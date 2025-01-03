@@ -1,0 +1,7 @@
+//plugins {
+//	id 'org.springframework.boot' version '3.3.0' apply false
+//}
+
+dependencies {
+	implementation 'mysql:mysql-connector-java:8.0.32'
+}

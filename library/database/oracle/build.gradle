@@ -1,0 +1,9 @@
+plugins {
+	id 'org.springframework.boot' version '3.3.0' apply false
+}
+
+dependencies {
+	implementation 'org.hibernate.orm:hibernate-core'
+	implementation 'org.hibernate.orm:hibernate-community-dialects'
+	implementation 'com.oracle.database.jdbc:ojdbc10:19.22.0.0'
+}

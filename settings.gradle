@@ -1,0 +1,19 @@
+rootProject.name = 'java-learning'
+
+def projectDirs = fileTree(rootDir) {
+    include '**/build.gradle'
+    exclude '**/build.gradle.kts' // Loại trừ nếu không dùng Kotlin DSL
+}.files.collect { it.parentFile }
+
+
+// Loại bỏ các thư mục trùng lặp (nếu có) và thêm vào project
+projectDirs.unique().each { dir ->
+    def projectPath = (dir.absolutePath + File.separator)
+            .replace(rootDir.absolutePath + File.separator, '')
+            .replace(File.separator, ':').toString()
+
+    if (projectPath.length() > 0) {
+        include ":${projectPath.substring(0,projectPath.length() - 1)}"
+    }
+
+}
