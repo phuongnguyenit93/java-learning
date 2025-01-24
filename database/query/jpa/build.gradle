@@ -32,8 +32,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.hibernate.orm:hibernate-core'
 	implementation 'org.hibernate.orm:hibernate-community-dialects'
-	implementation project(":library:database:${databaseType}")
-	implementation project(":library:spring:devtool")
-	implementation project(":module:entity:objectmapper")
-	implementation project(":module:entity:modelmapper")
+	implementation project(":database:connection:${databaseType}")
+	implementation project(":spring:library:devtool")
+	implementation project(":database:entity:objectmapper")
+	implementation project(":database:entity:modelmapper")
 }
