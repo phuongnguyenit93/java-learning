@@ -7,9 +7,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
 @EnableJpaRepositories(repositoryBaseClass = CustomRepositoryConfig.class)
-public class DemoApplication {
+public class JPAApplication {
 	public static void main(String[] args) {
 		System.out.println("Current directory: " + System.getProperty("user.dir"));
-		SpringApplication.run(DemoApplication.class, args);
+		SpringApplication.run(JPAApplication.class, args);
 	}
 }
