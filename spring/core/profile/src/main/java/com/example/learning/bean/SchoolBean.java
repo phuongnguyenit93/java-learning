@@ -8,25 +8,35 @@ import org.springframework.context.annotation.Profile;
 
 @Configuration
 public class SchoolBean {
+    @Value("${school.name}")
+    String schoolName;
+
     @Value("${class.name}")
     String className;
+
+    @Value("${student.name}")
+    String studentName;
+
+    public School createSchool() {
+        return new School(schoolName,className,studentName);
+    }
 
     @Bean
     @Profile("dev")
     public School schoolDev() {
-        return new School("School Dev",className);
+        return createSchool();
     }
 
     @Bean
     @Profile("loc")
     public School schoolLoc() {
-        return new School("School Local",className);
+        return createSchool();
     }
 
     @Bean
     @Profile("prod")
     public School schoolProd() {
-        return new School("School Product",className);
+        return createSchool();
     }
 
 }

@@ -16,5 +16,6 @@ public class ProfileController {
     public void getSchoolInfo(){
         System.out.println(school.getName());
         System.out.println(school.getClassName());
+        System.out.println(school.getStudentName());
     }
 }

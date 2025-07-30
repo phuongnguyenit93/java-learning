@@ -1,0 +1,8 @@
+spring.profiles.activate.on-profile : dev
+spring.profiles.include : common1
+---
+spring.profiles.activate.on-profile : loc
+spring.profiles.include : common2
+---
+spring.profiles.activate.on-profile : prod
+spring.profiles.include : common3
