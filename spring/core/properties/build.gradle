@@ -1,0 +1,7 @@
+plugins {
+    id 'org.springframework.boot' version '3.3.0' apply false
+}
+
+dependencies {
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+}

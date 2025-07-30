@@ -6,7 +6,7 @@ plugins {
 }
 
 allprojects {
-    group = 'com.example'
+    group = 'com.example.learning'
     version = '1.0.0'
 
     sourceCompatibility = '17'
