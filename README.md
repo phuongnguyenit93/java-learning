@@ -48,13 +48,13 @@
 15. Chạy lịch schedule và khái niệm executor pool trong Spring
 16. Microservices trong Spring
 17. Tìm hiểu Maven trong single Service và Microservices
-18. Giao tiếp giữa các service qua HTTP
-19. Giao tiếp giữa các service qua Eureka
+18. Giao tiếp giữa các com.example.learning.com.example.learning.service qua HTTP
+19. Giao tiếp giữa các com.example.learning.com.example.learning.service qua Eureka
 - Server Eureka
 - Server Discovery
-- Spring Actuator cho việc audit hệ thống và các service con bên trong
+- Spring Actuator cho việc audit hệ thống và các com.example.learning.com.example.learning.service con bên trong
 20. Tìm hiểu hệ thống Message Queue
-21. Giao tiếp giữa các service thông qua Message Queue
+21. Giao tiếp giữa các com.example.learning.com.example.learning.service thông qua Message Queue
 22. Tìm hiểu về SSE, WebSocket, polling
 23. Tìm hiểu Kafka
 - Sau khi có khái niệm về SSE và Kafka chúng ta có thể dựng hệ thống push notification không cần sử dụng đến các bên thứ 3 hỗ trợ như Firebase, Parse Server
@@ -72,7 +72,7 @@
 35. Cấu hình ghi log trong Spring Boot
 - Ghi log vào file
 - Ghi log vào database
-- Tự cấu hình log cho hệ thống, ghi vào service log
+- Tự cấu hình log cho hệ thống, ghi vào com.example.learning.com.example.learning.service log
 36. Thao tác với báo cáo JasperReport trong Spring Boot
 37. Thao tác với File, Multipart trong Spring Boot
 38. Các anotation nâng cao
