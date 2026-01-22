@@ -125,8 +125,8 @@ Kafka hỗ trợ hai cơ chế dọn dẹp dữ liệu (log cleanup policy):
 - Phù hợp với các use case publish event linh hoạt
 
 Ví dụ sử dụng:
-```java
-streamBridge.send("output-topic", message);
+```
+    streamBridge.send("output-topic", message);
 ```
 
 **Ưu điểm của StreamBridge:**
