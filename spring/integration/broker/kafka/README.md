@@ -46,6 +46,30 @@ Một Kafka cluster bao gồm nhiều broker để đảm bảo **high availabil
 - Consumer subscribe vào một hoặc nhiều topic
 - Dữ liệu được đọc theo thứ tự trong từng partition
 - Consumer quản lý offset để xác định message đã xử lý
+- 4 trạng thái để điều khiển 1 consumer : start, stop, pause, resume.
+#### Trạng thái Consumer
+
+- **Start**  
+  Khởi động consumer để bắt đầu lắng nghe và xử lý message từ Kafka.  
+  Khi start, consumer đọc dữ liệu từ offset đã commit gần nhất.
+  Trường hợp chưa có offset hoặc offset đã bị mất do retention, Kafka sẽ sử dụng auto.offset.reset (earliest / latest) để xác định vị trí bắt đầu đọc.
+
+
+- **Stop**  
+  Dừng hoàn toàn consumer và giải phóng tài nguyên.  
+  Consumer sẽ ngắt kết nối với Kafka broker và không tiếp tục xử lý message.
+
+
+- **Pause**  
+  Tạm thời dừng việc consume message nhưng **vẫn giữ kết nối** với Kafka.  
+  Offset không thay đổi trong thời gian pause.
+
+
+- **Resume**  
+  Tiếp tục consume message từ vị trí offset đã dừng trước đó.  
+  Consumer không bị rebalance lại khi resume.
+
+> Việc sử dụng **pause / resume** giúp kiểm soát luồng dữ liệu tốt hơn trong các trường hợp bảo trì, quá tải hoặc xử lý sự cố tạm thời.
 
 ---
 
@@ -98,6 +122,8 @@ Kafka hỗ trợ hai cơ chế dọn dẹp dữ liệu (log cleanup policy):
 
 ### Retention Time và Delete Retention Time
 
+#### Retention là cơ chế xóa message, không xóa offset → offset trở nên invalid
+
 - **Retention Time (`retention.ms`)**
     - Thời gian Kafka giữ message trước khi xóa
     - Áp dụng cho topic dùng chính sách **delete**
@@ -148,6 +174,127 @@ Consumer sử dụng offset để:
 - Tránh xử lý trùng lặp message
 - Hỗ trợ cơ chế retry và fault tolerance
 
+Ghi chú thêm: 
+- Thuộc tính auto.offset.reset không ảnh hưởng nếu offset đã được commit và còn hợp lệ
+- Offset được quản lý theo consumer group
+
+### Commit
+
+**Commit** là cơ chế dùng để **lưu offset** mà consumer đã xử lý thành công, giúp Kafka xác định vị trí đọc tiếp theo khi consumer restart hoặc xảy ra sự cố.
+
+Commit offset đảm bảo:
+- Tránh xử lý trùng lặp message
+- Hỗ trợ khôi phục (recovery) khi consumer bị restart
+- Kiểm soát độ tin cậy của quá trình consume
+
+#### Commit được lưu ở đâu?
+
+➡️ Kafka lưu commit offset vào internal topic:
+```
+    __consumer_offsets
+```
+
+Key gồm:
+* group.id
+* topic
+* partition
+
+📌 Vì vậy:
+- Cùng group.id → dùng chung offset
+- Khác group.id → đọc lại từ đầu
+
+#### Các hình thức Commit
+
+- **Auto Commit**
+  - Kafka tự động commit offset theo chu kỳ cấu hình
+  - Không quan tâm bạn xử lý xong hay chưa
+  - Dễ cấu hình nhưng có thể gây mất message nếu xử lý chưa hoàn tất
+  ```properties
+  enable.auto.commit=true
+  auto.commit.interval.ms=5000
+- **Manual Commit**
+  - Consumer chủ động commit offset sau khi xử lý message thành công
+  - Kiểm soát tốt hơn, phù hợp với hệ thống yêu cầu độ tin cậy cao
+  ```properties
+  enable.auto.commit=false
+  ```
+  #### Code commit manual
+    ```
+    @KafkaListener
+    public void listen(String msg, Acknowledgment ack) {
+    // xử lý xong
+    ack.acknowledge();
+    }
+    ```
+    or 
+    ```  
+    consumer.commitSync();
+    ``` 
+
+#### Commit Sync và Commit Async
+ - Commit Sync
+
+    - Chờ Kafka broker xác nhận commit thành công
+    - Đảm bảo offset được lưu chính xác
+    - Có thể làm giảm throughput
+
+ - Commit Async
+
+    - Không chờ phản hồi từ broker
+    - Tăng hiệu năng
+    - Có rủi ro commit thất bại mà không được phát hiện
+
+#### Commit và Consumer Group
+  - Offset được commit theo Consumer Group
+  - Mỗi consumer group có offset riêng cho từng partition
+  - Khi xảy ra rebalance, Kafka sẽ sử dụng offset đã commit gần nhất
+
+### KRaft và ZooKeeper
+
+Kafka hỗ trợ hai cơ chế quản lý metadata và điều phối cluster: **ZooKeeper** (truyền thống) và **KRaft** (Kafka Raft – kiến trúc mới).
+
+#### ZooKeeper
+
+**ZooKeeper** từng là thành phần bắt buộc trong Kafka để:
+- Quản lý metadata của cluster (broker, topic, partition)
+- Thực hiện leader election cho partition
+- Theo dõi trạng thái broker
+
+Nhược điểm:
+- Phụ thuộc thêm một hệ thống bên ngoài
+- Tăng độ phức tạp trong vận hành
+- Khó mở rộng và bảo trì ở quy mô lớn
+
+---
+
+#### KRaft (Kafka Raft)
+
+**KRaft** là kiến trúc mới của Kafka, sử dụng thuật toán **Raft** để quản lý metadata **nội bộ Kafka**, không cần ZooKeeper.
+
+Ưu điểm của KRaft:
+- Loại bỏ sự phụ thuộc vào ZooKeeper
+- Đơn giản hóa kiến trúc hệ thống
+- Tăng hiệu năng và độ ổn định
+- Thời gian khởi động và recovery nhanh hơn
+
+Trong chế độ KRaft:
+- Kafka controller được tích hợp trực tiếp trong broker
+- Metadata được lưu trữ trong **metadata log**
+- Leader election được thực hiện thông qua Raft consensus
+
+---
+
+#### So sánh nhanh
+
+| Tiêu chí        | ZooKeeper           | KRaft                |
+|-----------------|---------------------|----------------------|
+| Phụ thuộc ngoài | Có                  | Không                |
+| Quản lý metadata| ZooKeeper           | Kafka nội bộ         |
+| Độ phức tạp     | Cao                 | Thấp hơn             |
+| Tương lai Kafka | Đã deprecated       | Kiến trúc mặc định   |
+
+> **KRaft** là hướng phát triển chính và sẽ thay thế hoàn toàn ZooKeeper trong các phiên bản Kafka mới.
+
 #### Quản lý Offset
 
 - **Auto Commit**
@@ -155,3 +302,106 @@ Consumer sử dụng offset để:
     - Đơn giản nhưng có thể gây mất message nếu xử lý chưa xong
   ```properties
   enable.auto.commit=true
+  
+## Hướng dẫn setup và build 1 project Kafka
+
+### 1. Setup Kafka với Docker Compose
+
+Sử dụng `docker-compose` là cách nhanh nhất để khởi tạo Kafka phục vụ cho môi trường **local development**.
+
+#### Yêu cầu
+- Docker
+- Docker Compose
+
+#### Cấu trúc thư mục
+```text
+project-root
+├── docker-compose.yml
+└── README.md
+```
+### Docker Compose Configuration
+
+Sử dụng Docker Compose để khởi tạo Kafka chạy ở chế độ **KRaft (không cần ZooKeeper)**.
+
+#### File `docker-compose.yml`
+
+```yaml
+version: '3.8'
+
+services:
+  kafka1:
+    image: apache/kafka:latest
+    container_name: kafka1
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: 'broker,controller'
+      KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka1:29093,2@kafka2:29093,3@kafka3:29093'
+      KAFKA_LISTENERS: 'PLAINTEXT://:29092,CONTROLLER://:29093,PLAINTEXT_HOST://:9092'
+      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka1:29092,PLAINTEXT_HOST://localhost:9092'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT'
+      KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
+      KAFKA_INTER_BROKER_LISTENER_NAME: 'PLAINTEXT'
+      CLUSTER_ID: 'MkU3OEVBNTcwNTJENDM2Qk'
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3 # Tăng lên 3 để an toàn dữ liệu
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'false'
+
+  kafka2:
+    image: apache/kafka:latest
+    container_name: kafka2
+    ports:
+      - "9093:9093"
+    environment:
+      KAFKA_NODE_ID: 2
+      KAFKA_PROCESS_ROLES: 'broker,controller'
+      KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka1:29093,2@kafka2:29093,3@kafka3:29093'
+      KAFKA_LISTENERS: 'PLAINTEXT://:29092,CONTROLLER://:29093,PLAINTEXT_HOST://:9093'
+      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka2:29092,PLAINTEXT_HOST://localhost:9093'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT'
+      KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
+      KAFKA_INTER_BROKER_LISTENER_NAME: 'PLAINTEXT'
+      CLUSTER_ID: 'MkU3OEVBNTcwNTJENDM2Qk'
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'false'
+
+  kafka3:
+    image: apache/kafka:latest
+    container_name: kafka3
+    ports:
+      - "9094:9094"
+    environment:
+      KAFKA_NODE_ID: 3
+      KAFKA_PROCESS_ROLES: 'broker,controller'
+      KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka1:29093,2@kafka2:29093,3@kafka3:29093'
+      KAFKA_LISTENERS: 'PLAINTEXT://:29092,CONTROLLER://:29093,PLAINTEXT_HOST://:9094'
+      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka3:29092,PLAINTEXT_HOST://localhost:9094'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT'
+      KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
+      KAFKA_INTER_BROKER_LISTENER_NAME: 'PLAINTEXT'
+      CLUSTER_ID: 'MkU3OEVBNTcwNTJENDM2Qk'
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'false'
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
+    ports:
+      - "8080:8080"
+    depends_on:
+      - kafka1
+      - kafka2
+      - kafka3
+    environment:
+      # Kết nối Kafka UI với service 'kafka' bên trên
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka1:29092,kafka2:29092,kafka3:29092
+      DYNAMIC_CONFIG_ENABLED: 'true'
+
+```
+Khởi động Kafka
+```bash
+docker-compose up -d
+```
+
+## Một số câu hỏi về Kafka
