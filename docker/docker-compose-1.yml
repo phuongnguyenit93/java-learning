@@ -1,5 +1,14 @@
 version: '3.8'
 
+x-common-volumes: &my-volumes
+  volumes:
+    - ../spring/library/swagger/application.properties:/app/spring/library/swagger/application.properties
+    - ../spring/library/web/application.properties:/app/spring/library/web/application.properties
+
+x-common-build: &common-build
+  context: ../
+  dockerfile: docker/file/base/Dockerfile
+
 services:
   kafka1:
     image: apache/kafka:latest
@@ -69,3 +78,62 @@ services:
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka1:29092,kafka2:29092,kafka3:29092
       DYNAMIC_CONFIG_ENABLED: 'true'
+
+  kafka-control:
+    container_name: kafka-control
+    ports:
+      - "8091:8091"
+    extends:
+      file: base-config.yml
+      service: base-config
+    environment:
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka1:29092,kafka2:29092,kafka3:29092
+    build:
+      <<: *common-build
+      args:
+        - MODULE_PATH=:spring:integration:broker:kafka:control
+        - JAR_NAME=spring/integration/broker/kafka/control
+
+  kafka-accountant:
+    container_name: kafka-accountant
+    ports:
+      - "8092:8092"
+    extends:
+      file: base-config.yml
+      service: base-config
+    environment:
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka1:29092,kafka2:29092,kafka3:29092
+    build:
+      <<: *common-build
+      args:
+        - MODULE_PATH=:spring:integration:broker:kafka:consumer:accountant
+        - JAR_NAME=spring/integration/broker/kafka/consumer/accountant
+
+  kafka-notify:
+    container_name: kafka-notify
+    ports:
+      - "8093:8093"
+    extends:
+      file: base-config.yml
+      service: base-config
+    environment:
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka1:29092,kafka2:29092,kafka3:29092
+    build:
+      <<: *common-build
+      args:
+        - MODULE_PATH=:spring:integration:broker:kafka:consumer:notification
+        - JAR_NAME=spring/integration/broker/kafka/consumer/notification
+
+  kafka-producer-bank:
+    container_name: kafka-producer-bank
+    ports:
+      - "8089:8089"
+    build:
+      <<: *common-build
+      args:
+        - MODULE_PATH=:spring:integration:broker:kafka:producer:bank
+        - JAR_NAME=spring/integration/broker/kafka/producer/bank
+    environment:
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka1:29092,kafka2:29092,kafka3:29092
+    <<: *my-volumes
+

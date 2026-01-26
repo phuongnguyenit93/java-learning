@@ -1,0 +1,10 @@
+services:
+  base-config:
+    volumes:
+      - ../spring/library/swagger/application.properties:/app/spring/library/swagger/application.properties
+      - ../spring/library/web/application.properties:/app/spring/library/web/application.properties
+  base-with-data-config:
+    extends: base-config
+    volumes:
+      - ../database/connection/mysql/application.properties:/app/database/connection/mysql/application.properties
+      - ../database/config/hikariCP/application.properties:/app/database/config/hikariCP/application.properties

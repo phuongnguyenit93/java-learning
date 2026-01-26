@@ -33,6 +33,50 @@ Một Kafka cluster bao gồm nhiều broker để đảm bảo **high availabil
 
 ---
 
+### Cluster
+
+**Kafka Cluster** là tập hợp nhiều **broker** hoạt động cùng nhau để cung cấp một hệ thống **phân tán**, đảm bảo **khả năng mở rộng**, **tính sẵn sàng cao (high availability)** và **chịu lỗi**.
+
+Một cluster Kafka chịu trách nhiệm:
+- Lưu trữ và phân phối message
+- Quản lý topic, partition và replica
+- Đảm bảo dữ liệu không bị mất khi broker gặp sự cố
+
+---
+
+#### Thành phần của Kafka Cluster
+
+- **Broker**: Các node chính trong cluster, lưu trữ dữ liệu và xử lý request
+- **Controller**: Điều phối cluster, quản lý metadata và leader election
+- **Topic / Partition / Replica**: Cấu trúc dữ liệu phân tán trong cluster
+
+---
+
+#### Cluster và Khả năng Mở rộng
+
+- Có thể thêm broker mới vào cluster mà không cần downtime
+- Partition được phân bố trên nhiều broker
+- Consumer group cho phép scale out việc xử lý dữ liệu
+
+---
+
+#### Cluster và Khả năng Chịu lỗi
+
+- Dữ liệu được replicate trên nhiều broker
+- Khi một broker down, leader sẽ được bầu lại từ ISR
+- Consumer và producer tự động reconnect
+
+---
+
+#### Best Practices
+
+- Số lượng broker ≥ replication factor
+- Không sử dụng single broker cho môi trường production
+- Giám sát cluster bằng các công cụ như Kafdrop, AKHQ, Prometheus
+
+> Kafka Cluster là nền tảng cốt lõi để xây dựng các hệ thống **event-driven** và **microservices** có độ tin cậy cao.
+
+--- 
 ### Producer
 **Producer** là thành phần gửi dữ liệu (message/event) vào Kafka.
 - Producer gửi message đến một **topic**
@@ -87,14 +131,60 @@ Một Kafka cluster bao gồm nhiều broker để đảm bảo **high availabil
 - Mỗi partition chỉ được consume bởi **một consumer trong cùng consumer group**
 - Đảm bảo thứ tự message **trong phạm vi partition**
 
----
+--- 
 
+### Replica
+
+**Replica** là các bản sao của **partition** trong Kafka, được sử dụng để đảm bảo **tính sẵn sàng (high availability)** và **khả năng chịu lỗi (fault tolerance)**.
+
+- Mỗi partition có thể có nhiều replica
+- Một replica được bầu làm **Leader**
+- Các replica còn lại là **Follower**
+- Producer và Consumer **chỉ làm việc với Leader**
+
+#### Leader và Follower
+
+- **Leader Replica**
+    - Nhận message từ Producer
+    - Phân phối message cho Consumer
+    - Chịu trách nhiệm ghi dữ liệu chính
+
+- **Follower Replica**
+    - Đồng bộ dữ liệu từ Leader
+    - Không xử lý trực tiếp request từ Producer / Consumer
+    - Sẵn sàng thay thế Leader khi xảy ra sự cố
+
+
+#### In-Sync Replicas (ISR)
+
+**ISR (In-Sync Replicas)** là tập hợp các replica:
+- Được đồng bộ đầy đủ với Leader
+- Đáp ứng yêu cầu về độ trễ cho phép
+- Có khả năng được bầu làm Leader
+
+Nếu Leader gặp sự cố, Kafka sẽ:
+- Chọn một replica trong ISR làm Leader mới
+- Đảm bảo dữ liệu không bị mất hoặc mất ở mức tối thiểu
+
+
+#### Replica và Độ Tin Cậy Dữ Liệu
+
+- Số lượng replica được cấu hình thông qua `replication.factor`
+- Replica càng nhiều → độ an toàn dữ liệu càng cao
+- Replica nhiều cũng làm tăng chi phí tài nguyên
+
+```properties
+replication.factor=3
+```
+
+---
 ### Consumer Group
 **Consumer Group** là tập hợp các consumer cùng đọc dữ liệu từ một topic.
 - Kafka phân phối mỗi partition cho một consumer trong group
 - Giúp mở rộng khả năng xử lý (scale out)
 - Nếu một consumer bị down, partition sẽ được gán lại cho consumer khác
 
+---
 ### Compact và Delete
 
 Kafka hỗ trợ hai cơ chế dọn dẹp dữ liệu (log cleanup policy):
@@ -161,6 +251,7 @@ Ví dụ sử dụng:
 - Dễ sử dụng trong kiến trúc event-driven
 - Phù hợp cho microservices Spring Boot
 
+---
 ### Offset
 
 **Offset** là một số nguyên dùng để xác định **vị trí của message** trong một partition của Kafka.
@@ -177,6 +268,8 @@ Consumer sử dụng offset để:
 Ghi chú thêm: 
 - Thuộc tính auto.offset.reset không ảnh hưởng nếu offset đã được commit và còn hợp lệ
 - Offset được quản lý theo consumer group
+
+---
 
 ### Commit
 
@@ -248,6 +341,52 @@ Key gồm:
   - Offset được commit theo Consumer Group
   - Mỗi consumer group có offset riêng cho từng partition
   - Khi xảy ra rebalance, Kafka sẽ sử dụng offset đã commit gần nhất
+
+---
+
+### Controller
+
+**Controller** là một broker đặc biệt trong Kafka cluster, chịu trách nhiệm **điều phối và quản lý trạng thái của cluster**.
+
+Các nhiệm vụ chính của Controller:
+- Quản lý metadata của cluster (topic, partition, replica)
+- Thực hiện **leader election** cho partition
+- Giám sát trạng thái của broker (broker join / leave)
+- Xử lý sự kiện **failover** khi broker hoặc replica gặp sự cố
+
+#### Controller trong ZooKeeper Mode
+
+- Controller được **bầu chọn thông qua ZooKeeper**
+- Tại một thời điểm chỉ có **một Controller duy nhất**
+- Mọi thay đổi metadata đều được ghi nhận và đồng bộ qua ZooKeeper
+
+---
+
+#### Controller trong KRaft Mode
+
+- Controller được quản lý thông qua **Raft consensus**
+- Không phụ thuộc vào ZooKeeper
+- Metadata được lưu trữ trong **metadata log** nội bộ Kafka
+- Có thể có nhiều controller node nhưng chỉ **một controller leader** hoạt động tại một thời điểm
+
+---
+
+#### Vai trò của Controller đối với Cluster
+
+- Đảm bảo cluster hoạt động ổn định và nhất quán
+- Điều phối cluster
+- Tự động khôi phục khi có sự cố
+- Là thành phần cốt lõi để Kafka đảm bảo **high availability**
+
+> Trong các phiên bản Kafka mới, **KRaft Controller** là kiến trúc mặc định và là hướng phát triển lâu dài của Kafka.
+
+#### Lưu ý quan trọng
+
+* Nếu Controller chết → Kafka bầu Controller mới
+* Message KHÔNG bị mất
+* Có thể chậm vài giây trong thời gian re-election
+
+---
 
 ### KRaft và ZooKeeper
 
@@ -399,7 +538,93 @@ services:
       DYNAMIC_CONFIG_ENABLED: 'true'
 
 ```
-Khởi động Kafka
+
+Giải thích một số properties trong docker compose :
+### 1. Định danh và Vai trò (Identification & Roles)
+
+#### KAFKA_NODE_ID: 1
+* ID duy nhất của broker trong cụm. 
+* Các node khác phải là 2, 3... 
+* Nó thay thế cho broker.id trước đây.
+
+#### KAFKA_PROCESS_ROLES: 'broker,controller' 
+* Xác định node này làm nhiệm vụ gì.
+* broker: Lưu trữ dữ liệu và xử lý yêu cầu từ client.
+* controller: Quản lý cụm (thay thế vai trò của Zookeeper). Một node có thể làm cả hai.
+
+📌 Có 3 kiểu:
+* broker
+* controller
+* broker,controller (phổ biến cho dev)
+
+#### CLUSTER_ID: 'MkU3OEVBNTcwNTJENDM2Qk'
+* ID của cả cụm. 
+* Tất cả các broker trong cùng một cụm phải dùng chung ID này để chúng nhận diện được nhau.
+---
+### 2. Cơ chế Bầu chọn (Quorum Configuration)
+
+#### KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka1:29093,2@kafka2:29093,3@kafka3:29093'
+* Danh sách các node có quyền biểu quyết để bầu ra "Leader" quản lý cụm. 
+* Định dạng là node_id@host_name:port_controller. 
+* Đây là cách các controller tìm thấy nhau để duy trì sự ổn định của cụm.
+
+### 3. Mạng và Kết nối (Listeners) - Đây là phần dễ gây nhầm lẫn nhất:
+
+#### KAFKA_LISTENERS: 'PLAINTEXT://:29092,CONTROLLER://:29093,PLAINTEXT_HOST://:9092'
+
+ - Khai báo các "cổng" mà Kafka sẽ mở ra để lắng nghe.
+
+   * PLAINTEXT://:29092: Cho các broker khác hoặc app trong Docker (Broker nội bộ (container ↔ container))
+   * CONTROLLER://:29093: Chỉ dành cho các controller trao đổi thông tin bầu chọn.
+   * PLAINTEXT_HOST://:9092: Cho các ứng dụng chạy bên ngoài Docker (localhost).
+ - Listener chỉ là cổng mở, chưa phải địa chỉ client thấy
+
+#### KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka3:29092,PLAINTEXT_HOST://localhost:9092'
+
+  * Địa chỉ mà Kafka "quảng bá" ra ngoài. 
+  * Khi client kết nối tới Kafka, Kafka sẽ gửi lại địa chỉ này để bảo client hãy liên lạc qua đó.
+  * Client ngoài Docker sẽ dùng localhost:9092.
+  * Client trong Docker (như Kafka UI) sẽ dùng kafka1:29092.
+
+#### KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT'
+  * Định nghĩa giao thức bảo mật cho từng tên listener. 
+  * Ở đây tất cả đều là PLAINTEXT (không mã hóa).
+  * Nếu dùng SSL/SASL thì config tại đây
+
+### 4. Giao tiếp nội bộ (Internal Communication)
+
+#### KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER': 
+* Chỉ định listener nào được dùng cho mục đích quản lý cụm (controller).
+* Bắt buộc trong KRaft mode
+
+#### KAFKA_INTER_BROKER_LISTENER_NAME: 'PLAINTEXT': 
+* Chỉ định listener nào được các broker dùng để sao chép dữ liệu qua lại với nhau.
+* Listener dùng cho:
+  * Broker ↔ Broker
+  * Replication
+  * Metadata sync
+* Không phải client listener
+
+### 5. Cấu hình hệ thống và Dữ liệu
+
+#### KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3: 
+* Kafka lưu vị trí (offset) đã đọc của các Consumer trong một topic nội bộ. Khi có 3 broker, ta đặt là 3 để nếu 2 broker chết, ta vẫn không mất dấu vết đang đọc đến đâu.
+
+#### KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'false': 
+* Tắt tính năng tự tạo topic để kiểm soát chặt chẽ hệ thống.
+
+#### KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1 & REPLICATION_FACTOR: 1: 
+* Cấu hình cho các bản ghi giao dịch (transactions). 
+* Trong môi trường 3 broker, bạn nên nâng REPLICATION_FACTOR lên 3 để đồng bộ với số lượng broker.
+
+--- 
+Tóm tắt luồng đi của dữ liệu:
+
+* Spring Boot (ngoài Docker) nhìn thấy localhost:9092 (PLAINTEXT_HOST).
+* Kafka UI (trong Docker) nhìn thấy kafka1:29092 (PLAINTEXT).
+* Các Broker bầu chọn lẫn nhau qua cổng 29093 (CONTROLLER).
+
+## Khởi động Kafka
 ```bash
 docker-compose up -d
 ```
