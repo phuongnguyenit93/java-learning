@@ -13,6 +13,10 @@ services:
   kafka1:
     image: apache/kafka:latest
     container_name: kafka1
+    volumes:
+      - kafka1_data:/var/lib/kafka/data
+      - kafka1_secrets:/etc/kafka/secrets
+      - kafka1_config:/mnt/shared/config
     ports:
       - "9092:9092"
     environment:
@@ -31,6 +35,10 @@ services:
   kafka2:
     image: apache/kafka:latest
     container_name: kafka2
+    volumes:
+      - kafka2_data:/var/lib/kafka/data
+      - kafka2_secrets:/etc/kafka/secrets
+      - kafka2_config:/mnt/shared/config
     ports:
       - "9093:9093"
     environment:
@@ -49,6 +57,10 @@ services:
   kafka3:
     image: apache/kafka:latest
     container_name: kafka3
+    volumes:
+      - kafka3_data:/var/lib/kafka/data
+      - kafka3_secrets:/etc/kafka/secrets
+      - kafka3_config:/mnt/shared/config
     ports:
       - "9094:9094"
     environment:
@@ -136,4 +148,20 @@ services:
     environment:
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka1:29092,kafka2:29092,kafka3:29092
     <<: *my-volumes
+
+
+volumes:
+  # Data
+  kafka1_data: { name: kafka1_data_volumes }
+  kafka2_data: { name: kafka2_data_volumes }
+  kafka3_data: { name: kafka3_data_volumes }
+  # Secrets
+  kafka1_secrets: { name: kafka1_secrets_volumes }
+  kafka2_secrets: { name: kafka2_secrets_volumes }
+  kafka3_secrets: { name: kafka3_secrets_volumes }
+  # Config
+  kafka1_config: { name: kafka1_config_volumes }
+  kafka2_config: { name: kafka2_config_volumes }
+  kafka3_config: { name: kafka3_config_volumes }
+
 

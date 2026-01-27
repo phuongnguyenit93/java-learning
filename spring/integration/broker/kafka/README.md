@@ -26,10 +26,29 @@ Kafka hoạt động theo mô hình **publish / subscribe**, trong đó dữ li�
 ### Broker
 **Broker** là một server Kafka, chịu trách nhiệm:
 - Nhận message từ Producer
-- Lưu trữ message vào disk
+- Lưu trữ message vào disk : Message -> Topic → Partition → Broker lưu trên disk
 - Phân phối message cho Consumer
 
 Một Kafka cluster bao gồm nhiều broker để đảm bảo **high availability** và **scalability**.
+
+Ngoài ra các broker còn phân công nhiệm vụ Leader & Follower
+#### Mỗi partition có:
+
+* 1 Leader (xử lý read/write)
+* N Follower (replica)
+
+#### Nguyên tắc: 
+* Producer & Consumer chỉ nói chuyện với Leader
+* Khi 1 broker Leader sập , thì broker follower sẽ lên làm leader => Data không bị mất
+* Chia partition quản lý => Giảm tải kafka và phân tán Disk/CPU/Network
+
+
+Ví dụ (replicas=3):
+```text
+Partition 0:
+Leader: Broker 1
+Follower: Broker 2, Broker 3
+```
 
 ---
 
@@ -275,6 +294,14 @@ Ghi chú thêm:
 
 **Commit** là cơ chế dùng để **lưu offset** mà consumer đã xử lý thành công, giúp Kafka xác định vị trí đọc tiếp theo khi consumer restart hoặc xảy ra sự cố.
 
+Commit của consumer = việc ghi lại “tôi đã xử lý xong tới message nào rồi”
+
+Cụ thể hơn:
+
+* Kafka không tự biết consumer đã xử lý xong message hay chưa
+* Consumer phải nói cho Kafka biết bằng cách commit offset
+
+
 Commit offset đảm bảo:
 - Tránh xử lý trùng lặp message
 - Hỗ trợ khôi phục (recovery) khi consumer bị restart
@@ -350,14 +377,20 @@ Key gồm:
 
 Các nhiệm vụ chính của Controller:
 - Quản lý metadata của cluster (topic, partition, replica)
-- Thực hiện **leader election** cho partition
-- Giám sát trạng thái của broker (broker join / leave)
+- Thực hiện **leader election (bầu cử leader)** cho partition
+- Giám sát trạng thái của broker (broker join / leave) hoặc (broker dead/alive)
 - Xử lý sự kiện **failover** khi broker hoặc replica gặp sự cố
+
+#### Lưu ý
+- Broker không nhận message
+- Broker không lưu data
+- Broker không đọc/ghi topic
+
 
 #### Controller trong ZooKeeper Mode
 
 - Controller được **bầu chọn thông qua ZooKeeper**
-- Tại một thời điểm chỉ có **một Controller duy nhất**
+- Tại một thời điểm trong 1 cluster chỉ có **một Controller duy nhất**
 - Mọi thay đổi metadata đều được ghi nhận và đồng bộ qua ZooKeeper
 
 ---
@@ -630,3 +663,119 @@ docker-compose up -d
 ```
 
 ## Một số câu hỏi về Kafka
+
+### 1. Chuyện gì sẽ xảy ra khi consumer bị ngắt kết nối giữa chừng ?
+- Kafka không push message trực tiếp vào consumer, mà:
+
+  * Message được lưu bền vững (persist) trong topic partition
+  * Consumer chủ động pull message
+  * Kafka chỉ coi message là đã đọc xong khi offset được commit
+
+👉 Vì vậy:
+  * Khi consumer bị tắt / crash / pause → message vẫn nằm nguyên trong Kafka
+
+👉 Khi consumer start lại:
+  * Kafka sẽ đọc từ offset đã commit gần nhất
+  * Các message chưa được commit → được đọc lại
+
+✅ Message trong thời gian consumer bị tắt → đọc lại được
+
+👉 Tuy nhiên, đối với message đang xử lý mà consumer bị tắt, nếu đã commit offset thì coi như message đó đã mất
+
+### 2. Message tồn tại trong bao lâu ? Làm sao để điều chỉnh thời gian tồn tại ? Chuyện gì xảy ra nếu message đã xóa nhưng consumer chưa commit offset ?
+
+- Thời gian tổn tại của message dựa theo retention 
+- Retention dựa thao thời gian hoạc dung lượng 
+- Cách thức xóa cũng sẽ dựa theo cleanup policy (Compact hoặc Delete)
+  - Delete : Xóa theo thời gian / size : Và xóa cái xa nhất
+  - Compact : Giữ message cuối cùng theo key
+
+#### Nếu message đã xóa nhưng chưa commit offset
+  - Mất message đó 
+  - Ngoài ra có 3 case sau
+
+1. Case 1: auto.offset.reset=latest
+* ➡️ Kafka nhảy thẳng tới offset mới nhất
+* ➡️ ❌ MẤT TOÀN BỘ MESSAGE CŨ
+
+2. Case 2: auto.offset.reset=earliest
+* ➡️ Kafka đọc từ message còn tồn tại sớm nhất
+* ➡️ ❌ MẤT MESSAGE ĐÃ BỊ XÓA
+
+3. Case 3: auto.offset.reset=none
+* ➡️ ❌ Consumer CRASH
+* ➡️ OffsetOutOfRangeException
+
+#### Kafka có 3 cấp cấu hình retention (theo thứ tự ưu tiên):
+* Topic config  >  Broker config  >  Default
+
+### 3. Làm sao để các massage khi gửi cần theo thứ tự nó vào cùng partition trong 1 topics ? Vì các thứ tư giữa các partition không đảm bảo
+
+#### 👉 Kafka chỉ đảm bảo thứ tự trong 1 partition
+
+❌ Không bao giờ đảm bảo thứ tự:
+
+* Giữa các partition
+* Sau khi tăng partition cho cùng 1 key (nếu dùng sai cách)
+
+#### Vậy làm sao đảm bảo message của 1 consumer luôn ở cùng 1 partition?
+
+* CÁCH DUY NHẤT: DÙNG MESSAGE KEY
+  * Producer phải gửi message có key
+```text
+kafkaTemplate.send("deposit-money-event", userId, message);
+```
+Kafka sẽ 
+
+```text
+partition = hash(userId) % partition_count
+```
+
+📌 Kết quả:
+* Cùng userId → luôn vào cùng partition
+* Thứ tự của user đó được đảm bảo
+
+#### Vậy nếu khi tăng partition thì sao?
+⚠️ Đây là điểm nhiều người dính lỗi
+
+Giả sử ban đầu:
+
+```text
+partition_count = 3
+partition = hash(userId) % 3
+```
+
+Sau đó bạn tăng lên:
+```text
+partition_count = 6
+partition = hash(userId) % 6
+```
+
+➡️ KẾT QUẢ:
+1. [x] Cùng userId → vào partition KHÁC
+2. [x] Thứ tự bị phá
+
+#### Cách KHẮC PHỤC khi cần tăng partition
+
+Cách 1 (Chuẩn nhất): Chấp nhận MẤT ORDER khi scale
+
+  ✔️ Phổ biến
+  
+  ✔️ Kafka design chấp nhận
+
+➡️ Với hệ thống không yêu cầu strict ordering toàn cục
+
+* Cách 2: Dùng Custom Partitioner (nâng cao)
+```text
+public class FixedPartitioner implements Partitioner {
+@Override
+public int partition(String topic, Object key, byte[] keyBytes,Object value, byte[] valueBytes, Cluster cluster) {
+        return Math.abs(key.hashCode()) % 3; // CỐ ĐỊNH
+    }
+}
+```
+
+➡️ Dù topic tăng partition:
+
+* Key vẫn map vào 3 partition đầu
+* Partition mới chỉ dùng cho key mới
