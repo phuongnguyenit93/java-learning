@@ -7,7 +7,7 @@ Kafka project documentation
 
 Documentation
 
-* [Overview](docs/Overview.md)
-* [Setup](docs/Setup.md)
-* [Config](docs/Config.md)
-* [Q&A](docs/Q&A.md)
+* [Overview](docs/1.Overview.md)
+* [Setup](docs/2.Setup.md)
+* [Config](docs/3.Config.md)
+* [Q&A](docs/4.Q&A.md)
