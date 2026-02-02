@@ -103,8 +103,8 @@ services:
     build:
       <<: *common-build
       args:
-        - MODULE_PATH=:spring:integration:broker:kafka:control
-        - JAR_NAME=spring/integration/broker/kafka/control
+        - MODULE_PATH=:spring:integration:broker:kafka:project:control
+        - JAR_NAME=spring/integration/broker/kafka/project/control
 
   kafka-accountant:
     container_name: kafka-accountant
@@ -118,8 +118,8 @@ services:
     build:
       <<: *common-build
       args:
-        - MODULE_PATH=:spring:integration:broker:kafka:consumer:accountant
-        - JAR_NAME=spring/integration/broker/kafka/consumer/accountant
+        - MODULE_PATH=:spring:integration:broker:kafka:project:consumer:accountant
+        - JAR_NAME=spring/integration/broker/kafka/project/consumer/accountant
 
   kafka-notify:
     container_name: kafka-notify
@@ -133,8 +133,8 @@ services:
     build:
       <<: *common-build
       args:
-        - MODULE_PATH=:spring:integration:broker:kafka:consumer:notification
-        - JAR_NAME=spring/integration/broker/kafka/consumer/notification
+        - MODULE_PATH=:spring:integration:broker:kafka:project:consumer:notification
+        - JAR_NAME=spring/integration/broker/kafka/project/consumer/notification
 
   kafka-producer-bank:
     container_name: kafka-producer-bank
@@ -143,8 +143,8 @@ services:
     build:
       <<: *common-build
       args:
-        - MODULE_PATH=:spring:integration:broker:kafka:producer:bank
-        - JAR_NAME=spring/integration/broker/kafka/producer/bank
+        - MODULE_PATH=:spring:integration:broker:kafka:project:producer:bank
+        - JAR_NAME=spring/integration/broker/kafka/project/producer/bank
     environment:
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka1:29092,kafka2:29092,kafka3:29092
     <<: *my-volumes
