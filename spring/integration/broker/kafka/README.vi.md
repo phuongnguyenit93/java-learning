@@ -10,4 +10,5 @@ Tài liệu
 * [Tổng quan](docs/1.Overview.md)
 * [Setup](docs/2.Setup.md)
 * [Thiết lập](docs/3.Config.md)
-* [Hỏi đáp](docs/4.Q&A.md)
+* [Nâng cao](docs/4.Advanced.md)
+* [Hỏi đáp](docs/5.Q&A.md)

@@ -10,4 +10,5 @@ Documentation
 * [Overview](docs/1.Overview.md)
 * [Setup](docs/2.Setup.md)
 * [Config](docs/3.Config.md)
-* [Q&A](docs/4.Q&A.md)
+* [Advanced](docs/4.Advanced.md)
+* [Q&A](docs/5.Q&A.md)
