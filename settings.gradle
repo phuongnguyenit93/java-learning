@@ -1,9 +1,19 @@
 rootProject.name = 'java-learning'
 
 def projectDirs = fileTree(rootDir) {
-    include '**/build.gradle'
-    exclude '**/build.gradle.kts' // Loại trừ nếu không dùng Kotlin DSL
-}.files.collect { it.parentFile }
+    include '**/gradle.properties'
+    exclude 'gradle.properties' // Bỏ qua file properties của root project
+    exclude '**/build'          // Bỏ qua thư mục build
+//    include '**/build.gradle'
+//    exclude '**/build.gradle.kts' // Loại trừ nếu không dùng Kotlin DSL
+}.files
+        .findAll {file ->
+            def props = new Properties()
+            file.withInputStream { props.load(it) }
+
+            return props.getProperty('isModule') == 'true'
+        }
+        .collect { it.parentFile }
 
 
 // Loại bỏ các thư mục trùng lặp (nếu có) và thêm vào project

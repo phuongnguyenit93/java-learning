@@ -1,12 +1,3 @@
-# Kafka Project
-
-🌐 Languages: [English](README.md) | [Tiếng Việt](README.vi.md)
-
-## What is this?
-Kafka project documentation
-
-Documentation
-
 * [1.Overview](docs/vi/1.Overview.md)
 * [2.Setup](docs/vi/2.Setup.md)
 * [3.Config](docs/vi/3.Config.md)
