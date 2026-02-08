@@ -1,5 +1,10 @@
 rootProject.name = 'java-learning'
 
+// Biến để lưu trữ danh sách đường dẫn tuyệt đối của các module hợp lệ
+def envModulePathList = new StringBuilder("# Auto-generated module paths\n\n")
+def rootPath = rootDir.toString().replace("\\","/")
+envModulePathList.append("PROJECT_ROOT=${rootPath}\n\n")
+
 def projectDirs = fileTree(rootDir) {
     include '**/gradle.properties'
     exclude 'gradle.properties' // Bỏ qua file properties của root project
@@ -11,19 +16,178 @@ def projectDirs = fileTree(rootDir) {
             def props = new Properties()
             file.withInputStream { props.load(it) }
 
-            return props.getProperty('isModule') == 'true'
+            return props.getProperty('IS_MODULE') == 'true'
         }
         .collect { it.parentFile }
 
+def moduleProps = new File(rootDir,"modules.properties")
+if (moduleProps.exists()) moduleProps.createNewFile()
+
+def propsOutput = new Properties()
+propsOutput.setProperty("PROJECT_ROOT",rootPath)
 
 // Loại bỏ các thư mục trùng lặp (nếu có) và thêm vào project
 projectDirs.unique().each { dir ->
     def projectPath = (dir.absolutePath + File.separator)
             .replace(rootDir.absolutePath + File.separator, '')
             .replace(File.separator, ':').toString()
+            .with {it.substring(0,it.length()-1)}
 
     if (projectPath.length() > 0) {
-        include ":${projectPath.substring(0,projectPath.length() - 1)}"
+        include ":${projectPath}"
+    } else {
+        return
     }
 
+    // --- Đọc cấu hình từ gradle.properties ---
+    def props = new Properties()
+    def propsFile = new File(dir, 'gradle.properties')
+    propsFile.withInputStream { props.load(it) }
+
+    def buildDocument = props.getProperty('BUILD_DOCUMENT')?.toBoolean() ?: false
+    def documentLanguage = props.getProperty('DOCUMENT_LANGUAGE_LIST') ?: ""
+    def moduleName = props.getProperty("MODULE_NAME")
+    def targetLangs = documentLanguage.split(',').collect { it.trim() }.findAll { !it.isEmpty() }
+
+
+    // Lưu đường dẫn tuyệt đối vào danh sách
+    if (moduleName) {
+        def jarPath = projectPath.replace(":","/")
+        def absolutePath = "${rootPath}/${jarPath}"
+
+        envModulePathList.append("# ${moduleName}\n")
+        envModulePathList.append("${moduleName}_ABSOLUTE_PATH=${absolutePath}\n")
+        envModulePathList.append("${moduleName}_JAR_PATH=${jarPath}\n")
+        envModulePathList.append("${moduleName}_MODULE_PATH=${projectPath}\n")
+        envModulePathList.append("\n")
+
+        propsOutput.setProperty("${moduleName}_ABSOLUTE_PATH",absolutePath)
+        propsOutput.setProperty("${moduleName}_JAR_PATH",jarPath)
+        propsOutput.setProperty("${moduleName}_MODULE_PATH",projectPath)
+    }
+
+    def docsDir = new File(dir, "docs")
+
+    if (buildDocument == true) {
+        // --- Logic Tạo File/Folder tự động ---
+
+        // Tạo file README.md nếu chưa tồn tại
+        def readmeFile = new File(dir, "README.md")
+
+        if (!readmeFile.exists()) {
+            readmeFile.createNewFile()
+            println "Created README.md for module: $projectPath"
+        }
+
+        // Tạo các folder ngôn ngữ được chỉ định
+        targetLangs.each { lang ->
+            def langDir = new File(docsDir, lang)
+            createMenuStructure(langDir)
+        }
+
+        // XOÁ: Các folder ngôn ngữ không nằm trong danh sách documentLanguage
+        if (docsDir.exists()) {
+            docsDir.listFiles().each { file ->
+                if (file.isDirectory() && !targetLangs.contains(file.name)) {
+                    file.deleteDir()
+                    println "Removed unused language folder: ${file.path}"
+                }
+            }
+        }
+    } else {
+        // XOÁ: Nếu buildDocument = false hoặc không có, xoá toàn bộ folder docs
+        if (docsDir.exists()) {
+            println docsDir
+            docsDir.deleteDir()
+            println "Removed docs folder (buildDocument is false/missing): $projectPath"
+        }
+    }
+}
+
+moduleProps.withOutputStream {out ->
+    propsOutput.store(out,"Auto-generated Module Paths - Updated at: ${new Date()}")
+}
+
+// 3. Ghi thông tin ra file .env.module tại root/docker/env
+// Chúng ta thực hiện việc này sau khi vòng lặp kết thúc
+def envDir = new File(rootDir, "docker/env")
+if (!envDir.exists()) envDir.mkdirs()
+
+def envFile = new File(envDir, ".env.module")
+// Ghi đè file mới với danh sách đường dẫn (mỗi dòng một module)
+envFile.text = envModulePathList
+
+println "--> Updated docker/env/.env.module"
+
+def rootPropsFile = file("modules.properties")
+def rootProps = new Properties()
+rootPropsFile.withInputStream { rootProps.load(it) }
+
+projectDirs.unique().each { dir ->
+    // --- Đọc cấu hình từ gradle.properties ---
+    def props = new Properties()
+    def propsFile = new File(dir, 'gradle.properties')
+    propsFile.withInputStream { props.load(it) }
+
+    def moduleName = props.getProperty("MODULE_NAME")
+    if (moduleName == null) {
+        return
+    }
+
+    def dependModule = props.getProperty("MODULE_DEPENDS") ?: ""
+    def prefixes = dependModule.split(',').collect { it.trim() }.findAll { !it.isEmpty() }
+    prefixes.add(moduleName) // Luôn bao gồm chính nó
+
+    // 3. Lọc các ENV từ file tổng dựa trên các tiền tố
+    StringBuilder envContent = new StringBuilder("# Env for ${moduleName} - Generated at: ${new Date()}\n")
+    def groupedData = [:]
+
+    // Duyệt qua tất cả các key trong file properties tổng
+    rootProps.each { key, value ->
+        // Kiểm tra xem key có bắt đầu bằng bất kỳ tiền tố nào trong list không
+        def matchPrefix = prefixes.find{prefix -> key.toString().startsWith(prefix)}
+
+        if (matchPrefix == null) return;
+
+        if (!groupedData.containsKey(matchPrefix)) {
+            groupedData[matchPrefix] = []
+        }
+
+        groupedData[matchPrefix].add("${key}=${value}")
+
+    }
+
+    def sortedGroups = groupedData.sort { it.key }
+    StringBuilder content = new StringBuilder("# Auto-generated Environment Variables - ${new Date()}\n\n")
+
+    sortedGroups.each { groupName, lines ->
+        content.append("# --- Group: ${groupName} ---\n")
+        // Sắp xếp các dòng trong nhóm để nhìn chuyên nghiệp hơn
+        lines.sort().each { line ->
+            content.append("${line}\n")
+        }
+        content.append("\n") // Thêm dòng trống giữa các khối
+    }
+
+    def targetEnvFile = new File(dir, ".env")
+    if (!targetEnvFile.exists()) targetEnvFile.createNewFile()
+    targetEnvFile.text = content.toString()
+}
+
+
+// Hàm helper để tạo cấu trúc docs (giúp tránh lặp lại code cho en và vi)
+def createMenuStructure(File langDir) {
+    // 1. Tạo folder menu bên trong en/vi
+    def menuDir = new File(langDir, "menu")
+    if (!menuDir.exists()) {
+        menuDir.mkdirs()
+    }
+
+    // 2. Tạo các file .md bên trong menu
+    ["BASIC.md", "LIST.md"].each { fileName ->
+        def file = new File(menuDir, fileName)
+        if (!file.exists()) {
+            file.createNewFile()
+        }
+    }
 }

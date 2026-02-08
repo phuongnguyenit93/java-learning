@@ -7,8 +7,8 @@ Kafka project documentation
 
 Tài liệu
 
-* [Tổng quan](docs/vi/1.Overview.md)
-* [Setup](docs/vi/2.Setup.md)
-* [Thiết lập](docs/vi/3.Config.md)
-* [Nâng cao](docs/vi/4.Advanced.md)
-* [Hỏi đáp](docs/vi/6.Q&A.md)
+* [Tổng quan](project/readme/vi/1.Overview.md)
+* [Setup](project/readme/vi/2.Setup.md)
+* [Thiết lập](project/readme/vi/3.Config.md)
+* [Nâng cao](project/readme/vi/4.Advanced.md)
+* [Hỏi đáp](project/readme/vi/6.Q&A.md)

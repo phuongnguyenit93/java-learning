@@ -1,1 +1,64 @@
-apply from: 'task.gradle'
+task generateMdList {
+    group = 'documentation'
+    description = 'Quét thư mục docs và tạo danh sách file Markdown vào LIST.md'
+
+    // Định nghĩa đường dẫn
+    def docsDir = file("${projectDir}/docs/vi")
+    def listFile = file("${projectDir}/docs/vi/menu/LIST.md")
+
+    // Input/Output để Gradle tối ưu hóa việc chạy task
+    inputs.dir docsDir
+    outputs.file listFile
+
+    doLast {
+        if (!docsDir.exists() || !docsDir.isDirectory()) {
+            println ">>>> Warning: Thư mục 'docs' không tồn tại tại: ${docsDir.path}"
+            return
+        }
+
+        def markdownFiles = docsDir.listFiles().findAll { it.name.endsWith('.md') }
+
+        // Sắp xếp theo tên file cho đẹp
+        markdownFiles.sort { it.name }
+
+        StringBuilder content = new StringBuilder()
+        markdownFiles.each { file ->
+            def fileName = file.name.replace(".md", "")
+            // Đường dẫn tương đối từ LIST.md (cùng cấp với docs) vào trong docs/
+            def relativePath = "docs/vi/${file.name}"
+            content.append("* [${fileName}](${relativePath})\n")
+        }
+
+        listFile.text = content.toString()
+        println ">>>> Đã cập nhật xong LIST.md từ thư mục docs!"
+    }
+}
+
+task combineMarkdown {
+    dependsOn generateMdList;
+
+    group = 'documentation'
+    description = 'Gộp file BASIC.md và LIST.md thành COMBINE.md'
+
+    // Khai báo input và output để Gradle hỗ trợ Incremental Build (chỉ chạy khi có thay đổi)
+    def basePath = "${projectDir}/docs/vi/menu"
+    inputs.file file("${basePath}/BASIC.md")
+    inputs.file file("${basePath}/LIST.md")
+    outputs.file file("${projectDir}/README.md")
+
+    doLast {
+        def basicFile = file("${basePath}/BASIC.md")
+        def listFile = file("${basePath}/LIST.md")
+        def combineFile = file("${projectDir}/README.md")
+
+        if (basicFile.exists() && listFile.exists()) {
+            // Gộp nội dung với một dòng kẻ ngang phân cách ở giữa
+            combineFile.text = basicFile.text +
+                    "\n\n" +
+                    listFile.text
+            println "Successfully combined Markdown files in ${projectDir}"
+        } else {
+            println "Error: BASIC.md or LIST.md not found in ${projectDir}"
+        }
+    }
+}

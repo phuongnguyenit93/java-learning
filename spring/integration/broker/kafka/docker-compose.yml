@@ -2,11 +2,11 @@ version: '3.8'
 
 x-common-volumes: &my-volumes
   volumes:
-    - ../spring/library/swagger/application.properties:/app/spring/library/swagger/application.properties
-    - ../spring/library/web/application.properties:/app/spring/library/web/application.properties
+    - ${SPRING_SWAGGER_ABSOLUTE_PATH}/application.properties:/app/${SPRING_SWAGGER_JAR_PATH}/application.properties
+    - ${SPRING_WEB_ABSOLUTE_PATH}/application.properties:/app/${SPRING_WEB_JAR_PATH}/application.properties
 
 x-common-build: &common-build
-  context: ../
+  context: ${PROJECT_ROOT}
   dockerfile: docker/file/base/Dockerfile
 
 services:
@@ -103,8 +103,8 @@ services:
     build:
       <<: *common-build
       args:
-        - MODULE_PATH=:spring:integration:broker:kafka:project:control
-        - JAR_NAME=spring/integration/broker/kafka/project/control
+        - MODULE_PATH=${KAFKA_MODULE_PATH}:project:control
+        - JAR_PATH=${KAFKA_JAR_PATH}/project/control
 
   kafka-accountant:
     container_name: kafka-accountant
@@ -118,8 +118,8 @@ services:
     build:
       <<: *common-build
       args:
-        - MODULE_PATH=:spring:integration:broker:kafka:project:consumer:accountant
-        - JAR_NAME=spring/integration/broker/kafka/project/consumer/accountant
+        - MODULE_PATH=${KAFKA_MODULE_PATH}:project:consumer:accountant
+        - JAR_PATH=${KAFKA_JAR_PATH}/project/consumer/accountant
 
   kafka-notify:
     container_name: kafka-notify
@@ -133,8 +133,8 @@ services:
     build:
       <<: *common-build
       args:
-        - MODULE_PATH=:spring:integration:broker:kafka:project:consumer:notification
-        - JAR_NAME=spring/integration/broker/kafka/project/consumer/notification
+        - MODULE_PATH=${KAFKA_MODULE_PATH}:project:consumer:notification
+        - JAR_PATH=${KAFKA_JAR_PATH}/project/consumer/notification
 
   kafka-producer-bank:
     container_name: kafka-producer-bank
@@ -143,8 +143,8 @@ services:
     build:
       <<: *common-build
       args:
-        - MODULE_PATH=:spring:integration:broker:kafka:project:producer:bank
-        - JAR_NAME=spring/integration/broker/kafka/project/producer/bank
+        - MODULE_PATH=${KAFKA_MODULE_PATH}:project:producer:bank
+        - JAR_PATH=${KAFKA_JAR_PATH}/project/producer/bank
     environment:
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka1:29092,kafka2:29092,kafka3:29092
     <<: *my-volumes
