@@ -1,0 +1,52 @@
+ext.getFolderProps = {
+    List<HashMap> dirListProps = new ArrayList<>()
+
+    List<File> folderList = fileTree(rootDir) {
+        include '**/gradle.properties'
+        exclude 'gradle.properties'
+        exclude '**/build'
+
+    }.files.unique()
+            .collect { it.parentFile }
+
+    folderList.eachWithIndex{ File folder, Integer index ->
+
+        File propFile = new File(folder,"gradle.properties")
+        def props = new Properties()
+        propFile.withInputStream { props.load(it) }
+
+        HashMap<String,String> propMap = new HashMap(props)
+
+        String absolutePath = folder.absolutePath.replace(File.separator,"/")
+        propMap.put("ABSOLUTE_PATH",absolutePath)
+
+
+
+        String modulePath = (folder.absolutePath + File.separator)
+                .replace(rootDir.absolutePath + File.separator, '')
+                .replace(File.separator, ':').toString()
+                .with {it.substring(0,it.length()-1)}
+        propMap.put("MODULE_PATH",modulePath)
+
+        String jarPath = modulePath.replace(":","/")
+        propMap.put("JAR_PATH",jarPath)
+
+
+        dirListProps.add(propMap)
+    }
+
+    return dirListProps
+}
+
+
+ext.addModule = {List<HashMap> dirListProps ->
+    dirListProps.each { HashMap prop ->
+
+        boolean isModule = prop.containsKey("IS_MICROSERVICE") && prop.get("IS_MICROSERVICE").toString().equals('true')
+
+        if (isModule) {
+            include ":${prop.get("MODULE_PATH")}"
+        }
+    }
+}
+

@@ -5,6 +5,8 @@ plugins {
     id 'io.freefair.lombok' version '8.6'
 }
 
+apply from: "gradle/task/task.gradle"
+
 allprojects {
     group = 'com.example.learning'
     version = '1.0.0'
@@ -25,6 +27,9 @@ subprojects {
     apply plugin: 'io.spring.dependency-management'
     apply plugin: "io.freefair.lombok"
 
+    // Thay đổi đường dẫn build cho tất cả module con
+    layout.buildDirectory = rootProject.layout.buildDirectory.dir("outputs/${project.name}")
+
     println tasks
 
     dependencies {
@@ -34,8 +39,14 @@ subprojects {
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
         developmentOnly 'org.springframework.boot:spring-boot-devtools'
     }
+
+
 }
 
 task runAll {
     dependsOn ":application:bootRun" , ":application2:bootRun"
 }
+
+
+
+

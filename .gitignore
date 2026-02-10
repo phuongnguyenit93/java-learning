@@ -38,3 +38,9 @@ dependency-reduced-pom.xml
 mem*.db
 
 README.html
+.env
+.env.*
+!.env.example
+
+BASE.md
+LIST.md

@@ -28,7 +28,7 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT'
       KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
       KAFKA_INTER_BROKER_LISTENER_NAME: 'PLAINTEXT'
-      CLUSTER_ID: 'MkU3OEVBNTcwNTJENDM2Qk'
+      CLUSTER_ID: ${CLUSTER_ID}
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3 # Tăng lên 3 để an toàn dữ liệu
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'false'
 
@@ -50,7 +50,7 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT'
       KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
       KAFKA_INTER_BROKER_LISTENER_NAME: 'PLAINTEXT'
-      CLUSTER_ID: 'MkU3OEVBNTcwNTJENDM2Qk'
+      CLUSTER_ID: ${CLUSTER_ID}
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'false'
 
@@ -72,7 +72,7 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT'
       KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
       KAFKA_INTER_BROKER_LISTENER_NAME: 'PLAINTEXT'
-      CLUSTER_ID: 'MkU3OEVBNTcwNTJENDM2Qk'
+      CLUSTER_ID: ${CLUSTER_ID}
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'false'
 
@@ -95,46 +95,40 @@ services:
     container_name: kafka-control
     ports:
       - "8091:8091"
-    extends:
-      file: base-config.yml
-      service: base-config
     environment:
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka1:29092,kafka2:29092,kafka3:29092
     build:
       <<: *common-build
       args:
-        - MODULE_PATH=${KAFKA_MODULE_PATH}:project:control
-        - JAR_PATH=${KAFKA_JAR_PATH}/project/control
+        - MODULE_PATH=${KAFKA_CONTROL_MODULE_PATH}
+        - JAR_PATH=${KAFKA_CONTROL_JAR_PATH}
+    <<: *my-volumes
 
   kafka-accountant:
     container_name: kafka-accountant
     ports:
       - "8092:8092"
-    extends:
-      file: base-config.yml
-      service: base-config
     environment:
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka1:29092,kafka2:29092,kafka3:29092
     build:
       <<: *common-build
       args:
-        - MODULE_PATH=${KAFKA_MODULE_PATH}:project:consumer:accountant
-        - JAR_PATH=${KAFKA_JAR_PATH}/project/consumer/accountant
+        - MODULE_PATH=${KAFKA_CONSUMER_ACCOUNTANT_MODULE_PATH}
+        - JAR_PATH=${KAFKA_CONSUMER_ACCOUNTANT_JAR_PATH}
+    <<: *my-volumes
 
   kafka-notify:
     container_name: kafka-notify
     ports:
       - "8093:8093"
-    extends:
-      file: base-config.yml
-      service: base-config
     environment:
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka1:29092,kafka2:29092,kafka3:29092
     build:
       <<: *common-build
       args:
-        - MODULE_PATH=${KAFKA_MODULE_PATH}:project:consumer:notification
-        - JAR_PATH=${KAFKA_JAR_PATH}/project/consumer/notification
+        - MODULE_PATH=${KAFKA_CONSUMER_NOTIFICATION_MODULE_PATH}
+        - JAR_PATH=${KAFKA_CONSUMER_NOTIFICATION_JAR_PATH}
+    <<: *my-volumes
 
   kafka-producer-bank:
     container_name: kafka-producer-bank
@@ -143,8 +137,8 @@ services:
     build:
       <<: *common-build
       args:
-        - MODULE_PATH=${KAFKA_MODULE_PATH}:project:producer:bank
-        - JAR_PATH=${KAFKA_JAR_PATH}/project/producer/bank
+        - MODULE_PATH=${KAFKA_PRODUCER_BANK_MODULE_PATH}
+        - JAR_PATH=${KAFKA_PRODUCER_BANK_JAR_PATH}
     environment:
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka1:29092,kafka2:29092,kafka3:29092
     <<: *my-volumes

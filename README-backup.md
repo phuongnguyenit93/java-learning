@@ -107,3 +107,5 @@
 51. Load balancer cho ứng dụng
 52. Design Pattern cho ứng dụng
 53. Code Clean cho ứng dụng
+
+54. Trong Gradle, file settings.gradle chạy ở giai đoạn Initialization, còn các file build.gradle chạy ở giai đoạn Configuration . Theo mặc định, các biến khai báo bình thường trong settings.gradle sẽ không tự động "nhảy" vào Task được.

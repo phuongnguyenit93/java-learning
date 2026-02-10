@@ -38,16 +38,16 @@ task combineMarkdown {
     dependsOn generateMdList;
 
     group = 'documentation'
-    description = 'Gộp file BASIC.md và LIST.md thành COMBINE.md'
+    description = 'Gộp file BASE.md và LIST.md thành COMBINE.md'
 
     // Khai báo input và output để Gradle hỗ trợ Incremental Build (chỉ chạy khi có thay đổi)
     def basePath = "${projectDir}/docs/vi/menu"
-    inputs.file file("${basePath}/BASIC.md")
+    inputs.file file("${basePath}/BASE.md")
     inputs.file file("${basePath}/LIST.md")
     outputs.file file("${projectDir}/README.md")
 
     doLast {
-        def basicFile = file("${basePath}/BASIC.md")
+        def basicFile = file("${basePath}/BASE.md")
         def listFile = file("${basePath}/LIST.md")
         def combineFile = file("${projectDir}/README.md")
 
@@ -58,7 +58,7 @@ task combineMarkdown {
                     listFile.text
             println "Successfully combined Markdown files in ${projectDir}"
         } else {
-            println "Error: BASIC.md or LIST.md not found in ${projectDir}"
+            println "Error: BASE.md or LIST.md not found in ${projectDir}"
         }
     }
 }

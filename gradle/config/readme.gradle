@@ -1,0 +1,84 @@
+ext.buildReadme = {List<HashMap> readmeProps ->
+    readmeProps.each {props ->
+        File readmeFile = new File(props.get("ABSOLUTE_PATH") as File,"README.md")
+
+        if (!readmeFile.exists()) readmeFile.createNewFile()
+    }
+}
+
+
+ext.generateReadmeLanguage = {List<HashMap> readmeProps ->
+    readmeProps.each {props ->
+        List<String> langList = props.get("README_LANGUAGE")?.toString()?.split(",")
+
+        if (langList == null) return
+
+        langList.each{lang ->
+            File langDir = new File(props.get("ABSOLUTE_PATH") as File,"readme/${lang}")
+            File menuDir = new File(langDir,"menu")
+            if (!menuDir.exists()) menuDir.mkdirs()
+
+            ["BASE.md", "LIST.md"].each { fileName ->
+                def file = new File(langDir, fileName)
+                if (!file.exists()) {
+                    file.createNewFile()
+                }
+            }
+        }
+
+        File readmeDir = new File(props.get("ABSOLUTE_PATH") as File,"readme")
+
+        if (readmeDir.exists()) {
+            readmeDir.listFiles().each { file ->
+                if (file.isDirectory() && !langList.contains(file.name)) {
+                    file.deleteDir()
+                }
+            }
+        }
+
+    }
+}
+
+ext.generateMdList = {File projectDir,String language ->
+    def docsDir = new File("${projectDir}/readme/${language}")
+    if (!docsDir.exists() || !docsDir.isDirectory()) {
+        println ">>>> Warning: Thư mục 'docs' không tồn tại tại: ${docsDir.path}"
+        return
+    }
+
+    def listFile = file("${projectDir}/readme/${language}/LIST.md")
+    def menuDir = file("${docsDir}/menu")
+
+    def menuFiles = menuDir.listFiles().findAll { it.name.endsWith('.md') }
+    menuFiles.sort { it.name }
+
+    StringBuilder content = new StringBuilder()
+
+    menuFiles.each { file ->
+        def fileName = file.name.replace(".md", "")
+
+        def relativePath = file.path
+                .replace("${projectDir.path}${File.separator}","")
+                .replace(File.separator,"/")
+        content.append("* [${fileName}](${relativePath})\n")
+    }
+
+    listFile.text = content.toString()
+}
+
+ext.combineMarkdown = {File projectDir,String language ->
+    def basePath = "${projectDir}/readme/${language}"
+    def basicFile = file("${basePath}/BASE.md")
+    def listFile = file("${basePath}/LIST.md")
+    def combineFile = file("${projectDir}/README${language == "en" ? "" : ".${language}"}.md")
+
+    if (!combineFile.exists()) combineFile.createNewFile()
+
+    if (basicFile.exists() && listFile.exists()) {
+        combineFile.text = basicFile.text +
+                "\n\n" +
+                listFile.text
+    } else {
+        println "Error: BASE.md or LIST.md not found in ${projectDir}"
+    }
+}

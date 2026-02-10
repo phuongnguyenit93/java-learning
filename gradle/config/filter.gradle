@@ -1,0 +1,16 @@
+ext.filterFolderPropByKeyValue = { String key, String value, List<HashMap> dirListProps ->
+    return dirListProps.findAll { HashMap prop ->
+        if (prop[key] != value) return false
+
+        return true
+    }
+}
+
+ext.filterFolderPropByServiceName = { List<String> propsFilter, List<HashMap> dirListProps ->
+    return dirListProps.findAll { HashMap prop ->
+        if (prop.get("SERVICE_NAME") == null) return false
+        if (!propsFilter.contains(prop.get("SERVICE_NAME"))) return false
+
+        return true
+    }
+}
