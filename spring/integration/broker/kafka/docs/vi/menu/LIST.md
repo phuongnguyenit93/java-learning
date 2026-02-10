@@ -1,6 +1,0 @@
-* [1.Overview](docs/vi/1.Overview.md)
-* [2.Setup](docs/vi/2.Setup.md)
-* [3.Config](docs/vi/3.Config.md)
-* [4.Advanced](docs/vi/4.Advanced.md)
-* [5.Security](docs/vi/5.Security.md)
-* [6.Q&A](docs/vi/6.Q&A.md)
