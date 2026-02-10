@@ -60,6 +60,8 @@ ext.generateMdList = {File projectDir,String language ->
         def relativePath = file.path
                 .replace("${projectDir.path}${File.separator}","")
                 .replace(File.separator,"/")
+                .replace(" ","%20")
+
         content.append("* [${fileName}](${relativePath})\n")
     }
 
