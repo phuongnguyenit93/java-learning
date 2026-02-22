@@ -23,34 +23,43 @@ static def mergeMaps (Map base,Map override) {
     }
 }
 
-ext.buildProfilePropsStructure = {List<HashMap> appProps ->
+ext.buildProfilePropsFile = {List<HashMap> appProps ->
     appProps.each {props ->
-        File baseDir = getBaseDirProps(props)
+        // Đường dẫn đến file application.yml trong thư mục resources
+        def baseDir = getBaseDirProps(props)
+        def configFile = file("${baseDir}/application.yml")
 
-        List<String> profiles = gradle.extensions.extraProperties.get("profiles") as List<String>
 
-        profiles.each {profile ->
-            File file = new File(baseDir, "application${profile != "default" ? "-${profile}" : ""}.properties")
-            if (!file.exists()) file.createNewFile()
-        }
+        // Kiểm tra nếu file đã tồn tại thì bỏ qua
+        if (configFile.exists()) {
+            println "--> [${props.ABSOLUTE_PATH}] application.yml đã tồn tại. Bỏ qua."
+        } else {
+            configFile.createNewFile()
+            // 3. Nội dung mẫu cho các profile
+            List<String> profileList = gradle.extensions.extraProperties.get("profiles") as List<String>
+            def content = ""
 
-    }
-}
+            profileList.each {profile ->
+                if (profile == "default") {
+                    content += """
+# Cấu hình chung tại đây
 
-ext.buildModulePropsStructure = {List<HashMap> moduleProps ->
-    moduleProps.each {props ->
-        String basePath = props.get("ABSOLUTE_PATH")
+"""
+                } else {
+                    content += """---
+spring:
+  config:
+    activate:
+      on-profile: ${profile}
+# Cấu hình cho ${profile} tại đây
 
-        List<String> profiles = gradle.extensions.extraProperties.get("profiles") as List<String>
-
-        profiles.each {profile ->
-            File profileDir = new File(basePath as File,"config/${profile}/properties")
-            if (!profileDir.exists()) profileDir.mkdirs()
-
-            ["base.properties","module.properties"].each {fileName ->
-                File file = new File(profileDir, fileName)
-                if (!file.exists()) file.createNewFile()
+"""
+                }
             }
+            // Ghi nội dung vào file
+            configFile.text = content
+            println "--> [${props.ABSOLUTE_PATH}] Đã tạo file application.yml thành công!"
+
         }
     }
 }

@@ -17,10 +17,8 @@ List<HashMap> dirListProps = ext.getFolderProps()
 List<HashMap> appProps = ext.getModulePropByKeyValue("BUILD_PROPERTIES","true",dirListProps)
 
 List<HashMap> profileProps = ext.getModulePropByKeyValue("BUILD_PROFILE_PROPERTIES","true",appProps)
-//ext.buildProfilePropsStructure(profileProps)
+ext.buildProfilePropsFile(profileProps)
 
-List<HashMap> moduleProps = ext.getModulePropByKeyValue("BUILD_MODULE_PROPERTIES","true",appProps)
-//ext.buildModulePropsStructure(moduleProps)
 
 //////////////////////////////////
 [bootJar, jar].each { it.enabled = false }

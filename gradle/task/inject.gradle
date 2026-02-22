@@ -92,7 +92,7 @@ tasks.register('cleanupSpecificFiles') {
     description = 'Tìm và xóa các file dựa trên tên tham số nhập vào'
 
     doFirst {
-        def targetName = "application-loc.properties"
+        def targetName = "module.properties"
 
         if (!targetName) {
             throw new GradleException("Vui lòng nhập tên file cần xóa. Ví dụ: gradlew cleanupSpecificFiles -PfileName=test.txt")

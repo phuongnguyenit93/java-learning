@@ -8,7 +8,7 @@ apply from: "gradle/config/readme.gradle"
 List<HashMap> dirListProps = ext.getFolderProps()
 gradle.extensions.extraProperties.set("allFolderProps",dirListProps)
 
-List<String> profileList = ["dev","loc","prd","default"]
+List<String> profileList = ["default","dev","loc","prd"]
 gradle.extensions.extraProperties.set("profiles",profileList)
 
 // Include module file
