@@ -2,24 +2,40 @@ rootProject.name = 'java-learning'
 
 apply from: "gradle/config/modules.gradle"
 apply from: "gradle/config/env.gradle"
-apply from: "gradle/config/filter.gradle"
 apply from: "gradle/config/readme.gradle"
 
 // Get all props by gradle.properties location
 List<HashMap> dirListProps = ext.getFolderProps()
 gradle.extensions.extraProperties.set("allFolderProps",dirListProps)
 
+List<String> profileList = ["dev","loc","prd","default"]
+gradle.extensions.extraProperties.set("profiles",profileList)
+
 // Include module file
-ext.addModule(dirListProps)
+ext.addModuleAndServiceName(dirListProps)
 
-// Docker Env Automation
-List<HashMap> dockerProps = ext.filterFolderPropByKeyValue("BUILD_ENV_AUTO","true",dirListProps)
-ext.buildEnvStructure(dockerProps)
-ext.buildDockerEnv(dockerProps,dirListProps)
-ext.combineEnvAuto(dockerProps)
+///////////////////////////////////
+// README.md automation
+//////////////////////////////////
+List<HashMap> readmeProps = ext.getModulePropByKeyValue("BUILD_README","true",dirListProps)
+ext.buildReadmeEmptyFile(readmeProps)
+ext.buildReadmeLanguageStructure(readmeProps)
+///////////////////////////////////
 
-// Build Readme Structure
-List<HashMap> readmeProps = ext.filterFolderPropByKeyValue("BUILD_README","true",dirListProps)
-ext.buildReadme(readmeProps)
-ext.generateReadmeLanguage(readmeProps)
+
+///////////////////////////////////
+// .env automation
+//////////////////////////////////
+List<HashMap> appEnv = ext.getModulePropByKeyValue("BUILD_ENV","true",dirListProps)
+
+List<HashMap> profileEnv = ext.getModulePropByKeyValue("BUILD_PROFILE_ENV","true",appEnv)
+ext.buildProfileEnvStructure(profileEnv)
+
+List<HashMap> moduleEnvPath = ext.getModulePropByKeyValue("BUILD_ENV_PATH","true",appEnv)
+ext.buildModuleEnvPathStructure(moduleEnvPath,dirListProps)
+
+List<HashMap> moduleEnvProject = ext.getModulePropByKeyValue("BUILD_MODULE_ENV_PROJECT","true",appEnv)
+ext.buildModuleEnvProjectStructure(moduleEnvProject)
+///////////////////////////////////
+
 

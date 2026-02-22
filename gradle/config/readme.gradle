@@ -1,4 +1,4 @@
-ext.buildReadme = {List<HashMap> readmeProps ->
+ext.buildReadmeEmptyFile = {List<HashMap> readmeProps ->
     readmeProps.each {props ->
         File readmeFile = new File(props.get("ABSOLUTE_PATH") as File,"README.md")
 
@@ -6,8 +6,7 @@ ext.buildReadme = {List<HashMap> readmeProps ->
     }
 }
 
-
-ext.generateReadmeLanguage = {List<HashMap> readmeProps ->
+ext.buildReadmeLanguageStructure = {List<HashMap> readmeProps ->
     readmeProps.each {props ->
         List<String> langList = props.get("README_LANGUAGE")?.toString()?.split(",")
 
@@ -39,7 +38,24 @@ ext.generateReadmeLanguage = {List<HashMap> readmeProps ->
     }
 }
 
-ext.generateMdList = {File projectDir,String language ->
+ext.buildReadmeByServiceName = {List<HashMap> folderPropsList,String serviceName ->
+
+    HashMap props = folderPropsList
+            .find{props -> props.SERVICE_NAME == serviceName && props.BUILD_README == 'true'}
+
+    if (props == null) return
+
+    def modulePath = project.project(":${props.get("MODULE_PATH")}")
+    def languageList = props.get("README_LANGUAGE")?.toString()?.split(",")
+
+    languageList.each {lang ->
+        project.ext.generateReadMeMenuList(modulePath.projectDir,lang)
+        project.ext.combineFinalReadme(modulePath.projectDir,lang)
+    }
+}
+
+
+ext.generateReadMeMenuList = {File projectDir,String language ->
     def docsDir = new File("${projectDir}/readme/${language}")
     if (!docsDir.exists() || !docsDir.isDirectory()) {
         println ">>>> Warning: Thư mục 'docs' không tồn tại tại: ${docsDir.path}"
@@ -68,7 +84,7 @@ ext.generateMdList = {File projectDir,String language ->
     listFile.text = content.toString()
 }
 
-ext.combineMarkdown = {File projectDir,String language ->
+ext.combineFinalReadme = {File projectDir,String language ->
     def basePath = "${projectDir}/readme/${language}"
     def basicFile = file("${basePath}/BASE.md")
     def listFile = file("${basePath}/LIST.md")

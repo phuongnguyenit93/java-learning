@@ -1,0 +1,19 @@
+// START_MY_MODULE_APPLY
+apply from: "${rootDir}/gradle/config/readme.gradle"
+// END_MY_MODULE_APPLY
+
+// START_MY_TASK
+tasks.register("buildFinalReadmeByServiceName", DefaultTask) {
+    String serviceNameProp = project.findProperty("SERVICE_NAME")?.toString()
+    if (serviceNameProp?.toString()?.blank) {
+        throw new GradleException("Error : Missing 'SERVICE_NAME'. Please add by -PSERVICE_NAME=... or in gradle.properties")
+    }
+
+    List<HashMap> folderPropsList = gradle.extensions.getExtraProperties().get("allFolderProps") as List<HashMap>
+
+    project.ext.buildReadmeByServiceName (folderPropsList,serviceNameProp)
+}
+// END_MY_TASK
+
+
+

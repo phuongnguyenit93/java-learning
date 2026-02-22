@@ -1,0 +1,167 @@
+import org.yaml.snakeyaml.Yaml
+import org.yaml.snakeyaml.DumperOptions
+
+apply from: "${rootDir}/gradle/config/modules.gradle"
+
+static def getBaseDirProps (HashMap props) {
+    return ["src/main/resources", ""]
+            .collect { new File(props.get("ABSOLUTE_PATH") as File, it) }
+            .find { it.exists() }
+}
+
+static def mergeMaps (Map base,Map override) {
+    override.each { key, value ->
+        if (base.containsKey(key)) {
+            if (value instanceof Map && base[key] instanceof Map) {
+                mergeMaps(base[key], value)
+            } else if (base[key] != value) {
+                base[key] = value // Khác value thì đè lại giá trị
+            }
+        } else {
+            base[key] = value // Key mới thì thêm vào
+        }
+    }
+}
+
+ext.buildProfilePropsStructure = {List<HashMap> appProps ->
+    appProps.each {props ->
+        File baseDir = getBaseDirProps(props)
+
+        List<String> profiles = gradle.extensions.extraProperties.get("profiles") as List<String>
+
+        profiles.each {profile ->
+            File file = new File(baseDir, "application${profile != "default" ? "-${profile}" : ""}.properties")
+            if (!file.exists()) file.createNewFile()
+        }
+
+    }
+}
+
+ext.buildModulePropsStructure = {List<HashMap> moduleProps ->
+    moduleProps.each {props ->
+        String basePath = props.get("ABSOLUTE_PATH")
+
+        List<String> profiles = gradle.extensions.extraProperties.get("profiles") as List<String>
+
+        profiles.each {profile ->
+            File profileDir = new File(basePath as File,"config/${profile}/properties")
+            if (!profileDir.exists()) profileDir.mkdirs()
+
+            ["base.properties","module.properties"].each {fileName ->
+                File file = new File(profileDir, fileName)
+                if (!file.exists()) file.createNewFile()
+            }
+        }
+    }
+}
+
+ext.generateModuleProps = {List<HashMap> appProps,List<HashMap> dirListProps ->
+    appProps.each {props ->
+        List<String> moduleList = props.get("PROPERTIES_MODULE_LIST")?.toString()?.split(",")
+
+        File moduleBaseDir = ["src/main/resources", ""]
+                .collect { new File(props.get("ABSOLUTE_PATH") as File, it) }
+                .find { it.exists() }
+
+        if (moduleList == null) return
+        List<HashMap> propsFilter = ext.getModulePropByServiceNameList (moduleList,dirListProps)
+
+        StringBuilder content = new StringBuilder("# Auto properties module \n\n")
+
+        propsFilter.each{filter ->
+            def baseDir = filter.get("ABSOLUTE_PATH") as File
+            File properties = ["src/main/resources/application.properties", "application.properties"]
+                    .collect { new File(baseDir, it) }
+                    .find { it.exists() }
+
+            if (!properties) return
+
+            content.append("#--- SERVICE NAME : ${filter.get("SERVICE_NAME")} --- \n")
+            content.append(properties.text)
+            content.append("\n\n")
+        }
+
+        File appPropsFile = new File(moduleBaseDir,"module.properties")
+        appPropsFile.text = content
+    }
+}
+
+ext.combineBuildYaml = {List<HashMap> folderPropsList,String serviceName ->
+    HashMap props = ext.getModulePropByServiceName (serviceName,folderPropsList)
+    List<String> microserviceList = props.get("PROPERTIES_MODULE_LIST")?.toString()?.split(',') as List<String> ?: []
+
+    if (props.isEmpty() || microserviceList.isEmpty()) return
+
+    List<HashMap> microserviceProp = ext.getModulePropByServiceNameList(microserviceList,folderPropsList)
+    List<File> sourceFiles = microserviceProp.collect {prop ->
+        def baseDir = getBaseDirProps(prop)
+        return new File(baseDir,"application.yml")
+    }
+
+    File baseResourceDir = getBaseDirProps(props)
+    File targetFile = new File (baseResourceDir,"application.yml")
+    File outputFileBuild = layout.buildDirectory.file("resources/main/application.yml").get().asFile
+    File outputFileCheck = new File (baseResourceDir,"application-merged.yml")
+
+    if (!targetFile.exists() || !outputFileBuild.exists()) return
+    if (!outputFileCheck.exists()) outputFileCheck.createNewFile()
+
+    Yaml yaml = new Yaml()
+    def finalDocsMap = [:]
+
+    // Hàm helper lấy profile an toàn
+    def getProfileName = { doc ->
+        if (doc == null) return "default"
+        try {
+            return doc.get("spring")?.get("config")?.get("activate")?.get("on-profile") ?: "default"
+        } catch (Exception e) { return "default" }
+    }
+
+    // --- BẮT ĐẦU QUÁ TRÌNH GỘP ---
+
+    // Bước A: Load file gốc (Target) làm nền tảng
+    if (targetFile.exists()) {
+        yaml.loadAll(targetFile.text).each { doc ->
+            if (doc != null) finalDocsMap[getProfileName(doc)] = doc
+        }
+    }
+
+    // Bước B: Lặp qua từng file nguồn để gộp vào
+    sourceFiles.each { sFile ->
+        if (sFile.exists()) {
+            println "Đang gộp file: ${sFile.path}"
+            yaml.loadAll(sFile.text).each { doc ->
+                if (doc != null) {
+                    def pName = getProfileName(doc)
+                    if (finalDocsMap.containsKey(pName)) {
+                        mergeMaps(finalDocsMap[pName], doc)
+                    } else {
+                        finalDocsMap[pName] = doc
+                    }
+                }
+            }
+        } else {
+            println "Cảnh báo: Không tìm thấy file ${sFile.path}"
+        }
+    }
+
+    // 3. Xuất kết quả
+    DumperOptions options = new DumperOptions()
+    options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK)
+    options.setExplicitStart(true) // Tự động thêm dấu --- ở đầu file
+
+    Yaml writer = new Yaml(options)
+
+    [outputFileBuild,outputFileCheck].each {output ->
+        output.withWriter('UTF-8') { out ->
+            finalDocsMap.values().eachWithIndex { doc, index ->
+                writer.dump(doc, out)
+            }
+        }
+    }
+    println "------------------------------------------"
+    println "Hoàn thành! Đã gộp ${sourceFiles.size()} file vào ${outputFileCheck.path} và ${outputFileBuild.path}"
+}
+
+
+

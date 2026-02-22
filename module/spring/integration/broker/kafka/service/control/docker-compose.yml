@@ -1,0 +1,23 @@
+
+x-common-volumes: &my-volumes
+  volumes:
+    - ${SPRING_SWAGGER_ABSOLUTE_PATH}/application.properties:/app/${SPRING_SWAGGER_JAR_PATH}/application.properties
+    - ${SPRING_WEB_ABSOLUTE_PATH}/application.properties:/app/${SPRING_WEB_JAR_PATH}/application.properties
+
+x-common-build: &common-build
+  context: ${PROJECT_ROOT}
+  dockerfile: docker/file/base/Dockerfile
+
+services:
+  kafka-control:
+    container_name: kafka-control
+    ports:
+      - "8091:8091"
+    environment:
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka1:29092,kafka2:29092,kafka3:29092
+    build:
+      <<: *common-build
+      args:
+        - MODULE_PATH=${KAFKA_CONTROL_MODULE_PATH}
+        - JAR_PATH=${KAFKA_CONTROL_JAR_PATH}
+    <<: *my-volumes

@@ -1,0 +1,39 @@
+plugins {
+	id 'org.springframework.boot' version '3.3.0' apply false
+	id 'io.spring.dependency-management' version '1.1.5'
+	id 'java'
+}
+
+def validData = ["MYSQL", "ORACLE", "NOSQL","POSTGRESQL"]
+
+def props = new Properties()
+file("src/main/resources/application.properties").withInputStream {
+	props.load(it)
+}
+
+def databaseType = props.getProperty("database.type")
+
+if (!validData.contains(databaseType)) {
+	println "Database '${databaseType}' not valid. Use default: 'MYSQL'."
+	databaseType = 'MYSQL'
+} else {
+	println "Use database: '${databaseType}'."
+}
+
+dependencyManagement {
+	imports {
+		mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
+	}
+}
+
+
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.hibernate.orm:hibernate-core'
+	implementation 'org.hibernate.orm:hibernate-community-dialects'
+	implementation implementProjectByServiceName("DATABASE_${databaseType}")
+	implementation implementProjectByServiceName("SPRING_DEVTOOL")
+	implementation implementProjectByServiceName("MODEL_MAPPER")
+	implementation implementProjectByServiceName("OBJECT_MAPPER")
+}

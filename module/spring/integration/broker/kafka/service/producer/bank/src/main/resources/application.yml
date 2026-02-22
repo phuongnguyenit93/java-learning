@@ -1,0 +1,60 @@
+project:
+  contextPath: kafka
+  port: 8089
+  appName: bank-service
+
+spring:
+  config:
+    import: file:default.properties
+  kafka:
+    bootstrap-servers: localhost:9092
+    listener:
+      missing-topics-fatal: false
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      acks: all
+      retries: 10
+      properties:
+        enable.dempotence: true
+        delivery.timeout.ms: 120000
+    properties:
+      # Th?i gian ch? tr??c khi th? l?i khi g?p l?i metadata (m?c ??nh 100ms)
+      retry.backoff.ms: 10000
+      # Th?i gian t?i ?a ?? làm m?i metadata (m?c ??nh 5 phút)
+      metadata.max.age.ms: 300000
+
+#logging.level.org.pache.kafka.clients.NetworkClient=ERROR
+
+---
+# Cấu hình cho profile DEV
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+test:
+  a:
+    b: dev1
+
+---
+# Cấu hình cho profile loc
+spring:
+  config:
+    activate:
+      on-profile: loc
+
+test:
+  a:
+    b: loc2
+
+---
+# Cấu hình cho profile PRD
+spring:
+  config:
+    activate:
+      on-profile: prd
+
+test:
+  a:
+    b: prd33

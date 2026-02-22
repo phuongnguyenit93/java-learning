@@ -31,7 +31,7 @@ WORKDIR /app
 ARG JAR_PATH
 
 # Copy file jar từ kết quả của giai đoạn build
-COPY --from=build /app/${JAR_PATH}/build/libs/*.jar app.jar
+COPY --from=build /app/build/outputs/${JAR_PATH}/libs/*.jar app.jar
 
 # Lưu ý: file default.properties phải nằm trong context (root) hoặc được mount qua volume
 COPY default.properties /app/default.properties

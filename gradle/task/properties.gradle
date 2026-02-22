@@ -1,0 +1,26 @@
+// START_MY_MODULE_APPLY
+apply from: "${rootDir}/gradle/config/properties.gradle"
+// END_MY_MODULE_APPLY
+
+// START_MY_TASK
+tasks.register("combineBuildYaml", DefaultTask) {
+    doLast {
+        String serviceNameProp = project.findProperty("SERVICE_NAME")?.toString()
+        if (serviceNameProp?.toString()?.blank) {
+            throw new GradleException("Error : Missing 'SERVICE_NAME'. Please add by -PSERVICE_NAME=... or in gradle.properties")
+        }
+
+        List<HashMap> folderPropsList = gradle.extensions.getExtraProperties().get("allFolderProps") as List<HashMap>
+
+        project.ext.combineBuildYaml (folderPropsList,serviceNameProp)
+    }
+}
+
+tasks.named('processResources') {
+    finalizedBy "combineBuildYaml"
+}
+
+tasks.named('bootJar') {
+    dependsOn "combineBuildYaml"
+}
+// END_MY_TASK

@@ -1,0 +1,3 @@
+dependencies {
+    implementation implementProjectByServiceName("LIBRARY_SAMPLE")
+}
