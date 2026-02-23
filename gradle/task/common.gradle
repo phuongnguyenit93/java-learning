@@ -1,9 +1,8 @@
-apply from: "${rootDir}/gradle/config/modules.gradle"
+apply from: "${rootDir}/gradle/config/module.gradle"
 
 tasks.register('injectTaskToModule') {
     group = 'verification'
     description = 'Thêm file task.gradle chứa các task dành để chạy cho các module'
-
     project.ext.injectTask()
 }
 
@@ -11,7 +10,7 @@ tasks.register('cleanupSpecificFiles') {
     group = 'verification'
     description = 'Tìm và xóa các file dựa trên tên tham số nhập vào'
 
-    doFirst {
+    doLast {
         def targetName = "module.properties"
 
         if (!targetName) {

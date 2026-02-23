@@ -1,0 +1,202 @@
+ext.getFolderProps = {
+    List<HashMap> dirListProps = new ArrayList<>()
+
+    List<File> folderList = fileTree(rootDir) {
+        include '**/gradle.properties'
+        exclude 'gradle.properties'
+        exclude '**/build'
+
+    }.files.unique()
+            .collect { it.parentFile }
+
+    folderList.eachWithIndex{ File folder, Integer index ->
+
+        File propFile = new File(folder,"gradle.properties")
+        def props = new Properties()
+        propFile.withInputStream { props.load(it) }
+
+        HashMap<String,String> propMap = new HashMap(props)
+
+        String absolutePath = folder.absolutePath.replace(File.separator,"/")
+        propMap.put("ABSOLUTE_PATH",absolutePath)
+
+        String modulePath = (folder.absolutePath + File.separator)
+                .replace(rootDir.absolutePath + File.separator, '')
+                .replace(File.separator, ':').toString()
+                .with {it.substring(0,it.length()-1)}
+        propMap.put("MODULE_PATH",modulePath)
+
+        String jarPath = modulePath.replace(":","/")
+        propMap.put("JAR_PATH",jarPath)
+
+
+        dirListProps.add(propMap)
+    }
+
+    return dirListProps
+}
+
+
+ext.addModule = {List<HashMap> dirListProps ->
+    dirListProps.each { HashMap prop ->
+        def modulePath = prop.get("MODULE_PATH")
+
+        if (prop.IS_MICROSERVICE == 'true') {
+            include ":${modulePath}"
+        }
+    }
+}
+
+ext.injectTask = {
+    def GREEN = "\u001B[32m"
+    def YELLOW = "\u001B[33m"
+    def RESET = "\u001B[0m"
+    def CYAN = "\u001B[36m"
+    def BLUE = "\u001B[34m"
+
+    println "${BLUE}=================================================="
+    println "🔍 TẠO RA CÁC FILE TASK.GRADLE Ở MODULE VÀ COPY CÁC TASK DÀNH RIÊNG CHO CÁC MODULE VÀ BỎ VÀO ĐÓ"
+    println "${BLUE}==================================================${RESET}"
+
+    println "${BLUE}🚀 [INJECT-ENGINE] Bắt đầu quá trình quét và phân phối Task...${RESET}"
+
+    HashMap<String, List<String>> taskContent = new HashMap()
+    HashMap<String, List<String>> moduleContent = new HashMap()
+
+    def taskListProp = [
+            [type: "module", fileName: "module.gradle", propCheck: ""],
+            [type: "env", fileName: "env.gradle", propCheck: "BUILD_ENV"],
+            [type: "readme", fileName: "readme.gradle", propCheck: "BUILD_README"],
+            [type: "properties", fileName: "properties.gradle", propCheck: "BUILD_PROPERTIES"]
+    ]
+
+    def extractBlocks = { tagName, fileText ->
+        def pattern = /(?s)\/\/ START_${tagName}\s*\n(.*?)\n\s*\/\/ END_${tagName}/
+        def matcher = (fileText =~ pattern)
+        return matcher.collect { it[1].trim() }
+    }
+
+    // Giai đoạn 1: Trích xuất từ Template
+    println "${CYAN}📂 Bước 1: Trích xuất dữ liệu từ các file Template...${RESET}"
+    taskListProp.each { task ->
+        String fileName = task.get("fileName")
+        def templateFile = file("${rootDir}/gradle/task/${fileName}")
+
+        if (templateFile.exists()) {
+            def fileText = templateFile.text
+            def tasks = extractBlocks("MY_TASK", fileText)
+            def modules = extractBlocks("MY_MODULE_APPLY", fileText)
+
+            taskContent.put(task.get("type"), tasks)
+            moduleContent.put(task.get("type"), modules)
+            println "   + [${task.type}]: Tìm thấy ${GREEN}${tasks.size()}${RESET} tasks và ${GREEN}${modules.size()}${RESET} module blocks."
+        } else {
+            println "   + [${task.type}]: ${YELLOW}Cảnh báo: Không tìm thấy file ${fileName}${RESET}"
+        }
+    }
+
+    // Giai đoạn 2: Phân phối xuống subprojects
+    println "${CYAN}🏗️  Bước 2: Tiến hành Inject file task.gradle vào các subprojects...${RESET}"
+    subprojects { project ->
+        def propFile = file("${project.projectDir}/gradle.properties")
+        if (!propFile.exists()) return
+
+        def props = new Properties()
+        propFile.withInputStream { props.load(it) }
+        def serviceName = props.getProperty("SERVICE_NAME")
+        def isInjectTask = props.getProperty("INJECT_TASK_AUTO")
+
+        if (serviceName != null && !serviceName.isEmpty() && isInjectTask == "true") {
+            String moduleContentFinal = ""
+            String taskContentFinal = ""
+            def injectedTypes = []
+
+            taskListProp.each { task ->
+                def propCheckKey = task.get("propCheck")
+                def isPropActive = (propCheckKey == "" || props.getProperty(propCheckKey) == "true")
+
+                if (isPropActive) {
+                    def tasksToInject = taskContent[task.get("type")] ?: []
+                    def moduleToInject = moduleContent[task.get("type")] ?: []
+
+                    if (!tasksToInject.isEmpty() || !moduleToInject.isEmpty()) {
+                        injectedTypes << task.get("type")
+
+                        moduleToInject.each { String code -> moduleContentFinal += code + "\n" }
+
+                        tasksToInject.each { String originalCode ->
+                            def namePattern = /(?:tasks\.register\s*\(?\s*['"]|task\s+)(\w+)/
+                            def nameMatcher = (originalCode =~ namePattern)
+
+                            if (nameMatcher.find()) {
+                                def originalTaskName = nameMatcher.group(1)
+                                def newTaskName = "${originalTaskName}_${serviceName}"
+                                def customizedCode = originalCode.replaceAll(/(?<!ext\.)\b${originalTaskName}\b/, newTaskName)
+                                taskContentFinal += "// Injected from ${task.type}: ${originalTaskName}\n" + customizedCode + "\n\n"
+                            }
+                        }
+                    }
+                }
+            }
+
+            def targetFile = file("${project.projectDir}/task.gradle")
+            if (!moduleContentFinal.isEmpty() || !taskContentFinal.isEmpty()) {
+                if (!targetFile.exists()) targetFile.createNewFile()
+                targetFile.text = "// AUTO GENERATED FILE - DO NOT EDIT\n\n" + moduleContentFinal + "\n" + taskContentFinal
+                println "   ✅ Module [${GREEN}${serviceName}${RESET}]: Đã inject thành công (${injectedTypes.join(', ')})"
+            }
+        } else if (serviceName != null) {
+             // Log những module bị bỏ qua nhưng có SERVICE_NAME để dễ kiểm soát
+//             println "   ⏩ Module [${serviceName}]: Bỏ qua (INJECT_TASK_AUTO=false)"
+        }
+    }
+    println "${BLUE}==================================================${RESET}"
+}
+
+ext.getModulePropByKeyValue = { String key, String value, List<HashMap> dirListProps ->
+    return dirListProps.findAll { HashMap prop ->
+        if (value == null) {
+            if (prop.containsKey(key)) return true
+        } else {
+            if (prop[key] != value) return false
+        }
+
+        return true
+    }
+}
+
+ext.getModulePropByServiceNameList = { List<String> propsFilter, List<HashMap> dirListProps ->
+    return dirListProps.findAll { HashMap prop ->
+        if (prop.get("SERVICE_NAME") == null) return false
+        if (!propsFilter.contains(prop.get("SERVICE_NAME"))) return false
+
+        return true
+    }
+}
+
+ext.getModulePropByServiceName = { String propFilter, List<HashMap> dirListProps ->
+    return dirListProps.find { HashMap prop -> prop.SERVICE_NAME == propFilter}
+}
+
+ext.findSubProjectByServiceName = {String serviceName ->
+    // 1. Tìm trong tất cả các project đã được include
+    def target = rootProject.subprojects.find { p ->
+        // Cách này an toàn hơn: Kiểm tra trực tiếp property mà không bắt project phải evaluate xong
+        p.hasProperty('SERVICE_NAME') && p.SERVICE_NAME == serviceName
+    }
+
+    if (target == null) {
+        // In ra danh sách các SERVICE_NAME hiện có để bạn dễ debug
+        def availableServices = rootProject.subprojects
+                .findAll { it.hasProperty('SERVICE_NAME') }
+                .collect { it.SERVICE_NAME }
+
+        throw new GradleException(
+                "❌ Không tìm thấy module: '${serviceName}'. \n" +
+                "🔍 Các service hiện có: ${availableServices} \n" +
+                "👉 Hãy kiểm tra file gradle.properties của module đích."
+        )
+    }
+    return target
+}
+

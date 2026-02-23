@@ -1,6 +1,6 @@
 rootProject.name = 'java-learning'
 
-apply from: "gradle/config/modules.gradle"
+apply from: "gradle/config/module.gradle"
 apply from: "gradle/config/env.gradle"
 apply from: "gradle/config/readme.gradle"
 
@@ -8,7 +8,7 @@ apply from: "gradle/config/readme.gradle"
 List<HashMap> dirListProps = ext.getFolderProps()
 gradle.extensions.extraProperties.set("allFolderProps",dirListProps)
 
-List<String> profileList = ["default","dev","loc","prd"]
+List<String> profileList = ["dev","loc","prd"]
 gradle.extensions.extraProperties.set("profiles",profileList)
 
 ///////////////////////////////////

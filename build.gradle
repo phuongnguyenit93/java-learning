@@ -6,15 +6,10 @@ plugins {
 }
 
 apply from: "gradle/task/common.gradle"
-apply from: "gradle/config/modules.gradle"
+apply from: "gradle/config/module.gradle"
 apply from: "gradle/config/properties.gradle"
 
 List<HashMap> dirListProps = ext.getFolderProps()
-
-///////////////////////////////////
-// Create task.gradle at every module that have INJECT_TASK_AUTO properties
-//////////////////////////////////
-ext.injectTask()
 
 ///////////////////////////////////
 // application.yml automation
@@ -48,7 +43,7 @@ subprojects {
         apply plugin: 'io.spring.dependency-management'
         apply plugin: "io.freefair.lombok"
 
-        println tasks
+//        println tasks
 
         // Thay đổi đường dẫn build cho tất cả module con
         def projectPathAsFolder = project.path.replace(':', '/')

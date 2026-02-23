@@ -261,3 +261,62 @@ Nhiều người lầm tưởng `apply from` giống như lệnh `include` trong
 
 * **Sử dụng `buildSrc`**: Đưa logic xử lý vào các class Groovy/Java chính thống.
 * **Plugin hóa**: Viết một Plugin riêng để quản lý các thư viện dùng chung cho toàn bộ script build.
+
+Tôi đã đóng gói phần giải thích về Vòng đời của Gradle và sự khác biệt giữa Configuration và Execution vào file README.md. Đây là chìa khóa để giải quyết vấn đề code bị thực thi sớm hơn dự kiến.
+
+Markdown
+# 🛠️ Hiểu về Gradle Task: Register vs Execute
+
+Một trong những điểm gây nhầm lẫn nhất là tại sao một số đoạn code lại "chạy luôn" ngay khi vừa mở dự án. Vấn đề nằm ở sự khác biệt giữa việc **Đăng ký (Register)** và **Thực thi (Execute)**.
+
+---
+
+## 1. Cơ chế của `apply from`
+
+Khi bạn gọi `apply from: targetFile`, Gradle thực thi file script đó ngay lập tức tại thời điểm dòng lệnh đó được quét qua. Nó tương tự như việc nhúng trực tiếp nội dung file con vào file cha.
+
+---
+
+## 2. Ba Giai Đoạn Vòng Đời (The 3 Phases)
+
+Để hiểu tại sao code chạy sớm, chúng ta cần phân biệt:
+
+
+
+1.  **Initialization (Khởi tạo)**: Xác định các dự án/module tham gia build.
+2.  **Configuration (Cấu hình)**: Thực thi các file `build.gradle`. Các lệnh như `println`, cấu hình thuộc tính, xây dựng đồ thị Task (Task Graph) đều chạy ở đây.
+3.  **Execution (Thực thi)**: Chỉ chạy các logic nằm trong `doLast` hoặc `doFirst` của những task được gọi cụ thể (ví dụ: `./gradlew build`).
+
+---
+
+## 3. Tại sao `tasks.register` gây hiểu lầm?
+
+Hãy nhìn vào ví dụ sau để thấy sự khác biệt:
+
+    ```groovy
+    // file: task.gradle
+    tasks.register("myTask") {
+        // KHỐI CẤU HÌNH (Configuration block)
+        println "Dòng này sẽ in ra ở giai đoạn Configuration!" 
+        
+        doLast {
+            // KHỐI THỰC THI (Execution block)
+            println "Dòng này chỉ in ra khi bạn gọi: ./gradlew myTask" 
+        }
+    }
+    ```
+
+* **Lỗi thường gặp**: Nếu bạn đặt logic như `delete "folder"` hoặc `copy` trực tiếp trong khối cấu hình mà không bao quanh bởi `doLast`, nó sẽ thực hiện ngay khi Gradle vừa load dự án.
+
+---
+
+## 4. Cách khắc phục: Chỉ chạy khi được gọi
+
+Luôn đảm bảo các logic hành động (Action) nằm bên trong `doFirst { ... }` hoặc `doLast { ... }`.
+
+| Cách làm | Ví dụ | Kết quả |
+| :--- | :--- | :--- |
+| ❌ **Sai** | `tasks.register("clean") { delete "dir" }` | Xóa folder ngay khi đang load project. |
+| ✅ **Đúng** | `tasks.register("clean") { doLast { delete "dir" } }` | Chỉ xóa khi người dùng gõ lệnh thực thi task. |
+
+---

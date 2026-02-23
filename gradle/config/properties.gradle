@@ -1,7 +1,7 @@
 import org.yaml.snakeyaml.Yaml
 import org.yaml.snakeyaml.DumperOptions
 
-apply from: "${rootDir}/gradle/config/modules.gradle"
+apply from: "${rootDir}/gradle/config/module.gradle"
 
 static def getBaseDirProps (HashMap props) {
     return ["src/main/resources", ""]
@@ -23,51 +23,107 @@ static def mergeMaps (Map base,Map override) {
     }
 }
 
-ext.buildProfilePropsFile = {List<HashMap> appProps ->
-    appProps.each {props ->
-        // Đường dẫn đến file application.yml trong thư mục resources
+ext.buildProfilePropsFile = { List<HashMap> appProps ->
+    def GREEN = "\u001B[32m"
+    def YELLOW = "\u001B[33m"
+    def CYAN = "\u001B[36m"
+    def RESET = "\u001B[0m"
+    def RED = "\u001B[31m"
+    def BLUE = "\u001B[34m"
+    def BOLD = "\u001B[1m"
 
+    println "${BLUE}${BOLD}=================================================="
+    println "🔍 KHỞI TẠO APPLICATION.YML TẠI CÁC MODULE CHƯA CÓ"
+    println "${BLUE}==================================================${RESET}"
+
+    println "${CYAN}🚀 [CONFIG-INIT]${RESET} Đang kiểm tra cấu hình application.yml cho ${appProps.size()} module..."
+
+    appProps.each { props ->
+        def moduleName = props.get("SERVICE_NAME") ?: props.get("ABSOLUTE_PATH")
         def baseFile = file("${rootDir}/file-based.yml")
         def baseDir = getBaseDirProps(props)
         def configFile = file("${baseDir}/application.yml")
 
+        // 1. Kiểm tra file mẫu (base-file) trước
+        if (!baseFile.exists()) {
+            println "${RED}❌ [ERROR]${RESET} Không tìm thấy file mẫu tại: ${baseFile.path}"
+            return // Thoát sớm nếu không có file gốc để copy
+        }
 
-        // Kiểm tra nếu file đã tồn tại thì bỏ qua
+        // 2. Xử lý logic tạo file
         if (configFile.exists()) {
-            println "--> [${props.ABSOLUTE_PATH}] application.yml đã tồn tại. Bỏ qua."
+            // Dùng dấu mũi tên mờ hơn cho các file đã tồn tại để tránh loãng log
+            println "  ${YELLOW}⏩ [SKIP]${RESET} Module [${moduleName}]: application.yml đã tồn tại."
         } else {
-            configFile.createNewFile()
-            configFile.text = baseFile.text
-            println "--> [${props.ABSOLUTE_PATH}] Đã tạo file application.yml thành công!"
+            try {
+                // Đảm bảo thư mục cha tồn tại trước khi tạo file
+                if (!configFile.parentFile.exists()) {
+                    configFile.parentFile.mkdirs()
+                }
 
+                configFile.createNewFile()
+                configFile.text = baseFile.text
+
+                println "  ${GREEN}✨ [CREATED]${RESET} Module [${moduleName}]: Đã khởi tạo file từ file-based.yml"
+                println "             └─ Path: ${configFile.path}"
+            } catch (Exception e) {
+                println "${RED}❌ [FAILED]${RESET} Không thể tạo file cho ${moduleName}: ${e.message}"
+            }
         }
     }
+    println "${CYAN}--------------------------------------------------${RESET}"
 }
 
-ext.combineBuildYaml = {List<HashMap> folderPropsList,String serviceName ->
-    HashMap props = ext.getModulePropByServiceName (serviceName,folderPropsList)
+ext.combineBuildYaml = { List<HashMap> folderPropsList, String serviceName ->
+    def GREEN = "\u001B[32m"
+    def YELLOW = "\u001B[33m"
+    def CYAN = "\u001B[36m"
+    def RESET = "\u001B[0m"
+    def BLUE = "\u001B[34m"
+    def RED = "\u001B[31m"
+
+    println "${BLUE}=================================================="
+    println "🔍 GỘP CÁC APPLICATION.YML TẠI CÁC MODULE LỆ THUỘC VÀO MODULE GỐC"
+    println "${BLUE}==================================================${RESET}"
+
+    println "${BLUE}🧩 [YAML-MERGE]${RESET} Bắt đầu gộp file cấu hình cho Service: ${CYAN}${serviceName}${RESET}"
+
+    HashMap props = ext.getModulePropByServiceName(serviceName, folderPropsList)
     List<String> microserviceList = props.get("PROPERTIES_MODULE_LIST")?.toString()?.split(',') as List<String> ?: []
 
-    if (props.isEmpty() || microserviceList.isEmpty()) return
+    if (props.isEmpty()) {
+        println "${RED}❌ [ERROR]${RESET} Không tìm thấy cấu hình cho service: ${serviceName}"
+        return
+    }
 
-    List<HashMap> microserviceProp = ext.getModulePropByServiceNameList(microserviceList,folderPropsList)
-    List<File> sourceFiles = microserviceProp.collect {prop ->
+    if (microserviceList.isEmpty()) {
+        println "${YELLOW}⏩ [SKIP]${RESET} Service ${serviceName} không có module lệ thuộc (PROPERTIES_MODULE_LIST trống)."
+        return
+    }
+
+    List<HashMap> microserviceProp = ext.getModulePropByServiceNameList(microserviceList, folderPropsList)
+    List<File> sourceFiles = microserviceProp.collect { prop ->
         def baseDir = getBaseDirProps(prop)
-        return new File(baseDir,"application.yml")
+        return new File(baseDir, "application.yml")
     }
 
     File baseResourceDir = getBaseDirProps(props)
-    File targetFile = new File (baseResourceDir,"application.yml")
-    File outputFileBuild = layout.buildDirectory.file("resources/main/application.yml").get().asFile
-    File outputFileCheck = new File (baseResourceDir,"application-merged.yml")
+    File targetFile = new File(baseResourceDir, "application.yml")
 
-    if (!targetFile.exists() || !outputFileBuild.exists()) return
-    if (!outputFileCheck.exists()) outputFileCheck.createNewFile()
+    // Kiểm tra targetFile gốc
+    if (!targetFile.exists()) {
+        println "${RED}❌ [ERROR]${RESET} Không tìm thấy file gốc tại: ${targetFile.path}"
+        return
+    }
+
+    // Xác định đường dẫn build (Safe-check cho Gradle layout)
+    def buildDirFile = layout.buildDirectory.file("resources/main/application.yml").get().asFile
+    File outputFileCheck = new File(baseResourceDir, "application-merged.yml")
 
     Yaml yaml = new Yaml()
     def finalDocsMap = [:]
 
-    // Hàm helper lấy profile an toàn
+    // Helper lấy profile
     def getProfileName = { doc ->
         if (doc == null) return "default"
         try {
@@ -77,62 +133,56 @@ ext.combineBuildYaml = {List<HashMap> folderPropsList,String serviceName ->
 
     // --- BẮT ĐẦU QUÁ TRÌNH GỘP ---
 
-    // Bước A: Load file gốc (Target) làm nền tảng
-    if (targetFile.exists()) {
-        yaml.loadAll(targetFile.text).each { doc ->
-            if (doc != null) finalDocsMap[getProfileName(doc)] = doc
-        }
+    // Bước A: Load file gốc làm gốc tọa độ
+    println "   📥 Loading Base: ${CYAN}${targetFile.path}${RESET}"
+    yaml.loadAll(targetFile.text).each { doc ->
+        if (doc != null) finalDocsMap[getProfileName(doc)] = doc
     }
 
-    // Bước B: Lặp qua từng file nguồn để gộp vào
+    // Bước B: Lặp qua từng file nguồn
     sourceFiles.each { sFile ->
         if (sFile.exists()) {
-            println "Đang gộp file: ${sFile.path}"
+            println "   ➕ Merging: ${YELLOW}${sFile.path}${RESET} -> application.yml"
             yaml.loadAll(sFile.text).each { doc ->
                 if (doc != null) {
                     def pName = getProfileName(doc)
                     if (finalDocsMap.containsKey(pName)) {
-                        mergeMaps(finalDocsMap[pName], doc)
+                        mergeMaps(finalDocsMap[pName], doc) // Giả định bạn đã có hàm mergeMaps
                     } else {
                         finalDocsMap[pName] = doc
                     }
                 }
             }
         } else {
-            println "Cảnh báo: Không tìm thấy file ${sFile.path}"
+            println "   ${RED}⚠️  Missing:${RESET} ${sFile.path} (Bỏ qua)"
         }
     }
 
-    // 3. Xuất kết quả
+    // --- XUẤT KẾT QUẢ ---
     DumperOptions options = new DumperOptions()
     options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK)
-    options.setExplicitStart(true) // Tự động thêm dấu --- ở đầu file
-
+    options.setExplicitStart(true)
     Yaml writer = new Yaml(options)
 
-    [outputFileBuild,outputFileCheck].each {output ->
+    [buildDirFile, outputFileCheck].each { output ->
+        // Đảm bảo thư mục tồn tại
+        if (!output.parentFile.exists()) output.parentFile.mkdirs()
+
         output.withWriter('UTF-8') { out ->
             if (output == outputFileCheck) {
-                out.write("# =============================================================\n")
-                out.write("# ĐÂY LÀ FILE RE-CHECK, ĐÃ CÓ SẴN TRONG BUILD, KHÔNG CẦN PHẢI COPY-PASTE LẠI\n")
-                out.write("# ĐỂ BUILD LẠI FILE NÀY, CHẠY BOOTJAR HOẶC PROCESSRESORUCES TẠI MODULE GỐC LÀ ĐƯỢC\n")
-                out.write("# DANH SÁCH CÁC MODULE ĐƯỢC APPLY TRONG FILE NÀY\n\n")
-                out.write("# MODULE GỐC\n")
-                out.write("# ${props.SERVICE_NAME} : ${props.ABSOLUTE_PATH}\n\n")
-                out.write("# MODULE LỆ THUỘC\n")
-                microserviceProp.each {micro ->
-                    out.write("# ${micro.SERVICE_NAME} : ${micro.ABSOLUTE_PATH}\n")
-                }
-                out.write("# =============================================================\n\n")
+                out.write("# AUTO-GENERATED MERGED YAML\n")
+                out.write("# Source: ${props.SERVICE_NAME}\n")
+                out.write("# Dependencies: ${microserviceList.join(', ')}\n\n")
             }
-
-            finalDocsMap.values().each{ doc->
+            finalDocsMap.values().each { doc ->
                 writer.dump(doc, out)
             }
         }
     }
-    println "------------------------------------------"
-    println "Hoàn thành! Đã gộp ${sourceFiles.size()} file vào ${outputFileCheck.path} và ${outputFileBuild.path}"
+
+    println "${GREEN}✅ [SUCCESS]${RESET} Hợp nhất thành công ${CYAN}${finalDocsMap.size()}${RESET} profiles: ${finalDocsMap.keySet().join(", ")}"
+    println "   📍 Check file: ${BLUE}${outputFileCheck.path}${RESET}"
+    println "--------------------------------------------------"
 }
 
 
