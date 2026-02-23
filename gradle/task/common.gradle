@@ -1,8 +1,5 @@
 apply from: "${rootDir}/gradle/config/modules.gradle"
 
-import org.yaml.snakeyaml.Yaml
-import org.yaml.snakeyaml.DumperOptions
-
 tasks.register('injectTaskToModule') {
     group = 'verification'
     description = 'Thêm file task.gradle chứa các task dành để chạy cho các module'

@@ -70,6 +70,8 @@ ext.generateReadMeMenuList = {File projectDir,String language ->
 
     StringBuilder content = new StringBuilder()
 
+    content.append("# MENU LIST \n\n")
+
     menuFiles.each { file ->
         def fileName = file.name.replace(".md", "")
 
