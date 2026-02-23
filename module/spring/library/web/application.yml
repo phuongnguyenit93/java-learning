@@ -1,3 +1,7 @@
+#implementation 'org.springframework.boot:spring-boot-starter-web'
+# Document
+# https://docs.spring.io/spring-boot/appendix/application-properties/index.html
+---
 server:
   port: ${project.port:0}
   servlet:
@@ -14,9 +18,6 @@ spring:
     activate:
       on-profile: dev
 
-test:
-  a:
-    c: dev5
 
 ---
 # Cấu hình cho profile loc
@@ -25,10 +26,6 @@ spring:
     activate:
       on-profile: loc
 
-test:
-  a:
-    c: loc7
-
 ---
 # Cấu hình cho profile PRD
 spring:
@@ -36,6 +33,4 @@ spring:
     activate:
       on-profile: prd
 
-test:
-  a:
-    c: prd9333
+

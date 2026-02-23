@@ -1,0 +1,52 @@
+# Nếu là file mẫu (file-based.yml) vui lòng không thêm cấu hình vào
+# Nếu là các file application.yml tại module con , hãy thêm cấu hình phù hợp vào
+---
+# Cấu hình chung tại đây
+project:
+  contextPath: kafka
+  port: 0
+  appName: accountant-service
+
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    listener:
+      missing-topics-fatal: false
+      ack-mode: record
+      concurrency: 2
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: accountant-group
+      max-poll-records: 5
+      auto-offset-reset: earliest
+      enable-auto-commit: true
+    properties:
+      # Thoi gian cho truoc khi thu lai khi gap lai metadata (mac dinh 100ms)
+      retry.backoff.ms: 10000
+      # Thoi gian toi da de làm moi metadata (mac dinh 5 phut)
+      metadata.max.age.ms: 300000
+---
+# Cấu hình cho profile DEV
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+
+
+---
+# Cấu hình cho profile LOC
+spring:
+  config:
+    activate:
+      on-profile: loc
+
+
+
+---
+# Cấu hình cho profile PRD
+spring:
+  config:
+    activate:
+      on-profile: prd

@@ -1,90 +1,10 @@
-import java.util.regex.Matcher
+apply from: "${rootDir}/gradle/config/modules.gradle"
 
-task injectTaskToModule {
-    doLast {
+import org.yaml.snakeyaml.Yaml
+import org.yaml.snakeyaml.DumperOptions
 
-        HashMap <String,List<Matcher>> taskContent = new HashMap()
-        HashMap <String,List<Matcher>> moduleContent = new HashMap()
-
-        def taskListProp = [
-                [type: "module", fileName : "module.gradle", propCheck : ""],
-                [type: "env", fileName : "env.gradle", propCheck : "BUILD_ENV"],
-                [type: "readme", fileName : "readme.gradle", propCheck : "BUILD_README"],
-                [type: "properties", fileName : "properties.gradle", propCheck : "BUILD_PROPERTIES"]
-        ]
-
-        def extractBlocks = { tagName , file ->
-            def pattern = /(?s)\/\/ START_${tagName}\s*\n(.*?)\n\s*\/\/ END_${tagName}/
-            def matcher = (file =~ pattern)
-            return matcher.collect { it[1].trim() }
-        }
-
-        taskListProp.each {task ->
-            String fileName = task.get("fileName")
-            def fileTask = file("${rootDir}/gradle/task/${fileName}").text
-
-            taskContent.put(task.get("type"),extractBlocks("MY_TASK",fileTask))
-            moduleContent.put(task.get("type"),extractBlocks("MY_MODULE_APPLY",fileTask))
-        }
-
-        subprojects { project ->
-            def propFile = file("${project.projectDir}/gradle.properties")
-            if (!propFile.exists()) return
-
-            def props = new Properties()
-            propFile.withInputStream { props.load(it) }
-            def serviceName = props.getProperty("SERVICE_NAME")
-            def isInjectTask = props.getProperty("INJECT_TASK_AUTO")
-
-            if (serviceName != null && !serviceName.isEmpty() && isInjectTask == "true") {
-                String moduleContentFinal = ""
-                String taskContentFinal = ""
-
-                taskListProp.each {task ->
-                    def propCheck = props.getProperty(task.get("propCheck"))
-
-                    if (task.propCheck != "" && propCheck != "true") {
-                        println "⚠️ Module [${serviceName}]: Bỏ qua build task ${task.get("type")} vì ${task.get("propCheck")} không có"
-                        return
-                    } else {
-                        def tasksToInject = taskContent[task.get("type")]
-                        def moduleToInject = moduleContent[task.get("type")]
-
-                        moduleToInject.each {String matcher ->
-                            moduleContentFinal += matcher
-                            moduleContentFinal += "\n"
-                        }
-
-                        tasksToInject.each { String originalCode ->
-                            def namePattern = /(?:tasks\.register\s*\(?\s*['"]|task\s+)(\w+)/
-                            def nameMatcher = (originalCode =~ namePattern)
-
-                            if (nameMatcher.find()) {
-                                def originalTaskName = nameMatcher.group(1)
-                                def newTaskName = "${originalTaskName}_${serviceName}"
-
-                                def customizedCode = originalCode.replaceAll(/(?<!ext\.)\b${originalTaskName}\b/, newTaskName)
-                                taskContentFinal += "// Injected: ${originalTaskName}\n\n" + customizedCode + "\n\n"
-                            }
-                        }
-                    }
-                }
-
-                def targetFile = file("${project.projectDir}/task.gradle")
-                if (!targetFile.exists()) targetFile.createNewFile()
-
-                if (!moduleContentFinal.isEmpty() && !taskContentFinal.isEmpty()) {
-                    targetFile.text = moduleContentFinal + "\n" + taskContentFinal
-                    println "✅ Module [${serviceName}]: Đã chèn các task mới."
-                } else {
-                    println "❌ Không tìm thấy nội dung nào để inject!"
-                    return
-                }
-            } else {
-                println "⚠️ Module [${serviceName ?: project.path}]: Bỏ qua vì không thấy SERVICE_NAME hoặc không được phép inject task"
-            }
-        }
-    }
+tasks.register('injectTaskToModule') {
+    project.ext.injectTask()
 }
 
 tasks.register('cleanupSpecificFiles') {
@@ -115,8 +35,6 @@ tasks.register('cleanupSpecificFiles') {
     }
 }
 
-import org.yaml.snakeyaml.Yaml
-import org.yaml.snakeyaml.DumperOptions
 
 task mergeYamlConfigs {
     group = "custom"

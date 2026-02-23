@@ -11,8 +11,11 @@ gradle.extensions.extraProperties.set("allFolderProps",dirListProps)
 List<String> profileList = ["default","dev","loc","prd"]
 gradle.extensions.extraProperties.set("profiles",profileList)
 
+///////////////////////////////////
+// README.md automation
+//////////////////////////////////
 // Include module file
-ext.addModuleAndServiceName(dirListProps)
+ext.addModule(dirListProps)
 
 ///////////////////////////////////
 // README.md automation

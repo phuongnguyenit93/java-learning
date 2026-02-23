@@ -1,0 +1,27 @@
+---
+# Cấu hình chung tại đây
+
+---
+# Cấu hình cho profile DEV
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+
+
+---
+# Cấu hình cho profile LOC
+spring:
+  config:
+    activate:
+      on-profile: loc
+
+
+
+---
+# Cấu hình cho profile PRD
+spring:
+  config:
+    activate:
+      on-profile: prd

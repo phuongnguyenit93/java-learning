@@ -26,6 +26,8 @@ static def mergeMaps (Map base,Map override) {
 ext.buildProfilePropsFile = {List<HashMap> appProps ->
     appProps.each {props ->
         // Đường dẫn đến file application.yml trong thư mục resources
+
+        def baseFile = file("${rootDir}/file-based.yml")
         def baseDir = getBaseDirProps(props)
         def configFile = file("${baseDir}/application.yml")
 
@@ -35,63 +37,10 @@ ext.buildProfilePropsFile = {List<HashMap> appProps ->
             println "--> [${props.ABSOLUTE_PATH}] application.yml đã tồn tại. Bỏ qua."
         } else {
             configFile.createNewFile()
-            // 3. Nội dung mẫu cho các profile
-            List<String> profileList = gradle.extensions.extraProperties.get("profiles") as List<String>
-            def content = ""
-
-            profileList.each {profile ->
-                if (profile == "default") {
-                    content += """
-# Cấu hình chung tại đây
-
-"""
-                } else {
-                    content += """---
-spring:
-  config:
-    activate:
-      on-profile: ${profile}
-# Cấu hình cho ${profile} tại đây
-
-"""
-                }
-            }
-            // Ghi nội dung vào file
-            configFile.text = content
+            configFile.text = baseFile.text
             println "--> [${props.ABSOLUTE_PATH}] Đã tạo file application.yml thành công!"
 
         }
-    }
-}
-
-ext.generateModuleProps = {List<HashMap> appProps,List<HashMap> dirListProps ->
-    appProps.each {props ->
-        List<String> moduleList = props.get("PROPERTIES_MODULE_LIST")?.toString()?.split(",")
-
-        File moduleBaseDir = ["src/main/resources", ""]
-                .collect { new File(props.get("ABSOLUTE_PATH") as File, it) }
-                .find { it.exists() }
-
-        if (moduleList == null) return
-        List<HashMap> propsFilter = ext.getModulePropByServiceNameList (moduleList,dirListProps)
-
-        StringBuilder content = new StringBuilder("# Auto properties module \n\n")
-
-        propsFilter.each{filter ->
-            def baseDir = filter.get("ABSOLUTE_PATH") as File
-            File properties = ["src/main/resources/application.properties", "application.properties"]
-                    .collect { new File(baseDir, it) }
-                    .find { it.exists() }
-
-            if (!properties) return
-
-            content.append("#--- SERVICE NAME : ${filter.get("SERVICE_NAME")} --- \n")
-            content.append(properties.text)
-            content.append("\n\n")
-        }
-
-        File appPropsFile = new File(moduleBaseDir,"module.properties")
-        appPropsFile.text = content
     }
 }
 
@@ -163,7 +112,21 @@ ext.combineBuildYaml = {List<HashMap> folderPropsList,String serviceName ->
 
     [outputFileBuild,outputFileCheck].each {output ->
         output.withWriter('UTF-8') { out ->
-            finalDocsMap.values().eachWithIndex { doc, index ->
+            if (output == outputFileCheck) {
+                out.write("# =============================================================\n")
+                out.write("# ĐÂY LÀ FILE RE-CHECK, ĐÃ CÓ SẴN TRONG BUILD, KHÔNG CẦN PHẢI COPY-PASTE LẠI\n")
+                out.write("# ĐỂ BUILD LẠI FILE NÀY, CHẠY BOOTJAR HOẶC PROCESSRESORUCES TẠI MODULE GỐC LÀ ĐƯỢC\n")
+                out.write("# DANH SÁCH CÁC MODULE ĐƯỢC APPLY TRONG FILE NÀY\n\n")
+                out.write("# MODULE GỐC\n")
+                out.write("# ${props.SERVICE_NAME} : ${props.ABSOLUTE_PATH}\n\n")
+                out.write("# MODULE LỆ THUỘC\n")
+                microserviceProp.each {micro ->
+                    out.write("# ${micro.SERVICE_NAME} : ${micro.ABSOLUTE_PATH}\n")
+                }
+                out.write("# =============================================================\n\n")
+            }
+
+            finalDocsMap.values().each{ doc->
                 writer.dump(doc, out)
             }
         }

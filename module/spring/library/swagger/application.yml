@@ -1,0 +1,43 @@
+# Document
+# https://springdoc.org/#Introduction
+# https://swagger.io/
+# Url check : /swagger-ui/index.html
+---
+# Cấu hình chung tại đây
+springdoc:
+  swagger-ui:
+#    enabled: false
+    path: /
+#    url: /swagger/api-json.yaml
+#    supportedSubmitMethod:
+    docExpansion:
+      - none
+#    tagsSorter: alpha
+#  api-docs:
+#    enabled: false
+#    path: /api-json
+
+---
+# Cấu hình cho profile DEV
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+
+
+---
+# Cấu hình cho profile LOC
+spring:
+  config:
+    activate:
+      on-profile: loc
+
+
+
+---
+# Cấu hình cho profile PRD
+spring:
+  config:
+    activate:
+      on-profile: prd

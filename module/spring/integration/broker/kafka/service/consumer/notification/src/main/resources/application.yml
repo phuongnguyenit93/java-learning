@@ -1,30 +1,29 @@
 ---
+# Cấu hình chung tại đây
 project:
   contextPath: kafka
-  port: 8089
-  appName: bank-service
+  port: 8090
+  appName: notification-service
 
 spring:
   kafka:
     bootstrap-servers: localhost:9092
     listener:
       missing-topics-fatal: false
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
-      acks: all
-      retries: 10
-      properties:
-        enable.dempotence: true
-        delivery.timeout.ms: 120000
+      ack-mode: record
+      concurrency: 2
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: notify-group
+      max-poll-records: 5
+      auto-offset-reset: earliest
+      enable-auto-commit: true
     properties:
       # Thoi gian cho truoc khi thu lai khi gap lai metadata (mac dinh 100ms)
       retry.backoff.ms: 10000
       # Thoi gian toi da de làm moi metadata (mac dinh 5 phut)
       metadata.max.age.ms: 300000
-
-#logging.level.org.pache.kafka.clients.NetworkClient=ERROR
-
 ---
 # Cấu hình cho profile DEV
 spring:
@@ -32,12 +31,16 @@ spring:
     activate:
       on-profile: dev
 
+
+
 ---
-# Cấu hình cho profile loc
+# Cấu hình cho profile LOC
 spring:
   config:
     activate:
       on-profile: loc
+
+
 
 ---
 # Cấu hình cho profile PRD
@@ -45,4 +48,3 @@ spring:
   config:
     activate:
       on-profile: prd
-

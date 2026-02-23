@@ -12,6 +12,11 @@ apply from: "gradle/config/properties.gradle"
 List<HashMap> dirListProps = ext.getFolderProps()
 
 ///////////////////////////////////
+// Create task.gradle at every module that have INJECT_TASK_AUTO properties
+//////////////////////////////////
+ext.injectTask()
+
+///////////////////////////////////
 // application.yml automation
 //////////////////////////////////
 List<HashMap> appProps = ext.getModulePropByKeyValue("BUILD_PROPERTIES","true",dirListProps)
@@ -70,6 +75,21 @@ subprojects {
         [bootJar, jar].each { it.enabled = false }
     }
 
+    plugins.withType(JavaPlugin) {
+        processResources{
+            // 1. Chỉ định rõ ràng duy nhất file này được phép copy
+            include 'application.yml'
+
+            // 2. (Tùy chọn) Nếu bạn muốn chắc chắn loại bỏ tất cả các file có đuôi .yml khác và .properties
+            // Dòng này thực ra không cần thiết nếu đã dùng 'include' ở trên,
+            // nhưng thêm vào sẽ giúp logic chặt chẽ hơn.
+            exclude '**/application-*.yml'
+            exclude '**/*.properties'
+
+            // 3. Đặt chiến lược xử lý nếu trùng lặp (thường dùng trong Gradle mới)
+            duplicatesStrategy = DuplicatesStrategy.INCLUDE
+        }
+    }
 }
 
 task runAll {
