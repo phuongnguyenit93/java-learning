@@ -89,7 +89,7 @@ ext.combineBuildYaml = { List<HashMap> folderPropsList, String serviceName ->
     println "${BLUE}🧩 [YAML-MERGE]${RESET} Bắt đầu gộp file cấu hình cho Service: ${CYAN}${serviceName}${RESET}"
 
     HashMap props = ext.getModulePropByServiceName(serviceName, folderPropsList)
-    List<String> microserviceList = props.get("PROPERTIES_MODULE_LIST")?.toString()?.split(',') as List<String> ?: []
+    List<String> microserviceList = props.get("SERVICE_DEPEND")?.toString()?.split(',') as List<String> ?: []
 
     if (props.isEmpty()) {
         println "${RED}❌ [ERROR]${RESET} Không tìm thấy cấu hình cho service: ${serviceName}"
@@ -97,7 +97,7 @@ ext.combineBuildYaml = { List<HashMap> folderPropsList, String serviceName ->
     }
 
     if (microserviceList.isEmpty()) {
-        println "${YELLOW}⏩ [SKIP]${RESET} Service ${serviceName} không có module lệ thuộc (PROPERTIES_MODULE_LIST trống)."
+        println "${YELLOW}⏩ [SKIP]${RESET} Service ${serviceName} không có module lệ thuộc (SERVICE_DEPEND trống)."
         return
     }
 

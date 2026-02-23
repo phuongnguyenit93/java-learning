@@ -1,8 +1,12 @@
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
+
 plugins {
     id 'org.springframework.boot' version '3.3.0'
     id 'io.spring.dependency-management' version '1.1.5'
     id 'java'
     id 'io.freefair.lombok' version '8.6'
+    id 'com.avast.gradle.docker-compose' version '0.17.6'
 }
 
 apply from: "gradle/task/common.gradle"
@@ -10,6 +14,11 @@ apply from: "gradle/config/module.gradle"
 apply from: "gradle/config/properties.gradle"
 
 List<HashMap> dirListProps = ext.getFolderProps()
+
+///////////////////////////////////
+// task.gradle inject module
+//////////////////////////////////
+ext.injectTask()
 
 ///////////////////////////////////
 // application.yml automation
@@ -36,12 +45,20 @@ allprojects {
     project.ext.implementProjectByServiceName = rootProject.ext.findSubProjectByServiceName
 }
 
+def currentProjectKeys = [] as Set
+gradle.extensions.extraProperties.set("allModuleKeys",currentProjectKeys)
+
 subprojects {
     if (file("${projectDir}/gradle.properties").exists()) {
         apply plugin: 'java'
         apply plugin: 'org.springframework.boot'
         apply plugin: 'io.spring.dependency-management'
         apply plugin: "io.freefair.lombok"
+
+        def propFile = file("${projectDir}/gradle.properties")
+        Properties props = new Properties()
+        propFile.withInputStream { props.load(it) }
+        currentProjectKeys.addAll(props.keySet().collect { it.toString() })
 
 //        println tasks
 
@@ -53,21 +70,7 @@ subprojects {
         if (targetFile.exists()) {
             apply from: targetFile
         }
-    }
 
-    if (file("${projectDir}/src").exists()) {
-        dependencies {
-            implementation 'org.springframework.boot:spring-boot-starter-web'
-            implementation 'org.springframework.boot:spring-boot-starter-actuator'
-            implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
-            testImplementation 'org.springframework.boot:spring-boot-starter-test'
-            developmentOnly 'org.springframework.boot:spring-boot-devtools'
-        }
-    } else {
-        [bootJar, jar].each { it.enabled = false }
-    }
-
-    plugins.withType(JavaPlugin) {
         processResources{
             // 1. Chỉ định rõ ràng duy nhất file này được phép copy
             include 'application.yml'
@@ -82,7 +85,26 @@ subprojects {
             duplicatesStrategy = DuplicatesStrategy.INCLUDE
         }
     }
+
+    if (file("${projectDir}/docker-compose.yml").exists()) {
+        apply plugin: 'com.avast.gradle.docker-compose'
+    }
+
+    if (file("${projectDir}/src").exists()) {
+        dependencies {
+            implementation 'org.springframework.boot:spring-boot-starter-web'
+            implementation 'org.springframework.boot:spring-boot-starter-actuator'
+            implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+            testImplementation 'org.springframework.boot:spring-boot-starter-test'
+            developmentOnly 'org.springframework.boot:spring-boot-devtools'
+        }
+    } else {
+        [bootJar, jar].each { it.enabled = false }
+    }
 }
+
+// Get all key in gradle.properties at all module and save it in json file
+ext.getAllModuleProperties(currentProjectKeys)
 
 task runAll {
     dependsOn ":application:bootRun" , ":application2:bootRun"

@@ -1,3 +1,6 @@
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
+
 ext.getFolderProps = {
     List<HashMap> dirListProps = new ArrayList<>()
 
@@ -163,6 +166,68 @@ ext.getModulePropByKeyValue = { String key, String value, List<HashMap> dirListP
 
         return true
     }
+}
+
+ext.getAllModuleProperties = { Set currentProjectKeys ->
+    def GREEN = "\u001B[32m"
+    def YELLOW = "\u001B[33m"
+    def RESET = "\u001B[0m"
+    def CYAN = "\u001B[36m"
+    def PURPLE = "\u001B[35m"
+
+    println "${PURPLE}=================================================="
+    println "${PURPLE}📊 [PROPERTY-TRACKER] Lấy danh sách Config ở gradle.properties của các module con ${RESET}"
+    println "${PURPLE}==================================================${RESET}"
+
+    def jsonFile = file("${rootDir}/module-properties.json")
+    def masterData = [:]
+
+    if (jsonFile.exists()) {
+        try {
+            masterData = new JsonSlurper().parseText(jsonFile.getText("UTF-8"))
+        } catch (Exception e) {
+            println "   ⚠️ Lỗi đọc file JSON, khởi tạo mới hoàn toàn."
+            masterData = [:]
+        }
+    }
+
+    def finalData = [:]
+    int unusedCount = 0
+    int newCount = 0
+
+    // 1. Phân loại key cũ
+    masterData.each { key, comment ->
+        def cleanKey = key.replace(" [UNUSED]", "")
+        if (!currentProjectKeys.contains(cleanKey)) {
+            finalData[cleanKey + " [UNUSED]"] = comment
+            unusedCount++
+        } else {
+            finalData[cleanKey] = comment
+        }
+    }
+
+    // 2. Thêm key mới xuất hiện
+    currentProjectKeys.each { key ->
+        if (!finalData.containsKey(key)) {
+            finalData[key] = "Chưa có chú thích"
+            newCount++
+            println "   ${GREEN}+ New Key:${RESET} ${key}"
+        }
+    }
+
+    // 3. Ghi file và Fix Unicode
+    def sortedData = finalData.sort { it.key }
+    def rawJson = JsonOutput.prettyPrint(JsonOutput.toJson(sortedData))
+    def fixUnicode = rawJson.replaceAll(/\\u([0-9a-fA-F]{4})/) { match, code ->
+        return (char) Integer.parseInt(code, 16)
+    }
+
+    jsonFile.setText(fixUnicode, "UTF-8")
+
+    // --- LOG KẾT THÚC ---
+    println "   ✅ Cập nhật xong: ${CYAN}${jsonFile.name}${RESET}"
+    println "   📈 Thống kê: ${GREEN}${newCount} Mới${RESET} | ${YELLOW}${unusedCount} Không dùng${RESET} | ${CYAN}${currentProjectKeys.size()} Đang sử dụng${RESET}"
+    println "${PURPLE}--------------------------------------------------${RESET}\n"
 }
 
 ext.getModulePropByServiceNameList = { List<String> propsFilter, List<HashMap> dirListProps ->

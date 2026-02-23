@@ -1,7 +1,7 @@
 ---
 project:
   contextPath: kafka
-  port: 8089
+  port: ${PORT}
   appName: bank-service
 
 spring:

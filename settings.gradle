@@ -25,7 +25,6 @@ ext.buildReadmeEmptyFile(readmeProps)
 ext.buildReadmeLanguageStructure(readmeProps)
 ///////////////////////////////////
 
-
 ///////////////////////////////////
 // .env automation
 //////////////////////////////////
@@ -33,12 +32,4 @@ List<HashMap> appEnv = ext.getModulePropByKeyValue("BUILD_ENV","true",dirListPro
 
 List<HashMap> profileEnv = ext.getModulePropByKeyValue("BUILD_PROFILE_ENV","true",appEnv)
 ext.buildProfileEnvStructure(profileEnv)
-
-List<HashMap> moduleEnvPath = ext.getModulePropByKeyValue("BUILD_ENV_PATH","true",appEnv)
-ext.buildModuleEnvPathStructure(moduleEnvPath,dirListProps)
-
-List<HashMap> moduleEnvProject = ext.getModulePropByKeyValue("BUILD_MODULE_ENV_PROJECT","true",appEnv)
-ext.buildModuleEnvProjectStructure(moduleEnvProject)
 ///////////////////////////////////
-
-

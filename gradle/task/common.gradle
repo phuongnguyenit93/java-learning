@@ -1,10 +1,19 @@
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
+
 apply from: "${rootDir}/gradle/config/module.gradle"
 
-tasks.register('injectTaskToModule') {
+tasks.register("getAllModuleProperties")  {
     group = 'verification'
-    description = 'Thêm file task.gradle chứa các task dành để chạy cho các module'
-    project.ext.injectTask()
+    description = "Lấy tất cả properties tại gradle.properties module con và cho vào 1 file Json"
+
+    Set allPropsKey = gradle.extensions.extraProperties.get("allModuleKeys") as Set
+
+    doLast {
+        project.ext.getAllModuleProperties(allPropsKey)
+    }
 }
+
 
 tasks.register('cleanupSpecificFiles') {
     group = 'verification'
