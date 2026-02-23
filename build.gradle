@@ -13,7 +13,7 @@ apply from: "gradle/task/common.gradle"
 apply from: "gradle/config/module.gradle"
 apply from: "gradle/config/properties.gradle"
 
-List<HashMap> dirListProps = ext.getFolderProps()
+List<HashMap> dirListProps = gradle.extensions.extraProperties.get("allFolderProps") as List<HashMap>
 
 ///////////////////////////////////
 // task.gradle inject module
