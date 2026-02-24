@@ -2,11 +2,6 @@
 # Nếu là các file application.yml tại module con , hãy thêm cấu hình phù hợp vào
 ---
 # Cấu hình chung tại đây
-project:
-  contextPath: kafka
-  port: 0
-  appName: accountant-service
-
 spring:
   kafka:
     bootstrap-servers: localhost:9092

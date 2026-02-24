@@ -45,9 +45,9 @@ ext.buildReadmeByServiceName = { List<HashMap> folderPropsList, String serviceNa
     def YELLOW = "\u001B[33m"
     def CYAN = "\u001B[36m"
 
-    println "${BLUE}${BOLD}=================================================="
-    println "🔍 BUILD README.MD FILE FOR SERVICE: ${YELLOW}${serviceName}${RESET}"
-    println "${BLUE}==================================================${RESET}"
+    logger.lifecycle("${BLUE}${BOLD}==================================================")
+    logger.lifecycle("🔍 BUILD README.MD FILE FOR SERVICE: ${YELLOW}${serviceName}${RESET}")
+    logger.lifecycle("${BLUE}==================================================${RESET}")
 
     // Tìm cấu hình trong list
     HashMap props = folderPropsList.find { p ->
@@ -55,7 +55,7 @@ ext.buildReadmeByServiceName = { List<HashMap> folderPropsList, String serviceNa
     }
 
     if (props == null) {
-        println "⚠️  [SKIP] Service '${serviceName}' không được cấu hình BUILD_README hoặc không tồn tại."
+        logger.lifecycle("⚠️  [SKIP] Service '${serviceName}' không được cấu hình BUILD_README hoặc không tồn tại.")
         return
     }
 
@@ -63,9 +63,8 @@ ext.buildReadmeByServiceName = { List<HashMap> folderPropsList, String serviceNa
     def moduleProject = project.project(":${moduleName}")
     def languages = props.get("README_LANGUAGE")?.toString()?.split(",") ?: []
 
-    println "📍 Found Module: ${CYAN}${moduleName}${RESET}"
-    println "🌐 Languages to process: ${CYAN}${languages.join(', ')}${RESET}"
-    println ""
+    logger.lifecycle("📍 Found Module: ${CYAN}${moduleName}${RESET}")
+    logger.lifecycle("🌐 Languages to process: ${CYAN}${languages.join(', ')}${RESET}")
 
     languages.each { lang ->
         // Gọi các hàm con (các hàm này đã có log chi tiết bên trong)
@@ -73,7 +72,7 @@ ext.buildReadmeByServiceName = { List<HashMap> folderPropsList, String serviceNa
         project.ext.combineFinalReadme(moduleProject.projectDir, lang.trim())
     }
 
-    println "${BLUE}${BOLD}✨ Finished README process for ${serviceName}${RESET}\n"
+    logger.lifecycle("${BLUE}${BOLD}✨ Finished README process for ${serviceName}${RESET}\n")
 }
 
 
@@ -83,10 +82,10 @@ ext.generateReadMeMenuList = {File projectDir,String language ->
     def RESET = "\u001B[0m"
     def BLUE = "\u001B[34m"
 
-    println "${BLUE}🚀 [START]${RESET} Generating Menu List for language: ${YELLOW}${language}${RESET} in ${projectDir.name}"
+    logger.lifecycle("${BLUE}🚀 [START]${RESET} Generating Menu List for language: ${YELLOW}${language}${RESET} in ${projectDir.name}")
     def docsDir = new File("${projectDir}/readme/${language}")
     if (!docsDir.exists() || !docsDir.isDirectory()) {
-        println ">>>> ${YELLOW}Warning:${RESET} Thư mục 'docs' không tồn tại tại: ${docsDir.path}"
+        logger.lifecycle(">>>> ${YELLOW}Warning:${RESET} Thư mục 'docs' không tồn tại tại: ${docsDir.path}")
         return
     }
 
@@ -95,16 +94,16 @@ ext.generateReadMeMenuList = {File projectDir,String language ->
 
     // Kiểm tra xem folder menu có tồn tại không trước khi listFiles
     if (!menuDir.exists()) {
-        println ">>>> ${YELLOW}Skip:${RESET} Thư mục 'menu' không tìm thấy tại: ${menuDir.path}"
+        logger.lifecycle(">>>> ${YELLOW}Skip:${RESET} Thư mục 'menu' không tìm thấy tại: ${menuDir.path}")
         return
     }
 
     def menuFiles = menuDir.listFiles().findAll { it.name.endsWith('.md') }
 
     if (menuFiles.isEmpty()) {
-        println ">>>> ${YELLOW}Notice:${RESET} Không tìm thấy file .md nào trong thư mục menu."
+        logger.lifecycle(">>>> ${YELLOW}Notice:${RESET} Không tìm thấy file .md nào trong thư mục menu.")
     } else {
-        println "📝 Đã tìm thấy ${YELLOW}${menuFiles.size()}${RESET} file Menu."
+        logger.lifecycle("📝 Đã tìm thấy ${YELLOW}${menuFiles.size()}${RESET} file Menu.")
     }
 
     menuFiles.sort { it.name }
@@ -126,8 +125,8 @@ ext.generateReadMeMenuList = {File projectDir,String language ->
 
     listFile.text = content.toString()
 
-    println "${GREEN}✅ [SUCCESS]${RESET} Đã cập nhật xong file: ${BLUE}${listFile.path}${RESET}"
-    println "--------------------------------------------------"
+    logger.lifecycle("${GREEN}✅ [SUCCESS]${RESET} Đã cập nhật xong file: ${BLUE}${listFile.path}${RESET}")
+    logger.lifecycle("--------------------------------------------------")
 }
 
 ext.combineFinalReadme = {File projectDir,String language ->
@@ -144,7 +143,7 @@ ext.combineFinalReadme = {File projectDir,String language ->
     def outputName = "README${language == "en" ? "" : ".${language}"}.md"
     def combineFile = file("${projectDir}/${outputName}")
 
-    println "${CYAN}🛠️  [COMBINING]${RESET} Preparing ${YELLOW}${outputName}${RESET} for module: ${CYAN}${projectDir.name}${RESET}"
+    logger.lifecycle("${CYAN}🛠️  [COMBINING]${RESET} Preparing ${YELLOW}${outputName}${RESET} for module: ${CYAN}${projectDir.name}${RESET}")
 
 // Kiểm tra sự tồn tại của các file thành phần
     boolean hasBase = basicFile.exists()
@@ -154,20 +153,20 @@ ext.combineFinalReadme = {File projectDir,String language ->
         // Thực hiện gộp file
         if (!combineFile.exists()) {
             combineFile.createNewFile()
-            println "   📄 File mới đã được tạo: ${outputName}"
+            logger.lifecycle("   📄 File mới đã được tạo: ${outputName}")
         }
 
         combineFile.text = basicFile.text + "\n\n" + listFile.text
 
         // Log báo cáo kích thước file để người dùng an tâm
         def sizeKB = String.format("%.2f", combineFile.length() / 1024.0)
-        println "${GREEN}✅ [SUCCESS]${RESET} Đã gộp thành công vào: ${GREEN}${combineFile.name}${RESET} (${sizeKB} KB)"
+        logger.lifecycle("${GREEN}✅ [SUCCESS]${RESET} Đã gộp thành công vào: ${GREEN}${combineFile.name}${RESET} (${sizeKB} KB)")
     } else {
         // Báo lỗi chi tiết file nào bị thiếu
-        println "${RED}❌ [ERROR]${RESET} Không thể gộp file tại ${projectDir.name}:"
-        if (!hasBase) println "   - Thiếu file: ${RED}${basicFile.path}${RESET}"
-        if (!hasList) println "   - Thiếu file: ${RED}${listFile.path}${RESET}"
+        logger.lifecycle("${RED}❌ [ERROR]${RESET} Không thể gộp file tại ${projectDir.name}:")
+        if (!hasBase) logger.lifecycle("   - Thiếu file: ${RED}${basicFile.path}${RESET}")
+        if (!hasList) logger.lifecycle("   - Thiếu file: ${RED}${listFile.path}${RESET}")
     }
-    println "--------------------------------------------------"
+    logger.lifecycle("--------------------------------------------------")
 
 }

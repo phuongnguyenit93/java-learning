@@ -43,9 +43,11 @@ allprojects {
     }
 
     project.ext.implementProjectByServiceName = rootProject.ext.findSubProjectByServiceName
+
+
 }
 
-def currentProjectKeys = [] as Set
+def currentProjectKeys = [:]
 gradle.extensions.extraProperties.set("allModuleKeys",currentProjectKeys)
 
 subprojects {
@@ -58,13 +60,26 @@ subprojects {
         def propFile = file("${projectDir}/gradle.properties")
         Properties props = new Properties()
         propFile.withInputStream { props.load(it) }
-        currentProjectKeys.addAll(props.keySet().collect { it.toString() })
+
+        // Xác định Tên Module & Đường dẫn tương đối
+        def moduleName = props.getProperty("SERVICE_NAME") ?: projectDir.name
+        def relativePath = rootDir
+                .toPath()
+                .relativize(projectDir.toPath()).toString()
+                .replace('\\', '/')
+
+        props.keySet().each { key ->
+            def keyStr = key.toString()
+            if (!currentProjectKeys.containsKey(keyStr)) {
+                currentProjectKeys[keyStr] = [:]
+            }
+            // Lưu Map module -> path
+            currentProjectKeys[keyStr][moduleName] = relativePath
+        }
 
 //        println tasks
 
-        // Thay đổi đường dẫn build cho tất cả module con
-        def projectPathAsFolder = project.path.replace(':', '/')
-        layout.buildDirectory = rootProject.layout.buildDirectory.dir("outputs/${projectPathAsFolder}")
+
 
         def targetFile = file("${project.projectDir}/task.gradle")
         if (targetFile.exists()) {
@@ -84,6 +99,10 @@ subprojects {
             // 3. Đặt chiến lược xử lý nếu trùng lặp (thường dùng trong Gradle mới)
             duplicatesStrategy = DuplicatesStrategy.INCLUDE
         }
+
+        // Thay đổi đường dẫn build cho tất cả module con
+        def projectPathAsFolder = project.path.replace(':', '/')
+        layout.buildDirectory = rootProject.layout.buildDirectory.dir("outputs/${projectPathAsFolder}")
     }
 
     if (file("${projectDir}/docker-compose.yml").exists()) {

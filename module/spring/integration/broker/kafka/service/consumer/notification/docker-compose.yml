@@ -3,18 +3,18 @@ x-common-build: &common-build
   dockerfile: docker/file/base/Dockerfile
 
 services:
-  kafka-control:
-    container_name: kafka-control
-    image: kafka-control
+  kafka-consumer-notification:
+    container_name: kafka-consumer-notification
+    image: kafka-consumer-notification
     pull_policy: build
     ports:
       - ${PORT}:${PORT}
     environment:
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka1:29092,kafka2:29092,kafka3:29092
+    env_file:
+      - .env
     build:
       <<: *common-build
       args:
-        - MODULE_PATH=${KAFKA_CONTROL_MODULE_PATH}
-        - JAR_PATH=${KAFKA_CONTROL_JAR_PATH}
-    env_file:
-      - .env
+        - MODULE_PATH=${KAFKA_CONSUMER_NOTIFICATION_MODULE_PATH}
+        - JAR_PATH=${KAFKA_CONSUMER_NOTIFICATION_JAR_PATH}

@@ -1,0 +1,50 @@
+{
+    "BUILD_ENV": {
+        "DESCRIPTION": "Chưa có chú thích",
+        "STATUS": "USING"
+    },
+    "BUILD_ENV_PATH": {
+        "DESCRIPTION": "Chưa có chú thích",
+        "STATUS": "USING"
+    },
+    "BUILD_PROFILE_ENV": {
+        "DESCRIPTION": "Chưa có chú thích",
+        "STATUS": "USING"
+    },
+    "BUILD_PROFILE_PROPERTIES": {
+        "DESCRIPTION": "Chưa có chú thích",
+        "STATUS": "USING"
+    },
+    "BUILD_PROPERTIES": {
+        "DESCRIPTION": "Chưa có chú thích",
+        "STATUS": "USING"
+    },
+    "BUILD_README": {
+        "DESCRIPTION": "Chưa có chú thích",
+        "STATUS": "USING"
+    },
+    "INJECT_TASK_AUTO": {
+        "DESCRIPTION": "Chưa có chú thích",
+        "STATUS": "USING"
+    },
+    "IS_MICROSERVICE": {
+        "DESCRIPTION": "Chưa có chú thích",
+        "STATUS": "USING"
+    },
+    "PROFILE_PROPERTIES_LIST": {
+        "DESCRIPTION": "Chưa có chú thích",
+        "STATUS": "USING"
+    },
+    "README_LANGUAGE": {
+        "DESCRIPTION": "Chưa có chú thích",
+        "STATUS": "USING"
+    },
+    "SERVICE_DEPEND": {
+        "DESCRIPTION": "Chưa có chú thích",
+        "STATUS": "USING"
+    },
+    "SERVICE_NAME": {
+        "DESCRIPTION": "Chưa có chú thích",
+        "STATUS": "USING"
+    }
+}

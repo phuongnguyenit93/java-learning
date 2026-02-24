@@ -1,10 +1,5 @@
 ---
 # Cấu hình chung tại đây
-project:
-  contextPath: kafka
-  port: 8091
-  appName: kafka-control-service
-
 spring:
   kafka:
     bootstrap-servers: localhost:9092

@@ -7,9 +7,9 @@ ext.getFolderProps = {
     def CYAN = "\u001B[36m"
     def BLUE = "\u001B[34m"
 
-    println "${BLUE}=================================================="
-    println "🔍 [SCANNER] Đang lập bản đồ các module trong dự án..."
-    println "${BLUE}==================================================${RESET}"
+    logger.lifecycle("${BLUE}==================================================")
+    logger.lifecycle("🔍 [SCANNER] Đang lập bản đồ các module trong dự án...")
+    logger.lifecycle("${BLUE}==================================================${RESET}")
 
     List<HashMap> dirListProps = new ArrayList<>()
 
@@ -21,7 +21,7 @@ ext.getFolderProps = {
     }.files.unique()
             .collect { it.parentFile }
 
-    println "📂 Tìm thấy ${CYAN}${folderList.size()}${RESET} thư mục chứa cấu hình."
+    logger.lifecycle("📂 Tìm thấy ${CYAN}${folderList.size()}${RESET} thư mục chứa cấu hình.")
 
     folderList.eachWithIndex { File folder, Integer index ->
         File propFile = new File(folder, "gradle.properties")
@@ -49,12 +49,12 @@ ext.getFolderProps = {
 
         // Log từng module được map thành công
         def serviceName = propMap.get("SERVICE_NAME") ?: "N/A"
-        println "   [${index + 1}] ${GREEN}${serviceName}${RESET} -> :${modulePath}"
+        logger.lifecycle("   [${index + 1}] ${GREEN}${serviceName}${RESET} -> :${modulePath}")
     }
 
-    println "${BLUE}--------------------------------------------------"
-    println "✨ [SCAN COMPLETED] Đã nạp xong ${CYAN}${dirListProps.size()}${RESET} bộ thuộc tính vào bộ nhớ."
-    println "${BLUE}==================================================${RESET}\n"
+    logger.lifecycle("${BLUE}--------------------------------------------------")
+    logger.lifecycle("✨ [SCAN COMPLETED] Đã nạp xong ${CYAN}${dirListProps.size()}${RESET} bộ thuộc tính vào bộ nhớ.")
+    logger.lifecycle("${BLUE}==================================================${RESET}\n")
 
     return dirListProps
 }
@@ -77,11 +77,11 @@ ext.injectTask = {
     def CYAN = "\u001B[36m"
     def BLUE = "\u001B[34m"
 
-    println "${BLUE}=================================================="
-    println "🔍 TẠO RA CÁC FILE TASK.GRADLE Ở MODULE VÀ COPY CÁC TASK DÀNH RIÊNG CHO CÁC MODULE VÀ BỎ VÀO ĐÓ"
-    println "${BLUE}==================================================${RESET}"
+    logger.lifecycle("${BLUE}==================================================")
+    logger.lifecycle("🔍 TẠO RA CÁC FILE TASK.GRADLE Ở MODULE VÀ COPY CÁC TASK DÀNH RIÊNG CHO CÁC MODULE VÀ BỎ VÀO ĐÓ")
+    logger.lifecycle("${BLUE}==================================================${RESET}")
 
-    println "${BLUE}🚀 [INJECT-ENGINE] Bắt đầu quá trình quét và phân phối Task...${RESET}"
+    logger.lifecycle("${BLUE}🚀 [INJECT-ENGINE] Bắt đầu quá trình quét và phân phối Task...${RESET}")
 
     HashMap<String, List<String>> taskContent = new HashMap()
     HashMap<String, List<String>> moduleContent = new HashMap()
@@ -100,7 +100,7 @@ ext.injectTask = {
     }
 
     // Giai đoạn 1: Trích xuất từ Template
-    println "${CYAN}📂 Bước 1: Trích xuất dữ liệu từ các file Template...${RESET}"
+    logger.lifecycle("${CYAN}📂 Bước 1: Trích xuất dữ liệu từ các file Template...${RESET}")
     taskListProp.each { task ->
         String fileName = task.get("fileName")
         def templateFile = file("${rootDir}/gradle/task/${fileName}")
@@ -112,14 +112,14 @@ ext.injectTask = {
 
             taskContent.put(task.get("type"), tasks)
             moduleContent.put(task.get("type"), modules)
-            println "   + [${task.type}]: Tìm thấy ${GREEN}${tasks.size()}${RESET} tasks và ${GREEN}${modules.size()}${RESET} module blocks."
+            logger.lifecycle("   + [${task.type}]: Tìm thấy ${GREEN}${tasks.size()}${RESET} tasks và ${GREEN}${modules.size()}${RESET} module blocks.")
         } else {
-            println "   + [${task.type}]: ${YELLOW}Cảnh báo: Không tìm thấy file ${fileName}${RESET}"
+            logger.lifecycle("   + [${task.type}]: ${YELLOW}Cảnh báo: Không tìm thấy file ${fileName}${RESET}")
         }
     }
 
     // Giai đoạn 2: Phân phối xuống subprojects
-    println "${CYAN}🏗️  Bước 2: Tiến hành Inject file task.gradle vào các subprojects...${RESET}"
+    logger.lifecycle("${CYAN}🏗️  Bước 2: Tiến hành Inject file task.gradle vào các subprojects...${RESET}")
     subprojects { project ->
         def propFile = file("${project.projectDir}/gradle.properties")
         if (!propFile.exists()) return
@@ -166,14 +166,14 @@ ext.injectTask = {
             if (!moduleContentFinal.isEmpty() || !taskContentFinal.isEmpty()) {
                 if (!targetFile.exists()) targetFile.createNewFile()
                 targetFile.text = "// AUTO GENERATED FILE - DO NOT EDIT\n\n" + moduleContentFinal + "\n" + taskContentFinal
-                println "   ✅ Module [${GREEN}${serviceName}${RESET}]: Đã inject thành công (${injectedTypes.join(', ')})"
+                logger.lifecycle("   ✅ Module [${GREEN}${serviceName}${RESET}]: Đã inject thành công (${injectedTypes.join(', ')})")
             }
         } else if (serviceName != null) {
              // Log những module bị bỏ qua nhưng có SERVICE_NAME để dễ kiểm soát
-//             println "   ⏩ Module [${serviceName}]: Bỏ qua (INJECT_TASK_AUTO=false)"
+//             logger.lifecycle("   ⏩ Module [${serviceName}]: Bỏ qua (INJECT_TASK_AUTO=false)")
         }
     }
-    println "${BLUE}==================================================${RESET}"
+    logger.lifecycle("${BLUE}==================================================${RESET}")
 }
 
 ext.getModulePropByKeyValue = { String key, String value, List<HashMap> dirListProps ->
@@ -188,66 +188,76 @@ ext.getModulePropByKeyValue = { String key, String value, List<HashMap> dirListP
     }
 }
 
-ext.getAllModuleProperties = { Set currentProjectKeys ->
+ext.getAllModuleProperties = { Map currentProjectKeys ->
     def GREEN = "\u001B[32m"
     def YELLOW = "\u001B[33m"
     def RESET = "\u001B[0m"
     def CYAN = "\u001B[36m"
     def PURPLE = "\u001B[35m"
+    def BLUE = "\u001B[34m"
 
-    println "${PURPLE}=================================================="
-    println "${PURPLE}📊 [PROPERTY-TRACKER] Lấy danh sách Config ở gradle.properties của các module con ${RESET}"
-    println "${PURPLE}==================================================${RESET}"
+    logger.lifecycle("${PURPLE}==================================================")
+    logger.lifecycle("${PURPLE}📑 [PROPERTY-DICTIONARY] Đang phân tích và cập nhật từ điển thuộc tính...${RESET}")
+    logger.lifecycle("${PURPLE}==================================================${RESET}")
 
-    def jsonFile = file("${rootDir}/module-properties.json")
-    def masterData = [:]
+    def descFile = new File(rootDir, "description-properties.json")
+    def infoFile = new File(rootDir, "info-properties.json")
 
-    if (jsonFile.exists()) {
+    // --- XỬ LÝ FILE 1: description-properties.json ---
+    def oldDescData = [:]
+    if (descFile.exists()) {
         try {
-            masterData = new JsonSlurper().parseText(jsonFile.getText("UTF-8"))
-        } catch (Exception e) {
-            println "   ⚠️ Lỗi đọc file JSON, khởi tạo mới hoàn toàn."
-            masterData = [:]
+            def parsed = new JsonSlurper().parseText(descFile.getText("UTF-8"))
+            if (parsed instanceof Map) oldDescData = new LinkedHashMap(parsed)
+        } catch (e) { oldDescData = [:] }
+    }
+
+    def newDescData = [:]
+    int statusChanged = 0
+    int newAdded = 0
+
+    // Giữ Description và cập nhật Status
+    oldDescData.each { key, meta ->
+        def metaMap = new LinkedHashMap(meta as Map)
+        def oldStatus = metaMap.STATUS
+        def newStatus = currentProjectKeys.containsKey(key) ? "USING" : "NOT-USED"
+
+        if (oldStatus != newStatus) statusChanged++
+
+        newDescData[key] = [
+                "DESCRIPTION": metaMap.DESCRIPTION ?: "Chưa có chú thích",
+                "STATUS": newStatus
+        ]
+    }
+
+    // Thêm các key mới xuất hiện trong code
+    currentProjectKeys.keySet().each { key ->
+        if (!newDescData.containsKey(key)) {
+            newDescData[key] = ["DESCRIPTION": "Chưa có chú thích", "STATUS": "USING"]
+            newAdded++
+            logger.lifecycle("   ${GREEN}+ New Property Found:${RESET} ${key}")
         }
     }
 
-    def finalData = [:]
-    int unusedCount = 0
-    int newCount = 0
+    // --- XỬ LÝ FILE 2: info-properties.json ---
+    def newInfoData = [:]
+    currentProjectKeys.each { key, modulesMap ->
+        newInfoData[key] = ["MODULES": modulesMap.sort()]
+    }
 
-    // 1. Phân loại key cũ
-    masterData.each { key, comment ->
-        def cleanKey = key.replace(" [UNUSED]", "")
-        if (!currentProjectKeys.contains(cleanKey)) {
-            finalData[cleanKey + " [UNUSED]"] = comment
-            unusedCount++
-        } else {
-            finalData[cleanKey] = comment
+    // --- GHI FILE VÀ FIX UNICODE ---
+    [[file: descFile, data: newDescData], [file: infoFile, data: newInfoData]].each { item ->
+        def rawJson = JsonOutput.prettyPrint(JsonOutput.toJson(item.data.sort()))
+        def fixUnicode = rawJson.replaceAll(/\\u([0-9a-fA-F]{4})/) { match, code ->
+            return (char) Integer.parseInt(code, 16)
         }
+        item.file.setText(fixUnicode, "UTF-8")
     }
 
-    // 2. Thêm key mới xuất hiện
-    currentProjectKeys.each { key ->
-        if (!finalData.containsKey(key)) {
-            finalData[key] = "Chưa có chú thích"
-            newCount++
-            println "   ${GREEN}+ New Key:${RESET} ${key}"
-        }
-    }
-
-    // 3. Ghi file và Fix Unicode
-    def sortedData = finalData.sort { it.key }
-    def rawJson = JsonOutput.prettyPrint(JsonOutput.toJson(sortedData))
-    def fixUnicode = rawJson.replaceAll(/\\u([0-9a-fA-F]{4})/) { match, code ->
-        return (char) Integer.parseInt(code, 16)
-    }
-
-    jsonFile.setText(fixUnicode, "UTF-8")
-
-    // --- LOG KẾT THÚC ---
-    println "   ✅ Cập nhật xong: ${CYAN}${jsonFile.name}${RESET}"
-    println "   📈 Thống kê: ${GREEN}${newCount} Mới${RESET} | ${YELLOW}${unusedCount} Không dùng${RESET} | ${CYAN}${currentProjectKeys.size()} Đang sử dụng${RESET}"
-    println "${PURPLE}--------------------------------------------------${RESET}\n"
+    // --- LOG TỔNG KẾT ---
+    logger.lifecycle("   📝 ${CYAN}Description File:${RESET} Đã nạp ${newDescData.size()} keys (${GREEN}+${newAdded} mới${RESET}, ${YELLOW}${statusChanged} đổi trạng thái${RESET})")
+    logger.lifecycle("   📂 ${CYAN}Info File:${RESET} Đã cập nhật bản đồ sử dụng cho ${newInfoData.size()} thuộc tính.")
+    logger.lifecycle("${PURPLE}--------------------------------------------------${RESET}\n")
 }
 
 ext.getModulePropByServiceNameList = { List<String> propsFilter, List<HashMap> dirListProps ->

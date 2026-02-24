@@ -109,3 +109,47 @@
 53. Code Clean cho ứng dụng
 
 54. Trong Gradle, file settings.gradle chạy ở giai đoạn Initialization, còn các file build.gradle chạy ở giai đoạn Configuration . Theo mặc định, các biến khai báo bình thường trong settings.gradle sẽ không tự động "nhảy" vào Task được.
+
+Tôi đã hoàn thiện phần phân tích về Logging Levels trong Gradle vào file README.md. Việc hiểu rõ các cấp độ log này sẽ giúp bạn quản lý console một cách chuyên nghiệp, tránh bị "ngập" trong thông tin không cần thiết.
+
+Markdown
+# 📊 Quản lý Log trong Gradle: Lifecycle vs Info
+
+Việc phân biệt giữa `LIFECYCLE` và `INFO` là chìa khóa để bạn kiểm soát "độ ồn ào" của console mà không làm mất đi các thông tin quan trọng.
+
+---
+
+## 1. Cấp độ ưu tiên (Log Levels)
+
+Gradle sử dụng hệ thống phân cấp log từ ít chi tiết đến rất chi tiết. Dưới đây là thứ tự ưu tiên:
+
+1.  **ERROR**: Chỉ những lỗi nghiêm trọng làm dừng quá trình build.
+2.  **QUIET**: Chỉ những tin nhắn cực kỳ quan trọng (sử dụng cờ `-q`).
+3.  **LIFECYCLE** (Mặc định): Các thông báo về tiến độ build (Cột mốc).
+4.  **INFO**: Các thông tin chi tiết về quá trình thực thi (Mặc định bị ẩn).
+5.  **DEBUG**: Mọi thứ diễn ra "dưới nắp ca-pô" (Rất khủng khiếp về số lượng).
+
+---
+
+## 2. So sánh chi tiết: LIFECYCLE vs INFO
+
+| Đặc điểm | LIFECYCLE | INFO |
+| :--- | :--- | :--- |
+| **Mục đích** | Thông báo các cột mốc quan trọng (VD: "Bắt đầu compile", "Build thành công"). | Thông báo chi tiết kỹ thuật (VD: "Copy file X vào thư mục Y", "Đang dùng cache Z"). |
+| **Trạng thái mặc định** | **HIỆN**. Bạn sẽ luôn thấy các log này khi gõ `gradlew build`. | **ẨN**. Bạn sẽ không thấy gì trừ khi yêu cầu cụ thể. |
+| **Cách để hiện** | Luôn hiện trừ khi dùng cờ `-q`. | Chỉ hiện khi thêm cờ `-i` hoặc `--info`. |
+| **Khi nào nên dùng** | Dùng cho các dòng bạn luôn muốn thấy để biết dự án đang chạy đến đâu. | Dùng cho các dòng debug chỉ muốn thấy khi có lỗi hoặc cần kiểm tra sâu. |
+
+---
+
+## 🛠️ 3. Cách sử dụng trong Script
+
+Để ghi log đúng cấp độ trong file `.gradle`, bạn có thể sử dụng đối tượng `logger`:
+
+    ```groovy
+    // Log này sẽ luôn hiện
+    logger.lifecycle("--- Đang bắt đầu xử lý cấu hình Kafka ---")
+
+    // Log này chỉ hiện khi chạy với lệnh ./gradlew build -i
+    logger.info("Chi tiết: Đang đọc file config tại đường dẫn /config/kafka.yaml")
+    ```

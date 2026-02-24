@@ -1,0 +1,99 @@
+services:
+  kafka1:
+    image: apache/kafka:latest
+    container_name: kafka1
+    volumes:
+      - kafka1_data:/var/lib/kafka/data
+      - kafka1_secrets:/etc/kafka/secrets
+      - kafka1_config:/mnt/shared/config
+    ports:
+      - "9092:9092"
+    env_file:
+      - .env
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: 'broker,controller'
+      KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka1:29093,2@kafka2:29093,3@kafka3:29093'
+      KAFKA_LISTENERS: 'PLAINTEXT://:29092,CONTROLLER://:29093,PLAINTEXT_HOST://:9092'
+      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka1:29092,PLAINTEXT_HOST://localhost:9092'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT'
+      KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
+      KAFKA_INTER_BROKER_LISTENER_NAME: 'PLAINTEXT'
+      CLUSTER_ID: ${CLUSTER_ID}
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3 # Tăng lên 3 để an toàn dữ liệu
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'false'
+
+  kafka2:
+    image: apache/kafka:latest
+    container_name: kafka2
+    volumes:
+      - kafka2_data:/var/lib/kafka/data
+      - kafka2_secrets:/etc/kafka/secrets
+      - kafka2_config:/mnt/shared/config
+    ports:
+      - "9093:9093"
+    environment:
+      KAFKA_NODE_ID: 2
+      KAFKA_PROCESS_ROLES: 'broker,controller'
+      KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka1:29093,2@kafka2:29093,3@kafka3:29093'
+      KAFKA_LISTENERS: 'PLAINTEXT://:29092,CONTROLLER://:29093,PLAINTEXT_HOST://:9093'
+      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka2:29092,PLAINTEXT_HOST://localhost:9093'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT'
+      KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
+      KAFKA_INTER_BROKER_LISTENER_NAME: 'PLAINTEXT'
+      CLUSTER_ID: ${CLUSTER_ID}
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'false'
+
+  kafka3:
+    image: apache/kafka:latest
+    container_name: kafka3
+    volumes:
+      - kafka3_data:/var/lib/kafka/data
+      - kafka3_secrets:/etc/kafka/secrets
+      - kafka3_config:/mnt/shared/config
+    ports:
+      - "9094:9094"
+    environment:
+      KAFKA_NODE_ID: 3
+      KAFKA_PROCESS_ROLES: 'broker,controller'
+      KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka1:29093,2@kafka2:29093,3@kafka3:29093'
+      KAFKA_LISTENERS: 'PLAINTEXT://:29092,CONTROLLER://:29093,PLAINTEXT_HOST://:9094'
+      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka3:29092,PLAINTEXT_HOST://localhost:9094'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT'
+      KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
+      KAFKA_INTER_BROKER_LISTENER_NAME: 'PLAINTEXT'
+      CLUSTER_ID: ${CLUSTER_ID}
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'false'
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
+    ports:
+      - "8080:8080"
+    depends_on:
+      - kafka1
+      - kafka2
+      - kafka3
+    environment:
+      # Kết nối Kafka UI với service 'kafka' bên trên
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka1:29092,kafka2:29092,kafka3:29092
+      DYNAMIC_CONFIG_ENABLED: 'true'
+
+volumes:
+  # Data
+  kafka1_data: { name: kafka1_data_volumes }
+  kafka2_data: { name: kafka2_data_volumes }
+  kafka3_data: { name: kafka3_data_volumes }
+  # Secrets
+  kafka1_secrets: { name: kafka1_secrets_volumes }
+  kafka2_secrets: { name: kafka2_secrets_volumes }
+  kafka3_secrets: { name: kafka3_secrets_volumes }
+  # Config
+  kafka1_config: { name: kafka1_config_volumes }
+  kafka2_config: { name: kafka2_config_volumes }
+  kafka3_config: { name: kafka3_config_volumes }
+
+

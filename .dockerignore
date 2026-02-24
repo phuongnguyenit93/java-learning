@@ -1,0 +1,28 @@
+# 1. Loại bỏ các thư mục build của máy Host (BẮT BUỘC)
+# Tránh việc copy file JAR cũ từ máy bạn vào Docker gây sai lệch
+**/build/
+**/out/
+**/target/
+bin/
+
+# 2. Loại bỏ Cache của IDE và Gradle
+# Tránh xung đột giữa Windows (máy bạn) và Linux (Docker)
+.gradle/
+.idea/
+*.iml
+.vscode/
+
+# 3. Loại bỏ dữ liệu Git (Rất nặng, thường chiếm 80% dung lượng context)
+.git
+.gitignore
+
+# 4. Loại bỏ các file log và file tạm
+*.log
+.DS_Store
+Thumbs.db
+
+# 5. Loại bỏ các file nhạy cảm (An toàn)
+.env
+.env.*
+*.pem
+*.key

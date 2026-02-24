@@ -1,12 +1,7 @@
 ---
-project:
-  contextPath: kafka
-  port: ${PORT}
-  appName: bank-service
-
 spring:
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: ${BOOTSTRAP_SERVER}
     listener:
       missing-topics-fatal: false
     producer:

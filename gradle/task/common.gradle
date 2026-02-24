@@ -1,13 +1,10 @@
-import groovy.json.JsonOutput
-import groovy.json.JsonSlurper
-
 apply from: "${rootDir}/gradle/config/module.gradle"
 
 tasks.register("getAllModuleProperties")  {
     group = 'verification'
     description = "Lấy tất cả properties tại gradle.properties module con và cho vào 1 file Json"
 
-    Set allPropsKey = gradle.extensions.extraProperties.get("allModuleKeys") as Set
+    HashMap allPropsKey = gradle.extensions.extraProperties.get("allModuleKeys") as HashMap
 
     doLast {
         project.ext.getAllModuleProperties(allPropsKey)

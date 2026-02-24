@@ -1,10 +1,5 @@
 ---
 # Cấu hình chung tại đây
-project:
-  contextPath: kafka
-  port: 8090
-  appName: notification-service
-
 spring:
   kafka:
     bootstrap-servers: localhost:9092

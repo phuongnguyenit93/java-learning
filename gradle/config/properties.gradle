@@ -32,11 +32,11 @@ ext.buildProfilePropsFile = { List<HashMap> appProps ->
     def BLUE = "\u001B[34m"
     def BOLD = "\u001B[1m"
 
-    println "${BLUE}${BOLD}=================================================="
-    println "🔍 KHỞI TẠO APPLICATION.YML TẠI CÁC MODULE CHƯA CÓ"
-    println "${BLUE}==================================================${RESET}"
+    logger.lifecycle("${BLUE}${BOLD}==================================================")
+    logger.lifecycle("🔍 KHỞI TẠO APPLICATION.YML TẠI CÁC MODULE CHƯA CÓ")
+    logger.lifecycle("${BLUE}==================================================${RESET}")
 
-    println "${CYAN}🚀 [CONFIG-INIT]${RESET} Đang kiểm tra cấu hình application.yml cho ${appProps.size()} module..."
+    logger.lifecycle("${CYAN}🚀 [CONFIG-INIT]${RESET} Đang kiểm tra cấu hình application.yml cho ${appProps.size()} module...")
 
     appProps.each { props ->
         def moduleName = props.get("SERVICE_NAME") ?: props.get("ABSOLUTE_PATH")
@@ -46,14 +46,14 @@ ext.buildProfilePropsFile = { List<HashMap> appProps ->
 
         // 1. Kiểm tra file mẫu (base-file) trước
         if (!baseFile.exists()) {
-            println "${RED}❌ [ERROR]${RESET} Không tìm thấy file mẫu tại: ${baseFile.path}"
+            logger.lifecycle("${RED}❌ [ERROR]${RESET} Không tìm thấy file mẫu tại: ${baseFile.path}")
             return // Thoát sớm nếu không có file gốc để copy
         }
 
         // 2. Xử lý logic tạo file
         if (configFile.exists()) {
             // Dùng dấu mũi tên mờ hơn cho các file đã tồn tại để tránh loãng log
-            println "  ${YELLOW}⏩ [SKIP]${RESET} Module [${moduleName}]: application.yml đã tồn tại."
+            logger.lifecycle("  ${YELLOW}⏩ [SKIP]${RESET} Module [${moduleName}]: application.yml đã tồn tại.")
         } else {
             try {
                 // Đảm bảo thư mục cha tồn tại trước khi tạo file
@@ -64,14 +64,14 @@ ext.buildProfilePropsFile = { List<HashMap> appProps ->
                 configFile.createNewFile()
                 configFile.text = baseFile.text
 
-                println "  ${GREEN}✨ [CREATED]${RESET} Module [${moduleName}]: Đã khởi tạo file từ file-based.yml"
-                println "             └─ Path: ${configFile.path}"
+                logger.lifecycle("  ${GREEN}✨ [CREATED]${RESET} Module [${moduleName}]: Đã khởi tạo file từ file-based.yml")
+                logger.lifecycle("             └─ Path: ${configFile.path}")
             } catch (Exception e) {
-                println "${RED}❌ [FAILED]${RESET} Không thể tạo file cho ${moduleName}: ${e.message}"
+                logger.lifecycle("${RED}❌ [FAILED]${RESET} Không thể tạo file cho ${moduleName}: ${e.message}")
             }
         }
     }
-    println "${CYAN}--------------------------------------------------${RESET}"
+    logger.lifecycle("${CYAN}--------------------------------------------------${RESET}")
 }
 
 ext.combineBuildYaml = { List<HashMap> folderPropsList, String serviceName ->
@@ -82,22 +82,22 @@ ext.combineBuildYaml = { List<HashMap> folderPropsList, String serviceName ->
     def BLUE = "\u001B[34m"
     def RED = "\u001B[31m"
 
-    println "${BLUE}=================================================="
-    println "🔍 GỘP CÁC APPLICATION.YML TẠI CÁC MODULE LỆ THUỘC VÀO MODULE GỐC"
-    println "${BLUE}==================================================${RESET}"
+    logger.lifecycle("${BLUE}==================================================")
+    logger.lifecycle("🔍 GỘP CÁC APPLICATION.YML TẠI CÁC MODULE LỆ THUỘC VÀO MODULE GỐC")
+    logger.lifecycle("${BLUE}==================================================${RESET}")
 
-    println "${BLUE}🧩 [YAML-MERGE]${RESET} Bắt đầu gộp file cấu hình cho Service: ${CYAN}${serviceName}${RESET}"
+    logger.lifecycle("${BLUE}🧩 [YAML-MERGE]${RESET} Bắt đầu gộp file cấu hình cho Service: ${CYAN}${serviceName}${RESET}")
 
     HashMap props = ext.getModulePropByServiceName(serviceName, folderPropsList)
     List<String> microserviceList = props.get("SERVICE_DEPEND")?.toString()?.split(',') as List<String> ?: []
 
     if (props.isEmpty()) {
-        println "${RED}❌ [ERROR]${RESET} Không tìm thấy cấu hình cho service: ${serviceName}"
+        logger.lifecycle("${RED}❌ [ERROR]${RESET} Không tìm thấy cấu hình cho service: ${serviceName}")
         return
     }
 
     if (microserviceList.isEmpty()) {
-        println "${YELLOW}⏩ [SKIP]${RESET} Service ${serviceName} không có module lệ thuộc (SERVICE_DEPEND trống)."
+        logger.lifecycle("${YELLOW}⏩ [SKIP]${RESET} Service ${serviceName} không có module lệ thuộc (SERVICE_DEPEND trống).")
         return
     }
 
@@ -112,7 +112,7 @@ ext.combineBuildYaml = { List<HashMap> folderPropsList, String serviceName ->
 
     // Kiểm tra targetFile gốc
     if (!targetFile.exists()) {
-        println "${RED}❌ [ERROR]${RESET} Không tìm thấy file gốc tại: ${targetFile.path}"
+        logger.lifecycle("${RED}❌ [ERROR]${RESET} Không tìm thấy file gốc tại: ${targetFile.path}")
         return
     }
 
@@ -134,7 +134,7 @@ ext.combineBuildYaml = { List<HashMap> folderPropsList, String serviceName ->
     // --- BẮT ĐẦU QUÁ TRÌNH GỘP ---
 
     // Bước A: Load file gốc làm gốc tọa độ
-    println "   📥 Loading Base: ${CYAN}${targetFile.path}${RESET}"
+    logger.lifecycle("   📥 Loading Base: ${CYAN}${targetFile.path}${RESET}")
     yaml.loadAll(targetFile.text).each { doc ->
         if (doc != null) finalDocsMap[getProfileName(doc)] = doc
     }
@@ -142,7 +142,7 @@ ext.combineBuildYaml = { List<HashMap> folderPropsList, String serviceName ->
     // Bước B: Lặp qua từng file nguồn
     sourceFiles.each { sFile ->
         if (sFile.exists()) {
-            println "   ➕ Merging: ${YELLOW}${sFile.path}${RESET} -> application.yml"
+            logger.lifecycle("   ➕ Merging: ${YELLOW}${sFile.path}${RESET} -> application.yml")
             yaml.loadAll(sFile.text).each { doc ->
                 if (doc != null) {
                     def pName = getProfileName(doc)
@@ -154,7 +154,7 @@ ext.combineBuildYaml = { List<HashMap> folderPropsList, String serviceName ->
                 }
             }
         } else {
-            println "   ${RED}⚠️  Missing:${RESET} ${sFile.path} (Bỏ qua)"
+            logger.lifecycle("   ${RED}⚠️  Missing:${RESET} ${sFile.path} (Bỏ qua)")
         }
     }
 
@@ -180,9 +180,9 @@ ext.combineBuildYaml = { List<HashMap> folderPropsList, String serviceName ->
         }
     }
 
-    println "${GREEN}✅ [SUCCESS]${RESET} Hợp nhất thành công ${CYAN}${finalDocsMap.size()}${RESET} profiles: ${finalDocsMap.keySet().join(", ")}"
-    println "   📍 Check file: ${BLUE}${outputFileCheck.path}${RESET}"
-    println "--------------------------------------------------"
+    logger.lifecycle("${GREEN}✅ [SUCCESS]${RESET} Hợp nhất thành công ${CYAN}${finalDocsMap.size()}${RESET} profiles: ${finalDocsMap.keySet().join(", ")}")
+    logger.lifecycle("   📍 Check file: ${BLUE}${outputFileCheck.path}${RESET}")
+    logger.lifecycle("--------------------------------------------------")
 }
 
 

@@ -14,7 +14,7 @@ file("src/main/resources/application.properties").withInputStream {
 def databaseType = props.getProperty("database.type")
 
 if (!validData.contains(databaseType)) {
-	println "Database '${databaseType}' not valid. Use default: 'MYSQL'."
+	logger.lifecycle("Database '${databaseType}' not valid. Use default: 'MYSQL'.")
 	databaseType = 'MYSQL'
 } else {
 	println "Use database: '${databaseType}'."
