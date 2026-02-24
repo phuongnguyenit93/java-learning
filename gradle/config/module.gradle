@@ -200,8 +200,8 @@ ext.getAllModuleProperties = { Map currentProjectKeys ->
     logger.lifecycle("${PURPLE}📑 [PROPERTY-DICTIONARY] Đang phân tích và cập nhật từ điển thuộc tính...${RESET}")
     logger.lifecycle("${PURPLE}==================================================${RESET}")
 
-    def descFile = new File(rootDir, "description-properties.json")
-    def infoFile = new File(rootDir, "info-properties.json")
+    def descFile = new File(rootDir, "info/description-properties.json")
+    def infoFile = new File(rootDir, "info/info-properties.json")
 
     // --- XỬ LÝ FILE 1: description-properties.json ---
     def oldDescData = [:]
