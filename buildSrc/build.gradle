@@ -1,11 +1,11 @@
+plugins {
+    id 'java'
+}
 repositories {
     mavenCentral()
 }
 dependencies {
     implementation 'org.yaml:snakeyaml:2.2'
 }
-
-//apply from: "${rootDir.parentFile}/gradle/config/properties.gradle"
-
 
 //layout.buildDirectory = file("${projectDir.parentFile}/build/outputs")

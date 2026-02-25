@@ -3,6 +3,8 @@
 ---
 # Cấu hình chung tại đây
 spring:
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
   kafka:
     bootstrap-servers: localhost:9092
     listener:

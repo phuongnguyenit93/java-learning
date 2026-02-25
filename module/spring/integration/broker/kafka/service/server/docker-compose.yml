@@ -80,7 +80,7 @@ services:
       # Kết nối Kafka UI với service 'kafka' bên trên
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka1:29092,kafka2:29092,kafka3:29092
-      DYNAMIC_CONFIG_ENABLED: 'true'
+      DYNAMIC_CONFIG_ENABLED: 'TRUE'
 
 volumes:
   # Data

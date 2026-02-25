@@ -1,0 +1,173 @@
+[
+    {
+        "SERVICE_NAME": "ASPECT",
+        "IS_MICROSERVICE": "TRUE",
+        "BUILD_README": "TRUE",
+        "MODULE_PATH": "module:aop:aspect",
+        "RELATIVE_PATH": "module/aop/aspect",
+        "README_LANGUAGE": "en"
+    },
+    {
+        "BUILD_YML_PROFILE": "TRUE",
+        "IS_MICROSERVICE": "TRUE",
+        "BUILD_YML": "TRUE",
+        "MODULE_PATH": "module:automation:task",
+        "RELATIVE_PATH": "module/automation/task"
+    },
+    {
+        "SERVICE_NAME": "DATABASE_MYSQL",
+        "IS_MICROSERVICE": "TRUE",
+        "MODULE_PATH": "module:database:connection:mysql",
+        "RELATIVE_PATH": "module/database/connection/mysql"
+    },
+    {
+        "SERVICE_NAME": "DATABASE_NOSQL",
+        "IS_MICROSERVICE": "TRUE",
+        "MODULE_PATH": "module:database:connection:nosql",
+        "RELATIVE_PATH": "module/database/connection/nosql"
+    },
+    {
+        "SERVICE_NAME": "DATABASE_ORACLE",
+        "IS_MICROSERVICE": "TRUE",
+        "MODULE_PATH": "module:database:connection:oracle",
+        "RELATIVE_PATH": "module/database/connection/oracle"
+    },
+    {
+        "SERVICE_NAME": "DATABASE_POSTGRESQL",
+        "IS_MICROSERVICE": "TRUE",
+        "MODULE_PATH": "module:database:connection:postgresql",
+        "RELATIVE_PATH": "module/database/connection/postgresql"
+    },
+    {
+        "SERVICE_NAME": "MODEL_MAPPER",
+        "IS_MICROSERVICE": "TRUE",
+        "MODULE_PATH": "module:database:entity:modelmapper",
+        "RELATIVE_PATH": "module/database/entity/modelmapper"
+    },
+    {
+        "SERVICE_NAME": "OBJECT_MAPPER",
+        "IS_MICROSERVICE": "TRUE",
+        "MODULE_PATH": "module:database:entity:objectmapper",
+        "RELATIVE_PATH": "module/database/entity/objectmapper"
+    },
+    {
+        "IS_MICROSERVICE": "TRUE",
+        "MODULE_PATH": "module:database:query:jpa",
+        "RELATIVE_PATH": "module/database/query/jpa"
+    },
+    {
+        "IS_MICROSERVICE": "TRUE",
+        "MODULE_PATH": "module:java:core:abstractInterface",
+        "RELATIVE_PATH": "module/java/core/abstractInterface"
+    },
+    {
+        "IS_MICROSERVICE": "TRUE",
+        "MODULE_PATH": "module:java:version:java16:record",
+        "RELATIVE_PATH": "module/java/version/java16/record"
+    },
+    {
+        "SERVICE_NAME": "LIBRARY_SAMPLE",
+        "IS_MICROSERVICE": "TRUE",
+        "MODULE_PATH": "module:library:sample",
+        "RELATIVE_PATH": "module/library/sample"
+    },
+    {
+        "SERVICE_NAME": "KAFKA",
+        "BUILD_ENV_DOCKER_PROFILE": "TRUE",
+        "MODULE_PATH": "module:spring:integration:broker:kafka",
+        "BUILD_ENV": "TRUE",
+        "BUILD_ENV_PATH_MODULE_DEPEND": "KAFKA_SERVER,KAFKA_PRODUCER_BANK,KAFKA_CONTROL,KAFKA_CONSUMER_ACCOUNTANT,KAFKA_CONSUMER_NOTIFICATION",
+        "BUILD_README": "TRUE",
+        "RELATIVE_PATH": "module/spring/integration/broker/kafka",
+        "README_LANGUAGE": "en,vi",
+        "INJECT_TASK_AUTO": "TRUE"
+    },
+    {
+        "SERVICE_NAME": "KAFKA_CONSUMER_ACCOUNTANT",
+        "BUILD_YML_PROFILE": "TRUE",
+        "MODULE_PATH": "module:spring:integration:broker:kafka:service:consumer:accountant",
+        "BUILD_ENV": "TRUE",
+        "IS_MICROSERVICE": "TRUE",
+        "BUILD_YML": "TRUE",
+        "RELATIVE_PATH": "module/spring/integration/broker/kafka/service/consumer/accountant",
+        "BUILD_ENV_PROFILE": "TRUE",
+        "BUILD_YML_MODULE_DEPEND": "SPRING_SWAGGER,SPRING_WEB",
+        "INJECT_TASK_AUTO": "TRUE"
+    },
+    {
+        "SERVICE_NAME": "KAFKA_CONSUMER_NOTIFICATION",
+        "BUILD_YML_PROFILE": "TRUE",
+        "MODULE_PATH": "module:spring:integration:broker:kafka:service:consumer:notification",
+        "BUILD_ENV": "TRUE",
+        "IS_MICROSERVICE": "TRUE",
+        "BUILD_YML": "TRUE",
+        "RELATIVE_PATH": "module/spring/integration/broker/kafka/service/consumer/notification",
+        "BUILD_ENV_PROFILE": "TRUE",
+        "BUILD_YML_MODULE_DEPEND": "SPRING_SWAGGER,SPRING_WEB",
+        "INJECT_TASK_AUTO": "TRUE"
+    },
+    {
+        "SERVICE_NAME": "KAFKA_CONTROL",
+        "BUILD_YML_PROFILE": "TRUE",
+        "MODULE_PATH": "module:spring:integration:broker:kafka:service:control",
+        "BUILD_ENV": "TRUE",
+        "IS_MICROSERVICE": "TRUE",
+        "BUILD_YML": "TRUE",
+        "RELATIVE_PATH": "module/spring/integration/broker/kafka/service/control",
+        "BUILD_ENV_PROFILE": "TRUE",
+        "INJECT_TASK_AUTO": "TRUE"
+    },
+    {
+        "SERVICE_NAME": "KAFKA_PRODUCER_BANK",
+        "BUILD_YML_PROFILE": "TRUE",
+        "MODULE_PATH": "module:spring:integration:broker:kafka:service:producer:bank",
+        "BUILD_ENV": "TRUE",
+        "IS_MICROSERVICE": "TRUE",
+        "BUILD_YML": "TRUE",
+        "RELATIVE_PATH": "module/spring/integration/broker/kafka/service/producer/bank",
+        "BUILD_ENV_PROFILE": "TRUE",
+        "BUILD_YML_MODULE_DEPEND": "SPRING_SWAGGER,SPRING_WEB",
+        "INJECT_TASK_AUTO": "TRUE"
+    },
+    {
+        "SERVICE_NAME": "KAFKA_SERVER",
+        "MODULE_PATH": "module:spring:integration:broker:kafka:service:server",
+        "BUILD_ENV": "TRUE",
+        "IS_MICROSERVICE": "TRUE",
+        "RELATIVE_PATH": "module/spring/integration/broker/kafka/service/server",
+        "BUILD_ENV_PROFILE": "TRUE",
+        "INJECT_TASK_AUTO": "TRUE"
+    },
+    {
+        "SERVICE_NAME": "SPRING_ACTUATOR",
+        "BUILD_YML_PROFILE": "TRUE",
+        "IS_MICROSERVICE": "TRUE",
+        "BUILD_YML": "TRUE",
+        "MODULE_PATH": "module:spring:library:actuator",
+        "RELATIVE_PATH": "module/spring/library/actuator"
+    },
+    {
+        "SERVICE_NAME": "SPRING_DEVTOOL",
+        "BUILD_YML_PROFILE": "TRUE",
+        "IS_MICROSERVICE": "TRUE",
+        "BUILD_YML": "TRUE",
+        "MODULE_PATH": "module:spring:library:devtool",
+        "RELATIVE_PATH": "module/spring/library/devtool"
+    },
+    {
+        "SERVICE_NAME": "SPRING_SWAGGER",
+        "BUILD_YML_PROFILE": "TRUE",
+        "IS_MICROSERVICE": "TRUE",
+        "BUILD_YML": "TRUE",
+        "MODULE_PATH": "module:spring:library:swagger",
+        "RELATIVE_PATH": "module/spring/library/swagger"
+    },
+    {
+        "SERVICE_NAME": "SPRING_WEB",
+        "BUILD_YML_PROFILE": "TRUE",
+        "IS_MICROSERVICE": "TRUE",
+        "BUILD_YML": "TRUE",
+        "MODULE_PATH": "module:spring:library:web",
+        "RELATIVE_PATH": "module/spring/library/web"
+    }
+]

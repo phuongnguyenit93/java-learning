@@ -1,6 +1,9 @@
+apply from: "${rootDir}/gradle/config/module.gradle"
+
 ext.buildReadmeEmptyFile = {List<HashMap> readmeProps ->
     readmeProps.each {props ->
-        File readmeFile = new File(props.get("ABSOLUTE_PATH") as File,"README.md")
+        File baseDir = new File(rootDir,props.get("RELATIVE_PATH") as String)
+        File readmeFile = new File(baseDir,"README.md")
 
         if (!readmeFile.exists()) readmeFile.createNewFile()
     }
@@ -8,12 +11,14 @@ ext.buildReadmeEmptyFile = {List<HashMap> readmeProps ->
 
 ext.buildReadmeLanguageStructure = {List<HashMap> readmeProps ->
     readmeProps.each {props ->
+        File baseDir = new File (rootDir,props.get("RELATIVE_PATH") as String)
+
         List<String> langList = props.get("README_LANGUAGE")?.toString()?.split(",")
 
         if (langList == null) return
 
         langList.each{lang ->
-            File langDir = new File(props.get("ABSOLUTE_PATH") as File,"readme/${lang}")
+            File langDir = new File(baseDir,"readme/${lang}")
             File menuDir = new File(langDir,"menu")
             if (!menuDir.exists()) menuDir.mkdirs()
 
@@ -25,7 +30,7 @@ ext.buildReadmeLanguageStructure = {List<HashMap> readmeProps ->
             }
         }
 
-        File readmeDir = new File(props.get("ABSOLUTE_PATH") as File,"readme")
+        File readmeDir = new File(baseDir,"readme")
 
         if (readmeDir.exists()) {
             readmeDir.listFiles().each { file ->
@@ -51,7 +56,7 @@ ext.buildReadmeByServiceName = { List<HashMap> folderPropsList, String serviceNa
 
     // Tìm cấu hình trong list
     HashMap props = folderPropsList.find { p ->
-        p.SERVICE_NAME == serviceName && p.BUILD_README == 'true'
+        p.SERVICE_NAME == serviceName && p.BUILD_README == 'TRUE'
     }
 
     if (props == null) {

@@ -1,7 +1,7 @@
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 
-ext.getFolderProps = {
+ext.getAndStoreModuleProps = {
     def GREEN = "\u001B[32m"
     def RESET = "\u001B[0m"
     def CYAN = "\u001B[36m"
@@ -12,7 +12,7 @@ ext.getFolderProps = {
     logger.lifecycle("${BLUE}==================================================${RESET}")
 
     List<HashMap> dirListProps = new ArrayList<>()
-
+    HashMap currentProjectKeys = [:]
     // Lấy danh sách các folder chứa gradle.properties (trừ root và build)
     List<File> folderList = fileTree(rootDir) {
         include '**/gradle.properties'
@@ -25,27 +25,41 @@ ext.getFolderProps = {
 
     folderList.eachWithIndex { File folder, Integer index ->
         File propFile = new File(folder, "gradle.properties")
-        def props = new Properties()
+        Properties props = new Properties()
         propFile.withInputStream { props.load(it) }
+
+        // Xác định Tên Module & Đường dẫn tương đối
+        String moduleName = props.getProperty("SERVICE_NAME") ?: folder.name
+
+        // 1. Xử lý RELATIVE_PATH (ví dụ: services/order-service)
+        String relativePath = rootDir.toPath()
+                .relativize(folder.toPath()).toString()
+                .replace('\\', '/')
+
+        // 2. Xử lý MODULE_PATH (ví dụ: :services:order-service)
+        String modulePath = relativePath.replace("/",":")
 
         HashMap<String, String> propMap = new HashMap(props)
 
-        // 1. Xử lý ABSOLUTE_PATH
-        String absolutePath = folder.absolutePath.replace(File.separator, "/")
-        propMap.put("ABSOLUTE_PATH", absolutePath)
-
-        // 2. Xử lý MODULE_PATH (ví dụ: :services:order-service)
-        String modulePath = (folder.absolutePath + File.separator)
-                .replace(rootDir.absolutePath + File.separator, '')
-                .replace(File.separator, ':').toString()
-                .with { it.substring(0, it.length() - 1) }
         propMap.put("MODULE_PATH", modulePath)
+        propMap.put("RELATIVE_PATH", relativePath)
 
-        // 3. Xử lý JAR_PATH (ví dụ: services/order-service)
-        String jarPath = modulePath.replace(":", "/")
-        propMap.put("JAR_PATH", jarPath)
+        props.keySet().each { key ->
+            def keyStr = key.toString()
+            if (!currentProjectKeys.containsKey(keyStr)) {
+                currentProjectKeys[keyStr] = [:]
+            }
+            // Lưu Map module -> path
+            currentProjectKeys[keyStr][moduleName] = relativePath
+        }
 
         dirListProps.add(propMap)
+
+        def infoFile = new File(rootDir as File,"info/module/module-info.json")
+        if (!infoFile.exists()) infoFile.createNewFile()
+
+        def jsonString = JsonOutput.prettyPrint(JsonOutput.toJson(dirListProps))
+        infoFile.text = jsonString
 
         // Log từng module được map thành công
         def serviceName = propMap.get("SERVICE_NAME") ?: "N/A"
@@ -56,7 +70,7 @@ ext.getFolderProps = {
     logger.lifecycle("✨ [SCAN COMPLETED] Đã nạp xong ${CYAN}${dirListProps.size()}${RESET} bộ thuộc tính vào bộ nhớ.")
     logger.lifecycle("${BLUE}==================================================${RESET}\n")
 
-    return dirListProps
+    return [dirListProps,currentProjectKeys]
 }
 
 
@@ -64,7 +78,7 @@ ext.addModule = {List<HashMap> dirListProps ->
     dirListProps.each { HashMap prop ->
         def modulePath = prop.get("MODULE_PATH")
 
-        if (prop.IS_MICROSERVICE == 'true') {
+        if (prop.IS_MICROSERVICE == 'TRUE') {
             include ":${modulePath}"
         }
     }
@@ -90,7 +104,7 @@ ext.injectTask = {
             [type: "module", fileName: "module.gradle", propCheck: ""],
             [type: "env", fileName: "env.gradle", propCheck: "BUILD_ENV"],
             [type: "readme", fileName: "readme.gradle", propCheck: "BUILD_README"],
-            [type: "properties", fileName: "properties.gradle", propCheck: "BUILD_PROPERTIES"]
+            [type: "properties", fileName: "properties.gradle", propCheck: "BUILD_YML"]
     ]
 
     def extractBlocks = { tagName, fileText ->
@@ -129,14 +143,14 @@ ext.injectTask = {
         def serviceName = props.getProperty("SERVICE_NAME")
         def isInjectTask = props.getProperty("INJECT_TASK_AUTO")
 
-        if (serviceName != null && !serviceName.isEmpty() && isInjectTask == "true") {
+        if (serviceName != null && !serviceName.isEmpty() && isInjectTask == "TRUE") {
             String moduleContentFinal = ""
             String taskContentFinal = ""
             def injectedTypes = []
 
             taskListProp.each { task ->
                 def propCheckKey = task.get("propCheck")
-                def isPropActive = (propCheckKey == "" || props.getProperty(propCheckKey) == "true")
+                def isPropActive = (propCheckKey == "" || props.getProperty(propCheckKey) == "TRUE")
 
                 if (isPropActive) {
                     def tasksToInject = taskContent[task.get("type")] ?: []
@@ -194,14 +208,13 @@ ext.getAllModuleProperties = { Map currentProjectKeys ->
     def RESET = "\u001B[0m"
     def CYAN = "\u001B[36m"
     def PURPLE = "\u001B[35m"
-    def BLUE = "\u001B[34m"
 
     logger.lifecycle("${PURPLE}==================================================")
     logger.lifecycle("${PURPLE}📑 [PROPERTY-DICTIONARY] Đang phân tích và cập nhật từ điển thuộc tính...${RESET}")
     logger.lifecycle("${PURPLE}==================================================${RESET}")
 
-    def descFile = new File(rootDir, "info/description-properties.json")
-    def infoFile = new File(rootDir, "info/info-properties.json")
+    def descFile = new File(rootDir, "info/properties/description-properties.json")
+    def infoFile = new File(rootDir, "info/properties/info-properties.json")
 
     // --- XỬ LÝ FILE 1: description-properties.json ---
     def oldDescData = [:]

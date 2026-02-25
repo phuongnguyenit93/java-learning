@@ -1,35 +1,17 @@
 rootProject.name = 'java-learning'
 
 apply from: "gradle/config/module.gradle"
-apply from: "gradle/config/env.gradle"
-apply from: "gradle/config/readme.gradle"
 
 // Get all props by gradle.properties location
-List<HashMap> dirListProps = ext.getFolderProps()
-gradle.extensions.extraProperties.set("allFolderProps",dirListProps)
+def (List<HashMap> dirListProps,HashMap currentProjectKeys)  = ext.getAndStoreModuleProps()
+gradle.extensions.extraProperties.set("allModuleProps",dirListProps)
+gradle.extensions.extraProperties.set("allModuleKeys",currentProjectKeys)
 
 List<String> profileList = ["dev","loc","prd"]
 gradle.extensions.extraProperties.set("profiles",profileList)
 
 ///////////////////////////////////
-// README.md automation
-//////////////////////////////////
 // Include module file
+///////////////////////////////////
 ext.addModule(dirListProps)
 
-///////////////////////////////////
-// README.md automation
-//////////////////////////////////
-List<HashMap> readmeProps = ext.getModulePropByKeyValue("BUILD_README","true",dirListProps)
-ext.buildReadmeEmptyFile(readmeProps)
-ext.buildReadmeLanguageStructure(readmeProps)
-///////////////////////////////////
-
-///////////////////////////////////
-// .env automation
-//////////////////////////////////
-List<HashMap> appEnv = ext.getModulePropByKeyValue("BUILD_ENV","true",dirListProps)
-
-List<HashMap> profileEnv = ext.getModulePropByKeyValue("BUILD_PROFILE_ENV","true",appEnv)
-ext.buildProfileEnvStructure(profileEnv)
-///////////////////////////////////

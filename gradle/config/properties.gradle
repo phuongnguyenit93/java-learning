@@ -3,9 +3,10 @@ import org.yaml.snakeyaml.DumperOptions
 
 apply from: "${rootDir}/gradle/config/module.gradle"
 
-static def getBaseDirProps (HashMap props) {
+def getBaseDirProps (HashMap props) {
+    def baseDir = new File (rootDir,props.get("RELATIVE_PATH"))
     return ["src/main/resources", ""]
-            .collect { new File(props.get("ABSOLUTE_PATH") as File, it) }
+            .collect { new File(baseDir,it)}
             .find { it.exists() }
 }
 
@@ -39,8 +40,8 @@ ext.buildProfilePropsFile = { List<HashMap> appProps ->
     logger.lifecycle("${CYAN}🚀 [CONFIG-INIT]${RESET} Đang kiểm tra cấu hình application.yml cho ${appProps.size()} module...")
 
     appProps.each { props ->
-        def moduleName = props.get("SERVICE_NAME") ?: props.get("ABSOLUTE_PATH")
-        def baseFile = file("${rootDir}/info/file-based.yml")
+        def moduleName = props.get("SERVICE_NAME") ?: props.get("RELATIVE_PATH")
+        def baseFile = file("${rootDir}/info/module/file-based.yml")
         def baseDir = getBaseDirProps(props)
         def configFile = file("${baseDir}/application.yml")
 
@@ -89,7 +90,7 @@ ext.combineBuildYaml = { List<HashMap> folderPropsList, String serviceName ->
     logger.lifecycle("${BLUE}🧩 [YAML-MERGE]${RESET} Bắt đầu gộp file cấu hình cho Service: ${CYAN}${serviceName}${RESET}")
 
     HashMap props = ext.getModulePropByServiceName(serviceName, folderPropsList)
-    List<String> microserviceList = props.get("SERVICE_DEPEND")?.toString()?.split(',') as List<String> ?: []
+    List<String> microserviceList = props.get("BUILD_YML_MODULE_DEPEND")?.toString()?.split(',') as List<String> ?: []
 
     if (props.isEmpty()) {
         logger.lifecycle("${RED}❌ [ERROR]${RESET} Không tìm thấy cấu hình cho service: ${serviceName}")
@@ -97,8 +98,7 @@ ext.combineBuildYaml = { List<HashMap> folderPropsList, String serviceName ->
     }
 
     if (microserviceList.isEmpty()) {
-        logger.lifecycle("${YELLOW}⏩ [SKIP]${RESET} Service ${serviceName} không có module lệ thuộc (SERVICE_DEPEND trống).")
-        return
+        logger.lifecycle("${CYAN}ℹ️ [STANDALONE]${RESET} Module ${GREEN}${serviceName}${RESET}: Không có module phụ thuộc. Sử dụng application.yml mặc định.")
     }
 
     List<HashMap> microserviceProp = ext.getModulePropByServiceNameList(microserviceList, folderPropsList)
@@ -168,9 +168,15 @@ ext.combineBuildYaml = { List<HashMap> folderPropsList, String serviceName ->
         // Đảm bảo thư mục tồn tại
         if (!output.parentFile.exists()) output.parentFile.mkdirs()
 
+        String buildRelativePath = rootDir.toPath()
+                .relativize(buildDirFile.toPath()).toString()
+                .replace('\\', '/')
+
         output.withWriter('UTF-8') { out ->
             if (output == outputFileCheck) {
                 out.write("# AUTO-GENERATED MERGED YAML\n")
+                out.write("# THIS FILES NOT USING TO BUILD, THE NEEDED IS ALREADY BUILD\n")
+                out.write("# You can check at ${buildRelativePath}\n")
                 out.write("# Source: ${props.SERVICE_NAME}\n")
                 out.write("# Dependencies: ${microserviceList.join(', ')}\n\n")
             }

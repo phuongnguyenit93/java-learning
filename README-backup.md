@@ -153,3 +153,75 @@ Gradle sử dụng hệ thống phân cấp log từ ít chi tiết đến rất
     // Log này chỉ hiện khi chạy với lệnh ./gradlew build -i
     logger.info("Chi tiết: Đang đọc file config tại đường dẫn /config/kafka.yaml")
     ```
+
+# 🌍 Hướng dẫn: Quản lý Profile trong Spring Boot
+
+Tài liệu này giải thích cách Spring Boot tìm kiếm và ưu tiên biến `SPRING_PROFILES_ACTIVE` khi ứng dụng khởi chạy trong các môi trường khác nhau (Docker, Gradle, Jar).
+
+---
+
+## 🏗️ 1. Thứ tự ưu tiên (Precedence)
+
+Spring Boot áp dụng một quy tắc "khắt khe" để xác định Profile nào sẽ được kích hoạt. Nếu một thuộc tính được khai báo ở nhiều nơi, nguồn có ưu tiên cao hơn sẽ ghi đè các nguồn còn lại.
+
+
+
+### Thứ tự từ Cao nhất đến Thấp nhất:
+
+| Ưu tiên | Nguồn thiết lập | Cú pháp ví dụ |
+| :--- | :--- | :--- |
+| **1** | **Command Line Arguments** | `--spring.profiles.active=prod` |
+| **2** | **JVM System Properties** | `-Dspring.profiles.active=dev` |
+| **3** | **OS Environment Variables** | `export SPRING_PROFILES_ACTIVE=stg` |
+| **4** | **Application Config File** | `spring.profiles.active` trong `application.yml` |
+
+---
+
+## 🔍 2. Chi tiết các phương thức thiết lập
+
+### 🚀 1. Đối số dòng lệnh (Mạnh nhất)
+Đây là cách "áp đặt" giá trị ngay khi khởi động, đè bẹp tất cả các khai báo khác.
+```bash
+java -jar app.jar --spring.profiles.active=prod
+```
+
+### 💻 2. Thuộc tính hệ thống JVM
+Sử dụng cờ `-D`. Đây là cách mà Task `bootRun` của Gradle thường sử dụng.
+```bash
+java -Dspring.profiles.active=dev -jar app.jar
+```
+
+### 🐳 3. Biến môi trường OS
+Thường dùng nhất trong **Docker Compose**. Spring Boot tự động map `SPRING_PROFILES_ACTIVE` (viết hoa) sang `spring.profiles.active`.
+
+    ```yaml
+    # docker-compose.yml
+    services:
+      app:
+        environment:
+          - SPRING_PROFILES_ACTIVE=stg
+    ```
+
+### 📄 4. Trong file cấu hình (`application.yml`)
+Set cứng trong file cấu hình. Cách này ít được dùng vì làm mất tính linh hoạt khi deploy qua các môi trường.
+
+---
+
+## ⚠️ 3. Lưu ý về Xung đột cấu hình
+
+Khi bạn kết hợp giữa **Docker Compose** và **Gradle**, cần lưu ý:
+
+* **Khi chạy Local bằng Gradle**: Khai báo `systemProperty` trong task `bootRun` sẽ thắng biến môi trường của máy bạn.
+* **Khi chạy Docker**: Docker nạp biến môi trường vào OS của Container. Vì bạn chạy file Jar trực tiếp (`java -jar`), Spring Boot sẽ ưu tiên **Biến môi trường (Vị trí số 3)**.
+
+---
+
+## 💡 Mẹo kiểm tra nhanh
+
+Để biết chắc chắn Profile nào đang được nạp, hãy kiểm tra dòng log đầu tiên khi ứng dụng Start:
+
+    ```text
+    The following 1 profile is active: "dev"
+    ```
+
+---

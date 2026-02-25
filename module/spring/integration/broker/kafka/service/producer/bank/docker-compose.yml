@@ -13,10 +13,13 @@ services:
       <<: *common-build
       args:
         - MODULE_PATH=${KAFKA_PRODUCER_BANK_MODULE_PATH}
-        - JAR_PATH=${KAFKA_PRODUCER_BANK_JAR_PATH}
+        - RELATIVE_PATH=${KAFKA_PRODUCER_BANK_RELATIVE_PATH}
     environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-default}
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka1:29092,kafka2:29092,kafka3:29092
     env_file:
-      - .env
+      - path: .env
+      - path: .env.${SPRING_PROFILES_ACTIVE:-default}
+        required: false
 
 

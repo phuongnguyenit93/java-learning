@@ -10,11 +10,12 @@ services:
     ports:
       - ${PORT}:${PORT}
     environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-default}
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka1:29092,kafka2:29092,kafka3:29092
     build:
       <<: *common-build
       args:
         - MODULE_PATH=${KAFKA_CONTROL_MODULE_PATH}
-        - JAR_PATH=${KAFKA_CONTROL_JAR_PATH}
+        - RELATIVE_PATH=${KAFKA_CONTROL_RELATIVE_PATH}
     env_file:
       - .env

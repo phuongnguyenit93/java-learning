@@ -10,7 +10,7 @@ tasks.register("combineBuildYaml", DefaultTask) {
             throw new GradleException("Error : Missing 'SERVICE_NAME'. Please add by -PSERVICE_NAME=... or in gradle.properties")
         }
 
-        List<HashMap> folderPropsList = gradle.extensions.getExtraProperties().get("allFolderProps") as List<HashMap>
+        List<HashMap> folderPropsList = gradle.extensions.getExtraProperties().get("allModuleProps") as List<HashMap>
 
         project.ext.combineBuildYaml (folderPropsList,serviceNameProp)
     }
