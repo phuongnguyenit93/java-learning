@@ -78,29 +78,38 @@ subprojects {
 
 //        println tasks
 
-        // Thay đổi đường dẫn build cho tất cả module con
-        def projectPathAsFolder = project.path.replace(':', '/')
-        layout.buildDirectory = rootProject.layout.buildDirectory.dir("outputs/${projectPathAsFolder}")
-
         def targetFile = file("${project.projectDir}/task.gradle")
         if (targetFile.exists()) {
             apply from: targetFile
         }
-
+        
         processResources{
             // 1. Chỉ định rõ ràng duy nhất file này được phép copy
             include 'application.yml'
 
-            // 2. (Tùy chọn) Nếu bạn muốn chắc chắn loại bỏ tất cả các file có đuôi .yml khác và .properties
-            // Dòng này thực ra không cần thiết nếu đã dùng 'include' ở trên,
-            // nhưng thêm vào sẽ giúp logic chặt chẽ hơn.
-            exclude '**/application-*.yml'
-            exclude '**/*.properties'
+            from ("${projectDir}/src/main/resources") {
+                // 2. (Tùy chọn) Nếu bạn muốn chắc chắn loại bỏ tất cả các file có đuôi .yml khác và .properties
+                // Dòng này thực ra không cần thiết nếu đã dùng 'include' ở trên,
+                // nhưng thêm vào sẽ giúp logic chặt chẽ hơn.
+                exclude '**/application-*.yml'
+                exclude '**/*.properties'
+//                exclude 'application.yml'
+            }
 
+//            from("${projectDir}/src/main/resources/application-merged.yml") {
+//                rename { 'application.yml' }
+//            }
+
+            exclude 'application-merged.yml'
             // 3. Đặt chiến lược xử lý nếu trùng lặp (thường dùng trong Gradle mới)
             duplicatesStrategy = DuplicatesStrategy.INCLUDE
         }
 
+        tasks.named('bootJar') {
+            // Gom vào thư mục outputs ở root, phân theo tên project
+            def projectPathAsFolder = project.path.replace(':', '/')
+            destinationDirectory = rootProject.layout.buildDirectory.dir("jar/${projectPathAsFolder}")
+        }
     }
 
     if (file("${projectDir}/docker-compose.yml").exists()) {

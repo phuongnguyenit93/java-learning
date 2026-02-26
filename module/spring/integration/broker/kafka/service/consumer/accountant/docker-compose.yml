@@ -10,10 +10,12 @@ services:
     ports:
       - ${PORT}:${PORT}
     environment:
-      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-default}
+      - SPRING_PROFILES_ACTIVE=${DOCKER_PROFILE:-default}
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka1:29092,kafka2:29092,kafka3:29092
     env_file:
-      - .env
+      - path: .env
+      - path: .env.${DOCKER_PROFILE:-default}
+        required: false
     build:
       <<: *common-build
       args:
