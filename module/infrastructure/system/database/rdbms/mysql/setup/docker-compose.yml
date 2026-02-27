@@ -1,0 +1,27 @@
+services:
+  mysql-db:
+    image: mysql:latest
+    container_name: my_sql_db
+    restart: always
+    environment:
+      # Lấy biến từ file .env đã tạo ở trên
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - ${PORT_HOST}:${PORT_DOCKER}
+    volumes:
+      # 1. Lưu trữ dữ liệu thực tế (quan trọng để không mất data)
+      - db_data:/var/lib/mysql
+#      - ./init-db:/docker-entrypoint-initdb.d
+
+#    networks:
+#      - mysql_network
+
+volumes:
+  db_data:
+    name: my-sql-volume
+
+#networks:
+#  mysql_network:

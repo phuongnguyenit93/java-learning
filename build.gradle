@@ -139,6 +139,47 @@ subprojects {
     }
 }
 
+task generateProjectStructure {
+    doLast {
+        def outputFileName = "internal/module_structure.txt"
+        def outputFile = new File(projectDir, outputFileName)
+
+        // Các folder loại bỏ
+        def excludeDirs = [".gradle", ".idea", "build", "bin", "out", "target", "node_modules", ".git","src","readme"]
+
+        def sb = new StringBuilder()
+        sb.append("Cập nhật lúc: ${new Date().format('yyyy-MM-dd HH:mm:ss')}\n")
+        sb.append("=" * 30 + "\n")
+
+        boolean isStarted = false
+
+        def walkDir
+        walkDir = { File dir, String prefix ->
+            if (!isStarted) {
+                sb.append("${dir.name}\n")
+                isStarted = true
+            }
+            // Lấy danh sách folder, lọc bỏ các folder trong list exclude
+            def subDirs = dir.listFiles().findAll { it.isDirectory() && !excludeDirs.contains(it.name) }
+            subDirs.sort { it.name }.eachWithIndex { subDir, index ->
+                def isLast = (index == subDirs.size() - 1)
+
+                // Vẽ nhánh cho folder hiện tại
+                sb.append(prefix).append(isLast ? "└── " : "├── ").append(subDir.name).append("\n")
+
+                // Đệ quy vào các folder con
+                walkDir(subDir, prefix + (isLast ? "    " : "│   "))
+            }
+        }
+
+        // Bắt đầu chạy từ thư mục gốc của dự án
+        walkDir("${projectDir}/module" as File, "")
+
+        outputFile.text = sb.toString()
+        println "--- Đã cập nhật sơ đồ (bao gồm Root) tại: ${outputFileName} ---"
+    }
+}
+
 task runAll {
     dependsOn ":application:bootRun" , ":application2:bootRun"
 }

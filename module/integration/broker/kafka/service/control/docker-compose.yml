@@ -1,0 +1,23 @@
+x-common-build: &common-build
+  context: ${PROJECT_ROOT}
+  dockerfile: internal/docker/file/base/Dockerfile
+
+services:
+  kafka-control:
+    container_name: kafka-control
+    image: kafka-control
+    pull_policy: build
+    ports:
+      - ${PORT}:${PORT}
+    environment:
+      - SPRING_PROFILES_ACTIVE=${DOCKER_PROFILE:-default}
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka1:29092,kafka2:29092,kafka3:29092
+    build:
+      <<: *common-build
+      args:
+        - MODULE_PATH=${KAFKA_CONTROL_MODULE_PATH}
+        - RELATIVE_PATH=${KAFKA_CONTROL_RELATIVE_PATH}
+    env_file:
+      - path: .env
+      - path: .env.${DOCKER_PROFILE:-default}
+        required: false

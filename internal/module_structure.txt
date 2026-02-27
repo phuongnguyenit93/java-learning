@@ -1,0 +1,164 @@
+Cập nhật lúc: 2026-02-27 18:12:03
+==============================
+module
+├── infrastructure
+│   ├── devops
+│   │   ├── artifact-management
+│   │   │   ├── central-portal
+│   │   │   └── nexus
+│   │   ├── docker
+│   │   ├── jenkins
+│   │   └── k8s
+│   └── system
+│       ├── database
+│       │   ├── advance
+│       │   │   ├── function
+│       │   │   ├── package
+│       │   │   └── procedures
+│       │   ├── connection-pool
+│       │   │   └── hikariCP
+│       │   ├── nosql
+│       │   │   ├── mongoDB
+│       │   │   │   └── aggregation
+│       │   │   ├── neo4j
+│       │   │   └── redis
+│       │   │       └── lua-scripting
+│       │   └── rdbms
+│       │       ├── mysql
+│       │       │   ├── advance
+│       │       │   │   ├── functions
+│       │       │   │   ├── procedure
+│       │       │   │   └── trigger
+│       │       │   └── setup
+│       │       │       └── init-db
+│       │       ├── oracle
+│       │       │   ├── advance
+│       │       │   │   ├── package
+│       │       │   │   └── procedure
+│       │       │   └── setup
+│       │       └── postgresql
+│       │           ├── advance
+│       │           │   ├── functions
+│       │           │   └── trigger
+│       │           └── setup
+│       ├── network
+│       ├── observability
+│       │   ├── logging
+│       │   ├── metrics
+│       │   └── tracing
+│       └── server
+├── integration
+│   ├── broker
+│   │   ├── activeMQ
+│   │   ├── kafka
+│   │   │   └── service
+│   │   │       ├── consumer
+│   │   │       │   ├── accountant
+│   │   │       │   └── notification
+│   │   │       ├── control
+│   │   │       ├── producer
+│   │   │       │   └── bank
+│   │   │       └── server
+│   │   └── rabbitMQ
+│   ├── oneway
+│   │   ├── grpc
+│   │   ├── httpRequest
+│   │   │   ├── blocking
+│   │   │   │   ├── feign-client
+│   │   │   │   ├── http-url-connection
+│   │   │   │   └── rest-template
+│   │   │   └── nonBlocking
+│   │   │       └── web-client
+│   │   └── sse
+│   └── twoway
+│       ├── rsocket
+│       └── websocket
+├── microservice
+└── platform
+    ├── cloud
+    ├── development
+    │   ├── build-tool
+    │   │   ├── ant
+    │   │   ├── gradle
+    │   │   └── maven
+    │   ├── framework
+    │   │   └── spring
+    │   │       ├── basic
+    │   │       │   ├── core
+    │   │       │   │   ├── annotation
+    │   │       │   │   ├── bean
+    │   │       │   │   └── scope
+    │   │       │   ├── profile
+    │   │       │   └── properties
+    │   │       ├── data
+    │   │       │   ├── jpa
+    │   │       │   │   └── gradle
+    │   │       │   │       └── wrapper
+    │   │       │   └── nosql
+    │   │       ├── library
+    │   │       │   ├── actuator
+    │   │       │   ├── devtool
+    │   │       │   ├── swagger
+    │   │       │   └── web
+    │   │       └── springboot
+    │   ├── language
+    │   │   └── java
+    │   │       ├── advance
+    │   │       ├── core
+    │   │       │   └── abstractInterface
+    │   │       ├── mapping
+    │   │       │   ├── model-mapper
+    │   │       │   └── object-mapper
+    │   │       ├── persistence
+    │   │       │   ├── orm
+    │   │       │   │   ├── hibernate
+    │   │       │   │   └── jpa-specification
+    │   │       │   └── sql
+    │   │       │       ├── jdbc
+    │   │       │       └── mybatis
+    │   │       └── version
+    │   │           ├── java11
+    │   │           ├── java16
+    │   │           │   └── record
+    │   │           ├── java17
+    │   │           ├── java7
+    │   │           └── java8
+    │   ├── paradigm
+    │   │   ├── aop
+    │   │   ├── asynchronous
+    │   │   │   ├── batch
+    │   │   │   └── schedule
+    │   │   │       └── task
+    │   │   ├── di-ioc
+    │   │   ├── functional
+    │   │   ├── mvc-pattern
+    │   │   │   ├── controller
+    │   │   │   ├── model
+    │   │   │   └── service
+    │   │   ├── object-oriented
+    │   │   └── reactive-stream
+    │   └── validation
+    │       ├── performance
+    │       │   ├── benchmark
+    │       │   ├── jmeter
+    │       │   └── load-test
+    │       └── testing
+    │           ├── e2e-test
+    │           ├── integration-test
+    │           └── unit-test
+    ├── digital
+    ├── social
+    └── support
+        ├── document
+        │   ├── excel
+        │   ├── pdf
+        │   ├── word
+        │   └── xml
+        └── notification
+            ├── email
+            ├── kakao
+            ├── microsoft-team
+            ├── mobile-push
+            ├── slack
+            ├── sms
+            └── telegram

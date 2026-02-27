@@ -55,7 +55,7 @@ ext.getAndStoreModuleProps = {
 
         dirListProps.add(propMap)
 
-        def infoFile = new File(rootDir as File,"info/module/module-info.json")
+        def infoFile = new File(rootDir as File,"internal/info/module/module-info.json")
         if (!infoFile.exists()) infoFile.createNewFile()
 
         def jsonString = JsonOutput.prettyPrint(JsonOutput.toJson(dirListProps))
@@ -213,8 +213,8 @@ ext.getAllModuleProperties = { Map currentProjectKeys ->
     logger.lifecycle("${PURPLE}📑 [PROPERTY-DICTIONARY] Đang phân tích và cập nhật từ điển thuộc tính...${RESET}")
     logger.lifecycle("${PURPLE}==================================================${RESET}")
 
-    def descFile = new File(rootDir, "info/properties/description-properties.json")
-    def infoFile = new File(rootDir, "info/properties/info-properties.json")
+    def descFile = new File(rootDir, "internal/info/properties/description-properties.json")
+    def infoFile = new File(rootDir, "internal/info/properties/info-properties.json")
 
     // --- XỬ LÝ FILE 1: description-properties.json ---
     def oldDescData = [:]

@@ -41,7 +41,7 @@ ext.buildProfilePropsFile = { List<HashMap> appProps ->
 
     appProps.each { props ->
         def moduleName = props.get("SERVICE_NAME") ?: props.get("RELATIVE_PATH")
-        def baseFile = file("${rootDir}/info/module/file-based.yml")
+        def baseFile = file("${rootDir}/internal/info/module/file-based.yml")
         def baseDir = getBaseDirProps(props)
         def configFile = file("${baseDir}/application.yml")
 
