@@ -140,8 +140,8 @@
     },
     {
         "IS_MICROSERVICE": "TRUE",
-        "MODULE_PATH": "module:platform:development:language:java:core:abstractInterface",
-        "RELATIVE_PATH": "module/platform/development/language/java/core/abstractInterface"
+        "MODULE_PATH": "module:platform:development:language:java:core:abstract-interface",
+        "RELATIVE_PATH": "module/platform/development/language/java/core/abstract-interface"
     },
     {
         "SERVICE_NAME": "MODEL_MAPPER",

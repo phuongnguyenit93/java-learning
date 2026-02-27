@@ -101,7 +101,7 @@
             "SPRING_DEVTOOL": "module/platform/development/framework/spring/library/devtool",
             "SPRING_SWAGGER": "module/platform/development/framework/spring/library/swagger",
             "SPRING_WEB": "module/platform/development/framework/spring/library/web",
-            "abstractInterface": "module/platform/development/language/java/core/abstractInterface",
+            "abstract-interface": "module/platform/development/language/java/core/abstract-interface",
             "jpa": "module/platform/development/framework/spring/data/jpa",
             "record": "module/platform/development/language/java/version/java16/record",
             "task": "module/platform/development/paradigm/asynchronous/schedule/task"
