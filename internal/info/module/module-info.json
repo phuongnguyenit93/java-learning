@@ -1,17 +1,17 @@
-[
-    {
+{
+    "LIBRARY_SAMPLE": {
         "SERVICE_NAME": "LIBRARY_SAMPLE",
         "IS_MICROSERVICE": "TRUE",
         "MODULE_PATH": "internal:library:sample",
         "RELATIVE_PATH": "internal/library/sample"
     },
-    {
+    "DATABASE_NOSQL": {
         "SERVICE_NAME": "DATABASE_NOSQL",
         "IS_MICROSERVICE": "TRUE",
         "MODULE_PATH": "module:infrastructure:system:database:nosql:mongoDB",
         "RELATIVE_PATH": "module/infrastructure/system/database/nosql/mongoDB"
     },
-    {
+    "DATABASE_MYSQL": {
         "SERVICE_NAME": "DATABASE_MYSQL",
         "BUILD_YML_PROFILE": "TRUE",
         "MODULE_PATH": "module:infrastructure:system:database:rdbms:mysql:setup",
@@ -22,19 +22,19 @@
         "BUILD_ENV_PROFILE": "TRUE",
         "INJECT_TASK_AUTO": "TRUE"
     },
-    {
+    "DATABASE_ORACLE": {
         "SERVICE_NAME": "DATABASE_ORACLE",
         "IS_MICROSERVICE": "TRUE",
         "MODULE_PATH": "module:infrastructure:system:database:rdbms:oracle:setup",
         "RELATIVE_PATH": "module/infrastructure/system/database/rdbms/oracle/setup"
     },
-    {
+    "DATABASE_POSTGRESQL": {
         "SERVICE_NAME": "DATABASE_POSTGRESQL",
         "IS_MICROSERVICE": "TRUE",
         "MODULE_PATH": "module:infrastructure:system:database:rdbms:postgresql:setup",
         "RELATIVE_PATH": "module/infrastructure/system/database/rdbms/postgresql/setup"
     },
-    {
+    "KAFKA": {
         "SERVICE_NAME": "KAFKA",
         "BUILD_ENV_DOCKER_PROFILE": "TRUE",
         "MODULE_PATH": "module:integration:broker:kafka",
@@ -45,7 +45,7 @@
         "README_LANGUAGE": "en,vi",
         "INJECT_TASK_AUTO": "TRUE"
     },
-    {
+    "KAFKA_CONSUMER_ACCOUNTANT": {
         "SERVICE_NAME": "KAFKA_CONSUMER_ACCOUNTANT",
         "BUILD_YML_PROFILE": "TRUE",
         "MODULE_PATH": "module:integration:broker:kafka:service:consumer:accountant",
@@ -57,7 +57,7 @@
         "BUILD_YML_MODULE_DEPEND": "SPRING_SWAGGER,SPRING_WEB",
         "INJECT_TASK_AUTO": "TRUE"
     },
-    {
+    "KAFKA_CONSUMER_NOTIFICATION": {
         "SERVICE_NAME": "KAFKA_CONSUMER_NOTIFICATION",
         "BUILD_YML_PROFILE": "TRUE",
         "MODULE_PATH": "module:integration:broker:kafka:service:consumer:notification",
@@ -69,7 +69,7 @@
         "BUILD_YML_MODULE_DEPEND": "SPRING_SWAGGER,SPRING_WEB",
         "INJECT_TASK_AUTO": "TRUE"
     },
-    {
+    "KAFKA_CONTROL": {
         "SERVICE_NAME": "KAFKA_CONTROL",
         "BUILD_YML_PROFILE": "TRUE",
         "MODULE_PATH": "module:integration:broker:kafka:service:control",
@@ -80,7 +80,7 @@
         "BUILD_ENV_PROFILE": "TRUE",
         "INJECT_TASK_AUTO": "TRUE"
     },
-    {
+    "KAFKA_PRODUCER_BANK": {
         "SERVICE_NAME": "KAFKA_PRODUCER_BANK",
         "BUILD_YML_PROFILE": "TRUE",
         "MODULE_PATH": "module:integration:broker:kafka:service:producer:bank",
@@ -92,7 +92,7 @@
         "BUILD_YML_MODULE_DEPEND": "SPRING_SWAGGER,SPRING_WEB",
         "INJECT_TASK_AUTO": "TRUE"
     },
-    {
+    "KAFKA_SERVER": {
         "SERVICE_NAME": "KAFKA_SERVER",
         "MODULE_PATH": "module:integration:broker:kafka:service:server",
         "BUILD_ENV": "TRUE",
@@ -101,7 +101,7 @@
         "BUILD_ENV_PROFILE": "TRUE",
         "INJECT_TASK_AUTO": "TRUE"
     },
-    {
+    "SPRING_ACTUATOR": {
         "SERVICE_NAME": "SPRING_ACTUATOR",
         "BUILD_YML_PROFILE": "TRUE",
         "IS_MICROSERVICE": "TRUE",
@@ -109,12 +109,12 @@
         "MODULE_PATH": "module:platform:development:framework:spring:actuator",
         "RELATIVE_PATH": "module/platform/development/framework/spring/actuator"
     },
-    {
+    "jpa": {
         "IS_MICROSERVICE": "TRUE",
         "MODULE_PATH": "module:platform:development:framework:spring:data:jpa",
         "RELATIVE_PATH": "module/platform/development/framework/spring/data/jpa"
     },
-    {
+    "SPRING_DEVTOOL": {
         "SERVICE_NAME": "SPRING_DEVTOOL",
         "BUILD_YML_PROFILE": "TRUE",
         "IS_MICROSERVICE": "TRUE",
@@ -122,7 +122,7 @@
         "MODULE_PATH": "module:platform:development:framework:spring:devtool",
         "RELATIVE_PATH": "module/platform/development/framework/spring/devtool"
     },
-    {
+    "SPRING_SWAGGER": {
         "SERVICE_NAME": "SPRING_SWAGGER",
         "BUILD_YML_PROFILE": "TRUE",
         "IS_MICROSERVICE": "TRUE",
@@ -130,7 +130,7 @@
         "MODULE_PATH": "module:platform:development:framework:spring:swagger",
         "RELATIVE_PATH": "module/platform/development/framework/spring/swagger"
     },
-    {
+    "SPRING_WEB": {
         "SERVICE_NAME": "SPRING_WEB",
         "BUILD_YML_PROFILE": "TRUE",
         "IS_MICROSERVICE": "TRUE",
@@ -138,29 +138,29 @@
         "MODULE_PATH": "module:platform:development:framework:spring:web",
         "RELATIVE_PATH": "module/platform/development/framework/spring/web"
     },
-    {
+    "abstract-interface": {
         "IS_MICROSERVICE": "TRUE",
         "MODULE_PATH": "module:platform:development:language:java:core:abstract-interface",
         "RELATIVE_PATH": "module/platform/development/language/java/core/abstract-interface"
     },
-    {
+    "MODEL_MAPPER": {
         "SERVICE_NAME": "MODEL_MAPPER",
         "IS_MICROSERVICE": "TRUE",
         "MODULE_PATH": "module:platform:development:language:java:mapping:model-mapper",
         "RELATIVE_PATH": "module/platform/development/language/java/mapping/model-mapper"
     },
-    {
+    "OBJECT_MAPPER": {
         "SERVICE_NAME": "OBJECT_MAPPER",
         "IS_MICROSERVICE": "TRUE",
         "MODULE_PATH": "module:platform:development:language:java:mapping:object-mapper",
         "RELATIVE_PATH": "module/platform/development/language/java/mapping/object-mapper"
     },
-    {
+    "record": {
         "IS_MICROSERVICE": "TRUE",
         "MODULE_PATH": "module:platform:development:language:java:version:java16:record",
         "RELATIVE_PATH": "module/platform/development/language/java/version/java16/record"
     },
-    {
+    "ASPECT": {
         "SERVICE_NAME": "ASPECT",
         "IS_MICROSERVICE": "TRUE",
         "BUILD_README": "TRUE",
@@ -168,11 +168,11 @@
         "RELATIVE_PATH": "module/platform/development/paradigm/aop",
         "README_LANGUAGE": "en"
     },
-    {
+    "task": {
         "BUILD_YML_PROFILE": "TRUE",
         "IS_MICROSERVICE": "TRUE",
         "BUILD_YML": "TRUE",
         "MODULE_PATH": "module:platform:development:paradigm:asynchronous:schedule:task",
         "RELATIVE_PATH": "module/platform/development/paradigm/asynchronous/schedule/task"
     }
-]
+}

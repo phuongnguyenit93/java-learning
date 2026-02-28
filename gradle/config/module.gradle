@@ -12,6 +12,7 @@ ext.getAndStoreModuleProps = {
     logger.lifecycle("${BLUE}==================================================${RESET}")
 
     List<HashMap> dirListProps = new ArrayList<>()
+    HashMap moduleInfoStore = [:]
     HashMap currentProjectKeys = [:]
     // Lấy danh sách các folder chứa gradle.properties (trừ root và build)
     List<File> folderList = fileTree(rootDir) {
@@ -54,11 +55,12 @@ ext.getAndStoreModuleProps = {
         }
 
         dirListProps.add(propMap)
+        moduleInfoStore[moduleName] = propMap
 
         def infoFile = new File(rootDir as File,"internal/info/module/module-info.json")
         if (!infoFile.exists()) infoFile.createNewFile()
 
-        def jsonString = JsonOutput.prettyPrint(JsonOutput.toJson(dirListProps))
+        def jsonString = JsonOutput.prettyPrint(JsonOutput.toJson(moduleInfoStore))
         infoFile.text = jsonString
 
         // Log từng module được map thành công
