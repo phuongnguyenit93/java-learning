@@ -43,10 +43,10 @@
             "KAFKA_CONSUMER_NOTIFICATION": "module/integration/broker/kafka/service/consumer/notification",
             "KAFKA_CONTROL": "module/integration/broker/kafka/service/control",
             "KAFKA_PRODUCER_BANK": "module/integration/broker/kafka/service/producer/bank",
-            "SPRING_ACTUATOR": "module/platform/development/framework/spring/library/actuator",
-            "SPRING_DEVTOOL": "module/platform/development/framework/spring/library/devtool",
-            "SPRING_SWAGGER": "module/platform/development/framework/spring/library/swagger",
-            "SPRING_WEB": "module/platform/development/framework/spring/library/web",
+            "SPRING_ACTUATOR": "module/platform/development/framework/spring/actuator",
+            "SPRING_DEVTOOL": "module/platform/development/framework/spring/devtool",
+            "SPRING_SWAGGER": "module/platform/development/framework/spring/swagger",
+            "SPRING_WEB": "module/platform/development/framework/spring/web",
             "task": "module/platform/development/paradigm/asynchronous/schedule/task"
         }
     },
@@ -64,10 +64,10 @@
             "KAFKA_CONSUMER_NOTIFICATION": "module/integration/broker/kafka/service/consumer/notification",
             "KAFKA_CONTROL": "module/integration/broker/kafka/service/control",
             "KAFKA_PRODUCER_BANK": "module/integration/broker/kafka/service/producer/bank",
-            "SPRING_ACTUATOR": "module/platform/development/framework/spring/library/actuator",
-            "SPRING_DEVTOOL": "module/platform/development/framework/spring/library/devtool",
-            "SPRING_SWAGGER": "module/platform/development/framework/spring/library/swagger",
-            "SPRING_WEB": "module/platform/development/framework/spring/library/web",
+            "SPRING_ACTUATOR": "module/platform/development/framework/spring/actuator",
+            "SPRING_DEVTOOL": "module/platform/development/framework/spring/devtool",
+            "SPRING_SWAGGER": "module/platform/development/framework/spring/swagger",
+            "SPRING_WEB": "module/platform/development/framework/spring/web",
             "task": "module/platform/development/paradigm/asynchronous/schedule/task"
         }
     },
@@ -97,10 +97,10 @@
             "LIBRARY_SAMPLE": "internal/library/sample",
             "MODEL_MAPPER": "module/platform/development/language/java/mapping/model-mapper",
             "OBJECT_MAPPER": "module/platform/development/language/java/mapping/object-mapper",
-            "SPRING_ACTUATOR": "module/platform/development/framework/spring/library/actuator",
-            "SPRING_DEVTOOL": "module/platform/development/framework/spring/library/devtool",
-            "SPRING_SWAGGER": "module/platform/development/framework/spring/library/swagger",
-            "SPRING_WEB": "module/platform/development/framework/spring/library/web",
+            "SPRING_ACTUATOR": "module/platform/development/framework/spring/actuator",
+            "SPRING_DEVTOOL": "module/platform/development/framework/spring/devtool",
+            "SPRING_SWAGGER": "module/platform/development/framework/spring/swagger",
+            "SPRING_WEB": "module/platform/development/framework/spring/web",
             "abstract-interface": "module/platform/development/language/java/core/abstract-interface",
             "jpa": "module/platform/development/framework/spring/data/jpa",
             "record": "module/platform/development/language/java/version/java16/record",
@@ -129,10 +129,10 @@
             "LIBRARY_SAMPLE": "internal/library/sample",
             "MODEL_MAPPER": "module/platform/development/language/java/mapping/model-mapper",
             "OBJECT_MAPPER": "module/platform/development/language/java/mapping/object-mapper",
-            "SPRING_ACTUATOR": "module/platform/development/framework/spring/library/actuator",
-            "SPRING_DEVTOOL": "module/platform/development/framework/spring/library/devtool",
-            "SPRING_SWAGGER": "module/platform/development/framework/spring/library/swagger",
-            "SPRING_WEB": "module/platform/development/framework/spring/library/web"
+            "SPRING_ACTUATOR": "module/platform/development/framework/spring/actuator",
+            "SPRING_DEVTOOL": "module/platform/development/framework/spring/devtool",
+            "SPRING_SWAGGER": "module/platform/development/framework/spring/swagger",
+            "SPRING_WEB": "module/platform/development/framework/spring/web"
         }
     }
 }

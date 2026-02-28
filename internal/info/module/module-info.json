@@ -102,41 +102,41 @@
         "INJECT_TASK_AUTO": "TRUE"
     },
     {
-        "IS_MICROSERVICE": "TRUE",
-        "MODULE_PATH": "module:platform:development:framework:spring:data:jpa",
-        "RELATIVE_PATH": "module/platform/development/framework/spring/data/jpa"
-    },
-    {
         "SERVICE_NAME": "SPRING_ACTUATOR",
         "BUILD_YML_PROFILE": "TRUE",
         "IS_MICROSERVICE": "TRUE",
         "BUILD_YML": "TRUE",
-        "MODULE_PATH": "module:platform:development:framework:spring:library:actuator",
-        "RELATIVE_PATH": "module/platform/development/framework/spring/library/actuator"
+        "MODULE_PATH": "module:platform:development:framework:spring:actuator",
+        "RELATIVE_PATH": "module/platform/development/framework/spring/actuator"
+    },
+    {
+        "IS_MICROSERVICE": "TRUE",
+        "MODULE_PATH": "module:platform:development:framework:spring:data:jpa",
+        "RELATIVE_PATH": "module/platform/development/framework/spring/data/jpa"
     },
     {
         "SERVICE_NAME": "SPRING_DEVTOOL",
         "BUILD_YML_PROFILE": "TRUE",
         "IS_MICROSERVICE": "TRUE",
         "BUILD_YML": "TRUE",
-        "MODULE_PATH": "module:platform:development:framework:spring:library:devtool",
-        "RELATIVE_PATH": "module/platform/development/framework/spring/library/devtool"
+        "MODULE_PATH": "module:platform:development:framework:spring:devtool",
+        "RELATIVE_PATH": "module/platform/development/framework/spring/devtool"
     },
     {
         "SERVICE_NAME": "SPRING_SWAGGER",
         "BUILD_YML_PROFILE": "TRUE",
         "IS_MICROSERVICE": "TRUE",
         "BUILD_YML": "TRUE",
-        "MODULE_PATH": "module:platform:development:framework:spring:library:swagger",
-        "RELATIVE_PATH": "module/platform/development/framework/spring/library/swagger"
+        "MODULE_PATH": "module:platform:development:framework:spring:swagger",
+        "RELATIVE_PATH": "module/platform/development/framework/spring/swagger"
     },
     {
         "SERVICE_NAME": "SPRING_WEB",
         "BUILD_YML_PROFILE": "TRUE",
         "IS_MICROSERVICE": "TRUE",
         "BUILD_YML": "TRUE",
-        "MODULE_PATH": "module:platform:development:framework:spring:library:web",
-        "RELATIVE_PATH": "module/platform/development/framework/spring/library/web"
+        "MODULE_PATH": "module:platform:development:framework:spring:web",
+        "RELATIVE_PATH": "module/platform/development/framework/spring/web"
     },
     {
         "IS_MICROSERVICE": "TRUE",
