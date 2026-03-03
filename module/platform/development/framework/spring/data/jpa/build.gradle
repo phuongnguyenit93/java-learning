@@ -32,8 +32,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.hibernate.orm:hibernate-core'
 	implementation 'org.hibernate.orm:hibernate-community-dialects'
-	implementation implementProjectByServiceName("DATABASE_${databaseType}")
-	implementation implementProjectByServiceName("SPRING_DEVTOOL")
-	implementation implementProjectByServiceName("MODEL_MAPPER")
-	implementation implementProjectByServiceName("OBJECT_MAPPER")
+	implementation searchProjectByServiceName("DATABASE_${databaseType}")
+	implementation platform(searchProjectByServiceName("SPRING_DEVTOOL"))
+	implementation searchProjectByServiceName("MODEL_MAPPER")
+	implementation searchProjectByServiceName("OBJECT_MAPPER")
 }

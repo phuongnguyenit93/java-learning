@@ -1,48 +1,5 @@
 apply from: "${rootDir}/gradle/config/module.gradle"
 
-ext.buildReadmeEmptyFile = {List<HashMap> readmeProps ->
-    readmeProps.each {props ->
-        File baseDir = new File(rootDir,props.get("RELATIVE_PATH") as String)
-        File readmeFile = new File(baseDir,"README.md")
-
-        if (!readmeFile.exists()) readmeFile.createNewFile()
-    }
-}
-
-ext.buildReadmeLanguageStructure = {List<HashMap> readmeProps ->
-    readmeProps.each {props ->
-        File baseDir = new File (rootDir,props.get("RELATIVE_PATH") as String)
-
-        List<String> langList = props.get("README_LANGUAGE")?.toString()?.split(",")
-
-        if (langList == null) return
-
-        langList.each{lang ->
-            File langDir = new File(baseDir,"readme/${lang}")
-            File menuDir = new File(langDir,"menu")
-            if (!menuDir.exists()) menuDir.mkdirs()
-
-            ["BASE.md", "LIST.md"].each { fileName ->
-                def file = new File(langDir, fileName)
-                if (!file.exists()) {
-                    file.createNewFile()
-                }
-            }
-        }
-
-        File readmeDir = new File(baseDir,"readme")
-
-        if (readmeDir.exists()) {
-            readmeDir.listFiles().each { file ->
-                if (file.isDirectory() && !langList.contains(file.name)) {
-                    file.deleteDir()
-                }
-            }
-        }
-
-    }
-}
-
 ext.buildReadmeByServiceName = { List<HashMap> folderPropsList, String serviceName ->
     def BLUE = "\u001B[34m"
     def BOLD = "\u001B[1m"

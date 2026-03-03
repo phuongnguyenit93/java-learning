@@ -1,0 +1,22 @@
+Set<Project> moduleList = rootProject.subprojects.findAll{project ->
+    return new File(project.projectDir,"gradle.properties").exists()
+}
+
+
+ext.searchProjectByServiceName = {String serviceName, Set<Project> modules = moduleList->
+    return modules.find{module ->
+        module.hasProperty("SERVICE_NAME") && module.findProperty("SERVICE_NAME") == serviceName
+    }
+}
+
+ext.searchProjectByKeyValue = {String keys, String value, Set<Project> modules = moduleList->
+    return modules.find{module ->
+        module.hasProperty(keys) && module.findProperty(keys) == value
+    }
+}
+
+ext.searchProjectByServiceNameList = {List<String> serviceNameList, Set<Project> modules = moduleList ->
+    return modules.findAll{module ->
+        module.hasProperty("SERVICE_NAME") && serviceNameList.contains(module.findProperty("SERVICE_NAME"))
+    }
+}

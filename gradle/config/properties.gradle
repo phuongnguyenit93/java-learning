@@ -24,57 +24,6 @@ static def mergeMaps (Map base,Map override) {
     }
 }
 
-ext.buildProfilePropsFile = { List<HashMap> appProps ->
-    def GREEN = "\u001B[32m"
-    def YELLOW = "\u001B[33m"
-    def CYAN = "\u001B[36m"
-    def RESET = "\u001B[0m"
-    def RED = "\u001B[31m"
-    def BLUE = "\u001B[34m"
-    def BOLD = "\u001B[1m"
-
-    logger.lifecycle("${BLUE}${BOLD}==================================================")
-    logger.lifecycle("🔍 KHỞI TẠO APPLICATION.YML TẠI CÁC MODULE CHƯA CÓ")
-    logger.lifecycle("${BLUE}==================================================${RESET}")
-
-    logger.lifecycle("${CYAN}🚀 [CONFIG-INIT]${RESET} Đang kiểm tra cấu hình application.yml cho ${appProps.size()} module...")
-
-    appProps.each { props ->
-        def moduleName = props.get("SERVICE_NAME") ?: props.get("RELATIVE_PATH")
-        def baseFile = file("${rootDir}/internal/info/module/file-based.yml")
-        def baseDir = getBaseDirProps(props)
-        def configFile = file("${baseDir}/application.yml")
-
-        // 1. Kiểm tra file mẫu (base-file) trước
-        if (!baseFile.exists()) {
-            logger.lifecycle("${RED}❌ [ERROR]${RESET} Không tìm thấy file mẫu tại: ${baseFile.path}")
-            return // Thoát sớm nếu không có file gốc để copy
-        }
-
-        // 2. Xử lý logic tạo file
-        if (configFile.exists()) {
-            // Dùng dấu mũi tên mờ hơn cho các file đã tồn tại để tránh loãng log
-            logger.lifecycle("  ${YELLOW}⏩ [SKIP]${RESET} Module [${moduleName}]: application.yml đã tồn tại.")
-        } else {
-            try {
-                // Đảm bảo thư mục cha tồn tại trước khi tạo file
-                if (!configFile.parentFile.exists()) {
-                    configFile.parentFile.mkdirs()
-                }
-
-                configFile.createNewFile()
-                configFile.text = baseFile.text
-
-                logger.lifecycle("  ${GREEN}✨ [CREATED]${RESET} Module [${moduleName}]: Đã khởi tạo file từ file-based.yml")
-                logger.lifecycle("             └─ Path: ${configFile.path}")
-            } catch (Exception e) {
-                logger.lifecycle("${RED}❌ [FAILED]${RESET} Không thể tạo file cho ${moduleName}: ${e.message}")
-            }
-        }
-    }
-    logger.lifecycle("${CYAN}--------------------------------------------------${RESET}")
-}
-
 ext.combineBuildYaml = { List<HashMap> folderPropsList, String serviceName ->
     def GREEN = "\u001B[32m"
     def YELLOW = "\u001B[33m"

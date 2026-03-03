@@ -1,0 +1,89 @@
+import groovy.json.JsonOutput
+
+ext.preSetupProject = {
+    def GREEN = "\u001B[32m"
+    def RESET = "\u001B[0m"
+    def CYAN = "\u001B[36m"
+    def BLUE = "\u001B[34m"
+
+    logger.lifecycle("${BLUE}==================================================")
+    logger.lifecycle("🔍 [SCANNER] Getting all module, include it in and save it in module-info.json")
+    logger.lifecycle("${BLUE}==================================================${RESET}")
+
+    List<HashMap> dirListProps = new ArrayList<>()
+    HashMap moduleInfoStore = [:]
+    HashMap currentProjectKeys = new HashMap<>()
+
+    // Lấy danh sách các folder chứa gradle.properties (trừ root và build)
+    List<File> folderList = fileTree(rootDir) {
+        include '**/gradle.properties'
+        exclude 'gradle.properties' // Loại trừ file ở root
+        exclude '**/build'
+        exclude '**/.gradle/**'
+    }.files.unique()
+            .collect { it.parentFile }
+
+    logger.lifecycle("📂 Tìm thấy ${CYAN}${folderList.size()}${RESET} thư mục chứa cấu hình.")
+
+    folderList.eachWithIndex { File folder, Integer index ->
+        File propFile = new File(folder, "gradle.properties")
+        Properties props = new Properties()
+        propFile.withInputStream { props.load(it) }
+
+        // Xác định Tên Module & Đường dẫn tương đối
+        String moduleName = props.getProperty("SERVICE_NAME") ?: folder.name
+
+        // 1. Xử lý RELATIVE_PATH (ví dụ: services/order-service)
+        String relativePath = rootDir.toPath()
+                .relativize(folder.toPath()).toString()
+                .replace('\\', '/')
+
+        // 2. Xử lý MODULE_PATH (ví dụ: :services:order-service)
+        String modulePath = relativePath.replace("/",":")
+
+        if (props.IS_MICROSERVICE == "TRUE") {
+            include ":${modulePath}"
+        }
+
+        HashMap<String, String> propMap = new HashMap(props)
+
+        propMap.put("MODULE_PATH", modulePath)
+        propMap.put("RELATIVE_PATH", relativePath)
+
+        props.keySet().each { key ->
+            def keyStr = key.toString()
+            if (!currentProjectKeys.containsKey(keyStr)) {
+                currentProjectKeys[keyStr] = [:]
+            }
+            // Lưu Map module -> path
+            currentProjectKeys[keyStr][moduleName] = relativePath
+        }
+
+        dirListProps.add(propMap)
+        moduleInfoStore[moduleName] = propMap
+
+        def infoFile = new File(rootDir as File,"internal/info/module/module-info.json")
+        if (!infoFile.exists()) infoFile.createNewFile()
+
+        def jsonString = JsonOutput.prettyPrint(JsonOutput.toJson(moduleInfoStore))
+        infoFile.text = jsonString
+
+        // Log từng module được map thành công
+        def serviceName = propMap.get("SERVICE_NAME") ?: "N/A"
+        logger.lifecycle("   [${index + 1}] ${GREEN}${serviceName}${RESET} -> :${modulePath}")
+    }
+
+    gradle.extensions.extraProperties.set("allModuleProps",dirListProps)
+    gradle.extensions.extraProperties.set("allModuleKeys",currentProjectKeys)
+
+    logger.lifecycle("${BLUE}--------------------------------------------------")
+    logger.lifecycle("✨ [SCAN COMPLETED] Đã nạp xong ${CYAN}${dirListProps.size()}${RESET} bộ thuộc tính vào bộ nhớ.")
+    logger.lifecycle("${BLUE}==================================================${RESET}\n")
+
+    List<String> profileList = ["dev","loc","prd"]
+    gradle.extensions.extraProperties.set("profiles",profileList)
+
+    logger.lifecycle("${GREEN}==================================================")
+    logger.lifecycle("✨ [PROFILES] ${RESET} Project has ${CYAN}${profileList.size()}${RESET} profile : ${profileList.join(", ")}")
+    logger.lifecycle("${GREEN}==================================================${RESET}\n")
+}

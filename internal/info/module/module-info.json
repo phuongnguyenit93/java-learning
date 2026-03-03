@@ -14,25 +14,25 @@
     "DATABASE_MYSQL": {
         "SERVICE_NAME": "DATABASE_MYSQL",
         "BUILD_YML_PROFILE": "TRUE",
-        "MODULE_PATH": "module:infrastructure:system:database:rdbms:mysql:setup",
+        "MODULE_PATH": "module:infrastructure:system:database:rdbms:mysql",
         "BUILD_ENV": "TRUE",
         "IS_MICROSERVICE": "TRUE",
         "BUILD_YML": "TRUE",
-        "RELATIVE_PATH": "module/infrastructure/system/database/rdbms/mysql/setup",
+        "RELATIVE_PATH": "module/infrastructure/system/database/rdbms/mysql",
         "BUILD_ENV_PROFILE": "TRUE",
         "INJECT_TASK_AUTO": "TRUE"
     },
     "DATABASE_ORACLE": {
         "SERVICE_NAME": "DATABASE_ORACLE",
         "IS_MICROSERVICE": "TRUE",
-        "MODULE_PATH": "module:infrastructure:system:database:rdbms:oracle:setup",
-        "RELATIVE_PATH": "module/infrastructure/system/database/rdbms/oracle/setup"
+        "MODULE_PATH": "module:infrastructure:system:database:rdbms:oracle",
+        "RELATIVE_PATH": "module/infrastructure/system/database/rdbms/oracle"
     },
     "DATABASE_POSTGRESQL": {
         "SERVICE_NAME": "DATABASE_POSTGRESQL",
         "IS_MICROSERVICE": "TRUE",
-        "MODULE_PATH": "module:infrastructure:system:database:rdbms:postgresql:setup",
-        "RELATIVE_PATH": "module/infrastructure/system/database/rdbms/postgresql/setup"
+        "MODULE_PATH": "module:infrastructure:system:database:rdbms:postgresql",
+        "RELATIVE_PATH": "module/infrastructure/system/database/rdbms/postgresql"
     },
     "KAFKA": {
         "SERVICE_NAME": "KAFKA",
@@ -41,6 +41,7 @@
         "BUILD_ENV": "TRUE",
         "BUILD_ENV_PATH_MODULE_DEPEND": "KAFKA_SERVER,KAFKA_PRODUCER_BANK,KAFKA_CONTROL,KAFKA_CONSUMER_ACCOUNTANT,KAFKA_CONSUMER_NOTIFICATION",
         "BUILD_README": "TRUE",
+        "ABCXYZ": "ASDDFDF",
         "RELATIVE_PATH": "module/integration/broker/kafka",
         "README_LANGUAGE": "en,vi",
         "INJECT_TASK_AUTO": "TRUE"
@@ -48,6 +49,7 @@
     "KAFKA_CONSUMER_ACCOUNTANT": {
         "SERVICE_NAME": "KAFKA_CONSUMER_ACCOUNTANT",
         "BUILD_YML_PROFILE": "TRUE",
+        "BUILD_JAR": "TRUE",
         "MODULE_PATH": "module:integration:broker:kafka:service:consumer:accountant",
         "BUILD_ENV": "TRUE",
         "IS_MICROSERVICE": "TRUE",
@@ -60,6 +62,7 @@
     "KAFKA_CONSUMER_NOTIFICATION": {
         "SERVICE_NAME": "KAFKA_CONSUMER_NOTIFICATION",
         "BUILD_YML_PROFILE": "TRUE",
+        "BUILD_JAR": "TRUE",
         "MODULE_PATH": "module:integration:broker:kafka:service:consumer:notification",
         "BUILD_ENV": "TRUE",
         "IS_MICROSERVICE": "TRUE",
@@ -72,6 +75,7 @@
     "KAFKA_CONTROL": {
         "SERVICE_NAME": "KAFKA_CONTROL",
         "BUILD_YML_PROFILE": "TRUE",
+        "BUILD_JAR": "TRUE",
         "MODULE_PATH": "module:integration:broker:kafka:service:control",
         "BUILD_ENV": "TRUE",
         "IS_MICROSERVICE": "TRUE",
@@ -83,6 +87,7 @@
     "KAFKA_PRODUCER_BANK": {
         "SERVICE_NAME": "KAFKA_PRODUCER_BANK",
         "BUILD_YML_PROFILE": "TRUE",
+        "BUILD_JAR": "TRUE",
         "MODULE_PATH": "module:integration:broker:kafka:service:producer:bank",
         "BUILD_ENV": "TRUE",
         "IS_MICROSERVICE": "TRUE",

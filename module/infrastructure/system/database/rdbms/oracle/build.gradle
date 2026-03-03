@@ -1,0 +1,12 @@
+
+
+dependencies {
+	constraints {
+		// 1. Dùng 'api' vì các module khác cần thấy Hibernate để viết @Entity
+		api 'org.hibernate.orm:hibernate-core'
+
+		// 2. Dùng 'runtimeOnly' vì không ai viết code trực tiếp bằng Dialect hay Driver
+		api 'org.hibernate.orm:hibernate-community-dialects'
+		api 'com.oracle.database.jdbc:ojdbc10:19.22.0.0'
+	}
+}

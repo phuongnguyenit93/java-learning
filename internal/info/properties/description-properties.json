@@ -1,4 +1,8 @@
 {
+    "ABCXYZ": {
+        "DESCRIPTION": "Chưa có chú thích",
+        "STATUS": "USING"
+    },
     "BUILD_ENV": {
         "DESCRIPTION": "Chưa có chú thích",
         "STATUS": "USING"
@@ -12,6 +16,10 @@
         "STATUS": "USING"
     },
     "BUILD_ENV_PROFILE": {
+        "DESCRIPTION": "Chưa có chú thích",
+        "STATUS": "USING"
+    },
+    "BUILD_JAR": {
         "DESCRIPTION": "Chưa có chú thích",
         "STATUS": "USING"
     },

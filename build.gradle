@@ -1,57 +1,74 @@
 plugins {
     id 'org.springframework.boot' version '3.3.0'
-    id 'io.spring.dependency-management' version '1.1.5'
-    id 'java'
-    id 'io.freefair.lombok' version '8.6'
-    id 'com.avast.gradle.docker-compose' version '0.17.6'
+    id 'io.spring.dependency-management' version '1.1.5' apply false
+    id 'java-library'
+    id 'io.freefair.lombok' version '8.6' apply false
+    id 'com.avast.gradle.docker-compose' version '0.17.6' apply false
 }
 
-apply from: "gradle/task/common.gradle"
+apply from: "gradle/task/root/common.gradle"
 apply from: "gradle/config/module.gradle"
-apply from: "gradle/config/properties.gradle"
-apply from: "gradle/config/env.gradle"
-apply from: "gradle/config/readme.gradle"
+apply from: "gradle/config/search.gradle"
 
-List<HashMap> dirListProps = gradle.extensions.extraProperties.get("allModuleProps") as List<HashMap>
-HashMap currentProjectKeys = gradle.extensions.extraProperties.get("allModuleKeys") as HashMap
+subprojects {
+    def RESET = "\u001B[0m"
+    def BLUE = "\u001B[34m"
+    def BOLD = "\u001B[1m"
 
-///////////////////////////////////
-// task.gradle inject module
-//////////////////////////////////
-ext.injectTask()
+    apply from: "${rootDir}/gradle/config/module.gradle"
 
-///////////////////////////////////
-// application.yml automation
-//////////////////////////////////
-List<HashMap> appProps = ext.getModulePropByKeyValue("BUILD_YML","TRUE",dirListProps)
+    if (file("${projectDir}/gradle.properties").exists()) {
+        logger.lifecycle("${BLUE}${BOLD}==================================================")
+        logger.lifecycle("🔍 BUILD MODULE ${project.hasProperty("SERVICE_NAME") ? project.SERVICE_NAME : project.name} AT ROOT BUILD.GRADLE")
+        logger.lifecycle("${BLUE}==================================================${RESET}")
 
-List<HashMap> profileProps = ext.getModulePropByKeyValue("BUILD_YML_PROFILE","TRUE",appProps)
-ext.buildProfilePropsFile(profileProps)
-//////////////////////////////////
+        apply plugin: 'io.spring.dependency-management'
 
+        ext.buildModuleStructure()
 
-///////////////////////////////////
-// README.md automation
-//////////////////////////////////
-List<HashMap> readmeProps = ext.getModulePropByKeyValue("BUILD_README","TRUE",dirListProps)
-ext.buildReadmeEmptyFile(readmeProps)
-ext.buildReadmeLanguageStructure(readmeProps)
-///////////////////////////////////
+        ext.applyPluginAndDependencyToModule()
+        ext.buildProfileYMLFile()
 
-///////////////////////////////////
-// .env automation
-//////////////////////////////////
-List<HashMap> appEnv = ext.getModulePropByKeyValue("BUILD_ENV","TRUE",dirListProps)
-ext.buildDefaultEnvStructure(appEnv)
+        ext.buildDefaultEnvStructure()
+        ext.buildProfileEnvStructure()
 
-List<HashMap> profileEnv = ext.getModulePropByKeyValue("BUILD_ENV_PROFILE","TRUE",appEnv)
-ext.buildProfileEnvStructure(profileEnv)
-///////////////////////////////////
+        ext.buildReadmeStructure()
 
-///////////////////////////////////
-// Get all key in gradle.properties at all module and save it in json file
-///////////////////////////////////
-ext.getAllModuleProperties(currentProjectKeys)
+        processResources{
+            // 1. Chỉ định rõ ràng duy nhất file này được phép copy
+            include 'application.yml'
+
+            from ("${projectDir}/src/main/resources") {
+                // 2. (Tùy chọn) Nếu bạn muốn chắc chắn loại bỏ tất cả các file có đuôi .yml khác và .properties
+                exclude '**/application-*.yml'
+                exclude '**/*.properties'
+            }
+
+            exclude 'application-merged.yml'
+            // 3. Đặt chiến lược xử lý nếu trùng lặp (thường dùng trong Gradle mới)
+            duplicatesStrategy = DuplicatesStrategy.INCLUDE
+        }
+
+        bootJar {
+            def projectPathAsFolder = project.path.replace(':', '/')
+            destinationDirectory = rootProject.layout.buildDirectory.dir("jar/${projectPathAsFolder}")
+        }
+
+        logger.lifecycle("💯 ${BLUE} FINISHED SETTING MODULE ${project.hasProperty("SERVICE_NAME") ? project.SERVICE_NAME : project.name} AT ROOT BUILD.GRADLE")
+        logger.lifecycle("${BLUE}${BOLD}==================================================${RESET}\n\n\n")
+    }
+}
+
+afterEvaluate {
+    // Inject task in all module
+    ext.injectAndExtractAllModuleTask()
+
+    // Get all key in gradle.properties at all module and save it in json file
+    ext.getAllModuleProperties()
+    ext.generateProjectStructureFileTxt()
+
+    println tasks.collect { it.name }
+}
 
 allprojects {
     group = 'com.example.learning'
@@ -65,123 +82,6 @@ allprojects {
         mavenCentral()
         gradlePluginPortal()
     }
-
-    project.ext.implementProjectByServiceName = rootProject.ext.findSubProjectByServiceName
-}
-
-subprojects {
-    if (file("${projectDir}/gradle.properties").exists()) {
-        apply plugin: 'java'
-        apply plugin: 'org.springframework.boot'
-        apply plugin: 'io.spring.dependency-management'
-        apply plugin: "io.freefair.lombok"
-
-//        println tasks
-
-        def targetFile = file("${project.projectDir}/task.gradle")
-        if (targetFile.exists()) {
-            apply from: targetFile
-        }
-        
-        processResources{
-            // 1. Chỉ định rõ ràng duy nhất file này được phép copy
-            include 'application.yml'
-
-            from ("${projectDir}/src/main/resources") {
-                // 2. (Tùy chọn) Nếu bạn muốn chắc chắn loại bỏ tất cả các file có đuôi .yml khác và .properties
-                // Dòng này thực ra không cần thiết nếu đã dùng 'include' ở trên,
-                // nhưng thêm vào sẽ giúp logic chặt chẽ hơn.
-                exclude '**/application-*.yml'
-                exclude '**/*.properties'
-//                exclude 'application.yml'
-            }
-
-//            from("${projectDir}/src/main/resources/application-merged.yml") {
-//                rename { 'application.yml' }
-//            }
-
-            exclude 'application-merged.yml'
-            // 3. Đặt chiến lược xử lý nếu trùng lặp (thường dùng trong Gradle mới)
-            duplicatesStrategy = DuplicatesStrategy.INCLUDE
-        }
-
-        tasks.named('bootJar') {
-            // Gom vào thư mục outputs ở root, phân theo tên project
-            def projectPathAsFolder = project.path.replace(':', '/')
-            destinationDirectory = rootProject.layout.buildDirectory.dir("jar/${projectPathAsFolder}")
-        }
-    }
-
-    if (file("${projectDir}/docker-compose.yml").exists()) {
-        apply plugin: 'com.avast.gradle.docker-compose'
-
-        dockerCompose {
-            // Đọc giá trị từ gradle.properties hoặc command line (-PDOCKER_PROFILE=...)
-            def profile = project.hasProperty('DOCKER_PROFILE') ? project.property('DOCKER_PROFILE') : ''
-
-            // Nếu profile không trống, đẩy nó vào biến môi trường của Docker Compose
-            if (profile) {
-                environment.put 'SPRING_PROFILES_ACTIVE', profile
-            }
-        }
-    }
-
-    if (file("${projectDir}/src").exists()) {
-        dependencies {
-            implementation 'org.springframework.boot:spring-boot-starter-web'
-            implementation 'org.springframework.boot:spring-boot-starter-actuator'
-            implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
-            testImplementation 'org.springframework.boot:spring-boot-starter-test'
-            developmentOnly 'org.springframework.boot:spring-boot-devtools'
-        }
-    } else {
-        [bootJar, jar].each { it.enabled = false }
-    }
-}
-
-task generateProjectStructure {
-    doLast {
-        def outputFileName = "internal/module_structure.txt"
-        def outputFile = new File(projectDir, outputFileName)
-
-        // Các folder loại bỏ
-        def excludeDirs = [".gradle", ".idea", "build", "bin", "out", "target", "node_modules", ".git","src","readme"]
-
-        def sb = new StringBuilder()
-        sb.append("Cập nhật lúc: ${new Date().format('yyyy-MM-dd HH:mm:ss')}\n")
-        sb.append("=" * 30 + "\n")
-
-        boolean isStarted = false
-
-        def walkDir
-        walkDir = { File dir, String prefix ->
-            if (!isStarted) {
-                sb.append("${dir.name}\n")
-                isStarted = true
-            }
-            // Lấy danh sách folder, lọc bỏ các folder trong list exclude
-            def subDirs = dir.listFiles().findAll { it.isDirectory() && !excludeDirs.contains(it.name) }
-            subDirs.sort { it.name }.eachWithIndex { subDir, index ->
-                def isLast = (index == subDirs.size() - 1)
-
-                // Vẽ nhánh cho folder hiện tại
-                sb.append(prefix).append(isLast ? "└── " : "├── ").append(subDir.name).append("\n")
-
-                // Đệ quy vào các folder con
-                walkDir(subDir, prefix + (isLast ? "    " : "│   "))
-            }
-        }
-
-        // Bắt đầu chạy từ thư mục gốc của dự án
-        walkDir("${projectDir}/module" as File, "")
-
-        outputFile.text = sb.toString()
-        println "--- Đã cập nhật sơ đồ (bao gồm Root) tại: ${outputFileName} ---"
-    }
-}
-
-task runAll {
-    dependsOn ":application:bootRun" , ":application2:bootRun"
 }
 
 

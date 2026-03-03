@@ -1,92 +1,101 @@
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 
-ext.getAndStoreModuleProps = {
+def getModulePropList = {
+    def gradleFile = new File (projectDir,"gradle.properties")
+    if (!gradleFile.exists()) return
+
+    def props = new Properties()
+    gradleFile.withInputStream { props.load(it) }
+
+    return props
+}
+
+def isMissingProp = {List<String> propList ->
+
+    def props = getModulePropList()
+
+    return propList.any {
+        !props.hasProperty(it) || props[it]?.toString()?.toUpperCase() != "TRUE"
+    }
+}
+
+
+
+ext.applyPluginAndDependencyToModule = {
     def GREEN = "\u001B[32m"
+    def YELLOW = "\u001B[33m"
     def RESET = "\u001B[0m"
     def CYAN = "\u001B[36m"
-    def BLUE = "\u001B[34m"
 
-    logger.lifecycle("${BLUE}==================================================")
-    logger.lifecycle("🔍 [SCANNER] Đang lập bản đồ các module trong dự án...")
-    logger.lifecycle("${BLUE}==================================================${RESET}")
+    def javaSrcDir = file("${projectDir}/src/main/java")
 
-    List<HashMap> dirListProps = new ArrayList<>()
-    HashMap moduleInfoStore = [:]
-    HashMap currentProjectKeys = [:]
-    // Lấy danh sách các folder chứa gradle.properties (trừ root và build)
-    List<File> folderList = fileTree(rootDir) {
-        include '**/gradle.properties'
-        exclude 'gradle.properties' // Loại trừ file ở root
-        exclude '**/build'
-    }.files.unique()
-            .collect { it.parentFile }
+    if (javaSrcDir.exists()) {
+        logger.lifecycle("${CYAN}🛠️  [AUTO-CONFIG]${RESET} Đang phân tích module")
 
-    logger.lifecycle("📂 Tìm thấy ${CYAN}${folderList.size()}${RESET} thư mục chứa cấu hình.")
+        apply plugin: 'java-library'
 
-    folderList.eachWithIndex { File folder, Integer index ->
-        File propFile = new File(folder, "gradle.properties")
-        Properties props = new Properties()
-        propFile.withInputStream { props.load(it) }
+        def hasMainMethod = false
+        def usesLombok = false
+        def javaFiles = fileTree(dir: javaSrcDir, include: "**/*.java")
 
-        // Xác định Tên Module & Đường dẫn tương đối
-        String moduleName = props.getProperty("SERVICE_NAME") ?: folder.name
-
-        // 1. Xử lý RELATIVE_PATH (ví dụ: services/order-service)
-        String relativePath = rootDir.toPath()
-                .relativize(folder.toPath()).toString()
-                .replace('\\', '/')
-
-        // 2. Xử lý MODULE_PATH (ví dụ: :services:order-service)
-        String modulePath = relativePath.replace("/",":")
-
-        HashMap<String, String> propMap = new HashMap(props)
-
-        propMap.put("MODULE_PATH", modulePath)
-        propMap.put("RELATIVE_PATH", relativePath)
-
-        props.keySet().each { key ->
-            def keyStr = key.toString()
-            if (!currentProjectKeys.containsKey(keyStr)) {
-                currentProjectKeys[keyStr] = [:]
+        javaFiles.any { file ->
+            def fileContent = file.text
+            if (!hasMainMethod && fileContent.contains("public static void main") && fileContent.contains("String[] args")) {
+                hasMainMethod = true
             }
-            // Lưu Map module -> path
-            currentProjectKeys[keyStr][moduleName] = relativePath
+            if (!usesLombok && fileContent.contains("import lombok")) {
+                usesLombok = true
+            }
+            return hasMainMethod && usesLombok
         }
 
-        dirListProps.add(propMap)
-        moduleInfoStore[moduleName] = propMap
-
-        def infoFile = new File(rootDir as File,"internal/info/module/module-info.json")
-        if (!infoFile.exists()) infoFile.createNewFile()
-
-        def jsonString = JsonOutput.prettyPrint(JsonOutput.toJson(moduleInfoStore))
-        infoFile.text = jsonString
-
-        // Log từng module được map thành công
-        def serviceName = propMap.get("SERVICE_NAME") ?: "N/A"
-        logger.lifecycle("   [${index + 1}] ${GREEN}${serviceName}${RESET} -> :${modulePath}")
-    }
-
-    logger.lifecycle("${BLUE}--------------------------------------------------")
-    logger.lifecycle("✨ [SCAN COMPLETED] Đã nạp xong ${CYAN}${dirListProps.size()}${RESET} bộ thuộc tính vào bộ nhớ.")
-    logger.lifecycle("${BLUE}==================================================${RESET}\n")
-
-    return [dirListProps,currentProjectKeys]
-}
-
-
-ext.addModule = {List<HashMap> dirListProps ->
-    dirListProps.each { HashMap prop ->
-        def modulePath = prop.get("MODULE_PATH")
-
-        if (prop.IS_MICROSERVICE == 'TRUE') {
-            include ":${modulePath}"
+        // 1. Xử lý Spring Boot / Dependency Management
+        if (hasMainMethod) {
+            apply plugin: 'org.springframework.boot'
+            dependencies {
+                implementation 'org.springframework.boot:spring-boot-starter-web'
+                implementation 'org.springframework.boot:spring-boot-starter-actuator'
+                implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+                testImplementation 'org.springframework.boot:spring-boot-starter-test'
+                developmentOnly 'org.springframework.boot:spring-boot-devtools'
+            }
+            logger.lifecycle("   ├─ 🚀 ${GREEN}Spring Boot:${RESET} Đã tìm thấy hàm main -> Apply Boot + Starter Web.")
+        } else {
+            dependencyManagement {
+                imports {
+                    mavenBom "org.springframework.boot:spring-boot-dependencies:3.2.0"
+                }
+            }
+            logger.lifecycle("   ├─ 📦 ${YELLOW}BOM Management:${RESET} Không có hàm main -> Chỉ apply Dependency Management.")
         }
+
+        // 2. Xử lý Lombok
+        if (usesLombok) {
+            apply plugin: "io.freefair.lombok"
+            logger.lifecycle("   ├─ 🌶️  ${GREEN}Lombok:${RESET} Đã tìm thấy @Annotations -> Apply Lombok plugin.")
+        }
+    } else {
+        // Trường hợp module không có code Java (ví dụ module chứa config/resources)
+        apply plugin: 'java-platform'
+        logger.lifecycle("${CYAN}🛠️  [AUTO-CONFIG]${RESET} Không có src/java -> Apply ${YELLOW}java-platform${RESET}.")
+    }
+
+    // 3. Xử lý Docker Compose
+    if (file("${projectDir}/docker-compose.yml").exists()) {
+        apply plugin: 'com.avast.gradle.docker-compose'
+        def profile = project.hasProperty('DOCKER_PROFILE') ? project.property('DOCKER_PROFILE') : ''
+
+        dockerCompose {
+            if (profile) {
+                environment.put 'SPRING_PROFILES_ACTIVE', profile
+            }
+        }
+        logger.lifecycle("   └─ 🐳 ${CYAN}Docker Compose:${RESET} Đã tìm thấy docker-compose.yml (Profile: ${profile ?: 'default'})")
     }
 }
 
-ext.injectTask = {
+ext.injectAndExtractAllModuleTask = {
     def GREEN = "\u001B[32m"
     def YELLOW = "\u001B[33m"
     def RESET = "\u001B[0m"
@@ -106,7 +115,8 @@ ext.injectTask = {
             [type: "module", fileName: "module.gradle", propCheck: ""],
             [type: "env", fileName: "env.gradle", propCheck: "BUILD_ENV"],
             [type: "readme", fileName: "readme.gradle", propCheck: "BUILD_README"],
-            [type: "properties", fileName: "properties.gradle", propCheck: "BUILD_YML"]
+            [type: "properties", fileName: "properties.gradle", propCheck: "BUILD_YML"],
+            [type: "jar", fileName: "build-jar.gradle", propCheck: "BUILD_JAR"]
     ]
 
     def extractBlocks = { tagName, fileText ->
@@ -119,7 +129,7 @@ ext.injectTask = {
     logger.lifecycle("${CYAN}📂 Bước 1: Trích xuất dữ liệu từ các file Template...${RESET}")
     taskListProp.each { task ->
         String fileName = task.get("fileName")
-        def templateFile = file("${rootDir}/gradle/task/${fileName}")
+        def templateFile = file("${rootDir}/gradle/task/module/${fileName}")
 
         if (templateFile.exists()) {
             def fileText = templateFile.text
@@ -182,29 +192,22 @@ ext.injectTask = {
             if (!moduleContentFinal.isEmpty() || !taskContentFinal.isEmpty()) {
                 if (!targetFile.exists()) targetFile.createNewFile()
                 targetFile.text = "// AUTO GENERATED FILE - DO NOT EDIT\n\n" + moduleContentFinal + "\n" + taskContentFinal
-                logger.lifecycle("   ✅ Module [${GREEN}${serviceName}${RESET}]: Đã inject thành công (${injectedTypes.join(', ')})")
+                apply from: targetFile
+
+                logger.lifecycle("   ✅ Module [${GREEN}${serviceName}${RESET}]: Đã inject và apply thành công (${injectedTypes.join(', ')})")
+
             }
         } else if (serviceName != null) {
              // Log những module bị bỏ qua nhưng có SERVICE_NAME để dễ kiểm soát
 //             logger.lifecycle("   ⏩ Module [${serviceName}]: Bỏ qua (INJECT_TASK_AUTO=false)")
         }
     }
-    logger.lifecycle("${BLUE}==================================================${RESET}")
+    logger.lifecycle("${BLUE}==================================================${RESET}\n\n\n")
 }
 
-ext.getModulePropByKeyValue = { String key, String value, List<HashMap> dirListProps ->
-    return dirListProps.findAll { HashMap prop ->
-        if (value == null) {
-            if (prop.containsKey(key)) return true
-        } else {
-            if (prop[key] != value) return false
-        }
+ext.getAllModuleProperties = {
+    HashMap currentProjectKeys = gradle.extensions.extraProperties.get("allModuleKeys") as HashMap
 
-        return true
-    }
-}
-
-ext.getAllModuleProperties = { Map currentProjectKeys ->
     def GREEN = "\u001B[32m"
     def YELLOW = "\u001B[33m"
     def RESET = "\u001B[0m"
@@ -275,20 +278,7 @@ ext.getAllModuleProperties = { Map currentProjectKeys ->
     logger.lifecycle("${PURPLE}--------------------------------------------------${RESET}\n")
 }
 
-ext.getModulePropByServiceNameList = { List<String> propsFilter, List<HashMap> dirListProps ->
-    return dirListProps.findAll { HashMap prop ->
-        if (prop.get("SERVICE_NAME") == null) return false
-        if (!propsFilter.contains(prop.get("SERVICE_NAME"))) return false
-
-        return true
-    }
-}
-
-ext.getModulePropByServiceName = { String propFilter, List<HashMap> dirListProps ->
-    return dirListProps.find { HashMap prop -> prop.SERVICE_NAME == propFilter}
-}
-
-ext.findSubProjectByServiceName = {String serviceName ->
+ext.getProjectByServiceName = {String serviceName ->
     // 1. Tìm trong tất cả các project đã được include
     def target = rootProject.subprojects.find { p ->
         // Cách này an toàn hơn: Kiểm tra trực tiếp property mà không bắt project phải evaluate xong
@@ -308,5 +298,270 @@ ext.findSubProjectByServiceName = {String serviceName ->
         )
     }
     return target
+}
+
+ext.buildProfileYMLFile = {
+
+    if (isMissingProp(["BUILD_YML","BUILD_YML_PROFILE"])) return
+
+    def GREEN = "\u001B[32m"
+    def YELLOW = "\u001B[33m"
+    def CYAN = "\u001B[36m"
+    def RESET = "\u001B[0m"
+    def RED = "\u001B[31m"
+    def BLUE = "\u001B[34m"
+    def BOLD = "\u001B[1m"
+
+    String moduleName = project.hasProperty("SERVICE_NAME") ? project.SERVICE_NAME : project.name
+    logger.lifecycle("${YELLOW}${BOLD}--------------------------------------------------")
+    logger.lifecycle(" 🔍 KHỞI TẠO APPLICATION.YML NẾU CHƯA CÓ${RESET}")
+
+    logger.lifecycle("${CYAN}🚀 [CONFIG-INIT]${RESET} Đang kiểm tra cấu hình application.yml cho module ${project.RELATIVE_PATH}")
+
+    def baseFile = file("${rootDir}/internal/info/module/file-based.yml")
+    def baseDir = ["src/main/resources", ""]
+            .collect { new File(projectDir,it)}
+            .find { it.exists() }
+    def configFile = file("${baseDir}/application.yml")
+
+    // 1. Kiểm tra file mẫu (base-file) trước
+    if (!baseFile.exists()) {
+        logger.lifecycle("${RED}❌ [ERROR]${RESET} Không tìm thấy file mẫu tại: ${baseFile.path}")
+        return // Thoát sớm nếu không có file gốc để copy
+    }
+
+    // 2. Xử lý logic tạo file
+    if (configFile.exists()) {
+        // Dùng dấu mũi tên mờ hơn cho các file đã tồn tại để tránh loãng log
+        logger.lifecycle("  ${BLUE}⏩ [SKIP]${RESET} : application.yml đã tồn tại.")
+    } else {
+        try {
+            // Đảm bảo thư mục cha tồn tại trước khi tạo file
+            if (!configFile.parentFile.exists()) {
+                configFile.parentFile.mkdirs()
+            }
+
+            configFile.createNewFile()
+            configFile.text = baseFile.text
+
+            logger.lifecycle("  ${GREEN}✨ [CREATED]${RESET} Module [${moduleName}]: Đã khởi tạo file từ file-based.yml")
+            logger.lifecycle("             └─ Path: ${configFile.path}")
+        } catch (Exception e) {
+            logger.lifecycle("${RED}❌ [FAILED]${RESET} Không thể tạo file cho ${moduleName}: ${e.message}")
+        }
+    }
+
+    logger.lifecycle("${YELLOW}--------------------------------------------------${RESET}")
+}
+
+ext.buildModuleStructure = {
+    // 1. Xử lý RELATIVE_PATH (ví dụ: services/order-service)
+    String relativePath = rootDir.toPath()
+            .relativize(projectDir.toPath()).toString()
+            .replace('\\', '/')
+
+    // 2. Xử lý MODULE_PATH (ví dụ: :services:order-service)
+    String modulePath = relativePath.replace("/",":")
+
+    project.ext.RELATIVE_PATH = relativePath
+    project.ext.MODULE_PATH = modulePath
+}
+
+ext.buildDefaultEnvStructure = {
+    def GREEN = "\u001B[32m"
+    def YELLOW = "\u001B[33m"
+    def RESET = "\u001B[0m"
+    def CYAN = "\u001B[36m"
+    def GRAY = "\u001B[90m"
+
+    if (isMissingProp(["BUILD_ENV"])) return
+
+    logger.lifecycle("${GREEN}-----------------------------------------")
+    logger.lifecycle("🪄 GENERATE ENV FILE${RESET}")
+
+    String serviceName = project.hasProperty("SERVICE_NAME") ? project.property("SERVICE_NAME") : project.name
+    File env = new File(projectDir, ".env")
+
+    // 1. Xử lý tạo file .env
+    if (!env.exists()) {
+        try {
+            env.createNewFile()
+            env.text = "# Environment variables for ${serviceName}\n"
+            logger.lifecycle("✨ [${CYAN}${serviceName}${RESET}] ${GREEN}Đã khởi tạo file .env mới.${RESET}")
+        } catch (Exception e) {
+            logger.error("❌ [${serviceName}] Lỗi tạo file: ${e.message}")
+            return
+        }
+    } else {
+        logger.lifecycle("✔️ Cấu trúc file .env đã tồn tại.")
+    }
+
+    // 2. Kiểm tra điều kiện Docker Profile
+    if (project.hasProperty("BUILD_ENV_DOCKER_PROFILE") && project.BUILD_ENV_DOCKER_PROFILE == "TRUE") {
+        String content = env.text
+        boolean hasProfile = content.lines().any { line ->
+            line.trim().startsWith("DOCKER_PROFILE=")
+        }
+
+        if (!hasProfile) {
+            // Đảm bảo file kết thúc bằng xuống dòng trước khi append để tránh dính chữ
+            if (!content.endsWith("\n") && content.length() > 0) env.append("\n")
+            env.append("DOCKER_PROFILE=\n")
+            logger.lifecycle("   └─ ${YELLOW}Đã bổ sung biến:${RESET} DOCKER_PROFILE (Docker Mode)")
+        } else {
+            logger.lifecycle("   └─ ${GREEN}Xác nhận:${RESET} DOCKER_PROFILE đã có sẵn.")
+        }
+    } else {
+        // Log nhẹ nhàng để biết module này bỏ qua bước check profile
+        logger.lifecycle("   └─ ${GRAY}Bỏ qua check Profile (BUILD_ENV_DOCKER_PROFILE != TRUE)${RESET}")
+    }
+    logger.lifecycle("${GREEN}-----------------------------------------")
+}
+
+ext.buildProfileEnvStructure = {
+    def GREEN = "\u001B[32m"
+    def CYAN = "\u001B[36m"
+    def RESET = "\u001B[0m"
+    def YELLOW = "\u001B[33m"
+
+    if (isMissingProp(["BUILD_ENV_PROFILE"])) return
+
+    logger.lifecycle("${CYAN}--------------------------------------------------")
+    logger.lifecycle("${CYAN}📁 [ENV-STRUCTURE]${RESET} Đang khởi tạo cấu trúc file .env...")
+
+    String serviceName = project.hasProperty("SERVICE_NAME") ? project.SERVICE_NAME : project.name
+
+    List<String> profiles = gradle.extensions.extraProperties.get("profiles") as List<String>
+    int createdCount = 0
+
+    // 1. Tạo các file .env theo profile (dev, prod, loc...)
+    profiles.each { profile ->
+        File envProfile = new File(projectDir, ".env.${profile}")
+        if (!envProfile.exists()) {
+            envProfile.createNewFile()
+            createdCount++
+        }
+    }
+
+    // Log kết quả cho từng module
+    if (createdCount > 0) {
+        logger.lifecycle("   ✨ Đã tạo mới ${YELLOW}${createdCount}${RESET} file .env.")
+    } else {
+        logger.lifecycle("   ✔️ Cấu trúc .env profile đã đầy đủ.")
+    }
+
+    logger.lifecycle("${CYAN}--------------------------------------------------${RESET}")
+}
+
+ext.buildReadmeStructure = {
+    def YELLOW = "\u001B[33m"
+    def RESET = "\u001B[0m"
+    def CYAN = "\u001B[36m"
+    def RED = "\u001B[31m"
+    def GRAY = "\u001B[90m"
+
+    println project.hasProperty("BUILD_README")
+    println project.getProperties()
+    if (isMissingProp(["BUILD_README"])) return
+
+    logger.lifecycle("${CYAN}---------------------------------------------------")
+    logger.lifecycle("${CYAN}📖 [README-STRUCTURE]${RESET} Bắt đầu xử lý README cho module")
+
+    // 2. Tạo file README.md gốc nếu chưa có
+    File readmeFile = new File(projectDir, "README.md")
+    if (!readmeFile.exists()) {
+        readmeFile.createNewFile()
+        logger.lifecycle("   ├─ ✨ ${YELLOW}README.md${RESET} (Gốc): Khởi tạo thành công.")
+    } else {
+        logger.lifecycle("   ├─ ✔️  ${GRAY}README.md${RESET} (Gốc): Đã tồn tại.")
+    }
+
+    // 3. Xử lý danh sách ngôn ngữ
+    if (!project.hasProperty("README_LANGUAGE")) {
+        logger.lifecycle("   └─ ⚠️  ${RED}Bỏ qua:${RESET} Không tìm thấy cấu hình README_LANGUAGE.")
+        return
+    }
+
+    def langList = project.README_LANGUAGE?.toString()?.split(",")?.collect { it.trim() } ?: []
+
+    if (langList.isEmpty()) {
+        logger.lifecycle("   └─ ⏩ ${GRAY}Không có ngôn ngữ nào được khai báo.${RESET}")
+        return
+    }
+
+    // 4. Khởi tạo thư mục và file cho từng ngôn ngữ
+    langList.each { lang ->
+        File langDir = new File(projectDir, "readme/${lang}")
+        File menuDir = new File(langDir, "menu")
+
+        if (!menuDir.exists()) {
+            menuDir.mkdirs()
+            logger.lifecycle("   ├─ 🌐 Cấu trúc [${CYAN}${lang}${RESET}]: Đã tạo folder /menu.")
+        } else {
+            logger.lifecycle("   ├─ ✔️  Cấu trúc [${CYAN}${lang}${RESET}]: Đã sẵn sàng.")
+        }
+
+        ["BASE.md", "LIST.md"].each { fileName ->
+            def file = new File(langDir, fileName)
+            if (!file.exists()) {
+                file.createNewFile()
+                logger.lifecycle("   │  └─ 📝 ${YELLOW}${fileName}${RESET}: Đã tạo mới.")
+            } else {
+                // Chỉ log khi ở chế độ --info hoặc log nhẹ màu xám nếu muốn
+                // logger.lifecycle("   │  └─ ✔️  ${GRAY}${fileName}${RESET}: Đã có.")
+            }
+        }
+    }
+
+    // 5. Dọn dẹp các ngôn ngữ cũ
+    File readmeDir = new File(projectDir, "readme")
+    if (readmeDir.exists()) {
+        readmeDir.listFiles().each { folder ->
+            if (folder.isDirectory() && !langList.contains(folder.name)) {
+                folder.deleteDir()
+                logger.lifecycle("   └─ 🗑️  ${RED}Cleanup:${RESET} Đã xóa thư mục ngôn ngữ cũ [${folder.name}]")
+            }
+        }
+    }
+    logger.lifecycle("${CYAN}---------------------------------------------------${RESET}")
+}
+
+ext.generateProjectStructureFileTxt = {
+    def outputFileName = "internal/module_structure.txt"
+    def outputFile = new File(projectDir, outputFileName)
+
+    // Các folder loại bỏ
+    def excludeDirs = [".gradle", ".idea", "build", "bin", "out", "target", "node_modules", ".git","src","readme"]
+
+    def sb = new StringBuilder()
+    sb.append("Cập nhật lúc: ${new Date().format('yyyy-MM-dd HH:mm:ss')}\n")
+    sb.append("=" * 30 + "\n")
+
+    boolean isStarted = false
+
+    def walkDir
+    walkDir = { File dir, String prefix ->
+        if (!isStarted) {
+            sb.append("${dir.name}\n")
+            isStarted = true
+        }
+        // Lấy danh sách folder, lọc bỏ các folder trong list exclude
+        def subDirs = dir.listFiles().findAll { it.isDirectory() && !excludeDirs.contains(it.name) }
+        subDirs.sort { it.name }.eachWithIndex { subDir, index ->
+            def isLast = (index == subDirs.size() - 1)
+
+            // Vẽ nhánh cho folder hiện tại
+            sb.append(prefix).append(isLast ? "└── " : "├── ").append(subDir.name).append("\n")
+
+            // Đệ quy vào các folder con
+            walkDir(subDir, prefix + (isLast ? "    " : "│   "))
+        }
+    }
+
+    // Bắt đầu chạy từ thư mục gốc của dự án
+    walkDir("${projectDir}/module" as File, "")
+
+    outputFile.text = sb.toString()
+    println "--- Đã cập nhật sơ đồ (bao gồm Root) tại: ${outputFileName} ---"
 }
 
