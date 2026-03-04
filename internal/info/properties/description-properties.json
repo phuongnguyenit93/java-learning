@@ -1,8 +1,4 @@
 {
-    "ABCXYZ": {
-        "DESCRIPTION": "Chưa có chú thích",
-        "STATUS": "USING"
-    },
     "BUILD_ENV": {
         "DESCRIPTION": "Chưa có chú thích",
         "STATUS": "USING"
@@ -44,6 +40,10 @@
         "STATUS": "USING"
     },
     "IS_MICROSERVICE": {
+        "DESCRIPTION": "Chưa có chú thích",
+        "STATUS": "USING"
+    },
+    "MODULE_TYPE": {
         "DESCRIPTION": "Chưa có chú thích",
         "STATUS": "USING"
     },

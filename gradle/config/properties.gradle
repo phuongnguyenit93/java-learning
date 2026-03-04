@@ -2,9 +2,10 @@ import org.yaml.snakeyaml.Yaml
 import org.yaml.snakeyaml.DumperOptions
 
 apply from: "${rootDir}/gradle/config/module.gradle"
+apply from: "${rootDir}/gradle/config/search.gradle"
 
-def getBaseDirProps (HashMap props) {
-    def baseDir = new File (rootDir,props.get("RELATIVE_PATH"))
+def static getBaseDirProps (Project props) {
+    def baseDir = new File (props.projectDir.path)
     return ["src/main/resources", ""]
             .collect { new File(baseDir,it)}
             .find { it.exists() }
@@ -24,7 +25,7 @@ static def mergeMaps (Map base,Map override) {
     }
 }
 
-ext.combineBuildYaml = { List<HashMap> folderPropsList, String serviceName ->
+ext.combineBuildYaml = {String serviceName ->
     def GREEN = "\u001B[32m"
     def YELLOW = "\u001B[33m"
     def CYAN = "\u001B[36m"
@@ -38,10 +39,10 @@ ext.combineBuildYaml = { List<HashMap> folderPropsList, String serviceName ->
 
     logger.lifecycle("${BLUE}🧩 [YAML-MERGE]${RESET} Bắt đầu gộp file cấu hình cho Service: ${CYAN}${serviceName}${RESET}")
 
-    HashMap props = ext.getModulePropByServiceName(serviceName, folderPropsList)
-    List<String> microserviceList = props.get("BUILD_YML_MODULE_DEPEND")?.toString()?.split(',') as List<String> ?: []
+    Project baseProp = ext.searchProjectByServiceName(serviceName)
+    List<String> microserviceList = baseProp?.BUILD_YML_MODULE_DEPEND?.toString()?.split(',') as List<String> ?: []
 
-    if (props.isEmpty()) {
+    if (baseProp == null) {
         logger.lifecycle("${RED}❌ [ERROR]${RESET} Không tìm thấy cấu hình cho service: ${serviceName}")
         return
     }
@@ -50,13 +51,13 @@ ext.combineBuildYaml = { List<HashMap> folderPropsList, String serviceName ->
         logger.lifecycle("${CYAN}ℹ️ [STANDALONE]${RESET} Module ${GREEN}${serviceName}${RESET}: Không có module phụ thuộc. Sử dụng application.yml mặc định.")
     }
 
-    List<HashMap> microserviceProp = ext.getModulePropByServiceNameList(microserviceList, folderPropsList)
+    Set<Project> microserviceProp = ext.searchProjectByServiceNameList(microserviceList)
     List<File> sourceFiles = microserviceProp.collect { prop ->
         def baseDir = getBaseDirProps(prop)
         return new File(baseDir, "application.yml")
     }
 
-    File baseResourceDir = getBaseDirProps(props)
+    File baseResourceDir = getBaseDirProps(baseProp)
     File targetFile = new File(baseResourceDir, "application.yml")
 
     // Kiểm tra targetFile gốc
@@ -126,7 +127,7 @@ ext.combineBuildYaml = { List<HashMap> folderPropsList, String serviceName ->
                 out.write("# AUTO-GENERATED MERGED YAML\n")
                 out.write("# THIS FILES NOT USING TO BUILD, THE NEEDED IS ALREADY BUILD\n")
                 out.write("# You can check at ${buildRelativePath}\n")
-                out.write("# Source: ${props.SERVICE_NAME}\n")
+                out.write("# Source: ${baseProp.SERVICE_NAME}\n")
                 out.write("# Dependencies: ${microserviceList.join(', ')}\n\n")
             }
             finalDocsMap.values().each { doc ->

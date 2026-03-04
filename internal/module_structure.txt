@@ -1,4 +1,4 @@
-Cập nhật lúc: 2026-03-03 22:59:45
+Cập nhật lúc: 2026-03-04 17:20:50
 ==============================
 module
 ├── infrastructure
@@ -20,6 +20,10 @@ module
 │       │   ├── connection-pool
 │       │   │   └── hikariCP
 │       │   ├── nosql
+│       │   │   ├── clickhouse
+│       │   │   ├── elasticsearch
+│       │   │   ├── influxDB
+│       │   │   ├── loki
 │       │   │   ├── mongoDB
 │       │   │   │   └── aggregation
 │       │   │   ├── neo4j
@@ -53,8 +57,17 @@ module
 │       │       └── linkerd
 │       ├── observability
 │       │   ├── logging
+│       │   │   ├── event-log
+│       │   │   └── log-pipeline
 │       │   ├── metrics
+│       │   │   ├── aggregation
+│       │   │   ├── time-series
+│       │   │   │   └── prometheus
+│       │   │   └── visualization
+│       │   │       └── grafana
 │       │   └── tracing
+│       │       ├── concept
+│       │       └── tooling
 │       └── server
 ├── integration
 │   ├── broker
@@ -127,10 +140,6 @@ module
     │   │       │   ├── executor-service
     │   │       │   ├── high-level-utils
     │   │       │   ├── thread
-    │   │       │   │   ├── basic
-    │   │       │   │   ├── context-propagation
-    │   │       │   │   ├── pool
-    │   │       │   │   └── synchronization
     │   │       │   └── virtual-threads
     │   │       ├── core
     │   │       │   └── abstract-interface

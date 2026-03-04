@@ -1,11 +1,11 @@
-package com.example.learning;
+package ${basePackage};
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ModelMapperApplication {
+public class ${className} {
     public static void main(String[] args) {
-        SpringApplication.run(ModelMapperApplication.class, args);
+        SpringApplication.run(${className}.class, args);
     }
 }

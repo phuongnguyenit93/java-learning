@@ -7,6 +7,9 @@ pluginManagement {
 
 rootProject.name = 'java-learning'
 
+String basePackage = "com.example.learning"
+gradle.extensions.extraProperties.set("basePackage",basePackage)
+
 apply from: "gradle/setting/initial.gradle"
 
 // Get all props by gradle.properties location

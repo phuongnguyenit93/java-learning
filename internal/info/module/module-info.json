@@ -14,6 +14,7 @@
     "DATABASE_MYSQL": {
         "SERVICE_NAME": "DATABASE_MYSQL",
         "BUILD_YML_PROFILE": "TRUE",
+        "MODULE_TYPE": "APPLICATION",
         "MODULE_PATH": "module:infrastructure:system:database:rdbms:mysql",
         "BUILD_ENV": "TRUE",
         "IS_MICROSERVICE": "TRUE",
@@ -25,12 +26,14 @@
     "DATABASE_ORACLE": {
         "SERVICE_NAME": "DATABASE_ORACLE",
         "IS_MICROSERVICE": "TRUE",
+        "MODULE_TYPE": "APPLICATION",
         "MODULE_PATH": "module:infrastructure:system:database:rdbms:oracle",
         "RELATIVE_PATH": "module/infrastructure/system/database/rdbms/oracle"
     },
     "DATABASE_POSTGRESQL": {
         "SERVICE_NAME": "DATABASE_POSTGRESQL",
         "IS_MICROSERVICE": "TRUE",
+        "MODULE_TYPE": "APPLICATION",
         "MODULE_PATH": "module:infrastructure:system:database:rdbms:postgresql",
         "RELATIVE_PATH": "module/infrastructure/system/database/rdbms/postgresql"
     },
@@ -41,7 +44,6 @@
         "BUILD_ENV": "TRUE",
         "BUILD_ENV_PATH_MODULE_DEPEND": "KAFKA_SERVER,KAFKA_PRODUCER_BANK,KAFKA_CONTROL,KAFKA_CONSUMER_ACCOUNTANT,KAFKA_CONSUMER_NOTIFICATION",
         "BUILD_README": "TRUE",
-        "ABCXYZ": "ASDDFDF",
         "RELATIVE_PATH": "module/integration/broker/kafka",
         "README_LANGUAGE": "en,vi",
         "INJECT_TASK_AUTO": "TRUE"
@@ -143,6 +145,21 @@
         "MODULE_PATH": "module:platform:development:framework:spring:web",
         "RELATIVE_PATH": "module/platform/development/framework/spring/web"
     },
+    "THREAD": {
+        "SERVICE_NAME": "THREAD",
+        "BUILD_YML_PROFILE": "TRUE",
+        "BUILD_JAR": "TRUE",
+        "MODULE_PATH": "module:platform:development:language:java:concurrency:thread",
+        "IS_MICROSERVICE": "TRUE",
+        "BUILD_README": "TRUE",
+        "BUILD_YML": "TRUE",
+        "BUILD_YML_MODULE_DEPEND": "SPRING_WEB,SPRING_SWAGGER",
+        "MODULE_TYPE": "APPLICATION",
+        "BUILD_ENV": "TRUE",
+        "RELATIVE_PATH": "module/platform/development/language/java/concurrency/thread",
+        "README_LANGUAGE": "vi",
+        "INJECT_TASK_AUTO": "TRUE"
+    },
     "abstract-interface": {
         "IS_MICROSERVICE": "TRUE",
         "MODULE_PATH": "module:platform:development:language:java:core:abstract-interface",
@@ -151,17 +168,20 @@
     "MODEL_MAPPER": {
         "SERVICE_NAME": "MODEL_MAPPER",
         "IS_MICROSERVICE": "TRUE",
+        "MODULE_TYPE": "APPLICATION",
         "MODULE_PATH": "module:platform:development:language:java:mapping:model-mapper",
         "RELATIVE_PATH": "module/platform/development/language/java/mapping/model-mapper"
     },
     "OBJECT_MAPPER": {
         "SERVICE_NAME": "OBJECT_MAPPER",
         "IS_MICROSERVICE": "TRUE",
+        "MODULE_TYPE": "APPLICATION",
         "MODULE_PATH": "module:platform:development:language:java:mapping:object-mapper",
         "RELATIVE_PATH": "module/platform/development/language/java/mapping/object-mapper"
     },
     "record": {
         "IS_MICROSERVICE": "TRUE",
+        "MODULE_TYPE": "APPLICATION",
         "MODULE_PATH": "module:platform:development:language:java:version:java16:record",
         "RELATIVE_PATH": "module/platform/development/language/java/version/java16/record"
     },

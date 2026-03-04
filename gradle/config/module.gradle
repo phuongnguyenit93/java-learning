@@ -1,5 +1,6 @@
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
+import groovy.text.SimpleTemplateEngine
 
 def getModulePropList = {
     def gradleFile = new File (projectDir,"gradle.properties")
@@ -14,9 +15,8 @@ def getModulePropList = {
 def isMissingProp = {List<String> propList ->
 
     def props = getModulePropList()
-
     return propList.any {
-        !props.hasProperty(it) || props[it]?.toString()?.toUpperCase() != "TRUE"
+        return !props.containsKey(it)
     }
 }
 
@@ -31,6 +31,7 @@ ext.applyPluginAndDependencyToModule = {
     def javaSrcDir = file("${projectDir}/src/main/java")
 
     if (javaSrcDir.exists()) {
+        logger.lifecycle("${CYAN}-----------------------------------------")
         logger.lifecycle("${CYAN}🛠️  [AUTO-CONFIG]${RESET} Đang phân tích module")
 
         apply plugin: 'java-library'
@@ -93,6 +94,7 @@ ext.applyPluginAndDependencyToModule = {
         }
         logger.lifecycle("   └─ 🐳 ${CYAN}Docker Compose:${RESET} Đã tìm thấy docker-compose.yml (Profile: ${profile ?: 'default'})")
     }
+    logger.lifecycle("${CYAN}-----------------------------------------")
 }
 
 ext.injectAndExtractAllModuleTask = {
@@ -316,7 +318,7 @@ ext.buildProfileYMLFile = {
     logger.lifecycle("${YELLOW}${BOLD}--------------------------------------------------")
     logger.lifecycle(" 🔍 KHỞI TẠO APPLICATION.YML NẾU CHƯA CÓ${RESET}")
 
-    logger.lifecycle("${CYAN}🚀 [CONFIG-INIT]${RESET} Đang kiểm tra cấu hình application.yml cho module ${project.RELATIVE_PATH}")
+    logger.lifecycle("${CYAN}🚀 [CONFIG-INIT]${RESET} Đang kiểm tra cấu hình application.yml")
 
     def baseFile = file("${rootDir}/internal/info/module/file-based.yml")
     def baseDir = ["src/main/resources", ""]
@@ -355,16 +357,84 @@ ext.buildProfileYMLFile = {
 }
 
 ext.buildModuleStructure = {
-    // 1. Xử lý RELATIVE_PATH (ví dụ: services/order-service)
-    String relativePath = rootDir.toPath()
-            .relativize(projectDir.toPath()).toString()
-            .replace('\\', '/')
+    def GREEN = "\u001B[32m"
+    def YELLOW = "\u001B[33m"
+    def RESET = "\u001B[0m"
+    def CYAN = "\u001B[36m"
+    def GRAY = "\u001B[90m"
 
-    // 2. Xử lý MODULE_PATH (ví dụ: :services:order-service)
-    String modulePath = relativePath.replace("/",":")
+    // 1. Lấy thông tin từ gradle.properties của module hiện tại
+    def props = getModulePropList()
 
-    project.ext.RELATIVE_PATH = relativePath
-    project.ext.MODULE_PATH = modulePath
+    // Kiểm tra điều kiện bắt buộc (Sửa lại logic return để thoát hàm cha)
+    if (!props.containsKey("MODULE_TYPE") || props.MODULE_TYPE?.toString()?.isEmpty()) {
+        return
+    }
+
+    String type = props.MODULE_TYPE.toString().toUpperCase()
+    String basePackage = gradle.extensions.extraProperties.get("basePackage") as String
+    String packagePath = basePackage.replace('.', '/')
+
+    logger.lifecycle("${CYAN}---------------------------------------")
+    logger.lifecycle("${CYAN}🏗️  [STRUCTURE-GENERATE]${RESET} Đang khởi tạo cấu trúc cho Module: ${GREEN}${project.name}${RESET} (Type: ${type})")
+
+    // 2. Khởi tạo cấu trúc Java & Resources (Library + Application)
+    if (type == "LIBRARY" || type == "APPLICATION") {
+        def mainJavaPath = "src/main/java/${packagePath}"
+        def resourcePath = "src/main/resources"
+
+        [mainJavaPath, resourcePath].each { path ->
+            def dir = new File(projectDir, path)
+            if (!dir.exists()) {
+                dir.mkdirs()
+                logger.lifecycle("   ├─ ✨ Created folder: ${GRAY}${path}${RESET}")
+            }
+        }
+    }
+
+    // 3. Xử lý Render Application Class (Chỉ dành cho Application)
+    if (type == "APPLICATION") {
+        String rawName = props.getProperty("SERVICE_NAME") ?: project.name
+
+        // Chuyển snake_case thành CamelCase (ví dụ: user_service -> UserServiceApplication)
+        String className = rawName.toLowerCase()
+                .split('_')
+                .collect { it.capitalize() }
+                .join('') + "Application"
+
+        def appFile = new File(projectDir, "src/main/java/${packagePath}/${className}.java")
+
+        if (!appFile.exists()) {
+            File templateFile = new File(rootDir, "internal/base_application.txt")
+
+            if (templateFile.exists()) {
+                try {
+                    def binding = [
+                            basePackage: basePackage,
+                            className  : className
+                    ]
+                    def engine = new SimpleTemplateEngine()
+                    def template = engine.createTemplate(templateFile).make(binding)
+
+                    appFile.write(template.toString(), 'UTF-8')
+                    logger.lifecycle("   └─ 🚀 ${GREEN}[RENDERED]${RESET} Java Main Class: ${YELLOW}${className}.java${RESET}")
+                } catch (Exception e) {
+                    logger.error("   └─ ❌ [RENDER-ERROR] Lỗi khi tạo class ${className}: ${e.message}")
+                }
+            } else {
+                logger.lifecycle("   └─ ⚠️  [SKIP] Không tìm thấy file template tại internal/base_application.txt")
+            }
+        } else {
+            logger.lifecycle("   └─ ✔️  [EXISTED] Main class ${className}.java đã có sẵn.")
+        }
+    }
+
+    // 4. Xử lý Platform (BOM)
+    if (type == "PLATFORM") {
+        logger.lifecycle("   └─ 📦 [PLATFORM] Khởi tạo module dạng quản lý version (BOM).")
+    }
+
+    logger.lifecycle("${CYAN}---------------------------------------")
 }
 
 ext.buildDefaultEnvStructure = {
@@ -460,8 +530,6 @@ ext.buildReadmeStructure = {
     def RED = "\u001B[31m"
     def GRAY = "\u001B[90m"
 
-    println project.hasProperty("BUILD_README")
-    println project.getProperties()
     if (isMissingProp(["BUILD_README"])) return
 
     logger.lifecycle("${CYAN}---------------------------------------------------")
@@ -564,4 +632,3 @@ ext.generateProjectStructureFileTxt = {
     outputFile.text = sb.toString()
     println "--- Đã cập nhật sơ đồ (bao gồm Root) tại: ${outputFileName} ---"
 }
-

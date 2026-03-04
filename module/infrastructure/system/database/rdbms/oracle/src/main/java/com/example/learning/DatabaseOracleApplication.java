@@ -4,8 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ModelMapperApplication {
+public class DatabaseOracleApplication {
     public static void main(String[] args) {
-        SpringApplication.run(ModelMapperApplication.class, args);
+        SpringApplication.run(DatabaseOracleApplication.class, args);
     }
 }
