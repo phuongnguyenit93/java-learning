@@ -11,7 +11,7 @@ spring:
 springdoc:
   swagger-ui:
 #    enabled: false
-    path: /
+#    path: /
 #    url: /swagger/api-json.yaml
 #    supportedSubmitMethod:
     docExpansion:
