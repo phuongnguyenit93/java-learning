@@ -1,0 +1,58 @@
+{
+  "BUILD_ENV": {
+    "DESCRIPTION": "Testing cde",
+    "TYPE": "boolean"
+  },
+  "BUILD_ENV_DOCKER_PROFILE": {
+    "DESCRIPTION": "ASCV",
+    "TYPE": "boolean"
+  },
+  "BUILD_ENV_PATH_MODULE_DEPEND": {
+    "DESCRIPTION": "Chưa có chú thích",
+    "TYPE": "list"
+  },
+  "BUILD_ENV_PROFILE": {
+    "DESCRIPTION": "Chưa có chú thích",
+    "TYPE": "boolean"
+  },
+  "BUILD_JAR": {
+    "DESCRIPTION": "Chưa có chú thích",
+    "TYPE": "boolean"
+  },
+  "BUILD_README": {
+    "DESCRIPTION": "Chưa có chú thích",
+    "TYPE": "boolean"
+  },
+  "BUILD_YML": {
+    "DESCRIPTION": "Chưa có chú thích",
+    "TYPE": "boolean"
+  },
+  "BUILD_YML_MODULE_DEPEND": {
+    "DESCRIPTION": "Chưa có chú thích",
+    "TYPE": "list"
+  },
+  "BUILD_YML_PROFILE": {
+    "DESCRIPTION": "Chưa có chú thích",
+    "TYPE": "boolean"
+  },
+  "INJECT_TASK_AUTO": {
+    "DESCRIPTION": "Chưa có chú thích",
+    "TYPE": "boolean"
+  },
+  "IS_MICROSERVICE": {
+    "DESCRIPTION": "Chưa có chú thích",
+    "TYPE": "boolean"
+  },
+  "MODULE_TYPE": {
+    "DESCRIPTION": "Chưa có chú thích",
+    "TYPE": "string"
+  },
+  "README_LANGUAGE": {
+    "DESCRIPTION": "Chưa có chú thích",
+    "TYPE": "list"
+  },
+  "SERVICE_NAME": {
+    "DESCRIPTION": "Chưa có chú thích",
+    "TYPE": "string"
+  }
+}

@@ -1,100 +1,272 @@
 {
     "BUILD_ENV": {
         "MODULES": {
+            "ASPECT": "module/platform/development/paradigm/aop",
             "DATABASE_MYSQL": "module/infrastructure/system/database/rdbms/mysql",
+            "DATABASE_NOSQL": "module/infrastructure/system/database/nosql/mongoDB",
+            "DATABASE_ORACLE": "module/infrastructure/system/database/rdbms/oracle",
+            "DATABASE_POSTGRESQL": "module/infrastructure/system/database/rdbms/postgresql",
             "KAFKA": "module/integration/broker/kafka",
             "KAFKA_CONSUMER_ACCOUNTANT": "module/integration/broker/kafka/service/consumer/accountant",
             "KAFKA_CONSUMER_NOTIFICATION": "module/integration/broker/kafka/service/consumer/notification",
             "KAFKA_CONTROL": "module/integration/broker/kafka/service/control",
             "KAFKA_PRODUCER_BANK": "module/integration/broker/kafka/service/producer/bank",
             "KAFKA_SERVER": "module/integration/broker/kafka/service/server",
-            "THREAD": "module/platform/development/language/java/concurrency/thread"
+            "LIBRARY_SAMPLE": "internal/library/sample",
+            "MODEL_MAPPER": "module/platform/development/language/java/mapping/model-mapper",
+            "OBJECT_MAPPER": "module/platform/development/language/java/mapping/object-mapper",
+            "SPRING_ACTUATOR": "module/platform/development/framework/spring/actuator",
+            "SPRING_DEVTOOL": "module/platform/development/framework/spring/devtool",
+            "SPRING_SWAGGER": "module/platform/development/framework/spring/swagger",
+            "SPRING_WEB": "module/platform/development/framework/spring/web",
+            "THREAD": "module/platform/development/language/java/concurrency/thread",
+            "abstract-interface": "module/platform/development/language/java/core/abstract-interface",
+            "jpa": "module/platform/development/framework/spring/data/jpa",
+            "record": "module/platform/development/language/java/version/java16/record",
+            "task": "module/platform/development/paradigm/asynchronous/schedule/task"
         }
     },
     "BUILD_ENV_DOCKER_PROFILE": {
         "MODULES": {
-            "KAFKA": "module/integration/broker/kafka"
+            "ASPECT": "module/platform/development/paradigm/aop",
+            "DATABASE_MYSQL": "module/infrastructure/system/database/rdbms/mysql",
+            "DATABASE_NOSQL": "module/infrastructure/system/database/nosql/mongoDB",
+            "DATABASE_ORACLE": "module/infrastructure/system/database/rdbms/oracle",
+            "DATABASE_POSTGRESQL": "module/infrastructure/system/database/rdbms/postgresql",
+            "KAFKA": "module/integration/broker/kafka",
+            "KAFKA_CONSUMER_ACCOUNTANT": "module/integration/broker/kafka/service/consumer/accountant",
+            "KAFKA_CONSUMER_NOTIFICATION": "module/integration/broker/kafka/service/consumer/notification",
+            "KAFKA_CONTROL": "module/integration/broker/kafka/service/control",
+            "KAFKA_PRODUCER_BANK": "module/integration/broker/kafka/service/producer/bank",
+            "KAFKA_SERVER": "module/integration/broker/kafka/service/server",
+            "LIBRARY_SAMPLE": "internal/library/sample",
+            "MODEL_MAPPER": "module/platform/development/language/java/mapping/model-mapper",
+            "OBJECT_MAPPER": "module/platform/development/language/java/mapping/object-mapper",
+            "SPRING_ACTUATOR": "module/platform/development/framework/spring/actuator",
+            "SPRING_DEVTOOL": "module/platform/development/framework/spring/devtool",
+            "SPRING_SWAGGER": "module/platform/development/framework/spring/swagger",
+            "SPRING_WEB": "module/platform/development/framework/spring/web",
+            "THREAD": "module/platform/development/language/java/concurrency/thread",
+            "abstract-interface": "module/platform/development/language/java/core/abstract-interface",
+            "jpa": "module/platform/development/framework/spring/data/jpa",
+            "record": "module/platform/development/language/java/version/java16/record",
+            "task": "module/platform/development/paradigm/asynchronous/schedule/task"
         }
     },
     "BUILD_ENV_PATH_MODULE_DEPEND": {
         "MODULES": {
-            "KAFKA": "module/integration/broker/kafka"
+            "ASPECT": "module/platform/development/paradigm/aop",
+            "DATABASE_MYSQL": "module/infrastructure/system/database/rdbms/mysql",
+            "DATABASE_NOSQL": "module/infrastructure/system/database/nosql/mongoDB",
+            "DATABASE_ORACLE": "module/infrastructure/system/database/rdbms/oracle",
+            "DATABASE_POSTGRESQL": "module/infrastructure/system/database/rdbms/postgresql",
+            "KAFKA": "module/integration/broker/kafka",
+            "KAFKA_CONSUMER_ACCOUNTANT": "module/integration/broker/kafka/service/consumer/accountant",
+            "KAFKA_CONSUMER_NOTIFICATION": "module/integration/broker/kafka/service/consumer/notification",
+            "KAFKA_CONTROL": "module/integration/broker/kafka/service/control",
+            "KAFKA_PRODUCER_BANK": "module/integration/broker/kafka/service/producer/bank",
+            "KAFKA_SERVER": "module/integration/broker/kafka/service/server",
+            "LIBRARY_SAMPLE": "internal/library/sample",
+            "MODEL_MAPPER": "module/platform/development/language/java/mapping/model-mapper",
+            "OBJECT_MAPPER": "module/platform/development/language/java/mapping/object-mapper",
+            "SPRING_ACTUATOR": "module/platform/development/framework/spring/actuator",
+            "SPRING_DEVTOOL": "module/platform/development/framework/spring/devtool",
+            "SPRING_SWAGGER": "module/platform/development/framework/spring/swagger",
+            "SPRING_WEB": "module/platform/development/framework/spring/web",
+            "THREAD": "module/platform/development/language/java/concurrency/thread",
+            "abstract-interface": "module/platform/development/language/java/core/abstract-interface",
+            "jpa": "module/platform/development/framework/spring/data/jpa",
+            "record": "module/platform/development/language/java/version/java16/record",
+            "task": "module/platform/development/paradigm/asynchronous/schedule/task"
         }
     },
     "BUILD_ENV_PROFILE": {
         "MODULES": {
+            "ASPECT": "module/platform/development/paradigm/aop",
             "DATABASE_MYSQL": "module/infrastructure/system/database/rdbms/mysql",
+            "DATABASE_NOSQL": "module/infrastructure/system/database/nosql/mongoDB",
+            "DATABASE_ORACLE": "module/infrastructure/system/database/rdbms/oracle",
+            "DATABASE_POSTGRESQL": "module/infrastructure/system/database/rdbms/postgresql",
+            "KAFKA": "module/integration/broker/kafka",
             "KAFKA_CONSUMER_ACCOUNTANT": "module/integration/broker/kafka/service/consumer/accountant",
             "KAFKA_CONSUMER_NOTIFICATION": "module/integration/broker/kafka/service/consumer/notification",
             "KAFKA_CONTROL": "module/integration/broker/kafka/service/control",
             "KAFKA_PRODUCER_BANK": "module/integration/broker/kafka/service/producer/bank",
-            "KAFKA_SERVER": "module/integration/broker/kafka/service/server"
+            "KAFKA_SERVER": "module/integration/broker/kafka/service/server",
+            "LIBRARY_SAMPLE": "internal/library/sample",
+            "MODEL_MAPPER": "module/platform/development/language/java/mapping/model-mapper",
+            "OBJECT_MAPPER": "module/platform/development/language/java/mapping/object-mapper",
+            "SPRING_ACTUATOR": "module/platform/development/framework/spring/actuator",
+            "SPRING_DEVTOOL": "module/platform/development/framework/spring/devtool",
+            "SPRING_SWAGGER": "module/platform/development/framework/spring/swagger",
+            "SPRING_WEB": "module/platform/development/framework/spring/web",
+            "THREAD": "module/platform/development/language/java/concurrency/thread",
+            "abstract-interface": "module/platform/development/language/java/core/abstract-interface",
+            "jpa": "module/platform/development/framework/spring/data/jpa",
+            "record": "module/platform/development/language/java/version/java16/record",
+            "task": "module/platform/development/paradigm/asynchronous/schedule/task"
         }
     },
     "BUILD_JAR": {
         "MODULES": {
+            "ASPECT": "module/platform/development/paradigm/aop",
+            "DATABASE_MYSQL": "module/infrastructure/system/database/rdbms/mysql",
+            "DATABASE_NOSQL": "module/infrastructure/system/database/nosql/mongoDB",
+            "DATABASE_ORACLE": "module/infrastructure/system/database/rdbms/oracle",
+            "DATABASE_POSTGRESQL": "module/infrastructure/system/database/rdbms/postgresql",
+            "KAFKA": "module/integration/broker/kafka",
             "KAFKA_CONSUMER_ACCOUNTANT": "module/integration/broker/kafka/service/consumer/accountant",
             "KAFKA_CONSUMER_NOTIFICATION": "module/integration/broker/kafka/service/consumer/notification",
             "KAFKA_CONTROL": "module/integration/broker/kafka/service/control",
             "KAFKA_PRODUCER_BANK": "module/integration/broker/kafka/service/producer/bank",
-            "THREAD": "module/platform/development/language/java/concurrency/thread"
+            "KAFKA_SERVER": "module/integration/broker/kafka/service/server",
+            "LIBRARY_SAMPLE": "internal/library/sample",
+            "MODEL_MAPPER": "module/platform/development/language/java/mapping/model-mapper",
+            "OBJECT_MAPPER": "module/platform/development/language/java/mapping/object-mapper",
+            "SPRING_ACTUATOR": "module/platform/development/framework/spring/actuator",
+            "SPRING_DEVTOOL": "module/platform/development/framework/spring/devtool",
+            "SPRING_SWAGGER": "module/platform/development/framework/spring/swagger",
+            "SPRING_WEB": "module/platform/development/framework/spring/web",
+            "THREAD": "module/platform/development/language/java/concurrency/thread",
+            "abstract-interface": "module/platform/development/language/java/core/abstract-interface",
+            "jpa": "module/platform/development/framework/spring/data/jpa",
+            "record": "module/platform/development/language/java/version/java16/record",
+            "task": "module/platform/development/paradigm/asynchronous/schedule/task"
         }
     },
     "BUILD_README": {
         "MODULES": {
             "ASPECT": "module/platform/development/paradigm/aop",
-            "KAFKA": "module/integration/broker/kafka",
-            "THREAD": "module/platform/development/language/java/concurrency/thread"
-        }
-    },
-    "BUILD_YML": {
-        "MODULES": {
             "DATABASE_MYSQL": "module/infrastructure/system/database/rdbms/mysql",
-            "KAFKA_CONSUMER_ACCOUNTANT": "module/integration/broker/kafka/service/consumer/accountant",
-            "KAFKA_CONSUMER_NOTIFICATION": "module/integration/broker/kafka/service/consumer/notification",
-            "KAFKA_CONTROL": "module/integration/broker/kafka/service/control",
-            "KAFKA_PRODUCER_BANK": "module/integration/broker/kafka/service/producer/bank",
-            "SPRING_ACTUATOR": "module/platform/development/framework/spring/actuator",
-            "SPRING_DEVTOOL": "module/platform/development/framework/spring/devtool",
-            "SPRING_SWAGGER": "module/platform/development/framework/spring/swagger",
-            "SPRING_WEB": "module/platform/development/framework/spring/web",
-            "THREAD": "module/platform/development/language/java/concurrency/thread",
-            "task": "module/platform/development/paradigm/asynchronous/schedule/task"
-        }
-    },
-    "BUILD_YML_MODULE_DEPEND": {
-        "MODULES": {
-            "KAFKA_CONSUMER_ACCOUNTANT": "module/integration/broker/kafka/service/consumer/accountant",
-            "KAFKA_CONSUMER_NOTIFICATION": "module/integration/broker/kafka/service/consumer/notification",
-            "KAFKA_PRODUCER_BANK": "module/integration/broker/kafka/service/producer/bank",
-            "THREAD": "module/platform/development/language/java/concurrency/thread"
-        }
-    },
-    "BUILD_YML_PROFILE": {
-        "MODULES": {
-            "DATABASE_MYSQL": "module/infrastructure/system/database/rdbms/mysql",
-            "KAFKA_CONSUMER_ACCOUNTANT": "module/integration/broker/kafka/service/consumer/accountant",
-            "KAFKA_CONSUMER_NOTIFICATION": "module/integration/broker/kafka/service/consumer/notification",
-            "KAFKA_CONTROL": "module/integration/broker/kafka/service/control",
-            "KAFKA_PRODUCER_BANK": "module/integration/broker/kafka/service/producer/bank",
-            "SPRING_ACTUATOR": "module/platform/development/framework/spring/actuator",
-            "SPRING_DEVTOOL": "module/platform/development/framework/spring/devtool",
-            "SPRING_SWAGGER": "module/platform/development/framework/spring/swagger",
-            "SPRING_WEB": "module/platform/development/framework/spring/web",
-            "THREAD": "module/platform/development/language/java/concurrency/thread",
-            "task": "module/platform/development/paradigm/asynchronous/schedule/task"
-        }
-    },
-    "INJECT_TASK_AUTO": {
-        "MODULES": {
-            "DATABASE_MYSQL": "module/infrastructure/system/database/rdbms/mysql",
+            "DATABASE_NOSQL": "module/infrastructure/system/database/nosql/mongoDB",
+            "DATABASE_ORACLE": "module/infrastructure/system/database/rdbms/oracle",
+            "DATABASE_POSTGRESQL": "module/infrastructure/system/database/rdbms/postgresql",
             "KAFKA": "module/integration/broker/kafka",
             "KAFKA_CONSUMER_ACCOUNTANT": "module/integration/broker/kafka/service/consumer/accountant",
             "KAFKA_CONSUMER_NOTIFICATION": "module/integration/broker/kafka/service/consumer/notification",
             "KAFKA_CONTROL": "module/integration/broker/kafka/service/control",
             "KAFKA_PRODUCER_BANK": "module/integration/broker/kafka/service/producer/bank",
             "KAFKA_SERVER": "module/integration/broker/kafka/service/server",
-            "THREAD": "module/platform/development/language/java/concurrency/thread"
+            "LIBRARY_SAMPLE": "internal/library/sample",
+            "MODEL_MAPPER": "module/platform/development/language/java/mapping/model-mapper",
+            "OBJECT_MAPPER": "module/platform/development/language/java/mapping/object-mapper",
+            "SPRING_ACTUATOR": "module/platform/development/framework/spring/actuator",
+            "SPRING_DEVTOOL": "module/platform/development/framework/spring/devtool",
+            "SPRING_SWAGGER": "module/platform/development/framework/spring/swagger",
+            "SPRING_WEB": "module/platform/development/framework/spring/web",
+            "THREAD": "module/platform/development/language/java/concurrency/thread",
+            "abstract-interface": "module/platform/development/language/java/core/abstract-interface",
+            "jpa": "module/platform/development/framework/spring/data/jpa",
+            "record": "module/platform/development/language/java/version/java16/record",
+            "task": "module/platform/development/paradigm/asynchronous/schedule/task"
+        }
+    },
+    "BUILD_YML": {
+        "MODULES": {
+            "ASPECT": "module/platform/development/paradigm/aop",
+            "DATABASE_MYSQL": "module/infrastructure/system/database/rdbms/mysql",
+            "DATABASE_NOSQL": "module/infrastructure/system/database/nosql/mongoDB",
+            "DATABASE_ORACLE": "module/infrastructure/system/database/rdbms/oracle",
+            "DATABASE_POSTGRESQL": "module/infrastructure/system/database/rdbms/postgresql",
+            "KAFKA": "module/integration/broker/kafka",
+            "KAFKA_CONSUMER_ACCOUNTANT": "module/integration/broker/kafka/service/consumer/accountant",
+            "KAFKA_CONSUMER_NOTIFICATION": "module/integration/broker/kafka/service/consumer/notification",
+            "KAFKA_CONTROL": "module/integration/broker/kafka/service/control",
+            "KAFKA_PRODUCER_BANK": "module/integration/broker/kafka/service/producer/bank",
+            "KAFKA_SERVER": "module/integration/broker/kafka/service/server",
+            "LIBRARY_SAMPLE": "internal/library/sample",
+            "MODEL_MAPPER": "module/platform/development/language/java/mapping/model-mapper",
+            "OBJECT_MAPPER": "module/platform/development/language/java/mapping/object-mapper",
+            "SPRING_ACTUATOR": "module/platform/development/framework/spring/actuator",
+            "SPRING_DEVTOOL": "module/platform/development/framework/spring/devtool",
+            "SPRING_SWAGGER": "module/platform/development/framework/spring/swagger",
+            "SPRING_WEB": "module/platform/development/framework/spring/web",
+            "THREAD": "module/platform/development/language/java/concurrency/thread",
+            "abstract-interface": "module/platform/development/language/java/core/abstract-interface",
+            "jpa": "module/platform/development/framework/spring/data/jpa",
+            "record": "module/platform/development/language/java/version/java16/record",
+            "task": "module/platform/development/paradigm/asynchronous/schedule/task"
+        }
+    },
+    "BUILD_YML_MODULE_DEPEND": {
+        "MODULES": {
+            "ASPECT": "module/platform/development/paradigm/aop",
+            "DATABASE_MYSQL": "module/infrastructure/system/database/rdbms/mysql",
+            "DATABASE_NOSQL": "module/infrastructure/system/database/nosql/mongoDB",
+            "DATABASE_ORACLE": "module/infrastructure/system/database/rdbms/oracle",
+            "DATABASE_POSTGRESQL": "module/infrastructure/system/database/rdbms/postgresql",
+            "KAFKA": "module/integration/broker/kafka",
+            "KAFKA_CONSUMER_ACCOUNTANT": "module/integration/broker/kafka/service/consumer/accountant",
+            "KAFKA_CONSUMER_NOTIFICATION": "module/integration/broker/kafka/service/consumer/notification",
+            "KAFKA_CONTROL": "module/integration/broker/kafka/service/control",
+            "KAFKA_PRODUCER_BANK": "module/integration/broker/kafka/service/producer/bank",
+            "KAFKA_SERVER": "module/integration/broker/kafka/service/server",
+            "LIBRARY_SAMPLE": "internal/library/sample",
+            "MODEL_MAPPER": "module/platform/development/language/java/mapping/model-mapper",
+            "OBJECT_MAPPER": "module/platform/development/language/java/mapping/object-mapper",
+            "SPRING_ACTUATOR": "module/platform/development/framework/spring/actuator",
+            "SPRING_DEVTOOL": "module/platform/development/framework/spring/devtool",
+            "SPRING_SWAGGER": "module/platform/development/framework/spring/swagger",
+            "SPRING_WEB": "module/platform/development/framework/spring/web",
+            "THREAD": "module/platform/development/language/java/concurrency/thread",
+            "abstract-interface": "module/platform/development/language/java/core/abstract-interface",
+            "jpa": "module/platform/development/framework/spring/data/jpa",
+            "record": "module/platform/development/language/java/version/java16/record",
+            "task": "module/platform/development/paradigm/asynchronous/schedule/task"
+        }
+    },
+    "BUILD_YML_PROFILE": {
+        "MODULES": {
+            "ASPECT": "module/platform/development/paradigm/aop",
+            "DATABASE_MYSQL": "module/infrastructure/system/database/rdbms/mysql",
+            "DATABASE_NOSQL": "module/infrastructure/system/database/nosql/mongoDB",
+            "DATABASE_ORACLE": "module/infrastructure/system/database/rdbms/oracle",
+            "DATABASE_POSTGRESQL": "module/infrastructure/system/database/rdbms/postgresql",
+            "KAFKA": "module/integration/broker/kafka",
+            "KAFKA_CONSUMER_ACCOUNTANT": "module/integration/broker/kafka/service/consumer/accountant",
+            "KAFKA_CONSUMER_NOTIFICATION": "module/integration/broker/kafka/service/consumer/notification",
+            "KAFKA_CONTROL": "module/integration/broker/kafka/service/control",
+            "KAFKA_PRODUCER_BANK": "module/integration/broker/kafka/service/producer/bank",
+            "KAFKA_SERVER": "module/integration/broker/kafka/service/server",
+            "LIBRARY_SAMPLE": "internal/library/sample",
+            "MODEL_MAPPER": "module/platform/development/language/java/mapping/model-mapper",
+            "OBJECT_MAPPER": "module/platform/development/language/java/mapping/object-mapper",
+            "SPRING_ACTUATOR": "module/platform/development/framework/spring/actuator",
+            "SPRING_DEVTOOL": "module/platform/development/framework/spring/devtool",
+            "SPRING_SWAGGER": "module/platform/development/framework/spring/swagger",
+            "SPRING_WEB": "module/platform/development/framework/spring/web",
+            "THREAD": "module/platform/development/language/java/concurrency/thread",
+            "abstract-interface": "module/platform/development/language/java/core/abstract-interface",
+            "jpa": "module/platform/development/framework/spring/data/jpa",
+            "record": "module/platform/development/language/java/version/java16/record",
+            "task": "module/platform/development/paradigm/asynchronous/schedule/task"
+        }
+    },
+    "INJECT_TASK_AUTO": {
+        "MODULES": {
+            "ASPECT": "module/platform/development/paradigm/aop",
+            "DATABASE_MYSQL": "module/infrastructure/system/database/rdbms/mysql",
+            "DATABASE_NOSQL": "module/infrastructure/system/database/nosql/mongoDB",
+            "DATABASE_ORACLE": "module/infrastructure/system/database/rdbms/oracle",
+            "DATABASE_POSTGRESQL": "module/infrastructure/system/database/rdbms/postgresql",
+            "KAFKA": "module/integration/broker/kafka",
+            "KAFKA_CONSUMER_ACCOUNTANT": "module/integration/broker/kafka/service/consumer/accountant",
+            "KAFKA_CONSUMER_NOTIFICATION": "module/integration/broker/kafka/service/consumer/notification",
+            "KAFKA_CONTROL": "module/integration/broker/kafka/service/control",
+            "KAFKA_PRODUCER_BANK": "module/integration/broker/kafka/service/producer/bank",
+            "KAFKA_SERVER": "module/integration/broker/kafka/service/server",
+            "LIBRARY_SAMPLE": "internal/library/sample",
+            "MODEL_MAPPER": "module/platform/development/language/java/mapping/model-mapper",
+            "OBJECT_MAPPER": "module/platform/development/language/java/mapping/object-mapper",
+            "SPRING_ACTUATOR": "module/platform/development/framework/spring/actuator",
+            "SPRING_DEVTOOL": "module/platform/development/framework/spring/devtool",
+            "SPRING_SWAGGER": "module/platform/development/framework/spring/swagger",
+            "SPRING_WEB": "module/platform/development/framework/spring/web",
+            "THREAD": "module/platform/development/language/java/concurrency/thread",
+            "abstract-interface": "module/platform/development/language/java/core/abstract-interface",
+            "jpa": "module/platform/development/framework/spring/data/jpa",
+            "record": "module/platform/development/language/java/version/java16/record",
+            "task": "module/platform/development/paradigm/asynchronous/schedule/task"
         }
     },
     "IS_MICROSERVICE": {
@@ -104,6 +276,7 @@
             "DATABASE_NOSQL": "module/infrastructure/system/database/nosql/mongoDB",
             "DATABASE_ORACLE": "module/infrastructure/system/database/rdbms/oracle",
             "DATABASE_POSTGRESQL": "module/infrastructure/system/database/rdbms/postgresql",
+            "KAFKA": "module/integration/broker/kafka",
             "KAFKA_CONSUMER_ACCOUNTANT": "module/integration/broker/kafka/service/consumer/accountant",
             "KAFKA_CONSUMER_NOTIFICATION": "module/integration/broker/kafka/service/consumer/notification",
             "KAFKA_CONTROL": "module/integration/broker/kafka/service/control",
@@ -125,20 +298,56 @@
     },
     "MODULE_TYPE": {
         "MODULES": {
+            "ASPECT": "module/platform/development/paradigm/aop",
             "DATABASE_MYSQL": "module/infrastructure/system/database/rdbms/mysql",
+            "DATABASE_NOSQL": "module/infrastructure/system/database/nosql/mongoDB",
             "DATABASE_ORACLE": "module/infrastructure/system/database/rdbms/oracle",
             "DATABASE_POSTGRESQL": "module/infrastructure/system/database/rdbms/postgresql",
+            "KAFKA": "module/integration/broker/kafka",
+            "KAFKA_CONSUMER_ACCOUNTANT": "module/integration/broker/kafka/service/consumer/accountant",
+            "KAFKA_CONSUMER_NOTIFICATION": "module/integration/broker/kafka/service/consumer/notification",
+            "KAFKA_CONTROL": "module/integration/broker/kafka/service/control",
+            "KAFKA_PRODUCER_BANK": "module/integration/broker/kafka/service/producer/bank",
+            "KAFKA_SERVER": "module/integration/broker/kafka/service/server",
+            "LIBRARY_SAMPLE": "internal/library/sample",
             "MODEL_MAPPER": "module/platform/development/language/java/mapping/model-mapper",
             "OBJECT_MAPPER": "module/platform/development/language/java/mapping/object-mapper",
+            "SPRING_ACTUATOR": "module/platform/development/framework/spring/actuator",
+            "SPRING_DEVTOOL": "module/platform/development/framework/spring/devtool",
+            "SPRING_SWAGGER": "module/platform/development/framework/spring/swagger",
+            "SPRING_WEB": "module/platform/development/framework/spring/web",
             "THREAD": "module/platform/development/language/java/concurrency/thread",
-            "record": "module/platform/development/language/java/version/java16/record"
+            "abstract-interface": "module/platform/development/language/java/core/abstract-interface",
+            "jpa": "module/platform/development/framework/spring/data/jpa",
+            "record": "module/platform/development/language/java/version/java16/record",
+            "task": "module/platform/development/paradigm/asynchronous/schedule/task"
         }
     },
     "README_LANGUAGE": {
         "MODULES": {
             "ASPECT": "module/platform/development/paradigm/aop",
+            "DATABASE_MYSQL": "module/infrastructure/system/database/rdbms/mysql",
+            "DATABASE_NOSQL": "module/infrastructure/system/database/nosql/mongoDB",
+            "DATABASE_ORACLE": "module/infrastructure/system/database/rdbms/oracle",
+            "DATABASE_POSTGRESQL": "module/infrastructure/system/database/rdbms/postgresql",
             "KAFKA": "module/integration/broker/kafka",
-            "THREAD": "module/platform/development/language/java/concurrency/thread"
+            "KAFKA_CONSUMER_ACCOUNTANT": "module/integration/broker/kafka/service/consumer/accountant",
+            "KAFKA_CONSUMER_NOTIFICATION": "module/integration/broker/kafka/service/consumer/notification",
+            "KAFKA_CONTROL": "module/integration/broker/kafka/service/control",
+            "KAFKA_PRODUCER_BANK": "module/integration/broker/kafka/service/producer/bank",
+            "KAFKA_SERVER": "module/integration/broker/kafka/service/server",
+            "LIBRARY_SAMPLE": "internal/library/sample",
+            "MODEL_MAPPER": "module/platform/development/language/java/mapping/model-mapper",
+            "OBJECT_MAPPER": "module/platform/development/language/java/mapping/object-mapper",
+            "SPRING_ACTUATOR": "module/platform/development/framework/spring/actuator",
+            "SPRING_DEVTOOL": "module/platform/development/framework/spring/devtool",
+            "SPRING_SWAGGER": "module/platform/development/framework/spring/swagger",
+            "SPRING_WEB": "module/platform/development/framework/spring/web",
+            "THREAD": "module/platform/development/language/java/concurrency/thread",
+            "abstract-interface": "module/platform/development/language/java/core/abstract-interface",
+            "jpa": "module/platform/development/framework/spring/data/jpa",
+            "record": "module/platform/development/language/java/version/java16/record",
+            "task": "module/platform/development/paradigm/asynchronous/schedule/task"
         }
     },
     "SERVICE_NAME": {
@@ -161,7 +370,11 @@
             "SPRING_DEVTOOL": "module/platform/development/framework/spring/devtool",
             "SPRING_SWAGGER": "module/platform/development/framework/spring/swagger",
             "SPRING_WEB": "module/platform/development/framework/spring/web",
-            "THREAD": "module/platform/development/language/java/concurrency/thread"
+            "THREAD": "module/platform/development/language/java/concurrency/thread",
+            "abstract-interface": "module/platform/development/language/java/core/abstract-interface",
+            "jpa": "module/platform/development/framework/spring/data/jpa",
+            "record": "module/platform/development/language/java/version/java16/record",
+            "task": "module/platform/development/paradigm/asynchronous/schedule/task"
         }
     }
 }

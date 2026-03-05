@@ -24,6 +24,8 @@ subprojects {
 
         apply plugin: 'io.spring.dependency-management'
 
+        ext.generateSampleGradlePropFile()
+
         ext.buildModuleStructure()
 
         ext.applyPluginAndDependencyToModule()
@@ -83,7 +85,6 @@ allprojects {
         gradlePluginPortal()
     }
 }
-
 
 
 

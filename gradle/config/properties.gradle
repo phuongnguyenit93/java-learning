@@ -40,7 +40,7 @@ ext.combineBuildYaml = {String serviceName ->
     logger.lifecycle("${BLUE}🧩 [YAML-MERGE]${RESET} Bắt đầu gộp file cấu hình cho Service: ${CYAN}${serviceName}${RESET}")
 
     Project baseProp = ext.searchProjectByServiceName(serviceName)
-    List<String> microserviceList = baseProp?.BUILD_YML_MODULE_DEPEND?.toString()?.split(',') as List<String> ?: []
+    List<String> microserviceList = baseProp.hasProperty("BUILD_YML_MODULE_DEPEND") ? baseProp.BUILD_YML_MODULE_DEPEND?.toString()?.split(',') as List<String> : []
 
     if (baseProp == null) {
         logger.lifecycle("${RED}❌ [ERROR]${RESET} Không tìm thấy cấu hình cho service: ${serviceName}")

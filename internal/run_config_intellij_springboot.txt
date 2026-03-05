@@ -1,0 +1,16 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="${appName}" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+    <module name="${moduleId}" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="${mainClass}" />
+    <option name="envFilePaths">
+      <option value="${envPath}" />
+    </option>
+    <selectedOptions>
+      <option name="environmentVariables" />
+    </selectedOptions>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

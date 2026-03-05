@@ -1,0 +1,19 @@
+// START_MY_MODULE_APPLY
+apply from: "${rootDir}/gradle/config/module.gradle"
+// END_MY_MODULE_APPLY
+
+// START_MY_TASK
+tasks.register("generateIntellijConfigTemplate") {
+    group = "application"
+    description = "Config các file run application của Intellij để nó tự động map các file .env"
+
+    doLast {
+        String serviceNameProp = project.findProperty("SERVICE_NAME")?.toString()
+        if (serviceNameProp?.toString()?.blank) {
+            throw new GradleException("Error : Missing 'SERVICE_NAME'. Please add by -PSERVICE_NAME=... or in gradle.properties")
+        }
+
+        project.ext.generateIntellijConfigTemplate (serviceNameProp)
+    }
+}
+// END_MY_TASK

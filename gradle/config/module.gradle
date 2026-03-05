@@ -16,11 +16,9 @@ def isMissingProp = {List<String> propList ->
 
     def props = getModulePropList()
     return propList.any {
-        return !props.containsKey(it)
+        return !props.containsKey(it) || props.get(it) != "TRUE"
     }
 }
-
-
 
 ext.applyPluginAndDependencyToModule = {
     def GREEN = "\u001B[32m"
@@ -37,7 +35,6 @@ ext.applyPluginAndDependencyToModule = {
         apply plugin: 'java-library'
 
         def hasMainMethod = false
-        def usesLombok = false
         def javaFiles = fileTree(dir: javaSrcDir, include: "**/*.java")
 
         javaFiles.any { file ->
@@ -45,15 +42,15 @@ ext.applyPluginAndDependencyToModule = {
             if (!hasMainMethod && fileContent.contains("public static void main") && fileContent.contains("String[] args")) {
                 hasMainMethod = true
             }
-            if (!usesLombok && fileContent.contains("import lombok")) {
-                usesLombok = true
-            }
-            return hasMainMethod && usesLombok
+
+            return hasMainMethod
         }
 
         // 1. Xử lý Spring Boot / Dependency Management
         if (hasMainMethod) {
             apply plugin: 'org.springframework.boot'
+            apply plugin: "io.freefair.lombok"
+
             dependencies {
                 implementation 'org.springframework.boot:spring-boot-starter-web'
                 implementation 'org.springframework.boot:spring-boot-starter-actuator'
@@ -69,12 +66,6 @@ ext.applyPluginAndDependencyToModule = {
                 }
             }
             logger.lifecycle("   ├─ 📦 ${YELLOW}BOM Management:${RESET} Không có hàm main -> Chỉ apply Dependency Management.")
-        }
-
-        // 2. Xử lý Lombok
-        if (usesLombok) {
-            apply plugin: "io.freefair.lombok"
-            logger.lifecycle("   ├─ 🌶️  ${GREEN}Lombok:${RESET} Đã tìm thấy @Annotations -> Apply Lombok plugin.")
         }
     } else {
         // Trường hợp module không có code Java (ví dụ module chứa config/resources)
@@ -118,7 +109,8 @@ ext.injectAndExtractAllModuleTask = {
             [type: "env", fileName: "env.gradle", propCheck: "BUILD_ENV"],
             [type: "readme", fileName: "readme.gradle", propCheck: "BUILD_README"],
             [type: "properties", fileName: "properties.gradle", propCheck: "BUILD_YML"],
-            [type: "jar", fileName: "build-jar.gradle", propCheck: "BUILD_JAR"]
+            [type: "jar", fileName: "build-jar.gradle", propCheck: "BUILD_JAR"],
+            [type: "intellij", fileName: "intellij.gradle", propCheck: ""]
     ]
 
     def extractBlocks = { tagName, fileText ->
@@ -403,6 +395,10 @@ ext.buildModuleStructure = {
                 .join('') + "Application"
 
         def appFile = new File(projectDir, "src/main/java/${packagePath}/${className}.java")
+        project.ext.APPLICATION_NAME = className
+        project.ext.MAIN_CLASS_PATH = "${basePackage}.${className}"
+        project.ext.MODULE_ID = "${rootProject.name}${project.path.replace(":",".")}"
+        project.ext.ENV_PATH = "${projectDir.path}/.env"
 
         if (!appFile.exists()) {
             File templateFile = new File(rootDir, "internal/base_application.txt")
@@ -631,4 +627,102 @@ ext.generateProjectStructureFileTxt = {
 
     outputFile.text = sb.toString()
     println "--- Đã cập nhật sơ đồ (bao gồm Root) tại: ${outputFileName} ---"
+}
+
+ext.generateIntellijConfigTemplate = {String serviceName ->
+    Project baseProps = ext.searchProjectByServiceName(serviceName)
+    if (baseProps == null) return
+
+    def engine = new SimpleTemplateEngine()
+    def templateFile = file("${rootDir}/internal/run_config_intellij_springboot.txt")
+    if (!templateFile.exists()) return
+
+    String basePackage = gradle.extensions.extraProperties.get("basePackage") //com.example.learning
+    String packagePath = basePackage.replace('.', '/')
+    String appName = baseProps.project.APPLICATION_NAME
+
+    if (!new File(projectDir,"src/main/java/${packagePath}/${appName}.java").exists()) return
+
+    def binding = [
+        appName   : appName,
+        moduleId  : baseProps.project.MODULE_ID,
+        mainClass : baseProps.project.MAIN_CLASS_PATH,
+        envPath   : "${projectDir.toPath()}${File.separator}.env"
+    ]
+
+    // 3. Render template
+    def output = engine.createTemplate(templateFile).make(binding).toString()
+
+    def runDir = new File(rootDir,".run")
+    if (!runDir.exists()) runDir.mkdir()
+
+    def runFile = new File(runDir,"${appName}.run.xml")
+    if (!runFile.exists()) runFile.createNewFile()
+
+    runFile.text = output
+}
+
+ext.generateSampleGradlePropFile = {
+    File propFile = project.file("gradle.properties")
+
+    // 1. Đọc file JSON mẫu từ đường dẫn bạn đã chỉ định
+    def jsonFile = rootProject.file("internal/info/properties/module-properties-template.json")
+    if (!jsonFile.exists()) return // Bỏ qua nếu chưa tạo file template
+
+    def configModel = new JsonSlurper().parseText(jsonFile.getText("UTF-8"))
+    def lines = propFile.readLines("UTF-8")
+    def newLines = []
+    def processedKeys = []
+
+    // 2. Duyệt qua các dòng hiện tại để cập nhật/chèn comment
+    for (int i = 0; i < lines.size(); i++) {
+        def line = lines[i].trim()
+
+        if (line.contains('=') && !line.startsWith('#')) {
+            def key = line.split('=')[0].trim()
+
+            if (configModel.containsKey(key)) {
+                def newComment = "# ${configModel[key].DESCRIPTION}"
+
+                // Kiểm tra dòng ngay phía trên
+                if (i > 0) {
+                    def previousLine = lines[i-1].trim()
+                    // Nếu dòng trên là một comment (bất kể nội dung gì), ta loại bỏ nó khỏi danh sách mới
+                    if (previousLine.startsWith('#')) {
+                        if (!newLines.isEmpty()) {
+                            newLines.removeLast()
+                        }
+                    }
+                }
+
+                // Thêm comment mới nhất từ JSON vào
+                newLines << newComment
+                processedKeys << key
+            }
+        }
+        newLines << lines[i]
+    }
+
+    // 3. Thêm các thuộc tính mới hoàn toàn từ JSON vào cuối file
+    boolean hasNewKeys = false
+    configModel.each { key, info ->
+        if (!processedKeys.contains(key)) {
+            // Thêm dòng trống ngăn cách nếu file cũ đang có dữ liệu
+            if (!hasNewKeys && !newLines.isEmpty() && !newLines.last().trim().isEmpty()) {
+                newLines << ""
+            }
+            newLines << "# ${info.DESCRIPTION}"
+            def defaultValue = (info.TYPE == "boolean") ? "FALSE" : ""
+            newLines << "${key}=${defaultValue}"
+            processedKeys << key
+            hasNewKeys = true
+        }
+    }
+
+    // 4. Chỉ ghi lại file nếu có sự thay đổi thực tế
+    if (lines != newLines) {
+        propFile.setText(newLines.join(System.lineSeparator()), "UTF-8")
+        // Log ra để bạn biết module nào vừa được "chuẩn hóa"
+        logger.quiet "--- Synced properties for module: ${project.path} ---"
+    }
 }
