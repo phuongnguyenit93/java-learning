@@ -27,6 +27,7 @@ build/
 *.ipr
 *.iws
 *.idea
+*.run
 
 # VS Code #
 .vscode/
