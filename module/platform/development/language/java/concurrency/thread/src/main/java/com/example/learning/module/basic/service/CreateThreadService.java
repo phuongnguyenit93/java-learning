@@ -1,6 +1,8 @@
 package com.example.learning.module.basic.service;
 
 import com.example.learning.module.basic.thread.MyWorker;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.*;
@@ -48,12 +50,14 @@ public class CreateThreadService {
     }
 
     // Tạo một pool cố định có 5 threads
-    private final ExecutorService threadPool = Executors.newFixedThreadPool(5);
+    @Autowired
+    @Qualifier("defaultTaskExecutor")
+    Executor taskExecutor;
 
     public void createByThreadPool() {
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 5; i++) {
             int taskId = i;
-            threadPool.execute(() -> {
+            taskExecutor.execute(() -> {
                 System.out.println("Task " + taskId + " đang được xử lý bởi " + Thread.currentThread().getName());
             });
         }
