@@ -6,6 +6,7 @@ repositories {
 }
 dependencies {
     implementation 'org.yaml:snakeyaml:2.2'
+    implementation 'com.github.javaparser:javaparser-symbol-solver-core:3.25.10'
 }
 
 //layout.buildDirectory = file("${projectDir.parentFile}/build/outputs")

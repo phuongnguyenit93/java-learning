@@ -27,8 +27,7 @@ public class CreateThreadController {
 
     @GetMapping("/callable")
     public String createByCallable() throws ExecutionException, InterruptedException {
-        createThreadService.createByCallable();
-        return "Đã kích hoạt Runnable Threads (Xem console)";
+        return createThreadService.createByCallable();
     }
 
     @GetMapping("/pool")

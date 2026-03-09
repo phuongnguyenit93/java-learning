@@ -104,14 +104,14 @@ ext.injectAndExtractAllModuleTask = {
     HashMap<String, List<String>> taskContent = new HashMap()
     HashMap<String, List<String>> moduleContent = new HashMap()
 
-    def taskListProp = [
-            [type: "module", fileName: "module.gradle", propCheck: ""],
-            [type: "env", fileName: "env.gradle", propCheck: "BUILD_ENV"],
-            [type: "readme", fileName: "readme.gradle", propCheck: "BUILD_README"],
-            [type: "properties", fileName: "properties.gradle", propCheck: "BUILD_YML"],
-            [type: "jar", fileName: "build-jar.gradle", propCheck: "BUILD_JAR"],
-            [type: "intellij", fileName: "intellij.gradle", propCheck: ""]
-    ]
+    def jsonFile = rootProject.file("internal/info/module/task-list.json")
+    def taskListProp = []
+    if (jsonFile.exists()) {
+        taskListProp = new JsonSlurper().parseText(jsonFile.text)
+    } else {
+        logger.lifecycle("File not found")
+        return
+    }
 
     def extractBlocks = { tagName, fileText ->
         def pattern = /(?s)\/\/ START_${tagName}\s*\n(.*?)\n\s*\/\/ END_${tagName}/
@@ -724,5 +724,41 @@ ext.generateSampleGradlePropFile = {
         propFile.setText(newLines.join(System.lineSeparator()), "UTF-8")
         // Log ra để bạn biết module nào vừa được "chuẩn hóa"
         logger.quiet "--- Synced properties for module: ${project.path} ---"
+    }
+}
+
+ext.deleteOnePropsInGradleProperties = {String propName ->
+    subprojects { Project sub ->
+        File propsFile = sub.file("gradle.properties")
+
+        if (propsFile.exists()) {
+            List<String> lines = propsFile.readLines()
+            List<Integer> indicesToRemove = []
+
+            for (int i = 0; i < lines.size(); i++) {
+                String line = lines[i].trim()
+
+                // Kiểm tra xem dòng có bắt đầu bằng propName không (ví dụ: myProp=value)
+                if (line.startsWith("${propName}=") || line == propName) {
+                    indicesToRemove << i // Thêm index dòng hiện tại
+
+                    // Kiểm tra dòng phía trên (i - 1) xem có phải là comment không
+                    if (i > 0 && lines[i - 1].trim().startsWith("#")) {
+                        indicesToRemove << (i - 1)
+                    }
+                }
+            }
+
+            if (!indicesToRemove.isEmpty()) {
+                // Loại bỏ các index trùng lặp và sắp xếp giảm dần để xóa không bị lệch index
+                indicesToRemove.unique().sort().reverse().each { idx ->
+                    lines.remove(idx)
+                }
+
+                // Ghi lại nội dung mới vào file
+                propsFile.text = lines.join(System.lineSeparator()) + System.lineSeparator()
+                logger.lifecycle("--- Đã xóa ${propName} và comment liên quan tại: ${sub.name}")
+            }
+        }
     }
 }

@@ -1,0 +1,99 @@
+import com.github.javaparser.StaticJavaParser
+import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration
+import org.yaml.snakeyaml.DumperOptions
+import org.yaml.snakeyaml.Yaml
+
+ext.generateApiSwaggerDescription = {
+    if (project.findProperty("BUILD_SWAGGER") != "TRUE") {
+        logger.lifecycle("SWAGGER không đc bật")
+    }
+
+    def langListString = project.findProperty("BUILD_SWAGGER_LANGUAGE_LIST")
+    if (!langListString?.trim()) {
+        logger.lifecycle("BUILD_SWAGGER_LANGUAGE_LIST trống")
+    }
+
+    def langList = langListString.split(",") as List
+
+    def srcDir = file("src/main/java")
+    def resourceDir = file("src/main/resources")
+    if (!srcDir.exists()) return
+
+    def moduleName = project.hasProperty("SERVICE_NAME") ? project["SERVICE_NAME"] : project.name
+    def freshApiStructure = [:]
+    def freshParamsList = [] as Set
+
+    // 1. Quét code Java
+    srcDir.eachFileRecurse { file ->
+        if (file.name.endsWith(".java")) {
+            def cu = StaticJavaParser.parse(file)
+            cu.findAll(ClassOrInterfaceDeclaration.class).each { classDecl ->
+                def isController = classDecl.annotations.any { it.nameAsString.contains("Controller") }
+                if (isController) {
+                    def controllerName = classDecl.nameAsString
+                    def methods = [:]
+                    classDecl.methods.each { method ->
+                        def hasMapping = method.annotations.any {
+                            ["GetMapping", "PostMapping", "PutMapping", "DeleteMapping", "RequestMapping"].contains(it.nameAsString)
+                        }
+                        if (hasMapping) {
+                            // Cấu trúc mới cho Method
+                            methods[method.nameAsString] = [summary: "Chưa có tiêu đề", description: "Chưa có mô tả chi tiết"]
+                            method.parameters.each { p -> freshParamsList.add(p.nameAsString) }
+                        }
+                    }
+                    if (!methods.isEmpty()) freshApiStructure[controllerName] = methods
+                }
+            }
+        }
+    }
+
+    def yaml = new Yaml()
+    DumperOptions options = new DumperOptions()
+    options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK)
+    def dumper = new Yaml(options)
+
+    langList.each {lang ->
+        def swaggerDir = file("${resourceDir}/swagger/${lang}");
+        if (!swaggerDir.exists()) swaggerDir.mkdirs()
+        // --- 2. MERGE API DESCRIPTIONS ---
+        def apiFile = file("${swaggerDir}/api-descriptions.yml")
+        if (!apiFile.exists()) apiFile.createNewFile()
+        def finalApiData = loadOldData(apiFile, yaml, moduleName)
+
+        freshApiStructure.each { controller, methods ->
+            if (!finalApiData[moduleName][controller]) finalApiData[moduleName][controller] = [:]
+            methods.each { methodName, meta ->
+                if (!finalApiData[moduleName][controller].containsKey(methodName)) {
+                    finalApiData[moduleName][controller][methodName] = meta
+                }
+            }
+        }
+        apiFile.text = dumper.dump(finalApiData)
+
+        // --- 3. MERGE PARAMS ---
+        def paramsFile = file("${swaggerDir}/api-params.yml")
+        if (!paramsFile.exists()) apiFile.createNewFile()
+        def finalParamsData = loadOldData(paramsFile, yaml, moduleName)
+
+        freshParamsList.each { paramName ->
+            if (!finalParamsData[moduleName].containsKey(paramName)) {
+                // Cấu trúc mới cho Parameter
+                finalParamsData[moduleName][paramName] = [summary: "Chưa có tiêu đề", description: "Chưa có mô tả chi tiết"]
+            }
+        }
+        paramsFile.text = dumper.dump(finalParamsData)
+    }
+
+}
+
+// Hàm hỗ trợ load data cũ
+def loadOldData(file, yaml, moduleName) {
+    def data = [:]
+    if (file.exists()) {
+        def old = yaml.load(file.text)
+        if (old && old[moduleName]) data[moduleName] = old[moduleName]
+    }
+    if (!data[moduleName]) data[moduleName] = [:]
+    return data
+}

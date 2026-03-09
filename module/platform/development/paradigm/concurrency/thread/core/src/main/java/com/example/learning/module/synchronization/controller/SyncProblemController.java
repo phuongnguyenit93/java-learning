@@ -13,7 +13,7 @@ public class SyncProblemController {
     private final SyncProblemService syncProblemService;
 
     @GetMapping("instruction-reorder")
-    public void instructionReoder() throws InterruptedException {
+    public void instructionReorder() throws InterruptedException {
         syncProblemService.instructionReordering();
     }
 
@@ -23,7 +23,7 @@ public class SyncProblemController {
     }
 
     @GetMapping("race-condition")
-    public void raceCondidtion() throws InterruptedException {
+    public void raceCondition() throws InterruptedException {
         syncProblemService.raceCondition();
     }
 

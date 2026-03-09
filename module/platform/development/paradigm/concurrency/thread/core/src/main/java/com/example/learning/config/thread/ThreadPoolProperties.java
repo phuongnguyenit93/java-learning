@@ -1,4 +1,4 @@
-package com.example.learning.config;
+package com.example.learning.config.thread;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

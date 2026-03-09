@@ -20,9 +20,6 @@ thread:
     queue-capacity: 100
     keep-alive: 60
     thread-name-prefix: "application-pool-"
-
-
-
 ---
 # Cấu hình cho profile DEV
 spring:

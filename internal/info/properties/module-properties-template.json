@@ -54,5 +54,13 @@
   "SERVICE_NAME": {
     "DESCRIPTION": "Chưa có chú thích",
     "TYPE": "string"
+  },
+  "BUILD_SWAGGER": {
+    "DESCRIPTION": "Chưa có chú thích",
+    "TYPE": "boolean"
+  },
+  "BUILD_SWAGGER_LANGUAGE_LIST": {
+    "DESCRIPTION": "Chưa có chú thích",
+    "TYPE": "list"
   }
 }

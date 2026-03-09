@@ -1,4 +1,4 @@
-package com.example.learning.config;
+package com.example.learning.config.thread;
 
 import com.example.learning.shared.ThreadLocalTaskDecorator;
 import lombok.Getter;

@@ -9,6 +9,18 @@ tasks.register("injectAndExtractAllModuleTask") {
     }
 }
 
+tasks.register("deleteOnePropsInGradleProperties") {
+    doLast {
+        String propName = project.findProperty("PROP_NAME")?.toString()
+        if (propName?.toString() == null || propName?.toString()?.isBlank()) {
+            throw new GradleException("Error : Missing 'PROP_NAME'. Please add by -PPROP_NAME=... or in gradle.properties")
+        }
+
+        project.ext.deleteOnePropsInGradleProperties(propName)
+
+    }
+}
+
 tasks.register("generateProjectStructureFileTxt") {
     doLast {
         project.ext.generateProjectStructureFileTxt

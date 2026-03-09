@@ -45,7 +45,8 @@ subprojects {
                 exclude '**/application-*.yml'
                 exclude '**/*.properties'
             }
-
+            include '**/api-descriptions.yml'
+            include '**/api-params.yml'
             exclude 'application-merged.yml'
             // 3. Đặt chiến lược xử lý nếu trùng lặp (thường dùng trong Gradle mới)
             duplicatesStrategy = DuplicatesStrategy.INCLUDE

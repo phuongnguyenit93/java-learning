@@ -23,6 +23,18 @@
         "DESCRIPTION": "Chưa có chú thích",
         "STATUS": "USING"
     },
+    "BUILD_SWAGGER": {
+        "DESCRIPTION": "Chưa có chú thích",
+        "STATUS": "USING"
+    },
+    "BUILD_SWAGGER_LANGUAGE_LIST": {
+        "DESCRIPTION": "Chưa có chú thích",
+        "STATUS": "USING"
+    },
+    "BUILD_SWAGGER_LANGUAGUE_LIST": {
+        "DESCRIPTION": "Chưa có chú thích",
+        "STATUS": "USING"
+    },
     "BUILD_YML": {
         "DESCRIPTION": "Chưa có chú thích",
         "STATUS": "USING"

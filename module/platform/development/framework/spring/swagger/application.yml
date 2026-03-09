@@ -20,7 +20,8 @@ springdoc:
 #  api-docs:
 #    enabled: false
 #    path: /api-json
-
+swagger:
+  languages: ${BUILD_SWAGGER_LANGUAGE_LIST:}
 ---
 # Cấu hình cho profile DEV
 spring:

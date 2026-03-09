@@ -1,0 +1,57 @@
+# Phân biệt OperationCustomizer và OpenApiCustomizer trong SpringDoc
+
+Việc phân biệt được hai loại "Customizer" này là chìa khóa để làm chủ SpringDoc. Điểm khác biệt lớn nhất nằm ở **Phạm vi (Scope)** và **Thời điểm (Timing)** tác động.
+
+---
+
+### Bảng so sánh chi tiết
+
+| Đặc điểm | OperationCustomizer | OpenApiCustomizer |
+| :--- | :--- | :--- |
+| **Phạm vi tác động** | Từng API đơn lẻ (từng Method trong Controller). | Toàn bộ file OpenAPI (Paths, Components, Tags...). |
+| **Dữ liệu đầu vào** | Đối tượng `Operation` và `HandlerMethod` (Java). | Đối tượng `OpenAPI` (Toàn bộ cấu trúc JSON). |
+| **Khả năng truy cập Java** | **Rất mạnh:** Biết rõ Class, Method, Annotation. | **Yếu:** Chỉ thấy dữ liệu đã được parse thành Object. |
+| **Mục đích sử dụng** | Thêm thông tin bổ sung cho từng API cụ thể. | Chỉnh sửa tổng thể (Header, License, Security). |
+
+---
+
+### 1. OperationCustomizer (Cấp độ "Vi mô")
+Nó chạy giống như một cái "vòng lặp" đi qua từng cái tên Method trong code của bạn.
+
+* **Tại sao dùng?** Vì SpringDoc cung cấp `HandlerMethod`. Nhờ đó, bạn mới gọi được lệnh `.getBeanType().getSimpleName()` để biết API đó nằm trong class nào (ví dụ: `BasicThreadController`).
+* **Thời điểm:** Chạy trước khi file OpenAPI hoàn thiện.
+
+### 2. OpenApiCustomizer (Cấp độ "Vĩ mô")
+Nó chạy sau khi SpringDoc đã quét xong xuôi mọi thứ và gom tất cả API vào một cái "giỏ" lớn.
+
+* **Tại sao dùng?** Lúc này chúng ta đã có danh sách đầy đủ các Path. Đây là nơi lý tưởng để "quét một lượt" và map dữ liệu từ file YAML/Properties vào các chỗ trống (`summary`, `description`).
+* **Thời điểm:** Chạy cuối cùng, ngay trước khi trả dữ liệu về trình duyệt (Swagger UI).
+
+---
+
+### Tại sao chúng ta phải dùng cả hai?
+
+1.  **Nếu chỉ dùng OpenApiCustomizer:** Bạn có "giỏ" API nhưng bạn lại không biết chắc chắn cái API `/list-thread` đó thuộc về Class Java nào (vì `@Tag` có thể đã làm thay đổi tên nhóm).
+2.  **Nếu chỉ dùng OperationCustomizer:** Bạn biết rõ Class Java, nhưng tại thời điểm này, file cấu hình (YAML) chưa được đọc một cách hiệu quả để gán vào các trường một cách đồng bộ.
+
+**Quy trình phối hợp của chúng ta:**
+* **OperationCustomizer:** Đi qua từng Method -> Lấy tên Class Java thật -> Gắn vào "túi áo" của API đó (chính là cái *Extension*).
+* **OpenApiCustomizer:** Mở "giỏ" ra -> Thấy API nào cũng có sẵn tên Class trong "túi áo" -> Lấy tên đó đi tra cứu trong file YAML -> Điền thông tin vào.
+
+---
+
+### Một lưu ý nhỏ
+Khi bạn thêm `.addOperationCustomizer(controllerNameCustomizer)` vào trong `GroupedOpenApi`, bạn đang thông báo với Spring rằng: *"Này, khi quét các API cho Group này, hãy nhớ chạy cái logic 'đóng dấu' tên Class cho tôi nhé!"*.
+
+**Java ví dụ:**
+
+	```java
+	@Bean
+	public GroupedOpenApi publicApi(OperationCustomizer controllerNameCustomizer) {
+	    return GroupedOpenApi.builder()
+	            .group("public")
+	            .pathsToMatch("/api/**")
+	            .addOperationCustomizer(controllerNameCustomizer) // Đăng ký tại đây
+	            .build();
+	}
+	```
