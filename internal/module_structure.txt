@@ -1,4 +1,4 @@
-Cập nhật lúc: 2026-03-06 16:02:40
+Cập nhật lúc: 2026-03-08 22:48:07
 ==============================
 module
 ├── infrastructure
@@ -139,7 +139,6 @@ module
     │   │       │   ├── async-programming
     │   │       │   ├── executor-service
     │   │       │   ├── high-level-utils
-    │   │       │   ├── thread
     │   │       │   └── virtual-threads
     │   │       ├── core
     │   │       │   └── abstract-interface
@@ -162,10 +161,15 @@ module
     │   │           └── java8
     │   ├── paradigm
     │   │   ├── aop
-    │   │   ├── asynchronous
+    │   │   ├── concurrency
     │   │   │   ├── batch
-    │   │   │   └── schedule
-    │   │   │       └── task
+    │   │   │   ├── schedule
+    │   │   │   │   └── task
+    │   │   │   └── thread
+    │   │   │       ├── context-probagation
+    │   │   │       ├── core
+    │   │   │       ├── spring-async
+    │   │   │       └── virtual-thread
     │   │   ├── di-ioc
     │   │   ├── functional
     │   │   ├── mvc-pattern

@@ -56,7 +56,7 @@ ext.applyPluginAndDependencyToModule = {
                 implementation 'org.springframework.boot:spring-boot-starter-actuator'
                 implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
                 testImplementation 'org.springframework.boot:spring-boot-starter-test'
-                developmentOnly 'org.springframework.boot:spring-boot-devtools'
+//                developmentOnly 'org.springframework.boot:spring-boot-devtools'
             }
             logger.lifecycle("   ├─ 🚀 ${GREEN}Spring Boot:${RESET} Đã tìm thấy hàm main -> Apply Boot + Starter Web.")
         } else {

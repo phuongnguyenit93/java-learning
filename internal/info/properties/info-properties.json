@@ -19,11 +19,11 @@
             "SPRING_DEVTOOL": "module/platform/development/framework/spring/devtool",
             "SPRING_SWAGGER": "module/platform/development/framework/spring/swagger",
             "SPRING_WEB": "module/platform/development/framework/spring/web",
-            "THREAD": "module/platform/development/language/java/concurrency/thread",
+            "THREAD": "module/platform/development/paradigm/concurrency/thread/core",
             "abstract-interface": "module/platform/development/language/java/core/abstract-interface",
             "jpa": "module/platform/development/framework/spring/data/jpa",
             "record": "module/platform/development/language/java/version/java16/record",
-            "task": "module/platform/development/paradigm/asynchronous/schedule/task"
+            "task": "module/platform/development/paradigm/concurrency/schedule/task"
         }
     },
     "BUILD_ENV_DOCKER_PROFILE": {
@@ -46,11 +46,11 @@
             "SPRING_DEVTOOL": "module/platform/development/framework/spring/devtool",
             "SPRING_SWAGGER": "module/platform/development/framework/spring/swagger",
             "SPRING_WEB": "module/platform/development/framework/spring/web",
-            "THREAD": "module/platform/development/language/java/concurrency/thread",
+            "THREAD": "module/platform/development/paradigm/concurrency/thread/core",
             "abstract-interface": "module/platform/development/language/java/core/abstract-interface",
             "jpa": "module/platform/development/framework/spring/data/jpa",
             "record": "module/platform/development/language/java/version/java16/record",
-            "task": "module/platform/development/paradigm/asynchronous/schedule/task"
+            "task": "module/platform/development/paradigm/concurrency/schedule/task"
         }
     },
     "BUILD_ENV_PATH_MODULE_DEPEND": {
@@ -73,11 +73,11 @@
             "SPRING_DEVTOOL": "module/platform/development/framework/spring/devtool",
             "SPRING_SWAGGER": "module/platform/development/framework/spring/swagger",
             "SPRING_WEB": "module/platform/development/framework/spring/web",
-            "THREAD": "module/platform/development/language/java/concurrency/thread",
+            "THREAD": "module/platform/development/paradigm/concurrency/thread/core",
             "abstract-interface": "module/platform/development/language/java/core/abstract-interface",
             "jpa": "module/platform/development/framework/spring/data/jpa",
             "record": "module/platform/development/language/java/version/java16/record",
-            "task": "module/platform/development/paradigm/asynchronous/schedule/task"
+            "task": "module/platform/development/paradigm/concurrency/schedule/task"
         }
     },
     "BUILD_ENV_PROFILE": {
@@ -100,11 +100,11 @@
             "SPRING_DEVTOOL": "module/platform/development/framework/spring/devtool",
             "SPRING_SWAGGER": "module/platform/development/framework/spring/swagger",
             "SPRING_WEB": "module/platform/development/framework/spring/web",
-            "THREAD": "module/platform/development/language/java/concurrency/thread",
+            "THREAD": "module/platform/development/paradigm/concurrency/thread/core",
             "abstract-interface": "module/platform/development/language/java/core/abstract-interface",
             "jpa": "module/platform/development/framework/spring/data/jpa",
             "record": "module/platform/development/language/java/version/java16/record",
-            "task": "module/platform/development/paradigm/asynchronous/schedule/task"
+            "task": "module/platform/development/paradigm/concurrency/schedule/task"
         }
     },
     "BUILD_JAR": {
@@ -127,11 +127,11 @@
             "SPRING_DEVTOOL": "module/platform/development/framework/spring/devtool",
             "SPRING_SWAGGER": "module/platform/development/framework/spring/swagger",
             "SPRING_WEB": "module/platform/development/framework/spring/web",
-            "THREAD": "module/platform/development/language/java/concurrency/thread",
+            "THREAD": "module/platform/development/paradigm/concurrency/thread/core",
             "abstract-interface": "module/platform/development/language/java/core/abstract-interface",
             "jpa": "module/platform/development/framework/spring/data/jpa",
             "record": "module/platform/development/language/java/version/java16/record",
-            "task": "module/platform/development/paradigm/asynchronous/schedule/task"
+            "task": "module/platform/development/paradigm/concurrency/schedule/task"
         }
     },
     "BUILD_README": {
@@ -154,11 +154,11 @@
             "SPRING_DEVTOOL": "module/platform/development/framework/spring/devtool",
             "SPRING_SWAGGER": "module/platform/development/framework/spring/swagger",
             "SPRING_WEB": "module/platform/development/framework/spring/web",
-            "THREAD": "module/platform/development/language/java/concurrency/thread",
+            "THREAD": "module/platform/development/paradigm/concurrency/thread/core",
             "abstract-interface": "module/platform/development/language/java/core/abstract-interface",
             "jpa": "module/platform/development/framework/spring/data/jpa",
             "record": "module/platform/development/language/java/version/java16/record",
-            "task": "module/platform/development/paradigm/asynchronous/schedule/task"
+            "task": "module/platform/development/paradigm/concurrency/schedule/task"
         }
     },
     "BUILD_YML": {
@@ -181,11 +181,11 @@
             "SPRING_DEVTOOL": "module/platform/development/framework/spring/devtool",
             "SPRING_SWAGGER": "module/platform/development/framework/spring/swagger",
             "SPRING_WEB": "module/platform/development/framework/spring/web",
-            "THREAD": "module/platform/development/language/java/concurrency/thread",
+            "THREAD": "module/platform/development/paradigm/concurrency/thread/core",
             "abstract-interface": "module/platform/development/language/java/core/abstract-interface",
             "jpa": "module/platform/development/framework/spring/data/jpa",
             "record": "module/platform/development/language/java/version/java16/record",
-            "task": "module/platform/development/paradigm/asynchronous/schedule/task"
+            "task": "module/platform/development/paradigm/concurrency/schedule/task"
         }
     },
     "BUILD_YML_MODULE_DEPEND": {
@@ -208,11 +208,11 @@
             "SPRING_DEVTOOL": "module/platform/development/framework/spring/devtool",
             "SPRING_SWAGGER": "module/platform/development/framework/spring/swagger",
             "SPRING_WEB": "module/platform/development/framework/spring/web",
-            "THREAD": "module/platform/development/language/java/concurrency/thread",
+            "THREAD": "module/platform/development/paradigm/concurrency/thread/core",
             "abstract-interface": "module/platform/development/language/java/core/abstract-interface",
             "jpa": "module/platform/development/framework/spring/data/jpa",
             "record": "module/platform/development/language/java/version/java16/record",
-            "task": "module/platform/development/paradigm/asynchronous/schedule/task"
+            "task": "module/platform/development/paradigm/concurrency/schedule/task"
         }
     },
     "BUILD_YML_PROFILE": {
@@ -235,11 +235,11 @@
             "SPRING_DEVTOOL": "module/platform/development/framework/spring/devtool",
             "SPRING_SWAGGER": "module/platform/development/framework/spring/swagger",
             "SPRING_WEB": "module/platform/development/framework/spring/web",
-            "THREAD": "module/platform/development/language/java/concurrency/thread",
+            "THREAD": "module/platform/development/paradigm/concurrency/thread/core",
             "abstract-interface": "module/platform/development/language/java/core/abstract-interface",
             "jpa": "module/platform/development/framework/spring/data/jpa",
             "record": "module/platform/development/language/java/version/java16/record",
-            "task": "module/platform/development/paradigm/asynchronous/schedule/task"
+            "task": "module/platform/development/paradigm/concurrency/schedule/task"
         }
     },
     "INJECT_TASK_AUTO": {
@@ -262,11 +262,11 @@
             "SPRING_DEVTOOL": "module/platform/development/framework/spring/devtool",
             "SPRING_SWAGGER": "module/platform/development/framework/spring/swagger",
             "SPRING_WEB": "module/platform/development/framework/spring/web",
-            "THREAD": "module/platform/development/language/java/concurrency/thread",
+            "THREAD": "module/platform/development/paradigm/concurrency/thread/core",
             "abstract-interface": "module/platform/development/language/java/core/abstract-interface",
             "jpa": "module/platform/development/framework/spring/data/jpa",
             "record": "module/platform/development/language/java/version/java16/record",
-            "task": "module/platform/development/paradigm/asynchronous/schedule/task"
+            "task": "module/platform/development/paradigm/concurrency/schedule/task"
         }
     },
     "IS_MICROSERVICE": {
@@ -289,11 +289,11 @@
             "SPRING_DEVTOOL": "module/platform/development/framework/spring/devtool",
             "SPRING_SWAGGER": "module/platform/development/framework/spring/swagger",
             "SPRING_WEB": "module/platform/development/framework/spring/web",
-            "THREAD": "module/platform/development/language/java/concurrency/thread",
+            "THREAD": "module/platform/development/paradigm/concurrency/thread/core",
             "abstract-interface": "module/platform/development/language/java/core/abstract-interface",
             "jpa": "module/platform/development/framework/spring/data/jpa",
             "record": "module/platform/development/language/java/version/java16/record",
-            "task": "module/platform/development/paradigm/asynchronous/schedule/task"
+            "task": "module/platform/development/paradigm/concurrency/schedule/task"
         }
     },
     "MODULE_TYPE": {
@@ -316,11 +316,11 @@
             "SPRING_DEVTOOL": "module/platform/development/framework/spring/devtool",
             "SPRING_SWAGGER": "module/platform/development/framework/spring/swagger",
             "SPRING_WEB": "module/platform/development/framework/spring/web",
-            "THREAD": "module/platform/development/language/java/concurrency/thread",
+            "THREAD": "module/platform/development/paradigm/concurrency/thread/core",
             "abstract-interface": "module/platform/development/language/java/core/abstract-interface",
             "jpa": "module/platform/development/framework/spring/data/jpa",
             "record": "module/platform/development/language/java/version/java16/record",
-            "task": "module/platform/development/paradigm/asynchronous/schedule/task"
+            "task": "module/platform/development/paradigm/concurrency/schedule/task"
         }
     },
     "README_LANGUAGE": {
@@ -343,11 +343,11 @@
             "SPRING_DEVTOOL": "module/platform/development/framework/spring/devtool",
             "SPRING_SWAGGER": "module/platform/development/framework/spring/swagger",
             "SPRING_WEB": "module/platform/development/framework/spring/web",
-            "THREAD": "module/platform/development/language/java/concurrency/thread",
+            "THREAD": "module/platform/development/paradigm/concurrency/thread/core",
             "abstract-interface": "module/platform/development/language/java/core/abstract-interface",
             "jpa": "module/platform/development/framework/spring/data/jpa",
             "record": "module/platform/development/language/java/version/java16/record",
-            "task": "module/platform/development/paradigm/asynchronous/schedule/task"
+            "task": "module/platform/development/paradigm/concurrency/schedule/task"
         }
     },
     "SERVICE_NAME": {
@@ -370,11 +370,11 @@
             "SPRING_DEVTOOL": "module/platform/development/framework/spring/devtool",
             "SPRING_SWAGGER": "module/platform/development/framework/spring/swagger",
             "SPRING_WEB": "module/platform/development/framework/spring/web",
-            "THREAD": "module/platform/development/language/java/concurrency/thread",
+            "THREAD": "module/platform/development/paradigm/concurrency/thread/core",
             "abstract-interface": "module/platform/development/language/java/core/abstract-interface",
             "jpa": "module/platform/development/framework/spring/data/jpa",
             "record": "module/platform/development/language/java/version/java16/record",
-            "task": "module/platform/development/paradigm/asynchronous/schedule/task"
+            "task": "module/platform/development/paradigm/concurrency/schedule/task"
         }
     }
 }
