@@ -31,14 +31,23 @@ ext.generateApiSwaggerDescription = {
                 def isController = classDecl.annotations.any { it.nameAsString.contains("Controller") }
                 if (isController) {
                     def controllerName = classDecl.nameAsString
+                    def relativePath = srcDir.toPath().relativize(file.toPath()).toString().replace('\\', '/')
                     def methods = [:]
                     classDecl.methods.each { method ->
-                        def hasMapping = method.annotations.any {
+                        def mappingAnnotation = method.annotations.find {
                             ["GetMapping", "PostMapping", "PutMapping", "DeleteMapping", "RequestMapping"].contains(it.nameAsString)
                         }
-                        if (hasMapping) {
+                        if (mappingAnnotation) {
+                            // 2. Lấy nguyên văn Annotation dưới dạng String
+                            // Ví dụ: @GetMapping("/api/test") hoặc @PostMapping(value = "/save", produces = "application/json")
+                            def fullMapping = mappingAnnotation.toString()
                             // Cấu trúc mới cho Method
-                            methods[method.nameAsString] = [summary: "Chưa có tiêu đề", description: "Chưa có mô tả chi tiết"]
+                            methods[method.nameAsString] = [
+                                    summary: "Chưa có tiêu đề",
+                                    description: "Chưa có mô tả chi tiết",
+                                    path: relativePath,
+                                    mapping: fullMapping
+                            ]
                             method.parameters.each { p -> freshParamsList.add(p.nameAsString) }
                         }
                     }
@@ -66,6 +75,14 @@ ext.generateApiSwaggerDescription = {
             methods.each { methodName, meta ->
                 if (!finalApiData[moduleName][controller].containsKey(methodName)) {
                     finalApiData[moduleName][controller][methodName] = meta
+                } else {
+                    // Nếu đã có, lọc bỏ summary và description từ meta mới
+                    // Sau đó đè tất cả các thông số còn lại (path, mappingPath, v.v.) vào bản cũ
+                    def updates = meta.findAll { key, value ->
+                        !["summary", "description"].contains(key)
+                    }
+
+                    finalApiData[moduleName][controller][methodName].putAll(updates)
                 }
             }
         }
@@ -79,7 +96,10 @@ ext.generateApiSwaggerDescription = {
         freshParamsList.each { paramName ->
             if (!finalParamsData[moduleName].containsKey(paramName)) {
                 // Cấu trúc mới cho Parameter
-                finalParamsData[moduleName][paramName] = [summary: "Chưa có tiêu đề", description: "Chưa có mô tả chi tiết"]
+                finalParamsData[moduleName][paramName] = [
+                        summary: "Chưa có tiêu đề",
+                        description: "Chưa có mô tả chi tiết"
+                ]
             }
         }
         paramsFile.text = dumper.dump(finalParamsData)
