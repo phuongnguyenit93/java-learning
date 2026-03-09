@@ -65,9 +65,6 @@ subprojects {
 afterEvaluate {
     // Inject task in all module
     ext.injectAndExtractAllModuleTask()
-
-    // Get all key in gradle.properties at all module and save it in json file
-    ext.getAllModuleProperties()
     ext.generateProjectStructureFileTxt()
 
     println tasks.collect { it.name }

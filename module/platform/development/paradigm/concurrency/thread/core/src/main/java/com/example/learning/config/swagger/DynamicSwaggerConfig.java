@@ -76,8 +76,6 @@ public class DynamicSwaggerConfig implements ImportBeanDefinitionRegistrar , Env
     private OpenApiCustomizer customerGlobalOpenApiCustomizer(String languages) {
         return openApi -> {
             // Load 2 file YAML từ resources
-            System.out.println("swagger yaml");
-            System.out.println(languages);
             JsonNode apiDescs = loadYamlResource("swagger/" + languages + "/api-descriptions.yml");
             JsonNode apiParams = loadYamlResource("swagger/" + languages + "/api-params.yml");
             if (openApi.getPaths() == null) return;
