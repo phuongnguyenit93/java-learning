@@ -8,28 +8,28 @@ spring:
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:dev}
 
+swagger:
+  enabled: ${BUILD_SWAGGER:}
+  languages: ${BUILD_SWAGGER_LANGUAGE_LIST:}
+
 springdoc:
   swagger-ui:
-#    enabled: false
-#    path: /
-#    url: /swagger/api-json.yaml
-#    supportedSubmitMethod:
+    enabled: ${swagger.enabled}
+    #    path: /
+    #    url: /swagger/api-json.yaml
+    #    supportedSubmitMethod:
     docExpansion:
       - none
 #    tagsSorter: alpha
-#  api-docs:
-#    enabled: false
+  api-docs:
+    enabled: ${swagger.enabled}
 #    path: /api-json
-swagger:
-  languages: ${BUILD_SWAGGER_LANGUAGE_LIST:}
 ---
 # Cấu hình cho profile DEV
 spring:
   config:
     activate:
       on-profile: dev
-
-
 
 ---
 # Cấu hình cho profile LOC
@@ -38,11 +38,12 @@ spring:
     activate:
       on-profile: loc
 
-
-
 ---
 # Cấu hình cho profile PRD
 spring:
   config:
     activate:
       on-profile: prd
+
+swagger:
+  enabled: false

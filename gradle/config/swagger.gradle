@@ -3,6 +3,17 @@ import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration
 import org.yaml.snakeyaml.DumperOptions
 import org.yaml.snakeyaml.Yaml
 
+// Hàm hỗ trợ load data cũ
+static def loadOldData(file, yaml) {
+    def data = [:]
+    if (file.exists()) {
+        def old = yaml.load(file.text)
+        if (old) data = old
+    }
+    return data
+}
+
+
 ext.generateApiSwaggerDescription = {
     if (project.findProperty("BUILD_SWAGGER") != "TRUE") {
         logger.lifecycle("SWAGGER không đc bật")
@@ -20,20 +31,20 @@ ext.generateApiSwaggerDescription = {
     if (!srcDir.exists()) return
 
     def moduleName = project.hasProperty("SERVICE_NAME") ? project["SERVICE_NAME"] : project.name
-    def freshApiStructure = [:]
-    def freshParamsList = [] as Set
+    def apiListInfo = [:] as HashMap <String,Object>
+    def paramsListInfo = [] as Set
 
     // 1. Quét code Java
     srcDir.eachFileRecurse { file ->
         if (file.name.endsWith(".java")) {
-            def cu = StaticJavaParser.parse(file)
-            cu.findAll(ClassOrInterfaceDeclaration.class).each { classDecl ->
-                def isController = classDecl.annotations.any { it.nameAsString.contains("Controller") }
+            def javaFileParse = StaticJavaParser.parse(file)
+            javaFileParse.findAll(ClassOrInterfaceDeclaration.class).each { classDefine ->
+                def isController = classDefine.annotations.any { it.nameAsString.contains("Controller") }
                 if (isController) {
-                    def controllerName = classDecl.nameAsString
+                    def controllerName = classDefine.nameAsString
                     def relativePath = srcDir.toPath().relativize(file.toPath()).toString().replace('\\', '/')
-                    def methods = [:]
-                    classDecl.methods.each { method ->
+                    def methodsList = [:]
+                    classDefine.methods.each { method ->
                         def mappingAnnotation = method.annotations.find {
                             ["GetMapping", "PostMapping", "PutMapping", "DeleteMapping", "RequestMapping"].contains(it.nameAsString)
                         }
@@ -41,17 +52,17 @@ ext.generateApiSwaggerDescription = {
                             // 2. Lấy nguyên văn Annotation dưới dạng String
                             // Ví dụ: @GetMapping("/api/test") hoặc @PostMapping(value = "/save", produces = "application/json")
                             def fullMapping = mappingAnnotation.toString()
-                            // Cấu trúc mới cho Method
-                            methods[method.nameAsString] = [
+
+                            methodsList[method.nameAsString] = [
                                     summary: "Chưa có tiêu đề",
                                     description: "Chưa có mô tả chi tiết",
                                     path: relativePath,
                                     mapping: fullMapping
                             ]
-                            method.parameters.each { p -> freshParamsList.add(p.nameAsString) }
+                            method.parameters.each { p -> paramsListInfo.add(p.nameAsString) }
                         }
                     }
-                    if (!methods.isEmpty()) freshApiStructure[controllerName] = methods
+                    if (!methodsList.isEmpty()) apiListInfo[controllerName] = methodsList
                 }
             }
         }
@@ -65,16 +76,17 @@ ext.generateApiSwaggerDescription = {
     langList.each {lang ->
         def swaggerDir = file("${resourceDir}/swagger/${lang}");
         if (!swaggerDir.exists()) swaggerDir.mkdirs()
-        // --- 2. MERGE API DESCRIPTIONS ---
+
         def apiFile = file("${swaggerDir}/api-descriptions.yml")
         if (!apiFile.exists()) apiFile.createNewFile()
-        def finalApiData = loadOldData(apiFile, yaml, moduleName)
+        def finalApiData = loadOldData(apiFile, yaml)
 
-        freshApiStructure.each { controller, methods ->
-            if (!finalApiData[moduleName][controller]) finalApiData[moduleName][controller] = [:]
+        // --- 2. MERGE API Info ---
+        apiListInfo.each {String controller, methods ->
+            if (!finalApiData[controller]) finalApiData[controller] = [:]
             methods.each { methodName, meta ->
-                if (!finalApiData[moduleName][controller].containsKey(methodName)) {
-                    finalApiData[moduleName][controller][methodName] = meta
+                if (!finalApiData[controller].containsKey(methodName)) {
+                    finalApiData[controller][methodName] = meta
                 } else {
                     // Nếu đã có, lọc bỏ summary và description từ meta mới
                     // Sau đó đè tất cả các thông số còn lại (path, mappingPath, v.v.) vào bản cũ
@@ -82,7 +94,7 @@ ext.generateApiSwaggerDescription = {
                         !["summary", "description"].contains(key)
                     }
 
-                    finalApiData[moduleName][controller][methodName].putAll(updates)
+                    finalApiData[controller][methodName].putAll(updates)
                 }
             }
         }
@@ -91,12 +103,12 @@ ext.generateApiSwaggerDescription = {
         // --- 3. MERGE PARAMS ---
         def paramsFile = file("${swaggerDir}/api-params.yml")
         if (!paramsFile.exists()) apiFile.createNewFile()
-        def finalParamsData = loadOldData(paramsFile, yaml, moduleName)
+        def finalParamsData = loadOldData(paramsFile, yaml)
 
-        freshParamsList.each { paramName ->
-            if (!finalParamsData[moduleName].containsKey(paramName)) {
+        paramsListInfo.each { paramName ->
+            if (!finalParamsData.containsKey(paramName)) {
                 // Cấu trúc mới cho Parameter
-                finalParamsData[moduleName][paramName] = [
+                finalParamsData[paramName] = [
                         summary: "Chưa có tiêu đề",
                         description: "Chưa có mô tả chi tiết"
                 ]
@@ -107,13 +119,3 @@ ext.generateApiSwaggerDescription = {
 
 }
 
-// Hàm hỗ trợ load data cũ
-def loadOldData(file, yaml, moduleName) {
-    def data = [:]
-    if (file.exists()) {
-        def old = yaml.load(file.text)
-        if (old && old[moduleName]) data[moduleName] = old[moduleName]
-    }
-    if (!data[moduleName]) data[moduleName] = [:]
-    return data
-}

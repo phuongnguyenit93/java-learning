@@ -1,4 +1,4 @@
-Cập nhật lúc: 2026-03-09 22:34:36
+Cập nhật lúc: 2026-03-10 14:49:44
 ==============================
 module
 ├── infrastructure
@@ -113,15 +113,19 @@ module
     │   │   │   │   │   └── scope
     │   │   │   │   ├── profile
     │   │   │   │   └── properties
+    │   │   │   ├── conditional
     │   │   │   ├── data
     │   │   │   │   ├── jpa
     │   │   │   │   └── nosql
     │   │   │   ├── devtool
+    │   │   │   ├── import
+    │   │   │   ├── profile
     │   │   │   ├── security
     │   │   │   │   ├── basic
     │   │   │   │   ├── jwt
     │   │   │   │   └── oauth
     │   │   │   ├── swagger
+    │   │   │   ├── testPropertySource
     │   │   │   └── web
     │   │   └── spring-boot
     │   │       ├── auto-configuration

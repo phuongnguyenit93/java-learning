@@ -1,4 +1,3 @@
-import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import groovy.text.SimpleTemplateEngine
 
@@ -36,6 +35,7 @@ ext.applyPluginAndDependencyToModule = {
 
         def hasMainMethod = false
         def javaFiles = fileTree(dir: javaSrcDir, include: "**/*.java")
+        boolean hasSwagger = project.findProperty("BUILD_SWAGGER") == "TRUE"
 
         javaFiles.any { file ->
             def fileContent = file.text
@@ -51,10 +51,15 @@ ext.applyPluginAndDependencyToModule = {
             apply plugin: 'org.springframework.boot'
             apply plugin: "io.freefair.lombok"
 
+            if (hasSwagger) {
+                dependencies {
+                    implementation searchProjectByServiceName("SPRING_SWAGGER")
+                }
+            }
+
             dependencies {
                 implementation 'org.springframework.boot:spring-boot-starter-web'
                 implementation 'org.springframework.boot:spring-boot-starter-actuator'
-                implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
                 testImplementation 'org.springframework.boot:spring-boot-starter-test'
 //                developmentOnly 'org.springframework.boot:spring-boot-devtools'
             }
@@ -62,7 +67,7 @@ ext.applyPluginAndDependencyToModule = {
         } else {
             dependencyManagement {
                 imports {
-                    mavenBom "org.springframework.boot:spring-boot-dependencies:3.2.0"
+                    mavenBom "org.springframework.boot:spring-boot-dependencies:3.3.5"
                 }
             }
             logger.lifecycle("   ├─ 📦 ${YELLOW}BOM Management:${RESET} Không có hàm main -> Chỉ apply Dependency Management.")
@@ -198,32 +203,8 @@ ext.injectAndExtractAllModuleTask = {
     }
     logger.lifecycle("${BLUE}==================================================${RESET}\n\n\n")
 }
-
-ext.getProjectByServiceName = {String serviceName ->
-    // 1. Tìm trong tất cả các project đã được include
-    def target = rootProject.subprojects.find { p ->
-        // Cách này an toàn hơn: Kiểm tra trực tiếp property mà không bắt project phải evaluate xong
-        p.hasProperty('SERVICE_NAME') && p.SERVICE_NAME == serviceName
-    }
-
-    if (target == null) {
-        // In ra danh sách các SERVICE_NAME hiện có để bạn dễ debug
-        def availableServices = rootProject.subprojects
-                .findAll { it.hasProperty('SERVICE_NAME') }
-                .collect { it.SERVICE_NAME }
-
-        throw new GradleException(
-                "❌ Không tìm thấy module: '${serviceName}'. \n" +
-                "🔍 Các service hiện có: ${availableServices} \n" +
-                "👉 Hãy kiểm tra file gradle.properties của module đích."
-        )
-    }
-    return target
-}
-
-ext.buildProfileYMLFile = {
-
-    if (isMissingProp(["BUILD_YML","BUILD_YML_PROFILE"])) return
+ext.buildYMLFile = {
+    if (isMissingProp(["BUILD_YML"])) return
 
     def GREEN = "\u001B[32m"
     def YELLOW = "\u001B[33m"
@@ -362,10 +343,8 @@ ext.buildModuleStructure = {
 
 ext.buildDefaultEnvStructure = {
     def GREEN = "\u001B[32m"
-    def YELLOW = "\u001B[33m"
     def RESET = "\u001B[0m"
     def CYAN = "\u001B[36m"
-    def GRAY = "\u001B[90m"
 
     if (isMissingProp(["BUILD_ENV"])) return
 
@@ -389,25 +368,6 @@ ext.buildDefaultEnvStructure = {
         logger.lifecycle("✔️ Cấu trúc file .env đã tồn tại.")
     }
 
-    // 2. Kiểm tra điều kiện Docker Profile
-    if (project.hasProperty("BUILD_ENV_DOCKER_PROFILE") && project.BUILD_ENV_DOCKER_PROFILE == "TRUE") {
-        String content = env.text
-        boolean hasProfile = content.lines().any { line ->
-            line.trim().startsWith("DOCKER_PROFILE=")
-        }
-
-        if (!hasProfile) {
-            // Đảm bảo file kết thúc bằng xuống dòng trước khi append để tránh dính chữ
-            if (!content.endsWith("\n") && content.length() > 0) env.append("\n")
-            env.append("DOCKER_PROFILE=\n")
-            logger.lifecycle("   └─ ${YELLOW}Đã bổ sung biến:${RESET} DOCKER_PROFILE (Docker Mode)")
-        } else {
-            logger.lifecycle("   └─ ${GREEN}Xác nhận:${RESET} DOCKER_PROFILE đã có sẵn.")
-        }
-    } else {
-        // Log nhẹ nhàng để biết module này bỏ qua bước check profile
-        logger.lifecycle("   └─ ${GRAY}Bỏ qua check Profile (BUILD_ENV_DOCKER_PROFILE != TRUE)${RESET}")
-    }
     logger.lifecycle("${GREEN}-----------------------------------------")
 }
 

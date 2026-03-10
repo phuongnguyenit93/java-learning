@@ -1,6 +1,6 @@
 plugins {
-    id 'org.springframework.boot' version '3.3.0'
-    id 'io.spring.dependency-management' version '1.1.5' apply false
+    id 'org.springframework.boot' version '3.3.5'
+    id 'io.spring.dependency-management' version '1.1.6' apply false
     id 'java-library'
     id 'io.freefair.lombok' version '8.6' apply false
     id 'com.avast.gradle.docker-compose' version '0.17.6' apply false
@@ -29,7 +29,7 @@ subprojects {
         ext.buildModuleStructure()
 
         ext.applyPluginAndDependencyToModule()
-        ext.buildProfileYMLFile()
+        ext.buildYMLFile()
 
         ext.buildDefaultEnvStructure()
         ext.buildProfileEnvStructure()

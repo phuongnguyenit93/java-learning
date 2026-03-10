@@ -1,5 +1,5 @@
 // START_MY_MODULE_APPLY
-apply from: "${rootDir}/gradle/config/properties.gradle"
+apply from: "${rootDir}/gradle/config/yml.gradle"
 // END_MY_MODULE_APPLY
 
 // START_MY_TASK

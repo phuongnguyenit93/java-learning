@@ -7,7 +7,7 @@ spring:
     active: ${SPRING_PROFILES_ACTIVE:dev}
     mvc:
       async:
-        request-timeout: 600000  # 10 phút
+        request-timeout: 600000
 
 server:
   tomcat:
