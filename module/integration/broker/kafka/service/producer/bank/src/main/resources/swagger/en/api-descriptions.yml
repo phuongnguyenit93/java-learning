@@ -1,0 +1,11 @@
+BankController:
+  depositMoney:
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    path: com/example/learning/controller/BankController.java
+    mapping: '@GetMapping("/deposit/{money}")'
+  withdrawMoney:
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    path: com/example/learning/controller/BankController.java
+    mapping: '@GetMapping("withdrawal/{money}")'
