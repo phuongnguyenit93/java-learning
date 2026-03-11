@@ -1,4 +1,6 @@
-[//]: # (* [1.Basic]&#40;readme/vi/menu/1.Basic.md&#41;)
+* [1.Basic](readme/vi/menu/1.Basic.md)
+
+
 * <a id="basic" href="readme/vi/menu/1.Basic.md">Testing</a>
 ```mermaid
     graph LR
