@@ -10,5 +10,5 @@
         F -- Có --> G[Tạo luồng tạm thời]
         F -- Không --> H[Rejected Execution]
         
-        click G "readme/vi/menu/1.Basic.md" "Basic.md"
+        click G "/blob/main/readme/vi/menu/1.Basic.md" "Basic.md"
 ```
