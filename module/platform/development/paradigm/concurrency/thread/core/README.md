@@ -1,5 +1,5 @@
-* [1.Basic](readme/vi/menu/1.Basic.md)
-
+[//]: # (* [1.Basic]&#40;readme/vi/menu/1.Basic.md&#41;)
+* <a id="basic" href="readme/vi/menu/1.Basic.md">Testing</a>
 ```mermaid
     graph LR
         A[Request mới] --> B{Số luồng < Core?}
