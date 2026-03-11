@@ -1,4 +1,4 @@
-package com.example.learning.config.thread;
+package com.example.learning.config.pool;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

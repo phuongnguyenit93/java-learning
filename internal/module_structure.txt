@@ -1,4 +1,4 @@
-Cập nhật lúc: 2026-03-10 14:49:44
+Cập nhật lúc: 2026-03-11 22:14:37
 ==============================
 module
 ├── infrastructure
@@ -196,6 +196,8 @@ module
     ├── social
     └── support
         ├── document
+        │   ├── diagram
+        │   │   └── mermaid
         │   ├── excel
         │   ├── pdf
         │   ├── word

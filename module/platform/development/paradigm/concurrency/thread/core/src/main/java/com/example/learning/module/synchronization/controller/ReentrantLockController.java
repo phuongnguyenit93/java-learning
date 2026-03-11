@@ -1,6 +1,6 @@
-package com.example.learning.module.interruption.controller;
+package com.example.learning.module.synchronization.controller;
 
-import com.example.learning.module.interruption.service.ReentrantLockService;
+import com.example.learning.module.synchronization.service.ReentrantLockService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

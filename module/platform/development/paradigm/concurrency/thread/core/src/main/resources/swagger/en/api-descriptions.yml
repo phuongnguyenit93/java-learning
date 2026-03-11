@@ -81,22 +81,22 @@ ReentrantLockController:
   reentrantLockExample:
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
-    path: com/example/learning/module/interruption/controller/ReentrantLockController.java
+    path: com/example/learning/module/synchronization/controller/ReentrantLockController.java
     mapping: '@GetMapping("example")'
   fairLockExample:
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
-    path: com/example/learning/module/interruption/controller/ReentrantLockController.java
+    path: com/example/learning/module/synchronization/controller/ReentrantLockController.java
     mapping: '@GetMapping("fair-lock")'
   unfairLockExample:
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
-    path: com/example/learning/module/interruption/controller/ReentrantLockController.java
+    path: com/example/learning/module/synchronization/controller/ReentrantLockController.java
     mapping: '@GetMapping("unfair-lock")'
   interruptibleLock:
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
-    path: com/example/learning/module/interruption/controller/ReentrantLockController.java
+    path: com/example/learning/module/synchronization/controller/ReentrantLockController.java
     mapping: '@GetMapping("interruptible-lock")'
 SyncController:
   runSyncTest:
@@ -125,3 +125,61 @@ SyncProblemController:
     description: Chưa có mô tả chi tiết
     path: com/example/learning/module/synchronization/controller/SyncProblemController.java
     mapping: '@GetMapping("deadlock")'
+RejectExecutionHandlerController:
+  abortPolicy:
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    path: com/example/learning/module/pool/controller/RejectExecutionHandlerController.java
+    mapping: '@GetMapping("abort-policy")'
+  callerRunPolicy:
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    path: com/example/learning/module/pool/controller/RejectExecutionHandlerController.java
+    mapping: '@GetMapping("caller-run-policy")'
+  discardPolicy:
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    path: com/example/learning/module/pool/controller/RejectExecutionHandlerController.java
+    mapping: '@GetMapping("discard-policy")'
+  discardOldestPolicy:
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    path: com/example/learning/module/pool/controller/RejectExecutionHandlerController.java
+    mapping: '@GetMapping("discard-oldest-policy")'
+ThreadLocalController:
+  threadLocalDemo:
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    path: com/example/learning/module/propagation/controller/ThreadLocalController.java
+    mapping: '@GetMapping("thread-local")'
+  inheritableThreadLocalDemo:
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    path: com/example/learning/module/propagation/controller/ThreadLocalController.java
+    mapping: '@GetMapping("inheritable-thread-local")'
+  threadPoolIssueDemo:
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    path: com/example/learning/module/propagation/controller/ThreadLocalController.java
+    mapping: '@GetMapping("thread-pool-issue")'
+ReadWriteLockController:
+  readAndRead:
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    path: com/example/learning/module/synchronization/controller/ReadWriteLockController.java
+    mapping: '@GetMapping("read-read")'
+  readAndWrite:
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    path: com/example/learning/module/synchronization/controller/ReadWriteLockController.java
+    mapping: '@GetMapping("read-write")'
+  writeAndWrite:
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    path: com/example/learning/module/synchronization/controller/ReadWriteLockController.java
+    mapping: '@GetMapping("write-write")'
+  downgradeKey:
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    path: com/example/learning/module/synchronization/controller/ReadWriteLockController.java
+    mapping: '@GetMapping("downgrade")'
