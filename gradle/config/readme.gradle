@@ -39,56 +39,69 @@ ext.buildReadmeByServiceName = { List<HashMap> folderPropsList, String serviceNa
 
 
 ext.generateReadMeMenuList = {File projectDir,String language ->
-    def GREEN = "\u001B[32m"
-    def YELLOW = "\u001B[33m"
-    def RESET = "\u001B[0m"
-    def BLUE = "\u001B[34m"
-
-    logger.lifecycle("${BLUE}🚀 [START]${RESET} Generating Menu List for language: ${YELLOW}${language}${RESET} in ${projectDir.name}")
-    def docsDir = new File("${projectDir}/readme/${language}")
-    if (!docsDir.exists() || !docsDir.isDirectory()) {
-        logger.lifecycle(">>>> ${YELLOW}Warning:${RESET} Thư mục 'docs' không tồn tại tại: ${docsDir.path}")
-        return
-    }
-
+    def docsDir = new File("${projectDir}/readme/${language}/menu")
     def listFile = file("${projectDir}/readme/${language}/LIST.md")
-    def menuDir = file("${docsDir}/menu")
 
-    // Kiểm tra xem folder menu có tồn tại không trước khi listFiles
-    if (!menuDir.exists()) {
-        logger.lifecycle(">>>> ${YELLOW}Skip:${RESET} Thư mục 'menu' không tìm thấy tại: ${menuDir.path}")
+    // 1. Kiểm tra sự tồn tại của thư mục menu trước khi quét
+    if (!docsDir.exists() || !docsDir.isDirectory()) {
+        logger.lifecycle("   └─ ⏩ [LIST-SKIP] Không tìm thấy thư mục menu cho ngôn ngữ: ${language}")
         return
     }
 
-    def menuFiles = menuDir.listFiles().findAll { it.name.endsWith('.md') }
+    def CYAN = "\u001B[36m"
+    def RESET = "\u001B[0m"
+    def GREEN = "\u001B[32m"
 
-    if (menuFiles.isEmpty()) {
-        logger.lifecycle(">>>> ${YELLOW}Notice:${RESET} Không tìm thấy file .md nào trong thư mục menu.")
-    } else {
-        logger.lifecycle("📝 Đã tìm thấy ${YELLOW}${menuFiles.size()}${RESET} file Menu.")
-    }
-
-    menuFiles.sort { it.name }
+    logger.lifecycle("${CYAN}🌳 [TREE-GEN]${RESET} Đang lập mục lục cho: ${GREEN}${language.toUpperCase()}${RESET}")
 
     StringBuilder content = new StringBuilder()
+    content.append("# 📂 README MODULE STRUCTURE (${language.toUpperCase()})\n\n")
 
-    content.append("# MENU LIST \n\n")
+    int fileCount = 0
 
-    menuFiles.each { file ->
-        def fileName = file.name.replace(".md", "")
+    // 2. Hàm đệ quy để duyệt thư mục và build Tree
+    def buildTree
+    buildTree = { File currentDir, String indent ->
+        def files = currentDir.listFiles()?.sort { it.name }
+        if (files == null) return
 
-        def relativePath = file.path
-                .replace("${projectDir.path}${File.separator}","")
-                .replace(File.separator,"/")
-                .replace(" ","%20")
+        files.each { file ->
+            if (file.name.startsWith(".")) return
 
-        content.append("* [${fileName}](${relativePath})\n")
+            if (file.isDirectory()) {
+                // Kiểm tra folder này có nội dung .md hợp lệ hay không để tránh hiện folder rỗng
+                def hasMdInside = false
+                file.traverse(type: groovy.io.FileType.FILES, nameFilter: ~/.*\.md$/) { hasMdInside = true }
+
+                if (hasMdInside) {
+                    content.append("${indent}* **${file.name}**\n")
+                    buildTree(file, indent + "    ")
+                }
+            } else if (file.name.endsWith(".md")) {
+                def fileName = file.name.replace(".md", "")
+
+                // Render relative path chuẩn Markdown
+                def relativePath = projectDir.toPath().relativize(file.toPath()).toString()
+                        .replace(File.separator, "/")
+                        .replace(" ", "%20")
+
+                content.append("${indent}* [${fileName}](${relativePath})\n")
+                fileCount++
+            }
+        }
     }
 
+    // Thực thi quét
+    buildTree(docsDir, "")
+
+    // 3. Ghi file và báo cáo kết quả
     listFile.text = content.toString()
 
-    logger.lifecycle("${GREEN}✅ [SUCCESS]${RESET} Đã cập nhật xong file: ${BLUE}${listFile.path}${RESET}")
-    logger.lifecycle("--------------------------------------------------")
+    if (fileCount > 0) {
+        logger.lifecycle("   └─ ✨ [SUCCESS] Đã cập nhật ${GREEN}${fileCount}${RESET} tài liệu vào ${CYAN}LIST.md${RESET}")
+    } else {
+        logger.lifecycle("   └─ ⚠️  [EMPTY] Thư mục menu trống, LIST.md đã được reset.")
+    }
 }
 
 ext.combineFinalReadme = {File projectDir,String language ->
