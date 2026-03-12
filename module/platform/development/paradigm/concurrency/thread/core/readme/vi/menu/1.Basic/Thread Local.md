@@ -183,27 +183,26 @@ Hãy so sánh hai trường hợp sau:
 #### Trường hợp 1: Stateful (Nguy hiểm - Gây Race Condition)
 **Java**
 ```java
-@Service
-public class OrderService {
-private double totalPrice; // Biến instance lưu dữ liệu chung
-
-	    public void calculate(Order order) {
-	        totalPrice = order.getPrice() * 0.9; // Nhiều Thread cùng vào sẽ ghi đè lên nhau
-	    }
-	}
-	```
+    @Service
+    public class OrderService {
+    private double totalPrice; // Biến instance lưu dữ liệu chung
+    
+            public void calculate(Order order) {
+                totalPrice = order.getPrice() * 0.9; // Nhiều Thread cùng vào sẽ ghi đè lên nhau
+            }
+        }
+```
 
 #### Trường hợp 2: Stateless (An toàn - Đa số dự án dùng cách này)
-**Java**
 ```java
 @Service
-public class OrderService {
-    public double calculate(Order order) {
-        // Biến cục bộ (nằm trên Stack riêng của từng Thread)
-        double result = order.getPrice() * 0.9; 
-        return result; 
+    public class OrderService {
+        public double calculate(Order order) {
+            // Biến cục bộ (nằm trên Stack riêng của từng Thread)
+            double result = order.getPrice() * 0.9; 
+            return result; 
+        }
     }
-}
 ```
 Trong trường hợp 2, biến `result` nằm trong **Stack** của Thread đang chạy. Mỗi Thread có một Stack riêng, nên dù 1.000 Thread cùng gọi hàm `calculate` một lúc, chúng cũng không bao giờ đụng chạm đến nhau.
 
