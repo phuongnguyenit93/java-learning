@@ -1,6 +1,6 @@
-package com.example.learning.module.propagation.controller;
+package com.example.learning.module.context.controller;
 
-import com.example.learning.module.propagation.service.ThreadLocalService;
+import com.example.learning.module.context.service.ThreadLocalService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

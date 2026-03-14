@@ -125,11 +125,26 @@ ext.updateReadmeInternalMenu = {
     // Đảm bảo đuôi file luôn là .md
     if (!fileName.endsWith(".md")) { fileName += ".md" }
 
-    def file = file("readme/${lang}/menu/${fileName}")
+    def searchDir = file("readme/${lang}/menu")
 
-    if (!file.exists()) {
-        throw new GradleException("[ERROR] Không tìm thấy file tại: ${file.path}")
+    if (!searchDir.exists()) {
+        throw new GradleException("[ERROR] Thư mục không tồn tại: ${searchDir}")
     }
+
+    // 3. Sử dụng fileTree để tìm kiếm đệ quy file với tên chính xác
+    def tree = fileTree(dir: searchDir).include("/**/${fileName}")
+
+    // 4. Lấy danh sách các file khớp (thường chỉ có 1 nếu tên file là duy nhất)
+    def foundFiles = tree.files
+
+    if (foundFiles.isEmpty()) {
+        throw new GradleException("[ERROR] Không tìm thấy file '${fileName}' tại bất kỳ thư mục con nào trong: ${searchDir.path}")
+    }
+
+    // 5. Lấy file đầu tiên tìm thấy
+    def file = foundFiles.first()
+
+    logger.lifecycle("🔍 Đã tìm thấy file tại: ${file.path}")
 
     String content = file.getText("UTF-8")
 

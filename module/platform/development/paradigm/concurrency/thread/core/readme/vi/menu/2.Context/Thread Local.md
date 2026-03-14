@@ -21,7 +21,7 @@ Trong các ứng dụng Web (như Spring Boot), `ThreadLocal` thường dùng đ
 
 **Java**
 
-	```java
+```java
 	public class UserContext {
 	    private static final ThreadLocal<String> userHolder = new ThreadLocal<>();
 	
@@ -37,7 +37,7 @@ Trong các ứng dụng Web (như Spring Boot), `ThreadLocal` thường dùng đ
 	        userHolder.remove(); // CỰC KỲ QUAN TRỌNG để tránh Memory Leak
 	    }
 	}
-	```
+```
 
 ---
 
@@ -100,7 +100,7 @@ Hãy xem đoạn code sau trong dự án `java-learning` của bạn:
 
 **Java**
 
-	```java
+```java
 	@Service
 	public class OrderService {
 	    @Autowired
@@ -113,7 +113,7 @@ Hãy xem đoạn code sau trong dự án `java-learning` của bạn:
 	        // ... xử lý logic
 	    }
 	}
-	```
+```
 
 Dù bạn `@Autowired` rất chuẩn, nhưng vì `OrderService` là Singleton, `tempCounter` trở thành **Shared Resource**. Kết quả là bạn sẽ gặp lỗi dữ liệu mờ ảo hoặc sai số.
 
@@ -122,9 +122,9 @@ Dù bạn `@Autowired` rất chuẩn, nhưng vì `OrderService` là Singleton, `
 ### 3. @Autowired và ThreadLocal: Cặp bài trùng
 Để giải quyết vấn đề trên mà vẫn dùng được Singleton Bean, người ta thường kết hợp `@Autowired` với `ThreadLocal`.
 
-**Java**
 
-	```java
+
+```java
 	@Service
 	public class SecurityService {
 	    // Mỗi Thread (mỗi người dùng) sẽ có một ngăn chứa User riêng
@@ -138,7 +138,7 @@ Dù bạn `@Autowired` rất chuẩn, nhưng vì `OrderService` là Singleton, `
 	        return userContext.get();
 	    }
 	}
-	```
+```
 
 Khi bạn `@Autowired SecurityService` ở bất kỳ đâu, các Thread gọi vào hàm `getCurrentUser()` sẽ chỉ thấy dữ liệu của chính mình.
 
@@ -262,7 +262,7 @@ Dù mỗi Thread có bản sao riêng, nhưng cuối cùng cả hai đều muố
 
 **Java**
 
-	```java
+```java
 	@Entity
 	public class Product {
 	    @Id
@@ -272,7 +272,7 @@ Dù mỗi Thread có bản sao riêng, nhưng cuối cùng cả hai đều muố
 	    @Version
 	    private Long version; // "Cảnh sát" giao thông ở đây
 	}
-	```
+```
 
 **Cơ chế hoạt động:**
 1.  Thread A đọc Product (version 1).

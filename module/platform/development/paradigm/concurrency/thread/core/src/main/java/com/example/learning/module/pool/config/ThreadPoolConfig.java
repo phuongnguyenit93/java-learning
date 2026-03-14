@@ -1,6 +1,6 @@
-package com.example.learning.config.pool;
+package com.example.learning.module.pool.config;
 
-import com.example.learning.shared.ThreadLocalTaskDecorator;
+import com.example.learning.module.context.config.ThreadLocalTaskDecorator;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -90,6 +90,26 @@ public class ThreadPoolConfig {
         executor.setQueueCapacity(1100000);
         executor.setKeepAliveSeconds(60);
         executor.setThreadNamePrefix("interrupt-");
+        executor.setRejectedExecutionHandler(threadPoolRejectHandler);
+
+
+        // Quan trọng: Đảm bảo các luồng được đóng gọn gàng khi tắt App
+        executor.setWaitForTasksToCompleteOnShutdown(true);
+        executor.setAwaitTerminationSeconds(3);
+
+        executor.initialize();
+        return executor;
+    }
+
+    @Bean(name = "completableFutureExecutor")
+    public Executor completableFutureExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setTaskDecorator(threadLocalTaskDecorator);
+        executor.setCorePoolSize(50);
+        executor.setMaxPoolSize(50 * 2);
+        executor.setQueueCapacity(1100000);
+        executor.setKeepAliveSeconds(60);
+        executor.setThreadNamePrefix("completable-future-");
         executor.setRejectedExecutionHandler(threadPoolRejectHandler);
 
 

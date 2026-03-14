@@ -1,4 +1,4 @@
-package com.example.learning.config.pool;
+package com.example.learning.module.pool.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

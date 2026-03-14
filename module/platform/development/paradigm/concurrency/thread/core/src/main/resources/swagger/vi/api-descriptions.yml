@@ -183,3 +183,89 @@ ReadWriteLockController:
     description: Chưa có mô tả chi tiết
     path: com/example/learning/module/synchronization/controller/ReadWriteLockController.java
     mapping: '@GetMapping("downgrade")'
+AsyncController:
+  futureExample:
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    path: com/example/learning/module/coordination/async/controller/AsyncController.java
+    mapping: '@GetMapping("future")'
+  completableFutureExample:
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    path: com/example/learning/module/coordination/async/controller/AsyncController.java
+    mapping: '@GetMapping("completable-future")'
+ClassicCoordinationController:
+  joinThread:
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    path: com/example/learning/module/coordination/classic/controller/ClassicCoordinationController.java
+    mapping: '@GetMapping("join-thread")'
+  waitAndNotifyThread:
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    path: com/example/learning/module/coordination/classic/controller/ClassicCoordinationController.java
+    mapping: '@GetMapping("wait-and-notify-thread")'
+ModernCoordinationController:
+  lockConditionExample:
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    path: com/example/learning/module/coordination/modern/controller/ModernCoordinationController.java
+    mapping: '@GetMapping("lock-condition")'
+  lockSupportExample:
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    path: com/example/learning/module/coordination/modern/controller/ModernCoordinationController.java
+    mapping: '@GetMapping("lock-support")'
+PatternController:
+  exchangerExample:
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    path: com/example/learning/module/coordination/pattern/controller/PatternController.java
+    mapping: '@GetMapping("exchanger")'
+  consumerProducerPatternExample:
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    path: com/example/learning/module/coordination/pattern/controller/PatternController.java
+    mapping: '@GetMapping("consumer-producer")'
+SynchronizerController:
+  countDownLatchExample:
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    path: com/example/learning/module/coordination/synchronizer/controller/SynchronizerController.java
+    mapping: '@GetMapping("count-down-latch")'
+  countDownLatchTimeOutExample:
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    path: com/example/learning/module/coordination/synchronizer/controller/SynchronizerController.java
+    mapping: '@GetMapping("count-down-latch-timeout")'
+  cyclicBarrierExample:
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    path: com/example/learning/module/coordination/synchronizer/controller/SynchronizerController.java
+    mapping: '@GetMapping("cyclic-barrier")'
+  cyclicBarrierTimeOutExample:
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    path: com/example/learning/module/coordination/synchronizer/controller/SynchronizerController.java
+    mapping: '@GetMapping("cyclic-barrier-time-out")'
+  cyclicBarrierResetExample:
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    path: com/example/learning/module/coordination/synchronizer/controller/SynchronizerController.java
+    mapping: '@GetMapping("cyclic-barrier-reset")'
+  semaphoreExample:
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    path: com/example/learning/module/coordination/synchronizer/controller/SynchronizerController.java
+    mapping: '@GetMapping("semaphore")'
+  phaserExample:
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    path: com/example/learning/module/coordination/synchronizer/controller/SynchronizerController.java
+    mapping: '@GetMapping("phaser")'
+StampedLockController:
+  stampedExample:
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    path: com/example/learning/module/synchronization/controller/StampedLockController.java
+    mapping: '@GetMapping("example")'
