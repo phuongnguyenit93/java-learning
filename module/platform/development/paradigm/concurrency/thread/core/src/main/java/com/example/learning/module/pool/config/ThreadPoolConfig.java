@@ -55,6 +55,8 @@ public class ThreadPoolConfig {
         // Quan trọng: Đảm bảo các luồng được đóng gọn gàng khi tắt App
         executor.setWaitForTasksToCompleteOnShutdown(true);
         executor.setAwaitTerminationSeconds(10);
+        executor.setAllowCoreThreadTimeOut(true);
+        executor.setPrestartAllCoreThreads(true);
 
         executor.initialize();
         return executor;

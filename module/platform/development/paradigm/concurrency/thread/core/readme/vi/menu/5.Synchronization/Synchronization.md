@@ -68,11 +68,6 @@ Trong các bài toán đếm bản ghi (như Batch 1 triệu dòng của bạn),
 
 ---
 
-Chào bạn, nhận xét của bạn về CountDownLatch như một "Trọng tài cầm còi" hay "Chốt chặn an toàn" là cực kỳ chính xác và đầy tính hình tượng. Đây là một công cụ không thể thiếu khi bạn muốn điều phối sự phối hợp giữa các luồng trong các bài toán xử lý lô (Batch) hoặc kiểm thử hiệu năng (Load Test).
-
-Tôi đã hệ thống hóa kiến thức này vào bản README dưới đây để bạn lưu trữ và áp dụng vào dự án java-learning.
-
-Markdown
 # 🏁 CountDownLatch: Trọng tài điều phối Đa luồng
 
 Trong Java, `CountDownLatch` là một công cụ đồng bộ hóa (synchronization aid) cho phép một hoặc nhiều luồng phải đứng đợi cho đến khi một nhóm các thao tác thực thi ở các luồng khác hoàn thành.

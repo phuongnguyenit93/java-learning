@@ -52,7 +52,19 @@ Dù Thread nhẹ và nhanh hơn, nhưng vì chúng dùng chung "nhà kho" (Heap)
 * Nếu hai công nhân (Threads) cùng nhào vào thay đổi một món đồ trong kho mà không có sự sắp xếp, món đồ đó sẽ bị hỏng.
 * Đó là lý do trong Java chúng ta cần đến các từ khóa như `synchronized`, `Volatile` hoặc các cấu trúc `Concurrent` để giữ cho các Thread làm việc an toàn.
 
-## 4. Tổng kết nhanh
+## 4. Khi nào nên sử dụng Thread trong Java Backend?
+
+Việc sử dụng Thread đúng chỗ sẽ giúp ứng dụng của bạn phản hồi nhanh hơn và tận dụng tối đa sức mạnh phần cứng. Dưới đây là 4 nhóm trường hợp điển hình.
+
+---
+### * Giải phóng luồng chính (I/O Bound & Non-blocking)
+
+Đây là trường hợp phổ biến nhất trong lập trình Web. Khi người dùng gửi yêu cầu, có những việc không cần thiết phải bắt họ đợi cho đến khi hoàn tất.
+
+* **Gửi thông báo:** Sau khi đặt hàng thành công, việc gửi Email hoặc Push Notification nên thực hiện ở luồng phụ. User nhận phản hồi "Thành công" ngay lập tức.
+* **Logging & Analytics:** Ghi log hoạt động hoặc gửi dữ liệu đến hệ thống giám sát (Prometheus/Grafana). Việc này không được phép làm chậm tốc độ của API.
+
+## 5. Tổng kết nhanh
 
 * **Process** = Đơn vị sở hữu tài nguyên.
 * **Thread** = Đơn vị thực thi công việc.
@@ -343,21 +355,6 @@ Theo mặc định, một Thread mới tạo sẽ kế thừa trạng thái daem
 * **Shutdown sạch sẽ:** Dù là loại luồng nào, cách tốt nhất để dừng ứng dụng vẫn là sử dụng `interrupt()` kết hợp với **Shutdown Hooks** hoặc quản lý qua **ExecutorService shutdown** để đảm bảo giải phóng tài nguyên an toàn.
 
 ---
-
-Tôi đã hệ thống hóa và đóng gói 3 nhóm trường hợp điển hình nên sử dụng Thread cùng quy tắc "Bàn tay phải" vào định dạng README.md. Đây là bộ khung giúp bạn ra quyết định chính xác khi thiết kế các tính năng trong dự án java-learning.
-
-Markdown
-# 🚀 Khi nào nên sử dụng Thread trong Java Backend?
-
-Việc sử dụng Thread đúng chỗ sẽ giúp ứng dụng của bạn phản hồi nhanh hơn và tận dụng tối đa sức mạnh phần cứng. Dưới đây là 4 nhóm trường hợp điển hình.
-
----
-
-## 1. Giải phóng luồng chính (I/O Bound & Non-blocking)
-Đây là trường hợp phổ biến nhất trong lập trình Web. Khi người dùng gửi yêu cầu, có những việc không cần thiết phải bắt họ đợi cho đến khi hoàn tất.
-
-* **Gửi thông báo:** Sau khi đặt hàng thành công, việc gửi Email hoặc Push Notification nên thực hiện ở luồng phụ. User nhận phản hồi "Thành công" ngay lập tức.
-* **Logging & Analytics:** Ghi log hoạt động hoặc gửi dữ liệu đến hệ thống giám sát (Prometheus/Grafana). Việc này không được phép làm chậm tốc độ của API.
 
 </details>
 
