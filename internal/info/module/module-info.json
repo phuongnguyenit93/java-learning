@@ -198,6 +198,10 @@
         "INJECT_TASK_AUTO": "TRUE",
         "README_LANGUAGE": ""
     },
+    "open-rewrite": {
+        "MODULE_PATH": "module:platform:development:build-tool:gradle:open-rewrite",
+        "RELATIVE_PATH": "module/platform/development/build-tool/gradle/open-rewrite"
+    },
     "SPRING_ACTUATOR": {
         "SERVICE_NAME": "SPRING_ACTUATOR",
         "BUILD_JAR": "FALSE",
