@@ -1,0 +1,546 @@
+<a id="back-to-top"></a>
+
+# ThreadLocal: Vương quốc riêng của mỗi Thread
+
+## Menu
+- [Khái niệm cơ bản của ThreadLocal](#thread-local)
+- [@Autowired và Vấn đề Đa luồng trong Spring Boot](#autowired-with-thread-problem)
+- [Stateless Beans: Tại sao @Autowired phổ biến mà ít thấy ThreadLocal?](#stateless-bean)
+- [Entity Consistency: Tại sao Stateless Service vẫn quản lý được dữ liệu nhất quán?](#entity-consistency)
+- [ Tại sao InheritableThreadLocal "thất bại" với Thread Pool?](#ingeritable-thread-local-problem)
+- [Tìm hiểu về TaskDecorator và ThreadLocalTaskDecorator](#task-decorator)
+
+
+
+## <a id="thread-local">Khái niệm cơ bản của ThreadLocal</a>
+<details>
+<summary>Click for details</summary>
+
+
+Trong thế giới đa luồng, đôi khi "chia sẻ" lại chính là nguồn cơn của rắc rối. Đó là lúc chúng ta cần đến **ThreadLocal** – một cơ chế cho phép mỗi Thread sở hữu một dữ liệu riêng biệt, hoàn toàn cô lập với các Thread khác.
+
+---
+
+### 1. ThreadLocal là gì?
+Hãy tưởng tượng **ThreadLocal** giống như một chiếc tủ đồ cá nhân trong phòng tập gym:
+* Mọi người đều nhìn thấy dãy tủ (biến ThreadLocal dùng chung).
+* Nhưng chìa khóa của mỗi người chỉ mở được ngăn đồ của riêng họ.
+* Bạn để đồ vào ngăn của mình, người khác không thể thấy hay lấy nhầm đồ của bạn được.
+
+Về mặt kỹ thuật, `ThreadLocal` tạo ra một bản sao của biến cho mỗi luồng. Dù bạn dùng chung một biến ở mức Class, nhưng khi gọi `.get()` hoặc `.set()`, Java sẽ tự động tìm đúng dữ liệu gắn liền với ID của Thread đang chạy.
+
+---
+
+### 2. Ví dụ: Lưu trữ Context người dùng
+Trong các ứng dụng Web (như Spring Boot), `ThreadLocal` thường dùng để lưu thông tin User đang đăng nhập (`UserContext`) mà không phải truyền tham số qua hàng chục hàm khác nhau.
+
+**Java**
+
+```java
+	public class UserContext {
+	    private static final ThreadLocal<String> userHolder = new ThreadLocal<>();
+
+	    public static void setUserName(String name) {
+	        userHolder.set(name);
+	    }
+
+	    public static String getUserName() {
+	        return userHolder.get();
+	    }
+
+	    public static void clear() {
+	        userHolder.remove(); // CỰC KỲ QUAN TRỌNG để tránh Memory Leak
+	    }
+	}
+```
+
+---
+
+### 3. InheritableThreadLocal: "Cha truyền con nối"
+Một vấn đề nảy sinh: Nếu Thread A tạo ra Thread B (luồng con), thì Thread B sẽ không nhìn thấy dữ liệu trong `ThreadLocal` của Thread A. Để giải quyết, Java cung cấp **InheritableThreadLocal**.
+
+* **Cơ chế:** Khi Thread con được khởi tạo, nó sẽ copy toàn bộ giá trị từ cha sang cho mình.
+* **Lưu ý:** Đây là hành động copy lúc khởi tạo. Sau khi con đã "đẻ" ra, nếu cha thay đổi giá trị, con cũng không thấy sự thay đổi đó (và ngược lại).
+
+---
+
+### 4. Hiểm họa: Memory Leak (Rò rỉ bộ nhớ)
+Trong các hệ thống dùng **Thread Pool** (như Tomcat), Thread không bao giờ chết mà được tái sử dụng cho Request khác.
+
+* **Nguy cơ:** Nếu bạn `set()` dữ liệu nhưng không gọi `remove()` sau khi xong việc, dữ liệu của User cũ vẫn nằm trong Thread đó.
+* **Hậu quả:** Chiếm bộ nhớ và lỗi bảo mật (User sau có thể nhìn thấy dữ liệu của User trước).
+* **Quy tắc vàng:** Luôn gọi `remove()` trong khối `finally`.
+
+---
+
+### 5. So sánh nhanh
+
+| Đặc điểm | ThreadLocal | InheritableThreadLocal |
+| :--- | :--- | :--- |
+| **Cô lập giữa các luồng** | Có | Có |
+| **Truyền cho luồng con** | Không | Có |
+| **Ứng dụng phổ biến** | Transaction ID, User Session | Tracing/Logging qua nhiều luồng |
+
+---
+
+### 6. Khi nào nên dùng?
+1.  **Lưu trạng thái không an toàn (Non-thread-safe):** Ví dụ như `SimpleDateFormat`. Thay vì tạo mới liên tục (tốn RAM) hay dùng chung (lỗi Race Condition), hãy cho mỗi Thread một bản sao riêng.
+2.  **Dữ liệu Context:** Lưu Token, UserID xuyên suốt vòng đời của một Request.
+
+---
+
+**Tổng kết:** ThreadLocal là công cụ mạnh mẽ để giải quyết bài toán Visibility mà không cần dùng đến khóa (Lock), giúp tăng hiệu năng đáng kể nhưng cần cực kỳ cẩn thận với việc dọn dẹp bộ nhớ.
+---
+
+
+</details>
+
+- [Quay lại đầu trang](#back-to-top)
+---
+## <a id="autowired-with-thread-problem">@Autowired và Vấn đề Đa luồng trong Spring Boot</a>
+<details>
+<summary>Click for details</summary>
+
+
+Đây là một câu hỏi rất hay, chạm đúng vào "tử huyệt" mà nhiều lập trình viên Spring Boot thường mắc phải. Bản thân `@Autowired` không liên quan đến Thread, nhưng cái **Bean** mà nó tiêm vào thì có.
+
+Để hiểu rõ, bạn cần phân biệt giữa việc **"đi dây điện"** (`@Autowired`) và **"dòng điện"** chạy qua đó (**Thread**).
+
+---
+
+### 1. Spring Bean Scope và Tính Thread-safe
+Mặc định, các Bean trong Spring (như `@Service`, `@Repository`, `@Component`) đều là **Singleton**. Nghĩa là cả ứng dụng chỉ có duy nhất một đối tượng.
+
+* **Cơ chế:** Khi bạn dùng `@Autowired` để tiêm một Service vào Controller, mọi Request (mỗi Request là một Thread riêng) đều dùng chung đúng một Instance đó.
+* **Nguy cơ:** Nếu trong Service đó bạn khai báo một **biến instance** (biến nằm ngoài hàm) để lưu dữ liệu, các Thread sẽ cùng nhau xâu xé biến đó. Đây chính là lúc **Race Condition** xảy ra.
+
+---
+
+### 2. Ví dụ "Tử thần" với @Autowired
+Hãy xem đoạn code sau trong dự án `java-learning` của bạn:
+
+**Java**
+
+```java
+	@Service
+	public class OrderService {
+	    @Autowired
+	    private InventoryRepository repo;
+
+	    private int tempCounter = 0; // BIẾN NGUY HIỂM Ở ĐÂY
+
+	    public void processOrder() {
+	        tempCounter++; // Nhiều Thread cùng vào sẽ làm giá trị này sai lệch
+	        // ... xử lý logic
+	    }
+	}
+```
+
+Dù bạn `@Autowired` rất chuẩn, nhưng vì `OrderService` là Singleton, `tempCounter` trở thành **Shared Resource**. Kết quả là bạn sẽ gặp lỗi dữ liệu mờ ảo hoặc sai số.
+
+---
+
+### 3. @Autowired và ThreadLocal: Cặp bài trùng
+Để giải quyết vấn đề trên mà vẫn dùng được Singleton Bean, người ta thường kết hợp `@Autowired` với `ThreadLocal`.
+
+```java
+	@Service
+	public class SecurityService {
+	    // Mỗi Thread (mỗi người dùng) sẽ có một ngăn chứa User riêng
+	    private static final ThreadLocal<User> userContext = new ThreadLocal<>();
+
+	    public void setLoggedInUser(User user) {
+	        userContext.set(user);
+	    }
+
+	    public User getCurrentUser() {
+	        return userContext.get();
+	    }
+	}
+```
+
+Khi bạn `@Autowired SecurityService` ở bất kỳ đâu, các Thread gọi vào hàm `getCurrentUser()` sẽ chỉ thấy dữ liệu của chính mình.
+
+---
+
+### 4. Bean Scope: Request và Session
+Spring có các Scope khác giúp `@Autowired` an toàn hơn trong môi trường Web:
+
+* **`@Scope("request")`:** Mỗi Request (Thread) sẽ được tạo một Bean riêng. Dùng xong Thread đó thì Bean cũng "bay màu".
+* **`@Scope("session")`:** Bean tồn tại theo phiên làm việc của người dùng.
+
+> **Lưu ý về Proxy:** Khi bạn tiêm một Request Scope Bean vào một Singleton Bean, Spring sẽ tiêm một **Proxy**. Khi Thread chạy vào, Proxy này sẽ thông minh đến mức đi tìm đúng Instance của Request đó để trả về.
+
+---
+
+### 5. Tổng kết
+
+| Thành phần | Vai trò | Tác động Đa luồng |
+| :--- | :--- | :--- |
+| **`@Autowired`** | Tìm và gắn các mảnh ghép (Bean). | Không gây lỗi đa luồng trực tiếp. |
+| **Singleton Bean** | Một thực thể dùng chung toàn app. | **Nguy hiểm** nếu có biến instance (Stateful). |
+| **Stateless Bean** | Bean không lưu trạng thái biến. | **An toàn tuyệt đối** cho đa luồng. |
+
+**Lời khuyên:** Hãy luôn giữ cho các Bean `@Autowired` của bạn là **Stateless**. Nếu cần lưu dữ liệu tạm thời, hãy dùng biến cục bộ bên trong hàm hoặc `ThreadLocal`.
+
+---
+
+**Next step:** Bạn có muốn tôi viết một bài test nhỏ trong Spring để "bắt quả tang" việc nhiều Thread làm sai lệch dữ liệu trong một Singleton Bean không? Hay bạn muốn tìm hiểu về cách Spring xử lý `@Async`?
+---
+
+
+</details>
+
+- [Quay lại đầu trang](#back-to-top)
+---
+## <a id="stateless-bean">Stateless Beans: Tại sao @Autowired phổ biến mà ít thấy ThreadLocal?</a>
+<details>
+<summary>Click for details</summary>
+
+
+Đúng là đại đa số các dự án Spring Boot hiện nay bạn sẽ thấy `@Autowired` khắp nơi mà tuyệt nhiên không thấy bóng dáng của `ThreadLocal`. Lý do là vì họ đang tuân thủ một nguyên tắc thiết kế cốt lõi: **Stateless Beans (Bean không trạng thái)**.
+
+---
+
+### 1. Bí mật nằm ở: Stateless (Không trạng thái)
+Hầu hết các `@Service`, `@Repository`, `@Controller` mà bạn viết đều là **Stateless**. Nghĩa là chúng chỉ chứa logic xử lý, không chứa dữ liệu thay đổi (biến instance).
+
+Hãy so sánh hai trường hợp sau:
+
+#### Trường hợp 1: Stateful (Nguy hiểm - Gây Race Condition)
+**Java**
+```java
+    @Service
+    public class OrderService {
+    private double totalPrice; // Biến instance lưu dữ liệu chung
+
+            public void calculate(Order order) {
+                totalPrice = order.getPrice() * 0.9; // Nhiều Thread cùng vào sẽ ghi đè lên nhau
+            }
+        }
+```
+
+#### Trường hợp 2: Stateless (An toàn - Đa số dự án dùng cách này)
+```java
+@Service
+    public class OrderService {
+        public double calculate(Order order) {
+            // Biến cục bộ (nằm trên Stack riêng của từng Thread)
+            double result = order.getPrice() * 0.9; 
+            return result; 
+        }
+    }
+```
+Trong trường hợp 2, biến `result` nằm trong **Stack** của Thread đang chạy. Mỗi Thread có một Stack riêng, nên dù 1.000 Thread cùng gọi hàm `calculate` một lúc, chúng cũng không bao giờ đụng chạm đến nhau.
+
+---
+
+### 2. Vậy khi nào mới thực sự cần dùng đến ThreadLocal?
+Người ta chỉ dùng `ThreadLocal` khi có một mẩu thông tin cần được truy cập ở mọi nơi trong suốt một Request, nhưng lại không muốn truyền nó qua từng tham số của hàm (để tránh "rác" code).
+
+Thực tế, Spring Framework đã dùng `ThreadLocal` hộ bạn ở "tầng hầm" (Under the hood):
+* **Spring Security:** `SecurityContextHolder` sử dụng `ThreadLocal` để lưu thông tin User đang đăng nhập. Đó là lý do bạn có thể lấy Auth info ở bất kỳ tầng nào.
+* **Quản lý Transaction:** Khi dùng `@Transactional`, Spring lưu kết nối Database (`Connection`) vào một `ThreadLocal` để đảm bảo các câu lệnh SQL trong cùng một Request dùng chung một Connection.
+* **LocaleContextHolder:** Dùng để lưu thông tin ngôn ngữ (vi/en) của người dùng trong Request đó.
+
+---
+
+### 3. Tại sao dự án bình thường không nên tự viết ThreadLocal?
+Nếu tự ý dùng `ThreadLocal` mà không kiểm soát tốt (quên `.remove()` trong khối `finally`), bạn sẽ gây ra lỗi **Memory Leak** nghiêm trọng trong Thread Pool (Tomcat). Do đó, quy tắc chung là:
+1.  **Ưu tiên truyền tham số trực tiếp** (Method parameters).
+2.  **Dựa vào cơ chế có sẵn của Spring** (vốn đã quản lý `ThreadLocal` an toàn).
+
+---
+
+### 4. Tổng kết
+
+| Loại hình | Cách hoạt động | Độ an toàn |
+| :--- | :--- | :--- |
+| **Đa số dự án** | Dùng Bean Stateless + Biến cục bộ. | An toàn tuyệt đối. |
+| **Spring Framework** | Tự dùng `ThreadLocal` để quản lý User, Transaction. | Đã được tối ưu hóa. |
+| **Lập trình viên** | Chỉ tự viết `ThreadLocal` cho tính năng đặc thù (Multi-tenancy, Logging ID). | Cần cực kỳ cẩn thận. |
+
+> **Lời khuyên:** Nếu bạn định lưu dữ liệu vào biến instance của Service, hãy chuyển nó vào trong hàm (biến cục bộ) để tận dụng bộ nhớ **Stack** của Thread, giúp code vừa sạch vừa an toàn đa luồng.
+---
+
+
+</details>
+
+- [Quay lại đầu trang](#back-to-top)
+---
+## <a id="entity-consistency">Entity Consistency: Tại sao Stateless Service vẫn quản lý được dữ liệu nhất quán?</a>
+<details>
+<summary>Click for details</summary>
+
+
+Câu hỏi này rất sắc sảo! Bạn đang thắc mắc: *"Nếu các Service là Stateless (không lưu dữ liệu), nhưng chúng ta lại lấy các Entity (User, Order) từ Database ra để sửa đổi, thì làm sao đảm bảo nhiều Thread không ghi đè lên nhau làm hỏng dữ liệu?"*
+
+Câu trả lời là: **Entity không nằm ở tầng Service một mình**, nó được bảo vệ bởi "Cơ chế quản lý phiên" (**Persistence Context**) và các chiến lược **Locking**.
+
+---
+
+### 1. Cấp độ 1: Mỗi Thread một "Bản sao" riêng (Isolation)
+Khi một Request bay vào Service (qua `@Autowired`), Spring thường mở một Transaction mới.
+
+* **Cơ chế:** JPA/Hibernate sẽ tạo ra một `EntityManager` riêng cho Thread đó.
+* **Hoạt động:** Khi bạn gọi `repo.findById(1)`, Hibernate lấy dữ liệu từ DB và tạo ra một đối tượng Entity nằm trên **Stack/Local Heap** của riêng Thread đó.
+* **Kết quả:** Thread A có một bản sao "User" riêng, Thread B có một bản sao "User" riêng. Chúng không hề dùng chung một Instance Entity như cách chúng dùng chung Service Singleton.
+
+---
+
+### 2. Cấp độ 2: Optimistic Locking (Khóa lạc quan) - Phổ biến nhất
+Dù mỗi Thread có bản sao riêng, nhưng cuối cùng cả hai đều muốn "lưu" về cùng một dòng trong Database. Để tránh việc Thread A ghi đè lên thay đổi của Thread B, người ta dùng `@Version`.
+
+**Java**
+
+```java
+	@Entity
+	public class Product {
+	    @Id
+	    private Long id;
+	    private int quantity;
+
+	    @Version
+	    private Long version; // "Cảnh sát" giao thông ở đây
+	}
+```
+
+**Cơ chế hoạt động:**
+1.  Thread A đọc Product (version 1).
+2.  Thread B cũng đọc Product (version 1).
+3.  Thread A cập nhật `quantity` và lưu lại. Database kiểm tra thấy version vẫn là 1, nó cho phép lưu và tự động tăng version lên 2.
+4.  Thread B gửi lệnh lưu với version 1. Database báo ngay: *"Lỗi rồi! Version hiện tại là 2!"*. Spring sẽ ném ra `OptimisticLockException`.
+
+---
+
+### 3. Cấp độ 3: Pessimistic Locking (Khóa bi quan)
+Nếu bạn làm các hệ thống cực kỳ quan trọng như **Ngân hàng** hoặc **Bán vé máy bay**, nơi không được phép để lỗi xảy ra rồi mới báo, bạn sẽ dùng Pessimistic Lock.
+
+**Java**
+
+```java
+	@Lock(LockModeType.PESSIMISTIC_WRITE)
+	@Query("select p from Product p where p.id = :id")
+	Product findByIdForUpdate(Long id);
+```
+
+* **Cơ chế:** Khi Thread A vừa đọc Entity này lên, nó "khóa" luôn dòng đó trong Database lại (tương đương lệnh `SELECT ... FOR UPDATE` trong SQL).
+* **Hoạt động:** Thread B muốn đọc dòng đó? Phải đứng đợi. Khi nào Thread A kết thúc Transaction (Commit), Thread B mới được vào.
+* **Đặc điểm:** An toàn tuyệt đối nhưng làm chậm hệ thống vì các Thread phải xếp hàng.
+
+---
+
+### 4. Vậy "Tính nhất quán" thực sự ở đâu?
+Tính nhất quán của Entity không nằm ở Java Thread, mà nó nằm ở **Database Transaction (ACID)**:
+* **Atomic (Nguyên tử):** Hoặc là lưu hết, hoặc là không lưu gì.
+* **Isolation (Cô lập):** Database đảm bảo các Transaction chạy song song không nhìn thấy dữ liệu "dở dang" của nhau.
+
+---
+
+### Tổng kết chiến lược bảo vệ
+
+| Đối tượng | Cách đảm bảo nhất quán |
+| :--- | :--- |
+| **Spring Bean (@Service)** | Thiết kế **Stateless** (dùng biến cục bộ trong Stack). |
+| **Entity (Dữ liệu)** | Dùng **Transaction** để cô lập + **@Version** để chống ghi đè. |
+| **Context (User, Auth)** | Dùng **ThreadLocal** (thường do Spring tự quản lý). |
+
+> **Lời khuyên:** Nếu dự án của bạn có nhiều người cùng thao tác trên một dữ liệu (như chỉnh sửa bài viết, cập nhật kho hàng), hãy thêm `@Version` vào Entity ngay lập tức để tránh mất dữ liệu âm thầm!
+---
+
+</details>
+
+- [Quay lại đầu trang](#back-to-top)
+---
+## <a id="ingeritable-thread-local-problem"> Tại sao InheritableThreadLocal "thất bại" với Thread Pool?</a>
+<details>
+<summary>Click for details</summary>
+
+
+Đây là một trong những cái bẫy "kinh điển" nhất khi làm Microservices hoặc các hệ thống xử lý bất đồng bộ. Việc hiểu tại sao **InheritableThreadLocal** thất bại với Thread Pool sẽ giúp bạn tránh được những lỗi logic cực kỳ khó hiểu về sau.
+
+---
+
+### 1. Tại sao InheritableThreadLocal lại "hớ" với Thread Pool?
+Vấn đề nằm ở chữ **"Inheritable" (Thừa kế)**. Cơ chế này chỉ hoạt động **DUY NHẤT MỘT LẦN** lúc Thread con được khởi tạo (`new Thread()`).
+
+Trong Spring `@Async` hoặc Thread Pool:
+* **Thread không được tạo mới liên tục:** Chúng được tạo sẵn một lần và nằm chờ trong Pool.
+* **Tái sử dụng (Reuse):** Khi Thread cha gửi một Task vào Pool, Pool sẽ bốc một Thread cũ đang rảnh để chạy.
+* **Kết quả:** Vì Thread cũ này đã được khởi tạo từ trước, nó sẽ giữ mãi giá trị từ lúc khởi tạo đó hoặc giữ giá trị của một Request... từ quá khứ.
+
+---
+
+### 2. Minh họa kịch bản lỗi (Data Leakage)
+Hãy tưởng tượng hệ thống xử lý đơn hàng:
+
+1.  **Request 1:** User A vào hệ thống. Thread Pool lấy **Thread-1** để chạy. `InheritableThreadLocal` lưu `UserA`.
+2.  **Request 2:** User B vào hệ thống. **Thread-1** (vừa xong việc cho User A) lại được lôi ra dùng tiếp.
+3.  **Thảm họa:** Nếu bạn không xóa dữ liệu, **Thread-1** lúc này vẫn đang giữ Context của `UserA`. Khi xử lý cho User B, nó lại lấy nhầm thông tin của User A để ghi Log hoặc trừ tiền!
+
+---
+
+### 3. Giải pháp: TransmittableThreadLocal (TTL)
+Nếu bạn muốn "lan truyền" dữ liệu một cách chính xác vào Thread Pool (mỗi khi gửi Task vào Pool thì dữ liệu mới được copy sang), bạn cần dùng **TransmittableThreadLocal (TTL)** của Alibaba.
+
+Nó hoạt động theo cơ chế **Replay**:
+* **Trước khi chạy Task:** Nó copy giá trị từ Thread cha sang Thread pool.
+* **Sau khi chạy xong Task:** Nó xóa giá trị đó đi để trả lại Thread sạch cho Pool.
+
+---
+
+### 4. Code mẫu "Bắt lỗi" (Module Propagation)
+
+```java
+	public class ThreadPoolIssueDemo {
+	    private static final InheritableThreadLocal<String> context = new InheritableThreadLocal<>();
+	    // Tạo Pool chỉ có 1 Thread duy nhất để dễ thấy lỗi
+	    private static final ExecutorService pool = Executors.newFixedThreadPool(1);
+
+	    public static void main(String[] args) throws InterruptedException {
+	        // Lần 1: Set context là "USER_A"
+	        context.set("USER_A");
+	        pool.submit(() -> {
+	            System.out.println("Task 1 (Mong đợi USER_A): " + context.get());
+	        });
+
+	        Thread.sleep(1000);
+
+	        // Lần 2: Set context là "USER_B" ở Thread chính
+	        context.set("USER_B");
+	        pool.submit(() -> {
+	            // LỖI Ở ĐÂY: Nó vẫn sẽ in ra USER_A vì Thread-1 không được tạo mới
+	            System.out.println("Task 2 (Mong đợi USER_B): " + context.get());
+	        });
+
+	        pool.shutdown();
+	    }
+	}
+```
+
+---
+
+### Bài học rút ra cho dự án `java-learning`
+
+| Tình huống | Giải pháp nên dùng |
+| :--- | :--- |
+| **Luồng đơn (`new Thread()`)** | `InheritableThreadLocal` là ổn. |
+| **Thread Pool / `@Async`** | **Cảnh báo:** Không dùng `InheritableThreadLocal`. |
+| **Xử lý chuyên nghiệp** | Sử dụng **TTL** hoặc tự quản lý việc truyền dữ liệu qua `Runnable` wrapper. |
+
+> **Lưu ý:** Bạn phải tuyệt đối cẩn thận khi dùng `@EventListener(async = true)`. Bạn phải tự tay quản lý việc truyền dữ liệu hoặc dùng các thư viện chuyên dụng để đảm bảo tính an toàn dữ liệu.
+
+--- 
+
+</details>
+
+- [Quay lại đầu trang](#back-to-top)
+---
+## <a id="task-decorator">Tìm hiểu về TaskDecorator và ThreadLocalTaskDecorator</a>
+<details>
+<summary>Click for details</summary>
+
+
+Trong Spring, khi bạn sử dụng `@Async` hoặc đẩy một tác vụ vào `ThreadPoolTaskExecutor`, một luồng mới sẽ được lấy từ Pool để thực thi. Vấn đề là các dữ liệu lưu trong `ThreadLocal` (như Logback MDC, Security Context, hay Request Attributes) **sẽ không tự động đi theo** sang luồng mới.
+
+`TaskDecorator` chính là "người vận chuyển" giúp sao chép các dữ liệu này.
+
+---
+
+## 1. Cơ chế hoạt động của TaskDecorator
+
+`TaskDecorator` hoạt động như một lớp vỏ bọc (Wrapper) quanh tác vụ thực tế. Nó có hai thời điểm quan trọng:
+1.  **Trước khi luồng phụ chạy (Tại luồng cha):** Chụp ảnh (Capture) các dữ liệu ngữ cảnh hiện có.
+2.  **Trong luồng phụ (Trước và sau khi chạy code):** Thiết lập (Restore) dữ liệu vào luồng mới và dọn dẹp (Cleanup) sau khi xong.
+
+---
+
+## 2. Giải mã Code ThreadLocalTaskDecorator của bạn
+
+Đoạn code sau cung cấp thực hiện 3 nhiệm vụ sống còn:
+
+```java
+@Component
+public class ThreadLocalTaskDecorator implements TaskDecorator {
+    @Override
+    public Runnable decorate(Runnable runnable) {
+        // Capture context from parent thread
+        Map<String, String> contextMap = Optional.ofNullable(MDC.getCopyOfContextMap())
+                .orElse(Collections.emptyMap());
+
+        // Capture RequestAttributes (which includes AuditContext as request-scoped bean)
+        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+
+        return () -> {
+            try {
+                // Restore MDC context in async thread
+                MDC.setContextMap(contextMap);
+
+                // Restore RequestAttributes if available
+                if (requestAttributes != null) {
+                    RequestContextHolder.setRequestAttributes(requestAttributes);
+                }
+
+                runnable.run();
+            } finally {
+                // Clean up to prevent memory leaks
+                MDC.clear();
+                RequestContextHolder.resetRequestAttributes();
+            }
+        };
+    }
+}
+```
+
+### A. Sao chép MDC (Mapped Diagnostic Context)
+MDC giúp gắn `traceId` vào log. Nếu không có Decorator, các log trong luồng `@Async` sẽ không có `traceId`, khiến bạn không thể truy vết lỗi giữa các luồng.
+* **Capture:** `MDC.getCopyOfContextMap()` - Lấy toàn bộ thông tin log từ luồng chính.
+* **Restore:** `MDC.setContextMap(contextMap)` - Đẩy thông tin đó vào luồng phụ.
+
+### B. Sao chép RequestAttributes
+Spring lưu thông tin Request (Header, Session, Audit Context) trong `RequestContextHolder`. Mặc định, thông tin này sẽ biến mất khi bạn sang luồng mới.
+* **Capture:** `RequestContextHolder.getRequestAttributes()` - Giữ lại thông tin của Request hiện tại.
+* **Restore:** `RequestContextHolder.setRequestAttributes(...)` - Cho phép luồng phụ truy cập được các Bean Scoped là `request`.
+
+### C. Dọn dẹp (Cleanup) - Bước quan trọng nhất
+Vì các luồng trong Pool được **tái sử dụng**, nếu bạn không gọi `MDC.clear()` hay `resetRequestAttributes()` ở khối `finally`, dữ liệu của Request cũ sẽ bị "rò rỉ" sang Request sau. Điều này cực kỳ nguy hiểm trong bảo mật và log.
+
+---
+
+## 3. Tại sao đây là giải pháp tối ưu?
+
+So với việc truyền tham số thủ công vào từng hàm, `TaskDecorator` mang lại các lợi ích:
+* **Trong suốt (Transparent):** Người viết code `@Service` hay `@Async` không cần biết đến sự tồn tại của nó. Log và Context tự động chạy đúng.
+* **Tập trung (Centralized):** Mọi logic chuyển giao dữ liệu nằm ở một file duy nhất.
+* **An toàn:** Đảm bảo dữ liệu luôn được dọn dẹp nhờ khối `try-finally`.
+
+---
+
+## 4. Cách cấu hình vào Thread Pool
+
+Để Decorator này có hiệu lực, bạn phải đăng ký nó với `ThreadPoolTaskExecutor`:
+
+```java
+    @Bean
+    public Executor defaultTaskExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        // ... cấu hình core, max pool ...
+
+        // Đăng ký "người vận chuyển"
+        executor.setTaskDecorator(new ThreadLocalTaskDecorator());
+
+        executor.initialize();
+        return executor;
+    }
+```
+
+---
+
+## ⚠️ Lưu ý về Request Scope
+Khi luồng phụ chạy, nếu luồng chính (Request gốc) đã kết thúc và trả về phản hồi cho khách hàng, đối tượng `RequestAttributes` có thể bị hủy. Do đó:
+* Nếu bạn chỉ cần lấy dữ liệu (như `traceId`), Decorator này rất hoàn hảo.
+* Nếu bạn cần thực hiện các thao tác ghi sâu vào Request/Session sau khi luồng chính đã đóng, hãy cẩn thận với lỗi `ScopeNotActiveException`.
+
+</details>
+
+- [Quay lại đầu trang](#back-to-top)

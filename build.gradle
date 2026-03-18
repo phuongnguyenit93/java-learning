@@ -74,8 +74,8 @@ allprojects {
     group = 'com.example.learning'
     version = '1.0.0'
 
-    sourceCompatibility = '17'
-    targetCompatibility = '17'
+    sourceCompatibility = '21'
+    targetCompatibility = '21'
 
     repositories {
         mavenLocal()

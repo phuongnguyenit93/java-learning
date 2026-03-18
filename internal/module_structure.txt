@@ -1,4 +1,4 @@
-Cập nhật lúc: 2026-03-16 23:29:02
+Cập nhật lúc: 2026-03-18 12:25:36
 ==============================
 module
 ├── infrastructure
@@ -56,6 +56,18 @@ module
 │       │       ├── istio
 │       │       └── linkerd
 │       ├── observability
+│       │   ├── benchmark
+│       │   │   ├── load-test
+│       │   │   │   ├── jmeter
+│       │   │   │   └── k6
+│       │   │   └── micro
+│       │   │       └── jmh
+│       │   ├── dianostic
+│       │   │   ├── profiling
+│       │   │   │   ├── jprofiler
+│       │   │   │   └── visual-vm
+│       │   │   └── thread-dump
+│       │   │       └── jstack
 │       │   ├── logging
 │       │   │   ├── event-log
 │       │   │   └── log-pipeline
@@ -171,9 +183,6 @@ module
     │   │   │   ├── schedule
     │   │   │   │   └── task
     │   │   │   └── thread
-    │   │   │       ├── core
-    │   │   │       ├── spring-executor
-    │   │   │       └── virtual-thread
     │   │   ├── di-ioc
     │   │   ├── functional
     │   │   ├── mvc-pattern

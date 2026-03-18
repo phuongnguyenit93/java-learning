@@ -169,10 +169,10 @@ Thực hiện cùng một bài toán: Xử lý 1 triệu bản ghi Transaction c
 ### Cách 1: ForkJoinTask (Thủ công)
 Bạn phải tự định nghĩa lớp, chọn ngưỡng `THRESHOLD`, gọi `fork()` và `join()`.
 
-	```java
+```java
 	// Bạn phải viết cả một Class dài (sử dụng RecursiveTask)
 	List<Long> result = pool.invoke(new TransactionProcessor(data, 0, data.size()));
-	```
+```
 
 ### Cách 2: Parallel Stream (Hiện đại)
 Java tự động lo hết phần chia nhỏ (Splitting) và gộp (Merging).

@@ -417,7 +417,7 @@
     "THREAD": {
         "SERVICE_NAME": "THREAD",
         "BUILD_JAR": "TRUE",
-        "MODULE_PATH": "module:platform:development:paradigm:concurrency:thread:core",
+        "MODULE_PATH": "module:platform:development:paradigm:concurrency:thread",
         "BUILD_README": "TRUE",
         "IS_MICROSERVICE": "TRUE",
         "BUILD_SWAGGER_LANGUAGE_LIST": "vi,en",
@@ -428,25 +428,7 @@
         "MODULE_TYPE": "APPLICATION",
         "BUILD_ENV": "TRUE",
         "BUILD_ENV_PATH_MODULE_DEPEND": "",
-        "RELATIVE_PATH": "module/platform/development/paradigm/concurrency/thread/core",
-        "README_LANGUAGE": "vi",
-        "INJECT_TASK_AUTO": "TRUE"
-    },
-    "THREAD_SPRING_EXECUTOR": {
-        "SERVICE_NAME": "THREAD_SPRING_EXECUTOR",
-        "BUILD_JAR": "TRUE",
-        "MODULE_PATH": "module:platform:development:paradigm:concurrency:thread:spring-executor",
-        "BUILD_README": "TRUE",
-        "IS_MICROSERVICE": "TRUE",
-        "BUILD_SWAGGER_LANGUAGE_LIST": "vi,en",
-        "BUILD_SWAGGER": "TRUE",
-        "BUILD_YML": "TRUE",
-        "BUILD_ENV_PROFILE": "FALSE",
-        "BUILD_YML_MODULE_DEPEND": "SPRING_WEB,SPRING_SWAGGER",
-        "MODULE_TYPE": "APPLICATION",
-        "BUILD_ENV": "TRUE",
-        "BUILD_ENV_PATH_MODULE_DEPEND": "",
-        "RELATIVE_PATH": "module/platform/development/paradigm/concurrency/thread/spring-executor",
+        "RELATIVE_PATH": "module/platform/development/paradigm/concurrency/thread",
         "README_LANGUAGE": "vi",
         "INJECT_TASK_AUTO": "TRUE"
     }
