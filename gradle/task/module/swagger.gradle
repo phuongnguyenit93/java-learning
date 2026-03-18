@@ -15,22 +15,3 @@ tasks.register("generateApiSwaggerDescription") {
     }
 }
 // END_MY_TASK
-
-// START_MY_TASK
-tasks.register("updateReadmeInternalMenu") {
-    group = "documentation"
-
-    doLast {
-        // --- KIỂM TRA THAM SỐ ĐẦU VÀO ---
-        if (!project.hasProperty('LANGUAGE') || !project.hasProperty('FILE_NAME')) {
-            throw new GradleException(
-                    "\n[ERROR] Thiếu tham số! Hãy thêm vào lệnh như sau:\n" +
-                            "-PLANGUAGE=vi -PFILE_NAME=your-file.md\n" +
-                            "----------------------------------------------------------"
-            )
-        }
-
-        project.ext.updateReadmeInternalMenu()
-    }
-}
-// END_MY_TASK

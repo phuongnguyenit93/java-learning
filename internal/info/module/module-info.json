@@ -198,9 +198,23 @@
         "INJECT_TASK_AUTO": "TRUE",
         "README_LANGUAGE": ""
     },
-    "open-rewrite": {
+    "OPEN_REWRITE_GRADLE": {
+        "SERVICE_NAME": "OPEN_REWRITE_GRADLE",
+        "BUILD_JAR": "FALSE",
         "MODULE_PATH": "module:platform:development:build-tool:gradle:open-rewrite",
-        "RELATIVE_PATH": "module/platform/development/build-tool/gradle/open-rewrite"
+        "IS_MICROSERVICE": "TRUE",
+        "BUILD_README": "TRUE",
+        "BUILD_SWAGGER_LANGUAGE_LIST": "",
+        "BUILD_SWAGGER": "FALSE",
+        "BUILD_YML": "FALSE",
+        "BUILD_ENV_PROFILE": "FALSE",
+        "BUILD_YML_MODULE_DEPEND": "",
+        "MODULE_TYPE": "",
+        "BUILD_ENV": "FALSE",
+        "BUILD_ENV_PATH_MODULE_DEPEND": "",
+        "RELATIVE_PATH": "module/platform/development/build-tool/gradle/open-rewrite",
+        "INJECT_TASK_AUTO": "TRUE",
+        "README_LANGUAGE": "VI"
     },
     "SPRING_ACTUATOR": {
         "SERVICE_NAME": "SPRING_ACTUATOR",

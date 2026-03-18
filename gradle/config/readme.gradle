@@ -145,3 +145,107 @@ ext.combineFinalReadme = {File projectDir,String language ->
     logger.lifecycle("--------------------------------------------------")
 
 }
+
+ext.updateReadmeInternalMenu = {
+    def lang = project.findProperty('LANGUAGE') as String
+    def fileName = project.findProperty('FILE_NAME') as String
+
+    // Đảm bảo đuôi file luôn là .md
+    if (!fileName.endsWith(".md")) { fileName += ".md" }
+
+    def searchDir = file("readme/${lang}/menu")
+
+    if (!searchDir.exists()) {
+        throw new GradleException("[ERROR] Thư mục không tồn tại: ${searchDir}")
+    }
+
+    // 3. Sử dụng fileTree để tìm kiếm đệ quy file với tên chính xác
+    def tree = fileTree(dir: searchDir).include("/**/${fileName}")
+
+    // 4. Lấy danh sách các file khớp (thường chỉ có 1 nếu tên file là duy nhất)
+    def foundFiles = tree.files
+
+    if (foundFiles.isEmpty()) {
+        throw new GradleException("[ERROR] Không tìm thấy file '${fileName}' tại bất kỳ thư mục con nào trong: ${searchDir.path}")
+    }
+
+    // 5. Lấy file đầu tiên tìm thấy
+    def file = foundFiles.first()
+
+    logger.lifecycle("🔍 Đã tìm thấy file tại: ${file.path}")
+
+    String content = file.getText("UTF-8")
+
+    // --- BƯỚC 1: DỌN DẸP SIÊU SẠCH (Reset file và xóa dòng trống thừa) ---
+    content = content.replaceAll(/(?m)^\s+$/, "") // Bước A: Xóa trắng các dòng chỉ có space
+    content = content.replaceAll(/\n{3,}/, "\n\n") // Bước B: Nén các dòng thực sự trống
+    content = content.replaceAll(/(?s).*?/, "")
+    content = content.replaceAll(/(?m)^## Menu\s*\n(- \[.*?\]\(#.*?\)\s*\n*)*/, "")
+    content = content.replaceAll(/<details>\s*<summary>Click for details<\/summary>\n*/, "")
+    content = content.replaceAll(/<\/details>\n*/, "")
+    content = content.replaceAll(/(?m)^- \[Quay lại đầu trang\]\(#back-to-top\)\s*\n---\s*\n*/, "")
+    content = content.replaceAll(/(?m)^- \[Quay lại đầu trang\]\(#back-to-top\)/, "")
+
+    // QUAN TRỌNG: Đưa mọi cụm 2+ dòng trống về tối đa 2 dòng trống
+    content = content.replaceAll(/(?m)^\s+$/, "") // Bước A: Xóa trắng các dòng chỉ có space
+    content = content.replaceAll(/\n{3,}/, "\n\n") // Bước B: Nén các dòng thực sự trống
+
+
+
+    // --- BƯỚC 2: TRÍCH XUẤT MENU ---
+    def menuLinks = []
+    def matcher = (content =~ /<a id="([^"]+)">(.+?)<\/a>/)
+    while (matcher.find()) {
+        if (matcher.group(1) != "back-to-top") {
+            menuLinks << "- [${matcher.group(2)}](#${matcher.group(1)})"
+        }
+    }
+
+    // --- BƯỚC 3: DỰNG LẠI CẤU TRÚC (Kiểm soát dòng trống tuyệt đối) ---
+    int anchorCount = 0
+    content = content.replaceAll(/(?m)(^## )?(<a id="(?!back-to-top)[^"]+">.*?<\/a>)/) { fullMatch, h2, anchor ->
+        anchorCount++
+
+        // Prefix: Đóng section cũ bằng link quay lại + kẻ ngang + </details>
+        String prefix = "\n</details>\n\n- [Quay lại đầu trang](#back-to-top)\n---\n"
+        // Suffix: Mở section mới
+        String suffix = "\n<details>\n<summary>Click for details</summary>\n"
+
+        String middle = (h2 ?: "") + anchor
+
+        if (anchorCount == 1) {
+            return middle.trim() + suffix
+        } else {
+            return prefix + middle.trim() + suffix
+        }
+    }
+
+    // 3.2. Tạo khối Menu
+    String menuBlock = "\n## Menu\n" + menuLinks.join("\n") + "\n\n"
+
+    // 3.3. Chèn Menu
+    if (content =~ /(?m)^#\s+.+$/) {
+        content = content.replaceFirst(/(?m)^#\s+.+$/) { header ->
+            return header.trim() + "\n" + menuBlock
+        }
+    }
+
+    // --- BƯỚC 4: CHUẨN HÓA ĐẦU VÀ CHÈN KẾT THÚC ĐẦY ĐỦ ---
+    // 4.1. Đảm bảo đầu file luôn có anchor back-to-top
+    content = content.replace('<a id="back-to-top"></a>', "").trim()
+    content = '<a id="back-to-top"></a>\n\n' + content
+
+    // 4.2. Xử lý phần kết thúc: Thêm link quay lại cho section cuối cùng
+    content = content.trim()
+    String closingBlock = "\n\n</details>\n\n- [Quay lại đầu trang](#back-to-top)"
+
+    if (!content.endsWith("</details>")) {
+        content += closingBlock
+    }
+
+    // 4.3. Chốt chặn cuối cùng: Dọn dẹp các cụm dòng trống tích tụ (nén lại tối đa 2 dòng trống)
+    content = content.replaceAll(/\n{2,}/, "\n\n")
+
+    file.setText(content, "UTF-8")
+    println "Cleaned & Updated: ${file.name}"
+}
