@@ -1,4 +1,4 @@
-Cập nhật lúc: 2026-03-18 17:20:52
+Cập nhật lúc: 2026-03-20 17:12:19
 ==============================
 module
 ├── infrastructure
@@ -108,6 +108,28 @@ module
 │       ├── rsocket
 │       └── websocket
 ├── microservice
+│   └── module
+│       ├── deployments
+│       │   ├── docker
+│       │   ├── grafana
+│       │   └── prometheus
+│       ├── infrastructure
+│       │   ├── admin-server
+│       │   ├── api-gateway
+│       │   ├── config-server
+│       │   └── discovery-server
+│       ├── integration
+│       │   ├── message-broker
+│       │   └── notification-service
+│       ├── platform
+│       │   ├── common-lib
+│       │   ├── logging-starter
+│       │   ├── resilience4j
+│       │   └── security-starter
+│       └── service
+│           ├── inventory-service
+│           ├── order-service
+│           └── payment-service
 └── platform
     ├── cloud
     ├── development
