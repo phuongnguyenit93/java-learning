@@ -1,6 +1,15 @@
+<style>
+  ul { list-style-type: none; padding-left: 20px; }
+  li { margin: 4px 0; }
+  a { text-decoration: none; color: #0366d6; }
+  a:hover { text-decoration: underline; }
+  summary { cursor: pointer; }
+  summary:hover { color: #d73a49; }
+</style>
+
 # Project Module Structure (Foldable)
 
-> Cập nhật lúc: 2026-03-23 16:36:58
+> Cập nhật lúc: 2026-03-23 16:41:48
 
 Sử dụng mũi tên để đóng/mở các phân cấp module.
 
