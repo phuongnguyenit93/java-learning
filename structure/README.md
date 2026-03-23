@@ -1,33 +1,24 @@
-<style>
-  ul { list-style-type: none; padding-left: 20px; }
-  li { margin: 4px 0; }
-  a { text-decoration: none; color: #0366d6; }
-  a:hover { text-decoration: underline; }
-  summary { cursor: pointer; }
-  summary:hover { color: #d73a49; }
-</style>
-
 # Project Module Structure (Foldable)
 
-> Cập nhật lúc: 2026-03-23 16:41:48
+> Cập nhật lúc: 2026-03-23 16:52:43
 
 Sử dụng mũi tên để đóng/mở các phân cấp module.
 
 <details open>
   <summary><b><a href='../module'>module (Root)</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
 <details>
   <summary><b><a href='../module/infrastructure'>infrastructure</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
 <details>
   <summary><b><a href='../module/infrastructure/devops'>devops</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
 <details>
   <summary><b><a href='../module/infrastructure/devops/artifact-management'>artifact-management</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/infrastructure/devops/artifact-management/central-portal'>central-portal</a>
 </li>
@@ -58,15 +49,15 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/infrastructure/system'>system</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
 <details>
   <summary><b><a href='../module/infrastructure/system/database'>database</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
 <details>
   <summary><b><a href='../module/infrastructure/system/database/advance'>advance</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/infrastructure/system/database/advance/function'>function</a>
 </li>
@@ -82,7 +73,7 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/infrastructure/system/database/connection-pool'>connection-pool</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/infrastructure/system/database/connection-pool/hikariCP'>hikariCP</a>
 </li>
@@ -92,7 +83,7 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/infrastructure/system/database/nosql'>nosql</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/infrastructure/system/database/nosql/clickhouse'>clickhouse</a>
 </li>
@@ -108,7 +99,7 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/infrastructure/system/database/nosql/mongoDB'>mongoDB</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/infrastructure/system/database/nosql/mongoDB/aggregation'>aggregation</a>
 </li>
@@ -121,7 +112,7 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/infrastructure/system/database/nosql/redis'>redis</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/infrastructure/system/database/nosql/redis/lua-scripting'>lua-scripting</a>
 </li>
@@ -134,18 +125,18 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/infrastructure/system/database/rdbms'>rdbms</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/infrastructure/system/database/rdbms/mysql'>mysql</a>
 </li>
 <li>
 <details>
   <summary><b><a href='../module/infrastructure/system/database/rdbms/oracle'>oracle</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
 <details>
   <summary><b><a href='../module/infrastructure/system/database/rdbms/oracle/advance'>advance</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/infrastructure/system/database/rdbms/oracle/advance/package'>package</a>
 </li>
@@ -164,11 +155,11 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/infrastructure/system/database/rdbms/postgresql'>postgresql</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
 <details>
   <summary><b><a href='../module/infrastructure/system/database/rdbms/postgresql/advance'>advance</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/infrastructure/system/database/rdbms/postgresql/advance/functions'>functions</a>
 </li>
@@ -193,11 +184,11 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/infrastructure/system/network'>network</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
 <details>
   <summary><b><a href='../module/infrastructure/system/network/api-gateway'>api-gateway</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/infrastructure/system/network/api-gateway/kong'>kong</a>
 </li>
@@ -210,7 +201,7 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/infrastructure/system/network/protocol'>protocol</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/infrastructure/system/network/protocol/http'>http</a>
 </li>
@@ -226,7 +217,7 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/infrastructure/system/network/proxy'>proxy</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/infrastructure/system/network/proxy/haproxy'>haproxy</a>
 </li>
@@ -239,7 +230,7 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/infrastructure/system/network/service-mesh'>service-mesh</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/infrastructure/system/network/service-mesh/istio'>istio</a>
 </li>
@@ -255,15 +246,15 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/infrastructure/system/observability'>observability</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
 <details>
   <summary><b><a href='../module/infrastructure/system/observability/benchmark'>benchmark</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
 <details>
   <summary><b><a href='../module/infrastructure/system/observability/benchmark/load-test'>load-test</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/infrastructure/system/observability/benchmark/load-test/jmeter'>jmeter</a>
 </li>
@@ -276,7 +267,7 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/infrastructure/system/observability/benchmark/micro'>micro</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/infrastructure/system/observability/benchmark/micro/jmh'>jmh</a>
 </li>
@@ -289,11 +280,11 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/infrastructure/system/observability/dianostic'>dianostic</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
 <details>
   <summary><b><a href='../module/infrastructure/system/observability/dianostic/profiling'>profiling</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/infrastructure/system/observability/dianostic/profiling/jprofiler'>jprofiler</a>
 </li>
@@ -306,7 +297,7 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/infrastructure/system/observability/dianostic/thread-dump'>thread-dump</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/infrastructure/system/observability/dianostic/thread-dump/jstack'>jstack</a>
 </li>
@@ -319,7 +310,7 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/infrastructure/system/observability/logging'>logging</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/infrastructure/system/observability/logging/event-log'>event-log</a>
 </li>
@@ -332,14 +323,14 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/infrastructure/system/observability/metrics'>metrics</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/infrastructure/system/observability/metrics/aggregation'>aggregation</a>
 </li>
 <li>
 <details>
   <summary><b><a href='../module/infrastructure/system/observability/metrics/time-series'>time-series</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/infrastructure/system/observability/metrics/time-series/prometheus'>prometheus</a>
 </li>
@@ -349,7 +340,7 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/infrastructure/system/observability/metrics/visualization'>visualization</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/infrastructure/system/observability/metrics/visualization/grafana'>grafana</a>
 </li>
@@ -362,7 +353,7 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/infrastructure/system/observability/tracing'>tracing</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/infrastructure/system/observability/tracing/concept'>concept</a>
 </li>
@@ -387,26 +378,26 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/integration'>integration</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
 <details>
   <summary><b><a href='../module/integration/broker'>broker</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/integration/broker/activeMQ'>activeMQ</a>
 </li>
 <li>
 <details>
   <summary><b><a href='../module/integration/broker/kafka'>kafka</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
 <details>
   <summary><b><a href='../module/integration/broker/kafka/service'>service</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
 <details>
   <summary><b><a href='../module/integration/broker/kafka/service/consumer'>consumer</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/integration/broker/kafka/service/consumer/accountant'>accountant</a>
 </li>
@@ -422,7 +413,7 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/integration/broker/kafka/service/producer'>producer</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/integration/broker/kafka/service/producer/bank'>bank</a>
 </li>
@@ -447,18 +438,18 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/integration/oneway'>oneway</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/integration/oneway/grpc'>grpc</a>
 </li>
 <li>
 <details>
   <summary><b><a href='../module/integration/oneway/httpRequest'>httpRequest</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
 <details>
   <summary><b><a href='../module/integration/oneway/httpRequest/blocking'>blocking</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/integration/oneway/httpRequest/blocking/feign-client'>feign-client</a>
 </li>
@@ -474,7 +465,7 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/integration/oneway/httpRequest/nonBlocking'>nonBlocking</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/integration/oneway/httpRequest/nonBlocking/web-client'>web-client</a>
 </li>
@@ -493,7 +484,7 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/integration/twoway'>twoway</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/integration/twoway/rsocket'>rsocket</a>
 </li>
@@ -509,15 +500,15 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/microservice'>microservice</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
 <details>
   <summary><b><a href='../module/microservice/module'>module</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
 <details>
   <summary><b><a href='../module/microservice/module/deployments'>deployments</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/microservice/module/deployments/docker'>docker</a>
 </li>
@@ -533,7 +524,7 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/microservice/module/infrastructure'>infrastructure</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/microservice/module/infrastructure/admin-server'>admin-server</a>
 </li>
@@ -552,7 +543,7 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/microservice/module/integration'>integration</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/microservice/module/integration/message-broker'>message-broker</a>
 </li>
@@ -565,7 +556,7 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/microservice/module/platform'>platform</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/microservice/module/platform/common-lib'>common-lib</a>
 </li>
@@ -584,7 +575,7 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/microservice/module/service'>service</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/microservice/module/service/inventory-service'>inventory-service</a>
 </li>
@@ -606,25 +597,25 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/platform'>platform</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/platform/cloud'>cloud</a>
 </li>
 <li>
 <details>
   <summary><b><a href='../module/platform/development'>development</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
 <details>
   <summary><b><a href='../module/platform/development/build-tool'>build-tool</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/platform/development/build-tool/ant'>ant</a>
 </li>
 <li>
 <details>
   <summary><b><a href='../module/platform/development/build-tool/gradle'>gradle</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/platform/development/build-tool/gradle/open-rewrite'>open-rewrite</a>
 </li>
@@ -640,22 +631,22 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/platform/development/framework'>framework</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
 <details>
   <summary><b><a href='../module/platform/development/framework/spring'>spring</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/platform/development/framework/spring/actuator'>actuator</a>
 </li>
 <li>
 <details>
   <summary><b><a href='../module/platform/development/framework/spring/basic'>basic</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
 <details>
   <summary><b><a href='../module/platform/development/framework/spring/basic/core'>core</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/platform/development/framework/spring/basic/core/annotation'>annotation</a>
 </li>
@@ -683,7 +674,7 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/platform/development/framework/spring/data'>data</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/platform/development/framework/spring/data/jpa'>jpa</a>
 </li>
@@ -705,7 +696,7 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/platform/development/framework/spring/security'>security</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/platform/development/framework/spring/security/basic'>basic</a>
 </li>
@@ -733,7 +724,7 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/platform/development/framework/spring-boot'>spring-boot</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/platform/development/framework/spring-boot/auto-configuration'>auto-configuration</a>
 </li>
@@ -752,7 +743,7 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/platform/development/framework/spring-boot/starter'>starter</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/platform/development/framework/spring-boot/starter/custom-starter'>custom-starter</a>
 </li>
@@ -771,18 +762,18 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/platform/development/language'>language</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
 <details>
   <summary><b><a href='../module/platform/development/language/java'>java</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/platform/development/language/java/advance'>advance</a>
 </li>
 <li>
 <details>
   <summary><b><a href='../module/platform/development/language/java/concurrency'>concurrency</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/platform/development/language/java/concurrency/async-programming'>async-programming</a>
 </li>
@@ -801,7 +792,7 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/platform/development/language/java/core'>core</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/platform/development/language/java/core/abstract-interface'>abstract-interface</a>
 </li>
@@ -811,7 +802,7 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/platform/development/language/java/mapping'>mapping</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/platform/development/language/java/mapping/model-mapper'>model-mapper</a>
 </li>
@@ -824,11 +815,11 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/platform/development/language/java/persistence'>persistence</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
 <details>
   <summary><b><a href='../module/platform/development/language/java/persistence/orm'>orm</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/platform/development/language/java/persistence/orm/hibernate'>hibernate</a>
 </li>
@@ -841,7 +832,7 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/platform/development/language/java/persistence/sql'>sql</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/platform/development/language/java/persistence/sql/jdbc'>jdbc</a>
 </li>
@@ -857,14 +848,14 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/platform/development/language/java/version'>version</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/platform/development/language/java/version/java11'>java11</a>
 </li>
 <li>
 <details>
   <summary><b><a href='../module/platform/development/language/java/version/java16'>java16</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/platform/development/language/java/version/java16/record'>record</a>
 </li>
@@ -892,14 +883,14 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/platform/development/paradigm'>paradigm</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/platform/development/paradigm/aop'>aop</a>
 </li>
 <li>
 <details>
   <summary><b><a href='../module/platform/development/paradigm/concurrency'>concurrency</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/platform/development/paradigm/concurrency/batch'>batch</a>
 </li>
@@ -909,7 +900,7 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/platform/development/paradigm/concurrency/schedule'>schedule</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/platform/development/paradigm/concurrency/schedule/task'>task</a>
 </li>
@@ -931,7 +922,7 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/platform/development/paradigm/mvc-pattern'>mvc-pattern</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/platform/development/paradigm/mvc-pattern/controller'>controller</a>
 </li>
@@ -950,7 +941,7 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/platform/development/paradigm/reactive-stream'>reactive-stream</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/platform/development/paradigm/reactive-stream/webflux'>webflux</a>
 </li>
@@ -963,11 +954,11 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/platform/development/validation'>validation</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
 <details>
   <summary><b><a href='../module/platform/development/validation/performance'>performance</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/platform/development/validation/performance/benchmark'>benchmark</a>
 </li>
@@ -983,7 +974,7 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/platform/development/validation/testing'>testing</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/platform/development/validation/testing/e2e-test'>e2e-test</a>
 </li>
@@ -1011,15 +1002,15 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/platform/support'>support</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
 <details>
   <summary><b><a href='../module/platform/support/document'>document</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
 <details>
   <summary><b><a href='../module/platform/support/document/diagram'>diagram</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/platform/support/document/diagram/mermaid'>mermaid</a>
 </li>
@@ -1044,7 +1035,7 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
 <details>
   <summary><b><a href='../module/platform/support/notification'>notification</a></b></summary>
-<ul>
+<ul style='list-style-type: none; padding-left: 20px;'>
 <li>
   <a href='../module/platform/support/notification/email'>email</a>
 </li>
