@@ -1,0 +1,70 @@
+# AUTO-GENERATED MERGED YAML
+# You can check at module/microservice/module/service/inventory-service/src/main/resources/application.yml
+# Source: INVENTORY_SERVICE
+# Dependencies: SPRING_SWAGGER, SPRING_WEB
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+---
+spring:
+  config:
+    activate:
+      on-profile: loc
+---
+spring:
+  config:
+    activate:
+      on-profile: prd
+swagger:
+  enabled: false
+---
+spring:
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DATABASE_MYSQL_URI}
+    username: ${DATABASE_MYSQL_USER}
+    password: ${DATABASE_MYSQL_PASSWORD}
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      idle-timeout: 300000
+      connection-timeout: 20000
+      max-lifetime: 1800000
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  application:
+    name: ${PROJECT_NAME}
+swagger:
+  enabled: ${BUILD_SWAGGER:}
+  languages: ${BUILD_SWAGGER_LANGUAGE_LIST:}
+springdoc:
+  swagger-ui:
+    enabled: ${swagger.enabled}
+    docExpansion:
+    - none
+    path: /swagger-ui.html
+  api-docs:
+    enabled: ${swagger.enabled}
+server:
+  port: ${PORT}
+  forward-headers-strategy: framework
+  servlet:
+    context-path: /${CONTEXT_PATH}
+
+eureka:
+  instance:
+    # Thông báo cho Admin/Eureka biết đường dẫn chính xác
+    status-page-url-path: ${server.servlet.context-path}/actuator/info
+    health-check-url-path: ${server.servlet.context-path}/actuator/health
+    # Quan trọng: Metadata giúp Admin Server tự nối chuỗi URL
+    metadata-map:
+      # Đây là dòng then chốt:
+      management.context-path: ${server.servlet.context-path}/actuator

@@ -1,0 +1,47 @@
+# AUTO-GENERATED MERGED YAML
+# You can check at module/microservice/module/infrastructure/eureka-server/src/main/resources/application.yml
+# Source: EUREKA_SERVER
+# Dependencies: SPRING_WEB, SPRING_SWAGGER
+
+---
+spring:
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+  application:
+    name: ${PROJECT_NAME}
+eureka:
+  instance:
+    hostname: ${EUREKA_SERVER:localhost}
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+  server:
+    enable-self-preservation: false
+    wait-time-in-ms-when-sync-empty: 0
+    eviction-interval-timer-in-ms: 5000
+swagger:
+  enabled: ${BUILD_SWAGGER:}
+  languages: ${BUILD_SWAGGER_LANGUAGE_LIST:}
+server:
+  port: ${PORT}
+  servlet:
+    context-path: /${CONTEXT_PATH}
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+---
+spring:
+  config:
+    activate:
+      on-profile: loc
+---
+spring:
+  config:
+    activate:
+      on-profile: prd
+swagger:
+  enabled: false

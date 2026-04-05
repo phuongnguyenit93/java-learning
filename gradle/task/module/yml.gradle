@@ -1,0 +1,16 @@
+// START_MY_MODULE_APPLY
+apply from: "${rootDir}/gradle/config/yml.gradle"
+// END_MY_MODULE_APPLY
+
+// START_MY_TASK
+tasks.register("combineYaml", DefaultTask) {
+    doLast {
+        String serviceNameProp = project.findProperty("SERVICE_NAME")?.toString()
+        if (serviceNameProp?.toString()?.blank) {
+            throw new GradleException("Error : Missing 'SERVICE_NAME'. Please add by -PSERVICE_NAME=... or in gradle.properties")
+        }
+
+        project.ext.combineYaml (serviceNameProp)
+    }
+}
+// END_MY_TASK

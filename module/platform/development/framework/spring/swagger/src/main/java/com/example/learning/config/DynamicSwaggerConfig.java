@@ -12,9 +12,9 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.ResourceLoaderAware;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
@@ -28,7 +28,7 @@ import java.io.InputStream;
 @Configuration
 @Import(DynamicSwaggerConfig.class)
 @ConditionalOnClass(name = "org.springdoc.core.models.GroupedOpenApi")
-@ConditionalOnProperty(prefix = "swagger", name = "enabled", havingValue = "true")
+@Conditional(DynamicSwaggerCondition.class)
 public class DynamicSwaggerConfig implements ImportBeanDefinitionRegistrar , EnvironmentAware, ResourceLoaderAware {
 
     private Environment environment;

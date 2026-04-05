@@ -1,0 +1,69 @@
+// START_MY_MODULE_APPLY
+apply from: "${rootDir}/gradle/config/database.gradle"
+apply from: "${rootDir}/gradle/setting/initial.gradle"
+// END_MY_MODULE_APPLY
+
+// START_MY_TASK
+tasks.register("backupDatabase") {
+    doLast {
+        String isDatabaseModule = project.findProperty("IS_DATABASE_MODULE")?.toString()
+        if (isDatabaseModule != "TRUE") {
+            throw new GradleException("IS_DATABASE_MODULE is not equal TRUE. This task will not execute")
+        }
+
+        String serviceNameProp = project.findProperty("SERVICE_NAME")?.toString()
+        if (serviceNameProp?.toString()?.blank) {
+            throw new GradleException("Error : Missing 'SERVICE_NAME'. Please add by -PSERVICE_NAME=... or in gradle.properties")
+        }
+
+        String databaseType = project.findProperty("DATABASE_MODULE_NAME")?.toString()
+        if (databaseType?.toString()?.blank) {
+            throw new GradleException("Error : Missing 'DATABASE_MODULE_NAME'. Please add by -PDATABASE_MODULE_NAME=... or in gradle.properties")
+        }
+
+        String databaseName = project.findProperty("DATABASE_MODULE_NAME")?.toString() ?: ""
+
+        switch (databaseType) {
+            case "MONGODB":
+                project.ext.dumpAllMongoDBDatabase(databaseName)
+                break
+            default :
+                throw new GradleException("Error : No valid database")
+        }
+    }
+}
+// END_MY_TASK
+
+// START_MY_TASK
+tasks.register("updateMongoWhitelistIP") {
+    description = "Tự động lấy IP hiện tại và thêm vào MongoDB Atlas Whitelist"
+
+    doFirst {
+        project.ext.addEnvProp()
+    }
+
+    doLast {
+        String isDatabaseModule = project.findProperty("IS_DATABASE_MODULE")?.toString()
+        if (isDatabaseModule != "TRUE") {
+            throw new GradleException("IS_DATABASE_MODULE is not equal TRUE. This task will not execute")
+        }
+
+        String databaseType = project.findProperty("DATABASE_MODULE_NAME")?.toString()
+        if (databaseType?.toString()?.blank) {
+            throw new GradleException("Error : Missing 'DATABASE_MODULE_NAME'. Please add by -PDATABASE_MODULE_NAME=... or in gradle.properties")
+        }
+
+        String databaseName = project.findProperty("DATABASE_MODULE_NAME")?.toString() ?: ""
+        if (!databaseName.equals("MONGODB")) {
+            throw new GradleException("Error : This is not MongoDB Database.")
+        }
+
+        String serviceNameProp = project.findProperty("SERVICE_NAME")?.toString()
+        if (serviceNameProp?.toString()?.blank) {
+            throw new GradleException("Error : Missing 'SERVICE_NAME'. Please add by -PSERVICE_NAME=... or in gradle.properties")
+        }
+
+        project.ext.updateMongoWhitelistIP()
+    }
+}
+// END_MY_TASK

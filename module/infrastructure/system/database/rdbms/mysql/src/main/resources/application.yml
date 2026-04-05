@@ -5,7 +5,31 @@
 spring:
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:dev}
+  datasource:
+    # Sử dụng MySQL Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
+    # URL kết nối (Lưu ý: Port mặc định của TiDB là 4000)
+    url: ${DATABASE_MYSQL_URI}
+
+    # Thông tin tài khoản
+    username: ${DATABASE_MYSQL_USER}
+    password: ${DATABASE_MYSQL_PASSWORD}
+
+    # Cấu hình Connection Pool (HikariCP) để tối ưu hiệu năng
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      idle-timeout: 300000
+      connection-timeout: 20000
+      max-lifetime: 1800000
+
+  # Nếu bạn dùng JPA/Hibernate
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
 ---
 # Cấu hình cho profile DEV
 spring:

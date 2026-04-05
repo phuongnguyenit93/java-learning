@@ -1,0 +1,7 @@
+dependencies {
+    // Thư viện Spring Boot Admin Server
+    implementation 'de.codecentric:spring-boot-admin-starter-server:3.2.3'
+
+    // Eureka Client để Admin tự tìm các service khác
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+}

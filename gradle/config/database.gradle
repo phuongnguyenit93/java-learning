@@ -1,0 +1,213 @@
+import org.apache.hc.client5.http.classic.methods.HttpPost
+import org.apache.hc.core5.http.io.entity.StringEntity
+import org.yaml.snakeyaml.Yaml
+
+import groovy.json.JsonOutput
+import org.apache.hc.client5.http.impl.classic.HttpClients
+import org.apache.hc.client5.http.auth.UsernamePasswordCredentials
+import org.apache.hc.client5.http.auth.AuthScope
+import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider
+import org.apache.hc.core5.http.ContentType
+import org.apache.hc.core5.http.io.entity.EntityUtils
+
+def loadDotEnv() {
+    def env = [:]
+    def envFile = file("${project.projectDir}/.env")
+    if (envFile.exists()) {
+        envFile.eachLine { line ->
+            // Bỏ qua dòng trống hoặc comment (#)
+            if (line.trim() && !line.startsWith("#")) {
+                def (key, value) = line.split('=', 2)
+                env[key.trim()] = value.trim()
+            }
+        }
+    }
+    return env
+}
+
+// Định nghĩa hàm helper để parse biến ${}
+def static resolveValue(String value) {
+    if (value?.startsWith("\${") && value?.endsWith("}")) {
+        def envVar = value.substring(2, value.length() - 1)
+        return System.getenv(envVar) ?: System.getProperty(envVar)
+    }
+    return value
+}
+
+def static getBaseDirProps (Project props) {
+    def baseDir = new File (props.projectDir.path)
+    return ["src/main/resources", ""]
+            .collect { new File(baseDir,it)}
+            .find { it.exists() }
+}
+
+ext.dumpAllMongoDBDatabase = {String dbName = "" ->
+    // 1. Load môi trường
+    def env = loadDotEnv()
+    // 1. Thu thập các biến cần thiết
+    def config = [
+        containerName: env['MONGODB_CONTAINER_NAME'],
+        username     : env['MONGODB_USERNAME'],
+        password     : env['MONGODB_PASSWORD'],
+        host         : env['MONGODB_HOST'],
+        port         : env['MONGODB_PORT']
+    ]
+
+    // 2. Kiểm tra nếu CÓ BẤT KỲ (any) giá trị nào trống (null hoặc chuỗi rỗng)
+    if (config.values().any { it == null || it.trim().isEmpty() }) {
+        println ">>> [SKIP]: Thiếu cấu hình bắt buộc trong file .env (Container, User, Pass, Host hoặc Port)."
+        println ">>> Các biến hiện tại: ${config}"
+        return // Thoát task
+    }
+
+    println ">>> Đang tiến hành backup toàn bộ database: ${dbName}..."
+
+    try {
+        // 1. Chạy mongodump bên trong container
+        exec {
+            commandLine 'docker', 'exec', config.containerName,
+                    'mongodump',
+                    '--uri', "mongodb://${config.username}:${config.password}@${config.host}:${config.port}/${dbName}?authSource=admin",
+                    '--out', '/tmp/dump'
+
+            // Quan trọng: Phải để Gradle quăng Exception nếu lệnh docker fail
+            // thì try-catch mới bắt được.
+            ignoreExitValue = false
+        }
+
+        println ">>> Trích xuất (Dump) thành công!"
+
+    } catch (Exception e) {
+        println "--------------------------------------------------------"
+        println "[LỖI KẾT NỐI DOCKER]"
+        println ">>> Không thể thực thi lệnh trong container: ${config.containerName}"
+        println ">>> Vui lòng kiểm tra:"
+        println "    1. Docker Desktop đã được bật chưa?"
+        println "    2. Container '${config.containerName}' có đang chạy (Running) không?"
+        println "    3. Thông tin đăng nhập (User/Pass) trong .env có chính xác không?"
+        println "--------------------------------------------------------"
+
+        // Dừng task tại đây để không chạy tiếp các lệnh copy phía dưới
+        return
+    }
+
+    // 2. Copy dữ liệu từ container ra máy thật
+    def containerSrc = "/tmp/dump/${dbName}"
+
+    // Kiểm tra xem thư mục có tồn tại trong container trước khi copy
+    def checkDir = exec {
+        commandLine 'docker', 'exec', config.containerName, 'test', '-d', containerSrc
+        ignoreExitValue = true // Không cho Gradle dừng lại nếu thư mục không tồn tại
+    }
+
+    if (checkDir.exitValue == 0) {
+        println ">>> Đang tiến hành copy dữ liệu..."
+
+        // Đường dẫn lưu tại root/backup/mongo/full_backup_<timestamp>
+        def timestamp = java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"))
+        def backupDir = file("${project.rootDir}/backup/mongo/full_backup_${timestamp}")
+        if (!backupDir.exists()) backupDir.mkdirs()
+
+        // 2. Copy dữ liệu từ container ra máy thật (folder backup của project)
+        exec {
+            commandLine 'docker', 'cp', "${config.containerName}:/tmp/dump/.", backupDir
+        }
+
+        // 3. Dọn dẹp thư mục tạm trong container
+        exec {
+            commandLine 'docker', 'exec', config.containerName, 'rm', '-rf', '/tmp/dump'
+        }
+        println ">>> Thành công! Toàn bộ database đã được lưu tại: ${backupDir.absolutePath}"
+
+    } else {
+        println ">>> [CẢNH BÁO]: Database '${dbName}' đang trống hoặc mongodump thất bại. Không có gì để copy!"
+    }
+}
+
+ext.updateMongoWhitelistIP = {
+    // 1. Đọc file application.yml
+    def baseDir = getBaseDirProps(project)
+    def configFile = new File(baseDir,"application.yml")
+    if (!configFile.exists()) {
+        println "⚠️ Không tìm thấy application.yml"
+        return
+    }
+
+    def yaml = new Yaml()
+    def allConfigs = []
+
+    // SỬA TẠI ĐÂY: Dùng loadAll thay vì load
+    configFile.withInputStream { is ->
+        yaml.loadAll(is).each { doc ->
+            if (doc != null) allConfigs << doc
+        }
+    }
+
+    // Tìm các giá trị trong danh sách các document (thường là document đầu tiên chứa cấu hình chung)
+    def projectId = null
+    def publicKey = null
+    def privateKey = null
+
+    for (config in allConfigs) {
+        projectId = projectId ?: resolveValue(config?.atlas?.api?.'project-id')
+        publicKey = publicKey ?: resolveValue(config?.atlas?.api?.'public-key')
+        privateKey = privateKey ?: resolveValue(config?.atlas?.api?.'private-key')
+    }
+
+    if (!projectId || !publicKey || !privateKey) {
+        println "❌ Lỗi: Không thể resolve các biến ATLAS từ ENV thông qua YML!"
+        return
+    }
+
+    // 1. Lấy IP Public hiện tại
+    def currentIp = new URL("https://checkip.amazonaws.com").text.trim()
+    println ">>> Đang kiểm tra IP Public của bạn: ${currentIp}"
+
+    if (!projectId || !publicKey || !privateKey) {
+        throw new GradleException("Thiếu cấu hình Atlas API trong gradle.properties!")
+    }
+
+    // 1. Cấu hình Credentials
+    def credsProvider = new BasicCredentialsProvider()
+    credsProvider.setCredentials(
+            new AuthScope(null, -1),
+            new UsernamePasswordCredentials(publicKey, privateKey.toCharArray())
+    )
+
+    // 2. Tạo HttpClient hỗ trợ Digest Handshake
+    def httpClient = HttpClients.custom()
+            .setDefaultCredentialsProvider(credsProvider)
+            .build()
+
+    try {
+        def postRequest = new HttpPost("https://cloud.mongodb.com/api/atlas/v2/groups/${projectId}/accessList")
+        postRequest.addHeader("Accept", "application/vnd.atlas.2023-02-01+json")
+
+
+        // 3. Tạo Payload JSON (Thêm IP vào danh sách)
+        def payload = JsonOutput.toJson([[
+                                                 ipAddress: currentIp,
+                                                 comment: "Auto-added by Gradle Task at ${new Date().format('yyyy-MM-dd HH:mm:ss')}"
+                                         ]])
+
+        postRequest.setEntity(new StringEntity(payload, ContentType.APPLICATION_JSON))
+
+        // 4. Thực thi và kiểm tra phản hồi
+        httpClient.execute(postRequest).withCloseable { response ->
+            def status = response.getCode()
+            def responseBody = EntityUtils.toString(response.getEntity())
+
+            if (status == 201) {
+                println "--- THÀNH CÔNG ---"
+                println "✅ [SUCCESS]: Đã whitelist thành công IP: ${currentIp}"
+            } else {
+                println "--- LỖI ---"
+                println "Status Code: ${status}"
+                println "Chi tiết: ${responseBody}"
+            }
+        }
+    } finally {
+        httpClient.close()
+    }
+
+}

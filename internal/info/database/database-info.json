@@ -1,0 +1,14 @@
+{
+    "MONGODB": {
+        "MODULE_NAME": "DATABASE_MONGODB",
+        "DATABASE_TYPE": "NOSQL"
+    },
+    "MYSQL": {
+        "MODULE_NAME": "DATABASE_MYSQL",
+        "DATABASE_TYPE": ""
+    },
+    "ORACLE": {
+        "MODULE_NAME": "DATABASE_ORACLE",
+        "DATABASE_TYPE": ""
+    }
+}

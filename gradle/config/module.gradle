@@ -25,17 +25,18 @@ ext.applyPluginAndDependencyToModule = {
     def RESET = "\u001B[0m"
     def CYAN = "\u001B[36m"
 
-    def javaSrcDir = file("${projectDir}/src/main/java")
+    apply plugin: 'java-library'
 
+    def javaSrcDir = file("${projectDir}/src/main/java")
     if (javaSrcDir.exists()) {
         logger.lifecycle("${CYAN}-----------------------------------------")
         logger.lifecycle("${CYAN}🛠️  [AUTO-CONFIG]${RESET} Đang phân tích module")
-
-        apply plugin: 'java-library'
-
+        
         def hasMainMethod = false
         def javaFiles = fileTree(dir: javaSrcDir, include: "**/*.java")
         boolean hasSwagger = project.findProperty("BUILD_SWAGGER") == "TRUE"
+        List databaseList = project.findProperty("USE_DATABASE_LIST")?.toString()?.split(",")
+        boolean useDatabase = project.findProperty("USE_DATABASE") == "TRUE" && !databaseList.isEmpty()
 
         javaFiles.any { file ->
             def fileContent = file.text
@@ -57,6 +58,19 @@ ext.applyPluginAndDependencyToModule = {
                 }
             }
 
+            if (useDatabase) {
+                dependencies {
+                    implementation 'org.springframework.boot:spring-boot-starter-validation'
+                    databaseList.each(database -> {
+                        try {
+                            implementation searchProjectByServiceName(database)
+                        } catch (Exception e) {
+                            logger.error("Database ${database} không tồn tại module. Không add được ")
+                        }
+                    })
+                }
+            }
+
             dependencies {
                 implementation 'org.springframework.boot:spring-boot-starter-web'
                 implementation 'org.springframework.boot:spring-boot-starter-actuator'
@@ -74,7 +88,13 @@ ext.applyPluginAndDependencyToModule = {
         }
     } else {
         // Trường hợp module không có code Java (ví dụ module chứa config/resources)
-        apply plugin: 'java-platform'
+
+        dependencyManagement {
+            imports {
+                mavenBom "org.springframework.boot:spring-boot-dependencies:3.3.5"
+            }
+        }
+
         logger.lifecycle("${CYAN}🛠️  [AUTO-CONFIG]${RESET} Không có src/java -> Apply ${YELLOW}java-platform${RESET}.")
     }
 
@@ -109,7 +129,7 @@ ext.injectAndExtractAllModuleTask = {
     HashMap<String, List<String>> taskContent = new HashMap()
     HashMap<String, List<String>> moduleContent = new HashMap()
 
-    def jsonFile = rootProject.file("internal/info/module/task-list.json")
+    def jsonFile = rootProject.file("gradle/task/list/task-list.json")
     def taskListProp = []
     if (jsonFile.exists()) {
         taskListProp = new JsonSlurper().parseText(jsonFile.text)
@@ -220,7 +240,7 @@ ext.buildYMLFile = {
 
     logger.lifecycle("${CYAN}🚀 [CONFIG-INIT]${RESET} Đang kiểm tra cấu hình application.yml")
 
-    def baseFile = file("${rootDir}/internal/info/module/file-based.yml")
+    def baseFile = file("${rootDir}/internal/yml/file-based.yml")
     def baseDir = ["src/main/resources", ""]
             .collect { new File(projectDir,it)}
             .find { it.exists() }
@@ -309,7 +329,7 @@ ext.buildModuleStructure = {
         project.ext.ENV_PATH = "${projectDir.path}/.env"
 
         if (!appFile.exists()) {
-            File templateFile = new File(rootDir, "internal/base_application.txt")
+            File templateFile = new File(rootDir, "internal/template/base_application.txt")
 
             if (templateFile.exists()) {
                 try {
@@ -326,7 +346,7 @@ ext.buildModuleStructure = {
                     logger.error("   └─ ❌ [RENDER-ERROR] Lỗi khi tạo class ${className}: ${e.message}")
                 }
             } else {
-                logger.lifecycle("   └─ ⚠️  [SKIP] Không tìm thấy file template tại internal/base_application.txt")
+                logger.lifecycle("   └─ ⚠️  [SKIP] Không tìm thấy file template tại internal/template/base_application.txt")
             }
         } else {
             logger.lifecycle("   └─ ✔️  [EXISTED] Main class ${className}.java đã có sẵn.")
@@ -478,8 +498,10 @@ ext.buildReadmeStructure = {
 }
 
 ext.generateProjectStructureFileTxt = {
-    def outputFileName = "internal/module_structure.txt"
-    def outputFile = new File(projectDir, outputFileName)
+    def outputFileName = "internal/structure/module_structure.txt"
+    def outputFileMdName = "internal/structure/README.md"
+    def outputFileTxt = new File(projectDir, outputFileName)
+    def outputFileMd = new File(projectDir, outputFileMdName)
 
     // Các folder loại bỏ
     def excludeDirs = [".gradle", ".idea", "build", "bin", "out", "target", "node_modules", ".git","src","readme"]
@@ -487,6 +509,11 @@ ext.generateProjectStructureFileTxt = {
     def sb = new StringBuilder()
     sb.append("Cập nhật lúc: ${new Date().format('yyyy-MM-dd HH:mm:ss')}\n")
     sb.append("=" * 30 + "\n")
+
+    def readmeStructure = new StringBuilder()
+    readmeStructure.append("# Project Module Structure (Foldable)\n\n")
+    readmeStructure.append("> Cập nhật lúc: ${new Date().format('yyyy-MM-dd HH:mm:ss')}\n\n")
+    readmeStructure.append("Sử dụng mũi tên để đóng/mở các phân cấp module.\n\n")
 
     boolean isStarted = false
 
@@ -509,10 +536,49 @@ ext.generateProjectStructureFileTxt = {
         }
     }
 
+    def strucDir
+    strucDir = { File dir ->
+        def subDirs = dir.listFiles().findAll { it.isDirectory() && !excludeDirs.contains(it.name) }
+        if (subDirs) {
+            readmeStructure.append("<ul>\n") // Bắt đầu danh sách cho cấp con
+            subDirs.sort { it.name }.each { subDir ->
+                def relativePath = "../" + projectDir.toPath().relativize(subDir.toPath()).toString().replace('\\', '/')
+                def children = subDir.listFiles().findAll { it.isDirectory() && !excludeDirs.contains(it.name) }
+
+                readmeStructure.append("<li>\n")
+                if (children) {
+                    // Nếu có con, dùng details/summary
+                    readmeStructure.append("<details>\n")
+                    readmeStructure.append("  <summary><b><a href='${relativePath}'>📁 ${subDir.name}</a></b></summary>\n")
+                    strucDir(subDir) // Đệ quy gọi cấp con
+                    readmeStructure.append("</details>\n")
+                } else {
+                    // Node lá
+                    readmeStructure.append("  <a href='${relativePath}'>🪄 ${subDir.name}</a>\n")
+                }
+                readmeStructure.append("</li>\n")
+            }
+            readmeStructure.append("</ul>\n")
+        }
+    }
+
+    // Bắt đầu từ root
+    def rootDir = file("${projectDir}/module")
+    def rootRelativePath = "../" + projectDir.toPath().relativize(rootDir.toPath()).toString().replace('\\', '/')
+
+    readmeStructure.append("<details open>\n")
+    readmeStructure.append("  <summary><b><a href='${rootRelativePath}'>${rootDir.name} (Root)</a></b></summary>\n")
+    strucDir(rootDir)
+    readmeStructure.append("</details>\n")
+
+    // Đảm bảo folder structure tồn tại trước khi ghi file
+    outputFileMd.parentFile.mkdirs()
+    outputFileMd.text = readmeStructure.toString()
+
     // Bắt đầu chạy từ thư mục gốc của dự án
     walkDir("${projectDir}/module" as File, "")
 
-    outputFile.text = sb.toString()
+    outputFileTxt.text = sb.toString()
     println "--- Đã cập nhật sơ đồ (bao gồm Root) tại: ${outputFileName} ---"
 }
 
@@ -521,7 +587,7 @@ ext.generateIntellijConfigTemplate = {String serviceName ->
     if (baseProps == null) return
 
     def engine = new SimpleTemplateEngine()
-    def templateFile = file("${rootDir}/internal/run_config_intellij_springboot.txt")
+    def templateFile = file("${rootDir}/internal/template/run_config_intellij_springboot.txt")
     if (!templateFile.exists()) return
 
     String basePackage = gradle.extensions.extraProperties.get("basePackage") //com.example.learning

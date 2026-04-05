@@ -1,0 +1,250 @@
+Cập nhật lúc: 2026-04-05 17:16:06
+==============================
+module
+├── infrastructure
+│   ├── devops
+│   │   ├── artifact-management
+│   │   │   ├── central-portal
+│   │   │   └── nexus
+│   │   ├── ci-cd
+│   │   ├── docker
+│   │   ├── git
+│   │   ├── jenkins
+│   │   └── k8s
+│   └── system
+│       ├── database
+│       │   ├── advance
+│       │   │   ├── function
+│       │   │   ├── package
+│       │   │   └── procedures
+│       │   ├── connection-pool
+│       │   │   └── hikariCP
+│       │   ├── migration
+│       │   │   ├── flyway
+│       │   │   └── liquibase
+│       │   ├── nosql
+│       │   │   ├── clickhouse
+│       │   │   ├── elasticsearch
+│       │   │   ├── influxDB
+│       │   │   ├── loki
+│       │   │   ├── mongoDB
+│       │   │   │   └── aggregation
+│       │   │   ├── neo4j
+│       │   │   └── redis
+│       │   │       └── lua-scripting
+│       │   └── rdbms
+│       │       ├── mysql
+│       │       ├── oracle
+│       │       │   ├── advance
+│       │       │   │   ├── package
+│       │       │   │   └── procedure
+│       │       │   └── setup
+│       │       └── postgresql
+│       │           ├── advance
+│       │           │   ├── functions
+│       │           │   └── trigger
+│       │           └── setup
+│       ├── network
+│       │   ├── api-gateway
+│       │   │   ├── kong
+│       │   │   └── spring-cloud-gateway
+│       │   ├── protocol
+│       │   │   ├── http
+│       │   │   ├── ssl-tls
+│       │   │   └── tcp-udp
+│       │   ├── proxy
+│       │   │   ├── haproxy
+│       │   │   └── nginx
+│       │   └── service-mesh
+│       │       ├── istio
+│       │       └── linkerd
+│       ├── observability
+│       │   ├── benchmark
+│       │   │   ├── load-test
+│       │   │   │   ├── jmeter
+│       │   │   │   └── k6
+│       │   │   └── micro
+│       │   │       └── jmh
+│       │   ├── dianostic
+│       │   │   ├── profiling
+│       │   │   │   ├── jprofiler
+│       │   │   │   └── visual-vm
+│       │   │   └── thread-dump
+│       │   │       └── jstack
+│       │   ├── logging
+│       │   │   ├── event-log
+│       │   │   └── log-pipeline
+│       │   ├── metrics
+│       │   │   ├── aggregation
+│       │   │   ├── time-series
+│       │   │   │   └── prometheus
+│       │   │   └── visualization
+│       │   │       └── grafana
+│       │   └── tracing
+│       │       ├── concept
+│       │       └── tooling
+│       └── server
+├── integration
+│   ├── broker
+│   │   ├── activeMQ
+│   │   ├── kafka
+│   │   │   └── service
+│   │   │       ├── consumer
+│   │   │       │   ├── accountant
+│   │   │       │   └── notification
+│   │   │       ├── control
+│   │   │       ├── producer
+│   │   │       │   └── bank
+│   │   │       └── server
+│   │   └── rabbitMQ
+│   ├── oneway
+│   │   ├── grpc
+│   │   ├── httpRequest
+│   │   │   ├── blocking
+│   │   │   │   ├── feign-client
+│   │   │   │   ├── http-url-connection
+│   │   │   │   └── rest-template
+│   │   │   └── nonBlocking
+│   │   │       └── web-client
+│   │   └── sse
+│   └── twoway
+│       ├── rsocket
+│       └── websocket
+├── microservice
+│   └── module
+│       ├── deployments
+│       │   ├── docker
+│       │   ├── grafana
+│       │   └── prometheus
+│       ├── infrastructure
+│       │   ├── admin-server
+│       │   ├── api-gateway
+│       │   ├── config-server
+│       │   └── eureka-server
+│       ├── integration
+│       │   ├── message-broker
+│       │   └── notification-service
+│       ├── platform
+│       │   ├── common-lib
+│       │   ├── logging-starter
+│       │   ├── resilience4j
+│       │   └── security-starter
+│       └── service
+│           ├── inventory-service
+│           ├── order-service
+│           ├── payment-service
+│           └── product-service
+└── platform
+    ├── cloud
+    ├── development
+    │   ├── build-tool
+    │   │   ├── ant
+    │   │   ├── gradle
+    │   │   │   └── open-rewrite
+    │   │   └── maven
+    │   ├── framework
+    │   │   ├── spring
+    │   │   │   ├── actuator
+    │   │   │   ├── basic
+    │   │   │   │   ├── core
+    │   │   │   │   │   ├── annotation
+    │   │   │   │   │   ├── bean
+    │   │   │   │   │   └── scope
+    │   │   │   │   ├── profile
+    │   │   │   │   └── properties
+    │   │   │   ├── conditional
+    │   │   │   ├── data
+    │   │   │   │   └── jpa
+    │   │   │   ├── devtool
+    │   │   │   ├── functional-endpoint
+    │   │   │   ├── global-exception-handler
+    │   │   │   ├── import
+    │   │   │   ├── profile
+    │   │   │   ├── security
+    │   │   │   │   ├── basic
+    │   │   │   │   ├── jwt
+    │   │   │   │   └── oauth
+    │   │   │   ├── swagger
+    │   │   │   ├── test-property-source
+    │   │   │   └── web
+    │   │   └── spring-boot
+    │   │       ├── auto-configuration
+    │   │       ├── embedded-server
+    │   │       ├── externalized-configuration
+    │   │       ├── native-image
+    │   │       ├── packaging
+    │   │       ├── starter
+    │   │       │   └── custom-starter
+    │   │       └── testing
+    │   ├── language
+    │   │   └── java
+    │   │       ├── advance
+    │   │       ├── concurrency
+    │   │       │   ├── async-programming
+    │   │       │   ├── executor-service
+    │   │       │   ├── high-level-utils
+    │   │       │   └── virtual-threads
+    │   │       ├── core
+    │   │       │   └── abstract-interface
+    │   │       ├── mapping
+    │   │       │   ├── mapstruct
+    │   │       │   ├── model-mapper
+    │   │       │   └── object-mapper
+    │   │       ├── persistence
+    │   │       │   ├── orm
+    │   │       │   │   ├── hibernate
+    │   │       │   │   └── jpa-specification
+    │   │       │   └── sql
+    │   │       │       ├── jdbc
+    │   │       │       └── mybatis
+    │   │       └── version
+    │   │           ├── java11
+    │   │           ├── java16
+    │   │           │   └── record
+    │   │           ├── java17
+    │   │           ├── java7
+    │   │           └── java8
+    │   ├── paradigm
+    │   │   ├── aop
+    │   │   ├── concurrency
+    │   │   │   ├── batch
+    │   │   │   ├── forkjoin-workstealing
+    │   │   │   ├── schedule
+    │   │   │   │   └── task
+    │   │   │   └── thread
+    │   │   ├── di-ioc
+    │   │   ├── functional
+    │   │   ├── mvc-pattern
+    │   │   │   ├── controller
+    │   │   │   ├── model
+    │   │   │   └── service
+    │   │   ├── object-oriented
+    │   │   └── reactive-stream
+    │   │       └── webflux
+    │   └── validation
+    │       ├── performance
+    │       │   ├── benchmark
+    │       │   ├── jmeter
+    │       │   └── load-test
+    │       └── testing
+    │           ├── e2e-test
+    │           ├── integration-test
+    │           └── unit-test
+    ├── digital
+    ├── social
+    └── support
+        ├── document
+        │   ├── diagram
+        │   │   └── mermaid
+        │   ├── excel
+        │   ├── pdf
+        │   ├── word
+        │   └── xml
+        └── notification
+            ├── email
+            ├── kakao
+            ├── microsoft-team
+            ├── mobile-push
+            ├── slack
+            ├── sms
+            └── telegram

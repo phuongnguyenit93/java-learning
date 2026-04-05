@@ -12,6 +12,7 @@ ext.preSetupProject = {
 
     List<HashMap> dirListProps = new ArrayList<>()
     HashMap moduleInfoStore = [:]
+    HashMap moduleDatabaseConfig = [:]
     HashMap currentProjectKeys = new HashMap<>()
 
     // Lấy danh sách các folder chứa gradle.properties (trừ root và build)
@@ -41,10 +42,23 @@ ext.preSetupProject = {
         // 2. Xử lý MODULE_PATH (ví dụ: :services:order-service)
         String modulePath = relativePath.replace("/",":")
 
-        if (props.IS_MICROSERVICE == "TRUE") {
+        if (props.IS_MODULE == "TRUE") {
             include ":${modulePath}"
         }
 
+        if (props.IS_DATABASE_MODULE == "TRUE" && props.DATABASE_MODULE_NAME != null) {
+            String databaseName = props.DATABASE_MODULE_NAME
+            String databaseType = props.DATABASE_MODULE_TYPE
+
+            if (moduleDatabaseConfig.containsKey(databaseName)) {
+                throw new GradleException("Database ${databaseName} đã tồn tại. Config database thất bại. Hãy xoá 1 database trùng lặp trong list module sau : ${moduleName}, ${moduleDatabaseConfig[databaseName].MODULE_NAME}")
+            } else {
+                moduleDatabaseConfig[databaseName] = [:]
+            }
+
+            moduleDatabaseConfig[databaseName].MODULE_NAME = moduleName
+            moduleDatabaseConfig[databaseName].DATABASE_TYPE = databaseType
+        }
         HashMap<String, String> propMap = new HashMap(props)
 
         propMap.put("MODULE_PATH", modulePath)
@@ -65,8 +79,14 @@ ext.preSetupProject = {
         def infoFile = new File(rootDir as File,"internal/info/module/module-info.json")
         if (!infoFile.exists()) infoFile.createNewFile()
 
-        def jsonString = JsonOutput.prettyPrint(JsonOutput.toJson(moduleInfoStore))
-        infoFile.text = jsonString
+        def jsonInfoString = JsonOutput.prettyPrint(JsonOutput.toJson(moduleInfoStore))
+        infoFile.text = jsonInfoString
+
+        def dbFileList = new File(rootDir as File,"internal/info/database/database-info.json")
+        if (!dbFileList.exists()) dbFileList.createNewFile()
+
+        def jsonDBString = JsonOutput.prettyPrint(JsonOutput.toJson(moduleDatabaseConfig))
+        dbFileList.text = jsonDBString
 
         // Log từng module được map thành công
         def serviceName = propMap.get("SERVICE_NAME") ?: "N/A"
@@ -86,4 +106,17 @@ ext.preSetupProject = {
     logger.lifecycle("${GREEN}==================================================")
     logger.lifecycle("✨ [PROFILES] ${RESET} Project has ${CYAN}${profileList.size()}${RESET} profile : ${profileList.join(", ")}")
     logger.lifecycle("${GREEN}==================================================${RESET}\n")
+}
+
+ext.addEnvProp = {
+    // Tự động load file .env vào System Properties nếu file tồn tại
+    def envFile = project.file('.env')
+    if (envFile.exists()) {
+        envFile.eachLine { line ->
+            def parts = line.split('=')
+            if (parts.length == 2) {
+                System.setProperty(parts[0].trim(), parts[1].trim())
+            }
+        }
+    }
 }

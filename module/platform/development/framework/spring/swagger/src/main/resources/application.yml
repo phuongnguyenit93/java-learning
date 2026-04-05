@@ -10,12 +10,13 @@ spring:
 
 swagger:
   enabled: ${BUILD_SWAGGER:}
+  enable-language-swagger: ${BUILD_SWAGGER_LANGUAGE}
   languages: ${BUILD_SWAGGER_LANGUAGE_LIST:}
 
 springdoc:
   swagger-ui:
     enabled: ${swagger.enabled}
-    #    path: /
+    path: /swagger-ui.html
     #    url: /swagger/api-json.yaml
     #    supportedSubmitMethod:
     docExpansion:

@@ -1,0 +1,47 @@
+# AUTO-GENERATED MERGED YAML
+# You can check at module/microservice/module/service/inventory-service/src/main/resources/application.yml
+# Source: INVENTORY_SERVICE
+# Dependencies: SPRING_WEB, SPRING_SWAGGER
+
+---
+spring:
+  data:
+    mongodb:
+      auto-index-creation: true
+      uri: ${MONGODB_URI}
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+  application:
+    name: ${PROJECT_NAME}
+swagger:
+  enabled: ${BUILD_SWAGGER:}
+  languages: ${BUILD_SWAGGER_LANGUAGE_LIST:}
+springdoc:
+  swagger-ui:
+    enabled: ${swagger.enabled}
+    docExpansion:
+    - none
+  api-docs:
+    enabled: ${swagger.enabled}
+server:
+  port: ${PORT}
+  forward-headers-strategy: framework
+  servlet:
+    context-path: /${CONTEXT_PATH}
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+---
+spring:
+  config:
+    activate:
+      on-profile: loc
+---
+spring:
+  config:
+    activate:
+      on-profile: prd
+swagger:
+  enabled: false

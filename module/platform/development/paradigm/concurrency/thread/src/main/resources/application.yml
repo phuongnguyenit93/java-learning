@@ -1,46 +1,54 @@
-# Nếu là file mẫu (file-based.yml) vui lòng không thêm cấu hình vào
-# Nếu là các file application.yml tại module con , hãy thêm cấu hình phù hợp vào
+# AUTO-GENERATED MERGED YAML
+# You can check at module/platform/development/paradigm/concurrency/thread/src/main/resources/application.yml
+# Source: THREAD
+# Dependencies: SPRING_WEB, SPRING_SWAGGER
+
 ---
-# Cấu hình chung tại đây
 spring:
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:dev}
     mvc:
       async:
         request-timeout: 600000
-
+  application:
+    name: ${PROJECT_NAME}
 server:
   tomcat:
     connection-timeout: 600000
-
+  port: ${PORT}
+  servlet:
+    context-path: /${CONTEXT_PATH}
 thread:
   thread-pool:
     core-size: 5
     max-size: 10
     queue-capacity: 100
     keep-alive: 60
-    thread-name-prefix: "application-pool-"
+    thread-name-prefix: application-pool-
+swagger:
+  enabled: ${BUILD_SWAGGER:}
+  languages: ${BUILD_SWAGGER_LANGUAGE_LIST:}
+springdoc:
+  swagger-ui:
+    enabled: ${swagger.enabled}
+    docExpansion:
+    - none
+  api-docs:
+    enabled: ${swagger.enabled}
 ---
-# Cấu hình cho profile DEV
 spring:
   config:
     activate:
       on-profile: dev
-
-
-
 ---
-# Cấu hình cho profile LOC
 spring:
   config:
     activate:
       on-profile: loc
-
-
-
 ---
-# Cấu hình cho profile PRD
 spring:
   config:
     activate:
       on-profile: prd
+swagger:
+  enabled: false

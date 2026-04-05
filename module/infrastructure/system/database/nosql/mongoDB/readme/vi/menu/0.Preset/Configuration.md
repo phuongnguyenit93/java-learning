@@ -1,0 +1,1 @@
+- https://docs.spring.io/spring-boot/3.5/appendix/application-properties/index.html

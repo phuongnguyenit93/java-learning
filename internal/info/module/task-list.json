@@ -1,8 +1,0 @@
-[
-  {"type": "env", "fileName": "env.gradle", "propCheck": "BUILD_ENV"},
-  {"type": "readme", "fileName": "readme.gradle", "propCheck": "BUILD_README"},
-  {"type": "yml", "fileName": "yml.gradle", "propCheck": "BUILD_YML"},
-  {"type": "jar", "fileName": "build-jar.gradle", "propCheck": "BUILD_JAR"},
-  {"type": "intellij", "fileName": "intellij.gradle", "propCheck": ""},
-  {"type": "swagger", "fileName": "swagger.gradle", "propCheck": "BUILD_SWAGGER"}
-]

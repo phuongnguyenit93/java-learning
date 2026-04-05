@@ -1,5 +1,5 @@
 {
-  "IS_MICROSERVICE": {
+  "IS_MODULE": {
     "DESCRIPTION": "Define this is a module a not (To include in settings.gradle",
     "TYPE": "boolean"
   },
@@ -8,7 +8,7 @@
     "TYPE": "string"
   },
   "SERVICE_NAME": {
-    "DESCRIPTION": "Define name for this module. Use this name for task và many automation gradle",
+    "DESCRIPTION": "Define name for this module. Use this name for task and many automation gradle",
     "TYPE": "string"
   },
 
@@ -57,8 +57,33 @@
     "TYPE": "list"
   },
 
+
+  "USE_DATABASE": {
+    "DESCRIPTION": "To check that module is using database or not",
+    "TYPE": "boolean"
+  },
+  "USE_DATABASE_LIST": {
+    "DESCRIPTION": "To define which database use in this module",
+    "TYPE": "list"
+  },
+
+  "IS_DATABASE_MODULE": {
+    "DESCRIPTION": "To defined this module is module that config database",
+    "TYPE": "boolean"
+  },
+
+  "DATABASE_MODULE_NAME": {
+    "DESCRIPTION": "Name of database you are using",
+    "TYPE": "string"
+  },
+
+  "DATABASE_MODULE_TYPE": {
+    "DESCRIPTION": "Type of database you are using",
+    "TYPE": "string"
+  },
+
   "INJECT_TASK_AUTO": {
-    "DESCRIPTION": "Enable it to auto inject task list in file internal/info/module/task-list.json",
+    "DESCRIPTION": "Enable it to auto inject task list in file gradle/task/list/task-list.json",
     "TYPE": "boolean"
   }
 

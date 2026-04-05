@@ -141,5 +141,139 @@ ext.combineBuildYaml = {String serviceName ->
     logger.lifecycle("--------------------------------------------------")
 }
 
+ext.combineYaml = {String serviceName ->
+    def GREEN = "\u001B[32m"
+    def YELLOW = "\u001B[33m"
+    def CYAN = "\u001B[36m"
+    def RESET = "\u001B[0m"
+    def BLUE = "\u001B[34m"
+    def RED = "\u001B[31m"
 
+    logger.lifecycle("${BLUE}==================================================")
+    logger.lifecycle("🔍 GỘP CÁC APPLICATION.YML TẠI CÁC MODULE LỆ THUỘC VÀO MODULE GỐC")
+    logger.lifecycle("${BLUE}==================================================${RESET}")
 
+    logger.lifecycle("${BLUE}🧩 [YAML-MERGE]${RESET} Bắt đầu gộp file cấu hình cho Service: ${CYAN}${serviceName}${RESET}")
+
+    // Sử dụng LinkedHashSet để giữ thứ tự add và đảm bảo không trùng lặp
+    Set<String> serviceList = new LinkedHashSet<>()
+
+    // Gọi hàm đệ quy nội bộ
+    def collectDependencies
+    collectDependencies = { String currentService ->
+        // Lấy thông tin project từ hàm searchProjectByServiceName của bạn
+        def baseProp = ext.searchProjectByServiceName(currentService)
+        if (baseProp == null) return
+
+        // Lấy danh sách depend của service hiện tại
+        List<String> deps = baseProp.hasProperty("BUILD_YML_MODULE_DEPEND") ?
+                baseProp.BUILD_YML_MODULE_DEPEND?.toString()?.split(',')*.trim()?.findAll { !it.isEmpty() } : []
+
+        deps.each { dep ->
+            // Nếu chưa có trong danh sách kết quả thì mới xử lý (tránh đệ quy vô tận)
+            if (!serviceList.contains(dep)) {
+                serviceList.add(dep)
+                // Đệ quy tìm tiếp các phụ thuộc của phụ thuộc này
+                collectDependencies(dep)
+            }
+        }
+    }
+
+    // Thực hiện quét từ service gốc
+    collectDependencies(serviceName)
+
+    Project baseProp = ext.searchProjectByServiceName(serviceName)
+    List<String> microserviceList = serviceList.toList()
+
+    if (baseProp == null) {
+        logger.lifecycle("${RED}❌ [ERROR]${RESET} Không tìm thấy cấu hình cho service: ${serviceName}")
+        return
+    }
+
+    if (microserviceList.isEmpty()) {
+        logger.lifecycle("${CYAN}ℹ️ [STANDALONE]${RESET} Module ${GREEN}${serviceName}${RESET}: Không có module phụ thuộc. Sử dụng application.yml mặc định.")
+    }
+
+    Set<Project> microserviceProp = ext.searchProjectByServiceNameList(microserviceList)
+    List<File> sourceFiles = microserviceProp.collect { prop ->
+        def baseDir = getBaseDirProps(prop)
+        return new File(baseDir, "application.yml")
+    }
+
+    File baseResourceDir = getBaseDirProps(baseProp)
+    File targetFile = new File(baseResourceDir, "application.yml")
+
+    // Kiểm tra targetFile gốc
+    if (!targetFile.exists()) {
+        logger.lifecycle("${RED}❌ [ERROR]${RESET} Không tìm thấy file gốc tại: ${targetFile.path}")
+        return
+    }
+
+    Yaml yaml = new Yaml()
+    def finalDocsMap = [:]
+
+    // Helper lấy profile
+    def getProfileName = { doc ->
+        if (doc == null) return "default"
+        try {
+            return doc.get("spring")?.get("config")?.get("activate")?.get("on-profile") ?: "default"
+        } catch (Exception e) { return "default" }
+    }
+
+    // --- BẮT ĐẦU QUÁ TRÌNH GỘP ---
+
+    // Bước A: Load file gốc làm gốc tọa độ
+    logger.lifecycle("   📥 Loading Base: ${CYAN}${targetFile.path}${RESET}")
+    yaml.loadAll(targetFile.text).each { doc ->
+        if (doc != null) finalDocsMap[getProfileName(doc)] = doc
+    }
+
+    // Bước B: Lặp qua từng file nguồn
+    sourceFiles.each { sFile ->
+        if (sFile.exists()) {
+            logger.lifecycle("   ➕ Merging: ${YELLOW}${sFile.path}${RESET} -> application.yml")
+            yaml.loadAll(sFile.text).each { doc ->
+                if (doc != null) {
+                    def pName = getProfileName(doc)
+                    if (finalDocsMap.containsKey(pName)) {
+                        mergeMaps(finalDocsMap[pName], doc) // Giả định bạn đã có hàm mergeMaps
+                    } else {
+                        finalDocsMap[pName] = doc
+                    }
+                }
+            }
+        } else {
+            logger.lifecycle("   ${RED}⚠️  Missing:${RESET} ${sFile.path} (Bỏ qua)")
+        }
+    }
+
+    // --- XUẤT KẾT QUẢ ---
+    DumperOptions options = new DumperOptions()
+    options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK)
+    options.setExplicitStart(true)
+    Yaml writer = new Yaml(options)
+
+    [targetFile].each { output ->
+        // Đảm bảo thư mục tồn tại
+        if (!output.parentFile.exists()) output.parentFile.mkdirs()
+
+        String buildRelativePath = rootDir.toPath()
+                .relativize(targetFile.toPath()).toString()
+                .replace('\\', '/')
+
+        output.withWriter('UTF-8') { out ->
+            out.write("# AUTO-GENERATED MERGED YAML\n")
+            out.write("# You can check at ${buildRelativePath}\n")
+            out.write("# Source: ${baseProp.SERVICE_NAME}\n")
+            out.write("# Dependencies: ${microserviceList.join(', ')}\n\n")
+
+            finalDocsMap.values().each { doc ->
+                writer.dump(doc, out)
+            }
+        }
+    }
+
+    logger.lifecycle("${GREEN}✅ [SUCCESS]${RESET} Hợp nhất thành công ${CYAN}${finalDocsMap.size()}${RESET} profiles: ${finalDocsMap.keySet().join(", ")}")
+    logger.lifecycle("   📍 Check file: ${BLUE}${targetFile.path}${RESET}")
+    logger.lifecycle("--------------------------------------------------")
+}

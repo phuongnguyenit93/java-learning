@@ -1,0 +1,64 @@
+# AUTO-GENERATED MERGED YAML
+# You can check at module/microservice/module/infrastructure/api-gateway/src/main/resources/application.yml
+# Source: API_GATEWAY
+# Dependencies: SPRING_WEB, SPRING_SWAGGER
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+---
+spring:
+  config:
+    activate:
+      on-profile: loc
+---
+spring:
+  config:
+    activate:
+      on-profile: prd
+swagger:
+  enabled: false
+---
+spring:
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+  application:
+    name: ${PROJECT_NAME}
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+swagger:
+  enabled: ${BUILD_SWAGGER:}
+  languages: ${BUILD_SWAGGER_LANGUAGE_LIST:}
+springdoc:
+  swagger-ui:
+    enabled: ${swagger.enabled}
+    docExpansion:
+    - none
+    path: /swagger-ui.html
+  api-docs:
+    enabled: ${swagger.enabled}
+  enable-native-support: true
+  show-actuator: true
+  cache:
+    disabled: true
+
+server:
+  port: ${PORT}
+  servlet:
+    context-path: /${CONTEXT_PATH}
+
+eureka:
+  instance:
+    hostname: ${EUREKA_SERVER:localhost}
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true

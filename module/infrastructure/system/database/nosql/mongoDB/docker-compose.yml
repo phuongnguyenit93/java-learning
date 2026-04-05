@@ -1,0 +1,20 @@
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: ${MONGODB_CONTAINER_NAME}
+    ports:
+      - ${MONGODB_PORT}:${MONGODB_PORT}
+    environment:
+      # Khởi tạo user quản trị cao nhất (Root)
+      - MONGO_INITDB_ROOT_USERNAME=${MONGODB_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGODB_PASSWORD}
+      # Tùy chọn: Tên database mặc định sẽ tạo khi khởi chạy
+      - MONGO_INITDB_DATABASE=${MONGODB_DATABASE}
+    volumes:
+      # Lưu trữ dữ liệu lâu dài, tránh mất data khi restart container
+      - mongodb_data:/data/db
+    restart: always
+
+volumes:
+  mongodb_data:
+    name: mongo-db-volume

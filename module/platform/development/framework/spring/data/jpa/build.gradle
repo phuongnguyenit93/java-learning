@@ -27,7 +27,7 @@ dependencies {
 	implementation 'org.hibernate.orm:hibernate-core'
 	implementation 'org.hibernate.orm:hibernate-community-dialects'
 	implementation searchProjectByServiceName("DATABASE_${databaseType}")
-	implementation platform(searchProjectByServiceName("SPRING_DEVTOOL"))
+	implementation searchProjectByServiceName("SPRING_DEVTOOL")
 	implementation searchProjectByServiceName("MODEL_MAPPER")
 	implementation searchProjectByServiceName("OBJECT_MAPPER")
 }

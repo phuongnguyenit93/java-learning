@@ -73,6 +73,9 @@ Việc sử dụng Thread đúng chỗ sẽ giúp ứng dụng của bạn phả
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
+  - dafe
+    - fe
+      -dfds
 ---
 ## <a id="4-way-to-create-thread">2. Tổng hợp: 4 Cách tạo Thread trong Java</a>
 <details>
