@@ -42,6 +42,11 @@ spring:
     show-sql: true
   application:
     name: ${PROJECT_NAME}
+  config:
+    import: "optional:configserver:http://admin:123456@localhost:8888/config-server"
+  cloud:
+    config:
+      name: inventory-service # Tên file cần lấy
 swagger:
   enabled: ${BUILD_SWAGGER:}
   languages: ${BUILD_SWAGGER_LANGUAGE_LIST:}
@@ -58,6 +63,17 @@ server:
   forward-headers-strategy: framework
   servlet:
     context-path: /${CONTEXT_PATH}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*" # Mở khóa toàn bộ: loggers, refresh, beans, env, httptrace...
+  endpoint:
+    health:
+      show-details: always # Hiển thị chi tiết tình trạng DB, Disk...
+    shutdown:
+      enabled: true # Nếu bạn muốn hiện nút Shutdown (cẩn thận với nút này nhé!)
 
 eureka:
   instance:

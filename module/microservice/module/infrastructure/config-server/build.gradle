@@ -1,0 +1,11 @@
+dependencies {
+    // 1. Cốt lõi của Gateway
+    implementation 'org.springframework.cloud:spring-cloud-config-server'
+
+    // 3. Client để đăng ký và tìm service trên Eureka
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+
+    // 5. Actuator để Admin Server có thể giám sát
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+}

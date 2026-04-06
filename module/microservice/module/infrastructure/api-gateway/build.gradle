@@ -1,9 +1,6 @@
 dependencies {
     // 1. Cốt lõi của Gateway
     implementation 'org.springframework.cloud:spring-cloud-starter-gateway-mvc'
-    // 2. Client để lấy cấu hình từ Config Server
-    implementation 'org.springframework.cloud:spring-cloud-starter-config'
-    implementation 'org.springframework.cloud:spring-cloud-commons'
 
     // 3. Client để đăng ký và tìm service trên Eureka
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'

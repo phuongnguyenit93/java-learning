@@ -1,0 +1,65 @@
+# AUTO-GENERATED MERGED YAML
+# You can check at module/microservice/module/infrastructure/config-server/src/main/resources/application.yml
+# Source: CONFIG_SERVER
+# Dependencies: SPRING_WEB, SPRING_SWAGGER
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+---
+spring:
+  config:
+    activate:
+      on-profile: loc
+---
+spring:
+  config:
+    activate:
+      on-profile: prd
+swagger:
+  enabled: false
+---
+spring:
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+  application:
+    name: ${PROJECT_NAME}
+  security:
+    user:
+      name: admin
+      password: "123456"
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/phuongnguyenit93/java-learning.git
+          search-paths: internal/config-server
+          clone-on-start: true
+swagger:
+  enabled: ${BUILD_SWAGGER:}
+  enable-language-swagger: ${BUILD_SWAGGER_LANGUAGE}
+  languages: ${BUILD_SWAGGER_LANGUAGE_LIST:}
+springdoc:
+  swagger-ui:
+    enabled: ${swagger.enabled}
+    path: /swagger-ui.html
+    docExpansion:
+    - none
+  api-docs:
+    enabled: ${swagger.enabled}
+server:
+  port: ${PORT}
+  servlet:
+    context-path: /${CONTEXT_PATH}
+
+eureka:
+  instance:
+    hostname: ${EUREKA_SERVER:localhost}
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
