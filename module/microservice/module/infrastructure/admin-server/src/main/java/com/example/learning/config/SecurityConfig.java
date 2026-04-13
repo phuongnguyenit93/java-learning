@@ -34,12 +34,14 @@ public class SecurityConfig {
 
                         // 1. Chỉ ADMIN mới được phép thực hiện các hành động thay đổi (POST, DELETE, PUT)
                         // Các endpoint của SBA như /instances/** lo việc điều khiển service
-                        .requestMatchers(HttpMethod.POST, "/instances/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/instances/**").hasRole("ADMIN")
+                        // Chặn tất cả các thao tác tác động đến Instance (bao gồm shutdown, change log level, v.v.)
+                        .requestMatchers(HttpMethod.POST, "/instances/**", "/applications/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/instances/**", "/applications/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/instances/**", "/applications/**").hasRole("ADMIN")
                         .requestMatchers("/actuator/shutdown").hasRole("ADMIN")
 
                         // 2. USER và ADMIN đều có thể xem Dashboard (GET)
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
                 // 3. Cấu hình Form Login
                 .formLogin(form -> form.loginPage("/login").successHandler(successHandler))
@@ -49,10 +51,10 @@ public class SecurityConfig {
                 .httpBasic(Customizer.withDefaults())
                 // 6. Tắt CSRF để các Client (Eureka/Service con) có thể POST dữ liệu vào
                 .rememberMe(remember -> remember.key("uniqueAndSecret")) // Giúp bạn không phải login lại nhiều lần
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) // Chỉ tạo session khi cần
-                        .maximumSessions(1) // Giới hạn 1 người dùng chỉ log được 1 chỗ (tăng bảo mật)
-                )
+//                .sessionManagement(session -> session
+//                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) // Chỉ tạo session khi cần
+//                        .maximumSessions(1) // Giới hạn 1 người dùng chỉ log được 1 chỗ (tăng bảo mật)
+//                )
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                         .ignoringRequestMatchers("/instances","/instances/**","/actuator/**","/logout","/applications/**")

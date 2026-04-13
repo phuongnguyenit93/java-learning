@@ -2,6 +2,7 @@ package com.example.learning.routes;
 
 import org.springframework.cloud.gateway.server.mvc.common.MvcUtils;
 import org.springframework.cloud.gateway.server.mvc.filter.BeforeFilterFunctions;
+import org.springframework.cloud.gateway.server.mvc.filter.TokenRelayFilterFunctions;
 import org.springframework.cloud.gateway.server.mvc.handler.GatewayRouterFunctions;
 import org.springframework.cloud.gateway.server.mvc.handler.HandlerFunctions;
 import org.springframework.cloud.gateway.server.mvc.predicate.GatewayRequestPredicates;
@@ -20,6 +21,8 @@ public class Routes {
         return GatewayRouterFunctions.route("sub_services_proxy")
                 // Cấu trúc: /{tên-service-trên-eureka}/**
                 .route(GatewayRequestPredicates.path("/{serviceName}/api/**"), HandlerFunctions.http())
+                // 2. TOKEN RELAY: Lấy Token từ Session và nhét vào Header Authorization
+                .filter(TokenRelayFilterFunctions.tokenRelay())
                 .before(request -> {
                     String serviceName = request.pathVariable("serviceName");
                     // Gán ID và URI cho LoadBalancer của Gateway MVC

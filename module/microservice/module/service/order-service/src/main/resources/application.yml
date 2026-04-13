@@ -5,11 +5,21 @@
 
 ---
 spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # Phải khớp với Realm java-learning bạn đã tạo
+          issuer-uri: http://localhost:8180/realms/java-learning
   config:
-    import: "optional:configserver:http://admin:123456@localhost:8888/config-server"
+    import: "optional:configserver:http://localhost:8888/config-server/"
   cloud:
     config:
       name: order-service # Tên file cần lấy
+      # Nếu dùng Security, hãy bỏ user/pass vào uri hoặc dùng các thuộc tính riêng
+      uri: http://localhost:8888/config-server
+      username: admin
+      password: 123456
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:dev}
   datasource:
@@ -59,6 +69,39 @@ eureka:
     metadata-map:
       # Đây là dòng then chốt:
       management.context-path: ${server.servlet.context-path}/actuator
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*" # Mở khóa toàn bộ: loggers, refresh, beans, env, httptrace...
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoint:
+    health:
+      show-details: always # Hiển thị chi tiết tình trạng DB, Disk...
+    shutdown:
+      enabled: true # Nếu bạn muốn hiện nút Shutdown (cẩn thận với nút này nhé!)
+
+resilience4j:
+  circuitbreaker:
+    circuit-breaker-aspect-order: 1
+    configs:
+      default:
+        registerHealthIndicator: true # Đăng ký chỉ số sức khỏe với Actuator
+
+  retry:
+    instances:
+      customRetryConfigAb:
+        maxAttempts: 5
+        waitDuration: 2000ms
+        retryExceptions:
+          - java.io.IOException
+          - java.net.ConnectException
+          - feign.FeignException
+        ignoreExceptions:
+          - com.example.learning.module.feign.exception.FeignClientException
 ---
 spring:
   config:

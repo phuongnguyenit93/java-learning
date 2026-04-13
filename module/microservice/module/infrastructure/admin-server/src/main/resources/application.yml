@@ -50,6 +50,9 @@ server:
   port: ${PORT}
   servlet:
     context-path: /${CONTEXT_PATH}
+    session:
+      cookie:
+        name: ADMIN_SESSION_ID
 ---
 spring:
   config:

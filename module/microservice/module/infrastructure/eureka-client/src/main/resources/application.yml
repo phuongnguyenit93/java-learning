@@ -1,0 +1,36 @@
+# Nếu là file mẫu (file-based.yml) vui lòng không thêm cấu hình vào
+# Nếu là các file application.yml tại module con , hãy thêm cấu hình phù hợp vào
+---
+# Cấu hình chung tại đây
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/ # Địa chỉ của Eureka Server
+    fetch-registry: true # Cho phép service tải danh sách các service khác về (để gọi nhau)
+    register-with-eureka: true # Cho phép service này đăng ký danh tính
+  instance:
+    prefer-ip-address: true # Ưu tiên dùng IP thay vì hostname (giúp ổn định hơn trong Docker)
+---
+# Cấu hình cho profile DEV
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+
+
+---
+# Cấu hình cho profile LOC
+spring:
+  config:
+    activate:
+      on-profile: loc
+
+
+
+---
+# Cấu hình cho profile PRD
+spring:
+  config:
+    activate:
+      on-profile: prd

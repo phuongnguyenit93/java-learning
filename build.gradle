@@ -44,7 +44,22 @@ subprojects {
         processResources{
             // 1. Chỉ định rõ ràng duy nhất file này được phép copy
             include 'application.yml'
+            processResources{
+                // 1. Chỉ định rõ ràng duy nhất file này được phép copy
+                include 'application.yml'
+                include '**'
 
+                from ("${projectDir}/src/main/resources") {
+                    // 2. (Tùy chọn) Nếu bạn muốn chắc chắn loại bỏ tất cả các file có đuôi .yml khác và .properties
+                    exclude '**/application-*.yml'
+                    exclude '**/*.properties'
+                }
+                include '**/api-descriptions.yml'
+                include '**/api-params.yml'
+                exclude 'application-merged.yml'
+                // 3. Đặt chiến lược xử lý nếu trùng lặp (thường dùng trong Gradle mới)
+                duplicatesStrategy = DuplicatesStrategy.INCLUDE
+            }
             from ("${projectDir}/src/main/resources") {
                 // 2. (Tùy chọn) Nếu bạn muốn chắc chắn loại bỏ tất cả các file có đuôi .yml khác và .properties
                 exclude '**/application-*.yml'

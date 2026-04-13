@@ -1,6 +1,6 @@
 # Project Module Structure (Foldable)
 
-> Cập nhật lúc: 2026-04-06 12:41:24
+> Cập nhật lúc: 2026-04-13 18:54:41
 
 Sử dụng mũi tên để đóng/mở các phân cấp module.
 
@@ -292,27 +292,50 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/infrastructure/system/observability/dianostic'>📁 dianostic</a></b></summary>
+  <summary><b><a href='../module/infrastructure/system/observability/console'>📁 console</a></b></summary>
 <ul>
 <li>
-<details>
-  <summary><b><a href='../module/infrastructure/system/observability/dianostic/profiling'>📁 profiling</a></b></summary>
-<ul>
-<li>
-  <a href='../module/infrastructure/system/observability/dianostic/profiling/jprofiler'>🪄 jprofiler</a>
-</li>
-<li>
-  <a href='../module/infrastructure/system/observability/dianostic/profiling/visual-vm'>🪄 visual-vm</a>
+  <a href='../module/infrastructure/system/observability/console/hawtio'>🪄 hawtio</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/infrastructure/system/observability/dianostic/thread-dump'>📁 thread-dump</a></b></summary>
+  <summary><b><a href='../module/infrastructure/system/observability/diagnostic'>📁 diagnostic</a></b></summary>
 <ul>
 <li>
-  <a href='../module/infrastructure/system/observability/dianostic/thread-dump/jstack'>🪄 jstack</a>
+<details>
+  <summary><b><a href='../module/infrastructure/system/observability/diagnostic/profiling'>📁 profiling</a></b></summary>
+<ul>
+<li>
+  <a href='../module/infrastructure/system/observability/diagnostic/profiling/jconsole'>🪄 jconsole</a>
+</li>
+<li>
+  <a href='../module/infrastructure/system/observability/diagnostic/profiling/jprofiler'>🪄 jprofiler</a>
+</li>
+<li>
+  <a href='../module/infrastructure/system/observability/diagnostic/profiling/visual-vm'>🪄 visual-vm</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='../module/infrastructure/system/observability/diagnostic/runtime-analysis'>📁 runtime-analysis</a></b></summary>
+<ul>
+<li>
+  <a href='../module/infrastructure/system/observability/diagnostic/runtime-analysis/arthas'>🪄 arthas</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='../module/infrastructure/system/observability/diagnostic/thread-dump'>📁 thread-dump</a></b></summary>
+<ul>
+<li>
+  <a href='../module/infrastructure/system/observability/diagnostic/thread-dump/jstack'>🪄 jstack</a>
 </li>
 </ul>
 </details>
@@ -380,7 +403,44 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </details>
 </li>
 <li>
-  <a href='../module/infrastructure/system/server'>🪄 server</a>
+<details>
+  <summary><b><a href='../module/infrastructure/system/security'>📁 security</a></b></summary>
+<ul>
+<li>
+<details>
+  <summary><b><a href='../module/infrastructure/system/security/iam'>📁 iam</a></b></summary>
+<ul>
+<li>
+  <a href='../module/infrastructure/system/security/iam/keycloak'>🪄 keycloak</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='../module/infrastructure/system/security/vault'>📁 vault</a></b></summary>
+<ul>
+<li>
+  <a href='../module/infrastructure/system/security/vault/hashicorp'>🪄 hashicorp</a>
+</li>
+</ul>
+</details>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='../module/infrastructure/system/server'>📁 server</a></b></summary>
+<ul>
+<li>
+  <a href='../module/infrastructure/system/server/jetty'>🪄 jetty</a>
+</li>
+<li>
+  <a href='../module/infrastructure/system/server/tomcat'>🪄 tomcat</a>
+</li>
+</ul>
+</details>
 </li>
 </ul>
 </details>
@@ -470,6 +530,9 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <a href='../module/integration/oneway/httpRequest/blocking/http-url-connection'>🪄 http-url-connection</a>
 </li>
 <li>
+  <a href='../module/integration/oneway/httpRequest/blocking/rest-client'>🪄 rest-client</a>
+</li>
+<li>
   <a href='../module/integration/oneway/httpRequest/blocking/rest-template'>🪄 rest-template</a>
 </li>
 </ul>
@@ -546,6 +609,9 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </li>
 <li>
   <a href='../module/microservice/module/infrastructure/config-server'>🪄 config-server</a>
+</li>
+<li>
+  <a href='../module/microservice/module/infrastructure/eureka-client'>🪄 eureka-client</a>
 </li>
 <li>
   <a href='../module/microservice/module/infrastructure/eureka-server'>🪄 eureka-server</a>
@@ -640,6 +706,83 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </li>
 <li>
   <a href='../module/platform/development/build-tool/maven'>🪄 maven</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='../module/platform/development/design-pattern'>📁 design-pattern</a></b></summary>
+<ul>
+<li>
+  <a href='../module/platform/development/design-pattern/anti-patterns'>🪄 anti-patterns</a>
+</li>
+<li>
+<details>
+  <summary><b><a href='../module/platform/development/design-pattern/behavioral'>📁 behavioral</a></b></summary>
+<ul>
+<li>
+  <a href='../module/platform/development/design-pattern/behavioral/observer'>🪄 observer</a>
+</li>
+<li>
+  <a href='../module/platform/development/design-pattern/behavioral/state'>🪄 state</a>
+</li>
+<li>
+  <a href='../module/platform/development/design-pattern/behavioral/strategy'>🪄 strategy</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='../module/platform/development/design-pattern/creational'>📁 creational</a></b></summary>
+<ul>
+<li>
+  <a href='../module/platform/development/design-pattern/creational/builder'>🪄 builder</a>
+</li>
+<li>
+  <a href='../module/platform/development/design-pattern/creational/factory-method'>🪄 factory-method</a>
+</li>
+<li>
+  <a href='../module/platform/development/design-pattern/creational/singleton'>🪄 singleton</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='../module/platform/development/design-pattern/distributed-system'>📁 distributed-system</a></b></summary>
+<ul>
+<li>
+  <a href='../module/platform/development/design-pattern/distributed-system/bulkhead'>🪄 bulkhead</a>
+</li>
+<li>
+  <a href='../module/platform/development/design-pattern/distributed-system/saga'>🪄 saga</a>
+</li>
+<li>
+  <a href='../module/platform/development/design-pattern/distributed-system/sidecar'>🪄 sidecar</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+  <a href='../module/platform/development/design-pattern/solid-principles'>🪄 solid-principles</a>
+</li>
+<li>
+<details>
+  <summary><b><a href='../module/platform/development/design-pattern/structural'>📁 structural</a></b></summary>
+<ul>
+<li>
+  <a href='../module/platform/development/design-pattern/structural/adapter'>🪄 adapter</a>
+</li>
+<li>
+  <a href='../module/platform/development/design-pattern/structural/facade'>🪄 facade</a>
+</li>
+<li>
+  <a href='../module/platform/development/design-pattern/structural/proxy'>🪄 proxy</a>
+</li>
+</ul>
+</details>
 </li>
 </ul>
 </details>
@@ -815,6 +958,22 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
   <a href='../module/platform/development/language/java/core/abstract-interface'>🪄 abstract-interface</a>
 </li>
+<li>
+  <a href='../module/platform/development/language/java/core/class-and-runtime-class'>🪄 class-and-runtime-class</a>
+</li>
+<li>
+  <a href='../module/platform/development/language/java/core/classloader'>🪄 classloader</a>
+</li>
+<li>
+<details>
+  <summary><b><a href='../module/platform/development/language/java/core/reflection'>📁 reflection</a></b></summary>
+<ul>
+<li>
+  <a href='../module/platform/development/language/java/core/reflection/type-system'>🪄 type-system</a>
+</li>
+</ul>
+</details>
+</li>
 </ul>
 </details>
 </li>
@@ -891,7 +1050,14 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <a href='../module/platform/development/language/java/version/java7'>🪄 java7</a>
 </li>
 <li>
-  <a href='../module/platform/development/language/java/version/java8'>🪄 java8</a>
+<details>
+  <summary><b><a href='../module/platform/development/language/java/version/java8'>📁 java8</a></b></summary>
+<ul>
+<li>
+  <a href='../module/platform/development/language/java/version/java8/stream-api'>🪄 stream-api</a>
+</li>
+</ul>
+</details>
 </li>
 </ul>
 </details>

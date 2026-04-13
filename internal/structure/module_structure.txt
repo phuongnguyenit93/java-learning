@@ -1,4 +1,4 @@
-Cập nhật lúc: 2026-04-06 12:41:24
+Cập nhật lúc: 2026-04-13 18:54:41
 ==============================
 module
 ├── infrastructure
@@ -65,10 +65,15 @@ module
 │       │   │   │   └── k6
 │       │   │   └── micro
 │       │   │       └── jmh
-│       │   ├── dianostic
+│       │   ├── console
+│       │   │   └── hawtio
+│       │   ├── diagnostic
 │       │   │   ├── profiling
+│       │   │   │   ├── jconsole
 │       │   │   │   ├── jprofiler
 │       │   │   │   └── visual-vm
+│       │   │   ├── runtime-analysis
+│       │   │   │   └── arthas
 │       │   │   └── thread-dump
 │       │   │       └── jstack
 │       │   ├── logging
@@ -83,7 +88,14 @@ module
 │       │   └── tracing
 │       │       ├── concept
 │       │       └── tooling
+│       ├── security
+│       │   ├── iam
+│       │   │   └── keycloak
+│       │   └── vault
+│       │       └── hashicorp
 │       └── server
+│           ├── jetty
+│           └── tomcat
 ├── integration
 │   ├── broker
 │   │   ├── activeMQ
@@ -103,6 +115,7 @@ module
 │   │   │   ├── blocking
 │   │   │   │   ├── feign-client
 │   │   │   │   ├── http-url-connection
+│   │   │   │   ├── rest-client
 │   │   │   │   └── rest-template
 │   │   │   └── nonBlocking
 │   │   │       └── web-client
@@ -120,6 +133,7 @@ module
 │       │   ├── admin-server
 │       │   ├── api-gateway
 │       │   ├── config-server
+│       │   ├── eureka-client
 │       │   └── eureka-server
 │       ├── integration
 │       │   ├── message-broker
@@ -142,6 +156,25 @@ module
     │   │   ├── gradle
     │   │   │   └── open-rewrite
     │   │   └── maven
+    │   ├── design-pattern
+    │   │   ├── anti-patterns
+    │   │   ├── behavioral
+    │   │   │   ├── observer
+    │   │   │   ├── state
+    │   │   │   └── strategy
+    │   │   ├── creational
+    │   │   │   ├── builder
+    │   │   │   ├── factory-method
+    │   │   │   └── singleton
+    │   │   ├── distributed-system
+    │   │   │   ├── bulkhead
+    │   │   │   ├── saga
+    │   │   │   └── sidecar
+    │   │   ├── solid-principles
+    │   │   └── structural
+    │   │       ├── adapter
+    │   │       ├── facade
+    │   │       └── proxy
     │   ├── framework
     │   │   ├── spring
     │   │   │   ├── actuator
@@ -185,7 +218,11 @@ module
     │   │       │   ├── high-level-utils
     │   │       │   └── virtual-threads
     │   │       ├── core
-    │   │       │   └── abstract-interface
+    │   │       │   ├── abstract-interface
+    │   │       │   ├── class-and-runtime-class
+    │   │       │   ├── classloader
+    │   │       │   └── reflection
+    │   │       │       └── type-system
     │   │       ├── mapping
     │   │       │   ├── mapstruct
     │   │       │   ├── model-mapper
@@ -204,6 +241,7 @@ module
     │   │           ├── java17
     │   │           ├── java7
     │   │           └── java8
+    │   │               └── stream-api
     │   ├── paradigm
     │   │   ├── aop
     │   │   ├── concurrency

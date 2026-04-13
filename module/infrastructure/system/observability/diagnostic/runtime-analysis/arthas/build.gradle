@@ -1,0 +1,3 @@
+dependencies {
+    implementation "com.taobao.arthas:arthas-spring-boot-starter:3.7.1"
+}

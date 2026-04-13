@@ -17,6 +17,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable()) // Tắt CSRF để các client dễ kết nối
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/actuator/**").permitAll() // Cho phép xem Actuator (Hoặc yêu cầu authenticated() nếu đã làm bước 1)
                         .anyRequest().authenticated() // Mọi request đều phải đăng nhập
                 )
                 .httpBasic(Customizer.withDefaults()); // Sử dụng Basic Auth

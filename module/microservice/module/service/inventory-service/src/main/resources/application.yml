@@ -22,6 +22,12 @@ swagger:
   enabled: false
 ---
 spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # Phải khớp với Realm java-learning bạn đã tạo
+          issuer-uri: http://localhost:8180/realms/java-learning
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:dev}
   datasource:
@@ -43,10 +49,15 @@ spring:
   application:
     name: ${PROJECT_NAME}
   config:
-    import: "optional:configserver:http://admin:123456@localhost:8888/config-server"
+    import: "optional:configserver:http://admin:123456@localhost:8888/config-server/"
   cloud:
     config:
       name: inventory-service # Tên file cần lấy
+      uri: http://localhost:8888/config-server
+      username: admin
+      password: 123456
+  jmx:
+    enabled: true
 swagger:
   enabled: ${BUILD_SWAGGER:}
   languages: ${BUILD_SWAGGER_LANGUAGE_LIST:}
@@ -84,3 +95,7 @@ eureka:
     metadata-map:
       # Đây là dòng then chốt:
       management.context-path: ${server.servlet.context-path}/actuator
+
+hawtio:
+  authenticationEnabled: false
+  springBootEndpointsExtension: true

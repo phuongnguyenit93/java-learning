@@ -22,6 +22,21 @@ swagger:
   enabled: false
 ---
 spring:
+  security:
+    oauth2:
+      client:
+        provider:
+          keycloak:
+            # Đường dẫn đến Realm bạn vừa tạo
+            issuer-uri: http://localhost:8180/realms/java-learning
+        registration:
+          keycloak:
+            client-id: microservices-client
+            client-secret: L6QTJY5CifzJUi5SEspT17R4FMQiuQaT
+            scope: openid, profile, email
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8180/realms/java-learning
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:dev}
   application:
@@ -52,6 +67,9 @@ server:
   port: ${PORT}
   servlet:
     context-path: /${CONTEXT_PATH}
+  session:
+    cookie:
+      name: GATEWAY_SESSION_ID
 
 eureka:
   instance:
