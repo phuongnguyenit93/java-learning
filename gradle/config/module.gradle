@@ -47,6 +47,14 @@ ext.applyPluginAndDependencyToModule = {
             return hasMainMethod
         }
 
+        dependencies {
+            testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+            testImplementation 'org.springframework.boot:spring-boot-starter-test'
+            testImplementation 'org.springframework.security:spring-security-test'
+            // Nếu dùng Mockito để giả lập dữ liệu
+            testImplementation 'org.mockito:mockito-junit-jupiter:5.5.0'
+        }
+
         // 1. Xử lý Spring Boot / Dependency Management
         if (hasMainMethod) {
             apply plugin: 'org.springframework.boot'
@@ -74,7 +82,6 @@ ext.applyPluginAndDependencyToModule = {
             dependencies {
                 implementation 'org.springframework.boot:spring-boot-starter-web'
                 implementation 'org.springframework.boot:spring-boot-starter-actuator'
-                testImplementation 'org.springframework.boot:spring-boot-starter-test'
 //                developmentOnly 'org.springframework.boot:spring-boot-devtools'
             }
             logger.lifecycle("   ├─ 🚀 ${GREEN}Spring Boot:${RESET} Đã tìm thấy hàm main -> Apply Boot + Starter Web.")
@@ -528,8 +535,20 @@ ext.generateProjectStructureFileTxt = {
         subDirs.sort { it.name }.eachWithIndex { subDir, index ->
             def isLast = (index == subDirs.size() - 1)
 
+            def displayName = subDir.name
+            def propsFile = new File(subDir, "gradle.properties")
+
+            if (propsFile.exists()) {
+                def props = new Properties()
+                propsFile.withInputStream { props.load(it) }
+                if (props.containsKey('SERVICE_NAME')) {
+                    // Hiển thị dạng: folder-name (service-name) hoặc chỉ service-name tùy bạn
+                    displayName = "${subDir.name} [${props.getProperty('SERVICE_NAME')}]"
+                }
+            }
+
             // Vẽ nhánh cho folder hiện tại
-            sb.append(prefix).append(isLast ? "└── " : "├── ").append(subDir.name).append("\n")
+            sb.append(prefix).append(isLast ? "└── " : "├── ").append(displayName).append("\n")
 
             // Đệ quy vào các folder con
             walkDir(subDir, prefix + (isLast ? "    " : "│   "))
@@ -542,7 +561,7 @@ ext.generateProjectStructureFileTxt = {
         if (subDirs) {
             readmeStructure.append("<ul>\n") // Bắt đầu danh sách cho cấp con
             subDirs.sort { it.name }.each { subDir ->
-                def relativePath = "../" + projectDir.toPath().relativize(subDir.toPath()).toString().replace('\\', '/')
+                def relativePath = "../../" + projectDir.toPath().relativize(subDir.toPath()).toString().replace('\\', '/')
                 def children = subDir.listFiles().findAll { it.isDirectory() && !excludeDirs.contains(it.name) }
 
                 readmeStructure.append("<li>\n")
@@ -564,7 +583,7 @@ ext.generateProjectStructureFileTxt = {
 
     // Bắt đầu từ root
     def rootDir = file("${projectDir}/module")
-    def rootRelativePath = "../" + projectDir.toPath().relativize(rootDir.toPath()).toString().replace('\\', '/')
+    def rootRelativePath = "../../" + projectDir.toPath().relativize(rootDir.toPath()).toString().replace('\\', '/')
 
     readmeStructure.append("<details open>\n")
     readmeStructure.append("  <summary><b><a href='${rootRelativePath}'>${rootDir.name} (Root)</a></b></summary>\n")

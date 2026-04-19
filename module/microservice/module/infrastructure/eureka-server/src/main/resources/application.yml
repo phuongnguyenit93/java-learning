@@ -1,7 +1,7 @@
 # AUTO-GENERATED MERGED YAML
 # You can check at module/microservice/module/infrastructure/eureka-server/src/main/resources/application.yml
 # Source: EUREKA_SERVER
-# Dependencies: SPRING_WEB, SPRING_SWAGGER
+# Dependencies: SPRING_WEB, SPRING_SWAGGER, PROMETHEUS, SPRING_ACTUATOR
 
 ---
 spring:
@@ -24,10 +24,34 @@ eureka:
 swagger:
   enabled: ${BUILD_SWAGGER:}
   languages: ${BUILD_SWAGGER_LANGUAGE_LIST:}
+  enable-language-swagger: ${BUILD_SWAGGER_LANGUAGE}
 server:
   port: ${PORT}
   servlet:
     context-path: /${CONTEXT_PATH}
+management:
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+    env:
+      show-values: always
+    shutdown:
+      enabled: true
+springdoc:
+  swagger-ui:
+    enabled: ${swagger.enabled}
+    path: /swagger-ui.html
+    docExpansion:
+    - none
+  api-docs:
+    enabled: ${swagger.enabled}
 ---
 spring:
   config:

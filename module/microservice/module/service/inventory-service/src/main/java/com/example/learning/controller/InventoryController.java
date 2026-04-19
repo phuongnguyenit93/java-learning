@@ -18,11 +18,9 @@ import java.util.Map;
 public class InventoryController {
     private final InventoryService inventoryService;
 
-
     @GetMapping("/in-stock")
     @ResponseStatus(HttpStatus.OK)
     public boolean isInStock(@RequestParam String skuCode,@RequestParam Integer quantity) {
-        System.out.println(inventoryService.getClass().getName());
         return inventoryService.isInStock(skuCode,quantity);
     }
 

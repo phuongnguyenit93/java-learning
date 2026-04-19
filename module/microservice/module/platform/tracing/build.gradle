@@ -1,0 +1,14 @@
+dependencies {
+    // Core Tracing API (Sử dụng Brave bridge)
+    api 'io.micrometer:micrometer-tracing-bridge-brave'
+
+    // Reporter: Gửi dữ liệu đến Zipkin
+    api 'io.zipkin.reporter2:zipkin-reporter-brave'
+    // Quan trọng: Thêm context propagation để hỗ trợ log
+    api 'io.micrometer:context-propagation'
+    // Tích hợp Tracing cho OpenFeign
+    api 'io.github.openfeign:feign-micrometer'
+
+    // Spring Boot AOP (Cần thiết để @Observed hoặc các proxy hoạt động)
+    api 'org.springframework.boot:spring-boot-starter-aop'
+}

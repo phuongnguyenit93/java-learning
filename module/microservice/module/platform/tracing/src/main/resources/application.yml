@@ -2,22 +2,18 @@
 # Nếu là các file application.yml tại module con , hãy thêm cấu hình phù hợp vào
 ---
 # Cấu hình chung tại đây
-spring:
-  profiles:
-    active: ${SPRING_PROFILES_ACTIVE:dev}
-
 management:
-  endpoints:
-    web:
-      exposure:
-        include: "*" # Mở tất cả: health, info, metrics, loggers, threads...
-  endpoint:
-    health:
-      show-details: always # Hiển thị chi tiết tình trạng DB, Disk, v.v.
-    env:
-      show-values: always # Cho phép xem giá trị các biến cấu hình
-    shutdown:
-      enabled: true # Nếu bạn muốn hiện nút Shutdown (cẩn thận với nút này nhé!)
+  tracing:
+    sampling:
+      probability: 1.0 # 1.0 là lấy 100% request (môi trường dev), production nên để 0.1
+  zipkin:
+    tracing:
+      endpoint: "http://localhost:9411/api/v2/spans"
+
+logging:
+  pattern:
+    # Thêm [%X{traceId:-}, %X{spanId:-}] vào pattern
+    console: "%d{yyyy-MM-dd HH:mm:ss} %5p [%X{traceId:-}, %X{spanId:-}] --- [%thread] %-40.40logger{39} : %m%n"
 ---
 # Cấu hình cho profile DEV
 spring:

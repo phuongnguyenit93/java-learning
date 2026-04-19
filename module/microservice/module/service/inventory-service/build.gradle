@@ -3,6 +3,8 @@ apply from: "${searchProjectByServiceName("MAPSTRUCT").projectDir}/build.gradle"
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation searchProjectByServiceName("GLOBAL_EXCEPTION_HANDLER")
+    implementation searchProjectByServiceName("DISTRIBUTED_TRACING")
+    implementation searchProjectByServiceName("PROMETHEUS")
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     implementation 'org.springframework.cloud:spring-cloud-starter-config'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'

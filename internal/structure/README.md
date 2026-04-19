@@ -1,6 +1,6 @@
 # Project Module Structure (Foldable)
 
-> Cập nhật lúc: 2026-04-13 18:54:41
+> Cập nhật lúc: 2026-04-18 13:03:40
 
 Sử dụng mũi tên để đóng/mở các phân cấp module.
 
@@ -348,10 +348,69 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <summary><b><a href='../module/infrastructure/system/observability/logging'>📁 logging</a></b></summary>
 <ul>
 <li>
-  <a href='../module/infrastructure/system/observability/logging/event-log'>🪄 event-log</a>
+<details>
+  <summary><b><a href='../module/infrastructure/system/observability/logging/event-log'>📁 event-log</a></b></summary>
+<ul>
+<li>
+  <a href='../module/infrastructure/system/observability/logging/event-log/audit-log'>🪄 audit-log</a>
 </li>
 <li>
-  <a href='../module/infrastructure/system/observability/logging/log-pipeline'>🪄 log-pipeline</a>
+  <a href='../module/infrastructure/system/observability/logging/event-log/business-log'>🪄 business-log</a>
+</li>
+<li>
+  <a href='../module/infrastructure/system/observability/logging/event-log/compliance'>🪄 compliance</a>
+</li>
+<li>
+  <a href='../module/infrastructure/system/observability/logging/event-log/security-event'>🪄 security-event</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='../module/infrastructure/system/observability/logging/log-pipeline'>📁 log-pipeline</a></b></summary>
+<ul>
+<li>
+  <a href='../module/infrastructure/system/observability/logging/log-pipeline/fluentd'>🪄 fluentd</a>
+</li>
+<li>
+  <a href='../module/infrastructure/system/observability/logging/log-pipeline/logstash'>🪄 logstash</a>
+</li>
+<li>
+  <a href='../module/infrastructure/system/observability/logging/log-pipeline/promtail'>🪄 promtail</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='../module/infrastructure/system/observability/logging/storage-analysis'>📁 storage-analysis</a></b></summary>
+<ul>
+<li>
+<details>
+  <summary><b><a href='../module/infrastructure/system/observability/logging/storage-analysis/elk-stack'>📁 elk-stack</a></b></summary>
+<ul>
+<li>
+  <a href='../module/infrastructure/system/observability/logging/storage-analysis/elk-stack/elasticsearch'>🪄 elasticsearch</a>
+</li>
+<li>
+  <a href='../module/infrastructure/system/observability/logging/storage-analysis/elk-stack/kibana'>🪄 kibana</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='../module/infrastructure/system/observability/logging/storage-analysis/loki-stack'>📁 loki-stack</a></b></summary>
+<ul>
+<li>
+  <a href='../module/infrastructure/system/observability/logging/storage-analysis/loki-stack/loki'>🪄 loki</a>
+</li>
+</ul>
+</details>
+</li>
+</ul>
+</details>
 </li>
 </ul>
 </details>
@@ -394,7 +453,23 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <a href='../module/infrastructure/system/observability/tracing/concept'>🪄 concept</a>
 </li>
 <li>
-  <a href='../module/infrastructure/system/observability/tracing/tooling'>🪄 tooling</a>
+<details>
+  <summary><b><a href='../module/infrastructure/system/observability/tracing/tooling'>📁 tooling</a></b></summary>
+<ul>
+<li>
+  <a href='../module/infrastructure/system/observability/tracing/tooling/datadog'>🪄 datadog</a>
+</li>
+<li>
+  <a href='../module/infrastructure/system/observability/tracing/tooling/jaeger'>🪄 jaeger</a>
+</li>
+<li>
+  <a href='../module/infrastructure/system/observability/tracing/tooling/tempo'>🪄 tempo</a>
+</li>
+<li>
+  <a href='../module/infrastructure/system/observability/tracing/tooling/zipkin'>🪄 zipkin</a>
+</li>
+</ul>
+</details>
 </li>
 </ul>
 </details>
@@ -589,10 +664,7 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <a href='../module/microservice/module/deployments/docker'>🪄 docker</a>
 </li>
 <li>
-  <a href='../module/microservice/module/deployments/grafana'>🪄 grafana</a>
-</li>
-<li>
-  <a href='../module/microservice/module/deployments/prometheus'>🪄 prometheus</a>
+  <a href='../module/microservice/module/deployments/prometheus-grafana'>🪄 prometheus-grafana</a>
 </li>
 </ul>
 </details>
@@ -640,13 +712,29 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <a href='../module/microservice/module/platform/common-lib'>🪄 common-lib</a>
 </li>
 <li>
-  <a href='../module/microservice/module/platform/logging-starter'>🪄 logging-starter</a>
+<details>
+  <summary><b><a href='../module/microservice/module/platform/logging-starter'>📁 logging-starter</a></b></summary>
+<ul>
+<li>
+  <a href='../module/microservice/module/platform/logging-starter/elk-stack'>🪄 elk-stack</a>
+</li>
+<li>
+  <a href='../module/microservice/module/platform/logging-starter/loki'>🪄 loki</a>
+</li>
+</ul>
+</details>
 </li>
 <li>
   <a href='../module/microservice/module/platform/resilience4j'>🪄 resilience4j</a>
 </li>
 <li>
   <a href='../module/microservice/module/platform/security-starter'>🪄 security-starter</a>
+</li>
+<li>
+  <a href='../module/microservice/module/platform/temporal-starter'>🪄 temporal-starter</a>
+</li>
+<li>
+  <a href='../module/microservice/module/platform/tracing'>🪄 tracing</a>
 </li>
 </ul>
 </details>
@@ -755,6 +843,12 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <ul>
 <li>
   <a href='../module/platform/development/design-pattern/distributed-system/bulkhead'>🪄 bulkhead</a>
+</li>
+<li>
+  <a href='../module/platform/development/design-pattern/distributed-system/cqrs'>🪄 cqrs</a>
+</li>
+<li>
+  <a href='../module/platform/development/design-pattern/distributed-system/event-sourcing'>🪄 event-sourcing</a>
 </li>
 <li>
   <a href='../module/platform/development/design-pattern/distributed-system/saga'>🪄 saga</a>

@@ -1,7 +1,7 @@
 # AUTO-GENERATED MERGED YAML
 # You can check at module/microservice/module/service/order-service/src/main/resources/application.yml
 # Source: ORDER_SERVICE
-# Dependencies: SPRING_WEB, SPRING_SWAGGER
+# Dependencies: SPRING_WEB, SPRING_SWAGGER, SPRING_ACTUATOR, RESILIENCE_4J, DISTRIBUTED_TRACING
 
 ---
 spring:
@@ -9,14 +9,12 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          # Phải khớp với Realm java-learning bạn đã tạo
           issuer-uri: http://localhost:8180/realms/java-learning
   config:
-    import: "optional:configserver:http://localhost:8888/config-server/"
+    import: optional:configserver:http://localhost:8888/config-server/
   cloud:
     config:
-      name: order-service # Tên file cần lấy
-      # Nếu dùng Security, hãy bỏ user/pass vào uri hoặc dùng các thuộc tính riêng
+      name: order-service
       uri: http://localhost:8888/config-server
       username: admin
       password: 123456
@@ -42,12 +40,12 @@ spring:
     name: ${PROJECT_NAME}
 swagger:
   enabled: ${BUILD_SWAGGER:}
-  languages: ${BUILD_SWAGGER_LANGUAGE_LIST:}
 springdoc:
   swagger-ui:
     enabled: ${swagger.enabled}
     docExpansion:
     - none
+    path: /swagger-ui.html
   api-docs:
     enabled: ${swagger.enabled}
 server:
@@ -55,53 +53,46 @@ server:
   forward-headers-strategy: framework
   servlet:
     context-path: /${CONTEXT_PATH}
-
 integration:
   client:
     inventory: ${INVENTORY_CLIENT_URL}
-
 eureka:
   instance:
-    # Thông báo cho Admin/Eureka biết đường dẫn chính xác
     status-page-url-path: ${server.servlet.context-path}/actuator/info
     health-check-url-path: ${server.servlet.context-path}/actuator/health
-    # Quan trọng: Metadata giúp Admin Server tự nối chuỗi URL
     metadata-map:
-      # Đây là dòng then chốt:
       management.context-path: ${server.servlet.context-path}/actuator
-
 management:
-  endpoints:
-    web:
-      exposure:
-        include: "*" # Mở khóa toàn bộ: loggers, refresh, beans, env, httptrace...
   health:
     circuitbreakers:
       enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: '*'
   endpoint:
     health:
-      show-details: always # Hiển thị chi tiết tình trạng DB, Disk...
+      show-details: always
+    env:
+      show-values: always
     shutdown:
-      enabled: true # Nếu bạn muốn hiện nút Shutdown (cẩn thận với nút này nhé!)
-
+      enabled: true
+  tracing:
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9411/api/v2/spans
 resilience4j:
   circuitbreaker:
     circuit-breaker-aspect-order: 1
     configs:
       default:
-        registerHealthIndicator: true # Đăng ký chỉ số sức khỏe với Actuator
-
-  retry:
-    instances:
-      customRetryConfigAb:
-        maxAttempts: 5
-        waitDuration: 2000ms
-        retryExceptions:
-          - java.io.IOException
-          - java.net.ConnectException
-          - feign.FeignException
-        ignoreExceptions:
-          - com.example.learning.module.feign.exception.FeignClientException
+        registerHealthIndicator: true
+logging:
+  pattern:
+    console: '%d{yyyy-MM-dd HH:mm:ss} %5p [%X{traceId:-}, %X{spanId:-}] --- [%thread]
+      %-40.40logger{39} : %m%n'
 ---
 spring:
   config:

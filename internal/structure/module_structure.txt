@@ -1,4 +1,4 @@
-Cập nhật lúc: 2026-04-13 18:54:41
+Cập nhật lúc: 2026-04-18 13:03:40
 ==============================
 module
 ├── infrastructure
@@ -18,28 +18,28 @@ module
 │       │   │   ├── package
 │       │   │   └── procedures
 │       │   ├── connection-pool
-│       │   │   └── hikariCP
+│       │   │   └── hikariCP [HIKARI_CP]
 │       │   ├── migration
-│       │   │   ├── flyway
+│       │   │   ├── flyway [FLYWAY]
 │       │   │   └── liquibase
 │       │   ├── nosql
 │       │   │   ├── clickhouse
 │       │   │   ├── elasticsearch
 │       │   │   ├── influxDB
 │       │   │   ├── loki
-│       │   │   ├── mongoDB
+│       │   │   ├── mongoDB [DATABASE_MONGODB]
 │       │   │   │   └── aggregation
 │       │   │   ├── neo4j
 │       │   │   └── redis
 │       │   │       └── lua-scripting
 │       │   └── rdbms
-│       │       ├── mysql
-│       │       ├── oracle
+│       │       ├── mysql [DATABASE_MYSQL]
+│       │       ├── oracle [DATABASE_ORACLE]
 │       │       │   ├── advance
 │       │       │   │   ├── package
 │       │       │   │   └── procedure
 │       │       │   └── setup
-│       │       └── postgresql
+│       │       └── postgresql [DATABASE_POSTGRESQL]
 │       │           ├── advance
 │       │           │   ├── functions
 │       │           │   └── trigger
@@ -66,19 +66,32 @@ module
 │       │   │   └── micro
 │       │   │       └── jmh
 │       │   ├── console
-│       │   │   └── hawtio
+│       │   │   └── hawtio []
 │       │   ├── diagnostic
 │       │   │   ├── profiling
 │       │   │   │   ├── jconsole
 │       │   │   │   ├── jprofiler
 │       │   │   │   └── visual-vm
 │       │   │   ├── runtime-analysis
-│       │   │   │   └── arthas
+│       │   │   │   └── arthas [ARTHAS]
 │       │   │   └── thread-dump
 │       │   │       └── jstack
 │       │   ├── logging
 │       │   │   ├── event-log
-│       │   │   └── log-pipeline
+│       │   │   │   ├── audit-log
+│       │   │   │   ├── business-log
+│       │   │   │   ├── compliance
+│       │   │   │   └── security-event
+│       │   │   ├── log-pipeline
+│       │   │   │   ├── fluentd
+│       │   │   │   ├── logstash
+│       │   │   │   └── promtail
+│       │   │   └── storage-analysis
+│       │   │       ├── elk-stack
+│       │   │       │   ├── elasticsearch
+│       │   │       │   └── kibana
+│       │   │       └── loki-stack
+│       │   │           └── loki
 │       │   ├── metrics
 │       │   │   ├── aggregation
 │       │   │   ├── time-series
@@ -88,6 +101,10 @@ module
 │       │   └── tracing
 │       │       ├── concept
 │       │       └── tooling
+│       │           ├── datadog
+│       │           ├── jaeger
+│       │           ├── tempo
+│       │           └── zipkin
 │       ├── security
 │       │   ├── iam
 │       │   │   └── keycloak
@@ -99,15 +116,15 @@ module
 ├── integration
 │   ├── broker
 │   │   ├── activeMQ
-│   │   ├── kafka
+│   │   ├── kafka [KAFKA]
 │   │   │   └── service
 │   │   │       ├── consumer
-│   │   │       │   ├── accountant
-│   │   │       │   └── notification
-│   │   │       ├── control
+│   │   │       │   ├── accountant [KAFKA_CONSUMER_ACCOUNTANT]
+│   │   │       │   └── notification [KAFKA_CONSUMER_NOTIFICATION]
+│   │   │       ├── control [KAFKA_CONTROL]
 │   │   │       ├── producer
-│   │   │       │   └── bank
-│   │   │       └── server
+│   │   │       │   └── bank [KAFKA_PRODUCER_BANK]
+│   │   │       └── server [KAFKA_SERVER]
 │   │   └── rabbitMQ
 │   ├── oneway
 │   │   ├── grpc
@@ -123,38 +140,41 @@ module
 │   └── twoway
 │       ├── rsocket
 │       └── websocket
-├── microservice
+├── microservice [MICROSERVICE]
 │   └── module
 │       ├── deployments
 │       │   ├── docker
-│       │   ├── grafana
-│       │   └── prometheus
+│       │   └── prometheus-grafana [PROMETHEUS]
 │       ├── infrastructure
-│       │   ├── admin-server
-│       │   ├── api-gateway
-│       │   ├── config-server
-│       │   ├── eureka-client
-│       │   └── eureka-server
+│       │   ├── admin-server [ADMIN_SERVER]
+│       │   ├── api-gateway [API_GATEWAY]
+│       │   ├── config-server [CONFIG_SERVER]
+│       │   ├── eureka-client [EUREKA_CLIENT]
+│       │   └── eureka-server [EUREKA_SERVER]
 │       ├── integration
 │       │   ├── message-broker
 │       │   └── notification-service
 │       ├── platform
 │       │   ├── common-lib
 │       │   ├── logging-starter
-│       │   ├── resilience4j
-│       │   └── security-starter
+│       │   │   ├── elk-stack
+│       │   │   └── loki
+│       │   ├── resilience4j [RESILIENCE_4J]
+│       │   ├── security-starter
+│       │   ├── temporal-starter
+│       │   └── tracing [DISTRIBUTED_TRACING]
 │       └── service
-│           ├── inventory-service
-│           ├── order-service
+│           ├── inventory-service [INVENTORY_SERVICE]
+│           ├── order-service [ORDER_SERVICE]
 │           ├── payment-service
-│           └── product-service
+│           └── product-service [PRODUCT_SERVICE]
 └── platform
     ├── cloud
     ├── development
     │   ├── build-tool
     │   │   ├── ant
     │   │   ├── gradle
-    │   │   │   └── open-rewrite
+    │   │   │   └── open-rewrite [OPEN_REWRITE_GRADLE]
     │   │   └── maven
     │   ├── design-pattern
     │   │   ├── anti-patterns
@@ -168,6 +188,8 @@ module
     │   │   │   └── singleton
     │   │   ├── distributed-system
     │   │   │   ├── bulkhead
+    │   │   │   ├── cqrs
+    │   │   │   ├── event-sourcing
     │   │   │   ├── saga
     │   │   │   └── sidecar
     │   │   ├── solid-principles
@@ -177,7 +199,7 @@ module
     │   │       └── proxy
     │   ├── framework
     │   │   ├── spring
-    │   │   │   ├── actuator
+    │   │   │   ├── actuator [SPRING_ACTUATOR]
     │   │   │   ├── basic
     │   │   │   │   ├── core
     │   │   │   │   │   ├── annotation
@@ -187,19 +209,19 @@ module
     │   │   │   │   └── properties
     │   │   │   ├── conditional
     │   │   │   ├── data
-    │   │   │   │   └── jpa
-    │   │   │   ├── devtool
+    │   │   │   │   └── jpa [SPRING_JPA]
+    │   │   │   ├── devtool [SPRING_DEVTOOL]
     │   │   │   ├── functional-endpoint
-    │   │   │   ├── global-exception-handler
+    │   │   │   ├── global-exception-handler [GLOBAL_EXCEPTION_HANDLER]
     │   │   │   ├── import
     │   │   │   ├── profile
     │   │   │   ├── security
     │   │   │   │   ├── basic
     │   │   │   │   ├── jwt
     │   │   │   │   └── oauth
-    │   │   │   ├── swagger
+    │   │   │   ├── swagger [SPRING_SWAGGER]
     │   │   │   ├── test-property-source
-    │   │   │   └── web
+    │   │   │   └── web [SPRING_WEB]
     │   │   └── spring-boot
     │   │       ├── auto-configuration
     │   │       ├── embedded-server
@@ -218,15 +240,15 @@ module
     │   │       │   ├── high-level-utils
     │   │       │   └── virtual-threads
     │   │       ├── core
-    │   │       │   ├── abstract-interface
+    │   │       │   ├── abstract-interface []
     │   │       │   ├── class-and-runtime-class
     │   │       │   ├── classloader
     │   │       │   └── reflection
     │   │       │       └── type-system
     │   │       ├── mapping
-    │   │       │   ├── mapstruct
-    │   │       │   ├── model-mapper
-    │   │       │   └── object-mapper
+    │   │       │   ├── mapstruct [MAPSTRUCT]
+    │   │       │   ├── model-mapper [MODEL_MAPPER]
+    │   │       │   └── object-mapper [OBJECT_MAPPER]
     │   │       ├── persistence
     │   │       │   ├── orm
     │   │       │   │   ├── hibernate
@@ -237,19 +259,19 @@ module
     │   │       └── version
     │   │           ├── java11
     │   │           ├── java16
-    │   │           │   └── record
+    │   │           │   └── record []
     │   │           ├── java17
     │   │           ├── java7
     │   │           └── java8
     │   │               └── stream-api
     │   ├── paradigm
-    │   │   ├── aop
+    │   │   ├── aop [ASPECT]
     │   │   ├── concurrency
     │   │   │   ├── batch
-    │   │   │   ├── forkjoin-workstealing
+    │   │   │   ├── forkjoin-workstealing [FORK_JOIN_WORK_STEALING]
     │   │   │   ├── schedule
-    │   │   │   │   └── task
-    │   │   │   └── thread
+    │   │   │   │   └── task []
+    │   │   │   └── thread [THREAD]
     │   │   ├── di-ioc
     │   │   ├── functional
     │   │   ├── mvc-pattern
