@@ -1,133 +1,133 @@
 # Project Module Structure (Foldable)
 
-> Cập nhật lúc: 2026-04-18 13:03:40
+> Cập nhật lúc: 2026-04-19 15:01:14
 
 Sử dụng mũi tên để đóng/mở các phân cấp module.
 
 <details open>
-  <summary><b><a href='../module'>module (Root)</a></b></summary>
+  <summary><b><a href='../../module'>module (Root)</a></b></summary>
 <ul>
 <li>
 <details>
-  <summary><b><a href='../module/infrastructure'>📁 infrastructure</a></b></summary>
+  <summary><b><a href='../../module/infrastructure'>📁 infrastructure</a></b></summary>
 <ul>
 <li>
 <details>
-  <summary><b><a href='../module/infrastructure/devops'>📁 devops</a></b></summary>
+  <summary><b><a href='../../module/infrastructure/devops'>📁 devops</a></b></summary>
 <ul>
 <li>
 <details>
-  <summary><b><a href='../module/infrastructure/devops/artifact-management'>📁 artifact-management</a></b></summary>
+  <summary><b><a href='../../module/infrastructure/devops/artifact-management'>📁 artifact-management</a></b></summary>
 <ul>
 <li>
-  <a href='../module/infrastructure/devops/artifact-management/central-portal'>🪄 central-portal</a>
+  <a href='../../module/infrastructure/devops/artifact-management/central-portal'>🪄 central-portal</a>
 </li>
 <li>
-  <a href='../module/infrastructure/devops/artifact-management/nexus'>🪄 nexus</a>
+  <a href='../../module/infrastructure/devops/artifact-management/nexus'>🪄 nexus</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
-  <a href='../module/infrastructure/devops/ci-cd'>🪄 ci-cd</a>
+  <a href='../../module/infrastructure/devops/ci-cd'>🪄 ci-cd</a>
 </li>
 <li>
-  <a href='../module/infrastructure/devops/docker'>🪄 docker</a>
+  <a href='../../module/infrastructure/devops/docker'>🪄 docker</a>
 </li>
 <li>
-  <a href='../module/infrastructure/devops/git'>🪄 git</a>
+  <a href='../../module/infrastructure/devops/git'>🪄 git</a>
 </li>
 <li>
-  <a href='../module/infrastructure/devops/jenkins'>🪄 jenkins</a>
+  <a href='../../module/infrastructure/devops/jenkins'>🪄 jenkins</a>
 </li>
 <li>
-  <a href='../module/infrastructure/devops/k8s'>🪄 k8s</a>
+  <a href='../../module/infrastructure/devops/k8s'>🪄 k8s</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/infrastructure/system'>📁 system</a></b></summary>
+  <summary><b><a href='../../module/infrastructure/system'>📁 system</a></b></summary>
 <ul>
 <li>
 <details>
-  <summary><b><a href='../module/infrastructure/system/database'>📁 database</a></b></summary>
+  <summary><b><a href='../../module/infrastructure/system/database'>📁 database</a></b></summary>
 <ul>
 <li>
 <details>
-  <summary><b><a href='../module/infrastructure/system/database/advance'>📁 advance</a></b></summary>
+  <summary><b><a href='../../module/infrastructure/system/database/advance'>📁 advance</a></b></summary>
 <ul>
 <li>
-  <a href='../module/infrastructure/system/database/advance/function'>🪄 function</a>
+  <a href='../../module/infrastructure/system/database/advance/function'>🪄 function</a>
 </li>
 <li>
-  <a href='../module/infrastructure/system/database/advance/package'>🪄 package</a>
+  <a href='../../module/infrastructure/system/database/advance/package'>🪄 package</a>
 </li>
 <li>
-  <a href='../module/infrastructure/system/database/advance/procedures'>🪄 procedures</a>
+  <a href='../../module/infrastructure/system/database/advance/procedures'>🪄 procedures</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/infrastructure/system/database/connection-pool'>📁 connection-pool</a></b></summary>
+  <summary><b><a href='../../module/infrastructure/system/database/connection-pool'>📁 connection-pool</a></b></summary>
 <ul>
 <li>
-  <a href='../module/infrastructure/system/database/connection-pool/hikariCP'>🪄 hikariCP</a>
+  <a href='../../module/infrastructure/system/database/connection-pool/hikariCP'>🪄 hikariCP</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/infrastructure/system/database/migration'>📁 migration</a></b></summary>
+  <summary><b><a href='../../module/infrastructure/system/database/migration'>📁 migration</a></b></summary>
 <ul>
 <li>
-  <a href='../module/infrastructure/system/database/migration/flyway'>🪄 flyway</a>
+  <a href='../../module/infrastructure/system/database/migration/flyway'>🪄 flyway</a>
 </li>
 <li>
-  <a href='../module/infrastructure/system/database/migration/liquibase'>🪄 liquibase</a>
+  <a href='../../module/infrastructure/system/database/migration/liquibase'>🪄 liquibase</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/infrastructure/system/database/nosql'>📁 nosql</a></b></summary>
+  <summary><b><a href='../../module/infrastructure/system/database/nosql'>📁 nosql</a></b></summary>
 <ul>
 <li>
-  <a href='../module/infrastructure/system/database/nosql/clickhouse'>🪄 clickhouse</a>
+  <a href='../../module/infrastructure/system/database/nosql/clickhouse'>🪄 clickhouse</a>
 </li>
 <li>
-  <a href='../module/infrastructure/system/database/nosql/elasticsearch'>🪄 elasticsearch</a>
+  <a href='../../module/infrastructure/system/database/nosql/elasticsearch'>🪄 elasticsearch</a>
 </li>
 <li>
-  <a href='../module/infrastructure/system/database/nosql/influxDB'>🪄 influxDB</a>
+  <a href='../../module/infrastructure/system/database/nosql/influxDB'>🪄 influxDB</a>
 </li>
 <li>
-  <a href='../module/infrastructure/system/database/nosql/loki'>🪄 loki</a>
+  <a href='../../module/infrastructure/system/database/nosql/loki'>🪄 loki</a>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/infrastructure/system/database/nosql/mongoDB'>📁 mongoDB</a></b></summary>
+  <summary><b><a href='../../module/infrastructure/system/database/nosql/mongoDB'>📁 mongoDB</a></b></summary>
 <ul>
 <li>
-  <a href='../module/infrastructure/system/database/nosql/mongoDB/aggregation'>🪄 aggregation</a>
+  <a href='../../module/infrastructure/system/database/nosql/mongoDB/aggregation'>🪄 aggregation</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
-  <a href='../module/infrastructure/system/database/nosql/neo4j'>🪄 neo4j</a>
+  <a href='../../module/infrastructure/system/database/nosql/neo4j'>🪄 neo4j</a>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/infrastructure/system/database/nosql/redis'>📁 redis</a></b></summary>
+  <summary><b><a href='../../module/infrastructure/system/database/nosql/redis'>📁 redis</a></b></summary>
 <ul>
 <li>
-  <a href='../module/infrastructure/system/database/nosql/redis/lua-scripting'>🪄 lua-scripting</a>
+  <a href='../../module/infrastructure/system/database/nosql/redis/lua-scripting'>🪄 lua-scripting</a>
 </li>
 </ul>
 </details>
@@ -137,53 +137,53 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/infrastructure/system/database/rdbms'>📁 rdbms</a></b></summary>
+  <summary><b><a href='../../module/infrastructure/system/database/rdbms'>📁 rdbms</a></b></summary>
 <ul>
 <li>
-  <a href='../module/infrastructure/system/database/rdbms/mysql'>🪄 mysql</a>
+  <a href='../../module/infrastructure/system/database/rdbms/mysql'>🪄 mysql</a>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/infrastructure/system/database/rdbms/oracle'>📁 oracle</a></b></summary>
+  <summary><b><a href='../../module/infrastructure/system/database/rdbms/oracle'>📁 oracle</a></b></summary>
 <ul>
 <li>
 <details>
-  <summary><b><a href='../module/infrastructure/system/database/rdbms/oracle/advance'>📁 advance</a></b></summary>
+  <summary><b><a href='../../module/infrastructure/system/database/rdbms/oracle/advance'>📁 advance</a></b></summary>
 <ul>
 <li>
-  <a href='../module/infrastructure/system/database/rdbms/oracle/advance/package'>🪄 package</a>
+  <a href='../../module/infrastructure/system/database/rdbms/oracle/advance/package'>🪄 package</a>
 </li>
 <li>
-  <a href='../module/infrastructure/system/database/rdbms/oracle/advance/procedure'>🪄 procedure</a>
+  <a href='../../module/infrastructure/system/database/rdbms/oracle/advance/procedure'>🪄 procedure</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
-  <a href='../module/infrastructure/system/database/rdbms/oracle/setup'>🪄 setup</a>
+  <a href='../../module/infrastructure/system/database/rdbms/oracle/setup'>🪄 setup</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/infrastructure/system/database/rdbms/postgresql'>📁 postgresql</a></b></summary>
+  <summary><b><a href='../../module/infrastructure/system/database/rdbms/postgresql'>📁 postgresql</a></b></summary>
 <ul>
 <li>
 <details>
-  <summary><b><a href='../module/infrastructure/system/database/rdbms/postgresql/advance'>📁 advance</a></b></summary>
+  <summary><b><a href='../../module/infrastructure/system/database/rdbms/postgresql/advance'>📁 advance</a></b></summary>
 <ul>
 <li>
-  <a href='../module/infrastructure/system/database/rdbms/postgresql/advance/functions'>🪄 functions</a>
+  <a href='../../module/infrastructure/system/database/rdbms/postgresql/advance/functions'>🪄 functions</a>
 </li>
 <li>
-  <a href='../module/infrastructure/system/database/rdbms/postgresql/advance/trigger'>🪄 trigger</a>
+  <a href='../../module/infrastructure/system/database/rdbms/postgresql/advance/trigger'>🪄 trigger</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
-  <a href='../module/infrastructure/system/database/rdbms/postgresql/setup'>🪄 setup</a>
+  <a href='../../module/infrastructure/system/database/rdbms/postgresql/setup'>🪄 setup</a>
 </li>
 </ul>
 </details>
@@ -196,59 +196,59 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/infrastructure/system/network'>📁 network</a></b></summary>
+  <summary><b><a href='../../module/infrastructure/system/network'>📁 network</a></b></summary>
 <ul>
 <li>
 <details>
-  <summary><b><a href='../module/infrastructure/system/network/api-gateway'>📁 api-gateway</a></b></summary>
+  <summary><b><a href='../../module/infrastructure/system/network/api-gateway'>📁 api-gateway</a></b></summary>
 <ul>
 <li>
-  <a href='../module/infrastructure/system/network/api-gateway/kong'>🪄 kong</a>
+  <a href='../../module/infrastructure/system/network/api-gateway/kong'>🪄 kong</a>
 </li>
 <li>
-  <a href='../module/infrastructure/system/network/api-gateway/spring-cloud-gateway'>🪄 spring-cloud-gateway</a>
+  <a href='../../module/infrastructure/system/network/api-gateway/spring-cloud-gateway'>🪄 spring-cloud-gateway</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/infrastructure/system/network/protocol'>📁 protocol</a></b></summary>
+  <summary><b><a href='../../module/infrastructure/system/network/protocol'>📁 protocol</a></b></summary>
 <ul>
 <li>
-  <a href='../module/infrastructure/system/network/protocol/http'>🪄 http</a>
+  <a href='../../module/infrastructure/system/network/protocol/http'>🪄 http</a>
 </li>
 <li>
-  <a href='../module/infrastructure/system/network/protocol/ssl-tls'>🪄 ssl-tls</a>
+  <a href='../../module/infrastructure/system/network/protocol/ssl-tls'>🪄 ssl-tls</a>
 </li>
 <li>
-  <a href='../module/infrastructure/system/network/protocol/tcp-udp'>🪄 tcp-udp</a>
+  <a href='../../module/infrastructure/system/network/protocol/tcp-udp'>🪄 tcp-udp</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/infrastructure/system/network/proxy'>📁 proxy</a></b></summary>
+  <summary><b><a href='../../module/infrastructure/system/network/proxy'>📁 proxy</a></b></summary>
 <ul>
 <li>
-  <a href='../module/infrastructure/system/network/proxy/haproxy'>🪄 haproxy</a>
+  <a href='../../module/infrastructure/system/network/proxy/haproxy'>🪄 haproxy</a>
 </li>
 <li>
-  <a href='../module/infrastructure/system/network/proxy/nginx'>🪄 nginx</a>
+  <a href='../../module/infrastructure/system/network/proxy/nginx'>🪄 nginx</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/infrastructure/system/network/service-mesh'>📁 service-mesh</a></b></summary>
+  <summary><b><a href='../../module/infrastructure/system/network/service-mesh'>📁 service-mesh</a></b></summary>
 <ul>
 <li>
-  <a href='../module/infrastructure/system/network/service-mesh/istio'>🪄 istio</a>
+  <a href='../../module/infrastructure/system/network/service-mesh/istio'>🪄 istio</a>
 </li>
 <li>
-  <a href='../module/infrastructure/system/network/service-mesh/linkerd'>🪄 linkerd</a>
+  <a href='../../module/infrastructure/system/network/service-mesh/linkerd'>🪄 linkerd</a>
 </li>
 </ul>
 </details>
@@ -258,31 +258,31 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/infrastructure/system/observability'>📁 observability</a></b></summary>
+  <summary><b><a href='../../module/infrastructure/system/observability'>📁 observability</a></b></summary>
 <ul>
 <li>
 <details>
-  <summary><b><a href='../module/infrastructure/system/observability/benchmark'>📁 benchmark</a></b></summary>
+  <summary><b><a href='../../module/infrastructure/system/observability/benchmark'>📁 benchmark</a></b></summary>
 <ul>
 <li>
 <details>
-  <summary><b><a href='../module/infrastructure/system/observability/benchmark/load-test'>📁 load-test</a></b></summary>
+  <summary><b><a href='../../module/infrastructure/system/observability/benchmark/load-test'>📁 load-test</a></b></summary>
 <ul>
 <li>
-  <a href='../module/infrastructure/system/observability/benchmark/load-test/jmeter'>🪄 jmeter</a>
+  <a href='../../module/infrastructure/system/observability/benchmark/load-test/jmeter'>🪄 jmeter</a>
 </li>
 <li>
-  <a href='../module/infrastructure/system/observability/benchmark/load-test/k6'>🪄 k6</a>
+  <a href='../../module/infrastructure/system/observability/benchmark/load-test/k6'>🪄 k6</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/infrastructure/system/observability/benchmark/micro'>📁 micro</a></b></summary>
+  <summary><b><a href='../../module/infrastructure/system/observability/benchmark/micro'>📁 micro</a></b></summary>
 <ul>
 <li>
-  <a href='../module/infrastructure/system/observability/benchmark/micro/jmh'>🪄 jmh</a>
+  <a href='../../module/infrastructure/system/observability/benchmark/micro/jmh'>🪄 jmh</a>
 </li>
 </ul>
 </details>
@@ -292,50 +292,50 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/infrastructure/system/observability/console'>📁 console</a></b></summary>
+  <summary><b><a href='../../module/infrastructure/system/observability/console'>📁 console</a></b></summary>
 <ul>
 <li>
-  <a href='../module/infrastructure/system/observability/console/hawtio'>🪄 hawtio</a>
+  <a href='../../module/infrastructure/system/observability/console/hawtio'>🪄 hawtio</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/infrastructure/system/observability/diagnostic'>📁 diagnostic</a></b></summary>
+  <summary><b><a href='../../module/infrastructure/system/observability/diagnostic'>📁 diagnostic</a></b></summary>
 <ul>
 <li>
 <details>
-  <summary><b><a href='../module/infrastructure/system/observability/diagnostic/profiling'>📁 profiling</a></b></summary>
+  <summary><b><a href='../../module/infrastructure/system/observability/diagnostic/profiling'>📁 profiling</a></b></summary>
 <ul>
 <li>
-  <a href='../module/infrastructure/system/observability/diagnostic/profiling/jconsole'>🪄 jconsole</a>
+  <a href='../../module/infrastructure/system/observability/diagnostic/profiling/jconsole'>🪄 jconsole</a>
 </li>
 <li>
-  <a href='../module/infrastructure/system/observability/diagnostic/profiling/jprofiler'>🪄 jprofiler</a>
+  <a href='../../module/infrastructure/system/observability/diagnostic/profiling/jprofiler'>🪄 jprofiler</a>
 </li>
 <li>
-  <a href='../module/infrastructure/system/observability/diagnostic/profiling/visual-vm'>🪄 visual-vm</a>
+  <a href='../../module/infrastructure/system/observability/diagnostic/profiling/visual-vm'>🪄 visual-vm</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/infrastructure/system/observability/diagnostic/runtime-analysis'>📁 runtime-analysis</a></b></summary>
+  <summary><b><a href='../../module/infrastructure/system/observability/diagnostic/runtime-analysis'>📁 runtime-analysis</a></b></summary>
 <ul>
 <li>
-  <a href='../module/infrastructure/system/observability/diagnostic/runtime-analysis/arthas'>🪄 arthas</a>
+  <a href='../../module/infrastructure/system/observability/diagnostic/runtime-analysis/arthas'>🪄 arthas</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/infrastructure/system/observability/diagnostic/thread-dump'>📁 thread-dump</a></b></summary>
+  <summary><b><a href='../../module/infrastructure/system/observability/diagnostic/thread-dump'>📁 thread-dump</a></b></summary>
 <ul>
 <li>
-  <a href='../module/infrastructure/system/observability/diagnostic/thread-dump/jstack'>🪄 jstack</a>
+  <a href='../../module/infrastructure/system/observability/diagnostic/thread-dump/jstack'>🪄 jstack</a>
 </li>
 </ul>
 </details>
@@ -345,66 +345,66 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/infrastructure/system/observability/logging'>📁 logging</a></b></summary>
+  <summary><b><a href='../../module/infrastructure/system/observability/logging'>📁 logging</a></b></summary>
 <ul>
 <li>
 <details>
-  <summary><b><a href='../module/infrastructure/system/observability/logging/event-log'>📁 event-log</a></b></summary>
+  <summary><b><a href='../../module/infrastructure/system/observability/logging/event-log'>📁 event-log</a></b></summary>
 <ul>
 <li>
-  <a href='../module/infrastructure/system/observability/logging/event-log/audit-log'>🪄 audit-log</a>
+  <a href='../../module/infrastructure/system/observability/logging/event-log/audit-log'>🪄 audit-log</a>
 </li>
 <li>
-  <a href='../module/infrastructure/system/observability/logging/event-log/business-log'>🪄 business-log</a>
+  <a href='../../module/infrastructure/system/observability/logging/event-log/business-log'>🪄 business-log</a>
 </li>
 <li>
-  <a href='../module/infrastructure/system/observability/logging/event-log/compliance'>🪄 compliance</a>
+  <a href='../../module/infrastructure/system/observability/logging/event-log/compliance'>🪄 compliance</a>
 </li>
 <li>
-  <a href='../module/infrastructure/system/observability/logging/event-log/security-event'>🪄 security-event</a>
+  <a href='../../module/infrastructure/system/observability/logging/event-log/security-event'>🪄 security-event</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/infrastructure/system/observability/logging/log-pipeline'>📁 log-pipeline</a></b></summary>
+  <summary><b><a href='../../module/infrastructure/system/observability/logging/log-pipeline'>📁 log-pipeline</a></b></summary>
 <ul>
 <li>
-  <a href='../module/infrastructure/system/observability/logging/log-pipeline/fluentd'>🪄 fluentd</a>
+  <a href='../../module/infrastructure/system/observability/logging/log-pipeline/fluentd'>🪄 fluentd</a>
 </li>
 <li>
-  <a href='../module/infrastructure/system/observability/logging/log-pipeline/logstash'>🪄 logstash</a>
+  <a href='../../module/infrastructure/system/observability/logging/log-pipeline/logstash'>🪄 logstash</a>
 </li>
 <li>
-  <a href='../module/infrastructure/system/observability/logging/log-pipeline/promtail'>🪄 promtail</a>
+  <a href='../../module/infrastructure/system/observability/logging/log-pipeline/promtail'>🪄 promtail</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/infrastructure/system/observability/logging/storage-analysis'>📁 storage-analysis</a></b></summary>
+  <summary><b><a href='../../module/infrastructure/system/observability/logging/storage-analysis'>📁 storage-analysis</a></b></summary>
 <ul>
 <li>
 <details>
-  <summary><b><a href='../module/infrastructure/system/observability/logging/storage-analysis/elk-stack'>📁 elk-stack</a></b></summary>
+  <summary><b><a href='../../module/infrastructure/system/observability/logging/storage-analysis/elk-stack'>📁 elk-stack</a></b></summary>
 <ul>
 <li>
-  <a href='../module/infrastructure/system/observability/logging/storage-analysis/elk-stack/elasticsearch'>🪄 elasticsearch</a>
+  <a href='../../module/infrastructure/system/observability/logging/storage-analysis/elk-stack/elasticsearch'>🪄 elasticsearch</a>
 </li>
 <li>
-  <a href='../module/infrastructure/system/observability/logging/storage-analysis/elk-stack/kibana'>🪄 kibana</a>
+  <a href='../../module/infrastructure/system/observability/logging/storage-analysis/elk-stack/kibana'>🪄 kibana</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/infrastructure/system/observability/logging/storage-analysis/loki-stack'>📁 loki-stack</a></b></summary>
+  <summary><b><a href='../../module/infrastructure/system/observability/logging/storage-analysis/loki-stack'>📁 loki-stack</a></b></summary>
 <ul>
 <li>
-  <a href='../module/infrastructure/system/observability/logging/storage-analysis/loki-stack/loki'>🪄 loki</a>
+  <a href='../../module/infrastructure/system/observability/logging/storage-analysis/loki-stack/loki'>🪄 loki</a>
 </li>
 </ul>
 </details>
@@ -417,27 +417,27 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/infrastructure/system/observability/metrics'>📁 metrics</a></b></summary>
+  <summary><b><a href='../../module/infrastructure/system/observability/metrics'>📁 metrics</a></b></summary>
 <ul>
 <li>
-  <a href='../module/infrastructure/system/observability/metrics/aggregation'>🪄 aggregation</a>
+  <a href='../../module/infrastructure/system/observability/metrics/aggregation'>🪄 aggregation</a>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/infrastructure/system/observability/metrics/time-series'>📁 time-series</a></b></summary>
+  <summary><b><a href='../../module/infrastructure/system/observability/metrics/time-series'>📁 time-series</a></b></summary>
 <ul>
 <li>
-  <a href='../module/infrastructure/system/observability/metrics/time-series/prometheus'>🪄 prometheus</a>
+  <a href='../../module/infrastructure/system/observability/metrics/time-series/prometheus'>🪄 prometheus</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/infrastructure/system/observability/metrics/visualization'>📁 visualization</a></b></summary>
+  <summary><b><a href='../../module/infrastructure/system/observability/metrics/visualization'>📁 visualization</a></b></summary>
 <ul>
 <li>
-  <a href='../module/infrastructure/system/observability/metrics/visualization/grafana'>🪄 grafana</a>
+  <a href='../../module/infrastructure/system/observability/metrics/visualization/grafana'>🪄 grafana</a>
 </li>
 </ul>
 </details>
@@ -447,26 +447,26 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/infrastructure/system/observability/tracing'>📁 tracing</a></b></summary>
+  <summary><b><a href='../../module/infrastructure/system/observability/tracing'>📁 tracing</a></b></summary>
 <ul>
 <li>
-  <a href='../module/infrastructure/system/observability/tracing/concept'>🪄 concept</a>
+  <a href='../../module/infrastructure/system/observability/tracing/concept'>🪄 concept</a>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/infrastructure/system/observability/tracing/tooling'>📁 tooling</a></b></summary>
+  <summary><b><a href='../../module/infrastructure/system/observability/tracing/tooling'>📁 tooling</a></b></summary>
 <ul>
 <li>
-  <a href='../module/infrastructure/system/observability/tracing/tooling/datadog'>🪄 datadog</a>
+  <a href='../../module/infrastructure/system/observability/tracing/tooling/datadog'>🪄 datadog</a>
 </li>
 <li>
-  <a href='../module/infrastructure/system/observability/tracing/tooling/jaeger'>🪄 jaeger</a>
+  <a href='../../module/infrastructure/system/observability/tracing/tooling/jaeger'>🪄 jaeger</a>
 </li>
 <li>
-  <a href='../module/infrastructure/system/observability/tracing/tooling/tempo'>🪄 tempo</a>
+  <a href='../../module/infrastructure/system/observability/tracing/tooling/tempo'>🪄 tempo</a>
 </li>
 <li>
-  <a href='../module/infrastructure/system/observability/tracing/tooling/zipkin'>🪄 zipkin</a>
+  <a href='../../module/infrastructure/system/observability/tracing/tooling/zipkin'>🪄 zipkin</a>
 </li>
 </ul>
 </details>
@@ -479,24 +479,24 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/infrastructure/system/security'>📁 security</a></b></summary>
+  <summary><b><a href='../../module/infrastructure/system/security'>📁 security</a></b></summary>
 <ul>
 <li>
 <details>
-  <summary><b><a href='../module/infrastructure/system/security/iam'>📁 iam</a></b></summary>
+  <summary><b><a href='../../module/infrastructure/system/security/iam'>📁 iam</a></b></summary>
 <ul>
 <li>
-  <a href='../module/infrastructure/system/security/iam/keycloak'>🪄 keycloak</a>
+  <a href='../../module/infrastructure/system/security/iam/keycloak'>🪄 keycloak</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/infrastructure/system/security/vault'>📁 vault</a></b></summary>
+  <summary><b><a href='../../module/infrastructure/system/security/vault'>📁 vault</a></b></summary>
 <ul>
 <li>
-  <a href='../module/infrastructure/system/security/vault/hashicorp'>🪄 hashicorp</a>
+  <a href='../../module/infrastructure/system/security/vault/hashicorp'>🪄 hashicorp</a>
 </li>
 </ul>
 </details>
@@ -506,13 +506,13 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/infrastructure/system/server'>📁 server</a></b></summary>
+  <summary><b><a href='../../module/infrastructure/system/server'>📁 server</a></b></summary>
 <ul>
 <li>
-  <a href='../module/infrastructure/system/server/jetty'>🪄 jetty</a>
+  <a href='../../module/infrastructure/system/server/jetty'>🪄 jetty</a>
 </li>
 <li>
-  <a href='../module/infrastructure/system/server/tomcat'>🪄 tomcat</a>
+  <a href='../../module/infrastructure/system/server/tomcat'>🪄 tomcat</a>
 </li>
 </ul>
 </details>
@@ -525,51 +525,51 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/integration'>📁 integration</a></b></summary>
+  <summary><b><a href='../../module/integration'>📁 integration</a></b></summary>
 <ul>
 <li>
 <details>
-  <summary><b><a href='../module/integration/broker'>📁 broker</a></b></summary>
+  <summary><b><a href='../../module/integration/broker'>📁 broker</a></b></summary>
 <ul>
 <li>
-  <a href='../module/integration/broker/activeMQ'>🪄 activeMQ</a>
+  <a href='../../module/integration/broker/activeMQ'>🪄 activeMQ</a>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/integration/broker/kafka'>📁 kafka</a></b></summary>
+  <summary><b><a href='../../module/integration/broker/kafka'>📁 kafka</a></b></summary>
 <ul>
 <li>
 <details>
-  <summary><b><a href='../module/integration/broker/kafka/service'>📁 service</a></b></summary>
+  <summary><b><a href='../../module/integration/broker/kafka/service'>📁 service</a></b></summary>
 <ul>
 <li>
 <details>
-  <summary><b><a href='../module/integration/broker/kafka/service/consumer'>📁 consumer</a></b></summary>
+  <summary><b><a href='../../module/integration/broker/kafka/service/consumer'>📁 consumer</a></b></summary>
 <ul>
 <li>
-  <a href='../module/integration/broker/kafka/service/consumer/accountant'>🪄 accountant</a>
+  <a href='../../module/integration/broker/kafka/service/consumer/accountant'>🪄 accountant</a>
 </li>
 <li>
-  <a href='../module/integration/broker/kafka/service/consumer/notification'>🪄 notification</a>
+  <a href='../../module/integration/broker/kafka/service/consumer/notification'>🪄 notification</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
-  <a href='../module/integration/broker/kafka/service/control'>🪄 control</a>
+  <a href='../../module/integration/broker/kafka/service/control'>🪄 control</a>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/integration/broker/kafka/service/producer'>📁 producer</a></b></summary>
+  <summary><b><a href='../../module/integration/broker/kafka/service/producer'>📁 producer</a></b></summary>
 <ul>
 <li>
-  <a href='../module/integration/broker/kafka/service/producer/bank'>🪄 bank</a>
+  <a href='../../module/integration/broker/kafka/service/producer/bank'>🪄 bank</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
-  <a href='../module/integration/broker/kafka/service/server'>🪄 server</a>
+  <a href='../../module/integration/broker/kafka/service/server'>🪄 server</a>
 </li>
 </ul>
 </details>
@@ -578,47 +578,47 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </details>
 </li>
 <li>
-  <a href='../module/integration/broker/rabbitMQ'>🪄 rabbitMQ</a>
+  <a href='../../module/integration/broker/rabbitMQ'>🪄 rabbitMQ</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/integration/oneway'>📁 oneway</a></b></summary>
+  <summary><b><a href='../../module/integration/oneway'>📁 oneway</a></b></summary>
 <ul>
 <li>
-  <a href='../module/integration/oneway/grpc'>🪄 grpc</a>
+  <a href='../../module/integration/oneway/grpc'>🪄 grpc</a>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/integration/oneway/httpRequest'>📁 httpRequest</a></b></summary>
+  <summary><b><a href='../../module/integration/oneway/httpRequest'>📁 httpRequest</a></b></summary>
 <ul>
 <li>
 <details>
-  <summary><b><a href='../module/integration/oneway/httpRequest/blocking'>📁 blocking</a></b></summary>
+  <summary><b><a href='../../module/integration/oneway/httpRequest/blocking'>📁 blocking</a></b></summary>
 <ul>
 <li>
-  <a href='../module/integration/oneway/httpRequest/blocking/feign-client'>🪄 feign-client</a>
+  <a href='../../module/integration/oneway/httpRequest/blocking/feign-client'>🪄 feign-client</a>
 </li>
 <li>
-  <a href='../module/integration/oneway/httpRequest/blocking/http-url-connection'>🪄 http-url-connection</a>
+  <a href='../../module/integration/oneway/httpRequest/blocking/http-url-connection'>🪄 http-url-connection</a>
 </li>
 <li>
-  <a href='../module/integration/oneway/httpRequest/blocking/rest-client'>🪄 rest-client</a>
+  <a href='../../module/integration/oneway/httpRequest/blocking/rest-client'>🪄 rest-client</a>
 </li>
 <li>
-  <a href='../module/integration/oneway/httpRequest/blocking/rest-template'>🪄 rest-template</a>
+  <a href='../../module/integration/oneway/httpRequest/blocking/rest-template'>🪄 rest-template</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/integration/oneway/httpRequest/nonBlocking'>📁 nonBlocking</a></b></summary>
+  <summary><b><a href='../../module/integration/oneway/httpRequest/nonBlocking'>📁 nonBlocking</a></b></summary>
 <ul>
 <li>
-  <a href='../module/integration/oneway/httpRequest/nonBlocking/web-client'>🪄 web-client</a>
+  <a href='../../module/integration/oneway/httpRequest/nonBlocking/web-client'>🪄 web-client</a>
 </li>
 </ul>
 </details>
@@ -627,20 +627,20 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </details>
 </li>
 <li>
-  <a href='../module/integration/oneway/sse'>🪄 sse</a>
+  <a href='../../module/integration/oneway/sse'>🪄 sse</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/integration/twoway'>📁 twoway</a></b></summary>
+  <summary><b><a href='../../module/integration/twoway'>📁 twoway</a></b></summary>
 <ul>
 <li>
-  <a href='../module/integration/twoway/rsocket'>🪄 rsocket</a>
+  <a href='../../module/integration/twoway/rsocket'>🪄 rsocket</a>
 </li>
 <li>
-  <a href='../module/integration/twoway/websocket'>🪄 websocket</a>
+  <a href='../../module/integration/twoway/websocket'>🪄 websocket</a>
 </li>
 </ul>
 </details>
@@ -650,110 +650,110 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/microservice'>📁 microservice</a></b></summary>
+  <summary><b><a href='../../module/microservice'>📁 microservice</a></b></summary>
 <ul>
 <li>
 <details>
-  <summary><b><a href='../module/microservice/module'>📁 module</a></b></summary>
+  <summary><b><a href='../../module/microservice/module'>📁 module</a></b></summary>
 <ul>
 <li>
 <details>
-  <summary><b><a href='../module/microservice/module/deployments'>📁 deployments</a></b></summary>
+  <summary><b><a href='../../module/microservice/module/deployments'>📁 deployments</a></b></summary>
 <ul>
 <li>
-  <a href='../module/microservice/module/deployments/docker'>🪄 docker</a>
+  <a href='../../module/microservice/module/deployments/docker'>🪄 docker</a>
 </li>
 <li>
-  <a href='../module/microservice/module/deployments/prometheus-grafana'>🪄 prometheus-grafana</a>
+  <a href='../../module/microservice/module/deployments/prometheus-grafana'>🪄 prometheus-grafana</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/microservice/module/infrastructure'>📁 infrastructure</a></b></summary>
+  <summary><b><a href='../../module/microservice/module/infrastructure'>📁 infrastructure</a></b></summary>
 <ul>
 <li>
-  <a href='../module/microservice/module/infrastructure/admin-server'>🪄 admin-server</a>
+  <a href='../../module/microservice/module/infrastructure/admin-server'>🪄 admin-server</a>
 </li>
 <li>
-  <a href='../module/microservice/module/infrastructure/api-gateway'>🪄 api-gateway</a>
+  <a href='../../module/microservice/module/infrastructure/api-gateway'>🪄 api-gateway</a>
 </li>
 <li>
-  <a href='../module/microservice/module/infrastructure/config-server'>🪄 config-server</a>
+  <a href='../../module/microservice/module/infrastructure/config-server'>🪄 config-server</a>
 </li>
 <li>
-  <a href='../module/microservice/module/infrastructure/eureka-client'>🪄 eureka-client</a>
+  <a href='../../module/microservice/module/infrastructure/eureka-client'>🪄 eureka-client</a>
 </li>
 <li>
-  <a href='../module/microservice/module/infrastructure/eureka-server'>🪄 eureka-server</a>
+  <a href='../../module/microservice/module/infrastructure/eureka-server'>🪄 eureka-server</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/microservice/module/integration'>📁 integration</a></b></summary>
+  <summary><b><a href='../../module/microservice/module/integration'>📁 integration</a></b></summary>
 <ul>
 <li>
-  <a href='../module/microservice/module/integration/message-broker'>🪄 message-broker</a>
+  <a href='../../module/microservice/module/integration/message-broker'>🪄 message-broker</a>
 </li>
 <li>
-  <a href='../module/microservice/module/integration/notification-service'>🪄 notification-service</a>
+  <a href='../../module/microservice/module/integration/notification-service'>🪄 notification-service</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/microservice/module/platform'>📁 platform</a></b></summary>
+  <summary><b><a href='../../module/microservice/module/platform'>📁 platform</a></b></summary>
 <ul>
 <li>
-  <a href='../module/microservice/module/platform/common-lib'>🪄 common-lib</a>
+  <a href='../../module/microservice/module/platform/common-lib'>🪄 common-lib</a>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/microservice/module/platform/logging-starter'>📁 logging-starter</a></b></summary>
+  <summary><b><a href='../../module/microservice/module/platform/logging-starter'>📁 logging-starter</a></b></summary>
 <ul>
 <li>
-  <a href='../module/microservice/module/platform/logging-starter/elk-stack'>🪄 elk-stack</a>
+  <a href='../../module/microservice/module/platform/logging-starter/elk-stack'>🪄 elk-stack</a>
 </li>
 <li>
-  <a href='../module/microservice/module/platform/logging-starter/loki'>🪄 loki</a>
+  <a href='../../module/microservice/module/platform/logging-starter/loki'>🪄 loki</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
-  <a href='../module/microservice/module/platform/resilience4j'>🪄 resilience4j</a>
+  <a href='../../module/microservice/module/platform/resilience4j'>🪄 resilience4j</a>
 </li>
 <li>
-  <a href='../module/microservice/module/platform/security-starter'>🪄 security-starter</a>
+  <a href='../../module/microservice/module/platform/security-starter'>🪄 security-starter</a>
 </li>
 <li>
-  <a href='../module/microservice/module/platform/temporal-starter'>🪄 temporal-starter</a>
+  <a href='../../module/microservice/module/platform/temporal-starter'>🪄 temporal-starter</a>
 </li>
 <li>
-  <a href='../module/microservice/module/platform/tracing'>🪄 tracing</a>
+  <a href='../../module/microservice/module/platform/tracing'>🪄 tracing</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/microservice/module/service'>📁 service</a></b></summary>
+  <summary><b><a href='../../module/microservice/module/service'>📁 service</a></b></summary>
 <ul>
 <li>
-  <a href='../module/microservice/module/service/inventory-service'>🪄 inventory-service</a>
+  <a href='../../module/microservice/module/service/inventory-service'>🪄 inventory-service</a>
 </li>
 <li>
-  <a href='../module/microservice/module/service/order-service'>🪄 order-service</a>
+  <a href='../../module/microservice/module/service/order-service'>🪄 order-service</a>
 </li>
 <li>
-  <a href='../module/microservice/module/service/payment-service'>🪄 payment-service</a>
+  <a href='../../module/microservice/module/service/payment-service'>🪄 payment-service</a>
 </li>
 <li>
-  <a href='../module/microservice/module/service/product-service'>🪄 product-service</a>
+  <a href='../../module/microservice/module/service/product-service'>🪄 product-service</a>
 </li>
 </ul>
 </details>
@@ -766,114 +766,114 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/platform'>📁 platform</a></b></summary>
+  <summary><b><a href='../../module/platform'>📁 platform</a></b></summary>
 <ul>
 <li>
-  <a href='../module/platform/cloud'>🪄 cloud</a>
+  <a href='../../module/platform/cloud'>🪄 cloud</a>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/platform/development'>📁 development</a></b></summary>
+  <summary><b><a href='../../module/platform/development'>📁 development</a></b></summary>
 <ul>
 <li>
 <details>
-  <summary><b><a href='../module/platform/development/build-tool'>📁 build-tool</a></b></summary>
+  <summary><b><a href='../../module/platform/development/build-tool'>📁 build-tool</a></b></summary>
 <ul>
 <li>
-  <a href='../module/platform/development/build-tool/ant'>🪄 ant</a>
+  <a href='../../module/platform/development/build-tool/ant'>🪄 ant</a>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/platform/development/build-tool/gradle'>📁 gradle</a></b></summary>
+  <summary><b><a href='../../module/platform/development/build-tool/gradle'>📁 gradle</a></b></summary>
 <ul>
 <li>
-  <a href='../module/platform/development/build-tool/gradle/open-rewrite'>🪄 open-rewrite</a>
+  <a href='../../module/platform/development/build-tool/gradle/open-rewrite'>🪄 open-rewrite</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
-  <a href='../module/platform/development/build-tool/maven'>🪄 maven</a>
+  <a href='../../module/platform/development/build-tool/maven'>🪄 maven</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/platform/development/design-pattern'>📁 design-pattern</a></b></summary>
+  <summary><b><a href='../../module/platform/development/design-pattern'>📁 design-pattern</a></b></summary>
 <ul>
 <li>
-  <a href='../module/platform/development/design-pattern/anti-patterns'>🪄 anti-patterns</a>
+  <a href='../../module/platform/development/design-pattern/anti-patterns'>🪄 anti-patterns</a>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/platform/development/design-pattern/behavioral'>📁 behavioral</a></b></summary>
+  <summary><b><a href='../../module/platform/development/design-pattern/behavioral'>📁 behavioral</a></b></summary>
 <ul>
 <li>
-  <a href='../module/platform/development/design-pattern/behavioral/observer'>🪄 observer</a>
+  <a href='../../module/platform/development/design-pattern/behavioral/observer'>🪄 observer</a>
 </li>
 <li>
-  <a href='../module/platform/development/design-pattern/behavioral/state'>🪄 state</a>
+  <a href='../../module/platform/development/design-pattern/behavioral/state'>🪄 state</a>
 </li>
 <li>
-  <a href='../module/platform/development/design-pattern/behavioral/strategy'>🪄 strategy</a>
+  <a href='../../module/platform/development/design-pattern/behavioral/strategy'>🪄 strategy</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/platform/development/design-pattern/creational'>📁 creational</a></b></summary>
+  <summary><b><a href='../../module/platform/development/design-pattern/creational'>📁 creational</a></b></summary>
 <ul>
 <li>
-  <a href='../module/platform/development/design-pattern/creational/builder'>🪄 builder</a>
+  <a href='../../module/platform/development/design-pattern/creational/builder'>🪄 builder</a>
 </li>
 <li>
-  <a href='../module/platform/development/design-pattern/creational/factory-method'>🪄 factory-method</a>
+  <a href='../../module/platform/development/design-pattern/creational/factory-method'>🪄 factory-method</a>
 </li>
 <li>
-  <a href='../module/platform/development/design-pattern/creational/singleton'>🪄 singleton</a>
+  <a href='../../module/platform/development/design-pattern/creational/singleton'>🪄 singleton</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/platform/development/design-pattern/distributed-system'>📁 distributed-system</a></b></summary>
+  <summary><b><a href='../../module/platform/development/design-pattern/distributed-system'>📁 distributed-system</a></b></summary>
 <ul>
 <li>
-  <a href='../module/platform/development/design-pattern/distributed-system/bulkhead'>🪄 bulkhead</a>
+  <a href='../../module/platform/development/design-pattern/distributed-system/bulkhead'>🪄 bulkhead</a>
 </li>
 <li>
-  <a href='../module/platform/development/design-pattern/distributed-system/cqrs'>🪄 cqrs</a>
+  <a href='../../module/platform/development/design-pattern/distributed-system/cqrs'>🪄 cqrs</a>
 </li>
 <li>
-  <a href='../module/platform/development/design-pattern/distributed-system/event-sourcing'>🪄 event-sourcing</a>
+  <a href='../../module/platform/development/design-pattern/distributed-system/event-sourcing'>🪄 event-sourcing</a>
 </li>
 <li>
-  <a href='../module/platform/development/design-pattern/distributed-system/saga'>🪄 saga</a>
+  <a href='../../module/platform/development/design-pattern/distributed-system/saga'>🪄 saga</a>
 </li>
 <li>
-  <a href='../module/platform/development/design-pattern/distributed-system/sidecar'>🪄 sidecar</a>
+  <a href='../../module/platform/development/design-pattern/distributed-system/sidecar'>🪄 sidecar</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
-  <a href='../module/platform/development/design-pattern/solid-principles'>🪄 solid-principles</a>
+  <a href='../../module/platform/development/design-pattern/solid-principles'>🪄 solid-principles</a>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/platform/development/design-pattern/structural'>📁 structural</a></b></summary>
+  <summary><b><a href='../../module/platform/development/design-pattern/structural'>📁 structural</a></b></summary>
 <ul>
 <li>
-  <a href='../module/platform/development/design-pattern/structural/adapter'>🪄 adapter</a>
+  <a href='../../module/platform/development/design-pattern/structural/adapter'>🪄 adapter</a>
 </li>
 <li>
-  <a href='../module/platform/development/design-pattern/structural/facade'>🪄 facade</a>
+  <a href='../../module/platform/development/design-pattern/structural/facade'>🪄 facade</a>
 </li>
 <li>
-  <a href='../module/platform/development/design-pattern/structural/proxy'>🪄 proxy</a>
+  <a href='../../module/platform/development/design-pattern/structural/proxy'>🪄 proxy</a>
 </li>
 </ul>
 </details>
@@ -883,131 +883,131 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/platform/development/framework'>📁 framework</a></b></summary>
+  <summary><b><a href='../../module/platform/development/framework'>📁 framework</a></b></summary>
 <ul>
 <li>
 <details>
-  <summary><b><a href='../module/platform/development/framework/spring'>📁 spring</a></b></summary>
+  <summary><b><a href='../../module/platform/development/framework/spring'>📁 spring</a></b></summary>
 <ul>
 <li>
-  <a href='../module/platform/development/framework/spring/actuator'>🪄 actuator</a>
+  <a href='../../module/platform/development/framework/spring/actuator'>🪄 actuator</a>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/platform/development/framework/spring/basic'>📁 basic</a></b></summary>
+  <summary><b><a href='../../module/platform/development/framework/spring/basic'>📁 basic</a></b></summary>
 <ul>
 <li>
 <details>
-  <summary><b><a href='../module/platform/development/framework/spring/basic/core'>📁 core</a></b></summary>
+  <summary><b><a href='../../module/platform/development/framework/spring/basic/core'>📁 core</a></b></summary>
 <ul>
 <li>
-  <a href='../module/platform/development/framework/spring/basic/core/annotation'>🪄 annotation</a>
+  <a href='../../module/platform/development/framework/spring/basic/core/annotation'>🪄 annotation</a>
 </li>
 <li>
-  <a href='../module/platform/development/framework/spring/basic/core/bean'>🪄 bean</a>
+  <a href='../../module/platform/development/framework/spring/basic/core/bean'>🪄 bean</a>
 </li>
 <li>
-  <a href='../module/platform/development/framework/spring/basic/core/scope'>🪄 scope</a>
+  <a href='../../module/platform/development/framework/spring/basic/core/scope'>🪄 scope</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
-  <a href='../module/platform/development/framework/spring/basic/profile'>🪄 profile</a>
+  <a href='../../module/platform/development/framework/spring/basic/profile'>🪄 profile</a>
 </li>
 <li>
-  <a href='../module/platform/development/framework/spring/basic/properties'>🪄 properties</a>
+  <a href='../../module/platform/development/framework/spring/basic/properties'>🪄 properties</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
-  <a href='../module/platform/development/framework/spring/conditional'>🪄 conditional</a>
+  <a href='../../module/platform/development/framework/spring/conditional'>🪄 conditional</a>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/platform/development/framework/spring/data'>📁 data</a></b></summary>
+  <summary><b><a href='../../module/platform/development/framework/spring/data'>📁 data</a></b></summary>
 <ul>
 <li>
-  <a href='../module/platform/development/framework/spring/data/jpa'>🪄 jpa</a>
+  <a href='../../module/platform/development/framework/spring/data/jpa'>🪄 jpa</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
-  <a href='../module/platform/development/framework/spring/devtool'>🪄 devtool</a>
+  <a href='../../module/platform/development/framework/spring/devtool'>🪄 devtool</a>
 </li>
 <li>
-  <a href='../module/platform/development/framework/spring/functional-endpoint'>🪄 functional-endpoint</a>
+  <a href='../../module/platform/development/framework/spring/functional-endpoint'>🪄 functional-endpoint</a>
 </li>
 <li>
-  <a href='../module/platform/development/framework/spring/global-exception-handler'>🪄 global-exception-handler</a>
+  <a href='../../module/platform/development/framework/spring/global-exception-handler'>🪄 global-exception-handler</a>
 </li>
 <li>
-  <a href='../module/platform/development/framework/spring/import'>🪄 import</a>
+  <a href='../../module/platform/development/framework/spring/import'>🪄 import</a>
 </li>
 <li>
-  <a href='../module/platform/development/framework/spring/profile'>🪄 profile</a>
+  <a href='../../module/platform/development/framework/spring/profile'>🪄 profile</a>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/platform/development/framework/spring/security'>📁 security</a></b></summary>
+  <summary><b><a href='../../module/platform/development/framework/spring/security'>📁 security</a></b></summary>
 <ul>
 <li>
-  <a href='../module/platform/development/framework/spring/security/basic'>🪄 basic</a>
+  <a href='../../module/platform/development/framework/spring/security/basic'>🪄 basic</a>
 </li>
 <li>
-  <a href='../module/platform/development/framework/spring/security/jwt'>🪄 jwt</a>
+  <a href='../../module/platform/development/framework/spring/security/jwt'>🪄 jwt</a>
 </li>
 <li>
-  <a href='../module/platform/development/framework/spring/security/oauth'>🪄 oauth</a>
+  <a href='../../module/platform/development/framework/spring/security/oauth'>🪄 oauth</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
-  <a href='../module/platform/development/framework/spring/swagger'>🪄 swagger</a>
+  <a href='../../module/platform/development/framework/spring/swagger'>🪄 swagger</a>
 </li>
 <li>
-  <a href='../module/platform/development/framework/spring/test-property-source'>🪄 test-property-source</a>
+  <a href='../../module/platform/development/framework/spring/test-property-source'>🪄 test-property-source</a>
 </li>
 <li>
-  <a href='../module/platform/development/framework/spring/web'>🪄 web</a>
+  <a href='../../module/platform/development/framework/spring/web'>🪄 web</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/platform/development/framework/spring-boot'>📁 spring-boot</a></b></summary>
+  <summary><b><a href='../../module/platform/development/framework/spring-boot'>📁 spring-boot</a></b></summary>
 <ul>
 <li>
-  <a href='../module/platform/development/framework/spring-boot/auto-configuration'>🪄 auto-configuration</a>
+  <a href='../../module/platform/development/framework/spring-boot/auto-configuration'>🪄 auto-configuration</a>
 </li>
 <li>
-  <a href='../module/platform/development/framework/spring-boot/embedded-server'>🪄 embedded-server</a>
+  <a href='../../module/platform/development/framework/spring-boot/embedded-server'>🪄 embedded-server</a>
 </li>
 <li>
-  <a href='../module/platform/development/framework/spring-boot/externalized-configuration'>🪄 externalized-configuration</a>
+  <a href='../../module/platform/development/framework/spring-boot/externalized-configuration'>🪄 externalized-configuration</a>
 </li>
 <li>
-  <a href='../module/platform/development/framework/spring-boot/native-image'>🪄 native-image</a>
+  <a href='../../module/platform/development/framework/spring-boot/native-image'>🪄 native-image</a>
 </li>
 <li>
-  <a href='../module/platform/development/framework/spring-boot/packaging'>🪄 packaging</a>
+  <a href='../../module/platform/development/framework/spring-boot/packaging'>🪄 packaging</a>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/platform/development/framework/spring-boot/starter'>📁 starter</a></b></summary>
+  <summary><b><a href='../../module/platform/development/framework/spring-boot/starter'>📁 starter</a></b></summary>
 <ul>
 <li>
-  <a href='../module/platform/development/framework/spring-boot/starter/custom-starter'>🪄 custom-starter</a>
+  <a href='../../module/platform/development/framework/spring-boot/starter/custom-starter'>🪄 custom-starter</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
-  <a href='../module/platform/development/framework/spring-boot/testing'>🪄 testing</a>
+  <a href='../../module/platform/development/framework/spring-boot/testing'>🪄 testing</a>
 </li>
 </ul>
 </details>
@@ -1017,53 +1017,53 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/platform/development/language'>📁 language</a></b></summary>
+  <summary><b><a href='../../module/platform/development/language'>📁 language</a></b></summary>
 <ul>
 <li>
 <details>
-  <summary><b><a href='../module/platform/development/language/java'>📁 java</a></b></summary>
+  <summary><b><a href='../../module/platform/development/language/java'>📁 java</a></b></summary>
 <ul>
 <li>
-  <a href='../module/platform/development/language/java/advance'>🪄 advance</a>
+  <a href='../../module/platform/development/language/java/advance'>🪄 advance</a>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/platform/development/language/java/concurrency'>📁 concurrency</a></b></summary>
+  <summary><b><a href='../../module/platform/development/language/java/concurrency'>📁 concurrency</a></b></summary>
 <ul>
 <li>
-  <a href='../module/platform/development/language/java/concurrency/async-programming'>🪄 async-programming</a>
+  <a href='../../module/platform/development/language/java/concurrency/async-programming'>🪄 async-programming</a>
 </li>
 <li>
-  <a href='../module/platform/development/language/java/concurrency/executor-service'>🪄 executor-service</a>
+  <a href='../../module/platform/development/language/java/concurrency/executor-service'>🪄 executor-service</a>
 </li>
 <li>
-  <a href='../module/platform/development/language/java/concurrency/high-level-utils'>🪄 high-level-utils</a>
+  <a href='../../module/platform/development/language/java/concurrency/high-level-utils'>🪄 high-level-utils</a>
 </li>
 <li>
-  <a href='../module/platform/development/language/java/concurrency/virtual-threads'>🪄 virtual-threads</a>
+  <a href='../../module/platform/development/language/java/concurrency/virtual-threads'>🪄 virtual-threads</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/platform/development/language/java/core'>📁 core</a></b></summary>
+  <summary><b><a href='../../module/platform/development/language/java/core'>📁 core</a></b></summary>
 <ul>
 <li>
-  <a href='../module/platform/development/language/java/core/abstract-interface'>🪄 abstract-interface</a>
+  <a href='../../module/platform/development/language/java/core/abstract-interface'>🪄 abstract-interface</a>
 </li>
 <li>
-  <a href='../module/platform/development/language/java/core/class-and-runtime-class'>🪄 class-and-runtime-class</a>
+  <a href='../../module/platform/development/language/java/core/class-and-runtime-class'>🪄 class-and-runtime-class</a>
 </li>
 <li>
-  <a href='../module/platform/development/language/java/core/classloader'>🪄 classloader</a>
+  <a href='../../module/platform/development/language/java/core/classloader'>🪄 classloader</a>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/platform/development/language/java/core/reflection'>📁 reflection</a></b></summary>
+  <summary><b><a href='../../module/platform/development/language/java/core/reflection'>📁 reflection</a></b></summary>
 <ul>
 <li>
-  <a href='../module/platform/development/language/java/core/reflection/type-system'>🪄 type-system</a>
+  <a href='../../module/platform/development/language/java/core/reflection/type-system'>🪄 type-system</a>
 </li>
 </ul>
 </details>
@@ -1073,46 +1073,46 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/platform/development/language/java/mapping'>📁 mapping</a></b></summary>
+  <summary><b><a href='../../module/platform/development/language/java/mapping'>📁 mapping</a></b></summary>
 <ul>
 <li>
-  <a href='../module/platform/development/language/java/mapping/mapstruct'>🪄 mapstruct</a>
+  <a href='../../module/platform/development/language/java/mapping/mapstruct'>🪄 mapstruct</a>
 </li>
 <li>
-  <a href='../module/platform/development/language/java/mapping/model-mapper'>🪄 model-mapper</a>
+  <a href='../../module/platform/development/language/java/mapping/model-mapper'>🪄 model-mapper</a>
 </li>
 <li>
-  <a href='../module/platform/development/language/java/mapping/object-mapper'>🪄 object-mapper</a>
+  <a href='../../module/platform/development/language/java/mapping/object-mapper'>🪄 object-mapper</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/platform/development/language/java/persistence'>📁 persistence</a></b></summary>
+  <summary><b><a href='../../module/platform/development/language/java/persistence'>📁 persistence</a></b></summary>
 <ul>
 <li>
 <details>
-  <summary><b><a href='../module/platform/development/language/java/persistence/orm'>📁 orm</a></b></summary>
+  <summary><b><a href='../../module/platform/development/language/java/persistence/orm'>📁 orm</a></b></summary>
 <ul>
 <li>
-  <a href='../module/platform/development/language/java/persistence/orm/hibernate'>🪄 hibernate</a>
+  <a href='../../module/platform/development/language/java/persistence/orm/hibernate'>🪄 hibernate</a>
 </li>
 <li>
-  <a href='../module/platform/development/language/java/persistence/orm/jpa-specification'>🪄 jpa-specification</a>
+  <a href='../../module/platform/development/language/java/persistence/orm/jpa-specification'>🪄 jpa-specification</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/platform/development/language/java/persistence/sql'>📁 sql</a></b></summary>
+  <summary><b><a href='../../module/platform/development/language/java/persistence/sql'>📁 sql</a></b></summary>
 <ul>
 <li>
-  <a href='../module/platform/development/language/java/persistence/sql/jdbc'>🪄 jdbc</a>
+  <a href='../../module/platform/development/language/java/persistence/sql/jdbc'>🪄 jdbc</a>
 </li>
 <li>
-  <a href='../module/platform/development/language/java/persistence/sql/mybatis'>🪄 mybatis</a>
+  <a href='../../module/platform/development/language/java/persistence/sql/mybatis'>🪄 mybatis</a>
 </li>
 </ul>
 </details>
@@ -1122,33 +1122,33 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/platform/development/language/java/version'>📁 version</a></b></summary>
+  <summary><b><a href='../../module/platform/development/language/java/version'>📁 version</a></b></summary>
 <ul>
 <li>
-  <a href='../module/platform/development/language/java/version/java11'>🪄 java11</a>
+  <a href='../../module/platform/development/language/java/version/java11'>🪄 java11</a>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/platform/development/language/java/version/java16'>📁 java16</a></b></summary>
+  <summary><b><a href='../../module/platform/development/language/java/version/java16'>📁 java16</a></b></summary>
 <ul>
 <li>
-  <a href='../module/platform/development/language/java/version/java16/record'>🪄 record</a>
+  <a href='../../module/platform/development/language/java/version/java16/record'>🪄 record</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
-  <a href='../module/platform/development/language/java/version/java17'>🪄 java17</a>
+  <a href='../../module/platform/development/language/java/version/java17'>🪄 java17</a>
 </li>
 <li>
-  <a href='../module/platform/development/language/java/version/java7'>🪄 java7</a>
+  <a href='../../module/platform/development/language/java/version/java7'>🪄 java7</a>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/platform/development/language/java/version/java8'>📁 java8</a></b></summary>
+  <summary><b><a href='../../module/platform/development/language/java/version/java8'>📁 java8</a></b></summary>
 <ul>
 <li>
-  <a href='../module/platform/development/language/java/version/java8/stream-api'>🪄 stream-api</a>
+  <a href='../../module/platform/development/language/java/version/java8/stream-api'>🪄 stream-api</a>
 </li>
 </ul>
 </details>
@@ -1164,68 +1164,68 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/platform/development/paradigm'>📁 paradigm</a></b></summary>
+  <summary><b><a href='../../module/platform/development/paradigm'>📁 paradigm</a></b></summary>
 <ul>
 <li>
-  <a href='../module/platform/development/paradigm/aop'>🪄 aop</a>
+  <a href='../../module/platform/development/paradigm/aop'>🪄 aop</a>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/platform/development/paradigm/concurrency'>📁 concurrency</a></b></summary>
+  <summary><b><a href='../../module/platform/development/paradigm/concurrency'>📁 concurrency</a></b></summary>
 <ul>
 <li>
-  <a href='../module/platform/development/paradigm/concurrency/batch'>🪄 batch</a>
+  <a href='../../module/platform/development/paradigm/concurrency/batch'>🪄 batch</a>
 </li>
 <li>
-  <a href='../module/platform/development/paradigm/concurrency/forkjoin-workstealing'>🪄 forkjoin-workstealing</a>
+  <a href='../../module/platform/development/paradigm/concurrency/forkjoin-workstealing'>🪄 forkjoin-workstealing</a>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/platform/development/paradigm/concurrency/schedule'>📁 schedule</a></b></summary>
+  <summary><b><a href='../../module/platform/development/paradigm/concurrency/schedule'>📁 schedule</a></b></summary>
 <ul>
 <li>
-  <a href='../module/platform/development/paradigm/concurrency/schedule/task'>🪄 task</a>
+  <a href='../../module/platform/development/paradigm/concurrency/schedule/task'>🪄 task</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
-  <a href='../module/platform/development/paradigm/concurrency/thread'>🪄 thread</a>
+  <a href='../../module/platform/development/paradigm/concurrency/thread'>🪄 thread</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
-  <a href='../module/platform/development/paradigm/di-ioc'>🪄 di-ioc</a>
+  <a href='../../module/platform/development/paradigm/di-ioc'>🪄 di-ioc</a>
 </li>
 <li>
-  <a href='../module/platform/development/paradigm/functional'>🪄 functional</a>
+  <a href='../../module/platform/development/paradigm/functional'>🪄 functional</a>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/platform/development/paradigm/mvc-pattern'>📁 mvc-pattern</a></b></summary>
+  <summary><b><a href='../../module/platform/development/paradigm/mvc-pattern'>📁 mvc-pattern</a></b></summary>
 <ul>
 <li>
-  <a href='../module/platform/development/paradigm/mvc-pattern/controller'>🪄 controller</a>
+  <a href='../../module/platform/development/paradigm/mvc-pattern/controller'>🪄 controller</a>
 </li>
 <li>
-  <a href='../module/platform/development/paradigm/mvc-pattern/model'>🪄 model</a>
+  <a href='../../module/platform/development/paradigm/mvc-pattern/model'>🪄 model</a>
 </li>
 <li>
-  <a href='../module/platform/development/paradigm/mvc-pattern/service'>🪄 service</a>
+  <a href='../../module/platform/development/paradigm/mvc-pattern/service'>🪄 service</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
-  <a href='../module/platform/development/paradigm/object-oriented'>🪄 object-oriented</a>
+  <a href='../../module/platform/development/paradigm/object-oriented'>🪄 object-oriented</a>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/platform/development/paradigm/reactive-stream'>📁 reactive-stream</a></b></summary>
+  <summary><b><a href='../../module/platform/development/paradigm/reactive-stream'>📁 reactive-stream</a></b></summary>
 <ul>
 <li>
-  <a href='../module/platform/development/paradigm/reactive-stream/webflux'>🪄 webflux</a>
+  <a href='../../module/platform/development/paradigm/reactive-stream/webflux'>🪄 webflux</a>
 </li>
 </ul>
 </details>
@@ -1235,36 +1235,36 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/platform/development/validation'>📁 validation</a></b></summary>
+  <summary><b><a href='../../module/platform/development/validation'>📁 validation</a></b></summary>
 <ul>
 <li>
 <details>
-  <summary><b><a href='../module/platform/development/validation/performance'>📁 performance</a></b></summary>
+  <summary><b><a href='../../module/platform/development/validation/performance'>📁 performance</a></b></summary>
 <ul>
 <li>
-  <a href='../module/platform/development/validation/performance/benchmark'>🪄 benchmark</a>
+  <a href='../../module/platform/development/validation/performance/benchmark'>🪄 benchmark</a>
 </li>
 <li>
-  <a href='../module/platform/development/validation/performance/jmeter'>🪄 jmeter</a>
+  <a href='../../module/platform/development/validation/performance/jmeter'>🪄 jmeter</a>
 </li>
 <li>
-  <a href='../module/platform/development/validation/performance/load-test'>🪄 load-test</a>
+  <a href='../../module/platform/development/validation/performance/load-test'>🪄 load-test</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/platform/development/validation/testing'>📁 testing</a></b></summary>
+  <summary><b><a href='../../module/platform/development/validation/testing'>📁 testing</a></b></summary>
 <ul>
 <li>
-  <a href='../module/platform/development/validation/testing/e2e-test'>🪄 e2e-test</a>
+  <a href='../../module/platform/development/validation/testing/e2e-test'>🪄 e2e-test</a>
 </li>
 <li>
-  <a href='../module/platform/development/validation/testing/integration-test'>🪄 integration-test</a>
+  <a href='../../module/platform/development/validation/testing/integration-test'>🪄 integration-test</a>
 </li>
 <li>
-  <a href='../module/platform/development/validation/testing/unit-test'>🪄 unit-test</a>
+  <a href='../../module/platform/development/validation/testing/unit-test'>🪄 unit-test</a>
 </li>
 </ul>
 </details>
@@ -1276,68 +1276,68 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </details>
 </li>
 <li>
-  <a href='../module/platform/digital'>🪄 digital</a>
+  <a href='../../module/platform/digital'>🪄 digital</a>
 </li>
 <li>
-  <a href='../module/platform/social'>🪄 social</a>
+  <a href='../../module/platform/social'>🪄 social</a>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/platform/support'>📁 support</a></b></summary>
+  <summary><b><a href='../../module/platform/support'>📁 support</a></b></summary>
 <ul>
 <li>
 <details>
-  <summary><b><a href='../module/platform/support/document'>📁 document</a></b></summary>
+  <summary><b><a href='../../module/platform/support/document'>📁 document</a></b></summary>
 <ul>
 <li>
 <details>
-  <summary><b><a href='../module/platform/support/document/diagram'>📁 diagram</a></b></summary>
+  <summary><b><a href='../../module/platform/support/document/diagram'>📁 diagram</a></b></summary>
 <ul>
 <li>
-  <a href='../module/platform/support/document/diagram/mermaid'>🪄 mermaid</a>
+  <a href='../../module/platform/support/document/diagram/mermaid'>🪄 mermaid</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
-  <a href='../module/platform/support/document/excel'>🪄 excel</a>
+  <a href='../../module/platform/support/document/excel'>🪄 excel</a>
 </li>
 <li>
-  <a href='../module/platform/support/document/pdf'>🪄 pdf</a>
+  <a href='../../module/platform/support/document/pdf'>🪄 pdf</a>
 </li>
 <li>
-  <a href='../module/platform/support/document/word'>🪄 word</a>
+  <a href='../../module/platform/support/document/word'>🪄 word</a>
 </li>
 <li>
-  <a href='../module/platform/support/document/xml'>🪄 xml</a>
+  <a href='../../module/platform/support/document/xml'>🪄 xml</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='../module/platform/support/notification'>📁 notification</a></b></summary>
+  <summary><b><a href='../../module/platform/support/notification'>📁 notification</a></b></summary>
 <ul>
 <li>
-  <a href='../module/platform/support/notification/email'>🪄 email</a>
+  <a href='../../module/platform/support/notification/email'>🪄 email</a>
 </li>
 <li>
-  <a href='../module/platform/support/notification/kakao'>🪄 kakao</a>
+  <a href='../../module/platform/support/notification/kakao'>🪄 kakao</a>
 </li>
 <li>
-  <a href='../module/platform/support/notification/microsoft-team'>🪄 microsoft-team</a>
+  <a href='../../module/platform/support/notification/microsoft-team'>🪄 microsoft-team</a>
 </li>
 <li>
-  <a href='../module/platform/support/notification/mobile-push'>🪄 mobile-push</a>
+  <a href='../../module/platform/support/notification/mobile-push'>🪄 mobile-push</a>
 </li>
 <li>
-  <a href='../module/platform/support/notification/slack'>🪄 slack</a>
+  <a href='../../module/platform/support/notification/slack'>🪄 slack</a>
 </li>
 <li>
-  <a href='../module/platform/support/notification/sms'>🪄 sms</a>
+  <a href='../../module/platform/support/notification/sms'>🪄 sms</a>
 </li>
 <li>
-  <a href='../module/platform/support/notification/telegram'>🪄 telegram</a>
+  <a href='../../module/platform/support/notification/telegram'>🪄 telegram</a>
 </li>
 </ul>
 </details>
