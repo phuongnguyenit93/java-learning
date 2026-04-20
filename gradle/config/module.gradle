@@ -1,9 +1,41 @@
 import groovy.json.JsonSlurper
+import groovy.json.JsonOutput
 import groovy.text.SimpleTemplateEngine
 
 def isMissingProp = {List<String> propList ->
     return propList.any {
         return project.findProperty(it) != "TRUE"
+    }
+}
+
+ext.autoAddModuleDependency = {
+    // 1. Kiểm tra điều kiện: Nếu thuộc tính ADD_MODULE_DEPEND là "TRUE"
+    if (project.findProperty("ADD_MODULE_DEPEND") == "TRUE") {
+
+        // 2. Định nghĩa file nguồn (root) và file đích (module)
+        File rootDependFile = rootProject.file("internal/info/module/module-depend.json")
+        File targetDependFile = project.file("module-depend.json")
+
+        if (rootDependFile.exists()) {
+            // Đọc nội dung từ file gốc
+            def dependData = new JsonSlurper().parse(rootDependFile)
+            def newContent = JsonOutput.prettyPrint(JsonOutput.toJson(dependData))
+
+            // 3. Chỉ ghi file nếu nội dung có sự thay đổi hoặc file chưa tồn tại
+            if (!targetDependFile.exists() || targetDependFile.text.trim() != newContent.trim()) {
+                targetDependFile.text = newContent
+                println "♻️ Synced module-depend.json for module: ${project.name}"
+            }
+        } else {
+            logger.warn "⚠️ [Warning] Không tìm thấy file gốc tại: ${rootDependFile.path}"
+        }
+    } else {
+        // Tùy chọn: Nếu muốn tự động dọn dẹp file khi ADD_MODULE_DEPEND chuyển thành FALSE
+        File targetDependFile = project.file("module-depend.json")
+        if (targetDependFile.exists()) {
+            targetDependFile.delete()
+            println "🗑️ Removed module-depend.json from ${project.name} (ADD_MODULE_DEPEND is FALSE)"
+        }
     }
 }
 
@@ -231,7 +263,7 @@ ext.buildYMLFile = {
 
     logger.lifecycle("${CYAN}🚀 [CONFIG-INIT]${RESET} Đang kiểm tra cấu hình application.yml")
 
-    def baseFile = file("${rootDir}/internal/yml/file-based.yml")
+    def baseFile = file("${rootDir}/internal/info/yml/file-based.yml")
     def baseDir = ["src/main/resources", ""]
             .collect { new File(projectDir,it)}
             .find { it.exists() }
@@ -317,7 +349,7 @@ ext.buildModuleStructure = {
         project.ext.ENV_PATH = "${projectDir.path}/.env"
 
         if (!appFile.exists()) {
-            File templateFile = new File(rootDir, "internal/template/base_application.txt")
+            File templateFile = new File(rootDir, "internal/info/template/base_application.txt")
 
             if (templateFile.exists()) {
                 try {
@@ -334,7 +366,7 @@ ext.buildModuleStructure = {
                     logger.error("   └─ ❌ [RENDER-ERROR] Lỗi khi tạo class ${className}: ${e.message}")
                 }
             } else {
-                logger.lifecycle("   └─ ⚠️  [SKIP] Không tìm thấy file template tại internal/template/base_application.txt")
+                logger.lifecycle("   └─ ⚠️  [SKIP] Không tìm thấy file template tại internal/info/template/base_application.txt")
             }
         } else {
             logger.lifecycle("   └─ ✔️  [EXISTED] Main class ${className}.java đã có sẵn.")
@@ -507,8 +539,8 @@ ext.buildReadmeStructure = {
 }
 
 ext.generateProjectStructureFileTxt = {
-    def outputFileName = "internal/structure/module_structure.txt"
-    def outputFileMdName = "internal/structure/README.md"
+    def outputFileName = "internal/info/structure/module_structure.txt"
+    def outputFileMdName = "internal/info/structure/README.md"
     def outputFileTxt = new File(projectDir, outputFileName)
     def outputFileMd = new File(projectDir, outputFileMdName)
 
@@ -610,7 +642,7 @@ ext.generateIntellijConfigTemplate = {String serviceName ->
     if (baseProps == null) return
 
     def engine = new SimpleTemplateEngine()
-    def templateFile = file("${rootDir}/internal/template/run_config_intellij_springboot.txt")
+    def templateFile = file("${rootDir}/internal/info/template/run_config_intellij_springboot.txt")
     if (!templateFile.exists()) return
 
     String basePackage = gradle.extensions.extraProperties.get("basePackage") //com.example.learning

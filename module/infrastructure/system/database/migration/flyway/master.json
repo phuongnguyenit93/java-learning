@@ -10,6 +10,16 @@
         "TYPE": "string",
         "VALUE": "FLYWAY"
     },
+    "SERVICE_NAME_DESCRIBE": {
+        "DESCRIPTION": "Describe this module function",
+        "TYPE": "string",
+        "VALUE": ""
+    },
+    "IS_MODULE_DEPEND": {
+        "DESCRIPTION": "To define this module added to group list dependency depend or not",
+        "TYPE": "boolean",
+        "VALUE": "FALSE"
+    },
     "BUILD_ENV": {
         "DESCRIPTION": "Enable auto build .env file and it's task related to (env.gradle) in task module",
         "TYPE": "boolean",
@@ -45,6 +55,12 @@
         "TYPE": "boolean",
         "VALUE": "FALSE",
         "GROUP": "DATABASE_MODULE"
+    },
+    "ADD_MODULE_DEPEND": {
+        "DESCRIPTION": "To enable function to auto implement dependency",
+        "TYPE": "boolean",
+        "VALUE": "FALSE",
+        "GROUP": "MODULE_DEPEND"
     },
     "USE_DATABASE": {
         "DESCRIPTION": "To check that module is using database or not",

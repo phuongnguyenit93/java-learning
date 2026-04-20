@@ -5,10 +5,14 @@
     },
     "MYSQL": {
         "MODULE_NAME": "DATABASE_MYSQL",
-        "DATABASE_TYPE": ""
+        "DATABASE_TYPE": "SQL"
     },
     "ORACLE": {
         "MODULE_NAME": "DATABASE_ORACLE",
-        "DATABASE_TYPE": ""
+        "DATABASE_TYPE": "SQL"
+    },
+    "POSTGRESQL": {
+        "MODULE_NAME": "DATABASE_POSTGRESQL",
+        "DATABASE_TYPE": "SQL"
     }
 }

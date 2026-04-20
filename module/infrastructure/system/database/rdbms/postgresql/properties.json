@@ -1,3 +1,14 @@
 {
-    
+    "DATABASE_MODULE": {
+        "DATABASE_MODULE_NAME": {
+            "DESCRIPTION": "Name of database you are using",
+            "TYPE": "string",
+            "VALUE": "POSTGRESQL"
+        },
+        "DATABASE_MODULE_TYPE": {
+            "DESCRIPTION": "Type of database you are using",
+            "TYPE": "string",
+            "VALUE": "SQL"
+        }
+    }
 }

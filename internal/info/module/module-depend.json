@@ -1,0 +1,11 @@
+[
+    {
+        "SPRING_ACTUATOR": "To check and monitor system info when running"
+    },
+    {
+        "MODEL_MAPPER": "To quickly convert between 2 Java Object (Entity to DTO) by matching key field"
+    },
+    {
+        "OBJECT_MAPPER": "Convert Java Object to JSON (or XML , YAML)"
+    }
+]

@@ -30,6 +30,7 @@ subprojects {
         apply plugin: 'io.spring.dependency-management'
 
         ext.buildModuleStructure()
+        ext.autoAddModuleDependency()
 
         ext.applyPluginAndDependencyToModule()
         ext.buildYMLFile()

@@ -197,7 +197,7 @@ ext.preSetupProject = {
         def jsonInfoString = JsonOutput.prettyPrint(JsonOutput.toJson(moduleInfoStore))
         infoFile.text = jsonInfoString
 
-        def dbFileList = new File(rootDir as File,"internal/info/properties/database-properties.json")
+        def dbFileList = new File(rootDir as File,"internal/info/database/database-info.json")
         if (!dbFileList.exists()) dbFileList.createNewFile()
 
         def jsonDBString = JsonOutput.prettyPrint(JsonOutput.toJson(moduleDatabaseConfig))
@@ -238,6 +238,9 @@ ext.addEnvProp = {
 
 ext.addPropertiesAutoBuild = {
     gradle.projectsLoaded { gradle ->
+        // 1. Khai báo mảng để chứa các SERVICE_NAME thỏa mãn điều kiện
+        def moduleDependList = []
+
         gradle.rootProject.subprojects { proj ->
             def filesToInject = [
                     new File(proj.projectDir, "master.json"),
@@ -248,6 +251,21 @@ ext.addPropertiesAutoBuild = {
                 if (jsonFile.exists() && jsonFile.length() > 0) {
                     try {
                         def json = new groovy.json.JsonSlurper().parse(jsonFile)
+
+                        // --- LOGIC MỚI: Thu thập module depend từ master.json ---
+                        if (jsonFile.name == "master.json") {
+                            def isModuleDepend = json.IS_MODULE_DEPEND?.VALUE == "TRUE"
+                            def serviceName = json.SERVICE_NAME?.VALUE
+                            def serviceDescribe = json.SERVICE_NAME_DESCRIBE?.VALUE ?: ""
+
+                            def serviceInfo = [:]
+                            serviceInfo[serviceName] = serviceDescribe
+
+                            if (isModuleDepend && serviceName != null && serviceName != "") {
+                                moduleDependList << serviceInfo
+                            }
+                        }
+
                         json.each { key, data ->
                             // Flat structure
                             if (data instanceof Map && data.containsKey('VALUE')) {
@@ -267,6 +285,22 @@ ext.addPropertiesAutoBuild = {
                         println "❌ Lỗi nạp JSON cho ${proj.name}: ${e.message}"
                     }
                 }
+            }
+        }
+
+        if (!moduleDependList.isEmpty()) {
+            File outputFile = gradle.rootProject.file("internal/info/module/module-depend.json")
+
+            // Đảm bảo thư mục tồn tại
+            outputFile.parentFile.mkdirs()
+
+            // Format JSON cho đẹp và lưu lại
+            def jsonString = JsonOutput.prettyPrint(JsonOutput.toJson(moduleDependList.unique()))
+
+            // Chỉ ghi file nếu nội dung thay đổi để tránh trigger Gradle reload vô hạn
+            if (!outputFile.exists() || outputFile.text.trim() != jsonString.trim()) {
+                outputFile.text = jsonString
+                println "📝 Updated global dependency list: ${outputFile.path}"
             }
         }
     }
