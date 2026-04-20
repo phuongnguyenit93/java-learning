@@ -1,21 +1,9 @@
 import groovy.json.JsonSlurper
 import groovy.text.SimpleTemplateEngine
 
-def getModulePropList = {
-    def gradleFile = new File (projectDir,"gradle.properties")
-    if (!gradleFile.exists()) return
-
-    def props = new Properties()
-    gradleFile.withInputStream { props.load(it) }
-
-    return props
-}
-
 def isMissingProp = {List<String> propList ->
-
-    def props = getModulePropList()
     return propList.any {
-        return !props.containsKey(it) || props.get(it) != "TRUE"
+        return project.findProperty(it) != "TRUE"
     }
 }
 
@@ -35,7 +23,7 @@ ext.applyPluginAndDependencyToModule = {
         def hasMainMethod = false
         def javaFiles = fileTree(dir: javaSrcDir, include: "**/*.java")
         boolean hasSwagger = project.findProperty("BUILD_SWAGGER") == "TRUE"
-        List databaseList = project.findProperty("USE_DATABASE_LIST")?.toString()?.split(",")
+        List databaseList = project.findProperty("DATABASE_LIST")?.toString()?.split(",")
         boolean useDatabase = project.findProperty("USE_DATABASE") == "TRUE" && !databaseList.isEmpty()
 
         javaFiles.any { file ->
@@ -73,6 +61,7 @@ ext.applyPluginAndDependencyToModule = {
                         try {
                             implementation searchProjectByServiceName(database)
                         } catch (Exception e) {
+                            e.printStackTrace()
                             logger.error("Database ${database} không tồn tại module. Không add được ")
                         }
                     })
@@ -173,13 +162,8 @@ ext.injectAndExtractAllModuleTask = {
     // Giai đoạn 2: Phân phối xuống subprojects
     logger.lifecycle("${CYAN}🏗️  Bước 2: Tiến hành Inject file task.gradle vào các subprojects...${RESET}")
     subprojects { project ->
-        def propFile = file("${project.projectDir}/gradle.properties")
-        if (!propFile.exists()) return
-
-        def props = new Properties()
-        propFile.withInputStream { props.load(it) }
-        def serviceName = props.getProperty("SERVICE_NAME")
-        def isInjectTask = props.getProperty("INJECT_TASK_AUTO")
+        def serviceName = project.findProperty("SERVICE_NAME")
+        def isInjectTask = project.findProperty("USE_TASK")
 
         if (serviceName != null && !serviceName.isEmpty() && isInjectTask == "TRUE") {
             String moduleContentFinal = ""
@@ -188,7 +172,7 @@ ext.injectAndExtractAllModuleTask = {
 
             taskListProp.each { task ->
                 def propCheckKey = task.get("propCheck")
-                def isPropActive = (propCheckKey == "" || props.getProperty(propCheckKey) == "TRUE")
+                def isPropActive = (propCheckKey == "" || project.findProperty(propCheckKey).equals("TRUE"))
 
                 if (isPropActive) {
                     def tasksToInject = taskContent[task.get("type")] ?: []
@@ -225,7 +209,7 @@ ext.injectAndExtractAllModuleTask = {
             }
         } else if (serviceName != null) {
              // Log những module bị bỏ qua nhưng có SERVICE_NAME để dễ kiểm soát
-//             logger.lifecycle("   ⏩ Module [${serviceName}]: Bỏ qua (INJECT_TASK_AUTO=false)")
+//             logger.lifecycle("   ⏩ Module [${serviceName}]: Bỏ qua (USE_TASK=false)")
         }
     }
     logger.lifecycle("${BLUE}==================================================${RESET}\n\n\n")
@@ -290,15 +274,12 @@ ext.buildModuleStructure = {
     def CYAN = "\u001B[36m"
     def GRAY = "\u001B[90m"
 
-    // 1. Lấy thông tin từ gradle.properties của module hiện tại
-    def props = getModulePropList()
-
     // Kiểm tra điều kiện bắt buộc (Sửa lại logic return để thoát hàm cha)
-    if (!props.containsKey("MODULE_TYPE") || props.MODULE_TYPE?.toString()?.isEmpty()) {
+    if (project.findProperty("MODULE_TYPE").equals("")) {
         return
     }
 
-    String type = props.MODULE_TYPE.toString().toUpperCase()
+    String type = project.findProperty("MODULE_TYPE").toString().toUpperCase()
     String basePackage = gradle.extensions.extraProperties.get("basePackage") as String
     String packagePath = basePackage.replace('.', '/')
 
@@ -321,7 +302,7 @@ ext.buildModuleStructure = {
 
     // 3. Xử lý Render Application Class (Chỉ dành cho Application)
     if (type == "APPLICATION") {
-        String rawName = props.getProperty("SERVICE_NAME") ?: project.name
+        String rawName = project.findProperty("SERVICE_NAME") ?: project.name
 
         // Chuyển snake_case thành CamelCase (ví dụ: user_service -> UserServiceApplication)
         String className = rawName.toLowerCase()
@@ -492,15 +473,15 @@ ext.buildReadmeStructure = {
     }
 
     // 5. Dọn dẹp các ngôn ngữ cũ
-    File readmeDir = new File(projectDir, "readme")
-    if (readmeDir.exists()) {
-        readmeDir.listFiles().each { folder ->
-            if (folder.isDirectory() && !langList.contains(folder.name)) {
-                folder.deleteDir()
-                logger.lifecycle("   └─ 🗑️  ${RED}Cleanup:${RESET} Đã xóa thư mục ngôn ngữ cũ [${folder.name}]")
-            }
-        }
-    }
+//    File readmeDir = new File(projectDir, "readme")
+//    if (readmeDir.exists()) {
+//        readmeDir.listFiles().each { folder ->
+//            if (folder.isDirectory() && !langList.contains(folder.name)) {
+//                folder.deleteDir()
+//                logger.lifecycle("   └─ 🗑️  ${RED}Cleanup:${RESET} Đã xóa thư mục ngôn ngữ cũ [${folder.name}]")
+//            }
+//        }
+//    }
     logger.lifecycle("${CYAN}---------------------------------------------------${RESET}")
 }
 
@@ -536,14 +517,16 @@ ext.generateProjectStructureFileTxt = {
             def isLast = (index == subDirs.size() - 1)
 
             def displayName = subDir.name
-            def propsFile = new File(subDir, "gradle.properties")
+            def propsFile = new File(subDir, "master.json")
 
             if (propsFile.exists()) {
-                def props = new Properties()
-                propsFile.withInputStream { props.load(it) }
-                if (props.containsKey('SERVICE_NAME')) {
-                    // Hiển thị dạng: folder-name (service-name) hoặc chỉ service-name tùy bạn
-                    displayName = "${subDir.name} [${props.getProperty('SERVICE_NAME')}]"
+                def json = new JsonSlurper().parse(propsFile)
+
+                def serviceNameValue = json.SERVICE_NAME?.VALUE
+
+                if (serviceNameValue != null) {
+                    // Hiển thị: folder-name [SERVICE_NAME_VALUE]
+                    displayName += " [${serviceNameValue}]"
                 }
             }
 
@@ -632,71 +615,6 @@ ext.generateIntellijConfigTemplate = {String serviceName ->
     if (!runFile.exists()) runFile.createNewFile()
 
     runFile.text = output
-}
-
-ext.generateSampleGradlePropFile = {
-    File propFile = project.file("gradle.properties")
-
-    // 1. Đọc file JSON mẫu từ đường dẫn bạn đã chỉ định
-    def jsonFile = rootProject.file("internal/info/properties/module-properties-template.json")
-    if (!jsonFile.exists()) return // Bỏ qua nếu chưa tạo file template
-
-    def configModel = new JsonSlurper().parseText(jsonFile.getText("UTF-8"))
-    def lines = propFile.readLines("UTF-8")
-    def newLines = []
-    def processedKeys = []
-
-    // 2. Duyệt qua các dòng hiện tại để cập nhật/chèn comment
-    for (int i = 0; i < lines.size(); i++) {
-        def line = lines[i].trim()
-
-        if (line.contains('=') && !line.startsWith('#')) {
-            def key = line.split('=')[0].trim()
-
-            if (configModel.containsKey(key)) {
-                def newComment = "# ${configModel[key].DESCRIPTION}"
-
-                // Kiểm tra dòng ngay phía trên
-                if (i > 0) {
-                    def previousLine = lines[i-1].trim()
-                    // Nếu dòng trên là một comment (bất kể nội dung gì), ta loại bỏ nó khỏi danh sách mới
-                    if (previousLine.startsWith('#')) {
-                        if (!newLines.isEmpty()) {
-                            newLines.removeLast()
-                        }
-                    }
-                }
-
-                // Thêm comment mới nhất từ JSON vào
-                newLines << newComment
-                processedKeys << key
-            }
-        }
-        newLines << lines[i]
-    }
-
-    // 3. Thêm các thuộc tính mới hoàn toàn từ JSON vào cuối file
-    boolean hasNewKeys = false
-    configModel.each { key, info ->
-        if (!processedKeys.contains(key)) {
-            // Thêm dòng trống ngăn cách nếu file cũ đang có dữ liệu
-            if (!hasNewKeys && !newLines.isEmpty() && !newLines.last().trim().isEmpty()) {
-                newLines << ""
-            }
-            newLines << "# ${info.DESCRIPTION}"
-            def defaultValue = (info.TYPE == "boolean") ? "FALSE" : ""
-            newLines << "${key}=${defaultValue}"
-            processedKeys << key
-            hasNewKeys = true
-        }
-    }
-
-    // 4. Chỉ ghi lại file nếu có sự thay đổi thực tế
-    if (lines != newLines) {
-        propFile.setText(newLines.join(System.lineSeparator()), "UTF-8")
-        // Log ra để bạn biết module nào vừa được "chuẩn hóa"
-        logger.quiet "--- Synced properties for module: ${project.path} ---"
-    }
 }
 
 ext.deleteOnePropsInGradleProperties = {String propName ->

@@ -6,9 +6,9 @@ apply from: "${rootDir}/gradle/setting/initial.gradle"
 // START_MY_TASK
 tasks.register("backupDatabase") {
     doLast {
-        String isDatabaseModule = project.findProperty("IS_DATABASE_MODULE")?.toString()
+        String isDatabaseModule = project.findProperty("BUILD_DATABASE_MODULE")?.toString()
         if (isDatabaseModule != "TRUE") {
-            throw new GradleException("IS_DATABASE_MODULE is not equal TRUE. This task will not execute")
+            throw new GradleException("BUILD_DATABASE_MODULE is not equal TRUE. This task will not execute")
         }
 
         String serviceNameProp = project.findProperty("SERVICE_NAME")?.toString()
@@ -43,9 +43,9 @@ tasks.register("updateMongoWhitelistIP") {
     }
 
     doLast {
-        String isDatabaseModule = project.findProperty("IS_DATABASE_MODULE")?.toString()
+        String isDatabaseModule = project.findProperty("BUILD_DATABASE_MODULE")?.toString()
         if (isDatabaseModule != "TRUE") {
-            throw new GradleException("IS_DATABASE_MODULE is not equal TRUE. This task will not execute")
+            throw new GradleException("BUILD_DATABASE_MODULE is not equal TRUE. This task will not execute")
         }
 
         String databaseType = project.findProperty("DATABASE_MODULE_NAME")?.toString()

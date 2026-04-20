@@ -1,0 +1,61 @@
+{
+    "MODULE_TYPE": {
+        "DESCRIPTION": "Include 3 value . APPLICATION for service have main method (Spring web) , LIBRARY for service not have main but have code java to config , PLATFORM for service not have code java , only config yml",
+        "TYPE": "string",
+        "VALUE": "APPLICATION",
+        "EXAMPLE_VALUE": "APPLICATION,LIBRARY,PLATFORM"
+    },
+    "SERVICE_NAME": {
+        "DESCRIPTION": "Define name for this module. Use this name for task and many automation gradle",
+        "TYPE": "string",
+        "VALUE": "MODEL_MAPPER"
+    },
+    "BUILD_ENV": {
+        "DESCRIPTION": "Enable auto build .env file and it's task related to (env.gradle) in task module",
+        "TYPE": "boolean",
+        "VALUE": "FALSE",
+        "GROUP": "ENV"
+    },
+    "BUILD_YML": {
+        "DESCRIPTION": "Enable automatic build yml for module properties",
+        "TYPE": "boolean",
+        "VALUE": "FALSE",
+        "GROUP": "YML"
+    },
+    "BUILD_JAR": {
+        "DESCRIPTION": "Enable to inject task in file build-jar.gradle to each module enable it",
+        "TYPE": "boolean",
+        "VALUE": "FALSE",
+        "GROUP": "JAR"
+    },
+    "BUILD_README": {
+        "DESCRIPTION": "Enable to build readme.md file",
+        "TYPE": "boolean",
+        "VALUE": "FALSE",
+        "GROUP": "README"
+    },
+    "BUILD_SWAGGER": {
+        "DESCRIPTION": "Enable it to implement dependency and enable swagger it project (Still disable in product deploy)",
+        "TYPE": "boolean",
+        "VALUE": "FALSE",
+        "GROUP": "SWAGGER"
+    },
+    "BUILD_DATABASE_MODULE": {
+        "DESCRIPTION": "To defined this module is module that config database",
+        "TYPE": "boolean",
+        "VALUE": "FALSE",
+        "GROUP": "DATABASE_MODULE"
+    },
+    "USE_DATABASE": {
+        "DESCRIPTION": "To check that module is using database or not",
+        "TYPE": "boolean",
+        "VALUE": "FALSE",
+        "GROUP": "DATABASE"
+    },
+    "USE_TASK": {
+        "DESCRIPTION": "Enable it to auto inject task list in file gradle/task/list/task-list.json",
+        "TYPE": "boolean",
+        "VALUE": "FALSE",
+        "GROUP": "TASK"
+    }
+}

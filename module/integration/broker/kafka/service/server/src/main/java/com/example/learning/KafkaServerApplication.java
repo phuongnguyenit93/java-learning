@@ -5,8 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 @SpringBootApplication
-public class BankApplication extends SpringBootServletInitializer {
-	public static void main(String[] args) {
-		SpringApplication.run(BankApplication.class, args);
-	}
+public class KafkaServerApplication extends SpringBootServletInitializer {
+    public static void main(String[] args) {
+        SpringApplication.run(KafkaServerApplication.class, args);
+    }
 }

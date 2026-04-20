@@ -1,4 +1,97 @@
 import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
+
+// Định nghĩa hàm Merge JSON thông minh
+def syncMasterJson(File targetMasterFile, File rootMasterFile) {
+    def slurper = new JsonSlurper()
+    def templateJson = slurper.parse(rootMasterFile)
+    def targetJson = [:]
+
+    if (targetMasterFile.exists() && targetMasterFile.length() > 0) { // Thêm check length > 0
+        try {
+            targetJson = slurper.parse(targetMasterFile)
+        } catch (Exception e) {
+            // Nếu file lỗi định dạng (không phải JSON hợp lệ), coi như rỗng để ghi đè lại
+            targetJson = [:]
+            println "⚠️ Warning: File ${targetMasterFile.path} bị lỗi định dạng, sẽ được reset."
+        }
+    }
+
+    def updatedJson = [:]
+
+    templateJson.each { key, templateData ->
+        // Tạo một bản copy của templateData để tránh ảnh hưởng đến object gốc
+        def newItem = new LinkedHashMap(templateData)
+
+        // Kiểm tra xem module hiện tại đã có key này và có VALUE chưa
+        // Dùng dấu ?. để an toàn nếu targetJson[key] là null
+        def existingItem = targetJson[key]
+        def existingValue = existingItem instanceof Map ? existingItem.VALUE : null
+
+        if (existingValue != null && existingValue != "") {
+            newItem.VALUE = existingValue
+        }
+
+        updatedJson[key] = newItem
+    }
+
+    // Chỉ ghi đè nếu nội dung thay đổi
+    def newContent = JsonOutput.prettyPrint(JsonOutput.toJson(updatedJson))
+    if (!targetMasterFile.exists() || targetMasterFile.text.trim() != newContent.trim()) {
+        targetMasterFile.parentFile.mkdirs() // Đảm bảo folder auto-build tồn tại
+        targetMasterFile.text = newContent
+        println "✅ Synced: ${targetMasterFile.parentFile.parentFile.name}/${targetMasterFile.parentFile.name}/${targetMasterFile.name}"
+    }
+}
+
+def syncPropertiesJson(File targetPropFile, File masterFile, File rootPropFile) {
+    if (!masterFile.exists() || !rootPropFile.exists()) return
+
+    def slurper = new JsonSlurper()
+    def masterJson = slurper.parse(masterFile)
+    def rootPropJson = slurper.parse(rootPropFile)
+
+    // Đọc dữ liệu hiện tại của file properties.json tại module (nếu có)
+    def currentModulePropJson = [:]
+    if (targetPropFile.exists() && targetPropFile.length() > 0) {
+        try { currentModulePropJson = slurper.parse(targetPropFile) } catch(e) { }
+    }
+
+    // 1. Tìm các Group được bật (VALUE == "TRUE" và có GROUP)
+    def activeGroups = masterJson.values()
+            .findAll { it.VALUE == "TRUE" && it.GROUP != null }
+            .collect { it.GROUP }
+            .unique()
+
+    // 2. Xây dựng nội dung mới cho properties.json
+    def newModulePropJson = [:]
+
+    activeGroups.each { groupName ->
+        if (rootPropJson.containsKey(groupName)) {
+            // Lấy template của group này từ root
+            def groupTemplate = new LinkedHashMap(rootPropJson[groupName])
+
+            // Duyệt qua từng setting trong group để giữ lại VALUE cũ của module
+            groupTemplate.each { settingKey, settingData ->
+                def existingValue = currentModulePropJson[groupName]?.get(settingKey)?.VALUE
+
+                if (existingValue != null && existingValue != "") {
+                    settingData.VALUE = existingValue
+                }
+            }
+            newModulePropJson[groupName] = groupTemplate
+        }
+    }
+
+    // 3. So sánh và ghi file (Chỉ ghi nếu nội dung thay đổi)
+    def newContent = JsonOutput.prettyPrint(JsonOutput.toJson(newModulePropJson))
+    if (!targetPropFile.exists() || targetPropFile.text.trim() != newContent.trim()) {
+        targetPropFile.parentFile.mkdirs()
+        targetPropFile.text = newContent
+        println "⚙️ Generated Properties: ${targetPropFile.parentFile.parentFile.name}/${targetPropFile.name}"
+    }
+}
+
 
 ext.preSetupProject = {
     def GREEN = "\u001B[32m"
@@ -26,13 +119,13 @@ ext.preSetupProject = {
 
     logger.lifecycle("📂 Tìm thấy ${CYAN}${folderList.size()}${RESET} thư mục chứa cấu hình.")
 
+    File masterJson = new File(rootDir as File, "internal/auto-build/master.json")
+    File propJson = new File(rootDir as File, "internal/auto-build/properties.json")
+
     folderList.eachWithIndex { File folder, Integer index ->
         File propFile = new File(folder, "gradle.properties")
         Properties props = new Properties()
         propFile.withInputStream { props.load(it) }
-
-        // Xác định Tên Module & Đường dẫn tương đối
-        String moduleName = props.getProperty("SERVICE_NAME") ?: folder.name
 
         // 1. Xử lý RELATIVE_PATH (ví dụ: services/order-service)
         String relativePath = rootDir.toPath()
@@ -46,9 +139,30 @@ ext.preSetupProject = {
             include ":${modulePath}"
         }
 
-        if (props.IS_DATABASE_MODULE == "TRUE" && props.DATABASE_MODULE_NAME != null) {
-            String databaseName = props.DATABASE_MODULE_NAME
-            String databaseType = props.DATABASE_MODULE_TYPE
+        File targetMaster = new File(folder, "master.json")
+        File targetProperties = new File(folder, "properties.json")
+
+
+
+        // BƯỚC 1: Luôn sync master.json trước để cập nhật cấu trúc và các nút gạt (Toggle)
+        syncMasterJson(targetMaster, masterJson)
+
+        // BƯỚC 2: Dựa trên master.json vừa cập nhật, sinh ra properties.json tương ứng
+        syncPropertiesJson(targetProperties, targetMaster, propJson)
+
+//        injectJson(targetMaster)
+//        injectJson(targetProperties)
+
+        def slurper = new JsonSlurper()
+        def masterMap = slurper.parse(targetMaster)
+        def propertiesMap = slurper.parse(targetProperties)
+
+        // Xác định Tên Module & Đường dẫn tương đối
+        String moduleName = masterMap.SERVICE_NAME?.VALUE ?: folder.name
+
+        if (masterMap.BUILD_DATABASE_MODULE?.VALUE == "TRUE" && propertiesMap.DATABASE_MODULE?.DATABASE_MODULE_NAME != null) {
+            String databaseName = propertiesMap.DATABASE_MODULE?.DATABASE_MODULE_NAME?.VALUE
+            String databaseType = propertiesMap.DATABASE_MODULE?.DATABASE_MODULE_TYPE?.VALUE
 
             if (moduleDatabaseConfig.containsKey(databaseName)) {
                 throw new GradleException("Database ${databaseName} đã tồn tại. Config database thất bại. Hãy xoá 1 database trùng lặp trong list module sau : ${moduleName}, ${moduleDatabaseConfig[databaseName].MODULE_NAME}")
@@ -59,6 +173,7 @@ ext.preSetupProject = {
             moduleDatabaseConfig[databaseName].MODULE_NAME = moduleName
             moduleDatabaseConfig[databaseName].DATABASE_TYPE = databaseType
         }
+
         HashMap<String, String> propMap = new HashMap(props)
 
         propMap.put("MODULE_PATH", modulePath)
@@ -82,14 +197,14 @@ ext.preSetupProject = {
         def jsonInfoString = JsonOutput.prettyPrint(JsonOutput.toJson(moduleInfoStore))
         infoFile.text = jsonInfoString
 
-        def dbFileList = new File(rootDir as File,"internal/info/database/database-info.json")
+        def dbFileList = new File(rootDir as File,"internal/info/properties/database-properties.json")
         if (!dbFileList.exists()) dbFileList.createNewFile()
 
         def jsonDBString = JsonOutput.prettyPrint(JsonOutput.toJson(moduleDatabaseConfig))
         dbFileList.text = jsonDBString
 
         // Log từng module được map thành công
-        def serviceName = propMap.get("SERVICE_NAME") ?: "N/A"
+        def serviceName = masterMap.SERVICE_NAME?.VALUE ?: "N/A"
         logger.lifecycle("   [${index + 1}] ${GREEN}${serviceName}${RESET} -> :${modulePath}")
     }
 
@@ -116,6 +231,42 @@ ext.addEnvProp = {
             def parts = line.split('=')
             if (parts.length == 2) {
                 System.setProperty(parts[0].trim(), parts[1].trim())
+            }
+        }
+    }
+}
+
+ext.addPropertiesAutoBuild = {
+    gradle.projectsLoaded { gradle ->
+        gradle.rootProject.subprojects { proj ->
+            def filesToInject = [
+                    new File(proj.projectDir, "master.json"),
+                    new File(proj.projectDir, "properties.json")
+            ]
+
+            filesToInject.each { jsonFile ->
+                if (jsonFile.exists() && jsonFile.length() > 0) {
+                    try {
+                        def json = new groovy.json.JsonSlurper().parse(jsonFile)
+                        json.each { key, data ->
+                            // Flat structure
+                            if (data instanceof Map && data.containsKey('VALUE')) {
+                                proj.ext.set(key, data.VALUE)
+                            }
+                            // Nested structure
+                            else if (data instanceof Map) {
+                                data.each { subKey, subData ->
+                                    if (subData instanceof Map && subData.containsKey('VALUE')) {
+                                        proj.ext.set(subKey, subData.VALUE)
+                                    }
+                                }
+                            }
+                        }
+                    } catch (Exception e) {
+                        // Ở giai đoạn này logger đôi khi chưa sẵn sàng, dùng println cho an toàn
+                        println "❌ Lỗi nạp JSON cho ${proj.name}: ${e.message}"
+                    }
+                }
             }
         }
     }

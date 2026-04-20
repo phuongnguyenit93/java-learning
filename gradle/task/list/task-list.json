@@ -5,5 +5,5 @@
   {"type": "jar", "fileName": "build-jar.gradle", "propCheck": "BUILD_JAR"},
   {"type": "intellij", "fileName": "intellij.gradle", "propCheck": ""},
   {"type": "swagger", "fileName": "swagger.gradle", "propCheck": "BUILD_SWAGGER"},
-  {"type": "database", "fileName": "database.gradle", "propCheck": "IS_DATABASE_MODULE"}
+  {"type": "database", "fileName": "database.gradle", "propCheck": "BUILD_DATABASE_MODULE"}
 ]

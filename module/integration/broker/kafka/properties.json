@@ -1,0 +1,24 @@
+{
+    "ENV": {
+        "BUILD_ENV_PATH_MODULE_DEPEND": {
+            "DESCRIPTION": "Get all relative path and module path use for docker include module and store it in .env file in module",
+            "TYPE": "list",
+            "VALUE": "KAFKA_SERVER,KAFKA_PRODUCER_BANK,KAFKA_CONTROL,KAFKA_CONSUMER_ACCOUNTANT,KAFKA_CONSUMER_NOTIFICATION"
+        },
+        "BUILD_ENV_PROFILE": {
+            "DESCRIPTION": "Build .env with profile (.env.loc,.env.dev.env.prd)",
+            "TYPE": "boolean",
+            "VALUE": ""
+        }
+    },
+    "README": {
+        "README_LANGUAGE": {
+            "DESCRIPTION": "List language to automatic build readme.md in each language in each module",
+            "TYPE": "list",
+            "VALUE": "vi,en"
+        }
+    },
+    "TASK": {
+        
+    }
+}

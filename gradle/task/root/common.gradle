@@ -67,3 +67,54 @@ tasks.register('cleanupSpecificFiles') {
         }
     }
 }
+
+tasks.register('cleanupSpecificEmptyFolders') {
+    group = 'verification'
+    description = 'Tìm và xóa các thư mục có tên chỉ định nếu chúng không chứa file nào'
+
+    doLast {
+        def targetFolderName = "auto-build" // Tên folder bạn muốn nhắm tới
+
+        println "--- Đang quét các thư mục rỗng có tên: [${targetFolderName}] ---"
+
+        def foldersToDelete = []
+
+        // Bước 1: Thu thập danh sách (Chỉ đọc, không xóa ở bước này)
+        rootDir.traverse(
+                type: groovy.io.FileType.DIRECTORIES,
+                preDir: { File dir ->
+                    if (dir.name in [".gradle", "build", ".git", ".idea"]) {
+                        return groovy.io.FileVisitResult.SKIP_SUBTREE
+                    }
+                }
+        ) { File dir ->
+            if (dir.name == targetFolderName && dir.isDirectory()) {
+                // Kiểm tra xem folder có thực sự tồn tại và rỗng không
+                def contents = dir.list()
+                if (contents != null && contents.length == 0) {
+                    foldersToDelete << dir
+                }
+            }
+        }
+
+        // Bước 2: Thực hiện xóa từ danh sách đã thu thập
+        int deletedCount = 0
+        foldersToDelete.each { File dir ->
+            // Kiểm tra lại lần cuối trước khi xóa để tránh lỗi file hệ thống
+            if (dir.exists()) {
+                println "🗑️ Đang xóa thư mục rỗng: ${dir.absolutePath}"
+                if (dir.delete()) {
+                    deletedCount++
+                } else {
+                    println "⚠️ Không thể xóa (có thể do quyền truy cập): ${dir.name}"
+                }
+            }
+        }
+
+        if (deletedCount == 0) {
+            println "✨ Không tìm thấy thư mục rỗng nào tên '${targetFolderName}'."
+        } else {
+            println "✅ Đã dọn dẹp xong ${deletedCount} thư mục '${targetFolderName}'."
+        }
+    }
+}

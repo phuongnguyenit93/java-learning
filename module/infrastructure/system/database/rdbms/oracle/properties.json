@@ -1,0 +1,17 @@
+{
+    "DATABASE_MODULE": {
+        "DATABASE_MODULE_NAME": {
+            "DESCRIPTION": "Name of database you are using",
+            "TYPE": "string",
+            "VALUE": "ORACLE"
+        },
+        "DATABASE_MODULE_TYPE": {
+            "DESCRIPTION": "Type of database you are using",
+            "TYPE": "string",
+            "VALUE": "SQL"
+        }
+    },
+    "TASK": {
+        
+    }
+}

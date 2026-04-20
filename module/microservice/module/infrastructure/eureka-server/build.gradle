@@ -1,4 +1,4 @@
 dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server'
-    implementation searchProjectByServiceName("PROMETHEUS")
+    implementation searchProjectByServiceName("PROMETHEUS_GRAFANA")
 }

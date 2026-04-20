@@ -1,4 +1,4 @@
-Cập nhật lúc: 2026-04-18 13:03:40
+Cập nhật lúc: 2026-04-20 13:13:51
 ==============================
 module
 ├── infrastructure
@@ -66,7 +66,7 @@ module
 │       │   │   └── micro
 │       │   │       └── jmh
 │       │   ├── console
-│       │   │   └── hawtio []
+│       │   │   └── hawtio [HAWTIO]
 │       │   ├── diagnostic
 │       │   │   ├── profiling
 │       │   │   │   ├── jconsole
@@ -144,13 +144,13 @@ module
 │   └── module
 │       ├── deployments
 │       │   ├── docker
-│       │   └── prometheus-grafana [PROMETHEUS]
+│       │   └── prometheus-grafana [PROMETHEUS_GRAFANA]
 │       ├── infrastructure
 │       │   ├── admin-server [ADMIN_SERVER]
 │       │   ├── api-gateway [API_GATEWAY]
-│       │   ├── config-server [CONFIG_SERVER]
-│       │   ├── eureka-client [EUREKA_CLIENT]
-│       │   └── eureka-server [EUREKA_SERVER]
+│       │   ├── config-server []
+│       │   ├── eureka-client []
+│       │   └── eureka-server []
 │       ├── integration
 │       │   ├── message-broker
 │       │   └── notification-service
@@ -165,9 +165,9 @@ module
 │       │   └── tracing [DISTRIBUTED_TRACING]
 │       └── service
 │           ├── inventory-service [INVENTORY_SERVICE]
-│           ├── order-service [ORDER_SERVICE]
+│           ├── order-service []
 │           ├── payment-service
-│           └── product-service [PRODUCT_SERVICE]
+│           └── product-service []
 └── platform
     ├── cloud
     ├── development
@@ -199,7 +199,7 @@ module
     │   │       └── proxy
     │   ├── framework
     │   │   ├── spring
-    │   │   │   ├── actuator [SPRING_ACTUATOR]
+    │   │   │   ├── actuator []
     │   │   │   ├── basic
     │   │   │   │   ├── core
     │   │   │   │   │   ├── annotation
@@ -209,7 +209,7 @@ module
     │   │   │   │   └── properties
     │   │   │   ├── conditional
     │   │   │   ├── data
-    │   │   │   │   └── jpa [SPRING_JPA]
+    │   │   │   │   └── jpa []
     │   │   │   ├── devtool [SPRING_DEVTOOL]
     │   │   │   ├── functional-endpoint
     │   │   │   ├── global-exception-handler [GLOBAL_EXCEPTION_HANDLER]
@@ -221,7 +221,7 @@ module
     │   │   │   │   └── oauth
     │   │   │   ├── swagger [SPRING_SWAGGER]
     │   │   │   ├── test-property-source
-    │   │   │   └── web [SPRING_WEB]
+    │   │   │   └── web []
     │   │   └── spring-boot
     │   │       ├── auto-configuration
     │   │       ├── embedded-server
@@ -265,13 +265,13 @@ module
     │   │           └── java8
     │   │               └── stream-api
     │   ├── paradigm
-    │   │   ├── aop [ASPECT]
+    │   │   ├── aop []
     │   │   ├── concurrency
     │   │   │   ├── batch
-    │   │   │   ├── forkjoin-workstealing [FORK_JOIN_WORK_STEALING]
+    │   │   │   ├── forkjoin-workstealing []
     │   │   │   ├── schedule
     │   │   │   │   └── task []
-    │   │   │   └── thread [THREAD]
+    │   │   │   └── thread []
     │   │   ├── di-ioc
     │   │   ├── functional
     │   │   ├── mvc-pattern

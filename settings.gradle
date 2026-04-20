@@ -14,4 +14,10 @@ apply from: "gradle/setting/initial.gradle"
 
 // Get all props by gradle.properties location
 ext.preSetupProject()
+ext.addPropertiesAutoBuild()
+
+
+
+
+
 

@@ -1,0 +1,19 @@
+{
+    "YML": {
+        "BUILD_YML_MODULE_DEPEND": {
+            "DESCRIPTION": "Automation combine all yml at module and all component depend and save it in build file for run or docker compose",
+            "TYPE": "list",
+            "VALUE": ""
+        }
+    },
+    "README": {
+        "README_LANGUAGE": {
+            "DESCRIPTION": "List language to automatic build readme.md in each language in each module",
+            "TYPE": "list",
+            "VALUE": "vi,en"
+        }
+    },
+    "TASK": {
+        
+    }
+}

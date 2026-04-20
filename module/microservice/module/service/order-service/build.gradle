@@ -13,5 +13,5 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-aop'
     implementation searchProjectByServiceName("RESILIENCE_4J")
     implementation searchProjectByServiceName("DISTRIBUTED_TRACING")
-    implementation searchProjectByServiceName("PROMETHEUS")
+    implementation searchProjectByServiceName("PROMETHEUS_GRAFANA")
 }
