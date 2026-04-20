@@ -8,7 +8,7 @@
     "SERVICE_NAME": {
         "DESCRIPTION": "Define name for this module. Use this name for task and many automation gradle",
         "TYPE": "string",
-        "VALUE": ""
+        "VALUE": "JAVA_RECORD"
     },
     "BUILD_ENV": {
         "DESCRIPTION": "Enable auto build .env file and it's task related to (env.gradle) in task module",
@@ -31,13 +31,13 @@
     "BUILD_README": {
         "DESCRIPTION": "Enable to build readme.md file",
         "TYPE": "boolean",
-        "VALUE": "FALSE",
+        "VALUE": "TRUE",
         "GROUP": "README"
     },
     "BUILD_SWAGGER": {
         "DESCRIPTION": "Enable it to implement dependency and enable swagger it project (Still disable in product deploy)",
         "TYPE": "boolean",
-        "VALUE": "FALSE",
+        "VALUE": "TRUE",
         "GROUP": "SWAGGER"
     },
     "BUILD_DATABASE_MODULE": {

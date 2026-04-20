@@ -1,4 +1,4 @@
-Cập nhật lúc: 2026-04-20 13:13:51
+Cập nhật lúc: 2026-04-20 14:44:25
 ==============================
 module
 ├── infrastructure
@@ -148,9 +148,9 @@ module
 │       ├── infrastructure
 │       │   ├── admin-server [ADMIN_SERVER]
 │       │   ├── api-gateway [API_GATEWAY]
-│       │   ├── config-server []
-│       │   ├── eureka-client []
-│       │   └── eureka-server []
+│       │   ├── config-server [CONFIG_SERVER]
+│       │   ├── eureka-client [EUREKA_CLIENT]
+│       │   └── eureka-server [EUREKA_SERVER]
 │       ├── integration
 │       │   ├── message-broker
 │       │   └── notification-service
@@ -165,9 +165,9 @@ module
 │       │   └── tracing [DISTRIBUTED_TRACING]
 │       └── service
 │           ├── inventory-service [INVENTORY_SERVICE]
-│           ├── order-service []
+│           ├── order-service [ORDER_SERVICE]
 │           ├── payment-service
-│           └── product-service []
+│           └── product-service [PRODUCT_SERVICE]
 └── platform
     ├── cloud
     ├── development
@@ -199,7 +199,7 @@ module
     │   │       └── proxy
     │   ├── framework
     │   │   ├── spring
-    │   │   │   ├── actuator []
+    │   │   │   ├── actuator [SPRING_ACTUATOR]
     │   │   │   ├── basic
     │   │   │   │   ├── core
     │   │   │   │   │   ├── annotation
@@ -209,7 +209,7 @@ module
     │   │   │   │   └── properties
     │   │   │   ├── conditional
     │   │   │   ├── data
-    │   │   │   │   └── jpa []
+    │   │   │   │   └── jpa [SPRING_JPA]
     │   │   │   ├── devtool [SPRING_DEVTOOL]
     │   │   │   ├── functional-endpoint
     │   │   │   ├── global-exception-handler [GLOBAL_EXCEPTION_HANDLER]
@@ -221,7 +221,7 @@ module
     │   │   │   │   └── oauth
     │   │   │   ├── swagger [SPRING_SWAGGER]
     │   │   │   ├── test-property-source
-    │   │   │   └── web []
+    │   │   │   └── web [SPRING_WEB]
     │   │   └── spring-boot
     │   │       ├── auto-configuration
     │   │       ├── embedded-server
@@ -240,7 +240,7 @@ module
     │   │       │   ├── high-level-utils
     │   │       │   └── virtual-threads
     │   │       ├── core
-    │   │       │   ├── abstract-interface []
+    │   │       │   ├── abstract-interface [ABSTRACT_INTERFACE]
     │   │       │   ├── class-and-runtime-class
     │   │       │   ├── classloader
     │   │       │   └── reflection
@@ -259,19 +259,19 @@ module
     │   │       └── version
     │   │           ├── java11
     │   │           ├── java16
-    │   │           │   └── record []
+    │   │           │   └── record [JAVA_RECORD]
     │   │           ├── java17
     │   │           ├── java7
     │   │           └── java8
     │   │               └── stream-api
     │   ├── paradigm
-    │   │   ├── aop []
+    │   │   ├── aop [ASPECT]
     │   │   ├── concurrency
     │   │   │   ├── batch
-    │   │   │   ├── forkjoin-workstealing []
+    │   │   │   ├── forkjoin-workstealing [FORK_JOIN_WORK_STEALING]
     │   │   │   ├── schedule
-    │   │   │   │   └── task []
-    │   │   │   └── thread []
+    │   │   │   │   └── task [SCHEDULE]
+    │   │   │   └── thread [THREAD]
     │   │   ├── di-ioc
     │   │   ├── functional
     │   │   ├── mvc-pattern

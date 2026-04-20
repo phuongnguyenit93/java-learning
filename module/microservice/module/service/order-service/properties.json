@@ -1,3 +1,38 @@
 {
-    
+    "ENV": {
+        "BUILD_ENV_PATH_MODULE_DEPEND": {
+            "DESCRIPTION": "Get all relative path and module path use for docker include module and store it in .env file in module",
+            "TYPE": "list",
+            "VALUE": ""
+        },
+        "BUILD_ENV_PROFILE": {
+            "DESCRIPTION": "Build .env with profile (.env.loc,.env.dev.env.prd)",
+            "TYPE": "boolean",
+            "VALUE": ""
+        }
+    },
+    "YML": {
+        "BUILD_YML_MODULE_DEPEND": {
+            "DESCRIPTION": "Automation combine all yml at module and all component depend and save it in build file for run or docker compose",
+            "TYPE": "list",
+            "VALUE": "SPRING_WEB,SPRING_SWAGGER,SPRING_ACTUATOR,RESILIENCE_4J,DISTRIBUTED_TRACING,PROMETHEUS"
+        }
+    },
+    "SWAGGER": {
+        "BUILD_SWAGGER_LANGUAGE_LIST": {
+            "DESCRIPTION": "List of language to describe API in swagger",
+            "TYPE": "list",
+            "VALUE": "vi"
+        }
+    },
+    "DATABASE": {
+        "DATABASE_LIST": {
+            "DESCRIPTION": "To define which database use in this module",
+            "TYPE": "list",
+            "VALUE": "DATABASE_MYSQL"
+        }
+    },
+    "TASK": {
+        
+    }
 }

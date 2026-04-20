@@ -19,7 +19,7 @@
     "BUILD_YML": {
         "DESCRIPTION": "Enable automatic build yml for module properties",
         "TYPE": "boolean",
-        "VALUE": "FALSE",
+        "VALUE": "TRUE",
         "GROUP": "YML"
     },
     "BUILD_JAR": {

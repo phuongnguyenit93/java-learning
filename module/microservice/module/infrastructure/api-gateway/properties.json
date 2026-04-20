@@ -15,7 +15,7 @@
         "BUILD_YML_MODULE_DEPEND": {
             "DESCRIPTION": "Automation combine all yml at module and all component depend and save it in build file for run or docker compose",
             "TYPE": "list",
-            "VALUE": ""
+            "VALUE": "SPRING_WEB,SPRING_SWAGGER"
         }
     },
     "README": {
@@ -29,7 +29,10 @@
         "BUILD_SWAGGER_LANGUAGE_LIST": {
             "DESCRIPTION": "List of language to describe API in swagger",
             "TYPE": "list",
-            "VALUE": ""
+            "VALUE": "vi"
         }
+    },
+    "TASK": {
+        
     }
 }

@@ -8,7 +8,7 @@
     "SERVICE_NAME": {
         "DESCRIPTION": "Define name for this module. Use this name for task and many automation gradle",
         "TYPE": "string",
-        "VALUE": ""
+        "VALUE": "SPRING_ACTUATOR"
     },
     "BUILD_ENV": {
         "DESCRIPTION": "Enable auto build .env file and it's task related to (env.gradle) in task module",
@@ -19,7 +19,7 @@
     "BUILD_YML": {
         "DESCRIPTION": "Enable automatic build yml for module properties",
         "TYPE": "boolean",
-        "VALUE": "FALSE",
+        "VALUE": "TRUE",
         "GROUP": "YML"
     },
     "BUILD_JAR": {

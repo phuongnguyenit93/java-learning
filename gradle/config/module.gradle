@@ -473,15 +473,36 @@ ext.buildReadmeStructure = {
     }
 
     // 5. Dọn dẹp các ngôn ngữ cũ
-//    File readmeDir = new File(projectDir, "readme")
-//    if (readmeDir.exists()) {
-//        readmeDir.listFiles().each { folder ->
-//            if (folder.isDirectory() && !langList.contains(folder.name)) {
-//                folder.deleteDir()
-//                logger.lifecycle("   └─ 🗑️  ${RED}Cleanup:${RESET} Đã xóa thư mục ngôn ngữ cũ [${folder.name}]")
-//            }
-//        }
-//    }
+    File readmeDir = new File(projectDir, "readme")
+    if (readmeDir.exists()) {
+        readmeDir.listFiles().each { folder ->
+            // 1. Kiểm tra folder ngôn ngữ (ví dụ: 'vi') có nằm trong langList không
+            if (folder.isDirectory() && !langList.contains(folder.name)) {
+
+                // 2. Tìm folder 'menu' bên trong folder ngôn ngữ này
+                File menuDir = new File(folder, "menu")
+
+                // 3. Logic kiểm tra điều kiện xóa:
+                // - Nếu folder 'menu' không tồn tại: Giữ lại (vì có thể chứa các file quan trọng khác)
+                // - Nếu folder 'menu' tồn tại: Phải rỗng mới được xóa
+                if (menuDir.exists()) {
+                    def menuContents = menuDir.list()
+
+                    // Kiểm tra nếu menu rỗng (length == 0)
+                    if (menuContents != null && menuContents.length == 0) {
+                        folder.deleteDir()
+                        logger.lifecycle("   └─ 🗑️  ${RED}Cleanup:${RESET} Đã xóa thư mục [${folder.name}] vì folder 'menu' bên trong đang rỗng.")
+                    } else {
+                        // Nếu menu có file, không xóa và log cảnh báo (tùy chọn)
+                        logger.lifecycle("   └─ 🛡️  ${YELLOW}Skip:${RESET} Giữ lại [${folder.name}] vì 'menu' đang chứa dữ liệu.")
+                    }
+                } else {
+                    // Nếu bạn muốn xóa ngay cả khi không có folder 'menu', hãy bỏ comment dòng dưới
+                    // folder.deleteDir()
+                }
+            }
+        }
+    }
     logger.lifecycle("${CYAN}---------------------------------------------------${RESET}")
 }
 

@@ -2,36 +2,36 @@
     "MODULE_TYPE": {
         "DESCRIPTION": "Include 3 value . APPLICATION for service have main method (Spring web) , LIBRARY for service not have main but have code java to config , PLATFORM for service not have code java , only config yml",
         "TYPE": "string",
-        "VALUE": "",
+        "VALUE": "APPLICATION",
         "EXAMPLE_VALUE": "APPLICATION,LIBRARY,PLATFORM"
     },
     "SERVICE_NAME": {
         "DESCRIPTION": "Define name for this module. Use this name for task and many automation gradle",
         "TYPE": "string",
-        "VALUE": ""
+        "VALUE": "EUREKA_SERVER"
     },
     "BUILD_ENV": {
         "DESCRIPTION": "Enable auto build .env file and it's task related to (env.gradle) in task module",
         "TYPE": "boolean",
-        "VALUE": "FALSE",
+        "VALUE": "TRUE",
         "GROUP": "ENV"
     },
     "BUILD_YML": {
         "DESCRIPTION": "Enable automatic build yml for module properties",
         "TYPE": "boolean",
-        "VALUE": "FALSE",
+        "VALUE": "TRUE",
         "GROUP": "YML"
     },
     "BUILD_JAR": {
         "DESCRIPTION": "Enable to inject task in file build-jar.gradle to each module enable it",
         "TYPE": "boolean",
-        "VALUE": "FALSE",
+        "VALUE": "TRUE",
         "GROUP": "JAR"
     },
     "BUILD_README": {
         "DESCRIPTION": "Enable to build readme.md file",
         "TYPE": "boolean",
-        "VALUE": "FALSE",
+        "VALUE": "TRUE",
         "GROUP": "README"
     },
     "BUILD_SWAGGER": {
@@ -55,7 +55,7 @@
     "USE_TASK": {
         "DESCRIPTION": "Enable it to auto inject task list in file gradle/task/list/task-list.json",
         "TYPE": "boolean",
-        "VALUE": "FALSE",
+        "VALUE": "TRUE",
         "GROUP": "TASK"
     }
 }

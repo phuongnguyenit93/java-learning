@@ -5,5 +5,15 @@
             "TYPE": "list",
             "VALUE": ""
         }
+    },
+    "README": {
+        "README_LANGUAGE": {
+            "DESCRIPTION": "List language to automatic build readme.md in each language in each module",
+            "TYPE": "list",
+            "VALUE": "vi"
+        }
+    },
+    "TASK": {
+        
     }
 }

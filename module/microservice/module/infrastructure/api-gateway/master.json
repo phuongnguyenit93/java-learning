@@ -55,7 +55,7 @@
     "USE_TASK": {
         "DESCRIPTION": "Enable it to auto inject task list in file gradle/task/list/task-list.json",
         "TYPE": "boolean",
-        "VALUE": "FALSE",
+        "VALUE": "TRUE",
         "GROUP": "TASK"
     }
 }
