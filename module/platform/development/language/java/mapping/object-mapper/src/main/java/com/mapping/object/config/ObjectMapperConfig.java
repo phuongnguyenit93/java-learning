@@ -1,4 +1,4 @@
-package com.example.learning.config;
+package com.mapping.object.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;

@@ -1,4 +1,4 @@
-package com.example.learning.controller;
+package com.mapping.model.controller;
 
 import com.example.learning.UserDetailEntity;
 import com.example.learning.UserEntity;

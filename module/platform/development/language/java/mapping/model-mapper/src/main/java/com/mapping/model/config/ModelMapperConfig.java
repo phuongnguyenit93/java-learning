@@ -1,4 +1,4 @@
-package com.example.learning.config;
+package com.mapping.model.config;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;

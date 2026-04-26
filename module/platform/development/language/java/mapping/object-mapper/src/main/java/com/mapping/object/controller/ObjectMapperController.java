@@ -1,4 +1,4 @@
-package com.example.learning.controller;
+package com.mapping.object.controller;
 
 import com.example.learning.UserDetailEntity;
 import com.fasterxml.jackson.core.JsonProcessingException;
