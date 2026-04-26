@@ -48,6 +48,5 @@ LIST.md
 
 application-merged.*
 **/task.gradle
-**/module-depend.json
 
 backup

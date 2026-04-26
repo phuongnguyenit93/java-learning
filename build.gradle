@@ -30,12 +30,15 @@ def getSyncRegistry = { File file ->
     return [:]
 }
 
+def moduleDependList = [:]
+
 subprojects {
     def RESET = "\u001B[0m"
     def BLUE = "\u001B[34m"
     def BOLD = "\u001B[1m"
 
     apply from: "${rootDir}/gradle/config/module.gradle"
+    def serviceName = project.findProperty("SERVICE_NAME") ?: project.name
 
     if (file("${projectDir}/gradle.properties").exists()) {
 
@@ -52,13 +55,11 @@ subprojects {
             long lastPropertiesProcessed = registry.get("properties", "0").toLong()
 
             ext.applyPluginAndDependencyToModule()
-            ext.generateModuleDependList()
-            ext.autoAddModuleDependencyDepend()
 
             // Chỉ chạy nếu file master.json mới hơn file marker
             if (currentMasterTime !=  lastMasterProcessed || currentPropertiesTime != lastPropertiesProcessed) {
                 debugLog("${BLUE}${BOLD}==================================================")
-                debugLog("🔍 BUILD MODULE ${project.hasProperty("SERVICE_NAME") ? project.SERVICE_NAME : project.name} AT ROOT BUILD.GRADLE")
+                debugLog("🔍 BUILD MODULE ${serviceName} AT ROOT BUILD.GRADLE")
                 debugLog("${BLUE}==================================================${RESET}")
 
                 if (currentMasterTime != lastMasterProcessed) {
@@ -73,7 +74,7 @@ subprojects {
                 }
 
                 if (currentPropertiesTime != lastPropertiesProcessed) {
-
+                    // doing something
                 }
 
                 // 4. Cập nhật dữ liệu mới vào Registry
@@ -85,35 +86,19 @@ subprojects {
                 if (!registryFile.parentFile.exists()) registryFile.parentFile.mkdirs()
                 registryFile.text = JsonOutput.prettyPrint(JsonOutput.toJson(registry))
 
-                logger.lifecycle("💯 ${BLUE} FINISHED SETTING MODULE ${project.hasProperty("SERVICE_NAME") ? project.SERVICE_NAME : project.name} AT ROOT BUILD.GRADLE")
+                logger.lifecycle("💯 ${BLUE} FINISHED SETTING MODULE ${serviceName} AT ROOT BUILD.GRADLE")
                 logger.lifecycle("${BLUE}${BOLD}==================================================${RESET}\n\n\n")
             } else {
-                debugLog("🔍 SKIP BUILD MODULE ${project.findProperty("SERVICE_NAME") ?: project.name}")
-                skipServiceList << project.findProperty("SERVICE_NAME") ?: project.name
+                debugLog("🔍 SKIP BUILD MODULE ${serviceName}")
+                skipServiceList << serviceName
             }
         }
-
-        apply plugin: 'io.spring.dependency-management'
 
         processResources{
             // 1. Chỉ định rõ ràng duy nhất file này được phép copy
             include 'application.yml'
-            processResources{
-                // 1. Chỉ định rõ ràng duy nhất file này được phép copy
-                include 'application.yml'
-                include '**'
+            include '**'
 
-                from ("${projectDir}/src/main/resources") {
-                    // 2. (Tùy chọn) Nếu bạn muốn chắc chắn loại bỏ tất cả các file có đuôi .yml khác và .properties
-                    exclude '**/application-*.yml'
-                    exclude '**/*.properties'
-                }
-                include '**/api-descriptions.yml'
-                include '**/api-params.yml'
-                exclude 'application-merged.yml'
-                // 3. Đặt chiến lược xử lý nếu trùng lặp (thường dùng trong Gradle mới)
-                duplicatesStrategy = DuplicatesStrategy.INCLUDE
-            }
             from ("${projectDir}/src/main/resources") {
                 // 2. (Tùy chọn) Nếu bạn muốn chắc chắn loại bỏ tất cả các file có đuôi .yml khác và .properties
                 exclude '**/application-*.yml'
@@ -130,13 +115,26 @@ subprojects {
             def projectPathAsFolder = project.path.replace(':', '/')
             destinationDirectory = rootProject.layout.buildDirectory.dir("jar/${projectPathAsFolder}")
         }
+
+        afterEvaluate {
+            if (project.findProperty("IS_MODULE_DEPEND") == "TRUE") {
+                moduleDependList[serviceName] = []
+
+                configurations.api.allDependencies.each { dep ->
+                    moduleDependList[serviceName] <<  "${dep.group}:${dep.name}${!dep.version ? ":${dep.version}":""}"
+                }
+            }
+        }
     }
 }
 
-afterEvaluate {
+gradle.projectsEvaluated {
     ext.injectAndExtractAllModuleTask(skipServiceList)
+    ext.generateModuleDependList(moduleDependList)
     ext.generateProjectStructureFileTxt()
+}
 
+afterEvaluate {
 //    println tasks.collect { it.name }
 }
 
@@ -152,6 +150,7 @@ allprojects {
             mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
         }
     }
+
     test {
         useJUnitPlatform()
     }

@@ -45,7 +45,7 @@ tasks.register('cleanupSpecificFiles') {
     description = 'Tìm và xóa các file dựa trên tên tham số nhập vào'
 
     doLast {
-        def targetName = "task.gradle"
+        def targetName = "module-depend.json"
 
         if (!targetName) {
             throw new GradleException("Vui lòng nhập tên file cần xóa. Ví dụ: gradlew cleanupSpecificFiles -PfileName=test.txt")
@@ -63,7 +63,7 @@ tasks.register('cleanupSpecificFiles') {
 
         filesToDelete.each { File file ->
             println "Đang xóa: ${file.absolutePath}"
-            if (file.toString().trim().isEmpty()) delete file
+            delete file
         }
     }
 }

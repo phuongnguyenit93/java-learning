@@ -22,50 +22,12 @@ def debugLog(String message) {
 // Lưu hàm này vào extra properties để các subprojects có thể gọi được
 ext.debugLog = this.&debugLog
 
-ext.generateModuleDependList = {
-    // 1. Kiểm tra điều kiện: Nếu thuộc tính ADD_MODULE_DEPEND là "TRUE"
-    if (project.findProperty("ADD_MODULE_DEPEND") == "TRUE") {
+ext.generateModuleDependList = {HashMap moduleDependList ->
+    File rootDependFile = rootProject.file("internal/info/module/module-depend.json")
+    if (!rootDependFile.exists()) rootDependFile.parentFile.mkdir()
 
-        // 2. Định nghĩa file nguồn (root) và file đích (module)
-        File rootDependFile = rootProject.file("internal/info/module/module-depend.json")
-        File targetDependFile = project.file("module-depend.json")
-
-        if (rootDependFile.exists()) {
-            // Đọc nội dung từ file gốc
-            def dependData = new JsonSlurper().parse(rootDependFile)
-            def newContent = JsonOutput.prettyPrint(JsonOutput.toJson(dependData))
-
-            // 3. Chỉ ghi file nếu nội dung có sự thay đổi hoặc file chưa tồn tại
-            if (!targetDependFile.exists() || targetDependFile.text.trim() != newContent.trim()) {
-                targetDependFile.text = newContent
-                println "♻️ Synced module-depend.json for module: ${project.name}"
-            }
-        } else {
-            logger.warn "⚠️ [Warning] Không tìm thấy file gốc tại: ${rootDependFile.path}"
-        }
-    } else {
-        // Tùy chọn: Nếu muốn tự động dọn dẹp file khi ADD_MODULE_DEPEND chuyển thành FALSE
-        File targetDependFile = project.file("module-depend.json")
-        if (targetDependFile.exists()) {
-            targetDependFile.delete()
-            println "🗑️ Removed module-depend.json from ${project.name} (ADD_MODULE_DEPEND is FALSE)"
-        }
-    }
-}
-
-ext.autoAddModuleDependencyDepend = {
-    def rawList = project.findProperty("MODULE_DEPEND_LIST")?.toString() ?: ""
-
-    def moduleList = rawList.split(",")
-            .collect { it.trim() }
-            .findAll { !it.isEmpty() }
-
-    if (moduleList.isEmpty()) return
-    dependencies {
-        moduleList.each {module ->
-            implementation searchProjectByServiceName(module)
-        }
-    }
+    def newContent = JsonOutput.prettyPrint(JsonOutput.toJson(moduleDependList))
+    rootDependFile.text = newContent
 }
 
 ext.applyPluginAndDependencyToModule = {
@@ -75,6 +37,7 @@ ext.applyPluginAndDependencyToModule = {
     def CYAN = "\u001B[36m"
 
     apply plugin: 'java-library'
+    apply plugin: 'io.spring.dependency-management'
 
     def javaSrcDir = file("${projectDir}/src/main/java")
     if (javaSrcDir.exists()) {
@@ -136,7 +99,6 @@ ext.applyPluginAndDependencyToModule = {
             }
             debugLog("   ├─ 🚀 ${GREEN}Spring Boot:${RESET} Đã tìm thấy hàm main -> Apply Boot + Starter Web.")
         } else {
-            apply plugin: 'io.spring.dependency-management'
 
             dependencyManagement {
                 imports {
@@ -147,7 +109,6 @@ ext.applyPluginAndDependencyToModule = {
         }
     } else {
         // Trường hợp module không có code Java (ví dụ module chứa config/resources)
-        apply plugin: 'io.spring.dependency-management'
         dependencyManagement {
             imports {
                 mavenBom "org.springframework.boot:spring-boot-dependencies:3.3.5"
@@ -170,6 +131,20 @@ ext.applyPluginAndDependencyToModule = {
         debugLog("   └─ 🐳 ${CYAN}Docker Compose:${RESET} Đã tìm thấy docker-compose.yml (Profile: ${profile ?: 'default'})")
     }
     debugLog("${CYAN}-----------------------------------------${RESET}")
+
+    // 4. Xử lý các module dependency
+    def rawList = project.findProperty("MODULE_DEPEND_LIST")?.toString() ?: ""
+
+    def moduleList = rawList.split(",")
+            .collect { it.trim() }
+            .findAll { !it.isEmpty() }
+
+    if (moduleList.isEmpty()) return
+    dependencies {
+        moduleList.each {module ->
+            implementation searchProjectByServiceName(module)
+        }
+    }
 
 }
 
