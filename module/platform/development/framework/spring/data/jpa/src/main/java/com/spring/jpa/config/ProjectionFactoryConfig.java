@@ -1,4 +1,4 @@
-package com.example.learning.config;
+package com.spring.jpa.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.projection.ProjectionFactory;

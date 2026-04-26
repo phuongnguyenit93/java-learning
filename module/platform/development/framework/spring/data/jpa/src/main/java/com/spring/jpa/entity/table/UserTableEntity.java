@@ -1,4 +1,4 @@
-package com.example.learning.entity.table;
+package com.spring.jpa.entity.table;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

@@ -1,6 +1,6 @@
-package com.example.learning;
+package com.spring.jpa;
 
-import com.example.learning.config.CustomRepositoryConfig;
+import com.spring.jpa.config.CustomRepositoryConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;

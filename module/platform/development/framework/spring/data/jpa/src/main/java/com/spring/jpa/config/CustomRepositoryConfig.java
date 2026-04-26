@@ -1,6 +1,6 @@
-package com.example.learning.config;
+package com.spring.jpa.config;
 
-import com.example.learning.repository.refresh.CustomRepository;
+import com.spring.jpa.repository.refresh.CustomRepository;
 import jakarta.persistence.EntityGraph;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;

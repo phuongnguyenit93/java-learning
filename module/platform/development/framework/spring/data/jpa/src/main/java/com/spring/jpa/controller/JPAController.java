@@ -1,7 +1,7 @@
-package com.example.learning.controller;
+package com.spring.jpa.controller;
 
-import com.example.learning.entity.table.UserTableEntity;
-import com.example.learning.repository.table.UserRepository;
+import com.spring.jpa.entity.table.UserTableEntity;
+import com.spring.jpa.repository.table.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;

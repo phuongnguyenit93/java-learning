@@ -1,4 +1,4 @@
-package com.example.learning.repository.refresh;
+package com.spring.jpa.repository.refresh;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
