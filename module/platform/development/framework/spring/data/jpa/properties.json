@@ -13,6 +13,13 @@
             "VALUE": ""
         }
     },
+    "SWAGGER": {
+        "BUILD_SWAGGER_LANGUAGE_LIST": {
+            "DESCRIPTION": "List of language to describe API in swagger",
+            "TYPE": "list",
+            "VALUE": ""
+        }
+    },
     "TASK": {
         
     }

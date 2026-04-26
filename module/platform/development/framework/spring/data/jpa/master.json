@@ -53,7 +53,7 @@
     "BUILD_SWAGGER": {
         "DESCRIPTION": "Enable it to implement dependency and enable swagger it project (Still disable in product deploy)",
         "TYPE": "boolean",
-        "VALUE": "FALSE",
+        "VALUE": "TRUE",
         "GROUP": "SWAGGER"
     },
     "BUILD_DATABASE_MODULE": {

@@ -65,7 +65,7 @@
     "ADD_MODULE_DEPEND": {
         "DESCRIPTION": "To enable function to auto implement dependency",
         "TYPE": "boolean",
-        "VALUE": "FALSE",
+        "VALUE": "TRUE",
         "GROUP": "MODULE_DEPEND"
     },
     "USE_DATABASE": {

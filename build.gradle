@@ -44,11 +44,11 @@ subprojects {
 
         ext.applyPluginAndDependencyToModule()
 
-        configurations {
-            developmentOnly {
-                extendsFrom configurations.implementation
-            }
-        }
+//        configurations {
+//            developmentOnly {
+//                extendsFrom configurations.implementation
+//            }
+//        }
 
         File masterFile = file("master.json")
         File propertiesFile = file("properties.json")
