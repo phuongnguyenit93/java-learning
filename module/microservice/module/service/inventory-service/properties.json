@@ -25,6 +25,13 @@
             "VALUE": ""
         }
     },
+    "MODULE_DEPEND": {
+        "MODULE_DEPEND_LIST": {
+            "DESCRIPTION": "To define which module depend will be added to this module",
+            "TYPE": "list",
+            "VALUE": "SPRING_JPA,GLOBAL_EXCEPTION_HANDLER,EUREKA_CLIENT"
+        }
+    },
     "DATABASE": {
         "DATABASE_LIST": {
             "DESCRIPTION": "To define which database use in this module",

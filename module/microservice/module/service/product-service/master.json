@@ -44,6 +44,12 @@
         "VALUE": "FALSE",
         "GROUP": "README"
     },
+    "BUILD_TESTER": {
+        "DESCRIPTION": "Enable test case in module",
+        "TYPE": "boolean",
+        "VALUE": "FALSE",
+        "GROUP": "TESTER"
+    },
     "BUILD_SWAGGER": {
         "DESCRIPTION": "Enable it to implement dependency and enable swagger it project (Still disable in product deploy)",
         "TYPE": "boolean",
@@ -59,7 +65,7 @@
     "ADD_MODULE_DEPEND": {
         "DESCRIPTION": "To enable function to auto implement dependency",
         "TYPE": "boolean",
-        "VALUE": "FALSE",
+        "VALUE": "TRUE",
         "GROUP": "MODULE_DEPEND"
     },
     "USE_DATABASE": {

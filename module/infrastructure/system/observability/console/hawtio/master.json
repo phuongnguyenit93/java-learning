@@ -44,6 +44,12 @@
         "VALUE": "TRUE",
         "GROUP": "README"
     },
+    "BUILD_TESTER": {
+        "DESCRIPTION": "Enable test case in module",
+        "TYPE": "boolean",
+        "VALUE": "FALSE",
+        "GROUP": "TESTER"
+    },
     "BUILD_SWAGGER": {
         "DESCRIPTION": "Enable it to implement dependency and enable swagger it project (Still disable in product deploy)",
         "TYPE": "boolean",

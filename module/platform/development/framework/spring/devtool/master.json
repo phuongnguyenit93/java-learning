@@ -13,12 +13,12 @@
     "SERVICE_NAME_DESCRIBE": {
         "DESCRIPTION": "Describe this module function",
         "TYPE": "string",
-        "VALUE": ""
+        "VALUE": "Extension for developer to auto restart and apply code to app at develop phase"
     },
     "IS_MODULE_DEPEND": {
         "DESCRIPTION": "To define this module added to group list dependency depend or not",
         "TYPE": "boolean",
-        "VALUE": "FALSE"
+        "VALUE": "TRUE"
     },
     "BUILD_ENV": {
         "DESCRIPTION": "Enable auto build .env file and it's task related to (env.gradle) in task module",
@@ -43,6 +43,12 @@
         "TYPE": "boolean",
         "VALUE": "TRUE",
         "GROUP": "README"
+    },
+    "BUILD_TESTER": {
+        "DESCRIPTION": "Enable test case in module",
+        "TYPE": "boolean",
+        "VALUE": "FALSE",
+        "GROUP": "TESTER"
     },
     "BUILD_SWAGGER": {
         "DESCRIPTION": "Enable it to implement dependency and enable swagger it project (Still disable in product deploy)",

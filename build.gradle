@@ -6,6 +6,9 @@ plugins {
     id 'com.avast.gradle.docker-compose' version '0.17.6' apply false
 }
 
+import groovy.json.JsonSlurper
+import groovy.json.JsonOutput
+
 apply from: "gradle/task/root/common.gradle"
 apply from: "gradle/config/module.gradle"
 apply from: "gradle/config/search.gradle"
@@ -13,6 +16,18 @@ apply from: "gradle/config/search.gradle"
 // 1. Khai báo biến phiên bản Spring Cloud
 ext {
     set('springCloudVersion', "2023.0.1")
+}
+
+def skipServiceList = []
+def getSyncRegistry = { File file ->
+    if (file.exists()) {
+        try {
+            return new JsonSlurper().parse(file)
+        } catch (Exception e) {
+            return [:]
+        }
+    }
+    return [:]
 }
 
 subprojects {
@@ -23,22 +38,62 @@ subprojects {
     apply from: "${rootDir}/gradle/config/module.gradle"
 
     if (file("${projectDir}/gradle.properties").exists()) {
-        logger.lifecycle("${BLUE}${BOLD}==================================================")
-        logger.lifecycle("🔍 BUILD MODULE ${project.hasProperty("SERVICE_NAME") ? project.SERVICE_NAME : project.name} AT ROOT BUILD.GRADLE")
-        logger.lifecycle("${BLUE}==================================================${RESET}")
+
+        File masterFile = file("master.json")
+        File propertiesFile = file("properties.json")
+        File registryFile = layout.buildDirectory.file("last-check.json").get().asFile
+
+        HashMap registry = getSyncRegistry(registryFile) as HashMap
+
+        if (masterFile.exists() && propertiesFile.exists()) {
+            long currentMasterTime = masterFile.lastModified()
+            long currentPropertiesTime = propertiesFile.lastModified()
+            long lastMasterProcessed = registry.get("master", "0").toLong()
+            long lastPropertiesProcessed = registry.get("properties", "0").toLong()
+
+            ext.applyPluginAndDependencyToModule()
+            ext.generateModuleDependList()
+            ext.autoAddModuleDependencyDepend()
+
+            // Chỉ chạy nếu file master.json mới hơn file marker
+            if (currentMasterTime !=  lastMasterProcessed || currentPropertiesTime != lastPropertiesProcessed) {
+                debugLog("${BLUE}${BOLD}==================================================")
+                debugLog("🔍 BUILD MODULE ${project.hasProperty("SERVICE_NAME") ? project.SERVICE_NAME : project.name} AT ROOT BUILD.GRADLE")
+                debugLog("${BLUE}==================================================${RESET}")
+
+                if (currentMasterTime != lastMasterProcessed) {
+                    // --- Logic của bạn ---
+                    ext.buildModuleStructure()
+                    ext.buildYMLFile()
+
+                    ext.buildDefaultEnvStructure()
+                    ext.buildProfileEnvStructure()
+
+                    ext.buildReadmeStructure()
+                }
+
+                if (currentPropertiesTime != lastPropertiesProcessed) {
+
+                }
+
+                // 4. Cập nhật dữ liệu mới vào Registry
+                registry["master"] = currentMasterTime.toString()
+                registry["properties"] = currentPropertiesTime.toString()
+                registry["last_sync_date"] = new Date().toString()
+
+                // 5. Ghi Registry ra file JSON
+                if (!registryFile.parentFile.exists()) registryFile.parentFile.mkdirs()
+                registryFile.text = JsonOutput.prettyPrint(JsonOutput.toJson(registry))
+
+                logger.lifecycle("💯 ${BLUE} FINISHED SETTING MODULE ${project.hasProperty("SERVICE_NAME") ? project.SERVICE_NAME : project.name} AT ROOT BUILD.GRADLE")
+                logger.lifecycle("${BLUE}${BOLD}==================================================${RESET}\n\n\n")
+            } else {
+                debugLog("🔍 SKIP BUILD MODULE ${project.findProperty("SERVICE_NAME") ?: project.name}")
+                skipServiceList << project.findProperty("SERVICE_NAME") ?: project.name
+            }
+        }
 
         apply plugin: 'io.spring.dependency-management'
-
-        ext.buildModuleStructure()
-        ext.autoAddModuleDependency()
-
-        ext.applyPluginAndDependencyToModule()
-        ext.buildYMLFile()
-
-        ext.buildDefaultEnvStructure()
-        ext.buildProfileEnvStructure()
-
-        ext.buildReadmeStructure()
 
         processResources{
             // 1. Chỉ định rõ ràng duy nhất file này được phép copy
@@ -75,18 +130,14 @@ subprojects {
             def projectPathAsFolder = project.path.replace(':', '/')
             destinationDirectory = rootProject.layout.buildDirectory.dir("jar/${projectPathAsFolder}")
         }
-
-        logger.lifecycle("💯 ${BLUE} FINISHED SETTING MODULE ${project.hasProperty("SERVICE_NAME") ? project.SERVICE_NAME : project.name} AT ROOT BUILD.GRADLE")
-        logger.lifecycle("${BLUE}${BOLD}==================================================${RESET}\n\n\n")
     }
 }
 
 afterEvaluate {
-    // Inject task in all module
-    ext.injectAndExtractAllModuleTask()
+    ext.injectAndExtractAllModuleTask(skipServiceList)
     ext.generateProjectStructureFileTxt()
 
-    println tasks.collect { it.name }
+//    println tasks.collect { it.name }
 }
 
 allprojects {

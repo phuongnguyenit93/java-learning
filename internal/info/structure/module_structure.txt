@@ -1,4 +1,4 @@
-Cập nhật lúc: 2026-04-20 22:27:28
+Cập nhật lúc: 2026-04-26 17:04:18
 ==============================
 module
 ├── infrastructure
@@ -140,7 +140,7 @@ module
 │   └── twoway
 │       ├── rsocket
 │       └── websocket
-├── microservice [MICROSERVICE]
+├── microservice [MICROSERVICE] : This is a microservice service system app
 │   └── module
 │       ├── deployments
 │       │   ├── docker
@@ -149,7 +149,7 @@ module
 │       │   ├── admin-server [ADMIN_SERVER]
 │       │   ├── api-gateway [API_GATEWAY]
 │       │   ├── config-server [CONFIG_SERVER]
-│       │   ├── eureka-client [EUREKA_CLIENT]
+│       │   ├── eureka-client [EUREKA_CLIENT] - [DEPEND] : Library use for register,discovery,heartbeat service in microservice system
 │       │   └── eureka-server [EUREKA_SERVER]
 │       ├── integration
 │       │   ├── message-broker
@@ -164,8 +164,8 @@ module
 │       │   ├── temporal-starter
 │       │   └── tracing [DISTRIBUTED_TRACING]
 │       └── service
-│           ├── inventory-service [INVENTORY_SERVICE]
-│           ├── order-service [ORDER_SERVICE]
+│           ├── inventory-service [INVENTORY_SERVICE] : A service of microservice app . This service store inventory info
+│           ├── order-service [ORDER_SERVICE] : A service of microservice app . This service to handle order from user
 │           ├── payment-service
 │           └── product-service [PRODUCT_SERVICE]
 └── platform
@@ -199,7 +199,7 @@ module
     │   │       └── proxy
     │   ├── framework
     │   │   ├── spring
-    │   │   │   ├── actuator [SPRING_ACTUATOR]
+    │   │   │   ├── actuator [SPRING_ACTUATOR] - [DEPEND] : To check and monitor system info when running
     │   │   │   ├── basic
     │   │   │   │   ├── core
     │   │   │   │   │   ├── annotation
@@ -209,17 +209,17 @@ module
     │   │   │   │   └── properties
     │   │   │   ├── conditional
     │   │   │   ├── data
-    │   │   │   │   └── jpa [SPRING_JPA]
-    │   │   │   ├── devtool [SPRING_DEVTOOL]
+    │   │   │   │   └── jpa [SPRING_JPA] - [DEPEND]
+    │   │   │   ├── devtool [SPRING_DEVTOOL] - [DEPEND] : Extension for developer to auto restart and apply code to app at develop phase
     │   │   │   ├── functional-endpoint
-    │   │   │   ├── global-exception-handler [GLOBAL_EXCEPTION_HANDLER]
+    │   │   │   ├── global-exception-handler [GLOBAL_EXCEPTION_HANDLER] - [DEPEND]
     │   │   │   ├── import
     │   │   │   ├── profile
     │   │   │   ├── security
     │   │   │   │   ├── basic
     │   │   │   │   ├── jwt
     │   │   │   │   └── oauth
-    │   │   │   ├── swagger [SPRING_SWAGGER]
+    │   │   │   ├── swagger [SPRING_SWAGGER] - [DEPEND] : To auto generate list RestfulAPI to front-end page
     │   │   │   ├── test-property-source
     │   │   │   └── web [SPRING_WEB]
     │   │   └── spring-boot
@@ -247,8 +247,8 @@ module
     │   │       │       └── type-system
     │   │       ├── mapping
     │   │       │   ├── mapstruct [MAPSTRUCT]
-    │   │       │   ├── model-mapper [MODEL_MAPPER]
-    │   │       │   └── object-mapper [OBJECT_MAPPER]
+    │   │       │   ├── model-mapper [MODEL_MAPPER] - [DEPEND] : To quickly convert between 2 Java Object (Entity to DTO) by matching key field
+    │   │       │   └── object-mapper [OBJECT_MAPPER] - [DEPEND] : Convert Java Object to JSON (or XML , YAML)
     │   │       ├── persistence
     │   │       │   ├── orm
     │   │       │   │   ├── hibernate

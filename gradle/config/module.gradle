@@ -8,7 +8,21 @@ def isMissingProp = {List<String> propList ->
     }
 }
 
-ext.autoAddModuleDependency = {
+def debugLog(String message) {
+    // Đọc property từ gradle.properties
+    // Dùng findProperty để tránh bị lỗi nếu property này chưa được định nghĩa
+    def isLogEnabled = project.findProperty("ENABLE_CUSTOM_LOG") ?: "false"
+
+    if (isLogEnabled.toString().toBoolean()) {
+        // Bạn có thể giữ logger.lifecycle hoặc dùng println
+        logger.lifecycle(message)
+    }
+}
+
+// Lưu hàm này vào extra properties để các subprojects có thể gọi được
+ext.debugLog = this.&debugLog
+
+ext.generateModuleDependList = {
     // 1. Kiểm tra điều kiện: Nếu thuộc tính ADD_MODULE_DEPEND là "TRUE"
     if (project.findProperty("ADD_MODULE_DEPEND") == "TRUE") {
 
@@ -39,6 +53,21 @@ ext.autoAddModuleDependency = {
     }
 }
 
+ext.autoAddModuleDependencyDepend = {
+    def rawList = project.findProperty("MODULE_DEPEND_LIST")?.toString() ?: ""
+
+    def moduleList = rawList.split(",")
+            .collect { it.trim() }
+            .findAll { !it.isEmpty() }
+
+    if (moduleList.isEmpty()) return
+    dependencies {
+        moduleList.each {module ->
+            implementation searchProjectByServiceName(module)
+        }
+    }
+}
+
 ext.applyPluginAndDependencyToModule = {
     def GREEN = "\u001B[32m"
     def YELLOW = "\u001B[33m"
@@ -49,9 +78,9 @@ ext.applyPluginAndDependencyToModule = {
 
     def javaSrcDir = file("${projectDir}/src/main/java")
     if (javaSrcDir.exists()) {
-        logger.lifecycle("${CYAN}-----------------------------------------")
-        logger.lifecycle("${CYAN}🛠️  [AUTO-CONFIG]${RESET} Đang phân tích module")
-        
+        debugLog("${CYAN}-----------------------------------------")
+        debugLog("${CYAN}🛠️  [AUTO-CONFIG]${RESET} Đang phân tích module ${project.findProperty("SERVICE_NAME") ?: project.name}")
+
         def hasMainMethod = false
         def javaFiles = fileTree(dir: javaSrcDir, include: "**/*.java")
         boolean hasSwagger = project.findProperty("BUILD_SWAGGER") == "TRUE"
@@ -68,11 +97,11 @@ ext.applyPluginAndDependencyToModule = {
         }
 
         dependencies {
-            testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
-            testImplementation 'org.springframework.boot:spring-boot-starter-test'
-            testImplementation 'org.springframework.security:spring-security-test'
-            // Nếu dùng Mockito để giả lập dữ liệu
-            testImplementation 'org.mockito:mockito-junit-jupiter:5.5.0'
+//            testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+//            testImplementation 'org.springframework.boot:spring-boot-starter-test'
+//            testImplementation 'org.springframework.security:spring-security-test'
+//            // Nếu dùng Mockito để giả lập dữ liệu
+//            testImplementation 'org.mockito:mockito-junit-jupiter:5.5.0'
         }
 
         // 1. Xử lý Spring Boot / Dependency Management
@@ -105,25 +134,27 @@ ext.applyPluginAndDependencyToModule = {
                 implementation 'org.springframework.boot:spring-boot-starter-actuator'
 //                developmentOnly 'org.springframework.boot:spring-boot-devtools'
             }
-            logger.lifecycle("   ├─ 🚀 ${GREEN}Spring Boot:${RESET} Đã tìm thấy hàm main -> Apply Boot + Starter Web.")
+            debugLog("   ├─ 🚀 ${GREEN}Spring Boot:${RESET} Đã tìm thấy hàm main -> Apply Boot + Starter Web.")
         } else {
+            apply plugin: 'io.spring.dependency-management'
+
             dependencyManagement {
                 imports {
                     mavenBom "org.springframework.boot:spring-boot-dependencies:3.3.5"
                 }
             }
-            logger.lifecycle("   ├─ 📦 ${YELLOW}BOM Management:${RESET} Không có hàm main -> Chỉ apply Dependency Management.")
+            debugLog("   ├─ 📦 ${YELLOW}BOM Management:${RESET} Không có hàm main -> Chỉ apply Dependency Management.")
         }
     } else {
         // Trường hợp module không có code Java (ví dụ module chứa config/resources)
-
+        apply plugin: 'io.spring.dependency-management'
         dependencyManagement {
             imports {
                 mavenBom "org.springframework.boot:spring-boot-dependencies:3.3.5"
             }
         }
 
-        logger.lifecycle("${CYAN}🛠️  [AUTO-CONFIG]${RESET} Không có src/java -> Apply ${YELLOW}java-platform${RESET}.")
+        debugLog("${CYAN}🛠️  [AUTO-CONFIG]${RESET} - ${project.findProperty("SERVICE_NAME") ?: project.name} Không có src/java -> Apply ${YELLOW}java-platform${RESET}.")
     }
 
     // 3. Xử lý Docker Compose
@@ -136,23 +167,24 @@ ext.applyPluginAndDependencyToModule = {
                 environment.put 'SPRING_PROFILES_ACTIVE', profile
             }
         }
-        logger.lifecycle("   └─ 🐳 ${CYAN}Docker Compose:${RESET} Đã tìm thấy docker-compose.yml (Profile: ${profile ?: 'default'})")
+        debugLog("   └─ 🐳 ${CYAN}Docker Compose:${RESET} Đã tìm thấy docker-compose.yml (Profile: ${profile ?: 'default'})")
     }
-    logger.lifecycle("${CYAN}-----------------------------------------")
+    debugLog("${CYAN}-----------------------------------------${RESET}")
+
 }
 
-ext.injectAndExtractAllModuleTask = {
+ext.injectAndExtractAllModuleTask = {List skipServiceList ->
     def GREEN = "\u001B[32m"
     def YELLOW = "\u001B[33m"
     def RESET = "\u001B[0m"
     def CYAN = "\u001B[36m"
     def BLUE = "\u001B[34m"
 
-    logger.lifecycle("${BLUE}==================================================")
-    logger.lifecycle("🔍 TẠO RA CÁC FILE TASK.GRADLE Ở MODULE VÀ COPY CÁC TASK DÀNH RIÊNG CHO CÁC MODULE VÀ BỎ VÀO ĐÓ")
-    logger.lifecycle("${BLUE}==================================================${RESET}")
+    debugLog("${BLUE}==================================================")
+    debugLog("🔍 TẠO RA CÁC FILE TASK.GRADLE Ở MODULE VÀ COPY CÁC TASK DÀNH RIÊNG CHO CÁC MODULE VÀ BỎ VÀO ĐÓ")
+    debugLog("${BLUE}==================================================${RESET}")
 
-    logger.lifecycle("${BLUE}🚀 [INJECT-ENGINE] Bắt đầu quá trình quét và phân phối Task...${RESET}")
+    debugLog("${BLUE}🚀 [INJECT-ENGINE] Bắt đầu quá trình quét và phân phối Task...${RESET}")
 
     HashMap<String, List<String>> taskContent = new HashMap()
     HashMap<String, List<String>> moduleContent = new HashMap()
@@ -172,8 +204,9 @@ ext.injectAndExtractAllModuleTask = {
         return matcher.collect { it[1].trim() }
     }
 
+
     // Giai đoạn 1: Trích xuất từ Template
-    logger.lifecycle("${CYAN}📂 Bước 1: Trích xuất dữ liệu từ các file Template...${RESET}")
+    debugLog("${CYAN}📂 Bước 1: Trích xuất dữ liệu từ các file Template...${RESET}")
     taskListProp.each { task ->
         String fileName = task.get("fileName")
         def templateFile = file("${rootDir}/gradle/task/module/${fileName}")
@@ -185,19 +218,22 @@ ext.injectAndExtractAllModuleTask = {
 
             taskContent.put(task.get("type"), tasks)
             moduleContent.put(task.get("type"), modules)
-            logger.lifecycle("   + [${task.type}]: Tìm thấy ${GREEN}${tasks.size()}${RESET} tasks và ${GREEN}${modules.size()}${RESET} module blocks.")
+            debugLog("   + [${task.type}]: Tìm thấy ${GREEN}${tasks.size()}${RESET} tasks và ${GREEN}${modules.size()}${RESET} module blocks.")
         } else {
-            logger.lifecycle("   + [${task.type}]: ${YELLOW}Cảnh báo: Không tìm thấy file ${fileName}${RESET}")
+            debugLog("   + [${task.type}]: ${YELLOW}Cảnh báo: Không tìm thấy file ${fileName}${RESET}")
         }
     }
 
     // Giai đoạn 2: Phân phối xuống subprojects
-    logger.lifecycle("${CYAN}🏗️  Bước 2: Tiến hành Inject file task.gradle vào các subprojects...${RESET}")
+    debugLog("${CYAN}🏗️  Bước 2: Tiến hành Inject file task.gradle vào các subprojects...${RESET}")
     subprojects { project ->
         def serviceName = project.findProperty("SERVICE_NAME")
         def isInjectTask = project.findProperty("USE_TASK")
 
-        if (serviceName != null && !serviceName.isEmpty() && isInjectTask == "TRUE") {
+        def targetFile = file("${project.projectDir}/task.gradle")
+
+        if (serviceName != null && !serviceName.isEmpty() && isInjectTask == "TRUE" && !skipServiceList.contains(serviceName)) {
+
             String moduleContentFinal = ""
             String taskContentFinal = ""
             def injectedTypes = []
@@ -230,21 +266,22 @@ ext.injectAndExtractAllModuleTask = {
                 }
             }
 
-            def targetFile = file("${project.projectDir}/task.gradle")
             if (!moduleContentFinal.isEmpty() || !taskContentFinal.isEmpty()) {
                 if (!targetFile.exists()) targetFile.createNewFile()
+
                 targetFile.text = "// AUTO GENERATED FILE - DO NOT EDIT\n\n" + moduleContentFinal + "\n" + taskContentFinal
                 apply from: targetFile
 
-                logger.lifecycle("   ✅ Module [${GREEN}${serviceName}${RESET}]: Đã inject và apply thành công (${injectedTypes.join(', ')})")
+                debugLog("   ✅ Module [${GREEN}${serviceName}${RESET}]: Đã inject và apply thành công (${injectedTypes.join(', ')})")
 
             }
         } else if (serviceName != null) {
-             // Log những module bị bỏ qua nhưng có SERVICE_NAME để dễ kiểm soát
-//             logger.lifecycle("   ⏩ Module [${serviceName}]: Bỏ qua (USE_TASK=false)")
+//             // Log những module bị bỏ qua nhưng có SERVICE_NAME để dễ kiểm soát
+            if (targetFile.exists()) apply from: targetFile
+            debugLog("   ⏩ Module [${serviceName}]: Skipped")
         }
     }
-    logger.lifecycle("${BLUE}==================================================${RESET}\n\n\n")
+    debugLog("${BLUE}==================================================${RESET}\n\n\n")
 }
 ext.buildYMLFile = {
     if (isMissingProp(["BUILD_YML"])) return
@@ -576,10 +613,21 @@ ext.generateProjectStructureFileTxt = {
                 def json = new JsonSlurper().parse(propsFile)
 
                 def serviceNameValue = json.SERVICE_NAME?.VALUE
+                def serviceNameDescribe = json.SERVICE_NAME_DESCRIBE?.VALUE
+                def isModuleDepend = json.IS_MODULE_DEPEND?.VALUE
 
                 if (serviceNameValue != null) {
                     // Hiển thị: folder-name [SERVICE_NAME_VALUE]
                     displayName += " [${serviceNameValue}]"
+                }
+
+                if (isModuleDepend == "TRUE") {
+                    displayName += " - [DEPEND]"
+                }
+
+                if (serviceNameDescribe != null && serviceNameDescribe != "" ) {
+                    // Hiển thị: folder-name [SERVICE_NAME_VALUE]
+                    displayName += " : ${serviceNameDescribe}"
                 }
             }
 
@@ -634,7 +682,7 @@ ext.generateProjectStructureFileTxt = {
     walkDir("${projectDir}/module" as File, "")
 
     outputFileTxt.text = sb.toString()
-    println "--- Đã cập nhật sơ đồ (bao gồm Root) tại: ${outputFileName} ---"
+    debugLog("--- Đã cập nhật sơ đồ (bao gồm Root) tại: ${outputFileName} ---")
 }
 
 ext.generateIntellijConfigTemplate = {String serviceName ->

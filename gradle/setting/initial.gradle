@@ -1,6 +1,17 @@
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 
+def debugLog(String message) {
+    // Đọc property từ gradle.properties
+    // Dùng findProperty để tránh bị lỗi nếu property này chưa được định nghĩa
+    def isLogEnabled = providers.gradleProperty("ENABLE_CUSTOM_LOG").getOrElse("false")
+
+    if (isLogEnabled.toString().toBoolean()) {
+        // Bạn có thể giữ logger.lifecycle hoặc dùng println
+        logger.lifecycle(message)
+    }
+}
+
 // Định nghĩa hàm Merge JSON thông minh
 def syncMasterJson(File targetMasterFile, File rootMasterFile) {
     def slurper = new JsonSlurper()
@@ -99,9 +110,9 @@ ext.preSetupProject = {
     def CYAN = "\u001B[36m"
     def BLUE = "\u001B[34m"
 
-    logger.lifecycle("${BLUE}==================================================")
-    logger.lifecycle("🔍 [SCANNER] Getting all module, include it in and save it in module-info.json")
-    logger.lifecycle("${BLUE}==================================================${RESET}")
+    debugLog("${BLUE}==================================================")
+    debugLog("🔍 [SCANNER] Getting all module, include it in and save it in module-info.json")
+    debugLog("${BLUE}==================================================${RESET}")
 
     List<HashMap> dirListProps = new ArrayList<>()
     HashMap moduleInfoStore = [:]
@@ -117,7 +128,7 @@ ext.preSetupProject = {
     }.files.unique()
             .collect { it.parentFile }
 
-    logger.lifecycle("📂 Tìm thấy ${CYAN}${folderList.size()}${RESET} thư mục chứa cấu hình.")
+    debugLog("📂 Tìm thấy ${CYAN}${folderList.size()}${RESET} thư mục chứa cấu hình.")
 
     File masterJson = new File(rootDir as File, "internal/auto-build/master.json")
     File propJson = new File(rootDir as File, "internal/auto-build/properties.json")
@@ -205,22 +216,22 @@ ext.preSetupProject = {
 
         // Log từng module được map thành công
         def serviceName = masterMap.SERVICE_NAME?.VALUE ?: "N/A"
-        logger.lifecycle("   [${index + 1}] ${GREEN}${serviceName}${RESET} -> :${modulePath}")
+        debugLog("   [${index + 1}] ${GREEN}${serviceName}${RESET} -> :${modulePath}")
     }
 
     gradle.extensions.extraProperties.set("allModuleProps",dirListProps)
     gradle.extensions.extraProperties.set("allModuleKeys",currentProjectKeys)
 
-    logger.lifecycle("${BLUE}--------------------------------------------------")
-    logger.lifecycle("✨ [SCAN COMPLETED] Đã nạp xong ${CYAN}${dirListProps.size()}${RESET} bộ thuộc tính vào bộ nhớ.")
-    logger.lifecycle("${BLUE}==================================================${RESET}\n")
+    debugLog("${BLUE}--------------------------------------------------")
+    debugLog("✨ [SCAN COMPLETED] Đã nạp xong ${CYAN}${dirListProps.size()}${RESET} bộ thuộc tính vào bộ nhớ.")
+    debugLog("${BLUE}==================================================${RESET}\n")
 
     List<String> profileList = ["dev","loc","prd"]
     gradle.extensions.extraProperties.set("profiles",profileList)
 
-    logger.lifecycle("${GREEN}==================================================")
-    logger.lifecycle("✨ [PROFILES] ${RESET} Project has ${CYAN}${profileList.size()}${RESET} profile : ${profileList.join(", ")}")
-    logger.lifecycle("${GREEN}==================================================${RESET}\n")
+    debugLog("${GREEN}==================================================")
+    debugLog("✨ [PROFILES] ${RESET} Project has ${CYAN}${profileList.size()}${RESET} profile : ${profileList.join(", ")}")
+    debugLog("${GREEN}==================================================${RESET}\n")
 }
 
 ext.addEnvProp = {
