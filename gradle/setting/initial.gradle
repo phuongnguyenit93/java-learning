@@ -4,7 +4,7 @@ import groovy.json.JsonSlurper
 def debugLog(String message) {
     // Đọc property từ gradle.properties
     // Dùng findProperty để tránh bị lỗi nếu property này chưa được định nghĩa
-    def isLogEnabled = providers.gradleProperty("ENABLE_CUSTOM_LOG").getOrElse("false")
+    def isLogEnabled = providers.gradleProperty("ENABLE_SYNC_LOG").getOrElse("false")
 
     if (isLogEnabled.toString().toBoolean()) {
         // Bạn có thể giữ logger.lifecycle hoặc dùng println
@@ -250,7 +250,6 @@ ext.addEnvProp = {
 ext.addPropertiesAutoBuild = {
     gradle.projectsLoaded { gradle ->
         // 1. Khai báo mảng để chứa các SERVICE_NAME thỏa mãn điều kiện
-        def moduleDependList = []
 
         gradle.rootProject.subprojects { proj ->
             def filesToInject = [
@@ -265,16 +264,11 @@ ext.addPropertiesAutoBuild = {
 
                         // --- LOGIC MỚI: Thu thập module depend từ master.json ---
                         if (jsonFile.name == "master.json") {
-                            def isModuleDepend = json.IS_MODULE_DEPEND?.VALUE == "TRUE"
                             def serviceName = json.SERVICE_NAME?.VALUE
                             def serviceDescribe = json.SERVICE_NAME_DESCRIBE?.VALUE ?: ""
 
                             def serviceInfo = [:]
                             serviceInfo[serviceName] = serviceDescribe
-
-                            if (isModuleDepend && serviceName != null && serviceName != "") {
-                                moduleDependList << serviceInfo
-                            }
                         }
 
                         json.each { key, data ->
@@ -296,22 +290,6 @@ ext.addPropertiesAutoBuild = {
                         println "❌ Lỗi nạp JSON cho ${proj.name}: ${e.message}"
                     }
                 }
-            }
-        }
-
-        if (!moduleDependList.isEmpty()) {
-            File outputFile = gradle.rootProject.file("internal/info/module/module-depend.json")
-
-            // Đảm bảo thư mục tồn tại
-            outputFile.parentFile.mkdirs()
-
-            // Format JSON cho đẹp và lưu lại
-            def jsonString = JsonOutput.prettyPrint(JsonOutput.toJson(moduleDependList.unique()))
-
-            // Chỉ ghi file nếu nội dung thay đổi để tránh trigger Gradle reload vô hạn
-            if (!outputFile.exists() || outputFile.text.trim() != jsonString.trim()) {
-                outputFile.text = jsonString
-                println "📝 Updated global dependency list: ${outputFile.path}"
             }
         }
     }

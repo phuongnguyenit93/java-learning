@@ -38,9 +38,17 @@ subprojects {
     def BOLD = "\u001B[1m"
 
     apply from: "${rootDir}/gradle/config/module.gradle"
-    def serviceName = project.findProperty("SERVICE_NAME") ?: project.name
 
     if (file("${projectDir}/gradle.properties").exists()) {
+        def serviceName = project.findProperty("SERVICE_NAME") ?: project.name
+
+        ext.applyPluginAndDependencyToModule()
+
+        configurations {
+            developmentOnly {
+                extendsFrom configurations.implementation
+            }
+        }
 
         File masterFile = file("master.json")
         File propertiesFile = file("properties.json")
@@ -53,8 +61,6 @@ subprojects {
             long currentPropertiesTime = propertiesFile.lastModified()
             long lastMasterProcessed = registry.get("master", "0").toLong()
             long lastPropertiesProcessed = registry.get("properties", "0").toLong()
-
-            ext.applyPluginAndDependencyToModule()
 
             // Chỉ chạy nếu file master.json mới hơn file marker
             if (currentMasterTime !=  lastMasterProcessed || currentPropertiesTime != lastPropertiesProcessed) {
@@ -118,10 +124,18 @@ subprojects {
 
         afterEvaluate {
             if (project.findProperty("IS_MODULE_DEPEND") == "TRUE") {
-                moduleDependList[serviceName] = []
+                moduleDependList[serviceName] = [:]
+                moduleDependList[serviceName].DESCRIBE = project.findProperty("SERVICE_NAME_DESCRIBE")
 
-                configurations.api.allDependencies.each { dep ->
-                    moduleDependList[serviceName] <<  "${dep.group}:${dep.name}${!dep.version ? ":${dep.version}":""}"
+                ['api','developmentOnly'].each { configName ->
+                    // Truy cập động vào configuration theo tên
+                    def dependencyList = configurations.findByName(configName)?.dependencies
+                    if (dependencyList?.size() == 0) return
+
+                    moduleDependList[serviceName][configName] = []
+                    dependencyList?.each { dep ->
+                        moduleDependList[serviceName][configName] << "${dep.group}:${dep.name}${dep.version ? ":${dep.version}" : ""}"
+                    }
                 }
             }
         }

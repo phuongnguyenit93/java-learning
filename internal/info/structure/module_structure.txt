@@ -1,4 +1,4 @@
-Cập nhật lúc: 2026-04-26 21:37:26
+Cập nhật lúc: 2026-04-26 22:18:37
 ==============================
 module
 ├── infrastructure
@@ -212,7 +212,7 @@ module
     │   │   │   │   └── jpa [SPRING_JPA] - [DEPEND]
     │   │   │   ├── devtool [SPRING_DEVTOOL] - [DEPEND] : Extension for developer to auto restart and apply code to app at develop phase
     │   │   │   ├── functional-endpoint
-    │   │   │   ├── global-exception-handler [GLOBAL_EXCEPTION_HANDLER] - [DEPEND]
+    │   │   │   ├── global-exception-handler [GLOBAL_EXCEPTION_HANDLER] - [DEPEND] : Module stored custom exception handler case. Use by @EnableCustomExceptionHandler
     │   │   │   ├── import
     │   │   │   ├── profile
     │   │   │   ├── security

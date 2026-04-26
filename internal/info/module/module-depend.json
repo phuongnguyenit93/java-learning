@@ -1,26 +1,44 @@
 {
-    "EUREKA_CLIENT": [
-        "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:null"
-    ],
-    "SPRING_ACTUATOR": [
-        
-    ],
-    "SPRING_DEVTOOL": [
-        
-    ],
-    "GLOBAL_EXCEPTION_HANDLER": [
-        
-    ],
-    "SPRING_SWAGGER": [
-        "org.springdoc:springdoc-openapi-starter-webmvc-ui"
-    ],
-    "SPRING_JPA": [
-        "org.springframework.boot:spring-boot-starter-data-jpa:null"
-    ],
-    "MODEL_MAPPER": [
-        "org.modelmapper:modelmapper"
-    ],
-    "OBJECT_MAPPER": [
-        
-    ]
+    "EUREKA_CLIENT": {
+        "DESCRIBE": "Library use for register,discovery,heartbeat service in microservice system",
+        "api": [
+            "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client"
+        ]
+    },
+    "SPRING_ACTUATOR": {
+        "DESCRIBE": "To check and monitor system info when running",
+        "api": [
+            "org.springframework.boot:spring-boot-starter-actuator"
+        ]
+    },
+    "SPRING_DEVTOOL": {
+        "DESCRIBE": "Extension for developer to auto restart and apply code to app at develop phase",
+        "developmentOnly": [
+            "org.springframework.boot:spring-boot-devtools"
+        ]
+    },
+    "GLOBAL_EXCEPTION_HANDLER": {
+        "DESCRIBE": "Module stored custom exception handler case. Use by @EnableCustomExceptionHandler"
+    },
+    "SPRING_SWAGGER": {
+        "DESCRIBE": "To auto generate list RestfulAPI to front-end page",
+        "api": [
+            "org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0"
+        ]
+    },
+    "SPRING_JPA": {
+        "DESCRIBE": "",
+        "api": [
+            "org.springframework.boot:spring-boot-starter-data-jpa"
+        ]
+    },
+    "MODEL_MAPPER": {
+        "DESCRIBE": "To quickly convert between 2 Java Object (Entity to DTO) by matching key field",
+        "api": [
+            "org.modelmapper:modelmapper:3.2.0"
+        ]
+    },
+    "OBJECT_MAPPER": {
+        "DESCRIBE": "Convert Java Object to JSON (or XML , YAML)"
+    }
 }

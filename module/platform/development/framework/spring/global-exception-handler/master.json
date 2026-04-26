@@ -13,7 +13,7 @@
     "SERVICE_NAME_DESCRIBE": {
         "DESCRIPTION": "Describe this module function",
         "TYPE": "string",
-        "VALUE": ""
+        "VALUE": "Module stored custom exception handler case. Use by @EnableCustomExceptionHandler"
     },
     "IS_MODULE_DEPEND": {
         "DESCRIPTION": "To define this module added to group list dependency depend or not",

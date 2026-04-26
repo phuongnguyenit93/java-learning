@@ -11,7 +11,7 @@ def isMissingProp = {List<String> propList ->
 def debugLog(String message) {
     // Đọc property từ gradle.properties
     // Dùng findProperty để tránh bị lỗi nếu property này chưa được định nghĩa
-    def isLogEnabled = project.findProperty("ENABLE_CUSTOM_LOG") ?: "false"
+    def isLogEnabled = project.findProperty("ENABLE_SYNC_LOG") ?: "false"
 
     if (isLogEnabled.toString().toBoolean()) {
         // Bạn có thể giữ logger.lifecycle hoặc dùng println
@@ -37,6 +37,7 @@ ext.applyPluginAndDependencyToModule = {
     def CYAN = "\u001B[36m"
 
     apply plugin: 'java-library'
+    apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
 
     def javaSrcDir = file("${projectDir}/src/main/java")
@@ -69,7 +70,6 @@ ext.applyPluginAndDependencyToModule = {
 
         // 1. Xử lý Spring Boot / Dependency Management
         if (hasMainMethod) {
-            apply plugin: 'org.springframework.boot'
             apply plugin: "io.freefair.lombok"
 
             if (hasSwagger) {
@@ -94,9 +94,8 @@ ext.applyPluginAndDependencyToModule = {
 
             dependencies {
                 implementation 'org.springframework.boot:spring-boot-starter-web'
-                implementation 'org.springframework.boot:spring-boot-starter-actuator'
-//                developmentOnly 'org.springframework.boot:spring-boot-devtools'
             }
+
             debugLog("   ├─ 🚀 ${GREEN}Spring Boot:${RESET} Đã tìm thấy hàm main -> Apply Boot + Starter Web.")
         } else {
 
