@@ -1,9 +1,11 @@
 plugins {
-    id 'java'
+    id 'groovy'
+    id 'java-gradle-plugin'
 }
 repositories {
     mavenCentral()
 }
+
 dependencies {
     implementation 'org.yaml:snakeyaml:2.2'
     implementation 'com.github.javaparser:javaparser-symbol-solver-core:3.25.10'

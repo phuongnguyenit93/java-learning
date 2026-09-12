@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Swagger UI</title>
+
+    <link
+            rel="stylesheet"
+            href="swagger-ui/swagger-ui.css"
+    />
+
+    <link
+            rel="stylesheet"
+            href="swagger-youtube.css"
+    />
+</head>
+
+<body>
+
+<div id="swagger-ui"></div>
+
+<script>
+    const contextPath = window.location.pathname
+        .split("/")
+        .filter(Boolean)[0];
+
+    const basePath = contextPath
+        ? `/${contextPath}`
+        : "";
+
+    function loadScript(src) {
+        const script = document.createElement("script");
+        script.src = src;
+        document.head.appendChild(script);
+    }
+
+    loadScript(`${basePath}/swagger-ui/swagger-ui-bundle.js`);
+    loadScript(`${basePath}/swagger-ui/swagger-ui-standalone-preset.js`);
+    loadScript(`${basePath}/swagger-readme-config.js`);
+    loadScript(`${basePath}/swagger-youtube.js`);
+
+    window.onload = function () {
+        window.ui = SwaggerUIBundle({
+            configUrl: `${basePath}/v3/api-docs/swagger-config`,
+
+            dom_id: "#swagger-ui",
+
+            deepLinking: true,
+
+            presets: [
+                SwaggerUIBundle.presets.apis,
+                SwaggerUIStandalonePreset
+            ],
+
+            plugins: [
+                SwaggerUIBundle.plugins.DownloadUrl,
+                YoutubePlugin
+            ],
+
+            layout: "StandaloneLayout"
+        });
+        installReadmeNavigation();
+    };
+
+</script>
+</body>
+</html>

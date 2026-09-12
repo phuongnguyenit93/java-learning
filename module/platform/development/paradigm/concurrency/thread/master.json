@@ -32,12 +32,6 @@
         "VALUE": "TRUE",
         "GROUP": "YML"
     },
-    "BUILD_JAR": {
-        "DESCRIPTION": "Enable to inject task in file build-jar.gradle to each module enable it",
-        "TYPE": "boolean",
-        "VALUE": "TRUE",
-        "GROUP": "JAR"
-    },
     "BUILD_README": {
         "DESCRIPTION": "Enable to build readme.md file",
         "TYPE": "boolean",
@@ -65,7 +59,7 @@
     "ADD_MODULE_DEPEND": {
         "DESCRIPTION": "To enable function to auto implement dependency",
         "TYPE": "boolean",
-        "VALUE": "FALSE",
+        "VALUE": "TRUE",
         "GROUP": "MODULE_DEPEND"
     },
     "USE_DATABASE": {

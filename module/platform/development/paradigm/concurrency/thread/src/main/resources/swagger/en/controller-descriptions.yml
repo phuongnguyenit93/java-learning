@@ -1,0 +1,17 @@
+BasicThreadController:
+  description: |
+    <h2>Basic Thread Controller</h2>
+
+    <p>Đây là description test.</p>
+
+    <div class="swagger-youtube">
+      <iframe
+        width="560"
+        height="315"
+        src="https://www.youtube.com/embed/nd2ULXyBaV8"
+        title="YouTube video"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen>
+      </iframe>
+    </div>

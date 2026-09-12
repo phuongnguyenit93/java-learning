@@ -1,0 +1,9 @@
+[
+  {"type": "env", "propCheck": "BUILD_ENV"},
+  {"type": "readme", "propCheck": "BUILD_README"},
+  {"type": "yml", "propCheck": "BUILD_YML"},
+  {"type": "intellij", "propCheck": ""},
+  {"type": "swagger", "propCheck": "BUILD_SWAGGER"},
+  {"type": "database", "propCheck": "BUILD_DATABASE_MODULE"}
+
+]

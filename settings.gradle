@@ -1,23 +1,19 @@
 pluginManagement {
+    includeBuild('project-build/gradle-runtime')
+    includeBuild('project-orchestration')
+
     repositories {
         mavenLocal()
         gradlePluginPortal()
     }
 }
 
+plugins {
+    id 'com.example.settings-orchestration'
+}
+
 rootProject.name = 'java-learning'
+
 
 String basePackage = "com.example.learning"
 gradle.extensions.extraProperties.set("basePackage",basePackage)
-
-apply from: "gradle/setting/initial.gradle"
-
-// Get all props by gradle.properties location
-ext.preSetupProject()
-ext.addPropertiesAutoBuild()
-
-
-
-
-
-

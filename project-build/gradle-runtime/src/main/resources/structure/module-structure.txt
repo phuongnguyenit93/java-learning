@@ -1,0 +1,357 @@
+module
+├── infrastructure
+│   ├── devops
+│   │   ├── artifact-management
+│   │   │   ├── central-portal
+│   │   │   └── nexus
+│   │   ├── ci-cd
+│   │   ├── docker
+│   │   ├── git
+│   │   ├── jenkins
+│   │   └── k8s
+│   └── system
+│       ├── database
+│       │   ├── advance
+│       │   │   ├── function
+│       │   │   ├── package
+│       │   │   └── procedures
+│       │   ├── connection-pool
+│       │   │   └── hikariCP [HIKARI_CP]
+│       │   ├── migration
+│       │   │   ├── flyway [FLYWAY]
+│       │   │   └── liquibase
+│       │   ├── nosql
+│       │   │   ├── clickhouse
+│       │   │   ├── elasticsearch
+│       │   │   ├── influxDB
+│       │   │   ├── loki
+│       │   │   ├── mongoDB [DATABASE_MONGODB]
+│       │   │   │   └── aggregation
+│       │   │   ├── neo4j
+│       │   │   └── redis
+│       │   │       └── lua-scripting
+│       │   ├── performance
+│       │   │   ├── orm-performance
+│       │   │   └── query-optimization
+│       │   └── rdbms
+│       │       ├── mysql [DATABASE_MYSQL]
+│       │       ├── oracle [DATABASE_ORACLE]
+│       │       │   ├── advance
+│       │       │   │   ├── package
+│       │       │   │   └── procedure
+│       │       │   └── setup
+│       │       └── postgresql [DATABASE_POSTGRESQL]
+│       │           ├── advance
+│       │           │   ├── functions
+│       │           │   └── trigger
+│       │           └── setup
+│       ├── network
+│       │   ├── api-gateway
+│       │   │   ├── kong
+│       │   │   └── spring-cloud-gateway
+│       │   ├── protocol
+│       │   │   ├── http
+│       │   │   ├── ssl-tls
+│       │   │   └── tcp-udp
+│       │   ├── proxy
+│       │   │   ├── haproxy
+│       │   │   └── nginx
+│       │   └── service-mesh
+│       │       ├── istio
+│       │       └── linkerd
+│       ├── observability
+│       │   ├── benchmark
+│       │   │   ├── load-test
+│       │   │   │   ├── jmeter
+│       │   │   │   └── k6
+│       │   │   └── micro
+│       │   │       └── jmh
+│       │   ├── console
+│       │   │   └── hawtio [HAWTIO]
+│       │   ├── diagnostic
+│       │   │   ├── profiling
+│       │   │   │   ├── jconsole
+│       │   │   │   ├── jprofiler
+│       │   │   │   └── visual-vm
+│       │   │   ├── runtime-analysis
+│       │   │   │   └── arthas [ARTHAS]
+│       │   │   └── thread-dump
+│       │   │       └── jstack
+│       │   ├── logging
+│       │   │   ├── event-log
+│       │   │   │   ├── audit-log
+│       │   │   │   ├── business-log
+│       │   │   │   ├── compliance
+│       │   │   │   └── security-event
+│       │   │   ├── log-pipeline
+│       │   │   │   ├── fluentd
+│       │   │   │   ├── logstash
+│       │   │   │   └── promtail
+│       │   │   └── storage-analysis
+│       │   │       ├── elk-stack
+│       │   │       │   ├── elasticsearch
+│       │   │       │   └── kibana
+│       │   │       └── loki-stack
+│       │   │           └── loki
+│       │   ├── metrics
+│       │   │   ├── aggregation
+│       │   │   ├── time-series
+│       │   │   │   └── prometheus
+│       │   │   └── visualization
+│       │   │       └── grafana
+│       │   └── tracing
+│       │       ├── concept
+│       │       └── tooling
+│       │           ├── datadog
+│       │           ├── jaeger
+│       │           ├── tempo
+│       │           └── zipkin
+│       ├── security
+│       │   ├── iam
+│       │   │   └── keycloak
+│       │   └── vault
+│       │       └── hashicorp
+│       └── server
+│           ├── jetty
+│           └── tomcat
+├── integration
+│   ├── broker
+│   │   ├── activeMQ
+│   │   ├── kafka [KAFKA]
+│   │   │   └── service
+│   │   │       ├── consumer
+│   │   │       │   ├── accountant [KAFKA_CONSUMER_ACCOUNTANT]
+│   │   │       │   └── notification [KAFKA_CONSUMER_NOTIFICATION]
+│   │   │       ├── control [KAFKA_CONTROL]
+│   │   │       ├── producer
+│   │   │       │   └── bank [KAFKA_PRODUCER_BANK]
+│   │   │       └── server [KAFKA_SERVER]
+│   │   └── rabbitMQ
+│   ├── oneway
+│   │   ├── grpc
+│   │   ├── httpRequest
+│   │   │   ├── blocking
+│   │   │   │   ├── feign-client
+│   │   │   │   ├── http-url-connection
+│   │   │   │   ├── rest-client
+│   │   │   │   └── rest-template
+│   │   │   └── nonBlocking
+│   │   │       └── web-client
+│   │   └── sse
+│   └── twoway
+│       ├── rsocket
+│       └── websocket
+├── microservice [MICROSERVICE] : This is a microservice service system app
+│   └── module
+│       ├── deployments
+│       │   ├── docker
+│       │   └── prometheus-grafana [PROMETHEUS_GRAFANA]
+│       ├── infrastructure
+│       │   ├── admin-server [ADMIN_SERVER]
+│       │   ├── api-gateway [API_GATEWAY]
+│       │   ├── config-server [CONFIG_SERVER]
+│       │   ├── eureka-client [EUREKA_CLIENT] - [DEPEND] : Library use for register,discovery,heartbeat service in microservice system
+│       │   └── eureka-server [EUREKA_SERVER]
+│       ├── integration
+│       │   ├── message-broker
+│       │   └── notification-service
+│       ├── platform
+│       │   ├── common-lib
+│       │   ├── logging-starter
+│       │   │   ├── elk-stack
+│       │   │   └── loki
+│       │   ├── resilience4j [RESILIENCE_4J]
+│       │   ├── security-starter
+│       │   ├── temporal-starter
+│       │   └── tracing [DISTRIBUTED_TRACING]
+│       └── service
+│           ├── inventory-service [INVENTORY_SERVICE] : A service of microservice app . This service store inventory info
+│           ├── order-service [ORDER_SERVICE] : A service of microservice app . This service to handle order from user
+│           ├── payment-service
+│           └── product-service [PRODUCT_SERVICE]
+└── platform
+    ├── cloud
+    │   ├── alibaba
+    │   ├── aws
+    │   ├── azure
+    │   ├── gcp
+    │   ├── ibm
+    │   └── oracle
+    ├── code-quality
+    │   ├── continous-inspection
+    │   │   └── sonarqube
+    │   └── static-analysis
+    │       ├── checkstyle [CHECKSTYLE]
+    │       ├── error-prone
+    │       ├── pmd
+    │       └── spotbugs
+    ├── development
+    │   ├── build-tool
+    │   │   ├── ant
+    │   │   ├── gradle
+    │   │   │   ├── cache
+    │   │   │   ├── open-rewrite [OPEN_REWRITE_GRADLE]
+    │   │   │   ├── plugin
+    │   │   │   │   ├── development
+    │   │   │   │   │   ├── internal-plugin
+    │   │   │   │   │   │   ├── build-src
+    │   │   │   │   │   │   ├── convention-plugin
+    │   │   │   │   │   │   └── included-plugin
+    │   │   │   │   │   └── published-plugin
+    │   │   │   │   │       ├── gradle-plugin-portal
+    │   │   │   │   │       └── maven-repository
+    │   │   │   │   └── usage
+    │   │   │   │       ├── core-plugin
+    │   │   │   │       └── development-plugin
+    │   │   │   └── task
+    │   │   └── maven
+    │   ├── design-pattern
+    │   │   ├── anti-patterns
+    │   │   ├── behavioral
+    │   │   │   ├── observer
+    │   │   │   ├── state
+    │   │   │   └── strategy
+    │   │   ├── creational
+    │   │   │   ├── builder
+    │   │   │   ├── factory-method
+    │   │   │   └── singleton
+    │   │   ├── distributed-system
+    │   │   │   ├── bulkhead
+    │   │   │   ├── cqrs
+    │   │   │   ├── event-sourcing
+    │   │   │   ├── saga
+    │   │   │   └── sidecar
+    │   │   ├── solid-principles
+    │   │   └── structural
+    │   │       ├── adapter
+    │   │       ├── facade
+    │   │       └── proxy
+    │   ├── framework
+    │   │   ├── spring
+    │   │   │   ├── actuator [SPRING_ACTUATOR] - [DEPEND] : To check and monitor system info when running
+    │   │   │   ├── basic
+    │   │   │   │   ├── annotation
+    │   │   │   │   │   ├── configuration
+    │   │   │   │   │   └── stereotype
+    │   │   │   │   │       ├── component
+    │   │   │   │   │       ├── controller
+    │   │   │   │   │       ├── repository
+    │   │   │   │   │       └── service
+    │   │   │   │   ├── core
+    │   │   │   │   │   ├── bean
+    │   │   │   │   │   └── scope
+    │   │   │   │   ├── profile
+    │   │   │   │   └── properties
+    │   │   │   ├── conditional
+    │   │   │   ├── data
+    │   │   │   │   └── jpa [SPRING_JPA] - [DEPEND]
+    │   │   │   ├── devtool [SPRING_DEVTOOL] - [DEPEND] : Extension for developer to auto restart and apply code to app at develop phase
+    │   │   │   ├── functional-endpoint
+    │   │   │   ├── global-exception-handler [GLOBAL_EXCEPTION_HANDLER] - [DEPEND] : Module stored custom exception handler case. Use by @EnableCustomExceptionHandler
+    │   │   │   ├── import
+    │   │   │   ├── profile
+    │   │   │   ├── security
+    │   │   │   │   ├── basic
+    │   │   │   │   ├── jwt
+    │   │   │   │   └── oauth
+    │   │   │   ├── swagger [SPRING_SWAGGER] - [DEPEND] : To auto generate list RestfulAPI to front-end page
+    │   │   │   ├── test-property-source
+    │   │   │   └── web [SPRING_WEB]
+    │   │   └── spring-boot
+    │   │       ├── auto-configuration
+    │   │       ├── embedded-server
+    │   │       ├── externalized-configuration
+    │   │       ├── native-image
+    │   │       ├── packaging
+    │   │       ├── starter
+    │   │       │   └── custom-starter
+    │   │       └── testing
+    │   ├── language
+    │   │   ├── domain-specific-language
+    │   │   └── java
+    │   │       ├── advance
+    │   │       ├── concurrency
+    │   │       │   ├── async-programming
+    │   │       │   ├── executor-service
+    │   │       │   ├── high-level-utils
+    │   │       │   └── virtual-threads
+    │   │       ├── core
+    │   │       │   ├── abstract-interface [ABSTRACT_INTERFACE]
+    │   │       │   ├── annotation
+    │   │       │   │   ├── basic
+    │   │       │   │   ├── custom-annotation
+    │   │       │   │   └── meta-annotation
+    │   │       │   ├── class-and-runtime-class
+    │   │       │   ├── classloader
+    │   │       │   ├── oop
+    │   │       │   └── reflection
+    │   │       │       └── type-system
+    │   │       ├── mapping
+    │   │       │   ├── mapstruct [MAPSTRUCT] - [DEPEND]
+    │   │       │   ├── model-mapper [MODEL_MAPPER] - [DEPEND] : To quickly convert between 2 Java Object (Entity to DTO) by matching key field
+    │   │       │   └── object-mapper [OBJECT_MAPPER] - [DEPEND] : Convert Java Object to JSON (or XML , YAML)
+    │   │       ├── persistence
+    │   │       │   ├── orm
+    │   │       │   │   ├── hibernate
+    │   │       │   │   └── jpa-specification
+    │   │       │   └── sql
+    │   │       │       ├── jdbc
+    │   │       │       └── mybatis
+    │   │       └── version
+    │   │           ├── java11
+    │   │           ├── java16
+    │   │           │   └── record [JAVA_RECORD]
+    │   │           ├── java17
+    │   │           ├── java7
+    │   │           └── java8
+    │   │               └── stream-api
+    │   ├── paradigm
+    │   │   ├── aop [ASPECT]
+    │   │   ├── concurrency
+    │   │   │   ├── batch
+    │   │   │   ├── forkjoin-workstealing [FORK_JOIN_WORK_STEALING]
+    │   │   │   ├── schedule
+    │   │   │   │   └── task [SCHEDULE]
+    │   │   │   └── thread [THREAD]
+    │   │   ├── di-ioc
+    │   │   ├── functional
+    │   │   ├── mvc-pattern
+    │   │   │   ├── controller
+    │   │   │   ├── model
+    │   │   │   └── service
+    │   │   ├── object-oriented
+    │   │   └── reactive-stream
+    │   │       └── webflux
+    │   └── validation
+    │       ├── performance
+    │       │   ├── benchmark
+    │       │   ├── jmeter
+    │       │   └── load-test
+    │       └── testing
+    │           ├── e2e-test
+    │           ├── integration-test
+    │           └── unit-test
+    ├── digital
+    ├── social
+    └── support
+        ├── document
+        │   ├── diagram
+        │   │   └── mermaid
+        │   ├── excel
+        │   ├── markdown
+        │   │   └── flexmark [FLEXMARK_MARKDOWN] - [DEPEND]
+        │   ├── pdf
+        │   ├── translate
+        │   │   ├── argos
+        │   │   ├── azure [AZURE_TRANSLATE] - [DEPEND] : Translate using Azure service
+        │   │   └── libre
+        │   ├── word
+        │   └── xml
+        └── notification
+            ├── email
+            ├── kakao
+            ├── microsoft-team
+            ├── mobile-push
+            ├── slack
+            ├── sms
+            └── telegram

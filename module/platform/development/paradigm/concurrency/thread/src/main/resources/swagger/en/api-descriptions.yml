@@ -1,271 +1,1408 @@
 BasicThreadController:
-  testThread:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+  extract(String):
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: extract
+    params:
+    - markdown
+    path: com/example/learning/module/basic/controller/BasicThreadController.java
+    mapping: '@PostMapping(value = "/extract", consumes = MediaType.TEXT_PLAIN_VALUE)'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - basic/extract
+    produces: [
+      ]
+    consumes:
+    - MediaType.TEXT_PLAIN_VALUE
+    usage: true
+  testThread():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: testThread
+    params: [
+      ]
     path: com/example/learning/module/basic/controller/BasicThreadController.java
     mapping: '@GetMapping("/example-thread")'
-  testNonThread:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    httpMethods:
+    - GET
+    mappingPaths:
+    - basic/example-thread
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  testNonThread():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: testNonThread
+    params: [
+      ]
     path: com/example/learning/module/basic/controller/BasicThreadController.java
     mapping: '@GetMapping("/example-non-thread")'
-  threadLifeCycle:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    httpMethods:
+    - GET
+    mappingPaths:
+    - basic/example-non-thread
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  threadLifeCycle():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: threadLifeCycle
+    params: [
+      ]
     path: com/example/learning/module/basic/controller/BasicThreadController.java
     mapping: '@GetMapping("/thread-life-cycle")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - basic/thread-life-cycle
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
 CreateThreadController:
-  createByExtend:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+  createByExtend():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: createByExtend
+    params: [
+      ]
     path: com/example/learning/module/basic/controller/CreateThreadController.java
     mapping: '@GetMapping("/extend")'
-  createByRunnable:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    httpMethods:
+    - GET
+    mappingPaths:
+    - create/extend
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  createByRunnable():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: createByRunnable
+    params: [
+      ]
     path: com/example/learning/module/basic/controller/CreateThreadController.java
     mapping: '@GetMapping("/runnable")'
-  createByCallable:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    httpMethods:
+    - GET
+    mappingPaths:
+    - create/runnable
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  createByCallable():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: createByCallable
+    params: [
+      ]
     path: com/example/learning/module/basic/controller/CreateThreadController.java
     mapping: '@GetMapping("/callable")'
-  createByThreadPool:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    httpMethods:
+    - GET
+    mappingPaths:
+    - create/callable
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  createByThreadPool():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: createByThreadPool
+    params: [
+      ]
     path: com/example/learning/module/basic/controller/CreateThreadController.java
     mapping: '@GetMapping("/pool")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - create/pool
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
 DaemonThreadController:
-  threadDaemon:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+  threadDaemon():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: threadDaemon
+    params: [
+      ]
     path: com/example/learning/module/basic/controller/DaemonThreadController.java
     mapping: '@GetMapping("/daemon-thread")'
-  stopDaemon:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    httpMethods:
+    - GET
+    mappingPaths:
+    - daemon/daemon-thread
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  stopDaemon():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: stopDaemon
+    params: [
+      ]
     path: com/example/learning/module/basic/controller/DaemonThreadController.java
     mapping: '@GetMapping("/stop-thread")'
-  restartDaemon:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    httpMethods:
+    - GET
+    mappingPaths:
+    - daemon/stop-thread
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  restartDaemon():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: restartDaemon
+    params: [
+      ]
     path: com/example/learning/module/basic/controller/DaemonThreadController.java
     mapping: '@GetMapping("/restart-thread")'
-InterruptionController:
-  workerInterruption:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
-    path: com/example/learning/module/interruption/controller/InterruptionController.java
-    mapping: '@GetMapping("worker")'
-  blockerInterruption:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
-    path: com/example/learning/module/interruption/controller/InterruptionController.java
-    mapping: '@GetMapping("blocker")'
-  gracefulShutdownByJava:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
-    path: com/example/learning/module/interruption/controller/InterruptionController.java
-    mapping: '@GetMapping("shutdown-by-java")'
-  gracefulShutdownBySpring:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
-    path: com/example/learning/module/interruption/controller/InterruptionController.java
-    mapping: '@GetMapping("shutdown-by-spring")'
-  interruptedDemo:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
-    path: com/example/learning/module/interruption/controller/InterruptionController.java
-    mapping: '@GetMapping("interrupted-demo")'
-ReentrantLockController:
-  reentrantLockExample:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
-    path: com/example/learning/module/synchronization/controller/ReentrantLockController.java
-    mapping: '@GetMapping("example")'
-  fairLockExample:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
-    path: com/example/learning/module/synchronization/controller/ReentrantLockController.java
-    mapping: '@GetMapping("fair-lock")'
-  unfairLockExample:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
-    path: com/example/learning/module/synchronization/controller/ReentrantLockController.java
-    mapping: '@GetMapping("unfair-lock")'
-  interruptibleLock:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
-    path: com/example/learning/module/synchronization/controller/ReentrantLockController.java
-    mapping: '@GetMapping("interruptible-lock")'
-SyncController:
-  runSyncTest:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
-    path: com/example/learning/module/synchronization/controller/SyncController.java
-    mapping: '@GetMapping("run-sync-test")'
-SyncProblemController:
-  instructionReorder:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
-    path: com/example/learning/module/synchronization/controller/SyncProblemController.java
-    mapping: '@GetMapping("instruction-reorder")'
-  staleData:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
-    path: com/example/learning/module/synchronization/controller/SyncProblemController.java
-    mapping: '@GetMapping("stale-data")'
-  raceCondition:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
-    path: com/example/learning/module/synchronization/controller/SyncProblemController.java
-    mapping: '@GetMapping("race-condition")'
-  deadlock:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
-    path: com/example/learning/module/synchronization/controller/SyncProblemController.java
-    mapping: '@GetMapping("deadlock")'
-RejectExecutionHandlerController:
-  abortPolicy:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
-    path: com/example/learning/module/pool/controller/RejectExecutionHandlerController.java
-    mapping: '@GetMapping("abort-policy")'
-  callerRunPolicy:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
-    path: com/example/learning/module/pool/controller/RejectExecutionHandlerController.java
-    mapping: '@GetMapping("caller-run-policy")'
-  discardPolicy:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
-    path: com/example/learning/module/pool/controller/RejectExecutionHandlerController.java
-    mapping: '@GetMapping("discard-policy")'
-  discardOldestPolicy:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
-    path: com/example/learning/module/pool/controller/RejectExecutionHandlerController.java
-    mapping: '@GetMapping("discard-oldest-policy")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - daemon/restart-thread
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
 ThreadLocalController:
-  threadLocalDemo:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
-    path: com/example/learning/module/propagation/controller/ThreadLocalController.java
+  threadLocalDemo():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: threadLocalDemo
+    params: [
+      ]
+    path: com/example/learning/module/context/controller/ThreadLocalController.java
     mapping: '@GetMapping("thread-local")'
-  inheritableThreadLocalDemo:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
-    path: com/example/learning/module/propagation/controller/ThreadLocalController.java
+    httpMethods:
+    - GET
+    mappingPaths:
+    - thread-local/thread-local
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  inheritableThreadLocalDemo():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: inheritableThreadLocalDemo
+    params: [
+      ]
+    path: com/example/learning/module/context/controller/ThreadLocalController.java
     mapping: '@GetMapping("inheritable-thread-local")'
-  threadPoolIssueDemo:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
-    path: com/example/learning/module/propagation/controller/ThreadLocalController.java
+    httpMethods:
+    - GET
+    mappingPaths:
+    - thread-local/inheritable-thread-local
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  threadPoolIssueDemo():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: threadPoolIssueDemo
+    params: [
+      ]
+    path: com/example/learning/module/context/controller/ThreadLocalController.java
     mapping: '@GetMapping("thread-pool-issue")'
-ReadWriteLockController:
-  readAndRead:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
-    path: com/example/learning/module/synchronization/controller/ReadWriteLockController.java
-    mapping: '@GetMapping("read-read")'
-  readAndWrite:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
-    path: com/example/learning/module/synchronization/controller/ReadWriteLockController.java
-    mapping: '@GetMapping("read-write")'
-  writeAndWrite:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
-    path: com/example/learning/module/synchronization/controller/ReadWriteLockController.java
-    mapping: '@GetMapping("write-write")'
-  downgradeKey:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
-    path: com/example/learning/module/synchronization/controller/ReadWriteLockController.java
-    mapping: '@GetMapping("downgrade")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - thread-local/thread-pool-issue
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
 AsyncController:
-  futureExample:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+  futureExample():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: futureExample
+    params: [
+      ]
     path: com/example/learning/module/coordination/async/controller/AsyncController.java
     mapping: '@GetMapping("future")'
-  completableFutureExample:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    httpMethods:
+    - GET
+    mappingPaths:
+    - async/future
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  completableFutureExample():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: completableFutureExample
+    params: [
+      ]
     path: com/example/learning/module/coordination/async/controller/AsyncController.java
     mapping: '@GetMapping("completable-future")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - async/completable-future
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  completableFutureWithHandleExample():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: completableFutureWithHandleExample
+    params: [
+      ]
+    path: com/example/learning/module/coordination/async/controller/AsyncController.java
+    mapping: '@GetMapping("completable-future-with-handle")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - async/completable-future-with-handle
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+BlockingQueueController:
+  blockingQueueExample():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: blockingQueueExample
+    params: [
+      ]
+    path: com/example/learning/module/coordination/blockingQueue/controller/BlockingQueueController.java
+    mapping: '@GetMapping("blocking-queue")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - queue/blocking-queue
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  synchronousQueueExample():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: synchronousQueueExample
+    params: [
+      ]
+    path: com/example/learning/module/coordination/blockingQueue/controller/BlockingQueueController.java
+    mapping: '@GetMapping("synchronous-queue")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - queue/synchronous-queue
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  arrayQueueExample():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: arrayQueueExample
+    params: [
+      ]
+    path: com/example/learning/module/coordination/blockingQueue/controller/BlockingQueueController.java
+    mapping: '@GetMapping("array-queue")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - queue/array-queue
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  priorityQueueExample():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: priorityQueueExample
+    params: [
+      ]
+    path: com/example/learning/module/coordination/blockingQueue/controller/BlockingQueueController.java
+    mapping: '@GetMapping("priority-queue")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - queue/priority-queue
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
 ClassicCoordinationController:
-  joinThread:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+  joinThread():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: joinThread
+    params: [
+      ]
     path: com/example/learning/module/coordination/classic/controller/ClassicCoordinationController.java
     mapping: '@GetMapping("join-thread")'
-  waitAndNotifyThread:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    httpMethods:
+    - GET
+    mappingPaths:
+    - classic-coordination/join-thread
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  waitAndNotifyThread():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: waitAndNotifyThread
+    params: [
+      ]
     path: com/example/learning/module/coordination/classic/controller/ClassicCoordinationController.java
     mapping: '@GetMapping("wait-and-notify-thread")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - classic-coordination/wait-and-notify-thread
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
 ModernCoordinationController:
-  lockConditionExample:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+  lockConditionExample():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: lockConditionExample
+    params: [
+      ]
     path: com/example/learning/module/coordination/modern/controller/ModernCoordinationController.java
     mapping: '@GetMapping("lock-condition")'
-  lockSupportExample:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    httpMethods:
+    - GET
+    mappingPaths:
+    - modern-coordination/lock-condition
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  lockSupportExample():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: lockSupportExample
+    params: [
+      ]
     path: com/example/learning/module/coordination/modern/controller/ModernCoordinationController.java
     mapping: '@GetMapping("lock-support")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - modern-coordination/lock-support
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
 PatternController:
-  exchangerExample:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+  exchangerExample():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: exchangerExample
+    params: [
+      ]
     path: com/example/learning/module/coordination/pattern/controller/PatternController.java
     mapping: '@GetMapping("exchanger")'
-  consumerProducerPatternExample:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    httpMethods:
+    - GET
+    mappingPaths:
+    - pattern/exchanger
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  consumerProducerPatternExample():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: consumerProducerPatternExample
+    params: [
+      ]
     path: com/example/learning/module/coordination/pattern/controller/PatternController.java
     mapping: '@GetMapping("consumer-producer")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - pattern/consumer-producer
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
 SynchronizerController:
-  countDownLatchExample:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+  countDownLatchExample():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: countDownLatchExample
+    params: [
+      ]
     path: com/example/learning/module/coordination/synchronizer/controller/SynchronizerController.java
     mapping: '@GetMapping("count-down-latch")'
-  countDownLatchTimeOutExample:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    httpMethods:
+    - GET
+    mappingPaths:
+    - synchronizer/count-down-latch
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  countDownLatchTimeOutExample():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: countDownLatchTimeOutExample
+    params: [
+      ]
     path: com/example/learning/module/coordination/synchronizer/controller/SynchronizerController.java
     mapping: '@GetMapping("count-down-latch-timeout")'
-  cyclicBarrierExample:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    httpMethods:
+    - GET
+    mappingPaths:
+    - synchronizer/count-down-latch-timeout
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  cyclicBarrierExample():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: cyclicBarrierExample
+    params: [
+      ]
     path: com/example/learning/module/coordination/synchronizer/controller/SynchronizerController.java
     mapping: '@GetMapping("cyclic-barrier")'
-  cyclicBarrierTimeOutExample:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    httpMethods:
+    - GET
+    mappingPaths:
+    - synchronizer/cyclic-barrier
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  cyclicBarrierTimeOutExample():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: cyclicBarrierTimeOutExample
+    params: [
+      ]
     path: com/example/learning/module/coordination/synchronizer/controller/SynchronizerController.java
     mapping: '@GetMapping("cyclic-barrier-time-out")'
-  cyclicBarrierResetExample:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    httpMethods:
+    - GET
+    mappingPaths:
+    - synchronizer/cyclic-barrier-time-out
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  cyclicBarrierResetExample():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: cyclicBarrierResetExample
+    params: [
+      ]
     path: com/example/learning/module/coordination/synchronizer/controller/SynchronizerController.java
     mapping: '@GetMapping("cyclic-barrier-reset")'
-  semaphoreExample:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    httpMethods:
+    - GET
+    mappingPaths:
+    - synchronizer/cyclic-barrier-reset
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  semaphoreExample():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: semaphoreExample
+    params: [
+      ]
     path: com/example/learning/module/coordination/synchronizer/controller/SynchronizerController.java
     mapping: '@GetMapping("semaphore")'
-  phaserExample:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    httpMethods:
+    - GET
+    mappingPaths:
+    - synchronizer/semaphore
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  phaserExample():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: phaserExample
+    params: [
+      ]
     path: com/example/learning/module/coordination/synchronizer/controller/SynchronizerController.java
     mapping: '@GetMapping("phaser")'
-StampedLockController:
-  stampedExample:
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
-    path: com/example/learning/module/synchronization/controller/StampedLockController.java
+    httpMethods:
+    - GET
+    mappingPaths:
+    - synchronizer/phaser
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+TaskExecutorController:
+  springExecutorExample():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: springExecutorExample
+    params: [
+      ]
+    path: com/example/learning/module/executor/controller/TaskExecutorController.java
     mapping: '@GetMapping("example")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - spring-executor/example
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+InterruptionController:
+  workerInterruption():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: workerInterruption
+    params: [
+      ]
+    path: com/example/learning/module/interruption/controller/InterruptionController.java
+    mapping: '@GetMapping("worker")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - interruption/worker
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  blockerInterruption():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: blockerInterruption
+    params: [
+      ]
+    path: com/example/learning/module/interruption/controller/InterruptionController.java
+    mapping: '@GetMapping("blocker")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - interruption/blocker
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  gracefulShutdownByJava():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: gracefulShutdownByJava
+    params: [
+      ]
+    path: com/example/learning/module/interruption/controller/InterruptionController.java
+    mapping: '@GetMapping("shutdown-by-java")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - interruption/shutdown-by-java
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  gracefulShutdownBySpring():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: gracefulShutdownBySpring
+    params: [
+      ]
+    path: com/example/learning/module/interruption/controller/InterruptionController.java
+    mapping: '@GetMapping("shutdown-by-spring")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - interruption/shutdown-by-spring
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  interruptedDemo():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: interruptedDemo
+    params: [
+      ]
+    path: com/example/learning/module/interruption/controller/InterruptionController.java
+    mapping: '@GetMapping("interrupted-demo")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - interruption/interrupted-demo
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+LeakController:
+  threadLeak():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: threadLeak
+    params: [
+      ]
+    path: com/example/learning/module/leak/controller/LeakController.java
+    mapping: '@GetMapping("/thread")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - leak/thread
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  poolLeak():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: poolLeak
+    params: [
+      ]
+    path: com/example/learning/module/leak/controller/LeakController.java
+    mapping: '@GetMapping("/pool")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - leak/pool
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+ThreadPoolController:
+  fixedThreadPoolExample():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: fixedThreadPoolExample
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/executor/fixed-thread-pool")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - thread-pool/executor/fixed-thread-pool
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  cacheThreadPoolExample():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: cacheThreadPoolExample
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/executor/cache-thread-pool")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - thread-pool/executor/cache-thread-pool
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  singleThreadPoolExample():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: singleThreadPoolExample
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/executor/single-thread-pool")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - thread-pool/executor/single-thread-pool
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  scheduleThreadPoolExample():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: scheduleThreadPoolExample
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/executor/schedule-thread-pool")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - thread-pool/executor/schedule-thread-pool
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  abortPolicy():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: abortPolicy
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/reject/reject-abort-policy")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - thread-pool/reject/reject-abort-policy
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  callerRunPolicy():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: callerRunPolicy
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/reject/caller-run-policy")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - thread-pool/reject/caller-run-policy
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  discardPolicy():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: discardPolicy
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/reject/discard-policy")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - thread-pool/reject/discard-policy
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  discardOldestPolicy():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: discardOldestPolicy
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/reject/discard-oldest-policy")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - thread-pool/reject/discard-oldest-policy
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+AtomicController:
+  atomicBenchmark():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: atomicBenchmark
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/atomic/controller/AtomicController.java
+    mapping: '@GetMapping("atomic-benchmark")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - atomic/atomic-benchmark
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  adderBenchmark():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: adderBenchmark
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/atomic/controller/AtomicController.java
+    mapping: '@GetMapping("adder-benchmark")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - atomic/adder-benchmark
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  accumulatorExample():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: accumulatorExample
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/atomic/controller/AtomicController.java
+    mapping: '@GetMapping("accumulator-example")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - atomic/accumulator-example
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+SyncController:
+  runSyncTest():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: runSyncTest
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/basic/controller/SyncController.java
+    mapping: '@GetMapping("run-sync-test")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - sync/run-sync-test
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+SyncProblemController:
+  instructionReorder():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: instructionReorder
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/basic/controller/SyncProblemController.java
+    mapping: '@GetMapping("instruction-reorder")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - sync/problem/instruction-reorder
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  staleData():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: staleData
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/basic/controller/SyncProblemController.java
+    mapping: '@GetMapping("stale-data")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - sync/problem/stale-data
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  raceCondition():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: raceCondition
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/basic/controller/SyncProblemController.java
+    mapping: '@GetMapping("race-condition")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - sync/problem/race-condition
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  deadlock():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: deadlock
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/basic/controller/SyncProblemController.java
+    mapping: '@GetMapping("deadlock")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - sync/problem/deadlock
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  livelock():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: livelock
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/basic/controller/SyncProblemController.java
+    mapping: '@GetMapping("livelock")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - sync/problem/livelock
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+ConcurrentCollectionController:
+  concurrentHashMap():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: concurrentHashMap
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/concurrent/controller/ConcurrentCollectionController.java
+    mapping: '@GetMapping("concurrent-hash-map")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - concurrent-collection/concurrent-hash-map
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  concurrentSkipList():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: concurrentSkipList
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/concurrent/controller/ConcurrentCollectionController.java
+    mapping: '@GetMapping("concurrent-skip-list")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - concurrent-collection/concurrent-skip-list
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  copyOnWriteArrayWhenWriting():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: copyOnWriteArrayWhenWriting
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/concurrent/controller/ConcurrentCollectionController.java
+    mapping: '@GetMapping("copy-on-write-array-writing")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - concurrent-collection/copy-on-write-array-writing
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  copyOnWriteArrayWhenReading():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: copyOnWriteArrayWhenReading
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/concurrent/controller/ConcurrentCollectionController.java
+    mapping: '@GetMapping("copy-on-write-array-reading")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - concurrent-collection/copy-on-write-array-reading
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  concurrentLinkedQueue():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: concurrentLinkedQueue
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/concurrent/controller/ConcurrentCollectionController.java
+    mapping: '@GetMapping("concurrent-linked-queue")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - concurrent-collection/concurrent-linked-queue
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+ReadWriteLockController:
+  readAndRead():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: readAndRead
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/lock/controller/ReadWriteLockController.java
+    mapping: '@GetMapping("read-read")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - read-write-lock/read-read
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  readAndWrite():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: readAndWrite
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/lock/controller/ReadWriteLockController.java
+    mapping: '@GetMapping("read-write")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - read-write-lock/read-write
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  writeAndWrite():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: writeAndWrite
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/lock/controller/ReadWriteLockController.java
+    mapping: '@GetMapping("write-write")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - read-write-lock/write-write
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  downgradeKey():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: downgradeKey
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/lock/controller/ReadWriteLockController.java
+    mapping: '@GetMapping("downgrade")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - read-write-lock/downgrade
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+ReentrantLockController:
+  reentrantLockExample():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: reentrantLockExample
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/lock/controller/ReentrantLockController.java
+    mapping: '@GetMapping("example")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - reentrant-lock/example
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  fairLockExample():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: fairLockExample
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/lock/controller/ReentrantLockController.java
+    mapping: '@GetMapping("fair-lock")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - reentrant-lock/fair-lock
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  unfairLockExample():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: unfairLockExample
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/lock/controller/ReentrantLockController.java
+    mapping: '@GetMapping("unfair-lock")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - reentrant-lock/unfair-lock
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  interruptibleLock():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: interruptibleLock
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/lock/controller/ReentrantLockController.java
+    mapping: '@GetMapping("interruptible-lock")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - reentrant-lock/interruptible-lock
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+StampedLockController:
+  stampedExample():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: stampedExample
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/lock/controller/StampedLockController.java
+    mapping: '@GetMapping("example")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - stamped-lock/example
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+VirtualThreadController:
+  virtualThreadBenchmark():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: virtualThreadBenchmark
+    params: [
+      ]
+    path: com/example/learning/module/virtualThread/controller/VirtualThreadController.java
+    mapping: '@GetMapping("benchmark")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - virtual-thread/benchmark
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  virtualThreadBasic():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: virtualThreadBasic
+    params: [
+      ]
+    path: com/example/learning/module/virtualThread/controller/VirtualThreadController.java
+    mapping: '@GetMapping("with-basic")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - virtual-thread/with-basic
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  virtualThreadBuilder():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: virtualThreadBuilder
+    params: [
+      ]
+    path: com/example/learning/module/virtualThread/controller/VirtualThreadController.java
+    mapping: '@GetMapping("with-builder")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - virtual-thread/with-builder
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  virtualThreadExecutor():
+    summary: Title not provided
+    description: Detailed description not provided
+    videoYoutubeId: ID of youtube video add to API description
+    methodName: virtualThreadExecutor
+    params: [
+      ]
+    path: com/example/learning/module/virtualThread/controller/VirtualThreadController.java
+    mapping: '@GetMapping("with-executor")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - virtual-thread/with-executor
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

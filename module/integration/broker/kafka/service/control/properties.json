@@ -18,9 +18,6 @@
             "VALUE": ""
         }
     },
-    "JAR": {
-        
-    },
     "SWAGGER": {
         "BUILD_SWAGGER_LANGUAGE_LIST": {
             "DESCRIPTION": "List of language to describe API in swagger",

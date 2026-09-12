@@ -32,12 +32,6 @@
         "VALUE": "TRUE",
         "GROUP": "YML"
     },
-    "BUILD_JAR": {
-        "DESCRIPTION": "Enable to inject task in file build-jar.gradle to each module enable it",
-        "TYPE": "boolean",
-        "VALUE": "FALSE",
-        "GROUP": "JAR"
-    },
     "BUILD_README": {
         "DESCRIPTION": "Enable to build readme.md file",
         "TYPE": "boolean",

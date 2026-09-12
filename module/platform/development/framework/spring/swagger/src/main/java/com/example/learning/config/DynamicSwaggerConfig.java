@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.parameters.Parameter;
+import io.swagger.v3.oas.models.tags.Tag;
 import org.springdoc.core.customizers.OpenApiCustomizer;
 import org.springdoc.core.customizers.OperationCustomizer;
 import org.springdoc.core.models.GroupedOpenApi;
@@ -24,6 +25,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.type.AnnotationMetadata;
 
 import java.io.InputStream;
+import java.util.Map;
 
 @Configuration
 @Import(DynamicSwaggerConfig.class)
@@ -66,7 +68,7 @@ public class DynamicSwaggerConfig implements ImportBeanDefinitionRegistrar , Env
                         .group(trimmedLang)
                         .displayName("Ngôn ngữ: " + trimmedLang.toUpperCase())
                         .pathsToMatch("/**")
-                        .addOperationCustomizer(addControllerNameExtension())
+                        .addOperationCustomizer(addExtension())
                         .addOpenApiCustomizer(customerGlobalOpenApiCustomizer(trimmedLang))
                         .build()
             );
@@ -75,9 +77,22 @@ public class DynamicSwaggerConfig implements ImportBeanDefinitionRegistrar , Env
         }
     }
 
-    public OperationCustomizer addControllerNameExtension() {
+    public OperationCustomizer addExtension() {
         return (operation, handlerMethod) -> {
             String fullClassName = handlerMethod.getBeanType().getSimpleName();
+            SwaggerYoutubeVideo youtubeVideo =
+                    handlerMethod.getMethodAnnotation(SwaggerYoutubeVideo.class);
+
+            if (youtubeVideo != null) {
+                operation.addExtension(
+                        "x-youtube",
+                        Map.of(
+                                "videoId", youtubeVideo.videoId(),
+                                "title", youtubeVideo.title()
+                        )
+                );
+            }
+
             operation.addExtension("x-controller-name", fullClassName);
             return operation;
         };
@@ -88,12 +103,31 @@ public class DynamicSwaggerConfig implements ImportBeanDefinitionRegistrar , Env
             // Load 2 file YAML từ resources
             JsonNode apiDescs = loadYamlResource("swagger/" + languages + "/api-descriptions.yml");
             JsonNode apiParams = loadYamlResource("swagger/" + languages + "/api-params.yml");
+            JsonNode controllerDescs = loadYamlResource("swagger/" + languages + "/controller-descriptions.yml");
+
             if (openApi.getPaths() == null) return;
 
             openApi.getPaths().forEach((path, pathItem) -> {
                 pathItem.readOperationsMap().forEach((httpMethod, operation) -> {
                     String controllerName = (String) operation.getExtensions().get("x-controller-name");
                     String methodName = operation.getOperationId();
+
+                    operation.getTags().forEach(tag -> {
+                        // Tạo tag nếu chưa tồn tại
+                        openApi.getTags()
+                                .stream()
+                                .filter(t -> tag.equals(t.getName()))
+                                .findFirst()
+                                .orElseGet(() -> {
+                                    Tag newTag = new Tag();
+                                    newTag.setName(tag);
+                                    newTag.setDescription(controllerName);
+
+                                    openApi.addTagsItem(newTag);
+
+                                    return newTag;
+                                });
+                    });
 
                     // Map cho Method (Summary & Description)
                     mapMethodMetadata(operation, apiDescs, controllerName, methodName);
@@ -105,6 +139,33 @@ public class DynamicSwaggerConfig implements ImportBeanDefinitionRegistrar , Env
                         });
                     }
                 });
+            });
+
+            openApi.getTags().forEach(tag -> {
+
+                String controllerName = tag.getDescription();
+
+                JsonNode controllerNode =
+                        controllerDescs.get(controllerName);
+
+                if (controllerNode == null) {
+                    return;
+                }
+
+                JsonNode descriptionNode =
+                        controllerNode.get("description");
+
+                if (descriptionNode == null) {
+                    return;
+                }
+
+                String html =
+                        descriptionNode.asText();
+
+                tag.addExtension(
+                        "x-custom-html",
+                        html
+                );
             });
         };
     }

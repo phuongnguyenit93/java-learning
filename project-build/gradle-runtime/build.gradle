@@ -1,0 +1,112 @@
+plugins {
+    id 'groovy'
+    id 'java-gradle-plugin'
+}
+
+group = 'com.example.learning'
+version = '1.0.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation gradleApi()
+    implementation localGroovy()
+    implementation 'org.yaml:snakeyaml:2.2'
+    implementation 'com.vladsch.flexmark:flexmark:0.64.8'
+    implementation 'org.apache.httpcomponents.client5:httpclient5:5.4.4'
+}
+
+apply from: "${projectDir}/gradle/generate-project-plugin-template.gradle"
+apply from: "${projectDir}/gradle/generate-project-plugin-list.gradle"
+apply from: "${projectDir}/gradle/generate-extension-task.gradle"
+
+
+// ============================================================
+// Project plugin definitions
+// ============================================================
+
+List<Map<String, String>> projectPluginDefinitions =
+        project.ext
+                .projectPluginDefinitions as List<Map<String, String>>
+
+
+// ============================================================
+// Gradle plugins
+// ============================================================
+
+gradlePlugin {
+    plugins {
+        projectPluginDefinitions.each {
+            Map definition ->
+
+                String name =
+                        definition.name
+                                ?.toString()
+                                ?.trim()
+
+
+                String pluginId =
+                        definition.id
+                                ?.toString()
+                                ?.trim()
+
+
+                String implementationClassName =
+                        definition.implementationClass
+                                ?.toString()
+                                ?.trim()
+
+
+                // ==========================================
+                // Validate
+                // ==========================================
+
+                if (
+                        name == null ||
+                                name.isBlank()
+                ) {
+
+                    throw new GradleException(
+                            'project-plugin-list.json contains a plugin without name.'
+                    )
+                }
+
+
+                if (
+                        pluginId == null ||
+                                pluginId.isBlank()
+                ) {
+
+                    throw new GradleException(
+                            "Plugin '${name}' does not contain id."
+                    )
+                }
+
+
+                if (
+                        implementationClassName == null ||
+                                implementationClassName.isBlank()
+                ) {
+
+                    throw new GradleException(
+                            "Plugin '${name}' does not contain implementationClass."
+                    )
+                }
+
+
+                // ==========================================
+                // Register plugin
+                // ==========================================
+
+                create(
+                        name
+                ) {
+                    id = pluginId
+                    implementationClass =
+                            implementationClassName
+                }
+        }
+    }
+}

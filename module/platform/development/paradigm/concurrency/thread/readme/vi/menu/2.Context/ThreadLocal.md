@@ -7,15 +7,13 @@
 - [@Autowired và Vấn đề Đa luồng trong Spring Boot](#autowired-with-thread-problem)
 - [Stateless Beans: Tại sao @Autowired phổ biến mà ít thấy ThreadLocal?](#stateless-bean)
 - [Entity Consistency: Tại sao Stateless Service vẫn quản lý được dữ liệu nhất quán?](#entity-consistency)
-- [ Tại sao InheritableThreadLocal "thất bại" với Thread Pool?](#ingeritable-thread-local-problem)
+- [Tại sao InheritableThreadLocal "thất bại" với Thread Pool?](#ingeritable-thread-local-problem)
 - [Tìm hiểu về TaskDecorator và ThreadLocalTaskDecorator](#task-decorator)
 
-
-
 ## <a id="thread-local">Khái niệm cơ bản của ThreadLocal</a>
+
 <details>
 <summary>Click for details</summary>
-
 
 Trong thế giới đa luồng, đôi khi "chia sẻ" lại chính là nguồn cơn của rắc rối. Đó là lúc chúng ta cần đến **ThreadLocal** – một cơ chế cho phép mỗi Thread sở hữu một dữ liệu riêng biệt, hoàn toàn cô lập với các Thread khác.
 
@@ -92,15 +90,16 @@ Trong các hệ thống dùng **Thread Pool** (như Tomcat), Thread không bao g
 **Tổng kết:** ThreadLocal là công cụ mạnh mẽ để giải quyết bài toán Visibility mà không cần dùng đến khóa (Lock), giúp tăng hiệu năng đáng kể nhưng cần cực kỳ cẩn thận với việc dọn dẹp bộ nhớ.
 ---
 
-
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
+
 ---
+
 ## <a id="autowired-with-thread-problem">@Autowired và Vấn đề Đa luồng trong Spring Boot</a>
+
 <details>
 <summary>Click for details</summary>
-
 
 Đây là một câu hỏi rất hay, chạm đúng vào "tử huyệt" mà nhiều lập trình viên Spring Boot thường mắc phải. Bản thân `@Autowired` không liên quan đến Thread, nhưng cái **Bean** mà nó tiêm vào thì có.
 
@@ -185,18 +184,16 @@ Spring có các Scope khác giúp `@Autowired` an toàn hơn trong môi trườn
 
 ---
 
-**Next step:** Bạn có muốn tôi viết một bài test nhỏ trong Spring để "bắt quả tang" việc nhiều Thread làm sai lệch dữ liệu trong một Singleton Bean không? Hay bạn muốn tìm hiểu về cách Spring xử lý `@Async`?
----
-
-
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
+
 ---
+
 ## <a id="stateless-bean">Stateless Beans: Tại sao @Autowired phổ biến mà ít thấy ThreadLocal?</a>
+
 <details>
 <summary>Click for details</summary>
-
 
 Đúng là đại đa số các dự án Spring Boot hiện nay bạn sẽ thấy `@Autowired` khắp nơi mà tuyệt nhiên không thấy bóng dáng của `ThreadLocal`. Lý do là vì họ đang tuân thủ một nguyên tắc thiết kế cốt lõi: **Stateless Beans (Bean không trạng thái)**.
 
@@ -263,15 +260,16 @@ Nếu tự ý dùng `ThreadLocal` mà không kiểm soát tốt (quên `.remove(
 > **Lời khuyên:** Nếu bạn định lưu dữ liệu vào biến instance của Service, hãy chuyển nó vào trong hàm (biến cục bộ) để tận dụng bộ nhớ **Stack** của Thread, giúp code vừa sạch vừa an toàn đa luồng.
 ---
 
-
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
+
 ---
+
 ## <a id="entity-consistency">Entity Consistency: Tại sao Stateless Service vẫn quản lý được dữ liệu nhất quán?</a>
+
 <details>
 <summary>Click for details</summary>
-
 
 Câu hỏi này rất sắc sảo! Bạn đang thắc mắc: *"Nếu các Service là Stateless (không lưu dữ liệu), nhưng chúng ta lại lấy các Entity (User, Order) từ Database ra để sửa đổi, thì làm sao đảm bảo nhiều Thread không ghi đè lên nhau làm hỏng dữ liệu?"*
 
@@ -351,11 +349,13 @@ Tính nhất quán của Entity không nằm ở Java Thread, mà nó nằm ở 
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
+
 ---
+
 ## <a id="ingeritable-thread-local-problem"> Tại sao InheritableThreadLocal "thất bại" với Thread Pool?</a>
+
 <details>
 <summary>Click for details</summary>
-
 
 Đây là một trong những cái bẫy "kinh điển" nhất khi làm Microservices hoặc các hệ thống xử lý bất đồng bộ. Việc hiểu tại sao **InheritableThreadLocal** thất bại với Thread Pool sẽ giúp bạn tránh được những lỗi logic cực kỳ khó hiểu về sau.
 
@@ -430,16 +430,18 @@ Nó hoạt động theo cơ chế **Replay**:
 
 > **Lưu ý:** Bạn phải tuyệt đối cẩn thận khi dùng `@EventListener(async = true)`. Bạn phải tự tay quản lý việc truyền dữ liệu hoặc dùng các thư viện chuyên dụng để đảm bảo tính an toàn dữ liệu.
 
---- 
+---
 
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
+
 ---
+
 ## <a id="task-decorator">Tìm hiểu về TaskDecorator và ThreadLocalTaskDecorator</a>
+
 <details>
 <summary>Click for details</summary>
-
 
 Trong Spring, khi bạn sử dụng `@Async` hoặc đẩy một tác vụ vào `ThreadPoolTaskExecutor`, một luồng mới sẽ được lấy từ Pool để thực thi. Vấn đề là các dữ liệu lưu trong `ThreadLocal` (như Logback MDC, Security Context, hay Request Attributes) **sẽ không tự động đi theo** sang luồng mới.
 

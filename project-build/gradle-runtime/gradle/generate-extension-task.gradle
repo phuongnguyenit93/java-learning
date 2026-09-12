@@ -1,0 +1,643 @@
+import groovy.json.JsonOutput
+import org.gradle.api.GradleException
+import org.gradle.api.tasks.PathSensitivity
+
+
+// ============================================================
+// Path config
+// ============================================================
+
+def repositoryRoot =
+        rootDir.parentFile
+
+def taskSourceDirectory =
+        file(
+                'src/main/groovy/com/example/learning/task'
+        )
+
+
+def extensionSources =
+        fileTree(taskSourceDirectory) {
+
+            include '**/extension/**/*.groovy'
+        }
+
+
+def extensionListFile =
+        file(
+                'src/main/resources/task/task-extension-list.json'
+        )
+
+
+// ============================================================
+// Helper
+//
+// getInputLanguage
+//      ↓
+// inputLanguage
+// ============================================================
+
+def getterToFieldName = { String getterName ->
+
+    String name =
+            getterName.substring(3)
+
+
+    if (name.isEmpty()) {
+        return ''
+    }
+
+
+    return name[0].toLowerCase() +
+            name.substring(1)
+}
+
+
+// ============================================================
+// Helper
+//
+// MarkdownTranslationExtension
+//          ↓
+// markdownTranslation
+// ============================================================
+
+def classToExtensionName = { String className ->
+
+    String name =
+            className.replaceFirst(
+                    /Extension$/,
+                    ''
+            )
+
+
+    if (name.isEmpty()) {
+        return ''
+    }
+
+
+    return name[0].toLowerCase() +
+            name.substring(1)
+}
+
+
+// ============================================================
+// Helper
+//
+// Convert Gradle Property types
+// to DSL-friendly types.
+//
+// Property<String>
+//      ↓
+// String
+//
+// Property<List<String>>
+//      ↓
+// List<String>
+//
+// ListProperty<String>
+//      ↓
+// List<String>
+//
+// SetProperty<String>
+//      ↓
+// Set<String>
+//
+// MapProperty<String, Boolean>
+//      ↓
+// Map<String, Boolean>
+// ============================================================
+
+def toDslFieldType = {
+    String propertyContainer,
+    String genericType ->
+
+        String normalizedType =
+                genericType
+                        ?.trim()
+                        ?.replaceAll(
+                                /\s+/,
+                                ' '
+                        )
+
+
+        switch (propertyContainer) {
+
+            case 'Property':
+
+                /*
+                 * Property<String>
+                 * Property<List<String>>
+                 *
+                 * genericType đã chính là type DSL cần dùng.
+                 */
+                return normalizedType
+
+
+            case 'ListProperty':
+
+                return "List<${normalizedType}>"
+
+
+            case 'SetProperty':
+
+                return "Set<${normalizedType}>"
+
+
+            case 'MapProperty':
+
+                return "Map<${normalizedType}>"
+
+
+            default:
+
+                throw new GradleException(
+                        """
+Unsupported Gradle property type:
+
+${propertyContainer}<${normalizedType}>
+"""
+                )
+        }
+}
+
+
+// ============================================================
+// Task
+// ============================================================
+
+tasks.register('syncTaskExtensionList') {
+
+    group =
+            'build setup'
+
+    description =
+            'Scan task extensions and generate task-extension-list.json'
+
+
+    /*
+     * extensionSources là FileTree,
+     * không phải một directory duy nhất.
+     */
+    inputs.files(
+            extensionSources
+    )
+            .withPropertyName(
+                    'extensionSources'
+            )
+            .withPathSensitivity(
+                    PathSensitivity.RELATIVE
+            )
+
+
+    outputs.file(
+            extensionListFile
+    )
+
+
+    doLast {
+
+        if (!taskSourceDirectory.exists()) {
+
+            throw new GradleException(
+                    """
+Task source directory does not exist:
+
+${taskSourceDirectory.absolutePath}
+"""
+            )
+        }
+
+
+        /*
+         * Result:
+         *
+         * {
+         *     "README": [
+         *         ...
+         *     ],
+         *
+         *     "SWAGGER": [
+         *         ...
+         *     ]
+         * }
+         */
+
+        Map<String, List<Map>> registry =
+                new TreeMap<>()
+
+
+        // ====================================================
+        // Scan TYPE directories
+        //
+        // task/
+        // ├── env/
+        // ├── readme/
+        // ├── swagger/
+        // └── ...
+        // ====================================================
+
+        List<File> typeDirectories =
+                taskSourceDirectory
+                        .listFiles()
+                        ?.findAll {
+                            File directory ->
+
+                                directory.isDirectory()
+                        }
+                        ?.sort {
+                            File directory ->
+
+                                directory.name
+                        }
+                        ?: []
+
+
+        typeDirectories.each {
+            File typeDirectory ->
+
+                String type =
+                        typeDirectory.name
+
+
+                String jsonType =
+                        type.toUpperCase(
+                                Locale.ROOT
+                        )
+
+
+                File extensionDirectory =
+                        new File(
+                                typeDirectory,
+                                'extension'
+                        )
+
+
+                /*
+                 * Type không có extension
+                 * thì không cần add vào registry.
+                 */
+                if (
+                        !extensionDirectory.exists() ||
+                                !extensionDirectory.isDirectory()
+                ) {
+
+                    return
+                }
+
+
+                // =================================================
+                // Find extension source files
+                //
+                // Cho phép recursive bên trong extension/
+                // nếu sau này package được chia nhỏ hơn.
+                // =================================================
+
+                List<File> extensionFiles =
+                        fileTree(
+                                extensionDirectory
+                        ) {
+
+                            include '**/*.groovy'
+                        }
+                                .files
+                                .toList()
+                                .sort {
+                                    File sourceFile ->
+
+                                        extensionDirectory
+                                                .toPath()
+                                                .relativize(
+                                                        sourceFile.toPath()
+                                                )
+                                                .toString()
+                                }
+
+
+                List<Map> extensions = []
+
+
+                // =================================================
+                // Parse each extension source
+                // =================================================
+
+                extensionFiles.each {
+                    File sourceFile ->
+
+                        String source =
+                                sourceFile.getText(
+                                        'UTF-8'
+                                )
+
+
+                        // =============================================
+                        // Find abstract Extension class
+                        //
+                        // abstract class MarkdownTranslationExtension
+                        // =============================================
+
+                        def classMatcher =
+                                source =~
+                                        /(?m)\babstract\s+class\s+([A-Za-z_][A-Za-z0-9_]*)/
+
+
+                        if (!classMatcher.find()) {
+
+                            logger.info(
+                                    'Skip {}: abstract class not found.',
+                                    sourceFile.name
+                            )
+
+                            return
+                        }
+
+
+                        String className =
+                                classMatcher.group(1)
+
+
+                        /*
+                         * Chỉ xử lý class có suffix Extension.
+                         */
+                        if (
+                                !className.endsWith(
+                                        'Extension'
+                                )
+                        ) {
+
+                            logger.info(
+                                    'Skip {}: class does not end with Extension.',
+                                    className
+                            )
+
+                            return
+                        }
+
+
+                        // =============================================
+                        // Extract Gradle Property getters
+                        // =============================================
+
+                        Map<String, String> fields =
+                                new LinkedHashMap<>()
+
+
+                        /*
+                         * Hỗ trợ:
+                         *
+                         * abstract Property<String> getLocation()
+                         *
+                         * abstract Property<List<String>> getLanguages()
+                         *
+                         * abstract ListProperty<String> getLanguages()
+                         *
+                         * abstract SetProperty<String> getProviders()
+                         *
+                         * abstract MapProperty<String, String> getHeaders()
+                         *
+                         *
+                         * Group:
+                         *
+                         * 1 = Property container
+                         * 2 = generic type
+                         * 3 = getter suffix
+                         */
+
+                        def propertyMatcher =
+                                source =~
+                                        /(?s)\babstract\s+(Property|ListProperty|SetProperty|MapProperty)\s*<\s*(.*?)\s*>\s+get([A-Z][A-Za-z0-9_]*)\s*\(\s*\)/
+
+
+                        propertyMatcher.each {
+                            match ->
+
+                                String propertyContainer =
+                                        match[1]
+                                                .toString()
+                                                .trim()
+
+
+                                String genericType =
+                                        match[2]
+                                                .toString()
+                                                .trim()
+
+
+                                String getterName =
+                                        "get${match[3]}"
+
+
+                                String fieldName =
+                                        getterToFieldName(
+                                                getterName
+                                        )
+
+
+                                String fieldType =
+                                        toDslFieldType(
+                                                propertyContainer,
+                                                genericType
+                                        )
+
+
+                                fields[
+                                        fieldName
+                                ] =
+                                        fieldType
+                        }
+
+
+                        // =============================================
+                        // Add extension
+                        // =============================================
+
+                        String relativePath =
+                                repositoryRoot
+                                        .toPath()
+                                        .relativize(
+                                                sourceFile.toPath()
+                                        )
+                                        .toString()
+                                        .replace(
+                                                File.separator,
+                                                '/'
+                                        )
+
+
+                        extensions.add(
+                                [
+                                        extension:
+                                                className,
+
+                                        name:
+                                                classToExtensionName(
+                                                        className
+                                                ),
+
+                                        path:
+                                                relativePath,
+
+                                        fields:
+                                                fields
+                                ]
+                        )
+
+
+                        logger.lifecycle(
+                                '   ✅ [{}] {} - {} fields',
+                                jsonType,
+                                className,
+                                fields.size()
+                        )
+                }
+
+
+                // =================================================
+                // Add TYPE
+                // =================================================
+
+                if (!extensions.isEmpty()) {
+
+                    registry[
+                            jsonType
+                    ] =
+                            extensions
+                }
+        }
+
+
+        // ====================================================
+        // Generate JSON
+        // ====================================================
+
+        String json =
+                JsonOutput.prettyPrint(
+                        JsonOutput.toJson(
+                                registry
+                        )
+                ) +
+                        '\n'
+
+
+        /*
+         * Không rewrite nếu content giống nhau.
+         *
+         * Điều này tránh Gradle sync liên tục thay timestamp
+         * của resource dù metadata không đổi.
+         */
+        if (
+                extensionListFile.exists() &&
+                        extensionListFile.getText(
+                                'UTF-8'
+                        ) == json
+        ) {
+
+            logger.lifecycle(
+                    ''
+            )
+
+            logger.lifecycle(
+                    'task-extension-list.json is already up-to-date.'
+            )
+
+            return
+        }
+
+
+        extensionListFile
+                .parentFile
+                .mkdirs()
+
+
+        extensionListFile.setText(
+                json,
+                'UTF-8'
+        )
+
+
+        // ====================================================
+        // Summary
+        // ====================================================
+
+        int extensionCount =
+                registry
+                        .values()
+                        .collect {
+                            List<Map> extensionList ->
+
+                                extensionList.size()
+                        }
+                        .sum() ?: 0
+
+
+        int fieldCount =
+                registry
+                        .values()
+                        .collectMany {
+                            List<Map> extensionList ->
+
+                                extensionList
+                        }
+                        .collect {
+                            Map extension ->
+
+                                (extension.fields as Map)
+                                        .size()
+                        }
+                        .sum() ?: 0
+
+
+        logger.lifecycle(
+                ''
+        )
+
+        logger.lifecycle(
+                '=========================================='
+        )
+
+        logger.lifecycle(
+                ' TASK EXTENSION LIST GENERATED'
+        )
+
+        logger.lifecycle(
+                '=========================================='
+        )
+
+        logger.lifecycle(
+                'Types      : {}',
+                registry.size()
+        )
+
+        logger.lifecycle(
+                'Extensions : {}',
+                extensionCount
+        )
+
+        logger.lifecycle(
+                'Fields     : {}',
+                fieldCount
+        )
+
+        logger.lifecycle(
+                'Output     : {}',
+                extensionListFile.absolutePath
+        )
+
+        logger.lifecycle(
+                '=========================================='
+        )
+    }
+}
+
+
+// ============================================================
+// Resource lifecycle
+// ============================================================
+
+tasks.named(
+        'processResources'
+) {
+
+    dependsOn(
+            'syncTaskExtensionList'
+    )
+}

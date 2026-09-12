@@ -1,0 +1,30 @@
+dependencies {
+    implementation 'io.hawt:hawtio-springboot:4.0.0'
+}
+
+markdownTranslation {
+
+    inputLanguage = 'vi'
+    outputLanguage = 'en'
+    fileLocation = 'menu/1.Basic/Test.md'
+}
+
+generateInternalReadmeMenu {
+    location = 'readme/vi/menu/2.Context/ThreadLocal.md'
+}
+
+generateFinalReadme {
+
+    languages = [
+            'vi',
+            'en'
+    ]
+}
+
+apiSwaggerDescription {
+    languages = [
+            'vi',
+            'en'
+    ]
+}
+

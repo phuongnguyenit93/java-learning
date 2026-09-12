@@ -4,5 +4,8 @@ dependencies {
     api 'org.springframework.boot:spring-boot-starter-actuator'
     api 'io.github.resilience4j:resilience4j-spring-boot3'
     compileOnly 'org.springframework.cloud:spring-cloud-starter-openfeign'
-    implementation searchProjectByServiceName("GLOBAL_EXCEPTION_HANDLER")
+}
+
+implementationModule {
+    serviceList = "GLOBAL_EXCEPTION_HANDLER"
 }

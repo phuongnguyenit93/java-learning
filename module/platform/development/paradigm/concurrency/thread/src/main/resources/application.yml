@@ -1,7 +1,7 @@
 # AUTO-GENERATED MERGED YAML
 # You can check at module/platform/development/paradigm/concurrency/thread/src/main/resources/application.yml
 # Source: THREAD
-# Dependencies: SPRING_WEB, SPRING_SWAGGER
+# Dependencies: SPRING_WEB, AZURE_TRANSLATE
 
 ---
 spring:
@@ -32,9 +32,14 @@ springdoc:
   swagger-ui:
     enabled: ${swagger.enabled}
     docExpansion:
-    - none
+      - none
   api-docs:
     enabled: ${swagger.enabled}
+azure:
+  translator:
+    endpoint: https://api.cognitive.microsofttranslator.com
+    region: southeastasia
+    key: ${AZURE_TRANSLATOR_KEY}
 ---
 spring:
   config:

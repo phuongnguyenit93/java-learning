@@ -21,6 +21,8 @@ public class ThreadPoolExecutorService {
             });
         }
         // Kết quả: Luôn chỉ có 3 thread chạy, các task khác phải đợi trong Queue vô hạn.
+
+        fixedPool.shutdown();
     }
 
     public void cacheThreadPool() {
@@ -35,6 +37,8 @@ public class ThreadPoolExecutorService {
         }
         // Kết quả: Nếu task đến nhanh, nó có thể tạo ra 5 thread khác nhau cùng lúc.
         // Sau 60s không dùng, các thread này sẽ tự bị tiêu hủy để tiết kiệm RAM.
+
+        cachedPool.shutdown();
     }
 
     public void singleThreadPool() {
@@ -47,6 +51,8 @@ public class ThreadPoolExecutorService {
 
         // Kết quả: Chắc chắn Giao dịch 1 xong mới đến 2, rồi mới đến 3.
         // Không bao giờ có chuyện chạy song song.
+
+        singlePool.shutdown();
     }
 
     public void scheduleThreadPool() {
@@ -64,5 +70,11 @@ public class ThreadPoolExecutorService {
         scheduledPool.scheduleAtFixedRate(() -> {
             System.out.println("--- Kiểm tra trạng thái Server (Health Check) ---");
         }, 1, 5, TimeUnit.SECONDS);
+
+        // Sau 30 giây thì shutdown pool
+        scheduledPool.schedule(() -> {
+            System.out.println("--- Shutdown Scheduled Thread Pool ---");
+            scheduledPool.shutdown();
+        }, 30, TimeUnit.SECONDS);
     }
 }

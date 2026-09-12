@@ -1,0 +1,33 @@
+plugins {
+    id 'groovy'
+    id 'java-gradle-plugin'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation gradleApi()
+    implementation localGroovy()
+    implementation('com.example.learning:gradle-runtime:1.0.0')
+}
+
+gradlePlugin {
+    plugins {
+        moduleOrchestration {
+            id = 'com.example.module-orchestration'
+            implementationClass = 'com.example.learning.orchestration.ModuleOrchestrationPlugin'
+        }
+
+        settingsOrchestration {
+            id = 'com.example.settings-orchestration'
+            implementationClass = 'com.example.learning.orchestration.SettingsOrchestrationPlugin'
+        }
+
+        rootOrchestration {
+            id = 'com.example.root-orchestration'
+            implementationClass = 'com.example.learning.orchestration.RootOrchestrationPlugin'
+        }
+    }
+}

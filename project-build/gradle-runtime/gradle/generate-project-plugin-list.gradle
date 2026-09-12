@@ -1,0 +1,909 @@
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
+
+
+// ============================================================
+// Paths
+// ============================================================
+
+def groovySourceDirectory =
+        file(
+                'src/main/groovy'
+        )
+
+
+def projectPluginListFile =
+        file(
+                'src/main/resources/plugin/project-plugin-list.json'
+        )
+
+
+def generatedEnumPackage =
+        'com.example.learning.generated.root'
+
+
+def generatedEnumClassName =
+        'ProjectPlugin'
+
+
+def generatedEnumFile =
+        file(
+                "src/main/groovy/${generatedEnumPackage.replace('.', '/')}/${generatedEnumClassName}.groovy"
+        )
+
+
+// ============================================================
+// Plugin source files
+// ============================================================
+
+def pluginSourceFiles =
+        fileTree(
+                groovySourceDirectory
+        ) {
+
+            include '**/*Plugin.groovy'
+
+            /*
+             * ProjectPlugin.groovy là enum generated,
+             * không phải Gradle Plugin implementation.
+             *
+             * Đồng thời exclude nó để tránh:
+             *
+             * generateProjectPluginList
+             *     input ProjectPlugin.groovy
+             *
+             * generateProjectPluginEnum
+             *     output ProjectPlugin.groovy
+             *     dependsOn generateProjectPluginList
+             *
+             * tạo dependency không mong muốn.
+             */
+            exclude 'com/example/learning/plugin/ProjectPlugin.groovy'
+        }
+
+
+// ============================================================
+// Helpers
+// ============================================================
+
+def toKebabCase = {
+    String value ->
+
+        if (
+                value == null ||
+                        value.isBlank()
+        ) {
+
+            return value
+        }
+
+
+        return value
+                .replaceAll(
+                        /([A-Z]+)([A-Z][a-z])/,
+                        '$1-$2'
+                )
+                .replaceAll(
+                        /([a-z0-9])([A-Z])/,
+                        '$1-$2'
+                )
+                .replaceAll(
+                        /[_\s]+/,
+                        '-'
+                )
+                .toLowerCase(
+                        Locale.ROOT
+                )
+}
+
+
+def lowerFirstCharacter = {
+    String value ->
+
+        if (
+                value == null ||
+                        value.isEmpty()
+        ) {
+
+            return value
+        }
+
+
+        return value
+                .substring(
+                        0,
+                        1
+                )
+                .toLowerCase(
+                        Locale.ROOT
+                ) +
+                value.substring(
+                        1
+                )
+}
+
+
+def toEnumName = {
+    String value ->
+
+        return value
+                .replaceAll(
+                        /([A-Z]+)([A-Z][a-z])/,
+                        '$1_$2'
+                )
+                .replaceAll(
+                        /([a-z0-9])([A-Z])/,
+                        '$1_$2'
+                )
+                .replaceAll(
+                        /[-.\s]+/,
+                        '_'
+                )
+                .toUpperCase(
+                        Locale.ROOT
+                )
+}
+
+
+// ============================================================
+// Shared scanner
+// ============================================================
+
+/*
+ * Đây là source of truth duy nhất để discover Gradle plugins.
+ *
+ * Có thể gọi:
+ *
+ * 1. Trong configuration phase:
+ *
+ *      projectPluginScanner()
+ *
+ *    để configure:
+ *
+ *      gradlePlugin { plugins { ... } }
+ *
+ *
+ * 2. Trong task execution:
+ *
+ *      generateProjectPluginList
+ *
+ *    để generate project-plugin-list.json.
+ */
+def scanProjectPlugins = {
+
+    List<Map<String, String>> scannedPlugins =
+            []
+
+
+    pluginSourceFiles
+            .files
+            .sort {
+                File left,
+                File right ->
+
+                    left.absolutePath <=>
+                            right.absolutePath
+            }
+            .each {
+                File groovyFile ->
+
+                    String source =
+                            groovyFile.getText(
+                                    'UTF-8'
+                            )
+
+
+                    // ==========================================
+                    // Package
+                    // ==========================================
+
+                    def packageMatcher =
+                            source =~
+                                    /(?m)^\s*package\s+([A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)*)\s*$/
+
+
+                    if (!packageMatcher.find()) {
+
+                        logger.info(
+                                '[PROJECT-PLUGIN-SCANNER] Skip because package was not found: {}',
+                                groovyFile.absolutePath
+                        )
+
+                        return
+                    }
+
+
+                    String packageName =
+                            packageMatcher
+                                    .group(
+                                            1
+                                    )
+                                    .trim()
+
+
+                    List<String> packageSegments =
+                            packageName.split(
+                                    /\./
+                            ) as List<String>
+
+
+                    /*
+                     * Plugin implementation bắt buộc phải nằm
+                     * trong một package segment tên "plugin".
+                     */
+                    if (
+                            !packageSegments.contains(
+                                    'plugin'
+                            )
+                    ) {
+
+                        logger.info(
+                                '[PROJECT-PLUGIN-SCANNER] Skip because package is not a plugin package: {}',
+                                packageName
+                        )
+
+                        return
+                    }
+
+
+                    // ==========================================
+                    // Class
+                    // ==========================================
+
+                    def classMatcher =
+                            source =~
+                                    /(?m)^\s*(?:(?:public|protected|private|abstract|final|static)\s+)*class\s+([A-Za-z_][A-Za-z0-9_]*)\b/
+
+
+                    if (!classMatcher.find()) {
+
+                        logger.info(
+                                '[PROJECT-PLUGIN-SCANNER] Skip because class was not found: {}',
+                                groovyFile.absolutePath
+                        )
+
+                        return
+                    }
+
+
+                    String className =
+                            classMatcher
+                                    .group(
+                                            1
+                                    )
+                                    .trim()
+
+
+                    if (
+                            !className.endsWith(
+                                    'Plugin'
+                            )
+                    ) {
+
+                        logger.info(
+                                '[PROJECT-PLUGIN-SCANNER] Skip because class does not end with Plugin: {}',
+                                className
+                        )
+
+                        return
+                    }
+
+
+                    scannedPlugins.add(
+                            [
+                                    packageName: packageName,
+                                    className  : className
+                            ]
+                    )
+            }
+
+
+    // ========================================================
+    // Resolve ID
+    // ========================================================
+
+    Map<String, List<Map<String, String>>> pluginsByPackage =
+            scannedPlugins.groupBy {
+                Map<String, String> plugin ->
+
+                    plugin.packageName
+            }
+
+
+    List<Map<String, String>> pluginDefinitions =
+            []
+
+
+    scannedPlugins.each {
+        Map<String, String> plugin ->
+
+            String packageName =
+                    plugin.packageName
+
+
+            String className =
+                    plugin.className
+
+
+            List<Map<String, String>> samePackagePlugins =
+                    pluginsByPackage[
+                            packageName
+                    ] ?: []
+
+
+            /*
+             * Rule hiện tại:
+             *
+             * Package có 1 plugin:
+             *
+             *      id = package
+             *
+             * Ví dụ:
+             *
+             * com.example.learning.setup.project.plugin
+             *
+             *
+             * Package có > 1 plugin:
+             *
+             *      id = package + "." + kebab-case(class)
+             */
+            boolean multiplePluginsInPackage =
+                    samePackagePlugins.size() > 1
+
+
+            String pluginId =
+                    multiplePluginsInPackage
+                            ? "${packageName}.${toKebabCase(className)}"
+                            : packageName
+
+
+            String pluginName =
+                    lowerFirstCharacter(
+                            className
+                    )
+
+
+            String implementationClass =
+                    "${packageName}.${className}"
+
+
+            pluginDefinitions.add(
+                    [
+                            name               : pluginName,
+                            id                 : pluginId,
+                            implementationClass: implementationClass
+                    ]
+            )
+    }
+
+
+    // ========================================================
+    // Validate duplicate IDs
+    // ========================================================
+
+    Map<String, List<Map<String, String>>> definitionsById =
+            pluginDefinitions.groupBy {
+                Map<String, String> definition ->
+
+                    definition.id
+            }
+
+
+    List<String> duplicateIds =
+            definitionsById
+                    .findAll {
+                        String id,
+                        List<Map<String, String>> definitions ->
+
+                            definitions.size() > 1
+                    }
+                    .keySet()
+                    .toList()
+
+
+    if (!duplicateIds.isEmpty()) {
+
+        throw new GradleException(
+                """
+Duplicate plugin IDs detected:
+
+${duplicateIds.collect { " - ${it}" }.join('\n')}
+""".stripIndent()
+        )
+    }
+
+
+    // ========================================================
+    // Validate duplicate names
+    // ========================================================
+
+    Map<String, List<Map<String, String>>> definitionsByName =
+            pluginDefinitions.groupBy {
+                Map<String, String> definition ->
+
+                    definition.name
+            }
+
+
+    List<String> duplicateNames =
+            definitionsByName
+                    .findAll {
+                        String name,
+                        List<Map<String, String>> definitions ->
+
+                            definitions.size() > 1
+                    }
+                    .keySet()
+                    .toList()
+
+
+    if (!duplicateNames.isEmpty()) {
+
+        throw new GradleException(
+                """
+Duplicate plugin names detected:
+
+${duplicateNames.collect { " - ${it}" }.join('\n')}
+""".stripIndent()
+        )
+    }
+
+
+    // ========================================================
+    // Deterministic ordering
+    // ========================================================
+
+    pluginDefinitions.sort {
+        Map<String, String> left,
+        Map<String, String> right ->
+
+            left.id <=>
+                    right.id
+    }
+
+
+    return pluginDefinitions
+}
+
+
+// ============================================================
+// Export scanner + configuration-time definitions
+// ============================================================
+
+/*
+ * Export scanner để build.gradle hoặc script khác có thể
+ * sử dụng cùng một implementation.
+ */
+project.ext.projectPluginScanner =
+        scanProjectPlugins
+
+
+/*
+ * Scan NGAY trong configuration phase.
+ *
+ * Đây là list dùng cho:
+ *
+ * gradlePlugin {
+ *     plugins { ... }
+ * }
+ *
+ * Không phụ thuộc project-plugin-list.json.
+ */
+project.ext.projectPluginDefinitions =
+        scanProjectPlugins()
+
+
+// ============================================================
+// Generate project-plugin-list.json
+// ============================================================
+
+tasks.register(
+        'generateProjectPluginList'
+) {
+
+    group =
+            'build setup'
+
+    description =
+            'Generate project-plugin-list.json from all Groovy plugin classes.'
+
+
+    inputs
+            .files(
+                    pluginSourceFiles
+            )
+            .withPathSensitivity(
+                    PathSensitivity.RELATIVE
+            )
+
+
+    outputs.file(
+            projectPluginListFile
+    )
+
+
+    doLast {
+
+        logger.lifecycle('')
+        logger.lifecycle(
+                '=========================================='
+        )
+        logger.lifecycle(
+                ' Generate Project Plugin List'
+        )
+        logger.lifecycle(
+                '=========================================='
+        )
+
+
+        /*
+         * Gọi LẠI scanner tại execution-time.
+         *
+         * Không dùng snapshot configuration-time để nếu
+         * một generator khác vừa tạo Plugin.groovy trước task này,
+         * registry vẫn lấy source mới nhất.
+         */
+        List<Map<String, String>> pluginDefinitions =
+                project.ext
+                        .projectPluginScanner
+                        .call() as List<Map<String, String>>
+
+
+        pluginDefinitions.each {
+            Map<String, String> definition ->
+
+                logger.lifecycle(
+                        '✅ [{}] {} -> {}',
+                        definition.name,
+                        definition.id,
+                        definition.implementationClass
+                )
+        }
+
+
+        if (!projectPluginListFile.parentFile.exists()) {
+
+            boolean created =
+                    projectPluginListFile
+                            .parentFile
+                            .mkdirs()
+
+
+            if (!created) {
+
+                throw new GradleException(
+                        """
+Unable to create resource directory:
+
+${projectPluginListFile.parentFile.absolutePath}
+""".stripIndent()
+                )
+            }
+        }
+
+
+        String jsonContent =
+                JsonOutput.prettyPrint(
+                        JsonOutput.toJson(
+                                pluginDefinitions
+                        )
+                ) +
+                        '\n'
+
+
+        if (
+                projectPluginListFile.exists() &&
+                        projectPluginListFile.getText(
+                                'UTF-8'
+                        ) == jsonContent
+        ) {
+
+            logger.info(
+                    '[PROJECT-PLUGIN-LIST] UP-TO-DATE: {}',
+                    projectPluginListFile.absolutePath
+            )
+
+            return
+        }
+
+
+        projectPluginListFile.setText(
+                jsonContent,
+                'UTF-8'
+        )
+
+
+        logger.lifecycle('')
+
+        logger.lifecycle(
+                '📝 Generated: {}',
+                projectPluginListFile.absolutePath
+        )
+
+
+        logger.lifecycle(
+                '📦 Plugins: {}',
+                pluginDefinitions.size()
+        )
+
+
+        logger.lifecycle(
+                '=========================================='
+        )
+
+        logger.lifecycle('')
+    }
+}
+
+
+// ============================================================
+// Generate ProjectPlugin enum
+// ============================================================
+
+tasks.register(
+        'generateProjectPluginEnum'
+) {
+
+    group =
+            'build setup'
+
+    description =
+            'Generate ProjectPlugin enum from project-plugin-list.json.'
+
+
+    inputs.file(
+            projectPluginListFile
+    )
+
+
+    outputs.file(
+            generatedEnumFile
+    )
+
+
+    dependsOn(
+            'generateProjectPluginList'
+    )
+
+
+    doLast {
+
+        if (!projectPluginListFile.exists()) {
+
+            throw new GradleException(
+                    """
+Project plugin registry not found:
+
+${projectPluginListFile.absolutePath}
+""".stripIndent()
+            )
+        }
+
+
+        Object parsed =
+                new JsonSlurper()
+                        .parseText(
+                                projectPluginListFile.getText(
+                                        'UTF-8'
+                                )
+                        )
+
+
+        if (!(parsed instanceof List)) {
+
+            throw new GradleException(
+                    'project-plugin-list.json must contain a JSON array.'
+            )
+        }
+
+
+        List<Map> definitions =
+                parsed as List<Map>
+
+
+        StringBuilder content =
+                new StringBuilder()
+
+
+        content.append(
+                """/*
+ * ============================================================
+ * AUTO-GENERATED FILE
+ * ============================================================
+ *
+ * Generated from:
+ *
+ * src/main/resources/plugin/project-plugin-list.json
+ *
+ * Do not edit this file manually.
+ * ============================================================
+ */
+
+package ${generatedEnumPackage}
+
+enum ${generatedEnumClassName} {
+
+"""
+        )
+
+
+        definitions.eachWithIndex {
+            Map definition,
+            int index ->
+
+                String name =
+                        definition.name
+                                ?.toString()
+                                ?.trim()
+
+
+                String id =
+                        definition.id
+                                ?.toString()
+                                ?.trim()
+
+
+                String implementationClass =
+                        definition.implementationClass
+                                ?.toString()
+                                ?.trim()
+
+
+                if (
+                        name == null ||
+                                name.isBlank() ||
+                                id == null ||
+                                id.isBlank() ||
+                                implementationClass == null ||
+                                implementationClass.isBlank()
+                ) {
+
+                    throw new GradleException(
+                            """
+Invalid plugin definition:
+
+${definition}
+""".stripIndent()
+                    )
+                }
+
+
+                String enumName =
+                        toEnumName(
+                                name
+                        )
+
+
+                content.append(
+                        """    ${enumName}(
+            '${id}',
+            '${implementationClass}'
+    )"""
+                )
+
+
+                if (
+                        index <
+                                definitions.size() - 1
+                ) {
+
+                    content.append(
+                            ','
+                    )
+                }
+
+
+                content.append(
+                        '\n\n'
+                )
+        }
+
+
+        content.append(
+                """
+
+    final String id
+
+    final String implementationClass
+
+
+    ${generatedEnumClassName}(
+            String id,
+            String implementationClass
+    ) {
+
+        this.id =
+                id
+
+        this.implementationClass =
+                implementationClass
+    }
+}
+"""
+        )
+
+
+        String renderedContent =
+                content
+                        .toString()
+                        .trim() +
+                        '\n'
+
+
+        if (!generatedEnumFile.parentFile.exists()) {
+
+            boolean created =
+                    generatedEnumFile
+                            .parentFile
+                            .mkdirs()
+
+
+            if (!created) {
+
+                throw new GradleException(
+                        """
+Unable to create generated enum directory:
+
+${generatedEnumFile.parentFile.absolutePath}
+""".stripIndent()
+                )
+            }
+        }
+
+
+        if (
+                generatedEnumFile.exists() &&
+                        generatedEnumFile.getText(
+                                'UTF-8'
+                        ) == renderedContent
+        ) {
+
+            logger.info(
+                    '[PROJECT-PLUGIN-ENUM] UP-TO-DATE: {}',
+                    generatedEnumFile.absolutePath
+            )
+
+            return
+        }
+
+
+        generatedEnumFile.setText(
+                renderedContent,
+                'UTF-8'
+        )
+
+
+        logger.lifecycle(
+                '📝 [PROJECT-PLUGIN-ENUM] Generated: {}',
+                generatedEnumFile.absolutePath
+        )
+    }
+}
+
+
+// ============================================================
+// Enum must exist before Groovy compilation
+// ============================================================
+
+tasks.named(
+        'compileGroovy'
+) {
+
+    dependsOn(
+            'generateProjectPluginEnum'
+    )
+}
+
+
+// ============================================================
+// Registry must exist before resources are packaged
+// ============================================================
+
+tasks.named(
+        'processResources'
+) {
+
+    dependsOn(
+            'generateProjectPluginList'
+    )
+}

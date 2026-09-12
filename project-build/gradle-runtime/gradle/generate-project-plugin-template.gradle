@@ -1,0 +1,566 @@
+import groovy.json.JsonSlurper
+
+
+// ============================================================
+// Common helpers
+// ============================================================
+
+def toPascalCase = {
+    String value ->
+
+        return value
+                .split(/[-_]/)
+                .findAll {
+                    String part ->
+
+                        !part.isBlank()
+                }
+                .collect {
+                    String part ->
+
+                        part.capitalize()
+                }
+                .join('')
+}
+
+
+def toPackagePath = {
+    String packageName ->
+
+        return packageName.replace(
+                '.',
+                '/'
+        )
+}
+
+
+def ensureDirectory = {
+    File directory ->
+
+        if (directory.isDirectory()) {
+            return false
+        }
+
+
+        if (directory.exists()) {
+
+            throw new GradleException(
+                    """
+Expected directory but found another filesystem entry:
+
+${directory.absolutePath}
+""".stripIndent()
+            )
+        }
+
+
+        if (
+                !directory.mkdirs() &&
+                        !directory.isDirectory()
+        ) {
+
+            throw new GradleException(
+                    """
+Unable to create directory:
+
+${directory.absolutePath}
+""".stripIndent()
+            )
+        }
+
+
+        return true
+}
+
+
+def getSortedDirectories = {
+    File parentDirectory ->
+
+        File[] directories =
+                parentDirectory.listFiles(
+                        {
+                            File file ->
+
+                                file.isDirectory()
+                        } as FileFilter
+                )
+
+
+        if (directories == null) {
+            return []
+        }
+
+
+        return directories
+                .toList()
+                .sort {
+                    File left,
+                    File right ->
+
+                        left.name <=> right.name
+                }
+}
+
+
+def renderProjectPlugin = {
+    String packageName,
+    String className,
+    String todo ->
+
+        return """
+package ${packageName}
+
+import org.gradle.api.Plugin
+import org.gradle.api.Project
+
+class ${className}
+        implements Plugin<Project> {
+
+    @Override
+    void apply(
+            Project project
+    ) {
+
+        // TODO:
+        // ${todo}
+
+    }
+}
+""".stripIndent().trim() + '\n'
+}
+
+
+def writePluginIfMissing = {
+    File pluginFile,
+    String content ->
+
+        if (pluginFile.exists()) {
+
+            if (!pluginFile.isFile()) {
+
+                throw new GradleException(
+                        """
+Plugin path exists but is not a file:
+
+${pluginFile.absolutePath}
+""".stripIndent()
+                )
+            }
+
+
+            return false
+        }
+
+
+        ensureDirectory(
+                pluginFile.parentFile
+        )
+
+
+        pluginFile.setText(
+                content,
+                'UTF-8'
+        )
+
+
+        return true
+}
+
+// ============================================================
+// Task plugin generator
+// ============================================================
+
+def taskListFile =
+        file(
+                'src/main/resources/task/module-task-list.json'
+        )
+
+
+if (!taskListFile.isFile()) {
+
+    throw new GradleException(
+            "Task plugin registry not found: ${taskListFile.absolutePath}"
+    )
+}
+
+
+def taskPluginDefinitions =
+        new JsonSlurper()
+                .parseText(
+                        taskListFile.getText(
+                                'UTF-8'
+                        )
+                )
+
+// ============================================================
+// Generic setup plugin generator
+// ============================================================
+
+def registerPluginGenerator = {
+    Map config ->
+
+        String scope =
+                config.scope
+
+        String basePackage =
+                config.basePackage
+
+        String taskName =
+                config.taskName
+
+        String title =
+                config.title
+
+        String pluginSuffix =
+                config.pluginSuffix
+
+        Closure<List<String>> domains =
+                config.domains
+
+        List<String> extraPackages =
+                config.extraPackages ?: []
+
+
+        // ====================================================
+        // Naming
+        // ====================================================
+
+        def getPluginClassName = {
+            String domain ->
+
+                return "${toPascalCase(domain)}${pluginSuffix}"
+        }
+
+
+        def getPluginPackage = {
+            String domain ->
+
+                return "${basePackage}.${domain}.plugin"
+        }
+
+
+        def getDomainDirectory = {
+            String domain ->
+
+                return file(
+                        "src/main/groovy/${toPackagePath(basePackage)}/${domain}"
+                )
+        }
+
+
+        def getPluginDirectory = {
+            String domain ->
+
+                return new File(
+                        getDomainDirectory(domain),
+                        'plugin'
+                )
+        }
+
+
+        def getPluginFile = {
+            String domain ->
+
+                return new File(
+                        getPluginDirectory(domain),
+                        "${getPluginClassName(domain)}.groovy"
+                )
+        }
+
+
+        def getExtraDirectory = {
+            String domain,
+            String packageName ->
+
+                return new File(
+                        getDomainDirectory(domain),
+                        packageName
+                )
+        }
+
+
+        // ====================================================
+        // Task
+        // ====================================================
+
+        tasks.register(
+                taskName
+        ) {
+
+            group =
+                    'build setup'
+
+            description =
+                    "Generate missing ${scope} plugin classes."
+
+
+            // ================================================
+            // UP-TO-DATE
+            // ================================================
+
+            outputs.upToDateWhen {
+
+                List<String> domainNames =
+                        domains()
+                                .findAll {
+                                    it != null &&
+                                            !it.isBlank()
+                                }
+                                .unique()
+                                .sort()
+
+
+                return domainNames.every {
+                    String domain ->
+
+                        boolean pluginExists =
+                                getPluginFile(
+                                        domain
+                                ).isFile()
+
+
+                        boolean extraPackagesExist =
+                                extraPackages.every {
+                                    String extraPackage ->
+
+                                        getExtraDirectory(
+                                                domain,
+                                                extraPackage
+                                        ).isDirectory()
+                                }
+
+
+                        return pluginExists &&
+                                extraPackagesExist
+                }
+            }
+
+
+            // ================================================
+            // Generate
+            // ================================================
+
+            doLast {
+
+                logger.lifecycle('')
+                logger.lifecycle(
+                        '=========================================='
+                )
+                logger.lifecycle(
+                        " ${title}"
+                )
+                logger.lifecycle(
+                        '=========================================='
+                )
+
+
+                List<String> domainNames =
+                        domains()
+                                .findAll {
+                                    it != null &&
+                                            !it.isBlank()
+                                }
+                                .unique()
+                                .sort()
+
+
+                domainNames.each {
+                    String domain ->
+
+
+                        // ======================================
+                        // Extra packages
+                        // ======================================
+
+                        extraPackages.each {
+                            String extraPackage ->
+
+                                File extraDirectory =
+                                        getExtraDirectory(
+                                                domain,
+                                                extraPackage
+                                        )
+
+
+                                if (
+                                        ensureDirectory(
+                                                extraDirectory
+                                        )
+                                ) {
+
+                                    logger.lifecycle(
+                                            '✅ [{}:{}] Created {} package: {}',
+                                            scope,
+                                            domain,
+                                            extraPackage,
+                                            extraDirectory.absolutePath
+                                    )
+                                }
+                        }
+
+
+                        // ======================================
+                        // Plugin
+                        // ======================================
+
+                        String packageName =
+                                getPluginPackage(
+                                        domain
+                                )
+
+
+                        String className =
+                                getPluginClassName(
+                                        domain
+                                )
+
+
+                        File pluginFile =
+                                getPluginFile(
+                                        domain
+                                )
+
+
+                        boolean created =
+                                writePluginIfMissing(
+                                        pluginFile,
+                                        renderProjectPlugin(
+                                                packageName,
+                                                className,
+                                                "Configure ${scope} logic for \"${domain}\" here."
+                                        )
+                                )
+
+
+                        if (created) {
+
+                            logger.lifecycle(
+                                    '✅ [{}:{}] Created plugin: {}',
+                                    scope,
+                                    domain,
+                                    pluginFile.absolutePath
+                            )
+                        }
+                        else {
+
+                            logger.lifecycle(
+                                    '⏩ [{}:{}] Plugin already exists: {}',
+                                    scope,
+                                    domain,
+                                    pluginFile.absolutePath
+                            )
+                        }
+                }
+
+
+                logger.lifecycle(
+                        '=========================================='
+                )
+                logger.lifecycle('')
+            }
+        }
+}
+
+registerPluginGenerator(
+        [
+                scope        : 'task',
+                basePackage  : 'com.example.learning.task',
+                taskName     : 'generateTaskPluginStubs',
+                title        : 'Generate Task Plugin Stubs',
+                pluginSuffix : 'TaskPlugin',
+
+                domains      : {
+                    taskPluginDefinitions.collect {
+                        it.type as String
+                    }
+                },
+
+                extraPackages: [
+                        'extension'
+                ]
+        ]
+)
+
+registerPluginGenerator(
+        [
+                scope        : 'module',
+                basePackage  : 'com.example.learning.module',
+                taskName     : 'generateModulePluginStubs',
+                title        : 'Generate Module Setup Plugin Stubs',
+                pluginSuffix : 'SetupPlugin',
+
+                domains      : {
+                    getSortedDirectories(
+                            file(
+                                    'src/main/groovy/com/example/learning/module'
+                            )
+                    ).collect {
+                        it.name
+                    }
+                },
+
+                extraPackages: [
+                        'service'
+                ]
+        ]
+)
+
+registerPluginGenerator(
+        [
+                scope        : 'root',
+                basePackage  : 'com.example.learning.setup.root',
+                taskName     : 'generateRootPluginStubs',
+                title        : 'Generate Root Setup Plugin Stubs',
+                pluginSuffix : 'SetupPlugin',
+
+                domains      : {
+                    getSortedDirectories(
+                            file(
+                                    'src/main/groovy/com/example/learning/root'
+                            )
+                    ).collect {
+                        it.name
+                    }
+                },
+
+                extraPackages: [
+                        'service'
+                ]
+        ]
+)
+
+registerPluginGenerator(
+        [
+                scope        : 'settings',
+                basePackage  : 'com.example.learning.setup.settings',
+                taskName     : 'generateSettingsPluginStubs',
+                title        : 'Generate Settings Setup Plugin Stubs',
+                pluginSuffix : 'SetupPlugin',
+
+                domains      : {
+                    getSortedDirectories(
+                            file(
+                                    'src/main/groovy/com/example/learning/settings'
+                            )
+                    ).collect {
+                        it.name
+                    }
+                },
+
+                extraPackages: [
+                        'service'
+                ]
+        ]
+)
+
+tasks.named(
+        'compileGroovy'
+) {
+
+    dependsOn(
+            'generateTaskPluginStubs',
+            'generateSettingsPluginStubs',
+            'generateModulePluginStubs',
+            'generateRootPluginStubs'
+    )
+}

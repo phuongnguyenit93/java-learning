@@ -15,11 +15,8 @@
         "BUILD_YML_MODULE_DEPEND": {
             "DESCRIPTION": "Automation combine all yml at module and all component depend and save it in build file for run or docker compose",
             "TYPE": "list",
-            "VALUE": "SPRING_WEB,PROMETHEUS,SPRING_ACTUATOR"
+            "VALUE": "SPRING_WEB,PROMETHEUS_GRAFANA,SPRING_ACTUATOR"
         }
-    },
-    "JAR": {
-        
     },
     "README": {
         "README_LANGUAGE": {

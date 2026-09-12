@@ -1,0 +1,11 @@
+pluginManagement {
+
+    includeBuild('../project-build/gradle-runtime')
+
+    repositories {
+        mavenLocal()
+        gradlePluginPortal()
+    }
+}
+
+rootProject.name = 'project-orchestration'

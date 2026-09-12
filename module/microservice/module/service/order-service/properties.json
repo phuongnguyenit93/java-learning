@@ -15,7 +15,7 @@
         "BUILD_YML_MODULE_DEPEND": {
             "DESCRIPTION": "Automation combine all yml at module and all component depend and save it in build file for run or docker compose",
             "TYPE": "list",
-            "VALUE": "SPRING_WEB,SPRING_SWAGGER,SPRING_ACTUATOR,RESILIENCE_4J,DISTRIBUTED_TRACING,PROMETHEUS"
+            "VALUE": "SPRING_WEB,SPRING_SWAGGER,SPRING_ACTUATOR,RESILIENCE_4J,DISTRIBUTED_TRACING,PROMETHEUS_GRAFANA"
         }
     },
     "SWAGGER": {

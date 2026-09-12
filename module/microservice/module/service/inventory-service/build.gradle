@@ -1,11 +1,12 @@
-apply from: "${searchProjectByServiceName("MAPSTRUCT").projectDir}/build.gradle"
-
 dependencies {
-    implementation searchProjectByServiceName("DISTRIBUTED_TRACING")
-    implementation searchProjectByServiceName("PROMETHEUS_GRAFANA")
     implementation 'org.springframework.cloud:spring-cloud-starter-config'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'io.hawt:hawtio-springboot:4.0.0'
     implementation 'org.jolokia:jolokia-server-core'
+}
+
+implementationModule {
+    serviceList =
+            'DISTRIBUTED_TRACING,PROMETHEUS_GRAFANA,MAPSTRUCT'
 }

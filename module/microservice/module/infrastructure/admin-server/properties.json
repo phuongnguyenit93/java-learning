@@ -18,9 +18,6 @@
             "VALUE": "SPRING_WEB"
         }
     },
-    "JAR": {
-        
-    },
     "README": {
         "README_LANGUAGE": {
             "DESCRIPTION": "List language to automatic build readme.md in each language in each module",
