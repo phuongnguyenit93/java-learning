@@ -1,4 +1,4 @@
-package com.example.learning.module.yml.service
+package com.example.learning.setup.module.yml.service
 
 import org.gradle.api.Project
 import org.gradle.api.logging.Logger

@@ -14,15 +14,9 @@ class SwaggerYamlMergeService {
     private static final Set<String> API_HUMAN_FIELDS = [
             'summary',
             'description',
-            'videoYoutubeId'
+            'videoYoutubeId',
+            'videoYoutubeTitle'
     ] as Set
-
-
-    private static final Set<String> PARAM_HUMAN_FIELDS = [
-            'summary',
-            'description'
-    ] as Set
-
 
     private final Yaml reader
 
@@ -477,6 +471,17 @@ ${parameterName}
                     defaults.description
         }
 
+        if (
+                !entry.containsKey(
+                        'enableVideoYoutube'
+                )
+        ) {
+
+            entry[
+                    'enableVideoYoutube'
+            ] =
+                    defaults.enableVideoYoutube
+        }
 
         if (
                 !entry.containsKey(
@@ -489,6 +494,20 @@ ${parameterName}
             ] =
                     defaults.videoYoutubeId
         }
+
+        if (
+                !entry.containsKey(
+                        'videoYoutubeTitle'
+                )
+        ) {
+
+            entry[
+                    'videoYoutubeTitle'
+            ] =
+                    defaults.videoYoutubeTitle
+        }
+
+
     }
 
 

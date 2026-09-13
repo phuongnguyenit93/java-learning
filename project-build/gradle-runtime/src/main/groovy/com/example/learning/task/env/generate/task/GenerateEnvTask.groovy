@@ -27,18 +27,6 @@ abstract class GenerateEnvTask
     @Input
     abstract Property<String> getServiceName()
 
-
-    /**
-     * Đây KHÔNG còn là:
-     *
-     * src/main/resources/application.yml
-     *
-     * mà là:
-     *
-     * build/generated-config/application.yml
-     *
-     * được combineYaml generate.
-     */
     @InputFile
     @PathSensitive(PathSensitivity.RELATIVE)
     abstract RegularFileProperty getApplicationFile()

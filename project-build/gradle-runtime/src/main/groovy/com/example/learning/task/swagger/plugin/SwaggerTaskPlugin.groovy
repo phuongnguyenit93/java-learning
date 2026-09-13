@@ -15,7 +15,7 @@ class SwaggerTaskPlugin
 
         GenerateApiSwaggerDescriptionExtension extension =
                 project.extensions.create(
-                        'apiSwaggerDescription',
+                        'generateApiSwaggerDescription',
                         GenerateApiSwaggerDescriptionExtension
                 )
 

@@ -37,7 +37,7 @@ Internal README menu location is not configured.
 
 Example:
 
-internalReadmeMenu {
+generateInternalReadmeMenu {
 
     location =
         'readme/vi/menu/1.Basic/BasicThread.md'

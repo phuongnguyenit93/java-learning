@@ -1,4 +1,4 @@
-package com.example.learning.config;
+package com.example.projectbuild.swagger;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,14 +24,18 @@ import org.springframework.core.type.AnnotationMetadata;
 
 import java.io.InputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.nio.charset.StandardCharsets;
+import java.util.regex.Pattern;
 
 public class DynamicSwaggerRegistrar implements ImportBeanDefinitionRegistrar , EnvironmentAware, ResourceLoaderAware {
 
     private Environment environment;
     private ResourceLoader resourceLoader;
     private final ObjectMapper yamlMapper = new ObjectMapper(new YAMLFactory());
+    private static final Pattern YOUTUBE_VIDEO_ID_PATTERN =
+            Pattern.compile("^[A-Za-z0-9_-]{11}$");
 
     @Override
     public void setEnvironment(Environment environment) {
@@ -75,21 +79,15 @@ public class DynamicSwaggerRegistrar implements ImportBeanDefinitionRegistrar , 
 
     public OperationCustomizer addExtension() {
         return (operation, handlerMethod) -> {
-            String fullClassName = handlerMethod.getBeanType().getSimpleName();
-            SwaggerYoutubeVideo youtubeVideo =
-                    handlerMethod.getMethodAnnotation(SwaggerYoutubeVideo.class);
 
-            if (youtubeVideo != null) {
-                operation.addExtension(
-                        "x-youtube",
-                        Map.of(
-                                "videoId", youtubeVideo.videoId(),
-                                "title", youtubeVideo.title()
-                        )
-                );
-            }
+            String controllerName =
+                    handlerMethod.getBeanType().getSimpleName();
 
-            operation.addExtension("x-controller-name", fullClassName);
+            operation.addExtension(
+                    "x-controller-name",
+                    controllerName
+            );
+
             return operation;
         };
     }
@@ -201,15 +199,96 @@ public class DynamicSwaggerRegistrar implements ImportBeanDefinitionRegistrar , 
         }
     }
 
-    private void mapMethodMetadata(Operation operation, JsonNode apiDescs, String controller, String method) {
-        JsonNode methodNode = apiDescs.path(controller).path(method);
-        if (!methodNode.isMissingNode()) {
-            String summary = methodNode.path("summary").asText(null);
-            String description = methodNode.path("description").asText(null);
+    private void mapMethodMetadata(
+            Operation operation,
+            JsonNode apiDescs,
+            String controller,
+            String method
+    ) {
 
-            if (summary != null) operation.setSummary(summary);
-            if (description != null) operation.setDescription(description);
+        JsonNode methodNode =
+                findMethodNode(
+                        apiDescs,
+                        controller,
+                        method
+                );
+
+        if (methodNode == null) {
+            return;
         }
+
+        // ==========================================
+        // Summary & Description
+        // ==========================================
+
+        String summary =
+                methodNode.path("summary").asText(null);
+
+        String description =
+                methodNode.path("description").asText(null);
+
+        if (summary != null) {
+            operation.setSummary(summary);
+        }
+
+        if (description != null) {
+            operation.setDescription(description);
+        }
+
+        // ==========================================
+        // Youtube
+        // ==========================================
+
+
+        boolean enableVideoYoutube =
+                methodNode
+                        .path("enableVideoYoutube")
+                        .asBoolean(false);
+
+        System.out.println("enableVideoYoutube");
+        System.out.println(enableVideoYoutube);
+
+        if (!enableVideoYoutube) {
+            return;
+        }
+
+        String videoYoutubeId =
+                methodNode
+                        .path("videoYoutubeId")
+                        .asText(null);
+
+        String videoYoutubeTitle =
+                methodNode
+                        .path("videoYoutubeTitle")
+                        .asText(null);
+
+
+
+        if (!isValidYoutubeVideoIdFormat(videoYoutubeId)) {
+            return;
+        }
+
+        Map<String, Object> youtubeExtension =
+                new LinkedHashMap<>();
+
+        youtubeExtension.put(
+                "videoId",
+                videoYoutubeId
+        );
+
+        if (videoYoutubeTitle != null &&
+                !videoYoutubeTitle.isBlank()) {
+
+            youtubeExtension.put(
+                    "title",
+                    videoYoutubeTitle
+            );
+        }
+
+        operation.addExtension(
+                "x-youtube",
+                youtubeExtension
+        );
     }
 
     private void mapParameterMetadata(Parameter parameter, JsonNode apiParams) {
@@ -244,4 +323,43 @@ public class DynamicSwaggerRegistrar implements ImportBeanDefinitionRegistrar , 
         }
     }
 
+    private boolean isValidYoutubeVideoIdFormat(
+            String videoYoutubeId
+    ) {
+
+        if (videoYoutubeId == null ||
+                videoYoutubeId.isBlank()) {
+
+            return false;
+        }
+
+        return YOUTUBE_VIDEO_ID_PATTERN
+                .matcher(videoYoutubeId.trim())
+                .matches();
+    }
+
+    private JsonNode findMethodNode(
+            JsonNode apiDescs,
+            String controller,
+            String methodName
+    ) {
+
+        JsonNode controllerNode =
+                apiDescs.path(controller);
+
+        if (controllerNode.isMissingNode()) {
+            return null;
+        }
+
+        for (JsonNode methodNode : controllerNode) {
+
+            if (methodName.equals(
+                    methodNode.path("methodName").asText()
+            )) {
+                return methodNode;
+            }
+        }
+
+        return null;
+    }
 }

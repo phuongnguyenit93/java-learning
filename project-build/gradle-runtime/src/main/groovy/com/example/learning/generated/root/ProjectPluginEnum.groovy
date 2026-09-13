@@ -15,11 +15,6 @@ package com.example.learning.generated.root
 
 enum ProjectPluginEnum {
 
-    CONFIG_SETUP_PLUGIN(
-            'com.example.learning.module.config.plugin',
-            'com.example.learning.module.config.plugin.ConfigSetupPlugin'
-    ),
-
     DEPENDENCY_SETUP_PLUGIN(
             'com.example.learning.module.dependency.plugin',
             'com.example.learning.module.dependency.plugin.DependencySetupPlugin'
@@ -50,14 +45,24 @@ enum ProjectPluginEnum {
             'com.example.learning.module.task.plugin.TaskSetupPlugin'
     ),
 
+    CONFIG_SETUP_PLUGIN(
+            'com.example.learning.setup.module.config.plugin',
+            'com.example.learning.setup.module.config.plugin.ConfigSetupPlugin'
+    ),
+
     YML_SETUP_PLUGIN(
-            'com.example.learning.module.yml.plugin',
-            'com.example.learning.module.yml.plugin.YmlSetupPlugin'
+            'com.example.learning.setup.module.yml.plugin',
+            'com.example.learning.setup.module.yml.plugin.YmlSetupPlugin'
     ),
 
     CATALOG_SETUP_PLUGIN(
             'com.example.learning.setup.root.catalog.plugin',
             'com.example.learning.setup.root.catalog.plugin.CatalogSetupPlugin'
+    ),
+
+    CLEANUP_SETUP_PLUGIN(
+            'com.example.learning.setup.root.cleanup.plugin',
+            'com.example.learning.setup.root.cleanup.plugin.CleanupSetupPlugin'
     ),
 
     DATABASE_SETUP_PLUGIN(

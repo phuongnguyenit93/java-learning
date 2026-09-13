@@ -1,6 +1,6 @@
-package com.example.learning.module.config.service
+package com.example.learning.setup.module.config.service
 
-import com.example.learning.module.config.model.ModuleType
+import com.example.learning.setup.module.config.model.ModuleType
 import com.example.learning.utils.ModuleProjectUtils
 import com.example.learning.utils.ProjectDependencyUtils
 import com.example.learning.utils.ProjectPluginUtils

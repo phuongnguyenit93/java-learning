@@ -1,8 +1,8 @@
-package com.example.learning.module.config.plugin
+package com.example.learning.setup.module.config.plugin
 
-import com.example.learning.module.config.model.ModuleType
-import com.example.learning.module.config.service.ModuleBuildConfigurationService
-import com.example.learning.module.config.service.ModuleStructureService
+import com.example.learning.setup.module.config.model.ModuleType
+import com.example.learning.setup.module.config.service.ModuleBuildConfigurationService
+import com.example.learning.setup.module.config.service.ModuleStructureService
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 

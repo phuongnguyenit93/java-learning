@@ -62,49 +62,19 @@ class IntellijTaskPlugin
             return
         }
 
-
-        // ==========================================
-        // Base package
-        // ==========================================
-
-        if (
-                !project.gradle
-                        .extensions
-                        .extraProperties
-                        .has('basePackage')
-        ) {
-
-            project.logger.info(
-                    '[INTELLIJ] Skip {} because basePackage is not defined.',
-                    project.path
-            )
-
-            return
-        }
-
-
-        String basePackage =
-                project.gradle
-                        .extensions
-                        .extraProperties
-                        .get('basePackage')
-                        .toString()
-
-
-        String packagePath =
-                basePackage.replace(
-                        '.',
-                        '/'
-                )
-
-
         // ==========================================
         // Spring Boot application class
         // ==========================================
 
+        String mainClassPath =
+                mainClass.replace(
+                        '.',
+                        '/'
+                )
+
         File applicationFile =
                 project.file(
-                        "src/main/java/${packagePath}/${applicationName}.java"
+                        "src/main/java/${mainClassPath}.java"
                 )
 
 

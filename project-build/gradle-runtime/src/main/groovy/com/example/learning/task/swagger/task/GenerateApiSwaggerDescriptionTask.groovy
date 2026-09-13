@@ -46,7 +46,7 @@ Swagger languages are not configured.
 
 Example:
 
-apiSwaggerDescription {
+generateApiSwaggerDescription {
 
     languages = [
         'vi',

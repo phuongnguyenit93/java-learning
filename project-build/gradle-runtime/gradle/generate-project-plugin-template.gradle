@@ -484,7 +484,7 @@ registerPluginGenerator(
 registerPluginGenerator(
         [
                 scope        : 'module',
-                basePackage  : 'com.example.learning.module',
+                basePackage  : 'com.example.learning.setup.module',
                 taskName     : 'generateModulePluginStubs',
                 title        : 'Generate Module Setup Plugin Stubs',
                 pluginSuffix : 'SetupPlugin',
@@ -492,7 +492,7 @@ registerPluginGenerator(
                 domains      : {
                     getSortedDirectories(
                             file(
-                                    'src/main/groovy/com/example/learning/module'
+                                    'src/main/groovy/com/example/learning/setup/module'
                             )
                     ).collect {
                         it.name
@@ -516,7 +516,7 @@ registerPluginGenerator(
                 domains      : {
                     getSortedDirectories(
                             file(
-                                    'src/main/groovy/com/example/learning/root'
+                                    'src/main/groovy/com/example/learning/setup/root'
                             )
                     ).collect {
                         it.name
@@ -540,7 +540,7 @@ registerPluginGenerator(
                 domains      : {
                     getSortedDirectories(
                             file(
-                                    'src/main/groovy/com/example/learning/settings'
+                                    'src/main/groovy/com/example/learning/setup/settings'
                             )
                     ).collect {
                         it.name

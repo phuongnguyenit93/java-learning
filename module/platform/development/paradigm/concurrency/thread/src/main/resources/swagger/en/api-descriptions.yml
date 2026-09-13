@@ -1,26 +1,10 @@
 BasicThreadController:
-  extract(String):
-    summary: Title not provided
-    description: Detailed description not provided
-    videoYoutubeId: ID of youtube video add to API description
-    methodName: extract
-    params:
-    - markdown
-    path: com/example/learning/module/basic/controller/BasicThreadController.java
-    mapping: '@PostMapping(value = "/extract", consumes = MediaType.TEXT_PLAIN_VALUE)'
-    httpMethods:
-    - POST
-    mappingPaths:
-    - basic/extract
-    produces: [
-      ]
-    consumes:
-    - MediaType.TEXT_PLAIN_VALUE
-    usage: true
   testThread():
     summary: Title not provided
     description: Detailed description not provided
-    videoYoutubeId: ID of youtube video add to API description
+    enableVideoYoutube: true
+    videoYoutubeId: nd2ULXyBaV9
+    videoYoutubeTitle: Testing
     methodName: testThread
     params: [
       ]
@@ -38,7 +22,9 @@ BasicThreadController:
   testNonThread():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: testNonThread
     params: [
       ]
@@ -56,7 +42,9 @@ BasicThreadController:
   threadLifeCycle():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: threadLifeCycle
     params: [
       ]
@@ -75,7 +63,9 @@ CreateThreadController:
   createByExtend():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: createByExtend
     params: [
       ]
@@ -93,7 +83,9 @@ CreateThreadController:
   createByRunnable():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: createByRunnable
     params: [
       ]
@@ -111,7 +103,9 @@ CreateThreadController:
   createByCallable():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: createByCallable
     params: [
       ]
@@ -129,7 +123,9 @@ CreateThreadController:
   createByThreadPool():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: createByThreadPool
     params: [
       ]
@@ -148,7 +144,9 @@ DaemonThreadController:
   threadDaemon():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: threadDaemon
     params: [
       ]
@@ -166,7 +164,9 @@ DaemonThreadController:
   stopDaemon():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: stopDaemon
     params: [
       ]
@@ -184,7 +184,9 @@ DaemonThreadController:
   restartDaemon():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: restartDaemon
     params: [
       ]
@@ -203,7 +205,9 @@ ThreadLocalController:
   threadLocalDemo():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: threadLocalDemo
     params: [
       ]
@@ -221,7 +225,9 @@ ThreadLocalController:
   inheritableThreadLocalDemo():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: inheritableThreadLocalDemo
     params: [
       ]
@@ -239,7 +245,9 @@ ThreadLocalController:
   threadPoolIssueDemo():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: threadPoolIssueDemo
     params: [
       ]
@@ -258,7 +266,9 @@ AsyncController:
   futureExample():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: futureExample
     params: [
       ]
@@ -276,7 +286,9 @@ AsyncController:
   completableFutureExample():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: completableFutureExample
     params: [
       ]
@@ -294,7 +306,9 @@ AsyncController:
   completableFutureWithHandleExample():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: completableFutureWithHandleExample
     params: [
       ]
@@ -313,7 +327,9 @@ BlockingQueueController:
   blockingQueueExample():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: blockingQueueExample
     params: [
       ]
@@ -331,7 +347,9 @@ BlockingQueueController:
   synchronousQueueExample():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: synchronousQueueExample
     params: [
       ]
@@ -349,7 +367,9 @@ BlockingQueueController:
   arrayQueueExample():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: arrayQueueExample
     params: [
       ]
@@ -367,7 +387,9 @@ BlockingQueueController:
   priorityQueueExample():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: priorityQueueExample
     params: [
       ]
@@ -386,7 +408,9 @@ ClassicCoordinationController:
   joinThread():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: joinThread
     params: [
       ]
@@ -404,7 +428,9 @@ ClassicCoordinationController:
   waitAndNotifyThread():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: waitAndNotifyThread
     params: [
       ]
@@ -423,7 +449,9 @@ ModernCoordinationController:
   lockConditionExample():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: lockConditionExample
     params: [
       ]
@@ -441,7 +469,9 @@ ModernCoordinationController:
   lockSupportExample():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: lockSupportExample
     params: [
       ]
@@ -460,7 +490,9 @@ PatternController:
   exchangerExample():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: exchangerExample
     params: [
       ]
@@ -478,7 +510,9 @@ PatternController:
   consumerProducerPatternExample():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: consumerProducerPatternExample
     params: [
       ]
@@ -497,7 +531,9 @@ SynchronizerController:
   countDownLatchExample():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: countDownLatchExample
     params: [
       ]
@@ -515,7 +551,9 @@ SynchronizerController:
   countDownLatchTimeOutExample():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: countDownLatchTimeOutExample
     params: [
       ]
@@ -533,7 +571,9 @@ SynchronizerController:
   cyclicBarrierExample():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: cyclicBarrierExample
     params: [
       ]
@@ -551,7 +591,9 @@ SynchronizerController:
   cyclicBarrierTimeOutExample():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: cyclicBarrierTimeOutExample
     params: [
       ]
@@ -569,7 +611,9 @@ SynchronizerController:
   cyclicBarrierResetExample():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: cyclicBarrierResetExample
     params: [
       ]
@@ -587,7 +631,9 @@ SynchronizerController:
   semaphoreExample():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: semaphoreExample
     params: [
       ]
@@ -605,7 +651,9 @@ SynchronizerController:
   phaserExample():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: phaserExample
     params: [
       ]
@@ -624,7 +672,9 @@ TaskExecutorController:
   springExecutorExample():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: springExecutorExample
     params: [
       ]
@@ -643,7 +693,9 @@ InterruptionController:
   workerInterruption():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: workerInterruption
     params: [
       ]
@@ -661,7 +713,9 @@ InterruptionController:
   blockerInterruption():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: blockerInterruption
     params: [
       ]
@@ -679,7 +733,9 @@ InterruptionController:
   gracefulShutdownByJava():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: gracefulShutdownByJava
     params: [
       ]
@@ -697,7 +753,9 @@ InterruptionController:
   gracefulShutdownBySpring():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: gracefulShutdownBySpring
     params: [
       ]
@@ -715,7 +773,9 @@ InterruptionController:
   interruptedDemo():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: interruptedDemo
     params: [
       ]
@@ -734,7 +794,9 @@ LeakController:
   threadLeak():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: threadLeak
     params: [
       ]
@@ -752,7 +814,9 @@ LeakController:
   poolLeak():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: poolLeak
     params: [
       ]
@@ -771,7 +835,9 @@ ThreadPoolController:
   fixedThreadPoolExample():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: fixedThreadPoolExample
     params: [
       ]
@@ -789,7 +855,9 @@ ThreadPoolController:
   cacheThreadPoolExample():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: cacheThreadPoolExample
     params: [
       ]
@@ -807,7 +875,9 @@ ThreadPoolController:
   singleThreadPoolExample():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: singleThreadPoolExample
     params: [
       ]
@@ -825,7 +895,9 @@ ThreadPoolController:
   scheduleThreadPoolExample():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: scheduleThreadPoolExample
     params: [
       ]
@@ -843,7 +915,9 @@ ThreadPoolController:
   abortPolicy():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: abortPolicy
     params: [
       ]
@@ -861,7 +935,9 @@ ThreadPoolController:
   callerRunPolicy():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: callerRunPolicy
     params: [
       ]
@@ -879,7 +955,9 @@ ThreadPoolController:
   discardPolicy():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: discardPolicy
     params: [
       ]
@@ -897,7 +975,9 @@ ThreadPoolController:
   discardOldestPolicy():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: discardOldestPolicy
     params: [
       ]
@@ -916,7 +996,9 @@ AtomicController:
   atomicBenchmark():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: atomicBenchmark
     params: [
       ]
@@ -934,7 +1016,9 @@ AtomicController:
   adderBenchmark():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: adderBenchmark
     params: [
       ]
@@ -952,7 +1036,9 @@ AtomicController:
   accumulatorExample():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: accumulatorExample
     params: [
       ]
@@ -971,7 +1057,9 @@ SyncController:
   runSyncTest():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: runSyncTest
     params: [
       ]
@@ -990,7 +1078,9 @@ SyncProblemController:
   instructionReorder():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: instructionReorder
     params: [
       ]
@@ -1008,7 +1098,9 @@ SyncProblemController:
   staleData():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: staleData
     params: [
       ]
@@ -1026,7 +1118,9 @@ SyncProblemController:
   raceCondition():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: raceCondition
     params: [
       ]
@@ -1044,7 +1138,9 @@ SyncProblemController:
   deadlock():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: deadlock
     params: [
       ]
@@ -1062,7 +1158,9 @@ SyncProblemController:
   livelock():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: livelock
     params: [
       ]
@@ -1081,7 +1179,9 @@ ConcurrentCollectionController:
   concurrentHashMap():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: concurrentHashMap
     params: [
       ]
@@ -1099,7 +1199,9 @@ ConcurrentCollectionController:
   concurrentSkipList():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: concurrentSkipList
     params: [
       ]
@@ -1117,7 +1219,9 @@ ConcurrentCollectionController:
   copyOnWriteArrayWhenWriting():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: copyOnWriteArrayWhenWriting
     params: [
       ]
@@ -1135,7 +1239,9 @@ ConcurrentCollectionController:
   copyOnWriteArrayWhenReading():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: copyOnWriteArrayWhenReading
     params: [
       ]
@@ -1153,7 +1259,9 @@ ConcurrentCollectionController:
   concurrentLinkedQueue():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: concurrentLinkedQueue
     params: [
       ]
@@ -1172,7 +1280,9 @@ ReadWriteLockController:
   readAndRead():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: readAndRead
     params: [
       ]
@@ -1190,7 +1300,9 @@ ReadWriteLockController:
   readAndWrite():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: readAndWrite
     params: [
       ]
@@ -1208,7 +1320,9 @@ ReadWriteLockController:
   writeAndWrite():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: writeAndWrite
     params: [
       ]
@@ -1226,7 +1340,9 @@ ReadWriteLockController:
   downgradeKey():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: downgradeKey
     params: [
       ]
@@ -1245,7 +1361,9 @@ ReentrantLockController:
   reentrantLockExample():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: reentrantLockExample
     params: [
       ]
@@ -1263,7 +1381,9 @@ ReentrantLockController:
   fairLockExample():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: fairLockExample
     params: [
       ]
@@ -1281,7 +1401,9 @@ ReentrantLockController:
   unfairLockExample():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: unfairLockExample
     params: [
       ]
@@ -1299,7 +1421,9 @@ ReentrantLockController:
   interruptibleLock():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: interruptibleLock
     params: [
       ]
@@ -1318,7 +1442,9 @@ StampedLockController:
   stampedExample():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: stampedExample
     params: [
       ]
@@ -1337,7 +1463,9 @@ VirtualThreadController:
   virtualThreadBenchmark():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: virtualThreadBenchmark
     params: [
       ]
@@ -1355,7 +1483,9 @@ VirtualThreadController:
   virtualThreadBasic():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: virtualThreadBasic
     params: [
       ]
@@ -1373,7 +1503,9 @@ VirtualThreadController:
   virtualThreadBuilder():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: virtualThreadBuilder
     params: [
       ]
@@ -1391,7 +1523,9 @@ VirtualThreadController:
   virtualThreadExecutor():
     summary: Title not provided
     description: Detailed description not provided
+    enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
     methodName: virtualThreadExecutor
     params: [
       ]

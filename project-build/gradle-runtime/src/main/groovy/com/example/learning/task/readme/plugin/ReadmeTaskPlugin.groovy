@@ -22,7 +22,7 @@ class ReadmeTaskPlugin
 
         GenerateInternalReadmeMenuExtension internalMenuExtension =
                 project.extensions.create(
-                        'internalReadmeMenu',
+                        'generateInternalReadmeMenu',
                         GenerateInternalReadmeMenuExtension
                 )
 

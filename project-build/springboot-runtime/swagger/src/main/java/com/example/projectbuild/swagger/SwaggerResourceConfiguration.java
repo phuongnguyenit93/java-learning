@@ -1,4 +1,4 @@
-package com.example.learning.config;
+package com.example.projectbuild.swagger;
 
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;

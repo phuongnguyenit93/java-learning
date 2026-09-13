@@ -1,213 +1,170 @@
 # AGENTS.md
 
-## Mục đích
+## 1. Purpose
 
-File này là hướng dẫn làm việc dành cho Codex/AI agent khi đọc, phân tích hoặc chỉnh sửa repository.
+This file is the bootstrap context for AI agents working in `java-learning`.
 
-Mục tiêu chính:
+Read this file before making architecture or code changes. It summarizes the repository structure, source-of-truth rules, Gradle lifecycle, ownership boundaries, current intentional decisions, and the expected workflow when analyzing or modifying code.
 
-- hiểu đúng architecture hiện tại trước khi thao tác;
-- tôn trọng ranh giới giữa build-time, runtime và learning module;
-- không tự mở rộng phạm vi thay đổi;
-- không coi generated artifact là source of truth;
-- ưu tiên implementation thực tế khi documentation và source không đồng nhất;
-- giữ mọi thay đổi nhỏ, có chủ đích và dễ review.
+This file is intentionally more operational than `ARCHITECTURE.md`.
 
----
-
-# 1. Nguyên tắc làm việc bắt buộc
-
-## 1.1. Không tự ý chỉnh sửa
-
-Khi người dùng chỉ yêu cầu:
-
-- đọc;
-- phân tích;
-- review;
-- tìm lỗi;
-- giải thích;
-- đề xuất architecture;
-- đánh giá module;
-
-thì chỉ báo cáo:
-
-- hiện trạng;
-- evidence;
-- nguyên nhân;
-- rủi ro;
-- giải pháp đề xuất.
-
-Không tự chỉnh sửa file.
-
-Chỉ sửa khi người dùng yêu cầu rõ việc sửa trong câu lệnh hiện tại.
-
-Nếu phạm vi sửa chưa rõ, phải hỏi lại trước khi thay đổi.
-
-Không tự mở rộng việc sửa sang file khác chỉ vì thấy có thể refactor thêm.
-
----
-
-## 1.2. Không tự chạy destructive/generative task
-
-Không tự chạy task có khả năng:
-
-- generate file;
-- rewrite file;
-- synchronize metadata;
-- delete file/folder;
-- migrate dữ liệu;
-- thay đổi runtime state;
-- chạy Docker operation;
-- backup/restore database;
-- update remote service;
-- thay đổi generated source/resource.
-
-Trước khi chạy phải:
-
-1. giải thích task sẽ ảnh hưởng gì;
-2. nêu các file/resource có thể thay đổi;
-3. nhận xác nhận của người dùng.
-
-Các task read-only như inspection có thể chạy nếu phù hợp với yêu cầu.
-
----
-
-## 1.3. Evidence trước, suy luận sau
-
-Khi mô tả architecture:
-
-- ưu tiên source code;
-- ưu tiên Gradle configuration;
-- ưu tiên filesystem thực tế;
-- ưu tiên canonical schema;
-- ưu tiên behavior đang được implementation thực thi.
-
-Nếu tài liệu và implementation không đồng nhất:
-
-1. mô tả behavior thực tế;
-2. chỉ rõ điểm khác biệt;
-3. không tự sửa;
-4. không giả định tài liệu là đúng hơn code.
-
-Mọi kết luận chưa đủ evidence phải được đánh dấu là:
-
-- `Target`;
-- `Known Gap`;
-- hoặc `Inference`.
-
-Không viết target architecture như thể nó đã tồn tại.
-
----
-
-# 2. Thứ tự đọc repository
-
-Khi bắt đầu khảo sát repository hoặc một vấn đề architecture cấp project, đọc theo thứ tự:
-
-1. root `settings.gradle`;
-2. root `build.gradle`;
-3. `project-orchestration`;
-4. `project-build/gradle-runtime`;
-5. canonical metadata schemas;
-6. generated structure/catalog nếu cần;
-7. metadata của module liên quan;
-8. module `build.gradle`;
-9. source code của module chỉ khi yêu cầu cần đến.
-
-Không bắt đầu bằng việc đọc sâu toàn bộ source module nếu vấn đề chỉ thuộc build architecture.
-
----
-
-# 3. Architecture overview
-
-Repository được chia theo các responsibility chính:
+Use:
 
 ```text
-Root Project
-│
+AGENTS.md       → how an AI should work in this repository
+ARCHITECTURE.md → why the repository is structured this way
+README.md       → high-level project orientation
+STRUCTURE.md    → generated module tree/navigation
+```
+
+When documentation conflicts with live implementation, inspect the implementation and report the inconsistency instead of silently assuming the documentation is correct.
+
+---
+
+## 2. Repository purpose
+
+`java-learning` is a Java/Spring Boot learning repository organized as a Gradle multi-project/composite build.
+
+It is not one monolithic production application.
+
+The repository is designed so that many independent learning/application modules can reuse the same build automation and shared runtime infrastructure.
+
+Current technical baseline:
+
+```text
+Java            21
+Spring Boot     3.3.x
+Gradle          repository wrapper 8.5
+Build language  Groovy custom plugins
+Testing         JUnit Platform
+Runtime infra   Docker Compose where needed
+```
+
+Do not assume every module has the same runtime architecture or purpose.
+
+---
+
+## 3. Read order
+
+For repository-level work, read in this order:
+
+```text
+1. AGENTS.md
+2. ARCHITECTURE.md
+3. README.md
+4. settings.gradle
+5. build.gradle
+6. project-orchestration/
+7. project-build/gradle-runtime/
+8. project-build/springboot-runtime/
+9. STRUCTURE.md when module navigation is needed
+10. module metadata/build.gradle for the concrete task
+11. module source packages only when the requested work requires them
+```
+
+Do not read the entire `module/` source tree just to answer a build-system question.
+
+The architecture documentation intentionally does not claim knowledge of package design inside every learning module.
+
+---
+
+## 4. Main architecture boundaries
+
+Repository shape:
+
+```text
+java-learning/
+├── module/                         # learning/application modules
+├── internal/                       # internal supporting modules/resources
 ├── project-build/
-│   ├── gradle-runtime/
-│   │   └── build-time automation
-│   │
-│   └── springboot-runtime/
-│       └── shared Spring Boot runtime capability
-│
-├── project-orchestration/
-│   └── orchestration / composition policy
-│
-└── module/
-    └── learning modules
+│   ├── gradle-runtime/             # Gradle/build-time implementation
+│   └── springboot-runtime/         # shared Spring Boot runtime implementation
+├── project-orchestration/          # policy/composition layer
+├── settings.gradle
+├── build.gradle
+├── README.md
+├── ARCHITECTURE.md
+├── AGENTS.md
+└── STRUCTURE.md
 ```
 
-`project-build` là folder cha về mặt organization.
-
-`project-build/gradle-runtime` là Gradle build độc lập và được include bằng composite build.
-
-`project-build/springboot-runtime` chứa shared runtime code/config cho Spring Boot và không được trộn vào Gradle plugin artifact.
-
----
-
-# 4. Build-time và Runtime boundary
-
-## Build-time
-
-Thuộc:
+The three infrastructure boundaries are:
 
 ```text
+project-orchestration
+    = WHAT should be applied and WHEN
+
 project-build/gradle-runtime
-```
+    = HOW build-time behavior is implemented
 
-Bao gồm các concern như:
-
-- Gradle plugin;
-- task;
-- service;
-- utility;
-- module discovery;
-- metadata synchronization;
-- dependency setup;
-- ENV/YML/README generation;
-- Swagger build automation;
-- structure generation;
-- database build operations;
-- cleanup;
-- generated catalogs.
-
-## Runtime
-
-Thuộc:
-
-```text
 project-build/springboot-runtime
+    = HOW shared runtime behavior works inside Spring Boot applications
 ```
 
-Bao gồm shared configuration/code cần khi Spring Boot application chạy.
-
-Ví dụ:
-
-```text
-springboot-runtime/
-└── swagger/
-```
-
-Có thể mở rộng trong tương lai bằng:
-
-- logging;
-- security;
-- Jackson;
-- common Spring configuration;
-- các runtime concern dùng chung khác.
-
-## Rule
-
-Spring Boot runtime code không được phụ thuộc ngược vào Gradle build implementation.
-
-Không đưa runtime Spring code vào cùng artifact với Gradle plugin chỉ để tái sử dụng.
+Do not move code between these boundaries just to reduce file count.
 
 ---
 
-# 5. Orchestration architecture
+## 5. Responsibility model
 
-Ba orchestration plugin chính:
+The repository follows this responsibility split:
+
+```text
+Orchestration → capability selection and ordering
+Plugin        → Gradle lifecycle wiring
+Service       → implementation logic
+Task          → explicit execution / side effect
+Extension     → typed DSL/configuration surface
+Utils         → stateless reusable helpers
+```
+
+Prefer this model when adding or refactoring build capabilities.
+
+Avoid putting large algorithms directly in:
+
+```text
+root build.gradle
+settings.gradle
+orchestration plugins
+Gradle ext closures
+```
+
+unless the behavior is genuinely trivial.
+
+---
+
+## 6. Composite build structure
+
+Root `settings.gradle` includes:
+
+```groovy
+pluginManagement {
+    includeBuild('project-build/gradle-runtime')
+    includeBuild('project-orchestration')
+}
+```
+
+and applies:
+
+```groovy
+id 'com.example.settings-orchestration'
+```
+
+`project-orchestration` itself includes `../project-build/gradle-runtime` and depends on:
+
+```text
+com.example.learning:gradle-runtime:1.0.0
+```
+
+The composite build substitutes that dependency with the local included build.
+
+Do not replace this with ad-hoc copies of Gradle logic in the root project.
+
+---
+
+## 7. Orchestration plugins
+
+Three orchestration entry points exist:
 
 ```text
 com.example.settings-orchestration
@@ -215,63 +172,66 @@ com.example.root-orchestration
 com.example.module-orchestration
 ```
 
-Vai trò:
+### Settings orchestration
+
+Current order:
 
 ```text
-Settings Orchestration
-→ capability nào chạy trong Settings scope
-
-Root Orchestration
-→ capability nào chạy ở Root Project scope
-
-Module Orchestration
-→ capability nào chạy ở real module scope
+PresetSetupPlugin
+    ↓
+PropertiesSetupPlugin
 ```
 
-Orchestration quyết định **WHAT/WHICH**.
+This order matters.
 
-Implementation cụ thể thuộc `project-build/gradle-runtime`.
+Preset setup performs module discovery, inclusion, metadata synchronization, and settings-time generated information.
 
-Không đặt implementation logic lớn trực tiếp trong orchestration plugin.
+Properties setup injects synchronized metadata into Gradle `Project` objects through `projectsLoaded`.
+
+### Root orchestration
+
+Current capabilities:
+
+```text
+CatalogSetupPlugin
+StructureSetupPlugin
+DatabaseSetupPlugin
+CleanupSetupPlugin
+```
+
+Root-only plugins should remain root-only.
+
+### Module orchestration
+
+Current conceptual flow:
+
+```text
+real module guard
+    ↓
+DependencySetupPlugin
+    ↓
+ConfigSetupPlugin
+    ↓
+YmlSetupPlugin
+    ↓
+EnvSetupPlugin       if enabled
+    ↓
+ReadmeSetupPlugin    if enabled
+    ↓
+SwaggerSetupPlugin   if enabled
+    ↓
+TaskSetupPlugin      if USE_TASK=TRUE
+    ↓
+DockerSetupPlugin    if docker-compose.yml exists
+```
+
+`ConfigSetupPlugin` and `YmlSetupPlugin` are currently applied to every real module by convention.
 
 ---
 
-# 6. Build logic responsibility
+## 8. Real module identity
 
-Convention chung:
-
-```text
-Plugin
-→ wiring / lifecycle / WHEN
-
-Service
-→ use-case implementation / HOW
-
-Task
-→ explicit execution entry
-
-Utils
-→ stateless reusable primitive
-
-Orchestration
-→ composition / policy / WHICH
-```
-
-Khi thêm capability mới, ưu tiên giữ đúng separation này.
-
-Không quay lại pattern legacy kiểu:
-
-```groovy
-ext.someMethod = { ... }
-```
-
-cho logic có behavior phức tạp.
-
----
-
-# 7. Real Module
-
-Một directory được xem là **real module** khi nó có local:
+A real module is identified physically by a local:
 
 ```text
 gradle.properties
@@ -280,119 +240,88 @@ gradle.properties
 Rule:
 
 ```text
-local gradle.properties
-→ real module
+<directory>/gradle.properties exists
+    → real module
+
+otherwise
+    → intermediate/container project or ordinary directory
 ```
 
-Root `gradle.properties` không phải real module.
+Do not infer module identity from folder name, `IS_MODULE`, or Gradle hierarchy alone.
 
-Directory trung gian chỉ để tổ chức hierarchy và không có local `gradle.properties` là **intermediate project**.
-
-Không sử dụng `IS_MODULE` để xác định module.
-
-`IS_MODULE` là convention cũ và không được tái sử dụng.
+`IS_MODULE` is legacy and must not be reintroduced as the real-module discriminator.
 
 ---
 
-# 8. Module types
+## 9. Module types
 
-Module được phân loại bởi:
+Module behavior is controlled by:
 
 ```text
 MODULE_TYPE
 ```
 
-Các loại hiện tại:
+Current values:
 
-## APPLICATION
+```text
+APPLICATION
+LIBRARY
+PLATFORM
+```
 
-- có application entry point;
-- có thể chạy độc lập;
-- thường tạo executable Spring Boot JAR;
-- có thể dùng shared runtime capability.
+High-level semantics:
 
-## LIBRARY
+```text
+APPLICATION
+→ runnable application
+→ Java/resources structure
+→ Spring Boot executable behavior
 
-- code/config reusable;
-- không có independent application entry point;
-- được module khác sử dụng như dependency.
+LIBRARY
+→ reusable Java/configuration code
+→ Java/resources structure
+→ bootJar/bootRun disabled, plain jar enabled
 
-## PLATFORM
+PLATFORM
+→ platform/resource/config composition
+→ physical Java structure is not automatically created
+→ plain jar behavior, not runnable
+```
 
-- thiên về configuration/resource/platform concern;
-- không bắt buộc có Java source;
-- không nhất thiết tạo executable artifact.
+Do not infer type from the path when `MODULE_TYPE` exists.
 
-Không suy luận module type từ tên folder nếu metadata đã có.
+Current convention intentionally still gives PLATFORM modules the common Java/Spring Boot plugin baseline because the project currently relies on it for source/build behavior. Do not remove that baseline unless the user explicitly asks to redesign it.
 
 ---
 
-# 9. Module metadata
+## 10. Canonical metadata
 
-Canonical schemas:
+Canonical schemas live at:
 
 ```text
 project-build/gradle-runtime/src/main/resources/automation/master.json
 project-build/gradle-runtime/src/main/resources/automation/properties.json
 ```
 
-Một real module có thể có:
+Module-local projections:
 
 ```text
-gradle.properties
-master.json
-properties.json
-build.gradle
-task.gradle
-src/
-readme/
+<module>/master.json
+<module>/properties.json
 ```
 
-Vai trò:
+`master.json` contains identity and feature flags.
+
+`properties.json` contains detailed settings for enabled feature groups.
+
+Current important master metadata includes:
 
 ```text
-gradle.properties
-→ real-module identity + direct Gradle properties
-
-master.json
-→ module metadata + feature flags
-
-properties.json
-→ detailed configuration for enabled feature groups
-
-build.gradle
-→ module-specific dependencies/configuration
-
-task.gradle
-→ generated task declarations when enabled
-```
-
----
-
-# 10. Metadata synchronization rules
-
-Canonical schema thuộc build infrastructure.
-
-Module-local values thuộc module/human.
-
-Khi sync:
-
-- giữ `VALUE` hiện có nếu hợp lệ/nonblank theo behavior implementation;
-- schema metadata lấy từ canonical schema;
-- key bị xóa khỏi canonical schema có thể biến mất khỏi module-local output;
-- inactive properties group không được giữ chỉ vì từng tồn tại;
-- malformed module JSON có thể được regenerate theo implementation hiện tại;
-- write only when content changes.
-
-Không thay đổi semantics này nếu người dùng không yêu cầu.
-
----
-
-# 11. Feature flags
-
-Các feature flag quan trọng hiện có:
-
-```text
+MODULE_TYPE
+JAVA_BASE_PACKAGE
+SERVICE_NAME
+SERVICE_NAME_DESCRIBE
+IS_MODULE_DEPEND
 BUILD_ENV
 BUILD_YML
 BUILD_README
@@ -404,653 +333,978 @@ USE_DATABASE
 USE_TASK
 ```
 
-Không invent feature flag mới nếu chưa có requirement.
-
-Khi feature bị disable, phải kiểm tra behavior hiện tại trước khi quyết định generated state được giữ hay xóa.
+Do not add new metadata keys casually. Check whether the concept already has an owner and whether it belongs in `master.json` or grouped `properties.json`.
 
 ---
 
-# 12. Generated settings catalogs
+## 11. `JAVA_BASE_PACKAGE`
 
-Generated enums hiện nằm trong package:
+Java package ownership was intentionally moved out of root/global Gradle extra properties.
 
-```text
-com.example.learning.generated.settings
-```
-
-Các catalog quan trọng:
+The canonical default is:
 
 ```text
-ModuleListEnum
-DatabaseListEnum
+JAVA_BASE_PACKAGE = com.example.learning
 ```
 
-## ModuleListEnum
+Modules may override it in their own `master.json`.
 
-Là generated typed view của module registry.
+Example:
 
-Có thể chứa:
+```text
+project-build/springboot-runtime/swagger
+JAVA_BASE_PACKAGE = com.example.projectbuild.swagger
+```
 
-- enum name = logical `SERVICE_NAME`;
-- `modulePath`;
-- `relativePath`;
-- `moduleType`;
-- description;
-- dependency metadata.
+`ModuleStructureService` reads:
 
-Khi cần resolve module theo logical service name trong build logic, ưu tiên dùng `ModuleListEnum` nếu use case phù hợp.
+```groovy
+project.findProperty('JAVA_BASE_PACKAGE')
+```
 
-Không scan metadata lại nếu generated typed catalog đã là dependency đúng của use case.
+Do not restore hidden global state like:
 
-## DatabaseListEnum
+```groovy
+gradle.extensions.extraProperties.set('basePackage', ...)
+```
 
-Là generated typed view của database modules.
-
-Có thể chứa:
-
-- database name;
-- module name;
-- database type;
-- module path.
-
-## Important
-
-Generated enum là **projection**, không phải canonical source of truth.
-
-Không chỉnh tay generated enum để thay đổi module metadata.
+`MAIN_CLASS_PATH` is the source used by IntelliJ run-config generation; do not rebuild the main-class package independently from a global base package.
 
 ---
 
-# 13. Other generated artifacts
+## 12. Metadata synchronization ownership
 
-Các generated artifact quan trọng có thể gồm:
+Canonical schema metadata is build-owned.
+
+Module-local `VALUE` is developer/module-owned.
+
+Current synchronization rule:
 
 ```text
-ModuleListEnum
-DatabaseListEnum
-module-depend.json
-STRUCTURE.md
-module-structure.txt
+canonical key/schema
+    ↓
+copy DESCRIPTION / TYPE / GROUP / defaults
+
+existing module VALUE is nonblank
+    ↓
+preserve module VALUE
 ```
 
-Generated outputs phải ưu tiên:
+When a canonical field is newly introduced with a default, existing modules receive the default unless they already have a nonblank override.
 
-- deterministic;
-- idempotent;
-- stable ordering;
-- no timestamp nếu không thật sự cần;
-- write-if-changed;
-- không duplicate generated content qua nhiều lần chạy.
+Do not overwrite module-specific nonblank values during schema synchronization.
 
-Không biến generated artifact thành source-of-truth mới nếu dữ liệu gốc đã tồn tại ở nơi khác.
+Do not treat generated module JSON structure as independently authoritative from the canonical schema.
 
 ---
 
-# 14. Project structure documentation
+## 13. Property injection precedence
 
-Generated Markdown:
-
-```text
-<root>/STRUCTURE.md
-```
-
-Generated text structure:
+`SettingPropertiesInjectionService` injects:
 
 ```text
-project-build/gradle-runtime/src/main/resources/structure/module-structure.txt
+master.json
+    ↓ first
+properties.json
+    ↓ second
 ```
 
-Source thực tế của structure là:
+Therefore, when the same property key exists in both, the later `properties.json` value wins in the Gradle project extra properties.
 
-- filesystem dưới `module/`;
-- module metadata liên quan.
-
-`module-structure.txt` không phải template cấu trúc.
-
-Không sử dụng legacy path:
-
-```text
-internal/info/structure/module_structure.txt
-```
+Preserve this precedence unless a requirement explicitly changes configuration semantics.
 
 ---
 
-# 15. Resource ownership
+## 14. Source of truth map
 
-Phân biệt ba nhóm:
-
-## Human-owned
-
-Ví dụ:
-
-- source code;
-- module `build.gradle`;
-- module `gradle.properties`;
-- module-owned metadata value;
-- learning README content.
-
-## Canonical build-owned
-
-Ví dụ:
+Use this map before changing data:
 
 ```text
-project-build/gradle-runtime/src/main/resources/automation/master.json
-project-build/gradle-runtime/src/main/resources/automation/properties.json
+Real module existence
+→ filesystem + local gradle.properties
+
+Canonical master schema
+→ gradle-runtime resources/automation/master.json
+
+Canonical grouped settings schema
+→ gradle-runtime resources/automation/properties.json
+
+Module-specific values
+→ module-local master.json / properties.json VALUE
+
+Plugin registry input
+→ plugin registry/generator resources in gradle-runtime
+
+Typed/generated registry
+→ generated enums such as ProjectPluginEnum, ModuleListEnum, DatabaseListEnum
+
+Project tree documentation
+→ filesystem/module metadata → generated STRUCTURE.md
+
+Task DSL reference
+→ task definition resources + enabled module features → generated task.gradle
 ```
 
-## Generated
+Never edit a generated projection as a substitute for editing its source of truth.
 
-Ví dụ:
+---
+
+## 15. Generated artifacts
+
+Important generated artifacts include:
 
 ```text
+ProjectPluginEnum
 ModuleListEnum
 DatabaseListEnum
 module-depend.json
 STRUCTURE.md
 module-structure.txt
+task.gradle
+application-merged.yml
+generated README/menu fragments
 ```
 
-Trước khi sửa file, phải xác định nó thuộc nhóm nào.
+Generated output must prefer:
+
+```text
+deterministic ordering
+idempotency
+write-if-changed
+no duplicate generated content
+minimal timestamp churn
+```
+
+Do not manually patch generated output unless the task is specifically about the generator output itself and the user understands the source-of-truth implications.
 
 ---
 
-# 16. Gradle lifecycle awareness
+## 16. Strict README idempotency
 
-Luôn xác định logic thuộc phase nào:
+README/internal-menu generation has a strict invariant:
 
 ```text
-Initialization / Settings
+run N times
+=
+run once
+```
+
+Generated menu entries, `<details>` blocks, separators, back-to-top links, and similar generated markup must never duplicate across runs.
+
+Preferred strategy:
+
+```text
+identify/remove previous generated structure
+    ↓
+rebuild from canonical anchor/content structure
+```
+
+Do not implement append-only generation for these sections.
+
+---
+
+## 17. Human-owned vs generated-owned files
+
+Before editing a file, determine its ownership.
+
+### Human-owned examples
+
+```text
+application source code
+module build.gradle
+module-specific metadata VALUE
+application.yml after meaningful content exists
+README prose written by developer
+main application class after initial generation
+```
+
+### Generated-owned examples
+
+```text
+ProjectPluginEnum
+ModuleListEnum
+DatabaseListEnum
+STRUCTURE.md
+module-depend.json
+module-structure.txt
+task.gradle
+application-merged.yml
+generated menu fragments
+```
+
+### Mixed ownership example
+
+`master.json`:
+
+```text
+schema fields → build-owned
+VALUE         → module/developer-owned
+```
+
+Never overwrite human-owned content without an explicit requirement.
+
+---
+
+## 18. Gradle lifecycle awareness
+
+Always determine which phase owns the behavior:
+
+```text
+Settings / Initialization
 Configuration
-Execution
-projectsEvaluated / late configuration
-Runtime
+projectsLoaded
+projectsEvaluated
+Task execution
+Spring runtime
 ```
 
-Không di chuyển logic sang phase khác chỉ để code ngắn hơn.
+Important current examples:
 
-Ví dụ:
+```text
+module discovery/include
+→ Settings phase
 
-- module discovery/include thuộc Settings scope;
-- dependency catalog cần evaluated project state có thể cần chạy sau project evaluation;
-- task action chỉ nên chạy ở execution phase;
-- Spring runtime configuration không thuộc Gradle lifecycle.
+metadata injection into Project
+→ projectsLoaded
+
+module plugin wiring
+→ project configuration
+
+module dependency resolution
+→ deferred until projectsEvaluated
+
+dependency catalog / structure generation
+→ projectsEvaluated
+
+explicit destructive/external operation
+→ task execution
+
+Spring beans / web configuration
+→ application runtime
+```
+
+Do not move behavior to an earlier phase just because it makes the code shorter.
 
 ---
 
-# 17. Module dependency behavior
+## 19. Dependency setup
 
-Không giả định mọi dependency đều giống nhau.
+Logical module lookup is based primarily on:
 
-Các configuration có semantics khác nhau, ví dụ:
+```text
+SERVICE_NAME
+```
+
+`ModuleProjectUtils` resolves logical service names to Gradle projects.
+
+`DependencySetupPlugin` creates its DSL during configuration but performs the actual dependency wiring after project evaluation.
+
+When propagating dependencies, preserve Gradle configuration semantics.
+
+Do not convert:
+
+```text
+annotationProcessor
+```
+
+into:
 
 ```text
 implementation
 api
-annotationProcessor
-developmentOnly
 ```
 
-Không chuyển `annotationProcessor` thành `api`/`implementation`.
-
-Khi copy external dependency giữa module, phải bảo toàn role/configuration của dependency.
-
-Không resolve full dependency graph nếu requirement chỉ cần declared direct dependency.
+just to simplify dependency handling.
 
 ---
 
-# 18. Root build policy
+## 20. Root build policy
 
-Root `build.gradle` nên giữ mỏng.
+Keep root `build.gradle` relatively thin.
 
-Root có thể giữ global policy như:
+Root responsibilities currently include:
 
-- plugin declarations;
-- group/version;
-- Java version;
-- repository definitions;
-- BOM/import chung;
-- module orchestration application;
-- packaging policy.
+```text
+plugin versions/declarations
+group/version
+Java version
+repositories
+Spring Cloud BOM
+module orchestration application
+bootJar destination policy
+```
 
-Không đưa filesystem algorithm, generator implementation hoặc business build logic dài trở lại root `build.gradle`.
+Do not move build algorithms or filesystem generators back into root `build.gradle` unless explicitly requested.
 
 ---
 
-# 19. Root setup capability
+## 21. Task architecture
 
-Root-level capability có thể gồm:
+The manual task system has two enablement layers.
 
-- dependency catalog;
-- project structure;
-- database support;
-- cleanup support;
-- future root-wide utilities.
+Layer 1:
 
-Root capability implementation thuộc `project-build/gradle-runtime`.
+```text
+USE_TASK=TRUE
+→ TaskSetupPlugin is applied
+```
 
-Root orchestration chỉ compose/apply chúng.
+Layer 2:
+
+```text
+task/module-task-list.json
+task/task-extension-list.json
+→ feature-specific task plugins selected by propCheck
+```
+
+An empty `propCheck` means the task type is always enabled once the task system itself is active.
+
+`task.gradle` is a generated DSL reference, not a human configuration file.
+
+Do not reintroduce `USE_TASK` checking inside every task plugin when orchestration already owns that decision.
 
 ---
 
-# 20. Cleanup capability
+## 22. YML rules
 
-Cleanup là root capability lâu dài.
-
-Task names:
+`application.yml` and `application-merged.yml` have different ownership.
 
 ```text
-cleanupFiles
-cleanupEmptyFolders
+application.yml
+→ runtime source of truth for the application
+→ human-owned after meaningful content exists
+
+application-merged.yml
+→ generated suggestion/reference
+→ not runtime source of truth
 ```
 
-Properties:
+Conceptual flow:
 
 ```text
--PFileName=<exact-name>
--PFolderName=<exact-name>
--PProjectName=<SERVICE_NAME>   # optional
+dependency/library/platform config
+        +
+application config
+        ↓
+application-merged.yml
+        ↓
+developer review
+        ↓
+application.yml
 ```
 
-Rules:
-
-- `FileName` required cho `cleanupFiles`;
-- `FolderName` required cho `cleanupEmptyFolders`;
-- nếu không có `ProjectName`, scan root và warn;
-- nếu có `ProjectName`, resolve bằng `ModuleListEnum`;
-- project name matching case-sensitive;
-- file/folder name matching case-sensitive;
-- target chỉ là simple name, không phải path;
-- delete failure phải fail task;
-- no result = success;
-- empty folder chỉ xóa nếu đang rỗng, không recursive cleanup.
-
-Excluded subtrees hiện được thống nhất ở cleanup implementation:
-
-```text
-.gradle
-build
-.git
-.idea
-```
-
-Không tự thêm blacklist file/folder khác nếu chưa có yêu cầu.
+Do not make runtime automatically depend on `application-merged.yml` unless the user explicitly redesigns the contract.
 
 ---
 
-# 21. Database build capability
+## 23. ENV rules
 
-Database operation là root concern.
+ENV setup and explicit ENV generation intentionally have different ownership behavior.
 
-Database module sở hữu runtime/configuration như `.env`.
+Setup phase:
 
-Root task resolve database module thông qua generated database catalog.
+```text
+create defaults only when missing
+avoid overwriting existing .env
+```
 
-Không hardcode đường dẫn database module nếu catalog đã cung cấp identity/path.
+Explicit ENV generation task:
 
-Runtime backup output không đặt trong `src/main/resources`.
+```text
+developer intentionally invokes generator
+→ generator may rebuild/synchronize according to its task contract
+```
 
-Failure quan trọng phải fail task thay vì `println + return`.
+The `.env` generator intentionally includes a timestamp so the user can see when synchronization/generation happened.
+
+Do not flag the timestamp as an idempotency bug without understanding this explicit product decision.
 
 ---
 
-# 22. IntelliJ build automation
+## 24. Swagger build-time ownership
 
-IntelliJ run configuration template thuộc build infrastructure resource.
+Swagger build automation belongs to:
 
-Template nên được load từ classpath resource của `gradle-runtime`, không dùng legacy root filesystem path.
+```text
+project-build/gradle-runtime
+```
 
-Template là XML semantic content.
+Responsibilities include generation/copying of Swagger-related descriptions, README resources, metadata and task support.
 
-Generated run configurations được ghi vào root `.run/`.
+Per-API human-owned metadata includes fields such as:
 
-Nếu template content được dùng làm Gradle task input, ưu tiên để Gradle track **content** thay vì chỉ resource path.
+```text
+summary
+description
+videoYoutubeId
+```
+
+`videoYoutubeId` rule:
+
+```text
+if missing during generation
+→ create default placeholder value
+
+once present
+→ never overwrite during regeneration
+```
+
+This preservation rule applies to both active entries and historical/stale entries such as `usage=false`.
+
+Do not regenerate human-owned Swagger fields from scratch.
 
 ---
 
-# 23. Spring Boot shared runtime
+## 25. Swagger runtime ownership
 
-`project-build/springboot-runtime` dành cho runtime capability dùng chung.
-
-Swagger runtime configuration thuộc khu vực này nếu nó cần tồn tại khi application chạy.
-
-Không đặt runtime Swagger/Spring beans vào Gradle plugin artifact.
-
-Build-time Swagger generation vẫn thuộc `gradle-runtime`.
-
-Phân biệt rõ:
+Shared Swagger runtime belongs to:
 
 ```text
-Swagger build automation
-→ gradle-runtime
-
-Swagger Spring Boot runtime configuration
-→ springboot-runtime
+project-build/springboot-runtime/swagger
 ```
+
+Current Java package:
+
+```text
+com.example.projectbuild.swagger
+```
+
+Current module metadata override:
+
+```text
+JAVA_BASE_PACKAGE = com.example.projectbuild.swagger
+```
+
+Main runtime components currently include:
+
+```text
+DynamicSwaggerAutoConfiguration
+DynamicSwaggerCondition
+DynamicSwaggerRegistrar
+SwaggerResourceConfiguration
+```
+
+The auto-configuration registration file must live at:
+
+```text
+src/main/resources/META-INF/spring/
+org.springframework.boot.autoconfigure.AutoConfiguration.imports
+```
+
+and currently references:
+
+```text
+com.example.projectbuild.swagger.DynamicSwaggerAutoConfiguration
+```
+
+Do not move this file under `static/` or `resources/spring/`.
+
+The package was intentionally moved outside `com.example.learning` so runtime activation does not depend on accidental component scanning by consumer applications.
+
+Preserve auto-configuration-based discovery.
 
 ---
 
-# 24. Package conventions hiện tại
+## 26. Swagger runtime handoff
 
-Build setup được gom dưới:
+Build-time Swagger generation produces classpath resources consumed by the runtime Swagger module.
 
-```text
-com.example.learning.setup
-├── settings
-├── root
-└── module
-```
-
-Generated settings catalogs:
+Conceptual boundary:
 
 ```text
-com.example.learning.generated.settings
+gradle-runtime Swagger generation
+        ↓
+generated/copied classpath resources
+        ↓
+springboot-runtime/swagger
+        ↓
+Springdoc/OpenAPI runtime behavior
 ```
 
-Không sử dụng package naming cũ nếu source đã được refactor.
+Do not make runtime code call back into Gradle services/tasks.
 
-Các naming/path legacy như sau được xem là obsolete:
-
-```text
-project-build
-com.example.learning.settings...
-com.example.learning.root...
-com.example.learning.module...
-com.example.learning.generated.settings.preset
-internal/auto-build
-```
-
-Chỉ nhắc đến legacy khi đang xử lý migration hoặc evidence cho code chưa được dọn sạch.
+Current runtime supports language-based Swagger grouping and custom README/YAML metadata consumption.
 
 ---
 
-# 25. Coding/refactor rules
+## 27. Plugin registry
 
-Khi refactor:
+`ProjectPluginEnum` is a generated plugin registry.
 
-- giữ behavior hiện tại trừ khi requirement yêu cầu đổi;
-- không refactor unrelated code;
-- ưu tiên thay đổi nhỏ và dễ review;
-- giữ deterministic ordering;
-- giữ idempotency;
-- tránh rewrite generated file vô nghĩa;
-- fail fast khi configuration bắt buộc bị thiếu/sai;
-- không che lỗi bằng `println + return` nếu operation phải fail;
-- không tạo abstraction chỉ vì có thể;
-- abstraction phải phản ánh responsibility thực tế.
-
-Khi người dùng nói:
+It maps:
 
 ```text
-"chưa gen code"
-"nhận định thôi"
-"khoan code"
+logical plugin enum
+→ plugin ID
+→ implementation class
 ```
 
-không generate implementation code.
+Module orchestration uses this registry for capability application.
 
-Khi requirement đã được chốt và người dùng nói bắt đầu/tiến hành, mới đưa code cụ thể.
+Do not manually edit stale enum entries as a permanent fix; fix the registry/generator input and regenerate.
+
+Some build plugin packages have moved incrementally over time. Never assume package paths solely from old naming conventions; inspect the current generated registry/source.
 
 ---
 
-# 26. Khi phân tích một learning module
+## 28. Generator scripts
 
-Nếu người dùng yêu cầu làm việc với một module cụ thể, ưu tiên thu thập:
+Gradle-runtime generator scripts under:
 
 ```text
+project-build/gradle-runtime/gradle/
+```
+
+have their own local concept named `basePackage` for generating Gradle plugin source packages.
+
+That local generator variable is **not** the same thing as module metadata:
+
+```text
+JAVA_BASE_PACKAGE
+```
+
+Do not rewrite generator `basePackage` settings merely because module-level Java package ownership changed.
+
+---
+
+## 29. Intentional current decisions
+
+The following are known intentional decisions. Do not "fix" them proactively unless the user asks.
+
+### PLATFORM common setup
+
+PLATFORM currently receives the common Java/Spring Boot plugin baseline.
+
+This is intentional for the current project because source/build behavior relies on it.
+
+### ENV timestamp
+
+Generated `.env` includes a timestamp intentionally so users can see generation/synchronization time.
+
+### ENV ownership asymmetry
+
+Setup-time `.env` creation and explicit ENV generator behavior are intentionally different.
+
+### Google translation branch
+
+`TranslationServiceFactory` has a Google branch that is not implemented and may currently return `null`.
+
+It is not used by the current workflow and is intentionally deferred for future refactoring.
+
+Do not redesign it unless the user is working on Google translation support.
+
+### Database task plugin
+
+`DatabaseTaskPlugin` is currently incomplete/TODO.
+
+Do not treat it as a regression unless the user asks to implement it.
+
+### Tests
+
+The build framework currently does not have a complete `src/test` coverage architecture.
+
+Do not block unrelated work on this unless testing architecture is the task.
+
+---
+
+## 30. Known cleanup that is not automatically a bug
+
+Some things may be candidates for cleanup but should not be changed without scope confirmation, for example:
+
+```text
+unused private helper methods
+generated task.gradle in infrastructure directories
+direct-class imports vs enum-based plugin lookup in different orchestration scopes
+debug logging in Swagger runtime/frontend
+Gradle 9 deprecation warnings
+```
+
+Report them separately from blockers.
+
+Do not mix opportunistic cleanup into a narrowly scoped fix.
+
+---
+
+## 31. Working with module source code
+
+The internal package architecture of `module/` is not globally documented by this file.
+
+When the user asks to work on a specific module, inspect only the relevant module and gather at least:
+
+```text
+module path
 SERVICE_NAME
 MODULE_TYPE
-module path
+JAVA_BASE_PACKAGE
 gradle.properties
 master.json
 properties.json
 build.gradle
 direct module dependencies
 relevant runtime dependencies
-source tree
 README
+source tree needed for the task
 ```
 
-Sau đó thực hiện theo workflow:
-
-1. xác định mục tiêu học tập;
-2. xác định current implementation;
-3. tổng hợp kiến thức từ cơ bản đến nâng cao;
-4. đánh giá phần đã có và còn thiếu;
-5. đề xuất README structure;
-6. đề xuất examples/practice;
-7. giải thích source code;
-8. đưa self-review questions;
-9. đưa extended exercises nếu phù hợp.
-
-Không tự chỉnh source module nếu người dùng chỉ yêu cầu phân tích/giải thích.
+Do not generalize one module's controller/service/domain conventions to every other module without evidence.
 
 ---
 
-# 27. Learning repository principles
+## 32. Scope discipline
 
-Đây là repository học tập, không phải một monolithic production application.
-
-Không ép tất cả module vào cùng một runtime architecture.
-
-Một module có thể tồn tại chỉ để minh họa:
-
-- Java concept;
-- Spring feature;
-- database feature;
-- distributed-system concept;
-- build tool;
-- infrastructure technology;
-- design pattern;
-- testing technique.
-
-Architecture phải hỗ trợ learning isolation mà vẫn tái sử dụng common build/runtime infrastructure.
-
----
-
-# 28. Documentation rules
-
-Khi tạo hoặc cập nhật documentation:
-
-- current state trước;
-- target state phải ghi rõ;
-- known gap phải ghi rõ;
-- không invent behavior;
-- không ghi legacy path như current path;
-- dùng `STRUCTURE.md` để tham chiếu module tree nếu phù hợp;
-- ưu tiên link/path thực tế;
-- tránh duplicate cùng một rule ở nhiều nơi nếu không cần.
-
-Architecture documentation chi tiết và architecture overview có audience khác nhau:
-
-```text
-ARCHITECTURE_OVERVIEW.md
-→ interviewer / junior / newcomer
-
-ARCHITECTURE.md
-→ deep architecture / maintainer / architect / AI context
-
-AGENTS.md
-→ working rules for Codex/AI agents
-```
-
----
-
-# 29. Source of Truth rule
-
-Trước khi sử dụng dữ liệu, xác định source of truth.
-
-Ví dụ:
-
-```text
-Module existence
-→ filesystem + local gradle.properties
-
-Canonical metadata schema
-→ gradle-runtime resources/automation
-
-Module-specific metadata values
-→ module-local master.json / properties.json
-
-Typed module registry
-→ generated ModuleListEnum
-
-Typed database registry
-→ generated DatabaseListEnum
-
-Project structure documentation
-→ generated from filesystem/module metadata
-```
-
-Không đảo ngược dependency giữa source và generated view.
-
----
-
-# 30. Khi thấy inconsistency
-
-Nếu phát hiện:
-
-- path cũ vẫn tồn tại;
-- package naming cũ;
-- documentation lệch implementation;
-- duplicate source of truth;
-- generated artifact bị chỉnh tay;
-- lifecycle bất hợp lý;
-- build-time/runtime coupling;
-
-hãy báo:
-
-```text
-Current evidence
-Expected convention
-Impact
-Recommended change
-Files potentially affected
-```
-
-Không tự sửa nếu user chưa yêu cầu.
-
----
-
-# 31. Cách báo cáo thay đổi đề xuất
-
-Khi đề xuất refactor, ưu tiên format:
-
-```text
-Current
-→ behavior/path hiện tại
-
-Problem
-→ coupling/risk/duplication
-
-Target
-→ trạng thái mong muốn
-
-Affected files
-→ file/package cần xem hoặc sửa
-
-Behavior preserved
-→ phần phải giữ nguyên
-
-Behavior changed
-→ phần được phép đổi
-```
-
-Nếu cần code, chỉ generate sau khi requirement đủ rõ.
-
----
-
-# 32. Không được giả định từ tên
-
-Không suy luận behavior chỉ từ:
-
-- folder name;
-- plugin name;
-- service name;
-- class name;
-- generated file name.
-
-Phải đọc implementation liên quan trước khi kết luận.
-
-Tên chỉ là evidence phụ.
-
----
-
-# 33. Scope discipline
-
-Nếu request thuộc:
-
-```text
-project architecture
-```
-
-không tự đi sửa source code của learning module.
-
-Nếu request thuộc:
-
-```text
-one module
-```
-
-không tự refactor global build architecture.
-
-Nếu request thuộc:
+If the request is about:
 
 ```text
 build automation
 ```
 
-không tự thay đổi Spring runtime behavior.
+do not automatically refactor learning module source.
 
-Nếu phát hiện concern ngoài scope, báo riêng để người dùng quyết định.
+If the request is about:
+
+```text
+one learning/application module
+```
+
+do not automatically redesign global Gradle architecture.
+
+If the request is about:
+
+```text
+Spring runtime behavior
+```
+
+do not move implementation into `gradle-runtime`.
+
+If you discover an unrelated issue, report it separately and continue the requested scope unless it blocks correctness.
 
 ---
 
-# 34. Final checklist trước khi sửa code
+## 33. User intent: analysis vs editing
 
-Trước mỗi thay đổi, tự kiểm tra:
+Vietnamese phrases frequently used by the repository owner have explicit intent:
 
-- [ ] Tôi đã hiểu scope?
-- [ ] User có yêu cầu sửa thật không?
-- [ ] File này là human-owned hay generated?
-- [ ] Đây là build-time hay runtime concern?
-- [ ] Logic thuộc Settings, Root, Module hay Task execution?
-- [ ] Có source of truth nào đang bị duplicate không?
-- [ ] Có giữ idempotency không?
-- [ ] Có giữ deterministic output không?
-- [ ] Có rewrite file không cần thiết không?
-- [ ] Có phá dependency direction không?
-- [ ] Có sử dụng package/path legacy không?
-- [ ] Có thay đổi behavior ngoài requirement không?
-- [ ] Có task destructive/generative nào cần user xác nhận trước khi chạy không?
+```text
+"đọc"
+"check"
+"review"
+"đánh giá"
+"gợi ý"
+"khoan sửa"
+"khoan code"
+```
 
-Nếu bất kỳ điểm nào chưa rõ, hỏi người dùng trước.
+normally mean:
+
+```text
+inspect/analyze only
+do not modify files
+```
+
+Only edit when the user clearly authorizes implementation or modification.
+
+When the user says the equivalent of:
+
+```text
+"sửa đi"
+"hãy sửa"
+"tiến hành"
+"implement"
+```
+
+perform the requested changes within scope.
+
+Do not repeatedly ask for permission once the user has clearly authorized the change.
 
 ---
 
-# 35. Các tài liệu nên đọc cùng
+## 34. Evidence-first workflow
 
-Nếu tồn tại trong repository, ưu tiên đọc:
+Before claiming something is wrong:
 
-```text
-ARCHITECTURE_OVERVIEW.md
-ARCHITECTURE.md
-STRUCTURE.md
+1. inspect the live file;
+2. trace the consumer/caller;
+3. inspect generated output if relevant;
+4. inspect lifecycle ordering;
+5. run a safe validation when useful;
+6. distinguish blocker from cleanup.
+
+Do not conclude from stale documentation, old build output, or file names alone.
+
+If code and generated artifact disagree, determine which one is source of truth before proposing a fix.
+
+---
+
+## 35. Safe validation strategy
+
+Prefer validation that proves integration without causing unrelated changes.
+
+Useful repository command pattern on Windows:
+
+```powershell
+java -classpath .\gradle\wrapper\gradle-wrapper.jar org.gradle.wrapper.GradleWrapperMain help --no-daemon --console=plain
 ```
 
-Vai trò:
+This uses the repository Gradle wrapper version.
+
+Important: the project targets Java 21.
+
+Before running Java compilation, verify the active Java runtime/toolchain. A shell using Java 17 can fail with:
 
 ```text
-ARCHITECTURE_OVERVIEW.md
-→ high-level orientation
-
-ARCHITECTURE.md
-→ architecture contract chi tiết
-
-STRUCTURE.md
-→ module navigation/tree
-
-AGENTS.md
-→ rules để Codex/AI làm việc trong repository
+invalid source release: 21
 ```
 
-Khi các tài liệu này xung đột với implementation, báo inconsistency và ưu tiên behavior thực tế từ source.
+That is an environment mismatch, not automatically a project-source bug.
+
+Also remember that even `help` executes project configuration, and configuration-time generators may synchronize metadata or generated files. Inspect git/status/diff when the task requires proving no unintended mutation.
+
+---
+
+## 36. Destructive and external operations
+
+Be cautious with tasks that can:
+
+```text
+delete files/folders
+rewrite generated resources
+backup/restore databases
+update remote whitelist/configuration
+start/stop Docker infrastructure
+call external APIs with side effects
+```
+
+Do not run destructive or external-side-effect tasks merely to "test" architecture.
+
+Prefer read-only inspection or safe configuration/build validation.
+
+If the user explicitly asks to execute such an operation, explain meaningful consequences when necessary and then perform the requested task.
+
+---
+
+## 37. Coding/refactor rules
+
+When editing:
+
+```text
+preserve existing behavior unless change is requested
+keep changes scoped
+prefer small reviewable patches
+respect ownership boundaries
+preserve deterministic ordering
+preserve idempotency
+avoid unnecessary file rewrites
+fail fast for required invalid configuration
+avoid new hidden global state
+avoid duplicate source of truth
+avoid accidental cross-boundary dependencies
+```
+
+Do not create abstractions only because duplication is cosmetically undesirable.
+
+Create abstractions when they reflect a stable shared responsibility.
+
+---
+
+## 38. Error handling expectations
+
+For build infrastructure:
+
+Use contextual `GradleException` or equivalent failure when required configuration or a required operation is invalid.
+
+Avoid patterns like:
+
+```text
+println error
+return
+```
+
+when silently continuing would leave the build in a misleading state.
+
+Optional capabilities may log and skip when the contract says the condition is optional.
+
+---
+
+## 39. Generated content policy
+
+Whenever adding a generator, explicitly define:
+
+```text
+input
+output
+owner
+overwrite policy
+idempotency strategy
+ordering strategy
+failure behavior
+```
+
+If output can be reconstructed from canonical input, treat it as generated-owned.
+
+If developer edits must survive regeneration, encode preservation rules in the generator.
+
+Do not rely on "developers will remember not to run it twice".
+
+---
+
+## 40. Adding a build capability
+
+Before implementing a new build capability, answer:
+
+```text
+scope: Settings / Root / Module / Task?
+enablement: metadata flag or physical input?
+plugin entry point?
+service implementation owner?
+task needed?
+extension needed?
+canonical input?
+generated output?
+file ownership?
+idempotency strategy?
+orchestration insertion point?
+plugin registry entry needed?
+```
+
+If these are unclear, inspect analogous existing capabilities before inventing a new pattern.
+
+---
+
+## 41. Adding a shared runtime capability
+
+Before adding to `springboot-runtime`, define:
+
+```text
+runtime purpose
+consumer applications
+activation mechanism
+auto-configuration vs explicit configuration
+public properties/configuration surface
+runtime dependencies
+default behavior
+opt-out behavior
+classpath resources
+build-time handoff, if any
+package/component-scan behavior
+```
+
+Shared runtime code must not depend on Gradle API or Gradle implementation classes.
+
+When using Spring Boot auto-configuration, verify the `META-INF/spring/...AutoConfiguration.imports` packaging in the built artifact instead of assuming component scanning will mask mistakes.
+
+---
+
+## 42. Documentation rules
+
+When updating repository documentation:
+
+```text
+describe current implementation first
+do not present a target as current state
+do not resurrect legacy paths as active architecture
+keep source-of-truth rules explicit
+keep generated/human ownership explicit
+do not claim knowledge of module package architecture without reading it
+```
+
+If a statement is only a proposal, label it as a recommendation/target rather than current behavior.
+
+---
+
+## 43. Current architecture invariants
+
+Preserve these unless the user explicitly changes the architecture:
+
+1. Real module identity comes from local `gradle.properties`.
+2. Intermediate Gradle projects are not real modules.
+3. Canonical metadata schemas belong to `gradle-runtime`.
+4. Nonblank module-local metadata `VALUE` is preserved during sync.
+5. `JAVA_BASE_PACKAGE` is module metadata, not a hidden global Settings property.
+6. `SERVICE_NAME` is the logical identity used for module lookup.
+7. Orchestration decides capabilities; capability owners implement them.
+8. Build-time implementation belongs to `gradle-runtime`.
+9. Shared Spring Boot runtime implementation belongs to `springboot-runtime`.
+10. Runtime code does not depend on Gradle implementation.
+11. Generated projections are not canonical source of truth.
+12. Generators should be deterministic/idempotent according to their contract.
+13. Human-owned content is not overwritten without an explicit contract.
+14. External/destructive side effects belong in explicit actions/tasks.
+15. `application.yml` is runtime truth; `application-merged.yml` is a generated review artifact.
+16. Swagger build-time generation and Swagger runtime consumption are separate boundaries.
+
+---
+
+## 44. Final pre-change checklist
+
+Before editing code, verify:
+
+```text
+[ ] I understand the requested scope.
+[ ] The user actually asked for an edit, not only analysis.
+[ ] I know whether the target file is human-owned, generated-owned, or mixed.
+[ ] I know the source of truth.
+[ ] I know whether this is build-time or runtime behavior.
+[ ] I know the relevant Gradle lifecycle phase.
+[ ] I checked for existing metadata/capability patterns before inventing a new one.
+[ ] The change does not restore hidden global state.
+[ ] The change preserves idempotency/determinism where required.
+[ ] The change does not overwrite human-owned data unintentionally.
+[ ] Dependency configuration semantics remain correct.
+[ ] Package/resource paths are current, not legacy.
+[ ] Any validation command uses an appropriate Java/Gradle environment.
+[ ] Unrelated cleanup is not mixed into the requested fix.
+```
+
+---
+
+## 45. Context summary for another AI
+
+If you only have time to remember one block, remember this:
+
+```text
+This repository contains its own small build platform.
+
+project-orchestration
+→ policy and capability selection
+
+project-build/gradle-runtime
+→ Gradle/build-time implementation
+
+project-build/springboot-runtime
+→ shared Spring Boot runtime implementation
+
+Real module
+→ directory with local gradle.properties
+
+Canonical metadata
+→ gradle-runtime resources/automation
+
+Module values
+→ module master.json / properties.json VALUE
+
+JAVA_BASE_PACKAGE
+→ module metadata, default com.example.learning
+
+Generated artifacts
+→ never treat as canonical input
+
+README/menu generation
+→ strict idempotency
+
+application.yml
+→ runtime source of truth
+
+application-merged.yml
+→ generated review/reference only
+
+Swagger build automation
+→ gradle-runtime
+
+Swagger runtime
+→ springboot-runtime/swagger
+→ package com.example.projectbuild.swagger
+→ Spring Boot AutoConfiguration.imports under META-INF/spring
+
+Do not infer module package architecture globally.
+Inspect only the module/source needed for the task.
+```

@@ -23,7 +23,7 @@ def generatedEnumPackage =
 
 
 def generatedEnumClassName =
-        'ProjectPlugin'
+        'ProjectPluginEnum'
 
 
 def generatedEnumFile =
@@ -42,23 +42,6 @@ def pluginSourceFiles =
         ) {
 
             include '**/*Plugin.groovy'
-
-            /*
-             * ProjectPlugin.groovy là enum generated,
-             * không phải Gradle Plugin implementation.
-             *
-             * Đồng thời exclude nó để tránh:
-             *
-             * generateProjectPluginList
-             *     input ProjectPlugin.groovy
-             *
-             * generateProjectPluginEnum
-             *     output ProjectPlugin.groovy
-             *     dependsOn generateProjectPluginList
-             *
-             * tạo dependency không mong muốn.
-             */
-            exclude 'com/example/learning/plugin/ProjectPlugin.groovy'
         }
 
 

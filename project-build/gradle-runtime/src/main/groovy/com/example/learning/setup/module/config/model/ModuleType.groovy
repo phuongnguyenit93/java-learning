@@ -1,4 +1,4 @@
-package com.example.learning.module.config.model
+package com.example.learning.setup.module.config.model
 
 
 enum ModuleType {

@@ -5,6 +5,11 @@
         "VALUE": "",
         "EXAMPLE_VALUE": "APPLICATION,LIBRARY,PLATFORM"
     },
+    "JAVA_BASE_PACKAGE": {
+        "DESCRIPTION": "Define Java base package for this module",
+        "TYPE": "string",
+        "VALUE": "com.example.learning"
+    },
     "SERVICE_NAME": {
         "DESCRIPTION": "Define name for this module. Use this name for task and many automation gradle",
         "TYPE": "string",

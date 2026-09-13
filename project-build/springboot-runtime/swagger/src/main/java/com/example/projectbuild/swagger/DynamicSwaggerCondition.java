@@ -1,4 +1,4 @@
-package com.example.learning.config;
+package com.example.projectbuild.swagger;
 
 import org.springframework.boot.autoconfigure.condition.AllNestedConditions;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

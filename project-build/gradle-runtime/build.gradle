@@ -16,6 +16,7 @@ dependencies {
     implementation 'org.yaml:snakeyaml:2.2'
     implementation 'com.vladsch.flexmark:flexmark:0.64.8'
     implementation 'org.apache.httpcomponents.client5:httpclient5:5.4.4'
+    implementation 'com.github.javaparser:javaparser-symbol-solver-core:3.25.10'
 }
 
 apply from: "${projectDir}/gradle/generate-project-plugin-template.gradle"

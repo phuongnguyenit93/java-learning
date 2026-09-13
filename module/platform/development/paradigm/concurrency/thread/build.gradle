@@ -21,7 +21,7 @@ generateFinalReadme {
     ]
 }
 
-apiSwaggerDescription {
+generateApiSwaggerDescription {
     languages = [
             'vi',
             'en'

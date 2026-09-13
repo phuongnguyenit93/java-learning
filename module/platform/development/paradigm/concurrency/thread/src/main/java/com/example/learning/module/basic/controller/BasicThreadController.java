@@ -1,6 +1,5 @@
 package com.example.learning.module.basic.controller;
 
-import com.example.learning.config.SwaggerYoutubeVideo;
 import com.example.learning.module.basic.service.BasicThreadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +11,6 @@ public class BasicThreadController {
     private final BasicThreadService threadService;
 
     @GetMapping("/example-thread")
-    @SwaggerYoutubeVideo(title = "Testing",videoId = "nd2ULXyBaV8")
     public String testThread() {
         System.out.println("1. Controller nhận được request");
         threadService.executeTaskWithThread();
@@ -31,6 +29,4 @@ public class BasicThreadController {
     public void threadLifeCycle() throws InterruptedException {
         threadService.executeThreadLifeCycle();
     }
-
-
 }

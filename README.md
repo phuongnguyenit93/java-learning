@@ -1,133 +1,131 @@
 # Java Learning Repository
 
-Repository học tập dùng để hệ thống hóa kiến thức về **Java, Spring Boot, hệ thống phân tán, database, build tooling và infrastructure**.
+Repository học tập/thử nghiệm với **Java 21, Spring Boot 3.3.x và Gradle multi-module/composite build**.
 
-Mỗi chủ đề được tách thành các module nhỏ để dễ học, chạy thử và mở rộng.
+## Dành cho người tiếp tục phát triển project
 
-## Tech baseline
-
-- Java 21
-- Spring Boot 3.3.x
-- Gradle multi-module / composite build
-- JUnit Platform
-- Docker khi module cần runtime infrastructure
-
-## Cấu trúc chính
+### Project flow
 
 ```text
-.
-├── module/                         # Learning modules
-├── project-build/
-│   ├── gradle-runtime/             # Gradle build logic & automation
-│   └── springboot-runtime/         # Shared Spring Boot runtime config
-├── project-orchestration/          # Settings / Root / Module orchestration
-├── settings.gradle
-├── build.gradle
-└── STRUCTURE.md                    # Generated module map
+settings.gradle
+    ↓
+project-orchestration              # quyết định capability và thứ tự apply
+    ↓
+project-build/gradle-runtime       # build-time automation
+    ↓
+module/                            # module được cấu hình/generated
+    ↓
+project-build/springboot-runtime   # shared runtime capability
 ```
 
-## Module types
+Build convention:
 
-Module được phân loại bằng `MODULE_TYPE`:
-
-- `APPLICATION` — ứng dụng có thể chạy độc lập.
-- `LIBRARY` — code/config dùng lại.
-- `PLATFORM` — configuration/resource/platform module.
+```text
+Orchestration → chọn capability
+Plugin        → wiring/lifecycle
+Service       → implementation
+Task          → explicit execution
+```
 
 Một **real module** được nhận diện bằng local `gradle.properties`.
 
-## Build architecture
+### Tạo module mới từ số 0
 
-Build logic được tách theo trách nhiệm:
+1. Tạo thư mục dưới `module/` và file:
 
-```text
-Plugin        → wiring / lifecycle
-Service       → implementation logic
-Task          → explicit execution entry
-Utils         → stateless reusable logic
-Orchestration → chọn capability được áp dụng
-```
+   ```text
+   <module>/gradle.properties
+   ```
 
-Ba orchestration plugin chính:
+2. Reload/Sync Gradle. Build system sẽ nhận diện module và tạo/sync `master.json`, `properties.json`.
 
-```text
-com.example.settings-orchestration
-com.example.root-orchestration
-com.example.module-orchestration
-```
+3. Cấu hình các metadata chính trong `master.json`:
 
-## Module metadata
+   ```text
+   MODULE_TYPE        = APPLICATION | LIBRARY | PLATFORM
+   JAVA_BASE_PACKAGE  = com.example.learning   # có thể override
+   SERVICE_NAME       = logical name duy nhất
+   ```
 
-Canonical schema:
+   Bật capability cần dùng bằng các flag như `BUILD_YML`, `BUILD_ENV`, `BUILD_README`, `USE_TASK`, `ADD_MODULE_DEPEND`, `USE_DATABASE`, `BUILD_SWAGGER`.
 
-```text
-project-build/gradle-runtime/src/main/resources/automation/
-├── master.json
-└── properties.json
-```
+4. Reload Gradle lần nữa để tạo structure/capability tương ứng. `APPLICATION` và `LIBRARY` có Java/resource structure; `APPLICATION` được khởi tạo main class nếu chưa tồn tại.
 
-Một module có thể có:
+### YML
 
-```text
-gradle.properties
-master.json
-properties.json
-build.gradle
-task.gradle
-src/
-readme/
-```
+Đặt `BUILD_YML=TRUE`.
 
-`master.json` chứa metadata và feature flags; `properties.json` chứa cấu hình chi tiết cho các feature đang bật.
-
-## Build-time vs Runtime
+- `application.yml`: runtime source of truth, human-owned sau khi có nội dung.
+- `application-module.yml`: config của module dùng cho composition.
+- `combineYaml` (`USE_TASK=TRUE`): merge `application-module.yml` của module/dependencies thành `application-merged.yml`.
+- `application-merged.yml`: generated reference; review rồi cập nhật phần cần thiết vào `application.yml`.
 
 ```text
-project-build/gradle-runtime
-→ Gradle/build-time automation
-
-project-build/springboot-runtime
-→ shared Spring Boot runtime configuration
+application-module.yml(s)
+        ↓ combineYaml
+application-merged.yml
+        ↓ review
+application.yml
 ```
 
-Runtime code không phụ thuộc ngược vào Gradle implementation.
+### ENV
 
-## Generated artifacts
+Đặt:
 
-Một số artifact được sinh tự động:
+```text
+BUILD_ENV=TRUE
+USE_TASK=TRUE
+```
 
-- `ModuleListEnum`
-- `DatabaseListEnum`
-- `module-depend.json`
-- `STRUCTURE.md`
-- `module-structure.txt`
+Chạy `generateEnvFile` để tạo/sync:
 
-Generated output cần deterministic, idempotent và chỉ rewrite khi nội dung thay đổi.
+```text
+.env
+.env.example
+```
 
-## Cách khám phá project
+`.env` có timestamp để biết thời điểm generate/sync.
 
-Nếu mới vào repository:
+### README của module
 
-1. Đọc `settings.gradle`.
-2. Đọc root `build.gradle`.
-3. Xem `STRUCTURE.md`.
-4. Chọn module cần học.
-5. Đọc metadata + `build.gradle` của module.
-6. Sau đó mới đi sâu vào source code.
+Đặt:
+
+```text
+BUILD_README=TRUE
+USE_TASK=TRUE
+```
+
+Nếu cần nhiều ngôn ngữ, cấu hình `README_LANGUAGE` trong `properties.json`.
+
+Các task chính:
+
+```text
+generateInternalReadmeMenu
+generateFinalReadme
+translateMarkdown
+```
+
+README generation phải idempotent: chạy nhiều lần không được duplicate generated markup.
+
+### Dependency giữa module
+
+Module được tham chiếu bằng `SERVICE_NAME`. Khi dùng auto dependency, bật capability tương ứng và cấu hình `MODULE_DEPEND_LIST`.
+
+### File ownership
+
+```text
+Human-owned → source code, application.yml, README content, VALUE trong metadata
+Generated   → task.gradle, application-merged.yml, generated enums/catalogs, STRUCTURE.md
+```
+
+Không chỉnh generated output để thay đổi source configuration.
+
+## Dành cho người học
+
+Learning guide và learning path **sẽ được cập nhật sau**. Nội dung trong `module/` hiện chưa được chuẩn hóa đủ để cung cấp một lộ trình học chính thức.
 
 ## Tài liệu
 
-- `ARCHITECTURE_OVERVIEW.md` — kiến trúc ngắn gọn cho người mới/interviewer.
-- `ARCHITECTURE.md` — kiến trúc chi tiết.
-- `AGENTS.md` — quy tắc làm việc cho Codex/AI agents.
-- `STRUCTURE.md` — sơ đồ module được generate.
-
-## Mục tiêu
-
-Repository ưu tiên:
-
-- học theo module nhỏ;
-- tái sử dụng build/runtime infrastructure;
-- giữ module độc lập về mục tiêu học tập;
-- tránh duplicate configuration;
-- dễ mở rộng thêm module và capability mới.
+- [`ARCHITECTURE.md`](./ARCHITECTURE.md) — kiến trúc chi tiết.
+- [`AGENTS.md`](./AGENTS.md) — context/working rules cho AI.
+- [`STRUCTURE.md`](./STRUCTURE.md) — cây module generated.

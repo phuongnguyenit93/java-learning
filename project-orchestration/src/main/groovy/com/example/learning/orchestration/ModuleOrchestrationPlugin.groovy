@@ -230,23 +230,6 @@ class ModuleOrchestrationPlugin
         )
     }
 
-
-    private static boolean isEnabled(
-            Project project,
-            String propertyName
-    ) {
-
-        return project
-                .findProperty(
-                        propertyName
-                )
-                ?.toString()
-                ?.trim()
-                ?.equalsIgnoreCase(
-                        'TRUE'
-                ) ?: false
-    }
-
     // ========================================================
     // Logging
     // ========================================================

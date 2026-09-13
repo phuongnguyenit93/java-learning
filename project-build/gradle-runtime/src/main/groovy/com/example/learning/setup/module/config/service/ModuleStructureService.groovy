@@ -1,6 +1,6 @@
-package com.example.learning.module.config.service
+package com.example.learning.setup.module.config.service
 
-import com.example.learning.module.config.model.ModuleType
+import com.example.learning.setup.module.config.model.ModuleType
 import org.gradle.api.GradleException
 import org.gradle.api.Project
 import org.gradle.api.logging.Logger
@@ -37,7 +37,7 @@ class ModuleStructureService {
                         project
                 )
 
-                return
+                break
 
 
             case ModuleType.LIBRARY:
@@ -46,7 +46,7 @@ class ModuleStructureService {
                         project
                 )
 
-                return
+                break
 
 
             case ModuleType.PLATFORM:
@@ -344,33 +344,13 @@ public class ${className} extends SpringBootServletInitializer {
             Project project
     ) {
 
-        def extraProperties =
-                project
-                        .gradle
-                        .extensions
-                        .extraProperties
-
-
-        if (
-                !extraProperties.has(
-                        'basePackage'
-                )
-        ) {
-
-            throw new GradleException(
-                    'Global property basePackage was not found.'
-            )
-        }
-
-
         String basePackage =
-                extraProperties
-                        .get(
-                                'basePackage'
+                project
+                        .findProperty(
+                                'JAVA_BASE_PACKAGE'
                         )
                         ?.toString()
                         ?.trim()
-
 
         if (
                 basePackage == null ||
@@ -378,10 +358,9 @@ public class ${className} extends SpringBootServletInitializer {
         ) {
 
             throw new GradleException(
-                    'Global property basePackage must not be blank.'
+                    "JAVA_BASE_PACKAGE must not be blank for ${project.path}"
             )
         }
-
 
         return basePackage
     }

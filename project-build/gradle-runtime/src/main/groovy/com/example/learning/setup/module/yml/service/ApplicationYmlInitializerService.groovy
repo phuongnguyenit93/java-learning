@@ -1,4 +1,4 @@
-package com.example.learning.module.yml.service
+package com.example.learning.setup.module.yml.service
 
 import com.example.learning.utils.ProjectPropertyUtils
 import com.example.learning.utils.GradleBuildUtils

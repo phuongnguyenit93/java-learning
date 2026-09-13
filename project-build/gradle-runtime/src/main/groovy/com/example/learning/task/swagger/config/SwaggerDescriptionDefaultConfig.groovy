@@ -13,13 +13,17 @@ class SwaggerDescriptionDefaultConfig {
             vi: new SwaggerDescriptionDefault(
                     'Chưa có tiêu đề',
                     'Chưa có mô tả chi tiết',
-                    'ID của video youtube chèn vào description trong API'
+                    false,
+                    'ID của video youtube chèn vào description trong API',
+                    'Tiêu đề của video'
             ),
 
             en: new SwaggerDescriptionDefault(
                     'Title not provided',
                     'Detailed description not provided',
-                    'ID of youtube video add to API description'
+                    false,
+                    'ID of youtube video add to API description',
+                    'Title of video'
             )
 
     ].asImmutable()

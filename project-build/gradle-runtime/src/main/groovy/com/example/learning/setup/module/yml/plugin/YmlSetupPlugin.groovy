@@ -1,7 +1,7 @@
-package com.example.learning.module.yml.plugin
+package com.example.learning.setup.module.yml.plugin
 
-import com.example.learning.module.yml.service.ApplicationYmlInitializerService
-import com.example.learning.module.yml.service.YmlResourceConfigurationService
+import com.example.learning.setup.module.yml.service.ApplicationYmlInitializerService
+import com.example.learning.setup.module.yml.service.YmlResourceConfigurationService
 import com.example.learning.utils.ProjectPropertyUtils
 import org.gradle.api.Plugin
 import org.gradle.api.Project

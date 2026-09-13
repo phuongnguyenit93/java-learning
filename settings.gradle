@@ -13,7 +13,3 @@ plugins {
 }
 
 rootProject.name = 'java-learning'
-
-
-String basePackage = "com.example.learning"
-gradle.extensions.extraProperties.set("basePackage",basePackage)
