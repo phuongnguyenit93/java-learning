@@ -2,13 +2,24 @@ package com.example.learning.task.yml.service
 
 import com.example.learning.utils.ProjectPropertyUtils
 import com.example.learning.utils.ModuleProjectUtils
+import org.gradle.api.GradleException
 import org.gradle.api.Project
 
 class YamlDependencyResolverService {
 
+    private final YamlCapabilityDependencyService capabilityDependencyService =
+            new YamlCapabilityDependencyService()
+
     /**
-     * Resolve toàn bộ BUILD_YML_MODULE_DEPEND
-     * theo dạng recursive.
+     * Resolve toàn bộ YAML dependencies theo dạng recursive.
+     *
+     * Mỗi module có 2 nguồn dependency:
+     *
+     * 1. Explicit:
+     *    BUILD_YML_MODULE_DEPEND
+     *
+     * 2. Capability-derived:
+     *    ví dụ BUILD_SWAGGER=TRUE -> GLOBAL_SWAGGER_CONFIG
      *
      * Ví dụ:
      *
@@ -18,18 +29,20 @@ class YamlDependencyResolverService {
      * └── KAFKA
      *     └── KAFKA_COMMON
      *
-     * Kết quả:
+     * Kết quả theo post-order để merge dependency sâu trước:
      *
-     * DATABASE
      * HIKARI
-     * KAFKA
+     * DATABASE
      * KAFKA_COMMON
+     * KAFKA
      *
-     * LinkedHashSet đảm bảo:
+     * Rule:
      *
      * - không duplicate
-     * - giữ nguyên thứ tự
-     * - tránh circular dependency
+     * - dependency sâu hơn có precedence thấp hơn
+     * - dependency gần root được merge sau dependency sâu
+     * - circular dependency -> fail
+     * - dependency không resolve được -> fail
      */
     List<String> resolve(
             Project project,
@@ -45,34 +58,42 @@ class YamlDependencyResolverService {
         }
 
 
+        Project rootProject
+
+
+        try {
+
+            rootProject =
+                    ModuleProjectUtils.findByServiceName(
+                            project,
+                            rootServiceName
+                    )
+
+        } catch (GradleException exception) {
+
+            throw new GradleException(
+                    "[YAML-DEPENDENCY] Service '${rootServiceName}' could not be resolved to a Gradle project.",
+                    exception
+            )
+        }
+
+
         LinkedHashSet<String> resolved =
                 new LinkedHashSet<>()
 
-        LinkedHashSet<String> visited =
+        Set<String> visited =
                 new LinkedHashSet<>()
 
-
-        /*
-         * Root được đánh dấu trước.
-         *
-         * Ví dụ:
-         *
-         * A -> B
-         * B -> A
-         *
-         * thì A không bị add ngược trở lại
-         * dependency list.
-         */
-        visited.add(
-                rootServiceName
-        )
+        List<String> path =
+                [rootServiceName]
 
 
         collectDependencies(
                 project,
-                rootServiceName,
+                rootProject,
                 visited,
-                resolved
+                resolved,
+                path
         )
 
 
@@ -82,21 +103,11 @@ class YamlDependencyResolverService {
 
     private void collectDependencies(
             Project project,
-            String currentService,
+            Project currentProject,
             Set<String> visited,
-            Set<String> resolved
+            Set<String> resolved,
+            List<String> path
     ) {
-
-        Project currentProject =
-                ModuleProjectUtils.findByServiceName(
-                        project,
-                        currentService
-                )
-
-
-        if (currentProject == null) {
-            return
-        }
 
 
         List<String> dependencies =
@@ -107,57 +118,125 @@ class YamlDependencyResolverService {
 
         dependencies.each { String dependency ->
 
-            /*
-             * false nghĩa là đã từng gặp.
-             *
-             * Có thể do:
-             *
-             * - duplicate
-             * - dependency graph hội tụ
-             * - circular dependency
-             */
-            if (!visited.add(dependency)) {
+            int cycleStart =
+                    path.indexOf(
+                            dependency
+                    )
+
+
+            if (cycleStart >= 0) {
+
+                List<String> cycle =
+                        new ArrayList<>(
+                                path.subList(
+                                        cycleStart,
+                                        path.size()
+                                )
+                        )
+
+                cycle.add(
+                        dependency
+                )
+
+
+                throw new GradleException(
+                        "[YAML-DEPENDENCY] Circular dependency detected: ${cycle.join(' -> ')}"
+                )
+            }
+
+
+            if (visited.contains(dependency)) {
                 return
             }
 
 
-            /*
-             * Add trước rồi mới recursive.
-             *
-             * Giữ đúng behavior combineYaml cũ:
-             *
-             * A -> B -> C
-             *
-             * merge order:
-             *
-             * A(base)
-             * B
-             * C
-             *
-             * => C có precedence cao hơn B.
-             */
-            resolved.add(
+            Project dependencyProject
+
+            String currentService =
+                    currentProject.findProperty(
+                            'SERVICE_NAME'
+                    )
+                            ?.toString()
+                            ?.trim() ?: currentProject.path
+
+
+            try {
+
+                dependencyProject =
+                        ModuleProjectUtils.findByServiceName(
+                                project,
+                                dependency
+                        )
+
+            } catch (GradleException exception) {
+
+                throw new GradleException(
+                        "[YAML-DEPENDENCY] '${currentService}' depends on unknown service '${dependency}'.",
+                        exception
+                )
+            }
+
+
+            path.add(
                     dependency
             )
 
 
             collectDependencies(
                     project,
-                    dependency,
+                    dependencyProject,
                     visited,
-                    resolved
+                    resolved,
+                    path
+            )
+
+
+            path.remove(
+                    path.size() - 1
+            )
+
+
+            visited.add(
+                    dependency
+            )
+
+
+            resolved.add(
+                    dependency
             )
         }
     }
 
 
-    private static List<String> getDirectDependencies(
+    private List<String> getDirectDependencies(
             Project project
     ) {
 
-        return ProjectPropertyUtils.getCsvList(
-                project,
-                'BUILD_YML_MODULE_DEPEND'
-        )
+        List<String> explicitDependencies =
+                ProjectPropertyUtils.getCsvList(
+                        project,
+                        'BUILD_YML_MODULE_DEPEND'
+                )
+
+
+        List<String> capabilityDependencies =
+                capabilityDependencyService.resolve(
+                        project
+                )
+
+
+        /*
+         * Explicit dependency được giữ trước capability dependency.
+         *
+         * Linked order rất quan trọng vì resolver dùng post-order và
+         * merge order quyết định precedence.
+         *
+         * unique() xử lý cả trường hợp user đã khai báo explicit một
+         * module mà capability cũng tự động thêm module đó.
+         */
+        return (
+                explicitDependencies +
+                        capabilityDependencies
+        ).unique()
     }
 }

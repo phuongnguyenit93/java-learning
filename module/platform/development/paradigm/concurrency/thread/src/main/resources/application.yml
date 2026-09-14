@@ -28,11 +28,6 @@ springdoc:
       - none
   api-docs:
     enabled: ${swagger.enabled}
-azure:
-  translator:
-    endpoint: https://api.cognitive.microsofttranslator.com
-    region: southeastasia
-    key: ${AZURE_TRANSLATOR_KEY}
 ---
 spring:
   config:

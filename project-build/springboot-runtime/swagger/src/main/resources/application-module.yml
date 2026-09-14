@@ -15,6 +15,24 @@ spring:
   config:
     activate:
       on-profile: dev
+swagger:
+  enabled: ${BUILD_SWAGGER:}
+  enable-language-swagger: ${BUILD_SWAGGER_LANGUAGE}
+  languages: ${BUILD_SWAGGER_LANGUAGE_LIST:}
+
+springdoc:
+  swagger-ui:
+    enabled: ${swagger.enabled}
+    path: /swagger-ui.html
+    # Cho phép Swagger UI giữ nguyên các thẻ HTML nguy hiểm như iframe/script
+    #    url: /swagger/api-json.yaml
+    #    supportedSubmitMethod:
+    docExpansion:
+      - none
+  #    tagsSorter: alpha
+  api-docs:
+    enabled: ${swagger.enabled}
+#    path: /api-json
 
 # Add profile-specific configuration below this line.
 
@@ -37,5 +55,8 @@ spring:
   config:
     activate:
       on-profile: prd
+
+swagger:
+  enabled: false
 
 # Add profile-specific configuration below this line.

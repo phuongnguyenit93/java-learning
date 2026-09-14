@@ -1,6 +1,6 @@
 package com.example.learning.setup.module.yml.plugin
 
-import com.example.learning.setup.module.yml.service.ApplicationYmlInitializerService
+import com.example.learning.setup.module.yml.service.YmlInitializerService
 import com.example.learning.setup.module.yml.service.YmlResourceConfigurationService
 import com.example.learning.utils.ProjectPropertyUtils
 import org.gradle.api.Plugin
@@ -14,6 +14,21 @@ class YmlSetupPlugin
     void apply(
             Project project
     ) {
+
+        if (
+                !ProjectPropertyUtils.isEnabled(
+                        project,
+                        'BUILD_YML'
+                )
+        ) {
+
+            project.logger.info(
+                    '[YML-SETUP] Skip {} because BUILD_YML != TRUE.',
+                    project.path
+            )
+
+            return
+        }
 
         // ====================================================
         // Resource policy
@@ -31,25 +46,17 @@ class YmlSetupPlugin
 
 
         // ====================================================
-        // application.yml initialization
+        // YAML skeleton initialization
         // ====================================================
 
-        if (
-                ProjectPropertyUtils.isEnabled(
-                        project,
-                        'BUILD_YML'
+        YmlInitializerService initializerService =
+                new YmlInitializerService(
+                        project.logger
                 )
-        ) {
-
-            ApplicationYmlInitializerService initializerService =
-                    new ApplicationYmlInitializerService(
-                            project.logger
-                    )
 
 
-            initializerService.initialize(
-                    project
-            )
-        }
+        initializerService.initialize(
+                project
+        )
     }
 }

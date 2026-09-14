@@ -6,6 +6,7 @@ import com.example.learning.utils.GradleBuildUtils
 import com.example.learning.utils.ModuleProjectUtils
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.TaskProvider
 
 class YmlTaskPlugin
@@ -41,15 +42,18 @@ class YmlTaskPlugin
         // Recursive dependencies
         // ====================================================
 
-        List<String> dependencyServiceNames =
-                dependencyResolver.resolve(
-                        project,
-                        serviceName
-                )
+        Provider<List<String>> dependencyServiceNames =
+                project.provider {
+
+                    dependencyResolver.resolve(
+                            project,
+                            serviceName
+                    )
+                }
 
 
         // ====================================================
-        // Current module application-module.yml
+        // Current module composition source
         // ====================================================
 
         File baseResourceDirectory =
@@ -66,7 +70,7 @@ class YmlTaskPlugin
 
 
         // ====================================================
-        // Dependency application-module.yml
+        // Dependency application-module.yml sources
         //
         // Không dùng Set<Project>.
         //
@@ -74,9 +78,11 @@ class YmlTaskPlugin
         // quyết định YAML precedence.
         // ====================================================
 
-        List<File> dependencyApplicationFiles =
-                dependencyServiceNames
-                        .collect { String dependencyServiceName ->
+        Provider<List<File>> dependencyApplicationFiles =
+                dependencyServiceNames.map {
+                    List<String> dependencyNames ->
+
+                        dependencyNames.collect { String dependencyServiceName ->
 
                             Project dependencyProject =
                                     ModuleProjectUtils
@@ -87,10 +93,9 @@ class YmlTaskPlugin
 
 
                             File dependencyResourceDirectory =
-                                    GradleBuildUtils
-                                            .findBaseDirectory(
-                                                    dependencyProject
-                                            )
+                                    GradleBuildUtils.findBaseDirectory(
+                                            dependencyProject
+                                    )
 
 
                             return new File(
@@ -98,6 +103,7 @@ class YmlTaskPlugin
                                     'application-module.yml'
                             )
                         }
+                }
 
 
         // ====================================================
@@ -136,8 +142,8 @@ class YmlTaskPlugin
                     // Base application-module.yml
                     // ------------------------------------------
 
-                    task.baseApplicationModuleFile.set(
-                            baseApplicationModuleFile
+                    task.baseApplicationModulePath.set(
+                            baseApplicationModuleFile.absolutePath
                     )
 
 
@@ -146,20 +152,28 @@ class YmlTaskPlugin
                     // ------------------------------------------
 
                     task.dependencyApplicationPaths.set(
-                            dependencyApplicationFiles.collect {
-                                File sourceFile ->
+                            dependencyApplicationFiles.map {
+                                List<File> sourceFiles ->
 
-                                    sourceFile.absolutePath
+                                    sourceFiles.collect {
+                                        File sourceFile ->
+
+                                            sourceFile.absolutePath
+                                    }
                             }
                     )
 
 
                     // ------------------------------------------
-                    // Dependency file contents
+                    // YAML source contents
                     // ------------------------------------------
 
-                    task.dependencyApplicationFiles.from(
-                            dependencyApplicationFiles
+                    task.applicationModuleFiles.from(
+                            project.provider {
+
+                                [baseApplicationModuleFile] +
+                                        dependencyApplicationFiles.get()
+                            }
                     )
 
 

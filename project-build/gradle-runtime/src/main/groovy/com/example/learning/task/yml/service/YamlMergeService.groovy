@@ -2,40 +2,11 @@ package com.example.learning.task.yml.service
 
 import org.yaml.snakeyaml.DumperOptions
 import org.yaml.snakeyaml.Yaml
+import org.gradle.api.GradleException
 
 class YamlMergeService {
-
     /**
-     * Load file application.yml gốc.
-     *
-     * Key:
-     *   default
-     *   local
-     *   prod
-     *   ...
-     */
-    Map<String, Map> loadBase(
-            File sourceFile
-    ) {
-
-        Map<String, Map> documents =
-                new LinkedHashMap<>()
-
-        loadDocuments(sourceFile).each { Map document ->
-
-            String profileName =
-                    getProfileName(document)
-
-            documents[profileName] =
-                    document
-        }
-
-        return documents
-    }
-
-
-    /**
-     * Merge toàn bộ document của một application.yml
+     * Merge toàn bộ document của một application-module.yml
      * vào documents hiện tại.
      */
     void merge(
@@ -147,26 +118,50 @@ ${outputFile.parentFile.absolutePath}
             File sourceFile
     ) {
 
-        Yaml yaml =
-                new Yaml()
+        try {
 
-        List<Map> documents = []
+            Yaml yaml =
+                    new Yaml()
+
+            List<Map> documents = []
 
 
-        yaml.loadAll(
-                sourceFile.getText('UTF-8')
-        ).each { Object document ->
+            yaml.loadAll(
+                    sourceFile.getText('UTF-8')
+            ).each { Object document ->
 
-            if (document instanceof Map) {
+                if (
+                        document != null &&
+                                !(document instanceof Map)
+                ) {
 
-                documents.add(
-                        document as Map
-                )
+                    throw new GradleException(
+                            "[YAML-MERGE] YAML document root must be a map: ${sourceFile.absolutePath}"
+                    )
+                }
+
+
+                if (document instanceof Map) {
+
+                    documents.add(
+                            document as Map
+                    )
+                }
             }
+
+
+            return documents
+
+        } catch (GradleException exception) {
+            throw exception
+
+        } catch (Exception exception) {
+
+            throw new GradleException(
+                    "[YAML-MERGE] Failed to parse YAML: ${sourceFile.absolutePath}",
+                    exception
+            )
         }
-
-
-        return documents
     }
 
 

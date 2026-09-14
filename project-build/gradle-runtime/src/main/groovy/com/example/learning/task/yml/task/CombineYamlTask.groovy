@@ -9,7 +9,6 @@ import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.InputFile
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.PathSensitive
@@ -40,12 +39,11 @@ abstract class CombineYamlTask
      *
      * merge order:
      *
-     * BASE
-     * A
-     * B
      * C
+     * B
+     * A (current module, merged separately at the end)
      *
-     * C có precedence cao nhất.
+     * Module gần root hơn có precedence cao hơn.
      */
     @Input
     abstract ListProperty<String> getDependencyServiceNames()
@@ -65,14 +63,19 @@ abstract class CombineYamlTask
     // YAML inputs
     // ========================================================
 
-    @InputFile
-    @PathSensitive(PathSensitivity.RELATIVE)
-    abstract RegularFileProperty getBaseApplicationModuleFile()
+    @Input
+    abstract Property<String> getBaseApplicationModulePath()
 
 
+    /**
+     * Track content của toàn bộ application-module.yml hiện có.
+     *
+     * Validation missing file vẫn được thực hiện explicit trong TaskAction
+     * để message chỉ rõ module/dependency nào sai contract.
+     */
     @InputFiles
     @PathSensitive(PathSensitivity.RELATIVE)
-    abstract ConfigurableFileCollection getDependencyApplicationFiles()
+    abstract ConfigurableFileCollection getApplicationModuleFiles()
 
 
     // ========================================================
@@ -113,16 +116,20 @@ in gradle.properties.
 
 
         File baseFile =
-                baseApplicationModuleFile
-                        .get()
-                        .asFile
+                new File(
+                        baseApplicationModulePath
+                                .get()
+                )
 
 
-        if (!baseFile.exists()) {
+        if (!baseFile.isFile()) {
 
             throw new GradleException(
                     """
-[YAML-MERGE] application-module.yml not found:
+[YAML-MERGE] Current module is missing application-module.yml.
+
+Service: ${service}
+Expected:
 
 ${baseFile.absolutePath}
 """
@@ -166,46 +173,54 @@ ${baseFile.absolutePath}
 
 
         // ====================================================
-        // 1. Load module chính
+        // 1. Validate + merge dependencies
         // ====================================================
-
-        logger.lifecycle(
-                '   📥 Loading Base: {}',
-                baseFile.absolutePath
-        )
-
 
         Map<String, Map> finalDocuments =
-                mergeService.loadBase(
-                        baseFile
-                )
+                new LinkedHashMap<>()
+
+        List<String> dependencyPaths =
+                dependencyApplicationPaths
+                        .getOrElse([])
 
 
-        // ====================================================
-        // 2. Merge recursive dependencies
-        // ====================================================
+        if (dependencyPaths.size() != dependencyServices.size()) {
 
-        dependencyApplicationPaths
-                .getOrElse([])
-                .each { String path ->
+            throw new GradleException(
+                    '[YAML-MERGE] Internal error: dependency service/path counts do not match.'
+            )
+        }
+
+
+        dependencyPaths.eachWithIndex {
+            String path,
+            int index ->
 
                     File sourceFile =
                             new File(path)
 
 
-                    if (!sourceFile.exists()) {
+                    String dependencyService =
+                            dependencyServices[index]
 
-                        logger.lifecycle(
-                                '   ⚠️ Missing: {} (skip)',
-                                sourceFile.absolutePath
+
+                    if (!sourceFile.isFile()) {
+
+                        throw new GradleException(
+                                """
+[YAML-MERGE] Dependency '${dependencyService}' is missing application-module.yml.
+
+Expected:
+
+${sourceFile.absolutePath}
+"""
                         )
-
-                        return
                     }
 
 
                     logger.lifecycle(
-                            '   ➕ Merging: {}',
+                            '   ➕ Dependency {}: {}',
+                            dependencyService,
                             sourceFile.absolutePath
                     )
 
@@ -215,6 +230,23 @@ ${baseFile.absolutePath}
                             sourceFile
                     )
                 }
+
+
+        // ====================================================
+        // 2. Merge current module last
+        // ====================================================
+
+        logger.lifecycle(
+                '   📥 Current {}: {}',
+                service,
+                baseFile.absolutePath
+        )
+
+
+        mergeService.merge(
+                finalDocuments,
+                baseFile
+        )
 
 
         // ====================================================
@@ -244,7 +276,7 @@ ${baseFile.absolutePath}
 # AUTO-GENERATED FILE
 # ================================================================
 #
-# This file is generated from application-module.yml files.
+# This file is generated only from application-module.yml files.
 #
 # DO NOT use this file directly as the runtime configuration.
 #

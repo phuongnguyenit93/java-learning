@@ -1,5 +1,6 @@
 package com.example.learning.setup.module.config.service
 
+import com.example.learning.generated.settings.ModuleListEnum
 import com.example.learning.setup.module.config.model.ModuleType
 import com.example.learning.utils.ModuleProjectUtils
 import com.example.learning.utils.ProjectDependencyUtils
@@ -10,10 +11,6 @@ import org.gradle.api.logging.Logger
 
 
 class ModuleBuildConfigurationService {
-
-    private static final String GLOBAL_SWAGGER_SERVICE =
-            'GLOBAL_SWAGGER_CONFIG'
-
 
     private final Logger logger
 
@@ -152,7 +149,9 @@ class ModuleBuildConfigurationService {
             Project swaggerProject =
                     ModuleProjectUtils.findByServiceName(
                             project,
-                            GLOBAL_SWAGGER_SERVICE
+                            ModuleListEnum
+                                    .GLOBAL_SWAGGER_CONFIG
+                                    .name()
                     )
 
 

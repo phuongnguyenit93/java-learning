@@ -55,13 +55,16 @@ Một **real module** được nhận diện bằng local `gradle.properties`.
 
 Đặt `BUILD_YML=TRUE`.
 
-- `application.yml`: runtime source of truth, human-owned sau khi có nội dung.
-- `application-module.yml`: config của module dùng cho composition.
-- `combineYaml` (`USE_TASK=TRUE`): merge `application-module.yml` của module/dependencies thành `application-merged.yml`.
+- `application.yml`: runtime source of truth. Setup chỉ tạo skeleton khi file missing/blank; sau đó file là human-owned và không bị overwrite.
+- `application-module.yml`: module composition contract. Setup chỉ tạo skeleton khi file missing/blank; sau đó file là human-owned và không bị overwrite.
+- `combineYaml` (`USE_TASK=TRUE`): chỉ merge `application-module.yml` của module hiện tại và dependency. Dependency/file/cycle/YAML không hợp lệ sẽ fail task.
+- YAML dependency có 2 nguồn: explicit từ `BUILD_YML_MODULE_DEPEND` và capability-derived; ví dụ `BUILD_SWAGGER=TRUE` tự thêm `GLOBAL_SWAGGER_CONFIG`.
 - `application-merged.yml`: generated reference; review rồi cập nhật phần cần thiết vào `application.yml`.
 
 ```text
-application-module.yml(s)
+dependency application-module.yml(s)
+        ↓
+current application-module.yml
         ↓ combineYaml
 application-merged.yml
         ↓ review
@@ -114,7 +117,7 @@ Module được tham chiếu bằng `SERVICE_NAME`. Khi dùng auto dependency, b
 ### File ownership
 
 ```text
-Human-owned → source code, application.yml, README content, VALUE trong metadata
+Human-owned → source code, application.yml, application-module.yml, README content, VALUE trong metadata
 Generated   → task.gradle, application-merged.yml, generated enums/catalogs, STRUCTURE.md
 ```
 
