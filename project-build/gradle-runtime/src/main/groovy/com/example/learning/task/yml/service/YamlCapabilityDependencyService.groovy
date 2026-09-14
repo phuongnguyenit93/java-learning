@@ -1,6 +1,7 @@
 package com.example.learning.task.yml.service
 
 import com.example.learning.generated.settings.ModuleListEnum
+import com.example.learning.setup.module.config.model.ModuleType
 import com.example.learning.utils.ProjectPropertyUtils
 import org.gradle.api.Project
 
@@ -27,6 +28,35 @@ class YamlCapabilityDependencyService {
 
         List<String> dependencies =
                 []
+
+
+        ModuleType moduleType =
+                ModuleType.resolve(
+                        project.findProperty(
+                                'MODULE_TYPE'
+                        )
+                )
+
+
+        switch (moduleType) {
+
+            case ModuleType.SERVLET:
+
+                dependencies.add(
+                        ModuleListEnum.SPRING_WEB.name()
+                )
+
+                break
+
+
+            case ModuleType.REACTIVE:
+
+                dependencies.add(
+                        ModuleListEnum.SPRING_REACTIVE.name()
+                )
+
+                break
+        }
 
 
         CAPABILITY_DEPENDENCIES.each {

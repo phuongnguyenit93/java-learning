@@ -55,7 +55,19 @@
         "DESCRIBE": "Translate using Azure service"
     },
     "GLOBAL_SWAGGER_CONFIG": {
-        "DESCRIBE": "Global swagger config for all project that bind",
+        "DESCRIBE": "Stack-neutral Swagger core configuration shared by Servlet and Reactive adapters",
+        "api": [
+            "org.springdoc:springdoc-openapi-starter-common:2.5.0"
+        ]
+    },
+    "GLOBAL_SWAGGER_REACTIVE": {
+        "DESCRIBE": "Spring WebFlux adapter for global Swagger configuration",
+        "api": [
+            "org.springdoc:springdoc-openapi-starter-webflux-ui:2.5.0"
+        ]
+    },
+    "GLOBAL_SWAGGER_SERVLET": {
+        "DESCRIBE": "Spring MVC/Servlet adapter for global Swagger configuration",
         "api": [
             "org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0"
         ]

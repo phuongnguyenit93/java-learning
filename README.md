@@ -42,14 +42,14 @@ Một **real module** được nhận diện bằng local `gradle.properties`.
 3. Cấu hình các metadata chính trong `master.json`:
 
    ```text
-   MODULE_TYPE        = APPLICATION | LIBRARY | PLATFORM
+   MODULE_TYPE        = SERVLET | REACTIVE | LIBRARY | PLATFORM
    JAVA_BASE_PACKAGE  = com.example.learning   # có thể override
    SERVICE_NAME       = logical name duy nhất
    ```
 
    Bật capability cần dùng bằng các flag như `BUILD_YML`, `BUILD_ENV`, `BUILD_README`, `USE_TASK`, `ADD_MODULE_DEPEND`, `USE_DATABASE`, `BUILD_SWAGGER`.
 
-4. Reload Gradle lần nữa để tạo structure/capability tương ứng. `APPLICATION` và `LIBRARY` có Java/resource structure; `APPLICATION` được khởi tạo main class nếu chưa tồn tại.
+4. Reload Gradle lần nữa để tạo structure/capability tương ứng. `SERVLET`, `REACTIVE` và `LIBRARY` có Java/resource structure; `SERVLET` và `REACTIVE` được khởi tạo main class nếu chưa tồn tại. `SERVLET` dùng Spring MVC, `REACTIVE` dùng Spring WebFlux.
 
 ### YML
 
@@ -58,7 +58,7 @@ Một **real module** được nhận diện bằng local `gradle.properties`.
 - `application.yml`: runtime source of truth. Setup chỉ tạo skeleton khi file missing/blank; sau đó file là human-owned và không bị overwrite.
 - `application-module.yml`: module composition contract. Setup chỉ tạo skeleton khi file missing/blank; sau đó file là human-owned và không bị overwrite.
 - `combineYaml` (`USE_TASK=TRUE`): chỉ merge `application-module.yml` của module hiện tại và dependency. Dependency/file/cycle/YAML không hợp lệ sẽ fail task.
-- YAML dependency có 2 nguồn: explicit từ `BUILD_YML_MODULE_DEPEND` và capability-derived; ví dụ `BUILD_SWAGGER=TRUE` tự thêm `GLOBAL_SWAGGER_CONFIG`.
+- YAML dependency có 2 nguồn: explicit từ `BUILD_YML_MODULE_DEPEND` và capability-derived. `MODULE_TYPE=SERVLET` tự thêm `SPRING_WEB`, `MODULE_TYPE=REACTIVE` tự thêm `SPRING_REACTIVE`; `BUILD_SWAGGER=TRUE` tự thêm stack-neutral `GLOBAL_SWAGGER_CONFIG`.
 - `application-merged.yml`: generated reference; review rồi cập nhật phần cần thiết vào `application.yml`.
 
 ```text
@@ -70,6 +70,25 @@ application-merged.yml
         ↓ review
 application.yml
 ```
+
+### Swagger
+
+`BUILD_SWAGGER=TRUE` sử dụng core dùng chung và web-stack adapter tương ứng:
+
+```text
+GLOBAL_SWAGGER_CONFIG
+        └── common registrar/customizer/static assets/YAML
+
+SERVLET
+        └── GLOBAL_SWAGGER_SERVLET
+                └── springdoc-openapi-starter-webmvc-ui
+
+REACTIVE
+        └── GLOBAL_SWAGGER_REACTIVE
+                └── springdoc-openapi-starter-webflux-ui
+```
+
+Hai adapter đều phụ thuộc `GLOBAL_SWAGGER_CONFIG`. Java dependency chọn adapter theo `MODULE_TYPE`, trong khi `combineYaml` chỉ merge `GLOBAL_SWAGGER_CONFIG/application-module.yml` để tránh duplicate Swagger configuration.
 
 ### ENV
 

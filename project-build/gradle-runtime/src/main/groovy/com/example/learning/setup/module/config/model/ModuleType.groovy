@@ -3,7 +3,12 @@ package com.example.learning.setup.module.config.model
 
 enum ModuleType {
 
-    APPLICATION(
+    SERVLET(
+            true,
+            true
+    ),
+
+    REACTIVE(
             true,
             true
     ),

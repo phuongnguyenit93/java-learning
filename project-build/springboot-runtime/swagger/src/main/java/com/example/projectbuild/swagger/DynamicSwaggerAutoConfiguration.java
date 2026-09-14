@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Import;
 
 @AutoConfiguration
-@Import({DynamicSwaggerRegistrar.class,SwaggerResourceConfiguration.class})
+@Import(DynamicSwaggerRegistrar.class)
 @Conditional(DynamicSwaggerCondition.class)
 @ConditionalOnClass(name = "org.springdoc.core.models.GroupedOpenApi")
 public class DynamicSwaggerAutoConfiguration {

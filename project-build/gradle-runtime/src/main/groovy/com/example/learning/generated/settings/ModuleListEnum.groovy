@@ -15,7 +15,7 @@ enum ModuleListEnum {
     ADMIN_SERVER(
             'module:microservice:module:infrastructure:admin-server',
             'module/microservice/module/infrastructure/admin-server',
-            'APPLICATION',
+            'SERVLET',
             '',
             false,
             []
@@ -24,7 +24,7 @@ enum ModuleListEnum {
     API_GATEWAY(
             'module:microservice:module:infrastructure:api-gateway',
             'module/microservice/module/infrastructure/api-gateway',
-            'APPLICATION',
+            'SERVLET',
             '',
             false,
             []
@@ -42,7 +42,7 @@ enum ModuleListEnum {
     ASPECT(
             'module:platform:development:paradigm:aop',
             'module/platform/development/paradigm/aop',
-            '',
+            'SERVLET',
             '',
             false,
             []
@@ -51,7 +51,7 @@ enum ModuleListEnum {
     AZURE_TRANSLATE(
             'module:platform:support:document:translate:azure',
             'module/platform/support/document/translate/azure',
-            'APPLICATION',
+            'SERVLET',
             'Translate using Azure service',
             true,
             []
@@ -69,7 +69,7 @@ enum ModuleListEnum {
     CONFIG_SERVER(
             'module:microservice:module:infrastructure:config-server',
             'module/microservice/module/infrastructure/config-server',
-            'APPLICATION',
+            'SERVLET',
             '',
             false,
             ['SPRING_ACTUATOR', 'EUREKA_CLIENT']
@@ -87,7 +87,7 @@ enum ModuleListEnum {
     DATABASE_MYSQL(
             'module:infrastructure:system:database:rdbms:mysql',
             'module/infrastructure/system/database/rdbms/mysql',
-            'APPLICATION',
+            'SERVLET',
             '',
             false,
             []
@@ -96,7 +96,7 @@ enum ModuleListEnum {
     DATABASE_ORACLE(
             'module:infrastructure:system:database:rdbms:oracle',
             'module/infrastructure/system/database/rdbms/oracle',
-            'APPLICATION',
+            'SERVLET',
             '',
             false,
             []
@@ -105,7 +105,7 @@ enum ModuleListEnum {
     DATABASE_POSTGRESQL(
             'module:infrastructure:system:database:rdbms:postgresql',
             'module/infrastructure/system/database/rdbms/postgresql',
-            'APPLICATION',
+            'SERVLET',
             '',
             false,
             []
@@ -132,7 +132,7 @@ enum ModuleListEnum {
     EUREKA_SERVER(
             'module:microservice:module:infrastructure:eureka-server',
             'module/microservice/module/infrastructure/eureka-server',
-            'APPLICATION',
+            'SERVLET',
             '',
             false,
             []
@@ -141,7 +141,7 @@ enum ModuleListEnum {
     FLEXMARK_MARKDOWN(
             'module:platform:support:document:markdown:flexmark',
             'module/platform/support/document/markdown/flexmark',
-            'APPLICATION',
+            'SERVLET',
             '',
             true,
             []
@@ -178,9 +178,27 @@ enum ModuleListEnum {
             'project-build:springboot-runtime:swagger',
             'project-build/springboot-runtime/swagger',
             'LIBRARY',
-            'Global swagger config for all project that bind',
+            'Stack-neutral Swagger core configuration shared by Servlet and Reactive adapters',
             true,
             []
+    ),
+
+    GLOBAL_SWAGGER_REACTIVE(
+            'project-build:springboot-runtime:swagger-reactive',
+            'project-build/springboot-runtime/swagger-reactive',
+            'LIBRARY',
+            'Spring WebFlux adapter for global Swagger configuration',
+            true,
+            ['GLOBAL_SWAGGER_CONFIG']
+    ),
+
+    GLOBAL_SWAGGER_SERVLET(
+            'project-build:springboot-runtime:swagger-servlet',
+            'project-build/springboot-runtime/swagger-servlet',
+            'LIBRARY',
+            'Spring MVC/Servlet adapter for global Swagger configuration',
+            true,
+            ['GLOBAL_SWAGGER_CONFIG']
     ),
 
     HAWTIO(
@@ -204,7 +222,7 @@ enum ModuleListEnum {
     INVENTORY_SERVICE(
             'module:microservice:module:service:inventory-service',
             'module/microservice/module/service/inventory-service',
-            'APPLICATION',
+            'SERVLET',
             'A service of microservice app . This service store inventory info',
             false,
             ['SPRING_JPA', 'GLOBAL_EXCEPTION_HANDLER', 'EUREKA_CLIENT']
@@ -258,7 +276,7 @@ enum ModuleListEnum {
     KAFKA_PRODUCER_BANK(
             'module:integration:broker:kafka:service:producer:bank',
             'module/integration/broker/kafka/service/producer/bank',
-            'APPLICATION',
+            'SERVLET',
             '',
             false,
             []
@@ -267,7 +285,7 @@ enum ModuleListEnum {
     KAFKA_SERVER(
             'module:integration:broker:kafka:service:server',
             'module/integration/broker/kafka/service/server',
-            'APPLICATION',
+            'SERVLET',
             '',
             false,
             []
@@ -285,7 +303,7 @@ enum ModuleListEnum {
     MAPSTRUCT(
             'module:platform:development:language:java:mapping:mapstruct',
             'module/platform/development/language/java/mapping/mapstruct',
-            'APPLICATION',
+            'SERVLET',
             '',
             true,
             []
@@ -303,7 +321,7 @@ enum ModuleListEnum {
     MODEL_MAPPER(
             'module:platform:development:language:java:mapping:model-mapper',
             'module/platform/development/language/java/mapping/model-mapper',
-            'APPLICATION',
+            'SERVLET',
             'To quickly convert between 2 Java Object (Entity to DTO) by matching key field',
             true,
             []
@@ -312,7 +330,7 @@ enum ModuleListEnum {
     OBJECT_MAPPER(
             'module:platform:development:language:java:mapping:object-mapper',
             'module/platform/development/language/java/mapping/object-mapper',
-            'APPLICATION',
+            'SERVLET',
             'Convert Java Object to JSON (or XML , YAML)',
             true,
             []
@@ -330,7 +348,7 @@ enum ModuleListEnum {
     ORDER_SERVICE(
             'module:microservice:module:service:order-service',
             'module/microservice/module/service/order-service',
-            'APPLICATION',
+            'SERVLET',
             'A service of microservice app . This service to handle order from user',
             false,
             ['SPRING_JPA', 'EUREKA_CLIENT', 'GLOBAL_EXCEPTION_HANDLER']
@@ -339,7 +357,7 @@ enum ModuleListEnum {
     PRODUCT_SERVICE(
             'module:microservice:module:service:product-service',
             'module/microservice/module/service/product-service',
-            'APPLICATION',
+            'SERVLET',
             '',
             false,
             ['EUREKA_CLIENT', 'GLOBAL_EXCEPTION_HANDLER']
@@ -366,7 +384,7 @@ enum ModuleListEnum {
     SCHEDULE(
             'module:platform:development:paradigm:concurrency:schedule:task',
             'module/platform/development/paradigm/concurrency/schedule/task',
-            'APPLICATION',
+            'SERVLET',
             '',
             false,
             []
@@ -399,6 +417,15 @@ enum ModuleListEnum {
             []
     ),
 
+    SPRING_REACTIVE(
+            'module:platform:development:framework:spring:reactive',
+            'module/platform/development/framework/spring/reactive',
+            'PLATFORM',
+            'Shared YAML composition module for Spring WebFlux applications',
+            false,
+            []
+    ),
+
     SPRING_SWAGGER(
             'module:platform:development:framework:spring:swagger',
             'module/platform/development/framework/spring/swagger',
@@ -411,7 +438,7 @@ enum ModuleListEnum {
     SPRING_WEB(
             'module:platform:development:framework:spring:web',
             'module/platform/development/framework/spring/web',
-            '',
+            'PLATFORM',
             '',
             false,
             []
@@ -420,7 +447,7 @@ enum ModuleListEnum {
     THREAD(
             'module:platform:development:paradigm:concurrency:thread',
             'module/platform/development/paradigm/concurrency/thread',
-            'APPLICATION',
+            'SERVLET',
             '',
             false,
             []
@@ -429,7 +456,7 @@ enum ModuleListEnum {
     properties(
             'module:platform:development:framework:spring:basic:properties',
             'module/platform/development/framework/spring/basic/properties',
-            'APPLICATION',
+            'SERVLET',
             '',
             false,
             []

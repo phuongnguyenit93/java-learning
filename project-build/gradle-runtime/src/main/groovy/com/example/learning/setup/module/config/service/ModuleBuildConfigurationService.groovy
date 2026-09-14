@@ -87,10 +87,23 @@ class ModuleBuildConfigurationService {
 
         switch (moduleType) {
 
-            case ModuleType.APPLICATION:
+            case ModuleType.SERVLET:
 
-                configureApplication(
-                        project
+                configureRunnableApplication(
+                        project,
+                        ModuleType.SERVLET,
+                        'org.springframework.boot:spring-boot-starter-web'
+                )
+
+                return
+
+
+            case ModuleType.REACTIVE:
+
+                configureRunnableApplication(
+                        project,
+                        ModuleType.REACTIVE,
+                        'org.springframework.boot:spring-boot-starter-webflux'
                 )
 
                 return
@@ -117,21 +130,23 @@ class ModuleBuildConfigurationService {
 
 
     // ========================================================
-    // APPLICATION
+    // Runnable application
     // ========================================================
 
-    private void configureApplication(
-            Project project
+    private void configureRunnableApplication(
+            Project project,
+            ModuleType moduleType,
+            String webStarter
     ) {
 
         // ====================================================
-        // Spring Web
+        // Web stack
         // ====================================================
 
         ProjectDependencyUtils.addExternal(
                 project,
                 'implementation',
-                'org.springframework.boot:spring-boot-starter-web'
+                webStarter
         )
 
 
@@ -139,35 +154,10 @@ class ModuleBuildConfigurationService {
         // Swagger
         // ====================================================
 
-        if (
-                ProjectPropertyUtils.isEnabled(
-                        project,
-                        'BUILD_SWAGGER'
-                )
-        ) {
-
-            Project swaggerProject =
-                    ModuleProjectUtils.findByServiceName(
-                            project,
-                            ModuleListEnum
-                                    .GLOBAL_SWAGGER_CONFIG
-                                    .name()
-                    )
-
-
-            ProjectDependencyUtils.addProject(
-                    project,
-                    'implementation',
-                    swaggerProject
-            )
-
-
-            logger.lifecycle(
-                    '📘 [MODULE-BUILD] [{}] Swagger -> {}',
-                    project.path,
-                    swaggerProject.path
-            )
-        }
+        configureSwaggerDependency(
+                project,
+                moduleType
+        )
 
 
         // ====================================================
@@ -180,8 +170,74 @@ class ModuleBuildConfigurationService {
 
 
         logger.info(
-                '[MODULE-BUILD] Configured APPLICATION: {}',
+                '[MODULE-BUILD] Configured {}: {}',
+                moduleType,
                 project.path
+        )
+    }
+
+
+    private void configureSwaggerDependency(
+            Project project,
+            ModuleType moduleType
+    ) {
+
+        if (
+                !ProjectPropertyUtils.isEnabled(
+                        project,
+                        'BUILD_SWAGGER'
+                )
+        ) {
+
+            return
+        }
+
+
+        ModuleListEnum swaggerAdapter
+
+
+        switch (moduleType) {
+
+            case ModuleType.SERVLET:
+
+                swaggerAdapter =
+                        ModuleListEnum.GLOBAL_SWAGGER_SERVLET
+
+                break
+
+
+            case ModuleType.REACTIVE:
+
+                swaggerAdapter =
+                        ModuleListEnum.GLOBAL_SWAGGER_REACTIVE
+
+                break
+
+
+            default:
+
+                return
+        }
+
+
+        Project swaggerProject =
+                ModuleProjectUtils.findByServiceName(
+                        project,
+                        swaggerAdapter.name()
+                )
+
+
+        ProjectDependencyUtils.addProject(
+                project,
+                'implementation',
+                swaggerProject
+        )
+
+
+        logger.lifecycle(
+                '📘 [MODULE-BUILD] [{}] Swagger -> {}',
+                project.path,
+                swaggerProject.path
         )
     }
 

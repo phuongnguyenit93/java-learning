@@ -27,14 +27,16 @@ class ModuleStructureService {
 
         switch (moduleType) {
 
-            case ModuleType.APPLICATION:
+            case ModuleType.SERVLET:
+            case ModuleType.REACTIVE:
 
                 setupJavaStructure(
                         project
                 )
 
                 setupApplication(
-                        project
+                        project,
+                        moduleType
                 )
 
                 break
@@ -129,7 +131,8 @@ ${directory.absolutePath}
     // ========================================================
 
     private void setupApplication(
-            Project project
+            Project project,
+            ModuleType moduleType
     ) {
 
         String basePackage =
@@ -243,7 +246,8 @@ ${directory.absolutePath}
         renderApplicationClass(
                 applicationFile,
                 basePackage,
-                className
+                className,
+                moduleType
         )
     }
 
@@ -251,7 +255,8 @@ ${directory.absolutePath}
     private void renderApplicationClass(
             File applicationFile,
             String basePackage,
-            String className
+            String className,
+            ModuleType moduleType
     ) {
 
         try {
@@ -259,7 +264,8 @@ ${directory.absolutePath}
             String renderedContent =
                     renderApplicationSource(
                             basePackage,
-                            className
+                            className,
+                            moduleType
                     )
 
 
@@ -292,8 +298,26 @@ ${exception.message}
 
     private static String renderApplicationSource(
             String basePackage,
-            String className
+            String className,
+            ModuleType moduleType
     ) {
+
+        if (moduleType == ModuleType.REACTIVE) {
+
+            return """package ${basePackage};
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class ${className} {
+
+    public static void main(String[] args) {
+        SpringApplication.run(${className}.class, args);
+    }
+}
+"""
+        }
 
         return """package ${basePackage};
 

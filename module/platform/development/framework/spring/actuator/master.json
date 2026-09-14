@@ -1,9 +1,9 @@
 {
     "MODULE_TYPE": {
-        "DESCRIPTION": "Include 3 value . APPLICATION for service have main method (Spring web) , LIBRARY for service not have main but have code java to config , PLATFORM for service not have code java , only config yml",
+        "DESCRIPTION": "Include 4 values. SERVLET for runnable Spring MVC/Servlet application, REACTIVE for runnable Spring WebFlux application, LIBRARY for Java module without Spring Boot main application, PLATFORM for configuration/dependency module without Java source",
         "TYPE": "string",
         "VALUE": "",
-        "EXAMPLE_VALUE": "APPLICATION,LIBRARY,PLATFORM"
+        "EXAMPLE_VALUE": "SERVLET,REACTIVE,LIBRARY,PLATFORM"
     },
     "JAVA_BASE_PACKAGE": {
         "DESCRIPTION": "Define Java base package for this module",

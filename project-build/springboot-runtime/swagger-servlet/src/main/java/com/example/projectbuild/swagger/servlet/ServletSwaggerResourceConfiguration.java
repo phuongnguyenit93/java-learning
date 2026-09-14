@@ -1,17 +1,16 @@
-package com.example.projectbuild.swagger;
+package com.example.projectbuild.swagger.servlet;
 
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-public class SwaggerResourceConfiguration implements WebMvcConfigurer {
+public class ServletSwaggerResourceConfiguration implements WebMvcConfigurer {
+
     @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry)  {
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry
                 .addResourceHandler("/readme/**")
-                .addResourceLocations(
-                        "classpath:/META-INF/swagger/readme/"
-                );
+                .addResourceLocations("classpath:/META-INF/swagger/readme/");
     }
 
     @Override

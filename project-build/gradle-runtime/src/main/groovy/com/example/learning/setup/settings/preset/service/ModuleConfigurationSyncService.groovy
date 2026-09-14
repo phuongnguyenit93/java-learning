@@ -197,6 +197,13 @@ class ModuleConfigurationSyncService {
                                 : null
 
 
+                Object migratedValue =
+                        migrateMasterValue(
+                                key?.toString(),
+                                existingValue
+                        )
+
+
                 /*
                  * VALUE thuộc module/human.
                  *
@@ -204,13 +211,13 @@ class ModuleConfigurationSyncService {
                  * thuộc canonical template.
                  */
                 if (
-                        existingValue != null &&
-                                existingValue
+                        migratedValue != null &&
+                                migratedValue
                                         .toString() != ''
                 ) {
 
                     newItem.VALUE =
-                            existingValue
+                            migratedValue
                 }
 
 
@@ -229,6 +236,29 @@ class ModuleConfigurationSyncService {
 
 
         return updatedJson
+    }
+
+
+    private Object migrateMasterValue(
+            String key,
+            Object existingValue
+    ) {
+
+        if (
+                key == 'MODULE_TYPE' &&
+                        existingValue
+                                ?.toString()
+                                ?.trim()
+                                ?.equalsIgnoreCase(
+                                        'APPLICATION'
+                                )
+        ) {
+
+            return 'SERVLET'
+        }
+
+
+        return existingValue
     }
 
 
