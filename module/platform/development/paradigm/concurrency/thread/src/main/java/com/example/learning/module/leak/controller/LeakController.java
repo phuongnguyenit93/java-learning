@@ -1,24 +1,37 @@
 package com.example.learning.module.leak.controller;
 
 import com.example.learning.module.leak.service.LeakService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @RestController
-@RequiredArgsConstructor
-@RequestMapping("leak")
+@RequestMapping("/leak")
 public class LeakController {
+
     private final LeakService leakService;
 
-    @GetMapping("/thread")
-    public String threadLeak() {
-        return leakService.createThreadLeak();
+    public LeakController(LeakService leakService) {
+        this.leakService = leakService;
     }
 
-    @GetMapping("/pool")
-    public String poolLeak() {
-        return leakService.createPoolLeak();
+    /** README: readme/vi/menu/10.Leak/Leak.md#thread-leak */
+    @GetMapping("/thread-pattern")
+    public Map<String, Object> threadLeakPattern() throws InterruptedException {
+        return leakService.threadLeakPatternDemo();
+    }
+
+    /** README: readme/vi/menu/10.Leak/Leak.md#pool-leak */
+    @GetMapping("/pool-pattern")
+    public Map<String, Object> poolLeakPattern() throws InterruptedException {
+        return leakService.poolLeakPatternDemo();
+    }
+
+    /** README: readme/vi/menu/10.Leak/Leak.md#queue-growth */
+    @GetMapping("/queue-pressure")
+    public Map<String, Object> queuePressure() throws InterruptedException {
+        return leakService.queuePressureDemo();
     }
 }

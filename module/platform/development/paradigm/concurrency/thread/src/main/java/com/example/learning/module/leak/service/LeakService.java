@@ -2,103 +2,157 @@ package com.example.learning.module.leak.service;
 
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class LeakService {
 
-    private final AtomicInteger threadCounter = new AtomicInteger();
-    private final AtomicInteger poolCounter = new AtomicInteger();
+    public Map<String, Object> threadLeakPatternDemo() throws InterruptedException {
+        CountDownLatch stop = new CountDownLatch(1);
+        Thread worker = new Thread(() -> await(stop), "bounded-leak-demo-thread");
+        boolean aliveBeforeCleanup;
+        try {
+            worker.start();
+            waitUntilAlive(worker);
+            aliveBeforeCleanup = worker.isAlive();
+        } finally {
+            stop.countDown();
+            boolean interrupted = Thread.interrupted();
+            long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(2);
+            try {
+                while (worker.isAlive() && System.nanoTime() < deadline) {
+                    try {
+                        worker.join(Math.max(1, TimeUnit.NANOSECONDS.toMillis(deadline - System.nanoTime())));
+                    } catch (InterruptedException e) {
+                        interrupted = true;
+                        worker.interrupt();
+                    }
+                }
+            } finally {
+                if (interrupted) Thread.currentThread().interrupt();
+            }
+            if (worker.isAlive()) {
+                throw new IllegalStateException("Leak demo worker không terminate sau cleanup.");
+            }
+        }
 
-    /**
-     * DEMO THREAD LEAK
-     *
-     * Mỗi lần gọi sẽ tạo trực tiếp 1 Thread mới.
-     * Thread này chạy vô hạn và không có cơ chế stop.
-     *
-     * Gọi endpoint nhiều lần => số thread tăng liên tục.
-     */
-    public String createThreadLeak() {
+        return map(
+                "aliveBeforeCleanup", aliveBeforeCleanup,
+                "wouldLeakIfNeverReleased", aliveBeforeCleanup,
+                "aliveAfterCleanup", worker.isAlive(),
+                "finalState", worker.getState().name()
+        );
+    }
 
-        int id = threadCounter.incrementAndGet();
+    public Map<String, Object> poolLeakPatternDemo() throws InterruptedException {
+        ExecutorService pool = Executors.newFixedThreadPool(2);
+        CountDownLatch tasksDone = new CountDownLatch(2);
 
-        Thread thread = new Thread(() -> {
+        try {
+            pool.execute(tasksDone::countDown);
+            pool.execute(tasksDone::countDown);
+            if (!tasksDone.await(2, TimeUnit.SECONDS)) {
+                throw new IllegalStateException("Pool leak demo task không hoàn thành đúng hạn.");
+            }
+            return map(
+                    "isShutdownBeforeCleanup", pool.isShutdown(),
+                    "patternWouldLeakIfOwnerForgotShutdown", !pool.isShutdown()
+            );
+        } finally {
+            pool.shutdown();
+            if (!pool.awaitTermination(2, TimeUnit.SECONDS)) {
+                pool.shutdownNow();
+                if (!pool.awaitTermination(2, TimeUnit.SECONDS)) {
+                    throw new IllegalStateException("Pool leak demo executor không terminate sau cleanup.");
+                }
+            }
+        }
+    }
 
-            while (true) {
+    public Map<String, Object> queuePressureDemo() throws InterruptedException {
+        CountDownLatch releaseWorker = new CountDownLatch(1);
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(
+                1,
+                1,
+                0,
+                TimeUnit.MILLISECONDS,
+                new LinkedBlockingQueue<>(3),
+                new ThreadPoolExecutor.AbortPolicy()
+        );
+
+        AtomicInteger rejected = new AtomicInteger();
+        try {
+            executor.execute(() -> await(releaseWorker));
+            waitForActive(executor);
+
+            for (int i = 0; i < 4; i++) {
                 try {
-                    Thread.sleep(60_000);
-                } catch (InterruptedException e) {
-                    // Cố tình bỏ qua để demo leak
+                    executor.execute(() -> { });
+                } catch (RejectedExecutionException e) {
+                    rejected.incrementAndGet();
                 }
             }
 
-        }, "leaked-thread-" + id);
-
-        thread.start();
-
-        return "Created thread: " + thread.getName();
+            return map(
+                    "queueCapacity", 3,
+                    "queueSizeAtPressure", executor.getQueue().size(),
+                    "rejectedTasks", rejected.get(),
+                    "boundedQueuePreventsUnboundedBacklog", true
+            );
+        } finally {
+            releaseWorker.countDown();
+            executor.shutdown();
+            if (!executor.awaitTermination(2, TimeUnit.SECONDS)) {
+                executor.shutdownNow();
+                if (!executor.awaitTermination(2, TimeUnit.SECONDS)) {
+                    throw new IllegalStateException("Queue pressure executor không terminate sau cleanup.");
+                }
+            }
+        }
     }
 
-
-    /**
-     * DEMO POOL LEAK
-     *
-     * Mỗi lần gọi sẽ tạo một FixedThreadPool mới gồm 3 threads.
-     * Không shutdown pool và không giữ reference.
-     *
-     * => Pool bị leak.
-     * => Các worker thread của pool cũng bị leak.
-     */
-    public String createPoolLeak() {
-
-        int poolId = poolCounter.incrementAndGet();
-
-        AtomicInteger workerCounter = new AtomicInteger();
-
-        ExecutorService pool =
-                Executors.newFixedThreadPool(
-                        3,
-                        runnable -> {
-                            Thread thread = new Thread(runnable);
-
-                            thread.setName(
-                                    "leaked-pool-"
-                                            + poolId
-                                            + "-thread-"
-                                            + workerCounter.incrementAndGet()
-                            );
-
-                            return thread;
-                        }
-                );
-
-        for (int i = 1; i <= 3; i++) {
-
-            int taskId = i;
-
-            pool.execute(() -> {
-
-                System.out.println(
-                        "Task "
-                                + taskId
-                                + " running on "
-                                + Thread.currentThread().getName()
-                );
-
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                }
-            });
+    private static void waitUntilAlive(Thread worker) throws InterruptedException {
+        long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(1);
+        while (System.nanoTime() < deadline) {
+            if (worker.isAlive()) return;
+            Thread.sleep(5);
         }
+        throw new IllegalStateException("Worker không start");
+    }
 
-        // CỐ TÌNH:
-        // không pool.shutdown()
-        // không lưu pool vào field / Map
+    private static void waitForActive(ThreadPoolExecutor executor) throws InterruptedException {
+        long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(1);
+        while (System.nanoTime() < deadline) {
+            if (executor.getActiveCount() == 1) return;
+            Thread.sleep(5);
+        }
+        throw new IllegalStateException("Executor chưa có active worker");
+    }
 
-        return "Created leaked pool: leaked-pool-" + poolId;
+    private static boolean await(CountDownLatch latch) {
+        try {
+            latch.await();
+            return true;
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            return false;
+        }
+    }
+
+    private static Map<String, Object> map(Object... pairs) {
+        Map<String, Object> result = new LinkedHashMap<>();
+        for (int i = 0; i < pairs.length; i += 2) {
+            result.put((String) pairs[i], pairs[i + 1]);
+        }
+        return result;
     }
 }

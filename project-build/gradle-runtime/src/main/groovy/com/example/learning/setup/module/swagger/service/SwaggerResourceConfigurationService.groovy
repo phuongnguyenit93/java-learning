@@ -1,4 +1,4 @@
-package com.example.learning.module.swagger.service
+package com.example.learning.setup.module.swagger.service
 
 import org.gradle.api.Project
 import org.gradle.api.logging.Logger

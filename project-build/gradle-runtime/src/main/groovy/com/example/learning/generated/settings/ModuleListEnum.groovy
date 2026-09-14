@@ -423,7 +423,7 @@ enum ModuleListEnum {
             'APPLICATION',
             '',
             false,
-            ['AZURE_TRANSLATE', 'FLEXMARK_MARKDOWN']
+            []
     ),
 
     properties(

@@ -1,4 +1,4 @@
-package com.example.learning.module.readme.service
+package com.example.learning.setup.module.readme.service
 
 import com.example.learning.utils.ProjectPropertyUtils
 import org.gradle.api.GradleException

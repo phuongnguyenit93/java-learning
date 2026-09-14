@@ -3,6 +3,7 @@ package com.example.learning.setup.root.catalog.service
 import com.example.learning.utils.ModuleProjectUtils
 import com.example.learning.utils.ProjectPropertyUtils
 import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
 import org.gradle.api.GradleException
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Dependency
@@ -36,19 +37,6 @@ class ModuleDependencyCatalogService {
             Project rootProject
     ) {
 
-        // ====================================================
-        // Collect
-        // ====================================================
-
-        Map<String, Object> moduleDependList =
-                collectModuleDependencies(
-                        rootProject
-                )
-
-        // ====================================================
-        // Output
-        // ====================================================
-
         File outputFile =
                 new File(
                         rootProject.projectDir,
@@ -59,6 +47,27 @@ class ModuleDependencyCatalogService {
         ensureParentDirectory(
                 outputFile
         )
+
+
+        // ====================================================
+        // Collect
+        // ====================================================
+
+        Map<String, Object> existingCatalog =
+                readExistingCatalog(
+                        outputFile
+                )
+
+
+        Map<String, Object> moduleDependList =
+                collectModuleDependencies(
+                        rootProject,
+                        existingCatalog
+                )
+
+        // ====================================================
+        // Output
+        // ====================================================
 
 
         String newContent =
@@ -128,33 +137,86 @@ ${exception.message}
     // ========================================================
 
     private Map<String, Object> collectModuleDependencies(
-            Project rootProject
+            Project rootProject,
+            Map<String, Object> existingCatalog
     ) {
+
+        Set<Project> moduleProjects =
+                ModuleProjectUtils.getModules(
+                        rootProject
+                )
+
+
+        boolean allModulesEvaluated =
+                moduleProjects.every {
+                    Project moduleProject ->
+
+                        moduleProject.state.executed
+                }
+
 
         Map<String, Object> result =
                 new LinkedHashMap<>()
 
 
-        ModuleProjectUtils
-                .getModules(
-                        rootProject
-                )
-                .findAll {
-                    Project moduleProject ->
+        /*
+         * Gradle configuration-on-demand có thể chỉ evaluate một phần project graph.
+         * Nếu lúc đó rebuild catalog từ đầu, dependencies của các module chưa evaluate
+         * sẽ bị nhìn như rỗng và entry cũ bị ghi mất.
+         *
+         * Full evaluation:
+         *   rebuild catalog từ source of truth hiện tại.
+         *
+         * Partial evaluation:
+         *   giữ catalog cũ và chỉ refresh những module thực sự đã evaluate.
+         */
+        if (!allModulesEvaluated) {
 
-                        ProjectPropertyUtils.isEnabled(
+            result.putAll(
+                    existingCatalog
+            )
+
+
+            logger.info(
+                    '[MODULE-DEPENDENCY-CATALOG] Partial project evaluation detected. Preserve entries of non-evaluated modules.'
+            )
+        }
+
+
+        moduleProjects.each {
+            Project moduleProject ->
+
+                if (!moduleProject.state.executed) {
+                    return
+                }
+
+
+                String serviceName =
+                        getServiceName(
+                                moduleProject
+                        )
+
+
+                if (
+                        !ProjectPropertyUtils.isEnabled(
                                 moduleProject,
                                 'IS_MODULE_DEPEND'
                         )
-                }
-                .each {
-                    Project moduleProject ->
+                ) {
 
-                        collectModule(
-                                moduleProject,
-                                result
-                        )
+                    result.remove(
+                            serviceName
+                    )
+
+                    return
                 }
+
+
+                collectModule(
+                        moduleProject,
+                        result
+                )
+        }
 
 
         return result
@@ -167,10 +229,9 @@ ${exception.message}
     ) {
 
         String serviceName =
-                ProjectPropertyUtils.getString(
-                        moduleProject,
-                        'SERVICE_NAME'
-                ) ?: moduleProject.name
+                getServiceName(
+                        moduleProject
+                )
 
 
         String description =
@@ -211,6 +272,65 @@ ${exception.message}
 
         result[serviceName] =
                 moduleInfo
+    }
+
+
+    private static String getServiceName(
+            Project moduleProject
+    ) {
+
+        return ProjectPropertyUtils.getString(
+                moduleProject,
+                'SERVICE_NAME'
+        ) ?: moduleProject.name
+    }
+
+
+    // ========================================================
+    // Existing catalog
+    // ========================================================
+
+    private static Map<String, Object> readExistingCatalog(
+            File outputFile
+    ) {
+
+        if (!outputFile.isFile()) {
+            return new LinkedHashMap<>()
+        }
+
+
+        try {
+
+            Object parsed =
+                    new JsonSlurper().parseText(
+                            outputFile.getText(
+                                    'UTF-8'
+                            )
+                    )
+
+
+            if (!(parsed instanceof Map)) {
+
+                throw new GradleException(
+                        "Module dependency catalog root must be a JSON object: ${outputFile.absolutePath}"
+                )
+            }
+
+
+            return new LinkedHashMap<String, Object>(
+                    (Map<String, Object>) parsed
+            )
+        }
+        catch (GradleException exception) {
+            throw exception
+        }
+        catch (Exception exception) {
+
+            throw new GradleException(
+                    "Unable to read existing module dependency catalog: ${outputFile.absolutePath}",
+                    exception
+            )
+        }
     }
 
 

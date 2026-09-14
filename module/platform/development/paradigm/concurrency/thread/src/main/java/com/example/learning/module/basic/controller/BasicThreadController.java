@@ -1,32 +1,47 @@
 package com.example.learning.module.basic.controller;
 
 import com.example.learning.module.basic.service.BasicThreadService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.Map;
 
 @RestController
-@RequestMapping("basic")
-@RequiredArgsConstructor
+@RequestMapping("/basic")
 public class BasicThreadController {
-    private final BasicThreadService threadService;
 
-    @GetMapping("/example-thread")
-    public String testThread() {
-        System.out.println("1. Controller nhận được request");
-        threadService.executeTaskWithThread();
-        return "Yêu cầu của bạn đã được tiếp nhận và xử lý ngầm!";
+    private final BasicThreadService basicThreadService;
+
+    public BasicThreadController(BasicThreadService basicThreadService) {
+        this.basicThreadService = basicThreadService;
     }
 
-    @GetMapping("/example-non-thread")
-    public String testNonThread() {
-        System.out.println("1. Controller nhận được request");
-
-        threadService.executeTaskWithNonThread();
-        return "Yêu cầu của bạn dã được xử lý xong";
+    /**
+     * README: readme/vi/menu/1.Basic/Basic.md#process-and-thread
+     * Purpose: Quan sát JVM process và thread đang xử lý HTTP request.
+     */
+    @GetMapping("/process-thread")
+    public Map<String, Object> processAndThread() {
+        return basicThreadService.describeProcessAndCurrentThread();
     }
 
+    /**
+     * README: readme/vi/menu/1.Basic/Basic.md#start-vs-run
+     * Purpose: So sánh gọi run() trực tiếp với start() một Thread mới.
+     */
+    @GetMapping("/start-vs-run")
+    public List<String> startVsRun() throws InterruptedException {
+        return basicThreadService.compareRunAndStart();
+    }
+
+    /**
+     * README: readme/vi/menu/1.Basic/Basic.md#thread-state
+     * Purpose: Quan sát lần lượt các giá trị trong Thread.State.
+     */
     @GetMapping("/thread-life-cycle")
-    public void threadLifeCycle() throws InterruptedException {
-        threadService.executeThreadLifeCycle();
+    public List<String> threadLifeCycle() throws InterruptedException {
+        return basicThreadService.observeThreadLifecycle();
     }
 }

@@ -1,4 +1,4 @@
-package com.example.learning.module.env.service
+package com.example.learning.setup.module.env.service
 
 import com.example.learning.utils.ProjectPropertyUtils
 import org.gradle.api.Project

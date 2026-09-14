@@ -1,4 +1,4 @@
-package com.example.learning.module.dependency.service
+package com.example.learning.setup.module.dependency.service
 
 import com.example.learning.utils.ModuleProjectUtils
 import com.example.learning.utils.ProjectDependencyUtils

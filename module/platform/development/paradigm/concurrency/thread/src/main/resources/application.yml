@@ -18,13 +18,6 @@ server:
   port: ${PORT}
   servlet:
     context-path: /${CONTEXT_PATH}
-thread:
-  thread-pool:
-    core-size: 5
-    max-size: 10
-    queue-capacity: 100
-    keep-alive: 60
-    thread-name-prefix: application-pool-
 swagger:
   enabled: ${BUILD_SWAGGER:}
   languages: ${BUILD_SWAGGER_LANGUAGE_LIST:}

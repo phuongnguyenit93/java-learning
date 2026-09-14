@@ -1,65 +1,106 @@
 package com.example.learning.module.basic.service;
 
 import com.example.learning.module.basic.thread.MyWorker;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.util.concurrent.*;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 @Service
 public class CreateThreadService {
-    public void createByExtends() {
-        MyWorker t1 = new MyWorker();
-        t1.start();
+
+    public List<String> createByExtends() throws InterruptedException {
+        String callerThread = Thread.currentThread().getName();
+
+        MyWorker worker = new MyWorker("extends-thread-worker");
+        try {
+            worker.start();
+            joinOrFail(worker);
+        } finally {
+            cleanup(worker);
+        }
+
+        return List.of(
+                "Caller thread: " + callerThread,
+                "MyWorker.run() đã chạy trên thread: " + worker.getName()
+        );
     }
 
-    public void createByRunnable() {
-        // Cách 1: Dùng Anonymous Class
-        Runnable task1 = new Runnable() {
-            @Override
-            public void run() {
-                System.out.println("Runnable đang chạy...");
-            }
-        };
+    public List<String> createByRunnable() throws InterruptedException {
+        String callerThread = Thread.currentThread().getName();
 
-        // Cách 2: Dùng Lambda (Java 8+) - Rất gọn
-        Runnable task2 = () -> System.out.println("Runnable Lambda đang chạy!");
+        Runnable task = () -> System.out.println(
+                "Runnable.run() đang chạy trên thread: "
+                        + Thread.currentThread().getName()
+        );
 
-        Thread t1 = new Thread(task1);
-        Thread t2 = new Thread(task2);
+        Thread worker = new Thread(
+                task,
+                "runnable-thread-worker"
+        );
 
-        t1.start();
-        t2.start();
+        try {
+            worker.start();
+            joinOrFail(worker);
+        } finally {
+            cleanup(worker);
+        }
+
+        return List.of(
+                "Caller thread: " + callerThread,
+                "Runnable.run() đã chạy trên thread: " + worker.getName()
+        );
     }
 
-    public String createByCallable() throws ExecutionException, InterruptedException {
-        Callable<String> task = () -> {
-            Thread.sleep(2000);
-            return "Kết quả từ luồng phụ!";
-        };
+    public List<String> createByCallable()
+            throws ExecutionException, InterruptedException {
+        String callerThread = Thread.currentThread().getName();
 
-        // Để chạy Callable, thường dùng ExecutorService
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        Future<String> future = executor.submit(task);
+        Callable<String> task = () ->
+                "Callable.call() đang chạy trên thread: "
+                        + Thread.currentThread().getName();
 
-        // Luồng chính có thể làm việc khác ở đây...
+        FutureTask<String> futureTask = new FutureTask<>(task);
 
-        // Lấy kết quả (Lệnh .get() sẽ đợi cho đến khi luồng phụ xong)
-        return future.get();
+        Thread worker = new Thread(
+                futureTask,
+                "callable-thread-worker"
+        );
+
+        String result;
+        try {
+            worker.start();
+            result = futureTask.get(2, TimeUnit.SECONDS);
+            joinOrFail(worker);
+        } catch (TimeoutException e) {
+            throw new IllegalStateException("Callable worker không hoàn thành đúng thời gian dự kiến.", e);
+        } finally {
+            cleanup(worker);
+        }
+
+        return List.of(
+                "Caller thread: " + callerThread,
+                result
+        );
     }
 
-    // Tạo một pool cố định có 5 threads
-    @Autowired
-    @Qualifier("defaultTaskExecutor")
-    Executor taskExecutor;
+    private static void joinOrFail(Thread worker) throws InterruptedException {
+        worker.join(2_000);
+        if (worker.isAlive()) {
+            throw new IllegalStateException("Worker không kết thúc đúng thời gian dự kiến: " + worker.getName());
+        }
+    }
 
-    public void createByThreadPool() {
-        for (int i = 0; i < 5; i++) {
-            int taskId = i;
-            taskExecutor.execute(() -> {
-                System.out.println("Task " + taskId + " đang được xử lý bởi " + Thread.currentThread().getName());
-            });
+    private static void cleanup(Thread worker) throws InterruptedException {
+        if (!worker.isAlive()) return;
+        worker.interrupt();
+        worker.join(2_000);
+        if (worker.isAlive()) {
+            throw new IllegalStateException("Worker vẫn còn sống sau cleanup: " + worker.getName());
         }
     }
 }

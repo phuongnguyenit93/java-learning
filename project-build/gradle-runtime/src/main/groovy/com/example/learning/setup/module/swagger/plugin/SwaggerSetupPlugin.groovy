@@ -1,6 +1,6 @@
-package com.example.learning.module.swagger.plugin
+package com.example.learning.setup.module.swagger.plugin
 
-import com.example.learning.module.swagger.service.SwaggerResourceConfigurationService
+import com.example.learning.setup.module.swagger.service.SwaggerResourceConfigurationService
 import com.example.learning.utils.ProjectPropertyUtils
 import org.gradle.api.Plugin
 import org.gradle.api.Project

@@ -1,6 +1,6 @@
-package com.example.learning.module.env.plugin
+package com.example.learning.setup.module.env.plugin
 
-import com.example.learning.module.env.service.EnvStructureService
+import com.example.learning.setup.module.env.service.EnvStructureService
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 

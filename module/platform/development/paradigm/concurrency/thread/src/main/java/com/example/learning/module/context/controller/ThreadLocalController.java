@@ -1,29 +1,43 @@
 package com.example.learning.module.context.controller;
 
 import com.example.learning.module.context.service.ThreadLocalService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @RestController
-@RequestMapping("thread-local")
-@RequiredArgsConstructor
+@RequestMapping("/context")
 public class ThreadLocalController {
+
     private final ThreadLocalService threadLocalService;
 
-    @GetMapping("thread-local")
-    public void threadLocalDemo() {
-        threadLocalService.threadLocalDemo();
+    public ThreadLocalController(ThreadLocalService threadLocalService) {
+        this.threadLocalService = threadLocalService;
     }
 
-    @GetMapping("inheritable-thread-local")
-    public void inheritableThreadLocalDemo() throws InterruptedException {
-        threadLocalService.inheritableThreadLocalDemo();
+    /** README: readme/vi/menu/8.Context/ThreadLocal.md#thread-local-isolation */
+    @GetMapping("/isolation")
+    public Map<String, Object> isolation() throws InterruptedException {
+        return threadLocalService.isolationDemo();
     }
 
-    @GetMapping("thread-pool-issue")
-    public void threadPoolIssueDemo() throws InterruptedException {
-        threadLocalService.threadPoolIssueDemo();
+    /** README: readme/vi/menu/8.Context/ThreadLocal.md#inheritable-thread-local */
+    @GetMapping("/inheritance")
+    public Map<String, Object> inheritance() throws InterruptedException {
+        return threadLocalService.inheritanceDemo();
+    }
+
+    /** README: readme/vi/menu/8.Context/ThreadLocal.md#thread-pool-problem */
+    @GetMapping("/pool-reuse-problem")
+    public Map<String, Object> poolReuseProblem() throws Exception {
+        return threadLocalService.poolReuseProblemDemo();
+    }
+
+    /** README: readme/vi/menu/8.Context/ThreadLocal.md#context-propagation */
+    @GetMapping("/explicit-propagation")
+    public Map<String, Object> explicitPropagation() throws Exception {
+        return threadLocalService.explicitPropagationDemo();
     }
 }

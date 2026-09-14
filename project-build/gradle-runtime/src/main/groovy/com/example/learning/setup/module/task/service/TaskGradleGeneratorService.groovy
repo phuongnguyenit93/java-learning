@@ -1,4 +1,4 @@
-package com.example.learning.module.task.service
+package com.example.learning.setup.module.task.service
 
 class TaskGradleGeneratorService {
 

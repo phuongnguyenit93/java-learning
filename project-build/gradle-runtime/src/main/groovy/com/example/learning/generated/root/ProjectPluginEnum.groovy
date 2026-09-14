@@ -15,39 +15,39 @@ package com.example.learning.generated.root
 
 enum ProjectPluginEnum {
 
-    DEPENDENCY_SETUP_PLUGIN(
-            'com.example.learning.module.dependency.plugin',
-            'com.example.learning.module.dependency.plugin.DependencySetupPlugin'
-    ),
-
-    DOCKER_SETUP_PLUGIN(
-            'com.example.learning.module.docker.plugin',
-            'com.example.learning.module.docker.plugin.DockerSetupPlugin'
-    ),
-
-    ENV_SETUP_PLUGIN(
-            'com.example.learning.module.env.plugin',
-            'com.example.learning.module.env.plugin.EnvSetupPlugin'
-    ),
-
-    README_SETUP_PLUGIN(
-            'com.example.learning.module.readme.plugin',
-            'com.example.learning.module.readme.plugin.ReadmeSetupPlugin'
-    ),
-
-    SWAGGER_SETUP_PLUGIN(
-            'com.example.learning.module.swagger.plugin',
-            'com.example.learning.module.swagger.plugin.SwaggerSetupPlugin'
-    ),
-
-    TASK_SETUP_PLUGIN(
-            'com.example.learning.module.task.plugin',
-            'com.example.learning.module.task.plugin.TaskSetupPlugin'
-    ),
-
     CONFIG_SETUP_PLUGIN(
             'com.example.learning.setup.module.config.plugin',
             'com.example.learning.setup.module.config.plugin.ConfigSetupPlugin'
+    ),
+
+    DEPENDENCY_SETUP_PLUGIN(
+            'com.example.learning.setup.module.dependency.plugin',
+            'com.example.learning.setup.module.dependency.plugin.DependencySetupPlugin'
+    ),
+
+    DOCKER_SETUP_PLUGIN(
+            'com.example.learning.setup.module.docker.plugin',
+            'com.example.learning.setup.module.docker.plugin.DockerSetupPlugin'
+    ),
+
+    ENV_SETUP_PLUGIN(
+            'com.example.learning.setup.module.env.plugin',
+            'com.example.learning.setup.module.env.plugin.EnvSetupPlugin'
+    ),
+
+    README_SETUP_PLUGIN(
+            'com.example.learning.setup.module.readme.plugin',
+            'com.example.learning.setup.module.readme.plugin.ReadmeSetupPlugin'
+    ),
+
+    SWAGGER_SETUP_PLUGIN(
+            'com.example.learning.setup.module.swagger.plugin',
+            'com.example.learning.setup.module.swagger.plugin.SwaggerSetupPlugin'
+    ),
+
+    TASK_SETUP_PLUGIN(
+            'com.example.learning.setup.module.task.plugin',
+            'com.example.learning.setup.module.task.plugin.TaskSetupPlugin'
     ),
 
     YML_SETUP_PLUGIN(

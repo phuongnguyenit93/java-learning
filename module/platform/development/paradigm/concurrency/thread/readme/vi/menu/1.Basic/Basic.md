@@ -1,360 +1,764 @@
 <a id="back-to-top"></a>
 
-# Các kiến thức cơ bản của Thread
+# Thread cơ bản trong Java
 
 ## Menu
-- [1. Process và Thread trong Java](#process-and-thread)
-- [2. Tổng hợp: 4 Cách tạo Thread trong Java](#4-way-to-create-thread)
-- [3. Vòng đời (Lifecycle) của Thread trong Java](#life-cycle)
-- [4. Phân biệt Daemon vs Non-Daemon Thread trong Java](#daemon-thread)
+- [1. Process và Thread](#process-and-thread)
+- [2. Phân biệt Thread, Runnable, Callable và Executor](#thread-task)
+- [3. start() và run() khác nhau như thế nào?](#start-vs-run)
+- [4. Tạo và chạy Thread trực tiếp](#create-thread)
+- [5. Thread lifecycle và Thread.State](#thread-state)
+- [6. Daemon Thread và JVM lifecycle](#daemon-thread)
+- [7. Các experiment của phần Basic](#basic-endpoints)
 
-## <a id="process-and-thread">1. Process và Thread trong Java</a>
+Phần này xây dựng mental model nền tảng trước khi đi vào interruption, Java Memory Model, synchronization, coordination hay thread pool.
+
+Mục tiêu sau khi học xong:
+
+- Phân biệt được Process, Thread và Task.
+- Hiểu `start()` khác `run()` ở điểm nào.
+- Biết hai cách trực tiếp để tạo Platform Thread bằng `Thread` và `Runnable`.
+- Hiểu `Callable` không tự tạo Thread; nó chỉ mô tả một task có kết quả.
+- Đọc được các trạng thái trong `Thread.State`.
+- Hiểu chính xác Daemon Thread ảnh hưởng tới thời điểm JVM kết thúc như thế nào.
+
+## <a id="process-and-thread">1. Process và Thread</a>
+
 <details>
 <summary>Click for details</summary>
 
-### Process (Tiến trình) là gì?
-- **Khái niệm**: Một chương trình đang chạy trong hệ điều hành (VD: IntelliJ, Chrome).
-- **Bộ nhớ**: Mỗi process có **không gian bộ nhớ riêng**, **cách ly** với process khác.
-- **Giao tiếp**: Muốn trao đổi dữ liệu giữa các process thường dùng **IPC** (socket, file, pipe, shared memory...).
-- **Tài nguyên/chi phí**: Tạo/huỷ process thường **nặng hơn**, chuyển ngữ cảnh (context switch) thường **tốn hơn**.
-- **Độ an toàn**: Một process lỗi/crash thường **không làm sập** process khác (cách ly tốt).
+### Process là gì?
 
-### Thread (Luồng) là gì?
-- **Khái niệm**: “Luồng thực thi” bên trong **một process**. Một process có thể có **nhiều thread**.
-- **Bộ nhớ**:
-  - Các thread trong cùng process **chia sẻ**: heap, static, các object/tài nguyên chung.
-  - Mỗi thread có **stack riêng** (biến local, call stack riêng).
-- **Giao tiếp**: Dễ chia sẻ dữ liệu qua biến/object chung, nhưng dễ gặp **race condition** nếu không đồng bộ.
-- **Tài nguyên/chi phí**: Tạo/huỷ thread thường **nhẹ hơn** process.
-- **Rủi ro**: Do dùng chung dữ liệu, lỗi đồng bộ có thể ảnh hưởng toàn bộ process (deadlock, data corruption...).
+Process là một chương trình đang thực thi và có không gian tài nguyên riêng do hệ điều hành quản lý.
 
-## 1. Bảng so sánh chi tiết
+Ví dụ:
 
-| Đặc điểm | Process (Tiến trình) | Thread (Luồng) |
-| :--- | :--- | :--- |
-| **Định nghĩa** | Một chương trình đang thực thi (VD: IntelliJ, Chrome). | Đơn vị thực thi nhỏ nhất bên trong một Process. |
-| **Bộ nhớ** | Có vùng nhớ riêng biệt (Heap, Stack riêng). | Chia sẻ chung vùng nhớ (**Heap**) của Process nhưng có **Stack riêng**. |
-| **Giao tiếp** | Khó khăn, cần dùng **IPC** (Inter-Process Communication). | Dễ dàng vì dùng chung bộ nhớ (nhưng cần xử lý Thread-safe). |
-| **Chi phí** | Khởi tạo và chuyển ngữ cảnh (Context switch) nặng nề. | Khởi tạo nhanh, chuyển ngữ cảnh nhẹ nhàng hơn. |
-| **Sự cố** | Một Process sập thường không ảnh hưởng đến cái khác. | Một Thread bị lỗi nặng có thể kéo sập cả Process. |
-## 2. Hình ảnh minh họa trực quan
+- IntelliJ IDEA đang chạy là một process.
+- Một JVM chạy Spring Boot application là một process.
+- Chrome có thể sử dụng nhiều process cho các tab hoặc thành phần khác nhau.
 
-Hãy tưởng tượng một **Process** giống như một **Nhà máy**:
-* **Process**: Là toàn bộ khuôn viên nhà máy, có nguồn điện, nước và kho bãi riêng (Bộ nhớ).
-* **Thread**: Là các **Công nhân** làm việc bên trong nhà máy đó.
-* Các công nhân dùng chung nhà kho và máy móc (Shared Memory).
-* Mỗi công nhân có một bộ đồ bảo hộ và sổ tay riêng (Stack).
-* Nếu nhà máy này cháy (Process sập), mọi công nhân đều ngừng việc. Nhưng nếu nhà máy bên cạnh cháy, nhà máy này vẫn có thể hoạt động bình thường.
+Các process được cách ly với nhau. Nếu muốn trao đổi dữ liệu, chúng thường phải sử dụng một cơ chế IPC như socket, pipe, file hoặc shared memory.
 
-## 3. Tại sao Thread lại "nguy hiểm" hơn Process?
+### Thread là gì?
 
-Dù Thread nhẹ và nhanh hơn, nhưng vì chúng dùng chung "nhà kho" (Heap), nên xảy ra vấn đề **Race Condition**:
-* Nếu hai công nhân (Threads) cùng nhào vào thay đổi một món đồ trong kho mà không có sự sắp xếp, món đồ đó sẽ bị hỏng.
-* Đó là lý do trong Java chúng ta cần đến các từ khóa như `synchronized`, `Volatile` hoặc các cấu trúc `Concurrent` để giữ cho các Thread làm việc an toàn.
+Thread là một luồng thực thi bên trong process.
 
-## 4. Khi nào nên sử dụng Thread trong Java Backend?
+Một JVM process thường có nhiều thread cùng tồn tại:
 
-Việc sử dụng Thread đúng chỗ sẽ giúp ứng dụng của bạn phản hồi nhanh hơn và tận dụng tối đa sức mạnh phần cứng. Dưới đây là 4 nhóm trường hợp điển hình.
+```text
+JVM Process
+│
+├── main thread
+├── HTTP worker thread
+├── GC thread
+├── scheduler thread
+└── các thread khác
+```
 
----
-### * Giải phóng luồng chính (I/O Bound & Non-blocking)
+Các thread trong cùng process có thể cùng truy cập những object nằm trong heap của process. Mỗi thread đồng thời có execution stack riêng để lưu call stack và dữ liệu local của lần thực thi đó.
 
-Đây là trường hợp phổ biến nhất trong lập trình Web. Khi người dùng gửi yêu cầu, có những việc không cần thiết phải bắt họ đợi cho đến khi hoàn tất.
+Điều quan trọng là:
 
-* **Gửi thông báo:** Sau khi đặt hàng thành công, việc gửi Email hoặc Push Notification nên thực hiện ở luồng phụ. User nhận phản hồi "Thành công" ngay lập tức.
-* **Logging & Analytics:** Ghi log hoạt động hoặc gửi dữ liệu đến hệ thống giám sát (Prometheus/Grafana). Việc này không được phép làm chậm tốc độ của API.
+```text
+Nhiều Thread
+    ↓
+có thể cùng truy cập Shared Mutable State
+    ↓
+Concurrency Problem có thể xuất hiện
+```
 
-## 5. Tổng kết nhanh
+Race condition, visibility, ordering và synchronization sẽ được học ở các phần sau. Ở phần Basic chỉ cần ghi nhớ rằng việc nhiều thread cùng nhìn thấy một object không đồng nghĩa việc truy cập object đó luôn an toàn.
 
-* **Process** = Đơn vị sở hữu tài nguyên.
-* **Thread** = Đơn vị thực thi công việc.
-* Một Process có thể có nhiều Thread, nhưng một Thread chỉ thuộc về một Process duy nhất.
+### Process và Thread khác nhau ở đâu?
+
+| Đặc điểm | Process | Thread |
+| --- | --- | --- |
+| Phạm vi | Một chương trình đang chạy | Một luồng thực thi bên trong process |
+| Không gian bộ nhớ | Có không gian địa chỉ riêng | Cùng process nên có thể cùng truy cập heap |
+| Stack | Process có thể chứa nhiều thread, mỗi thread có stack riêng | Mỗi thread có stack riêng |
+| Giao tiếp | Thường cần IPC | Có thể giao tiếp thông qua shared object |
+| Chi phí tạo/chuyển đổi | Thường lớn hơn thread | Thường nhẹ hơn process |
+| Rủi ro concurrency | Cách ly tốt hơn giữa các process | Dễ phát sinh lỗi khi chia sẻ mutable state |
+
+### Demo trong module
+
+Tham khảo controller:
+
+```text
+BasicThreadController#processAndThread()
+```
+
+Endpoint:
+
+```text
+GET /basic/process-thread
+```
+
+Khi chạy endpoint này, response trả về:
+
+- PID của JVM process hiện tại.
+- Tên thread đang xử lý HTTP request.
+- ID của thread đó.
+- Thread đó có phải daemon hay không.
+- Trạng thái hiện tại của thread.
+
+Điểm cần quan sát là **một HTTP request không tự tồn tại độc lập**. Nó đang được thực thi bởi một thread cụ thể bên trong JVM process.
+
+**Kết luận:** Process là phạm vi chứa tài nguyên và nhiều thread; Thread là execution flow đang thực sự chạy code bên trong process đó.
 
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
+
 ---
-## <a id="4-way-to-create-thread">2. Tổng hợp: 4 Cách tạo Thread trong Java</a>
+
+## <a id="thread-task">2. Phân biệt Thread, Runnable, Callable và Executor</a>
+
 <details>
 <summary>Click for details</summary>
 
-Trong Java, việc tạo Thread đi từ mức độ cơ bản (thuần Java) đến các cách chuyên nghiệp thường dùng trong thực tế (Spring Boot). Dưới đây là hướng dẫn chi tiết kèm code mẫu.
+Đây là điểm rất dễ học sai nếu chỉ nhớ các API riêng lẻ.
 
-## 1. Kế thừa lớp Thread (Extends Thread)
-Đây là cách trực quan nhất nhưng ít linh hoạt nhất vì Java không cho phép đa kế thừa.
+### Thread
 
-* **Đặc điểm**: Đơn giản cho người mới bắt đầu.
-* **Hạn chế**: Nếu đã `extends Thread` thì không thể kế thừa bất kỳ lớp nào khác.
+`Thread` đại diện cho một luồng thực thi.
 
-```java
-    // Định nghĩa một lớp Thread
-    class MyWorker extends Thread {
-        @Override
-        public void run() {
-            System.out.println("Thread [Extends] đang chạy: " + Thread.currentThread().getName());
-        }
-    }
-
-    @Service
-    public class ThreadStyleService {
-        public void createByExtends() {
-            MyWorker t1 = new MyWorker();
-            t1.start(); 
-        }
-    }
-```
-
----
-
-## 2. Triển khai Interface Runnable (Implements Runnable)
-Đây là cách phổ biến và được khuyến khích nhất trong lập trình Java cơ bản.
-
-* **Đặc điểm**: Tách biệt rõ ràng giữa **"Công việc"** (Runnable) và **"Người thực hiện"** (Thread).
-* **Ưu điểm**: Giúp code sạch, dễ bảo trì và linh hoạt trong kế thừa.
+Ví dụ:
 
 ```java
-    @Service
-    public class RunnableService {
-        public void createByRunnable() {
-            // Sử dụng Lambda (Java 8+) giúp code cực kỳ gọn
-            Runnable task = () -> System.out.println("Runnable Lambda đang chạy!");
+Thread worker = new Thread(() -> {
+    System.out.println(Thread.currentThread().getName());
+});
 
-            Thread t1 = new Thread(task);
-            t1.start();
-        }
-    }
+worker.start();
 ```
 
----
+### Runnable
 
-## 3. Sử dụng Interface Callable và Future
-`Runnable` có nhược điểm là hàm `run()` không thể trả về kết quả và không thể `throw` Exception. `Callable` ra đời để giải quyết vấn đề này.
-
-* **Đặc điểm**: Dùng khi bạn cần luồng phụ tính toán xong và **trả về một giá trị** cho luồng chính.
-```java
-    @Service
-    public class CallableService {
-        public String createByCallable() throws Exception {
-            Callable<String> task = () -> {
-                Thread.sleep(2000);
-                return "Kết quả từ luồng phụ!";
-            };
-
-            ExecutorService executor = Executors.newSingleThreadExecutor();
-            Future<String> future = executor.submit(task);
-
-            // Lấy kết quả (Lệnh .get() sẽ block luồng chính cho đến khi xong)
-            return future.get();
-        }
-    }
-```
-
----
-
-## 4. Sử dụng Thread Pool (Executor Service) - 🔥 Cách chuyên nghiệp
-Trong các dự án thực tế, người ta không bao giờ dùng `new Thread().start()` tùy tiện. Thay vào đó, họ dùng một "hồ chứa" (Pool) các luồng để tái sử dụng, giúp tiết kiệm tài nguyên.
+`Runnable` mô tả một công việc:
 
 ```java
-    @Service
-    public class PoolService {
-        // Tạo một pool cố định có 5 threads
-        private final ExecutorService threadPool = Executors.newFixedThreadPool(5);
-
-        public void createByThreadPool() {
-            for (int i = 0; i < 10; i++) {
-                int taskId = i;
-                threadPool.execute(() -> {
-                    System.out.println("Task " + taskId + " xử lý bởi " + Thread.currentThread().getName());
-                });
-            }
-        }
-    }
+Runnable task = () -> {
+    System.out.println("Doing work");
+};
 ```
 
-## 📊 Bảng so sánh nhanh
+`Runnable` không phải Thread và tự nó không tạo ra thread mới.
 
-| Cách thức | Khi nào nên dùng? | Mức độ phổ biến |
-| :--- | :--- | :--- |
-| **Extends Thread** | Chỉ dùng cho các bài tập nhỏ, cực kỳ đơn giản. | Thấp |
-| **Implements Runnable** | Khi định nghĩa tác vụ chạy ngầm, không cần trả kết quả. | Cao |
-| **Callable & Future** | Khi cần lấy giá trị trả về hoặc xử lý Exception từ luồng phụ. | Cao |
-| **Thread Pool** | **Luôn dùng trong dự án thực tế** để quản lý tài nguyên. | Rất Cao |
-## 🚀 Ví dụ tích hợp vào Controller để Test
+Muốn task chạy trên một Thread mới:
 
 ```java
-    @RestController
-    @RequestMapping("/api/threads")
-    public class ThreadLearningController {
-        private final RunnableService runnableService;
-        private final PoolService poolService;
-
-        public ThreadLearningController(RunnableService runnableService, PoolService poolService) {
-            this.runnableService = runnableService;
-            this.poolService = poolService;
-        }
-
-        @GetMapping("/runnable")
-        public String testRunnable() {
-            runnableService.createByRunnable();
-            return "Đã kích hoạt Runnable (Xem console)";
-        }
-
-        @GetMapping("/pool")
-        public String testPool() {
-            poolService.createByThreadPool();
-            return "Đã đẩy 10 tasks vào Pool (Xem console)";
-        }
-    }
+Thread worker = new Thread(task);
+worker.start();
 ```
+
+Mental model:
+
+```text
+Runnable
+   = WHAT to run
+
+Thread
+   = WHERE execution happens
+```
+
+### Callable
+
+`Callable<V>` cũng mô tả một task nhưng có thể:
+
+- trả về kết quả;
+- ném checked exception.
+
+```java
+Callable<String> task = () -> "result";
+```
+
+`Callable` cũng không tự tạo Thread.
+
+Ở phần Basic, module dùng `FutureTask` để kết nối `Callable` với một Thread trực tiếp:
+
+```java
+Callable<String> task = () -> "result";
+FutureTask<String> futureTask = new FutureTask<>(task);
+
+Thread worker = new Thread(futureTask, "callable-worker");
+worker.start();
+
+String result = futureTask.get();
+```
+
+`Future`, `ExecutorService` và `CompletableFuture` sẽ được học kỹ ở các chapter sau.
+
+### Executor
+
+Executor là abstraction dùng để nhận task và quyết định cách task được thực thi.
+
+Trong phần Basic chỉ cần ghi nhớ:
+
+```text
+Task abstraction
+    Runnable / Callable
+            ↓
+Execution mechanism
+    Thread / Executor
+```
+
+Không nên gọi `Callable` hoặc Thread Pool là "cách tạo Thread" vì chúng đảm nhận vai trò khác nhau.
+
+### Liên hệ với code trong module
+
+Tham khảo:
+
+```text
+CreateThreadController#createByExtends()
+CreateThreadController#createByRunnable()
+CreateThreadController#createByCallable()
+```
+
+Ba method này được đặt cạnh nhau để nhìn rõ ba vai trò khác nhau:
+
+```text
+MyWorker extends Thread
+    → task và execution mechanism bị gắn vào cùng một class
+
+Runnable + Thread
+    → task và Thread được tách rời
+
+Callable + FutureTask + Thread
+    → task có kết quả vẫn cần một execution mechanism để chạy
+```
+
+**Kết luận:** `Runnable` và `Callable` mô tả **công việc**; `Thread` hoặc `Executor` chịu trách nhiệm **thực thi công việc**.
 
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
+
 ---
-## <a id="life-cycle">3. Vòng đời (Lifecycle) của Thread trong Java</a>
+
+## <a id="start-vs-run">3. start() và run() khác nhau như thế nào?</a>
+
 <details>
 <summary>Click for details</summary>
 
-Hiểu rõ các trạng thái của Thread giúp bạn lập trình đa luồng (Multi-threading) hiệu quả và dễ dàng debug các vấn đề về hiệu năng hoặc Deadlock.
+Đây là kiến thức nền tảng nhất khi làm việc trực tiếp với `Thread`.
 
----
+Giả sử có:
 
-## 🔄 Sơ đồ tổng quát
+```java
+Thread worker = new Thread(task, "worker-thread");
+```
 
-Mô hình chuyển đổi trạng thái của một Thread:
-`NEW → RUNNABLE → (RUNNING) → BLOCKED / WAITING / TIMED_WAITING → RUNNABLE → … → TERMINATED`
-> **⚠️ Lưu ý quan trọng:** Trong Enum chính thức `Thread.State` của Java **không có trạng thái tên là `RUNNING`**. "RUNNING" chỉ là cách gọi kỹ thuật khi Thread thực sự được CPU xử lý. Trong JVM, lúc đó Thread vẫn được báo cáo là `RUNNABLE`.
+### Gọi run()
 
----
+```java
+worker.run();
+```
 
-## 1. NEW (Mới tạo)
-* **Ý nghĩa**: Thread vừa được khởi tạo bằng `new Thread(...)` nhưng **chưa** gọi `start()`.
-* **Trạng thái JVM**: `NEW`
+Đây chỉ là một lời gọi method Java thông thường.
 
-    ```java
-    Thread t = new Thread(() -> System.out.println("hi"));
-    System.out.println(t.getState()); // Kết quả: NEW
-    ```
+Không có thread mới được start.
 
----
+`task` chạy ngay trên thread đang gọi `run()`.
 
-## 2. RUNNABLE (Sẵn sàng chạy)
-* **Ý nghĩa**: Sau khi gọi `start()`, Thread sẵn sàng để chạy. Bộ lập lịch (Scheduler) của OS/JVM sẽ cấp CPU khi đến lượt.
-* **Trạng thái JVM**: `RUNNABLE`
-* Trong Java, không có trạng thái "RUNNING" riêng biệt; RUNNABLE bao gồm cả việc "đang chạy" và "đang chờ CPU cấp lượt".
+```text
+HTTP request thread
+      ↓
+worker.run()
+      ↓
+task vẫn chạy trên HTTP request thread
+```
 
-    ```java
-    Thread t = new Thread(() -> {
-        // Khi Thread đang thực thi code, state vẫn là RUNNABLE
-        System.out.println("running...");
-    });
-    t.start();
-    ```
+### Gọi start()
 
----
+```java
+worker.start();
+```
 
-## 3. BLOCKED (Bị chặn)
-* **Ý nghĩa**: Thread đang chờ để vào một khối `synchronized` nhưng không lấy được khóa (monitor lock) vì Thread khác đang giữ.
-* **Trạng thái JVM**: `BLOCKED`
+`start()` yêu cầu JVM khởi động execution của Thread đó. Sau đó JVM sẽ gọi `run()` trên thread mới.
 
-    ```java
-    Object lock = new Object();
-    // Giả sử t1 đã chiếm lock và đang ngủ
-    Thread t2 = new Thread(() -> {
-        synchronized (lock) { // t2 sẽ rơi vào trạng thái BLOCKED
-            System.out.println("acquired");
-        }
-    });
-    ```
+```text
+HTTP request thread
+      │
+      └── worker.start()
+              ↓
+        worker-thread
+              ↓
+            run()
+```
 
----
+Vì vậy:
 
-## 4. WAITING (Chờ vô thời hạn)
-* **Ý nghĩa**: Thread chờ đợi một sự kiện đánh thức từ Thread khác mà không có thời gian hết hạn.
-* **Trạng thái JVM**: `WAITING`
-* **Nguyên nhân**: Gọi `Object.wait()`, `Thread.join()` hoặc `LockSupport.park()`.
-* Luồng dừng vô thời hạn cho đến khi một luồng khác gọi notify() hoặc join()
+```text
+run()   → method call bình thường
+start() → bắt đầu lifecycle của một Thread mới
+```
 
-    ```java
-    synchronized (lock) {
-        lock.wait(); // Thread rơi vào trạng thái WAITING
-    }
-    ```
+Một object `Thread` chỉ được `start()` một lần. Nếu gọi `start()` lần thứ hai sau khi nó đã được start, JVM ném `IllegalThreadStateException`.
 
----
+### Demo trong module
 
-## 5. TIMED_WAITING (Chờ có thời hạn)
-* **Ý nghĩa**: Tương tự WAITING nhưng có cài đặt thời gian. Thread sẽ tự quay lại `RUNNABLE
-* Xảy ra khi bạn dùng Thread.sleep(ms) hoặc wait(ms)
-## 6. TERMINATED
-* **Ý nghĩa**: Luồng đã chết.
-* Bạn không thể gọi .start() lần thứ hai trên một Thread đã TERMINATED (nếu cố tình sẽ bị IllegalThreadStateException).
+Tham khảo controller:
+
+```text
+BasicThreadController#startVsRun()
+```
+
+Endpoint:
+
+```text
+GET /basic/start-vs-run
+```
+
+Demo chạy cùng một `Runnable` theo hai cách:
+
+1. gọi trực tiếp `run()`;
+2. tạo Thread và gọi `start()`.
+
+Khi chạy, hãy so sánh tên thread:
+
+```text
+run() trực tiếp
+→ task chạy trên caller/request thread
+
+start()
+→ task chạy trên basic-start-worker
+```
+
+Điểm cần quan sát không phải thứ tự log, mà là **thread nào đang thực thi `run()`**.
+
+**Kết luận:** gọi `run()` chỉ là gọi method bình thường; gọi `start()` mới bắt đầu lifecycle của một Thread riêng.
 
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
+
 ---
-## <a id="daemon-thread">4. Phân biệt Daemon vs Non-Daemon Thread trong Java</a>
+
+## <a id="create-thread">4. Tạo và chạy Thread trực tiếp</a>
+
 <details>
 <summary>Click for details</summary>
 
-Trong Java, các Thread được chia thành hai loại chính dựa trên cách mà JVM (Java Virtual Machine) đối xử với chúng khi chương trình kết thúc.
+Trong phần Basic, mục tiêu là hiểu API mức thấp trước khi học Executor.
 
----
-
-## 1. Daemon Thread (Luồng nền)
-**Daemon thread** là luồng phục vụ "hậu trường" cho chương trình (ví dụ: Garbage Collection, dọn dẹp cache, monitoring như Prometheus/Grafana).
-
-* **Tính chất quan trọng:** JVM **không đợi** Daemon thread chạy xong để thoát chương trình.
-* **Hành vi:** Khi tất cả các luồng Non-daemon đã kết thúc, JVM sẽ đóng lại ngay lập tức. Mọi Daemon thread đang chạy sẽ bị chấm dứt (terminate) đột ngột mà không cần đợi hoàn tất.
----
-
-## 2. Non-Daemon Thread (User Thread)
-**Non-daemon thread** là luồng "chính" thực hiện các công việc cốt lõi của ứng dụng.
-
-* **Tính chất quan trọng:** JVM sẽ tiếp tục chạy miễn là còn ít nhất **một** Non-daemon thread chưa kết thúc.
-* **Hành vi:** Luồng chính (`main` thread) mặc định là một Non-daemon thread.
-* Nghĩa là nếu run() có vòng lặp vô tận, ứng dụng Spring Boot của bạn sẽ không thể tắt hoàn toàn dù bạn đã dừng Server.
-
----
-
-## 📊 So sánh và Hệ quả thực tế
-
-| Đặc điểm | Daemon Thread | Non-Daemon (User Thread) |
-| :--- | :--- | :--- |
-| **Mục đích** | Phục vụ các tác vụ bổ trợ, housekeeping. | Thực hiện logic chính của ứng dụng. |
-| **Khi app thoát** | Bị JVM cắt ngang ngay lập tức. | JVM đợi cho đến khi hoàn thành. |
-| **Trường hợp sử dụng** | Dọn cache, log định kỳ, giám sát tài nguyên. | Ghi file, giao dịch DB, gửi message, xử lý request. |
-
-> **⚠️ Cảnh báo:** Không bao giờ dùng Daemon thread cho các công việc cần tính toàn vẹn dữ liệu (như ghi File quan trọng hoặc Commit DB) vì chúng có thể bị "khai tử" giữa chừng, gây mất mát hoặc hỏng dữ liệu.
-
----
-
-## ⚙️ Cách cấu hình Daemon Thread
-
-Theo mặc định, một Thread mới tạo sẽ kế thừa trạng thái daemon từ Thread tạo ra nó. Để thay đổi, bạn phải sử dụng phương thức `setDaemon(true)`.
-
-**Quy tắc vàng:** Việc đặt trạng thái daemon phải thực hiện **trước khi** gọi `start()`. Nếu gọi sau khi đã chạy, hệ thống sẽ ném ra `IllegalThreadStateException`.
+### Cách 1: extends Thread
 
 ```java
-    Thread t = new Thread(() -> {
-        while (true) { 
-            // Thực hiện công việc nền vĩnh viễn
-            System.out.println("Daemon is working...");
-        }
-    });
+public class MyWorker extends Thread {
 
-    t.setDaemon(true); // Thiết lập là luồng nền (PHẢI trước start)
-    t.start();
+    public MyWorker(String name) {
+        super(name);
+    }
+
+    @Override
+    public void run() {
+        System.out.println(
+                "Running on " + Thread.currentThread().getName()
+        );
+    }
+}
 ```
 
----
-## 💡 Ghi chú nhanh cho Lập trình viên
+Sử dụng:
 
-* **Độ ưu tiên:** Daemon thread không có độ ưu tiên (Priority) thấp hơn luồng thường một cách mặc định; sự khác biệt duy nhất nằm ở quy tắc "sống/chết" khi JVM thoát.
-* **Shutdown sạch sẽ:** Dù là loại luồng nào, cách tốt nhất để dừng ứng dụng vẫn là sử dụng `interrupt()` kết hợp với **Shutdown Hooks** hoặc quản lý qua **ExecutorService shutdown** để đảm bảo giải phóng tài nguyên an toàn.
+```java
+Thread worker = new MyWorker("extends-thread-worker");
+worker.start();
+```
+
+Cách này giúp nhìn rõ quan hệ kế thừa với `Thread`, nhưng nó làm class công việc bị gắn chặt với execution mechanism.
+
+### Cách 2: Runnable + Thread
+
+```java
+Runnable task = () -> {
+    System.out.println(
+            "Running on " + Thread.currentThread().getName()
+    );
+};
+
+Thread worker = new Thread(task, "runnable-worker");
+worker.start();
+```
+
+Cách này tách rõ:
+
+```text
+Runnable = task
+Thread   = execution
+```
+
+Đây là mental model quan trọng để sau này hiểu Executor.
+
+### Callable + FutureTask + Thread
+
+`Callable` không thể truyền trực tiếp vào constructor `Thread` vì `Thread` nhận `Runnable`.
+
+`FutureTask` có thể bọc `Callable` và đồng thời implements `Runnable`:
+
+```java
+Callable<String> task = () -> "Kết quả";
+FutureTask<String> futureTask = new FutureTask<>(task);
+
+Thread worker = new Thread(futureTask, "callable-worker");
+worker.start();
+
+String result = futureTask.get();
+```
+
+Điểm cần hiểu:
+
+```text
+Callable
+    ↓ được bọc bởi
+FutureTask
+    ↓ được chạy bởi
+Thread
+```
+
+### Demo trong module
+
+Tham khảo controller:
+
+```text
+CreateThreadController#createByExtends()
+CreateThreadController#createByRunnable()
+CreateThreadController#createByCallable()
+```
+
+Các endpoint:
+
+```text
+GET /create/extends
+GET /create/runnable
+GET /create/callable
+```
+
+Khi chạy từng endpoint, hãy quan sát tên worker trong response:
+
+```text
+/extends
+→ extends-thread-worker
+
+/runnable
+→ runnable-thread-worker
+
+/callable
+→ callable-thread-worker
+```
+
+`/extends` và `/runnable` đều tạo execution bằng `Thread`, nhưng cách tổ chức task khác nhau. `/callable` cho thấy `Callable` không tự chạy: nó được `FutureTask` bọc lại rồi mới được một `Thread` thực thi.
+
+Mỗi demo đều `join()` hoặc chờ kết quả trước khi kết thúc experiment, nên không để lại worker thread ngoài ý muốn.
+
+**Kết luận:** phần này học cách nối **task** với **execution mechanism**, không phải học ba API tương đương nhau.
+
+</details>
+
+- [Quay lại đầu trang](#back-to-top)
 
 ---
+
+## <a id="thread-state">5. Thread lifecycle và Thread.State</a>
+
+<details>
+<summary>Click for details</summary>
+
+Java định nghĩa sáu trạng thái trong `Thread.State`:
+
+```text
+NEW
+RUNNABLE
+BLOCKED
+WAITING
+TIMED_WAITING
+TERMINATED
+```
+
+Không có enum state tên là `RUNNING`.
+
+Một thread đang thực sự dùng CPU vẫn được JVM biểu diễn bằng `RUNNABLE`.
+
+### NEW
+
+Thread object đã được tạo nhưng chưa `start()`:
+
+```java
+Thread worker = new Thread(task);
+System.out.println(worker.getState()); // NEW
+```
+
+### RUNNABLE
+
+Thread đã được start và đang ở trạng thái có thể thực thi hoặc đang thực thi.
+
+Java không tách riêng "ready" và "running" thành hai giá trị `Thread.State`.
+
+### BLOCKED
+
+Thread đang chờ lấy intrinsic monitor để đi vào một block hoặc method `synchronized`.
+
+Ví dụ:
+
+```text
+Thread A giữ monitor X
+        ↓
+Thread B cố synchronized(X)
+        ↓
+Thread B = BLOCKED
+```
+
+`BLOCKED` có ý nghĩa rất cụ thể: chờ monitor lock của `synchronized`.
+
+Không nên gọi mọi trường hợp "đang chờ" là `BLOCKED`.
+
+### WAITING
+
+Thread đang chờ vô thời hạn cho đến khi một điều kiện hoặc sự kiện khác làm nó có thể tiếp tục.
+
+Một số API có thể đưa thread vào `WAITING`:
+
+- `Object.wait()` không timeout;
+- `Thread.join()` không timeout;
+- `LockSupport.park()`.
+
+Ví dụ với `wait()`:
+
+```java
+synchronized (monitor) {
+    monitor.wait();
+}
+```
+
+Thread đang gọi `wait()` phải được đánh thức bằng `notify()`, `notifyAll()`, interrupt hoặc một cơ chế phù hợp với API đang dùng.
+
+Riêng `join()` có semantics khác: thread đang gọi `join()` chờ thread mục tiêu kết thúc.
+
+### TIMED_WAITING
+
+Thread đang chờ với một giới hạn thời gian.
+
+Ví dụ:
+
+- `Thread.sleep(...)`;
+- `Object.wait(timeout)`;
+- `Thread.join(timeout)`;
+- `LockSupport.parkNanos(...)`.
+
+### TERMINATED
+
+Method `run()` đã hoàn thành hoặc kết thúc bởi exception không được xử lý.
+
+Thread object vẫn tồn tại như một object Java, nhưng execution của thread đó đã kết thúc và không thể `start()` lại.
+
+### Sơ đồ mental model
+
+```text
+new Thread(...)
+      ↓
+     NEW
+      ↓ start()
+   RUNNABLE
+      ↓
+ ┌────┼───────────────┐
+ ↓    ↓               ↓
+BLOCKED          WAITING / TIMED_WAITING
+ └────┴──────┬────────┘
+             ↓
+          RUNNABLE
+             ↓ run() kết thúc
+         TERMINATED
+```
+
+Đây là mô hình khái niệm. Một thread có thể chuyển giữa `RUNNABLE` và các trạng thái chờ nhiều lần trong suốt vòng đời.
+
+### Demo trong module
+
+Tham khảo controller:
+
+```text
+BasicThreadController#threadLifeCycle()
+```
+
+Endpoint:
+
+```text
+GET /basic/thread-life-cycle
+```
+
+Demo mới chủ động điều khiển một worker đi qua lần lượt:
+
+```text
+NEW
+→ RUNNABLE
+→ TIMED_WAITING
+→ BLOCKED
+→ WAITING
+→ TERMINATED
+```
+
+Service sử dụng các tín hiệu nội bộ để quan sát state thay vì chỉ dựa vào những khoảng `sleep()` ngẫu nhiên của request thread. Riêng `TIMED_WAITING` được tạo bằng một latch có timeout dài; caller quan sát state rồi chủ động release latch để worker tiếp tục sang bước `BLOCKED`. Vì vậy demo không phụ thuộc vào việc scheduler phải "bắt kịp" một cửa sổ sleep ngắn.
+
+Khi chạy endpoint, response nên thể hiện đủ chuỗi:
+
+```text
+NEW -> NEW
+RUNNABLE -> RUNNABLE
+TIMED_WAITING -> TIMED_WAITING
+BLOCKED -> BLOCKED
+WAITING -> WAITING
+TERMINATED -> TERMINATED
+```
+
+Điểm cần quan sát là mỗi state xuất hiện vì **một nguyên nhân cụ thể**:
+
+- `TIMED_WAITING` do chờ có timeout;
+- `BLOCKED` do chờ intrinsic monitor của `synchronized`;
+- `WAITING` do `wait()` không timeout;
+- `TERMINATED` sau khi `run()` kết thúc.
+
+**Kết luận:** không nên gom mọi trạng thái "đang chờ" thành một khái niệm chung. `Thread.State` mô tả các loại chờ khác nhau với semantics khác nhau.
+
+</details>
+
+- [Quay lại đầu trang](#back-to-top)
+
+---
+
+## <a id="daemon-thread">6. Daemon Thread và JVM lifecycle</a>
+
+<details>
+<summary>Click for details</summary>
+
+Java thread có thuộc tính daemon.
+
+Điểm quan trọng nhất không phải daemon "chạy nền", mà là cách JVM quyết định thời điểm kết thúc.
+
+### User thread và daemon thread
+
+JVM tiếp tục tồn tại khi vẫn còn user thread còn sống.
+
+Khi không còn user thread nào sống, JVM có thể kết thúc dù daemon thread vẫn chưa hoàn thành.
+
+```text
+User Thread còn sống
+    → JVM tiếp tục chạy
+
+Chỉ còn Daemon Thread
+    → JVM không bắt buộc phải chờ daemon hoàn thành
+```
+
+Vì vậy daemon thread không phù hợp cho công việc bắt buộc phải hoàn tất trước khi process kết thúc, ví dụ ghi dữ liệu quan trọng mà không có cơ chế đảm bảo khác.
+
+Daemon cũng **không đồng nghĩa priority thấp**. `daemon` là property liên quan JVM liveness/lifecycle; thread scheduling priority là khái niệm khác. Không suy ra một daemon thread sẽ tự động được CPU ưu tiên thấp hơn chỉ vì `isDaemon() == true`.
+
+### Thread mới kế thừa daemon status
+
+Khi tạo một Thread mới, daemon status mặc định được kế thừa từ thread tạo ra nó.
+
+Có thể thay đổi trước khi start:
+
+```java
+Thread worker = new Thread(task);
+worker.setDaemon(true);
+worker.start();
+```
+
+Sau khi Thread đã được start, không thể thay đổi daemon flag bằng `setDaemon(...)`.
+
+### Vì sao không dùng HTTP endpoint để chứng minh JVM exit?
+
+Trong Spring Boot, kết thúc một HTTP request không đồng nghĩa JVM kết thúc.
+
+Server vẫn có nhiều user thread khác đang sống.
+
+Do đó kiểu demo:
+
+```text
+request kết thúc
+→ kết luận daemon thread phải chết
+```
+
+là sai.
+
+Controller chỉ phù hợp để quan sát daemon property, không phù hợp để chứng minh quy tắc shutdown của JVM.
+
+### Demo trong Spring Boot
+
+Tham khảo controller:
+
+```text
+DaemonThreadController#inspectDaemonRules()
+```
+
+Endpoint:
+
+```text
+GET /daemon/inspect
+```
+
+Demo cho thấy:
+
+- daemon status của HTTP request thread;
+- daemon status mà child thread kế thừa mặc định;
+- giá trị sau khi chủ động gọi `setDaemon(true)` trước `start()`.
+
+Khi chạy endpoint này, không kết luận gì về thời điểm JVM shutdown. Endpoint chỉ dùng để quan sát **daemon flag và inheritance rule**.
+
+### Demo JVM lifecycle độc lập
+
+File:
+
+```text
+src/main/java/com/example/learning/module/basic/thread/DaemonJvmExitDemo.java
+```
+
+Class này có `main()` riêng và phải chạy như một Java application độc lập.
+
+Chạy với:
+
+```text
+true  → worker là daemon thread
+false → worker là user thread
+```
+
+Khi `true`, `main` kết thúc trước worker và JVM không chờ worker hoàn thành.
+
+Khi `false`, worker là user thread nên JVM tiếp tục sống cho đến khi worker hoàn thành.
+
+**Kết luận:** HTTP demo giúp quan sát daemon property; `DaemonJvmExitDemo.main()` mới là experiment phù hợp để chứng minh JVM exit semantics.
+
+</details>
+
+- [Quay lại đầu trang](#back-to-top)
+
+---
+
+## <a id="basic-endpoints">7. Các experiment của phần Basic</a>
+
+<details>
+<summary>Click for details</summary>
+
+| README section | Controller method / Demo | Endpoint | Mục đích |
+| --- | --- | --- | --- |
+| `#process-and-thread` | `BasicThreadController#processAndThread()` | `GET /basic/process-thread` | Quan sát JVM process và HTTP request thread |
+| `#start-vs-run` | `BasicThreadController#startVsRun()` | `GET /basic/start-vs-run` | Chứng minh `run()` không tạo thread mới còn `start()` thì có |
+| `#thread-state` | `BasicThreadController#threadLifeCycle()` | `GET /basic/thread-life-cycle` | Quan sát sáu giá trị `Thread.State` |
+| `#create-thread` | `CreateThreadController#createByExtends()` | `GET /create/extends` | Tạo Thread bằng subclass của `Thread` |
+| `#create-thread` | `CreateThreadController#createByRunnable()` | `GET /create/runnable` | Tách task `Runnable` khỏi `Thread` |
+| `#create-thread` | `CreateThreadController#createByCallable()` | `GET /create/callable` | Chạy `Callable` bằng `FutureTask` và một Thread trực tiếp |
+| `#daemon-thread` | `DaemonThreadController#inspectDaemonRules()` | `GET /daemon/inspect` | Quan sát daemon flag và inheritance |
+| `#daemon-thread` | `DaemonJvmExitDemo.main()` | Java application độc lập | Chứng minh JVM không đợi daemon thread |
+
+Sau phần này, cần tự trả lời được các câu hỏi:
+
+1. `Thread`, `Runnable` và `Callable` khác vai trò ở đâu?
+2. Vì sao `thread.run()` không tương đương `thread.start()`?
+3. `Thread.State.BLOCKED` khác `WAITING` như thế nào?
+4. Vì sao một Thread đã `TERMINATED` không thể restart?
+5. Vì sao kết thúc HTTP request trong Spring Boot không chứng minh được daemon thread sẽ chết?
+6. Vì sao Executor chưa nên được coi đơn giản là "một cách tạo Thread"?
 
 </details>
 

@@ -60,12 +60,6 @@ module
 │       │       ├── istio
 │       │       └── linkerd
 │       ├── observability
-│       │   ├── benchmark
-│       │   │   ├── load-test
-│       │   │   │   ├── jmeter
-│       │   │   │   └── k6
-│       │   │   └── micro
-│       │   │       └── jmh
 │       │   ├── console
 │       │   │   └── hawtio [HAWTIO]
 │       │   ├── diagnostic
@@ -323,14 +317,32 @@ module
     │   │   └── reactive-stream
     │   │       └── webflux
     │   └── validation
+    │       ├── benchmark
+    │       │   ├── microbenchmark
+    │       │   │   └── jmh
+    │       │   └── system-benchmark
     │       ├── performance
     │       │   ├── benchmark
     │       │   ├── jmeter
     │       │   └── load-test
     │       └── testing
-    │           ├── e2e-test
-    │           ├── integration-test
-    │           └── unit-test
+    │           ├── functional
+    │           │   ├── e2e-test
+    │           │   ├── integration-test
+    │           │   └── unit-test
+    │           └── non-functional
+    │               ├── performance-test
+    │               │   └── concept
+    │               │       ├── endurance-test
+    │               │       ├── load-test
+    │               │       ├── scalability-test
+    │               │       ├── spike-test
+    │               │       ├── stress-test
+    │               │       └── volume-test
+    │               └── tooling
+    │                   ├── gatling
+    │                   ├── jmeter
+    │                   └── k6
     ├── digital
     ├── social
     └── support

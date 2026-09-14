@@ -1,7 +1,7 @@
-package com.example.learning.module.task.plugin
+package com.example.learning.setup.module.task.plugin
 
 import com.example.learning.generated.root.ProjectPluginEnum
-import com.example.learning.module.task.service.TaskGradleGeneratorService
+import com.example.learning.setup.module.task.service.TaskGradleGeneratorService
 import groovy.json.JsonSlurper
 import org.gradle.api.GradleException
 import org.gradle.api.Plugin

@@ -1,6 +1,6 @@
-package com.example.learning.module.docker.plugin
+package com.example.learning.setup.module.docker.plugin
 
-import com.example.learning.module.docker.service.DockerComposeConfigurationService
+import com.example.learning.setup.module.docker.service.DockerComposeConfigurationService
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 

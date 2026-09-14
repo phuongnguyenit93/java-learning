@@ -273,36 +273,6 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <ul>
 <li>
 <details>
-  <summary><b><a href='./module/infrastructure/system/observability/benchmark'>📁 benchmark</a></b></summary>
-<ul>
-<li>
-<details>
-  <summary><b><a href='./module/infrastructure/system/observability/benchmark/load-test'>📁 load-test</a></b></summary>
-<ul>
-<li>
-  <a href='./module/infrastructure/system/observability/benchmark/load-test/jmeter'>🪄 jmeter</a>
-</li>
-<li>
-  <a href='./module/infrastructure/system/observability/benchmark/load-test/k6'>🪄 k6</a>
-</li>
-</ul>
-</details>
-</li>
-<li>
-<details>
-  <summary><b><a href='./module/infrastructure/system/observability/benchmark/micro'>📁 micro</a></b></summary>
-<ul>
-<li>
-  <a href='./module/infrastructure/system/observability/benchmark/micro/jmh'>🪄 jmh</a>
-</li>
-</ul>
-</details>
-</li>
-</ul>
-</details>
-</li>
-<li>
-<details>
   <summary><b><a href='./module/infrastructure/system/observability/console'>📁 console</a></b></summary>
 <ul>
 <li>
@@ -1418,6 +1388,26 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <ul>
 <li>
 <details>
+  <summary><b><a href='./module/platform/development/validation/benchmark'>📁 benchmark</a></b></summary>
+<ul>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/validation/benchmark/microbenchmark'>📁 microbenchmark</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/validation/benchmark/microbenchmark/jmh'>🪄 jmh</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+  <a href='./module/platform/development/validation/benchmark/system-benchmark'>🪄 system-benchmark</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
   <summary><b><a href='./module/platform/development/validation/performance'>📁 performance</a></b></summary>
 <ul>
 <li>
@@ -1437,13 +1427,75 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <summary><b><a href='./module/platform/development/validation/testing'>📁 testing</a></b></summary>
 <ul>
 <li>
-  <a href='./module/platform/development/validation/testing/e2e-test'>🪄 e2e-test</a>
+<details>
+  <summary><b><a href='./module/platform/development/validation/testing/functional'>📁 functional</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/validation/testing/functional/e2e-test'>🪄 e2e-test</a>
 </li>
 <li>
-  <a href='./module/platform/development/validation/testing/integration-test'>🪄 integration-test</a>
+  <a href='./module/platform/development/validation/testing/functional/integration-test'>🪄 integration-test</a>
 </li>
 <li>
-  <a href='./module/platform/development/validation/testing/unit-test'>🪄 unit-test</a>
+  <a href='./module/platform/development/validation/testing/functional/unit-test'>🪄 unit-test</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/validation/testing/non-functional'>📁 non-functional</a></b></summary>
+<ul>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/validation/testing/non-functional/performance-test'>📁 performance-test</a></b></summary>
+<ul>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/validation/testing/non-functional/performance-test/concept'>📁 concept</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/validation/testing/non-functional/performance-test/concept/endurance-test'>🪄 endurance-test</a>
+</li>
+<li>
+  <a href='./module/platform/development/validation/testing/non-functional/performance-test/concept/load-test'>🪄 load-test</a>
+</li>
+<li>
+  <a href='./module/platform/development/validation/testing/non-functional/performance-test/concept/scalability-test'>🪄 scalability-test</a>
+</li>
+<li>
+  <a href='./module/platform/development/validation/testing/non-functional/performance-test/concept/spike-test'>🪄 spike-test</a>
+</li>
+<li>
+  <a href='./module/platform/development/validation/testing/non-functional/performance-test/concept/stress-test'>🪄 stress-test</a>
+</li>
+<li>
+  <a href='./module/platform/development/validation/testing/non-functional/performance-test/concept/volume-test'>🪄 volume-test</a>
+</li>
+</ul>
+</details>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/validation/testing/non-functional/tooling'>📁 tooling</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/validation/testing/non-functional/tooling/gatling'>🪄 gatling</a>
+</li>
+<li>
+  <a href='./module/platform/development/validation/testing/non-functional/tooling/jmeter'>🪄 jmeter</a>
+</li>
+<li>
+  <a href='./module/platform/development/validation/testing/non-functional/tooling/k6'>🪄 k6</a>
+</li>
+</ul>
+</details>
+</li>
+</ul>
+</details>
 </li>
 </ul>
 </details>

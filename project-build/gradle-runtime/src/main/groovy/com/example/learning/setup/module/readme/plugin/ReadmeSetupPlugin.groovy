@@ -1,6 +1,6 @@
-package com.example.learning.module.readme.plugin
+package com.example.learning.setup.module.readme.plugin
 
-import com.example.learning.module.readme.service.ReadmeStructureService
+import com.example.learning.setup.module.readme.service.ReadmeStructureService
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 

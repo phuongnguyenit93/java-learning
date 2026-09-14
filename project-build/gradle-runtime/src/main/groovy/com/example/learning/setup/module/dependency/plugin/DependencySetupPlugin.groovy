@@ -1,7 +1,7 @@
-package com.example.learning.module.dependency.plugin
+package com.example.learning.setup.module.dependency.plugin
 
-import com.example.learning.module.dependency.extension.ImplementationModuleExtension
-import com.example.learning.module.dependency.service.ImplementationModuleService
+import com.example.learning.setup.module.dependency.extension.ImplementationModuleExtension
+import com.example.learning.setup.module.dependency.service.ImplementationModuleService
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 

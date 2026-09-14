@@ -2,86 +2,205 @@ package com.example.learning.module.basic.service;
 
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 @Service
 public class BasicThreadService {
-    public void executeTaskWithThread() {
-        // 1. Định nghĩa công việc (Runnable)
-        Runnable runnableTask = () -> {
-            try {
-                System.out.println(">>> Luồng con bắt đầu xử lý: ");
-                // Giả lập xử lý nặng tốn 5 giây
-                Thread.sleep(5000);
-                System.out.println("<<< Luồng con đã hoàn thành: ");
-            } catch (InterruptedException e) {
-                System.err.println("Luồng bị ngắt quãng!");
-            }
-        };
 
-        // 2. Tạo luồng và chạy
-        Thread thread = new Thread(runnableTask);
-        thread.start();
+    private static final Duration STATE_TIMEOUT = Duration.ofSeconds(2);
 
-        System.out.println("--- Phương thức đang chạy - Bạn có thể làm việc khác ---");
+    public Map<String, Object> describeProcessAndCurrentThread() {
+        Thread currentThread = Thread.currentThread();
+
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("processId", ProcessHandle.current().pid());
+        result.put("threadName", currentThread.getName());
+        result.put("threadId", currentThread.threadId());
+        result.put("threadState", currentThread.getState().name());
+        result.put("daemon", currentThread.isDaemon());
+
+        return result;
     }
 
-    public void executeTaskWithNonThread() {
+    public List<String> compareRunAndStart() throws InterruptedException {
+        String callerThreadName = Thread.currentThread().getName();
 
-        System.out.println("Starting task - And you must wait here until done");
+        Runnable directTask = () -> System.out.println(
+                "run() trực tiếp đang chạy trên: "
+                        + Thread.currentThread().getName()
+        );
+
+        directTask.run();
+
+        Runnable startedTask = () -> System.out.println(
+                "start() đang chạy task trên: "
+                        + Thread.currentThread().getName()
+        );
+
+        Thread worker = new Thread(
+                startedTask,
+                "basic-start-worker"
+        );
+
         try {
-            Thread.sleep(5000);
-        } catch (Exception e) {
-            System.out.println("Lỗi");
+            worker.start();
+            joinOrFail(worker);
+        } finally {
+            cleanup(worker);
         }
 
-        System.out.println("--- Bạn đã chờ 5s và phương thức đã thực hiện xong ---");
-
+        return List.of(
+                "Caller thread: " + callerThreadName,
+                "Gọi run() trực tiếp -> task chạy trên caller thread: "
+                        + callerThreadName,
+                "Gọi start() -> task chạy trên worker thread: "
+                        + worker.getName()
+        );
     }
 
-    public void executeThreadLifeCycle() throws InterruptedException {
-        // 0. Tạo một đối tượng Lock để gây ra tranh chấp (BLOCKED)
-        Object lock = new Object();
+    public List<String> observeThreadLifecycle() throws InterruptedException {
+        List<String> observations = new ArrayList<>();
 
-        // KHAI BÁO BIẾN Ở ĐÂY để dùng được ở mọi nơi trong hàm main
-        Thread thread;
-        // Luồng chính (Main) sẽ chiếm lock này trước để Thread con bị chặn
-        synchronized (lock) {
+        AtomicBoolean stayRunnable = new AtomicBoolean(true);
+        CountDownLatch runnableEntered = new CountDownLatch(1);
+        CountDownLatch timedWaitGate = new CountDownLatch(1);
 
-            // 1. TRẠNG THÁI: NEW
-            thread = new Thread(() -> {
+        Object blockedMonitor = new Object();
+        Object waitingMonitor = new Object();
+
+        Thread worker = new Thread(() -> {
+            runnableEntered.countDown();
+
+            while (stayRunnable.get()) {
+                Thread.onSpinWait();
+            }
+
+            try {
+                timedWaitGate.await(30, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return;
+            }
+
+            synchronized (blockedMonitor) {
+                // Chỉ cần lấy được monitor là đủ để rời trạng thái BLOCKED.
+            }
+
+            synchronized (waitingMonitor) {
                 try {
-                    // 3. TRẠNG THÁI: TIMED_WAITING
-                    Thread.sleep(1000);
-
-                    // 4. TRẠNG THÁI: BLOCKED
-                    // Luồng con cố gắng vào đây nhưng Main đang giữ 'lock'
-                    synchronized (lock) {
-                        System.out.println("Luồng con đã lấy được lock!");
-                    }
+                    waitingMonitor.wait();
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    Thread.currentThread().interrupt();
                 }
-            });
+            }
+        }, "thread-state-worker");
 
-            System.out.println("1. Sau khi khởi tạo: " + thread.getState()); // NEW
+        try {
+            observations.add("NEW -> " + worker.getState());
 
-            // 2. TRẠNG THÁI: RUNNABLE
-            thread.start();
-            System.out.println("2. Sau khi gọi start(): " + thread.getState()); // RUNNABLE
+            worker.start();
 
-            // Chờ 0.5s để Thread con rơi vào sleep
-            Thread.sleep(500);
-            System.out.println("3. Khi đang sleep(): " + thread.getState()); // TIMED_WAITING
+            if (!runnableEntered.await(STATE_TIMEOUT.toMillis(), TimeUnit.MILLISECONDS)) {
+                throw new IllegalStateException("Worker không bắt đầu đúng thời gian dự kiến.");
+            }
 
-            // Chờ thêm 1s để Thread con thức dậy và cố gắng chiếm lock
-            Thread.sleep(1000);
-            System.out.println("4. Khi bị chặn bởi synchronized: " + thread.getState()); // BLOCKED
+            waitForState(worker, Thread.State.RUNNABLE);
+            observations.add("RUNNABLE -> " + worker.getState());
 
-        } // <--- Đến đây Main mới nhả lock ra
+            synchronized (blockedMonitor) {
+                stayRunnable.set(false);
 
-        // 5. TRẠNG THÁI: TERMINATED
-        thread.join();
-        System.out.println("5. Sau khi hoàn thành: " + thread.getState()); // TERMINATED
+                waitForState(worker, Thread.State.TIMED_WAITING);
+                observations.add("TIMED_WAITING -> " + worker.getState());
+
+                timedWaitGate.countDown();
+
+                waitForState(worker, Thread.State.BLOCKED);
+                observations.add("BLOCKED -> " + worker.getState());
+            }
+
+            waitForState(worker, Thread.State.WAITING);
+            observations.add("WAITING -> " + worker.getState());
+
+            synchronized (waitingMonitor) {
+                waitingMonitor.notifyAll();
+            }
+
+            worker.join(STATE_TIMEOUT.toMillis());
+
+            if (worker.isAlive()) {
+                throw new IllegalStateException("Worker không kết thúc đúng thời gian dự kiến.");
+            }
+
+            observations.add("TERMINATED -> " + worker.getState());
+
+            return observations;
+        } finally {
+            stayRunnable.set(false);
+            timedWaitGate.countDown();
+
+            synchronized (waitingMonitor) {
+                waitingMonitor.notifyAll();
+            }
+
+            if (worker.isAlive()) {
+                worker.interrupt();
+                worker.join(STATE_TIMEOUT.toMillis());
+                if (worker.isAlive()) {
+                    throw new IllegalStateException(
+                            "Worker vẫn còn sống sau cleanup: " + worker.getName()
+                    );
+                }
+            }
+        }
     }
 
+    private static void waitForState(
+            Thread thread,
+            Thread.State expectedState
+    ) throws InterruptedException {
+        long deadline = System.nanoTime() + STATE_TIMEOUT.toNanos();
 
+        while (System.nanoTime() < deadline) {
+            if (thread.getState() == expectedState) {
+                return;
+            }
+
+            if (!thread.isAlive() && expectedState != Thread.State.TERMINATED) {
+                break;
+            }
+
+            Thread.sleep(5);
+        }
+
+        throw new IllegalStateException(
+                "Không quan sát được state "
+                        + expectedState
+                        + ". State hiện tại: "
+                        + thread.getState()
+        );
+    }
+
+    private static void joinOrFail(Thread worker) throws InterruptedException {
+        worker.join(STATE_TIMEOUT.toMillis());
+        if (worker.isAlive()) {
+            throw new IllegalStateException("Worker không kết thúc đúng thời gian dự kiến: " + worker.getName());
+        }
+    }
+
+    private static void cleanup(Thread worker) throws InterruptedException {
+        if (!worker.isAlive()) return;
+        worker.interrupt();
+        worker.join(STATE_TIMEOUT.toMillis());
+        if (worker.isAlive()) {
+            throw new IllegalStateException("Worker vẫn còn sống sau cleanup: " + worker.getName());
+        }
+    }
 }

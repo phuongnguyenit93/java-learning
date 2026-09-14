@@ -15,7 +15,7 @@
         "BUILD_YML_MODULE_DEPEND": {
             "DESCRIPTION": "Automation combine all yml at module and all component depend and save it in build file for run or docker compose",
             "TYPE": "list",
-            "VALUE": "SPRING_WEB,AZURE_TRANSLATE"
+            "VALUE": "SPRING_WEB"
         }
     },
     "README": {
@@ -36,7 +36,7 @@
         "MODULE_DEPEND_LIST": {
             "DESCRIPTION": "To define which module depend will be added to this module",
             "TYPE": "list",
-            "VALUE": "AZURE_TRANSLATE,FLEXMARK_MARKDOWN"
+            "VALUE": ""
         }
     },
     "TASK": {

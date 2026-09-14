@@ -1,4 +1,4 @@
-package com.example.learning.module.docker.service
+package com.example.learning.setup.module.docker.service
 
 import com.example.learning.utils.ProjectPluginUtils
 import com.example.learning.utils.ProjectPropertyUtils
