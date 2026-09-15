@@ -24,7 +24,9 @@ import org.springframework.core.type.AnnotationMetadata;
 
 import java.io.InputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.nio.charset.StandardCharsets;
 import java.util.regex.Pattern;
@@ -102,34 +104,43 @@ public class DynamicSwaggerRegistrar implements ImportBeanDefinitionRegistrar , 
 
             openApi.getInfo().setDescription(readme);
 
-            // Load 2 file YAML từ resources
+            // Load Swagger metadata từ resources
             JsonNode apiDescs = loadYamlResource("swagger/" + languages + "/api-descriptions.yml");
             JsonNode apiParams = loadYamlResource("swagger/" + languages + "/api-params.yml");
-            JsonNode controllerDescs = loadYamlResource("swagger/" + languages + "/controller-descriptions.yml");
+            JsonNode controllerDescs = loadYamlResource("swagger/" + languages + "/controller-description.yml");
+
+            Map<String, String> controllerByTag =
+                    new LinkedHashMap<>();
 
             if (openApi.getPaths() == null) return;
 
             openApi.getPaths().forEach((path, pathItem) -> {
                 pathItem.readOperationsMap().forEach((httpMethod, operation) -> {
-                    String controllerName = (String) operation.getExtensions().get("x-controller-name");
+                    String controllerName =
+                            operation.getExtensions() == null
+                                    ? null
+                                    : (String) operation.getExtensions().get("x-controller-name");
+
                     String methodName = operation.getOperationId();
 
-                    operation.getTags().forEach(tag -> {
-                        // Tạo tag nếu chưa tồn tại
-                        openApi.getTags()
-                                .stream()
-                                .filter(t -> tag.equals(t.getName()))
-                                .findFirst()
-                                .orElseGet(() -> {
-                                    Tag newTag = new Tag();
-                                    newTag.setName(tag);
-                                    newTag.setDescription(controllerName);
+                    if (operation.getTags() != null) {
+                        operation.getTags().forEach(tagName -> {
+                            Tag tag = findOrCreateTag(
+                                    openApi,
+                                    tagName,
+                                    controllerName
+                            );
 
-                                    openApi.addTagsItem(newTag);
+                            if (controllerName != null &&
+                                    !controllerName.isBlank()) {
 
-                                    return newTag;
-                                });
-                    });
+                                controllerByTag.putIfAbsent(
+                                        tag.getName(),
+                                        controllerName
+                                );
+                            }
+                        });
+                    }
 
                     // Map cho Method (Summary & Description)
                     mapMethodMetadata(operation, apiDescs, controllerName, methodName);
@@ -143,9 +154,19 @@ public class DynamicSwaggerRegistrar implements ImportBeanDefinitionRegistrar , 
                 });
             });
 
+            if (openApi.getTags() == null) {
+                return;
+            }
+
             openApi.getTags().forEach(tag -> {
 
-                String controllerName = tag.getDescription();
+                String controllerName =
+                        controllerByTag.get(tag.getName());
+
+                if (controllerName == null ||
+                        controllerName.isBlank()) {
+                    return;
+                }
 
                 JsonNode controllerNode =
                         controllerDescs.get(controllerName);
@@ -170,6 +191,40 @@ public class DynamicSwaggerRegistrar implements ImportBeanDefinitionRegistrar , 
                 );
             });
         };
+    }
+
+    private Tag findOrCreateTag(
+            io.swagger.v3.oas.models.OpenAPI openApi,
+            String tagName,
+            String controllerName
+    ) {
+
+        List<Tag> tags = openApi.getTags();
+
+        if (tags == null) {
+            tags = new ArrayList<>();
+            openApi.setTags(tags);
+        }
+
+        List<Tag> resolvedTags = tags;
+
+        return resolvedTags
+                .stream()
+                .filter(tag -> tagName.equals(tag.getName()))
+                .findFirst()
+                .orElseGet(() -> {
+                    Tag newTag = new Tag();
+                    newTag.setName(tagName);
+
+                    if (controllerName != null &&
+                            !controllerName.isBlank()) {
+                        newTag.setDescription(controllerName);
+                    }
+
+                    resolvedTags.add(newTag);
+
+                    return newTag;
+                });
     }
 
     private String loadReadme(String language) {
