@@ -409,13 +409,32 @@ project.findProperty('...')
 
 ## 9. Module type model
 
-`MODULE_TYPE` có ba loại chính:
+`MODULE_TYPE` có bốn loại chính:
 
 | Type | Physical Java structure | Runnable | Artifact behavior |
 | --- | --- | --- | --- |
-| `APPLICATION` | Có | Có | Spring Boot application / `bootJar` |
+| `SERVLET` | Có | Có | Spring MVC/Servlet Boot application / `bootJar` |
+| `REACTIVE` | Có | Có | Spring WebFlux Boot application / `bootJar` |
 | `LIBRARY` | Có | Không | plain `jar`, `bootJar`/`bootRun` disabled |
 | `PLATFORM` | Không tự tạo physical Java structure | Không | plain `jar`, `bootJar`/`bootRun` disabled |
+
+Hai runnable type có dependency mặc định khác nhau:
+
+```text
+SERVLET
+→ spring-boot-starter-web
+
+REACTIVE
+→ spring-boot-starter-webflux
+```
+
+`APPLICATION` là legacy metadata value và được `ModuleConfigurationSyncService` migrate thành:
+
+```text
+APPLICATION → SERVLET
+```
+
+Canonical schema và code mới không tiếp tục expose `APPLICATION` như một `ModuleType` hợp lệ.
 
 Common build configuration vẫn được apply trước khi specialized module behavior được quyết định.
 
@@ -453,11 +472,22 @@ project.JAVA_BASE_PACKAGE
 ModuleStructureService
 ```
 
-Với `APPLICATION`, `ModuleStructureService` dùng package này để:
+Với `SERVLET` và `REACTIVE`, `ModuleStructureService` dùng package này để:
 
 - tạo source directory;
 - generate main application class nếu chưa tồn tại;
 - tạo `MAIN_CLASS_PATH`.
+
+Main class được generate theo web stack:
+
+```text
+SERVLET
+→ Spring Boot application class có Servlet deployment support
+
+REACTIVE
+→ regular @SpringBootApplication main class
+→ không phụ thuộc SpringBootServletInitializer
+```
 
 `MAIN_CLASS_PATH` sau đó là source of truth cho những consumer như IntelliJ run configuration generation.
 
@@ -747,6 +777,35 @@ application.yml
 
 `application-merged.yml` không phải runtime source of truth.
 
+### 17.3 Capability-derived YML dependency
+
+YML composition không chỉ đọc dependency khai báo explicit. Một số dependency được derive trực tiếp từ module type/capability:
+
+```text
+MODULE_TYPE=SERVLET
+→ SPRING_WEB
+
+MODULE_TYPE=REACTIVE
+→ SPRING_REACTIVE
+
+BUILD_SWAGGER=TRUE
+→ GLOBAL_SWAGGER_CONFIG
+```
+
+Mỗi dependency ở đây đóng góp `application-module.yml` vào graph merge. Vì vậy một module `REACTIVE + BUILD_SWAGGER=TRUE` có conceptual YML graph:
+
+```text
+SPRING_REACTIVE/application-module.yml
+        +
+GLOBAL_SWAGGER_CONFIG/application-module.yml
+        +
+current module application-module.yml
+        ↓
+application-merged.yml
+```
+
+Swagger adapter Java không được thêm vào YML graph chỉ để phản ánh runtime dependency; YML core được dùng chung cho cả hai web stack.
+
 ---
 
 ## 18. ENV architecture
@@ -805,10 +864,29 @@ project-build/gradle-runtime
 Nó chịu trách nhiệm những việc như:
 
 - enable Swagger capability theo metadata;
-- wire shared Swagger runtime dependency;
+- chọn shared Swagger runtime adapter theo `MODULE_TYPE`;
 - generate/synchronize API description metadata;
 - copy README/resources cần thiết vào application artifact;
 - expose Swagger task DSL.
+
+Runtime dependency selection hiện là:
+
+```text
+BUILD_SWAGGER=TRUE + MODULE_TYPE=SERVLET
+→ GLOBAL_SWAGGER_SERVLET
+
+BUILD_SWAGGER=TRUE + MODULE_TYPE=REACTIVE
+→ GLOBAL_SWAGGER_REACTIVE
+```
+
+Trong khi YML capability vẫn derive:
+
+```text
+BUILD_SWAGGER=TRUE
+→ GLOBAL_SWAGGER_CONFIG
+```
+
+Sự tách này là intentional: Java runtime cần stack-specific adapter, còn Swagger YML contract hiện stack-neutral.
 
 Swagger generator coi một số field là **human-owned metadata**.
 
@@ -824,20 +902,37 @@ Khác với `gradle-runtime`, code ở đây chạy trong application process, k
 
 Runtime không được phụ thuộc ngược Gradle API hoặc build generator.
 
-Hiện capability đã được implementation và xác minh là:
+Swagger runtime hiện được implementation thành ba module phối hợp:
 
 ```text
 springboot-runtime/swagger
+springboot-runtime/swagger-servlet
+springboot-runtime/swagger-reactive
 ```
 
 ---
 
 ## 22. Shared Swagger runtime
 
-Swagger runtime là một `LIBRARY` module với service identity:
+Swagger runtime dùng mô hình **stack-neutral core + stack-specific adapter**.
 
 ```text
 GLOBAL_SWAGGER_CONFIG
+        │
+        ├── GLOBAL_SWAGGER_SERVLET
+        │       └── springdoc-openapi-starter-webmvc-ui
+        │
+        └── GLOBAL_SWAGGER_REACTIVE
+                └── springdoc-openapi-starter-webflux-ui
+```
+
+### 22.1 Core `GLOBAL_SWAGGER_CONFIG`
+
+Core là `LIBRARY` module:
+
+```text
+project-build/springboot-runtime/swagger
+SERVICE_NAME=GLOBAL_SWAGGER_CONFIG
 ```
 
 Nó dùng Java package riêng:
@@ -860,7 +955,67 @@ com.example.learning
 
 để Swagger runtime không vô tình hoạt động nhờ component scan của consumer.
 
-### 22.1 Auto-configuration contract
+Core sở hữu những phần không phụ thuộc web stack:
+
+- `DynamicSwaggerAutoConfiguration`;
+- `DynamicSwaggerCondition`;
+- `DynamicSwaggerRegistrar`;
+- `GroupedOpenApi`/customizer behavior;
+- custom Swagger static assets;
+- shared Swagger YML composition contract.
+
+Core dùng `springdoc-openapi-starter-common`. Nó không sở hữu `WebMvcConfigurer` hay `WebFluxConfigurer`.
+
+### 22.2 Servlet adapter
+
+```text
+project-build/springboot-runtime/swagger-servlet
+SERVICE_NAME=GLOBAL_SWAGGER_SERVLET
+depends on GLOBAL_SWAGGER_CONFIG
+```
+
+Adapter này sở hữu:
+
+- `springdoc-openapi-starter-webmvc-ui`;
+- `ServletSwaggerAutoConfiguration`;
+- `ServletSwaggerResourceConfiguration implements WebMvcConfigurer`;
+- Servlet-specific resource/view mapping.
+
+### 22.3 Reactive adapter
+
+```text
+project-build/springboot-runtime/swagger-reactive
+SERVICE_NAME=GLOBAL_SWAGGER_REACTIVE
+depends on GLOBAL_SWAGGER_CONFIG
+```
+
+Adapter này sở hữu:
+
+- `springdoc-openapi-starter-webflux-ui`;
+- `ReactiveSwaggerAutoConfiguration`;
+- `ReactiveSwaggerResourceConfiguration implements WebFluxConfigurer`;
+- Reactive resource mapping;
+- reactive root redirect thông qua `RouterFunction` thay vì MVC `ViewControllerRegistry`.
+
+### 22.4 Tại sao phải tách adapter
+
+Mục tiêu là làm cho dependency graph đảm bảo chỉ đúng web stack cần thiết tồn tại:
+
+```text
+SERVLET consumer
+→ GLOBAL_SWAGGER_SERVLET
+→ webmvc-ui
+→ không cần GLOBAL_SWAGGER_REACTIVE / webflux-ui
+
+REACTIVE consumer
+→ GLOBAL_SWAGGER_REACTIVE
+→ webflux-ui
+→ không cần GLOBAL_SWAGGER_SERVLET / webmvc-ui
+```
+
+Nếu MVC và WebFlux configuration cùng nằm trong core, core phải compile/reference cả hai stack hoặc dựa nhiều hơn vào optional dependency, classloading condition và runtime filtering. Adapter split loại bỏ phần không dùng khỏi graph ngay từ dependency selection.
+
+### 22.5 Auto-configuration contract
 
 Runtime đăng ký Spring Boot auto-configuration bằng:
 
@@ -882,7 +1037,9 @@ Activation hiện phụ thuộc các điều kiện như:
 - Springdoc class tồn tại;
 - `swagger.enabled=true`.
 
-### 22.2 Runtime responsibility
+Core và mỗi adapter đều đăng auto-configuration qua file `META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports` của chính module đó.
+
+### 22.6 Runtime responsibility
 
 Swagger runtime chịu trách nhiệm:
 
@@ -895,7 +1052,7 @@ Swagger runtime chịu trách nhiệm:
 - cung cấp custom Swagger UI/static assets;
 - hỗ trợ navigation README trong Swagger UI mà không cần reload toàn page.
 
-### 22.3 Build/runtime handoff
+### 22.7 Build/runtime handoff
 
 Contract giữa hai nửa Swagger là:
 
@@ -906,8 +1063,13 @@ gradle-runtime
 application artifact
     ↓ classpath
 
-springboot-runtime/swagger
-    ↓ consume at runtime
+springboot-runtime/swagger core
+    ↓ shared runtime behavior
+
+MODULE_TYPE-selected adapter
+    ├── SERVLET  → swagger-servlet
+    └── REACTIVE → swagger-reactive
+    ↓ stack-specific web integration
 
 Swagger UI / OpenAPI
 ```
@@ -999,7 +1161,7 @@ trừ khi architecture contract của artifact đó được thay đổi rõ rà
 | Metadata schema | `gradle-runtime` `automation/*.json` | module-local JSON |
 | Module config value | module-local JSON `VALUE` | Gradle project properties |
 | Java base package | `JAVA_BASE_PACKAGE` | source structure / `MAIN_CLASS_PATH` |
-| Module type | `MODULE_TYPE` | Config setup |
+| Module type | `MODULE_TYPE` = `SERVLET | REACTIVE | LIBRARY | PLATFORM` | Config/source/dependency setup |
 | Stable module identity | `SERVICE_NAME` | dependency/module lookup |
 | Feature enablement | `master.json` flags | orchestration |
 | Detailed feature config | `properties.json` | setup/task plugins |
@@ -1137,6 +1299,10 @@ Các invariant dưới đây phản ánh architecture hiện tại và nên đư
 14. External/destructive side effect phải nằm trong explicit task/action.
 15. `application.yml` của application là runtime configuration chính; `application-merged.yml` chỉ là generated reference.
 16. Swagger build-time generation và Swagger runtime consumption là hai boundary riêng.
+17. `APPLICATION` là legacy `MODULE_TYPE`; sync migrate nó thành `SERVLET` và canonical model chỉ dùng `SERVLET`, `REACTIVE`, `LIBRARY`, `PLATFORM`.
+18. `SERVLET` mặc định dùng Spring MVC starter; `REACTIVE` mặc định dùng Spring WebFlux starter.
+19. Swagger runtime core phải stack-neutral; MVC/WebFlux-specific code và UI starter thuộc adapter tương ứng.
+20. `BUILD_SWAGGER=TRUE` chọn đúng một Java runtime adapter theo `MODULE_TYPE`, trong khi YML composition dùng chung `GLOBAL_SWAGGER_CONFIG`.
 
 ---
 

@@ -264,7 +264,8 @@ MODULE_TYPE
 Current values:
 
 ```text
-APPLICATION
+SERVLET
+REACTIVE
 LIBRARY
 PLATFORM
 ```
@@ -272,10 +273,19 @@ PLATFORM
 High-level semantics:
 
 ```text
-APPLICATION
-→ runnable application
+SERVLET
+→ runnable Spring MVC / Servlet application
 → Java/resources structure
 → Spring Boot executable behavior
+→ spring-boot-starter-web
+→ generated main class may extend SpringBootServletInitializer
+
+REACTIVE
+→ runnable Spring WebFlux application
+→ Java/resources structure
+→ Spring Boot executable behavior
+→ spring-boot-starter-webflux
+→ generated main class is a regular @SpringBootApplication class
 
 LIBRARY
 → reusable Java/configuration code
@@ -289,6 +299,18 @@ PLATFORM
 ```
 
 Do not infer type from the path when `MODULE_TYPE` exists.
+
+`APPLICATION` is a legacy value. Metadata synchronization migrates legacy:
+
+```text
+APPLICATION → SERVLET
+```
+
+Do not add `APPLICATION` back to `ModuleType` as a compatibility alias. New metadata and generated schema must use:
+
+```text
+SERVLET,REACTIVE,LIBRARY,PLATFORM
+```
 
 Current convention intentionally still gives PLATFORM modules the common Java/Spring Boot plugin baseline because the project currently relies on it for source/build behavior. Do not remove that baseline unless the user explicitly asks to redesign it.
 
@@ -391,6 +413,14 @@ preserve module VALUE
 ```
 
 When a canonical field is newly introduced with a default, existing modules receive the default unless they already have a nonblank override.
+
+`MODULE_TYPE` has one explicit legacy migration during synchronization:
+
+```text
+APPLICATION → SERVLET
+```
+
+This migration is intentional and is not a generic rule that arbitrary module-owned values may be rewritten.
 
 Do not overwrite module-specific nonblank values during schema synchronization.
 
@@ -695,6 +725,23 @@ application.yml
 
 Do not make runtime automatically depend on `application-merged.yml` unless the user explicitly redesigns the contract.
 
+YML composition dependencies come from both explicit module configuration and derived capabilities.
+
+Current derived rules include:
+
+```text
+MODULE_TYPE=SERVLET
+→ SPRING_WEB/application-module.yml
+
+MODULE_TYPE=REACTIVE
+→ SPRING_REACTIVE/application-module.yml
+
+BUILD_SWAGGER=TRUE
+→ GLOBAL_SWAGGER_CONFIG/application-module.yml
+```
+
+The Swagger YML dependency intentionally points to the stack-neutral core, not to the Servlet/Reactive runtime adapters. Do not duplicate the same Swagger YML contract in both adapters unless stack-specific configuration actually becomes necessary.
+
 ---
 
 ## 23. ENV rules
@@ -757,32 +804,77 @@ Do not regenerate human-owned Swagger fields from scratch.
 
 ## 25. Swagger runtime ownership
 
-Shared Swagger runtime belongs to:
+Shared Swagger runtime is split into a stack-neutral core plus web-stack adapters:
 
 ```text
 project-build/springboot-runtime/swagger
+project-build/springboot-runtime/swagger-servlet
+project-build/springboot-runtime/swagger-reactive
 ```
 
-Current Java package:
+Service identities:
+
+```text
+GLOBAL_SWAGGER_CONFIG
+GLOBAL_SWAGGER_SERVLET
+GLOBAL_SWAGGER_REACTIVE
+```
+
+Core Java package:
 
 ```text
 com.example.projectbuild.swagger
 ```
 
-Current module metadata override:
+Core module metadata override:
 
 ```text
 JAVA_BASE_PACKAGE = com.example.projectbuild.swagger
 ```
 
-Main runtime components currently include:
+The core owns stack-neutral behavior such as:
 
 ```text
 DynamicSwaggerAutoConfiguration
 DynamicSwaggerCondition
 DynamicSwaggerRegistrar
-SwaggerResourceConfiguration
+custom Swagger static assets
+shared Swagger YAML composition
 ```
+
+The core uses `springdoc-openapi-starter-common`. It may use `spring-web` as a compile-only API requirement for shared Spring Web types, but it must not own MVC- or WebFlux-specific runtime configuration.
+
+Servlet adapter:
+
+```text
+GLOBAL_SWAGGER_SERVLET
+→ depends on GLOBAL_SWAGGER_CONFIG
+→ springdoc-openapi-starter-webmvc-ui
+→ ServletSwaggerAutoConfiguration
+→ ServletSwaggerResourceConfiguration implements WebMvcConfigurer
+```
+
+Reactive adapter:
+
+```text
+GLOBAL_SWAGGER_REACTIVE
+→ depends on GLOBAL_SWAGGER_CONFIG
+→ springdoc-openapi-starter-webflux-ui
+→ ReactiveSwaggerAutoConfiguration
+→ ReactiveSwaggerResourceConfiguration implements WebFluxConfigurer
+```
+
+`ModuleBuildConfigurationService` selects exactly one runtime adapter when `BUILD_SWAGGER=TRUE`:
+
+```text
+MODULE_TYPE=SERVLET
+→ GLOBAL_SWAGGER_SERVLET
+
+MODULE_TYPE=REACTIVE
+→ GLOBAL_SWAGGER_REACTIVE
+```
+
+Do not make `GLOBAL_SWAGGER_CONFIG` depend on both `spring-webmvc` and `spring-webflux`. The adapter split exists so the unused web stack is absent from the consumer dependency graph rather than merely disabled by runtime conditions.
 
 The auto-configuration registration file must live at:
 
@@ -791,11 +883,13 @@ src/main/resources/META-INF/spring/
 org.springframework.boot.autoconfigure.AutoConfiguration.imports
 ```
 
-and currently references:
+The core registration references:
 
 ```text
 com.example.projectbuild.swagger.DynamicSwaggerAutoConfiguration
 ```
+
+Each adapter also owns its own `META-INF/spring/...AutoConfiguration.imports` entry for the corresponding adapter auto-configuration.
 
 Do not move this file under `static/` or `resources/spring/`.
 
@@ -816,7 +910,11 @@ gradle-runtime Swagger generation
         ↓
 generated/copied classpath resources
         ↓
-springboot-runtime/swagger
+springboot-runtime/swagger core
+        ↓
+MODULE_TYPE selects exactly one adapter
+        ├── SERVLET  → swagger-servlet
+        └── REACTIVE → swagger-reactive
         ↓
 Springdoc/OpenAPI runtime behavior
 ```
@@ -824,6 +922,16 @@ Springdoc/OpenAPI runtime behavior
 Do not make runtime code call back into Gradle services/tasks.
 
 Current runtime supports language-based Swagger grouping and custom README/YAML metadata consumption.
+
+Keep Java runtime dependency selection and YML composition selection separate:
+
+```text
+Java runtime
+→ Servlet/Reactive adapter selected by MODULE_TYPE
+
+YML composition
+→ GLOBAL_SWAGGER_CONFIG shared core
+```
 
 ---
 
@@ -1231,6 +1339,10 @@ Preserve these unless the user explicitly changes the architecture:
 14. External/destructive side effects belong in explicit actions/tasks.
 15. `application.yml` is runtime truth; `application-merged.yml` is a generated review artifact.
 16. Swagger build-time generation and Swagger runtime consumption are separate boundaries.
+17. Active module types are `SERVLET`, `REACTIVE`, `LIBRARY`, and `PLATFORM`; legacy `APPLICATION` migrates to `SERVLET`.
+18. `SERVLET` and `REACTIVE` must not accidentally pull each other's web starter through automatic module-type setup.
+19. Swagger core is stack-neutral; `GLOBAL_SWAGGER_SERVLET` and `GLOBAL_SWAGGER_REACTIVE` own web-stack-specific runtime dependencies.
+20. `BUILD_SWAGGER=TRUE` selects one Java Swagger adapter by `MODULE_TYPE`, while YML composition continues to consume only `GLOBAL_SWAGGER_CONFIG`.
 
 ---
 
@@ -1285,6 +1397,10 @@ Module values
 JAVA_BASE_PACKAGE
 → module metadata, default com.example.learning
 
+MODULE_TYPE
+→ SERVLET | REACTIVE | LIBRARY | PLATFORM
+→ legacy APPLICATION migrates to SERVLET
+
 Generated artifacts
 → never treat as canonical input
 
@@ -1301,8 +1417,12 @@ Swagger build automation
 → gradle-runtime
 
 Swagger runtime
-→ springboot-runtime/swagger
-→ package com.example.projectbuild.swagger
+→ springboot-runtime/swagger = stack-neutral core
+→ springboot-runtime/swagger-servlet = MVC adapter
+→ springboot-runtime/swagger-reactive = WebFlux adapter
+→ SERVLET selects GLOBAL_SWAGGER_SERVLET
+→ REACTIVE selects GLOBAL_SWAGGER_REACTIVE
+→ YML still composes GLOBAL_SWAGGER_CONFIG
 → Spring Boot AutoConfiguration.imports under META-INF/spring
 
 Do not infer module package architecture globally.
