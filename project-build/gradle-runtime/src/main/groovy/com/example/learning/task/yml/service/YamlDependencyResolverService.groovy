@@ -18,8 +18,10 @@ class YamlDependencyResolverService {
      * 1. Explicit:
      *    BUILD_YML_MODULE_DEPEND
      *
-     * 2. Capability-derived:
-     *    ví dụ BUILD_SWAGGER=TRUE -> GLOBAL_SWAGGER_CONFIG
+     * 2. Derived:
+     *    - MODULE_TYPE=SERVLET -> SPRING_WEB
+     *    - MODULE_TYPE=REACTIVE -> SPRING_REACTIVE
+     *    - BUILD_SWAGGER=TRUE -> GLOBAL_SWAGGER_CONFIG
      *
      * Ví dụ:
      *

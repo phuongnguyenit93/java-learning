@@ -9,6 +9,23 @@ import org.gradle.api.Project
 class YamlCapabilityDependencyService {
 
     /**
+     * MODULE_TYPE -> YAML composition module(s).
+     *
+     * Đây là dependency mặc định theo web stack của application.
+     * LIBRARY/PLATFORM không có bonus YAML dependency theo type.
+     */
+    private static final Map<ModuleType, List<ModuleListEnum>> MODULE_TYPE_DEPENDENCIES =
+            [
+                    (ModuleType.SERVLET): [
+                            ModuleListEnum.SPRING_WEB
+                    ],
+                    (ModuleType.REACTIVE): [
+                            ModuleListEnum.SPRING_REACTIVE
+                    ]
+            ].asImmutable()
+
+
+    /**
      * Capability -> YAML composition module(s).
      *
      * Đây là nơi duy nhất cần mở rộng khi một BUILD_* capability
@@ -38,25 +55,18 @@ class YamlCapabilityDependencyService {
                 )
 
 
-        switch (moduleType) {
-
-            case ModuleType.SERVLET:
-
-                dependencies.add(
-                        ModuleListEnum.SPRING_WEB.name()
+        MODULE_TYPE_DEPENDENCIES
+                .getOrDefault(
+                        moduleType,
+                        []
                 )
+                .each {
+                    ModuleListEnum module ->
 
-                break
-
-
-            case ModuleType.REACTIVE:
-
-                dependencies.add(
-                        ModuleListEnum.SPRING_REACTIVE.name()
-                )
-
-                break
-        }
+                        dependencies.add(
+                                module.name()
+                        )
+                }
 
 
         CAPABILITY_DEPENDENCIES.each {
