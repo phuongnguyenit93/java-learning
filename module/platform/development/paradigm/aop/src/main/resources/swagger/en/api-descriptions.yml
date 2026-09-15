@@ -1,0 +1,455 @@
+AdvisorController:
+  observeAdvisor():
+    summary: Observe Advisor composition and runtime matching
+    description: Demonstrates how an Advisor combines a Pointcut with Advice and compares static method matching with runtime argument matching.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: observeAdvisor
+    params: [
+      ]
+    path: com/example/learning/module/advanced/advisor/controller/AdvisorController.java
+    mapping: '@GetMapping("/observe")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /aop/advanced/advisor/observe
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+RuntimeBoundaryController:
+  inspectRuntimeBoundary():
+    summary: Inspect the runtime boundary of Spring AOP
+    description: Shows the difference between AspectJ-style aspect declarations and the proxy-based Spring AOP runtime used by this module.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: inspectRuntimeBoundary
+    params: [
+      ]
+    path: com/example/learning/module/advanced/boundary/controller/RuntimeBoundaryController.java
+    mapping: '@GetMapping("/inspect")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /aop/advanced/runtime-boundary/inspect
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+InfrastructureController:
+  inspectInfrastructure():
+    summary: Inspect Spring AOP infrastructure
+    description: Inspects the auto-proxy creator, generated proxy type, configured proxy strategy, and Advisor chain behind a Spring-managed AOP bean.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: inspectInfrastructure
+    params: [
+      ]
+    path: com/example/learning/module/advanced/infrastructure/controller/InfrastructureController.java
+    mapping: '@GetMapping("/inspect")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /aop/advanced/infrastructure/inspect
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+IntroductionController:
+  observeIntroduction():
+    summary: Observe an AOP introduction
+    description: Demonstrates how an AOP proxy can expose an additional interface that the original target class does not implement.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: observeIntroduction
+    params: [
+      ]
+    path: com/example/learning/module/advanced/introduction/controller/IntroductionController.java
+    mapping: '@GetMapping("/observe")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /aop/advanced/introduction/observe
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+ProgrammaticProxyController:
+  compareProxyFactoryStrategies():
+    summary: Compare JDK and CGLIB ProxyFactory strategies
+    description: Programmatically creates JDK dynamic and CGLIB proxies with ProxyFactory and applies the same MethodInterceptor to both strategies.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: compareProxyFactoryStrategies
+    params: [
+      ]
+    path: com/example/learning/module/advanced/proxyfactory/controller/ProgrammaticProxyController.java
+    mapping: '@GetMapping("/compare")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /aop/advanced/proxy-factory/compare
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+AdviceLifecycleController:
+  success():
+    summary: Observe advice order on successful execution
+    description: Executes a successful target method to observe @Before, target execution, @AfterReturning, and @After in their actual runtime order.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: success
+    params: [
+      ]
+    path: com/example/learning/module/advice/controller/AdviceLifecycleController.java
+    mapping: '@GetMapping("/success")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /aop/advice/success
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  failure():
+    summary: Observe advice order when an exception is thrown
+    description: Executes a failing target method to observe @AfterThrowing and @After when the invocation exits through an exception.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: failure
+    params: [
+      ]
+    path: com/example/learning/module/advice/controller/AdviceLifecycleController.java
+    mapping: '@GetMapping("/failure")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /aop/advice/failure
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+AnnotationDrivenController:
+  trackByAnnotation():
+    summary: Apply AOP through a custom annotation
+    description: Uses a custom annotation as a declarative contract and demonstrates how an Aspect matches the annotation and reads its metadata.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: trackByAnnotation
+    params: [
+      ]
+    path: com/example/learning/module/annotation/controller/AnnotationDrivenController.java
+    mapping: '@GetMapping("/track")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /aop/annotation/track
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+AroundAdviceController:
+  timing():
+    summary: Measure execution with @Around advice
+    description: Demonstrates code running before and after proceed() while measuring the target method execution time.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: timing
+    params: [
+      ]
+    path: com/example/learning/module/around/controller/AroundAdviceController.java
+    mapping: '@GetMapping("/timing")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /aop/around/timing
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  transform():
+    summary: Transform a return value with @Around advice
+    description: Demonstrates that @Around advice can inspect and replace the value returned by the target after proceed() completes.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: transform
+    params: [
+      ]
+    path: com/example/learning/module/around/controller/AroundAdviceController.java
+    mapping: '@GetMapping("/transform")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /aop/around/transform
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  skip():
+    summary: Skip target execution with @Around advice
+    description: Demonstrates that omitting proceed() prevents the target method from executing and allows the advice to return its own result.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: skip
+    params: [
+      ]
+    path: com/example/learning/module/around/controller/AroundAdviceController.java
+    mapping: '@GetMapping("/skip")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /aop/around/skip
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  arguments():
+    summary: Modify method arguments with @Around advice
+    description: Demonstrates how @Around advice can read and replace invocation arguments before calling proceed(Object[]).
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: arguments
+    params: [
+      ]
+    path: com/example/learning/module/around/controller/AroundAdviceController.java
+    mapping: '@GetMapping("/arguments")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /aop/around/arguments
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  exceptionPropagation():
+    summary: Observe exception propagation through @Around advice
+    description: Demonstrates an @Around advice observing an exception and rethrowing it so the original target contract is preserved.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: exceptionPropagation
+    params: [
+      ]
+    path: com/example/learning/module/around/controller/AroundAdviceController.java
+    mapping: '@GetMapping("/exception")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /aop/around/exception
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+CrossCuttingController:
+  observeCrossCutting():
+    summary: Observe a cross-cutting logging concern
+    description: Applies one logging concern to multiple business methods through AOP so the service methods do not duplicate logging code.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: observeCrossCutting
+    params: [
+      ]
+    path: com/example/learning/module/crosscutting/controller/CrossCuttingController.java
+    mapping: '@GetMapping("/observe")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /aop/cross-cutting/observe
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+OrderingController:
+  observeOrdering():
+    summary: Observe nested Aspect ordering
+    description: Demonstrates how two @Around Aspects form a nested call stack according to their @Order values.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: observeOrdering
+    params: [
+      ]
+    path: com/example/learning/module/ordering/controller/OrderingController.java
+    mapping: '@GetMapping("/observe")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /aop/ordering/observe
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+PracticalPatternController:
+  checkout(String):
+    summary: Apply practical auditing and timing aspects
+    description: Runs a checkout operation with auditing and timing implemented as reusable cross-cutting concerns around the business method.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: checkout
+    params:
+    - item
+    path: com/example/learning/module/patterns/controller/PracticalPatternController.java
+    mapping: '@GetMapping("/checkout")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /aop/patterns/checkout
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+PointcutController:
+  comparePointcuts():
+    summary: Compare common Spring AOP pointcut expressions
+    description: Compares execution, annotation, args, runtime argument type, within, composed pointcuts, this/target, bean(), and an intentionally unmatched method.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: comparePointcuts
+    params: [
+      ]
+    path: com/example/learning/module/pointcut/controller/PointcutController.java
+    mapping: '@GetMapping("/compare")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /aop/pointcut/compare
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+ProxyMentalModelController:
+  inspectProxy():
+    summary: Inspect a Spring AOP proxy
+    description: Shows that the injected service is an AOP proxy and exposes its runtime class, target class, proxy type, and intercepted call sequence.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: inspectProxy
+    params: [
+      ]
+    path: com/example/learning/module/proxy/controller/ProxyMentalModelController.java
+    mapping: '@GetMapping("/inspect")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /aop/proxy/inspect
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  compareManagedBeanAndPlainObject():
+    summary: Compare a managed proxy with a plain Java object
+    description: Compares a Spring-managed bean that passes through AOP interception with an object created directly using new, which bypasses the Spring proxy.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: compareManagedBeanAndPlainObject
+    params: [
+      ]
+    path: com/example/learning/module/proxy/controller/ProxyMentalModelController.java
+    mapping: '@GetMapping("/managed-vs-new")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /aop/proxy/managed-vs-new
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+SelfInvocationController:
+  compareSelfInvocation():
+    summary: Compare self-invocation with external proxy invocation
+    description: Compares this.inner() inside the target with an external call through the Spring proxy to show why self-invocation bypasses proxy advice.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: compareSelfInvocation
+    params: [
+      ]
+    path: com/example/learning/module/selfinvocation/controller/SelfInvocationController.java
+    mapping: '@GetMapping("/compare")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /aop/self-invocation/compare
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  finalMethodLimitation():
+    summary: Demonstrate the final-method proxy limitation
+    description: Shows that a final method on a class-based proxy cannot be overridden and therefore cannot be intercepted by proxy-based advice.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: finalMethodLimitation
+    params: [
+      ]
+    path: com/example/learning/module/selfinvocation/controller/SelfInvocationController.java
+    mapping: '@GetMapping("/final-method")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /aop/self-invocation/final-method
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+TerminologyController:
+  inspectTerminology():
+    summary: Inspect core AOP terminology in a real invocation
+    description: Connects Aspect, Advice, Join Point, Target, and Proxy terminology to an actual Spring AOP method call and its runtime proxy facts.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: inspectTerminology
+    params: [
+      ]
+    path: com/example/learning/module/terminology/controller/TerminologyController.java
+    mapping: '@GetMapping("/inspect")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /aop/terminology/inspect
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

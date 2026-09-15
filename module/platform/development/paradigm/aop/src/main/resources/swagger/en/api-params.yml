@@ -1,0 +1,4 @@
+item:
+  summary: Checkout item
+  description: Item name passed to the checkout business operation so the auditing and timing aspects can be observed around a concrete invocation.
+  usage: true
