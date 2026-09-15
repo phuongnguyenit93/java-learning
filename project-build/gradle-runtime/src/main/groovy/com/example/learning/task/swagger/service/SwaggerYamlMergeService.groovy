@@ -70,6 +70,13 @@ ${swaggerDirectory.absolutePath}
                 )
 
 
+        File controllerDescriptionFile =
+                new File(
+                        swaggerDirectory,
+                        'controller-description.yml'
+                )
+
+
         /*
          * LOAD TRƯỚC.
          *
@@ -88,6 +95,12 @@ ${swaggerDirectory.absolutePath}
                 )
 
 
+        Map<String, Object> controllerDescriptionData =
+                loadMap(
+                        controllerDescriptionFile
+                )
+
+
         mergeApiData(
                 apiData,
                 scanResult,
@@ -102,8 +115,15 @@ ${swaggerDirectory.absolutePath}
         )
 
 
+        mergeControllerDescriptionData(
+                controllerDescriptionData,
+                scanResult,
+                defaults
+        )
+
+
         /*
-         * Dump cả hai trước khi write.
+         * Dump cả ba trước khi write.
          */
         String apiYaml =
                 writer.dump(
@@ -117,6 +137,12 @@ ${swaggerDirectory.absolutePath}
                 )
 
 
+        String controllerDescriptionYaml =
+                writer.dump(
+                        controllerDescriptionData
+                )
+
+
         writeSafely(
                 apiFile,
                 apiYaml
@@ -127,6 +153,119 @@ ${swaggerDirectory.absolutePath}
                 paramsFile,
                 paramsYaml
         )
+
+
+        writeSafely(
+                controllerDescriptionFile,
+                controllerDescriptionYaml
+        )
+    }
+
+
+    private static void mergeControllerDescriptionData(
+            Map<String, Object> controllerDescriptionData,
+            SwaggerScanResult scanResult,
+            SwaggerDescriptionDefault defaults
+    ) {
+
+        /*
+         * controller-description.yml khác api-descriptions.yml:
+         *
+         * - controller còn tồn tại trong source -> phải có entry.
+         * - controller không còn tồn tại -> xóa entry.
+         * - description đã tồn tại -> HUMAN OWNED, tuyệt đối không overwrite.
+         */
+        controllerDescriptionData.each {
+            String controllerName,
+            Object value ->
+
+                requireMap(
+                        value,
+                        """
+Invalid Swagger controller description entry:
+
+${controllerName}
+"""
+                )
+        }
+
+
+        Map<String, Object> merged =
+                new LinkedHashMap<>()
+
+
+        scanResult.apiByController.keySet().each {
+            String controllerName ->
+
+                Object existing =
+                        controllerDescriptionData[
+                                controllerName
+                        ]
+
+
+                Map<String, Object> entry =
+                        existing == null
+                                ? new LinkedHashMap<>()
+                                : new LinkedHashMap<>(
+                                        requireMap(
+                                                existing,
+                                                """
+Invalid Swagger controller description entry:
+
+${controllerName}
+"""
+                                        )
+                                )
+
+
+                if (
+                        !entry.containsKey(
+                                'description'
+                        )
+                ) {
+
+                    entry[
+                            'description'
+                    ] =
+                            buildControllerDescription(
+                                    controllerName,
+                                    defaults.controllerDescriptionParagraph
+                            )
+                }
+
+
+                merged[
+                        controllerName
+                ] =
+                        entry
+        }
+
+
+        controllerDescriptionData.clear()
+        controllerDescriptionData.putAll(
+                merged
+        )
+    }
+
+
+    private static String buildControllerDescription(
+            String controllerName,
+            String descriptionParagraph
+    ) {
+
+        String displayName =
+                controllerName
+                        .replaceAll(
+                                /([A-Z]+)([A-Z][a-z])/,
+                                '$1 $2'
+                        )
+                        .replaceAll(
+                                /([a-z0-9])([A-Z])/,
+                                '$1 $2'
+                        )
+
+
+        return "<h2>${displayName}</h2>\n<p>${descriptionParagraph}</p>"
     }
 
 

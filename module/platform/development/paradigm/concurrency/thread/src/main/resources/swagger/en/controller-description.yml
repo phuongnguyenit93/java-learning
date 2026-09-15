@@ -1,0 +1,52 @@
+AsyncController:
+  description: |-
+    <h2>Async Controller</h2>
+    <p>APIs demonstrating Future, CompletableFuture, completion pipelines, exception handling, timeout, cancellation, and execution policy for asynchronous tasks.</p>
+BasicThreadController:
+  description: |-
+    <h2>Basic Thread Controller</h2>
+    <p>Foundational experiments covering the JVM process, HTTP request Threads, start() versus run(), and the full Thread.State lifecycle.</p>
+CreateThreadController:
+  description: |-
+    <h2>Create Thread Controller</h2>
+    <p>Compares ways to connect a task with an execution mechanism: extending Thread, Runnable plus Thread, and Callable plus FutureTask plus Thread.</p>
+DaemonThreadController:
+  description: |-
+    <h2>Daemon Thread Controller</h2>
+    <p>Observes daemon flags and Thread inheritance rules in Spring Boot; this endpoint is not used to infer JVM shutdown timing directly.</p>
+ConcurrencyProblemController:
+  description: |-
+    <h2>Concurrency Problem Controller</h2>
+    <p>Experiments covering race conditions, the Java Memory Model, happens-before, volatile, and progress problems such as deadlock and livelock.</p>
+ThreadLocalController:
+  description: |-
+    <h2>Thread Local Controller</h2>
+    <p>Demonstrates ThreadLocal isolation, InheritableThreadLocal, stale context from worker reuse, and explicit context propagation patterns.</p>
+CoordinationController:
+  description: |-
+    <h2>Coordination Controller</h2>
+    <p>A collection of Thread coordination primitives including join, wait/notify, Condition, LockSupport, BlockingQueue, and higher-level synchronizers.</p>
+TaskExecutorController:
+  description: |-
+    <h2>Task Executor Controller</h2>
+    <p>Demonstrates Spring TaskExecutor and @Async with a custom executor, TaskDecorator context propagation, and failure handling for void async methods.</p>
+InterruptionController:
+  description: |-
+    <h2>Interruption Controller</h2>
+    <p>Experiments for cooperative cancellation, interrupt flags, InterruptedException, cleanup, interruption limits, and comparison with custom stop flags.</p>
+LeakController:
+  description: |-
+    <h2>Leak Controller</h2>
+    <p>Bounded demonstrations of Thread leaks, executor lifecycle leaks, and queue pressure; every resource is cleaned up within the experiment.</p>
+ThreadPoolController:
+  description: |-
+    <h2>Thread Pool Controller</h2>
+    <p>Explores ThreadPoolExecutor flow, Executors factories, scheduling, rejection policies, and lifecycle from graceful to forced shutdown.</p>
+SynchronizationController:
+  description: |-
+    <h2>Synchronization Controller</h2>
+    <p>Experiments with synchronized, Lock, ReadWriteLock, StampedLock, atomic/CAS tools, and concurrent collections for protecting shared mutable state.</p>
+VirtualThreadController:
+  description: |-
+    <h2>Virtual Thread Controller</h2>
+    <p>Demonstrates Java 21 Virtual Threads: core properties, creation APIs, blocking scalability, downstream limits, and ThreadLocal semantics.</p>

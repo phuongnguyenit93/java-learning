@@ -3,13 +3,17 @@ package com.example.learning.task.swagger.service
 import com.example.learning.task.swagger.model.SwaggerApiMetadata
 import com.example.learning.task.swagger.model.SwaggerMappingMetadata
 import com.example.learning.task.swagger.model.SwaggerScanResult
-import com.github.javaparser.StaticJavaParser
+import com.github.javaparser.JavaParser
+import com.github.javaparser.ParserConfiguration
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration
 import com.github.javaparser.ast.body.MethodDeclaration
 import com.github.javaparser.ast.expr.AnnotationExpr
 import groovy.io.FileType
 
 class SwaggerJavaSourceScanner {
+
+    private static final ParserConfiguration.LanguageLevel SOURCE_LANGUAGE_LEVEL =
+            ParserConfiguration.LanguageLevel.JAVA_21
 
     private static final Set<String> CONTROLLER_ANNOTATIONS = [
             'Controller',
@@ -28,6 +32,7 @@ class SwaggerJavaSourceScanner {
 
 
     private final SpringMappingMetadataParser mappingParser
+    private final JavaParser javaParser
 
 
     SwaggerJavaSourceScanner() {
@@ -44,6 +49,15 @@ class SwaggerJavaSourceScanner {
 
         this.mappingParser =
                 mappingParser
+
+
+        this.javaParser =
+                new JavaParser(
+                        new ParserConfiguration()
+                                .setLanguageLevel(
+                                        SOURCE_LANGUAGE_LEVEL
+                                )
+                )
     }
 
 
@@ -120,10 +134,25 @@ class SwaggerJavaSourceScanner {
             Set<String> parameterNames
     ) {
 
-        def compilationUnit =
-                StaticJavaParser.parse(
+        def parseResult =
+                javaParser.parse(
                         javaFile
                 )
+
+
+        if (
+                !parseResult.successful ||
+                        parseResult.result.empty
+        ) {
+
+            throw new IllegalStateException(
+                    "Unable to parse Java source '${javaFile.absolutePath}' with language level ${SOURCE_LANGUAGE_LEVEL}. Problems: ${parseResult.problems}"
+            )
+        }
+
+
+        def compilationUnit =
+                parseResult.result.get()
 
 
         compilationUnit

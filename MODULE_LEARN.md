@@ -586,7 +586,172 @@ Nếu output sai, ưu tiên sửa source hoặc generator thay vì patch output.
 
 ---
 
-## 14. Quy trình cho một topic
+## 14. Rule của generateApiSwaggerDescription
+
+Task:
+
+```text
+generateApiSwaggerDescription
+```
+
+dùng để scan Java source hiện tại của learning module và đồng bộ Swagger metadata theo structure thật của:
+
+```text
+Controller
+→ API method
+→ parameter
+```
+
+Mục tiêu của task không phải tự viết nội dung tài liệu chi tiết thay cho người author.
+
+Mental model:
+
+```text
+Java source
+    ↓ scan
+generateApiSwaggerDescription
+    ↓
+đồng bộ Swagger metadata structure
+    ↓
+human-owned description được giữ lại
+```
+
+### Ba file Swagger metadata
+
+Mỗi language directory dùng ba file chính:
+
+```text
+src/main/resources/swagger/<lang>/api-descriptions.yml
+src/main/resources/swagger/<lang>/api-params.yml
+src/main/resources/swagger/<lang>/controller-description.yml
+```
+
+#### api-descriptions.yml
+
+Dùng để mô tả **từng API method**.
+
+Một entry có thể chứa các field human-owned như:
+
+```text
+summary
+description
+videoYoutubeId
+videoYoutubeTitle
+```
+
+và các field generated từ Java source như method name, mapping, HTTP method, path, params, usage...
+
+Rule quan trọng:
+
+```text
+API đang tồn tại trong source
+→ usage=true
+→ generated fields được sync theo source
+
+API historical/stale không còn trong source
+→ có thể được giữ lại với usage=false
+→ human-owned metadata không được tự ý overwrite/xóa
+```
+
+#### api-params.yml
+
+Dùng để mô tả **parameter name** được phát hiện từ các API method.
+
+`summary` và `description` của parameter là human-owned metadata.
+
+Generator chịu trách nhiệm đồng bộ parameter nào đang được sử dụng; nội dung mô tả đã có không được overwrite chỉ vì task chạy lại.
+
+#### controller-description.yml
+
+Dùng để mô tả **Controller ở cấp tổng quan**, tương ứng với nhóm API / Swagger tag của controller đó.
+
+Ví dụ:
+
+```yaml
+BasicThreadController:
+  description: |-
+    <h2>Basic Thread Controller</h2>
+    <p>Mô tả tổng quan về nhóm API Basic Thread.</p>
+```
+
+Rule:
+
+```text
+Controller mới xuất hiện trong source
+→ tạo skeleton entry nếu chưa có
+
+Controller vẫn tồn tại
+→ giữ nguyên description đã có
+
+Controller không còn tồn tại trong source
+→ xóa entry khỏi controller-description.yml
+```
+
+`description` của controller là **human-owned content** sau khi được tạo skeleton.
+
+### Khi nào được enrich summary/description
+
+Việc tạo/refactor learning module, tạo menu README hoặc chạy generator **không đồng nghĩa** phải tự động viết nội dung chi tiết cho Swagger metadata.
+
+Rule mặc định:
+
+```text
+tạo module/menu/refactor topic
+→ KHÔNG tự động enrich toàn bộ Swagger summary/description
+```
+
+Chỉ khi user có **yêu cầu riêng** về Swagger documentation/enrichment thì mới thực hiện bước semantic authoring.
+
+Khi có yêu cầu đó:
+
+```text
+api-descriptions.yml
+→ đọc và hiểu behavior thật của từng Controller method
+→ đối chiếu README / Service nếu cần
+→ viết summary ngắn, đúng trọng tâm
+→ viết description mô tả experiment/behavior/điểm cần quan sát
+
+controller-description.yml
+→ đọc vai trò và phạm vi của toàn Controller
+→ viết description tổng quan cho nhóm API
+→ không chỉ đổi CamelCase thành một câu placeholder
+```
+
+Nếu module có nhiều language:
+
+```text
+vi / en / ...
+→ nội dung phải tương ứng theo từng language
+→ không copy nguyên một language sang language khác
+```
+
+Khi enrich thủ công theo yêu cầu, phải giữ nguyên các metadata human-owned khác không nằm trong scope, đặc biệt:
+
+```text
+videoYoutubeId
+videoYoutubeTitle
+enableVideoYoutube
+historical entry usage=false
+```
+
+Sau khi chỉnh nội dung nên chạy lại:
+
+```text
+generateApiSwaggerDescription
+```
+
+để xác nhận:
+
+```text
+task vẫn chạy thành công
+summary/description vừa author không bị overwrite
+historical metadata vẫn được preserve
+controller structure vẫn khớp source hiện tại
+```
+
+---
+
+## 15. Quy trình cho một topic
 
 Ví dụ topic `Basic` trong **workflow staging**:
 
@@ -626,7 +791,7 @@ Nếu topic/module thuộc **workflow direct edit** thì bỏ các bước `menu
 
 ---
 
-## 15. Validation checklist
+## 16. Validation checklist
 
 Trước khi coi một topic là hoàn thành:
 
@@ -648,11 +813,14 @@ Trước khi coi một topic là hoàn thành:
 [ ] Demo có thể chạy lặp lại mà không bị state cũ làm sai kết quả.
 [ ] Code đang sửa compile với Java version của project.
 [ ] Nếu dùng staging, code thật và README thật chưa bị sửa ngoài scope trước promotion.
+[ ] Nếu module dùng Swagger generator, structure của 3 file Swagger metadata khớp source hiện tại.
+[ ] Không tự động enrich Swagger summary/description trong lúc chỉ tạo/refactor module hoặc menu nếu user chưa yêu cầu.
+[ ] Nếu user yêu cầu enrich Swagger content, summary/description phải dựa trên behavior thật của method/controller và không overwrite metadata human-owned ngoài scope.
 ```
 
 ---
 
-## 16. Promote staging sang code thật
+## 17. Promote staging sang code thật
 
 Section này **chỉ áp dụng cho workflow staging**.
 
@@ -694,7 +862,7 @@ Nếu cấu trúc mới ít file hơn cấu trúc cũ, phải bảo đảm old-o
 
 ---
 
-## 17. Tóm tắt ngắn để đưa vào context AI khác
+## 18. Tóm tắt ngắn để đưa vào context AI khác
 
 ```text
 Learning module refactor has two workflows.
@@ -719,6 +887,21 @@ src/main/java/com/example/learning/moduleb/...
 
 LIST.md/generated README:
 do not edit manually.
+
+Swagger metadata task:
+generateApiSwaggerDescription
+→ sync Java Controller/API/parameter structure into:
+   api-descriptions.yml
+   api-params.yml
+   controller-description.yml
+
+Swagger content ownership:
+generator syncs structure/generated fields;
+existing human-owned descriptions must be preserved.
+
+Do NOT automatically enrich Swagger summary/description while merely creating/refactoring a learning module or README menu.
+Only do semantic Swagger authoring when the user explicitly requests it.
+When requested, understand each method/controller first, then write meaningful localized summary/description while preserving unrelated human-owned metadata.
 
 BASE.md:
 defines overall curriculum/learning flow.

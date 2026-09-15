@@ -1,47 +1,9 @@
 BasicThreadController:
-  testThread():
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
-    enableVideoYoutube: true
-    videoYoutubeId: nd2ULXyBaV8
-    videoYoutubeTitle: Tiêu đề của video
-    methodName: testThread
-    params: [
-      ]
-    path: com/example/learning/module/basic/controller/BasicThreadController.java
-    mapping: '@GetMapping("/example-thread")'
-    httpMethods:
-    - GET
-    mappingPaths:
-    - basic/example-thread
-    produces: [
-      ]
-    consumes: [
-      ]
-    usage: true
-  testNonThread():
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
-    enableVideoYoutube: false
-    videoYoutubeId: ID của video youtube chèn vào description trong API
-    videoYoutubeTitle: Tiêu đề của video
-    methodName: testNonThread
-    params: [
-      ]
-    path: com/example/learning/module/basic/controller/BasicThreadController.java
-    mapping: '@GetMapping("/example-non-thread")'
-    httpMethods:
-    - GET
-    mappingPaths:
-    - basic/example-non-thread
-    produces: [
-      ]
-    consumes: [
-      ]
-    usage: true
   threadLifeCycle():
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Quan sát các trạng thái Thread.State
+    description: Điều khiển một worker đi qua NEW, RUNNABLE, TIMED_WAITING, BLOCKED,
+      WAITING và TERMINATED. Experiment giúp phân biệt nguyên nhân của từng trạng
+      thái thay vì gom mọi trạng thái chờ thành một khái niệm chung.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -53,7 +15,51 @@ BasicThreadController:
     httpMethods:
     - GET
     mappingPaths:
-    - basic/thread-life-cycle
+    - /basic/thread-life-cycle
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  processAndThread():
+    summary: Quan sát Process và HTTP request Thread
+    description: Trả về PID của JVM cùng tên, id, daemon flag và state của Thread
+      đang xử lý HTTP request. Experiment cho thấy request thực sự chạy trên một execution
+      thread cụ thể bên trong JVM process.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: processAndThread
+    params: [
+      ]
+    path: com/example/learning/module/basic/controller/BasicThreadController.java
+    mapping: '@GetMapping("/process-thread")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /basic/process-thread
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  startVsRun():
+    summary: So sánh Thread.run() và Thread.start()
+    description: Chạy cùng một Runnable bằng cách gọi run() trực tiếp và bằng start()
+      trên một Thread mới. Kết quả cho thấy run() chỉ là method call trên caller thread,
+      còn start() mới bắt đầu lifecycle của một Thread riêng.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: startVsRun
+    params: [
+      ]
+    path: com/example/learning/module/basic/controller/BasicThreadController.java
+    mapping: '@GetMapping("/start-vs-run")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /basic/start-vs-run
     produces: [
       ]
     consumes: [
@@ -79,10 +85,12 @@ CreateThreadController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   createByRunnable():
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Chạy Runnable trên một Thread riêng
+    description: Tách công việc thành Runnable rồi truyền task đó cho một Thread để
+      thực thi. Experiment làm rõ Runnable mô tả WHAT to run còn Thread quyết định
+      WHERE execution happens.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -94,15 +102,17 @@ CreateThreadController:
     httpMethods:
     - GET
     mappingPaths:
-    - create/runnable
+    - /create/runnable
     produces: [
       ]
     consumes: [
       ]
     usage: true
   createByCallable():
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Chạy Callable bằng FutureTask và Thread
+    description: Bọc Callable bằng FutureTask để nó có thể được một Thread trực tiếp
+      thực thi, sau đó lấy result qua FutureTask.get(). Experiment chứng minh Callable
+      có kết quả nhưng không tự tạo hay tự chạy trên Thread mới.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -114,7 +124,7 @@ CreateThreadController:
     httpMethods:
     - GET
     mappingPaths:
-    - create/callable
+    - /create/callable
     produces: [
       ]
     consumes: [
@@ -135,6 +145,28 @@ CreateThreadController:
     - GET
     mappingPaths:
     - create/pool
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: false
+  createByExtends():
+    summary: Tạo Thread bằng cách extends Thread
+    description: Khởi tạo một subclass của Thread và chạy task được gắn trực tiếp
+      vào run(). Experiment minh họa cách task và execution mechanism bị coupling
+      khi kế thừa Thread.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: createByExtends
+    params: [
+      ]
+    path: com/example/learning/module/basic/controller/CreateThreadController.java
+    mapping: '@GetMapping("/extends")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /create/extends
     produces: [
       ]
     consumes: [
@@ -160,7 +192,7 @@ DaemonThreadController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   stopDaemon():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -180,7 +212,7 @@ DaemonThreadController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   restartDaemon():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -196,6 +228,28 @@ DaemonThreadController:
     - GET
     mappingPaths:
     - daemon/restart-thread
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: false
+  inspectDaemonRules():
+    summary: Quan sát daemon flag và inheritance
+    description: Quan sát daemon status của request thread, child thread kế thừa daemon
+      flag và một child được setDaemon(true) trước khi start. Endpoint chỉ chứng minh
+      daemon property và inheritance, không dùng để kết luận thời điểm JVM shutdown.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: inspectDaemonRules
+    params: [
+      ]
+    path: com/example/learning/module/basic/controller/DaemonThreadController.java
+    mapping: '@GetMapping("/inspect")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /daemon/inspect
     produces: [
       ]
     consumes: [
@@ -221,7 +275,7 @@ ThreadLocalController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   inheritableThreadLocalDemo():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -241,7 +295,7 @@ ThreadLocalController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   threadPoolIssueDemo():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -257,6 +311,94 @@ ThreadLocalController:
     - GET
     mappingPaths:
     - thread-local/thread-pool-issue
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: false
+  isolation():
+    summary: Quan sát ThreadLocal isolation
+    description: Hai Thread dùng cùng một ThreadLocal object nhưng set và đọc hai
+      request id khác nhau. Experiment chứng minh value được gắn theo từng Thread
+      thay vì là shared mutable value cần lock.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: isolation
+    params: [
+      ]
+    path: com/example/learning/module/context/controller/ThreadLocalController.java
+    mapping: '@GetMapping("/isolation")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /context/isolation
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  inheritance():
+    summary: Quan sát InheritableThreadLocal khi tạo Thread
+    description: Parent đặt context A, tạo child Thread, sau đó đổi context thành
+      B trước khi child start. Child vẫn thấy A, cho thấy inheritance xảy ra tại creation
+      boundary chứ không được copy lại mỗi lần task chạy.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: inheritance
+    params: [
+      ]
+    path: com/example/learning/module/context/controller/ThreadLocalController.java
+    mapping: '@GetMapping("/inheritance")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /context/inheritance
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  poolReuseProblem():
+    summary: Chứng minh stale context khi worker được reuse
+    description: Dùng worker pool được tạo một lần để cho thấy InheritableThreadLocal
+      không tự cập nhật context mới theo từng task submission. Task sau có thể vẫn
+      thấy context cũ được inherit khi worker ban đầu được tạo.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: poolReuseProblem
+    params: [
+      ]
+    path: com/example/learning/module/context/controller/ThreadLocalController.java
+    mapping: '@GetMapping("/pool-reuse-problem")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /context/pool-reuse-problem
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  explicitPropagation():
+    summary: Truyền context theo capture, restore và cleanup
+    description: Tạo worker trước khi parent có context rồi wrap task để capture context
+      ở submission boundary, restore trên worker và cleanup sau execution. Experiment
+      minh họa pattern explicit context propagation an toàn với worker reuse.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: explicitPropagation
+    params: [
+      ]
+    path: com/example/learning/module/context/controller/ThreadLocalController.java
+    mapping: '@GetMapping("/explicit-propagation")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /context/explicit-propagation
     produces: [
       ]
     consumes: [
@@ -282,7 +424,7 @@ AsyncController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   completableFutureExample():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -302,7 +444,7 @@ AsyncController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   completableFutureWithHandleExample():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -318,6 +460,186 @@ AsyncController:
     - GET
     mappingPaths:
     - async/completable-future-with-handle
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: false
+  future():
+    summary: Quan sát Callable và Future
+    description: Submit một Callable vào ExecutorService, giữ task chưa hoàn thành
+      để quan sát isDone=false, sau đó release task và lấy kết quả bằng Future.get().
+      Experiment cho thấy Future tách submission khỏi result retrieval nhưng get()
+      vẫn là một blocking wait.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: future
+    params: [
+      ]
+    path: com/example/learning/module/async/controller/AsyncController.java
+    mapping: '@GetMapping("/future")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /async/future
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  futureCancellation():
+    summary: So sánh Future.cancel(false) và cancel(true)
+    description: Chạy hai task đang block rồi hủy bằng cancel(false) và cancel(true)
+      để quan sát cancellation state và interruption behavior. cancel(true) có thể
+      interrupt worker, còn cancel(false) không yêu cầu interruption và underlying
+      task có thể tiếp tục chạy.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: futureCancellation
+    params: [
+      ]
+    path: com/example/learning/module/async/controller/AsyncController.java
+    mapping: '@GetMapping("/future-cancellation")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /async/future-cancellation
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  pipeline():
+    summary: Kết hợp pipeline bằng CompletableFuture
+    description: Tạo hai nhánh bất đồng bộ độc lập cho order và exchange rate, ghép
+      chúng bằng thenCombine rồi transform kết quả bằng thenApply. Experiment minh
+      họa composition theo completion thay vì tự block lấy từng kết quả trung gian.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: pipeline
+    params: [
+      ]
+    path: com/example/learning/module/async/controller/AsyncController.java
+    mapping: '@GetMapping("/pipeline")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /async/pipeline
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  fastest():
+    summary: Quan sát semantics của CompletableFuture.anyOf
+    description: Điều khiển thứ tự completion của nhiều CompletableFuture để chứng
+      minh anyOf chọn completion đầu tiên, kể cả khi completion đó là failure. Các
+      sibling future không tự động bị cancel chỉ vì aggregate đã hoàn thành.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: fastest
+    params: [
+      ]
+    path: com/example/learning/module/async/controller/AsyncController.java
+    mapping: '@GetMapping("/fastest")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /async/fastest
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  exceptionHandling():
+    summary: Xử lý exceptional completion trong CompletableFuture
+    description: Cố tình tạo một stage thất bại rồi dùng handle() để biến cả success
+      hoặc failure thành một result có kiểm soát. Experiment làm rõ exception trong
+      pipeline là một completion state có thể được compose và xử lý tiếp.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: exceptionHandling
+    params: [
+      ]
+    path: com/example/learning/module/async/controller/AsyncController.java
+    mapping: '@GetMapping("/exception")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /async/exception
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executionVariant():
+    summary: So sánh thenApply và thenApplyAsync
+    description: Dùng một stage đã complete để quan sát thenApply có thể chạy inline
+      trên caller, trong khi thenApplyAsync với executor chỉ định được dispatch qua
+      executor đó. Mục tiêu là hiểu execution policy chứ không giả định mọi async
+      variant luôn dùng một Thread khác.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: executionVariant
+    params: [
+      ]
+    path: com/example/learning/module/async/controller/AsyncController.java
+    mapping: '@GetMapping("/execution-variant")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /async/execution-variant
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  allOf():
+    summary: Quan sát semantics của CompletableFuture.allOf
+    description: Cho một input fail trước và một sibling hoàn thành sau để chứng minh
+      allOf không phải fail-fast barrier. Aggregate chỉ complete sau khi các input
+      cần thiết hoàn tất, có thể complete exceptionally và không tự cancel sibling.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: allOf
+    params: [
+      ]
+    path: com/example/learning/module/async/controller/AsyncController.java
+    mapping: '@GetMapping("/all-of")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /async/all-of
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  timeoutCancellation():
+    summary: Phân biệt timeout và cancellation của CompletableFuture
+    description: So sánh orTimeout() với CompletableFuture.cancel(true) trên underlying
+      work đang block. Cả hai thay đổi completion state của future nhưng không mặc
+      định interrupt hoặc kill công việc bên dưới, nên cleanup phải được thiết kế
+      riêng.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: timeoutCancellation
+    params: [
+      ]
+    path: com/example/learning/module/async/controller/AsyncController.java
+    mapping: '@GetMapping("/timeout-cancellation")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /async/timeout-cancellation
     produces: [
       ]
     consumes: [
@@ -343,7 +665,7 @@ BlockingQueueController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   synchronousQueueExample():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -363,7 +685,7 @@ BlockingQueueController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   arrayQueueExample():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -383,7 +705,7 @@ BlockingQueueController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   priorityQueueExample():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -403,7 +725,7 @@ BlockingQueueController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
 ClassicCoordinationController:
   joinThread():
     summary: Chưa có tiêu đề
@@ -424,7 +746,7 @@ ClassicCoordinationController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   waitAndNotifyThread():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -444,7 +766,7 @@ ClassicCoordinationController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
 ModernCoordinationController:
   lockConditionExample():
     summary: Chưa có tiêu đề
@@ -465,7 +787,7 @@ ModernCoordinationController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   lockSupportExample():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -485,7 +807,7 @@ ModernCoordinationController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
 PatternController:
   exchangerExample():
     summary: Chưa có tiêu đề
@@ -506,7 +828,7 @@ PatternController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   consumerProducerPatternExample():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -526,7 +848,7 @@ PatternController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
 SynchronizerController:
   countDownLatchExample():
     summary: Chưa có tiêu đề
@@ -547,7 +869,7 @@ SynchronizerController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   countDownLatchTimeOutExample():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -567,7 +889,7 @@ SynchronizerController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   cyclicBarrierExample():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -587,7 +909,7 @@ SynchronizerController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   cyclicBarrierTimeOutExample():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -607,7 +929,7 @@ SynchronizerController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   cyclicBarrierResetExample():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -627,7 +949,7 @@ SynchronizerController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   semaphoreExample():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -647,7 +969,7 @@ SynchronizerController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   phaserExample():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -667,7 +989,7 @@ SynchronizerController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
 TaskExecutorController:
   springExecutorExample():
     summary: Chưa có tiêu đề
@@ -684,6 +1006,51 @@ TaskExecutorController:
     - GET
     mappingPaths:
     - spring-executor/example
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: false
+  asyncWithContext():
+    summary: Chạy @Async với custom executor và context propagation
+    description: Đặt DemoContext, MDC và RequestAttributes trên caller rồi gọi bean
+      @Async sử dụng custom ThreadPoolTaskExecutor. TaskDecorator capture, restore
+      và cleanup context để response chứng minh worker nhận đúng request context trên
+      Thread khác.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: asyncWithContext
+    params: [
+      ]
+    path: com/example/learning/module/executor/controller/TaskExecutorController.java
+    mapping: '@GetMapping("/async-context")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-executor/async-context
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  asyncVoidException():
+    summary: Quan sát exception của void @Async
+    description: Gọi một void @Async method cố tình throw và quan sát AsyncUncaughtExceptionHandler
+      nhận failure qua correlation id. Experiment cũng phân biệt exception trong method
+      body với rejection xảy ra đồng bộ tại submission boundary.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: asyncVoidException
+    params: [
+      ]
+    path: com/example/learning/module/executor/controller/TaskExecutorController.java
+    mapping: '@GetMapping("/void-exception")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-executor/void-exception
     produces: [
       ]
     consumes: [
@@ -709,7 +1076,7 @@ InterruptionController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   blockerInterruption():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -729,7 +1096,7 @@ InterruptionController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   gracefulShutdownByJava():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -749,7 +1116,7 @@ InterruptionController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   gracefulShutdownBySpring():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -769,7 +1136,7 @@ InterruptionController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   interruptedDemo():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -785,6 +1152,138 @@ InterruptionController:
     - GET
     mappingPaths:
     - interruption/interrupted-demo
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: false
+  interruptBusyWorker():
+    summary: Hủy CPU loop bằng cooperative interruption
+    description: Start một worker chạy busy loop có cancellation point dựa trên isInterrupted(),
+      sau đó gửi interrupt(). Worker tự quan sát signal, thoát loop và kết thúc thay
+      vì bị JVM cưỡng bức kill.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: interruptBusyWorker
+    params: [
+      ]
+    path: com/example/learning/module/interruption/controller/InterruptionController.java
+    mapping: '@GetMapping("/busy-loop")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /interruption/busy-loop
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  inspectInterruptFlag():
+    summary: So sánh isInterrupted() và Thread.interrupted()
+    description: Interrupt worker rồi đọc interrupt status nhiều lần bằng hai API.
+      Experiment cho thấy isInterrupted() chỉ quan sát flag còn Thread.interrupted()
+      đọc và clear flag của current thread.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: inspectInterruptFlag
+    params: [
+      ]
+    path: com/example/learning/module/interruption/controller/InterruptionController.java
+    mapping: '@GetMapping("/flag")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /interruption/flag
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  interruptSleepingWorker():
+    summary: Interrupt Thread đang sleep và restore flag
+    description: Interrupt một worker đang Thread.sleep() để nhận InterruptedException,
+      quan sát flag đã bị clear trong catch rồi restore bằng Thread.currentThread().interrupt().
+      Experiment nối exception path với interruption signal.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: interruptSleepingWorker
+    params: [
+      ]
+    path: com/example/learning/module/interruption/controller/InterruptionController.java
+    mapping: '@GetMapping("/sleep")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /interruption/sleep
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  cancelWithCleanup():
+    summary: Cleanup tài nguyên khi task bị cancel
+    description: Mô phỏng worker đang giữ resource rồi gửi interrupt trong lúc làm
+      việc. finally luôn cleanup resource dù cancellation được quan sát qua loop condition
+      hay InterruptedException, chứng minh cancellation cần deterministic cleanup.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: cancelWithCleanup
+    params: [
+      ]
+    path: com/example/learning/module/interruption/controller/InterruptionController.java
+    mapping: '@GetMapping("/cleanup")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /interruption/cleanup
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  interruptSynchronizedWaiter():
+    summary: Chứng minh synchronized monitor acquisition không interruptible
+    description: Giữ intrinsic monitor để worker rơi vào BLOCKED rồi gọi interrupt().
+      Worker vẫn phải chờ monitor được release dù interrupt flag đã set, sau đó mới
+      acquire monitor và quan sát signal.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: interruptSynchronizedWaiter
+    params: [
+      ]
+    path: com/example/learning/module/interruption/controller/InterruptionController.java
+    mapping: '@GetMapping("/synchronized-blocked")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /interruption/synchronized-blocked
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  stopFlagVsInterrupt():
+    summary: So sánh stop flag và interrupt khi worker block
+    description: Set volatile stop flag khi worker đang sleep và quan sát worker vẫn
+      bị TIMED_WAITING, sau đó dùng interrupt() để đánh thức blocking operation. Experiment
+      làm rõ state flag không tích hợp với interruption protocol của Java.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: stopFlagVsInterrupt
+    params: [
+      ]
+    path: com/example/learning/module/interruption/controller/InterruptionController.java
+    mapping: '@GetMapping("/stop-flag-vs-interrupt")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /interruption/stop-flag-vs-interrupt
     produces: [
       ]
     consumes: [
@@ -810,7 +1309,7 @@ LeakController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   poolLeak():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -826,6 +1325,72 @@ LeakController:
     - GET
     mappingPaths:
     - leak/pool
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: false
+  threadLeakPattern():
+    summary: Quan sát pattern Thread leak theo cách bounded
+    description: Giữ một worker sống có chủ đích để quan sát aliveBeforeCleanup, sau
+      đó release và join để xác nhận worker đã kết thúc. Demo minh họa lifecycle bug
+      mà không thực sự để lại leaked Thread.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: threadLeakPattern
+    params: [
+      ]
+    path: com/example/learning/module/leak/controller/LeakController.java
+    mapping: '@GetMapping("/thread-pattern")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /leak/thread-pattern
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  poolLeakPattern():
+    summary: Quan sát pool leak do quên shutdown
+    description: Tạo một ExecutorService cục bộ và quan sát pool chưa shutdown ở giữa
+      experiment, sau đó cleanup bằng shutdown và awaitTermination. Mục tiêu là làm
+      rõ ownership của executor và trách nhiệm kết thúc lifecycle.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: poolLeakPattern
+    params: [
+      ]
+    path: com/example/learning/module/leak/controller/LeakController.java
+    mapping: '@GetMapping("/pool-pattern")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /leak/pool-pattern
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  queuePressure():
+    summary: Quan sát queue backlog và rejection
+    description: Dùng pool với bounded queue nhỏ, giữ worker bận rồi submit đủ task
+      để làm đầy queue và kích hoạt rejection. Experiment minh họa resource pressure
+      của backlog mà không tạo unbounded memory growth thật.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: queuePressure
+    params: [
+      ]
+    path: com/example/learning/module/leak/controller/LeakController.java
+    mapping: '@GetMapping("/queue-pressure")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /leak/queue-pressure
     produces: [
       ]
     consumes: [
@@ -851,7 +1416,7 @@ ThreadPoolController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   cacheThreadPoolExample():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -871,7 +1436,7 @@ ThreadPoolController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   singleThreadPoolExample():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -891,7 +1456,7 @@ ThreadPoolController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   scheduleThreadPoolExample():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -911,7 +1476,7 @@ ThreadPoolController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   abortPolicy():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -931,7 +1496,7 @@ ThreadPoolController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   callerRunPolicy():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -951,7 +1516,7 @@ ThreadPoolController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   discardPolicy():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -971,7 +1536,7 @@ ThreadPoolController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   discardOldestPolicy():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -987,6 +1552,249 @@ ThreadPoolController:
     - GET
     mappingPaths:
     - thread-pool/reject/discard-oldest-policy
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: false
+  executorFlow():
+    summary: Quan sát core, queue, max và rejection
+    description: Dùng ThreadPoolExecutor cấu hình core=1, max=2, queue=1 và giữ task
+      bằng latch để thấy task 1 tạo core worker, task 2 vào queue, task 3 mở worker
+      bổ sung và task 4 bị reject.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: executorFlow
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/executor-flow")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /thread-pool/executor-flow
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeVsSubmit():
+    summary: So sánh execute() và submit()
+    description: Cho Runnable throw exception qua execute() và submit() để quan sát
+      hai failure channel khác nhau. execute() đi qua uncaught-exception path của
+      worker, còn submit() lưu failure trong Future và expose qua get().
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: executeVsSubmit
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/execute-vs-submit")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /thread-pool/execute-vs-submit
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  fixedPoolReuse():
+    summary: Quan sát worker reuse trong fixed thread pool
+    description: Submit nhiều task vào fixed pool nhỏ và ghi lại worker names để thấy
+      cùng một nhóm worker được reuse thay vì tạo một Thread mới cho mỗi task. Executor
+      được shutdown sau experiment.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: fixedPoolReuse
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/fixed-pool-reuse")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /thread-pool/fixed-pool-reuse
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executorFactories():
+    summary: So sánh các Executors factory
+    description: Chạy các case bounded với fixed, cached, single và scheduled executor
+      để quan sát worker count, serialization, queueing và delayed execution. Mục
+      tiêu là hiểu semantics thật thay vì chọn factory chỉ dựa trên tên.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: executorFactories
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/executor-factories")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /thread-pool/executor-factories
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  scheduledExecution():
+    summary: So sánh fixed-rate và fixed-delay scheduling
+    description: Chạy task lâu hơn interval cấu hình rồi ghi timeline của scheduleAtFixedRate
+      và scheduleWithFixedDelay. Experiment cho thấy fixed-rate bám cadence theo mốc
+      start còn fixed-delay chờ một khoảng sau completion, đồng thời cùng periodic
+      task không tự overlap với chính nó.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: scheduledExecution
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/scheduled-execution")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /thread-pool/scheduled-execution
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  scheduledFailure():
+    summary: Quan sát exception làm dừng periodic task
+    description: Tạo periodic task throw ngay lần chạy đầu tiên rồi quan sát ScheduledFuture
+      complete exceptionally và các lần chạy tiếp theo bị suppress. Experiment nhấn
+      mạnh periodic job cần error observability rõ ràng.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: scheduledFailure
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/scheduled-failure")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /thread-pool/scheduled-failure
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  callerRuns():
+    summary: Quan sát CallerRunsPolicy tạo feedback pressure
+    description: Làm đầy worker và queue rồi submit thêm task để CallerRunsPolicy
+      chạy task ngay trên caller thread. Khi caller phải tự xử lý công việc, tốc độ
+      submission giảm và tạo feedback pressure thay vì queue tự block execute().
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: callerRuns
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/caller-runs")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /thread-pool/caller-runs
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  discardPolicies():
+    summary: So sánh DiscardPolicy và DiscardOldestPolicy
+    description: Làm đầy pool để quan sát DiscardPolicy bỏ task mới im lặng, còn DiscardOldestPolicy
+      loại phần tử ở head của work queue rồi thử submit task mới lại. Experiment làm
+      rõ mất task là business semantics.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: discardPolicies
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/discard-policies")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /thread-pool/discard-policies
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  customRejectionHandler():
+    summary: Ghi nhận overload bằng custom rejection handler
+    description: Dùng custom RejectedExecutionHandler để đếm rejection và expose overload
+      trước khi reject rõ ràng. Experiment minh họa rejection có thể trở thành metric
+      hoặc alertable event thay vì chỉ là exception kỹ thuật.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: customRejectionHandler
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/custom-rejection-handler")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /thread-pool/custom-rejection-handler
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  gracefulShutdown():
+    summary: Thực hiện graceful shutdown ExecutorService
+    description: Cho task hoàn thành rồi gọi shutdown() và awaitTermination() để xác
+      nhận executor kết thúc trước khi request return. Experiment minh họa orderly
+      shutdown và ownership của resource do code tự tạo.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: gracefulShutdown
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/graceful-shutdown")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /thread-pool/graceful-shutdown
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  forcedShutdown():
+    summary: Quan sát shutdownNow() và task chưa bắt đầu
+    description: Giữ một task đang chạy và một task trong queue, để graceful wait
+      timeout rồi gọi shutdownNow(). Running task nhận interruption nếu cooperate,
+      còn task chưa start được trả lại cho caller và không được thực thi.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: forcedShutdown
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/forced-shutdown")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /thread-pool/forced-shutdown
     produces: [
       ]
     consumes: [
@@ -1012,7 +1820,7 @@ AtomicController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   adderBenchmark():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -1032,7 +1840,7 @@ AtomicController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   accumulatorExample():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -1052,7 +1860,7 @@ AtomicController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
 SyncController:
   runSyncTest():
     summary: Chưa có tiêu đề
@@ -1073,7 +1881,7 @@ SyncController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
 SyncProblemController:
   instructionReorder():
     summary: Chưa có tiêu đề
@@ -1094,7 +1902,7 @@ SyncProblemController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   staleData():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -1114,7 +1922,7 @@ SyncProblemController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   raceCondition():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -1134,7 +1942,7 @@ SyncProblemController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   deadlock():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -1154,7 +1962,7 @@ SyncProblemController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   livelock():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -1174,7 +1982,7 @@ SyncProblemController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
 ConcurrentCollectionController:
   concurrentHashMap():
     summary: Chưa có tiêu đề
@@ -1195,7 +2003,7 @@ ConcurrentCollectionController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   concurrentSkipList():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -1215,7 +2023,7 @@ ConcurrentCollectionController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   copyOnWriteArrayWhenWriting():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -1235,7 +2043,7 @@ ConcurrentCollectionController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   copyOnWriteArrayWhenReading():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -1255,7 +2063,7 @@ ConcurrentCollectionController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   concurrentLinkedQueue():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -1275,7 +2083,7 @@ ConcurrentCollectionController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
 ReadWriteLockController:
   readAndRead():
     summary: Chưa có tiêu đề
@@ -1296,7 +2104,7 @@ ReadWriteLockController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   readAndWrite():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -1316,7 +2124,7 @@ ReadWriteLockController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   writeAndWrite():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -1336,7 +2144,7 @@ ReadWriteLockController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   downgradeKey():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -1356,7 +2164,7 @@ ReadWriteLockController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
 ReentrantLockController:
   reentrantLockExample():
     summary: Chưa có tiêu đề
@@ -1377,7 +2185,7 @@ ReentrantLockController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   fairLockExample():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -1397,7 +2205,7 @@ ReentrantLockController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   unfairLockExample():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -1417,7 +2225,7 @@ ReentrantLockController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   interruptibleLock():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -1437,7 +2245,7 @@ ReentrantLockController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
 StampedLockController:
   stampedExample():
     summary: Chưa có tiêu đề
@@ -1458,7 +2266,7 @@ StampedLockController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
 VirtualThreadController:
   virtualThreadBenchmark():
     summary: Chưa có tiêu đề
@@ -1479,7 +2287,7 @@ VirtualThreadController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   virtualThreadBasic():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -1499,7 +2307,7 @@ VirtualThreadController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   virtualThreadBuilder():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -1519,7 +2327,7 @@ VirtualThreadController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   virtualThreadExecutor():
     summary: Chưa có tiêu đề
     description: Chưa có mô tả chi tiết
@@ -1535,6 +2343,826 @@ VirtualThreadController:
     - GET
     mappingPaths:
     - virtual-thread/with-executor
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: false
+  basic():
+    summary: Quan sát thuộc tính cơ bản của Virtual Thread
+    description: Tạo một Virtual Thread Java 21 và trả về isVirtual, daemon flag,
+      priority cùng state sau join. Experiment làm rõ Virtual Thread vẫn là Thread
+      nhưng có lifecycle properties khác Platform Thread.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: basic
+    params: [
+      ]
+    path: com/example/learning/module/virtualThread/controller/VirtualThreadController.java
+    mapping: '@GetMapping("/basic")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /virtual-thread/basic
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  creationApi():
+    summary: So sánh API tạo Virtual Thread trực tiếp
+    description: Tạo Virtual Thread bằng Thread.startVirtualThread() và Thread.ofVirtual().start(),
+      sau đó join cả hai. Experiment chứng minh Virtual Thread có thể được tạo trực
+      tiếp mà không bắt buộc đi qua ExecutorService.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: creationApi
+    params: [
+      ]
+    path: com/example/learning/module/virtualThread/controller/VirtualThreadController.java
+    mapping: '@GetMapping("/creation-api")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /virtual-thread/creation-api
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  blockingScale():
+    summary: So sánh blocking task trên platform pool và Virtual Thread
+    description: Chạy cùng một nhóm sleep-based blocking task trên fixed platform
+      pool và virtual-thread-per-task executor rồi đo thời gian minh họa. Kết quả
+      dùng để quan sát concurrency shape, không phải benchmark production.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: blockingScale
+    params: [
+      ]
+    path: com/example/learning/module/virtualThread/controller/VirtualThreadController.java
+    mapping: '@GetMapping("/blocking-scale")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /virtual-thread/blocking-scale
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  limitedResource():
+    summary: Giới hạn downstream concurrency khi dùng Virtual Thread
+    description: Tạo nhiều Virtual Thread nhưng dùng Semaphore để chỉ cho một số task
+      hữu hạn cùng vào external-resource section. Experiment chứng minh Virtual Thread
+      rẻ không làm database, API hoặc resource downstream trở thành vô hạn.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: limitedResource
+    params: [
+      ]
+    path: com/example/learning/module/virtualThread/controller/VirtualThreadController.java
+    mapping: '@GetMapping("/limited-resource")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /virtual-thread/limited-resource
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  threadLocal():
+    summary: Quan sát ThreadLocal trên Virtual Thread
+    description: Dùng ThreadLocal và InheritableThreadLocal trên nhiều Virtual Thread
+      để quan sát isolation, cleanup, inheritance mặc định và khả năng tắt inheritance
+      bằng builder. Experiment nhấn mạnh Virtual Thread không thay đổi ThreadLocal
+      lifecycle rules.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: threadLocal
+    params: [
+      ]
+    path: com/example/learning/module/virtualThread/controller/VirtualThreadController.java
+    mapping: '@GetMapping("/thread-local")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /virtual-thread/thread-local
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+ConcurrencyProblemController:
+  raceCondition():
+    summary: Tạo lost update để quan sát race condition
+    description: Điều phối hai Thread cùng đọc một snapshot rồi mới được phép ghi
+      để tạo lost update một cách deterministic. Kết quả so sánh expected sequential
+      result với actual result và minh họa atomicity problem của read-modify-write.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: raceCondition
+    params: [
+      ]
+    path: com/example/learning/module/concurrency/problem/controller/ConcurrencyProblemController.java
+    mapping: '@GetMapping("/race-condition")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /concurrency/problem/race-condition
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  startJoinHappensBefore():
+    summary: Quan sát happens-before của start() và join()
+    description: Ghi dữ liệu trước Thread.start(), để worker đọc và ghi dữ liệu mới,
+      rồi đọc lại sau Thread.join(). Experiment chứng minh start và join không chỉ
+      phối hợp lifecycle mà còn tạo memory-consistency guarantees.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: startJoinHappensBefore
+    params: [
+      ]
+    path: com/example/learning/module/concurrency/problem/controller/ConcurrencyProblemController.java
+    mapping: '@GetMapping("/happens-before-start-join")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /concurrency/problem/happens-before-start-join
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  volatilePublication():
+    summary: Publish dữ liệu bằng volatile flag
+    description: Writer ghi plain data rồi publish bằng một volatile flag; reader
+      chỉ đọc data sau khi quan sát flag. Experiment minh họa volatile write/read
+      tạo happens-before edge giúp publish các write xảy ra trước đó.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: volatilePublication
+    params: [
+      ]
+    path: com/example/learning/module/concurrency/problem/controller/ConcurrencyProblemController.java
+    mapping: '@GetMapping("/volatile-publication")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /concurrency/problem/volatile-publication
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  volatileIsNotAtomic():
+    summary: Chứng minh volatile không đảm bảo atomicity
+    description: Thực hiện compound increment trên volatile state với interleaving
+      được điều khiển để tạo lost update. Experiment cho thấy volatile cung cấp visibility
+      và ordering nhưng không biến read-modify-write thành một atomic operation.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: volatileIsNotAtomic
+    params: [
+      ]
+    path: com/example/learning/module/concurrency/problem/controller/ConcurrencyProblemController.java
+    mapping: '@GetMapping("/volatile-not-atomic")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /concurrency/problem/volatile-not-atomic
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  deadlockRisk():
+    summary: Quan sát circular lock dependency an toàn
+    description: Hai worker giữ hai lock theo thứ tự đối nghịch rồi dùng tryLock để
+      thử lấy lock còn lại. Experiment tái hiện hình dạng circular wait nhưng có timeout
+      và cleanup để không tạo permanent deadlock.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: deadlockRisk
+    params: [
+      ]
+    path: com/example/learning/module/concurrency/problem/controller/ConcurrencyProblemController.java
+    mapping: '@GetMapping("/deadlock-risk")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /concurrency/problem/deadlock-risk
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  deadlockPrevention():
+    summary: Phòng deadlock bằng global lock ordering
+    description: Cho nhiều worker cần cùng hai lock nhưng bắt buộc acquire theo cùng
+      thứ tự A rồi B. Experiment cho thấy consistent lock ordering loại bỏ circular-wait
+      dependency ngay từ design.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: deadlockPrevention
+    params: [
+      ]
+    path: com/example/learning/module/concurrency/problem/controller/ConcurrencyProblemController.java
+    mapping: '@GetMapping("/deadlock-prevention")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /concurrency/problem/deadlock-prevention
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  boundedLivelock():
+    summary: Mô phỏng livelock theo cách bounded
+    description: Hai worker liên tục phản ứng và back off đối xứng nên vẫn hoạt động
+      nhưng không tạo progress trong số vòng hữu hạn. Experiment minh họa active-without-progress
+      mà không để lại infinite loop.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: boundedLivelock
+    params: [
+      ]
+    path: com/example/learning/module/concurrency/problem/controller/ConcurrencyProblemController.java
+    mapping: '@GetMapping("/livelock")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /concurrency/problem/livelock
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+CoordinationController:
+  join():
+    summary: Phối hợp lifecycle bằng Thread.join()
+    description: Start worker rồi dùng join() để caller chờ đến khi worker kết thúc
+      trước khi tiếp tục. Experiment minh họa dependency theo lifecycle và nhắc rằng
+      join còn mang happens-before guarantee cho các write của worker.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: join
+    params: [
+      ]
+    path: com/example/learning/module/coordination/controller/CoordinationController.java
+    mapping: '@GetMapping("/join")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /coordination/join
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  waitNotify():
+    summary: Phối hợp bằng wait(), notify() và notifyAll()
+    description: Dùng nhiều waiter, predicate loop, notify() và notifyAll() để quan
+      sát wait set và việc waiter phải reacquire monitor trước khi tiếp tục. Notification
+      chỉ là tín hiệu kiểm tra lại; predicate mới quyết định Thread có thể đi tiếp
+      hay không.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: waitNotify
+    params: [
+      ]
+    path: com/example/learning/module/coordination/controller/CoordinationController.java
+    mapping: '@GetMapping("/wait-notify")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /coordination/wait-notify
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  condition():
+    summary: Phối hợp nhiều Condition với ReentrantLock
+    description: Tạo hai Condition độc lập trên cùng ReentrantLock và signal từng
+      condition theo predicate tương ứng. Experiment cho thấy Condition là explicit-lock
+      counterpart của wait/notify và await() release rồi reacquire lock.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: condition
+    params: [
+      ]
+    path: com/example/learning/module/coordination/controller/CoordinationController.java
+    mapping: '@GetMapping("/condition")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /coordination/condition
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  lockSupport():
+    summary: Quan sát LockSupport park và unpark
+    description: Park nhiều worker để chứng minh unpark(thread) target đúng Thread,
+      blocker metadata có thể được quan sát và interrupt làm park() return mà không
+      ném InterruptedException. Cleanup đảm bảo mọi worker đều kết thúc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: lockSupport
+    params: [
+      ]
+    path: com/example/learning/module/coordination/controller/CoordinationController.java
+    mapping: '@GetMapping("/lock-support")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /coordination/lock-support
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  blockingQueue():
+    summary: Xây producer-consumer với BlockingQueue
+    description: Chạy producer và consumer trên một BlockingQueue hữu hạn bằng các
+      operation blocking rồi join cả hai Thread. Experiment minh họa buffer trung
+      gian và coordination an toàn mà không để consumer chạy vô hạn.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: blockingQueue
+    params: [
+      ]
+    path: com/example/learning/module/coordination/controller/CoordinationController.java
+    mapping: '@GetMapping("/blocking-queue")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /coordination/blocking-queue
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  blockingQueueVariants():
+    summary: So sánh các BlockingQueue phổ biến
+    description: Quan sát capacity của ArrayBlockingQueue, drainTo trên LinkedBlockingQueue
+      và priority ordering của PriorityBlockingQueue trong các case bounded. Mục tiêu
+      là chọn queue theo capacity, ordering và handoff semantics.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: blockingQueueVariants
+    params: [
+      ]
+    path: com/example/learning/module/coordination/controller/CoordinationController.java
+    mapping: '@GetMapping("/blocking-queue-variants")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /coordination/blocking-queue-variants
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  priorityQueueSemantics():
+    summary: Quan sát semantics của PriorityBlockingQueue
+    description: Đưa các task có priority khác nhau và bằng nhau vào PriorityBlockingQueue
+      để quan sát ordering. Experiment nhấn mạnh priority cao được ưu tiên nhưng equal
+      priority không có FIFO contract và queue không cung cấp bounded backpressure.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: priorityQueueSemantics
+    params: [
+      ]
+    path: com/example/learning/module/coordination/controller/CoordinationController.java
+    mapping: '@GetMapping("/priority-queue-semantics")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /coordination/priority-queue-semantics
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  synchronousQueue():
+    summary: Quan sát direct handoff với SynchronousQueue
+    description: Cho producer put và consumer take qua SynchronousQueue để thấy mỗi
+      phần tử cần một operation phía đối diện tương ứng. Queue này là rendezvous point
+      và không giữ backlog như buffer thông thường.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: synchronousQueue
+    params: [
+      ]
+    path: com/example/learning/module/coordination/controller/CoordinationController.java
+    mapping: '@GetMapping("/synchronous-queue")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /coordination/synchronous-queue
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  synchronizers():
+    summary: So sánh các synchronizer cấp cao
+    description: Chạy các experiment bounded với CountDownLatch, CyclicBarrier, Semaphore,
+      Phaser và Exchanger để quan sát các kiểu dependency khác nhau. Response tập
+      trung vào coordination semantics thay vì benchmark timing.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: synchronizers
+    params: [
+      ]
+    path: com/example/learning/module/coordination/controller/CoordinationController.java
+    mapping: '@GetMapping("/synchronizers")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /coordination/synchronizers
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  synchronizersTimeout():
+    summary: Quan sát timeout và failure của synchronizer
+    description: Minh họa latch timeout, broken/reset barrier, semaphore acquisition
+      timeout, Phaser dynamic participation và Exchanger timeout/interruption. Experiment
+      cho thấy mỗi synchronizer có failure state và recovery semantics riêng.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: synchronizersTimeout
+    params: [
+      ]
+    path: com/example/learning/module/coordination/controller/CoordinationController.java
+    mapping: '@GetMapping("/synchronizers-timeout")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /coordination/synchronizers-timeout
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  semaphorePermitAccounting():
+    summary: Chứng minh Semaphore không enforce ownership
+    description: Cố tình release permit khi chưa acquire để thấy available permits
+      tăng sai, sau đó quan sát có thể acquire vượt capacity ban đầu. Experiment nhấn
+      mạnh permit accounting là trách nhiệm của application.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: semaphorePermitAccounting
+    params: [
+      ]
+    path: com/example/learning/module/coordination/controller/CoordinationController.java
+    mapping: '@GetMapping("/semaphore-permit-accounting")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /coordination/semaphore-permit-accounting
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+SynchronizationController:
+  synchronizedCounter():
+    summary: Bảo vệ compound update bằng synchronized
+    description: Cho nhiều Thread cùng increment shared counter dưới intrinsic monitor.
+      Experiment chứng minh synchronized biến compound update cần bảo vệ thành critical
+      section và tránh lost update.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: synchronizedCounter
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/synchronized-counter")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/synchronized-counter
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  reentrantLock():
+    summary: Quan sát tính reentrant của ReentrantLock
+    description: Cùng một Thread acquire ReentrantLock nhiều lần và quan sát hold
+      count trước khi unlock tương ứng. Experiment chứng minh lock là reentrant nhưng
+      mỗi lần acquire vẫn cần release cân bằng.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: reentrantLock
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/reentrant-lock")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/reentrant-lock
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  tryLock():
+    summary: Quan sát tryLock(timeout) khi lock đang bận
+    description: Một Thread giữ lock trong khi Thread khác dùng tryLock với timeout
+      hữu hạn. Experiment cho thấy acquisition có thể fail có kiểm soát thay vì chờ
+      vô hạn.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: tryLock
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/try-lock")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/try-lock
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  interruptibleLock():
+    summary: Hủy Thread đang chờ lock bằng lockInterruptibly()
+    description: Giữ ReentrantLock để worker phải chờ bằng lockInterruptibly(), sau
+      đó interrupt worker. Experiment cho thấy explicit lock có thể cung cấp interruptible
+      acquisition, khác với Thread đang BLOCKED chờ synchronized monitor.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: interruptibleLock
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/interruptible-lock")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/interruptible-lock
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  reentrantLockPolicy():
+    summary: Quan sát fair và non-fair policy của ReentrantLock
+    description: So sánh policy của ReentrantLock và nhấn mạnh fairness không phải
+      guarantee về Thread.start order. Untimed tryLock() có thể barge nên không được
+      dùng để suy ra toàn bộ fairness behavior.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: reentrantLockPolicy
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/reentrant-lock-policy")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/reentrant-lock-policy
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  readWriteLock():
+    summary: Quan sát concurrent readers và exclusive writer
+    description: Cho nhiều reader giữ read lock đồng thời trong khi writer phải đợi.
+      Experiment minh họa ReentrantReadWriteLock cho phép shared reads nhưng write
+      access vẫn exclusive.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: readWriteLock
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/read-write-lock")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/read-write-lock
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  readWriteLockDowngrade():
+    summary: Thực hiện write-to-read lock downgrade
+    description: Giữ write lock, acquire read lock trước rồi mới release write lock
+      để hạ cấp quyền truy cập mà không mở cửa sổ không được bảo vệ. Experiment minh
+      họa đúng thứ tự lock downgrade.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: readWriteLockDowngrade
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/read-write-lock-downgrade")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/read-write-lock-downgrade
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  readWriteLockPolicy():
+    summary: Quan sát policy của ReentrantReadWriteLock
+    description: Quan sát default/fair mode của read-write lock và nuance của các
+      untimed tryLock operation. Experiment nhắc rằng fairness policy cần đọc theo
+      contract cụ thể của từng API.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: readWriteLockPolicy
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/read-write-lock-policy")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/read-write-lock-policy
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  stampedLock():
+    summary: Quan sát optimistic read và fallback của StampedLock
+    description: Lấy optimistic stamp, cho writer thay đổi state để stamp invalid,
+      sau đó validate và fallback sang read lock. Experiment minh họa optimistic read
+      chỉ hợp lệ khi validation thành công.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: stampedLock
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/stamped-lock")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/stamped-lock
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  stampedLockLimitations():
+    summary: Quan sát giới hạn của StampedLock
+    description: 'Kiểm tra hai limitation quan trọng: StampedLock không reentrant
+      và các Lock view của nó không cung cấp Condition. Experiment giúp tránh áp mental
+      model của ReentrantLock sang StampedLock.'
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: stampedLockLimitations
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/stamped-lock-limitations")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/stamped-lock-limitations
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  atomicTools():
+    summary: So sánh AtomicInteger, LongAdder và LongAccumulator
+    description: Chạy các thao tác xác định với AtomicInteger, LongAdder và LongAccumulator
+      để quan sát vai trò khác nhau của atomic update và distributed accumulation.
+      Experiment tập trung vào semantics chứ không benchmark throughput.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: atomicTools
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/atomic-tools")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/atomic-tools
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  atomicCas():
+    summary: Quan sát CAS, ABA và stamped reference
+    description: Dùng compareAndSet để minh họa conditional atomic update, sau đó
+      tạo ABA trên value và dùng stamp để phát hiện state đã thay đổi rồi quay lại
+      giá trị cũ. Experiment làm rõ giới hạn của value-only CAS.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: atomicCas
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/atomic-cas")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/atomic-cas
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  concurrentCollections():
+    summary: Quan sát atomic operation của concurrent collections
+    description: Minh họa atomic map update, snapshot-style iteration và non-blocking
+      queue bằng các concurrent collection phù hợp. Experiment nhấn mạnh thread-safe
+      từng operation không đồng nghĩa mọi multi-step business invariant tự trở thành
+      atomic.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: concurrentCollections
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/concurrent-collections")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/concurrent-collections
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  concurrentSkipList():
+    summary: Quan sát sorted concurrent map
+    description: Update ConcurrentSkipListMap từ nhiều Thread rồi đọc key order sau
+      khi hoàn thành. Experiment cho thấy collection vừa hỗ trợ concurrent access
+      vừa duy trì sorted ordering theo contract của map.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: concurrentSkipList
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/concurrent-skip-list")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/concurrent-skip-list
     produces: [
       ]
     consumes: [

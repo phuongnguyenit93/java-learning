@@ -1,47 +1,9 @@
 BasicThreadController:
-  testThread():
-    summary: Title not provided
-    description: Detailed description not provided
-    enableVideoYoutube: true
-    videoYoutubeId: nd2ULXyBaV9
-    videoYoutubeTitle: Testing
-    methodName: testThread
-    params: [
-      ]
-    path: com/example/learning/module/basic/controller/BasicThreadController.java
-    mapping: '@GetMapping("/example-thread")'
-    httpMethods:
-    - GET
-    mappingPaths:
-    - basic/example-thread
-    produces: [
-      ]
-    consumes: [
-      ]
-    usage: true
-  testNonThread():
-    summary: Title not provided
-    description: Detailed description not provided
-    enableVideoYoutube: false
-    videoYoutubeId: ID of youtube video add to API description
-    videoYoutubeTitle: Title of video
-    methodName: testNonThread
-    params: [
-      ]
-    path: com/example/learning/module/basic/controller/BasicThreadController.java
-    mapping: '@GetMapping("/example-non-thread")'
-    httpMethods:
-    - GET
-    mappingPaths:
-    - basic/example-non-thread
-    produces: [
-      ]
-    consumes: [
-      ]
-    usage: true
   threadLifeCycle():
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Observe all Thread.State values
+    description: Drive a worker through NEW, RUNNABLE, TIMED_WAITING, BLOCKED, WAITING,
+      and TERMINATED. The experiment helps distinguish why each state occurs instead
+      of treating every waiting state as the same concept.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -53,7 +15,51 @@ BasicThreadController:
     httpMethods:
     - GET
     mappingPaths:
-    - basic/thread-life-cycle
+    - /basic/thread-life-cycle
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  processAndThread():
+    summary: Observe the JVM process and HTTP request Thread
+    description: Return the JVM PID together with the name, id, daemon flag, and state
+      of the Thread handling the HTTP request. The experiment shows that a request
+      is executed by a concrete Thread inside the JVM process.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: processAndThread
+    params: [
+      ]
+    path: com/example/learning/module/basic/controller/BasicThreadController.java
+    mapping: '@GetMapping("/process-thread")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /basic/process-thread
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  startVsRun():
+    summary: Compare Thread.run() and Thread.start()
+    description: Run the same Runnable by calling run() directly and by calling start()
+      on a new Thread. The result shows that run() is a normal method call on the
+      caller Thread, while start() begins the lifecycle of a separate Thread.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: startVsRun
+    params: [
+      ]
+    path: com/example/learning/module/basic/controller/BasicThreadController.java
+    mapping: '@GetMapping("/start-vs-run")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /basic/start-vs-run
     produces: [
       ]
     consumes: [
@@ -79,10 +85,12 @@ CreateThreadController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   createByRunnable():
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Run a Runnable on a dedicated Thread
+    description: Separate the work into a Runnable and pass that task to a Thread
+      for execution. The experiment clarifies that Runnable describes WHAT to run
+      while Thread determines WHERE execution happens.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -94,15 +102,17 @@ CreateThreadController:
     httpMethods:
     - GET
     mappingPaths:
-    - create/runnable
+    - /create/runnable
     produces: [
       ]
     consumes: [
       ]
     usage: true
   createByCallable():
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Run Callable with FutureTask and Thread
+    description: Wrap a Callable in FutureTask so it can be executed by a direct Thread,
+      then obtain the result through FutureTask.get(). The experiment shows that Callable
+      can produce a result but does not create or run on a Thread by itself.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -114,7 +124,7 @@ CreateThreadController:
     httpMethods:
     - GET
     mappingPaths:
-    - create/callable
+    - /create/callable
     produces: [
       ]
     consumes: [
@@ -135,6 +145,28 @@ CreateThreadController:
     - GET
     mappingPaths:
     - create/pool
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: false
+  createByExtends():
+    summary: Create a Thread by extending Thread
+    description: Instantiate a Thread subclass whose work is implemented directly
+      in run(). The experiment demonstrates how task logic and the execution mechanism
+      become coupled when inheriting from Thread.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: createByExtends
+    params: [
+      ]
+    path: com/example/learning/module/basic/controller/CreateThreadController.java
+    mapping: '@GetMapping("/extends")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /create/extends
     produces: [
       ]
     consumes: [
@@ -160,7 +192,7 @@ DaemonThreadController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   stopDaemon():
     summary: Title not provided
     description: Detailed description not provided
@@ -180,7 +212,7 @@ DaemonThreadController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   restartDaemon():
     summary: Title not provided
     description: Detailed description not provided
@@ -196,6 +228,29 @@ DaemonThreadController:
     - GET
     mappingPaths:
     - daemon/restart-thread
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: false
+  inspectDaemonRules():
+    summary: Observe daemon flag and inheritance
+    description: Inspect the daemon status of the request Thread, a child Thread that
+      inherits the flag, and a child explicitly configured with setDaemon(true) before
+      start. The endpoint demonstrates daemon properties and inheritance, not JVM
+      shutdown timing.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: inspectDaemonRules
+    params: [
+      ]
+    path: com/example/learning/module/basic/controller/DaemonThreadController.java
+    mapping: '@GetMapping("/inspect")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /daemon/inspect
     produces: [
       ]
     consumes: [
@@ -221,7 +276,7 @@ ThreadLocalController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   inheritableThreadLocalDemo():
     summary: Title not provided
     description: Detailed description not provided
@@ -241,7 +296,7 @@ ThreadLocalController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   threadPoolIssueDemo():
     summary: Title not provided
     description: Detailed description not provided
@@ -257,6 +312,95 @@ ThreadLocalController:
     - GET
     mappingPaths:
     - thread-local/thread-pool-issue
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: false
+  isolation():
+    summary: Observe ThreadLocal isolation
+    description: Two Threads use the same ThreadLocal object but set and read different
+      request ids. The experiment demonstrates that values are associated with each
+      Thread rather than being a single shared mutable value protected by a lock.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: isolation
+    params: [
+      ]
+    path: com/example/learning/module/context/controller/ThreadLocalController.java
+    mapping: '@GetMapping("/isolation")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /context/isolation
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  inheritance():
+    summary: Observe InheritableThreadLocal at Thread creation
+    description: The parent sets context A, creates a child Thread, then changes the
+      context to B before the child starts. The child still sees A, showing that inheritance
+      occurs at the Thread creation boundary rather than on each task execution.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: inheritance
+    params: [
+      ]
+    path: com/example/learning/module/context/controller/ThreadLocalController.java
+    mapping: '@GetMapping("/inheritance")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /context/inheritance
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  poolReuseProblem():
+    summary: Demonstrate stale context with worker reuse
+    description: Use a worker pool created once to show that InheritableThreadLocal
+      does not refresh context for every task submission. A later task can still see
+      the context inherited when the worker was originally created.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: poolReuseProblem
+    params: [
+      ]
+    path: com/example/learning/module/context/controller/ThreadLocalController.java
+    mapping: '@GetMapping("/pool-reuse-problem")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /context/pool-reuse-problem
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  explicitPropagation():
+    summary: Propagate context with capture, restore, and cleanup
+    description: Create a worker before the parent has context, then wrap the task
+      to capture context at submission, restore it on the worker, and clean it up
+      afterward. The experiment demonstrates explicit context propagation that remains
+      safe when workers are reused.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: explicitPropagation
+    params: [
+      ]
+    path: com/example/learning/module/context/controller/ThreadLocalController.java
+    mapping: '@GetMapping("/explicit-propagation")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /context/explicit-propagation
     produces: [
       ]
     consumes: [
@@ -282,7 +426,7 @@ AsyncController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   completableFutureExample():
     summary: Title not provided
     description: Detailed description not provided
@@ -302,7 +446,7 @@ AsyncController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   completableFutureWithHandleExample():
     summary: Title not provided
     description: Detailed description not provided
@@ -318,6 +462,187 @@ AsyncController:
     - GET
     mappingPaths:
     - async/completable-future-with-handle
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: false
+  future():
+    summary: Observe Callable and Future
+    description: Submit a Callable to an ExecutorService, keep the task incomplete
+      to observe isDone=false, then release it and retrieve the result with Future.get().
+      The experiment shows that Future separates submission from result retrieval
+      while get() is still a blocking wait.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: future
+    params: [
+      ]
+    path: com/example/learning/module/async/controller/AsyncController.java
+    mapping: '@GetMapping("/future")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /async/future
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  futureCancellation():
+    summary: Compare Future.cancel(false) and cancel(true)
+    description: Run two blocking tasks and cancel them with cancel(false) and cancel(true)
+      to observe cancellation state and interruption behavior. cancel(true) may interrupt
+      a running worker, while cancel(false) does not request interruption and the
+      underlying task may continue.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: futureCancellation
+    params: [
+      ]
+    path: com/example/learning/module/async/controller/AsyncController.java
+    mapping: '@GetMapping("/future-cancellation")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /async/future-cancellation
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  pipeline():
+    summary: Compose a CompletableFuture pipeline
+    description: Create independent asynchronous branches for an order and an exchange
+      rate, combine them with thenCombine, then transform the result with thenApply.
+      The experiment demonstrates completion-based composition without manually blocking
+      for every intermediate value.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: pipeline
+    params: [
+      ]
+    path: com/example/learning/module/async/controller/AsyncController.java
+    mapping: '@GetMapping("/pipeline")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /async/pipeline
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  fastest():
+    summary: Observe CompletableFuture.anyOf semantics
+    description: Control completion order across several CompletableFuture instances
+      to show that anyOf selects the first completion, including an exceptional one.
+      Sibling futures are not automatically cancelled when the aggregate completes.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: fastest
+    params: [
+      ]
+    path: com/example/learning/module/async/controller/AsyncController.java
+    mapping: '@GetMapping("/fastest")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /async/fastest
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  exceptionHandling():
+    summary: Handle exceptional CompletableFuture completion
+    description: Intentionally fail a stage and use handle() to convert either success
+      or failure into a controlled result. The experiment shows that pipeline failures
+      are completion states that can be observed and composed further.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: exceptionHandling
+    params: [
+      ]
+    path: com/example/learning/module/async/controller/AsyncController.java
+    mapping: '@GetMapping("/exception")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /async/exception
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executionVariant():
+    summary: Compare thenApply and thenApplyAsync
+    description: Use an already-completed stage to show that thenApply may run inline
+      on the caller while thenApplyAsync with an explicit executor is dispatched through
+      that executor. The goal is to understand execution policy rather than assume
+      every async variant always uses a different Thread.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: executionVariant
+    params: [
+      ]
+    path: com/example/learning/module/async/controller/AsyncController.java
+    mapping: '@GetMapping("/execution-variant")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /async/execution-variant
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  allOf():
+    summary: Observe CompletableFuture.allOf semantics
+    description: Fail one input before another sibling completes to demonstrate that
+      allOf is not a fail-fast barrier. The aggregate completes after the required
+      inputs finish, may complete exceptionally, and does not automatically cancel
+      siblings.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: allOf
+    params: [
+      ]
+    path: com/example/learning/module/async/controller/AsyncController.java
+    mapping: '@GetMapping("/all-of")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /async/all-of
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  timeoutCancellation():
+    summary: Distinguish CompletableFuture timeout from cancellation
+    description: Compare orTimeout() with CompletableFuture.cancel(true) while underlying
+      work is blocked. Both change future completion state but neither inherently
+      interrupts or kills the underlying work, so cleanup must be designed separately.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: timeoutCancellation
+    params: [
+      ]
+    path: com/example/learning/module/async/controller/AsyncController.java
+    mapping: '@GetMapping("/timeout-cancellation")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /async/timeout-cancellation
     produces: [
       ]
     consumes: [
@@ -343,7 +668,7 @@ BlockingQueueController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   synchronousQueueExample():
     summary: Title not provided
     description: Detailed description not provided
@@ -363,7 +688,7 @@ BlockingQueueController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   arrayQueueExample():
     summary: Title not provided
     description: Detailed description not provided
@@ -383,7 +708,7 @@ BlockingQueueController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   priorityQueueExample():
     summary: Title not provided
     description: Detailed description not provided
@@ -403,7 +728,7 @@ BlockingQueueController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
 ClassicCoordinationController:
   joinThread():
     summary: Title not provided
@@ -424,7 +749,7 @@ ClassicCoordinationController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   waitAndNotifyThread():
     summary: Title not provided
     description: Detailed description not provided
@@ -444,7 +769,7 @@ ClassicCoordinationController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
 ModernCoordinationController:
   lockConditionExample():
     summary: Title not provided
@@ -465,7 +790,7 @@ ModernCoordinationController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   lockSupportExample():
     summary: Title not provided
     description: Detailed description not provided
@@ -485,7 +810,7 @@ ModernCoordinationController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
 PatternController:
   exchangerExample():
     summary: Title not provided
@@ -506,7 +831,7 @@ PatternController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   consumerProducerPatternExample():
     summary: Title not provided
     description: Detailed description not provided
@@ -526,7 +851,7 @@ PatternController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
 SynchronizerController:
   countDownLatchExample():
     summary: Title not provided
@@ -547,7 +872,7 @@ SynchronizerController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   countDownLatchTimeOutExample():
     summary: Title not provided
     description: Detailed description not provided
@@ -567,7 +892,7 @@ SynchronizerController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   cyclicBarrierExample():
     summary: Title not provided
     description: Detailed description not provided
@@ -587,7 +912,7 @@ SynchronizerController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   cyclicBarrierTimeOutExample():
     summary: Title not provided
     description: Detailed description not provided
@@ -607,7 +932,7 @@ SynchronizerController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   cyclicBarrierResetExample():
     summary: Title not provided
     description: Detailed description not provided
@@ -627,7 +952,7 @@ SynchronizerController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   semaphoreExample():
     summary: Title not provided
     description: Detailed description not provided
@@ -647,7 +972,7 @@ SynchronizerController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   phaserExample():
     summary: Title not provided
     description: Detailed description not provided
@@ -667,7 +992,7 @@ SynchronizerController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
 TaskExecutorController:
   springExecutorExample():
     summary: Title not provided
@@ -684,6 +1009,52 @@ TaskExecutorController:
     - GET
     mappingPaths:
     - spring-executor/example
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: false
+  asyncWithContext():
+    summary: Run @Async with a custom executor and context propagation
+    description: Set DemoContext, MDC, and RequestAttributes on the caller, then invoke
+      an @Async bean backed by a custom ThreadPoolTaskExecutor. TaskDecorator captures,
+      restores, and cleans context so the response proves the worker sees the correct
+      request context on a different Thread.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: asyncWithContext
+    params: [
+      ]
+    path: com/example/learning/module/executor/controller/TaskExecutorController.java
+    mapping: '@GetMapping("/async-context")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-executor/async-context
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  asyncVoidException():
+    summary: Observe exceptions from void @Async methods
+    description: Invoke a void @Async method that intentionally throws and observe
+      AsyncUncaughtExceptionHandler receiving the failure through a correlation id.
+      The experiment also distinguishes method-body failure from synchronous rejection
+      at the submission boundary.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: asyncVoidException
+    params: [
+      ]
+    path: com/example/learning/module/executor/controller/TaskExecutorController.java
+    mapping: '@GetMapping("/void-exception")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-executor/void-exception
     produces: [
       ]
     consumes: [
@@ -709,7 +1080,7 @@ InterruptionController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   blockerInterruption():
     summary: Title not provided
     description: Detailed description not provided
@@ -729,7 +1100,7 @@ InterruptionController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   gracefulShutdownByJava():
     summary: Title not provided
     description: Detailed description not provided
@@ -749,7 +1120,7 @@ InterruptionController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   gracefulShutdownBySpring():
     summary: Title not provided
     description: Detailed description not provided
@@ -769,7 +1140,7 @@ InterruptionController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   interruptedDemo():
     summary: Title not provided
     description: Detailed description not provided
@@ -785,6 +1156,140 @@ InterruptionController:
     - GET
     mappingPaths:
     - interruption/interrupted-demo
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: false
+  interruptBusyWorker():
+    summary: Cancel a CPU loop with cooperative interruption
+    description: Start a worker running a busy loop with an isInterrupted() cancellation
+      point, then call interrupt(). The worker observes the signal itself, exits the
+      loop, and terminates rather than being forcibly killed by the JVM.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: interruptBusyWorker
+    params: [
+      ]
+    path: com/example/learning/module/interruption/controller/InterruptionController.java
+    mapping: '@GetMapping("/busy-loop")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /interruption/busy-loop
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  inspectInterruptFlag():
+    summary: Compare isInterrupted() and Thread.interrupted()
+    description: Interrupt a worker and read interruption status repeatedly with both
+      APIs. The experiment shows that isInterrupted() only observes the flag while
+      Thread.interrupted() reads and clears the current Thread's flag.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: inspectInterruptFlag
+    params: [
+      ]
+    path: com/example/learning/module/interruption/controller/InterruptionController.java
+    mapping: '@GetMapping("/flag")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /interruption/flag
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  interruptSleepingWorker():
+    summary: Interrupt a sleeping Thread and restore the flag
+    description: Interrupt a worker blocked in Thread.sleep() to receive InterruptedException,
+      observe that the flag is cleared in the catch block, then restore it with Thread.currentThread().interrupt().
+      The experiment connects the exception path with the interruption signal.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: interruptSleepingWorker
+    params: [
+      ]
+    path: com/example/learning/module/interruption/controller/InterruptionController.java
+    mapping: '@GetMapping("/sleep")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /interruption/sleep
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  cancelWithCleanup():
+    summary: Clean up resources when a task is cancelled
+    description: Simulate a worker holding a resource and interrupt it while work
+      is in progress. A finally block cleans the resource whether cancellation is
+      observed through the loop condition or InterruptedException, demonstrating deterministic
+      cleanup.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: cancelWithCleanup
+    params: [
+      ]
+    path: com/example/learning/module/interruption/controller/InterruptionController.java
+    mapping: '@GetMapping("/cleanup")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /interruption/cleanup
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  interruptSynchronizedWaiter():
+    summary: Show that synchronized monitor acquisition is not interruptible
+    description: Hold an intrinsic monitor so a worker becomes BLOCKED, then interrupt
+      that worker. It still waits until the monitor is released even though its interrupt
+      flag is set, then acquires the monitor and can observe the signal.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: interruptSynchronizedWaiter
+    params: [
+      ]
+    path: com/example/learning/module/interruption/controller/InterruptionController.java
+    mapping: '@GetMapping("/synchronized-blocked")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /interruption/synchronized-blocked
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  stopFlagVsInterrupt():
+    summary: Compare a stop flag with interrupt while blocked
+    description: Set a volatile stop flag while a worker is sleeping and observe that
+      it remains TIMED_WAITING, then use interrupt() to wake the blocking operation.
+      The experiment shows that an application state flag does not integrate with
+      Java's interruption protocol.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: stopFlagVsInterrupt
+    params: [
+      ]
+    path: com/example/learning/module/interruption/controller/InterruptionController.java
+    mapping: '@GetMapping("/stop-flag-vs-interrupt")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /interruption/stop-flag-vs-interrupt
     produces: [
       ]
     consumes: [
@@ -810,7 +1315,7 @@ LeakController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   poolLeak():
     summary: Title not provided
     description: Detailed description not provided
@@ -826,6 +1331,72 @@ LeakController:
     - GET
     mappingPaths:
     - leak/pool
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: false
+  threadLeakPattern():
+    summary: Observe a Thread leak pattern safely
+    description: Intentionally keep a worker alive long enough to observe aliveBeforeCleanup,
+      then release and join it to confirm termination. The demo illustrates a lifecycle
+      leak pattern without actually leaving a leaked Thread behind.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: threadLeakPattern
+    params: [
+      ]
+    path: com/example/learning/module/leak/controller/LeakController.java
+    mapping: '@GetMapping("/thread-pattern")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /leak/thread-pattern
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  poolLeakPattern():
+    summary: Observe a pool leak caused by missing shutdown
+    description: Create a local ExecutorService and observe that it is still running
+      in the middle of the experiment, then clean it up with shutdown and awaitTermination.
+      The example clarifies executor ownership and lifecycle responsibility.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: poolLeakPattern
+    params: [
+      ]
+    path: com/example/learning/module/leak/controller/LeakController.java
+    mapping: '@GetMapping("/pool-pattern")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /leak/pool-pattern
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  queuePressure():
+    summary: Observe queue backlog and rejection
+    description: Use a pool with a small bounded queue, keep the worker busy, and
+      submit enough work to fill the queue and trigger rejection. The experiment demonstrates
+      backlog resource pressure without creating real unbounded memory growth.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: queuePressure
+    params: [
+      ]
+    path: com/example/learning/module/leak/controller/LeakController.java
+    mapping: '@GetMapping("/queue-pressure")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /leak/queue-pressure
     produces: [
       ]
     consumes: [
@@ -851,7 +1422,7 @@ ThreadPoolController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   cacheThreadPoolExample():
     summary: Title not provided
     description: Detailed description not provided
@@ -871,7 +1442,7 @@ ThreadPoolController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   singleThreadPoolExample():
     summary: Title not provided
     description: Detailed description not provided
@@ -891,7 +1462,7 @@ ThreadPoolController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   scheduleThreadPoolExample():
     summary: Title not provided
     description: Detailed description not provided
@@ -911,7 +1482,7 @@ ThreadPoolController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   abortPolicy():
     summary: Title not provided
     description: Detailed description not provided
@@ -931,7 +1502,7 @@ ThreadPoolController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   callerRunPolicy():
     summary: Title not provided
     description: Detailed description not provided
@@ -951,7 +1522,7 @@ ThreadPoolController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   discardPolicy():
     summary: Title not provided
     description: Detailed description not provided
@@ -971,7 +1542,7 @@ ThreadPoolController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   discardOldestPolicy():
     summary: Title not provided
     description: Detailed description not provided
@@ -987,6 +1558,254 @@ ThreadPoolController:
     - GET
     mappingPaths:
     - thread-pool/reject/discard-oldest-policy
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: false
+  executorFlow():
+    summary: Observe core, queue, max, and rejection
+    description: Use ThreadPoolExecutor with core=1, max=2, and queue=1 while tasks
+      are held by latches. Task 1 creates the core worker, task 2 queues, task 3 creates
+      an extra worker, and task 4 is rejected.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: executorFlow
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/executor-flow")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /thread-pool/executor-flow
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeVsSubmit():
+    summary: Compare execute() and submit()
+    description: Run a failing Runnable through execute() and submit() to observe
+      different failure channels. execute() follows the worker's uncaught-exception
+      path, while submit() stores failure in a Future and exposes it through get().
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: executeVsSubmit
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/execute-vs-submit")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /thread-pool/execute-vs-submit
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  fixedPoolReuse():
+    summary: Observe worker reuse in a fixed thread pool
+    description: Submit multiple tasks to a small fixed pool and record worker names
+      to show that the same worker set is reused instead of creating a new Thread
+      per task. The executor is shut down after the experiment.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: fixedPoolReuse
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/fixed-pool-reuse")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /thread-pool/fixed-pool-reuse
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executorFactories():
+    summary: Compare Executors factory methods
+    description: Run bounded cases with fixed, cached, single, and scheduled executors
+      to observe worker count, serialization, queueing, and delayed execution. The
+      goal is to understand actual semantics rather than choose a factory from its
+      name alone.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: executorFactories
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/executor-factories")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /thread-pool/executor-factories
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  scheduledExecution():
+    summary: Compare fixed-rate and fixed-delay scheduling
+    description: Run work that takes longer than the configured interval and record
+      timelines for scheduleAtFixedRate and scheduleWithFixedDelay. The experiment
+      shows cadence based on scheduled starts versus delay after completion and confirms
+      a single periodic task does not overlap with itself.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: scheduledExecution
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/scheduled-execution")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /thread-pool/scheduled-execution
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  scheduledFailure():
+    summary: Observe periodic task suppression after failure
+    description: Create a periodic task that throws on its first run, then observe
+      that the ScheduledFuture completes exceptionally and later executions are suppressed.
+      The experiment highlights the need for explicit error observability in periodic
+      jobs.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: scheduledFailure
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/scheduled-failure")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /thread-pool/scheduled-failure
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  callerRuns():
+    summary: Observe feedback pressure from CallerRunsPolicy
+    description: Saturate the worker and queue, then submit another task so CallerRunsPolicy
+      executes it on the caller Thread. Making the submitter perform work slows further
+      submission and creates feedback pressure instead of blocking execute() on queue
+      capacity.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: callerRuns
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/caller-runs")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /thread-pool/caller-runs
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  discardPolicies():
+    summary: Compare DiscardPolicy and DiscardOldestPolicy
+    description: Saturate the pool to observe DiscardPolicy silently dropping the
+      new task while DiscardOldestPolicy removes the queue head and retries the new
+      task. The experiment makes clear that task loss is a business semantic, not
+      just a technical detail.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: discardPolicies
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/discard-policies")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /thread-pool/discard-policies
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  customRejectionHandler():
+    summary: Record overload with a custom rejection handler
+    description: Use a custom RejectedExecutionHandler to count rejection and expose
+      overload before rejecting explicitly. The experiment shows how rejection can
+      become a metric or alertable event rather than only a technical exception.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: customRejectionHandler
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/custom-rejection-handler")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /thread-pool/custom-rejection-handler
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  gracefulShutdown():
+    summary: Gracefully shut down an ExecutorService
+    description: Allow submitted work to complete, call shutdown(), and await termination
+      so the executor is fully terminated before the request returns. The experiment
+      demonstrates orderly shutdown and clear ownership of a resource created by application
+      code.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: gracefulShutdown
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/graceful-shutdown")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /thread-pool/graceful-shutdown
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  forcedShutdown():
+    summary: Observe shutdownNow() and never-started tasks
+    description: Keep one task running and another queued, let the graceful wait time
+      out, then call shutdownNow(). A cooperative running task is interrupted while
+      the never-started queued task is returned to the caller and does not execute.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: forcedShutdown
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/forced-shutdown")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /thread-pool/forced-shutdown
     produces: [
       ]
     consumes: [
@@ -1012,7 +1831,7 @@ AtomicController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   adderBenchmark():
     summary: Title not provided
     description: Detailed description not provided
@@ -1032,7 +1851,7 @@ AtomicController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   accumulatorExample():
     summary: Title not provided
     description: Detailed description not provided
@@ -1052,7 +1871,7 @@ AtomicController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
 SyncController:
   runSyncTest():
     summary: Title not provided
@@ -1073,7 +1892,7 @@ SyncController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
 SyncProblemController:
   instructionReorder():
     summary: Title not provided
@@ -1094,7 +1913,7 @@ SyncProblemController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   staleData():
     summary: Title not provided
     description: Detailed description not provided
@@ -1114,7 +1933,7 @@ SyncProblemController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   raceCondition():
     summary: Title not provided
     description: Detailed description not provided
@@ -1134,7 +1953,7 @@ SyncProblemController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   deadlock():
     summary: Title not provided
     description: Detailed description not provided
@@ -1154,7 +1973,7 @@ SyncProblemController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   livelock():
     summary: Title not provided
     description: Detailed description not provided
@@ -1174,7 +1993,7 @@ SyncProblemController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
 ConcurrentCollectionController:
   concurrentHashMap():
     summary: Title not provided
@@ -1195,7 +2014,7 @@ ConcurrentCollectionController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   concurrentSkipList():
     summary: Title not provided
     description: Detailed description not provided
@@ -1215,7 +2034,7 @@ ConcurrentCollectionController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   copyOnWriteArrayWhenWriting():
     summary: Title not provided
     description: Detailed description not provided
@@ -1235,7 +2054,7 @@ ConcurrentCollectionController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   copyOnWriteArrayWhenReading():
     summary: Title not provided
     description: Detailed description not provided
@@ -1255,7 +2074,7 @@ ConcurrentCollectionController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   concurrentLinkedQueue():
     summary: Title not provided
     description: Detailed description not provided
@@ -1275,7 +2094,7 @@ ConcurrentCollectionController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
 ReadWriteLockController:
   readAndRead():
     summary: Title not provided
@@ -1296,7 +2115,7 @@ ReadWriteLockController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   readAndWrite():
     summary: Title not provided
     description: Detailed description not provided
@@ -1316,7 +2135,7 @@ ReadWriteLockController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   writeAndWrite():
     summary: Title not provided
     description: Detailed description not provided
@@ -1336,7 +2155,7 @@ ReadWriteLockController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   downgradeKey():
     summary: Title not provided
     description: Detailed description not provided
@@ -1356,7 +2175,7 @@ ReadWriteLockController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
 ReentrantLockController:
   reentrantLockExample():
     summary: Title not provided
@@ -1377,7 +2196,7 @@ ReentrantLockController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   fairLockExample():
     summary: Title not provided
     description: Detailed description not provided
@@ -1397,7 +2216,7 @@ ReentrantLockController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   unfairLockExample():
     summary: Title not provided
     description: Detailed description not provided
@@ -1417,7 +2236,7 @@ ReentrantLockController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   interruptibleLock():
     summary: Title not provided
     description: Detailed description not provided
@@ -1437,7 +2256,7 @@ ReentrantLockController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
 StampedLockController:
   stampedExample():
     summary: Title not provided
@@ -1458,7 +2277,7 @@ StampedLockController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
 VirtualThreadController:
   virtualThreadBenchmark():
     summary: Title not provided
@@ -1479,7 +2298,7 @@ VirtualThreadController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   virtualThreadBasic():
     summary: Title not provided
     description: Detailed description not provided
@@ -1499,7 +2318,7 @@ VirtualThreadController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   virtualThreadBuilder():
     summary: Title not provided
     description: Detailed description not provided
@@ -1519,7 +2338,7 @@ VirtualThreadController:
       ]
     consumes: [
       ]
-    usage: true
+    usage: false
   virtualThreadExecutor():
     summary: Title not provided
     description: Detailed description not provided
@@ -1535,6 +2354,835 @@ VirtualThreadController:
     - GET
     mappingPaths:
     - virtual-thread/with-executor
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: false
+  basic():
+    summary: Observe core Virtual Thread properties
+    description: Create a Java 21 Virtual Thread and return isVirtual, daemon flag,
+      priority, and state after join. The experiment shows that a Virtual Thread is
+      still a Thread while having different lifecycle properties from a Platform Thread.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: basic
+    params: [
+      ]
+    path: com/example/learning/module/virtualThread/controller/VirtualThreadController.java
+    mapping: '@GetMapping("/basic")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /virtual-thread/basic
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  creationApi():
+    summary: Compare direct Virtual Thread creation APIs
+    description: Create Virtual Threads with Thread.startVirtualThread() and Thread.ofVirtual().start(),
+      then join both. The experiment shows that Virtual Threads can be created directly
+      without requiring ExecutorService.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: creationApi
+    params: [
+      ]
+    path: com/example/learning/module/virtualThread/controller/VirtualThreadController.java
+    mapping: '@GetMapping("/creation-api")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /virtual-thread/creation-api
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  blockingScale():
+    summary: Compare blocking work on platform and Virtual Threads
+    description: Run the same sleep-based blocking workload on a fixed platform pool
+      and a virtual-thread-per-task executor and record illustrative elapsed time.
+      The result demonstrates concurrency shape and is not intended as a production
+      benchmark.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: blockingScale
+    params: [
+      ]
+    path: com/example/learning/module/virtualThread/controller/VirtualThreadController.java
+    mapping: '@GetMapping("/blocking-scale")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /virtual-thread/blocking-scale
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  limitedResource():
+    summary: Limit downstream concurrency with Virtual Threads
+    description: Create many Virtual Threads but use a Semaphore so only a bounded
+      number may enter the simulated external-resource section at once. The experiment
+      shows that cheap Threads do not make databases, APIs, or other downstream resources
+      unlimited.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: limitedResource
+    params: [
+      ]
+    path: com/example/learning/module/virtualThread/controller/VirtualThreadController.java
+    mapping: '@GetMapping("/limited-resource")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /virtual-thread/limited-resource
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  threadLocal():
+    summary: Observe ThreadLocal on Virtual Threads
+    description: Use ThreadLocal and InheritableThreadLocal across multiple Virtual
+      Threads to observe isolation, cleanup, default inheritance, and disabling inheritance
+      through the builder. The experiment shows that Virtual Threads do not change
+      ThreadLocal lifecycle rules.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: threadLocal
+    params: [
+      ]
+    path: com/example/learning/module/virtualThread/controller/VirtualThreadController.java
+    mapping: '@GetMapping("/thread-local")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /virtual-thread/thread-local
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+ConcurrencyProblemController:
+  raceCondition():
+    summary: Create a lost update to observe a race condition
+    description: Coordinate two Threads so they read the same snapshot before either
+      is allowed to write, creating a deterministic lost update. The result compares
+      the expected sequential value with the actual value and illustrates an atomicity
+      problem in read-modify-write logic.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: raceCondition
+    params: [
+      ]
+    path: com/example/learning/module/concurrency/problem/controller/ConcurrencyProblemController.java
+    mapping: '@GetMapping("/race-condition")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /concurrency/problem/race-condition
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  startJoinHappensBefore():
+    summary: Observe happens-before from start() and join()
+    description: Write data before Thread.start(), let the worker read and update
+      state, then read again after Thread.join(). The experiment shows that start
+      and join provide memory-consistency guarantees in addition to lifecycle coordination.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: startJoinHappensBefore
+    params: [
+      ]
+    path: com/example/learning/module/concurrency/problem/controller/ConcurrencyProblemController.java
+    mapping: '@GetMapping("/happens-before-start-join")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /concurrency/problem/happens-before-start-join
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  volatilePublication():
+    summary: Publish data through a volatile flag
+    description: A writer updates plain data and then publishes a volatile flag; a
+      reader accesses the data only after observing the flag. The experiment demonstrates
+      the happens-before edge created by volatile write/read and how earlier writes
+      become visible.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: volatilePublication
+    params: [
+      ]
+    path: com/example/learning/module/concurrency/problem/controller/ConcurrencyProblemController.java
+    mapping: '@GetMapping("/volatile-publication")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /concurrency/problem/volatile-publication
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  volatileIsNotAtomic():
+    summary: Prove volatile does not provide atomicity
+    description: Perform a compound increment on volatile state with controlled interleaving
+      to create a lost update. The experiment shows that volatile provides visibility
+      and ordering but does not make a read-modify-write sequence atomic.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: volatileIsNotAtomic
+    params: [
+      ]
+    path: com/example/learning/module/concurrency/problem/controller/ConcurrencyProblemController.java
+    mapping: '@GetMapping("/volatile-not-atomic")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /concurrency/problem/volatile-not-atomic
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  deadlockRisk():
+    summary: Observe circular lock dependency safely
+    description: Two workers hold different first locks in opposite order and use
+      tryLock for the second lock. The experiment reproduces the shape of circular
+      wait while using timeouts and cleanup so no permanent deadlock remains.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: deadlockRisk
+    params: [
+      ]
+    path: com/example/learning/module/concurrency/problem/controller/ConcurrencyProblemController.java
+    mapping: '@GetMapping("/deadlock-risk")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /concurrency/problem/deadlock-risk
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  deadlockPrevention():
+    summary: Prevent deadlock with global lock ordering
+    description: Multiple workers need the same two locks but are required to acquire
+      them in the same A-then-B order. The experiment shows that consistent lock ordering
+      removes circular-wait dependency by design.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: deadlockPrevention
+    params: [
+      ]
+    path: com/example/learning/module/concurrency/problem/controller/ConcurrencyProblemController.java
+    mapping: '@GetMapping("/deadlock-prevention")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /concurrency/problem/deadlock-prevention
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  boundedLivelock():
+    summary: Simulate livelock with bounded execution
+    description: Two workers repeatedly react and back off symmetrically, staying
+      active without making progress for a finite number of rounds. The experiment
+      demonstrates active-without-progress behavior without leaving an infinite loop.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: boundedLivelock
+    params: [
+      ]
+    path: com/example/learning/module/concurrency/problem/controller/ConcurrencyProblemController.java
+    mapping: '@GetMapping("/livelock")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /concurrency/problem/livelock
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+CoordinationController:
+  join():
+    summary: Coordinate lifecycle with Thread.join()
+    description: Start a worker and use join() so the caller waits until that worker
+      terminates before continuing. The experiment demonstrates lifecycle dependency
+      and reinforces that join also carries a happens-before guarantee for worker
+      writes.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: join
+    params: [
+      ]
+    path: com/example/learning/module/coordination/controller/CoordinationController.java
+    mapping: '@GetMapping("/join")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /coordination/join
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  waitNotify():
+    summary: Coordinate with wait(), notify(), and notifyAll()
+    description: Use several waiters, a predicate loop, notify(), and notifyAll()
+      to observe the wait set and monitor reacquisition. Notification only asks a
+      waiter to check again; the predicate determines whether execution may actually
+      continue.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: waitNotify
+    params: [
+      ]
+    path: com/example/learning/module/coordination/controller/CoordinationController.java
+    mapping: '@GetMapping("/wait-notify")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /coordination/wait-notify
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  condition():
+    summary: Coordinate multiple Conditions with ReentrantLock
+    description: Create two independent Condition queues on the same ReentrantLock
+      and signal each one for its corresponding predicate. The experiment shows that
+      Condition is the explicit-lock counterpart of wait/notify and that await() releases
+      then reacquires the lock.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: condition
+    params: [
+      ]
+    path: com/example/learning/module/coordination/controller/CoordinationController.java
+    mapping: '@GetMapping("/condition")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /coordination/condition
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  lockSupport():
+    summary: Observe LockSupport park and unpark
+    description: Park several workers to show that unpark(thread) targets a specific
+      Thread, blocker metadata can be inspected, and interruption can make park()
+      return without throwing InterruptedException. Cleanup ensures every worker terminates.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: lockSupport
+    params: [
+      ]
+    path: com/example/learning/module/coordination/controller/CoordinationController.java
+    mapping: '@GetMapping("/lock-support")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /coordination/lock-support
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  blockingQueue():
+    summary: Build producer-consumer coordination with BlockingQueue
+    description: Run a bounded producer and consumer using BlockingQueue operations,
+      then join both Threads. The experiment demonstrates queue-based coordination
+      without leaving an infinite consumer running after the request.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: blockingQueue
+    params: [
+      ]
+    path: com/example/learning/module/coordination/controller/CoordinationController.java
+    mapping: '@GetMapping("/blocking-queue")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /coordination/blocking-queue
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  blockingQueueVariants():
+    summary: Compare common BlockingQueue implementations
+    description: Observe ArrayBlockingQueue capacity, drainTo on LinkedBlockingQueue,
+      and priority ordering in PriorityBlockingQueue through bounded examples. The
+      goal is to select a queue based on capacity, ordering, and handoff semantics.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: blockingQueueVariants
+    params: [
+      ]
+    path: com/example/learning/module/coordination/controller/CoordinationController.java
+    mapping: '@GetMapping("/blocking-queue-variants")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /coordination/blocking-queue-variants
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  priorityQueueSemantics():
+    summary: Observe PriorityBlockingQueue semantics
+    description: Insert tasks with different and equal priorities to observe ordering
+      behavior. The experiment emphasizes that higher priority is preferred, equal
+      priority has no FIFO contract, and the queue does not provide bounded backpressure.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: priorityQueueSemantics
+    params: [
+      ]
+    path: com/example/learning/module/coordination/controller/CoordinationController.java
+    mapping: '@GetMapping("/priority-queue-semantics")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /coordination/priority-queue-semantics
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  synchronousQueue():
+    summary: Observe direct handoff with SynchronousQueue
+    description: Pair producer put and consumer take operations through SynchronousQueue
+      to show that every element requires a matching operation on the other side.
+      This queue is a rendezvous point and does not buffer backlog like a normal queue.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: synchronousQueue
+    params: [
+      ]
+    path: com/example/learning/module/coordination/controller/CoordinationController.java
+    mapping: '@GetMapping("/synchronous-queue")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /coordination/synchronous-queue
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  synchronizers():
+    summary: Compare higher-level synchronizers
+    description: Run bounded examples with CountDownLatch, CyclicBarrier, Semaphore,
+      Phaser, and Exchanger to observe different coordination dependencies. The response
+      focuses on synchronization semantics rather than timing benchmarks.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: synchronizers
+    params: [
+      ]
+    path: com/example/learning/module/coordination/controller/CoordinationController.java
+    mapping: '@GetMapping("/synchronizers")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /coordination/synchronizers
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  synchronizersTimeout():
+    summary: Observe synchronizer timeout and failure behavior
+    description: Demonstrate latch timeout, broken/reset barrier behavior, semaphore
+      acquisition timeout, dynamic Phaser participation, and Exchanger timeout/interruption.
+      The experiment shows that each synchronizer has distinct failure and recovery
+      semantics.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: synchronizersTimeout
+    params: [
+      ]
+    path: com/example/learning/module/coordination/controller/CoordinationController.java
+    mapping: '@GetMapping("/synchronizers-timeout")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /coordination/synchronizers-timeout
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  semaphorePermitAccounting():
+    summary: Prove Semaphore does not enforce ownership
+    description: Intentionally release a permit without acquiring it and observe the
+      available permit count increase incorrectly, then acquire beyond the original
+      capacity. The experiment emphasizes that permit accounting is the application's
+      responsibility.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: semaphorePermitAccounting
+    params: [
+      ]
+    path: com/example/learning/module/coordination/controller/CoordinationController.java
+    mapping: '@GetMapping("/semaphore-permit-accounting")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /coordination/semaphore-permit-accounting
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+SynchronizationController:
+  synchronizedCounter():
+    summary: Protect a compound update with synchronized
+    description: Let multiple Threads increment a shared counter under an intrinsic
+      monitor. The experiment shows how synchronized creates a critical section around
+      a compound update and prevents lost updates.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: synchronizedCounter
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/synchronized-counter")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/synchronized-counter
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  reentrantLock():
+    summary: Observe ReentrantLock reentrancy
+    description: Acquire the same ReentrantLock multiple times from one Thread and
+      inspect the hold count before matching unlock operations. The experiment shows
+      that the lock is reentrant but every successful acquisition must still be balanced
+      by release.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: reentrantLock
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/reentrant-lock")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/reentrant-lock
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  tryLock():
+    summary: Observe tryLock(timeout) while a lock is busy
+    description: One Thread holds the lock while another uses tryLock with a bounded
+      timeout. The experiment shows how acquisition can fail in a controlled way instead
+      of waiting indefinitely.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: tryLock
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/try-lock")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/try-lock
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  interruptibleLock():
+    summary: Cancel a lock waiter with lockInterruptibly()
+    description: Hold a ReentrantLock so a worker waits using lockInterruptibly(),
+      then interrupt that worker. The experiment shows that explicit locks can provide
+      interruptible acquisition unlike a Thread BLOCKED on synchronized monitor entry.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: interruptibleLock
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/interruptible-lock")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/interruptible-lock
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  reentrantLockPolicy():
+    summary: Observe fair and non-fair ReentrantLock policy
+    description: Compare ReentrantLock policies and emphasize that fairness is not
+      a guarantee about Thread.start order. Untimed tryLock() may barge, so it cannot
+      be used to infer the entire fairness contract.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: reentrantLockPolicy
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/reentrant-lock-policy")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/reentrant-lock-policy
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  readWriteLock():
+    summary: Observe concurrent readers and an exclusive writer
+    description: Allow multiple readers to hold the read lock concurrently while a
+      writer waits. The experiment demonstrates that ReentrantReadWriteLock supports
+      shared reads while write access remains exclusive.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: readWriteLock
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/read-write-lock")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/read-write-lock
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  readWriteLockDowngrade():
+    summary: Perform write-to-read lock downgrade
+    description: Hold the write lock, acquire the read lock before releasing the write
+      lock, and keep a protected view without an unguarded gap. The experiment demonstrates
+      the correct lock-downgrade sequence.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: readWriteLockDowngrade
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/read-write-lock-downgrade")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/read-write-lock-downgrade
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  readWriteLockPolicy():
+    summary: Observe ReentrantReadWriteLock policy
+    description: Inspect default/fair read-write lock behavior and the nuance of untimed
+      tryLock operations. The experiment reinforces that fairness must be interpreted
+      according to each API's exact contract.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: readWriteLockPolicy
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/read-write-lock-policy")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/read-write-lock-policy
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  stampedLock():
+    summary: Observe StampedLock optimistic read and fallback
+    description: Take an optimistic stamp, let a writer change state so the stamp
+      becomes invalid, then validate and fall back to a read lock. The experiment
+      demonstrates that optimistic reads are valid only when validation succeeds.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: stampedLock
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/stamped-lock")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/stamped-lock
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  stampedLockLimitations():
+    summary: Observe StampedLock limitations
+    description: 'Check two important limitations: StampedLock is not reentrant, and
+      its Lock views do not provide Condition support. The experiment prevents applying
+      a ReentrantLock mental model to StampedLock.'
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: stampedLockLimitations
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/stamped-lock-limitations")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/stamped-lock-limitations
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  atomicTools():
+    summary: Compare AtomicInteger, LongAdder, and LongAccumulator
+    description: Run deterministic operations with AtomicInteger, LongAdder, and LongAccumulator
+      to observe the different roles of atomic updates and distributed accumulation.
+      The experiment focuses on semantics rather than throughput benchmarking.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: atomicTools
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/atomic-tools")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/atomic-tools
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  atomicCas():
+    summary: Observe CAS, ABA, and stamped references
+    description: Use compareAndSet for conditional atomic update, then create an ABA
+      sequence on the value and use a stamp to detect that state changed and returned
+      to the same value. The experiment exposes the limitation of value-only CAS.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: atomicCas
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/atomic-cas")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/atomic-cas
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  concurrentCollections():
+    summary: Observe atomic operations in concurrent collections
+    description: Demonstrate atomic map updates, snapshot-style iteration, and a non-blocking
+      queue with suitable concurrent collections. The experiment emphasizes that thread-safe
+      individual operations do not automatically make every multi-step business invariant
+      atomic.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: concurrentCollections
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/concurrent-collections")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/concurrent-collections
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  concurrentSkipList():
+    summary: Observe a sorted concurrent map
+    description: Update ConcurrentSkipListMap from multiple Threads and read key order
+      after completion. The experiment shows that the collection supports concurrent
+      access while preserving sorted map ordering.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: concurrentSkipList
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/concurrent-skip-list")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/concurrent-skip-list
     produces: [
       ]
     consumes: [
