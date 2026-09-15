@@ -1,0 +1,49 @@
+# Runtime configuration of this module.
+# This skeleton is generated only when the file is missing or blank.
+# After initialization this file is human-owned and will not be overwritten.
+#
+# application.yml is the runtime source of truth.
+
+---
+# Common runtime configuration
+# Add common runtime configuration below this line.
+server:
+  port: 8084
+  servlet:
+    context-path: /aspect
+spring:
+  application:
+    name: ${PROJECT_NAME}
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+
+---
+# Runtime configuration for profile DEV
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+# Add profile-specific configuration below this line.
+
+
+
+---
+# Runtime configuration for profile LOC
+spring:
+  config:
+    activate:
+      on-profile: loc
+
+# Add profile-specific configuration below this line.
+
+
+
+---
+# Runtime configuration for profile PRD
+spring:
+  config:
+    activate:
+      on-profile: prd
+
+# Add profile-specific configuration below this line.
