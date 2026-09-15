@@ -1,4 +1,5 @@
 item:
   summary: Mặt hàng cần checkout
-  description: Tên mặt hàng truyền vào business operation checkout để quan sát auditing và timing Aspect quanh một lời gọi cụ thể.
+  description: Tên mặt hàng truyền vào business operation checkout để quan sát auditing
+    và timing Aspect quanh một lời gọi cụ thể.
   usage: true

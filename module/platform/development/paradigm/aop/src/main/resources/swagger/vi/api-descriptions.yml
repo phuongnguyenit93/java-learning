@@ -1,7 +1,8 @@
 AdvisorController:
   observeAdvisor():
     summary: Quan sát cách Advisor kết hợp Pointcut và Advice
-    description: Minh họa cách Advisor ghép Pointcut với Advice, đồng thời so sánh việc match method tĩnh với việc match theo argument ở runtime.
+    description: Minh họa cách Advisor ghép Pointcut với Advice, đồng thời so sánh
+      việc match method tĩnh với việc match theo argument ở runtime.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -22,7 +23,8 @@ AdvisorController:
 RuntimeBoundaryController:
   inspectRuntimeBoundary():
     summary: Quan sát ranh giới runtime của Spring AOP
-    description: Minh họa sự khác nhau giữa cú pháp khai báo AspectJ và cơ chế Spring AOP dựa trên proxy đang được sử dụng trong module.
+    description: Minh họa sự khác nhau giữa cú pháp khai báo AspectJ và cơ chế Spring
+      AOP dựa trên proxy đang được sử dụng trong module.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -43,7 +45,8 @@ RuntimeBoundaryController:
 InfrastructureController:
   inspectInfrastructure():
     summary: Quan sát hạ tầng bên trong Spring AOP
-    description: Kiểm tra auto-proxy creator, loại proxy được tạo, chiến lược proxy cấu hình và chuỗi Advisor đứng sau một Spring-managed AOP bean.
+    description: Kiểm tra auto-proxy creator, loại proxy được tạo, chiến lược proxy
+      cấu hình và chuỗi Advisor đứng sau một Spring-managed AOP bean.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -64,7 +67,8 @@ InfrastructureController:
 IntroductionController:
   observeIntroduction():
     summary: Quan sát AOP Introduction
-    description: Minh họa cách AOP proxy có thể cung cấp thêm một interface mà target class ban đầu không implement.
+    description: Minh họa cách AOP proxy có thể cung cấp thêm một interface mà target
+      class ban đầu không implement.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -85,7 +89,8 @@ IntroductionController:
 ProgrammaticProxyController:
   compareProxyFactoryStrategies():
     summary: So sánh JDK proxy và CGLIB bằng ProxyFactory
-    description: Tạo JDK dynamic proxy và CGLIB proxy bằng ProxyFactory, sau đó áp dụng cùng một MethodInterceptor cho cả hai chiến lược.
+    description: Tạo JDK dynamic proxy và CGLIB proxy bằng ProxyFactory, sau đó áp
+      dụng cùng một MethodInterceptor cho cả hai chiến lược.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -106,7 +111,8 @@ ProgrammaticProxyController:
 AdviceLifecycleController:
   success():
     summary: Quan sát thứ tự Advice khi thực thi thành công
-    description: Thực thi một target method thành công để quan sát thứ tự runtime của @Before, target, @AfterReturning và @After.
+    description: Thực thi một target method thành công để quan sát thứ tự runtime
+      của @Before, target, @AfterReturning và @After.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -126,7 +132,8 @@ AdviceLifecycleController:
     usage: true
   failure():
     summary: Quan sát Advice khi target ném exception
-    description: Thực thi một target method thất bại để quan sát @AfterThrowing và @After khi lời gọi kết thúc bằng exception.
+    description: Thực thi một target method thất bại để quan sát @AfterThrowing và
+      @After khi lời gọi kết thúc bằng exception.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -147,7 +154,8 @@ AdviceLifecycleController:
 AnnotationDrivenController:
   trackByAnnotation():
     summary: Áp dụng AOP thông qua custom annotation
-    description: Sử dụng custom annotation như một declarative contract và minh họa cách Aspect match annotation rồi đọc metadata của annotation đó.
+    description: Sử dụng custom annotation như một declarative contract và minh họa
+      cách Aspect match annotation rồi đọc metadata của annotation đó.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -168,7 +176,8 @@ AnnotationDrivenController:
 AroundAdviceController:
   timing():
     summary: Đo thời gian thực thi bằng @Around Advice
-    description: Minh họa code chạy trước và sau proceed(), đồng thời đo thời gian thực thi của target method.
+    description: Minh họa code chạy trước và sau proceed(), đồng thời đo thời gian
+      thực thi của target method.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -188,7 +197,8 @@ AroundAdviceController:
     usage: true
   transform():
     summary: Thay đổi return value bằng @Around Advice
-    description: Minh họa @Around Advice có thể đọc và thay thế giá trị trả về sau khi target đã chạy qua proceed().
+    description: Minh họa @Around Advice có thể đọc và thay thế giá trị trả về sau
+      khi target đã chạy qua proceed().
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -208,7 +218,8 @@ AroundAdviceController:
     usage: true
   skip():
     summary: Bỏ qua target bằng @Around Advice
-    description: Minh họa việc không gọi proceed() sẽ khiến target method không được thực thi và Advice có thể tự trả về kết quả.
+    description: Minh họa việc không gọi proceed() sẽ khiến target method không được
+      thực thi và Advice có thể tự trả về kết quả.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -228,7 +239,8 @@ AroundAdviceController:
     usage: true
   arguments():
     summary: Thay đổi argument bằng @Around Advice
-    description: Minh họa cách @Around Advice đọc và thay đổi argument của lời gọi trước khi thực thi proceed(Object[]).
+    description: Minh họa cách @Around Advice đọc và thay đổi argument của lời gọi
+      trước khi thực thi proceed(Object[]).
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -248,7 +260,8 @@ AroundAdviceController:
     usage: true
   exceptionPropagation():
     summary: Quan sát exception đi qua @Around Advice
-    description: Minh họa @Around Advice bắt được exception để quan sát nhưng vẫn rethrow nhằm giữ nguyên contract của target method.
+    description: Minh họa @Around Advice bắt được exception để quan sát nhưng vẫn
+      rethrow nhằm giữ nguyên contract của target method.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -269,7 +282,8 @@ AroundAdviceController:
 CrossCuttingController:
   observeCrossCutting():
     summary: Quan sát logging như một cross-cutting concern
-    description: Áp dụng một logging concern cho nhiều business method bằng AOP để service không phải lặp lại logging code.
+    description: Áp dụng một logging concern cho nhiều business method bằng AOP để
+      service không phải lặp lại logging code.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -290,7 +304,8 @@ CrossCuttingController:
 OrderingController:
   observeOrdering():
     summary: Quan sát thứ tự lồng nhau của nhiều Aspect
-    description: Minh họa cách hai @Around Aspect tạo call stack lồng nhau dựa trên giá trị @Order.
+    description: Minh họa cách hai @Around Aspect tạo call stack lồng nhau dựa trên
+      giá trị @Order.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -311,7 +326,8 @@ OrderingController:
 PracticalPatternController:
   checkout(String):
     summary: Áp dụng auditing và timing trong tình huống thực tế
-    description: Thực thi thao tác checkout với auditing và timing được triển khai như các cross-cutting concern tái sử dụng quanh business method.
+    description: Thực thi thao tác checkout với auditing và timing được triển khai
+      như các cross-cutting concern tái sử dụng quanh business method.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -332,7 +348,8 @@ PracticalPatternController:
 PointcutController:
   comparePointcuts():
     summary: So sánh các biểu thức Pointcut phổ biến của Spring AOP
-    description: So sánh execution, annotation, args, runtime argument type, within, pointcut composition, this/target, bean() và một method cố ý không match.
+    description: So sánh execution, annotation, args, runtime argument type, within,
+      pointcut composition, this/target, bean() và một method cố ý không match.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -353,7 +370,8 @@ PointcutController:
 ProxyMentalModelController:
   inspectProxy():
     summary: Quan sát Spring AOP proxy
-    description: Chứng minh service được inject là một AOP proxy và hiển thị runtime class, target class, loại proxy cùng call sequence đã bị intercept.
+    description: Chứng minh service được inject là một AOP proxy và hiển thị runtime
+      class, target class, loại proxy cùng call sequence đã bị intercept.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -373,7 +391,8 @@ ProxyMentalModelController:
     usage: true
   compareManagedBeanAndPlainObject():
     summary: So sánh Spring-managed bean với object tạo bằng new
-    description: So sánh một Spring-managed bean đi qua AOP interception với object được tạo trực tiếp bằng new nên không đi qua Spring proxy.
+    description: So sánh một Spring-managed bean đi qua AOP interception với object
+      được tạo trực tiếp bằng new nên không đi qua Spring proxy.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -394,7 +413,8 @@ ProxyMentalModelController:
 SelfInvocationController:
   compareSelfInvocation():
     summary: So sánh self-invocation với lời gọi qua proxy
-    description: So sánh this.inner() bên trong target với lời gọi từ bên ngoài qua Spring proxy để minh họa vì sao self-invocation bỏ qua proxy Advice.
+    description: So sánh this.inner() bên trong target với lời gọi từ bên ngoài qua
+      Spring proxy để minh họa vì sao self-invocation bỏ qua proxy Advice.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -414,7 +434,8 @@ SelfInvocationController:
     usage: true
   finalMethodLimitation():
     summary: Minh họa giới hạn của final method với proxy
-    description: Chứng minh final method trên class-based proxy không thể bị override nên không thể được intercept bởi proxy-based Advice.
+    description: Chứng minh final method trên class-based proxy không thể bị override
+      nên không thể được intercept bởi proxy-based Advice.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -435,7 +456,8 @@ SelfInvocationController:
 TerminologyController:
   inspectTerminology():
     summary: Quan sát các thuật ngữ AOP trong một lời gọi thực tế
-    description: Gắn các khái niệm Aspect, Advice, Join Point, Target và Proxy vào một method call Spring AOP thực tế cùng các thông tin runtime của proxy.
+    description: Gắn các khái niệm Aspect, Advice, Join Point, Target và Proxy vào
+      một method call Spring AOP thực tế cùng các thông tin runtime của proxy.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video

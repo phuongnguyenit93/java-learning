@@ -1,7 +1,8 @@
 AdvisorController:
   observeAdvisor():
     summary: Observe Advisor composition and runtime matching
-    description: Demonstrates how an Advisor combines a Pointcut with Advice and compares static method matching with runtime argument matching.
+    description: Demonstrates how an Advisor combines a Pointcut with Advice and compares
+      static method matching with runtime argument matching.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -22,7 +23,8 @@ AdvisorController:
 RuntimeBoundaryController:
   inspectRuntimeBoundary():
     summary: Inspect the runtime boundary of Spring AOP
-    description: Shows the difference between AspectJ-style aspect declarations and the proxy-based Spring AOP runtime used by this module.
+    description: Shows the difference between AspectJ-style aspect declarations and
+      the proxy-based Spring AOP runtime used by this module.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -43,7 +45,8 @@ RuntimeBoundaryController:
 InfrastructureController:
   inspectInfrastructure():
     summary: Inspect Spring AOP infrastructure
-    description: Inspects the auto-proxy creator, generated proxy type, configured proxy strategy, and Advisor chain behind a Spring-managed AOP bean.
+    description: Inspects the auto-proxy creator, generated proxy type, configured
+      proxy strategy, and Advisor chain behind a Spring-managed AOP bean.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -64,7 +67,8 @@ InfrastructureController:
 IntroductionController:
   observeIntroduction():
     summary: Observe an AOP introduction
-    description: Demonstrates how an AOP proxy can expose an additional interface that the original target class does not implement.
+    description: Demonstrates how an AOP proxy can expose an additional interface
+      that the original target class does not implement.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -85,7 +89,8 @@ IntroductionController:
 ProgrammaticProxyController:
   compareProxyFactoryStrategies():
     summary: Compare JDK and CGLIB ProxyFactory strategies
-    description: Programmatically creates JDK dynamic and CGLIB proxies with ProxyFactory and applies the same MethodInterceptor to both strategies.
+    description: Programmatically creates JDK dynamic and CGLIB proxies with ProxyFactory
+      and applies the same MethodInterceptor to both strategies.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -106,7 +111,8 @@ ProgrammaticProxyController:
 AdviceLifecycleController:
   success():
     summary: Observe advice order on successful execution
-    description: Executes a successful target method to observe @Before, target execution, @AfterReturning, and @After in their actual runtime order.
+    description: Executes a successful target method to observe @Before, target execution,
+      @AfterReturning, and @After in their actual runtime order.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -126,7 +132,8 @@ AdviceLifecycleController:
     usage: true
   failure():
     summary: Observe advice order when an exception is thrown
-    description: Executes a failing target method to observe @AfterThrowing and @After when the invocation exits through an exception.
+    description: Executes a failing target method to observe @AfterThrowing and @After
+      when the invocation exits through an exception.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -147,7 +154,8 @@ AdviceLifecycleController:
 AnnotationDrivenController:
   trackByAnnotation():
     summary: Apply AOP through a custom annotation
-    description: Uses a custom annotation as a declarative contract and demonstrates how an Aspect matches the annotation and reads its metadata.
+    description: Uses a custom annotation as a declarative contract and demonstrates
+      how an Aspect matches the annotation and reads its metadata.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -168,7 +176,8 @@ AnnotationDrivenController:
 AroundAdviceController:
   timing():
     summary: Measure execution with @Around advice
-    description: Demonstrates code running before and after proceed() while measuring the target method execution time.
+    description: Demonstrates code running before and after proceed() while measuring
+      the target method execution time.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -188,7 +197,8 @@ AroundAdviceController:
     usage: true
   transform():
     summary: Transform a return value with @Around advice
-    description: Demonstrates that @Around advice can inspect and replace the value returned by the target after proceed() completes.
+    description: Demonstrates that @Around advice can inspect and replace the value
+      returned by the target after proceed() completes.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -208,7 +218,8 @@ AroundAdviceController:
     usage: true
   skip():
     summary: Skip target execution with @Around advice
-    description: Demonstrates that omitting proceed() prevents the target method from executing and allows the advice to return its own result.
+    description: Demonstrates that omitting proceed() prevents the target method from
+      executing and allows the advice to return its own result.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -228,7 +239,8 @@ AroundAdviceController:
     usage: true
   arguments():
     summary: Modify method arguments with @Around advice
-    description: Demonstrates how @Around advice can read and replace invocation arguments before calling proceed(Object[]).
+    description: Demonstrates how @Around advice can read and replace invocation arguments
+      before calling proceed(Object[]).
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -248,7 +260,8 @@ AroundAdviceController:
     usage: true
   exceptionPropagation():
     summary: Observe exception propagation through @Around advice
-    description: Demonstrates an @Around advice observing an exception and rethrowing it so the original target contract is preserved.
+    description: Demonstrates an @Around advice observing an exception and rethrowing
+      it so the original target contract is preserved.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -269,7 +282,8 @@ AroundAdviceController:
 CrossCuttingController:
   observeCrossCutting():
     summary: Observe a cross-cutting logging concern
-    description: Applies one logging concern to multiple business methods through AOP so the service methods do not duplicate logging code.
+    description: Applies one logging concern to multiple business methods through
+      AOP so the service methods do not duplicate logging code.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -290,7 +304,8 @@ CrossCuttingController:
 OrderingController:
   observeOrdering():
     summary: Observe nested Aspect ordering
-    description: Demonstrates how two @Around Aspects form a nested call stack according to their @Order values.
+    description: Demonstrates how two @Around Aspects form a nested call stack according
+      to their @Order values.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -311,7 +326,8 @@ OrderingController:
 PracticalPatternController:
   checkout(String):
     summary: Apply practical auditing and timing aspects
-    description: Runs a checkout operation with auditing and timing implemented as reusable cross-cutting concerns around the business method.
+    description: Runs a checkout operation with auditing and timing implemented as
+      reusable cross-cutting concerns around the business method.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -332,7 +348,8 @@ PracticalPatternController:
 PointcutController:
   comparePointcuts():
     summary: Compare common Spring AOP pointcut expressions
-    description: Compares execution, annotation, args, runtime argument type, within, composed pointcuts, this/target, bean(), and an intentionally unmatched method.
+    description: Compares execution, annotation, args, runtime argument type, within,
+      composed pointcuts, this/target, bean(), and an intentionally unmatched method.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -353,7 +370,8 @@ PointcutController:
 ProxyMentalModelController:
   inspectProxy():
     summary: Inspect a Spring AOP proxy
-    description: Shows that the injected service is an AOP proxy and exposes its runtime class, target class, proxy type, and intercepted call sequence.
+    description: Shows that the injected service is an AOP proxy and exposes its runtime
+      class, target class, proxy type, and intercepted call sequence.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -373,7 +391,8 @@ ProxyMentalModelController:
     usage: true
   compareManagedBeanAndPlainObject():
     summary: Compare a managed proxy with a plain Java object
-    description: Compares a Spring-managed bean that passes through AOP interception with an object created directly using new, which bypasses the Spring proxy.
+    description: Compares a Spring-managed bean that passes through AOP interception
+      with an object created directly using new, which bypasses the Spring proxy.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -394,7 +413,8 @@ ProxyMentalModelController:
 SelfInvocationController:
   compareSelfInvocation():
     summary: Compare self-invocation with external proxy invocation
-    description: Compares this.inner() inside the target with an external call through the Spring proxy to show why self-invocation bypasses proxy advice.
+    description: Compares this.inner() inside the target with an external call through
+      the Spring proxy to show why self-invocation bypasses proxy advice.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -414,7 +434,8 @@ SelfInvocationController:
     usage: true
   finalMethodLimitation():
     summary: Demonstrate the final-method proxy limitation
-    description: Shows that a final method on a class-based proxy cannot be overridden and therefore cannot be intercepted by proxy-based advice.
+    description: Shows that a final method on a class-based proxy cannot be overridden
+      and therefore cannot be intercepted by proxy-based advice.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -435,7 +456,8 @@ SelfInvocationController:
 TerminologyController:
   inspectTerminology():
     summary: Inspect core AOP terminology in a real invocation
-    description: Connects Aspect, Advice, Join Point, Target, and Proxy terminology to an actual Spring AOP method call and its runtime proxy facts.
+    description: Connects Aspect, Advice, Join Point, Target, and Proxy terminology
+      to an actual Spring AOP method call and its runtime proxy facts.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
