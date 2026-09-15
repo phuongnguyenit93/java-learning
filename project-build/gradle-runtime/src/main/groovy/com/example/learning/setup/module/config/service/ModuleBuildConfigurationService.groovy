@@ -160,6 +160,12 @@ class ModuleBuildConfigurationService {
         )
 
 
+        configureExecutionContextDependency(
+                project,
+                moduleType
+        )
+
+
         // ====================================================
         // Database consumer
         // ====================================================
@@ -238,6 +244,73 @@ class ModuleBuildConfigurationService {
                 '📘 [MODULE-BUILD] [{}] Swagger -> {}',
                 project.path,
                 swaggerProject.path
+        )
+    }
+
+
+    private void configureExecutionContextDependency(
+            Project project,
+            ModuleType moduleType
+    ) {
+
+        if (
+                !ProjectPropertyUtils.isEnabled(
+                        project,
+                        'BUILD_EXECUTION_CONTEXT'
+                )
+        ) {
+
+            return
+        }
+
+
+        String adapterServiceName
+
+
+        switch (moduleType) {
+
+            case ModuleType.SERVLET:
+
+                adapterServiceName =
+                        'GLOBAL_EXECUTION_CONTEXT_SERVLET'
+
+                break
+
+
+            case ModuleType.REACTIVE:
+
+                project.logger.warn(
+                        '[MODULE-BUILD] BUILD_EXECUTION_CONTEXT is enabled for REACTIVE {}, but a reactive adapter has not been implemented yet.',
+                        project.path
+                )
+
+                return
+
+
+            default:
+
+                return
+        }
+
+
+        Project adapterProject =
+                ModuleProjectUtils.findByServiceName(
+                        project,
+                        adapterServiceName
+                )
+
+
+        ProjectDependencyUtils.addProject(
+                project,
+                'implementation',
+                adapterProject
+        )
+
+
+        project.logger.lifecycle(
+                '🧭 [MODULE-BUILD] [{}] Execution Context -> {}',
+                project.path,
+                adapterProject.path
         )
     }
 

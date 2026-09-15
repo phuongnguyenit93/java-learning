@@ -182,6 +182,29 @@ class ModuleOrchestrationPlugin
         }
 
         // ====================================================
+        // Execution Context setup
+        // ====================================================
+
+        if (
+                ProjectPropertyUtils.isEnabled(
+                        project,
+                        'BUILD_EXECUTION_CONTEXT'
+                )
+        ) {
+
+            project.pluginManager.apply(
+                    ProjectPluginEnum.EXECUTION_CONTEXT_SETUP_PLUGIN.id
+            )
+        }
+        else {
+
+            project.logger.info(
+                    '[PROJECT-ORCHESTRATION] Skip EXECUTION CONTEXT setup for {} because BUILD_EXECUTION_CONTEXT != TRUE.',
+                    project.path
+            )
+        }
+
+        // ====================================================
         // Task setup
         // ====================================================
 

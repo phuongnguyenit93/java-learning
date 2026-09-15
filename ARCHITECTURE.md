@@ -229,6 +229,8 @@ README setup     [conditional]
     ↓
 Swagger setup    [conditional]
     ↓
+Execution Context setup [conditional]
+    ↓
 Task setup       [conditional]
     ↓
 Docker setup     [docker-compose.yml exists]
@@ -241,6 +243,7 @@ Condition chính:
 | ENV | `BUILD_ENV=TRUE` hoặc `BUILD_ENV_PROFILE=TRUE` |
 | README | `BUILD_README=TRUE` |
 | Swagger | `BUILD_SWAGGER=TRUE` |
+| Execution Context | `BUILD_EXECUTION_CONTEXT=TRUE` |
 | Task system | `USE_TASK=TRUE` |
 | Docker | `docker-compose.yml` tồn tại |
 
@@ -322,6 +325,7 @@ BUILD_YML
 BUILD_README
 BUILD_TESTER
 BUILD_SWAGGER
+BUILD_EXECUTION_CONTEXT
 BUILD_DATABASE_MODULE
 ADD_MODULE_DEPEND
 USE_DATABASE
@@ -553,6 +557,7 @@ Module layer cung cấp các capability như:
 - ENV setup;
 - README setup;
 - Swagger build-time setup;
+- Execution Context build-time source-context setup;
 - task dispatcher;
 - Docker setup.
 
@@ -910,6 +915,15 @@ springboot-runtime/swagger-servlet
 springboot-runtime/swagger-reactive
 ```
 
+Execution Context runtime hiện có hai module:
+
+```text
+springboot-runtime/execution-context
+springboot-runtime/execution-context-servlet
+```
+
+Trong đó core là stack-neutral và Servlet adapter sở hữu Spring MVC/Servlet integration. Reactive adapter là target tương lai, chưa phải implementation hiện tại.
+
 ---
 
 ## 22. Shared Swagger runtime
@@ -1078,6 +1092,344 @@ Runtime không gọi Gradle generator ngược trở lại.
 
 ---
 
+## 22A. Execution Context và kiến trúc tích hợp chat AI
+
+Execution Context là một runtime/build capability độc lập với Swagger.
+
+Mục tiêu của nó là tạo một `ExperimentContext` trung lập mô tả **execution thực tế vừa xảy ra**, thay vì buộc công cụ AI chỉ suy luận từ source tĩnh.
+
+Boundary hiện tại:
+
+```text
+project-build/gradle-runtime
+        │
+        └── generate source context at build time
+                    ↓
+       META-INF/execution-context/source-context.json
+                    ↓
+project-build/springboot-runtime/execution-context
+        │
+        └── model / store / service / source lookup
+                    ↑
+project-build/springboot-runtime/execution-context-servlet
+        │
+        └── request / response / handler / logs / stdout-stderr capture
+```
+
+Enablement của Servlet application:
+
+```text
+BUILD_EXECUTION_CONTEXT=TRUE
+        ↓
+GLOBAL_EXECUTION_CONTEXT_SERVLET
+        ↓
+GLOBAL_EXECUTION_CONTEXT
+```
+
+Swagger không nằm trong dependency chain này. Swagger UI có thể là nơi user bấm Execute, nhưng HTTP request sau đó được Execution Context capture như bất kỳ request bình thường nào.
+
+### 22A.1 Roadmap 7 phase
+
+Bốn phase đầu tạo **Execution Context Core + Query Layer** và không phụ thuộc chat AI:
+
+```text
+Phase 1: Execution Capture
+→ xác định API/controller method đã chạy
+→ request / response
+→ status / duration / exception
+→ executionId correlation
+
+Phase 2: Runtime Observation
+→ logs theo executionId
+→ thread information
+→ System.out / System.err khi bật
+→ async/virtual-thread observation khi context propagation hỗ trợ
+
+Phase 3: Source Context
+→ Controller method source
+→ related Service source khi resolve được
+→ Javadoc / README / annotation / config context khi có
+→ source index được generate ở build time và lookup ở runtime
+
+Phase 4: Context Query Service
+→ query latest/by-id/recent/time range và filterable execution history
+→ `ExecutionSummary` cho list/search
+→ `ExperimentContext` cho detail/export/AI
+
+Sau Phase 4 mới tách Manual Mode và Connected Mode.
+
+Connected Mode tiếp tục:
+
+Phase 5: MCP Adapter
+→ expose cùng Execution Context qua MCP tools/resources
+
+Phase 6: Tunnel
+→ transport để chat client ở ngoài máy local có thể reach MCP/runtime khi cần
+
+Phase 7: ChatGPT connection
+→ ChatGPT lấy execution context tự động qua connected path
+```
+
+Status hiện tại:
+
+| Phase | Trạng thái hiện tại |
+| --- | --- |
+| 1. Execution Capture | Implemented cho Servlet baseline |
+| 2. Runtime Observation | Implemented cho Servlet baseline |
+| 3. Source Context | Implemented bằng build-time generation + runtime lookup |
+| 4. Context Query Service | Implemented: `ExecutionQuery`, `ExecutionSummary`, REST query/detail, Explorer, ZIP export |
+| 5. MCP Adapter | Planned |
+| 6. Tunnel | Planned |
+| 7. ChatGPT connection | Planned |
+
+Không được mô tả Phase 5–7 như current implementation trước khi code tương ứng tồn tại và được validate.
+
+### 22A.2 `ExperimentContext` là contract dùng chung
+
+Conceptual model:
+
+```text
+ExperimentContext
+├── execution
+│   ├── executionId
+│   ├── handler/controller/method
+│   ├── request
+│   ├── response
+│   ├── logs
+│   ├── exception
+│   └── duration
+└── sourceContext
+    ├── controller source
+    ├── documentation
+    └── related source
+```
+
+Source index dùng method signature identity để không collision khi controller overload method:
+
+```text
+ControllerFqcn#method(TypeA,TypeB)
+```
+
+Phase 3 output hiện được package vào application artifact dưới:
+
+```text
+META-INF/execution-context/source-context.json
+```
+
+Điều này cho phép runtime lookup source context khi chạy bằng `bootRun`, Docker hoặc executable JAR mà không cần source tree nằm cạnh process.
+
+### 22A.3 Hai hướng user có thể dùng với công cụ chat AI
+
+Sau Phase 1–4, user có **hai hướng độc lập**. Đây là product/architecture requirement, không chỉ là lựa chọn UI.
+
+#### Hướng A — Manual Mode
+
+User muốn AI hỗ trợ nhưng không muốn MCP/tunnel:
+
+Đây là branch sau Phase 4, không phải một phase đánh số riêng trong roadmap 7 phase. Servlet adapter hiện đã có REST JSON detail và ZIP exporter.
+
+```text
+Execute API/application
+        ↓
+Execution Context Core
+        ↓
+Phase 4: Context Query Service
+        ↓
+AI Context Exporter
+        ↓
+REST JSON / ZIP bundle
+        ↓
+upload thủ công vào ChatGPT / Claude / Gemini / chat AI khác
+```
+
+Manual Mode phải có thể hoạt động mà không cần:
+
+```text
+MCP
+tunnel
+OpenAI API key
+ChatGPT-specific runtime dependency
+```
+
+Artifact khuyến nghị là **AI Context Bundle** chứa source, request/response, logs, exception, timing và documentation liên quan. Compiled JAR có thể là file bổ sung nếu cần, nhưng không nên là format context chính vì chat AI sẽ phải tự extract/decompile để tìm lại những thông tin repository đã biết sẵn.
+
+#### Hướng B — Connected Mode
+
+User muốn trải nghiệm tự động:
+
+Đây là nhánh tiếp tục roadmap bằng Phase 5–7 sau Phase 4 dùng chung.
+
+```text
+Execute API/application
+        ↓
+Execution Context Core
+        ↓
+Phase 4: Context Query Service
+        ↓
+Phase 5: MCP Adapter
+        ↓
+Phase 6: Tunnel/transport khi cần
+        ↓
+Phase 7: ChatGPT connection
+        ↓
+"phân tích lần execution vừa chạy"
+```
+
+ChatGPT khi đó query context thay vì user phải tải/upload bundle thủ công.
+
+Hai hướng dùng **cùng một `ExperimentContext`**:
+
+```text
+                         Execution Context Core
+                                  │
+                         ExperimentContext
+                                  │
+                       Phase 4 Query Service
+                                  │
+                  ┌───────────────┴───────────────┐
+                  │                               │
+                  ▼                               ▼
+          Manual AI Exporter                  MCP Adapter
+                  │                               │
+          REST JSON / ZIP                       Tunnel
+                  │                               │
+                  ▼                               ▼
+        Upload to chat AI                     ChatGPT
+```
+
+Manual exporter và MCP adapter là **consumer/adapter**, không được sở hữu lại logic capture, log correlation hoặc source scanning.
+
+Phase 4 hiện có thêm **Execution Context Explorer** độc lập với Swagger. Explorer dùng `ExecutionSummary` cho table/search, multi-select execution để bulk export, và chỉ load `ExperimentContext` khi xem detail hoặc export.
+
+Swagger chỉ giữ quick action theo từng operation:
+
+```text
+[ Execute ]
+[ View last execution ]
+[ Export this execution ]
+```
+
+History, search/filter, multi-select và bulk export thuộc Execution Context Explorer.
+
+### 22A.4 Phase 4 implementation hiện tại
+
+Phase 4 được chia thành **neutral query contract trong core** và **Servlet/Web adapter**. Query contract không phụ thuộc Swagger UI hay chat vendor.
+
+Core hiện có:
+
+```text
+ExecutionQuery
+ExecutionSummary
+ExecutionQueryService
+DefaultExecutionQueryService
+```
+
+`ExecutionQuery` hỗ trợ các tiêu chí hiện tại:
+
+```text
+limit
+from / to
+search
+httpMethod
+path
+controller
+method
+status
+failed
+minDuration / maxDuration
+```
+
+`ExecutionSummary` cố ý chỉ chứa dữ liệu nhẹ phục vụ list/search như execution id, thời gian, HTTP method/path, handler, status, duration, failed flag và log count. `ExperimentContext` đầy đủ chỉ được resolve khi cần xem detail, export hoặc cấp context cho AI consumer.
+
+Servlet adapter expose query/detail API:
+
+```text
+GET /execution-context/api/executions
+GET /execution-context/api/executions/latest
+GET /execution-context/api/executions/{executionId}
+```
+
+Export API hiện có:
+
+```text
+GET  /execution-context/api/executions/{executionId}/export
+POST /execution-context/api/export
+```
+
+`POST /execution-context/api/export` hỗ trợ export theo explicit `executionIds` hoặc theo `ExecutionQuery`, nhờ đó Explorer có thể bulk export nhiều execution mà không cần duplicate filtering logic ở frontend.
+
+ZIP bundle hiện có structure chính:
+
+```text
+manifest.json
+executions/<executionId>/context.json
+executions/<executionId>/logs.txt
+executions/<executionId>/source/controller-method.java
+executions/<executionId>/source/documentation.txt
+executions/<executionId>/source/related/*.java
+```
+
+`Execution Context Explorer` được serve tại:
+
+```text
+/execution-context/explorer.html
+```
+
+Explorer sở hữu history/search/time range, detail view, multi-select và bulk export. Đây là UI chính cho việc điều tra execution history; Swagger không được biến thành execution-history dashboard.
+
+Swagger integration chỉ là một adapter tiện ích phía UI. Khi Execution Context runtime có mặt, `DynamicSwaggerRegistrar` đánh dấu operation bằng:
+
+```text
+x-execution-context-enabled=true
+```
+
+Custom Swagger plugin wrap component `execute` của Swagger UI và bổ sung hai action cạnh nút Execute:
+
+```text
+[ Execute ] [ View last execution ] [ Export this execution ]
+```
+
+`View last execution` query execution gần nhất bằng `path + httpMethod` rồi mở Explorer theo `executionId`. `Export this execution` dùng cùng query contract để tải ZIP của execution tương ứng. Nếu Swagger đã có response, nút native `Clear` vẫn do Swagger sở hữu và có thể xuất hiện cùng hàng.
+
+Các endpoint `/execution-context/**` bị loại khỏi OpenAPI group để tránh Execution Context tự xuất hiện như learning/business API trong Swagger.
+
+Phase 4 hiện vẫn query trên store runtime hiện tại; persistence ngoài process chưa phải current capability. Vì vậy restart application sẽ mất execution history đang nằm trong in-memory store.
+
+### 22A.5 Boundary với Swagger
+
+Relationship đúng:
+
+```text
+Swagger UI ───────┐
+                  │ normal HTTP request
+                  ▼
+        Execution Context Core
+                  │
+        ┌─────────┴─────────┐
+        ▼                   ▼
+   AI Exporter         MCP / Query Adapter
+```
+
+Không phải:
+
+```text
+Execution Context
+        ↓
+Swagger
+        ↓
+MCP / AI
+```
+
+Nhờ boundary này, Execution Context vẫn reusable cho application không dùng Swagger và có thể phát triển thành library độc lập.
+
+### 22A.6 Giới hạn propagation hiện tại
+
+Servlet baseline hiện correlation tốt với request thread và thread mới kế thừa context. Existing executor pools, một số `@Async`/`CompletableFuture` flow hoặc reactive context cần propagation adapter riêng.
+
+Không được coi `InheritableThreadLocal` là lời giải tổng quát cho mọi concurrency model. Khi mở rộng Phase 2, propagation phải được thiết kế theo execution model tương ứng.
+
+---
+
 ## 23. Docker architecture
 
 Docker setup hiện sử dụng **physical capability detection**:
@@ -1169,6 +1521,8 @@ trừ khi architecture contract của artifact đó được thay đổi rõ rà
 | Suggested composed config | dependency/application YML inputs | `application-merged.yml` |
 | Build plugin registry input | plugin definitions/generator inputs | `ProjectPluginEnum` |
 | Repository structure | filesystem/module discovery | `STRUCTURE.md` |
+| Execution Context enablement | `BUILD_EXECUTION_CONTEXT` | orchestration/runtime dependency selection |
+| Execution source context | Java source + build-time scanner/generator | `META-INF/execution-context/source-context.json` |
 
 ---
 
@@ -1303,6 +1657,10 @@ Các invariant dưới đây phản ánh architecture hiện tại và nên đư
 18. `SERVLET` mặc định dùng Spring MVC starter; `REACTIVE` mặc định dùng Spring WebFlux starter.
 19. Swagger runtime core phải stack-neutral; MVC/WebFlux-specific code và UI starter thuộc adapter tương ứng.
 20. `BUILD_SWAGGER=TRUE` chọn đúng một Java runtime adapter theo `MODULE_TYPE`, trong khi YML composition dùng chung `GLOBAL_SWAGGER_CONFIG`.
+21. Execution Context độc lập với Swagger và không được phụ thuộc OpenAPI/springdoc chỉ để capture execution.
+22. Phase 1–4 tạo reusable capture/source/query capability; exporter và MCP chỉ consume query contract này, không duplicate capture/source logic.
+23. User dùng chat AI phải có hai hướng sau Phase 4: Manual Mode bằng REST JSON/ZIP upload và Connected Mode qua Phase 5–7.
+24. Phase 5–7 là roadmap planned cho tới khi implementation tương ứng tồn tại và được validate.
 
 ---
 
@@ -1425,6 +1783,10 @@ Generated build/documentation artifacts
 Application artifacts
         ↓
 Shared Spring Boot runtime capabilities
+        │
+        ├── Swagger core + web-stack adapters
+        │
+        └── Execution Context core + Servlet adapter
 ```
 
 Vai trò của ba phần infrastructure chính có thể tóm gọn:
@@ -1442,6 +1804,18 @@ project-build/springboot-runtime
 
 `module/` đứng phía consumer của kiến trúc này và vẫn giữ quyền sở hữu nội dung học tập/application cụ thể của từng module.
 
+Execution Context bổ sung một đường dữ liệu khác từ runtime thực tế sang công cụ phân tích:
+
+```text
+Application execution
+        ↓
+Phase 1–4 Execution Context Core + Query Layer
+        ↓
+ExperimentContext
+        ├── Manual Mode → ZIP/JSON → upload vào chat AI
+        └── Connected Mode → Context Query → MCP → Tunnel → ChatGPT
+```
+
 ---
 
 ## 36. Evidence boundary
@@ -1454,6 +1828,8 @@ Bản tài liệu này được xây dựng từ source thực tế của:
 - `project-orchestration`;
 - `project-build/gradle-runtime`;
 - `project-build/springboot-runtime/swagger`;
+- `project-build/springboot-runtime/execution-context`;
+- `project-build/springboot-runtime/execution-context-servlet`;
 - canonical automation/task resources;
 - generated plugin/catalog flow đã được kiểm tra;
 - Gradle configuration flow đã được chạy bằng repository Gradle Wrapper 8.5.

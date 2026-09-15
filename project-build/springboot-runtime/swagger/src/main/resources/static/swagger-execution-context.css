@@ -1,0 +1,34 @@
+.execution-context-action {
+    border: 1px solid #1f6feb;
+    border-radius: 4px;
+    background: white;
+    color: #1f6feb;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 10px;
+}
+
+.swagger-ui .execute-wrapper {
+    display: flex;
+    gap: 8px;
+}
+
+.swagger-ui .execute-wrapper > .btn {
+    flex: 1 1 0;
+    width: auto;
+    margin: 0;
+}
+
+.execution-context-action:hover {
+    background: #f0f6ff;
+}
+
+.execution-context-action.export {
+    background: #1f6feb;
+    color: white;
+}
+
+.execution-context-action.export:hover {
+    background: #195fbf;
+}

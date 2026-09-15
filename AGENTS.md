@@ -220,6 +220,8 @@ ReadmeSetupPlugin    if enabled
     ↓
 SwaggerSetupPlugin   if enabled
     ↓
+ExecutionContextSetupPlugin if BUILD_EXECUTION_CONTEXT=TRUE
+    ↓
 TaskSetupPlugin      if USE_TASK=TRUE
     ↓
 DockerSetupPlugin    if docker-compose.yml exists
@@ -349,6 +351,7 @@ BUILD_YML
 BUILD_README
 BUILD_TESTER
 BUILD_SWAGGER
+BUILD_EXECUTION_CONTEXT
 BUILD_DATABASE_MODULE
 ADD_MODULE_DEPEND
 USE_DATABASE
@@ -493,6 +496,7 @@ module-structure.txt
 task.gradle
 application-merged.yml
 generated README/menu fragments
+META-INF/execution-context/source-context.json
 ```
 
 Generated output must prefer:
@@ -935,6 +939,292 @@ YML composition
 
 ---
 
+## 26A. Execution Context and AI integration roadmap
+
+Execution Context is an independent capability. Swagger may be one UI that triggers an HTTP request, but Execution Context must not depend on OpenAPI, springdoc, Swagger UI, GPT, MCP, or tunnel infrastructure.
+
+Current implementation boundaries:
+
+```text
+project-build/springboot-runtime/execution-context
+    → stack-neutral execution model/store/service/source lookup
+
+project-build/springboot-runtime/execution-context-servlet
+    → Spring MVC / Servlet request, response, handler and log capture
+
+project-build/gradle-runtime
+    → build-time source-context generation
+```
+
+Current service identities:
+
+```text
+GLOBAL_EXECUTION_CONTEXT
+GLOBAL_EXECUTION_CONTEXT_SERVLET
+```
+
+Current Servlet enablement:
+
+```text
+BUILD_EXECUTION_CONTEXT=TRUE
+        ↓
+GLOBAL_EXECUTION_CONTEXT_SERVLET
+        ↓
+GLOBAL_EXECUTION_CONTEXT
+```
+
+Reactive support is not yet implemented. Do not claim that `execution-context-reactive` exists until it is actually added and validated.
+
+The seven-phase roadmap is:
+
+```text
+CORE — independent from chat AI
+────────────────────────────────────────────
+
+Phase 1: Execution Capture
+→ identify the API/controller method that executed
+→ capture request / response
+→ capture status / duration / exception
+→ assign and preserve executionId correlation
+
+Phase 2: Runtime Observation
+→ capture logs correlated by executionId
+→ capture thread information
+→ capture System.out / System.err when enabled
+→ support async/virtual-thread observations where propagation is available
+
+Phase 3: Source Context
+→ capture/index Controller method source
+→ include related Service source where resolvable
+→ include Javadoc/README/annotation/config context when available
+→ generate source metadata at build time and consume it at runtime
+
+Phase 4: Context Query Service
+→ query latest/by-id/recent/time-range/filterable execution history
+→ return lightweight ExecutionSummary for list/search
+→ return ExperimentContext for detail/export/AI consumers
+
+CONNECTED MODE — automatic chat integration
+────────────────────────────────────────────
+
+Phase 5: MCP Adapter
+→ map Execution Context queries to MCP tools/resources
+
+Phase 6: Tunnel
+→ provide reachable transport from the local runtime to the remote chat client when required
+
+Phase 7: ChatGPT connection
+→ let ChatGPT retrieve execution context through the connected MCP path
+```
+
+Current implementation status:
+
+```text
+Phase 1  implemented for Servlet baseline
+Phase 2  implemented for Servlet baseline
+Phase 3  implemented with build-time generated source context + runtime lookup
+Phase 4  implemented with ExecutionQuery/ExecutionSummary/ExecutionQueryService + REST/Explorer/export adapters
+Phase 5  planned
+Phase 6  planned
+Phase 7  planned
+```
+
+Phase 3 currently generates a deterministic classpath artifact:
+
+```text
+META-INF/execution-context/source-context.json
+```
+
+Source identity must include the method signature rather than method name alone so overloaded controller methods cannot collide conceptually:
+
+```text
+ControllerFqcn#method(TypeA,TypeB)
+```
+
+After Phase 1–3, the neutral domain object is conceptually:
+
+```text
+ExperimentContext
+├── execution
+│   ├── executionId
+│   ├── handler/controller/method
+│   ├── request
+│   ├── response
+│   ├── logs
+│   ├── exception
+│   └── duration
+└── sourceContext
+    ├── controller source
+    ├── documentation
+    └── related source
+```
+
+### Two user paths when using chat AI
+
+The user must be able to choose between two independent consumption modes. Do not design the system so using chat AI requires MCP/tunnel infrastructure.
+
+**Path A — Manual Mode / portable AI Context Export**
+
+This branches after Phase 4 and is not a separate numbered phase in the seven-phase roadmap. The current Servlet adapter already exposes REST JSON detail and ZIP bundle export.
+
+```text
+Execute application/API
+        ↓
+Execution Context Core (Phase 1–3)
+        ↓
+Phase 4: Context Query Service
+        ↓
+AI Context Exporter
+        ↓
+REST JSON / ZIP bundle
+        ↓
+user uploads bundle to ChatGPT / Claude / Gemini / another chat AI
+```
+
+This path is intentionally vendor-neutral and should not require:
+
+```text
+MCP
+tunnel
+OpenAI API key
+ChatGPT-specific runtime code
+```
+
+Prefer an AI Context Bundle containing source/context/log information over asking an AI to inspect only a compiled JAR. The application JAR may be optional supporting input, not the primary AI context format.
+
+**Path B — Connected Mode / automatic retrieval**
+
+This path continues after the shared Phase 4 through Phase 5–7.
+
+```text
+Execute application/API
+        ↓
+Execution Context Core (Phase 1–3)
+        ↓
+Phase 4: Context Query Service
+        ↓
+Phase 5: MCP Adapter
+        ↓
+Phase 6: Tunnel/transport when needed
+        ↓
+Phase 7: ChatGPT connection
+        ↓
+chat asks for latest/specific execution without manual upload
+```
+
+Both paths must consume the same `ExperimentContext`. Manual export and MCP are adapters/consumers; neither owns execution capture, runtime observation, or source scanning.
+
+Target dependency direction:
+
+```text
+                       Execution Context Core
+                               │
+                    ExperimentContext
+                               │
+                  Phase 4 Query Service
+                               │
+                ┌──────────────┴──────────────┐
+                │                             │
+                ▼                             ▼
+        Manual AI Exporter                 MCP Adapter
+                │                             │
+        REST JSON / ZIP                    Tunnel
+                │                             │
+                ▼                             ▼
+        upload to any AI                   ChatGPT
+```
+
+Do not put MCP or chat-vendor logic inside `execution-context` core. Do not make `execution-context` depend on Swagger. Do not duplicate Phase 1–4 query/capture logic in an exporter or MCP adapter.
+
+### Phase 4 implementation contract
+
+Keep Phase 4 split between a neutral core query API and web/UI adapters.
+
+Core types currently are:
+
+```text
+ExecutionQuery
+ExecutionSummary
+ExecutionQueryService
+DefaultExecutionQueryService
+```
+
+`ExecutionQuery` currently supports:
+
+```text
+limit
+fromEpochMilli / toEpochMilli
+search
+httpMethod
+path
+controller
+method
+status
+failed
+minDurationMillis / maxDurationMillis
+```
+
+Use `ExecutionSummary` for list/search/history surfaces. Resolve full `ExperimentContext` only for detail, export, or downstream AI consumers. Do not duplicate query predicates in Swagger, Explorer, exporter, or future MCP code.
+
+Current Servlet REST surface:
+
+```text
+GET /execution-context/api/executions
+GET /execution-context/api/executions/latest
+GET /execution-context/api/executions/{executionId}
+GET /execution-context/api/executions/{executionId}/export
+POST /execution-context/api/export
+```
+
+`POST /execution-context/api/export` may export explicit `executionIds` or results selected by an `ExecutionQuery`.
+
+Current ZIP bundle contract includes:
+
+```text
+manifest.json
+executions/<executionId>/context.json
+executions/<executionId>/logs.txt
+executions/<executionId>/source/controller-method.java
+executions/<executionId>/source/documentation.txt
+executions/<executionId>/source/related/*.java
+```
+
+The current standalone UI is:
+
+```text
+/execution-context/explorer.html
+```
+
+Explorer owns execution history, search/time-range filtering, detail inspection, multi-select, and bulk export.
+
+The current store is in-memory. Do not describe execution history as persistent across application restart until a persistent store is implemented and validated.
+
+Swagger integration must stay intentionally narrow per operation:
+
+```text
+[ Execute ]
+[ View last execution ]
+[ Export this execution ]
+```
+
+History/search/filter/multi-select/bulk export belong to the separate Execution Context Explorer, not Swagger UI.
+
+Current Swagger integration contract:
+
+```text
+Execution Context runtime present
+        ↓
+OpenAPI operation gets x-execution-context-enabled=true
+        ↓
+swagger-execution-context.js wraps Swagger UI component `execute`
+        ↓
+[ Execute ] [ View last execution ] [ Export this execution ]
+```
+
+`View last execution` and `Export this execution` must resolve the latest matching execution through the Phase 4 query API by operation path + HTTP method; they must not inspect the in-memory store directly from Swagger code. `/execution-context/**` must remain excluded from the learning/business OpenAPI groups.
+
+---
+
 ## 27. Plugin registry
 
 `ProjectPluginEnum` is a generated plugin registry.
@@ -1343,6 +1633,10 @@ Preserve these unless the user explicitly changes the architecture:
 18. `SERVLET` and `REACTIVE` must not accidentally pull each other's web starter through automatic module-type setup.
 19. Swagger core is stack-neutral; `GLOBAL_SWAGGER_SERVLET` and `GLOBAL_SWAGGER_REACTIVE` own web-stack-specific runtime dependencies.
 20. `BUILD_SWAGGER=TRUE` selects one Java Swagger adapter by `MODULE_TYPE`, while YML composition continues to consume only `GLOBAL_SWAGGER_CONFIG`.
+21. Execution Context is independent from Swagger; Swagger may trigger requests or later expose UI, but it does not own capture/source/log correlation.
+22. Execution Context Phase 1–4 form the reusable capture/source/query capability; manual export and MCP consume the same query contract and `ExperimentContext`.
+23. Chat AI usage must support two paths after Phase 4: manual REST JSON/ZIP export without MCP/tunnel, and connected retrieval through Phase 5–7.
+24. Phase 5–7 are not current runtime facts until their concrete implementations are added and validated.
 
 ---
 
@@ -1424,6 +1718,17 @@ Swagger runtime
 → REACTIVE selects GLOBAL_SWAGGER_REACTIVE
 → YML still composes GLOBAL_SWAGGER_CONFIG
 → Spring Boot AutoConfiguration.imports under META-INF/spring
+
+Execution Context
+→ BUILD_EXECUTION_CONTEXT is an independent capability flag
+→ springboot-runtime/execution-context = neutral core
+→ springboot-runtime/execution-context-servlet = current MVC/Servlet adapter
+→ gradle-runtime generates META-INF/execution-context/source-context.json
+→ Phase 1–3 = Execution Capture + Runtime Observation + Source Context
+→ Manual Mode = export ZIP/JSON and upload to any compatible chat AI
+→ Phase 4 Context Query Service is shared by both modes
+→ Connected Mode = Phase 5 MCP → Phase 6 Tunnel → Phase 7 ChatGPT connection
+→ both modes consume the same ExperimentContext
 
 Do not infer module package architecture globally.
 Inspect only the module/source needed for the task.

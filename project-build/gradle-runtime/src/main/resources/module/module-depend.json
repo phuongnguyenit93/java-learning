@@ -54,6 +54,19 @@
     "AZURE_TRANSLATE": {
         "DESCRIBE": "Translate using Azure service"
     },
+    "GLOBAL_EXECUTION_CONTEXT": {
+        "DESCRIBE": "Stack-neutral execution capture models, store and generated source-context lookup",
+        "api": [
+            "com.fasterxml.jackson.core:jackson-databind"
+        ]
+    },
+    "GLOBAL_EXECUTION_CONTEXT_SERVLET": {
+        "DESCRIBE": "Spring MVC/Servlet adapter for execution capture, log correlation and source-context lookup",
+        "api": [
+            "org.springframework.boot:spring-boot-autoconfigure",
+            "org.springframework:spring-webmvc"
+        ]
+    },
     "GLOBAL_SWAGGER_CONFIG": {
         "DESCRIBE": "Stack-neutral Swagger core configuration shared by Servlet and Reactive adapters",
         "api": [

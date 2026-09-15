@@ -13,6 +13,11 @@
             rel="stylesheet"
             href="swagger-youtube.css"
     />
+
+    <link
+            rel="stylesheet"
+            href="swagger-execution-context.css"
+    />
 </head>
 
 <body>
@@ -28,6 +33,8 @@
         ? `/${contextPath}`
         : "";
 
+    window.swaggerBasePath = basePath;
+
     function loadScript(src) {
         const script = document.createElement("script");
         script.src = src;
@@ -38,6 +45,7 @@
     loadScript(`${basePath}/swagger-ui/swagger-ui-standalone-preset.js`);
     loadScript(`${basePath}/swagger-readme-config.js`);
     loadScript(`${basePath}/swagger-youtube.js`);
+    loadScript(`${basePath}/swagger-execution-context.js`);
 
     window.onload = function () {
         window.ui = SwaggerUIBundle({
@@ -54,7 +62,8 @@
 
             plugins: [
                 SwaggerUIBundle.plugins.DownloadUrl,
-                YoutubePlugin
+                YoutubePlugin,
+                ExecutionContextPlugin
             ],
 
             layout: "StandaloneLayout"

@@ -47,7 +47,7 @@ Một **real module** được nhận diện bằng local `gradle.properties`.
    SERVICE_NAME       = logical name duy nhất
    ```
 
-   Bật capability cần dùng bằng các flag như `BUILD_YML`, `BUILD_ENV`, `BUILD_README`, `USE_TASK`, `ADD_MODULE_DEPEND`, `USE_DATABASE`, `BUILD_SWAGGER`.
+   Bật capability cần dùng bằng các flag như `BUILD_YML`, `BUILD_ENV`, `BUILD_README`, `USE_TASK`, `ADD_MODULE_DEPEND`, `USE_DATABASE`, `BUILD_SWAGGER`, `BUILD_EXECUTION_CONTEXT`.
 
 4. Reload Gradle lần nữa để tạo structure/capability tương ứng. `SERVLET`, `REACTIVE` và `LIBRARY` có Java/resource structure; `SERVLET` và `REACTIVE` được khởi tạo main class nếu chưa tồn tại. `SERVLET` dùng Spring MVC, `REACTIVE` dùng Spring WebFlux.
 
@@ -89,6 +89,24 @@ REACTIVE
 ```
 
 Hai adapter đều phụ thuộc `GLOBAL_SWAGGER_CONFIG`. Java dependency chọn adapter theo `MODULE_TYPE`, trong khi `combineYaml` chỉ merge `GLOBAL_SWAGGER_CONFIG/application-module.yml` để tránh duplicate Swagger configuration.
+
+### Execution Context / AI
+
+`BUILD_EXECUTION_CONTEXT=TRUE` tạo context của một lần chạy gồm request/response, log/runtime và source liên quan.
+
+```text
+Phase 1–4: Capture → Observation → Source → Query          [implemented]
+Phase 5–7: MCP → Tunnel → ChatGPT                          [planned]
+```
+
+User có 2 cách dùng với chat AI:
+
+```text
+Manual Mode    → Explorer/REST → ZIP/JSON → upload vào chat AI
+Connected Mode → MCP + tunnel → ChatGPT tự lấy context
+```
+
+Hai hướng dùng chung một `ExperimentContext`; Swagger chỉ có thể là nơi trigger request, không sở hữu capability này.
 
 ### ENV
 

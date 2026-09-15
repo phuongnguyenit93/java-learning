@@ -55,6 +55,11 @@
         "VALUE": "TRUE",
         "GROUP": "SWAGGER"
     },
+    "BUILD_EXECUTION_CONTEXT": {
+        "DESCRIPTION": "Enable execution capture, runtime observation and generated source context for AI/manual analysis",
+        "TYPE": "boolean",
+        "VALUE": "TRUE"
+    },
     "BUILD_DATABASE_MODULE": {
         "DESCRIPTION": "To defined this module is module that config database",
         "TYPE": "boolean",

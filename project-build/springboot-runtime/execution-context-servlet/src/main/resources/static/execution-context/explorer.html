@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Execution Context Explorer</title>
+    <link rel="stylesheet" href="explorer.css">
+</head>
+<body>
+<main class="page">
+    <header class="page-header">
+        <div>
+            <h1>Execution Context Explorer</h1>
+            <p>Search runtime executions, inspect detail, and export selected contexts for AI analysis.</p>
+        </div>
+        <button id="refreshButton" type="button" class="secondary">Refresh</button>
+    </header>
+
+    <section class="panel query-panel">
+        <form id="queryForm">
+            <label class="search-field">
+                <span>Search</span>
+                <input id="searchInput" type="search" placeholder="execution id, path, controller, method...">
+            </label>
+
+            <label>
+                <span>From</span>
+                <input id="fromInput" type="datetime-local">
+            </label>
+
+            <label>
+                <span>To</span>
+                <input id="toInput" type="datetime-local">
+            </label>
+
+            <label>
+                <span>Limit</span>
+                <select id="limitInput">
+                    <option value="5">5</option>
+                    <option value="20" selected>20</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+            </label>
+
+            <button type="submit">Search</button>
+        </form>
+    </section>
+
+    <section class="panel results-panel">
+        <div class="result-actions">
+            <div>
+                <strong id="resultCount">0 executions</strong>
+                <span id="selectionCount">0 selected</span>
+            </div>
+            <button id="exportSelectedButton" type="button" disabled>Export selected</button>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                <tr>
+                    <th class="checkbox-cell"><input id="selectAllInput" type="checkbox" aria-label="Select all"></th>
+                    <th>Started</th>
+                    <th>HTTP</th>
+                    <th>Path</th>
+                    <th>Handler</th>
+                    <th>Status</th>
+                    <th>Duration</th>
+                    <th>Logs</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody id="executionRows"></tbody>
+            </table>
+        </div>
+
+        <p id="emptyState" class="empty-state" hidden>No execution matches the current query.</p>
+    </section>
+
+    <section id="detailPanel" class="panel detail-panel" hidden>
+        <div class="detail-header">
+            <div>
+                <h2>Execution detail</h2>
+                <code id="detailExecutionId"></code>
+            </div>
+            <div class="detail-actions">
+                <button id="exportDetailButton" type="button">Export this execution</button>
+                <button id="closeDetailButton" type="button" class="secondary">Close</button>
+            </div>
+        </div>
+        <pre id="detailContent"></pre>
+    </section>
+
+    <div id="message" class="message" hidden></div>
+</main>
+
+<script src="explorer.js"></script>
+</body>
+</html>

@@ -20,6 +20,11 @@
         "implementationClass": "com.example.learning.setup.module.env.plugin.EnvSetupPlugin"
     },
     {
+        "name": "executionContextSetupPlugin",
+        "id": "com.example.learning.setup.module.executioncontext.plugin",
+        "implementationClass": "com.example.learning.setup.module.executioncontext.plugin.ExecutionContextSetupPlugin"
+    },
+    {
         "name": "readmeSetupPlugin",
         "id": "com.example.learning.setup.module.readme.plugin",
         "implementationClass": "com.example.learning.setup.module.readme.plugin.ReadmeSetupPlugin"

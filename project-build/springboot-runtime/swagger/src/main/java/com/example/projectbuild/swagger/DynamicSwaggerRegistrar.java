@@ -21,6 +21,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.type.AnnotationMetadata;
+import org.springframework.util.ClassUtils;
 
 import java.io.InputStream;
 import java.io.IOException;
@@ -38,6 +39,8 @@ public class DynamicSwaggerRegistrar implements ImportBeanDefinitionRegistrar , 
     private final ObjectMapper yamlMapper = new ObjectMapper(new YAMLFactory());
     private static final Pattern YOUTUBE_VIDEO_ID_PATTERN =
             Pattern.compile("^[A-Za-z0-9_-]{11}$");
+    private static final String EXECUTION_CONTEXT_SERVICE_CLASS =
+            "com.example.projectbuild.executioncontext.service.ExecutionContextService";
 
     @Override
     public void setEnvironment(Environment environment) {
@@ -70,6 +73,7 @@ public class DynamicSwaggerRegistrar implements ImportBeanDefinitionRegistrar , 
                         .group(trimmedLang)
                         .displayName("Ngôn ngữ: " + trimmedLang.toUpperCase())
                         .pathsToMatch("/**")
+                        .pathsToExclude("/execution-context/**")
                         .addOperationCustomizer(addExtension())
                         .addOpenApiCustomizer(customerGlobalOpenApiCustomizer(trimmedLang))
                         .build()
@@ -89,6 +93,16 @@ public class DynamicSwaggerRegistrar implements ImportBeanDefinitionRegistrar , 
                     "x-controller-name",
                     controllerName
             );
+
+            if (ClassUtils.isPresent(
+                    EXECUTION_CONTEXT_SERVICE_CLASS,
+                    handlerMethod.getBeanType().getClassLoader()
+            )) {
+                operation.addExtension(
+                        "x-execution-context-enabled",
+                        true
+                );
+            }
 
             return operation;
         };

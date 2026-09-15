@@ -35,6 +35,11 @@ enum ProjectPluginEnum {
             'com.example.learning.setup.module.env.plugin.EnvSetupPlugin'
     ),
 
+    EXECUTION_CONTEXT_SETUP_PLUGIN(
+            'com.example.learning.setup.module.executioncontext.plugin',
+            'com.example.learning.setup.module.executioncontext.plugin.ExecutionContextSetupPlugin'
+    ),
+
     README_SETUP_PLUGIN(
             'com.example.learning.setup.module.readme.plugin',
             'com.example.learning.setup.module.readme.plugin.ReadmeSetupPlugin'

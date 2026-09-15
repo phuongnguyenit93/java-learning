@@ -174,6 +174,24 @@ enum ModuleListEnum {
             []
     ),
 
+    GLOBAL_EXECUTION_CONTEXT(
+            'project-build:springboot-runtime:execution-context',
+            'project-build/springboot-runtime/execution-context',
+            'LIBRARY',
+            'Stack-neutral execution capture models, store and generated source-context lookup',
+            true,
+            []
+    ),
+
+    GLOBAL_EXECUTION_CONTEXT_SERVLET(
+            'project-build:springboot-runtime:execution-context-servlet',
+            'project-build/springboot-runtime/execution-context-servlet',
+            'LIBRARY',
+            'Spring MVC/Servlet adapter for execution capture, log correlation and source-context lookup',
+            true,
+            ['GLOBAL_EXECUTION_CONTEXT']
+    ),
+
     GLOBAL_SWAGGER_CONFIG(
             'project-build:springboot-runtime:swagger',
             'project-build/springboot-runtime/swagger',
