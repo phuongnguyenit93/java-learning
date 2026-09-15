@@ -1,3 +1,30 @@
+# 📂 README MODULE STRUCTURE (VI)
+
+* **1.Basic**
+    * [Basic](readme/vi/menu/1.Basic/Basic.md)
+* **2.Interruption**
+    * [Interruption](readme/vi/menu/2.Interruption/Interruption.md)
+* **3.Concurrency_Problems**
+    * [ConcurrencyProblem](readme/vi/menu/3.Concurrency_Problems/ConcurrencyProblem.md)
+* **4.Synchronization**
+    * [Synchronization](readme/vi/menu/4.Synchronization/Synchronization.md)
+* **5.Coordination**
+    * [Coordination](readme/vi/menu/5.Coordination/Coordination.md)
+* **6.Thread_Pool_Executor**
+    * [ThreadPoolExecutor](readme/vi/menu/6.Thread_Pool_Executor/ThreadPoolExecutor.md)
+* **7.Async**
+    * [Async](readme/vi/menu/7.Async/Async.md)
+* **8.Context**
+    * [ThreadLocal](readme/vi/menu/8.Context/ThreadLocal.md)
+* **9.Spring_Task_Executor**
+    * [SpringExecutor](readme/vi/menu/9.Spring_Task_Executor/SpringExecutor.md)
+* **10.Leak**
+    * [Leak](readme/vi/menu/10.Leak/Leak.md)
+* **11.Virtual_Thread**
+    * [VirtualThread](readme/vi/menu/11.Virtual_Thread/VirtualThread.md)
+* **12.Q&A**
+    * [Q&A](readme/vi/menu/12.Q&A/Q&A.md)
+
 # Thread & Concurrency
 
 Module này được xây dựng để học Thread và Concurrency theo hướng **từ nền tảng → vấn đề thực tế → công cụ xử lý → cách áp dụng trong Spring Boot**.
@@ -324,30 +351,3 @@ Mỗi experiment cần hướng tới các tiêu chí:
 3. Kết quả đủ rõ để quan sát và lặp lại.
 4. Thread, executor và resource được cleanup đúng lifecycle.
 5. README, endpoint và code có cùng một ý nghĩa.
-
-# 📂 README MODULE STRUCTURE (VI)
-
-* **1.Basic**
-    * [Basic](readme/vi/menu/1.Basic/Basic.md)
-* **2.Interruption**
-    * [Interruption](readme/vi/menu/2.Interruption/Interruption.md)
-* **3.Concurrency_Problems**
-    * [ConcurrencyProblem](readme/vi/menu/3.Concurrency_Problems/ConcurrencyProblem.md)
-* **4.Synchronization**
-    * [Synchronization](readme/vi/menu/4.Synchronization/Synchronization.md)
-* **5.Coordination**
-    * [Coordination](readme/vi/menu/5.Coordination/Coordination.md)
-* **6.Thread_Pool_Executor**
-    * [ThreadPoolExecutor](readme/vi/menu/6.Thread_Pool_Executor/ThreadPoolExecutor.md)
-* **7.Async**
-    * [Async](readme/vi/menu/7.Async/Async.md)
-* **8.Context**
-    * [ThreadLocal](readme/vi/menu/8.Context/ThreadLocal.md)
-* **9.Spring_Task_Executor**
-    * [SpringExecutor](readme/vi/menu/9.Spring_Task_Executor/SpringExecutor.md)
-* **10.Leak**
-    * [Leak](readme/vi/menu/10.Leak/Leak.md)
-* **11.Virtual_Thread**
-    * [VirtualThread](readme/vi/menu/11.Virtual_Thread/VirtualThread.md)
-* **12.Q&A**
-    * [Q&A](readme/vi/menu/12.Q&A/Q&A.md)

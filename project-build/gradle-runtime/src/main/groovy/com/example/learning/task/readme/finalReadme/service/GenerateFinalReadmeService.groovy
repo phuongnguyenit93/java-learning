@@ -480,9 +480,9 @@ ${baseFile.absolutePath}
 
 
         String finalContent =
-                baseContent +
+                listContent +
                         '\n\n' +
-                        listContent +
+                        baseContent +
                         '\n'
 
 

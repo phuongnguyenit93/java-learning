@@ -300,9 +300,6 @@ public class DynamicSwaggerRegistrar implements ImportBeanDefinitionRegistrar , 
                         .path("enableVideoYoutube")
                         .asBoolean(false);
 
-        System.out.println("enableVideoYoutube");
-        System.out.println(enableVideoYoutube);
-
         if (!enableVideoYoutube) {
             return;
         }
