@@ -14,6 +14,8 @@ class SwaggerDescriptionDefault {
 
     final String controllerDescriptionParagraph
 
+    final String execution
+
 
     SwaggerDescriptionDefault(
             String summary,
@@ -21,7 +23,8 @@ class SwaggerDescriptionDefault {
             boolean enableVideoYoutube,
             String videoYoutubeId,
             String videoYoutubeTitle,
-            String controllerDescriptionParagraph
+            String controllerDescriptionParagraph,
+            String execution
     ) {
 
         this.summary =
@@ -41,5 +44,8 @@ class SwaggerDescriptionDefault {
 
         this.controllerDescriptionParagraph =
                 controllerDescriptionParagraph
+
+        this.execution =
+                execution
     }
 }

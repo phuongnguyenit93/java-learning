@@ -3,19 +3,26 @@ package com.example.learning.task.swagger.service
 import com.example.learning.task.swagger.model.SwaggerApiMetadata
 import com.example.learning.task.swagger.model.SwaggerDescriptionDefault
 import com.example.learning.task.swagger.model.SwaggerScanResult
+import org.gradle.api.logging.Logger
+import org.gradle.api.logging.Logging
 import org.yaml.snakeyaml.DumperOptions
 import org.yaml.snakeyaml.Yaml
 
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
+import java.util.regex.Pattern
 
 class SwaggerYamlMergeService {
+
+    private static final Logger LOGGER =
+            Logging.getLogger(SwaggerYamlMergeService)
 
     private static final Set<String> API_HUMAN_FIELDS = [
             'summary',
             'description',
             'videoYoutubeId',
-            'videoYoutubeTitle'
+            'videoYoutubeTitle',
+            'readmeRelated'
     ] as Set
 
     private final Yaml reader
@@ -77,6 +84,13 @@ ${swaggerDirectory.absolutePath}
                 )
 
 
+        File apiExecutionFile =
+                new File(
+                        swaggerDirectory,
+                        'api-execution.yml'
+                )
+
+
         /*
          * LOAD TRƯỚC.
          *
@@ -101,6 +115,12 @@ ${swaggerDirectory.absolutePath}
                 )
 
 
+        Map<String, Object> apiExecutionData =
+                loadMap(
+                        apiExecutionFile
+                )
+
+
         mergeApiData(
                 apiData,
                 scanResult,
@@ -122,8 +142,22 @@ ${swaggerDirectory.absolutePath}
         )
 
 
+        mergeApiExecutionData(
+                apiExecutionData,
+                scanResult,
+                defaults
+        )
+
+
+        validateReadmeRelationships(
+                swaggerDirectory,
+                controllerDescriptionData,
+                apiData
+        )
+
+
         /*
-         * Dump cả ba trước khi write.
+         * Dump toàn bộ trước khi write.
          */
         String apiYaml =
                 writer.dump(
@@ -143,6 +177,12 @@ ${swaggerDirectory.absolutePath}
                 )
 
 
+        String apiExecutionYaml =
+                writer.dump(
+                        apiExecutionData
+                )
+
+
         writeSafely(
                 apiFile,
                 apiYaml
@@ -159,6 +199,456 @@ ${swaggerDirectory.absolutePath}
                 controllerDescriptionFile,
                 controllerDescriptionYaml
         )
+
+
+        writeSafely(
+                apiExecutionFile,
+                apiExecutionYaml
+        )
+    }
+
+
+    private static void validateReadmeRelationships(
+            File swaggerDirectory,
+            Map<String, Object> controllerDescriptionData,
+            Map<String, Object> apiData
+    ) {
+
+        File projectDirectory =
+                resolveProjectDirectory(
+                        swaggerDirectory
+                )
+
+
+        if (projectDirectory == null) {
+            return
+        }
+
+
+        String language =
+                swaggerDirectory.name
+
+
+        File menuDirectory =
+                new File(
+                        projectDirectory,
+                        "readme/${language}/menu"
+                )
+
+
+        controllerDescriptionData.each {
+            String controllerName,
+            Object controllerValue ->
+
+                Map<String, Object> controllerEntry =
+                        requireMap(
+                                controllerValue,
+                                "Invalid Swagger controller description entry: ${controllerName}"
+                        )
+
+
+                String controllerFile =
+                        readReadmeField(
+                                controllerEntry,
+                                'file'
+                        )
+
+
+                if (
+                        controllerFile != null &&
+                                !controllerFile.isBlank() &&
+                                !isValidReadmeFile(
+                                        menuDirectory,
+                                        controllerFile
+                                )
+                ) {
+
+                    warnReadmeMapping(
+                            language,
+                            controllerName,
+                            'INVALID_FILE',
+                            controllerFile,
+                            null
+                    )
+                }
+
+
+                Object apiControllerValue =
+                        apiData[
+                                controllerName
+                        ]
+
+
+                if (apiControllerValue == null) {
+                    return
+                }
+
+
+                Map<String, Object> apiController =
+                        requireMap(
+                                apiControllerValue,
+                                "Invalid Swagger API controller entry: ${controllerName}"
+                        )
+
+
+                apiController.each {
+                    String methodSignature,
+                    Object methodValue ->
+
+                        Map<String, Object> methodEntry =
+                                requireMap(
+                                        methodValue,
+                                        "Invalid Swagger API entry: ${controllerName}#${methodSignature}"
+                                )
+
+
+                        String anchor =
+                                readReadmeField(
+                                        methodEntry,
+                                        'anchor'
+                                )
+
+
+                        if (
+                                anchor == null ||
+                                        anchor.isBlank()
+                        ) {
+                            return
+                        }
+
+
+                        String methodFile =
+                                readReadmeField(
+                                        methodEntry,
+                                        'file'
+                                )
+
+
+                        String resolvedFile =
+                                methodFile != null &&
+                                        !methodFile.isBlank()
+                                        ? methodFile
+                                        : controllerFile
+
+
+                        if (
+                                resolvedFile == null ||
+                                        resolvedFile.isBlank() ||
+                                        !isValidReadmeFile(
+                                                menuDirectory,
+                                                resolvedFile
+                                        )
+                        ) {
+
+                            warnReadmeMapping(
+                                    language,
+                                    "${controllerName}#${methodSignature}",
+                                    'INVALID_FILE',
+                                    resolvedFile,
+                                    anchor
+                            )
+
+                            return
+                        }
+
+
+                        File readmeFile =
+                                new File(
+                                        menuDirectory,
+                                        normalizeReadmeFile(
+                                                resolvedFile
+                                        )
+                                )
+
+
+                        String markdown =
+                                readmeFile.getText(
+                                        'UTF-8'
+                                )
+
+
+                        if (
+                                !containsReadmeAnchor(
+                                        markdown,
+                                        anchor
+                                )
+                        ) {
+
+                            warnReadmeMapping(
+                                    language,
+                                    "${controllerName}#${methodSignature}",
+                                    'INVALID_ANCHOR',
+                                    resolvedFile,
+                                    anchor
+                            )
+                        }
+                }
+        }
+    }
+
+
+    private static File resolveProjectDirectory(
+            File swaggerDirectory
+    ) {
+
+        File current =
+                swaggerDirectory
+
+
+        for (int index = 0; index < 5; index++) {
+
+            current =
+                    current?.parentFile
+
+
+            if (current == null) {
+                return null
+            }
+        }
+
+
+        return current
+    }
+
+
+    private static String readReadmeField(
+            Map<String, Object> entry,
+            String field
+    ) {
+
+        Object relatedValue =
+                entry[
+                        'readmeRelated'
+                ]
+
+
+        if (relatedValue == null) {
+            return null
+        }
+
+
+        Map<String, Object> related =
+                requireMap(
+                        relatedValue,
+                        'Invalid Swagger readmeRelated entry.'
+                )
+
+
+        Object value =
+                related[
+                        field
+                ]
+
+
+        return value == null
+                ? null
+                : value.toString().trim()
+    }
+
+
+    private static boolean isValidReadmeFile(
+            File menuDirectory,
+            String configuredFile
+    ) {
+
+        String normalized =
+                normalizeReadmeFile(
+                        configuredFile
+                )
+
+
+        if (
+                normalized == null ||
+                        normalized.isBlank() ||
+                        normalized.startsWith('/') ||
+                        normalized == '..' ||
+                        normalized.contains('../')
+        ) {
+            return false
+        }
+
+
+        int separator =
+                normalized.indexOf('/')
+
+
+        if (
+                separator <= 0 ||
+                        separator >= normalized.length() - 1
+        ) {
+            return false
+        }
+
+
+        String folder =
+                normalized.substring(
+                        0,
+                        separator
+                )
+
+
+        if (
+                !(folder ==~ /\d+\..+/)
+        ) {
+            return false
+        }
+
+
+        return new File(
+                menuDirectory,
+                normalized
+        ).isFile()
+    }
+
+
+    private static String normalizeReadmeFile(
+            String configuredFile
+    ) {
+
+        return configuredFile == null
+                ? null
+                : configuredFile
+                        .trim()
+                        .replace(
+                                '\\',
+                                '/'
+                        )
+    }
+
+
+    private static boolean containsReadmeAnchor(
+            String markdown,
+            String anchor
+    ) {
+
+        if (
+                markdown == null ||
+                        anchor == null ||
+                        anchor.isBlank()
+        ) {
+            return false
+        }
+
+
+        Pattern pattern =
+                Pattern.compile(
+                        "<a\\s+[^>]*\\bid\\s*=\\s*([\\\"'])" +
+                                Pattern.quote(
+                                        anchor
+                                ) +
+                                "\\1[^>]*>",
+                        Pattern.CASE_INSENSITIVE
+                )
+
+
+        return pattern
+                .matcher(
+                        markdown
+                )
+                .find()
+    }
+
+
+    private static void warnReadmeMapping(
+            String language,
+            String owner,
+            String status,
+            String file,
+            String anchor
+    ) {
+
+        LOGGER.warn(
+                '[SWAGGER-README] language={} owner={} status={} file={} anchor={}',
+                language,
+                owner,
+                status,
+                file,
+                anchor
+        )
+    }
+
+
+    private static void mergeApiExecutionData(
+            Map<String, Object> apiExecutionData,
+            SwaggerScanResult scanResult,
+            SwaggerDescriptionDefault defaults
+    ) {
+
+        markAllApiUsage(
+                apiExecutionData,
+                false
+        )
+
+
+        scanResult.apiByController.each {
+            String controllerName,
+            Map<String, SwaggerApiMetadata> currentApis ->
+
+                Map<String, Object> controllerData =
+                        getOrCreateControllerData(
+                                apiExecutionData,
+                                controllerName
+                        )
+
+
+                currentApis.each {
+                    String methodSignature,
+                    SwaggerApiMetadata metadata ->
+
+                        Object existing =
+                                controllerData[
+                                        methodSignature
+                                ]
+
+
+                        Map<String, Object> entry
+
+
+                        if (existing == null) {
+
+                            entry =
+                                    new LinkedHashMap<>()
+
+
+                            controllerData[
+                                    methodSignature
+                            ] =
+                                    entry
+                        }
+                        else {
+
+                            entry =
+                                    requireMap(
+                                            existing,
+                                            """
+Invalid Swagger API execution entry:
+
+${controllerName}
+${methodSignature}
+"""
+                                    )
+                        }
+
+
+                        if (
+                                !entry.containsKey(
+                                        'execution'
+                                )
+                        ) {
+
+                            entry[
+                                    'execution'
+                            ] =
+                                    defaults.execution
+                        }
+
+
+                        entry[
+                                'usage'
+                        ] =
+                                true
+                }
+        }
     }
 
 
@@ -232,6 +722,14 @@ ${controllerName}
                                     defaults.controllerDescriptionParagraph
                             )
                 }
+
+
+                ensureReadmeRelatedFields(
+                        entry,
+                        [
+                                'file'
+                        ]
+                )
 
 
                 merged[
@@ -647,6 +1145,68 @@ ${parameterName}
         }
 
 
+        ensureReadmeRelatedFields(
+                entry,
+                [
+                        'file',
+                        'anchor'
+                ]
+        )
+
+
+    }
+
+
+    private static void ensureReadmeRelatedFields(
+            Map<String, Object> entry,
+            Collection<String> fields
+    ) {
+
+        Object existing =
+                entry[
+                        'readmeRelated'
+                ]
+
+
+        Map<String, Object> readmeRelated
+
+
+        if (existing == null) {
+
+            readmeRelated =
+                    new LinkedHashMap<>()
+
+
+            entry[
+                    'readmeRelated'
+            ] =
+                    readmeRelated
+        }
+        else {
+
+            readmeRelated =
+                    requireMap(
+                            existing,
+                            'Invalid Swagger readmeRelated entry.'
+                    )
+        }
+
+
+        fields.each {
+            String field ->
+
+                if (
+                        !readmeRelated.containsKey(
+                                field
+                        )
+                ) {
+
+                    readmeRelated[
+                            field
+                    ] =
+                            ''
+                }
+        }
     }
 
 
@@ -748,12 +1308,20 @@ ${controllerName}
                         )
                 ) {
 
-                    target[
-                            field
-                    ] =
+                    Object value =
                             source[
                                     field
                             ]
+
+
+                    target[
+                            field
+                    ] =
+                            value instanceof Map
+                                    ? new LinkedHashMap<>(
+                                            value as Map
+                                    )
+                                    : value
                 }
         }
     }

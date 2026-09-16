@@ -47,6 +47,28 @@ const ExecutionContextPlugin = function (system) {
     };
 };
 
+function updateExecutionContextExplorerAction() {
+    const action = document.getElementById("execution-context-explorer-action");
+    if (!action || !window.ui) {
+        return;
+    }
+
+    const immutableSpec = window.ui.specSelectors.specJson();
+    if (!immutableSpec) {
+        action.hidden = true;
+        return;
+    }
+
+    const spec = immutableSpec.toJS();
+    const available = Object.values(spec.paths || {}).some(pathItem =>
+        Object.values(pathItem || {}).some(operation =>
+            operation && operation["x-execution-context-enabled"] === true
+        )
+    );
+
+    action.hidden = !available;
+}
+
 async function findLastExecution(path, method) {
     const basePath = window.swaggerBasePath || "";
     const params = new URLSearchParams({

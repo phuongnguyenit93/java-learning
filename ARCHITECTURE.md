@@ -897,6 +897,276 @@ Swagger generator coi một số field là **human-owned metadata**.
 
 Ví dụ `videoYoutubeId` được preserve qua regeneration sau khi đã tồn tại, kể cả entry historical/stale không còn active.
 
+Ngoài `api-descriptions.yml`, Swagger build-time hiện còn quản lý metadata execution riêng tại:
+
+```text
+swagger/<language>/api-execution.yml
+```
+
+File này có mixed ownership:
+
+```text
+Controller
+    ↓
+methodSignature
+    ↓
+execution  → human-owned HTML
+usage      → generated-owned
+```
+
+`methodSignature` là identity chính của method thay vì chỉ dùng `methodName`, để overloaded method không collision.
+
+Generator chỉ initialize `execution` khi field chưa tồn tại. Sau khi developer đã viết nội dung, regeneration phải preserve nguyên giá trị đó, kể cả khi entry trở thành historical/stale với `usage=false`. `usage` vẫn do generator đồng bộ theo source hiện tại.
+
+### 20.1 Vai trò học tập của `execution`
+
+`execution` không được xem là bản diễn giải tuần tự của source code. Nó là **guided execution explanation** gắn trực tiếp với API để người học có thể hiểu phần lớn experiment ngay trong Swagger mà chưa cần mở Java source.
+
+Ba lớp metadata có trách nhiệm khác nhau:
+
+```text
+summary
+→ API/chủ đề này là gì?
+
+description
+→ API này dùng để minh họa hoặc chứng minh điều gì?
+
+execution
+→ experiment thực sự chạy như thế nào,
+  tại sao từng bước quan trọng,
+  bằng chứng nào trong code/runtime/response xác nhận behavior,
+  và người học cần rút ra kết luận gì?
+```
+
+Với learning API không trivial, một `execution` tốt nên bao phủ các lớp sau khi phù hợp:
+
+```text
+Concept
+→ experiment muốn chứng minh điều gì
+
+Flow
+→ request/call đi qua những thành phần nào và theo thứ tự nào
+
+Meaning
+→ ý nghĩa của các bước quan trọng, không chỉ tên method nào được gọi
+
+Code evidence
+→ chi tiết implementation cụ thể làm phát sinh behavior,
+  được đặt ngay tại execution step mà đoạn code đó chứng minh
+
+Observation
+→ response field, trace event, thread state, ordering, exception, result... nào là bằng chứng
+
+Conclusion
+→ kiến thức cần ghi nhớ sau khi chạy experiment
+```
+
+Ví dụ conceptual cho một `@Around` Advice bỏ qua target:
+
+```text
+caller
+  ↓
+Spring AOP proxy
+  ↓
+@Around advice
+  ↓
+không gọi proceed()
+  ↓
+target không chạy
+  ↓
+advice tự trả kết quả
+```
+
+Tài liệu `execution` cần giải thích vì sao việc không xuất hiện target trace là bằng chứng target chưa được thực thi và vì sao điều đó chứng minh quyền điều khiển của `@Around`, thay vì chỉ liệt kê tên controller/service/aspect đã chạy.
+
+Source-level diễn giải vẫn là một phần quan trọng của `execution`, nhưng nó đóng vai trò **technical evidence cho concept**, không phải điều kiện tiên quyết để người đọc hiểu nội dung.
+
+### 20.2 Colocate code evidence với execution step
+
+Code snippet không nên được gom thành một khối source lớn ở cuối `execution` nếu có thể gắn trực tiếp nó với bước runtime tương ứng. Cấu trúc ưu tiên là:
+
+```text
+<li>
+  bước này đang xảy ra điều gì
+  ↓
+  tại sao bước này quan trọng
+  ↓
+  đoạn code ngắn trực tiếp tạo ra/chứng minh behavior
+  ↓
+  response/trace/state nào cần quan sát nếu phù hợp
+</li>
+```
+
+Ví dụ với một `@Around` Advice, step giải thích việc Advice không gọi `proceed()` nên đặt ngay snippet chứa phần return trực tiếp trong chính `<li>` đó. Step tiếp theo có thể đặt snippet của target method để cho thấy target sẽ ghi một trace marker nếu thật sự được chạy; việc marker này không xuất hiện trở thành evidence cho conclusion.
+
+Không bắt buộc mọi `<li>` đều có code. Snippet chỉ nên xuất hiện khi source thực sự giúp người học hiểu hoặc kiểm chứng step đó. Nếu một đoạn code đã xuất hiện ở step gần trước và không có thêm ý nghĩa học tập, không duplicate chỉ để làm cho mọi step có cùng hình thức.
+
+Snippet phải nhỏ và tập trung vào evidence cần thiết. Tránh copy nguyên controller/service/aspect/helper hoặc nguyên method dài nếu chỉ vài dòng quyết định behavior. Mục tiêu là giữ mối liên hệ trực tiếp:
+
+```text
+concept/meaning
+↕
+small source evidence
+↕
+observable runtime result
+```
+
+Khi cần chỉ rõ nguồn, ưu tiên class/file + method name thay vì line number vì line number dễ stale sau refactor.
+
+Do `execution` được render dưới dạng raw HTML, code trong `<pre><code>...</code></pre>` phải escape các ký tự có thể bị browser hiểu là HTML, ví dụ `<` → `&lt;`, `>` → `&gt;`, và `&` → `&amp;` khi cần.
+
+HTML nên đủ ngắn để đọc ngay trong Swagger, thường dùng `<p>` và `<ol><li>...</li></ol>`; nội dung dài nên lưu bằng YAML block scalar để an toàn với dấu câu và multiline HTML.
+
+### 20.3 Liên kết Swagger với README learning path
+
+Swagger cần có quan hệ rõ ràng với README để người học biết một controller/method đang thuộc chapter/section kiến thức nào và để thứ tự hiển thị bám theo learning path thay vì phụ thuộc vào tên tag/path.
+
+Thiết kế dùng mô hình **manual relationship + generated derivation**:
+
+```text
+human
+→ khai báo controller thuộc README file nào
+→ khai báo method thuộc README anchor nào
+
+generator
+→ validate mapping
+→ derive chapter number/title
+→ derive section title/position
+→ derive sorting/status/navigation metadata
+```
+
+Không auto-match controller với README dựa trên tên. Controller name và README chapter name không bắt buộc giống nhau.
+
+#### Controller mapping
+
+`controller-description.yml` sở hữu human-owned mapping:
+
+```yaml
+ProxyMentalModelController:
+  description: |-
+    ...
+  readmeRelated:
+    file: 3.Proxy/Proxy.md
+```
+
+`file` là path tương đối từ:
+
+```text
+readme/<language>/menu/
+```
+
+Folder chứa file phải có numeric chapter prefix:
+
+```text
+3.Proxy/Proxy.md
+→ chapterOrder = 3
+
+11.ProxyFactory/ProxyFactory.md
+→ chapterOrder = 11
+```
+
+Prefix phải parse thành integer, không sort như string. Folder không có numeric prefix hợp lệ làm mapping trở thành invalid.
+
+Chapter title được derive từ Markdown H1 đầu tiên của file. Controller UI hiển thị hai dòng:
+
+```text
+Chapter 03 · Spring AOP Proxy Mental Model
+Proxy Mental Model Controller
+```
+
+Controller sorting:
+
+```text
+valid README mapping
+→ sort theo chapterOrder
+
+nhiều controller cùng chapter
+→ sort alphabetically
+
+không có mapping
+→ cuối danh sách
+→ sort alphabetically
+→ VI: Chưa có tài liệu tương ứng trong README
+→ EN: No related documentation in README yet
+```
+
+Mapping đã cấu hình nhưng file không tồn tại hoặc chapter prefix không hợp lệ không được coi là “unlinked”; đó là invalid mapping. Generator log warning nhưng vẫn tiếp tục generate Swagger.
+
+#### Method mapping
+
+Method relationship nằm trong `api-descriptions.yml` dưới exact method-signature key:
+
+```yaml
+ProxyMentalModelController:
+  inspectProxy():
+    summary: ...
+    description: ...
+    readmeRelated:
+      anchor: proxy-demo
+    usage: true
+```
+
+Method mặc định inherit README file từ controller. Khi knowledge của method thuộc chapter/file khác, method được phép override:
+
+```yaml
+readmeRelated:
+  file: 11.ProxyFactory/ProxyFactory.md
+  anchor: proxy-factory-demo
+```
+
+Method-to-anchor binding là manual. Generator chỉ exact-match configured anchor với markup README dạng:
+
+```html
+<a id="proxy-demo">
+```
+
+Không dùng fuzzy search, semantic matching hoặc suy luận từ method name để tự chọn section.
+
+Khi anchor hợp lệ, generator derive:
+
+```text
+resolved README file
+resolved chapter number/title
+section heading chứa anchor
+anchor position trong file
+```
+
+Anchor position là source cho method order trong controller. Nhiều method được phép map cùng anchor; các method đó sort alphabetical. Method không có mapping hoặc không có valid resolved section nằm sau các method linked và sort alphabetical.
+
+Fallback cho method chưa mapping:
+
+```text
+VI: Method này chưa có nội dung README
+EN: This method does not have README content yet
+```
+
+Configured mapping invalid phải được phân biệt với missing mapping. Resolver có thể biểu diễn trạng thái semantic tương đương:
+
+```text
+LINKED
+UNLINKED
+INVALID_FILE
+INVALID_ANCHOR
+```
+
+`INVALID_FILE` / `INVALID_ANCHOR` chỉ warning và không fail Swagger generation.
+
+#### Language, ownership và navigation
+
+README relationship resolve độc lập theo từng language. VI thiếu file/anchor không được fallback sang EN và ngược lại; language bị lỗi chỉ nhận warning/status của chính nó.
+
+`readmeRelated.file` và `readmeRelated.anchor` là human-owned metadata. Generator tạo sẵn blank field cho entry mới để feature dễ discover, sau đó preserve nguyên mapping qua regeneration, kể cả historical/stale entry có `usage=false`.
+
+Resolved method UI hiển thị chapter + section để người học vẫn biết context khi method override sang chapter khác:
+
+```text
+README · Chapter 03 · 2. Demo trong module
+```
+
+Dòng này là navigation action. Click sẽ dùng cơ chế `swagger-readme-config.js` hiện có để mở đúng README file + anchor ngay trong Swagger cùng tab. Không embed toàn bộ README vào operation panel và không mở tab mới mặc định.
+
+Contract này hiện đã được implementation ở cả build-time generator/validator và shared Swagger runtime/UI: generator tạo/preserve mapping, runtime resolve metadata theo language, OpenAPI được sort theo chapter/anchor, và Swagger UI hiển thị/navigation tới README cùng tab.
+
 ---
 
 ## 21. Spring Boot runtime architecture
@@ -1661,6 +1931,7 @@ Các invariant dưới đây phản ánh architecture hiện tại và nên đư
 22. Phase 1–4 tạo reusable capture/source/query capability; exporter và MCP chỉ consume query contract này, không duplicate capture/source logic.
 23. User dùng chat AI phải có hai hướng sau Phase 4: Manual Mode bằng REST JSON/ZIP upload và Connected Mode qua Phase 5–7.
 24. Phase 5–7 là roadmap planned cho tới khi implementation tương ứng tồn tại và được validate.
+25. Swagger `execution` documentation là guided learning explanation: phải giúp người đọc hiểu concept, flow, ý nghĩa, evidence và conclusion mà không bắt buộc phải mở source code trước.
 
 ---
 

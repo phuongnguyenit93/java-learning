@@ -1,0 +1,412 @@
+AdvisorController:
+  observeAdvisor():
+    execution: |-
+      <p>This experiment proves what an <b>Advisor</b> contributes to Spring AOP: it is the pair of a <b>Pointcut</b> that decides whether a call is eligible and an <b>Advice</b> that runs only when that match succeeds. It also contrasts a decision that can be made from the method alone with one that must inspect runtime arguments.</p>
+      <ol>
+        <li>The service first builds a target object and a <code>NameMatchMethodPointcut</code> mapped only to <code>write</code>. A <code>DefaultPointcutAdvisor</code> combines that pointcut with a <code>MethodInterceptor</code>, and a CGLIB <code>ProxyFactory</code> proxy is created. This matters because both <code>read()</code> and <code>write()</code> cross the same proxy, but only <code>write()</code> satisfies the pointcut.<p><b>Source: AdvisorExperimentService.observeStaticNameMatchPointcut()</b></p><pre><code>NameMatchMethodPointcut pointcut = new NameMatchMethodPointcut();
+      pointcut.setMappedName("write");
+      DefaultPointcutAdvisor advisor = new DefaultPointcutAdvisor(pointcut, advice);
+      proxyFactory.addAdvisor(advisor);</code></pre></li>
+        <li>When <code>read()</code> runs, the target records only <code>target:read</code>. When <code>write()</code> runs, the interceptor records <code>advisor-before:write</code>, calls <code>invocation.proceed()</code>, the target records <code>target:write</code>, and the interceptor records <code>advisor-after:write</code>. In the response, inspect <code>staticNameMatchPointcut.events</code> and <code>methodMatcherIsRuntime=false</code>; those fields are the evidence that matching was based on method metadata, not call arguments.</li>
+        <li>The second branch constructs <code>RuntimeArgumentPointcut</code> for <code>writeWithMode(String)</code>. Its static matcher accepts the target class and method name, but <code>isRuntime()</code> returns true, so Spring also invokes the runtime matcher with the actual argument. Only <code>"audit"</code> equals the required first argument.<p><b>Source: RuntimeArgumentPointcut</b></p><pre><code>public boolean isRuntime() {
+          return true;
+      }
+      return matches(method, targetClass)
+              &amp;&amp; args.length &gt; 0
+              &amp;&amp; requiredFirstArgument.equals(args[0]);</code></pre></li>
+        <li>The service therefore invokes the same proxied method twice. The <code>audit</code> call produces <code>dynamic-advisor-before...</code>, <code>target:writeWithMode:mode=audit</code>, and <code>dynamic-advisor-after...</code>; the <code>plain</code> call records only its target event. Compare <code>runtimeMatchAudit=true</code>, <code>runtimeMatchPlain=false</code>, and the combined trace to see that the Advisor can make a per-invocation decision even when the Java method is identical.</li>
+      </ol>
+      <p><b>Conclusion:</b> an Advisor is not merely “an interceptor attached to a bean”; the Pointcut determines <em>where and when</em> that interceptor participates. Static matchers can decide from class/method metadata, while runtime matchers may defer the final decision until actual arguments are available.</p>
+    usage: true
+RuntimeBoundaryController:
+  inspectRuntimeBoundary():
+    execution: |-
+      <p>This experiment separates two ideas that are easy to conflate: the code uses AspectJ-style annotations such as <code>@Aspect</code> and <code>@Around</code>, but the runtime behavior demonstrated here is still <b>Spring AOP proxy interception of method execution</b>, not general AspectJ bytecode weaving.</p>
+      <ol>
+        <li>The controller clears the trace and invokes the injected <code>RuntimeBoundaryService.execute()</code>. Because the injected service is Spring-managed and matched by the Aspect, the call first crosses an AOP proxy instead of entering the target method directly.</li>
+        <li><code>RuntimeBoundaryAspect.around()</code> records <code>join-point-kind=method-execution</code> and <code>runtime-aspect:before</code>, then calls <code>joinPoint.proceed()</code>. That <code>proceed()</code> is the handoff from advice to the target; without it the target would not run.<p><b>Source: RuntimeBoundaryAspect.around()</b></p><pre><code>traceLog.add("runtime-aspect:join-point-kind=" + joinPoint.getKind());
+      traceLog.add("runtime-aspect:before");
+      Object result = joinPoint.proceed();
+      traceLog.add("runtime-aspect:after");</code></pre></li>
+        <li>The service records <code>target:runtime-boundary</code> and returns <code>runtime-boundary-result</code>. Control returns to the advice, which records <code>runtime-aspect:after</code>. The expected event order is therefore before → target → after, with the join-point-kind entry first.</li>
+        <li>After execution, the controller asks the <code>ApplicationContext</code> for the Aspect bean and uses <code>AopUtils</code> on the service. Observe <code>facts.aspectIsSpringBean=true</code>, <code>facts.targetIsAopProxy=true</code>, a proxy <code>targetRuntimeClass</code>, and a distinct underlying <code>targetClass</code>. These facts explain <em>why</em> the advice ran: the invocation crossed a Spring-generated proxy around a Spring bean.<p><b>Source: RuntimeBoundaryController.inspectRuntimeBoundary()</b></p><pre><code>facts.put("aspectIsSpringBean", aspectBean != null);
+      facts.put("targetIsAopProxy", AopUtils.isAopProxy(runtimeBoundaryService));
+      facts.put("targetRuntimeClass", runtimeBoundaryService.getClass().getName());
+      facts.put("targetClass", AopUtils.getTargetClass(runtimeBoundaryService).getName());</code></pre></li>
+      </ol>
+      <p><b>Conclusion:</b> <code>@AspectJ</code> syntax describes the aspect, but this module's execution boundary is a Spring AOP proxy around bean method execution. The proxy facts and the before/target/after trace together are the evidence.</p>
+    usage: true
+InfrastructureController:
+  inspectInfrastructure():
+    execution: |-
+      <p>This experiment looks below the Aspect declaration and exposes the <b>Spring AOP infrastructure</b> that turns eligible beans into proxies. It connects three layers: an Aspect contributes advice, Spring converts applicable advice into Advisors, and an auto-proxy creator installs those Advisors on the bean proxy.</p>
+      <ol>
+        <li>The controller resets the trace and calls <code>InfrastructureTargetService.execute()</code>. <code>InfrastructureAspect</code> matches that method with an <code>@Around</code> expression, records <code>infrastructure-aspect:before</code>, calls <code>proceed()</code>, and records <code>infrastructure-aspect:after</code> after the service has emitted <code>target:infrastructure</code>.</li>
+        <li>The trace order before → target → after proves that advice is active, but the controller then inspects the actual bean to show the machinery behind that result. <code>AopUtils.isAopProxy</code>, <code>isCglibProxy</code>, <code>isJdkDynamicProxy</code>, <code>runtimeClass</code>, and <code>targetClass</code> reveal which proxy strategy Spring produced for this target.</li>
+        <li>If the runtime proxy implements Spring's <code>Advised</code> interface, the controller reads <code>getAdvisors()</code> and returns their concrete classes. This is source-level evidence that the proxy contains an Advisor chain rather than calling the Aspect by magic.<p><b>Source: InfrastructureController.inspectInfrastructure()</b></p><pre><code>if (infrastructureTargetService instanceof Advised advised) {
+          facts.put("advisors",
+                  Arrays.stream(advised.getAdvisors())
+                          .map(advisor -&gt; advisor.getClass().getName())
+                          .toList());
+      }</code></pre></li>
+        <li>The controller also queries the application context for <code>AbstractAutoProxyCreator</code> beans and returns them in <code>facts.autoProxyCreators</code>. Finally, it reports whether <code>spring.aop.auto</code> and <code>spring.aop.proxy-target-class</code> were explicitly configured, so the learner can distinguish explicit properties from framework defaults.<p><b>Source: InfrastructureController.inspectInfrastructure()</b></p><pre><code>String[] autoProxyCreatorNames =
+              applicationContext.getBeanNamesForType(AbstractAutoProxyCreator.class);
+      facts.put("autoProxyCreatorPresent", !autoProxyCreators.isEmpty());</code></pre></li>
+        <li>Observe <code>events</code> for interception and <code>facts.isAopProxy</code>, <code>advisors</code>, and <code>autoProxyCreatorPresent</code> for infrastructure. The execution trace answers “did AOP run?”, while the facts answer “what Spring object graph made it run?”.</li>
+      </ol>
+      <p><b>Conclusion:</b> Spring AOP interception is implemented by generated proxies containing Advisors, and those proxies are normally created automatically by an auto-proxy creator. The Aspect is the declaration surface; the proxy/Advisor infrastructure is the runtime mechanism.</p>
+    usage: true
+IntroductionController:
+  observeIntroduction():
+    execution: |-
+      <p>This experiment proves that an AOP proxy can expose <b>additional behavior through an introduced interface</b> even when the original target class never implemented that interface. The technique is an Introduction, declared here with <code>@DeclareParents</code>.</p>
+      <ol>
+        <li><code>IntroductionAspect</code> declares that <code>IntroductionTargetService</code> proxies should also implement <code>UsageTracked</code>, with <code>DefaultUsageTracked</code> providing the implementation. The target source itself still declares only its business method.<p><b>Source: IntroductionAspect</b></p><pre><code>@DeclareParents(
+              value = "com.example.learning.module.advanced.introduction.service.IntroductionTargetService",
+              defaultImpl = DefaultUsageTracked.class
+      )
+      public static UsageTracked usageTracked;</code></pre></li>
+        <li>The controller first evaluates <code>introductionTargetService instanceof UsageTracked</code>. This check is intentionally performed on the injected runtime object: if Introduction was not applied, the endpoint returns <code>introduction-not-applied</code> immediately.</li>
+        <li>When the proxy does expose the interface, the controller casts it to <code>UsageTracked</code>, resets the counter, reads the initial count, calls <code>incrementUseCount()</code> twice, and reads the count again. Those calls are serviced by <code>DefaultUsageTracked</code>, whose <code>AtomicInteger</code> moves from 0 to 2.<p><b>Source: IntroductionController.observeIntroduction()</b></p><pre><code>UsageTracked usageTracked = (UsageTracked) introductionTargetService;
+      usageTracked.resetUseCount();
+      usageTracked.incrementUseCount();
+      usageTracked.incrementUseCount();
+      int after = usageTracked.getUseCount();</code></pre></li>
+        <li>The controller then invokes the original <code>businessOperation()</code>, which records <code>target:introduction-business-operation</code> and returns <code>introduction-result</code>. This shows that the same proxy presents both the original business API and the introduced interface.</li>
+        <li>Observe <code>facts.targetClassImplementsUsageTracked=false</code> together with <code>facts.proxyImplementsUsageTracked=true</code>, <code>facts.isAopProxy=true</code>, and <code>useCountBefore=0</code>/<code>useCountAfter=2</code>. Those values are stronger evidence than the cast alone because they distinguish target type from proxy type and prove the introduced implementation is functional.</li>
+      </ol>
+      <p><b>Conclusion:</b> an Introduction changes the interface surface of the proxy, not the Java inheritance declaration of the target class. Clients interacting with the proxy can use the introduced contract while the underlying business class remains unchanged.</p>
+    usage: true
+ProgrammaticProxyController:
+  compareProxyFactoryStrategies():
+    execution: |-
+      <p>This experiment builds proxies manually with <code>ProxyFactory</code> so the difference between <b>JDK dynamic proxying</b> and <b>CGLIB class proxying</b> can be observed without relying on auto-configuration. Both branches use the same target behavior and the same <code>MethodInterceptor</code>; only the proxy strategy changes.</p>
+      <ol>
+        <li>In the JDK branch, the factory is given the <code>GreetingOperations</code> interface and <code>setProxyTargetClass(false)</code>. The returned object is typed as <code>GreetingOperations</code>. Calling <code>greet("jdk")</code> produces interceptor-before → <code>target:greet:jdk</code> → interceptor-after because <code>TracingMethodInterceptor.invoke()</code> surrounds <code>invocation.proceed()</code>.<p><b>Source: ProgrammaticProxyService.compareProxyStrategies()</b></p><pre><code>jdkFactory.setInterfaces(GreetingOperations.class);
+      jdkFactory.setProxyTargetClass(false);
+      jdkFactory.addAdvice(new TracingMethodInterceptor(traceLog));
+      GreetingOperations jdkProxy = (GreetingOperations) jdkFactory.getProxy();</code></pre></li>
+        <li>Inspect <code>jdkProxy.isJdkDynamicProxy=true</code>, <code>proxyIsGreetingOperations=true</code>, <code>proxyIsGreetingTarget=false</code>, and <code>targetOnlyCapabilityVisibleThroughProxyType=false</code>. The important meaning is that a JDK proxy exposes the configured interface contract, not arbitrary public methods that exist only on the concrete target class.</li>
+        <li>In the CGLIB branch, <code>setProxyTargetClass(true)</code> makes the proxy subclass <code>GreetingTarget</code>. The service calls both <code>greet("cglib")</code> and <code>targetOnlyCapability()</code>; the same interceptor surrounds both calls because both methods are visible through the class-based proxy.<p><b>Source: ProgrammaticProxyService.compareProxyStrategies()</b></p><pre><code>cglibFactory.setTarget(cglibTarget);
+      cglibFactory.setProxyTargetClass(true);
+      cglibFactory.addAdvice(new TracingMethodInterceptor(traceLog));
+      GreetingTarget cglibProxy = (GreetingTarget) cglibFactory.getProxy();
+      cglibProxy.targetOnlyCapability();</code></pre></li>
+        <li>Observe <code>cglibProxy.isCglibProxy=true</code>, <code>proxyIsGreetingTarget=true</code>, <code>targetOnlyCapabilityVisibleThroughProxyType=true</code>, plus trace entries for both method names. The returned runtime classes make the proxy implementation difference visible as well.</li>
+      </ol>
+      <p><b>Conclusion:</b> both proxy types can apply the same advice, but their public type surface differs. JDK proxies are interface-oriented; CGLIB proxies subclass the concrete class and can therefore expose target-class methods that are not part of an interface.</p>
+    usage: true
+AdviceLifecycleController:
+  success():
+    execution: |-
+      <p>This experiment demonstrates which advice types participate when a matched target method <b>returns normally</b>. It is meant to distinguish “always after completion” from “only after successful return”.</p>
+      <ol>
+        <li>The controller clears the trace and calls <code>AdviceLifecycleService.success()</code> through its Spring AOP proxy.</li>
+        <li>The Aspect's <code>@Before</code> advice runs first and records <code>@Before:success</code>. The target then records <code>target:success</code> and returns the concrete value <code>success-result</code>.</li>
+        <li>Because the invocation completed normally, <code>@AfterReturning</code> receives that return value and records <code>@AfterReturning:success:success-result</code>. The Aspect also has <code>@After</code>, which runs when control leaves the join point regardless of success or failure.<p><b>Source: AdviceLifecycleAspect.afterReturning()</b></p><pre><code>public void afterReturning(
+              JoinPoint joinPoint,
+              Object result
+      ) {
+          traceLog.add("@AfterReturning:" + joinPoint.getSignature().getName() + ":" + result);
+      }</code></pre></li>
+        <li>The endpoint returns the target value in <code>result</code> and the lifecycle events in <code>events</code>. Verify that <code>@AfterReturning</code> is present and <code>@AfterThrowing</code> is absent; that contrast is the observable proof of the normal-return branch.</li>
+      </ol>
+      <p><b>Conclusion:</b> <code>@Before</code> runs before the target, <code>@AfterReturning</code> is specific to successful completion, and <code>@After</code> is a finalization-style advice that still participates when the join point finishes.</p>
+    usage: true
+  failure():
+    execution: |-
+      <p>This experiment runs the same advice family through an <b>exceptional target exit</b> so the learner can compare it directly with the successful branch.</p>
+      <ol>
+        <li>The controller clears the trace and invokes <code>AdviceLifecycleService.failure()</code> through the proxy. <code>@Before</code> records <code>@Before:failure</code> before target execution.</li>
+        <li>The target records <code>target:failure</code> and throws <code>IllegalStateException("intentional-advice-demo-error")</code> instead of returning a value. Because there is no normal return, <code>@AfterReturning</code> is not eligible.<p><b>Source: AdviceLifecycleService.failure()</b></p><pre><code>public String failure() {
+          traceLog.add("target:failure");
+          throw new IllegalStateException("intentional-advice-demo-error");
+      }</code></pre></li>
+        <li><code>@AfterThrowing</code> receives the thrown exception and records its type, while <code>@After</code> still participates as the join point exits. The exception then propagates out of the proxy unchanged.<p><b>Source: AdviceLifecycleAspect.afterThrowing()</b></p><pre><code>public void afterThrowing(
+              JoinPoint joinPoint,
+              Throwable throwable
+      ) {
+          traceLog.add("@AfterThrowing:" + joinPoint.getSignature().getName()
+                  + ":" + throwable.getClass().getSimpleName());
+      }</code></pre></li>
+        <li>The controller catches that <code>IllegalStateException</code> only so the HTTP endpoint can return an inspectable response string such as <code>IllegalStateException: intentional-advice-demo-error</code>. In <code>events</code>, verify <code>@AfterThrowing</code> is present, <code>@AfterReturning</code> is absent, and <code>@After</code> still appears.</li>
+      </ol>
+      <p><b>Conclusion:</b> successful and exceptional completion select different advice paths. <code>@AfterReturning</code> models normal-return work, <code>@AfterThrowing</code> models failure work, and <code>@After</code> applies to either exit path.</p>
+    usage: true
+AnnotationDrivenController:
+  trackByAnnotation():
+    execution: |-
+      <p>This experiment proves how a custom runtime annotation can serve as a <b>declarative AOP contract</b>: business code marks intent, while the Aspect discovers the marker and implements the cross-cutting behavior centrally.</p>
+      <ol>
+        <li><code>AnnotationDrivenService.executeTrackedOperation()</code> is annotated with <code>@TrackExecution("annotation-demo")</code>. The annotation has runtime retention, which matters because the Aspect must be able to bind its metadata during execution.<p><b>Source: TrackExecution</b></p><pre><code>@Retention(RetentionPolicy.RUNTIME)
+      @Target(ElementType.METHOD)
+      public @interface TrackExecution {
+          String value();
+      }</code></pre><p><b>Source: AnnotationDrivenService.executeTrackedOperation()</b></p><pre><code>@TrackExecution("annotation-demo")
+      public String executeTrackedOperation() {
+          traceLog.add("target:executeTrackedOperation");
+          return "tracked-operation-result";
+      }</code></pre></li>
+        <li><code>TrackingAspect</code> uses <code>@Around("@annotation(trackExecution)")</code>, so only calls to methods carrying that annotation enter <code>track()</code>. The advice reads <code>trackExecution.value()</code> and records <code>track-before:label=annotation-demo</code> before delegating.<p><b>Source: TrackingAspect.track()</b></p><pre><code>@Around("@annotation(trackExecution)")
+      public Object track(
+              ProceedingJoinPoint joinPoint,
+              TrackExecution trackExecution
+      ) throws Throwable {
+          long startedAt = System.nanoTime();
+          traceLog.add("track-before:label=" + trackExecution.value());</code></pre></li>
+        <li><code>joinPoint.proceed()</code> invokes the business method, which records <code>target:executeTrackedOperation</code> and returns <code>tracked-operation-result</code>. On successful return the Aspect records <code>track-success:method=executeTrackedOperation</code>.</li>
+        <li>A <code>finally</code> block always calculates elapsed nanoseconds and records <code>track-finished:elapsed-nanos=...</code>. Observe the returned <code>result</code> and the event sequence label → target → success → elapsed time; it demonstrates that annotation metadata drove the advice without timing/tracing code being placed in the service method.</li>
+      </ol>
+      <p><b>Conclusion:</b> annotations can express “this method should receive a concern” while the Aspect owns the implementation of that concern. The method stays focused on business behavior, and the runtime trace proves the annotation was bound and interpreted by the advice.</p>
+    usage: true
+AroundAdviceController:
+  timing():
+    execution: |-
+      <p>This experiment shows the defining capability of <code>@Around</code>: the advice can execute code on both sides of the target call and therefore measure the duration of the entire <code>proceed()</code> segment.</p>
+      <ol>
+        <li>The controller resets the trace and calls <code>timedOperation()</code> through the proxy. <code>AroundAdviceAspect.measureExecution()</code> captures <code>System.nanoTime()</code> and records <code>around:before-proceed</code>.</li>
+        <li>The advice calls <code>joinPoint.proceed()</code>, which is the exact point at which control enters the target. The service records <code>target:timedOperation</code> and returns <code>timed-target-result</code>.<p><b>Source: AroundAdviceAspect.measureExecution()</b></p><pre><code>long startedAt = System.nanoTime();
+      traceLog.add("around:before-proceed");
+      try {
+          return joinPoint.proceed();
+      } finally {
+          long elapsedNanos = System.nanoTime() - startedAt;
+          traceLog.add("around:after-proceed:elapsed-nanos=" + elapsedNanos);
+      }</code></pre></li>
+        <li>Whether the target returns or throws, the advice's <code>finally</code> block computes <code>System.nanoTime() - startedAt</code> and records <code>around:after-proceed:elapsed-nanos=...</code>. Using <code>finally</code> makes the timing cleanup structurally reliable.</li>
+        <li>Observe <code>result=timed-target-result</code> and the ordered trace before-proceed → target → after-proceed with a nonnegative elapsed value. The target result is unchanged; only measurement behavior was added around it.</li>
+      </ol>
+      <p><b>Conclusion:</b> <code>@Around</code> controls the boundary surrounding target execution. Calling <code>proceed()</code> preserves the target call, while code before and after that call can implement concerns such as timing without modifying the target method.</p>
+    usage: true
+  transform():
+    execution: |-
+      <p>This experiment proves that <code>@Around</code> advice can <b>replace the value observed by the caller</b> even after the target itself has completed normally.</p>
+      <ol>
+        <li>The proxy routes <code>transformResult()</code> into <code>AroundAdviceAspect.transformReturnValue()</code>, which records <code>around:before-transform</code>.</li>
+        <li>The advice calls <code>proceed()</code>. The target records <code>target:transformResult</code> and returns the literal <code>original-result</code>; this is the source-level evidence that the business method itself did not produce the final HTTP-visible value.</li>
+        <li>The advice receives that string, appends <code>|transformed-by-around</code>, records <code>around:transformed-return-value</code>, and returns the new string instead of the original one.<p><b>Source: AroundAdviceAspect.transformReturnValue()</b></p><pre><code>String original = (String) joinPoint.proceed();
+      String transformed = original + "|transformed-by-around";
+      traceLog.add("around:transformed-return-value");
+      return transformed;</code></pre></li>
+        <li>Observe <code>result=original-result|transformed-by-around</code> plus the trace containing the target event between the two advice events. Seeing both proves the target did run, while the changed result proves the caller received the advice's return value.</li>
+      </ol>
+      <p><b>Conclusion:</b> with <code>@Around</code>, <code>proceed()</code> does not force the advice to return the target's value unchanged. The advice owns the value that ultimately leaves the proxy and may transform it deliberately.</p>
+    usage: true
+  skip():
+    execution: |-
+      <p>This experiment demonstrates the strongest control offered by <code>@Around</code>: the advice can <b>short-circuit the invocation</b> and prevent the target method from running at all.</p>
+      <ol>
+        <li>The controller calls <code>skippedTarget()</code> on the proxied service. The pointcut matches, so execution enters <code>AroundAdviceAspect.skipProceed()</code> first.</li>
+        <li>The advice records <code>around:skip-proceed</code> and immediately returns <code>returned-without-calling-target</code>. Its method has no <code>ProceedingJoinPoint.proceed()</code> call, which is the crucial source-level detail: control is never delegated to the service method.<p><b>Source: AroundAdviceAspect.skipProceed()</b></p><pre><code>public Object skipProceed() {
+          traceLog.add("around:skip-proceed");
+          return "returned-without-calling-target";
+      }</code></pre></li>
+        <li>The service method would have recorded <code>target:skippedTarget</code> and returned <code>this-result-should-not-be-seen</code>, but neither appears because the method body is never reached.<p><b>Source: AroundAdviceService.skippedTarget()</b></p><pre><code>public String skippedTarget() {
+          traceLog.add("target:skippedTarget");
+          return "this-result-should-not-be-seen";
+      }</code></pre></li>
+        <li>Observe that <code>result</code> equals the advice-created string and <code>events</code> contains <code>around:skip-proceed</code> but not <code>target:skippedTarget</code>. The missing target event is intentional evidence, not missing logging.</li>
+      </ol>
+      <p><b>Conclusion:</b> <code>proceed()</code> is the gate from around advice to the target. If the advice does not call it, the target does not execute and the advice may supply the complete result itself.</p>
+    usage: true
+  arguments():
+    execution: |-
+      <p>This experiment proves that <code>@Around</code> advice can inspect and <b>replace arguments before target execution</b>, changing what the business method actually receives.</p>
+      <ol>
+        <li>The controller intentionally calls <code>normalizeArgument("  Book  ")</code>, preserving spaces and uppercase characters so the transformation is observable.</li>
+        <li>The advice reads <code>joinPoint.getArgs()[0]</code>, computes <code>trim().toLowerCase()</code> to produce <code>book</code>, and records both <code>around:argument-before=  Book  </code> and <code>around:argument-after=book</code>.</li>
+        <li>Instead of plain <code>proceed()</code>, the advice calls <code>proceed(new Object[]{normalized})</code>. That overload is the key source-level mechanism that substitutes the argument used for the target invocation.<p><b>Source: AroundAdviceAspect.normalizeArgument()</b></p><pre><code>String original = (String) joinPoint.getArgs()[0];
+      String normalized = original.trim().toLowerCase();
+      traceLog.add("around:argument-before=" + original);
+      traceLog.add("around:argument-after=" + normalized);
+      return joinPoint.proceed(new Object[]{normalized});</code></pre></li>
+        <li>The target records <code>target:normalizeArgument:item=book</code> and returns its received argument. Observe <code>result=book</code> plus the before/after argument trace; together they show that normalization happened in the advice and the target saw only the modified value.</li>
+      </ol>
+      <p><b>Conclusion:</b> around advice can mediate inputs as well as outputs. Supplying a new argument array to <code>proceed(...)</code> changes the target call itself, so this capability should be used deliberately because it affects business-visible semantics.</p>
+    usage: true
+  exceptionPropagation():
+    execution: |-
+      <p>This experiment shows how <code>@Around</code> advice can <b>observe an exception without swallowing or replacing it</b>. The Aspect adds diagnostics while preserving the target's failure contract.</p>
+      <ol>
+        <li>The advice records <code>around:exception-before-proceed</code> and calls <code>proceed()</code>. The target records <code>target:throwsFailure</code> and throws <code>IllegalStateException("intentional-around-demo-error")</code>.</li>
+        <li>The advice catches <code>Throwable</code>, records <code>around:exception-observed=IllegalStateException</code>, and immediately rethrows the same throwable. This rethrow is important: the Aspect observes the failure but does not convert it into success.<p><b>Source: AroundAdviceAspect.observeExceptionPropagation()</b></p><pre><code>try {
+          return joinPoint.proceed();
+      } catch (Throwable throwable) {
+          traceLog.add("around:exception-observed=" + throwable.getClass().getSimpleName());
+          throw throwable;
+      } finally {
+          traceLog.add("around:exception-finally");
+      }</code></pre></li>
+        <li>The advice's <code>finally</code> block records <code>around:exception-finally</code>, proving finalization logic still runs on the exceptional path. The exception then crosses the proxy boundary to the controller.</li>
+        <li>The controller catches the <code>IllegalStateException</code> only to make the experiment inspectable as HTTP data, returning a result string containing the original exception type and message. Verify the trace order before → target → observed-exception → finally and the matching exception text in <code>result</code>.</li>
+      </ol>
+      <p><b>Conclusion:</b> advice can add logging, metrics, or cleanup around failures without changing their semantics. Rethrowing preserves the original exception path; the controller's later conversion is a separate presentation choice for this learning endpoint.</p>
+    usage: true
+CrossCuttingController:
+  observeCrossCutting():
+    execution: |-
+      <p>This experiment demonstrates the motivation for AOP: one <b>cross-cutting logging concern</b> applies consistently to multiple business operations without duplicating logging code inside each service method.</p>
+      <ol>
+        <li>The controller clears one thread-local trace and calls <code>createOrder()</code> followed by <code>cancelOrder()</code> on the same proxied service.</li>
+        <li><code>CrossCuttingLoggingAspect</code> matches every method in <code>CrossCuttingService</code>. For each call it derives the method name, records <code>logging-before:&lt;method&gt;</code>, invokes <code>proceed()</code>, and records <code>logging-after:&lt;method&gt;</code> when the target returns normally.<p><b>Source: CrossCuttingLoggingAspect.logAround()</b></p><pre><code>String methodName = joinPoint.getSignature().getName();
+      traceLog.add("logging-before:" + methodName);
+      Object result = joinPoint.proceed();
+      traceLog.add("logging-after:" + methodName);
+      return result;</code></pre></li>
+        <li>The service methods contain only their business-specific trace and result: <code>createOrder()</code> emits <code>target:create-order</code>/<code>order-created</code>, while <code>cancelOrder()</code> emits <code>target:cancel-order</code>/<code>order-cancelled</code>. There is no repeated logging implementation in either method.</li>
+        <li>Observe the result list with both business results and the event sequence logging-before:createOrder → target:create-order → logging-after:createOrder → logging-before:cancelOrder → target:cancel-order → logging-after:cancelOrder. The repeated outer pattern around different targets is the evidence of centralized cross-cutting behavior.</li>
+      </ol>
+      <p><b>Conclusion:</b> AOP is useful when behavior conceptually spans many operations. The Aspect centralizes the concern, while each target remains focused on its own business responsibility.</p>
+    usage: true
+OrderingController:
+  observeOrdering():
+    execution: |-
+      <p>This experiment proves that when multiple <code>@Around</code> advices match the same join point, their <code>@Order</code> values define a <b>nested call stack</b>, not a flat list of callbacks.</p>
+      <ol>
+        <li>The controller invokes <code>OrderingService.execute()</code>. Both aspects match that method, but <code>OuterOrderingAspect</code> has <code>@Order(1)</code> and therefore wraps <code>InnerOrderingAspect</code>, which has <code>@Order(2)</code>.</li>
+        <li>The outer advice records <code>order-1:before</code> and calls <code>proceed()</code>. That proceeds into the next advice, which records <code>order-2:before</code> and calls <code>proceed()</code> again.<p><b>Source: OuterOrderingAspect</b></p><pre><code>@Aspect
+      @Component
+      @Order(1)
+      public class OuterOrderingAspect {</code></pre><p><b>Source: InnerOrderingAspect</b></p><pre><code>@Aspect
+      @Component
+      @Order(2)
+      public class InnerOrderingAspect {</code></pre></li>
+        <li>Only then does the target record <code>target:ordering</code> and return <code>ordering-result</code>. As stack frames unwind, the inner advice records <code>order-2:after</code> before the outer advice can record <code>order-1:after</code>.<p><b>Source: InnerOrderingAspect.inner()</b></p><pre><code>traceLog.add("order-2:before");
+      Object result = joinPoint.proceed();
+      traceLog.add("order-2:after");
+      return result;</code></pre></li>
+        <li>Observe the exact event nesting <code>1-before, 2-before, target, 2-after, 1-after</code>. The mirrored order on exit is the important evidence that precedence defines wrapping depth.</li>
+      </ol>
+      <p><b>Conclusion:</b> a lower order value runs earlier on entry but later on exit because it is outermost. Think of ordered around advice as nested function calls rather than independent “before/after” hooks.</p>
+    usage: true
+PracticalPatternController:
+  checkout(String):
+    execution: |-
+      <p>This experiment combines several ideas into a practical AOP pattern: the business method declares <b>audit intent</b> with an annotation, while the Aspect centralizes auditing and timing. The goal is to show how cross-cutting policy can be attached declaratively without mixing it into checkout logic.</p>
+      <ol>
+        <li>The HTTP parameter <code>item</code> defaults to <code>book</code> and is passed to <code>PracticalPatternService.checkout(item)</code>. That method is annotated <code>@AuditedOperation(action="checkout")</code>, which is the declarative signal consumed by the Aspect.<p><b>Source: PracticalPatternService.checkout()</b></p><pre><code>@AuditedOperation(action = "checkout")
+      public String checkout(String item) {
+          traceLog.add("target:checkout:item=" + item);
+          return "checked-out:" + item;
+      }</code></pre></li>
+        <li><code>PracticalPatternAspect</code> matches <code>@annotation(auditedOperation)</code>, captures a start timestamp, reads <code>action()</code>, and records <code>audit-start:action=checkout</code> before calling <code>proceed()</code>.<p><b>Source: PracticalPatternAspect.audit()</b></p><pre><code>@Around("@annotation(auditedOperation)")
+      public Object audit(
+              ProceedingJoinPoint joinPoint,
+              AuditedOperation auditedOperation
+      ) throws Throwable {
+          long startedAt = System.nanoTime();
+          traceLog.add("audit-start:action=" + auditedOperation.action());</code></pre></li>
+        <li>The target records <code>target:checkout:item=&lt;item&gt;</code> and returns <code>checked-out:&lt;item&gt;</code>. On this normal path the Aspect then records <code>audit-success:method=checkout</code>. Its catch branch would instead record <code>audit-failure:type=...</code> and rethrow if the target failed.</li>
+        <li>A <code>finally</code> block always records <code>metric:elapsed-nanos=...</code>, so timing is coupled to the audit boundary rather than duplicated in business code. Observe the returned checkout result and the trace start → target → success → metric.</li>
+      </ol>
+      <p><b>Conclusion:</b> a common production pattern is “annotation declares policy, Aspect implements policy”. Auditing and metrics stay centralized and consistent, while the service method remains responsible only for checkout behavior.</p>
+    usage: true
+PointcutController:
+  comparePointcuts():
+    execution: |-
+      <p>This experiment compares several <b>Pointcut designators</b> by invoking eight service methods in one request. The important lesson is that pointcuts can select join points by method signature, annotation, runtime argument type, declaring/target type, proxy type, or bean identity—and an unmatched method provides the baseline.</p>
+      <ol>
+        <li><code>byExecution()</code> is selected by an explicit <code>execution(...byExecution(..))</code> expression; look for <code>pointcut:execution</code> immediately before <code>target:byExecution</code>.</li>
+        <li><code>byAnnotation()</code> carries <code>@PointcutMarker</code>, so the <code>@annotation</code> advice records <code>pointcut:@annotation</code>. <code>byArgs("demo")</code> uses <code>args(value)</code> binding, proving the actual argument can be captured into advice as shown by <code>pointcut:args:demo</code>.</li>
+        <li><code>byRuntimeArgs(Object)</code> is declared with parameter type <code>Object</code> but is invoked with a String. The expression <code>args(java.lang.String)</code> matches the <em>runtime</em> argument type, so the trace records <code>pointcut:args-runtime-type=String</code> before the target's <code>declaredType=Object</code> event.<p><b>Source: PointcutMatchingAspect.matchRuntimeArgumentType()</b></p><pre><code>@Before("execution(* com.example.learning.module.pointcut.service.PointcutService.byRuntimeArgs(..)) &amp;&amp; " +
+              "args(java.lang.String)")
+      public void matchRuntimeArgumentType(JoinPoint joinPoint) {
+          Object value = joinPoint.getArgs()[0];
+          traceLog.add("pointcut:args-runtime-type=" + value.getClass().getSimpleName());
+      }</code></pre></li>
+        <li><code>byWithin()</code> is selected by the composition of a named <code>within(PointcutService)</code> pointcut and a named execution pointcut. <code>byThisAndTarget()</code> triggers both <code>this(...)</code> and <code>target(...)</code>, letting the same call expose the distinction between proxy type and underlying target type. <code>byBean()</code> is selected by the Spring bean name <code>pointcutService</code>.<p><b>Source: PointcutMatchingAspect.matchWithinAndNamedComposition()</b></p><pre><code>@Before("pointcutServiceType() &amp;&amp; byWithinMethod()")
+      public void matchWithinAndNamedComposition() {
+          traceLog.add("pointcut:within+named-composition");
+      }</code></pre><p><b>Source: PointcutMatchingAspect.matchSpringBeanName()</b></p><pre><code>@Before("bean(pointcutService) &amp;&amp; execution(* com.example.learning.module.pointcut.service.PointcutService.byBean(..))")
+      public void matchSpringBeanName() {
+          traceLog.add("pointcut:bean-name");
+      }</code></pre></li>
+        <li>Finally, <code>unmatched()</code> has no matching advice and therefore contributes only <code>target:unmatched</code>. Compare each result position with the event stream: advice markers appearing before target markers identify the matching rule, while the unmatched baseline shows what a direct target-only trace looks like.</li>
+      </ol>
+      <p><b>Conclusion:</b> a Pointcut is a selection rule, and different designators answer different questions about an invocation. Choose the narrowest rule that represents the intended semantic boundary rather than relying only on method-name patterns.</p>
+    usage: true
+ProxyMentalModelController:
+  inspectProxy():
+    execution: |-
+      <p>This experiment establishes the basic Spring AOP mental model: the object injected into the controller is a <b>proxy</b>, the business object behind it is the <b>target</b>, and advice runs because a caller crosses the proxy boundary before reaching the target.</p>
+      <ol>
+        <li>The controller clears the trace and calls <code>proxyMentalModelService.invokeTarget()</code> on the injected reference. The matching <code>ProxyMentalModelAspect</code> intercepts that external call and records <code>proxy-boundary:before-target</code>.</li>
+        <li>The Aspect calls <code>proceed()</code>, so the target service records <code>target:invokeTarget</code> and returns <code>target-completed</code>. The advice then records <code>proxy-boundary:after-target</code> and returns the same value to the controller.<p><b>Source: ProxyMentalModelAspect.observeProxyBoundary()</b></p><pre><code>traceLog.add("proxy-boundary:before-target");
+      Object result = joinPoint.proceed();
+      traceLog.add("proxy-boundary:after-target");
+      return result;</code></pre></li>
+        <li>The controller does not merely assume a proxy exists. It returns <code>runtimeClass</code>, <code>AopProxyUtils.ultimateTargetClass(...)</code>, and the <code>AopUtils</code> checks for AOP/JDK/CGLIB proxy kinds.<p><b>Source: ProxyMentalModelController.inspectProxy()</b></p><pre><code>facts.put("runtimeClass", proxyMentalModelService.getClass().getName());
+      facts.put("targetClass", AopProxyUtils.ultimateTargetClass(proxyMentalModelService).getName());
+      facts.put("isAopProxy", AopUtils.isAopProxy(proxyMentalModelService));
+      facts.put("isCglibProxy", AopUtils.isCglibProxy(proxyMentalModelService));</code></pre></li>
+        <li>Observe before → target → after in <code>events</code>, <code>result=target-completed</code>, and <code>facts.isAopProxy=true</code>. The difference between <code>runtimeClass</code> and <code>targetClass</code> is concrete evidence that the call was made on a wrapper object rather than directly on the plain service instance.</li>
+      </ol>
+      <p><b>Conclusion:</b> Spring AOP advice is reached through proxy-mediated calls. Understanding “caller → proxy/advice → target → proxy/advice → caller” explains many later behaviors such as self-invocation limitations.</p>
+    usage: true
+  compareManagedBeanAndPlainObject():
+    execution: |-
+      <p>This experiment isolates the reason Spring-managed objects receive AOP behavior: <b>proxying belongs to the managed bean reference, not intrinsically to the Java class</b>. The same method is called once through Spring and once on an object created with <code>new</code>.</p>
+      <ol>
+        <li>The controller first invokes the injected <code>ProxyMentalModelService</code>. Because that reference is an AOP proxy, the captured <code>managedEvents</code> are <code>proxy-boundary:before-target</code>, <code>target:invokeTarget</code>, and <code>proxy-boundary:after-target</code>.</li>
+        <li>The trace is reset, then the controller executes <code>new ProxyMentalModelService(traceLog)</code> and calls the same <code>invokeTarget()</code> method. This object was not created and post-processed as a Spring bean, so no AOP proxy sits in front of it; <code>plainEvents</code> contains only <code>target:invokeTarget</code>.<p><b>Source: ProxyMentalModelController.compareManagedBeanAndPlainObject()</b></p><pre><code>traceLog.reset();
+      ProxyMentalModelService plainObject = new ProxyMentalModelService(traceLog);
+      String plainResult = plainObject.invokeTarget();
+      List&lt;String&gt; plainEvents = traceLog.snapshotAndClear();</code></pre></li>
+        <li>Both branches return <code>target-completed</code>, showing that the underlying business method is the same. The difference is entirely in the interception path, not the target implementation.</li>
+        <li>Observe <code>facts.managedIsAopProxy=true</code> and <code>facts.plainIsAopProxy=false</code> next to the two event lists. Those facts explain why the event streams differ and prevent the common misconception that adding an Aspect somehow rewrites every instance of the class.</li>
+      </ol>
+      <p><b>Conclusion:</b> ordinary objects created with <code>new</code> do not automatically participate in Spring AOP. Advice applies when calls go through the Spring-managed proxy created for the eligible bean.</p>
+    usage: true
+SelfInvocationController:
+  compareSelfInvocation():
+    execution: |-
+      <p>This experiment demonstrates the classic Spring AOP <b>self-invocation limitation</b>: an annotated inner method may be interceptable from outside the bean yet bypass advice when another method on the same target calls it through <code>this</code>.</p>
+      <ol>
+        <li>For the first branch, the controller calls <code>outerCallsInner()</code> through the service proxy. Inside the target object, that method records <code>target:outer-before-inner</code> and then calls <code>innerTrackedMethod()</code> directly on the same instance.<p><b>Source: SelfInvocationService.outerCallsInner()</b></p><pre><code>public String outerCallsInner() {
+          traceLog.add("target:outer-before-inner");
+          String result = innerTrackedMethod();
+          traceLog.add("target:outer-after-inner");
+          return result;
+      }</code></pre></li>
+        <li><code>innerTrackedMethod()</code> has <code>@TrackExecution("self-invocation-inner")</code>, but the internal Java call does not leave the target and re-enter the proxy. Therefore <code>selfInvocationEvents</code> contains the outer and inner target events but no <code>track-before</code>/<code>track-success</code>/<code>track-finished</code> events.</li>
+        <li>The second branch resets the trace and lets the controller call <code>innerTrackedMethod()</code> directly on the injected reference. This time the call crosses the proxy, so <code>TrackingAspect</code> reads the annotation, records track-before, calls the target, records track-success, and finally records elapsed time.<p><b>Source: SelfInvocationController.compareSelfInvocation()</b></p><pre><code>traceLog.reset();
+      String proxyInvocationResult = selfInvocationService.innerTrackedMethod();
+      List&lt;String&gt; proxyInvocationEvents = traceLog.snapshotAndClear();</code></pre></li>
+        <li>Compare <code>selfInvocationResult</code> and <code>proxyInvocationResult</code>: both are <code>inner-result</code>. The business result is unchanged, but the event arrays differ. That side-by-side trace is the evidence that call path—not annotation presence alone—determines interception.</li>
+      </ol>
+      <p><b>Conclusion:</b> Spring proxy-based AOP intercepts calls that cross the proxy boundary. A <code>this.someMethod()</code> call inside the target normally bypasses that boundary, so refactoring the call path or separating responsibilities may be necessary when advice must apply.</p>
+    usage: true
+  finalMethodLimitation():
+    execution: |-
+      <p>This experiment shows a limitation of <b>class-based CGLIB proxying</b>: interception relies on an overridable method boundary, so a <code>final</code> method cannot be overridden by the generated subclass and therefore cannot be advised in the normal way.</p>
+      <ol>
+        <li><code>SelfInvocationService.finalTrackedMethod()</code> is deliberately both <code>final</code> and annotated with <code>@TrackExecution("final-method")</code>. The annotation proves the method would conceptually qualify for <code>TrackingAspect</code>'s <code>@annotation</code> pointcut if it were interceptable.<p><b>Source: SelfInvocationService.finalTrackedMethod()</b></p><pre><code>@TrackExecution("final-method")
+      public final String finalTrackedMethod() {
+          return "final-method-result";
+      }</code></pre></li>
+        <li>The controller calls that method on the injected service and receives <code>final-method-result</code>. The target method itself contains no trace statements, and no tracking advice can wrap the call, so the returned <code>events</code> list remains empty.</li>
+        <li>The controller then inspects the method reflectively and reports <code>annotationPresentOnFinalMethod</code> and <code>methodIsFinal</code>. It also reports <code>isAopProxy</code> and <code>isCglibProxy</code> for the surrounding bean.<p><b>Source: SelfInvocationController.finalMethodLimitation()</b></p><pre><code>facts.put("isCglibProxy", AopUtils.isCglibProxy(selfInvocationService));
+      facts.put("annotationPresentOnFinalMethod",
+              finalTrackedMethod.isAnnotationPresent(TrackExecution.class));
+      facts.put("methodIsFinal",
+              java.lang.reflect.Modifier.isFinal(finalTrackedMethod.getModifiers()));</code></pre></li>
+        <li>Observe the combination <code>isCglibProxy=true</code>, <code>annotationPresentOnFinalMethod=true</code>, <code>methodIsFinal=true</code>, but no tracking events. This combination is important because it rules out “Aspect not configured” and isolates final-method non-overridability as the limitation being demonstrated.</li>
+      </ol>
+      <p><b>Conclusion:</b> on a class-based proxy, matching metadata is not sufficient if the method cannot be overridden. Final methods are a structural interception boundary for CGLIB-style Spring AOP.</p>
+    usage: true
+TerminologyController:
+  inspectTerminology():
+    execution: |-
+      <p>This experiment maps the core AOP terms—<b>Aspect, Advice, Join Point, Proxy, and Target</b>—onto one concrete call so the vocabulary corresponds to runtime objects rather than abstract definitions.</p>
+      <ol>
+        <li>The controller receives a Spring-managed <code>TerminologyService</code> reference and calls <code>execute()</code>. Because <code>TerminologyAspect</code> has a matching <code>@Before</code> pointcut, the injected reference is proxied and the proxy dispatches the matching advice before target execution.</li>
+        <li>Inside the advice, <code>joinPoint.getSignature()</code> identifies the <b>Join Point</b> as the execution of the service method. The advice records <code>aspect=TerminologyAspect</code> and <code>advice=@Before</code>, explicitly naming the <b>Aspect</b> container and the <b>Advice</b> that is currently running.<p><b>Source: TerminologyAspect.explainTerms()</b></p><pre><code>traceLog.add("aspect=TerminologyAspect");
+      traceLog.add("advice=@Before");
+      traceLog.add("join-point=" + joinPoint.getSignature().toShortString());
+      traceLog.add("proxy-class=" + joinPoint.getThis().getClass().getSimpleName());
+      traceLog.add("target-class=" + joinPoint.getTarget().getClass().getSimpleName());</code></pre></li>
+        <li><code>joinPoint.getThis()</code> is inspected as the <b>Proxy</b> seen by the call, while <code>joinPoint.getTarget()</code> identifies the underlying <b>Target</b>. After the advice returns, the target method records <code>target:TerminologyService.execute</code> and returns <code>terminology-target-result</code>.</li>
+        <li>The controller independently reports <code>injectedObjectClass</code>, <code>isAopProxy</code>, and <code>targetClass</code>. Compare those facts with the trace fields <code>proxy-class=...</code>, <code>target-class=...</code>, and <code>join-point=...</code>; they provide two views of the same runtime relationship.</li>
+      </ol>
+      <p><b>Conclusion:</b> the Proxy is the object the caller invokes, the Target contains the business method, the Join Point is the intercepted method execution, Advice is the code that runs at that join point, and the Aspect groups that advice and its pointcut definition.</p>
+    usage: true

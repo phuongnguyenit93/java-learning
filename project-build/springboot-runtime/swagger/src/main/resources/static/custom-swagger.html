@@ -18,9 +18,27 @@
             rel="stylesheet"
             href="swagger-execution-context.css"
     />
+
+    <link
+            rel="stylesheet"
+            href="swagger-api-execution.css"
+    />
+
+    <link
+            rel="stylesheet"
+            href="swagger-readme-related.css"
+    />
 </head>
 
 <body>
+
+<a
+        id="execution-context-explorer-action"
+        class="execution-context-explorer-action"
+        target="_blank"
+        rel="noopener"
+        hidden
+>Execution Context</a>
 
 <div id="swagger-ui"></div>
 
@@ -35,6 +53,9 @@
 
     window.swaggerBasePath = basePath;
 
+    document.getElementById("execution-context-explorer-action").href =
+        `${basePath}/execution-context/explorer.html`;
+
     function loadScript(src) {
         const script = document.createElement("script");
         script.src = src;
@@ -45,6 +66,8 @@
     loadScript(`${basePath}/swagger-ui/swagger-ui-standalone-preset.js`);
     loadScript(`${basePath}/swagger-readme-config.js`);
     loadScript(`${basePath}/swagger-youtube.js`);
+    loadScript(`${basePath}/swagger-readme-related.js`);
+    loadScript(`${basePath}/swagger-api-execution.js`);
     loadScript(`${basePath}/swagger-execution-context.js`);
 
     window.onload = function () {
@@ -55,6 +78,8 @@
 
             deepLinking: true,
 
+            operationsSorter: compareSwaggerReadmeOperations,
+
             presets: [
                 SwaggerUIBundle.presets.apis,
                 SwaggerUIStandalonePreset
@@ -63,8 +88,12 @@
             plugins: [
                 SwaggerUIBundle.plugins.DownloadUrl,
                 YoutubePlugin,
+                SwaggerReadmeRelatedPlugin,
+                ApiExecutionPlugin,
                 ExecutionContextPlugin
             ],
+
+            onComplete: updateExecutionContextExplorerAction,
 
             layout: "StandaloneLayout"
         });

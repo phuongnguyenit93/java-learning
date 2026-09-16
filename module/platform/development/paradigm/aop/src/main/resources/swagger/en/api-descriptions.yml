@@ -20,6 +20,9 @@ AdvisorController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: ''
 RuntimeBoundaryController:
   inspectRuntimeBoundary():
     summary: Inspect the runtime boundary of Spring AOP
@@ -42,6 +45,9 @@ RuntimeBoundaryController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: ''
 InfrastructureController:
   inspectInfrastructure():
     summary: Inspect Spring AOP infrastructure
@@ -64,6 +70,9 @@ InfrastructureController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: ''
 IntroductionController:
   observeIntroduction():
     summary: Observe an AOP introduction
@@ -86,6 +95,9 @@ IntroductionController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: ''
 ProgrammaticProxyController:
   compareProxyFactoryStrategies():
     summary: Compare JDK and CGLIB ProxyFactory strategies
@@ -108,6 +120,9 @@ ProgrammaticProxyController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: ''
 AdviceLifecycleController:
   success():
     summary: Observe advice order on successful execution
@@ -130,6 +145,9 @@ AdviceLifecycleController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: ''
   failure():
     summary: Observe advice order when an exception is thrown
     description: Executes a failing target method to observe @AfterThrowing and @After
@@ -151,6 +169,9 @@ AdviceLifecycleController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: ''
 AnnotationDrivenController:
   trackByAnnotation():
     summary: Apply AOP through a custom annotation
@@ -173,6 +194,9 @@ AnnotationDrivenController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: ''
 AroundAdviceController:
   timing():
     summary: Measure execution with @Around advice
@@ -195,6 +219,9 @@ AroundAdviceController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: ''
   transform():
     summary: Transform a return value with @Around advice
     description: Demonstrates that @Around advice can inspect and replace the value
@@ -216,6 +243,9 @@ AroundAdviceController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: ''
   skip():
     summary: Skip target execution with @Around advice
     description: Demonstrates that omitting proceed() prevents the target method from
@@ -237,6 +267,9 @@ AroundAdviceController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: ''
   arguments():
     summary: Modify method arguments with @Around advice
     description: Demonstrates how @Around advice can read and replace invocation arguments
@@ -258,6 +291,9 @@ AroundAdviceController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: ''
   exceptionPropagation():
     summary: Observe exception propagation through @Around advice
     description: Demonstrates an @Around advice observing an exception and rethrowing
@@ -279,6 +315,9 @@ AroundAdviceController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: ''
 CrossCuttingController:
   observeCrossCutting():
     summary: Observe a cross-cutting logging concern
@@ -301,6 +340,9 @@ CrossCuttingController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: ''
 OrderingController:
   observeOrdering():
     summary: Observe nested Aspect ordering
@@ -323,6 +365,9 @@ OrderingController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: ''
 PracticalPatternController:
   checkout(String):
     summary: Apply practical auditing and timing aspects
@@ -345,6 +390,9 @@ PracticalPatternController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: ''
 PointcutController:
   comparePointcuts():
     summary: Compare common Spring AOP pointcut expressions
@@ -367,6 +415,9 @@ PointcutController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: ''
 ProxyMentalModelController:
   inspectProxy():
     summary: Inspect a Spring AOP proxy
@@ -389,6 +440,9 @@ ProxyMentalModelController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: ''
   compareManagedBeanAndPlainObject():
     summary: Compare a managed proxy with a plain Java object
     description: Compares a Spring-managed bean that passes through AOP interception
@@ -410,6 +464,9 @@ ProxyMentalModelController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: ''
 SelfInvocationController:
   compareSelfInvocation():
     summary: Compare self-invocation with external proxy invocation
@@ -432,6 +489,9 @@ SelfInvocationController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: ''
   finalMethodLimitation():
     summary: Demonstrate the final-method proxy limitation
     description: Shows that a final method on a class-based proxy cannot be overridden
@@ -453,6 +513,9 @@ SelfInvocationController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: ''
 TerminologyController:
   inspectTerminology():
     summary: Inspect core AOP terminology in a real invocation
@@ -475,3 +538,6 @@ TerminologyController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: ''

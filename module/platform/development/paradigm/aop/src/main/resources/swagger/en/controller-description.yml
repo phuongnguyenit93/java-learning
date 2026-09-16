@@ -3,59 +3,89 @@ AdvisorController:
     <h2>Advisor Controller</h2>
     <p>Demonstrates the Advisor abstraction, where a Pointcut selects eligible join points and Advice defines the behavior applied to them.</p>
     <p>The example also contrasts static method matching with runtime argument matching.</p>
+  readmeRelated:
+    file: ''
 RuntimeBoundaryController:
   description: |-
     <h2>Runtime Boundary Controller</h2>
     <p>Explores the runtime boundary of this module and distinguishes AspectJ-style declarations from Spring's proxy-based AOP execution model.</p>
+  readmeRelated:
+    file: ''
 InfrastructureController:
   description: |-
     <h2>Infrastructure Controller</h2>
     <p>Inspects the Spring AOP infrastructure behind a managed bean, including the auto-proxy creator, proxy strategy, generated proxy type, and Advisor chain.</p>
+  readmeRelated:
+    file: ''
 IntroductionController:
   description: |-
     <h2>Introduction Controller</h2>
     <p>Demonstrates AOP Introduction by exposing an additional interface through the proxy even though the original target class does not implement that interface.</p>
+  readmeRelated:
+    file: ''
 ProgrammaticProxyController:
   description: |-
     <h2>Programmatic Proxy Controller</h2>
     <p>Builds proxies programmatically with Spring ProxyFactory and compares JDK dynamic proxy and CGLIB proxy behavior using the same interceptor.</p>
+  readmeRelated:
+    file: ''
 AdviceLifecycleController:
   description: |-
     <h2>Advice Lifecycle Controller</h2>
     <p>Shows when @Before, @AfterReturning, @AfterThrowing, and @After execute around successful and exceptional target invocations.</p>
+  readmeRelated:
+    file: ''
 AnnotationDrivenController:
   description: |-
     <h2>Annotation Driven Controller</h2>
     <p>Demonstrates annotation-driven AOP where a custom annotation acts as a declarative contract that an Aspect can match and inspect.</p>
+  readmeRelated:
+    file: ''
 AroundAdviceController:
   description: |-
     <h2>Around Advice Controller</h2>
     <p>Explores the control available to @Around advice: timing execution, transforming results, skipping targets, changing arguments, and observing exceptions.</p>
+  readmeRelated:
+    file: ''
 CrossCuttingController:
   description: |-
     <h2>Cross Cutting Controller</h2>
     <p>Demonstrates how AOP extracts a concern such as logging from business methods and applies it consistently across multiple operations.</p>
+  readmeRelated:
+    file: ''
 OrderingController:
   description: |-
     <h2>Ordering Controller</h2>
     <p>Shows how multiple @Around Aspects are nested according to @Order and how their before/after sections form the runtime call stack.</p>
+  readmeRelated:
+    file: ''
 PracticalPatternController:
   description: |-
     <h2>Practical Pattern Controller</h2>
     <p>Combines auditing and timing into reusable cross-cutting behavior around a checkout business operation.</p>
+  readmeRelated:
+    file: ''
 PointcutController:
   description: |-
     <h2>Pointcut Controller</h2>
     <p>Provides side-by-side examples of common Spring AOP pointcut designators and compositions so their matching behavior can be compared directly.</p>
+  readmeRelated:
+    file: ''
 ProxyMentalModelController:
   description: |-
     <h2>Proxy Mental Model Controller</h2>
     <p>Builds the core Spring AOP proxy mental model by inspecting the injected proxy and comparing Spring-managed calls with direct object construction.</p>
+  readmeRelated:
+    file: ''
 SelfInvocationController:
   description: |-
     <h2>Self Invocation Controller</h2>
     <p>Demonstrates two important proxy limitations: self-invocation bypasses interception and final methods cannot be overridden by class-based proxies.</p>
+  readmeRelated:
+    file: ''
 TerminologyController:
   description: |-
     <h2>Terminology Controller</h2>
     <p>Maps the terms Aspect, Advice, Join Point, Target, and Proxy to one concrete Spring AOP invocation and its runtime objects.</p>
+  readmeRelated:
+    file: ''

@@ -90,6 +90,8 @@ REACTIVE
 
 Hai adapter đều phụ thuộc `GLOBAL_SWAGGER_CONFIG`. Java dependency chọn adapter theo `MODULE_TYPE`, trong khi `combineYaml` chỉ merge `GLOBAL_SWAGGER_CONFIG/application-module.yml` để tránh duplicate Swagger configuration.
 
+Swagger có contract `readmeRelated` để liên kết controller/method với chapter/section trong README. Mapping do developer khai báo; hệ thống dùng mapping đó để hiển thị chapter, sắp xếp API theo learning path và mở đúng README anchor ngay trong Swagger. Controller/method chưa được liên kết sẽ được đưa xuống cuối và hiển thị trạng thái chưa có nội dung README.
+
 ### Execution Context / AI
 
 `BUILD_EXECUTION_CONTEXT=TRUE` tạo context của một lần chạy gồm request/response, log/runtime và source liên quan.

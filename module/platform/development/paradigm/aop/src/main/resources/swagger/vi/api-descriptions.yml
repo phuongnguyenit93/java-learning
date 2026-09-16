@@ -19,6 +19,9 @@ AdvisorController:
       ]
     consumes: [
       ]
+    readmeRelated:
+      anchor: advisor-demo
+      file: ''
     usage: true
 RuntimeBoundaryController:
   inspectRuntimeBoundary():
@@ -41,6 +44,9 @@ RuntimeBoundaryController:
       ]
     consumes: [
       ]
+    readmeRelated:
+      anchor: runtime-boundary-demo
+      file: ''
     usage: true
 InfrastructureController:
   inspectInfrastructure():
@@ -63,6 +69,9 @@ InfrastructureController:
       ]
     consumes: [
       ]
+    readmeRelated:
+      anchor: infrastructure-demo
+      file: ''
     usage: true
 IntroductionController:
   observeIntroduction():
@@ -85,6 +94,9 @@ IntroductionController:
       ]
     consumes: [
       ]
+    readmeRelated:
+      anchor: introduction-demo
+      file: ''
     usage: true
 ProgrammaticProxyController:
   compareProxyFactoryStrategies():
@@ -107,6 +119,9 @@ ProgrammaticProxyController:
       ]
     consumes: [
       ]
+    readmeRelated:
+      anchor: proxy-factory-demo
+      file: ''
     usage: true
 AdviceLifecycleController:
   success():
@@ -129,6 +144,9 @@ AdviceLifecycleController:
       ]
     consumes: [
       ]
+    readmeRelated:
+      anchor: advice-success-demo
+      file: ''
     usage: true
   failure():
     summary: Quan sát Advice khi target ném exception
@@ -150,6 +168,9 @@ AdviceLifecycleController:
       ]
     consumes: [
       ]
+    readmeRelated:
+      anchor: advice-failure-demo
+      file: ''
     usage: true
 AnnotationDrivenController:
   trackByAnnotation():
@@ -172,6 +193,9 @@ AnnotationDrivenController:
       ]
     consumes: [
       ]
+    readmeRelated:
+      anchor: annotation-demo
+      file: ''
     usage: true
 AroundAdviceController:
   timing():
@@ -194,6 +218,9 @@ AroundAdviceController:
       ]
     consumes: [
       ]
+    readmeRelated:
+      anchor: around-timing-demo
+      file: ''
     usage: true
   transform():
     summary: Thay đổi return value bằng @Around Advice
@@ -215,6 +242,9 @@ AroundAdviceController:
       ]
     consumes: [
       ]
+    readmeRelated:
+      anchor: around-transform-demo
+      file: ''
     usage: true
   skip():
     summary: Bỏ qua target bằng @Around Advice
@@ -236,6 +266,9 @@ AroundAdviceController:
       ]
     consumes: [
       ]
+    readmeRelated:
+      anchor: around-skip-demo
+      file: ''
     usage: true
   arguments():
     summary: Thay đổi argument bằng @Around Advice
@@ -257,6 +290,9 @@ AroundAdviceController:
       ]
     consumes: [
       ]
+    readmeRelated:
+      anchor: around-arguments-demo
+      file: ''
     usage: true
   exceptionPropagation():
     summary: Quan sát exception đi qua @Around Advice
@@ -278,6 +314,9 @@ AroundAdviceController:
       ]
     consumes: [
       ]
+    readmeRelated:
+      anchor: around-exception-demo
+      file: ''
     usage: true
 CrossCuttingController:
   observeCrossCutting():
@@ -300,6 +339,9 @@ CrossCuttingController:
       ]
     consumes: [
       ]
+    readmeRelated:
+      anchor: cross-cutting-demo
+      file: ''
     usage: true
 OrderingController:
   observeOrdering():
@@ -322,6 +364,9 @@ OrderingController:
       ]
     consumes: [
       ]
+    readmeRelated:
+      anchor: ordering-demo
+      file: ''
     usage: true
 PracticalPatternController:
   checkout(String):
@@ -344,6 +389,9 @@ PracticalPatternController:
       ]
     consumes: [
       ]
+    readmeRelated:
+      anchor: practical-demo
+      file: ''
     usage: true
 PointcutController:
   comparePointcuts():
@@ -366,6 +414,9 @@ PointcutController:
       ]
     consumes: [
       ]
+    readmeRelated:
+      anchor: pointcut-demo
+      file: ''
     usage: true
 ProxyMentalModelController:
   inspectProxy():
@@ -388,6 +439,9 @@ ProxyMentalModelController:
       ]
     consumes: [
       ]
+    readmeRelated:
+      anchor: proxy-demo
+      file: ''
     usage: true
   compareManagedBeanAndPlainObject():
     summary: So sánh Spring-managed bean với object tạo bằng new
@@ -409,6 +463,9 @@ ProxyMentalModelController:
       ]
     consumes: [
       ]
+    readmeRelated:
+      anchor: managed-vs-new-demo
+      file: ''
     usage: true
 SelfInvocationController:
   compareSelfInvocation():
@@ -431,6 +488,9 @@ SelfInvocationController:
       ]
     consumes: [
       ]
+    readmeRelated:
+      anchor: self-invocation-demo
+      file: ''
     usage: true
   finalMethodLimitation():
     summary: Minh họa giới hạn của final method với proxy
@@ -452,6 +512,9 @@ SelfInvocationController:
       ]
     consumes: [
       ]
+    readmeRelated:
+      anchor: final-method-demo
+      file: ''
     usage: true
 TerminologyController:
   inspectTerminology():
@@ -474,4 +537,7 @@ TerminologyController:
       ]
     consumes: [
       ]
+    readmeRelated:
+      anchor: terminology-demo
+      file: ''
     usage: true

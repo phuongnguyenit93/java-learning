@@ -1,0 +1,745 @@
+AsyncController:
+  future():
+    execution: |-
+      <p>The controller delegates to a single-thread executor and returns the observed state of one <code>Future</code>.</p>
+      <ol>
+        <li>A callable blocks on a latch and is submitted to the executor.</li>
+        <li>The service checks <code>isDone()</code> while the task is still blocked, releases the latch, then reads the result with a two-second timeout.</li>
+        <li>It reports the result and final done state, then shuts the executor down in <code>finally</code>.</li>
+      </ol>
+    usage: true
+  futureCancellation():
+    execution: |-
+      <p>The service runs the same latch-blocked task twice to compare <code>Future.cancel(false)</code> with <code>cancel(true)</code>.</p>
+      <ol>
+        <li>Each sample waits until its worker has started.</li>
+        <li>With <code>false</code>, the future becomes cancelled but the worker remains blocked until the service releases its latch.</li>
+        <li>With <code>true</code>, the blocked worker is interrupted and exits through its <code>InterruptedException</code> path.</li>
+        <li>Both samples confirm that <code>get()</code> throws <code>CancellationException</code> and then clean up their executor.</li>
+      </ol>
+    usage: true
+  pipeline():
+    execution: |-
+      <p>A two-thread executor drives a multi-stage <code>CompletableFuture</code> pipeline.</p>
+      <ol>
+        <li>An exchange-rate stage and an order stage start asynchronously.</li>
+        <li>The order stage composes into a price lookup.</li>
+        <li>The price and exchange rate are combined into a VND total.</li>
+        <li>A final async stage adds shipping and returns the recorded worker thread for each stage; the executor is shut down when the pipeline completes.</li>
+      </ol>
+    usage: true
+  fastest():
+    execution: |-
+      <p>The service uses gated futures to make <code>anyOf</code> behavior deterministic.</p>
+      <ol>
+        <li>Server A is released first, so its completion wins the first race; Server B is then released so all demo work finishes.</li>
+        <li>A second race completes one future exceptionally before a later successful future.</li>
+        <li>The response records that exceptional completion can win <code>anyOf</code>, <code>join()</code> then throws, and the later sibling is not automatically cancelled.</li>
+      </ol>
+    usage: true
+  exceptionHandling():
+    execution: |-
+      <p>The service starts a <code>CompletableFuture</code> that immediately throws a simulated exception.</p>
+      <ol>
+        <li>The failed stage completes exceptionally.</li>
+        <li>A <code>handle</code> stage receives both value and error and converts the failure into a normal result map.</li>
+        <li>The returned future therefore completes successfully with recovery metadata and a <code>FALLBACK</code> value.</li>
+      </ol>
+    usage: true
+  executionVariant():
+    execution: |-
+      <p>The service compares continuation execution policy on an already-completed future.</p>
+      <ol>
+        <li><code>thenApply</code> is attached to a completed stage and its thread name is captured, showing that it runs inline on the caller in this experiment.</li>
+        <li><code>thenApplyAsync</code> is given a dedicated single-thread executor named <code>async-variant-worker</code>.</li>
+        <li>The response reports both thread names and the observed executor choice before the executor is shut down.</li>
+      </ol>
+    usage: true
+  allOf():
+    execution: |-
+      <p>The service exercises both successful and exceptional <code>CompletableFuture.allOf</code> aggregation.</p>
+      <ol>
+        <li>Three tasks run on a three-thread pool and the first aggregate waits for all of them.</li>
+        <li>For the failure case, one input is completed exceptionally while another sibling is still incomplete.</li>
+        <li>The service observes that the aggregate does not finish until the remaining sibling completes, then <code>join()</code> exposes the failure and the successful sibling remains uncancelled.</li>
+      </ol>
+    usage: true
+  timeoutCancellation():
+    execution: |-
+      <p>The service runs two latch-blocked <code>CompletableFuture</code> experiments to separate future state from underlying task interruption.</p>
+      <ol>
+        <li><code>orTimeout</code> completes the future with <code>TimeoutException</code>, but the worker is not interrupted and continues until the latch is released.</li>
+        <li><code>cancel(true)</code> marks the <code>CompletableFuture</code> cancelled and makes <code>join()</code> throw <code>CancellationException</code>, yet the submitted worker is still not interrupted in this setup.</li>
+        <li>Both workers are explicitly released and executors are cleaned up.</li>
+      </ol>
+    usage: true
+BasicThreadController:
+  processAndThread():
+    execution: |-
+      <p>The service inspects the JVM process and the exact thread handling the HTTP request.</p>
+      <ol>
+        <li>It reads the current process id from <code>ProcessHandle.current()</code>.</li>
+        <li>It reads the current thread name, id, state, and daemon flag.</li>
+        <li>Those values are returned directly so the request can be tied to one execution thread inside the JVM process.</li>
+      </ol>
+    usage: true
+  startVsRun():
+    execution: |-
+      <p>The service executes equivalent tasks through direct <code>run()</code> invocation and through <code>Thread.start()</code>.</p>
+      <ol>
+        <li>A runnable is called with <code>run()</code>, so it executes on the HTTP caller thread.</li>
+        <li>A second runnable is placed in a named <code>Thread</code> and started, so its task executes on <code>basic-start-worker</code>.</li>
+        <li>The service joins the worker and returns both thread identities.</li>
+      </ol>
+    usage: true
+  threadLifeCycle():
+    execution: |-
+      <p>The service drives one worker through observable <code>Thread.State</code> values with latches and monitors.</p>
+      <ol>
+        <li>Before start it records <code>NEW</code>, then keeps the worker spinning long enough to observe <code>RUNNABLE</code>.</li>
+        <li>A timed latch wait produces <code>TIMED_WAITING</code>.</li>
+        <li>The caller holds a monitor while releasing the latch, forcing the worker into <code>BLOCKED</code>.</li>
+        <li>The worker then calls <code>wait()</code> to enter <code>WAITING</code>; the caller notifies it, joins it, and records <code>TERMINATED</code>.</li>
+      </ol>
+    usage: true
+CreateThreadController:
+  createByExtends():
+    execution: |-
+      <p>The service creates a concrete <code>MyWorker</code> subclass of <code>Thread</code>.</p>
+      <ol>
+        <li>The request thread constructs the named worker.</li>
+        <li><code>start()</code> invokes the subclass implementation of <code>run()</code> on <code>extends-thread-worker</code>.</li>
+        <li>The service joins the worker, performs bounded cleanup if necessary, and returns caller and worker thread names.</li>
+      </ol>
+    usage: true
+  createByRunnable():
+    execution: |-
+      <p>The service separates the task from the thread by using a <code>Runnable</code>.</p>
+      <ol>
+        <li>A runnable captures its executing thread name.</li>
+        <li>The runnable is passed to a new named <code>Thread</code> and started.</li>
+        <li>The service joins and cleans up the worker, then returns the caller and <code>runnable-thread-worker</code> identities.</li>
+      </ol>
+    usage: true
+  createByCallable():
+    execution: |-
+      <p>The service adapts a value-returning <code>Callable</code> to a thread by wrapping it in <code>FutureTask</code>.</p>
+      <ol>
+        <li>The callable is wrapped in <code>FutureTask&lt;String&gt;</code>.</li>
+        <li>A named thread executes that future task.</li>
+        <li>The service waits up to two seconds for <code>FutureTask.get()</code>, joins the worker, and returns both caller information and the value produced by <code>call()</code>.</li>
+      </ol>
+    usage: true
+DaemonThreadController:
+  inspectDaemonRules():
+    execution: |-
+      <p>The API inspects daemon inheritance without starting the child thread.</p>
+      <ol>
+        <li>It reads the daemon flag of the current HTTP request thread.</li>
+        <li>It constructs a child thread and records the daemon flag inherited at construction time.</li>
+        <li>It calls <code>setDaemon(true)</code> before the child is started and returns the before/after flags; JVM-exit behavior is intentionally left to the separate standalone demo.</li>
+      </ol>
+    usage: true
+ConcurrencyProblemController:
+  raceCondition():
+    execution: |-
+      <p>The service creates a deterministic lost update on an unsynchronized integer.</p>
+      <ol>
+        <li>Two workers read the same counter value into separate snapshots.</li>
+        <li>A latch holds both workers until both reads have happened.</li>
+        <li>Each worker writes its own <code>snapshot + 1</code>, so one update overwrites the other.</li>
+        <li>After joining both workers, the response compares the sequential expectation of two with the actual value and reports the lost update.</li>
+      </ol>
+    usage: true
+  startJoinHappensBefore():
+    execution: |-
+      <p>The experiment uses plain fields and relies on the memory-consistency guarantees of <code>Thread.start()</code> and <code>join()</code>.</p>
+      <ol>
+        <li>The parent writes <code>beforeStart = 7</code> before starting the worker.</li>
+        <li>The worker reads that value and writes <code>writtenByWorker = 42</code>.</li>
+        <li>The parent joins the worker, then reads the worker-written value and returns both observations.</li>
+      </ol>
+    usage: true
+  volatilePublication():
+    execution: |-
+      <p>A writer publishes ordinary data through a volatile readiness flag.</p>
+      <ol>
+        <li>The reader starts first and spins on volatile <code>ready</code>.</li>
+        <li>The writer stores <code>data = 42</code> and then sets <code>ready = true</code>.</li>
+        <li>Once the reader observes the volatile write, it reads the previously written data, and both threads are joined before the values are returned.</li>
+      </ol>
+    usage: true
+  volatileIsNotAtomic():
+    execution: |-
+      <p>The service repeats the deterministic lost-update experiment with the counter field declared <code>volatile</code>.</p>
+      <ol>
+        <li>Both workers read the same volatile value before either is allowed to write.</li>
+        <li>After the latch releases them, each stores <code>snapshot + 1</code>.</li>
+        <li>The final value is still lower than the sequential expectation, demonstrating that visibility does not make the read-modify-write sequence atomic.</li>
+      </ol>
+    usage: true
+  deadlockRisk():
+    execution: |-
+      <p>The service constructs circular lock ownership while using non-blocking second-lock attempts so the demo cannot hang.</p>
+      <ol>
+        <li>Worker A locks A and worker B locks B.</li>
+        <li>A latch ensures both first locks are held before each worker calls <code>tryLock()</code> on the other lock.</li>
+        <li>Both second-lock attempts fail, exposing the circular dependency that would deadlock with blocking acquisition.</li>
+        <li>Each worker releases its first lock and terminates cleanly.</li>
+      </ol>
+    usage: true
+  deadlockPrevention():
+    execution: |-
+      <p>Both workers use the same global lock order to remove circular wait.</p>
+      <ol>
+        <li>A start latch releases the two workers together.</li>
+        <li>Each worker acquires lock A first and lock B second, performs its work, then releases B and A.</li>
+        <li>The caller joins both workers and reports that both completed with the fixed <code>A -&gt; B</code> order.</li>
+      </ol>
+    usage: true
+  boundedLivelock():
+    execution: |-
+      <p>The service models livelock for exactly five synchronized rounds so the API remains bounded.</p>
+      <ol>
+        <li>Both workers announce that they are trying to proceed and meet at a barrier.</li>
+        <li>Each sees the other trying, backs off, and meets at another barrier before the next round.</li>
+        <li>Because they react symmetrically, they keep changing state without making progress; after five rounds both threads terminate and the backoff counts are returned.</li>
+      </ol>
+    usage: true
+ThreadLocalController:
+  isolation():
+    execution: |-
+      <p>Two platform threads use the same static <code>ThreadLocal</code> but store different request values.</p>
+      <ol>
+        <li>Thread A sets <code>REQ-A</code> and Thread B sets <code>REQ-B</code>.</li>
+        <li>Each reads its own value and removes it in <code>finally</code>.</li>
+        <li>After both threads are joined, the caller also reads the <code>ThreadLocal</code>, demonstrating that the values are isolated per thread.</li>
+      </ol>
+    usage: true
+  inheritance():
+    execution: |-
+      <p>The service shows when an <code>InheritableThreadLocal</code> value is captured for a newly created thread.</p>
+      <ol>
+        <li>The parent sets <code>PARENT-A</code> and constructs the child.</li>
+        <li>Before starting the child, the parent changes its own value to <code>PARENT-B</code>.</li>
+        <li>The child still observes <code>PARENT-A</code>, the value inherited at thread construction, and the parent removes its context during cleanup.</li>
+      </ol>
+    usage: true
+  poolReuseProblem():
+    execution: |-
+      <p>A one-thread pool demonstrates why inherited context and worker reuse do not mix safely.</p>
+      <ol>
+        <li>The parent sets <code>USER_A</code> and submits the first task, causing the pool worker to inherit that value.</li>
+        <li>The parent changes its context to <code>USER_B</code> and submits a second task.</li>
+        <li>The same worker is reused and still reads <code>USER_A</code>, so the response marks the stale context before the pool is shut down.</li>
+      </ol>
+    usage: true
+  explicitPropagation():
+    execution: |-
+      <p>The service explicitly propagates a plain <code>ThreadLocal</code> into an already-created pool worker.</p>
+      <ol>
+        <li>A warm-up task creates the single pool worker before any context is set.</li>
+        <li>The caller stores <code>USER_B</code> and wraps the real callable with a propagation helper that captures that value.</li>
+        <li>The wrapper installs the captured value on the worker, runs the task, then restores the worker's previous context in <code>finally</code>.</li>
+      </ol>
+    usage: true
+CoordinationController:
+  join():
+    execution: |-
+      <p>The service starts one worker whose only action is to mark itself complete.</p>
+      <ol>
+        <li>The caller starts the worker.</li>
+        <li>A bounded <code>join()</code> waits for it to terminate.</li>
+        <li>The response is produced only after the join and reports both the completion flag and the final <code>TERMINATED</code> state.</li>
+      </ol>
+    usage: true
+  waitNotify():
+    execution: |-
+      <p>Three workers wait on the same monitor using a predicate loop.</p>
+      <ol>
+        <li>The service waits until all three workers are in the monitor wait set.</li>
+        <li>It calls <code>notify()</code> while the readiness predicate is still false, so one waiter wakes, checks the predicate, and waits again.</li>
+        <li>The service then sets the predicate to true and calls <code>notifyAll()</code>.</li>
+        <li>All workers leave the loop, complete, and are joined before the result is returned.</li>
+      </ol>
+    usage: true
+  condition():
+    execution: |-
+      <p>One <code>ReentrantLock</code> owns two independent <code>Condition</code> wait sets.</p>
+      <ol>
+        <li>A data waiter awaits <code>dataAvailable</code> and a shutdown waiter awaits <code>shutdownRequested</code>.</li>
+        <li>The caller signals only <code>dataAvailable</code> and verifies that the shutdown waiter has not proceeded.</li>
+        <li>It then sets the shutdown predicate and signals the second condition.</li>
+        <li>Both workers are joined and the response records the targeted wake-up behavior.</li>
+      </ol>
+    usage: true
+  lockSupport():
+    execution: |-
+      <p>Three workers demonstrate targeted parking, blocker metadata, and interrupt behavior with <code>LockSupport</code>.</p>
+      <ol>
+        <li>All workers park with the same blocker object, and the service verifies that the blocker is visible.</li>
+        <li>Only the second worker is unparked first, while the first remains parked.</li>
+        <li>The third worker is interrupted; <code>park()</code> returns without throwing and its interrupt flag remains set.</li>
+        <li>The first worker is finally unparked and all workers are cleaned up.</li>
+      </ol>
+    usage: true
+  blockingQueue():
+    execution: |-
+      <p>A producer and consumer communicate through an <code>ArrayBlockingQueue</code> with capacity two.</p>
+      <ol>
+        <li>The producer inserts five items with blocking <code>put()</code>.</li>
+        <li>The consumer removes five items with blocking <code>take()</code>.</li>
+        <li>The bounded queue provides the backpressure between their speeds; the service joins both threads and returns the consumed sequence and final empty state.</li>
+      </ol>
+    usage: true
+  blockingQueueVariants():
+    execution: |-
+      <p>The service runs three finite queue experiments in one request.</p>
+      <ol>
+        <li>A fair <code>ArrayBlockingQueue</code> of size two is filled and a third non-blocking <code>offer</code> is observed to fail.</li>
+        <li>A capacity-three <code>LinkedBlockingQueue</code> is filled and two items are removed with <code>drainTo</code>.</li>
+        <li>A <code>PriorityBlockingQueue</code> receives three prioritized tasks and is polled in priority order, while the response notes that this queue is not capacity-bounded.</li>
+      </ol>
+    usage: true
+  priorityQueueSemantics():
+    execution: |-
+      <p>The service inserts two equal-priority tasks and one higher-priority task into a <code>PriorityBlockingQueue</code>.</p>
+      <ol>
+        <li>All elements are polled until the queue is empty.</li>
+        <li>The response verifies that the higher-priority item comes first.</li>
+        <li>It deliberately does not treat the observed order of equal-priority elements as a FIFO guarantee and records that the queue has no bounded-capacity backpressure.</li>
+      </ol>
+    usage: true
+  synchronousQueue():
+    execution: |-
+      <p>The service uses a zero-capacity <code>SynchronousQueue</code> to demonstrate direct handoff.</p>
+      <ol>
+        <li>The producer starts first and blocks in <code>put("payload")</code> because no consumer is waiting.</li>
+        <li>After that waiting state is observed, the consumer starts and calls <code>take()</code>.</li>
+        <li>The producer and consumer rendezvous, both terminate, and the queue still reports size zero because it never stores the element.</li>
+      </ol>
+    usage: true
+  synchronizers():
+    execution: |-
+      <p>The endpoint executes five bounded coordination samples and returns their observations together.</p>
+      <ol>
+        <li>A <code>CountDownLatch</code> waits for two workers.</li>
+        <li>A two-party <code>CyclicBarrier</code> releases both parties and runs its barrier action once.</li>
+        <li>A two-permit <code>Semaphore</code> limits four workers to at most two active holders.</li>
+        <li>A <code>Phaser</code> coordinates two worker phases with registration and deregistration.</li>
+        <li>An <code>Exchanger</code> pairs two workers and swaps their values.</li>
+      </ol>
+    usage: true
+  synchronizersTimeout():
+    execution: |-
+      <p>The service exercises timeout and failure paths across several synchronizers.</p>
+      <ol>
+        <li>A timed latch wait expires while its worker remains able to finish later.</li>
+        <li>A lone barrier participant times out and breaks the barrier; after <code>reset()</code>, a new generation of two parties passes successfully.</li>
+        <li>A semaphore with both permits held rejects a timed extra acquire and later restores its permit count.</li>
+        <li>A phaser demonstrates deregistration across phases with bounded interruptible waits.</li>
+        <li>An exchanger shows both timeout without a partner and interruption of a blocking exchange.</li>
+      </ol>
+    usage: true
+  semaphorePermitAccounting():
+    execution: |-
+      <p>The service demonstrates that <code>Semaphore</code> tracks permits, not ownership.</p>
+      <ol>
+        <li>A semaphore starts with one permit.</li>
+        <li>The caller performs an unmatched <code>release()</code>, increasing the available count to two.</li>
+        <li>It then successfully acquires both permits at once and releases them again.</li>
+        <li>The returned values show why code must release only permits it actually acquired.</li>
+      </ol>
+    usage: true
+TaskExecutorController:
+  asyncWithContext():
+    execution: |-
+      <p>The controller seeds request-scoped demo context, then dispatches work through Spring <code>@Async</code> and a custom <code>ThreadPoolTaskExecutor</code>.</p>
+      <ol>
+        <li>The HTTP thread saves any previous <code>DemoContext</code> and MDC value, sets both to <code>REQUEST-123</code>, and calls the proxied async service.</li>
+        <li><code>DemoTaskDecorator</code> captures the demo context, MDC, and request attributes at submission time, installs them on the worker, and restores the worker's previous state afterward.</li>
+        <li>The async service reports caller/worker thread names and the propagated values; the controller restores its own previous context immediately after submission.</li>
+      </ol>
+    usage: true
+  asyncVoidException():
+    execution: |-
+      <p>The endpoint observes failure from an <code>@Async void</code> method through the configured <code>AsyncUncaughtExceptionHandler</code>.</p>
+      <ol>
+        <li>The controller creates a correlation id and registers a pending observation future in <code>AsyncExceptionProbe</code>.</li>
+        <li>The async service method throws <code>IllegalStateException</code> on the custom executor.</li>
+        <li>The uncaught-exception handler extracts the correlation id, records method/error/thread metadata, and completes the observation future.</li>
+        <li>If submission itself is rejected synchronously, the controller completes that same probe exceptionally so the registration still terminates and cleans itself up.</li>
+      </ol>
+    usage: true
+InterruptionController:
+  interruptBusyWorker():
+    execution: |-
+      <p>A CPU-bound worker cooperatively polls its interrupt status.</p>
+      <ol>
+        <li>The worker signals that it has started, then spins while <code>isInterrupted()</code> is false and counts iterations.</li>
+        <li>The request thread calls <code>interrupt()</code>.</li>
+        <li>The worker observes the flag, exits its loop, records that interruption was seen, and is joined before its final state is returned.</li>
+      </ol>
+    usage: true
+  inspectInterruptFlag():
+    execution: |-
+      <p>The worker compares the non-clearing and clearing interrupt-status APIs in a controlled sequence.</p>
+      <ol>
+        <li>The caller interrupts the worker before allowing it to continue.</li>
+        <li>Two calls to <code>isInterrupted()</code> both observe the flag without clearing it.</li>
+        <li>The first static <code>Thread.interrupted()</code> returns true and clears the current thread's flag.</li>
+        <li>A second <code>Thread.interrupted()</code> and the final <code>isInterrupted()</code> therefore observe false.</li>
+      </ol>
+    usage: true
+  interruptSleepingWorker():
+    execution: |-
+      <p>The service interrupts a worker that is blocked in <code>Thread.sleep()</code>.</p>
+      <ol>
+        <li>The worker signals just before entering a long sleep.</li>
+        <li>The caller interrupts it, causing <code>sleep()</code> to throw <code>InterruptedException</code> and clear the interrupt status.</li>
+        <li>The catch block records the cleared flag, explicitly restores it with <code>interrupt()</code>, and records the restored state.</li>
+        <li>The caller joins the worker and returns the observations.</li>
+      </ol>
+    usage: true
+  cancelWithCleanup():
+    execution: |-
+      <p>The worker models a cancellable task that owns a resource and must release it on every exit path.</p>
+      <ol>
+        <li>It marks the resource open and loops while no interrupt is pending, sleeping briefly between checks.</li>
+        <li>The caller interrupts the worker; an interrupted sleep restores the flag so the loop terminates cooperatively.</li>
+        <li>A <code>finally</code> block closes the resource and records that cleanup ran.</li>
+        <li>The request waits for termination and returns interruption, cleanup, and resource-state flags.</li>
+      </ol>
+    usage: true
+  interruptSynchronizedWaiter():
+    execution: |-
+      <p>The caller deliberately holds an intrinsic monitor while a worker tries to enter the same <code>synchronized</code> block.</p>
+      <ol>
+        <li>The worker reaches the monitor acquisition point and becomes <code>BLOCKED</code>.</li>
+        <li>The caller interrupts it while still holding the monitor and verifies that the worker remains <code>BLOCKED</code>; the interrupt flag is set but monitor acquisition is not cancelled.</li>
+        <li>After the caller leaves the synchronized block, the worker acquires the monitor, observes the pending interrupt flag, exits, and is joined.</li>
+      </ol>
+    usage: true
+  stopFlagVsInterrupt():
+    execution: |-
+      <p>The demo contrasts a visible stop flag with interruption while a worker is inside a blocking operation.</p>
+      <ol>
+        <li>The worker loops on a volatile stop flag but spends each iteration in a long <code>sleep()</code>.</li>
+        <li>The caller sets the stop flag and immediately observes that the sleeping worker is still alive and timed-waiting.</li>
+        <li>The caller then interrupts the worker, waking the sleep with <code>InterruptedException</code>; the worker restores the flag and exits.</li>
+        <li>The result shows that the stop flag alone did not unblock the operation.</li>
+      </ol>
+    usage: true
+LeakController:
+  threadLeakPattern():
+    execution: |-
+      <p>The service creates a thread that waits indefinitely on a latch to model a thread-leak pattern, then bounds the demo with cleanup.</p>
+      <ol>
+        <li>The worker starts and blocks waiting for a stop latch.</li>
+        <li>The service records that the thread is alive and would remain so if the owning code never released it.</li>
+        <li>In <code>finally</code>, the latch is released and the worker is joined with a deadline; the response confirms the worker is no longer alive.</li>
+      </ol>
+    usage: true
+  poolLeakPattern():
+    execution: |-
+      <p>A fixed thread pool completes two trivial tasks but is intentionally inspected before shutdown.</p>
+      <ol>
+        <li>Two tasks count down a latch and the caller waits for both to finish.</li>
+        <li>The service records that the executor is still not shut down after its work is complete, illustrating the ownership leak if shutdown were forgotten.</li>
+        <li>The <code>finally</code> block performs graceful shutdown with a forced fallback if termination takes too long.</li>
+      </ol>
+    usage: true
+  queuePressure():
+    execution: |-
+      <p>The service creates a single-worker <code>ThreadPoolExecutor</code> with a queue capacity of three and <code>AbortPolicy</code>.</p>
+      <ol>
+        <li>The worker is occupied by a latch-blocked task.</li>
+        <li>Four additional tasks are submitted while the worker remains busy; three fill the bounded queue and the fourth is rejected.</li>
+        <li>The response reports queue size and rejection count, then releases the worker and shuts the executor down.</li>
+      </ol>
+    usage: true
+ThreadPoolController:
+  executorFlow():
+    execution: |-
+      <p>The service drives a <code>ThreadPoolExecutor</code> through its core-thread, queue, maximum-thread, and rejection decisions.</p>
+      <ol>
+        <li>Task 1 creates the single core worker.</li>
+        <li>Task 2 is queued because the core worker is busy and the queue has one slot.</li>
+        <li>Task 3 causes a second worker to be created up to <code>maximumPoolSize = 2</code>.</li>
+        <li>Task 4 arrives with both workers busy and the queue full, so <code>AbortPolicy</code> rejects it; snapshots record pool and queue sizes at each stage.</li>
+      </ol>
+    usage: true
+  executeVsSubmit():
+    execution: |-
+      <p>Two single-thread executors expose the different exception channels of <code>execute()</code> and <code>submit()</code>.</p>
+      <ol>
+        <li>An <code>execute()</code> task throws, and a custom uncaught-exception handler on the worker records that failure.</li>
+        <li>A <code>submit()</code> task throws, but its exception is captured inside the returned <code>Future</code>.</li>
+        <li>The caller invokes <code>get()</code>, receives <code>ExecutionException</code>, records its cause, and shuts both executors down.</li>
+      </ol>
+    usage: true
+  fixedPoolReuse():
+    execution: |-
+      <p>A fixed pool of two named workers executes six short tasks.</p>
+      <ol>
+        <li>Every task records the worker thread name into a concurrent set and counts down a completion latch.</li>
+        <li>The service waits until all six tasks finish.</li>
+        <li>The returned worker-name set demonstrates reuse of the same small worker pool across more tasks than threads, after which the executor is shut down.</li>
+      </ol>
+    usage: true
+  executorFactories():
+    execution: |-
+      <p>The endpoint runs bounded samples for four <code>Executors</code> factory methods.</p>
+      <ol>
+        <li>A fixed pool with two blocked workers queues the remaining submitted tasks.</li>
+        <li>A cached pool receives four simultaneous blocked tasks and grows because no worker is idle.</li>
+        <li>A single-thread executor processes three tasks in submission order.</li>
+        <li>A scheduled pool runs a task after a requested delay and records the worker and elapsed time.</li>
+      </ol>
+    usage: true
+  scheduledExecution():
+    execution: |-
+      <p>The service measures three executions each for fixed-rate and fixed-delay scheduling on a single scheduled worker.</p>
+      <ol>
+        <li>Both modes use a 30 ms configured interval while each task deliberately sleeps for about 60 ms.</li>
+        <li>For fixed rate, missed schedule times do not create overlapping executions on the single worker, so later runs can start as soon as the previous run finishes.</li>
+        <li>For fixed delay, each next run waits for the configured delay after the previous run ends.</li>
+        <li>The response contains start/end timestamps and the observed inter-run gaps.</li>
+      </ol>
+    usage: true
+  scheduledFailure():
+    execution: |-
+      <p>A single-thread scheduled executor runs a fixed-rate task that throws on every invocation.</p>
+      <ol>
+        <li>The first execution increments a counter and throws <code>IllegalStateException</code>.</li>
+        <li>The periodic <code>ScheduledFuture</code> completes exceptionally; <code>get()</code> exposes the failure through <code>ExecutionException</code>.</li>
+        <li>The service records that only one run occurred because subsequent executions of that periodic task are suppressed after the uncaught failure.</li>
+      </ol>
+    usage: true
+  callerRuns():
+    execution: |-
+      <p>The service saturates a one-worker, one-queue-slot executor configured with <code>CallerRunsPolicy</code>.</p>
+      <ol>
+        <li>A latch-blocked task occupies the worker.</li>
+        <li>A second task fills the only queue slot.</li>
+        <li>The next submitted task is rejected by normal capacity checks, so <code>CallerRunsPolicy</code> executes it synchronously on the HTTP caller thread.</li>
+        <li>The service compares the caller and fallback thread names, then releases and shuts down the executor.</li>
+      </ol>
+    usage: true
+  discardPolicies():
+    execution: |-
+      <p>Two saturated one-worker executors demonstrate the data-loss semantics of discard rejection policies.</p>
+      <ol>
+        <li>With <code>DiscardPolicy</code>, a running task occupies the worker, one task fills the queue, and the next task is silently dropped.</li>
+        <li>With <code>DiscardOldestPolicy</code>, the queued oldest task is removed when a newer task arrives, and the newer task takes its place.</li>
+        <li>After releasing the worker, counters reveal which queued tasks actually ran.</li>
+      </ol>
+    usage: true
+  customRejectionHandler():
+    execution: |-
+      <p>The executor uses a custom <code>RejectedExecutionHandler</code> to make overload observable and explicit.</p>
+      <ol>
+        <li>A blocked worker and one queued task saturate the one-thread, one-slot executor.</li>
+        <li>A third submission invokes the custom handler on the submitting thread.</li>
+        <li>The handler increments a rejection counter, records that thread name, and throws <code>RejectedExecutionException</code>.</li>
+        <li>The service catches the exception, releases the worker, and returns the recorded overload metadata.</li>
+      </ol>
+    usage: true
+  gracefulShutdown():
+    execution: |-
+      <p>A two-thread fixed pool receives four short tasks before a graceful shutdown is initiated.</p>
+      <ol>
+        <li>Each task sleeps briefly and increments a completion counter.</li>
+        <li>The service calls <code>shutdown()</code>, which rejects new work but allows submitted tasks to finish.</li>
+        <li>It waits up to two seconds for termination and only falls back to <code>shutdownNow()</code> if needed.</li>
+        <li>The response reports completed task count and the executor's shutdown/termination state.</li>
+      </ol>
+    usage: true
+  forcedShutdown():
+    execution: |-
+      <p>A single-thread executor is arranged with one running blocked task and one queued task before forceful shutdown.</p>
+      <ol>
+        <li>The running task waits on a latch while a second runnable remains queued.</li>
+        <li>The service first calls <code>shutdown()</code> and confirms that the executor does not terminate within a short wait.</li>
+        <li><code>shutdownNow()</code> interrupts the running worker and returns the queued task that never started.</li>
+        <li>The result reports interruption, the returned pending task, its zero run count, and final termination.</li>
+      </ol>
+    usage: true
+SynchronizationController:
+  synchronizedCounter():
+    execution: |-
+      <p>Four workers concurrently update one counter whose increment and read methods are synchronized on the counter instance.</p>
+      <ol>
+        <li>A start latch releases all workers together.</li>
+        <li>Each worker performs 1,000 compound <code>value++</code> operations through the synchronized method.</li>
+        <li>The caller joins every worker and compares the final value with the expected 4,000 updates.</li>
+      </ol>
+    usage: true
+  reentrantLock():
+    execution: |-
+      <p>The current request thread acquires the same <code>ReentrantLock</code> twice.</p>
+      <ol>
+        <li>After the first <code>lock()</code>, the service records hold count one.</li>
+        <li>The same thread calls <code>lock()</code> again successfully and observes hold count two.</li>
+        <li>Nested <code>finally</code> blocks call <code>unlock()</code> twice so the hold count is fully released.</li>
+      </ol>
+    usage: true
+  tryLock():
+    execution: |-
+      <p>One worker deliberately holds a <code>ReentrantLock</code> while a contender performs a timed acquisition attempt.</p>
+      <ol>
+        <li>The holder acquires the lock and waits on a release latch.</li>
+        <li>The contender waits until ownership is established, then calls <code>tryLock(100 ms)</code>.</li>
+        <li>The timeout expires before the holder is released, so the contender does not enter the critical section.</li>
+        <li>The caller then releases the holder and joins both workers.</li>
+      </ol>
+    usage: true
+  interruptibleLock():
+    execution: |-
+      <p>The request thread holds a <code>ReentrantLock</code> so a worker must wait in <code>lockInterruptibly()</code>.</p>
+      <ol>
+        <li>The service starts the waiter and waits until it is blocked waiting for the explicit lock.</li>
+        <li>The waiter is interrupted before the lock is released.</li>
+        <li><code>lockInterruptibly()</code> throws <code>InterruptedException</code>; the waiter records interruption and never acquires the lock.</li>
+        <li>The caller releases its lock and cleans up the terminated worker.</li>
+      </ol>
+    usage: true
+  reentrantLockPolicy():
+    execution: |-
+      <p>This endpoint inspects <code>ReentrantLock</code> policy configuration rather than running a contention race.</p>
+      <ol>
+        <li>It constructs the default lock, an explicitly unfair lock, and a fair lock and reads each <code>isFair()</code> value.</li>
+        <li>The returned metadata also records the API semantics used by the lesson. Untimed <code>tryLock()</code> may barge despite fairness, timed acquisition honors the fairness policy, and fairness does not guarantee thread-start order or eliminate scheduler variance.</li>
+      </ol>
+    usage: true
+  readWriteLock():
+    execution: |-
+      <p>Two readers and one writer demonstrate shared-read and exclusive-write behavior.</p>
+      <ol>
+        <li>Both reader threads acquire the read lock and wait on a latch, allowing the service to observe two concurrent readers.</li>
+        <li>The writer then attempts the write lock and is observed waiting while the readers still hold their locks.</li>
+        <li>The caller releases both readers; after their read locks are released, the writer acquires and releases the write lock.</li>
+        <li>All three threads are joined and the concurrency observations are returned.</li>
+      </ol>
+    usage: true
+  readWriteLockDowngrade():
+    execution: |-
+      <p>The request thread performs the supported write-to-read downgrade sequence and then probes the unsupported reverse upgrade.</p>
+      <ol>
+        <li>It acquires the write lock, then acquires the read lock before releasing the write lock.</li>
+        <li>A competing writer starts and remains blocked while the downgraded read lock is still held.</li>
+        <li>After the read lock is released, the competing writer proceeds and terminates.</li>
+        <li>The service finally holds only a read lock and performs a short timed write-lock attempt, showing that direct read-to-write upgrade does not succeed.</li>
+      </ol>
+    usage: true
+  readWriteLockPolicy():
+    execution: |-
+      <p>This endpoint inspects policy characteristics of <code>ReentrantReadWriteLock</code> without starting contender threads.</p>
+      <ol>
+        <li>It creates the default lock and an explicitly fair lock and reads their fairness settings.</li>
+        <li>The result records the documented nuance that untimed read/write <code>tryLock()</code> calls do not honor fairness ordering, while fair mode still carries scheduling and throughput trade-offs rather than a strict start-order guarantee.</li>
+      </ol>
+    usage: true
+  stampedLock():
+    execution: |-
+      <p>A reader starts with an optimistic <code>StampedLock</code> read while a coordinated writer changes the protected value.</p>
+      <ol>
+        <li>The reader obtains an optimistic stamp and snapshots value 100.</li>
+        <li>After that snapshot, the writer acquires the write lock, changes the value to 120, and releases it.</li>
+        <li>The reader validates its old stamp, finds it invalid, falls back to a real read lock, and rereads the updated value.</li>
+        <li>The service returns the original snapshot, validation result, and fallback value.</li>
+      </ol>
+    usage: true
+  stampedLockLimitations():
+    execution: |-
+      <p>The request thread directly probes two <code>StampedLock</code> limitations.</p>
+      <ol>
+        <li>It acquires a write stamp and then calls <code>tryWriteLock()</code> again from the same thread; the second acquisition returns zero because the lock is not reentrant.</li>
+        <li>It converts the read view to the <code>Lock</code> interface and calls <code>newCondition()</code>, which throws <code>UnsupportedOperationException</code>.</li>
+        <li>The original write stamp is released in <code>finally</code>.</li>
+      </ol>
+    usage: true
+  atomicTools():
+    execution: |-
+      <p>Four workers update three atomic-style counters after a common start latch.</p>
+      <ol>
+        <li>Each worker performs 1,000 increments on both <code>AtomicInteger</code> and <code>LongAdder</code>.</li>
+        <li>Each worker also submits a distinct value to a <code>LongAccumulator</code> configured with <code>max</code>.</li>
+        <li>After all workers are joined, the service returns the exact total from the two counters and the maximum accumulated worker value.</li>
+      </ol>
+    usage: true
+  atomicCas():
+    execution: |-
+      <p>The endpoint performs deterministic compare-and-set operations, including an ABA sequence.</p>
+      <ol>
+        <li>An <code>AtomicInteger</code> successfully changes 10 to 20, then rejects a CAS using the stale expected value 10.</li>
+        <li>A plain <code>AtomicReference</code> changes A to B and back to the same A object; a stale reference then successfully CASes A to C, demonstrating ABA.</li>
+        <li>An <code>AtomicStampedReference</code> performs A-to-B-to-A while incrementing the stamp, so a CAS using the original stale stamp fails and reveals the intermediate changes.</li>
+      </ol>
+    usage: true
+  concurrentCollections():
+    execution: |-
+      <p>The service combines three finite concurrent-collection demonstrations.</p>
+      <ol>
+        <li>Four workers call <code>ConcurrentHashMap.merge</code> 250 times each on the same key, producing an atomic total of 1,000.</li>
+        <li>A <code>CopyOnWriteArrayList</code> iterator is created before adding a fourth element, so that iterator sees the old snapshot while the current list contains the new value.</li>
+        <li>A <code>ConcurrentLinkedQueue</code> is offered A and B, then polled until empty, including a final null poll.</li>
+      </ol>
+    usage: true
+  concurrentSkipList():
+    execution: |-
+      <p>Four workers concurrently insert disjoint key ranges into one <code>ConcurrentSkipListMap</code>.</p>
+      <ol>
+        <li>A latch releases all workers together.</li>
+        <li>Each worker inserts 25 keys in descending order within its own range.</li>
+        <li>After all workers are joined, the service reads the key set and verifies that the map exposes the combined keys in ascending sorted order from 0 through 99.</li>
+      </ol>
+    usage: true
+VirtualThreadController:
+  basic():
+    execution: |-
+      <p>The service starts one named virtual thread and inspects it from inside and after completion.</p>
+      <ol>
+        <li><code>Thread.ofVirtual().name(...).start(...)</code> creates and starts the worker.</li>
+        <li>Inside the worker, the code records <code>isVirtual()</code> and the thread description.</li>
+        <li>The caller joins the virtual thread and returns its virtual flag, daemon status, priority, textual description, and final terminated state.</li>
+      </ol>
+    usage: true
+  creationApi():
+    execution: |-
+      <p>The service creates two real virtual threads using the two primary creation styles.</p>
+      <ol>
+        <li><code>Thread.startVirtualThread(...)</code> starts one task directly.</li>
+        <li><code>Thread.ofVirtual().name("virtual-builder").start(...)</code> creates the second task through a builder.</li>
+        <li>Each task records that its current thread is virtual; both are joined and the builder-created thread's name is returned.</li>
+      </ol>
+    usage: true
+  blockingScale():
+    execution: |-
+      <p>The service runs the same 100 blocking sleep tasks through a small platform-thread pool and through a virtual-thread-per-task executor.</p>
+      <ol>
+        <li>A fixed platform pool with 10 workers submits 100 tasks that each sleep for 20 ms; closing the executor waits for them to finish and the elapsed time is recorded.</li>
+        <li>The experiment is repeated with <code>newVirtualThreadPerTaskExecutor()</code>, giving each submitted task a virtual thread.</li>
+        <li>The response returns both elapsed times as an illustrative measurement and explicitly marks the experiment as non-benchmark-grade.</li>
+      </ol>
+    usage: true
+  limitedResource():
+    execution: |-
+      <p>Thirty virtual-thread tasks compete for a resource guarded by a five-permit <code>Semaphore</code>.</p>
+      <ol>
+        <li>Each virtual thread acquires a permit before entering the simulated resource section.</li>
+        <li>Atomic counters track current and maximum simultaneous entrants while each holder sleeps briefly.</li>
+        <li>Every task releases its permit in <code>finally</code> and counts down a completion latch.</li>
+        <li>The response verifies that concurrency inside the limited resource never exceeded five despite having many cheap virtual threads.</li>
+      </ol>
+    usage: true
+  threadLocal():
+    execution: |-
+      <p>The service checks plain and inheritable thread-local behavior on virtual threads.</p>
+      <ol>
+        <li>The first virtual thread sets a plain <code>ThreadLocal</code>, reads it, removes it in <code>finally</code>, and verifies cleanup.</li>
+        <li>A second virtual thread reads the same plain <code>ThreadLocal</code> and sees null because the state is per thread.</li>
+        <li>The parent then sets an <code>InheritableThreadLocal</code>; one virtual thread inherits it by default, while another is created with <code>inheritInheritableThreadLocals(false)</code> and sees null.</li>
+        <li>The parent context is removed after both threads finish.</li>
+      </ol>
+    usage: true

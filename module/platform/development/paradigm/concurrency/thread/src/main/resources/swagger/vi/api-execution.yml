@@ -1,0 +1,714 @@
+AsyncController:
+  future():
+    execution: |-
+      <p>API tạo một single-thread executor và submit một Callable bị giữ bởi CountDownLatch để quan sát trạng thái Future trước khi task được phép hoàn thành.</p>
+      <ol>
+        <li>Kiểm tra isDone khi worker vẫn đang chờ latch.</li>
+        <li>Mở latch rồi gọi get với timeout để lấy PAYMENT_OK và xác nhận Future đã hoàn thành.</li>
+        <li>Cuối cùng shutdownNow và chờ executor terminate để không để lại worker.</li>
+      </ol>
+    usage: true
+  futureCancellation():
+    execution: |-
+      <p>API chạy hai thí nghiệm Future.cancel trên task đang chờ CountDownLatch.</p>
+      <ol>
+        <li>Với cancel(false), Future chuyển sang cancelled nhưng worker không bị interrupt; service chủ động mở latch để task kết thúc.</li>
+        <li>Với cancel(true), worker đang await nhận interrupt và ghi nhận cờ interrupted.</li>
+        <li>Cả hai trường hợp đều kiểm tra get ném CancellationException và executor được cleanup.</li>
+      </ol>
+    usage: true
+  pipeline():
+    execution: |-
+      <p>API dựng một pipeline CompletableFuture trên fixed pool 2 thread.</p>
+      <ol>
+        <li>Tỷ giá và chuỗi lấy order rồi price chạy bất đồng bộ.</li>
+        <li>thenCombineAsync nhân giá USD với tỷ giá, sau đó thenApplyAsync cộng phí vận chuyển.</li>
+        <li>Tên thread của từng stage được ghi lại và executor chỉ shutdown khi pipeline hoàn tất.</li>
+      </ol>
+    usage: true
+  fastest():
+    execution: |-
+      <p>API điều khiển hai CompletableFuture bằng latch để minh họa anyOf theo completion đầu tiên.</p>
+      <ol>
+        <li>Server A được mở trước nên thắng race; Server B vẫn được mở và hoàn tất sau đó.</li>
+        <li>Một race phụ cho future lỗi hoàn thành trước future thành công để chứng minh exceptional completion cũng có thể thắng anyOf.</li>
+        <li>Kiểm tra future thua không bị tự động cancel.</li>
+      </ol>
+    usage: true
+  exceptionHandling():
+    execution: |-
+      <p>API tạo một CompletableFuture cố ý ném IllegalStateException rồi dùng handle để biến cả nhánh thành công và lỗi thành một kết quả thống nhất.</p>
+      <ol>
+        <li>Stage nguồn complete exceptionally.</li>
+        <li>handle nhận error, đánh dấu recovered và trả FALLBACK thay vì để exception lan ra response.</li>
+      </ol>
+    usage: true
+  executionVariant():
+    execution: |-
+      <p>API dùng một completedFuture để quan sát chính xác execution policy của continuation.</p>
+      <ol>
+        <li>thenApply trên stage đã complete được chạy ngay trên caller thread.</li>
+        <li>thenApplyAsync được gắn explicit executor một thread tên async-variant-worker.</li>
+        <li>Kết quả so sánh thread thực tế rồi shutdown executor.</li>
+      </ol>
+    usage: true
+  allOf():
+    execution: |-
+      <p>API chạy hai nhóm thí nghiệm với CompletableFuture.allOf.</p>
+      <ol>
+        <li>Ba task inventory, payment và shipping chạy trên fixed pool; allOf chỉ complete khi cả ba xong và từng kết quả được đọc từ future gốc.</li>
+        <li>Nhóm thứ hai cho một future fail trước trong khi sibling chưa xong; aggregate chỉ hoàn tất sau sibling rồi complete exceptionally.</li>
+        <li>Sự cố của một input không tự cancel sibling.</li>
+      </ol>
+    usage: true
+  timeoutCancellation():
+    execution: |-
+      <p>API so sánh timeout và cancellation của CompletableFuture với công việc thật đang chạy bên dưới.</p>
+      <ol>
+        <li>orTimeout làm future complete với TimeoutException nhưng worker đang chờ latch không bị interrupt.</li>
+        <li>cancel(true) làm CompletableFuture cancelled nhưng mayInterruptIfRunning không dừng worker supplyAsync trong thí nghiệm này.</li>
+        <li>Service mở latch và shutdown executor để kết thúc underlying work một cách xác định.</li>
+      </ol>
+    usage: true
+BasicThreadController:
+  processAndThread():
+    execution: |-
+      <p>API đọc trực tiếp execution context của request hiện tại.</p>
+      <ol>
+        <li>Lấy PID từ ProcessHandle.current().</li>
+        <li>Lấy tên, id, state và daemon flag của Thread đang xử lý HTTP request.</li>
+        <li>Trả các giá trị quan sát được mà không tạo worker mới.</li>
+      </ol>
+    usage: true
+  startVsRun():
+    execution: |-
+      <p>API chạy cùng kiểu Runnable theo hai cơ chế khác nhau để đối chiếu thread thực thi.</p>
+      <ol>
+        <li>Gọi run trực tiếp nên task chạy ngay trên request thread.</li>
+        <li>Tạo Thread basic-start-worker rồi gọi start để JVM chạy task trên worker riêng.</li>
+        <li>join worker trước khi trả về và cleanup nếu cần.</li>
+      </ol>
+    usage: true
+  threadLifeCycle():
+    execution: |-
+      <p>API chủ động dẫn một worker qua các trạng thái Thread.State có thể quan sát.</p>
+      <ol>
+        <li>Ghi NEW, start worker và giữ spin để bắt RUNNABLE.</li>
+        <li>Dùng timed latch tạo TIMED_WAITING, giữ monitor để ép BLOCKED, rồi wait trên monitor khác để tạo WAITING.</li>
+        <li>notifyAll cho worker chạy tiếp, join và ghi TERMINATED; finally giải phóng mọi gate để cleanup.</li>
+      </ol>
+    usage: true
+CreateThreadController:
+  createByExtends():
+    execution: |-
+      <p>API tạo MyWorker là subclass của Thread và gắn logic trực tiếp trong run.</p>
+      <ol>
+        <li>Ghi nhận request thread.</li>
+        <li>Khởi động MyWorker tên extends-thread-worker để run trên thread riêng.</li>
+        <li>join worker rồi trả tên caller và worker, kèm cleanup nếu worker chưa dừng.</li>
+      </ol>
+    usage: true
+  createByRunnable():
+    execution: |-
+      <p>API tách task Runnable khỏi đối tượng Thread thực thi.</p>
+      <ol>
+        <li>Tạo Runnable chỉ chứa phần công việc.</li>
+        <li>Gắn Runnable vào Thread runnable-thread-worker và gọi start.</li>
+        <li>join trước khi trả kết quả để xác nhận task chạy trên worker khác caller.</li>
+      </ol>
+    usage: true
+  createByCallable():
+    execution: |-
+      <p>API bọc Callable trong FutureTask rồi dùng Thread thường để thực thi.</p>
+      <ol>
+        <li>Callable trả về chuỗi chứa tên thread thực tế.</li>
+        <li>FutureTask vừa là Runnable cho Thread callable-thread-worker vừa là Future chứa kết quả.</li>
+        <li>get với timeout lấy giá trị, sau đó join và cleanup worker.</li>
+      </ol>
+    usage: true
+DaemonThreadController:
+  inspectDaemonRules():
+    execution: |-
+      <p>API quan sát daemon flag mà không cần chạy child thread.</p>
+      <ol>
+        <li>Đọc daemon status của request thread.</li>
+        <li>Tạo child Thread và đọc flag mặc định để thấy nó kế thừa trạng thái từ thread tạo ra.</li>
+        <li>Gọi setDaemon(true) trước khi start và trả lại trạng thái mới; JVM lifecycle đầy đủ được tách sang DaemonJvmExitDemo.</li>
+      </ol>
+    usage: true
+ConcurrencyProblemController:
+  raceCondition():
+    execution: |-
+      <p>API tạo lost update theo cách deterministic trên một counter thường.</p>
+      <ol>
+        <li>Hai worker cùng đọc counter trước và đồng bộ bằng CountDownLatch để chắc chắn đều thấy cùng snapshot.</li>
+        <li>Sau đó cả hai cùng ghi snapshot + 1.</li>
+        <li>Kết quả cuối chỉ tăng một lần thay vì hai, cho thấy read-modify-write không atomic.</li>
+      </ol>
+    usage: true
+  startJoinHappensBefore():
+    execution: |-
+      <p>API dùng Thread.start và Thread.join để quan sát happens-before mà không dùng volatile.</p>
+      <ol>
+        <li>Parent ghi beforeStart = 7 trước khi start worker.</li>
+        <li>Worker đọc giá trị đó rồi ghi writtenByWorker = 42.</li>
+        <li>Sau join, parent đọc được giá trị worker đã ghi và trả lại cả hai chiều visibility.</li>
+      </ol>
+    usage: true
+  volatilePublication():
+    execution: |-
+      <p>API publish dữ liệu thường thông qua một volatile flag.</p>
+      <ol>
+        <li>Reader spin chờ ready trở thành true.</li>
+        <li>Writer ghi data = 42 trước rồi mới ghi volatile ready = true.</li>
+        <li>Khi reader thấy ready, nó đọc data và service join cả hai thread để xác nhận publication thành công.</li>
+      </ol>
+    usage: true
+  volatileIsNotAtomic():
+    execution: |-
+      <p>API lặp lại lost update nhưng counter được khai báo volatile.</p>
+      <ol>
+        <li>Hai worker cùng đọc volatile value và đồng bộ để giữ cùng snapshot.</li>
+        <li>Mỗi worker tự tính snapshot + 1 rồi ghi lại.</li>
+        <li>Visibility của volatile vẫn không ghép chuỗi read-modify-write thành một thao tác atomic nên kết quả có lost update.</li>
+      </ol>
+    usage: true
+  deadlockRisk():
+    execution: |-
+      <p>API mô phỏng circular lock dependency mà không để request deadlock vĩnh viễn.</p>
+      <ol>
+        <li>Worker A giữ lock A, worker B giữ lock B và barrier bằng latch để cả hai cùng sở hữu lock đầu tiên.</li>
+        <li>Mỗi worker dùng tryLock không chờ để thử lấy lock còn lại.</li>
+        <li>Cả hai thất bại ở lock thứ hai, ghi nhận circular dependency rồi nhả lock ban đầu và kết thúc.</li>
+      </ol>
+    usage: true
+  deadlockPrevention():
+    execution: |-
+      <p>API loại bỏ circular wait bằng một global lock order cố định.</p>
+      <ol>
+        <li>Hai worker cùng chờ start latch.</li>
+        <li>Cả hai luôn acquire lock A trước rồi lock B.</li>
+        <li>Sau critical section chúng nhả theo thứ tự ngược; cả hai hoàn thành mà không tạo vòng chờ.</li>
+      </ol>
+    usage: true
+  boundedLivelock():
+    execution: |-
+      <p>API tạo một livelock hữu hạn bằng hai worker liên tục nhường nhau.</p>
+      <ol>
+        <li>Mỗi vòng, cả hai cùng đánh dấu đang thử và gặp nhau qua CyclicBarrier.</li>
+        <li>Khi thấy đối phương cũng đang thử, cả hai cùng back off rồi lặp lại.</li>
+        <li>Sau 5 vòng service trả số lần backoff và cho thấy worker hoạt động liên tục nhưng không tạo progress.</li>
+      </ol>
+    usage: true
+ThreadLocalController:
+  isolation():
+    execution: |-
+      <p>API tạo hai platform thread và dùng cùng một ThreadLocal với hai giá trị khác nhau.</p>
+      <ol>
+        <li>Thread A set REQ-A, Thread B set REQ-B.</li>
+        <li>Mỗi thread đọc lại đúng context của chính mình rồi remove trong finally.</li>
+        <li>Caller không set giá trị nên ThreadLocal trên request thread vẫn null.</li>
+      </ol>
+    usage: true
+  inheritance():
+    execution: |-
+      <p>API kiểm tra thời điểm InheritableThreadLocal được sao chép sang child thread.</p>
+      <ol>
+        <li>Parent set PARENT-A rồi tạo child Thread.</li>
+        <li>Trước khi start child, parent đổi thành PARENT-B.</li>
+        <li>Child vẫn quan sát PARENT-A vì giá trị được snapshot lúc Thread được tạo; parent context được remove khi xong.</li>
+      </ol>
+    usage: true
+  poolReuseProblem():
+    execution: |-
+      <p>API dùng pool một worker để cho thấy InheritableThreadLocal không phù hợp với thread reuse.</p>
+      <ol>
+        <li>Parent set USER_A và submit task đầu, khiến worker được tạo và kế thừa USER_A.</li>
+        <li>Parent đổi thành USER_B rồi submit task thứ hai lên cùng worker.</li>
+        <li>Task thứ hai vẫn thấy USER_A, minh họa stale context khi pool tái sử dụng thread.</li>
+      </ol>
+    usage: true
+  explicitPropagation():
+    execution: |-
+      <p>API truyền ThreadLocal sang pool bằng wrapper chủ động capture và restore context.</p>
+      <ol>
+        <li>Tạo worker trước để nó không thể kế thừa context về sau.</li>
+        <li>Caller set USER_B, wrapper capture giá trị rồi set nó vào worker ngay trước task.call.</li>
+        <li>Sau task, wrapper khôi phục context cũ của worker và caller remove giá trị.</li>
+      </ol>
+    usage: true
+CoordinationController:
+  join():
+    execution: |-
+      <p>API start một worker đơn giản rồi dùng join như điểm đồng bộ.</p>
+      <ol>
+        <li>Worker đặt cờ completed.</li>
+        <li>Caller join và chỉ tiếp tục khi worker đã terminate.</li>
+        <li>Response kiểm tra cờ hoàn thành và state TERMINATED sau join.</li>
+      </ol>
+    usage: true
+  waitNotify():
+    execution: |-
+      <p>API tạo ba waiter trên cùng intrinsic monitor để minh họa predicate loop, notify và notifyAll.</p>
+      <ol>
+        <li>Cả ba vào wait trong vòng while khi ready=false.</li>
+        <li>notify đánh thức một waiter nhưng predicate vẫn false nên waiter quay lại chờ.</li>
+        <li>Sau đó service set ready=true và notifyAll để tất cả hoàn thành, rồi join và cleanup.</li>
+      </ol>
+    usage: true
+  condition():
+    execution: |-
+      <p>API dùng một ReentrantLock với hai Condition tách biệt cho hai loại sự kiện.</p>
+      <ol>
+        <li>Một waiter chờ dataAvailable, waiter còn lại chờ shutdownRequested.</li>
+        <li>Signal dataAvailable chỉ cho data waiter đi tiếp trong khi shutdown waiter vẫn chờ.</li>
+        <li>Sau đó signal shutdownRequested và join cả hai, chứng minh mỗi Condition có wait queue logic riêng.</li>
+      </ol>
+    usage: true
+  lockSupport():
+    execution: |-
+      <p>API tạo ba thread park bằng LockSupport với cùng blocker object.</p>
+      <ol>
+        <li>Đọc blocker metadata khi thread đầu đang park.</li>
+        <li>unpark riêng thread thứ hai và xác nhận thread thứ nhất vẫn park.</li>
+        <li>Interrupt thread thứ ba làm park return mà không ném InterruptedException; cuối cùng unpark thread còn lại và cleanup.</li>
+      </ol>
+    usage: true
+  blockingQueue():
+    execution: |-
+      <p>API chạy producer-consumer trên ArrayBlockingQueue capacity 2.</p>
+      <ol>
+        <li>Producer put 5 item nên tự block khi queue đầy.</li>
+        <li>Consumer take đúng 5 item, đồng thời giải phóng chỗ cho producer.</li>
+        <li>Service join cả hai và xác nhận queue rỗng khi kết thúc.</li>
+      </ol>
+    usage: true
+  blockingQueueVariants():
+    execution: |-
+      <p>API chạy ba thí nghiệm queue trong cùng request.</p>
+      <ol>
+        <li>ArrayBlockingQueue capacity 2 được fill rồi offer item thứ ba để quan sát thất bại khi full.</li>
+        <li>LinkedBlockingQueue capacity 3 được drainTo tối đa 2 phần tử.</li>
+        <li>PriorityBlockingQueue nhận ba task có priority khác nhau rồi poll để quan sát thứ tự ưu tiên.</li>
+      </ol>
+    usage: true
+  priorityQueueSemantics():
+    execution: |-
+      <p>API đưa hai phần tử cùng priority và một phần tử ưu tiên cao hơn vào PriorityBlockingQueue.</p>
+      <ol>
+        <li>Poll toàn bộ queue để ghi thứ tự thực tế.</li>
+        <li>Xác nhận phần tử priority cao hơn đứng đầu.</li>
+        <li>Response nhấn mạnh equal-priority không có FIFO contract và queue này không cung cấp bounded-capacity backpressure.</li>
+      </ol>
+    usage: true
+  synchronousQueue():
+    execution: |-
+      <p>API dùng SynchronousQueue không có vùng chứa để minh họa handoff trực tiếp.</p>
+      <ol>
+        <li>Producer start trước và block tại put vì chưa có consumer nhận.</li>
+        <li>Sau khi quan sát producer đang waiting, service start consumer gọi take.</li>
+        <li>Hai thread gặp nhau, payload được chuyển trực tiếp và queue size vẫn bằng 0.</li>
+      </ol>
+    usage: true
+  synchronizers():
+    execution: |-
+      <p>API chạy một bộ thí nghiệm nhỏ cho các synchronizer chuẩn của JDK.</p>
+      <ol>
+        <li>CountDownLatch chờ hai worker; CyclicBarrier cho hai participant gặp nhau và chạy barrier action.</li>
+        <li>Semaphore giới hạn tối đa hai worker trong vùng bảo vệ; Phaser đồng bộ nhiều phase và deregister.</li>
+        <li>Exchanger cho hai thread trao đổi payload trực tiếp rồi service tổng hợp kết quả.</li>
+      </ol>
+    usage: true
+  synchronizersTimeout():
+    execution: |-
+      <p>API tập trung vào timeout, failure và recovery semantics của nhiều synchronizer.</p>
+      <ol>
+        <li>CountDownLatch timeout ở caller nhưng worker vẫn có thể chạy tiếp sau khi được release.</li>
+        <li>CyclicBarrier timeout làm barrier broken, sau reset một generation mới lại chạy được; Semaphore thử acquire thêm permit với timeout.</li>
+        <li>Phaser cho worker deregister theo phase; Exchanger được thử cả timeout không có partner và interrupt khi đang chờ.</li>
+      </ol>
+    usage: true
+  semaphorePermitAccounting():
+    execution: |-
+      <p>API cố ý release Semaphore mà chưa acquire để quan sát permit accounting.</p>
+      <ol>
+        <li>Semaphore bắt đầu với một permit.</li>
+        <li>Một unmatched release làm số permit tăng thành hai vì Semaphore không theo dõi ownership.</li>
+        <li>Service thử acquire cả hai permit và sau đó trả lại, minh họa vì sao code phải chỉ release permit thực sự đã acquire.</li>
+      </ol>
+    usage: true
+TaskExecutorController:
+  asyncWithContext():
+    execution: |-
+      <p>API đặt DemoContext và MDC requestId trên request thread rồi gọi method có @Async.</p>
+      <ol>
+        <li>ThreadPoolTaskExecutor dùng DemoTaskDecorator để capture DemoContext, MDC và RequestAttributes tại lúc submit.</li>
+        <li>Decorator cài các context đó lên worker, runAsync ghi nhận worker thread và giá trị quan sát được.</li>
+        <li>Sau task, decorator khôi phục context cũ của worker; controller cũng khôi phục context cũ của caller trong finally.</li>
+      </ol>
+    usage: true
+  asyncVoidException():
+    execution: |-
+      <p>API theo dõi exception của method @Async trả void bằng correlationId.</p>
+      <ol>
+        <li>Controller đăng ký một CompletableFuture quan sát trong AsyncExceptionProbe rồi gọi failWithoutFuture.</li>
+        <li>Method async cố ý ném IllegalStateException; AsyncUncaughtExceptionHandler lấy correlationId và complete future bằng metadata lỗi.</li>
+        <li>Nếu executor reject ngay lúc submit, controller complete future exceptionally để registration vẫn được cleanup.</li>
+      </ol>
+    usage: true
+InterruptionController:
+  interruptBusyWorker():
+    execution: |-
+      <p>API start một CPU-bound worker quay vòng cho tới khi thấy interrupt flag.</p>
+      <ol>
+        <li>Worker báo started rồi tăng bộ đếm trong vòng while kiểm tra isInterrupted.</li>
+        <li>Caller gọi interrupt và join.</li>
+        <li>Worker tự quan sát signal, thoát vòng lặp và kết thúc; interrupt ở đây là cooperative cancellation chứ không ép thread dừng.</li>
+      </ol>
+    usage: true
+  inspectInterruptFlag():
+    execution: |-
+      <p>API đặt interrupt flag trước khi cho worker đọc nó nhiều cách.</p>
+      <ol>
+        <li>Hai lần isInterrupted đều chỉ đọc nên vẫn trả true.</li>
+        <li>Lần đầu Thread.interrupted trả true đồng thời clear flag.</li>
+        <li>Lần Thread.interrupted tiếp theo và isInterrupted cuối cùng trả false, minh họa khác biệt giữa query và query-and-clear.</li>
+      </ol>
+    usage: true
+  interruptSleepingWorker():
+    execution: |-
+      <p>API interrupt một worker đang Thread.sleep.</p>
+      <ol>
+        <li>Worker vào sleep dài và caller gọi interrupt.</li>
+        <li>sleep ném InterruptedException đồng thời clear interrupt flag, nên service ghi nhận flag false ngay trong catch.</li>
+        <li>Worker chủ động gọi interrupt lại để restore flag rồi kết thúc.</li>
+      </ol>
+    usage: true
+  cancelWithCleanup():
+    execution: |-
+      <p>API mô phỏng worker giữ một resource rồi bị cancel.</p>
+      <ol>
+        <li>Worker đánh dấu resource đang mở và chạy vòng lặp có sleep.</li>
+        <li>Caller interrupt; worker bắt InterruptedException, restore flag và thoát loop.</li>
+        <li>Khối finally luôn đóng resource và đánh dấu cleanupCalled trước khi thread terminate.</li>
+      </ol>
+    usage: true
+  interruptSynchronizedWaiter():
+    execution: |-
+      <p>API giữ intrinsic monitor trên request thread để ép worker vào trạng thái BLOCKED khi cố synchronized.</p>
+      <ol>
+        <li>Sau khi quan sát BLOCKED, caller gọi interrupt.</li>
+        <li>Worker vẫn BLOCKED; interrupt chỉ đặt flag vì chờ intrinsic monitor không interruptible.</li>
+        <li>Khi caller rời synchronized, worker mới acquire monitor và thấy interrupt flag vẫn đang được giữ.</li>
+      </ol>
+    usage: true
+  stopFlagVsInterrupt():
+    execution: |-
+      <p>API so sánh volatile stop flag với interrupt khi worker đang ở blocking sleep.</p>
+      <ol>
+        <li>Worker vào Thread.sleep dài trong vòng lặp kiểm tra stopRequested.</li>
+        <li>Caller chỉ set stop flag nhưng worker vẫn sống và tiếp tục TIMED_WAITING vì chưa có cơ hội đọc flag.</li>
+        <li>Caller interrupt để đánh thức sleep; worker bắt InterruptedException và kết thúc ngay.</li>
+      </ol>
+    usage: true
+LeakController:
+  threadLeakPattern():
+    execution: |-
+      <p>API tạo một thread chờ CountDownLatch để mô phỏng thread bị bỏ quên.</p>
+      <ol>
+        <li>Sau start, service xác nhận worker còn sống và sẽ tiếp tục tồn tại nếu latch không bao giờ được mở.</li>
+        <li>Trong finally, latch được countDown và service join worker với deadline.</li>
+        <li>Response đối chiếu trạng thái trước và sau cleanup.</li>
+      </ol>
+    usage: true
+  poolLeakPattern():
+    execution: |-
+      <p>API tạo fixed thread pool 2 worker và chạy hai task ngắn.</p>
+      <ol>
+        <li>Sau khi task hoàn tất, pool vẫn chưa shutdown nên các worker thuộc quyền sở hữu của executor vẫn tồn tại.</li>
+        <li>Response ghi nhận pattern sẽ leak nếu owner quên shutdown.</li>
+        <li>Finally gọi shutdown và awaitTermination, fallback shutdownNow nếu cần.</li>
+      </ol>
+    usage: true
+  queuePressure():
+    execution: |-
+      <p>API tạo ThreadPoolExecutor một worker với bounded queue capacity 3 và AbortPolicy.</p>
+      <ol>
+        <li>Task đầu giữ worker bận bằng latch.</li>
+        <li>Bốn task tiếp theo được submit khi worker đang bận; ba task lấp queue và task dư bị reject.</li>
+        <li>Finally mở latch rồi shutdown, minh họa bounded queue giới hạn backlog thay vì tăng vô hạn.</li>
+      </ol>
+    usage: true
+ThreadPoolController:
+  executorFlow():
+    execution: |-
+      <p>API cấu hình ThreadPoolExecutor core=1, max=2 và queue capacity=1 để quan sát thuật toán nhận task.</p>
+      <ol>
+        <li>Task 1 tạo core worker; task 2 đi vào queue.</li>
+        <li>Task 3 làm queue đầy nên pool tăng lên worker thứ hai.</li>
+        <li>Task 4 gặp cả pool max và queue full nên AbortPolicy reject; cuối cùng latch được mở và executor shutdown.</li>
+      </ol>
+    usage: true
+  executeVsSubmit():
+    execution: |-
+      <p>API chạy hai task cố ý ném exception bằng execute và submit trên hai executor riêng.</p>
+      <ol>
+        <li>Exception từ execute đi ra uncaught exception channel của worker và được UncaughtExceptionHandler ghi nhận.</li>
+        <li>submit trả Future; exception được giữ trong Future và xuất hiện dưới dạng ExecutionException khi get.</li>
+        <li>Cả hai executor được shutdown sau khi quan sát xong.</li>
+      </ol>
+    usage: true
+  fixedPoolReuse():
+    execution: |-
+      <p>API submit 6 task vào fixed pool chỉ có 2 worker.</p>
+      <ol>
+        <li>Mỗi task ghi tên thread chạy nó vào một concurrent set.</li>
+        <li>CountDownLatch chờ đủ 6 task hoàn thành.</li>
+        <li>Số tên worker duy nhất cho thấy nhiều task được tái sử dụng trên cùng hai thread thay vì tạo thread mới cho từng task.</li>
+      </ol>
+    usage: true
+  executorFactories():
+    execution: |-
+      <p>API chạy bốn thí nghiệm bounded cho các factory trong Executors.</p>
+      <ol>
+        <li>Fixed pool giới hạn số worker và queue task dư; cached pool tăng worker khi không có thread rảnh.</li>
+        <li>SingleThreadExecutor chạy ba task tuần tự theo submission order.</li>
+        <li>ScheduledThreadPool chạy một task sau delay và ghi nhận thread cùng thời gian thực thi.</li>
+      </ol>
+    usage: true
+  scheduledExecution():
+    execution: |-
+      <p>API đo timeline của cùng một task định kỳ theo fixed-rate và fixed-delay.</p>
+      <ol>
+        <li>Mỗi mode chạy 3 lần trên scheduler một thread; mỗi lần làm việc 60 ms trong khi interval cấu hình 30 ms.</li>
+        <li>Service ghi start, end và gap giữa các lần chạy rồi cancel periodic future.</li>
+        <li>Kết quả cho thấy fixed-rate cố bám lịch còn fixed-delay đợi thêm delay sau khi lần trước kết thúc, và task không overlap trên single-thread scheduler.</li>
+      </ol>
+    usage: true
+  scheduledFailure():
+    execution: |-
+      <p>API scheduleAtFixedRate một task luôn ném IllegalStateException.</p>
+      <ol>
+        <li>Lần chạy đầu tăng counter rồi fail.</li>
+        <li>ScheduledFuture complete exceptionally và get trả ExecutionException.</li>
+        <li>Scheduler suppress các lần chạy định kỳ tiếp theo của chính task đó; finally cancel và shutdown executor.</li>
+      </ol>
+    usage: true
+  callerRuns():
+    execution: |-
+      <p>API làm bão hòa executor một worker và queue một phần tử với CallerRunsPolicy.</p>
+      <ol>
+        <li>Task đầu giữ worker bận, task thứ hai lấp queue.</li>
+        <li>Task thứ ba bị reject khỏi pool nhưng CallerRunsPolicy chạy ngay trên thread gọi execute.</li>
+        <li>Service so sánh callerThread với fallbackThread để xác nhận backpressure đã đẩy việc về caller.</li>
+      </ol>
+    usage: true
+  discardPolicies():
+    execution: |-
+      <p>API chạy hai executor bão hòa để so sánh DiscardPolicy và DiscardOldestPolicy.</p>
+      <ol>
+        <li>DiscardPolicy âm thầm bỏ task mới khi worker bận và queue đầy.</li>
+        <li>DiscardOldestPolicy loại task cũ đang nằm trong queue rồi đưa task mới vào thay thế.</li>
+        <li>Sau khi mở latch, các counter cho biết task nào thực sự đã chạy.</li>
+      </ol>
+    usage: true
+  customRejectionHandler():
+    execution: |-
+      <p>API bão hòa executor rồi dùng RejectedExecutionHandler tự viết.</p>
+      <ol>
+        <li>Worker đầu bị giữ và queue được lấp đầy.</li>
+        <li>Submission tiếp theo gọi handler trên chính caller thread; handler tăng rejection counter, ghi tên thread và ném RejectedExecutionException.</li>
+        <li>Controller nhận kết quả cho thấy overload vừa được ghi nhận vừa được báo lỗi rõ ràng.</li>
+      </ol>
+    usage: true
+  gracefulShutdown():
+    execution: |-
+      <p>API submit 4 task ngắn vào fixed pool 2 worker rồi gọi shutdown.</p>
+      <ol>
+        <li>shutdown ngừng nhận task mới nhưng cho running và queued task hoàn tất.</li>
+        <li>awaitTermination chờ tối đa 2 giây và chỉ fallback shutdownNow nếu quá hạn.</li>
+        <li>Response trả số task hoàn thành cùng trạng thái shutdown/terminated.</li>
+      </ol>
+    usage: true
+  forcedShutdown():
+    execution: |-
+      <p>API tạo single-thread executor với một task đang block và một task còn nằm trong queue.</p>
+      <ol>
+        <li>Gọi shutdown trước và chờ ngắn để chứng minh executor chưa thể terminate.</li>
+        <li>shutdownNow interrupt running task và trả danh sách task chưa từng bắt đầu.</li>
+        <li>Service xác nhận queued task không chạy, worker nhận interrupt và executor terminate sau force.</li>
+      </ol>
+    usage: true
+SynchronizationController:
+  synchronizedCounter():
+    execution: |-
+      <p>API cho 4 worker cùng tăng một counter dùng synchronized method.</p>
+      <ol>
+        <li>Tất cả chờ chung start latch rồi mỗi worker increment 1000 lần.</li>
+        <li>Intrinsic monitor serialize compound update value++.</li>
+        <li>Sau khi join, service so sánh actual với expected 4000 và cleanup toàn bộ worker.</li>
+      </ol>
+    usage: true
+  reentrantLock():
+    execution: |-
+      <p>API acquire cùng một ReentrantLock hai lần trên chính request thread.</p>
+      <ol>
+        <li>Lần lock đầu làm hold count bằng 1.</li>
+        <li>Thread hiện tại lock lại thành công và hold count tăng thành 2, chứng minh reentrancy.</li>
+        <li>Hai lần unlock trong các finally cân bằng chính xác số lần acquire.</li>
+      </ol>
+    usage: true
+  tryLock():
+    execution: |-
+      <p>API để một holder giữ ReentrantLock rồi cho contender thử acquire có timeout.</p>
+      <ol>
+        <li>Holder acquire lock và chờ release latch.</li>
+        <li>Contender chỉ bắt đầu sau khi holder đã giữ lock, gọi tryLock trong 100 ms và không acquire được.</li>
+        <li>Sau khi contender kết thúc, service mở latch cho holder nhả lock và join cả hai.</li>
+      </ol>
+    usage: true
+  interruptibleLock():
+    execution: |-
+      <p>API giữ ReentrantLock trên caller rồi cho worker chờ bằng lockInterruptibly.</p>
+      <ol>
+        <li>Worker bắt đầu chờ explicit lock và chuyển sang waiting state.</li>
+        <li>Caller interrupt worker trước khi nhả lock.</li>
+        <li>lockInterruptibly ném InterruptedException, worker không acquire lock và terminate; finally caller mới unlock.</li>
+      </ol>
+    usage: true
+  reentrantLockPolicy():
+    execution: |-
+      <p>API không tạo contention mà đọc trực tiếp policy của ba ReentrantLock.</p>
+      <ol>
+        <li>So sánh lock mặc định, explicit unfair và fair bằng isFair.</li>
+        <li>Response ghi lại nuance rằng untimed tryLock có thể barge dù lock fair, còn timed tryLock tôn trọng fairness.</li>
+        <li>Fairness không bảo đảm thứ tự start tuyệt đối và có trade-off throughput.</li>
+      </ol>
+    usage: true
+  readWriteLock():
+    execution: |-
+      <p>API chạy hai reader và một writer trên ReentrantReadWriteLock.</p>
+      <ol>
+        <li>Hai reader cùng giữ read lock và service đo max concurrent reader.</li>
+        <li>Writer bắt đầu trong lúc read lock còn giữ nên phải chờ.</li>
+        <li>Khi releaseReaders mở, hai reader unlock; writer mới acquire write lock rồi kết thúc.</li>
+      </ol>
+    usage: true
+  readWriteLockDowngrade():
+    execution: |-
+      <p>API thực hiện lock downgrading theo thứ tự an toàn từ write sang read.</p>
+      <ol>
+        <li>Caller giữ write lock, acquire thêm read lock rồi start một writer cạnh tranh.</li>
+        <li>Caller nhả write lock nhưng vẫn giữ read lock nên competing writer tiếp tục bị chặn; sau khi read lock được nhả nó mới chạy.</li>
+        <li>Cuối cùng service thử nâng read lên write bằng tryLock timeout và cho thấy upgrade không được hỗ trợ theo cách đó.</li>
+      </ol>
+    usage: true
+  readWriteLockPolicy():
+    execution: |-
+      <p>API đọc policy của ReentrantReadWriteLock mặc định và fair.</p>
+      <ol>
+        <li>isFair cho thấy constructor mặc định là unfair và instance explicit có thể fair.</li>
+        <li>Response ghi rõ untimed tryLock của cả read và write lock có thể bỏ qua fairness queue.</li>
+        <li>Fairness chỉ là chính sách chờ, không bảo đảm thứ tự thread start và có chi phí throughput.</li>
+      </ol>
+    usage: true
+  stampedLock():
+    execution: |-
+      <p>API ép một optimistic read của StampedLock bị invalid.</p>
+      <ol>
+        <li>Reader lấy optimistic stamp và snapshot value 100 rồi báo cho writer.</li>
+        <li>Writer acquire write lock, đổi value thành 120 và unlock.</li>
+        <li>Reader validate stamp thấy false nên fallback sang readLock để đọc lại giá trị mới một cách an toàn.</li>
+      </ol>
+    usage: true
+  stampedLockLimitations():
+    execution: |-
+      <p>API giữ write stamp của StampedLock rồi kiểm tra hai giới hạn quan trọng.</p>
+      <ol>
+        <li>Cùng thread gọi tryWriteLock lần nữa nhưng không reenter được.</li>
+        <li>Read-lock view được hỏi newCondition và ném UnsupportedOperationException.</li>
+        <li>Cuối cùng write stamp ban đầu được unlock đúng cách.</li>
+      </ol>
+    usage: true
+  atomicTools():
+    execution: |-
+      <p>API cho 4 worker chạy đồng thời trên AtomicInteger, LongAdder và LongAccumulator.</p>
+      <ol>
+        <li>Mỗi worker tăng AtomicInteger và LongAdder 1000 lần.</li>
+        <li>Mỗi worker đưa một giá trị riêng vào LongAccumulator cấu hình phép max.</li>
+        <li>Sau join, service đối chiếu hai bộ đếm với expected 4000 và đọc max tích lũy.</li>
+      </ol>
+    usage: true
+  atomicCas():
+    execution: |-
+      <p>API chạy CAS tuần tự để minh họa expected value và vấn đề ABA.</p>
+      <ol>
+        <li>AtomicInteger compareAndSet 10→20 thành công, còn CAS tiếp theo với expected 10 thất bại.</li>
+        <li>AtomicReference đi A→B→A; một stale reference vẫn CAS sang C thành công vì chỉ nhìn giá trị hiện tại.</li>
+        <li>AtomicStampedReference cũng đi A→B→A nhưng stamp tăng, nên CAS dùng version cũ bị từ chối và phát hiện thay đổi trung gian.</li>
+      </ol>
+    usage: true
+  concurrentCollections():
+    execution: |-
+      <p>API chạy ba ví dụ collection concurrent với semantics khác nhau.</p>
+      <ol>
+        <li>4 worker dùng ConcurrentHashMap.merge để cộng tổng 1000 lần một cách atomic theo key.</li>
+        <li>CopyOnWriteArrayList tạo iterator snapshot trước khi add phần tử mới, nên iterator cũ không thấy thay đổi.</li>
+        <li>ConcurrentLinkedQueue được offer hai item rồi poll đến rỗng bằng non-blocking operations.</li>
+      </ol>
+    usage: true
+  concurrentSkipList():
+    execution: |-
+      <p>API cho 4 worker ghi đồng thời vào các dải key khác nhau của ConcurrentSkipListMap.</p>
+      <ol>
+        <li>Mỗi worker insert 25 key theo thứ tự giảm dần trong dải riêng.</li>
+        <li>Sau khi join, service lấy keySet của map.</li>
+        <li>Kết quả xác nhận 100 key vẫn được duy trì theo sorted order từ firstKey đến lastKey.</li>
+      </ol>
+    usage: true
+VirtualThreadController:
+  basic():
+    execution: |-
+      <p>API tạo một virtual thread thật bằng Thread.ofVirtual().name().start().</p>
+      <ol>
+        <li>Worker tự đọc isVirtual và chuỗi mô tả của chính nó.</li>
+        <li>Caller join virtual thread và cleanup nếu cần.</li>
+        <li>Response ghi thêm daemon flag, priority và state sau join để quan sát các thuộc tính runtime.</li>
+      </ol>
+    usage: true
+  creationApi():
+    execution: |-
+      <p>API tạo hai virtual thread bằng hai API khác nhau.</p>
+      <ol>
+        <li>Thread.startVirtualThread chạy task thứ nhất và ghi nhận isVirtual.</li>
+        <li>Thread.ofVirtual().name("virtual-builder").start chạy task thứ hai và ghi lại tên được cấu hình.</li>
+        <li>Service join cả hai và xác nhận chúng đều terminate.</li>
+      </ol>
+    usage: true
+  blockingScale():
+    execution: |-
+      <p>API chạy cùng 100 blocking task, mỗi task sleep 20 ms, bằng hai loại executor.</p>
+      <ol>
+        <li>Fixed platform pool chỉ có 10 worker nên các task blocking phải chạy theo nhiều đợt.</li>
+        <li>VirtualThreadPerTaskExecutor cấp một virtual thread cho mỗi task blocking.</li>
+        <li>Service đo elapsed time của hai lượt như một demo định tính, không coi đây là benchmark chuẩn.</li>
+      </ol>
+    usage: true
+  limitedResource():
+    execution: |-
+      <p>API submit 30 task lên VirtualThreadPerTaskExecutor nhưng đặt Semaphore chỉ có 5 permit trước resource giả lập.</p>
+      <ol>
+        <li>Mỗi virtual thread phải acquire permit trước khi tăng active count và sleep ngắn.</li>
+        <li>Service theo dõi max concurrent thread bên trong vùng tài nguyên.</li>
+        <li>Task luôn release permit trong finally; kết quả xác nhận concurrency không vượt quá 5 dù có nhiều virtual thread.</li>
+      </ol>
+    usage: true
+  threadLocal():
+    execution: |-
+      <p>API kiểm tra ThreadLocal và InheritableThreadLocal trên virtual thread.</p>
+      <ol>
+        <li>Virtual thread đầu set plain ThreadLocal, đọc rồi remove; virtual thread thứ hai không thấy giá trị đó vì ThreadLocal vẫn per-thread.</li>
+        <li>Parent set InheritableThreadLocal rồi tạo một virtual thread mặc định để quan sát giá trị kế thừa.</li>
+        <li>Một builder khác tắt inheritInheritableThreadLocals nên child không nhận context; parent cleanup sau khi join.</li>
+      </ol>
+    usage: true

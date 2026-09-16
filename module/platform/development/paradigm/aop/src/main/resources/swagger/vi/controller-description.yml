@@ -3,59 +3,89 @@ AdvisorController:
     <h2>Advisor Controller</h2>
     <p>Minh họa abstraction Advisor, trong đó Pointcut chọn các join point phù hợp còn Advice định nghĩa behavior được áp dụng lên chúng.</p>
     <p>Ví dụ đồng thời so sánh static method matching với runtime argument matching.</p>
+  readmeRelated:
+    file: 12.Advisor/Advisor.md
 RuntimeBoundaryController:
   description: |-
     <h2>Runtime Boundary Controller</h2>
     <p>Quan sát ranh giới runtime của module và phân biệt cú pháp khai báo theo AspectJ với mô hình thực thi Spring AOP dựa trên proxy.</p>
+  readmeRelated:
+    file: 15.RuntimeBoundary/RuntimeBoundary.md
 InfrastructureController:
   description: |-
     <h2>Infrastructure Controller</h2>
     <p>Kiểm tra hạ tầng Spring AOP đứng sau một managed bean, gồm auto-proxy creator, chiến lược proxy, loại proxy được tạo và chuỗi Advisor.</p>
+  readmeRelated:
+    file: 13.Infrastructure/Infrastructure.md
 IntroductionController:
   description: |-
     <h2>Introduction Controller</h2>
     <p>Minh họa AOP Introduction bằng cách để proxy expose thêm một interface dù target class ban đầu không implement interface đó.</p>
+  readmeRelated:
+    file: 14.Introduction/Introduction.md
 ProgrammaticProxyController:
   description: |-
     <h2>Programmatic Proxy Controller</h2>
     <p>Tạo proxy bằng Spring ProxyFactory và so sánh JDK dynamic proxy với CGLIB proxy khi cả hai cùng sử dụng một interceptor.</p>
+  readmeRelated:
+    file: 11.ProxyFactory/ProxyFactory.md
 AdviceLifecycleController:
   description: |-
     <h2>Advice Lifecycle Controller</h2>
     <p>Minh họa thời điểm @Before, @AfterReturning, @AfterThrowing và @After được thực thi quanh target invocation thành công hoặc phát sinh exception.</p>
+  readmeRelated:
+    file: 5.Advice/Advice.md
 AnnotationDrivenController:
   description: |-
     <h2>Annotation Driven Controller</h2>
     <p>Minh họa annotation-driven AOP, trong đó custom annotation đóng vai trò declarative contract để Aspect match và đọc metadata.</p>
+  readmeRelated:
+    file: 7.Annotation/Annotation.md
 AroundAdviceController:
   description: |-
     <h2>Around Advice Controller</h2>
     <p>Khảo sát khả năng điều khiển của @Around Advice: đo thời gian, thay đổi kết quả, bỏ qua target, sửa argument và quan sát exception.</p>
+  readmeRelated:
+    file: 6.Around/Around.md
 CrossCuttingController:
   description: |-
     <h2>Cross Cutting Controller</h2>
     <p>Minh họa cách AOP tách một concern như logging khỏi business method và áp dụng nhất quán concern đó lên nhiều operation.</p>
+  readmeRelated:
+    file: 1.CrossCutting/CrossCutting.md
 OrderingController:
   description: |-
     <h2>Ordering Controller</h2>
     <p>Minh họa cách nhiều @Around Aspect lồng nhau theo @Order và cách phần before/after của chúng tạo thành runtime call stack.</p>
+  readmeRelated:
+    file: 8.Ordering/Ordering.md
 PracticalPatternController:
   description: |-
     <h2>Practical Pattern Controller</h2>
     <p>Kết hợp auditing và timing thành các cross-cutting behavior có thể tái sử dụng quanh business operation checkout.</p>
+  readmeRelated:
+    file: 10.Patterns/Patterns.md
 PointcutController:
   description: |-
     <h2>Pointcut Controller</h2>
     <p>Cung cấp các ví dụ đặt cạnh nhau cho những pointcut designator và cách composition phổ biến của Spring AOP để dễ so sánh behavior matching.</p>
+  readmeRelated:
+    file: 4.Pointcut/Pointcut.md
 ProxyMentalModelController:
   description: |-
     <h2>Proxy Mental Model Controller</h2>
     <p>Xây dựng mental model về Spring AOP proxy bằng cách kiểm tra proxy được inject và so sánh lời gọi trên Spring-managed bean với object tạo trực tiếp.</p>
+  readmeRelated:
+    file: 3.Proxy/Proxy.md
 SelfInvocationController:
   description: |-
     <h2>Self Invocation Controller</h2>
     <p>Minh họa hai giới hạn quan trọng của proxy: self-invocation bỏ qua interception và final method không thể bị class-based proxy override.</p>
+  readmeRelated:
+    file: 9.SelfInvocation/SelfInvocation.md
 TerminologyController:
   description: |-
     <h2>Terminology Controller</h2>
     <p>Gắn các thuật ngữ Aspect, Advice, Join Point, Target và Proxy vào một lời gọi Spring AOP cụ thể cùng các runtime object tương ứng.</p>
+  readmeRelated:
+    file: 2.Terminology/Terminology.md

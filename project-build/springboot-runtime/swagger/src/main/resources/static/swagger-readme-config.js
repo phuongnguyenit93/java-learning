@@ -107,7 +107,10 @@ function installReadmeNavigation() {
                 url
             );
 
-            updateSwaggerDescription(markdown);
+            updateSwaggerDescription(
+                markdown,
+                url.hash
+            );
 
         } catch (error) {
 
@@ -127,7 +130,7 @@ function installReadmeNavigation() {
  *
  * Swagger UI sẽ tự render Markdown.
  */
-function updateSwaggerDescription(markdown) {
+function updateSwaggerDescription(markdown, anchorHash = "") {
 
     if (!window.ui) {
         console.error("Swagger UI is not initialized");
@@ -164,7 +167,11 @@ function updateSwaggerDescription(markdown) {
 
     window.ui.specActions.updateJsonSpec(spec);
 
-    scrollToSwaggerInfo();
+    if (anchorHash) {
+        scrollToSwaggerReadmeAnchor(anchorHash);
+    } else {
+        scrollToSwaggerInfo();
+    }
 }
 
 
@@ -249,4 +256,43 @@ function scrollToSwaggerInfo() {
         }
 
     }, 0);
+}
+
+function scrollToSwaggerReadmeAnchor(anchorHash) {
+
+    const anchorId = decodeURIComponent(
+        String(anchorHash || "").replace(/^#/, "")
+    );
+
+    if (!anchorId) {
+        scrollToSwaggerInfo();
+        return;
+    }
+
+    const scroll = () => {
+        const anchor = document.getElementById(anchorId);
+
+        if (!anchor) {
+            return false;
+        }
+
+        anchor.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+
+        return true;
+    };
+
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            if (!scroll()) {
+                setTimeout(() => {
+                    if (!scroll()) {
+                        scrollToSwaggerInfo();
+                    }
+                }, 50);
+            }
+        });
+    });
 }

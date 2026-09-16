@@ -788,6 +788,7 @@ Per-API human-owned metadata includes fields such as:
 summary
 description
 videoYoutubeId
+execution
 ```
 
 `videoYoutubeId` rule:
@@ -803,6 +804,197 @@ once present
 This preservation rule applies to both active entries and historical/stale entries such as `usage=false`.
 
 Do not regenerate human-owned Swagger fields from scratch.
+
+`api-execution.yml` is a mixed-ownership Swagger artifact with the shape:
+
+```text
+Controller
+    ↓
+methodSignature
+    ↓
+execution  → human-owned HTML
+usage      → generated-owned activity flag
+```
+
+The method key must use method signature identity rather than method name alone so overloaded controller methods do not collide.
+
+`execution` follows the same preservation rule as other human-owned Swagger metadata:
+
+```text
+execution key missing
+→ initialize a localized HTML placeholder
+
+execution key already exists
+→ preserve it exactly, including intentionally blank content
+
+method no longer exists
+→ keep the historical entry and set usage=false
+```
+
+When writing or reviewing `execution`, do not treat it as a source-code paraphrase. Its primary role is a **guided execution explanation** that should still teach the experiment to a reader who has not opened the Java source.
+
+Responsibility split:
+
+```text
+summary
+→ what topic/API is this?
+
+description
+→ what is this API intended to demonstrate or teach?
+
+execution
+→ how does the experiment unfold step by step, why do the steps matter,
+  what source-level evidence supports the behavior, what should the user observe,
+  and what conclusion should be learned from the result?
+```
+
+For nontrivial learning APIs, `execution` should normally cover these semantic layers when applicable:
+
+```text
+1. Concept
+   → what the method/experiment is proving
+
+2. Flow
+   → what happens step by step at runtime
+
+3. Meaning
+   → why each important step matters
+
+4. Code evidence
+   → relevant method/advice/lock/future/queue/etc. details from the implementation,
+     colocated with the execution step that the code proves
+
+5. Observation
+   → which response field, trace event, state, ordering, exception or result proves the behavior
+
+6. Conclusion
+   → the learning point the reader should retain
+```
+
+Do not require the reader to inspect the source code before the `execution` text becomes understandable. Source-level details are valuable and should remain, but they are evidence for the concept rather than a prerequisite for understanding it.
+
+Code evidence should normally be embedded directly inside the `<li>` for the runtime step it explains instead of being collected into one large code section after the whole flow. The preferred reading order is:
+
+```text
+step explanation
+→ why the step matters
+→ focused code snippet that causes/proves the behavior
+→ observation/evidence when applicable
+```
+
+Do not force every `<li>` to contain code. Add a snippet only when source lines materially help explain or prove that step. If the same code has already been shown in a nearby step, do not repeat it without a learning reason.
+
+Keep snippets small and focused. Prefer the minimum lines needed to establish the behavior rather than copying complete controllers, services, aspects, helpers, or methods. Code is evidence, not decoration and not a substitute for the explanation.
+
+When useful, identify the source context immediately before the snippet, for example the relevant class/method name. Prefer stable class/file + method identity over source line numbers because line numbers become stale easily.
+
+Because `execution` is raw HTML, escape source characters that could be interpreted as HTML when placing code inside `<pre><code>...</code></pre>` (for example `<` as `&lt;`, `>` as `&gt;`, and `&` as `&amp;` where required).
+
+Prefer concise HTML such as `<p>` + `<ol><li>...</li></ol>` and a final conclusion paragraph. Use YAML block scalars for substantial HTML so punctuation such as `: ` and multiline content remain parse-safe.
+
+### Swagger ↔ README relationship contract
+
+Swagger learning documentation may link controllers and methods back to module README content through human-owned `readmeRelated` metadata.
+
+This contract is manual/semi-manual by design. Do not infer controller-to-README relationships from controller names, package names, folder names, summaries, or semantic similarity. The human declares the relationship; the generator may derive ordering, labels, validation status, and navigation metadata from that relationship.
+
+Controller relationship belongs in `controller-description.yml`:
+
+```yaml
+ProxyMentalModelController:
+  description: |-
+    ...
+  readmeRelated:
+    file: 3.Proxy/Proxy.md
+```
+
+`readmeRelated.file` is relative to `readme/<language>/menu/` and is human-owned. The generator should create the field for newly generated controllers so developers can discover the feature, but once present it must not overwrite the configured value during regeneration.
+
+Controller README resolution rules:
+
+```text
+valid file mapping
+→ folder name must start with a numeric chapter prefix such as 3.Proxy or 11.ProxyFactory
+→ parse that prefix as an integer, never lexicographically
+→ read the first Markdown H1 as the localized chapter title
+→ display chapter information on a separate line above the controller name
+
+same chapter mapped by multiple controllers
+→ sort those controllers alphabetically
+
+missing mapping
+→ sort after all valid README-linked controllers, alphabetically
+→ VI: Chưa có tài liệu tương ứng trong README
+→ EN: No related documentation in README yet
+
+configured file missing or folder prefix invalid
+→ mark the mapping invalid
+→ warn during generation
+→ continue generating Swagger
+```
+
+Method relationship belongs in `api-descriptions.yml` under the exact method-signature entry:
+
+```yaml
+ProxyMentalModelController:
+  inspectProxy():
+    summary: ...
+    description: ...
+    readmeRelated:
+      anchor: proxy-demo
+    usage: true
+```
+
+By default a method inherits the controller `readmeRelated.file`. A method may override the file when its knowledge belongs to another README chapter:
+
+```yaml
+readmeRelated:
+  file: 11.ProxyFactory/ProxyFactory.md
+  anchor: proxy-factory-demo
+```
+
+Method mapping is manual. Do not use fuzzy or semantic matching to guess an anchor. Resolve the configured anchor exactly against README anchor markup such as `<a id="proxy-demo">`.
+
+Method README resolution and ordering rules:
+
+```text
+valid anchor
+→ derive the localized section heading from the heading that owns the anchor
+→ derive method order from anchor position inside the resolved README file
+
+multiple methods mapped to the same anchor
+→ allowed
+→ sort alphabetically within that anchor position
+
+missing mapping
+→ sort after methods with valid README mappings, alphabetically
+→ VI: Method này chưa có nội dung README
+→ EN: This method does not have README content yet
+
+configured file or anchor invalid
+→ mark INVALID_FILE or INVALID_ANCHOR as appropriate
+→ warn during generation
+→ continue generating Swagger
+```
+
+README relationships resolve independently for each configured language. Do not silently fall back from VI to EN or from EN to VI when a localized README file or anchor is missing.
+
+The resolved Swagger UI should expose the relationship clearly:
+
+```text
+Controller:
+Chapter 03 · <localized README H1>
+<Controller display name>
+
+Method:
+README · Chapter 03 · <localized README section heading>
+```
+
+The method README relationship should be clickable and should use the existing Swagger README navigation so the selected README file and anchor open in the same Swagger tab. Do not duplicate the whole README inside an operation panel and do not open a new tab by default.
+
+`readmeRelated.file` and `readmeRelated.anchor` are human-owned metadata. Preserve them for active and stale entries, including `usage=false`. Missing fields should be generated as discoverable blank placeholders rather than omitted entirely.
+
+This contract is implemented across Swagger build-time metadata generation/validation and the shared Swagger runtime/UI. When changing it, keep generator preservation, localized README resolution, OpenAPI sorting/extensions, and same-tab README navigation consistent with one another.
 
 ---
 
@@ -1637,6 +1829,7 @@ Preserve these unless the user explicitly changes the architecture:
 22. Execution Context Phase 1–4 form the reusable capture/source/query capability; manual export and MCP consume the same query contract and `ExperimentContext`.
 23. Chat AI usage must support two paths after Phase 4: manual REST JSON/ZIP export without MCP/tunnel, and connected retrieval through Phase 5–7.
 24. Phase 5–7 are not current runtime facts until their concrete implementations are added and validated.
+25. Swagger `execution` documentation is a guided learning explanation, not merely a code trace; it must explain concept, runtime flow, meaning, observable evidence, and conclusion without requiring the reader to open the source first.
 
 ---
 

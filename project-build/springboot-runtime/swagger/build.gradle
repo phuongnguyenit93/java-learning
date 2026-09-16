@@ -1,4 +1,6 @@
 dependencies {
     api 'org.springdoc:springdoc-openapi-starter-common:2.5.0'
     compileOnly 'org.springframework:spring-web'
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.springframework:spring-web'
 }
