@@ -28,17 +28,37 @@
             rel="stylesheet"
             href="swagger-readme-related.css"
     />
+
+    <link
+            rel="stylesheet"
+            href="swagger-ai-chat.css"
+    />
 </head>
 
 <body>
 
-<a
-        id="execution-context-explorer-action"
-        class="execution-context-explorer-action"
-        target="_blank"
-        rel="noopener"
-        hidden
->Execution Context</a>
+<div class="swagger-top-actions">
+    <a
+            id="execution-context-explorer-action"
+            class="execution-context-explorer-action"
+            target="_blank"
+            rel="noopener"
+            hidden
+    >Execution Context</a>
+
+    <!--
+    AI chat prototype is intentionally disabled in the current architecture.
+    swagger-ai-chat.js exits without installing the modal/chat UI when this
+    trigger button is absent, so keeping the prototype source does not expose
+    the feature in Swagger.
+
+    <button
+            id="swagger-ai-connect-action"
+            class="swagger-ai-connect-action"
+            type="button"
+    >Connect AI</button>
+    -->
+</div>
 
 <div id="swagger-ui"></div>
 
@@ -69,6 +89,7 @@
     loadScript(`${basePath}/swagger-readme-related.js`);
     loadScript(`${basePath}/swagger-api-execution.js`);
     loadScript(`${basePath}/swagger-execution-context.js`);
+    loadScript(`${basePath}/swagger-ai-chat.js`);
 
     window.onload = function () {
         window.ui = SwaggerUIBundle({
