@@ -2,6 +2,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-aop'
 }
 
+generateFinalReadme {
+    languages = ["vi", "en"]
+}
+
 generateApiSwaggerDescription {
     languages = ["vi","en"] // List<String>
 }

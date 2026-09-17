@@ -2,51 +2,77 @@ AsyncController:
   description: |-
     <h2>Async Controller</h2>
     <p>Nhóm API minh họa Future, CompletableFuture, completion pipeline, exception handling, timeout, cancellation và execution policy của asynchronous task.</p>
+  readmeRelated:
+    file: 7.Async/Async.md
 BasicThreadController:
   description: |-
     <h2>Basic Thread Controller</h2>
     <p>Các experiment nền tảng về JVM process, HTTP request thread, sự khác nhau giữa start() và run(), cùng toàn bộ Thread.State.</p>
+  readmeRelated:
+    file: 1.Basic/Basic.md
 CreateThreadController:
   description: |-
     <h2>Create Thread Controller</h2>
     <p>So sánh các cách nối task với execution mechanism: extends Thread, Runnable + Thread và Callable + FutureTask + Thread.</p>
+  readmeRelated:
+    file: 1.Basic/Basic.md
 DaemonThreadController:
   description: |-
     <h2>Daemon Thread Controller</h2>
     <p>Quan sát daemon flag và quy tắc inheritance của Thread trong Spring Boot; endpoint này không dùng để suy luận trực tiếp về thời điểm JVM shutdown.</p>
+  readmeRelated:
+    file: 1.Basic/Basic.md
 ConcurrencyProblemController:
   description: |-
     <h2>Concurrency Problem Controller</h2>
     <p>Nhóm experiment về race condition, Java Memory Model, happens-before, volatile và các vấn đề progress như deadlock, livelock.</p>
+  readmeRelated:
+    file: 3.Concurrency_Problems/ConcurrencyProblem.md
 ThreadLocalController:
   description: |-
     <h2>Thread Local Controller</h2>
     <p>Minh họa ThreadLocal isolation, InheritableThreadLocal, stale context do worker reuse và pattern explicit context propagation.</p>
+  readmeRelated:
+    file: 8.Context/ThreadLocal.md
 CoordinationController:
   description: |-
     <h2>Coordination Controller</h2>
     <p>Tập hợp các primitive phối hợp Thread gồm join, wait/notify, Condition, LockSupport, BlockingQueue và các synchronizer cấp cao.</p>
+  readmeRelated:
+    file: 5.Coordination/Coordination.md
 TaskExecutorController:
   description: |-
     <h2>Task Executor Controller</h2>
     <p>Minh họa Spring TaskExecutor và @Async với custom executor, TaskDecorator context propagation và failure handling của void async method.</p>
+  readmeRelated:
+    file: 9.Spring_Task_Executor/SpringExecutor.md
 InterruptionController:
   description: |-
     <h2>Interruption Controller</h2>
     <p>Các experiment về cooperative cancellation, interrupt flag, InterruptedException, cleanup, giới hạn của interrupt và sự khác nhau với custom stop flag.</p>
+  readmeRelated:
+    file: 2.Interruption/Interruption.md
 LeakController:
   description: |-
     <h2>Leak Controller</h2>
     <p>Các demo bounded về Thread leak, pool lifecycle leak và queue pressure; mọi resource được cleanup trong cùng experiment để không để lại leak thật.</p>
+  readmeRelated:
+    file: 10.Leak/Leak.md
 ThreadPoolController:
   description: |-
     <h2>Thread Pool Controller</h2>
     <p>Khảo sát ThreadPoolExecutor flow, Executors factory, scheduling, rejection policy và lifecycle từ graceful đến forced shutdown.</p>
+  readmeRelated:
+    file: 6.Thread_Pool_Executor/ThreadPoolExecutor.md
 SynchronizationController:
   description: |-
     <h2>Synchronization Controller</h2>
     <p>Nhóm experiment về synchronized, Lock, ReadWriteLock, StampedLock, atomic/CAS và concurrent collections để bảo vệ shared mutable state.</p>
+  readmeRelated:
+    file: 4.Synchronization/Synchronization.md
 VirtualThreadController:
   description: |-
     <h2>Virtual Thread Controller</h2>
     <p>Minh họa Virtual Thread trên Java 21: thuộc tính cơ bản, API tạo thread, blocking scalability, downstream limits và ThreadLocal semantics.</p>
+  readmeRelated:
+    file: 11.Virtual_Thread/VirtualThread.md

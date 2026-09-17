@@ -22,7 +22,7 @@ AdvisorController:
     usage: true
     readmeRelated:
       file: ''
-      anchor: ''
+      anchor: advisor-demo
 RuntimeBoundaryController:
   inspectRuntimeBoundary():
     summary: Inspect the runtime boundary of Spring AOP
@@ -47,7 +47,7 @@ RuntimeBoundaryController:
     usage: true
     readmeRelated:
       file: ''
-      anchor: ''
+      anchor: runtime-boundary-demo
 InfrastructureController:
   inspectInfrastructure():
     summary: Inspect Spring AOP infrastructure
@@ -72,7 +72,7 @@ InfrastructureController:
     usage: true
     readmeRelated:
       file: ''
-      anchor: ''
+      anchor: infrastructure-demo
 IntroductionController:
   observeIntroduction():
     summary: Observe an AOP introduction
@@ -97,7 +97,7 @@ IntroductionController:
     usage: true
     readmeRelated:
       file: ''
-      anchor: ''
+      anchor: introduction-demo
 ProgrammaticProxyController:
   compareProxyFactoryStrategies():
     summary: Compare JDK and CGLIB ProxyFactory strategies
@@ -122,7 +122,7 @@ ProgrammaticProxyController:
     usage: true
     readmeRelated:
       file: ''
-      anchor: ''
+      anchor: proxy-factory-demo
 AdviceLifecycleController:
   success():
     summary: Observe advice order on successful execution
@@ -147,7 +147,7 @@ AdviceLifecycleController:
     usage: true
     readmeRelated:
       file: ''
-      anchor: ''
+      anchor: advice-success-demo
   failure():
     summary: Observe advice order when an exception is thrown
     description: Executes a failing target method to observe @AfterThrowing and @After
@@ -171,7 +171,7 @@ AdviceLifecycleController:
     usage: true
     readmeRelated:
       file: ''
-      anchor: ''
+      anchor: advice-failure-demo
 AnnotationDrivenController:
   trackByAnnotation():
     summary: Apply AOP through a custom annotation
@@ -196,7 +196,7 @@ AnnotationDrivenController:
     usage: true
     readmeRelated:
       file: ''
-      anchor: ''
+      anchor: annotation-demo
 AroundAdviceController:
   timing():
     summary: Measure execution with @Around advice
@@ -221,7 +221,7 @@ AroundAdviceController:
     usage: true
     readmeRelated:
       file: ''
-      anchor: ''
+      anchor: around-timing-demo
   transform():
     summary: Transform a return value with @Around advice
     description: Demonstrates that @Around advice can inspect and replace the value
@@ -245,7 +245,7 @@ AroundAdviceController:
     usage: true
     readmeRelated:
       file: ''
-      anchor: ''
+      anchor: around-transform-demo
   skip():
     summary: Skip target execution with @Around advice
     description: Demonstrates that omitting proceed() prevents the target method from
@@ -269,7 +269,7 @@ AroundAdviceController:
     usage: true
     readmeRelated:
       file: ''
-      anchor: ''
+      anchor: around-skip-demo
   arguments():
     summary: Modify method arguments with @Around advice
     description: Demonstrates how @Around advice can read and replace invocation arguments
@@ -293,7 +293,7 @@ AroundAdviceController:
     usage: true
     readmeRelated:
       file: ''
-      anchor: ''
+      anchor: around-arguments-demo
   exceptionPropagation():
     summary: Observe exception propagation through @Around advice
     description: Demonstrates an @Around advice observing an exception and rethrowing
@@ -317,7 +317,7 @@ AroundAdviceController:
     usage: true
     readmeRelated:
       file: ''
-      anchor: ''
+      anchor: around-exception-demo
 CrossCuttingController:
   observeCrossCutting():
     summary: Observe a cross-cutting logging concern
@@ -342,7 +342,7 @@ CrossCuttingController:
     usage: true
     readmeRelated:
       file: ''
-      anchor: ''
+      anchor: cross-cutting-demo
 OrderingController:
   observeOrdering():
     summary: Observe nested Aspect ordering
@@ -367,7 +367,7 @@ OrderingController:
     usage: true
     readmeRelated:
       file: ''
-      anchor: ''
+      anchor: ordering-demo
 PracticalPatternController:
   checkout(String):
     summary: Apply practical auditing and timing aspects
@@ -392,7 +392,7 @@ PracticalPatternController:
     usage: true
     readmeRelated:
       file: ''
-      anchor: ''
+      anchor: practical-demo
 PointcutController:
   comparePointcuts():
     summary: Compare common Spring AOP pointcut expressions
@@ -417,7 +417,7 @@ PointcutController:
     usage: true
     readmeRelated:
       file: ''
-      anchor: ''
+      anchor: pointcut-demo
 ProxyMentalModelController:
   inspectProxy():
     summary: Inspect a Spring AOP proxy
@@ -442,7 +442,7 @@ ProxyMentalModelController:
     usage: true
     readmeRelated:
       file: ''
-      anchor: ''
+      anchor: proxy-demo
   compareManagedBeanAndPlainObject():
     summary: Compare a managed proxy with a plain Java object
     description: Compares a Spring-managed bean that passes through AOP interception
@@ -466,7 +466,7 @@ ProxyMentalModelController:
     usage: true
     readmeRelated:
       file: ''
-      anchor: ''
+      anchor: managed-vs-new-demo
 SelfInvocationController:
   compareSelfInvocation():
     summary: Compare self-invocation with external proxy invocation
@@ -491,7 +491,7 @@ SelfInvocationController:
     usage: true
     readmeRelated:
       file: ''
-      anchor: ''
+      anchor: self-invocation-demo
   finalMethodLimitation():
     summary: Demonstrate the final-method proxy limitation
     description: Shows that a final method on a class-based proxy cannot be overridden
@@ -515,7 +515,7 @@ SelfInvocationController:
     usage: true
     readmeRelated:
       file: ''
-      anchor: ''
+      anchor: final-method-demo
 TerminologyController:
   inspectTerminology():
     summary: Inspect core AOP terminology in a real invocation
@@ -540,4 +540,4 @@ TerminologyController:
     usage: true
     readmeRelated:
       file: ''
-      anchor: ''
+      anchor: terminology-demo

@@ -21,6 +21,9 @@ BasicThreadController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: thread-state
   processAndThread():
     summary: Observe the JVM process and HTTP request Thread
     description: Return the JVM PID together with the name, id, daemon flag, and state
@@ -43,6 +46,9 @@ BasicThreadController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: process-and-thread
   startVsRun():
     summary: Compare Thread.run() and Thread.start()
     description: Run the same Runnable by calling run() directly and by calling start()
@@ -65,6 +71,9 @@ BasicThreadController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: start-vs-run
 CreateThreadController:
   createByExtend():
     summary: Title not provided
@@ -86,6 +95,9 @@ CreateThreadController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   createByRunnable():
     summary: Run a Runnable on a dedicated Thread
     description: Separate the work into a Runnable and pass that task to a Thread
@@ -108,6 +120,9 @@ CreateThreadController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: create-thread
   createByCallable():
     summary: Run Callable with FutureTask and Thread
     description: Wrap a Callable in FutureTask so it can be executed by a direct Thread,
@@ -130,6 +145,9 @@ CreateThreadController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: create-thread
   createByThreadPool():
     summary: Title not provided
     description: Detailed description not provided
@@ -150,6 +168,9 @@ CreateThreadController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   createByExtends():
     summary: Create a Thread by extending Thread
     description: Instantiate a Thread subclass whose work is implemented directly
@@ -172,6 +193,9 @@ CreateThreadController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: create-thread
 DaemonThreadController:
   threadDaemon():
     summary: Title not provided
@@ -193,6 +217,9 @@ DaemonThreadController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   stopDaemon():
     summary: Title not provided
     description: Detailed description not provided
@@ -213,6 +240,9 @@ DaemonThreadController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   restartDaemon():
     summary: Title not provided
     description: Detailed description not provided
@@ -233,6 +263,9 @@ DaemonThreadController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   inspectDaemonRules():
     summary: Observe daemon flag and inheritance
     description: Inspect the daemon status of the request Thread, a child Thread that
@@ -256,6 +289,9 @@ DaemonThreadController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: daemon-thread
 ThreadLocalController:
   threadLocalDemo():
     summary: Title not provided
@@ -277,6 +313,9 @@ ThreadLocalController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   inheritableThreadLocalDemo():
     summary: Title not provided
     description: Detailed description not provided
@@ -297,6 +336,9 @@ ThreadLocalController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   threadPoolIssueDemo():
     summary: Title not provided
     description: Detailed description not provided
@@ -317,6 +359,9 @@ ThreadLocalController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   isolation():
     summary: Observe ThreadLocal isolation
     description: Two Threads use the same ThreadLocal object but set and read different
@@ -339,6 +384,9 @@ ThreadLocalController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: thread-local-isolation
   inheritance():
     summary: Observe InheritableThreadLocal at Thread creation
     description: The parent sets context A, creates a child Thread, then changes the
@@ -361,6 +409,9 @@ ThreadLocalController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: inheritable-thread-local
   poolReuseProblem():
     summary: Demonstrate stale context with worker reuse
     description: Use a worker pool created once to show that InheritableThreadLocal
@@ -383,6 +434,9 @@ ThreadLocalController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: thread-pool-problem
   explicitPropagation():
     summary: Propagate context with capture, restore, and cleanup
     description: Create a worker before the parent has context, then wrap the task
@@ -406,6 +460,9 @@ ThreadLocalController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: context-propagation
 AsyncController:
   futureExample():
     summary: Title not provided
@@ -427,6 +484,9 @@ AsyncController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   completableFutureExample():
     summary: Title not provided
     description: Detailed description not provided
@@ -447,6 +507,9 @@ AsyncController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   completableFutureWithHandleExample():
     summary: Title not provided
     description: Detailed description not provided
@@ -467,6 +530,9 @@ AsyncController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   future():
     summary: Observe Callable and Future
     description: Submit a Callable to an ExecutorService, keep the task incomplete
@@ -490,6 +556,9 @@ AsyncController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: future
   futureCancellation():
     summary: Compare Future.cancel(false) and cancel(true)
     description: Run two blocking tasks and cancel them with cancel(false) and cancel(true)
@@ -513,6 +582,9 @@ AsyncController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: future-cancellation
   pipeline():
     summary: Compose a CompletableFuture pipeline
     description: Create independent asynchronous branches for an order and an exchange
@@ -536,6 +608,9 @@ AsyncController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: completable-future-pipeline
   fastest():
     summary: Observe CompletableFuture.anyOf semantics
     description: Control completion order across several CompletableFuture instances
@@ -558,6 +633,9 @@ AsyncController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: combine-race
   exceptionHandling():
     summary: Handle exceptional CompletableFuture completion
     description: Intentionally fail a stage and use handle() to convert either success
@@ -580,6 +658,9 @@ AsyncController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: exception-handling
   executionVariant():
     summary: Compare thenApply and thenApplyAsync
     description: Use an already-completed stage to show that thenApply may run inline
@@ -603,6 +684,9 @@ AsyncController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: async-variant
   allOf():
     summary: Observe CompletableFuture.allOf semantics
     description: Fail one input before another sibling completes to demonstrate that
@@ -626,6 +710,9 @@ AsyncController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: combine-race
   timeoutCancellation():
     summary: Distinguish CompletableFuture timeout from cancellation
     description: Compare orTimeout() with CompletableFuture.cancel(true) while underlying
@@ -648,6 +735,9 @@ AsyncController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: timeout-cancellation
 BlockingQueueController:
   blockingQueueExample():
     summary: Title not provided
@@ -669,6 +759,9 @@ BlockingQueueController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   synchronousQueueExample():
     summary: Title not provided
     description: Detailed description not provided
@@ -689,6 +782,9 @@ BlockingQueueController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   arrayQueueExample():
     summary: Title not provided
     description: Detailed description not provided
@@ -709,6 +805,9 @@ BlockingQueueController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   priorityQueueExample():
     summary: Title not provided
     description: Detailed description not provided
@@ -729,6 +828,9 @@ BlockingQueueController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
 ClassicCoordinationController:
   joinThread():
     summary: Title not provided
@@ -750,6 +852,9 @@ ClassicCoordinationController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   waitAndNotifyThread():
     summary: Title not provided
     description: Detailed description not provided
@@ -770,6 +875,9 @@ ClassicCoordinationController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
 ModernCoordinationController:
   lockConditionExample():
     summary: Title not provided
@@ -791,6 +899,9 @@ ModernCoordinationController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   lockSupportExample():
     summary: Title not provided
     description: Detailed description not provided
@@ -811,6 +922,9 @@ ModernCoordinationController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
 PatternController:
   exchangerExample():
     summary: Title not provided
@@ -832,6 +946,9 @@ PatternController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   consumerProducerPatternExample():
     summary: Title not provided
     description: Detailed description not provided
@@ -852,6 +969,9 @@ PatternController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
 SynchronizerController:
   countDownLatchExample():
     summary: Title not provided
@@ -873,6 +993,9 @@ SynchronizerController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   countDownLatchTimeOutExample():
     summary: Title not provided
     description: Detailed description not provided
@@ -893,6 +1016,9 @@ SynchronizerController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   cyclicBarrierExample():
     summary: Title not provided
     description: Detailed description not provided
@@ -913,6 +1039,9 @@ SynchronizerController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   cyclicBarrierTimeOutExample():
     summary: Title not provided
     description: Detailed description not provided
@@ -933,6 +1062,9 @@ SynchronizerController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   cyclicBarrierResetExample():
     summary: Title not provided
     description: Detailed description not provided
@@ -953,6 +1085,9 @@ SynchronizerController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   semaphoreExample():
     summary: Title not provided
     description: Detailed description not provided
@@ -973,6 +1108,9 @@ SynchronizerController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   phaserExample():
     summary: Title not provided
     description: Detailed description not provided
@@ -993,6 +1131,9 @@ SynchronizerController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
 TaskExecutorController:
   springExecutorExample():
     summary: Title not provided
@@ -1014,6 +1155,9 @@ TaskExecutorController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   asyncWithContext():
     summary: Run @Async with a custom executor and context propagation
     description: Set DemoContext, MDC, and RequestAttributes on the caller, then invoke
@@ -1037,6 +1181,9 @@ TaskExecutorController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: spring-async-demo
   asyncVoidException():
     summary: Observe exceptions from void @Async methods
     description: Invoke a void @Async method that intentionally throws and observe
@@ -1060,6 +1207,9 @@ TaskExecutorController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: async-return-type
 InterruptionController:
   workerInterruption():
     summary: Title not provided
@@ -1081,6 +1231,9 @@ InterruptionController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   blockerInterruption():
     summary: Title not provided
     description: Detailed description not provided
@@ -1101,6 +1254,9 @@ InterruptionController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   gracefulShutdownByJava():
     summary: Title not provided
     description: Detailed description not provided
@@ -1121,6 +1277,9 @@ InterruptionController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   gracefulShutdownBySpring():
     summary: Title not provided
     description: Detailed description not provided
@@ -1141,6 +1300,9 @@ InterruptionController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   interruptedDemo():
     summary: Title not provided
     description: Detailed description not provided
@@ -1161,6 +1323,9 @@ InterruptionController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   interruptBusyWorker():
     summary: Cancel a CPU loop with cooperative interruption
     description: Start a worker running a busy loop with an isInterrupted() cancellation
@@ -1183,6 +1348,9 @@ InterruptionController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: interrupt-mental-model
   inspectInterruptFlag():
     summary: Compare isInterrupted() and Thread.interrupted()
     description: Interrupt a worker and read interruption status repeatedly with both
@@ -1205,6 +1373,9 @@ InterruptionController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: interrupt-flag
   interruptSleepingWorker():
     summary: Interrupt a sleeping Thread and restore the flag
     description: Interrupt a worker blocked in Thread.sleep() to receive InterruptedException,
@@ -1227,6 +1398,9 @@ InterruptionController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: interrupted-exception
   cancelWithCleanup():
     summary: Clean up resources when a task is cancelled
     description: Simulate a worker holding a resource and interrupt it while work
@@ -1250,6 +1424,9 @@ InterruptionController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: interrupt-cleanup
   interruptSynchronizedWaiter():
     summary: Show that synchronized monitor acquisition is not interruptible
     description: Hold an intrinsic monitor so a worker becomes BLOCKED, then interrupt
@@ -1272,6 +1449,9 @@ InterruptionController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: interrupt-limitations
   stopFlagVsInterrupt():
     summary: Compare a stop flag with interrupt while blocked
     description: Set a volatile stop flag while a worker is sleeping and observe that
@@ -1295,6 +1475,9 @@ InterruptionController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: interrupt-vs-stop-flag
 LeakController:
   threadLeak():
     summary: Title not provided
@@ -1316,6 +1499,9 @@ LeakController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   poolLeak():
     summary: Title not provided
     description: Detailed description not provided
@@ -1336,6 +1522,9 @@ LeakController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   threadLeakPattern():
     summary: Observe a Thread leak pattern safely
     description: Intentionally keep a worker alive long enough to observe aliveBeforeCleanup,
@@ -1358,6 +1547,9 @@ LeakController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: thread-leak
   poolLeakPattern():
     summary: Observe a pool leak caused by missing shutdown
     description: Create a local ExecutorService and observe that it is still running
@@ -1380,6 +1572,9 @@ LeakController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: pool-leak
   queuePressure():
     summary: Observe queue backlog and rejection
     description: Use a pool with a small bounded queue, keep the worker busy, and
@@ -1402,6 +1597,9 @@ LeakController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: queue-growth
 ThreadPoolController:
   fixedThreadPoolExample():
     summary: Title not provided
@@ -1423,6 +1621,9 @@ ThreadPoolController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   cacheThreadPoolExample():
     summary: Title not provided
     description: Detailed description not provided
@@ -1443,6 +1644,9 @@ ThreadPoolController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   singleThreadPoolExample():
     summary: Title not provided
     description: Detailed description not provided
@@ -1463,6 +1667,9 @@ ThreadPoolController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   scheduleThreadPoolExample():
     summary: Title not provided
     description: Detailed description not provided
@@ -1483,6 +1690,9 @@ ThreadPoolController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   abortPolicy():
     summary: Title not provided
     description: Detailed description not provided
@@ -1503,6 +1713,9 @@ ThreadPoolController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   callerRunPolicy():
     summary: Title not provided
     description: Detailed description not provided
@@ -1523,6 +1736,9 @@ ThreadPoolController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   discardPolicy():
     summary: Title not provided
     description: Detailed description not provided
@@ -1543,6 +1759,9 @@ ThreadPoolController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   discardOldestPolicy():
     summary: Title not provided
     description: Detailed description not provided
@@ -1563,6 +1782,9 @@ ThreadPoolController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   executorFlow():
     summary: Observe core, queue, max, and rejection
     description: Use ThreadPoolExecutor with core=1, max=2, and queue=1 while tasks
@@ -1585,6 +1807,9 @@ ThreadPoolController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: thread-pool-flow
   executeVsSubmit():
     summary: Compare execute() and submit()
     description: Run a failing Runnable through execute() and submit() to observe
@@ -1607,6 +1832,9 @@ ThreadPoolController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: execute-vs-submit
   fixedPoolReuse():
     summary: Observe worker reuse in a fixed thread pool
     description: Submit multiple tasks to a small fixed pool and record worker names
@@ -1629,6 +1857,9 @@ ThreadPoolController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: executors-factories
   executorFactories():
     summary: Compare Executors factory methods
     description: Run bounded cases with fixed, cached, single, and scheduled executors
@@ -1652,6 +1883,9 @@ ThreadPoolController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: executors-factories
   scheduledExecution():
     summary: Compare fixed-rate and fixed-delay scheduling
     description: Run work that takes longer than the configured interval and record
@@ -1675,6 +1909,9 @@ ThreadPoolController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: scheduled-execution
   scheduledFailure():
     summary: Observe periodic task suppression after failure
     description: Create a periodic task that throws on its first run, then observe
@@ -1698,6 +1935,9 @@ ThreadPoolController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: scheduled-failure
   callerRuns():
     summary: Observe feedback pressure from CallerRunsPolicy
     description: Saturate the worker and queue, then submit another task so CallerRunsPolicy
@@ -1721,6 +1961,9 @@ ThreadPoolController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: rejection-policy
   discardPolicies():
     summary: Compare DiscardPolicy and DiscardOldestPolicy
     description: Saturate the pool to observe DiscardPolicy silently dropping the
@@ -1744,6 +1987,9 @@ ThreadPoolController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: rejection-policy
   customRejectionHandler():
     summary: Record overload with a custom rejection handler
     description: Use a custom RejectedExecutionHandler to count rejection and expose
@@ -1766,6 +2012,9 @@ ThreadPoolController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: custom-rejection-handler
   gracefulShutdown():
     summary: Gracefully shut down an ExecutorService
     description: Allow submitted work to complete, call shutdown(), and await termination
@@ -1789,6 +2038,9 @@ ThreadPoolController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: graceful-shutdown
   forcedShutdown():
     summary: Observe shutdownNow() and never-started tasks
     description: Keep one task running and another queued, let the graceful wait time
@@ -1811,6 +2063,9 @@ ThreadPoolController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: graceful-shutdown
 AtomicController:
   atomicBenchmark():
     summary: Title not provided
@@ -1832,6 +2087,9 @@ AtomicController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   adderBenchmark():
     summary: Title not provided
     description: Detailed description not provided
@@ -1852,6 +2110,9 @@ AtomicController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   accumulatorExample():
     summary: Title not provided
     description: Detailed description not provided
@@ -1872,6 +2133,9 @@ AtomicController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
 SyncController:
   runSyncTest():
     summary: Title not provided
@@ -1893,6 +2157,9 @@ SyncController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
 SyncProblemController:
   instructionReorder():
     summary: Title not provided
@@ -1914,6 +2181,9 @@ SyncProblemController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   staleData():
     summary: Title not provided
     description: Detailed description not provided
@@ -1934,6 +2204,9 @@ SyncProblemController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   raceCondition():
     summary: Title not provided
     description: Detailed description not provided
@@ -1954,6 +2227,9 @@ SyncProblemController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   deadlock():
     summary: Title not provided
     description: Detailed description not provided
@@ -1974,6 +2250,9 @@ SyncProblemController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   livelock():
     summary: Title not provided
     description: Detailed description not provided
@@ -1994,6 +2273,9 @@ SyncProblemController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
 ConcurrentCollectionController:
   concurrentHashMap():
     summary: Title not provided
@@ -2015,6 +2297,9 @@ ConcurrentCollectionController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   concurrentSkipList():
     summary: Title not provided
     description: Detailed description not provided
@@ -2035,6 +2320,9 @@ ConcurrentCollectionController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   copyOnWriteArrayWhenWriting():
     summary: Title not provided
     description: Detailed description not provided
@@ -2055,6 +2343,9 @@ ConcurrentCollectionController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   copyOnWriteArrayWhenReading():
     summary: Title not provided
     description: Detailed description not provided
@@ -2075,6 +2366,9 @@ ConcurrentCollectionController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   concurrentLinkedQueue():
     summary: Title not provided
     description: Detailed description not provided
@@ -2095,6 +2389,9 @@ ConcurrentCollectionController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
 ReadWriteLockController:
   readAndRead():
     summary: Title not provided
@@ -2116,6 +2413,9 @@ ReadWriteLockController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   readAndWrite():
     summary: Title not provided
     description: Detailed description not provided
@@ -2136,6 +2436,9 @@ ReadWriteLockController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   writeAndWrite():
     summary: Title not provided
     description: Detailed description not provided
@@ -2156,6 +2459,9 @@ ReadWriteLockController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   downgradeKey():
     summary: Title not provided
     description: Detailed description not provided
@@ -2176,6 +2482,9 @@ ReadWriteLockController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
 ReentrantLockController:
   reentrantLockExample():
     summary: Title not provided
@@ -2197,6 +2506,9 @@ ReentrantLockController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   fairLockExample():
     summary: Title not provided
     description: Detailed description not provided
@@ -2217,6 +2529,9 @@ ReentrantLockController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   unfairLockExample():
     summary: Title not provided
     description: Detailed description not provided
@@ -2237,6 +2552,9 @@ ReentrantLockController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   interruptibleLock():
     summary: Title not provided
     description: Detailed description not provided
@@ -2257,6 +2575,9 @@ ReentrantLockController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
 StampedLockController:
   stampedExample():
     summary: Title not provided
@@ -2278,6 +2599,9 @@ StampedLockController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
 VirtualThreadController:
   virtualThreadBenchmark():
     summary: Title not provided
@@ -2299,6 +2623,9 @@ VirtualThreadController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   virtualThreadBasic():
     summary: Title not provided
     description: Detailed description not provided
@@ -2319,6 +2646,9 @@ VirtualThreadController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   virtualThreadBuilder():
     summary: Title not provided
     description: Detailed description not provided
@@ -2339,6 +2669,9 @@ VirtualThreadController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   virtualThreadExecutor():
     summary: Title not provided
     description: Detailed description not provided
@@ -2359,6 +2692,9 @@ VirtualThreadController:
     consumes: [
       ]
     usage: false
+    readmeRelated:
+      file: ''
+      anchor: ''
   basic():
     summary: Observe core Virtual Thread properties
     description: Create a Java 21 Virtual Thread and return isVirtual, daemon flag,
@@ -2381,6 +2717,9 @@ VirtualThreadController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: virtual-thread-basic
   creationApi():
     summary: Compare direct Virtual Thread creation APIs
     description: Create Virtual Threads with Thread.startVirtualThread() and Thread.ofVirtual().start(),
@@ -2403,6 +2742,9 @@ VirtualThreadController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: virtual-thread-creation
   blockingScale():
     summary: Compare blocking work on platform and Virtual Threads
     description: Run the same sleep-based blocking workload on a fixed platform pool
@@ -2426,6 +2768,9 @@ VirtualThreadController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: virtual-executor
   limitedResource():
     summary: Limit downstream concurrency with Virtual Threads
     description: Create many Virtual Threads but use a Semaphore so only a bounded
@@ -2449,6 +2794,9 @@ VirtualThreadController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: resource-limits
   threadLocal():
     summary: Observe ThreadLocal on Virtual Threads
     description: Use ThreadLocal and InheritableThreadLocal across multiple Virtual
@@ -2472,6 +2820,9 @@ VirtualThreadController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: virtual-thread-thread-local
 ConcurrencyProblemController:
   raceCondition():
     summary: Create a lost update to observe a race condition
@@ -2496,6 +2847,9 @@ ConcurrencyProblemController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: shared-state-race-condition
   startJoinHappensBefore():
     summary: Observe happens-before from start() and join()
     description: Write data before Thread.start(), let the worker read and update
@@ -2518,6 +2872,9 @@ ConcurrencyProblemController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: happens-before
   volatilePublication():
     summary: Publish data through a volatile flag
     description: A writer updates plain data and then publishes a volatile flag; a
@@ -2541,6 +2898,9 @@ ConcurrencyProblemController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: volatile-publication
   volatileIsNotAtomic():
     summary: Prove volatile does not provide atomicity
     description: Perform a compound increment on volatile state with controlled interleaving
@@ -2563,6 +2923,9 @@ ConcurrencyProblemController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: volatile-publication
   deadlockRisk():
     summary: Observe circular lock dependency safely
     description: Two workers hold different first locks in opposite order and use
@@ -2585,6 +2948,9 @@ ConcurrencyProblemController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: progress-problems
   deadlockPrevention():
     summary: Prevent deadlock with global lock ordering
     description: Multiple workers need the same two locks but are required to acquire
@@ -2607,6 +2973,9 @@ ConcurrencyProblemController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: deadlock-prevention
   boundedLivelock():
     summary: Simulate livelock with bounded execution
     description: Two workers repeatedly react and back off symmetrically, staying
@@ -2629,6 +2998,9 @@ ConcurrencyProblemController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: progress-problems
 CoordinationController:
   join():
     summary: Coordinate lifecycle with Thread.join()
@@ -2653,6 +3025,9 @@ CoordinationController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: join
   waitNotify():
     summary: Coordinate with wait(), notify(), and notifyAll()
     description: Use several waiters, a predicate loop, notify(), and notifyAll()
@@ -2676,6 +3051,9 @@ CoordinationController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: wait-notify
   condition():
     summary: Coordinate multiple Conditions with ReentrantLock
     description: Create two independent Condition queues on the same ReentrantLock
@@ -2699,6 +3077,9 @@ CoordinationController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: condition
   lockSupport():
     summary: Observe LockSupport park and unpark
     description: Park several workers to show that unpark(thread) targets a specific
@@ -2721,6 +3102,9 @@ CoordinationController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: lock-support
   blockingQueue():
     summary: Build producer-consumer coordination with BlockingQueue
     description: Run a bounded producer and consumer using BlockingQueue operations,
@@ -2743,6 +3127,9 @@ CoordinationController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: producer-consumer
   blockingQueueVariants():
     summary: Compare common BlockingQueue implementations
     description: Observe ArrayBlockingQueue capacity, drainTo on LinkedBlockingQueue,
@@ -2765,6 +3152,9 @@ CoordinationController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: blocking-queue-variants
   priorityQueueSemantics():
     summary: Observe PriorityBlockingQueue semantics
     description: Insert tasks with different and equal priorities to observe ordering
@@ -2787,6 +3177,9 @@ CoordinationController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: priority-queue-semantics
   synchronousQueue():
     summary: Observe direct handoff with SynchronousQueue
     description: Pair producer put and consumer take operations through SynchronousQueue
@@ -2809,6 +3202,9 @@ CoordinationController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: synchronous-queue
   synchronizers():
     summary: Compare higher-level synchronizers
     description: Run bounded examples with CountDownLatch, CyclicBarrier, Semaphore,
@@ -2831,6 +3227,9 @@ CoordinationController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: synchronizers
   synchronizersTimeout():
     summary: Observe synchronizer timeout and failure behavior
     description: Demonstrate latch timeout, broken/reset barrier behavior, semaphore
@@ -2854,6 +3253,9 @@ CoordinationController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: synchronizer-timeout-failure
   semaphorePermitAccounting():
     summary: Prove Semaphore does not enforce ownership
     description: Intentionally release a permit without acquiring it and observe the
@@ -2877,6 +3279,9 @@ CoordinationController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: semaphore-permit-accounting
 SynchronizationController:
   synchronizedCounter():
     summary: Protect a compound update with synchronized
@@ -2900,6 +3305,9 @@ SynchronizationController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: synchronized-monitor
   reentrantLock():
     summary: Observe ReentrantLock reentrancy
     description: Acquire the same ReentrantLock multiple times from one Thread and
@@ -2923,6 +3331,9 @@ SynchronizationController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: reentrant-lock
   tryLock():
     summary: Observe tryLock(timeout) while a lock is busy
     description: One Thread holds the lock while another uses tryLock with a bounded
@@ -2945,6 +3356,9 @@ SynchronizationController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: reentrant-lock
   interruptibleLock():
     summary: Cancel a lock waiter with lockInterruptibly()
     description: Hold a ReentrantLock so a worker waits using lockInterruptibly(),
@@ -2967,6 +3381,9 @@ SynchronizationController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: reentrant-lock
   reentrantLockPolicy():
     summary: Observe fair and non-fair ReentrantLock policy
     description: Compare ReentrantLock policies and emphasize that fairness is not
@@ -2989,6 +3406,9 @@ SynchronizationController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: reentrant-lock
   readWriteLock():
     summary: Observe concurrent readers and an exclusive writer
     description: Allow multiple readers to hold the read lock concurrently while a
@@ -3011,6 +3431,9 @@ SynchronizationController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: read-write-lock
   readWriteLockDowngrade():
     summary: Perform write-to-read lock downgrade
     description: Hold the write lock, acquire the read lock before releasing the write
@@ -3033,6 +3456,9 @@ SynchronizationController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: read-write-lock
   readWriteLockPolicy():
     summary: Observe ReentrantReadWriteLock policy
     description: Inspect default/fair read-write lock behavior and the nuance of untimed
@@ -3055,6 +3481,9 @@ SynchronizationController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: read-write-lock-policy
   stampedLock():
     summary: Observe StampedLock optimistic read and fallback
     description: Take an optimistic stamp, let a writer change state so the stamp
@@ -3077,6 +3506,9 @@ SynchronizationController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: stamped-lock
   stampedLockLimitations():
     summary: Observe StampedLock limitations
     description: 'Check two important limitations: StampedLock is not reentrant, and
@@ -3099,6 +3531,9 @@ SynchronizationController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: stamped-lock-limitations
   atomicTools():
     summary: Compare AtomicInteger, LongAdder, and LongAccumulator
     description: Run deterministic operations with AtomicInteger, LongAdder, and LongAccumulator
@@ -3121,6 +3556,9 @@ SynchronizationController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: adder-accumulator
   atomicCas():
     summary: Observe CAS, ABA, and stamped references
     description: Use compareAndSet for conditional atomic update, then create an ABA
@@ -3143,6 +3581,9 @@ SynchronizationController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: atomic-cas
   concurrentCollections():
     summary: Observe atomic operations in concurrent collections
     description: Demonstrate atomic map updates, snapshot-style iteration, and a non-blocking
@@ -3166,6 +3607,9 @@ SynchronizationController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: concurrent-collections
   concurrentSkipList():
     summary: Observe a sorted concurrent map
     description: Update ConcurrentSkipListMap from multiple Threads and read key order
@@ -3188,3 +3632,6 @@ SynchronizationController:
     consumes: [
       ]
     usage: true
+    readmeRelated:
+      file: ''
+      anchor: concurrent-collections
