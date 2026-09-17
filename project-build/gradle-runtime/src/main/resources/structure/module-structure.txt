@@ -6,6 +6,8 @@ module
 │   │   │   └── nexus
 │   │   ├── ci-cd
 │   │   ├── docker
+│   │   ├── environment
+│   │   │   └── isolation
 │   │   ├── git
 │   │   ├── jenkins
 │   │   └── k8s
@@ -48,6 +50,7 @@ module
 │       ├── network
 │       │   ├── api-gateway
 │       │   │   ├── kong
+│       │   │   ├── rate-limiting
 │       │   │   └── spring-cloud-gateway
 │       │   ├── protocol
 │       │   │   ├── http
@@ -81,6 +84,9 @@ module
 │       │   │   │   ├── fluentd
 │       │   │   │   ├── logstash
 │       │   │   │   └── promtail
+│       │   │   ├── sanitization
+│       │   │   │   ├── masking
+│       │   │   │   └── redaction
 │       │   │   └── storage-analysis
 │       │   │       ├── elk-stack
 │       │   │       │   ├── elasticsearch
@@ -102,9 +108,11 @@ module
 │       │           └── zipkin
 │       ├── security
 │       │   ├── iam
-│       │   │   └── keycloak
+│       │   │   ├── keycloak
+│       │   │   └── token-lifecycle
 │       │   └── vault
-│       │       └── hashicorp
+│       │       ├── hashicorp
+│       │       └── secret-lifecycle
 │       └── server
 │           ├── jetty
 │           └── tomcat
@@ -246,9 +254,16 @@ module
     │   │   │   ├── profile
     │   │   │   ├── reactive [SPRING_REACTIVE] : Shared YAML composition module for Spring WebFlux applications
     │   │   │   ├── security
-    │   │   │   │   ├── basic
-    │   │   │   │   ├── jwt
-    │   │   │   │   └── oauth
+    │   │   │   │   ├── authentication
+    │   │   │   │   │   ├── basic
+    │   │   │   │   │   └── jwt
+    │   │   │   │   ├── authorization
+    │   │   │   │   │   ├── method-security
+    │   │   │   │   │   ├── oauth
+    │   │   │   │   │   │   └── scope
+    │   │   │   │   │   ├── permission-based
+    │   │   │   │   │   └── role-based
+    │   │   │   │   └── resource-server
     │   │   │   ├── swagger [SPRING_SWAGGER] - [DEPEND] : To auto generate list RestfulAPI to front-end page
     │   │   │   ├── test-property-source
     │   │   │   └── web [SPRING_WEB]

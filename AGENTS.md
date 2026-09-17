@@ -1196,29 +1196,56 @@ Phase 4: Context Query Service
 → return lightweight ExecutionSummary for list/search
 → return ExperimentContext for detail/export/AI consumers
 
-CONNECTED MODE — automatic chat integration
+CONNECTED MODE — delegated external AI integration
 ────────────────────────────────────────────
 
-Phase 5: MCP Adapter
-→ map Execution Context queries to MCP tools/resources
+Phase 5: AI Tool Bridge
+→ prefer Chat On Steroids (CoS) Core as the external MCP/tool bridge
+→ let the AI use CoS workspace/terminal tools to read project source and call Phase 4 Execution Context REST endpoints
+→ do not add an application-owned MCP adapter unless a future standalone requirement explicitly needs one
 
-Phase 6: Tunnel
-→ provide reachable transport from the local runtime to the remote chat client when required
+Phase 6: Reachability / transport
+→ prefer CoS-managed MCP tunnel/transport when remote ChatGPT needs to reach the local workspace/tools
+→ the application must not own tunnel credentials, tunnel lifecycle, or provider-specific transport configuration for the current project path
 
-Phase 7: ChatGPT connection
-→ let ChatGPT retrieve execution context through the connected MCP path
+Phase 7: ChatGPT usage through CoS
+→ ChatGPT web/app remains the model/conversation host
+→ CoS supplies the local tool surface; the application supplies structured Execution Context through Phase 4 REST/query contracts
+→ ChatGPT can retrieve runtime context on demand without an embedded Swagger chat and without the application calling the OpenAI API
 ```
 
-Current implementation status:
+The preferred Connected Mode for this repository is therefore **ChatGPT + Chat On Steroids + existing Execution Context APIs**:
+
+```text
+ChatGPT web/app
+        ↓
+Chat On Steroids Core (MCP/tool bridge)
+        ├── project/workspace read tools
+        └── terminal / local HTTP access
+                    ↓
+        Execution Context REST API
+                    ↓
+        Phase 4 Context Query Service
+                    ↓
+              ExperimentContext
+```
+
+In this path, Phase 5–7 capabilities are **delegated to external tooling rather than implemented as new Spring Boot runtime modules**. The application remains responsible for producing safe, structured runtime context; CoS is responsible for the MCP/tool/tunnel bridge; ChatGPT is responsible for model reasoning and conversation.
+
+A future standalone product may replace CoS with an application-owned MCP adapter and tunnel implementation. If that happens, the new adapter must consume the same Phase 4 query contract and must not duplicate capture, source scanning, or execution correlation.
+
+An **embedded Swagger AI chat** is optional and currently unnecessary for the primary workflow. If later implemented by calling provider APIs directly, it is a separate product mode with server-side credentials/billing. If later implemented by reusing a browser ChatGPT conversation, it requires a separate browser/companion bridge. Neither option is required to complete Phase 5–7 through CoS.
+
+Current implementation/status:
 
 ```text
 Phase 1  implemented for Servlet baseline
 Phase 2  implemented for Servlet baseline
 Phase 3  implemented with build-time generated source context + runtime lookup
 Phase 4  implemented with ExecutionQuery/ExecutionSummary/ExecutionQueryService + REST/Explorer/export adapters
-Phase 5  planned
-Phase 6  planned
-Phase 7  planned
+Phase 5  delegated to Chat On Steroids Core when CoS is configured
+Phase 6  delegated to Chat On Steroids tunnel/transport when required
+Phase 7  delegated to the user's ChatGPT + CoS connection
 ```
 
 Phase 3 currently generates a deterministic classpath artifact:
@@ -1284,27 +1311,29 @@ ChatGPT-specific runtime code
 
 Prefer an AI Context Bundle containing source/context/log information over asking an AI to inspect only a compiled JAR. The application JAR may be optional supporting input, not the primary AI context format.
 
-**Path B — Connected Mode / automatic retrieval**
+**Path B — Connected Mode / automatic retrieval through CoS**
 
-This path continues after the shared Phase 4 through Phase 5–7.
+This path continues after the shared Phase 4, but Phase 5–7 are delegated to Chat On Steroids instead of being implemented inside the application.
 
 ```text
 Execute application/API
         ↓
 Execution Context Core (Phase 1–3)
         ↓
-Phase 4: Context Query Service
+Phase 4: Context Query Service / REST
         ↓
-Phase 5: MCP Adapter
+Phase 5: CoS Core tool bridge
         ↓
-Phase 6: Tunnel/transport when needed
+Phase 6: CoS tunnel/transport when needed
         ↓
-Phase 7: ChatGPT connection
+Phase 7: ChatGPT + CoS connected session
         ↓
 chat asks for latest/specific execution without manual upload
 ```
 
-Both paths must consume the same `ExperimentContext`. Manual export and MCP are adapters/consumers; neither owns execution capture, runtime observation, or source scanning.
+ChatGPT remains the model host. CoS reads the workspace and can query the local Execution Context REST API through its tool surface. The application does not need OpenAI API calls, a repository-owned MCP server, or an embedded Swagger chat for this workflow.
+
+Both paths must consume the same `ExperimentContext`. Manual export and the CoS-driven connected path are consumers; neither owns execution capture, runtime observation, or source scanning.
 
 Target dependency direction:
 
@@ -1318,15 +1347,18 @@ Target dependency direction:
                 ┌──────────────┴──────────────┐
                 │                             │
                 ▼                             ▼
-        Manual AI Exporter                 MCP Adapter
-                │                             │
-        REST JSON / ZIP                    Tunnel
-                │                             │
-                ▼                             ▼
-        upload to any AI                   ChatGPT
+        Manual AI Exporter            Chat On Steroids Core
+                │                     (external integration)
+        REST JSON / ZIP                       │
+                │                     workspace + terminal
+                ▼                             │
+        upload to any AI                      ▼
+                                      ChatGPT web/app account
 ```
 
-Do not put MCP or chat-vendor logic inside `execution-context` core. Do not make `execution-context` depend on Swagger. Do not duplicate Phase 1–4 query/capture logic in an exporter or MCP adapter.
+Do not put CoS, MCP, tunnel, or chat-vendor logic inside `execution-context` core. Do not make `execution-context` depend on Swagger. Keep Phase 4 REST/query contracts stable enough that either CoS or a future standalone MCP adapter can consume them.
+
+Swagger may keep Execution Context inspection/export controls, but an embedded `Connect AI`/floating chat is optional and not required by the current architecture. Do not make Swagger own MCP/tunnel/provider lifecycle.
 
 ### Phase 4 implementation contract
 
@@ -1826,10 +1858,12 @@ Preserve these unless the user explicitly changes the architecture:
 19. Swagger core is stack-neutral; `GLOBAL_SWAGGER_SERVLET` and `GLOBAL_SWAGGER_REACTIVE` own web-stack-specific runtime dependencies.
 20. `BUILD_SWAGGER=TRUE` selects one Java Swagger adapter by `MODULE_TYPE`, while YML composition continues to consume only `GLOBAL_SWAGGER_CONFIG`.
 21. Execution Context is independent from Swagger; Swagger may trigger requests or later expose UI, but it does not own capture/source/log correlation.
-22. Execution Context Phase 1–4 form the reusable capture/source/query capability; manual export and MCP consume the same query contract and `ExperimentContext`.
-23. Chat AI usage must support two paths after Phase 4: manual REST JSON/ZIP export without MCP/tunnel, and connected retrieval through Phase 5–7.
-24. Phase 5–7 are not current runtime facts until their concrete implementations are added and validated.
-25. Swagger `execution` documentation is a guided learning explanation, not merely a code trace; it must explain concept, runtime flow, meaning, observable evidence, and conclusion without requiring the reader to open the source first.
+22. Execution Context Phase 1–4 form the reusable capture/source/query capability; manual export and external AI tooling consume the same query contract and `ExperimentContext`.
+23. Chat AI usage has two paths after Phase 4: manual REST JSON/ZIP export, or connected retrieval through Chat On Steroids using workspace/terminal access plus the existing Execution Context REST API.
+24. For the current repository, Phase 5–7 are delegated to CoS: Core provides the MCP/tool bridge, CoS provides tunnel/transport when needed, and ChatGPT remains the model/conversation host.
+25. The application must not add MCP/tunnel/chat-vendor dependencies merely to support the current CoS workflow. A standalone application-owned MCP path may be added later only when explicitly required.
+26. Embedded Swagger AI chat and any browser/companion bridge are optional UX/product features, not requirements for Phase 5–7 through CoS.
+27. Swagger `execution` documentation is a guided learning explanation, not merely a code trace; it must explain concept, runtime flow, meaning, observable evidence, and conclusion without requiring the reader to open the source first.
 
 ---
 
@@ -1920,7 +1954,10 @@ Execution Context
 → Phase 1–3 = Execution Capture + Runtime Observation + Source Context
 → Manual Mode = export ZIP/JSON and upload to any compatible chat AI
 → Phase 4 Context Query Service is shared by both modes
-→ Connected Mode = Phase 5 MCP → Phase 6 Tunnel → Phase 7 ChatGPT connection
+→ Connected Mode = Phase 5 CoS Core tool bridge → Phase 6 CoS tunnel/transport when needed → Phase 7 ChatGPT + CoS session
+→ Phase 5–7 are delegated externally for the current project; no application-owned MCP/tunnel implementation is required
+→ preferred Connected Mode keeps ChatGPT as the model host and queries existing Execution Context REST APIs through CoS
+→ embedded Swagger AI chat/browser bridge remains optional; API-backed chat, if ever added, is a separate billed/provider-key mode
 → both modes consume the same ExperimentContext
 
 Do not infer module package architecture globally.

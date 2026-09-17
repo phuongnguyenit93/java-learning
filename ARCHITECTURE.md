@@ -1428,17 +1428,51 @@ Phase 4: Context Query Service
 
 Sau Phase 4 mới tách Manual Mode và Connected Mode.
 
-Connected Mode tiếp tục:
+Với repository hiện tại, Connected Mode **không tiếp tục bằng cách tự xây MCP/tunnel/chat backend trong Spring Boot**. Phase 5–7 được delegate cho Chat On Steroids (CoS):
 
-Phase 5: MCP Adapter
-→ expose cùng Execution Context qua MCP tools/resources
+Phase 5: AI Tool Bridge
+→ CoS Core cung cấp MCP/tool surface cho ChatGPT
+→ AI dùng workspace/file tools để đọc source và terminal/local HTTP để query Execution Context REST API
+→ application không cần tự expose MCP tool riêng cho current path
 
-Phase 6: Tunnel
-→ transport để chat client ở ngoài máy local có thể reach MCP/runtime khi cần
+Phase 6: Reachability / transport
+→ CoS quản lý MCP tunnel/transport khi ChatGPT cần reach local machine
+→ application không sở hữu tunnel credential/lifecycle/provider-specific configuration
 
-Phase 7: ChatGPT connection
-→ ChatGPT lấy execution context tự động qua connected path
+Phase 7: ChatGPT usage through CoS
+→ ChatGPT web/app của user tiếp tục host model và conversation
+→ CoS nối conversation đó với local tools
+→ ChatGPT lấy Execution Context từ REST/query layer hiện có và correlate với project source
 ```
+
+Connected Mode ưu tiên của repository trở thành:
+
+```text
+ChatGPT web/app
+        ↓
+Chat On Steroids Core
+(MCP/tool bridge)
+        ├── workspace/file access
+        └── terminal / local HTTP
+                    ↓
+        Execution Context REST API
+                    ↓
+        Phase 4 Context Query Service
+                    ↓
+              ExperimentContext
+```
+
+Boundary ownership:
+
+```text
+Application          → capture/query/serve structured Execution Context
+Chat On Steroids     → MCP tools + local workspace/terminal + tunnel/transport
+ChatGPT              → reasoning + conversation
+```
+
+Luồng này không cần OpenAI API key trong application và không cần embedded Swagger chat. Nếu sau này repository cần chạy độc lập không phụ thuộc CoS, có thể bổ sung application-owned MCP adapter/tunnel như một adapter thay thế; adapter đó vẫn phải consume Phase 4 contract hiện có.
+
+Embedded Swagger AI chat vẫn có thể được nghiên cứu sau, nhưng là optional UX/product mode. Gọi OpenAI API trực tiếp sẽ có credential/billing riêng; reuse ChatGPT browser conversation sẽ cần browser/companion bridge riêng. Cả hai đều không phải requirement của Phase 5–7 hiện tại.
 
 Status hiện tại:
 
@@ -1448,11 +1482,11 @@ Status hiện tại:
 | 2. Runtime Observation | Implemented cho Servlet baseline |
 | 3. Source Context | Implemented bằng build-time generation + runtime lookup |
 | 4. Context Query Service | Implemented: `ExecutionQuery`, `ExecutionSummary`, REST query/detail, Explorer, ZIP export |
-| 5. MCP Adapter | Planned |
-| 6. Tunnel | Planned |
-| 7. ChatGPT connection | Planned |
+| 5. AI Tool Bridge | Delegated to Chat On Steroids Core khi CoS được cấu hình |
+| 6. Reachability / transport | Delegated to CoS tunnel/transport khi cần |
+| 7. ChatGPT usage | Delegated to ChatGPT + CoS connected session |
 
-Không được mô tả Phase 5–7 như current implementation trước khi code tương ứng tồn tại và được validate.
+Phase 5–7 không phải Spring Boot runtime module của repository trong current architecture; chúng là external integration capabilities.
 
 ### 22A.2 `ExperimentContext` là contract dùng chung
 
@@ -1523,29 +1557,27 @@ ChatGPT-specific runtime dependency
 
 Artifact khuyến nghị là **AI Context Bundle** chứa source, request/response, logs, exception, timing và documentation liên quan. Compiled JAR có thể là file bổ sung nếu cần, nhưng không nên là format context chính vì chat AI sẽ phải tự extract/decompile để tìm lại những thông tin repository đã biết sẵn.
 
-#### Hướng B — Connected Mode
+#### Hướng B — Connected Mode qua Chat On Steroids
 
-User muốn trải nghiệm tự động:
-
-Đây là nhánh tiếp tục roadmap bằng Phase 5–7 sau Phase 4 dùng chung.
+User muốn trải nghiệm tự động mà không phải upload bundle thủ công:
 
 ```text
 Execute API/application
         ↓
 Execution Context Core
         ↓
-Phase 4: Context Query Service
+Phase 4: Context Query Service / REST
         ↓
-Phase 5: MCP Adapter
+Phase 5: CoS Core tool bridge
         ↓
-Phase 6: Tunnel/transport khi cần
+Phase 6: CoS tunnel/transport khi cần
         ↓
-Phase 7: ChatGPT connection
+Phase 7: ChatGPT + CoS connected session
         ↓
 "phân tích lần execution vừa chạy"
 ```
 
-ChatGPT khi đó query context thay vì user phải tải/upload bundle thủ công.
+ChatGPT query context thông qua tool surface của CoS. CoS có thể gọi local REST endpoint, đọc source trong workspace và đưa evidence trở lại cùng conversation. Application không cần triển khai MCP server riêng hoặc gọi OpenAI API cho workflow này.
 
 Hai hướng dùng **cùng một `ExperimentContext`**:
 
@@ -1559,15 +1591,18 @@ Hai hướng dùng **cùng một `ExperimentContext`**:
                   ┌───────────────┴───────────────┐
                   │                               │
                   ▼                               ▼
-          Manual AI Exporter                  MCP Adapter
-                  │                               │
-          REST JSON / ZIP                       Tunnel
-                  │                               │
-                  ▼                               ▼
-        Upload to chat AI                     ChatGPT
+          Manual AI Exporter             Chat On Steroids Core
+                  │                       (external adapter)
+          REST JSON / ZIP                        │
+                  │                      workspace + terminal
+                  ▼                               │
+        Upload to chat AI                        ▼
+                                        ChatGPT web/app account
 ```
 
-Manual exporter và MCP adapter là **consumer/adapter**, không được sở hữu lại logic capture, log correlation hoặc source scanning.
+Manual exporter và CoS connected path là **consumer/integration layer**, không được sở hữu lại logic capture, log correlation hoặc source scanning.
+
+Swagger tiếp tục tập trung vào run/inspect/export Execution Context. `Connect AI` hoặc floating chat nếu có chỉ là optional UX; không phải dependency hoặc ownership boundary của current Connected Mode.
 
 Phase 4 hiện có thêm **Execution Context Explorer** độc lập với Swagger. Explorer dùng `ExecutionSummary` cho table/search, multi-select execution để bulk export, và chỉ load `ExperimentContext` khi xem detail hoặc export.
 
@@ -1928,10 +1963,12 @@ Các invariant dưới đây phản ánh architecture hiện tại và nên đư
 19. Swagger runtime core phải stack-neutral; MVC/WebFlux-specific code và UI starter thuộc adapter tương ứng.
 20. `BUILD_SWAGGER=TRUE` chọn đúng một Java runtime adapter theo `MODULE_TYPE`, trong khi YML composition dùng chung `GLOBAL_SWAGGER_CONFIG`.
 21. Execution Context độc lập với Swagger và không được phụ thuộc OpenAPI/springdoc chỉ để capture execution.
-22. Phase 1–4 tạo reusable capture/source/query capability; exporter và MCP chỉ consume query contract này, không duplicate capture/source logic.
-23. User dùng chat AI phải có hai hướng sau Phase 4: Manual Mode bằng REST JSON/ZIP upload và Connected Mode qua Phase 5–7.
-24. Phase 5–7 là roadmap planned cho tới khi implementation tương ứng tồn tại và được validate.
-25. Swagger `execution` documentation là guided learning explanation: phải giúp người đọc hiểu concept, flow, ý nghĩa, evidence và conclusion mà không bắt buộc phải mở source code trước.
+22. Phase 1–4 tạo reusable capture/source/query capability; exporter và external AI tooling chỉ consume query contract này, không duplicate capture/source logic.
+23. User dùng chat AI có hai hướng sau Phase 4: Manual Mode bằng REST JSON/ZIP upload hoặc Connected Mode qua Chat On Steroids.
+24. Current Connected Mode delegate Phase 5–7 cho CoS: Core cung cấp MCP/tool bridge, CoS quản lý tunnel/transport khi cần, ChatGPT host model/conversation.
+25. Application không cần application-owned MCP/tunnel/chat backend cho current workflow; standalone MCP integration chỉ bổ sung khi có requirement độc lập khỏi CoS.
+26. Embedded Swagger AI chat/browser bridge là optional product UX và không phải requirement của Phase 5–7 hiện tại.
+27. Swagger `execution` documentation là guided learning explanation: phải giúp người đọc hiểu concept, flow, ý nghĩa, evidence và conclusion mà không bắt buộc phải mở source code trước.
 
 ---
 
@@ -2084,7 +2121,15 @@ Phase 1–4 Execution Context Core + Query Layer
         ↓
 ExperimentContext
         ├── Manual Mode → ZIP/JSON → upload vào chat AI
-        └── Connected Mode → Context Query → MCP → Tunnel → ChatGPT
+        └── Connected Mode → Context Query/REST → Chat On Steroids → ChatGPT web/app account
+
+Current Phase 5–7 ownership:
+Phase 5 tool bridge → CoS Core
+Phase 6 tunnel/transport → CoS when needed
+Phase 7 conversation/model → ChatGPT connected through CoS
+
+Embedded Swagger AI chat/browser bridge is optional and not required for the current path.
+API-backed embedded chat, nếu có, là mode riêng và có provider credential/billing riêng.
 ```
 
 ---

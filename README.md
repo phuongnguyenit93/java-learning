@@ -98,17 +98,19 @@ Swagger có contract `readmeRelated` để liên kết controller/method với c
 
 ```text
 Phase 1–4: Capture → Observation → Source → Query          [implemented]
-Phase 5–7: MCP → Tunnel → ChatGPT                          [planned]
+Phase 5–7: CoS Core → CoS transport → ChatGPT              [delegated]
 ```
 
 User có 2 cách dùng với chat AI:
 
 ```text
 Manual Mode    → Explorer/REST → ZIP/JSON → upload vào chat AI
-Connected Mode → MCP + tunnel → ChatGPT tự lấy context
+Connected Mode → ChatGPT → Chat On Steroids → query Execution Context REST + project source
 ```
 
-Hai hướng dùng chung một `ExperimentContext`; Swagger chỉ có thể là nơi trigger request, không sở hữu capability này.
+Phase 5–7 hiện không cần tự xây MCP/tunnel/chat backend trong project: Chat On Steroids cung cấp tool/MCP bridge và transport, còn ChatGPT xử lý conversation/reasoning. Embedded AI chat trong Swagger là optional; chỉ cân nhắc sau nếu có requirement UX riêng.
+
+Hai hướng vẫn dùng chung một `ExperimentContext`; Swagger chỉ trigger/inspect/export execution, không sở hữu AI integration.
 
 ### ENV
 

@@ -33,6 +33,16 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <a href='./module/infrastructure/devops/docker'>🪄 docker</a>
 </li>
 <li>
+<details>
+  <summary><b><a href='./module/infrastructure/devops/environment'>📁 environment</a></b></summary>
+<ul>
+<li>
+  <a href='./module/infrastructure/devops/environment/isolation'>🪄 isolation</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
   <a href='./module/infrastructure/devops/git'>🪄 git</a>
 </li>
 <li>
@@ -217,6 +227,9 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <a href='./module/infrastructure/system/network/api-gateway/kong'>🪄 kong</a>
 </li>
 <li>
+  <a href='./module/infrastructure/system/network/api-gateway/rate-limiting'>🪄 rate-limiting</a>
+</li>
+<li>
   <a href='./module/infrastructure/system/network/api-gateway/spring-cloud-gateway'>🪄 spring-cloud-gateway</a>
 </li>
 </ul>
@@ -365,6 +378,19 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </li>
 <li>
 <details>
+  <summary><b><a href='./module/infrastructure/system/observability/logging/sanitization'>📁 sanitization</a></b></summary>
+<ul>
+<li>
+  <a href='./module/infrastructure/system/observability/logging/sanitization/masking'>🪄 masking</a>
+</li>
+<li>
+  <a href='./module/infrastructure/system/observability/logging/sanitization/redaction'>🪄 redaction</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
   <summary><b><a href='./module/infrastructure/system/observability/logging/storage-analysis'>📁 storage-analysis</a></b></summary>
 <ul>
 <li>
@@ -469,6 +495,9 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
   <a href='./module/infrastructure/system/security/iam/keycloak'>🪄 keycloak</a>
 </li>
+<li>
+  <a href='./module/infrastructure/system/security/iam/token-lifecycle'>🪄 token-lifecycle</a>
+</li>
 </ul>
 </details>
 </li>
@@ -478,6 +507,9 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <ul>
 <li>
   <a href='./module/infrastructure/system/security/vault/hashicorp'>🪄 hashicorp</a>
+</li>
+<li>
+  <a href='./module/infrastructure/system/security/vault/secret-lifecycle'>🪄 secret-lifecycle</a>
 </li>
 </ul>
 </details>
@@ -1084,13 +1116,46 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <summary><b><a href='./module/platform/development/framework/spring/security'>📁 security</a></b></summary>
 <ul>
 <li>
-  <a href='./module/platform/development/framework/spring/security/basic'>🪄 basic</a>
+<details>
+  <summary><b><a href='./module/platform/development/framework/spring/security/authentication'>📁 authentication</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/framework/spring/security/authentication/basic'>🪄 basic</a>
 </li>
 <li>
-  <a href='./module/platform/development/framework/spring/security/jwt'>🪄 jwt</a>
+  <a href='./module/platform/development/framework/spring/security/authentication/jwt'>🪄 jwt</a>
+</li>
+</ul>
+</details>
 </li>
 <li>
-  <a href='./module/platform/development/framework/spring/security/oauth'>🪄 oauth</a>
+<details>
+  <summary><b><a href='./module/platform/development/framework/spring/security/authorization'>📁 authorization</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/framework/spring/security/authorization/method-security'>🪄 method-security</a>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/framework/spring/security/authorization/oauth'>📁 oauth</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/framework/spring/security/authorization/oauth/scope'>🪄 scope</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+  <a href='./module/platform/development/framework/spring/security/authorization/permission-based'>🪄 permission-based</a>
+</li>
+<li>
+  <a href='./module/platform/development/framework/spring/security/authorization/role-based'>🪄 role-based</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+  <a href='./module/platform/development/framework/spring/security/resource-server'>🪄 resource-server</a>
 </li>
 </ul>
 </details>
