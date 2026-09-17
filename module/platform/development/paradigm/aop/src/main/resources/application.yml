@@ -13,10 +13,19 @@ server:
     context-path: /aspect
 spring:
   application:
-    name: ${PROJECT_NAME}
+    name: aspect
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:dev}
-
+swagger:
+  enabled: true
+  languages: vi,en
+springdoc:
+  swagger-ui:
+    enabled: ${swagger.enabled}
+    docExpansion:
+      - none
+  api-docs:
+    enabled: ${swagger.enabled}
 ---
 # Runtime configuration for profile DEV
 spring:

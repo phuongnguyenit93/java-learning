@@ -28,6 +28,10 @@ springdoc:
       - none
   api-docs:
     enabled: ${swagger.enabled}
+
+hawtio:
+  authenticationEnabled: false
+  springBootEndpointsExtension: true
 ---
 spring:
   config:
