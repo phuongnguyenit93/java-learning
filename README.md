@@ -16,6 +16,8 @@ project-build/gradle-runtime       # build-time automation
 module/                            # module được cấu hình/generated
     ↓
 project-build/springboot-runtime   # shared runtime capability
+
+project-portal/                    # Spring Boot + React learning UI
 ```
 
 Build convention:
@@ -28,6 +30,19 @@ Task          → explicit execution
 ```
 
 Một **real module** được nhận diện bằng local `gradle.properties`.
+
+### Project Portal
+
+`project-portal` là Learning Portal ở cấp root, tách khỏi `module/`:
+
+```text
+Spring Boot :9098
++ React + TypeScript + Vite + React Router
+```
+
+Frontend hiện static-first/fake data, chưa gọi backend API. Gradle build React bằng Vite rồi copy `dist` vào `classpath:/static`, nên Spring Boot tự serve UI mà không cần controller render trang. Current route dùng `HashRouter`, ví dụ `http://localhost:9098/#/learning/THREAD`.
+
+Chi tiết xem [`PROJECT_PORTAL.md`](./PROJECT_PORTAL.md).
 
 ### Tạo module mới từ số 0
 
@@ -172,4 +187,5 @@ Learning guide và learning path **sẽ được cập nhật sau**. Nội dung 
 
 - [`ARCHITECTURE.md`](./ARCHITECTURE.md) — kiến trúc chi tiết.
 - [`AGENTS.md`](./AGENTS.md) — context/working rules cho AI.
+- [`PROJECT_PORTAL.md`](./PROJECT_PORTAL.md) — Learning Portal hiện tại và target architecture.
 - [`STRUCTURE.md`](./STRUCTURE.md) — cây module generated.

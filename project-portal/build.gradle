@@ -1,0 +1,36 @@
+plugins {
+    id 'com.github.node-gradle.node' version '7.1.0'
+}
+
+import com.github.gradle.node.npm.task.NpmTask
+
+node {
+    download = true
+    version = '22.14.0'
+    npmVersion = '10.9.2'
+    nodeProjectDir = file("${projectDir}/frontend")
+}
+
+tasks.register('buildFrontend', NpmTask) {
+    dependsOn tasks.named('npmInstall')
+    args = ['run', 'build']
+
+    inputs.file(file('frontend/package.json'))
+    inputs.file(file('frontend/tsconfig.json'))
+    inputs.file(file('frontend/tsconfig.app.json'))
+    inputs.file(file('frontend/vite.config.ts'))
+    inputs.dir(file('frontend/src'))
+    outputs.dir(file('frontend/dist'))
+}
+
+tasks.named('processResources') {
+    dependsOn tasks.named('buildFrontend')
+
+    from(file('frontend/dist')) {
+        into 'static'
+    }
+}
+
+tasks.named('clean') {
+    delete file('frontend/dist')
+}

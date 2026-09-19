@@ -28,6 +28,7 @@ Repository hiện được xây dựng quanh các baseline chính:
 - Groovy cho phần lớn custom Gradle plugin.
 - JUnit Platform cho project có Java plugin.
 - Docker Compose cho module cần runtime infrastructure.
+- React 19 + TypeScript + Vite + React Router cho `project-portal` frontend.
 
 Root project quản lý các plugin và convention dùng chung như:
 
@@ -46,6 +47,7 @@ Root project quản lý các plugin và convention dùng chung như:
 java-learning/
 ├── module/                         # Learning modules
 ├── internal/                       # Internal supporting modules/resources
+├── project-portal/                 # Repository-level Java Learning portal
 ├── project-build/
 │   ├── gradle-runtime/             # Build-time implementation
 │   └── springboot-runtime/         # Shared Spring Boot runtime capability
@@ -54,6 +56,7 @@ java-learning/
 ├── settings.gradle                 # Composite build entry point
 ├── README.md
 ├── ARCHITECTURE.md
+├── PROJECT_PORTAL.md               # Portal-specific architecture/design
 └── STRUCTURE.md                    # Generated module map
 ```
 
@@ -71,6 +74,130 @@ project-build/springboot-runtime
 ```
 
 `module/` là consumer chính của các capability trên, nhưng nội dung package bên trong module nằm ngoài phạm vi tài liệu này.
+
+### 3.1 `project-portal` boundary
+
+`project-portal/` là application ở cấp repository dùng để trình bày learning experience chung. Nó được đặt ngang hàng với `module/`, `project-build/`, `project-orchestration/` vì trách nhiệm của nó khác với một learning module:
+
+```text
+module/
+→ nội dung/chủ đề được học
+
+project-portal/
+→ nơi người dùng khám phá, đọc và tương tác với nội dung học
+```
+
+Portal hiện có cả Spring Boot và React để phục vụ mục tiêu học full-stack, nhưng frontend được thiết kế **static-first** và chưa phụ thuộc backend API.
+
+Current physical structure:
+
+```text
+project-portal/
+├── build.gradle
+├── gradle.properties
+├── master.json
+├── src/main/java/com/example/projectportal/
+│   └── ProjectPortalApplication.java
+├── src/main/resources/
+│   └── application.yml             # port 9098
+└── frontend/
+    ├── package.json
+    ├── vite.config.ts
+    └── src/
+        ├── main.tsx
+        ├── App.tsx
+        ├── components/
+        ├── pages/
+        ├── data/
+        ├── state/
+        └── styles/
+```
+
+Current build/serve flow:
+
+```text
+React + TypeScript source
+project-portal/frontend/src
+        ↓
+npm run build
+        ↓
+Vite output: frontend/dist
+        ↓
+Gradle processResources
+        ↓
+build/resources/main/static
+        ↓
+Spring Boot classpath:/static
+        ↓
+Embedded Tomcat :9098
+        ↓
+Browser
+```
+
+Điểm quan trọng: Spring Boot **không render React** và `ProjectPortalApplication` không cần controller để trả trang chính. Spring Boot tự serve `classpath:/static/index.html`; browser tải JavaScript bundle và chính browser mới chạy React.
+
+Frontend entry point hiện là:
+
+```text
+index.html
+    ↓
+main.tsx
+    ↓
+App.tsx
+    ↓
+React Router
+    ↓
+pages/components
+```
+
+Routing production hiện dùng `HashRouter`:
+
+```text
+http://localhost:9098/#/
+http://localhost:9098/#/learning
+http://localhost:9098/#/learning/THREAD
+```
+
+Phần sau `#` được browser/React xử lý và không được gửi lên Spring Boot. Nhờ vậy phase hiện tại chưa cần SPA fallback controller. Nếu sau này chuyển sang `BrowserRouter`, backend/static server phải có fallback về `index.html` cho client routes.
+
+Current UI scope:
+
+```text
+Header
+├── Java Learning
+├── Trang chủ
+├── Learning
+├── global search UI
+└── VI ↔ EN switch
+
+Learning page
+├── module hierarchy sidebar
+├── "Tìm kiến thức" search
+├── Overview
+├── Knowledge
+├── Quiz
+├── API Docs
+├── Execution
+└── Download action
+```
+
+`Overview`, `Knowledge`, `Quiz`, `API Docs` hiện render fake TypeScript data bằng React loop/filter/state. `Execution` và những menu cần backend/runtime thật có thể giữ empty state trong phase đầu. CSS dùng stylesheet riêng; inline CSS không phải convention của Portal.
+
+Portal không được trở thành source of truth mới cho module metadata hoặc learning content. Target data flow vẫn là:
+
+```text
+canonical module structure/model
+        +
+module master.json / resources
+        +
+actual README/quiz/API/artifact state
+        ↓
+build-time generated portal projection
+        ↓
+React Portal
+```
+
+Spring Boot backend trong `project-portal` chỉ nên nhận responsibility khi feature thực sự cần server-side behavior, ví dụ runtime aggregation, secured external integration, server-side persistence hoặc dynamic operations. Dữ liệu static/generated không nên bị ép thành REST API chỉ vì backend tồn tại.
 
 ---
 
@@ -1828,6 +1955,9 @@ trừ khi architecture contract của artifact đó được thay đổi rõ rà
 | Repository structure | filesystem/module discovery | `STRUCTURE.md` |
 | Execution Context enablement | `BUILD_EXECUTION_CONTEXT` | orchestration/runtime dependency selection |
 | Execution source context | Java source + build-time scanner/generator | `META-INF/execution-context/source-context.json` |
+| Portal current UI data | `project-portal/frontend/src/data` fake TypeScript fixtures | React pages/components |
+| Portal future module catalog | canonical module structure/model + module metadata + actual resource/artifact state | generated machine-readable portal projection |
+| Portal production frontend | React/TypeScript source | Vite `dist` → Spring `classpath:/static` |
 
 ---
 
@@ -1872,6 +2002,26 @@ projectsEvaluated
 Execute requested tasks
 ```
 
+Riêng `project-portal`, build lifecycle hiện có thêm frontend handoff:
+
+```text
+:project-portal:processResources / bootJar / bootRun dependency chain
+        ↓
+buildFrontend
+        ↓
+npmInstall
+        ↓
+npm run build
+        ↓
+Vite frontend/dist
+        ↓
+copy vào Spring resources/static
+        ↓
+Spring Boot serve production bundle
+```
+
+Gradle Node plugin download Node/npm cho Portal build, vì vậy production build không dựa vào việc developer đã cài Node global. Khi phát triển frontend riêng, Vite dev server có thể chạy độc lập; khi test application đóng gói hoàn chỉnh, Spring Boot serve bundle đã build.
+
 Điểm quan trọng:
 
 - metadata phải sẵn sàng trước module configuration;
@@ -1906,6 +2056,19 @@ Rules:
 3. `springboot-runtime` không chứa Gradle scanning/generation logic.
 4. Runtime code không gọi Gradle plugin/task API.
 5. Build-time và runtime giao tiếp qua dependency, artifact, metadata và classpath resource.
+
+Portal bổ sung thêm một boundary browser-side:
+
+```text
+Gradle build process
+    ↓ build React
+Spring Boot process
+    ↓ serve static files / future APIs
+Browser process
+    ↓ execute React / client routing / local state
+```
+
+Không được mô tả React như code chạy trong JVM. Spring Boot chỉ host static bundle ở current phase; React runtime chạy trong browser.
 
 ---
 
@@ -1969,6 +2132,11 @@ Các invariant dưới đây phản ánh architecture hiện tại và nên đư
 25. Application không cần application-owned MCP/tunnel/chat backend cho current workflow; standalone MCP integration chỉ bổ sung khi có requirement độc lập khỏi CoS.
 26. Embedded Swagger AI chat/browser bridge là optional product UX và không phải requirement của Phase 5–7 hiện tại.
 27. Swagger `execution` documentation là guided learning explanation: phải giúp người đọc hiểu concept, flow, ý nghĩa, evidence và conclusion mà không bắt buộc phải mở source code trước.
+28. `project-portal` là repository-level presentation application nằm ngoài `module/`; nó không phải learning topic.
+29. Portal frontend ưu tiên static/generated data; có Spring Boot backend không đồng nghĩa mọi dữ liệu phải đi qua REST.
+30. Production React bundle được Vite build rồi Gradle copy vào `classpath:/static`; Spring Boot phục vụ bundle bằng static-resource mechanism mặc định.
+31. Current Portal routing dùng `HashRouter`, vì vậy `#/learning/...` thuộc browser/React và chưa cần Spring MVC SPA fallback.
+32. Learning experience không phụ thuộc việc learning module có Spring Boot Application; API execution và Execution Context chỉ là optional runtime capabilities.
 
 ---
 
@@ -2048,9 +2216,10 @@ Khi cần hiểu architecture của project, thứ tự đọc được khuyến
 5. project-orchestration
 6. project-build/gradle-runtime
 7. project-build/springboot-runtime
-8. STRUCTURE.md
-9. metadata/build.gradle của module cần khảo sát
-10. source package của module chỉ khi phạm vi công việc yêu cầu
+8. PROJECT_PORTAL.md + project-portal khi task liên quan Learning Portal
+9. STRUCTURE.md
+10. metadata/build.gradle của module cần khảo sát
+11. source package của module chỉ khi phạm vi công việc yêu cầu
 ```
 
 Thứ tự này giúp phân biệt rõ:
@@ -2108,9 +2277,28 @@ project-build/gradle-runtime
 
 project-build/springboot-runtime
     = runtime implementation: ứng dụng dùng capability như thế nào khi chạy
+
+project-portal
+    = presentation application: Spring Boot host + React/TypeScript learning UI
 ```
 
 `module/` đứng phía consumer của kiến trúc này và vẫn giữ quyền sở hữu nội dung học tập/application cụ thể của từng module.
+
+`project-portal` đứng phía presentation/aggregation. Current flow của Portal là:
+
+```text
+fake/static frontend data
+        ↓
+React + TypeScript
+        ↓ Vite build
+static bundle
+        ↓ Gradle processResources
+Spring Boot classpath:/static
+        ↓
+browser at :9098
+```
+
+Trong phase hiện tại Java backend không sở hữu learning data API. Khi generated module catalog/README/quiz/OpenAPI projections được bổ sung, chúng nên tiếp tục đi theo static-first data flow trừ khi feature có requirement server-side rõ ràng.
 
 Execution Context bổ sung một đường dữ liệu khác từ runtime thực tế sang công cụ phân tích:
 
@@ -2146,6 +2334,8 @@ Bản tài liệu này được xây dựng từ source thực tế của:
 - `project-build/springboot-runtime/swagger`;
 - `project-build/springboot-runtime/execution-context`;
 - `project-build/springboot-runtime/execution-context-servlet`;
+- `project-portal` Spring Boot + React/Vite build handoff;
+- `PROJECT_PORTAL.md` cho product/portal-specific design;
 - canonical automation/task resources;
 - generated plugin/catalog flow đã được kiểm tra;
 - Gradle configuration flow đã được chạy bằng repository Gradle Wrapper 8.5.

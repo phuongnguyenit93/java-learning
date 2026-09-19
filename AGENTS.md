@@ -14,6 +14,7 @@ Use:
 AGENTS.md       → how an AI should work in this repository
 ARCHITECTURE.md → why the repository is structured this way
 README.md       → high-level project orientation
+PROJECT_PORTAL.md → detailed Learning Portal design/current implementation
 STRUCTURE.md    → generated module tree/navigation
 ```
 
@@ -38,6 +39,7 @@ Gradle          repository wrapper 8.5
 Build language  Groovy custom plugins
 Testing         JUnit Platform
 Runtime infra   Docker Compose where needed
+Portal frontend React 19 + TypeScript + Vite + React Router
 ```
 
 Do not assume every module has the same runtime architecture or purpose.
@@ -57,9 +59,10 @@ For repository-level work, read in this order:
 6. project-orchestration/
 7. project-build/gradle-runtime/
 8. project-build/springboot-runtime/
-9. STRUCTURE.md when module navigation is needed
-10. module metadata/build.gradle for the concrete task
-11. module source packages only when the requested work requires them
+9. project-portal/ and PROJECT_PORTAL.md when portal/frontend work is involved
+10. STRUCTURE.md when module navigation is needed
+11. module metadata/build.gradle for the concrete task
+12. module source packages only when the requested work requires them
 ```
 
 Do not read the entire `module/` source tree just to answer a build-system question.
@@ -76,6 +79,7 @@ Repository shape:
 java-learning/
 ├── module/                         # learning/application modules
 ├── internal/                       # internal supporting modules/resources
+├── project-portal/                 # repository-level Java Learning portal
 ├── project-build/
 │   ├── gradle-runtime/             # Gradle/build-time implementation
 │   └── springboot-runtime/         # shared Spring Boot runtime implementation
@@ -85,6 +89,7 @@ java-learning/
 ├── README.md
 ├── ARCHITECTURE.md
 ├── AGENTS.md
+├── PROJECT_PORTAL.md
 └── STRUCTURE.md
 ```
 
@@ -102,6 +107,76 @@ project-build/springboot-runtime
 ```
 
 Do not move code between these boundaries just to reduce file count.
+
+### Project Portal boundary
+
+`project-portal/` is a repository-level application used to present learning content. It is intentionally outside `module/` because it is **where learning content is presented**, not a learning topic itself.
+
+Current implementation:
+
+```text
+project-portal/
+├── src/main/java/.../ProjectPortalApplication.java
+├── src/main/resources/application.yml   # server.port=9098
+├── frontend/                            # React + TypeScript + Vite
+│   └── src/
+└── build.gradle                         # Node/Vite → Spring static-resource wiring
+```
+
+The Portal is currently **static-first**. React uses local fake TypeScript data and client-side state; no portal feature currently depends on a Java REST API.
+
+Do not move fake frontend data into Spring controllers merely because the application has a backend. Static/generated knowledge should stay static until a server-side requirement actually exists.
+
+The current frontend contract is:
+
+```text
+React source
+project-portal/frontend/src
+        ↓ npm run build
+Vite output
+project-portal/frontend/dist
+        ↓ Gradle processResources
+classpath:/static/
+        ↓ Spring Boot static-resource handling
+browser
+```
+
+`ProjectPortalApplication` therefore does not need a controller to render the React UI. Spring Boot automatically serves `classpath:/static/index.html` and its generated assets.
+
+Current production routing uses `HashRouter`, so routes such as:
+
+```text
+http://localhost:9098/#/learning/THREAD
+```
+
+are resolved by React in the browser. The fragment after `#` is not sent to Spring Boot. Do not add SPA fallback controllers unless routing is intentionally migrated to `BrowserRouter`.
+
+Current top-level UI direction:
+
+```text
+Header
+├── Java Learning
+├── Home
+├── Learning
+├── global search UI
+└── VI ↔ EN switch
+
+Learning
+├── module hierarchy sidebar
+├── knowledge search
+├── Overview
+├── Knowledge
+├── Quiz
+├── API Docs
+├── Execution
+└── Download action
+```
+
+`Overview`, `Knowledge`, `Quiz`, and `API Docs` currently use fake data rendered through React loops. `Execution` and backend-dependent download/build behavior may remain empty/placeholder until their real integration contract is implemented.
+
+Portal frontend styling uses normal CSS files. Avoid inline CSS unless there is a concrete technical reason that cannot be reasonably expressed through classes/stylesheets.
+
+The Portal consumes/aggregates learning capabilities but must not become the source of truth for module metadata, README ownership, Swagger runtime, or Execution Context. Future generated portal data should be a projection from canonical module structure/metadata/resources.
 
 ---
 
@@ -474,6 +549,10 @@ Typed/generated registry
 Project tree documentation
 → filesystem/module metadata → generated STRUCTURE.md
 
+Portal module/catalog data [future]
+→ canonical module structure/model + module metadata + actual resources/artifacts
+→ generated machine-readable portal projection
+
 Task DSL reference
 → task definition resources + enabled module features → generated task.gradle
 ```
@@ -498,6 +577,8 @@ application-merged.yml
 generated README/menu fragments
 META-INF/execution-context/source-context.json
 ```
+
+Future Portal catalogs such as `module-catalog.json`, quiz projections, static OpenAPI projections, or copied README assets must follow the same generated-artifact rules if/when they are implemented. The browser must not parse `module-structure.txt` as canonical data.
 
 Generated output must prefer:
 
@@ -1864,6 +1945,11 @@ Preserve these unless the user explicitly changes the architecture:
 25. The application must not add MCP/tunnel/chat-vendor dependencies merely to support the current CoS workflow. A standalone application-owned MCP path may be added later only when explicitly required.
 26. Embedded Swagger AI chat and any browser/companion bridge are optional UX/product features, not requirements for Phase 5–7 through CoS.
 27. Swagger `execution` documentation is a guided learning explanation, not merely a code trace; it must explain concept, runtime flow, meaning, observable evidence, and conclusion without requiring the reader to open the source first.
+28. `project-portal` is a repository-level presentation application outside `module/`; it is not itself a learning topic even though Gradle can discover/configure it as a real project.
+29. Portal knowledge/navigation data should remain static/generated where possible; the existence of Spring Boot does not require every frontend read to become a REST call.
+30. React production assets are built by Vite and copied into Spring Boot `classpath:/static/` through Gradle `processResources`; Spring Boot serves them without a rendering controller.
+31. Current Portal client routing uses `HashRouter`; `#/...` routes belong to React, not Spring MVC.
+32. Module runtime capabilities remain optional from the Portal perspective: learning/documentation must not require a learning module to have its own Spring Boot Application.
 
 ---
 
@@ -1959,6 +2045,15 @@ Execution Context
 → preferred Connected Mode keeps ChatGPT as the model host and queries existing Execution Context REST APIs through CoS
 → embedded Swagger AI chat/browser bridge remains optional; API-backed chat, if ever added, is a separate billed/provider-key mode
 → both modes consume the same ExperimentContext
+
+Project Portal
+→ root-level `project-portal/`, outside learning `module/`
+→ Spring Boot host on port 9098 + React/TypeScript/Vite frontend
+→ Gradle buildFrontend → Vite dist → processResources → classpath:/static
+→ browser executes React; Spring Boot only serves the static bundle in the current phase
+→ HashRouter owns `#/learning/...` navigation
+→ current content is fake/static frontend data; no portal REST API dependency yet
+→ target module/catalog data remains a generated projection, not a replacement source of truth
 
 Do not infer module package architecture globally.
 Inspect only the module/source needed for the task.
