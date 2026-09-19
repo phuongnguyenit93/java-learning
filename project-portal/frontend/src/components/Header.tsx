@@ -1,5 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import { useLanguage } from '../state/LanguageContext';
+import { useTheme } from '../state/ThemeContext';
 
 const labels = {
   vi: {
@@ -18,6 +19,7 @@ const labels = {
 
 export function Header() {
   const { language, toggleLanguage } = useLanguage();
+  const { theme, toggleTheme } = useTheme();
   const text = labels[language];
 
   return (
@@ -56,8 +58,17 @@ export function Header() {
           </span>
           <span className="language-toggle__label">EN</span>
         </button>
+
+        <button
+          type="button"
+          className="theme-toggle"
+          onClick={toggleTheme}
+          aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+          title={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+        >
+          <span aria-hidden="true">{theme === 'dark' ? '☾' : '☀'}</span>
+        </button>
       </div>
     </header>
   );
 }
-

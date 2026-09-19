@@ -22,7 +22,7 @@ CSS stylesheet thuần
 
 Mục tiêu dài hạn vẫn là tạo một **Learning Portal** độc lập với runtime của từng learning module, để mọi learning module đều có một điểm truy cập chung dù module đó có hay không có Spring Boot `Application`.
 
-Current phase intentionally chỉ dựng frontend static/fake data và navigation. Backend Spring Boot đã tồn tại để học full-stack và làm host production bundle, nhưng Portal chưa gọi REST API nào của chính nó.
+Current phase vẫn static-first và chưa gọi REST API của chính Portal. Module hierarchy/routing đã chuyển từ fake tree sang generated `module-catalog.json`; Knowledge/Quiz/API Docs vẫn dùng fake frontend fixtures trong lúc các projection thật chưa được implement.
 
 ### 1.1 Current physical structure
 
@@ -34,7 +34,10 @@ project-portal/
 ├── src/main/java/com/example/projectportal/
 │   └── ProjectPortalApplication.java
 ├── src/main/resources/
-│   └── application.yml
+│   ├── application.yml
+│   └── portal-data/
+│       └── data/
+│           └── module-catalog.json
 └── frontend/
     ├── package.json
     ├── vite.config.ts
@@ -69,6 +72,12 @@ Portal không dùng Java controller để render React.
 Flow hiện tại:
 
 ```text
+module/ filesystem + module metadata
+        ↓
+ProjectStructureService
+        ↓
+src/main/resources/portal-data/data/module-catalog.json
+        ↓ Vite static input
 frontend/src/**/*.tsx + CSS
         ↓
 npm run build
@@ -133,6 +142,17 @@ React + TypeScript + Vite + React Router + CSS stylesheet
 ```
 
 Styling rule hiện tại: ưu tiên CSS class trong file stylesheet, tránh inline CSS trừ khi có technical reason rõ ràng.
+
+Theme hiện có Light/Dark toggle ở header. Lần đầu Portal dùng `prefers-color-scheme`; khi user chủ động đổi theme thì lựa chọn được lưu trong `localStorage`. Các semantic capability colors không đổi giữa hai theme:
+
+```text
+Overview   → gray
+Knowledge  → blue
+Quiz       → amber
+API Docs   → red
+Execution  → purple
+Download   → green
+```
 
 ### 1.4 Development và production mode
 
@@ -332,17 +352,17 @@ Platform
 
 Không nên để frontend parse trực tiếp file text này.
 
-Target flow:
+Current flow cho module hierarchy:
 
 ```text
 Canonical module structure/model
         │
         ├── generate → module-structure.txt
         ├── generate → STRUCTURE.md
-        └── generate → machine-readable module catalog
+        └── generate → project-portal/src/main/resources/portal-data/data/module-catalog.json
 ```
 
-Portal consume machine-readable catalog.
+Portal consume machine-readable catalog này trực tiếp; frontend không parse `module-structure.txt`.
 
 ---
 
@@ -364,21 +384,21 @@ BUILD_EXECUTION_CONTEXT
 
 Portal không nên đọc trực tiếp hàng trăm `master.json`.
 
-Thay vào đó build-time generator sẽ kết hợp:
+Hiện tại `ProjectStructureService` kết hợp filesystem/module metadata để generate hierarchy catalog:
 
 ```text
-module hierarchy
+module filesystem hierarchy
         +
-module master.json
+real-module identity từ local gradle.properties
         +
-actual module resources/artifacts
-        ↓
-Module Capability Resolver
+module metadata/master.json
         ↓
 module-catalog.json
         ↓
 Learning Portal
 ```
+
+Capability availability dựa trên README/quiz/OpenAPI/artifact state vẫn là target phase sau; chưa được nhét giả vào structure generator.
 
 Điều này giữ được nguyên tắc:
 
@@ -1014,23 +1034,30 @@ Java Learning
 
 `Trang chủ` hiện để trống để dành cho nội dung tương lai.
 
-Learning page có thêm một search riêng:
+Learning page hiện có hai search riêng ngoài header global-search UI:
 
 ```text
+Lọc module...
+
+và
+
 Tìm kiến thức...
 ```
 
-Hai search có semantic khác nhau:
+Ba search có semantic khác nhau:
 
 ```text
 Header search
 → target global search toàn Portal
 
+Sidebar module search
+→ filter generated module tree
+
 Learning search
 → target search/filter knowledge trong Learning experience
 ```
 
-Current Learning search chạy trên fake frontend data; không gọi backend.
+Current sidebar search chạy trên generated catalog; current Knowledge search chạy trên fake frontend fixtures. Cả hai đều client-side và không gọi backend.
 
 Portal dùng layout:
 
@@ -1044,9 +1071,39 @@ Main content/question list
 
 Nhưng category không hard-code theo ngôn ngữ/framework.
 
-Category tree được generate từ module hierarchy.
+Category tree hiện được render từ generated `module-catalog.json`.
 
-Current phase chưa generate hierarchy thật; fake TypeScript tree dùng tên/module thật của repository và render bằng loop để component contract gần với target generated data.
+Current sidebar interaction:
+
+```text
+row có children
+→ click toàn row để expand/collapse
+
+real module
+→ có nút tròn `>` bên phải
+→ nút `>` mới navigate tới module page
+
+search match chính node
+→ giữ full subtree của node đó
+
+search chỉ match descendant
+→ chỉ giữ ancestor path cần thiết tới kết quả
+```
+
+Search mode vẫn cho phép collapse/expand; nó không ép tất cả kết quả luôn mở.
+
+Ngay dưới module search có switch:
+
+```text
+Full tree / Đầy đủ
+→ render toàn bộ generated tree
+
+Real modules / Module thật
+→ giữ real MODULE nodes
+→ giữ GROUP ancestor cần thiết để bảo toàn hierarchy
+→ prune branch không chứa real module
+→ không flatten thành list
+```
 
 Để tránh sidebar quá lớn:
 
@@ -1204,21 +1261,28 @@ MVP đã bắt đầu implementation. Current phase đã có:
 4. Gradle frontend build integrated with processResources/bootJar
 5. header + Home + Learning navigation
 6. VI/EN frontend language switch
-7. fake module hierarchy sidebar
-8. Learning knowledge search
-9. Overview / Knowledge / Quiz / API Docs fake panels
-10. Knowledge category filter + collapse/expand interaction
-11. Execution/Download placeholder state
-12. production static bundle served by Spring Boot
+7. Light/Dark theme theo OS + localStorage persistence
+8. ProjectStructureService-generated `module-catalog.json`
+9. real module hierarchy sidebar + dynamic `#/learning/{routeId}` routing
+10. sidebar module search với self-match/descendant-match semantics
+11. Full tree / Real modules switch, prune nhưng giữ ancestor hierarchy
+12. row expand/collapse + separate circular `>` navigation action cho real module
+13. Overview từ catalog metadata
+14. Knowledge / Quiz / API Docs fake panels
+15. Knowledge/Quiz/API counts derive từ fake arrays; badge 0 bị ẩn
+16. Knowledge category filter + collapse/expand interaction
+17. semantic capability colors dùng chung cho sidebar/tabs và giữ nguyên giữa Light/Dark
+18. Execution/Download placeholder state
+19. production static bundle served by Spring Boot
 ```
 
 Chưa implement trong current phase:
 
 ```text
-real module-catalog generation
 real README projection/Markdown rendering
 real quiz source/generator
 real OpenAPI projection
+capability availability resolver từ actual resource/artifact state
 backend REST integration
 Execution Context aggregation
 artifact build/download integration

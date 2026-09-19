@@ -1,6 +1,7 @@
 package com.example.learning.setup.root.structure.service
 
 import com.example.learning.utils.GradleBuildUtils
+import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import org.gradle.api.GradleException
 import org.gradle.api.Project
@@ -30,6 +31,10 @@ class ProjectStructureService {
 
     private static final String MARKDOWN_STRUCTURE_PATH =
             'STRUCTURE.md'
+
+
+    private static final String PORTAL_CATALOG_PATH =
+            'project-portal/src/main/resources/portal-data/data/module-catalog.json'
 
 
     private final Logger logger
@@ -75,16 +80,29 @@ ${moduleDirectory.absolutePath}
         // Generate content
         // ====================================================
 
+        StructureNode structure =
+                buildStructure(
+                        rootProject,
+                        moduleDirectory
+                )
+
+
         String textContent =
                 generateTextStructure(
-                        moduleDirectory
+                        structure
                 )
 
 
         String markdownContent =
                 generateMarkdownStructure(
                         rootProject,
-                        moduleDirectory
+                        structure
+                )
+
+
+        String portalCatalogContent =
+                generatePortalCatalog(
+                        structure
                 )
 
 
@@ -106,6 +124,13 @@ ${moduleDirectory.absolutePath}
                 )
 
 
+        File portalCatalogOutput =
+                new File(
+                        rootProject.projectDir,
+                        PORTAL_CATALOG_PATH
+                )
+
+
         // ====================================================
         // Write
         // ====================================================
@@ -120,6 +145,117 @@ ${moduleDirectory.absolutePath}
                 markdownOutput,
                 markdownContent
         )
+
+
+        writeIfChanged(
+                portalCatalogOutput,
+                portalCatalogContent
+        )
+    }
+
+
+    // ========================================================
+    // Shared structure model
+    // ========================================================
+
+    private StructureNode buildStructure(
+            Project rootProject,
+            File moduleDirectory
+    ) {
+
+        return buildStructureNode(
+                rootProject,
+                moduleDirectory,
+                moduleDirectory
+        )
+    }
+
+
+    private StructureNode buildStructureNode(
+            Project rootProject,
+            File moduleDirectory,
+            File directory
+    ) {
+
+        File masterFile =
+                new File(
+                        directory,
+                        'master.json'
+                )
+
+
+        Map master =
+                masterFile.isFile()
+                        ? readMasterFile(masterFile)
+                        : [:]
+
+
+        String relativePath =
+                GradleBuildUtils.normalizePath(
+                        rootProject
+                                .projectDir
+                                .toPath()
+                                .toAbsolutePath()
+                                .normalize()
+                                .relativize(
+                                        directory
+                                                .toPath()
+                                                .toAbsolutePath()
+                                                .normalize()
+                                )
+                                .toString()
+                )
+
+
+        String relativeModulePath =
+                GradleBuildUtils.normalizePath(
+                        moduleDirectory
+                                .toPath()
+                                .toAbsolutePath()
+                                .normalize()
+                                .relativize(
+                                        directory
+                                                .toPath()
+                                                .toAbsolutePath()
+                                                .normalize()
+                                )
+                                .toString()
+                )
+
+
+        StructureNode node =
+                new StructureNode(
+                        directory: directory,
+                        id: relativeModulePath.isBlank()
+                                ? moduleDirectory.name
+                                : relativeModulePath,
+                        name: directory.name,
+                        path: relativePath,
+                        realModule: new File(directory, 'gradle.properties').isFile(),
+                        serviceName: getMasterValue(master, 'SERVICE_NAME'),
+                        moduleType: getMasterValue(master, 'MODULE_TYPE'),
+                        javaBasePackage: getMasterValue(master, 'JAVA_BASE_PACKAGE'),
+                        description: getMasterValue(master, 'SERVICE_NAME_DESCRIBE'),
+                        moduleDepend: 'TRUE'.equalsIgnoreCase(
+                                getMasterValue(master, 'IS_MODULE_DEPEND')
+                        )
+                )
+
+
+        node.children =
+                getSubDirectories(directory)
+                        .collect {
+                            File child ->
+
+                                buildStructureNode(
+                                        rootProject,
+                                        moduleDirectory,
+                                        child
+                                )
+                        }
+
+
+        return node
     }
 
 
@@ -128,7 +264,7 @@ ${moduleDirectory.absolutePath}
     // ========================================================
 
     private String generateTextStructure(
-            File moduleDirectory
+            StructureNode rootNode
     ) {
 
         StringBuilder builder =
@@ -137,7 +273,7 @@ ${moduleDirectory.absolutePath}
 
         builder
                 .append(
-                        moduleDirectory.name
+                        rootNode.name
                 )
                 .append(
                         '\n'
@@ -145,7 +281,7 @@ ${moduleDirectory.absolutePath}
 
 
         appendTextChildren(
-                moduleDirectory,
+                rootNode,
                 '',
                 builder
         )
@@ -156,19 +292,17 @@ ${moduleDirectory.absolutePath}
 
 
     private void appendTextChildren(
-            File directory,
+            StructureNode node,
             String prefix,
             StringBuilder builder
     ) {
 
-        List<File> children =
-                getSubDirectories(
-                        directory
-                )
+        List<StructureNode> children =
+                node.children
 
 
         children.eachWithIndex {
-            File child,
+            StructureNode child,
             int index ->
 
                 boolean last =
@@ -213,66 +347,25 @@ ${moduleDirectory.absolutePath}
 
 
     private String resolveDisplayName(
-            File directory
+            StructureNode node
     ) {
 
         String displayName =
-                directory.name
-
-
-        File masterFile =
-                new File(
-                        directory,
-                        'master.json'
-                )
-
-
-        if (!masterFile.isFile()) {
-            return displayName
-        }
-
-
-        Map master =
-                readMasterFile(
-                        masterFile
-                )
-
-
-        String serviceName =
-                getMasterValue(
-                        master,
-                        'SERVICE_NAME'
-                )
-
-
-        String description =
-                getMasterValue(
-                        master,
-                        'SERVICE_NAME_DESCRIBE'
-                )
-
-
-        String moduleDepend =
-                getMasterValue(
-                        master,
-                        'IS_MODULE_DEPEND'
-                )
+                node.name
 
 
         if (
-                serviceName != null &&
-                        !serviceName.isBlank()
+                node.serviceName != null &&
+                        !node.serviceName.isBlank()
         ) {
 
             displayName +=
-                    " [${serviceName}]"
+                    " [${node.serviceName}]"
         }
 
 
         if (
-                'TRUE'.equalsIgnoreCase(
-                        moduleDepend
-                )
+                node.moduleDepend
         ) {
 
             displayName +=
@@ -281,12 +374,12 @@ ${moduleDirectory.absolutePath}
 
 
         if (
-                description != null &&
-                        !description.isBlank()
+                node.description != null &&
+                        !node.description.isBlank()
         ) {
 
             displayName +=
-                    " : ${description}"
+                    " : ${node.description}"
         }
 
 
@@ -300,7 +393,7 @@ ${moduleDirectory.absolutePath}
 
     private String generateMarkdownStructure(
             Project rootProject,
-            File moduleDirectory
+            StructureNode rootNode
     ) {
 
         StringBuilder builder =
@@ -320,7 +413,7 @@ ${moduleDirectory.absolutePath}
         String rootRelativePath =
                 buildRelativeLink(
                         rootProject,
-                        moduleDirectory
+                        rootNode.directory
                 )
 
 
@@ -330,13 +423,13 @@ ${moduleDirectory.absolutePath}
 
 
         builder.append(
-                "  <summary><b><a href='${rootRelativePath}'>${moduleDirectory.name} (Root)</a></b></summary>\n"
+                "  <summary><b><a href='${rootRelativePath}'>${rootNode.name} (Root)</a></b></summary>\n"
         )
 
 
         appendMarkdownChildren(
                 rootProject,
-                moduleDirectory,
+                rootNode,
                 builder
         )
 
@@ -352,14 +445,12 @@ ${moduleDirectory.absolutePath}
 
     private void appendMarkdownChildren(
             Project rootProject,
-            File directory,
+            StructureNode node,
             StringBuilder builder
     ) {
 
-        List<File> children =
-                getSubDirectories(
-                        directory
-                )
+        List<StructureNode> children =
+                node.children
 
 
         if (children.isEmpty()) {
@@ -373,19 +464,17 @@ ${moduleDirectory.absolutePath}
 
 
         children.each {
-            File child ->
+            StructureNode child ->
 
                 String relativePath =
                         buildRelativeLink(
-                                rootProject,
-                                child
-                        )
+                        rootProject,
+                        child.directory
+                )
 
 
-                List<File> childDirectories =
-                        getSubDirectories(
-                                child
-                        )
+                List<StructureNode> childDirectories =
+                        child.children
 
 
                 builder.append(
@@ -433,6 +522,86 @@ ${moduleDirectory.absolutePath}
         builder.append(
                 '</ul>\n'
         )
+    }
+
+
+    // ========================================================
+    // Portal catalog
+    // ========================================================
+
+    private String generatePortalCatalog(
+            StructureNode rootNode
+    ) {
+
+        Map catalog =
+                [
+                        version: 1,
+                        root   : toPortalCatalogNode(rootNode)
+                ]
+
+
+        return JsonOutput.prettyPrint(
+                JsonOutput.toJson(catalog)
+        ) + '\n'
+    }
+
+
+    private static Map toPortalCatalogNode(
+            StructureNode node
+    ) {
+
+        Map result =
+                [
+                        id      : node.id,
+                        name    : node.name,
+                        path    : node.path,
+                        kind    : node.realModule
+                                ? 'MODULE'
+                                : 'GROUP',
+                        children: node.children.collect {
+                            StructureNode child ->
+
+                                toPortalCatalogNode(child)
+                        }
+                ]
+
+
+        if (node.realModule) {
+
+            result.routeId =
+                    node.serviceName != null &&
+                            !node.serviceName.isBlank()
+                            ? node.serviceName
+                            : node.name
+        }
+
+
+        if (node.serviceName != null && !node.serviceName.isBlank()) {
+            result.serviceName = node.serviceName
+        }
+
+
+        if (node.moduleType != null && !node.moduleType.isBlank()) {
+            result.moduleType = node.moduleType
+        }
+
+
+        if (node.javaBasePackage != null && !node.javaBasePackage.isBlank()) {
+            result.javaBasePackage = node.javaBasePackage
+        }
+
+
+        if (node.description != null && !node.description.isBlank()) {
+            result.description = node.description
+        }
+
+
+        if (node.moduleDepend) {
+            result.moduleDepend = true
+        }
+
+
+        return result
     }
 
 
@@ -652,5 +821,21 @@ ${exception.message}
                 '🌳 [PROJECT-STRUCTURE] Generated: {}',
                 outputFile.absolutePath
         )
+    }
+
+
+    private static class StructureNode {
+
+        File directory
+        String id
+        String name
+        String path
+        boolean realModule
+        String serviceName
+        String moduleType
+        String javaBasePackage
+        String description
+        boolean moduleDepend
+        List<StructureNode> children = []
     }
 }

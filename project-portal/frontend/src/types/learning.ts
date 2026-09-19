@@ -2,6 +2,12 @@ export type Language = 'vi' | 'en';
 
 export type LocalizedText = Record<Language, string>;
 
+export interface ModuleStats {
+  knowledge: number;
+  quiz: number;
+  apiDocs: number;
+}
+
 export interface CapabilityState {
   knowledge: boolean;
   quiz: boolean;
@@ -20,12 +26,23 @@ export interface LearningModule {
   capabilities: CapabilityState;
 }
 
-export interface ModuleTreeNode {
+export interface ModuleCatalog {
+  version: number;
+  root: ModuleCatalogNode;
+}
+
+export interface ModuleCatalogNode {
   id: string;
-  label: LocalizedText;
-  count?: number;
-  moduleId?: string;
-  children?: ModuleTreeNode[];
+  name: string;
+  path: string;
+  kind: 'GROUP' | 'MODULE';
+  routeId?: string;
+  serviceName?: string;
+  moduleType?: 'SERVLET' | 'REACTIVE' | 'LIBRARY' | 'PLATFORM' | string;
+  javaBasePackage?: string;
+  description?: string;
+  moduleDepend?: boolean;
+  children: ModuleCatalogNode[];
 }
 
 export interface KnowledgeTopic {
@@ -60,4 +77,3 @@ export interface ApiOperation {
   summary: LocalizedText;
   description: LocalizedText;
 }
-

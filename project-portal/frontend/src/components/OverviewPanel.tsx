@@ -1,17 +1,18 @@
 import { useLanguage } from '../state/LanguageContext';
-import type { LearningModule } from '../types/learning';
+import type { LearningModule, ModuleStats } from '../types/learning';
 
 interface OverviewPanelProps {
   module: LearningModule;
+  stats: ModuleStats;
 }
 
-export function OverviewPanel({ module }: OverviewPanelProps) {
+export function OverviewPanel({ module, stats }: OverviewPanelProps) {
   const { language } = useLanguage();
 
-  const stats = [
-    { value: module.questionCount, vi: 'Mục kiến thức', en: 'Knowledge items' },
-    { value: module.capabilities.quiz ? '✓' : '—', vi: 'Quiz', en: 'Quiz' },
-    { value: module.capabilities.apiDocs ? '✓' : '—', vi: 'API Docs', en: 'API Docs' },
+  const overviewStats = [
+    { value: stats.knowledge, vi: 'Mục kiến thức', en: 'Knowledge items' },
+    { value: stats.quiz, vi: 'Quiz', en: 'Quiz' },
+    { value: stats.apiDocs, vi: 'API Docs', en: 'API Docs' },
     { value: module.capabilities.execution ? '✓' : '—', vi: 'Execution', en: 'Execution' },
   ];
 
@@ -24,7 +25,7 @@ export function OverviewPanel({ module }: OverviewPanelProps) {
       </div>
 
       <div className="overview-stats">
-        {stats.map((stat) => (
+        {overviewStats.map((stat) => (
           <div key={stat.en} className="overview-stat">
             <strong>{stat.value}</strong>
             <span>{language === 'vi' ? stat.vi : stat.en}</span>
@@ -43,4 +44,3 @@ export function OverviewPanel({ module }: OverviewPanelProps) {
     </section>
   );
 }
-

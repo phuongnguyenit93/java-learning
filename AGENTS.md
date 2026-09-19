@@ -117,13 +117,15 @@ Current implementation:
 ```text
 project-portal/
 ├── src/main/java/.../ProjectPortalApplication.java
-├── src/main/resources/application.yml   # server.port=9098
+├── src/main/resources/
+│   ├── application.yml                  # server.port=9098
+│   └── portal-data/data/module-catalog.json
 ├── frontend/                            # React + TypeScript + Vite
 │   └── src/
 └── build.gradle                         # Node/Vite → Spring static-resource wiring
 ```
 
-The Portal is currently **static-first**. React uses local fake TypeScript data and client-side state; no portal feature currently depends on a Java REST API.
+The Portal is currently **static-first**. Module hierarchy/routing comes from generated `module-catalog.json`; learning-content panels still use local fake TypeScript fixtures. No portal feature currently depends on a Java REST API.
 
 Do not move fake frontend data into Spring controllers merely because the application has a backend. Static/generated knowledge should stay static until a server-side requirement actually exists.
 
@@ -159,10 +161,13 @@ Header
 ├── Home
 ├── Learning
 ├── global search UI
-└── VI ↔ EN switch
+├── VI ↔ EN switch
+└── Light ↔ Dark theme toggle
 
 Learning
-├── module hierarchy sidebar
+├── generated module hierarchy sidebar
+│   ├── module search
+│   └── Full tree ↔ Real modules switch
 ├── knowledge search
 ├── Overview
 ├── Knowledge
@@ -172,7 +177,31 @@ Learning
 └── Download action
 ```
 
-`Overview`, `Knowledge`, `Quiz`, and `API Docs` currently use fake data rendered through React loops. `Execution` and backend-dependent download/build behavior may remain empty/placeholder until their real integration contract is implemented.
+`Overview` uses generated catalog metadata. `Knowledge`, `Quiz`, and `API Docs` currently use fake data rendered through React loops. Sidebar/tab counts are derived from those fixtures; a zero count hides the badge rather than storing a separate fake count. `Execution` and backend-dependent download/build behavior may remain empty/placeholder until their real integration contract is implemented.
+
+Current sidebar behavior is intentional and should be preserved unless the user explicitly changes it:
+
+```text
+row with children
+→ click the row to expand/collapse
+
+real module
+→ render a separate circular `>` action on the right
+→ only that action navigates to #/learning/{routeId}
+
+module filter self-match
+→ preserve the matched node's full subtree
+
+module filter descendant-match
+→ preserve only the ancestor path to matching descendants
+
+Real modules mode
+→ keep MODULE nodes plus required GROUP ancestors
+→ remove branches with no real module descendants
+→ never flatten the hierarchy into a plain real-module list
+```
+
+Theme selection starts from `prefers-color-scheme` and persists user choice in `localStorage`. Capability colors are semantic and theme-independent: Overview gray, Knowledge blue, Quiz amber, API Docs red, Execution purple, Download green. Light/Dark changes surrounding surfaces/text/borders, not those semantic identities.
 
 Portal frontend styling uses normal CSS files. Avoid inline CSS unless there is a concrete technical reason that cannot be reasonably expressed through classes/stylesheets.
 
@@ -549,9 +578,13 @@ Typed/generated registry
 Project tree documentation
 → filesystem/module metadata → generated STRUCTURE.md
 
-Portal module/catalog data [future]
-→ canonical module structure/model + module metadata + actual resources/artifacts
-→ generated machine-readable portal projection
+Portal module/catalog data [current]
+→ filesystem/module metadata via ProjectStructureService
+→ `project-portal/src/main/resources/portal-data/data/module-catalog.json`
+
+Portal learning-content projections [future]
+→ README/quiz/OpenAPI/artifact state
+→ generated static Portal projections/assets
 
 Task DSL reference
 → task definition resources + enabled module features → generated task.gradle
@@ -572,13 +605,14 @@ DatabaseListEnum
 module-depend.json
 STRUCTURE.md
 module-structure.txt
+project-portal/src/main/resources/portal-data/data/module-catalog.json
 task.gradle
 application-merged.yml
 generated README/menu fragments
 META-INF/execution-context/source-context.json
 ```
 
-Future Portal catalogs such as `module-catalog.json`, quiz projections, static OpenAPI projections, or copied README assets must follow the same generated-artifact rules if/when they are implemented. The browser must not parse `module-structure.txt` as canonical data.
+`module-catalog.json` is now a generated Portal projection and must follow the same deterministic/idempotent/write-if-changed rules. Future quiz projections, static OpenAPI projections, or copied README assets must do the same. The browser must not parse `module-structure.txt` as canonical data.
 
 Generated output must prefer:
 
@@ -1950,6 +1984,10 @@ Preserve these unless the user explicitly changes the architecture:
 30. React production assets are built by Vite and copied into Spring Boot `classpath:/static/` through Gradle `processResources`; Spring Boot serves them without a rendering controller.
 31. Current Portal client routing uses `HashRouter`; `#/...` routes belong to React, not Spring MVC.
 32. Module runtime capabilities remain optional from the Portal perspective: learning/documentation must not require a learning module to have its own Spring Boot Application.
+33. Portal hierarchy/routing must come from generated `module-catalog.json`, not from a hard-coded frontend tree or by parsing `module-structure.txt`.
+34. `Real modules` mode preserves GROUP ancestors needed to represent real-module hierarchy and only prunes branches with no real module descendants.
+35. Sidebar module search distinguishes self-match from descendant-match: self-match keeps the full subtree; descendant-match keeps only the ancestor path, and filtered trees remain collapsible.
+36. For a real module with children, row click is expand/collapse and the separate circular `>` action owns navigation.
 
 ---
 
@@ -2052,8 +2090,11 @@ Project Portal
 → Gradle buildFrontend → Vite dist → processResources → classpath:/static
 → browser executes React; Spring Boot only serves the static bundle in the current phase
 → HashRouter owns `#/learning/...` navigation
-→ current content is fake/static frontend data; no portal REST API dependency yet
-→ target module/catalog data remains a generated projection, not a replacement source of truth
+→ ProjectStructureService generates `portal-data/data/module-catalog.json` for real hierarchy/routing
+→ Knowledge/Quiz/API Docs still use fake frontend fixtures; counts are derived from those fixtures
+→ sidebar supports module search plus Full tree/Real modules pruning without flattening hierarchy
+→ Light/Dark theme follows OS initially and persists explicit user choice
+→ no portal REST API dependency yet; generated Portal data remains a projection, not a replacement source of truth
 
 Do not infer module package architecture globally.
 Inspect only the module/source needed for the task.

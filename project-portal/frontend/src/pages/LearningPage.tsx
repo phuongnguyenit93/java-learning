@@ -8,36 +8,111 @@ import { ModuleSidebar } from '../components/ModuleSidebar';
 import { ModuleTabs, type ModuleTab } from '../components/ModuleTabs';
 import { OverviewPanel } from '../components/OverviewPanel';
 import { QuizPanel } from '../components/QuizPanel';
-import { learningModules } from '../data/mockLearningData';
+import {
+  collectRealModules,
+  findModuleByRouteId,
+  loadModuleCatalog,
+  toLearningModule,
+} from '../data/moduleCatalog';
+import { resolveModuleStats } from '../data/moduleStats';
 import { useLanguage } from '../state/LanguageContext';
+import type { ModuleCatalog } from '../types/learning';
 
 export function LearningPage() {
   const { moduleId } = useParams();
   const navigate = useNavigate();
   const { language } = useLanguage();
+  const [catalog, setCatalog] = useState<ModuleCatalog | null>(null);
+  const [catalogError, setCatalogError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<ModuleTab>('knowledge');
   const [searchQuery, setSearchQuery] = useState('');
   const [downloadOpen, setDownloadOpen] = useState(false);
 
+  useEffect(() => {
+    let active = true;
+
+    loadModuleCatalog()
+      .then((result) => {
+        if (active) {
+          setCatalog(result);
+          setCatalogError(null);
+        }
+      })
+      .catch((error: unknown) => {
+        if (active) {
+          setCatalogError(error instanceof Error ? error.message : 'Unable to load module catalog.');
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const realModules = useMemo(
+    () => (catalog ? collectRealModules(catalog.root) : []),
+    [catalog],
+  );
+
+  const requestedModule = useMemo(
+    () => (catalog && moduleId ? findModuleByRouteId(catalog.root, moduleId) : undefined),
+    [catalog, moduleId],
+  );
+
+  const activeModuleNode = requestedModule ?? realModules[0];
+  const activeModuleId = activeModuleNode?.routeId ?? activeModuleNode?.serviceName ?? activeModuleNode?.name ?? '';
+  const activeStats = useMemo(
+    () => resolveModuleStats(activeModuleId),
+    [activeModuleId],
+  );
   const activeModule = useMemo(
-    () => learningModules.find((module) => module.id === moduleId) ?? learningModules[0],
-    [moduleId],
+    () => (activeModuleNode ? toLearningModule(activeModuleNode, activeStats) : null),
+    [activeModuleNode, activeStats],
   );
 
   useEffect(() => {
-    if (!moduleId) {
-      navigate(`/learning/${learningModules[0].id}`, { replace: true });
+    if (!catalog || !activeModuleNode?.routeId) {
+      return;
     }
-  }, [moduleId, navigate]);
+
+    if (!moduleId || !requestedModule) {
+      navigate(`/learning/${activeModuleNode.routeId}`, { replace: true });
+    }
+  }, [activeModuleNode, catalog, moduleId, navigate, requestedModule]);
 
   useEffect(() => {
+    if (!activeModule) {
+      return;
+    }
+
     setSearchQuery('');
     setDownloadOpen(false);
-  }, [activeModule.id]);
+  }, [activeModule?.id]);
+
+  if (catalogError) {
+    return (
+      <main className="learning-layout learning-layout--status">
+        <div className="empty-state empty-state--large">
+          <strong>{language === 'vi' ? 'Không thể tải cấu trúc module' : 'Unable to load module structure'}</strong>
+          <span>{catalogError}</span>
+        </div>
+      </main>
+    );
+  }
+
+  if (!catalog || !activeModule) {
+    return (
+      <main className="learning-layout learning-layout--status">
+        <div className="empty-state empty-state--large">
+          <strong>{language === 'vi' ? 'Đang tải cấu trúc module...' : 'Loading module structure...'}</strong>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="learning-layout">
-      <ModuleSidebar activeModuleId={activeModule.id} />
+      <ModuleSidebar nodes={catalog.root.children} activeModuleId={activeModule.id} />
 
       <section className="learning-main">
         <div className="learning-main__topline">
@@ -53,6 +128,7 @@ export function LearningPage() {
         <div className="module-tab-wrapper">
           <ModuleTabs
             activeTab={activeTab}
+            stats={activeStats}
             onChange={(tab) => {
               setActiveTab(tab);
               setDownloadOpen(false);
@@ -68,7 +144,7 @@ export function LearningPage() {
         </div>
 
         <div className="learning-content">
-          {activeTab === 'overview' && <OverviewPanel module={activeModule} />}
+          {activeTab === 'overview' && <OverviewPanel module={activeModule} stats={activeStats} />}
           {activeTab === 'knowledge' && (
             <KnowledgePanel moduleId={activeModule.id} searchQuery={searchQuery} />
           )}
@@ -80,4 +156,3 @@ export function LearningPage() {
     </main>
   );
 }
-
