@@ -43,7 +43,6 @@ README.html
 .env.*
 !.env.example
 
-BASE.md
 LIST.md
 
 application-merged.*
