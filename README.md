@@ -40,7 +40,7 @@ Spring Boot :9098
 + React + TypeScript + Vite + React Router
 ```
 
-Frontend hiện static-first và chưa gọi backend API. `ProjectStructureService` generate `module-catalog.json` cho Portal, React dùng catalog này để render tree/module routing; Knowledge/Quiz/API Docs vẫn đang dùng fake fixtures. Portal có Light/Dark theme, module search/filter và chế độ Full tree/Real modules. Gradle build React bằng Vite rồi copy `dist` vào `classpath:/static`. Current route dùng `HashRouter`, ví dụ `http://localhost:9098/#/learning/THREAD`.
+Frontend hiện static-first và chưa gọi backend API. `ProjectStructureService` generate `module-catalog.json` cho Portal; Overview/Menu/Knowledge được build từ README projections, còn API Docs consume generated localized Swagger metadata trực tiếp trong browser. Quiz vẫn đang dùng fixture tạm. API Docs hiện là reference-only, không live execute/debug trong Portal. Gradle build React bằng Vite rồi copy `dist` vào `classpath:/static`. Current route dùng `HashRouter`, ví dụ `http://localhost:9098/#/learning/THREAD`.
 
 Chi tiết xem [`PROJECT_PORTAL.md`](./PROJECT_PORTAL.md).
 

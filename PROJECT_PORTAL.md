@@ -22,7 +22,7 @@ CSS stylesheet thuần
 
 Mục tiêu dài hạn vẫn là tạo một **Learning Portal** độc lập với runtime của từng learning module, để mọi learning module đều có một điểm truy cập chung dù module đó có hay không có Spring Boot `Application`.
 
-Current phase vẫn static-first và chưa gọi REST API của chính Portal. Module hierarchy/routing đã chuyển từ fake tree sang generated `module-catalog.json`; Knowledge/Quiz/API Docs vẫn dùng fake frontend fixtures trong lúc các projection thật chưa được implement.
+Current phase vẫn static-first và chưa gọi REST API của chính Portal. Module hierarchy/routing đã chuyển từ fake tree sang generated `module-catalog.json`; Overview, Menu, Knowledge và API Docs hiện đã consume build-time projection thật. Quiz vẫn dùng fake frontend fixture ở thời điểm hiện tại.
 
 ### 1.1 Current physical structure
 
@@ -34,10 +34,18 @@ project-portal/
 ├── src/main/java/com/example/projectportal/
 │   └── ProjectPortalApplication.java
 ├── src/main/resources/
-│   ├── application.yml
-│   └── portal-data/
-│       └── data/
-│           └── module-catalog.json
+│   └── application.yml
+├── build/generated/portal-data/
+│   ├── module-catalog.json
+│   └── module/
+│       └── {ROUTE_ID}/
+│           ├── overview/
+│           ├── knowledge/
+│           └── api/{lang}/
+│               ├── api-descriptions.yml
+│               ├── api-execution.yml
+│               ├── api-params.yml
+│               └── controller-description.yml
 └── frontend/
     ├── package.json
     ├── vite.config.ts
@@ -74,9 +82,11 @@ Flow hiện tại:
 ```text
 module/ filesystem + module metadata
         ↓
-ProjectStructureService
+Portal build-time generators
         ↓
-src/main/resources/portal-data/data/module-catalog.json
+build/generated/portal-data/
+├── module-catalog.json
+└── module/{ROUTE_ID}/{feature}/...
         ↓ Vite static input
 frontend/src/**/*.tsx + CSS
         ↓
@@ -162,7 +172,7 @@ Hai mode có mục tiêu khác nhau:
 Frontend development
 → Vite dev server
 → nhanh, hot reload
-→ hiện không cần Spring Boot vì data đang fake/static
+→ hiện không cần Spring Boot vì Portal data đang static/generated ở build-time
 
 Integrated application test
 → Gradle buildFrontend/processResources
@@ -306,7 +316,7 @@ Quiz
 25 questions
 ```
 
-Current phase đã dựng đủ navigation shell trên bằng fake data. `Execution` và `Download` có thể hiển thị empty/placeholder state cho tới khi integration thật được thêm.
+Current phase đã dựng navigation shell và đã migrate Overview/Menu/Knowledge/API Docs sang generated/static data. `Quiz` vẫn còn fixture. `Execution` và build/download integration có thể hiển thị empty/placeholder state cho tới khi contract thật được thêm.
 
 Các tab/action về lâu dài phải được render theo capability thực tế của module.
 
@@ -359,7 +369,7 @@ Canonical module structure/model
         │
         ├── generate → module-structure.txt
         ├── generate → STRUCTURE.md
-        └── generate → project-portal/src/main/resources/portal-data/data/module-catalog.json
+        └── generate → project-portal/build/generated/portal-data/module-catalog.json
 ```
 
 Portal consume machine-readable catalog này trực tiếp; frontend không parse `module-structure.txt`.
@@ -673,7 +683,7 @@ Current UI dùng tên:
 API Docs
 ```
 
-và đang render fake pseudo REST operations từ TypeScript data.
+và hiện render dữ liệu thật từ generated Swagger metadata.
 
 Target model:
 
@@ -701,7 +711,56 @@ apiDocumentation = true
 apiExecution     = false
 ```
 
-Khi generator thật được triển khai, nên ưu tiên OpenAPI JSON/YAML hoặc một machine-readable projection tương thích OpenAPI thay vì invent proprietary API schema không cần thiết.
+Build-time projection hiện ưu tiên reuse trực tiếp canonical Swagger metadata thay vì scan source Java lần thứ hai hoặc invent proprietary API schema. Với mỗi language có đủ bốn file:
+
+```text
+src/main/resources/swagger/{lang}/
+├── api-descriptions.yml
+├── api-execution.yml
+├── api-params.yml
+└── controller-description.yml
+```
+
+generator copy nguyên bộ sang:
+
+```text
+project-portal/build/generated/portal-data/module/{ROUTE_ID}/api/{lang}/
+```
+
+và `module-catalog.json` expose base path `api.{lang}`. Language Swagger bị thiếu một trong bốn file không được publish thành Portal API projection hoàn chỉnh. Frontend API Docs hiện consume trực tiếp các file static này; không cần module runtime và không cần Portal REST API.
+
+Current browser-side mapping:
+
+```text
+controller-description.yml
+→ controller description + readmeRelated.file
+
+api-descriptions.yml
+→ method signature/name + HTTP metadata + summary/description + readmeRelated
+
+api-execution.yml
+→ guided execution HTML
+
+api-params.yml
+→ parameter description khi có
+```
+
+Ordering của API Reference bám theo learning path của README:
+
+```text
+controller
+→ numeric chapter prefix từ readmeRelated.file
+→ cùng chapter thì alphabetical
+→ invalid/missing mapping theo fallback rule
+
+method
+→ vị trí exact readmeRelated.anchor trong resolved README file
+→ không sort thay bằng path/controller name
+```
+
+`execution` có thể chứa rich HTML, vì vậy frontend sanitize nội dung trước khi render. API Reference hiện là **documentation/reference only**: Portal không live execute/debug API ở panel này. Muốn chạy/debug experiment, user phải tải source/module về chạy local hoặc dùng runtime tooling của module.
+
+API Docs mặc định collapsed lần đầu. Sau khi user mở/đóng controller hoặc method, trạng thái gần nhất được giữ khi đổi tab rồi quay lại trong cùng module/language. Global Expand all/Collapse all là explicit user action và không thay đổi source data.
 
 Điều này đảo dependency cũ:
 
@@ -1057,7 +1116,7 @@ Learning search
 → target search/filter knowledge trong Learning experience
 ```
 
-Current sidebar search chạy trên generated catalog; current Knowledge search chạy trên fake frontend fixtures. Cả hai đều client-side và không gọi backend.
+Current sidebar search chạy trên generated catalog; Menu/Knowledge search/filter chạy trên generated Knowledge index. Cả hai đều client-side và không gọi backend.
 
 Portal dùng layout:
 
@@ -1078,8 +1137,10 @@ Current sidebar interaction:
 ```text
 row có children
 → click toàn row để expand/collapse
+→ `+` = collapsed, `−` = expanded
+→ default toàn tree collapsed
 
-real module
+module row
 → có nút tròn `>` bên phải
 → nút `>` mới navigate tới module page
 
@@ -1092,6 +1153,16 @@ search chỉ match descendant
 
 Search mode vẫn cho phép collapse/expand; nó không ép tất cả kết quả luôn mở.
 
+Ngay cạnh switch có global tree actions:
+
+```text
+Expand all
+→ mở toàn bộ projected tree hiện tại
+
+Collapse all
+→ thu gọn toàn bộ projected tree hiện tại
+```
+
 Ngay dưới module search có switch:
 
 ```text
@@ -1099,11 +1170,19 @@ Full tree / Đầy đủ
 → render toàn bộ generated tree
 
 Real modules / Module thật
-→ giữ real MODULE nodes
+→ đây là content filter của Portal, không phải định nghĩa physical real module theo `gradle.properties`
+→ giữ MODULE nếu Knowledge > 0 OR Quiz > 0 OR API Docs > 0
+→ chỉ ẩn MODULE khi cả ba count đều = 0
 → giữ GROUP ancestor cần thiết để bảo toàn hierarchy
-→ prune branch không chứa real module
+→ prune branch không chứa module còn content
 → không flatten thành list
 ```
+
+MODULE đạt điều kiện `Module thật` được highlight bằng background riêng để phân biệt trong cả Full tree và filtered mode. Màu highlight có token riêng cho Light/Dark theme; active row vẫn có state nổi bật hơn.
+
+Tab state được giữ theo browser session cho module/language hiện tại: Menu, Knowledge và API Docs được lazy-mount lần đầu rồi giữ mounted khi user đổi tab. Vì vậy manual expand/collapse gần nhất không tự reset chỉ vì tab đang bị ẩn. Khi đổi module/language, component key/reset boundary tạo state mới phù hợp context mới.
+
+Menu và API Docs mặc định collapsed. Knowledge cũng bắt đầu chưa mở section nào, nhưng cho phép **nhiều section mở đồng thời**. Content Markdown của section đã load được cache trong panel để quay lại tab không phải fetch lại ngay.
 
 Để tránh sidebar quá lớn:
 
@@ -1267,21 +1346,26 @@ MVP đã bắt đầu implementation. Current phase đã có:
 10. sidebar module search với self-match/descendant-match semantics
 11. Full tree / Real modules switch, prune nhưng giữ ancestor hierarchy
 12. row expand/collapse + separate circular `>` navigation action cho real module
-13. Overview từ catalog metadata
-14. Knowledge / Quiz / API Docs fake panels
-15. Knowledge/Quiz/API counts derive từ fake arrays; badge 0 bị ẩn
-16. Knowledge category filter + collapse/expand interaction
-17. semantic capability colors dùng chung cho sidebar/tabs và giữ nguyên giữa Light/Dark
-18. Execution/Download placeholder state
-19. production static bundle served by Spring Boot
+13. Overview từ language `BASE.md` qua build-time projection
+14. build-only module-first Portal data layout: `portal-data/module/{ROUTE_ID}/{feature}/...`
+15. build-time Knowledge projection theo category + anchored section
+16. Menu + Knowledge frontend consume generated Knowledge index/section Markdown; section content được lazy-load khi mở, nhiều Knowledge section có thể mở đồng thời
+17. build-time API metadata projection: copy complete localized four-file Swagger sets vào `module/{ROUTE_ID}/api/{lang}/` + expose `api` base path trong module catalog
+18. API Docs frontend consume trực tiếp generated Swagger YAML; controller/method order follow README mapping, rich execution HTML được sanitize, API Reference là reference-only chứ không live execute/debug
+19. Knowledge/API counts lấy từ generated/static data; Quiz count vẫn từ fixture; sidebar `Module thật` giữ module khi ít nhất một trong ba count > 0 và chỉ ẩn khi cả ba = 0
+20. sidebar tree mặc định collapsed, dùng `+`/`−`, có Expand all/Collapse all; qualifying content module được highlight trong cả Full tree và Module thật mode
+21. Menu mặc định collapsed + Expand all/Collapse all; Knowledge/API Docs/Menu giữ state gần nhất khi đổi tab rồi quay lại trong cùng module/language
+22. Download action dùng popup dùng chung; popup đóng khi click ngoài, nhấn Escape hoặc toggle lại chính nút
+23. Knowledge category filter + collapse/expand interaction
+24. semantic capability colors dùng chung cho sidebar/tabs và giữ nguyên giữa Light/Dark
+25. Execution/artifact-download backend vẫn là placeholder/chưa wired
+26. production static bundle served by Spring Boot
 ```
 
 Chưa implement trong current phase:
 
 ```text
-real README projection/Markdown rendering
 real quiz source/generator
-real OpenAPI projection
 capability availability resolver từ actual resource/artifact state
 backend REST integration
 Execution Context aggregation

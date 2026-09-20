@@ -118,14 +118,23 @@ Current implementation:
 project-portal/
 ├── src/main/java/.../ProjectPortalApplication.java
 ├── src/main/resources/
-│   ├── application.yml                  # server.port=9098
-│   └── portal-data/data/module-catalog.json
+│   └── application.yml                  # server.port=9098
+├── build/generated/portal-data/         # generated; never source-owned
+│   ├── module-catalog.json
+│   └── module/{ROUTE_ID}/
+│       ├── overview/{lang}.md
+│       ├── knowledge/{lang}/...
+│       └── api/{lang}/
+│           ├── api-descriptions.yml
+│           ├── api-execution.yml
+│           ├── api-params.yml
+│           └── controller-description.yml
 ├── frontend/                            # React + TypeScript + Vite
 │   └── src/
 └── build.gradle                         # Node/Vite → Spring static-resource wiring
 ```
 
-The Portal is currently **static-first**. Module hierarchy/routing comes from generated `module-catalog.json`; learning-content panels still use local fake TypeScript fixtures. No portal feature currently depends on a Java REST API.
+The Portal is currently **static-first**. Module hierarchy/routing comes from generated `module-catalog.json`; Overview, Knowledge, and raw localized Swagger/API metadata projections are generated under `project-portal/build/generated/portal-data`. The frontend currently consumes Overview, Menu/Knowledge, and API Docs directly from those generated/static projections. Quiz still uses temporary frontend fixtures. No portal feature currently depends on a Java REST API.
 
 Do not move fake frontend data into Spring controllers merely because the application has a backend. Static/generated knowledge should stay static until a server-side requirement actually exists.
 
@@ -170,6 +179,7 @@ Learning
 │   └── Full tree ↔ Real modules switch
 ├── knowledge search
 ├── Overview
+├── Menu
 ├── Knowledge
 ├── Quiz
 ├── API Docs
@@ -177,13 +187,15 @@ Learning
 └── Download action
 ```
 
-`Overview` uses generated catalog metadata. `Knowledge`, `Quiz`, and `API Docs` currently use fake data rendered through React loops. Sidebar/tab counts are derived from those fixtures; a zero count hides the badge rather than storing a separate fake count. `Execution` and backend-dependent download/build behavior may remain empty/placeholder until their real integration contract is implemented.
+`Overview` uses generated catalog metadata and generated BASE.md projections. `Menu` and `Knowledge` consume the generated Knowledge index/section projections. `API Docs` now consumes the complete localized four-file Swagger projection advertised through catalog `api` language base paths. `Quiz` still uses fake data rendered through React loops. Knowledge and API counts for sidebar modules are preloaded from generated/static projections for the active language; Quiz count remains fixture-derived until the real Quiz data contract is implemented. `Execution` and backend-dependent download/build behavior may remain empty/placeholder until their real integration contract is implemented.
 
 Current sidebar behavior is intentional and should be preserved unless the user explicitly changes it:
 
 ```text
 row with children
 → click the row to expand/collapse
+→ use `+` for collapsed and `−` for expanded
+→ default tree state is fully collapsed
 
 real module
 → render a separate circular `>` action on the right
@@ -195,11 +207,44 @@ module filter self-match
 module filter descendant-match
 → preserve only the ancestor path to matching descendants
 
-Real modules mode
-→ keep MODULE nodes plus required GROUP ancestors
-→ remove branches with no real module descendants
-→ never flatten the hierarchy into a plain real-module list
+sidebar `Real modules / Module thật` mode
+→ this is a Portal content filter, not the repository-level `gradle.properties` real-module identity rule
+→ keep a MODULE when at least one visible learning count is non-zero: Knowledge OR Quiz OR API Docs
+→ hide a MODULE only when Knowledge=0 AND Quiz=0 AND API Docs=0
+→ keep required GROUP ancestors
+→ remove branches with no qualifying descendants
+→ never flatten the hierarchy into a plain module list
+
+sidebar global tree controls
+→ `Expand all` / `Collapse all` apply to the currently projected tree
+→ manual branch state remains independently collapsible afterward
 ```
+
+Portal panel-state rules:
+
+```text
+Menu
+→ default collapsed
+→ `+` / `−` branch toggles
+→ explicit Expand all / Collapse all
+
+Knowledge
+→ multiple sections may be open at the same time
+→ opening one section must not close another
+→ loaded Markdown is cached while the panel remains mounted
+
+API Docs
+→ controller + method details default collapsed
+→ explicit Expand all / Collapse all
+→ reference-only; no live execute/debug control in this panel
+
+tab switching
+→ Menu / Knowledge / API Docs are lazy-mounted then kept alive for the current module/language
+→ preserve the user's latest expand/collapse state when switching tabs
+→ changing module/language establishes a new state boundary
+```
+
+The API Reference notice explains that the docs are for learning/reference only and that running/debugging requires local source/runtime. Its Download action reuses the shared Download popover. Download popovers must anchor to the button that opened them and close when the user clicks outside, presses Escape, or toggles the same action again.
 
 Theme selection starts from `prefers-color-scheme` and persists user choice in `localStorage`. Capability colors are semantic and theme-independent: Overview gray, Knowledge blue, Quiz amber, API Docs red, Execution purple, Download green. Light/Dark changes surrounding surfaces/text/borders, not those semantic identities.
 
@@ -580,11 +625,11 @@ Project tree documentation
 
 Portal module/catalog data [current]
 → filesystem/module metadata via ProjectStructureService
-→ `project-portal/src/main/resources/portal-data/data/module-catalog.json`
+→ `project-portal/build/generated/portal-data/module-catalog.json`
 
-Portal learning-content projections [future]
-→ README/quiz/OpenAPI/artifact state
-→ generated static Portal projections/assets
+Portal module-scoped projections [current/future]
+→ canonical README/quiz/Swagger/artifact state
+→ `project-portal/build/generated/portal-data/module/{ROUTE_ID}/{feature}/...`
 
 Task DSL reference
 → task definition resources + enabled module features → generated task.gradle
@@ -605,14 +650,17 @@ DatabaseListEnum
 module-depend.json
 STRUCTURE.md
 module-structure.txt
-project-portal/src/main/resources/portal-data/data/module-catalog.json
+project-portal/build/generated/portal-data/module-catalog.json
+project-portal/build/generated/portal-data/module/{ROUTE_ID}/overview/...
+project-portal/build/generated/portal-data/module/{ROUTE_ID}/knowledge/...
+project-portal/build/generated/portal-data/module/{ROUTE_ID}/api/{lang}/...
 task.gradle
 application-merged.yml
 generated README/menu fragments
 META-INF/execution-context/source-context.json
 ```
 
-`module-catalog.json` is now a generated Portal projection and must follow the same deterministic/idempotent/write-if-changed rules. Future quiz projections, static OpenAPI projections, or copied README assets must do the same. The browser must not parse `module-structure.txt` as canonical data.
+Portal generated data is build-only and must never be written back into `project-portal/src/main/resources`. `module-catalog.json` stays at the root of generated `portal-data`; module-owned projections are namespaced under `portal-data/module/{ROUTE_ID}/`. Overview and Knowledge are transformed projections; API metadata is an exact build-time copy of the four canonical localized Swagger YAML files when the complete set exists. The API Docs frontend parses these static YAML files in-browser and sanitizes rich execution HTML before rendering it. These projections must follow deterministic/idempotent/write-if-changed rules. Future quiz projections or copied README assets must do the same. The browser must not parse `module-structure.txt` as canonical data.
 
 Generated output must prefer:
 
@@ -1985,9 +2033,13 @@ Preserve these unless the user explicitly changes the architecture:
 31. Current Portal client routing uses `HashRouter`; `#/...` routes belong to React, not Spring MVC.
 32. Module runtime capabilities remain optional from the Portal perspective: learning/documentation must not require a learning module to have its own Spring Boot Application.
 33. Portal hierarchy/routing must come from generated `module-catalog.json`, not from a hard-coded frontend tree or by parsing `module-structure.txt`.
-34. `Real modules` mode preserves GROUP ancestors needed to represent real-module hierarchy and only prunes branches with no real module descendants.
+34. Portal sidebar `Real modules / Module thật` is a content-availability filter, not the repository's physical real-module identity rule: a MODULE qualifies when Knowledge OR Quiz OR API Docs count is non-zero; only all-three-zero modules are removed, while required GROUP ancestors are preserved.
 35. Sidebar module search distinguishes self-match from descendant-match: self-match keeps the full subtree; descendant-match keeps only the ancestor path, and filtered trees remain collapsible.
-36. For a real module with children, row click is expand/collapse and the separate circular `>` action owns navigation.
+36. For a module row with children, row click is expand/collapse and the separate circular `>` action owns navigation; sidebar tree state starts collapsed and also supports global expand/collapse controls.
+37. Portal Menu and API Docs start collapsed by default, but tab switching must preserve the most recent in-memory expand/collapse state for the current module/language instead of remounting/resetting those panels.
+38. Knowledge supports multiple simultaneously expanded sections; opening one section must not implicitly close another. Loaded Markdown remains cached while the panel stays mounted.
+39. Portal API Docs are documentation-only in the current architecture: they render static Swagger metadata and guided `execution` content, not live execute/debug controls. Running/debugging requires downloading/running the module locally or using the module's own runtime tooling.
+40. Portal API controller/method ordering follows README learning relationships when valid: controller order comes from numeric `readmeRelated.file` chapter order, and method order comes from resolved README anchor position; do not replace this with alphabetical/path ordering.
 
 ---
 
@@ -2090,9 +2142,13 @@ Project Portal
 → Gradle buildFrontend → Vite dist → processResources → classpath:/static
 → browser executes React; Spring Boot only serves the static bundle in the current phase
 → HashRouter owns `#/learning/...` navigation
-→ ProjectStructureService generates `portal-data/data/module-catalog.json` for real hierarchy/routing
-→ Knowledge/Quiz/API Docs still use fake frontend fixtures; counts are derived from those fixtures
-→ sidebar supports module search plus Full tree/Real modules pruning without flattening hierarchy
+→ ProjectStructureService generates build-only `portal-data/module-catalog.json` for real hierarchy/routing
+→ module-scoped generated data lives under `portal-data/module/{ROUTE_ID}/...`; current Overview, Knowledge, and API metadata projections follow this layout
+→ Vite `publicDir` points at `build/generated/portal-data`; `npm run dev` prepares generated data before starting Vite
+→ Menu/Knowledge UI consumes the generated Knowledge index and lazy section Markdown; Knowledge supports multiple open sections and keeps panel state across tab switches
+→ API Docs consumes the generated localized four-file Swagger projection, follows README-derived controller/method order, renders sanitized `execution` HTML, and is reference-only rather than a live runner/debugger
+→ Quiz still uses fake frontend fixtures
+→ sidebar supports module search plus Full tree/content-bearing `Real modules` pruning without flattening hierarchy; the tree defaults collapsed and has `+`/`−` branch controls plus global expand/collapse
 → Light/Dark theme follows OS initially and persists explicit user choice
 → no portal REST API dependency yet; generated Portal data remains a projection, not a replacement source of truth
 
