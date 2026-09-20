@@ -23,6 +23,9 @@ export interface LearningModule {
   description: LocalizedText;
   path: string[];
   questionCount: number;
+  overview: Partial<Record<Language, string>>;
+  knowledge: Partial<Record<Language, string>>;
+  api: Partial<Record<Language, string>>;
   capabilities: CapabilityState;
 }
 
@@ -42,7 +45,48 @@ export interface ModuleCatalogNode {
   javaBasePackage?: string;
   description?: string;
   moduleDepend?: boolean;
+  overview?: Partial<Record<Language, string>>;
+  knowledge?: Partial<Record<Language, string>>;
+  api?: Partial<Record<Language, string>>;
   children: ModuleCatalogNode[];
+}
+
+export interface KnowledgeSection {
+  id: string;
+  title: string;
+  content: string;
+}
+
+export interface KnowledgeCategoryNode {
+  kind: 'CATEGORY';
+  id: string;
+  title: string;
+  sourcePath: string;
+  intro?: string;
+  sections: KnowledgeSection[];
+}
+
+export interface KnowledgeFolderNode {
+  kind: 'FOLDER';
+  id: string;
+  title: string;
+  children: KnowledgeTreeNode[];
+}
+
+export type KnowledgeTreeNode = KnowledgeFolderNode | KnowledgeCategoryNode;
+
+export interface KnowledgeIndex {
+  version: number;
+  moduleId: string;
+  language: Language;
+  categoryCount: number;
+  sectionCount: number;
+  tree: KnowledgeTreeNode[];
+}
+
+export interface KnowledgeSectionRef extends KnowledgeSection {
+  categoryId: string;
+  categoryTitle: string;
 }
 
 export interface KnowledgeTopic {
@@ -76,4 +120,46 @@ export interface ApiOperation {
   path: string;
   summary: LocalizedText;
   description: LocalizedText;
+}
+
+export interface ApiReadmeRelated {
+  file?: string;
+  anchor?: string;
+}
+
+export interface ApiParamDefinition {
+  name: string;
+  summary: string;
+  description: string;
+}
+
+export interface ApiDocOperation {
+  id: string;
+  controllerName: string;
+  methodSignature: string;
+  methodName: string;
+  httpMethod: string;
+  path: string;
+  summary: string;
+  description: string;
+  executionHtml: string;
+  consumes: string[];
+  produces: string[];
+  params: ApiParamDefinition[];
+  readmeRelated: ApiReadmeRelated;
+}
+
+export interface ApiDocController {
+  name: string;
+  title: string;
+  description: string;
+  descriptionHtml: string;
+  readmeRelated: ApiReadmeRelated;
+  chapterOrder: number | null;
+  operations: ApiDocOperation[];
+}
+
+export interface ApiDocsDocument {
+  operationCount: number;
+  controllers: ApiDocController[];
 }

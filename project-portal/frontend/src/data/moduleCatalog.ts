@@ -23,7 +23,7 @@ const acronymLabels: Record<string, string> = {
 };
 
 export async function loadModuleCatalog(): Promise<ModuleCatalog> {
-  const response = await fetch('/data/module-catalog.json', { cache: 'no-cache' });
+  const response = await fetch('/module-catalog.json', { cache: 'no-cache' });
 
   if (!response.ok) {
     throw new Error(`Unable to load module catalog: ${response.status} ${response.statusText}`);
@@ -82,6 +82,9 @@ export function toLearningModule(node: ModuleCatalogNode, stats: ModuleStats): L
     description: { vi: description, en: description },
     path: hierarchy,
     questionCount: stats.knowledge,
+    overview: node.overview ?? {},
+    knowledge: node.knowledge ?? {},
+    api: node.api ?? {},
     capabilities: {
       knowledge: true,
       quiz: true,
@@ -91,4 +94,3 @@ export function toLearningModule(node: ModuleCatalogNode, stats: ModuleStats): L
     },
   };
 }
-

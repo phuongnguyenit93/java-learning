@@ -4,6 +4,7 @@ import { ApiDocsPanel } from '../components/ApiDocsPanel';
 import { EmptyPanel } from '../components/EmptyPanel';
 import { KnowledgePanel } from '../components/KnowledgePanel';
 import { LearningSearch } from '../components/LearningSearch';
+import { MenuPanel } from '../components/MenuPanel';
 import { ModuleSidebar } from '../components/ModuleSidebar';
 import { ModuleTabs, type ModuleTab } from '../components/ModuleTabs';
 import { OverviewPanel } from '../components/OverviewPanel';
@@ -14,9 +15,11 @@ import {
   loadModuleCatalog,
   toLearningModule,
 } from '../data/moduleCatalog';
+import { loadApiOperationCount } from '../data/apiDocs';
+import { loadKnowledgeIndex } from '../data/knowledge';
 import { resolveModuleStats } from '../data/moduleStats';
 import { useLanguage } from '../state/LanguageContext';
-import type { ModuleCatalog } from '../types/learning';
+import type { KnowledgeIndex, ModuleCatalog } from '../types/learning';
 
 export function LearningPage() {
   const { moduleId } = useParams();
@@ -25,8 +28,16 @@ export function LearningPage() {
   const [catalog, setCatalog] = useState<ModuleCatalog | null>(null);
   const [catalogError, setCatalogError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<ModuleTab>('knowledge');
+  const [visitedTabs, setVisitedTabs] = useState<Set<ModuleTab>>(() => new Set<ModuleTab>(['knowledge']));
   const [searchQuery, setSearchQuery] = useState('');
-  const [downloadOpen, setDownloadOpen] = useState(false);
+  const [downloadTarget, setDownloadTarget] = useState<'tabs' | 'api-notice' | null>(null);
+  const [knowledgeIndex, setKnowledgeIndex] = useState<KnowledgeIndex | null>(null);
+  const [knowledgeCounts, setKnowledgeCounts] = useState<Record<string, number>>({});
+  const [apiCounts, setApiCounts] = useState<Record<string, number>>({});
+  const [knowledgeLoading, setKnowledgeLoading] = useState(false);
+  const [knowledgeError, setKnowledgeError] = useState<string | null>(null);
+  const [activeKnowledgeCategory, setActiveKnowledgeCategory] = useState('all');
+  const [selectedKnowledgeSection, setSelectedKnowledgeSection] = useState<string | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -69,6 +80,93 @@ export function LearningPage() {
     () => (activeModuleNode ? toLearningModule(activeModuleNode, activeStats) : null),
     [activeModuleNode, activeStats],
   );
+  const knowledgePath = activeModule?.knowledge[language];
+  const apiPath = activeModule?.api[language];
+  const displayedStats = useMemo(
+    () => ({
+      ...activeStats,
+      knowledge: knowledgeIndex?.sectionCount ?? knowledgeCounts[activeModuleId] ?? 0,
+      apiDocs: apiCounts[activeModuleId] ?? 0,
+    }),
+    [activeModuleId, activeStats, apiCounts, knowledgeCounts, knowledgeIndex],
+  );
+
+  useEffect(() => {
+    let active = true;
+
+    setKnowledgeCounts({});
+
+    if (!catalog) {
+      return () => {
+        active = false;
+      };
+    }
+
+    const modulesWithKnowledge = collectRealModules(catalog.root)
+      .map((node) => ({
+        routeId: node.routeId,
+        path: node.knowledge?.[language],
+      }))
+      .filter((entry): entry is { routeId: string; path: string } => Boolean(entry.routeId && entry.path));
+
+    Promise.all(
+      modulesWithKnowledge.map(async ({ routeId, path }) => {
+        try {
+          const index = await loadKnowledgeIndex(path);
+          return [routeId, index.sectionCount] as const;
+        } catch {
+          return null;
+        }
+      }),
+    )
+      .then((entries) => {
+        if (active) {
+          setKnowledgeCounts(Object.fromEntries(entries.filter((entry) => entry !== null)));
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [catalog, language]);
+
+  useEffect(() => {
+    let active = true;
+
+    setApiCounts({});
+
+    if (!catalog) {
+      return () => {
+        active = false;
+      };
+    }
+
+    const modulesWithApi = collectRealModules(catalog.root)
+      .map((node) => ({
+        routeId: node.routeId,
+        path: node.api?.[language],
+      }))
+      .filter((entry): entry is { routeId: string; path: string } => Boolean(entry.routeId && entry.path));
+
+    Promise.all(
+      modulesWithApi.map(async ({ routeId, path }) => {
+        try {
+          const count = await loadApiOperationCount(path);
+          return [routeId, count] as const;
+        } catch {
+          return null;
+        }
+      }),
+    ).then((entries) => {
+      if (active) {
+        setApiCounts(Object.fromEntries(entries.filter((entry) => entry !== null)));
+      }
+    });
+
+    return () => {
+      active = false;
+    };
+  }, [catalog, language]);
 
   useEffect(() => {
     if (!catalog || !activeModuleNode?.routeId) {
@@ -86,8 +184,83 @@ export function LearningPage() {
     }
 
     setSearchQuery('');
-    setDownloadOpen(false);
+    setDownloadTarget(null);
+    setActiveKnowledgeCategory('all');
+    setSelectedKnowledgeSection(null);
+    setVisitedTabs(new Set<ModuleTab>([activeTab]));
   }, [activeModule?.id]);
+
+  useEffect(() => {
+    if (!downloadTarget) {
+      return undefined;
+    }
+
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target;
+
+      if (target instanceof Element && target.closest('[data-download-control]')) {
+        return;
+      }
+
+      setDownloadTarget(null);
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setDownloadTarget(null);
+      }
+    };
+
+    document.addEventListener('pointerdown', handlePointerDown);
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('pointerdown', handlePointerDown);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [downloadTarget]);
+
+  useEffect(() => {
+    let active = true;
+
+    setActiveKnowledgeCategory('all');
+    setSelectedKnowledgeSection(null);
+
+    if (!knowledgePath) {
+      setKnowledgeIndex(null);
+      setKnowledgeLoading(false);
+      setKnowledgeError(null);
+      return () => {
+        active = false;
+      };
+    }
+
+    setKnowledgeLoading(true);
+    setKnowledgeError(null);
+
+    loadKnowledgeIndex(knowledgePath)
+      .then((result) => {
+        if (!active) {
+          return;
+        }
+
+        setKnowledgeIndex(result);
+        setKnowledgeLoading(false);
+      })
+      .catch((error: unknown) => {
+        if (!active) {
+          return;
+        }
+
+        setKnowledgeIndex(null);
+        setKnowledgeLoading(false);
+        setKnowledgeError(error instanceof Error ? error.message : 'Unable to load Knowledge.');
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [knowledgePath]);
 
   if (catalogError) {
     return (
@@ -112,7 +285,12 @@ export function LearningPage() {
 
   return (
     <main className="learning-layout">
-      <ModuleSidebar nodes={catalog.root.children} activeModuleId={activeModule.id} />
+      <ModuleSidebar
+        nodes={catalog.root.children}
+        activeModuleId={activeModule.id}
+        knowledgeCounts={knowledgeCounts}
+        apiCounts={apiCounts}
+      />
 
       <section className="learning-main">
         <div className="learning-main__topline">
@@ -128,28 +306,82 @@ export function LearningPage() {
         <div className="module-tab-wrapper">
           <ModuleTabs
             activeTab={activeTab}
-            stats={activeStats}
+            stats={displayedStats}
             onChange={(tab) => {
               setActiveTab(tab);
-              setDownloadOpen(false);
-            }}
-            onDownload={() => setDownloadOpen((current) => !current)}
-          />
+              setVisitedTabs((current) => {
+                if (current.has(tab)) {
+                  return current;
+                }
 
-          {downloadOpen && (
-            <div className="download-popover">
-              <EmptyPanel type="download" />
-            </div>
-          )}
+                const next = new Set(current);
+                next.add(tab);
+                return next;
+              });
+              setDownloadTarget(null);
+            }}
+            downloadOpen={downloadTarget === 'tabs'}
+            onDownloadToggle={() => setDownloadTarget((current) => (current === 'tabs' ? null : 'tabs'))}
+          />
         </div>
 
         <div className="learning-content">
-          {activeTab === 'overview' && <OverviewPanel module={activeModule} stats={activeStats} />}
-          {activeTab === 'knowledge' && (
-            <KnowledgePanel moduleId={activeModule.id} searchQuery={searchQuery} />
+          {activeTab === 'overview' && <OverviewPanel module={activeModule} />}
+          {visitedTabs.has('menu') && (
+            <div hidden={activeTab !== 'menu'}>
+              <MenuPanel
+                key={`${activeModule.id}:${language}:menu`}
+                index={knowledgeIndex}
+                loading={knowledgeLoading}
+                error={knowledgeError}
+                searchQuery={searchQuery}
+                selectedSectionId={selectedKnowledgeSection}
+                onSelectSection={(categoryId, sectionId) => {
+                  setSearchQuery('');
+                  setActiveKnowledgeCategory(categoryId);
+                  setSelectedKnowledgeSection(sectionId);
+                  setVisitedTabs((current) => {
+                    const next = new Set(current);
+                    next.add('knowledge');
+                    return next;
+                  });
+                  setActiveTab('knowledge');
+                  setDownloadTarget(null);
+                }}
+              />
+            </div>
+          )}
+          {visitedTabs.has('knowledge') && (
+            <div hidden={activeTab !== 'knowledge'}>
+              <KnowledgePanel
+                key={`${activeModule.id}:${language}:knowledge`}
+                index={knowledgeIndex}
+                loading={knowledgeLoading}
+                error={knowledgeError}
+                searchQuery={searchQuery}
+                activeCategoryId={activeKnowledgeCategory}
+                selectedSectionId={selectedKnowledgeSection}
+                onCategoryChange={(categoryId) => {
+                  setActiveKnowledgeCategory(categoryId);
+                  setSelectedKnowledgeSection(null);
+                }}
+                onSectionChange={setSelectedKnowledgeSection}
+              />
+            </div>
           )}
           {activeTab === 'quiz' && <QuizPanel moduleId={activeModule.id} />}
-          {activeTab === 'api' && <ApiDocsPanel moduleId={activeModule.id} />}
+          {visitedTabs.has('api') && (
+            <div hidden={activeTab !== 'api'}>
+              <ApiDocsPanel
+                key={`${activeModule.id}:${language}:api`}
+                basePath={apiPath}
+                knowledgeIndex={knowledgeIndex}
+                searchQuery={searchQuery}
+                downloadOpen={downloadTarget === 'api-notice'}
+                onDownloadToggle={() => setDownloadTarget((current) => (current === 'api-notice' ? null : 'api-notice'))}
+              />
+            </div>
+          )}
           {activeTab === 'execution' && <EmptyPanel type="execution" />}
         </div>
       </section>

@@ -10,6 +10,14 @@ import org.gradle.api.logging.Logger
 
 class ProjectStructureService {
 
+    private static final List<String> PORTAL_API_FILES =
+            [
+                    'api-descriptions.yml',
+                    'api-execution.yml',
+                    'api-params.yml',
+                    'controller-description.yml'
+            ]
+
     private static final Set<String> EXCLUDED_DIRECTORIES =
             [
                     '.gradle',
@@ -34,7 +42,11 @@ class ProjectStructureService {
 
 
     private static final String PORTAL_CATALOG_PATH =
-            'project-portal/src/main/resources/portal-data/data/module-catalog.json'
+            'project-portal/build/generated/portal-data/module-catalog.json'
+
+
+    private static final String PORTAL_MODULE_DIRECTORY =
+            'project-portal/build/generated/portal-data/module'
 
 
     private final Logger logger
@@ -100,12 +112,6 @@ ${moduleDirectory.absolutePath}
                 )
 
 
-        String portalCatalogContent =
-                generatePortalCatalog(
-                        structure
-                )
-
-
         // ====================================================
         // Outputs
         // ====================================================
@@ -124,13 +130,6 @@ ${moduleDirectory.absolutePath}
                 )
 
 
-        File portalCatalogOutput =
-                new File(
-                        rootProject.projectDir,
-                        PORTAL_CATALOG_PATH
-                )
-
-
         // ====================================================
         // Write
         // ====================================================
@@ -145,11 +144,61 @@ ${moduleDirectory.absolutePath}
                 markdownOutput,
                 markdownContent
         )
+    }
+
+
+    void generatePortalData(
+            Project rootProject
+    ) {
+
+        File moduleDirectory =
+                new File(
+                        rootProject.projectDir,
+                        'module'
+                )
+
+
+        if (!moduleDirectory.isDirectory()) {
+
+            throw new GradleException(
+                    """
+Project module directory was not found:
+
+${moduleDirectory.absolutePath}
+""".stripIndent()
+            )
+        }
+
+
+        StructureNode structure =
+                buildStructure(
+                        rootProject,
+                        moduleDirectory
+                )
+
+
+        String portalCatalogContent =
+                generatePortalCatalog(
+                        structure
+                )
+
+
+        File portalCatalogOutput =
+                new File(
+                        rootProject.projectDir,
+                        PORTAL_CATALOG_PATH
+                )
 
 
         writeIfChanged(
                 portalCatalogOutput,
                 portalCatalogContent
+        )
+
+
+        syncPortalOverviewOutputs(
+                rootProject,
+                structure
         )
     }
 
@@ -240,6 +289,27 @@ ${moduleDirectory.absolutePath}
                                 getMasterValue(master, 'IS_MODULE_DEPEND')
                         )
                 )
+
+
+        if (node.realModule) {
+
+            node.overviewSources =
+                    findOverviewSources(
+                            directory
+                    )
+
+
+            node.knowledgeLanguages =
+                    findKnowledgeLanguages(
+                            directory
+                    )
+
+
+            node.apiLanguages =
+                    findApiLanguages(
+                            directory
+                    )
+        }
 
 
         node.children =
@@ -569,10 +639,58 @@ ${moduleDirectory.absolutePath}
         if (node.realModule) {
 
             result.routeId =
-                    node.serviceName != null &&
-                            !node.serviceName.isBlank()
-                            ? node.serviceName
-                            : node.name
+                    resolveRouteId(
+                            node
+                    )
+
+
+            if (!node.overviewSources.isEmpty()) {
+
+                result.overview =
+                        node.overviewSources
+                                .keySet()
+                                .toList()
+                                .sort()
+                                .collectEntries {
+                                    String language ->
+
+                                        [
+                                                (language): "/module/${resolveRouteId(node)}/overview/${language}.md"
+                                        ]
+                                }
+            }
+
+
+            if (!node.knowledgeLanguages.isEmpty()) {
+
+                result.knowledge =
+                        node.knowledgeLanguages
+                                .toList()
+                                .sort()
+                                .collectEntries {
+                                    String language ->
+
+                                        [
+                                                (language): "/module/${resolveRouteId(node)}/knowledge/${language}/index.json"
+                                        ]
+                                }
+            }
+
+
+            if (!node.apiLanguages.isEmpty()) {
+
+                result.api =
+                        node.apiLanguages
+                                .toList()
+                                .sort()
+                                .collectEntries {
+                                    String language ->
+
+                                        [
+                                                (language): "/module/${resolveRouteId(node)}/api/${language}"
+                                        ]
+                                }
+            }
         }
 
 
@@ -602,6 +720,475 @@ ${moduleDirectory.absolutePath}
 
 
         return result
+    }
+
+
+    private static String resolveRouteId(
+            StructureNode node
+    ) {
+
+        return node.serviceName != null &&
+                !node.serviceName.isBlank()
+                ? node.serviceName
+                : node.name
+    }
+
+
+    // ========================================================
+    // Portal overview projection
+    // ========================================================
+
+    private static Map<String, File> findOverviewSources(
+            File moduleDirectory
+    ) {
+
+        File readmeDirectory =
+                new File(
+                        moduleDirectory,
+                        'readme'
+                )
+
+
+        if (!readmeDirectory.isDirectory()) {
+            return [:]
+        }
+
+
+        File[] languageDirectories =
+                readmeDirectory.listFiles(
+                        {
+                            File file ->
+
+                                file.isDirectory()
+                        } as FileFilter
+                )
+
+
+        if (languageDirectories == null) {
+
+            throw new GradleException(
+                    """
+Unable to read module README directory:
+
+${readmeDirectory.absolutePath}
+""".stripIndent()
+            )
+        }
+
+
+        Map<String, File> result =
+                new LinkedHashMap<>()
+
+
+        languageDirectories
+                .toList()
+                .sort {
+                    File left,
+                    File right ->
+
+                        left.name <=> right.name
+                }
+                .each {
+                    File languageDirectory ->
+
+                        File baseFile =
+                                new File(
+                                        languageDirectory,
+                                        'BASE.md'
+                                )
+
+
+                        if (
+                                baseFile.isFile() &&
+                                        !baseFile.getText('UTF-8').isBlank()
+                        ) {
+
+                            result[
+                                    languageDirectory.name
+                            ] =
+                                    baseFile
+                        }
+                }
+
+
+        return result
+    }
+
+
+    private static Set<String> findKnowledgeLanguages(
+            File moduleDirectory
+    ) {
+
+        File readmeDirectory =
+                new File(
+                        moduleDirectory,
+                        'readme'
+                )
+
+
+        if (!readmeDirectory.isDirectory()) {
+            return [] as Set<String>
+        }
+
+
+        File[] languageDirectories =
+                readmeDirectory.listFiles(
+                        {
+                            File file ->
+
+                                file.isDirectory()
+                        } as FileFilter
+                )
+
+
+        if (languageDirectories == null) {
+
+            throw new GradleException(
+                    """
+Unable to read module README directory:
+
+${readmeDirectory.absolutePath}
+""".stripIndent()
+            )
+        }
+
+
+        Set<String> result =
+                new LinkedHashSet<>()
+
+
+        languageDirectories
+                .toList()
+                .sort {
+                    File left,
+                    File right ->
+
+                        left.name <=> right.name
+                }
+                .each {
+                    File languageDirectory ->
+
+                        File menuDirectory =
+                                new File(
+                                        languageDirectory,
+                                        'menu'
+                                )
+
+
+                        if (
+                                menuDirectory.isDirectory() &&
+                                        containsMarkdownFile(
+                                                menuDirectory
+                                        )
+                        ) {
+
+                            result.add(
+                                    languageDirectory.name
+                            )
+                        }
+                }
+
+
+        return result
+    }
+
+
+    private static Set<String> findApiLanguages(
+            File moduleDirectory
+    ) {
+
+        File swaggerDirectory =
+                new File(
+                        moduleDirectory,
+                        'src/main/resources/swagger'
+                )
+
+
+        if (!swaggerDirectory.isDirectory()) {
+            return [] as Set<String>
+        }
+
+
+        File[] languageDirectories =
+                swaggerDirectory.listFiles(
+                        {
+                            File file ->
+
+                                file.isDirectory()
+                        } as FileFilter
+                )
+
+
+        if (languageDirectories == null) {
+
+            throw new GradleException(
+                    """
+Unable to read module Swagger directory:
+
+${swaggerDirectory.absolutePath}
+""".stripIndent()
+            )
+        }
+
+
+        Set<String> result =
+                new LinkedHashSet<>()
+
+
+        languageDirectories
+                .toList()
+                .sort {
+                    File left,
+                    File right ->
+
+                        left.name <=> right.name
+                }
+                .each {
+                    File languageDirectory ->
+
+                        boolean complete =
+                                PORTAL_API_FILES.every {
+                                    String fileName ->
+
+                                        new File(
+                                                languageDirectory,
+                                                fileName
+                                        ).isFile()
+                                }
+
+
+                        if (complete) {
+
+                            result.add(
+                                    languageDirectory.name
+                            )
+                        }
+                }
+
+
+        return result
+    }
+
+
+    private static boolean containsMarkdownFile(
+            File directory
+    ) {
+
+        File[] children =
+                directory.listFiles()
+
+
+        if (children == null) {
+
+            throw new GradleException(
+                    """
+Unable to read README menu directory:
+
+${directory.absolutePath}
+""".stripIndent()
+            )
+        }
+
+
+        return children.any {
+            File child ->
+
+                if (child.name.startsWith('.')) {
+                    return false
+                }
+
+
+                if (child.isDirectory()) {
+
+                    return containsMarkdownFile(
+                            child
+                    )
+                }
+
+
+                return child.isFile() &&
+                        child.name.toLowerCase(Locale.ROOT).endsWith('.md')
+        }
+    }
+
+
+    private void syncPortalOverviewOutputs(
+            Project rootProject,
+            StructureNode rootNode
+    ) {
+
+        File outputDirectory =
+                new File(
+                        rootProject.projectDir,
+                        PORTAL_MODULE_DIRECTORY
+                )
+
+
+        Map<String, String> expectedOutputs =
+                new LinkedHashMap<>()
+
+
+        collectPortalOverviewOutputs(
+                rootNode,
+                expectedOutputs
+        )
+
+
+        expectedOutputs.each {
+            String relativePath,
+            String content ->
+
+                writeIfChanged(
+                        new File(
+                                outputDirectory,
+                                relativePath
+                        ),
+                        content
+                )
+        }
+
+
+        removeStalePortalOverviewFiles(
+                outputDirectory,
+                expectedOutputs.keySet()
+        )
+    }
+
+
+    private static void collectPortalOverviewOutputs(
+            StructureNode node,
+            Map<String, String> expectedOutputs
+    ) {
+
+        if (node.realModule) {
+
+            String routeId =
+                    resolveRouteId(
+                            node
+                    )
+
+
+            node.overviewSources.each {
+                String language,
+                File sourceFile ->
+
+                    String relativePath =
+                            "${routeId}/overview/${language}.md"
+
+
+                    if (expectedOutputs.containsKey(relativePath)) {
+
+                        throw new GradleException(
+                                """
+Duplicate Portal overview output detected:
+
+${relativePath}
+
+Route identifiers must be unique for generated Portal overview content.
+""".stripIndent()
+                        )
+                    }
+
+
+                    expectedOutputs[
+                            relativePath
+                    ] =
+                            sourceFile.getText(
+                                    'UTF-8'
+                            )
+            }
+        }
+
+
+        node.children.each {
+            StructureNode child ->
+
+                collectPortalOverviewOutputs(
+                        child,
+                        expectedOutputs
+                )
+        }
+    }
+
+
+    private static void removeStalePortalOverviewFiles(
+            File outputDirectory,
+            Set<String> expectedRelativePaths
+    ) {
+
+        if (!outputDirectory.exists()) {
+            return
+        }
+
+
+        if (!outputDirectory.isDirectory()) {
+
+            throw new GradleException(
+                    """
+Portal overview output path is not a directory:
+
+${outputDirectory.absolutePath}
+""".stripIndent()
+            )
+        }
+
+
+        outputDirectory.eachFileRecurse {
+            File file ->
+
+                if (!file.isFile() || !file.name.endsWith('.md')) {
+                    return
+                }
+
+
+                String relativePath =
+                        GradleBuildUtils.normalizePath(
+                                outputDirectory
+                                        .toPath()
+                                        .toAbsolutePath()
+                                        .normalize()
+                                        .relativize(
+                                                file
+                                                        .toPath()
+                                                        .toAbsolutePath()
+                                                        .normalize()
+                                        )
+                                        .toString()
+                        )
+
+
+                if (
+                        isPortalOverviewPath(relativePath) &&
+                                !expectedRelativePaths.contains(relativePath)
+                ) {
+
+                    if (!file.delete() && file.exists()) {
+
+                        throw new GradleException(
+                                """
+Unable to remove stale Portal overview file:
+
+${file.absolutePath}
+""".stripIndent()
+                        )
+                    }
+                }
+        }
+    }
+
+
+    private static boolean isPortalOverviewPath(
+            String relativePath
+    ) {
+
+        List<String> pathSegments =
+                relativePath
+                        .split('/')
+                        .toList()
+
+
+        return pathSegments.size() >= 3 &&
+                pathSegments[1] == 'overview'
     }
 
 
@@ -836,6 +1423,9 @@ ${exception.message}
         String javaBasePackage
         String description
         boolean moduleDepend
+        Map<String, File> overviewSources = [:]
+        Set<String> knowledgeLanguages = [] as Set<String>
+        Set<String> apiLanguages = [] as Set<String>
         List<StructureNode> children = []
     }
 }

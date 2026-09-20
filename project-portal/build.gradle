@@ -4,6 +4,16 @@ plugins {
 
 import com.github.gradle.node.npm.task.NpmTask
 
+def portalClean = tasks.named('clean')
+
+rootProject.tasks.named('generatePortalModuleData') {
+    mustRunAfter portalClean
+}
+
+rootProject.tasks.named('generatePortalKnowledge') {
+    mustRunAfter portalClean
+}
+
 node {
     download = true
     version = '22.14.0'
@@ -13,6 +23,7 @@ node {
 
 tasks.register('buildFrontend', NpmTask) {
     dependsOn tasks.named('npmInstall')
+    dependsOn ':generatePortalData'
     args = ['run', 'build']
 
     inputs.file(file('frontend/package.json'))
@@ -20,6 +31,7 @@ tasks.register('buildFrontend', NpmTask) {
     inputs.file(file('frontend/tsconfig.app.json'))
     inputs.file(file('frontend/vite.config.ts'))
     inputs.dir(file('frontend/src'))
+    inputs.dir(layout.buildDirectory.dir('generated/portal-data'))
     outputs.dir(file('frontend/dist'))
 }
 
@@ -31,6 +43,6 @@ tasks.named('processResources') {
     }
 }
 
-tasks.named('clean') {
+portalClean.configure {
     delete file('frontend/dist')
 }

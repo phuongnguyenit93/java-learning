@@ -1,46 +1,95 @@
+import { useEffect, useState } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { useLanguage } from '../state/LanguageContext';
-import type { LearningModule, ModuleStats } from '../types/learning';
+import type { LearningModule } from '../types/learning';
 
 interface OverviewPanelProps {
   module: LearningModule;
-  stats: ModuleStats;
 }
 
-export function OverviewPanel({ module, stats }: OverviewPanelProps) {
+export function OverviewPanel({ module }: OverviewPanelProps) {
   const { language } = useLanguage();
+  const [content, setContent] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const overviewPath = module.overview[language];
 
-  const overviewStats = [
-    { value: stats.knowledge, vi: 'Mục kiến thức', en: 'Knowledge items' },
-    { value: stats.quiz, vi: 'Quiz', en: 'Quiz' },
-    { value: stats.apiDocs, vi: 'API Docs', en: 'API Docs' },
-    { value: module.capabilities.execution ? '✓' : '—', vi: 'Execution', en: 'Execution' },
-  ];
+  useEffect(() => {
+    let active = true;
+
+    if (!overviewPath) {
+      setContent(null);
+      setError(null);
+      setLoading(false);
+      return () => {
+        active = false;
+      };
+    }
+
+    setLoading(true);
+    setError(null);
+
+    fetch(overviewPath, { cache: 'no-cache' })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Unable to load overview: ${response.status} ${response.statusText}`);
+        }
+
+        return response.text();
+      })
+      .then((markdown) => {
+        if (active) {
+          setContent(markdown);
+          setLoading(false);
+        }
+      })
+      .catch((cause: unknown) => {
+        if (active) {
+          setContent(null);
+          setLoading(false);
+          setError(cause instanceof Error ? cause.message : 'Unable to load overview.');
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [overviewPath]);
+
+  if (!overviewPath) {
+    return (
+      <div className="empty-state empty-state--large">
+        <strong>{language === 'vi' ? 'Chưa có nội dung Overview' : 'No Overview content yet'}</strong>
+        <span>
+          {language === 'vi'
+            ? 'Module này chưa có readme/vi/BASE.md.'
+            : 'This module does not have readme/en/BASE.md yet.'}
+        </span>
+      </div>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div className="empty-state empty-state--large">
+        <strong>{language === 'vi' ? 'Đang tải Overview...' : 'Loading Overview...'}</strong>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="empty-state empty-state--large">
+        <strong>{language === 'vi' ? 'Không thể tải Overview' : 'Unable to load Overview'}</strong>
+        <span>{error}</span>
+      </div>
+    );
+  }
 
   return (
-    <section className="overview-panel">
-      <div className="overview-panel__intro">
-        <span className="eyebrow">{module.path.join(' / ')}</span>
-        <h2>{module.name[language]}</h2>
-        <p>{module.description[language]}</p>
-      </div>
-
-      <div className="overview-stats">
-        {overviewStats.map((stat) => (
-          <div key={stat.en} className="overview-stat">
-            <strong>{stat.value}</strong>
-            <span>{language === 'vi' ? stat.vi : stat.en}</span>
-          </div>
-        ))}
-      </div>
-
-      <div className="overview-progress">
-        <div className="overview-progress__copy">
-          <strong>{language === 'vi' ? 'Tiến độ học tập' : 'Learning progress'}</strong>
-          <span>{language === 'vi' ? 'Dữ liệu demo phía client' : 'Client-side demo data'}</span>
-        </div>
-        <div className="progress-bar"><span /></div>
-        <strong>64%</strong>
-      </div>
+    <section className="overview-panel markdown-content">
+      <ReactMarkdown remarkPlugins={[remarkGfm]}>{content ?? ''}</ReactMarkdown>
     </section>
   );
 }

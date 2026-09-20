@@ -8,14 +8,24 @@ import type { ModuleCatalogNode } from '../types/learning';
 interface ModuleSidebarProps {
   nodes: ModuleCatalogNode[];
   activeModuleId: string;
+  knowledgeCounts: Record<string, number>;
+  apiCounts: Record<string, number>;
 }
 
 interface TreeNodeProps {
   node: ModuleCatalogNode;
   depth: number;
   activeModuleId: string;
+  knowledgeCounts: Record<string, number>;
+  apiCounts: Record<string, number>;
   filter: string;
+  expandRequest: SidebarExpandRequest;
   showEntireSubtree?: boolean;
+}
+
+interface SidebarExpandRequest {
+  version: number;
+  expanded: boolean;
 }
 
 function nodeMatchesSelf(node: ModuleCatalogNode, filter: string): boolean {
@@ -49,13 +59,33 @@ function nodeContainsMatch(node: ModuleCatalogNode, filter: string): boolean {
   return node.children.some((child) => nodeContainsMatch(child, filter));
 }
 
-function projectRealModuleNodes(nodes: ModuleCatalogNode[]): ModuleCatalogNode[] {
+function isQualifiedRealModule(
+  node: ModuleCatalogNode,
+  knowledgeCounts: Record<string, number>,
+  apiCounts: Record<string, number>,
+): boolean {
+  if (node.kind !== 'MODULE' || !node.routeId) {
+    return false;
+  }
+
+  const stats = resolveModuleStats(node.routeId);
+  return (knowledgeCounts[node.routeId] ?? 0) > 0
+    || stats.quiz > 0
+    || (apiCounts[node.routeId] ?? 0) > 0;
+}
+
+function projectRealModuleNodes(
+  nodes: ModuleCatalogNode[],
+  knowledgeCounts: Record<string, number>,
+  apiCounts: Record<string, number>,
+): ModuleCatalogNode[] {
   const result: ModuleCatalogNode[] = [];
 
   nodes.forEach((node) => {
-    const projectedChildren = projectRealModuleNodes(node.children);
+    const projectedChildren = projectRealModuleNodes(node.children, knowledgeCounts, apiCounts);
+    const keepModule = isQualifiedRealModule(node, knowledgeCounts, apiCounts);
 
-    if (node.kind === 'MODULE' || projectedChildren.length > 0) {
+    if (keepModule || projectedChildren.length > 0) {
       result.push({
         ...node,
         children: projectedChildren,
@@ -70,12 +100,15 @@ function TreeNode({
   node,
   depth,
   activeModuleId,
+  knowledgeCounts,
+  apiCounts,
   filter,
+  expandRequest,
   showEntireSubtree = false,
 }: TreeNodeProps) {
   const navigate = useNavigate();
   const hasChildren = node.children.length > 0;
-  const [expanded, setExpanded] = useState(depth < 2);
+  const [expanded, setExpanded] = useState(false);
   const [searchExpanded, setSearchExpanded] = useState(false);
   const selfMatches = nodeMatchesSelf(node, filter);
   const containsMatch = nodeContainsMatch(node, filter);
@@ -85,12 +118,20 @@ function TreeNode({
   const isModule = node.kind === 'MODULE' && Boolean(node.routeId);
   const isActive = isModule && node.routeId === activeModuleId;
   const stats = isModule && node.routeId ? resolveModuleStats(node.routeId) : null;
+  const knowledgeCount = isModule && node.routeId ? (knowledgeCounts[node.routeId] ?? 0) : 0;
+  const apiCount = isModule && node.routeId ? (apiCounts[node.routeId] ?? 0) : 0;
+  const isRealModule = isQualifiedRealModule(node, knowledgeCounts, apiCounts);
 
   useEffect(() => {
     if (filter && visible && hasChildren) {
       setSearchExpanded(true);
     }
   }, [filter, visible, hasChildren]);
+
+  useEffect(() => {
+    setExpanded(expandRequest.expanded);
+    setSearchExpanded(expandRequest.expanded);
+  }, [expandRequest]);
 
   if (!visible) {
     return null;
@@ -115,7 +156,7 @@ function TreeNode({
   return (
     <li className="module-tree__item">
       <div
-        className={`module-tree__row${hasChildren ? ' is-expandable' : ''}${isModule ? ' is-module' : ''}${isActive ? ' is-active' : ''}`}
+        className={`module-tree__row${hasChildren ? ' is-expandable' : ''}${isModule ? ' is-module' : ''}${isRealModule ? ' is-real-module' : ''}${isActive ? ' is-active' : ''}`}
         onClick={hasChildren ? toggleChildren : undefined}
         onKeyDown={(event) => {
           if (!hasChildren) {
@@ -132,15 +173,15 @@ function TreeNode({
         aria-expanded={hasChildren ? open : undefined}
       >
         <span className="module-tree__indent" data-depth={Math.min(depth, 5)} />
-        <span className="module-tree__caret" aria-hidden="true">{hasChildren ? (open ? '⌄' : '›') : '•'}</span>
+        <span className="module-tree__caret" aria-hidden="true">{hasChildren ? (open ? '−' : '+') : '•'}</span>
         <span className={`module-tree__content${isActive ? ' is-active' : ''}`}>
           <span className="module-tree__label">{formatCatalogName(node.name)}</span>
 
           {stats && (
             <span className="module-tree__badges" aria-label="Module content counts">
-              {stats.knowledge > 0 && (
+              {knowledgeCount > 0 && (
                 <span className="module-tree__badge module-tree__badge--knowledge" title="Knowledge">
-                  {stats.knowledge}
+                  {knowledgeCount}
                 </span>
               )}
               {stats.quiz > 0 && (
@@ -148,9 +189,9 @@ function TreeNode({
                   {stats.quiz}
                 </span>
               )}
-              {stats.apiDocs > 0 && (
+              {apiCount > 0 && (
                 <span className="module-tree__badge module-tree__badge--api" title="API Docs">
-                  {stats.apiDocs}
+                  {apiCount}
                 </span>
               )}
             </span>
@@ -181,7 +222,10 @@ function TreeNode({
               node={child}
               depth={depth + 1}
               activeModuleId={activeModuleId}
+              knowledgeCounts={knowledgeCounts}
+              apiCounts={apiCounts}
               filter={filter}
+              expandRequest={expandRequest}
               showEntireSubtree={childShowEntireSubtree}
             />
           ))}
@@ -191,25 +235,34 @@ function TreeNode({
   );
 }
 
-export function ModuleSidebar({ nodes, activeModuleId }: ModuleSidebarProps) {
+export function ModuleSidebar({ nodes, activeModuleId, knowledgeCounts, apiCounts }: ModuleSidebarProps) {
   const { language } = useLanguage();
   const [filterInput, setFilterInput] = useState('');
   const [realModulesOnly, setRealModulesOnly] = useState(false);
+  const [expandRequest, setExpandRequest] = useState<SidebarExpandRequest>({ version: 0, expanded: false });
   const filter = useMemo(() => filterInput.trim().toLowerCase(), [filterInput]);
   const moduleCount = useMemo(
     () => nodes.reduce((count, node) => count + collectRealModules(node).length, 0),
     [nodes],
   );
+  const realModuleCount = useMemo(
+    () => nodes.reduce(
+      (count, node) => count + collectRealModules(node)
+        .filter((moduleNode) => isQualifiedRealModule(moduleNode, knowledgeCounts, apiCounts)).length,
+      0,
+    ),
+    [apiCounts, knowledgeCounts, nodes],
+  );
   const visibleNodes = useMemo(
-    () => (realModulesOnly ? projectRealModuleNodes(nodes) : nodes),
-    [nodes, realModulesOnly],
+    () => (realModulesOnly ? projectRealModuleNodes(nodes, knowledgeCounts, apiCounts) : nodes),
+    [apiCounts, knowledgeCounts, nodes, realModulesOnly],
   );
 
   return (
     <aside className="learning-sidebar">
       <div className="learning-sidebar__headline">
         <span>{language === 'vi' ? 'Tất cả module' : 'All modules'}</span>
-        <span className="learning-sidebar__total">{moduleCount}</span>
+        <span className="learning-sidebar__total">{realModulesOnly ? realModuleCount : moduleCount}</span>
       </div>
 
       <label className="sidebar-search">
@@ -239,6 +292,25 @@ export function ModuleSidebar({ nodes, activeModuleId }: ModuleSidebarProps) {
         <span className={realModulesOnly ? 'is-active' : undefined}>
           {language === 'vi' ? 'Module thật' : 'Real modules'}
         </span>
+
+        <div className="sidebar-module-mode__tree-actions" aria-label={language === 'vi' ? 'Điều khiển cây module' : 'Module tree controls'}>
+          <button
+            type="button"
+            onClick={() => setExpandRequest((current) => ({ version: current.version + 1, expanded: true }))}
+            aria-label={language === 'vi' ? 'Mở tất cả module' : 'Expand all modules'}
+            title={language === 'vi' ? 'Mở tất cả' : 'Expand all'}
+          >
+            + All
+          </button>
+          <button
+            type="button"
+            onClick={() => setExpandRequest((current) => ({ version: current.version + 1, expanded: false }))}
+            aria-label={language === 'vi' ? 'Thu gọn tất cả module' : 'Collapse all modules'}
+            title={language === 'vi' ? 'Thu gọn tất cả' : 'Collapse all'}
+          >
+            − All
+          </button>
+        </div>
       </div>
 
       <div className="learning-sidebar__section-title">
@@ -252,7 +324,10 @@ export function ModuleSidebar({ nodes, activeModuleId }: ModuleSidebarProps) {
             node={node}
             depth={0}
             activeModuleId={activeModuleId}
+            knowledgeCounts={knowledgeCounts}
+            apiCounts={apiCounts}
             filter={filter}
+            expandRequest={expandRequest}
           />
         ))}
       </ul>

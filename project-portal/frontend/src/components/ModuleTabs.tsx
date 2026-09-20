@@ -1,24 +1,27 @@
 import { useLanguage } from '../state/LanguageContext';
 import type { ModuleStats } from '../types/learning';
+import { DownloadAction } from './DownloadAction';
 
-export type ModuleTab = 'overview' | 'knowledge' | 'quiz' | 'api' | 'execution';
+export type ModuleTab = 'overview' | 'menu' | 'knowledge' | 'quiz' | 'api' | 'execution';
 
 interface ModuleTabsProps {
   activeTab: ModuleTab;
   stats: ModuleStats;
   onChange: (tab: ModuleTab) => void;
-  onDownload: () => void;
+  downloadOpen: boolean;
+  onDownloadToggle: () => void;
 }
 
 const tabs: Array<{ id: ModuleTab; vi: string; en: string; countKey?: keyof ModuleStats }> = [
   { id: 'overview', vi: 'Overview', en: 'Overview' },
+  { id: 'menu', vi: 'Menu', en: 'Menu' },
   { id: 'knowledge', vi: 'Knowledge', en: 'Knowledge', countKey: 'knowledge' },
   { id: 'quiz', vi: 'Quiz', en: 'Quiz', countKey: 'quiz' },
   { id: 'api', vi: 'API Docs', en: 'API Docs', countKey: 'apiDocs' },
   { id: 'execution', vi: 'Execution', en: 'Execution' },
 ];
 
-export function ModuleTabs({ activeTab, stats, onChange, onDownload }: ModuleTabsProps) {
+export function ModuleTabs({ activeTab, stats, onChange, downloadOpen, onDownloadToggle }: ModuleTabsProps) {
   const { language } = useLanguage();
 
   return (
@@ -43,10 +46,7 @@ export function ModuleTabs({ activeTab, stats, onChange, onDownload }: ModuleTab
         })}
       </div>
 
-      <button type="button" className="download-action" onClick={onDownload}>
-        <span aria-hidden="true">↓</span>
-        Download
-      </button>
+      <DownloadAction open={downloadOpen} onToggle={onDownloadToggle} />
     </div>
   );
 }
