@@ -470,6 +470,73 @@ pre {
   padding: 32px;
 }
 
+.my-cv-page {
+  height: calc(100vh - var(--header-height));
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  background: var(--layout-bg);
+  overflow: hidden;
+}
+
+.my-cv-toolbar {
+  min-height: 62px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 10px 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.my-cv-toolbar__copy {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.my-cv-toolbar__copy strong {
+  color: var(--text);
+  font-size: 14px;
+}
+
+.my-cv-toolbar__copy span {
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+.my-cv-download {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 0 13px;
+  border: 1px solid var(--download-text);
+  border-radius: 8px;
+  background: var(--download-bg);
+  color: var(--download-text);
+  font-size: 12px;
+  font-weight: 700;
+  transition: transform 140ms ease, box-shadow 140ms ease;
+}
+
+.my-cv-download:hover,
+.my-cv-download:focus-visible {
+  box-shadow: 0 0 0 2px rgba(127, 224, 196, 0.16);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.my-cv-frame {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #fff;
+}
+
 .home-placeholder {
   width: min(680px, 100%);
   padding: 40px;

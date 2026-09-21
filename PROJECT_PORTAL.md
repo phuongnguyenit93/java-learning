@@ -523,7 +523,7 @@ Knowledge là capability luôn có thể hoạt động mà không cần module 
 Target:
 
 ```text
-module README/menu Markdown
+module README/menu Markdown + localized knowledge metadata
         ↓
 build-time collection/generation
         ↓
@@ -535,19 +535,45 @@ Markdown renderer
 Ví dụ generated assets:
 
 ```text
-project-portal/
-└── data/
-    └── readme/
-        ├── THREAD/
-        │   ├── vi/
-        │   └── en/
-        ├── ASPECT/
-        └── GRADLE_CACHE/
+project-portal/build/generated/portal-data/
+└── module/
+    └── THREAD/
+        └── knowledge/
+            ├── vi/
+            │   ├── index.json
+            │   └── content/
+            └── en/
+                ├── index.json
+                └── content/
 ```
 
 Learning Portal trở thành nơi đọc README chung của mọi module.
 
 Swagger vẫn có thể giữ README integration hiện tại đối với module runnable, nhưng không còn là nơi duy nhất để đọc knowledge.
+
+Knowledge content và metadata có owner riêng:
+
+```text
+readme/{lang}/menu/**/*.md
+→ canonical Markdown + exact anchored H2 sections
+
+src/main/resources/readme/{lang}/knowledge-metadata.yml
+→ difficulty / aiGenerated / reviewed
+```
+
+Metadata file được key theo README relative path rồi section anchor, ví dụ:
+
+```yaml
+1.Basic/Basic.md:
+  thread-state:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+```
+
+`difficulty` nhận `BASIC`, `INTERMEDIATE`, `ADVANCED`; missing metadata mặc định `BASIC`, `aiGenerated=true`, `reviewed=false`. Task `syncMetadataReadme` là explicit build/documentation action để đồng bộ skeleton từ Markdown hiện tại, preserve custom metadata của topic còn tồn tại, loại stale topic/file và write-if-changed. Portal generation chỉ consume metadata này; nó không được tự ý ghi ngược metadata vào source.
+
+Frontend hiển thị difficulty bằng label localized (`CƠ BẢN / TRUNG BÌNH / NÂNG CAO` ở VI) và governance badge `AI Generated`, `Reviewed/Not Reviewed` với tooltip giải thích trạng thái. Metadata này là thông tin provenance/review của nội dung, không thay đổi Markdown source.
 
 ---
 
@@ -738,7 +764,7 @@ controller-description.yml
 → controller description + readmeRelated.file
 
 api-descriptions.yml
-→ method signature/name + HTTP metadata + summary/description + readmeRelated
+→ method signature/name + HTTP metadata + summary/description + readmeRelated + aiGenerated/reviewed
 
 api-execution.yml
 → guided execution HTML
@@ -761,6 +787,24 @@ method
 ```
 
 `execution` có thể chứa rich HTML, vì vậy frontend sanitize nội dung trước khi render. API Reference hiện là **documentation/reference only**: Portal không live execute/debug API ở panel này. Muốn chạy/debug experiment, user phải tải source/module về chạy local hoặc dùng runtime tooling của module.
+
+API method governance hiện dùng `aiGenerated=true` và `reviewed=false` làm default khi generator gặp method mới; sau khi field tồn tại thì chúng là human-owned metadata và được preserve qua regeneration. API Docs và Related API popup dùng cùng badge/tooltip convention với Knowledge. `difficulty` chỉ thuộc Knowledge metadata, không thuộc API description.
+
+`readmeRelated` vẫn là relationship canonical giữa API và Knowledge: controller cung cấp `readmeRelated.file`, method cung cấp exact `readmeRelated.anchor`, method `file` rỗng thì inherit controller file. Không tạo thêm relationship song song kiểu `knowledgeRelated`.
+
+Frontend dùng relationship này theo cả hai chiều mà không tạo source metadata thứ hai:
+
+```text
+API Docs method detail
+→ Execution | Related Knowledge
+
+Knowledge section
+→ Related APIs popup
+```
+
+Related Knowledge resolve từ effective README file + exact anchor. Related APIs được derive ngược từ cùng `readmeRelated` mapping đã parse. Popup phía Knowledge chỉ preview API metadata/execution cần thiết; không thêm action “Go to Details” và không biến popup thành live execution surface.
+
+Expanded API method detail giữ lower-area split `Execution | Related Knowledge`; Execution là phần chính không cần internal scroll riêng, còn Related Knowledge có thể scroll độc lập khi nội dung dài. Đây là presentation contract hiện tại, không thay đổi ownership của source metadata.
 
 API Docs mặc định collapsed lần đầu. Sau khi user mở/đóng controller hoặc method, trạng thái gần nhất được giữ khi đổi tab rồi quay lại trong cùng module/language. Global Expand all/Collapse all là explicit user action và không thay đổi source data.
 
@@ -911,15 +955,12 @@ Một target output có thể là:
 project-portal/frontend/dist/
 ├── index.html
 ├── assets/
-│   ├── css/
-│   └── js/
-├── data/
-│   ├── modules.json
-│   ├── readme/
-│   └── quiz/
-└── downloads/
+├── module-catalog.json
+└── module/
     ├── THREAD/
-    ├── ASPECT/
+    │   ├── overview/
+    │   ├── knowledge/
+    │   └── api/
     └── ...
 ```
 
@@ -967,6 +1008,14 @@ https://java-learning-cly.pages.dev
 ```
 
 Workflow không dùng Cloudflare Git integration; GitHub Actions là CI/CD owner và upload build output vào Pages project đã tạo theo Direct Upload. Hai credential `CLOUDFLARE_ACCOUNT_ID` và `CLOUDFLARE_API_TOKEN` chỉ tồn tại dưới GitHub Repository Secrets. Merge Pull Request vào `main` cũng kích hoạt workflow vì `main` nhận commit mới và phát sinh `push` event.
+
+Cloudflare project identifier dùng trong Wrangler là **`java-learning`**; `java-learning-cly.pages.dev` là public hostname, không phải project name. Current deploy command vì vậy giữ contract:
+
+```text
+pages deploy project-portal/frontend/dist --project-name=java-learning --branch=main
+```
+
+GitHub Actions chạy trên Linux. Các Gradle generator tham gia `:project-portal:buildFrontend` phải an toàn với case-sensitive filesystem; plugin stub generator hiện reuse existing filename theo case-insensitive match và fail nếu có nhiều match mơ hồ để tránh tạo duplicate khác casing.
 
 ---
 
@@ -1113,7 +1162,7 @@ Java Learning
 └── VI ↔ EN slider
 ```
 
-`Trang chủ` hiện để trống để dành cho nội dung tương lai.
+`Trang chủ` hiện là placeholder tối giản: thông báo trang đang được cập nhật và có CTA `Đi tới Learning` / `Go to Learning`. Nó không chứa fake learning content.
 
 Learning page hiện có hai search riêng ngoài header global-search UI:
 
@@ -1205,6 +1254,8 @@ MODULE đạt điều kiện `Module thật` được highlight bằng backgroun
 Tab state được giữ theo browser session cho module/language hiện tại: Menu, Knowledge và API Docs được lazy-mount lần đầu rồi giữ mounted khi user đổi tab. Vì vậy manual expand/collapse gần nhất không tự reset chỉ vì tab đang bị ẩn. Khi đổi module/language, component key/reset boundary tạo state mới phù hợp context mới.
 
 Menu và API Docs mặc định collapsed. Knowledge cũng bắt đầu chưa mở section nào, nhưng cho phép **nhiều section mở đồng thời**. Content Markdown của section đã load được cache trong panel để quay lại tab không phải fetch lại ngay.
+
+Knowledge category strip hỗ trợ cả nút cuộn trái/phải và pointer drag ngang. Pointer chỉ chuyển sang drag sau threshold nhỏ (>5px); click bình thường vẫn chọn category, còn click phát sinh sau một drag thật sự bị suppress để tránh đổi category ngoài ý muốn. Cursor `grab/grabbing` phản ánh state tương tác này.
 
 Để tránh sidebar quá lớn:
 
@@ -1371,18 +1422,21 @@ MVP đã bắt đầu implementation. Current phase đã có:
 13. Overview từ language `BASE.md` qua build-time projection
 14. build-only module-first Portal data layout: `portal-data/module/{ROUTE_ID}/{feature}/...`
 15. build-time Knowledge projection theo category + anchored section
-16. Menu + Knowledge frontend consume generated Knowledge index/section Markdown; section content được lazy-load khi mở, nhiều Knowledge section có thể mở đồng thời
-17. build-time API metadata projection: copy complete localized four-file Swagger sets vào `module/{ROUTE_ID}/api/{lang}/` + expose `api` base path trong module catalog
-18. API Docs frontend consume trực tiếp generated Swagger YAML; controller/method order follow README mapping, rich execution HTML được sanitize, API Reference là reference-only chứ không live execute/debug
-19. Knowledge/API counts lấy từ generated/static data; Quiz count vẫn từ fixture; sidebar `Module thật` giữ module khi ít nhất một trong ba count > 0 và chỉ ẩn khi cả ba = 0
-20. sidebar tree mặc định collapsed, dùng `+`/`−`, có Expand all/Collapse all; qualifying content module được highlight trong cả Full tree và Module thật mode
-21. Menu mặc định collapsed + Expand all/Collapse all; Knowledge/API Docs/Menu giữ state gần nhất khi đổi tab rồi quay lại trong cùng module/language
-22. Download action dùng popup dùng chung; popup đóng khi click ngoài, nhấn Escape hoặc toggle lại chính nút
-23. Knowledge category filter + collapse/expand interaction
-24. semantic capability colors dùng chung cho sidebar/tabs và giữ nguyên giữa Light/Dark
-25. Execution/artifact-download backend vẫn là placeholder/chưa wired
-26. production static bundle vẫn có thể được serve bởi Spring Boot khi chạy packaged application
-27. public static Portal deploy lên Cloudflare Pages (`java-learning-cly.pages.dev`) bằng `.github/workflows/deploy-portal.yml`; push/merge `main` hoặc `workflow_dispatch` → JDK 21 → `:project-portal:buildFrontend` → Wrangler Pages deploy
+16. localized `knowledge-metadata.yml` + explicit `syncMetadataReadme` quản lý difficulty/AI provenance/review state cho exact README section; Portal projection đưa metadata này vào Knowledge index
+17. Menu + Knowledge frontend consume generated Knowledge index/section Markdown; section content được lazy-load khi mở, nhiều Knowledge section có thể mở đồng thời, category strip hỗ trợ arrow-scroll + drag-scroll
+18. build-time API metadata projection: copy complete localized four-file Swagger sets vào `module/{ROUTE_ID}/api/{lang}/` + expose `api` base path trong module catalog
+19. API Docs frontend consume trực tiếp generated Swagger YAML; controller/method order follow README mapping, rich execution HTML được sanitize, API Reference là reference-only chứ không live execute/debug
+20. API methods có human-owned `aiGenerated/reviewed`; Knowledge/API Docs/Related API popup render shared governance badge + tooltip; API ↔ Knowledge tiếp tục dùng duy nhất `readmeRelated`
+21. Knowledge/API counts lấy từ generated/static data; Quiz count vẫn từ fixture; sidebar `Module thật` giữ module khi ít nhất một trong ba count > 0 và chỉ ẩn khi cả ba = 0
+22. sidebar tree mặc định collapsed, dùng `+`/`−`, có Expand all/Collapse all; qualifying content module được highlight trong cả Full tree và Module thật mode
+23. Menu mặc định collapsed + Expand all/Collapse all; Knowledge/API Docs/Menu giữ state gần nhất khi đổi tab rồi quay lại trong cùng module/language
+24. Download action dùng popup dùng chung; popup đóng khi click ngoài, nhấn Escape hoặc toggle lại chính nút
+25. Home là placeholder có CTA sang Learning; Knowledge category filter có collapse/expand + horizontal drag-scroll
+26. semantic capability colors dùng chung cho sidebar/tabs và giữ nguyên giữa Light/Dark
+27. Execution/artifact-download backend vẫn là placeholder/chưa wired
+28. production static bundle vẫn có thể được serve bởi Spring Boot khi chạy packaged application
+29. public static Portal deploy lên Cloudflare Pages (`java-learning-cly.pages.dev`) bằng `.github/workflows/deploy-portal.yml`; Wrangler project name là `java-learning`; push/merge `main` hoặc `workflow_dispatch` → JDK 21 → `:project-portal:buildFrontend` → Wrangler Pages deploy
+30. Gradle plugin stub generator đã Linux-safe về filename casing để CI không tạo duplicate plugin khác casing
 ```
 
 Chưa implement trong current phase:

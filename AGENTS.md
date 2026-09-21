@@ -178,7 +178,7 @@ project-portal/frontend/dist
 Cloudflare Pages: java-learning-cly.pages.dev
 ```
 
-The Cloudflare project is a Direct Upload Pages project; GitHub Actions is the CI/CD owner rather than Cloudflare Git integration. Keep Cloudflare credentials only in GitHub Repository Secrets named `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN`. Never place their values in workflow YAML, Gradle files, frontend source, documentation, or generated Portal data. A Pull Request merge into `main` updates `main`, therefore it satisfies the current `push.branches: [main]` deployment trigger.
+The Cloudflare project is a Direct Upload Pages project; GitHub Actions is the CI/CD owner rather than Cloudflare Git integration. The Wrangler **project name is `java-learning`**; `java-learning-cly.pages.dev` is the public hostname and must not be substituted for `--project-name`. Keep Cloudflare credentials only in GitHub Repository Secrets named `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN`. Never place their values in workflow YAML, Gradle files, frontend source, documentation, or generated Portal data. A Pull Request merge into `main` updates `main`, therefore it satisfies the current `push.branches: [main]` deployment trigger.
 
 Current top-level UI direction:
 
@@ -199,13 +199,15 @@ Learning
 ├── Overview
 ├── Menu
 ├── Knowledge
-├── Quiz
 ├── API Docs
+├── Quiz
 ├── Execution
 └── Download action
 ```
 
 `Overview` uses generated catalog metadata and generated BASE.md projections. `Menu` and `Knowledge` consume the generated Knowledge index/section projections. `API Docs` now consumes the complete localized four-file Swagger projection advertised through catalog `api` language base paths. `Quiz` still uses fake data rendered through React loops. Knowledge and API counts for sidebar modules are preloaded from generated/static projections for the active language; Quiz count remains fixture-derived until the real Quiz data contract is implemented. `Execution` and backend-dependent download/build behavior may remain empty/placeholder until their real integration contract is implemented.
+
+`Home` is currently an intentional placeholder, not a blank page. It tells the user that the home page is being updated and links directly to `Learning`. Keep it lightweight until a real Home information architecture is defined.
 
 Current sidebar behavior is intentional and should be preserved unless the user explicitly changes it:
 
@@ -528,6 +530,26 @@ USE_TASK
 
 `MODULE_LANGUAGE` is the module-level source of truth for localized documentation/runtime metadata. It is a `list` value in `master.json` (canonical default: `vi,en`) and is reused by README structure/final generation, Swagger description generation, Knowledge metadata synchronization, Portal localized projections, runtime Swagger language grouping, and generated `.env` values. Do not reintroduce per-feature language keys such as `README_LANGUAGE`, `BUILD_SWAGGER_LANGUAGE_LIST`, or task-local `languages` extensions for README/Swagger.
 
+Knowledge section governance is stored next to localized README source, not inside Portal-generated JSON:
+
+```text
+src/main/resources/readme/{lang}/knowledge-metadata.yml
+```
+
+The Markdown under `readme/{lang}/menu/**/*.md` remains the content/source-of-truth for whether a Knowledge topic exists. `knowledge-metadata.yml` is keyed by README path and exact anchored section id and currently owns these per-section fields:
+
+```yaml
+1.Basic/Basic.md:
+  thread-state:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+```
+
+Allowed `difficulty` values are `BASIC`, `INTERMEDIATE`, and `ADVANCED`. Missing fields default to `BASIC`, `true`, and `false` respectively. Existing human-owned values must be preserved. Stale file/topic metadata is removed when the explicit `syncMetadataReadme` task rebuilds the metadata skeleton from current Markdown. This synchronization task is intentionally manual/explicit; ordinary Gradle configuration, IDE sync, or Portal browsing must not silently write source metadata.
+
+`syncMetadataReadme` follows `MODULE_LANGUAGE`, only scans real learning modules under `module/` with local `gradle.properties`, and only creates metadata for languages that actually contain README menu Markdown. The canonical Knowledge section identity is an exact heading of the form `## <a id="...">Title</a>`; duplicate section ids within one module/language are invalid.
+
 Do not add new metadata keys casually. Check whether the concept already has an owner and whether it belongs in `master.json` or grouped `properties.json`.
 
 ---
@@ -649,7 +671,7 @@ Portal module/catalog data [current]
 → `project-portal/build/generated/portal-data/module-catalog.json`
 
 Portal module-scoped projections [current/future]
-→ canonical README/quiz/Swagger/artifact state
+→ canonical README content + localized Knowledge metadata / quiz / Swagger / artifact state
 → `project-portal/build/generated/portal-data/module/{ROUTE_ID}/{feature}/...`
 
 Task DSL reference
@@ -974,8 +996,14 @@ Per-API human-owned metadata includes fields such as:
 summary
 description
 videoYoutubeId
-execution
+videoYoutubeTitle
+readmeRelated
+aiGenerated
+reviewed
+execution       # human-owned in api-execution.yml
 ```
+
+`aiGenerated` and `reviewed` default to `true` and `false` for newly discovered API methods. They are human-owned after creation, participate in legacy method-key migration, and must not be overwritten during regeneration. `difficulty` belongs to README Knowledge metadata and must not be added as Swagger API metadata.
 
 `videoYoutubeId` rule:
 
@@ -1672,6 +1700,8 @@ JAVA_BASE_PACKAGE
 ```
 
 Do not rewrite generator `basePackage` settings merely because module-level Java package ownership changed.
+
+Generator filename lookup must also be safe on both case-insensitive and case-sensitive filesystems. Before creating a generated plugin source file, resolve an existing filename case-insensitively and reuse its actual casing when exactly one match exists. If more than one case-insensitive match exists, fail instead of guessing. This prevents Windows-only success from creating a differently-cased duplicate on Linux CI; for example, an existing `ExecutionContextSetupPlugin.groovy` must not cause generation of a second `ExecutioncontextSetupPlugin.groovy`.
 
 ---
 

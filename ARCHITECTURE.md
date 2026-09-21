@@ -193,13 +193,15 @@ Learning page
 ├── Overview
 ├── Menu
 ├── Knowledge
-├── Quiz
 ├── API Docs
+├── Quiz
 ├── Execution
 └── Download action
 ```
 
 Module hierarchy/routing hiện lấy từ generated `module-catalog.json`. `Overview` consume build-time projection từ language `BASE.md`. `Menu` và `Knowledge` consume Knowledge build-time projection theo module/language/category/section contract; section Markdown chỉ được fetch khi user mở section. Build-time API projection cũng đã có: module có đủ bốn Swagger YAML chuẩn cho một language sẽ được copy nguyên vẹn vào `module/{ROUTE_ID}/api/{lang}/` và catalog expose base path tương ứng. `API Docs` frontend hiện đã consume projection này trực tiếp trong browser; `Quiz` vẫn còn fake. Knowledge count và API count ở sidebar được preload từ generated/static projection theo active language, còn Quiz count tiếp tục derive từ fixture cho tới khi có real Quiz contract. `Execution` và những menu cần backend/runtime thật có thể giữ empty state trong phase đầu. CSS dùng stylesheet riêng; inline CSS không phải convention của Portal.
+
+`Home` hiện là placeholder có chủ đích: hiển thị trạng thái “đang được cập nhật” và CTA sang `Learning`. Nó không còn là blank page, nhưng cũng chưa phải source của learning content.
 
 Current sidebar interaction contract:
 
@@ -781,6 +783,8 @@ Registry là **generated projection**, không phải canonical input.
 
 Các generator script của `gradle-runtime` chịu trách nhiệm cập nhật plugin list, enum và stub khi framework thay đổi.
 
+Generator phải deterministic trên cả Windows và Linux. Khi suy ra tên file plugin, logic hiện lookup file đang tồn tại theo **case-insensitive filename** trước khi tạo mới: đúng một match thì reuse actual casing, nhiều hơn một match thì fail. Rule này tránh trường hợp Windows coi `ExecutionContextSetupPlugin.groovy` và `ExecutioncontextSetupPlugin.groovy` là cùng file nhưng Linux CI lại tạo duplicate rồi làm registry/orchestration lệch implementation class.
+
 ---
 
 ## 13. Task architecture
@@ -1026,6 +1030,30 @@ README automation gồm các responsibility chính:
 
 README language structure và `generateFinalReadme` lấy danh sách language trực tiếp từ `MODULE_LANGUAGE`; module `build.gradle` không còn khai báo `generateFinalReadme { languages = ... }`.
 
+Knowledge Markdown và Knowledge governance có ownership tách nhau:
+
+```text
+readme/{lang}/menu/**/*.md
+→ canonical content + anchored section existence
+
+src/main/resources/readme/{lang}/knowledge-metadata.yml
+→ per-section difficulty / AI provenance / review state
+```
+
+`knowledge-metadata.yml` có shape theo README relative path rồi exact anchored section id:
+
+```yaml
+1.Basic/Basic.md:
+  thread-state:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+```
+
+`difficulty` chỉ nhận `BASIC | INTERMEDIATE | ADVANCED`; defaults hiện tại là `BASIC`, `aiGenerated=true`, `reviewed=false`. Root task `syncMetadataReadme` là explicit/manual synchronization: nó đi theo `MODULE_LANGUAGE`, scan real learning module có local `gradle.properties`, rebuild metadata từ current Markdown section, preserve existing current-topic values, loại stale file/topic entry và write only when changed. Ordinary Gradle configuration/IDE sync không được tự ghi file metadata này.
+
+Shared `ReadmeKnowledgeParser` định nghĩa section Knowledge hợp lệ bằng exact anchored H2 dạng `## <a id="...">Title</a>`. Section id phải unique trong một module/language để cả metadata synchronization, Portal projection và API `readmeRelated.anchor` cùng dùng một identity ổn định.
+
 Translation pipeline tách:
 
 ```text
@@ -1083,9 +1111,7 @@ BUILD_SWAGGER=TRUE
 
 Sự tách này là intentional: Java runtime cần stack-specific adapter, còn Swagger YML contract hiện stack-neutral.
 
-Swagger generator coi một số field là **human-owned metadata**.
-
-Ví dụ `videoYoutubeId` được preserve qua regeneration sau khi đã tồn tại, kể cả entry historical/stale không còn active.
+Swagger generator coi một số field là **human-owned metadata**. Với API method hiện tại, nhóm này gồm `summary`, `description`, `videoYoutubeId`, `videoYoutubeTitle`, `readmeRelated`, `aiGenerated`, `reviewed`. Field chỉ được initialize khi thiếu rồi preserve qua regeneration, kể cả entry historical/stale không còn active. Default governance cho method mới là `aiGenerated=true`, `reviewed=false`; `difficulty` không thuộc Swagger API metadata mà thuộc Knowledge metadata.
 
 Ngoài `api-descriptions.yml`, Swagger build-time hiện còn quản lý metadata execution riêng tại:
 
@@ -2020,7 +2046,7 @@ trừ khi architecture contract của artifact đó được thay đổi rõ rà
 | Execution source context | Java source + build-time scanner/generator | `META-INF/execution-context/source-context.json` |
 | Portal module hierarchy/catalog | filesystem/module discovery + module metadata via `ProjectStructureService` | `project-portal/build/generated/portal-data/module-catalog.json` |
 | Portal module Overview | `module/**/readme/{lang}/BASE.md` | `project-portal/build/generated/portal-data/module/{ROUTE_ID}/overview/{lang}.md` |
-| Portal Knowledge | `module/**/readme/{lang}/menu/**/*.md` anchored sections | `project-portal/build/generated/portal-data/module/{ROUTE_ID}/knowledge/{lang}/...` |
+| Portal Knowledge | `module/**/readme/{lang}/menu/**/*.md` anchored sections + `src/main/resources/readme/{lang}/knowledge-metadata.yml` governance | `project-portal/build/generated/portal-data/module/{ROUTE_ID}/knowledge/{lang}/...` |
 | Portal API metadata | complete `module/**/src/main/resources/swagger/{lang}` four-file set | `project-portal/build/generated/portal-data/module/{ROUTE_ID}/api/{lang}/...` + catalog `api` base path |
 | Portal current fake learning-content fixtures | `project-portal/frontend/src/data` fake TypeScript fixtures | Quiz frontend only until real Quiz projection is implemented |
 | Portal production frontend | React/TypeScript source | Vite `dist` → Spring `classpath:/static` |
@@ -2108,6 +2134,16 @@ https://java-learning-cly.pages.dev
 ```
 
 Cloudflare Pages chỉ host static production output; nó không chạy Spring Boot backend. Điều này phù hợp với static-first boundary hiện tại vì module catalog, Overview, Knowledge và API Docs đều đã được materialize trước ở build-time. Khi một feature tương lai thực sự cần server-side behavior thì backend có thể được deploy riêng mà không thay đổi ownership của static Portal data.
+
+Cloudflare **Pages project name** dùng cho Wrangler là `java-learning`; `java-learning-cly.pages.dev` chỉ là public hostname. Workflow phải giữ đúng distinction này:
+
+```text
+pages deploy project-portal/frontend/dist
+--project-name=java-learning
+--branch=main
+```
+
+CI chạy trên Linux nên toàn bộ generator chạy trong `:project-portal:buildFrontend` phải tuân thủ case-sensitive filesystem semantics; đây là lý do plugin filename lookup ở `gradle-runtime` có rule case-insensitive reuse/fail-on-ambiguity nêu ở phần registry.
 
 CI secret boundary hiện tại:
 
