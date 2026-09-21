@@ -37,5 +37,5 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: >-
             pages deploy project-portal/frontend/dist
-            --project-name=java-learning-cly
+            --project-name=java-learning
             --branch=main
