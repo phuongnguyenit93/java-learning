@@ -261,9 +261,59 @@ def registerPluginGenerator = {
         def getPluginFile = {
             String domain ->
 
-                return new File(
-                        getPluginDirectory(domain),
+                File pluginDirectory =
+                        getPluginDirectory(
+                                domain
+                        )
+
+
+                String expectedFileName =
                         "${getPluginClassName(domain)}.groovy"
+
+
+                File[] caseInsensitiveMatches =
+                        pluginDirectory.listFiles(
+                                {
+                                    File file ->
+
+                                        file.isFile() &&
+                                                file.name.equalsIgnoreCase(
+                                                        expectedFileName
+                                                )
+                                } as FileFilter
+                        )
+
+
+                if (
+                        caseInsensitiveMatches != null &&
+                                caseInsensitiveMatches.length > 1
+                ) {
+
+                    throw new GradleException(
+                            """
+Multiple plugin files match the generated plugin name case-insensitively:
+
+Domain: ${domain}
+Expected: ${expectedFileName}
+Matches:
+${caseInsensitiveMatches.collect { " - ${it.absolutePath}" }.join('\n')}
+""".stripIndent()
+                    )
+                }
+
+
+                if (
+                        caseInsensitiveMatches != null &&
+                                caseInsensitiveMatches.length == 1
+                ) {
+
+                    return caseInsensitiveMatches[0]
+                }
+
+
+                return new File(
+                        pluginDirectory,
+                        expectedFileName
                 )
         }
 
