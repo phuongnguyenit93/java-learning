@@ -1,0 +1,34 @@
+0.Preset/ExtractData.md:
+  extract-mongo-atlas:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  backup-mongo-local:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+1.Native/CoreArchitecture.md:
+  bson-in-mongodb:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  document-in-mongodb:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  objectId-in-mongodb:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  dynamic-schema:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  acid-in-mongodb:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  mongodb-with-hikaricp:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false

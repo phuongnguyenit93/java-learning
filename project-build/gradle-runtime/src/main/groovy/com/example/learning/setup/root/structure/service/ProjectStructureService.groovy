@@ -293,21 +293,30 @@ ${moduleDirectory.absolutePath}
 
         if (node.realModule) {
 
+            List<String> moduleLanguages =
+                    getMasterStringList(
+                            master,
+                            'MODULE_LANGUAGE'
+                    )
+
             node.overviewSources =
                     findOverviewSources(
-                            directory
+                            directory,
+                            moduleLanguages
                     )
 
 
             node.knowledgeLanguages =
                     findKnowledgeLanguages(
-                            directory
+                            directory,
+                            moduleLanguages
                     )
 
 
             node.apiLanguages =
                     findApiLanguages(
-                            directory
+                            directory,
+                            moduleLanguages
                     )
         }
 
@@ -739,7 +748,8 @@ ${moduleDirectory.absolutePath}
     // ========================================================
 
     private static Map<String, File> findOverviewSources(
-            File moduleDirectory
+            File moduleDirectory,
+            List<String> moduleLanguages
     ) {
 
         File readmeDirectory =
@@ -754,42 +764,19 @@ ${moduleDirectory.absolutePath}
         }
 
 
-        File[] languageDirectories =
-                readmeDirectory.listFiles(
-                        {
-                            File file ->
-
-                                file.isDirectory()
-                        } as FileFilter
-                )
-
-
-        if (languageDirectories == null) {
-
-            throw new GradleException(
-                    """
-Unable to read module README directory:
-
-${readmeDirectory.absolutePath}
-""".stripIndent()
-            )
-        }
-
-
         Map<String, File> result =
                 new LinkedHashMap<>()
 
 
-        languageDirectories
-                .toList()
-                .sort {
-                    File left,
-                    File right ->
-
-                        left.name <=> right.name
-                }
+        moduleLanguages
                 .each {
-                    File languageDirectory ->
+                    String language ->
+
+                        File languageDirectory =
+                                new File(
+                                        readmeDirectory,
+                                        language
+                                )
 
                         File baseFile =
                                 new File(
@@ -804,7 +791,7 @@ ${readmeDirectory.absolutePath}
                         ) {
 
                             result[
-                                    languageDirectory.name
+                                    language
                             ] =
                                     baseFile
                         }
@@ -816,7 +803,8 @@ ${readmeDirectory.absolutePath}
 
 
     private static Set<String> findKnowledgeLanguages(
-            File moduleDirectory
+            File moduleDirectory,
+            List<String> moduleLanguages
     ) {
 
         File readmeDirectory =
@@ -831,42 +819,19 @@ ${readmeDirectory.absolutePath}
         }
 
 
-        File[] languageDirectories =
-                readmeDirectory.listFiles(
-                        {
-                            File file ->
-
-                                file.isDirectory()
-                        } as FileFilter
-                )
-
-
-        if (languageDirectories == null) {
-
-            throw new GradleException(
-                    """
-Unable to read module README directory:
-
-${readmeDirectory.absolutePath}
-""".stripIndent()
-            )
-        }
-
-
         Set<String> result =
                 new LinkedHashSet<>()
 
 
-        languageDirectories
-                .toList()
-                .sort {
-                    File left,
-                    File right ->
-
-                        left.name <=> right.name
-                }
+        moduleLanguages
                 .each {
-                    File languageDirectory ->
+                    String language ->
+
+                        File languageDirectory =
+                                new File(
+                                        readmeDirectory,
+                                        language
+                                )
 
                         File menuDirectory =
                                 new File(
@@ -883,7 +848,7 @@ ${readmeDirectory.absolutePath}
                         ) {
 
                             result.add(
-                                    languageDirectory.name
+                                    language
                             )
                         }
                 }
@@ -894,7 +859,8 @@ ${readmeDirectory.absolutePath}
 
 
     private static Set<String> findApiLanguages(
-            File moduleDirectory
+            File moduleDirectory,
+            List<String> moduleLanguages
     ) {
 
         File swaggerDirectory =
@@ -909,42 +875,19 @@ ${readmeDirectory.absolutePath}
         }
 
 
-        File[] languageDirectories =
-                swaggerDirectory.listFiles(
-                        {
-                            File file ->
-
-                                file.isDirectory()
-                        } as FileFilter
-                )
-
-
-        if (languageDirectories == null) {
-
-            throw new GradleException(
-                    """
-Unable to read module Swagger directory:
-
-${swaggerDirectory.absolutePath}
-""".stripIndent()
-            )
-        }
-
-
         Set<String> result =
                 new LinkedHashSet<>()
 
 
-        languageDirectories
-                .toList()
-                .sort {
-                    File left,
-                    File right ->
-
-                        left.name <=> right.name
-                }
+        moduleLanguages
                 .each {
-                    File languageDirectory ->
+                    String language ->
+
+                        File languageDirectory =
+                                new File(
+                                        swaggerDirectory,
+                                        language
+                                )
 
                         boolean complete =
                                 PORTAL_API_FILES.every {
@@ -960,7 +903,7 @@ ${swaggerDirectory.absolutePath}
                         if (complete) {
 
                             result.add(
-                                    languageDirectory.name
+                                    language
                             )
                         }
                 }
@@ -1287,6 +1230,64 @@ ${exception.message}
         return value
                 ?.toString()
                 ?.trim()
+    }
+
+
+    private static List<String> getMasterStringList(
+            Map master,
+            String key
+    ) {
+
+        Object value =
+                master
+                        ?.get(
+                                key
+                        )
+                        ?.get(
+                                'VALUE'
+                        )
+
+
+        Collection<?> values
+
+
+        if (value instanceof Collection) {
+
+            values =
+                    value as Collection<?>
+        }
+        else if (value == null) {
+
+            return []
+        }
+        else {
+
+            values =
+                    value
+                            .toString()
+                            .split(',')
+                            .toList()
+        }
+
+
+        return values
+                .collect {
+                    Object item ->
+
+                        item
+                                ?.toString()
+                                ?.trim()
+                                ?.toLowerCase(
+                                        Locale.ROOT
+                                )
+                }
+                .findAll {
+                    String item ->
+
+                        item != null &&
+                                !item.isBlank()
+                }
+                .unique()
     }
 
 

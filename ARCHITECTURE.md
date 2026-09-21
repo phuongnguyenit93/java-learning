@@ -499,6 +499,7 @@ Module-local JSON sở hữu **giá trị cấu hình thực tế của module**
 
 ```text
 MODULE_TYPE
+MODULE_LANGUAGE
 JAVA_BASE_PACKAGE
 SERVICE_NAME
 SERVICE_NAME_DESCRIBE
@@ -514,6 +515,8 @@ ADD_MODULE_DEPEND
 USE_DATABASE
 USE_TASK
 ```
+
+`MODULE_LANGUAGE` là metadata cấp module dùng chung cho mọi capability cần localization. Canonical type là `list`, default hiện tại là `[vi, en]`. README, Swagger build-time, Knowledge metadata sync, Portal projection và runtime Swagger không sở hữu language list riêng; chúng consume `MODULE_LANGUAGE`. Hai key cũ `README_LANGUAGE` và `BUILD_SWAGGER_LANGUAGE_LIST` đã được loại bỏ khỏi `properties.json`.
 
 `JAVA_BASE_PACKAGE` hiện có canonical default:
 
@@ -1021,6 +1024,8 @@ README automation gồm các responsibility chính:
 - preserve human-owned content;
 - expose generated documentation resources cho runtime capability khi cần.
 
+README language structure và `generateFinalReadme` lấy danh sách language trực tiếp từ `MODULE_LANGUAGE`; module `build.gradle` không còn khai báo `generateFinalReadme { languages = ... }`.
+
 Translation pipeline tách:
 
 ```text
@@ -1055,7 +1060,9 @@ Nó chịu trách nhiệm những việc như:
 - chọn shared Swagger runtime adapter theo `MODULE_TYPE`;
 - generate/synchronize API description metadata;
 - copy README/resources cần thiết vào application artifact;
-- expose Swagger task DSL.
+- expose Swagger generation task.
+
+`generateApiSwaggerDescription` lấy language từ `MODULE_LANGUAGE`; module `build.gradle` không còn sở hữu extension `generateApiSwaggerDescription { languages = ... }`. Cùng contract này được dùng để filter/publish Swagger API projection cho Portal.
 
 Runtime dependency selection hiện là:
 

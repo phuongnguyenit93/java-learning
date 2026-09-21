@@ -10,7 +10,4 @@ public class DynamicSwaggerCondition extends AllNestedConditions {
 
     @ConditionalOnProperty(prefix = "swagger", name = "enabled", havingValue = "true")
     static class SwaggerEnabled {}
-
-    @ConditionalOnProperty(prefix = "swagger", name = "enable-language-swagger", havingValue = "true")
-    static class LanguageEnabled {}
 }

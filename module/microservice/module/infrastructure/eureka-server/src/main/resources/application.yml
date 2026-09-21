@@ -23,8 +23,7 @@ eureka:
     eviction-interval-timer-in-ms: 5000
 swagger:
   enabled: ${BUILD_SWAGGER:}
-  languages: ${BUILD_SWAGGER_LANGUAGE_LIST:}
-  enable-language-swagger: ${BUILD_SWAGGER_LANGUAGE}
+  languages: ${MODULE_LANGUAGE:vi,en}
 server:
   port: ${PORT}
   servlet:

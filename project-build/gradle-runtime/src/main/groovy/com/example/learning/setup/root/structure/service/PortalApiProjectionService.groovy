@@ -1,6 +1,7 @@
 package com.example.learning.setup.root.structure.service
 
 import com.example.learning.utils.GradleBuildUtils
+import com.example.learning.utils.ProjectPropertyUtils
 import org.gradle.api.GradleException
 import org.gradle.api.Project
 import org.gradle.api.logging.Logger
@@ -86,7 +87,7 @@ ${moduleRoot.absolutePath}
 
                 List<LanguageSource> languageSources =
                         resolveLanguageSources(
-                                moduleProject.projectDir
+                                moduleProject
                         )
 
 
@@ -164,12 +165,12 @@ Route identifiers must be unique for modules that expose complete Swagger API me
 
 
     private List<LanguageSource> resolveLanguageSources(
-            File moduleDirectory
+            Project moduleProject
     ) {
 
         File swaggerDirectory =
                 new File(
-                        moduleDirectory,
+                        moduleProject.projectDir,
                         SWAGGER_DIRECTORY
                 )
 
@@ -179,41 +180,42 @@ Route identifiers must be unique for modules that expose complete Swagger API me
         }
 
 
-        File[] languageDirectories =
-                swaggerDirectory.listFiles(
-                        {
-                            File file ->
-
-                                file.isDirectory()
-                        } as FileFilter
-                )
-
-
-        if (languageDirectories == null) {
-
-            throw new GradleException(
-                    """
-Unable to read module Swagger directory:
-
-${swaggerDirectory.absolutePath}
-""".stripIndent()
-            )
-        }
-
-
         List<LanguageSource> result = []
 
 
-        languageDirectories
-                .toList()
-                .sort {
-                    File left,
-                    File right ->
+        ProjectPropertyUtils
+                .getStringList(
+                        moduleProject,
+                        'MODULE_LANGUAGE'
+                )
+                .collect {
+                    String language ->
 
-                        left.name <=> right.name
+                        language.toLowerCase(
+                                Locale.ROOT
+                        )
                 }
+                .unique()
                 .each {
-                    File languageDirectory ->
+                    String language ->
+
+                        File languageDirectory =
+                                new File(
+                                        swaggerDirectory,
+                                        language
+                                )
+
+
+                        if (!languageDirectory.isDirectory()) {
+
+                            logger.warn(
+                                    '[PORTAL-API] Skip declared language {} for {} because Swagger metadata directory does not exist.',
+                                    language,
+                                    moduleProject.path
+                            )
+
+                            return
+                        }
 
                         List<String> missingFiles =
                                 API_FILES.findAll {
@@ -241,7 +243,7 @@ ${swaggerDirectory.absolutePath}
 
                         result.add(
                                 new LanguageSource(
-                                        languageDirectory.name,
+                                        language,
                                         languageDirectory
                                 )
                         )

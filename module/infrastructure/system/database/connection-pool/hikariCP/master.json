@@ -5,6 +5,14 @@
         "VALUE": "PLATFORM",
         "EXAMPLE_VALUE": "SERVLET,REACTIVE,LIBRARY,PLATFORM"
     },
+    "MODULE_LANGUAGE": {
+        "DESCRIPTION": "Languages supported by this module for generated documentation and metadata",
+        "TYPE": "list",
+        "VALUE": [
+            "vi",
+            "en"
+        ]
+    },
     "JAVA_BASE_PACKAGE": {
         "DESCRIPTION": "Define Java base package for this module",
         "TYPE": "string",

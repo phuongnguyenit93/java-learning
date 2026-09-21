@@ -24,6 +24,8 @@ BasicThreadController:
     readmeRelated:
       file: ''
       anchor: thread-state
+    aiGenerated: true
+    reviewed: false
   processAndThread():
     summary: Quan sát Process và HTTP request Thread
     description: Trả về PID của JVM cùng tên, id, daemon flag và state của Thread
@@ -49,6 +51,8 @@ BasicThreadController:
     readmeRelated:
       file: ''
       anchor: process-and-thread
+    aiGenerated: true
+    reviewed: false
   startVsRun():
     summary: So sánh Thread.run() và Thread.start()
     description: Chạy cùng một Runnable bằng cách gọi run() trực tiếp và bằng start()
@@ -74,6 +78,8 @@ BasicThreadController:
     readmeRelated:
       file: ''
       anchor: start-vs-run
+    aiGenerated: true
+    reviewed: false
 CreateThreadController:
   createByRunnable():
     summary: Chạy Runnable trên một Thread riêng
@@ -100,6 +106,8 @@ CreateThreadController:
     readmeRelated:
       file: ''
       anchor: create-thread
+    aiGenerated: true
+    reviewed: false
   createByCallable():
     summary: Chạy Callable bằng FutureTask và Thread
     description: Bọc Callable bằng FutureTask để nó có thể được một Thread trực tiếp
@@ -125,6 +133,8 @@ CreateThreadController:
     readmeRelated:
       file: ''
       anchor: create-thread
+    aiGenerated: true
+    reviewed: false
   createByExtends():
     summary: Tạo Thread bằng cách extends Thread
     description: Khởi tạo một subclass của Thread và chạy task được gắn trực tiếp
@@ -150,6 +160,8 @@ CreateThreadController:
     readmeRelated:
       file: ''
       anchor: create-thread
+    aiGenerated: true
+    reviewed: false
 DaemonThreadController:
   inspectDaemonRules():
     summary: Quan sát daemon flag và inheritance
@@ -176,6 +188,8 @@ DaemonThreadController:
     readmeRelated:
       file: ''
       anchor: daemon-thread
+    aiGenerated: true
+    reviewed: false
 ThreadLocalController:
   isolation():
     summary: Quan sát ThreadLocal isolation
@@ -202,6 +216,8 @@ ThreadLocalController:
     readmeRelated:
       file: ''
       anchor: thread-local-isolation
+    aiGenerated: true
+    reviewed: false
   inheritance():
     summary: Quan sát InheritableThreadLocal khi tạo Thread
     description: Parent đặt context A, tạo child Thread, sau đó đổi context thành
@@ -227,6 +243,8 @@ ThreadLocalController:
     readmeRelated:
       file: ''
       anchor: inheritable-thread-local
+    aiGenerated: true
+    reviewed: false
   poolReuseProblem():
     summary: Chứng minh stale context khi worker được reuse
     description: Dùng worker pool được tạo một lần để cho thấy InheritableThreadLocal
@@ -252,6 +270,8 @@ ThreadLocalController:
     readmeRelated:
       file: ''
       anchor: thread-pool-problem
+    aiGenerated: true
+    reviewed: false
   explicitPropagation():
     summary: Truyền context theo capture, restore và cleanup
     description: Tạo worker trước khi parent có context rồi wrap task để capture context
@@ -277,6 +297,8 @@ ThreadLocalController:
     readmeRelated:
       file: ''
       anchor: context-propagation
+    aiGenerated: true
+    reviewed: false
 AsyncController:
   future():
     summary: Quan sát Callable và Future
@@ -304,6 +326,8 @@ AsyncController:
     readmeRelated:
       file: ''
       anchor: future
+    aiGenerated: true
+    reviewed: false
   futureCancellation():
     summary: So sánh Future.cancel(false) và cancel(true)
     description: Chạy hai task đang block rồi hủy bằng cancel(false) và cancel(true)
@@ -330,6 +354,8 @@ AsyncController:
     readmeRelated:
       file: ''
       anchor: future-cancellation
+    aiGenerated: true
+    reviewed: false
   pipeline():
     summary: Kết hợp pipeline bằng CompletableFuture
     description: Tạo hai nhánh bất đồng bộ độc lập cho order và exchange rate, ghép
@@ -355,6 +381,8 @@ AsyncController:
     readmeRelated:
       file: ''
       anchor: completable-future-pipeline
+    aiGenerated: true
+    reviewed: false
   fastest():
     summary: Quan sát semantics của CompletableFuture.anyOf
     description: Điều khiển thứ tự completion của nhiều CompletableFuture để chứng
@@ -380,6 +408,8 @@ AsyncController:
     readmeRelated:
       file: ''
       anchor: combine-race
+    aiGenerated: true
+    reviewed: false
   exceptionHandling():
     summary: Xử lý exceptional completion trong CompletableFuture
     description: Cố tình tạo một stage thất bại rồi dùng handle() để biến cả success
@@ -405,6 +435,8 @@ AsyncController:
     readmeRelated:
       file: ''
       anchor: exception-handling
+    aiGenerated: true
+    reviewed: false
   executionVariant():
     summary: So sánh thenApply và thenApplyAsync
     description: Dùng một stage đã complete để quan sát thenApply có thể chạy inline
@@ -431,6 +463,8 @@ AsyncController:
     readmeRelated:
       file: ''
       anchor: async-variant
+    aiGenerated: true
+    reviewed: false
   allOf():
     summary: Quan sát semantics của CompletableFuture.allOf
     description: Cho một input fail trước và một sibling hoàn thành sau để chứng minh
@@ -456,6 +490,8 @@ AsyncController:
     readmeRelated:
       file: ''
       anchor: combine-race
+    aiGenerated: true
+    reviewed: false
   timeoutCancellation():
     summary: Phân biệt timeout và cancellation của CompletableFuture
     description: So sánh orTimeout() với CompletableFuture.cancel(true) trên underlying
@@ -482,6 +518,8 @@ AsyncController:
     readmeRelated:
       file: ''
       anchor: timeout-cancellation
+    aiGenerated: true
+    reviewed: false
 TaskExecutorController:
   asyncWithContext():
     summary: Chạy @Async với custom executor và context propagation
@@ -509,6 +547,8 @@ TaskExecutorController:
     readmeRelated:
       file: ''
       anchor: spring-async-demo
+    aiGenerated: true
+    reviewed: false
   asyncVoidException():
     summary: Quan sát exception của void @Async
     description: Gọi một void @Async method cố tình throw và quan sát AsyncUncaughtExceptionHandler
@@ -534,6 +574,8 @@ TaskExecutorController:
     readmeRelated:
       file: ''
       anchor: async-return-type
+    aiGenerated: true
+    reviewed: false
 InterruptionController:
   interruptBusyWorker():
     summary: Hủy CPU loop bằng cooperative interruption
@@ -560,6 +602,8 @@ InterruptionController:
     readmeRelated:
       file: ''
       anchor: interrupt-mental-model
+    aiGenerated: true
+    reviewed: false
   inspectInterruptFlag():
     summary: So sánh isInterrupted() và Thread.interrupted()
     description: Interrupt worker rồi đọc interrupt status nhiều lần bằng hai API.
@@ -585,6 +629,8 @@ InterruptionController:
     readmeRelated:
       file: ''
       anchor: interrupt-flag
+    aiGenerated: true
+    reviewed: false
   interruptSleepingWorker():
     summary: Interrupt Thread đang sleep và restore flag
     description: Interrupt một worker đang Thread.sleep() để nhận InterruptedException,
@@ -610,6 +656,8 @@ InterruptionController:
     readmeRelated:
       file: ''
       anchor: interrupted-exception
+    aiGenerated: true
+    reviewed: false
   cancelWithCleanup():
     summary: Cleanup tài nguyên khi task bị cancel
     description: Mô phỏng worker đang giữ resource rồi gửi interrupt trong lúc làm
@@ -635,6 +683,8 @@ InterruptionController:
     readmeRelated:
       file: ''
       anchor: interrupt-cleanup
+    aiGenerated: true
+    reviewed: false
   interruptSynchronizedWaiter():
     summary: Chứng minh synchronized monitor acquisition không interruptible
     description: Giữ intrinsic monitor để worker rơi vào BLOCKED rồi gọi interrupt().
@@ -660,6 +710,8 @@ InterruptionController:
     readmeRelated:
       file: ''
       anchor: interrupt-limitations
+    aiGenerated: true
+    reviewed: false
   stopFlagVsInterrupt():
     summary: So sánh stop flag và interrupt khi worker block
     description: Set volatile stop flag khi worker đang sleep và quan sát worker vẫn
@@ -685,6 +737,8 @@ InterruptionController:
     readmeRelated:
       file: ''
       anchor: interrupt-vs-stop-flag
+    aiGenerated: true
+    reviewed: false
 LeakController:
   threadLeakPattern():
     summary: Quan sát pattern Thread leak theo cách bounded
@@ -711,6 +765,8 @@ LeakController:
     readmeRelated:
       file: ''
       anchor: thread-leak
+    aiGenerated: true
+    reviewed: false
   poolLeakPattern():
     summary: Quan sát pool leak do quên shutdown
     description: Tạo một ExecutorService cục bộ và quan sát pool chưa shutdown ở giữa
@@ -736,6 +792,8 @@ LeakController:
     readmeRelated:
       file: ''
       anchor: pool-leak
+    aiGenerated: true
+    reviewed: false
   queuePressure():
     summary: Quan sát queue backlog và rejection
     description: Dùng pool với bounded queue nhỏ, giữ worker bận rồi submit đủ task
@@ -761,6 +819,8 @@ LeakController:
     readmeRelated:
       file: ''
       anchor: queue-growth
+    aiGenerated: true
+    reviewed: false
 ThreadPoolController:
   executorFlow():
     summary: Quan sát core, queue, max và rejection
@@ -787,6 +847,8 @@ ThreadPoolController:
     readmeRelated:
       file: ''
       anchor: thread-pool-flow
+    aiGenerated: true
+    reviewed: false
   executeVsSubmit():
     summary: So sánh execute() và submit()
     description: Cho Runnable throw exception qua execute() và submit() để quan sát
@@ -812,6 +874,8 @@ ThreadPoolController:
     readmeRelated:
       file: ''
       anchor: execute-vs-submit
+    aiGenerated: true
+    reviewed: false
   fixedPoolReuse():
     summary: Quan sát worker reuse trong fixed thread pool
     description: Submit nhiều task vào fixed pool nhỏ và ghi lại worker names để thấy
@@ -837,6 +901,8 @@ ThreadPoolController:
     readmeRelated:
       file: ''
       anchor: executors-factories
+    aiGenerated: true
+    reviewed: false
   executorFactories():
     summary: So sánh các Executors factory
     description: Chạy các case bounded với fixed, cached, single và scheduled executor
@@ -862,6 +928,8 @@ ThreadPoolController:
     readmeRelated:
       file: ''
       anchor: executors-factories
+    aiGenerated: true
+    reviewed: false
   scheduledExecution():
     summary: So sánh fixed-rate và fixed-delay scheduling
     description: Chạy task lâu hơn interval cấu hình rồi ghi timeline của scheduleAtFixedRate
@@ -888,6 +956,8 @@ ThreadPoolController:
     readmeRelated:
       file: ''
       anchor: scheduled-execution
+    aiGenerated: true
+    reviewed: false
   scheduledFailure():
     summary: Quan sát exception làm dừng periodic task
     description: Tạo periodic task throw ngay lần chạy đầu tiên rồi quan sát ScheduledFuture
@@ -913,6 +983,8 @@ ThreadPoolController:
     readmeRelated:
       file: ''
       anchor: scheduled-failure
+    aiGenerated: true
+    reviewed: false
   callerRuns():
     summary: Quan sát CallerRunsPolicy tạo feedback pressure
     description: Làm đầy worker và queue rồi submit thêm task để CallerRunsPolicy
@@ -938,6 +1010,8 @@ ThreadPoolController:
     readmeRelated:
       file: ''
       anchor: rejection-policy
+    aiGenerated: true
+    reviewed: false
   discardPolicies():
     summary: So sánh DiscardPolicy và DiscardOldestPolicy
     description: Làm đầy pool để quan sát DiscardPolicy bỏ task mới im lặng, còn DiscardOldestPolicy
@@ -963,6 +1037,8 @@ ThreadPoolController:
     readmeRelated:
       file: ''
       anchor: rejection-policy
+    aiGenerated: true
+    reviewed: false
   customRejectionHandler():
     summary: Ghi nhận overload bằng custom rejection handler
     description: Dùng custom RejectedExecutionHandler để đếm rejection và expose overload
@@ -988,6 +1064,8 @@ ThreadPoolController:
     readmeRelated:
       file: ''
       anchor: custom-rejection-handler
+    aiGenerated: true
+    reviewed: false
   gracefulShutdown():
     summary: Thực hiện graceful shutdown ExecutorService
     description: Cho task hoàn thành rồi gọi shutdown() và awaitTermination() để xác
@@ -1013,6 +1091,8 @@ ThreadPoolController:
     readmeRelated:
       file: ''
       anchor: graceful-shutdown
+    aiGenerated: true
+    reviewed: false
   forcedShutdown():
     summary: Quan sát shutdownNow() và task chưa bắt đầu
     description: Giữ một task đang chạy và một task trong queue, để graceful wait
@@ -1038,6 +1118,8 @@ ThreadPoolController:
     readmeRelated:
       file: ''
       anchor: graceful-shutdown
+    aiGenerated: true
+    reviewed: false
 VirtualThreadController:
   basic():
     summary: Quan sát thuộc tính cơ bản của Virtual Thread
@@ -1064,6 +1146,8 @@ VirtualThreadController:
     readmeRelated:
       file: ''
       anchor: virtual-thread-basic
+    aiGenerated: true
+    reviewed: false
   creationApi():
     summary: So sánh API tạo Virtual Thread trực tiếp
     description: Tạo Virtual Thread bằng Thread.startVirtualThread() và Thread.ofVirtual().start(),
@@ -1089,6 +1173,8 @@ VirtualThreadController:
     readmeRelated:
       file: ''
       anchor: virtual-thread-creation
+    aiGenerated: true
+    reviewed: false
   blockingScale():
     summary: So sánh blocking task trên platform pool và Virtual Thread
     description: Chạy cùng một nhóm sleep-based blocking task trên fixed platform
@@ -1114,6 +1200,8 @@ VirtualThreadController:
     readmeRelated:
       file: ''
       anchor: virtual-executor
+    aiGenerated: true
+    reviewed: false
   limitedResource():
     summary: Giới hạn downstream concurrency khi dùng Virtual Thread
     description: Tạo nhiều Virtual Thread nhưng dùng Semaphore để chỉ cho một số task
@@ -1139,6 +1227,8 @@ VirtualThreadController:
     readmeRelated:
       file: ''
       anchor: resource-limits
+    aiGenerated: true
+    reviewed: false
   threadLocal():
     summary: Quan sát ThreadLocal trên Virtual Thread
     description: Dùng ThreadLocal và InheritableThreadLocal trên nhiều Virtual Thread
@@ -1165,6 +1255,8 @@ VirtualThreadController:
     readmeRelated:
       file: ''
       anchor: virtual-thread-thread-local
+    aiGenerated: true
+    reviewed: false
 ConcurrencyProblemController:
   raceCondition():
     summary: Tạo lost update để quan sát race condition
@@ -1191,6 +1283,8 @@ ConcurrencyProblemController:
     readmeRelated:
       file: ''
       anchor: shared-state-race-condition
+    aiGenerated: true
+    reviewed: false
   startJoinHappensBefore():
     summary: Quan sát happens-before của start() và join()
     description: Ghi dữ liệu trước Thread.start(), để worker đọc và ghi dữ liệu mới,
@@ -1216,6 +1310,8 @@ ConcurrencyProblemController:
     readmeRelated:
       file: ''
       anchor: happens-before
+    aiGenerated: true
+    reviewed: false
   volatilePublication():
     summary: Publish dữ liệu bằng volatile flag
     description: Writer ghi plain data rồi publish bằng một volatile flag; reader
@@ -1241,6 +1337,8 @@ ConcurrencyProblemController:
     readmeRelated:
       file: ''
       anchor: volatile-publication
+    aiGenerated: true
+    reviewed: false
   volatileIsNotAtomic():
     summary: Chứng minh volatile không đảm bảo atomicity
     description: Thực hiện compound increment trên volatile state với interleaving
@@ -1266,6 +1364,8 @@ ConcurrencyProblemController:
     readmeRelated:
       file: ''
       anchor: volatile-publication
+    aiGenerated: true
+    reviewed: false
   deadlockRisk():
     summary: Quan sát circular lock dependency an toàn
     description: Hai worker giữ hai lock theo thứ tự đối nghịch rồi dùng tryLock để
@@ -1291,6 +1391,8 @@ ConcurrencyProblemController:
     readmeRelated:
       file: ''
       anchor: progress-problems
+    aiGenerated: true
+    reviewed: false
   deadlockPrevention():
     summary: Phòng deadlock bằng global lock ordering
     description: Cho nhiều worker cần cùng hai lock nhưng bắt buộc acquire theo cùng
@@ -1316,6 +1418,8 @@ ConcurrencyProblemController:
     readmeRelated:
       file: ''
       anchor: deadlock-prevention
+    aiGenerated: true
+    reviewed: false
   boundedLivelock():
     summary: Mô phỏng livelock theo cách bounded
     description: Hai worker liên tục phản ứng và back off đối xứng nên vẫn hoạt động
@@ -1341,6 +1445,8 @@ ConcurrencyProblemController:
     readmeRelated:
       file: ''
       anchor: progress-problems
+    aiGenerated: true
+    reviewed: false
 CoordinationController:
   join():
     summary: Phối hợp lifecycle bằng Thread.join()
@@ -1367,6 +1473,8 @@ CoordinationController:
     readmeRelated:
       file: ''
       anchor: join
+    aiGenerated: true
+    reviewed: false
   waitNotify():
     summary: Phối hợp bằng wait(), notify() và notifyAll()
     description: Dùng nhiều waiter, predicate loop, notify() và notifyAll() để quan
@@ -1393,6 +1501,8 @@ CoordinationController:
     readmeRelated:
       file: ''
       anchor: wait-notify
+    aiGenerated: true
+    reviewed: false
   condition():
     summary: Phối hợp nhiều Condition với ReentrantLock
     description: Tạo hai Condition độc lập trên cùng ReentrantLock và signal từng
@@ -1418,6 +1528,8 @@ CoordinationController:
     readmeRelated:
       file: ''
       anchor: condition
+    aiGenerated: true
+    reviewed: false
   lockSupport():
     summary: Quan sát LockSupport park và unpark
     description: Park nhiều worker để chứng minh unpark(thread) target đúng Thread,
@@ -1443,6 +1555,8 @@ CoordinationController:
     readmeRelated:
       file: ''
       anchor: lock-support
+    aiGenerated: true
+    reviewed: false
   blockingQueue():
     summary: Xây producer-consumer với BlockingQueue
     description: Chạy producer và consumer trên một BlockingQueue hữu hạn bằng các
@@ -1468,6 +1582,8 @@ CoordinationController:
     readmeRelated:
       file: ''
       anchor: producer-consumer
+    aiGenerated: true
+    reviewed: false
   blockingQueueVariants():
     summary: So sánh các BlockingQueue phổ biến
     description: Quan sát capacity của ArrayBlockingQueue, drainTo trên LinkedBlockingQueue
@@ -1493,6 +1609,8 @@ CoordinationController:
     readmeRelated:
       file: ''
       anchor: blocking-queue-variants
+    aiGenerated: true
+    reviewed: false
   priorityQueueSemantics():
     summary: Quan sát semantics của PriorityBlockingQueue
     description: Đưa các task có priority khác nhau và bằng nhau vào PriorityBlockingQueue
@@ -1518,6 +1636,8 @@ CoordinationController:
     readmeRelated:
       file: ''
       anchor: priority-queue-semantics
+    aiGenerated: true
+    reviewed: false
   synchronousQueue():
     summary: Quan sát direct handoff với SynchronousQueue
     description: Cho producer put và consumer take qua SynchronousQueue để thấy mỗi
@@ -1543,6 +1663,8 @@ CoordinationController:
     readmeRelated:
       file: ''
       anchor: synchronous-queue
+    aiGenerated: true
+    reviewed: false
   synchronizers():
     summary: So sánh các synchronizer cấp cao
     description: Chạy các experiment bounded với CountDownLatch, CyclicBarrier, Semaphore,
@@ -1568,6 +1690,8 @@ CoordinationController:
     readmeRelated:
       file: ''
       anchor: synchronizers
+    aiGenerated: true
+    reviewed: false
   synchronizersTimeout():
     summary: Quan sát timeout và failure của synchronizer
     description: Minh họa latch timeout, broken/reset barrier, semaphore acquisition
@@ -1593,6 +1717,8 @@ CoordinationController:
     readmeRelated:
       file: ''
       anchor: synchronizer-timeout-failure
+    aiGenerated: true
+    reviewed: false
   semaphorePermitAccounting():
     summary: Chứng minh Semaphore không enforce ownership
     description: Cố tình release permit khi chưa acquire để thấy available permits
@@ -1618,6 +1744,8 @@ CoordinationController:
     readmeRelated:
       file: ''
       anchor: semaphore-permit-accounting
+    aiGenerated: true
+    reviewed: false
 SynchronizationController:
   synchronizedCounter():
     summary: Bảo vệ compound update bằng synchronized
@@ -1644,6 +1772,8 @@ SynchronizationController:
     readmeRelated:
       file: ''
       anchor: synchronized-monitor
+    aiGenerated: true
+    reviewed: false
   reentrantLock():
     summary: Quan sát tính reentrant của ReentrantLock
     description: Cùng một Thread acquire ReentrantLock nhiều lần và quan sát hold
@@ -1669,6 +1799,8 @@ SynchronizationController:
     readmeRelated:
       file: ''
       anchor: reentrant-lock
+    aiGenerated: true
+    reviewed: false
   tryLock():
     summary: Quan sát tryLock(timeout) khi lock đang bận
     description: Một Thread giữ lock trong khi Thread khác dùng tryLock với timeout
@@ -1694,6 +1826,8 @@ SynchronizationController:
     readmeRelated:
       file: ''
       anchor: reentrant-lock
+    aiGenerated: true
+    reviewed: false
   interruptibleLock():
     summary: Hủy Thread đang chờ lock bằng lockInterruptibly()
     description: Giữ ReentrantLock để worker phải chờ bằng lockInterruptibly(), sau
@@ -1719,6 +1853,8 @@ SynchronizationController:
     readmeRelated:
       file: ''
       anchor: reentrant-lock
+    aiGenerated: true
+    reviewed: false
   reentrantLockPolicy():
     summary: Quan sát fair và non-fair policy của ReentrantLock
     description: So sánh policy của ReentrantLock và nhấn mạnh fairness không phải
@@ -1744,6 +1880,8 @@ SynchronizationController:
     readmeRelated:
       file: ''
       anchor: reentrant-lock
+    aiGenerated: true
+    reviewed: false
   readWriteLock():
     summary: Quan sát concurrent readers và exclusive writer
     description: Cho nhiều reader giữ read lock đồng thời trong khi writer phải đợi.
@@ -1769,6 +1907,8 @@ SynchronizationController:
     readmeRelated:
       file: ''
       anchor: read-write-lock
+    aiGenerated: true
+    reviewed: false
   readWriteLockDowngrade():
     summary: Thực hiện write-to-read lock downgrade
     description: Giữ write lock, acquire read lock trước rồi mới release write lock
@@ -1794,6 +1934,8 @@ SynchronizationController:
     readmeRelated:
       file: ''
       anchor: read-write-lock
+    aiGenerated: true
+    reviewed: false
   readWriteLockPolicy():
     summary: Quan sát policy của ReentrantReadWriteLock
     description: Quan sát default/fair mode của read-write lock và nuance của các
@@ -1819,6 +1961,8 @@ SynchronizationController:
     readmeRelated:
       file: ''
       anchor: read-write-lock-policy
+    aiGenerated: true
+    reviewed: false
   stampedLock():
     summary: Quan sát optimistic read và fallback của StampedLock
     description: Lấy optimistic stamp, cho writer thay đổi state để stamp invalid,
@@ -1844,6 +1988,8 @@ SynchronizationController:
     readmeRelated:
       file: ''
       anchor: stamped-lock
+    aiGenerated: true
+    reviewed: false
   stampedLockLimitations():
     summary: Quan sát giới hạn của StampedLock
     description: 'Kiểm tra hai limitation quan trọng: StampedLock không reentrant
@@ -1869,6 +2015,8 @@ SynchronizationController:
     readmeRelated:
       file: ''
       anchor: stamped-lock-limitations
+    aiGenerated: true
+    reviewed: false
   atomicTools():
     summary: So sánh AtomicInteger, LongAdder và LongAccumulator
     description: Chạy các thao tác xác định với AtomicInteger, LongAdder và LongAccumulator
@@ -1894,6 +2042,8 @@ SynchronizationController:
     readmeRelated:
       file: ''
       anchor: adder-accumulator
+    aiGenerated: true
+    reviewed: false
   atomicCas():
     summary: Quan sát CAS, ABA và stamped reference
     description: Dùng compareAndSet để minh họa conditional atomic update, sau đó
@@ -1919,6 +2069,8 @@ SynchronizationController:
     readmeRelated:
       file: ''
       anchor: atomic-cas
+    aiGenerated: true
+    reviewed: false
   concurrentCollections():
     summary: Quan sát atomic operation của concurrent collections
     description: Minh họa atomic map update, snapshot-style iteration và non-blocking
@@ -1945,6 +2097,8 @@ SynchronizationController:
     readmeRelated:
       file: ''
       anchor: concurrent-collections
+    aiGenerated: true
+    reviewed: false
   concurrentSkipList():
     summary: Quan sát sorted concurrent map
     description: Update ConcurrentSkipListMap từ nhiều Thread rồi đọc key order sau
@@ -1970,3 +2124,5 @@ SynchronizationController:
     readmeRelated:
       file: ''
       anchor: concurrent-collections
+    aiGenerated: true
+    reviewed: false

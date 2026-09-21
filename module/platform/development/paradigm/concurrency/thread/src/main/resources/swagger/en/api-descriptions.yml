@@ -24,6 +24,8 @@ BasicThreadController:
     readmeRelated:
       file: ''
       anchor: thread-state
+    aiGenerated: true
+    reviewed: false
   processAndThread():
     summary: Observe the JVM process and HTTP request Thread
     description: Return the JVM PID together with the name, id, daemon flag, and state
@@ -49,6 +51,8 @@ BasicThreadController:
     readmeRelated:
       file: ''
       anchor: process-and-thread
+    aiGenerated: true
+    reviewed: false
   startVsRun():
     summary: Compare Thread.run() and Thread.start()
     description: Run the same Runnable by calling run() directly and by calling start()
@@ -74,6 +78,8 @@ BasicThreadController:
     readmeRelated:
       file: ''
       anchor: start-vs-run
+    aiGenerated: true
+    reviewed: false
 CreateThreadController:
   createByRunnable():
     summary: Run a Runnable on a dedicated Thread
@@ -100,6 +106,8 @@ CreateThreadController:
     readmeRelated:
       file: ''
       anchor: create-thread
+    aiGenerated: true
+    reviewed: false
   createByCallable():
     summary: Run Callable with FutureTask and Thread
     description: Wrap a Callable in FutureTask so it can be executed by a direct Thread,
@@ -125,6 +133,8 @@ CreateThreadController:
     readmeRelated:
       file: ''
       anchor: create-thread
+    aiGenerated: true
+    reviewed: false
   createByExtends():
     summary: Create a Thread by extending Thread
     description: Instantiate a Thread subclass whose work is implemented directly
@@ -150,6 +160,8 @@ CreateThreadController:
     readmeRelated:
       file: ''
       anchor: create-thread
+    aiGenerated: true
+    reviewed: false
 DaemonThreadController:
   inspectDaemonRules():
     summary: Observe daemon flag and inheritance
@@ -177,6 +189,8 @@ DaemonThreadController:
     readmeRelated:
       file: ''
       anchor: daemon-thread
+    aiGenerated: true
+    reviewed: false
 ThreadLocalController:
   isolation():
     summary: Observe ThreadLocal isolation
@@ -203,6 +217,8 @@ ThreadLocalController:
     readmeRelated:
       file: ''
       anchor: thread-local-isolation
+    aiGenerated: true
+    reviewed: false
   inheritance():
     summary: Observe InheritableThreadLocal at Thread creation
     description: The parent sets context A, creates a child Thread, then changes the
@@ -228,6 +244,8 @@ ThreadLocalController:
     readmeRelated:
       file: ''
       anchor: inheritable-thread-local
+    aiGenerated: true
+    reviewed: false
   poolReuseProblem():
     summary: Demonstrate stale context with worker reuse
     description: Use a worker pool created once to show that InheritableThreadLocal
@@ -253,6 +271,8 @@ ThreadLocalController:
     readmeRelated:
       file: ''
       anchor: thread-pool-problem
+    aiGenerated: true
+    reviewed: false
   explicitPropagation():
     summary: Propagate context with capture, restore, and cleanup
     description: Create a worker before the parent has context, then wrap the task
@@ -279,6 +299,8 @@ ThreadLocalController:
     readmeRelated:
       file: ''
       anchor: context-propagation
+    aiGenerated: true
+    reviewed: false
 AsyncController:
   future():
     summary: Observe Callable and Future
@@ -306,6 +328,8 @@ AsyncController:
     readmeRelated:
       file: ''
       anchor: future
+    aiGenerated: true
+    reviewed: false
   futureCancellation():
     summary: Compare Future.cancel(false) and cancel(true)
     description: Run two blocking tasks and cancel them with cancel(false) and cancel(true)
@@ -332,6 +356,8 @@ AsyncController:
     readmeRelated:
       file: ''
       anchor: future-cancellation
+    aiGenerated: true
+    reviewed: false
   pipeline():
     summary: Compose a CompletableFuture pipeline
     description: Create independent asynchronous branches for an order and an exchange
@@ -358,6 +384,8 @@ AsyncController:
     readmeRelated:
       file: ''
       anchor: completable-future-pipeline
+    aiGenerated: true
+    reviewed: false
   fastest():
     summary: Observe CompletableFuture.anyOf semantics
     description: Control completion order across several CompletableFuture instances
@@ -383,6 +411,8 @@ AsyncController:
     readmeRelated:
       file: ''
       anchor: combine-race
+    aiGenerated: true
+    reviewed: false
   exceptionHandling():
     summary: Handle exceptional CompletableFuture completion
     description: Intentionally fail a stage and use handle() to convert either success
@@ -408,6 +438,8 @@ AsyncController:
     readmeRelated:
       file: ''
       anchor: exception-handling
+    aiGenerated: true
+    reviewed: false
   executionVariant():
     summary: Compare thenApply and thenApplyAsync
     description: Use an already-completed stage to show that thenApply may run inline
@@ -434,6 +466,8 @@ AsyncController:
     readmeRelated:
       file: ''
       anchor: async-variant
+    aiGenerated: true
+    reviewed: false
   allOf():
     summary: Observe CompletableFuture.allOf semantics
     description: Fail one input before another sibling completes to demonstrate that
@@ -460,6 +494,8 @@ AsyncController:
     readmeRelated:
       file: ''
       anchor: combine-race
+    aiGenerated: true
+    reviewed: false
   timeoutCancellation():
     summary: Distinguish CompletableFuture timeout from cancellation
     description: Compare orTimeout() with CompletableFuture.cancel(true) while underlying
@@ -485,6 +521,8 @@ AsyncController:
     readmeRelated:
       file: ''
       anchor: timeout-cancellation
+    aiGenerated: true
+    reviewed: false
 TaskExecutorController:
   asyncWithContext():
     summary: Run @Async with a custom executor and context propagation
@@ -512,6 +550,8 @@ TaskExecutorController:
     readmeRelated:
       file: ''
       anchor: spring-async-demo
+    aiGenerated: true
+    reviewed: false
   asyncVoidException():
     summary: Observe exceptions from void @Async methods
     description: Invoke a void @Async method that intentionally throws and observe
@@ -538,6 +578,8 @@ TaskExecutorController:
     readmeRelated:
       file: ''
       anchor: async-return-type
+    aiGenerated: true
+    reviewed: false
 InterruptionController:
   interruptBusyWorker():
     summary: Cancel a CPU loop with cooperative interruption
@@ -564,6 +606,8 @@ InterruptionController:
     readmeRelated:
       file: ''
       anchor: interrupt-mental-model
+    aiGenerated: true
+    reviewed: false
   inspectInterruptFlag():
     summary: Compare isInterrupted() and Thread.interrupted()
     description: Interrupt a worker and read interruption status repeatedly with both
@@ -589,6 +633,8 @@ InterruptionController:
     readmeRelated:
       file: ''
       anchor: interrupt-flag
+    aiGenerated: true
+    reviewed: false
   interruptSleepingWorker():
     summary: Interrupt a sleeping Thread and restore the flag
     description: Interrupt a worker blocked in Thread.sleep() to receive InterruptedException,
@@ -614,6 +660,8 @@ InterruptionController:
     readmeRelated:
       file: ''
       anchor: interrupted-exception
+    aiGenerated: true
+    reviewed: false
   cancelWithCleanup():
     summary: Clean up resources when a task is cancelled
     description: Simulate a worker holding a resource and interrupt it while work
@@ -640,6 +688,8 @@ InterruptionController:
     readmeRelated:
       file: ''
       anchor: interrupt-cleanup
+    aiGenerated: true
+    reviewed: false
   interruptSynchronizedWaiter():
     summary: Show that synchronized monitor acquisition is not interruptible
     description: Hold an intrinsic monitor so a worker becomes BLOCKED, then interrupt
@@ -665,6 +715,8 @@ InterruptionController:
     readmeRelated:
       file: ''
       anchor: interrupt-limitations
+    aiGenerated: true
+    reviewed: false
   stopFlagVsInterrupt():
     summary: Compare a stop flag with interrupt while blocked
     description: Set a volatile stop flag while a worker is sleeping and observe that
@@ -691,6 +743,8 @@ InterruptionController:
     readmeRelated:
       file: ''
       anchor: interrupt-vs-stop-flag
+    aiGenerated: true
+    reviewed: false
 LeakController:
   threadLeakPattern():
     summary: Observe a Thread leak pattern safely
@@ -717,6 +771,8 @@ LeakController:
     readmeRelated:
       file: ''
       anchor: thread-leak
+    aiGenerated: true
+    reviewed: false
   poolLeakPattern():
     summary: Observe a pool leak caused by missing shutdown
     description: Create a local ExecutorService and observe that it is still running
@@ -742,6 +798,8 @@ LeakController:
     readmeRelated:
       file: ''
       anchor: pool-leak
+    aiGenerated: true
+    reviewed: false
   queuePressure():
     summary: Observe queue backlog and rejection
     description: Use a pool with a small bounded queue, keep the worker busy, and
@@ -767,6 +825,8 @@ LeakController:
     readmeRelated:
       file: ''
       anchor: queue-growth
+    aiGenerated: true
+    reviewed: false
 ThreadPoolController:
   executorFlow():
     summary: Observe core, queue, max, and rejection
@@ -793,6 +853,8 @@ ThreadPoolController:
     readmeRelated:
       file: ''
       anchor: thread-pool-flow
+    aiGenerated: true
+    reviewed: false
   executeVsSubmit():
     summary: Compare execute() and submit()
     description: Run a failing Runnable through execute() and submit() to observe
@@ -818,6 +880,8 @@ ThreadPoolController:
     readmeRelated:
       file: ''
       anchor: execute-vs-submit
+    aiGenerated: true
+    reviewed: false
   fixedPoolReuse():
     summary: Observe worker reuse in a fixed thread pool
     description: Submit multiple tasks to a small fixed pool and record worker names
@@ -843,6 +907,8 @@ ThreadPoolController:
     readmeRelated:
       file: ''
       anchor: executors-factories
+    aiGenerated: true
+    reviewed: false
   executorFactories():
     summary: Compare Executors factory methods
     description: Run bounded cases with fixed, cached, single, and scheduled executors
@@ -869,6 +935,8 @@ ThreadPoolController:
     readmeRelated:
       file: ''
       anchor: executors-factories
+    aiGenerated: true
+    reviewed: false
   scheduledExecution():
     summary: Compare fixed-rate and fixed-delay scheduling
     description: Run work that takes longer than the configured interval and record
@@ -895,6 +963,8 @@ ThreadPoolController:
     readmeRelated:
       file: ''
       anchor: scheduled-execution
+    aiGenerated: true
+    reviewed: false
   scheduledFailure():
     summary: Observe periodic task suppression after failure
     description: Create a periodic task that throws on its first run, then observe
@@ -921,6 +991,8 @@ ThreadPoolController:
     readmeRelated:
       file: ''
       anchor: scheduled-failure
+    aiGenerated: true
+    reviewed: false
   callerRuns():
     summary: Observe feedback pressure from CallerRunsPolicy
     description: Saturate the worker and queue, then submit another task so CallerRunsPolicy
@@ -947,6 +1019,8 @@ ThreadPoolController:
     readmeRelated:
       file: ''
       anchor: rejection-policy
+    aiGenerated: true
+    reviewed: false
   discardPolicies():
     summary: Compare DiscardPolicy and DiscardOldestPolicy
     description: Saturate the pool to observe DiscardPolicy silently dropping the
@@ -973,6 +1047,8 @@ ThreadPoolController:
     readmeRelated:
       file: ''
       anchor: rejection-policy
+    aiGenerated: true
+    reviewed: false
   customRejectionHandler():
     summary: Record overload with a custom rejection handler
     description: Use a custom RejectedExecutionHandler to count rejection and expose
@@ -998,6 +1074,8 @@ ThreadPoolController:
     readmeRelated:
       file: ''
       anchor: custom-rejection-handler
+    aiGenerated: true
+    reviewed: false
   gracefulShutdown():
     summary: Gracefully shut down an ExecutorService
     description: Allow submitted work to complete, call shutdown(), and await termination
@@ -1024,6 +1102,8 @@ ThreadPoolController:
     readmeRelated:
       file: ''
       anchor: graceful-shutdown
+    aiGenerated: true
+    reviewed: false
   forcedShutdown():
     summary: Observe shutdownNow() and never-started tasks
     description: Keep one task running and another queued, let the graceful wait time
@@ -1049,6 +1129,8 @@ ThreadPoolController:
     readmeRelated:
       file: ''
       anchor: graceful-shutdown
+    aiGenerated: true
+    reviewed: false
 VirtualThreadController:
   basic():
     summary: Observe core Virtual Thread properties
@@ -1075,6 +1157,8 @@ VirtualThreadController:
     readmeRelated:
       file: ''
       anchor: virtual-thread-basic
+    aiGenerated: true
+    reviewed: false
   creationApi():
     summary: Compare direct Virtual Thread creation APIs
     description: Create Virtual Threads with Thread.startVirtualThread() and Thread.ofVirtual().start(),
@@ -1100,6 +1184,8 @@ VirtualThreadController:
     readmeRelated:
       file: ''
       anchor: virtual-thread-creation
+    aiGenerated: true
+    reviewed: false
   blockingScale():
     summary: Compare blocking work on platform and Virtual Threads
     description: Run the same sleep-based blocking workload on a fixed platform pool
@@ -1126,6 +1212,8 @@ VirtualThreadController:
     readmeRelated:
       file: ''
       anchor: virtual-executor
+    aiGenerated: true
+    reviewed: false
   limitedResource():
     summary: Limit downstream concurrency with Virtual Threads
     description: Create many Virtual Threads but use a Semaphore so only a bounded
@@ -1152,6 +1240,8 @@ VirtualThreadController:
     readmeRelated:
       file: ''
       anchor: resource-limits
+    aiGenerated: true
+    reviewed: false
   threadLocal():
     summary: Observe ThreadLocal on Virtual Threads
     description: Use ThreadLocal and InheritableThreadLocal across multiple Virtual
@@ -1178,6 +1268,8 @@ VirtualThreadController:
     readmeRelated:
       file: ''
       anchor: virtual-thread-thread-local
+    aiGenerated: true
+    reviewed: false
 ConcurrencyProblemController:
   raceCondition():
     summary: Create a lost update to observe a race condition
@@ -1205,6 +1297,8 @@ ConcurrencyProblemController:
     readmeRelated:
       file: ''
       anchor: shared-state-race-condition
+    aiGenerated: true
+    reviewed: false
   startJoinHappensBefore():
     summary: Observe happens-before from start() and join()
     description: Write data before Thread.start(), let the worker read and update
@@ -1230,6 +1324,8 @@ ConcurrencyProblemController:
     readmeRelated:
       file: ''
       anchor: happens-before
+    aiGenerated: true
+    reviewed: false
   volatilePublication():
     summary: Publish data through a volatile flag
     description: A writer updates plain data and then publishes a volatile flag; a
@@ -1256,6 +1352,8 @@ ConcurrencyProblemController:
     readmeRelated:
       file: ''
       anchor: volatile-publication
+    aiGenerated: true
+    reviewed: false
   volatileIsNotAtomic():
     summary: Prove volatile does not provide atomicity
     description: Perform a compound increment on volatile state with controlled interleaving
@@ -1281,6 +1379,8 @@ ConcurrencyProblemController:
     readmeRelated:
       file: ''
       anchor: volatile-publication
+    aiGenerated: true
+    reviewed: false
   deadlockRisk():
     summary: Observe circular lock dependency safely
     description: Two workers hold different first locks in opposite order and use
@@ -1306,6 +1406,8 @@ ConcurrencyProblemController:
     readmeRelated:
       file: ''
       anchor: progress-problems
+    aiGenerated: true
+    reviewed: false
   deadlockPrevention():
     summary: Prevent deadlock with global lock ordering
     description: Multiple workers need the same two locks but are required to acquire
@@ -1331,6 +1433,8 @@ ConcurrencyProblemController:
     readmeRelated:
       file: ''
       anchor: deadlock-prevention
+    aiGenerated: true
+    reviewed: false
   boundedLivelock():
     summary: Simulate livelock with bounded execution
     description: Two workers repeatedly react and back off symmetrically, staying
@@ -1356,6 +1460,8 @@ ConcurrencyProblemController:
     readmeRelated:
       file: ''
       anchor: progress-problems
+    aiGenerated: true
+    reviewed: false
 CoordinationController:
   join():
     summary: Coordinate lifecycle with Thread.join()
@@ -1383,6 +1489,8 @@ CoordinationController:
     readmeRelated:
       file: ''
       anchor: join
+    aiGenerated: true
+    reviewed: false
   waitNotify():
     summary: Coordinate with wait(), notify(), and notifyAll()
     description: Use several waiters, a predicate loop, notify(), and notifyAll()
@@ -1409,6 +1517,8 @@ CoordinationController:
     readmeRelated:
       file: ''
       anchor: wait-notify
+    aiGenerated: true
+    reviewed: false
   condition():
     summary: Coordinate multiple Conditions with ReentrantLock
     description: Create two independent Condition queues on the same ReentrantLock
@@ -1435,6 +1545,8 @@ CoordinationController:
     readmeRelated:
       file: ''
       anchor: condition
+    aiGenerated: true
+    reviewed: false
   lockSupport():
     summary: Observe LockSupport park and unpark
     description: Park several workers to show that unpark(thread) targets a specific
@@ -1460,6 +1572,8 @@ CoordinationController:
     readmeRelated:
       file: ''
       anchor: lock-support
+    aiGenerated: true
+    reviewed: false
   blockingQueue():
     summary: Build producer-consumer coordination with BlockingQueue
     description: Run a bounded producer and consumer using BlockingQueue operations,
@@ -1485,6 +1599,8 @@ CoordinationController:
     readmeRelated:
       file: ''
       anchor: producer-consumer
+    aiGenerated: true
+    reviewed: false
   blockingQueueVariants():
     summary: Compare common BlockingQueue implementations
     description: Observe ArrayBlockingQueue capacity, drainTo on LinkedBlockingQueue,
@@ -1510,6 +1626,8 @@ CoordinationController:
     readmeRelated:
       file: ''
       anchor: blocking-queue-variants
+    aiGenerated: true
+    reviewed: false
   priorityQueueSemantics():
     summary: Observe PriorityBlockingQueue semantics
     description: Insert tasks with different and equal priorities to observe ordering
@@ -1535,6 +1653,8 @@ CoordinationController:
     readmeRelated:
       file: ''
       anchor: priority-queue-semantics
+    aiGenerated: true
+    reviewed: false
   synchronousQueue():
     summary: Observe direct handoff with SynchronousQueue
     description: Pair producer put and consumer take operations through SynchronousQueue
@@ -1560,6 +1680,8 @@ CoordinationController:
     readmeRelated:
       file: ''
       anchor: synchronous-queue
+    aiGenerated: true
+    reviewed: false
   synchronizers():
     summary: Compare higher-level synchronizers
     description: Run bounded examples with CountDownLatch, CyclicBarrier, Semaphore,
@@ -1585,6 +1707,8 @@ CoordinationController:
     readmeRelated:
       file: ''
       anchor: synchronizers
+    aiGenerated: true
+    reviewed: false
   synchronizersTimeout():
     summary: Observe synchronizer timeout and failure behavior
     description: Demonstrate latch timeout, broken/reset barrier behavior, semaphore
@@ -1611,6 +1735,8 @@ CoordinationController:
     readmeRelated:
       file: ''
       anchor: synchronizer-timeout-failure
+    aiGenerated: true
+    reviewed: false
   semaphorePermitAccounting():
     summary: Prove Semaphore does not enforce ownership
     description: Intentionally release a permit without acquiring it and observe the
@@ -1637,6 +1763,8 @@ CoordinationController:
     readmeRelated:
       file: ''
       anchor: semaphore-permit-accounting
+    aiGenerated: true
+    reviewed: false
 SynchronizationController:
   synchronizedCounter():
     summary: Protect a compound update with synchronized
@@ -1663,6 +1791,8 @@ SynchronizationController:
     readmeRelated:
       file: ''
       anchor: synchronized-monitor
+    aiGenerated: true
+    reviewed: false
   reentrantLock():
     summary: Observe ReentrantLock reentrancy
     description: Acquire the same ReentrantLock multiple times from one Thread and
@@ -1689,6 +1819,8 @@ SynchronizationController:
     readmeRelated:
       file: ''
       anchor: reentrant-lock
+    aiGenerated: true
+    reviewed: false
   tryLock():
     summary: Observe tryLock(timeout) while a lock is busy
     description: One Thread holds the lock while another uses tryLock with a bounded
@@ -1714,6 +1846,8 @@ SynchronizationController:
     readmeRelated:
       file: ''
       anchor: reentrant-lock
+    aiGenerated: true
+    reviewed: false
   interruptibleLock():
     summary: Cancel a lock waiter with lockInterruptibly()
     description: Hold a ReentrantLock so a worker waits using lockInterruptibly(),
@@ -1739,6 +1873,8 @@ SynchronizationController:
     readmeRelated:
       file: ''
       anchor: reentrant-lock
+    aiGenerated: true
+    reviewed: false
   reentrantLockPolicy():
     summary: Observe fair and non-fair ReentrantLock policy
     description: Compare ReentrantLock policies and emphasize that fairness is not
@@ -1764,6 +1900,8 @@ SynchronizationController:
     readmeRelated:
       file: ''
       anchor: reentrant-lock
+    aiGenerated: true
+    reviewed: false
   readWriteLock():
     summary: Observe concurrent readers and an exclusive writer
     description: Allow multiple readers to hold the read lock concurrently while a
@@ -1789,6 +1927,8 @@ SynchronizationController:
     readmeRelated:
       file: ''
       anchor: read-write-lock
+    aiGenerated: true
+    reviewed: false
   readWriteLockDowngrade():
     summary: Perform write-to-read lock downgrade
     description: Hold the write lock, acquire the read lock before releasing the write
@@ -1814,6 +1954,8 @@ SynchronizationController:
     readmeRelated:
       file: ''
       anchor: read-write-lock
+    aiGenerated: true
+    reviewed: false
   readWriteLockPolicy():
     summary: Observe ReentrantReadWriteLock policy
     description: Inspect default/fair read-write lock behavior and the nuance of untimed
@@ -1839,6 +1981,8 @@ SynchronizationController:
     readmeRelated:
       file: ''
       anchor: read-write-lock-policy
+    aiGenerated: true
+    reviewed: false
   stampedLock():
     summary: Observe StampedLock optimistic read and fallback
     description: Take an optimistic stamp, let a writer change state so the stamp
@@ -1864,6 +2008,8 @@ SynchronizationController:
     readmeRelated:
       file: ''
       anchor: stamped-lock
+    aiGenerated: true
+    reviewed: false
   stampedLockLimitations():
     summary: Observe StampedLock limitations
     description: 'Check two important limitations: StampedLock is not reentrant, and
@@ -1889,6 +2035,8 @@ SynchronizationController:
     readmeRelated:
       file: ''
       anchor: stamped-lock-limitations
+    aiGenerated: true
+    reviewed: false
   atomicTools():
     summary: Compare AtomicInteger, LongAdder, and LongAccumulator
     description: Run deterministic operations with AtomicInteger, LongAdder, and LongAccumulator
@@ -1914,6 +2062,8 @@ SynchronizationController:
     readmeRelated:
       file: ''
       anchor: adder-accumulator
+    aiGenerated: true
+    reviewed: false
   atomicCas():
     summary: Observe CAS, ABA, and stamped references
     description: Use compareAndSet for conditional atomic update, then create an ABA
@@ -1939,6 +2089,8 @@ SynchronizationController:
     readmeRelated:
       file: ''
       anchor: atomic-cas
+    aiGenerated: true
+    reviewed: false
   concurrentCollections():
     summary: Observe atomic operations in concurrent collections
     description: Demonstrate atomic map updates, snapshot-style iteration, and a non-blocking
@@ -1965,6 +2117,8 @@ SynchronizationController:
     readmeRelated:
       file: ''
       anchor: concurrent-collections
+    aiGenerated: true
+    reviewed: false
   concurrentSkipList():
     summary: Observe a sorted concurrent map
     description: Update ConcurrentSkipListMap from multiple Threads and read key order
@@ -1990,3 +2144,5 @@ SynchronizationController:
     readmeRelated:
       file: ''
       anchor: concurrent-collections
+    aiGenerated: true
+    reviewed: false

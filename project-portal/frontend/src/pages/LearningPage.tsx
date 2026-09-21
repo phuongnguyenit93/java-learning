@@ -361,6 +361,7 @@ export function LearningPage() {
                 searchQuery={searchQuery}
                 activeCategoryId={activeKnowledgeCategory}
                 selectedSectionId={selectedKnowledgeSection}
+                apiBasePath={apiPath}
                 onCategoryChange={(categoryId) => {
                   setActiveKnowledgeCategory(categoryId);
                   setSelectedKnowledgeSection(null);

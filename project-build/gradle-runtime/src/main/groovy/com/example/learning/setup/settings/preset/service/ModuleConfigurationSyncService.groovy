@@ -568,6 +568,10 @@ ${resourcePath}
                                 content
                         )
                 )
+                        .replaceAll(
+                                /(?m)[ \t]+$/,
+                                ''
+                        )
 
 
         if (

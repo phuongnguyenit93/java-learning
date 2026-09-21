@@ -42,33 +42,77 @@ final class ProjectPropertyUtils {
             String propertyName
     ) {
 
-        String rawValue =
-                getString(
-                        project,
+        return getStringList(
+                project,
+                propertyName
+        )
+    }
+
+
+    static List<String> getStringList(
+            Project project,
+            String propertyName
+    ) {
+
+        Object rawValue =
+                project.findProperty(
                         propertyName
                 )
 
 
-        if (
-                rawValue == null ||
-                        rawValue.isBlank()
-        ) {
+        if (rawValue == null) {
 
             return []
         }
 
 
-        return rawValue
-                .split(',')
-                .collect {
-                    String value ->
+        Collection<?> rawValues
 
-                        value.trim()
+
+        if (rawValue instanceof Collection) {
+
+            rawValues =
+                    rawValue as Collection<?>
+        }
+        else if (rawValue.getClass().isArray()) {
+
+            rawValues =
+                    (rawValue as Object[])
+                            .toList()
+        }
+        else {
+
+            String text =
+                    rawValue
+                            .toString()
+                            .trim()
+
+
+            if (text.isBlank()) {
+                return []
+            }
+
+
+            rawValues =
+                    text.split(',')
+                            .toList()
+        }
+
+
+        return rawValues
+                .collect {
+                    Object value ->
+
+                        value
+                                ?.toString()
+                                ?.trim()
                 }
                 .findAll {
                     String value ->
 
-                        !value.isBlank()
+                        value != null &&
+                                !value.isBlank()
                 }
+                .unique()
     }
 }

@@ -19,11 +19,7 @@
         }
     },
     "SWAGGER": {
-        "BUILD_SWAGGER_LANGUAGE_LIST": {
-            "DESCRIPTION": "List of language to describe API in swagger",
-            "TYPE": "list",
-            "VALUE": "vi"
-        }
+
     },
     "MODULE_DEPEND": {
         "MODULE_DEPEND_LIST": {
@@ -40,6 +36,6 @@
         }
     },
     "TASK": {
-        
+
     }
 }

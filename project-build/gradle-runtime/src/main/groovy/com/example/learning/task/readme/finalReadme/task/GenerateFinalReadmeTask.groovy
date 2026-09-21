@@ -26,6 +26,9 @@ abstract class GenerateFinalReadmeTask
                         .getOrElse([])
                         .collect {
                             it?.trim()
+                                    ?.toLowerCase(
+                                            Locale.ROOT
+                                    )
                         }
                         .findAll {
                             it != null &&
@@ -40,14 +43,11 @@ abstract class GenerateFinalReadmeTask
                     """
 Final README languages are not configured.
 
-Example:
+Configure MODULE_LANGUAGE in master.json, for example:
 
-generateFinalReadme {
-
-    languages = [
-        'vi',
-        'en'
-    ]
+"MODULE_LANGUAGE": {
+    "TYPE": "list",
+    "VALUE": ["vi", "en"]
 }
 """
             )

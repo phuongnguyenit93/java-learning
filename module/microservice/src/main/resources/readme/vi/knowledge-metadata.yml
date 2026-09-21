@@ -1,0 +1,54 @@
+0.Preset/Knowledge.md:
+  monilith-vs-microservice:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  domain-drive-design:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  database-per-service:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  3-gold-rule-microservice:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  microservice-problem:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+0.Preset/Logging.md:
+  centralized-logging:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+0.Preset/Observability.md:
+  3-core-of-observability:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+0.Preset/Roadmap.md:
+  microservice-roadmap:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+1.Basic/ConfigServer.md:
+  static-config-and-dynamic-config:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  spring-cloud-server-shutdown:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+2.Discovery Server/Discovery_Server.md:
+  context-path-mistake:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  eureka-config-list:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false

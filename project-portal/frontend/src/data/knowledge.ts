@@ -57,6 +57,7 @@ export function collectKnowledgeSections(nodes: KnowledgeTreeNode[]): KnowledgeS
       ...section,
       categoryId: category.id,
       categoryTitle: category.title,
+      sourcePath: category.sourcePath,
     })),
   );
 }

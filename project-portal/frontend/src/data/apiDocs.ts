@@ -2,6 +2,7 @@ import { parse } from 'yaml';
 import { collectKnowledgeCategories } from './knowledge';
 import type {
   ApiDocController,
+  ApiKnowledgeRelation,
   ApiDocOperation,
   ApiDocsDocument,
   ApiParamDefinition,
@@ -242,6 +243,8 @@ function buildDocument(
         produces: asStringArray(method.produces),
         params: resolveParamDefinitions(paramNames, source.apiParams),
         readmeRelated: operationReadmeRelated,
+        aiGenerated: asBoolean(method.aiGenerated, false),
+        reviewed: asBoolean(method.reviewed, false),
       });
     });
 
@@ -293,4 +296,29 @@ export async function loadApiDocs(
 export async function loadApiOperationCount(basePath: string): Promise<number> {
   const source = await loadApiDocsSource(basePath);
   return buildDocument(source, null).operationCount;
+}
+
+export function resolveOperationKnowledgeKey(
+  controller: ApiDocController,
+  operation: ApiDocOperation,
+): string | null {
+  const sourcePath = operation.readmeRelated.file || controller.readmeRelated.file;
+  const anchor = operation.readmeRelated.anchor;
+
+  return sourcePath && anchor ? `${sourcePath}#${anchor}` : null;
+}
+
+export function collectApiKnowledgeRelations(document: ApiDocsDocument): ApiKnowledgeRelation[] {
+  return document.controllers.flatMap((controller) =>
+    controller.operations.flatMap((operation) => {
+      const sourcePath = operation.readmeRelated.file || controller.readmeRelated.file;
+      const anchor = operation.readmeRelated.anchor;
+
+      if (!sourcePath || !anchor) {
+        return [];
+      }
+
+      return [{ controller, operation, sourcePath, anchor }];
+    }),
+  );
 }

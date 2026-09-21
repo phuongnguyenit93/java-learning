@@ -55,7 +55,12 @@ export interface KnowledgeSection {
   id: string;
   title: string;
   content: string;
+  difficulty: KnowledgeDifficulty;
+  aiGenerated: boolean;
+  reviewed: boolean;
 }
+
+export type KnowledgeDifficulty = 'BASIC' | 'INTERMEDIATE' | 'ADVANCED';
 
 export interface KnowledgeCategoryNode {
   kind: 'CATEGORY';
@@ -87,6 +92,7 @@ export interface KnowledgeIndex {
 export interface KnowledgeSectionRef extends KnowledgeSection {
   categoryId: string;
   categoryTitle: string;
+  sourcePath: string;
 }
 
 export interface KnowledgeTopic {
@@ -147,6 +153,8 @@ export interface ApiDocOperation {
   produces: string[];
   params: ApiParamDefinition[];
   readmeRelated: ApiReadmeRelated;
+  aiGenerated: boolean;
+  reviewed: boolean;
 }
 
 export interface ApiDocController {
@@ -162,4 +170,11 @@ export interface ApiDocController {
 export interface ApiDocsDocument {
   operationCount: number;
   controllers: ApiDocController[];
+}
+
+export interface ApiKnowledgeRelation {
+  controller: ApiDocController;
+  operation: ApiDocOperation;
+  sourcePath: string;
+  anchor: string;
 }

@@ -1,0 +1,287 @@
+1.CrossCutting/CrossCutting.md:
+  cross-cutting-concern:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  cross-cutting-demo:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  cross-cutting-conclusion:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+2.Terminology/Terminology.md:
+  terminology-map:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  terminology-demo:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  spring-aop-vs-aspectj-style:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  terminology-conclusion:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+3.Proxy/Proxy.md:
+  proxy-mental-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  proxy-demo:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  managed-vs-new-demo:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  proxy-strategies:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  proxy-conclusion:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+4.Pointcut/Pointcut.md:
+  pointcut-mental-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  pointcut-demo:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  spring-aop-pointcut-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  pointcut-conclusion:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+5.Advice/Advice.md:
+  advice-semantics:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  advice-success-demo:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  advice-failure-demo:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  advice-parameter-binding:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  advice-conclusion:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+6.Around/Around.md:
+  around-mental-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  around-timing-demo:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  around-transform-demo:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  around-skip-demo:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  around-arguments-demo:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  around-exception-demo:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  around-conclusion:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+7.Annotation/Annotation.md:
+  annotation-contract:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  annotation-demo:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  annotation-vs-expression:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  annotation-conclusion:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+8.Ordering/Ordering.md:
+  ordering-mental-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  ordering-demo:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  ordering-pitfall:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  ordering-conclusion:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+9.SelfInvocation/SelfInvocation.md:
+  self-invocation-mental-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  self-invocation-demo:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  proxy-limitations:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  final-method-demo:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  self-invocation-conclusion:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+10.Patterns/Patterns.md:
+  practical-patterns:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  practical-demo:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  aop-pitfalls:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  practical-conclusion:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+11.ProxyFactory/ProxyFactory.md:
+  proxy-factory-mental-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  jdk-vs-cglib:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  proxy-factory-demo:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  proxy-factory-conclusion:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+12.Advisor/Advisor.md:
+  advisor-mental-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  pointcut-internals:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  static-dynamic-pointcut:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  advisor-demo:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  advisor-conclusion:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+13.Infrastructure/Infrastructure.md:
+  auto-proxy-mental-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  spring-boot-aop-auto-config:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  advised-interface:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  infrastructure-demo:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  infrastructure-conclusion:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+14.Introduction/Introduction.md:
+  introduction-mental-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  declare-parents:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  introduction-demo:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  introduction-conclusion:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+15.RuntimeBoundary/RuntimeBoundary.md:
+  spring-aop-runtime:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  spring-aop-vs-aspectj:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  runtime-boundary-demo:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  framework-connections:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  runtime-boundary-conclusion:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false

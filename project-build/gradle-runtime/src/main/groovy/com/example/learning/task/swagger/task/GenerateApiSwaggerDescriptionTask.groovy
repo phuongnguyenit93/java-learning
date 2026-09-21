@@ -30,6 +30,9 @@ abstract class GenerateApiSwaggerDescriptionTask
                         .getOrElse([])
                         .collect {
                             it?.trim()
+                                    ?.toLowerCase(
+                                            Locale.ROOT
+                                    )
                         }
                         .findAll {
                             it != null &&
@@ -44,14 +47,11 @@ abstract class GenerateApiSwaggerDescriptionTask
                     """
 Swagger languages are not configured.
 
-Example:
+Configure MODULE_LANGUAGE in master.json, for example:
 
-generateApiSwaggerDescription {
-
-    languages = [
-        'vi',
-        'en'
-    ]
+"MODULE_LANGUAGE": {
+    "TYPE": "list",
+    "VALUE": ["vi", "en"]
 }
 """
             )

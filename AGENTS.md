@@ -491,6 +491,7 @@ Current important master metadata includes:
 
 ```text
 MODULE_TYPE
+MODULE_LANGUAGE
 JAVA_BASE_PACKAGE
 SERVICE_NAME
 SERVICE_NAME_DESCRIBE
@@ -506,6 +507,8 @@ ADD_MODULE_DEPEND
 USE_DATABASE
 USE_TASK
 ```
+
+`MODULE_LANGUAGE` is the module-level source of truth for localized documentation/runtime metadata. It is a `list` value in `master.json` (canonical default: `vi,en`) and is reused by README structure/final generation, Swagger description generation, Knowledge metadata synchronization, Portal localized projections, runtime Swagger language grouping, and generated `.env` values. Do not reintroduce per-feature language keys such as `README_LANGUAGE`, `BUILD_SWAGGER_LANGUAGE_LIST`, or task-local `languages` extensions for README/Swagger.
 
 Do not add new metadata keys casually. Check whether the concept already has an owner and whether it belongs in `master.json` or grouped `properties.json`.
 
@@ -944,6 +947,8 @@ project-build/gradle-runtime
 ```
 
 Responsibilities include generation/copying of Swagger-related descriptions, README resources, metadata and task support.
+
+Swagger language selection comes from `MODULE_LANGUAGE` in module `master.json`. `generateApiSwaggerDescription` is a task, not a language-configuration extension; its language input is wired from the injected module property. Runtime `swagger.languages` is likewise bridged from `MODULE_LANGUAGE` (comma-separated when materialized into `.env`).
 
 Per-API human-owned metadata includes fields such as:
 

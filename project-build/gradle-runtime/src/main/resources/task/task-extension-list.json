@@ -1,14 +1,6 @@
 {
     "README": [
         {
-            "extension": "GenerateFinalReadmeExtension",
-            "name": "generateFinalReadme",
-            "path": "gradle-runtime/src/main/groovy/com/example/learning/task/readme/extension/GenerateFinalReadmeExtension.groovy",
-            "fields": {
-                "languages": "List<String>"
-            }
-        },
-        {
             "extension": "GenerateInternalReadmeMenuExtension",
             "name": "generateInternalReadmeMenu",
             "path": "gradle-runtime/src/main/groovy/com/example/learning/task/readme/extension/GenerateInternalReadmeMenuExtension.groovy",
@@ -25,16 +17,6 @@
                 "outputLanguage": "String",
                 "fileLocation": "String",
                 "provider": "String"
-            }
-        }
-    ],
-    "SWAGGER": [
-        {
-            "extension": "GenerateApiSwaggerDescriptionExtension",
-            "name": "generateApiSwaggerDescription",
-            "path": "gradle-runtime/src/main/groovy/com/example/learning/task/swagger/extension/GenerateApiSwaggerDescriptionExtension.groovy",
-            "fields": {
-                "languages": "List<String>"
             }
         }
     ]

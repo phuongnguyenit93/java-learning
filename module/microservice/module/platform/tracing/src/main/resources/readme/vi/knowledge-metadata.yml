@@ -1,0 +1,17 @@
+0.Preset/Definition.md:
+  distributed-tracing:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  datadog-tracing:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  trace-id-and-span-id:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  custom-span:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false

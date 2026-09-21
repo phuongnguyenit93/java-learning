@@ -1,0 +1,40 @@
+0.Preset/Definition.md:
+  hawtio-define:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  hawtio-and-sba:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  jokolia:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  jmx-and-mbean:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  jmx-feature:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+0.Preset/Feature.md:
+  hawtio-feature:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+1.Setup/AddBean.md:
+  add-business-bean:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  managed-bean-by-spring-and-jmx:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+1.Setup/Path.md:
+  path-hawtio:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false

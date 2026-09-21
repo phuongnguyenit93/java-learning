@@ -1,0 +1,544 @@
+1.Basic/Basic.md:
+  process-and-thread:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  thread-task:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  start-vs-run:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  create-thread:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  thread-state:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  daemon-thread:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  basic-endpoints:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+2.Interruption/Interruption.md:
+  interrupt-mental-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  interrupt-flag:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  interrupted-exception:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  interrupt-cleanup:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  interrupt-limitations:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  interrupt-vs-stop-flag:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  interrupt-rules:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  interruption-experiments:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+3.Concurrency_Problems/ConcurrencyProblem.md:
+  shared-state-race-condition:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  jmm-visibility:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  happens-before:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  safe-publication-final:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  volatile-publication:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  ordering-reordering:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  progress-problems:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  deadlock-prevention:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  problem-summary:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  problem-experiments:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+4.Synchronization/Synchronization.md:
+  synchronized-monitor:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  reentrant-lock:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  read-write-lock:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  read-write-lock-policy:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  stamped-lock:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  stamped-lock-limitations:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  atomic-cas:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  adder-accumulator:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  concurrent-collections:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  synchronization-choice:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  synchronization-experiments:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+5.Coordination/Coordination.md:
+  join:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  wait-notify:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  condition:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  lock-support:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  producer-consumer:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  blocking-queue-variants:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  priority-queue-semantics:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  synchronous-queue:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  synchronizers:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  semaphore-permit-accounting:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  synchronizer-timeout-failure:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  coordination-choice:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  coordination-experiments:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+6.Thread_Pool_Executor/ThreadPoolExecutor.md:
+  executor-abstraction:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  thread-pool-flow:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  pool-properties:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  pool-sizing:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  executors-factories:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  scheduled-execution:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  rejection-policy:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  custom-rejection-handler:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  graceful-shutdown:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  thread-factory-observability:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  thread-pool-experiments:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+7.Async/Async.md:
+  async-mental-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  future:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  completable-future-pipeline:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  async-variant:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  combine-race:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  exception-handling:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  executor-choice:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  timeout-cancellation:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  async-experiments:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+8.Context/ThreadLocal.md:
+  thread-local-isolation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  thread-local-cleanup:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  inheritable-thread-local:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  thread-pool-problem:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  context-propagation:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  spring-bean-thread-safety:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  object-memory:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  thread-local-usage:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  context-experiments:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+9.Spring_Task_Executor/SpringExecutor.md:
+  task-executor:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  async-annotation:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  async-return-type:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  spring-executor-config:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  task-decorator:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  spring-async-demo:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  spring-boot-auto-config:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  executor-lifecycle:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  spring-executor-experiments:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+10.Leak/Leak.md:
+  thread-leak:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  pool-leak:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  queue-growth:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  cached-pool-risk:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  scheduled-leak:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  thread-local-leak:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  observability:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  lifecycle-rule:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  leak-experiments:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+11.Virtual_Thread/VirtualThread.md:
+  virtual-thread-basic:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  virtual-thread-creation:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  mount-unmount:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  virtual-executor:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  throughput-latency:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  resource-limits:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  virtual-thread-thread-local:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  pinning-java21:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  virtual-thread-locking:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  spring-virtual-thread:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  executor-autoclose:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  virtual-thread-choice:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  virtual-thread-experiments:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+12.Q&A/Q&A.md:
+  mental-map:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  thread-vs-task:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  run-vs-start:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  interrupt-question:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  stack-heap-thread-safety:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  effectively-final:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  volatile-atomic-sync:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  race-vs-visibility:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  happens-before-question:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  synchronization-vs-coordination:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  wait-notify-question:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  blocking-queue-question:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  thread-pool-question:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  async-question:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  future-question:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  thread-local-question:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  spring-async-question:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  leak-question:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  virtual-thread-question:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  schedule-thread:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  schedule-interrupt:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  batch-schedule:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  final-checklist:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  module-conclusion:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false

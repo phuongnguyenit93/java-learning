@@ -1,0 +1,29 @@
+0.Preset/Definition.md:
+  resilience-4j:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  resilience-4j-config:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  semaphore-and-resilience-4j:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  ignore-noretry-and-fallback:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  3-state-of-circuit-breaker:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  time-limiter-resilience-4j:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  time-limiter-with-async:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false

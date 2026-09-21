@@ -1,0 +1,9 @@
+0.Preset/Definition.md:
+  spring-boot-admin:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  admin-server-config:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false

@@ -1,0 +1,9 @@
+1.Config/Config.md:
+  api-gateway-config:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  route-config-gateway:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false

@@ -6,8 +6,8 @@ import com.example.learning.task.readme.translate.service.path.MarkdownPathResol
 import com.example.learning.task.readme.translate.task.TranslateMarkdownTask
 import com.example.learning.task.readme.extension.GenerateInternalReadmeMenuExtension
 import com.example.learning.task.readme.internalMenu.task.GenerateInternalReadmeMenuTask
-import com.example.learning.task.readme.extension.GenerateFinalReadmeExtension
 import com.example.learning.task.readme.finalReadme.task.GenerateFinalReadmeTask
+import com.example.learning.utils.ProjectPropertyUtils
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.provider.Provider
@@ -33,17 +33,18 @@ class ReadmeTaskPlugin
             task.location.set(internalMenuExtension.location)
         }
 
-        GenerateFinalReadmeExtension finalReadmeExtension =
-                project.extensions.create(
-                        'generateFinalReadme',
-                        GenerateFinalReadmeExtension
-                )
-
         project.tasks.register('generateFinalReadme', GenerateFinalReadmeTask) { task ->
 
             task.group = 'documentation'
-            task.description = 'Generate LIST.md and final README files for configured languages.'
-            task.languages.set(finalReadmeExtension.languages)
+            task.description = 'Generate LIST.md and final README files for MODULE_LANGUAGE.'
+            task.languages.set(
+                    project.provider {
+                        ProjectPropertyUtils.getStringList(
+                                project,
+                                'MODULE_LANGUAGE'
+                        )
+                    }
+            )
         }
 
 

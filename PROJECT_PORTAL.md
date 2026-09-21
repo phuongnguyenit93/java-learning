@@ -729,6 +729,8 @@ project-portal/build/generated/portal-data/module/{ROUTE_ID}/api/{lang}/
 
 và `module-catalog.json` expose base path `api.{lang}`. Language Swagger bị thiếu một trong bốn file không được publish thành Portal API projection hoàn chỉnh. Frontend API Docs hiện consume trực tiếp các file static này; không cần module runtime và không cần Portal REST API.
 
+Danh sách language hợp lệ của module lấy từ `master.json -> MODULE_LANGUAGE`. Portal chỉ publish một language đã được module khai báo và có đủ source projection tương ứng; filesystem không tự trở thành source of truth cho language support.
+
 Current browser-side mapping:
 
 ```text

@@ -1,13 +1,33 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import DOMPurify from 'dompurify';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { collectApiKnowledgeRelations, loadApiDocs } from '../data/apiDocs';
 import {
   collectKnowledgeCategories,
   collectKnowledgeSections,
   formatKnowledgeDisplayTitle,
 } from '../data/knowledge';
 import { useLanguage } from '../state/LanguageContext';
-import type { KnowledgeIndex } from '../types/learning';
+import type {
+  ApiDocsDocument,
+  ApiKnowledgeRelation,
+  KnowledgeDifficulty,
+  KnowledgeIndex,
+} from '../types/learning';
+import { CustomTooltip } from './CustomTooltip';
+
+function resolveDifficultyLabel(difficulty: KnowledgeDifficulty, language: 'vi' | 'en'): string {
+  if (difficulty === 'INTERMEDIATE') {
+    return language === 'vi' ? 'TRUNG BÌNH' : 'INTERMEDIATE';
+  }
+
+  if (difficulty === 'ADVANCED') {
+    return language === 'vi' ? 'NÂNG CAO' : 'ADVANCED';
+  }
+
+  return language === 'vi' ? 'CƠ BẢN' : 'BASIC';
+}
 
 interface KnowledgePanelProps {
   index: KnowledgeIndex | null;
@@ -16,6 +36,7 @@ interface KnowledgePanelProps {
   searchQuery: string;
   activeCategoryId: string;
   selectedSectionId: string | null;
+  apiBasePath?: string;
   onCategoryChange: (categoryId: string) => void;
   onSectionChange: (sectionId: string | null) => void;
 }
@@ -27,6 +48,7 @@ export function KnowledgePanel({
   searchQuery,
   activeCategoryId,
   selectedSectionId,
+  apiBasePath,
   onCategoryChange,
   onSectionChange,
 }: KnowledgePanelProps) {
@@ -35,10 +57,21 @@ export function KnowledgePanel({
   const [expandedSectionIds, setExpandedSectionIds] = useState<Set<string>>(() => new Set());
   const [loadingSectionIds, setLoadingSectionIds] = useState<Set<string>>(() => new Set());
   const [sectionErrors, setSectionErrors] = useState<Record<string, string>>({});
+  const [apiDocument, setApiDocument] = useState<ApiDocsDocument | null>(null);
+  const [previewOperationId, setPreviewOperationId] = useState<string | null>(null);
   const [canScrollTopicsLeft, setCanScrollTopicsLeft] = useState(false);
   const [canScrollTopicsRight, setCanScrollTopicsRight] = useState(false);
+  const [draggingTopics, setDraggingTopics] = useState(false);
   const topicStripRef = useRef<HTMLDivElement>(null);
   const topicButtonRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const topicDragRef = useRef({
+    pointerId: -1,
+    startX: 0,
+    startScrollLeft: 0,
+    dragged: false,
+    active: false,
+  });
+  const suppressTopicClickRef = useRef(false);
 
   const categories = useMemo(() => (index ? collectKnowledgeCategories(index.tree) : []), [index]);
   const allSections = useMemo(() => (index ? collectKnowledgeSections(index.tree) : []), [index]);
@@ -59,12 +92,86 @@ export function KnowledgePanel({
     });
   }, [activeCategoryId, allSections, searchQuery]);
 
+  const relatedApisByKnowledgeKey = useMemo(() => {
+    const result = new Map<string, ApiKnowledgeRelation[]>();
+
+    if (!apiDocument) {
+      return result;
+    }
+
+    collectApiKnowledgeRelations(apiDocument).forEach((relation) => {
+      const key = `${relation.sourcePath}#${relation.anchor}`;
+      const current = result.get(key) ?? [];
+      current.push(relation);
+      result.set(key, current);
+    });
+
+    return result;
+  }, [apiDocument]);
+
   useEffect(() => {
     setContentCache({});
     setExpandedSectionIds(new Set());
     setLoadingSectionIds(new Set());
     setSectionErrors({});
   }, [index?.moduleId, index?.language]);
+
+  useEffect(() => {
+    let active = true;
+
+    setApiDocument(null);
+    setPreviewOperationId(null);
+
+    if (!apiBasePath || !index) {
+      return () => {
+        active = false;
+      };
+    }
+
+    loadApiDocs(apiBasePath, index)
+      .then((result) => {
+        if (active) {
+          setApiDocument(result);
+        }
+      })
+      .catch(() => {
+        if (active) {
+          setApiDocument(null);
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [apiBasePath, index]);
+
+  useEffect(() => {
+    if (!previewOperationId) {
+      return undefined;
+    }
+
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target;
+      if (target instanceof Element && target.closest('[data-related-api-control]')) {
+        return;
+      }
+      setPreviewOperationId(null);
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setPreviewOperationId(null);
+      }
+    };
+
+    document.addEventListener('pointerdown', handlePointerDown);
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('pointerdown', handlePointerDown);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [previewOperationId]);
 
   useEffect(() => {
     if (!selectedSectionId) {
@@ -194,6 +301,77 @@ export function KnowledgePanel({
     });
   };
 
+  const handleTopicPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (event.button !== 0) {
+      return;
+    }
+
+    const strip = topicStripRef.current;
+    if (!strip) {
+      return;
+    }
+
+    topicDragRef.current = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startScrollLeft: strip.scrollLeft,
+      dragged: false,
+      active: true,
+    };
+  };
+
+  const handleTopicPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    const strip = topicStripRef.current;
+    const drag = topicDragRef.current;
+
+    if (!strip || !drag.active || drag.pointerId !== event.pointerId) {
+      return;
+    }
+
+    const delta = event.clientX - drag.startX;
+    if (!drag.dragged && Math.abs(delta) > 5) {
+      drag.dragged = true;
+      setDraggingTopics(true);
+
+      if (!strip.hasPointerCapture(event.pointerId)) {
+        strip.setPointerCapture(event.pointerId);
+      }
+    }
+
+    if (!drag.dragged) {
+      return;
+    }
+
+    event.preventDefault();
+    strip.scrollLeft = drag.startScrollLeft - delta;
+  };
+
+  const finishTopicDrag = (event: React.PointerEvent<HTMLDivElement>) => {
+    const strip = topicStripRef.current;
+    const drag = topicDragRef.current;
+
+    if (!drag.active || drag.pointerId !== event.pointerId) {
+      return;
+    }
+
+    suppressTopicClickRef.current = drag.dragged;
+    window.setTimeout(() => {
+      suppressTopicClickRef.current = false;
+    }, 0);
+    topicDragRef.current = {
+      pointerId: -1,
+      startX: 0,
+      startScrollLeft: 0,
+      dragged: false,
+      active: false,
+    };
+    setDraggingTopics(false);
+
+    if (strip?.hasPointerCapture(event.pointerId)) {
+      strip.releasePointerCapture(event.pointerId);
+    }
+  };
+
   const toggleSection = (sectionId: string) => {
     const willExpand = !expandedSectionIds.has(sectionId);
 
@@ -259,7 +437,24 @@ export function KnowledgePanel({
           ‹
         </button>
 
-        <div ref={topicStripRef} className="knowledge-topic-strip" aria-label="Knowledge categories">
+        <div
+          ref={topicStripRef}
+          className={`knowledge-topic-strip${draggingTopics ? ' is-dragging' : ''}`}
+          aria-label="Knowledge categories"
+          onPointerDown={handleTopicPointerDown}
+          onPointerMove={handleTopicPointerMove}
+          onPointerUp={finishTopicDrag}
+          onPointerCancel={finishTopicDrag}
+          onClickCapture={(event) => {
+            if (!suppressTopicClickRef.current) {
+              return;
+            }
+
+            suppressTopicClickRef.current = false;
+            event.preventDefault();
+            event.stopPropagation();
+          }}
+        >
           <button
             ref={(element) => { topicButtonRefs.current.all = element; }}
             type="button"
@@ -301,6 +496,7 @@ export function KnowledgePanel({
           const markdown = contentCache[section.content];
           const isLoading = loadingSectionIds.has(section.id);
           const sectionError = sectionErrors[section.id];
+          const relatedApis = relatedApisByKnowledgeKey.get(`${section.sourcePath}#${section.id}`) ?? [];
 
           return (
             <article key={section.id} id={`knowledge-section-${section.id}`} className={`knowledge-card${expanded ? ' is-expanded' : ''}`}>
@@ -317,8 +513,36 @@ export function KnowledgePanel({
                   <span className="knowledge-card__title">{formatKnowledgeDisplayTitle(section.title)}</span>
                   <span className="knowledge-card__category">{section.categoryTitle}</span>
                 </span>
-                <span className="knowledge-card__level knowledge-card__level--basic">
-                  {language === 'vi' ? 'CƠ BẢN' : 'BASIC'}
+                <span className="knowledge-card__metadata">
+                  {section.aiGenerated && (
+                    <CustomTooltip
+                      content={language === 'vi'
+                        ? 'Nội dung này do AI Sinh ra và có thể có sai sót'
+                        : 'This content was generated by AI and may contain errors.'}
+                    >
+                      <span className="knowledge-card__governance knowledge-card__governance--ai">
+                        AI Generated
+                      </span>
+                    </CustomTooltip>
+                  )}
+                  <CustomTooltip
+                    content={section.reviewed
+                      ? (language === 'vi'
+                        ? 'Nội dung này đã được kiểm tra và sửa chữa'
+                        : 'This content has been reviewed and corrected.')
+                      : (language === 'vi'
+                        ? 'Nội dung này chưa được kiểm tra và sửa chữa'
+                        : 'This content has not been reviewed and corrected.')}
+                  >
+                    <span className={`knowledge-card__governance knowledge-card__governance--${section.reviewed ? 'reviewed' : 'not-reviewed'}`}>
+                      {section.reviewed
+                        ? (language === 'vi' ? 'Đã review' : 'Reviewed')
+                        : (language === 'vi' ? 'Chưa review' : 'Not Reviewed')}
+                    </span>
+                  </CustomTooltip>
+                  <span className={`knowledge-card__level knowledge-card__level--${section.difficulty.toLowerCase()}`}>
+                    {resolveDifficultyLabel(section.difficulty, language)}
+                  </span>
                 </span>
                 <span className="knowledge-card__expand" aria-hidden="true">{expanded ? '−' : '+'}</span>
               </button>
@@ -335,6 +559,127 @@ export function KnowledgePanel({
                     <div className="markdown-content knowledge-card__markdown">
                       <ReactMarkdown remarkPlugins={[remarkGfm]}>{markdown}</ReactMarkdown>
                     </div>
+                  )}
+
+                  {relatedApis.length > 0 && (
+                    <section className="knowledge-related-apis">
+                      <div className="knowledge-related-apis__heading">
+                        <strong>{language === 'vi' ? 'API liên quan' : 'Related APIs'} · {relatedApis.length}</strong>
+                      </div>
+
+                      <div className="knowledge-related-apis__list">
+                        {relatedApis.map(({ controller, operation }) => {
+                          const previewOpen = previewOperationId === operation.id;
+                          const sanitizedExecution = operation.executionHtml
+                            ? DOMPurify.sanitize(operation.executionHtml)
+                            : '';
+
+                          return (
+                            <div
+                              key={operation.id}
+                              className="knowledge-related-api-control"
+                              data-related-api-control
+                            >
+                              <button
+                                type="button"
+                                className="knowledge-related-api-row"
+                                onClick={() => setPreviewOperationId((current) => (
+                                  current === operation.id ? null : operation.id
+                                ))}
+                              >
+                                <span className={`http-method http-method--${operation.httpMethod.toLowerCase()}`}>
+                                  {operation.httpMethod}
+                                </span>
+                                <code>{operation.path || '—'}</code>
+                                <span className="knowledge-related-api-row__copy">
+                                  <strong>{operation.summary}</strong>
+                                  <small>{controller.title}</small>
+                                </span>
+                              </button>
+
+                              {previewOpen && (
+                                <div className="knowledge-related-api-popover" role="dialog" aria-label={operation.summary}>
+                                  <div className="knowledge-related-api-popover__header">
+                                    <span className={`http-method http-method--${operation.httpMethod.toLowerCase()}`}>
+                                      {operation.httpMethod}
+                                    </span>
+                                    <code>{operation.path || '—'}</code>
+                                  </div>
+
+                                  <div className="knowledge-related-api-popover__body">
+                                    <div className="knowledge-related-api-popover__basic-info">
+                                      <strong>{operation.summary}</strong>
+                                      <div className="api-operation__metadata">
+                                        {operation.aiGenerated && (
+                                          <CustomTooltip
+                                            content={language === 'vi'
+                                              ? 'Nội dung này do AI Sinh ra và có thể có sai sót'
+                                              : 'This content was generated by AI and may contain errors.'}
+                                          >
+                                            <span className="api-operation__governance api-operation__governance--ai">
+                                              AI Generated
+                                            </span>
+                                          </CustomTooltip>
+                                        )}
+                                        <CustomTooltip
+                                          content={operation.reviewed
+                                            ? (language === 'vi'
+                                              ? 'Nội dung này đã được kiểm tra và sửa chữa'
+                                              : 'This content has been reviewed and corrected.')
+                                            : (language === 'vi'
+                                              ? 'Nội dung này chưa được kiểm tra và sửa chữa'
+                                              : 'This content has not been reviewed and corrected.')}
+                                        >
+                                          <span className={`api-operation__governance api-operation__governance--${operation.reviewed ? 'reviewed' : 'not-reviewed'}`}>
+                                            {operation.reviewed
+                                              ? (language === 'vi' ? 'Đã review' : 'Reviewed')
+                                              : (language === 'vi' ? 'Chưa review' : 'Not Reviewed')}
+                                          </span>
+                                        </CustomTooltip>
+                                      </div>
+                                      {operation.description && <p>{operation.description}</p>}
+                                      <small>{controller.title} · {operation.methodSignature}</small>
+                                    </div>
+
+                                    <section>
+                                      <h4>Execution</h4>
+                                      {sanitizedExecution ? (
+                                        <div
+                                          className="api-execution-content"
+                                          dangerouslySetInnerHTML={{ __html: sanitizedExecution }}
+                                        />
+                                      ) : (
+                                        <p className="api-operation__empty-detail">
+                                          {language === 'vi' ? 'Chưa có mô tả execution.' : 'No execution description yet.'}
+                                        </p>
+                                      )}
+                                    </section>
+
+                                    {operation.params.length > 0 && (
+                                      <section>
+                                        <h4>{language === 'vi' ? 'Tham số' : 'Parameters'}</h4>
+                                        <div className="api-param-list">
+                                          {operation.params.map((param) => (
+                                            <div key={param.name} className="api-param">
+                                              <code>{param.name}</code>
+                                              <span>
+                                                <strong>{param.summary || param.name}</strong>
+                                                {param.description && <small>{param.description}</small>}
+                                              </span>
+                                            </div>
+                                          ))}
+                                        </div>
+                                      </section>
+                                    )}
+                                  </div>
+
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </section>
                   )}
                 </div>
               )}

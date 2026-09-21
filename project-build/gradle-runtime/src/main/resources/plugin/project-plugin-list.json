@@ -60,6 +60,11 @@
         "implementationClass": "com.example.learning.setup.root.database.plugin.DatabaseSetupPlugin"
     },
     {
+        "name": "readmeMetadataSetupPlugin",
+        "id": "com.example.learning.setup.root.readmeMetadata.plugin",
+        "implementationClass": "com.example.learning.setup.root.readmeMetadata.plugin.ReadmeMetadataSetupPlugin"
+    },
+    {
         "name": "structureSetupPlugin",
         "id": "com.example.learning.setup.root.structure.plugin",
         "implementationClass": "com.example.learning.setup.root.structure.plugin.StructureSetupPlugin"

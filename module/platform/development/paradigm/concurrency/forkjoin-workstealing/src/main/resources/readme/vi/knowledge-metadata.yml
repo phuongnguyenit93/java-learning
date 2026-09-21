@@ -1,0 +1,13 @@
+ForkJoin.md:
+  fork-join:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  fork-join-method:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  fork-join-task-and-parallel-task:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false

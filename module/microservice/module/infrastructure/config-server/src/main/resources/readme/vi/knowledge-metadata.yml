@@ -1,0 +1,25 @@
+0.Preset/Definition.md:
+  cloud-config-trade-off:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  gradle-task-and-spring-cloud-config:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  spof-config-server:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  spring-cloud-server-config:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  hot-reload-spring-cloud-config:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  spring-cloud-server-precedence:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false

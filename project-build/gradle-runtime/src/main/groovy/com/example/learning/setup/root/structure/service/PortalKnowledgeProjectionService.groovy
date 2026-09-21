@@ -1,10 +1,14 @@
 package com.example.learning.setup.root.structure.service
 
+import com.example.learning.setup.module.readme.service.ReadmeKnowledgeParser
+import com.example.learning.setup.root.readmeMetadata.service.ReadmeMetadataSyncService
 import com.example.learning.utils.GradleBuildUtils
+import com.example.learning.utils.ProjectPropertyUtils
 import groovy.json.JsonOutput
 import org.gradle.api.GradleException
 import org.gradle.api.Project
 import org.gradle.api.logging.Logger
+import org.yaml.snakeyaml.Yaml
 
 import java.nio.file.Files
 import java.nio.file.Path
@@ -16,21 +20,6 @@ class PortalKnowledgeProjectionService {
 
     private static final String OUTPUT_DIRECTORY =
             'project-portal/build/generated/portal-data/module'
-
-
-    private static final Pattern SECTION_CANDIDATE_PATTERN =
-            Pattern.compile(
-                    '(?m)^##\\s+<a\\b[^\\r\\n]*$'
-            )
-
-
-    private static final Pattern SECTION_PATTERN =
-            Pattern.compile(
-                    '^##\\s+' +
-                            '<a\\s+id\\s*=\\s*["\']([^"\']*)["\']\\s*>' +
-                            '(.*?)' +
-                            '</a>\\s*$'
-            )
 
 
     private static final Pattern BACK_TO_TOP_ANCHOR_PATTERN =
@@ -97,6 +86,8 @@ class PortalKnowledgeProjectionService {
 
 
     private final Logger logger
+    private final ReadmeKnowledgeParser knowledgeParser
+    private final Yaml yamlReader
 
 
     PortalKnowledgeProjectionService(
@@ -105,6 +96,16 @@ class PortalKnowledgeProjectionService {
 
         this.logger =
                 logger
+
+
+        this.knowledgeParser =
+                new ReadmeKnowledgeParser(
+                        logger
+                )
+
+
+        this.yamlReader =
+                new Yaml()
     }
 
 
@@ -168,7 +169,7 @@ ${moduleRoot.absolutePath}
 
                 List<LanguageSource> languageSources =
                         resolveLanguageSources(
-                                moduleProject.projectDir
+                                moduleProject
                         )
 
 
@@ -262,12 +263,20 @@ Route identifiers must be unique for modules that expose README knowledge.
                 new Counter()
 
 
+        Map<String, Object> knowledgeMetadata =
+                loadKnowledgeMetadata(
+                        moduleProject,
+                        languageSource.language
+                )
+
+
         List<Map> tree =
                 buildTree(
                         moduleProject,
                         routeId,
                         languageSource,
                         languageSource.menuDirectory,
+                        knowledgeMetadata,
                         categoryIds,
                         categorySources,
                         sectionIds,
@@ -308,6 +317,7 @@ Route identifiers must be unique for modules that expose README knowledge.
             String routeId,
             LanguageSource languageSource,
             File currentDirectory,
+            Map<String, Object> knowledgeMetadata,
             Set<String> categoryIds,
             Map<String, String> categorySources,
             Set<String> sectionIds,
@@ -338,6 +348,7 @@ Route identifiers must be unique for modules that expose README knowledge.
                                     routeId,
                                     languageSource,
                                     child,
+                                    knowledgeMetadata,
                                     categoryIds,
                                     categorySources,
                                     sectionIds,
@@ -383,6 +394,7 @@ Route identifiers must be unique for modules that expose README knowledge.
                                 routeId,
                                 languageSource,
                                 child,
+                                knowledgeMetadata,
                                 categoryIds,
                                 categorySources,
                                 sectionIds,
@@ -408,6 +420,7 @@ Route identifiers must be unique for modules that expose README knowledge.
             String routeId,
             LanguageSource languageSource,
             File markdownFile,
+            Map<String, Object> knowledgeMetadata,
             Set<String> categoryIds,
             Map<String, String> categorySources,
             Set<String> sectionIds,
@@ -476,10 +489,30 @@ Category ids are derived from Markdown filenames and must be unique within one m
                 )
 
 
-        List<SectionCandidate> candidates =
-                findSectionCandidates(
+        List<ReadmeKnowledgeParser.SectionCandidate> candidates =
+                knowledgeParser.parse(
                         markdownFile,
                         content
+                )
+
+
+        Map<String, Object> fileMetadata =
+                resolveMetadataMap(
+                        knowledgeMetadata[
+                                sourcePath
+                        ],
+                        """
+Invalid Portal README knowledge metadata file entry.
+
+Module:
+${routeId}
+
+Language:
+${languageSource.language}
+
+README file:
+${sourcePath}
+""".stripIndent()
                 )
 
 
@@ -547,7 +580,7 @@ Category ids are derived from Markdown filenames and must be unique within one m
 
 
         candidates.eachWithIndex {
-            SectionCandidate candidate,
+            ReadmeKnowledgeParser.SectionCandidate candidate,
             int index ->
 
                 int bodyEnd =
@@ -633,11 +666,26 @@ Section ids must be unique within one module/language.
                 )
 
 
+                Map<String, Object> sectionMetadata =
+                        resolveSectionMetadata(
+                                fileMetadata[
+                                        sectionId
+                                ],
+                                routeId,
+                                languageSource.language,
+                                sourcePath,
+                                sectionId
+                        )
+
+
                 sections.add(
                         [
-                                id     : sectionId,
-                                title  : candidate.title,
-                                content: publicPath
+                                id         : sectionId,
+                                title      : candidate.title,
+                                content    : publicPath,
+                                difficulty : sectionMetadata.difficulty,
+                                aiGenerated: sectionMetadata.aiGenerated,
+                                reviewed   : sectionMetadata.reviewed
                         ]
                 )
 
@@ -668,113 +716,279 @@ Section ids must be unique within one module/language.
     }
 
 
-    private List<SectionCandidate> findSectionCandidates(
-            File markdownFile,
-            String content
+    private Map<String, Object> loadKnowledgeMetadata(
+            Project moduleProject,
+            String language
     ) {
 
-        Matcher matcher =
-                SECTION_CANDIDATE_PATTERN.matcher(
-                        content
+        File metadataFile =
+                new File(
+                        moduleProject.projectDir,
+                        "src/main/resources/readme/${language}/${ReadmeMetadataSyncService.METADATA_FILE_NAME}"
                 )
 
 
-        List<SectionCandidate> result = []
+        if (
+                !metadataFile.exists() ||
+                        metadataFile.length() == 0
+        ) {
+
+            return new LinkedHashMap<>()
+        }
 
 
-        while (matcher.find()) {
+        if (!metadataFile.isFile()) {
 
-            String line =
-                    matcher.group()
+            throw new GradleException(
+                    """
+Portal README knowledge metadata path exists but is not a file:
 
-
-            Matcher sectionMatcher =
-                    SECTION_PATTERN.matcher(
-                            line
-                    )
-
-
-            if (!sectionMatcher.matches()) {
-
-                warnMalformedSection(
-                        markdownFile,
-                        line
-                )
-
-
-                result.add(
-                        SectionCandidate.invalid(
-                                matcher.start(),
-                                matcher.end()
-                        )
-                )
-
-
-                continue
-            }
-
-
-            String id =
-                    sectionMatcher
-                            .group(1)
-                            ?.trim()
-
-
-            String title =
-                    sectionMatcher
-                            .group(2)
-                            ?.trim()
-
-
-            if (
-                    id == null ||
-                            id.isBlank() ||
-                            title == null ||
-                            title.isBlank()
-            ) {
-
-                warnMalformedSection(
-                        markdownFile,
-                        line
-                )
-
-
-                result.add(
-                        SectionCandidate.invalid(
-                                matcher.start(),
-                                matcher.end()
-                        )
-                )
-
-
-                continue
-            }
-
-
-            result.add(
-                    SectionCandidate.valid(
-                            matcher.start(),
-                            matcher.end(),
-                            id,
-                            title
-                    )
+${metadataFile.absolutePath}
+""".stripIndent()
             )
         }
 
 
-        return result
+        Object loaded
+
+
+        try {
+
+            loaded =
+                    yamlReader.load(
+                            metadataFile.getText(
+                                    'UTF-8'
+                            )
+                    )
+        }
+        catch (Exception exception) {
+
+            throw new GradleException(
+                    """
+Unable to parse Portal README knowledge metadata YAML.
+
+File:
+${metadataFile.absolutePath}
+
+Cause:
+${exception.message}
+""".stripIndent(),
+                    exception
+            )
+        }
+
+
+        if (loaded == null) {
+
+            return new LinkedHashMap<>()
+        }
+
+
+        if (!(loaded instanceof Map)) {
+
+            throw new GradleException(
+                    """
+Invalid Portal README knowledge metadata YAML structure.
+
+Expected root object to be a map.
+
+File:
+${metadataFile.absolutePath}
+""".stripIndent()
+            )
+        }
+
+
+        return loaded as Map<String, Object>
     }
 
 
-    private void warnMalformedSection(
-            File markdownFile,
-            String line
+    private static Map<String, Object> resolveMetadataMap(
+            Object value,
+            String message
     ) {
 
-        logger.warn(
-                '[PORTAL-KNOWLEDGE] Skip malformed section heading in {}: {}',
-                markdownFile.absolutePath,
-                line
+        if (value == null) {
+
+            return new LinkedHashMap<>()
+        }
+
+
+        if (!(value instanceof Map)) {
+
+            throw new GradleException(
+                    message.trim()
+            )
+        }
+
+
+        return value as Map<String, Object>
+    }
+
+
+    private static Map<String, Object> resolveSectionMetadata(
+            Object value,
+            String routeId,
+            String language,
+            String sourcePath,
+            String sectionId
+    ) {
+
+        Map<String, Object> section =
+                resolveMetadataMap(
+                        value,
+                        """
+Invalid Portal README knowledge metadata section entry.
+
+Module:
+${routeId}
+
+Language:
+${language}
+
+README file:
+${sourcePath}
+
+Section id:
+${sectionId}
+""".stripIndent()
+                )
+
+
+        Object difficultyValue =
+                section[
+                        'difficulty'
+                ]
+
+
+        String difficulty =
+                difficultyValue == null ||
+                        difficultyValue.toString().trim().isBlank()
+                        ? ReadmeMetadataSyncService.DEFAULT_DIFFICULTY
+                        : difficultyValue
+                                .toString()
+                                .trim()
+                                .toUpperCase(
+                                        Locale.ROOT
+                                )
+
+
+        if (
+                !ReadmeMetadataSyncService.ALLOWED_DIFFICULTIES.contains(
+                        difficulty
+                )
+        ) {
+
+            throw new GradleException(
+                    """
+Invalid Portal README knowledge difficulty.
+
+Module:
+${routeId}
+
+Language:
+${language}
+
+README file:
+${sourcePath}
+
+Section id:
+${sectionId}
+
+Value:
+${difficultyValue}
+
+Allowed values:
+${ReadmeMetadataSyncService.ALLOWED_DIFFICULTIES.join(', ')}
+""".stripIndent()
+            )
+        }
+
+
+        boolean aiGenerated =
+                resolveBooleanMetadata(
+                        section,
+                        'aiGenerated',
+                        ReadmeMetadataSyncService.DEFAULT_AI_GENERATED,
+                        routeId,
+                        language,
+                        sourcePath,
+                        sectionId
+                )
+
+
+        boolean reviewed =
+                resolveBooleanMetadata(
+                        section,
+                        'reviewed',
+                        ReadmeMetadataSyncService.DEFAULT_REVIEWED,
+                        routeId,
+                        language,
+                        sourcePath,
+                        sectionId
+                )
+
+
+        return [
+                difficulty : difficulty,
+                aiGenerated: aiGenerated,
+                reviewed   : reviewed
+        ]
+    }
+
+
+    private static boolean resolveBooleanMetadata(
+            Map<String, Object> section,
+            String field,
+            boolean defaultValue,
+            String routeId,
+            String language,
+            String sourcePath,
+            String sectionId
+    ) {
+
+        Object value =
+                section[
+                        field
+                ]
+
+
+        if (value == null) {
+
+            return defaultValue
+        }
+
+
+        if (value instanceof Boolean) {
+
+            return value as boolean
+        }
+
+
+        throw new GradleException(
+                """
+Invalid Portal README knowledge boolean metadata.
+
+Module:
+${routeId}
+
+Language:
+${language}
+
+README file:
+${sourcePath}
+
+Section id:
+${sectionId}
+
+Field:
+${field}
+
+Value:
+${value}
+
+Expected YAML boolean true or false.
+""".stripIndent()
         )
     }
 
@@ -1439,12 +1653,12 @@ Section ids must be unique within one module/language.
 
 
     private static List<LanguageSource> resolveLanguageSources(
-            File moduleDirectory
+            Project moduleProject
     ) {
 
         File readmeDirectory =
                 new File(
-                        moduleDirectory,
+                        moduleProject.projectDir,
                         'readme'
                 )
 
@@ -1454,41 +1668,30 @@ Section ids must be unique within one module/language.
         }
 
 
-        File[] languageDirectories =
-                readmeDirectory.listFiles(
-                        {
-                            File file ->
-
-                                file.isDirectory()
-                        } as FileFilter
+        return ProjectPropertyUtils
+                .getStringList(
+                        moduleProject,
+                        'MODULE_LANGUAGE'
                 )
-
-
-        if (languageDirectories == null) {
-
-            throw new GradleException(
-                    """
-Unable to read README directory:
-
-${readmeDirectory.absolutePath}
-""".stripIndent()
-            )
-        }
-
-
-        return languageDirectories
-                .toList()
-                .sort {
-                    File left,
-                    File right ->
-
-                        left.name <=> right.name
-                }
                 .collect {
-                    File languageDirectory ->
+                    String language ->
+
+                        language.toLowerCase(
+                                Locale.ROOT
+                        )
+                }
+                .unique()
+                .collect {
+                    String language ->
+
+                        File languageDirectory =
+                                new File(
+                                        readmeDirectory,
+                                        language
+                                )
 
                         new LanguageSource(
-                                languageDirectory.name,
+                                language,
                                 languageDirectory,
                                 new File(
                                         languageDirectory,
@@ -2087,64 +2290,6 @@ ${directory.absolutePath}
             this.language = language
             this.languageDirectory = languageDirectory
             this.menuDirectory = menuDirectory
-        }
-    }
-
-
-    private static class SectionCandidate {
-
-        final int start
-        final int end
-        final boolean valid
-        final String id
-        final String title
-
-
-        private SectionCandidate(
-                int start,
-                int end,
-                boolean valid,
-                String id,
-                String title
-        ) {
-
-            this.start = start
-            this.end = end
-            this.valid = valid
-            this.id = id
-            this.title = title
-        }
-
-
-        static SectionCandidate valid(
-                int start,
-                int end,
-                String id,
-                String title
-        ) {
-
-            return new SectionCandidate(
-                    start,
-                    end,
-                    true,
-                    id,
-                    title
-            )
-        }
-
-
-        static SectionCandidate invalid(
-                int start,
-                int end
-        ) {
-
-            return new SectionCandidate(
-                    start,
-                    end,
-                    false,
-                    null,
-                    null
-            )
         }
     }
 

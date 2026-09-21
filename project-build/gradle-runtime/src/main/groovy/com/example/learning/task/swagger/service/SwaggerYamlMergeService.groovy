@@ -22,7 +22,9 @@ class SwaggerYamlMergeService {
             'description',
             'videoYoutubeId',
             'videoYoutubeTitle',
-            'readmeRelated'
+            'readmeRelated',
+            'aiGenerated',
+            'reviewed'
     ] as Set
 
     private final Yaml reader
@@ -1142,6 +1144,32 @@ ${parameterName}
                     'videoYoutubeTitle'
             ] =
                     defaults.videoYoutubeTitle
+        }
+
+
+        if (
+                !entry.containsKey(
+                        'aiGenerated'
+                )
+        ) {
+
+            entry[
+                    'aiGenerated'
+            ] =
+                    defaults.aiGenerated
+        }
+
+
+        if (
+                !entry.containsKey(
+                        'reviewed'
+                )
+        ) {
+
+            entry[
+                    'reviewed'
+            ] =
+                    defaults.reviewed
         }
 
 

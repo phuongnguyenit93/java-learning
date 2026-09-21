@@ -51,11 +51,12 @@ public class DynamicSwaggerConfig implements ImportBeanDefinitionRegistrar , Env
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata,BeanDefinitionRegistry registry) throws BeansException {
         String languages = environment.getProperty("swagger.languages", "");
 
-        if (languages.isEmpty()) return;
+        if (languages.isBlank()) return;
         String[] langArray = languages.split(",");
 
         for (String lang : langArray) {
             String trimmedLang = lang.trim();
+            if (trimmedLang.isEmpty()) continue;
             String beanName = "customApiGroup_" + trimmedLang;
 
             // Tạo Definition cho Bean GroupedOpenApi

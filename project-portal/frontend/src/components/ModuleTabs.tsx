@@ -16,8 +16,8 @@ const tabs: Array<{ id: ModuleTab; vi: string; en: string; countKey?: keyof Modu
   { id: 'overview', vi: 'Overview', en: 'Overview' },
   { id: 'menu', vi: 'Menu', en: 'Menu' },
   { id: 'knowledge', vi: 'Knowledge', en: 'Knowledge', countKey: 'knowledge' },
-  { id: 'quiz', vi: 'Quiz', en: 'Quiz', countKey: 'quiz' },
   { id: 'api', vi: 'API Docs', en: 'API Docs', countKey: 'apiDocs' },
+  { id: 'quiz', vi: 'Quiz', en: 'Quiz', countKey: 'quiz' },
   { id: 'execution', vi: 'Execution', en: 'Execution' },
 ];
 

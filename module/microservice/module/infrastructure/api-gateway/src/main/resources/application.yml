@@ -49,7 +49,7 @@ spring:
           lower-case-service-id: true
 swagger:
   enabled: ${BUILD_SWAGGER:}
-  languages: ${BUILD_SWAGGER_LANGUAGE_LIST:}
+  languages: ${MODULE_LANGUAGE:vi,en}
 springdoc:
   swagger-ui:
     enabled: ${swagger.enabled}

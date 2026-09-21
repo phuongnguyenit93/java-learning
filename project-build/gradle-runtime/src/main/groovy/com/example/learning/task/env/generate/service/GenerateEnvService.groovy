@@ -19,7 +19,7 @@ class GenerateEnvService {
     private static final List<String> GRADLE_OVERRIDE_PROPERTIES =
             [
                     'BUILD_SWAGGER',
-                    'BUILD_SWAGGER_LANGUAGE_LIST'
+                    'MODULE_LANGUAGE'
             ]
 
 
@@ -241,14 +241,31 @@ class GenerateEnvService {
                 }
 
 
-                String value =
-                        ProjectPropertyUtils.getString(
-                                project,
-                                propertyName
-                        )
+                String value
 
 
-                if (value == null) {
+                if (propertyName == 'MODULE_LANGUAGE') {
+
+                    value =
+                            ProjectPropertyUtils.getStringList(
+                                    project,
+                                    propertyName
+                            ).join(',')
+                }
+                else {
+
+                    value =
+                            ProjectPropertyUtils.getString(
+                                    project,
+                                    propertyName
+                            )
+                }
+
+
+                if (
+                        value == null ||
+                                value.isBlank()
+                ) {
                     return
                 }
 
@@ -427,7 +444,18 @@ class GenerateEnvService {
                                 .collect {
                                     String key ->
 
-                                        "${key}=your-value-here"
+                                        String exampleValue =
+                                                key == 'MODULE_LANGUAGE'
+                                                        ? ProjectPropertyUtils
+                                                        .getStringList(
+                                                                project,
+                                                                'MODULE_LANGUAGE'
+                                                        )
+                                                        .join(',')
+                                                        : 'your-value-here'
+
+
+                                        "${key}=${exampleValue}"
                                 }
                 ]
 

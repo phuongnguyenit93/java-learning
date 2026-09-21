@@ -66,7 +66,7 @@ class ReadmeStructureService {
         /*
          * Giữ nguyên behavior cũ:
          *
-         * Không có README_LANGUAGE
+         * Không có MODULE_LANGUAGE
          * hoặc danh sách rỗng
          * → chỉ đảm bảo README.md root tồn tại
          * → không cleanup language cũ.
@@ -74,7 +74,7 @@ class ReadmeStructureService {
         if (languages.isEmpty()) {
 
             logger.info(
-                    '[README-STRUCTURE] No README_LANGUAGE configured for {}.',
+                    '[README-STRUCTURE] No MODULE_LANGUAGE configured for {}.',
                     project.path
             )
 
@@ -480,9 +480,9 @@ ${languageDirectory.absolutePath}
     ) {
 
         return ProjectPropertyUtils
-                .getCsvList(
+                .getStringList(
                         project,
-                        'README_LANGUAGE'
+                        'MODULE_LANGUAGE'
                 )
                 .collect {
                     String language ->

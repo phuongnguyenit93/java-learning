@@ -154,7 +154,7 @@ BUILD_README=TRUE
 USE_TASK=TRUE
 ```
 
-Nếu cần nhiều ngôn ngữ, cấu hình `README_LANGUAGE` trong `properties.json`.
+Ngôn ngữ của module được cấu hình tập trung bằng `MODULE_LANGUAGE` trong `master.json` và được dùng chung cho các generator README/Swagger.
 
 Các task chính:
 

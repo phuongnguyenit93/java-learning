@@ -12,17 +12,3 @@ generateInternalReadmeMenu {
     location = 'readme/vi/menu/1.Basic/Basic.md'
 }
 
-generateFinalReadme {
-    languages = [
-            'vi',
-            'en'
-    ]
-}
-
-generateApiSwaggerDescription {
-    languages = [
-            'vi',
-            'en'
-    ]
-}
-

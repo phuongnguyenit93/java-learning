@@ -75,6 +75,11 @@ enum ProjectPluginEnum {
             'com.example.learning.setup.root.database.plugin.DatabaseSetupPlugin'
     ),
 
+    README_METADATA_SETUP_PLUGIN(
+            'com.example.learning.setup.root.readmeMetadata.plugin',
+            'com.example.learning.setup.root.readmeMetadata.plugin.ReadmeMetadataSetupPlugin'
+    ),
+
     STRUCTURE_SETUP_PLUGIN(
             'com.example.learning.setup.root.structure.plugin',
             'com.example.learning.setup.root.structure.plugin.StructureSetupPlugin'
