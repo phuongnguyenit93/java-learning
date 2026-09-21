@@ -2088,6 +2088,36 @@ Spring Boot serve production bundle
 
 Gradle Node plugin download Node/npm cho Portal build, vì vậy production build không dựa vào việc developer đã cài Node global. Khi phát triển frontend riêng, Vite dev server có thể chạy độc lập; khi test application đóng gói hoàn chỉnh, Spring Boot serve bundle đã build.
 
+Portal hiện còn có production deployment path tách khỏi Spring Boot host local:
+
+```text
+push/merge vào main hoặc workflow_dispatch
+        ↓
+.github/workflows/deploy-portal.yml
+        ↓
+GitHub Actions
+        ├── setup JDK 21
+        └── Gradle :project-portal:buildFrontend
+                    ↓
+          project-portal/frontend/dist
+                    ↓
+          Cloudflare Wrangler
+                    ↓
+Cloudflare Pages Direct Upload
+https://java-learning-cly.pages.dev
+```
+
+Cloudflare Pages chỉ host static production output; nó không chạy Spring Boot backend. Điều này phù hợp với static-first boundary hiện tại vì module catalog, Overview, Knowledge và API Docs đều đã được materialize trước ở build-time. Khi một feature tương lai thực sự cần server-side behavior thì backend có thể được deploy riêng mà không thay đổi ownership của static Portal data.
+
+CI secret boundary hiện tại:
+
+```text
+CLOUDFLARE_ACCOUNT_ID
+CLOUDFLARE_API_TOKEN
+```
+
+Hai giá trị chỉ thuộc GitHub Repository Secrets. Workflow được phép reference qua `secrets.*`, nhưng repository source không được chứa credential thực tế. Trigger `push` trên `main` áp dụng cả direct push lẫn merge Pull Request vì merge làm `main` nhận commit mới.
+
 Điểm quan trọng:
 
 - metadata phải sẵn sàng trước module configuration;

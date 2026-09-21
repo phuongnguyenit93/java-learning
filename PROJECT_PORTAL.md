@@ -936,7 +936,7 @@ download artifacts
 
 Tuy nhiên current implementation **cố ý có cả Spring Boot và React** để phục vụ mục tiêu học full-stack.
 
-Production bundle hiện được đóng vào Spring Boot application:
+Bundle vẫn được đóng vào Spring Boot application để test/đóng gói full-stack local:
 
 ```text
 frontend/dist
@@ -947,6 +947,26 @@ Spring Boot executable JAR
 ```
 
 Backend hiện không cung cấp business REST API cho frontend. Spring Boot trước mắt đóng vai trò host static bundle và là chỗ để bổ sung server-side capability về sau khi thật sự cần.
+
+Public production hiện được deploy theo static path riêng:
+
+```text
+push/merge vào main hoặc workflow_dispatch
+        ↓
+.github/workflows/deploy-portal.yml
+        ↓
+GitHub Actions + JDK 21
+        ↓
+./gradlew :project-portal:buildFrontend --no-daemon
+        ↓
+project-portal/frontend/dist
+        ↓ Cloudflare Wrangler
+Cloudflare Pages Direct Upload
+        ↓
+https://java-learning-cly.pages.dev
+```
+
+Workflow không dùng Cloudflare Git integration; GitHub Actions là CI/CD owner và upload build output vào Pages project đã tạo theo Direct Upload. Hai credential `CLOUDFLARE_ACCOUNT_ID` và `CLOUDFLARE_API_TOKEN` chỉ tồn tại dưới GitHub Repository Secrets. Merge Pull Request vào `main` cũng kích hoạt workflow vì `main` nhận commit mới và phát sinh `push` event.
 
 ---
 
@@ -1361,7 +1381,8 @@ MVP đã bắt đầu implementation. Current phase đã có:
 23. Knowledge category filter + collapse/expand interaction
 24. semantic capability colors dùng chung cho sidebar/tabs và giữ nguyên giữa Light/Dark
 25. Execution/artifact-download backend vẫn là placeholder/chưa wired
-26. production static bundle served by Spring Boot
+26. production static bundle vẫn có thể được serve bởi Spring Boot khi chạy packaged application
+27. public static Portal deploy lên Cloudflare Pages (`java-learning-cly.pages.dev`) bằng `.github/workflows/deploy-portal.yml`; push/merge `main` hoặc `workflow_dispatch` → JDK 21 → `:project-portal:buildFrontend` → Wrangler Pages deploy
 ```
 
 Chưa implement trong current phase:

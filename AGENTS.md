@@ -162,6 +162,24 @@ http://localhost:9098/#/learning/THREAD
 
 are resolved by React in the browser. The fragment after `#` is not sent to Spring Boot. Do not add SPA fallback controllers unless routing is intentionally migrated to `BrowserRouter`.
 
+Production static deployment currently uses Cloudflare Pages. The deployment contract is:
+
+```text
+push/merge to main or workflow_dispatch
+        ↓
+.github/workflows/deploy-portal.yml
+        ↓
+GitHub Actions + JDK 21
+        ↓
+:project-portal:buildFrontend
+        ↓
+project-portal/frontend/dist
+        ↓ Wrangler
+Cloudflare Pages: java-learning-cly.pages.dev
+```
+
+The Cloudflare project is a Direct Upload Pages project; GitHub Actions is the CI/CD owner rather than Cloudflare Git integration. Keep Cloudflare credentials only in GitHub Repository Secrets named `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN`. Never place their values in workflow YAML, Gradle files, frontend source, documentation, or generated Portal data. A Pull Request merge into `main` updates `main`, therefore it satisfies the current `push.branches: [main]` deployment trigger.
+
 Current top-level UI direction:
 
 ```text

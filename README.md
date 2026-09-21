@@ -42,6 +42,8 @@ Spring Boot :9098
 
 Frontend hiện static-first và chưa gọi backend API. `ProjectStructureService` generate `module-catalog.json` cho Portal; Overview/Menu/Knowledge được build từ README projections, còn API Docs consume generated localized Swagger metadata trực tiếp trong browser. Quiz vẫn đang dùng fixture tạm. API Docs hiện là reference-only, không live execute/debug trong Portal. Gradle build React bằng Vite rồi copy `dist` vào `classpath:/static`. Current route dùng `HashRouter`, ví dụ `http://localhost:9098/#/learning/THREAD`.
 
+Portal production hiện được publish static lên Cloudflare Pages tại `https://java-learning-cly.pages.dev`. Workflow `.github/workflows/deploy-portal.yml` tự chạy khi `main` nhận push mới (bao gồm merge Pull Request vào `main`) hoặc khi chạy thủ công bằng `workflow_dispatch`. GitHub Actions dùng JDK 21, chạy `:project-portal:buildFrontend`, sau đó deploy `project-portal/frontend/dist` vào Cloudflare Pages bằng Wrangler. Credential Cloudflare chỉ được lưu trong GitHub Repository Secrets `CLOUDFLARE_ACCOUNT_ID` và `CLOUDFLARE_API_TOKEN`, không commit vào source.
+
 Chi tiết xem [`PROJECT_PORTAL.md`](./PROJECT_PORTAL.md).
 
 ### Tạo module mới từ số 0
