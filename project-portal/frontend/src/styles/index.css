@@ -465,6 +465,63 @@ pre {
 .home-page {
   min-height: calc(100vh - var(--header-height));
   background: var(--home-bg);
+  display: grid;
+  place-items: center;
+  padding: 32px;
+}
+
+.home-placeholder {
+  width: min(680px, 100%);
+  padding: 40px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: var(--surface);
+  text-align: center;
+  box-shadow: 0 18px 50px rgb(0 0 0 / 8%);
+}
+
+.home-placeholder__eyebrow {
+  display: inline-block;
+  margin-bottom: 12px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.home-placeholder h1 {
+  margin: 0;
+  font-size: clamp(28px, 4vw, 42px);
+  line-height: 1.15;
+}
+
+.home-placeholder p {
+  margin: 18px auto 0;
+  max-width: 580px;
+  line-height: 1.7;
+  color: var(--text-muted);
+}
+
+.home-placeholder__action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 26px;
+  min-height: 42px;
+  padding: 0 18px;
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  background: var(--surface-hover);
+  color: var(--text);
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 150ms ease, background 150ms ease;
+}
+
+.home-placeholder__action:hover {
+  transform: translateY(-1px);
+  background: var(--surface);
 }
 
 .learning-layout {
