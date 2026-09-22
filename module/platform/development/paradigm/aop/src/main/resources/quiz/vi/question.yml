@@ -1,0 +1,1153 @@
+# <quiz-schema>
+# Cấu trúc câu hỏi Quiz
+# schema-version: 3
+#
+# questions [kiểu: list; bắt buộc; mặc định: []; duy nhất theo: id]
+#   Danh sách câu hỏi Quiz của module trong language hiện tại.
+#   mỗi phần tử:
+#     id [kiểu: string; bắt buộc; mặc định: ""]
+#       ID ổn định và duy nhất của câu hỏi.
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi hiển thị cho người học.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu câu hỏi được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu câu hỏi đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+#     answers [kiểu: list; bắt buộc; số phần tử: 4; mặc định: []; duy nhất theo: id]
+#       Chính xác bốn đáp án. ID A/B/C/D là identity nội bộ ổn định, không phải vị trí hiển thị sau khi frontend shuffle.
+#       mỗi phần tử:
+#         id [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#           Identity ổn định của đáp án.
+#         answer [kiểu: string; bắt buộc; mặc định: ""]
+#           Nội dung đáp án hiển thị cho người học.
+#         explanation [kiểu: string; bắt buộc; mặc định: ""]
+#           Giải thích hiển thị khi người học chọn đáp án này, bất kể đúng hay sai.
+#     correctAnswerId [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
+# </quiz-schema>
+
+questions:
+  - id: aop-cross-cutting-purpose
+    question: "Tình huống nào phù hợp nhất để áp dụng AOP?"
+    answers:
+      - id: D
+        answer: "Tách logging, timing hoặc auditing lặp lại khỏi nhiều business method có boundary rõ ràng."
+        explanation: "Đúng. Đây là nhóm cross-cutting concern điển hình: xuất hiện ở nhiều target nhưng không phải business logic cốt lõi."
+      - id: B
+        answer: "Đưa toàn bộ rule tính giá và workflow đặt hàng vào Aspect để service ngắn hơn."
+        explanation: "Sai. Business rule cốt lõi bị giấu trong Aspect sẽ làm dependency và control flow khó hiểu hơn."
+      - id: C
+        answer: "Dùng Aspect để thay thế mọi interface giữa các module."
+        explanation: "Sai. AOP không thay thế abstraction/module boundary thông thường."
+      - id: A
+        answer: "Dùng AOP bất cứ khi nào một method dài hơn 20 dòng."
+        explanation: "Sai. Độ dài method không phải tiêu chí xác định cross-cutting concern."
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.CrossCutting/CrossCutting.md", anchor: "cross-cutting-concern"}
+    apiRelated: {controller: "CrossCuttingController", methodSignature: "observeCrossCutting()"}
+
+  - id: aop-cross-cutting-boundary
+    question: "Điều kiện nào giúp một cross-cutting concern trở thành ứng viên AOP tốt hơn?"
+    answers:
+      - id: A
+        answer: "Behavior càng phụ thuộc nhiều mutable business state càng tốt."
+        explanation: "Sai. Điều này thường làm Aspect khó dự đoán và khó test."
+      - id: B
+        answer: "Concern có thể mô tả bằng boundary rõ ràng như pointcut hoặc annotation và xuất hiện ở nhiều target."
+        explanation: "Đúng. README nhấn mạnh tính cross-cutting và boundary rõ ràng."
+      - id: C
+        answer: "Concern chỉ xuất hiện đúng một lần trong toàn hệ thống."
+        explanation: "Sai. Một concern đơn lẻ thường chưa có lý do mạnh để đưa sang AOP."
+      - id: D
+        answer: "Concern cần thay đổi luồng business theo nhiều nhánh bí mật."
+        explanation: "Sai. Hidden workflow là một pitfall của AOP."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.CrossCutting/CrossCutting.md", anchor: "cross-cutting-conclusion"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: aop-terminology-map
+    question: "Trong Spring AOP, cặp khái niệm nào được ghép đúng nhất?"
+    answers:
+      - id: A
+        answer: "Aspect = method execution; Join Point = class chứa advice."
+        explanation: "Sai. Aspect là nơi gom cross-cutting behavior; join point là điểm thực thi được AOP model quan sát/chọn."
+      - id: B
+        answer: "Pointcut = behavior thực thi; Advice = rule chọn method."
+        explanation: "Sai. Hai vai trò này bị đảo ngược."
+      - id: C
+        answer: "Pointcut chọn join point; Advice là behavior chạy khi join point phù hợp được intercept."
+        explanation: "Đúng. Đây là mental model nền của terminology chapter."
+      - id: D
+        answer: "Proxy và target luôn là cùng một runtime object."
+        explanation: "Sai. Proxy có thể là object wrapper/subclass đứng trước target."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.Terminology/Terminology.md", anchor: "terminology-map"}
+    apiRelated: {controller: "TerminologyController", methodSignature: "inspectTerminology()"}
+
+  - id: aspect-annotation-not-component
+    question: "Một class chỉ có `@Aspect` nhưng không được đăng ký thành Spring bean. Nhận định nào đúng nhất trong runtime của module?"
+    answers:
+      - id: A
+        answer: "`@Aspect` tự động làm class trở thành component được scan."
+        explanation: "Sai. `@Aspect` mô tả semantics của Aspect nhưng không tự nó là component-scanning annotation."
+      - id: B
+        answer: "Spring AOP cần Aspect instance tồn tại trong ApplicationContext, ví dụ qua `@Component` hoặc `@Bean`."
+        explanation: "Đúng. Module dùng cả `@Aspect` và `@Component` cho các Aspect được auto-proxy infrastructure sử dụng."
+      - id: C
+        answer: "Aspect vẫn chạy vì AspectJ compiler luôn weave class đó tự động."
+        explanation: "Sai. Module không cấu hình AspectJ compiler hay load-time weaving."
+      - id: D
+        answer: "Class đó sẽ được tạo một instance mới cho mỗi invocation."
+        explanation: "Sai. Không có bean thì Spring AOP cũng không có Aspect bean để áp dụng theo cách của module."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.Terminology/Terminology.md", anchor: "spring-aop-vs-aspectj-style"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: proxy-invocation-boundary
+    question: "Khi debug vì sao advice không chạy, câu hỏi nào nên được kiểm tra trước?"
+    answers:
+      - id: C
+        answer: "Invocation có thực sự đi qua Spring AOP proxy hay không?"
+        explanation: "Đúng. Nếu call không qua proxy thì pointcut đúng đến đâu cũng không có interception."
+      - id: B
+        answer: "Tên generated proxy class có kết thúc bằng một suffix cố định hay không?"
+        explanation: "Sai. Không nên dựa vào tên generated class để suy luận semantics."
+      - id: A
+        answer: "Target method có nhiều hơn một parameter hay không?"
+        explanation: "Sai. Số parameter không phải điều kiện nền để AOP hoạt động."
+      - id: D
+        answer: "Aspect bean có field mutable hay không?"
+        explanation: "Sai. Đây là concern về thread safety/design, không phải câu hỏi đầu tiên về interception boundary."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.Proxy/Proxy.md", anchor: "proxy-mental-model"}
+    apiRelated: {controller: "ProxyMentalModelController", methodSignature: "inspectProxy()"}
+
+  - id: managed-vs-new-aop
+    question: "Vì sao `new SomeService()` thường không nhận cùng Spring AOP advice như bean được inject từ ApplicationContext?"
+    answers:
+      - id: A
+        answer: "Object tạo bằng `new` luôn là final nên không proxy được."
+        explanation: "Sai. Vấn đề chính là object đó nằm ngoài Spring-managed proxy boundary."
+      - id: B
+        answer: "Spring chỉ proxy controller, không proxy service."
+        explanation: "Sai. Service bean hoàn toàn có thể được AOP proxy."
+      - id: C
+        answer: "Pointcut chỉ hoạt động trên object được JVM tạo bằng reflection."
+        explanation: "Sai. Pointcut không phụ thuộc quy tắc này."
+      - id: D
+        answer: "Object tạo trực tiếp không phải Spring-managed proxy nên invocation đi thẳng vào target object."
+        explanation: "Đúng. README có experiment managed bean versus plain object để chứng minh boundary này."
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.Proxy/Proxy.md", anchor: "managed-vs-new-demo"}
+    apiRelated: {controller: "ProxyMentalModelController", methodSignature: "compareManagedBeanAndPlainObject()"}
+
+  - id: proxy-jdk-vs-cglib-type-surface
+    question: "Khác biệt quan trọng giữa JDK dynamic proxy và class-based/CGLIB proxy là gì?"
+    answers:
+      - id: D
+        answer: "JDK proxy dựa trên interface surface; CGLIB proxy là subclass của target class."
+        explanation: "Đúng. Strategy ảnh hưởng type surface và một số limitation interception."
+      - id: B
+        answer: "JDK proxy luôn nhanh hơn CGLIB trong mọi workload."
+        explanation: "Sai. README không đưa ra ranking hiệu năng tuyệt đối."
+      - id: C
+        answer: "CGLIB proxy không thể chạy advice."
+        explanation: "Sai. Class-based proxy vẫn là cơ chế AOP thông thường."
+      - id: A
+        answer: "Hai strategy luôn expose chính xác cùng method surface."
+        explanation: "Sai. Đây chính là điểm khác biệt được ProxyFactory demo minh họa."
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.Proxy/Proxy.md", anchor: "proxy-strategies"}
+    apiRelated: {controller: "ProgrammaticProxyController", methodSignature: "compareProxyFactoryStrategies()"}
+
+  - id: pointcut-args-vs-execution
+    question: "Method khai báo parameter là `Object` nhưng runtime nhận một `String`. Designator nào có thể match dựa trên runtime argument type?"
+    answers:
+      - id: A
+        answer: "`execution(...)`"
+        explanation: "Sai. `execution(...)` chủ yếu nhìn declared method signature."
+      - id: B
+        answer: "`within(...)`"
+        explanation: "Sai. `within(...)` nhìn declaring type/package boundary."
+      - id: C
+        answer: "`args(java.lang.String)`"
+        explanation: "Đúng. `args(...)` xét runtime argument shape/type."
+      - id: D
+        answer: "`bean(...)`"
+        explanation: "Sai. `bean(...)` là Spring-specific designator theo bean name."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.Pointcut/Pointcut.md", anchor: "pointcut-demo"}
+    apiRelated: {controller: "PointcutController", methodSignature: "comparePointcuts()"}
+
+  - id: pointcut-this-vs-target
+    question: "Trong Spring AOP pointcut, `this(...)` và `target(...)` khác nhau thế nào?"
+    answers:
+      - id: C
+        answer: "`this(...)` nhìn proxy object/type, còn `target(...)` nhìn target object/type phía sau proxy."
+        explanation: "Đúng. Sự khác nhau đặc biệt rõ khi thay đổi proxy strategy."
+      - id: B
+        answer: "Hai designator luôn đồng nghĩa trong mọi proxy strategy."
+        explanation: "Sai. Chúng có semantics khác nhau dù một experiment cụ thể có thể cùng match."
+      - id: A
+        answer: "`target(...)` match theo bean name, `this(...)` match theo annotation."
+        explanation: "Sai. Đây là semantics của các designator khác."
+      - id: D
+        answer: "`this(...)` chỉ dùng được với full AspectJ weaving."
+        explanation: "Sai. Module dùng nó trong Spring AOP pointcut."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.Pointcut/Pointcut.md", anchor: "pointcut-mental-model"}
+    apiRelated: {controller: "PointcutController", methodSignature: "comparePointcuts()"}
+
+  - id: spring-aop-pointcut-boundary
+    question: "Phát biểu nào đúng về pointcut language của Spring AOP?"
+    answers:
+      - id: A
+        answer: "Vì dùng AspectJ expression syntax nên Spring AOP hỗ trợ mọi AspectJ join point như field get/set và constructor initialization."
+        explanation: "Sai. Syntax tương tự không đồng nghĩa runtime join point model tương đương full AspectJ."
+      - id: B
+        answer: "Spring AOP tập trung vào method execution đi qua proxy và không hỗ trợ thông thường các designator như `call`, `get`, `set`, `cflow`."
+        explanation: "Đúng. Đây là runtime boundary quan trọng của proxy-based Spring AOP."
+      - id: C
+        answer: "Spring AOP không hỗ trợ `execution(...)`."
+        explanation: "Sai. Đây là designator phổ biến nhất."
+      - id: D
+        answer: "Pointcut chỉ có thể viết bằng Java code, không có expression syntax."
+        explanation: "Sai. Module dùng @AspectJ expression style."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.Pointcut/Pointcut.md", anchor: "spring-aop-pointcut-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: advice-success-lifecycle
+    question: "Target method return bình thường. Sequence semantic nào phù hợp nhất với advice lifecycle trong module?"
+    answers:
+      - id: D
+        answer: "`@Before` → target → `@AfterReturning` → `@After`."
+        explanation: "Đúng. `@AfterReturning` chỉ xuất hiện trên success path, còn `@After` có finally-like semantics."
+      - id: B
+        answer: "`@AfterThrowing` → target → `@Before`."
+        explanation: "Sai. `@AfterThrowing` chỉ chạy khi exception thoát ra phù hợp."
+      - id: C
+        answer: "Target → `@Before` → `@AfterReturning`."
+        explanation: "Sai. `@Before` phải chạy trước target invocation."
+      - id: A
+        answer: "`@After` chỉ chạy khi success."
+        explanation: "Sai. `@After` có finally-like semantics."
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.Advice/Advice.md", anchor: "advice-success-demo"}
+    apiRelated: {controller: "AdviceLifecycleController", methodSignature: "success()"}
+
+  - id: advice-failure-lifecycle
+    question: "Giả sử pointcut đã match invocation và exception thoát ra cũng match kiểu/binding của `@AfterThrowing`. Trên failure path này, advice nào không nên được kỳ vọng chạy?"
+    answers:
+      - id: A
+        answer: "`@Before`"
+        explanation: "Sai. Nó đã chạy trước target."
+      - id: B
+        answer: "`@AfterThrowing`"
+        explanation: "Sai. Với giả định exception match binding, `@AfterThrowing` được kỳ vọng chạy trên failure path này."
+      - id: C
+        answer: "`@AfterReturning`"
+        explanation: "Đúng. Target không return bình thường nên `@AfterReturning` không chạy."
+      - id: D
+        answer: "`@After`"
+        explanation: "Sai. `@After` có finally-like semantics và vẫn chạy khi invocation kết thúc bằng exception."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.Advice/Advice.md", anchor: "advice-failure-demo"}
+    apiRelated: {controller: "AdviceLifecycleController", methodSignature: "failure()"}
+
+  - id: advice-weakest-sufficient
+    question: "Nếu chỉ cần quan sát return value khi success và không cần thay đổi control flow, advice nào phù hợp hơn `@Around`?"
+    answers:
+      - id: C
+        answer: "`@AfterReturning`"
+        explanation: "Đúng. README khuyên chọn advice yếu nhất nhưng đủ requirement."
+      - id: B
+        answer: "`@AfterThrowing`"
+        explanation: "Sai. Nó dành cho exception path."
+      - id: A
+        answer: "Luôn phải dùng `@Around` vì các advice khác không đọc được dữ liệu."
+        explanation: "Sai. `@AfterReturning` có thể bind return value."
+      - id: D
+        answer: "Không advice nào có thể quan sát return value."
+        explanation: "Sai. Đây là capability chuẩn của `@AfterReturning`."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.Advice/Advice.md", anchor: "advice-semantics"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: around-proceed-control
+    question: "Ý nghĩa đúng nhất của `ProceedingJoinPoint.proceed()` trong `@Around` là gì?"
+    answers:
+      - id: A
+        answer: "Tạo một thread mới để chạy target."
+        explanation: "Sai. `proceed()` không phải concurrency primitive."
+      - id: B
+        answer: "Tiếp tục interceptor/advice chain và cuối cùng tới target nếu chain cho phép."
+        explanation: "Đúng. Đây là điểm trao quyền control-flow cho around advice."
+      - id: C
+        answer: "Commit transaction hiện tại."
+        explanation: "Sai. Transaction semantics không phải meaning chung của `proceed()`."
+      - id: D
+        answer: "Chỉ đọc metadata của join point."
+        explanation: "Sai. `proceed()` thực sự tiếp tục invocation."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.Around/Around.md", anchor: "around-mental-model"}
+    apiRelated: {controller: "AroundAdviceController", methodSignature: "timing()"}
+
+  - id: around-skip-target
+    question: "Điều gì xảy ra nếu `@Around` advice không gọi `proceed()` và tự return một giá trị?"
+    answers:
+      - id: A
+        answer: "Target vẫn luôn chạy ngầm sau khi advice return."
+        explanation: "Sai. Chain dừng tại advice hiện tại."
+      - id: B
+        answer: "Spring ném exception vì `proceed()` bắt buộc phải gọi đúng một lần."
+        explanation: "Sai. Around advice có quyền không gọi `proceed()`."
+      - id: C
+        answer: "Target không được thực thi và caller nhận giá trị do advice trả về."
+        explanation: "Đúng. Module có experiment riêng cho behavior này."
+      - id: D
+        answer: "Chỉ `@Before` mới có thể skip target."
+        explanation: "Sai. `@Before` không có `proceed()` control; around advice mới có quyền này."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.Around/Around.md", anchor: "around-skip-demo"}
+    apiRelated: {controller: "AroundAdviceController", methodSignature: "skip()"}
+
+  - id: around-argument-rewrite
+    question: "Trong Spring AOP runtime của module, `proceed(new Object[]{...})` được dùng để làm gì?"
+    answers:
+      - id: D
+        answer: "Thay argument list của underlying method invocation trước khi tiếp tục chain."
+        explanation: "Đúng. Module normalize argument rồi truyền array mới vào `proceed(Object[])`."
+      - id: B
+        answer: "Đổi proxy strategy từ CGLIB sang JDK."
+        explanation: "Sai. Proxy strategy không liên quan API này."
+      - id: C
+        answer: "Thay return value sau khi target chạy."
+        explanation: "Sai. Return transformation là capability khác của around advice."
+      - id: A
+        answer: "Bind annotation instance vào advice parameter."
+        explanation: "Sai. `@annotation(...)` mới làm việc đó."
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.Around/Around.md", anchor: "around-arguments-demo"}
+    apiRelated: {controller: "AroundAdviceController", methodSignature: "arguments()"}
+
+  - id: around-exception-propagation
+    question: "Aspect dùng `@Around` để logging exception. Cách xử lý nào ít gây surprise hơn nếu requirement chỉ là quan sát lỗi?"
+    answers:
+      - id: A
+        answer: "Catch rồi luôn trả success giả để caller không thấy lỗi."
+        explanation: "Sai. Điều này có thể phá contract của target và che lỗi."
+      - id: B
+        answer: "Catch để ghi nhận rồi rethrow exception, đồng thời dùng `finally` cho cleanup cần thiết."
+        explanation: "Đúng. Module minh họa việc quan sát exception mà vẫn giữ propagation contract."
+      - id: C
+        answer: "Gọi `proceed()` lặp vô hạn cho tới khi success."
+        explanation: "Sai. Gọi proceed nhiều lần có thể lặp side effect và không phải retry policy an toàn mặc định."
+      - id: D
+        answer: "Không bao giờ được catch exception trong `@Around`."
+        explanation: "Sai. Có thể catch để observe/transform theo contract, nhưng cần chủ ý rõ ràng."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.Around/Around.md", anchor: "around-exception-demo"}
+    apiRelated: {controller: "AroundAdviceController", methodSignature: "exceptionPropagation()"}
+
+  - id: annotation-runtime-retention
+    question: "Vì sao custom annotation dùng cho runtime AOP matching thường cần `RetentionPolicy.RUNTIME`?"
+    answers:
+      - id: A
+        answer: "Để JVM tạo thêm thread khi annotation được đọc."
+        explanation: "Sai. Retention không liên quan thread creation."
+      - id: B
+        answer: "Để annotation metadata còn tồn tại và có thể được Aspect/framework đọc ở runtime."
+        explanation: "Đúng. Module đọc metadata của `@TrackExecution` khi application đang chạy."
+      - id: C
+        answer: "Để annotation tự biến method thành Spring bean."
+        explanation: "Sai. Annotation method-level không làm method trở thành bean."
+      - id: D
+        answer: "Để bỏ qua proxy boundary."
+        explanation: "Sai. Có annotation vẫn cần invocation đi qua proxy."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Annotation/Annotation.md", anchor: "annotation-contract"}
+    apiRelated: {controller: "AnnotationDrivenController", methodSignature: "trackByAnnotation()"}
+
+  - id: annotation-contract-not-guarantee
+    question: "Method có `@TrackExecution` nhưng được gọi bằng self-invocation trong cùng target. Điều nào đúng?"
+    answers:
+      - id: A
+        answer: "Annotation đảm bảo advice chạy dù call có qua proxy hay không."
+        explanation: "Sai. Annotation là declarative contract/matching metadata, không xóa proxy limitation."
+      - id: B
+        answer: "Advice có thể không chạy vì call nội bộ không quay lại proxy."
+        explanation: "Đúng. Đây là sự nối trực tiếp giữa Annotation chapter và SelfInvocation chapter."
+      - id: C
+        answer: "Spring tự weave bytecode của method đó ở compile time."
+        explanation: "Sai. Module dùng proxy-based Spring AOP."
+      - id: D
+        answer: "Method trở thành final sau khi thêm annotation."
+        explanation: "Sai. Annotation không thay modifier của method."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Annotation/Annotation.md", anchor: "annotation-vs-expression"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: aspect-order-nested-stack
+    question: "Hai `@Around` Aspect có `@Order(1)` và `@Order(2)` cùng match target. Với precedence trong README, sequence nào đúng?"
+    answers:
+      - id: C
+        answer: "order1-before → order2-before → target → order2-after → order1-after"
+        explanation: "Đúng. Advice chain là nested call stack nên chiều unwind đảo ngược chiều đi vào."
+      - id: B
+        answer: "order1-before → order1-after → order2-before → order2-after → target"
+        explanation: "Sai. Around advice bao quanh chain thay vì chạy như callback phẳng."
+      - id: A
+        answer: "target → order1-before → order2-before → order1-after → order2-after"
+        explanation: "Sai. Before portion chạy trước target."
+      - id: D
+        answer: "Không thể có nhiều Aspect cùng match một join point."
+        explanation: "Sai. Đây chính là lý do ordering tồn tại."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.Ordering/Ordering.md", anchor: "ordering-demo"}
+    apiRelated: {controller: "OrderingController", methodSignature: "observeOrdering()"}
+
+  - id: aspect-order-business-protocol
+    question: "Dấu hiệu nào cho thấy đang lạm dụng `@Order`?"
+    answers:
+      - id: A
+        answer: "Hai concern độc lập cần precedence đơn giản và được document."
+        explanation: "Sai. Đây có thể là usage hợp lý."
+      - id: B
+        answer: "Correctness của business workflow phụ thuộc chuỗi dài A phải sửa dữ liệu cho B, B phải chạy trước C, C trước D."
+        explanation: "Đúng. README xem đây là dấu hiệu workflow nên nằm trong abstraction/service rõ ràng hơn."
+      - id: C
+        answer: "Aspect chỉ dùng logging."
+        explanation: "Sai. Logging cross-cutting là pattern phổ biến."
+      - id: D
+        answer: "Order value là số nguyên."
+        explanation: "Sai. Đây chỉ là API contract bình thường."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.Ordering/Ordering.md", anchor: "ordering-pitfall"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: self-invocation-bypass
+    question: "Vì sao `this.inner()` bên trong target có thể bỏ qua Spring AOP advice?"
+    answers:
+      - id: D
+        answer: "Vì method call xảy ra trực tiếp trên target hiện tại và không quay lại proxy boundary."
+        explanation: "Đúng. Đây là self-invocation limitation cốt lõi của proxy-based AOP."
+      - id: B
+        answer: "Vì `this` luôn null bên trong Spring bean."
+        explanation: "Sai. `this` vẫn là object hiện tại."
+      - id: C
+        answer: "Vì annotation chỉ hoạt động ở controller."
+        explanation: "Sai. Annotation có thể áp dụng ở service method."
+      - id: A
+        answer: "Vì Spring tắt AOP sau invocation đầu tiên."
+        explanation: "Sai. Vấn đề là call path, không phải AOP bị tắt."
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.SelfInvocation/SelfInvocation.md", anchor: "self-invocation-demo"}
+    apiRelated: {controller: "SelfInvocationController", methodSignature: "compareSelfInvocation()"}
+
+  - id: self-invocation-refactor
+    question: "Cách thiết kế nào thường được ưu tiên để tránh self-invocation limitation?"
+    answers:
+      - id: A
+        answer: "Gọi `AopContext.currentProxy()` ở mọi method."
+        explanation: "Sai. Đây là escape hatch làm code phụ thuộc rõ vào AOP infrastructure."
+      - id: B
+        answer: "Refactor boundary để Bean A gọi Bean B qua Spring-managed proxy."
+        explanation: "Đúng. README ưu tiên tách boundary giữa các bean."
+      - id: C
+        answer: "Biến mọi method thành static."
+        explanation: "Sai. Điều này không giải proxy interception theo cách mong muốn."
+      - id: D
+        answer: "Tạo object bằng `new` bên trong method."
+        explanation: "Sai. Điều này còn đưa invocation ra khỏi Spring-managed proxy boundary."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.SelfInvocation/SelfInvocation.md", anchor: "proxy-limitations"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: final-method-cglib-limit
+    question: "Vì sao final method là limitation của class-based/CGLIB proxy?"
+    answers:
+      - id: C
+        answer: "Vì class-based proxy cần subclass/override method để intercept, còn final method không thể override."
+        explanation: "Đúng. Annotation có thể tồn tại nhưng proxy subclass vẫn không chen interceptor vào method final đó."
+      - id: B
+        answer: "Vì JVM không cho gọi final method."
+        explanation: "Sai. Final method vẫn gọi bình thường; chỉ không override được."
+      - id: A
+        answer: "Vì final method luôn private."
+        explanation: "Sai. `final` và `private` là modifier khác nhau."
+      - id: D
+        answer: "Vì final method bắt buộc chạy trên JDK proxy."
+        explanation: "Sai. Demo đang minh họa limitation của class-based proxy."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.SelfInvocation/SelfInvocation.md", anchor: "final-method-demo"}
+    apiRelated: {controller: "SelfInvocationController", methodSignature: "finalMethodLimitation()"}
+
+  - id: aop-business-logic-boundary
+    question: "Khi pricing, order state hoặc workflow decision là business rule cốt lõi, cách thiết kế nào phù hợp nhất?"
+    answers:
+      - id: D
+        answer: "Giữ các rule đó trong service/domain abstraction rõ ràng; Aspect chỉ xử lý concern cross-cutting quanh boundary nếu cần."
+        explanation: "Đúng. Core business decision nên có dependency và control flow explicit thay vì bị giấu trong Aspect."
+      - id: B
+        answer: "Đưa pricing và order-state transition vào `@Around` để service chỉ còn các method rỗng."
+        explanation: "Sai. Đây là business logic cốt lõi; giấu nó trong Aspect làm behavior khó đọc, test và debug hơn."
+      - id: C
+        answer: "Dùng chuỗi `@Order` giữa nhiều Aspect để biểu diễn workflow nghiệp vụ chính."
+        explanation: "Sai. Ordering dependency phức tạp không nên trở thành workflow engine ẩn."
+      - id: A
+        answer: "Chỉ cần business rule được dùng ở nhiều method thì tự động coi nó là cross-cutting concern."
+        explanation: "Sai. Việc lặp lại không biến một decision thuộc domain thành cross-cutting concern; bản chất responsibility mới là yếu tố quyết định."
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.Patterns/Patterns.md", anchor: "aop-pitfalls"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: aspect-singleton-mutable-state
+    question: "Vì sao mutable field trong Aspect bean thông thường có thể nguy hiểm?"
+    answers:
+      - id: C
+        answer: "Aspect bean thường singleton nên nhiều request/thread có thể cùng truy cập field đó."
+        explanation: "Đúng. Shared mutable state trong singleton Aspect có thể tạo race condition hoặc leak state giữa invocation."
+      - id: B
+        answer: "Spring tạo một Aspect instance mới cho từng method call."
+        explanation: "Sai. Đây chính là assumption cần tránh."
+      - id: A
+        answer: "Mutable field làm pointcut không compile."
+        explanation: "Sai. Vấn đề là runtime state/concurrency, không phải pointcut compile."
+      - id: D
+        answer: "Mutable field tự động biến Aspect thành prototype scope."
+        explanation: "Sai. Scope không tự đổi như vậy."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.Patterns/Patterns.md", anchor: "aop-pitfalls"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: joinpoint-vs-proceedingjoinpoint
+    question: "Khác biệt quan trọng nhất giữa `JoinPoint` và `ProceedingJoinPoint` trong Spring AOP advice là gì?"
+    answers:
+      - id: D
+        answer: "`JoinPoint` cung cấp metadata về invocation; `ProceedingJoinPoint` dùng trong `@Around` còn có `proceed()` để tiếp tục hoặc kiểm soát invocation chain."
+        explanation: "Đúng. `ProceedingJoinPoint` mở rộng khả năng quan sát bằng quyền điều khiển luồng thông qua `proceed()`."
+      - id: B
+        answer: "`JoinPoint` có `proceed()` còn `ProceedingJoinPoint` chỉ đọc signature."
+        explanation: "Sai. Quan hệ bị đảo ngược: `ProceedingJoinPoint` mới cung cấp `proceed()`."
+      - id: C
+        answer: "Hai type hoàn toàn giống nhau; tên khác nhau chỉ để tương thích lịch sử."
+        explanation: "Sai. `ProceedingJoinPoint` có capability control-flow bổ sung và gắn với around advice."
+      - id: A
+        answer: "`ProceedingJoinPoint` chỉ dùng cho full AspectJ weaving, không dùng được trong Spring AOP."
+        explanation: "Sai. Module dùng `ProceedingJoinPoint` trực tiếp trong proxy-based Spring AOP `@Around` advice."
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.Around/Around.md", anchor: "around-mental-model"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: proxyfactory-methodinterceptor
+    question: "Trong Spring AOP API thấp hơn annotation style, `MethodInterceptor` gần nhất với advice nào?"
+    answers:
+      - id: C
+        answer: "Around advice, vì có `invocation.proceed()` để tiếp tục chain."
+        explanation: "Đúng. README dùng MethodInterceptor để minh họa cùng mental model before/proceed/after."
+      - id: B
+        answer: "Chỉ `@Before`, vì interceptor không thấy code sau target."
+        explanation: "Sai. Interceptor có thể chạy logic cả trước và sau `proceed()`."
+      - id: A
+        answer: "Chỉ `@AfterThrowing`."
+        explanation: "Sai. Nó có quyền bao quanh invocation."
+      - id: D
+        answer: "Không liên quan advice; chỉ là HTTP interceptor."
+        explanation: "Sai. Đây là Spring AOP Alliance interceptor trong proxy chain."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "11.ProxyFactory/ProxyFactory.md", anchor: "proxy-factory-mental-model"}
+    apiRelated: {controller: "ProgrammaticProxyController", methodSignature: "compareProxyFactoryStrategies()"}
+
+  - id: proxyfactory-jdk-surface
+    question: "Trong ProxyFactory demo, tại sao JDK proxy không expose `targetOnlyCapability()` qua interface `GreetingOperations`?"
+    answers:
+      - id: D
+        answer: "Vì JDK proxy expose interface surface thay vì trở thành subclass của concrete target."
+        explanation: "Đúng. Đây là điểm type-surface quan trọng giữa JDK proxy và CGLIB."
+      - id: B
+        answer: "Vì method đó luôn private."
+        explanation: "Sai. Method là capability trên concrete class nhưng không nằm trong interface."
+      - id: C
+        answer: "Vì MethodInterceptor chỉ chạy với CGLIB."
+        explanation: "Sai. Cùng interceptor được áp dụng cho cả hai proxy strategy."
+      - id: A
+        answer: "Vì JDK proxy không thể implement interface."
+        explanation: "Sai. JDK proxy chính là proxy dựa trên interface."
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "11.ProxyFactory/ProxyFactory.md", anchor: "jdk-vs-cglib"}
+    apiRelated: {controller: "ProgrammaticProxyController", methodSignature: "compareProxyFactoryStrategies()"}
+
+  - id: advisor-pointcut-plus-advice
+    question: "Mental model đúng nhất của Spring `Advisor` là gì?"
+    answers:
+      - id: C
+        answer: "Advisor = Pointcut + Advice/MethodInterceptor."
+        explanation: "Đúng. Pointcut quyết định match đâu, Advice quyết định làm gì."
+      - id: B
+        answer: "Advisor = Controller + Service."
+        explanation: "Sai. Đây không phải abstraction của Spring AOP infrastructure."
+      - id: A
+        answer: "Advisor chỉ là tên khác của Aspect bean."
+        explanation: "Sai. Advisor là abstraction ghép selection và behavior ở tầng thấp hơn."
+      - id: D
+        answer: "Advisor chỉ chứa MethodMatcher, không có Advice."
+        explanation: "Sai. Nó kết hợp pointcut với advice."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "12.Advisor/Advisor.md", anchor: "advisor-mental-model"}
+    apiRelated: {controller: "AdvisorController", methodSignature: "observeAdvisor()"}
+
+  - id: pointcut-classfilter-methodmatcher
+    question: "Ở Spring AOP API thấp hơn, một `Pointcut` được mô hình hóa cơ bản bởi thành phần nào?"
+    answers:
+      - id: D
+        answer: "ClassFilter và MethodMatcher."
+        explanation: "Đúng. ClassFilter loại candidate type; MethodMatcher chọn method/invocation phù hợp."
+      - id: B
+        answer: "BeanFactory và ControllerAdvice."
+        explanation: "Sai. Đây là các abstraction khác."
+      - id: C
+        answer: "ThreadLocal và Executor."
+        explanation: "Sai. Không liên quan pointcut internals."
+      - id: A
+        answer: "Only annotation name string."
+        explanation: "Sai. Programmatic pointcut có abstraction rõ hơn nhiều."
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "12.Advisor/Advisor.md", anchor: "pointcut-internals"}
+    apiRelated: {controller: "AdvisorController", methodSignature: "observeAdvisor()"}
+
+  - id: dynamic-methodmatcher-cost
+    question: "Khi nào `MethodMatcher#isRuntime()` cần là `true`?"
+    answers:
+      - id: C
+        answer: "Khi quyết định match cần xem runtime arguments của từng invocation sau static phase."
+        explanation: "Đúng. Module dùng argument `mode=audit` để minh họa dynamic matching."
+      - id: B
+        answer: "Bất cứ khi nào method là public."
+        explanation: "Sai. Visibility không quyết định runtime matcher."
+      - id: A
+        answer: "Khi pointcut chỉ dựa trên method name cố định."
+        explanation: "Sai. Trường hợp đó thường static matching là đủ."
+      - id: D
+        answer: "Chỉ khi dùng CGLIB proxy."
+        explanation: "Sai. Static/dynamic matching là concern của pointcut, không gắn riêng một proxy strategy."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "12.Advisor/Advisor.md", anchor: "static-dynamic-pointcut"}
+    apiRelated: {controller: "AdvisorController", methodSignature: "observeAdvisor()"}
+
+  - id: auto-proxy-creator-role
+    question: "Spring tạo AOP proxy tự động cho bean theo mental model nào?"
+    answers:
+      - id: D
+        answer: "Bean instance đi qua BeanPostProcessor/auto-proxy infrastructure; framework tìm Advisor phù hợp và có thể trả proxy thay raw bean reference."
+        explanation: "Đúng. Đây là simplified auto-proxy creation flow trong README."
+      - id: B
+        answer: "Controller tự gọi `new ProxyFactory()` cho mọi service trước mỗi request."
+        explanation: "Sai. Application code bình thường không làm việc đó."
+      - id: C
+        answer: "JVM tự nhận diện `@Aspect` và đổi bytecode của mọi class."
+        explanation: "Sai. Module dùng Spring AOP proxy infrastructure."
+      - id: A
+        answer: "AOP proxy chỉ được tạo sau khi method đầu tiên thất bại."
+        explanation: "Sai. Proxy tồn tại khi bean được consumer sử dụng nếu bean cần được proxied."
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "13.Infrastructure/Infrastructure.md", anchor: "auto-proxy-mental-model"}
+    apiRelated: {controller: "InfrastructureController", methodSignature: "inspectInfrastructure()"}
+
+  - id: spring-boot-aop-default-proxy
+    question: "Theo README, Spring Boot mặc định ưu tiên proxy strategy nào khi `spring.aop.proxy-target-class` giữ default?"
+    answers:
+      - id: A
+        answer: "Class-based/CGLIB proxy vì documented Boot default của `spring.aop.proxy-target-class` là true."
+        explanation: "Đúng. README cũng phân biệt documented default với property được application khai báo explicit."
+      - id: B
+        answer: "Luôn JDK proxy, bất kể configuration."
+        explanation: "Sai. Boot default hiện được mô tả là class-based proxy."
+      - id: C
+        answer: "Không có proxy; Spring Boot dùng compile-time weaving."
+        explanation: "Sai. Runtime của module vẫn proxy-based."
+      - id: D
+        answer: "Proxy strategy được chọn theo số lượng method của bean."
+        explanation: "Sai. Không có rule như vậy."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "13.Infrastructure/Infrastructure.md", anchor: "spring-boot-aop-auto-config"}
+    apiRelated: {controller: "InfrastructureController", methodSignature: "inspectInfrastructure()"}
+
+  - id: introduction-interface-enrichment
+    question: "Spring AOP Introduction (`@DeclareParents`) cho phép điều gì?"
+    answers:
+      - id: A
+        answer: "Proxy expose thêm một interface/capability mà target class ban đầu không implement."
+        explanation: "Đúng. Capability mới nằm trên proxy type surface, không phải target class bị sửa bytecode."
+      - id: B
+        answer: "Đổi superclass thực của target sau khi JVM load class."
+        explanation: "Sai. README nhấn mạnh đây không phải bytecode mutation của target."
+      - id: C
+        answer: "Biến mọi private method thành public."
+        explanation: "Sai. Introduction không thay visibility của method cũ."
+      - id: D
+        answer: "Loại bỏ hoàn toàn proxy boundary."
+        explanation: "Sai. Introduction tồn tại chính trên AOP proxy."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "14.Introduction/Introduction.md", anchor: "introduction-mental-model"}
+    apiRelated: {controller: "IntroductionController", methodSignature: "observeIntroduction()"}
+
+  - id: spring-aop-vs-full-aspectj
+    question: "Phát biểu nào phân biệt đúng Spring AOP trong module với full AspectJ?"
+    answers:
+      - id: A
+        answer: "Module dùng @AspectJ-style declaration nhưng runtime vẫn là Spring AOP proxy-based method interception."
+        explanation: "Đúng. Có package/annotation AspectJ không đồng nghĩa đang weave bytecode bằng AspectJ compiler/agent."
+      - id: B
+        answer: "Module dùng AspectJ compiler để weave mọi field access."
+        explanation: "Sai. Build không cấu hình AspectJ compiler hay load-time weaving agent."
+      - id: C
+        answer: "Spring AOP và full AspectJ có join point model hoàn toàn giống nhau."
+        explanation: "Sai. Full AspectJ rộng hơn proxy-based method execution."
+      - id: D
+        answer: "Spring AOP không thể dùng annotation `@Aspect`."
+        explanation: "Sai. Module dùng @AspectJ declaration style trên Spring AOP runtime."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "15.RuntimeBoundary/RuntimeBoundary.md", anchor: "spring-aop-runtime"}
+    apiRelated: {controller: "RuntimeBoundaryController", methodSignature: "inspectRuntimeBoundary()"}
+
+  - id: aop-async-timing-boundary
+    question: "Một `@Around` advice đo thời gian quanh method trả `CompletableFuture` rất nhanh. Có thể kết luận gì?"
+    answers:
+      - id: A
+        answer: "Elapsed time của advice luôn bằng thời gian end-to-end cho tới khi Future hoàn tất."
+        explanation: "Sai. Advice có thể kết thúc khi method đã trả container nhưng async workload còn chạy."
+      - id: B
+        answer: "Advice đo thời gian method invocation; muốn đo completion end-to-end cần instrumentation phù hợp với abstraction async/reactive."
+        explanation: "Đúng. README nêu rõ boundary này trong framework connections."
+      - id: C
+        answer: "AOP tự động block cho tới khi Future complete."
+        explanation: "Sai. `proceed()` return khi method invocation return theo contract của method."
+      - id: D
+        answer: "Spring AOP không thể intercept method trả Future."
+        explanation: "Sai. Return type không ngăn method interception."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "15.RuntimeBoundary/RuntimeBoundary.md", anchor: "framework-connections"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: aop-weaving-terminology
+    question: "Trong context của module, nên hiểu từ `weaving` như thế nào để tránh nhầm Spring AOP với full AspectJ?"
+    answers:
+      - id: A
+        answer: "Weaving luôn đồng nghĩa compile-time bytecode modification bằng AspectJ compiler."
+        explanation: "Sai. README dùng weaving theo nghĩa AOP tổng quát là liên kết Aspect với target/advised object."
+      - id: B
+        answer: "Spring AOP thực hiện liên kết behavior ở runtime qua proxy; full AspectJ còn có compile-time/load-time weaving và join point model rộng hơn."
+        explanation: "Đúng. Hai runtime có thể dùng cùng @AspectJ declaration style nhưng cơ chế thực thi khác nhau."
+      - id: C
+        answer: "Weaving là việc Spring inject dependency vào field `@Autowired`."
+        explanation: "Sai. Dependency injection không phải AOP weaving."
+      - id: D
+        answer: "Spring AOP không có khái niệm liên kết Aspect với target."
+        explanation: "Sai. Proxy/advisor chain chính là runtime mechanism thực hiện việc đó."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.Terminology/Terminology.md", anchor: "terminology-map"}
+    apiRelated: {controller: "TerminologyController", methodSignature: "inspectTerminology()"}
+
+  - id: proxy-aoputils-introspection
+    question: "Khi cần xác định một injected bean có thực sự là AOP proxy hay không, cách nào bền vững hơn?"
+    answers:
+      - id: A
+        answer: "Parse tên runtime class và đoán theo suffix generated."
+        explanation: "Sai. Tên generated class là implementation detail dễ thay đổi."
+      - id: B
+        answer: "Dùng `AopUtils`/Spring AOP introspection để kiểm tra `isAopProxy`, `isCglibProxy`, `isJdkDynamicProxy`."
+        explanation: "Đúng. README khuyên kiểm tra semantics thay vì phụ thuộc tên class."
+      - id: C
+        answer: "Kiểm tra bean có annotation `@Service` là đủ để kết luận nó đã được proxy."
+        explanation: "Sai. `@Service` chỉ đăng ký component, không chứng minh có AOP proxy."
+      - id: D
+        answer: "Mọi bean Spring đều mặc định là AOP proxy."
+        explanation: "Sai. Chỉ bean cần infrastructure/advisor phù hợp mới được proxied."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.Proxy/Proxy.md", anchor: "proxy-demo"}
+    apiRelated: {controller: "ProxyMentalModelController", methodSignature: "inspectProxy()"}
+
+  - id: pointcut-composition-narrowing
+    question: "Tại sao nên đặt tên các pointcut nhỏ rồi compose bằng `&&`, `||`, `!`?"
+    answers:
+      - id: A
+        answer: "Để expression phức tạp dễ đọc, tái sử dụng và giữ boundary đủ hẹp thay vì nhét mọi rule vào một annotation dài."
+        explanation: "Đúng. Đây là mục tiêu chính của named pointcut composition trong README."
+      - id: B
+        answer: "Vì Spring cấm viết nhiều designator trong cùng một expression."
+        explanation: "Sai. Spring cho phép compose expression trực tiếp; named pointcut là cách tổ chức tốt hơn."
+      - id: C
+        answer: "Để pointcut tự động bypass proxy limitation."
+        explanation: "Sai. Composition không thay đổi proxy boundary."
+      - id: D
+        answer: "Để Aspect chạy trên field access thay vì method execution."
+        explanation: "Sai. Runtime boundary của Spring AOP vẫn là proxy-based method interception."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.Pointcut/Pointcut.md", anchor: "pointcut-mental-model"}
+    apiRelated: {controller: "PointcutController", methodSignature: "comparePointcuts()"}
+
+  - id: advice-parameter-binding
+    question: "Cách binding nào được ghép đúng trong advice declaration?"
+    answers:
+      - id: A
+        answer: "`returning = \"result\"` bind exception; `throwing = \"e\"` bind return value."
+        explanation: "Sai. Hai semantics bị đảo ngược."
+      - id: B
+        answer: "`@annotation(annotation)` chỉ kiểm tra annotation nhưng không thể bind instance annotation vào advice parameter."
+        explanation: "Sai. Module thực tế bind annotation instance để đọc metadata."
+      - id: C
+        answer: "`args(value)` có thể bind runtime argument; `returning` bind return value; `throwing` bind exception."
+        explanation: "Đúng. Advice có thể nhận đúng dữ liệu được declaration/pointcut bind thay vì tự parse mọi thứ từ `Object[]`."
+      - id: D
+        answer: "Advice parameter binding chỉ tồn tại trong full AspectJ, không có trong Spring AOP."
+        explanation: "Sai. Module dùng các kiểu binding này trong Spring AOP."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.Advice/Advice.md", anchor: "advice-parameter-binding"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: around-return-transformation
+    question: "Một `@Around` advice gọi `proceed()`, nhận result rồi trả một result khác. Điều này chứng minh capability nào?"
+    answers:
+      - id: A
+        answer: "Advice có thể thay đổi return value mà caller quan sát được."
+        explanation: "Đúng. Module có endpoint transform minh họa target trả một giá trị nhưng caller nhận giá trị đã được advice biến đổi."
+      - id: B
+        answer: "Advice đã thay đổi bytecode của target method."
+        explanation: "Sai. Đây là proxy/interceptor behavior quanh invocation, không phải bytecode rewriting."
+      - id: C
+        answer: "Target method không được thực thi."
+        explanation: "Sai. Trong case này `proceed()` đã được gọi nên target vẫn chạy."
+      - id: D
+        answer: "Only `@AfterReturning` mới có thể thay return value cho caller."
+        explanation: "Sai. README phân biệt `@AfterReturning` quan sát return value với `@Around` có thể thay nó."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.Around/Around.md", anchor: "around-transform-demo"}
+    apiRelated: {controller: "AroundAdviceController", methodSignature: "transform()"}
+
+  - id: around-proceed-multiple-times
+    question: "Tại sao không nên xem việc gọi `proceed()` nhiều lần trong `@Around` như một retry pattern mặc định?"
+    answers:
+      - id: A
+        answer: "Vì mỗi lần `proceed()` có thể tiếp tục chain và làm target/side effect thực thi thêm lần nữa."
+        explanation: "Đúng. `proceed()` không phải callback vô hại; retry cần contract riêng về idempotency và failure handling."
+      - id: B
+        answer: "Vì JVM chỉ cho gọi method Java đúng một lần."
+        explanation: "Sai. Giới hạn nằm ở semantics/design chứ không phải JVM cấm gọi method lặp lại."
+      - id: C
+        answer: "Vì `proceed()` luôn tạo một transaction mới và commit ngay."
+        explanation: "Sai. Đây không phải semantics chung của ProceedingJoinPoint."
+      - id: D
+        answer: "Vì lần gọi thứ hai luôn bị Spring bỏ qua."
+        explanation: "Sai. Không nên dựa vào assumption đó."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.Around/Around.md", anchor: "around-exception-demo"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: annotation-metadata-binding
+    question: "Với pointcut `@annotation(trackExecution)`, lợi ích thực tế của việc bind annotation instance vào advice parameter là gì?"
+    answers:
+      - id: A
+        answer: "Advice có thể đọc metadata như `trackExecution.value()` và dùng nó trong cross-cutting behavior."
+        explanation: "Đúng. Demo tracking đọc label từ annotation cùng thông tin method."
+      - id: B
+        answer: "Advice có thể thay đổi retention policy của annotation khi runtime."
+        explanation: "Sai. Retention metadata của annotation type không bị đổi bởi advice."
+      - id: C
+        answer: "Annotation instance làm invocation bỏ qua proxy."
+        explanation: "Sai. Proxy boundary vẫn là điều kiện bắt buộc."
+      - id: D
+        answer: "Binding biến annotation thành Spring bean singleton."
+        explanation: "Sai. Đây chỉ là binding metadata vào parameter."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Annotation/Annotation.md", anchor: "annotation-demo"}
+    apiRelated: {controller: "AnnotationDrivenController", methodSignature: "trackByAnnotation()"}
+
+  - id: ordering-unspecified-same-precedence
+    question: "Hai advice cùng precedence cùng match một invocation nhưng không có ordering contract rõ. Có nên lấy thứ tự log của một lần chạy làm guarantee không?"
+    answers:
+      - id: A
+        answer: "Có, vì log đầu tiên luôn định nghĩa precedence vĩnh viễn."
+        explanation: "Sai. Một execution quan sát được không tự tạo contract ordering."
+      - id: B
+        answer: "Không. Nếu correctness cần thứ tự thì phải khai báo precedence rõ hoặc tách thiết kế để giảm coupling."
+        explanation: "Đúng. README chủ động không dùng thứ tự hai advice cùng precedence trong Pointcut demo làm learning contract."
+      - id: C
+        answer: "Có, miễn là cả hai advice nằm trong cùng source file."
+        explanation: "Sai. Source order của advice method không nên được dùng như contract ngầm."
+      - id: D
+        answer: "Spring sẽ luôn sort theo alphabet của method name."
+        explanation: "Sai. Không có contract như vậy."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.Ordering/Ordering.md", anchor: "ordering-mental-model"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: aop-overbroad-pointcut
+    question: "Rủi ro chính của pointcut quá rộng như `execution(* com.example..*(..))` là gì?"
+    answers:
+      - id: A
+        answer: "Có thể intercept nhiều method hơn ý định, làm runtime behavior khó dự đoán và tăng coupling ẩn."
+        explanation: "Đúng. Practical Patterns chapter liệt kê đây là pitfall đầu tiên."
+      - id: B
+        answer: "Spring sẽ không compile được expression có wildcard."
+        explanation: "Sai. Wildcard là một phần bình thường của expression syntax."
+      - id: C
+        answer: "Pointcut rộng tự động chuyển runtime sang full AspectJ."
+        explanation: "Sai. Proxy/runtime model không đổi vì expression rộng hơn."
+      - id: D
+        answer: "Nó chỉ ảnh hưởng logging, không thể ảnh hưởng correctness."
+        explanation: "Sai. Nếu advice có side effect/control flow, matching ngoài ý muốn có thể ảnh hưởng behavior đáng kể."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.Patterns/Patterns.md", anchor: "aop-pitfalls"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: spring-vs-boot-proxy-selection
+    question: "Nuance nào mô tả đúng việc chọn JDK proxy hay class-based proxy giữa Spring Framework core và Spring Boot?"
+    answers:
+      - id: A
+        answer: "Spring Framework thường dùng JDK dynamic proxy khi target có interface phù hợp trừ khi class proxy được ép; Spring Boot document `spring.aop.proxy-target-class=true` mặc định nên thường ưu tiên class-based/CGLIB proxy."
+        explanation: "Đúng. Cần phân biệt proxy-selection rule của Spring AOP core với Boot auto-configuration default được document trong module."
+      - id: B
+        answer: "Spring Framework core và Spring Boot luôn bắt buộc JDK dynamic proxy nếu target implement bất kỳ interface nào."
+        explanation: "Sai. Class-based proxy có thể được ép, và Boot mặc định document `proxy-target-class=true`."
+      - id: C
+        answer: "Spring Boot không dùng proxy; starter AOP tự động bật AspectJ compile-time weaving."
+        explanation: "Sai. Module dùng proxy-based Spring AOP, không cấu hình AspectJ compiler hay load-time weaving."
+      - id: D
+        answer: "Proxy strategy được Spring Boot chọn dựa trên số lượng method của bean."
+        explanation: "Sai. Không có rule chọn proxy theo số lượng method."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "13.Infrastructure/Infrastructure.md", anchor: "spring-boot-aop-auto-config"}
+    apiRelated: {controller: "InfrastructureController", methodSignature: "inspectInfrastructure()"}
+
+  - id: infrastructure-advised-interface
+    question: "Interface `Advised` hữu ích nhất cho mục đích nào?"
+    answers:
+      - id: A
+        answer: "Inspect các Advisor/interceptor metadata gắn với một Spring AOP proxy khi debug hoặc học infrastructure."
+        explanation: "Đúng. README xem đây là công cụ introspection, không phải business-flow dependency mặc định."
+      - id: B
+        answer: "Dùng làm domain interface cho mọi service để AOP hoạt động."
+        explanation: "Sai. Application code thông thường không cần phụ thuộc sâu vào `Advised`."
+      - id: C
+        answer: "Thay thế BeanFactory và ApplicationContext."
+        explanation: "Sai. `Advised` không phải container API."
+      - id: D
+        answer: "Buộc mọi bean chuyển thành JDK dynamic proxy."
+        explanation: "Sai. Nó không phải proxy-strategy switch."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "13.Infrastructure/Infrastructure.md", anchor: "advised-interface"}
+    apiRelated: {controller: "InfrastructureController", methodSignature: "inspectInfrastructure()"}
+
+  - id: declare-parents-default-impl
+    question: "Trong `@DeclareParents`, vai trò của `defaultImpl` là gì?"
+    answers:
+      - id: A
+        answer: "Cung cấp implementation mặc định cho interface được introduction vào proxy."
+        explanation: "Đúng. Module dùng `DefaultUsageTracked` để implement capability `UsageTracked`."
+      - id: B
+        answer: "Chỉ định superclass mới cho target class thật."
+        explanation: "Sai. Target class không bị đổi inheritance tree bằng bytecode mutation trong demo này."
+      - id: C
+        answer: "Chỉ định default pointcut order."
+        explanation: "Sai. Đây không phải ordering metadata."
+      - id: D
+        answer: "Chỉ định bean name của controller."
+        explanation: "Sai. Không liên quan controller."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "14.Introduction/Introduction.md", anchor: "declare-parents"}
+    apiRelated: {controller: "IntroductionController", methodSignature: "observeIntroduction()"}
+
+  - id: runtime-boundary-debug-checklist
+    question: "Khi một advice không chạy trong module Spring AOP này, thứ tự debug nào hợp lý nhất?"
+    answers:
+      - id: A
+        answer: "Kiểm tra object có managed/proxied không → invocation có đi qua proxy không → Advisor/pointcut có match không → interceptor/advice chain chạy thế nào."
+        explanation: "Đúng. RuntimeBoundary chapter đưa đúng checklist này để debug theo architecture."
+      - id: B
+        answer: "Đổi ngay sang AspectJ compile-time weaving trước khi kiểm tra proxy."
+        explanation: "Sai. Điều đó bỏ qua nguyên nhân phổ biến trong runtime hiện tại và thay đổi architecture không cần thiết."
+      - id: C
+        answer: "Tăng `@Order` xuống số âm rồi thử lại."
+        explanation: "Sai. Ordering không sửa một invocation vốn không đi qua proxy hoặc pointcut không match."
+      - id: D
+        answer: "Đổi mọi method thành `final` để proxy ổn định hơn."
+        explanation: "Sai. Với class-based proxy, final method còn là limitation interception."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "15.RuntimeBoundary/RuntimeBoundary.md", anchor: "spring-aop-vs-aspectj"}
+    apiRelated: {controller: "RuntimeBoundaryController", methodSignature: "inspectRuntimeBoundary()"}
+
+  - id: aop-integration-test-proxy-boundary
+    question: "Bạn muốn kiểm tra một Spring AOP advice có thực sự được áp dụng ở runtime. Test nào có giá trị nhất cho behavior này?"
+    answers:
+      - id: A
+        answer: "Chỉ `new` target class rồi gọi method trực tiếp, không khởi tạo Spring context."
+        explanation: "Sai. Cách này chỉ kiểm tra target logic và cố ý bỏ qua Spring proxy/advisor infrastructure."
+      - id: B
+        answer: "Chỉ kiểm tra source code có annotation `@Aspect` bằng regex."
+        explanation: "Sai. Annotation hiện diện không chứng minh bean/proxy/pointcut chain thực sự hoạt động."
+      - id: C
+        answer: "Mock toàn bộ target và không gọi qua Spring-managed reference."
+        explanation: "Sai. Mock đơn thuần không chứng minh proxy boundary và interceptor chain runtime."
+      - id: D
+        answer: "Một integration test lấy bean từ Spring context rồi gọi qua reference mà application thực sự sử dụng, sau đó assert observable effect của advice."
+        explanation: "Đúng. Muốn kiểm tra AOP runtime behavior thì test phải đi qua chính managed proxy boundary cần xác minh."
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "", anchor: ""}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: aop-static-constructor-boundary
+    question: "Trong proxy-based Spring AOP, nhận định nào đúng về static method và constructor?"
+    answers:
+      - id: A
+        answer: "Chúng được intercept giống hệt public instance method miễn là pointcut dùng `execution(...)`."
+        explanation: "Sai. Instance AOP proxy intercept các invocation đi qua proxy object; static method và constructor không đi qua boundary đó."
+      - id: B
+        answer: "Static method và constructor không đi qua instance Spring AOP proxy boundary, nên proxy-based Spring AOP không intercept chúng như các instance method được gọi qua proxy."
+        explanation: "Đúng. Đây là hệ quả của proxy boundary: proxy đứng trước một bean instance và intercept method calls đi qua instance đó."
+      - id: C
+        answer: "Constructor chỉ được intercept nếu bean có ít nhất một interface; static method chỉ được intercept bởi CGLIB."
+        explanation: "Sai. JDK/CGLIB strategy không biến constructor hoặc static invocation thành call đi qua instance proxy."
+      - id: D
+        answer: "`@Around` có thể intercept constructor trong Spring AOP nếu không gọi `proceed()`."
+        explanation: "Sai. `@Around` chỉ có control khi invocation đã đi vào Spring AOP advice chain; constructor không đi qua instance proxy chain đó."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "", anchor: ""}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: aop-sensitive-argument-logging
+    question: "Một logging Aspect định log toàn bộ arguments của mọi service method. Concern thực tế quan trọng nhất là gì?"
+    answers:
+      - id: A
+        answer: "AOP tự động mã hóa mọi argument nên không có rủi ro dữ liệu nhạy cảm."
+        explanation: "Sai. Proxy/advice không tự sanitize secret, token, credential hay PII."
+      - id: B
+        answer: "Logging arguments làm pointcut ngừng match."
+        explanation: "Sai. Đây không phải consequence mặc định của việc đọc argument."
+      - id: C
+        answer: "Cross-cutting logging vẫn cần data-classification/redaction policy; không nên dump mù quáng secret hoặc dữ liệu nhạy cảm chỉ vì advice có thể đọc args."
+        explanation: "Đúng. Khả năng kỹ thuật quan sát arguments không thay thế yêu cầu bảo vệ dữ liệu và thiết kế observability có chủ đích."
+      - id: D
+        answer: "Chỉ controller mới có thể chứa dữ liệu nhạy cảm; service arguments luôn an toàn để log."
+        explanation: "Sai. Sensitive data có thể đi qua bất kỳ layer nào."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "", anchor: ""}
+    apiRelated: {controller: "", methodSignature: ""}

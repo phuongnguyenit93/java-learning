@@ -1,0 +1,614 @@
+# <interview-schema>
+# Cấu trúc câu hỏi Interview
+# schema-version: 2
+#
+# questions [kiểu: list; bắt buộc; mặc định: []]
+#   Danh sách câu hỏi Interview của module trong language hiện tại.
+#   mỗi phần tử:
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi phỏng vấn hiển thị cho người học.
+#     answer [kiểu: string; bắt buộc; mặc định: ""]
+#       Câu trả lời tham khảo, chỉ hiển thị khi người học chủ động mở.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu nội dung được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu nội dung đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+# </interview-schema>
+
+questions:
+  - question: >-
+      AOP giải quyết bài toán gì và cross-cutting concern khác business concern như thế nào?
+    answer: >-
+      Business concern là logic cốt lõi của use case như tạo đơn hàng hay tính giá. Cross-cutting concern là behavior xuất hiện ở nhiều nơi nhưng không phải mục tiêu nghiệp vụ chính, ví dụ logging, auditing, tracing, metrics hoặc authorization boundary. AOP giúp tách những concern dùng chung này khỏi business code và áp dụng chúng tại một boundary có thể mô tả rõ bằng pointcut hoặc annotation. AOP không thay thế business logic; nó chỉ đưa behavior dùng chung ra khỏi target method.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.CrossCutting/CrossCutting.md"
+      anchor: "cross-cutting-concern"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Làm sao chứng minh một logging concern thực sự được tách khỏi business method bằng Spring AOP?
+    answer: >-
+      Hãy kiểm tra target service không tự ghi các event logging trước và sau business logic, nhưng khi gọi Spring-managed bean qua proxy thì event vẫn xuất hiện quanh nhiều method. Điều đó chứng minh behavior nằm trong Aspect và được áp dụng từ bên ngoài target. Nếu cùng object được gọi ngoài proxy boundary thì behavior đó sẽ không tự xuất hiện chỉ vì code của method giống nhau.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.CrossCutting/CrossCutting.md"
+      anchor: "cross-cutting-demo"
+    apiRelated:
+      controller: "CrossCuttingController"
+      methodSignature: "observeCrossCutting()"
+
+  - question: >-
+      Aspect, Advice, Join Point, Pointcut, Target Object và AOP Proxy khác nhau như thế nào trong Spring AOP?
+    answer: >-
+      Aspect là nơi gom một cross-cutting concern. Advice là behavior cụ thể chạy tại join point được chọn. Join point của Spring AOP là method execution. Pointcut là rule chọn subset các method execution cần áp dụng advice. Target Object là object thật chứa business method, còn AOP Proxy là object đứng trước target và xây interceptor/advice chain khi invocation đi qua nó. Một call thường có mental model: caller → proxy → pointcut/advice chain → target.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.Terminology/Terminology.md"
+      anchor: "terminology-map"
+    apiRelated:
+      controller: "TerminologyController"
+      methodSignature: "inspectTerminology()"
+
+  - question: >-
+      Dùng @Aspect, @Before hay @Around có đồng nghĩa application đang dùng full AspectJ weaving không?
+    answer: >-
+      Không. Các annotation đó thuộc @AspectJ declaration style, nhưng Spring có thể đọc metadata rồi triển khai bằng Spring AOP proxy tại runtime. Full AspectJ có compile-time hoặc load-time weaving và join point model rộng hơn. Vì vậy phải tách syntax khai báo khỏi runtime mechanism; nhìn thấy package org.aspectj hoặc annotation AspectJ không đủ để kết luận bytecode đang được weave bằng AspectJ.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.Terminology/Terminology.md"
+      anchor: "spring-aop-vs-aspectj-style"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      @Aspect có tự làm class trở thành Spring bean không và vì sao Aspect thường cần @Component hoặc @Bean?
+    answer: >-
+      @Aspect mô tả semantics AOP của class nhưng không phải component-scanning annotation. Spring auto-proxy infrastructure cần Aspect instance tồn tại trong ApplicationContext để chuyển metadata của nó thành Advisor và áp dụng lên candidate bean. Vì vậy Aspect thường đồng thời là @Component hoặc được khai báo bằng @Bean. Nếu object Aspect không được quản lý như bean phù hợp thì chỉ có annotation chưa đủ để Spring dùng nó.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.Terminology/Terminology.md"
+      anchor: "spring-aop-vs-aspectj-style"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Mental model đúng của Spring AOP proxy là gì?
+    answer: >-
+      Consumer thường nhận một proxy thay vì reference trực tiếp tới target. Khi method call đi qua proxy, Spring xây hoặc đi qua interceptor chain, kiểm tra các Advisor/pointcut phù hợp rồi mới tới target. Câu hỏi quan trọng nhất khi debug không phải chỉ là annotation có tồn tại hay không, mà là invocation có đi qua proxy boundary hay không. Nếu call không đi qua proxy thì advice không có cơ hội tham gia.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.Proxy/Proxy.md"
+      anchor: "proxy-mental-model"
+    apiRelated:
+      controller: "ProxyMentalModelController"
+      methodSignature: "inspectProxy()"
+
+  - question: >-
+      Vì sao một Spring-managed bean có thể được AOP intercept còn object tạo bằng new thì không?
+    answer: >-
+      Spring-managed bean có thể được BeanPostProcessor/auto-proxy infrastructure bọc thành AOP proxy trước khi inject cho consumer. Object tạo trực tiếp bằng new nằm ngoài ApplicationContext nên Spring không thay reference đó bằng proxy và không gắn interceptor chain vào invocation. Vì vậy cùng một method và cùng pointcut expression, nhánh Spring-managed có thể chạy advice còn plain object thì chỉ chạy target trực tiếp.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.Proxy/Proxy.md"
+      anchor: "managed-vs-new-demo"
+    apiRelated:
+      controller: "ProxyMentalModelController"
+      methodSignature: "compareManagedBeanAndPlainObject()"
+
+  - question: >-
+      JDK Dynamic Proxy và CGLIB/class-based proxy khác nhau ở điểm nào?
+    answer: >-
+      JDK Dynamic Proxy tạo proxy dựa trên interface, nên type surface của proxy chủ yếu là các interface được expose. CGLIB/class-based proxy tạo subclass của target class, nên caller có thể nhìn thấy concrete type surface rộng hơn. Strategy cũng ảnh hưởng limitation: class-based proxy không thể override final method hoặc subclass final class. Không có strategy nào luôn tốt hơn; điều cần hiểu là type surface, khả năng intercept và cách application inject/cast bean.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.Proxy/Proxy.md"
+      anchor: "proxy-strategies"
+    apiRelated:
+      controller: "ProgrammaticProxyController"
+      methodSignature: "compareProxyFactoryStrategies()"
+
+  - question: >-
+      Các pointcut designator execution, within, args, @annotation, this, target và bean dùng để match theo gì?
+    answer: >-
+      execution chủ yếu match method execution/signature; within match theo declaring type hoặc package boundary; args nhìn runtime argument shape/type; @annotation match method có annotation cụ thể; this nhìn type của proxy object; target nhìn type của target object phía sau proxy; bean là designator riêng của Spring để match theo bean name. Pointcut nên đủ hẹp và có thể dự đoán, thay vì dùng expression quá rộng rồi để Aspect vô tình áp dụng vào nhiều method không liên quan.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.Pointcut/Pointcut.md"
+      anchor: "pointcut-mental-model"
+    apiRelated:
+      controller: "PointcutController"
+      methodSignature: "comparePointcuts()"
+
+  - question: >-
+      args(...) khác execution(...) như thế nào khi match parameter type?
+    answer: >-
+      execution(...) dựa chủ yếu trên declared method signature. args(...) có thể xét runtime argument type của invocation. Vì vậy một method khai báo parameter là Object nhưng được gọi với String có thể match args(java.lang.String) dù declared type vẫn là Object. Đây là lý do cần phân biệt static method signature với dữ liệu runtime khi thiết kế pointcut.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.Pointcut/Pointcut.md"
+      anchor: "pointcut-demo"
+    apiRelated:
+      controller: "PointcutController"
+      methodSignature: "comparePointcuts()"
+
+  - question: >-
+      this(...) và target(...) khác nhau như thế nào trong Spring AOP?
+    answer: >-
+      this(...) match dựa trên type của proxy object mà caller đang tương tác, còn target(...) match dựa trên type của target object thật phía sau proxy. Với class-based proxy hai type có thể khá giống nhau, nhưng với JDK proxy thì proxy implements interface trong khi target là concrete class. Vì vậy cùng một invocation có thể cho kết quả matching khác nhau tùy proxy strategy.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.Pointcut/Pointcut.md"
+      anchor: "pointcut-demo"
+    apiRelated:
+      controller: "PointcutController"
+      methodSignature: "comparePointcuts()"
+
+  - question: >-
+      Spring AOP có hỗ trợ toàn bộ AspectJ join point model không?
+    answer: >-
+      Không. Spring AOP dùng AspectJ pointcut expression language cho nhiều trường hợp nhưng runtime vẫn là proxy-based method interception trên Spring-managed object. Các join point như method call, field get/set, initialization hay control-flow pointcut không thuộc capability thông thường của Spring AOP proxy. Khi cần model rộng hơn ngoài proxy method execution thì phải cân nhắc full AspectJ weaving hoặc cơ chế instrumentation khác phù hợp.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.Pointcut/Pointcut.md"
+      anchor: "spring-aop-pointcut-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      @Before, @AfterReturning, @AfterThrowing, @After và @Around khác nhau về lifecycle semantics như thế nào?
+    answer: >-
+      @Before chạy trước target invocation. @AfterReturning chỉ chạy khi invocation return bình thường. @AfterThrowing chỉ chạy khi invocation thoát ra bằng exception phù hợp. @After có finally-like semantics và chạy khi invocation kết thúc dù success hay failure. @Around bao quanh toàn bộ chain và có proceed(), nên có quyền điều khiển control flow mạnh nhất. Nên chọn advice yếu nhất nhưng đủ đáp ứng requirement để flow dễ hiểu hơn.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Advice/Advice.md"
+      anchor: "advice-semantics"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Trên success path, @AfterReturning và @After khác nhau ở đâu?
+    answer: >-
+      @AfterReturning chỉ chạy khi target hoàn thành bình thường và có thể bind return value để quan sát. @After chạy theo finally-like semantics nên vẫn chạy cả khi target ném exception. Trên một success path có thể thấy @Before → target → @AfterReturning → @After, nhưng không nên dùng thứ tự source code của nhiều advice cùng loại làm contract nếu framework không cung cấp precedence rõ ràng.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Advice/Advice.md"
+      anchor: "advice-success-demo"
+    apiRelated:
+      controller: "AdviceLifecycleController"
+      methodSignature: "success()"
+
+  - question: >-
+      Khi target ném exception, @AfterThrowing và @After hoạt động ra sao?
+    answer: >-
+      @AfterThrowing chỉ chạy trên exception path khi exception phù hợp với binding/pointcut của advice. @After vẫn chạy vì có semantics giống finally. @AfterReturning không chạy vì target không return bình thường. Nếu mục tiêu chỉ là logging hoặc metrics, thường nên quan sát rồi giữ nguyên exception contract; recovery hoặc biến exception thành result là thay đổi control flow mạnh hơn và thường phù hợp với @Around khi thật sự cần.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Advice/Advice.md"
+      anchor: "advice-failure-demo"
+    apiRelated:
+      controller: "AdviceLifecycleController"
+      methodSignature: "failure()"
+
+  - question: >-
+      ProceedingJoinPoint.proceed() có ý nghĩa gì trong @Around advice?
+    answer: >-
+      proceed() chuyển quyền thực thi sang phần tiếp theo của interceptor/advice chain và cuối cùng có thể tới target. Code trước proceed() chạy trước downstream invocation; code sau proceed() chỉ chạy khi control quay lại advice sau khi downstream hoàn thành hoặc ném exception. Nếu không gọi proceed() thì chain dừng tại advice hiện tại và target có thể không chạy. Vì vậy proceed() là primitive điều khiển invocation chứ không phải callback vô hại.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.Around/Around.md"
+      anchor: "around-mental-model"
+    apiRelated:
+      controller: "AroundAdviceController"
+      methodSignature: "timing()"
+
+  - question: >-
+      @Around có thể thay đổi return value hoặc bỏ qua target không và rủi ro là gì?
+    answer: >-
+      Có. Advice có thể nhận result từ proceed(), transform result trước khi trả cho caller, hoặc thậm chí không gọi proceed() và tự trả result. Điều đó làm Aspect có khả năng thay đổi contract mà caller quan sát được và thậm chí ngăn business method chạy. Đây là capability hợp lệ nhưng cần dùng có chủ đích; nếu transformation hay short-circuit bị giấu trong Aspect thì code trở nên khó debug và business flow khó dự đoán.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.Around/Around.md"
+      anchor: "around-mental-model"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      proceed(Object[]) được dùng thế nào để thay đổi argument trong Spring AOP?
+    answer: >-
+      Around advice có thể đọc joinPoint.getArgs(), tạo argument list mới rồi gọi proceed(newArgs). Trong proxy-based Spring AOP, array đó đại diện cho argument list mới của underlying method invocation và số phần tử phải phù hợp với method arguments. Target sẽ nhận argument mới. Semantics này không nên được mặc định là hoàn toàn giống AspectJ-compiled around advice, nơi proceed arguments liên quan tới các parameter được bind vào advice signature.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.Around/Around.md"
+      anchor: "around-arguments-demo"
+    apiRelated:
+      controller: "AroundAdviceController"
+      methodSignature: "arguments()"
+
+  - question: >-
+      Một @Around advice nên xử lý exception và việc gọi proceed() nhiều lần như thế nào?
+    answer: >-
+      Advice có thể catch exception để log, đo metric hoặc cleanup rồi rethrow nhằm giữ nguyên contract của target. Swallow exception hoặc đổi thành success chỉ nên làm khi đó là contract rõ ràng. Về kỹ thuật, proceed() có thể ảnh hưởng sâu tới control flow; gọi nhiều lần có thể khiến target hoặc downstream interceptor thực thi nhiều lần và tạo side effect lặp. Vì vậy không nên coi proceed() như callback có thể gọi tùy ý.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.Around/Around.md"
+      anchor: "around-exception-demo"
+    apiRelated:
+      controller: "AroundAdviceController"
+      methodSignature: "exceptionPropagation()"
+
+  - question: >-
+      Vì sao custom annotation thường được dùng làm declarative contract cho AOP?
+    answer: >-
+      Annotation cho phép business method tuyên bố intent như audited, measured hoặc tracked mà không chứa implementation của concern đó. Aspect dùng @annotation để match và có thể bind trực tiếp annotation instance để đọc metadata. Nếu Aspect cần đọc annotation ở runtime thì annotation phải có RetentionPolicy.RUNTIME. Cách này thường rõ hơn pointcut phụ thuộc sâu vào naming convention hoặc package, miễn là annotation biểu diễn một contract dễ hiểu.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.Annotation/Annotation.md"
+      anchor: "annotation-contract"
+    apiRelated:
+      controller: "AnnotationDrivenController"
+      methodSignature: "trackByAnnotation()"
+
+  - question: >-
+      Annotation-based pointcut có đảm bảo advice chắc chắn chạy không?
+    answer: >-
+      Không. Annotation chỉ giúp pointcut mô tả selection rule. Invocation vẫn phải đi qua AOP proxy và method phải intercept được theo proxy strategy hiện tại. Self-invocation, plain object tạo bằng new, final/private method trong class-based proxy hoặc bean không được proxy đều có thể khiến annotation tồn tại nhưng advice không chạy. Khi debug phải kiểm tra cả proxy boundary lẫn pointcut matching.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.Annotation/Annotation.md"
+      anchor: "annotation-vs-expression"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      @Order ảnh hưởng call chain của nhiều @Around Aspect như thế nào?
+    answer: >-
+      Khi nhiều Around Aspect cùng match, chain có dạng nested call stack. Với precedence hiện tại, Aspect có order nhỏ hơn đứng ngoài: A before → B before → target → B after → A after. Chiều đi ra đảo ngược chiều đi vào vì mỗi advice đang bao quanh advice tiếp theo. Nếu correctness phụ thuộc thứ tự thì phải khai báo precedence rõ, không suy ra contract từ vài dòng log quan sát được.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.Ordering/Ordering.md"
+      anchor: "ordering-mental-model"
+    apiRelated:
+      controller: "OrderingController"
+      methodSignature: "observeOrdering()"
+
+  - question: >-
+      Vì sao không nên biến @Order giữa nhiều Aspect thành business workflow ngầm?
+    answer: >-
+      Ordering phù hợp để định nghĩa precedence giữa các cross-cutting concern, nhưng nếu business correctness phụ thuộc chuỗi Aspect A sửa dữ liệu cho B, B bắt buộc chạy trước C rồi C trước D thì dependency đã bị giấu trong infrastructure. Flow như vậy khó đọc, khó test và dễ vỡ khi thêm Aspect mới. Business protocol nên nằm trong service/abstraction rõ ràng, còn AOP giữ vai trò cross-cutting có boundary đơn giản.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.Ordering/Ordering.md"
+      anchor: "ordering-pitfall"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Vì sao self-invocation như this.inner() thường bypass Spring AOP advice?
+    answer: >-
+      External call bắt đầu từ ngoài target nên đi qua proxy trước khi tới method. Self-invocation xảy ra khi method trên target gọi trực tiếp method khác trên chính object hiện tại; call đó không quay ra proxy lần thứ hai. Vì vậy inner method có thể mang annotation và pointcut vẫn đúng nhưng advice không chạy. Đây là hệ quả của proxy boundary, không phải bug của annotation.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.SelfInvocation/SelfInvocation.md"
+      anchor: "self-invocation-mental-model"
+    apiRelated:
+      controller: "SelfInvocationController"
+      methodSignature: "compareSelfInvocation()"
+
+  - question: >-
+      Cách xử lý self-invocation nào thường được ưu tiên trong thiết kế Spring?
+    answer: >-
+      Cách dễ reasoning nhất thường là refactor AOP boundary sang bean khác để call đi từ Bean A tới proxy của Bean B. Self-injection hoặc AopContext.currentProxy() có thể giải quyết một số trường hợp nhưng làm business code phụ thuộc mạnh hơn vào AOP infrastructure; AopContext còn cần expose proxy. Vì vậy các kỹ thuật đó nên được xem là escape hatch thay vì design mặc định.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.SelfInvocation/SelfInvocation.md"
+      anchor: "proxy-limitations"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Final method, private method và final class ảnh hưởng class-based proxy như thế nào?
+    answer: >-
+      Class-based proxy hoạt động bằng subclassing nên final method không thể override để chèn interceptor, private method cũng không thể override, còn final class không thể được subclass để tạo proxy. Vì vậy annotation vẫn có thể tồn tại trên final method nhưng advice không chạy. Đây là limitation khác self-invocation: self-invocation bỏ qua proxy boundary, còn final/private limitation đến từ khả năng override của proxy subclass.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.SelfInvocation/SelfInvocation.md"
+      anchor: "final-method-demo"
+    apiRelated:
+      controller: "SelfInvocationController"
+      methodSignature: "finalMethodLimitation()"
+
+  - question: >-
+      Self-invocation có liên quan gì tới @Transactional, @Async và @Cacheable?
+    answer: >-
+      Nhiều Spring feature declarative sử dụng proxy/interceptor nên cùng chia sẻ câu hỏi cốt lõi: invocation có đi qua proxy không. Nếu một method tự gọi method khác trên cùng target, interception có thể bị bypass và transaction, async dispatch hoặc cache behavior dự kiến có thể không xảy ra theo proxy mode. Không nên học từng annotation như ngoại lệ riêng; mental model proxy boundary giúp giải thích cả nhóm feature này.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.SelfInvocation/SelfInvocation.md"
+      anchor: "proxy-limitations"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Những use case nào thường phù hợp với AOP và tiêu chí chọn boundary là gì?
+    answer: >-
+      Logging, timing/metrics, auditing, tracing hook, declarative authorization và annotation-driven instrumentation thường phù hợp vì chúng lặp trên nhiều target và không phải business logic chính. Boundary tốt phải mô tả rõ, có thể dự đoán, ít side effect bất ngờ và không ép caller hiểu một workflow ngầm. Nếu concern chỉ thuộc một use case cụ thể hoặc quyết định business state cốt lõi thì service/domain abstraction thường rõ ràng hơn AOP.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "10.Patterns/Patterns.md"
+      anchor: "practical-patterns"
+    apiRelated:
+      controller: "PracticalPatternController"
+      methodSignature: "checkout(String)"
+
+  - question: >-
+      Những AOP pitfall nào thường gặp trong code thật?
+    answer: >-
+      Các pitfall phổ biến gồm pointcut quá rộng, đưa business logic vào Aspect, âm thầm sửa argument/return value, swallow exception, phụ thuộc ordering phức tạp và dùng mutable state không an toàn trong Aspect singleton. Những lỗi này làm runtime behavior khó đoán và dependency bị ẩn. AOP tốt nên giảm lặp cross-cutting code nhưng vẫn giữ business flow nhìn thấy được từ service layer.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "10.Patterns/Patterns.md"
+      anchor: "aop-pitfalls"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Vì sao mutable field trong Aspect có thể gây race condition?
+    answer: >-
+      Aspect bean thông thường là singleton trong ApplicationContext nên nhiều request/thread có thể cùng đi qua một Aspect instance. Mutable field như currentRequestCount hoặc currentUser có thể bị đọc/ghi đồng thời, tạo race condition hoặc làm state của request này rò sang request khác. Ưu tiên Aspect stateless; nếu cần state thì phải thiết kế scope và concurrency semantics rõ ràng thay vì giả định mỗi invocation có một Aspect instance riêng.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "10.Patterns/Patterns.md"
+      anchor: "aop-pitfalls"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      ProxyFactory dùng để làm gì và nó giúp hiểu Spring AOP ở tầng thấp hơn như thế nào?
+    answer: >-
+      ProxyFactory cho phép tạo AOP proxy bằng code từ target và Advice/MethodInterceptor thay vì chỉ dùng @Aspect annotation. Nó làm lộ kiến trúc target + interceptor chain + proxy. MethodInterceptor có invoke(MethodInvocation) và invocation.proceed() để tiếp tục chain, rất gần mental model của @Around và ProceedingJoinPoint. Nhờ đó có thể thấy annotation style chỉ là một authoring layer phía trên các abstraction proxy/interceptor cơ bản.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "11.ProxyFactory/ProxyFactory.md"
+      anchor: "proxy-factory-mental-model"
+    apiRelated:
+      controller: "ProgrammaticProxyController"
+      methodSignature: "compareProxyFactoryStrategies()"
+
+  - question: >-
+      Cùng một target và interceptor, ProxyFactory tạo JDK proxy và CGLIB proxy khác nhau ra sao về type surface?
+    answer: >-
+      Với JDK proxy, caller chủ yếu tương tác qua interface đã cấu hình và proxy không trở thành subclass của concrete target. Với CGLIB, proxy là subclass nên concrete target methods có thể nằm trên type surface của proxy nếu intercept được. Điều này cũng giải thích vì sao this(...) nhìn proxy type còn target(...) nhìn target type và có thể cho kết quả khác nhau khi thay đổi proxy strategy.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "11.ProxyFactory/ProxyFactory.md"
+      anchor: "jdk-vs-cglib"
+    apiRelated:
+      controller: "ProgrammaticProxyController"
+      methodSignature: "compareProxyFactoryStrategies()"
+
+  - question: >-
+      MethodInterceptor khác @Around ở mức abstraction như thế nào?
+    answer: >-
+      Cả hai đều có semantics bao quanh invocation và một primitive proceed để tiếp tục chain. @Around thuộc @AspectJ-style authoring và làm việc với ProceedingJoinPoint, còn MethodInterceptor là Spring AOP API mức thấp làm việc với MethodInvocation. Hai abstraction phục vụ cùng mental model chain nhưng ở tầng API khác nhau; hiểu MethodInterceptor giúp giải thích cách Advisor và ProxyFactory hoạt động bên dưới annotation-based AOP.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "11.ProxyFactory/ProxyFactory.md"
+      anchor: "proxy-factory-mental-model"
+    apiRelated:
+      controller: "ProgrammaticProxyController"
+      methodSignature: "compareProxyFactoryStrategies()"
+
+  - question: >-
+      Advisor là gì và tại sao có thể hiểu Advisor = Pointcut + Advice?
+    answer: >-
+      Pointcut trả lời invocation nào cần match, còn Advice/MethodInterceptor trả lời khi match thì làm gì. Advisor ghép hai phần này thành một đơn vị mà proxy infrastructure có thể dùng để xây interceptor chain. Trong @AspectJ style, pointcut expression và advice method thường nằm cạnh nhau trong annotation; ở Spring AOP API thấp hơn chúng có thể là object độc lập rồi được ghép bởi Advisor.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "12.Advisor/Advisor.md"
+      anchor: "advisor-mental-model"
+    apiRelated:
+      controller: "AdvisorController"
+      methodSignature: "observeAdvisor()"
+
+  - question: >-
+      Pointcut ở Spring AOP API thấp hơn được cấu thành từ ClassFilter và MethodMatcher như thế nào?
+    answer: >-
+      ClassFilter xác định target class có phải candidate hay không, giúp loại sớm type không liên quan. MethodMatcher quyết định method nào trên candidate type được chọn. Ví dụ NameMatchMethodPointcut có thể match write() nhưng không match read() trên cùng proxy. Điều này cho thấy pointcut không chỉ là một expression string; bên dưới nó là các abstraction có thể kiểm tra class và method một cách programmatic.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "12.Advisor/Advisor.md"
+      anchor: "pointcut-internals"
+    apiRelated:
+      controller: "AdvisorController"
+      methodSignature: "observeAdvisor()"
+
+  - question: >-
+      Static MethodMatcher và dynamic MethodMatcher khác nhau như thế nào?
+    answer: >-
+      Static matching chỉ cần Method và targetClass nên framework có thể quyết định dựa trên metadata. Dynamic matching có static phase trước, sau đó nếu isRuntime() là true thì framework còn đánh giá runtime arguments cho từng invocation. Dynamic pointcut hữu ích khi selection thật sự phụ thuộc dữ liệu như mode="audit", nhưng có thêm runtime evaluation cost và complexity; nếu chỉ cần type/method metadata thì static matcher đơn giản hơn.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "12.Advisor/Advisor.md"
+      anchor: "static-dynamic-pointcut"
+    apiRelated:
+      controller: "AdvisorController"
+      methodSignature: "observeAdvisor()"
+
+  - question: >-
+      Spring tự động tạo AOP proxy cho bean ở đâu trong lifecycle?
+    answer: >-
+      Mental model là bean instance được tạo, sau đó BeanPostProcessor/auto-proxy creator infrastructure đánh giá các Advisor phù hợp và có thể trả proxy thay cho raw bean reference. AbstractAutoProxyCreator là một family infrastructure quan trọng cho cơ chế này. Vì vậy consumer nhận bean đã được proxy mà không cần controller hay service tự gọi new ProxyFactory cho từng object.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "13.Infrastructure/Infrastructure.md"
+      anchor: "auto-proxy-mental-model"
+    apiRelated:
+      controller: "InfrastructureController"
+      methodSignature: "inspectInfrastructure()"
+
+  - question: >-
+      Spring Boot bật AOP và chọn proxy strategy mặc định như thế nào?
+    answer: >-
+      Khi starter AOP và các điều kiện auto-configuration phù hợp, Spring Boot có thể bật AOP mà application không cần tự thêm @EnableAspectJAutoProxy. Boot document spring.aop.auto mặc định true và spring.aop.proxy-target-class mặc định true, ưu tiên class-based proxy. Nếu proxy-target-class=false và target expose interface phù hợp thì JDK dynamic proxy có thể được dùng. Cần phân biệt documented default với property được application explicit cấu hình và với runtime observation thực tế.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "13.Infrastructure/Infrastructure.md"
+      anchor: "spring-boot-aop-auto-config"
+    apiRelated:
+      controller: "InfrastructureController"
+      methodSignature: "inspectInfrastructure()"
+
+  - question: >-
+      Interface Advised dùng để làm gì và có nên đưa vào business logic không?
+    answer: >-
+      Spring AOP proxy thường expose Advised để infrastructure hoặc tooling inspect danh sách Advisor và thông tin cấu hình proxy. Nó hữu ích khi debug hoặc học architecture, ví dụ xác nhận proxy đang chứa những Advisor nào. Business logic thông thường không nên phụ thuộc sâu vào Advised để quyết định workflow vì như vậy domain code bị coupling với AOP infrastructure và khó thay đổi implementation sau này.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "13.Infrastructure/Infrastructure.md"
+      anchor: "advised-interface"
+    apiRelated:
+      controller: "InfrastructureController"
+      methodSignature: "inspectInfrastructure()"
+
+  - question: >-
+      AOP Introduction là gì và @DeclareParents thay đổi điều gì ở proxy?
+    answer: >-
+      Introduction cho phép AOP proxy expose thêm interface mà target class gốc không implement. @DeclareParents có thể khai báo interface mới và default implementation của nó. Target bytecode không bị sửa; capability mới nằm trên proxy type surface, nên caller có thể cast proxy sang interface được introduction và dùng behavior mới. Đây là feature nâng cao, hữu ích để hiểu sức mạnh của proxy/advisor model nhưng nên dùng có documentation rõ để tránh surprise.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "14.Introduction/Introduction.md"
+      anchor: "introduction-mental-model"
+    apiRelated:
+      controller: "IntroductionController"
+      methodSignature: "observeIntroduction()"
+
+  - question: >-
+      Boundary giữa @AspectJ syntax và Spring AOP runtime trong module là gì?
+    answer: >-
+      Module dùng @Aspect, @Pointcut, @Before và @Around nhưng runtime thực tế là Spring AOP auto-proxy infrastructure trong ApplicationContext. Aspect tồn tại như Spring bean, target được bọc bằng proxy và join point quan sát được là method execution. Không có AspectJ compiler hoặc load-time weaving agent trong runtime boundary này. Vì vậy quy trình debug nên bắt đầu từ Spring-managed object, proxy boundary, Advisor/pointcut matching và interceptor chain.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "15.RuntimeBoundary/RuntimeBoundary.md"
+      anchor: "spring-aop-runtime"
+    apiRelated:
+      controller: "RuntimeBoundaryController"
+      methodSignature: "inspectRuntimeBoundary()"
+
+  - question: >-
+      Spring AOP và full AspectJ khác nhau ra sao, và vì sao đo thời gian quanh proceed() chưa chắc là end-to-end latency của async/reactive work?
+    answer: >-
+      Spring AOP tập trung vào method execution trên Spring-managed object qua proxy, còn full AspectJ weaving có join point model rộng hơn và có thể hoạt động ngoài proxy boundary tùy cách weave. Với async/reactive method, @Around chỉ đo thời gian của method invocation quanh proceed(); method có thể trả CompletableFuture, Mono hoặc Flux rất nhanh trong khi workload thật hoàn thành sau đó. Muốn đo end-to-end completion phải instrument completion signal của abstraction async/reactive, không chỉ thời gian proxy invocation.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "15.RuntimeBoundary/RuntimeBoundary.md"
+      anchor: "spring-aop-vs-aspectj"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      JoinPoint và ProceedingJoinPoint khác nhau như thế nào trong Spring AOP, và khi nào bạn cần ProceedingJoinPoint?
+    answer: >-
+      JoinPoint cung cấp context của invocation như method signature, target, proxy reference và arguments để advice quan sát invocation. ProceedingJoinPoint là dạng mở rộng dùng cho @Around advice và thêm proceed() / proceed(Object[]) để tiếp tục hoặc điều khiển invocation chain. Vì vậy @Before, @AfterReturning hoặc @AfterThrowing thường chỉ cần JoinPoint nếu cần đọc context, còn @Around cần ProceedingJoinPoint khi advice phải quyết định có tiếp tục target hay không, thay argument, quan sát hoặc thay return value, hoặc xử lý control flow quanh invocation.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.Around/Around.md"
+      anchor: "around-mental-model"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Việc Spring Framework chọn JDK proxy hay class-based proxy khác gì với default của Spring Boot?
+    answer: >-
+      Ở Spring AOP thuần, proxy strategy phụ thuộc cấu hình: khi dùng interface-based proxying thì JDK dynamic proxy có thể được chọn, còn bật proxyTargetClass sẽ yêu cầu class-based proxy. Spring Boot thêm một opinionated default: spring.aop.proxy-target-class mặc định là true, nên auto-configured AOP thường ưu tiên class-based/CGLIB proxy trừ khi application override cấu hình. Vì vậy không nên biến câu "Spring luôn dùng JDK proxy nếu có interface" thành rule chung cho ứng dụng Spring Boot; cần phân biệt capability/default của Spring Framework với Boot auto-configuration và kiểm tra runtime configuration thực tế.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "13.Infrastructure/Infrastructure.md"
+      anchor: "spring-boot-aop-auto-config"
+    apiRelated:
+      controller: "InfrastructureController"
+      methodSignature: "inspectInfrastructure()"
+
+  - question: >-
+      Vì sao static method và constructor không phải join point phù hợp cho proxy-based Spring AOP thông thường?
+    answer: >-
+      Spring AOP thông thường intercept instance method invocation khi caller đi qua một proxy object. Static method thuộc về class và lời gọi của nó không dispatch qua instance proxy theo cách đó, còn constructor chạy trong quá trình tạo object trước khi Spring có thể đưa proxy thay raw bean reference cho consumer. Vì vậy proxy-based Spring AOP không phải cơ chế để intercept static method hoặc constructor execution. Nếu thật sự cần các join point kiểu constructor hoặc static/class-level behavior ngoài proxy method invocation thì phải cân nhắc cơ chế khác, chẳng hạn full AspectJ weaving hoặc instrumentation phù hợp.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
