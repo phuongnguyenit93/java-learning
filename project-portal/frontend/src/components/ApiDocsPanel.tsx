@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import DOMPurify from 'dompurify';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -49,9 +49,6 @@ export function ApiDocsPanel({
     let active = true;
 
     setDocument(null);
-    setExpandedControllers(new Set());
-    setExpandedOperations(new Set());
-    setKnowledgeDetailsOperations(new Set());
     setKnowledgeContentCache({});
     setKnowledgeLoadingPaths(new Set());
     setKnowledgeErrors({});
@@ -74,6 +71,19 @@ export function ApiDocsPanel({
         }
 
         setDocument(result);
+        const controllerNames = new Set(result.controllers.map((controller) => controller.name));
+        const operationIds = new Set(
+          result.controllers.flatMap((controller) => controller.operations.map((operation) => operation.id)),
+        );
+        setExpandedControllers((current) => new Set(
+          [...current].filter((controllerName) => controllerNames.has(controllerName)),
+        ));
+        setExpandedOperations((current) => new Set(
+          [...current].filter((operationId) => operationIds.has(operationId)),
+        ));
+        setKnowledgeDetailsOperations((current) => new Set(
+          [...current].filter((operationId) => operationIds.has(operationId)),
+        ));
         setLoading(false);
       })
       .catch((loadError: unknown) => {
@@ -182,22 +192,9 @@ export function ApiDocsPanel({
     return key ? knowledgeSectionByKey.get(key) : undefined;
   };
 
-  const toggleKnowledgeDetails = (operationId: string, section: KnowledgeSectionRef) => {
-    const opening = !knowledgeDetailsOperations.has(operationId);
-
-    setKnowledgeDetailsOperations((current) => {
-      const next = new Set(current);
-      if (next.has(operationId)) {
-        next.delete(operationId);
-      } else {
-        next.add(operationId);
-      }
-      return next;
-    });
-
+  const ensureKnowledgeContent = useCallback((section: KnowledgeSectionRef) => {
     if (
-      !opening
-      || knowledgeContentCache[section.content] !== undefined
+      knowledgeContentCache[section.content] !== undefined
       || knowledgeLoadingPaths.has(section.content)
     ) {
       return;
@@ -238,6 +235,39 @@ export function ApiDocsPanel({
           return next;
         });
       });
+  }, [knowledgeContentCache, knowledgeLoadingPaths]);
+
+  useEffect(() => {
+    document?.controllers.forEach((controller) => {
+      controller.operations.forEach((operation) => {
+        if (!knowledgeDetailsOperations.has(operation.id)) {
+          return;
+        }
+
+        const section = resolveLinkedKnowledge(controller, operation);
+        if (section) {
+          ensureKnowledgeContent(section);
+        }
+      });
+    });
+  }, [document, ensureKnowledgeContent, knowledgeDetailsOperations, knowledgeSectionByKey]);
+
+  const toggleKnowledgeDetails = (operationId: string, section: KnowledgeSectionRef) => {
+    const opening = !knowledgeDetailsOperations.has(operationId);
+
+    setKnowledgeDetailsOperations((current) => {
+      const next = new Set(current);
+      if (next.has(operationId)) {
+        next.delete(operationId);
+      } else {
+        next.add(operationId);
+      }
+      return next;
+    });
+
+    if (opening) {
+      ensureKnowledgeContent(section);
+    }
   };
 
   if (!basePath) {

@@ -306,9 +306,6 @@ export function LearningPage() {
   useEffect(() => {
     let active = true;
 
-    setActiveKnowledgeCategory('all');
-    setSelectedKnowledgeSection(null);
-
     if (!knowledgePath) {
       setKnowledgeIndex(null);
       setKnowledgeLoading(false);
@@ -415,7 +412,7 @@ export function LearningPage() {
           {visitedTabs.has('menu') && (
             <div hidden={activeTab !== 'menu'}>
               <MenuPanel
-                key={`${activeModule.id}:${language}:menu`}
+                key={`${activeModule.id}:menu`}
                 index={knowledgeIndex}
                 loading={knowledgeLoading}
                 error={knowledgeError}
@@ -439,7 +436,7 @@ export function LearningPage() {
           {visitedTabs.has('knowledge') && (
             <div hidden={activeTab !== 'knowledge'}>
               <KnowledgePanel
-                key={`${activeModule.id}:${language}:knowledge`}
+                key={`${activeModule.id}:knowledge`}
                 index={knowledgeIndex}
                 loading={knowledgeLoading}
                 error={knowledgeError}
@@ -458,7 +455,7 @@ export function LearningPage() {
           {visitedTabs.has('quiz') && (
             <div hidden={activeTab !== 'quiz'}>
               <QuizPanel
-                key={`${activeModule.id}:${language}:quiz`}
+                key={`${activeModule.id}:quiz`}
                 path={quizPath}
                 knowledgeIndex={knowledgeIndex}
                 apiBasePath={apiPath}
@@ -468,7 +465,7 @@ export function LearningPage() {
           {visitedTabs.has('interview') && (
             <div hidden={activeTab !== 'interview'}>
               <InterviewPanel
-                key={`${activeModule.id}:${language}:interview`}
+                key={`${activeModule.id}:interview`}
                 path={interviewPath}
                 knowledgeIndex={knowledgeIndex}
                 apiBasePath={apiPath}
@@ -478,7 +475,7 @@ export function LearningPage() {
           {visitedTabs.has('api') && (
             <div hidden={activeTab !== 'api'}>
               <ApiDocsPanel
-                key={`${activeModule.id}:${language}:api`}
+                key={`${activeModule.id}:api`}
                 basePath={apiPath}
                 knowledgeIndex={knowledgeIndex}
                 searchQuery={searchQuery}

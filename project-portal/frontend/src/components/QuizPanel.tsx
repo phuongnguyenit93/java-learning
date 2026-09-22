@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import DOMPurify from 'dompurify';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -52,8 +52,6 @@ export function QuizPanel({ path, knowledgeIndex, apiBasePath }: QuizPanelProps)
   useEffect(() => {
     let active = true;
 
-    setSelectedAnswers({});
-    setRelatedPanelByQuestion({});
     setKnowledgeContentCache({});
     setKnowledgeLoadingPaths(new Set());
     setKnowledgeErrors({});
@@ -75,12 +73,34 @@ export function QuizPanel({ path, knowledgeIndex, apiBasePath }: QuizPanelProps)
           return;
         }
 
-        setQuestions(
-          document.questions.map((question) => ({
+        setQuestions((current) => {
+          const previousAnswerOrder = new Map(
+            current.map((question) => [question.id, question.answers.map((answer) => answer.id)]),
+          );
+
+          return document.questions.map((question) => ({
             ...question,
-            answers: shuffleAnswers(question.answers),
-          })),
+            answers: orderAnswers(
+              question.answers,
+              previousAnswerOrder.get(question.id),
+            ),
+          }));
+        });
+
+        const validQuestions = new Map(
+          document.questions.map((question) => [
+            question.id,
+            new Set(question.answers.map((answer) => answer.id)),
+          ]),
         );
+        setSelectedAnswers((current) => Object.fromEntries(
+          Object.entries(current).filter(([questionId, answerId]) => (
+            validQuestions.get(questionId)?.has(answerId) ?? false
+          )),
+        ));
+        setRelatedPanelByQuestion((current) => Object.fromEntries(
+          Object.entries(current).filter(([questionId]) => validQuestions.has(questionId)),
+        ));
         setLoading(false);
       })
       .catch((caught: unknown) => {
@@ -151,9 +171,7 @@ export function QuizPanel({ path, knowledgeIndex, apiBasePath }: QuizPanelProps)
     return result;
   }, [apiDocument]);
 
-  const openRelatedKnowledge = (questionId: string, section: KnowledgeSectionRef) => {
-    setRelatedPanelByQuestion((current) => ({ ...current, [questionId]: 'knowledge' }));
-
+  const ensureKnowledgeContent = useCallback((section: KnowledgeSectionRef) => {
     if (
       knowledgeContentCache[section.content] !== undefined
       || knowledgeLoadingPaths.has(section.content)
@@ -196,6 +214,28 @@ export function QuizPanel({ path, knowledgeIndex, apiBasePath }: QuizPanelProps)
           return next;
         });
       });
+  }, [knowledgeContentCache, knowledgeLoadingPaths]);
+
+  useEffect(() => {
+    questions.forEach((question) => {
+      if (relatedPanelByQuestion[question.id] !== 'knowledge') {
+        return;
+      }
+
+      const knowledgeKey = question.readmeRelated.file && question.readmeRelated.anchor
+        ? `${question.readmeRelated.file}#${question.readmeRelated.anchor}`
+        : '';
+      const relatedKnowledge = knowledgeKey ? knowledgeByKey.get(knowledgeKey) : undefined;
+
+      if (relatedKnowledge) {
+        ensureKnowledgeContent(relatedKnowledge);
+      }
+    });
+  }, [ensureKnowledgeContent, knowledgeByKey, questions, relatedPanelByQuestion]);
+
+  const openRelatedKnowledge = (questionId: string, section: KnowledgeSectionRef) => {
+    setRelatedPanelByQuestion((current) => ({ ...current, [questionId]: 'knowledge' }));
+    ensureKnowledgeContent(section);
   };
 
   const openRelatedApi = (questionId: string) => {
@@ -503,4 +543,16 @@ function shuffleAnswers(answers: QuizAnswer[]): QuizAnswer[] {
   }
 
   return result;
+}
+
+function orderAnswers(answers: QuizAnswer[], previousOrder?: QuizAnswerId[]): QuizAnswer[] {
+  if (!previousOrder || previousOrder.length === 0) {
+    return shuffleAnswers(answers);
+  }
+
+  const orderById = new Map(previousOrder.map((answerId, index) => [answerId, index]));
+  return [...answers].sort((left, right) => (
+    (orderById.get(left.id) ?? Number.MAX_SAFE_INTEGER)
+    - (orderById.get(right.id) ?? Number.MAX_SAFE_INTEGER)
+  ));
 }

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import DOMPurify from 'dompurify';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -44,8 +44,6 @@ export function InterviewPanel({ path, knowledgeIndex, apiBasePath }: InterviewP
   useEffect(() => {
     let active = true;
 
-    setExpandedAnswers(new Set());
-    setRelatedPanelByQuestion({});
     setKnowledgeContentCache({});
     setKnowledgeLoadingPaths(new Set());
     setKnowledgeErrors({});
@@ -68,6 +66,15 @@ export function InterviewPanel({ path, knowledgeIndex, apiBasePath }: InterviewP
         }
 
         setQuestions(document.questions);
+        setExpandedAnswers((current) => new Set(
+          [...current].filter((index) => index < document.questions.length),
+        ));
+        setRelatedPanelByQuestion((current) => Object.fromEntries(
+          Object.entries(current).filter(([questionKey]) => {
+            const index = Number(questionKey);
+            return Number.isInteger(index) && index >= 0 && index < document.questions.length;
+          }),
+        ));
         setLoading(false);
       })
       .catch((caught: unknown) => {
@@ -138,9 +145,7 @@ export function InterviewPanel({ path, knowledgeIndex, apiBasePath }: InterviewP
     return result;
   }, [apiDocument]);
 
-  const openRelatedKnowledge = (questionKey: string, section: KnowledgeSectionRef) => {
-    setRelatedPanelByQuestion((current) => ({ ...current, [questionKey]: 'knowledge' }));
-
+  const ensureKnowledgeContent = useCallback((section: KnowledgeSectionRef) => {
     if (
       knowledgeContentCache[section.content] !== undefined
       || knowledgeLoadingPaths.has(section.content)
@@ -183,6 +188,29 @@ export function InterviewPanel({ path, knowledgeIndex, apiBasePath }: InterviewP
           return next;
         });
       });
+  }, [knowledgeContentCache, knowledgeLoadingPaths]);
+
+  useEffect(() => {
+    questions.forEach((question, index) => {
+      const questionKey = String(index);
+      if (relatedPanelByQuestion[questionKey] !== 'knowledge') {
+        return;
+      }
+
+      const knowledgeKey = question.readmeRelated.file && question.readmeRelated.anchor
+        ? `${question.readmeRelated.file}#${question.readmeRelated.anchor}`
+        : '';
+      const relatedKnowledge = knowledgeKey ? knowledgeByKey.get(knowledgeKey) : undefined;
+
+      if (relatedKnowledge) {
+        ensureKnowledgeContent(relatedKnowledge);
+      }
+    });
+  }, [ensureKnowledgeContent, knowledgeByKey, questions, relatedPanelByQuestion]);
+
+  const openRelatedKnowledge = (questionKey: string, section: KnowledgeSectionRef) => {
+    setRelatedPanelByQuestion((current) => ({ ...current, [questionKey]: 'knowledge' }));
+    ensureKnowledgeContent(section);
   };
 
   const openRelatedApi = (questionKey: string) => {
@@ -201,7 +229,7 @@ export function InterviewPanel({ path, knowledgeIndex, apiBasePath }: InterviewP
     });
   };
 
-  if (loading) {
+  if (loading && questions.length === 0) {
     return (
       <div className="empty-state">
         <strong>{language === 'vi' ? 'Đang tải Interview...' : 'Loading Interview...'}</strong>
@@ -236,7 +264,7 @@ export function InterviewPanel({ path, knowledgeIndex, apiBasePath }: InterviewP
     <section className="interview-list">
       {questions.map((question, index) => {
         const expanded = expandedAnswers.has(index);
-        const questionKey = `${index}:${question.question}`;
+        const questionKey = String(index);
         const knowledgeKey = question.readmeRelated.file && question.readmeRelated.anchor
           ? `${question.readmeRelated.file}#${question.readmeRelated.anchor}`
           : '';
@@ -262,7 +290,7 @@ export function InterviewPanel({ path, knowledgeIndex, apiBasePath }: InterviewP
           : '';
 
         return (
-          <article key={`${index}-${question.question}`} className="interview-card">
+          <article key={questionKey} className="interview-card">
             <div className="interview-card__topline">
               <span className="interview-card__number">
                 {language === 'vi' ? 'Câu' : 'Question'} {index + 1}

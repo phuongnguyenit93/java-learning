@@ -111,7 +111,6 @@ export function KnowledgePanel({
 
   useEffect(() => {
     setContentCache({});
-    setExpandedSectionIds(new Set());
     setLoadingSectionIds(new Set());
     setSectionErrors({});
   }, [index?.moduleId, index?.language]);
@@ -120,7 +119,6 @@ export function KnowledgePanel({
     let active = true;
 
     setApiDocument(null);
-    setPreviewOperationId(null);
 
     if (!apiBasePath || !index) {
       return () => {
