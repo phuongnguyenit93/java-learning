@@ -182,6 +182,52 @@ class ModuleOrchestrationPlugin
         }
 
         // ====================================================
+        // Quiz setup
+        // ====================================================
+
+        if (
+                ProjectPropertyUtils.isEnabled(
+                        project,
+                        'BUILD_QUIZ'
+                )
+        ) {
+
+            project.pluginManager.apply(
+                    ProjectPluginEnum.QUIZ_SETUP_PLUGIN.id
+            )
+        }
+        else {
+
+            project.logger.info(
+                    '[PROJECT-ORCHESTRATION] Skip QUIZ setup for {} because BUILD_QUIZ != TRUE.',
+                    project.path
+            )
+        }
+
+        // ====================================================
+        // Interview setup
+        // ====================================================
+
+        if (
+                ProjectPropertyUtils.isEnabled(
+                        project,
+                        'BUILD_INTERVIEW'
+                )
+        ) {
+
+            project.pluginManager.apply(
+                    ProjectPluginEnum.INTERVIEW_SETUP_PLUGIN.id
+            )
+        }
+        else {
+
+            project.logger.info(
+                    '[PROJECT-ORCHESTRATION] Skip INTERVIEW setup for {} because BUILD_INTERVIEW != TRUE.',
+                    project.path
+            )
+        }
+
+        // ====================================================
         // Execution Context setup
         // ====================================================
 

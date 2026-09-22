@@ -105,6 +105,8 @@ project-portal/
 │   └── module/{ROUTE_ID}/
 │       ├── overview/{lang}.md
 │       ├── knowledge/{lang}/...
+│       ├── quiz/{lang}/question.yml
+│       ├── interview/{lang}/question.yml
 │       └── api/{lang}/              # copied complete Swagger metadata set
 └── frontend/
     ├── package.json
@@ -195,11 +197,18 @@ Learning page
 ├── Knowledge
 ├── API Docs
 ├── Quiz
-├── Execution
+├── Interview
+├── Local Run
 └── Download action
 ```
 
-Module hierarchy/routing hiện lấy từ generated `module-catalog.json`. `Overview` consume build-time projection từ language `BASE.md`. `Menu` và `Knowledge` consume Knowledge build-time projection theo module/language/category/section contract; section Markdown chỉ được fetch khi user mở section. Build-time API projection cũng đã có: module có đủ bốn Swagger YAML chuẩn cho một language sẽ được copy nguyên vẹn vào `module/{ROUTE_ID}/api/{lang}/` và catalog expose base path tương ứng. `API Docs` frontend hiện đã consume projection này trực tiếp trong browser; `Quiz` vẫn còn fake. Knowledge count và API count ở sidebar được preload từ generated/static projection theo active language, còn Quiz count tiếp tục derive từ fixture cho tới khi có real Quiz contract. `Execution` và những menu cần backend/runtime thật có thể giữ empty state trong phase đầu. CSS dùng stylesheet riêng; inline CSS không phải convention của Portal.
+Module hierarchy/routing hiện lấy từ generated `module-catalog.json`. `Overview` consume build-time projection từ language `BASE.md`. `Menu` và `Knowledge` consume Knowledge build-time projection theo module/language/category/section contract; section Markdown chỉ được fetch khi user mở section. `Quiz` và `Interview` consume localized `question.yml` projection generated từ module resource. Build-time API projection cũng đã có: module có đủ bốn Swagger YAML chuẩn cho một language sẽ được copy nguyên vẹn vào `module/{ROUTE_ID}/api/{lang}/` và catalog expose base path tương ứng. Knowledge/Quiz/Interview/API counts ở sidebar đều preload từ generated/static projection theo active language. `Local Run` là display label hiện tại của internal `execution` tab và có thể giữ empty state cho tới khi runtime integration thật được nối vào Portal. CSS dùng stylesheet riêng; inline CSS không phải convention của Portal.
+
+Quiz setup giữ đúng boundary WHAT/WHEN/HOW của repository: canonical `BUILD_QUIZ` nằm trong `project-build/gradle-runtime` master schema; `project-orchestration` chỉ apply `QUIZ_SETUP_PLUGIN` khi flag bật; `QuizStructureService` trong `gradle-runtime` mới là nơi tạo/sync `src/main/resources/quiz/{lang}/question.yml`. Canonical structure nằm tại `gradle-runtime/src/main/resources/quiz/question-schema.yml`, vừa drive validation vừa drive localized generated comment block. Regeneration chỉ được thay block comment generated-owned, không overwrite `questions:` human-owned.
+
+Interview dùng cùng boundary: canonical `BUILD_INTERVIEW` nằm trong `project-build/gradle-runtime` master schema; orchestration chỉ apply `INTERVIEW_SETUP_PLUGIN`; `InterviewStructureService` tạo/sync `src/main/resources/interview/{lang}/question.yml` theo `MODULE_LANGUAGE`. Canonical schema `gradle-runtime/src/main/resources/interview/question-schema.yml` drive validation, localized generated comment và required-field defaults. Cả Quiz lẫn Interview đều preserve phần `questions:` human-owned; generator chỉ tạo file mới, refresh schema comment và bổ sung required fields còn thiếu bằng default canonical.
+
+Quiz question schema hiện có governance `aiGenerated/reviewed`, optional `readmeRelated {file, anchor}` và `apiRelated {controller, methodSignature}` bên cạnh four-answer single-choice contract. `PortalQuizProjectionService` validate schema và kiểm tra relation target; blank/blank relation là hợp lệ, còn partial/unresolved relation được cảnh báo thay vì tự đoán mapping. Interview dùng cùng relation shape ở schema/UI nhưng `PortalInterviewProjectionService` hiện chỉ schema-validate rồi copy projection; relation-target validation build-time chưa được mở rộng sang Interview. THREAD hiện bật cả hai capability và có source VI/EN dựa trên README.
 
 `Home` hiện là placeholder có chủ đích: hiển thị trạng thái “đang được cập nhật” và CTA sang `Learning`. Nó không còn là blank page, nhưng cũng chưa phải source của learning content.
 
@@ -209,7 +218,7 @@ Current sidebar interaction contract:
 node row có children
 → click toàn row để expand/collapse
 → `+` = đóng, `−` = mở
-→ default toàn tree là collapsed
+→ default toàn tree là expanded
 
 real module
 → có nút tròn `>` ở bên phải
@@ -223,8 +232,8 @@ module search: descendant-match
 
 `Real modules / Module thật` mode
 → đây là content-availability filter của Portal, không thay đổi definition repository-level của “real module” theo `gradle.properties`
-→ giữ MODULE nếu `Knowledge > 0 OR Quiz > 0 OR API Docs > 0`
-→ chỉ ẩn MODULE khi cả ba count đều bằng 0
+→ giữ MODULE nếu `Knowledge > 0 OR Quiz > 0 OR Interview > 0 OR API Docs > 0`
+→ chỉ ẩn MODULE khi cả bốn count đều bằng 0
 → giữ các GROUP ancestor cần thiết
 → prune branch không còn descendant hợp lệ
 → không flatten hierarchy
@@ -233,13 +242,13 @@ global tree controls
 → Expand all / Collapse all áp dụng trên projected tree hiện tại
 ```
 
-Portal giữ state UI gần nhất theo module/language trong browser session khi user đổi tab rồi quay lại. Menu/Knowledge/API Docs được lazy-mount rồi giữ mounted; chúng không bị remount chỉ vì tab khác đang active. Knowledge hỗ trợ nhiều section mở đồng thời; mở section mới không đóng section đang mở trước đó. Đổi module/language tạo state boundary mới.
+Portal giữ state UI gần nhất theo module/language trong browser session khi user đổi tab rồi quay lại. Menu/Knowledge/API Docs/Quiz/Interview được lazy-mount rồi giữ mounted; chúng không bị remount chỉ vì tab khác đang active. Knowledge hỗ trợ nhiều section mở đồng thời; mở section mới không đóng section đang mở trước đó. Quiz giữ lựa chọn/explanation đã mở, còn Interview giữ các reference answer đã expand. Đổi module/language tạo state boundary mới.
 
 `API Docs` hiện là **reference-only static documentation**. Nó không chạy/debug API trực tiếp trong Portal. Dữ liệu hiển thị được parse từ bốn Swagger YAML generated; rich `execution` HTML được sanitize trước khi render. Controller order bám theo numeric chapter order từ `controller-description.yml -> readmeRelated.file`; method order bám theo resolved README anchor position. Điều này giữ API reference theo learning path thay vì sort theo controller name/path.
 
 Download UI hiện dùng một shared popover contract. Popup phải anchor ngay dưới action đã mở nó; click bên ngoài, nhấn `Escape`, hoặc bấm lại chính action sẽ đóng popup. API Reference notice có thể reuse cùng Download action nhưng không được tự biến API Docs thành live execution surface.
 
-Theme dùng `prefers-color-scheme` cho lần đầu và lưu lựa chọn user vào `localStorage`. Theme surface/text thay đổi theo Light/Dark, còn semantic capability colors giữ cố định giữa hai theme: Overview gray, Knowledge blue, Quiz amber, API Docs red, Execution purple, Download green.
+Theme dùng `prefers-color-scheme` cho lần đầu và lưu lựa chọn user vào `localStorage`. Theme surface/text thay đổi theo Light/Dark, còn semantic capability colors giữ cố định giữa hai theme: Overview gray, Knowledge blue, Quiz amber, Interview teal, API Docs red, Local Run purple, Download green.
 
 Portal không được trở thành source of truth mới cho module metadata hoặc learning content. Target data flow vẫn là:
 
@@ -248,7 +257,7 @@ canonical module structure/model
         +
 module master.json / resources
         +
-actual README/quiz/API/artifact state
+actual README/quiz/interview/API/artifact state
         ↓
 build-time generated portal projection
         ↓
@@ -414,6 +423,10 @@ README setup     [conditional]
     ↓
 Swagger setup    [conditional]
     ↓
+Quiz setup       [conditional]
+    ↓
+Interview setup  [conditional]
+    ↓
 Execution Context setup [conditional]
     ↓
 Task setup       [conditional]
@@ -428,6 +441,8 @@ Condition chính:
 | ENV | `BUILD_ENV=TRUE` hoặc `BUILD_ENV_PROFILE=TRUE` |
 | README | `BUILD_README=TRUE` |
 | Swagger | `BUILD_SWAGGER=TRUE` |
+| Quiz | `BUILD_QUIZ=TRUE` |
+| Interview | `BUILD_INTERVIEW=TRUE` |
 | Execution Context | `BUILD_EXECUTION_CONTEXT=TRUE` |
 | Task system | `USE_TASK=TRUE` |
 | Docker | `docker-compose.yml` tồn tại |
@@ -2047,8 +2062,9 @@ trừ khi architecture contract của artifact đó được thay đổi rõ rà
 | Portal module hierarchy/catalog | filesystem/module discovery + module metadata via `ProjectStructureService` | `project-portal/build/generated/portal-data/module-catalog.json` |
 | Portal module Overview | `module/**/readme/{lang}/BASE.md` | `project-portal/build/generated/portal-data/module/{ROUTE_ID}/overview/{lang}.md` |
 | Portal Knowledge | `module/**/readme/{lang}/menu/**/*.md` anchored sections + `src/main/resources/readme/{lang}/knowledge-metadata.yml` governance | `project-portal/build/generated/portal-data/module/{ROUTE_ID}/knowledge/{lang}/...` |
+| Portal Quiz | `BUILD_QUIZ=TRUE` + `module/**/src/main/resources/quiz/{lang}/question.yml` validated by canonical Quiz schema | `project-portal/build/generated/portal-data/module/{ROUTE_ID}/quiz/{lang}/question.yml` + catalog `quiz` path |
+| Portal Interview | `BUILD_INTERVIEW=TRUE` + `module/**/src/main/resources/interview/{lang}/question.yml` validated by canonical Interview schema | `project-portal/build/generated/portal-data/module/{ROUTE_ID}/interview/{lang}/question.yml` + catalog `interview` path |
 | Portal API metadata | complete `module/**/src/main/resources/swagger/{lang}` four-file set | `project-portal/build/generated/portal-data/module/{ROUTE_ID}/api/{lang}/...` + catalog `api` base path |
-| Portal current fake learning-content fixtures | `project-portal/frontend/src/data` fake TypeScript fixtures | Quiz frontend only until real Quiz projection is implemented |
 | Portal production frontend | React/TypeScript source | Vite `dist` → Spring `classpath:/static` |
 
 ---
@@ -2270,13 +2286,16 @@ Các invariant dưới đây phản ánh architecture hiện tại và nên đư
 31. Current Portal routing dùng `HashRouter`, vì vậy `#/learning/...` thuộc browser/React và chưa cần Spring MVC SPA fallback.
 32. Learning experience không phụ thuộc việc learning module có Spring Boot Application; API execution và Execution Context chỉ là optional runtime capabilities.
 33. Portal module hierarchy phải consume generated `module-catalog.json`; browser không parse `module-structure.txt` làm canonical input.
-34. Sidebar Portal `Real modules / Module thật` là content filter: giữ MODULE khi Knowledge hoặc Quiz hoặc API Docs có count > 0; chỉ loại module khi cả ba đều 0. Đây không phải định nghĩa physical real module của repository, vốn vẫn dựa trên local `gradle.properties`.
+34. Sidebar Portal `Real modules / Module thật` là content filter: giữ MODULE khi Knowledge hoặc Quiz hoặc Interview hoặc API Docs có count > 0; chỉ loại module khi cả bốn đều 0. Đây không phải định nghĩa physical real module của repository, vốn vẫn dựa trên local `gradle.properties`.
 35. Module-search self-match giữ nguyên subtree; descendant-match chỉ giữ ancestor path. Search mode vẫn phải cho phép expand/collapse.
-36. Module navigation dùng action riêng (`>`); row có children sở hữu expand/collapse interaction. Tree mặc định collapsed, dùng `+`/`−` và có global Expand all/Collapse all.
+36. Module navigation dùng action riêng (`>`); row có children sở hữu expand/collapse interaction. Tree hiện mặc định expanded, dùng `+`/`−` và có global Expand all/Collapse all.
 37. Menu/API Docs mặc định collapsed nhưng phải preserve state gần nhất khi user đổi tab rồi quay lại trong cùng module/language; Knowledge cho phép nhiều section cùng mở và không auto-close sibling section.
 38. API Docs hiện consume static generated Swagger metadata, không live-execute/debug. Controller/method order phải follow valid README relationship order thay vì alphabetical/path order; rich execution HTML phải được sanitize trước khi render.
 39. Portal generated data là build artifact: không generate `module-catalog`, Overview, Knowledge hoặc future module projections vào `project-portal/src/main/resources`.
 40. Generated Portal layout là module-first: global `module-catalog.json` nằm ở `portal-data/`, còn module-owned feature data nằm dưới `portal-data/module/{ROUTE_ID}/{feature}/...`.
+41. Quiz và Interview là module-local static learning capabilities: canonical schema/comment generation thuộc `gradle-runtime`, enablement thuộc orchestration, còn nội dung `questions:` thuộc module source.
+42. Quiz dùng stable internal answer ids `A/B/C/D`; frontend chỉ shuffle display order một lần khi load document và không dùng display position làm correctness identity.
+43. Quiz/Interview có governance `aiGenerated/reviewed` và optional exact Knowledge/API relations. Không tạo relation giả khi README/API không có target trực tiếp phù hợp.
 
 ---
 
@@ -2431,8 +2450,7 @@ filesystem/module metadata
         ↓ ProjectStructureService
 build/generated/portal-data/module-catalog.json
         ↓
-        + module-scoped generated Overview/Knowledge/API metadata projections
-        + fake Quiz fixture cho capability chưa migrate
+        + module-scoped generated Overview/Knowledge/Quiz/Interview/API projections
         ↓
 React + TypeScript
         ↓ Vite build
@@ -2443,7 +2461,7 @@ Spring Boot classpath:/static
 browser at :9098
 ```
 
-Trong phase hiện tại Java backend không sở hữu learning data API. Module catalog đã là generated static projection; README/quiz/OpenAPI projections khi được bổ sung cũng nên tiếp tục đi theo static-first data flow trừ khi feature có requirement server-side rõ ràng.
+Trong phase hiện tại Java backend không sở hữu learning data API. Module catalog cùng README/Quiz/Interview/OpenAPI projections đều đi theo static-first data flow; chỉ thêm server-side API khi feature có requirement runtime/persistence/security rõ ràng.
 
 Execution Context bổ sung một đường dữ liệu khác từ runtime thực tế sang công cụ phân tích:
 

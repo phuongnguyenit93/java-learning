@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { CustomTooltip } from './CustomTooltip';
 import { collectRealModules, formatCatalogName } from '../data/moduleCatalog';
 import { resolveModuleStats } from '../data/moduleStats';
 import { useLanguage } from '../state/LanguageContext';
@@ -9,6 +10,8 @@ interface ModuleSidebarProps {
   nodes: ModuleCatalogNode[];
   activeModuleId: string;
   knowledgeCounts: Record<string, number>;
+  quizCounts: Record<string, number>;
+  interviewCounts: Record<string, number>;
   apiCounts: Record<string, number>;
 }
 
@@ -17,6 +20,8 @@ interface TreeNodeProps {
   depth: number;
   activeModuleId: string;
   knowledgeCounts: Record<string, number>;
+  quizCounts: Record<string, number>;
+  interviewCounts: Record<string, number>;
   apiCounts: Record<string, number>;
   filter: string;
   expandRequest: SidebarExpandRequest;
@@ -62,28 +67,32 @@ function nodeContainsMatch(node: ModuleCatalogNode, filter: string): boolean {
 function isQualifiedRealModule(
   node: ModuleCatalogNode,
   knowledgeCounts: Record<string, number>,
+  quizCounts: Record<string, number>,
+  interviewCounts: Record<string, number>,
   apiCounts: Record<string, number>,
 ): boolean {
   if (node.kind !== 'MODULE' || !node.routeId) {
     return false;
   }
 
-  const stats = resolveModuleStats(node.routeId);
   return (knowledgeCounts[node.routeId] ?? 0) > 0
-    || stats.quiz > 0
+    || (quizCounts[node.routeId] ?? 0) > 0
+    || (interviewCounts[node.routeId] ?? 0) > 0
     || (apiCounts[node.routeId] ?? 0) > 0;
 }
 
 function projectRealModuleNodes(
   nodes: ModuleCatalogNode[],
   knowledgeCounts: Record<string, number>,
+  quizCounts: Record<string, number>,
+  interviewCounts: Record<string, number>,
   apiCounts: Record<string, number>,
 ): ModuleCatalogNode[] {
   const result: ModuleCatalogNode[] = [];
 
   nodes.forEach((node) => {
-    const projectedChildren = projectRealModuleNodes(node.children, knowledgeCounts, apiCounts);
-    const keepModule = isQualifiedRealModule(node, knowledgeCounts, apiCounts);
+    const projectedChildren = projectRealModuleNodes(node.children, knowledgeCounts, quizCounts, interviewCounts, apiCounts);
+    const keepModule = isQualifiedRealModule(node, knowledgeCounts, quizCounts, interviewCounts, apiCounts);
 
     if (keepModule || projectedChildren.length > 0) {
       result.push({
@@ -101,6 +110,8 @@ function TreeNode({
   depth,
   activeModuleId,
   knowledgeCounts,
+  quizCounts,
+  interviewCounts,
   apiCounts,
   filter,
   expandRequest,
@@ -108,8 +119,8 @@ function TreeNode({
 }: TreeNodeProps) {
   const navigate = useNavigate();
   const hasChildren = node.children.length > 0;
-  const [expanded, setExpanded] = useState(false);
-  const [searchExpanded, setSearchExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(expandRequest.expanded);
+  const [searchExpanded, setSearchExpanded] = useState(expandRequest.expanded);
   const selfMatches = nodeMatchesSelf(node, filter);
   const containsMatch = nodeContainsMatch(node, filter);
   const visible = !filter || showEntireSubtree || containsMatch;
@@ -119,8 +130,13 @@ function TreeNode({
   const isActive = isModule && node.routeId === activeModuleId;
   const stats = isModule && node.routeId ? resolveModuleStats(node.routeId) : null;
   const knowledgeCount = isModule && node.routeId ? (knowledgeCounts[node.routeId] ?? 0) : 0;
+  const quizCount = isModule && node.routeId ? (quizCounts[node.routeId] ?? 0) : 0;
+  const interviewCount = isModule && node.routeId ? (interviewCounts[node.routeId] ?? 0) : 0;
   const apiCount = isModule && node.routeId ? (apiCounts[node.routeId] ?? 0) : 0;
-  const isRealModule = isQualifiedRealModule(node, knowledgeCounts, apiCounts);
+  const isRealModule = isQualifiedRealModule(node, knowledgeCounts, quizCounts, interviewCounts, apiCounts);
+  const displayName = formatCatalogName(node.name);
+  const description = node.description?.trim();
+  const tooltipContent = description ? `${displayName}: ${description}` : displayName;
 
   useEffect(() => {
     if (filter && visible && hasChildren) {
@@ -175,7 +191,9 @@ function TreeNode({
         <span className="module-tree__indent" data-depth={Math.min(depth, 5)} />
         <span className="module-tree__caret" aria-hidden="true">{hasChildren ? (open ? '−' : '+') : '•'}</span>
         <span className={`module-tree__content${isActive ? ' is-active' : ''}`}>
-          <span className="module-tree__label">{formatCatalogName(node.name)}</span>
+          <CustomTooltip content={tooltipContent}>
+            <span className="module-tree__label">{displayName}</span>
+          </CustomTooltip>
 
           {stats && (
             <span className="module-tree__badges" aria-label="Module content counts">
@@ -184,9 +202,14 @@ function TreeNode({
                   {knowledgeCount}
                 </span>
               )}
-              {stats.quiz > 0 && (
+              {quizCount > 0 && (
                 <span className="module-tree__badge module-tree__badge--quiz" title="Quiz">
-                  {stats.quiz}
+                  {quizCount}
+                </span>
+              )}
+              {interviewCount > 0 && (
+                <span className="module-tree__badge module-tree__badge--interview" title="Interview">
+                  {interviewCount}
                 </span>
               )}
               {apiCount > 0 && (
@@ -223,6 +246,8 @@ function TreeNode({
               depth={depth + 1}
               activeModuleId={activeModuleId}
               knowledgeCounts={knowledgeCounts}
+              quizCounts={quizCounts}
+              interviewCounts={interviewCounts}
               apiCounts={apiCounts}
               filter={filter}
               expandRequest={expandRequest}
@@ -235,11 +260,11 @@ function TreeNode({
   );
 }
 
-export function ModuleSidebar({ nodes, activeModuleId, knowledgeCounts, apiCounts }: ModuleSidebarProps) {
+export function ModuleSidebar({ nodes, activeModuleId, knowledgeCounts, quizCounts, interviewCounts, apiCounts }: ModuleSidebarProps) {
   const { language } = useLanguage();
   const [filterInput, setFilterInput] = useState('');
-  const [realModulesOnly, setRealModulesOnly] = useState(false);
-  const [expandRequest, setExpandRequest] = useState<SidebarExpandRequest>({ version: 0, expanded: false });
+  const [realModulesOnly, setRealModulesOnly] = useState(true);
+  const [expandRequest, setExpandRequest] = useState<SidebarExpandRequest>({ version: 0, expanded: true });
   const filter = useMemo(() => filterInput.trim().toLowerCase(), [filterInput]);
   const moduleCount = useMemo(
     () => nodes.reduce((count, node) => count + collectRealModules(node).length, 0),
@@ -248,14 +273,14 @@ export function ModuleSidebar({ nodes, activeModuleId, knowledgeCounts, apiCount
   const realModuleCount = useMemo(
     () => nodes.reduce(
       (count, node) => count + collectRealModules(node)
-        .filter((moduleNode) => isQualifiedRealModule(moduleNode, knowledgeCounts, apiCounts)).length,
+        .filter((moduleNode) => isQualifiedRealModule(moduleNode, knowledgeCounts, quizCounts, interviewCounts, apiCounts)).length,
       0,
     ),
-    [apiCounts, knowledgeCounts, nodes],
+    [apiCounts, interviewCounts, knowledgeCounts, nodes, quizCounts],
   );
   const visibleNodes = useMemo(
-    () => (realModulesOnly ? projectRealModuleNodes(nodes, knowledgeCounts, apiCounts) : nodes),
-    [apiCounts, knowledgeCounts, nodes, realModulesOnly],
+    () => (realModulesOnly ? projectRealModuleNodes(nodes, knowledgeCounts, quizCounts, interviewCounts, apiCounts) : nodes),
+    [apiCounts, interviewCounts, knowledgeCounts, nodes, quizCounts, realModulesOnly],
   );
 
   return (
@@ -325,6 +350,8 @@ export function ModuleSidebar({ nodes, activeModuleId, knowledgeCounts, apiCount
             depth={0}
             activeModuleId={activeModuleId}
             knowledgeCounts={knowledgeCounts}
+            quizCounts={quizCounts}
+            interviewCounts={interviewCounts}
             apiCounts={apiCounts}
             filter={filter}
             expandRequest={expandRequest}

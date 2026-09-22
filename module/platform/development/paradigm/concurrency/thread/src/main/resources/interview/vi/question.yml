@@ -1,0 +1,627 @@
+# <interview-schema>
+# Cấu trúc câu hỏi Interview
+# schema-version: 2
+#
+# questions [kiểu: list; bắt buộc; mặc định: []]
+#   Danh sách câu hỏi Interview của module trong language hiện tại.
+#   mỗi phần tử:
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi phỏng vấn hiển thị cho người học.
+#     answer [kiểu: string; bắt buộc; mặc định: ""]
+#       Câu trả lời tham khảo, chỉ hiển thị khi người học chủ động mở.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu nội dung được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu nội dung đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+# </interview-schema>
+
+questions:
+  - question: >-
+      Process và Thread khác nhau như thế nào trong một JVM application?
+    answer: >-
+      Process là một chương trình đang chạy với phạm vi tài nguyên riêng do hệ điều hành quản lý. Thread là một luồng thực thi bên trong process. Các Thread trong cùng JVM process có thể cùng truy cập object trên heap, còn mỗi Thread có execution stack riêng. Chính việc nhiều Thread cùng truy cập shared mutable state là nguồn của nhiều bài toán concurrency.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Basic/Basic.md"
+      anchor: "process-and-thread"
+    apiRelated:
+      controller: "BasicThreadController"
+      methodSignature: "processAndThread()"
+
+  - question: >-
+      Thread, Runnable, Callable và Executor khác nhau về vai trò như thế nào?
+    answer: >-
+      Runnable và Callable mô tả công việc cần thực hiện; Callable còn có thể trả kết quả và ném checked exception. Thread đại diện cho execution flow. Executor là abstraction quyết định task được thực thi như thế nào. Runnable hoặc Callable không tự tạo Thread; chúng vẫn cần Thread, Executor hoặc một execution mechanism khác để chạy.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Basic/Basic.md"
+      anchor: "thread-task"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Gọi thread.run() khác thread.start() như thế nào?
+    answer: >-
+      run() chỉ là một lời gọi method Java bình thường nên task chạy trên caller Thread hiện tại. start() mới bắt đầu lifecycle của Thread và JVM sẽ gọi run() trên execution của Thread đó. Một Thread object chỉ được start một lần; start lần thứ hai sẽ dẫn tới IllegalThreadStateException.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Basic/Basic.md"
+      anchor: "start-vs-run"
+    apiRelated:
+      controller: "BasicThreadController"
+      methodSignature: "startVsRun()"
+
+  - question: >-
+      Java có những Thread.State nào và BLOCKED khác WAITING ở điểm nào?
+    answer: >-
+      Java có sáu state: NEW, RUNNABLE, BLOCKED, WAITING, TIMED_WAITING và TERMINATED; không có enum RUNNING. BLOCKED có nghĩa cụ thể là Thread đang chờ intrinsic monitor để vào synchronized. WAITING là chờ vô thời hạn cho một event hoặc condition, ví dụ Object.wait(), Thread.join() hoặc LockSupport.park(). TIMED_WAITING là dạng chờ có timeout.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Basic/Basic.md"
+      anchor: "thread-state"
+    apiRelated:
+      controller: "BasicThreadController"
+      methodSignature: "threadLifeCycle()"
+
+  - question: >-
+      Daemon Thread ảnh hưởng tới JVM lifecycle như thế nào?
+    answer: >-
+      JVM tiếp tục tồn tại khi còn user Thread sống. Khi chỉ còn daemon Thread, JVM không bắt buộc phải chờ chúng hoàn thành. Daemon không có nghĩa là priority thấp; đó là thuộc tính về JVM liveness. Thread mới mặc định kế thừa daemon status của Thread tạo nó, và setDaemon(...) phải được gọi trước start().
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Basic/Basic.md"
+      anchor: "daemon-thread"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      interrupt() có kill một Thread không?
+    answer: >-
+      Không. interrupt() gửi một cooperative cancellation signal. Nếu Thread đang chạy CPU loop thì code phải chủ động kiểm tra interrupt status. Nếu Thread đang ở operation hỗ trợ interruption như sleep(), wait() hoặc join(), operation có thể kết thúc sớm bằng InterruptedException. Task vẫn phải tự cleanup và kết thúc an toàn.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.Interruption/Interruption.md"
+      anchor: "interrupt-mental-model"
+    apiRelated:
+      controller: "InterruptionController"
+      methodSignature: "interruptBusyWorker()"
+
+  - question: >-
+      isInterrupted() và Thread.interrupted() khác nhau như thế nào?
+    answer: >-
+      isInterrupted() là instance method dùng để đọc interrupt status của Thread được gọi và không clear flag. Thread.interrupted() là static method kiểm tra current Thread và đồng thời clear interrupt status. Vì vậy không nên dùng Thread.interrupted() tùy tiện nếu tầng trên vẫn cần quan sát cancellation signal.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.Interruption/Interruption.md"
+      anchor: "interrupt-flag"
+    apiRelated:
+      controller: "InterruptionController"
+      methodSignature: "inspectInterruptFlag()"
+
+  - question: >-
+      Vì sao thường phải restore interrupt status khi bắt InterruptedException?
+    answer: >-
+      Nhiều interruptible blocking API clear interrupt flag khi ném InterruptedException. Nếu method bắt exception nhưng không propagate nó lên trên, pattern phổ biến là gọi Thread.currentThread().interrupt() để bảo toàn tín hiệu cancellation cho code tầng trên. Cleanup resource nên nằm trong finally để chạy cả ở normal path lẫn cancellation path.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.Interruption/Interruption.md"
+      anchor: "interrupted-exception"
+    apiRelated:
+      controller: "InterruptionController"
+      methodSignature: "interruptSleepingWorker()"
+
+  - question: >-
+      Một Thread đang BLOCKED để lấy synchronized monitor có thoát ra ngay khi bị interrupt không?
+    answer: >-
+      Không. Khi Thread đang BLOCKED chờ intrinsic monitor của synchronized, interrupt() có thể đặt interrupt status nhưng không làm Thread thoát khỏi monitor acquisition. Thread vẫn phải chờ monitor được release. Nếu cần lock acquisition có khả năng phản ứng với interruption, ReentrantLock cung cấp lockInterruptibly().
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.Interruption/Interruption.md"
+      anchor: "interrupt-limitations"
+    apiRelated:
+      controller: "InterruptionController"
+      methodSignature: "interruptSynchronizedWaiter()"
+
+  - question: >-
+      volatile stop flag và interrupt() khác nhau như thế nào trong cancellation?
+    answer: >-
+      volatile stop flag là application state có visibility guarantee, phù hợp cho một số cooperative loop. Nhưng nó không tích hợp với interruption protocol và không tự đánh thức Thread đang sleep(), wait() hoặc join(). interrupt() ngoài việc mang cancellation signal còn có thể làm các interruptible blocking operation kết thúc sớm, nên thường phù hợp hơn khi task có thể block và cần cancellation responsive.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.Interruption/Interruption.md"
+      anchor: "interrupt-vs-stop-flag"
+    apiRelated:
+      controller: "InterruptionController"
+      methodSignature: "stopFlagVsInterrupt()"
+
+  - question: >-
+      Vì sao count++ không thread-safe khi nhiều Thread cùng cập nhật?
+    answer: >-
+      count++ là một chuỗi read-modify-write chứ không phải một atomic action duy nhất. Hai Thread có thể cùng đọc giá trị cũ, cùng tính giá trị mới rồi ghi đè lên nhau, tạo lost update. Muốn bảo vệ increment cần primitive có atomicity phù hợp như AtomicInteger hoặc một critical section được synchronized/lock bảo vệ.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.Concurrency_Problems/ConcurrencyProblem.md"
+      anchor: "shared-state-race-condition"
+    apiRelated:
+      controller: "ConcurrencyProblemController"
+      methodSignature: "raceCondition()"
+
+  - question: >-
+      Race condition, data race, visibility và ordering khác nhau như thế nào?
+    answer: >-
+      Race condition là vấn đề correctness khi kết quả phụ thuộc vào interleaving không được kiểm soát. Data race có nghĩa cụ thể trong JMM: hai Thread truy cập cùng variable, ít nhất một là write và các truy cập xung đột không được ordered bởi happens-before. Visibility hỏi Thread khác có guarantee thấy write hay không; ordering hỏi các action được quan sát theo guarantee nào. Các vấn đề này có thể cùng xuất hiện nhưng không phải một khái niệm duy nhất.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "12.Q&A/Q&A.md"
+      anchor: "race-vs-visibility"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Happens-before trong Java Memory Model có nghĩa là gì?
+    answer: >-
+      Happens-before là relation mang visibility và ordering guarantee, không chỉ là thứ tự thời gian theo đồng hồ. Các edge quan trọng gồm program order, Thread.start(), successful join(), monitor unlock tới later lock, volatile write tới subsequent read, executor submission tới task execution, computation tới successful Future.get(), synchronizer release/acquire và tính transitive.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.Concurrency_Problems/ConcurrencyProblem.md"
+      anchor: "happens-before"
+    apiRelated:
+      controller: "ConcurrencyProblemController"
+      methodSignature: "startJoinHappensBefore()"
+
+  - question: >-
+      Safe publication là gì, final field giúp gì và vì sao this escape trong constructor nguy hiểm?
+    answer: >-
+      Safe publication yêu cầu reference được đưa sang Thread khác qua memory-consistency boundary rõ ràng như volatile, monitor/Lock, concurrent collection, Thread.start() hoặc Executor submission. Final field có initialization-safety đặc biệt khi object được construct đúng và this không escape trước khi constructor hoàn tất. Nếu this escape sớm, Thread khác có thể quan sát object trước khi invariant được thiết lập đầy đủ.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.Concurrency_Problems/ConcurrencyProblem.md"
+      anchor: "safe-publication-final"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      volatile đảm bảo gì và không đảm bảo gì?
+    answer: >-
+      volatile cung cấp visibility và ordering semantics. Một volatile write happens-before subsequent read của cùng volatile variable, nên có thể dùng flag như ready để publish các write trước đó. Nhưng volatile không biến compound operation như count++ thành atomic; với những update cần read-modify-write nguyên tử vẫn cần Atomic, synchronized, Lock hoặc design khác.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.Concurrency_Problems/ConcurrencyProblem.md"
+      anchor: "volatile-publication"
+    apiRelated:
+      controller: "ConcurrencyProblemController"
+      methodSignature: "volatileIsNotAtomic()"
+
+  - question: >-
+      Deadlock, livelock và starvation khác nhau như thế nào?
+    answer: >-
+      Deadlock là các Thread bị kẹt trong dependency cycle và không thể tiến tiếp. Livelock là các Thread vẫn hoạt động, liên tục phản ứng với nhau nhưng không tạo progress. Starvation là một Thread về lý thuyết có thể chạy nhưng lâu dài không nhận được CPU, lock hoặc resource cần thiết trong khi các Thread khác vẫn tiến. Đây đều là progress/liveness problem nhưng biểu hiện khác nhau.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.Concurrency_Problems/ConcurrencyProblem.md"
+      anchor: "progress-problems"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Bốn Coffman conditions của deadlock là gì và global lock ordering phòng deadlock ra sao?
+    answer: >-
+      Bốn điều kiện là mutual exclusion, hold and wait, no preemption và circular wait. Một chiến lược thực dụng là phá circular wait bằng global lock ordering: mọi code path cần nhiều lock phải acquire theo cùng một thứ tự, ví dụ luôn A rồi B, không có chỗ khác lấy B rồi A.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.Concurrency_Problems/ConcurrencyProblem.md"
+      anchor: "deadlock-prevention"
+    apiRelated:
+      controller: "ConcurrencyProblemController"
+      methodSignature: "deadlockPrevention()"
+
+  - question: >-
+      synchronized cung cấp những guarantee gì và instance synchronized khác static synchronized ra sao?
+    answer: >-
+      synchronized cung cấp mutual exclusion và memory-consistency guarantee khi release/acquire cùng monitor. Instance synchronized method khóa monitor của this, còn static synchronized khóa Class object. Hai instance khác nhau không tự chặn nhau nếu chúng dùng hai monitor khác nhau; điều quan trọng là các code path có thực sự cạnh tranh cùng monitor hay không.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.Synchronization/Synchronization.md"
+      anchor: "synchronized-monitor"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      ReentrantLock có gì khác synchronized và vì sao unlock phải nằm trong finally?
+    answer: >-
+      ReentrantLock cung cấp explicit locking cùng các khả năng như tryLock(), timed tryLock(), lockInterruptibly(), fairness và nhiều Condition. Nó reentrant, nghĩa là Thread đang giữ lock có thể acquire lại chính lock đó và hold count tăng lên. Mỗi acquire phải được release tương ứng; unlock trong finally giúp tránh giữ lock vô hạn nếu critical section ném exception hoặc thoát sớm.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.Synchronization/Synchronization.md"
+      anchor: "reentrant-lock"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Fair ReentrantLock có đảm bảo Thread start trước sẽ lấy lock trước không?
+    answer: >-
+      Không. Fairness là acquisition policy cho các Thread đang cạnh tranh lock, không phải guarantee về Thread.start(), scheduler hay thứ tự log. Một footgun quan trọng là untimed tryLock() vẫn có thể barge trên fair lock nếu lock đang available; timed tryLock(timeout, unit) mới tham gia fair ordering policy khi phải chờ. Fairness cũng có thể đổi throughput lấy việc giảm barging/starvation.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.Synchronization/Synchronization.md"
+      anchor: "reentrant-lock"
+    apiRelated:
+      controller: "SynchronizationController"
+      methodSignature: "reentrantLockPolicy()"
+
+  - question: >-
+      ReentrantReadWriteLock phù hợp khi nào và downgrade/upgrade có semantics gì?
+    answer: >-
+      Read lock cho phép nhiều reader cùng giữ, còn write lock là exclusive. Nó đáng cân nhắc khi workload read-heavy thật sự và critical section đọc đủ lớn để concurrency có lợi. Write-to-read downgrade được hỗ trợ bằng cách giữ write lock, lấy read lock rồi release write lock. Read-to-write upgrade không được hỗ trợ như một thao tác nâng cấp an toàn; cần release/re-coordinate theo protocol phù hợp.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.Synchronization/Synchronization.md"
+      anchor: "read-write-lock"
+    apiRelated:
+      controller: "SynchronizationController"
+      methodSignature: "readWriteLockDowngrade()"
+
+  - question: >-
+      StampedLock optimistic read hoạt động thế nào và có những hạn chế gì?
+    answer: >-
+      Reader gọi tryOptimisticRead(), đọc snapshot rồi validate(stamp). Nếu validation fail thì phải fallback sang read lock thật trước khi tin dữ liệu. StampedLock không reentrant, Lock view không cung cấp Condition, programmer phải quản lý stamp đúng mode và optimistic read luôn cần validate. Vì vậy nó không đơn giản là một ReadWriteLock nhanh hơn.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.Synchronization/Synchronization.md"
+      anchor: "stamped-lock"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      CAS là gì và ABA problem là gì?
+    answer: >-
+      CAS cập nhật state chỉ khi current value/reference vẫn bằng expected value mà caller dựa vào để tính transition; nếu thất bại thường phải đọc lại và retry. ABA xảy ra khi state đi A → B → A, làm plain CAS thấy giá trị cuối vẫn là A và không biết history đã thay đổi. Khi intermediate transition là một phần correctness, AtomicStampedReference có thể dùng stamp/version để phát hiện trường hợp đó.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.Synchronization/Synchronization.md"
+      anchor: "atomic-cas"
+    apiRelated:
+      controller: "SynchronizationController"
+      methodSignature: "atomicCas()"
+
+  - question: >-
+      Khi nào nên dùng LongAdder thay vì AtomicLong và có caveat gì với sum()?
+    answer: >-
+      LongAdder phù hợp cho counter có contention cao như metrics vì update được phân tán vào nhiều cell. Tuy nhiên sum() không phải atomic snapshot khi các Thread khác vẫn update. Vì vậy LongAdder không phù hợp cho sequence ID hoặc admission rule kiểu sum() < limit rồi increment. LongAccumulator cũng nên dùng reduction function dễ reasoning và side-effect-free vì function có thể được áp dụng lại trong concurrent update/retry.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.Synchronization/Synchronization.md"
+      anchor: "adder-accumulator"
+    apiRelated:
+      controller: "SynchronizationController"
+      methodSignature: "atomicTools()"
+
+  - question: >-
+      ConcurrentHashMap có làm mọi chuỗi get rồi put trở thành atomic không?
+    answer: >-
+      Không. ConcurrentHashMap bảo vệ semantics của các operation mà API định nghĩa, nhưng một chuỗi get() rồi put() riêng rẽ vẫn có thể race. Khi cần compound update nên ưu tiên API như putIfAbsent(), compute(), computeIfAbsent(), merge() hoặc replace(key, oldValue, newValue). Tương tự, chọn concurrent collection dựa trên access pattern và semantics cần có, không chỉ vì tên chứa chữ Concurrent.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.Synchronization/Synchronization.md"
+      anchor: "concurrent-collections"
+    apiRelated:
+      controller: "SynchronizationController"
+      methodSignature: "concurrentCollections()"
+
+  - question: >-
+      Synchronization và coordination khác nhau như thế nào?
+    answer: >-
+      Synchronization tập trung bảo vệ shared state, tức là ai được phép truy cập hoặc mutation tại một thời điểm. Coordination tập trung vào dependency giữa các Thread: ai phải chờ, chờ event/phase nào và khi nào được tiếp tục. synchronized bảo vệ counter là synchronization; CountDownLatch chờ nhiều worker hoàn thành là coordination. Một chương trình thực tế thường cần cả hai.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "12.Q&A/Q&A.md"
+      anchor: "synchronization-vs-coordination"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Vì sao Object.wait() phải nằm trong while và wait() khác Thread.sleep() ở điểm quan trọng nào?
+    answer: >-
+      Notification chỉ là tín hiệu để waiter kiểm tra lại predicate, không phải bằng chứng condition đã đúng. while xử lý spurious wakeup, nhiều waiter cạnh tranh và state thay đổi trước khi Thread reacquire monitor. wait() yêu cầu caller đang giữ monitor và sẽ release monitor trong lúc chờ; sleep() không release monitor chỉ vì Thread đang ngủ. notify()/notifyAll() cũng không trao monitor ngay cho waiter.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Coordination/Coordination.md"
+      anchor: "wait-notify"
+    apiRelated:
+      controller: "CoordinationController"
+      methodSignature: "waitNotify()"
+
+  - question: >-
+      LockSupport.park()/unpark() khác wait()/notify() ở những điểm nào?
+    answer: >-
+      LockSupport không yêu cầu intrinsic monitor và unpark(thread) target một Thread cụ thể. Permit có thể được cấp sau khi Thread đã start nhưng trước lần park tương ứng, nhưng permit không phải counter cộng dồn vô hạn. park() có thể return do permit, interrupt hoặc spurious return và không ném InterruptedException, nên caller vẫn phải dùng predicate/cancellation loop và kiểm tra interrupt status khi cần.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Coordination/Coordination.md"
+      anchor: "lock-support"
+    apiRelated:
+      controller: "CoordinationController"
+      methodSignature: "lockSupport()"
+
+  - question: >-
+      BlockingQueue giải quyết Producer–Consumer và backpressure như thế nào, và các implementation phổ biến khác nhau ra sao?
+    answer: >-
+      BlockingQueue có waiting semantics như put/take và timed offer/poll; bounded queue có thể tạo backpressure khi đầy. ArrayBlockingQueue có capacity cố định; LinkedBlockingQueue chỉ bounded khi cấu hình capacity và mặc định capacity rất lớn; SynchronousQueue không lưu phần tử mà direct handoff; PriorityBlockingQueue sắp theo priority và effectively unbounded, đồng thời không có FIFO contract cho các item cùng priority.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Coordination/Coordination.md"
+      anchor: "producer-consumer"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      CountDownLatch, CyclicBarrier, Semaphore, Phaser và Exchanger nên được phân biệt thế nào?
+    answer: >-
+      CountDownLatch là one-shot để chờ N việc hoàn thành. CyclicBarrier cho một nhóm Thread gặp nhau ở checkpoint và có thể tái sử dụng qua nhiều generation nếu không broken. Semaphore quản lý permit để giới hạn concurrent access. Phaser phù hợp workflow nhiều phase với participant có thể register/deregister động. Exchanger là rendezvous point để hai Thread trao đổi object. Chọn primitive theo dependency chứ không theo tên API.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Coordination/Coordination.md"
+      anchor: "synchronizers"
+    apiRelated:
+      controller: "CoordinationController"
+      methodSignature: "synchronizers()"
+
+  - question: >-
+      Semaphore có ownership giống Lock không và vì sao over-release nguy hiểm?
+    answer: >-
+      Semaphore không enforce ownership như Lock. Code có thể release() dù Thread hiện tại chưa acquire permit, làm permit count tăng sai và phá giới hạn concurrency. Pattern an toàn là ghi nhận acquisition thành công rồi chỉ release trong finally nếu thật sự đã acquire. Timeout/interruption ở acquire cũng phải được tính vào permit accounting.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Coordination/Coordination.md"
+      anchor: "semaphore-permit-accounting"
+    apiRelated:
+      controller: "CoordinationController"
+      methodSignature: "semaphorePermitAccounting()"
+
+  - question: >-
+      ThreadPoolExecutor xử lý một task mới theo thứ tự nào?
+    answer: >-
+      Mental model là: nếu worker count nhỏ hơn corePoolSize thì tạo core worker; nếu không thì thử enqueue; nếu queue đầy và worker count còn nhỏ hơn maximumPoolSize thì tạo worker bổ sung; nếu vẫn không nhận được thì đi vào rejection policy. execute() không tự block caller chỉ vì queue đầy. Vì vậy maximumPoolSize thường chỉ phát huy khi queue không còn nhận thêm task.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.Thread_Pool_Executor/ThreadPoolExecutor.md"
+      anchor: "thread-pool-flow"
+    apiRelated:
+      controller: "ThreadPoolController"
+      methodSignature: "executorFlow()"
+
+  - question: >-
+      execute() và submit() khác nhau như thế nào về result và failure observation?
+    answer: >-
+      execute(Runnable) trả void; exception thoát khỏi task đi theo uncaught-exception path của worker. submit(Runnable/Callable) trả Future và giữ result hoặc failure trong Future; get() expose failure qua ExecutionException. Vì vậy submit một task quan trọng rồi bỏ luôn Future có thể làm application mất một failure-observation channel quan trọng.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.Thread_Pool_Executor/ThreadPoolExecutor.md"
+      anchor: "executor-abstraction"
+    apiRelated:
+      controller: "ThreadPoolController"
+      methodSignature: "executeVsSubmit()"
+
+  - question: >-
+      Có thể chọn pool size chỉ bằng công thức CPU-bound = Ncpu và I/O-bound > Ncpu không?
+    answer: >-
+      Không. Các công thức đó chỉ là heuristic khởi đầu. Production sizing phải xét arrival rate, service time, latency SLO, downstream capacity, queue memory, contention và overload behavior. Các factory tiện lợi cũng có trade-off: fixed/single thường dùng queue rất lớn, cached pool có thể tăng platform Thread mạnh với SynchronousQueue. Cần hiểu queue, capacity và rejection semantics thật sự.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.Thread_Pool_Executor/ThreadPoolExecutor.md"
+      anchor: "pool-sizing"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      scheduleAtFixedRate() và scheduleWithFixedDelay() khác nhau thế nào, và exception trong periodic task có hậu quả gì?
+    answer: >-
+      Fixed rate cố duy trì cadence theo các mốc start dự kiến; fixed delay chờ một khoảng delay sau khi lần chạy trước hoàn thành rồi mới lên lịch lượt tiếp theo. Cùng một periodic task không overlap với chính nó theo contract của ScheduledThreadPoolExecutor. Nếu một execution của periodic task để exception thoát ra ngoài, các execution tiếp theo của chính periodic task đó bị suppress, nên production job cần failure-observation/handling rõ ràng.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.Thread_Pool_Executor/ThreadPoolExecutor.md"
+      anchor: "scheduled-execution"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Các rejection policy của ThreadPoolExecutor thể hiện overload semantics như thế nào?
+    answer: >-
+      AbortPolicy ném RejectedExecutionException. CallerRunsPolicy cho caller chạy task nếu executor chưa shutdown, tạo feedback pressure vì caller bị chậm lại. DiscardPolicy bỏ task mới im lặng. DiscardOldestPolicy bỏ head của work queue rồi thử submit lại task mới. Hai policy discard thay đổi business semantics về task nào có thể mất, nên chỉ dùng khi loss thực sự được hiểu và chấp nhận.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.Thread_Pool_Executor/ThreadPoolExecutor.md"
+      anchor: "rejection-policy"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      shutdown() và shutdownNow() của ExecutorService khác nhau như thế nào?
+    answer: >-
+      shutdown() ngừng nhận task mới nhưng cho queued/running task tiếp tục. shutdownNow() cố interrupt running task và trả về các task chưa bắt đầu, nhưng không thể cưỡng bức một task không hợp tác với interruption phải dừng ngay. Executor do code tạo ra phải có owner chịu trách nhiệm shutdown; awaitTermination thường được dùng để giới hạn thời gian graceful shutdown trước khi cân nhắc forced shutdown.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.Thread_Pool_Executor/ThreadPoolExecutor.md"
+      anchor: "graceful-shutdown"
+    apiRelated:
+      controller: "ThreadPoolController"
+      methodSignature: "forcedShutdown()"
+
+  - question: >-
+      Asynchronous có đồng nghĩa với non-blocking không?
+    answer: >-
+      Không. Async mô tả quan hệ giữa caller và completion: caller không nhất thiết chờ công việc hoàn thành ngay tại điểm submit. Worker vẫn có thể block, ví dụ CompletableFuture.supplyAsync(() -> blockingJdbcCall()). Non-blocking là property của cách operation chờ external event/resource, còn async không tự biến blocking I/O thành non-blocking.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.Async/Async.md"
+      anchor: "async-mental-model"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Future.cancel(false), Future.cancel(true) và CompletableFuture.cancel(true) có semantics giống nhau không?
+    answer: >-
+      Không. Future từ ExecutorService với cancel(false) không request interrupt running task; task có thể tiếp tục. cancel(true) có thể request interrupt nhưng task vẫn phải cooperate. Với CompletableFuture, mayInterruptIfRunning không điều khiển underlying processing theo cùng semantics đó; cancel chủ yếu thay đổi completion state. Không được coi bất kỳ cancel(true) nào là primitive kill Thread.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "12.Q&A/Q&A.md"
+      anchor: "future-question"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      CompletableFuture khác Future ở đâu và allOf()/anyOf() có những nuance gì?
+    answer: >-
+      Future chủ yếu là handle cho completion, cancellation và blocking get(). CompletableFuture thêm pipeline/composition như thenApply, thenCompose, thenCombine và error handling. allOf() đợi tất cả input complete và không phải fail-fast barrier; anyOf() chọn first completion, có thể là success hoặc failure. Cả hai không mặc định cancel sibling future. get() và join() đều có thể block; khác biệt nổi bật nằm ở exception API checked so với CompletionException/CancellationException.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "12.Q&A/Q&A.md"
+      anchor: "future-question"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      ThreadLocal và InheritableThreadLocal có những rủi ro gì khi dùng với Thread Pool?
+    answer: >-
+      ThreadLocal gắn value với current Thread và giúp tránh sharing context, nhưng không làm shared object khác thread-safe. Worker pool được reuse nên value không remove có thể trở thành stale context hoặc giữ reference quá lâu. InheritableThreadLocal chỉ inherit tại Thread creation; task submit sau trên cùng worker cũ không nhận context mới của caller. Vì vậy pool context thường cần explicit propagation và cleanup.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.Context/ThreadLocal.md"
+      anchor: "thread-pool-problem"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Context propagation đúng qua Executor hoặc Spring TaskDecorator nên theo flow nào?
+    answer: >-
+      Mental model là capture context tại submission boundary, restore nó trên worker trước khi task chạy, rồi cleanup hoặc restore previous state trong finally. Spring TaskDecorator là nơi phù hợp để đóng gói pattern này cho ThreadPoolTaskExecutor, ví dụ với correlation id, MDC hoặc RequestAttributes. Propagation không kéo dài lifecycle của HTTP request, nên khi có thể nên capture các immutable value thực sự cần thay vì giữ request object quá lâu.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.Spring_Task_Executor/SpringExecutor.md"
+      anchor: "task-decorator"
+    apiRelated:
+      controller: "TaskExecutorController"
+      methodSignature: "asyncWithContext()"
+
+  - question: >-
+      @Async hoạt động như thế nào và vì sao self-invocation có thể không async?
+    answer: >-
+      @Async hoạt động qua Spring async infrastructure và proxy/interceptor; @EnableAsync thường được dùng để bật infrastructure. Khi invocation đi qua proxy, method được dispatch tới TaskExecutor được resolve. Nếu một method gọi trực tiếp một @Async method khác trên chính this, lời gọi có thể bypass proxy nên interception không xảy ra. Với void @Async, caller không có Future để nhận failure; cần AsyncUncaughtExceptionHandler/logging/metrics và vẫn phải xử lý submission rejection riêng.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.Spring_Task_Executor/SpringExecutor.md"
+      anchor: "async-annotation"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Khi nào một Thread, pool hoặc queue được coi là leak/resource pressure và nên quan sát gì trong production?
+    answer: >-
+      Leak xảy ra khi resource sống lâu hơn ownership/intention và thiếu lifecycle phù hợp, ví dụ Thread không có cancellation path, pool tạo theo request nhưng quên shutdown, duplicated scheduler hoặc stale ThreadLocal. Thread count ổn định vẫn có thể nguy hiểm nếu queue backlog tăng. Production nên theo dõi thread/pool count, active count, queue depth, memory, CPU, rejection và shutdown duration, đồng thời so sánh nhiều thread dump theo thời gian để tìm owner và lifecycle bug.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "10.Leak/Leak.md"
+      anchor: "observability"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Virtual Thread trong Java 21 thay đổi execution model như thế nào và có thay thế mọi resource limit không?
+    answer: >-
+      Virtual Thread là lightweight Thread do JVM quản lý và được mount lên carrier/platform Thread khi chạy. Với supported blocking operation, runtime có thể unmount virtual Thread để carrier làm việc khác, giúp mô hình thread-per-task scale tốt hơn cho nhiều blocking task. Nhưng DB connection, API rate limit, file descriptor và các downstream resource vẫn hữu hạn, nên Semaphore, rate limiter hoặc resource pool vẫn cần thiết.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "11.Virtual_Thread/VirtualThread.md"
+      anchor: "resource-limits"
+    apiRelated:
+      controller: "VirtualThreadController"
+      methodSignature: "limitedResource()"
+
+  - question: >-
+      Những caveat quan trọng của Virtual Thread trên Java 21 là gì?
+    answer: >-
+      Virtual Thread vẫn tuân theo JMM, race condition, lock và deadlock như platform Thread. Trong Java 21 chúng luôn là daemon và có priority cố định Thread.NORM_PRIORITY. ThreadLocal vẫn có per-thread semantics và payload lớn trên rất nhiều virtual Thread có thể tạo heap pressure. Java 21 còn có pinning trong một số trường hợp, đáng chú ý khi blocking lúc giữ synchronized monitor; pinning dài/thường xuyên có thể giảm scalability. Bật spring.threads.virtual.enabled=true cũng không biến mọi Thread trong application thành virtual Thread.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "12.Q&A/Q&A.md"
+      anchor: "virtual-thread-question"
+    apiRelated:
+      controller: ""
+      methodSignature: ""

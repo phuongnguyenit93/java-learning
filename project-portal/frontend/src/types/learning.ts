@@ -5,12 +5,14 @@ export type LocalizedText = Record<Language, string>;
 export interface ModuleStats {
   knowledge: number;
   quiz: number;
+  interview: number;
   apiDocs: number;
 }
 
 export interface CapabilityState {
   knowledge: boolean;
   quiz: boolean;
+  interview: boolean;
   apiDocs: boolean;
   execution: boolean;
   download: boolean;
@@ -25,6 +27,8 @@ export interface LearningModule {
   questionCount: number;
   overview: Partial<Record<Language, string>>;
   knowledge: Partial<Record<Language, string>>;
+  quiz: Partial<Record<Language, string>>;
+  interview: Partial<Record<Language, string>>;
   api: Partial<Record<Language, string>>;
   capabilities: CapabilityState;
 }
@@ -47,6 +51,8 @@ export interface ModuleCatalogNode {
   moduleDepend?: boolean;
   overview?: Partial<Record<Language, string>>;
   knowledge?: Partial<Record<Language, string>>;
+  quiz?: Partial<Record<Language, string>>;
+  interview?: Partial<Record<Language, string>>;
   api?: Partial<Record<Language, string>>;
   children: ModuleCatalogNode[];
 }
@@ -112,11 +118,50 @@ export interface KnowledgeItem {
   code?: string;
 }
 
-export interface QuizItem {
+export type QuizAnswerId = 'A' | 'B' | 'C' | 'D';
+
+export interface QuizAnswer {
+  id: QuizAnswerId;
+  answer: string;
+  explanation: string;
+}
+
+export interface QuizReadmeRelated {
+  file: string;
+  anchor: string;
+}
+
+export interface QuizApiRelated {
+  controller: string;
+  methodSignature: string;
+}
+
+export interface QuizQuestion {
   id: string;
-  moduleId: string;
-  question: LocalizedText;
-  answers: LocalizedText[];
+  question: string;
+  aiGenerated: boolean;
+  reviewed: boolean;
+  readmeRelated: QuizReadmeRelated;
+  apiRelated: QuizApiRelated;
+  answers: QuizAnswer[];
+  correctAnswerId: QuizAnswerId;
+}
+
+export interface QuizDocument {
+  questions: QuizQuestion[];
+}
+
+export interface InterviewQuestion {
+  question: string;
+  answer: string;
+  aiGenerated: boolean;
+  reviewed: boolean;
+  readmeRelated: QuizReadmeRelated;
+  apiRelated: QuizApiRelated;
+}
+
+export interface InterviewDocument {
+  questions: InterviewQuestion[];
 }
 
 export interface ApiOperation {

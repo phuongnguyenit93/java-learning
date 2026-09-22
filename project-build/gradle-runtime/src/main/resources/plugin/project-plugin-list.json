@@ -25,6 +25,16 @@
         "implementationClass": "com.example.learning.setup.module.executioncontext.plugin.ExecutionContextSetupPlugin"
     },
     {
+        "name": "interviewSetupPlugin",
+        "id": "com.example.learning.setup.module.interview.plugin",
+        "implementationClass": "com.example.learning.setup.module.interview.plugin.InterviewSetupPlugin"
+    },
+    {
+        "name": "quizSetupPlugin",
+        "id": "com.example.learning.setup.module.quiz.plugin",
+        "implementationClass": "com.example.learning.setup.module.quiz.plugin.QuizSetupPlugin"
+    },
+    {
         "name": "readmeSetupPlugin",
         "id": "com.example.learning.setup.module.readme.plugin",
         "implementationClass": "com.example.learning.setup.module.readme.plugin.ReadmeSetupPlugin"

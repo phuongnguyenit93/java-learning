@@ -2,7 +2,7 @@ import { useLanguage } from '../state/LanguageContext';
 import type { ModuleStats } from '../types/learning';
 import { DownloadAction } from './DownloadAction';
 
-export type ModuleTab = 'overview' | 'menu' | 'knowledge' | 'quiz' | 'api' | 'execution';
+export type ModuleTab = 'overview' | 'menu' | 'knowledge' | 'quiz' | 'interview' | 'api' | 'execution';
 
 interface ModuleTabsProps {
   activeTab: ModuleTab;
@@ -18,7 +18,8 @@ const tabs: Array<{ id: ModuleTab; vi: string; en: string; countKey?: keyof Modu
   { id: 'knowledge', vi: 'Knowledge', en: 'Knowledge', countKey: 'knowledge' },
   { id: 'api', vi: 'API Docs', en: 'API Docs', countKey: 'apiDocs' },
   { id: 'quiz', vi: 'Quiz', en: 'Quiz', countKey: 'quiz' },
-  { id: 'execution', vi: 'Execution', en: 'Execution' },
+  { id: 'interview', vi: 'Interview', en: 'Interview', countKey: 'interview' },
+  { id: 'execution', vi: 'Local Run', en: 'Local Run' },
 ];
 
 export function ModuleTabs({ activeTab, stats, onChange, downloadOpen, onDownloadToggle }: ModuleTabsProps) {

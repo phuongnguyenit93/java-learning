@@ -2,7 +2,9 @@ package com.example.learning.setup.root.structure.plugin
 
 import com.example.learning.setup.root.structure.service.ProjectStructureService
 import com.example.learning.setup.root.structure.service.PortalApiProjectionService
+import com.example.learning.setup.root.structure.service.PortalInterviewProjectionService
 import com.example.learning.setup.root.structure.service.PortalKnowledgeProjectionService
+import com.example.learning.setup.root.structure.service.PortalQuizProjectionService
 import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -51,6 +53,18 @@ ${project.path}
                 )
 
 
+        PortalQuizProjectionService quizService =
+                new PortalQuizProjectionService(
+                        project.logger
+                )
+
+
+        PortalInterviewProjectionService interviewService =
+                new PortalInterviewProjectionService(
+                        project.logger
+                )
+
+
         def portalDataInputs =
                 project.fileTree(
                         new File(
@@ -62,6 +76,8 @@ ${project.path}
                     include '**/master.json'
                     include '**/readme/**'
                     include '**/src/main/resources/swagger/**'
+                    include '**/src/main/resources/quiz/**'
+                    include '**/src/main/resources/interview/**'
 
                     exclude '**/build/**'
                     exclude '**/.gradle/**'
@@ -203,6 +219,72 @@ ${project.path}
                 }
 
 
+        def generatePortalQuiz =
+                project.tasks.register(
+                        'generatePortalQuiz'
+                ) {
+                    task ->
+
+                        task.group =
+                                'learning portal'
+
+
+                        task.description =
+                                'Copy localized Quiz question.yml files into static Portal Quiz projections.'
+
+
+                        task.dependsOn(
+                                cleanupLegacyPortalData
+                        )
+
+
+                        task.inputs.files(
+                                portalDataInputs
+                        )
+
+
+                        task.doLast {
+
+                            quizService.generate(
+                                    project
+                            )
+                        }
+                }
+
+
+        def generatePortalInterview =
+                project.tasks.register(
+                        'generatePortalInterview'
+                ) {
+                    task ->
+
+                        task.group =
+                                'learning portal'
+
+
+                        task.description =
+                                'Copy localized Interview question.yml files into static Portal Interview projections.'
+
+
+                        task.dependsOn(
+                                cleanupLegacyPortalData
+                        )
+
+
+                        task.inputs.files(
+                                portalDataInputs
+                        )
+
+
+                        task.doLast {
+
+                            interviewService.generate(
+                                    project
+                            )
+                        }
+                }
+
+
         generatePortalKnowledge.configure {
             task ->
 
@@ -213,6 +295,24 @@ ${project.path}
 
 
         generatePortalApi.configure {
+            task ->
+
+                task.mustRunAfter(
+                        generatePortalModuleData
+                )
+        }
+
+
+        generatePortalQuiz.configure {
+            task ->
+
+                task.mustRunAfter(
+                        generatePortalModuleData
+                )
+        }
+
+
+        generatePortalInterview.configure {
             task ->
 
                 task.mustRunAfter(
@@ -237,7 +337,9 @@ ${project.path}
                 task.dependsOn(
                         generatePortalModuleData,
                         generatePortalKnowledge,
-                        generatePortalApi
+                        generatePortalApi,
+                        generatePortalQuiz,
+                        generatePortalInterview
                 )
         }
 

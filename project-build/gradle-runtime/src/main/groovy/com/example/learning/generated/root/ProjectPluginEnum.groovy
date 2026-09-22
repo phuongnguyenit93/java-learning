@@ -40,6 +40,16 @@ enum ProjectPluginEnum {
             'com.example.learning.setup.module.executioncontext.plugin.ExecutionContextSetupPlugin'
     ),
 
+    INTERVIEW_SETUP_PLUGIN(
+            'com.example.learning.setup.module.interview.plugin',
+            'com.example.learning.setup.module.interview.plugin.InterviewSetupPlugin'
+    ),
+
+    QUIZ_SETUP_PLUGIN(
+            'com.example.learning.setup.module.quiz.plugin',
+            'com.example.learning.setup.module.quiz.plugin.QuizSetupPlugin'
+    ),
+
     README_SETUP_PLUGIN(
             'com.example.learning.setup.module.readme.plugin',
             'com.example.learning.setup.module.readme.plugin.ReadmeSetupPlugin'

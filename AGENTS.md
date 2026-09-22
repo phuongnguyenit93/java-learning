@@ -124,6 +124,8 @@ project-portal/
 │   └── module/{ROUTE_ID}/
 │       ├── overview/{lang}.md
 │       ├── knowledge/{lang}/...
+│       ├── quiz/{lang}/question.yml
+│       ├── interview/{lang}/question.yml
 │       └── api/{lang}/
 │           ├── api-descriptions.yml
 │           ├── api-execution.yml
@@ -134,7 +136,7 @@ project-portal/
 └── build.gradle                         # Node/Vite → Spring static-resource wiring
 ```
 
-The Portal is currently **static-first**. Module hierarchy/routing comes from generated `module-catalog.json`; Overview, Knowledge, and raw localized Swagger/API metadata projections are generated under `project-portal/build/generated/portal-data`. The frontend currently consumes Overview, Menu/Knowledge, and API Docs directly from those generated/static projections. Quiz still uses temporary frontend fixtures. No portal feature currently depends on a Java REST API.
+The Portal is currently **static-first**. Module hierarchy/routing comes from generated `module-catalog.json`; Overview, Knowledge, Quiz, Interview, and raw localized Swagger/API metadata projections are generated under `project-portal/build/generated/portal-data`. The frontend consumes Overview, Menu/Knowledge, Quiz, Interview, and API Docs directly from those generated/static projections. No portal feature currently depends on a Java REST API.
 
 Do not move fake frontend data into Spring controllers merely because the application has a backend. Static/generated knowledge should stay static until a server-side requirement actually exists.
 
@@ -201,11 +203,12 @@ Learning
 ├── Knowledge
 ├── API Docs
 ├── Quiz
-├── Execution
+├── Interview
+├── Local Run
 └── Download action
 ```
 
-`Overview` uses generated catalog metadata and generated BASE.md projections. `Menu` and `Knowledge` consume the generated Knowledge index/section projections. `API Docs` now consumes the complete localized four-file Swagger projection advertised through catalog `api` language base paths. `Quiz` still uses fake data rendered through React loops. Knowledge and API counts for sidebar modules are preloaded from generated/static projections for the active language; Quiz count remains fixture-derived until the real Quiz data contract is implemented. `Execution` and backend-dependent download/build behavior may remain empty/placeholder until their real integration contract is implemented.
+`Overview` uses generated catalog metadata and generated BASE.md projections. `Menu` and `Knowledge` consume the generated Knowledge index/section projections. `Quiz` and `Interview` consume localized generated `question.yml` projections advertised through catalog `quiz` and `interview` language paths. `API Docs` consumes the complete localized four-file Swagger projection advertised through catalog `api` language base paths. Knowledge, Quiz, Interview, and API counts for sidebar modules are preloaded from generated/static projections for the active language. `Local Run` is the current display label for the internal `execution` tab and may remain empty/placeholder until its real runtime integration contract is implemented.
 
 `Home` is currently an intentional placeholder, not a blank page. It tells the user that the home page is being updated and links directly to `Learning`. Keep it lightweight until a real Home information architecture is defined.
 
@@ -215,7 +218,7 @@ Current sidebar behavior is intentional and should be preserved unless the user 
 row with children
 → click the row to expand/collapse
 → use `+` for collapsed and `−` for expanded
-→ default tree state is fully collapsed
+→ default tree state is fully expanded
 
 real module
 → render a separate circular `>` action on the right
@@ -229,8 +232,8 @@ module filter descendant-match
 
 sidebar `Real modules / Module thật` mode
 → this is a Portal content filter, not the repository-level `gradle.properties` real-module identity rule
-→ keep a MODULE when at least one visible learning count is non-zero: Knowledge OR Quiz OR API Docs
-→ hide a MODULE only when Knowledge=0 AND Quiz=0 AND API Docs=0
+→ keep a MODULE when at least one visible learning count is non-zero: Knowledge OR Quiz OR Interview OR API Docs
+→ hide a MODULE only when Knowledge=0 AND Quiz=0 AND Interview=0 AND API Docs=0
 → keep required GROUP ancestors
 → remove branches with no qualifying descendants
 → never flatten the hierarchy into a plain module list
@@ -253,20 +256,28 @@ Knowledge
 → opening one section must not close another
 → loaded Markdown is cached while the panel remains mounted
 
+Quiz
+→ four answer positions are shuffled once when the localized document loads
+→ selected answer/explanation state remains stable while the panel stays mounted
+
+Interview
+→ reference answers start collapsed and may be expanded independently
+→ expanded-answer state remains stable while the panel stays mounted
+
 API Docs
 → controller + method details default collapsed
 → explicit Expand all / Collapse all
 → reference-only; no live execute/debug control in this panel
 
 tab switching
-→ Menu / Knowledge / API Docs are lazy-mounted then kept alive for the current module/language
+→ Menu / Knowledge / API Docs / Quiz / Interview are lazy-mounted then kept alive for the current module/language
 → preserve the user's latest expand/collapse state when switching tabs
 → changing module/language establishes a new state boundary
 ```
 
 The API Reference notice explains that the docs are for learning/reference only and that running/debugging requires local source/runtime. Its Download action reuses the shared Download popover. Download popovers must anchor to the button that opened them and close when the user clicks outside, presses Escape, or toggles the same action again.
 
-Theme selection starts from `prefers-color-scheme` and persists user choice in `localStorage`. Capability colors are semantic and theme-independent: Overview gray, Knowledge blue, Quiz amber, API Docs red, Execution purple, Download green. Light/Dark changes surrounding surfaces/text/borders, not those semantic identities.
+Theme selection starts from `prefers-color-scheme` and persists user choice in `localStorage`. Capability colors are semantic and theme-independent: Overview gray, Knowledge blue, Quiz amber, Interview teal, API Docs red, Local Run purple, Download green. Light/Dark changes surrounding surfaces/text/borders, not those semantic identities.
 
 Portal frontend styling uses normal CSS files. Avoid inline CSS unless there is a concrete technical reason that cannot be reasonably expressed through classes/stylesheets.
 
@@ -388,6 +399,10 @@ EnvSetupPlugin       if enabled
 ReadmeSetupPlugin    if enabled
     ↓
 SwaggerSetupPlugin   if enabled
+    ↓
+QuizSetupPlugin      if BUILD_QUIZ=TRUE
+    ↓
+InterviewSetupPlugin if BUILD_INTERVIEW=TRUE
     ↓
 ExecutionContextSetupPlugin if BUILD_EXECUTION_CONTEXT=TRUE
     ↓
@@ -519,6 +534,8 @@ IS_MODULE_DEPEND
 BUILD_ENV
 BUILD_YML
 BUILD_README
+BUILD_QUIZ
+BUILD_INTERVIEW
 BUILD_TESTER
 BUILD_SWAGGER
 BUILD_EXECUTION_CONTEXT
@@ -528,7 +545,7 @@ USE_DATABASE
 USE_TASK
 ```
 
-`MODULE_LANGUAGE` is the module-level source of truth for localized documentation/runtime metadata. It is a `list` value in `master.json` (canonical default: `vi,en`) and is reused by README structure/final generation, Swagger description generation, Knowledge metadata synchronization, Portal localized projections, runtime Swagger language grouping, and generated `.env` values. Do not reintroduce per-feature language keys such as `README_LANGUAGE`, `BUILD_SWAGGER_LANGUAGE_LIST`, or task-local `languages` extensions for README/Swagger.
+`MODULE_LANGUAGE` is the module-level source of truth for localized documentation/runtime metadata. It is a `list` value in `master.json` (canonical default: `vi,en`) and is reused by README structure/final generation, Swagger description generation, Knowledge metadata synchronization, Quiz/Interview skeleton generation, Portal localized projections, runtime Swagger language grouping, and generated `.env` values. Do not reintroduce per-feature language keys such as `README_LANGUAGE`, `BUILD_SWAGGER_LANGUAGE_LIST`, or task-local `languages` extensions for README/Swagger/Quiz/Interview.
 
 Knowledge section governance is stored next to localized README source, not inside Portal-generated JSON:
 
@@ -549,6 +566,14 @@ The Markdown under `readme/{lang}/menu/**/*.md` remains the content/source-of-tr
 Allowed `difficulty` values are `BASIC`, `INTERMEDIATE`, and `ADVANCED`. Missing fields default to `BASIC`, `true`, and `false` respectively. Existing human-owned values must be preserved. Stale file/topic metadata is removed when the explicit `syncMetadataReadme` task rebuilds the metadata skeleton from current Markdown. This synchronization task is intentionally manual/explicit; ordinary Gradle configuration, IDE sync, or Portal browsing must not silently write source metadata.
 
 `syncMetadataReadme` follows `MODULE_LANGUAGE`, only scans real learning modules under `module/` with local `gradle.properties`, and only creates metadata for languages that actually contain README menu Markdown. The canonical Knowledge section identity is an exact heading of the form `## <a id="...">Title</a>`; duplicate section ids within one module/language are invalid.
+
+Quiz follows the same build/orchestration boundary. `BUILD_QUIZ=TRUE` is declared in canonical `automation/master.json`; `project-orchestration` only decides whether to apply `QUIZ_SETUP_PLUGIN`; the actual structure generation lives in `project-build/gradle-runtime`. Active `MODULE_LANGUAGE` values receive `src/main/resources/quiz/{lang}/question.yml`. The generated comment block between `# <quiz-schema>` and `# </quiz-schema>` is derived from canonical `gradle-runtime/src/main/resources/quiz/question-schema.yml` and may be refreshed when the schema changes; the `questions:` content below it is human-owned and must not be overwritten.
+
+The canonical Quiz item contract is single-choice with exactly four stable internal answer ids `A/B/C/D`. Each answer owns both `answer` and `explanation`; `correctAnswerId` stores the correct stable id separately. Each question also carries `aiGenerated`, `reviewed`, optional `readmeRelated {file, anchor}`, and optional `apiRelated {controller, methodSignature}` metadata. Blank/blank relation pairs mean no relation. Portal shuffles answers once when a localized Quiz document is loaded, then reassigns display labels `A/B/C/D` by shuffled position while correctness continues to use the stable internal id. Do not shuffle again on ordinary React re-render. Related Knowledge/API actions are only exposed after the learner selects the correct answer.
+
+Interview mirrors the same build/orchestration boundary with `BUILD_INTERVIEW=TRUE`, `INTERVIEW_SETUP_PLUGIN`, and `src/main/resources/interview/{lang}/question.yml`. The generated block between `# <interview-schema>` and `# </interview-schema>` comes from canonical `gradle-runtime/src/main/resources/interview/question-schema.yml`; `questions:` remains human-owned. Each Interview item contains a nonblank `question` and reference `answer`, `aiGenerated`, `reviewed`, plus the same optional `readmeRelated` and `apiRelated` pair shapes. Portal keeps reference answers collapsed until the learner explicitly opens them, then may expose resolved Related Knowledge/API panels. The THREAD module currently owns localized VI/EN Quiz and Interview content derived from its README; exact relations are filled only when the source supports them rather than inventing a mapping.
+
+Quiz build-time projection performs schema validation and additionally checks relation targets. A blank/blank pair is valid; partial or unresolved README/API pairs are logged as relation warnings, and an API relation is considered Portal-resolvable only when the target method is active (`usage: true`). Interview projection currently performs canonical schema validation and exact static copying; do not claim it has the same build-time relation-target validation until that behavior is implemented.
 
 Do not add new metadata keys casually. Check whether the concept already has an owner and whether it belongs in `master.json` or grouped `properties.json`.
 
@@ -696,6 +721,8 @@ module-structure.txt
 project-portal/build/generated/portal-data/module-catalog.json
 project-portal/build/generated/portal-data/module/{ROUTE_ID}/overview/...
 project-portal/build/generated/portal-data/module/{ROUTE_ID}/knowledge/...
+project-portal/build/generated/portal-data/module/{ROUTE_ID}/quiz/{lang}/question.yml
+project-portal/build/generated/portal-data/module/{ROUTE_ID}/interview/{lang}/question.yml
 project-portal/build/generated/portal-data/module/{ROUTE_ID}/api/{lang}/...
 task.gradle
 application-merged.yml
@@ -703,7 +730,7 @@ generated README/menu fragments
 META-INF/execution-context/source-context.json
 ```
 
-Portal generated data is build-only and must never be written back into `project-portal/src/main/resources`. `module-catalog.json` stays at the root of generated `portal-data`; module-owned projections are namespaced under `portal-data/module/{ROUTE_ID}/`. Overview and Knowledge are transformed projections; API metadata is an exact build-time copy of the four canonical localized Swagger YAML files when the complete set exists. The API Docs frontend parses these static YAML files in-browser and sanitizes rich execution HTML before rendering it. These projections must follow deterministic/idempotent/write-if-changed rules. Future quiz projections or copied README assets must do the same. The browser must not parse `module-structure.txt` as canonical data.
+Portal generated data is build-only and must never be written back into `project-portal/src/main/resources`. `module-catalog.json` stays at the root of generated `portal-data`; module-owned projections are namespaced under `portal-data/module/{ROUTE_ID}/`. Overview and Knowledge are transformed projections; Quiz and Interview are exact localized `question.yml` copies after build-time schema validation; API metadata is an exact build-time copy of the four canonical localized Swagger YAML files when the complete set exists. Quiz/Interview/API YAML is parsed in-browser, and API rich execution HTML is sanitized before rendering. These projections must follow deterministic/idempotent/write-if-changed rules. The browser must not parse `module-structure.txt` as canonical data.
 
 Generated output must prefer:
 
@@ -2086,13 +2113,16 @@ Preserve these unless the user explicitly changes the architecture:
 31. Current Portal client routing uses `HashRouter`; `#/...` routes belong to React, not Spring MVC.
 32. Module runtime capabilities remain optional from the Portal perspective: learning/documentation must not require a learning module to have its own Spring Boot Application.
 33. Portal hierarchy/routing must come from generated `module-catalog.json`, not from a hard-coded frontend tree or by parsing `module-structure.txt`.
-34. Portal sidebar `Real modules / Module thật` is a content-availability filter, not the repository's physical real-module identity rule: a MODULE qualifies when Knowledge OR Quiz OR API Docs count is non-zero; only all-three-zero modules are removed, while required GROUP ancestors are preserved.
+34. Portal sidebar `Real modules / Module thật` is a content-availability filter, not the repository's physical real-module identity rule: a MODULE qualifies when Knowledge OR Quiz OR Interview OR API Docs count is non-zero; only modules with all four counts equal to zero are removed, while required GROUP ancestors are preserved.
 35. Sidebar module search distinguishes self-match from descendant-match: self-match keeps the full subtree; descendant-match keeps only the ancestor path, and filtered trees remain collapsible.
-36. For a module row with children, row click is expand/collapse and the separate circular `>` action owns navigation; sidebar tree state starts collapsed and also supports global expand/collapse controls.
+36. For a module row with children, row click is expand/collapse and the separate circular `>` action owns navigation; sidebar tree state currently starts expanded and also supports global expand/collapse controls.
 37. Portal Menu and API Docs start collapsed by default, but tab switching must preserve the most recent in-memory expand/collapse state for the current module/language instead of remounting/resetting those panels.
 38. Knowledge supports multiple simultaneously expanded sections; opening one section must not implicitly close another. Loaded Markdown remains cached while the panel stays mounted.
 39. Portal API Docs are documentation-only in the current architecture: they render static Swagger metadata and guided `execution` content, not live execute/debug controls. Running/debugging requires downloading/running the module locally or using the module's own runtime tooling.
 40. Portal API controller/method ordering follows README learning relationships when valid: controller order comes from numeric `readmeRelated.file` chapter order, and method order comes from resolved README anchor position; do not replace this with alphabetical/path ordering.
+41. Quiz and Interview are static learning capabilities owned by module-local localized YAML. Their generated schema-comment blocks are build-owned, while `questions:` content is human-owned and must survive regeneration.
+42. Quiz answer ids `A/B/C/D` are stable identities, not display positions; shuffle only the displayed order once per localized document load and check correctness against the original id.
+43. Interview reference answers are hidden by default and revealed explicitly; Quiz/Interview relation panels must resolve canonical Knowledge/API metadata rather than duplicating content into the question file.
 
 ---
 
@@ -2196,12 +2226,14 @@ Project Portal
 → browser executes React; Spring Boot only serves the static bundle in the current phase
 → HashRouter owns `#/learning/...` navigation
 → ProjectStructureService generates build-only `portal-data/module-catalog.json` for real hierarchy/routing
-→ module-scoped generated data lives under `portal-data/module/{ROUTE_ID}/...`; current Overview, Knowledge, and API metadata projections follow this layout
+→ module-scoped generated data lives under `portal-data/module/{ROUTE_ID}/...`; current Overview, Knowledge, Quiz, Interview, and API metadata projections follow this layout
 → Vite `publicDir` points at `build/generated/portal-data`; `npm run dev` prepares generated data before starting Vite
 → Menu/Knowledge UI consumes the generated Knowledge index and lazy section Markdown; Knowledge supports multiple open sections and keeps panel state across tab switches
 → API Docs consumes the generated localized four-file Swagger projection, follows README-derived controller/method order, renders sanitized `execution` HTML, and is reference-only rather than a live runner/debugger
-→ Quiz still uses fake frontend fixtures
-→ sidebar supports module search plus Full tree/content-bearing `Real modules` pruning without flattening hierarchy; the tree defaults collapsed and has `+`/`−` branch controls plus global expand/collapse
+→ Quiz consumes localized generated `question.yml`, shows four shuffled answer positions, and reveals the selected answer's explanation while checking correctness by stable internal answer id
+→ Interview consumes localized generated `question.yml`, keeps reference answers collapsed until explicitly opened, and can resolve Related Knowledge/API panels
+→ tabs are Overview → Menu → Knowledge → API Docs → Quiz → Interview → Local Run; `Local Run` is the display label of the internal `execution` placeholder
+→ sidebar supports module search plus Full tree/content-bearing `Real modules` pruning without flattening hierarchy; the tree defaults expanded and has `+`/`−` branch controls plus global expand/collapse
 → Light/Dark theme follows OS initially and persists explicit user choice
 → no portal REST API dependency yet; generated Portal data remains a projection, not a replacement source of truth
 

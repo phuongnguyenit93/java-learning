@@ -2,7 +2,6 @@ import type {
   ApiOperation,
   KnowledgeItem,
   KnowledgeTopic,
-  QuizItem,
 } from '../types/learning';
 
 export const knowledgeTopics: KnowledgeTopic[] = [
@@ -139,31 +138,6 @@ export const knowledgeItems: KnowledgeItem[] = [
     paragraphs: [],
     bullets: [
       { vi: 'Một partition chỉ được gán cho tối đa một consumer trong cùng group tại một thời điểm.', en: 'A partition is assigned to at most one consumer in the same group at a time.' },
-    ],
-  },
-];
-
-export const quizItems: QuizItem[] = [
-  {
-    id: 'quiz-thread-1',
-    moduleId: 'THREAD',
-    question: { vi: 'Phương thức nào bắt đầu execution trên một thread mới?', en: 'Which method starts execution on a new thread?' },
-    answers: [
-      { vi: 'start()', en: 'start()' },
-      { vi: 'run()', en: 'run()' },
-      { vi: 'join()', en: 'join()' },
-      { vi: 'yield()', en: 'yield()' },
-    ],
-  },
-  {
-    id: 'quiz-thread-2',
-    moduleId: 'THREAD',
-    question: { vi: 'volatile chủ yếu giải quyết guarantee nào?', en: 'Which guarantee does volatile primarily address?' },
-    answers: [
-      { vi: 'Visibility', en: 'Visibility' },
-      { vi: 'Mutual exclusion', en: 'Mutual exclusion' },
-      { vi: 'Transaction rollback', en: 'Transaction rollback' },
-      { vi: 'Thread creation', en: 'Thread creation' },
     ],
   },
 ];

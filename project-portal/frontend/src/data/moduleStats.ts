@@ -1,10 +1,10 @@
-import { knowledgeItems, quizItems } from './mockLearningData';
 import type { ModuleStats } from '../types/learning';
 
-export function resolveModuleStats(moduleId: string): ModuleStats {
+export function resolveModuleStats(_moduleId: string): ModuleStats {
   return {
-    knowledge: knowledgeItems.filter((item) => item.moduleId === moduleId).length,
-    quiz: quizItems.filter((item) => item.moduleId === moduleId).length,
+    knowledge: 0,
+    quiz: 0,
+    interview: 0,
     apiDocs: 0,
   };
 }

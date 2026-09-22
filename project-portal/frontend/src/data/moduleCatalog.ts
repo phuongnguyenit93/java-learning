@@ -84,10 +84,13 @@ export function toLearningModule(node: ModuleCatalogNode, stats: ModuleStats): L
     questionCount: stats.knowledge,
     overview: node.overview ?? {},
     knowledge: node.knowledge ?? {},
+    quiz: node.quiz ?? {},
+    interview: node.interview ?? {},
     api: node.api ?? {},
     capabilities: {
       knowledge: true,
       quiz: true,
+      interview: true,
       apiDocs: true,
       execution: true,
       download: true,

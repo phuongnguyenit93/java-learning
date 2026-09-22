@@ -318,6 +318,32 @@ ${moduleDirectory.absolutePath}
                             directory,
                             moduleLanguages
                     )
+
+
+            node.quizLanguages =
+                    findQuizLanguages(
+                            directory,
+                            moduleLanguages,
+                            'TRUE'.equalsIgnoreCase(
+                                    getMasterValue(
+                                            master,
+                                            'BUILD_QUIZ'
+                                    )
+                            )
+                    )
+
+
+            node.interviewLanguages =
+                    findInterviewLanguages(
+                            directory,
+                            moduleLanguages,
+                            'TRUE'.equalsIgnoreCase(
+                                    getMasterValue(
+                                            master,
+                                            'BUILD_INTERVIEW'
+                                    )
+                            )
+                    )
         }
 
 
@@ -700,6 +726,38 @@ ${moduleDirectory.absolutePath}
                                         ]
                                 }
             }
+
+
+            if (!node.quizLanguages.isEmpty()) {
+
+                result.quiz =
+                        node.quizLanguages
+                                .toList()
+                                .sort()
+                                .collectEntries {
+                                    String language ->
+
+                                    [
+                                            (language): "/module/${resolveRouteId(node)}/quiz/${language}/question.yml"
+                                    ]
+                                }
+            }
+
+
+            if (!node.interviewLanguages.isEmpty()) {
+
+                result.interview =
+                        node.interviewLanguages
+                                .toList()
+                                .sort()
+                                .collectEntries {
+                                    String language ->
+
+                                    [
+                                            (language): "/module/${resolveRouteId(node)}/interview/${language}/question.yml"
+                                    ]
+                                }
+            }
         }
 
 
@@ -907,6 +965,102 @@ ${moduleDirectory.absolutePath}
                             )
                         }
                 }
+
+
+        return result
+    }
+
+
+    private static Set<String> findQuizLanguages(
+            File moduleDirectory,
+            List<String> moduleLanguages,
+            boolean quizEnabled
+    ) {
+
+        if (!quizEnabled) {
+            return [] as Set<String>
+        }
+
+
+        File quizDirectory =
+                new File(
+                        moduleDirectory,
+                        'src/main/resources/quiz'
+                )
+
+
+        if (!quizDirectory.isDirectory()) {
+            return [] as Set<String>
+        }
+
+
+        Set<String> result =
+                new LinkedHashSet<>()
+
+
+        moduleLanguages.each {
+            String language ->
+
+            File questionFile =
+                    new File(
+                            quizDirectory,
+                            "${language}/question.yml"
+                    )
+
+
+            if (questionFile.isFile()) {
+                result.add(
+                        language
+                )
+            }
+        }
+
+
+        return result
+    }
+
+
+    private static Set<String> findInterviewLanguages(
+            File moduleDirectory,
+            List<String> moduleLanguages,
+            boolean interviewEnabled
+    ) {
+
+        if (!interviewEnabled) {
+            return [] as Set<String>
+        }
+
+
+        File interviewDirectory =
+                new File(
+                        moduleDirectory,
+                        'src/main/resources/interview'
+                )
+
+
+        if (!interviewDirectory.isDirectory()) {
+            return [] as Set<String>
+        }
+
+
+        Set<String> result =
+                new LinkedHashSet<>()
+
+
+        moduleLanguages.each {
+            String language ->
+
+            File questionFile =
+                    new File(
+                            interviewDirectory,
+                            "${language}/question.yml"
+                    )
+
+
+            if (questionFile.isFile()) {
+                result.add(language)
+            }
+        }
 
 
         return result
@@ -1427,6 +1581,8 @@ ${exception.message}
         Map<String, File> overviewSources = [:]
         Set<String> knowledgeLanguages = [] as Set<String>
         Set<String> apiLanguages = [] as Set<String>
+        Set<String> quizLanguages = [] as Set<String>
+        Set<String> interviewLanguages = [] as Set<String>
         List<StructureNode> children = []
     }
 }

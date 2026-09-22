@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { ApiDocsPanel } from '../components/ApiDocsPanel';
 import { EmptyPanel } from '../components/EmptyPanel';
 import { KnowledgePanel } from '../components/KnowledgePanel';
+import { InterviewPanel } from '../components/InterviewPanel';
 import { LearningSearch } from '../components/LearningSearch';
 import { MenuPanel } from '../components/MenuPanel';
 import { ModuleSidebar } from '../components/ModuleSidebar';
@@ -16,7 +17,9 @@ import {
   toLearningModule,
 } from '../data/moduleCatalog';
 import { loadApiOperationCount } from '../data/apiDocs';
+import { loadInterviewQuestionCount } from '../data/interview';
 import { loadKnowledgeIndex } from '../data/knowledge';
+import { loadQuizQuestionCount } from '../data/quiz';
 import { resolveModuleStats } from '../data/moduleStats';
 import { useLanguage } from '../state/LanguageContext';
 import type { KnowledgeIndex, ModuleCatalog } from '../types/learning';
@@ -33,6 +36,8 @@ export function LearningPage() {
   const [downloadTarget, setDownloadTarget] = useState<'tabs' | 'api-notice' | null>(null);
   const [knowledgeIndex, setKnowledgeIndex] = useState<KnowledgeIndex | null>(null);
   const [knowledgeCounts, setKnowledgeCounts] = useState<Record<string, number>>({});
+  const [quizCounts, setQuizCounts] = useState<Record<string, number>>({});
+  const [interviewCounts, setInterviewCounts] = useState<Record<string, number>>({});
   const [apiCounts, setApiCounts] = useState<Record<string, number>>({});
   const [knowledgeLoading, setKnowledgeLoading] = useState(false);
   const [knowledgeError, setKnowledgeError] = useState<string | null>(null);
@@ -81,14 +86,18 @@ export function LearningPage() {
     [activeModuleNode, activeStats],
   );
   const knowledgePath = activeModule?.knowledge[language];
+  const quizPath = activeModule?.quiz[language];
+  const interviewPath = activeModule?.interview[language];
   const apiPath = activeModule?.api[language];
   const displayedStats = useMemo(
     () => ({
       ...activeStats,
       knowledge: knowledgeIndex?.sectionCount ?? knowledgeCounts[activeModuleId] ?? 0,
+      quiz: quizCounts[activeModuleId] ?? 0,
+      interview: interviewCounts[activeModuleId] ?? 0,
       apiDocs: apiCounts[activeModuleId] ?? 0,
     }),
-    [activeModuleId, activeStats, apiCounts, knowledgeCounts, knowledgeIndex],
+    [activeModuleId, activeStats, apiCounts, interviewCounts, knowledgeCounts, knowledgeIndex, quizCounts],
   );
 
   useEffect(() => {
@@ -124,6 +133,80 @@ export function LearningPage() {
           setKnowledgeCounts(Object.fromEntries(entries.filter((entry) => entry !== null)));
         }
       });
+
+    return () => {
+      active = false;
+    };
+  }, [catalog, language]);
+
+  useEffect(() => {
+    let active = true;
+
+    setInterviewCounts({});
+
+    if (!catalog) {
+      return () => {
+        active = false;
+      };
+    }
+
+    const modulesWithInterview = collectRealModules(catalog.root)
+      .map((node) => ({
+        routeId: node.routeId,
+        path: node.interview?.[language],
+      }))
+      .filter((entry): entry is { routeId: string; path: string } => Boolean(entry.routeId && entry.path));
+
+    Promise.all(
+      modulesWithInterview.map(async ({ routeId, path }) => {
+        try {
+          return [routeId, await loadInterviewQuestionCount(path)] as const;
+        } catch {
+          return null;
+        }
+      }),
+    ).then((entries) => {
+      if (active) {
+        setInterviewCounts(Object.fromEntries(entries.filter((entry) => entry !== null)));
+      }
+    });
+
+    return () => {
+      active = false;
+    };
+  }, [catalog, language]);
+
+  useEffect(() => {
+    let active = true;
+
+    setQuizCounts({});
+
+    if (!catalog) {
+      return () => {
+        active = false;
+      };
+    }
+
+    const modulesWithQuiz = collectRealModules(catalog.root)
+      .map((node) => ({
+        routeId: node.routeId,
+        path: node.quiz?.[language],
+      }))
+      .filter((entry): entry is { routeId: string; path: string } => Boolean(entry.routeId && entry.path));
+
+    Promise.all(
+      modulesWithQuiz.map(async ({ routeId, path }) => {
+        try {
+          return [routeId, await loadQuizQuestionCount(path)] as const;
+        } catch {
+          return null;
+        }
+      }),
+    ).then((entries) => {
+      if (active) {
+        setQuizCounts(Object.fromEntries(entries.filter((entry) => entry !== null)));
+      }
+    });
 
     return () => {
       active = false;
@@ -289,6 +372,8 @@ export function LearningPage() {
         nodes={catalog.root.children}
         activeModuleId={activeModule.id}
         knowledgeCounts={knowledgeCounts}
+        quizCounts={quizCounts}
+        interviewCounts={interviewCounts}
         apiCounts={apiCounts}
       />
 
@@ -370,7 +455,26 @@ export function LearningPage() {
               />
             </div>
           )}
-          {activeTab === 'quiz' && <QuizPanel moduleId={activeModule.id} />}
+          {visitedTabs.has('quiz') && (
+            <div hidden={activeTab !== 'quiz'}>
+              <QuizPanel
+                key={`${activeModule.id}:${language}:quiz`}
+                path={quizPath}
+                knowledgeIndex={knowledgeIndex}
+                apiBasePath={apiPath}
+              />
+            </div>
+          )}
+          {visitedTabs.has('interview') && (
+            <div hidden={activeTab !== 'interview'}>
+              <InterviewPanel
+                key={`${activeModule.id}:${language}:interview`}
+                path={interviewPath}
+                knowledgeIndex={knowledgeIndex}
+                apiBasePath={apiPath}
+              />
+            </div>
+          )}
           {visitedTabs.has('api') && (
             <div hidden={activeTab !== 'api'}>
               <ApiDocsPanel
