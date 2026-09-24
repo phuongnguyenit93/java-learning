@@ -1,6 +1,5 @@
 import { useLanguage } from '../state/LanguageContext';
 import type { ModuleStats } from '../types/learning';
-import { DownloadAction } from './DownloadAction';
 
 export type ModuleTab = 'overview' | 'menu' | 'knowledge' | 'quiz' | 'interview' | 'api' | 'execution';
 
@@ -9,8 +8,6 @@ interface ModuleTabsProps {
   stats: ModuleStats;
   executionEnabled: boolean;
   onChange: (tab: ModuleTab) => void;
-  downloadOpen: boolean;
-  onDownloadToggle: () => void;
 }
 
 const tabs: Array<{ id: ModuleTab; vi: string; en: string; countKey?: keyof ModuleStats }> = [
@@ -23,7 +20,7 @@ const tabs: Array<{ id: ModuleTab; vi: string; en: string; countKey?: keyof Modu
   { id: 'execution', vi: 'Local Run', en: 'Local Run' },
 ];
 
-export function ModuleTabs({ activeTab, stats, executionEnabled, onChange, downloadOpen, onDownloadToggle }: ModuleTabsProps) {
+export function ModuleTabs({ activeTab, stats, executionEnabled, onChange }: ModuleTabsProps) {
   const { language } = useLanguage();
 
   return (
@@ -48,7 +45,6 @@ export function ModuleTabs({ activeTab, stats, executionEnabled, onChange, downl
         })}
       </div>
 
-      <DownloadAction open={downloadOpen} onToggle={onDownloadToggle} />
     </div>
   );
 }

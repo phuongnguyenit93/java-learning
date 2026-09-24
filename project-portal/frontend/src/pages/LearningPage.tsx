@@ -33,7 +33,7 @@ export function LearningPage() {
   const [activeTab, setActiveTab] = useState<ModuleTab>('knowledge');
   const [visitedTabs, setVisitedTabs] = useState<Set<ModuleTab>>(() => new Set<ModuleTab>(['knowledge']));
   const [searchQuery, setSearchQuery] = useState('');
-  const [downloadTarget, setDownloadTarget] = useState<'tabs' | 'api-notice' | null>(null);
+  const [downloadTarget, setDownloadTarget] = useState<'api-notice' | null>(null);
   const [knowledgeIndex, setKnowledgeIndex] = useState<KnowledgeIndex | null>(null);
   const [knowledgeCounts, setKnowledgeCounts] = useState<Record<string, number>>({});
   const [quizCounts, setQuizCounts] = useState<Record<string, number>>({});
@@ -414,8 +414,6 @@ export function LearningPage() {
               });
               setDownloadTarget(null);
             }}
-            downloadOpen={downloadTarget === 'tabs'}
-            onDownloadToggle={() => setDownloadTarget((current) => (current === 'tabs' ? null : 'tabs'))}
           />
         </div>
 

@@ -284,7 +284,7 @@ Ví dụ với module runnable `THREAD`:
 ```text
 Thread & Concurrency
 
-[Overview] [Menu] [Knowledge] [API Docs] [Quiz] [Interview] [Local Run]        [Download]
+[Overview] [Menu] [Knowledge] [API Docs] [Quiz] [Interview] [Local Run]
 
 Progress
 ████████░░
@@ -310,7 +310,7 @@ Ví dụ với module không runnable:
 ```text
 Gradle Cache
 
-[Overview] [Knowledge] [Quiz]                               [Download]
+[Overview] [Knowledge] [Quiz]
 
 Knowledge
 1. Cache Concepts
@@ -987,15 +987,9 @@ Execution Context tiếp tục là capability độc lập và giữ ownership r
 
 ## 14. Download
 
-`Download` nên là action, không nhất thiết là content tab ngang hàng.
+Không còn `Download` action ở thanh module tabs tổng. Download được đặt theo đúng context cần dùng, ví dụ API Docs và `Local Run`.
 
-Ví dụ UI:
-
-```text
-[Overview] [Menu] [Knowledge] [API Docs] [Quiz] [Interview] [Local Run]        [↓ Download]
-```
-
-Bấm `Download`:
+Ví dụ nội dung download theo context:
 
 ```text
 Download THREAD
