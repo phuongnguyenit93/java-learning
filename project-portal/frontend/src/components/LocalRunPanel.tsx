@@ -11,6 +11,7 @@ interface LocalRunPanelProps {
 const DEFAULT_PORT = 9000;
 const DEFAULT_CONTEXT_PATH = '/api';
 const DEFAULT_APPLICATION_NAME = 'api';
+const SWAGGER_ENABLED = 'TRUE';
 const BUILD_STATUS_POLL_INTERVAL_MS = 2500;
 
 function toJarFileName(moduleId: string): string {
@@ -41,7 +42,7 @@ export function LocalRunPanel({
   const [error, setError] = useState<string | null>(null);
 
   const jarFileName = useMemo(() => toJarFileName(moduleId), [moduleId]);
-  const runCommand = `java -jar ${jarFileName} --server.port=${DEFAULT_PORT} --server.servlet.context-path=${DEFAULT_CONTEXT_PATH} --spring.application.name=${DEFAULT_APPLICATION_NAME}`;
+  const runCommand = `java -jar ${jarFileName} --server.port=${DEFAULT_PORT} --server.servlet.context-path=${DEFAULT_CONTEXT_PATH} --spring.application.name=${DEFAULT_APPLICATION_NAME} --swagger.enabled=${SWAGGER_ENABLED}`;
   const localUrl = `http://localhost:${DEFAULT_PORT}${DEFAULT_CONTEXT_PATH}`;
 
   const text = language === 'vi'

@@ -19,15 +19,15 @@ server:
   servlet:
     context-path: /${CONTEXT_PATH}
 swagger:
-  enabled: ${BUILD_SWAGGER:}
+  enabled: ${BUILD_SWAGGER:TRUE}
   languages: ${MODULE_LANGUAGE:vi,en}
 springdoc:
   swagger-ui:
-    enabled: ${BUILD_SWAGGER}
+    enabled: ${swagger.enabled:TRUE}
     docExpansion:
       - none
   api-docs:
-    enabled: ${BUILD_SWAGGER}
+    enabled: ${swagger.enabled:TRUE}
 
 hawtio:
   authenticationEnabled: false
