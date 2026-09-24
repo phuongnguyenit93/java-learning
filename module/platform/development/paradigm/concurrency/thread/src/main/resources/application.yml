@@ -23,11 +23,11 @@ swagger:
   languages: ${MODULE_LANGUAGE:vi,en}
 springdoc:
   swagger-ui:
-    enabled: ${swagger.enabled}
+    enabled: ${BUILD_SWAGGER}
     docExpansion:
       - none
   api-docs:
-    enabled: ${swagger.enabled}
+    enabled: ${BUILD_SWAGGER}
 
 hawtio:
   authenticationEnabled: false

@@ -21,7 +21,7 @@ swagger:
 
 springdoc:
   swagger-ui:
-    enabled: ${swagger.enabled}
+    enabled: ${BUILD_SWAGGER}
     path: /swagger-ui.html
     # Cho phép Swagger UI giữ nguyên các thẻ HTML nguy hiểm như iframe/script
     #    url: /swagger/api-json.yaml
@@ -30,7 +30,7 @@ springdoc:
       - none
   #    tagsSorter: alpha
   api-docs:
-    enabled: ${swagger.enabled}
+    enabled: ${BUILD_SWAGGER}
 #    path: /api-json
 
 # Add profile-specific configuration below this line.
