@@ -31,7 +31,7 @@ Task          → explicit execution
 
 ## Project Portal
 
-Portal dùng React + TypeScript + Vite, theo hướng **static-first**. Module catalog, Overview, Knowledge, Quiz, Interview và API Docs đều được materialize ở build-time. Production deploy qua GitHub Actions lên Cloudflare Pages tại `https://java-learning-cly.pages.dev` (Wrangler project: `java-learning`).
+Portal dùng React + TypeScript + Vite, theo hướng **static-first**. Module catalog, Overview, Knowledge, Quiz, Interview và API Docs đều được materialize ở build-time; `Local Run` là ngoại lệ dynamic, dùng backend server-side để build/download executable JAR qua GitHub Actions + rolling Release. Production deploy qua GitHub Actions lên Cloudflare Pages tại `https://java-learning-cly.pages.dev` (Wrangler project: `java-learning`).
 
 Chi tiết Portal: [`PROJECT_PORTAL.md`](./PROJECT_PORTAL.md).
 

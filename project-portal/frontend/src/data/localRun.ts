@@ -1,4 +1,5 @@
 export type LocalRunBuildStatus = 'QUEUED' | 'BUILDING' | 'SUCCESS' | 'FAILED';
+export type LocalRunBuildResult = 'AVAILABLE' | 'REUSED' | 'DISPATCHED';
 
 export interface LocalRunBuildRequest {
   moduleId: string;
@@ -6,12 +7,16 @@ export interface LocalRunBuildRequest {
 }
 
 export interface LocalRunBuildResponse {
+  runId?: string;
+  moduleId: string;
+  status: LocalRunBuildStatus;
+  result: LocalRunBuildResult;
+}
+
+export interface LocalRunStatusResponse {
   runId: string;
   moduleId: string;
   status: LocalRunBuildStatus;
-}
-
-export interface LocalRunStatusResponse extends LocalRunBuildResponse {
   message?: string;
 }
 

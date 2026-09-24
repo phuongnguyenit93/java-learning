@@ -1,4 +1,5 @@
 name: Build Local Run JAR
+run-name: Local Run ${{ inputs.moduleId }} · fingerprint:${{ inputs.sourceFingerprint }}
 
 on:
   workflow_dispatch:
@@ -157,6 +158,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           RELEASE_TAG: local-run
+          MODULE_ID: ${{ inputs.moduleId }}
           JAR_NAME: ${{ steps.module.outputs.jar_name }}
           SOURCE_FINGERPRINT: ${{ steps.module.outputs.source_fingerprint }}
         shell: bash
@@ -164,5 +166,5 @@ jobs:
           set -euo pipefail
 
           gh release upload "$RELEASE_TAG" \
-            "local-run-artifact/$JAR_NAME#fingerprint:$SOURCE_FINGERPRINT" \
+            "local-run-artifact/$JAR_NAME#$MODULE_ID · fingerprint:$SOURCE_FINGERPRINT" \
             --clobber

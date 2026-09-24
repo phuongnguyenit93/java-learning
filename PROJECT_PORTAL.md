@@ -959,11 +959,25 @@ THREAD.sourceFingerprint = git rev-parse HEAD:module/.../thread
 ASPECT.sourceFingerprint = git rev-parse HEAD:module/.../aop
 
 Release: local-run
-thread.jar  label=fingerprint:<THREAD tree SHA>
-aspect.jar  label=fingerprint:<ASPECT tree SHA>
+thread.jar  label=THREAD · fingerprint:<THREAD tree SHA>
+aspect.jar  label=ASPECT · fingerprint:<ASPECT tree SHA>
 ```
 
 Khi mở tab Local Run, UI check Release Asset trước. Nếu filename tồn tại và label fingerprint khớp thì hiện `Download JAR` ngay. Nếu asset không có hoặc fingerprint khác thì hiện `Build JAR`. Workflow recompute tree SHA sau checkout và reject request nếu catalog fingerprint đã stale. Upload dùng stable filename + `--clobber`, vì vậy build THREAD chỉ thay `thread.jar`; `aspect.jar` không bị build/download lại. Current fingerprint scope là directory của chính module và chưa bao gồm transitive dependency/shared build-input closure.
+
+`POST /api/local-run/build` không tin state UI cũ và luôn re-check server-side trước khi dispatch. Contract decision order:
+
+```text
+fresh Release Asset?
+├── YES → result=AVAILABLE, status=SUCCESS, không dispatch
+└── NO
+    ↓
+same module + fingerprint workflow đang active?
+├── YES → result=REUSED, trả lại existing runId
+└── NO  → result=DISPATCHED, tạo workflow run mới
+```
+
+Workflow dùng deterministic run name `Local Run <MODULE_ID> · fingerprint:<sourceFingerprint>`, nên local và production adapter cùng nhìn thấy chung một active build qua GitHub REST API mà không cần D1/database. Nhiều browser cùng request một version sẽ reuse cùng run; nếu một user đã build xong asset trước khi browser khác bấm Build thì request sau nhận `AVAILABLE` và chuyển thẳng sang Download. `concurrency` theo module vẫn là safety net cho residual race window và để fingerprint mới có thể thay thế build stale cũ.
 
 Release Asset là raw JAR, không phải Actions Artifact ZIP. Production Pages Function không tải toàn bộ ZIP vào memory và không unzip JAR; nó chỉ trả `browser_download_url` của Release Asset. Điều này loại bỏ large-file proxy path từng có nguy cơ gây 502 trên Worker.
 

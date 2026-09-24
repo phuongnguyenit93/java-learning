@@ -59,6 +59,27 @@ public class GitHubLocalRunService {
     public BuildResult startBuild(String rawModuleId, String rawSourceFingerprint) {
         String moduleId = normalizeModuleId(rawModuleId);
         String sourceFingerprint = normalizeSourceFingerprint(rawSourceFingerprint);
+
+        ReleaseAssetDescriptor asset = findReleaseAsset(moduleId);
+        if (asset != null && releaseAssetLabel(moduleId, sourceFingerprint).equals(asset.label())) {
+            return new BuildResult(
+                    null,
+                    moduleId,
+                    "SUCCESS",
+                    "AVAILABLE"
+            );
+        }
+
+        ActiveWorkflowRun activeRun = findActiveWorkflowRun(moduleId, sourceFingerprint);
+        if (activeRun != null) {
+            return new BuildResult(
+                    Long.toString(activeRun.id()),
+                    moduleId,
+                    "in_progress".equals(activeRun.status()) ? "BUILDING" : "QUEUED",
+                    "REUSED"
+            );
+        }
+
         JsonNode response = sendJson(
                 apiRequest("/repos/%s/%s/actions/workflows/%s/dispatches".formatted(owner, repository, workflow))
                         .POST(HttpRequest.BodyPublishers.ofString(writeJson(Map.of(
@@ -83,7 +104,8 @@ public class GitHubLocalRunService {
         return new BuildResult(
                 Long.toString(runIdNode.asLong()),
                 moduleId,
-                "QUEUED"
+                "QUEUED",
+                "DISPATCHED"
         );
     }
 
@@ -131,7 +153,7 @@ public class GitHubLocalRunService {
             );
         }
 
-        boolean fresh = releaseAssetLabel(sourceFingerprint).equals(asset.label());
+        boolean fresh = releaseAssetLabel(moduleId, sourceFingerprint).equals(asset.label());
 
         return new ArtifactResult(
                 moduleId,
@@ -187,6 +209,28 @@ public class GitHubLocalRunService {
 
             if (assets.size() < 100) {
                 break;
+            }
+        }
+
+        return null;
+    }
+
+    private ActiveWorkflowRun findActiveWorkflowRun(String moduleId, String sourceFingerprint) {
+        JsonNode response = sendJson(
+                apiRequest("/repos/%s/%s/actions/workflows/%s/runs?event=workflow_dispatch&per_page=100".formatted(
+                                owner,
+                                repository,
+                                workflow
+                        ))
+                        .GET()
+                        .build()
+        );
+
+        String expectedName = localRunWorkflowRunName(moduleId, sourceFingerprint);
+        for (JsonNode run : response.path("workflow_runs")) {
+            String status = run.path("status").asText("");
+            if (expectedName.equals(run.path("display_title").asText()) && isActiveRunStatus(status)) {
+                return new ActiveWorkflowRun(run.path("id").asLong(), status);
             }
         }
 
@@ -338,11 +382,23 @@ public class GitHubLocalRunService {
         return normalized;
     }
 
-    private static String releaseAssetLabel(String sourceFingerprint) {
-        return "fingerprint:" + sourceFingerprint;
+    private static String releaseAssetLabel(String moduleId, String sourceFingerprint) {
+        return moduleId + " · fingerprint:" + sourceFingerprint;
     }
 
-    public record BuildResult(String runId, String moduleId, String status) {
+    private static String localRunWorkflowRunName(String moduleId, String sourceFingerprint) {
+        return "Local Run " + moduleId + " · fingerprint:" + sourceFingerprint;
+    }
+
+    private static boolean isActiveRunStatus(String status) {
+        return "queued".equals(status)
+                || "in_progress".equals(status)
+                || "requested".equals(status)
+                || "waiting".equals(status)
+                || "pending".equals(status);
+    }
+
+    public record BuildResult(String runId, String moduleId, String status, String result) {
     }
 
     public record StatusResult(String runId, String moduleId, String status, String message) {
@@ -358,5 +414,8 @@ public class GitHubLocalRunService {
     }
 
     private record ReleaseAssetDescriptor(String label, String browserDownloadUrl) {
+    }
+
+    private record ActiveWorkflowRun(long id, String status) {
     }
 }

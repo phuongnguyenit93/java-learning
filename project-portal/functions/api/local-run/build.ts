@@ -2,10 +2,13 @@ import {
   GITHUB_OWNER,
   GITHUB_REPO,
   LOCAL_RUN_WORKFLOW,
+  findActiveLocalRunWorkflowRun,
+  findLocalRunReleaseAsset,
   githubFetch,
   jsonResponse,
   normalizeModuleId,
   normalizeSourceFingerprint,
+  releaseAssetLabel,
   sameOriginRequest,
   type LocalRunEnv,
 } from '../../../functions-shared/github';
@@ -39,6 +42,26 @@ export async function onRequestPost({ request, env }: PagesContext): Promise<Res
   }
 
   try {
+    const asset = await findLocalRunReleaseAsset(env, moduleId);
+    if (asset?.label === releaseAssetLabel(moduleId, sourceFingerprint)) {
+      return jsonResponse({
+        moduleId,
+        status: 'SUCCESS',
+        result: 'AVAILABLE',
+      });
+    }
+
+    const activeRun = await findActiveLocalRunWorkflowRun(env, moduleId, sourceFingerprint);
+    if (activeRun) {
+      return jsonResponse({
+        runId: String(activeRun.id),
+        moduleId,
+        status: activeRun.status === 'in_progress' ? 'BUILDING' : 'QUEUED',
+        result: 'REUSED',
+        runUrl: activeRun.html_url,
+      });
+    }
+
     const response = await githubFetch(
       env,
       `/repos/${GITHUB_OWNER}/${GITHUB_REPO}/actions/workflows/${LOCAL_RUN_WORKFLOW}/dispatches`,
@@ -60,6 +83,7 @@ export async function onRequestPost({ request, env }: PagesContext): Promise<Res
       runId: String(dispatched.workflow_run_id),
       moduleId,
       status: 'QUEUED',
+      result: 'DISPATCHED',
       runUrl: dispatched.html_url,
     });
   } catch (error) {

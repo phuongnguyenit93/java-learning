@@ -170,6 +170,16 @@ export function LocalRunPanel({
       setBuildStatus(started.status);
       setBuildMessage(null);
 
+      if (started.result === 'AVAILABLE') {
+        const artifactResponse = await localRunApi.getArtifact(moduleId, sourceFingerprint);
+        setArtifact(artifactResponse);
+        return;
+      }
+
+      if (!started.runId) {
+        throw new Error('Local Run API did not return a workflow run id.');
+      }
+
       let currentStatus = started.status;
       while (currentStatus !== 'SUCCESS' && currentStatus !== 'FAILED') {
         await new Promise((resolve) => window.setTimeout(resolve, BUILD_STATUS_POLL_INTERVAL_MS));
@@ -260,20 +270,26 @@ export function LocalRunPanel({
 
           {buildStatus !== 'IDLE' && (
             <div className="local-run-progress" aria-live="polite">
-              <div className={`local-run-progress__step${buildStatus === 'QUEUED' || buildStatus === 'BUILDING' || buildStatus === 'SUCCESS' ? ' is-active' : ''}`}>
+              <div className={`local-run-progress__step${buildStatus === 'QUEUED' || buildStatus === 'BUILDING' || buildStatus === 'SUCCESS' ? ' is-active' : ''}${buildStatus === 'QUEUED' ? ' is-current' : ''}`}>
                 <span>1</span>
                 <strong>{text.queued}</strong>
               </div>
-              <span className="local-run-progress__connector" aria-hidden="true">↓</span>
-              <div className={`local-run-progress__step${buildStatus === 'BUILDING' || buildStatus === 'SUCCESS' ? ' is-active' : ''}`}>
+              <span className={`local-run-progress__connector${buildStatus === 'QUEUED' || buildStatus === 'BUILDING' ? ' is-running' : buildStatus === 'SUCCESS' ? ' is-complete' : ''}`} aria-hidden="true">↓</span>
+              <div className={`local-run-progress__step${buildStatus === 'BUILDING' || buildStatus === 'SUCCESS' ? ' is-active' : ''}${buildStatus === 'BUILDING' ? ' is-current' : ''}`}>
                 <span>2</span>
                 <strong>{text.building}</strong>
               </div>
-              <span className="local-run-progress__connector" aria-hidden="true">↓</span>
+              <span className={`local-run-progress__connector${buildStatus === 'BUILDING' ? ' is-running' : buildStatus === 'SUCCESS' ? ' is-complete' : ''}`} aria-hidden="true">↓</span>
               <div className={`local-run-progress__step${buildStatus === 'SUCCESS' ? ' is-active is-success' : buildStatus === 'FAILED' ? ' is-active is-failed' : ''}`}>
                 <span>{buildStatus === 'SUCCESS' ? '✓' : buildStatus === 'FAILED' ? '×' : '3'}</span>
                 <strong>{buildStatus === 'FAILED' ? text.failed : text.successful}</strong>
               </div>
+
+              {buildInProgress && (
+                <div className="local-run-progress__activity" aria-hidden="true">
+                  <span />
+                </div>
+              )}
             </div>
           )}
 
