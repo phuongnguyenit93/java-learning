@@ -1,0 +1,122 @@
+name: Build Local Run JAR
+
+on:
+  workflow_dispatch:
+    inputs:
+      moduleId:
+        description: Portal module SERVICE_NAME / route id
+        required: true
+        type: string
+
+concurrency:
+  group: local-run-${{ inputs.moduleId }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Resolve runnable module
+        id: module
+        env:
+          MODULE_ID: ${{ inputs.moduleId }}
+        shell: bash
+        run: |
+          python3 <<'PY'
+          import json
+          import os
+          import re
+          from pathlib import Path
+
+          module_id = os.environ['MODULE_ID'].strip().upper()
+          if not re.fullmatch(r'[A-Z0-9][A-Z0-9_-]{0,63}', module_id):
+              raise SystemExit(f'Invalid moduleId: {module_id!r}')
+
+          matches = []
+          for master_file in Path('module').rglob('master.json'):
+              module_dir = master_file.parent
+              if not (module_dir / 'gradle.properties').is_file():
+                  continue
+
+              data = json.loads(master_file.read_text(encoding='utf-8'))
+
+              def value(key):
+                  raw = data.get(key)
+                  return raw.get('VALUE') if isinstance(raw, dict) else raw
+
+              service_name = str(value('SERVICE_NAME') or module_dir.name).strip().upper()
+              if service_name != module_id:
+                  continue
+
+              module_type = str(value('MODULE_TYPE') or '').strip().upper()
+              if module_type not in {'SERVLET', 'REACTIVE'}:
+                  raise SystemExit(
+                      f'Module {module_id} is {module_type or "UNKNOWN"}; Local Run only supports SERVLET/REACTIVE modules.'
+                  )
+
+              matches.append(module_dir)
+
+          if len(matches) != 1:
+              raise SystemExit(f'Expected exactly one runnable module for {module_id}; found {len(matches)}.')
+
+          module_dir = matches[0]
+          relative_path = module_dir.as_posix()
+          gradle_path = ':' + relative_path.replace('/', ':')
+          jar_base = re.sub(r'[^a-z0-9._-]+', '-', module_id.lower()).strip('-') or 'module'
+          jar_name = f'{jar_base}.jar'
+
+          with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as output:
+              output.write(f'module_dir={relative_path}\n')
+              output.write(f'gradle_path={gradle_path}\n')
+              output.write(f'jar_output_dir=build/jar/{relative_path}\n')
+              output.write(f'jar_name={jar_name}\n')
+          PY
+
+      - name: Setup JDK 21
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: gradle
+
+      - name: Make Gradle wrapper executable
+        run: chmod +x gradlew
+
+      - name: Build executable JAR
+        env:
+          GRADLE_PATH: ${{ steps.module.outputs.gradle_path }}
+        run: ./gradlew "${GRADLE_PATH}:bootJar" --no-daemon
+
+      - name: Prepare Local Run artifact
+        env:
+          JAR_OUTPUT_DIR: ${{ steps.module.outputs.jar_output_dir }}
+          JAR_NAME: ${{ steps.module.outputs.jar_name }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p local-run-artifact
+
+          mapfile -t jars < <(find "$JAR_OUTPUT_DIR" -maxdepth 1 -type f -name '*.jar' ! -name '*-plain.jar' -print)
+          if [ "${#jars[@]}" -ne 1 ]; then
+            echo "Expected exactly one executable JAR in $JAR_OUTPUT_DIR, found ${#jars[@]}." >&2
+            printf '%s\n' "${jars[@]}" >&2
+            exit 1
+          fi
+
+          cp "${jars[0]}" "local-run-artifact/$JAR_NAME"
+
+      - name: Upload Local Run artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: local-run-${{ inputs.moduleId }}
+          path: local-run-artifact/${{ steps.module.outputs.jar_name }}
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 0

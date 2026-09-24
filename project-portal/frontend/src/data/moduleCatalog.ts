@@ -92,7 +92,7 @@ export function toLearningModule(node: ModuleCatalogNode, stats: ModuleStats): L
       quiz: true,
       interview: true,
       apiDocs: true,
-      execution: true,
+      execution: node.moduleType === 'SERVLET' || node.moduleType === 'REACTIVE',
       download: true,
     },
   };

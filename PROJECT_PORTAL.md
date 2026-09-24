@@ -322,7 +322,7 @@ Quiz
 25 questions
 ```
 
-Current phase đã dựng navigation shell và đã migrate Overview/Menu/Knowledge/API Docs/Quiz/Interview sang generated/static data. `Local Run` hiện là display label của internal `execution` tab và có thể hiển thị empty/placeholder state cho tới khi runtime contract thật được thêm; build/download integration cũng chưa wired hoàn chỉnh.
+Current phase đã dựng navigation shell và đã migrate Overview/Menu/Knowledge/API Docs/Quiz/Interview sang generated/static data. `Local Run` hiện có UI hai khung Build/Download JAR + Run Locally và production integration thật: same-origin Cloudflare Pages Functions giữ GitHub token server-side, dispatch `local-run-build.yml`, poll exact workflow run, rồi proxy/extract JAR từ GitHub Actions artifact. Frontend mock vẫn có thể bật bằng `VITE_LOCAL_RUN_MODE=mock` cho local simulation.
 
 Các tab/action về lâu dài phải được render theo capability thực tế của module.
 
@@ -1530,7 +1530,7 @@ MVP đã bắt đầu implementation. Current phase đã có:
 24. Download action dùng popup dùng chung; popup đóng khi click ngoài, nhấn Escape hoặc toggle lại chính nút
 25. Home là placeholder có CTA sang Learning; Knowledge category filter có collapse/expand + horizontal drag-scroll
 26. semantic capability colors dùng chung cho sidebar/tabs và giữ nguyên giữa Light/Dark
-27. `Local Run` là label hiện tại của internal `execution` tab; runtime Execution Context/artifact-download integration vẫn là placeholder/chưa wired trong Portal
+27. `Local Run` là label hiện tại của internal `execution` tab; UI Build/Download JAR + Run Locally, Cloudflare Pages Functions `build/status/artifact`, GitHub workflow `bootJar` và GitHub Actions artifact download đều đã wired; browser không nhận GitHub secret và chỉ truyền `moduleId`, còn mock flow giữ lại qua `VITE_LOCAL_RUN_MODE=mock`
 28. production static bundle vẫn có thể được serve bởi Spring Boot khi chạy packaged application
 29. public static Portal deploy lên Cloudflare Pages (`java-learning-cly.pages.dev`) bằng `.github/workflows/deploy-portal.yml`; Wrangler project name là `java-learning`; push/merge `main` hoặc `workflow_dispatch` → JDK 21 → `:project-portal:buildFrontend` → Wrangler Pages deploy
 30. Gradle plugin stub generator đã Linux-safe về filename casing để CI không tạo duplicate plugin khác casing
@@ -1543,9 +1543,8 @@ Chưa implement trong current phase:
 
 ```text
 capability availability resolver từ actual resource/artifact state
-backend REST integration
+Spring Boot Portal REST integration ngoài Local Run Pages Functions
 Execution Context aggregation
-artifact build/download integration
 database/login/multi-user progress
 admin/online CRUD
 AI provider integration

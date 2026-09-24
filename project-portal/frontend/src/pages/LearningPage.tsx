@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ApiDocsPanel } from '../components/ApiDocsPanel';
-import { EmptyPanel } from '../components/EmptyPanel';
 import { KnowledgePanel } from '../components/KnowledgePanel';
 import { InterviewPanel } from '../components/InterviewPanel';
 import { LearningSearch } from '../components/LearningSearch';
+import { LocalRunPanel } from '../components/LocalRunPanel';
 import { MenuPanel } from '../components/MenuPanel';
 import { ModuleSidebar } from '../components/ModuleSidebar';
 import { ModuleTabs, type ModuleTab } from '../components/ModuleTabs';
@@ -99,6 +99,17 @@ export function LearningPage() {
     }),
     [activeModuleId, activeStats, apiCounts, interviewCounts, knowledgeCounts, knowledgeIndex, quizCounts],
   );
+
+  useEffect(() => {
+    if (activeTab === 'execution' && activeModule && !activeModule.capabilities.execution) {
+      setActiveTab('knowledge');
+      setVisitedTabs((current) => {
+        const next = new Set(current);
+        next.add('knowledge');
+        return next;
+      });
+    }
+  }, [activeModule, activeTab]);
 
   useEffect(() => {
     let active = true;
@@ -389,6 +400,7 @@ export function LearningPage() {
           <ModuleTabs
             activeTab={activeTab}
             stats={displayedStats}
+            executionEnabled={activeModule.capabilities.execution}
             onChange={(tab) => {
               setActiveTab(tab);
               setVisitedTabs((current) => {
@@ -484,7 +496,9 @@ export function LearningPage() {
               />
             </div>
           )}
-          {activeTab === 'execution' && <EmptyPanel type="execution" />}
+          {activeTab === 'execution' && activeModule.capabilities.execution && (
+            <LocalRunPanel moduleId={activeModule.id} moduleName={activeModule.shortName} />
+          )}
         </div>
       </section>
     </main>

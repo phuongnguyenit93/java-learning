@@ -7,6 +7,7 @@ export type ModuleTab = 'overview' | 'menu' | 'knowledge' | 'quiz' | 'interview'
 interface ModuleTabsProps {
   activeTab: ModuleTab;
   stats: ModuleStats;
+  executionEnabled: boolean;
   onChange: (tab: ModuleTab) => void;
   downloadOpen: boolean;
   onDownloadToggle: () => void;
@@ -22,13 +23,13 @@ const tabs: Array<{ id: ModuleTab; vi: string; en: string; countKey?: keyof Modu
   { id: 'execution', vi: 'Local Run', en: 'Local Run' },
 ];
 
-export function ModuleTabs({ activeTab, stats, onChange, downloadOpen, onDownloadToggle }: ModuleTabsProps) {
+export function ModuleTabs({ activeTab, stats, executionEnabled, onChange, downloadOpen, onDownloadToggle }: ModuleTabsProps) {
   const { language } = useLanguage();
 
   return (
     <div className="module-tabs-row">
       <div className="module-tabs" role="tablist" aria-label="Module sections">
-        {tabs.map((tab) => {
+        {tabs.filter((tab) => tab.id !== 'execution' || executionEnabled).map((tab) => {
           const count = tab.countKey ? stats[tab.countKey] : 0;
 
           return (

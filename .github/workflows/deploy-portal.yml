@@ -35,7 +35,8 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: project-portal
           command: >-
-            pages deploy project-portal/frontend/dist
+            pages deploy frontend/dist
             --project-name=java-learning
             --branch=main

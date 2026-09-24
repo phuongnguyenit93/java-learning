@@ -208,7 +208,7 @@ Learning
 └── Download action
 ```
 
-`Overview` uses generated catalog metadata and generated BASE.md projections. `Menu` and `Knowledge` consume the generated Knowledge index/section projections. `Quiz` and `Interview` consume localized generated `question.yml` projections advertised through catalog `quiz` and `interview` language paths. `API Docs` consumes the complete localized four-file Swagger projection advertised through catalog `api` language base paths. Knowledge, Quiz, Interview, and API counts for sidebar modules are preloaded from generated/static projections for the active language. `Local Run` is the current display label for the internal `execution` tab and may remain empty/placeholder until its real runtime integration contract is implemented.
+`Overview` uses generated catalog metadata and generated BASE.md projections. `Menu` and `Knowledge` consume the generated Knowledge index/section projections. `Quiz` and `Interview` consume localized generated `question.yml` projections advertised through catalog `quiz` and `interview` language paths. `API Docs` consumes the complete localized four-file Swagger projection advertised through catalog `api` language base paths. Knowledge, Quiz, Interview, and API counts for sidebar modules are preloaded from generated/static projections for the active language. `Local Run` is the display label for the internal `execution` tab. Its production flow uses same-origin Cloudflare Pages Functions to dispatch a guarded GitHub Actions `bootJar` workflow, poll the exact workflow run, resolve its short-lived Actions artifact, and proxy the JAR download without exposing `GITHUB_ACTION_TOKEN` to the browser. `VITE_LOCAL_RUN_MODE=mock` remains available for frontend-only local simulation.
 
 `Home` is currently an intentional placeholder, not a blank page. It tells the user that the home page is being updated and links directly to `Learning`. Keep it lightweight until a real Home information architecture is defined.
 
@@ -2232,10 +2232,10 @@ Project Portal
 → API Docs consumes the generated localized four-file Swagger projection, follows README-derived controller/method order, renders sanitized `execution` HTML, and is reference-only rather than a live runner/debugger
 → Quiz consumes localized generated `question.yml`, shows four shuffled answer positions, and reveals the selected answer's explanation while checking correctness by stable internal answer id
 → Interview consumes localized generated `question.yml`, keeps reference answers collapsed until explicitly opened, and can resolve Related Knowledge/API panels
-→ tabs are Overview → Menu → Knowledge → API Docs → Quiz → Interview → Local Run; `Local Run` is the display label of the internal `execution` placeholder
+→ tabs are Overview → Menu → Knowledge → API Docs → Quiz → Interview → Local Run; `Local Run` is the display label of the internal `execution` tab and uses Pages Functions + GitHub Actions for its production build/status/artifact flow
 → sidebar supports module search plus Full tree/content-bearing `Real modules` pruning without flattening hierarchy; the tree defaults expanded and has `+`/`−` branch controls plus global expand/collapse
 → Light/Dark theme follows OS initially and persists explicit user choice
-→ no portal REST API dependency yet; generated Portal data remains a projection, not a replacement source of truth
+→ generated learning data remains static/projection-first; the only current Portal server API dependency is the narrowly scoped Local Run Pages Functions build/status/artifact flow
 
 Do not infer module package architecture globally.
 Inspect only the module/source needed for the task.
