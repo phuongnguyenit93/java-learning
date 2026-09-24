@@ -5,6 +5,7 @@ import {
   githubFetch,
   jsonResponse,
   normalizeModuleId,
+  normalizeSourceFingerprint,
   sameOriginRequest,
   type LocalRunEnv,
 } from '../../../functions-shared/github';
@@ -32,8 +33,9 @@ export async function onRequestPost({ request, env }: PagesContext): Promise<Res
   }
 
   const moduleId = normalizeModuleId((payload as { moduleId?: unknown })?.moduleId);
-  if (!moduleId) {
-    return jsonResponse({ message: 'moduleId is invalid.' }, 400);
+  const sourceFingerprint = normalizeSourceFingerprint((payload as { sourceFingerprint?: unknown })?.sourceFingerprint);
+  if (!moduleId || !sourceFingerprint) {
+    return jsonResponse({ message: 'moduleId or sourceFingerprint is invalid.' }, 400);
   }
 
   try {
@@ -44,7 +46,7 @@ export async function onRequestPost({ request, env }: PagesContext): Promise<Res
         method: 'POST',
         body: JSON.stringify({
           ref: 'main',
-          inputs: { moduleId },
+          inputs: { moduleId, sourceFingerprint },
         }),
       },
     );

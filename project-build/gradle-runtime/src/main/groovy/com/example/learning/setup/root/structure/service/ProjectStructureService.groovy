@@ -293,6 +293,18 @@ ${moduleDirectory.absolutePath}
 
         if (node.realModule) {
 
+            if (
+                    'SERVLET'.equalsIgnoreCase(node.moduleType) ||
+                            'REACTIVE'.equalsIgnoreCase(node.moduleType)
+            ) {
+
+                node.sourceFingerprint =
+                        resolveGitTreeFingerprint(
+                                rootProject,
+                                relativePath
+                        )
+            }
+
             List<String> moduleLanguages =
                     getMasterStringList(
                             master,
@@ -758,6 +770,11 @@ ${moduleDirectory.absolutePath}
                                     ]
                                 }
             }
+
+
+            if (node.sourceFingerprint != null && !node.sourceFingerprint.isBlank()) {
+                result.sourceFingerprint = node.sourceFingerprint
+            }
         }
 
 
@@ -787,6 +804,63 @@ ${moduleDirectory.absolutePath}
 
 
         return result
+    }
+
+
+    private String resolveGitTreeFingerprint(
+            Project rootProject,
+            String relativePath
+    ) {
+
+        try {
+
+            Process process =
+                    new ProcessBuilder(
+                            'git',
+                            '-C',
+                            rootProject.projectDir.absolutePath,
+                            'rev-parse',
+                            "HEAD:${relativePath}"
+                    )
+                            .redirectErrorStream(true)
+                            .start()
+
+
+            String output =
+                    process.inputStream.getText('UTF-8').trim()
+
+
+            int exitCode =
+                    process.waitFor()
+
+
+            if (
+                    exitCode != 0 ||
+                            !(output ==~ /[0-9a-fA-F]{40,64}/)
+            ) {
+
+                logger.warn(
+                        '[PORTAL-LOCAL-RUN] Unable to resolve Git tree fingerprint for {}: {}',
+                        relativePath,
+                        output
+                )
+
+                return null
+            }
+
+
+            return output.toLowerCase(Locale.ROOT)
+        }
+        catch (Exception exception) {
+
+            logger.warn(
+                    '[PORTAL-LOCAL-RUN] Unable to resolve Git tree fingerprint for {}: {}',
+                    relativePath,
+                    exception.message
+            )
+
+            return null
+        }
     }
 
 
@@ -1577,6 +1651,7 @@ ${exception.message}
         String moduleType
         String javaBasePackage
         String description
+        String sourceFingerprint
         boolean moduleDepend
         Map<String, File> overviewSources = [:]
         Set<String> knowledgeLanguages = [] as Set<String>

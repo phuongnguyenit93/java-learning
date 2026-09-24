@@ -5,9 +5,11 @@ export interface LocalRunEnv {
 export const GITHUB_OWNER = 'phuongnguyenit93';
 export const GITHUB_REPO = 'java-learning';
 export const LOCAL_RUN_WORKFLOW = 'local-run-build.yml';
+export const LOCAL_RUN_RELEASE_TAG = 'local-run';
 export const GITHUB_API_VERSION = '2026-03-10';
 
 const MODULE_ID_PATTERN = /^[A-Z0-9][A-Z0-9_-]{0,63}$/;
+const SOURCE_FINGERPRINT_PATTERN = /^[0-9a-f]{40,64}$/;
 
 export function normalizeModuleId(value: unknown): string | null {
   if (typeof value !== 'string') {
@@ -24,6 +26,19 @@ export function normalizeRunId(value: string | null): string | null {
   }
 
   return value;
+}
+
+export function normalizeSourceFingerprint(value: unknown): string | null {
+  if (typeof value !== 'string') {
+    return null;
+  }
+
+  const normalized = value.trim().toLowerCase();
+  return SOURCE_FINGERPRINT_PATTERN.test(normalized) ? normalized : null;
+}
+
+export function releaseAssetLabel(sourceFingerprint: string): string {
+  return `fingerprint:${sourceFingerprint}`;
 }
 
 export function jarFileName(moduleId: string): string {

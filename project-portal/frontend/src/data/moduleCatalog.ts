@@ -77,6 +77,7 @@ export function toLearningModule(node: ModuleCatalogNode, stats: ModuleStats): L
 
   return {
     id: node.routeId ?? node.serviceName ?? node.name,
+    sourceFingerprint: node.sourceFingerprint ?? '',
     shortName: displayName,
     name: { vi: displayName, en: displayName },
     description: { vi: description, en: description },

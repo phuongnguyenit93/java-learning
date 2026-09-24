@@ -1,132 +1,136 @@
 import {
   GITHUB_OWNER,
   GITHUB_REPO,
+  LOCAL_RUN_RELEASE_TAG,
   githubFetch,
   githubHeaders,
   jarFileName,
   jsonResponse,
   normalizeModuleId,
-  normalizeRunId,
+  normalizeSourceFingerprint,
+  releaseAssetLabel,
   type LocalRunEnv,
 } from '../../../functions-shared/github';
-import { extractJarStream } from '../../../functions-shared/zip';
 
 interface PagesContext {
   request: Request;
   env: LocalRunEnv;
 }
 
-interface GitHubArtifact {
+interface GitHubRelease {
+  id: number;
+}
+
+interface GitHubReleaseAsset {
   id: number;
   name: string;
-  expired: boolean;
-  size_in_bytes: number;
+  label?: string | null;
+  browser_download_url: string;
 }
 
-interface ArtifactListResponse {
-  artifacts?: GitHubArtifact[];
-}
+interface GitHubReleaseAssetsResponse extends Array<GitHubReleaseAsset> {}
 
-const MAX_ARTIFACT_ARCHIVE_BYTES = 60 * 1024 * 1024;
+async function findRelease(env: LocalRunEnv): Promise<GitHubRelease | null> {
+  if (!env.GITHUB_ACTION_TOKEN) {
+    throw new Error('GITHUB_ACTION_TOKEN is not configured for this Pages environment.');
+  }
 
-async function findArtifact(env: LocalRunEnv, runId: string, moduleId: string): Promise<GitHubArtifact | null> {
-  const response = await githubFetch(
-    env,
-    `/repos/${GITHUB_OWNER}/${GITHUB_REPO}/actions/runs/${runId}/artifacts?per_page=100`,
-  );
-  const payload = await response.json() as ArtifactListResponse;
-  const expectedName = `local-run-${moduleId}`;
-
-  return payload.artifacts?.find((artifact) => artifact.name === expectedName && !artifact.expired) ?? null;
-}
-
-async function downloadArtifactArchive(env: LocalRunEnv, artifactId: number): Promise<Uint8Array> {
   const response = await fetch(
-    `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/actions/artifacts/${artifactId}/zip`,
+    `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/releases/tags/${LOCAL_RUN_RELEASE_TAG}`,
     {
       headers: githubHeaders(env.GITHUB_ACTION_TOKEN),
-      redirect: 'manual',
     },
   );
 
-  if (response.status !== 302) {
-    throw new Error(`GitHub artifact download returned ${response.status}.`);
+  if (response.status === 404) {
+    return null;
   }
 
-  const location = response.headers.get('location');
-  if (!location) {
-    throw new Error('GitHub artifact download did not return a redirect URL.');
+  if (!response.ok) {
+    const body = await response.text();
+    throw new Error(`GitHub API ${response.status}: ${body.slice(0, 500)}`);
   }
 
-  const archiveResponse = await fetch(location, { redirect: 'follow' });
-  if (!archiveResponse.ok) {
-    throw new Error(`GitHub artifact archive returned ${archiveResponse.status}.`);
+  return response.json() as Promise<GitHubRelease>;
+}
+
+async function listReleaseAssets(env: LocalRunEnv, releaseId: number): Promise<GitHubReleaseAsset[]> {
+  const result: GitHubReleaseAsset[] = [];
+
+  for (let page = 1; page <= 10; page += 1) {
+    const response = await githubFetch(
+      env,
+      `/repos/${GITHUB_OWNER}/${GITHUB_REPO}/releases/${releaseId}/assets?per_page=100&page=${page}`,
+    );
+    const assets = await response.json() as GitHubReleaseAssetsResponse;
+    result.push(...assets);
+
+    if (assets.length < 100) {
+      break;
+    }
   }
 
-  const contentLength = Number(archiveResponse.headers.get('content-length') ?? '0');
-  if (contentLength > MAX_ARTIFACT_ARCHIVE_BYTES) {
-    throw new Error('Local Run artifact is too large to proxy through the Pages Function.');
-  }
-
-  const archive = new Uint8Array(await archiveResponse.arrayBuffer());
-  if (archive.byteLength > MAX_ARTIFACT_ARCHIVE_BYTES) {
-    throw new Error('Local Run artifact is too large to proxy through the Pages Function.');
-  }
-
-  return archive;
+  return result;
 }
 
 export async function onRequestGet({ request, env }: PagesContext): Promise<Response> {
   const url = new URL(request.url);
-  const runId = normalizeRunId(url.searchParams.get('runId'));
   const moduleId = normalizeModuleId(url.searchParams.get('moduleId'));
+  const sourceFingerprint = normalizeSourceFingerprint(url.searchParams.get('sourceFingerprint'));
 
-  if (!runId || !moduleId) {
-    return jsonResponse({ message: 'runId and moduleId are required.' }, 400);
+  if (!moduleId || !sourceFingerprint) {
+    return jsonResponse({ message: 'moduleId and sourceFingerprint are required.' }, 400);
   }
 
   try {
-    const artifact = await findArtifact(env, runId, moduleId);
     const fileName = jarFileName(moduleId);
+    const release = await findRelease(env);
 
-    if (!artifact) {
+    if (!release) {
       return jsonResponse({
         moduleId,
         available: false,
+        stale: false,
         fileName,
       });
     }
 
-    if (url.searchParams.get('download') !== '1') {
-      const downloadUrl = new URL(request.url);
-      downloadUrl.searchParams.set('download', '1');
+    const assets = await listReleaseAssets(env, release.id);
+    const asset = assets.find((candidate) => candidate.name === fileName);
 
+    if (!asset) {
       return jsonResponse({
         moduleId,
-        available: true,
+        available: false,
+        stale: false,
         fileName,
-        downloadUrl: `${downloadUrl.pathname}${downloadUrl.search}`,
       });
     }
 
-    if (artifact.size_in_bytes > MAX_ARTIFACT_ARCHIVE_BYTES) {
-      return jsonResponse({ message: 'Local Run artifact is too large to download through the Portal.' }, 413);
+    const fresh = asset.label === releaseAssetLabel(sourceFingerprint);
+    if (!fresh) {
+      return jsonResponse({
+        moduleId,
+        available: false,
+        stale: true,
+        fileName,
+      });
     }
 
-    const archive = await downloadArtifactArchive(env, artifact.id);
-    const jarStream = extractJarStream(archive, fileName);
+    if (url.searchParams.get('download') === '1') {
+      return Response.redirect(asset.browser_download_url, 302);
+    }
 
-    return new Response(jarStream, {
-      headers: {
-        'content-type': 'application/java-archive',
-        'content-disposition': `attachment; filename="${fileName}"`,
-        'cache-control': 'private, no-store',
-        'x-content-type-options': 'nosniff',
-      },
+    return jsonResponse({
+      moduleId,
+      available: true,
+      stale: false,
+      fileName,
+      downloadUrl: asset.browser_download_url,
     });
   } catch (error) {
     return jsonResponse({
-      message: error instanceof Error ? error.message : 'Unable to resolve Local Run artifact.',
+      message: error instanceof Error ? error.message : 'Unable to resolve Local Run release asset.',
     }, 502);
   }
 }

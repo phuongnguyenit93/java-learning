@@ -36,13 +36,13 @@
     "BUILD_ENV": {
         "DESCRIPTION": "Enable auto build .env file and it's task related to (env.gradle) in task module",
         "TYPE": "boolean",
-        "VALUE": "FALSE",
+        "VALUE": "TRUE",
         "GROUP": "ENV"
     },
     "BUILD_YML": {
         "DESCRIPTION": "Enable automatic build yml for module properties",
         "TYPE": "boolean",
-        "VALUE": "FALSE",
+        "VALUE": "TRUE",
         "GROUP": "YML"
     },
     "BUILD_README": {

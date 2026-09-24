@@ -7,6 +7,10 @@ on:
         description: Portal module SERVICE_NAME / route id
         required: true
         type: string
+      sourceFingerprint:
+        description: Expected Git tree fingerprint for the module directory
+        required: true
+        type: string
 
 concurrency:
   group: local-run-${{ inputs.moduleId }}
@@ -17,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
-      contents: read
+      contents: write
 
     steps:
       - name: Checkout repository
@@ -27,17 +31,22 @@ jobs:
         id: module
         env:
           MODULE_ID: ${{ inputs.moduleId }}
+          EXPECTED_FINGERPRINT: ${{ inputs.sourceFingerprint }}
         shell: bash
         run: |
           python3 <<'PY'
           import json
           import os
           import re
+          import subprocess
           from pathlib import Path
 
           module_id = os.environ['MODULE_ID'].strip().upper()
+          expected_fingerprint = os.environ['EXPECTED_FINGERPRINT'].strip().lower()
           if not re.fullmatch(r'[A-Z0-9][A-Z0-9_-]{0,63}', module_id):
               raise SystemExit(f'Invalid moduleId: {module_id!r}')
+          if not re.fullmatch(r'[0-9a-f]{40,64}', expected_fingerprint):
+              raise SystemExit('Invalid sourceFingerprint.')
 
           matches = []
           for master_file in Path('module').rglob('master.json'):
@@ -71,12 +80,23 @@ jobs:
           gradle_path = ':' + relative_path.replace('/', ':')
           jar_base = re.sub(r'[^a-z0-9._-]+', '-', module_id.lower()).strip('-') or 'module'
           jar_name = f'{jar_base}.jar'
+          source_fingerprint = subprocess.check_output(
+              ['git', 'rev-parse', f'HEAD:{relative_path}'],
+              text=True,
+          ).strip().lower()
+
+          if source_fingerprint != expected_fingerprint:
+              raise SystemExit(
+                  f'Portal fingerprint is stale for {module_id}: '
+                  f'expected {expected_fingerprint}, current main is {source_fingerprint}.'
+              )
 
           with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as output:
               output.write(f'module_dir={relative_path}\n')
               output.write(f'gradle_path={gradle_path}\n')
               output.write(f'jar_output_dir=build/jar/{relative_path}\n')
               output.write(f'jar_name={jar_name}\n')
+              output.write(f'source_fingerprint={source_fingerprint}\n')
           PY
 
       - name: Setup JDK 21
@@ -112,11 +132,37 @@ jobs:
 
           cp "${jars[0]}" "local-run-artifact/$JAR_NAME"
 
-      - name: Upload Local Run artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: local-run-${{ inputs.moduleId }}
-          path: local-run-artifact/${{ steps.module.outputs.jar_name }}
-          if-no-files-found: error
-          retention-days: 1
-          compression-level: 0
+      - name: Ensure Local Run release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: local-run
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            exit 0
+          fi
+
+          if ! gh release create "$RELEASE_TAG" \
+            --target "$GITHUB_SHA" \
+            --title "Local Run" \
+            --notes "Rolling executable JAR assets for the Project Portal Local Run feature." \
+            --latest=false; then
+            # Another module may have created the shared rolling release concurrently.
+            gh release view "$RELEASE_TAG" >/dev/null
+          fi
+
+      - name: Upload rolling module release asset
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: local-run
+          JAR_NAME: ${{ steps.module.outputs.jar_name }}
+          SOURCE_FINGERPRINT: ${{ steps.module.outputs.source_fingerprint }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          gh release upload "$RELEASE_TAG" \
+            "local-run-artifact/$JAR_NAME#fingerprint:$SOURCE_FINGERPRINT" \
+            --clobber

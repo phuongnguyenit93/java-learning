@@ -5,6 +5,7 @@ import { useLanguage } from '../state/LanguageContext';
 interface LocalRunPanelProps {
   moduleId: string;
   moduleName: string;
+  sourceFingerprint: string;
 }
 
 const DEFAULT_PORT = 9000;
@@ -25,11 +26,13 @@ function toJarFileName(moduleId: string): string {
 export function LocalRunPanel({
   moduleId,
   moduleName,
+  sourceFingerprint,
 }: LocalRunPanelProps) {
   const { language } = useLanguage();
   const [copied, setCopied] = useState(false);
   const [buildStatus, setBuildStatus] = useState<LocalRunBuildStatus | 'IDLE'>('IDLE');
   const [buildMessage, setBuildMessage] = useState<string | null>(null);
+  const [artifactChecking, setArtifactChecking] = useState(true);
   const [artifact, setArtifact] = useState<LocalRunArtifactResponse>({
     moduleId,
     available: false,
@@ -47,6 +50,9 @@ export function LocalRunPanel({
         module: 'Module',
         java: 'Java',
         missing: 'Chưa có executable JAR cho phiên bản này.',
+        stale: 'Executable JAR hiện có đã cũ so với module hiện tại.',
+        checking: 'Đang kiểm tra executable JAR...',
+        fingerprintMissing: 'Không xác định được source fingerprint cho module này.',
         ready: 'Executable JAR đã sẵn sàng.',
         build: 'Build JAR',
         download: 'Download JAR',
@@ -77,6 +83,9 @@ export function LocalRunPanel({
         module: 'Module',
         java: 'Java',
         missing: 'No executable JAR is available for this version.',
+        stale: 'The available executable JAR is outdated for the current module version.',
+        checking: 'Checking executable JAR...',
+        fingerprintMissing: 'The source fingerprint is unavailable for this module.',
         ready: 'The executable JAR is ready.',
         build: 'Build JAR',
         download: 'Download JAR',
@@ -104,23 +113,60 @@ export function LocalRunPanel({
       };
 
   useEffect(() => {
+    let cancelled = false;
+
     setBuildStatus('IDLE');
     setBuildMessage(null);
     setError(null);
+    setArtifactChecking(true);
     setArtifact({
       moduleId,
       available: false,
       fileName: toJarFileName(moduleId),
     });
-  }, [moduleId]);
+
+    if (!sourceFingerprint) {
+      setArtifactChecking(false);
+      setError(text.fingerprintMissing);
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    localRunApi.getArtifact(moduleId, sourceFingerprint)
+      .then((artifactResponse) => {
+        if (!cancelled) {
+          setArtifact(artifactResponse);
+        }
+      })
+      .catch((artifactError) => {
+        if (!cancelled) {
+          setError(artifactError instanceof Error ? artifactError.message : text.failed);
+        }
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setArtifactChecking(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [moduleId, sourceFingerprint, text.failed, text.fingerprintMissing]);
 
   const handleBuild = async () => {
+    if (!sourceFingerprint) {
+      setError(text.fingerprintMissing);
+      return;
+    }
+
     setError(null);
     setBuildStatus('QUEUED');
     setBuildMessage(text.buildStarting);
 
     try {
-      const started = await localRunApi.startBuild({ moduleId });
+      const started = await localRunApi.startBuild({ moduleId, sourceFingerprint });
       setBuildStatus(started.status);
       setBuildMessage(null);
 
@@ -138,8 +184,12 @@ export function LocalRunPanel({
       }
 
       if (currentStatus === 'SUCCESS') {
-        const artifactResponse = await localRunApi.getArtifact(started.runId, moduleId);
+        const artifactResponse = await localRunApi.getArtifact(moduleId, sourceFingerprint);
         setArtifact(artifactResponse);
+
+        if (!artifactResponse.available) {
+          setError(text.artifactPending);
+        }
       }
     } catch (buildError) {
       setBuildStatus('FAILED');
@@ -195,7 +245,15 @@ export function LocalRunPanel({
               {artifact.available ? '✓' : '○'}
             </span>
             <div>
-              <strong>{artifact.available ? text.ready : text.missing}</strong>
+              <strong>
+                {artifactChecking
+                  ? text.checking
+                  : artifact.available
+                    ? text.ready
+                    : artifact.stale
+                      ? text.stale
+                      : text.missing}
+              </strong>
               <span>{jarFileName}</span>
             </div>
           </div>
@@ -231,7 +289,12 @@ export function LocalRunPanel({
                 </button>
               )
             ) : (
-              <button className="local-run-button local-run-button--build" type="button" onClick={handleBuild} disabled={buildInProgress}>
+              <button
+                className="local-run-button local-run-button--build"
+                type="button"
+                onClick={handleBuild}
+                disabled={buildInProgress || artifactChecking || !sourceFingerprint}
+              >
                 ▶ {buildInProgress ? statusLabel : text.build}
               </button>
             )}

@@ -5,3 +5,10 @@ spring:
   application:
     name: project-portal
 
+local-run:
+  github:
+    token: ${GITHUB_ACTION_TOKEN:}
+    owner: phuongnguyenit93
+    repository: java-learning
+    workflow: local-run-build.yml
+    release-tag: local-run

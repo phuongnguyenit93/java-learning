@@ -497,7 +497,11 @@ export function LearningPage() {
             </div>
           )}
           {activeTab === 'execution' && activeModule.capabilities.execution && (
-            <LocalRunPanel moduleId={activeModule.id} moduleName={activeModule.shortName} />
+            <LocalRunPanel
+              moduleId={activeModule.id}
+              moduleName={activeModule.shortName}
+              sourceFingerprint={activeModule.sourceFingerprint}
+            />
           )}
         </div>
       </section>

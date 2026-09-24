@@ -322,7 +322,7 @@ Quiz
 25 questions
 ```
 
-Current phase đã dựng navigation shell và đã migrate Overview/Menu/Knowledge/API Docs/Quiz/Interview sang generated/static data. `Local Run` hiện có UI hai khung Build/Download JAR + Run Locally và production integration thật: same-origin Cloudflare Pages Functions giữ GitHub token server-side, dispatch `local-run-build.yml`, poll exact workflow run, rồi proxy/extract JAR từ GitHub Actions artifact. Frontend mock vẫn có thể bật bằng `VITE_LOCAL_RUN_MODE=mock` cho local simulation.
+Current phase đã dựng navigation shell và đã migrate Overview/Menu/Knowledge/API Docs/Quiz/Interview sang generated/static data. `Local Run` có UI hai khung Build/Download JAR + Run Locally và dùng cùng relative API contract `/api/local-run/*` ở mọi môi trường. Localhost xử lý contract bằng Spring Boot `project-portal`; production xử lý contract bằng Cloudflare Pages Functions. Hai adapter độc lập, cùng dispatch/poll GitHub Actions và cùng đọc rolling GitHub Release `local-run`; token GitHub luôn nằm server-side.
 
 Các tab/action về lâu dài phải được render theo capability thực tế của module.
 
@@ -913,23 +913,61 @@ Learning Portal → README
 
 ## 13. Local Run / Execution
 
-Execution Context tiếp tục là capability độc lập theo architecture hiện tại.
-
-Portal chỉ consume/launch capability khi module có Execution Context runtime.
-
-Không chuyển ownership của Execution Context vào Portal.
-
-Target:
+`Local Run` là capability build/download runnable JAR và độc lập với Execution Context. Frontend không biết backend adapter cụ thể; nó luôn gọi cùng relative API:
 
 ```text
-Learning Portal
-      │
-      └── Local Run tab/action
-              ↓
-      existing Execution Context UI/API
+POST /api/local-run/build
+GET  /api/local-run/status?runId=...&moduleId=...
+GET  /api/local-run/artifact?moduleId=...&sourceFingerprint=...
 ```
 
-Portal không duplicate capture/query/store logic.
+Local runtime:
+
+```text
+React on localhost
+      ↓ same-origin /api/local-run/*
+Spring Boot project-portal
+      ↓ GITHUB_ACTION_TOKEN from process env or ignored project-portal/.env
+GitHub REST API
+      ↓
+local-run-build.yml
+      ↓
+guarded module bootJar
+      ↓
+rolling GitHub Release `local-run`
+      ↓ raw Release Asset: thread.jar / aspect.jar / ...
+GitHub browser_download_url
+```
+
+Production runtime:
+
+```text
+React static deployment
+      ↓ same-origin /api/local-run/*
+Cloudflare Pages Functions
+      ↓ GITHUB_ACTION_TOKEN from Cloudflare secret
+GitHub REST API / GitHub Actions / rolling Release metadata
+```
+
+Local và production không gọi qua nhau. Browser chỉ gửi `moduleId` và `sourceFingerprint`; backend/workflow resolve module thật và không nhận arbitrary Gradle task/path từ client. `.env` là local human-owned/ignored; `.env.example` chỉ chứa placeholder. `GITHUB_ACTION_TOKEN` của local/production adapter cần Actions Read/Write để dispatch/poll và Contents Read để đọc Release metadata; upload Release Asset dùng workflow `GITHUB_TOKEN` riêng với `contents: write`.
+
+Artifact freshness dùng module-scoped Git tree SHA:
+
+```text
+module-catalog.json
+THREAD.sourceFingerprint = git rev-parse HEAD:module/.../thread
+ASPECT.sourceFingerprint = git rev-parse HEAD:module/.../aop
+
+Release: local-run
+thread.jar  label=fingerprint:<THREAD tree SHA>
+aspect.jar  label=fingerprint:<ASPECT tree SHA>
+```
+
+Khi mở tab Local Run, UI check Release Asset trước. Nếu filename tồn tại và label fingerprint khớp thì hiện `Download JAR` ngay. Nếu asset không có hoặc fingerprint khác thì hiện `Build JAR`. Workflow recompute tree SHA sau checkout và reject request nếu catalog fingerprint đã stale. Upload dùng stable filename + `--clobber`, vì vậy build THREAD chỉ thay `thread.jar`; `aspect.jar` không bị build/download lại. Current fingerprint scope là directory của chính module và chưa bao gồm transitive dependency/shared build-input closure.
+
+Release Asset là raw JAR, không phải Actions Artifact ZIP. Production Pages Function không tải toàn bộ ZIP vào memory và không unzip JAR; nó chỉ trả `browser_download_url` của Release Asset. Điều này loại bỏ large-file proxy path từng có nguy cơ gây 502 trên Worker.
+
+Execution Context tiếp tục là capability độc lập và giữ ownership runtime/capture/query/store riêng; Local Run không duplicate hoặc phụ thuộc vào Execution Context.
 
 ---
 
@@ -1530,7 +1568,7 @@ MVP đã bắt đầu implementation. Current phase đã có:
 24. Download action dùng popup dùng chung; popup đóng khi click ngoài, nhấn Escape hoặc toggle lại chính nút
 25. Home là placeholder có CTA sang Learning; Knowledge category filter có collapse/expand + horizontal drag-scroll
 26. semantic capability colors dùng chung cho sidebar/tabs và giữ nguyên giữa Light/Dark
-27. `Local Run` là label hiện tại của internal `execution` tab; UI Build/Download JAR + Run Locally, Cloudflare Pages Functions `build/status/artifact`, GitHub workflow `bootJar` và GitHub Actions artifact download đều đã wired; browser không nhận GitHub secret và chỉ truyền `moduleId`, còn mock flow giữ lại qua `VITE_LOCAL_RUN_MODE=mock`
+27. `Local Run` là label hiện tại của internal `execution` tab; frontend luôn gọi relative `/api/local-run/*`; local dùng Spring Boot adapter còn production dùng Cloudflare Pages Functions adapter; cả hai dispatch/poll GitHub Actions và check rolling GitHub Release Asset theo module-scoped `sourceFingerprint`; không còn mock và hai môi trường không phụ thuộc nhau
 28. production static bundle vẫn có thể được serve bởi Spring Boot khi chạy packaged application
 29. public static Portal deploy lên Cloudflare Pages (`java-learning-cly.pages.dev`) bằng `.github/workflows/deploy-portal.yml`; Wrangler project name là `java-learning`; push/merge `main` hoặc `workflow_dispatch` → JDK 21 → `:project-portal:buildFrontend` → Wrangler Pages deploy
 30. Gradle plugin stub generator đã Linux-safe về filename casing để CI không tạo duplicate plugin khác casing
@@ -1543,7 +1581,7 @@ Chưa implement trong current phase:
 
 ```text
 capability availability resolver từ actual resource/artifact state
-Spring Boot Portal REST integration ngoài Local Run Pages Functions
+Spring Boot Portal REST integration ngoài Local Run local adapter
 Execution Context aggregation
 database/login/multi-user progress
 admin/online CRUD

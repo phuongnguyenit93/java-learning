@@ -136,7 +136,7 @@ project-portal/
 └── build.gradle                         # Node/Vite → Spring static-resource wiring
 ```
 
-The Portal is currently **static-first**. Module hierarchy/routing comes from generated `module-catalog.json`; Overview, Knowledge, Quiz, Interview, and raw localized Swagger/API metadata projections are generated under `project-portal/build/generated/portal-data`. The frontend consumes Overview, Menu/Knowledge, Quiz, Interview, and API Docs directly from those generated/static projections. No portal feature currently depends on a Java REST API.
+The Portal remains **static-first for learning content**. Module hierarchy/routing comes from generated `module-catalog.json`; Overview, Knowledge, Quiz, Interview, and raw localized Swagger/API metadata projections are generated under `project-portal/build/generated/portal-data`. The frontend consumes Overview, Menu/Knowledge, Quiz, Interview, and API Docs directly from those generated/static projections. `Local Run` is the narrow exception: when the Portal runs locally, Spring Boot owns `/api/local-run/*` and calls GitHub Actions server-side.
 
 Do not move fake frontend data into Spring controllers merely because the application has a backend. Static/generated knowledge should stay static until a server-side requirement actually exists.
 
@@ -208,7 +208,11 @@ Learning
 └── Download action
 ```
 
-`Overview` uses generated catalog metadata and generated BASE.md projections. `Menu` and `Knowledge` consume the generated Knowledge index/section projections. `Quiz` and `Interview` consume localized generated `question.yml` projections advertised through catalog `quiz` and `interview` language paths. `API Docs` consumes the complete localized four-file Swagger projection advertised through catalog `api` language base paths. Knowledge, Quiz, Interview, and API counts for sidebar modules are preloaded from generated/static projections for the active language. `Local Run` is the display label for the internal `execution` tab. Its production flow uses same-origin Cloudflare Pages Functions to dispatch a guarded GitHub Actions `bootJar` workflow, poll the exact workflow run, resolve its short-lived Actions artifact, and proxy the JAR download without exposing `GITHUB_ACTION_TOKEN` to the browser. `VITE_LOCAL_RUN_MODE=mock` remains available for frontend-only local simulation.
+`Overview` uses generated catalog metadata and generated BASE.md projections. `Menu` and `Knowledge` consume the generated Knowledge index/section projections. `Quiz` and `Interview` consume localized generated `question.yml` projections advertised through catalog `quiz` and `interview` language paths. `API Docs` consumes the complete localized four-file Swagger projection advertised through catalog `api` language base paths. Knowledge/Quiz/Interview/API counts in the sidebar are preloaded from generated/static projections for the active language. `Local Run` is the display label for the internal `execution` tab and has one frontend contract with two environment adapters. Locally, React calls same-origin Spring Boot `/api/local-run/*`; Spring Boot reads `GITHUB_ACTION_TOKEN` from the process environment or local ignored `project-portal/.env`, then talks directly to GitHub. In production, the same relative API contract is implemented by Cloudflare Pages Functions using a Cloudflare secret. Both adapters dispatch/poll GitHub Actions and read the shared rolling GitHub Release `local-run`; neither path exposes the GitHub token to the browser, and there is no mock Local Run adapter.
+
+Local Run artifact freshness is module-scoped. `ProjectStructureService` projects the committed Git tree SHA of each real module directory as `sourceFingerprint` in `module-catalog.json`. The workflow independently recomputes `git rev-parse HEAD:<module-path>` and rejects a stale caller fingerprint. The rolling release keeps one stable-named asset per runnable module (`thread.jar`, `aspect.jar`, ...); the asset label is `fingerprint:<tree-sha>`. A module is downloadable only when the asset label matches the catalog fingerprint. Changing files under module A therefore invalidates A without invalidating unrelated module B. This current fingerprint intentionally covers the module directory itself, not transitive dependency/build-input closure.
+
+`GITHUB_ACTION_TOKEN` used by the local Spring adapter / production Pages Functions needs GitHub Actions read/write permission for workflow dispatch/status and Contents read permission for Release metadata. Uploading/replacing Release Assets is performed by the dispatched workflow's own `GITHUB_TOKEN` with `contents: write`.
 
 `Home` is currently an intentional placeholder, not a blank page. It tells the user that the home page is being updated and links directly to `Learning`. Keep it lightweight until a real Home information architecture is defined.
 
@@ -2223,7 +2227,7 @@ Project Portal
 → root-level `project-portal/`, outside learning `module/`
 → Spring Boot host on port 9098 + React/TypeScript/Vite frontend
 → Gradle buildFrontend → Vite dist → processResources → classpath:/static
-→ browser executes React; Spring Boot only serves the static bundle in the current phase
+→ browser executes React; Spring Boot serves the static bundle and owns the local-only `/api/local-run/*` adapter
 → HashRouter owns `#/learning/...` navigation
 → ProjectStructureService generates build-only `portal-data/module-catalog.json` for real hierarchy/routing
 → module-scoped generated data lives under `portal-data/module/{ROUTE_ID}/...`; current Overview, Knowledge, Quiz, Interview, and API metadata projections follow this layout
@@ -2232,10 +2236,11 @@ Project Portal
 → API Docs consumes the generated localized four-file Swagger projection, follows README-derived controller/method order, renders sanitized `execution` HTML, and is reference-only rather than a live runner/debugger
 → Quiz consumes localized generated `question.yml`, shows four shuffled answer positions, and reveals the selected answer's explanation while checking correctness by stable internal answer id
 → Interview consumes localized generated `question.yml`, keeps reference answers collapsed until explicitly opened, and can resolve Related Knowledge/API panels
-→ tabs are Overview → Menu → Knowledge → API Docs → Quiz → Interview → Local Run; `Local Run` is the display label of the internal `execution` tab and uses Pages Functions + GitHub Actions for its production build/status/artifact flow
+→ tabs are Overview → Menu → Knowledge → API Docs → Quiz → Interview → Local Run; frontend always calls relative `/api/local-run/*`; local resolves to Spring Boot, production resolves to Pages Functions, and both adapters call GitHub Actions + the rolling `local-run` GitHub Release
+→ Local Run freshness uses module-scoped Git tree SHA projected as `sourceFingerprint`; release assets keep stable module filenames and store that fingerprint in the asset label
 → sidebar supports module search plus Full tree/content-bearing `Real modules` pruning without flattening hierarchy; the tree defaults expanded and has `+`/`−` branch controls plus global expand/collapse
 → Light/Dark theme follows OS initially and persists explicit user choice
-→ generated learning data remains static/projection-first; the only current Portal server API dependency is the narrowly scoped Local Run Pages Functions build/status/artifact flow
+→ generated learning data remains static/projection-first; the only current Portal server API dependency is the narrowly scoped Local Run `build/status/artifact` contract
 
 Do not infer module package architecture globally.
 Inspect only the module/source needed for the task.

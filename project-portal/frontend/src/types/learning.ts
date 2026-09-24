@@ -20,6 +20,7 @@ export interface CapabilityState {
 
 export interface LearningModule {
   id: string;
+  sourceFingerprint: string;
   name: LocalizedText;
   shortName: string;
   description: LocalizedText;
@@ -44,6 +45,7 @@ export interface ModuleCatalogNode {
   path: string;
   kind: 'GROUP' | 'MODULE';
   routeId?: string;
+  sourceFingerprint?: string;
   serviceName?: string;
   moduleType?: 'SERVLET' | 'REACTIVE' | 'LIBRARY' | 'PLATFORM' | string;
   javaBasePackage?: string;
