@@ -39,6 +39,7 @@ export function LearningPage() {
   const [quizCounts, setQuizCounts] = useState<Record<string, number>>({});
   const [interviewCounts, setInterviewCounts] = useState<Record<string, number>>({});
   const [apiCounts, setApiCounts] = useState<Record<string, number>>({});
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [knowledgeLoading, setKnowledgeLoading] = useState(false);
   const [knowledgeError, setKnowledgeError] = useState<string | null>(null);
   const [activeKnowledgeCategory, setActiveKnowledgeCategory] = useState('all');
@@ -375,7 +376,7 @@ export function LearningPage() {
   }
 
   return (
-    <main className="learning-layout">
+    <main className={`learning-layout${sidebarCollapsed ? ' is-sidebar-collapsed' : ''}`}>
       <ModuleSidebar
         nodes={catalog.root.children}
         activeModuleId={activeModule.id}
@@ -385,11 +386,36 @@ export function LearningPage() {
         apiCounts={apiCounts}
       />
 
+      {!sidebarCollapsed && (
+        <button
+          type="button"
+          className="learning-sidebar-collapse-control"
+          onClick={() => setSidebarCollapsed(true)}
+          aria-label={language === 'vi' ? 'Thu gọn thanh menu' : 'Collapse sidebar'}
+          title={language === 'vi' ? 'Thu gọn thanh menu' : 'Collapse sidebar'}
+        >
+          ‹
+        </button>
+      )}
+
+      {sidebarCollapsed && (
+        <button
+          type="button"
+          className="learning-sidebar-reveal"
+          onClick={() => setSidebarCollapsed(false)}
+          aria-label={language === 'vi' ? 'Mở thanh menu' : 'Open sidebar'}
+          title={language === 'vi' ? 'Mở thanh menu' : 'Open sidebar'}
+        >
+          ›
+        </button>
+      )}
+
       <section className="learning-main">
         <div className="learning-main__topline">
           <div>
             <span className="eyebrow">{activeModule.path.join(' / ')}</span>
             <h1>{activeModule.name[language]}</h1>
+            <p className="learning-main__module-description">{activeModule.description[language]}</p>
           </div>
           <span className="module-id-badge">{activeModule.id}</span>
         </div>

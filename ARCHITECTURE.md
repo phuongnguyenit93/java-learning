@@ -166,15 +166,16 @@ React Router
 pages/components
 ```
 
-Routing production hiện dùng `HashRouter`:
+Routing hiện dùng `BrowserRouter`:
 
 ```text
-http://localhost:9098/#/
-http://localhost:9098/#/learning
-http://localhost:9098/#/learning/THREAD
+http://localhost:9098/
+http://localhost:9098/my-cv
+http://localhost:9098/learning
+http://localhost:9098/learning/THREAD
 ```
 
-Phần sau `#` được browser/React xử lý và không được gửi lên Spring Boot. Nhờ vậy phase hiện tại chưa cần SPA fallback controller. Nếu sau này chuyển sang `BrowserRouter`, backend/static server phải có fallback về `index.html` cho client routes.
+Vì URL không còn dùng hash fragment, direct request/F5 trên client route sẽ đi tới server. Local Spring Boot vì vậy có SPA fallback **explicit** cho `/my-cv`, `/learning`, `/learning/{moduleId}` và các biến thể trailing slash tương ứng. Fallback dùng internal forward tới `/index.html`, không redirect về `/`, nên browser giữ nguyên URL và React Router render đúng page. Static assets, generated Portal data và `/api/**` không nằm trong wildcard fallback. Frontend còn normalize legacy `/#/...` link bằng `history.replaceState` để chuyển sang clean URL mà không reload về home.
 
 Current UI scope:
 
@@ -219,14 +220,35 @@ Quiz question schema hiện có governance `aiGenerated/reviewed`, optional `rea
 Current sidebar interaction contract:
 
 ```text
-node row có children
+GROUP chỉ có children
 → click toàn row để expand/collapse
+→ hover chỉ chạy wave/cue dọc
+→ đóng = wave xuống; mở = wave lên
 → `+` = đóng, `−` = mở
 → default toàn tree là expanded
 
-real module
-→ có nút tròn `>` ở bên phải
-→ chỉ nút này navigate tới #/learning/{routeId}
+MODULE chỉ có dashboard
+→ click toàn row để navigate `/learning/{routeId}`
+→ hover chạy sweep trái → phải + cue `›››`
+
+MODULE vừa có children vừa có dashboard
+→ dấu `+`/`−` là boundary giữa hai vùng click
+→ từ boundary về trái: expand/collapse
+→ từ boundary sang phải: navigate dashboard
+→ hover tại bất kỳ vị trí nào trên row đều kích hoạt đồng thời cả hai animation
+→ wave dọc bị clip trong vùng trái; wave ngang bị clip trong vùng phải
+→ không animation nào được tràn qua boundary
+
+visual state
+→ wave/màu directional chỉ xuất hiện khi hover/focus
+→ module đạt điều kiện `Real modules` không có permanent background riêng
+→ các count badge Knowledge/Quiz/Interview/API là tín hiệu content availability
+→ active module vẫn có selected highlight riêng
+
+whole sidebar
+→ desktop width đủ để giữ tên menu đầy đủ, không ellipsis như affordance mặc định
+→ có control collapse nằm giữa chiều cao ở mép phải sidebar
+→ khi đóng sidebar, main content giãn ra và control `>` ở giữa mép trái màn hình mở lại sidebar
 
 module search: self-match
 → giữ toàn bộ subtree của node match
@@ -2374,12 +2396,12 @@ Các invariant dưới đây phản ánh architecture hiện tại và nên đư
 28. `project-portal` là repository-level presentation application nằm ngoài `module/`; nó không phải learning topic.
 29. Portal frontend ưu tiên static/generated data; có Spring Boot backend không đồng nghĩa mọi dữ liệu phải đi qua REST.
 30. Production React bundle được Vite build rồi Gradle copy vào `classpath:/static`; Spring Boot phục vụ bundle bằng static-resource mechanism mặc định.
-31. Current Portal routing dùng `HashRouter`, vì vậy `#/learning/...` thuộc browser/React và chưa cần Spring MVC SPA fallback.
+31. Current Portal routing dùng `BrowserRouter`; local Spring MVC chỉ forward các SPA route `/my-cv`, `/learning`, `/learning/{moduleId}` về `/index.html` để deep-link/F5 giữ nguyên route, không dùng broad wildcard nuốt static/API paths.
 32. Learning experience không phụ thuộc việc learning module có Spring Boot Application; API execution và Execution Context chỉ là optional runtime capabilities.
 33. Portal module hierarchy phải consume generated `module-catalog.json`; browser không parse `module-structure.txt` làm canonical input.
 34. Sidebar Portal `Real modules / Module thật` là content filter: giữ MODULE khi Knowledge hoặc Quiz hoặc Interview hoặc API Docs có count > 0; chỉ loại module khi cả bốn đều 0. Đây không phải định nghĩa physical real module của repository, vốn vẫn dựa trên local `gradle.properties`.
 35. Module-search self-match giữ nguyên subtree; descendant-match chỉ giữ ancestor path. Search mode vẫn phải cho phép expand/collapse.
-36. Module navigation dùng action riêng (`>`); row có children sở hữu expand/collapse interaction. Tree hiện mặc định expanded, dùng `+`/`−` và có global Expand all/Collapse all.
+36. Sidebar không còn circular `>` riêng trên từng module. Dashboard-only row navigate toàn row; child-only row toggle toàn row; hybrid row chia click tại `+`/`−` nhưng hover toàn row kích hoạt đồng thời wave dọc vùng trái và wave ngang vùng phải, mỗi wave bị clip đúng vùng. Tree mặc định expanded và vẫn có global Expand all/Collapse all.
 37. Menu/API Docs mặc định collapsed nhưng phải preserve state gần nhất khi user đổi tab rồi quay lại trong cùng module/language; Knowledge cho phép nhiều section cùng mở và không auto-close sibling section.
 38. API Docs hiện consume static generated Swagger metadata, không live-execute/debug. Controller/method order phải follow valid README relationship order thay vì alphabetical/path order; rich execution HTML phải được sanitize trước khi render.
 39. Portal generated data là build artifact: không generate `module-catalog`, Overview, Knowledge hoặc future module projections vào `project-portal/src/main/resources`.

@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CustomTooltip } from './CustomTooltip';
 import { collectRealModules, formatCatalogName } from '../data/moduleCatalog';
 import { resolveModuleStats } from '../data/moduleStats';
 import { useLanguage } from '../state/LanguageContext';
@@ -135,8 +134,6 @@ function TreeNode({
   const apiCount = isModule && node.routeId ? (apiCounts[node.routeId] ?? 0) : 0;
   const isRealModule = isQualifiedRealModule(node, knowledgeCounts, quizCounts, interviewCounts, apiCounts);
   const displayName = formatCatalogName(node.name);
-  const description = node.description?.trim();
-  const tooltipContent = description ? `${displayName}: ${description}` : displayName;
 
   useEffect(() => {
     if (filter && visible && hasChildren) {
@@ -169,71 +166,83 @@ function TreeNode({
     }
   };
 
+  const content = (
+    <span className={`module-tree__content${isActive ? ' is-active' : ''}`}>
+      <span className="module-tree__label">{displayName}</span>
+
+      {stats && (
+        <span className="module-tree__badges" aria-label="Module content counts">
+          {knowledgeCount > 0 && (
+            <span className="module-tree__badge module-tree__badge--knowledge" title="Knowledge">
+              {knowledgeCount}
+            </span>
+          )}
+          {quizCount > 0 && (
+            <span className="module-tree__badge module-tree__badge--quiz" title="Quiz">
+              {quizCount}
+            </span>
+          )}
+          {interviewCount > 0 && (
+            <span className="module-tree__badge module-tree__badge--interview" title="Interview">
+              {interviewCount}
+            </span>
+          )}
+          {apiCount > 0 && (
+            <span className="module-tree__badge module-tree__badge--api" title="API Docs">
+              {apiCount}
+            </span>
+          )}
+        </span>
+      )}
+    </span>
+  );
+
   return (
     <li className="module-tree__item">
       <div
         className={`module-tree__row${hasChildren ? ' is-expandable' : ''}${isModule ? ' is-module' : ''}${isRealModule ? ' is-real-module' : ''}${isActive ? ' is-active' : ''}`}
-        onClick={hasChildren ? toggleChildren : undefined}
-        onKeyDown={(event) => {
-          if (!hasChildren) {
-            return;
-          }
-
-          if (event.key === 'Enter' || event.key === ' ') {
-            event.preventDefault();
-            toggleChildren();
-          }
-        }}
-        role={hasChildren ? 'button' : undefined}
-        tabIndex={hasChildren ? 0 : undefined}
-        aria-expanded={hasChildren ? open : undefined}
       >
-        <span className="module-tree__indent" data-depth={Math.min(depth, 5)} />
-        <span className="module-tree__caret" aria-hidden="true">{hasChildren ? (open ? '−' : '+') : '•'}</span>
-        <span className={`module-tree__content${isActive ? ' is-active' : ''}`}>
-          <CustomTooltip content={tooltipContent}>
-            <span className="module-tree__label">{displayName}</span>
-          </CustomTooltip>
-
-          {stats && (
-            <span className="module-tree__badges" aria-label="Module content counts">
-              {knowledgeCount > 0 && (
-                <span className="module-tree__badge module-tree__badge--knowledge" title="Knowledge">
-                  {knowledgeCount}
-                </span>
-              )}
-              {quizCount > 0 && (
-                <span className="module-tree__badge module-tree__badge--quiz" title="Quiz">
-                  {quizCount}
-                </span>
-              )}
-              {interviewCount > 0 && (
-                <span className="module-tree__badge module-tree__badge--interview" title="Interview">
-                  {interviewCount}
-                </span>
-              )}
-              {apiCount > 0 && (
-                <span className="module-tree__badge module-tree__badge--api" title="API Docs">
-                  {apiCount}
-                </span>
-              )}
-            </span>
-          )}
-        </span>
+        {hasChildren && (
+          <button
+            type="button"
+            className={`module-tree__collapse-zone${isModule ? ' is-split' : ' is-full'}${open ? ' is-open' : ' is-closed'}`}
+            onClick={toggleChildren}
+            aria-expanded={open}
+            aria-label={`${open ? 'Collapse' : 'Expand'} ${displayName}`}
+            title={`${open ? 'Collapse' : 'Expand'} ${displayName}`}
+          >
+            <span className="module-tree__indent" data-depth={Math.min(depth, 5)} />
+            <span className="module-tree__vertical-cue" aria-hidden="true">{open ? '↑↑↑' : '↓↓↓'}</span>
+            <span className="module-tree__caret" aria-hidden="true">{open ? '−' : '+'}</span>
+            {!isModule && content}
+          </button>
+        )}
 
         {isModule && (
           <button
             type="button"
-            className="module-tree__navigate-button"
-            onClick={(event) => {
-              event.stopPropagation();
-              navigateToModule();
-            }}
-            aria-label={`Open ${formatCatalogName(node.name)}`}
-            title={`Open ${formatCatalogName(node.name)}`}
+            className={`module-tree__dashboard-zone${hasChildren ? ' is-split' : ' is-full'}`}
+            onClick={navigateToModule}
+            aria-label={`Open ${displayName} dashboard`}
+            title={`Open ${displayName}`}
           >
-            ›
+            {!hasChildren && (
+              <>
+                <span className="module-tree__indent" data-depth={Math.min(depth, 5)} />
+                <span className="module-tree__caret module-tree__caret--leaf" aria-hidden="true">•</span>
+              </>
+            )}
+            {content}
+            <span className="module-tree__dashboard-cue" aria-hidden="true">›››</span>
           </button>
+        )}
+
+        {!hasChildren && !isModule && (
+          <div className="module-tree__static-zone">
+            <span className="module-tree__indent" data-depth={Math.min(depth, 5)} />
+            <span className="module-tree__caret module-tree__caret--leaf" aria-hidden="true">•</span>
+            {content}
+          </div>
         )}
       </div>
 
@@ -260,7 +269,14 @@ function TreeNode({
   );
 }
 
-export function ModuleSidebar({ nodes, activeModuleId, knowledgeCounts, quizCounts, interviewCounts, apiCounts }: ModuleSidebarProps) {
+export function ModuleSidebar({
+  nodes,
+  activeModuleId,
+  knowledgeCounts,
+  quizCounts,
+  interviewCounts,
+  apiCounts,
+}: ModuleSidebarProps) {
   const { language } = useLanguage();
   const [filterInput, setFilterInput] = useState('');
   const [realModulesOnly, setRealModulesOnly] = useState(true);
@@ -286,8 +302,10 @@ export function ModuleSidebar({ nodes, activeModuleId, knowledgeCounts, quizCoun
   return (
     <aside className="learning-sidebar">
       <div className="learning-sidebar__headline">
-        <span>{language === 'vi' ? 'Tất cả module' : 'All modules'}</span>
-        <span className="learning-sidebar__total">{realModulesOnly ? realModuleCount : moduleCount}</span>
+        <span className="learning-sidebar__headline-copy">
+          <span>{language === 'vi' ? 'Tất cả module' : 'All modules'}</span>
+          <span className="learning-sidebar__total">{realModulesOnly ? realModuleCount : moduleCount}</span>
+        </span>
       </div>
 
       <label className="sidebar-search">

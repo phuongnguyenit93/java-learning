@@ -72,7 +72,7 @@ http://localhost:9098
 Current production Learning route ví dụ:
 
 ```text
-http://localhost:9098/#/learning/THREAD
+http://localhost:9098/learning/THREAD
 ```
 
 ### 1.2 Current build and serve model
@@ -122,12 +122,12 @@ main.tsx
     ↓
 App.tsx
     ↓
-HashRouter
+BrowserRouter
     ↓
 pages/components
 ```
 
-`HashRouter` được chọn cho phase đầu để client route không cần Spring MVC fallback. Phần sau dấu `#` không được gửi lên server.
+Portal hiện dùng `BrowserRouter` để URL client sạch, ví dụ `/my-cv` và `/learning/THREAD`. Spring MVC chỉ forward các route SPA đã biết về `index.html`; URL trên browser được giữ nguyên để React Router resolve đúng page khi deep-link hoặc refresh trực tiếp. Frontend còn normalize legacy `/#/...` URL sang clean path bằng `history.replaceState` để bookmark/link cũ tiếp tục hoạt động.
 
 ### 1.3 Vai trò của React / TypeScript / Vite / React Router
 
@@ -516,7 +516,7 @@ module path
 available capabilities
 ```
 
-`SERVICE_NAME_DESCRIBE` có thể trở thành description chính hiển thị trên Portal.
+`SERVICE_NAME_DESCRIBE` hiện là description chính hiển thị ngay dưới tên module ở Learning header. Sidebar chỉ hiển thị tên menu ngắn gọn và các capability count badges; không lặp lại detailed description dưới dạng tooltip.
 
 Không nên thêm metadata mới nếu thông tin đã có owner phù hợp trong `master.json` hoặc `properties.json`.
 
@@ -1156,24 +1156,27 @@ GitHub Actions chạy trên Linux. Các Gradle generator tham gia `:project-port
 
 Portal là root-level/common entry point, độc lập với context path của từng learning module runtime.
 
-Current routing dùng `HashRouter`:
+Current routing dùng `BrowserRouter`:
 
 ```text
-/#/
-/#/learning
-/#/learning/THREAD
-/#/learning/ASPECT
+/
+/my-cv
+/learning
+/learning/THREAD
+/learning/ASPECT
 ```
 
 Logical `SERVICE_NAME` đang là lựa chọn phù hợp cho module route identity trong fake/current phase.
 
-Nếu sau này muốn clean URL:
+Spring MVC có SPA fallback explicit cho các client route hiện tại:
 
 ```text
-/learning/THREAD
+/my-cv
+/learning
+/learning/{moduleId}
 ```
 
-thì có thể chuyển sang `BrowserRouter`, nhưng khi đó Spring/static host phải fallback unknown client route về `index.html`.
+Các route trên forward nội bộ về `/index.html`; đây không phải redirect về `/`, nên refresh `/my-cv` vẫn giữ URL `/my-cv` và React Router tiếp tục render `MyCvPage`. Static assets, generated Portal data và `/api/**` không đi qua fallback này. Static production host cũng phải giữ contract SPA fallback tương đương cho các clean client routes.
 
 ---
 
@@ -1353,9 +1356,20 @@ row có children
 → `+` = collapsed, `−` = expanded
 → default toàn tree expanded
 
-module row
-→ có nút tròn `>` bên phải
-→ nút `>` mới navigate tới module page
+GROUP chỉ có children
+→ click toàn row để expand/collapse
+→ hover chạy directional wave dọc: đóng thì xuống, mở thì lên
+
+MODULE chỉ có dashboard
+→ click toàn row để navigate tới module page
+→ hover chạy sweep trái → phải + `›››`
+
+MODULE vừa có children vừa có dashboard
+→ dấu `+`/`−` là boundary giữa hai vùng click
+→ từ boundary về trái: expand/collapse
+→ từ boundary sang phải: navigate dashboard
+→ hover ở bất kỳ đâu trên row kích hoạt đồng thời wave dọc bên trái và wave ngang bên phải
+→ mỗi wave bị clip trong đúng vùng của nó, không tràn qua boundary
 
 search match chính node
 → giữ full subtree của node đó
@@ -1391,7 +1405,9 @@ Real modules / Module thật
 → không flatten thành list
 ```
 
-MODULE đạt điều kiện `Module thật` được highlight bằng background riêng để phân biệt trong cả Full tree và filtered mode. Màu highlight có token riêng cho Light/Dark theme; active row vẫn có state nổi bật hơn.
+MODULE đạt điều kiện `Module thật` **không có permanent background riêng**. Knowledge/Quiz/Interview/API count badges đã là tín hiệu đủ rõ cho content availability; background persistent chỉ dành cho active/selected module. Directional hover color/wave chỉ xuất hiện khi pointer/focus đi vào interactive row.
+
+Toàn sidebar có thể đóng/mở độc lập với tree branch state. Control đóng sidebar nằm giữa chiều cao ở mép phải sidebar; khi sidebar bị ẩn, main content giãn ra và một control `>` ở giữa mép trái màn hình mở sidebar lại. Desktop sidebar ưu tiên đủ rộng để tên menu hiển thị đầy đủ thay vì ellipsis. Header module hiển thị thêm description từ `SERVICE_NAME_DESCRIBE`; sidebar chỉ giữ tên menu ngắn gọn thay vì tooltip/detail description.
 
 Tab state được giữ theo browser session cho module/language hiện tại: Menu, Knowledge, API Docs, Quiz và Interview được lazy-mount lần đầu rồi giữ mounted khi user đổi tab. Vì vậy manual expand/collapse, lựa chọn Quiz và Interview answer state gần nhất không tự reset chỉ vì tab đang bị ẩn. Khi đổi module/language, component key/reset boundary tạo state mới phù hợp context mới.
 
@@ -1558,10 +1574,10 @@ MVP đã bắt đầu implementation. Current phase đã có:
 6. VI/EN frontend language switch
 7. Light/Dark theme theo OS + localStorage persistence
 8. ProjectStructureService-generated `module-catalog.json`
-9. real module hierarchy sidebar + dynamic `#/learning/{routeId}` routing
+9. real module hierarchy sidebar + dynamic `/learning/{routeId}` routing
 10. sidebar module search với self-match/descendant-match semantics
 11. Full tree / Real modules switch, prune nhưng giữ ancestor hierarchy
-12. row expand/collapse + separate circular `>` navigation action cho real module
+12. sidebar interaction theo capability: child-only row toggle toàn row, dashboard-only module navigate toàn row, hybrid row chia click tại `+`/`−`; hover hybrid kích hoạt đồng thời hai directional waves nhưng mỗi wave bị clip đúng vùng; không còn circular `>` trên từng module
 13. Overview từ language `BASE.md` qua build-time projection
 14. build-only module-first Portal data layout: `portal-data/module/{ROUTE_ID}/{feature}/...`
 15. build-time Knowledge projection theo category + anchored section
@@ -1571,7 +1587,7 @@ MVP đã bắt đầu implementation. Current phase đã có:
 19. API Docs frontend consume trực tiếp generated Swagger YAML; controller/method order follow README mapping, rich execution HTML được sanitize, API Reference là reference-only chứ không live execute/debug
 20. API methods có human-owned `aiGenerated/reviewed`; Knowledge/API Docs/Related API popup render shared governance badge + tooltip; API ↔ Knowledge tiếp tục dùng duy nhất `readmeRelated`
 21. Knowledge/Quiz/Interview/API counts đều lấy từ generated/static data; sidebar `Module thật` giữ module khi ít nhất một trong bốn count > 0 và chỉ ẩn khi cả bốn = 0
-22. sidebar tree mặc định expanded, dùng `+`/`−`, có Expand all/Collapse all; qualifying content module được highlight trong cả Full tree và Module thật mode
+22. sidebar tree mặc định expanded, dùng `+`/`−`, có Expand all/Collapse all; qualifying content module nhận biết bằng count badges thay vì permanent background, active module mới giữ selected highlight; whole sidebar có thể collapse/reopen từ control giữa cạnh màn hình
 23. Menu mặc định collapsed + Expand all/Collapse all; Knowledge/API Docs/Menu/Quiz/Interview giữ state gần nhất khi đổi tab rồi quay lại trong cùng module/language
 24. Download action dùng popup dùng chung; popup đóng khi click ngoài, nhấn Escape hoặc toggle lại chính nút
 25. Home là placeholder có CTA sang Learning; Knowledge category filter có collapse/expand + horizontal drag-scroll

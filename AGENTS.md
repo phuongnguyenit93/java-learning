@@ -156,13 +156,14 @@ browser
 
 `ProjectPortalApplication` therefore does not need a controller to render the React UI. Spring Boot automatically serves `classpath:/static/index.html` and its generated assets.
 
-Current production routing uses `HashRouter`, so routes such as:
+Current client routing uses `BrowserRouter`, so routes such as:
 
 ```text
-http://localhost:9098/#/learning/THREAD
+http://localhost:9098/my-cv
+http://localhost:9098/learning/THREAD
 ```
 
-are resolved by React in the browser. The fragment after `#` is not sent to Spring Boot. Do not add SPA fallback controllers unless routing is intentionally migrated to `BrowserRouter`.
+use clean path-based URLs. Local Spring Boot owns an explicit SPA fallback only for the known client routes `/my-cv`, `/learning`, and `/learning/{moduleId}`; those mappings internally forward to `/index.html` without redirecting the browser, so direct deep-links and `F5` preserve the requested URL and React Router resolves the correct page. Static assets/generated Portal data and `/api/**` must not be swallowed by a broad wildcard fallback. Legacy `/#/...` links are normalized client-side to the equivalent clean path with `history.replaceState`.
 
 Production static deployment currently uses Cloudflare Pages. The deployment contract is:
 
@@ -221,14 +222,36 @@ Every `POST /api/local-run/build` must treat GitHub as the shared source of trut
 Current sidebar behavior is intentional and should be preserved unless the user explicitly changes it:
 
 ```text
-row with children
-→ click the row to expand/collapse
+group row with children and no dashboard
+→ click the whole row to expand/collapse
+→ hover shows only the vertical directional sweep/cue
+→ collapsed = downward cue; expanded = upward cue
 → use `+` for collapsed and `−` for expanded
 → default tree state is fully expanded
 
-real module
-→ render a separate circular `>` action on the right
-→ only that action navigates to #/learning/{routeId}
+module with dashboard only
+→ click the whole row to navigate to `/learning/{routeId}`
+→ hover shows the left-to-right sweep with a large `›››` cue
+
+module with both children and dashboard
+→ `+` / `−` is the click-action boundary
+→ click from the boundary toward the left = expand/collapse
+→ click from the boundary toward the right = navigate to `/learning/{routeId}`
+→ hovering anywhere on the row starts both directional animations at the same time
+→ the vertical up/down wave is clipped to the left interaction zone
+→ the horizontal left-to-right wave is clipped to the right interaction zone
+→ neither wave may spill across the `+` / `−` boundary
+
+interaction styling
+→ directional color/wave cues are hidden until hover/focus
+→ content-bearing/`Real modules` rows do not get a permanent special background merely for qualifying
+→ numeric Knowledge/Quiz/Interview/API badges communicate content availability
+→ only the active module keeps a persistent selected/highlight state
+
+whole sidebar
+→ labels should remain fully readable rather than ellipsized at normal desktop width
+→ the sidebar can collapse from a control centered vertically on its right edge
+→ when collapsed, main content expands and a centered `>` control on the left screen edge reopens it
 
 module filter self-match
 → preserve the matched node's full subtree
@@ -2136,12 +2159,12 @@ Preserve these unless the user explicitly changes the architecture:
 28. `project-portal` is a repository-level presentation application outside `module/`; it is not itself a learning topic even though Gradle can discover/configure it as a real project.
 29. Portal knowledge/navigation data should remain static/generated where possible; the existence of Spring Boot does not require every frontend read to become a REST call.
 30. React production assets are built by Vite and copied into Spring Boot `classpath:/static/` through Gradle `processResources`; Spring Boot serves them without a rendering controller.
-31. Current Portal client routing uses `HashRouter`; `#/...` routes belong to React, not Spring MVC.
+31. Current Portal client routing uses `BrowserRouter`; Spring MVC explicitly forwards only `/my-cv`, `/learning`, and `/learning/{moduleId}` to `/index.html` for SPA deep-link/refresh support, while static/generated assets and `/api/**` keep their own handlers.
 32. Module runtime capabilities remain optional from the Portal perspective: learning/documentation must not require a learning module to have its own Spring Boot Application.
 33. Portal hierarchy/routing must come from generated `module-catalog.json`, not from a hard-coded frontend tree or by parsing `module-structure.txt`.
 34. Portal sidebar `Real modules / Module thật` is a content-availability filter, not the repository's physical real-module identity rule: a MODULE qualifies when Knowledge OR Quiz OR Interview OR API Docs count is non-zero; only modules with all four counts equal to zero are removed, while required GROUP ancestors are preserved.
 35. Sidebar module search distinguishes self-match from descendant-match: self-match keeps the full subtree; descendant-match keeps only the ancestor path, and filtered trees remain collapsible.
-36. For a module row with children, row click is expand/collapse and the separate circular `>` action owns navigation; sidebar tree state currently starts expanded and also supports global expand/collapse controls.
+36. Sidebar interaction depends on node capability: child-only rows use the whole row for expand/collapse; dashboard-only modules use the whole row for navigation; hybrid module+children rows split click actions at the `+`/`−` boundary while whole-row hover activates both clipped directional cues. There is no per-module circular `>` navigation button. Tree state starts expanded and still supports global expand/collapse controls.
 37. Portal Menu and API Docs start collapsed by default, but tab switching must preserve the most recent in-memory expand/collapse state for the current module/language instead of remounting/resetting those panels.
 38. Knowledge supports multiple simultaneously expanded sections; opening one section must not implicitly close another. Loaded Markdown remains cached while the panel stays mounted.
 39. Portal API Docs are documentation-only in the current architecture: they render static Swagger metadata and guided `execution` content, not live execute/debug controls. Running/debugging requires downloading/running the module locally or using the module's own runtime tooling.
@@ -2250,7 +2273,7 @@ Project Portal
 → Spring Boot host on port 9098 + React/TypeScript/Vite frontend
 → Gradle buildFrontend → Vite dist → processResources → classpath:/static
 → browser executes React; Spring Boot serves the static bundle and owns the local-only `/api/local-run/*` adapter
-→ HashRouter owns `#/learning/...` navigation
+→ BrowserRouter owns clean `/my-cv` and `/learning/{routeId}` client navigation; explicit Spring MVC SPA forwards keep local deep-links/F5 on the same path
 → ProjectStructureService generates build-only `portal-data/module-catalog.json` for real hierarchy/routing
 → module-scoped generated data lives under `portal-data/module/{ROUTE_ID}/...`; current Overview, Knowledge, Quiz, Interview, and API metadata projections follow this layout
 → Vite `publicDir` points at `build/generated/portal-data`; `npm run dev` prepares generated data before starting Vite
@@ -2260,7 +2283,9 @@ Project Portal
 → Interview consumes localized generated `question.yml`, keeps reference answers collapsed until explicitly opened, and can resolve Related Knowledge/API panels
 → tabs are Overview → Menu → Knowledge → API Docs → Quiz → Interview → Local Run; frontend always calls relative `/api/local-run/*`; local resolves to Spring Boot, production resolves to Pages Functions, and both adapters call GitHub Actions + the rolling `local-run` GitHub Release
 → Local Run freshness uses module-scoped Git tree SHA projected as `sourceFingerprint`; release assets keep stable module filenames and store that fingerprint in the asset label
-→ sidebar supports module search plus Full tree/content-bearing `Real modules` pruning without flattening hierarchy; the tree defaults expanded and has `+`/`−` branch controls plus global expand/collapse
+→ sidebar supports module search plus Full tree/content-bearing `Real modules` pruning without flattening hierarchy; qualifying modules are identified by content-count badges rather than a permanent special background
+→ tree defaults expanded and has `+`/`−` branch controls plus global expand/collapse; dashboard-only rows navigate as a whole, child-only rows toggle as a whole, and hybrid rows split click behavior at `+`/`−` while whole-row hover shows both clipped directional sweep cues
+→ the whole sidebar can collapse/reopen from vertically centered edge controls; main content expands when the sidebar is hidden
 → Light/Dark theme follows OS initially and persists explicit user choice
 → generated learning data remains static/projection-first; the only current Portal server API dependency is the narrowly scoped Local Run `build/status/artifact` contract
 
