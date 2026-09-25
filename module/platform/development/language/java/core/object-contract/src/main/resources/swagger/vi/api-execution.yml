@@ -1,6 +1,6 @@
 EqualityController:
   identityVsEquality():
-    execution: <p><strong>Khái niệm:</strong> Object identity v&#224; logical equality.</p><ol><li>Endpoint
+    execution: <p><strong>Khái niệm:</strong> Object identity và logical equality.</p><ol><li>Endpoint
       chạy một ví dụ deterministic và bounded trong <code>EqualityController#identityVsEquality()</code>.</li><li>Source
       line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/identity-vs-equality&quot;)
       public Map&lt;String,Object&gt; identityVsEquality(){ Value a=new Value(7),
@@ -12,7 +12,7 @@ EqualityController:
     usage: true
 HashContractController:
   brokenHashSetLookup():
-    execution: <p><strong>Khái niệm:</strong> Hệ quả observable khi contract bị ph&#225;.</p><ol><li>Endpoint
+    execution: <p><strong>Khái niệm:</strong> Hệ quả observable khi contract bị phá.</p><ol><li>Endpoint
       chạy một ví dụ deterministic và bounded trong <code>HashContractController#brokenHashSetLookup()</code>.</li><li>Source
       line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/broken-contract&quot;)
       public Map&lt;String,Object&gt; brokenHashSetLookup(){ Set&lt;Broken&gt; set=new
@@ -50,7 +50,7 @@ OrderingController:
       khái quát behavior.</p>
     usage: true
   compareToEquals():
-    execution: <p><strong>Khái niệm:</strong> Consistency với equals v&#224; sorted
+    execution: <p><strong>Khái niệm:</strong> Consistency với equals và sorted
       collection.</p><ol><li>Endpoint chạy một ví dụ deterministic và bounded trong
       <code>OrderingController#compareToEquals()</code>.</li><li>Source line dưới
       đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/compareto-equals&quot;)

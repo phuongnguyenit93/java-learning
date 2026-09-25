@@ -1,30 +1,30 @@
 EncodingController:
   description: |-
-    <h2>E nc od in g</h2>
+    <h2>Encoding</h2>
     <p>Executable Java Core experiments related to Charset encode/decode.</p>
   readmeRelated:
     file: 8.Encoding/Encoding.md
 RegexController:
   description: |-
-    <h2>R eg ex</h2>
+    <h2>Regex</h2>
     <p>Executable Java Core experiments related to Groups and captures.</p>
   readmeRelated:
     file: 10.Regex/Regex.md
 StringConcatController:
   description: |-
-    <h2>S tr in gC on ca t</h2>
+    <h2>String Concatenation</h2>
     <p>Executable Java Core experiments related to Repeated concatenation cost.</p>
   readmeRelated:
     file: 4.Concatenation/Concatenation.md
 StringPoolController:
   description: |-
-    <h2>S tr in gP oo l</h2>
+    <h2>String Pool</h2>
     <p>Executable Java Core experiments related to Pool identity and compile-time constants.</p>
   readmeRelated:
     file: 2.StringPool/StringPool.md
 UnicodeController:
   description: |-
-    <h2>U ni co de</h2>
+    <h2>Unicode</h2>
     <p>Executable Java Core experiments related to Surrogate pairs.</p>
   readmeRelated:
     file: 9.UnicodeCodePoint/UnicodeCodePoint.md

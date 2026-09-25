@@ -25,7 +25,7 @@ EncodingController:
     usage: true
 RegexController:
   groups():
-    execution: <p><strong>Khái niệm:</strong> Group v&#224; capture.</p><ol><li>Endpoint
+    execution: <p><strong>Khái niệm:</strong> Group và capture.</p><ol><li>Endpoint
       chạy một ví dụ deterministic và bounded trong <code>RegexController#groups()</code>.</li><li>Source
       line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/groups&quot;)
       public Map&lt;String,Object&gt; groups(){ Matcher m=Pattern.compile(&quot;(?&lt;user&gt;[a-z]+)@(?&lt;domain&gt;[a-z.]+)&quot;).matcher(&quot;ada@example.com&quot;);
@@ -36,7 +36,7 @@ RegexController:
       khái quát behavior.</p>
     usage: true
   backtracking():
-    execution: <p><strong>Khái niệm:</strong> Backtracking v&#224; performance pitfall.</p><ol><li>Endpoint
+    execution: <p><strong>Khái niệm:</strong> Backtracking và performance pitfall.</p><ol><li>Endpoint
       chạy một ví dụ deterministic và bounded trong <code>RegexController#backtracking()</code>.</li><li>Source
       line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/backtracking&quot;)
       public Map&lt;String,Object&gt; backtracking(){ String input=&quot;a&quot;.repeat(18)+&quot;!&quot;;
@@ -65,7 +65,7 @@ StringConcatController:
     usage: true
 StringPoolController:
   identity():
-    execution: <p><strong>Khái niệm:</strong> Pool identity v&#224; compile-time constant.</p><ol><li>Endpoint
+    execution: <p><strong>Khái niệm:</strong> Pool identity và compile-time constant.</p><ol><li>Endpoint
       chạy một ví dụ deterministic và bounded trong <code>StringPoolController#identity()</code>.</li><li>Source
       line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/identity&quot;)
       public Map&lt;String,Object&gt; identity(){ String literalA=&quot;java&quot;,literalB=&quot;ja&quot;+&quot;va&quot;,runtime=new
@@ -88,7 +88,7 @@ UnicodeController:
       khái quát behavior.</p>
     usage: true
   normalization():
-    execution: <p><strong>Khái niệm:</strong> Canonical equivalence v&#224; String
+    execution: <p><strong>Khái niệm:</strong> Canonical equivalence và String
       equality.</p><ol><li>Endpoint chạy một ví dụ deterministic và bounded trong
       <code>UnicodeController#normalization()</code>.</li><li>Source line dưới đây
       là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/normalization&quot;)

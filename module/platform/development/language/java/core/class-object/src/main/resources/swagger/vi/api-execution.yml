@@ -1,6 +1,6 @@
 AliasingController:
   mutateAlias():
-    execution: <p><strong>Khái niệm:</strong> Nhiều reference c&#249;ng tới một mutable
+    execution: <p><strong>Khái niệm:</strong> Nhiều reference cùng tới một mutable
       object.</p><ol><li>Endpoint chạy một ví dụ deterministic và bounded trong <code>AliasingController#mutateAlias()</code>.</li><li>Source
       line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/mutation&quot;)
       public Map&lt;String,Object&gt; mutateAlias(){ List&lt;String&gt; first=new
@@ -39,7 +39,7 @@ CopyController:
     usage: true
 EnumController:
   enumBehavior():
-    execution: <p><strong>Khái niệm:</strong> Behavior ri&#234;ng theo constant.</p><ol><li>Endpoint
+    execution: <p><strong>Khái niệm:</strong> Behavior riêng theo constant.</p><ol><li>Endpoint
       chạy một ví dụ deterministic và bounded trong <code>EnumController#enumBehavior()</code>.</li><li>Source
       line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/behavior&quot;)
       public Map&lt;String,Object&gt; enumBehavior(){ return Map.of(&quot;standard&quot;,Tier.STANDARD.apply(1000),&quot;discount&quot;,Tier.DISCOUNT.apply(1000),&quot;identity&quot;,Tier.valueOf(&quot;DISCOUNT&quot;)==Tier.DISCOUNT,&quot;declarationOrder&quot;,Arrays.stream(Tier.values()).map(Enum::name).toList());

@@ -1,48 +1,48 @@
 ArrayController:
   description: |-
-    <h2>A rr ay</h2>
-    <p>C&#225;c th&#237; nghiệm Java Core c&#243; thể chạy để quan s&#225;t Array covariance v&#224; ArrayStoreException.</p>
+    <h2>Array</h2>
+    <p>Các thí nghiệm Java Core có thể chạy để quan sát Array covariance và ArrayStoreException.</p>
   readmeRelated:
     file: 10.Arrays/Arrays.md
 CastingController:
   description: |-
-    <h2>C as ti ng</h2>
-    <p>C&#225;c th&#237; nghiệm Java Core c&#243; thể chạy để quan s&#225;t Reference upcast v&#224; downcast.</p>
+    <h2>Casting</h2>
+    <p>Các thí nghiệm Java Core có thể chạy để quan sát Reference upcast và downcast.</p>
   readmeRelated:
     file: 5.Casting/Casting.md
 MethodDispatchController:
   description: |-
-    <h2>M et ho dD is pa tc h</h2>
-    <p>C&#225;c th&#237; nghiệm Java Core c&#243; thể chạy để quan s&#225;t Overload selection v&#224; override dispatch.</p>
+    <h2>Method Dispatch</h2>
+    <p>Các thí nghiệm Java Core có thể chạy để quan sát Overload selection và override dispatch.</p>
   readmeRelated:
     file: 13.TypeSystemMentalModel/TypeSystemMentalModel.md
 OperatorController:
   description: |-
-    <h2>O pe ra to r</h2>
-    <p>C&#225;c th&#237; nghiệm Java Core c&#243; thể chạy để quan s&#225;t Short-circuit boolean operator.</p>
+    <h2>Operator</h2>
+    <p>Các thí nghiệm Java Core có thể chạy để quan sát Short-circuit boolean operator.</p>
   readmeRelated:
     file: 4.Operators/Operators.md
 OverloadResolutionController:
   description: |-
-    <h2>O ve rl oa dR es ol ut io n</h2>
-    <p>C&#225;c th&#237; nghiệm Java Core c&#243; thể chạy để quan s&#225;t C&#225;c phase của overload resolution.</p>
+    <h2>Overload Resolution</h2>
+    <p>Các thí nghiệm Java Core có thể chạy để quan sát Các phase của overload resolution.</p>
   readmeRelated:
     file: 7.Methods/Methods.md
 PassByValueController:
   description: |-
-    <h2>P as sB yV al ue</h2>
-    <p>C&#225;c th&#237; nghiệm Java Core c&#243; thể chạy để quan s&#225;t Copy reference v&#224; mutation nh&#236;n thấy từ caller.</p>
+    <h2>Pass By Value</h2>
+    <p>Các thí nghiệm Java Core có thể chạy để quan sát Copy reference và mutation nhìn thấy từ caller.</p>
   readmeRelated:
     file: 9.PassByValue/PassByValue.md
 TypeSystemController:
   description: |-
-    <h2>T yp eS ys te m</h2>
-    <p>C&#225;c th&#237; nghiệm Java Core c&#243; thể chạy để quan s&#225;t Compile-time type v&#224; runtime type.</p>
+    <h2>Type System</h2>
+    <p>Các thí nghiệm Java Core có thể chạy để quan sát Compile-time type và runtime type.</p>
   readmeRelated:
     file: 13.TypeSystemMentalModel/TypeSystemMentalModel.md
 WrapperController:
   description: |-
-    <h2>W ra pp er</h2>
-    <p>C&#225;c th&#237; nghiệm Java Core c&#243; thể chạy để quan s&#225;t Wrapper cache v&#224; bẫy identity.</p>
+    <h2>Wrapper</h2>
+    <p>Các thí nghiệm Java Core có thể chạy để quan sát Wrapper cache và bẫy identity.</p>
   readmeRelated:
     file: 3.WrapperBoxing/WrapperBoxing.md

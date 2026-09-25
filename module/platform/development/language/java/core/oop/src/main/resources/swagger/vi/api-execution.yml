@@ -1,6 +1,6 @@
 CompositionController:
   strategySwap():
-    execution: <p><strong>Khái niệm:</strong> Trade-off composition v&#224; inheritance.</p><ol><li>Endpoint
+    execution: <p><strong>Khái niệm:</strong> Trade-off composition và inheritance.</p><ol><li>Endpoint
       chạy một ví dụ deterministic và bounded trong <code>CompositionController#strategySwap()</code>.</li><li>Source
       line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/strategy-swap&quot;)
       public Map&lt;String,Object&gt; strategySwap(){ return Map.of(&quot;regular&quot;,new
@@ -12,7 +12,7 @@ CompositionController:
     usage: true
 DispatchController:
   overloadVsOverride():
-    execution: <p><strong>Khái niệm:</strong> Overloading l&#224; compile-time selection.</p><ol><li>Endpoint
+    execution: <p><strong>Khái niệm:</strong> Overloading là compile-time selection.</p><ol><li>Endpoint
       chạy một ví dụ deterministic và bounded trong <code>DispatchController#overloadVsOverride()</code>.</li><li>Source
       line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/overload-vs-override&quot;)
       public Map&lt;String,Object&gt; overloadVsOverride(){ Parent x=new Child();
@@ -23,7 +23,7 @@ DispatchController:
       khái quát behavior.</p>
     usage: true
   dispatchVsHiding():
-    execution: <p><strong>Khái niệm:</strong> Instance dispatch kh&#225;c static/field
+    execution: <p><strong>Khái niệm:</strong> Instance dispatch khác static/field
       hiding.</p><ol><li>Endpoint chạy một ví dụ deterministic và bounded trong <code>DispatchController#dispatchVsHiding()</code>.</li><li>Source
       line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/dispatch-vs-hiding&quot;)
       public Map&lt;String,Object&gt; dispatchVsHiding(){ Parent x=new Child(); return
@@ -60,7 +60,7 @@ PolymorphismController:
     usage: true
 SubstitutabilityController:
   substituteImplementations():
-    execution: <p><strong>Khái niệm:</strong> Substitutability v&#224; behavioral
+    execution: <p><strong>Khái niệm:</strong> Substitutability và behavioral
       expectation.</p><ol><li>Endpoint chạy một ví dụ deterministic và bounded trong
       <code>SubstitutabilityController#substituteImplementations()</code>.</li><li>Source
       line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/implementations&quot;)

@@ -13,7 +13,7 @@ ExceptionDesignController:
     usage: true
 FinallyController:
   returnInteraction():
-    execution: <p><strong>Khái niệm:</strong> Tương t&#225;c return/throw với finally.</p><ol><li>Endpoint
+    execution: <p><strong>Khái niệm:</strong> Tương tác return/throw với finally.</p><ol><li>Endpoint
       chạy một ví dụ deterministic và bounded trong <code>FinallyController#returnInteraction()</code>.</li><li>Source
       line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/return-interaction&quot;)
       public Map&lt;String,Object&gt; returnInteraction(){ return Map.of(&quot;normalReturnWithFinally&quot;,safeReturn(),&quot;returnInsideFinally&quot;,dangerousReturn(),&quot;warning&quot;,&quot;a
@@ -24,7 +24,7 @@ FinallyController:
     usage: true
 PropagationController:
   propagate():
-    execution: <p><strong>Khái niệm:</strong> Stack unwinding v&#224; propagation.</p><ol><li>Endpoint
+    execution: <p><strong>Khái niệm:</strong> Stack unwinding và propagation.</p><ol><li>Endpoint
       chạy một ví dụ deterministic và bounded trong <code>PropagationController#propagate()</code>.</li><li>Source
       line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/stack&quot;)
       public Map&lt;String,Object&gt; propagate(){ try{levelOne();return Map.of();}catch(IllegalStateException
@@ -35,7 +35,7 @@ PropagationController:
       khái quát behavior.</p>
     usage: true
   wrapCause():
-    execution: <p><strong>Khái niệm:</strong> Wrap v&#224; preserve cause.</p><ol><li>Endpoint
+    execution: <p><strong>Khái niệm:</strong> Wrap và preserve cause.</p><ol><li>Endpoint
       chạy một ví dụ deterministic và bounded trong <code>PropagationController#wrapCause()</code>.</li><li>Source
       line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/wrap-cause&quot;)
       public Map&lt;String,Object&gt; wrapCause(){ try{load();return Map.of();}catch(OrderReadException
@@ -59,7 +59,7 @@ ResourceController:
       quả với README section được liên kết trước khi khái quát behavior.</p>
     usage: true
   suppressed():
-    execution: <p><strong>Khái niệm:</strong> Primary v&#224; suppressed exception.</p><ol><li>Endpoint
+    execution: <p><strong>Khái niệm:</strong> Primary và suppressed exception.</p><ol><li>Endpoint
       chạy một ví dụ deterministic và bounded trong <code>ResourceController#suppressed()</code>.</li><li>Source
       line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/suppressed&quot;)
       public Map&lt;String,Object&gt; suppressed(){ List&lt;String&gt; trace=new ArrayList&lt;&gt;();

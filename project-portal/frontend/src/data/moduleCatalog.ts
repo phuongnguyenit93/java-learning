@@ -13,6 +13,7 @@ const acronymLabels: Record<string, string> = {
   k8s: 'K8s',
   mq: 'MQ',
   nosql: 'NoSQL',
+  oop: 'OOP',
   rdbms: 'RDBMS',
   sse: 'SSE',
   sql: 'SQL',

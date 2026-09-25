@@ -1,6 +1,6 @@
 ArrayController:
   covarianceFailure():
-    execution: <p><strong>Khái niệm:</strong> Array covariance v&#224; ArrayStoreException.</p><ol><li>Endpoint
+    execution: <p><strong>Khái niệm:</strong> Array covariance và ArrayStoreException.</p><ol><li>Endpoint
       chạy một ví dụ deterministic và bounded trong <code>ArrayController#covarianceFailure()</code>.</li><li>Source
       line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>public
       Map&lt;String, Object&gt; covarianceFailure() {</code></pre></li><li>Quan sát
@@ -10,7 +10,7 @@ ArrayController:
     usage: true
 CastingController:
   safeAndUnsafeCast(String):
-    execution: <p><strong>Khái niệm:</strong> Reference upcast v&#224; downcast.</p><ol><li>Endpoint
+    execution: <p><strong>Khái niệm:</strong> Reference upcast và downcast.</p><ol><li>Endpoint
       chạy một ví dụ deterministic và bounded trong <code>CastingController#safeAndUnsafeCast(String)</code>.</li><li>Source
       line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>public
       Map&lt;String, Object&gt; safeAndUnsafeCast(@RequestParam(defaultValue = &quot;hello&quot;)
@@ -21,7 +21,7 @@ CastingController:
     usage: true
 MethodDispatchController:
   overloadVsOverride():
-    execution: <p><strong>Khái niệm:</strong> Overload selection v&#224; override
+    execution: <p><strong>Khái niệm:</strong> Overload selection và override
       dispatch.</p><ol><li>Endpoint chạy một ví dụ deterministic và bounded trong
       <code>MethodDispatchController#overloadVsOverride()</code>.</li><li>Source line
       dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>public
@@ -42,7 +42,7 @@ OperatorController:
     usage: true
 OverloadResolutionController:
   selectionMatrix():
-    execution: <p><strong>Khái niệm:</strong> C&#225;c phase của overload resolution.</p><ol><li>Endpoint
+    execution: <p><strong>Khái niệm:</strong> Các phase của overload resolution.</p><ol><li>Endpoint
       chạy một ví dụ deterministic và bounded trong <code>OverloadResolutionController#selectionMatrix()</code>.</li><li>Source
       line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>public
       Map&lt;String, Object&gt; selectionMatrix() {</code></pre></li><li>Quan sát
@@ -52,7 +52,7 @@ OverloadResolutionController:
     usage: true
 PassByValueController:
   mutateAndReassign():
-    execution: <p><strong>Khái niệm:</strong> Copy reference v&#224; mutation nh&#236;n
+    execution: <p><strong>Khái niệm:</strong> Copy reference và mutation nhìn
       thấy từ caller.</p><ol><li>Endpoint chạy một ví dụ deterministic và bounded
       trong <code>PassByValueController#mutateAndReassign()</code>.</li><li>Source
       line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>public
@@ -63,7 +63,7 @@ PassByValueController:
     usage: true
 TypeSystemController:
   inspectRuntimeType(Object):
-    execution: <p><strong>Khái niệm:</strong> Compile-time type v&#224; runtime type.</p><ol><li>Endpoint
+    execution: <p><strong>Khái niệm:</strong> Compile-time type và runtime type.</p><ol><li>Endpoint
       chạy một ví dụ deterministic và bounded trong <code>TypeSystemController#inspectRuntimeType(Object)</code>.</li><li>Source
       line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>public
       Map&lt;String, Object&gt; inspectRuntimeType(@RequestParam(defaultValue = &quot;sample&quot;)
@@ -74,7 +74,7 @@ TypeSystemController:
     usage: true
 WrapperController:
   wrapperIdentity():
-    execution: <p><strong>Khái niệm:</strong> Wrapper cache v&#224; bẫy identity.</p><ol><li>Endpoint
+    execution: <p><strong>Khái niệm:</strong> Wrapper cache và bẫy identity.</p><ol><li>Endpoint
       chạy một ví dụ deterministic và bounded trong <code>WrapperController#wrapperIdentity()</code>.</li><li>Source
       line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>public
       Map&lt;String, Object&gt; wrapperIdentity() {</code></pre></li><li>Quan sát

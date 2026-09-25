@@ -1,30 +1,30 @@
 EncodingController:
   description: |-
-    <h2>E nc od in g</h2>
-    <p>C&#225;c th&#237; nghiệm Java Core c&#243; thể chạy để quan s&#225;t Encode/decode bằng Charset.</p>
+    <h2>Encoding</h2>
+    <p>Các thí nghiệm Java Core có thể chạy để quan sát Encode/decode bằng Charset.</p>
   readmeRelated:
     file: 8.Encoding/Encoding.md
 RegexController:
   description: |-
-    <h2>R eg ex</h2>
-    <p>C&#225;c th&#237; nghiệm Java Core c&#243; thể chạy để quan s&#225;t Group v&#224; capture.</p>
+    <h2>Regex</h2>
+    <p>Các thí nghiệm Java Core có thể chạy để quan sát Group và capture.</p>
   readmeRelated:
     file: 10.Regex/Regex.md
 StringConcatController:
   description: |-
-    <h2>S tr in gC on ca t</h2>
-    <p>C&#225;c th&#237; nghiệm Java Core c&#243; thể chạy để quan s&#225;t Cost của repeated concatenation.</p>
+    <h2>String Concatenation</h2>
+    <p>Các thí nghiệm Java Core có thể chạy để quan sát Cost của repeated concatenation.</p>
   readmeRelated:
     file: 4.Concatenation/Concatenation.md
 StringPoolController:
   description: |-
-    <h2>S tr in gP oo l</h2>
-    <p>C&#225;c th&#237; nghiệm Java Core c&#243; thể chạy để quan s&#225;t Pool identity v&#224; compile-time constant.</p>
+    <h2>String Pool</h2>
+    <p>Các thí nghiệm Java Core có thể chạy để quan sát Pool identity và compile-time constant.</p>
   readmeRelated:
     file: 2.StringPool/StringPool.md
 UnicodeController:
   description: |-
-    <h2>U ni co de</h2>
-    <p>C&#225;c th&#237; nghiệm Java Core c&#243; thể chạy để quan s&#225;t Surrogate pair.</p>
+    <h2>Unicode</h2>
+    <p>Các thí nghiệm Java Core có thể chạy để quan sát Surrogate pair.</p>
   readmeRelated:
     file: 9.UnicodeCodePoint/UnicodeCodePoint.md

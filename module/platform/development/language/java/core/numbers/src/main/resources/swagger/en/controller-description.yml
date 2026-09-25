@@ -1,24 +1,24 @@
 BigDecimalController:
   description: |-
-    <h2>B ig De ci ma l</h2>
+    <h2>BigDecimal</h2>
     <p>Executable Java Core experiments related to String/valueOf/double construction.</p>
   readmeRelated:
     file: 5.BigDecimal/BigDecimal.md
 FloatingPointController:
   description: |-
-    <h2>F lo at in gP oi nt</h2>
+    <h2>Floating Point</h2>
     <p>Executable Java Core experiments related to Precision and rounding error.</p>
   readmeRelated:
     file: 3.FloatingPoint/FloatingPoint.md
 IntegerArithmeticController:
   description: |-
-    <h2>I nt eg er Ar it hm et ic</h2>
+    <h2>Integer Arithmetic</h2>
     <p>Executable Java Core experiments related to Integer overflow and wraparound.</p>
   readmeRelated:
     file: 2.IntegerOverflow/IntegerOverflow.md
 RandomController:
   description: |-
-    <h2>R an do m</h2>
+    <h2>Random</h2>
     <p>Executable Java Core experiments related to Pseudo-random model and seed.</p>
   readmeRelated:
     file: 10.Random/Random.md
