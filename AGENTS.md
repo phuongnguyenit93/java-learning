@@ -443,6 +443,24 @@ Do not infer module identity from folder name, `IS_MODULE`, or Gradle hierarchy 
 
 `IS_MODULE` is legacy and must not be reintroduced as the real-module discriminator.
 
+Physical real-module identity and learning-topic granularity are separate concerns. The local `gradle.properties` rule answers **whether a directory is a real module**; it does not imply that every small concept should be modeled as its own real learning module.
+
+When designing learning modules, prefer one coherent learning domain with enough conceptual depth to support a meaningful curriculum. Smaller concepts such as one keyword, one language rule, one operator, or one narrow behavior should normally become README chapters/Knowledge sections inside a broader module rather than independent modules. Do not split modules merely to increase module count.
+
+Learning-content completeness is not measured by topic/H2/API/Quiz counts alone. A mature module must also have a coherent pedagogical path: an entry mental model/roadmap that explains what the domain is and introduces its major terminology, concept chapters that explain the problem/motivation and relationship to the module before deep rules, and then technical depth/code/runtime behavior. In short, author learning content as `WHAT → WHY → RELATION → HOW → EVIDENCE → PRACTICE`, not as an encyclopedia of isolated definitions.
+
+The first chapter or equivalent entry chapter of a nontrivial learning module must orient a beginner: what the topic is, why it exists, which major terms will appear, how those terms relate, and what order the learner should follow. It need not be named `MentalModel`, but it must serve that role. Coverage correctness does not substitute for this pedagogical coherence.
+
+API availability is not a prerequisite for learning-module completeness. A conceptual/library-oriented module may be complete with Knowledge, Quiz and Interview only. Do not force a module into `SERVLET`/`REACTIVE` or create artificial endpoints solely so it can have API Docs. When a `SERVLET`/`REACTIVE` module does contain meaningful learning APIs, those APIs should represent real experiments for Knowledge concepts and follow the Swagger ↔ README relationship contract below.
+
+Detailed AI authoring workflow and granularity guidance lives in `MODULE_LEARNING_AGENTS.md`.
+
+For learning-content tasks, treat the three-layer pedagogical model in `MODULE_LEARNING_AGENTS.md` as an authoring requirement, not optional style guidance. A successful build/projection or high relation/assessment coverage does not prove that the learning path is complete.
+
+When bootstrapping a new learning module, prefer the actual settings/module lifecycle: create the local `gradle.properties` marker, let settings synchronization create/synchronize `master.json` and `properties.json`, set module-owned `VALUE` fields, enable `BUILD_README`, then let `ReadmeSetupPlugin` initialize the README language/support structure. Do not manually create generated registries/structure outputs that already have a generator.
+
+Current bootstrap caveat: `SettingInfoGeneratorService` falls back from blank `SERVICE_NAME` to the directory name and validates that result as an enum constant. A new directory name containing `-` is therefore invalid during the first sync while `SERVICE_NAME` is blank. For such a brand-new module, bootstrap once with an enum-safe temporary directory name, set the stable valid `SERVICE_NAME`, then rename to the intended hyphenated directory and rerun Gradle. This is an implementation constraint, not a taxonomy rule.
+
 ---
 
 ## 9. Module types
@@ -572,6 +590,8 @@ The Markdown under `readme/{lang}/menu/**/*.md` remains the content/source-of-tr
 Allowed `difficulty` values are `BASIC`, `INTERMEDIATE`, and `ADVANCED`. Missing fields default to `BASIC`, `true`, and `false` respectively. Existing human-owned values must be preserved. Stale file/topic metadata is removed when the explicit `syncMetadataReadme` task rebuilds the metadata skeleton from current Markdown. This synchronization task is intentionally manual/explicit; ordinary Gradle configuration, IDE sync, or Portal browsing must not silently write source metadata.
 
 `syncMetadataReadme` follows `MODULE_LANGUAGE`, only scans real learning modules under `module/` with local `gradle.properties`, and only creates metadata for languages that actually contain README menu Markdown. The canonical Knowledge section identity is an exact heading of the form `## <a id="...">Title</a>`; duplicate section ids within one module/language are invalid.
+
+A chapter file containing only an H1 is a valid curriculum scaffold but does not yet define a Knowledge section. Do not run `syncMetadataReadme` just to materialize metadata for H1-only chapter outlines; add real anchored H2 sections first, then synchronize Knowledge governance.
 
 Quiz follows the same build/orchestration boundary. `BUILD_QUIZ=TRUE` is declared in canonical `automation/master.json`; `project-orchestration` only decides whether to apply `QUIZ_SETUP_PLUGIN`; the actual structure generation lives in `project-build/gradle-runtime`. Active `MODULE_LANGUAGE` values receive `src/main/resources/quiz/{lang}/question.yml`. The generated comment block between `# <quiz-schema>` and `# </quiz-schema>` is derived from canonical `gradle-runtime/src/main/resources/quiz/question-schema.yml` and may be refreshed when the schema changes; the `questions:` content below it is human-owned and must not be overwritten.
 

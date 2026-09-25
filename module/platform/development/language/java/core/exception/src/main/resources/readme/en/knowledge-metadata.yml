@@ -1,0 +1,145 @@
+1.Throwable/Throwable.md:
+  throwable-hierarchy:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  error-vs-exception:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  stack-trace-cause:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+2.CheckedUnchecked/CheckedUnchecked.md:
+  checked-exception:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  unchecked-exception:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  checked-vs-unchecked-design:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+3.ThrowThrows/ThrowThrows.md:
+  throw-statement:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  throws-clause:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  precise-rethrow:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  override-throws-rules:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  checked-exception-narrowing:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+4.Propagation/Propagation.md:
+  exception-propagation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  catch-selection:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  exception-chaining:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  lost-cause-pitfall:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+5.TryCatchFinally/TryCatchFinally.md:
+  try-catch-flow:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  finally-semantics:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  return-finally:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  multi-catch:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+6.TryWithResources/TryWithResources.md:
+  autocloseable:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  resource-close-order:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  effective-final-resource:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  twr-vs-finally:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+7.SuppressedException/SuppressedException.md:
+  primary-vs-suppressed:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  get-suppressed:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  close-failure:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+8.CustomException/CustomException.md:
+  custom-exception-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  exception-context:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  exception-hierarchy-design:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+9.ExceptionDesign/ExceptionDesign.md:
+  exception-boundaries:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  do-not-swallow:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  logging-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  exception-as-control-flow:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  cleanup-and-recovery:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false

@@ -1,0 +1,85 @@
+# <interview-schema>
+# Cấu trúc câu hỏi Interview
+# schema-version: 2
+#
+# questions [kiểu: list; bắt buộc; mặc định: []]
+#   Danh sách câu hỏi Interview của module trong language hiện tại.
+#   mỗi phần tử:
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi phỏng vấn hiển thị cho người học.
+#     answer [kiểu: string; bắt buộc; mặc định: ""]
+#       Câu trả lời tham khảo, chỉ hiển thị khi người học chủ động mở.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu nội dung được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu nội dung đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+# </interview-schema>
+
+questions:
+  - question: "Giải thích quan hệ giữa class, object, reference, identity và state."
+    answer: "Class định nghĩa type và implementation. Object là runtime instance có identity và instance state. Variable giữ reference value nhận diện object. Nhiều reference có thể cùng tới một object, còn hai object distinct có thể có state equal."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.ClassObject/ClassObject.md", anchor: "class-object-model"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Constructor nên guarantee gì trước khi object được publish?"
+    answer: "Nó nên establish invariant cần thiết và initialize owned state. Publish this hay register callback quá sớm có thể expose partially initialized object, nên construction thường phải hoàn tất trước khi external code quan sát."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.Constructor/Constructor.md", anchor: "constructor-purpose"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Mô tả order instance initialization qua superclass và subclass."
+    answer: "Field bắt đầu bằng default value. Superclass construction hoàn tất trước. Ở từng class level, instance field initializer và instance initializer block chạy theo textual order trước constructor body. Điều này giải thích constructor-dispatch hazard."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.InitializationOrder/InitializationOrder.md", anchor: "inheritance-initialization-order"}
+    apiRelated: {controller: "InitializationController", methodSignature: "traceOrder()"}
+
+  - question: "Vì sao protected access subtle hơn private/package-private/public khi xuyên package?"
+    answer: "Subclass ngoài package chỉ có protected access theo subclass-context và qualifying-expression rule; nó không thể tùy ý access protected member qua mọi superclass instance. Same-package access là phần semantics khác."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.AccessModifier/AccessModifier.md", anchor: "protected-cross-package"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Vì sao enum không chỉ là nhóm integer constant?"
+    answer: "Mỗi enum constant là instance của special class. Enum có field, constructor, method, interface và constant-specific behavior trong khi vẫn giữ finite named instance set và identity semantics."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "11.Enum/Enum.md", anchor: "enum-type-model"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Deep copy nên có nghĩa gì trong domain model thực tế?"
+    answer: "Nó nên duplicate mutable reachable state mà object mới phải own độc lập. Immutable value có thể share, cycle cần xử lý và external resource có thể không copy được. Depth là ownership contract chứ không phải universal recursive rule."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "12.CopySemantics/CopySemantics.md", anchor: "deep-copy"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Aliasing và mutability kết hợp tạo hidden coupling thế nào?"
+    answer: "Nếu nhiều reference cùng tới một mutable object, component này có thể thay state mà component khác nhìn thấy mà không có explicit data transfer. Ownership rule, encapsulation, immutability và defensive copy giảm coupling đó."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "13.ObjectAliasingMutability/ObjectAliasingMutability.md", anchor: "aliasing-model"}
+    apiRelated: {controller: "AliasingController", methodSignature: "mutateAlias()"}
+
+  - question: "Vì sao final field không đủ guarantee deep immutability?"
+    answer: "final chỉ ngăn reassign field reference, còn referenced object vẫn có thể mutate qua reference này hoặc alias khác. Deep immutability cần reachable state liên quan immutable hoặc exclusive-owned và không mutate sau construction."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "14.ImmutabilityDefensiveCopy/ImmutabilityDefensiveCopy.md", anchor: "deep-immutability"}
+    apiRelated: {controller: "", methodSignature: ""}

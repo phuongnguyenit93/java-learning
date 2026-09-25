@@ -1,0 +1,59 @@
+AbstractClassController:
+  templateBehavior():
+    execution: <p><strong>Khái niệm:</strong> Abstract class như partial implementation
+      + state.</p><ol><li>Endpoint chạy một ví dụ deterministic và bounded trong <code>AbstractClassController#templateBehavior()</code>.</li><li>Source
+      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/template&quot;)
+      public Map&lt;String,Object&gt; templateBehavior(){ Processor p=new UpperProcessor();
+      return Map.of(&quot;declaredType&quot;,&quot;Processor&quot;,&quot;runtimeType&quot;,p.getClass().getSimpleName(),&quot;result&quot;,p.process(&quot;java&quot;));
+      }</code></pre></li><li>Quan sát các field trong response cùng nhau; đây là evidence
+      cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
+      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
+      khái quát behavior.</p>
+    usage: true
+DefaultMethodController:
+  dispatch():
+    execution: <p><strong>Khái niệm:</strong> Default method.</p><ol><li>Endpoint
+      chạy một ví dụ deterministic và bounded trong <code>DefaultMethodController#dispatch()</code>.</li><li>Source
+      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/dispatch&quot;)
+      public Map&lt;String,Object&gt; dispatch(){ Greeting g=new DefaultGreeting();
+      return Map.of(&quot;result&quot;,g.greet(),&quot;runtime&quot;,g.getClass().getSimpleName());
+      }</code></pre></li><li>Quan sát các field trong response cùng nhau; đây là evidence
+      cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
+      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
+      khái quát behavior.</p>
+    usage: true
+  resolveConflict():
+    execution: <p><strong>Khái niệm:</strong> Resolve default-method conflict.</p><ol><li>Endpoint
+      chạy một ví dụ deterministic và bounded trong <code>DefaultMethodController#resolveConflict()</code>.</li><li>Source
+      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/resolve-conflict&quot;)
+      public Map&lt;String,Object&gt; resolveConflict(){ return Map.of(&quot;resolved&quot;,new
+      Both().value(),&quot;rule&quot;,&quot;class must explicitly resolve unrelated
+      default conflict&quot;); }</code></pre></li><li>Quan sát các field trong response
+      cùng nhau; đây là evidence cho quy tắc, không phải benchmark hay production
+      policy.</li></ol><p><strong>Kết luận:</strong> đối chiếu kết quả với README
+      section được liên kết trước khi khái quát behavior.</p>
+    usage: true
+InterfaceController:
+  multipleContracts():
+    execution: <p><strong>Khái niệm:</strong> Implement nhiều contract.</p><ol><li>Endpoint
+      chạy một ví dụ deterministic và bounded trong <code>InterfaceController#multipleContracts()</code>.</li><li>Source
+      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/multiple-contracts&quot;)
+      public Map&lt;String,Object&gt; multipleContracts(){ Feature f=new Feature();
+      Named n=f; Enabled e=f; return Map.of(&quot;sameObject&quot;,n==e,&quot;name&quot;,n.name(),&quot;enabled&quot;,e.enabled(),&quot;runtimeType&quot;,f.getClass().getSimpleName());
+      }</code></pre></li><li>Quan sát các field trong response cùng nhau; đây là evidence
+      cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
+      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
+      khái quát behavior.</p>
+    usage: true
+InterfaceEvolutionController:
+  defaultCompatibility():
+    execution: <p><strong>Khái niệm:</strong> Interface evolution compatibility.</p><ol><li>Endpoint
+      chạy một ví dụ deterministic và bounded trong <code>InterfaceEvolutionController#defaultCompatibility()</code>.</li><li>Source
+      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/default-compatibility&quot;)
+      public Map&lt;String,Object&gt; defaultCompatibility(){ Versioned v=new OldStyleImplementation();
+      return Map.of(&quot;implementationOnlyDefines&quot;,&quot;id()&quot;,&quot;newDefaultMethodResult&quot;,v.display(),&quot;runtimeType&quot;,v.getClass().getSimpleName());
+      }</code></pre></li><li>Quan sát các field trong response cùng nhau; đây là evidence
+      cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
+      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
+      khái quát behavior.</p>
+    usage: true

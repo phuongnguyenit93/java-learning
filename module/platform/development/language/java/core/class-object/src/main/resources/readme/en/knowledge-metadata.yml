@@ -1,0 +1,210 @@
+1.ClassObject/ClassObject.md:
+  class-object-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  fields-methods-state:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  object-reference-lifecycle:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+2.Constructor/Constructor.md:
+  constructor-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  constructor-overloading:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  default-constructor:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  constructor-exceptions:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+3.ThisSuper/ThisSuper.md:
+  this-reference:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  super-access:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  constructor-chaining-order:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+4.AccessModifier/AccessModifier.md:
+  access-levels:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  protected-cross-package:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  encapsulation-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+5.StaticFinal/StaticFinal.md:
+  static-vs-instance:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  final-variable-reference:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  static-initialization:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  constants-design:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+6.InitializationBlocks/InitializationBlocks.md:
+  static-initializer:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  instance-initializer:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  initializer-use-cases:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+7.InitializationOrder/InitializationOrder.md:
+  class-initialization-order:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  instance-initialization-order:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  inheritance-initialization-order:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+8.ObjectCreationLifecycle/ObjectCreationLifecycle.md:
+  allocation-initialization-construction:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  constructor-dynamic-dispatch-risk:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  this-escape:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+9.NestedInnerClass/NestedInnerClass.md:
+  static-nested-class:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  inner-class:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  local-anonymous-class:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  capture-semantics:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+10.ObjectClass/ObjectClass.md:
+  object-root-type:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  object-core-methods:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  clone-finalize-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+11.Enum/Enum.md:
+  enum-type-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  enum-fields-constructors:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  enum-interface:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  enum-constant-specific:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  enum-values-valueof:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+12.CopySemantics/CopySemantics.md:
+  reference-copy:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  shallow-copy:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  deep-copy:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  copy-strategies:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+13.ObjectAliasingMutability/ObjectAliasingMutability.md:
+  aliasing-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  shared-mutable-state:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  aliasing-in-collections:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+14.ImmutabilityDefensiveCopy/ImmutabilityDefensiveCopy.md:
+  immutable-object-design:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  defensive-copy-input:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  defensive-copy-output:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  deep-immutability:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false

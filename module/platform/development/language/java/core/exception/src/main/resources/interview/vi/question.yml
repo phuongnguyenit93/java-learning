@@ -1,0 +1,85 @@
+# <interview-schema>
+# Cấu trúc câu hỏi Interview
+# schema-version: 2
+#
+# questions [kiểu: list; bắt buộc; mặc định: []]
+#   Danh sách câu hỏi Interview của module trong language hiện tại.
+#   mỗi phần tử:
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi phỏng vấn hiển thị cho người học.
+#     answer [kiểu: string; bắt buộc; mặc định: ""]
+#       Câu trả lời tham khảo, chỉ hiển thị khi người học chủ động mở.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu nội dung được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu nội dung đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+# </interview-schema>
+
+questions:
+  - question: "Bạn quyết định dùng checked hay unchecked exception trong API như thế nào?"
+    answer: "Quyết định theo caller contract thay vì rule tuyệt đối. Checked exception có thể buộc xử lý explicit cho condition dự kiến recover được; unchecked exception phù hợp programming error hoặc failure caller không thể hợp lý recover cục bộ. Giữ abstraction ổn định và document recovery expectation."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.CheckedUnchecked/CheckedUnchecked.md", anchor: "checked-vs-unchecked-design"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Giải thích rule của checked exception khi overriding method và vì sao Java áp rule đó."
+    answer: "Overriding method có thể giữ, narrow hoặc bỏ checked exception đã declare ở parent method, nhưng không được broaden. Code compile theo parent contract không thể bất ngờ phải handle checked exception rộng hơn khi subtype được thay thế."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.ThrowThrows/ThrowThrows.md", anchor: "override-throws-rules"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Mô tả exception propagation và stack unwinding từ throw site tới handler."
+    answer: "Throw làm current path complete đột ngột. Runtime tìm ra ngoài qua call frame để gặp compatible catch đầu tiên. Các frame ở giữa unwind và chạy cleanup/finally/TWR cần thiết. Nếu không có handler, exception kết thúc thread."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.Propagation/Propagation.md", anchor: "exception-propagation"}
+    apiRelated: {controller: "PropagationController", methodSignature: "propagate()"}
+
+  - question: "Vì sao exception chaining quan trọng khi translate failure qua các layer?"
+    answer: "Outer exception có thể dùng vocabulary của higher abstraction trong khi cause giữ technical failure, stack trace và diagnostic chain gốc. Nếu mất cause, debugging thường mất event khởi đầu failure."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.Propagation/Propagation.md", anchor: "exception-chaining"}
+    apiRelated: {controller: "PropagationController", methodSignature: "wrapCause()"}
+
+  - question: "Control-flow hazard của return hoặc throw bên trong finally là gì?"
+    answer: "finally chạy khi normal return hoặc exception có thể đang pending. Nếu finally tự return/throw, abrupt completion đó có thể thay return/exception trước, làm mất result hoặc failure. Cleanup thường không nên thay primary outcome."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.TryCatchFinally/TryCatchFinally.md", anchor: "return-finally"}
+    apiRelated: {controller: "FinallyController", methodSignature: "returnInteraction()"}
+
+  - question: "Try-with-resources giữ cả body failure và close failure như thế nào?"
+    answer: "Exception từ try body vẫn là primary. Exception phát sinh khi close resource được attach qua addSuppressed và xem bằng getSuppressed. Resource được close theo thứ tự ngược declaration."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.SuppressedException/SuppressedException.md", anchor: "primary-vs-suppressed"}
+    apiRelated: {controller: "ResourceController", methodSignature: "suppressed()"}
+
+  - question: "Translate exception tại abstraction boundary nghĩa là gì?"
+    answer: "Một layer catch implementation-specific failure rồi throw exception có ý nghĩa với caller của layer đó, đồng thời giữ cause và context hữu ích. Translation nên xảy ra nơi vocabulary/contract thay đổi, không phải máy móc ở mọi method."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.ExceptionDesign/ExceptionDesign.md", anchor: "exception-boundaries"}
+    apiRelated: {controller: "ExceptionDesignController", methodSignature: "translateBoundary()"}
+
+  - question: "Vì sao log cùng exception ở mọi layer là vấn đề và thường nên log ở đâu?"
+    answer: "Log lặp tạo duplicate stack trace mà không thêm meaning và làm rối event flow. Lower layer nên thêm context hoặc translate khi cần; log ở boundary sở hữu failure outcome, trừ khi lower layer có unique evidence cần record đúng một lần."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.ExceptionDesign/ExceptionDesign.md", anchor: "logging-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}

@@ -1,0 +1,193 @@
+BigDecimalController:
+  construction():
+    summary: String/valueOf/double construction
+    description: Runs a deterministic learning experiment for String/valueOf/double
+      construction. The response exposes concrete runtime evidence instead of only
+      describing the rule.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 5.BigDecimal/BigDecimal.md
+      anchor: big-decimal-construction
+    methodName: construction
+    params: [
+      ]
+    path: com/example/learning/controller/BigDecimalController.java
+    mapping: '@GetMapping("/construction")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/numbers/big-decimal/construction
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  comparison():
+    summary: BigDecimal equals includes scale
+    description: Runs a deterministic learning experiment for BigDecimal equals includes
+      scale. The response exposes concrete runtime evidence instead of only describing
+      the rule.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 8.BigDecimalComparison/BigDecimalComparison.md
+      anchor: big-decimal-equals
+    methodName: comparison
+    params: [
+      ]
+    path: com/example/learning/controller/BigDecimalController.java
+    mapping: '@GetMapping("/comparison")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/numbers/big-decimal/comparison
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  divisionAndRounding():
+    summary: RoundingMode semantics
+    description: Runs a deterministic learning experiment for RoundingMode semantics.
+      The response exposes concrete runtime evidence instead of only describing the
+      rule.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 7.Rounding/Rounding.md
+      anchor: rounding-modes
+    methodName: divisionAndRounding
+    params: [
+      ]
+    path: com/example/learning/controller/BigDecimalController.java
+    mapping: '@GetMapping("/division-rounding")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/numbers/big-decimal/division-rounding
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+FloatingPointController:
+  precision():
+    summary: Precision and rounding error
+    description: Runs a deterministic learning experiment for Precision and rounding
+      error. The response exposes concrete runtime evidence instead of only describing
+      the rule.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 3.FloatingPoint/FloatingPoint.md
+      anchor: precision-rounding-error
+    methodName: precision
+    params: [
+      ]
+    path: com/example/learning/controller/FloatingPointController.java
+    mapping: '@GetMapping("/precision")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/numbers/floating/precision
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  specialValues():
+    summary: NaN, infinity and negative zero
+    description: Runs a deterministic learning experiment for NaN, infinity and negative
+      zero. The response exposes concrete runtime evidence instead of only describing
+      the rule.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 3.FloatingPoint/FloatingPoint.md
+      anchor: nan-infinity-negative-zero
+    methodName: specialValues
+    params: [
+      ]
+    path: com/example/learning/controller/FloatingPointController.java
+    mapping: '@GetMapping("/special-values")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/numbers/floating/special-values
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+IntegerArithmeticController:
+  overflow():
+    summary: Integer overflow and wraparound
+    description: Runs a deterministic learning experiment for Integer overflow and
+      wraparound. The response exposes concrete runtime evidence instead of only describing
+      the rule.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 2.IntegerOverflow/IntegerOverflow.md
+      anchor: integer-overflow-wraparound
+    methodName: overflow
+    params: [
+      ]
+    path: com/example/learning/controller/IntegerArithmeticController.java
+    mapping: '@GetMapping("/overflow")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/numbers/integer/overflow
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+RandomController:
+  seededSequence():
+    summary: Pseudo-random model and seed
+    description: Runs a deterministic learning experiment for Pseudo-random model
+      and seed. The response exposes concrete runtime evidence instead of only describing
+      the rule.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 10.Random/Random.md
+      anchor: pseudo-random-model
+    methodName: seededSequence
+    params: [
+      ]
+    path: com/example/learning/controller/RandomController.java
+    mapping: '@GetMapping("/seeded-sequence")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/numbers/random/seeded-sequence
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

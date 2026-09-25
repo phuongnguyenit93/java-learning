@@ -3,15 +3,6 @@ package com.example.learning.generated.settings
 
 enum ModuleListEnum {
 
-    ABSTRACT_INTERFACE(
-            'module:platform:development:language:java:core:abstract-interface',
-            'module/platform/development/language/java/core/abstract-interface',
-            '',
-            '',
-            false,
-            []
-    ),
-
     ADMIN_SERVER(
             'module:microservice:module:infrastructure:admin-server',
             'module/microservice/module/infrastructure/admin-server',
@@ -246,11 +237,209 @@ enum ModuleListEnum {
             ['SPRING_JPA', 'GLOBAL_EXCEPTION_HANDLER', 'EUREKA_CLIENT']
     ),
 
+    JAVA_ABSTRACT_INTERFACE(
+            'module:platform:development:language:java:core:abstract-interface',
+            'module/platform/development/language/java/core/abstract-interface',
+            'SERVLET',
+            'Java abstract class and interface',
+            false,
+            []
+    ),
+
+    JAVA_ANNOTATION(
+            'module:platform:development:language:java:core:annotation',
+            'module/platform/development/language/java/core/annotation',
+            'LIBRARY',
+            'Java annotations',
+            false,
+            []
+    ),
+
+    JAVA_CLASSLOADER(
+            'module:platform:development:language:java:core:classloader',
+            'module/platform/development/language/java/core/classloader',
+            'LIBRARY',
+            'Java class loading',
+            false,
+            []
+    ),
+
+    JAVA_CLASS_OBJECT(
+            'module:platform:development:language:java:core:class-object',
+            'module/platform/development/language/java/core/class-object',
+            'SERVLET',
+            'Java class and object model',
+            false,
+            []
+    ),
+
+    JAVA_COLLECTION(
+            'module:platform:development:language:java:core:collection',
+            'module/platform/development/language/java/core/collection',
+            'LIBRARY',
+            'Java collections framework',
+            false,
+            []
+    ),
+
+    JAVA_DATE_TIME(
+            'module:platform:development:language:java:core:date-time',
+            'module/platform/development/language/java/core/date-time',
+            'LIBRARY',
+            'Java date and time API',
+            false,
+            []
+    ),
+
+    JAVA_EXCEPTION(
+            'module:platform:development:language:java:core:exception',
+            'module/platform/development/language/java/core/exception',
+            'SERVLET',
+            'Java exception handling',
+            false,
+            []
+    ),
+
+    JAVA_FUNCTIONAL_PROGRAMMING(
+            'module:platform:development:paradigm:functional',
+            'module/platform/development/paradigm/functional',
+            'LIBRARY',
+            'Java functional programming',
+            false,
+            []
+    ),
+
+    JAVA_GENERICS(
+            'module:platform:development:language:java:core:generics',
+            'module/platform/development/language/java/core/generics',
+            'LIBRARY',
+            'Java generics',
+            false,
+            []
+    ),
+
+    JAVA_IO(
+            'module:platform:development:language:java:core:io',
+            'module/platform/development/language/java/core/io',
+            'LIBRARY',
+            'Java I/O and NIO',
+            false,
+            []
+    ),
+
+    JAVA_JVM(
+            'module:platform:development:language:java:advance:jvm',
+            'module/platform/development/language/java/advance/jvm',
+            'LIBRARY',
+            'Java Virtual Machine internals',
+            false,
+            []
+    ),
+
+    JAVA_LANGUAGE_BASICS(
+            'module:platform:development:language:java:core:language-basics',
+            'module/platform/development/language/java/core/language-basics',
+            'SERVLET',
+            'Java language basics',
+            false,
+            []
+    ),
+
+    JAVA_LOCALIZATION(
+            'module:platform:development:language:java:core:localization',
+            'module/platform/development/language/java/core/localization',
+            'LIBRARY',
+            'Java localization and internationalization',
+            false,
+            []
+    ),
+
+    JAVA_MODULE_SYSTEM(
+            'module:platform:development:language:java:version:java9:module-system',
+            'module/platform/development/language/java/version/java9/module-system',
+            'LIBRARY',
+            'Java Platform Module System',
+            false,
+            []
+    ),
+
+    JAVA_NETWORKING(
+            'module:platform:development:language:java:advance:networking',
+            'module/platform/development/language/java/advance/networking',
+            'LIBRARY',
+            'Java networking APIs',
+            false,
+            []
+    ),
+
+    JAVA_NUMBERS(
+            'module:platform:development:language:java:core:numbers',
+            'module/platform/development/language/java/core/numbers',
+            'SERVLET',
+            'Java numeric types and arithmetic',
+            false,
+            []
+    ),
+
+    JAVA_OBJECT_CONTRACT(
+            'module:platform:development:language:java:core:object-contract',
+            'module/platform/development/language/java/core/object-contract',
+            'SERVLET',
+            'Java object contracts',
+            false,
+            []
+    ),
+
+    JAVA_OOP(
+            'module:platform:development:language:java:core:oop',
+            'module/platform/development/language/java/core/oop',
+            'SERVLET',
+            'Java object-oriented programming',
+            false,
+            []
+    ),
+
     JAVA_RECORD(
             'module:platform:development:language:java:version:java16:record',
             'module/platform/development/language/java/version/java16/record',
             '',
             '',
+            false,
+            []
+    ),
+
+    JAVA_REFLECTION(
+            'module:platform:development:language:java:core:reflection',
+            'module/platform/development/language/java/core/reflection',
+            'LIBRARY',
+            'Java reflection',
+            false,
+            []
+    ),
+
+    JAVA_SECURITY_CRYPTOGRAPHY(
+            'module:platform:development:language:java:advance:security-cryptography',
+            'module/platform/development/language/java/advance/security-cryptography',
+            'LIBRARY',
+            'Java security and cryptography APIs',
+            false,
+            []
+    ),
+
+    JAVA_STREAM_API(
+            'module:platform:development:language:java:version:java8:stream-api',
+            'module/platform/development/language/java/version/java8/stream-api',
+            'LIBRARY',
+            'Java Stream API',
+            false,
+            []
+    ),
+
+    JAVA_STRING(
+            'module:platform:development:language:java:core:string',
+            'module/platform/development/language/java/core/string',
+            'SERVLET',
+            'Java String and text fundamentals',
             false,
             []
     ),

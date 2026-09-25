@@ -1,0 +1,63 @@
+EqualityController:
+  identityVsEquality():
+    execution: '<p><strong>Concept:</strong> Object identity vs logical equality.</p><ol><li>The
+      endpoint runs a bounded deterministic example inside <code>EqualityController#identityVsEquality()</code>.</li><li>Compare
+      == and equals for distinct logically equal objects.<pre><code>@GetMapping(&quot;/identity-vs-equality&quot;)
+      public Map&lt;String,Object&gt; identityVsEquality(){ Value a=new Value(7),
+      b=new Value(7); return Map.of(&quot;sameReference&quot;,a==b,&quot;logicalEquals&quot;,a.equals(b),&quot;sameHash&quot;,a.hashCode()==b.hashCode());
+      }</code></pre></li><li>Inspect the response fields together: they are the observable
+      evidence for the rule rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
+      connect the observed result back to the linked README section before generalizing
+      the behavior.</p>'
+    usage: true
+HashContractController:
+  brokenHashSetLookup():
+    execution: '<p><strong>Concept:</strong> Observable failures from broken contract.</p><ol><li>The
+      endpoint runs a bounded deterministic example inside <code>HashContractController#brokenHashSetLookup()</code>.</li><li>Show
+      failed lookup after violating equals/hashCode consistency.<pre><code>@GetMapping(&quot;/broken-contract&quot;)
+      public Map&lt;String,Object&gt; brokenHashSetLookup(){ Set&lt;Broken&gt; set=new
+      HashSet&lt;&gt;(); Broken stored=new Broken(1), equal=new Broken(1); set.add(stored);
+      return Map.of(&quot;equals&quot;,stored.equals(equal),&quot;storedHash&quot;,stored.hashCode(),&quot;equalHash&quot;,equal.hashCode(),&quot;containsEqualObject&quot;,set.contains(equal));
+      }</code></pre></li><li>Inspect the response fields together: they are the observable
+      evidence for the rule rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
+      connect the observed result back to the linked README section before generalizing
+      the behavior.</p>'
+    usage: true
+  mutableKey():
+    execution: '<p><strong>Concept:</strong> Mutable fields used in hashCode.</p><ol><li>The
+      endpoint runs a bounded deterministic example inside <code>HashContractController#mutableKey()</code>.</li><li>Mutate
+      key field after insertion and observe lookup failure.<pre><code>static final
+      class MutableKey { int id; MutableKey(int id){this.id=id;} public boolean equals(Object
+      o){return o instanceof MutableKey k&amp;&amp;id==k.id;} public int hashCode(){return
+      Integer.hashCode(id);} }</code></pre></li><li>Inspect the response fields together:
+      they are the observable evidence for the rule rather than a benchmark or production
+      policy.</li></ol><p><strong>Conclusion:</strong> connect the observed result
+      back to the linked README section before generalizing the behavior.</p>'
+    usage: true
+OrderingController:
+  naturalVsCustom():
+    execution: '<p><strong>Concept:</strong> External/custom ordering.</p><ol><li>The
+      endpoint runs a bounded deterministic example inside <code>OrderingController#naturalVsCustom()</code>.</li><li>Compare
+      Comparable natural order with Comparator alternatives.<pre><code>@GetMapping(&quot;/natural-vs-custom&quot;)
+      public Map&lt;String,Object&gt; naturalVsCustom(){ List&lt;Person&gt; source=List.of(new
+      Person(&quot;Bob&quot;,30),new Person(&quot;Ada&quot;,40)); List&lt;Person&gt;
+      natural=new ArrayList&lt;&gt;(source); Collections.sort(natural); List&lt;Person&gt;
+      byName=new ArrayList&lt;&gt;(source); byName.sort(Comparator.comparing(Person::name));
+      return Map.of(&quot;naturalByAge&quot;,natural,&quot;customByName&quot;,byName);
+      }</code></pre></li><li>Inspect the response fields together: they are the observable
+      evidence for the rule rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
+      connect the observed result back to the linked README section before generalizing
+      the behavior.</p>'
+    usage: true
+  compareToEquals():
+    execution: '<p><strong>Concept:</strong> Consistency with equals and sorted collections.</p><ol><li>The
+      endpoint runs a bounded deterministic example inside <code>OrderingController#compareToEquals()</code>.</li><li>Show
+      sorted-set implications when ordering is inconsistent with equals.<pre><code>@GetMapping(&quot;/compareto-equals&quot;)
+      public Map&lt;String,Object&gt; compareToEquals(){ BigDecimal a=new BigDecimal(&quot;1.0&quot;),b=new
+      BigDecimal(&quot;1.00&quot;); Set&lt;BigDecimal&gt; hash=new HashSet&lt;&gt;(List.of(a,b));
+      Set&lt;BigDecimal&gt; tree=new TreeSet&lt;&gt;(List.of(a,b)); return Map.of(&quot;equals&quot;,a.equals(b),&quot;compareTo&quot;,a.compareTo(b),&quot;hashSetSize&quot;,hash.size(),&quot;treeSetSize&quot;,tree.size());
+      }</code></pre></li><li>Inspect the response fields together: they are the observable
+      evidence for the rule rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
+      connect the observed result back to the linked README section before generalizing
+      the behavior.</p>'
+    usage: true

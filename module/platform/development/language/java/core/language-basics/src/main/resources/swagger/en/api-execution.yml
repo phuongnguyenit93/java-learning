@@ -1,0 +1,86 @@
+ArrayController:
+  covarianceFailure():
+    execution: '<p><strong>Concept:</strong> Array covariance and ArrayStoreException.</p><ol><li>The
+      endpoint runs a bounded deterministic example inside <code>ArrayController#covarianceFailure()</code>.</li><li>Demonstrate
+      covariant assignment and runtime ArrayStoreException.<pre><code>public Map&lt;String,
+      Object&gt; covarianceFailure() {</code></pre></li><li>Inspect the response fields
+      together: they are the observable evidence for the rule rather than a benchmark
+      or production policy.</li></ol><p><strong>Conclusion:</strong> connect the observed
+      result back to the linked README section before generalizing the behavior.</p>'
+    usage: true
+CastingController:
+  safeAndUnsafeCast(String):
+    execution: '<p><strong>Concept:</strong> Reference upcast and downcast.</p><ol><li>The
+      endpoint runs a bounded deterministic example inside <code>CastingController#safeAndUnsafeCast(String)</code>.</li><li>Compare
+      legal upcast, guarded downcast and failing cast.<pre><code>public Map&lt;String,
+      Object&gt; safeAndUnsafeCast(@RequestParam(defaultValue = &quot;hello&quot;)
+      String input) {</code></pre></li><li>Inspect the response fields together: they
+      are the observable evidence for the rule rather than a benchmark or production
+      policy.</li></ol><p><strong>Conclusion:</strong> connect the observed result
+      back to the linked README section before generalizing the behavior.</p>'
+    usage: true
+MethodDispatchController:
+  overloadVsOverride():
+    execution: '<p><strong>Concept:</strong> Overload selection vs override dispatch.</p><ol><li>The
+      endpoint runs a bounded deterministic example inside <code>MethodDispatchController#overloadVsOverride()</code>.</li><li>Show
+      compile-time overload choice vs runtime override dispatch.<pre><code>public
+      Map&lt;String, Object&gt; overloadVsOverride() {</code></pre></li><li>Inspect
+      the response fields together: they are the observable evidence for the rule
+      rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
+      connect the observed result back to the linked README section before generalizing
+      the behavior.</p>'
+    usage: true
+OperatorController:
+  shortCircuit():
+    execution: '<p><strong>Concept:</strong> Short-circuit boolean operators.</p><ol><li>The
+      endpoint runs a bounded deterministic example inside <code>OperatorController#shortCircuit()</code>.</li><li>Expose
+      evaluation trace proving short-circuit behavior.<pre><code>public Map&lt;String,
+      Object&gt; shortCircuit() {</code></pre></li><li>Inspect the response fields
+      together: they are the observable evidence for the rule rather than a benchmark
+      or production policy.</li></ol><p><strong>Conclusion:</strong> connect the observed
+      result back to the linked README section before generalizing the behavior.</p>'
+    usage: true
+OverloadResolutionController:
+  selectionMatrix():
+    execution: '<p><strong>Concept:</strong> Overload resolution phases.</p><ol><li>The
+      endpoint runs a bounded deterministic example inside <code>OverloadResolutionController#selectionMatrix()</code>.</li><li>Run
+      a fixed set of overload calls and expose which overload wins across widening,
+      boxing and varargs cases; include a documented compile-time-only ambiguous `null`
+      example rather than trying to execute uncompilable code.<pre><code>public Map&lt;String,
+      Object&gt; selectionMatrix() {</code></pre></li><li>Inspect the response fields
+      together: they are the observable evidence for the rule rather than a benchmark
+      or production policy.</li></ol><p><strong>Conclusion:</strong> connect the observed
+      result back to the linked README section before generalizing the behavior.</p>'
+    usage: true
+PassByValueController:
+  mutateAndReassign():
+    execution: '<p><strong>Concept:</strong> Copied references and visible object
+      mutation.</p><ol><li>The endpoint runs a bounded deterministic example inside
+      <code>PassByValueController#mutateAndReassign()</code>.</li><li>Trace object
+      mutation vs local reference reassignment.<pre><code>public Map&lt;String, Object&gt;
+      mutateAndReassign() {</code></pre></li><li>Inspect the response fields together:
+      they are the observable evidence for the rule rather than a benchmark or production
+      policy.</li></ol><p><strong>Conclusion:</strong> connect the observed result
+      back to the linked README section before generalizing the behavior.</p>'
+    usage: true
+TypeSystemController:
+  inspectRuntimeType(Object):
+    execution: '<p><strong>Concept:</strong> Compile-time type vs runtime type.</p><ol><li>The
+      endpoint runs a bounded deterministic example inside <code>TypeSystemController#inspectRuntimeType(Object)</code>.</li><li>Show
+      declared/observed runtime type and instanceof results.<pre><code>public Map&lt;String,
+      Object&gt; inspectRuntimeType(@RequestParam(defaultValue = &quot;sample&quot;)
+      Object value) {</code></pre></li><li>Inspect the response fields together: they
+      are the observable evidence for the rule rather than a benchmark or production
+      policy.</li></ol><p><strong>Conclusion:</strong> connect the observed result
+      back to the linked README section before generalizing the behavior.</p>'
+    usage: true
+WrapperController:
+  wrapperIdentity():
+    execution: '<p><strong>Concept:</strong> Wrapper caches and identity pitfalls.</p><ol><li>The
+      endpoint runs a bounded deterministic example inside <code>WrapperController#wrapperIdentity()</code>.</li><li>Compare
+      == and equals across cached/non-cached wrappers.<pre><code>public Map&lt;String,
+      Object&gt; wrapperIdentity() {</code></pre></li><li>Inspect the response fields
+      together: they are the observable evidence for the rule rather than a benchmark
+      or production policy.</li></ol><p><strong>Conclusion:</strong> connect the observed
+      result back to the linked README section before generalizing the behavior.</p>'
+    usage: true

@@ -1,0 +1,81 @@
+BigDecimalController:
+  construction():
+    execution: <p><strong>Khái niệm:</strong> Khởi tạo từ String/valueOf/double.</p><ol><li>Endpoint
+      chạy một ví dụ deterministic và bounded trong <code>BigDecimalController#construction()</code>.</li><li>Source
+      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/construction&quot;)
+      public Map&lt;String,Object&gt; construction(){ return Map.of(&quot;fromString&quot;,new
+      BigDecimal(&quot;0.1&quot;).toString(),&quot;fromValueOf&quot;,BigDecimal.valueOf(0.1d).toString(),&quot;fromDouble&quot;,new
+      BigDecimal(0.1d).toString()); }</code></pre></li><li>Quan sát các field trong
+      response cùng nhau; đây là evidence cho quy tắc, không phải benchmark hay production
+      policy.</li></ol><p><strong>Kết luận:</strong> đối chiếu kết quả với README
+      section được liên kết trước khi khái quát behavior.</p>
+    usage: true
+  comparison():
+    execution: <p><strong>Khái niệm:</strong> BigDecimal equals c&#243; t&#237;nh
+      scale.</p><ol><li>Endpoint chạy một ví dụ deterministic và bounded trong <code>BigDecimalController#comparison()</code>.</li><li>Source
+      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/comparison&quot;)
+      public Map&lt;String,Object&gt; comparison(){ BigDecimal a=new BigDecimal(&quot;1.0&quot;),
+      b=new BigDecimal(&quot;1.00&quot;); return Map.of(&quot;leftScale&quot;,a.scale(),&quot;rightScale&quot;,b.scale(),&quot;equals&quot;,a.equals(b),&quot;compareTo&quot;,a.compareTo(b));
+      }</code></pre></li><li>Quan sát các field trong response cùng nhau; đây là evidence
+      cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
+      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
+      khái quát behavior.</p>
+    usage: true
+  divisionAndRounding():
+    execution: <p><strong>Khái niệm:</strong> Semantics của RoundingMode.</p><ol><li>Endpoint
+      chạy một ví dụ deterministic và bounded trong <code>BigDecimalController#divisionAndRounding()</code>.</li><li>Source
+      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/division-rounding&quot;)
+      public Map&lt;String,Object&gt; divisionAndRounding(){ Map&lt;String,Object&gt;
+      r=new LinkedHashMap&lt;&gt;(); try{ BigDecimal.ONE.divide(new BigDecimal(&quot;3&quot;));
+      }catch(ArithmeticException e){r.put(&quot;exactDivisionFailure&quot;,e.getClass().getSimpleName());}
+      r.put(&quot;rounded&quot;,BigDecimal.ONE.divide(new BigDecimal(&quot;3&quot;),4,RoundingMode.HALF_UP).toString());
+      return r; }</code></pre></li><li>Quan sát các field trong response cùng nhau;
+      đây là evidence cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
+      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
+      khái quát behavior.</p>
+    usage: true
+FloatingPointController:
+  precision():
+    execution: <p><strong>Khái niệm:</strong> Precision v&#224; rounding error.</p><ol><li>Endpoint
+      chạy một ví dụ deterministic và bounded trong <code>FloatingPointController#precision()</code>.</li><li>Source
+      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/precision&quot;)
+      public Map&lt;String,Object&gt; precision(){ double v=0.1d+0.2d; return Map.of(&quot;computed&quot;,v,&quot;expectedDecimal&quot;,0.3d,&quot;exactEqual&quot;,v==0.3d,&quot;delta&quot;,Math.abs(v-0.3d));
+      }</code></pre></li><li>Quan sát các field trong response cùng nhau; đây là evidence
+      cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
+      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
+      khái quát behavior.</p>
+    usage: true
+  specialValues():
+    execution: <p><strong>Khái niệm:</strong> NaN, infinity v&#224; negative zero.</p><ol><li>Endpoint
+      chạy một ví dụ deterministic và bounded trong <code>FloatingPointController#specialValues()</code>.</li><li>Source
+      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/special-values&quot;)
+      public Map&lt;String,Object&gt; specialValues(){ return Map.of(&quot;nanEqualsItself&quot;,Double.NaN==Double.NaN,&quot;isNaN&quot;,Double.isNaN(0.0d/0.0d),&quot;positiveInfinity&quot;,1.0d/0.0d,&quot;zeroEqualsNegativeZero&quot;,0.0d==-0.0d);
+      }</code></pre></li><li>Quan sát các field trong response cùng nhau; đây là evidence
+      cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
+      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
+      khái quát behavior.</p>
+    usage: true
+IntegerArithmeticController:
+  overflow():
+    execution: <p><strong>Khái niệm:</strong> Integer overflow v&#224; wraparound.</p><ol><li>Endpoint
+      chạy một ví dụ deterministic và bounded trong <code>IntegerArithmeticController#overflow()</code>.</li><li>Source
+      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/overflow&quot;)
+      public Map&lt;String,Object&gt; overflow(){</code></pre></li><li>Quan sát các
+      field trong response cùng nhau; đây là evidence cho quy tắc, không phải benchmark
+      hay production policy.</li></ol><p><strong>Kết luận:</strong> đối chiếu kết
+      quả với README section được liên kết trước khi khái quát behavior.</p>
+    usage: true
+RandomController:
+  seededSequence():
+    execution: <p><strong>Khái niệm:</strong> Pseudo-random model v&#224; seed.</p><ol><li>Endpoint
+      chạy một ví dụ deterministic và bounded trong <code>RandomController#seededSequence()</code>.</li><li>Source
+      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/seeded-sequence&quot;)
+      public Map&lt;String,Object&gt; seededSequence(){ Random a=new Random(42L),
+      b=new Random(42L); List&lt;Integer&gt; x=List.of(a.nextInt(1000),a.nextInt(1000),a.nextInt(1000));
+      List&lt;Integer&gt; y=List.of(b.nextInt(1000),b.nextInt(1000),b.nextInt(1000));
+      return Map.of(&quot;first&quot;,x,&quot;sameSeed&quot;,y,&quot;reproducible&quot;,x.equals(y),&quot;securityBoundary&quot;,&quot;use
+      SecureRandom when unpredictability is required&quot;); }</code></pre></li><li>Quan
+      sát các field trong response cùng nhau; đây là evidence cho quy tắc, không phải
+      benchmark hay production policy.</li></ol><p><strong>Kết luận:</strong> đối
+      chiếu kết quả với README section được liên kết trước khi khái quát behavior.</p>
+    usage: true

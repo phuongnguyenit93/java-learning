@@ -1,0 +1,8 @@
+input:
+  summary: 'Input parameter: input'
+  description: Controls the bounded sample input used by this learning endpoint.
+  usage: true
+value:
+  summary: 'Input parameter: value'
+  description: Controls the bounded sample input used by this learning endpoint.
+  usage: true

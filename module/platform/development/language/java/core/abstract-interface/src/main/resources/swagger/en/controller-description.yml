@@ -1,0 +1,24 @@
+AbstractClassController:
+  description: |-
+    <h2>A bs tr ac tC la ss</h2>
+    <p>Executable Java Core experiments related to Abstract class as partial implementation + state.</p>
+  readmeRelated:
+    file: 1.AbstractClass/AbstractClass.md
+DefaultMethodController:
+  description: |-
+    <h2>D ef au lt Me th od</h2>
+    <p>Executable Java Core experiments related to Default methods.</p>
+  readmeRelated:
+    file: 5.DefaultStaticPrivate/DefaultStaticPrivate.md
+InterfaceController:
+  description: |-
+    <h2>I nt er fa ce</h2>
+    <p>Executable Java Core experiments related to Implementing multiple contracts.</p>
+  readmeRelated:
+    file: 2.Interface/Interface.md
+InterfaceEvolutionController:
+  description: |-
+    <h2>I nt er fa ce Ev ol ut io n</h2>
+    <p>Executable Java Core experiments related to Interface evolution compatibility.</p>
+  readmeRelated:
+    file: 5.DefaultStaticPrivate/DefaultStaticPrivate.md

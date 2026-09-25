@@ -1,0 +1,196 @@
+# <quiz-schema>
+# Cấu trúc câu hỏi Quiz
+# schema-version: 3
+#
+# questions [kiểu: list; bắt buộc; mặc định: []; duy nhất theo: id]
+#   Danh sách câu hỏi Quiz của module trong language hiện tại.
+#   mỗi phần tử:
+#     id [kiểu: string; bắt buộc; mặc định: ""]
+#       ID ổn định và duy nhất của câu hỏi.
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi hiển thị cho người học.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu câu hỏi được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu câu hỏi đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+#     answers [kiểu: list; bắt buộc; số phần tử: 4; mặc định: []; duy nhất theo: id]
+#       Chính xác bốn đáp án. ID A/B/C/D là identity nội bộ ổn định, không phải vị trí hiển thị sau khi frontend shuffle.
+#       mỗi phần tử:
+#         id [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#           Identity ổn định của đáp án.
+#         answer [kiểu: string; bắt buộc; mặc định: ""]
+#           Nội dung đáp án hiển thị cho người học.
+#         explanation [kiểu: string; bắt buộc; mặc định: ""]
+#           Giải thích hiển thị khi người học chọn đáp án này, bất kể đúng hay sai.
+#     correctAnswerId [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
+# </quiz-schema>
+
+questions:
+  - id: exception-error-vs-exception
+    question: "Phát biểu nào mô tả đúng Error so với Exception?"
+    answers:
+      - {id: A, answer: "Error thường biểu diễn lỗi nghiêm trọng của JVM/environment mà application code thông thường không được kỳ vọng recover thường xuyên.", explanation: "Đúng. Throwable có hai nhánh Error và Exception với recovery semantics khác nhau."}
+      - {id: B, answer: "Error là checked subclass của IOException.", explanation: "Sai. Throwable có hai nhánh Error và Exception với recovery semantics khác nhau."}
+      - {id: C, answer: "Error luôn phải catch trước Exception.", explanation: "Sai. Throwable có hai nhánh Error và Exception với recovery semantics khác nhau."}
+      - {id: D, answer: "Exception không bao giờ biểu diễn programming bug.", explanation: "Sai. Throwable có hai nhánh Error và Exception với recovery semantics khác nhau."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.Throwable/Throwable.md", anchor: "error-vs-exception"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: exception-checked-contract
+    question: "Điều gì khiến checked exception trở thành một phần của compile-time contract của method?"
+    answers:
+      - {id: A, answer: "JVM tự động retry exception đó.", explanation: "Sai. Checked exception tham gia compile-time rule về handling/declaration."}
+      - {id: B, answer: "Method phải catch hoặc declare bằng throws nếu exception có thể escape theo control-flow analysis.", explanation: "Đúng. Checked exception tham gia compile-time rule về handling/declaration."}
+      - {id: C, answer: "Nó luôn là subclass của RuntimeException.", explanation: "Sai. Checked exception tham gia compile-time rule về handling/declaration."}
+      - {id: D, answer: "Nó chỉ có thể xảy ra trong constructor.", explanation: "Sai. Checked exception tham gia compile-time rule về handling/declaration."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.CheckedUnchecked/CheckedUnchecked.md", anchor: "checked-exception"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: exception-throw-vs-throws
+    question: "Khác biệt giữa throw và throws là gì?"
+    answers:
+      - {id: A, answer: "throw khai báo method signature còn throws tạo object.", explanation: "Sai. Một cái là executable statement, cái kia là declaration clause của method/constructor."}
+      - {id: B, answer: "Hai keyword hoàn toàn thay thế nhau.", explanation: "Sai. Một cái là executable statement, cái kia là declaration clause của method/constructor."}
+      - {id: C, answer: "throw chuyển control bằng cách ném một Throwable value; throws khai báo exception type mà method có thể để escape.", explanation: "Đúng. Một cái là executable statement, cái kia là declaration clause của method/constructor."}
+      - {id: D, answer: "throws tự động catch exception.", explanation: "Sai. Một cái là executable statement, cái kia là declaration clause của method/constructor."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.ThrowThrows/ThrowThrows.md", anchor: "throws-clause"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: exception-override-checked-narrow
+    question: "Parent method declare throws IOException. Checked-exception declaration nào hợp lệ cho overriding child method?"
+    answers:
+      - {id: A, answer: "Bắt buộc declare đúng IOException và không được khác.", explanation: "Sai. Override không được broaden checked-exception obligation mà parent contract áp lên caller."}
+      - {id: B, answer: "Luôn có thể broaden thành Throwable.", explanation: "Sai. Override không được broaden checked-exception obligation mà parent contract áp lên caller."}
+      - {id: C, answer: "Không được declare bất kỳ unchecked exception nào.", explanation: "Sai. Override không được broaden checked-exception obligation mà parent contract áp lên caller."}
+      - {id: D, answer: "Có thể declare IOException, subtype như FileNotFoundException, hoặc bỏ checked exception, nhưng không được broaden thành Exception.", explanation: "Đúng. Override không được broaden checked-exception obligation mà parent contract áp lên caller."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.ThrowThrows/ThrowThrows.md", anchor: "override-throws-rules"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: exception-propagation-unwind
+    question: "Điều gì xảy ra khi exception được throw nhưng không được catch trong method hiện tại?"
+    answers:
+      - {id: A, answer: "Call hiện tại unwind và exception propagate lên caller cho tới khi gặp compatible handler hoặc thread kết thúc.", explanation: "Đúng. Exception propagation đi theo call stack và compatible catch selection."}
+      - {id: B, answer: "Execution tự động tiếp tục ở statement kế tiếp.", explanation: "Sai. Exception propagation đi theo call stack và compatible catch selection."}
+      - {id: C, answer: "Exception được convert thành null.", explanation: "Sai. Exception propagation đi theo call stack và compatible catch selection."}
+      - {id: D, answer: "JVM luôn restart method.", explanation: "Sai. Exception propagation đi theo call stack và compatible catch selection."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.Propagation/Propagation.md", anchor: "exception-propagation"}
+    apiRelated: {controller: "PropagationController", methodSignature: "propagate()"}
+
+  - id: exception-preserve-cause
+    question: "Khi translate low-level exception thành higher-level exception, vì sao thường nên giữ cause?"
+    answers:
+      - {id: A, answer: "Nó ngăn exception mới bị throw.", explanation: "Sai. Exception chaining giữ causality mà không bắt public abstraction phải expose low-level type."}
+      - {id: B, answer: "Nó giữ failure chain và diagnostic context gốc trong khi abstraction boundary vẫn expose exception type có ý nghĩa hơn.", explanation: "Đúng. Exception chaining giữ causality mà không bắt public abstraction phải expose low-level type."}
+      - {id: C, answer: "Nó bảo đảm automatic recovery.", explanation: "Sai. Exception chaining giữ causality mà không bắt public abstraction phải expose low-level type."}
+      - {id: D, answer: "Nó ẩn vĩnh viễn mọi stack frame.", explanation: "Sai. Exception chaining giữ causality mà không bắt public abstraction phải expose low-level type."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.Propagation/Propagation.md", anchor: "exception-chaining"}
+    apiRelated: {controller: "PropagationController", methodSignature: "wrapCause()"}
+
+  - id: exception-finally-return-risk
+    question: "Vì sao return từ finally block nguy hiểm?"
+    answers:
+      - {id: A, answer: "finally bị skip khi try có return.", explanation: "Sai. finally chạy khi normal lẫn exceptional exit, nên abrupt completion của chính nó có thể thay outcome trước đó."}
+      - {id: B, answer: "return trong finally luôn là compile-time error ở mọi Java version.", explanation: "Sai. finally chạy khi normal lẫn exceptional exit, nên abrupt completion của chính nó có thể thay outcome trước đó."}
+      - {id: C, answer: "Nó có thể override return value hoặc suppress exception đang propagate từ try/catch, làm mất outcome thực.", explanation: "Đúng. finally chạy khi normal lẫn exceptional exit, nên abrupt completion của chính nó có thể thay outcome trước đó."}
+      - {id: D, answer: "Nó chỉ thay đổi logging output.", explanation: "Sai. finally chạy khi normal lẫn exceptional exit, nên abrupt completion của chính nó có thể thay outcome trước đó."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.TryCatchFinally/TryCatchFinally.md", anchor: "return-finally"}
+    apiRelated: {controller: "FinallyController", methodSignature: "returnInteraction()"}
+
+  - id: exception-resource-close-order
+    question: "Trong try-with-resources với resource r1 rồi r2, chúng được close theo thứ tự nào?"
+    answers:
+      - {id: A, answer: "Theo declaration order: r1 rồi r2.", explanation: "Sai. Try-with-resources close resource đã khởi tạo theo thứ tự ngược."}
+      - {id: B, answer: "Thứ tự ngẫu nhiên.", explanation: "Sai. Try-with-resources close resource đã khởi tạo theo thứ tự ngược."}
+      - {id: C, answer: "Resource không bao giờ close nếu body throw.", explanation: "Sai. Try-with-resources close resource đã khởi tạo theo thứ tự ngược."}
+      - {id: D, answer: "Ngược declaration order: r2 close trước r1.", explanation: "Đúng. Try-with-resources close resource đã khởi tạo theo thứ tự ngược."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.TryWithResources/TryWithResources.md", anchor: "resource-close-order"}
+    apiRelated: {controller: "ResourceController", methodSignature: "closeOrder()"}
+
+  - id: exception-suppressed-primary
+    question: "Try body throw A rồi close() throw B. Với try-with-resources, exception nào thường là primary?"
+    answers:
+      - {id: A, answer: "A vẫn là primary còn B được attach thành suppressed exception.", explanation: "Đúng. Suppression giữ body failure đồng thời vẫn lưu close failure cho diagnostics."}
+      - {id: B, answer: "B thay A và A bị discard.", explanation: "Sai. Suppression giữ body failure đồng thời vẫn lưu close failure cho diagnostics."}
+      - {id: C, answer: "Cả hai convert thành Error.", explanation: "Sai. Suppression giữ body failure đồng thời vẫn lưu close failure cho diagnostics."}
+      - {id: D, answer: "Không exception nào observable.", explanation: "Sai. Suppression giữ body failure đồng thời vẫn lưu close failure cho diagnostics."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.SuppressedException/SuppressedException.md", anchor: "primary-vs-suppressed"}
+    apiRelated: {controller: "ResourceController", methodSignature: "suppressed()"}
+
+  - id: exception-custom-context
+    question: "Điều gì làm custom exception hữu ích thay vì chỉ tạo thêm một class name?"
+    answers:
+      - {id: A, answer: "Nó luôn nên discard original cause.", explanation: "Sai. Custom exception có giá trị khi cải thiện caller-facing failure contract và diagnostics."}
+      - {id: B, answer: "Nó nên biểu diễn failure có ý nghĩa ở abstraction/domain và giữ context/cause cần thiết.", explanation: "Đúng. Custom exception có giá trị khi cải thiện caller-facing failure contract và diagnostics."}
+      - {id: C, answer: "Nó nên chứa mọi local variable trong process.", explanation: "Sai. Custom exception có giá trị khi cải thiện caller-facing failure contract và diagnostics."}
+      - {id: D, answer: "Nó bắt buộc extend Error.", explanation: "Sai. Custom exception có giá trị khi cải thiện caller-facing failure contract và diagnostics."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.CustomException/CustomException.md", anchor: "exception-context"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: exception-boundary-translation
+    question: "Exception translation hữu ích nhất ở đâu?"
+    answers:
+      - {id: A, answer: "Ở mọi method call bất kể ý nghĩa.", explanation: "Sai. Translation nên biểu diễn abstraction change thực, không tạo wrapper noise."}
+      - {id: B, answer: "Chỉ bên trong static initializer.", explanation: "Sai. Translation nên biểu diễn abstraction change thực, không tạo wrapper noise."}
+      - {id: C, answer: "Tại abstraction boundary nơi low-level implementation failure cần trở thành higher-level contract ổn định trong khi vẫn giữ cause.", explanation: "Đúng. Translation nên biểu diễn abstraction change thực, không tạo wrapper noise."}
+      - {id: D, answer: "Chỉ sau khi log cùng exception ở mọi layer.", explanation: "Sai. Translation nên biểu diễn abstraction change thực, không tạo wrapper noise."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.ExceptionDesign/ExceptionDesign.md", anchor: "exception-boundaries"}
+    apiRelated: {controller: "ExceptionDesignController", methodSignature: "translateBoundary()"}
+
+  - id: exception-swallowing
+    question: "Vì sao catch Exception rồi không làm gì thường là design bug nghiêm trọng?"
+    answers:
+      - {id: A, answer: "Nó biến checked exception thành compile error.", explanation: "Sai. Handler phải recover, translate, thêm context hoặc terminate có chủ đích; swallow im lặng làm mất signal."}
+      - {id: B, answer: "Nó bắt JVM shutdown ngay.", explanation: "Sai. Handler phải recover, translate, thêm context hoặc terminate có chủ đích; swallow im lặng làm mất signal."}
+      - {id: C, answer: "Nó tự động retry operation mãi mãi.", explanation: "Sai. Handler phải recover, translate, thêm context hoặc terminate có chủ đích; swallow im lặng làm mất signal."}
+      - {id: D, answer: "Nó làm mất failure visibility và có thể cho execution tiếp tục với assumption sai hoặc partial state.", explanation: "Đúng. Handler phải recover, translate, thêm context hoặc terminate có chủ đích; swallow im lặng làm mất signal."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.ExceptionDesign/ExceptionDesign.md", anchor: "do-not-swallow"}
+    apiRelated: {controller: "", methodSignature: ""}

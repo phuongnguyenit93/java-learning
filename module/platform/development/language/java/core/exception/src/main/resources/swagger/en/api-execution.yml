@@ -1,0 +1,74 @@
+ExceptionDesignController:
+  translateBoundary():
+    execution: '<p><strong>Concept:</strong> Translate exceptions at abstraction boundaries.</p><ol><li>The
+      endpoint runs a bounded deterministic example inside <code>ExceptionDesignController#translateBoundary()</code>.</li><li>Translate
+      low-level failure while preserving cause/context.<pre><code>@GetMapping(&quot;/translate&quot;)
+      public Map&lt;String,Object&gt; translateBoundary(){ try{repository();return
+      Map.of();}catch(OrderServiceException e){return Map.of(&quot;translatedType&quot;,e.getClass().getSimpleName(),&quot;message&quot;,e.getMessage(),&quot;preservedCause&quot;,e.getCause().getClass().getSimpleName());}
+      }</code></pre></li><li>Inspect the response fields together: they are the observable
+      evidence for the rule rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
+      connect the observed result back to the linked README section before generalizing
+      the behavior.</p>'
+    usage: true
+FinallyController:
+  returnInteraction():
+    execution: '<p><strong>Concept:</strong> return/throw interactions with finally.</p><ol><li>The
+      endpoint runs a bounded deterministic example inside <code>FinallyController#returnInteraction()</code>.</li><li>Show
+      why return/throw in finally is dangerous.<pre><code>@GetMapping(&quot;/return-interaction&quot;)
+      public Map&lt;String,Object&gt; returnInteraction(){ return Map.of(&quot;normalReturnWithFinally&quot;,safeReturn(),&quot;returnInsideFinally&quot;,dangerousReturn(),&quot;warning&quot;,&quot;a
+      return in finally replaces the pending return/exception&quot;); }</code></pre></li><li>Inspect
+      the response fields together: they are the observable evidence for the rule
+      rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
+      connect the observed result back to the linked README section before generalizing
+      the behavior.</p>'
+    usage: true
+PropagationController:
+  propagate():
+    execution: '<p><strong>Concept:</strong> Stack unwinding and propagation.</p><ol><li>The
+      endpoint runs a bounded deterministic example inside <code>PropagationController#propagate()</code>.</li><li>Return
+      bounded causal-chain trace from nested calls.<pre><code>@GetMapping(&quot;/stack&quot;)
+      public Map&lt;String,Object&gt; propagate(){ try{levelOne();return Map.of();}catch(IllegalStateException
+      e){return Map.of(&quot;type&quot;,e.getClass().getSimpleName(),&quot;message&quot;,e.getMessage(),&quot;topFrames&quot;,Arrays.stream(e.getStackTrace()).limit(3).map(StackTraceElement::getMethodName).toList());}
+      }</code></pre></li><li>Inspect the response fields together: they are the observable
+      evidence for the rule rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
+      connect the observed result back to the linked README section before generalizing
+      the behavior.</p>'
+    usage: true
+  wrapCause():
+    execution: '<p><strong>Concept:</strong> Wrapping with preserved cause.</p><ol><li>The
+      endpoint runs a bounded deterministic example inside <code>PropagationController#wrapCause()</code>.</li><li>Compare
+      preserved vs lost cause.<pre><code>@GetMapping(&quot;/wrap-cause&quot;) public
+      Map&lt;String,Object&gt; wrapCause(){ try{load();return Map.of();}catch(OrderReadException
+      e){return Map.of(&quot;wrapper&quot;,e.getClass().getSimpleName(),&quot;message&quot;,e.getMessage(),&quot;cause&quot;,e.getCause().getClass().getSimpleName(),&quot;causeMessage&quot;,e.getCause().getMessage());}
+      }</code></pre></li><li>Inspect the response fields together: they are the observable
+      evidence for the rule rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
+      connect the observed result back to the linked README section before generalizing
+      the behavior.</p>'
+    usage: true
+ResourceController:
+  closeOrder():
+    execution: '<p><strong>Concept:</strong> Reverse resource close order.</p><ol><li>The
+      endpoint runs a bounded deterministic example inside <code>ResourceController#closeOrder()</code>.</li><li>Trace
+      reverse close order.<pre><code>@GetMapping(&quot;/close-order&quot;) public
+      Map&lt;String,Object&gt; closeOrder(){ List&lt;String&gt; trace=new ArrayList&lt;&gt;();
+      try(DemoResource a=new DemoResource(&quot;A&quot;,trace,false);DemoResource
+      b=new DemoResource(&quot;B&quot;,trace,false)){trace.add(&quot;body&quot;);}
+      return Map.of(&quot;trace&quot;,trace); }</code></pre></li><li>Inspect the response
+      fields together: they are the observable evidence for the rule rather than a
+      benchmark or production policy.</li></ol><p><strong>Conclusion:</strong> connect
+      the observed result back to the linked README section before generalizing the
+      behavior.</p>'
+    usage: true
+  suppressed():
+    execution: '<p><strong>Concept:</strong> Primary vs suppressed exception.</p><ol><li>The
+      endpoint runs a bounded deterministic example inside <code>ResourceController#suppressed()</code>.</li><li>Primary
+      body failure plus close failure and getSuppressed.<pre><code>@GetMapping(&quot;/suppressed&quot;)
+      public Map&lt;String,Object&gt; suppressed(){ List&lt;String&gt; trace=new ArrayList&lt;&gt;();
+      try(DemoResource r=new DemoResource(&quot;R&quot;,trace,true)){trace.add(&quot;body-fails&quot;);throw
+      new IllegalArgumentException(&quot;primary&quot;);}catch(Exception e){return
+      Map.of(&quot;primary&quot;,e.getClass().getSimpleName(),&quot;message&quot;,e.getMessage(),&quot;suppressed&quot;,Arrays.stream(e.getSuppressed()).map(x-&gt;x.getClass().getSimpleName()+&quot;:&quot;+x.getMessage()).toList(),&quot;trace&quot;,trace);}
+      }</code></pre></li><li>Inspect the response fields together: they are the observable
+      evidence for the rule rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
+      connect the observed result back to the linked README section before generalizing
+      the behavior.</p>'
+    usage: true

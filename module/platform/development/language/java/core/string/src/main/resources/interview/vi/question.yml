@@ -1,0 +1,85 @@
+# <interview-schema>
+# Cấu trúc câu hỏi Interview
+# schema-version: 2
+#
+# questions [kiểu: list; bắt buộc; mặc định: []]
+#   Danh sách câu hỏi Interview của module trong language hiện tại.
+#   mỗi phần tử:
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi phỏng vấn hiển thị cho người học.
+#     answer [kiểu: string; bắt buộc; mặc định: ""]
+#       Câu trả lời tham khảo, chỉ hiển thị khi người học chủ động mở.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu nội dung được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu nội dung đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+# </interview-schema>
+
+questions:
+  - question: "Vì sao String immutability quan trọng với Java API và runtime behavior?"
+    answer: "Immutable text có thể được share, cache, pool, dùng làm hash key ổn định và truyền qua API mà caller không thể mutate value hiện có. Operation trả về value mới, giúp reasoning đơn giản hơn và hỗ trợ contract của String pool."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.Immutability/Immutability.md", anchor: "string-immutability"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Giải thích mental model của String pool và vì sao == vẫn không phải mặc định đúng để so sánh text."
+    answer: "Pool có thể canonicalize literal và value được intern nên một số String bằng nhau dùng chung identity. Việc share đó là contract của pooling, không phải value equality. == kiểm tra identity; equals kiểm tra nội dung."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.StringPool/StringPool.md", anchor: "string-pool-model"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "String, Unicode và Charset liên hệ với nhau thế nào khi data đi qua I/O boundary?"
+    answer: "String biểu diễn text trong Java trên UTF-16 code unit/code point model. Storage hoặc transmission bên ngoài dùng bytes. Charset định nghĩa mapping giữa text và bytes, nên hai phía phải thống nhất encoding."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.Encoding/Encoding.md", anchor: "charset-encode-decode"}
+    apiRelated: {controller: "EncodingController", methodSignature: "roundTrip()"}
+
+  - question: "Vì sao char không phải synonym an toàn cho một ký tự người dùng nhìn thấy?"
+    answer: "char là một UTF-16 code unit. Supplementary Unicode code point cần hai char, và một grapheme người dùng cảm nhận có thể gồm nhiều code point như base letter + combining mark hoặc emoji sequence."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.UnicodeCodePoint/UnicodeCodePoint.md", anchor: "code-unit-code-point-grapheme"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Khi nào Unicode normalization quan trọng trong application logic?"
+    answer: "Text nhìn giống nhau có thể dùng canonical code-point sequence khác nhau. Hãy normalize tại boundary so sánh/search/storage khi domain cần canonical equivalence, nhưng nhớ normalization không thay thế locale-aware collation hay general case folding."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.UnicodeCodePoint/UnicodeCodePoint.md", anchor: "unicode-normalization"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Bạn chọn giữa String concatenation, StringBuilder và StringBuffer như thế nào?"
+    answer: "Dùng concatenation cho expression đơn giản dễ đọc; compiler tối ưu nhiều trường hợp. Dùng StringBuilder cho incremental construction rõ ràng, nhất là loop. StringBuffer thêm synchronized method cho legacy/shared-buffer scenario, nhưng synchronization không giải quyết toàn bộ concurrency design."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.StringBuffer/StringBuffer.md", anchor: "builder-vs-buffer"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "String.intern giải quyết vấn đề gì và vì sao không nên dùng bừa bãi?"
+    answer: "Interning canonicalize các String value bằng nhau về một pooled identity, hữu ích cho workload kiểu symbol chuyên biệt. Nó cũng tạo trade-off về quản lý pool và memory retention, nên value equality thông thường không nên phụ thuộc interning."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Intern/Intern.md", anchor: "intern-tradeoffs"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Bạn review regex cho production safety như thế nào thay vì chỉ kiểm tra correctness?"
+    answer: "Kiểm tra input bound, nested quantifier/alternative mơ hồ, catastrophic-backtracking risk, khả năng reuse compiled Pattern và xem parser/string operation đơn giản có rõ hơn không. Match đúng không đồng nghĩa runtime cost có thể dự đoán."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.Regex/Regex.md", anchor: "regex-performance"}
+    apiRelated: {controller: "RegexController", methodSignature: "backtracking()"}

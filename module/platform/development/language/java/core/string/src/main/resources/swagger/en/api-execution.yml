@@ -1,0 +1,102 @@
+EncodingController:
+  roundTrip():
+    execution: '<p><strong>Concept:</strong> Charset encode/decode.</p><ol><li>The
+      endpoint runs a bounded deterministic example inside <code>EncodingController#roundTrip()</code>.</li><li>Encode/decode
+      same text under explicit charsets.<pre><code>@GetMapping(&quot;/round-trip&quot;)
+      public Map&lt;String,Object&gt; roundTrip(){ String text=&quot;Xin ch&#224;o
+      ☕&quot;; byte[] bytes=text.getBytes(StandardCharsets.UTF_8); return Map.of(&quot;text&quot;,text,&quot;utf8Bytes&quot;,bytes.length,&quot;decoded&quot;,new
+      String(bytes,StandardCharsets.UTF_8),&quot;roundTrip&quot;,text.equals(new String(bytes,StandardCharsets.UTF_8)));
+      }</code></pre></li><li>Inspect the response fields together: they are the observable
+      evidence for the rule rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
+      connect the observed result back to the linked README section before generalizing
+      the behavior.</p>'
+    usage: true
+  wrongCharset():
+    execution: '<p><strong>Concept:</strong> Default charset portability risk.</p><ol><li>The
+      endpoint runs a bounded deterministic example inside <code>EncodingController#wrongCharset()</code>.</li><li>Demonstrate
+      mojibake from mismatched charset.<pre><code>@GetMapping(&quot;/wrong-charset&quot;)
+      public Map&lt;String,Object&gt; wrongCharset(){ String text=&quot;caf&#233;&quot;;
+      byte[] utf8=text.getBytes(StandardCharsets.UTF_8); String wrong=new String(utf8,StandardCharsets.ISO_8859_1);
+      return Map.of(&quot;original&quot;,text,&quot;decodedAsLatin1&quot;,wrong,&quot;same&quot;,text.equals(wrong));
+      }</code></pre></li><li>Inspect the response fields together: they are the observable
+      evidence for the rule rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
+      connect the observed result back to the linked README section before generalizing
+      the behavior.</p>'
+    usage: true
+RegexController:
+  groups():
+    execution: '<p><strong>Concept:</strong> Groups and captures.</p><ol><li>The endpoint
+      runs a bounded deterministic example inside <code>RegexController#groups()</code>.</li><li>Return
+      matches/groups for controlled input.<pre><code>@GetMapping(&quot;/groups&quot;)
+      public Map&lt;String,Object&gt; groups(){ Matcher m=Pattern.compile(&quot;(?&lt;user&gt;[a-z]+)@(?&lt;domain&gt;[a-z.]+)&quot;).matcher(&quot;ada@example.com&quot;);
+      boolean found=m.matches(); return Map.of(&quot;matched&quot;,found,&quot;user&quot;,found?m.group(&quot;user&quot;):&quot;&quot;,&quot;domain&quot;,found?m.group(&quot;domain&quot;):&quot;&quot;);
+      }</code></pre></li><li>Inspect the response fields together: they are the observable
+      evidence for the rule rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
+      connect the observed result back to the linked README section before generalizing
+      the behavior.</p>'
+    usage: true
+  backtracking():
+    execution: '<p><strong>Concept:</strong> Backtracking and performance pitfalls.</p><ol><li>The
+      endpoint runs a bounded deterministic example inside <code>RegexController#backtracking()</code>.</li><li>Bounded
+      safe example showing problematic pattern cost characteristics.<pre><code>@GetMapping(&quot;/backtracking&quot;)
+      public Map&lt;String,Object&gt; backtracking(){ String input=&quot;a&quot;.repeat(18)+&quot;!&quot;;
+      Pattern risky=Pattern.compile(&quot;(a+)+$&quot;); long start=System.nanoTime();
+      boolean matched=risky.matcher(input).matches(); long elapsed=System.nanoTime()-start;
+      return Map.of(&quot;inputLength&quot;,input.length(),&quot;matched&quot;,matched,&quot;boundedSample&quot;,true,&quot;elapsedNanos&quot;,elapsed,&quot;warning&quot;,&quot;nested
+      ambiguous quantifiers can backtrack heavily; timing is illustrative only&quot;);
+      }</code></pre></li><li>Inspect the response fields together: they are the observable
+      evidence for the rule rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
+      connect the observed result back to the linked README section before generalizing
+      the behavior.</p>'
+    usage: true
+StringConcatController:
+  constructionTrace():
+    execution: '<p><strong>Concept:</strong> Repeated concatenation cost.</p><ol><li>The
+      endpoint runs a bounded deterministic example inside <code>StringConcatController#constructionTrace()</code>.</li><li>Compare
+      result/counters for repeated concat vs StringBuilder.<pre><code>@GetMapping(&quot;/construction&quot;)
+      public Map&lt;String,Object&gt; constructionTrace(){ String s=&quot;&quot;;
+      List&lt;Integer&gt; ids=new ArrayList&lt;&gt;(); for(int i=0;i&lt;4;i++){s=s+i;ids.add(System.identityHashCode(s));}
+      StringBuilder b=new StringBuilder(); for(int i=0;i&lt;4;i++)b.append(i); return
+      Map.of(&quot;concatResult&quot;,s,&quot;concatIntermediateIdentities&quot;,ids,&quot;builderResult&quot;,b.toString(),&quot;builderIdentity&quot;,System.identityHashCode(b));
+      }</code></pre></li><li>Inspect the response fields together: they are the observable
+      evidence for the rule rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
+      connect the observed result back to the linked README section before generalizing
+      the behavior.</p>'
+    usage: true
+StringPoolController:
+  identity():
+    execution: '<p><strong>Concept:</strong> Pool identity and compile-time constants.</p><ol><li>The
+      endpoint runs a bounded deterministic example inside <code>StringPoolController#identity()</code>.</li><li>Compare
+      literals, new String, compile-time concat and intern.<pre><code>@GetMapping(&quot;/identity&quot;)
+      public Map&lt;String,Object&gt; identity(){ String literalA=&quot;java&quot;,literalB=&quot;ja&quot;+&quot;va&quot;,runtime=new
+      String(&quot;java&quot;),interned=runtime.intern(); return Map.of(&quot;literalIdentity&quot;,literalA==literalB,&quot;newStringIdentity&quot;,literalA==runtime,&quot;contentEquals&quot;,literalA.equals(runtime),&quot;internIdentity&quot;,literalA==interned);
+      }</code></pre></li><li>Inspect the response fields together: they are the observable
+      evidence for the rule rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
+      connect the observed result back to the linked README section before generalizing
+      the behavior.</p>'
+    usage: true
+UnicodeController:
+  charVsCodePoint():
+    execution: '<p><strong>Concept:</strong> Surrogate pairs.</p><ol><li>The endpoint
+      runs a bounded deterministic example inside <code>UnicodeController#charVsCodePoint()</code>.</li><li>Show
+      length/char count/code-point count for supplementary character.<pre><code>@GetMapping(&quot;/char-vs-code-point&quot;)
+      public Map&lt;String,Object&gt; charVsCodePoint(){ String value=&quot;A😀&quot;;
+      return Map.of(&quot;text&quot;,value,&quot;utf16Length&quot;,value.length(),&quot;codePointCount&quot;,value.codePointCount(0,value.length()),&quot;codePoints&quot;,value.codePoints().mapToObj(cp-&gt;String.format(&quot;U+%04X&quot;,cp)).toList());
+      }</code></pre></li><li>Inspect the response fields together: they are the observable
+      evidence for the rule rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
+      connect the observed result back to the linked README section before generalizing
+      the behavior.</p>'
+    usage: true
+  normalization():
+    execution: '<p><strong>Concept:</strong> Canonical equivalence and String equality.</p><ol><li>The
+      endpoint runs a bounded deterministic example inside <code>UnicodeController#normalization()</code>.</li><li>Compare
+      precomposed and combining-mark forms before and after NFC/NFD normalization,
+      including code points and equality.<pre><code>@GetMapping(&quot;/normalization&quot;)
+      public Map&lt;String,Object&gt; normalization(){ String composed=&quot;&#233;&quot;,
+      decomposed=&quot;e\u0301&quot;; String nfcA=Normalizer.normalize(composed,Normalizer.Form.NFC),
+      nfcB=Normalizer.normalize(decomposed,Normalizer.Form.NFC); return Map.of(&quot;visualA&quot;,composed,&quot;visualB&quot;,decomposed,&quot;equalsBefore&quot;,composed.equals(decomposed),&quot;codePointsA&quot;,composed.codePoints().mapToObj(cp-&gt;String.format(&quot;U+%04X&quot;,cp)).toList(),&quot;codePointsB&quot;,decomposed.codePoints().mapToObj(cp-&gt;String.format(&quot;U+%04X&quot;,cp)).toList(),&quot;equalsAfterNfc&quot;,nfcA.equals(nfcB));
+      }</code></pre></li><li>Inspect the response fields together: they are the observable
+      evidence for the rule rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
+      connect the observed result back to the linked README section before generalizing
+      the behavior.</p>'
+    usage: true

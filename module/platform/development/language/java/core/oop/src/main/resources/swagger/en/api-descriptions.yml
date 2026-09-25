@@ -1,0 +1,167 @@
+CompositionController:
+  strategySwap():
+    summary: Composition vs inheritance trade-offs
+    description: Runs a deterministic learning experiment for Composition vs inheritance
+      trade-offs. The response exposes concrete runtime evidence instead of only describing
+      the rule.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 6.Composition/Composition.md
+      anchor: composition-vs-inheritance
+    methodName: strategySwap
+    params: [
+      ]
+    path: com/example/learning/controller/CompositionController.java
+    mapping: '@GetMapping("/strategy-swap")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/oop/composition/strategy-swap
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+DispatchController:
+  overloadVsOverride():
+    summary: Overloading is compile-time selection
+    description: Runs a deterministic learning experiment for Overloading is compile-time
+      selection. The response exposes concrete runtime evidence instead of only describing
+      the rule.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 5.OverloadingOverriding/OverloadingOverriding.md
+      anchor: overloading-compile-time
+    methodName: overloadVsOverride
+    params: [
+      ]
+    path: com/example/learning/controller/DispatchController.java
+    mapping: '@GetMapping("/overload-vs-override")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/oop/dispatch/overload-vs-override
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  dispatchVsHiding():
+    summary: Instance-method dispatch vs static-method and field hiding
+    description: Runs a deterministic learning experiment for Instance-method dispatch
+      vs static-method and field hiding. The response exposes concrete runtime evidence
+      instead of only describing the rule.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 5.OverloadingOverriding/OverloadingOverriding.md
+      anchor: dispatch-vs-hiding
+    methodName: dispatchVsHiding
+    params: [
+      ]
+    path: com/example/learning/controller/DispatchController.java
+    mapping: '@GetMapping("/dispatch-vs-hiding")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/oop/dispatch/dispatch-vs-hiding
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+EncapsulationController:
+  invariantProtection():
+    summary: Protecting invariants
+    description: Runs a deterministic learning experiment for Protecting invariants.
+      The response exposes concrete runtime evidence instead of only describing the
+      rule.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 2.Encapsulation/Encapsulation.md
+      anchor: invariant-protection
+    methodName: invariantProtection
+    params: [
+      ]
+    path: com/example/learning/controller/EncapsulationController.java
+    mapping: '@GetMapping("/invariant")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/oop/encapsulation/invariant
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+PolymorphismController:
+  dispatch():
+    summary: Runtime dynamic dispatch
+    description: Runs a deterministic learning experiment for Runtime dynamic dispatch.
+      The response exposes concrete runtime evidence instead of only describing the
+      rule.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 4.Polymorphism/Polymorphism.md
+      anchor: dynamic-dispatch
+    methodName: dispatch
+    params: [
+      ]
+    path: com/example/learning/controller/PolymorphismController.java
+    mapping: '@GetMapping("/dispatch")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/oop/polymorphism/dispatch
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+SubstitutabilityController:
+  substituteImplementations():
+    summary: Substitutability and behavioral expectations
+    description: Runs a deterministic learning experiment for Substitutability and
+      behavioral expectations. The response exposes concrete runtime evidence instead
+      of only describing the rule.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 4.Polymorphism/Polymorphism.md
+      anchor: substitutability
+    methodName: substituteImplementations
+    params: [
+      ]
+    path: com/example/learning/controller/SubstitutabilityController.java
+    mapping: '@GetMapping("/implementations")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/oop/substitutability/implementations
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

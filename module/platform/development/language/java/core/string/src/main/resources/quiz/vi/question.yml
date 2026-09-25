@@ -1,0 +1,222 @@
+# <quiz-schema>
+# Cấu trúc câu hỏi Quiz
+# schema-version: 3
+#
+# questions [kiểu: list; bắt buộc; mặc định: []; duy nhất theo: id]
+#   Danh sách câu hỏi Quiz của module trong language hiện tại.
+#   mỗi phần tử:
+#     id [kiểu: string; bắt buộc; mặc định: ""]
+#       ID ổn định và duy nhất của câu hỏi.
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi hiển thị cho người học.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu câu hỏi được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu câu hỏi đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+#     answers [kiểu: list; bắt buộc; số phần tử: 4; mặc định: []; duy nhất theo: id]
+#       Chính xác bốn đáp án. ID A/B/C/D là identity nội bộ ổn định, không phải vị trí hiển thị sau khi frontend shuffle.
+#       mỗi phần tử:
+#         id [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#           Identity ổn định của đáp án.
+#         answer [kiểu: string; bắt buộc; mặc định: ""]
+#           Nội dung đáp án hiển thị cho người học.
+#         explanation [kiểu: string; bắt buộc; mặc định: ""]
+#           Giải thích hiển thị khi người học chọn đáp án này, bất kể đúng hay sai.
+#     correctAnswerId [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
+# </quiz-schema>
+
+questions:
+  - id: string-immutability-result
+    question: "Điều gì xảy ra với String ban đầu khi gọi phép biến đổi như toUpperCase() mà không gán giá trị trả về?"
+    answers:
+      - {id: A, answer: "String ban đầu không đổi vì String là immutable; operation trả về một String value khác.", explanation: "Đúng. String operation không mutate object hiện có; caller phải dùng giá trị trả về."}
+      - {id: B, answer: "String ban đầu bị sửa trực tiếp.", explanation: "Sai. String operation không mutate object hiện có; caller phải dùng giá trị trả về."}
+      - {id: C, answer: "String ban đầu trở thành null.", explanation: "Sai. String operation không mutate object hiện có; caller phải dùng giá trị trả về."}
+      - {id: D, answer: "JVM sửa pooled value cho mọi reference.", explanation: "Sai. String operation không mutate object hiện có; caller phải dùng giá trị trả về."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.Immutability/Immutability.md", anchor: "string-immutability"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-pool-identity
+    question: "Vì sao hai String literal giống nhau có thể cho == là true trong khi hai new String(\"x\") thường không?"
+    answers:
+      - {id: A, answer: "== luôn so sánh nội dung String.", explanation: "Sai. String pool có thể chia sẻ identity của literal, nhưng so sánh value phải dùng equals."}
+      - {id: B, answer: "Literal có thể dùng chung canonical instance trong pool, còn new tạo object riêng; == so sánh identity.", explanation: "Đúng. String pool có thể chia sẻ identity của literal, nhưng so sánh value phải dùng equals."}
+      - {id: C, answer: "new String tự động intern mọi object.", explanation: "Sai. String pool có thể chia sẻ identity của literal, nhưng so sánh value phải dùng equals."}
+      - {id: D, answer: "equals so sánh địa chỉ vật lý còn == so sánh text.", explanation: "Sai. String pool có thể chia sẻ identity của literal, nhưng so sánh value phải dùng equals."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.StringPool/StringPool.md", anchor: "pool-identity"}
+    apiRelated: {controller: "StringPoolController", methodSignature: "identity()"}
+
+  - id: string-equality-rule
+    question: "Thông thường nên dùng phép so sánh nào để kiểm tra hai String chứa cùng text?"
+    answers:
+      - {id: A, answer: "==, vì String override toán tử ==.", explanation: "Sai. String không overload ==; == vẫn là so sánh reference identity."}
+      - {id: B, answer: "Chỉ System.identityHashCode.", explanation: "Sai. String không overload ==; == vẫn là so sánh reference identity."}
+      - {id: C, answer: "equals, vì nó so sánh nội dung String thay vì object identity.", explanation: "Đúng. String không overload ==; == vẫn là so sánh reference identity."}
+      - {id: D, answer: "compareTo luôn phải trả chính xác 1.", explanation: "Sai. String không overload ==; == vẫn là so sánh reference identity."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.Equality/Equality.md", anchor: "string-reference-equality"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-compile-time-concat
+    question: "Vì sao \"ja\" + \"va\" có thể dùng chung pooled identity với literal \"java\" khi là constant expression?"
+    answers:
+      - {id: A, answer: "Mọi runtime concatenation đều tự động intern.", explanation: "Sai. Compile-time constant folding khác với runtime concatenation thông thường."}
+      - {id: B, answer: "StringBuilder luôn trả pooled String.", explanation: "Sai. Compile-time constant folding khác với runtime concatenation thông thường."}
+      - {id: C, answer: "Garbage collector lập tức gộp mọi String bằng nhau.", explanation: "Sai. Compile-time constant folding khác với runtime concatenation thông thường."}
+      - {id: D, answer: "Compiler có thể fold phép nối constant expression thành một literal trước runtime.", explanation: "Đúng. Compile-time constant folding khác với runtime concatenation thông thường."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.Concatenation/Concatenation.md", anchor: "compile-time-concat"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-builder-loop
+    question: "Khi xây một String dài tăng dần trong loop, vì sao thường ưu tiên StringBuilder hơn nối String immutable lặp lại?"
+    answers:
+      - {id: A, answer: "Nó tích lũy ký tự trong mutable buffer và tránh tạo chuỗi intermediate String value.", explanation: "Đúng. Lợi ích chính là mutable accumulation hiệu quả, không phải thay đổi semantics của String."}
+      - {id: B, answer: "Nó biến chính String thành mutable class.", explanation: "Sai. Lợi ích chính là mutable accumulation hiệu quả, không phải thay đổi semantics của String."}
+      - {id: C, answer: "Nó bảo đảm thread safety cho mọi shared state.", explanation: "Sai. Lợi ích chính là mutable accumulation hiệu quả, không phải thay đổi semantics của String."}
+      - {id: D, answer: "Nó tự động nén text.", explanation: "Sai. Lợi ích chính là mutable accumulation hiệu quả, không phải thay đổi semantics của String."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.StringBuilder/StringBuilder.md", anchor: "builder-usage"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-buffer-vs-builder
+    question: "Khác biệt cốt lõi ở mức API giữa StringBuilder và StringBuffer là gì?"
+    answers:
+      - {id: A, answer: "StringBuilder immutable còn StringBuffer mutable.", explanation: "Sai. Synchronization là khác biệt chính, nhưng nó không thay thế thiết kế concurrency ở mức cao hơn."}
+      - {id: B, answer: "StringBuffer synchronize các mutating method, còn StringBuilder thì không; cả hai đều là mutable character buffer.", explanation: "Đúng. Synchronization là khác biệt chính, nhưng nó không thay thế thiết kế concurrency ở mức cao hơn."}
+      - {id: C, answer: "StringBuffer lưu byte còn StringBuilder lưu char.", explanation: "Sai. Synchronization là khác biệt chính, nhưng nó không thay thế thiết kế concurrency ở mức cao hơn."}
+      - {id: D, answer: "StringBuilder chỉ dùng được bên trong stream.", explanation: "Sai. Synchronization là khác biệt chính, nhưng nó không thay thế thiết kế concurrency ở mức cao hơn."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.StringBuffer/StringBuffer.md", anchor: "builder-vs-buffer"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-intern-canonical
+    question: "String.intern() trả về gì?"
+    answers:
+      - {id: A, answer: "Một deep copy được bảo đảm nằm ngoài heap.", explanation: "Sai. intern liên quan canonical identity trong String pool, không liên quan mutability hay encoding."}
+      - {id: B, answer: "Một phiên bản mutable của String.", explanation: "Sai. intern liên quan canonical identity trong String pool, không liên quan mutability hay encoding."}
+      - {id: C, answer: "Một canonical pooled reference cho String value bằng nhau theo contract của String pool.", explanation: "Đúng. intern liên quan canonical identity trong String pool, không liên quan mutability hay encoding."}
+      - {id: D, answer: "UTF-8 byte array backing String.", explanation: "Sai. intern liên quan canonical identity trong String pool, không liên quan mutability hay encoding."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Intern/Intern.md", anchor: "intern-identity"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-charset-roundtrip
+    question: "Để round trip text ↔ bytes đáng tin cậy, producer và consumer phải thống nhất điều gì?"
+    answers:
+      - {id: A, answer: "Chỉ cần String length bằng nhau.", explanation: "Sai. Bytes không tự mang text encoding; charset là một phần của interpretation contract."}
+      - {id: B, answer: "Platform default charset luôn là UTF-8 trên mọi Java runtime.", explanation: "Sai. Bytes không tự mang text encoding; charset là một phần của interpretation contract."}
+      - {id: C, answer: "Byte order có thể thay thế khai báo charset.", explanation: "Sai. Bytes không tự mang text encoding; charset là một phần của interpretation contract."}
+      - {id: D, answer: "Phải dùng cùng character encoding/Charset khi encode và decode bytes.", explanation: "Đúng. Bytes không tự mang text encoding; charset là một phần của interpretation contract."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.Encoding/Encoding.md", anchor: "charset-encode-decode"}
+    apiRelated: {controller: "EncodingController", methodSignature: "roundTrip()"}
+
+  - id: string-codepoint-length
+    question: "Vì sao String.length() có thể lớn hơn số Unicode code point trong text?"
+    answers:
+      - {id: A, answer: "length đếm UTF-16 code unit, và supplementary code point cần surrogate pair gồm hai code unit.", explanation: "Đúng. String indexing của Java dựa trên UTF-16 code unit, không phải Unicode code point hay grapheme cluster."}
+      - {id: B, answer: "length đếm UTF-8 byte.", explanation: "Sai. String indexing của Java dựa trên UTF-16 code unit, không phải Unicode code point hay grapheme cluster."}
+      - {id: C, answer: "Mọi chữ có dấu luôn được lưu thành bốn char.", explanation: "Sai. String indexing của Java dựa trên UTF-16 code unit, không phải Unicode code point hay grapheme cluster."}
+      - {id: D, answer: "length đếm grapheme cluster còn codePointCount đếm byte.", explanation: "Sai. String indexing của Java dựa trên UTF-16 code unit, không phải Unicode code point hay grapheme cluster."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.UnicodeCodePoint/UnicodeCodePoint.md", anchor: "surrogate-pairs"}
+    apiRelated: {controller: "UnicodeController", methodSignature: "charVsCodePoint()"}
+
+  - id: string-normalization-equality
+    question: "Hai String hiển thị cùng một ký tự có dấu nhưng equals trả false. Một nguyên nhân Unicode hợp lý là gì?"
+    answers:
+      - {id: A, answer: "equals bỏ qua mọi Unicode character ngoài ASCII.", explanation: "Sai. Text canonical-equivalent có thể có code-point sequence khác nhau cho đến khi được normalize."}
+      - {id: B, answer: "Một String có thể dùng precomposed code point còn String kia dùng base character + combining mark; canonical normalization có thể đưa chúng về dạng tương ứng.", explanation: "Đúng. Text canonical-equivalent có thể có code-point sequence khác nhau cho đến khi được normalize."}
+      - {id: C, answer: "Java tự động bỏ combining mark trước equals.", explanation: "Sai. Text canonical-equivalent có thể có code-point sequence khác nhau cho đến khi được normalize."}
+      - {id: D, answer: "Một String chỉ có thể chứa một code point cho mỗi ký tự nhìn thấy.", explanation: "Sai. Text canonical-equivalent có thể có code-point sequence khác nhau cho đến khi được normalize."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.UnicodeCodePoint/UnicodeCodePoint.md", anchor: "canonical-equivalence"}
+    apiRelated: {controller: "UnicodeController", methodSignature: "normalization()"}
+
+  - id: string-grapheme-boundary
+    question: "Phát biểu nào phân biệt đúng code unit, code point và grapheme cluster?"
+    answers:
+      - {id: A, answer: "Đây chỉ là ba tên cho cùng một đơn vị.", explanation: "Sai. Các tầng xử lý text khác nhau; ký tự nhìn thấy có thể gồm nhiều code point và code unit."}
+      - {id: B, answer: "Một grapheme cluster luôn là một Java char.", explanation: "Sai. Các tầng xử lý text khác nhau; ký tự nhìn thấy có thể gồm nhiều code point và code unit."}
+      - {id: C, answer: "Code unit là đơn vị encoding, code point định danh Unicode scalar value, còn grapheme cluster gần với một ký tự người dùng cảm nhận.", explanation: "Đúng. Các tầng xử lý text khác nhau; ký tự nhìn thấy có thể gồm nhiều code point và code unit."}
+      - {id: D, answer: "Một code point luôn gồm hai UTF-16 code unit.", explanation: "Sai. Các tầng xử lý text khác nhau; ký tự nhìn thấy có thể gồm nhiều code point và code unit."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.UnicodeCodePoint/UnicodeCodePoint.md", anchor: "code-unit-code-point-grapheme"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-regex-greedy
+    question: "Greedy quantifier như .* thường cố làm gì trước khi backtrack?"
+    answers:
+      - {id: A, answer: "Chỉ consume đúng một character.", explanation: "Sai. Greedy và reluctant quantifier khác nhau ở lượng input ban đầu chúng consume, không phải ở việc có là regex hay không."}
+      - {id: B, answer: "Tắt hoàn toàn backtracking.", explanation: "Sai. Greedy và reluctant quantifier khác nhau ở lượng input ban đầu chúng consume, không phải ở việc có là regex hay không."}
+      - {id: C, answer: "Chỉ match ASCII whitespace.", explanation: "Sai. Greedy và reluctant quantifier khác nhau ở lượng input ban đầu chúng consume, không phải ở việc có là regex hay không."}
+      - {id: D, answer: "Consume nhiều input nhất có thể nhưng vẫn cho phép toàn pattern match.", explanation: "Đúng. Greedy và reluctant quantifier khác nhau ở lượng input ban đầu chúng consume, không phải ở việc có là regex hay không."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.Regex/Regex.md", anchor: "regex-quantifiers"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-regex-backtracking-risk
+    question: "Vì sao regex backtracking thiết kế kém có thể nguy hiểm với adversarial input?"
+    answers:
+      - {id: A, answer: "Alternative/quantifier lồng nhau mơ hồ có thể tạo số lượng backtracking path tăng rất nhanh và tốn CPU.", explanation: "Đúng. Catastrophic backtracking là vấn đề search explosion, vì vậy pattern và input bound rất quan trọng."}
+      - {id: B, answer: "Pattern luôn tạo một thread cho mỗi character.", explanation: "Sai. Catastrophic backtracking là vấn đề search explosion, vì vậy pattern và input bound rất quan trọng."}
+      - {id: C, answer: "Regex tự động mở network connection.", explanation: "Sai. Catastrophic backtracking là vấn đề search explosion, vì vậy pattern và input bound rất quan trọng."}
+      - {id: D, answer: "Matcher chuyển toàn bộ input thành BigInteger.", explanation: "Sai. Catastrophic backtracking là vấn đề search explosion, vì vậy pattern và input bound rất quan trọng."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.Regex/Regex.md", anchor: "regex-performance"}
+    apiRelated: {controller: "RegexController", methodSignature: "backtracking()"}
+
+  - id: string-text-block-whitespace
+    question: "Vì sao text block không chỉ đơn giản là quoted String được tách qua nhiều source line?"
+    answers:
+      - {id: A, answer: "Text block tạo mutable subclass của String.", explanation: "Sai. Text block có compile-time formatting rule; chúng không thay đổi tính immutable của String."}
+      - {id: B, answer: "Compiler áp dụng rule của text block, bao gồm xử lý incidental indentation, trước khi tạo String value.", explanation: "Đúng. Text block có compile-time formatting rule; chúng không thay đổi tính immutable của String."}
+      - {id: C, answer: "Text block chỉ được garbage collector evaluate.", explanation: "Sai. Text block có compile-time formatting rule; chúng không thay đổi tính immutable của String."}
+      - {id: D, answer: "Mọi source indentation character luôn được giữ nguyên tuyệt đối.", explanation: "Sai. Text block có compile-time formatting rule; chúng không thay đổi tính immutable của String."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "11.TextBlocks/TextBlocks.md", anchor: "incidental-whitespace"}
+    apiRelated: {controller: "", methodSignature: ""}

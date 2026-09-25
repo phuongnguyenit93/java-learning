@@ -1,0 +1,85 @@
+# <interview-schema>
+# Cấu trúc câu hỏi Interview
+# schema-version: 2
+#
+# questions [kiểu: list; bắt buộc; mặc định: []]
+#   Danh sách câu hỏi Interview của module trong language hiện tại.
+#   mỗi phần tử:
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi phỏng vấn hiển thị cho người học.
+#     answer [kiểu: string; bắt buộc; mặc định: ""]
+#       Câu trả lời tham khảo, chỉ hiển thị khi người học chủ động mở.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu nội dung được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu nội dung đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+# </interview-schema>
+
+questions:
+  - question: "Giải thích khác biệt giữa copy primitive value và copy reference value trong Java."
+    answer: "Primitive assignment copy chính primitive value. Reference assignment copy reference value nên hai biến có thể cùng nhận diện một object; nó không clone object. Đây là nền tảng của aliasing và pass-by-value."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.PrimitiveReference/PrimitiveReference.md", anchor: "primitive-vs-reference-model"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Vì sao field có default value còn local variable phải definite assignment?"
+    answer: "Object/class initialization cấp default value cho field trước explicit initialization. Local variable chịu compile-time definite-assignment analysis và không được đọc tới khi mọi reachable path đã assign."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.VariablesScope/VariablesScope.md", anchor: "definite-assignment"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Mô tả widening, boxing, varargs và most-specific selection tương tác thế nào trong overload resolution."
+    answer: "Compiler tìm candidate theo phase có thứ tự, ưu tiên fixed-arity conversion ở phase sớm trước boxing/varargs. Trong cùng phase nó chọn most-specific method. Runtime receiver type không chọn lại overload."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Methods/Methods.md", anchor: "overload-resolution-phases"}
+    apiRelated: {controller: "OverloadResolutionController", methodSignature: "selectionMatrix()"}
+
+  - question: "Chứng minh Java pass-by-value dù callee có thể mutate object mà caller nhìn thấy."
+    answer: "Parameter nhận bản copy của reference value. Mutate qua copied reference ảnh hưởng shared object, nhưng reassign parameter không đổi caller variable. Đó chính là pass-by-value của reference."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.PassByValue/PassByValue.md", anchor: "java-pass-by-value"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Vì sao array covariant còn generics thường invariant, và hậu quả safety của array là gì?"
+    answer: "Java cho subtype array được view như supertype array vì historical type-system design, nên write cần runtime component-type check và có thể ném ArrayStoreException. Generics ưu tiên compile-time invariance."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.Arrays/Arrays.md", anchor: "array-covariance-risk"}
+    apiRelated: {controller: "ArrayController", methodSignature: "covarianceFailure()"}
+
+  - question: "Trong method call Java thông thường, decision nào dùng compile-time type và decision nào dùng runtime type?"
+    answer: "Compile-time type quyết định member availability, overload selection, assignment và cast. Sau khi chọn instance-method signature, runtime receiver class chọn override implementation. Field và static method không dynamic dispatch."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "13.TypeSystemMentalModel/TypeSystemMentalModel.md", anchor: "compile-time-vs-runtime-type"}
+    apiRelated: {controller: "TypeSystemController", methodSignature: "inspectRuntimeType(Object)"}
+
+  - question: "Vì sao wrapper type có thể tạo NullPointerException trong expression nhìn như numeric?"
+    answer: "Arithmetic/comparison có thể trigger implicit unboxing. Nếu wrapper reference null thì không có primitive value để lấy, nên unboxing ném NullPointerException trước arithmetic."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.WrapperBoxing/WrapperBoxing.md", anchor: "unboxing-null"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "API nên quyết định giữa null, empty result, exception hay Optional-like absence thế nào?"
+    answer: "Chọn theo domain semantics: absence là expected, exceptional hay khác empty value? Document contract nhất quán. Mục tiêu không phải cấm null máy móc mà làm absence explicit và dễ đoán."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "12.Null/Null.md", anchor: "null-api-design"}
+    apiRelated: {controller: "", methodSignature: ""}

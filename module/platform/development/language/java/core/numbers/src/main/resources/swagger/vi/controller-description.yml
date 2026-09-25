@@ -1,0 +1,24 @@
+BigDecimalController:
+  description: |-
+    <h2>B ig De ci ma l</h2>
+    <p>C&#225;c th&#237; nghiệm Java Core c&#243; thể chạy để quan s&#225;t Khởi tạo từ String/valueOf/double.</p>
+  readmeRelated:
+    file: 5.BigDecimal/BigDecimal.md
+FloatingPointController:
+  description: |-
+    <h2>F lo at in gP oi nt</h2>
+    <p>C&#225;c th&#237; nghiệm Java Core c&#243; thể chạy để quan s&#225;t Precision v&#224; rounding error.</p>
+  readmeRelated:
+    file: 3.FloatingPoint/FloatingPoint.md
+IntegerArithmeticController:
+  description: |-
+    <h2>I nt eg er Ar it hm et ic</h2>
+    <p>C&#225;c th&#237; nghiệm Java Core c&#243; thể chạy để quan s&#225;t Integer overflow v&#224; wraparound.</p>
+  readmeRelated:
+    file: 2.IntegerOverflow/IntegerOverflow.md
+RandomController:
+  description: |-
+    <h2>R an do m</h2>
+    <p>C&#225;c th&#237; nghiệm Java Core c&#243; thể chạy để quan s&#225;t Pseudo-random model v&#224; seed.</p>
+  readmeRelated:
+    file: 10.Random/Random.md

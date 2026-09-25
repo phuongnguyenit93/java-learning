@@ -1,0 +1,235 @@
+# <quiz-schema>
+# Cấu trúc câu hỏi Quiz
+# schema-version: 3
+#
+# questions [kiểu: list; bắt buộc; mặc định: []; duy nhất theo: id]
+#   Danh sách câu hỏi Quiz của module trong language hiện tại.
+#   mỗi phần tử:
+#     id [kiểu: string; bắt buộc; mặc định: ""]
+#       ID ổn định và duy nhất của câu hỏi.
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi hiển thị cho người học.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu câu hỏi được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu câu hỏi đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+#     answers [kiểu: list; bắt buộc; số phần tử: 4; mặc định: []; duy nhất theo: id]
+#       Chính xác bốn đáp án. ID A/B/C/D là identity nội bộ ổn định, không phải vị trí hiển thị sau khi frontend shuffle.
+#       mỗi phần tử:
+#         id [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#           Identity ổn định của đáp án.
+#         answer [kiểu: string; bắt buộc; mặc định: ""]
+#           Nội dung đáp án hiển thị cho người học.
+#         explanation [kiểu: string; bắt buộc; mặc định: ""]
+#           Giải thích hiển thị khi người học chọn đáp án này, bất kể đúng hay sai.
+#     correctAnswerId [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
+# </quiz-schema>
+
+questions:
+  - id: primitive-reference-copy
+    question: "Sau `List<String> b = a`, Java copy thứ gì?"
+    answers:
+      - {id: A, answer: "Reference value; cả hai biến có thể nhận diện cùng một List object.", explanation: "Đúng. Reference assignment copy reference value chứ không copy object graph."}
+      - {id: B, answer: "Một deep copy mới của List.", explanation: "Sai. Reference assignment copy reference value chứ không copy object graph."}
+      - {id: C, answer: "Chỉ current list size.", explanation: "Sai. Reference assignment copy reference value chứ không copy object graph."}
+      - {id: D, answer: "Địa chỉ bộ nhớ vật lý dưới dạng primitive long.", explanation: "Sai. Reference assignment copy reference value chứ không copy object graph."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.PrimitiveReference/PrimitiveReference.md", anchor: "primitive-vs-reference-model"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: local-definite-assignment
+    question: "Vì sao local `int x;` không được đọc trước khi compiler thấy assignment trên mọi path?"
+    answers:
+      - {id: A, answer: "Vì mọi local variable implicit final.", explanation: "Sai. Field có default value khi initialize, còn local phải definitely assigned trước khi đọc."}
+      - {id: B, answer: "Local variable chịu compile-time definite-assignment analysis và không có automatic default value.", explanation: "Đúng. Field có default value khi initialize, còn local phải definitely assigned trước khi đọc."}
+      - {id: C, answer: "Vì JVM initialize local thành null.", explanation: "Sai. Field có default value khi initialize, còn local phải definitely assigned trước khi đọc."}
+      - {id: D, answer: "Vì chỉ static method được initialize local variable.", explanation: "Sai. Field có default value khi initialize, còn local phải definitely assigned trước khi đọc."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.VariablesScope/VariablesScope.md", anchor: "definite-assignment"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: wrapper-identity-cache
+    question: "Rule an toàn để so sánh numeric wrapper value là gì?"
+    answers:
+      - {id: A, answer: "Luôn dùng `==` vì autoboxing loại bỏ object identity.", explanation: "Sai. `==` so object identity, còn wrapper cache không phải value-equality contract."}
+      - {id: B, answer: "Chỉ so `hashCode()`.", explanation: "Sai. `==` so object identity, còn wrapper cache không phải value-equality contract."}
+      - {id: C, answer: "Dùng value equality như `equals`, không dùng `==`, vì wrapper identity có thể cache hoặc distinct.", explanation: "Đúng. `==` so object identity, còn wrapper cache không phải value-equality contract."}
+      - {id: D, answer: "Wrapper value không thể compare sau boxing.", explanation: "Sai. `==` so object identity, còn wrapper cache không phải value-equality contract."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.WrapperBoxing/WrapperBoxing.md", anchor: "wrapper-caching"}
+    apiRelated: {controller: "WrapperController", methodSignature: "wrapperIdentity()"}
+
+  - id: wrapper-null-unboxing
+    question: "Điều gì xảy ra khi `Integer count = null; int x = count;` chạy?"
+    answers:
+      - {id: A, answer: "x trở thành 0.", explanation: "Sai. Wrapper null không thể cung cấp primitive value mà unboxing yêu cầu."}
+      - {id: B, answer: "Compiler silently bỏ assignment.", explanation: "Sai. Wrapper null không thể cung cấp primitive value mà unboxing yêu cầu."}
+      - {id: C, answer: "x trở thành Integer.MIN_VALUE.", explanation: "Sai. Wrapper null không thể cung cấp primitive value mà unboxing yêu cầu."}
+      - {id: D, answer: "Unboxing cần object value nên sẽ ném NullPointerException.", explanation: "Đúng. Wrapper null không thể cung cấp primitive value mà unboxing yêu cầu."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.WrapperBoxing/WrapperBoxing.md", anchor: "unboxing-null"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: numeric-promotion-byte
+    question: "Với `byte a=1,b=2`, type của `a + b` trước explicit cast là gì?"
+    answers:
+      - {id: A, answer: "int", explanation: "Đúng. Binary numeric promotion nâng byte/short lên int khi arithmetic."}
+      - {id: B, answer: "byte", explanation: "Sai. Binary numeric promotion nâng byte/short lên int khi arithmetic."}
+      - {id: C, answer: "short", explanation: "Sai. Binary numeric promotion nâng byte/short lên int khi arithmetic."}
+      - {id: D, answer: "long", explanation: "Sai. Binary numeric promotion nâng byte/short lên int khi arithmetic."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.Operators/Operators.md", anchor: "numeric-promotion"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: short-circuit-null-guard
+    question: "Vì sao `value != null && value.isBlank()` an toàn khỏi dereference null?"
+    answers:
+      - {id: A, answer: "`isBlank()` tự nhận null.", explanation: "Sai. Short-circuit là control-flow semantics: vế trái false thì vế phải không chạy."}
+      - {id: B, answer: "`&&` chỉ evaluate operand phải khi operand trái true.", explanation: "Đúng. Short-circuit là control-flow semantics: vế trái false thì vế phải không chạy."}
+      - {id: C, answer: "Compiler thay null bằng empty string.", explanation: "Sai. Short-circuit là control-flow semantics: vế trái false thì vế phải không chạy."}
+      - {id: D, answer: "Cả hai vế chạy nhưng NPE bị ignore.", explanation: "Sai. Short-circuit là control-flow semantics: vế trái false thì vế phải không chạy."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.Operators/Operators.md", anchor: "short-circuit-operators"}
+    apiRelated: {controller: "OperatorController", methodSignature: "shortCircuit()"}
+
+  - id: reference-downcast-runtime
+    question: "Một downcast compile được. Điều gì vẫn quyết định nó có thành công không?"
+    answers:
+      - {id: A, answer: "Variable name phải giống target class.", explanation: "Sai. Cast đổi compile-time view nhưng runtime vẫn type-check downcast."}
+      - {id: B, answer: "Target type phải final.", explanation: "Sai. Cast đổi compile-time view nhưng runtime vẫn type-check downcast."}
+      - {id: C, answer: "Runtime object phải thật sự compatible với target type yêu cầu.", explanation: "Đúng. Cast đổi compile-time view nhưng runtime vẫn type-check downcast."}
+      - {id: D, answer: "Source reference phải tạo trong cùng method.", explanation: "Sai. Cast đổi compile-time view nhưng runtime vẫn type-check downcast."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.Casting/Casting.md", anchor: "class-cast-failure"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: overload-phase-widening
+    question: "Với overload `f(long)`, `f(Integer)`, `f(int...)`, `f(1)` chọn method nào?"
+    answers:
+      - {id: A, answer: "`f(Integer)` vì boxing luôn ưu tiên cao nhất.", explanation: "Sai. Overload resolution theo phase; candidate applicable ở phase sớm chặn việc chọn varargs phase sau."}
+      - {id: B, answer: "`f(int...)` vì element type là exact int.", explanation: "Sai. Overload resolution theo phase; candidate applicable ở phase sớm chặn việc chọn varargs phase sau."}
+      - {id: C, answer: "Call luôn ambiguous.", explanation: "Sai. Overload resolution theo phase; candidate applicable ở phase sớm chặn việc chọn varargs phase sau."}
+      - {id: D, answer: "`f(long)` vì fixed-arity widening applicable được xét trước boxing và varargs fallback.", explanation: "Đúng. Overload resolution theo phase; candidate applicable ở phase sớm chặn việc chọn varargs phase sau."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Methods/Methods.md", anchor: "overload-resolution-phases"}
+    apiRelated: {controller: "OverloadResolutionController", methodSignature: "selectionMatrix()"}
+
+  - id: null-overload-ambiguity
+    question: "Vì sao `f(null)` có thể ambiguous khi overload nhận `String` và `StringBuilder`?"
+    answers:
+      - {id: A, answer: "null compatible với cả hai reference type không liên quan và không overload nào specific hơn.", explanation: "Đúng. Most-specific selection không chọn được giữa hai unrelated reference parameter type với null literal."}
+      - {id: B, answer: "null chỉ truyền được cho String.", explanation: "Sai. Most-specific selection không chọn được giữa hai unrelated reference parameter type với null literal."}
+      - {id: C, answer: "StringBuilder luôn specific hơn String.", explanation: "Sai. Most-specific selection không chọn được giữa hai unrelated reference parameter type với null literal."}
+      - {id: D, answer: "null là primitive và phải boxing trước.", explanation: "Sai. Most-specific selection không chọn được giữa hai unrelated reference parameter type với null literal."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Methods/Methods.md", anchor: "null-overload-ambiguity"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: java-pass-by-value
+    question: "Method mutate object nhận qua parameter và caller thấy mutation. Điều này có chứng minh Java pass-by-reference không?"
+    answers:
+      - {id: A, answer: "Có, mọi visible mutation đều chứng minh pass-by-reference.", explanation: "Sai. Parameter reassignment chỉ local, còn mutation qua copied reference có thể visible."}
+      - {id: B, answer: "Không. Java copy reference value và cả hai reference cùng nhận diện một mutable object.", explanation: "Đúng. Parameter reassignment chỉ local, còn mutation qua copied reference có thể visible."}
+      - {id: C, answer: "Có, nhưng chỉ với collection.", explanation: "Sai. Parameter reassignment chỉ local, còn mutation qua copied reference có thể visible."}
+      - {id: D, answer: "Không, vì method không thể mutate object.", explanation: "Sai. Parameter reassignment chỉ local, còn mutation qua copied reference có thể visible."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.PassByValue/PassByValue.md", anchor: "java-pass-by-value"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: array-covariance-runtime
+    question: "Vì sao `Object[] a = new String[1]; a[0] = 123;` compile nhưng fail?"
+    answers:
+      - {id: A, answer: "Integer không phải Object.", explanation: "Sai. Assignment được phép qua Object[] view, sau đó runtime store check ném ArrayStoreException."}
+      - {id: B, answer: "Object[] không store được value nào.", explanation: "Sai. Assignment được phép qua Object[] view, sau đó runtime store check ném ArrayStoreException."}
+      - {id: C, answer: "Array covariant nhưng runtime array nhớ component type String và reject store incompatible.", explanation: "Đúng. Assignment được phép qua Object[] view, sau đó runtime store check ném ArrayStoreException."}
+      - {id: D, answer: "Array đổi runtime type thành Object[] sau assignment.", explanation: "Sai. Assignment được phép qua Object[] view, sau đó runtime store check ném ArrayStoreException."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.Arrays/Arrays.md", anchor: "array-covariance-risk"}
+    apiRelated: {controller: "ArrayController", methodSignature: "covarianceFailure()"}
+
+  - id: switch-expression-yield
+    question: "Một property quan trọng của modern switch expression là gì?"
+    answers:
+      - {id: A, answer: "Chỉ dùng được với int.", explanation: "Sai. Switch expression là value-producing construct với rule semantics rõ ràng."}
+      - {id: B, answer: "Mọi case tự chạy case tiếp theo.", explanation: "Sai. Switch expression là value-producing construct với rule semantics rõ ràng."}
+      - {id: C, answer: "Không thể đứng bên phải assignment.", explanation: "Sai. Switch expression là value-producing construct với rule semantics rõ ràng."}
+      - {id: D, answer: "Nó có thể produce value bằng arrow rule hoặc `yield`, tránh accidental classic fall-through.", explanation: "Đúng. Switch expression là value-producing construct với rule semantics rõ ràng."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.ControlFlow/ControlFlow.md", anchor: "switch-expression"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: compile-runtime-type-dispatch
+    question: "Với `Animal a = new Dog()`, statement nào đúng?"
+    answers:
+      - {id: A, answer: "Overload/member availability dùng compile-time view Animal, còn overridden instance method dispatch tới Dog ở runtime.", explanation: "Đúng. Java tách compile-time signature selection khỏi runtime override dispatch."}
+      - {id: B, answer: "Mọi member lookup dùng Dog vì đó là runtime class.", explanation: "Sai. Java tách compile-time signature selection khỏi runtime override dispatch."}
+      - {id: C, answer: "Mọi method call dùng Animal vì đó là declared type.", explanation: "Sai. Java tách compile-time signature selection khỏi runtime override dispatch."}
+      - {id: D, answer: "Assignment biến Dog object thành Animal object.", explanation: "Sai. Java tách compile-time signature selection khỏi runtime override dispatch."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "13.TypeSystemMentalModel/TypeSystemMentalModel.md", anchor: "overload-vs-override-dispatch"}
+    apiRelated: {controller: "MethodDispatchController", methodSignature: "overloadVsOverride()"}
+
+  - id: package-private-boundary
+    question: "Member có access gì khi không khai báo access modifier?"
+    answers:
+      - {id: A, answer: "Private trong declaring method.", explanation: "Sai. Không modifier nghĩa là package access, khác protected và public."}
+      - {id: B, answer: "Package-private: accessible từ code trong cùng package.", explanation: "Đúng. Không modifier nghĩa là package access, khác protected và public."}
+      - {id: C, answer: "Chỉ protected trong mọi subclass.", explanation: "Sai. Không modifier nghĩa là package access, khác protected và public."}
+      - {id: D, answer: "Public trong toàn module.", explanation: "Sai. Không modifier nghĩa là package access, khác protected và public."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "11.PackagesImports/PackagesImports.md", anchor: "package-access"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: varargs-array-model
+    question: "Bên trong method khai báo `void log(String... values)`, `values` thực chất là gì?"
+    answers:
+      - {id: A, answer: "Một collection type đặc biệt không liên quan array.", explanation: "Sai. Varargs là syntax bao quanh array parameter; bên trong method nó hoạt động như String[]."}
+      - {id: B, answer: "Một parameter kiểu `String[]`.", explanation: "Đúng. Varargs là syntax bao quanh array parameter; bên trong method nó hoạt động như String[]."}
+      - {id: C, answer: "Một Stream<String> được tạo tự động.", explanation: "Sai. Varargs là syntax bao quanh array parameter; bên trong method nó hoạt động như String[]."}
+      - {id: D, answer: "Một String được compiler nối các value bằng dấu phẩy.", explanation: "Sai. Varargs là syntax bao quanh array parameter; bên trong method nó hoạt động như String[]."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.Varargs/Varargs.md", anchor: "varargs-array-model"}
+    apiRelated: {controller: "", methodSignature: ""}

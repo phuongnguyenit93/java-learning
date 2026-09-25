@@ -1,0 +1,175 @@
+1.Immutability/Immutability.md:
+  string-immutability:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  immutability-consequences:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  string-operation-new-value:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+2.StringPool/StringPool.md:
+  string-pool-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  literal-vs-new:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  pool-identity:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+3.Equality/Equality.md:
+  string-equals:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  string-reference-equality:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  case-insensitive-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+4.Concatenation/Concatenation.md:
+  concat-semantics:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  compile-time-concat:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  runtime-concat:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  loop-concat-cost:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+5.StringBuilder/StringBuilder.md:
+  builder-mutable-buffer:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  builder-capacity:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  builder-usage:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+6.StringBuffer/StringBuffer.md:
+  buffer-synchronization:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  builder-vs-buffer:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  thread-safety-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+7.Intern/Intern.md:
+  intern-semantics:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  intern-identity:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  intern-tradeoffs:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+8.Encoding/Encoding.md:
+  text-vs-bytes:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  charset-encode-decode:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  default-charset-risk:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  malformed-input:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+9.UnicodeCodePoint/UnicodeCodePoint.md:
+  utf16-char-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  code-point:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  surrogate-pairs:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  unicode-iteration:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  code-unit-code-point-grapheme:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  unicode-normalization:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  canonical-equivalence:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+10.Regex/Regex.md:
+  pattern-matcher:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  regex-groups:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  regex-quantifiers:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  regex-performance:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+11.TextBlocks/TextBlocks.md:
+  text-block-syntax:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  incidental-whitespace:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  escape-processing:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  text-block-not-template:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false

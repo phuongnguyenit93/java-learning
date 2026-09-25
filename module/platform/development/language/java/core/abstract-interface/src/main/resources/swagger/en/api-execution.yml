@@ -1,0 +1,60 @@
+AbstractClassController:
+  templateBehavior():
+    execution: '<p><strong>Concept:</strong> Abstract class as partial implementation
+      + state.</p><ol><li>The endpoint runs a bounded deterministic example inside
+      <code>AbstractClassController#templateBehavior()</code>.</li><li>Show shared
+      state/implementation plus subtype hook.<pre><code>@GetMapping(&quot;/template&quot;)
+      public Map&lt;String,Object&gt; templateBehavior(){ Processor p=new UpperProcessor();
+      return Map.of(&quot;declaredType&quot;,&quot;Processor&quot;,&quot;runtimeType&quot;,p.getClass().getSimpleName(),&quot;result&quot;,p.process(&quot;java&quot;));
+      }</code></pre></li><li>Inspect the response fields together: they are the observable
+      evidence for the rule rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
+      connect the observed result back to the linked README section before generalizing
+      the behavior.</p>'
+    usage: true
+DefaultMethodController:
+  dispatch():
+    execution: '<p><strong>Concept:</strong> Default methods.</p><ol><li>The endpoint
+      runs a bounded deterministic example inside <code>DefaultMethodController#dispatch()</code>.</li><li>Show
+      inherited default behavior and override.<pre><code>@GetMapping(&quot;/dispatch&quot;)
+      public Map&lt;String,Object&gt; dispatch(){ Greeting g=new DefaultGreeting();
+      return Map.of(&quot;result&quot;,g.greet(),&quot;runtime&quot;,g.getClass().getSimpleName());
+      }</code></pre></li><li>Inspect the response fields together: they are the observable
+      evidence for the rule rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
+      connect the observed result back to the linked README section before generalizing
+      the behavior.</p>'
+    usage: true
+  resolveConflict():
+    execution: '<p><strong>Concept:</strong> Default-method conflict resolution.</p><ol><li>The
+      endpoint runs a bounded deterministic example inside <code>DefaultMethodController#resolveConflict()</code>.</li><li>Demonstrate
+      explicit conflict resolution.<pre><code>@GetMapping(&quot;/resolve-conflict&quot;)
+      public Map&lt;String,Object&gt; resolveConflict(){ return Map.of(&quot;resolved&quot;,new
+      Both().value(),&quot;rule&quot;,&quot;class must explicitly resolve unrelated
+      default conflict&quot;); }</code></pre></li><li>Inspect the response fields
+      together: they are the observable evidence for the rule rather than a benchmark
+      or production policy.</li></ol><p><strong>Conclusion:</strong> connect the observed
+      result back to the linked README section before generalizing the behavior.</p>'
+    usage: true
+InterfaceController:
+  multipleContracts():
+    execution: '<p><strong>Concept:</strong> Implementing multiple contracts.</p><ol><li>The
+      endpoint runs a bounded deterministic example inside <code>InterfaceController#multipleContracts()</code>.</li><li>One
+      class implementing multiple independent interfaces.<pre><code>@GetMapping(&quot;/multiple-contracts&quot;)
+      public Map&lt;String,Object&gt; multipleContracts(){ Feature f=new Feature();
+      Named n=f; Enabled e=f; return Map.of(&quot;sameObject&quot;,n==e,&quot;name&quot;,n.name(),&quot;enabled&quot;,e.enabled(),&quot;runtimeType&quot;,f.getClass().getSimpleName());
+      }</code></pre></li><li>Inspect the response fields together: they are the observable
+      evidence for the rule rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
+      connect the observed result back to the linked README section before generalizing
+      the behavior.</p>'
+    usage: true
+InterfaceEvolutionController:
+  defaultCompatibility():
+    execution: '<p><strong>Concept:</strong> Interface evolution compatibility.</p><ol><li>The
+      endpoint runs a bounded deterministic example inside <code>InterfaceEvolutionController#defaultCompatibility()</code>.</li><li>Show
+      added default method preserving existing implementation.<pre><code>@GetMapping(&quot;/default-compatibility&quot;)
+      public Map&lt;String,Object&gt; defaultCompatibility(){ Versioned v=new OldStyleImplementation();
+      return Map.of(&quot;implementationOnlyDefines&quot;,&quot;id()&quot;,&quot;newDefaultMethodResult&quot;,v.display(),&quot;runtimeType&quot;,v.getClass().getSimpleName());
+      }</code></pre></li><li>Inspect the response fields together: they are the observable
+      evidence for the rule rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
+      connect the observed result back to the linked README section before generalizing
+      the behavior.</p>'
+    usage: true

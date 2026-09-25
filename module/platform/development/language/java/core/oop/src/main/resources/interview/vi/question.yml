@@ -1,0 +1,85 @@
+# <interview-schema>
+# Cấu trúc câu hỏi Interview
+# schema-version: 2
+#
+# questions [kiểu: list; bắt buộc; mặc định: []]
+#   Danh sách câu hỏi Interview của module trong language hiện tại.
+#   mỗi phần tử:
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi phỏng vấn hiển thị cho người học.
+#     answer [kiểu: string; bắt buộc; mặc định: ""]
+#       Câu trả lời tham khảo, chỉ hiển thị khi người học chủ động mở.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu nội dung được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu nội dung đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+# </interview-schema>
+
+questions:
+  - question: "Giải thích OOP thế nào mà không chỉ lặp slogan bốn pillar?"
+    answer: "OOP phân rã system thành object có responsibility, state, behavior và collaboration boundary. Encapsulation, inheritance, polymorphism và abstraction là tool trong model đó, không phải mục tiêu cuối; mục tiêu là rule localized và change dễ hiểu."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.MentalModel/MentalModel.md", anchor: "oop-object-collaboration"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Encapsulation khác việc chỉ làm field private thế nào?"
+    answer: "Private kiểm soát visibility. Encapsulation kiểm soát valid access/mutation qua abstraction ổn định bảo vệ invariant và ẩn decision. Class có private field nhưng unrestricted setter vẫn có encapsulation yếu."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.Encapsulation/Encapsulation.md", anchor: "encapsulation-model"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Substitutability nghĩa là gì trong Java inheritance hierarchy?"
+    answer: "Code viết theo supertype phải tiếp tục behavior đúng khi nhận subtype. Điều này gồm invariant, accepted input, output, side effect và checked-contract expectation, không chỉ pass compiler type check."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.Polymorphism/Polymorphism.md", anchor: "substitutability"}
+    apiRelated: {controller: "SubstitutabilityController", methodSignature: "substituteImplementations()"}
+
+  - question: "So sánh overriding, static-method hiding và field hiding với `Parent x = new Child()`."
+    answer: "Overridden instance method dispatch tới Child ở runtime. Hidden static method và hidden field được chọn từ compile-time view Parent. Đây là các language mechanism khác nhau dù access qua cùng expression."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.OverloadingOverriding/OverloadingOverriding.md", anchor: "dispatch-vs-hiding"}
+    apiRelated: {controller: "DispatchController", methodSignature: "dispatchVsHiding()"}
+
+  - question: "Quyết định giữa inheritance và composition thế nào?"
+    answer: "Dùng inheritance khi child là behavioral subtype thật và shared base contract/implementation có giá trị. Dùng composition khi chủ yếu cần reuse behavior, replaceable strategy hoặc coupling/ownership lỏng hơn mà không tạo is-a contract."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.Composition/Composition.md", anchor: "composition-vs-inheritance"}
+    apiRelated: {controller: "CompositionController", methodSignature: "strategySwap()"}
+
+  - question: "Khác biệt practical giữa dependency, association, aggregation và composition trong Java code là gì?"
+    answer: "Chúng truyền đạt mức relationship/ownership khác nhau chứ không phải runtime feature riêng: temporary use, long-lived association, weak/shared ownership và strong ownership/lifecycle. Ordinary reference implement chúng; API/lifecycle convention truyền meaning."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.Composition/Composition.md", anchor: "object-relationships"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Fragile-base-class risk là gì?"
+    answer: "Subclass phụ thuộc implementation assumption, initialization, protected hook và overridable behavior của base. Change ở base tưởng local có thể đổi subclass behavior, nên inheritance tạo coupling mạnh hơn delegation."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.Inheritance/Inheritance.md", anchor: "inheritance-coupling"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Khi nào abstraction bị xem là leaky, và mọi leak có tự động là bug không?"
+    answer: "Abstraction leak khi caller phải hiểu implementation detail mới dùng đúng, như lifecycle, ordering, provider error hoặc performance cliff. Một số constraint vốn relevant và nên document; vấn đề là giấu detail ảnh hưởng correctness."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Abstraction/Abstraction.md", anchor: "abstraction-leak"}
+    apiRelated: {controller: "", methodSignature: ""}

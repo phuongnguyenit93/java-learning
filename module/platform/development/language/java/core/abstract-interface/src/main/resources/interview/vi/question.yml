@@ -1,0 +1,85 @@
+# <interview-schema>
+# Cấu trúc câu hỏi Interview
+# schema-version: 2
+#
+# questions [kiểu: list; bắt buộc; mặc định: []]
+#   Danh sách câu hỏi Interview của module trong language hiện tại.
+#   mỗi phần tử:
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi phỏng vấn hiển thị cho người học.
+#     answer [kiểu: string; bắt buộc; mặc định: ""]
+#       Câu trả lời tham khảo, chỉ hiển thị khi người học chủ động mở.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu nội dung được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu nội dung đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+# </interview-schema>
+
+questions:
+  - question: "Abstract class giải quyết vấn đề gì mà pure interface có thể không tự nhiên bằng?"
+    answer: "Nó kết hợp common subtype contract với shared instance state, constructor, concrete algorithm và abstract extension point trong một hierarchy. Hữu ích khi shared implementation thật sự thuộc model."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.AbstractClass/AbstractClass.md", anchor: "abstract-class-model"}
+    apiRelated: {controller: "AbstractClassController", methodSignature: "templateBehavior()"}
+
+  - question: "Program to an interface trong Java nghĩa là gì?"
+    answer: "Consumer phụ thuộc stable behavioral role thay vì concrete implementation class. Điều này cho phép multiple implementation/proxy và giảm knowledge về construction/internal, nhưng interface vẫn phải có contract meaningful chứ không tạo máy móc."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.Interface/Interface.md", anchor: "interface-contract"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Vì sao class implement nhiều interface nhưng chỉ extend một class, và hệ quả design là gì?"
+    answer: "Java dùng single class inheritance để tránh ambiguity của multiple inherited instance state/base implementation, còn interface compose role/default behavior mà không multiple superclass state. Vì vậy interface phù hợp capability xuyên unrelated hierarchy."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.AbstractVsInterface/AbstractVsInterface.md", anchor: "abstract-vs-interface-inheritance"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Default method giải quyết compatibility problem nào và không guarantee điều gì?"
+    answer: "Chúng cho interface thêm implementation để nhiều existing implementer vẫn chạy mà không thêm body. Chúng không làm mọi interface change safe: abstract addition, changed contract hay default conflict mới vẫn có thể break client."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.DefaultStaticPrivate/DefaultStaticPrivate.md", anchor: "default-method-evolution"}
+    apiRelated: {controller: "InterfaceEvolutionController", methodSignature: "defaultCompatibility()"}
+
+  - question: "Giải thích Java resolve multiple inherited default method thế nào."
+    answer: "Default specific hơn có thể thắng, và concrete class-hierarchy method thắng interface default. Nếu unrelated interface vẫn cạnh tranh, implementing class phải override và có thể explicit gọi `InterfaceName.super.method()` khi rule cho phép."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.MultipleInheritance/MultipleInheritance.md", anchor: "default-method-conflict"}
+    apiRelated: {controller: "DefaultMethodController", methodSignature: "resolveConflict()"}
+
+  - question: "Vì sao interface field là nơi kém phù hợp cho mutable global application state?"
+    answer: "Chúng là public static final reference nên reference global và fixed nhưng mutable object phía sau vẫn đổi được. Điều này tạo global shared mutable state và ownership yếu thay vì instance encapsulation."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.Interface/Interface.md", anchor: "interface-fields"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Nêu các lý do hữu ích để redeclare inherited interface method."
+    answer: "Subinterface có thể narrow covariant return, thêm documentation/annotation specific hơn hoặc bắt implementation cung cấp body bằng cách redeclare inherited default thành abstract. Redeclaration nên refine chứ không tùy ý mâu thuẫn parent contract."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.InterfaceInheritance/InterfaceInheritance.md", anchor: "interface-redeclaration"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Interface và abstract class có thể dùng cùng nhau không, và khi nào hữu ích?"
+    answer: "Có. Interface định nghĩa public role còn abstract class cung cấp optional shared implementation/state cho một family implementation. Implementation khác vẫn có thể implement interface mà không inherit base class đó."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.AbstractVsInterface/AbstractVsInterface.md", anchor: "selection-guidance"}
+    apiRelated: {controller: "", methodSignature: ""}

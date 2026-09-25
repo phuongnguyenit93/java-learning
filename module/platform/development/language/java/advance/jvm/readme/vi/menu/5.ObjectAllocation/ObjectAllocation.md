@@ -1,0 +1,1 @@
+# Cấp phát và bố trí Object

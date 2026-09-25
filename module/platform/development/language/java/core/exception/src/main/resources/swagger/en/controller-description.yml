@@ -1,0 +1,24 @@
+ExceptionDesignController:
+  description: |-
+    <h2>E xc ep ti on De si gn</h2>
+    <p>Executable Java Core experiments related to Translate exceptions at abstraction boundaries.</p>
+  readmeRelated:
+    file: 9.ExceptionDesign/ExceptionDesign.md
+FinallyController:
+  description: |-
+    <h2>F in al ly</h2>
+    <p>Executable Java Core experiments related to return/throw interactions with finally.</p>
+  readmeRelated:
+    file: 5.TryCatchFinally/TryCatchFinally.md
+PropagationController:
+  description: |-
+    <h2>P ro pa ga ti on</h2>
+    <p>Executable Java Core experiments related to Stack unwinding and propagation.</p>
+  readmeRelated:
+    file: 4.Propagation/Propagation.md
+ResourceController:
+  description: |-
+    <h2>R es ou rc e</h2>
+    <p>Executable Java Core experiments related to Reverse resource close order.</p>
+  readmeRelated:
+    file: 6.TryWithResources/TryWithResources.md

@@ -1,0 +1,147 @@
+1.NumericModel/NumericModel.md:
+  numeric-type-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  integer-vs-floating:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  numeric-conversions:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+2.IntegerOverflow/IntegerOverflow.md:
+  integer-overflow-wraparound:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  checked-arithmetic:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  boundary-values:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+3.FloatingPoint/FloatingPoint.md:
+  binary-floating-point:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  precision-rounding-error:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  nan-infinity-negative-zero:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  floating-point-comparison:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+4.BigInteger/BigInteger.md:
+  big-integer-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  big-integer-immutability:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  big-integer-operations:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+5.BigDecimal/BigDecimal.md:
+  big-decimal-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  big-decimal-construction:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  big-decimal-arithmetic:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+6.PrecisionScale/PrecisionScale.md:
+  precision-vs-scale:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  scale-transformations:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  math-context:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+7.Rounding/Rounding.md:
+  rounding-modes:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  rounding-at-boundaries:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  financial-rounding-policy:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+8.BigDecimalComparison/BigDecimalComparison.md:
+  big-decimal-equals:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  big-decimal-compareto:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  big-decimal-collections:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+9.Math/Math.md:
+  math-core-functions:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  exact-arithmetic-methods:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  strictmath-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+10.Random/Random.md:
+  pseudo-random-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  threadlocal-random-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  random-not-security:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+11.SecureRandom/SecureRandom.md:
+  secure-random-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  entropy-seeding:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  security-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false

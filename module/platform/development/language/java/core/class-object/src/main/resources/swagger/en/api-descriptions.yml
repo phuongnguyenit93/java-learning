@@ -1,0 +1,195 @@
+AliasingController:
+  mutateAlias():
+    summary: Multiple references to one mutable object
+    description: Runs a deterministic learning experiment for Multiple references
+      to one mutable object. The response exposes concrete runtime evidence instead
+      of only describing the rule.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 13.ObjectAliasingMutability/ObjectAliasingMutability.md
+      anchor: aliasing-model
+    methodName: mutateAlias
+    params: [
+      ]
+    path: com/example/learning/controller/AliasingController.java
+    mapping: '@GetMapping("/mutation")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/class-object/aliasing/mutation
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+ConstructionController:
+  constructorDispatchRisk():
+    summary: Calling overridable methods during construction
+    description: Runs a deterministic learning experiment for Calling overridable
+      methods during construction. The response exposes concrete runtime evidence
+      instead of only describing the rule.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 8.ObjectCreationLifecycle/ObjectCreationLifecycle.md
+      anchor: constructor-dynamic-dispatch-risk
+    methodName: constructorDispatchRisk
+    params: [
+      ]
+    path: com/example/learning/controller/ConstructionController.java
+    mapping: '@GetMapping("/override-risk")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/class-object/construction/override-risk
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+CopyController:
+  shallowVsDeep():
+    summary: Shallow copy
+    description: Runs a deterministic learning experiment for Shallow copy. The response
+      exposes concrete runtime evidence instead of only describing the rule.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 12.CopySemantics/CopySemantics.md
+      anchor: shallow-copy
+    methodName: shallowVsDeep
+    params: [
+      ]
+    path: com/example/learning/controller/CopyController.java
+    mapping: '@GetMapping("/shallow-vs-deep")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/class-object/copy/shallow-vs-deep
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+EnumController:
+  enumBehavior():
+    summary: Constant-specific behavior
+    description: Runs a deterministic learning experiment for Constant-specific behavior.
+      The response exposes concrete runtime evidence instead of only describing the
+      rule.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 11.Enum/Enum.md
+      anchor: enum-constant-specific
+    methodName: enumBehavior
+    params: [
+      ]
+    path: com/example/learning/controller/EnumController.java
+    mapping: '@GetMapping("/behavior")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/class-object/enum/behavior
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+ImmutabilityController:
+  defensiveCopy():
+    summary: Defensive copy on output
+    description: Runs a deterministic learning experiment for Defensive copy on output.
+      The response exposes concrete runtime evidence instead of only describing the
+      rule.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 14.ImmutabilityDefensiveCopy/ImmutabilityDefensiveCopy.md
+      anchor: defensive-copy-output
+    methodName: defensiveCopy
+    params: [
+      ]
+    path: com/example/learning/controller/ImmutabilityController.java
+    mapping: '@GetMapping("/defensive-copy")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/class-object/immutability/defensive-copy
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+InitializationController:
+  traceOrder():
+    summary: Parent/child initialization order
+    description: Runs a deterministic learning experiment for Parent/child initialization
+      order. The response exposes concrete runtime evidence instead of only describing
+      the rule.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 7.InitializationOrder/InitializationOrder.md
+      anchor: inheritance-initialization-order
+    methodName: traceOrder
+    params: [
+      ]
+    path: com/example/learning/controller/InitializationController.java
+    mapping: '@GetMapping("/order")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/class-object/initialization/order
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+NestedClassController:
+  capture():
+    summary: Captured local variables
+    description: Runs a deterministic learning experiment for Captured local variables.
+      The response exposes concrete runtime evidence instead of only describing the
+      rule.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 9.NestedInnerClass/NestedInnerClass.md
+      anchor: capture-semantics
+    methodName: capture
+    params: [
+      ]
+    path: com/example/learning/controller/NestedClassController.java
+    mapping: '@GetMapping("/capture")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/class-object/nested/capture
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

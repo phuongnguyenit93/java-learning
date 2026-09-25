@@ -1,0 +1,8 @@
+input:
+  summary: 'Tham số đầu vào: input'
+  description: Điều khiển sample input bounded của learning endpoint này.
+  usage: true
+value:
+  summary: 'Tham số đầu vào: value'
+  description: Điều khiển sample input bounded của learning endpoint này.
+  usage: true

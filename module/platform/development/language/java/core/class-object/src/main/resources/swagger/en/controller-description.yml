@@ -1,0 +1,42 @@
+AliasingController:
+  description: |-
+    <h2>A li as in g</h2>
+    <p>Executable Java Core experiments related to Multiple references to one mutable object.</p>
+  readmeRelated:
+    file: 13.ObjectAliasingMutability/ObjectAliasingMutability.md
+ConstructionController:
+  description: |-
+    <h2>C on st ru ct io n</h2>
+    <p>Executable Java Core experiments related to Calling overridable methods during construction.</p>
+  readmeRelated:
+    file: 8.ObjectCreationLifecycle/ObjectCreationLifecycle.md
+CopyController:
+  description: |-
+    <h2>C op y</h2>
+    <p>Executable Java Core experiments related to Shallow copy.</p>
+  readmeRelated:
+    file: 12.CopySemantics/CopySemantics.md
+EnumController:
+  description: |-
+    <h2>E nu m</h2>
+    <p>Executable Java Core experiments related to Constant-specific behavior.</p>
+  readmeRelated:
+    file: 11.Enum/Enum.md
+ImmutabilityController:
+  description: |-
+    <h2>I mm ut ab il it y</h2>
+    <p>Executable Java Core experiments related to Defensive copy on output.</p>
+  readmeRelated:
+    file: 14.ImmutabilityDefensiveCopy/ImmutabilityDefensiveCopy.md
+InitializationController:
+  description: |-
+    <h2>I ni ti al iz at io n</h2>
+    <p>Executable Java Core experiments related to Parent/child initialization order.</p>
+  readmeRelated:
+    file: 7.InitializationOrder/InitializationOrder.md
+NestedClassController:
+  description: |-
+    <h2>N es te dC la ss</h2>
+    <p>Executable Java Core experiments related to Captured local variables.</p>
+  readmeRelated:
+    file: 9.NestedInnerClass/NestedInnerClass.md

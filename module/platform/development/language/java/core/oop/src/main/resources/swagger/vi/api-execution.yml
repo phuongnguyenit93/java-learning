@@ -1,0 +1,72 @@
+CompositionController:
+  strategySwap():
+    execution: <p><strong>Khái niệm:</strong> Trade-off composition v&#224; inheritance.</p><ol><li>Endpoint
+      chạy một ví dụ deterministic và bounded trong <code>CompositionController#strategySwap()</code>.</li><li>Source
+      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/strategy-swap&quot;)
+      public Map&lt;String,Object&gt; strategySwap(){ return Map.of(&quot;regular&quot;,new
+      Checkout(new Regular()).total(1000),&quot;discount&quot;,new Checkout(new Discount()).total(1000),&quot;consumerType&quot;,&quot;Checkout
+      unchanged&quot;); }</code></pre></li><li>Quan sát các field trong response cùng
+      nhau; đây là evidence cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
+      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
+      khái quát behavior.</p>
+    usage: true
+DispatchController:
+  overloadVsOverride():
+    execution: <p><strong>Khái niệm:</strong> Overloading l&#224; compile-time selection.</p><ol><li>Endpoint
+      chạy một ví dụ deterministic và bounded trong <code>DispatchController#overloadVsOverride()</code>.</li><li>Source
+      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/overload-vs-override&quot;)
+      public Map&lt;String,Object&gt; overloadVsOverride(){ Parent x=new Child();
+      return Map.of(&quot;overload&quot;,select(x),&quot;override&quot;,x.call(),&quot;runtime&quot;,x.getClass().getSimpleName());
+      }</code></pre></li><li>Quan sát các field trong response cùng nhau; đây là evidence
+      cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
+      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
+      khái quát behavior.</p>
+    usage: true
+  dispatchVsHiding():
+    execution: <p><strong>Khái niệm:</strong> Instance dispatch kh&#225;c static/field
+      hiding.</p><ol><li>Endpoint chạy một ví dụ deterministic và bounded trong <code>DispatchController#dispatchVsHiding()</code>.</li><li>Source
+      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/dispatch-vs-hiding&quot;)
+      public Map&lt;String,Object&gt; dispatchVsHiding(){ Parent x=new Child(); return
+      Map.of(&quot;instanceMethod&quot;,x.call(),&quot;staticMethod&quot;,x.staticCall(),&quot;field&quot;,x.field,&quot;runtime&quot;,x.getClass().getSimpleName());
+      }</code></pre></li><li>Quan sát các field trong response cùng nhau; đây là evidence
+      cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
+      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
+      khái quát behavior.</p>
+    usage: true
+EncapsulationController:
+  invariantProtection():
+    execution: <p><strong>Khái niệm:</strong> Bảo vệ invariant.</p><ol><li>Endpoint
+      chạy một ví dụ deterministic và bounded trong <code>EncapsulationController#invariantProtection()</code>.</li><li>Source
+      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/invariant&quot;)
+      public Map&lt;String,Object&gt; invariantProtection(){ Account a=new Account();
+      a.withdraw(30); String failure=&quot;none&quot;; try{a.withdraw(100);}catch(IllegalArgumentException
+      e){failure=e.getMessage();} return Map.of(&quot;balance&quot;,a.balance(),&quot;rejected&quot;,failure,&quot;invariant&quot;,&quot;balance
+      never becomes negative&quot;); }</code></pre></li><li>Quan sát các field trong
+      response cùng nhau; đây là evidence cho quy tắc, không phải benchmark hay production
+      policy.</li></ol><p><strong>Kết luận:</strong> đối chiếu kết quả với README
+      section được liên kết trước khi khái quát behavior.</p>
+    usage: true
+PolymorphismController:
+  dispatch():
+    execution: <p><strong>Khái niệm:</strong> Runtime dynamic dispatch.</p><ol><li>Endpoint
+      chạy một ví dụ deterministic và bounded trong <code>PolymorphismController#dispatch()</code>.</li><li>Source
+      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/dispatch&quot;)
+      public Map&lt;String,Object&gt; dispatch(){ Speaker first=new Dog(), second=new
+      Cat(); return Map.of(&quot;declaredType&quot;,&quot;Speaker&quot;,&quot;firstRuntime&quot;,first.getClass().getSimpleName(),&quot;firstResult&quot;,first.speak(),&quot;secondRuntime&quot;,second.getClass().getSimpleName(),&quot;secondResult&quot;,second.speak());
+      }</code></pre></li><li>Quan sát các field trong response cùng nhau; đây là evidence
+      cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
+      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
+      khái quát behavior.</p>
+    usage: true
+SubstitutabilityController:
+  substituteImplementations():
+    execution: <p><strong>Khái niệm:</strong> Substitutability v&#224; behavioral
+      expectation.</p><ol><li>Endpoint chạy một ví dụ deterministic và bounded trong
+      <code>SubstitutabilityController#substituteImplementations()</code>.</li><li>Source
+      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/implementations&quot;)
+      public List&lt;Map&lt;String,String&gt;&gt; substituteImplementations(){ return
+      List.of(run(new Upper()),run(new Lower())); }</code></pre></li><li>Quan sát
+      các field trong response cùng nhau; đây là evidence cho quy tắc, không phải
+      benchmark hay production policy.</li></ol><p><strong>Kết luận:</strong> đối
+      chiếu kết quả với README section được liên kết trước khi khái quát behavior.</p>
+    usage: true

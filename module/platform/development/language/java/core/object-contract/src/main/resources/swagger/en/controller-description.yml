@@ -1,0 +1,18 @@
+EqualityController:
+  description: |-
+    <h2>E qu al it y</h2>
+    <p>Executable Java Core experiments related to Object identity vs logical equality.</p>
+  readmeRelated:
+    file: 1.IdentityEquality/IdentityEquality.md
+HashContractController:
+  description: |-
+    <h2>H as hC on tr ac t</h2>
+    <p>Executable Java Core experiments related to Observable failures from broken contract.</p>
+  readmeRelated:
+    file: 4.EqualsHashCode/EqualsHashCode.md
+OrderingController:
+  description: |-
+    <h2>O rd er in g</h2>
+    <p>Executable Java Core experiments related to External/custom ordering.</p>
+  readmeRelated:
+    file: 7.Comparator/Comparator.md

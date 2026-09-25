@@ -1,0 +1,1 @@
+# Giới hạn của Generics

@@ -1,0 +1,135 @@
+AbstractClassController:
+  templateBehavior():
+    summary: Abstract class như partial implementation + state
+    description: Chạy thí nghiệm học tập deterministic cho Abstract class như partial
+      implementation + state. Response cung cấp runtime evidence cụ thể thay vì chỉ
+      mô tả quy tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 1.AbstractClass/AbstractClass.md
+      anchor: abstract-class-model
+    methodName: templateBehavior
+    params: [
+      ]
+    path: com/example/learning/controller/AbstractClassController.java
+    mapping: '@GetMapping("/template")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/abstract-interface/abstract-class/template
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+DefaultMethodController:
+  dispatch():
+    summary: Default method
+    description: Chạy thí nghiệm học tập deterministic cho Default method. Response
+      cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 5.DefaultStaticPrivate/DefaultStaticPrivate.md
+      anchor: default-method
+    methodName: dispatch
+    params: [
+      ]
+    path: com/example/learning/controller/DefaultMethodController.java
+    mapping: '@GetMapping("/dispatch")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/abstract-interface/default-method/dispatch
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  resolveConflict():
+    summary: Resolve default-method conflict
+    description: Chạy thí nghiệm học tập deterministic cho Resolve default-method
+      conflict. Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 6.MultipleInheritance/MultipleInheritance.md
+      anchor: default-method-conflict
+    methodName: resolveConflict
+    params: [
+      ]
+    path: com/example/learning/controller/DefaultMethodController.java
+    mapping: '@GetMapping("/resolve-conflict")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/abstract-interface/default-method/resolve-conflict
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+InterfaceController:
+  multipleContracts():
+    summary: Implement nhiều contract
+    description: Chạy thí nghiệm học tập deterministic cho Implement nhiều contract.
+      Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 2.Interface/Interface.md
+      anchor: interface-implementation
+    methodName: multipleContracts
+    params: [
+      ]
+    path: com/example/learning/controller/InterfaceController.java
+    mapping: '@GetMapping("/multiple-contracts")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/abstract-interface/interface/multiple-contracts
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+InterfaceEvolutionController:
+  defaultCompatibility():
+    summary: Interface evolution compatibility
+    description: Chạy thí nghiệm học tập deterministic cho Interface evolution compatibility.
+      Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 5.DefaultStaticPrivate/DefaultStaticPrivate.md
+      anchor: default-method-evolution
+    methodName: defaultCompatibility
+    params: [
+      ]
+    path: com/example/learning/controller/InterfaceEvolutionController.java
+    mapping: '@GetMapping("/default-compatibility")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/abstract-interface/evolution/default-compatibility
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

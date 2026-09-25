@@ -1,0 +1,1 @@
+# Nạp Resource

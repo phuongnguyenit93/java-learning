@@ -1,0 +1,1 @@
+# Vòng đời nạp Class

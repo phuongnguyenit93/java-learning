@@ -1,0 +1,64 @@
+EqualityController:
+  identityVsEquality():
+    execution: <p><strong>Khái niệm:</strong> Object identity v&#224; logical equality.</p><ol><li>Endpoint
+      chạy một ví dụ deterministic và bounded trong <code>EqualityController#identityVsEquality()</code>.</li><li>Source
+      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/identity-vs-equality&quot;)
+      public Map&lt;String,Object&gt; identityVsEquality(){ Value a=new Value(7),
+      b=new Value(7); return Map.of(&quot;sameReference&quot;,a==b,&quot;logicalEquals&quot;,a.equals(b),&quot;sameHash&quot;,a.hashCode()==b.hashCode());
+      }</code></pre></li><li>Quan sát các field trong response cùng nhau; đây là evidence
+      cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
+      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
+      khái quát behavior.</p>
+    usage: true
+HashContractController:
+  brokenHashSetLookup():
+    execution: <p><strong>Khái niệm:</strong> Hệ quả observable khi contract bị ph&#225;.</p><ol><li>Endpoint
+      chạy một ví dụ deterministic và bounded trong <code>HashContractController#brokenHashSetLookup()</code>.</li><li>Source
+      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/broken-contract&quot;)
+      public Map&lt;String,Object&gt; brokenHashSetLookup(){ Set&lt;Broken&gt; set=new
+      HashSet&lt;&gt;(); Broken stored=new Broken(1), equal=new Broken(1); set.add(stored);
+      return Map.of(&quot;equals&quot;,stored.equals(equal),&quot;storedHash&quot;,stored.hashCode(),&quot;equalHash&quot;,equal.hashCode(),&quot;containsEqualObject&quot;,set.contains(equal));
+      }</code></pre></li><li>Quan sát các field trong response cùng nhau; đây là evidence
+      cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
+      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
+      khái quát behavior.</p>
+    usage: true
+  mutableKey():
+    execution: <p><strong>Khái niệm:</strong> Rủi ro mutable field trong hashCode.</p><ol><li>Endpoint
+      chạy một ví dụ deterministic và bounded trong <code>HashContractController#mutableKey()</code>.</li><li>Source
+      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>static
+      final class MutableKey { int id; MutableKey(int id){this.id=id;} public boolean
+      equals(Object o){return o instanceof MutableKey k&amp;&amp;id==k.id;} public
+      int hashCode(){return Integer.hashCode(id);} }</code></pre></li><li>Quan sát
+      các field trong response cùng nhau; đây là evidence cho quy tắc, không phải
+      benchmark hay production policy.</li></ol><p><strong>Kết luận:</strong> đối
+      chiếu kết quả với README section được liên kết trước khi khái quát behavior.</p>
+    usage: true
+OrderingController:
+  naturalVsCustom():
+    execution: <p><strong>Khái niệm:</strong> External/custom ordering.</p><ol><li>Endpoint
+      chạy một ví dụ deterministic và bounded trong <code>OrderingController#naturalVsCustom()</code>.</li><li>Source
+      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/natural-vs-custom&quot;)
+      public Map&lt;String,Object&gt; naturalVsCustom(){ List&lt;Person&gt; source=List.of(new
+      Person(&quot;Bob&quot;,30),new Person(&quot;Ada&quot;,40)); List&lt;Person&gt;
+      natural=new ArrayList&lt;&gt;(source); Collections.sort(natural); List&lt;Person&gt;
+      byName=new ArrayList&lt;&gt;(source); byName.sort(Comparator.comparing(Person::name));
+      return Map.of(&quot;naturalByAge&quot;,natural,&quot;customByName&quot;,byName);
+      }</code></pre></li><li>Quan sát các field trong response cùng nhau; đây là evidence
+      cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
+      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
+      khái quát behavior.</p>
+    usage: true
+  compareToEquals():
+    execution: <p><strong>Khái niệm:</strong> Consistency với equals v&#224; sorted
+      collection.</p><ol><li>Endpoint chạy một ví dụ deterministic và bounded trong
+      <code>OrderingController#compareToEquals()</code>.</li><li>Source line dưới
+      đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/compareto-equals&quot;)
+      public Map&lt;String,Object&gt; compareToEquals(){ BigDecimal a=new BigDecimal(&quot;1.0&quot;),b=new
+      BigDecimal(&quot;1.00&quot;); Set&lt;BigDecimal&gt; hash=new HashSet&lt;&gt;(List.of(a,b));
+      Set&lt;BigDecimal&gt; tree=new TreeSet&lt;&gt;(List.of(a,b)); return Map.of(&quot;equals&quot;,a.equals(b),&quot;compareTo&quot;,a.compareTo(b),&quot;hashSetSize&quot;,hash.size(),&quot;treeSetSize&quot;,tree.size());
+      }</code></pre></li><li>Quan sát các field trong response cùng nhau; đây là evidence
+      cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
+      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
+      khái quát behavior.</p>
+    usage: true

@@ -1,0 +1,85 @@
+# <interview-schema>
+# Cấu trúc câu hỏi Interview
+# schema-version: 2
+#
+# questions [kiểu: list; bắt buộc; mặc định: []]
+#   Danh sách câu hỏi Interview của module trong language hiện tại.
+#   mỗi phần tử:
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi phỏng vấn hiển thị cho người học.
+#     answer [kiểu: string; bắt buộc; mặc định: ""]
+#       Câu trả lời tham khảo, chỉ hiển thị khi người học chủ động mở.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu nội dung được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu nội dung đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+# </interview-schema>
+
+questions:
+  - question: "Giải thích integer overflow trong Java và cách xử lý counter không được phép overflow."
+    answer: "Primitive integer arithmetic wrap ở fixed-width boundary. Nếu overflow vi phạm contract, validate bound hoặc dùng Math exact helper hay type rộng/arbitrary-precision để failure explicit."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.IntegerOverflow/IntegerOverflow.md", anchor: "integer-overflow-wraparound"}
+    apiRelated: {controller: "IntegerArithmeticController", methodSignature: "overflow()"}
+
+  - question: "Vì sao chiến lược so sánh floating-point phải phụ thuộc domain?"
+    answer: "Computed binary floating value thường có representation error. Exact equality đúng cho exact binary contract, còn measurement thường cần absolute hoặc relative tolerance theo scale và error requirement; không có universal epsilon."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.FloatingPoint/FloatingPoint.md", anchor: "precision-rounding-error"}
+    apiRelated: {controller: "FloatingPointController", methodSignature: "precision()"}
+
+  - question: "So sánh `new BigDecimal(\"0.1\")`, `BigDecimal.valueOf(0.1)` và `new BigDecimal(0.1)`."
+    answer: "String form biểu diễn exact decimal 0.1. valueOf dùng canonical String representation của double và thường giữ intent decimal. Double constructor capture exact binary double value nên lộ approximation."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.BigDecimal/BigDecimal.md", anchor: "big-decimal-construction"}
+    apiRelated: {controller: "BigDecimalController", methodSignature: "construction()"}
+
+  - question: "Giải thích khác biệt giữa BigDecimal precision, scale và MathContext."
+    answer: "Precision đếm significant digit; scale xác định decimal positioning. MathContext cung cấp operation precision cộng rounding mode. Set scale không giống limit significant-digit precision."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.PrecisionScale/PrecisionScale.md", anchor: "precision-vs-scale"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Vì sao BigDecimal có thể behavior khác nhau giữa HashSet và TreeSet?"
+    answer: "BigDecimal.equals tính scale, còn compareTo xét numerical magnitude. HashSet dùng equals và hashCode nên có thể giữ 1.0 và 1.00 riêng; TreeSet natural ordering có thể xem chúng cùng ordering key."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.BigDecimalComparison/BigDecimalComparison.md", anchor: "big-decimal-equals"}
+    apiRelated: {controller: "BigDecimalController", methodSignature: "comparison()"}
+
+  - question: "Vì sao round mọi intermediate monetary result có thể khác round một lần ở business boundary?"
+    answer: "Mỗi lần round đều discard information. Round lặp làm input cho bước sau thay đổi nên final total có thể khác. Domain phải định nghĩa cả thời điểm rounding chứ không chỉ mode."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Rounding/Rounding.md", anchor: "rounding-at-boundaries"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Khác biệt concept giữa pseudo-random reproducible và security randomness là gì?"
+    answer: "PRNG thường deterministic từ seed và state, hữu ích cho test và simulation. Security randomness cần computational unpredictability trước attacker và nên dùng SecureRandom với entropy/provider phù hợp."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.Random/Random.md", anchor: "pseudo-random-model"}
+    apiRelated: {controller: "RandomController", methodSignature: "seededSequence()"}
+
+  - question: "Numbers module nên dừng ở đâu khi dạy SecureRandom?"
+    answer: "Nó nên chốt khi nào unpredictability cần SecureRandom và mental model entropy/seeding cơ bản. Key generation, IV/nonce, signature, encryption và provider policy thuộc security-cryptography module."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "11.SecureRandom/SecureRandom.md", anchor: "security-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}

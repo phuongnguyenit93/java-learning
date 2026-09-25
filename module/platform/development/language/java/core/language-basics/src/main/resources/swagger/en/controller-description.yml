@@ -1,0 +1,48 @@
+ArrayController:
+  description: |-
+    <h2>A rr ay</h2>
+    <p>Executable Java Core experiments related to Array covariance and ArrayStoreException.</p>
+  readmeRelated:
+    file: 10.Arrays/Arrays.md
+CastingController:
+  description: |-
+    <h2>C as ti ng</h2>
+    <p>Executable Java Core experiments related to Reference upcast and downcast.</p>
+  readmeRelated:
+    file: 5.Casting/Casting.md
+MethodDispatchController:
+  description: |-
+    <h2>M et ho dD is pa tc h</h2>
+    <p>Executable Java Core experiments related to Overload selection vs override dispatch.</p>
+  readmeRelated:
+    file: 13.TypeSystemMentalModel/TypeSystemMentalModel.md
+OperatorController:
+  description: |-
+    <h2>O pe ra to r</h2>
+    <p>Executable Java Core experiments related to Short-circuit boolean operators.</p>
+  readmeRelated:
+    file: 4.Operators/Operators.md
+OverloadResolutionController:
+  description: |-
+    <h2>O ve rl oa dR es ol ut io n</h2>
+    <p>Executable Java Core experiments related to Overload resolution phases.</p>
+  readmeRelated:
+    file: 7.Methods/Methods.md
+PassByValueController:
+  description: |-
+    <h2>P as sB yV al ue</h2>
+    <p>Executable Java Core experiments related to Copied references and visible object mutation.</p>
+  readmeRelated:
+    file: 9.PassByValue/PassByValue.md
+TypeSystemController:
+  description: |-
+    <h2>T yp eS ys te m</h2>
+    <p>Executable Java Core experiments related to Compile-time type vs runtime type.</p>
+  readmeRelated:
+    file: 13.TypeSystemMentalModel/TypeSystemMentalModel.md
+WrapperController:
+  description: |-
+    <h2>W ra pp er</h2>
+    <p>Executable Java Core experiments related to Wrapper caches and identity pitfalls.</p>
+  readmeRelated:
+    file: 3.WrapperBoxing/WrapperBoxing.md

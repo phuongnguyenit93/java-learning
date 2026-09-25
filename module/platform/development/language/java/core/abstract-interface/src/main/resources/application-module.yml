@@ -1,0 +1,41 @@
+# Module YAML composition contract.
+# This skeleton is generated only when the file is missing or blank.
+# After initialization this file is human-owned and will not be overwritten.
+#
+# combineYaml reads this file. Spring Boot does not use it as runtime config.
+
+---
+# Common module configuration exported for composition
+# Add common exported configuration below this line.
+
+
+---
+# Module configuration for profile DEV
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+# Add profile-specific configuration below this line.
+
+
+
+---
+# Module configuration for profile LOC
+spring:
+  config:
+    activate:
+      on-profile: loc
+
+# Add profile-specific configuration below this line.
+
+
+
+---
+# Module configuration for profile PRD
+spring:
+  config:
+    activate:
+      on-profile: prd
+
+# Add profile-specific configuration below this line.

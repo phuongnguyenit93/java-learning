@@ -1,0 +1,94 @@
+1.AbstractClass/AbstractClass.md:
+  abstract-class-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  abstract-method:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  abstract-constructor:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  abstract-class-limits:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+2.Interface/Interface.md:
+  interface-contract:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  interface-fields:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  interface-method-kinds:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  interface-implementation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+3.AbstractVsInterface/AbstractVsInterface.md:
+  abstract-vs-interface-state:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  abstract-vs-interface-inheritance:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  selection-guidance:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+4.InterfaceInheritance/InterfaceInheritance.md:
+  interface-extends-interface:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  multiple-interface-hierarchy:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  interface-redeclaration:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+5.DefaultStaticPrivate/DefaultStaticPrivate.md:
+  default-method:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  static-interface-method:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  private-interface-method:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  default-method-evolution:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+6.MultipleInheritance/MultipleInheritance.md:
+  default-method-conflict:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  class-wins-rule:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  explicit-super-interface:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  diamond-interface:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false

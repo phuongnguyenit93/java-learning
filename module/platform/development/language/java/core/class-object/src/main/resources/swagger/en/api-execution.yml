@@ -1,0 +1,91 @@
+AliasingController:
+  mutateAlias():
+    execution: '<p><strong>Concept:</strong> Multiple references to one mutable object.</p><ol><li>The
+      endpoint runs a bounded deterministic example inside <code>AliasingController#mutateAlias()</code>.</li><li>Show
+      two references observing same mutation.<pre><code>@GetMapping(&quot;/mutation&quot;)
+      public Map&lt;String,Object&gt; mutateAlias(){ List&lt;String&gt; first=new
+      ArrayList&lt;&gt;(); List&lt;String&gt; second=first; second.add(&quot;visible-through-both&quot;);
+      return Map.of(&quot;sameIdentity&quot;,first==second,&quot;first&quot;,first,&quot;second&quot;,second);
+      }</code></pre></li><li>Inspect the response fields together: they are the observable
+      evidence for the rule rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
+      connect the observed result back to the linked README section before generalizing
+      the behavior.</p>'
+    usage: true
+ConstructionController:
+  constructorDispatchRisk():
+    execution: '<p><strong>Concept:</strong> Calling overridable methods during construction.</p><ol><li>The
+      endpoint runs a bounded deterministic example inside <code>ConstructionController#constructorDispatchRisk()</code>.</li><li>Show
+      overridable method seeing uninitialized subclass state.<pre><code>@GetMapping(&quot;/override-risk&quot;)
+      public Map&lt;String,Object&gt; constructorDispatchRisk(){ Child child=new Child();
+      return Map.of(&quot;valueAfterConstruction&quot;,child.value,&quot;valueObservedDuringSuperConstructor&quot;,child.observed,&quot;conclusion&quot;,&quot;virtual
+      dispatch reached Child before Child field initializer&quot;); }</code></pre></li><li>Inspect
+      the response fields together: they are the observable evidence for the rule
+      rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
+      connect the observed result back to the linked README section before generalizing
+      the behavior.</p>'
+    usage: true
+CopyController:
+  shallowVsDeep():
+    execution: '<p><strong>Concept:</strong> Shallow copy.</p><ol><li>The endpoint
+      runs a bounded deterministic example inside <code>CopyController#shallowVsDeep()</code>.</li><li>Compare
+      nested mutable state after shallow/deep copy.<pre><code>@GetMapping(&quot;/shallow-vs-deep&quot;)
+      public Map&lt;String,Object&gt; shallowVsDeep(){ Person source=new Person(&quot;Ada&quot;,new
+      ArrayList&lt;&gt;(List.of(&quot;java&quot;))); Person shallow=source.shallow(),
+      deep=source.deep(); source.tags.add(&quot;mutable&quot;); return Map.of(&quot;sourceTags&quot;,source.tags,&quot;shallowTags&quot;,shallow.tags,&quot;deepTags&quot;,deep.tags,&quot;shallowSharesNested&quot;,source.tags==shallow.tags,&quot;deepSharesNested&quot;,source.tags==deep.tags);
+      }</code></pre></li><li>Inspect the response fields together: they are the observable
+      evidence for the rule rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
+      connect the observed result back to the linked README section before generalizing
+      the behavior.</p>'
+    usage: true
+EnumController:
+  enumBehavior():
+    execution: '<p><strong>Concept:</strong> Constant-specific behavior.</p><ol><li>The
+      endpoint runs a bounded deterministic example inside <code>EnumController#enumBehavior()</code>.</li><li>Show
+      fields/methods/interface/per-constant behavior.<pre><code>@GetMapping(&quot;/behavior&quot;)
+      public Map&lt;String,Object&gt; enumBehavior(){ return Map.of(&quot;standard&quot;,Tier.STANDARD.apply(1000),&quot;discount&quot;,Tier.DISCOUNT.apply(1000),&quot;identity&quot;,Tier.valueOf(&quot;DISCOUNT&quot;)==Tier.DISCOUNT,&quot;declarationOrder&quot;,Arrays.stream(Tier.values()).map(Enum::name).toList());
+      }</code></pre></li><li>Inspect the response fields together: they are the observable
+      evidence for the rule rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
+      connect the observed result back to the linked README section before generalizing
+      the behavior.</p>'
+    usage: true
+ImmutabilityController:
+  defensiveCopy():
+    execution: '<p><strong>Concept:</strong> Defensive copy on output.</p><ol><li>The
+      endpoint runs a bounded deterministic example inside <code>ImmutabilityController#defensiveCopy()</code>.</li><li>Demonstrate
+      leaked vs copied mutable collection.<pre><code>@GetMapping(&quot;/defensive-copy&quot;)
+      public Map&lt;String,Object&gt; defensiveCopy(){ List&lt;String&gt; input=new
+      ArrayList&lt;&gt;(List.of(&quot;A&quot;)); SafeNames value=new SafeNames(input);
+      input.add(&quot;B&quot;); boolean outputMutable; try{value.names().add(&quot;C&quot;);
+      outputMutable=true;}catch(UnsupportedOperationException e){outputMutable=false;}
+      return Map.of(&quot;callerInputAfterMutation&quot;,input,&quot;storedSnapshot&quot;,value.names(),&quot;returnedViewMutable&quot;,outputMutable);
+      }</code></pre></li><li>Inspect the response fields together: they are the observable
+      evidence for the rule rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
+      connect the observed result back to the linked README section before generalizing
+      the behavior.</p>'
+    usage: true
+InitializationController:
+  traceOrder():
+    execution: '<p><strong>Concept:</strong> Parent/child initialization order.</p><ol><li>The
+      endpoint runs a bounded deterministic example inside <code>InitializationController#traceOrder()</code>.</li><li>Return
+      deterministic static/instance/constructor trace.<pre><code>@GetMapping(&quot;/order&quot;)
+      public Map&lt;String,Object&gt; traceOrder(){ List&lt;String&gt; t=new ArrayList&lt;&gt;();
+      Child c=new Child(t); t.add(t.size()-1,&quot;child-field-initializer(value=&quot;+c.field+&quot;)&quot;);
+      return Map.of(&quot;staticInitialization&quot;,List.copyOf(STATIC_TRACE),&quot;instanceConstruction&quot;,t);
+      }</code></pre></li><li>Inspect the response fields together: they are the observable
+      evidence for the rule rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
+      connect the observed result back to the linked README section before generalizing
+      the behavior.</p>'
+    usage: true
+NestedClassController:
+  capture():
+    execution: '<p><strong>Concept:</strong> Captured local variables.</p><ol><li>The
+      endpoint runs a bounded deterministic example inside <code>NestedClassController#capture()</code>.</li><li>Expose
+      outer/captured-state relationship.<pre><code>@GetMapping(&quot;/capture&quot;)
+      public Map&lt;String,Object&gt; capture(){ int base=40; class Local { int answer(){return
+      base+2;} } Local local=new Local(); return Map.of(&quot;capturedValue&quot;,base,&quot;computed&quot;,local.answer(),&quot;rule&quot;,&quot;captured
+      local is final or effectively final&quot;); }</code></pre></li><li>Inspect the
+      response fields together: they are the observable evidence for the rule rather
+      than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
+      connect the observed result back to the linked README section before generalizing
+      the behavior.</p>'
+    usage: true

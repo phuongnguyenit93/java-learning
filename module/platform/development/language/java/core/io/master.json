@@ -1,0 +1,105 @@
+{
+    "MODULE_TYPE": {
+        "DESCRIPTION": "Include 4 values. SERVLET for runnable Spring MVC/Servlet application, REACTIVE for runnable Spring WebFlux application, LIBRARY for Java module without Spring Boot main application, PLATFORM for configuration/dependency module without Java source",
+        "TYPE": "string",
+        "VALUE": "LIBRARY",
+        "EXAMPLE_VALUE": "SERVLET,REACTIVE,LIBRARY,PLATFORM"
+    },
+    "MODULE_LANGUAGE": {
+        "DESCRIPTION": "Languages supported by this module for generated documentation and metadata",
+        "TYPE": "list",
+        "VALUE": [
+            "vi",
+            "en"
+        ]
+    },
+    "JAVA_BASE_PACKAGE": {
+        "DESCRIPTION": "Define Java base package for this module",
+        "TYPE": "string",
+        "VALUE": "com.example.learning"
+    },
+    "SERVICE_NAME": {
+        "DESCRIPTION": "Define name for this module. Use this name for task and many automation gradle",
+        "TYPE": "string",
+        "VALUE": "JAVA_IO"
+    },
+    "SERVICE_NAME_DESCRIBE": {
+        "DESCRIPTION": "Describe this module function",
+        "TYPE": "string",
+        "VALUE": "Java I/O and NIO"
+    },
+    "IS_MODULE_DEPEND": {
+        "DESCRIPTION": "To define this module added to group list dependency depend or not",
+        "TYPE": "boolean",
+        "VALUE": "FALSE"
+    },
+    "BUILD_ENV": {
+        "DESCRIPTION": "Enable auto build .env file and it's task related to (env.gradle) in task module",
+        "TYPE": "boolean",
+        "VALUE": "FALSE",
+        "GROUP": "ENV"
+    },
+    "BUILD_YML": {
+        "DESCRIPTION": "Enable automatic build yml for module properties",
+        "TYPE": "boolean",
+        "VALUE": "FALSE",
+        "GROUP": "YML"
+    },
+    "BUILD_README": {
+        "DESCRIPTION": "Enable to build readme.md file",
+        "TYPE": "boolean",
+        "VALUE": "TRUE",
+        "GROUP": "README"
+    },
+    "BUILD_QUIZ": {
+        "DESCRIPTION": "Enable localized Quiz question skeletons and Portal Quiz projection for this module",
+        "TYPE": "boolean",
+        "VALUE": "FALSE"
+    },
+    "BUILD_INTERVIEW": {
+        "DESCRIPTION": "Enable localized Interview question skeletons and Portal Interview projection for this module",
+        "TYPE": "boolean",
+        "VALUE": "FALSE"
+    },
+    "BUILD_TESTER": {
+        "DESCRIPTION": "Enable test case in module",
+        "TYPE": "boolean",
+        "VALUE": "FALSE",
+        "GROUP": "TESTER"
+    },
+    "BUILD_SWAGGER": {
+        "DESCRIPTION": "Enable it to implement dependency and enable swagger it project (Still disable in product deploy)",
+        "TYPE": "boolean",
+        "VALUE": "FALSE",
+        "GROUP": "SWAGGER"
+    },
+    "BUILD_EXECUTION_CONTEXT": {
+        "DESCRIPTION": "Enable execution capture, runtime observation and generated source context for AI/manual analysis",
+        "TYPE": "boolean",
+        "VALUE": "FALSE"
+    },
+    "BUILD_DATABASE_MODULE": {
+        "DESCRIPTION": "To defined this module is module that config database",
+        "TYPE": "boolean",
+        "VALUE": "FALSE",
+        "GROUP": "DATABASE_MODULE"
+    },
+    "ADD_MODULE_DEPEND": {
+        "DESCRIPTION": "To enable function to auto implement dependency",
+        "TYPE": "boolean",
+        "VALUE": "FALSE",
+        "GROUP": "MODULE_DEPEND"
+    },
+    "USE_DATABASE": {
+        "DESCRIPTION": "To check that module is using database or not",
+        "TYPE": "boolean",
+        "VALUE": "FALSE",
+        "GROUP": "DATABASE"
+    },
+    "USE_TASK": {
+        "DESCRIPTION": "Enable it to auto inject task list in file gradle/task/list/task-list.json",
+        "TYPE": "boolean",
+        "VALUE": "FALSE",
+        "GROUP": "TASK"
+    }
+}

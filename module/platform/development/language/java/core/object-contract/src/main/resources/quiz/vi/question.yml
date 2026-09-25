@@ -1,0 +1,170 @@
+# <quiz-schema>
+# Cấu trúc câu hỏi Quiz
+# schema-version: 3
+#
+# questions [kiểu: list; bắt buộc; mặc định: []; duy nhất theo: id]
+#   Danh sách câu hỏi Quiz của module trong language hiện tại.
+#   mỗi phần tử:
+#     id [kiểu: string; bắt buộc; mặc định: ""]
+#       ID ổn định và duy nhất của câu hỏi.
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi hiển thị cho người học.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu câu hỏi được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu câu hỏi đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+#     answers [kiểu: list; bắt buộc; số phần tử: 4; mặc định: []; duy nhất theo: id]
+#       Chính xác bốn đáp án. ID A/B/C/D là identity nội bộ ổn định, không phải vị trí hiển thị sau khi frontend shuffle.
+#       mỗi phần tử:
+#         id [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#           Identity ổn định của đáp án.
+#         answer [kiểu: string; bắt buộc; mặc định: ""]
+#           Nội dung đáp án hiển thị cho người học.
+#         explanation [kiểu: string; bắt buộc; mặc định: ""]
+#           Giải thích hiển thị khi người học chọn đáp án này, bất kể đúng hay sai.
+#     correctAnswerId [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
+# </quiz-schema>
+
+questions:
+  - id: identity-vs-logical-equality
+    question: "Reference `==` trả lời điều gì với hai object reference?"
+    answers:
+      - {id: A, answer: "Chúng có nhận diện cùng một object hay không, không phải domain value có logically equal hay không.", explanation: "Đúng. Object identity và logical equality là hai contract riêng trong Java."}
+      - {id: B, answer: "Mọi field value có equal không.", explanation: "Sai. Object identity và logical equality là hai contract riêng trong Java."}
+      - {id: C, answer: "Hash code của chúng có unique không.", explanation: "Sai. Object identity và logical equality là hai contract riêng trong Java."}
+      - {id: D, answer: "Chúng có được tạo bởi cùng constructor overload không.", explanation: "Sai. Object identity và logical equality là hai contract riêng trong Java."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.IdentityEquality/IdentityEquality.md", anchor: "identity-vs-equality"}
+    apiRelated: {controller: "EqualityController", methodSignature: "identityVsEquality()"}
+
+  - id: equals-contract-laws
+    question: "Property nào bắt buộc trong equals contract đúng?"
+    answers:
+      - {id: A, answer: "Nó có thể trả kết quả khác mỗi lần với cùng stable object.", explanation: "Sai. Collection/library dựa vào full equality contract dù compiler không enforce được."}
+      - {id: B, answer: "Nó phải reflexive, symmetric, transitive, consistent khi relevant state ổn định và false với null.", explanation: "Đúng. Collection/library dựa vào full equality contract dù compiler không enforce được."}
+      - {id: C, answer: "Nó phải true với null.", explanation: "Sai. Collection/library dựa vào full equality contract dù compiler không enforce được."}
+      - {id: D, answer: "Nó có thể asymmetric miễn hashCode match.", explanation: "Sai. Collection/library dựa vào full equality contract dù compiler không enforce được."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.Equals/Equals.md", anchor: "equals-contract"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: equals-inheritance-symmetry
+    question: "Vì sao thêm equality-relevant state ở subclass làm equals khó?"
+    answers:
+      - {id: A, answer: "Subclass không thể override equals.", explanation: "Sai. Value equality và open inheritance có thể tạo equivalence expectation xung đột."}
+      - {id: B, answer: "Mọi subclass có cùng identity với parent class.", explanation: "Sai. Value equality và open inheritance có thể tạo equivalence expectation xung đột."}
+      - {id: C, answer: "Parent có thể xem child equal theo parent state còn child yêu cầu extra state, gây rủi ro symmetry/transitivity.", explanation: "Đúng. Value equality và open inheritance có thể tạo equivalence expectation xung đột."}
+      - {id: D, answer: "equals là static nên không thấy subtype state.", explanation: "Sai. Value equality và open inheritance có thể tạo equivalence expectation xung đột."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.Equals/Equals.md", anchor: "equals-inheritance-risk"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: hashcode-equals-rule
+    question: "Điều gì bắt buộc đúng với hai object equal theo equals?"
+    answers:
+      - {id: A, answer: "Chúng phải cùng reference.", explanation: "Sai. Equal object có hash khác nhau phá assumption của hash-based lookup."}
+      - {id: B, answer: "Hash code phải globally unique.", explanation: "Sai. Equal object có hash khác nhau phá assumption của hash-based lookup."}
+      - {id: C, answer: "Chúng phải implement Comparable.", explanation: "Sai. Equal object có hash khác nhau phá assumption của hash-based lookup."}
+      - {id: D, answer: "Chúng phải trả cùng hash code.", explanation: "Đúng. Equal object có hash khác nhau phá assumption của hash-based lookup."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.HashCode/HashCode.md", anchor: "hashcode-contract"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: mutable-hash-key
+    question: "Vì sao mutate equality/hash field của HashMap key sau insertion nguy hiểm?"
+    answers:
+      - {id: A, answer: "Current hash có thể chỉ bucket khác nơi key đã được store nên lookup/remove có thể fail.", explanation: "Đúng. Hash-based collection assume equality/hash state của key ổn định khi stored."}
+      - {id: B, answer: "HashMap tự deep-copy mọi key.", explanation: "Sai. Hash-based collection assume equality/hash state của key ổn định khi stored."}
+      - {id: C, answer: "Đổi key luôn tự rehash entry đó.", explanation: "Sai. Hash-based collection assume equality/hash state của key ổn định khi stored."}
+      - {id: D, answer: "Mutable key bị convert thành String.", explanation: "Sai. Hash-based collection assume equality/hash state của key ổn định khi stored."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.HashCode/HashCode.md", anchor: "mutable-key-risk"}
+    apiRelated: {controller: "HashContractController", methodSignature: "mutableKey()"}
+
+  - id: broken-equals-hash
+    question: "Điều gì có thể xảy ra khi hai equal object trả hash code khác nhau?"
+    answers:
+      - {id: A, answer: "JVM tự rewrite equals.", explanation: "Sai. Hash thu hẹp candidate location trước khi equality xác nhận match."}
+      - {id: B, answer: "HashSet có thể trông như giữ duplicate và HashMap lookup bằng equal key có thể miss entry.", explanation: "Đúng. Hash thu hẹp candidate location trước khi equality xác nhận match."}
+      - {id: C, answer: "Mọi collection chuyển sang identity comparison.", explanation: "Sai. Hash thu hẹp candidate location trước khi equality xác nhận match."}
+      - {id: D, answer: "Compiler reject class.", explanation: "Sai. Hash thu hẹp candidate location trước khi equality xác nhận match."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.EqualsHashCode/EqualsHashCode.md", anchor: "broken-contract-effects"}
+    apiRelated: {controller: "HashContractController", methodSignature: "brokenHashSetLookup()"}
+
+  - id: tostring-sensitive-data
+    question: "Vì sao secret không nên nằm trong toString?"
+    answers:
+      - {id: A, answer: "toString không bao giờ được gọi runtime.", explanation: "Sai. Diagnostic convenience không được leak credential hay sensitive domain data."}
+      - {id: B, answer: "Secret tự encrypt trong toString.", explanation: "Sai. Diagnostic convenience không được leak credential hay sensitive domain data."}
+      - {id: C, answer: "toString thường được gọi implicit bởi log, debugger, concatenation và error nên exposure surface rất rộng.", explanation: "Đúng. Diagnostic convenience không được leak credential hay sensitive domain data."}
+      - {id: D, answer: "Chỉ private field mới có thể xuất hiện trong log.", explanation: "Sai. Diagnostic convenience không được leak credential hay sensitive domain data."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.ToString/ToString.md", anchor: "tostring-sensitive-data"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: comparable-subtraction-overflow
+    question: "Vì sao `return this.id - other.id` là compareTo implementation kém với arbitrary int?"
+    answers:
+      - {id: A, answer: "Subtraction illegal trong compareTo.", explanation: "Sai. Dùng `Integer.compare` hoặc helper tương đương để giữ ordering semantics ở boundary."}
+      - {id: B, answer: "compareTo bắt buộc chỉ trả đúng -1,0,1.", explanation: "Sai. Dùng `Integer.compare` hoặc helper tương đương để giữ ordering semantics ở boundary."}
+      - {id: C, answer: "int không represent negative number.", explanation: "Sai. Dùng `Integer.compare` hoặc helper tương đương để giữ ordering semantics ở boundary."}
+      - {id: D, answer: "Phép trừ có thể overflow và trả sign không đúng với ordering thật.", explanation: "Đúng. Dùng `Integer.compare` hoặc helper tương đương để giữ ordering semantics ở boundary."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.Comparable/Comparable.md", anchor: "compareto-contract"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: compareto-equals-consistency
+    question: "Điều gì có thể xảy ra nếu `compareTo(a,b)==0` nhưng `a.equals(b)` false?"
+    answers:
+      - {id: A, answer: "Sorted set/map có thể xem chúng cùng ordering key dù hash/equality collection xem chúng distinct.", explanation: "Đúng. Sorted structure dùng comparison ordering cho key uniqueness; hash structure dùng equals/hashCode."}
+      - {id: B, answer: "Compiler reject mọi Comparable như vậy.", explanation: "Sai. Sorted structure dùng comparison ordering cho key uniqueness; hash structure dùng equals/hashCode."}
+      - {id: C, answer: "Hai object tự thành cùng reference.", explanation: "Sai. Sorted structure dùng comparison ordering cho key uniqueness; hash structure dùng equals/hashCode."}
+      - {id: D, answer: "HashSet cũng bắt buộc collapse theo compareTo.", explanation: "Sai. Sorted structure dùng comparison ordering cho key uniqueness; hash structure dùng equals/hashCode."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.Comparable/Comparable.md", anchor: "compareto-equals-consistency"}
+    apiRelated: {controller: "OrderingController", methodSignature: "compareToEquals()"}
+
+  - id: comparator-mutability
+    question: "Vì sao comparator đổi ordering theo mutable external state nguy hiểm trong TreeSet?"
+    answers:
+      - {id: A, answer: "TreeSet copy comparator state trước mọi comparison.", explanation: "Sai. Ordered structure assume comparator coherent và stable khi value đang stored."}
+      - {id: B, answer: "Ordering invariant của set có thể đổi sau khi element đã store, làm search/order behavior inconsistent.", explanation: "Đúng. Ordered structure assume comparator coherent và stable khi value đang stored."}
+      - {id: C, answer: "Comparator bắt buộc là static method.", explanation: "Sai. Ordered structure assume comparator coherent và stable khi value đang stored."}
+      - {id: D, answer: "Mutable state làm mọi comparison trả zero.", explanation: "Sai. Ordered structure assume comparator coherent và stable khi value đang stored."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Comparator/Comparator.md", anchor: "comparator-contract"}
+    apiRelated: {controller: "", methodSignature: ""}

@@ -1,0 +1,164 @@
+CompositionController:
+  strategySwap():
+    summary: Trade-off composition và inheritance
+    description: Chạy thí nghiệm học tập deterministic cho Trade-off composition và
+      inheritance. Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy
+      tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 6.Composition/Composition.md
+      anchor: composition-vs-inheritance
+    methodName: strategySwap
+    params: [
+      ]
+    path: com/example/learning/controller/CompositionController.java
+    mapping: '@GetMapping("/strategy-swap")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/oop/composition/strategy-swap
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+DispatchController:
+  overloadVsOverride():
+    summary: Overloading là compile-time selection
+    description: Chạy thí nghiệm học tập deterministic cho Overloading là compile-time
+      selection. Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 5.OverloadingOverriding/OverloadingOverriding.md
+      anchor: overloading-compile-time
+    methodName: overloadVsOverride
+    params: [
+      ]
+    path: com/example/learning/controller/DispatchController.java
+    mapping: '@GetMapping("/overload-vs-override")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/oop/dispatch/overload-vs-override
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  dispatchVsHiding():
+    summary: Instance dispatch khác static/field hiding
+    description: Chạy thí nghiệm học tập deterministic cho Instance dispatch khác
+      static/field hiding. Response cung cấp runtime evidence cụ thể thay vì chỉ mô
+      tả quy tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 5.OverloadingOverriding/OverloadingOverriding.md
+      anchor: dispatch-vs-hiding
+    methodName: dispatchVsHiding
+    params: [
+      ]
+    path: com/example/learning/controller/DispatchController.java
+    mapping: '@GetMapping("/dispatch-vs-hiding")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/oop/dispatch/dispatch-vs-hiding
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+EncapsulationController:
+  invariantProtection():
+    summary: Bảo vệ invariant
+    description: Chạy thí nghiệm học tập deterministic cho Bảo vệ invariant. Response
+      cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 2.Encapsulation/Encapsulation.md
+      anchor: invariant-protection
+    methodName: invariantProtection
+    params: [
+      ]
+    path: com/example/learning/controller/EncapsulationController.java
+    mapping: '@GetMapping("/invariant")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/oop/encapsulation/invariant
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+PolymorphismController:
+  dispatch():
+    summary: Runtime dynamic dispatch
+    description: Chạy thí nghiệm học tập deterministic cho Runtime dynamic dispatch.
+      Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 4.Polymorphism/Polymorphism.md
+      anchor: dynamic-dispatch
+    methodName: dispatch
+    params: [
+      ]
+    path: com/example/learning/controller/PolymorphismController.java
+    mapping: '@GetMapping("/dispatch")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/oop/polymorphism/dispatch
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+SubstitutabilityController:
+  substituteImplementations():
+    summary: Substitutability và behavioral expectation
+    description: Chạy thí nghiệm học tập deterministic cho Substitutability và behavioral
+      expectation. Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy
+      tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 4.Polymorphism/Polymorphism.md
+      anchor: substitutability
+    methodName: substituteImplementations
+    params: [
+      ]
+    path: com/example/learning/controller/SubstitutabilityController.java
+    mapping: '@GetMapping("/implementations")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/oop/substitutability/implementations
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

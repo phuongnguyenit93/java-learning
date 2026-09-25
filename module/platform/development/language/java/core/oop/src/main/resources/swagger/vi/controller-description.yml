@@ -1,0 +1,30 @@
+CompositionController:
+  description: |-
+    <h2>C om po si ti on</h2>
+    <p>C&#225;c th&#237; nghiệm Java Core c&#243; thể chạy để quan s&#225;t Trade-off composition v&#224; inheritance.</p>
+  readmeRelated:
+    file: 6.Composition/Composition.md
+DispatchController:
+  description: |-
+    <h2>D is pa tc h</h2>
+    <p>C&#225;c th&#237; nghiệm Java Core c&#243; thể chạy để quan s&#225;t Overloading l&#224; compile-time selection.</p>
+  readmeRelated:
+    file: 5.OverloadingOverriding/OverloadingOverriding.md
+EncapsulationController:
+  description: |-
+    <h2>E nc ap su la ti on</h2>
+    <p>C&#225;c th&#237; nghiệm Java Core c&#243; thể chạy để quan s&#225;t Bảo vệ invariant.</p>
+  readmeRelated:
+    file: 2.Encapsulation/Encapsulation.md
+PolymorphismController:
+  description: |-
+    <h2>P ol ym or ph is m</h2>
+    <p>C&#225;c th&#237; nghiệm Java Core c&#243; thể chạy để quan s&#225;t Runtime dynamic dispatch.</p>
+  readmeRelated:
+    file: 4.Polymorphism/Polymorphism.md
+SubstitutabilityController:
+  description: |-
+    <h2>S ub st it ut ab il it y</h2>
+    <p>C&#225;c th&#237; nghiệm Java Core c&#243; thể chạy để quan s&#225;t Substitutability v&#224; behavioral expectation.</p>
+  readmeRelated:
+    file: 4.Polymorphism/Polymorphism.md

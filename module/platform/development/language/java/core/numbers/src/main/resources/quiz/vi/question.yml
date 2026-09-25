@@ -1,0 +1,222 @@
+# <quiz-schema>
+# Cấu trúc câu hỏi Quiz
+# schema-version: 3
+#
+# questions [kiểu: list; bắt buộc; mặc định: []; duy nhất theo: id]
+#   Danh sách câu hỏi Quiz của module trong language hiện tại.
+#   mỗi phần tử:
+#     id [kiểu: string; bắt buộc; mặc định: ""]
+#       ID ổn định và duy nhất của câu hỏi.
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi hiển thị cho người học.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu câu hỏi được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu câu hỏi đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+#     answers [kiểu: list; bắt buộc; số phần tử: 4; mặc định: []; duy nhất theo: id]
+#       Chính xác bốn đáp án. ID A/B/C/D là identity nội bộ ổn định, không phải vị trí hiển thị sau khi frontend shuffle.
+#       mỗi phần tử:
+#         id [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#           Identity ổn định của đáp án.
+#         answer [kiểu: string; bắt buộc; mặc định: ""]
+#           Nội dung đáp án hiển thị cho người học.
+#         explanation [kiểu: string; bắt buộc; mặc định: ""]
+#           Giải thích hiển thị khi người học chọn đáp án này, bất kể đúng hay sai.
+#     correctAnswerId [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
+# </quiz-schema>
+
+questions:
+  - id: integer-overflow-wrap
+    question: "`Integer.MAX_VALUE + 1` làm gì trong int arithmetic thông thường?"
+    answers:
+      - {id: A, answer: "Nó wrap thành Integer.MIN_VALUE và không tự throw.", explanation: "Đúng. Primitive integer overflow wrap theo fixed-width signed integer semantics trừ khi dùng exact helper."}
+      - {id: B, answer: "Nó tự thành long.", explanation: "Sai. Primitive integer overflow wrap theo fixed-width signed integer semantics trừ khi dùng exact helper."}
+      - {id: C, answer: "Nó tự ném ArithmeticException.", explanation: "Sai. Primitive integer overflow wrap theo fixed-width signed integer semantics trừ khi dùng exact helper."}
+      - {id: D, answer: "Nó dừng ở Integer.MAX_VALUE.", explanation: "Sai. Primitive integer overflow wrap theo fixed-width signed integer semantics trừ khi dùng exact helper."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.IntegerOverflow/IntegerOverflow.md", anchor: "integer-overflow-wraparound"}
+    apiRelated: {controller: "IntegerArithmeticController", methodSignature: "overflow()"}
+
+  - id: integer-add-exact
+    question: "Khi nào `Math.addExact` phù hợp hơn `+` thông thường cho int?"
+    answers:
+      - {id: A, answer: "Khi mọi operand là floating point.", explanation: "Sai. Exact helper ném ArithmeticException khi result không represent được."}
+      - {id: B, answer: "Khi overflow phải được phát hiện thay vì silently wrap.", explanation: "Đúng. Exact helper ném ArithmeticException khi result không represent được."}
+      - {id: C, answer: "Khi overflow nên clamp ở MAX_VALUE.", explanation: "Sai. Exact helper ném ArithmeticException khi result không represent được."}
+      - {id: D, answer: "Chỉ khi dùng BigDecimal.", explanation: "Sai. Exact helper ném ArithmeticException khi result không represent được."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.IntegerOverflow/IntegerOverflow.md", anchor: "checked-arithmetic"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: floating-decimal-approx
+    question: "Vì sao `0.1 + 0.2` có thể khác decimal 0.3 chính xác?"
+    answers:
+      - {id: A, answer: "JVM random thay đổi double.", explanation: "Sai. IEEE 754 binary floating point biểu diễn nhiều decimal fraction theo giá trị gần đúng."}
+      - {id: B, answer: "Addition dùng String conversion nội bộ.", explanation: "Sai. IEEE 754 binary floating point biểu diễn nhiều decimal fraction theo giá trị gần đúng."}
+      - {id: C, answer: "Phần lớn decimal fraction không có finite binary floating-point representation nên operation dùng value representable gần nhất.", explanation: "Đúng. IEEE 754 binary floating point biểu diễn nhiều decimal fraction theo giá trị gần đúng."}
+      - {id: D, answer: "double lưu decimal chính xác nhưng println làm đổi.", explanation: "Sai. IEEE 754 binary floating point biểu diễn nhiều decimal fraction theo giá trị gần đúng."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.FloatingPoint/FloatingPoint.md", anchor: "precision-rounding-error"}
+    apiRelated: {controller: "FloatingPointController", methodSignature: "precision()"}
+
+  - id: nan-comparison
+    question: "Cách đúng để test một double có phải NaN không?"
+    answers:
+      - {id: A, answer: "Dùng `value == Double.NaN`.", explanation: "Sai. NaN unordered và ngay cả `NaN == NaN` cũng false."}
+      - {id: B, answer: "Dùng `value > Double.MAX_VALUE`.", explanation: "Sai. NaN unordered và ngay cả `NaN == NaN` cũng false."}
+      - {id: C, answer: "Dùng `value == null`.", explanation: "Sai. NaN unordered và ngay cả `NaN == NaN` cũng false."}
+      - {id: D, answer: "Dùng `Double.isNaN(value)`, không so equality với `Double.NaN`.", explanation: "Đúng. NaN unordered và ngay cả `NaN == NaN` cũng false."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.FloatingPoint/FloatingPoint.md", anchor: "nan-infinity-negative-zero"}
+    apiRelated: {controller: "FloatingPointController", methodSignature: "specialValues()"}
+
+  - id: biginteger-immutable
+    question: "Điều gì xảy ra nếu gọi `a.add(BigInteger.ONE)` rồi bỏ return value?"
+    answers:
+      - {id: A, answer: "`a` không đổi vì BigInteger immutable và arithmetic trả value mới.", explanation: "Đúng. BigInteger operation không mutate receiver."}
+      - {id: B, answer: "a increment tại chỗ.", explanation: "Sai. BigInteger operation không mutate receiver."}
+      - {id: C, answer: "JVM chỉ mutate a khi nó final.", explanation: "Sai. BigInteger operation không mutate receiver."}
+      - {id: D, answer: "Call illegal vì BigInteger không có add method.", explanation: "Sai. BigInteger operation không mutate receiver."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.BigInteger/BigInteger.md", anchor: "big-integer-immutability"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: bigdecimal-double-constructor
+    question: "Vì sao `new BigDecimal(0.1)` thường gây bất ngờ?"
+    answers:
+      - {id: A, answer: "BigDecimal round mọi input thành integer.", explanation: "Sai. Khi intent là decimal, String constructor hoặc valueOf thường phù hợp hơn."}
+      - {id: B, answer: "Nó capture exact binary double value, không phải decimal 0.1 mà con người nghĩ.", explanation: "Đúng. Khi intent là decimal, String constructor hoặc valueOf thường phù hợp hơn."}
+      - {id: C, answer: "Constructor luôn trả null.", explanation: "Sai. Khi intent là decimal, String constructor hoặc valueOf thường phù hợp hơn."}
+      - {id: D, answer: "BigDecimal không represent decimal fraction.", explanation: "Sai. Khi intent là decimal, String constructor hoặc valueOf thường phù hợp hơn."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.BigDecimal/BigDecimal.md", anchor: "big-decimal-construction"}
+    apiRelated: {controller: "BigDecimalController", methodSignature: "construction()"}
+
+  - id: bigdecimal-nonterminating-division
+    question: "Điều gì xảy ra với `BigDecimal.ONE.divide(new BigDecimal(\"3\"))` nếu không có rounding policy?"
+    answers:
+      - {id: A, answer: "Nó silently trả 0.33.", explanation: "Sai. BigDecimal division exact trừ khi cung cấp precision hoặc rounding policy."}
+      - {id: B, answer: "Nó trả positive infinity.", explanation: "Sai. BigDecimal division exact trừ khi cung cấp precision hoặc rounding policy."}
+      - {id: C, answer: "Nó ném ArithmeticException vì decimal expansion không kết thúc.", explanation: "Đúng. BigDecimal division exact trừ khi cung cấp precision hoặc rounding policy."}
+      - {id: D, answer: "Nó tự convert sang double.", explanation: "Sai. BigDecimal division exact trừ khi cung cấp precision hoặc rounding policy."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.BigDecimal/BigDecimal.md", anchor: "big-decimal-arithmetic"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: precision-vs-scale
+    question: "Với `new BigDecimal(\"123.4500\")`, precision và scale mô tả gì?"
+    answers:
+      - {id: A, answer: "Cả hai luôn bằng số digit sau decimal point.", explanation: "Sai. Precision và scale là hai representation property khác nhau."}
+      - {id: B, answer: "Precision luôn là 2 với tiền.", explanation: "Sai. Precision và scale là hai representation property khác nhau."}
+      - {id: C, answer: "Scale là số byte trong memory.", explanation: "Sai. Precision và scale là hai representation property khác nhau."}
+      - {id: D, answer: "Precision đếm significant digit; scale biểu diễn decimal-place positioning, ở đây là 4.", explanation: "Đúng. Precision và scale là hai representation property khác nhau."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.PrecisionScale/PrecisionScale.md", anchor: "precision-vs-scale"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: rounding-domain-policy
+    question: "Statement nào về financial rounding chính xác nhất?"
+    answers:
+      - {id: A, answer: "Mode và boundary đúng đến từ domain rule; không có universal two-decimal HALF_UP cho mọi money calculation.", explanation: "Đúng. Tax, interest, conversion, line item và settlement có thể cần policy khác nhau."}
+      - {id: B, answer: "HALF_UP luôn đúng cho mọi currency và domain.", explanation: "Sai. Tax, interest, conversion, line item và settlement có thể cần policy khác nhau."}
+      - {id: C, answer: "Luôn round sau mọi arithmetic operation.", explanation: "Sai. Tax, interest, conversion, line item và settlement có thể cần policy khác nhau."}
+      - {id: D, answer: "Rounding mode không bao giờ ảnh hưởng total.", explanation: "Sai. Tax, interest, conversion, line item và settlement có thể cần policy khác nhau."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Rounding/Rounding.md", anchor: "financial-rounding-policy"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: bigdecimal-equals-compareto
+    question: "`new BigDecimal(\"1.0\")` và `new BigDecimal(\"1.00\")` compare thế nào?"
+    answers:
+      - {id: A, answer: "Cả equals và compareTo đều báo magnitude khác.", explanation: "Sai. BigDecimal equality tính representation scale; numeric comparison bỏ qua khác biệt scale đó."}
+      - {id: B, answer: "`equals` false vì scale khác, còn `compareTo` trả 0 vì numerical magnitude bằng nhau.", explanation: "Đúng. BigDecimal equality tính representation scale; numeric comparison bỏ qua khác biệt scale đó."}
+      - {id: C, answer: "equals true và compareTo nonzero.", explanation: "Sai. BigDecimal equality tính representation scale; numeric comparison bỏ qua khác biệt scale đó."}
+      - {id: D, answer: "Không method nào compare được scale khác nhau.", explanation: "Sai. BigDecimal equality tính representation scale; numeric comparison bỏ qua khác biệt scale đó."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.BigDecimalComparison/BigDecimalComparison.md", anchor: "big-decimal-equals"}
+    apiRelated: {controller: "BigDecimalController", methodSignature: "comparison()"}
+
+  - id: random-seed-reproducible
+    question: "Vì sao fixed seed hữu ích cho `Random` trong test?"
+    answers:
+      - {id: A, answer: "Nó làm Random cryptographically secure.", explanation: "Sai. PRNG thông thường deterministic từ seed và internal state."}
+      - {id: B, answer: "Nó guarantee mọi number unique.", explanation: "Sai. PRNG thông thường deterministic từ seed và internal state."}
+      - {id: C, answer: "Nó làm pseudo-random sequence reproducible với cùng algorithm và state evolution.", explanation: "Đúng. PRNG thông thường deterministic từ seed và internal state."}
+      - {id: D, answer: "Nó disable mọi randomness API.", explanation: "Sai. PRNG thông thường deterministic từ seed và internal state."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.Random/Random.md", anchor: "pseudo-random-model"}
+    apiRelated: {controller: "RandomController", methodSignature: "seededSequence()"}
+
+  - id: secure-random-boundary
+    question: "Nguồn nào nên ưu tiên cho security-sensitive token?"
+    answers:
+      - {id: A, answer: "Random seed bằng currentTimeMillis.", explanation: "Sai. Random và ThreadLocalRandom không được design làm cryptographically strong unpredictability source."}
+      - {id: B, answer: "Math.random vì nó static.", explanation: "Sai. Random và ThreadLocalRandom không được design làm cryptographically strong unpredictability source."}
+      - {id: C, answer: "Counter convert sang hex.", explanation: "Sai. Random và ThreadLocalRandom không được design làm cryptographically strong unpredictability source."}
+      - {id: D, answer: "SecureRandom vì unpredictability là một phần security contract.", explanation: "Đúng. Random và ThreadLocalRandom không được design làm cryptographically strong unpredictability source."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "11.SecureRandom/SecureRandom.md", anchor: "secure-random-purpose"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: numeric-model-domain
+    question: "Câu hỏi đầu tiên tốt nhất khi chọn giữa integer type, floating-point type và BigDecimal là gì?"
+    answers:
+      - {id: A, answer: "Type name nào ngắn nhất để gõ?", explanation: "Sai. Chọn numeric type nên dựa vào range, exactness, scale và performance requirement của domain."}
+      - {id: B, answer: "Type nào có memory footprint lớn nhất?", explanation: "Sai. Chọn numeric type nên dựa vào range, exactness, scale và performance requirement của domain."}
+      - {id: C, answer: "Domain cần range và semantics về exactness/precision như thế nào?", explanation: "Đúng. Chọn numeric type nên dựa vào range, exactness, scale và performance requirement của domain."}
+      - {id: D, answer: "Có thể convert mọi value sang String trước không?", explanation: "Sai. Chọn numeric type nên dựa vào range, exactness, scale và performance requirement của domain."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.NumericModel/NumericModel.md", anchor: "numeric-type-model"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: math-exact-arithmetic
+    question: "Vì sao nên dùng `Math.addExact(int, int)` thay `a + b` khi overflow không được phép xảy ra âm thầm?"
+    answers:
+      - {id: A, answer: "Nó tự động convert result thành BigDecimal.", explanation: "Sai. Exact arithmetic helper detect overflow và throw ArithmeticException thay vì wrap âm thầm."}
+      - {id: B, answer: "Nó detect integer overflow và throw ArithmeticException thay vì wrap âm thầm.", explanation: "Đúng. Exact arithmetic helper detect overflow và throw ArithmeticException thay vì wrap âm thầm."}
+      - {id: C, answer: "Nó disable two's-complement arithmetic trên toàn JVM.", explanation: "Sai. Exact arithmetic helper detect overflow và throw ArithmeticException thay vì wrap âm thầm."}
+      - {id: D, answer: "Nó bảo đảm operand luôn dương.", explanation: "Sai. Exact arithmetic helper detect overflow và throw ArithmeticException thay vì wrap âm thầm."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.Math/Math.md", anchor: "exact-arithmetic-methods"}
+    apiRelated: {controller: "", methodSignature: ""}

@@ -1,0 +1,192 @@
+AliasingController:
+  mutateAlias():
+    summary: Nhiều reference cùng tới một mutable object
+    description: Chạy thí nghiệm học tập deterministic cho Nhiều reference cùng tới
+      một mutable object. Response cung cấp runtime evidence cụ thể thay vì chỉ mô
+      tả quy tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 13.ObjectAliasingMutability/ObjectAliasingMutability.md
+      anchor: aliasing-model
+    methodName: mutateAlias
+    params: [
+      ]
+    path: com/example/learning/controller/AliasingController.java
+    mapping: '@GetMapping("/mutation")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/class-object/aliasing/mutation
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+ConstructionController:
+  constructorDispatchRisk():
+    summary: Rủi ro gọi overridable method trong constructor
+    description: Chạy thí nghiệm học tập deterministic cho Rủi ro gọi overridable
+      method trong constructor. Response cung cấp runtime evidence cụ thể thay vì
+      chỉ mô tả quy tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 8.ObjectCreationLifecycle/ObjectCreationLifecycle.md
+      anchor: constructor-dynamic-dispatch-risk
+    methodName: constructorDispatchRisk
+    params: [
+      ]
+    path: com/example/learning/controller/ConstructionController.java
+    mapping: '@GetMapping("/override-risk")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/class-object/construction/override-risk
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+CopyController:
+  shallowVsDeep():
+    summary: Shallow copy
+    description: Chạy thí nghiệm học tập deterministic cho Shallow copy. Response
+      cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 12.CopySemantics/CopySemantics.md
+      anchor: shallow-copy
+    methodName: shallowVsDeep
+    params: [
+      ]
+    path: com/example/learning/controller/CopyController.java
+    mapping: '@GetMapping("/shallow-vs-deep")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/class-object/copy/shallow-vs-deep
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+EnumController:
+  enumBehavior():
+    summary: Behavior riêng theo constant
+    description: Chạy thí nghiệm học tập deterministic cho Behavior riêng theo constant.
+      Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 11.Enum/Enum.md
+      anchor: enum-constant-specific
+    methodName: enumBehavior
+    params: [
+      ]
+    path: com/example/learning/controller/EnumController.java
+    mapping: '@GetMapping("/behavior")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/class-object/enum/behavior
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+ImmutabilityController:
+  defensiveCopy():
+    summary: Defensive copy ở output
+    description: Chạy thí nghiệm học tập deterministic cho Defensive copy ở output.
+      Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 14.ImmutabilityDefensiveCopy/ImmutabilityDefensiveCopy.md
+      anchor: defensive-copy-output
+    methodName: defensiveCopy
+    params: [
+      ]
+    path: com/example/learning/controller/ImmutabilityController.java
+    mapping: '@GetMapping("/defensive-copy")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/class-object/immutability/defensive-copy
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+InitializationController:
+  traceOrder():
+    summary: Initialization order qua inheritance
+    description: Chạy thí nghiệm học tập deterministic cho Initialization order qua
+      inheritance. Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy
+      tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 7.InitializationOrder/InitializationOrder.md
+      anchor: inheritance-initialization-order
+    methodName: traceOrder
+    params: [
+      ]
+    path: com/example/learning/controller/InitializationController.java
+    mapping: '@GetMapping("/order")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/class-object/initialization/order
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+NestedClassController:
+  capture():
+    summary: Captured local variable
+    description: Chạy thí nghiệm học tập deterministic cho Captured local variable.
+      Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 9.NestedInnerClass/NestedInnerClass.md
+      anchor: capture-semantics
+    methodName: capture
+    params: [
+      ]
+    path: com/example/learning/controller/NestedClassController.java
+    mapping: '@GetMapping("/capture")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/class-object/nested/capture
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

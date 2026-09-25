@@ -1,0 +1,166 @@
+ExceptionDesignController:
+  translateBoundary():
+    summary: Translate exceptions at abstraction boundaries
+    description: Runs a deterministic learning experiment for Translate exceptions
+      at abstraction boundaries. The response exposes concrete runtime evidence instead
+      of only describing the rule.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 9.ExceptionDesign/ExceptionDesign.md
+      anchor: exception-boundaries
+    methodName: translateBoundary
+    params: [
+      ]
+    path: com/example/learning/controller/ExceptionDesignController.java
+    mapping: '@GetMapping("/translate")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/exception/design/translate
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+FinallyController:
+  returnInteraction():
+    summary: return/throw interactions with finally
+    description: Runs a deterministic learning experiment for return/throw interactions
+      with finally. The response exposes concrete runtime evidence instead of only
+      describing the rule.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 5.TryCatchFinally/TryCatchFinally.md
+      anchor: return-finally
+    methodName: returnInteraction
+    params: [
+      ]
+    path: com/example/learning/controller/FinallyController.java
+    mapping: '@GetMapping("/return-interaction")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/exception/finally/return-interaction
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+PropagationController:
+  propagate():
+    summary: Stack unwinding and propagation
+    description: Runs a deterministic learning experiment for Stack unwinding and
+      propagation. The response exposes concrete runtime evidence instead of only
+      describing the rule.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 4.Propagation/Propagation.md
+      anchor: exception-propagation
+    methodName: propagate
+    params: [
+      ]
+    path: com/example/learning/controller/PropagationController.java
+    mapping: '@GetMapping("/stack")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/exception/propagation/stack
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  wrapCause():
+    summary: Wrapping with preserved cause
+    description: Runs a deterministic learning experiment for Wrapping with preserved
+      cause. The response exposes concrete runtime evidence instead of only describing
+      the rule.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 4.Propagation/Propagation.md
+      anchor: exception-chaining
+    methodName: wrapCause
+    params: [
+      ]
+    path: com/example/learning/controller/PropagationController.java
+    mapping: '@GetMapping("/wrap-cause")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/exception/propagation/wrap-cause
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+ResourceController:
+  closeOrder():
+    summary: Reverse resource close order
+    description: Runs a deterministic learning experiment for Reverse resource close
+      order. The response exposes concrete runtime evidence instead of only describing
+      the rule.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 6.TryWithResources/TryWithResources.md
+      anchor: resource-close-order
+    methodName: closeOrder
+    params: [
+      ]
+    path: com/example/learning/controller/ResourceController.java
+    mapping: '@GetMapping("/close-order")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/exception/resource/close-order
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  suppressed():
+    summary: Primary vs suppressed exception
+    description: Runs a deterministic learning experiment for Primary vs suppressed
+      exception. The response exposes concrete runtime evidence instead of only describing
+      the rule.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 7.SuppressedException/SuppressedException.md
+      anchor: primary-vs-suppressed
+    methodName: suppressed
+    params: [
+      ]
+    path: com/example/learning/controller/ResourceController.java
+    mapping: '@GetMapping("/suppressed")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/exception/resource/suppressed
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

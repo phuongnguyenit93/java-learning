@@ -1,0 +1,119 @@
+1.MentalModel/MentalModel.md:
+  oop-object-collaboration:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  oop-boundaries:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  oop-vs-procedural:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+2.Encapsulation/Encapsulation.md:
+  encapsulation-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  invariant-protection:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  tell-dont-ask-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+3.Inheritance/Inheritance.md:
+  is-a-subtyping:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  inherited-state-behavior:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  inheritance-coupling:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+4.Polymorphism/Polymorphism.md:
+  subtype-polymorphism:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  dynamic-dispatch:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  substitutability:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+5.OverloadingOverriding/OverloadingOverriding.md:
+  overloading-compile-time:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  overriding-runtime:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  covariant-return:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  override-rules:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  static-method-hiding:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  field-hiding:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  dispatch-vs-hiding:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+6.Composition/Composition.md:
+  composition-has-a:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  object-relationships:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  association-dependency:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  ownership-lifecycle:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  composition-vs-inheritance:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  delegation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+7.Abstraction/Abstraction.md:
+  abstraction-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  program-to-abstraction:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  abstraction-leak:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false

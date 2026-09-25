@@ -1,0 +1,186 @@
+BigDecimalController:
+  construction():
+    summary: Khởi tạo từ String/valueOf/double
+    description: Chạy thí nghiệm học tập deterministic cho Khởi tạo từ String/valueOf/double.
+      Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 5.BigDecimal/BigDecimal.md
+      anchor: big-decimal-construction
+    methodName: construction
+    params: [
+      ]
+    path: com/example/learning/controller/BigDecimalController.java
+    mapping: '@GetMapping("/construction")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/numbers/big-decimal/construction
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  comparison():
+    summary: BigDecimal equals có tính scale
+    description: Chạy thí nghiệm học tập deterministic cho BigDecimal equals có tính
+      scale. Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 8.BigDecimalComparison/BigDecimalComparison.md
+      anchor: big-decimal-equals
+    methodName: comparison
+    params: [
+      ]
+    path: com/example/learning/controller/BigDecimalController.java
+    mapping: '@GetMapping("/comparison")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/numbers/big-decimal/comparison
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  divisionAndRounding():
+    summary: Semantics của RoundingMode
+    description: Chạy thí nghiệm học tập deterministic cho Semantics của RoundingMode.
+      Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 7.Rounding/Rounding.md
+      anchor: rounding-modes
+    methodName: divisionAndRounding
+    params: [
+      ]
+    path: com/example/learning/controller/BigDecimalController.java
+    mapping: '@GetMapping("/division-rounding")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/numbers/big-decimal/division-rounding
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+FloatingPointController:
+  precision():
+    summary: Precision và rounding error
+    description: Chạy thí nghiệm học tập deterministic cho Precision và rounding error.
+      Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 3.FloatingPoint/FloatingPoint.md
+      anchor: precision-rounding-error
+    methodName: precision
+    params: [
+      ]
+    path: com/example/learning/controller/FloatingPointController.java
+    mapping: '@GetMapping("/precision")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/numbers/floating/precision
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  specialValues():
+    summary: NaN, infinity và negative zero
+    description: Chạy thí nghiệm học tập deterministic cho NaN, infinity và negative
+      zero. Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 3.FloatingPoint/FloatingPoint.md
+      anchor: nan-infinity-negative-zero
+    methodName: specialValues
+    params: [
+      ]
+    path: com/example/learning/controller/FloatingPointController.java
+    mapping: '@GetMapping("/special-values")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/numbers/floating/special-values
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+IntegerArithmeticController:
+  overflow():
+    summary: Integer overflow và wraparound
+    description: Chạy thí nghiệm học tập deterministic cho Integer overflow và wraparound.
+      Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 2.IntegerOverflow/IntegerOverflow.md
+      anchor: integer-overflow-wraparound
+    methodName: overflow
+    params: [
+      ]
+    path: com/example/learning/controller/IntegerArithmeticController.java
+    mapping: '@GetMapping("/overflow")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/numbers/integer/overflow
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+RandomController:
+  seededSequence():
+    summary: Pseudo-random model và seed
+    description: Chạy thí nghiệm học tập deterministic cho Pseudo-random model và
+      seed. Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 10.Random/Random.md
+      anchor: pseudo-random-model
+    methodName: seededSequence
+    params: [
+      ]
+    path: com/example/learning/controller/RandomController.java
+    mapping: '@GetMapping("/seeded-sequence")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/numbers/random/seeded-sequence
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

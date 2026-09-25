@@ -1,0 +1,18 @@
+EqualityController:
+  description: |-
+    <h2>E qu al it y</h2>
+    <p>C&#225;c th&#237; nghiệm Java Core c&#243; thể chạy để quan s&#225;t Object identity v&#224; logical equality.</p>
+  readmeRelated:
+    file: 1.IdentityEquality/IdentityEquality.md
+HashContractController:
+  description: |-
+    <h2>H as hC on tr ac t</h2>
+    <p>C&#225;c th&#237; nghiệm Java Core c&#243; thể chạy để quan s&#225;t Hệ quả observable khi contract bị ph&#225;.</p>
+  readmeRelated:
+    file: 4.EqualsHashCode/EqualsHashCode.md
+OrderingController:
+  description: |-
+    <h2>O rd er in g</h2>
+    <p>C&#225;c th&#237; nghiệm Java Core c&#243; thể chạy để quan s&#225;t External/custom ordering.</p>
+  readmeRelated:
+    file: 7.Comparator/Comparator.md

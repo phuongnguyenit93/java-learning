@@ -1,0 +1,1 @@
+# Các lỗi thường gặp với Locale và i18n

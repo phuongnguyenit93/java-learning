@@ -1,0 +1,24 @@
+ExceptionDesignController:
+  description: |-
+    <h2>E xc ep ti on De si gn</h2>
+    <p>C&#225;c th&#237; nghiệm Java Core c&#243; thể chạy để quan s&#225;t Translate exception tại abstraction boundary.</p>
+  readmeRelated:
+    file: 9.ExceptionDesign/ExceptionDesign.md
+FinallyController:
+  description: |-
+    <h2>F in al ly</h2>
+    <p>C&#225;c th&#237; nghiệm Java Core c&#243; thể chạy để quan s&#225;t Tương t&#225;c return/throw với finally.</p>
+  readmeRelated:
+    file: 5.TryCatchFinally/TryCatchFinally.md
+PropagationController:
+  description: |-
+    <h2>P ro pa ga ti on</h2>
+    <p>C&#225;c th&#237; nghiệm Java Core c&#243; thể chạy để quan s&#225;t Stack unwinding v&#224; propagation.</p>
+  readmeRelated:
+    file: 4.Propagation/Propagation.md
+ResourceController:
+  description: |-
+    <h2>R es ou rc e</h2>
+    <p>C&#225;c th&#237; nghiệm Java Core c&#243; thể chạy để quan s&#225;t Resource close theo thứ tự ngược.</p>
+  readmeRelated:
+    file: 6.TryWithResources/TryWithResources.md

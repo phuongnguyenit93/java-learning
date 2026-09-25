@@ -1,0 +1,214 @@
+EncodingController:
+  roundTrip():
+    summary: Encode/decode bằng Charset
+    description: Chạy thí nghiệm học tập deterministic cho Encode/decode bằng Charset.
+      Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 8.Encoding/Encoding.md
+      anchor: charset-encode-decode
+    methodName: roundTrip
+    params: [
+      ]
+    path: com/example/learning/controller/EncodingController.java
+    mapping: '@GetMapping("/round-trip")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/string/encoding/round-trip
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  wrongCharset():
+    summary: Rủi ro platform default charset
+    description: Chạy thí nghiệm học tập deterministic cho Rủi ro platform default
+      charset. Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 8.Encoding/Encoding.md
+      anchor: default-charset-risk
+    methodName: wrongCharset
+    params: [
+      ]
+    path: com/example/learning/controller/EncodingController.java
+    mapping: '@GetMapping("/wrong-charset")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/string/encoding/wrong-charset
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+RegexController:
+  groups():
+    summary: Group và capture
+    description: Chạy thí nghiệm học tập deterministic cho Group và capture. Response
+      cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 10.Regex/Regex.md
+      anchor: regex-groups
+    methodName: groups
+    params: [
+      ]
+    path: com/example/learning/controller/RegexController.java
+    mapping: '@GetMapping("/groups")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/string/regex/groups
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  backtracking():
+    summary: Backtracking và performance pitfall
+    description: Chạy thí nghiệm học tập deterministic cho Backtracking và performance
+      pitfall. Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 10.Regex/Regex.md
+      anchor: regex-performance
+    methodName: backtracking
+    params: [
+      ]
+    path: com/example/learning/controller/RegexController.java
+    mapping: '@GetMapping("/backtracking")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/string/regex/backtracking
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+StringConcatController:
+  constructionTrace():
+    summary: Cost của repeated concatenation
+    description: Chạy thí nghiệm học tập deterministic cho Cost của repeated concatenation.
+      Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 4.Concatenation/Concatenation.md
+      anchor: loop-concat-cost
+    methodName: constructionTrace
+    params: [
+      ]
+    path: com/example/learning/controller/StringConcatController.java
+    mapping: '@GetMapping("/construction")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/string/concat/construction
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+StringPoolController:
+  identity():
+    summary: Pool identity và compile-time constant
+    description: Chạy thí nghiệm học tập deterministic cho Pool identity và compile-time
+      constant. Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 2.StringPool/StringPool.md
+      anchor: pool-identity
+    methodName: identity
+    params: [
+      ]
+    path: com/example/learning/controller/StringPoolController.java
+    mapping: '@GetMapping("/identity")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/string/pool/identity
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+UnicodeController:
+  charVsCodePoint():
+    summary: Surrogate pair
+    description: Chạy thí nghiệm học tập deterministic cho Surrogate pair. Response
+      cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 9.UnicodeCodePoint/UnicodeCodePoint.md
+      anchor: surrogate-pairs
+    methodName: charVsCodePoint
+    params: [
+      ]
+    path: com/example/learning/controller/UnicodeController.java
+    mapping: '@GetMapping("/char-vs-code-point")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/string/unicode/char-vs-code-point
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  normalization():
+    summary: Canonical equivalence và String equality
+    description: Chạy thí nghiệm học tập deterministic cho Canonical equivalence và
+      String equality. Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả
+      quy tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 9.UnicodeCodePoint/UnicodeCodePoint.md
+      anchor: canonical-equivalence
+    methodName: normalization
+    params: [
+      ]
+    path: com/example/learning/controller/UnicodeController.java
+    mapping: '@GetMapping("/normalization")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/string/unicode/normalization
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

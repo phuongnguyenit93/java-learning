@@ -1,0 +1,95 @@
+1.IdentityEquality/IdentityEquality.md:
+  identity-vs-equality:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  reference-equality:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  value-object-equality:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+2.Equals/Equals.md:
+  equals-contract:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  equals-implementation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  equals-inheritance-risk:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+3.HashCode/HashCode.md:
+  hashcode-contract:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  hash-distribution:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  mutable-key-risk:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+4.EqualsHashCode/EqualsHashCode.md:
+  equals-hashcode-consistency:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  hash-collection-lookup:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  broken-contract-effects:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+5.ToString/ToString.md:
+  tostring-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  tostring-design:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  tostring-sensitive-data:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+6.Comparable/Comparable.md:
+  natural-order:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  compareto-contract:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  compareto-equals-consistency:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+7.Comparator/Comparator.md:
+  external-order:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  comparator-composition:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  comparator-contract:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  sorting-stability-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false

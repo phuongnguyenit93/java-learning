@@ -1,0 +1,170 @@
+# <quiz-schema>
+# Cấu trúc câu hỏi Quiz
+# schema-version: 3
+#
+# questions [kiểu: list; bắt buộc; mặc định: []; duy nhất theo: id]
+#   Danh sách câu hỏi Quiz của module trong language hiện tại.
+#   mỗi phần tử:
+#     id [kiểu: string; bắt buộc; mặc định: ""]
+#       ID ổn định và duy nhất của câu hỏi.
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi hiển thị cho người học.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu câu hỏi được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu câu hỏi đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+#     answers [kiểu: list; bắt buộc; số phần tử: 4; mặc định: []; duy nhất theo: id]
+#       Chính xác bốn đáp án. ID A/B/C/D là identity nội bộ ổn định, không phải vị trí hiển thị sau khi frontend shuffle.
+#       mỗi phần tử:
+#         id [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#           Identity ổn định của đáp án.
+#         answer [kiểu: string; bắt buộc; mặc định: ""]
+#           Nội dung đáp án hiển thị cho người học.
+#         explanation [kiểu: string; bắt buộc; mặc định: ""]
+#           Giải thích hiển thị khi người học chọn đáp án này, bất kể đúng hay sai.
+#     correctAnswerId [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
+# </quiz-schema>
+
+questions:
+  - id: abstract-class-state
+    question: "Abstract class có thể chứa gì mà interface không cung cấp như per-instance state?"
+    answers:
+      - {id: A, answer: "Instance field và constructor initialize shared superclass state.", explanation: "Đúng. Abstract class có thể own instance state và partial implementation; interface field là static final constant."}
+      - {id: B, answer: "Chỉ static final constant.", explanation: "Sai. Abstract class có thể own instance state và partial implementation; interface field là static final constant."}
+      - {id: C, answer: "Không có method nào.", explanation: "Sai. Abstract class có thể own instance state và partial implementation; interface field là static final constant."}
+      - {id: D, answer: "Nhiều direct superclass.", explanation: "Sai. Abstract class có thể own instance state và partial implementation; interface field là static final constant."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.AbstractClass/AbstractClass.md", anchor: "abstract-class-model"}
+    apiRelated: {controller: "AbstractClassController", methodSignature: "templateBehavior()"}
+
+  - id: abstract-constructor
+    question: "Nếu abstract class không instantiate trực tiếp, vì sao nó có constructor?"
+    answers:
+      - {id: A, answer: "Constructor abstract class không bao giờ chạy.", explanation: "Sai. Subclass construction vẫn chạy superclass constructor chain."}
+      - {id: B, answer: "Constructor của nó initialize superclass portion mỗi khi concrete subclass được construct.", explanation: "Đúng. Subclass construction vẫn chạy superclass constructor chain."}
+      - {id: C, answer: "Nó chỉ tồn tại cho reflection và không initialize state.", explanation: "Sai. Subclass construction vẫn chạy superclass constructor chain."}
+      - {id: D, answer: "Nó tạo abstract object riêng bên cạnh child.", explanation: "Sai. Subclass construction vẫn chạy superclass constructor chain."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.AbstractClass/AbstractClass.md", anchor: "abstract-constructor"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: interface-fields
+    question: "Field khai báo trong interface là gì?"
+    answers:
+      - {id: A, answer: "Private mutable field trên mọi implementation.", explanation: "Sai. Interface không chứa instance field của implementing object."}
+      - {id: B, answer: "Protected instance field.", explanation: "Sai. Interface không chứa instance field của implementing object."}
+      - {id: C, answer: "Implicit public static final constant, không phải per-instance state.", explanation: "Đúng. Interface không chứa instance field của implementing object."}
+      - {id: D, answer: "Constructor parameter được store tự động.", explanation: "Sai. Interface không chứa instance field của implementing object."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.Interface/Interface.md", anchor: "interface-fields"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: interface-method-kinds
+    question: "Modern Java interface có thể khai báo những method kind nào?"
+    answers:
+      - {id: A, answer: "Chỉ abstract public method.", explanation: "Sai. Các method kind này có inheritance/dispatch semantics khác nhau."}
+      - {id: B, answer: "Chỉ static và final method.", explanation: "Sai. Các method kind này có inheritance/dispatch semantics khác nhau."}
+      - {id: C, answer: "Chỉ constructor và protected method.", explanation: "Sai. Các method kind này có inheritance/dispatch semantics khác nhau."}
+      - {id: D, answer: "Abstract instance method, default method, static method và private helper method.", explanation: "Đúng. Các method kind này có inheritance/dispatch semantics khác nhau."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.Interface/Interface.md", anchor: "interface-method-kinds"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: multiple-contracts
+    question: "Implement nhiều interface chủ yếu cung cấp gì?"
+    answers:
+      - {id: A, answer: "Một object có thể thỏa nhiều behavioral role mà không cần multiple class inheritance.", explanation: "Đúng. Java hỗ trợ multiple interface inheritance của type/behavior nhưng chỉ một superclass."}
+      - {id: B, answer: "Nhiều copy độc lập của object state.", explanation: "Sai. Java hỗ trợ multiple interface inheritance của type/behavior nhưng chỉ một superclass."}
+      - {id: C, answer: "Nhiều superclass constructor chạy song song.", explanation: "Sai. Java hỗ trợ multiple interface inheritance của type/behavior nhưng chỉ một superclass."}
+      - {id: D, answer: "Automatic deep clone mọi interface field.", explanation: "Sai. Java hỗ trợ multiple interface inheritance của type/behavior nhưng chỉ một superclass."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.Interface/Interface.md", anchor: "interface-implementation"}
+    apiRelated: {controller: "InterfaceController", methodSignature: "multipleContracts()"}
+
+  - id: abstract-vs-interface
+    question: "Khi nào abstract class thường phù hợp hơn interface?"
+    answers:
+      - {id: A, answer: "Bất cứ khi nào class cần nhiều role.", explanation: "Sai. Interface thường tốt cho role xuyên hierarchy; abstract class tạo base-class commitment mạnh hơn."}
+      - {id: B, answer: "Khi related hierarchy thật sự share base instance state, constructor và partial implementation.", explanation: "Đúng. Interface thường tốt cho role xuyên hierarchy; abstract class tạo base-class commitment mạnh hơn."}
+      - {id: C, answer: "Khi không được có shared implementation.", explanation: "Sai. Interface thường tốt cho role xuyên hierarchy; abstract class tạo base-class commitment mạnh hơn."}
+      - {id: D, answer: "Khi cần multiple superclass inheritance.", explanation: "Sai. Interface thường tốt cho role xuyên hierarchy; abstract class tạo base-class commitment mạnh hơn."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.AbstractVsInterface/AbstractVsInterface.md", anchor: "selection-guidance"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: interface-redeclaration
+    question: "Subinterface có thể làm gì khi redeclare inherited method?"
+    answers:
+      - {id: A, answer: "Đổi thành unrelated return type.", explanation: "Sai. Redeclaration có thể refine inherited contract nhưng vẫn signature-compatible."}
+      - {id: B, answer: "Biến nó thành constructor.", explanation: "Sai. Redeclaration có thể refine inherited contract nhưng vẫn signature-compatible."}
+      - {id: C, answer: "Refine compatible return type, thêm contract metadata hoặc biến inherited default thành abstract lại.", explanation: "Đúng. Redeclaration có thể refine inherited contract nhưng vẫn signature-compatible."}
+      - {id: D, answer: "Tự cấp instance field cho nó.", explanation: "Sai. Redeclaration có thể refine inherited contract nhưng vẫn signature-compatible."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.InterfaceInheritance/InterfaceInheritance.md", anchor: "interface-redeclaration"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: default-method-purpose
+    question: "Vì sao default method quan trọng cho interface evolution?"
+    answers:
+      - {id: A, answer: "Chúng cho interface own mutable instance field.", explanation: "Sai. Default method cải thiện compatibility cho nhiều evolution scenario nhưng không làm mọi change safe."}
+      - {id: B, answer: "Chúng loại virtual dispatch.", explanation: "Sai. Default method cải thiện compatibility cho nhiều evolution scenario nhưng không làm mọi change safe."}
+      - {id: C, answer: "Chúng guarantee mọi future interface change binary compatible.", explanation: "Sai. Default method cải thiện compatibility cho nhiều evolution scenario nhưng không làm mọi change safe."}
+      - {id: D, answer: "Chúng có thể thêm behavior mà không buộc mọi existing implementation lập tức cung cấp body mới.", explanation: "Đúng. Default method cải thiện compatibility cho nhiều evolution scenario nhưng không làm mọi change safe."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.DefaultStaticPrivate/DefaultStaticPrivate.md", anchor: "default-method-evolution"}
+    apiRelated: {controller: "InterfaceEvolutionController", methodSignature: "defaultCompatibility()"}
+
+  - id: class-wins-default
+    question: "Class hierarchy có concrete method và interface có compatible default. Cái nào thắng?"
+    answers:
+      - {id: A, answer: "Class method thắng interface default.", explanation: "Đúng. Interface default là fallback implementation và không override inherited concrete class method."}
+      - {id: B, answer: "Interface default luôn thắng.", explanation: "Sai. Interface default là fallback implementation và không override inherited concrete class method."}
+      - {id: C, answer: "Cả hai tự chạy theo sequence.", explanation: "Sai. Interface default là fallback implementation và không override inherited concrete class method."}
+      - {id: D, answer: "Class không thể implement interface.", explanation: "Sai. Interface default là fallback implementation và không override inherited concrete class method."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.MultipleInheritance/MultipleInheritance.md", anchor: "class-wins-rule"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: default-conflict
+    question: "Class phải làm gì khi inherit cùng default signature từ hai unrelated interface?"
+    answers:
+      - {id: A, answer: "Không cần làm gì; Java random chọn một.", explanation: "Sai. Java không tự đoán giữa các unrelated default cạnh tranh."}
+      - {id: B, answer: "Override method và explicit resolve behavior nào dùng hoặc combine.", explanation: "Đúng. Java không tự đoán giữa các unrelated default cạnh tranh."}
+      - {id: C, answer: "Tự convert cả hai interface thành abstract class.", explanation: "Sai. Java không tự đoán giữa các unrelated default cạnh tranh."}
+      - {id: D, answer: "Khai báo hai object cùng identity.", explanation: "Sai. Java không tự đoán giữa các unrelated default cạnh tranh."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.MultipleInheritance/MultipleInheritance.md", anchor: "default-method-conflict"}
+    apiRelated: {controller: "DefaultMethodController", methodSignature: "resolveConflict()"}

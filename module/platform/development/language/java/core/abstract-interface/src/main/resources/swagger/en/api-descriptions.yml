@@ -1,0 +1,138 @@
+AbstractClassController:
+  templateBehavior():
+    summary: Abstract class as partial implementation + state
+    description: Runs a deterministic learning experiment for Abstract class as partial
+      implementation + state. The response exposes concrete runtime evidence instead
+      of only describing the rule.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 1.AbstractClass/AbstractClass.md
+      anchor: abstract-class-model
+    methodName: templateBehavior
+    params: [
+      ]
+    path: com/example/learning/controller/AbstractClassController.java
+    mapping: '@GetMapping("/template")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/abstract-interface/abstract-class/template
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+DefaultMethodController:
+  dispatch():
+    summary: Default methods
+    description: Runs a deterministic learning experiment for Default methods. The
+      response exposes concrete runtime evidence instead of only describing the rule.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 5.DefaultStaticPrivate/DefaultStaticPrivate.md
+      anchor: default-method
+    methodName: dispatch
+    params: [
+      ]
+    path: com/example/learning/controller/DefaultMethodController.java
+    mapping: '@GetMapping("/dispatch")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/abstract-interface/default-method/dispatch
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  resolveConflict():
+    summary: Default-method conflict resolution
+    description: Runs a deterministic learning experiment for Default-method conflict
+      resolution. The response exposes concrete runtime evidence instead of only describing
+      the rule.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 6.MultipleInheritance/MultipleInheritance.md
+      anchor: default-method-conflict
+    methodName: resolveConflict
+    params: [
+      ]
+    path: com/example/learning/controller/DefaultMethodController.java
+    mapping: '@GetMapping("/resolve-conflict")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/abstract-interface/default-method/resolve-conflict
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+InterfaceController:
+  multipleContracts():
+    summary: Implementing multiple contracts
+    description: Runs a deterministic learning experiment for Implementing multiple
+      contracts. The response exposes concrete runtime evidence instead of only describing
+      the rule.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 2.Interface/Interface.md
+      anchor: interface-implementation
+    methodName: multipleContracts
+    params: [
+      ]
+    path: com/example/learning/controller/InterfaceController.java
+    mapping: '@GetMapping("/multiple-contracts")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/abstract-interface/interface/multiple-contracts
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+InterfaceEvolutionController:
+  defaultCompatibility():
+    summary: Interface evolution compatibility
+    description: Runs a deterministic learning experiment for Interface evolution
+      compatibility. The response exposes concrete runtime evidence instead of only
+      describing the rule.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 5.DefaultStaticPrivate/DefaultStaticPrivate.md
+      anchor: default-method-evolution
+    methodName: defaultCompatibility
+    params: [
+      ]
+    path: com/example/learning/controller/InterfaceEvolutionController.java
+    mapping: '@GetMapping("/default-compatibility")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/abstract-interface/evolution/default-compatibility
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

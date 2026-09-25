@@ -1222,7 +1222,20 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <summary><b><a href='./module/platform/development/language/java'>📁 java</a></b></summary>
 <ul>
 <li>
-  <a href='./module/platform/development/language/java/advance'>🪄 advance</a>
+<details>
+  <summary><b><a href='./module/platform/development/language/java/advance'>📁 advance</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/language/java/advance/jvm'>🪄 jvm</a>
+</li>
+<li>
+  <a href='./module/platform/development/language/java/advance/networking'>🪄 networking</a>
+</li>
+<li>
+  <a href='./module/platform/development/language/java/advance/security-cryptography'>🪄 security-cryptography</a>
+</li>
+</ul>
+</details>
 </li>
 <li>
 <details>
@@ -1251,39 +1264,49 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <a href='./module/platform/development/language/java/core/abstract-interface'>🪄 abstract-interface</a>
 </li>
 <li>
-<details>
-  <summary><b><a href='./module/platform/development/language/java/core/annotation'>📁 annotation</a></b></summary>
-<ul>
-<li>
-  <a href='./module/platform/development/language/java/core/annotation/basic'>🪄 basic</a>
+  <a href='./module/platform/development/language/java/core/annotation'>🪄 annotation</a>
 </li>
 <li>
-  <a href='./module/platform/development/language/java/core/annotation/custom-annotation'>🪄 custom-annotation</a>
-</li>
-<li>
-  <a href='./module/platform/development/language/java/core/annotation/meta-annotation'>🪄 meta-annotation</a>
-</li>
-</ul>
-</details>
-</li>
-<li>
-  <a href='./module/platform/development/language/java/core/class-and-runtime-class'>🪄 class-and-runtime-class</a>
+  <a href='./module/platform/development/language/java/core/class-object'>🪄 class-object</a>
 </li>
 <li>
   <a href='./module/platform/development/language/java/core/classloader'>🪄 classloader</a>
 </li>
 <li>
+  <a href='./module/platform/development/language/java/core/collection'>🪄 collection</a>
+</li>
+<li>
+  <a href='./module/platform/development/language/java/core/date-time'>🪄 date-time</a>
+</li>
+<li>
+  <a href='./module/platform/development/language/java/core/exception'>🪄 exception</a>
+</li>
+<li>
+  <a href='./module/platform/development/language/java/core/generics'>🪄 generics</a>
+</li>
+<li>
+  <a href='./module/platform/development/language/java/core/io'>🪄 io</a>
+</li>
+<li>
+  <a href='./module/platform/development/language/java/core/language-basics'>🪄 language-basics</a>
+</li>
+<li>
+  <a href='./module/platform/development/language/java/core/localization'>🪄 localization</a>
+</li>
+<li>
+  <a href='./module/platform/development/language/java/core/numbers'>🪄 numbers</a>
+</li>
+<li>
+  <a href='./module/platform/development/language/java/core/object-contract'>🪄 object-contract</a>
+</li>
+<li>
   <a href='./module/platform/development/language/java/core/oop'>🪄 oop</a>
 </li>
 <li>
-<details>
-  <summary><b><a href='./module/platform/development/language/java/core/reflection'>📁 reflection</a></b></summary>
-<ul>
-<li>
-  <a href='./module/platform/development/language/java/core/reflection/type-system'>🪄 type-system</a>
+  <a href='./module/platform/development/language/java/core/reflection'>🪄 reflection</a>
 </li>
-</ul>
-</details>
+<li>
+  <a href='./module/platform/development/language/java/core/string'>🪄 string</a>
 </li>
 </ul>
 </details>
@@ -1366,6 +1389,16 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <ul>
 <li>
   <a href='./module/platform/development/language/java/version/java8/stream-api'>🪄 stream-api</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/language/java/version/java9'>📁 java9</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/language/java/version/java9/module-system'>🪄 module-system</a>
 </li>
 </ul>
 </details>

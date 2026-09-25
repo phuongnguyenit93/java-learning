@@ -1,0 +1,196 @@
+# <quiz-schema>
+# Cấu trúc câu hỏi Quiz
+# schema-version: 3
+#
+# questions [kiểu: list; bắt buộc; mặc định: []; duy nhất theo: id]
+#   Danh sách câu hỏi Quiz của module trong language hiện tại.
+#   mỗi phần tử:
+#     id [kiểu: string; bắt buộc; mặc định: ""]
+#       ID ổn định và duy nhất của câu hỏi.
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi hiển thị cho người học.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu câu hỏi được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu câu hỏi đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+#     answers [kiểu: list; bắt buộc; số phần tử: 4; mặc định: []; duy nhất theo: id]
+#       Chính xác bốn đáp án. ID A/B/C/D là identity nội bộ ổn định, không phải vị trí hiển thị sau khi frontend shuffle.
+#       mỗi phần tử:
+#         id [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#           Identity ổn định của đáp án.
+#         answer [kiểu: string; bắt buộc; mặc định: ""]
+#           Nội dung đáp án hiển thị cho người học.
+#         explanation [kiểu: string; bắt buộc; mặc định: ""]
+#           Giải thích hiển thị khi người học chọn đáp án này, bất kể đúng hay sai.
+#     correctAnswerId [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
+# </quiz-schema>
+
+questions:
+  - id: oop-responsibility
+    question: "Một câu hỏi OOP design hữu ích ngoài việc liệt kê field là gì?"
+    answers:
+      - {id: A, answer: "Object nào sở hữu rule này và bảo vệ state/invariant liên quan?", explanation: "Đúng. OOP chủ yếu về responsibility boundary và collaboration, không chỉ đặt data vào class."}
+      - {id: B, answer: "Làm sao mọi operation thành static?", explanation: "Sai. OOP chủ yếu về responsibility boundary và collaboration, không chỉ đặt data vào class."}
+      - {id: C, answer: "Làm sao một class chứa toàn system?", explanation: "Sai. OOP chủ yếu về responsibility boundary và collaboration, không chỉ đặt data vào class."}
+      - {id: D, answer: "Làm sao mọi field public?", explanation: "Sai. OOP chủ yếu về responsibility boundary và collaboration, không chỉ đặt data vào class."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.MentalModel/MentalModel.md", anchor: "oop-object-collaboration"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: encapsulation-invariant
+    question: "Vì sao `account.withdraw(amount)` thường encapsulation mạnh hơn expose `setBalance`?"
+    answers:
+      - {id: A, answer: "Method tự làm mọi field immutable.", explanation: "Sai. Encapsulation kiểm soát valid mutation chứ không chỉ field visibility."}
+      - {id: B, answer: "Behavior có thể validate state transition đầy đủ và preserve domain invariant.", explanation: "Đúng. Encapsulation kiểm soát valid mutation chứ không chỉ field visibility."}
+      - {id: C, answer: "Setter không thể public trong Java.", explanation: "Sai. Encapsulation kiểm soát valid mutation chứ không chỉ field visibility."}
+      - {id: D, answer: "withdraw loại bỏ nhu cầu constructor.", explanation: "Sai. Encapsulation kiểm soát valid mutation chứ không chỉ field visibility."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.Encapsulation/Encapsulation.md", anchor: "invariant-protection"}
+    apiRelated: {controller: "EncapsulationController", methodSignature: "invariantProtection()"}
+
+  - id: inheritance-subtype
+    question: "Khi nào class inheritance hợp lý nhất?"
+    answers:
+      - {id: A, answer: "Bất cứ khi nào hai class có cùng một field name.", explanation: "Sai. Inheritance tạo subtype và base-class coupling mạnh nên behavior quan trọng hơn shared field."}
+      - {id: B, answer: "Bất cứ khi nào composition cần constructor.", explanation: "Sai. Inheritance tạo subtype và base-class coupling mạnh nên behavior quan trọng hơn shared field."}
+      - {id: C, answer: "Khi child là behavioral subtype thật sự có thể honor superclass contract, không chỉ reuse code.", explanation: "Đúng. Inheritance tạo subtype và base-class coupling mạnh nên behavior quan trọng hơn shared field."}
+      - {id: D, answer: "Khi child cần utility method không liên quan.", explanation: "Sai. Inheritance tạo subtype và base-class coupling mạnh nên behavior quan trọng hơn shared field."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.Inheritance/Inheritance.md", anchor: "is-a-subtyping"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: runtime-dispatch
+    question: "Với overridden instance method trên `Parent p = new Child()`, implementation nào chạy?"
+    answers:
+      - {id: A, answer: "Luôn Parent body vì variable là Parent.", explanation: "Sai. Signature được biết ở compile time, còn override body được chọn ở runtime."}
+      - {id: B, answer: "Cả hai body tự chạy.", explanation: "Sai. Signature được biết ở compile time, còn override body được chọn ở runtime."}
+      - {id: C, answer: "Method call luôn ambiguous.", explanation: "Sai. Signature được biết ở compile time, còn override body được chọn ở runtime."}
+      - {id: D, answer: "Child override vì instance-method override dispatch dùng runtime receiver class.", explanation: "Đúng. Signature được biết ở compile time, còn override body được chọn ở runtime."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.Polymorphism/Polymorphism.md", anchor: "dynamic-dispatch"}
+    apiRelated: {controller: "PolymorphismController", methodSignature: "dispatch()"}
+
+  - id: substitutability-behavior
+    question: "Subtype substitutability tốt yêu cầu gì ngoài việc compile?"
+    answers:
+      - {id: A, answer: "Subtype nên preserve behavioral expectation, invariant, accepted state và postcondition có ý nghĩa của supertype contract.", explanation: "Đúng. Static type compatibility không tự guarantee caller vẫn đúng về behavior."}
+      - {id: B, answer: "Chỉ cần class name giống nhau.", explanation: "Sai. Static type compatibility không tự guarantee caller vẫn đúng về behavior."}
+      - {id: C, answer: "Subtype phải thêm public field.", explanation: "Sai. Static type compatibility không tự guarantee caller vẫn đúng về behavior."}
+      - {id: D, answer: "Subtype luôn phải throw nhiều exception hơn.", explanation: "Sai. Static type compatibility không tự guarantee caller vẫn đúng về behavior."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.Polymorphism/Polymorphism.md", anchor: "substitutability"}
+    apiRelated: {controller: "SubstitutabilityController", methodSignature: "substituteImplementations()"}
+
+  - id: overloading-compile-time
+    question: "Overload được chọn khi nào?"
+    answers:
+      - {id: A, answer: "Chỉ sau khi method body bắt đầu.", explanation: "Sai. Runtime object type không làm Java chọn lại overload sau compilation."}
+      - {id: B, answer: "Ở compile time từ declared argument type và applicable conversion.", explanation: "Đúng. Runtime object type không làm Java chọn lại overload sau compilation."}
+      - {id: C, answer: "Bởi garbage collector.", explanation: "Sai. Runtime object type không làm Java chọn lại overload sau compilation."}
+      - {id: D, answer: "Luôn từ runtime class của mọi argument.", explanation: "Sai. Runtime object type không làm Java chọn lại overload sau compilation."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.OverloadingOverriding/OverloadingOverriding.md", anchor: "overloading-compile-time"}
+    apiRelated: {controller: "DispatchController", methodSignature: "overloadVsOverride()"}
+
+  - id: static-method-hiding
+    question: "Với `Parent p = new Child()`, hidden static method được chọn thế nào khi gọi qua `p`?"
+    answers:
+      - {id: A, answer: "Child version luôn chạy qua virtual dispatch.", explanation: "Sai. Static member selection gắn với qualifying type, không runtime receiver dispatch."}
+      - {id: B, answer: "Cả hai static method chạy.", explanation: "Sai. Static member selection gắn với qualifying type, không runtime receiver dispatch."}
+      - {id: C, answer: "Theo compile-time type Parent; static method là hiding, không dynamic override.", explanation: "Đúng. Static member selection gắn với qualifying type, không runtime receiver dispatch."}
+      - {id: D, answer: "Static method không thể cùng signature ở parent/child.", explanation: "Sai. Static member selection gắn với qualifying type, không runtime receiver dispatch."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.OverloadingOverriding/OverloadingOverriding.md", anchor: "static-method-hiding"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: field-hiding
+    question: "`p.field` được chọn thế nào với `Parent p = new Child()` khi cả hai class có `field`?"
+    answers:
+      - {id: A, answer: "Child field luôn thắng runtime.", explanation: "Sai. Field hiding dùng compile-time member selection, khác overridden instance method."}
+      - {id: B, answer: "Hai field value được merge.", explanation: "Sai. Field hiding dùng compile-time member selection, khác overridden instance method."}
+      - {id: C, answer: "JVM ném ClassCastException.", explanation: "Sai. Field hiding dùng compile-time member selection, khác overridden instance method."}
+      - {id: D, answer: "Parent field được chọn từ compile-time type của `p`; field không virtual.", explanation: "Đúng. Field hiding dùng compile-time member selection, khác overridden instance method."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.OverloadingOverriding/OverloadingOverriding.md", anchor: "field-hiding"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: composition-vs-inheritance
+    question: "Vì sao composition thường được ưu tiên để reuse behavior?"
+    answers:
+      - {id: A, answer: "Nó giữ collaborator replaceable và tránh couple type vào base-class hierarchy khi không có subtype relationship thật.", explanation: "Đúng. Inheritance giá trị với subtype polymorphism thật; composition linh hoạt hơn cho delegated behavior."}
+      - {id: B, answer: "Composition làm mọi call static.", explanation: "Sai. Inheritance giá trị với subtype polymorphism thật; composition linh hoạt hơn cho delegated behavior."}
+      - {id: C, answer: "Inheritance illegal trong Java.", explanation: "Sai. Inheritance giá trị với subtype polymorphism thật; composition linh hoạt hơn cho delegated behavior."}
+      - {id: D, answer: "Composition luôn loại mọi object reference.", explanation: "Sai. Inheritance giá trị với subtype polymorphism thật; composition linh hoạt hơn cho delegated behavior."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.Composition/Composition.md", anchor: "composition-vs-inheritance"}
+    apiRelated: {controller: "CompositionController", methodSignature: "strategySwap()"}
+
+  - id: object-relationship-model
+    question: "Dependency, association, aggregation và composition nên được hiểu thế nào trong Java?"
+    answers:
+      - {id: A, answer: "Mỗi relationship có JVM bytecode instruction riêng.", explanation: "Sai. Java không có keyword hay GC semantics riêng trực tiếp enforce các distinction kiểu UML này."}
+      - {id: B, answer: "Là modeling relationship biểu diễn bằng ordinary reference và ownership/lifecycle convention, không phải bốn runtime construct đặc biệt.", explanation: "Đúng. Java không có keyword hay GC semantics riêng trực tiếp enforce các distinction kiểu UML này."}
+      - {id: C, answer: "Aggregation tự ngăn garbage collection.", explanation: "Sai. Java không có keyword hay GC semantics riêng trực tiếp enforce các distinction kiểu UML này."}
+      - {id: D, answer: "Composition chỉ biểu diễn bằng inheritance.", explanation: "Sai. Java không có keyword hay GC semantics riêng trực tiếp enforce các distinction kiểu UML này."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.Composition/Composition.md", anchor: "object-relationships"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: delegation-boundary
+    question: "Delegation nghĩa là gì trong object design?"
+    answers:
+      - {id: A, answer: "Copy mọi method implementation vào caller.", explanation: "Sai. Delegation hỗ trợ composition và separation of responsibility mà không cần subtype inheritance."}
+      - {id: B, answer: "Dùng reflection cho mọi call.", explanation: "Sai. Delegation hỗ trợ composition và separation of responsibility mà không cần subtype inheritance."}
+      - {id: C, answer: "Object chuyển responsibility cho collaborator khác sở hữu behavior liên quan.", explanation: "Đúng. Delegation hỗ trợ composition và separation of responsibility mà không cần subtype inheritance."}
+      - {id: D, answer: "Làm mọi collaborator thành global static variable.", explanation: "Sai. Delegation hỗ trợ composition và separation of responsibility mà không cần subtype inheritance."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.Composition/Composition.md", anchor: "delegation"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: abstraction-contract
+    question: "Điều gì làm một abstraction hữu ích?"
+    answers:
+      - {id: A, answer: "Nó luôn phải là abstract class.", explanation: "Sai. Chỉ có interface keyword không guarantee abstraction tốt; contract và boundary mới quan trọng."}
+      - {id: B, answer: "Nó phải giấu mọi performance/lifecycle constraint.", explanation: "Sai. Chỉ có interface keyword không guarantee abstraction tốt; contract và boundary mới quan trọng."}
+      - {id: C, answer: "Nó phải chỉ có đúng một implementation mãi mãi.", explanation: "Sai. Chỉ có interface keyword không guarantee abstraction tốt; contract và boundary mới quan trọng."}
+      - {id: D, answer: "Nó expose essential contract caller cần và ẩn implementation detail cần được tự do thay đổi.", explanation: "Đúng. Chỉ có interface keyword không guarantee abstraction tốt; contract và boundary mới quan trọng."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Abstraction/Abstraction.md", anchor: "abstraction-model"}
+    apiRelated: {controller: "", methodSignature: ""}

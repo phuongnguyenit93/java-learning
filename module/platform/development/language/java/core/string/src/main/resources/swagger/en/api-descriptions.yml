@@ -1,0 +1,220 @@
+EncodingController:
+  roundTrip():
+    summary: Charset encode/decode
+    description: Runs a deterministic learning experiment for Charset encode/decode.
+      The response exposes concrete runtime evidence instead of only describing the
+      rule.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 8.Encoding/Encoding.md
+      anchor: charset-encode-decode
+    methodName: roundTrip
+    params: [
+      ]
+    path: com/example/learning/controller/EncodingController.java
+    mapping: '@GetMapping("/round-trip")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/string/encoding/round-trip
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  wrongCharset():
+    summary: Default charset portability risk
+    description: Runs a deterministic learning experiment for Default charset portability
+      risk. The response exposes concrete runtime evidence instead of only describing
+      the rule.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 8.Encoding/Encoding.md
+      anchor: default-charset-risk
+    methodName: wrongCharset
+    params: [
+      ]
+    path: com/example/learning/controller/EncodingController.java
+    mapping: '@GetMapping("/wrong-charset")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/string/encoding/wrong-charset
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+RegexController:
+  groups():
+    summary: Groups and captures
+    description: Runs a deterministic learning experiment for Groups and captures.
+      The response exposes concrete runtime evidence instead of only describing the
+      rule.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 10.Regex/Regex.md
+      anchor: regex-groups
+    methodName: groups
+    params: [
+      ]
+    path: com/example/learning/controller/RegexController.java
+    mapping: '@GetMapping("/groups")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/string/regex/groups
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  backtracking():
+    summary: Backtracking and performance pitfalls
+    description: Runs a deterministic learning experiment for Backtracking and performance
+      pitfalls. The response exposes concrete runtime evidence instead of only describing
+      the rule.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 10.Regex/Regex.md
+      anchor: regex-performance
+    methodName: backtracking
+    params: [
+      ]
+    path: com/example/learning/controller/RegexController.java
+    mapping: '@GetMapping("/backtracking")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/string/regex/backtracking
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+StringConcatController:
+  constructionTrace():
+    summary: Repeated concatenation cost
+    description: Runs a deterministic learning experiment for Repeated concatenation
+      cost. The response exposes concrete runtime evidence instead of only describing
+      the rule.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 4.Concatenation/Concatenation.md
+      anchor: loop-concat-cost
+    methodName: constructionTrace
+    params: [
+      ]
+    path: com/example/learning/controller/StringConcatController.java
+    mapping: '@GetMapping("/construction")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/string/concat/construction
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+StringPoolController:
+  identity():
+    summary: Pool identity and compile-time constants
+    description: Runs a deterministic learning experiment for Pool identity and compile-time
+      constants. The response exposes concrete runtime evidence instead of only describing
+      the rule.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 2.StringPool/StringPool.md
+      anchor: pool-identity
+    methodName: identity
+    params: [
+      ]
+    path: com/example/learning/controller/StringPoolController.java
+    mapping: '@GetMapping("/identity")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/string/pool/identity
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+UnicodeController:
+  charVsCodePoint():
+    summary: Surrogate pairs
+    description: Runs a deterministic learning experiment for Surrogate pairs. The
+      response exposes concrete runtime evidence instead of only describing the rule.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 9.UnicodeCodePoint/UnicodeCodePoint.md
+      anchor: surrogate-pairs
+    methodName: charVsCodePoint
+    params: [
+      ]
+    path: com/example/learning/controller/UnicodeController.java
+    mapping: '@GetMapping("/char-vs-code-point")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/string/unicode/char-vs-code-point
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  normalization():
+    summary: Canonical equivalence and String equality
+    description: Runs a deterministic learning experiment for Canonical equivalence
+      and String equality. The response exposes concrete runtime evidence instead
+      of only describing the rule.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 9.UnicodeCodePoint/UnicodeCodePoint.md
+      anchor: canonical-equivalence
+    methodName: normalization
+    params: [
+      ]
+    path: com/example/learning/controller/UnicodeController.java
+    mapping: '@GetMapping("/normalization")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/string/unicode/normalization
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

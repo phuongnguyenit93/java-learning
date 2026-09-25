@@ -1,0 +1,85 @@
+# <interview-schema>
+# Cấu trúc câu hỏi Interview
+# schema-version: 2
+#
+# questions [kiểu: list; bắt buộc; mặc định: []]
+#   Danh sách câu hỏi Interview của module trong language hiện tại.
+#   mỗi phần tử:
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi phỏng vấn hiển thị cho người học.
+#     answer [kiểu: string; bắt buộc; mặc định: ""]
+#       Câu trả lời tham khảo, chỉ hiển thị khi người học chủ động mở.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu nội dung được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu nội dung đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+# </interview-schema>
+
+questions:
+  - question: "Phân biệt object identity với logical equality và nêu case mỗi loại quan trọng."
+    answer: "Identity hỏi reference có cùng nhận diện một object và dùng reference equality. Logical equality hỏi các object riêng có biểu diễn cùng domain value qua equals. Identity quan trọng với singleton/sentinel/enum; value object thường quan tâm logical equality."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.IdentityEquality/IdentityEquality.md", anchor: "identity-vs-equality"}
+    apiRelated: {controller: "EqualityController", methodSignature: "identityVsEquality()"}
+
+  - question: "Vì sao reflexivity, symmetry, transitivity, consistency và null handling quan trọng trong equals?"
+    answer: "Chúng làm equality thành relation ổn định mà library có thể reasoning. Vi phạm tạo behavior phụ thuộc order/unstable trong collection, deduplication, caching và test dù compiler vẫn accept code."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.Equals/Equals.md", anchor: "equals-contract"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Vì sao value equality qua open inheritance hierarchy khó design?"
+    answer: "Parent có thể chỉ compare base state trong khi child thêm equality-relevant state, tạo tension symmetry/transitivity. Composition, closed hierarchy hoặc class-based equality thường tránh contradiction."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.Equals/Equals.md", anchor: "equals-inheritance-risk"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Giải thích concept HashMap dùng hashCode và equals thế nào khi lookup."
+    answer: "Hash thu hẹp nơi tìm, còn equality xác nhận logical key trong candidate/collision. Vì vậy equal key phải cùng hash, nhưng cùng hash không suy ra equal key."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.EqualsHashCode/EqualsHashCode.md", anchor: "equals-hashcode-consistency"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Property nào làm một key tốt cho hash-based collection?"
+    answer: "Equality và hashCode phải đúng, consistent với nhau và dựa trên state ổn định khi key stored. Immutable value object thường là key dễ reasoning nhất."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.HashCode/HashCode.md", anchor: "mutable-key-risk"}
+    apiRelated: {controller: "HashContractController", methodSignature: "mutableKey()"}
+
+  - question: "Vì sao consistency giữa compareTo và equals quan trọng?"
+    answer: "Sorted set/map thường xem compareTo zero là cùng ordering key, còn API khác dùng equals. Nếu hai notion khác nhau, size/membership semantics có thể khác, như BigDecimal scale variant."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.Comparable/Comparable.md", anchor: "compareto-equals-consistency"}
+    apiRelated: {controller: "OrderingController", methodSignature: "compareToEquals()"}
+
+  - question: "Khi nào ordering nên nằm trong Comparable và khi nào dùng Comparator?"
+    answer: "Comparable phù hợp cho một natural order intrinsic và dễ đoán của type. Comparator tốt cho alternate view, domain-specific sort hoặc khi type không nên own ordering policy."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Comparator/Comparator.md", anchor: "external-order"}
+    apiRelated: {controller: "OrderingController", methodSignature: "naturalVsCustom()"}
+
+  - question: "Production-quality toString nên tối ưu điều gì?"
+    answer: "Human diagnostic value, output concise/deterministic và safety. Nó nên tránh expensive side effect/sensitive data và không nên bị xem là stable serialization contract nếu không thiết kế explicit."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.ToString/ToString.md", anchor: "tostring-sensitive-data"}
+    apiRelated: {controller: "", methodSignature: ""}

@@ -1,0 +1,162 @@
+ExceptionDesignController:
+  translateBoundary():
+    summary: Translate exception tại abstraction boundary
+    description: Chạy thí nghiệm học tập deterministic cho Translate exception tại
+      abstraction boundary. Response cung cấp runtime evidence cụ thể thay vì chỉ
+      mô tả quy tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 9.ExceptionDesign/ExceptionDesign.md
+      anchor: exception-boundaries
+    methodName: translateBoundary
+    params: [
+      ]
+    path: com/example/learning/controller/ExceptionDesignController.java
+    mapping: '@GetMapping("/translate")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/exception/design/translate
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+FinallyController:
+  returnInteraction():
+    summary: Tương tác return/throw với finally
+    description: Chạy thí nghiệm học tập deterministic cho Tương tác return/throw
+      với finally. Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy
+      tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 5.TryCatchFinally/TryCatchFinally.md
+      anchor: return-finally
+    methodName: returnInteraction
+    params: [
+      ]
+    path: com/example/learning/controller/FinallyController.java
+    mapping: '@GetMapping("/return-interaction")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/exception/finally/return-interaction
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+PropagationController:
+  propagate():
+    summary: Stack unwinding và propagation
+    description: Chạy thí nghiệm học tập deterministic cho Stack unwinding và propagation.
+      Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 4.Propagation/Propagation.md
+      anchor: exception-propagation
+    methodName: propagate
+    params: [
+      ]
+    path: com/example/learning/controller/PropagationController.java
+    mapping: '@GetMapping("/stack")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/exception/propagation/stack
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  wrapCause():
+    summary: Wrap và preserve cause
+    description: Chạy thí nghiệm học tập deterministic cho Wrap và preserve cause.
+      Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 4.Propagation/Propagation.md
+      anchor: exception-chaining
+    methodName: wrapCause
+    params: [
+      ]
+    path: com/example/learning/controller/PropagationController.java
+    mapping: '@GetMapping("/wrap-cause")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/exception/propagation/wrap-cause
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+ResourceController:
+  closeOrder():
+    summary: Resource close theo thứ tự ngược
+    description: Chạy thí nghiệm học tập deterministic cho Resource close theo thứ
+      tự ngược. Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 6.TryWithResources/TryWithResources.md
+      anchor: resource-close-order
+    methodName: closeOrder
+    params: [
+      ]
+    path: com/example/learning/controller/ResourceController.java
+    mapping: '@GetMapping("/close-order")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/exception/resource/close-order
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  suppressed():
+    summary: Primary và suppressed exception
+    description: Chạy thí nghiệm học tập deterministic cho Primary và suppressed exception.
+      Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 7.SuppressedException/SuppressedException.md
+      anchor: primary-vs-suppressed
+    methodName: suppressed
+    params: [
+      ]
+    path: com/example/learning/controller/ResourceController.java
+    mapping: '@GetMapping("/suppressed")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/exception/resource/suppressed
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

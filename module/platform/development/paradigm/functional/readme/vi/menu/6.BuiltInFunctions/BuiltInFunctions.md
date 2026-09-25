@@ -1,0 +1,1 @@
+# Các Functional Interface có sẵn

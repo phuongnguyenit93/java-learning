@@ -1,0 +1,134 @@
+EqualityController:
+  identityVsEquality():
+    summary: Object identity và logical equality
+    description: Chạy thí nghiệm học tập deterministic cho Object identity và logical
+      equality. Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 1.IdentityEquality/IdentityEquality.md
+      anchor: identity-vs-equality
+    methodName: identityVsEquality
+    params: [
+      ]
+    path: com/example/learning/controller/EqualityController.java
+    mapping: '@GetMapping("/identity-vs-equality")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/object-contract/equality/identity-vs-equality
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+HashContractController:
+  brokenHashSetLookup():
+    summary: Hệ quả observable khi contract bị phá
+    description: Chạy thí nghiệm học tập deterministic cho Hệ quả observable khi contract
+      bị phá. Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 4.EqualsHashCode/EqualsHashCode.md
+      anchor: broken-contract-effects
+    methodName: brokenHashSetLookup
+    params: [
+      ]
+    path: com/example/learning/controller/HashContractController.java
+    mapping: '@GetMapping("/broken-contract")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/object-contract/hash/broken-contract
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  mutableKey():
+    summary: Rủi ro mutable field trong hashCode
+    description: Chạy thí nghiệm học tập deterministic cho Rủi ro mutable field trong
+      hashCode. Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 3.HashCode/HashCode.md
+      anchor: mutable-key-risk
+    methodName: mutableKey
+    params: [
+      ]
+    path: com/example/learning/controller/HashContractController.java
+    mapping: '@GetMapping("/mutable-key")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/object-contract/hash/mutable-key
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+OrderingController:
+  naturalVsCustom():
+    summary: External/custom ordering
+    description: Chạy thí nghiệm học tập deterministic cho External/custom ordering.
+      Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 7.Comparator/Comparator.md
+      anchor: external-order
+    methodName: naturalVsCustom
+    params: [
+      ]
+    path: com/example/learning/controller/OrderingController.java
+    mapping: '@GetMapping("/natural-vs-custom")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/object-contract/ordering/natural-vs-custom
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  compareToEquals():
+    summary: Consistency với equals và sorted collection
+    description: Chạy thí nghiệm học tập deterministic cho Consistency với equals
+      và sorted collection. Response cung cấp runtime evidence cụ thể thay vì chỉ
+      mô tả quy tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 6.Comparable/Comparable.md
+      anchor: compareto-equals-consistency
+    methodName: compareToEquals
+    params: [
+      ]
+    path: com/example/learning/controller/OrderingController.java
+    mapping: '@GetMapping("/compareto-equals")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/object-contract/ordering/compareto-equals
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

@@ -1,0 +1,235 @@
+# <quiz-schema>
+# Cấu trúc câu hỏi Quiz
+# schema-version: 3
+#
+# questions [kiểu: list; bắt buộc; mặc định: []; duy nhất theo: id]
+#   Danh sách câu hỏi Quiz của module trong language hiện tại.
+#   mỗi phần tử:
+#     id [kiểu: string; bắt buộc; mặc định: ""]
+#       ID ổn định và duy nhất của câu hỏi.
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi hiển thị cho người học.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu câu hỏi được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu câu hỏi đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+#     answers [kiểu: list; bắt buộc; số phần tử: 4; mặc định: []; duy nhất theo: id]
+#       Chính xác bốn đáp án. ID A/B/C/D là identity nội bộ ổn định, không phải vị trí hiển thị sau khi frontend shuffle.
+#       mỗi phần tử:
+#         id [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#           Identity ổn định của đáp án.
+#         answer [kiểu: string; bắt buộc; mặc định: ""]
+#           Nội dung đáp án hiển thị cho người học.
+#         explanation [kiểu: string; bắt buộc; mặc định: ""]
+#           Giải thích hiển thị khi người học chọn đáp án này, bất kể đúng hay sai.
+#     correctAnswerId [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
+# </quiz-schema>
+
+questions:
+  - id: class-vs-object
+    question: "Statement nào phân biệt class và object đúng nhất?"
+    answers:
+      - {id: A, answer: "Class định nghĩa type và implementation blueprint; object là runtime instance có identity và instance state riêng.", explanation: "Đúng. Nhiều object có thể share một class definition nhưng giữ state khác nhau."}
+      - {id: B, answer: "Class luôn là runtime instance còn object là source code.", explanation: "Sai. Nhiều object có thể share một class definition nhưng giữ state khác nhau."}
+      - {id: C, answer: "Object chỉ tồn tại khi mọi field static.", explanation: "Sai. Nhiều object có thể share một class definition nhưng giữ state khác nhau."}
+      - {id: D, answer: "Class và mọi object của nó share một identity.", explanation: "Sai. Nhiều object có thể share một class definition nhưng giữ state khác nhau."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.ClassObject/ClassObject.md", anchor: "class-object-model"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: constructor-default-rule
+    question: "Khi nào Java cung cấp implicit default no-arg constructor?"
+    answers:
+      - {id: A, answer: "Luôn có dù đã khai báo custom constructor.", explanation: "Sai. Khai báo bất kỳ constructor nào làm compiler không sinh implicit default constructor."}
+      - {id: B, answer: "Chỉ khi class không khai báo constructor, đồng thời superclass constructor phù hợp phải accessible.", explanation: "Đúng. Khai báo bất kỳ constructor nào làm compiler không sinh implicit default constructor."}
+      - {id: C, answer: "Chỉ với abstract class.", explanation: "Sai. Khai báo bất kỳ constructor nào làm compiler không sinh implicit default constructor."}
+      - {id: D, answer: "Chỉ khi mọi field final.", explanation: "Sai. Khai báo bất kỳ constructor nào làm compiler không sinh implicit default constructor."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.Constructor/Constructor.md", anchor: "default-constructor"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: constructor-chaining
+    question: "Quan hệ giữa `this(...)` và `super(...)` trong constructor chain là gì?"
+    answers:
+      - {id: A, answer: "Cả hai phải được gọi ở hai statement đầu.", explanation: "Sai. Construction theo một ordered chain chứ không có hai first constructor call cạnh tranh."}
+      - {id: B, answer: "super tạo một parent object riêng.", explanation: "Sai. Construction theo một ordered chain chứ không có hai first constructor call cạnh tranh."}
+      - {id: C, answer: "Constructor first delegate hoặc sang constructor cùng class hoặc sang superclass constructor, và chain cuối cùng đi tới superclass.", explanation: "Đúng. Construction theo một ordered chain chứ không có hai first constructor call cạnh tranh."}
+      - {id: D, answer: "this chỉ dùng trong static method.", explanation: "Sai. Construction theo một ordered chain chứ không có hai first constructor call cạnh tranh."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.ThisSuper/ThisSuper.md", anchor: "constructor-chaining-order"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: protected-cross-package
+    question: "Mô tả nào về protected access xuyên package chính xác?"
+    answers:
+      - {id: A, answer: "Protected giống public ngoài package.", explanation: "Sai. Protected subtle hơn mô tả package cộng mọi subclass ở mọi nơi."}
+      - {id: B, answer: "Protected chỉ visible trong declaring class.", explanation: "Sai. Protected subtle hơn mô tả package cộng mọi subclass ở mọi nơi."}
+      - {id: C, answer: "Mọi unrelated class đều access protected field qua instance.", explanation: "Sai. Protected subtle hơn mô tả package cộng mọi subclass ở mọi nơi."}
+      - {id: D, answer: "Subclass có protected access theo subclass-context và qualifying-expression rule, không phải access tùy ý qua mọi superclass instance.", explanation: "Đúng. Protected subtle hơn mô tả package cộng mọi subclass ở mọi nơi."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.AccessModifier/AccessModifier.md", anchor: "protected-cross-package"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: final-reference-mutability
+    question: "`final List<String> names = new ArrayList<>();` guarantee điều gì?"
+    answers:
+      - {id: A, answer: "Variable không reassign sang list khác được, nhưng List object được reference vẫn có thể mutate.", explanation: "Đúng. final constrain assignment của variable, không tạo deep immutability cho referenced object."}
+      - {id: B, answer: "List trở thành deep immutable.", explanation: "Sai. final constrain assignment của variable, không tạo deep immutability cho referenced object."}
+      - {id: C, answer: "Mọi element insert vào đều final.", explanation: "Sai. final constrain assignment của variable, không tạo deep immutability cho referenced object."}
+      - {id: D, answer: "Reference reassign được nhưng element không đổi.", explanation: "Sai. final constrain assignment của variable, không tạo deep immutability cho referenced object."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.StaticFinal/StaticFinal.md", anchor: "final-variable-reference"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: initialization-parent-child
+    question: "Trong `new Child()`, broad order nào đúng?"
+    answers:
+      - {id: A, answer: "Child constructor body chạy trước mọi parent constructor.", explanation: "Sai. Một object được initialize qua superclass chain trước khi subclass construction hoàn tất."}
+      - {id: B, answer: "Superclass construction chạy trước subclass instance initializer và subclass constructor body.", explanation: "Đúng. Một object được initialize qua superclass chain trước khi subclass construction hoàn tất."}
+      - {id: C, answer: "Mọi subclass field initialize trước superclass constructor.", explanation: "Sai. Một object được initialize qua superclass chain trước khi subclass construction hoàn tất."}
+      - {id: D, answer: "Constructor order random theo JVM.", explanation: "Sai. Một object được initialize qua superclass chain trước khi subclass construction hoàn tất."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.InitializationOrder/InitializationOrder.md", anchor: "inheritance-initialization-order"}
+    apiRelated: {controller: "InitializationController", methodSignature: "traceOrder()"}
+
+  - id: constructor-override-risk
+    question: "Vì sao gọi overridable method từ superclass constructor có rủi ro?"
+    answers:
+      - {id: A, answer: "Override bị disable trong construction.", explanation: "Sai. Virtual dispatch vẫn áp dụng trong construction nên override có thể thấy default field value."}
+      - {id: B, answer: "Nó luôn tạo hai object riêng.", explanation: "Sai. Virtual dispatch vẫn áp dụng trong construction nên override có thể thấy default field value."}
+      - {id: C, answer: "Runtime dispatch có thể tới subclass override trước khi subclass field explicit initialization hoàn tất.", explanation: "Đúng. Virtual dispatch vẫn áp dụng trong construction nên override có thể thấy default field value."}
+      - {id: D, answer: "JVM bỏ qua superclass constructor.", explanation: "Sai. Virtual dispatch vẫn áp dụng trong construction nên override có thể thấy default field value."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.ObjectCreationLifecycle/ObjectCreationLifecycle.md", anchor: "constructor-dynamic-dispatch-risk"}
+    apiRelated: {controller: "ConstructionController", methodSignature: "constructorDispatchRisk()"}
+
+  - id: inner-class-outer
+    question: "Điểm gì phân biệt non-static member inner class với static nested class?"
+    answers:
+      - {id: A, answer: "Static nested class luôn extend outer class.", explanation: "Sai. Static nested class không có implicit outer-instance reference."}
+      - {id: B, answer: "Inner class không access được outer member.", explanation: "Sai. Static nested class không có implicit outer-instance reference."}
+      - {id: C, answer: "Chỉ static nested class mới có method.", explanation: "Sai. Static nested class không có implicit outer-instance reference."}
+      - {id: D, answer: "Inner class gắn với enclosing instance và có thể implicit access state của outer instance.", explanation: "Đúng. Static nested class không có implicit outer-instance reference."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.NestedInnerClass/NestedInnerClass.md", anchor: "inner-class"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: enum-ordinal-persistence
+    question: "Vì sao enum `ordinal()` thường không nên persist làm durable business identifier?"
+    answers:
+      - {id: A, answer: "Reorder hoặc insert constant làm ordinal đổi nên persisted meaning có thể silently thay đổi.", explanation: "Đúng. Dùng stable external code explicit khi enum identity đi qua storage/protocol boundary."}
+      - {id: B, answer: "ordinal luôn random.", explanation: "Sai. Dùng stable external code explicit khi enum identity đi qua storage/protocol boundary."}
+      - {id: C, answer: "ordinal không đọc được runtime.", explanation: "Sai. Dùng stable external code explicit khi enum identity đi qua storage/protocol boundary."}
+      - {id: D, answer: "Mọi enum constant có ordinal 0.", explanation: "Sai. Dùng stable external code explicit khi enum identity đi qua storage/protocol boundary."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "11.Enum/Enum.md", anchor: "enum-values-valueof"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: shallow-copy-nested
+    question: "Rủi ro chính của shallow copy chứa mutable nested List là gì?"
+    answers:
+      - {id: A, answer: "Shallow copy luôn deep-copy mọi collection.", explanation: "Sai. Shallow copy duplicate field value nguyên trạng, bao gồm reference value."}
+      - {id: B, answer: "Outer object mới nhưng hai copy vẫn có thể share cùng nested List reference.", explanation: "Đúng. Shallow copy duplicate field value nguyên trạng, bao gồm reference value."}
+      - {id: C, answer: "Outer object mới phải cùng identity.", explanation: "Sai. Shallow copy duplicate field value nguyên trạng, bao gồm reference value."}
+      - {id: D, answer: "Primitive field không thể shallow copy.", explanation: "Sai. Shallow copy duplicate field value nguyên trạng, bao gồm reference value."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "12.CopySemantics/CopySemantics.md", anchor: "shallow-copy"}
+    apiRelated: {controller: "CopyController", methodSignature: "shallowVsDeep()"}
+
+  - id: aliasing-visible-mutation
+    question: "Object aliasing nghĩa là gì?"
+    answers:
+      - {id: A, answer: "Hai object khác nhau tình cờ có field equal.", explanation: "Sai. Aliasing nói về shared object identity, không phải variable name giống nhau."}
+      - {id: B, answer: "Variable khai báo final.", explanation: "Sai. Aliasing nói về shared object identity, không phải variable name giống nhau."}
+      - {id: C, answer: "Nhiều reference nhận diện cùng object nên mutation qua alias này có thể thấy qua alias khác.", explanation: "Đúng. Aliasing nói về shared object identity, không phải variable name giống nhau."}
+      - {id: D, answer: "Class có nhiều constructor.", explanation: "Sai. Aliasing nói về shared object identity, không phải variable name giống nhau."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "13.ObjectAliasingMutability/ObjectAliasingMutability.md", anchor: "aliasing-model"}
+    apiRelated: {controller: "AliasingController", methodSignature: "mutateAlias()"}
+
+  - id: defensive-copy-input
+    question: "Vì sao immutable object có thể defensive copy mutable constructor argument?"
+    answers:
+      - {id: A, answer: "Để constructor chạy hai lần.", explanation: "Sai. Immutability yêu cầu kiểm soát reachable mutable state, không chỉ final field."}
+      - {id: B, answer: "Vì final field không store object được.", explanation: "Sai. Immutability yêu cầu kiểm soát reachable mutable state, không chỉ final field."}
+      - {id: C, answer: "Để đổi reference equality thành primitive equality.", explanation: "Sai. Immutability yêu cầu kiểm soát reachable mutable state, không chỉ final field."}
+      - {id: D, answer: "Để ngăn caller giữ alias và mutate internal state sau construction.", explanation: "Đúng. Immutability yêu cầu kiểm soát reachable mutable state, không chỉ final field."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "14.ImmutabilityDefensiveCopy/ImmutabilityDefensiveCopy.md", anchor: "defensive-copy-input"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: defensive-copy-output
+    question: "Vấn đề khi trả trực tiếp mutable internal collection là gì?"
+    answers:
+      - {id: A, answer: "Nó leak alias cho phép caller mutate internal state ngoài owning object contract.", explanation: "Đúng. Nên trả immutable representation, copy hoặc documented view theo ownership semantics."}
+      - {id: B, answer: "Nó luôn tự copy collection.", explanation: "Sai. Nên trả immutable representation, copy hoặc documented view theo ownership semantics."}
+      - {id: C, answer: "Nó làm method thành static.", explanation: "Sai. Nên trả immutable representation, copy hoặc documented view theo ownership semantics."}
+      - {id: D, answer: "Nó ngăn caller đọc element.", explanation: "Sai. Nên trả immutable representation, copy hoặc documented view theo ownership semantics."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "14.ImmutabilityDefensiveCopy/ImmutabilityDefensiveCopy.md", anchor: "defensive-copy-output"}
+    apiRelated: {controller: "ImmutabilityController", methodSignature: "defensiveCopy()"}
+
+  - id: clone-finalization-boundary
+    question: "Guidance hiện đại nào phù hợp nhất cho copying và cleanup?"
+    answers:
+      - {id: A, answer: "Dùng finalizer làm cách chính để close file.", explanation: "Sai. Clone có shallow-copy/invariant semantics awkward và finalization đã deprecated for removal."}
+      - {id: B, answer: "Ưu tiên explicit copy constructor/factory cho copy policy và AutoCloseable style deterministic cleanup cho resource.", explanation: "Đúng. Clone có shallow-copy/invariant semantics awkward và finalization đã deprecated for removal."}
+      - {id: C, answer: "Dùng Object.clone cho mọi domain object.", explanation: "Sai. Clone có shallow-copy/invariant semantics awkward và finalization đã deprecated for removal."}
+      - {id: D, answer: "Chờ GC trước khi release mọi external resource.", explanation: "Sai. Clone có shallow-copy/invariant semantics awkward và finalization đã deprecated for removal."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.ObjectClass/ObjectClass.md", anchor: "clone-finalize-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: instance-initializer-order
+    question: "Trong một class, instance initializer block chạy khi nào so với constructor body?"
+    answers:
+      - {id: A, answer: "Sau khi constructor body đã return.", explanation: "Sai. Instance field initializer và instance initializer block chạy trước constructor body của class đó, sau khi superclass constructor hoàn tất."}
+      - {id: B, answer: "Chỉ khi constructor gọi explicit chúng.", explanation: "Sai. Instance field initializer và instance initializer block chạy trước constructor body của class đó, sau khi superclass constructor hoàn tất."}
+      - {id: C, answer: "Trước khi superclass constructor bắt đầu.", explanation: "Sai. Instance field initializer và instance initializer block chạy trước constructor body của class đó, sau khi superclass constructor hoàn tất."}
+      - {id: D, answer: "Trước constructor body của class đó, sau bước superclass construction của object.", explanation: "Đúng. Instance field initializer và instance initializer block chạy trước constructor body của class đó, sau khi superclass constructor hoàn tất."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.InitializationBlocks/InitializationBlocks.md", anchor: "instance-initializer"}
+    apiRelated: {controller: "", methodSignature: ""}

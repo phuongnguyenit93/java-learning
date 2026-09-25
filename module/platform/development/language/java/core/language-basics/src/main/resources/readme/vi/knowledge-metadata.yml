@@ -1,0 +1,217 @@
+1.PrimitiveReference/PrimitiveReference.md:
+  primitive-vs-reference-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  primitive-ranges-and-defaults:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  reference-value-semantics:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+2.VariablesScope/VariablesScope.md:
+  variable-kinds-and-lifetime:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  scope-and-shadowing:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  definite-assignment:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+3.WrapperBoxing/WrapperBoxing.md:
+  wrapper-types:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  boxing-unboxing:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  wrapper-caching:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  unboxing-null:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+4.Operators/Operators.md:
+  numeric-promotion:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  short-circuit-operators:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  bitwise-shift:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  precedence-side-effects:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+5.Casting/Casting.md:
+  primitive-casting:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  reference-upcast-downcast:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  instanceof-safe-cast:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  class-cast-failure:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+6.ControlFlow/ControlFlow.md:
+  branching-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  loop-control:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  switch-expression:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  control-flow-pitfalls:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+7.Methods/Methods.md:
+  method-signature:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  method-invocation-conversion:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  overload-resolution-phases:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  most-specific-overload:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  null-overload-ambiguity:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  method-call-evaluation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  recursion-stack:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+8.Varargs/Varargs.md:
+  varargs-array-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  varargs-overload:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  varargs-generics-warning:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+9.PassByValue/PassByValue.md:
+  java-pass-by-value:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  reference-copy-mutation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  reassignment-vs-mutation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+10.Arrays/Arrays.md:
+  array-type-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  array-initialization:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  array-covariance-risk:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  multidimensional-arrays:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+11.PackagesImports/PackagesImports.md:
+  package-namespace:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  import-resolution:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  static-import:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  package-access:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+12.Null/Null.md:
+  null-reference:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  null-dereference:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  null-comparison:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  null-api-design:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+13.TypeSystemMentalModel/TypeSystemMentalModel.md:
+  compile-time-vs-runtime-type:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  assignment-compatibility:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  overload-vs-override-dispatch:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  type-system-boundaries:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false

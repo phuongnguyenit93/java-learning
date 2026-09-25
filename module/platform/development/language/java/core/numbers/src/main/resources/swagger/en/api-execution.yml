@@ -1,0 +1,83 @@
+BigDecimalController:
+  construction():
+    execution: '<p><strong>Concept:</strong> String/valueOf/double construction.</p><ol><li>The
+      endpoint runs a bounded deterministic example inside <code>BigDecimalController#construction()</code>.</li><li>Compare
+      new BigDecimal(double), String and valueOf.<pre><code>@GetMapping(&quot;/construction&quot;)
+      public Map&lt;String,Object&gt; construction(){ return Map.of(&quot;fromString&quot;,new
+      BigDecimal(&quot;0.1&quot;).toString(),&quot;fromValueOf&quot;,BigDecimal.valueOf(0.1d).toString(),&quot;fromDouble&quot;,new
+      BigDecimal(0.1d).toString()); }</code></pre></li><li>Inspect the response fields
+      together: they are the observable evidence for the rule rather than a benchmark
+      or production policy.</li></ol><p><strong>Conclusion:</strong> connect the observed
+      result back to the linked README section before generalizing the behavior.</p>'
+    usage: true
+  comparison():
+    execution: '<p><strong>Concept:</strong> BigDecimal equals includes scale.</p><ol><li>The
+      endpoint runs a bounded deterministic example inside <code>BigDecimalController#comparison()</code>.</li><li>Show
+      equals vs compareTo and scale.<pre><code>@GetMapping(&quot;/comparison&quot;)
+      public Map&lt;String,Object&gt; comparison(){ BigDecimal a=new BigDecimal(&quot;1.0&quot;),
+      b=new BigDecimal(&quot;1.00&quot;); return Map.of(&quot;leftScale&quot;,a.scale(),&quot;rightScale&quot;,b.scale(),&quot;equals&quot;,a.equals(b),&quot;compareTo&quot;,a.compareTo(b));
+      }</code></pre></li><li>Inspect the response fields together: they are the observable
+      evidence for the rule rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
+      connect the observed result back to the linked README section before generalizing
+      the behavior.</p>'
+    usage: true
+  divisionAndRounding():
+    execution: '<p><strong>Concept:</strong> RoundingMode semantics.</p><ol><li>The
+      endpoint runs a bounded deterministic example inside <code>BigDecimalController#divisionAndRounding()</code>.</li><li>Show
+      non-terminating division failure and explicit rounding.<pre><code>@GetMapping(&quot;/division-rounding&quot;)
+      public Map&lt;String,Object&gt; divisionAndRounding(){ Map&lt;String,Object&gt;
+      r=new LinkedHashMap&lt;&gt;(); try{ BigDecimal.ONE.divide(new BigDecimal(&quot;3&quot;));
+      }catch(ArithmeticException e){r.put(&quot;exactDivisionFailure&quot;,e.getClass().getSimpleName());}
+      r.put(&quot;rounded&quot;,BigDecimal.ONE.divide(new BigDecimal(&quot;3&quot;),4,RoundingMode.HALF_UP).toString());
+      return r; }</code></pre></li><li>Inspect the response fields together: they
+      are the observable evidence for the rule rather than a benchmark or production
+      policy.</li></ol><p><strong>Conclusion:</strong> connect the observed result
+      back to the linked README section before generalizing the behavior.</p>'
+    usage: true
+FloatingPointController:
+  precision():
+    execution: '<p><strong>Concept:</strong> Precision and rounding error.</p><ol><li>The
+      endpoint runs a bounded deterministic example inside <code>FloatingPointController#precision()</code>.</li><li>Expose
+      0.1 + 0.2, decimal rendering and tolerance comparison.<pre><code>@GetMapping(&quot;/precision&quot;)
+      public Map&lt;String,Object&gt; precision(){ double v=0.1d+0.2d; return Map.of(&quot;computed&quot;,v,&quot;expectedDecimal&quot;,0.3d,&quot;exactEqual&quot;,v==0.3d,&quot;delta&quot;,Math.abs(v-0.3d));
+      }</code></pre></li><li>Inspect the response fields together: they are the observable
+      evidence for the rule rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
+      connect the observed result back to the linked README section before generalizing
+      the behavior.</p>'
+    usage: true
+  specialValues():
+    execution: '<p><strong>Concept:</strong> NaN, infinity and negative zero.</p><ol><li>The
+      endpoint runs a bounded deterministic example inside <code>FloatingPointController#specialValues()</code>.</li><li>Compare
+      NaN/infinity/-0.0 behavior.<pre><code>@GetMapping(&quot;/special-values&quot;)
+      public Map&lt;String,Object&gt; specialValues(){ return Map.of(&quot;nanEqualsItself&quot;,Double.NaN==Double.NaN,&quot;isNaN&quot;,Double.isNaN(0.0d/0.0d),&quot;positiveInfinity&quot;,1.0d/0.0d,&quot;zeroEqualsNegativeZero&quot;,0.0d==-0.0d);
+      }</code></pre></li><li>Inspect the response fields together: they are the observable
+      evidence for the rule rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
+      connect the observed result back to the linked README section before generalizing
+      the behavior.</p>'
+    usage: true
+IntegerArithmeticController:
+  overflow():
+    execution: '<p><strong>Concept:</strong> Integer overflow and wraparound.</p><ol><li>The
+      endpoint runs a bounded deterministic example inside <code>IntegerArithmeticController#overflow()</code>.</li><li>Return
+      MAX_VALUE + 1 plus checked addExact result.<pre><code>@GetMapping(&quot;/overflow&quot;)
+      public Map&lt;String,Object&gt; overflow(){</code></pre></li><li>Inspect the
+      response fields together: they are the observable evidence for the rule rather
+      than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
+      connect the observed result back to the linked README section before generalizing
+      the behavior.</p>'
+    usage: true
+RandomController:
+  seededSequence():
+    execution: '<p><strong>Concept:</strong> Pseudo-random model and seed.</p><ol><li>The
+      endpoint runs a bounded deterministic example inside <code>RandomController#seededSequence()</code>.</li><li>Show
+      deterministic seeded PRNG vs SecureRandom boundary.<pre><code>@GetMapping(&quot;/seeded-sequence&quot;)
+      public Map&lt;String,Object&gt; seededSequence(){ Random a=new Random(42L),
+      b=new Random(42L); List&lt;Integer&gt; x=List.of(a.nextInt(1000),a.nextInt(1000),a.nextInt(1000));
+      List&lt;Integer&gt; y=List.of(b.nextInt(1000),b.nextInt(1000),b.nextInt(1000));
+      return Map.of(&quot;first&quot;,x,&quot;sameSeed&quot;,y,&quot;reproducible&quot;,x.equals(y),&quot;securityBoundary&quot;,&quot;use
+      SecureRandom when unpredictability is required&quot;); }</code></pre></li><li>Inspect
+      the response fields together: they are the observable evidence for the rule
+      rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
+      connect the observed result back to the linked README section before generalizing
+      the behavior.</p>'
+    usage: true

@@ -1,0 +1,224 @@
+ArrayController:
+  covarianceFailure():
+    summary: Array covariance and ArrayStoreException
+    description: Runs a deterministic learning experiment for Array covariance and
+      ArrayStoreException. The response exposes concrete runtime evidence instead
+      of only describing the rule.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 10.Arrays/Arrays.md
+      anchor: array-covariance-risk
+    methodName: covarianceFailure
+    params: [
+      ]
+    path: com/example/learning/controller/ArrayController.java
+    mapping: '@GetMapping("/covariance-failure")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/language-basics/array/covariance-failure
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+CastingController:
+  safeAndUnsafeCast(String):
+    summary: Reference upcast and downcast
+    description: Runs a deterministic learning experiment for Reference upcast and
+      downcast. The response exposes concrete runtime evidence instead of only describing
+      the rule.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 5.Casting/Casting.md
+      anchor: reference-upcast-downcast
+    methodName: safeAndUnsafeCast
+    params:
+    - input
+    path: com/example/learning/controller/CastingController.java
+    mapping: '@GetMapping("/safe-and-unsafe")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/language-basics/casting/safe-and-unsafe
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+MethodDispatchController:
+  overloadVsOverride():
+    summary: Overload selection vs override dispatch
+    description: Runs a deterministic learning experiment for Overload selection vs
+      override dispatch. The response exposes concrete runtime evidence instead of
+      only describing the rule.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 13.TypeSystemMentalModel/TypeSystemMentalModel.md
+      anchor: overload-vs-override-dispatch
+    methodName: overloadVsOverride
+    params: [
+      ]
+    path: com/example/learning/controller/MethodDispatchController.java
+    mapping: '@GetMapping("/overload-vs-override")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/language-basics/dispatch/overload-vs-override
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+OperatorController:
+  shortCircuit():
+    summary: Short-circuit boolean operators
+    description: Runs a deterministic learning experiment for Short-circuit boolean
+      operators. The response exposes concrete runtime evidence instead of only describing
+      the rule.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 4.Operators/Operators.md
+      anchor: short-circuit-operators
+    methodName: shortCircuit
+    params: [
+      ]
+    path: com/example/learning/controller/OperatorController.java
+    mapping: '@GetMapping("/short-circuit")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/language-basics/operator/short-circuit
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+OverloadResolutionController:
+  selectionMatrix():
+    summary: Overload resolution phases
+    description: Runs a deterministic learning experiment for Overload resolution
+      phases. The response exposes concrete runtime evidence instead of only describing
+      the rule.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 7.Methods/Methods.md
+      anchor: overload-resolution-phases
+    methodName: selectionMatrix
+    params: [
+      ]
+    path: com/example/learning/controller/OverloadResolutionController.java
+    mapping: '@GetMapping("/selection-matrix")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/language-basics/overload/selection-matrix
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+PassByValueController:
+  mutateAndReassign():
+    summary: Copied references and visible object mutation
+    description: Runs a deterministic learning experiment for Copied references and
+      visible object mutation. The response exposes concrete runtime evidence instead
+      of only describing the rule.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 9.PassByValue/PassByValue.md
+      anchor: reference-copy-mutation
+    methodName: mutateAndReassign
+    params: [
+      ]
+    path: com/example/learning/controller/PassByValueController.java
+    mapping: '@GetMapping("/mutate-and-reassign")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/language-basics/pass-by-value/mutate-and-reassign
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+TypeSystemController:
+  inspectRuntimeType(Object):
+    summary: Compile-time type vs runtime type
+    description: Runs a deterministic learning experiment for Compile-time type vs
+      runtime type. The response exposes concrete runtime evidence instead of only
+      describing the rule.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 13.TypeSystemMentalModel/TypeSystemMentalModel.md
+      anchor: compile-time-vs-runtime-type
+    methodName: inspectRuntimeType
+    params:
+    - value
+    path: com/example/learning/controller/TypeSystemController.java
+    mapping: '@GetMapping("/runtime-type")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/language-basics/type-system/runtime-type
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+WrapperController:
+  wrapperIdentity():
+    summary: Wrapper caches and identity pitfalls
+    description: Runs a deterministic learning experiment for Wrapper caches and identity
+      pitfalls. The response exposes concrete runtime evidence instead of only describing
+      the rule.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 3.WrapperBoxing/WrapperBoxing.md
+      anchor: wrapper-caching
+    methodName: wrapperIdentity
+    params: [
+      ]
+    path: com/example/learning/controller/WrapperController.java
+    mapping: '@GetMapping("/identity")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/language-basics/wrapper/identity
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

@@ -479,6 +479,91 @@ container / intermediate project
 
 Không được giả định rằng mọi Gradle subproject đều là real module.
 
+### 7.1 Physical module identity vs learning granularity
+
+Rule `gradle.properties` ở trên chỉ định nghĩa **physical real-module identity** cho scanner/orchestration. Nó không định nghĩa độ lớn của một learning topic.
+
+Ở tầng learning/content, một real learning module nên đại diện cho một domain/chủ đề đủ thống nhất và đủ sâu để có curriculum riêng. Các concept nhỏ thuộc cùng một mental model nên ưu tiên trở thành README chapter/Knowledge section thay vì bị tách thành nhiều real module cực nhỏ.
+
+Conceptual model:
+
+```text
+real learning module
+    ↓
+coherent learning domain
+    ↓
+README chapters / Knowledge sections
+    ↓
+smaller concepts and experiments
+```
+
+Ở tầng curriculum, repository phân biệt **content coverage** và **pedagogical coherence**. Một module có đủ chapter/H2/API/Quiz/Interview vẫn có thể là learning experience kém nếu các term chỉ được liệt kê như dictionary mà không có roadmap, motivation và relation.
+
+Learning contract mục tiêu cho một mature module có ba tầng:
+
+```text
+Layer 1 — Module mental model / roadmap
+→ topic này là gì
+→ vì sao nó tồn tại
+→ các thuật ngữ lớn là gì
+→ chúng liên hệ và nên học theo thứ tự nào
+
+Layer 2 — Concept / chapter story
+→ problem trước khi concept xuất hiện
+→ vì sao concept hữu ích / được sinh ra
+→ concept giải quyết vấn đề bằng mental model nào
+→ nó nối với chapter trước/sau ra sao
+→ Java biểu diễn concept bằng mechanism/type/API nào
+
+Layer 3 — Technical depth
+→ syntax/API
+→ compile-time/runtime behavior
+→ code evidence
+→ rules / edge cases / pitfalls / trade-offs
+```
+
+Vì vậy learning flow tổng quát nên đọc được theo hướng:
+
+```text
+WHAT → WHY → RELATION → HOW → EVIDENCE → PRACTICE
+```
+
+Chapter đầu tiên hoặc entry chapter tương đương của một nontrivial module phải đóng vai trò orientation cho beginner. Tên file không bắt buộc là `MentalModel`, nhưng learner phải hiểu được domain, vocabulary chính và roadmap trước khi gặp deep mechanics.
+
+Các Java language/runtime mechanism cũng không tự động trở thành foundational domain concept chỉ vì chúng nằm trong cùng module. Knowledge phải nói rõ mechanism đó đang implement/hỗ trợ concept nào, được đưa vào để comparison, hay chỉ là boundary handoff sang module khác.
+
+Việc một module có API hay không không quyết định module đó có đủ lớn hay hoàn chỉnh. Knowledge + Quiz + Interview có thể tạo thành learning module hoàn chỉnh cho các topic thiên về language/library/concept. API Docs chỉ là practical experiment layer khi module thực sự có runnable API có giá trị học tập.
+
+Do đó không được đổi một topic tự nhiên thành `SERVLET`/`REACTIVE`, hoặc tạo endpoint giả, chỉ để đạt "đủ bộ" Knowledge/API/Quiz/Interview. Ngược lại, nếu `SERVLET`/`REACTIVE` module có learning API thực sự thì API phải minh họa/chứng minh Knowledge concept và dùng exact README relationship theo Swagger contract.
+
+Quy tắc authoring chi tiết, heuristic granularity và workflow AI nằm trong `MODULE_LEARNING_AGENTS.md`.
+
+Ba tầng này là **learning/content contract**, không phải constraint của Gradle/module scanner. Build system vẫn chỉ materialize/present source content; chất lượng roadmap, motivation, transition và conceptual relationship thuộc human/AI-authored curriculum và phải được review độc lập với schema/build correctness.
+
+### 7.2 Bootstrap lifecycle cho learning module mới
+
+Current repository lifecycle khi khởi tạo một learning module mới là:
+
+```text
+local gradle.properties
+        ↓ settings scanner
+real module discovered
+        ↓ ModuleConfigurationSyncService
+master.json + properties.json synchronized
+        ↓ module-owned VALUE configuration
+BUILD_README=TRUE
+        ↓ module orchestration / ReadmeSetupPlugin
+README.md + localized BASE.md/LIST.md/menu directories
+        ↓ human authoring
+readme/{lang}/menu/**/*.md
+```
+
+`ModuleListEnum`, `module-structure.txt`, `STRUCTURE.md` và các generated registry/structure outputs khác nằm phía generator; bootstrap module không được coi các file này là canonical input để sửa tay.
+
+Concept-oriented module có thể bắt đầu ở `MODULE_TYPE=LIBRARY` với chỉ README capability. Không bắt buộc phải có Java source, module-local `build.gradle`, Swagger, Quiz hay Interview ngay trong phase dựng curriculum skeleton.
+
+Current technical caveat: nếu `SERVICE_NAME` còn blank, settings info generation fallback sang directory name rồi validate nó theo enum-constant format. Vì vậy directory mới có dấu `-` sẽ fail bootstrap trước khi có `SERVICE_NAME` hợp lệ. Workaround hiện tại là sync lần đầu bằng tên thư mục tạm hợp lệ theo enum, set stable `SERVICE_NAME`, rename về final taxonomy path, rồi chạy Gradle lại. Đây là bootstrap implementation detail, không phải requirement rằng learning directory phải dùng underscore.
+
 ---
 
 ## 8. Module metadata architecture
@@ -1072,6 +1157,8 @@ src/main/resources/readme/{lang}/knowledge-metadata.yml
 `difficulty` chỉ nhận `BASIC | INTERMEDIATE | ADVANCED`; defaults hiện tại là `BASIC`, `aiGenerated=true`, `reviewed=false`. Root task `syncMetadataReadme` là explicit/manual synchronization: nó đi theo `MODULE_LANGUAGE`, scan real learning module có local `gradle.properties`, rebuild metadata từ current Markdown section, preserve existing current-topic values, loại stale file/topic entry và write only when changed. Ordinary Gradle configuration/IDE sync không được tự ghi file metadata này.
 
 Shared `ReadmeKnowledgeParser` định nghĩa section Knowledge hợp lệ bằng exact anchored H2 dạng `## <a id="...">Title</a>`. Section id phải unique trong một module/language để cả metadata synchronization, Portal projection và API `readmeRelated.anchor` cùng dùng một identity ổn định.
+
+H1 và anchored H2 có hai vai trò khác nhau. H1 có thể được dùng để dựng chapter outline trước; file H1-only chưa tạo Knowledge identity. `syncMetadataReadme` chỉ có ý nghĩa sau khi chapter đã có anchored H2 sections thực sự cần governance. Điều này cho phép phase scaffold curriculum tạo tên chapter trước mà chưa tạo metadata rỗng hoặc giả.
 
 Translation pipeline tách:
 

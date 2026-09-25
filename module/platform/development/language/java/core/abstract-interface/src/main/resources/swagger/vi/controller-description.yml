@@ -1,0 +1,24 @@
+AbstractClassController:
+  description: |-
+    <h2>A bs tr ac tC la ss</h2>
+    <p>C&#225;c th&#237; nghiệm Java Core c&#243; thể chạy để quan s&#225;t Abstract class như partial implementation + state.</p>
+  readmeRelated:
+    file: 1.AbstractClass/AbstractClass.md
+DefaultMethodController:
+  description: |-
+    <h2>D ef au lt Me th od</h2>
+    <p>C&#225;c th&#237; nghiệm Java Core c&#243; thể chạy để quan s&#225;t Default method.</p>
+  readmeRelated:
+    file: 5.DefaultStaticPrivate/DefaultStaticPrivate.md
+InterfaceController:
+  description: |-
+    <h2>I nt er fa ce</h2>
+    <p>C&#225;c th&#237; nghiệm Java Core c&#243; thể chạy để quan s&#225;t Implement nhiều contract.</p>
+  readmeRelated:
+    file: 2.Interface/Interface.md
+InterfaceEvolutionController:
+  description: |-
+    <h2>I nt er fa ce Ev ol ut io n</h2>
+    <p>C&#225;c th&#237; nghiệm Java Core c&#243; thể chạy để quan s&#225;t Interface evolution compatibility.</p>
+  readmeRelated:
+    file: 5.DefaultStaticPrivate/DefaultStaticPrivate.md

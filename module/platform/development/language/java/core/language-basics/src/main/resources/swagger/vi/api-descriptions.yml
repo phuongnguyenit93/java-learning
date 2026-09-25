@@ -1,0 +1,218 @@
+ArrayController:
+  covarianceFailure():
+    summary: Array covariance và ArrayStoreException
+    description: Chạy thí nghiệm học tập deterministic cho Array covariance và ArrayStoreException.
+      Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 10.Arrays/Arrays.md
+      anchor: array-covariance-risk
+    methodName: covarianceFailure
+    params: [
+      ]
+    path: com/example/learning/controller/ArrayController.java
+    mapping: '@GetMapping("/covariance-failure")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/language-basics/array/covariance-failure
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+CastingController:
+  safeAndUnsafeCast(String):
+    summary: Reference upcast và downcast
+    description: Chạy thí nghiệm học tập deterministic cho Reference upcast và downcast.
+      Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 5.Casting/Casting.md
+      anchor: reference-upcast-downcast
+    methodName: safeAndUnsafeCast
+    params:
+    - input
+    path: com/example/learning/controller/CastingController.java
+    mapping: '@GetMapping("/safe-and-unsafe")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/language-basics/casting/safe-and-unsafe
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+MethodDispatchController:
+  overloadVsOverride():
+    summary: Overload selection và override dispatch
+    description: Chạy thí nghiệm học tập deterministic cho Overload selection và override
+      dispatch. Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 13.TypeSystemMentalModel/TypeSystemMentalModel.md
+      anchor: overload-vs-override-dispatch
+    methodName: overloadVsOverride
+    params: [
+      ]
+    path: com/example/learning/controller/MethodDispatchController.java
+    mapping: '@GetMapping("/overload-vs-override")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/language-basics/dispatch/overload-vs-override
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+OperatorController:
+  shortCircuit():
+    summary: Short-circuit boolean operator
+    description: Chạy thí nghiệm học tập deterministic cho Short-circuit boolean operator.
+      Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 4.Operators/Operators.md
+      anchor: short-circuit-operators
+    methodName: shortCircuit
+    params: [
+      ]
+    path: com/example/learning/controller/OperatorController.java
+    mapping: '@GetMapping("/short-circuit")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/language-basics/operator/short-circuit
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+OverloadResolutionController:
+  selectionMatrix():
+    summary: Các phase của overload resolution
+    description: Chạy thí nghiệm học tập deterministic cho Các phase của overload
+      resolution. Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy
+      tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 7.Methods/Methods.md
+      anchor: overload-resolution-phases
+    methodName: selectionMatrix
+    params: [
+      ]
+    path: com/example/learning/controller/OverloadResolutionController.java
+    mapping: '@GetMapping("/selection-matrix")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/language-basics/overload/selection-matrix
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+PassByValueController:
+  mutateAndReassign():
+    summary: Copy reference và mutation nhìn thấy từ caller
+    description: Chạy thí nghiệm học tập deterministic cho Copy reference và mutation
+      nhìn thấy từ caller. Response cung cấp runtime evidence cụ thể thay vì chỉ mô
+      tả quy tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 9.PassByValue/PassByValue.md
+      anchor: reference-copy-mutation
+    methodName: mutateAndReassign
+    params: [
+      ]
+    path: com/example/learning/controller/PassByValueController.java
+    mapping: '@GetMapping("/mutate-and-reassign")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/language-basics/pass-by-value/mutate-and-reassign
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+TypeSystemController:
+  inspectRuntimeType(Object):
+    summary: Compile-time type và runtime type
+    description: Chạy thí nghiệm học tập deterministic cho Compile-time type và runtime
+      type. Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 13.TypeSystemMentalModel/TypeSystemMentalModel.md
+      anchor: compile-time-vs-runtime-type
+    methodName: inspectRuntimeType
+    params:
+    - value
+    path: com/example/learning/controller/TypeSystemController.java
+    mapping: '@GetMapping("/runtime-type")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/language-basics/type-system/runtime-type
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+WrapperController:
+  wrapperIdentity():
+    summary: Wrapper cache và bẫy identity
+    description: Chạy thí nghiệm học tập deterministic cho Wrapper cache và bẫy identity.
+      Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 3.WrapperBoxing/WrapperBoxing.md
+      anchor: wrapper-caching
+    methodName: wrapperIdentity
+    params: [
+      ]
+    path: com/example/learning/controller/WrapperController.java
+    mapping: '@GetMapping("/identity")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/language-basics/wrapper/identity
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

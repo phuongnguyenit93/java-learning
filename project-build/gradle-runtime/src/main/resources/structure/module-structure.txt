@@ -280,22 +280,31 @@ module
     │   │   ├── domain-specific-language
     │   │   └── java
     │   │       ├── advance
+    │   │       │   ├── jvm [JAVA_JVM] : Java Virtual Machine internals
+    │   │       │   ├── networking [JAVA_NETWORKING] : Java networking APIs
+    │   │       │   └── security-cryptography [JAVA_SECURITY_CRYPTOGRAPHY] : Java security and cryptography APIs
     │   │       ├── concurrency
     │   │       │   ├── async-programming
     │   │       │   ├── executor-service
     │   │       │   ├── high-level-utils
     │   │       │   └── virtual-threads
     │   │       ├── core
-    │   │       │   ├── abstract-interface [ABSTRACT_INTERFACE]
-    │   │       │   ├── annotation
-    │   │       │   │   ├── basic
-    │   │       │   │   ├── custom-annotation
-    │   │       │   │   └── meta-annotation
-    │   │       │   ├── class-and-runtime-class
-    │   │       │   ├── classloader
-    │   │       │   ├── oop
-    │   │       │   └── reflection
-    │   │       │       └── type-system
+    │   │       │   ├── abstract-interface [JAVA_ABSTRACT_INTERFACE] : Java abstract class and interface
+    │   │       │   ├── annotation [JAVA_ANNOTATION] : Java annotations
+    │   │       │   ├── class-object [JAVA_CLASS_OBJECT] : Java class and object model
+    │   │       │   ├── classloader [JAVA_CLASSLOADER] : Java class loading
+    │   │       │   ├── collection [JAVA_COLLECTION] : Java collections framework
+    │   │       │   ├── date-time [JAVA_DATE_TIME] : Java date and time API
+    │   │       │   ├── exception [JAVA_EXCEPTION] : Java exception handling
+    │   │       │   ├── generics [JAVA_GENERICS] : Java generics
+    │   │       │   ├── io [JAVA_IO] : Java I/O and NIO
+    │   │       │   ├── language-basics [JAVA_LANGUAGE_BASICS] : Java language basics
+    │   │       │   ├── localization [JAVA_LOCALIZATION] : Java localization and internationalization
+    │   │       │   ├── numbers [JAVA_NUMBERS] : Java numeric types and arithmetic
+    │   │       │   ├── object-contract [JAVA_OBJECT_CONTRACT] : Java object contracts
+    │   │       │   ├── oop [JAVA_OOP] : Java object-oriented programming
+    │   │       │   ├── reflection [JAVA_REFLECTION] : Java reflection
+    │   │       │   └── string [JAVA_STRING] : Java String and text fundamentals
     │   │       ├── mapping
     │   │       │   ├── mapstruct [MAPSTRUCT] - [DEPEND]
     │   │       │   ├── model-mapper [MODEL_MAPPER] - [DEPEND] : To quickly convert between 2 Java Object (Entity to DTO) by matching key field
@@ -313,8 +322,10 @@ module
     │   │           │   └── record [JAVA_RECORD]
     │   │           ├── java17
     │   │           ├── java7
-    │   │           └── java8
-    │   │               └── stream-api
+    │   │           ├── java8
+    │   │           │   └── stream-api [JAVA_STREAM_API] : Java Stream API
+    │   │           └── java9
+    │   │               └── module-system [JAVA_MODULE_SYSTEM] : Java Platform Module System
     │   ├── paradigm
     │   │   ├── aop [ASPECT]
     │   │   ├── concurrency
@@ -324,7 +335,7 @@ module
     │   │   │   │   └── task [SCHEDULE]
     │   │   │   └── thread [THREAD]
     │   │   ├── di-ioc
-    │   │   ├── functional
+    │   │   ├── functional [JAVA_FUNCTIONAL_PROGRAMMING] : Java functional programming
     │   │   ├── mvc-pattern
     │   │   │   ├── controller
     │   │   │   ├── model
