@@ -129,6 +129,65 @@ PRACTICE
 
 Do not treat a complete H2 inventory as proof that the module teaches well.
 
+### Vietnamese authoring policy
+
+For `vi` Knowledge, Vietnamese is the primary explanatory language. The learner should not have to translate ordinary prose mentally while learning a new Java concept.
+
+Translate ordinary explanatory vocabulary when a clear Vietnamese equivalent exists, for example:
+
+```text
+responsibility   → trách nhiệm
+behavior         → hành vi
+caller           → bên gọi / đoạn mã sử dụng
+rule             → quy tắc
+state            → trạng thái
+implementation   → cách triển khai / phần triển khai
+collaborator      → đối tượng cộng tác
+hierarchy         → cây kế thừa / hệ phân cấp (tùy context)
+procedural code   → mã theo phong cách thủ tục
+localize change   → khoanh vùng ảnh hưởng của thay đổi
+```
+
+Keep English when it is one of these:
+
+```text
+Java keyword or syntax token
+→ class, interface, extends, implements, private, static, final...
+
+Java/API/type/member name
+→ Object, String, List, @Override, PaymentMethod...
+
+technical term the learner should recognize/search
+→ polymorphism, encapsulation, dynamic dispatch, overloading, overriding, subtype...
+```
+
+For the last category, prefer Vietnamese first with English in parentheses on first meaningful introduction, then use the Vietnamese term where natural:
+
+```text
+đa hình (polymorphism)
+đóng gói (encapsulation)
+kiểu con (subtype)
+trạng thái (state)
+trách nhiệm (responsibility)
+```
+
+Do not force literal translation when the Vietnamese wording would become less precise than the established Java term, but also do not leave English filler merely because the source draft was written in English.
+
+The pedagogical chain is conceptual, not a requirement to expose English labels in localized content. VI headings may use natural equivalents such as:
+
+```text
+KHÁI NIỆM
+VÌ SAO
+MỐI LIÊN HỆ
+CƠ CHẾ
+MINH CHỨNG
+THỰC HÀNH
+ĐÁNH ĐỔI
+GIỚI HẠN
+```
+
+The exact visible heading may vary by chapter, but the underlying learning role must remain equivalent to `WHAT → WHY → RELATION → HOW → EVIDENCE → PRACTICE`.
+
 ### Mandatory three-layer curriculum model
 
 Every mature learning module should be understandable at **three nested layers**.
@@ -757,6 +816,39 @@ Write or improve localized Markdown under the module README learning structure. 
 
 Section ids must be unique within the module/language and stable enough to serve as references from API, Quiz and Interview metadata.
 
+The H2 visible title should behave like a compact learning/navigation label:
+
+```text
+short
+→ easy to scan in the Portal card/index
+→ names the concept or learner question directly
+→ matches the opening focus of the section
+```
+
+Do not make the visible title carry the whole explanation, conclusion, motivation, or contrast. Put those in the body instead.
+
+Prefer:
+
+```text
+OOP là gì?
+Đóng gói là gì?
+Rủi ro của kế thừa
+Dynamic Dispatch
+What Is OOP?
+Inheritance Risks
+```
+
+over sentence-like titles such as:
+
+```text
+Đối tượng là nơi gắn trạng thái với hành vi
+Đóng gói không chỉ là dùng field private
+Objects as collaborating state + behavior
+Encapsulation is more than private fields
+```
+
+Visible titles may be refined during curriculum editing without changing the stable anchor id. VI/EN titles should be naturally localized and conceptually equivalent, not literal copies of each other.
+
 Knowledge should normally progress from mental model to practical behavior:
 
 ```text
@@ -1294,6 +1386,8 @@ API relationship
 Knowledge relationship
 technical conclusion
 ```
+
+Natural localization is preferred over literal translation. In particular, VI should read as Vietnamese technical writing, not English prose with Vietnamese connectors. EN should read as natural English. Both languages must preserve the same technical meaning, learning intent, anchor identity, and downstream relationships even when sentence structure and visible pedagogical headings differ.
 
 ### 7.4 Source code is evidence, not the curriculum itself
 

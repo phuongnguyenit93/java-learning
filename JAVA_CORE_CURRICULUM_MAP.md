@@ -69,6 +69,8 @@ The intended learning narrative is:
 WHAT → WHY → RELATION → HOW → EVIDENCE → PRACTICE
 ```
 
+For Vietnamese Knowledge, that chain describes **learning roles**, not mandatory English labels. VI should be written as natural Vietnamese technical prose and may surface the flow as `KHÁI NIỆM → VÌ SAO → MỐI LIÊN HỆ → CƠ CHẾ → MINH CHỨNG → THỰC HÀNH`. Ordinary English explanatory words should be translated when a clear Vietnamese equivalent exists; retain English mainly for Java keywords/API/type/member names and technical terms the learner should recognize/search. On first use, a useful pattern is Vietnamese first with English in parentheses, e.g. `đa hình (polymorphism)`, `đóng gói (encapsulation)`, `kiểu con (subtype)`, then use Vietnamese naturally afterward.
+
 The first chapter or equivalent entry chapter of every nontrivial Java Core module must provide a beginner-readable orientation and terminology roadmap before deep mechanics. Major chapters must explain motivation and chapter relationships before technical rules.
 
 This is especially important where one module mixes domain/design concepts with Java mechanisms. The map explicitly classifies those roles so file placement does not accidentally imply a false conceptual hierarchy.
@@ -148,6 +150,10 @@ Each Knowledge section uses one stable anchored H2:
 ```
 
 VI and EN must use the same anchor id for the same concept while the visible title remains naturally localized.
+
+“Naturally localized” means VI is not expected to mirror EN word-for-word. VI should minimize unnecessary English inside explanatory sentences; EN should remain natural English. Technical meaning, concept order, anchor identity and relation targets must remain equivalent even when the wording and pedagogical headings differ.
+
+The visible H2 title is also the Portal Knowledge label, so it should be concise and scan-friendly. Name the concept or direct learner question rather than encoding a full explanatory sentence. The body owns the detailed claim, motivation, comparison, and caveats. For example, prefer `OOP là gì?`, `Đóng gói là gì?`, `Dynamic Dispatch`, `Rủi ro của kế thừa` and their natural EN equivalents over long statement-style titles. A title wording improvement must preserve the existing stable anchor unless the concept identity itself truly changes.
 
 Anchors should describe concepts, not implementation details. Avoid anchors such as `demo-1`, `example-api`, or controller names.
 

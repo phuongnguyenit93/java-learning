@@ -1,19 +1,133 @@
 # Composition
 
-## <a id="composition-has-a">Composition and has-a</a>
-Composition builds behavior by holding references to collaborating objects rather than inheriting implementation. A service can delegate a responsibility to a strategy, repository, formatter, or policy object and replace that collaborator without changing its own type hierarchy.
+Inheritance answers “is this object a subtype of that type?”. Composition answers a different question: **which objects does this object collaborate with to fulfill its responsibility?**
 
-## <a id="object-relationships">Dependency, association, aggregation and composition as modeling relationships</a>
-These terms describe modeling strength, not four special Java runtime features. A dependency is usually temporary use; association is a longer-lived relationship; aggregation communicates weak/shared ownership; composition communicates strong ownership/lifecycle. Java represents all of them with ordinary references and application conventions.
+## <a id="composition-has-a">Composition</a>
 
-## <a id="association-dependency">Dependency vs longer-lived association</a>
-A method parameter/local collaborator can represent a dependency for one operation, while a field often represents an association that forms part of object state. The distinction helps reason about coupling and lifetime, but should not be forced when it adds no design value.
+### WHAT
 
-## <a id="ownership-lifecycle">Ownership/lifecycle strength in aggregation/composition modeling</a>
-Composition usually means the parent conceptually owns the part and the part's lifecycle is tied to it; aggregation allows independently existing/shared parts. Java GC does not enforce UML ownership, so the contract must be communicated by API design, mutation rules, and object creation/retention choices.
+Composition builds behavior by storing references to collaborators and delegating some work to them.
 
-## <a id="composition-vs-inheritance">Composition vs inheritance trade-offs</a>
-Inheritance gives subtype polymorphism and protected/shared implementation but creates tight coupling to a base class. Composition gives runtime configurability and smaller contracts but requires explicit delegation. Prefer composition for behavior reuse unless a true subtype relationship is valuable.
+```java
+final class Checkout {
+    private final Pricing pricing;
 
-## <a id="delegation">Delegation as behavior reuse</a>
-Delegation means forwarding work to another object that owns the relevant behavior. It keeps responsibilities separate and allows substitution through interfaces. Excessive pass-through layers can also become noise, so delegate where it represents a real boundary.
+    Checkout(Pricing pricing) {
+        this.pricing = pricing;
+    }
+
+    int total(int base) {
+        return pricing.price(base);
+    }
+}
+```
+
+`Checkout` **has-a** `Pricing`. It should not `extend Pricing` because checkout is not a pricing policy.
+
+### WHY — reuse behavior without inheriting implementation
+
+If the goal is to vary pricing strategy, composition lets us inject `Regular`, `Discount`, or another implementation without changing the type hierarchy of `Checkout`.
+
+Variation stays in the collaborator rather than turning the consumer into a complex base/subclass hierarchy.
+
+### EVIDENCE — `CompositionController#strategySwap()`
+
+The experiment creates:
+
+```text
+new Checkout(new Regular())
+new Checkout(new Discount())
+```
+
+`Checkout` does not change; only the `Pricing` collaborator changes. The response shows different behavior while the consumer type remains the same.
+
+## <a id="object-relationships">Object Relationships</a>
+
+These terms describe relationships in an object model; they are **not four separate Java runtime features**.
+
+| Relationship | Typical design meaning | Common Java representation |
+| --- | --- | --- |
+| Dependency | temporary use for an operation | parameter/local/short-lived reference |
+| Association | a longer-lived collaboration | field/reference |
+| Aggregation | weak/shared ownership | field/reference + lifecycle convention |
+| Composition | strong ownership, part lifecycle tied to whole | field/reference + construction/API rules |
+
+Java sees references; ownership meaning mostly comes from the design contract.
+
+### WHY — do not infer UML semantics from syntax alone
+
+Two classes both having fields is not enough to decide aggregation vs composition. Look at who creates the part, who retains it, whether it can be shared, and how lifecycle is managed.
+
+## <a id="association-dependency">Dependency and Association</a>
+
+A dependency may be needed for just one operation:
+
+```java
+Receipt checkout(PaymentGateway gateway) {
+    return gateway.charge(...);
+}
+```
+
+If a collaborator is a stable part of object state, a field association may be more appropriate:
+
+```java
+class CheckoutService {
+    private final PaymentGateway gateway;
+}
+```
+
+### TRADE-OFF
+
+Do not force every parameter to be labeled “dependency” and every field “association” when the distinction adds no reasoning value. The goal is to understand coupling and lifetime, not classify every reference for its own sake.
+
+## <a id="ownership-lifecycle">Ownership and Lifecycle</a>
+
+### Aggregation
+
+The part can exist independently or be shared across owners. A `Team` may reference `Player` objects, while a `Player` does not necessarily cease to exist if the `Team` disappears.
+
+### Composition
+
+The whole conceptually owns the part more strongly. An `Order` may create and own its `OrderLine` objects; the line lifecycle is commonly tied to the order.
+
+### HOW — Java does not enforce ownership semantics
+
+The garbage collector only understands reachability. It does not know “aggregation” or “composition”. Ownership must be expressed through constructors/factories, mutability, APIs, and whether references are exposed or shared.
+
+## <a id="composition-vs-inheritance">Composition vs Inheritance</a>
+
+The mechanisms model different kinds of relationships:
+
+| Question | Inheritance | Composition |
+| --- | --- | --- |
+| Primary relationship | is-a | has-a / collaborates-with |
+| Reuse | inherited implementation | delegation |
+| Variation | subtype override | replace collaborator |
+| Coupling | tight to base class | tight to collaborator contract |
+| Runtime swap | usually less natural | natural when collaborator is injected |
+
+### Decision heuristic
+
+If an object **truly must be usable as the supertype**, inheritance may be right. If the goal is only to reuse or swap behavior, consider composition first.
+
+“Favor composition over inheritance” does not mean “never use inheritance”; it warns against using inheritance as a shortcut for code reuse without subtype semantics.
+
+## <a id="delegation">Delegation</a>
+
+Delegation means an object receives a request and forwards part of the work to a collaborator that owns the relevant responsibility.
+
+```java
+int total(int base) {
+    return pricing.price(base);
+}
+```
+
+`Checkout` does not need to know the discount formula. It only knows the `Pricing` contract.
+
+### RELATION — delegation leads to abstraction
+
+For composition to stay flexible, the consumer should depend on a **stable contract** rather than implementation details. That is why composition and abstraction often reinforce each other.
+
+### TRADE-OFF
+
+Too many pass-through layers that add no responsibility can become ceremony. Delegation is valuable when the collaborator truly owns distinct behavior or a variation point.

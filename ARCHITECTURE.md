@@ -550,6 +550,16 @@ Vì vậy learning flow tổng quát nên đọc được theo hướng:
 WHAT → WHY → RELATION → HOW → EVIDENCE → PRACTICE
 ```
 
+Với content `vi`, đây là **vai trò sư phạm**, không phải requirement phải giữ nguyên heading tiếng Anh. Bản VI dùng tiếng Việt làm ngôn ngữ giải thích chính để giảm cognitive load cho người học. Những từ tiếng Anh thông thường có thể dịch tự nhiên như `responsibility`, `behavior`, `caller`, `rule`, `state`, `implementation`, `collaborator`, `hierarchy`, `procedural code`, `localize change` nên được viết bằng tiếng Việt. English chỉ nên giữ khi đó là Java keyword/API/type/name hoặc technical term learner thực sự cần nhận diện/tra cứu; lần đầu có thể viết `trạng thái (state)`, `trách nhiệm (responsibility)`, `đa hình (polymorphism)`, `kiểu con (subtype)` rồi ưu tiên từ Việt ở phần diễn giải tiếp theo.
+
+Do đó VI có thể render flow trên thành:
+
+```text
+KHÁI NIỆM → VÌ SAO → MỐI LIÊN HỆ → CƠ CHẾ → MINH CHỨNG → THỰC HÀNH
+```
+
+hoặc heading tương đương tự nhiên theo context. Không được dịch máy móc Java keyword/API/type, nhưng cũng không được viết câu nửa Việt nửa Anh chỉ vì source term ban đầu là English.
+
 Chapter đầu tiên hoặc entry chapter tương đương của một nontrivial module phải đóng vai trò orientation cho beginner. Tên file không bắt buộc là `MentalModel`, nhưng learner phải hiểu được domain, vocabulary chính và roadmap trước khi gặp deep mechanics.
 
 Các Java language/runtime mechanism cũng không tự động trở thành foundational domain concept chỉ vì chúng nằm trong cùng module. Knowledge phải nói rõ mechanism đó đang implement/hỗ trợ concept nào, được đưa vào để comparison, hay chỉ là boundary handoff sang module khác.
@@ -1179,6 +1189,8 @@ src/main/resources/readme/{lang}/knowledge-metadata.yml
 `difficulty` chỉ nhận `BASIC | INTERMEDIATE | ADVANCED`; defaults hiện tại là `BASIC`, `aiGenerated=true`, `reviewed=false`. Root task `syncMetadataReadme` là explicit/manual synchronization: nó đi theo `MODULE_LANGUAGE`, scan real learning module có local `gradle.properties`, rebuild metadata từ current Markdown section, preserve existing current-topic values, loại stale file/topic entry và write only when changed. Ordinary Gradle configuration/IDE sync không được tự ghi file metadata này.
 
 Shared `ReadmeKnowledgeParser` định nghĩa section Knowledge hợp lệ bằng exact anchored H2 dạng `## <a id="...">Title</a>`. Section id phải unique trong một module/language để cả metadata synchronization, Portal projection và API `readmeRelated.anchor` cùng dùng một identity ổn định.
+
+`Title` trong anchored H2 đồng thời được Portal dùng như label của Knowledge card/index. Vì vậy title phải ưu tiên **ngắn, dễ quét, đúng concept** thay vì cố gói toàn bộ kết luận của section vào một câu dài. Title nên khớp với câu hỏi/chủ đề mở đầu của nội dung; phần giải thích như motivation, contrast, claim hoặc caveat để trong body. Ví dụ `OOP là gì?`, `Đóng gói là gì?`, `Dynamic Dispatch`, `Rủi ro của kế thừa` tốt hơn các title dài kiểu `Đối tượng là nơi gắn trạng thái với hành vi`. VI/EN có thể dùng wording tự nhiên khác nhau, nhưng phải giữ cùng concept và cùng anchor id. Việc rút gọn visible title không phải lý do đổi anchor ổn định.
 
 H1 và anchored H2 có hai vai trò khác nhau. H1 có thể được dùng để dựng chapter outline trước; file H1-only chưa tạo Knowledge identity. `syncMetadataReadme` chỉ có ý nghĩa sau khi chapter đã có anchored H2 sections thực sự cần governance. Điều này cho phép phase scaffold curriculum tạo tên chapter trước mà chưa tạo metadata rỗng hoặc giả.
 
