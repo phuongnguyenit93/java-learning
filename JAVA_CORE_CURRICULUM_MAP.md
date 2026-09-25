@@ -1,6 +1,6 @@
 # Java Core Detailed Curriculum Map
 
-> Planning document only. This file defines the proposed curriculum before README Knowledge, Java/API experiments, Swagger metadata, Quiz and Interview content are implemented.
+> Curriculum blueprint. This file defines the target Java Core learning structure and pedagogical flow. Some modules may already have implementation/content, but this map remains the planning source for curriculum refactoring and later waves; it is not generated runtime content.
 
 ## 1. Scope
 
@@ -27,11 +27,19 @@ classloader
 
 The existing chapter paths are treated as the curriculum skeleton and should remain stable unless a later human review explicitly changes the taxonomy.
 
-### Pedagogical refinement context — not yet applied to the detailed maps
+### Pedagogical model applied by this map
 
-The current detailed maps primarily answer **what concepts belong in each Java Core module**. A later refinement pass must also answer **how a learner is led through those concepts**.
+This map now answers both:
 
-This document is **not being structurally rewritten yet**. The chapter tables, H2 identities, API proposals and counts below remain the current planning baseline. The following ideas are context for the next curriculum-refinement pass:
+```text
+WHAT concepts belong in each Java Core module?
+        +
+HOW should a learner be led through those concepts?
+```
+
+The detailed H2/API/Quiz/Interview plans remain the technical coverage baseline, but every module section must also define its beginner entry point, major terminology roles, learning narrative and chapter-to-chapter flow.
+
+The curriculum uses three layers:
 
 ```text
 Layer 1 — module mental model / roadmap
@@ -61,16 +69,20 @@ The intended learning narrative is:
 WHAT → WHY → RELATION → HOW → EVIDENCE → PRACTICE
 ```
 
-In the future refinement pass, the first chapter or equivalent entry chapter of every nontrivial Java Core module should provide a beginner-readable orientation and terminology roadmap. Major chapters should then explain motivation and chapter-to-chapter relationships before deep technical rules.
+The first chapter or equivalent entry chapter of every nontrivial Java Core module must provide a beginner-readable orientation and terminology roadmap before deep mechanics. Major chapters must explain motivation and chapter relationships before technical rules.
 
-This is especially important where the current taxonomy contains a mixture of domain/design concepts and Java mechanisms. For example, an OOP curriculum should distinguish OOP concepts such as encapsulation/abstraction/polymorphism from Java mechanisms such as overriding/dynamic dispatch, and should explain that overloading is primarily a compile-time Java mechanism often taught nearby because learners commonly confuse it with overriding.
+This is especially important where one module mixes domain/design concepts with Java mechanisms. The map explicitly classifies those roles so file placement does not accidentally imply a false conceptual hierarchy.
 
-Do not interpret the existing H2/API/Quiz/Interview coverage counts as proof of pedagogical completeness. Those counts describe coverage only; the later refinement pass will evaluate narrative coherence, motivation, transitions and running examples separately.
+Do not interpret H2/API/Quiz/Interview coverage counts as proof of pedagogical completeness. Counts describe coverage only; roadmap, motivation, transitions and evidence are separate quality dimensions.
 
 The implementation dependency is:
 
 ```text
 chapter/H1
+    ↓
+module mental model / terminology roadmap
+    ↓
+chapter problem / motivation / transition story
     ↓
 anchored H2 Knowledge sections
     ↓
@@ -89,7 +101,43 @@ integrated coverage review
 
 ## 2. Global design rules
 
-### 2.1 Knowledge first
+### 2.1 Three-layer learning contract
+
+Every module must be planned and later authored through the same three layers:
+
+```text
+Layer 1 — Module orientation
+→ "what is this thing?"
+→ why the topic exists
+→ major terminology
+→ terminology relationships
+→ learning order
+
+Layer 2 — Chapter/concept story
+→ problem before the concept
+→ why the concept is useful
+→ relation to the module and neighboring concepts
+→ Java mechanism/type/API that expresses it
+→ focused code question/evidence
+
+Layer 3 — Technical depth
+→ syntax/API
+→ compile-time/runtime semantics
+→ rules/edge cases
+→ pitfalls/trade-offs
+→ production/debugging implications when relevant
+```
+
+The map uses the following per-module planning fields before the technical Knowledge table:
+
+```text
+Entry chapter contract
+Major terminology roles
+Learning roadmap
+Running example / evidence strategy
+```
+
+### 2.2 Knowledge first
 
 Every real learning concept must exist in README Knowledge before Quiz/Interview relations or API-to-Knowledge mappings are finalized.
 
@@ -103,7 +151,7 @@ VI and EN must use the same anchor id for the same concept while the visible tit
 
 Anchors should describe concepts, not implementation details. Avoid anchors such as `demo-1`, `example-api`, or controller names.
 
-### 2.2 API is evidence, not curriculum completeness
+### 2.3 API is evidence, not curriculum completeness
 
 The target implementation may convert a module from `LIBRARY` to `SERVLET` when meaningful runtime experiments justify API Docs. This map may propose APIs for all 16 modules, but an API is only implemented when it proves or makes observable a real Knowledge concept.
 
@@ -125,7 +173,7 @@ learning conclusion fields when useful
 
 Avoid endpoints whose only result is a static explanation string already present in README.
 
-### 2.3 Swagger relationship contract
+### 2.4 Swagger relationship contract
 
 For every learning API that survives implementation review:
 
@@ -139,7 +187,7 @@ methodSignature
 
 Swagger `execution` should explain concept → runtime flow → why → focused code evidence → observation → conclusion.
 
-### 2.4 Quiz design
+### 2.5 Quiz design
 
 Quiz focuses primarily on prediction, behavior, constraints, misconceptions and code-reading rather than terminology recall.
 
@@ -147,7 +195,7 @@ Every question must have exactly four stable internal answers `A/B/C/D`, explana
 
 Suggested question ranges in this map are quality targets, not quotas.
 
-### 2.5 Interview design
+### 2.6 Interview design
 
 Interview is not a prose rewrite of Quiz. It should cover:
 
@@ -164,7 +212,7 @@ debugging/review reasoning
 
 Each generated item begins as `aiGenerated=true`, `reviewed=false`.
 
-### 2.6 Cross-module ownership
+### 2.7 Cross-module ownership
 
 Use one primary home per concept. Cross-module links are encouraged; duplicated full curricula are not.
 
@@ -230,9 +278,45 @@ localization
 
 Within each wave, stabilize README anchors before implementing relations downstream.
 
+Within each module, however, the order is now:
+
+```text
+module orientation / terminology roadmap
+        ↓
+chapter problem + motivation + transition story
+        ↓
+stable Knowledge anchors + technical depth
+        ↓
+API evidence
+        ↓
+Quiz / Interview
+```
+
+Do not start the anchor/API/assessment phase from the chapter names alone. The learning narrative is an upstream input.
+
 ## 4. Module detail maps
 
-The following sections define the proposed chapter-level Knowledge anchors, runtime/API experiments, Quiz coverage and Interview coverage for each module.
+Each module section now has two planning layers before its technical Knowledge map:
+
+```text
+Layer 1 — Module orientation
+→ entry chapter contract
+→ major terminology roles
+→ module learning roadmap
+→ running-example/evidence strategy
+
+Layer 2 — Chapter story
+→ the learner question/problem each chapter answers
+→ why that chapter belongs at that point in the sequence
+
+Layer 3 — Technical map
+→ anchored H2 sections
+→ API experiments
+→ Quiz coverage
+→ Interview coverage
+```
+
+The detailed sections below are therefore not just topic inventories; they are the blueprint for later README refactoring.
 
 
 ### 4.1 `language-basics`
@@ -240,6 +324,88 @@ The following sections define the proposed chapter-level Knowledge anchors, runt
 **API applicability:** Yes — runtime type/casting/pass-by-value/array/method behavior are observable.
 
 **Suggested assessment size:** Quiz 30–40; Interview 20–28. These are coverage ranges, not quotas.
+
+#### Layer 1 — Module orientation
+
+**Entry chapter contract:** `1.PrimitiveReference/PrimitiveReference.md` must first orient the learner to Java's basic execution/value model before going into primitive/reference details. It should answer: what values exist in Java, how variables hold them, how methods consume them, and why later topics such as casting, arrays, null and dispatch depend on this model.
+
+**Major terminology roles:**
+
+```text
+primitive / reference
+→ value-model foundation
+
+scope / lifetime
+→ where names and values exist
+
+conversion / casting / boxing
+→ how values cross type boundaries
+
+control flow / methods
+→ how execution moves and behavior is invoked
+
+array / null / package
+→ important language/runtime boundaries
+
+compile-time type vs runtime type
+→ bridge from basic syntax into Java's type system and later OOP
+```
+
+**Learning roadmap:**
+
+```text
+What kind of values does Java manipulate?
+Primitive vs Reference
+        ↓
+Where do values live and which name can see them?
+Variables & Scope
+        ↓
+How do primitives participate in object APIs?
+Wrapper / Boxing
+        ↓
+How are values combined and converted?
+Operators → Casting
+        ↓
+How does execution choose a path?
+Control Flow
+        ↓
+How is reusable behavior called?
+Methods → Varargs → Pass-by-Value
+        ↓
+How does Java represent repeated values?
+Arrays
+        ↓
+How are names organized and access bounded?
+Packages / Imports
+        ↓
+What does "no object" mean for a reference?
+Null
+        ↓
+How do declared type, runtime type and dispatch fit together?
+Type System Mental Model
+```
+
+**Running example / evidence strategy:** use a few tiny recurring values (`int`, `Integer`, `String`, a simple `User` object and arrays of them) and evolve the same calls through assignment, conversion, method invocation, mutation/reassignment and runtime-type checks. Avoid inventing a domain model just to demonstrate syntax.
+
+#### Layer 2 — Chapter story
+
+Each chapter should answer one learner question before technical rules:
+
+```text
+PrimitiveReference     → What does a Java variable actually hold?
+VariablesScope         → Where can that variable be used, and for how long?
+WrapperBoxing          → How can primitive values participate in object-oriented/generic APIs?
+Operators              → How are values combined, compared and promoted?
+Casting                → What happens when one type must become another?
+ControlFlow            → How does the program choose what executes next?
+Methods                → How is behavior named, selected and invoked?
+Varargs                → How can a method accept a variable number of arguments?
+PassByValue            → What exactly gets copied into a method call?
+Arrays                 → How does Java model a fixed-size sequence of values?
+PackagesImports        → How are names grouped and visibility bounded?
+Null                   → What does the absence of an object mean at runtime?
+TypeSystemMentalModel  → Which guarantees are compile-time, and which checks happen at runtime?
+```
 
 #### Knowledge map
 
@@ -287,6 +453,84 @@ explain Java pass-by-value; overload applicability/specificity and why widening/
 
 **Suggested assessment size:** Quiz 28–36; Interview 18–24. These are coverage ranges, not quotas.
 
+#### Layer 1 — Module orientation
+
+**Entry chapter contract:** `1.NumericModel/NumericModel.md` must explain that Java has several numeric representations because no single representation can simultaneously provide unlimited range, exact decimal behavior, high performance and compact storage.
+
+**Major terminology roles:**
+
+```text
+integer types
+→ exact whole-number arithmetic within a fixed range
+
+floating point
+→ approximate binary representation for wide-range real-number computation
+
+BigInteger
+→ arbitrary-range integer arithmetic
+
+BigDecimal
+→ explicit decimal value + scale model for exact decimal workflows
+
+precision / scale / rounding
+→ policies controlling representation and arithmetic outcome
+
+Random / SecureRandom
+→ different randomness contracts; not interchangeable
+```
+
+**Learning roadmap:**
+
+```text
+What kinds of numeric problems exist?
+Numeric Model
+        ↓
+What goes wrong with fixed-width integers?
+Integer Overflow
+        ↓
+Why does 0.1 + 0.2 surprise people?
+Floating Point
+        ↓
+What if integer range is not enough?
+BigInteger
+        ↓
+What if exact decimal semantics matter?
+BigDecimal
+        ↓
+How do precision and scale affect a decimal value?
+Precision & Scale
+        ↓
+When and how should results be rounded?
+Rounding
+        ↓
+Why can numerically equal BigDecimal values behave differently in equality/collections?
+BigDecimal Comparison
+        ↓
+Which math helpers already exist?
+Math
+        ↓
+How do pseudo-random and security randomness differ?
+Random → SecureRandom
+```
+
+**Running example / evidence strategy:** reuse three value families: counters/IDs for integers, sensor/scientific values for floating point, and money/rates for BigDecimal. Use code to make representation failures visible before introducing the safer alternative.
+
+#### Layer 2 — Chapter story
+
+```text
+NumericModel            → Which numeric representation matches which problem?
+IntegerOverflow         → Why can "exact" integer arithmetic still produce a wrong wrapped result?
+FloatingPoint           → Why are many decimal fractions only approximations in binary?
+BigInteger              → How do we remove fixed-width integer range limits?
+BigDecimal              → How do we represent decimal quantities with explicit scale?
+PrecisionScale          → What do precision and scale actually control?
+Rounding                → Why is rounding a policy decision rather than a formatting afterthought?
+BigDecimalComparison    → Why do equals and numerical comparison answer different questions?
+Math                    → Which common numeric operations should use standard helpers?
+Random                  → What does deterministic pseudo-randomness mean?
+SecureRandom            → When does unpredictability become part of the contract?
+```
+
 #### Knowledge map
 
 | Existing chapter | Proposed anchored H2 sections |
@@ -329,6 +573,96 @@ why money uses BigDecimal; equals vs compareTo implications; binary floating-poi
 **API applicability:** Yes — initialization, aliasing, copy and enum behavior can be traced safely.
 
 **Suggested assessment size:** Quiz 36–48; Interview 24–32. These are coverage ranges, not quotas.
+
+#### Layer 1 — Module orientation
+
+**Entry chapter contract:** `1.ClassObject/ClassObject.md` must start from the simplest question: what is a class, what is an object, and why Java groups state and behavior into instances. The chapter must introduce the vocabulary used by all later chapters before explaining object lifecycle details.
+
+**Major terminology roles:**
+
+```text
+class
+→ blueprint/type that defines state and behavior
+
+object / instance
+→ runtime entity with identity and state
+
+constructor / initialization
+→ how a valid object comes into existence
+
+this / super
+→ current instance and superclass construction/member context
+
+static / instance
+→ class-level vs object-level state/behavior
+
+aliasing / copying / immutability
+→ how object references and mutable state are shared or isolated
+```
+
+**Learning roadmap:**
+
+```text
+What are class and object?
+Class & Object
+        ↓
+How is an object created in a valid state?
+Constructor
+        ↓
+How does construction move through current/superclass context?
+this / super
+        ↓
+Who is allowed to see or change members?
+Access Modifiers
+        ↓
+Which members belong to the class and which to each object?
+static / final
+        ↓
+What runs before constructor bodies?
+Initialization Blocks → Initialization Order
+        ↓
+What really happens during object creation?
+Object Creation Lifecycle
+        ↓
+How can classes be nested and capture surrounding context?
+Nested / Inner Classes
+        ↓
+What common contract does every object inherit?
+Object Class
+        ↓
+How does Java model a fixed set of typed constants?
+Enum
+        ↓
+What does copying an object actually mean?
+Copy Semantics
+        ↓
+Why can two references accidentally share mutable state?
+Aliasing & Mutability
+        ↓
+How do we design objects that are safe to share?
+Immutability & Defensive Copy
+```
+
+**Running example / evidence strategy:** evolve a small `BankAccount`/`Profile`-style class from plain fields into constructor-established invariants, static/instance state, nested helpers, copying and immutable variants. Keep the same object identity visible across chapters to make aliasing and lifecycle concrete.
+
+#### Layer 2 — Chapter story
+
+```text
+ClassObject                  → What is the difference between a type definition and a runtime object?
+Constructor                  → How does an object establish valid initial state?
+ThisSuper                    → How does one object participate in constructor/member chains?
+AccessModifier               → Which parts of object state/behavior should callers be allowed to access?
+StaticFinal                  → What belongs to the class versus each instance, and what can no longer change?
+InitializationBlocks         → What initialization work exists outside constructor bodies?
+InitializationOrder          → In what order do class, superclass, field and constructor initialization steps run?
+ObjectCreationLifecycle      → What complete sequence turns allocation into a usable object?
+NestedInnerClass             → When does a type logically belong inside another type and what context can it capture?
+ObjectClass                  → Which universal object behaviors does Java provide?
+Enum                         → How do we represent a closed set of domain values as real types?
+CopySemantics                → Does copying duplicate an object, its fields, or merely a reference?
+ObjectAliasingMutability     → What breaks when multiple references can mutate the same state?
+ImmutabilityDefensiveCopy    → How can ownership and state sharing be made safer?
+```
 
 #### Knowledge map
 
@@ -376,6 +710,89 @@ class vs object; constructor invariants; this escape; protected semantics; stati
 
 **Suggested assessment size:** Quiz 24–32; Interview 18–24. These are coverage ranges, not quotas.
 
+#### Layer 1 — Module orientation
+
+**Entry chapter contract:** `1.MentalModel/MentalModel.md` must explicitly answer **"OOP là gì?"** before naming pillars. It should explain OOP as organizing software around objects that own state, behavior and responsibilities, then show why the later concepts exist as tools for managing object boundaries and collaboration.
+
+**Major terminology roles:**
+
+```text
+encapsulation
+→ OOP design concept: an object protects its state/invariants behind behavior
+
+abstraction
+→ OOP design concept: expose the contract a caller needs, hide irrelevant implementation
+
+inheritance
+→ subtype/reuse mechanism; one way to establish an is-a relationship
+
+polymorphism
+→ OOP design/runtime concept: one abstraction can exhibit multiple implementations
+
+overriding + dynamic dispatch
+→ Java mechanisms that make subtype polymorphism observable at runtime
+
+overloading
+→ compile-time Java mechanism; taught nearby mainly because it is commonly confused with overriding
+
+composition / delegation
+→ object-collaboration alternative to inheritance for behavior reuse and change
+```
+
+**Learning roadmap:**
+
+```text
+Why organize code around objects at all?
+OOP Mental Model
+        ↓
+If an object owns state, how does it keep that state valid?
+Encapsulation
+        ↓
+How can one type be treated as another compatible type?
+Inheritance / Subtyping
+        ↓
+How can the same contract execute different behavior?
+Polymorphism
+        ↓
+How does Java distinguish compile-time method choice from runtime behavior choice?
+Overloading vs Overriding / Dispatch vs Hiding
+        ↓
+What if inheritance creates too much coupling?
+Composition / Delegation
+        ↓
+How do callers depend on essential behavior instead of implementation detail?
+Abstraction
+```
+
+**Running example / evidence strategy:** use one small evolving model such as `PaymentMethod`/`CheckoutService` or `Account` variants. Start with exposed state and branching, then progressively introduce encapsulation, subtype contracts, overriding/dynamic dispatch and finally composition. The example must make each concept solve a visible problem rather than merely demonstrate syntax.
+
+#### Layer 2 — Chapter story
+
+```text
+MentalModel
+→ Start with procedural data + scattered rules and ask why object ownership/responsibility can localize change.
+
+Encapsulation
+→ Public mutable state lets any caller violate invariants; move rules behind object behavior.
+
+Inheritance
+→ Repeated behavior and subtype contracts create a need for "is-a" relationships, but inheritance also creates coupling.
+
+Polymorphism
+→ If callers depend on a common supertype, they should not need type-specific if/else for every implementation.
+
+OverloadingOverriding
+→ Once multiple methods/types exist, distinguish compile-time overload selection from runtime override dispatch and from static/field hiding.
+
+Composition
+→ When inheritance is only used for reuse, collaboration/delegation often produces a smaller and more replaceable design.
+
+Abstraction
+→ Pull the lesson together: callers should depend on stable responsibilities/contracts, not concrete implementation details.
+```
+
+**Authoring note:** overloading must never be introduced as an OOP "pillar". Its place in this module is comparative: it helps explain why overriding/dynamic dispatch is the mechanism relevant to runtime polymorphism.
+
 #### Knowledge map
 
 | Existing chapter | Proposed anchored H2 sections |
@@ -413,6 +830,64 @@ four OOP pillars without slogans; inheritance vs composition; LSP-style substitu
 
 **Suggested assessment size:** Quiz 22–30; Interview 16–22. These are coverage ranges, not quotas.
 
+#### Layer 1 — Module orientation
+
+**Entry chapter contract:** `1.AbstractClass/AbstractClass.md` must begin with a short module-level orientation before deep abstract-class rules: what problem "programming to a contract" solves, why Java has both abstract classes and interfaces, and how the remaining chapters compare the two mechanisms.
+
+**Major terminology roles:**
+
+```text
+abstract class
+→ partial implementation + shared state/behavior + incomplete contract
+
+interface
+→ explicit capability/role contract with multiple-implementation flexibility
+
+default/static/private interface methods
+→ interface evolution and reusable contract-side behavior
+
+multiple interface inheritance
+→ combining roles without multiple class inheritance
+
+default-method conflict
+→ Java rule for ambiguous inherited behavior
+```
+
+**Learning roadmap:**
+
+```text
+Why do we need a type that defines behavior without being directly instantiable?
+Abstract Class
+        ↓
+What if we want a contract without committing to one class hierarchy?
+Interface
+        ↓
+When should each mechanism be chosen?
+Abstract Class vs Interface
+        ↓
+How can contracts themselves form hierarchies?
+Interface Inheritance
+        ↓
+How can interfaces evolve behavior without breaking every implementation?
+Default / Static / Private Interface Methods
+        ↓
+What happens when multiple inherited interface behaviors collide?
+Multiple Inheritance / Conflict Resolution
+```
+
+**Running example / evidence strategy:** use one capability family such as `PaymentMethod`, `Refundable`, and a partially implemented base class. Let the example demonstrate why shared state favors an abstract class while cross-cutting capability contracts favor interfaces.
+
+#### Layer 2 — Chapter story
+
+```text
+AbstractClass          → How do we share implementation/state while still requiring subclasses to complete behavior?
+Interface              → How do unrelated classes promise the same capability?
+AbstractVsInterface    → Which mechanism matches state-sharing, hierarchy and contract needs?
+InterfaceInheritance   → How do larger contracts compose from smaller roles?
+DefaultStaticPrivate   → How can interface APIs evolve and share helper behavior safely?
+MultipleInheritance    → How does Java combine multiple interface contracts and resolve default conflicts?
+```
+
 #### Knowledge map
 
 | Existing chapter | Proposed anchored H2 sections |
@@ -448,6 +923,71 @@ interface vs abstract class trade-offs; why default methods exist; diamond confl
 **API applicability:** Yes — collection behavior makes broken contracts observable.
 
 **Suggested assessment size:** Quiz 24–32; Interview 18–24. These are coverage ranges, not quotas.
+
+#### Layer 1 — Module orientation
+
+**Entry chapter contract:** `1.IdentityEquality/IdentityEquality.md` must explain what an "object contract" is: methods inherited from `Object` and ordering contracts influence how other Java APIs interpret an object. The learner should know before the details that equality, hashing, string representation and ordering are not isolated utility methods.
+
+**Major terminology roles:**
+
+```text
+identity
+→ "is this the same object?"
+
+logical equality
+→ "should these two objects represent the same value/entity?"
+
+hashCode
+→ hash-based lookup contract coupled to equals
+
+toString
+→ diagnostic/text representation contract
+
+Comparable
+→ natural ordering owned by the type
+
+Comparator
+→ external/alternative ordering strategy
+```
+
+**Learning roadmap:**
+
+```text
+Same reference or same logical value?
+Identity vs Equality
+        ↓
+How should a class define logical equality?
+equals
+        ↓
+How do hash-based collections use equality efficiently?
+hashCode
+        ↓
+Why must equals and hashCode agree?
+equals + hashCode Contract
+        ↓
+How should an object describe itself for humans/tools?
+toString
+        ↓
+How can a type define one natural order?
+Comparable
+        ↓
+How can callers define alternate orderings?
+Comparator
+```
+
+**Running example / evidence strategy:** use a value object such as `Money`, `UserId`, or `BookKey`. Put the same instances into `HashSet`, `HashMap`, `TreeSet` and sorting operations so broken contracts produce visible behavior.
+
+#### Layer 2 — Chapter story
+
+```text
+IdentityEquality → Before overriding anything, distinguish object identity from domain equality.
+Equals           → Define what "same logical value" means and which laws callers rely on.
+HashCode         → Explain why hash containers need a stable bucket signal.
+EqualsHashCode   → Show that equality and hashing form one contract, not two independent methods.
+ToString         → Move from machine identity to useful human-readable diagnostics without leaking secrets.
+Comparable       → Define a type's natural ordering and its consistency expectations.
+Comparator       → Separate ordering policy from the type when multiple views/orders are needed.
+```
 
 #### Knowledge map
 
@@ -485,6 +1025,87 @@ designing equals/hashCode; inheritance equality traps; why hashCode matters; mut
 **API applicability:** Yes — pool/Unicode/encoding/regex behavior is highly observable.
 
 **Suggested assessment size:** Quiz 28–38; Interview 18–26. These are coverage ranges, not quotas.
+
+#### Layer 1 — Module orientation
+
+**Entry chapter contract:** `1.Immutability/Immutability.md` must first explain what a Java `String` represents, why text handling is more complex than "an array of chars", and why immutability is the foundation for pooling, sharing and safe API use.
+
+**Major terminology roles:**
+
+```text
+String immutability
+→ existing String values do not change in place
+
+String pool / intern
+→ canonical identity optimization for selected equal strings
+
+encoding / Charset
+→ mapping between Java text and external bytes
+
+UTF-16 code unit / Unicode code point / grapheme
+→ different levels of "character" representation
+
+StringBuilder / StringBuffer
+→ mutable construction tools, not mutable String variants
+
+regex
+→ pattern-matching language over text
+
+text block
+→ source-code syntax for multiline String literals
+```
+
+**Learning roadmap:**
+
+```text
+What is a String value and why is it immutable?
+Immutability
+        ↓
+Why can equal literals sometimes share identity?
+String Pool
+        ↓
+How should text values actually be compared?
+Equality
+        ↓
+What happens when Strings are repeatedly combined?
+Concatenation
+        ↓
+How do we build text efficiently when mutation is useful?
+StringBuilder → StringBuffer
+        ↓
+What does canonicalizing a String identity mean?
+intern
+        ↓
+How does text become bytes and bytes become text?
+Encoding / Charset
+        ↓
+Why is Java char not always one user-visible character?
+Unicode / Code Point / Grapheme / Normalization
+        ↓
+How do we describe text patterns?
+Regex
+        ↓
+How does Java make multiline source text easier to write?
+Text Blocks
+```
+
+**Running example / evidence strategy:** carry a small piece of user text through equality, concatenation, UTF-8 encoding/decoding, supplementary Unicode, normalization and regex validation. Make every representation boundary observable with lengths, code points and bytes.
+
+#### Layer 2 — Chapter story
+
+```text
+Immutability      → Why can text be safely shared and reused without defensive mutation rules?
+StringPool        → If String is immutable, when can the runtime safely share equal literal instances?
+Equality          → Why does pooled identity not change the rule that text values use equals?
+Concatenation     → If String cannot mutate, what objects/results are created during text building?
+StringBuilder     → How do we explicitly use one mutable buffer for incremental construction?
+StringBuffer      → What synchronization difference exists, and what concurrency problem does it not solve?
+Intern            → What does explicit canonicalization do and what trade-offs does it introduce?
+Encoding          → Why does external I/O require an explicit mapping between text and bytes?
+UnicodeCodePoint  → Why do char, code point and user-perceived character differ, and why can canonical-equivalent text compare differently?
+Regex             → When is pattern matching useful, and where can backtracking become a cost/risk?
+TextBlocks        → How does source representation improve without changing String runtime semantics?
+```
 
 #### Knowledge map
 
@@ -530,6 +1151,82 @@ why String immutable; pool behavior; encoding bugs; char/code point/grapheme dis
 
 **Suggested assessment size:** Quiz 28–38; Interview 20–28. These are coverage ranges, not quotas.
 
+#### Layer 1 — Module orientation
+
+**Entry chapter contract:** `1.Throwable/Throwable.md` must explain Java's failure model before hierarchy trivia: normal control flow assumes success, exceptions represent abnormal completion, and Java needs a structured way to propagate failure information across call boundaries.
+
+**Major terminology roles:**
+
+```text
+Throwable
+→ root model for exceptional completion
+
+checked exception
+→ compile-time handling/declaration contract
+
+unchecked exception
+→ runtime failure not subject to checked handling rules
+
+throw / throws
+→ create/propagate a failure vs declare a possible checked failure
+
+try / catch / finally
+→ handle and clean up around exceptional control flow
+
+try-with-resources / suppressed exception
+→ deterministic resource cleanup while preserving multiple failures
+
+exception translation / chaining
+→ change abstraction vocabulary without losing root cause
+```
+
+**Learning roadmap:**
+
+```text
+How does Java represent abnormal failure?
+Throwable
+        ↓
+Which failures become part of the compile-time method contract?
+Checked vs Unchecked
+        ↓
+How is a failure thrown and declared?
+throw / throws
+        ↓
+How does failure move through the call stack?
+Propagation
+        ↓
+How do we handle failure and still perform cleanup?
+try / catch / finally
+        ↓
+How do resources close safely even when multiple things fail?
+try-with-resources
+        ↓
+What happens when the body and cleanup both throw?
+Suppressed Exceptions
+        ↓
+When should we create a domain/application exception?
+Custom Exceptions
+        ↓
+Where should failures be translated, logged, recovered or allowed to propagate?
+Exception Design
+```
+
+**Running example / evidence strategy:** use a small service operation that reads/parses data and crosses a repository/service boundary. Let it fail in controlled ways so propagation, wrapping, cause preservation, cleanup order and suppressed exceptions can all be observed from one story.
+
+#### Layer 2 — Chapter story
+
+```text
+Throwable          → What changes in control flow when normal execution cannot continue?
+CheckedUnchecked   → Which failures should the compiler force callers to acknowledge?
+ThrowThrows        → How do we signal a failure and communicate the method contract?
+Propagation        → If nobody handles it here, where does the exception go?
+TryCatchFinally    → How do we recover/translate while guaranteeing cleanup behavior?
+TryWithResources   → How can resource ownership be expressed so cleanup is automatic and ordered?
+SuppressedException→ How do we preserve the primary failure when cleanup also fails?
+CustomException    → When does a new exception type add meaningful abstraction/context?
+ExceptionDesign    → Where should applications catch, translate, log, retry, recover or terminate?
+```
+
 #### Knowledge map
 
 | Existing chapter | Proposed anchored H2 sections |
@@ -568,6 +1265,82 @@ checked vs unchecked trade-off; checked-exception rules when overriding; precise
 **API applicability:** Yes — variance, PECS, raw types and erasure can be demonstrated with runtime evidence.
 
 **Suggested assessment size:** Quiz 28–38; Interview 20–28. These are coverage ranges, not quotas.
+
+#### Layer 1 — Module orientation
+
+**Entry chapter contract:** `1.GenericType/GenericType.md` must begin by explaining the problem generics solve: without parameterized types, APIs either lose type information into `Object` or duplicate the same container/algorithm for many types. The learner should understand "type as a parameter" before wildcard syntax appears.
+
+**Major terminology roles:**
+
+```text
+type parameter
+→ placeholder type owned by a generic declaration
+
+type argument
+→ concrete type supplied by a use site
+
+bounded type parameter
+→ restricts which type arguments are legal
+
+wildcard
+→ describes an unknown family of compatible generic types at a use site
+
+PECS
+→ reasoning heuristic for producer/consumer variance
+
+invariance
+→ List<Dog> is not a subtype of List<Animal>
+
+type erasure
+→ compile-time generic safety with limited runtime generic type identity
+```
+
+**Learning roadmap:**
+
+```text
+Why not just store Object everywhere?
+Generic Type
+        ↓
+How can one algorithm introduce its own type variable?
+Generic Method
+        ↓
+How do we constrain the capabilities a type parameter must have?
+Bounded Type
+        ↓
+How can an API accept a family of generic types without knowing the exact type?
+Wildcards
+        ↓
+How do producer and consumer directions affect wildcard choice?
+PECS
+        ↓
+Why is List<Dog> not a List<Animal>?
+Invariance
+        ↓
+What happens when old raw types bypass generic guarantees?
+Raw Types
+        ↓
+Where did generic type information go at runtime?
+Type Erasure
+        ↓
+Which operations remain impossible or unsafe because of erasure/invariance?
+Generic Limitations
+```
+
+**Running example / evidence strategy:** evolve `Box<T>` into a small repository/collection-style API and reuse a simple `Animal`/`Dog` hierarchy to demonstrate bounds, invariance, wildcards and PECS. Compile-time-invalid examples should be shown as code evidence rather than faked runtime endpoints.
+
+#### Layer 2 — Chapter story
+
+```text
+GenericType    → How do we preserve type information while reusing one data structure/API?
+GenericMethod  → How can one method be generic even when its class is not?
+BoundedType    → How can generic code safely call capabilities that not every type has?
+Wildcards      → How do we describe "some unknown subtype/supertype" at an API boundary?
+PECS           → Why does reading and writing push wildcard bounds in different directions?
+Invariance     → Why would generic subtyping be unsafe if List<Dog> were assignable to List<Animal>?
+RawTypes       → How can legacy/raw usage escape compile-time safety and reintroduce runtime failure?
+TypeErasure    → How does Java implement generics while preserving older bytecode/runtime compatibility?
+Limitations    → Which restrictions follow from erasure, non-reifiable types and invariant mutation?
+```
 
 #### Knowledge map
 
@@ -608,6 +1381,97 @@ why generics are invariant; PECS reasoning; erasure trade-offs; bridge methods; 
 **API applicability:** Yes — ordering, uniqueness, hashing, iteration and mutability are observable.
 
 **Suggested assessment size:** Quiz 34–46; Interview 22–30. These are coverage ranges, not quotas.
+
+#### Layer 1 — Module orientation
+
+**Entry chapter contract:** `1.Hierarchy/Hierarchy.md` must explain why collections exist before listing interfaces: programs need different data structures because ordering, uniqueness, lookup, queueing and mutation have different contracts and costs. The hierarchy is a map of those capabilities, not a memorization tree.
+
+**Major terminology roles:**
+
+```text
+Collection / Iterable
+→ common sequence/group behavior
+
+List
+→ ordered, indexable, duplicate-friendly sequence
+
+Set
+→ uniqueness contract
+
+Map
+→ key-to-value association; not a subtype of Collection
+
+Queue / Deque
+→ insertion/removal-order-oriented data structures
+
+iterator
+→ traversal protocol separated from collection implementation
+
+hashing / ordering / equality
+→ contracts that determine lookup, uniqueness and sorted behavior
+
+mutable / immutable collection
+→ who owns structural change
+```
+
+**Learning roadmap:**
+
+```text
+Why are there many collection interfaces instead of one container?
+Collection Hierarchy
+        ↓
+Need ordered positional values?
+List
+        ↓
+Need uniqueness?
+Set
+        ↓
+Need lookup by key?
+Map
+        ↓
+Need FIFO/LIFO/double-ended operations?
+Queue / Deque
+        ↓
+How do we traverse without knowing implementation details?
+Iteration
+        ↓
+How do ordering and sorting contracts work?
+Ordering / Sorting
+        ↓
+Why do equals/hashCode/comparison change collection behavior?
+Equality / Hashing
+        ↓
+Who is allowed to mutate the collection?
+Mutable vs Immutable
+        ↓
+What happens when structure changes during iteration?
+Fail-Fast behavior
+        ↓
+Which implementation matches the actual workload?
+Implementation Choice
+        ↓
+When can enum-specific structures be more precise/efficient?
+Enum Collections
+```
+
+**Running example / evidence strategy:** use one small `Order`/`User` dataset and ask the same business questions with different structures: preserve order, remove duplicates, index by id, process a queue, sort by value. Let observable behavior and operation needs drive the choice of interface/implementation.
+
+#### Layer 2 — Chapter story
+
+```text
+Hierarchy             → Which collection contract describes the operation we actually need?
+List                  → When does encounter/index order matter and duplicates remain valid?
+Set                   → How is uniqueness defined and what equality contract powers it?
+Map                   → Why is key lookup a different abstraction from a collection of values?
+QueueDeque            → How do processing order and endpoint operations shape the data structure?
+Iteration             → How can algorithms traverse structures through a common protocol?
+OrderingSorting       → Who owns natural order, custom order and sorted-container behavior?
+EqualityHashing       → Why can broken equals/hashCode/comparison make values appear missing or duplicated?
+MutableImmutable      → How do mutation ownership and defensive views affect API safety?
+FailFast              → Why can structural mutation during traversal invalidate iterator assumptions?
+ImplementationChoice  → How do operation complexity, ordering and memory constraints guide ArrayList/HashSet/etc. choice?
+EnumCollections       → Why can a closed enum key/value universe enable specialized implementations?
+```
 
 #### Knowledge map
 
@@ -654,6 +1518,91 @@ how to choose collection; HashMap conceptual lookup; TreeSet/TreeMap comparison 
 
 **Suggested assessment size:** Quiz 30–40; Interview 20–28. These are coverage ranges, not quotas.
 
+#### Layer 1 — Module orientation
+
+**Entry chapter contract:** `1.MentalModel/MentalModel.md` must distinguish the major meanings of time before API details: a calendar date, a wall-clock time, a local date-time, an instant on the global timeline, and a time-zone rule set are different concepts and should not be collapsed into one "timestamp" idea.
+
+**Major terminology roles:**
+
+```text
+LocalDate / LocalTime / LocalDateTime
+→ human calendar/wall-clock values without a global timeline position
+
+Instant
+→ machine-oriented point on the UTC timeline
+
+ZoneId / ZoneOffset
+→ time-zone rules vs one concrete UTC offset
+
+ZonedDateTime / OffsetDateTime
+→ date-time combined with zone rules or a fixed offset
+
+Duration / Period
+→ timeline-based amount vs calendar-based amount
+
+Clock
+→ injectable source of current time for deterministic code/tests
+```
+
+**Learning roadmap:**
+
+```text
+What kind of "time" does the problem actually mean?
+Date-Time Mental Model
+        ↓
+Need only a calendar date?
+LocalDate
+        ↓
+Need only wall-clock time?
+LocalTime
+        ↓
+Need both but still no global timeline meaning?
+LocalDateTime
+        ↓
+Need one precise point on the timeline?
+Instant
+        ↓
+How do UTC offset and named zone rules differ?
+ZoneOffset / ZoneId
+        ↓
+How do we attach offset/zone context to date-time values?
+ZonedDateTime / OffsetDateTime
+        ↓
+How do we represent elapsed time vs calendar amount?
+Duration / Period
+        ↓
+How do we parse and format intentionally?
+Formatting / Parsing
+        ↓
+How do arithmetic and comparison change across types/zones?
+Arithmetic / Comparison
+        ↓
+How do we make "now" testable?
+Clock
+        ↓
+How do legacy Date/Calendar APIs interoperate and where do defaults/DST cause bugs?
+Legacy Interop / Pitfalls
+```
+
+**Running example / evidence strategy:** use a meeting/booking scenario with a user-local schedule and a stored global instant. Reuse it to show local date-time ambiguity, zone conversion, DST gap/overlap, duration/period differences and deterministic `Clock` tests.
+
+#### Layer 2 — Chapter story
+
+```text
+MentalModel           → Before choosing a class, what semantic kind of time does the domain own?
+LocalDate             → How do we represent a date that intentionally has no time-of-day or zone?
+LocalTime             → How do we represent wall-clock time without assuming a date/timeline position?
+LocalDateTime         → When is "2026-09-25 09:00" meaningful even though it is not yet a global instant?
+Instant               → How do we represent one unambiguous machine timeline point?
+ZoneOffsetZoneId      → Why is +07:00 not the same thing as Asia/Ho_Chi_Minh rules?
+ZonedOffsetDateTime   → When should the value carry named-zone rules versus only an offset?
+DurationPeriod        → Why is 24 hours different from one calendar day around DST/calendar rules?
+FormattingParsing     → How do text representation rules stay explicit and deterministic?
+ArithmeticComparison  → Which arithmetic operates on calendar fields and which on timeline distance?
+Clock                 → How do we remove hidden dependency on the system clock from business logic/tests?
+LegacyInteropPitfalls → How do Date/Calendar/default zone/DST assumptions leak bugs into modern code?
+```
+
 #### Knowledge map
 
 | Existing chapter | Proposed anchored H2 sections |
@@ -697,6 +1646,90 @@ Instant vs LocalDateTime vs ZonedDateTime; storing timestamps; DST bugs; Duratio
 
 **Suggested assessment size:** Quiz 30–40; Interview 20–28. These are coverage ranges, not quotas.
 
+#### Layer 1 — Module orientation
+
+**Entry chapter contract:** `1.MentalModel/MentalModel.md` must explain I/O as data moving between a source and sink across a resource boundary. Before naming classes, learners must distinguish bytes from characters, buffering from storage, blocking from non-blocking mechanisms, and resource lifetime from ordinary object lifetime.
+
+**Major terminology roles:**
+
+```text
+InputStream / OutputStream
+→ byte-oriented I/O
+
+Reader / Writer
+→ character-oriented I/O with text decoding/encoding concerns
+
+buffering
+→ reduce expensive underlying operations by batching data
+
+File / Path / Files
+→ legacy path object vs modern filesystem API model
+
+channel / buffer
+→ NIO data-transfer model separated from stream abstraction
+
+FileChannel
+→ file-oriented channel operations and random-access capabilities
+
+AutoCloseable / try-with-resources
+→ deterministic ownership/release of external resources
+```
+
+**Learning roadmap:**
+
+```text
+What is moving, from where to where, and who owns the resource?
+I/O Mental Model
+        ↓
+Is the payload raw bytes?
+Byte Streams
+        ↓
+Is the payload text?
+Character Streams
+        ↓
+Why do many tiny reads/writes cost more?
+Buffered I/O
+        ↓
+How did Java historically represent filesystem paths?
+File
+        ↓
+What is the modern filesystem API?
+Path / Files
+        ↓
+How does NIO model data with Channel + Buffer?
+Buffers / Channels
+        ↓
+What file-specific operations become possible with FileChannel?
+FileChannel
+        ↓
+How do we guarantee close/release behavior?
+Resource Management
+        ↓
+What does Java object serialization do and why is it a boundary-heavy feature?
+Serialization
+        ↓
+How do we choose the simplest correct I/O abstraction?
+Choosing I/O
+```
+
+**Running example / evidence strategy:** move one UTF-8 text payload from memory to a temporary file and back, first as bytes, then characters, then buffered/channel-based forms. Keep charset and resource ownership explicit so the learner sees why String/Unicode knowledge matters.
+
+#### Layer 2 — Chapter story
+
+```text
+MentalModel        → What are source, sink, payload unit and resource lifetime?
+ByteStreams        → When must data remain opaque bytes rather than text?
+CharacterStreams   → How do bytes become characters through a Charset-aware layer?
+BufferedIO         → Why does batching improve throughput and where does flushing matter?
+File               → What does the legacy File abstraction represent and what are its limitations?
+PathFiles          → How do Path and Files separate path identity from filesystem operations?
+BuffersChannels    → Why does NIO separate storage of data from the conduit that moves it?
+FileChannel        → When do random access, position and channel-specific file operations matter?
+ResourceManagement → Why must external handles be closed deterministically instead of waiting for GC?
+Serialization      → What does object serialization promise, and why is it not a general persistence/network format recommendation?
+ChoosingIO         → Given payload, scale and operation pattern, which abstraction is simplest and correct?
+```
+
 #### Knowledge map
 
 | Existing chapter | Proposed anchored H2 sections |
@@ -738,6 +1771,90 @@ InputStream vs Reader; explicit charset; Path/Files vs File; flip/clear/compact;
 **API applicability:** Yes — locale-sensitive formatting, bundles, fallback and collation are directly observable.
 
 **Suggested assessment size:** Quiz 26–34; Interview 18–24. These are coverage ranges, not quotas.
+
+#### Layer 1 — Module orientation
+
+**Entry chapter contract:** `1.MentalModel/MentalModel.md` must explain the difference between internationalization and localization before any API names: software should keep domain data/logic independent from user-facing language, number, currency, date and collation conventions, then apply locale-sensitive presentation at the correct boundary.
+
+**Major terminology roles:**
+
+```text
+Locale
+→ language/script/region preference/context, not a time zone
+
+language tag
+→ interoperable textual representation of locale components
+
+ResourceBundle
+→ localized message/resource lookup with fallback
+
+MessageFormat
+→ parameterized locale-aware message templates
+
+Number/Currency formatting
+→ locale-sensitive presentation of numeric values
+
+Collator
+→ locale-sensitive text ordering/comparison
+
+fallback/default locale
+→ resolution behavior that can become a hidden dependency
+```
+
+**Learning roadmap:**
+
+```text
+Why should domain data be independent from presentation locale?
+Localization Mental Model
+        ↓
+What does Locale actually identify?
+Locale
+        ↓
+How is locale information represented across systems?
+Language Tags
+        ↓
+How do we load localized text/resources?
+ResourceBundle
+        ↓
+How do localized messages safely include parameters?
+MessageFormat
+        ↓
+How do numbers vary by locale?
+Number Formatting
+        ↓
+How do currency value and currency display differ?
+Currency
+        ↓
+Why does alphabetic ordering differ by locale?
+Collator
+        ↓
+How does locale affect date-time presentation without replacing ZoneId?
+Date-Time Localization
+        ↓
+What happens when an exact localized resource is missing?
+Fallback
+        ↓
+Why are system/default locale assumptions dangerous?
+Locale Pitfalls
+```
+
+**Running example / evidence strategy:** reuse one product/order presentation with the same canonical domain values rendered for `vi-VN` and `en-US`: message text, decimal amount, currency, date and sorting. Keep time-zone conversion separate so Locale vs ZoneId does not blur.
+
+#### Layer 2 — Chapter story
+
+```text
+MentalModel          → Which parts of an application are canonical domain data and which are locale-sensitive presentation?
+Locale               → What preference/context does a Locale carry, and what does it explicitly not carry?
+LanguageTags         → How do language/script/region components travel through a standard textual form?
+ResourceBundle       → How can messages vary by locale without hard-coded if/else trees?
+MessageFormat        → How do dynamic values enter translated messages without concatenation assumptions?
+NumberFormatting     → Why do grouping, decimal separators and digit conventions vary?
+Currency             → Why is a currency code/value distinct from locale-specific formatting?
+Collator             → Why does lexical order require language-sensitive rules rather than raw Unicode order?
+DateTimeLocalization → How do date/time display conventions vary while the underlying instant/zone semantics stay separate?
+Fallback             → How does resource resolution degrade from specific locale to more general/default resources?
+LocalePitfalls       → Where do default locale, case conversion and hidden environment assumptions create bugs?
+```
 
 #### Knowledge map
 
@@ -782,6 +1899,78 @@ i18n vs l10n; Locale vs Currency vs ZoneId; ResourceBundle fallback; why default
 
 **Suggested assessment size:** Quiz 24–32; Interview 18–24. These are coverage ranges, not quotas.
 
+#### Layer 1 — Module orientation
+
+**Entry chapter contract:** `1.Basic/Basic.md` must first explain what metadata is and why code sometimes needs machine-readable declarations about other code. Only after that should it introduce `@` syntax and built-in annotations.
+
+**Major terminology roles:**
+
+```text
+annotation
+→ structured metadata attached to program elements
+
+annotation element
+→ typed metadata value declared by an annotation type
+
+retention
+→ how long metadata survives: source, class file or runtime
+
+target
+→ where an annotation is legal
+
+meta-annotation
+→ annotation that configures another annotation type
+
+annotation processing
+→ compile-time consumer that can validate/generate artifacts
+
+reflection
+→ runtime consumer for RUNTIME-retained metadata; owned deeply by reflection module
+```
+
+**Learning roadmap:**
+
+```text
+Why attach metadata to code instead of encoding everything in naming/conventions?
+Annotation Basics
+        ↓
+Which metadata contracts does Java already provide?
+Built-In Annotations
+        ↓
+How do we define our own metadata vocabulary?
+Custom Annotation
+        ↓
+How long must that metadata survive?
+Retention
+        ↓
+Where should it be legal to use?
+Target
+        ↓
+How do annotations configure annotation types themselves?
+Meta-Annotations
+        ↓
+How do repeatable and inherited annotations change lookup semantics?
+Repeatable / Inherited
+        ↓
+How can compile-time tools consume metadata and generate code/resources?
+Annotation Processing
+```
+
+**Running example / evidence strategy:** define one small annotation family such as `@Audit`, `@FeatureFlag`, or `@ColumnAlias`. Reuse it to demonstrate target, retention, repeatability and runtime inspection, then show a separate compile-time processor example without pretending compile-time behavior is a runtime API feature.
+
+#### Layer 2 — Chapter story
+
+```text
+Basic                → What problem does structured metadata solve compared with comments or naming conventions?
+BuiltIn              → Which compiler/tool contracts already use annotations and what guarantees do they add?
+CustomAnnotation     → How do we define domain/framework metadata with a precise schema?
+Retention            → Which consumer needs the metadata, and therefore how long must it survive?
+Target               → How do we prevent metadata from appearing on meaningless program elements?
+MetaAnnotation       → How do annotations declare their own retention, target, documentation and inheritance behavior?
+RepeatableInherited  → How do multiple values and class-hierarchy lookup change retrieval semantics?
+AnnotationProcessing → How can compile-time tools validate or generate code from metadata before the application runs?
+```
+
 #### Knowledge map
 
 | Existing chapter | Proposed anchored H2 sections |
@@ -819,6 +2008,86 @@ why annotations exist; retention choice; @Inherited limitations; repeatable anno
 **API applicability:** Yes — reflection is itself runtime inspection, making APIs directly educational.
 
 **Suggested assessment size:** Quiz 30–40; Interview 22–30. These are coverage ranges, not quotas.
+
+#### Layer 1 — Module orientation
+
+**Entry chapter contract:** `1.Basic/Basic.md` must explain reflection as a deliberate escape from ordinary static access: code can inspect types/members and invoke behavior dynamically when the concrete structure is not known at compile time. It must also establish why frameworks use reflection and why ordinary application code should not default to it.
+
+**Major terminology roles:**
+
+```text
+Class<?> / metadata
+→ runtime description of a loaded Java type
+
+Field / Method / Constructor
+→ reflective descriptors for members
+
+invoke / newInstance / get / set
+→ dynamic operations driven by metadata instead of direct syntax
+
+AccessibleObject / access checks
+→ reflective access still interacts with language/module encapsulation
+
+Type / ParameterizedType / TypeVariable / WildcardType
+→ retained generic signature metadata model
+
+dynamic proxy / InvocationHandler
+→ runtime-generated interface implementation and interception mechanism
+
+MethodHandle
+→ neighboring dynamic invocation mechanism, not duplicated as full curriculum here
+```
+
+**Learning roadmap:**
+
+```text
+Why would code inspect other code at runtime?
+Reflection Basics
+        ↓
+What information does a Class object expose?
+Class Metadata
+        ↓
+How do we inspect/read/write fields dynamically?
+Fields
+        ↓
+How do we discover and invoke methods dynamically?
+Methods
+        ↓
+How do we discover and call constructors dynamically?
+Constructors
+        ↓
+Can reflection bypass normal access control, and where does JPMS stop it?
+Access Control
+        ↓
+What generic information remains available after erasure?
+Generic Type Inspection
+        ↓
+How does dynamic invocation differ from ordinary compile-time calls?
+Dynamic Invocation
+        ↓
+What safety, performance and maintainability costs appear?
+Limitations / Risks
+        ↓
+How can the runtime synthesize an interface implementation that intercepts calls?
+Dynamic Proxy
+```
+
+**Running example / evidence strategy:** use one small project-owned service/model class and inspect the same type throughout metadata, fields, methods, constructors and generic signatures. Finish with an interface-based proxy that records invocation flow so the learner can connect reflection metadata to framework-style behavior.
+
+#### Layer 2 — Chapter story
+
+```text
+Basic                 → What do we gain and lose when structure is discovered dynamically instead of referenced directly?
+ClassMetadata         → What is known about a loaded type at runtime?
+Fields                → How can state be discovered/read/written when field names/types are metadata?
+Methods               → How can a method be selected and invoked without a direct Java call expression?
+Constructors          → How can objects be instantiated when constructor choice is discovered dynamically?
+AccessControl         → Why does reflection not mean "encapsulation no longer exists", especially under JPMS?
+GenericTypeInspection → If generics are erased for execution, what signature metadata can tools still inspect?
+DynamicInvocation     → Which conversions/failures appear when invocation is driven dynamically?
+LimitationsRisks      → When do lost compile-time safety, hidden coupling and runtime cost outweigh flexibility?
+DynamicProxy          → How do frameworks implement interface interception without writing each implementation class manually?
+```
 
 #### Knowledge map
 
@@ -861,6 +2130,85 @@ how frameworks use reflection; getMethod vs getDeclaredMethod; InvocationTargetE
 **API applicability:** Yes — loader chain, resource lookup, initialization and identity can be observed; unloading/leaks need bounded demonstrations.
 
 **Suggested assessment size:** Quiz 28–38; Interview 22–30. These are coverage ranges, not quotas.
+
+#### Layer 1 — Module orientation
+
+**Entry chapter contract:** `1.Lifecycle/Lifecycle.md` must first explain what a ClassLoader is and why Java needs a loading subsystem at all: source code becomes class bytes, but the JVM still needs to locate, define, link and initialize types before they can execute. The learner must know that "class exists on disk" and "Class object is loaded/initialized" are different states.
+
+**Major terminology roles:**
+
+```text
+loading / linking / initialization
+→ lifecycle stages from class bytes to executable initialized type
+
+defining ClassLoader
+→ loader that creates the runtime Class identity
+
+parent delegation
+→ default lookup strategy that asks parent loaders first
+
+custom ClassLoader
+→ alternate byte source/isolation mechanism
+
+class identity
+→ binary class name + defining loader
+
+TCCL
+→ thread-associated loader used by discovery/framework scenarios
+
+resource loading
+→ classpath resource lookup, related to but distinct from class definition
+
+unloading / leaks
+→ Class objects unload only with their defining loader reachability
+```
+
+**Learning roadmap:**
+
+```text
+How do class bytes become a usable runtime type?
+Loading / Linking / Initialization
+        ↓
+Which loaders already exist in a normal JVM?
+Built-In ClassLoaders
+        ↓
+Why do they ask parents before defining classes themselves?
+Parent Delegation
+        ↓
+When would an application need a custom byte source or isolated namespace?
+Custom ClassLoader
+        ↓
+Why can two classes with the same name still be incompatible types?
+Class Identity
+        ↓
+Why do frameworks sometimes use the thread context ClassLoader?
+Context ClassLoader
+        ↓
+How are non-class resources found through class/loader paths?
+Resource Loading
+        ↓
+What actually triggers static initialization and what happens on failure?
+Initialization
+        ↓
+Why can plugin/redeploy systems retain whole class-loader graphs?
+Unloading / Leaks
+```
+
+**Running example / evidence strategy:** frame the module around a tiny plugin system. Load one plugin class through the application loader, then isolated custom loaders; observe loader identity, resource lookup, TCCL handoff, initialization trace and finally the references that would prevent unloading.
+
+#### Layer 2 — Chapter story
+
+```text
+Lifecycle             → Which lifecycle stages exist between class bytes and initialized runtime behavior?
+BuiltInClassLoaders   → Which standard loaders own JDK/platform/application classes?
+ParentDelegation      → Why does parent-first lookup protect consistency and core-type identity?
+CustomClassLoader     → How can plugins/containers define types from alternate locations or isolated namespaces?
+ClassIdentity         → Why is binary name alone insufficient to decide whether two runtime types are the same?
+ContextClassLoader    → How can parent-owned framework code discover child/application providers?
+ResourceLoading       → How do class-relative and loader-root resource paths differ from filesystem paths?
+Initialization        → What triggers `<clinit>`, how is it synchronized, and what happens after failure?
+UnloadingLeaks        → Why does retaining one loader often retain all of its classes/resources and break redeploy/plugin cleanup?
+```
 
 #### Knowledge map
 
@@ -918,7 +2266,9 @@ class loading lifecycle; parent delegation; why same class name can be different
 | `classloader` | 9 | 39 | 7 | 28–38 | 22–30 |
 | **Total** | **160** | **614** | **105** | **450–602** | **314–430** |
 
-These totals are planning bounds, not delivery quotas. During implementation an API experiment or assessment item may be removed when it proves redundant, weak or artificial. Knowledge coverage is the primary completeness criterion.
+These totals are planning bounds, not delivery quotas. During implementation an API experiment or assessment item may be removed when it proves redundant, weak or artificial.
+
+The numeric table measures **coverage scope only**. It intentionally has no numeric "pedagogy score". A module with all planned H2/API/Quiz/Interview items can still fail acceptance if its entry roadmap, concept motivation or chapter transitions are incoherent.
 
 ## 6. Important curriculum dependencies
 
@@ -974,6 +2324,22 @@ Cross-links should point to the primary module rather than repeating the full ex
 
 The implementation should not move to the next learning surface merely because files exist.
 
+### Gate 0 — Pedagogical plan ready
+
+Before rewriting real README Knowledge for one module:
+
+```text
+entry chapter can explain the module to a beginner without assuming its vocabulary
+major terminology is listed and each term has a role in the module
+domain/design concepts are distinguished from Java mechanisms/comparison/boundary concepts
+chapter order has an explainable cause-and-effect learning narrative
+each major chapter has a problem/motivation question
+important chapter-to-chapter transitions are known
+running example/evidence strategy is selected when continuity adds value
+```
+
+If the module still reads like a list of unrelated terms, do not proceed merely because the H2 inventory is complete.
+
 ### Gate A — Knowledge ready
 
 For one module:
@@ -982,7 +2348,12 @@ For one module:
 all planned chapters populated in VI + EN
 all intended H2 anchors present with VI/EN parity
 no duplicate anchors
-concept progression is coherent
+entry/equivalent first chapter explains what the module is, why it exists and what vocabulary follows
+important terms explain why they belong in the module before deep mechanics
+concept progression and chapter transitions are coherent
+technical rules are attached to an established mental model rather than presented as isolated facts
+code examples answer a learning question / demonstrate a problem or behavior
+running examples remain consistent where the plan calls for continuity
 code examples compile conceptually and do not contradict current Java 21 behavior
 knowledge-metadata synchronized
 aiGenerated=true / reviewed=false retained until human review
@@ -1028,7 +2399,11 @@ VI/EN parity
 Build a module matrix:
 
 ```text
-Knowledge concept
+Knowledge concept / major term
+→ learner knows why it exists?
+→ relationship to module/previous concept is explicit?
+→ Java mechanism is identified correctly?
+→ code/runtime evidence? (when useful)
 → API evidence? (optional)
 → Quiz coverage?
 → Interview coverage?
@@ -1039,13 +2414,21 @@ Classify findings as:
 
 ```text
 MUST FIX
-→ incorrect concept, missing foundational Knowledge, invalid relation, broken API experiment, misleading assessment
+→ incorrect concept, missing foundational Knowledge, invalid relation, broken API experiment,
+  misleading assessment, or a nontrivial module with no usable beginner roadmap
 
 SHOULD FIX
-→ weak explanation, thin assessment coverage, duplicated content, poor learning order
+→ weak motivation, definition-first explanation, unclear terminology relationship,
+  poor chapter transition/order, disconnected examples, thin assessment coverage, duplicated content
 
 OPTIONAL
 → enrichment that adds value but is not required for a coherent Java Core curriculum
 ```
 
-The final goal is not maximum counts. The final goal is that every Java Core module has a coherent learning path and every downstream surface can be traced back to correct Knowledge.
+The final goal is not maximum counts. The final goal is that every Java Core module teaches one coherent story:
+
+```text
+WHAT → WHY → RELATION → HOW → EVIDENCE → PRACTICE
+```
+
+and every downstream surface can be traced back to technically correct Knowledge inside that story.
