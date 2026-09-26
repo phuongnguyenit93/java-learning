@@ -1,9 +1,9 @@
 AbstractClassController:
   templateBehavior():
-    summary: Abstract class như partial implementation + state
-    description: Chạy thí nghiệm học tập deterministic cho Abstract class như partial
-      implementation + state. Response cung cấp runtime evidence cụ thể thay vì chỉ
-      mô tả quy tắc.
+    summary: Shared state + template behavior + abstract hook
+    description: Processor giữ prefix state và concrete process(...), còn UpperProcessor
+      hoàn thiện abstract transform(...). Response cho thấy reference kiểu Processor
+      vẫn dispatch tới runtime subtype UpperProcessor và tạo kết quả result:JAVA.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -28,9 +28,10 @@ AbstractClassController:
     usage: true
 DefaultMethodController:
   dispatch():
-    summary: Default method
-    description: Chạy thí nghiệm học tập deterministic cho Default method. Response
-      cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    summary: Kế thừa default method khi class không override
+    description: DefaultGreeting không khai báo greet(), nhưng object vẫn gọi được
+      Greeting.greet() và trả hello-default. Thí nghiệm làm rõ default method là
+      instance behavior có thể được kế thừa.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -54,9 +55,10 @@ DefaultMethodController:
       ]
     usage: true
   resolveConflict():
-    summary: Resolve default-method conflict
-    description: Chạy thí nghiệm học tập deterministic cho Resolve default-method
-      conflict. Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    summary: Giải quyết xung đột giữa hai default method
+    description: Left và Right cùng cung cấp value(). Both phải override method và
+      gọi tường minh Left.super.value() cùng Right.super.value(). Kết quả left+right
+      chứng minh conflict không được Java tự chọn thay class.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -81,9 +83,10 @@ DefaultMethodController:
     usage: true
 InterfaceController:
   multipleContracts():
-    summary: Implement nhiều contract
-    description: Chạy thí nghiệm học tập deterministic cho Implement nhiều contract.
-      Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    summary: Một object thỏa nhiều interface contract
+    description: Feature implement cả Named và Enabled. Hai reference theo hai interface
+      khác nhau vẫn trỏ tới cùng một object Feature; response cho thấy sameObject=true
+      đồng thời gọi được name() và enabled().
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -108,9 +111,11 @@ InterfaceController:
     usage: true
 InterfaceEvolutionController:
   defaultCompatibility():
-    summary: Interface evolution compatibility
-    description: Chạy thí nghiệm học tập deterministic cho Interface evolution compatibility.
-      Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    summary: Implementation cũ kế thừa default behavior mới
+    description: OldStyleImplementation chỉ định nghĩa id(), trong khi Versioned cung
+      cấp display() bằng default method. Response cho thấy display() vẫn chạy và gọi
+      id() của implementation để tạo id=legacy; đây là evidence cho cơ chế interface
+      evolution, không phải tuyên bố rằng mọi thay đổi interface đều tương thích.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video

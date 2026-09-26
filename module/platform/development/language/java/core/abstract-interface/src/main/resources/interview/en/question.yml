@@ -29,57 +29,127 @@
 
 questions:
   - question: "What problem does an abstract class solve that a pure interface may not solve as naturally?"
-    answer: "It can combine a common subtype contract with shared instance state, constructors, concrete algorithms, and abstract extension points in one hierarchy. That is useful when the shared implementation itself is part of the model."
+    answer: "An abstract class fits when related subtypes genuinely share instance state, initialization invariants, and part of an algorithm. It can combine a common contract with partial implementation inside one hierarchy. An interface fits better when only a role/capability must cross unrelated hierarchies, so an abstract class should not be introduced merely to reuse a few lines of code."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "1.AbstractClass/AbstractClass.md", anchor: "abstract-class-model"}
     apiRelated: {controller: "AbstractClassController", methodSignature: "templateBehavior()"}
 
-  - question: "What does it mean to program to an interface in Java?"
-    answer: "Consumers depend on the stable behavioral role rather than one concrete implementation class. That allows multiple implementations or proxies and reduces construction/internal knowledge, while still requiring a meaningful contract rather than an interface created mechanically."
+  - question: "How do abstract methods relate to dynamic dispatch and a template-method style design?"
+    answer: "An abstract method is a body-less extension point. A concrete method in the base class can call it as a hook; when the runtime object is a subtype, that hook dispatches to the subtype override. templateBehavior() demonstrates Processor.process(...) owning the common algorithm while UpperProcessor.transform(...) supplies the varying step."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.AbstractClass/AbstractClass.md", anchor: "abstract-method"}
+    apiRelated: {controller: "AbstractClassController", methodSignature: "templateBehavior()"}
+
+  - question: "Why is calling an overridable method from a constructor usually dangerous?"
+    answer: "The superclass constructor runs before subclass-specific state is fully initialized. If it calls an overridable method, dynamic dispatch can execute subclass code too early and read incomplete state. Constructors should generally establish their own invariants rather than invoke extension points unless the contract is deliberately designed around that risk."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.AbstractClass/AbstractClass.md", anchor: "abstract-constructor"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "When does single class inheritance make an abstract class a poor fit?"
+    answer: "When a role must be shared by types that already belong to unrelated class hierarchies. Forcing them under one base class solely for that capability creates coupling and consumes the single superclass slot. An interface lets each type keep the class hierarchy that matches its state/model while implementing additional independent roles."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.AbstractClass/AbstractClass.md", anchor: "abstract-class-limits"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "What does programming to an interface mean in Java, and what does it not mean?"
+    answer: "It means consumers depend on a stable behavioral contract such as PaymentMethod instead of one concrete implementation such as CardPayment. That makes alternate implementations, proxies, and test doubles easier when the contract is meaningful. It does not mean every class needs its own interface, nor does an interface automatically create loose coupling if the contract still leaks implementation details."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "2.Interface/Interface.md", anchor: "interface-contract"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Why can a class implement many interfaces but extend only one class, and what design consequence follows?"
-    answer: "Java has single class inheritance to avoid multiple inherited instance-state/base-implementation ambiguity, while interfaces compose roles and default behavior without multiple superclass state. Interfaces therefore fit capabilities across unrelated hierarchies."
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "3.AbstractVsInterface/AbstractVsInterface.md", anchor: "abstract-vs-interface-inheritance"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - question: "What compatibility problem do default methods address, and what do they not guarantee?"
-    answer: "They let an interface add an implementation so many existing implementers keep working without adding a body. They do not make every interface change safe: abstract additions, changed contracts, or new default conflicts can still break clients."
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "5.DefaultStaticPrivate/DefaultStaticPrivate.md", anchor: "default-method-evolution"}
-    apiRelated: {controller: "InterfaceEvolutionController", methodSignature: "defaultCompatibility()"}
-
-  - question: "Explain how Java resolves multiple inherited default methods."
-    answer: "A more specific inherited default can win, and a concrete class-hierarchy method wins over interface defaults. If unrelated interfaces still provide competing defaults, the implementing class must override and can explicitly call `InterfaceName.super.method()` where allowed."
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "6.MultipleInheritance/MultipleInheritance.md", anchor: "default-method-conflict"}
-    apiRelated: {controller: "DefaultMethodController", methodSignature: "resolveConflict()"}
-
-  - question: "Why are interface fields a poor place for mutable global application state?"
-    answer: "They are public static final references, so the reference is globally exposed and fixed but a mutable object behind it can still change. That creates global shared mutable state and weak ownership rather than instance encapsulation."
+  - question: "Why can an interface field still create a global mutable-state pitfall even though it is final?"
+    answer: "An interface field is public static final, so the reference is globally exposed and fixed at the type level. But final prevents reassignment of the reference; it does not freeze a mutable object behind that reference. This can create globally shared mutable state with unclear ownership, difficult testing, and uncontrolled side effects. Interface fields are best reserved for true constants, preferably immutable values."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "2.Interface/Interface.md", anchor: "interface-fields"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Give useful reasons for redeclaring an inherited interface method."
-    answer: "A subinterface may narrow a covariant return, add more specific documentation/annotations, or require implementations to supply a body by redeclaring an inherited default as abstract. The redeclaration should refine, not arbitrarily contradict, the parent contract."
+  - question: "How do abstract, default, static, and private interface methods differ in role and dispatch?"
+    answer: "An abstract instance method is the public contract implementations must satisfy. A default method is instance behavior with a body that may be inherited or overridden. A static method belongs to the interface type and is not inherited as an implementation instance method. Private/private static methods are internal helpers and do not become part of the public implementation contract. This is why 'all interface methods are abstract' is no longer a correct mental model."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.Interface/Interface.md", anchor: "interface-method-kinds"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Does implementing multiple interfaces create multiple objects or copies of state?"
+    answer: "No. One object may be viewed through several interface reference types while identity and runtime object remain the same. In multipleContracts(), Named n and Enabled e both refer to the same Feature, so sameObject=true. Each reference only exposes a different compile-time contract; it does not clone the object or duplicate its state."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.Interface/Interface.md", anchor: "interface-implementation"}
+    apiRelated: {controller: "InterfaceController", methodSignature: "multipleContracts()"}
+
+  - question: "How would you divide responsibilities among PaymentMethod, BasePayment, and Refundable?"
+    answer: "PaymentMethod should be the public behavioral contract consumers depend on. BasePayment is an optional abstract base for one family of implementations that truly shares state, initialization, and common behavior. Refundable is an independent capability implemented only by types that support refunds. This keeps the public contract flexible without preventing some implementations from reusing a shared base."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.AbstractVsInterface/AbstractVsInterface.md", anchor: "selection-guidance"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Why should interface inheritance be viewed as contract composition rather than just extends syntax?"
+    answer: "The design goal is to build larger contracts from focused roles without forcing every implementation to depend on methods it does not need. Payable, Refundable, and Auditable can stand alone; a subinterface composes only the relevant roles. A giant interface often forces implementations to provide meaningless behavior or take unnecessary dependencies."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.InterfaceInheritance/InterfaceInheritance.md", anchor: "interface-extends-interface"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Is extending multiple parent interfaces always safe?"
+    answer: "No. Compatible abstract contracts usually compose cleanly, but the same signature with incompatible return types can make the combined contract impossible to satisfy. Default methods can also compete and require resolution rules. Multiple interface inheritance is inheritance of types/contracts and sometimes behavior; it does not mean conflicts are impossible."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.InterfaceInheritance/InterfaceInheritance.md", anchor: "multiple-interface-hierarchy"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Why would a subinterface redeclare an inherited method instead of leaving it unchanged?"
+    answer: "Redeclaration can refine the contract: narrow a covariant return type, add more specific annotations/documentation, or turn an inherited default back into an abstract requirement so downstream implementations must provide behavior. It must remain compatible with the parent contract; simply repeating the signature without adding meaning is usually noise."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "4.InterfaceInheritance/InterfaceInheritance.md", anchor: "interface-redeclaration"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Can interfaces and abstract classes be used together, and when is that useful?"
-    answer: "Yes. An interface can define the public role while an abstract class supplies optional shared implementation and state for a family of implementations. Other implementations can still implement the interface without inheriting that base class."
+  - question: "What interface-evolution problem do default methods address, and what are their limits?"
+    answer: "They let an interface add a method with a default body so many existing implementations do not immediately need a new source implementation. They do not make every change safe: adding an abstract method may still break source compatibility, a new default can conflict with another interface, and changed semantics can still break clients. defaultCompatibility() demonstrates the mechanism rather than proving every form of binary compatibility."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.AbstractVsInterface/AbstractVsInterface.md", anchor: "selection-guidance"}
+    readmeRelated: {file: "5.DefaultStaticPrivate/DefaultStaticPrivate.md", anchor: "default-method-evolution"}
+    apiRelated: {controller: "InterfaceEvolutionController", methodSignature: "defaultCompatibility()"}
+
+  - question: "What does dispatch() demonstrate about default methods?"
+    answer: "Greeting provides default greet(), while DefaultGreeting does not override it. Calling greet() on a DefaultGreeting still returns hello-default, showing that default methods are inheritable instance behavior. The runtime type remains DefaultGreeting; the interface does not create a separate object and the default does not become static."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.DefaultStaticPrivate/DefaultStaticPrivate.md", anchor: "default-method"}
+    apiRelated: {controller: "DefaultMethodController", methodSignature: "dispatch()"}
+
+  - question: "When would you use a static interface method instead of a default method?"
+    answer: "Use static when the operation belongs to the interface's namespace/contract but does not need receiver state, such as a validator or factory closely related to PaymentMethod. Use default when behavior needs an instance receiver and may be inherited or overridden. A static interface method is not inherited as an implementation instance method, so the two serve different design roles."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.DefaultStaticPrivate/DefaultStaticPrivate.md", anchor: "static-interface-method"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "What value do private interface methods provide if implementations cannot call them?"
+    answer: "That is precisely their value: they can deduplicate internal logic among default/static methods without exposing the helper to callers or implementers. A private instance helper works in instance/default context, while a private static helper works in static context. Implementing classes cannot call or override either one."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.DefaultStaticPrivate/DefaultStaticPrivate.md", anchor: "private-interface-method"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Explain the reasoning order Java uses when multiple inherited default methods are involved."
+    answer: "First check whether the class hierarchy already provides a compatible concrete method; if so, the class method wins. Otherwise ask whether one interface default is more specific than the others; a more-specific child default can win. If unrelated defaults still compete, the implementing class must override. That override may explicitly call a valid direct superinterface default with InterfaceName.super.method()."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.MultipleInheritance/MultipleInheritance.md", anchor: "default-method-conflict"}
+    apiRelated: {controller: "DefaultMethodController", methodSignature: "resolveConflict()"}
+
+  - question: "Is diamond-shaped interface inheritance always ambiguous?"
+    answer: "No. A diamond describes the inheritance graph, not automatically a conflict. If all paths ultimately lead to one most-specific default, there are not two independent behaviors to choose between. Ambiguity appears when independent defaults with the same signature still compete and none is more specific. Reason about the inherited declarations, not the shape alone."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.MultipleInheritance/MultipleInheritance.md", anchor: "diamond-interface"}
     apiRelated: {controller: "", methodSignature: ""}

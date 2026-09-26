@@ -39,132 +39,288 @@
 # </quiz-schema>
 
 questions:
-  - id: abstract-class-state
-    question: "Abstract class có thể chứa gì mà interface không cung cấp như per-instance state?"
+  - id: abstract-class-shared-state
+    question: "Điểm nào mô tả đúng vai trò của abstract class trong một hierarchy có shared state?"
     answers:
-      - {id: A, answer: "Instance field và constructor initialize shared superclass state.", explanation: "Đúng. Abstract class có thể own instance state và partial implementation; interface field là static final constant."}
-      - {id: B, answer: "Chỉ static final constant.", explanation: "Sai. Abstract class có thể own instance state và partial implementation; interface field là static final constant."}
-      - {id: C, answer: "Không có method nào.", explanation: "Sai. Abstract class có thể own instance state và partial implementation; interface field là static final constant."}
-      - {id: D, answer: "Nhiều direct superclass.", explanation: "Sai. Abstract class có thể own instance state và partial implementation; interface field là static final constant."}
+      - {id: A, answer: "Nó có thể giữ instance state và concrete behavior chung, đồng thời để lại abstract hook cho subtype.", explanation: "Đúng. Đây là mô hình partial implementation điển hình của abstract class."}
+      - {id: B, answer: "Nó chỉ được chứa abstract method, không được chứa field hay constructor.", explanation: "Sai. Abstract class có thể có field, constructor và concrete method."}
+      - {id: C, answer: "Nó cho phép một class có nhiều direct superclass.", explanation: "Sai. Java vẫn chỉ cho một class extends một class."}
+      - {id: D, answer: "Nó chỉ dùng được làm utility class static.", explanation: "Sai. Abstract class là instance type và có thể giữ state/behavior của object."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "1.AbstractClass/AbstractClass.md", anchor: "abstract-class-model"}
     apiRelated: {controller: "AbstractClassController", methodSignature: "templateBehavior()"}
 
-  - id: abstract-constructor
-    question: "Nếu abstract class không instantiate trực tiếp, vì sao nó có constructor?"
+  - id: abstract-method-contract
+    question: "Điều nào đúng về abstract method trong abstract class?"
     answers:
-      - {id: A, answer: "Constructor abstract class không bao giờ chạy.", explanation: "Sai. Subclass construction vẫn chạy superclass constructor chain."}
-      - {id: B, answer: "Constructor của nó initialize superclass portion mỗi khi concrete subclass được construct.", explanation: "Đúng. Subclass construction vẫn chạy superclass constructor chain."}
-      - {id: C, answer: "Nó chỉ tồn tại cho reflection và không initialize state.", explanation: "Sai. Subclass construction vẫn chạy superclass constructor chain."}
-      - {id: D, answer: "Nó tạo abstract object riêng bên cạnh child.", explanation: "Sai. Subclass construction vẫn chạy superclass constructor chain."}
+      - {id: A, answer: "Nó luôn là static method.", explanation: "Sai. Abstract method là instance method và không thể static."}
+      - {id: B, answer: "Nó có body mặc định nhưng subtype có thể bỏ qua.", explanation: "Sai. Abstract method không có body."}
+      - {id: C, answer: "Concrete subclass phải cung cấp implementation tương thích nếu chưa có concrete implementation kế thừa nào thỏa contract.", explanation: "Đúng. Subclass cụ thể phải làm cho abstract contract trở thành concrete."}
+      - {id: D, answer: "Nó không tham gia overriding rules.", explanation: "Sai. Visibility, return type và checked exception vẫn phải tuân overriding rules."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.AbstractClass/AbstractClass.md", anchor: "abstract-method"}
+    apiRelated: {controller: "AbstractClassController", methodSignature: "templateBehavior()"}
+
+  - id: abstract-constructor-chain
+    question: "Vì sao abstract class vẫn có constructor dù không thể new trực tiếp?"
+    answers:
+      - {id: A, answer: "Chỉ để reflection nhìn thấy, constructor không bao giờ chạy.", explanation: "Sai. Constructor superclass vẫn chạy khi tạo concrete subclass."}
+      - {id: B, answer: "Để khởi tạo phần state thuộc superclass trong quá trình construct subclass.", explanation: "Đúng. Object subclass vẫn chứa superclass portion cần được khởi tạo."}
+      - {id: C, answer: "Để tạo một abstract object riêng rồi gắn vào subclass.", explanation: "Sai. Không có object abstract tách biệt được tạo ra."}
+      - {id: D, answer: "Để Java hỗ trợ multiple class inheritance.", explanation: "Sai. Constructor không thay đổi single class inheritance."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "1.AbstractClass/AbstractClass.md", anchor: "abstract-constructor"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - id: interface-fields
-    question: "Field khai báo trong interface là gì?"
+  - id: abstract-class-limit
+    question: "Giới hạn thiết kế lớn nhất của abstract class khi mô tả một capability cắt ngang nhiều hierarchy là gì?"
     answers:
-      - {id: A, answer: "Private mutable field trên mọi implementation.", explanation: "Sai. Interface không chứa instance field của implementing object."}
-      - {id: B, answer: "Protected instance field.", explanation: "Sai. Interface không chứa instance field của implementing object."}
-      - {id: C, answer: "Implicit public static final constant, không phải per-instance state.", explanation: "Đúng. Interface không chứa instance field của implementing object."}
-      - {id: D, answer: "Constructor parameter được store tự động.", explanation: "Sai. Interface không chứa instance field của implementing object."}
+      - {id: A, answer: "Abstract class không thể có concrete method.", explanation: "Sai. Abstract class có thể có concrete method."}
+      - {id: B, answer: "Abstract class không thể có constructor.", explanation: "Sai. Abstract class có thể có constructor."}
+      - {id: C, answer: "Một class chỉ có thể extends một class, nên base class commitment có thể quá ràng buộc.", explanation: "Đúng. Đây là lý do interface thường phù hợp hơn cho cross-cutting capability."}
+      - {id: D, answer: "Abstract class không thể được dùng làm reference type.", explanation: "Sai. Abstract class hoàn toàn có thể là declared/reference type."}
     correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.AbstractClass/AbstractClass.md", anchor: "abstract-class-limits"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: interface-contract-decoupling
+    question: "Khi method nhận tham số kiểu PaymentMethod thay vì CardPayment, lợi ích chính là gì?"
+    answers:
+      - {id: A, answer: "Method chỉ gọi được static method của PaymentMethod.", explanation: "Sai. Reference interface dùng để gọi instance contract đã khai báo."}
+      - {id: B, answer: "Bên sử dụng phụ thuộc vào behavioral contract thay vì một implementation cụ thể.", explanation: "Đúng. Đây là ý nghĩa cốt lõi của program-to-interface."}
+      - {id: C, answer: "Java tự động tạo object PaymentMethod mới.", explanation: "Sai. Interface reference không tạo object mới."}
+      - {id: D, answer: "Mọi implementation bắt buộc phải cùng superclass.", explanation: "Sai. Interface cho phép unrelated classes cùng thỏa contract."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.Interface/Interface.md", anchor: "interface-contract"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: interface-field-semantics
+    question: "Phát biểu nào đúng nhất về field khai báo trong interface?"
+    answers:
+      - {id: A, answer: "Nó là per-instance field và có thể được constructor implementation gán sau.", explanation: "Sai. Interface field là static final và phải được khởi tạo tại khai báo."}
+      - {id: B, answer: "Nó mặc nhiên public static final; final cố định reference nhưng không làm object được trỏ tới trở nên immutable.", explanation: "Đúng. Mutable object phía sau final reference vẫn có thể đổi state."}
+      - {id: C, answer: "Nó mặc nhiên protected final.", explanation: "Sai. Interface field mặc nhiên public static final."}
+      - {id: D, answer: "Mỗi implementing object có một bản copy riêng.", explanation: "Sai. Field thuộc interface type, không phải per-instance state."}
+    correctAnswerId: B
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "2.Interface/Interface.md", anchor: "interface-fields"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - id: interface-method-kinds
-    question: "Modern Java interface có thể khai báo những method kind nào?"
+  - id: interface-abstract-visibility
+    question: "Trong interface, khai báo void pay(); không ghi modifier được hiểu như thế nào?"
     answers:
-      - {id: A, answer: "Chỉ abstract public method.", explanation: "Sai. Các method kind này có inheritance/dispatch semantics khác nhau."}
-      - {id: B, answer: "Chỉ static và final method.", explanation: "Sai. Các method kind này có inheritance/dispatch semantics khác nhau."}
-      - {id: C, answer: "Chỉ constructor và protected method.", explanation: "Sai. Các method kind này có inheritance/dispatch semantics khác nhau."}
-      - {id: D, answer: "Abstract instance method, default method, static method và private helper method.", explanation: "Đúng. Các method kind này có inheritance/dispatch semantics khác nhau."}
-    correctAnswerId: D
+      - {id: A, answer: "private abstract void pay();", explanation: "Sai. Abstract interface method không mặc nhiên private."}
+      - {id: B, answer: "protected abstract void pay();", explanation: "Sai. Interface không dùng protected cho abstract contract kiểu này."}
+      - {id: C, answer: "public abstract void pay(); và implementation không được giảm visibility.", explanation: "Đúng. Đây là modifier mặc định của abstract instance method trong interface."}
+      - {id: D, answer: "public static void pay();", explanation: "Sai. Không có static modifier thì đây là instance contract."}
+    correctAnswerId: C
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "2.Interface/Interface.md", anchor: "interface-method-kinds"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - id: multiple-contracts
-    question: "Implement nhiều interface chủ yếu cung cấp gì?"
+  - id: multiple-contracts-same-object
+    question: "Feature implements Named và Enabled. Nếu Named n = feature và Enabled e = feature thì điều gì đúng?"
     answers:
-      - {id: A, answer: "Một object có thể thỏa nhiều behavioral role mà không cần multiple class inheritance.", explanation: "Đúng. Java hỗ trợ multiple interface inheritance của type/behavior nhưng chỉ một superclass."}
-      - {id: B, answer: "Nhiều copy độc lập của object state.", explanation: "Sai. Java hỗ trợ multiple interface inheritance của type/behavior nhưng chỉ một superclass."}
-      - {id: C, answer: "Nhiều superclass constructor chạy song song.", explanation: "Sai. Java hỗ trợ multiple interface inheritance của type/behavior nhưng chỉ một superclass."}
-      - {id: D, answer: "Automatic deep clone mọi interface field.", explanation: "Sai. Java hỗ trợ multiple interface inheritance của type/behavior nhưng chỉ một superclass."}
-    correctAnswerId: A
+      - {id: A, answer: "n và e bắt buộc là hai object khác nhau.", explanation: "Sai. Hai reference có thể cùng trỏ tới một object."}
+      - {id: B, answer: "Mỗi interface tạo một bản copy state riêng.", explanation: "Sai. Implement nhiều interface không duplicate object state."}
+      - {id: C, answer: "Chỉ interface khai báo đầu tiên trong implements mới dùng được.", explanation: "Sai. Object thỏa cả hai contract."}
+      - {id: D, answer: "n và e có thể cùng trỏ tới một Feature, mỗi reference expose role tương ứng.", explanation: "Đúng. Đây chính là behavior endpoint multipleContracts() minh họa."}
+    correctAnswerId: D
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "2.Interface/Interface.md", anchor: "interface-implementation"}
     apiRelated: {controller: "InterfaceController", methodSignature: "multipleContracts()"}
 
-  - id: abstract-vs-interface
-    question: "Khi nào abstract class thường phù hợp hơn interface?"
+  - id: abstract-vs-interface-state
+    question: "Nhu cầu nào nghiêng mạnh về abstract class hơn interface?"
     answers:
-      - {id: A, answer: "Bất cứ khi nào class cần nhiều role.", explanation: "Sai. Interface thường tốt cho role xuyên hierarchy; abstract class tạo base-class commitment mạnh hơn."}
-      - {id: B, answer: "Khi related hierarchy thật sự share base instance state, constructor và partial implementation.", explanation: "Đúng. Interface thường tốt cho role xuyên hierarchy; abstract class tạo base-class commitment mạnh hơn."}
-      - {id: C, answer: "Khi không được có shared implementation.", explanation: "Sai. Interface thường tốt cho role xuyên hierarchy; abstract class tạo base-class commitment mạnh hơn."}
-      - {id: D, answer: "Khi cần multiple superclass inheritance.", explanation: "Sai. Interface thường tốt cho role xuyên hierarchy; abstract class tạo base-class commitment mạnh hơn."}
+      - {id: A, answer: "Một family subtype cần shared instance state, invariant khởi tạo và base implementation.", explanation: "Đúng. Đây là strength chính của abstract class."}
+      - {id: B, answer: "Nhiều class không liên quan cần cùng một role nhỏ.", explanation: "Sai. Interface thường phù hợp hơn cho role cắt ngang hierarchy."}
+      - {id: C, answer: "Một class cần đồng thời ba capability độc lập.", explanation: "Sai. Multiple interfaces phù hợp hơn."}
+      - {id: D, answer: "Chỉ cần một public contract không có shared state.", explanation: "Sai. Đây là case tự nhiên của interface."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.AbstractVsInterface/AbstractVsInterface.md", anchor: "abstract-vs-interface-state"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: one-class-many-interfaces
+    question: "Rule inheritance nào đúng trong Java?"
+    answers:
+      - {id: A, answer: "Một class có thể extends nhiều class nhưng chỉ implements một interface.", explanation: "Sai. Java ngược lại: một superclass, nhiều interface."}
+      - {id: B, answer: "Một class không thể vừa extends class vừa implements interface.", explanation: "Sai. Hai cơ chế có thể dùng cùng nhau."}
+      - {id: C, answer: "Một class chỉ extends một class nhưng có thể implements nhiều interface.", explanation: "Đúng. Đây là nền tảng cho việc compose nhiều role."}
+      - {id: D, answer: "Interface không thể extends interface khác.", explanation: "Sai. Interface có thể extends một hoặc nhiều interface."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.AbstractVsInterface/AbstractVsInterface.md", anchor: "abstract-vs-interface-inheritance"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: selection-guidance-refund
+    question: "Refundable cần được hỗ trợ bởi CardPayment, WalletPayment và một type không cùng superclass. Thiết kế nào tự nhiên nhất?"
+    answers:
+      - {id: A, answer: "Buộc tất cả extends một RefundableBase dù không share state.", explanation: "Sai. Điều này tạo base-class coupling không cần thiết."}
+      - {id: B, answer: "Định nghĩa Refundable như interface capability và để các type cần thiết implements nó.", explanation: "Đúng. Interface phù hợp với role cắt ngang nhiều hierarchy."}
+      - {id: C, answer: "Dùng một global boolean field để đánh dấu refundable.", explanation: "Sai. Flag không thay thế behavioral contract."}
+      - {id: D, answer: "Copy refund(...) vào từng class mà không có contract chung.", explanation: "Sai. Điều này mất abstraction chung và tăng duplication."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "3.AbstractVsInterface/AbstractVsInterface.md", anchor: "selection-guidance"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - id: interface-redeclaration
-    question: "Subinterface có thể làm gì khi redeclare inherited method?"
+  - id: interface-extends-contract
+    question: "Nếu RefundablePayment extends Payable và khai báo thêm refund(), class implement RefundablePayment phải làm gì?"
     answers:
-      - {id: A, answer: "Đổi thành unrelated return type.", explanation: "Sai. Redeclaration có thể refine inherited contract nhưng vẫn signature-compatible."}
-      - {id: B, answer: "Biến nó thành constructor.", explanation: "Sai. Redeclaration có thể refine inherited contract nhưng vẫn signature-compatible."}
-      - {id: C, answer: "Refine compatible return type, thêm contract metadata hoặc biến inherited default thành abstract lại.", explanation: "Đúng. Redeclaration có thể refine inherited contract nhưng vẫn signature-compatible."}
-      - {id: D, answer: "Tự cấp instance field cho nó.", explanation: "Sai. Redeclaration có thể refine inherited contract nhưng vẫn signature-compatible."}
+      - {id: A, answer: "Thỏa cả pay() được kế thừa và refund() mới.", explanation: "Đúng. Subinterface bao gồm contract của parent interface."}
+      - {id: B, answer: "Chỉ cần refund() vì extends xóa contract cũ.", explanation: "Sai. Parent contract vẫn được kế thừa."}
+      - {id: C, answer: "Chỉ cần pay() vì method mới không áp dụng cho implementation.", explanation: "Sai. Method mới cũng là một phần contract."}
+      - {id: D, answer: "Không thể implement subinterface trực tiếp.", explanation: "Sai. Class có thể implement subinterface bình thường."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.InterfaceInheritance/InterfaceInheritance.md", anchor: "interface-extends-interface"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: multiple-interface-hierarchy-compatibility
+    question: "Khi một interface extends nhiều parent interface, trường hợp nào có thể làm hierarchy không hợp lệ?"
+    answers:
+      - {id: A, answer: "Các parent chỉ có abstract method khác tên.", explanation: "Sai. Các contract độc lập như vậy thường compose bình thường."}
+      - {id: B, answer: "Các parent dùng chung một annotation.", explanation: "Sai. Annotation chung không tự tạo conflict type."}
+      - {id: C, answer: "Các parent khai báo cùng signature với return type không thể tương thích.", explanation: "Đúng. Return contract không thể được thỏa đồng thời có thể làm hierarchy invalid."}
+      - {id: D, answer: "Subinterface không có field.", explanation: "Sai. Interface không cần field để extends parent."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.InterfaceInheritance/InterfaceInheritance.md", anchor: "multiple-interface-hierarchy"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: interface-redeclaration-refine
+    question: "Đâu là use case hợp lệ khi subinterface redeclare inherited method?"
+    answers:
+      - {id: A, answer: "Đổi Number return thành unrelated String dù không covariant.", explanation: "Sai. Redeclaration vẫn phải tương thích với inherited contract."}
+      - {id: B, answer: "Biến instance method thành constructor.", explanation: "Sai. Constructor không phải inherited interface method."}
+      - {id: C, answer: "Thu hẹp return type covariantly hoặc biến inherited default thành abstract requirement.", explanation: "Đúng. Cả hai đều là refinement hợp lệ."}
+      - {id: D, answer: "Thêm instance field cho method.", explanation: "Sai. Method redeclaration không tạo instance field."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "4.InterfaceInheritance/InterfaceInheritance.md", anchor: "interface-redeclaration"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - id: default-method-purpose
-    question: "Vì sao default method quan trọng cho interface evolution?"
+  - id: default-method-inheritance
+    question: "Greeting có default greet(), còn DefaultGreeting implements Greeting nhưng không override. Gọi greet() sẽ thế nào?"
     answers:
-      - {id: A, answer: "Chúng cho interface own mutable instance field.", explanation: "Sai. Default method cải thiện compatibility cho nhiều evolution scenario nhưng không làm mọi change safe."}
-      - {id: B, answer: "Chúng loại virtual dispatch.", explanation: "Sai. Default method cải thiện compatibility cho nhiều evolution scenario nhưng không làm mọi change safe."}
-      - {id: C, answer: "Chúng guarantee mọi future interface change binary compatible.", explanation: "Sai. Default method cải thiện compatibility cho nhiều evolution scenario nhưng không làm mọi change safe."}
-      - {id: D, answer: "Chúng có thể thêm behavior mà không buộc mọi existing implementation lập tức cung cấp body mới.", explanation: "Đúng. Default method cải thiện compatibility cho nhiều evolution scenario nhưng không làm mọi change safe."}
+      - {id: A, answer: "Compile error vì mọi interface method đều phải được class viết lại.", explanation: "Sai. Default method đã có implementation có thể kế thừa."}
+      - {id: B, answer: "DefaultGreeting kế thừa default implementation và lời gọi chạy bình thường.", explanation: "Đúng. Đây là behavior endpoint dispatch() quan sát được."}
+      - {id: C, answer: "Method tự động trở thành static.", explanation: "Sai. Default method là instance method."}
+      - {id: D, answer: "JVM bỏ qua default và trả null.", explanation: "Sai. Default body được dispatch như instance behavior."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.DefaultStaticPrivate/DefaultStaticPrivate.md", anchor: "default-method"}
+    apiRelated: {controller: "DefaultMethodController", methodSignature: "dispatch()"}
+
+  - id: static-interface-method-call
+    question: "Phát biểu nào đúng về static method trong interface?"
+    answers:
+      - {id: A, answer: "Nó được kế thừa như instance method của implementing class.", explanation: "Sai. Static interface method không trở thành instance method của implementation."}
+      - {id: B, answer: "Nó chỉ được gọi thông qua object implementation.", explanation: "Sai. Cách tự nhiên là gọi qua interface type."}
+      - {id: C, answer: "Nó cần instance state để chạy.", explanation: "Sai. Static method không có instance receiver."}
+      - {id: D, answer: "Nó thuộc interface type và thường được gọi như PaymentMethod.validate(...).", explanation: "Đúng. Đây là type-level behavior gắn với contract."}
     correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.DefaultStaticPrivate/DefaultStaticPrivate.md", anchor: "static-interface-method"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: private-interface-helper
+    question: "Mục đích chính của private method trong interface là gì?"
+    answers:
+      - {id: A, answer: "Dùng lại logic nội bộ giữa các method của interface mà không mở rộng public contract.", explanation: "Đúng. Implementing class không thể call/override private helper đó."}
+      - {id: B, answer: "Ép mọi implementation override thêm một method.", explanation: "Sai. Private method không phải public contract cho implementation."}
+      - {id: C, answer: "Cho interface sở hữu mutable instance field.", explanation: "Sai. Private method không thay đổi state model của interface."}
+      - {id: D, answer: "Thay thế constructor của interface.", explanation: "Sai. Interface không có instance constructor."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.DefaultStaticPrivate/DefaultStaticPrivate.md", anchor: "private-interface-method"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: default-method-evolution
+    question: "Default method giúp interface evolution theo cách nào?"
+    answers:
+      - {id: A, answer: "Nó guarantee mọi thay đổi tương lai đều binary compatible.", explanation: "Sai. Default method không làm mọi thay đổi interface trở nên an toàn."}
+      - {id: B, answer: "Nó cho interface thêm instance field mà implementation cũ tự nhận được.", explanation: "Sai. Interface vẫn không có per-instance field."}
+      - {id: C, answer: "Nó có thể thêm behavior có body mặc định để implementation hiện có không phải lập tức cung cấp method mới.", explanation: "Đúng. Đây là động cơ chính của default method trong API evolution."}
+      - {id: D, answer: "Nó loại bỏ dynamic dispatch khỏi interface.", explanation: "Sai. Default method vẫn là virtual instance behavior."}
+    correctAnswerId: C
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "5.DefaultStaticPrivate/DefaultStaticPrivate.md", anchor: "default-method-evolution"}
     apiRelated: {controller: "InterfaceEvolutionController", methodSignature: "defaultCompatibility()"}
 
-  - id: class-wins-default
-    question: "Class hierarchy có concrete method và interface có compatible default. Cái nào thắng?"
+  - id: unrelated-default-conflict
+    question: "Class implement hai unrelated interface cùng có default String value(). Điều gì bắt buộc?"
     answers:
-      - {id: A, answer: "Class method thắng interface default.", explanation: "Đúng. Interface default là fallback implementation và không override inherited concrete class method."}
-      - {id: B, answer: "Interface default luôn thắng.", explanation: "Sai. Interface default là fallback implementation và không override inherited concrete class method."}
-      - {id: C, answer: "Cả hai tự chạy theo sequence.", explanation: "Sai. Interface default là fallback implementation và không override inherited concrete class method."}
-      - {id: D, answer: "Class không thể implement interface.", explanation: "Sai. Interface default là fallback implementation và không override inherited concrete class method."}
+      - {id: A, answer: "Java chọn interface được viết trước trong implements.", explanation: "Sai. Thứ tự implements không resolve conflict."}
+      - {id: B, answer: "Class phải override value() để resolve ambiguity.", explanation: "Đúng. Java không tự chọn giữa hai unrelated default."}
+      - {id: C, answer: "Hai default tự chạy nối tiếp.", explanation: "Sai. Không có sequencing tự động."}
+      - {id: D, answer: "Một interface tự động bị bỏ khỏi type hierarchy.", explanation: "Sai. Class vẫn implement cả hai contract."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.MultipleInheritance/MultipleInheritance.md", anchor: "default-method-conflict"}
+    apiRelated: {controller: "DefaultMethodController", methodSignature: "resolveConflict()"}
+
+  - id: class-wins-default
+    question: "Superclass có concrete name(), interface có default name() tương thích. Implementation nào được ưu tiên?"
+    answers:
+      - {id: A, answer: "Concrete class-hierarchy method được ưu tiên.", explanation: "Đúng. Interface default không âm thầm thay thế inherited concrete class behavior."}
+      - {id: B, answer: "Interface default luôn được ưu tiên.", explanation: "Sai. Class method wins trong case này."}
+      - {id: C, answer: "Cả hai chạy và nối String tự động.", explanation: "Sai. Java không tự compose hai body."}
+      - {id: D, answer: "Compile error chỉ vì cả hai cùng signature.", explanation: "Sai. Concrete class method resolve case này."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "6.MultipleInheritance/MultipleInheritance.md", anchor: "class-wins-rule"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - id: default-conflict
-    question: "Class phải làm gì khi inherit cùng default signature từ hai unrelated interface?"
+  - id: explicit-interface-super
+    question: "Trong class Both implements Left, Right, cú pháp Left.super.value() dùng để làm gì?"
     answers:
-      - {id: A, answer: "Không cần làm gì; Java random chọn một.", explanation: "Sai. Java không tự đoán giữa các unrelated default cạnh tranh."}
-      - {id: B, answer: "Override method và explicit resolve behavior nào dùng hoặc combine.", explanation: "Đúng. Java không tự đoán giữa các unrelated default cạnh tranh."}
-      - {id: C, answer: "Tự convert cả hai interface thành abstract class.", explanation: "Sai. Java không tự đoán giữa các unrelated default cạnh tranh."}
-      - {id: D, answer: "Khai báo hai object cùng identity.", explanation: "Sai. Java không tự đoán giữa các unrelated default cạnh tranh."}
-    correctAnswerId: B
+      - {id: A, answer: "Gọi constructor của interface Left.", explanation: "Sai. Interface không có instance constructor."}
+      - {id: B, answer: "Ép runtime type của object thành Left.", explanation: "Sai. Cú pháp này không cast object."}
+      - {id: C, answer: "Gọi tường minh default implementation của direct superinterface Left từ override đang resolve conflict.", explanation: "Đúng. Nó cho phép class chọn hoặc combine parent defaults."}
+      - {id: D, answer: "Gọi static method value() trên Left.", explanation: "Sai. Đây là cú pháp gọi default instance method của superinterface."}
+    correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.MultipleInheritance/MultipleInheritance.md", anchor: "default-method-conflict"}
+    readmeRelated: {file: "6.MultipleInheritance/MultipleInheritance.md", anchor: "explicit-super-interface"}
     apiRelated: {controller: "DefaultMethodController", methodSignature: "resolveConflict()"}
+
+  - id: diamond-most-specific
+    question: "Khi nào diamond-shaped interface inheritance không tạo default-method ambiguity?"
+    answers:
+      - {id: A, answer: "Bất cứ khi nào có hơn một path kế thừa.", explanation: "Sai. Nhiều path không tự động đồng nghĩa với ambiguity."}
+      - {id: B, answer: "Chỉ khi class không implements interface nào.", explanation: "Sai. Diamond là vấn đề của inherited contract/default resolution."}
+      - {id: C, answer: "Chỉ khi mọi interface không có method.", explanation: "Sai. Diamond vẫn có thể hợp lệ dù có method."}
+      - {id: D, answer: "Khi các path cuối cùng dẫn tới cùng một default cụ thể nhất, thay vì nhiều independent defaults cạnh tranh.", explanation: "Đúng. Ambiguity xuất hiện khi còn nhiều candidate không có cái nào more specific."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.MultipleInheritance/MultipleInheritance.md", anchor: "diamond-interface"}
+    apiRelated: {controller: "", methodSignature: ""}

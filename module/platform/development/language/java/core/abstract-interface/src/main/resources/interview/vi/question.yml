@@ -28,58 +28,128 @@
 # </interview-schema>
 
 questions:
-  - question: "Abstract class giải quyết vấn đề gì mà pure interface có thể không tự nhiên bằng?"
-    answer: "Nó kết hợp common subtype contract với shared instance state, constructor, concrete algorithm và abstract extension point trong một hierarchy. Hữu ích khi shared implementation thật sự thuộc model."
+  - question: "Abstract class giải quyết vấn đề gì mà interface thuần có thể không tự nhiên bằng?"
+    answer: "Abstract class phù hợp khi các subtype thật sự chia sẻ instance state, constructor/invariant và một phần algorithm chung. Nó vừa định nghĩa common contract vừa giữ partial implementation trong cùng hierarchy. Interface phù hợp hơn khi chỉ cần role/capability xuyên nhiều hierarchy; vì vậy không nên dùng abstract class chỉ vì muốn reuse vài dòng code."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "1.AbstractClass/AbstractClass.md", anchor: "abstract-class-model"}
     apiRelated: {controller: "AbstractClassController", methodSignature: "templateBehavior()"}
 
-  - question: "Program to an interface trong Java nghĩa là gì?"
-    answer: "Consumer phụ thuộc stable behavioral role thay vì concrete implementation class. Điều này cho phép multiple implementation/proxy và giảm knowledge về construction/internal, nhưng interface vẫn phải có contract meaningful chứ không tạo máy móc."
+  - question: "Abstract method liên quan thế nào tới dynamic dispatch và template-method style?"
+    answer: "Abstract method là extension point không có body. Concrete method ở base class có thể gọi abstract method như một hook; khi runtime object là subtype, lời gọi hook dispatch tới override của subtype. API templateBehavior() minh họa Processor.process(...) giữ algorithm chung còn UpperProcessor.transform(...) cung cấp bước biến đổi cụ thể."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.AbstractClass/AbstractClass.md", anchor: "abstract-method"}
+    apiRelated: {controller: "AbstractClassController", methodSignature: "templateBehavior()"}
+
+  - question: "Vì sao gọi overridable method từ constructor thường nguy hiểm?"
+    answer: "Superclass constructor chạy trước khi phần state riêng của subclass được khởi tạo hoàn chỉnh. Nếu constructor gọi method có thể override, dynamic dispatch có thể chạy code của subclass quá sớm và đọc state chưa sẵn sàng. Vì vậy constructor nên thiết lập invariant của chính class thay vì gọi extension point có thể bị override, trừ khi contract được thiết kế cực kỳ rõ."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.AbstractClass/AbstractClass.md", anchor: "abstract-constructor"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Khi nào limitation single class inheritance khiến abstract class trở thành lựa chọn kém?"
+    answer: "Khi một role cần xuất hiện ở nhiều type vốn đã thuộc các hierarchy khác nhau. Buộc tất cả vào một base class chỉ để có capability đó tạo coupling và chiếm mất superclass slot. Interface giải quyết tốt hơn vì một class vẫn có thể extends base class phù hợp với state/model của nó và implements thêm nhiều role độc lập."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.AbstractClass/AbstractClass.md", anchor: "abstract-class-limits"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Program to an interface trong Java nghĩa là gì, và nó không có nghĩa là gì?"
+    answer: "Nó nghĩa là code phía sử dụng phụ thuộc vào behavioral contract ổn định như PaymentMethod thay vì một implementation cụ thể như CardPayment. Điều này giúp thay implementation, proxy hoặc test double dễ hơn khi contract thật sự có ý nghĩa. Nó không có nghĩa mọi class đều phải có interface riêng, cũng không có nghĩa interface tự động làm code loose-coupled nếu contract vẫn leak implementation detail."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "2.Interface/Interface.md", anchor: "interface-contract"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Vì sao class implement nhiều interface nhưng chỉ extend một class, và hệ quả design là gì?"
-    answer: "Java dùng single class inheritance để tránh ambiguity của multiple inherited instance state/base implementation, còn interface compose role/default behavior mà không multiple superclass state. Vì vậy interface phù hợp capability xuyên unrelated hierarchy."
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "3.AbstractVsInterface/AbstractVsInterface.md", anchor: "abstract-vs-interface-inheritance"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - question: "Default method giải quyết compatibility problem nào và không guarantee điều gì?"
-    answer: "Chúng cho interface thêm implementation để nhiều existing implementer vẫn chạy mà không thêm body. Chúng không làm mọi interface change safe: abstract addition, changed contract hay default conflict mới vẫn có thể break client."
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "5.DefaultStaticPrivate/DefaultStaticPrivate.md", anchor: "default-method-evolution"}
-    apiRelated: {controller: "InterfaceEvolutionController", methodSignature: "defaultCompatibility()"}
-
-  - question: "Giải thích Java resolve multiple inherited default method thế nào."
-    answer: "Default specific hơn có thể thắng, và concrete class-hierarchy method thắng interface default. Nếu unrelated interface vẫn cạnh tranh, implementing class phải override và có thể explicit gọi `InterfaceName.super.method()` khi rule cho phép."
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "6.MultipleInheritance/MultipleInheritance.md", anchor: "default-method-conflict"}
-    apiRelated: {controller: "DefaultMethodController", methodSignature: "resolveConflict()"}
-
-  - question: "Vì sao interface field là nơi kém phù hợp cho mutable global application state?"
-    answer: "Chúng là public static final reference nên reference global và fixed nhưng mutable object phía sau vẫn đổi được. Điều này tạo global shared mutable state và ownership yếu thay vì instance encapsulation."
+  - question: "Vì sao interface field dễ tạo global mutable-state pitfall dù field là final?"
+    answer: "Interface field là public static final nên reference được public và cố định ở cấp type. Nhưng final chỉ cấm gán lại reference; nếu nó trỏ tới mutable object thì object vẫn đổi state được. Kết quả là shared global mutable state với ownership kém rõ ràng, khó test và khó kiểm soát side effect. Interface field nên dùng cho constant thực sự, ưu tiên immutable value."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "2.Interface/Interface.md", anchor: "interface-fields"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Nêu các lý do hữu ích để redeclare inherited interface method."
-    answer: "Subinterface có thể narrow covariant return, thêm documentation/annotation specific hơn hoặc bắt implementation cung cấp body bằng cách redeclare inherited default thành abstract. Redeclaration nên refine chứ không tùy ý mâu thuẫn parent contract."
+  - question: "Các abstract/default/static/private method trong interface khác nhau về vai trò và dispatch thế nào?"
+    answer: "Abstract instance method là public contract implementation phải thỏa. Default method là instance behavior có body và có thể được kế thừa/override. Static method thuộc interface type, không được kế thừa thành instance method của implementation. Private/private static method chỉ là helper nội bộ của interface và không trở thành public contract. Phân biệt bốn nhóm này giúp tránh suy nghĩ sai rằng 'method trong interface đều abstract'."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.Interface/Interface.md", anchor: "interface-method-kinds"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Một object implement nhiều interface có tạo nhiều object hay nhiều bản sao state không?"
+    answer: "Không. Một object có thể được nhìn qua nhiều interface reference khác nhau nhưng identity/runtime object vẫn là một. Trong API multipleContracts(), Named n và Enabled e cùng trỏ tới Feature nên sameObject=true. Mỗi reference chỉ giới hạn view theo contract compile-time; nó không clone object hoặc nhân đôi state."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.Interface/Interface.md", anchor: "interface-implementation"}
+    apiRelated: {controller: "InterfaceController", methodSignature: "multipleContracts()"}
+
+  - question: "Nếu thiết kế PaymentMethod, BasePayment và Refundable cùng lúc, bạn phân vai ba abstraction này như thế nào?"
+    answer: "PaymentMethod nên là public behavioral contract mà consumer phụ thuộc. BasePayment là optional abstract base class cho một family implementation thật sự chia sẻ state/initialization/common behavior. Refundable là capability độc lập chỉ type hỗ trợ refund mới implement. Cách tách này tránh ép mọi implementation vào một base class nhưng vẫn cho một số implementation reuse phần chung."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.AbstractVsInterface/AbstractVsInterface.md", anchor: "selection-guidance"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Vì sao interface inheritance nên được nhìn như contract composition chứ không chỉ là cú pháp extends?"
+    answer: "Mục tiêu là ghép các role nhỏ thành contract lớn hơn mà không ép mọi implementation phụ thuộc vào method không cần thiết. Payable, Refundable và Auditable có thể tồn tại độc lập; một subinterface chỉ compose các role phù hợp. Nếu gom tất cả vào một giant interface, implementation có thể phải cung cấp behavior vô nghĩa hoặc phụ thuộc dư thừa."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.InterfaceInheritance/InterfaceInheritance.md", anchor: "interface-extends-interface"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Interface extends nhiều parent có phải luôn an toàn không?"
+    answer: "Không. Các abstract contract tương thích thường compose được, nhưng cùng signature với return type không tương thích có thể làm contract bất khả thi. Default methods cũng có thể cạnh tranh nhau và cần rule resolution. Multiple interface inheritance vì thế là multiple inheritance của type/contract và đôi khi behavior, không phải 'không bao giờ có conflict'."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.InterfaceInheritance/InterfaceInheritance.md", anchor: "multiple-interface-hierarchy"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Tại sao subinterface lại redeclare một inherited method thay vì để nguyên?"
+    answer: "Redeclaration hữu ích khi muốn refine contract: thu hẹp covariant return type, thêm annotation/documentation cụ thể hơn, hoặc biến inherited default thành abstract để bắt downstream implementation tự cung cấp behavior. Nó phải giữ compatibility với parent contract; redeclare chỉ để lặp lại signature mà không thêm semantics thường không có giá trị."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "4.InterfaceInheritance/InterfaceInheritance.md", anchor: "interface-redeclaration"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Interface và abstract class có thể dùng cùng nhau không, và khi nào hữu ích?"
-    answer: "Có. Interface định nghĩa public role còn abstract class cung cấp optional shared implementation/state cho một family implementation. Implementation khác vẫn có thể implement interface mà không inherit base class đó."
+  - question: "Default method giải quyết vấn đề interface evolution nào, và giới hạn của nó là gì?"
+    answer: "Nó cho interface thêm một method có body mặc định để nhiều implementation hiện có không phải lập tức thêm source implementation mới. Nhưng nó không làm mọi thay đổi safe: thêm abstract method vẫn có thể break source, default mới có thể conflict với interface khác, và thay đổi semantics của contract vẫn có thể phá client behavior. API defaultCompatibility() minh họa cơ chế chứ không chứng minh mọi dạng binary compatibility."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.AbstractVsInterface/AbstractVsInterface.md", anchor: "selection-guidance"}
+    readmeRelated: {file: "5.DefaultStaticPrivate/DefaultStaticPrivate.md", anchor: "default-method-evolution"}
+    apiRelated: {controller: "InterfaceEvolutionController", methodSignature: "defaultCompatibility()"}
+
+  - question: "API dispatch() chứng minh điều gì về default method?"
+    answer: "Greeting có default greet(), còn DefaultGreeting không override. Gọi greet() trên object DefaultGreeting vẫn trả hello-default, chứng minh default method là inheritable instance behavior. Runtime type vẫn là DefaultGreeting; default method không tạo object interface riêng và cũng không trở thành static method."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.DefaultStaticPrivate/DefaultStaticPrivate.md", anchor: "default-method"}
+    apiRelated: {controller: "DefaultMethodController", methodSignature: "dispatch()"}
+
+  - question: "Khi nào nên dùng static method trong interface thay vì default method?"
+    answer: "Dùng static khi operation thuộc namespace/contract của interface nhưng không cần receiver state, ví dụ validator hoặc factory liên quan chặt tới PaymentMethod. Dùng default khi behavior cần một instance receiver và có thể được implementation kế thừa/override. Static interface method không được kế thừa thành instance method, nên hai loại phục vụ hai mục đích khác nhau."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.DefaultStaticPrivate/DefaultStaticPrivate.md", anchor: "static-interface-method"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Private interface method có giá trị gì nếu implementation không gọi được?"
+    answer: "Chính vì không phải public contract nên nó hữu ích để deduplicate logic nội bộ giữa default/static methods mà không expose helper ra caller hoặc implementation. Private instance helper dùng trong instance/default context; private static helper dùng được trong static context. Implementing class không call hay override chúng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.DefaultStaticPrivate/DefaultStaticPrivate.md", anchor: "private-interface-method"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Hãy giải thích thứ tự reasoning khi Java gặp nhiều inherited default methods."
+    answer: "Trước hết xem class hierarchy đã có concrete method tương thích chưa; nếu có thì class method thắng. Nếu không, trong các interface có default nào more specific hơn không; default cụ thể hơn có thể thắng parent default. Nếu vẫn còn unrelated defaults cùng cạnh tranh, implementing class phải override. Override có thể gọi trực tiếp parent default bằng InterfaceName.super.method() khi interface đó là direct superinterface hợp lệ."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.MultipleInheritance/MultipleInheritance.md", anchor: "default-method-conflict"}
+    apiRelated: {controller: "DefaultMethodController", methodSignature: "resolveConflict()"}
+
+  - question: "Diamond interface inheritance có phải lúc nào cũng ambiguous không?"
+    answer: "Không. Diamond chỉ mô tả hình dạng inheritance graph. Nếu các path cuối cùng hội tụ về cùng một most-specific default thì không có hai behavior độc lập để chọn. Ambiguity xuất hiện khi nhiều independent defaults cùng signature vẫn còn cạnh tranh và không có candidate nào more specific. Vì vậy phải reasoning theo inherited declarations, không chỉ nhìn hình diamond."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.MultipleInheritance/MultipleInheritance.md", anchor: "diamond-interface"}
     apiRelated: {controller: "", methodSignature: ""}

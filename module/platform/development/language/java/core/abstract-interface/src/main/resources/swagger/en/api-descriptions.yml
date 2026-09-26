@@ -1,9 +1,10 @@
 AbstractClassController:
   templateBehavior():
-    summary: Abstract class as partial implementation + state
-    description: Runs a deterministic learning experiment for Abstract class as partial
-      implementation + state. The response exposes concrete runtime evidence instead
-      of only describing the rule.
+    summary: Shared state + template behavior + abstract hook
+    description: Processor owns prefix state and the concrete process(...) template,
+      while UpperProcessor completes the abstract transform(...) hook. The response
+      shows a Processor reference dispatching to runtime subtype UpperProcessor and
+      producing result:JAVA.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -28,9 +29,10 @@ AbstractClassController:
     usage: true
 DefaultMethodController:
   dispatch():
-    summary: Default methods
-    description: Runs a deterministic learning experiment for Default methods. The
-      response exposes concrete runtime evidence instead of only describing the rule.
+    summary: Inheriting a default method without overriding it
+    description: DefaultGreeting declares no greet() implementation, yet the object
+      can invoke Greeting.greet() and returns hello-default. The experiment makes
+      inherited default instance behavior observable.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -54,10 +56,10 @@ DefaultMethodController:
       ]
     usage: true
   resolveConflict():
-    summary: Default-method conflict resolution
-    description: Runs a deterministic learning experiment for Default-method conflict
-      resolution. The response exposes concrete runtime evidence instead of only describing
-      the rule.
+    summary: Resolving two unrelated default methods
+    description: Left and Right both provide value(). Both must override the method
+      and explicitly invoke Left.super.value() and Right.super.value(). The left+right
+      result shows that Java does not arbitrarily choose between unrelated defaults.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -82,10 +84,10 @@ DefaultMethodController:
     usage: true
 InterfaceController:
   multipleContracts():
-    summary: Implementing multiple contracts
-    description: Runs a deterministic learning experiment for Implementing multiple
-      contracts. The response exposes concrete runtime evidence instead of only describing
-      the rule.
+    summary: One object satisfying multiple interface contracts
+    description: Feature implements both Named and Enabled. References typed as the
+      two different interfaces still point to the same Feature object; the response
+      shows sameObject=true while both name() and enabled() remain available.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -110,10 +112,11 @@ InterfaceController:
     usage: true
 InterfaceEvolutionController:
   defaultCompatibility():
-    summary: Interface evolution compatibility
-    description: Runs a deterministic learning experiment for Interface evolution
-      compatibility. The response exposes concrete runtime evidence instead of only
-      describing the rule.
+    summary: Existing implementation inheriting newly added default behavior
+    description: OldStyleImplementation defines only id(), while Versioned supplies
+      display() as a default method. The response shows display() executing and calling
+      the implementation's id() to produce id=legacy; this demonstrates the evolution
+      mechanism without claiming that every interface change is compatible.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video

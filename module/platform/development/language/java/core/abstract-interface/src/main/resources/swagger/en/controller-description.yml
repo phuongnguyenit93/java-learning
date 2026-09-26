@@ -1,24 +1,24 @@
 AbstractClassController:
   description: |-
     <h2>Abstract Class</h2>
-    <p>Executable Java Core experiments related to Abstract class as partial implementation + state.</p>
+    <p>Observe an abstract class sharing state and implementation while leaving an abstract hook for a subtype to complete.</p>
   readmeRelated:
     file: 1.AbstractClass/AbstractClass.md
 DefaultMethodController:
   description: |-
     <h2>Default Method</h2>
-    <p>Executable Java Core experiments related to Default methods.</p>
+    <p>Observe inherited default behavior and the explicit resolution required when unrelated defaults conflict.</p>
   readmeRelated:
     file: 5.DefaultStaticPrivate/DefaultStaticPrivate.md
 InterfaceController:
   description: |-
     <h2>Interface</h2>
-    <p>Executable Java Core experiments related to Implementing multiple contracts.</p>
+    <p>Observe one object satisfying several interface contracts without multiple class inheritance.</p>
   readmeRelated:
     file: 2.Interface/Interface.md
 InterfaceEvolutionController:
   description: |-
     <h2>Interface Evolution</h2>
-    <p>Executable Java Core experiments related to Interface evolution compatibility.</p>
+    <p>Observe an implementation that only supplies the original abstract contract while inheriting newly added default behavior.</p>
   readmeRelated:
     file: 5.DefaultStaticPrivate/DefaultStaticPrivate.md

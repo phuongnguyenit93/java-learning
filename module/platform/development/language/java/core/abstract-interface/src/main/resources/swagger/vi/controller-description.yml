@@ -1,24 +1,24 @@
 AbstractClassController:
   description: |-
     <h2>Abstract Class</h2>
-    <p>Các thí nghiệm Java Core có thể chạy để quan sát Abstract class như partial implementation + state.</p>
+    <p>Quan sát abstract class vừa giữ state/implementation chung vừa để lại abstract hook cho subtype hoàn thiện.</p>
   readmeRelated:
     file: 1.AbstractClass/AbstractClass.md
 DefaultMethodController:
   description: |-
     <h2>Default Method</h2>
-    <p>Các thí nghiệm Java Core có thể chạy để quan sát Default method.</p>
+    <p>Quan sát default method được kế thừa và cách class phải tự giải quyết khi hai default độc lập xung đột.</p>
   readmeRelated:
     file: 5.DefaultStaticPrivate/DefaultStaticPrivate.md
 InterfaceController:
   description: |-
     <h2>Interface</h2>
-    <p>Các thí nghiệm Java Core có thể chạy để quan sát Implement nhiều contract.</p>
+    <p>Quan sát một object đồng thời thỏa nhiều interface contract mà không cần multiple class inheritance.</p>
   readmeRelated:
     file: 2.Interface/Interface.md
 InterfaceEvolutionController:
   description: |-
     <h2>Interface Evolution</h2>
-    <p>Các thí nghiệm Java Core có thể chạy để quan sát Interface evolution compatibility.</p>
+    <p>Quan sát implementation chỉ cung cấp abstract contract cũ nhưng vẫn dùng được hành vi mới được thêm bằng default method.</p>
   readmeRelated:
     file: 5.DefaultStaticPrivate/DefaultStaticPrivate.md

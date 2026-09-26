@@ -1,59 +1,100 @@
 AbstractClassController:
   templateBehavior():
-    execution: <p><strong>Khái niệm:</strong> Abstract class như partial implementation
-      + state.</p><ol><li>Endpoint chạy một ví dụ deterministic và bounded trong <code>AbstractClassController#templateBehavior()</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/template&quot;)
-      public Map&lt;String,Object&gt; templateBehavior(){ Processor p=new UpperProcessor();
-      return Map.of(&quot;declaredType&quot;,&quot;Processor&quot;,&quot;runtimeType&quot;,p.getClass().getSimpleName(),&quot;result&quot;,p.process(&quot;java&quot;));
-      }</code></pre></li><li>Quan sát các field trong response cùng nhau; đây là evidence
-      cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
-      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
-      khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> abstract class có thể giữ state và concrete behavior chung, đồng thời để lại abstract hook cho subtype hoàn thiện.</p>
+      <ol>
+        <li><strong>Flow:</strong> <code>Processor</code> giữ <code>prefix</code>, concrete method <code>process(...)</code> và abstract method <code>transform(...)</code>. <code>UpperProcessor</code> chỉ cần hoàn thiện hook <code>transform(...)</code>.</li>
+        <li><strong>Code evidence:</strong><pre><code>static abstract class Processor {
+          private final String prefix;
+          final String process(String value) {
+              return prefix + transform(value);
+          }
+          abstract String transform(String value);
+      }
+
+      static final class UpperProcessor extends Processor {
+          String transform(String v) {
+              return v.toUpperCase(Locale.ROOT);
+          }
+      }</code></pre></li>
+        <li><strong>Observation:</strong> response có <code>declaredType=Processor</code>, <code>runtimeType=UpperProcessor</code> và <code>result=result:JAVA</code>.</li>
+        <li><strong>Ý nghĩa:</strong> phần algorithm/state chung nằm ở abstract class, còn bước biến đổi cụ thể được dispatch tới subtype ở runtime.</li>
+      </ol>
+      <p><strong>Kết luận:</strong> abstract class phù hợp khi hierarchy thật sự chia sẻ state + implementation nhưng vẫn cần extension point bắt buộc subtype hoàn thiện.</p>
     usage: true
 DefaultMethodController:
   dispatch():
-    execution: <p><strong>Khái niệm:</strong> Default method.</p><ol><li>Endpoint
-      chạy một ví dụ deterministic và bounded trong <code>DefaultMethodController#dispatch()</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/dispatch&quot;)
-      public Map&lt;String,Object&gt; dispatch(){ Greeting g=new DefaultGreeting();
-      return Map.of(&quot;result&quot;,g.greet(),&quot;runtime&quot;,g.getClass().getSimpleName());
-      }</code></pre></li><li>Quan sát các field trong response cùng nhau; đây là evidence
-      cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
-      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
-      khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> default method là instance behavior được interface cung cấp sẵn và implementation có thể kế thừa nếu không override.</p>
+      <ol>
+        <li><strong>Flow:</strong> <code>Greeting</code> định nghĩa <code>greet()</code> bằng <code>default</code>; <code>DefaultGreeting</code> không khai báo method này.</li>
+        <li><strong>Code evidence:</strong><pre><code>interface Greeting {
+          default String greet() {
+              return "hello-default";
+          }
+      }
+
+      static final class DefaultGreeting implements Greeting {}</code></pre></li>
+        <li><strong>Observation:</strong> gọi <code>g.greet()</code> vẫn trả <code>hello-default</code>, trong khi runtime type là <code>DefaultGreeting</code>.</li>
+        <li><strong>Ý nghĩa:</strong> class implementation nhận được default instance behavior mà không cần viết body mới.</li>
+      </ol>
+      <p><strong>Kết luận:</strong> default method bổ sung behavior ở contract-side nhưng vẫn là instance method có thể bị override.</p>
     usage: true
   resolveConflict():
-    execution: <p><strong>Khái niệm:</strong> Resolve default-method conflict.</p><ol><li>Endpoint
-      chạy một ví dụ deterministic và bounded trong <code>DefaultMethodController#resolveConflict()</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/resolve-conflict&quot;)
-      public Map&lt;String,Object&gt; resolveConflict(){ return Map.of(&quot;resolved&quot;,new
-      Both().value(),&quot;rule&quot;,&quot;class must explicitly resolve unrelated
-      default conflict&quot;); }</code></pre></li><li>Quan sát các field trong response
-      cùng nhau; đây là evidence cho quy tắc, không phải benchmark hay production
-      policy.</li></ol><p><strong>Kết luận:</strong> đối chiếu kết quả với README
-      section được liên kết trước khi khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> hai interface không liên quan cùng cung cấp một default signature sẽ tạo ambiguity mà implementing class phải tự giải quyết.</p>
+      <ol>
+        <li><strong>Flow:</strong> <code>Left</code> và <code>Right</code> đều định nghĩa <code>value()</code>; <code>Both</code> implement cả hai.</li>
+        <li><strong>Code evidence:</strong><pre><code>interface Left  { default String value() { return "left";  } }
+      interface Right { default String value() { return "right"; } }
+
+      static final class Both implements Left, Right {
+          public String value() {
+              return Left.super.value() + "+" + Right.super.value();
+          }
+      }</code></pre></li>
+        <li><strong>Observation:</strong> response trả <code>resolved=left+right</code> và nhắc rõ class phải tự resolve unrelated default conflict.</li>
+        <li><strong>Ý nghĩa:</strong> Java không random chọn một default; override trong class xác định behavior cuối cùng và có thể gọi tường minh từng parent default bằng <code>InterfaceName.super.method()</code>.</li>
+      </ol>
+      <p><strong>Kết luận:</strong> multiple interface inheritance hợp lệ, nhưng default behavior cạnh tranh phải được resolution rõ ràng.</p>
     usage: true
 InterfaceController:
   multipleContracts():
-    execution: <p><strong>Khái niệm:</strong> Implement nhiều contract.</p><ol><li>Endpoint
-      chạy một ví dụ deterministic và bounded trong <code>InterfaceController#multipleContracts()</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/multiple-contracts&quot;)
-      public Map&lt;String,Object&gt; multipleContracts(){ Feature f=new Feature();
-      Named n=f; Enabled e=f; return Map.of(&quot;sameObject&quot;,n==e,&quot;name&quot;,n.name(),&quot;enabled&quot;,e.enabled(),&quot;runtimeType&quot;,f.getClass().getSimpleName());
-      }</code></pre></li><li>Quan sát các field trong response cùng nhau; đây là evidence
-      cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
-      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
-      khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> một object có thể thỏa nhiều interface contract mà không cần nhiều superclass.</p>
+      <ol>
+        <li><strong>Flow:</strong> <code>Feature</code> implement cả <code>Named</code> và <code>Enabled</code>; cùng object được nhìn qua hai reference type khác nhau.</li>
+        <li><strong>Code evidence:</strong><pre><code>static final class Feature implements Named, Enabled {
+          public String name() { return "search"; }
+          public boolean enabled() { return true; }
+      }
+
+      Feature f = new Feature();
+      Named n = f;
+      Enabled e = f;</code></pre></li>
+        <li><strong>Observation:</strong> <code>sameObject=true</code>, đồng thời <code>name=search</code>, <code>enabled=true</code> và runtime type vẫn là <code>Feature</code>.</li>
+        <li><strong>Ý nghĩa:</strong> hai interface reference biểu diễn hai role của cùng một object, không tạo hai object hay hai bản sao state.</li>
+      </ol>
+      <p><strong>Kết luận:</strong> interface phù hợp để compose nhiều role/capability độc lập trên cùng một concrete type.</p>
     usage: true
 InterfaceEvolutionController:
   defaultCompatibility():
-    execution: <p><strong>Khái niệm:</strong> Interface evolution compatibility.</p><ol><li>Endpoint
-      chạy một ví dụ deterministic và bounded trong <code>InterfaceEvolutionController#defaultCompatibility()</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/default-compatibility&quot;)
-      public Map&lt;String,Object&gt; defaultCompatibility(){ Versioned v=new OldStyleImplementation();
-      return Map.of(&quot;implementationOnlyDefines&quot;,&quot;id()&quot;,&quot;newDefaultMethodResult&quot;,v.display(),&quot;runtimeType&quot;,v.getClass().getSimpleName());
-      }</code></pre></li><li>Quan sát các field trong response cùng nhau; đây là evidence
-      cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
-      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
-      khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> default method cho phép interface thêm behavior có implementation mặc định mà implementation hiện có không phải lập tức viết method mới.</p>
+      <ol>
+        <li><strong>Flow:</strong> <code>Versioned</code> có abstract <code>id()</code> và default <code>display()</code>; <code>OldStyleImplementation</code> chỉ định nghĩa <code>id()</code>.</li>
+        <li><strong>Code evidence:</strong><pre><code>interface Versioned {
+          String id();
+          default String display() {
+              return "id=" + id();
+          }
+      }
+
+      static final class OldStyleImplementation implements Versioned {
+          public String id() { return "legacy"; }
+      }</code></pre></li>
+        <li><strong>Observation:</strong> response ghi <code>implementationOnlyDefines=id()</code> nhưng <code>newDefaultMethodResult=id=legacy</code>.</li>
+        <li><strong>Ý nghĩa:</strong> default <code>display()</code> được kế thừa và bên trong vẫn dispatch tới <code>id()</code> của implementation.</li>
+      </ol>
+      <p><strong>Kết luận:</strong> thí nghiệm minh họa cơ chế interface evolution bằng default method; nó không có nghĩa mọi thay đổi interface đều source/binary/behavior compatible.</p>
     usage: true
