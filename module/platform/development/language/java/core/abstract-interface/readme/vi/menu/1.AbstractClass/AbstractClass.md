@@ -4,6 +4,22 @@ Module này tập trung vào một câu hỏi rất thực tế trong thiết k�
 
 `abstract class` phù hợp khi các kiểu con không chỉ chia sẻ một hợp đồng mà còn thực sự chia sẻ **trạng thái và một phần cách triển khai**. `interface` linh hoạt hơn khi ta muốn mô tả một vai trò hoặc khả năng mà nhiều class không cùng cây kế thừa vẫn có thể thực hiện.
 
+Trong các ví dụ xuyên suốt module, ta sẽ giữ một mô hình nhất quán:
+
+```text
+PaymentMethod
+→ interface mô tả hợp đồng thanh toán
+
+BasePayment
+→ abstract class giữ trạng thái và phần triển khai chung
+
+CardPayment
+→ class cụ thể hoàn thiện hành vi
+
+Refundable
+→ interface bổ sung một khả năng độc lập
+```
+
 Lộ trình của module:
 
 ```text
@@ -34,7 +50,7 @@ Multiple Inheritance qua Interface
 
 - instance field;
 - constructor;
-- concrete method;
+- method có phần thân (`concrete method`);
 - abstract method.
 
 Vì vậy nó thường đóng vai trò **khung triển khai một phần** cho một nhóm class có quan hệ gần nhau.
@@ -42,10 +58,10 @@ Vì vậy nó thường đóng vai trò **khung triển khai một phần** cho 
 Ví dụ:
 
 ```java
-abstract class PaymentMethod {
+abstract class BasePayment {
     private final String provider;
 
-    protected PaymentMethod(String provider) {
+    protected BasePayment(String provider) {
         this.provider = provider;
     }
 
@@ -53,11 +69,11 @@ abstract class PaymentMethod {
         return provider;
     }
 
-    abstract void pay(int amount);
+    public abstract void pay(int amount);
 }
 ```
 
-`PaymentMethod` đã giữ phần trạng thái chung là `provider`, đồng thời buộc class con tự hoàn thiện `pay(...)`.
+`BasePayment` giữ phần trạng thái chung là `provider`, đồng thời buộc class con tự hoàn thiện `pay(...)`. Ở chương sau, ta sẽ đặt một `interface PaymentMethod` phía trên để tách **hợp đồng mà bên sử dụng nhìn thấy** khỏi **phần triển khai chung** mà một nhánh class muốn tái sử dụng.
 
 ### VÌ SAO
 
@@ -80,7 +96,7 @@ Class con cụ thể phải cung cấp cách triển khai phù hợp, trừ khi 
 Abstract method vẫn tham gia đầy đủ các quy tắc overriding của Java:
 
 - khả năng truy cập phải tương thích;
-- return type phải tương thích;
+- kiểu trả về (return type) phải tương thích;
 - checked exception phải tuân quy tắc override;
 - có thể dùng `@Override` ở class con để compiler kiểm tra.
 
@@ -91,17 +107,17 @@ Abstract method vẫn tham gia đầy đủ các quy tắc overriding của Java
 Một abstract class không thể được `new` trực tiếp, nhưng constructor của nó **vẫn chạy** khi tạo object của class con cụ thể.
 
 ```java
-class CardPayment extends PaymentMethod {
+class CardPayment extends BasePayment {
     CardPayment() {
         super("card");
     }
 
     @Override
-    void pay(int amount) { ... }
+    public void pay(int amount) { ... }
 }
 ```
 
-Constructor của `PaymentMethod` khởi tạo phần trạng thái thuộc class cha trước khi quá trình khởi tạo `CardPayment` hoàn tất.
+Constructor của `BasePayment` khởi tạo phần trạng thái thuộc class cha trước khi quá trình khởi tạo `CardPayment` hoàn tất.
 
 ### GIỚI HẠN
 
@@ -112,9 +128,9 @@ Không nên gọi method có thể bị override từ constructor nếu không c
 `abstract` chỉ ngăn việc tạo instance trực tiếp. Abstract class vẫn dùng được làm kiểu tham chiếu:
 
 ```java
-PaymentMethod payment = new CardPayment();
+BasePayment payment = new CardPayment();
 ```
 
-Giới hạn quan trọng hơn là Java chỉ cho một class `extends` **một class**. Vì vậy khi một capability cần xuất hiện ở nhiều cây class không liên quan, `abstract class` thường quá ràng buộc.
+Giới hạn quan trọng hơn là Java chỉ cho một class `extends` **một class**. Vì vậy khi một khả năng cần xuất hiện ở nhiều cây class không liên quan, `abstract class` thường quá ràng buộc.
 
 Đây là lý do chương tiếp theo chuyển sang `interface`: **nếu ta chỉ cần một hợp đồng chung mà không muốn buộc mọi cách triển khai vào cùng một cây kế thừa class thì sao?**

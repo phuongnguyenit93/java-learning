@@ -2,15 +2,30 @@
 
 There is no rule that interfaces are always better than abstract classes or vice versa. They solve overlapping but distinct design needs. The right choice starts with the **relationship being modeled**, not a syntax preference.
 
+Return to the same payment example:
+
+```text
+PaymentMethod
+→ every payment implementation must provide pay(...)
+
+BasePayment
+→ some payment implementations share provider state, validation, and base behavior
+
+Refundable
+→ only payment types that support refunds need this capability
+```
+
+Those needs should not be forced into one mechanism. A consumer-facing contract, reusable base implementation, and optional capability are different responsibilities.
+
 ## <a id="abstract-vs-interface-state">State and Constructors</a>
 
 An abstract class may own instance state and constructors:
 
 ```java
-abstract class PaymentBase {
+abstract class BasePayment {
     private final String provider;
 
-    protected PaymentBase(String provider) {
+    protected BasePayment(String provider) {
         this.provider = provider;
     }
 }
@@ -52,10 +67,23 @@ A practical heuristic:
 The mechanisms can work together:
 
 ```java
-interface PaymentMethod { ... }
-abstract class BasePayment implements PaymentMethod { ... }
+interface PaymentMethod {
+    void pay(int amount);
+}
+
+abstract class BasePayment implements PaymentMethod {
+    private final String provider;
+
+    protected BasePayment(String provider) {
+        this.provider = provider;
+    }
+}
+
+class CardPayment extends BasePayment implements Refundable {
+    ...
+}
 ```
 
-The interface defines the contract consumers depend on; the abstract class supplies reusable implementation for one branch of implementations.
+The interface defines the contract consumers depend on; the abstract class supplies reusable implementation for one branch of implementations. Another implementation may still implement `PaymentMethod` without extending `BasePayment`.
 
 The next chapter asks how interfaces themselves can form larger contract hierarchies.

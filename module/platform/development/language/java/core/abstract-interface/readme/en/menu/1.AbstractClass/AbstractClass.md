@@ -4,6 +4,22 @@ This module starts from a practical Java design question: **how do we define a s
 
 An abstract class fits naturally when related subclasses share not only a contract, but also **state and part of the implementation**. An interface fits better when we want to describe a capability or role that can span unrelated class hierarchies.
 
+The module keeps one running model consistent across chapters:
+
+```text
+PaymentMethod
+→ interface describing the payment contract
+
+BasePayment
+→ abstract class holding shared state and partial implementation
+
+CardPayment
+→ concrete class completing the behavior
+
+Refundable
+→ another interface describing an independent capability
+```
+
 Learning roadmap:
 
 ```text
@@ -40,10 +56,10 @@ An `abstract class` cannot be instantiated directly, but it may still contain:
 That makes it useful as a **partial implementation** for a closely related family of subclasses.
 
 ```java
-abstract class PaymentMethod {
+abstract class BasePayment {
     private final String provider;
 
-    protected PaymentMethod(String provider) {
+    protected BasePayment(String provider) {
         this.provider = provider;
     }
 
@@ -51,11 +67,11 @@ abstract class PaymentMethod {
         return provider;
     }
 
-    abstract void pay(int amount);
+    public abstract void pay(int amount);
 }
 ```
 
-`PaymentMethod` owns shared state and behavior while requiring each concrete subtype to complete `pay(...)`.
+`BasePayment` owns shared state and behavior while requiring each concrete subtype to complete `pay(...)`. The next chapter introduces a `PaymentMethod` interface so the **contract seen by consumers** stays separate from the **shared implementation** reused by one class hierarchy.
 
 ### WHY
 
@@ -80,17 +96,17 @@ There is no special dispatch model for abstract methods: once a concrete subclas
 Even though an abstract class cannot be instantiated directly, its constructor still runs when a concrete subclass is created.
 
 ```java
-class CardPayment extends PaymentMethod {
+class CardPayment extends BasePayment {
     CardPayment() {
         super("card");
     }
 
     @Override
-    void pay(int amount) { ... }
+    public void pay(int amount) { ... }
 }
 ```
 
-The superclass constructor establishes the superclass portion of the object before subclass construction completes.
+The `BasePayment` constructor establishes the superclass portion of the object before subclass construction completes.
 
 Avoid calling overridable methods from constructors unless there is a strong reason: subclass behavior may run before subclass state has been initialized.
 
@@ -99,7 +115,7 @@ Avoid calling overridable methods from constructors unless there is a strong rea
 `abstract` only prevents direct instantiation. An abstract class is still a valid reference type:
 
 ```java
-PaymentMethod payment = new CardPayment();
+BasePayment payment = new CardPayment();
 ```
 
 The more important limitation is that a Java class can extend only **one class**. If a capability must cross unrelated class hierarchies, an abstract base class is often too restrictive.

@@ -2,6 +2,19 @@
 
 Java does not allow a class to inherit implementation from several parent classes, but a class may implement several interfaces. Pure abstract contracts usually compose cleanly. The interesting conflicts appear when multiple interfaces provide **default implementations** for the same method.
 
+Rather than memorizing isolated rules, read default-method resolution as a sequence:
+
+```text
+Does the class hierarchy already provide a compatible concrete method?
+→ yes: use the class method
+
+Otherwise, is one interface default more specific than the others?
+→ yes: use the more-specific default
+
+Do independent competing defaults still remain?
+→ yes: the class must override and resolve the conflict explicitly
+```
+
 ## <a id="default-method-conflict">Default Method Conflicts</a>
 
 If two unrelated interfaces provide the same default signature:
@@ -20,19 +33,45 @@ a class implementing both must override `name()` and resolve the ambiguity itsel
 
 Java does not guess which behavior is intended when neither interface is more specific.
 
+By contrast, when a subinterface overrides a parent default, the subinterface declaration is more specific:
+
+```java
+interface Parent {
+    default String name() { return "parent"; }
+}
+
+interface Child extends Parent {
+    @Override
+    default String name() { return "child"; }
+}
+```
+
+A class inheriting `Child` does not have to choose again between `Parent.name()` and `Child.name()`; `Child` already provides the more-specific contract.
+
 ## <a id="class-wins-rule">Class Methods Win</a>
 
 If the class hierarchy already provides a compatible concrete instance method, that class method takes precedence over an interface default.
 
-```text
-concrete class method
-→ wins
+```java
+class Named {
+    public String name() {
+        return "class";
+    }
+}
 
-interface default
-→ fallback when the class hierarchy supplies no implementation
+interface NamedContract {
+    default String name() {
+        return "interface";
+    }
+}
+
+class CardPayment extends Named implements NamedContract {
+}
 ```
 
-Interface defaults therefore do not silently replace behavior inherited from classes.
+For `new CardPayment().name()`, the implementation from `Named` is used. Interface defaults therefore do not silently replace behavior inherited from classes.
+
+This rule is about a **concrete class method**. If a superclass only declares an abstract method with the same signature, the concrete subclass still has to satisfy that contract; “class wins” should not be understood as a runtime choice between two available bodies.
 
 ## <a id="explicit-super-interface">InterfaceName.super</a>
 
