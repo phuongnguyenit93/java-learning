@@ -25,6 +25,33 @@ ArrayController:
     consumes: [
       ]
     usage: true
+  copyReferenceElements():
+    summary: Copy array và reference element dùng chung
+    description: Tạo một reference array mới bằng Arrays.copyOf rồi chứng minh array
+      object mới vẫn chứa bản copy của reference value, nên hai array có thể cùng
+      quan sát mutation trên cùng element object.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 10.Arrays/Arrays.md
+      anchor: array-initialization
+    methodName: copyReferenceElements
+    params: [
+      ]
+    path: com/example/learning/controller/ArrayController.java
+    mapping: '@GetMapping("/copy-reference-elements")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/language-basics/array/copy-reference-elements
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
 CastingController:
   safeAndUnsafeCast(String):
     summary: Reference upcast và downcast
@@ -189,6 +216,32 @@ TypeSystemController:
     consumes: [
       ]
     usage: true
+  conversionContexts():
+    summary: Conversion context thay đổi rule áp dụng
+    description: So sánh assignment conversion, numeric promotion, method-invocation
+      widening và boxing bằng các kết quả quan sát được trong cùng một endpoint.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 13.TypeSystemMentalModel/TypeSystemMentalModel.md
+      anchor: assignment-compatibility
+    methodName: conversionContexts
+    params: [
+      ]
+    path: com/example/learning/controller/TypeSystemController.java
+    mapping: '@GetMapping("/conversion-contexts")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/language-basics/type-system/conversion-contexts
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
 WrapperController:
   wrapperIdentity():
     summary: Wrapper cache và bẫy identity
@@ -211,6 +264,33 @@ WrapperController:
     - GET
     mappingPaths:
     - /java/core/language-basics/wrapper/identity
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+ControlFlowController:
+  patternSwitch():
+    summary: Java 21 pattern switch và case null
+    description: Chạy cùng một switch expression với Integer, String, null và một
+      fallback type để quan sát type-pattern binding, case null và default branch.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 6.ControlFlow/ControlFlow.md
+      anchor: switch-expression
+    methodName: patternSwitch
+    params: [
+      ]
+    path: com/example/learning/controller/ControlFlowController.java
+    mapping: '@GetMapping("/pattern-switch")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/language-basics/control-flow/pattern-switch
     produces: [
       ]
     consumes: [

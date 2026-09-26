@@ -26,6 +26,33 @@ ArrayController:
     consumes: [
       ]
     usage: true
+  copyReferenceElements():
+    summary: Array copy and shared reference elements
+    description: Creates a new reference array with Arrays.copyOf and proves that
+      the new array still contains copied reference values, so both arrays can observe
+      mutation of the same element object.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 10.Arrays/Arrays.md
+      anchor: array-initialization
+    methodName: copyReferenceElements
+    params: [
+      ]
+    path: com/example/learning/controller/ArrayController.java
+    mapping: '@GetMapping("/copy-reference-elements")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/language-basics/array/copy-reference-elements
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
 CastingController:
   safeAndUnsafeCast(String):
     summary: Reference upcast and downcast
@@ -194,6 +221,32 @@ TypeSystemController:
     consumes: [
       ]
     usage: true
+  conversionContexts():
+    summary: Conversion rules depend on context
+    description: Compares assignment conversion, numeric promotion, method-invocation
+      widening, and boxing through observable results in one endpoint.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 13.TypeSystemMentalModel/TypeSystemMentalModel.md
+      anchor: assignment-compatibility
+    methodName: conversionContexts
+    params: [
+      ]
+    path: com/example/learning/controller/TypeSystemController.java
+    mapping: '@GetMapping("/conversion-contexts")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/language-basics/type-system/conversion-contexts
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
 WrapperController:
   wrapperIdentity():
     summary: Wrapper caches and identity pitfalls
@@ -217,6 +270,33 @@ WrapperController:
     - GET
     mappingPaths:
     - /java/core/language-basics/wrapper/identity
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+ControlFlowController:
+  patternSwitch():
+    summary: Java 21 pattern switch and case null
+    description: Runs one switch expression with Integer, String, null, and a fallback
+      type to expose type-pattern binding, case null, and the default branch.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 6.ControlFlow/ControlFlow.md
+      anchor: switch-expression
+    methodName: patternSwitch
+    params: [
+      ]
+    path: com/example/learning/controller/ControlFlowController.java
+    mapping: '@GetMapping("/pattern-switch")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/language-basics/control-flow/pattern-switch
     produces: [
       ]
     consumes: [

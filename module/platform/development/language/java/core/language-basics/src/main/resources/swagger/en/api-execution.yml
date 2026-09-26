@@ -8,6 +8,20 @@ ArrayController:
       or production policy.</li></ol><p><strong>Conclusion:</strong> connect the observed
       result back to the linked README section before generalizing the behavior.</p>'
     usage: true
+  copyReferenceElements():
+    execution: <p><strong>Concept:</strong> Copying a reference array does not deep-copy
+      the objects referenced by its elements.</p><ol><li>Create <code>User[] original</code>
+      and use <code>Arrays.copyOf</code> to create a different array object.</li><li>The
+      endpoint compares both array identity and element identity:<pre><code>User[]
+      copied = Arrays.copyOf(original, original.length); boolean differentArrays =
+      original != copied; boolean sameElementReference = original[0] == copied[0];</code></pre></li><li>It
+      mutates the shared object through <code>copied[0]</code> and then reads it through
+      <code>original[0]</code>.</li><li><strong>Observation:</strong> <code>differentArrayObjects=true</code>,
+      <code>sameElementReference=true</code>, and the original view observes name
+      B.</li></ol><p><strong>Conclusion:</strong> array copying creates a new container,
+      but reference elements are copied as reference values and may still share the
+      same object.</p>
+    usage: true
 CastingController:
   safeAndUnsafeCast(String):
     execution: '<p><strong>Concept:</strong> Reference upcast and downcast.</p><ol><li>The
@@ -74,6 +88,21 @@ TypeSystemController:
       policy.</li></ol><p><strong>Conclusion:</strong> connect the observed result
       back to the linked README section before generalizing the behavior.</p>'
     usage: true
+  conversionContexts():
+    execution: <p><strong>Concept:</strong> Java permits different conversions in
+      different contexts.</p><ol><li>A constant assignment to <code>byte</code> keeps
+      a byte-typed variable.</li><li>Arithmetic on two byte operands applies numeric
+      promotion to int; overloads <code>identify(byte)</code>/<code>identify(int)</code>
+      make the expression type observable:<pre><code>result.put("assignmentConstantType",
+      identify(assignmentConstant)); result.put("bytePlusByteExpressionType", identify(left
+      + right));</code></pre></li><li><code>acceptLong(10)</code> demonstrates method-invocation
+      widening from int to long, while <code>Integer boxed = 10</code> demonstrates
+      boxing.</li><li>The response also records the compile-time boundary that <code>useByte(1)</code>
+      does not automatically use the narrowing constant conversion available in assignment
+      context.</li></ol><p><strong>Conclusion:</strong> ask which conversion context
+      applies—assignment, operator, invocation, or explicit cast—before predicting
+      whether code compiles.</p>
+    usage: true
 WrapperController:
   wrapperIdentity():
     execution: '<p><strong>Concept:</strong> Wrapper caches and identity pitfalls.</p><ol><li>The
@@ -83,4 +112,18 @@ WrapperController:
       together: they are the observable evidence for the rule rather than a benchmark
       or production policy.</li></ol><p><strong>Conclusion:</strong> connect the observed
       result back to the linked README section before generalizing the behavior.</p>'
+    usage: true
+ControlFlowController:
+  patternSwitch():
+    execution: <p><strong>Concept:</strong> Java 21 switch expressions can classify
+      reference values with type patterns and can handle null explicitly.</p><ol><li>The
+      endpoint invokes the same helper with an Integer, String, null, and Double.</li><li>The
+      helper uses a pattern switch:<pre><code>return switch (value) { case Integer
+      integer -&gt; "integer:" + integer; case String text -&gt; "string:" + text;
+      case null -&gt; "null"; default -&gt; "other:" + value.getClass().getSimpleName();
+      };</code></pre></li><li><strong>Observation:</strong> exactly one branch handles
+      each input; a pattern case both checks runtime type and binds a statically typed
+      variable, while <code>case null</code> handles null explicitly.</li></ol><p><strong>Conclusion:</strong>
+      pattern switch is useful when several branches classify one selector and a value-producing
+      decision table is clearer than a long conditional chain.</p>
     usage: true

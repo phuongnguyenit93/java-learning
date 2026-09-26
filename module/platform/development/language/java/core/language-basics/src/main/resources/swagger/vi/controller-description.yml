@@ -1,7 +1,7 @@
 ArrayController:
   description: |-
     <h2>Array</h2>
-    <p>Các thí nghiệm Java Core có thể chạy để quan sát Array covariance và ArrayStoreException.</p>
+    <p>Các thí nghiệm Java Core có thể chạy để quan sát Array covariance, ArrayStoreException và semantics khi copy reference array.</p>
   readmeRelated:
     file: 10.Arrays/Arrays.md
 CastingController:
@@ -10,6 +10,12 @@ CastingController:
     <p>Các thí nghiệm Java Core có thể chạy để quan sát Reference upcast và downcast.</p>
   readmeRelated:
     file: 5.Casting/Casting.md
+ControlFlowController:
+  description: |-
+    <h2>Control Flow</h2>
+    <p>Các thí nghiệm Java 21 có thể chạy để quan sát switch expression, type-pattern matching, pattern binding và case null.</p>
+  readmeRelated:
+    file: 6.ControlFlow/ControlFlow.md
 MethodDispatchController:
   description: |-
     <h2>Method Dispatch</h2>
@@ -37,7 +43,7 @@ PassByValueController:
 TypeSystemController:
   description: |-
     <h2>Type System</h2>
-    <p>Các thí nghiệm Java Core có thể chạy để quan sát Compile-time type và runtime type.</p>
+    <p>Các thí nghiệm Java Core có thể chạy để quan sát Compile-time type, runtime type và sự khác nhau giữa các conversion context.</p>
   readmeRelated:
     file: 13.TypeSystemMentalModel/TypeSystemMentalModel.md
 WrapperController:

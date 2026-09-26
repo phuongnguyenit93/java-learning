@@ -233,3 +233,198 @@ questions:
     reviewed: false
     readmeRelated: {file: "8.Varargs/Varargs.md", anchor: "varargs-array-model"}
     apiRelated: {controller: "", methodSignature: ""}
+
+  - id: primitive-byte-range
+    question: "What is the range of Java primitive `byte`?"
+    answers:
+      - {id: A, answer: "-128 through 127.", explanation: "Correct. byte is a signed 8-bit integer, so its range is -2^7 through 2^7 - 1."}
+      - {id: B, answer: "0 through 255.", explanation: "Incorrect. Java byte is signed, not an unsigned 8-bit integer."}
+      - {id: C, answer: "-255 through 255.", explanation: "Incorrect. That does not match the signed 8-bit representation of byte."}
+      - {id: D, answer: "It depends on the CPU/JVM platform.", explanation: "Incorrect. Java defines primitive sizes consistently across platforms."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.PrimitiveReference/PrimitiveReference.md", anchor: "primitive-ranges-and-defaults"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: floating-literal-default-type
+    question: "Why does `float ratio = 1.5;` fail to compile without a cast or suffix?"
+    answers:
+      - {id: A, answer: "Because every floating-point literal is a float.", explanation: "Incorrect. A floating-point literal without a suffix defaults to double."}
+      - {id: B, answer: "Because `1.5` has compile-time type double, so assignment to float needs an appropriate conversion, commonly `1.5F`.", explanation: "Correct. Literal type affects assignment compatibility."}
+      - {id: C, answer: "Because float cannot represent fractional values.", explanation: "Incorrect. float is a floating-point type with its own precision/range."}
+      - {id: D, answer: "Because local variables have no default value.", explanation: "Incorrect. Definite assignment is not the issue here."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.PrimitiveReference/PrimitiveReference.md", anchor: "primitive-ranges-and-defaults"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: var-is-static-typing
+    question: "For `var value = \"Java\";`, which statement is correct?"
+    answers:
+      - {id: A, answer: "value has no type until runtime.", explanation: "Incorrect. The compiler infers a static type from the initializer."}
+      - {id: B, answer: "value has static type String; `var` only asks the compiler to infer the local variable type.", explanation: "Correct. var does not make Java dynamically typed."}
+      - {id: C, answer: "value can later be reassigned an int because var is dynamic.", explanation: "Incorrect. Its static type has already been inferred as String."}
+      - {id: D, answer: "var is only valid for class fields.", explanation: "Incorrect. var is local-variable type inference in contexts allowed by Java."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.VariablesScope/VariablesScope.md", anchor: "variable-kinds-and-lifetime"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: pattern-variable-flow-scope
+    question: "Why is `text` valid on the right side of `value instanceof String text && !text.isBlank()`?"
+    answers:
+      - {id: A, answer: "Every variable declared in a condition has method-wide scope.", explanation: "Incorrect. A pattern variable exists only where the compiler can guarantee the match succeeded."}
+      - {id: B, answer: "`&&` evaluates the right operand only after the left is true, so the compiler knows the pattern matched before `text` is used.", explanation: "Correct. This is flow scoping based on a control-flow guarantee."}
+      - {id: C, answer: "instanceof turns text into a global variable.", explanation: "Incorrect. Pattern binding still has compiler-controlled scope."}
+      - {id: D, answer: "Because String values can never be null.", explanation: "Incorrect. Null behavior does not explain pattern-variable scope."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.VariablesScope/VariablesScope.md", anchor: "scope-and-shadowing"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: compound-assignment-byte
+    question: "With `byte b = 1;`, why does `b += 1` compile while `b = b + 1` needs a cast?"
+    answers:
+      - {id: A, answer: "`+=` disables type checking.", explanation: "Incorrect. Compound assignment still follows language-defined conversion rules."}
+      - {id: B, answer: "`b + 1` is numerically promoted to int, while compound assignment includes a conversion back to the target type according to its own rule.", explanation: "Correct. The two forms are not mechanically equivalent in conversion semantics."}
+      - {id: C, answer: "`b + 1` becomes long while `+=` becomes short.", explanation: "Incorrect. byte arithmetic is commonly promoted to int."}
+      - {id: D, answer: "Because the literal 1 is cached.", explanation: "Incorrect. Wrapper caching is unrelated to this primitive arithmetic."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.Operators/Operators.md", anchor: "numeric-promotion"}
+    apiRelated: {controller: "TypeSystemController", methodSignature: "conversionContexts()"}
+
+  - id: conditional-operator-lazy-branch
+    question: "In `condition ? left() : right()`, how are the two result expressions evaluated?"
+    answers:
+      - {id: A, answer: "Both left() and right() always run before one value is selected.", explanation: "Incorrect. The conditional operator evaluates only the selected result branch."}
+      - {id: B, answer: "Only left() runs when condition is true, or only right() runs when condition is false.", explanation: "Correct. Exactly one result expression is evaluated."}
+      - {id: C, answer: "Neither runs because ?: is compile-time only.", explanation: "Incorrect. It is a runtime value-producing expression."}
+      - {id: D, answer: "Java leaves the order undefined.", explanation: "Incorrect. The condition determines which single branch is evaluated."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.Operators/Operators.md", anchor: "short-circuit-operators"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: primitive-narrowing-cast
+    question: "What is the result of `byte b = (byte) 130;`?"
+    answers:
+      - {id: A, answer: "130, because casting always preserves the numeric value.", explanation: "Incorrect. Narrowing can lose information when the value does not fit the target range."}
+      - {id: B, answer: "Compile error because Java never allows int-to-byte casts.", explanation: "Incorrect. Explicit narrowing casts are allowed."}
+      - {id: C, answer: "-126 because narrowing preserves the low bits according to byte conversion rules.", explanation: "Correct. A cast permits the conversion but does not guarantee domain-value preservation."}
+      - {id: D, answer: "0 because overflow always resets to zero.", explanation: "Incorrect. Narrowing integer conversion has no such reset-to-zero rule."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.Casting/Casting.md", anchor: "primitive-casting"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: for-continue-update-order
+    question: "In classic `for(init; condition; update)`, where does `continue` transfer control?"
+    answers:
+      - {id: A, answer: "It exits the loop completely.", explanation: "Incorrect. That is break behavior, not continue."}
+      - {id: B, answer: "It goes to the update expression, then the next condition check.", explanation: "Correct. A classic for still runs its update before the next condition test."}
+      - {id: C, answer: "It returns to the init expression.", explanation: "Incorrect. Initialization runs only once."}
+      - {id: D, answer: "It skips update and immediately reruns the body.", explanation: "Incorrect. continue in classic for transfers to the update expression."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.ControlFlow/ControlFlow.md", anchor: "loop-control"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: switch-pattern-null-case
+    question: "In a Java 21 pattern switch over a reference selector, what does `case null` provide?"
+    answers:
+      - {id: A, answer: "It handles null explicitly instead of assuming default automatically handles null.", explanation: "Correct. case null makes the switch null contract explicit."}
+      - {id: B, answer: "It converts null into an empty String before matching.", explanation: "Incorrect. switch does not convert null to String."}
+      - {id: C, answer: "It is valid only for primitive selectors.", explanation: "Incorrect. null is relevant to reference selectors."}
+      - {id: D, answer: "It always runs after default.", explanation: "Incorrect. Case selection chooses a matching branch rather than this kind of sequential fall-through."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.ControlFlow/ControlFlow.md", anchor: "switch-expression"}
+    apiRelated: {controller: "ControlFlowController", methodSignature: "patternSwitch()"}
+
+  - id: non-void-return-path
+    question: "Why does `int f(boolean ok) { if (ok) return 1; }` fail to compile?"
+    answers:
+      - {id: A, answer: "Because if statements are forbidden in methods returning int.", explanation: "Incorrect. if is perfectly valid in a non-void method."}
+      - {id: B, answer: "Because a reachable normal path can reach the end of the method without returning an int value.", explanation: "Correct. The compiler analyzes normal completion of relevant paths."}
+      - {id: C, answer: "Because boolean parameters must be static.", explanation: "Incorrect. Parameters do not need to be static."}
+      - {id: D, answer: "Because only one return statement is allowed per method.", explanation: "Incorrect. Java permits multiple return paths."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Methods/Methods.md", anchor: "method-signature"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: argument-evaluation-left-to-right
+    question: "In what order does Java evaluate argument expressions in `call(first(), second())`?"
+    answers:
+      - {id: A, answer: "second() first because it is closer to the closing parenthesis.", explanation: "Incorrect. Java evaluates argument expressions left to right."}
+      - {id: B, answer: "first() then second(), before the method body starts.", explanation: "Correct. The defined order makes side effects predictable, though heavily side-effecting arguments are still hard to read."}
+      - {id: C, answer: "The compiler may choose any order for optimization.", explanation: "Incorrect. Java defines the evaluation order of arguments."}
+      - {id: D, answer: "Both expressions run only after entering the method body.", explanation: "Incorrect. Argument values must be computed before invocation."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Methods/Methods.md", anchor: "method-call-evaluation"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: varargs-null-vs-empty
+    question: "What is the difference between `log()` and `log((String[]) null)` for `void log(String... values)`?"
+    answers:
+      - {id: A, answer: "There is no difference; both always receive null.", explanation: "Incorrect. A zero-argument varargs call receives an empty array according to varargs invocation semantics."}
+      - {id: B, answer: "`log()` receives an array of length 0, while the casted null passes a null array reference.", explanation: "Correct. Empty varargs and an explicit null array are different states."}
+      - {id: C, answer: "`log()` does not compile without at least one argument.", explanation: "Incorrect. Zero arguments are a normal varargs use case."}
+      - {id: D, answer: "The casted null becomes an array containing one null element.", explanation: "Incorrect. `(String[]) null` is a null array reference, not an array of length 1."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.Varargs/Varargs.md", anchor: "varargs-array-model"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: array-copy-reference-elements
+    question: "After `User[] copy = Arrays.copyOf(original, original.length)`, what is true about reference elements?"
+    answers:
+      - {id: A, answer: "Every User object is automatically deep-copied.", explanation: "Incorrect. Arrays.copyOf creates a new array but copies each element value; for a reference element that value is a reference."}
+      - {id: B, answer: "The arrays are different objects, but corresponding elements may identify the same User object.", explanation: "Correct. Mutation through the copied array can therefore be visible through the original array."}
+      - {id: C, answer: "Both array variables still identify the same array object.", explanation: "Incorrect. Arrays.copyOf creates a new array object."}
+      - {id: D, answer: "Reference elements are converted to primitive addresses.", explanation: "Incorrect. Ordinary Java reference semantics still apply."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.Arrays/Arrays.md", anchor: "array-initialization"}
+    apiRelated: {controller: "ArrayController", methodSignature: "copyReferenceElements()"}
+
+  - id: package-subpackage-access
+    question: "How are `com.example` and `com.example.internal` related for package-private access?"
+    answers:
+      - {id: A, answer: "internal automatically inherits every package-private member from com.example.", explanation: "Incorrect. A shared name prefix does not create access inheritance."}
+      - {id: B, answer: "They are different packages; package-private members in com.example are not automatically accessible from com.example.internal.", explanation: "Correct. Package-name hierarchy is not an access hierarchy."}
+      - {id: C, answer: "Java treats them as one package because they share a prefix.", explanation: "Incorrect. The relevant package name must match the package boundary."}
+      - {id: D, answer: "A subpackage always gets public access to private members of its parent package.", explanation: "Incorrect. Package naming does not override access rules."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "11.PackagesImports/PackagesImports.md", anchor: "package-access"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: conversion-context-difference
+    question: "Why can `byte b = 1;` be valid while `useByte(1)` is not automatically valid just because literal 1 fits in byte?"
+    answers:
+      - {id: A, answer: "Assignment and method invocation permit different conversions; the narrowing constant assignment rule is not automatically used as a method-invocation conversion.", explanation: "Correct. Identify the conversion context before predicting compilation."}
+      - {id: B, answer: "Method parameters can never be primitive.", explanation: "Incorrect. Method parameters may use byte, int, long, and other primitives."}
+      - {id: C, answer: "Literal 1 changes runtime type after entering the method.", explanation: "Incorrect. This is a compile-time applicability question."}
+      - {id: D, answer: "byte may be used only for fields.", explanation: "Incorrect. byte can be used for locals, fields, parameters, and other contexts."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "13.TypeSystemMentalModel/TypeSystemMentalModel.md", anchor: "assignment-compatibility"}
+    apiRelated: {controller: "TypeSystemController", methodSignature: "conversionContexts()"}

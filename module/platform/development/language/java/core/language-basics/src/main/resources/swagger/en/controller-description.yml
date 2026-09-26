@@ -1,7 +1,7 @@
 ArrayController:
   description: |-
     <h2>Array</h2>
-    <p>Executable Java Core experiments related to Array covariance and ArrayStoreException.</p>
+    <p>Executable Java Core experiments for array covariance, ArrayStoreException, and reference-array copy semantics.</p>
   readmeRelated:
     file: 10.Arrays/Arrays.md
 CastingController:
@@ -10,6 +10,12 @@ CastingController:
     <p>Executable Java Core experiments related to Reference upcast and downcast.</p>
   readmeRelated:
     file: 5.Casting/Casting.md
+ControlFlowController:
+  description: |-
+    <h2>Control Flow</h2>
+    <p>Executable Java 21 experiments for switch expressions, type-pattern matching, pattern binding, and case null.</p>
+  readmeRelated:
+    file: 6.ControlFlow/ControlFlow.md
 MethodDispatchController:
   description: |-
     <h2>Method Dispatch</h2>
@@ -37,7 +43,7 @@ PassByValueController:
 TypeSystemController:
   description: |-
     <h2>Type System</h2>
-    <p>Executable Java Core experiments related to Compile-time type vs runtime type.</p>
+    <p>Executable Java Core experiments for compile-time type, runtime type, and differences among conversion contexts.</p>
   readmeRelated:
     file: 13.TypeSystemMentalModel/TypeSystemMentalModel.md
 WrapperController:

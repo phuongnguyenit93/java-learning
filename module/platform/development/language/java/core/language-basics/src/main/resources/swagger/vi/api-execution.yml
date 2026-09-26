@@ -8,6 +8,19 @@ ArrayController:
       benchmark hay production policy.</li></ol><p><strong>Kết luận:</strong> đối
       chiếu kết quả với README section được liên kết trước khi khái quát behavior.</p>
     usage: true
+  copyReferenceElements():
+    execution: <p><strong>Khái niệm:</strong> Copy reference array không deep-copy
+      object được element tham chiếu.</p><ol><li>Tạo <code>User[] original</code>
+      rồi gọi <code>Arrays.copyOf</code> để tạo array object mới.</li><li>Endpoint
+      so sánh identity của hai array và identity của element index 0:<pre><code>User[]
+      copied = Arrays.copyOf(original, original.length); boolean differentArrays =
+      original != copied; boolean sameElementReference = original[0] == copied[0];</code></pre></li><li>Sau
+      đó mutate object qua <code>copied[0]</code> và đọc lại qua <code>original[0]</code>.</li><li><strong>Quan
+      sát:</strong> <code>differentArrayObjects=true</code>, <code>sameElementReference=true</code>,
+      và tên đọc từ original đổi thành B.</li></ol><p><strong>Kết luận:</strong> array
+      copy tạo container mới nhưng với reference element nó chỉ copy reference value;
+      object bên trong vẫn có thể được chia sẻ.</p>
+    usage: true
 CastingController:
   safeAndUnsafeCast(String):
     execution: <p><strong>Khái niệm:</strong> Reference upcast và downcast.</p><ol><li>Endpoint
@@ -21,10 +34,9 @@ CastingController:
     usage: true
 MethodDispatchController:
   overloadVsOverride():
-    execution: <p><strong>Khái niệm:</strong> Overload selection và override
-      dispatch.</p><ol><li>Endpoint chạy một ví dụ deterministic và bounded trong
-      <code>MethodDispatchController#overloadVsOverride()</code>.</li><li>Source line
-      dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>public
+    execution: <p><strong>Khái niệm:</strong> Overload selection và override dispatch.</p><ol><li>Endpoint
+      chạy một ví dụ deterministic và bounded trong <code>MethodDispatchController#overloadVsOverride()</code>.</li><li>Source
+      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>public
       Map&lt;String, Object&gt; overloadVsOverride() {</code></pre></li><li>Quan sát
       các field trong response cùng nhau; đây là evidence cho quy tắc, không phải
       benchmark hay production policy.</li></ol><p><strong>Kết luận:</strong> đối
@@ -52,10 +64,10 @@ OverloadResolutionController:
     usage: true
 PassByValueController:
   mutateAndReassign():
-    execution: <p><strong>Khái niệm:</strong> Copy reference và mutation nhìn
-      thấy từ caller.</p><ol><li>Endpoint chạy một ví dụ deterministic và bounded
-      trong <code>PassByValueController#mutateAndReassign()</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>public
+    execution: <p><strong>Khái niệm:</strong> Copy reference và mutation nhìn thấy
+      từ caller.</p><ol><li>Endpoint chạy một ví dụ deterministic và bounded trong
+      <code>PassByValueController#mutateAndReassign()</code>.</li><li>Source line
+      dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>public
       Map&lt;String, Object&gt; mutateAndReassign() {</code></pre></li><li>Quan sát
       các field trong response cùng nhau; đây là evidence cho quy tắc, không phải
       benchmark hay production policy.</li></ol><p><strong>Kết luận:</strong> đối
@@ -72,6 +84,19 @@ TypeSystemController:
       luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
       khái quát behavior.</p>
     usage: true
+  conversionContexts():
+    execution: <p><strong>Khái niệm:</strong> Java áp dụng conversion rule khác nhau
+      tùy context.</p><ol><li>Một constant assignment vào <code>byte</code> giữ static
+      type byte.</li><li>Hai operand byte tham gia arithmetic được numeric promotion
+      thành int; endpoint chứng minh bằng overload <code>identify(byte)</code>/<code>identify(int)</code>:<pre><code>result.put("assignmentConstantType",
+      identify(assignmentConstant)); result.put("bytePlusByteExpressionType", identify(left
+      + right));</code></pre></li><li>Lời gọi <code>acceptLong(10)</code> cho thấy
+      method-invocation widening từ int sang long; <code>Integer boxed = 10</code>
+      cho thấy boxing.</li><li>Response còn ghi compile-time boundary rằng <code>useByte(1)</code>
+      không tự dùng narrowing constant conversion như assignment.</li></ol><p><strong>Kết
+      luận:</strong> đừng hỏi chỉ “value này convert được không”; phải hỏi đang ở
+      assignment, operator, method invocation hay explicit-cast context.</p>
+    usage: true
 WrapperController:
   wrapperIdentity():
     execution: <p><strong>Khái niệm:</strong> Wrapper cache và bẫy identity.</p><ol><li>Endpoint
@@ -81,4 +106,17 @@ WrapperController:
       các field trong response cùng nhau; đây là evidence cho quy tắc, không phải
       benchmark hay production policy.</li></ol><p><strong>Kết luận:</strong> đối
       chiếu kết quả với README section được liên kết trước khi khái quát behavior.</p>
+    usage: true
+ControlFlowController:
+  patternSwitch():
+    execution: <p><strong>Khái niệm:</strong> Java 21 switch expression có thể match
+      reference value bằng type pattern và xử lý null rõ ràng.</p><ol><li>Endpoint
+      gọi cùng helper với Integer, String, null và Double.</li><li>Helper dùng pattern
+      switch:<pre><code>return switch (value) { case Integer integer -&gt; "integer:"
+      + integer; case String text -&gt; "string:" + text; case null -&gt; "null";
+      default -&gt; "other:" + value.getClass().getSimpleName(); };</code></pre></li><li><strong>Quan
+      sát:</strong> mỗi input đi đúng một branch; pattern case vừa kiểm tra runtime
+      type vừa bind variable có static type tương ứng, còn null được xử lý bởi <code>case
+      null</code>.</li></ol><p><strong>Kết luận:</strong> pattern switch phù hợp khi
+      nhiều nhánh cùng phân loại một selector và cần value result rõ ràng.</p>
     usage: true

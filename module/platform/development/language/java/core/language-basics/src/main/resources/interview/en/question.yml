@@ -83,3 +83,101 @@ questions:
     reviewed: false
     readmeRelated: {file: "12.Null/Null.md", anchor: "null-api-design"}
     apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Does `var` make Java dynamically typed? When can `var` improve or hurt readability?"
+    answer: "No. `var` only asks the compiler to infer the static type of a local variable from its initializer; that type remains fixed for compile-time checking. It helps when the initializer makes the type obvious or the explicit type is noisy, but an explicit type is often clearer when inference hides information readers need."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.VariablesScope/VariablesScope.md", anchor: "variable-kinds-and-lifetime"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Explain pattern-variable flow scope using `instanceof String s && ...` and a negated guard clause."
+    answer: "A pattern variable exists only where the compiler can prove the pattern matched. On the right side of `&&`, execution happens only after a successful match, so `s` is available. With `if (!(x instanceof String s)) return;`, execution continues only when the match succeeded, so `s` can be used after the guard. Scope therefore depends on control-flow guarantees, not only braces."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.VariablesScope/VariablesScope.md", anchor: "scope-and-shadowing"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Why can using `==` with wrappers such as Integer be buggy even though some small values sometimes compare true?"
+    answer: "`==` on wrapper references checks identity, not numeric value equality. Some wrapper instances may be cached, making identity happen to match for selected values and making a demo look correct. Code should not depend on cache identity; use `equals` or primitive comparison when the contract is value equality."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.WrapperBoxing/WrapperBoxing.md", anchor: "wrapper-caching"}
+    apiRelated: {controller: "WrapperController", methodSignature: "wrapperIdentity()"}
+
+  - question: "Explain why `byte + byte` has expression type int and why `b += 1` differs from `b = b + 1`."
+    answer: "Binary numeric promotion commonly promotes byte/short/char operands to int before arithmetic, so `b + 1` has type int. Simple assignment back to byte needs a valid conversion or cast. Compound assignment has its own rule that includes conversion back to the target type and evaluates the left side once, so it is not just textual expansion of `b = b + 1`."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.Operators/Operators.md", anchor: "numeric-promotion"}
+    apiRelated: {controller: "TypeSystemController", methodSignature: "conversionContexts()"}
+
+  - question: "Does widening primitive conversion always preserve the exact value? What does a narrowing cast guarantee and not guarantee?"
+    answer: "Widening is a type-system conversion category, not a universal precision guarantee; for example a sufficiently large long converted to double can lose precision. A narrowing cast explicitly permits the conversion but may truncate, wrap, or otherwise lose information when the value does not fit. A cast is not a substitute for domain range validation."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.Casting/Casting.md", anchor: "primitive-casting"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "What do short-circuit `&&`/`||` and the conditional operator `?:` have in common about evaluation, and why are side effects in skipped branches risky?"
+    answer: "Both use conditional evaluation: part of the expression may not run. `&&`/`||` decide whether the right operand is evaluated, while `?:` evaluates only one result branch. If correctness depends on a side effect in a branch that may be skipped, the behavior becomes easy to miss and fragile; important side effects are clearer as explicit statements."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.Operators/Operators.md", anchor: "short-circuit-operators"}
+    apiRelated: {controller: "OperatorController", methodSignature: "shortCircuit()"}
+
+  - question: "Describe the execution order of a classic for loop and explain exactly what `continue` does to the update expression."
+    answer: "A classic for runs initialization once, then condition → body → update → condition. `continue` skips the rest of the current body but transfers control to the update expression before the next condition check. This matters when the update has side effects or loop termination depends on it."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.ControlFlow/ControlFlow.md", anchor: "loop-control"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "How does Java 21 pattern switch extend the mental model of switch? What do `case null` and a pattern variable mean?"
+    answer: "Switch can classify a reference selector using type patterns, not only constant/enum/String cases. `case Integer i` both tests runtime type and binds `i` with static type Integer inside the branch. `case null` makes the null contract explicit; default should not be mechanically assumed to handle null. Pattern switch is useful when several branches classify one selector."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.ControlFlow/ControlFlow.md", anchor: "switch-expression"}
+    apiRelated: {controller: "ControlFlowController", methodSignature: "patternSwitch()"}
+
+  - question: "How is the return-path rule for non-void methods related to definite assignment?"
+    answer: "Both are compile-time control-flow analyses. For a local variable, the compiler must prove it was assigned before reading on every relevant path. For a non-void method, the compiler must prove there is no reachable normal path that reaches the end without a return value; a path ending with throw does not complete normally and needs no later return."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Methods/Methods.md", anchor: "method-signature"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Why is left-to-right argument evaluation still not a good excuse to write calls with many side effects?"
+    answer: "Java defines argument expressions to run left to right before entering the method body, so the result is predictable. But a call such as `f(i++, update(i))` forces readers to simulate state transitions inside a dense expression, making intent and review harder. Extracting intermediate values into statements is usually clearer."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Methods/Methods.md", anchor: "method-call-evaluation"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "How do varargs differ for zero arguments, an existing array, and an explicit null array? What risk appears with generic varargs?"
+    answer: "Inside the method varargs is still an array. Zero arguments correspond to an empty array; a compatible existing array can be passed directly; `(T[]) null` passes a null array reference. With generic varargs, array runtime-component behavior combined with type erasure can enable heap pollution if the implementation writes to or exposes the array unsafely. `@SafeVarargs` is a safety promise, not a warning-suppression shortcut."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.Varargs/Varargs.md", anchor: "varargs-generics-warning"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "What does `Arrays.copyOf` copy for a reference array, and why can mutating an object through the copied array still be visible from the original?"
+    answer: "It creates a new array object and copies each element value. In a reference array, an element value is a reference, so original and copied arrays may contain copies of the same reference to one object. Mutating that object through one array is therefore visible through the other; this is shallow element-reference copying, not a deep copy of the object graph."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.Arrays/Arrays.md", anchor: "array-initialization"}
+    apiRelated: {controller: "ArrayController", methodSignature: "copyReferenceElements()"}
+
+  - question: "Why do `com.example` and `com.example.internal` not form a parent/child package-private access relationship, and do imports change access or class loading?"
+    answer: "Java treats them as separate packages; the shared name prefix is organizational naming, not access inheritance. Package-private requires the same actual package. Imports only affect source name resolution; they do not grant visibility and do not eagerly load every imported type into the JVM."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "11.PackagesImports/PackagesImports.md", anchor: "package-access"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "When two nearly identical Java lines compile differently, why should you identify the conversion context first?"
+    answer: "Assignment, operator expressions, method invocation, and explicit casts do not permit exactly the same conversions. For example constant `1` may be assigned directly to byte when it fits, while `useByte(1)` does not automatically use that narrowing constant conversion, and `byte + byte` is numerically promoted to int. Identifying the context makes the rules coherent rather than arbitrary."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "13.TypeSystemMentalModel/TypeSystemMentalModel.md", anchor: "assignment-compatibility"}
+    apiRelated: {controller: "TypeSystemController", methodSignature: "conversionContexts()"}

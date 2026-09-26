@@ -83,3 +83,101 @@ questions:
     reviewed: false
     readmeRelated: {file: "12.Null/Null.md", anchor: "null-api-design"}
     apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "`var` có làm Java trở thành dynamically typed không? Khi nào dùng `var` giúp code rõ hơn hoặc khó đọc hơn?"
+    answer: "Không. `var` chỉ yêu cầu compiler suy ra static type của local variable từ initializer; type vẫn cố định cho compile-time checking. Nó hữu ích khi initializer làm type quá rõ hoặc type viết dài, nhưng explicit type tốt hơn khi inference che mất thông tin quan trọng đối với người đọc."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.VariablesScope/VariablesScope.md", anchor: "variable-kinds-and-lifetime"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Giải thích flow scope của pattern variable bằng `instanceof String s && ...` và guard clause phủ định pattern."
+    answer: "Pattern variable chỉ tồn tại ở nơi compiler chứng minh pattern đã match. Với `&&`, vế phải chỉ chạy sau match nên dùng được `s`. Với `if (!(x instanceof String s)) return;`, execution đi tiếp chỉ khi match thành công nên `s` có thể dùng sau guard. Scope vì vậy phụ thuộc control-flow guarantee chứ không chỉ dấu ngoặc block."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.VariablesScope/VariablesScope.md", anchor: "scope-and-shadowing"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Vì sao dùng `==` để so wrapper như Integer có thể tạo bug dù một số value nhỏ đôi khi cho kết quả true?"
+    answer: "`==` trên wrapper reference kiểm tra identity, không phải numeric value equality. Một số wrapper instance có thể được cache nên identity trùng cho vài value và làm demo có vẻ đúng; code không nên dựa vào cache. Dùng `equals` hoặc primitive comparison khi contract cần value equality."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.WrapperBoxing/WrapperBoxing.md", anchor: "wrapper-caching"}
+    apiRelated: {controller: "WrapperController", methodSignature: "wrapperIdentity()"}
+
+  - question: "Giải thích vì sao `byte + byte` cho kết quả expression type int và vì sao `b += 1` khác `b = b + 1`."
+    answer: "Binary numeric promotion thường nâng byte/short/char operand lên int trước arithmetic, nên `b + 1` có type int. Simple assignment về byte cần conversion hợp lệ/cast. Compound assignment có rule riêng bao gồm conversion về target type và evaluate left side một lần, vì vậy không phải textual expansion đơn giản của `b = b + 1`."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.Operators/Operators.md", anchor: "numeric-promotion"}
+    apiRelated: {controller: "TypeSystemController", methodSignature: "conversionContexts()"}
+
+  - question: "Widening primitive conversion có luôn bảo đảm giữ chính xác value không? Narrowing cast bảo đảm điều gì và không bảo đảm điều gì?"
+    answer: "Widening là phân loại conversion của type system, không phải guarantee về precision cho mọi cặp type; ví dụ long lớn sang double có thể mất precision. Narrowing cast cho phép conversion explicit nhưng có thể truncate/wrap/mất information khi value không fit. Cast không thay thế domain range validation."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.Casting/Casting.md", anchor: "primitive-casting"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Short-circuit `&&`/`||` và conditional operator `?:` giống nhau ở điểm nào về evaluation, và vì sao side effect trong branch dễ gây bug?"
+    answer: "Cả hai đều có conditional evaluation: một phần expression có thể không chạy. `&&`/`||` quyết định có evaluate vế phải hay không; `?:` chỉ evaluate một trong hai result branch. Nếu correctness phụ thuộc side effect ở branch có thể bị skip, behavior trở nên khó thấy và dễ sai; nên tách side effect quan trọng thành statement rõ ràng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.Operators/Operators.md", anchor: "short-circuit-operators"}
+    apiRelated: {controller: "OperatorController", methodSignature: "shortCircuit()"}
+
+  - question: "Mô tả execution order của classic for loop và giải thích chính xác `continue` tác động tới update expression thế nào."
+    answer: "Classic for chạy initialization một lần, rồi condition → body → update → condition. `continue` bỏ phần còn lại của body nhưng chuyển tới update expression trước khi kiểm tra condition lần tiếp theo. Đây là khác biệt quan trọng khi update có side effect hoặc termination phụ thuộc update."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.ControlFlow/ControlFlow.md", anchor: "loop-control"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Java 21 pattern switch mở rộng mental model của switch như thế nào? `case null` và pattern variable có ý nghĩa gì?"
+    answer: "Switch có thể phân loại reference selector bằng type pattern, không chỉ constant/enum/String case. `case Integer i` vừa kiểm tra runtime type vừa bind `i` có static type Integer trong branch. `case null` cho phép null contract explicit; default không nên được hiểu máy móc là tự xử lý null. Pattern switch phù hợp khi nhiều branch cùng classify một selector."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.ControlFlow/ControlFlow.md", anchor: "switch-expression"}
+    apiRelated: {controller: "ControlFlowController", methodSignature: "patternSwitch()"}
+
+  - question: "Rule về return path của non-void method liên hệ thế nào với definite assignment?"
+    answer: "Cả hai đều là compile-time control-flow analysis. Với local variable, compiler phải chứng minh value đã được assign trước khi đọc trên mọi relevant path. Với non-void method, compiler phải chứng minh không có reachable normal path kết thúc method mà thiếu return value; path kết thúc bằng throw không complete normally nên không cần return tiếp."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Methods/Methods.md", anchor: "method-signature"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Vì sao thứ tự evaluate argument từ trái sang phải vẫn không phải lý do tốt để viết call chứa nhiều side effect?"
+    answer: "Java định nghĩa argument expression chạy từ trái sang phải trước khi vào method body, nên kết quả có thể dự đoán. Nhưng call như `f(i++, update(i))` buộc người đọc mô phỏng state transition trong một expression dài, làm intent và review khó hơn. Tách intermediate value thành statement thường rõ và an toàn hơn."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Methods/Methods.md", anchor: "method-call-evaluation"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Varargs khác gì giữa zero arguments, truyền array có sẵn và explicit null array? Generic varargs tạo risk gì?"
+    answer: "Trong body varargs vẫn là array. Zero arguments tương ứng array rỗng; truyền compatible array dùng chính array đó; `(T[]) null` truyền null array reference. Với generic varargs, array runtime component model kết hợp type erasure có thể tạo heap pollution nếu implementation ghi/expose array không an toàn. `@SafeVarargs` là cam kết safety, không phải nút tắt warning tùy ý."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.Varargs/Varargs.md", anchor: "varargs-generics-warning"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "`Arrays.copyOf` trên reference array copy thứ gì? Vì sao mutate object qua copied array vẫn có thể nhìn thấy từ original array?"
+    answer: "Nó tạo array object mới và copy từng element value. Với reference array, element value là reference, nên original và copied có thể chứa hai bản copy của cùng reference tới một object. Mutate object qua một array vì thế visible qua array kia; đây là shallow element-reference copying, không phải deep copy object graph."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.Arrays/Arrays.md", anchor: "array-initialization"}
+    apiRelated: {controller: "ArrayController", methodSignature: "copyReferenceElements()"}
+
+  - question: "Vì sao `com.example` và `com.example.internal` không có quan hệ package-private cha/con, và import có thay đổi access hoặc class loading không?"
+    answer: "Java xem chúng là hai package khác nhau; common name prefix chỉ giống hierarchy tổ chức, không tạo access inheritance. Package-private yêu cầu cùng package thực sự. Import chỉ ảnh hưởng source name resolution, không cấp thêm visibility và không khiến JVM eager-load tất cả type được import."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "11.PackagesImports/PackagesImports.md", anchor: "package-access"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Khi hai dòng Java gần giống nhau nhưng một dòng compile còn dòng kia không, vì sao nên xác định conversion context trước?"
+    answer: "Assignment, operator expression, method invocation và explicit cast không dùng đúng cùng một tập conversion. Ví dụ constant `1` có thể assignment trực tiếp vào byte nếu fit, nhưng `useByte(1)` không tự dùng narrowing constant conversion đó; `byte + byte` lại được numeric promotion thành int. Xác định context trước giúp rule trở nên nhất quán thay vì có vẻ ngẫu nhiên."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "13.TypeSystemMentalModel/TypeSystemMentalModel.md", anchor: "assignment-compatibility"}
+    apiRelated: {controller: "TypeSystemController", methodSignature: "conversionContexts()"}
