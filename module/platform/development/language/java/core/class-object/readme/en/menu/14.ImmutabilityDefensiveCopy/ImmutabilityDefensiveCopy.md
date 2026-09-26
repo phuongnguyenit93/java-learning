@@ -13,11 +13,22 @@ An immutable object usually:
 - restricts extension when subclasses could violate immutability.
 
 ```java
-final class Profile {
-    private final String name;
-    ...
+final class BankAccountSnapshot {
+    private final String id;
+    private final List<String> tags;
+
+    BankAccountSnapshot(String id, List<String> tags) {
+        this.id = id;
+        this.tags = new ArrayList<>(tags);
+    }
+
+    List<String> tags() {
+        return List.copyOf(tags);
+    }
 }
 ```
+
+This immutable variant of the running account example establishes all state during construction and never exposes its mutable internal list directly.
 
 Immutability simplifies sharing, caching, hashing, and concurrency reasoning.
 
@@ -26,10 +37,18 @@ Immutability simplifies sharing, caching, hashing, and concurrency reasoning.
 If a constructor stores a mutable input reference directly, the caller can mutate internal state after construction.
 
 ```java
-this.roles = new ArrayList<>(roles);
+this.tags = new ArrayList<>(tags);
 ```
 
-Copying input transfers ownership away from the caller's mutable collection.
+Copying input separates the snapshot's ownership from the caller's mutable collection:
+
+```java
+List<String> source = new ArrayList<>();
+BankAccountSnapshot snapshot = new BankAccountSnapshot("A-01", source);
+
+source.add("VIP");
+System.out.println(snapshot.tags()); // []
+```
 
 Immutable inputs such as `String` do not need defensive copying merely for appearance.
 
@@ -43,11 +62,17 @@ Possible contracts include:
 - `List.copyOf(...)`;
 - fresh copies.
 
+For the `BankAccountSnapshot` above, `List.copyOf(tags)` returns an unmodifiable result rather than the mutable internal list itself:
+
+```java
+snapshot.tags().add("VIP"); // UnsupportedOperationException
+```
+
 An unmodifiable view is not automatically deep immutability; the underlying data may still change elsewhere.
 
 ## <a id="deep-immutability">Shallow vs Deep Immutability</a>
 
-`final List<Address> addresses` is not deeply immutable if the list or `Address` instances remain mutable.
+`final List<Address> addresses` is not deeply immutable if the list or `Address` instances remain mutable. `final` fixes the field reference; it does not recursively freeze the referenced object graph.
 
 ```text
 shallow immutability

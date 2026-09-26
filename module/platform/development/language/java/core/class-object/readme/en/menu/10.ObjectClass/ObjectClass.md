@@ -1,16 +1,16 @@
 # java.lang.Object
 
-Every Java class directly or indirectly extends `java.lang.Object`. That gives all objects a common baseline contract, though the default implementations are not always appropriate for domain semantics.
+`java.lang.Object` is the root class of Java's ordinary class hierarchy. Every class other than `Object` itself has `Object` somewhere in its superclass chain, which gives ordinary class instances a common baseline contract. The default implementations are not always appropriate for domain semantics.
 
 ## <a id="object-root-type">Object as the Root Reference Type</a>
 
 An `Object` reference can refer to an instance of any class:
 
 ```java
-Object value = new Profile("An");
+Object value = new BankAccount("A-01");
 ```
 
-But the static type `Object` exposes only the `Object` contract. Accessing `Profile`-specific behavior requires appropriate type information/casting.
+But the static type `Object` exposes only the `Object` contract. Accessing `BankAccount`-specific behavior requires appropriate type information/casting.
 
 Primitives are not subtypes of `Object`; wrapper types let primitive values participate in reference-based APIs.
 

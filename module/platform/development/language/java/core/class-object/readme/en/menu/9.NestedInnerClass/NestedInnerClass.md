@@ -7,24 +7,47 @@ Placing one type inside another can express close conceptual organization or acc
 A static nested class does **not** implicitly retain an outer instance.
 
 ```java
-class Profile {
-    static class Builder { ... }
+class BankAccount {
+    static class Builder {
+        BankAccount build() {
+            return new BankAccount("A-01");
+        }
+    }
 }
 ```
 
 It behaves much like an ordinary class but lives in the outer class's namespace. It is useful when the nested type is logically related but does not need a particular outer object's state.
+
+It can be created without an outer `BankAccount` instance:
+
+```java
+BankAccount.Builder builder = new BankAccount.Builder();
+```
 
 ## <a id="inner-class">Inner Class</a>
 
 A non-static nested class is an inner class and is associated with an outer instance.
 
 ```java
-class Order {
-    class LineView { ... }
+class BankAccount {
+    private int balance;
+
+    class BalanceView {
+        int currentBalance() {
+            return BankAccount.this.balance;
+        }
+    }
 }
 ```
 
-Each `LineView` belongs to a particular `Order` instance and may access outer-instance members.
+Each `BalanceView` belongs to a particular `BankAccount` instance and may access outer-instance members.
+
+Creation syntax makes that relationship visible:
+
+```java
+BankAccount account = new BankAccount("A-01");
+BankAccount.BalanceView view = account.new BalanceView();
+```
 
 That convenience also creates a lifetime/coupling relationship: keeping the inner object may keep the outer object reachable.
 
@@ -51,4 +74,4 @@ Runnable r = new Runnable() {
 
 The capture follows value-oriented language rules rather than sharing an arbitrarily mutable local slot.
 
-The next chapter looks at the common superclass of all ordinary reference types: `java.lang.Object`.
+The next chapter looks at the root class shared by ordinary class instances: `java.lang.Object`.

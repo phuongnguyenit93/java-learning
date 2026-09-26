@@ -5,14 +5,14 @@ Aliasing occurs when multiple references point to the same object. With immutabl
 ## <a id="aliasing-model">Multiple References, One Object</a>
 
 ```java
-List<String> a = new ArrayList<>();
-List<String> b = a;
+BankAccount account = new BankAccount("A-01", new ArrayList<>());
+BankAccount alias = account;
 
-b.add("x");
-System.out.println(a); // [x]
+alias.tags().add("VIP");
+System.out.println(account.tags()); // [VIP]
 ```
 
-Assignment did not copy the collection; it copied the reference.
+Assignment did not copy the `BankAccount`; it copied the reference.
 
 This connects directly to Java pass-by-value: a method receives a copy of the reference value and can therefore mutate the same object.
 
@@ -32,15 +32,15 @@ Mutability is not inherently wrong; unclear ownership is the bigger problem.
 
 ## <a id="aliasing-in-collections">Collection Aliasing</a>
 
-A getter returning an internal mutable collection leaks the reference:
+A getter returning an internal mutable collection leaks the reference. For the running `BankAccount` example:
 
 ```java
-List<String> getRoles() {
-    return roles;
+List<String> tags() {
+    return tags;
 }
 ```
 
-Callers can mutate internal state without going through the owner's rules.
+Callers can now mutate `tags` without going through `BankAccount`'s rules.
 
 The same problem occurs when a constructor stores a caller-owned mutable input directly.
 

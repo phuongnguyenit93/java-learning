@@ -1,8 +1,8 @@
 # Class and Object
 
-Java uses a `class` to describe **a kind of object with state and behavior**, while an `object` is a real runtime instance. This distinction is the foundation for constructors, `this`, `static`, initialization order, aliasing, copying, and immutability.
+Java uses a `class` to describe **a kind of object with state and behavior**, while an `object` is a real runtime instance. This lets Java keep data together with the operations and rules that are responsible for that data instead of treating every value as unrelated global state.
 
-Keep a small running example such as `Profile` or `BankAccount`: the class defines shared structure and rules; each object has its own identity and state.
+Keep a small running example such as `BankAccount`: the class defines shared structure and rules; each account object has its own identity and state. Later chapters evolve the same mental model through construction, initialization, copying, aliasing, and immutability.
 
 Roadmap:
 
@@ -47,6 +47,28 @@ How can objects be made safer to share?
 Immutability & Defensive Copy
 ```
 
+The main terminology fits together like this:
+
+```text
+class
+→ defines the type, state shape and behavior
+
+object / instance
+→ one runtime entity created from that type
+
+constructor / initialization
+→ establish the object's initial valid state
+
+this / super
+→ express current-instance and superclass construction/member context
+
+static / instance
+→ distinguish class-level state/behavior from per-object state/behavior
+
+reference / aliasing / copying / immutability
+→ explain how objects are reached, shared, duplicated or protected from mutation
+```
+
 ## <a id="class-object-model">Class vs Object</a>
 
 A `class` defines a type and its shared implementation: fields, methods, constructors, nested types, and initialization logic.
@@ -58,11 +80,30 @@ An `object` is a runtime instance with:
 - behavior determined by the class/runtime type.
 
 ```java
-Profile first = new Profile("An");
-Profile second = new Profile("Binh");
+BankAccount first = new BankAccount("A-01");
+BankAccount second = new BankAccount("A-02");
 ```
 
-Both objects use the same class definition but remain distinct instances with different state.
+Both objects use the same `BankAccount` class definition but remain distinct instances with different identities and potentially different state.
+
+### Why group state and behavior?
+
+Suppose an account balance could be changed by arbitrary code through an exposed integer. Every caller would need to remember all rules such as "do not withdraw below zero". A class can instead keep the state and the operations that protect its invariants together:
+
+```java
+class BankAccount {
+    private int balance;
+
+    void withdraw(int amount) {
+        if (amount <= 0 || amount > balance) {
+            throw new IllegalArgumentException();
+        }
+        balance -= amount;
+    }
+}
+```
+
+The important idea is not merely that Java has `class` syntax. The object becomes the owner of state and the rules that keep that state meaningful. Later modules go deeper into encapsulation and object-oriented design; this module first establishes the object model and lifecycle needed to understand them.
 
 ## <a id="fields-methods-state">State, Behavior and Identity</a>
 

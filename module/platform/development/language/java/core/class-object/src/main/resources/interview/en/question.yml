@@ -83,3 +83,143 @@ questions:
     reviewed: false
     readmeRelated: {file: "14.ImmutabilityDefensiveCopy/ImmutabilityDefensiveCopy.md", anchor: "deep-immutability"}
     apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Why does Java's class/object model group state and behavior instead of exposing all data for callers to manipulate directly?"
+    answer: "The key benefit is ownership of invariants. If BankAccount exposes balance as freely mutable data, every caller must remember rules such as not withdrawing below zero. Putting state and the operations that protect it behind the object boundary centralizes those rules and reduces invalid state. This does not mean every field needs a trivial getter/setter; the useful boundary is the behavior and constraints the object owns."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.ClassObject/ClassObject.md", anchor: "class-object-model"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "How is object lifetime different from the scope of one reference variable, and why should external resources not be tied to GC?"
+    answer: "A local variable can go out of scope while the object remains reachable through another reference, so GC eligibility is based on reachability rather than one variable's lexical lifetime. Files, sockets, and similar external resources need deterministic release because GC timing is nondeterministic and memory reachability is not a resource-management contract. Use explicit cleanup such as AutoCloseable/try-with-resources for those resources."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.ClassObject/ClassObject.md", anchor: "object-reference-lifecycle"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "What is the difference between an overloaded constructor, a default constructor, and an implicit super() call?"
+    answer: "Overloaded constructors are constructors you declare with different parameter lists. A default constructor is compiler-generated only when the class declares no constructor at all. Separately, when a constructor does not explicitly delegate with this(...) or super(...), Java inserts an implicit no-argument super() constructor invocation. That implicit call must resolve to an accessible superclass constructor or compilation fails."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.Constructor/Constructor.md", anchor: "default-constructor"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Explain this(...) versus super(...), and why neither means creating an extra object."
+    answer: "this(...) delegates to another constructor in the same class; super(...) invokes a superclass constructor as the next construction step. They form one constructor chain for one runtime object. super does not refer to a second parent object stored inside the child. The superclass portion and subclass portion are initialized as parts of the same object identity."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.ThisSuper/ThisSuper.md", anchor: "constructor-chaining-order"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "When should state be static rather than instance state, and what risk comes with mutable static state?"
+    answer: "Use instance state when the value belongs to each object, such as one account's balance. Use static state when the value genuinely belongs to the class-level concept rather than a receiver. Mutable static state is globally shared across instances, so it increases coupling, test interference, lifecycle complexity, and concurrency risk. static should describe ownership, not be a shortcut for convenient global access."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.StaticFinal/StaticFinal.md", anchor: "static-vs-instance"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Why does final List<String> tags not make a BankAccount immutable?"
+    answer: "final prevents the field reference from being reassigned after its valid assignment, but it does not freeze the List object. Code holding that List reference can still add or remove elements unless ownership and exposure are controlled. Immutability therefore depends on the reachable object graph and aliases, not only on final modifiers at the outer object."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.StaticFinal/StaticFinal.md", anchor: "final-variable-reference"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "How do class initialization and instance initialization differ?"
+    answer: "Class initialization prepares static state for the class and, when required, initializes the superclass first; static fields/blocks then run in textual order. Instance initialization happens for each object construction. After superclass construction, that class level's instance field initializers and instance blocks run in textual order before its constructor body. Mixing these lifecycles leads to incorrect expectations about when state is ready."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.InitializationOrder/InitializationOrder.md", anchor: "class-initialization-order"}
+    apiRelated: {controller: "InitializationController", methodSignature: "traceOrder()"}
+
+  - question: "When are initializer blocks useful, and when do they make object construction harder to understand?"
+    answer: "A simple field initializer is usually clearest for obvious defaults, and constructors/helpers are usually clearest for validation or context-rich setup. An instance initializer can be useful when several constructors truly share a small initialization step, and a static initializer can support class setup that cannot be expressed cleanly as one expression. They become harmful when important logic, I/O, or side effects are hidden in places readers do not expect."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.InitializationBlocks/InitializationBlocks.md", anchor: "initializer-use-cases"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "What is the difference between allocated/default-initialized memory and a valid constructed object?"
+    answer: "Allocation gives the object storage and instance fields first have JVM default values such as 0, false, and null. That does not mean class invariants are established. Superclass construction, field/initializer execution, and constructor bodies still need to complete successfully. Code that observes the object too early can therefore see a real allocated object whose semantic state is not yet valid."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.ObjectCreationLifecycle/ObjectCreationLifecycle.md", anchor: "allocation-initialization-construction"}
+    apiRelated: {controller: "ConstructionController", methodSignature: "constructorDispatchRisk()"}
+
+  - question: "Use constructorDispatchRisk() to explain why dynamic dispatch from a constructor is dangerous."
+    answer: "Parent() calls hook(), and normal virtual dispatch reaches Child.hook() because the runtime object is a Child. But the Child field initializer has not run yet, so the override observes value as its default 0. After construction, value is 42. The API deliberately exposes both values. The risk is not that dispatch stops working; it is that it works before subclass invariants are ready."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.ObjectCreationLifecycle/ObjectCreationLifecycle.md", anchor: "constructor-dynamic-dispatch-risk"}
+    apiRelated: {controller: "ConstructionController", methodSignature: "constructorDispatchRisk()"}
+
+  - question: "What is this escape, and why is it especially dangerous in concurrent code?"
+    answer: "this escape means publishing a reference to the object before construction completes, for example registering this in a listener or global registry from the constructor. Other code can then observe incomplete invariants. Under concurrency, premature publication can also interact with visibility and safe-publication rules, so another thread may observe state before construction is safely visible. Detailed memory-model rules belong in concurrency material, but the construction boundary should be respected here."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.ObjectCreationLifecycle/ObjectCreationLifecycle.md", anchor: "this-escape"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "When would you choose a static nested class instead of a non-static inner class?"
+    answer: "Choose a static nested class when the type is logically namespaced under the outer type but does not need one particular outer object's state; it avoids the implicit outer-instance relationship. Choose a non-static inner class when each nested instance genuinely belongs to and needs access to a specific outer instance. Retaining an inner object can also keep its outer object reachable."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.NestedInnerClass/NestedInnerClass.md", anchor: "static-nested-class"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "What does capture() demonstrate about effectively-final locals versus enclosing-instance fields?"
+    answer: "LocalCalculator reads localBase, a method-local variable assigned once and therefore effectively final, and outerOffset, a field on the enclosing controller instance. Java restricts captured local variables, while instance fields are reached through the enclosing object context. capture() returns both inputs and the computed result so the distinction is observable."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.NestedInnerClass/NestedInnerClass.md", anchor: "capture-semantics"}
+    apiRelated: {controller: "NestedClassController", methodSignature: "capture()"}
+
+  - question: "What does it mean that Object is the root class, and what does an Object-typed reference hide?"
+    answer: "Every ordinary class other than Object itself has Object somewhere in its superclass chain. Therefore an Object reference can refer to any class instance, but the compile-time type exposes only the Object contract. Subtype-specific members require appropriate type information and often a cast or pattern check. Primitive types are not Object subtypes; wrappers bridge primitive values into reference-based APIs."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.ObjectClass/ObjectClass.md", anchor: "object-root-type"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Why are Object.clone() and finalization usually poor defaults for modern domain design?"
+    answer: "Object.clone() carries awkward shallow-copy and construction/invariant semantics, so explicit copy constructors, factories, builders, or mapping usually express ownership policy more clearly. Finalization is nondeterministic and deprecated for removal, so it should not manage critical external resources. Prefer deterministic cleanup such as AutoCloseable and try-with-resources."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.ObjectClass/ObjectClass.md", anchor: "clone-finalize-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "How can enum constants act like a closed strategy set, and what does enumBehavior() prove?"
+    answer: "An enum may implement an interface and individual constants can provide different method bodies. FeeTier.STANDARD and FeeTier.PREMIUM both satisfy FeePolicy but compute fees differently, so callers use one typed contract over a closed known set. enumBehavior() also shows identity through valueOf and declaration order through values()."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "11.Enum/Enum.md", anchor: "enum-constant-specific"}
+    apiRelated: {controller: "EnumController", methodSignature: "enumBehavior()"}
+
+  - question: "Why is ordinal() a poor persistence key, and what should an enum use instead when crossing a storage or protocol boundary?"
+    answer: "ordinal() is derived from declaration position, so inserting or reordering constants changes its numeric value and can silently reinterpret persisted data. If an enum needs a durable external identity, define an explicit stable field such as code and map that intentionally. name() is also a compatibility concern if constants may be renamed."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "11.Enum/Enum.md", anchor: "enum-values-valueof"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "What copy strategy would you prefer for a domain object with invariants, and why?"
+    answer: "Prefer an explicit copy constructor, factory, builder, or mapper that states which fields are shared, duplicated, transformed, or revalidated. That makes ownership and invariants visible in normal construction code. A blanket serialization copy or Object.clone() can obscure those decisions. The best strategy depends on the domain contract rather than achieving the deepest possible mechanical copy."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "12.CopySemantics/CopySemantics.md", anchor: "copy-strategies"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "How does defensiveCopy() protect both the input and output ownership boundaries?"
+    answer: "The snapshot copies the caller's mutable input with List.copyOf, so later mutation of the caller's original List cannot change stored state. Its accessor returns the stored unmodifiable List, so callers also cannot mutate the snapshot through the returned reference. The endpoint shows the caller input gaining VIP while storedSnapshot stays unchanged and returnedCollectionMutable is false."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "14.ImmutabilityDefensiveCopy/ImmutabilityDefensiveCopy.md", anchor: "defensive-copy-output"}
+    apiRelated: {controller: "ImmutabilityController", methodSignature: "defensiveCopy()"}
+
+  - question: "What is the difference between an unmodifiable view and deep immutability?"
+    answer: "An unmodifiable view only prevents mutation through that particular reference or API. The underlying collection or nested elements may still change elsewhere if other aliases exist. Deep immutability is a stronger object-graph contract: the relevant reachable state cannot change observably after construction. Therefore an unmodifiable wrapper alone does not prove the whole graph is immutable."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "14.ImmutabilityDefensiveCopy/ImmutabilityDefensiveCopy.md", anchor: "deep-immutability"}
+    apiRelated: {controller: "", methodSignature: ""}

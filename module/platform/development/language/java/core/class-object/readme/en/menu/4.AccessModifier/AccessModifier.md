@@ -28,7 +28,36 @@ There is no `package-private` keyword; omitting an access modifier creates that 
 
 A subclass in another package cannot arbitrarily use a protected member through every superclass instance.
 
-Treat complex protected boundaries deliberately and verify them with concrete code rather than intuition alone.
+For example, assume `Parent` is declared in package `a` with a protected field:
+
+```java
+package a;
+
+public class Parent {
+    protected int value;
+}
+```
+
+Then a subclass in package `b` may use the inherited member through its own subclass context, but not through an arbitrary `Parent` reference:
+
+```java
+package b;
+
+import a.Parent;
+
+class Child extends Parent {
+    void allowed(Child other) {
+        this.value = 1;
+        other.value = 2;
+    }
+
+    void rejected(Parent other) {
+        // other.value = 3; // compile-time error
+    }
+}
+```
+
+This is why `protected` should be learned as a precise language rule, not as the shortcut “subclasses can always access it”.
 
 ## <a id="encapsulation-boundary">Access Control as a Boundary</a>
 

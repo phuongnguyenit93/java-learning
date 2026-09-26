@@ -1,6 +1,29 @@
 package com.example.learning.controller;
-import org.springframework.web.bind.annotation.*; import java.util.*;
-@RestController @RequestMapping("/java/core/class-object/nested")
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
+
+@RestController
+@RequestMapping("/java/core/class-object/nested")
 public class NestedClassController {
- @GetMapping("/capture") public Map<String,Object> capture(){ int base=40; class Local { int answer(){return base+2;} } Local local=new Local(); return Map.of("capturedValue",base,"computed",local.answer(),"rule","captured local is final or effectively final"); }
+    private final int outerOffset = 2;
+
+    @GetMapping("/capture")
+    public Map<String, Object> capture() {
+        int localBase = 40;
+
+        class LocalCalculator {
+            int answer() { return localBase + outerOffset; }
+        }
+
+        LocalCalculator calculator = new LocalCalculator();
+        return Map.of(
+                "capturedLocal", localBase,
+                "outerInstanceValue", outerOffset,
+                "computed", calculator.answer(),
+                "rule", "captured local variables must be final or effectively final");
+    }
 }

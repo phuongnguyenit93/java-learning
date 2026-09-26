@@ -1,91 +1,81 @@
 AliasingController:
   mutateAlias():
-    execution: '<p><strong>Concept:</strong> Multiple references to one mutable object.</p><ol><li>The
-      endpoint runs a bounded deterministic example inside <code>AliasingController#mutateAlias()</code>.</li><li>Show
-      two references observing same mutation.<pre><code>@GetMapping(&quot;/mutation&quot;)
-      public Map&lt;String,Object&gt; mutateAlias(){ List&lt;String&gt; first=new
-      ArrayList&lt;&gt;(); List&lt;String&gt; second=first; second.add(&quot;visible-through-both&quot;);
-      return Map.of(&quot;sameIdentity&quot;,first==second,&quot;first&quot;,first,&quot;second&quot;,second);
-      }</code></pre></li><li>Inspect the response fields together: they are the observable
-      evidence for the rule rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
-      connect the observed result back to the linked README section before generalizing
-      the behavior.</p>'
+    execution: |-
+      <p><strong>Concept:</strong> Aliasing means multiple references identify the same mutable object.</p>
+      <p><strong>Flow:</strong> Create one <code>BankAccount</code>, assign a second reference to it, then mutate tags through the alias.</p>
+      <pre><code>BankAccount account = new BankAccount();
+      BankAccount alias = account;
+      alias.tags().add("VIP");</code></pre>
+      <p><strong>Meaning:</strong> Assignment copies the reference value; it does not create a second account.</p>
+      <p><strong>Observation:</strong> <code>sameIdentity</code> is true and both returned tag lists contain <code>VIP</code>.</p>
+      <p><strong>Conclusion:</strong> Shared mutable state creates visible coupling across aliases.</p>
     usage: true
 ConstructionController:
   constructorDispatchRisk():
-    execution: '<p><strong>Concept:</strong> Calling overridable methods during construction.</p><ol><li>The
-      endpoint runs a bounded deterministic example inside <code>ConstructionController#constructorDispatchRisk()</code>.</li><li>Show
-      overridable method seeing uninitialized subclass state.<pre><code>@GetMapping(&quot;/override-risk&quot;)
-      public Map&lt;String,Object&gt; constructorDispatchRisk(){ Child child=new Child();
-      return Map.of(&quot;valueAfterConstruction&quot;,child.value,&quot;valueObservedDuringSuperConstructor&quot;,child.observed,&quot;conclusion&quot;,&quot;virtual
-      dispatch reached Child before Child field initializer&quot;); }</code></pre></li><li>Inspect
-      the response fields together: they are the observable evidence for the rule
-      rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
-      connect the observed result back to the linked README section before generalizing
-      the behavior.</p>'
+    execution: |-
+      <p><strong>Concept:</strong> Dynamic dispatch still applies while an object is being constructed.</p>
+      <p><strong>Flow:</strong> <code>Parent()</code> calls <code>hook()</code>; runtime dispatch reaches <code>Child.hook()</code> before the child field initializer assigns <code>42</code>.</p>
+      <pre><code>Parent() { hook(); }
+      int value = 42;
+      @Override void hook() { observed = value; }</code></pre>
+      <p><strong>Meaning:</strong> The runtime object is already a <code>Child</code>, but subclass initialization is incomplete.</p>
+      <p><strong>Observation:</strong> The response shows <code>valueObservedDuringSuperConstructor = 0</code> and <code>valueAfterConstruction = 42</code>.</p>
+      <p><strong>Conclusion:</strong> Avoid overridable calls from constructors unless partially initialized subclass state is explicitly intended.</p>
     usage: true
 CopyController:
   shallowVsDeep():
-    execution: '<p><strong>Concept:</strong> Shallow copy.</p><ol><li>The endpoint
-      runs a bounded deterministic example inside <code>CopyController#shallowVsDeep()</code>.</li><li>Compare
-      nested mutable state after shallow/deep copy.<pre><code>@GetMapping(&quot;/shallow-vs-deep&quot;)
-      public Map&lt;String,Object&gt; shallowVsDeep(){ Person source=new Person(&quot;Ada&quot;,new
-      ArrayList&lt;&gt;(List.of(&quot;java&quot;))); Person shallow=source.shallow(),
-      deep=source.deep(); source.tags.add(&quot;mutable&quot;); return Map.of(&quot;sourceTags&quot;,source.tags,&quot;shallowTags&quot;,shallow.tags,&quot;deepTags&quot;,deep.tags,&quot;shallowSharesNested&quot;,source.tags==shallow.tags,&quot;deepSharesNested&quot;,source.tags==deep.tags);
-      }</code></pre></li><li>Inspect the response fields together: they are the observable
-      evidence for the rule rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
-      connect the observed result back to the linked README section before generalizing
-      the behavior.</p>'
+    execution: |-
+      <p><strong>Concept:</strong> A shallow copy creates a new outer object while nested references may still be shared.</p>
+      <p><strong>Flow:</strong> Build one shallow copy that reuses the tag List and one deep copy that creates a new List, then mutate the source.</p>
+      <pre><code>BankAccount shallowCopy() { return new BankAccount(id, tags); }
+      BankAccount deepCopy() { return new BankAccount(id, new ArrayList&lt;&gt;(tags)); }</code></pre>
+      <p><strong>Meaning:</strong> Copy depth is an ownership decision about reachable mutable state.</p>
+      <p><strong>Observation:</strong> <code>shallowSharesNested</code> is true, <code>deepSharesNested</code> is false, and only the shallow copy sees the later source mutation.</p>
+      <p><strong>Conclusion:</strong> Choose copy depth from the intended ownership contract rather than from the word "copy" alone.</p>
     usage: true
 EnumController:
   enumBehavior():
-    execution: '<p><strong>Concept:</strong> Constant-specific behavior.</p><ol><li>The
-      endpoint runs a bounded deterministic example inside <code>EnumController#enumBehavior()</code>.</li><li>Show
-      fields/methods/interface/per-constant behavior.<pre><code>@GetMapping(&quot;/behavior&quot;)
-      public Map&lt;String,Object&gt; enumBehavior(){ return Map.of(&quot;standard&quot;,Tier.STANDARD.apply(1000),&quot;discount&quot;,Tier.DISCOUNT.apply(1000),&quot;identity&quot;,Tier.valueOf(&quot;DISCOUNT&quot;)==Tier.DISCOUNT,&quot;declarationOrder&quot;,Arrays.stream(Tier.values()).map(Enum::name).toList());
-      }</code></pre></li><li>Inspect the response fields together: they are the observable
-      evidence for the rule rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
-      connect the observed result back to the linked README section before generalizing
-      the behavior.</p>'
+    execution: |-
+      <p><strong>Concept:</strong> Enum constants are real instances and may provide constant-specific behavior.</p>
+      <p><strong>Flow:</strong> <code>STANDARD</code> and <code>PREMIUM</code> implement the same <code>FeePolicy</code> differently; the endpoint also uses <code>valueOf</code> and <code>values()</code>.</p>
+      <pre><code>enum FeeTier implements FeePolicy {
+          STANDARD { public int feeFor(int amount) { return amount / 100; } },
+          PREMIUM  { public int feeFor(int amount) { return 0; } }
+      }</code></pre>
+      <p><strong>Observation:</strong> Fees differ, <code>valueOf("PREMIUM") == PREMIUM</code> is true, and <code>values()</code> preserves declaration order.</p>
+      <p><strong>Conclusion:</strong> Enums can model a closed typed strategy set; use an explicit stable code rather than <code>ordinal()</code> for durable external identity.</p>
     usage: true
 ImmutabilityController:
   defensiveCopy():
-    execution: '<p><strong>Concept:</strong> Defensive copy on output.</p><ol><li>The
-      endpoint runs a bounded deterministic example inside <code>ImmutabilityController#defensiveCopy()</code>.</li><li>Demonstrate
-      leaked vs copied mutable collection.<pre><code>@GetMapping(&quot;/defensive-copy&quot;)
-      public Map&lt;String,Object&gt; defensiveCopy(){ List&lt;String&gt; input=new
-      ArrayList&lt;&gt;(List.of(&quot;A&quot;)); SafeNames value=new SafeNames(input);
-      input.add(&quot;B&quot;); boolean outputMutable; try{value.names().add(&quot;C&quot;);
-      outputMutable=true;}catch(UnsupportedOperationException e){outputMutable=false;}
-      return Map.of(&quot;callerInputAfterMutation&quot;,input,&quot;storedSnapshot&quot;,value.names(),&quot;returnedViewMutable&quot;,outputMutable);
-      }</code></pre></li><li>Inspect the response fields together: they are the observable
-      evidence for the rule rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
-      connect the observed result back to the linked README section before generalizing
-      the behavior.</p>'
+    execution: |-
+      <p><strong>Concept:</strong> Defensive copying protects an object's ownership boundary from mutable aliases.</p>
+      <p><strong>Flow:</strong> Copy mutable caller input into <code>BankAccountSnapshot</code>, mutate the caller List, then attempt to mutate the List returned by the snapshot.</p>
+      <pre><code>BankAccountSnapshot(List&lt;String&gt; input) { tags = List.copyOf(input); }
+      List&lt;String&gt; tags() { return tags; }</code></pre>
+      <p><strong>Meaning:</strong> Input copying breaks the caller alias; an unmodifiable stored List prevents output mutation through the accessor.</p>
+      <p><strong>Observation:</strong> Caller input gains <code>VIP</code>, storedSnapshot does not, and <code>returnedCollectionMutable</code> is false.</p>
+      <p><strong>Conclusion:</strong> final fields alone do not guarantee immutability; reachable mutable state and aliases must also be controlled.</p>
     usage: true
 InitializationController:
   traceOrder():
-    execution: '<p><strong>Concept:</strong> Parent/child initialization order.</p><ol><li>The
-      endpoint runs a bounded deterministic example inside <code>InitializationController#traceOrder()</code>.</li><li>Return
-      deterministic static/instance/constructor trace.<pre><code>@GetMapping(&quot;/order&quot;)
-      public Map&lt;String,Object&gt; traceOrder(){ List&lt;String&gt; t=new ArrayList&lt;&gt;();
-      Child c=new Child(t); t.add(t.size()-1,&quot;child-field-initializer(value=&quot;+c.field+&quot;)&quot;);
-      return Map.of(&quot;staticInitialization&quot;,List.copyOf(STATIC_TRACE),&quot;instanceConstruction&quot;,t);
-      }</code></pre></li><li>Inspect the response fields together: they are the observable
-      evidence for the rule rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
-      connect the observed result back to the linked README section before generalizing
-      the behavior.</p>'
+    execution: |-
+      <p><strong>Concept:</strong> Superclass construction precedes subclass field/block initialization and the subclass constructor body.</p>
+      <p><strong>Flow:</strong> Construct <code>Child</code>; the parent constructor records first, then child field initialization, child instance initialization, and the child constructor record in order.</p>
+      <pre><code>private final int field = initField();
+      { trace.add("child-instance-initializer"); }
+      Child(List&lt;String&gt; trace) { super(trace); trace.add("child-constructor"); }</code></pre>
+      <p><strong>Observation:</strong> <code>instanceConstruction</code> is <code>[parent-constructor, child-field-initializer, child-instance-initializer, child-constructor]</code>; static initialization is returned separately.</p>
+      <p><strong>Conclusion:</strong> Initialization order is deterministic and explains why premature subclass behavior may observe default values.</p>
     usage: true
 NestedClassController:
   capture():
-    execution: '<p><strong>Concept:</strong> Captured local variables.</p><ol><li>The
-      endpoint runs a bounded deterministic example inside <code>NestedClassController#capture()</code>.</li><li>Expose
-      outer/captured-state relationship.<pre><code>@GetMapping(&quot;/capture&quot;)
-      public Map&lt;String,Object&gt; capture(){ int base=40; class Local { int answer(){return
-      base+2;} } Local local=new Local(); return Map.of(&quot;capturedValue&quot;,base,&quot;computed&quot;,local.answer(),&quot;rule&quot;,&quot;captured
-      local is final or effectively final&quot;); }</code></pre></li><li>Inspect the
-      response fields together: they are the observable evidence for the rule rather
-      than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
-      connect the observed result back to the linked README section before generalizing
-      the behavior.</p>'
+    execution: |-
+      <p><strong>Concept:</strong> A local class may access enclosing-instance state and local variables that are final or effectively final.</p>
+      <p><strong>Flow:</strong> <code>LocalCalculator</code> reads method-local <code>localBase</code> and enclosing field <code>outerOffset</code>, then adds them.</p>
+      <pre><code>int localBase = 40;
+      class LocalCalculator {
+          int answer() { return localBase + outerOffset; }
+      }</code></pre>
+      <p><strong>Observation:</strong> The response exposes <code>capturedLocal = 40</code>, <code>outerInstanceValue = 2</code>, and <code>computed = 42</code>.</p>
+      <p><strong>Conclusion:</strong> Captured locals must remain final/effectively final, while fields are accessed through the enclosing object context.</p>
     usage: true

@@ -7,48 +7,70 @@
 Instance field/method gắn với từng object:
 
 ```java
-account.balance
-account.withdraw(...)
+bankAccount.balance
+bankAccount.withdraw(...)
 ```
 
-Static field/method gắn với class-level ngữ cảnh:
+Static field/method gắn với class thay vì một instance cụ thể:
 
 ```java
-Account.MAX_LIMIT
-Account.createDefault()
+BankAccount.MAX_LIMIT
+BankAccount.createDefault()
 ```
 
-Static method không có `this` vì không có current instance mặc định.
+Static method không có `this` vì không có instance hiện tại mặc định.
 
-## <a id="final-variable-reference">final với Primitive và Reference</a>
+## <a id="final-variable-reference">Các ý nghĩa của final</a>
 
-`final` variable chỉ cho phép gán một lần sau initialization.
+Một biến `final` chỉ được nhận giá trị **một lần** theo quy tắc definite assignment của Java. Giá trị có thể được gán ngay khi khai báo hoặc được gán sau đó đúng một lần trên mọi đường khởi tạo hợp lệ.
 
 ```java
 final int x = 10;
 final List<String> names = new ArrayList<>();
 ```
 
-Với reference, `final` ngăn `names` trỏ sang list khác, nhưng **không làm list phía sau immutable**:
+Với reference, `final` ngăn `names` trỏ sang list khác, nhưng **không làm list phía sau trở thành bất biến**:
 
 ```java
 names.add("A"); // vẫn có thể hợp lệ
 ```
 
-Đây là distinction quan trọng khi học immutable object sau này.
+Đây là điểm phân biệt quan trọng khi học object bất biến (immutable object) sau này.
+
+`final` còn có ý nghĩa khác tùy loại declaration:
+
+```text
+final variable
+→ giá trị/reference không được gán lại sau lần gán hợp lệ duy nhất
+
+final method
+→ subclass không được override method đó
+
+final class
+→ không thể tạo subclass từ class đó
+```
+
+Chương này chỉ cần thiết lập ranh giới khái niệm; overriding và thiết kế kế thừa được học sâu trong module OOP.
 
 ## <a id="static-initialization">Static Initialization</a>
 
-Static field initializer và static initializer block chạy trong quá trình class initialization theo order được định nghĩa bởi source/superclass lifecycle.
+Static field initializer và static initializer block chạy trong quá trình class initialization theo thứ tự được xác định bởi vị trí trong mã nguồn và vòng đời của superclass.
 
-Static trạng thái được chia sẻ cho mọi instance, nên mutable static trạng thái tạo coupling toàn cục và concurrency concern lớn hơn instance trạng thái thông thường.
+Trạng thái `static` được dùng chung giữa mọi instance, nên trạng thái `static` có thể thay đổi sẽ tạo phụ thuộc toàn cục và vấn đề đồng thời (concurrency) lớn hơn trạng thái riêng của từng instance.
 
 ## <a id="constants-design">Constant và Compile-time Constant</a>
 
 Không phải mọi `static final` đều là compile-time constant.
 
-Compile-time constant phải đáp ứng các quy tắc cụ thể về primitive/String và constant biểu thức. Điều này ảnh hưởng tới inlining và một số hành vi khi library thay đổi constant mà client chưa recompile.
+```java
+static final int MAX_DAILY_WITHDRAWALS = 3;          // compile-time constant
+static final int CONFIGURED_LIMIT = Integer.parseInt("3"); // không phải compile-time constant
+```
 
-Tên `UPPER_SNAKE_CASE` là convention phổ biến cho constant, nhưng ngữ nghĩa quan trọng vẫn là immutability/value hợp đồng chứ không chỉ style.
+Giá trị đầu là primitive được khởi tạo từ constant expression nên có thể được inline vào bytecode của code sử dụng. Giá trị thứ hai cần gọi method nên được xác định khi runtime.
 
-chương tiếp theo đi vào các block khởi tạo nằm ngoài constructor body.
+Compile-time constant phải đáp ứng các quy tắc cụ thể về primitive/String và constant expression. Điều này ảnh hưởng tới inlining và một số hành vi khi thư viện thay đổi constant nhưng mã sử dụng chưa được biên dịch lại.
+
+Tên `UPPER_SNAKE_CASE` là quy ước phổ biến cho constant, nhưng ngữ nghĩa của constant quan trọng hơn kiểu đặt tên.
+
+Chương tiếp theo đi vào các block khởi tạo nằm ngoài constructor body.

@@ -28,13 +28,42 @@ Không có keyword `package-private`; đó là trạng thái khi không ghi modi
 
 Một subclass ở package khác không có quyền tùy ý dùng protected member thông qua mọi superclass instance.
 
-Đây là lý do protected access nên được dùng có chủ ý và test bằng mã cụ thể khi ranh giới phức tạp.
+Ví dụ, giả sử `Parent` nằm trong package `a` và có một field `protected`:
+
+```java
+package a;
+
+public class Parent {
+    protected int value;
+}
+```
+
+Một subclass trong package `b` có thể truy cập member kế thừa qua đúng ngữ cảnh subclass, nhưng không thể truy cập tùy ý qua một reference kiểu `Parent`:
+
+```java
+package b;
+
+import a.Parent;
+
+class Child extends Parent {
+    void allowed(Child other) {
+        this.value = 1;
+        other.value = 2;
+    }
+
+    void rejected(Parent other) {
+        // other.value = 3; // lỗi biên dịch
+    }
+}
+```
+
+Vì vậy không nên ghi nhớ `protected` bằng câu rút gọn “subclass luôn truy cập được”. Hãy xem nó là một quy tắc truy cập cụ thể của ngôn ngữ.
 
 ## <a id="encapsulation-boundary">Access Control và Encapsulation</a>
 
-`private` không tự động tạo design tốt, nhưng access control là công cụ quan trọng để giảm coupling.
+`private` không tự động tạo thiết kế tốt, nhưng access control là công cụ quan trọng để giảm mức phụ thuộc (coupling).
 
-Heuristic hữu ích:
+Một nguyên tắc thực dụng:
 
 ```text
 member không cần public
@@ -44,7 +73,7 @@ trạng thái có invariant
 → hạn chế raw mutation từ bên ngoài
 ```
 
-API surface càng nhỏ thì càng ít bên gọi phụ thuộc vào chi tiết cách triển khai.
+Phạm vi API công khai càng nhỏ thì càng ít bên gọi phụ thuộc trực tiếp vào chi tiết cách triển khai.
 
 ## <a id="java-modifier-map">Bản đồ Modifier trong Java</a>
 
@@ -119,4 +148,4 @@ public synchronized void update() { ... }
 
 Phần Class Object chỉ cần giúp bạn nhận diện đúng vai trò của các modifier. Những modifier gắn với concurrency, serialization hoặc native code nên được học sâu tại module giải thích chính vấn đề mà chúng giải quyết.
 
-chương tiếp theo tách hai trục khác: **member thuộc class hay object**, và **giá trị/reference có được gán lại hay không**.
+Chương tiếp theo tách hai trục khác: **member thuộc class hay object**, và **giá trị/reference có được gán lại hay không**.

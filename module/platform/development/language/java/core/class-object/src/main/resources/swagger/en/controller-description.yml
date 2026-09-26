@@ -1,42 +1,42 @@
 AliasingController:
   description: |-
     <h2>Aliasing</h2>
-    <p>Executable Java Core experiments related to Multiple references to one mutable object.</p>
+    <p>Observe how two references to one mutable object share identity and therefore observe the same mutation.</p>
   readmeRelated:
     file: 13.ObjectAliasingMutability/ObjectAliasingMutability.md
 ConstructionController:
   description: |-
     <h2>Construction</h2>
-    <p>Executable Java Core experiments related to Calling overridable methods during construction.</p>
+    <p>Observe why dynamic dispatch from a superclass constructor can reach subclass code before subclass state is initialized.</p>
   readmeRelated:
     file: 8.ObjectCreationLifecycle/ObjectCreationLifecycle.md
 CopyController:
   description: |-
     <h2>Copy</h2>
-    <p>Executable Java Core experiments related to Shallow copy.</p>
+    <p>Compare shallow copy and deep copy by observing ownership of nested mutable state.</p>
   readmeRelated:
     file: 12.CopySemantics/CopySemantics.md
 EnumController:
   description: |-
     <h2>Enum</h2>
-    <p>Executable Java Core experiments related to Constant-specific behavior.</p>
+    <p>Observe enum identity, values/valueOf behavior, interface implementation, and constant-specific behavior.</p>
   readmeRelated:
     file: 11.Enum/Enum.md
 ImmutabilityController:
   description: |-
     <h2>Immutability</h2>
-    <p>Executable Java Core experiments related to Defensive copy on output.</p>
+    <p>Observe how snapshot ownership and defensive copying prevent caller aliases from mutating internal state.</p>
   readmeRelated:
     file: 14.ImmutabilityDefensiveCopy/ImmutabilityDefensiveCopy.md
 InitializationController:
   description: |-
     <h2>Initialization</h2>
-    <p>Executable Java Core experiments related to Parent/child initialization order.</p>
+    <p>Trace class and instance initialization across a superclass/subclass construction path.</p>
   readmeRelated:
     file: 7.InitializationOrder/InitializationOrder.md
 NestedClassController:
   description: |-
     <h2>Nested Class</h2>
-    <p>Executable Java Core experiments related to Captured local variables.</p>
+    <p>Observe how a local class accesses an effectively-final local variable and enclosing-instance state.</p>
   readmeRelated:
     file: 9.NestedInnerClass/NestedInnerClass.md

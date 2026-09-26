@@ -83,3 +83,143 @@ questions:
     reviewed: false
     readmeRelated: {file: "14.ImmutabilityDefensiveCopy/ImmutabilityDefensiveCopy.md", anchor: "deep-immutability"}
     apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Vì sao mô hình class/object của Java gom state và behavior lại thay vì để caller thao tác trực tiếp mọi dữ liệu?"
+    answer: "Lợi ích cốt lõi là ownership của invariant. Nếu BankAccount expose balance để mọi nơi sửa tự do, từng caller phải tự nhớ các rule như không được rút quá số dư. Khi state và operation bảo vệ state nằm sau object boundary, các rule đó được tập trung ở một nơi và invalid state khó xuất hiện hơn. Điều này không có nghĩa mọi field đều cần getter/setter; boundary hữu ích là behavior và constraint mà object thực sự sở hữu."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.ClassObject/ClassObject.md", anchor: "class-object-model"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Object lifetime khác scope của một reference variable thế nào, và vì sao external resource không nên phụ thuộc vào GC?"
+    answer: "Một local variable có thể ra khỏi scope nhưng object vẫn reachable qua reference khác, nên GC eligibility dựa trên reachability chứ không dựa trên lexical lifetime của một biến. File, socket và external resource tương tự cần release deterministic vì GC timing không xác định và memory reachability không phải resource-management contract. Với resource kiểu này nên dùng explicit cleanup như AutoCloseable/try-with-resources."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.ClassObject/ClassObject.md", anchor: "object-reference-lifecycle"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Khác nhau giữa overloaded constructor, default constructor và implicit super() call là gì?"
+    answer: "Overloaded constructor là các constructor do ta khai báo với parameter list khác nhau. Default constructor là constructor không tham số do compiler sinh chỉ khi class không khai báo constructor nào. Riêng implicit super() là constructor invocation được Java chèn khi constructor không bắt đầu bằng this(...) hoặc super(...). Lời gọi implicit đó phải resolve tới accessible superclass constructor, nếu không code sẽ không compile."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.Constructor/Constructor.md", anchor: "default-constructor"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Giải thích this(...) và super(...), và vì sao cả hai không có nghĩa là tạo thêm một object khác."
+    answer: "this(...) delegate sang constructor khác trong cùng class; super(...) gọi superclass constructor ở bước tiếp theo của construction. Cả hai tạo thành một constructor chain cho cùng một runtime object. super không trỏ tới một parent object thứ hai nằm bên trong child. Phần superclass và subclass được initialize như các phần của cùng một object identity."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.ThisSuper/ThisSuper.md", anchor: "constructor-chaining-order"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Khi nào state nên là static thay vì instance state, và mutable static state mang rủi ro gì?"
+    answer: "Dùng instance state khi value thuộc từng object, ví dụ balance của một account. Dùng static state khi value thực sự thuộc class-level concept chứ không thuộc một receiver cụ thể. Mutable static state được share toàn cục giữa các instance nên tăng coupling, test interference, lifecycle complexity và concurrency risk. static nên biểu diễn ownership, không nên là shortcut để tạo global access tiện lợi."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.StaticFinal/StaticFinal.md", anchor: "static-vs-instance"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Vì sao final List<String> tags chưa làm BankAccount trở thành immutable?"
+    answer: "final chỉ ngăn field reference bị reassign sau lần gán hợp lệ; nó không đóng băng List object. Code còn giữ reference tới List vẫn có thể add/remove element nếu ownership và exposure không được kiểm soát. Vì vậy immutability phụ thuộc cả reachable object graph và alias, không chỉ phụ thuộc final modifier ở outer object."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.StaticFinal/StaticFinal.md", anchor: "final-variable-reference"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Class initialization và instance initialization khác nhau thế nào?"
+    answer: "Class initialization chuẩn bị static state của class và khi cần sẽ initialize superclass trước; static field/block sau đó chạy theo textual order. Instance initialization xảy ra cho từng object construction. Sau superclass construction, instance field initializer và instance block của class level hiện tại chạy theo textual order trước constructor body. Trộn lẫn hai lifecycle này sẽ dẫn tới kỳ vọng sai về thời điểm state sẵn sàng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.InitializationOrder/InitializationOrder.md", anchor: "class-initialization-order"}
+    apiRelated: {controller: "InitializationController", methodSignature: "traceOrder()"}
+
+  - question: "Initializer block hữu ích khi nào, và khi nào nó làm object construction khó hiểu hơn?"
+    answer: "Simple field initializer thường rõ nhất cho default state đơn giản; constructor/helper thường rõ hơn cho validation hoặc setup cần context. Instance initializer có thể hữu ích khi nhiều constructor thật sự share một bước initialization nhỏ; static initializer phù hợp cho class setup khó biểu diễn bằng một expression. Chúng trở thành vấn đề khi logic quan trọng, I/O hoặc side effect bị giấu ở vị trí reader khó đoán."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.InitializationBlocks/InitializationBlocks.md", anchor: "initializer-use-cases"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Khác nhau giữa memory đã được allocate/default-initialize và một object đã construction hợp lệ là gì?"
+    answer: "Allocation tạo storage cho object và instance field ban đầu nhận JVM default value như 0, false, null. Điều đó chưa có nghĩa invariant của class đã được thiết lập. Superclass construction, field/initializer execution và constructor body vẫn phải hoàn tất thành công. Code quan sát object quá sớm vì vậy có thể thấy một object đã có memory nhưng semantic state chưa hợp lệ."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.ObjectCreationLifecycle/ObjectCreationLifecycle.md", anchor: "allocation-initialization-construction"}
+    apiRelated: {controller: "ConstructionController", methodSignature: "constructorDispatchRisk()"}
+
+  - question: "Dùng constructorDispatchRisk() để giải thích vì sao dynamic dispatch từ constructor nguy hiểm."
+    answer: "Parent() gọi hook(), và normal virtual dispatch đi tới Child.hook() vì runtime object là Child. Nhưng Child field initializer chưa chạy nên override quan sát value ở default value 0. Sau construction, value là 42. API cố ý expose cả hai giá trị. Rủi ro không phải dispatch ngừng hoạt động; ngược lại, nó hoạt động trước khi subclass invariant sẵn sàng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.ObjectCreationLifecycle/ObjectCreationLifecycle.md", anchor: "constructor-dynamic-dispatch-risk"}
+    apiRelated: {controller: "ConstructionController", methodSignature: "constructorDispatchRisk()"}
+
+  - question: "this escape là gì, và vì sao nó đặc biệt nguy hiểm trong concurrent code?"
+    answer: "this escape là publish reference tới object trước khi construction hoàn tất, ví dụ register this vào listener hoặc global registry ngay trong constructor. Code khác có thể quan sát invariant chưa hoàn chỉnh. Trong concurrency, premature publication còn liên quan visibility và safe-publication rule, nên thread khác có thể thấy state trước khi construction được publish an toàn. Chi tiết Java Memory Model thuộc module concurrency, nhưng construction boundary cần được tôn trọng ngay ở đây."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.ObjectCreationLifecycle/ObjectCreationLifecycle.md", anchor: "this-escape"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Khi nào nên chọn static nested class thay vì non-static inner class?"
+    answer: "Chọn static nested class khi type chỉ cần được namespace dưới outer type nhưng không cần state của một outer object cụ thể; cách này tránh implicit outer-instance relationship. Chọn non-static inner class khi mỗi nested instance thật sự thuộc và cần truy cập một outer instance cụ thể. Giữ inner object cũng có thể làm outer object tiếp tục reachable."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.NestedInnerClass/NestedInnerClass.md", anchor: "static-nested-class"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "capture() chứng minh gì về effectively-final local variable so với enclosing-instance field?"
+    answer: "LocalCalculator đọc localBase, một method-local variable chỉ gán một lần nên effectively final, và outerOffset, một field của enclosing controller instance. Java giới hạn captured local variable, còn instance field được truy cập qua enclosing object context. capture() trả cả hai input và computed result để distinction này quan sát được."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.NestedInnerClass/NestedInnerClass.md", anchor: "capture-semantics"}
+    apiRelated: {controller: "NestedClassController", methodSignature: "capture()"}
+
+  - question: "Nói Object là root class nghĩa là gì, và một Object-typed reference che giấu điều gì?"
+    answer: "Mọi ordinary class ngoài Object đều có Object ở đâu đó trong superclass chain, nên một Object reference có thể trỏ tới instance của bất kỳ class nào. Nhưng compile-time type Object chỉ expose Object contract; subtype-specific member cần type information phù hợp và thường cần cast hoặc pattern check. Primitive không phải Object subtype; wrapper giúp primitive value tham gia reference-based API."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.ObjectClass/ObjectClass.md", anchor: "object-root-type"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Vì sao Object.clone() và finalization thường là default kém phù hợp cho modern domain design?"
+    answer: "Object.clone() có shallow-copy và construction/invariant semantics khó diễn đạt ownership rõ ràng, nên explicit copy constructor, factory, builder hoặc mapping thường dễ hiểu hơn. Finalization có timing nondeterministic và đã deprecated for removal nên không nên quản lý critical external resource. Với cleanup nên ưu tiên cơ chế deterministic như AutoCloseable và try-with-resources."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.ObjectClass/ObjectClass.md", anchor: "clone-finalize-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Enum constant có thể hoạt động như một closed strategy set thế nào, và enumBehavior() chứng minh điều gì?"
+    answer: "Enum có thể implement interface và từng constant cung cấp method body khác nhau. FeeTier.STANDARD và FeeTier.PREMIUM cùng thỏa FeePolicy nhưng tính fee khác nhau, nên caller dùng một typed contract trên tập value đóng đã biết. enumBehavior() còn cho thấy identity qua valueOf và declaration order qua values()."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "11.Enum/Enum.md", anchor: "enum-constant-specific"}
+    apiRelated: {controller: "EnumController", methodSignature: "enumBehavior()"}
+
+  - question: "Vì sao ordinal() là persistence key kém an toàn, và enum nên dùng gì khi đi qua storage/protocol boundary?"
+    answer: "ordinal() sinh từ declaration position, nên insert hoặc reorder constant sẽ đổi numeric value và có thể làm persisted data bị hiểu sai âm thầm. Nếu enum cần durable external identity, nên định nghĩa stable field như code và map có chủ đích. name() cũng là compatibility concern nếu constant có thể bị rename."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "11.Enum/Enum.md", anchor: "enum-values-valueof"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Với domain object có invariant, bạn ưu tiên copy strategy nào và vì sao?"
+    answer: "Ưu tiên explicit copy constructor, factory, builder hoặc mapper mô tả rõ field nào share, duplicate, transform hoặc revalidate. Cách này làm ownership và invariant visible trong normal construction code. Blanket serialization copy hoặc Object.clone() có thể che mất các quyết định đó. Strategy tốt phụ thuộc domain contract chứ không phụ thuộc mục tiêu copy cơ học sâu nhất có thể."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "12.CopySemantics/CopySemantics.md", anchor: "copy-strategies"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "defensiveCopy() bảo vệ cả input và output ownership boundary như thế nào?"
+    answer: "Snapshot copy mutable input của caller bằng List.copyOf nên mutation về sau trên List gốc không thay đổi stored state. Accessor trả List đã unmodifiable nên caller cũng không mutate snapshot qua returned reference. Endpoint cho thấy callerInputAfterMutation có VIP, storedSnapshot không đổi và returnedCollectionMutable là false."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "14.ImmutabilityDefensiveCopy/ImmutabilityDefensiveCopy.md", anchor: "defensive-copy-output"}
+    apiRelated: {controller: "ImmutabilityController", methodSignature: "defensiveCopy()"}
+
+  - question: "Unmodifiable view khác deep immutability thế nào?"
+    answer: "Unmodifiable view chỉ ngăn mutation thông qua reference hoặc API đó. Underlying collection hoặc nested element vẫn có thể thay đổi ở nơi khác nếu còn alias. Deep immutability là object-graph contract mạnh hơn: reachable state liên quan không thay đổi observable sau construction. Vì vậy unmodifiable wrapper tự nó không chứng minh toàn bộ object graph immutable."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "14.ImmutabilityDefensiveCopy/ImmutabilityDefensiveCopy.md", anchor: "deep-immutability"}
+    apiRelated: {controller: "", methodSignature: ""}

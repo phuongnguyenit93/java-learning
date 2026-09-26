@@ -1,90 +1,81 @@
 AliasingController:
   mutateAlias():
-    execution: <p><strong>Khái niệm:</strong> Nhiều reference cùng tới một mutable
-      object.</p><ol><li>Endpoint chạy một ví dụ deterministic và bounded trong <code>AliasingController#mutateAlias()</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/mutation&quot;)
-      public Map&lt;String,Object&gt; mutateAlias(){ List&lt;String&gt; first=new
-      ArrayList&lt;&gt;(); List&lt;String&gt; second=first; second.add(&quot;visible-through-both&quot;);
-      return Map.of(&quot;sameIdentity&quot;,first==second,&quot;first&quot;,first,&quot;second&quot;,second);
-      }</code></pre></li><li>Quan sát các field trong response cùng nhau; đây là evidence
-      cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
-      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
-      khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> Aliasing xảy ra khi nhiều reference cùng nhận diện một mutable object.</p>
+      <p><strong>Luồng:</strong> Tạo một <code>BankAccount</code>, gán thêm một reference tới đúng object đó rồi mutate tags thông qua alias.</p>
+      <pre><code>BankAccount account = new BankAccount();
+      BankAccount alias = account;
+      alias.tags().add("VIP");</code></pre>
+      <p><strong>Ý nghĩa:</strong> Phép gán chỉ copy reference value; nó không tạo account thứ hai.</p>
+      <p><strong>Quan sát:</strong> <code>sameIdentity</code> là true và cả hai danh sách tags đều chứa <code>VIP</code>.</p>
+      <p><strong>Kết luận:</strong> Shared mutable state tạo coupling quan sát được giữa các alias.</p>
     usage: true
 ConstructionController:
   constructorDispatchRisk():
-    execution: <p><strong>Khái niệm:</strong> Rủi ro gọi overridable method trong
-      constructor.</p><ol><li>Endpoint chạy một ví dụ deterministic và bounded trong
-      <code>ConstructionController#constructorDispatchRisk()</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/override-risk&quot;)
-      public Map&lt;String,Object&gt; constructorDispatchRisk(){ Child child=new Child();
-      return Map.of(&quot;valueAfterConstruction&quot;,child.value,&quot;valueObservedDuringSuperConstructor&quot;,child.observed,&quot;conclusion&quot;,&quot;virtual
-      dispatch reached Child before Child field initializer&quot;); }</code></pre></li><li>Quan
-      sát các field trong response cùng nhau; đây là evidence cho quy tắc, không phải
-      benchmark hay production policy.</li></ol><p><strong>Kết luận:</strong> đối
-      chiếu kết quả với README section được liên kết trước khi khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> Dynamic dispatch vẫn hoạt động khi object đang được construct.</p>
+      <p><strong>Luồng:</strong> <code>Parent()</code> gọi <code>hook()</code>; runtime dispatch đi tới <code>Child.hook()</code> trước khi child field initializer gán <code>42</code>.</p>
+      <pre><code>Parent() { hook(); }
+      int value = 42;
+      @Override void hook() { observed = value; }</code></pre>
+      <p><strong>Ý nghĩa:</strong> Runtime object đã là <code>Child</code> nhưng subclass initialization chưa hoàn tất.</p>
+      <p><strong>Quan sát:</strong> Response cho thấy <code>valueObservedDuringSuperConstructor = 0</code> và <code>valueAfterConstruction = 42</code>.</p>
+      <p><strong>Kết luận:</strong> Tránh gọi overridable method từ constructor trừ khi design chủ động chấp nhận partially initialized subclass state.</p>
     usage: true
 CopyController:
   shallowVsDeep():
-    execution: <p><strong>Khái niệm:</strong> Shallow copy.</p><ol><li>Endpoint chạy
-      một ví dụ deterministic và bounded trong <code>CopyController#shallowVsDeep()</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/shallow-vs-deep&quot;)
-      public Map&lt;String,Object&gt; shallowVsDeep(){ Person source=new Person(&quot;Ada&quot;,new
-      ArrayList&lt;&gt;(List.of(&quot;java&quot;))); Person shallow=source.shallow(),
-      deep=source.deep(); source.tags.add(&quot;mutable&quot;); return Map.of(&quot;sourceTags&quot;,source.tags,&quot;shallowTags&quot;,shallow.tags,&quot;deepTags&quot;,deep.tags,&quot;shallowSharesNested&quot;,source.tags==shallow.tags,&quot;deepSharesNested&quot;,source.tags==deep.tags);
-      }</code></pre></li><li>Quan sát các field trong response cùng nhau; đây là evidence
-      cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
-      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
-      khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> Shallow copy tạo outer object mới nhưng nested reference vẫn có thể được dùng chung.</p>
+      <p><strong>Luồng:</strong> Tạo shallow copy dùng lại List tags và deep copy tạo List mới, sau đó mutate source.</p>
+      <pre><code>BankAccount shallowCopy() { return new BankAccount(id, tags); }
+      BankAccount deepCopy() { return new BankAccount(id, new ArrayList&lt;&gt;(tags)); }</code></pre>
+      <p><strong>Ý nghĩa:</strong> Copy depth là quyết định ownership đối với reachable mutable state.</p>
+      <p><strong>Quan sát:</strong> <code>shallowSharesNested</code> là true, <code>deepSharesNested</code> là false và chỉ shallow copy thấy mutation về sau của source.</p>
+      <p><strong>Kết luận:</strong> Chọn copy depth theo ownership contract mong muốn, không chỉ theo từ "copy".</p>
     usage: true
 EnumController:
   enumBehavior():
-    execution: <p><strong>Khái niệm:</strong> Behavior riêng theo constant.</p><ol><li>Endpoint
-      chạy một ví dụ deterministic và bounded trong <code>EnumController#enumBehavior()</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/behavior&quot;)
-      public Map&lt;String,Object&gt; enumBehavior(){ return Map.of(&quot;standard&quot;,Tier.STANDARD.apply(1000),&quot;discount&quot;,Tier.DISCOUNT.apply(1000),&quot;identity&quot;,Tier.valueOf(&quot;DISCOUNT&quot;)==Tier.DISCOUNT,&quot;declarationOrder&quot;,Arrays.stream(Tier.values()).map(Enum::name).toList());
-      }</code></pre></li><li>Quan sát các field trong response cùng nhau; đây là evidence
-      cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
-      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
-      khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> Enum constant là instance thật và có thể có behavior riêng theo từng constant.</p>
+      <p><strong>Luồng:</strong> <code>STANDARD</code> và <code>PREMIUM</code> cùng implement <code>FeePolicy</code> nhưng tính fee khác nhau; endpoint đồng thời dùng <code>valueOf</code> và <code>values()</code>.</p>
+      <pre><code>enum FeeTier implements FeePolicy {
+          STANDARD { public int feeFor(int amount) { return amount / 100; } },
+          PREMIUM  { public int feeFor(int amount) { return 0; } }
+      }</code></pre>
+      <p><strong>Quan sát:</strong> Hai constant trả fee khác nhau, <code>valueOf("PREMIUM") == PREMIUM</code> là true và <code>values()</code> giữ declaration order.</p>
+      <p><strong>Kết luận:</strong> Enum có thể mô hình hóa closed typed strategy set; persistence nên dùng stable code riêng thay vì <code>ordinal()</code>.</p>
     usage: true
 ImmutabilityController:
   defensiveCopy():
-    execution: <p><strong>Khái niệm:</strong> Defensive copy ở output.</p><ol><li>Endpoint
-      chạy một ví dụ deterministic và bounded trong <code>ImmutabilityController#defensiveCopy()</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/defensive-copy&quot;)
-      public Map&lt;String,Object&gt; defensiveCopy(){ List&lt;String&gt; input=new
-      ArrayList&lt;&gt;(List.of(&quot;A&quot;)); SafeNames value=new SafeNames(input);
-      input.add(&quot;B&quot;); boolean outputMutable; try{value.names().add(&quot;C&quot;);
-      outputMutable=true;}catch(UnsupportedOperationException e){outputMutable=false;}
-      return Map.of(&quot;callerInputAfterMutation&quot;,input,&quot;storedSnapshot&quot;,value.names(),&quot;returnedViewMutable&quot;,outputMutable);
-      }</code></pre></li><li>Quan sát các field trong response cùng nhau; đây là evidence
-      cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
-      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
-      khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> Defensive copy bảo vệ ownership boundary khỏi mutable alias bên ngoài.</p>
+      <p><strong>Luồng:</strong> Copy mutable input của caller vào <code>BankAccountSnapshot</code>, mutate List gốc rồi thử mutate List mà snapshot trả ra.</p>
+      <pre><code>BankAccountSnapshot(List&lt;String&gt; input) { tags = List.copyOf(input); }
+      List&lt;String&gt; tags() { return tags; }</code></pre>
+      <p><strong>Ý nghĩa:</strong> Copy input cắt caller alias; stored List không sửa được ngăn output mutation qua accessor.</p>
+      <p><strong>Quan sát:</strong> Caller input có thêm <code>VIP</code>, storedSnapshot không đổi và <code>returnedCollectionMutable</code> là false.</p>
+      <p><strong>Kết luận:</strong> final field chưa đủ tạo immutability; reachable mutable state và alias cũng phải được kiểm soát.</p>
     usage: true
 InitializationController:
   traceOrder():
-    execution: <p><strong>Khái niệm:</strong> Initialization order qua inheritance.</p><ol><li>Endpoint
-      chạy một ví dụ deterministic và bounded trong <code>InitializationController#traceOrder()</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/order&quot;)
-      public Map&lt;String,Object&gt; traceOrder(){ List&lt;String&gt; t=new ArrayList&lt;&gt;();
-      Child c=new Child(t); t.add(t.size()-1,&quot;child-field-initializer(value=&quot;+c.field+&quot;)&quot;);
-      return Map.of(&quot;staticInitialization&quot;,List.copyOf(STATIC_TRACE),&quot;instanceConstruction&quot;,t);
-      }</code></pre></li><li>Quan sát các field trong response cùng nhau; đây là evidence
-      cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
-      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
-      khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> Superclass construction xảy ra trước subclass field/block initialization và subclass constructor body.</p>
+      <p><strong>Luồng:</strong> Tạo <code>Child</code>; parent constructor ghi trace trước, sau đó child field initialization, child instance initialization và child constructor ghi theo runtime order.</p>
+      <pre><code>private final int field = initField();
+      { trace.add("child-instance-initializer"); }
+      Child(List&lt;String&gt; trace) { super(trace); trace.add("child-constructor"); }</code></pre>
+      <p><strong>Quan sát:</strong> <code>instanceConstruction</code> là <code>[parent-constructor, child-field-initializer, child-instance-initializer, child-constructor]</code>; static initialization được trả riêng.</p>
+      <p><strong>Kết luận:</strong> Initialization order là deterministic và giải thích vì sao subclass behavior bị gọi sớm có thể thấy default value.</p>
     usage: true
 NestedClassController:
   capture():
-    execution: <p><strong>Khái niệm:</strong> Captured local variable.</p><ol><li>Endpoint
-      chạy một ví dụ deterministic và bounded trong <code>NestedClassController#capture()</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/capture&quot;)
-      public Map&lt;String,Object&gt; capture(){ int base=40; class Local { int answer(){return
-      base+2;} } Local local=new Local(); return Map.of(&quot;capturedValue&quot;,base,&quot;computed&quot;,local.answer(),&quot;rule&quot;,&quot;captured
-      local is final or effectively final&quot;); }</code></pre></li><li>Quan sát
-      các field trong response cùng nhau; đây là evidence cho quy tắc, không phải
-      benchmark hay production policy.</li></ol><p><strong>Kết luận:</strong> đối
-      chiếu kết quả với README section được liên kết trước khi khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> Local class có thể truy cập enclosing-instance state và local variable nếu local variable là final/effectively final.</p>
+      <p><strong>Luồng:</strong> <code>LocalCalculator</code> đọc method-local <code>localBase</code> và enclosing field <code>outerOffset</code>, rồi cộng hai giá trị.</p>
+      <pre><code>int localBase = 40;
+      class LocalCalculator {
+          int answer() { return localBase + outerOffset; }
+      }</code></pre>
+      <p><strong>Quan sát:</strong> Response cho thấy <code>capturedLocal = 40</code>, <code>outerInstanceValue = 2</code> và <code>computed = 42</code>.</p>
+      <p><strong>Kết luận:</strong> Captured local phải final/effectively final, còn field được truy cập qua enclosing object context.</p>
     usage: true

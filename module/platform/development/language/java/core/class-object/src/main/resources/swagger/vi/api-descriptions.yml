@@ -1,9 +1,9 @@
 AliasingController:
   mutateAlias():
-    summary: Nhiều reference cùng tới một mutable object
-    description: Chạy thí nghiệm học tập deterministic cho Nhiều reference cùng tới
-      một mutable object. Response cung cấp runtime evidence cụ thể thay vì chỉ mô
-      tả quy tắc.
+    summary: Quan sát aliasing qua trạng thái mutable dùng chung
+    description: Tạo hai reference BankAccount cùng trỏ tới một object, thay đổi tags
+      qua một alias rồi trả về bằng chứng về identity và state để thấy vì sao reference
+      còn lại quan sát cùng mutation.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -28,10 +28,10 @@ AliasingController:
     usage: true
 ConstructionController:
   constructorDispatchRisk():
-    summary: Rủi ro gọi overridable method trong constructor
-    description: Chạy thí nghiệm học tập deterministic cho Rủi ro gọi overridable
-      method trong constructor. Response cung cấp runtime evidence cụ thể thay vì
-      chỉ mô tả quy tắc.
+    summary: Quan sát dynamic dispatch trong quá trình construction
+    description: Cho superclass constructor gọi một overridable method rồi so sánh giá
+      trị field của subclass được quan sát trong superclass constructor với giá trị sau
+      khi construction hoàn tất.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -56,9 +56,9 @@ ConstructionController:
     usage: true
 CopyController:
   shallowVsDeep():
-    summary: Shallow copy
-    description: Chạy thí nghiệm học tập deterministic cho Shallow copy. Response
-      cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    summary: So sánh behavior của shallow copy và deep copy
+    description: Tạo shallow copy và deep copy của BankAccount, thay đổi nested mutable
+      state ở source rồi cho thấy copy nào còn dùng chung cùng một List.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -83,9 +83,9 @@ CopyController:
     usage: true
 EnumController:
   enumBehavior():
-    summary: Behavior riêng theo constant
-    description: Chạy thí nghiệm học tập deterministic cho Behavior riêng theo constant.
-      Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    summary: Quan sát enum identity và behavior riêng theo constant
+    description: Dùng các FeeTier constant cùng implement một interface nhưng có behavior
+      khác nhau, sau đó trả về fee, identity từ valueOf và declaration order từ values.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -110,9 +110,9 @@ EnumController:
     usage: true
 ImmutabilityController:
   defensiveCopy():
-    summary: Defensive copy ở output
-    description: Chạy thí nghiệm học tập deterministic cho Defensive copy ở output.
-      Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    summary: Quan sát defensive copy ở input và output
+    description: Tạo BankAccountSnapshot theo hướng immutable từ mutable input của caller,
+      thay đổi List gốc rồi kiểm tra collection trả ra không thể sửa stored state.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -137,10 +137,10 @@ ImmutabilityController:
     usage: true
 InitializationController:
   traceOrder():
-    summary: Initialization order qua inheritance
-    description: Chạy thí nghiệm học tập deterministic cho Initialization order qua
-      inheritance. Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy
-      tắc.
+    summary: Trace initialization order giữa parent và child
+    description: Ghi lại superclass construction, child field initialization, child
+      instance initialization và child constructor theo đúng runtime order, đồng thời
+      trả thêm class-initialization evidence.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -165,9 +165,9 @@ InitializationController:
     usage: true
 NestedClassController:
   capture():
-    summary: Captured local variable
-    description: Chạy thí nghiệm học tập deterministic cho Captured local variable.
-      Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    summary: Quan sát local capture và outer-instance access
+    description: Dùng local class đọc cả effectively-final local variable và field của
+      enclosing controller, giúp quan sát hai surrounding context trong cùng kết quả.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video

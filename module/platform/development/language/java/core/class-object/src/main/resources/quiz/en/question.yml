@@ -233,3 +233,354 @@ questions:
     reviewed: false
     readmeRelated: {file: "6.InitializationBlocks/InitializationBlocks.md", anchor: "instance-initializer"}
     apiRelated: {controller: "", methodSignature: ""}
+
+  - id: instance-state-identity
+    question: "Two BankAccount objects contain the same field values. What can still be true?"
+    answers:
+      - {id: A, answer: "They must be the same object because their state is equal.", explanation: "Incorrect. Equal state does not imply identical object identity."}
+      - {id: B, answer: "They can be distinct objects with different identities even though their current state is equal.", explanation: "Correct. Object identity and object state are separate concepts."}
+      - {id: C, answer: "They cannot both have instance fields.", explanation: "Incorrect. Each object can have its own instance fields."}
+      - {id: D, answer: "Java merges them automatically to save memory.", explanation: "Incorrect. Ordinary object instances are not merged merely because field values match."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.ClassObject/ClassObject.md", anchor: "fields-methods-state"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: reference-reachability-lifetime
+    question: "A local reference variable goes out of scope. When may the referenced object still remain alive?"
+    answers:
+      - {id: A, answer: "When another reachable reference still points to the object.", explanation: "Correct. GC eligibility is based on reachability, not on one variable leaving lexical scope."}
+      - {id: B, answer: "Never; local scope end immediately destroys the object.", explanation: "Incorrect. The object may still be reachable through other references."}
+      - {id: C, answer: "Only if every field is static.", explanation: "Incorrect. Static fields are not required for an object to remain reachable."}
+      - {id: D, answer: "Only until the current statement completes.", explanation: "Incorrect. Lifetime depends on reachability, not statement boundaries."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.ClassObject/ClassObject.md", anchor: "object-reference-lifecycle"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: constructor-invariants
+    question: "Which constructor design best protects an invariant that opening balance must not be negative?"
+    answers:
+      - {id: A, answer: "Construct the object with any value and require callers to remember a later repair method.", explanation: "Incorrect. Mandatory repair after construction allows a half-valid object to escape."}
+      - {id: B, answer: "Validate the opening balance during construction and reject invalid input before returning the object.", explanation: "Correct. Constructors should establish required invariants before the object becomes usable."}
+      - {id: C, answer: "Make every field public so callers can fix the invariant themselves.", explanation: "Incorrect. That weakens the ownership boundary instead of enforcing the invariant."}
+      - {id: D, answer: "Move validation to finalize().", explanation: "Incorrect. Finalization is unrelated and occurs far too late."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.Constructor/Constructor.md", anchor: "constructor-purpose"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: constructor-overloading-signature
+    question: "Why can a class declare both BankAccount(String id) and BankAccount(String id, int balance)?"
+    answers:
+      - {id: A, answer: "They have different parameter lists, so they are distinct overloaded constructors.", explanation: "Correct. Constructor overloading is distinguished by parameter lists, not return types."}
+      - {id: B, answer: "Constructors may differ only by return type.", explanation: "Incorrect. Constructors have no return type, and overload resolution uses the parameter list."}
+      - {id: C, answer: "Java allows only one constructor per class, so this cannot compile.", explanation: "Incorrect. Multiple overloaded constructors are allowed."}
+      - {id: D, answer: "The second constructor is actually a static method.", explanation: "Incorrect. Matching the class name with no return type makes it a constructor."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.Constructor/Constructor.md", anchor: "constructor-overloading"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: constructor-failure-publication
+    question: "A constructor throws after registering this in a global registry. Which statement is most accurate?"
+    answers:
+      - {id: A, answer: "The new expression still returns the fully initialized object.", explanation: "Incorrect. A throwing constructor prevents the new expression from returning a successfully constructed reference."}
+      - {id: B, answer: "All earlier side effects are automatically rolled back by the JVM.", explanation: "Incorrect. Java does not automatically undo arbitrary side effects performed before the exception."}
+      - {id: C, answer: "The caller does not receive a successfully constructed object, but the earlier registry side effect may still expose the partially constructed instance.", explanation: "Correct. Constructor failure does not magically reverse external publication."}
+      - {id: D, answer: "A constructor is not allowed to throw exceptions.", explanation: "Incorrect. Constructors may throw when they cannot establish valid state."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.Constructor/Constructor.md", anchor: "constructor-exceptions"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: this-current-instance
+    question: "Inside an instance method, what does this refer to?"
+    answers:
+      - {id: A, answer: "The current object on which the instance code is executing.", explanation: "Correct. this is the current receiver in instance context."}
+      - {id: B, answer: "The superclass object stored separately inside the current object.", explanation: "Incorrect. There is no separate superclass object represented by this."}
+      - {id: C, answer: "The Class object for the current type.", explanation: "Incorrect. The runtime Class object is different from the instance receiver."}
+      - {id: D, answer: "A reference available only in static methods.", explanation: "Incorrect. Static context has no implicit this."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.ThisSuper/ThisSuper.md", anchor: "this-reference"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: super-same-object
+    question: "What is the best mental model for super inside a subclass instance?"
+    answers:
+      - {id: A, answer: "super refers to a second parent object allocated beside the subclass object.", explanation: "Incorrect. Construction produces one object, not a nested separate superclass object."}
+      - {id: B, answer: "super changes how superclass constructors or members are selected on the same object context.", explanation: "Correct. It expresses superclass access/construction context for the same object."}
+      - {id: C, answer: "super is an alias for null until the child constructor finishes.", explanation: "Incorrect. super is not a mutable reference variable."}
+      - {id: D, answer: "super can be reassigned to another superclass instance.", explanation: "Incorrect. super is language syntax, not an assignable variable."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.ThisSuper/ThisSuper.md", anchor: "super-access"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: access-package-private
+    question: "How is package-private access declared for a member?"
+    answers:
+      - {id: A, answer: "With the package keyword.", explanation: "Incorrect. Java has no package-private keyword."}
+      - {id: B, answer: "By omitting public, protected, and private.", explanation: "Correct. No explicit access modifier means package-private access."}
+      - {id: C, answer: "With protected package.", explanation: "Incorrect. That is not valid Java syntax."}
+      - {id: D, answer: "By marking the member static.", explanation: "Incorrect. static controls class-vs-instance ownership, not access level."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.AccessModifier/AccessModifier.md", anchor: "access-levels"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: encapsulation-small-surface
+    question: "Why can a smaller public API surface improve encapsulation?"
+    answers:
+      - {id: A, answer: "It reduces the number of callers that can depend directly on implementation details.", explanation: "Correct. Fewer exposed members create fewer direct coupling points."}
+      - {id: B, answer: "It guarantees the implementation is thread-safe.", explanation: "Incorrect. Access control and thread safety solve different problems."}
+      - {id: C, answer: "It makes every object immutable automatically.", explanation: "Incorrect. Immutability requires stronger ownership and mutation guarantees."}
+      - {id: D, answer: "It prevents the class from having constructors.", explanation: "Incorrect. Constructor availability is unrelated to public API size in this sense."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.AccessModifier/AccessModifier.md", anchor: "encapsulation-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: modifier-domain-separation
+    question: "What is the clearest distinction between private and volatile on the same field?"
+    answers:
+      - {id: A, answer: "private controls who may access the field; volatile concerns cross-thread visibility and ordering.", explanation: "Correct. The modifiers solve different problem domains even when they appear on one declaration."}
+      - {id: B, answer: "Both are access modifiers with identical meaning.", explanation: "Incorrect. volatile is a concurrency/JMM modifier, not an access level."}
+      - {id: C, answer: "volatile makes the field visible only inside the declaring class.", explanation: "Incorrect. That is the role of private, not volatile."}
+      - {id: D, answer: "private guarantees atomic compound updates across threads.", explanation: "Incorrect. Access restriction does not provide concurrency atomicity."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.AccessModifier/AccessModifier.md", anchor: "java-modifier-map"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: static-instance-sharing
+    question: "Which statement correctly contrasts a static field with an instance field?"
+    answers:
+      - {id: A, answer: "Every object gets an independent copy of both fields.", explanation: "Incorrect. Static state is associated with the class, not one copy per instance."}
+      - {id: B, answer: "A static field is shared at class level, while each object has its own instance-field state.", explanation: "Correct. static and instance state have different ownership scopes."}
+      - {id: C, answer: "Instance fields can be accessed only from static methods.", explanation: "Incorrect. Instance methods naturally access instance state through the receiver."}
+      - {id: D, answer: "A static method has an implicit this referring to the class.", explanation: "Incorrect. Static methods have no implicit this."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.StaticFinal/StaticFinal.md", anchor: "static-vs-instance"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: static-init-once-class
+    question: "When do static field initializers and static initializer blocks run?"
+    answers:
+      - {id: A, answer: "Once for every new object.", explanation: "Incorrect. That describes instance initialization, not class initialization."}
+      - {id: B, answer: "During class initialization, according to superclass/source ordering rules.", explanation: "Correct. Static initialization belongs to class initialization, not each construction."}
+      - {id: C, answer: "Only after the first constructor body finishes.", explanation: "Incorrect. Required class initialization occurs before normal use that triggers it."}
+      - {id: D, answer: "Only when System.gc() runs.", explanation: "Incorrect. Garbage collection is unrelated to class initialization."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.StaticFinal/StaticFinal.md", anchor: "static-initialization"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: compile-time-constant
+    question: "Which field is a compile-time constant under ordinary Java constant-expression rules?"
+    answers:
+      - {id: A, answer: "static final int LIMIT = 3;", explanation: "Correct. A primitive static final initialized by a constant expression can be a compile-time constant."}
+      - {id: B, answer: "static final int LIMIT = Integer.parseInt(\"3\");", explanation: "Incorrect. The method call makes this a runtime initialization, not a constant expression."}
+      - {id: C, answer: "static int LIMIT = 3;", explanation: "Incorrect. Without final, it is not a constant variable."}
+      - {id: D, answer: "final List<Integer> LIMITS = new ArrayList<>();", explanation: "Incorrect. A mutable object reference like this is not a primitive/String compile-time constant."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.StaticFinal/StaticFinal.md", anchor: "constants-design"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: static-initializer-timing
+    question: "What is a key reason to avoid complex I/O inside a static initializer?"
+    answers:
+      - {id: A, answer: "Static initializers cannot contain statements.", explanation: "Incorrect. They can contain statements, but complexity has lifecycle consequences."}
+      - {id: B, answer: "Failure happens during class initialization, which can make startup and error handling harder to reason about.", explanation: "Correct. Static initialization couples the work to class-initialization timing and failure semantics."}
+      - {id: C, answer: "A static initializer runs after every instance method call.", explanation: "Incorrect. It belongs to class initialization."}
+      - {id: D, answer: "I/O automatically turns static fields into instance fields.", explanation: "Incorrect. The kind of work does not change member ownership."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.InitializationBlocks/InitializationBlocks.md", anchor: "static-initializer"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: initializer-readability
+    question: "When is an initializer block a reasonable choice?"
+    answers:
+      - {id: A, answer: "Whenever Java syntax allows it, regardless of readability.", explanation: "Incorrect. The mechanism should serve clarity rather than exist for its own sake."}
+      - {id: B, answer: "When it genuinely makes shared initialization clearer than duplicating logic across constructors.", explanation: "Correct. Readability and lifecycle clarity are the deciding concerns."}
+      - {id: C, answer: "Only for network I/O.", explanation: "Incorrect. Initializer blocks are not dedicated I/O hooks."}
+      - {id: D, answer: "Only in interfaces.", explanation: "Incorrect. Instance initializer blocks are a class construction feature."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.InitializationBlocks/InitializationBlocks.md", anchor: "initializer-use-cases"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: class-init-super-first
+    question: "When a subclass requires class initialization, what broad ordering rule applies?"
+    answers:
+      - {id: A, answer: "Required superclass initialization occurs before the subclass's static initialization.", explanation: "Correct. Class initialization follows the superclass relationship before subclass static fields/blocks execute."}
+      - {id: B, answer: "Subclass static blocks always run before superclass static state.", explanation: "Incorrect. Required superclass class initialization comes first."}
+      - {id: C, answer: "Static initialization order is random.", explanation: "Incorrect. Java defines ordering rules."}
+      - {id: D, answer: "Class initialization happens once per object allocation.", explanation: "Incorrect. It belongs to the class lifecycle, not each object."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.InitializationOrder/InitializationOrder.md", anchor: "class-initialization-order"}
+    apiRelated: {controller: "InitializationController", methodSignature: "traceOrder()"}
+
+  - id: object-creation-default-values
+    question: "During object creation, what exists before explicit instance field initializers run?"
+    answers:
+      - {id: A, answer: "Fields first have JVM default values such as 0, false, and null.", explanation: "Correct. Allocation/default initialization precedes explicit field and block initialization."}
+      - {id: B, answer: "All fields already contain their final source-code initializer values.", explanation: "Incorrect. Explicit initialization runs later in the construction sequence."}
+      - {id: C, answer: "The object has no memory until after the constructor returns.", explanation: "Incorrect. Memory/default state exists before constructor completion."}
+      - {id: D, answer: "Only static fields have values; instance fields do not exist yet.", explanation: "Incorrect. Instance storage exists and begins with default values."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.ObjectCreationLifecycle/ObjectCreationLifecycle.md", anchor: "allocation-initialization-construction"}
+    apiRelated: {controller: "ConstructionController", methodSignature: "constructorDispatchRisk()"}
+
+  - id: this-escape-publication
+    question: "Which constructor action is a classic this-escape risk?"
+    answers:
+      - {id: A, answer: "Assigning a constructor parameter to a private field.", explanation: "Incorrect. Ordinary field assignment does not publish the object externally."}
+      - {id: B, answer: "Registering this in an external listener/registry that may use it before construction completes.", explanation: "Correct. External publication can expose partially initialized state."}
+      - {id: C, answer: "Calling this(...) as the constructor's delegation step.", explanation: "Incorrect. Constructor chaining itself is not external publication."}
+      - {id: D, answer: "Assigning a primitive final field exactly once.", explanation: "Incorrect. That is normal initialization."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.ObjectCreationLifecycle/ObjectCreationLifecycle.md", anchor: "this-escape"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: static-nested-no-outer
+    question: "Which creation syntax demonstrates that a static nested class does not require an outer instance?"
+    answers:
+      - {id: A, answer: "BankAccount.Builder b = new BankAccount.Builder();", explanation: "Correct. A static nested class is created through the outer type name without an outer object receiver."}
+      - {id: B, answer: "BankAccount.Builder b = account.new Builder();", explanation: "Incorrect. That syntax is associated with a non-static inner class."}
+      - {id: C, answer: "Builder b = super.new Builder();", explanation: "Incorrect. That is not valid nested-class creation syntax."}
+      - {id: D, answer: "Builder b = this();", explanation: "Incorrect. this() is constructor delegation syntax."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.NestedInnerClass/NestedInnerClass.md", anchor: "static-nested-class"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: local-anonymous-this
+    question: "Which statement correctly distinguishes an anonymous class from a lambda regarding this?"
+    answers:
+      - {id: A, answer: "An anonymous class has its own object/this semantics, while lambda this follows the enclosing context.", explanation: "Correct. This is an important semantic difference despite both supporting local behavior."}
+      - {id: B, answer: "Neither can access any enclosing state.", explanation: "Incorrect. Both can interact with enclosing context under their respective rules."}
+      - {id: C, answer: "A lambda always creates a named nested class in source code.", explanation: "Incorrect. Lambda syntax does not declare a named class."}
+      - {id: D, answer: "Anonymous classes can exist only in static methods.", explanation: "Incorrect. They can be used in instance contexts too."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.NestedInnerClass/NestedInnerClass.md", anchor: "local-anonymous-class"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: effectively-final-capture
+    question: "Why can the local class in capture() read localBase = 40?"
+    answers:
+      - {id: A, answer: "Because localBase is effectively final: it is assigned once and not reassigned.", explanation: "Correct. Local/anonymous classes may capture final or effectively-final local variables."}
+      - {id: B, answer: "Because every int variable is implicitly static.", explanation: "Incorrect. Local primitive variables are not implicitly static."}
+      - {id: C, answer: "Because captured locals may be freely reassigned after capture.", explanation: "Incorrect. Reassignment would break effectively-final status."}
+      - {id: D, answer: "Because the local class copies the entire stack frame and makes it mutable.", explanation: "Incorrect. That is not the Java language model for captured locals."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.NestedInnerClass/NestedInnerClass.md", anchor: "capture-semantics"}
+    apiRelated: {controller: "NestedClassController", methodSignature: "capture()"}
+
+  - id: object-root-primitives
+    question: "Which statement about java.lang.Object and primitives is correct?"
+    answers:
+      - {id: A, answer: "int directly extends Object.", explanation: "Incorrect. Primitive types are not class subtypes of Object."}
+      - {id: B, answer: "Ordinary classes have Object in their superclass chain, while primitives use wrapper types when participating in reference-based APIs.", explanation: "Correct. Boxing bridges primitive values into reference-oriented APIs."}
+      - {id: C, answer: "Object is a primitive supertype.", explanation: "Incorrect. Object is a class."}
+      - {id: D, answer: "Only final classes inherit from Object.", explanation: "Incorrect. Finality does not determine the root superclass."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.ObjectClass/ObjectClass.md", anchor: "object-root-type"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: object-method-boundary
+    question: "Where should the detailed equals/hashCode contract be learned in this curriculum?"
+    answers:
+      - {id: A, answer: "Only in the class-object module because Object declares the methods.", explanation: "Incorrect. This module gives the Object overview but delegates deep equality/hash contracts."}
+      - {id: B, answer: "In object-contract, while class-object keeps only the root-method orientation.", explanation: "Correct. This preserves the intended module boundary."}
+      - {id: C, answer: "In the enum chapter only.", explanation: "Incorrect. Equality/hash contracts are broader than enums."}
+      - {id: D, answer: "They are JVM-internal and should not be learned.", explanation: "Incorrect. They are important Java object contracts."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.ObjectClass/ObjectClass.md", anchor: "object-core-methods"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: enum-instance-identity
+    question: "Why is == appropriate for comparing enum constants?"
+    answers:
+      - {id: A, answer: "Each declared enum constant has a stable singleton identity for that enum type.", explanation: "Correct. Enum comparison naturally uses constant identity."}
+      - {id: B, answer: "Enums are secretly primitive ints.", explanation: "Incorrect. Enum constants are objects, not integer aliases."}
+      - {id: C, answer: "== invokes equals() with deep reflection for enums.", explanation: "Incorrect. == compares reference identity."}
+      - {id: D, answer: "All enum constants are the same object.", explanation: "Incorrect. Each named constant is a distinct enum instance."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "11.Enum/Enum.md", anchor: "enum-type-model"}
+    apiRelated: {controller: "EnumController", methodSignature: "enumBehavior()"}
+
+  - id: enum-interface-behavior
+    question: "What does FeeTier implements FeePolicy demonstrate?"
+    answers:
+      - {id: A, answer: "An enum cannot implement interfaces, so the code is invalid.", explanation: "Incorrect. Enums can implement interfaces."}
+      - {id: B, answer: "A closed set of enum constants can satisfy one interface while individual constants provide different behavior.", explanation: "Correct. This combines typed closed values with polymorphic behavior."}
+      - {id: C, answer: "Every enum constant becomes a separate top-level class declaration.", explanation: "Incorrect. Constant-specific bodies are part of the enum model, not separate source-level top-level types."}
+      - {id: D, answer: "Implementing an interface removes enum identity semantics.", explanation: "Incorrect. The constants remain enum instances with stable identity."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "11.Enum/Enum.md", anchor: "enum-interface"}
+    apiRelated: {controller: "EnumController", methodSignature: "enumBehavior()"}
+
+  - id: reference-copy-not-object
+    question: "After BankAccount b = a;, what has been copied?"
+    answers:
+      - {id: A, answer: "The entire BankAccount object graph.", explanation: "Incorrect. Plain reference assignment does not clone the object."}
+      - {id: B, answer: "Only the reference value, so a and b identify the same object.", explanation: "Correct. This is reference copying, not object copying."}
+      - {id: C, answer: "Only primitive fields inside the account.", explanation: "Incorrect. No fields are copied by the assignment."}
+      - {id: D, answer: "A new object with equal identity.", explanation: "Incorrect. Object identity is not duplicated this way."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "12.CopySemantics/CopySemantics.md", anchor: "reference-copy"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: deep-copy-ownership
+    question: "What should determine whether a nested object is duplicated in a deep copy?"
+    answers:
+      - {id: A, answer: "A universal rule that every reachable object must always be cloned.", explanation: "Incorrect. Deep-copy depth depends on ownership and domain semantics."}
+      - {id: B, answer: "Whether the new object needs independent ownership of that mutable reachable state.", explanation: "Correct. Immutable values may be safely shared while mutable owned state may need duplication."}
+      - {id: C, answer: "Whether the field name contains the word copy.", explanation: "Incorrect. Naming does not define ownership semantics."}
+      - {id: D, answer: "Only whether the nested object overrides toString().", explanation: "Incorrect. String representation is unrelated to copy ownership."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "12.CopySemantics/CopySemantics.md", anchor: "deep-copy"}
+    apiRelated: {controller: "CopyController", methodSignature: "shallowVsDeep()"}

@@ -1,42 +1,42 @@
 AliasingController:
   description: |-
     <h2>Aliasing</h2>
-    <p>Các thí nghiệm Java Core có thể chạy để quan sát Nhiều reference cùng tới một mutable object.</p>
+    <p>Quan sát cách hai reference cùng trỏ tới một mutable object nên cùng thấy một identity và cùng quan sát mutation.</p>
   readmeRelated:
     file: 13.ObjectAliasingMutability/ObjectAliasingMutability.md
 ConstructionController:
   description: |-
     <h2>Construction</h2>
-    <p>Các thí nghiệm Java Core có thể chạy để quan sát Rủi ro gọi overridable method trong constructor.</p>
+    <p>Quan sát vì sao dynamic dispatch từ superclass constructor có thể chạy subclass code trước khi subclass state được initialize.</p>
   readmeRelated:
     file: 8.ObjectCreationLifecycle/ObjectCreationLifecycle.md
 CopyController:
   description: |-
     <h2>Copy</h2>
-    <p>Các thí nghiệm Java Core có thể chạy để quan sát Shallow copy.</p>
+    <p>So sánh shallow copy và deep copy bằng cách quan sát ownership của nested mutable state.</p>
   readmeRelated:
     file: 12.CopySemantics/CopySemantics.md
 EnumController:
   description: |-
     <h2>Enum</h2>
-    <p>Các thí nghiệm Java Core có thể chạy để quan sát Behavior riêng theo constant.</p>
+    <p>Quan sát enum identity, values/valueOf, interface implementation và behavior riêng theo từng constant.</p>
   readmeRelated:
     file: 11.Enum/Enum.md
 ImmutabilityController:
   description: |-
     <h2>Immutability</h2>
-    <p>Các thí nghiệm Java Core có thể chạy để quan sát Defensive copy ở output.</p>
+    <p>Quan sát cách snapshot ownership và defensive copy ngăn caller alias sửa internal state.</p>
   readmeRelated:
     file: 14.ImmutabilityDefensiveCopy/ImmutabilityDefensiveCopy.md
 InitializationController:
   description: |-
     <h2>Initialization</h2>
-    <p>Các thí nghiệm Java Core có thể chạy để quan sát Initialization order qua inheritance.</p>
+    <p>Trace class initialization và instance initialization xuyên qua một chuỗi superclass/subclass.</p>
   readmeRelated:
     file: 7.InitializationOrder/InitializationOrder.md
 NestedClassController:
   description: |-
     <h2>Nested Class</h2>
-    <p>Các thí nghiệm Java Core có thể chạy để quan sát Captured local variable.</p>
+    <p>Quan sát local class truy cập effectively-final local variable và state của enclosing instance.</p>
   readmeRelated:
     file: 9.NestedInnerClass/NestedInnerClass.md

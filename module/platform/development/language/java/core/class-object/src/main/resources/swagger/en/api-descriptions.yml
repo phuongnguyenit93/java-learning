@@ -1,9 +1,9 @@
 AliasingController:
   mutateAlias():
-    summary: Multiple references to one mutable object
-    description: Runs a deterministic learning experiment for Multiple references
-      to one mutable object. The response exposes concrete runtime evidence instead
-      of only describing the rule.
+    summary: Observe aliasing through shared mutable state
+    description: Creates two BankAccount references to the same object, mutates tags
+      through one alias, and returns identity plus state evidence showing why the other
+      reference observes the same mutation.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -28,10 +28,10 @@ AliasingController:
     usage: true
 ConstructionController:
   constructorDispatchRisk():
-    summary: Calling overridable methods during construction
-    description: Runs a deterministic learning experiment for Calling overridable
-      methods during construction. The response exposes concrete runtime evidence
-      instead of only describing the rule.
+    summary: Observe dynamic dispatch during construction
+    description: Lets a superclass constructor call an overridable method and compares
+      the subclass field value observed during superclass construction with the value
+      after construction completes.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -56,9 +56,9 @@ ConstructionController:
     usage: true
 CopyController:
   shallowVsDeep():
-    summary: Shallow copy
-    description: Runs a deterministic learning experiment for Shallow copy. The response
-      exposes concrete runtime evidence instead of only describing the rule.
+    summary: Compare shallow and deep copy behavior
+    description: Creates shallow and deep BankAccount copies, mutates nested mutable
+      state in the source, and exposes whether each copy shares the same nested List.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -83,10 +83,9 @@ CopyController:
     usage: true
 EnumController:
   enumBehavior():
-    summary: Constant-specific behavior
-    description: Runs a deterministic learning experiment for Constant-specific behavior.
-      The response exposes concrete runtime evidence instead of only describing the
-      rule.
+    summary: Observe enum identity and constant-specific behavior
+    description: Uses FeeTier constants that implement one interface with different
+      behavior, then exposes fee results, valueOf identity, and values declaration order.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -111,10 +110,10 @@ EnumController:
     usage: true
 ImmutabilityController:
   defensiveCopy():
-    summary: Defensive copy on output
-    description: Runs a deterministic learning experiment for Defensive copy on output.
-      The response exposes concrete runtime evidence instead of only describing the
-      rule.
+    summary: Observe defensive copy on input and output
+    description: Builds an immutable-style BankAccountSnapshot from mutable caller input,
+      mutates the original List, and verifies that the returned collection cannot mutate
+      the stored snapshot.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -139,10 +138,10 @@ ImmutabilityController:
     usage: true
 InitializationController:
   traceOrder():
-    summary: Parent/child initialization order
-    description: Runs a deterministic learning experiment for Parent/child initialization
-      order. The response exposes concrete runtime evidence instead of only describing
-      the rule.
+    summary: Trace parent and child initialization order
+    description: Records superclass construction, child field initialization, child
+      instance initialization, and the child constructor in the order they actually run,
+      while also exposing class-initialization evidence.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -167,10 +166,10 @@ InitializationController:
     usage: true
 NestedClassController:
   capture():
-    summary: Captured local variables
-    description: Runs a deterministic learning experiment for Captured local variables.
-      The response exposes concrete runtime evidence instead of only describing the
-      rule.
+    summary: Observe local capture and outer-instance access
+    description: Uses a local class that reads an effectively-final local variable and
+      an enclosing controller field, making the two surrounding contexts observable in
+      one deterministic result.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video

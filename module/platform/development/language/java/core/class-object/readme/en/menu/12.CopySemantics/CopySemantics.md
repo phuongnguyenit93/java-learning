@@ -5,8 +5,8 @@
 ## <a id="reference-copy">Reference Copy</a>
 
 ```java
-Profile a = new Profile();
-Profile b = a;
+BankAccount a = new BankAccount("A-01");
+BankAccount b = a;
 ```
 
 No new object is created. Only the reference value is copied, so both variables refer to the same object.
@@ -17,16 +17,40 @@ Mutation through one reference is visible through the other.
 
 A shallow copy creates a new outer object but copies its field values as they are.
 
-Reference fields are copied as references, so nested mutable objects may still be shared.
+Reference fields are copied as references, so nested mutable objects may still be shared. Suppose `BankAccount` owns a mutable list of tags and its copy constructor copies that list reference directly:
 
-```text
-original ------> mutable Address
-copy     ------> same Address
+```java
+class BankAccount {
+    private final String id;
+    private final List<String> tags;
+
+    BankAccount(String id, List<String> tags) {
+        this.id = id;
+        this.tags = tags;
+    }
+
+    BankAccount(BankAccount source) {
+        this(source.id, source.tags); // shallow: same list reference
+    }
+
+    List<String> tags() {
+        return tags;
+    }
+}
+
+BankAccount original = new BankAccount("A-01", new ArrayList<>());
+BankAccount copy = new BankAccount(original);
+
+copy.tags().add("VIP");
+
+System.out.println(original.tags()); // [VIP]
 ```
+
+The two `BankAccount` objects have different identities, but both still refer to the same mutable list.
 
 ## <a id="deep-copy">Deep Copy</a>
 
-A deep copy tries to create independent mutable state where ownership requires it.
+A deep copy tries to create independent mutable state where ownership requires it. In the running example, the copy constructor could instead use `new ArrayList<>(source.tags)` to give the copied account its own list.
 
 There is no universal deep-copy algorithm for every object graph. The design must decide which nested values are copied, which immutable values may be shared, and how cycles/identity are treated.
 

@@ -7,11 +7,11 @@ A constructor is more than syntax executed after `new`. It is where an object tr
 A constructor should establish invariants required for the object to be usable.
 
 ```java
-class Account {
+class BankAccount {
     private final String id;
     private int balance;
 
-    Account(String id, int openingBalance) {
+    BankAccount(String id, int openingBalance) {
         if (openingBalance < 0) throw new IllegalArgumentException();
         this.id = id;
         this.balance = openingBalance;
@@ -26,12 +26,14 @@ Callers should not normally receive a half-valid object that requires a mandator
 A class may declare multiple constructors with different parameter lists.
 
 ```java
-Account(String id) {
+BankAccount(String id) {
     this(id, 0);
 }
 ```
 
 `this(...)` delegates to another constructor in the same class so validation/initialization logic can stay in one place.
+
+If a constructor does not explicitly begin with `this(...)` or `super(...)`, Java inserts an implicit no-argument `super()` call. That call must resolve to an accessible superclass constructor; otherwise compilation fails.
 
 ## <a id="default-constructor">Default Constructor</a>
 
@@ -40,10 +42,10 @@ The compiler provides a no-argument default constructor only when the class decl
 Once you declare:
 
 ```java
-Account(String id) { ... }
+BankAccount(String id) { ... }
 ```
 
-the compiler no longer adds `Account()` automatically.
+the compiler no longer adds `BankAccount()` automatically.
 
 This often matters for frameworks or code expecting a no-arg constructor.
 
