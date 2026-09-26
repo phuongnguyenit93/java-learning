@@ -1,9 +1,9 @@
 EqualityController:
   identityVsEquality():
-    summary: Object identity vs logical equality
-    description: Runs a deterministic learning experiment for Object identity vs logical
-      equality. The response exposes concrete runtime evidence instead of only describing
-      the rule.
+    summary: Reference identity versus logical equality
+    description: |-
+      Creates two distinct `Value` instances with the same `id`, then returns `==`, `equals`, and hash-comparison results together.
+      The experiment shows that identity and logical equality answer different questions while also reinforcing that equal objects must have consistent hashes.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -28,10 +28,10 @@ EqualityController:
     usage: true
 HashContractController:
   brokenHashSetLookup():
-    summary: Observable failures from broken contract
-    description: Runs a deterministic learning experiment for Observable failures
-      from broken contract. The response exposes concrete runtime evidence instead
-      of only describing the rule.
+    summary: HashSet lookup with a broken equals/hashCode contract
+    description: |-
+      Creates two keys for which `equals == true` but deliberately returns different hash codes, inserts one into a `HashSet`, and looks it up through the other logically equal key.
+      The response turns an abstract contract violation into observable failure: the collection can miss a value that `equals` says is equal.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -55,10 +55,10 @@ HashContractController:
       ]
     usage: true
   mutableKey():
-    summary: Mutable fields used in hashCode
-    description: Runs a deterministic learning experiment for Mutable fields used
-      in hashCode. The response exposes concrete runtime evidence instead of only
-      describing the rule.
+    summary: Mutating equality/hash state after insertion
+    description: |-
+      Inserts a mutable key into a `HashMap`, checks lookup before mutation, changes the field used by `equals/hashCode`, and checks again.
+      The experiment shows why hash keys should keep equality/hash state stable; the post-mutation result is evidence from the current implementation, not a promise that every implementation must fail in exactly the same way.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -83,10 +83,10 @@ HashContractController:
     usage: true
 OrderingController:
   naturalVsCustom():
-    summary: External/custom ordering
-    description: Runs a deterministic learning experiment for External/custom ordering.
-      The response exposes concrete runtime evidence instead of only describing the
-      rule.
+    summary: Natural ordering versus a custom Comparator
+    description: |-
+      Uses the same `Person` list twice: `Collections.sort` applies the type's natural `Comparable` order by age, while `Comparator.comparing(Person::name)` applies caller-owned ordering by name.
+      The two results make the design difference between type-owned and external ordering directly observable.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -110,10 +110,10 @@ OrderingController:
       ]
     usage: true
   compareToEquals():
-    summary: Consistency with equals and sorted collections
-    description: Runs a deterministic learning experiment for Consistency with equals
-      and sorted collections. The response exposes concrete runtime evidence instead
-      of only describing the rule.
+    summary: When compareTo and equals disagree
+    description: |-
+      Compares `BigDecimal("1.0")` with `BigDecimal("1.00")`: `equals` is false while `compareTo` is zero, then inserts both values into a `HashSet` and a `TreeSet`.
+      The response demonstrates why hash-based and sorted collections can report different sizes when they use different notions of "same key".
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video

@@ -1,18 +1,21 @@
 EqualityController:
   description: |-
     <h2>Equality</h2>
-    <p>Các thí nghiệm Java Core có thể chạy để quan sát Object identity và logical equality.</p>
+    <p>Nhóm thí nghiệm quan sát trực tiếp sự khác nhau giữa <strong>reference identity</strong> và <strong>logical equality</strong>.</p>
+    <p>Mục tiêu là nhìn thấy hai object khác identity vẫn có thể equal theo domain contract, thay vì chỉ ghi nhớ rằng <code>==</code> và <code>equals</code> khác nhau.</p>
   readmeRelated:
     file: 1.IdentityEquality/IdentityEquality.md
 HashContractController:
   description: |-
     <h2>Hash Contract</h2>
-    <p>Các thí nghiệm Java Core có thể chạy để quan sát Hệ quả observable khi contract bị phá.</p>
+    <p>Nhóm thí nghiệm cho thấy <code>equals</code> và <code>hashCode</code> là một contract vận hành chung trong hash-based collection.</p>
+    <p>Hai endpoint tập trung vào hai failure mode thực tế: equal object nhưng hash khác nhau, và key bị mutate sau khi đã insert.</p>
   readmeRelated:
     file: 4.EqualsHashCode/EqualsHashCode.md
 OrderingController:
   description: |-
     <h2>Ordering</h2>
-    <p>Các thí nghiệm Java Core có thể chạy để quan sát External/custom ordering.</p>
+    <p>Nhóm thí nghiệm so sánh natural ordering qua <code>Comparable</code> với ordering policy bên ngoài qua <code>Comparator</code>.</p>
+    <p>Đồng thời quan sát hệ quả khi ordering equality (<code>compareTo == 0</code>) không trùng với logical equality.</p>
   readmeRelated:
     file: 7.Comparator/Comparator.md

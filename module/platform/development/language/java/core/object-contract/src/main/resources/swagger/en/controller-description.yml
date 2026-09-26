@@ -1,18 +1,21 @@
 EqualityController:
   description: |-
     <h2>Equality</h2>
-    <p>Executable Java Core experiments related to Object identity vs logical equality.</p>
+    <p>Executable experiments that make the difference between <strong>reference identity</strong> and <strong>logical equality</strong> directly observable.</p>
+    <p>The goal is to see distinct objects compare logically equal instead of merely memorizing that <code>==</code> and <code>equals</code> are different.</p>
   readmeRelated:
     file: 1.IdentityEquality/IdentityEquality.md
 HashContractController:
   description: |-
     <h2>Hash Contract</h2>
-    <p>Executable Java Core experiments related to Observable failures from broken contract.</p>
+    <p>Executable experiments showing that <code>equals</code> and <code>hashCode</code> form one operational contract inside hash-based collections.</p>
+    <p>The endpoints focus on two practical failure modes: equal objects with different hashes, and keys whose equality/hash state changes after insertion.</p>
   readmeRelated:
     file: 4.EqualsHashCode/EqualsHashCode.md
 OrderingController:
   description: |-
     <h2>Ordering</h2>
-    <p>Executable Java Core experiments related to External/custom ordering.</p>
+    <p>Executable experiments comparing natural ordering through <code>Comparable</code> with caller-owned ordering through <code>Comparator</code>.</p>
+    <p>They also expose what happens when ordering equality (<code>compareTo == 0</code>) differs from logical equality.</p>
   readmeRelated:
     file: 7.Comparator/Comparator.md

@@ -168,3 +168,237 @@ questions:
     reviewed: false
     readmeRelated: {file: "7.Comparator/Comparator.md", anchor: "comparator-contract"}
     apiRelated: {controller: "", methodSignature: ""}
+
+  - id: default-object-equals-identity
+    question: "If a class does not override `equals`, how are two separate instances with identical field values treated by `equals`?"
+    answers:
+      - {id: A, answer: "They are always equal because the JVM compares every field automatically.", explanation: "Incorrect. Default `Object.equals` uses identity semantics and does not infer domain fields."}
+      - {id: B, answer: "They are equal only when both references identify the same object.", explanation: "Correct. Without an override, `Object.equals` remains identity-based."}
+      - {id: C, answer: "Calling equals always throws because it was not implemented.", explanation: "Incorrect. Every class inherits an implementation from `Object`."}
+      - {id: D, answer: "They are equal whenever their hash codes match.", explanation: "Incorrect. A hash collision does not define logical equality."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.IdentityEquality/IdentityEquality.md", anchor: "reference-equality"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: equals-overload-vs-override
+    question: "Why is defining `boolean equals(UserId other)` without `equals(Object other)` a design bug?"
+    answers:
+      - {id: A, answer: "It creates an overload, so collections or calls through Object may still use `Object.equals`.", explanation: "Correct. The standard contract requires overriding the exact `equals(Object)` signature."}
+      - {id: B, answer: "Java forbids overloading equals.", explanation: "Incorrect. Overloading is legal; it simply does not replace the Object contract."}
+      - {id: C, answer: "equals must be static.", explanation: "Incorrect. `equals` is an instance method."}
+      - {id: D, answer: "The parameter must be the generic type `T`.", explanation: "Incorrect. The Object contract uses `equals(Object)`."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.Equals/Equals.md", anchor: "equals-implementation"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: equals-field-selection
+    question: "If `User` equality represents domain identity through `userId`, which field should usually not be included automatically just because an IDE can see it?"
+    answers:
+      - {id: A, answer: "A stable `userId` that actually defines identity.", explanation: "Incorrect. If the domain identity is userId, that field is central."}
+      - {id: B, answer: "A mutable `lastLoginAt` value that changes after each login.", explanation: "Correct. Mutable operational state should not normally make the same entity become unequal."}
+      - {id: C, answer: "A field the domain contract explicitly defines as identity.", explanation: "Incorrect. Equality should follow domain meaning."}
+      - {id: D, answer: "No field; equals must always compare every field.", explanation: "Incorrect. There is no rule requiring every field to participate in equality."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.Equals/Equals.md", anchor: "equals-implementation"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: equals-getclass-instanceof-policy
+    question: "What is the main design difference between using `instanceof` and `getClass()` for the type check in equals?"
+    answers:
+      - {id: A, answer: "`instanceof` is always faster, so it is mandatory.", explanation: "Incorrect. This is mainly an equality-policy choice, not a universal performance rule."}
+      - {id: B, answer: "`getClass()` requires the exact runtime class, while `instanceof` can allow compatible subtypes into equality.", explanation: "Correct. The choice affects symmetry and transitivity in hierarchies."}
+      - {id: C, answer: "`getClass()` compares fields while `instanceof` compares hash codes.", explanation: "Incorrect. Both are type-compatibility checks."}
+      - {id: D, answer: "They are always equivalent in every inheritance hierarchy.", explanation: "Incorrect. They express different policies."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.Equals/Equals.md", anchor: "equals-inheritance-risk"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: hash-collision-not-equality
+    question: "What does it mean when two different objects return the same hashCode?"
+    answers:
+      - {id: A, answer: "Their equals result must be true.", explanation: "Incorrect. Collisions are valid; equality must still be checked separately."}
+      - {id: B, answer: "It is always a JVM bug.", explanation: "Incorrect. A finite int hash space necessarily allows collisions."}
+      - {id: C, answer: "They may simply collide; the collection still needs equals to confirm a match.", explanation: "Correct. Hashing narrows candidates but does not replace equality."}
+      - {id: D, answer: "A HashSet must keep at most one of them.", explanation: "Incorrect. If equals is false, both may coexist."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.HashCode/HashCode.md", anchor: "hash-distribution"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: hashcode-cross-jvm-stability
+    question: "Should `hashCode()` be stored in a database as a persistent identifier across JVM runs?"
+    answers:
+      - {id: A, answer: "Yes; the Object contract guarantees the hash never changes forever.", explanation: "Incorrect. The contract does not guarantee the same value across separate JVM executions."}
+      - {id: B, answer: "No; hashCode supports object/hash-collection contracts, not durable identity.", explanation: "Correct. Persistent identity needs its own contract."}
+      - {id: C, answer: "Yes, if the object is immutable, because the hash is globally unique.", explanation: "Incorrect. Immutability gives neither uniqueness nor a cross-run guarantee."}
+      - {id: D, answer: "Only if the class implements Comparable.", explanation: "Incorrect. Comparable does not change the hashCode contract."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.HashCode/HashCode.md", anchor: "hashcode-contract"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: hashmap-lookup-flow
+    question: "Which mental model best describes lookup in a hash-based collection?"
+    answers:
+      - {id: A, answer: "Call equals on every key first, then calculate a hash.", explanation: "Incorrect. Hashing is used first to narrow the candidate region."}
+      - {id: B, answer: "hashCode fully proves equality; equals is only for logging.", explanation: "Incorrect. A hash alone cannot establish equality."}
+      - {id: C, answer: "hashCode narrows candidates, then equals confirms the logical match.", explanation: "Correct. This is the key boundary model for hash lookup."}
+      - {id: D, answer: "The collection only uses reference ==.", explanation: "Incorrect. HashMap and HashSet rely on equals/hashCode contracts."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.EqualsHashCode/EqualsHashCode.md", anchor: "hash-collection-lookup"}
+    apiRelated: {controller: "HashContractController", methodSignature: "brokenHashSetLookup()"}
+
+  - id: tostring-default-not-unique-id
+    question: "Which statement is correct about default Object.toString output such as `ClassName@5e2de80c`?"
+    answers:
+      - {id: A, answer: "The suffix is a JVM-guaranteed unique object ID.", explanation: "Incorrect. The suffix comes from hashCode in hexadecimal and collisions are possible."}
+      - {id: B, answer: "The suffix is derived from hashCode in hexadecimal and is not a uniqueness guarantee.", explanation: "Correct. The default representation is not a persistent or unique identity."}
+      - {id: C, answer: "It is Java's standard serialization format.", explanation: "Incorrect. toString is a diagnostic representation, not a serialization contract."}
+      - {id: D, answer: "The format is guaranteed to remain stable across all JVM runs.", explanation: "Incorrect. There is no such cross-run stability guarantee."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.ToString/ToString.md", anchor: "tostring-purpose"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: tostring-vs-serialization
+    question: "Why should a domain object's toString not be used as a JSON-like persistence protocol unless the type explicitly documents that contract?"
+    answers:
+      - {id: A, answer: "toString is always private.", explanation: "Incorrect. toString is a public method inherited from Object."}
+      - {id: B, answer: "Diagnostic formatting may evolve for humans and carries no schema or compatibility guarantee.", explanation: "Correct. Machine-readable persistence should use a dedicated serializer/contract."}
+      - {id: C, answer: "toString cannot contain strings.", explanation: "Incorrect. It returns a String."}
+      - {id: D, answer: "JSON cannot represent Java objects.", explanation: "Incorrect. The issue is the contract, not representability."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.ToString/ToString.md", anchor: "tostring-design"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: tostring-recursive-graph
+    question: "What pitfall can occur if Parent.toString prints the full Child and Child.toString prints the full Parent?"
+    answers:
+      - {id: A, answer: "The representation can recurse indefinitely or become enormous.", explanation: "Correct. Diagnostic fields should be selected intentionally instead of dumping the whole graph."}
+      - {id: B, answer: "The JVM always cuts the cycle after exactly one level.", explanation: "Incorrect. Custom toString implementations have no such general guarantee."}
+      - {id: C, answer: "equals becomes disabled automatically.", explanation: "Incorrect. This is a representation concern, not an equality switch."}
+      - {id: D, answer: "The object graph becomes immutable.", explanation: "Incorrect. toString does not change mutability."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.ToString/ToString.md", anchor: "tostring-design"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: natural-order-design-choice
+    question: "If a type has several equally meaningful sort orders, such as Book by title, price, or rating, which choice is usually better?"
+    answers:
+      - {id: A, answer: "Pick one field arbitrarily for compareTo and call it natural order.", explanation: "Incorrect. Natural order should be clear and unsurprising."}
+      - {id: B, answer: "Use Comparator policies for contextual ordering instead of inventing a fake natural order.", explanation: "Correct. Comparator keeps policy outside the type."}
+      - {id: C, answer: "Never sort the type at all.", explanation: "Incorrect. It can be sorted with Comparator."}
+      - {id: D, answer: "Change equals to match whichever field is being sorted at the moment.", explanation: "Incorrect. Equality should not vary with presentation ordering."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.Comparable/Comparable.md", anchor: "natural-order"}
+    apiRelated: {controller: "OrderingController", methodSignature: "naturalVsCustom()"}
+
+  - id: comparable-null-contract
+    question: "According to the Comparable contract, what should `x.compareTo(null)` do when x is non-null?"
+    answers:
+      - {id: A, answer: "Return 0 so null equals every object.", explanation: "Incorrect. Natural ordering does not treat null as a valid peer value."}
+      - {id: B, answer: "Return a negative value so null sorts last.", explanation: "Incorrect. Null placement belongs to Comparator policy when needed."}
+      - {id: C, answer: "Throw NullPointerException.", explanation: "Correct. This is required by the Comparable contract."}
+      - {id: D, answer: "Call equals(null) and return that boolean.", explanation: "Incorrect. compareTo returns int and has its own contract."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.Comparable/Comparable.md", anchor: "compareto-contract"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: comparable-zero-third-value
+    question: "If `a.compareTo(b) == 0`, what else must hold when a and b are compared with the same third value c?"
+    answers:
+      - {id: A, answer: "Nothing else is required.", explanation: "Incorrect. Values in the same ordering equivalence class must behave consistently against a third value."}
+      - {id: B, answer: "The sign of `a.compareTo(c)` must match the sign of `b.compareTo(c)`.", explanation: "Correct. Otherwise ordering equivalence is not coherent."}
+      - {id: C, answer: "a and b must be the same reference.", explanation: "Incorrect. Ordering equality does not require identity."}
+      - {id: D, answer: "a and c must have the same hashCode.", explanation: "Incorrect. This is an ordering contract, not a hashing contract."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.Comparable/Comparable.md", anchor: "compareto-contract"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: comparator-tiebreaker-tree-set
+    question: "A TreeSet comparator compares Book only by title. What may happen to two books with different ids but the same title?"
+    answers:
+      - {id: A, answer: "TreeSet must keep both because equals is different.", explanation: "Incorrect. TreeSet uses the comparator to determine ordering-key equality."}
+      - {id: B, answer: "The comparator returns 0, so TreeSet may treat them as one ordering key; add a tie-breaker if they must remain distinct.", explanation: "Correct. `thenComparing` can provide an intentional tie-breaker."}
+      - {id: C, answer: "The comparator automatically calls hashCode to distinguish them.", explanation: "Incorrect. TreeSet does not use hashCode for key uniqueness."}
+      - {id: D, answer: "The JVM automatically appends id to the comparator.", explanation: "Incorrect. Ordering policy is the comparator's responsibility."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Comparator/Comparator.md", anchor: "comparator-composition"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: comparator-null-policy
+    question: "If the caller wants null values to sort last, what is the clearest way to express that contract?"
+    answers:
+      - {id: A, answer: "Rely on NullPointerException and retry.", explanation: "Incorrect. Null placement should be an explicit policy."}
+      - {id: B, answer: "Use `Comparator.nullsLast(...)` around an appropriate non-null comparator.", explanation: "Correct. This helper makes null semantics explicit."}
+      - {id: C, answer: "Override Object.equals so null is greater than every value.", explanation: "Incorrect. equals does not define ordering."}
+      - {id: D, answer: "Convert every null to an empty string regardless of the domain.", explanation: "Incorrect. That changes data semantics rather than merely ordering policy."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Comparator/Comparator.md", anchor: "comparator-composition"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: comparator-zero-third-value
+    question: "A comparator returns `compare(a,b)==0`. What must hold for a coherent ordering relative to a third value c?"
+    answers:
+      - {id: A, answer: "The signs of compare(a,c) and compare(b,c) must agree.", explanation: "Correct. Values in the same ordering equivalence class need the same relationship to c."}
+      - {id: B, answer: "a.equals(c) must be true.", explanation: "Incorrect. Equality with c does not follow from compare(a,b)==0."}
+      - {id: C, answer: "a and b must have the same identityHashCode.", explanation: "Incorrect. Identity hashing is unrelated to the comparator contract."}
+      - {id: D, answer: "The comparator must return exactly -1, 0, or 1.", explanation: "Incorrect. Only the sign is part of the contract."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Comparator/Comparator.md", anchor: "comparator-contract"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: sorting-stability-vs-comparator
+    question: "Which statement correctly relates stable sorting and a comparator's contract?"
+    answers:
+      - {id: A, answer: "A transitive comparator automatically makes every sort stable.", explanation: "Incorrect. Stability is a property of the sorting algorithm/API."}
+      - {id: B, answer: "A stable sort can repair a non-transitive comparator.", explanation: "Incorrect. Stability cannot fix an invalid ordering relation."}
+      - {id: C, answer: "Stability preserves encounter order among ties; comparator consistency is a separate property of the ordering function.", explanation: "Correct. They are distinct concepts that both affect results."}
+      - {id: D, answer: "Stable sorting means equals is always called.", explanation: "Incorrect. Stability does not define the equality mechanism."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Comparator/Comparator.md", anchor: "sorting-stability-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: sorted-set-reverse-equality-mismatch
+    question: "If `a.equals(b)==true` but a comparator returns `compare(a,b)!=0`, how may TreeSet behave?"
+    answers:
+      - {id: A, answer: "It may retain both a and b because the comparator sees two different ordering keys.", explanation: "Correct. This is the reverse direction of ordering-versus-equality inconsistency."}
+      - {id: B, answer: "It must collapse them because TreeSet always calls equals first.", explanation: "Incorrect. TreeSet uniqueness is based on ordering comparison."}
+      - {id: C, answer: "The compiler rejects the comparator.", explanation: "Incorrect. The compiler cannot detect this semantic mismatch."}
+      - {id: D, answer: "HashSet must also retain both.", explanation: "Incorrect. HashSet uses equals/hashCode and therefore has different semantics."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Comparator/Comparator.md", anchor: "comparator-contract"}
+    apiRelated: {controller: "", methodSignature: ""}

@@ -1,63 +1,105 @@
 EqualityController:
   identityVsEquality():
-    execution: '<p><strong>Concept:</strong> Object identity vs logical equality.</p><ol><li>The
-      endpoint runs a bounded deterministic example inside <code>EqualityController#identityVsEquality()</code>.</li><li>Compare
-      == and equals for distinct logically equal objects.<pre><code>@GetMapping(&quot;/identity-vs-equality&quot;)
-      public Map&lt;String,Object&gt; identityVsEquality(){ Value a=new Value(7),
-      b=new Value(7); return Map.of(&quot;sameReference&quot;,a==b,&quot;logicalEquals&quot;,a.equals(b),&quot;sameHash&quot;,a.hashCode()==b.hashCode());
-      }</code></pre></li><li>Inspect the response fields together: they are the observable
-      evidence for the rule rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
-      connect the observed result back to the linked README section before generalizing
-      the behavior.</p>'
+    execution: |-
+      <p><strong>Concept:</strong> reference identity and logical equality are different contracts.</p>
+      <p><strong>Flow:</strong></p>
+      <ol>
+        <li>Create two distinct <code>Value</code> instances with the same <code>id = 7</code>.</li>
+        <li>Use <code>==</code> to observe identity.</li>
+        <li>Use <code>equals</code> to observe logical equality.</li>
+        <li>Compare <code>hashCode</code> values to check the hashing side of the equality contract.</li>
+      </ol>
+      <p><strong>Code evidence:</strong></p>
+      <pre><code>Value a = new Value(7), b = new Value(7);
+      return Map.of(
+          "sameReference", a == b,
+          "logicalEquals", a.equals(b),
+          "sameHash", a.hashCode() == b.hashCode()
+      );</code></pre>
+      <p><strong>Expected observation:</strong> <code>sameReference=false</code>, <code>logicalEquals=true</code>, <code>sameHash=true</code>.</p>
+      <p><strong>Meaning:</strong> two objects can have different identities while representing the same logical value. Equal hashes do not prove equality, but equal objects must have equal hashes.</p>
+      <p><strong>Conclusion:</strong> use <code>==</code> when identity is the real question and <code>equals</code> when the domain needs logical equality.</p>
     usage: true
 HashContractController:
   brokenHashSetLookup():
-    execution: '<p><strong>Concept:</strong> Observable failures from broken contract.</p><ol><li>The
-      endpoint runs a bounded deterministic example inside <code>HashContractController#brokenHashSetLookup()</code>.</li><li>Show
-      failed lookup after violating equals/hashCode consistency.<pre><code>@GetMapping(&quot;/broken-contract&quot;)
-      public Map&lt;String,Object&gt; brokenHashSetLookup(){ Set&lt;Broken&gt; set=new
-      HashSet&lt;&gt;(); Broken stored=new Broken(1), equal=new Broken(1); set.add(stored);
-      return Map.of(&quot;equals&quot;,stored.equals(equal),&quot;storedHash&quot;,stored.hashCode(),&quot;equalHash&quot;,equal.hashCode(),&quot;containsEqualObject&quot;,set.contains(equal));
-      }</code></pre></li><li>Inspect the response fields together: they are the observable
-      evidence for the rule rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
-      connect the observed result back to the linked README section before generalizing
-      the behavior.</p>'
+    execution: |-
+      <p><strong>Concept:</strong> <code>equals</code> and <code>hashCode</code> must agree for hash-based lookup to behave as callers expect.</p>
+      <p><strong>Setup:</strong> <code>Broken</code> deliberately violates the contract: equality uses only <code>id</code>, while the hash is supplied independently.</p>
+      <pre><code>static final class Broken {
+          final int id;
+          final int hash;
+          public boolean equals(Object o) {
+              return o instanceof Broken b &amp;&amp; id == b.id;
+          }
+          public int hashCode() { return hash; }
+      }</code></pre>
+      <p><strong>Flow:</strong></p>
+      <ol>
+        <li>Create <code>stored = Broken(1, 101)</code> and <code>equal = Broken(1, 202)</code>.</li>
+        <li><code>stored.equals(equal)</code> is <code>true</code>, but the hashes differ.</li>
+        <li>Insert <code>stored</code> into a <code>HashSet</code>.</li>
+        <li>Look it up using <code>equal</code>.</li>
+      </ol>
+      <p><strong>Expected observation:</strong> the response shows <code>equals=true</code>, different hash values, and <code>containsEqualObject=false</code>.</p>
+      <p><strong>Meaning:</strong> hashing narrows candidates before equality confirms a match. If equal objects are routed to different hash regions, lookup may never reach the <code>equals</code> check.</p>
+      <p><strong>Conclusion:</strong> overriding <code>equals</code> and <code>hashCode</code> should be treated as one design change.</p>
     usage: true
   mutableKey():
-    execution: '<p><strong>Concept:</strong> Mutable fields used in hashCode.</p><ol><li>The
-      endpoint runs a bounded deterministic example inside <code>HashContractController#mutableKey()</code>.</li><li>Mutate
-      key field after insertion and observe lookup failure.<pre><code>static final
-      class MutableKey { int id; MutableKey(int id){this.id=id;} public boolean equals(Object
-      o){return o instanceof MutableKey k&amp;&amp;id==k.id;} public int hashCode(){return
-      Integer.hashCode(id);} }</code></pre></li><li>Inspect the response fields together:
-      they are the observable evidence for the rule rather than a benchmark or production
-      policy.</li></ol><p><strong>Conclusion:</strong> connect the observed result
-      back to the linked README section before generalizing the behavior.</p>'
+    execution: |-
+      <p><strong>Concept:</strong> a key's equality/hash state should remain stable while it is stored in a hash-based collection.</p>
+      <p><strong>Flow:</strong></p>
+      <ol>
+        <li>Create <code>MutableKey(1)</code> and insert it into a <code>HashMap</code>.</li>
+        <li>Check <code>containsKey</code> before mutation.</li>
+        <li>Change <code>key.id</code> from <code>1</code> to <code>2</code>; both <code>equals</code> and <code>hashCode</code> depend on this field.</li>
+        <li>Check <code>containsKey</code> again.</li>
+      </ol>
+      <p><strong>Code evidence:</strong></p>
+      <pre><code>map.put(key, "value");
+      boolean before = map.containsKey(key);
+      key.id = 2;
+      boolean after = map.containsKey(key);</code></pre>
+      <p><strong>Observation:</strong> the endpoint returns both before/after lookup states and the current hash so the consequence is visible on the running JDK.</p>
+      <p><strong>Boundary:</strong> once the key violates the stable-state assumption, collection contracts do not promise one universal failure shape across all implementations. The experiment is evidence of the risk, not a guarantee that every post-mutation lookup must return false.</p>
+      <p><strong>Conclusion:</strong> immutable keys, or at least immutable equality/hash fields, are the easiest keys to reason about.</p>
     usage: true
 OrderingController:
   naturalVsCustom():
-    execution: '<p><strong>Concept:</strong> External/custom ordering.</p><ol><li>The
-      endpoint runs a bounded deterministic example inside <code>OrderingController#naturalVsCustom()</code>.</li><li>Compare
-      Comparable natural order with Comparator alternatives.<pre><code>@GetMapping(&quot;/natural-vs-custom&quot;)
-      public Map&lt;String,Object&gt; naturalVsCustom(){ List&lt;Person&gt; source=List.of(new
-      Person(&quot;Bob&quot;,30),new Person(&quot;Ada&quot;,40)); List&lt;Person&gt;
-      natural=new ArrayList&lt;&gt;(source); Collections.sort(natural); List&lt;Person&gt;
-      byName=new ArrayList&lt;&gt;(source); byName.sort(Comparator.comparing(Person::name));
-      return Map.of(&quot;naturalByAge&quot;,natural,&quot;customByName&quot;,byName);
-      }</code></pre></li><li>Inspect the response fields together: they are the observable
-      evidence for the rule rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
-      connect the observed result back to the linked README section before generalizing
-      the behavior.</p>'
+    execution: |-
+      <p><strong>Concept:</strong> <code>Comparable</code> puts natural ordering on the type; <code>Comparator</code> puts ordering policy at the caller.</p>
+      <p><strong>Setup:</strong> <code>Person</code> implements <code>Comparable&lt;Person&gt;</code> by <code>age</code>, while the caller builds a comparator by <code>name</code>.</p>
+      <pre><code>record Person(String name, int age) implements Comparable&lt;Person&gt; {
+          public int compareTo(Person o) {
+              return Integer.compare(age, o.age);
+          }
+      }</code></pre>
+      <p><strong>Flow:</strong></p>
+      <ol>
+        <li>Copy the same source list into two independent lists.</li>
+        <li><code>Collections.sort(natural)</code> applies the natural order by age.</li>
+        <li><code>byName.sort(Comparator.comparing(Person::name))</code> applies caller-owned ordering by name.</li>
+      </ol>
+      <p><strong>Expected observation:</strong> natural order places Bob(30) before Ada(40), while the custom order places Ada before Bob.</p>
+      <p><strong>Meaning:</strong> the same data may have one natural order and multiple contextual orders. <code>compareTo</code> should not be changed merely to serve one view.</p>
+      <p><strong>Conclusion:</strong> use <code>Comparable</code> for one clear default order and <code>Comparator</code> for alternate or business-specific ordering.</p>
     usage: true
   compareToEquals():
-    execution: '<p><strong>Concept:</strong> Consistency with equals and sorted collections.</p><ol><li>The
-      endpoint runs a bounded deterministic example inside <code>OrderingController#compareToEquals()</code>.</li><li>Show
-      sorted-set implications when ordering is inconsistent with equals.<pre><code>@GetMapping(&quot;/compareto-equals&quot;)
-      public Map&lt;String,Object&gt; compareToEquals(){ BigDecimal a=new BigDecimal(&quot;1.0&quot;),b=new
-      BigDecimal(&quot;1.00&quot;); Set&lt;BigDecimal&gt; hash=new HashSet&lt;&gt;(List.of(a,b));
-      Set&lt;BigDecimal&gt; tree=new TreeSet&lt;&gt;(List.of(a,b)); return Map.of(&quot;equals&quot;,a.equals(b),&quot;compareTo&quot;,a.compareTo(b),&quot;hashSetSize&quot;,hash.size(),&quot;treeSetSize&quot;,tree.size());
-      }</code></pre></li><li>Inspect the response fields together: they are the observable
-      evidence for the rule rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
-      connect the observed result back to the linked README section before generalizing
-      the behavior.</p>'
+    execution: |-
+      <p><strong>Concept:</strong> sorted collections use comparison semantics, while hash-based collections use <code>equals/hashCode</code>.</p>
+      <p><strong>Setup:</strong> <code>BigDecimal("1.0")</code> and <code>BigDecimal("1.00")</code> are a standard example: <code>equals</code> considers scale and returns false, while <code>compareTo</code> treats them as the same numeric position and returns zero.</p>
+      <p><strong>Flow:</strong></p>
+      <ol>
+        <li>Measure <code>a.equals(b)</code> and <code>a.compareTo(b)</code>.</li>
+        <li>Insert both into a <code>HashSet</code>.</li>
+        <li>Insert both into a <code>TreeSet</code>.</li>
+        <li>Compare the collection sizes.</li>
+      </ol>
+      <p><strong>Code evidence:</strong></p>
+      <pre><code>BigDecimal a = new BigDecimal("1.0");
+      BigDecimal b = new BigDecimal("1.00");
+      Set&lt;BigDecimal&gt; hash = new HashSet&lt;&gt;(List.of(a, b));
+      Set&lt;BigDecimal&gt; tree = new TreeSet&lt;&gt;(List.of(a, b));</code></pre>
+      <p><strong>Expected observation:</strong> <code>equals=false</code>, <code>compareTo=0</code>, <code>hashSetSize=2</code>, <code>treeSetSize=1</code>.</p>
+      <p><strong>Meaning:</strong> <code>TreeSet</code> uses ordering to determine duplicate keys, so comparison zero can collapse objects that <code>equals</code> considers different.</p>
+      <p><strong>Conclusion:</strong> natural/comparator ordering should be consistent with <code>equals</code> when practical; if it is intentionally inconsistent, callers must understand sorted-collection semantics.</p>
     usage: true

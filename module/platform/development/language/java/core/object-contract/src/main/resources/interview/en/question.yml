@@ -83,3 +83,87 @@ questions:
     reviewed: false
     readmeRelated: {file: "5.ToString/ToString.md", anchor: "tostring-sensitive-data"}
     apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "If a class does not override equals/hashCode, what semantics does Object provide by default, and when are those semantics sufficient?"
+    answer: "`Object.equals` is identity-based by default: only the same object is equal, and `Object.hashCode` is compatible with that identity-oriented behavior. This is sufficient when identity itself is the meaning, such as sentinel/singleton-style objects or objects that do not need value semantics. If separate instances should represent the same domain value/entity, logical equality and matching hash semantics must be designed explicitly."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.IdentityEquality/IdentityEquality.md", anchor: "reference-equality"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "How should field selection for equals/hashCode differ between an entity and a value object?"
+    answer: "A value object is usually equal by the components that define its value; an entity is usually equal by stable domain identity rather than all mutable state. Do not blindly include every field an IDE generator can see. Equality fields should reflect domain meaning and should remain stable when the object is used as a key."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.IdentityEquality/IdentityEquality.md", anchor: "value-object-equality"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Distinguish correctly overriding equals from accidentally overloading it, and explain why @Override matters."
+    answer: "The standard contract is `equals(Object)`. A method such as `equals(UserId)` is only an overload, so collections or calls through Object may still use the inherited implementation. `@Override` lets the compiler verify the exact signature and catch a method that does not actually replace the Object contract."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.Equals/Equals.md", anchor: "equals-implementation"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "How does hash collision affect correctness differently from performance?"
+    answer: "A collision does not by itself break correctness because the collection can still use equals to distinguish candidate keys. Poor distribution does increase the number of candidates in the same region and can hurt lookup cost. Correctness comes from the equals/hashCode contract; distribution quality mainly affects performance."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.HashCode/HashCode.md", anchor: "hash-distribution"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Why should hashCode not be treated as a unique ID, security fingerprint, or persistent identifier?"
+    answer: "hashCode is a finite int so collisions are valid, it has no cryptographic security property, and the Object contract does not guarantee the same value across separate JVM executions. Its purpose is to support Java hash-based object contracts, not replace domain IDs, cryptographic hashes, or persistence keys."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.HashCode/HashCode.md", anchor: "hashcode-contract"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Distinguish these two failure modes: equals is overridden without a consistent hashCode, versus a mutable key changing after insertion."
+    answer: "The first is an implementation contract violation from the start: equal objects can be routed to different hash regions. The second may start with correct methods, but the key changes equality/hash state after insertion so its old storage position no longer matches its new lookup state. Both violate assumptions of hash collections, but for different reasons."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.EqualsHashCode/EqualsHashCode.md", anchor: "broken-contract-effects"}
+    apiRelated: {controller: "HashContractController", methodSignature: "brokenHashSetLookup()"}
+
+  - question: "How does toString differ from a serialization contract in purpose and stability?"
+    answer: "toString optimizes for human diagnostics and may change as debugging needs evolve; its default form is not a unique identity or cross-run stable contract. Serialization requires a machine-readable schema, compatibility/versioning policy, and a defined parser. Do not parse a normal toString back into objects unless the type explicitly promises such a format."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.ToString/ToString.md", anchor: "tostring-design"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "What contracts should a production-quality compareTo preserve beyond returning negative/zero/positive values?"
+    answer: "The ordering needs sign antisymmetry, transitivity, and zero-equivalence consistency: if a compares equal to b, both must have the same sign relationship to a third value. `x.compareTo(null)` must throw NullPointerException. Callers rely on the sign only, so Integer.compare/Long.compare are safer than subtraction that can overflow."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.Comparable/Comparable.md", anchor: "compareto-contract"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Describe both directions in which ordering inconsistent with equals can make TreeSet behavior diverge from normal Set expectations."
+    answer: "If equals is false but comparison is zero, TreeSet may collapse two logically different values. If equals is true but comparison is nonzero, TreeSet may retain both even though normal Set semantics suggest they are duplicates. Sorted sets determine duplicate keys using ordering comparison."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.Comparable/Comparable.md", anchor: "compareto-equals-consistency"}
+    apiRelated: {controller: "OrderingController", methodSignature: "compareToEquals()"}
+
+  - question: "How would you design a multi-field Comparator for a TreeSet so distinct domain objects are not accidentally collapsed?"
+    answer: "Start with the primary business key and add intentional `thenComparing` tie-breakers until `compare(a,b)==0` matches the ordering-key equivalence the collection needs. If every entity must remain distinct, a stable unique field is often the final tie-breaker. Do not add meaningless tie-breakers when the domain intentionally wants values to share one ordering key."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Comparator/Comparator.md", anchor: "comparator-composition"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Why is a comparator that depends on current time or mutable external configuration risky compared with a pure comparator over stable object state?"
+    answer: "The same pair of objects can change order between comparisons even when the objects themselves did not change, violating consistency and potentially transitivity. A TreeSet/TreeMap may have been arranged under the old ordering while later searches use a new relationship. Comparator policy should remain deterministic over stable ordering state while the structure uses it."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Comparator/Comparator.md", anchor: "comparator-contract"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Distinguish sort stability from comparator consistency and give one use case for stable sorting."
+    answer: "Comparator consistency describes whether the ordering function is coherent; stability is a property of the sorting algorithm/API: elements that compare as equal preserve their relative encounter order. Stable sorting is useful when a prior secondary order or encounter order is meaningful. Stability cannot repair a non-transitive comparator, and a correct comparator does not automatically make a sort stable."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Comparator/Comparator.md", anchor: "sorting-stability-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}

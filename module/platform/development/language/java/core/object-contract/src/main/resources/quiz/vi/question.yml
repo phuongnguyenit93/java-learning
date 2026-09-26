@@ -168,3 +168,237 @@ questions:
     reviewed: false
     readmeRelated: {file: "7.Comparator/Comparator.md", anchor: "comparator-contract"}
     apiRelated: {controller: "", methodSignature: ""}
+
+  - id: default-object-equals-identity
+    question: "Một class không override `equals` thì hai instance riêng có cùng field value sẽ được `equals` xử lý thế nào?"
+    answers:
+      - {id: A, answer: "Luôn equal vì JVM tự compare mọi field.", explanation: "Sai. `Object.equals` mặc định dùng identity semantics, không tự suy luận domain fields."}
+      - {id: B, answer: "Chỉ equal khi hai reference nhận diện cùng object.", explanation: "Đúng. Nếu không override, `Object.equals` giữ identity-based equality."}
+      - {id: C, answer: "Luôn throw vì equals chưa được implement.", explanation: "Sai. Mọi class đều kế thừa implementation từ `Object`."}
+      - {id: D, answer: "Equal nếu hashCode giống nhau.", explanation: "Sai. Hash collision không định nghĩa logical equality."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.IdentityEquality/IdentityEquality.md", anchor: "reference-equality"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: equals-overload-vs-override
+    question: "Vì sao viết `boolean equals(UserId other)` mà không có `equals(Object other)` là lỗi thiết kế?"
+    answers:
+      - {id: A, answer: "Vì method đó là overload, nên collection/API gọi qua Object có thể vẫn dùng `Object.equals`.", explanation: "Đúng. Contract chuẩn phải override exact signature `equals(Object)`."}
+      - {id: B, answer: "Vì Java cấm overload equals.", explanation: "Sai. Java cho phép overload, nhưng overload không thay thế Object contract."}
+      - {id: C, answer: "Vì equals bắt buộc static.", explanation: "Sai. `equals` là instance method."}
+      - {id: D, answer: "Vì tham số equals bắt buộc generic `T`.", explanation: "Sai. Signature contract là `equals(Object)`."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.Equals/Equals.md", anchor: "equals-implementation"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: equals-field-selection
+    question: "Nếu `User` equality đại diện domain identity theo `userId`, field nào thường không nên tự động đưa vào equals chỉ vì IDE nhìn thấy nó?"
+    answers:
+      - {id: A, answer: "`userId` ổn định định nghĩa identity.", explanation: "Sai. Nếu domain identity thật sự là userId thì đây là field cốt lõi."}
+      - {id: B, answer: "`lastLoginAt` thay đổi sau mỗi lần đăng nhập.", explanation: "Đúng. Mutable operational state thường không nên làm cùng entity đổi equality."}
+      - {id: C, answer: "Field mà domain contract xác định là identity.", explanation: "Sai. Equality nên bám domain meaning."}
+      - {id: D, answer: "Không field nào; equals luôn phải dùng mọi field.", explanation: "Sai. Không có rule bắt buộc mọi field tham gia equality."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.Equals/Equals.md", anchor: "equals-implementation"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: equals-getclass-instanceof-policy
+    question: "Khác biệt thiết kế chính giữa type check bằng `instanceof` và `getClass()` trong equals là gì?"
+    answers:
+      - {id: A, answer: "`instanceof` luôn nhanh hơn nên bắt buộc dùng.", explanation: "Sai. Đây chủ yếu là equality policy, không phải rule performance."}
+      - {id: B, answer: "`getClass()` yêu cầu exact runtime class; `instanceof` có thể cho subtype tương thích tham gia equality.", explanation: "Đúng. Lựa chọn ảnh hưởng symmetry/transitivity trong hierarchy."}
+      - {id: C, answer: "`getClass()` so field còn `instanceof` so hashCode.", explanation: "Sai. Cả hai chỉ là cách kiểm type compatibility."}
+      - {id: D, answer: "Hai cách luôn tương đương trong mọi inheritance hierarchy.", explanation: "Sai. Chúng thể hiện policy khác nhau."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.Equals/Equals.md", anchor: "equals-inheritance-risk"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: hash-collision-not-equality
+    question: "Hai object khác nhau trả cùng hashCode có nghĩa gì?"
+    answers:
+      - {id: A, answer: "Chắc chắn equals phải true.", explanation: "Sai. Collision là hợp lệ; equality vẫn phải được kiểm riêng."}
+      - {id: B, answer: "Đó luôn là bug của JVM.", explanation: "Sai. Không gian int hữu hạn nên collision là expected."}
+      - {id: C, answer: "Chúng có thể collision; collection vẫn cần equals để xác nhận match.", explanation: "Đúng. Hash chỉ thu hẹp candidate, không thay thế equality."}
+      - {id: D, answer: "HashSet bắt buộc giữ tối đa một trong hai object.", explanation: "Sai. Nếu equals false, cả hai vẫn có thể cùng tồn tại."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.HashCode/HashCode.md", anchor: "hash-distribution"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: hashcode-cross-jvm-stability
+    question: "Có nên lưu `hashCode()` vào database làm persistent identifier giữa các lần chạy JVM không?"
+    answers:
+      - {id: A, answer: "Có, Object contract bảo đảm hash không đổi vĩnh viễn.", explanation: "Sai. Contract không bảo đảm cùng hash giữa các JVM execution."}
+      - {id: B, answer: "Không; hashCode phục vụ object/hash-collection contract, không phải durable identity.", explanation: "Đúng. Persistence identity cần contract riêng."}
+      - {id: C, answer: "Có, nếu object immutable thì hash luôn globally unique.", explanation: "Sai. Immutable không tạo uniqueness hay cross-run guarantee."}
+      - {id: D, answer: "Chỉ được nếu class implement Comparable.", explanation: "Sai. Comparable không thay đổi hashCode contract."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.HashCode/HashCode.md", anchor: "hashcode-contract"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: hashmap-lookup-flow
+    question: "Mental model đúng nhất của lookup trong hash-based collection là gì?"
+    answers:
+      - {id: A, answer: "equals mọi key trước rồi mới tính hash.", explanation: "Sai. Hash được dùng trước để thu hẹp candidate region."}
+      - {id: B, answer: "hashCode xác nhận equality hoàn toàn, equals chỉ dùng để logging.", explanation: "Sai. Hash không đủ kết luận equality."}
+      - {id: C, answer: "hashCode thu hẹp candidate, sau đó equals xác nhận logical match.", explanation: "Đúng. Đây là boundary model quan trọng của hash lookup."}
+      - {id: D, answer: "Collection chỉ dùng reference ==.", explanation: "Sai. HashMap/HashSet dựa vào equals/hashCode contract."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.EqualsHashCode/EqualsHashCode.md", anchor: "hash-collection-lookup"}
+    apiRelated: {controller: "HashContractController", methodSignature: "brokenHashSetLookup()"}
+
+  - id: tostring-default-not-unique-id
+    question: "Điều nào đúng về output mặc định kiểu `ClassName@5e2de80c` của Object.toString()?"
+    answers:
+      - {id: A, answer: "Suffix là unique object ID được JVM bảo đảm.", explanation: "Sai. Suffix dựa trên hashCode ở dạng hex và collision có thể xảy ra."}
+      - {id: B, answer: "Suffix đến từ hashCode dạng hexadecimal, không phải unique identity guarantee.", explanation: "Đúng. Default representation không phải persistent/unique ID."}
+      - {id: C, answer: "Đó là serialization format chuẩn của Java.", explanation: "Sai. toString là diagnostic representation, không phải serialization contract."}
+      - {id: D, answer: "Format này bắt buộc ổn định giữa mọi JVM run.", explanation: "Sai. Không có cross-run stability guarantee như vậy."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.ToString/ToString.md", anchor: "tostring-purpose"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: tostring-vs-serialization
+    question: "Vì sao không nên dùng toString của domain object làm JSON-like persistence protocol nếu class không công bố contract đó?"
+    answers:
+      - {id: A, answer: "toString luôn private.", explanation: "Sai. toString là public method kế thừa từ Object."}
+      - {id: B, answer: "Diagnostic format có thể thay đổi theo nhu cầu con người và không có schema/compatibility guarantee.", explanation: "Đúng. Machine-readable persistence cần serializer/contract chuyên dụng."}
+      - {id: C, answer: "toString không thể chứa String.", explanation: "Sai. Nó trả chính String."}
+      - {id: D, answer: "JSON không thể biểu diễn object Java.", explanation: "Sai. Vấn đề là contract, không phải khả năng biểu diễn."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.ToString/ToString.md", anchor: "tostring-design"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: tostring-recursive-graph
+    question: "Pitfall nào có thể xảy ra nếu Parent.toString in toàn bộ Child và Child.toString lại in toàn bộ Parent?"
+    answers:
+      - {id: A, answer: "Recursive representation có thể lặp vô hạn hoặc tạo output cực lớn.", explanation: "Đúng. Nên chọn field diagnostic có chủ ý thay vì dump toàn graph."}
+      - {id: B, answer: "JVM tự động cắt cycle ở đúng một level.", explanation: "Sai. Không có guarantee chung như vậy cho custom toString."}
+      - {id: C, answer: "equals tự động bị disable.", explanation: "Sai. Đây là representation concern, không trực tiếp đổi equals."}
+      - {id: D, answer: "Object graph tự trở thành immutable.", explanation: "Sai. toString không thay đổi mutability."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.ToString/ToString.md", anchor: "tostring-design"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: natural-order-design-choice
+    question: "Khi một type có nhiều cách sort ngang nhau về ý nghĩa như Book theo title, price hoặc rating, lựa chọn nào thường hợp lý hơn?"
+    answers:
+      - {id: A, answer: "Chọn ngẫu nhiên một field làm compareTo và coi đó là natural order.", explanation: "Sai. Natural order nên rõ ràng và dễ dự đoán."}
+      - {id: B, answer: "Dùng Comparator cho các ordering policy theo context thay vì ép một natural order giả tạo.", explanation: "Đúng. Comparator tách policy khỏi type."}
+      - {id: C, answer: "Không bao giờ sort type đó.", explanation: "Sai. Có thể sort bằng Comparator."}
+      - {id: D, answer: "Override equals theo field đang sort mỗi lần.", explanation: "Sai. Equality không nên đổi theo presentation ordering."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.Comparable/Comparable.md", anchor: "natural-order"}
+    apiRelated: {controller: "OrderingController", methodSignature: "naturalVsCustom()"}
+
+  - id: comparable-null-contract
+    question: "Theo Comparable contract, `x.compareTo(null)` với x khác null nên làm gì?"
+    answers:
+      - {id: A, answer: "Trả 0 để null bằng mọi object.", explanation: "Sai. Natural ordering không coi null là peer value hợp lệ."}
+      - {id: B, answer: "Trả số âm để null đứng cuối.", explanation: "Sai. Null ordering policy nên được xử lý qua Comparator khi cần."}
+      - {id: C, answer: "Ném NullPointerException.", explanation: "Đúng. Đây là behavior được Comparable contract yêu cầu."}
+      - {id: D, answer: "Tự gọi equals(null) rồi trả boolean.", explanation: "Sai. compareTo trả int và contract riêng với equals."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.Comparable/Comparable.md", anchor: "compareto-contract"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: comparable-zero-third-value
+    question: "Nếu `a.compareTo(b) == 0`, ordering contract còn yêu cầu gì khi so a và b với cùng phần tử c?"
+    answers:
+      - {id: A, answer: "Không có yêu cầu nào khác.", explanation: "Sai. Các value cùng ordering class phải hành xử nhất quán với phần tử thứ ba."}
+      - {id: B, answer: "Dấu của `a.compareTo(c)` phải giống dấu của `b.compareTo(c)`.", explanation: "Đúng. Nếu không, ordering equivalence không coherent."}
+      - {id: C, answer: "a và b phải là cùng reference.", explanation: "Sai. Ordering equality không yêu cầu identity."}
+      - {id: D, answer: "hashCode của a và c phải bằng nhau.", explanation: "Sai. Đây là ordering contract, không phải hash contract."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.Comparable/Comparable.md", anchor: "compareto-contract"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: comparator-tiebreaker-tree-set
+    question: "Comparator của TreeSet chỉ compare Book theo title. Hai Book khác id nhưng cùng title có thể gặp điều gì?"
+    answers:
+      - {id: A, answer: "TreeSet bắt buộc giữ cả hai vì equals khác nhau.", explanation: "Sai. TreeSet dùng comparator để xác định ordering key."}
+      - {id: B, answer: "Comparator trả 0 nên TreeSet có thể xem chúng cùng ordering key; cần tie-breaker nếu muốn giữ distinct.", explanation: "Đúng. `thenComparing` có thể bổ sung tie-breaker phù hợp."}
+      - {id: C, answer: "Comparator tự động gọi hashCode để phân biệt.", explanation: "Sai. TreeSet không dùng hashCode cho key uniqueness."}
+      - {id: D, answer: "JVM tự thêm id vào comparator.", explanation: "Sai. Ordering policy là trách nhiệm của comparator."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Comparator/Comparator.md", anchor: "comparator-composition"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: comparator-null-policy
+    question: "Nếu caller muốn null đứng cuối khi sort, cách biểu đạt contract rõ ràng nhất là gì?"
+    answers:
+      - {id: A, answer: "Dựa vào NullPointerException rồi retry.", explanation: "Sai. Null placement nên là policy explicit."}
+      - {id: B, answer: "Dùng `Comparator.nullsLast(...)` với comparator phù hợp cho non-null value.", explanation: "Đúng. Helper này làm null semantics explicit."}
+      - {id: C, answer: "Override Object.equals để null lớn hơn mọi value.", explanation: "Sai. equals không định nghĩa ordering."}
+      - {id: D, answer: "Đổi mọi null thành chuỗi rỗng bất kể domain.", explanation: "Sai. Việc đó thay đổi dữ liệu/semantics chứ không chỉ ordering policy."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Comparator/Comparator.md", anchor: "comparator-composition"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: comparator-zero-third-value
+    question: "Comparator trả `compare(a,b)==0`. Điều nào cần đúng để ordering coherent với phần tử thứ ba c?"
+    answers:
+      - {id: A, answer: "Dấu compare(a,c) và compare(b,c) phải nhất quán.", explanation: "Đúng. Các value cùng ordering equivalence class phải có cùng relation với c."}
+      - {id: B, answer: "a.equals(c) bắt buộc true.", explanation: "Sai. Equality với c không được suy ra từ compare(a,b)==0."}
+      - {id: C, answer: "a và b phải có cùng identityHashCode.", explanation: "Sai. Identity hash không thuộc comparator contract."}
+      - {id: D, answer: "Comparator phải return đúng -1/0/1.", explanation: "Sai. Chỉ dấu của kết quả có ý nghĩa contract."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Comparator/Comparator.md", anchor: "comparator-contract"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: sorting-stability-vs-comparator
+    question: "Điều nào mô tả đúng quan hệ giữa stable sort và comparator đúng contract?"
+    answers:
+      - {id: A, answer: "Comparator transitive tự làm mọi sort stable.", explanation: "Sai. Stability là property của sorting algorithm/API."}
+      - {id: B, answer: "Stable sort có thể sửa comparator non-transitive.", explanation: "Sai. Stability không chữa ordering contract sai."}
+      - {id: C, answer: "Stability giữ encounter order của tie; comparator consistency là contract riêng của ordering function.", explanation: "Đúng. Hai khái niệm độc lập nhưng cùng ảnh hưởng kết quả sort."}
+      - {id: D, answer: "Stable sort nghĩa là equals luôn được gọi.", explanation: "Sai. Stability không định nghĩa equality mechanism."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Comparator/Comparator.md", anchor: "sorting-stability-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: sorted-set-reverse-equality-mismatch
+    question: "Nếu `a.equals(b)==true` nhưng comparator trả `compare(a,b)!=0`, TreeSet có thể hành xử thế nào?"
+    answers:
+      - {id: A, answer: "Có thể giữ cả a và b vì comparator xem chúng là hai ordering key khác nhau.", explanation: "Đúng. Đây là chiều ngược của ordering-vs-equality inconsistency."}
+      - {id: B, answer: "Bắt buộc collapse vì TreeSet luôn gọi equals trước.", explanation: "Sai. TreeSet uniqueness dựa trên ordering comparison."}
+      - {id: C, answer: "Compiler reject comparator.", explanation: "Sai. Contract mismatch không được compiler phát hiện."}
+      - {id: D, answer: "HashSet cũng bắt buộc giữ cả hai.", explanation: "Sai. HashSet dựa trên equals/hashCode, nên semantics khác."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Comparator/Comparator.md", anchor: "comparator-contract"}
+    apiRelated: {controller: "", methodSignature: ""}

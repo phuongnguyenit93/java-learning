@@ -1,8 +1,9 @@
 EqualityController:
   identityVsEquality():
-    summary: Object identity và logical equality
-    description: Chạy thí nghiệm học tập deterministic cho Object identity và logical
-      equality. Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    summary: Phân biệt reference identity và logical equality
+    description: |-
+      Tạo hai instance `Value` khác reference nhưng cùng `id`, sau đó trả về đồng thời kết quả `==`, `equals` và so sánh hash.
+      Experiment cho thấy identity và logical equality trả lời hai câu hỏi khác nhau, đồng thời củng cố rằng equal object phải có hash nhất quán.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -27,9 +28,10 @@ EqualityController:
     usage: true
 HashContractController:
   brokenHashSetLookup():
-    summary: Hệ quả observable khi contract bị phá
-    description: Chạy thí nghiệm học tập deterministic cho Hệ quả observable khi contract
-      bị phá. Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    summary: HashSet lookup khi equals/hashCode contract bị phá
+    description: |-
+      Tạo hai key có `equals == true` nhưng cố ý trả hai hash code khác nhau, insert một key vào `HashSet` rồi lookup bằng key logically equal còn lại.
+      Response biến một lỗi contract trừu tượng thành failure quan sát được: collection có thể không tìm thấy logical value mà `equals` nói là bằng nhau.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -53,9 +55,10 @@ HashContractController:
       ]
     usage: true
   mutableKey():
-    summary: Rủi ro mutable field trong hashCode
-    description: Chạy thí nghiệm học tập deterministic cho Rủi ro mutable field trong
-      hashCode. Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    summary: Rủi ro mutate hash/equality state sau insertion
+    description: |-
+      Insert một mutable key vào `HashMap`, kiểm tra lookup trước mutation, thay đổi field tham gia `equals/hashCode`, rồi kiểm tra lại.
+      Experiment cho thấy vì sao key dùng trong hash-based collection nên có equality/hash state ổn định; kết quả sau mutation là evidence của implementation hiện tại, không phải một contract bảo đảm lookup luôn fail theo cùng cách.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -80,9 +83,10 @@ HashContractController:
     usage: true
 OrderingController:
   naturalVsCustom():
-    summary: External/custom ordering
-    description: Chạy thí nghiệm học tập deterministic cho External/custom ordering.
-      Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    summary: Natural ordering so với Comparator tùy chỉnh
+    description: |-
+      Dùng cùng một danh sách `Person`: `Collections.sort` áp dụng natural order từ `Comparable` theo age, còn `Comparator.comparing(Person::name)` áp dụng ordering policy bên ngoài theo name.
+      Hai kết quả cho thấy ordering nằm ở type hay ở caller là một quyết định thiết kế, không phải hai cú pháp tương đương.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -106,10 +110,10 @@ OrderingController:
       ]
     usage: true
   compareToEquals():
-    summary: Consistency với equals và sorted collection
-    description: Chạy thí nghiệm học tập deterministic cho Consistency với equals
-      và sorted collection. Response cung cấp runtime evidence cụ thể thay vì chỉ
-      mô tả quy tắc.
+    summary: Khi compareTo và equals không nhất quán
+    description: |-
+      So sánh `BigDecimal("1.0")` với `BigDecimal("1.00")`: `equals` trả false nhưng `compareTo` trả 0, sau đó đưa cả hai vào `HashSet` và `TreeSet`.
+      Response chứng minh hash-based collection và sorted collection có thể có size khác nhau vì chúng dùng hai notion "same key" khác nhau.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video

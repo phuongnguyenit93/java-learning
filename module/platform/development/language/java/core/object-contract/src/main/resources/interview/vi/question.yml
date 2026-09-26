@@ -83,3 +83,87 @@ questions:
     reviewed: false
     readmeRelated: {file: "5.ToString/ToString.md", anchor: "tostring-sensitive-data"}
     apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Nếu một class không override equals/hashCode thì Object mặc định cho semantics gì, và khi nào semantics đó là đủ?"
+    answer: "`Object.equals` mặc định là identity-based: chỉ cùng object mới equal; `Object.hashCode` tương thích với semantics đó. Điều này đủ khi identity chính là meaning của object, ví dụ sentinel/singleton-style object hoặc object không cần value semantics. Khi domain cần hai instance độc lập đại diện cùng value/entity, phải thiết kế logical equality và hashCode tương ứng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.IdentityEquality/IdentityEquality.md", anchor: "reference-equality"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Bạn chọn field cho equals/hashCode của entity và value object khác nhau như thế nào?"
+    answer: "Value object thường equal theo toàn bộ thành phần định nghĩa value; entity thường equal theo stable domain identity thay vì mọi mutable state. Không nên máy móc đưa mọi field vào generator. Field equality phải phản ánh domain meaning và nên ổn định nếu object dùng làm key."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.IdentityEquality/IdentityEquality.md", anchor: "value-object-equality"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Phân biệt override equals đúng với việc vô tình overload equals và giải thích vì sao @Override quan trọng."
+    answer: "Contract chuẩn là `equals(Object)`. `equals(UserId)` chỉ tạo overload; collection hoặc code gọi qua Object vẫn có thể dùng implementation kế thừa. `@Override` giúp compiler xác nhận exact signature và bắt lỗi ngay khi method không thực sự override Object contract."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.Equals/Equals.md", anchor: "equals-implementation"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Hash collision ảnh hưởng correctness và performance khác nhau như thế nào?"
+    answer: "Collision tự nó không phá correctness vì collection vẫn dùng equals để phân biệt candidate. Nhưng phân bố hash kém làm nhiều key dồn vào cùng candidate region, tăng chi phí lookup. Correctness đến từ equals/hashCode contract; distribution chủ yếu ảnh hưởng performance."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.HashCode/HashCode.md", anchor: "hash-distribution"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Vì sao hashCode không nên được dùng như unique ID, security fingerprint hoặc persistent identifier?"
+    answer: "HashCode là int hữu hạn nên collision hợp lệ, không có security property và Object contract không bảo đảm cùng value giữa các JVM execution. Nó tồn tại để hỗ trợ hash-based object contract, không để thay thế domain ID, cryptographic hash hay persistence key."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.HashCode/HashCode.md", anchor: "hashcode-contract"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Phân biệt hai failure mode: override equals nhưng hashCode không consistent, và mutable key thay đổi sau khi insert."
+    answer: "Case đầu là implementation contract sai ngay từ đầu: equal objects có thể đi tới hash region khác nhau. Case hai có thể bắt đầu với implementation đúng nhưng key đổi equality/hash state sau insertion, khiến vị trí lưu cũ không còn khớp lookup state mới. Cả hai đều phá assumption của hash collection nhưng nguyên nhân khác nhau."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.EqualsHashCode/EqualsHashCode.md", anchor: "broken-contract-effects"}
+    apiRelated: {controller: "HashContractController", methodSignature: "brokenHashSetLookup()"}
+
+  - question: "toString khác serialization contract ở mục tiêu và mức ổn định như thế nào?"
+    answer: "toString ưu tiên diagnostic readability cho con người và có thể thay đổi khi nhu cầu debug thay đổi; format mặc định cũng không phải unique identity hay cross-run stable contract. Serialization cần machine-readable schema, compatibility/versioning policy và parser rõ ràng. Không nên parse ngược toString trừ khi type explicitly cam kết format đó."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.ToString/ToString.md", anchor: "tostring-design"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Một compareTo production-quality cần giữ những contract nào ngoài việc trả số âm/0/dương?"
+    answer: "Ordering phải có sign antisymmetry, transitivity và zero-equivalence consistency: nếu a compare b bằng 0 thì a và b phải có cùng relation về dấu với phần tử thứ ba. `x.compareTo(null)` phải throw NullPointerException. Caller chỉ dựa vào dấu, nên nên dùng Integer.compare/Long.compare thay vì phép trừ có thể overflow."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.Comparable/Comparable.md", anchor: "compareto-contract"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Mô tả cả hai chiều mà ordering không consistent với equals có thể làm TreeSet khác Set expectation."
+    answer: "Nếu equals false nhưng compare bằng 0, TreeSet có thể collapse hai logical value khác nhau. Nếu equals true nhưng compare khác 0, TreeSet có thể giữ cả hai value dù Set semantics thông thường khiến người đọc kỳ vọng chúng trùng. Vì sorted set dùng ordering comparison để xác định duplicate key."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.Comparable/Comparable.md", anchor: "compareto-equals-consistency"}
+    apiRelated: {controller: "OrderingController", methodSignature: "compareToEquals()"}
+
+  - question: "Bạn thiết kế Comparator nhiều field cho TreeSet như thế nào để tránh vô tình collapse object khác nhau?"
+    answer: "Bắt đầu từ primary business key rồi thêm tie-breaker bằng `thenComparing` cho tới khi `compare(a,b)==0` đúng với notion ordering-key mà collection cần. Nếu muốn giữ mọi entity distinct, thường cần stable unique field cuối chain. Nhưng không nên thêm tie-breaker vô nghĩa nếu domain thật sự muốn coi chúng cùng ordering key."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Comparator/Comparator.md", anchor: "comparator-composition"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Vì sao comparator phụ thuộc current time hoặc mutable external configuration nguy hiểm hơn comparator thuần trên object state?"
+    answer: "Cùng cặp object có thể đổi thứ tự giữa các lần compare dù object không đổi, phá sign/transitivity/consistency assumptions của sort và tree structure. Với TreeSet/TreeMap, cấu trúc đã được bố trí theo ordering cũ nhưng comparator mới có thể tìm theo relation khác. Comparator nên deterministic trên stable ordering state trong thời gian collection sử dụng nó."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Comparator/Comparator.md", anchor: "comparator-contract"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Phân biệt sort stability với comparator consistency và nêu một use case của stable sort."
+    answer: "Comparator consistency nói ordering function có coherent hay không; stability là property của sorting algorithm/API: các phần tử compare bằng 0 giữ encounter order tương đối. Stable sort hữu ích khi đã có một ordering phụ trước đó hoặc encounter order có ý nghĩa. Stable algorithm không sửa comparator non-transitive, và comparator đúng cũng không tự bảo đảm sort stable."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Comparator/Comparator.md", anchor: "sorting-stability-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}

@@ -1,64 +1,105 @@
 EqualityController:
   identityVsEquality():
-    execution: <p><strong>Khái niệm:</strong> Object identity và logical equality.</p><ol><li>Endpoint
-      chạy một ví dụ deterministic và bounded trong <code>EqualityController#identityVsEquality()</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/identity-vs-equality&quot;)
-      public Map&lt;String,Object&gt; identityVsEquality(){ Value a=new Value(7),
-      b=new Value(7); return Map.of(&quot;sameReference&quot;,a==b,&quot;logicalEquals&quot;,a.equals(b),&quot;sameHash&quot;,a.hashCode()==b.hashCode());
-      }</code></pre></li><li>Quan sát các field trong response cùng nhau; đây là evidence
-      cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
-      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
-      khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> reference identity và logical equality là hai contract khác nhau.</p>
+      <p><strong>Flow:</strong></p>
+      <ol>
+        <li>Tạo hai instance <code>Value</code> khác nhau nhưng cùng <code>id = 7</code>.</li>
+        <li>So sánh bằng <code>==</code> để kiểm tra identity.</li>
+        <li>So sánh bằng <code>equals</code> để kiểm tra logical equality.</li>
+        <li>So sánh <code>hashCode</code> để kiểm tra contract đi kèm equality.</li>
+      </ol>
+      <p><strong>Code evidence:</strong></p>
+      <pre><code>Value a = new Value(7), b = new Value(7);
+      return Map.of(
+          "sameReference", a == b,
+          "logicalEquals", a.equals(b),
+          "sameHash", a.hashCode() == b.hashCode()
+      );</code></pre>
+      <p><strong>Quan sát mong đợi:</strong> <code>sameReference=false</code>, <code>logicalEquals=true</code>, <code>sameHash=true</code>.</p>
+      <p><strong>Ý nghĩa:</strong> hai object có thể khác identity nhưng đại diện cùng logical value. Hash equality không chứng minh hai object equal, nhưng equal object bắt buộc phải có cùng hash.</p>
+      <p><strong>Kết luận:</strong> dùng <code>==</code> khi identity thật sự là điều cần hỏi; dùng <code>equals</code> khi domain cần logical equality.</p>
     usage: true
 HashContractController:
   brokenHashSetLookup():
-    execution: <p><strong>Khái niệm:</strong> Hệ quả observable khi contract bị phá.</p><ol><li>Endpoint
-      chạy một ví dụ deterministic và bounded trong <code>HashContractController#brokenHashSetLookup()</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/broken-contract&quot;)
-      public Map&lt;String,Object&gt; brokenHashSetLookup(){ Set&lt;Broken&gt; set=new
-      HashSet&lt;&gt;(); Broken stored=new Broken(1), equal=new Broken(1); set.add(stored);
-      return Map.of(&quot;equals&quot;,stored.equals(equal),&quot;storedHash&quot;,stored.hashCode(),&quot;equalHash&quot;,equal.hashCode(),&quot;containsEqualObject&quot;,set.contains(equal));
-      }</code></pre></li><li>Quan sát các field trong response cùng nhau; đây là evidence
-      cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
-      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
-      khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> <code>equals</code> và <code>hashCode</code> phải nhất quán để hash-based lookup hoạt động đúng kỳ vọng.</p>
+      <p><strong>Setup:</strong> class <code>Broken</code> cố ý vi phạm contract: equality chỉ dựa trên <code>id</code>, còn hash được truyền riêng.</p>
+      <pre><code>static final class Broken {
+          final int id;
+          final int hash;
+          public boolean equals(Object o) {
+              return o instanceof Broken b &amp;&amp; id == b.id;
+          }
+          public int hashCode() { return hash; }
+      }</code></pre>
+      <p><strong>Flow:</strong></p>
+      <ol>
+        <li>Tạo <code>stored = Broken(1, 101)</code> và <code>equal = Broken(1, 202)</code>.</li>
+        <li><code>stored.equals(equal)</code> là <code>true</code> nhưng hash khác nhau.</li>
+        <li>Insert <code>stored</code> vào <code>HashSet</code>.</li>
+        <li>Lookup bằng <code>equal</code>.</li>
+      </ol>
+      <p><strong>Quan sát mong đợi:</strong> response cho thấy <code>equals=true</code>, hai hash khác nhau và <code>containsEqualObject=false</code>.</p>
+      <p><strong>Ý nghĩa:</strong> hash được dùng để thu hẹp candidate trước khi equality xác nhận match. Nếu equal object đi tới vùng hash khác, lookup có thể không bao giờ tới bước <code>equals</code>.</p>
+      <p><strong>Kết luận:</strong> override <code>equals</code> và <code>hashCode</code> phải được xem như một thay đổi thiết kế chung.</p>
     usage: true
   mutableKey():
-    execution: <p><strong>Khái niệm:</strong> Rủi ro mutable field trong hashCode.</p><ol><li>Endpoint
-      chạy một ví dụ deterministic và bounded trong <code>HashContractController#mutableKey()</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>static
-      final class MutableKey { int id; MutableKey(int id){this.id=id;} public boolean
-      equals(Object o){return o instanceof MutableKey k&amp;&amp;id==k.id;} public
-      int hashCode(){return Integer.hashCode(id);} }</code></pre></li><li>Quan sát
-      các field trong response cùng nhau; đây là evidence cho quy tắc, không phải
-      benchmark hay production policy.</li></ol><p><strong>Kết luận:</strong> đối
-      chiếu kết quả với README section được liên kết trước khi khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> equality/hash state của key phải ổn định trong thời gian key nằm trong hash-based collection.</p>
+      <p><strong>Flow:</strong></p>
+      <ol>
+        <li>Tạo <code>MutableKey(1)</code> và insert vào <code>HashMap</code>.</li>
+        <li>Kiểm tra <code>containsKey</code> trước mutation.</li>
+        <li>Đổi <code>key.id</code> từ <code>1</code> sang <code>2</code>; cả <code>equals</code> và <code>hashCode</code> đều phụ thuộc vào field này.</li>
+        <li>Kiểm tra lại <code>containsKey</code>.</li>
+      </ol>
+      <p><strong>Code evidence:</strong></p>
+      <pre><code>map.put(key, "value");
+      boolean before = map.containsKey(key);
+      key.id = 2;
+      boolean after = map.containsKey(key);</code></pre>
+      <p><strong>Quan sát:</strong> endpoint trả cả trạng thái trước/sau mutation cùng current hash để người học nhìn thấy hậu quả thực tế trên JDK đang chạy.</p>
+      <p><strong>Boundary:</strong> khi key đã phá assumption về state ổn định, Java collection không cam kết một failure shape duy nhất cho mọi implementation. Experiment này là evidence của rủi ro, không phải một API guarantee rằng mọi lookup sau mutation luôn trả false.</p>
+      <p><strong>Kết luận:</strong> immutable key hoặc ít nhất immutable equality/hash fields là lựa chọn dễ reasoning nhất.</p>
     usage: true
 OrderingController:
   naturalVsCustom():
-    execution: <p><strong>Khái niệm:</strong> External/custom ordering.</p><ol><li>Endpoint
-      chạy một ví dụ deterministic và bounded trong <code>OrderingController#naturalVsCustom()</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/natural-vs-custom&quot;)
-      public Map&lt;String,Object&gt; naturalVsCustom(){ List&lt;Person&gt; source=List.of(new
-      Person(&quot;Bob&quot;,30),new Person(&quot;Ada&quot;,40)); List&lt;Person&gt;
-      natural=new ArrayList&lt;&gt;(source); Collections.sort(natural); List&lt;Person&gt;
-      byName=new ArrayList&lt;&gt;(source); byName.sort(Comparator.comparing(Person::name));
-      return Map.of(&quot;naturalByAge&quot;,natural,&quot;customByName&quot;,byName);
-      }</code></pre></li><li>Quan sát các field trong response cùng nhau; đây là evidence
-      cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
-      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
-      khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> <code>Comparable</code> đặt natural order trong type; <code>Comparator</code> đặt ordering policy ở caller.</p>
+      <p><strong>Setup:</strong> <code>Person</code> implements <code>Comparable&lt;Person&gt;</code> theo <code>age</code>, trong khi caller tạo comparator theo <code>name</code>.</p>
+      <pre><code>record Person(String name, int age) implements Comparable&lt;Person&gt; {
+          public int compareTo(Person o) {
+              return Integer.compare(age, o.age);
+          }
+      }</code></pre>
+      <p><strong>Flow:</strong></p>
+      <ol>
+        <li>Copy cùng source list sang hai list độc lập.</li>
+        <li><code>Collections.sort(natural)</code> dùng natural order theo age.</li>
+        <li><code>byName.sort(Comparator.comparing(Person::name))</code> dùng policy theo name.</li>
+      </ol>
+      <p><strong>Quan sát mong đợi:</strong> natural order đặt Bob(30) trước Ada(40), còn custom order đặt Ada trước Bob.</p>
+      <p><strong>Ý nghĩa:</strong> cùng dữ liệu có thể có một natural order và nhiều contextual order. Không nên sửa <code>compareTo</code> chỉ để phục vụ một view cụ thể.</p>
+      <p><strong>Kết luận:</strong> dùng <code>Comparable</code> khi type có một default order rõ ràng; dùng <code>Comparator</code> cho alternate/business-specific ordering.</p>
     usage: true
   compareToEquals():
-    execution: <p><strong>Khái niệm:</strong> Consistency với equals và sorted
-      collection.</p><ol><li>Endpoint chạy một ví dụ deterministic và bounded trong
-      <code>OrderingController#compareToEquals()</code>.</li><li>Source line dưới
-      đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/compareto-equals&quot;)
-      public Map&lt;String,Object&gt; compareToEquals(){ BigDecimal a=new BigDecimal(&quot;1.0&quot;),b=new
-      BigDecimal(&quot;1.00&quot;); Set&lt;BigDecimal&gt; hash=new HashSet&lt;&gt;(List.of(a,b));
-      Set&lt;BigDecimal&gt; tree=new TreeSet&lt;&gt;(List.of(a,b)); return Map.of(&quot;equals&quot;,a.equals(b),&quot;compareTo&quot;,a.compareTo(b),&quot;hashSetSize&quot;,hash.size(),&quot;treeSetSize&quot;,tree.size());
-      }</code></pre></li><li>Quan sát các field trong response cùng nhau; đây là evidence
-      cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
-      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
-      khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> sorted collections dùng comparison semantics, còn hash-based collections dùng <code>equals/hashCode</code>.</p>
+      <p><strong>Setup:</strong> <code>BigDecimal("1.0")</code> và <code>BigDecimal("1.00")</code> là ví dụ chuẩn: <code>equals</code> xét scale nên trả false, còn <code>compareTo</code> xét numeric ordering nên trả 0.</p>
+      <p><strong>Flow:</strong></p>
+      <ol>
+        <li>Đo trực tiếp <code>a.equals(b)</code> và <code>a.compareTo(b)</code>.</li>
+        <li>Insert cả hai vào <code>HashSet</code>.</li>
+        <li>Insert cả hai vào <code>TreeSet</code>.</li>
+        <li>So sánh size của hai collection.</li>
+      </ol>
+      <p><strong>Code evidence:</strong></p>
+      <pre><code>BigDecimal a = new BigDecimal("1.0");
+      BigDecimal b = new BigDecimal("1.00");
+      Set&lt;BigDecimal&gt; hash = new HashSet&lt;&gt;(List.of(a, b));
+      Set&lt;BigDecimal&gt; tree = new TreeSet&lt;&gt;(List.of(a, b));</code></pre>
+      <p><strong>Quan sát mong đợi:</strong> <code>equals=false</code>, <code>compareTo=0</code>, <code>hashSetSize=2</code>, <code>treeSetSize=1</code>.</p>
+      <p><strong>Ý nghĩa:</strong> <code>TreeSet</code> dùng ordering để quyết định key trùng, nên comparison bằng 0 có thể collapse hai object mà <code>equals</code> xem là khác nhau.</p>
+      <p><strong>Kết luận:</strong> natural/comparator ordering nên consistent với <code>equals</code> khi có thể; nếu cố ý không consistent, caller phải hiểu semantics của sorted collection.</p>
     usage: true
