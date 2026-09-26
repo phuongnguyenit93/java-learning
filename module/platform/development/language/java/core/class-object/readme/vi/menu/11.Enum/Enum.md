@@ -1,16 +1,65 @@
 # Enum
 
-## <a id="enum-type-model">Enum constant là instance</a>
-Enum là special class với tập named instance cố định. Mỗi constant là singleton instance cho initialized enum class, có thể compare bằng identity và có `name()` ổn định. Enum có thể implement interface và định nghĩa behavior như class khác trong các language restriction riêng.
+`enum` không chỉ là “mấy số constant có tên”. Mỗi enum constant là **một instance của enum type**, có thể có field, constructor, method và hành vi riêng.
 
-## <a id="enum-fields-constructors">Field, constructor và method trong enum</a>
-Enum constructor không được caller gọi trực tiếp. Nó initialize constant khai báo trong enum, có thể nhận argument, gán final field và enforce invariant. Field/method hữu ích khi mỗi constant mang domain metadata hoặc common behavior.
+## <a id="enum-type-model">Enum Constant là Instance</a>
 
-## <a id="enum-interface">Enum implement interface</a>
-Enum có thể implement nhiều interface, giúp fixed constants được dùng qua abstraction. Điều này phù hợp với strategy có closed set implementation trong khi consumer không phụ thuộc concrete constant name.
+```java
+enum Status {
+    NEW, PAID, CANCELLED
+}
+```
 
-## <a id="enum-constant-specific">Behavior riêng theo constant</a>
-Constant có thể có class body và override behavior. Pattern này hỗ trợ strategy nhỏ gọn, nhưng workflow business lớn ẩn trong enum constant sẽ khó maintain; chỉ dùng khi behavior thực sự intrinsic với finite set.
+`Status.NEW` là một object singleton theo enum hợp đồng, không phải integer alias.
 
-## <a id="enum-values-valueof">Boundary values/valueOf/name/ordinal</a>
-Compiler sinh `values()` trả constant theo declaration order; `valueOf` resolve exact constant name. `ordinal()` chỉ là positional metadata và không nên persist làm business identifier vì reorder constant sẽ đổi value. External storage/protocol nên dùng stable code explicit.
+Vì mỗi constant có identity ổn định, so sánh enum bằng `==` là phù hợp và thường được khuyến nghị.
+
+## <a id="enum-fields-constructors">Thành phần trong Enum</a>
+
+Enum có thể giữ dữ liệu và hành vi:
+
+```java
+enum Currency {
+    USD(2), JPY(0);
+
+    private final int fractionDigits;
+
+    Currency(int fractionDigits) {
+        this.fractionDigits = fractionDigits;
+    }
+}
+```
+
+Enum constructor không được gọi trực tiếp từ mã ứng dụng; nó phục vụ construction của các constant đã khai báo.
+
+## <a id="enum-interface">Enum Implement Interface</a>
+
+Enum có thể `implements` interface, giúp một tập constant đóng vai trò cách triển khai có hợp đồng rõ ràng.
+
+```java
+enum Operation implements IntBinaryOperator { ... }
+```
+
+Điều này thường rõ hơn switch lớn khi hành vi thật sự thuộc từng constant.
+
+## <a id="enum-constant-specific">Behavior riêng theo Constant</a>
+
+Mỗi constant có thể cung cấp cách triển khai riêng cho abstract/overridable method của enum.
+
+```java
+PLUS {
+    int apply(int a, int b) { return a + b; }
+}
+```
+
+Đây là một dạng polymorphic hành vi trong một tập type đóng.
+
+## <a id="enum-values-valueof">values, valueOf, name và ordinal</a>
+
+`values()` trả các constant theo declaration order; `valueOf(String)` lookup theo exact name.
+
+`name()` là identifier khai báo. `ordinal()` chỉ là vị trí declaration và **không nên dùng làm persistent business mã/database value**, vì reorder constant sẽ đổi ordinal.
+
+Nếu cần external mã ổn định, hãy định nghĩa field riêng.
+
+chương tiếp theo chuyển từ “object là gì” sang “copy object nghĩa là copy reference hay copy trạng thái?”.

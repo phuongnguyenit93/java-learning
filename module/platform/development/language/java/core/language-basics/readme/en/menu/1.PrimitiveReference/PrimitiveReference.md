@@ -1,23 +1,96 @@
-# Primitive and Reference Types
+# Primitive and Reference Values
 
-## <a id="primitive-vs-reference-model">Primitive vs reference value model</a>
-Java variables hold values. A primitive variable directly holds a primitive value such as `int`, `double`, `char`, or `boolean`. A reference variable holds a reference value that can identify an object or array, or it can hold `null`.
+Before learning `if`, methods, arrays, or OOP, answer one foundational question: **what kind of value does a Java variable actually hold?**
 
-Copying a primitive copies the primitive value. Copying a reference copies the reference value, so two variables can refer to the same mutable object. This distinction explains pass-by-value, aliasing, identity, defensive copying, and nullability.
+The first mental split is:
 
-```java
-int a = 10;
-int b = a;          // independent primitive value
-List<String> x = new ArrayList<>();
-List<String> y = x; // copied reference; one shared object
+```text
+primitive value
+→ the numeric/boolean/char primitive value itself
+
+reference value
+→ a value identifying an object/array, or null
 ```
 
-## <a id="primitive-ranges-and-defaults">Primitive ranges, literals and defaults</a>
-Java has eight primitive types. Integer primitives have fixed widths; floating-point primitives follow IEEE 754; `char` is an unsigned UTF-16 code unit; `boolean` represents logical truth values. Fields receive language-defined default values, but local variables must be definitely assigned before they are read.
+That distinction appears throughout Java Core: assignment, boxing, casting, method calls, pass-by-value, arrays, `null`, equality, and runtime types.
 
-Numeric literals participate in compile-time typing. Suffixes such as `L`, `F`, and `D`, radix prefixes, underscores, and narrowing constant expressions can affect whether an assignment compiles.
+Roadmap:
 
-## <a id="reference-value-semantics">What a reference value actually stores</a>
-The Java language does not expose a physical address as the semantic value of an object reference. The useful model is that a reference can identify an object, be copied, compared for identity with `==`, dereferenced, or be `null`.
+```text
+What kinds of values do Java variables hold?
+Primitive vs Reference
+        ↓
+Where are names visible and how long do variables live?
+Variables & Scope
+        ↓
+How do primitives enter object/generic APIs?
+Wrapper & Boxing
+        ↓
+How are values combined and converted?
+Operators → Casting
+        ↓
+How does execution choose a path?
+Control Flow
+        ↓
+How is reusable behavior named and invoked?
+Methods → Varargs → Pass-by-Value
+        ↓
+How are fixed-size sequences represented?
+Arrays
+        ↓
+How are type names organized?
+Packages & Imports
+        ↓
+What does “no object” mean for a reference?
+null
+        ↓
+How do compile-time and runtime types fit together?
+Type System Mental Model
+```
 
-An object can have many aliases and its lifetime is not tied to one variable. Losing one reference does not destroy the object while other reachable references still exist. Reachability and garbage collection belong to the JVM model; ordinary Java code should reason in terms of references and identity rather than addresses.
+## <a id="primitive-vs-reference-model">Primitive vs Reference</a>
+
+A primitive variable holds a primitive value directly:
+
+```java
+int age = 20;
+boolean active = true;
+```
+
+A reference variable holds a **reference value** that may identify an object/array or be `null`:
+
+```java
+User user = new User();
+int[] values = new int[3];
+```
+
+Java still copies **values** during assignment and argument passing. For a reference variable, the copied value is the reference value itself.
+
+## <a id="primitive-ranges-and-defaults">Primitive Ranges and Defaults</a>
+
+Java has eight primitive types: `byte`, `short`, `int`, `long`, `float`, `double`, `char`, and `boolean`.
+
+Integer primitives have fixed ranges; floating point follows IEEE 754; `char` is a 16-bit UTF-16 code unit; `boolean` represents logical truth values.
+
+Fields receive language-defined default values. Local variables do not become readable through those defaults; the compiler requires definite assignment first.
+
+Numeric literals also have compile-time types, so suffixes such as `L`/`F`, radix forms, and constant-expression rules can affect assignment.
+
+## <a id="reference-value-semantics">What Does a Reference Value Mean?</a>
+
+Java does not require programmers to treat references as manipulable physical memory addresses.
+
+A sufficient mental model is:
+
+```text
+reference value
+→ identifies an object/array
+→ can be copied
+→ can be compared for identity with ==
+→ can be dereferenced
+→ can be null
+```
+
+Several references may alias the same object. Losing one reference does not destroy the object while another reachable path remains.
+
+The next chapter asks where variables are visible and how variable lifetime differs from object lifetime.

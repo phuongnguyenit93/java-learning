@@ -1,18 +1,58 @@
-# Toán tử trong Java
+# Toán tử
 
-## <a id="numeric-promotion">Numeric promotion</a>
-Arithmetic không phải lúc nào cũng chạy bằng type nhìn thấy của operand. Unary/binary numeric promotion có thể nâng integer nhỏ lên `int`, kết hợp type rộng hơn và ảnh hưởng cả result type lẫn overflow behavior.
+Toán tử không chỉ là ký hiệu viết tắt. Java áp dụng promotion, evaluation order và short-circuit các quy tắc trước/khi biểu thức được thực thi.
+
+## <a id="numeric-promotion">Numeric Promotion</a>
+
+Trong arithmetic biểu thức, `byte`, `short` và `char` thường được promote lên `int`:
 
 ```java
-byte a = 1, b = 2;
-int c = a + b; // byte + byte tạo int
+byte a = 1;
+byte b = 2;
+int c = a + b;
 ```
 
-## <a id="short-circuit-operators">Short-circuit boolean operator</a>
-`&&` và `||` chỉ evaluate operand phải khi cần. `&` và `|` trên boolean evaluate cả hai phía. Điều này ảnh hưởng side effect, expensive work và null-safe guard. Short-circuit là control-flow semantics, không chỉ là optimization.
+Vì vậy `byte c = a + b;` thường không compile nếu không có constant-biểu thức quy tắc hoặc cast phù hợp.
 
-## <a id="bitwise-shift">Bitwise và shift operator</a>
-Bitwise operator trên integer thao tác bit pattern. `<<` shift trái, `>>` shift phải giữ sign, còn `>>>` shift phải zero-fill. Shift distance được mask theo width của operand sau promotion.
+Mixed numeric biểu thức cũng được nâng type theo binary numeric promotion các quy tắc. Hãy suy luận type của **biểu thức**, không chỉ nhìn type của từng operand.
 
-## <a id="precedence-side-effects">Precedence, evaluation order và side effect</a>
-Precedence quyết định grouping, đồng thời Java quy định evaluation order. Parentheses nên thể hiện intent. Expression trộn increment, call, assignment và side effect có thể hợp lệ nhưng thường khó đọc và khó bảo trì.
+## <a id="short-circuit-operators">Short-circuit Boolean Operator</a>
+
+`&&` và `||` có short-circuit:
+
+```java
+user != null && user.isActive()
+```
+
+Nếu `user != null` là false, vế phải không được evaluate.
+
+Điều này không chỉ tối ưu hiệu năng; nó thường là một phần correctness để tránh dereference không hợp lệ hoặc side effect không mong muốn.
+
+`&` và `|` với boolean evaluate cả hai vế, nên ngữ nghĩa khác.
+
+## <a id="bitwise-shift">Bitwise và Shift</a>
+
+Với integer type, Java hỗ trợ:
+
+```text
+& | ^ ~
+<< >> >>>
+```
+
+`>>` giữ sign bit theo arithmetic shift; `>>>` zero-fill theo logical shift.
+
+Shift distance cũng bị mask theo độ rộng type. Bitwise mã nên đi cùng unit test rõ ràng vì lỗi sign/width thường khó nhìn bằng mắt.
+
+## <a id="precedence-side-effects">Precedence và Evaluation Order</a>
+
+Precedence quyết định biểu thức được **group** như thế nào; evaluation order quyết định operand được evaluate theo thứ tự nào.
+
+Java xác định left-to-right evaluation cho operand trong nhiều biểu thức ngữ cảnh, nhưng side effect bên trong biểu thức dài vẫn làm mã khó đọc:
+
+```java
+array[i++] = i + update();
+```
+
+Nếu phải nhớ precedence phức tạp để hiểu intent, dùng parentheses hoặc tách biểu thức thành statement nhỏ hơn.
+
+chương tiếp theo đi từ chuyển đổi ngầm trong biểu thức sang chuyển đổi có chủ ý bằng casting.

@@ -1,10 +1,31 @@
 # Varargs
 
-## <a id="varargs-array-model">Varargs are arrays</a>
-A declaration such as `void log(String... values)` is compiled as an array parameter. Callers may pass zero or more elements, or an explicit compatible array. Inside the method, `values` is an array and may itself be `null` if the caller explicitly passes a null array.
+Varargs lets callers pass a variable number of arguments without explicitly constructing an array at every call site. Inside the method, however, the parameter still follows an array mental model.
 
-## <a id="varargs-overload">Varargs and overload resolution</a>
-Varargs is considered after fixed-arity overload phases. Adding a varargs overload can interact with existing overloads in non-obvious ways, especially around zero arguments, arrays, boxing, and `null`. Keep overload sets small and unsurprising.
+## <a id="varargs-array-model">Varargs Are Arrays</a>
 
-## <a id="varargs-generics-warning">Generic varargs and heap-pollution boundary</a>
-Because generic element types may be non-reifiable while varargs uses an array, generic varargs can expose heap-pollution risks. `@SafeVarargs` is a promise by the author that the implementation is safe; it is not a switch that makes unsafe code safe.
+```java
+void log(String... messages) {
+    System.out.println(messages.length);
+}
+```
+
+Inside the body, `messages` has type `String[]`.
+
+Callers can write `log("a", "b")` or pass a compatible array. A varargs parameter must be the final parameter.
+
+## <a id="varargs-overload">Varargs and Overloading</a>
+
+Varargs is normally considered after suitable fixed-arity candidates.
+
+Adding a varargs overload can therefore change an overload set in non-obvious ways when combined with widening, boxing, and `null`.
+
+Public overload sets that mix varargs with related reference types deserve representative call-site tests.
+
+## <a id="varargs-generics-warning">Generic Varargs and Heap Pollution</a>
+
+Varargs uses arrays while generic type parameters are erased. Combining the mechanisms can produce heap-pollution warnings for non-reifiable types.
+
+`@SafeVarargs` is a promise that the implementation uses the varargs array safely; it should not be used merely to silence a warning.
+
+The next chapter asks exactly what gets copied when arguments enter a method.

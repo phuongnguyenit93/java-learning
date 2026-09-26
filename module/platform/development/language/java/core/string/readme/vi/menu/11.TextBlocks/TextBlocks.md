@@ -1,13 +1,56 @@
 # Text Block
 
-## <a id="text-block-syntax">Syntax text block</a>
-Text block dùng triple quote để biểu diễn multiline String literal với ít escaping hơn. Nó vẫn tạo ordinary immutable `String`; đây là source syntax chứ không phải runtime text type mới.
+Text block giúp viết multiline String dễ đọc hơn trong mã nguồn. Nó thay đổi **cú pháp biểu diễn literal trong source**, không tạo một runtime type mới.
 
-## <a id="incidental-whitespace">Incidental indentation</a>
-Compiler loại incidental indentation dựa trên closing delimiter/common indentation rule. Essential indentation trong content được giữ. Di chuyển closing delimiter vì vậy có thể làm resulting text đổi dù source nhìn gần giống.
+## <a id="text-block-syntax">Cú pháp Text Block</a>
 
-## <a id="escape-processing">Escape và line terminator</a>
-Java escape processing bình thường vẫn áp dụng sau text-block indentation handling. Text block còn có convenience như escape line terminator để continue line. Nếu exact byte/line ending quan trọng, hãy test resulting String và encode bằng charset explicit.
+```java
+String json = """
+    {
+      "name": "Java"
+    }
+    """;
+```
 
-## <a id="text-block-not-template">Text block không phải string template</a>
-Text block không tự interpolate variable. Concatenation, formatting, template facility hoặc API khác vẫn cần cho dynamic value. Không build SQL/JSON/HTML bằng raw interpolation nếu target domain có structured/binding API an toàn hơn.
+Result vẫn là `java.lang.String` bình thường.
+
+Text block đặc biệt hữu ích cho JSON, SQL, HTML hoặc text mẫu nhiều dòng vì giảm escape/concatenation noise.
+
+## <a id="incidental-whitespace">Incidental Indentation</a>
+
+Compiler xử lý một phần indentation mang tính “trình bày source” để text block có thể đặt đẹp trong mã mà không bắt buộc đầu ra giữ toàn bộ khoảng trắng đầu dòng đó.
+
+Whitespace bên trong text vẫn quan trọng. Khi đầu ra phải exact, hãy kiểm tra rendered string thay vì suy luận bằng mắt từ indentation của source.
+
+## <a id="escape-processing">Escape và Line Terminator</a>
+
+Text block vẫn xử lý escape sequence theo quy tắc của Java và có ngữ nghĩa riêng cho line terminator/closing delimiter.
+
+Không phải mọi `\` đều biến mất, và text block không có nghĩa “raw string”. Nếu cần exact backslash hoặc newline hành vi, hãy kiểm tra Java string value cuối cùng.
+
+## <a id="text-block-not-template">Text Block và String Template</a>
+
+Text block không tự interpolation variable:
+
+```java
+"""
+Hello ${name}
+"""
+```
+
+không tự thay `${name}` thành value.
+
+Muốn chèn dữ liệu vẫn cần formatting, concatenation hoặc API/template mechanism phù hợp.
+
+Kết thúc module, mô hình tư duy nên là:
+
+```text
+String immutable
+→ có thể chia sẻ/pool
+→ equality dùng value, không dựa vào pool identity
+→ builder dùng khi cần mutable construction
+→ text/bytes cần Charset
+→ char/code point/grapheme là các tầng biểu diễn khác nhau
+→ regex mô tả pattern
+→ text block chỉ cải thiện cú pháp trong mã nguồn
+```

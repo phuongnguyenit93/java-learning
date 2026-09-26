@@ -1,10 +1,46 @@
-# String Intern
+# String.intern
 
-## <a id="intern-semantics">Semantics của String.intern</a>
-`intern()` trả canonical pooled String equal với receiver. Nếu pool đã có equal canonical string thì trả reference đó; nếu chưa, receiver value sẽ được represented canonical theo JVM behavior.
+String pool có thể chia sẻ identity cho literal và một số String đã được chuẩn hóa. `String.intern()` là API cho phép yêu cầu một **reference chuẩn trong pool** tương ứng với cùng nội dung text.
 
-## <a id="intern-identity">Canonical pool reference</a>
-Sau intern các string equal, identity có thể share nên `a.intern() == b.intern()` có thể true khi content bằng nhau. Đây là canonicalization mechanism, không phải replacement cho `equals` trong ordinary text logic.
+## <a id="intern-semantics">String.intern làm gì?</a>
 
-## <a id="intern-tradeoffs">Trade-off interning và memory</a>
-Interning có thể giảm duplicate storage hoặc cho canonical identity với vocabulary bounded, nhưng arbitrary/high-cardinality user data có thể làm pool tăng và thêm lookup overhead. Modern JVM không còn đúng các permanent-generation myth cũ, nhưng unbounded interning vẫn là ownership/memory decision cần measure.
+Khi gọi:
+
+```java
+String canonical = value.intern();
+```
+
+JVM trả về reference đại diện trong String pool cho chuỗi có cùng nội dung.
+
+Điều này không thay đổi nội dung của `value` và cũng không làm `String` trở nên mutable. `intern()` chỉ liên quan tới **identity/canonicalization**, không thay đổi equality ngữ nghĩa.
+
+## <a id="intern-identity">Canonical Reference</a>
+
+Ví dụ:
+
+```java
+String a = new String("java");
+String b = a.intern();
+String c = "java";
+
+b == c // true trong cùng runtime context phù hợp
+```
+
+Sau `intern()`, `b` dùng canonical pooled reference cho nội dung `"java"`.
+
+Nhưng business logic vẫn nên dùng `equals` khi câu hỏi là **nội dung có bằng nhau không**. Không nên chuyển mọi comparison sang identity chỉ vì có `intern()`.
+
+## <a id="intern-tradeoffs">Đánh đổi của Interning</a>
+
+Interning có thể giảm số object identity khác nhau cho một tập String lặp lại nhiều, nhưng không phải optimization mặc định cho mọi ứng dụng.
+
+Chi phí/cân nhắc gồm:
+
+- thao tác lookup/canonicalization;
+- giữ nhiều String trong pool;
+- memory pressure nếu intern dữ liệu có cardinality rất lớn;
+- làm mã phụ thuộc không cần thiết vào identity.
+
+Chỉ intern khi workload và measurement cho thấy lợi ích rõ ràng, hoặc hợp đồng thực sự cần canonical identity.
+
+chương tiếp theo rời khỏi identity và đi qua một ranh giới quan trọng hơn: **String trong JVM biến thành byte bên ngoài JVM bằng cách nào?**

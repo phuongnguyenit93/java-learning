@@ -1,29 +1,90 @@
-# Phương thức trong Java
+# Method
 
-## <a id="method-signature">Method signature, parameter và return</a>
-Method Java khai báo name và parameter types; return type không tham gia overload identity. Parameter là local variable được khởi tạo từ argument value. Contract của method nên làm rõ input hợp lệ, output, side effect và exceptional behavior.
+Method đặt tên cho một hành vi có thể tái sử dụng. Nhưng một lời gọi Java không chỉ là “tìm method cùng tên”: compiler còn phải xét signature, chuyển đổi và overload resolution.
 
-## <a id="method-invocation-conversion">Method invocation conversion</a>
-Khi kiểm tra argument có dùng được cho method hay không, Java có thể dùng identity conversion, primitive/reference widening, boxing/unboxing theo invocation rule và cuối cùng varargs applicability. Không phải conversion có vẻ hợp lý nào cũng được xét.
+## <a id="method-signature">Method Signature</a>
 
-## <a id="overload-resolution-phases">Các phase của overload resolution</a>
-Overload resolution là compile-time selection. Compiler xét fixed-arity candidate ở các phase sớm và chỉ sau đó mới xét varargs. Nếu phase sớm đã có candidate hợp lệ thì phase sau không quyết định lại.
+Ở mức overload trong Java, method signature chủ yếu gồm **tên method + parameter types**. Return type không đủ để tạo overload khác nhau.
 
 ```java
-void f(long x) {}
-void f(Integer x) {}
-void f(int... x) {}
-// f(1) chọn f(long), không chọn boxing hay varargs.
+int parse(String value) { ... }
+long parse(String value) { ... } // không hợp lệ chỉ vì return type khác
 ```
 
-## <a id="most-specific-overload">Chọn overload most-specific</a>
-Nếu nhiều overload cùng applicable trong một phase, Java chọn method most-specific theo type relationship và invocation compatibility. Nó không đơn giản là numeric type nhỏ nhất hay method viết trước.
+Parameter là local variable nhận đối số value khi method được gọi. `return` kết thúc method và cung cấp result nếu return type không phải `void`.
 
-## <a id="null-overload-ambiguity">null và overload ambiguity</a>
-`null` compatible với reference type. Nếu overload nhận các reference type không liên quan, `f(null)` có thể ambiguous vì không candidate nào specific hơn. Cast có thể disambiguate, nhưng API tốt nên tránh overload set gây khó hiểu.
+## <a id="method-invocation-conversion">Chuyển đổi khi gọi Method</a>
 
-## <a id="method-call-evaluation">Evaluation order của argument</a>
-Argument được evaluate từ trái sang phải trước khi method body bắt đầu. Side effect vì vậy có order xác định, nhưng expression quá dày đặc side effect vẫn khó đọc.
+Để một method candidate áp dụng được, đối số có thể trải qua các chuyển đổi mà Java cho phép trong method invocation ngữ cảnh, như:
 
-## <a id="recursion-stack">Recursion và call-stack cost</a>
-Mỗi recursive call tạo thêm invocation frame cho tới base case. Java không guarantee tail-call elimination nên recursion sâu có thể gây `StackOverflowError`. Depth không giới hạn thường nên cân nhắc iterative solution.
+- identity chuyển đổi;
+- primitive widening;
+- reference widening;
+- boxing/unboxing trong phase phù hợp;
+- varargs chuyển đổi ở phase cuối.
+
+Không phải mọi cast hợp lệ đều được compiler tự thực hiện trong method call.
+
+## <a id="overload-resolution-phases">Các bước Overload Resolution</a>
+
+Compiler xét overload theo các phase ưu tiên. mô hình tư duy hữu ích:
+
+```text
+1. fixed arity, không cần boxing/varargs mở rộng
+        ↓ nếu chưa có candidate phù hợp
+2. cho phép boxing/unboxing phù hợp
+        ↓ nếu vẫn chưa có
+3. varargs fallback
+```
+
+Chi tiết specification sâu hơn, nhưng order này giải thích nhiều câu hỏi phỏng vấn kiểu “widening, boxing hay varargs thắng?”.
+
+## <a id="most-specific-overload">Most-specific Overload</a>
+
+Nếu nhiều candidate cùng áp dụng, compiler cố chọn candidate **cụ thể hơn** theo type các quy tắc.
+
+```java
+void print(Object x) { }
+void print(String x) { }
+
+print("java"); // String overload
+```
+
+Không phải “method khai báo sau” hay “method có body tốt hơn” thắng; đây là quyết định compile-time dựa trên type.
+
+## <a id="null-overload-ambiguity">null và Overload Ambiguity</a>
+
+Literal `null` tương thích với reference type. Nếu các overload không có quan hệ specificity rõ ràng:
+
+```java
+void print(String x) { }
+void print(Integer x) { }
+
+print(null); // ambiguous
+```
+
+compiler không thể chọn một overload cụ thể.
+
+Cast explicit có thể disambiguate nếu đó thực sự là intent.
+
+## <a id="method-call-evaluation">Thứ tự Evaluation của Argument</a>
+
+Java evaluate đối số biểu thức từ trái sang phải trước khi method body chạy.
+
+Side effect trong đối số vẫn có thể làm mã khó hiểu:
+
+```java
+call(i++, update(i));
+```
+
+Khi thứ tự có ý nghĩa business, tách calculation ra biến riêng thường rõ hơn.
+
+## <a id="recursion-stack">Recursion và Call Stack</a>
+
+Recursive method gọi lại chính nó hoặc một cycle method khác. Mỗi lời gọi cần một stack frame mới.
+
+Nếu không có base case hoặc depth quá lớn, chương trình có thể gặp `StackOverflowError`.
+
+Recursion phù hợp tự nhiên với một số tree/divide-and-conquer problem, nhưng loop có thể đơn giản và an toàn stack hơn cho iteration tuyến tính dài.
+
+chương tiếp theo xem cú pháp đặc biệt cho method nhận số đối số thay đổi: varargs.

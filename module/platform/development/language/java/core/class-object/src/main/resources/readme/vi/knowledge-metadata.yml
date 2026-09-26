@@ -54,6 +54,10 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+  java-modifier-map:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
 5.StaticFinal/StaticFinal.md:
   static-vs-instance:
     difficulty: BASIC

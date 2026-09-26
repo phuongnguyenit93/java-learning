@@ -1,13 +1,55 @@
 # Package và Import
 
-## <a id="package-namespace">Package như namespace</a>
-Package tham gia fully qualified name của type và nhóm các type liên quan. Package structure còn ảnh hưởng package-private/protected access. Directory convention thường mirror package name, nhưng language concept là package declaration.
+Khi codebase lớn lên, tên class cần được tổ chức để tránh xung đột và tạo ranh giới. Package là phần của **fully qualified type name**; import chỉ giúp source dùng tên ngắn hơn.
 
-## <a id="import-resolution">Import và name resolution</a>
-Import cho phép source dùng simple type name; nó không copy code hay tự tạo runtime dependency. `java.lang` được import implicit, current package visible, và simple name conflict phải dùng qualification.
+## <a id="package-namespace">Package như Namespace</a>
 
-## <a id="static-import">Static import</a>
-Static import cho phép dùng selected static member mà không prefix class. Nó hữu ích cho DSL-like code hoặc constant nhưng cũng có thể che ownership. Chỉ nên dùng khi nguồn của name vẫn rõ trong context.
+Ví dụ:
 
-## <a id="package-access">Package-private access boundary</a>
-Không ghi access modifier tạo package-private access. Type/member chỉ accessible trong cùng package. Đây là boundary hữu ích cho implementation collaboration mà không mở surface ra public.
+```java
+package com.example.order;
+```
+
+làm class `Order` có fully qualified name:
+
+```text
+com.example.order.Order
+```
+
+Hai class cùng simple name có thể cùng tồn tại nếu thuộc package khác nhau.
+
+Package không chỉ phục vụ folder organization; nó còn tham gia access control và type naming.
+
+## <a id="import-resolution">Import và Name Resolution</a>
+
+```java
+import java.util.List;
+```
+
+không “load” class vào JVM. Import chỉ cho compiler/source resolver biết simple name `List` đang nói tới type nào.
+
+Nếu hai type cùng simple name gây ambiguity, có thể dùng fully qualified name cho ít nhất một bên.
+
+`java.lang` được implicit import; type cùng package cũng không cần explicit import.
+
+## <a id="static-import">Static Import</a>
+
+Static import cho phép dùng static member mà không ghi type qualifier:
+
+```java
+import static java.lang.Math.max;
+
+int x = max(a, b);
+```
+
+Nó hữu ích khi member name rất rõ trong ngữ cảnh, nhưng quá nhiều static import có thể làm mất dấu member đến từ type nào.
+
+## <a id="package-access">Package-private Boundary</a>
+
+Khi không ghi access modifier, top-level type/member phù hợp có package-private access.
+
+Điều này cho phép nhiều class trong cùng package cộng tác mà không public API ra toàn codebase.
+
+Package vì vậy có thể là một **encapsulation ranh giới ở mức nhóm type**, không chỉ là thư mục để sắp file.
+
+chương tiếp theo quay lại reference value đặc biệt nhất: `null`.

@@ -1,20 +1,66 @@
-# Wrapper, Boxing và Unboxing
+# Wrapper và Boxing
 
-## <a id="wrapper-types">Wrapper type và object semantics</a>
-Mỗi primitive type có wrapper class tương ứng như `Integer`, `Long`, `Double`, `Boolean`. Wrapper là immutable object nên có thể là `null`, dùng trong generics/collection, có identity và cung cấp helper parse/convert.
+Primitive không phải object. Nhưng nhiều Java API, đặc biệt generic collection, làm việc với reference type. Wrapper type tạo cầu nối như `int ↔ Integer`, `double ↔ Double`.
 
-## <a id="boxing-unboxing">Boxing và unboxing</a>
-Autoboxing chuyển primitive sang wrapper khi language rule cho phép; unboxing lấy primitive value từ wrapper. Compiler chèn các conversion này và chúng còn tham gia overload resolution.
+## <a id="wrapper-types">Wrapper Type</a>
 
-```java
-Integer boxed = 42;
-int n = boxed;
+Mỗi primitive có wrapper tương ứng:
+
+```text
+byte    ↔ Byte
+short   ↔ Short
+int     ↔ Integer
+long    ↔ Long
+float   ↔ Float
+double  ↔ Double
+char    ↔ Character
+boolean ↔ Boolean
 ```
 
-Syntax tiện lợi không làm mất khác biệt semantic giữa primitive và object.
+Wrapper là object immutable với value ngữ nghĩa riêng. Vì là reference type, wrapper có thể là `null`, tham gia generic API và có identity khác với primitive value.
 
-## <a id="wrapper-caching">Wrapper cache và bẫy identity</a>
-Một số wrapper factory/autoboxing reuse cached object cho các range bắt buộc/phổ biến. Vì vậy boxed value đôi khi có cùng identity và đôi khi không. Không dùng `==` để so sánh numeric value của wrapper; dùng `.equals()` hoặc chủ động unbox.
+## <a id="boxing-unboxing">Boxing và Unboxing</a>
 
-## <a id="unboxing-null">Unboxing null và NullPointerException</a>
-Unboxing cần wrapper object thực. Nếu reference là `null`, unboxing ném `NullPointerException`. Lỗi này có thể xuất hiện gián tiếp trong arithmetic, comparison, ternary expression hoặc API trộn primitive/wrapper.
+**Boxing** chuyển primitive value sang wrapper; **unboxing** lấy primitive value từ wrapper.
+
+```java
+Integer boxed = 10; // autoboxing
+int value = boxed;  // unboxing
+```
+
+Compiler chèn chuyển đổi tương ứng trong ngữ cảnh hợp lệ.
+
+Autoboxing tiện nhưng không làm primitive và wrapper trở thành cùng một type. Overload resolution, `null`, identity và performance vẫn có thể khác.
+
+## <a id="wrapper-caching">Wrapper Cache</a>
+
+Một số wrapper value có thể được cache, khiến demo dùng `==` đôi khi cho kết quả bất ngờ:
+
+```java
+Integer a = 100;
+Integer b = 100;
+a == b // có thể true do cache
+```
+
+nhưng với value khác:
+
+```java
+Integer x = 1000;
+Integer y = 1000;
+x == y // không nên dựa vào kết quả identity
+```
+
+Khi muốn so wrapper value, dùng `equals` hoặc unbox theo hợp đồng phù hợp; không dựa vào cache identity.
+
+## <a id="unboxing-null">Unboxing null</a>
+
+Wrapper có thể là `null`:
+
+```java
+Integer boxed = null;
+int value = boxed; // NullPointerException
+```
+
+Unboxing cần một object wrapper thực sự để lấy primitive value. Vì vậy API dùng nullable wrapper có thêm một lỗi mode mà primitive không có.
+
+chương tiếp theo xem các toán tử kết hợp value và những chuyển đổi ngầm có thể xảy ra trong biểu thức.

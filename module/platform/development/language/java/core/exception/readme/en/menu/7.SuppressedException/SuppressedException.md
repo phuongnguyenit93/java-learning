@@ -1,10 +1,40 @@
 # Suppressed Exceptions
 
-## <a id="primary-vs-suppressed">Primary vs suppressed exception</a>
-If the try-with-resources body throws and closing a resource also throws, Java keeps the body failure as the primary exception and attaches the close failure as suppressed. This preserves the failure that caused control to leave the body while retaining cleanup evidence.
+Cleanup can fail too. When the body of a try-with-resources block throws and `close()` also throws, Java needs to preserve both failures without losing the original one.
 
-## <a id="get-suppressed">Inspecting suppressed exceptions</a>
-`Throwable.getSuppressed()` returns the attached cleanup failures. Logging frameworks typically print them with the primary stack trace, but custom error/reporting code should preserve them when translating or serializing diagnostic information.
+## <a id="primary-vs-suppressed">Primary vs Suppressed</a>
 
-## <a id="close-failure">Close failure during another failure</a>
-With multiple resources, several `close()` calls can fail and each later cleanup failure may be suppressed according to resource order. Do not replace this behavior with manual code that blindly catches/ignores close failures; cleanup failures can be important evidence of partial writes, transaction/flush problems, or resource corruption.
+If the body throws A and `close()` throws B:
+
+```text
+A
+→ primary exception
+
+B
+→ suppressed on A
+```
+
+This keeps cleanup failure from hiding the failure that caused the operation to fail first.
+
+## <a id="get-suppressed">Inspecting Suppressed Exceptions</a>
+
+Suppressed throwables are available through:
+
+```java
+Throwable[] suppressed = ex.getSuppressed();
+```
+
+They are primarily diagnostic context rather than something ordinary business logic should depend on heavily.
+
+## <a id="close-failure">Close Failure</a>
+
+```text
+body succeeds + close fails
+→ close failure is primary
+
+body fails + close fails
+→ body failure is primary
+→ close failure is suppressed
+```
+
+The next chapter moves from runtime mechanics to API design: when does a custom exception type add real meaning?

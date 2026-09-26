@@ -1,10 +1,44 @@
 # String Pool
 
-## <a id="string-pool-model">String pool mental model</a>
-The JVM maintains a pool of canonical string instances for literals and strings explicitly interned in a class-loader/runtime context. Pooling is possible because String is immutable: sharing one canonical object cannot let one caller change another caller's text.
+Because Strings are immutable, the runtime can safely share selected equal values instead of always allocating separate objects. That is the core idea behind the String pool.
+
+## <a id="string-pool-model">What Is the String Pool?</a>
+
+The pool provides canonical references for selected Strings, especially literals and explicitly interned values.
+
+```java
+String a = "java";
+String b = "java";
+```
+
+In the same runtime context, these literals normally share the pooled object.
+
+Pooling is an **identity optimization/canonicalization mechanism**. It does not change the rule that text content should be compared with `equals`.
 
 ## <a id="literal-vs-new">Literal vs new String</a>
-A literal such as `"abc"` refers to the pooled canonical string for that literal. `new String("abc")` creates a distinct String object initialized with equal content, so identity differs even though `equals` is true.
 
-## <a id="pool-identity">Pool identity and compile-time constants</a>
-Compile-time constant string expressions can be folded and share a pooled identity, while runtime concatenation generally produces a result object before any explicit interning. Never use `==` to test text content; pool identity is an implementation/language optimization detail, not a value-equality contract.
+```java
+String a = "java";
+String b = new String("java");
+```
+
+`a` refers to the pooled literal, while `new String(...)` requests a distinct object.
+
+Therefore `a == b` is normally false while `a.equals(b)` is true.
+
+Avoid `new String("...")` when a literal already expresses the intended value.
+
+## <a id="pool-identity">Pool Identity and Constant Expressions</a>
+
+Compile-time constant concatenation may be folded into the same pooled literal:
+
+```java
+String a = "ja" + "va";
+String b = "java";
+```
+
+Runtime concatenation does not carry the same identity guarantee.
+
+Application logic should never depend on pool identity for text equality.
+
+The next chapter focuses directly on String comparison rules.

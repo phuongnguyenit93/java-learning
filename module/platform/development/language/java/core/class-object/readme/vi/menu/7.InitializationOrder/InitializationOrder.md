@@ -1,10 +1,47 @@
-# Thứ tự khởi tạo
+# Initialization Order
 
-## <a id="class-initialization-order">Static initialization order</a>
-Trước static initializer, static field đã có default value. Explicit static field initializer và static block sau đó chạy theo textual order của class. Superclass initialization thường xảy ra trước subclass initialization khi subclass được active initialize.
+Nhiều bug construction xuất phát từ việc “đúng mã nhưng sai thời điểm”. Java có thứ tự rõ ràng cho class initialization và instance initialization.
 
-## <a id="instance-initialization-order">Order của instance field/block/constructor</a>
-Sau khi superclass constructor portion hoàn tất, subclass instance field và instance initializer block chạy theo textual order, rồi constructor body mới chạy. Default field value tồn tại trước explicit initializer.
+## <a id="class-initialization-order">Static Initialization Order</a>
 
-## <a id="inheritance-initialization-order">Initialization order qua inheritance</a>
-Với `new Child()`, chỉ có một object allocation nhưng construction đi qua superclass chain trước subclass initialization/body. Static initialization và instance construction là hai lifecycle khác nhau. Order này giải thích vì sao gọi overridable method trong constructor có thể thấy subclass field trước explicit initializer.
+Khi một class được initialize, superclass được initialize trước nếu cần, sau đó static field initializer/static block của class chạy theo textual order.
+
+```text
+superclass static initialization
+        ↓
+subclass static fields/blocks theo source order
+```
+
+Class loading, linking và initialization sâu hơn thuộc module classloader; ở đây chỉ cần mô hình tư duy về thời điểm static trạng thái trở nên sẵn sàng.
+
+## <a id="instance-initialization-order">Instance Initialization Order</a>
+
+Trong một class, instance field initializer và instance initializer chạy theo textual order trước constructor body của class đó.
+
+```text
+trạng thái mặc định zero/null
+→ field initializer / instance block
+→ constructor body
+```
+
+Nhưng superclass portion vẫn phải được construct trước subclass portion.
+
+## <a id="inheritance-initialization-order">Initialization qua Inheritance</a>
+
+Với `new Child()`:
+
+```text
+class initialization nếu cần
+        ↓
+Parent instance initialization
+        ↓
+Parent constructor body
+        ↓
+Child instance initialization
+        ↓
+Child constructor body
+```
+
+Hiểu order này giải thích vì sao gọi overridable method quá sớm trong constructor nguy hiểm: subclass method có thể chạy trước khi subclass fields được initialize như mong đợi.
+
+chương tiếp theo nhìn toàn bộ quá trình object creation ở mức lifecycle và các rủi ro `this` escape.

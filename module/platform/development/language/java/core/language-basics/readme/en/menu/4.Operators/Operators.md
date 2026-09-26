@@ -1,18 +1,45 @@
-# Java Operators
+# Operators
 
-## <a id="numeric-promotion">Numeric promotion</a>
-Arithmetic does not always run in the apparent operand type. Unary/binary numeric promotion can widen smaller integral operands to `int`, combine wider types, and influence both result type and overflow behavior.
+Operators are not merely shorthand symbols. Java applies promotion, grouping, evaluation-order, and short-circuit rules around them.
+
+## <a id="numeric-promotion">Numeric Promotion</a>
+
+In arithmetic expressions, `byte`, `short`, and `char` are commonly promoted to `int`:
 
 ```java
-byte a = 1, b = 2;
-int c = a + b; // byte + byte produces int
+byte a = 1;
+byte b = 2;
+int c = a + b;
 ```
 
-## <a id="short-circuit-operators">Short-circuit boolean operators</a>
-`&&` and `||` evaluate the right operand only when necessary. `&` and `|` on booleans evaluate both operands. This affects side effects, expensive work, and null-safe guards. Short-circuiting is a control-flow property, not merely an optimization.
+Reason about the type of the **whole expression**, not only the operand types.
 
-## <a id="bitwise-shift">Bitwise and shift operators</a>
-Integral bitwise operators manipulate bit patterns. `<<` shifts left, `>>` performs sign-propagating right shift, and `>>>` performs zero-fill right shift. Shift distances are masked according to operand width after promotion.
+## <a id="short-circuit-operators">Short-circuit Boolean Operators</a>
 
-## <a id="precedence-side-effects">Precedence, evaluation order and side effects</a>
-Precedence determines grouping, while Java also specifies evaluation order. Parentheses should communicate intent even when precedence is known. Expressions combining increment, calls, assignments, and other side effects are legal but often needlessly hard to reason about.
+`&&` and `||` short-circuit:
+
+```java
+user != null && user.isActive()
+```
+
+If the left side is false, the right side is not evaluated.
+
+That is often part of correctness, not only an optimization. Boolean `&` and `|` evaluate both sides and therefore have different semantics.
+
+## <a id="bitwise-shift">Bitwise and Shift Operators</a>
+
+Integer types support `&`, `|`, `^`, `~`, `<<`, `>>`, and `>>>`.
+
+`>>` performs sign-preserving arithmetic right shift; `>>>` zero-fills. Shift distances are also masked according to the operand width.
+
+Bit-level code benefits from explicit tests around sign and width boundaries.
+
+## <a id="precedence-side-effects">Precedence and Evaluation Order</a>
+
+Precedence determines how an expression groups; evaluation order determines when operands are evaluated.
+
+Java specifies left-to-right operand evaluation in many expression contexts, but complex side effects still make code difficult to reason about.
+
+Use parentheses or smaller statements when understanding intent requires memorizing a long precedence table.
+
+The next chapter moves from implicit conversions in expressions to explicit casting.

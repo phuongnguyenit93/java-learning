@@ -657,7 +657,7 @@ Immutability & Defensive Copy
 ClassObject                  → What is the difference between a type definition and a runtime object?
 Constructor                  → How does an object establish valid initial state?
 ThisSuper                    → How does one object participate in constructor/member chains?
-AccessModifier               → Which parts of object state/behavior should callers be allowed to access?
+AccessModifier               → Which parts of object state/behavior should callers be allowed to access, and how do access modifiers differ from concurrency/serialization/native modifiers?
 StaticFinal                  → What belongs to the class versus each instance, and what can no longer change?
 InitializationBlocks         → What initialization work exists outside constructor bodies?
 InitializationOrder          → In what order do class, superclass, field and constructor initialization steps run?
@@ -677,7 +677,7 @@ ImmutabilityDefensiveCopy    → How can ownership and state sharing be made saf
 | `1.ClassObject/ClassObject.md` | `#class-object-model` — Class vs object mental model<br>`#fields-methods-state` — State, behavior and instance identity<br>`#object-reference-lifecycle` — Reference reachability and object lifetime boundary |
 | `2.Constructor/Constructor.md` | `#constructor-purpose` — Constructor purpose and invariants<br>`#constructor-overloading` — Constructor overloading and chaining<br>`#default-constructor` — Default constructor rules<br>`#constructor-exceptions` — Constructor failure and partially-created state boundary |
 | `3.ThisSuper/ThisSuper.md` | `#this-reference` — this reference<br>`#super-access` — super member/constructor access<br>`#constructor-chaining-order` — this()/super() constructor chaining rules |
-| `4.AccessModifier/AccessModifier.md` | `#access-levels` — private/package/protected/public<br>`#protected-cross-package` — Protected access across packages<br>`#encapsulation-boundary` — Access control as encapsulation boundary |
+| `4.AccessModifier/AccessModifier.md` | `#access-levels` — private/package/protected/public<br>`#protected-cross-package` — Protected access across packages<br>`#encapsulation-boundary` — Access control as encapsulation boundary<br>`#java-modifier-map` — Map access/static/final/abstract/synchronized/volatile/transient/native/strictfp to the problem domain and downstream module where each belongs |
 | `5.StaticFinal/StaticFinal.md` | `#static-vs-instance` — Static vs instance members<br>`#final-variable-reference` — final primitive/reference semantics<br>`#static-initialization` — Static member initialization<br>`#constants-design` — Constants and compile-time constants |
 | `6.InitializationBlocks/InitializationBlocks.md` | `#static-initializer` — Static initializer<br>`#instance-initializer` — Instance initializer<br>`#initializer-use-cases` — Initializer use cases and readability |
 | `7.InitializationOrder/InitializationOrder.md` | `#class-initialization-order` — Static initialization order<br>`#instance-initialization-order` — Instance field/block/constructor order<br>`#inheritance-initialization-order` — Parent/child initialization order |
@@ -725,6 +725,9 @@ class vs object; constructor invariants; this escape; protected semantics; stati
 ```text
 encapsulation
 → OOP design concept: an object protects its state/invariants behind behavior
+
+access modifiers
+→ Java mechanism that helps enforce encapsulation boundaries; detailed language rules live in `class-object`
 
 abstraction
 → OOP design concept: expose the contract a caller needs, hide irrelevant implementation
@@ -779,7 +782,7 @@ MentalModel
 → Start with procedural data + scattered rules and ask why object ownership/responsibility can localize change.
 
 Encapsulation
-→ Public mutable state lets any caller violate invariants; move rules behind object behavior.
+→ Public mutable state lets any caller violate invariants; move rules behind object behavior, then connect the design concept to Java access modifiers without duplicating the full `class-object` access-control rules.
 
 Inheritance
 → Repeated behavior and subtype contracts create a need for "is-a" relationships, but inheritance also creates coupling.
@@ -804,7 +807,7 @@ Abstraction
 | Existing chapter | Proposed anchored H2 sections |
 | --- | --- |
 | `1.MentalModel/MentalModel.md` | `#oop-object-collaboration` — Objects as collaborating state + behavior<br>`#oop-boundaries` — Responsibility and boundaries<br>`#oop-vs-procedural` — OOP vs procedural decomposition trade-off |
-| `2.Encapsulation/Encapsulation.md` | `#encapsulation-model` — Encapsulation is more than private fields<br>`#invariant-protection` — Protecting invariants<br>`#tell-dont-ask-boundary` — Behavior-oriented API vs data exposure |
+| `2.Encapsulation/Encapsulation.md` | `#encapsulation-model` — What is encapsulation?<br>`#encapsulation-access-modifiers` — Access modifiers as a Java mechanism for enforcing encapsulation boundaries; point learners to `class-object → Access Modifier` for detailed rules<br>`#invariant-protection` — Protecting invariants<br>`#tell-dont-ask-boundary` — Tell, Don't Ask |
 | `3.Inheritance/Inheritance.md` | `#is-a-subtyping` — Inheritance, subtyping and is-a<br>`#inherited-state-behavior` — Inherited state/behavior<br>`#inheritance-coupling` — Inheritance coupling and fragile-base risk |
 | `4.Polymorphism/Polymorphism.md` | `#subtype-polymorphism` — Subtype polymorphism<br>`#dynamic-dispatch` — Runtime dynamic dispatch<br>`#substitutability` — Substitutability and behavioral expectations |
 | `5.OverloadingOverriding/OverloadingOverriding.md` | `#overloading-compile-time` — Overloading is compile-time selection<br>`#overriding-runtime` — Overriding is runtime dispatch<br>`#covariant-return` — Covariant return types<br>`#override-rules` — Visibility/final/static/private overriding boundaries<br>`#static-method-hiding` — Static methods are hidden, not overridden<br>`#field-hiding` — Field selection follows the compile-time reference type, not runtime dispatch<br>`#dispatch-vs-hiding` — Instance-method dispatch vs static-method and field hiding |
@@ -2256,8 +2259,8 @@ class loading lifecycle; parent delegation; why same class name can be different
 | --- | ---: | ---: | ---: | ---: | ---: |
 | `language-basics` | 13 | 51 | 8 | 30–40 | 20–28 |
 | `numbers` | 11 | 34 | 7 | 28–36 | 18–24 |
-| `class-object` | 14 | 49 | 7 | 36–48 | 24–32 |
-| `oop` | 7 | 28 | 6 | 24–32 | 18–24 |
+| `class-object` | 14 | 50 | 7 | 36–48 | 24–32 |
+| `oop` | 7 | 29 | 6 | 24–32 | 18–24 |
 | `abstract-interface` | 6 | 22 | 5 | 22–30 | 16–22 |
 | `object-contract` | 7 | 22 | 5 | 24–32 | 18–24 |
 | `string` | 11 | 41 | 8 | 28–38 | 18–26 |

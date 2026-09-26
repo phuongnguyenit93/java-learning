@@ -1,10 +1,44 @@
 # Custom Exception
 
-## <a id="custom-exception-purpose">Khi nào custom exception có giá trị</a>
-Tạo custom exception khi failure biểu diễn stable domain/application concept mà caller, log hoặc handler cần nhận diện. Không tạo một class mới cho từng message; type nên truyền đạt category/contract có ý nghĩa.
+Không phải lỗi nào cũng cần một exception class mới. Custom exception chỉ có giá trị khi kiểu mới **thêm ý nghĩa**, tạo ranh giới abstraction rõ hơn hoặc giúp bên gọi xử lý một nhóm lỗi theo hợp đồng có chủ ý.
 
-## <a id="exception-context">Giữ context hữu ích và cause</a>
-Đưa information cần để hiểu operation fail như order ID hoặc requested state, nhưng tránh secret và object dump quá lớn. Khi wrap low-level failure, constructor nên nhận original cause và preserve nó.
+## <a id="custom-exception-purpose">Khi nào cần Custom Exception?</a>
 
-## <a id="exception-hierarchy-design">Thiết kế domain exception hierarchy nhỏ</a>
-Giữ hierarchy nông và có mục đích. Common domain base exception có thể hỗ trợ một handling policy, còn subtype cụ thể chỉ nên tồn tại khi recovery/status decision thật sự khác. Checked hay unchecked phải theo API contract, không theo naming convention.
+Custom exception hữu ích khi nó:
+
+- diễn đạt lỗi của domain hoặc ứng dụng rõ hơn;
+- gom các exception tầng thấp thành ngôn ngữ của tầng hiện tại;
+- cho phép bên gọi catch một nhóm lỗi có cùng ngữ nghĩa;
+- mang ngữ cảnh có cấu trúc mà message chung chung không đủ.
+
+Không nên tạo `SomethingException` chỉ để đổi tên một `IllegalArgumentException` mà không thêm hợp đồng hay ngữ cảnh.
+
+## <a id="exception-context">Giữ ngữ cảnh và Cause</a>
+
+Custom exception nên giữ đủ ngữ cảnh để chẩn đoán:
+
+```java
+throw new OrderLoadException(orderId, ex);
+```
+
+Ví dụ có thể giữ:
+
+- `orderId`;
+- thao tác đang thực hiện;
+- cause gốc.
+
+Nhưng tránh đưa secret, token hoặc dữ liệu nhạy cảm vào message/ngữ cảnh nếu chúng có thể xuất hiện trong log.
+
+## <a id="exception-hierarchy-design">Thiết kế Exception Hierarchy</a>
+
+Một hệ phân cấp nhỏ, có ý nghĩa thường tốt hơn hàng chục class chỉ khác tên.
+
+```text
+OrderException
+├── OrderNotFoundException
+└── OrderValidationException
+```
+
+Hệ phân cấp nên phục vụ **cách bên gọi muốn xử lý lỗi**, không chỉ phản chiếu mọi chi tiết triển khai nội bộ.
+
+Chương cuối đặt toàn bộ cơ chế đã học vào ngữ cảnh thiết kế ứng dụng: catch ở đâu, chuyển đổi exception ở đâu, log ở đâu và khi nào nên để exception tiếp tục truyền lên trên.

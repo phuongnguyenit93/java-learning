@@ -1,18 +1,68 @@
-# Java Type System Mental Model
+# Type System Mental Model
 
-## <a id="compile-time-vs-runtime-type">Compile-time type vs runtime type</a>
-A reference expression has a compile-time type used for member access, overload resolution, and assignment checks. The object it references may have a more specific runtime class used for overridden instance-method dispatch.
+The module ends by separating two worlds that are often conflated: **what the compiler knows from static types** and **what runtime knows from the actual object/value**.
+
+## <a id="compile-time-vs-runtime-type">Compile-time vs Runtime Type</a>
 
 ```java
-Animal a = new Dog();
-// compile-time type: Animal; runtime class: Dog
+Animal animal = new Dog();
 ```
 
-## <a id="assignment-compatibility">Assignment compatibility</a>
-Assignments are accepted only when the source can be converted to the target according to Java's type rules. Reference widening is normally safe; downcasting requires an explicit cast and runtime check. Primitive conversions follow their own widening/narrowing rules.
+Here:
 
-## <a id="overload-vs-override-dispatch">Overload selection vs override dispatch</a>
-Overloads are chosen at compile time from declared types and applicable conversions. Overrides are selected at runtime from the actual receiver object after a method signature has already been chosen. Mixing these two stages causes many incorrect predictions.
+```text
+declared / compile-time type
+→ Animal
 
-## <a id="type-system-boundaries">Type-system guarantees and runtime checks</a>
-The compiler prevents many incompatible operations, but runtime checks remain where static typing cannot prove safety: downcasts, array stores, null dereference, class-loader identity, and some reflection. A good mental model separates compiler guarantees from runtime validation.
+runtime object type
+→ Dog
+```
+
+The compiler uses `Animal` for member availability, conversions, and overload rules. The runtime `Dog` type participates in dynamic dispatch for overridden instance methods.
+
+## <a id="assignment-compatibility">Assignment Compatibility</a>
+
+Java permits assignments only when type/value relationships satisfy language rules.
+
+Subtype-to-supertype assignment is normally implicit; the reverse direction requires a cast and may require a runtime check.
+
+Primitive assignment has a different conversion model from reference assignment.
+
+Static typing prevents many invalid operations before execution, but it cannot prove every runtime cast/reference operation will succeed.
+
+## <a id="overload-vs-override-dispatch">Overload vs Override Dispatch</a>
+
+Keep the distinction:
+
+```text
+overload selection
+→ compile time
+→ method set + static argument types/conversions
+
+override dispatch
+→ runtime
+→ runtime receiver type after a signature is selected
+```
+
+That is why one expression can choose an overload using a declared type while still executing a subclass override body at runtime.
+
+## <a id="type-system-boundaries">Compile-time vs Runtime Boundaries</a>
+
+The compiler can check name/type resolution, assignment compatibility, overload applicability, definite assignment, and many access/cast constraints.
+
+Runtime still handles facts the compiler cannot know with certainty, such as actual downcast type, runtime array component type, null dereference, or array index bounds.
+
+That is why static type checking coexists with runtime exceptions such as `ClassCastException`, `ArrayStoreException`, and `NullPointerException`.
+
+The module's final chain is:
+
+```text
+value model
+→ scope/lifetime
+→ conversions/expressions
+→ control flow
+→ method calls
+→ pass-by-value/reference sharing
+→ arrays/packages/null
+→ compile-time types vs runtime behavior
+```

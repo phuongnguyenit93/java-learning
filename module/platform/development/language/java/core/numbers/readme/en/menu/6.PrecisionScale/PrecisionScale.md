@@ -1,15 +1,41 @@
 # Precision and Scale
 
-## <a id="precision-vs-scale">Precision vs scale</a>
-Precision is the number of significant digits in a `BigDecimal`; scale is the number of digits to the right of the decimal point when scale is non-negative. They answer different questions and should not be used interchangeably.
+These terms describe different aspects of a `BigDecimal` and should not be used interchangeably.
 
-```java
-BigDecimal x = new BigDecimal("123.4500");
-// precision = 7, scale = 4
+## <a id="precision-vs-scale">Precision vs Scale</a>
+
+For `123.45`:
+
+```text
+precision = 5
+→ total significant digits
+
+scale = 2
+→ digits to the right of the decimal point
 ```
 
-## <a id="scale-transformations">setScale, movePoint and normalization</a>
-`setScale` changes representation and may require rounding when reducing scale. `movePointLeft`/`movePointRight` change the numerical value by powers of ten. `stripTrailingZeros` removes representational trailing zeros and can produce a negative scale, so code should not assume normalized values always have scale >= 0.
+Scale may be zero, positive, or even negative in some representations.
 
-## <a id="math-context">MathContext and precision control</a>
-`MathContext` sets significant-digit precision plus rounding mode for operations that accept it. This is different from fixing the number of decimal places. Choose the policy from domain requirements, and avoid applying one global context blindly to calculations with different meaning.
+Precision is not another word for “decimal places”; that is the role of scale.
+
+## <a id="scale-transformations">Scale Transformations</a>
+
+`setScale(...)` may require rounding when reducing decimal places:
+
+```java
+value.setScale(2, RoundingMode.HALF_UP);
+```
+
+`movePointLeft`/`movePointRight` shift the decimal point by powers of ten. `stripTrailingZeros()` can change representation/scale while preserving numerical value.
+
+## <a id="math-context">MathContext</a>
+
+`MathContext` controls **operation precision** plus a rounding mode:
+
+```java
+MathContext context = new MathContext(4, RoundingMode.HALF_EVEN);
+```
+
+That is different from `setScale`: one controls overall arithmetic precision, while the other controls result scale.
+
+The next chapter treats rounding as a deliberate policy rather than a formatting afterthought.

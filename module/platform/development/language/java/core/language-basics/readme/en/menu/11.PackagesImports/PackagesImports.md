@@ -1,13 +1,45 @@
 # Packages and Imports
 
-## <a id="package-namespace">Packages as namespaces</a>
-A package contributes to a type's fully qualified name and groups related types. Package structure also participates in package-private/protected access rules. A directory convention normally mirrors the package name, but the language concept is the declared package.
+As a codebase grows, type names need organization to avoid collisions and define boundaries. A package is part of a type's **fully qualified name**; an import only lets source code use shorter names.
 
-## <a id="import-resolution">Imports and name resolution</a>
-Imports let source use simple type names; they do not copy code or create runtime dependencies by themselves. `java.lang` is implicitly imported, the current package is visible, and conflicting simple names require qualification.
+## <a id="package-namespace">Packages as Namespaces</a>
 
-## <a id="static-import">Static import</a>
-Static import allows unqualified access to selected static members. It can improve DSL-like code or constants but can also hide ownership. Use it when the imported name remains obvious in context.
+```java
+package com.example.order;
+```
 
-## <a id="package-access">Package-private access boundary</a>
-Omitting an access modifier gives package-private access. Types or members are then accessible only from the same package. This is useful for implementation collaboration inside a package without exposing the surface publicly.
+makes `Order` part of the fully qualified name `com.example.order.Order`.
+
+Different packages may contain the same simple class name.
+
+Packages also participate in access control, not merely folder organization.
+
+## <a id="import-resolution">Imports and Name Resolution</a>
+
+```java
+import java.util.List;
+```
+
+does not load the class into the JVM. It helps the compiler/source resolver map the simple name `List` to a type.
+
+If simple names conflict, use a fully qualified name where necessary. `java.lang` is implicitly imported; types in the same package also need no import.
+
+## <a id="static-import">Static Import</a>
+
+Static imports allow an unqualified use of a static member:
+
+```java
+import static java.lang.Math.max;
+```
+
+They can improve readability when the member's origin is obvious, but overuse can make source ownership unclear.
+
+## <a id="package-access">Package-private Access</a>
+
+Omitting an access modifier gives package-private visibility where the language allows it.
+
+That lets types within one package collaborate without exposing every helper/member as public API.
+
+A package can therefore form an encapsulation boundary for a group of types.
+
+The next chapter returns to the special reference value `null`.

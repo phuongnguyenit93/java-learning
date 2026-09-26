@@ -1,21 +1,59 @@
-# Type Casting in Java
+# Casting
 
-## <a id="primitive-casting">Widening and narrowing primitive conversions</a>
-Widening primitive conversion is often implicit. Narrowing is explicit because information may be lost through truncation, wraparound, or floating-to-integral conversion.
+Casting asks Java to view/convert a value through another type within language rules. Primitive casting and reference casting have different mental models.
+
+## <a id="primitive-casting">Primitive Casting</a>
+
+Widening primitive conversion usually moves to a representation with broader range and often needs no explicit cast:
 
 ```java
-int n = 100;
-long wide = n;
-byte narrow = (byte) 130; // -126
+int x = 10;
+long y = x;
 ```
 
-Casting does not validate range; validate first or use exact conversion helpers when correctness requires it.
+Narrowing conversion can lose information and normally requires a cast:
 
-## <a id="reference-upcast-downcast">Reference upcast and downcast</a>
-Upcasting a subtype reference to a supertype is type-safe and usually implicit. Downcasting asks the runtime to verify that the referenced object is compatible with the requested subtype. The cast changes the compile-time view of the reference, not the runtime class of the object.
+```java
+long x = 1000L;
+int y = (int) x;
+```
 
-## <a id="instanceof-safe-cast">instanceof and safe casting</a>
-Use `instanceof` when behavior truly depends on runtime type. Pattern matching can bind the narrowed variable after a successful test. If many type branches accumulate, reconsider whether polymorphism would model the behavior better.
+A cast does not guarantee the value remains semantically valid for the domain.
 
-## <a id="class-cast-failure">ClassCastException boundaries</a>
-A syntactically legal downcast can still fail at runtime. `ClassCastException` means the actual object is not an instance of the target type. Prefer stronger contracts, generics, polymorphism, or a prior compatibility check over using exceptions as normal type discovery.
+## <a id="reference-upcast-downcast">Reference Upcast and Downcast</a>
+
+Upcasting a subtype to a supertype is normally implicit:
+
+```java
+Dog dog = new Dog();
+Animal animal = dog;
+```
+
+The object does not change; only the reference's static type becomes more general.
+
+Downcasting is explicit and may require a runtime type check.
+
+## <a id="instanceof-safe-cast">instanceof and Safe Casting</a>
+
+Pattern matching can combine a runtime type test and binding:
+
+```java
+if (animal instanceof Dog dog) {
+    dog.bark();
+}
+```
+
+If code repeatedly branches with `instanceof` only to choose subtype behavior, reconsider the abstraction/polymorphism design.
+
+## <a id="class-cast-failure">ClassCastException</a>
+
+If the runtime object is incompatible with the target type, the downcast fails:
+
+```java
+Animal animal = new Cat();
+Dog dog = (Dog) animal; // ClassCastException
+```
+
+The compiler validates possible type relationships; runtime validates the actual object.
+
+The next chapter moves from type conversion to control flow.

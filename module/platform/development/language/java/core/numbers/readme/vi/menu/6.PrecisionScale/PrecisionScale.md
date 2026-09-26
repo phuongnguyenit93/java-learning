@@ -1,15 +1,49 @@
 # Precision và Scale
 
-## <a id="precision-vs-scale">Precision khác scale</a>
-Precision là số significant digit trong `BigDecimal`; scale là số digit bên phải decimal point khi scale không âm. Hai khái niệm trả lời hai câu hỏi khác nhau và không nên dùng thay thế nhau.
+Hai thuật ngữ này thường bị dùng lẫn nhau nhưng mô tả hai khía cạnh khác nhau của `BigDecimal`.
 
-```java
-BigDecimal x = new BigDecimal("123.4500");
-// precision = 7, scale = 4
+## <a id="precision-vs-scale">Precision và Scale</a>
+
+Với:
+
+```text
+123.45
 ```
 
-## <a id="scale-transformations">setScale, movePoint và normalization</a>
-`setScale` đổi representation và có thể cần rounding khi giảm scale. `movePointLeft`/`movePointRight` đổi numerical value theo power of ten. `stripTrailingZeros` bỏ trailing zero và có thể tạo negative scale, nên không được assume normalized value luôn scale >= 0.
+ta có thể hiểu:
 
-## <a id="math-context">MathContext và precision control</a>
-`MathContext` quy định significant-digit precision cộng rounding mode cho operation hỗ trợ nó. Nó khác việc cố định số decimal place. Policy phải xuất phát từ domain requirement, không nên áp một global context cho mọi calculation.
+```text
+precision = 5
+→ tổng số chữ số có nghĩa
+
+scale = 2
+→ số chữ số bên phải dấu thập phân
+```
+
+Scale có thể bằng `0`, dương hoặc thậm chí âm trong một số cách biểu diễn.
+
+Đừng dùng “precision” như từ đồng nghĩa với “số chữ số sau dấu phẩy”; đó là vai trò của scale.
+
+## <a id="scale-transformations">Thay đổi Scale</a>
+
+`setScale(...)` có thể yêu cầu rounding nếu giảm số chữ số thập phân:
+
+```java
+value.setScale(2, RoundingMode.HALF_UP);
+```
+
+`movePointLeft`/`movePointRight` thay đổi vị trí decimal point theo power of ten.
+
+Các thao tác như `stripTrailingZeros()` có thể thay cách biểu diễn/scale mà vẫn giữ numerical value.
+
+## <a id="math-context">MathContext</a>
+
+`MathContext` cho phép đặt **precision của thao tác** và rounding mode:
+
+```java
+MathContext context = new MathContext(4, RoundingMode.HALF_EVEN);
+```
+
+Nó khác với `setScale`: một cái kiểm soát tổng precision của arithmetic, cái kia tập trung vào scale của value/result.
+
+chương tiếp theo đi sâu vào rounding: **làm tròn không chỉ là format đầu ra mà thường là một quyết định của domain**.

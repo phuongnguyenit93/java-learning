@@ -1,19 +1,48 @@
 # static and final
 
-## <a id="static-vs-instance">Static vs instance members</a>
-Instance members require an object receiver and can access that object's state. Static members belong to the class context and should be accessed through the class name for clarity. A static method cannot directly use `this` or instance fields without an explicit object reference.
+`static` and `final` answer different questions. `static` says **whether a member belongs to the class or each instance**; `final` restricts reassignment/overriding depending on context.
 
-## <a id="final-variable-reference">final primitive/reference semantics</a>
-A `final` variable can be assigned once. For a primitive this fixes the primitive value; for a reference it fixes which object the variable refers to, not the mutability of that object.
+## <a id="static-vs-instance">Static vs Instance Members</a>
+
+Instance fields/methods belong to individual objects:
 
 ```java
-final List<String> names = new ArrayList<>();
-names.add("A"); // allowed
-// names = new ArrayList<>(); // not allowed
+account.balance
+account.withdraw(...)
 ```
 
-## <a id="static-initialization">Static member initialization</a>
-Static fields and static initializer blocks run as part of class initialization, once per initialized `Class` object/defining loader. Their order follows textual initialization order after default values are established. Detailed JVM triggering belongs to classloader/JVM curriculum.
+Static members belong to class-level context:
 
-## <a id="constants-design">Constants and compile-time constants</a>
-`static final` does not automatically mean compile-time constant. Primitive/String fields initialized with constant expressions can be inlined into client bytecode, which has compatibility implications when a library constant changes. Constants should also represent truly immutable values, not mutable objects behind final references.
+```java
+Account.MAX_LIMIT
+Account.createDefault()
+```
+
+Static methods have no implicit `this`.
+
+## <a id="final-variable-reference">final: Primitive vs Reference</a>
+
+A `final` variable can be assigned only once after initialization.
+
+```java
+final int x = 10;
+final List<String> names = new ArrayList<>();
+```
+
+For a reference, `final` prevents `names` from pointing to a different list, but it does **not** make the list immutable.
+
+## <a id="static-initialization">Static Initialization</a>
+
+Static field initializers and static initializer blocks run during class initialization according to source/superclass ordering rules.
+
+Static mutable state is shared across all instances, so it introduces more global coupling and concurrency concerns than ordinary instance state.
+
+## <a id="constants-design">Constants and Compile-time Constants</a>
+
+Not every `static final` value is a compile-time constant. Java has specific rules for primitive/String constant expressions.
+
+That distinction affects inlining and binary behavior when libraries change constants without client recompilation.
+
+`UPPER_SNAKE_CASE` is a naming convention; the semantic contract matters more than the style.
+
+The next chapter looks at initialization blocks outside constructor bodies.

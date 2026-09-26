@@ -1,10 +1,37 @@
-# Object Class
+# java.lang.Object
 
-## <a id="object-root-type">Object as root reference type</a>
-Every class ultimately derives from `java.lang.Object` (arrays are also reference objects with Object-compatible behavior). This gives a common minimal API and permits an `Object` reference to point at any object, at the cost of losing compile-time knowledge of more specific members.
+Every Java class directly or indirectly extends `java.lang.Object`. That gives all objects a common baseline contract, though the default implementations are not always appropriate for domain semantics.
 
-## <a id="object-core-methods">getClass/toString/equals/hashCode overview</a>
-`getClass` exposes runtime class identity; `equals` and `hashCode` define logical equality/hash contracts when overridden; `toString` provides a diagnostic representation. The full equality/ordering contracts belong to the object-contract module, but every class inherits these methods.
+## <a id="object-root-type">Object as the Root Reference Type</a>
 
-## <a id="clone-finalize-boundary">Legacy clone/finalization boundary and safer alternatives</a>
-`Object.clone` supports a shallow field copy under the `Cloneable` protocol but has awkward constructor/invariant semantics; copy constructors/factories are usually clearer. Finalization is deprecated for removal and must not be used for normal resource management. Prefer deterministic cleanup (`AutoCloseable`) and explicit copy policies.
+An `Object` reference can refer to an instance of any class:
+
+```java
+Object value = new Profile("An");
+```
+
+But the static type `Object` exposes only the `Object` contract. Accessing `Profile`-specific behavior requires appropriate type information/casting.
+
+Primitives are not subtypes of `Object`; wrapper types let primitive values participate in reference-based APIs.
+
+## <a id="object-core-methods">Core Object Methods</a>
+
+Important methods include:
+
+- `getClass()`;
+- `toString()`;
+- `equals()`;
+- `hashCode()`;
+- `wait/notify/notifyAll`;
+- legacy `clone()`;
+- legacy finalization behavior.
+
+`equals`, `hashCode`, and `toString` are explored deeply in the `object-contract` module.
+
+## <a id="clone-finalize-boundary">clone/finalize Boundary</a>
+
+`Cloneable`/`Object.clone()` has awkward semantics for deep object graphs, constructors, and invariants. Prefer explicit copy constructors, factories, or mapping when possible.
+
+Finalization is not a reliable resource-management mechanism. Prefer `AutoCloseable`/try-with-resources or other explicit cleanup designs.
+
+The next chapter looks at a special class form: `enum`.

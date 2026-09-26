@@ -1,10 +1,33 @@
 # StringBuffer
 
-## <a id="buffer-synchronization">StringBuffer synchronization</a>
-`StringBuffer` is a mutable character sequence similar to `StringBuilder`, but its public mutating/reading operations are synchronized. That provides per-method mutual exclusion for one buffer instance and is why it is generally slower than an uncontended builder.
+`StringBuffer` has an API similar to `StringBuilder`, but many operations are synchronized. That provides guarantees around individual calls without automatically making every multi-step use case atomic.
 
-## <a id="builder-vs-buffer">StringBuilder vs StringBuffer trade-off</a>
-Use `StringBuilder` for normal local, single-thread-confined text construction. Choose `StringBuffer` only when its synchronized per-operation contract matches a real sharing requirement. Often a better design is not to share a mutable text accumulator across threads at all.
+## <a id="buffer-synchronization">StringBuffer Synchronization</a>
 
-## <a id="thread-safety-boundary">Why synchronized methods do not solve all composition concerns</a>
-Several individually synchronized calls are not automatically one atomic compound action. A check-then-append sequence can still interleave unless external synchronization protects the whole invariant. Full concurrency design belongs to concurrency modules; the important boundary here is method-level synchronization vs multi-step atomicity.
+Methods such as `append` synchronize on the buffer object, preventing some races at individual method-call boundaries when several threads share the buffer.
+
+The trade-off is synchronization overhead and possible contention.
+
+For thread-confined/local construction, `StringBuilder` is normally the simpler choice.
+
+## <a id="builder-vs-buffer">StringBuilder vs StringBuffer</a>
+
+```text
+no shared mutable buffer across threads
+→ StringBuilder
+
+genuinely shared synchronized character buffer required
+→ consider StringBuffer
+```
+
+Often the better concurrent design is to avoid sharing one mutable builder at all.
+
+## <a id="thread-safety-boundary">Thread-safety Boundary</a>
+
+Several synchronized methods do not make a larger read-decide-write sequence atomic.
+
+Another thread may interleave between calls unless the caller establishes a wider synchronization boundary.
+
+Thread safety must therefore be evaluated at the **use-case operation boundary**, not only by inspecting individual synchronized methods.
+
+The next chapter returns to the pool and explicit canonicalization through `String.intern()`.

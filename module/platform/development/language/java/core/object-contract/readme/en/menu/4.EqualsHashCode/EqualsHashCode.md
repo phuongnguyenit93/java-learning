@@ -1,10 +1,43 @@
-# equals and hashCode Together
+# equals and hashCode
 
-## <a id="equals-hashcode-consistency">Equal objects must share hash code</a>
-Overriding `equals` without a compatible `hashCode` violates the contract used by `HashMap`, `HashSet`, caches, and many frameworks. The reverse is not required: same hash does not imply equality.
+`equals` and `hashCode` should not be designed independently. For hash-based collections they form **one combined contract**: hashing narrows the search; equality confirms the logical match.
 
-## <a id="hash-collection-lookup">HashMap/HashSet lookup mechanics boundary</a>
-Conceptually a hash collection uses the hash to narrow candidate locations and then uses equality to confirm the key/element. Modern implementations contain extra collision-handling details, but the learning invariant is hash narrows, equals decides logical match.
+## <a id="equals-hashcode-consistency">Equal Objects Share a Hash Code</a>
 
-## <a id="broken-contract-effects">Observable failures from broken contract</a>
-If equal objects return different hashes, a `HashSet` can appear to contain duplicates and a `HashMap` lookup using an equal key can miss the stored entry. These are not collection bugs; the collection is relying on a broken key contract.
+If equal objects return different hashes, `HashMap`/`HashSet` may search different regions and never reach the `equals` comparison.
+
+Whenever `equals` is overridden, `hashCode` should be reviewed at the same time.
+
+```text
+equals == true
+→ hashCode must match
+
+hashCode matches
+→ does not imply equals == true
+```
+
+## <a id="hash-collection-lookup">Hash Collection Lookup</a>
+
+At the mental-model level, lookup can be understood as:
+
+```text
+hashCode
+→ narrow the bucket/candidate region
+        ↓
+equals
+→ confirm the logical match
+```
+
+Modern `HashMap` implementations have additional collision-handling details, but this is the object-level contract that matters.
+
+## <a id="broken-contract-effects">Effects of a Broken Contract</a>
+
+When equal objects produce different hashes, you may observe:
+
+- a `HashSet` that appears to contain duplicates;
+- `HashMap.get(equalKey)` missing an inserted entry;
+- `contains` returning false even though a logically equal object is stored.
+
+That is not a collection bug. The collection is operating under the documented assumption that keys honor the contract.
+
+The next chapter moves from equality contracts to a human-facing object contract: `toString`.

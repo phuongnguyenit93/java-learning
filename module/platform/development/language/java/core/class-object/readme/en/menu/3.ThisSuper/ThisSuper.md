@@ -1,10 +1,45 @@
 # this and super
 
-## <a id="this-reference">this reference</a>
-Inside an instance context, `this` refers to the current receiver object. It disambiguates fields from shadowing parameters, can be passed as a value, and can select another constructor with `this(...)`. It is unavailable in a static context because no receiver object exists there.
+Inside instance code, Java needs a way to refer to **the current object** and to **superclass construction/member context**. `this` and `super` express those roles.
 
-## <a id="super-access">super member/constructor access</a>
-`super` selects superclass behavior from the current object context. It can invoke an accessible superclass constructor or bypass an override to call a superclass implementation. It does not create or refer to a second “parent object”; the runtime object is still one object.
+## <a id="this-reference">this</a>
 
-## <a id="constructor-chaining-order">this()/super() constructor chaining rules</a>
-Every constructor chain ultimately invokes a superclass constructor. A constructor delegates either to another constructor in the same class or directly to a superclass constructor, not both as competing first steps. The superclass portion initializes before the subclass constructor body runs.
+`this` is the reference to the current object in instance context.
+
+Common uses include:
+
+- distinguishing fields from same-named parameters;
+- passing the current object elsewhere;
+- invoking another constructor through `this(...)`;
+- returning the current instance in fluent APIs when appropriate.
+
+```java
+this.name = name;
+```
+
+Static context has no `this` because there is no implicit current instance.
+
+## <a id="super-access">super</a>
+
+`super` accesses superclass constructors/members according to Java's lookup rules.
+
+```java
+super(provider);
+super.toString();
+```
+
+`super` is not a second object nested inside the subclass object. It changes how the source refers to superclass context on the same object.
+
+## <a id="constructor-chaining-order">this()/super() Chaining</a>
+
+Every constructor chain eventually reaches a superclass constructor.
+
+```text
+this(...)
+→ another constructor in the same class
+→ eventually super(...)
+```
+
+Constructor invocation follows special first-step rules in Java construction.
+
+Understanding this chain prepares us for initialization order later. First, the next chapter asks who may access each member.

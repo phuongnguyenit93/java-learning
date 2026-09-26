@@ -1,21 +1,50 @@
-# Try-with-Resources
+# Try-with-resources
 
-## <a id="autocloseable">AutoCloseable contract</a>
-A resource used in try-with-resources must implement `AutoCloseable` (or `Closeable`). The construct owns closing the declared resources when the try scope ends. `close()` may throw, so cleanup itself participates in exception handling.
+Files, streams, sockets, and similar resources need deterministic cleanup rather than waiting for garbage collection. Try-with-resources makes ownership and cleanup explicit in the language.
 
-## <a id="resource-close-order">Reverse resource close order</a>
-Resources are closed in reverse declaration order, mirroring nested acquisition.
+## <a id="autocloseable">AutoCloseable</a>
+
+A resource used in try-with-resources implements `AutoCloseable`:
 
 ```java
-try (A a = openA(); B b = openB()) {
-    use(a, b);
-} // b.close(), then a.close()
+try (InputStream in = Files.newInputStream(path)) {
+    return in.read();
+}
 ```
 
-This matters when later resources depend on earlier ones.
+When the block exits, Java invokes `close()` automatically according to the try-with-resources rules.
 
-## <a id="effective-final-resource">Java 9 effective-final resource usage</a>
-A final or effectively-final variable declared before the `try` can be referenced directly in the resource specification in modern Java. The resource must not be reassigned because the construct needs a stable object to close.
+## <a id="resource-close-order">Reverse Close Order</a>
 
-## <a id="twr-vs-finally">Try-with-resources vs manual finally</a>
-Try-with-resources is preferred for `AutoCloseable` resources because it generates reliable reverse-order cleanup and preserves close failures as suppressed exceptions when the body already failed. Manual `finally` code is easier to get wrong and can accidentally hide the primary failure.
+For resources declared as:
+
+```java
+try (A a = ...; B b = ...; C c = ...) {
+    ...
+}
+```
+
+the close order is:
+
+```text
+C → B → A
+```
+
+This mirrors stack-like ownership: later resources often depend on earlier ones and should be released first.
+
+## <a id="effective-final-resource">Effective-final Resources</a>
+
+Since Java 9, an existing local variable may be used directly if it is final or effectively final:
+
+```java
+InputStream in = Files.newInputStream(path);
+try (in) {
+    ...
+}
+```
+
+## <a id="twr-vs-finally">Try-with-resources vs Manual finally</a>
+
+Try-with-resources is usually safer because it reduces boilerplate, defines close order, makes cleanup harder to forget, and preserves the primary failure when `close()` also fails.
+
+That last point leads directly to suppressed exceptions.

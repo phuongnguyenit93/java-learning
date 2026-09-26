@@ -1,17 +1,78 @@
-# Mảng trong Java
+# Array
 
-## <a id="array-type-model">Array type, length và covariance</a>
-Array là object có fixed length và runtime component type. Reference array là covariant: `String[]` assign được cho `Object[]`. Sự tiện lợi này cần runtime store check vì write element incompatible phải fail.
+Array là object đặc biệt biểu diễn **một sequence có kích thước cố định** và các phần tử cùng component type. Variable array vẫn là reference variable, vì vậy mọi quy tắc về reference copy, `null` và pass-by-value tiếp tục áp dụng.
 
-## <a id="array-initialization">Khởi tạo array</a>
-Tạo array sẽ cấp toàn bộ element và initialize bằng default value. Array initializer có thể cung cấp value trực tiếp. Length cố định sau khi tạo; muốn thay số element phải dùng array khác hoặc dynamic collection.
+## <a id="array-type-model">Mô hình Array Type</a>
 
-## <a id="array-covariance-risk">Array covariance và ArrayStoreException</a>
 ```java
-Object[] values = new String[1];
-values[0] = 123; // ArrayStoreException
+int[] numbers = new int[3];
+String[] names = new String[3];
 ```
-Reference type cho phép assignment expression, nhưng runtime array vẫn nhớ nó là `String[]`. Đây là contrast quan trọng với generics invariance.
 
-## <a id="multidimensional-arrays">Multidimensional array là array của array</a>
-`int[][]` là array chứa reference tới `int[]`. Mỗi row có thể dài khác nhau hoặc thậm chí `null`. Java vì vậy hỗ trợ jagged array chứ không bắt buộc rectangular matrix.
+Array có:
+
+- runtime array type;
+- fixed `length` sau construction;
+- index bắt đầu từ `0`;
+- element default value theo component type.
+
+Array itself là object, nên có thể gán `null`, truyền vào method và chia sẻ qua nhiều reference.
+
+## <a id="array-initialization">Khởi tạo Array</a>
+
+Có thể tạo array với length rồi gán từng phần tử:
+
+```java
+int[] values = new int[3];
+values[0] = 10;
+```
+
+hoặc dùng initializer:
+
+```java
+int[] values = {10, 20, 30};
+```
+
+Primitive array nhận primitive default value; reference array nhận `null` cho từng phần tử ban đầu.
+
+Truy cập index ngoài `[0, length)` gây `ArrayIndexOutOfBoundsException` ở runtime.
+
+## <a id="array-covariance-risk">Array Covariance</a>
+
+Reference array trong Java là covariant:
+
+```java
+String[] strings = new String[1];
+Object[] objects = strings;
+```
+
+Assignment này compile, nhưng runtime array vẫn là `String[]`.
+
+```java
+objects[0] = Integer.valueOf(1); // ArrayStoreException
+```
+
+Compiler cho phép type relationship, còn runtime check bảo vệ component type thật của array.
+
+Đây là một contrast quan trọng với generic collection, vốn invariant theo cách khác.
+
+## <a id="multidimensional-arrays">Mảng nhiều chiều</a>
+
+Java multidimensional array thực chất là **array chứa array**:
+
+```java
+int[][] matrix = new int[2][3];
+```
+
+Mỗi row là một `int[]` riêng, nên jagged array hoàn toàn hợp lệ:
+
+```java
+int[][] data = {
+    {1, 2},
+    {3, 4, 5}
+};
+```
+
+Không nên mặc định nó là một contiguous rectangular memory matrix giống mọi ngôn ngữ khác.
+
+chương tiếp theo rời khỏi value/container và xem Java tổ chức **tên type và khả năng truy cập theo package** như thế nào.

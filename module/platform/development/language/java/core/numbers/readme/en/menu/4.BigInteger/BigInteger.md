@@ -1,16 +1,33 @@
 # BigInteger
 
-## <a id="big-integer-model">Arbitrary-precision integer model</a>
-`BigInteger` represents signed integers whose magnitude is limited mainly by available memory rather than a fixed primitive width. It is useful for cryptographic/math domains, very large counters, combinatorics, and exact integer calculations that exceed `long`.
+When `long` cannot cover the required range, the right solution is often a representation that is not fixed-width rather than hoping overflow never occurs.
 
-## <a id="big-integer-immutability">BigInteger immutability</a>
-All arithmetic returns a new `BigInteger`; the receiver is not modified.
+## <a id="big-integer-model">What Is BigInteger?</a>
+
+`BigInteger` represents integers with arbitrary precision, limited primarily by available memory.
 
 ```java
-BigInteger a = new BigInteger("1000");
-a.add(BigInteger.ONE);     // ignored result
-BigInteger b = a.add(BigInteger.ONE); // 1001
+BigInteger value = new BigInteger("123456789012345678901234567890");
 ```
 
-## <a id="big-integer-operations">Core arithmetic and conversion boundaries</a>
-`BigInteger` supports arithmetic, division/remainder, powers, gcd, bit operations, and primality-oriented helpers. Converting back to primitive types can truncate with methods such as `intValue`; use `intValueExact`/`longValueExact` when out-of-range values must fail instead of silently losing bits.
+It is useful for large counters, combinatorial values, and some cryptographic arithmetic. The trade-off is object allocation and more expensive arithmetic than primitive integers.
+
+## <a id="big-integer-immutability">BigInteger Is Immutable</a>
+
+Operations return new objects instead of mutating the current value:
+
+```java
+BigInteger a = BigInteger.TEN;
+a.add(BigInteger.ONE); // a is still 10
+a = a.add(BigInteger.ONE);
+```
+
+The variable can be reassigned, but each `BigInteger` object keeps its value.
+
+## <a id="big-integer-operations">Operations and Conversion Boundaries</a>
+
+`BigInteger` provides arithmetic, `pow`, `gcd`, `mod`, bit operations, and primitive conversions.
+
+Converting back to `int` or `long` is a boundary worth treating explicitly. `intValue()` may truncate, while `intValueExact()`/`longValueExact()` detect values that do not fit.
+
+`BigInteger` solves integer range. It does not solve exact decimal semantics; that is the role of `BigDecimal`.

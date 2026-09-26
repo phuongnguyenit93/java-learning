@@ -1,16 +1,76 @@
 # Exception Design
 
-## <a id="exception-boundaries">Translate exceptions at abstraction boundaries</a>
-Translate a lower-level exception when crossing into an abstraction whose callers should reason in different terms. A repository can turn a JDBC-specific failure into a repository/domain failure; a controller boundary can turn domain failure into an HTTP response. Preserve the cause and do not translate merely to rename the same semantics repeatedly.
+Knowing `try/catch` syntax is not enough. The larger design question is: **which layer has enough context and responsibility to do something meaningful with a failure?**
 
-## <a id="do-not-swallow">Do not swallow failures</a>
-An empty catch or catch that only comments/logs and continues can leave the system in a state the caller believes succeeded. Swallow only when ignoring the failure is an explicit, safe policy and the loss of information is understood.
+## <a id="exception-boundaries">Translate at Abstraction Boundaries</a>
 
-## <a id="logging-boundary">Logging once at the responsible boundary</a>
-Logging and rethrowing the same exception at every layer creates duplicate stack traces without adding information. Add context through exception chaining and log where the application has enough context to decide severity, user impact, correlation information, and response policy.
+Low-level exceptions often use implementation vocabulary such as `SQLException`, `IOException`, or `SocketTimeoutException`.
 
-## <a id="exception-as-control-flow">Avoid exceptions as normal control flow</a>
-Exceptions are for exceptional contract outcomes, not ordinary branching such as “item not found in a collection” when absence is expected. Exception-based loops/parsing also obscure intent and can be expensive. Model expected alternatives explicitly when they are normal behavior.
+A higher layer may translate them to application/domain vocabulary such as `OrderRepositoryException` or `PaymentUnavailableException`.
 
-## <a id="cleanup-and-recovery">Recovery vs cleanup vs propagation</a>
-Cleanup releases resources; recovery restores or chooses a valid alternative; propagation delegates the decision upward. A catch block should know which role it is performing. Catching without the information or authority to recover usually means cleanup plus propagation is the correct design.
+Translation decouples callers from infrastructure details, but the original cause should be preserved.
+
+## <a id="do-not-swallow">Do Not Swallow Failures</a>
+
+Avoid empty broad catches:
+
+```java
+try {
+    run();
+} catch (Exception ex) {
+    // ignored
+}
+```
+
+Silently treating a failed operation as success makes state and behavior difficult to reason about.
+
+If a specific failure is intentionally ignored, the reason and scope should be explicit.
+
+## <a id="logging-boundary">Log at the Responsible Boundary</a>
+
+Logging the same exception at every layer and rethrowing it creates duplicates.
+
+A useful heuristic is:
+
+```text
+layer that handles/terminates the request or job
+→ usually logs once with full context
+
+layer that only translates/rethrows
+→ usually preserves context without logging again
+```
+
+## <a id="exception-as-control-flow">Exceptions and Control Flow</a>
+
+Exceptions represent exceptional completion. They should not replace ordinary branches that can be expressed clearly and cheaply.
+
+Using an exception occasionally at a parsing boundary may be reasonable; using exceptions continuously to drive loops or ordinary state transitions usually hurts readability and performance.
+
+## <a id="cleanup-and-recovery">Cleanup, Recovery and Propagation</a>
+
+Keep these responsibilities distinct:
+
+```text
+cleanup
+→ release resources / complete mandatory cleanup
+
+recovery
+→ apply a real strategy that lets the operation continue or use an alternative
+
+propagation
+→ the current layer lacks the responsibility/context to handle the failure
+```
+
+Catch because the current layer has meaningful work to do, not merely because an exception exists.
+
+The module's final mental model is:
+
+```text
+failure occurs
+→ throw
+→ propagate through the call stack
+→ handle or translate where appropriate
+→ always preserve cleanup responsibility
+→ preserve root cause
+→ log/recover at the responsible boundary
+```

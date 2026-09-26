@@ -1,13 +1,55 @@
 # String Concatenation
 
-## <a id="concat-semantics">Semantics của string concatenation</a>
-Operator `+` concatenate khi operand liên quan là String. Primitive/object được convert sang text theo Java rule. Association quan trọng: `"x" + 1 + 2` tạo `x12`, còn `1 + 2 + "x"` tạo `3x`.
+Toán tử `+` làm việc rất tiện với String, nhưng cần phân biệt **ngữ nghĩa ngôn ngữ** với **chi tiết triển khai compiler/runtime**.
 
-## <a id="compile-time-concat">Compile-time constant concatenation</a>
-Concatenation chỉ gồm compile-time constant có thể được compiler fold thành một pooled literal. Điều này ảnh hưởng identity observation nhưng không phải lý do dùng `==` để compare String.
+## <a id="concat-semantics">Nối String bằng +</a>
 
-## <a id="runtime-concat">Runtime concatenation và implementation boundary</a>
-Runtime concatenation có thể được implement bằng `StringBuilder`, `invokedynamic` concat strategy hoặc optimization khác tùy Java version. Source code chỉ nên rely vào resulting String semantics, không rely mechanism generated cụ thể.
+Khi một operand là String trong ngữ cảnh concatenation, Java tạo ra String result biểu diễn nội dung đã nối.
 
-## <a id="loop-concat-cost">Cost của repeated concatenation</a>
-Tạo immutable String mới lặp lại trong loop có thể copy content tăng dần nhiều lần. Dùng `StringBuilder` khi xây chuỗi incremental với số phần dynamic. Với expression nhỏ cố định, `+` rõ ràng và compiler/JVM optimize tốt.
+```java
+String message = "Hello " + name;
+```
+
+String cũ không bị mutate; result là một String value mới về mặt ngữ nghĩa.
+
+Khi biểu thức trộn số và String, evaluation order ảnh hưởng kết quả:
+
+```java
+1 + 2 + "x"   // "3x"
+"x" + 1 + 2   // "x12"
+```
+
+## <a id="compile-time-concat">Concatenation ở Compile Time</a>
+
+Nếu toàn bộ biểu thức là compile-time constant, compiler có thể gộp ngay:
+
+```java
+String value = "ja" + "va";
+```
+
+về ngữ nghĩa có thể tương đương literal `"java"` và tham gia constant pool.
+
+Đây là lý do một số demo `==` với concatenated literal cho `true`, nhưng không được suy rộng sang runtime concatenation.
+
+## <a id="runtime-concat">Concatenation ở Runtime</a>
+
+Với runtime values, compiler/JVM có thể dùng các strategy khác nhau tùy Java version, ví dụ builder-like lowering hoặc `invokedynamic` concat machinery.
+
+mã ứng dụng nên phụ thuộc vào **language ngữ nghĩa**, không phụ thuộc vào việc bytecode hiện tại dùng đúng class helper nào.
+
+## <a id="loop-concat-cost">Chi phí khi nối lặp lại</a>
+
+Trong loop lớn:
+
+```java
+String result = "";
+for (...) {
+    result += part;
+}
+```
+
+mỗi bước có thể tạo thêm intermediate String/value-copy cost.
+
+Nếu đang xây một chuỗi tăng dần qua nhiều bước, `StringBuilder` thể hiện intent rõ hơn và thường hiệu quả hơn.
+
+chương tiếp theo đi vào chính mutable buffer đó.

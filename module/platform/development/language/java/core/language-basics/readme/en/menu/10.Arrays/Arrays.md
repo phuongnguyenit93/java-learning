@@ -1,17 +1,46 @@
-# Arrays in Java
+# Arrays
 
-## <a id="array-type-model">Array type, length and covariance</a>
-Arrays are objects with a fixed length and a runtime component type. Reference arrays are covariant: `String[]` is assignable to `Object[]`. That convenience requires a runtime store check because writing an incompatible element must fail.
+An array is a special object representing a **fixed-size sequence** of elements with one component type. Array variables are reference variables, so ordinary reference-copy, `null`, and pass-by-value rules still apply.
 
-## <a id="array-initialization">Array creation and initialization</a>
-Creating an array allocates all elements and initializes them to default values. Array initializer syntax can provide values directly. Length is fixed after creation; changing the number of elements requires another array or a dynamic collection.
+## <a id="array-type-model">Array Type Model</a>
 
-## <a id="array-covariance-risk">Array covariance and ArrayStoreException</a>
+Arrays have a runtime array type, a fixed `length`, zero-based indexes, and element default values based on the component type.
+
+The array itself is an object and can be shared through several references or set to `null`.
+
+## <a id="array-initialization">Array Initialization</a>
+
+Arrays can be created by length and populated later:
+
 ```java
-Object[] values = new String[1];
-values[0] = 123; // ArrayStoreException
+int[] values = new int[3];
 ```
-The reference type allows the assignment expression, but the runtime array remembers it is a `String[]`. This is a key contrast with invariant generics.
 
-## <a id="multidimensional-arrays">Multidimensional arrays are arrays of arrays</a>
-`int[][]` is an array whose elements are references to `int[]`. Rows can have different lengths and can even be `null`. Java therefore supports jagged arrays rather than requiring a rectangular memory matrix.
+or created with an initializer:
+
+```java
+int[] values = {10, 20, 30};
+```
+
+Primitive elements receive primitive defaults; reference elements start as `null`. Invalid indexes fail with `ArrayIndexOutOfBoundsException` at runtime.
+
+## <a id="array-covariance-risk">Array Covariance</a>
+
+Reference arrays are covariant:
+
+```java
+String[] strings = new String[1];
+Object[] objects = strings;
+```
+
+But the runtime array remains `String[]`, so storing an `Integer` through `objects` throws `ArrayStoreException`.
+
+The compiler accepts the type relation; runtime preserves the real component type.
+
+## <a id="multidimensional-arrays">Multidimensional Arrays</a>
+
+Java multidimensional arrays are **arrays of arrays**, so jagged shapes are valid.
+
+Do not assume they are one contiguous rectangular matrix representation.
+
+The next chapter moves from values and containers to package-level naming and visibility.

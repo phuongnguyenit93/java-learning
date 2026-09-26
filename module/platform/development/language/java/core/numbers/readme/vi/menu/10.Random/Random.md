@@ -1,10 +1,32 @@
-# Sinh số ngẫu nhiên
+# Random
 
-## <a id="pseudo-random-model">Pseudo-random model và seed</a>
-Pseudo-random generator tạo sequence deterministic từ internal state. Cùng algorithm/seed có thể reproduce cùng sequence, hữu ích cho test/simulation. Output nhìn random không đồng nghĩa unpredictable trước attacker.
+`Random` không tạo “ngẫu nhiên tuyệt đối”. Nó tạo một chuỗi **pseudo-random** từ trạng thái/seed theo algorithm xác định.
 
-## <a id="threadlocal-random-boundary">Boundary Random và ThreadLocalRandom</a>
-`Random` là general stateful PRNG. `ThreadLocalRandom` tránh share một generator state giữa các thread và hữu ích trong concurrent code, nhưng curriculum concurrency đầy đủ thuộc module concurrency. Không cái nào trở thành security-safe chỉ vì output có vẻ random.
+## <a id="pseudo-random-model">Pseudo-random và Seed</a>
 
-## <a id="random-not-security">Vì sao PRNG thông thường không dùng cho security</a>
-Security token, key, salt và nonce cần cryptographically strong source. Seed/state predictable có thể làm lộ output tương lai. Dùng `SecureRandom` cho security-sensitive randomness và chuyển threat model sâu hơn sang security-cryptography module.
+Cùng seed và cùng chuỗi lời gọi có thể tạo cùng kết quả:
+
+```java
+Random a = new Random(42);
+Random b = new Random(42);
+```
+
+Determinism này rất hữu ích cho test, simulation và reproducible experiment.
+
+Seed không phải “mật khẩu bảo mật”; với PRNG thông thường, đầu ra có thể dự đoán nếu trạng thái/algorithm bị suy ra.
+
+## <a id="threadlocal-random-boundary">Random và ThreadLocalRandom</a>
+
+`ThreadLocalRandom` được thiết kế cho concurrent mã để tránh contention khi nhiều thread cùng cần pseudo-random values.
+
+Nó phù hợp cho các use case như randomized scheduling, simulation hoặc sampling không có security yêu cầu.
+
+Không nên chọn `ThreadLocalRandom` chỉ vì tên có “thread”; câu hỏi vẫn là concurrency/performance hợp đồng của use case.
+
+## <a id="random-not-security">Random không dành cho Security</a>
+
+Token, session id, secret, nonce bảo mật hoặc key material cần unpredictability mạnh hơn PRNG thông thường.
+
+`Random` và `ThreadLocalRandom` **không được thiết kế làm cryptographic random source**.
+
+Nếu đầu ra phải khó đoán trước đối với kẻ tấn công, chương tiếp theo chuyển sang `SecureRandom`.

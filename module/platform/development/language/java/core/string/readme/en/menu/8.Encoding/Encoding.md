@@ -1,18 +1,47 @@
-# Character Encoding
+# Encoding and Charset
 
-## <a id="text-vs-bytes">Text vs bytes mental model</a>
-A Java String is a sequence of UTF-16 code units; files, network payloads, and many storage formats are bytes. A charset defines the reversible/partially reversible mapping between text characters/code points and byte sequences. Never assume bytes “are already text”.
+`String` represents text inside Java, while files, network payloads, and wire protocols ultimately move **bytes**. Encoding is the mapping between those two representations.
 
-## <a id="charset-encode-decode">Charset encode/decode</a>
-Encoding converts text to bytes with a chosen charset; decoding converts bytes to text with a charset. Use explicit charsets such as `StandardCharsets.UTF_8` at boundaries.
+## <a id="text-vs-bytes">Text vs Bytes</a>
+
+A String such as `"Xin chào"` does not have one universal byte sequence. Different charsets can encode the same text differently.
+
+```text
+String / text
+        ↓ encode with Charset
+byte[]
+        ↓ decode with the same Charset
+String / text
+```
+
+If encoding and decoding disagree about the charset, the bytes may arrive intact while the reconstructed text is wrong.
+
+## <a id="charset-encode-decode">Charset Encode/Decode</a>
+
+Make the charset explicit at boundaries:
 
 ```java
 byte[] bytes = text.getBytes(StandardCharsets.UTF_8);
-String copy = new String(bytes, StandardCharsets.UTF_8);
+String restored = new String(bytes, StandardCharsets.UTF_8);
 ```
 
-## <a id="default-charset-risk">Default charset portability risk</a>
-APIs that use the platform default charset can behave differently across machines or process configuration. Since modern Java defaults have evolved, relying on “whatever the machine uses” is still a weak external-data contract. Declare the charset of persisted/networked content explicitly.
+An explicit standard charset makes the contract independent of the machine's default configuration.
 
-## <a id="malformed-input">Malformed/unmappable input boundary</a>
-A decoder may encounter malformed byte sequences; an encoder may encounter characters not representable in the target charset. High-level convenience methods often replace invalid data, while `CharsetEncoder`/`CharsetDecoder` can be configured to report, replace, or ignore. Choose failure behavior deliberately when data integrity matters.
+## <a id="default-charset-risk">Default Charset Risk</a>
+
+Code such as `text.getBytes()` or `new String(bytes)` may depend on the platform default charset.
+
+That can behave differently across developer machines, CI, containers, and production.
+
+For persistent or network data, make the charset part of the explicit protocol/format contract.
+
+## <a id="malformed-input">Malformed and Unmappable Input</a>
+
+Encoding/decoding can fail semantically:
+
+- **malformed input**: a byte sequence is invalid for the charset;
+- **unmappable character**: a character cannot be represented in the target charset.
+
+`CharsetDecoder` and `CharsetEncoder` can report, replace, or ignore such cases. Choose that policy intentionally; silent replacement can hide data corruption.
+
+The next chapter asks whether Java `char` is really the same thing as one Unicode character a user sees.

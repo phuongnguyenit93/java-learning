@@ -1,13 +1,58 @@
-# Giá trị null trong Java
+# null
 
-## <a id="null-reference">null như một reference value</a>
-`null` là reference value đặc biệt biểu diễn không refer tới object nào. Nó assign được cho reference type, không phải primitive. `null` không có runtime class và không nên xem như một placeholder object.
+`null` là một reference value đặc biệt biểu diễn rằng **reference hiện không nhận diện object nào**. Nó không phải object, không phải empty String và không phải primitive default chung.
 
-## <a id="null-dereference">Dereference failure</a>
-Truy cập instance member qua `null`, unbox wrapper null hoặc operation khác yêu cầu object sẽ gây `NullPointerException`. JVM hiện đại có message tốt hơn, nhưng prevention vẫn dựa trên contract và validation rõ ràng.
+## <a id="null-reference">null là Reference Value</a>
 
-## <a id="null-comparison">So sánh null và control flow</a>
-Dùng `==`/`!=` để test reference với `null`. Chỉ gọi instance method sau khi có non-null guarantee. Helper như `Objects.equals` có thể làm equality tolerate null mà không thay đổi null model.
+Reference variable có thể giữ `null` nếu type/ngữ cảnh cho phép:
 
-## <a id="null-api-design">Nullability như một vấn đề thiết kế API</a>
-Cần quyết định absence có hợp lệ không và document rõ. Trả `null`, throw khi thiếu data, trả empty collection hay dùng `Optional` mang semantics khác nhau; curriculum đầy đủ về `Optional` thuộc functional module. Tránh nullable boundary không được giải thích.
+```java
+String name = null;
+```
+
+Primitive variable không thể giữ `null`:
+
+```java
+int value = null; // không compile
+```
+
+Wrapper như `Integer` là reference type nên có thể `null`, tạo thêm rủi ro khi unboxing.
+
+## <a id="null-dereference">Dereference null</a>
+
+Nếu mã cố dùng `null` như một object:
+
+```java
+name.length();
+```
+
+runtime throw `NullPointerException`.
+
+NPE thường không phải vấn đề “Java có null”, mà là ranh giới/hợp đồng không nói rõ value có thể vắng mặt hay mã không kiểm tra invariant cần thiết.
+
+## <a id="null-comparison">So sánh với null</a>
+
+Dùng `==`/`!=` để kiểm tra null identity:
+
+```java
+if (user != null) {
+    user.run();
+}
+```
+
+Gọi `user.equals(null)` là sai hướng vì nếu `user` chính là null thì đã dereference trước khi vào `equals`.
+
+Short-circuit `&&` thường kết hợp tự nhiên với null guard.
+
+## <a id="null-api-design">Nullability trong API Design</a>
+
+API nên làm rõ:
+
+- parameter có chấp nhận null không;
+- return có thể null không;
+- collection có chứa null không;
+- null có nghĩa “không có”, “chưa tải”, hay “không hợp lệ”.
+
+Không phải mọi absence đều cần `Optional`, nhưng hợp đồng mơ hồ về null làm bên gọi phải đoán và tạo NPE xa nguồn gốc.
+
+chương cuối ghép các phần đã học thành một mô hình tư duy về **compile-time type, runtime type và những guarantee nằm ở đâu**.

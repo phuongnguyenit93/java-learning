@@ -1,16 +1,51 @@
 # BigDecimal
 
-## <a id="big-decimal-model">BigDecimal gồm unscaled value và scale</a>
-`BigDecimal` model decimal value bằng arbitrary-precision integer cộng scale. Có thể hiểu value = unscaledValue × 10^-scale. Scale là một phần representation nên `1.0` và `1.00` có thể bằng nhau về numerical value nhưng representation khác nhau.
+`BigDecimal` được dùng khi domain cần **decimal ngữ nghĩa rõ ràng**, ví dụ tiền, lãi suất hoặc các phép tính mà cách biểu diễn `0.1` phải mang đúng ý nghĩa thập phân.
 
-## <a id="big-decimal-construction">Khởi tạo từ String/valueOf/double</a>
-Ưu tiên decimal text hoặc `BigDecimal.valueOf(double)` khi bắt đầu từ floating value mang ý nghĩa decimal. `new BigDecimal(0.1)` capture chính xác binary `double` value, thường không phải decimal value mà con người mong muốn.
+## <a id="big-decimal-model">Mô hình BigDecimal</a>
 
-```java
-new BigDecimal("0.1");
-BigDecimal.valueOf(0.1);
-new BigDecimal(0.1);
+Có thể hiểu một `BigDecimal` bằng hai thành phần chính:
+
+```text
+unscaled value
+        +
+scale
 ```
 
-## <a id="big-decimal-arithmetic">Arithmetic và non-terminating division</a>
-BigDecimal arithmetic exact trừ khi có precision/rounding policy. Division có decimal expansion không kết thúc sẽ throw `ArithmeticException` nếu không cung cấp rounding mode hoặc `MathContext`. Monetary/business code nên explicit scale và rounding rule.
+Ví dụ `123.45` có thể được hình dung như unscaled value `12345` với scale `2`.
+
+Scale là một phần của cách biểu diễn, vì vậy `1.0` và `1.00` có thể có cùng numerical value nhưng cách biểu diễn khác nhau.
+
+## <a id="big-decimal-construction">Khởi tạo BigDecimal</a>
+
+Khi decimal literal phải chính xác, ưu tiên:
+
+```java
+new BigDecimal("0.1")
+```
+
+hoặc:
+
+```java
+BigDecimal.valueOf(0.1)
+```
+
+Tránh `new BigDecimal(0.1)` nếu bạn mong đúng decimal `0.1`, vì constructor đó nhận **binary floating-point value đã gần đúng** rồi chuyển cách biểu diễn gần đúng ấy sang BigDecimal.
+
+## <a id="big-decimal-arithmetic">Arithmetic và Division</a>
+
+`BigDecimal` cũng immutable:
+
+```java
+amount = amount.add(fee);
+```
+
+Một số phép chia decimal không kết thúc hữu hạn:
+
+```java
+BigDecimal.ONE.divide(new BigDecimal("3"));
+```
+
+nếu không cung cấp scale/rounding chính sách phù hợp có thể throw `ArithmeticException`.
+
+Đây là điểm quan trọng: BigDecimal không “tự đoán” cách làm tròn cho domain. chương tiếp theo phân biệt **precision và scale**, nền tảng để hiểu rounding.

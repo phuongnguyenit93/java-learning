@@ -1,10 +1,31 @@
 # StringBuilder
 
-## <a id="builder-mutable-buffer">StringBuilder mutable buffer model</a>
-`StringBuilder` is a mutable sequence used to build text without creating a new String for every intermediate append/insert/delete. It is not a String subtype; call `toString()` when an immutable String result is needed.
+`StringBuilder` is not a “mutable String”. It is a **mutable buffer for constructing a String**, followed by `toString()` to produce the immutable result.
 
-## <a id="builder-capacity">Length vs capacity</a>
-Length is the number of characters currently stored; capacity is the internal storage available before growth is needed. Capacity grows automatically and is an implementation/performance concern, not part of the text value. Pre-sizing can help when size is predictable, but measure before micro-optimizing.
+## <a id="builder-mutable-buffer">Mutable Buffer</a>
 
-## <a id="builder-usage">Efficient incremental construction</a>
-Use one builder for a local construction flow, append pieces, then convert once. Avoid sharing a mutable builder across unrelated callers. Fluent append calls improve readability, but complex formatting may be clearer with formatters/templates rather than manual delimiter logic.
+```java
+StringBuilder builder = new StringBuilder();
+builder.append("Hello");
+builder.append(' ');
+builder.append(name);
+String result = builder.toString();
+```
+
+Unlike String operations, multiple `append` calls mutate the same builder's internal buffer.
+
+That makes it a natural tool for incremental construction inside a controlled scope.
+
+## <a id="builder-capacity">Length vs Capacity</a>
+
+`length()` is the current character/code-unit count. `capacity()` is the current internal buffer capacity before growth is required.
+
+Capacity is a performance concern rather than part of text semantics. Pre-sizing can reduce resizing when a large final size is reasonably predictable.
+
+## <a id="builder-usage">Incremental String Construction</a>
+
+Use a builder when text is assembled through loops, many branches, or repeated appends.
+
+After `toString()`, the resulting String is immutable in the usual String sense; later builder mutations do not turn that String into mutable text.
+
+The next chapter compares `StringBuilder` with synchronized `StringBuffer`.

@@ -1,10 +1,64 @@
-# equals Contract
+# equals
 
-## <a id="equals-contract">equals contract: reflexive/symmetric/transitive/consistent/null</a>
-A correct `equals` implementation is reflexive, symmetric, transitive, consistent while relevant state does not change, and returns false for `null`. Collections and other libraries assume these laws even though the compiler cannot enforce them.
+Once identity and logical equality are separated, the next question is: **if a class defines when two objects are logically equal, which laws must `equals` obey?**
 
-## <a id="equals-implementation">Typical equals implementation</a>
-A value-style implementation usually checks identity fast-path, type compatibility, then compares all fields that define equality. The chosen type test (`getClass` vs `instanceof`) affects inheritance semantics. Use null-safe comparisons for nullable components and keep `hashCode` based on the same equality state.
+## <a id="equals-contract">The equals Contract</a>
 
-## <a id="equals-inheritance-risk">Inheritance and equality symmetry risk</a>
-Extending a concrete value class with additional equality-relevant state can make symmetry/transitivity difficult. A parent may consider the child equal while the child requires extra fields. Prefer composition, sealed/closed designs, or careful class-based equality when value semantics and inheritance conflict.
+A correct `equals` implementation preserves several core properties:
+
+```text
+reflexive
+x.equals(x) is true
+
+symmetric
+x.equals(y) and y.equals(x) agree
+
+transitive
+if x equals y and y equals z, then x equals z
+
+consistent
+the result stays stable while relevant state is unchanged
+
+null
+x.equals(null) is false
+```
+
+The compiler does not enforce these laws, but collections and libraries assume your objects honor them.
+
+## <a id="equals-implementation">Implementing equals</a>
+
+A value-style implementation often follows this flow:
+
+```text
+1. same-identity fast path
+2. type compatibility check
+3. compare all fields that define equality
+```
+
+```java
+@Override
+public boolean equals(Object other) {
+    if (this == other) return true;
+    if (!(other instanceof UserId that)) return false;
+    return Objects.equals(value, that.value);
+}
+```
+
+Choosing `getClass()` vs `instanceof` affects inheritance semantics. Most importantly, `equals` and `hashCode` should use the same equality-relevant state.
+
+## <a id="equals-inheritance-risk">Equality and Inheritance Risks</a>
+
+Inheritance complicates equality when a subclass adds equality-relevant state.
+
+A parent may compare only `id`, while a child also compares `region`. That can easily produce:
+
+```text
+parent.equals(child) == true
+child.equals(parent) == false
+```
+
+which breaks symmetry.
+
+When value semantics and open inheritance fight each other, composition, a closed hierarchy, or carefully class-based equality is often safer.
+
+The next chapter asks what extra information hash-based collections need once equality is defined.

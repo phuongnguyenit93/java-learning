@@ -1,16 +1,37 @@
-# Pass-by-Value in Java
+# Pass-by-Value
 
-## <a id="java-pass-by-value">Java is always pass-by-value</a>
-Every argument is copied into a parameter. For primitives, the primitive value is copied. For objects, the copied value is the reference value. Java does not pass a caller variable itself by reference.
+Java **always passes arguments by value**. The confusion comes from objects: for a reference argument, the copied value is the **reference value**.
 
-## <a id="reference-copy-mutation">Copied references and visible object mutation</a>
-When the copied reference still identifies the same mutable object, a callee can mutate that object and the caller observes the changed state.
+## <a id="java-pass-by-value">Java Is Always Pass-by-Value</a>
+
+Each parameter receives a copy of the argument value.
+
+For a primitive, changing the parameter does not change the caller's variable.
+
+For an object reference, the parameter receives another reference value pointing to the same object.
+
+## <a id="reference-copy-mutation">Reference Copy and Mutation</a>
 
 ```java
-void add(List<String> x) { x.add("A"); }
+void rename(User user) {
+    user.setName("B");
+}
 ```
 
-The visible mutation does not make Java pass-by-reference; caller and callee simply hold copied references to one object.
+The caller observes the mutation because both references point to the same `User` object.
 
-## <a id="reassignment-vs-mutation">Parameter reassignment vs object mutation</a>
-Reassigning a parameter changes only the callee's local parameter variable. It does not change which object the caller variable refers to. This distinction is the simplest test for the pass-by-value model.
+This does **not** make Java pass-by-reference: the method did not receive the caller's variable slot, only a copied reference value.
+
+## <a id="reassignment-vs-mutation">Reassignment vs Mutation</a>
+
+```java
+void replace(User user) {
+    user = new User("new");
+}
+```
+
+Reassigning the parameter only changes the local parameter variable. The caller's reference still points to the original object.
+
+This distinction is foundational for aliasing, defensive copying, and API design.
+
+The next chapter applies the same value/reference model to arrays.

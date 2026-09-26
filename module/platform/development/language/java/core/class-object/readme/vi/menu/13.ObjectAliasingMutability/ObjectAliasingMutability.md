@@ -1,16 +1,47 @@
-# Object Aliasing và Mutability
+# Aliasing và Mutability
 
-## <a id="aliasing-model">Nhiều reference cùng tới một mutable object</a>
-Aliasing xảy ra khi nhiều reference nhận diện cùng object. Với immutable object thường không vấn đề; với mutable object, mutation qua một alias sẽ visible qua alias khác. Cần suy luận bằng identity và ownership, không chỉ bằng variable name.
+Aliasing xảy ra khi nhiều reference cùng trỏ tới một object. Với immutable object, điều này thường an toàn. Với mutable object, thay đổi qua một alias có thể xuất hiện “bất ngờ” ở nơi khác.
+
+## <a id="aliasing-model">Nhiều Reference, Một Object</a>
 
 ```java
 List<String> a = new ArrayList<>();
 List<String> b = a;
-b.add("x"); // a cũng thấy "x"
+
+b.add("x");
+System.out.println(a); // [x]
 ```
 
-## <a id="shared-mutable-state">Hệ quả shared mutable state</a>
-Shared mutable state tăng coupling vì caller có thể thấy change do nơi khác tạo ra. Nó làm invariant, testing, caching, concurrency và reasoning về ownership khó hơn. Encapsulation, immutability, ownership rule và copy giúp giảm uncertainty.
+Không có copy collection ở assignment. Chỉ reference được copy.
 
-## <a id="aliasing-in-collections">Aliasing qua collection và returned reference</a>
-Trả internal mutable collection, lưu trực tiếp mutable object của caller hoặc expose array có thể leak alias qua API boundary. Unmodifiable wrapper chỉ chặn mutation qua wrapper nhưng vẫn có thể reflect source mutation; defensive copy thay đổi ownership semantics.
+mô hình tư duy này nối trực tiếp với Java pass-by-value: method nhận một bản copy của reference value, vì vậy vẫn có thể mutate cùng object.
+
+## <a id="shared-mutable-state">Trạng thái Mutable dùng chung</a>
+
+Shared mutable trạng thái làm reasoning khó hơn vì một object có thể bị thay đổi từ nhiều nơi.
+
+Hậu quả thường gặp:
+
+- invariant bị phá ngoài owner;
+- test phụ thuộc thứ tự;
+- concurrency race;
+- cache/view bị thay đổi gián tiếp;
+- khó biết ai chịu trách nhiệm update trạng thái.
+
+Không phải mọi mutability đều xấu; vấn đề là **quan hệ sở hữu và mutation ranh giới có rõ không**.
+
+## <a id="aliasing-in-collections">Aliasing qua Collection và Getter</a>
+
+Một getter trả trực tiếp mutable collection nội bộ sẽ làm lộ reference:
+
+```java
+List<String> getRoles() {
+    return roles;
+}
+```
+
+bên gọi có thể mutate `roles` mà không đi qua quy tắc của owner.
+
+Tương tự, constructor lưu thẳng mutable đầu vào collection cũng có thể bị bên gọi mutate sau đó.
+
+chương cuối giải quyết vấn đề này bằng **immutability và defensive copy**.

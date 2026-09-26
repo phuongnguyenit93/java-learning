@@ -1,10 +1,40 @@
 # StringBuilder
 
-## <a id="builder-mutable-buffer">Mental model mutable buffer của StringBuilder</a>
-`StringBuilder` là mutable sequence dùng để build text mà không tạo String mới cho mọi intermediate append/insert/delete. Nó không phải subtype của String; gọi `toString()` khi cần immutable String result.
+`StringBuilder` không phải “String có thể sửa”. Nó là **mutable buffer dùng để xây String**, sau đó tạo String result bằng `toString()`.
 
-## <a id="builder-capacity">Length và capacity</a>
-Length là số character hiện có; capacity là internal storage trước khi cần grow. Capacity grow tự động và là implementation/performance concern, không thuộc text value. Pre-size có thể hữu ích khi size dự đoán được nhưng nên đo trước khi micro-optimize.
+## <a id="builder-mutable-buffer">Mutable Buffer</a>
 
-## <a id="builder-usage">Xây chuỗi incremental hiệu quả</a>
-Dùng một builder cho local construction flow, append piece rồi convert một lần. Tránh share mutable builder giữa các caller không liên quan. Fluent append dễ đọc, nhưng formatting phức tạp có thể phù hợp với formatter/template hơn manual delimiter logic.
+```java
+StringBuilder builder = new StringBuilder();
+builder.append("Hello");
+builder.append(' ');
+builder.append(name);
+String result = builder.toString();
+```
+
+Khác String, cùng builder object thay đổi internal buffer qua nhiều `append`.
+
+Đây là lý do builder phù hợp cho incremental construction trong một scope kiểm soát rõ.
+
+## <a id="builder-capacity">Length và Capacity</a>
+
+`length()` là số character/code unit hiện có trong builder.
+
+`capacity()` là kích thước buffer nội bộ hiện có trước khi cần grow.
+
+Capacity là performance detail hữu ích khi dự đoán đầu ra lớn, nhưng không phải part của text result ngữ nghĩa.
+
+Pre-size capacity có thể giảm resize/copy nếu biết gần đúng kích thước cuối; không cần tối ưu sớm cho chuỗi nhỏ.
+
+## <a id="builder-usage">Xây chuỗi tăng dần</a>
+
+Builder phù hợp khi:
+
+- loop append nhiều phần;
+- format đầu ra theo nhiều branch;
+- tạo text trong một method/thread-local scope;
+- cần giảm intermediate String.
+
+Sau khi gọi `toString()`, String result là immutable và độc lập về ngữ nghĩa với các thay đổi builder tiếp theo.
+
+chương tiếp theo so `StringBuilder` với phiên bản có synchronization: `StringBuffer`.

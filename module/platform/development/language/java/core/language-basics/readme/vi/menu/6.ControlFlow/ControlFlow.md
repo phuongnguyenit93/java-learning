@@ -1,13 +1,45 @@
-# Luồng điều khiển
+# Control Flow
 
-## <a id="branching-model">Mô hình nhánh if/switch</a>
-`if` chọn path từ boolean condition. `switch` chọn giữa các alternative rời rạc và modern switch expression có thể tạo value. Nên chọn cấu trúc làm các business rule loại trừ nhau rõ ràng thay vì nested condition quá sâu.
+Sau khi có value và biểu thức, chương trình cần quyết định **statement nào chạy, chạy bao nhiêu lần và khi nào dừng**. Đó là vai trò của control flow.
 
-## <a id="loop-control">for/while/do-while và break/continue</a>
-`for` phù hợp khi initialization/update thuộc loop; enhanced `for` iterate `Iterable` hoặc array; `while` kiểm tra trước mỗi vòng; `do-while` chạy body ít nhất một lần. `break` thoát và `continue` bỏ qua phần còn lại của iteration. Labeled control flow có tồn tại nhưng nên dùng hiếm.
+## <a id="branching-model">Nhánh if và switch</a>
 
-## <a id="switch-expression">Switch expression và yield</a>
-Switch expression dùng `->` hoặc `yield` để trả value và tránh accidental fall-through. Exhaustiveness quan trọng khi compiler biết toàn bộ alternative, ví dụ enum.
+`if/else` phù hợp khi điều kiện là boolean biểu thức linh hoạt:
+
+```java
+if (score >= 90) {
+    grade = "A";
+} else if (score >= 80) {
+    grade = "B";
+}
+```
+
+`switch` phù hợp khi một selector được đối chiếu với tập case rõ ràng. Với Java hiện đại, `switch` có thể là statement hoặc biểu thức.
+
+Đừng chọn chỉ vì cú pháp ngắn hơn; hãy chọn cấu trúc làm decision model dễ đọc nhất.
+
+## <a id="loop-control">Loop và break/continue</a>
+
+Các loop chính:
+
+```text
+for
+→ phù hợp khi có initialization/condition/update rõ
+
+while
+→ lặp khi condition còn đúng
+
+do-while
+→ body chạy ít nhất một lần
+```
+
+`break` thoát loop hiện tại; `continue` bỏ phần còn lại của iteration hiện tại và chuyển sang lần tiếp theo.
+
+Labeled `break/continue` tồn tại nhưng thường chỉ nên dùng khi nó làm nested-loop intent rõ hơn; nếu flow quá khó theo dõi, refactor thành method nhỏ có thể tốt hơn.
+
+## <a id="switch-expression">Switch Expression và yield</a>
+
+Switch biểu thức trả value:
 
 ```java
 String label = switch (status) {
@@ -16,5 +48,30 @@ String label = switch (status) {
 };
 ```
 
-## <a id="control-flow-pitfalls">Pitfall và readability của control flow</a>
-Các lỗi phổ biến gồm classic-switch fall-through ngoài ý muốn, loop termination phụ thuộc hidden mutation, condition lặp lại và nested branch quá sâu. Guard clause và method nhỏ thường làm invariant rõ hơn.
+Với block case cần nhiều statement, `yield` trả value cho switch biểu thức:
+
+```java
+int result = switch (code) {
+    case 1 -> 10;
+    default -> {
+        int computed = compute();
+        yield computed;
+    }
+};
+```
+
+Arrow form tránh accidental fall-through của colon-style switch.
+
+## <a id="control-flow-pitfalls">Control Flow dễ đọc</a>
+
+Các dấu hiệu control flow khó bảo trì:
+
+- nested `if` quá sâu;
+- boolean condition dài với side effect;
+- switch fall-through không chủ ý;
+- loop có quá nhiều `break/continue` ở nhiều tầng;
+- cùng condition được lặp ở nhiều nơi.
+
+Guard clause, method extraction hoặc data/polymorphism model tốt hơn đôi khi làm flow rõ hơn.
+
+chương tiếp theo đóng gói hành vi thành method và xem compiler chọn method call như thế nào.

@@ -1,10 +1,32 @@
-# Random Number Generation
+# Random
 
-## <a id="pseudo-random-model">Pseudo-random model and seed</a>
-A pseudo-random generator produces a deterministic sequence from internal state. Equal algorithms and seeds can reproduce the same sequence, which is useful for tests/simulations. Random-looking output does not imply unpredictability against an attacker.
+`Random` does not produce “absolute randomness”. It produces a **pseudo-random** sequence from internal state/seed according to a deterministic algorithm.
 
-## <a id="threadlocal-random-boundary">Random vs ThreadLocalRandom boundary</a>
-`Random` is a general stateful PRNG. `ThreadLocalRandom` avoids sharing one generator state across threads and is useful inside concurrent code, but its full concurrency behavior belongs to the concurrency curriculum. Neither should be selected for security merely because the sequence looks random.
+## <a id="pseudo-random-model">Pseudo-randomness and Seed</a>
 
-## <a id="random-not-security">Why ordinary PRNG is not security</a>
-Security tokens, keys, salts, and nonces require a cryptographically strong source. A predictable seed or state can reveal future outputs. Use `SecureRandom` for security-sensitive randomness and let the security-cryptography module own the deeper threat model.
+The same seed and call sequence can reproduce the same outputs:
+
+```java
+Random a = new Random(42);
+Random b = new Random(42);
+```
+
+That determinism is useful for tests, simulations, and reproducible experiments.
+
+A PRNG seed is not automatically a security secret; ordinary pseudo-random output may be predictable if state or algorithm behavior is inferred.
+
+## <a id="threadlocal-random-boundary">Random vs ThreadLocalRandom</a>
+
+`ThreadLocalRandom` is designed for concurrent code to reduce contention when many threads need pseudo-random values.
+
+It is suitable for simulations, randomized scheduling, or sampling with no cryptographic requirement.
+
+Choose it for concurrency/performance reasons, not merely because the name contains “thread”.
+
+## <a id="random-not-security">Not for Security</a>
+
+Security tokens, session identifiers, nonces, secrets, and key material need unpredictability stronger than ordinary PRNGs provide.
+
+`Random` and `ThreadLocalRandom` are **not cryptographic random sources**.
+
+The next chapter uses `SecureRandom` when unpredictability is part of the contract.

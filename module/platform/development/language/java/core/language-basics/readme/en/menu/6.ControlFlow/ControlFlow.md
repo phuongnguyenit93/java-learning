@@ -1,13 +1,26 @@
 # Control Flow
 
-## <a id="branching-model">if/switch branching model</a>
-`if` chooses a path from boolean conditions. `switch` selects among discrete alternatives and modern switch expressions can produce values. Prefer a structure that makes mutually exclusive business rules obvious instead of deeply nested conditionals.
+Once a program has values and expressions, it needs to decide **which statements execute, how often, and when execution leaves a branch or loop**.
 
-## <a id="loop-control">for/while/do-while and break/continue</a>
-`for` is useful when initialization/update belong to the loop; enhanced `for` iterates an `Iterable` or array; `while` checks before each iteration; `do-while` runs the body at least once. `break` exits and `continue` skips to the next iteration. Labeled forms exist but should be rare.
+## <a id="branching-model">if and switch Branching</a>
 
-## <a id="switch-expression">switch expression and yield</a>
-Switch expressions use `->` or `yield` to produce a value and avoid accidental fall-through. Exhaustiveness matters when the compiler knows all alternatives, such as enums.
+`if/else` is natural for arbitrary boolean conditions. `switch` is useful when one selector is compared against a well-defined set of cases.
+
+Modern Java supports both switch statements and switch expressions.
+
+Choose the structure that makes the decision model easiest to understand, not merely the one with fewer characters.
+
+## <a id="loop-control">Loops and break/continue</a>
+
+Java's common loops are `for`, `while`, and `do-while`.
+
+`break` exits the current loop; `continue` skips the rest of the current iteration.
+
+Labeled `break`/`continue` can express some nested-loop flows, but deeply nested control flow is often a signal that extraction into smaller methods would be clearer.
+
+## <a id="switch-expression">Switch Expressions and yield</a>
+
+A switch expression produces a value:
 
 ```java
 String label = switch (status) {
@@ -16,5 +29,14 @@ String label = switch (status) {
 };
 ```
 
-## <a id="control-flow-pitfalls">Control-flow readability and common pitfalls</a>
-Common problems include accidental classic-switch fall-through, loop termination depending on hidden mutation, duplicated conditions, and deeply nested branches. Guard clauses and small methods often make invariants clearer. Correct control flow should also communicate why a path exists.
+For a multi-statement case block, `yield` provides the switch-expression result.
+
+Arrow-style cases also avoid accidental fall-through from classic colon-style switch statements.
+
+## <a id="control-flow-pitfalls">Control-flow Pitfalls</a>
+
+Readability suffers with deeply nested branches, side effects inside long conditions, accidental switch fall-through, or many exits spread across several loop levels.
+
+Guard clauses, extracted methods, data-driven design, or polymorphism may express the decision more clearly.
+
+The next chapter packages reusable behavior into methods and examines how a Java method call is selected.

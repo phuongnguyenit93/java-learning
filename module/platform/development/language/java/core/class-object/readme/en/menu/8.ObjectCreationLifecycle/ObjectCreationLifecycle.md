@@ -1,17 +1,55 @@
 # Object Creation Lifecycle
 
-## <a id="allocation-initialization-construction">Allocation → initialization → construction mental model</a>
-Conceptually, object creation allocates storage, gives fields default values, runs superclass construction, applies instance initializers, and executes constructor bodies before returning the reference. JVM implementation details may optimize allocation, but Java-visible initialization semantics must be preserved.
+`new Child()` looks like one expression, but object creation includes allocation, default initialization, constructor chaining, field/block initialization, and finally a usable object.
 
-## <a id="constructor-dynamic-dispatch-risk">Calling overridable methods during construction</a>
-Instance method dispatch remains virtual during construction. If a superclass constructor calls an overridable method, a subclass override can run before subclass fields are explicitly initialized. The override may observe default values and violate assumptions.
+## <a id="allocation-initialization-construction">Object Creation Stages</a>
 
-```java
-class Parent { Parent() { hook(); } void hook() {} }
-class Child extends Parent { int x = 42; @Override void hook(){ /* x may be 0 */ } }
+A useful mental model is:
+
+```text
+allocate object memory
+        ↓
+fields receive default zero/null/false values
+        ↓
+superclass construction
+        ↓
+instance field initializers / initializer blocks
+        ↓
+current-class constructor body
+        ↓
+reference returned to caller if construction succeeds
 ```
 
-Avoid invoking overridable behavior from constructors unless the contract is intentionally designed for it.
+Allocated memory is not the same thing as a valid constructed object. Invariants should be considered established only after the constructor chain completes successfully.
 
-## <a id="this-escape">this escape during construction</a>
-`this` escapes when the not-fully-constructed object becomes reachable elsewhere, for example by registering a listener, starting a thread, or storing itself in shared state. Other code may observe broken invariants. Keep construction private until initialization completes, then publish the object.
+## <a id="constructor-dynamic-dispatch-risk">Dynamic Dispatch During Construction</a>
+
+Instance method calls still use dynamic dispatch inside constructors.
+
+If a superclass constructor calls an overridable method, subclass behavior may execute **before subclass state is initialized**.
+
+```java
+class Parent {
+    Parent() { print(); }
+    void print() { }
+}
+
+class Child extends Parent {
+    private String value = "ready";
+    @Override void print() { System.out.println(value); }
+}
+```
+
+`print()` may observe `value == null` when invoked from `Parent()`.
+
+A strong default is to avoid overridable method calls from constructors.
+
+## <a id="this-escape">this Escape</a>
+
+`this` escape happens when a reference to the under-construction object is published before construction completes.
+
+Examples include registering `this` in a global registry or listener from the constructor.
+
+External code may then observe partially initialized state. In concurrent code, premature publication creates even more serious visibility hazards.
+
+Next we move from lifecycle to type organization: nested and inner classes.

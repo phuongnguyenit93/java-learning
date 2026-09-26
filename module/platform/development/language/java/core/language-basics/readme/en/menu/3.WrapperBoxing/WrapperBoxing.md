@@ -1,20 +1,56 @@
-# Wrapper Types, Boxing and Unboxing
+# Wrapper Types and Boxing
 
-## <a id="wrapper-types">Wrapper types and object semantics</a>
-Every primitive type has a wrapper class such as `Integer`, `Long`, `Double`, and `Boolean`. Wrappers are immutable objects: they can be `null`, participate in generics and collections, have identity, and provide parsing/conversion helpers.
+Primitives are not objects, while many Java APIs—especially generic collections—operate on reference types. Wrapper classes bridge that gap, such as `int ↔ Integer` and `double ↔ Double`.
 
-## <a id="boxing-unboxing">Boxing and unboxing</a>
-Autoboxing converts a primitive to its wrapper where the language permits it; unboxing extracts the primitive value. These conversions are inserted by the compiler and can participate in overload resolution.
+## <a id="wrapper-types">Wrapper Types</a>
 
-```java
-Integer boxed = 42;
-int n = boxed;
+Each primitive has a wrapper counterpart:
+
+```text
+byte    ↔ Byte
+short   ↔ Short
+int     ↔ Integer
+long    ↔ Long
+float   ↔ Float
+double  ↔ Double
+char    ↔ Character
+boolean ↔ Boolean
 ```
 
-Convenient syntax does not erase the semantic difference between primitive and object values.
+Wrappers are immutable objects. Because they are references, they can be `null`, participate in generic APIs, and have object identity distinct from primitive values.
 
-## <a id="wrapper-caching">Wrapper caches and identity pitfalls</a>
-Some wrapper factories/autoboxing reuse cached objects for required/common ranges. Two boxed values may therefore sometimes have the same identity and sometimes not. Do not use `==` as numeric-value comparison for wrappers; use `.equals()` or deliberately unbox.
+## <a id="boxing-unboxing">Boxing and Unboxing</a>
 
-## <a id="unboxing-null">Null unboxing and NullPointerException</a>
-Unboxing requires an actual wrapper object. If the reference is `null`, unboxing throws `NullPointerException`. This can happen indirectly in arithmetic, comparison, ternary expressions, or APIs mixing primitive and wrapper values.
+**Boxing** converts a primitive value to a wrapper; **unboxing** extracts the primitive value.
+
+```java
+Integer boxed = 10; // autoboxing
+int value = boxed;  // unboxing
+```
+
+Autoboxing is convenient, but it does not make primitives and wrappers the same type. Overload resolution, `null`, identity, and performance can still differ.
+
+## <a id="wrapper-caching">Wrapper Caching</a>
+
+Some wrapper values may be cached, so identity demos can be misleading:
+
+```java
+Integer a = 100;
+Integer b = 100;
+a == b // may be true because of caching
+```
+
+Do not use wrapper identity as value equality. Prefer `equals` or explicit primitive comparison according to the contract.
+
+## <a id="unboxing-null">Unboxing null</a>
+
+Wrappers may be `null`:
+
+```java
+Integer boxed = null;
+int value = boxed; // NullPointerException
+```
+
+Unboxing requires an actual wrapper object from which to extract a primitive value.
+
+The next chapter examines operators and implicit promotions inside expressions.

@@ -1,17 +1,53 @@
-# Số nguyên và Overflow
+# Integer Overflow
 
-## <a id="integer-overflow-wraparound">Integer overflow và wraparound</a>
-Primitive integer operation không tự throw khi overflow. Kết quả wrap theo độ rộng type với two's-complement semantics.
+Số nguyên primitive nhìn có vẻ “exact”, nhưng chỉ exact **trong phạm vi cố định**. Khi phép tính vượt `MIN_VALUE` hoặc `MAX_VALUE`, Java không tự chuyển sang `BigInteger` và cũng không mặc định throw exception.
+
+## <a id="integer-overflow-wraparound">Overflow và Wraparound</a>
+
+Ví dụ:
 
 ```java
-int x = Integer.MAX_VALUE;
-int y = x + 1; // Integer.MIN_VALUE
+int value = Integer.MAX_VALUE;
+value++;
 ```
 
-Overflow là behavior xác định của language nhưng thường là bug khi value biểu diễn tiền, counter, size hay identifier.
+Kết quả trở thành `Integer.MIN_VALUE` do arithmetic fixed-width wrap quanh theo biểu diễn two's complement.
 
-## <a id="checked-arithmetic">Checked arithmetic bằng exact methods</a>
-`Math.addExact`, `subtractExact`, `multiplyExact`, `incrementExact`, `decrementExact` và conversion helper tương tự sẽ throw `ArithmeticException` nếu result không represent được. Dùng chúng khi silent wraparound không chấp nhận được.
+Điều nguy hiểm là chương trình vẫn tiếp tục chạy. Nếu giá trị là quantity, counter, price-in-cents hoặc offset, logic phía sau có thể nhận một số hoàn toàn sai nhưng không có exception cảnh báo.
 
-## <a id="boundary-values">Suy luận ở MIN/MAX boundary</a>
-Mọi fixed-width integer type có `MIN_VALUE` và `MAX_VALUE`. Signed range không đối xứng; ví dụ `-Integer.MIN_VALUE` vẫn là `Integer.MIN_VALUE` vì positive counterpart không represent được. Boundary test nên gồm zero, sát limit và sign transition.
+### THỰC HÀNH
+
+Khi đầu vào có thể tiến gần ranh giới, đừng chỉ test “giá trị bình thường”. Hãy test quanh:
+
+```text
+MIN_VALUE
+MIN_VALUE + 1
+-1 / 0 / 1
+MAX_VALUE - 1
+MAX_VALUE
+```
+
+## <a id="checked-arithmetic">Checked Arithmetic</a>
+
+`Math` cung cấp các exact helper như:
+
+```java
+Math.addExact(a, b)
+Math.subtractExact(a, b)
+Math.multiplyExact(a, b)
+Math.incrementExact(a)
+```
+
+Nếu thao tác overflow, chúng throw `ArithmeticException` thay vì wrap im lặng.
+
+Đây là lựa chọn tốt khi overflow phải được xem là **lỗi của hợp đồng**, không phải hành vi chấp nhận được.
+
+## <a id="boundary-values">Giá trị biên MIN/MAX</a>
+
+ranh giới arithmetic dễ gây bug vì một số phép biến đổi toán học trực giác không còn đúng trong fixed-width integer.
+
+Ví dụ `Math.abs(Integer.MIN_VALUE)` không thể trả `+2147483648` dưới dạng `int`, vì giá trị đó vượt `Integer.MAX_VALUE`.
+
+Khi phạm vi của domain thực sự có thể vượt `long`, đừng cố vá từng overflow case; hãy cân nhắc `BigInteger`.
+
+Trước khi tới `BigInteger`, ta cần hiểu một dạng trade-off khác: floating-point không wrap theo cùng cách nhưng lại **không biểu diễn chính xác mọi số thập phân**.

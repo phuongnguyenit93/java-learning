@@ -1,10 +1,37 @@
-# String Interning
+# String.intern
 
-## <a id="intern-semantics">String.intern semantics</a>
-`intern()` returns a canonical pooled String equal to the receiver. If an equal canonical string is already in the pool, that reference is returned; otherwise the receiver's value becomes represented canonically according to JVM behavior.
+The String pool can provide canonical identity for literals and selected Strings. `String.intern()` explicitly asks for the **canonical pooled reference** corresponding to the same text content.
 
-## <a id="intern-identity">Canonical pool reference</a>
-After interning equal strings, identity can be shared, so `a.intern() == b.intern()` can be true when contents are equal. This is a canonicalization mechanism, not a recommended replacement for `equals` in ordinary text logic.
+## <a id="intern-semantics">What Does String.intern Do?</a>
 
-## <a id="intern-tradeoffs">Interning trade-offs and memory considerations</a>
-Interning can reduce duplicate storage or make canonical identity useful for carefully bounded vocabularies, but arbitrary/high-cardinality user data can grow the pool and add lookup overhead. Modern collectors/runtime implementations mitigate old permanent-generation myths, yet unbounded interning is still an ownership/memory decision that should be measured.
+```java
+String canonical = value.intern();
+```
+
+The runtime returns the pool reference associated with the same String content.
+
+This does not mutate `value` and does not change String equality semantics. Interning is about **identity/canonicalization**, not a different definition of text equality.
+
+## <a id="intern-identity">Canonical Pool Reference</a>
+
+```java
+String a = new String("java");
+String b = a.intern();
+String c = "java";
+
+b == c // true in the corresponding runtime context
+```
+
+`b` uses the canonical pooled reference for `"java"`.
+
+Application logic should still use `equals` when the question is content equality.
+
+## <a id="intern-tradeoffs">Interning Trade-offs</a>
+
+Interning can reduce duplicate identities for a highly repetitive String set, but it is not a default optimization for all applications.
+
+Consider lookup/canonicalization cost, pool retention, high-cardinality input, and unnecessary identity coupling.
+
+Intern when the workload and measurements justify it, or when canonical identity is genuinely part of the design.
+
+The next chapter crosses a more important representation boundary: how does Java text become external bytes?

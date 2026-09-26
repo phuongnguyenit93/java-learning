@@ -1,23 +1,44 @@
 # try, catch and finally
 
-## <a id="try-catch-flow">try/catch control flow</a>
-Code in `try` runs until it completes normally or throws. If a thrown value matches a catch clause, control transfers to the first compatible handler; otherwise it continues propagating. After handling, execution continues after the whole construct unless the handler returns/throws.
+Propagation lets failures travel upward. `try/catch/finally` lets a layer decide **what to handle, what to translate, and what cleanup must still happen**.
 
-## <a id="finally-semantics">finally execution semantics</a>
-A `finally` block normally executes whether the `try` completes normally, returns, or throws, and whether a matching catch handles the failure. It is intended for cleanup that must happen regardless of outcome. Process termination or fatal VM conditions can prevent ordinary finally execution, so it is not an external durability guarantee.
+## <a id="try-catch-flow">try/catch Flow</a>
 
-## <a id="return-finally">return/throw interactions with finally</a>
-A `finally` block executes after a return value has been determined but before control actually leaves. If `finally` itself returns or throws, it can replace the pending return or exception and hide the original outcome.
+If an exception occurs inside `try`, the remaining statements in that block are skipped and the runtime searches for a compatible `catch`.
 
 ```java
 try {
-    return 1;
-} finally {
-    return 2; // hides the original return; avoid this
+    load();
+    process(); // skipped if load() throws
+} catch (IOException ex) {
+    recover(ex);
 }
 ```
 
-Never use `return`/normal-flow `throw` in `finally` merely to simplify control flow.
+Catch where the current layer has meaningful work to do: recover, translate, add context, or intentionally terminate a flow.
 
-## <a id="multi-catch">Multi-catch and alternatives</a>
-Multi-catch (`catch (IOException | SQLException e)`) is useful when unrelated exception types require the same handling. Alternatives in one multi-catch cannot be related by subclassing because the broader type would already cover the narrower one. Keep handling common only when the recovery/translation semantics are genuinely identical.
+## <a id="finally-semantics">finally Semantics</a>
+
+`finally` generally runs when leaving `try/catch`, including normal completion, `return`, or exceptional completion.
+
+It can support manual cleanup, but try-with-resources is preferable for owned resources when available.
+
+## <a id="return-finally">return/throw and finally</a>
+
+A `return` or `throw` in `finally` can replace a result or exception already leaving the `try` block.
+
+That can hide the original failure, so avoid returning from `finally` and be cautious about throwing new exceptions there.
+
+## <a id="multi-catch">Multi-catch</a>
+
+When several exception types need the same handling:
+
+```java
+catch (IOException | SQLException ex) {
+    handle(ex);
+}
+```
+
+Multi-catch removes duplication, but unrelated failure semantics should not be merged merely because their current handler body happens to match.
+
+Next we replace manual resource cleanup with try-with-resources.

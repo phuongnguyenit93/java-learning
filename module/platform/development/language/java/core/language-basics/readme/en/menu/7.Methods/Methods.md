@@ -1,29 +1,69 @@
-# Methods in Java
+# Methods
 
-## <a id="method-signature">Method signature, parameters and return</a>
-A Java method declares a name and parameter types; the return type is not part of overload identity. Parameters are local variables initialized from argument values. Method contracts should make valid input, output, side effects, and exceptional behavior clear.
+A method names reusable behavior. A Java invocation is more than “find the same name”: the compiler considers signatures, conversions, and overload-resolution rules.
 
-## <a id="method-invocation-conversion">Method invocation conversions</a>
-When checking whether a method can accept an argument, Java can use identity conversion, primitive/reference widening, boxing/unboxing combinations allowed by invocation rules, and finally varargs applicability. Not every mathematically possible conversion is considered.
+## <a id="method-signature">Method Signature</a>
 
-## <a id="overload-resolution-phases">Overload resolution phases</a>
-Overload resolution is compile-time selection. The compiler first looks for applicable fixed-arity methods in earlier phases and only later considers varargs. An earlier applicable phase wins before a later one is considered.
+For Java overloading, a method signature is primarily its **name + parameter types**. Return type alone cannot distinguish overloads.
 
-```java
-void f(long x) {}
-void f(Integer x) {}
-void f(int... x) {}
-// f(1) selects f(long), not boxing or varargs.
+Parameters are local variables receiving copied argument values when the method is invoked. `return` completes the method and supplies a result when the return type is not `void`.
+
+## <a id="method-invocation-conversion">Method Invocation Conversions</a>
+
+An argument may use conversions permitted in method-invocation context, including identity conversion, primitive/reference widening, boxing/unboxing in applicable phases, and eventually varargs conversion.
+
+Not every explicit cast that is legal in source is automatically performed by overload resolution.
+
+## <a id="overload-resolution-phases">Overload Resolution Phases</a>
+
+A useful mental model is:
+
+```text
+1. fixed arity without boxing/varargs fallback
+        ↓ if needed
+2. applicable boxing/unboxing conversions
+        ↓ if still needed
+3. varargs fallback
 ```
 
-## <a id="most-specific-overload">Selecting the most-specific applicable overload</a>
-If several overloads are applicable in the same phase, Java chooses the most specific according to type relationships and invocation compatibility. It is not simply the smallest numeric type or the method written first.
+The language specification is more detailed, but this ordering explains many “widening vs boxing vs varargs” questions.
 
-## <a id="null-overload-ambiguity">null arguments and ambiguous unrelated reference overloads</a>
-`null` is compatible with reference types. If overloads take unrelated reference types, `f(null)` can be ambiguous because neither candidate is more specific. A cast can disambiguate, but a clearer API often avoids such overload sets.
+## <a id="most-specific-overload">Most-specific Overload</a>
 
-## <a id="method-call-evaluation">Argument evaluation order</a>
-Arguments are evaluated left-to-right before the method body starts. Side effects therefore have a defined order, but dense side-effect expressions still harm readability.
+If several candidates are applicable, the compiler tries to choose the **most specific** according to type rules.
 
-## <a id="recursion-stack">Recursion and call-stack cost</a>
-Each recursive call creates another invocation frame until the base case returns. Java does not guarantee tail-call elimination, so deep recursion can cause `StackOverflowError`. Iteration may be safer for unbounded depth.
+```java
+void print(Object x) { }
+void print(String x) { }
+
+print("java"); // String overload
+```
+
+This is a compile-time type decision, not a choice based on source declaration order.
+
+## <a id="null-overload-ambiguity">null Overload Ambiguity</a>
+
+`null` is compatible with reference types. If unrelated overloads are equally applicable:
+
+```java
+void print(String x) { }
+void print(Integer x) { }
+
+print(null); // ambiguous
+```
+
+the compiler cannot choose one candidate. An explicit cast can disambiguate when that is the actual intent.
+
+## <a id="method-call-evaluation">Argument Evaluation Order</a>
+
+Java evaluates argument expressions left to right before entering the method body.
+
+Even with defined order, side-effect-heavy argument lists are hard to read. Extract meaningful intermediate calculations when order matters.
+
+## <a id="recursion-stack">Recursion and the Call Stack</a>
+
+Recursive calls create additional stack frames. Missing base cases or excessive depth can result in `StackOverflowError`.
+
+Recursion is natural for some tree/divide-and-conquer algorithms; iterative solutions can be simpler for long linear repetition.
+
+The next chapter introduces varargs, Java's syntax for variable argument counts.

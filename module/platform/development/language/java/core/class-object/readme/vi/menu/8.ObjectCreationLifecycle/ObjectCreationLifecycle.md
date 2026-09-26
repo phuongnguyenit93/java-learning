@@ -1,17 +1,61 @@
 # Vòng đời tạo Object
 
-## <a id="allocation-initialization-construction">Mental model allocation → initialization → construction</a>
-Về semantics, object creation allocate storage, cấp default value cho field, chạy superclass construction, áp instance initializer rồi chạy constructor body trước khi trả reference. JVM có thể optimize allocation nhưng phải giữ Java-visible initialization semantics.
+`new Child()` nhìn như một biểu thức đơn giản, nhưng phía sau là nhiều bước: allocation, default initialization, constructor chain, field/block initialization và cuối cùng mới có một object usable theo hợp đồng của class.
 
-## <a id="constructor-dynamic-dispatch-risk">Rủi ro gọi overridable method trong constructor</a>
-Instance method vẫn virtual dispatch trong construction. Nếu superclass constructor gọi overridable method, subclass override có thể chạy trước khi subclass field explicit initialize. Override khi đó có thể thấy default value và phá assumption.
+## <a id="allocation-initialization-construction">Các bước tạo Object</a>
 
-```java
-class Parent { Parent() { hook(); } void hook() {} }
-class Child extends Parent { int x = 42; @Override void hook(){ /* x có thể là 0 */ } }
+Một mô hình tư duy đủ dùng:
+
+```text
+allocate memory cho object
+        ↓
+field nhận default zero/null/false
+        ↓
+superclass construction
+        ↓
+instance field initializer / initializer block
+        ↓
+constructor body của class hiện tại
+        ↓
+reference được trả về cho bên gọi nếu quá trình khởi tạo thành công
 ```
 
-Nên tránh gọi overridable behavior từ constructor trừ khi contract cố ý thiết kế như vậy.
+Đừng nhầm “memory đã được allocate” với “object đã ở trạng thái hợp lệ”. Invariant chỉ nên được coi là hoàn tất sau khi constructor chain kết thúc đúng.
 
-## <a id="this-escape">this escape trong construction</a>
-`this` escape khi object chưa construct xong trở nên reachable ở nơi khác, ví dụ register listener, start thread hoặc lưu vào shared state. Code khác có thể thấy invariant chưa hoàn tất. Hãy giữ construction private tới khi initialization xong rồi mới publish object.
+## <a id="constructor-dynamic-dispatch-risk">Dynamic Dispatch trong Constructor</a>
+
+Instance method call vẫn có dynamic dispatch ngay cả khi đang ở constructor.
+
+Nếu superclass constructor gọi một overridable method, cách triển khai ở subclass có thể chạy **trước khi subclass trạng thái được initialize đầy đủ**.
+
+```java
+class Parent {
+    Parent() { print(); }
+    void print() { }
+}
+
+class Child extends Parent {
+    private String value = "ready";
+    @Override void print() { System.out.println(value); }
+}
+```
+
+`print()` có thể nhìn thấy `value == null` khi được gọi từ `Parent()`.
+
+Heuristic an toàn: tránh gọi overridable method từ constructor.
+
+## <a id="this-escape">this Escape</a>
+
+`this` escape xảy ra khi reference tới object đang construct bị công bố ra bên ngoài trước khi construction hoàn tất.
+
+Ví dụ rủi ro:
+
+```java
+registry.add(this);
+```
+
+trong constructor, hoặc đăng listener/callback có thể chạy ngay.
+
+mã bên ngoài có thể quan sát object ở trạng thái chưa hoàn chỉnh. Trong concurrent mã, vấn đề publication còn nghiêm trọng hơn.
+
+chương tiếp theo chuyển từ lifecycle sang tổ chức type: **khi nào một class nên được đặt bên trong class khác và inner class giữ ngữ cảnh gì?**

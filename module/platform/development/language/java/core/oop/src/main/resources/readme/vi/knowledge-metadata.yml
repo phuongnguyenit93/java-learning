@@ -16,6 +16,10 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+  encapsulation-access-modifiers:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
   invariant-protection:
     difficulty: BASIC
     aiGenerated: true

@@ -1,13 +1,72 @@
 # Immutability and Defensive Copy
 
-## <a id="immutable-object-design">Immutable object design</a>
-An immutable object's observable state never changes after successful construction. Typical design keeps fields private/final, establishes invariants in construction, prevents mutator methods, and avoids exposing mutable internal objects. `final` on the reference alone does not make a nested object immutable.
+When observable state cannot change after construction, sharing becomes much easier to reason about. But `final` fields alone are not enough; the entire reachable object graph and exposed references matter.
 
-## <a id="defensive-copy-input">Defensive copy on input</a>
-If a constructor/method accepts a mutable value that becomes internal state, copy it when the object should own an independent snapshot. Otherwise the caller can mutate the supplied object later and silently change internal state.
+## <a id="immutable-object-design">Immutable Object Design</a>
 
-## <a id="defensive-copy-output">Defensive copy on output</a>
-Returning a mutable internal object leaks an alias. Return an immutable representation, an independent copy, or a carefully documented view depending on the contract. `Collections.unmodifiableList(internal)` is a read-only view, not necessarily an immutable snapshot.
+An immutable object usually:
 
-## <a id="deep-immutability">Shallow vs deep immutability</a>
-An object with final fields can still be only shallowly immutable if those fields reference mutable objects that other aliases can change. Deep immutability requires the reachable state relevant to the abstraction to be immutable or exclusively owned and never mutated after construction.
+- establishes all state in a constructor/factory;
+- exposes no mutator that changes state;
+- uses `final` fields when appropriate;
+- prevents mutable internal state from leaking;
+- restricts extension when subclasses could violate immutability.
+
+```java
+final class Profile {
+    private final String name;
+    ...
+}
+```
+
+Immutability simplifies sharing, caching, hashing, and concurrency reasoning.
+
+## <a id="defensive-copy-input">Defensive Copy on Input</a>
+
+If a constructor stores a mutable input reference directly, the caller can mutate internal state after construction.
+
+```java
+this.roles = new ArrayList<>(roles);
+```
+
+Copying input transfers ownership away from the caller's mutable collection.
+
+Immutable inputs such as `String` do not need defensive copying merely for appearance.
+
+## <a id="defensive-copy-output">Defensive Copy on Output</a>
+
+Do not return mutable internal references when callers are not allowed to modify state.
+
+Possible contracts include:
+
+- immutable/unmodifiable views;
+- `List.copyOf(...)`;
+- fresh copies.
+
+An unmodifiable view is not automatically deep immutability; the underlying data may still change elsewhere.
+
+## <a id="deep-immutability">Shallow vs Deep Immutability</a>
+
+`final List<Address> addresses` is not deeply immutable if the list or `Address` instances remain mutable.
+
+```text
+shallow immutability
+→ outer references/state cannot be reassigned
+
+deep immutability
+→ the relevant reachable object graph has immutable contracts
+```
+
+Not every domain needs deep immutability, but ownership and mutation boundaries should be explicit.
+
+The module's final mental model is:
+
+```text
+class defines state/behavior
+→ constructor establishes valid state
+→ access modifiers define boundaries
+→ initialization order controls when state becomes ready
+→ reference copying creates aliasing
+→ mutability requires clear ownership
+→ immutability/defensive copying makes sharing safer
+```

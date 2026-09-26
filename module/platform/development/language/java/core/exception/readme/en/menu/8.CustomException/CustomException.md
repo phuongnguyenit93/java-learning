@@ -1,10 +1,38 @@
 # Custom Exceptions
 
-## <a id="custom-exception-purpose">When custom exceptions add meaning</a>
-Create a custom exception when the failure represents a stable domain/application concept that callers, logs, or handlers benefit from recognizing. Do not create one new class for every message; the type should communicate a meaningful category or contract.
+Not every failure needs a new exception class. A custom exception is valuable when the new type **adds meaning**, creates a useful abstraction boundary, or gives callers a meaningful handling category.
 
-## <a id="exception-context">Preserving useful context and cause</a>
-Include the information needed to understand the failed operation—such as an order ID or requested state—while avoiding secrets and giant object dumps. When wrapping a lower-level failure, provide a constructor that accepts the original cause and preserve it.
+## <a id="custom-exception-purpose">When Custom Exceptions Help</a>
 
-## <a id="exception-hierarchy-design">Designing a small domain exception hierarchy</a>
-Keep hierarchies shallow and purposeful. A common domain base exception can support one handling policy while specific subtypes represent genuinely different recovery/status decisions. Checked vs unchecked should follow the API contract rather than a naming convention.
+Custom exceptions are useful when they:
+
+- express a domain/application failure clearly;
+- translate low-level failures into higher-level vocabulary;
+- let callers catch a meaningful category;
+- carry structured context that a generic message cannot express well.
+
+Avoid creating a new exception merely to rename an existing one without adding contract or context.
+
+## <a id="exception-context">Preserving Context and Cause</a>
+
+```java
+throw new OrderLoadException(orderId, ex);
+```
+
+A useful custom exception may retain an identifier, operation context, and the original cause.
+
+Avoid placing secrets or sensitive values in exception messages/context because they often reach logs.
+
+## <a id="exception-hierarchy-design">Designing Exception Hierarchies</a>
+
+A small hierarchy with meaningful handling categories is usually better than many classes that differ only by name.
+
+```text
+OrderException
+├── OrderNotFoundException
+└── OrderValidationException
+```
+
+The hierarchy should reflect how callers want to handle failures, not every internal implementation detail.
+
+The final chapter puts all of the mechanics into application-level exception design.

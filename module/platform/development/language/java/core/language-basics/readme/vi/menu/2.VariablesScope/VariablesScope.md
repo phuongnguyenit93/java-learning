@@ -1,20 +1,57 @@
-# Biến và phạm vi
+# Biến và Phạm vi
 
-## <a id="variable-kinds-and-lifetime">Lifetime của local, parameter, field và static variable</a>
-Local variable và parameter thuộc một invocation/block và không có automatic default value. Instance field thuộc về từng object. Static field thuộc về class và được chia sẻ giữa các instance trong cùng defining class loader.
+Hiểu type/value chưa đủ; cần biết **tên biến nhìn thấy ở đâu và trạng thái tồn tại trong ngữ cảnh nào**. Scope là quy tắc của mã nguồn; lifetime của object/reference lại là một câu hỏi khác.
 
-Lifetime và visibility là hai khái niệm khác nhau. Field có thể sống lâu hơn method invocation, còn local variable chỉ nằm trong lexical scope của block. Lifetime của object phụ thuộc reachability chứ không phụ thuộc scope của một reference cụ thể.
+## <a id="variable-kinds-and-lifetime">Các loại Variable</a>
 
-## <a id="scope-and-shadowing">Scope, shadowing và name resolution</a>
-Lexical scope quyết định nơi một name có thể được dùng. Local variable hoặc parameter có thể shadow field. Khi shadowing có chủ ý, `this.field` giúp phân biệt field với parameter/local. Shadowing quá mức làm code khó đọc.
+Những loại variable thường gặp:
 
-## <a id="definite-assignment">Quy tắc definite assignment</a>
-Compiler phân tích definite assignment cho local variable và blank `final`. Local variable chỉ được đọc nếu compiler chứng minh nó đã được gán trên mọi control-flow path đi tới điểm đọc.
+```text
+local variable
+→ khai báo trong block/method
 
-```java
-int value;
-if (ready) value = 10;
-// System.out.println(value); // compile error
+parameter
+→ nhận value khi method/constructor được gọi
+
+instance field
+→ trạng thái của từng object
+
+static field
+→ trạng thái gắn với class
 ```
 
-Đây là compile-time guarantee. Field khác local variable vì object/class initialization cấp default value trước constructor hoặc explicit initializer.
+Local/parameter tồn tại theo execution frame/ngữ cảnh của lời gọi. Field tồn tại như một phần trạng thái của object/class.
+
+Đừng đồng nhất lifetime của một **reference variable** với lifetime của object mà nó trỏ tới. Object có thể còn reachable từ nơi khác sau khi local variable ra khỏi scope.
+
+## <a id="scope-and-shadowing">Scope và Shadowing</a>
+
+Scope quyết định tên nào có thể được dùng tại một vị trí mã nguồn.
+
+Một tên ở scope bên trong có thể che một tên khác ở scope ngoài trong những trường hợp Java cho phép. Ví dụ parameter có thể shadow field:
+
+```java
+void setName(String name) {
+    this.name = name;
+}
+```
+
+`this.name` là field; `name` là parameter.
+
+Shadowing hợp lệ không có nghĩa luôn dễ đọc. Nếu nhiều scope lồng nhau dùng cùng tên với ý nghĩa khác, mã dễ gây nhầm.
+
+## <a id="definite-assignment">Definite Assignment</a>
+
+Compiler phải chứng minh local variable đã được gán trên mọi control-flow path trước khi đọc:
+
+```java
+int x;
+if (condition) {
+    x = 1;
+}
+System.out.println(x); // có thể không compile
+```
+
+Đây là **compile-time guarantee**, không phải runtime initialization giống field default value.
+
+chương tiếp theo nối primitive với object-oriented APIs thông qua wrapper type và boxing.

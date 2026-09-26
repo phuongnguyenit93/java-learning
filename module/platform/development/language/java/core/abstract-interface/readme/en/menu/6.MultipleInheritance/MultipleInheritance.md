@@ -1,13 +1,64 @@
-# Multiple Interface Inheritance
+# Multiple Inheritance Through Interfaces
 
-## <a id="default-method-conflict">Default-method conflict resolution</a>
-If unrelated interfaces provide the same default signature and neither inherited default is more specific, the implementing class must override the method to resolve the conflict. Java does not guess which behavior was intended.
+Java does not allow a class to inherit implementation from several parent classes, but a class may implement several interfaces. Pure abstract contracts usually compose cleanly. The interesting conflicts appear when multiple interfaces provide **default implementations** for the same method.
 
-## <a id="class-wins-rule">Class method wins over interface default</a>
-A concrete method inherited from a class hierarchy takes precedence over an interface default with the same compatible signature. Interface defaults are fallback implementations, not a mechanism to override existing class behavior.
+## <a id="default-method-conflict">Default Method Conflicts</a>
 
-## <a id="explicit-super-interface">InterfaceName.super dispatch</a>
-Inside an implementing class override, `InterfaceName.super.method()` can explicitly call a directly inherited interface default when language rules allow it. This is useful when the class combines defaults rather than replacing them completely.
+If two unrelated interfaces provide the same default signature:
 
-## <a id="diamond-interface">Diamond-shaped interface inheritance</a>
-A diamond is not inherently a problem. If both paths inherit the same most-specific default, the contract remains unambiguous. Conflicts arise when distinct unrelated defaults compete. This is multiple inheritance of type/behavior, not duplicated instance state.
+```java
+interface A {
+    default String name() { return "A"; }
+}
+
+interface B {
+    default String name() { return "B"; }
+}
+```
+
+a class implementing both must override `name()` and resolve the ambiguity itself.
+
+Java does not guess which behavior is intended when neither interface is more specific.
+
+## <a id="class-wins-rule">Class Methods Win</a>
+
+If the class hierarchy already provides a compatible concrete instance method, that class method takes precedence over an interface default.
+
+```text
+concrete class method
+→ wins
+
+interface default
+→ fallback when the class hierarchy supplies no implementation
+```
+
+Interface defaults therefore do not silently replace behavior inherited from classes.
+
+## <a id="explicit-super-interface">InterfaceName.super</a>
+
+When a class overrides a conflicting default, it may explicitly invoke a directly inherited interface default:
+
+```java
+@Override
+public String name() {
+    return A.super.name() + B.super.name();
+}
+```
+
+`InterfaceName.super.method()` lets a class combine default behavior instead of reimplementing everything.
+
+## <a id="diamond-interface">Diamond-Shaped Interface Inheritance</a>
+
+A diamond shape is not automatically ambiguous.
+
+If both paths ultimately inherit the same **most-specific** default method, the contract remains unambiguous. A conflict appears only when independent defaults compete and neither is more specific.
+
+The key mental model is:
+
+```text
+multiple interface inheritance
+→ combines types/contracts and possibly default behavior
+→ does not duplicate instance state like multiple class inheritance would
+```
+
+After this module, the first design question should be **what relationship are we modeling?** Shared state/partial implementation points toward an abstract class; a flexible capability contract points toward an interface.

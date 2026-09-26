@@ -1,16 +1,47 @@
-# Object Aliasing and Mutability
+# Aliasing and Mutability
 
-## <a id="aliasing-model">Multiple references to one mutable object</a>
-Aliasing exists when multiple references identify the same object. With immutable objects this is usually harmless; with mutable objects, a mutation through one alias becomes visible through the others. Reason about identity and ownership, not just variable names.
+Aliasing occurs when multiple references point to the same object. With immutable values this is usually safe. With mutable objects, a change through one alias may appear unexpectedly elsewhere.
+
+## <a id="aliasing-model">Multiple References, One Object</a>
 
 ```java
 List<String> a = new ArrayList<>();
 List<String> b = a;
-b.add("x"); // a now also observes "x"
+
+b.add("x");
+System.out.println(a); // [x]
 ```
 
-## <a id="shared-mutable-state">Shared mutable state consequences</a>
-Shared mutable state increases coupling because a caller can observe changes caused elsewhere. It complicates invariants, testing, caching, concurrency, and reasoning about who may modify data. Encapsulation, immutability, ownership rules, and copies reduce this uncertainty.
+Assignment did not copy the collection; it copied the reference.
 
-## <a id="aliasing-in-collections">Aliasing through collections and returned references</a>
-Returning an internal mutable collection, storing a caller-provided mutable object directly, or exposing arrays can leak aliases across an API boundary. An unmodifiable wrapper prevents mutation through that wrapper but may still reflect source mutation; a defensive copy changes ownership semantics.
+This connects directly to Java pass-by-value: a method receives a copy of the reference value and can therefore mutate the same object.
+
+## <a id="shared-mutable-state">Shared Mutable State</a>
+
+Shared mutable state complicates reasoning because several locations may change the same object.
+
+Typical consequences include:
+
+- invariants broken outside the owner;
+- order-dependent tests;
+- concurrency races;
+- caches/views changing indirectly;
+- unclear mutation responsibility.
+
+Mutability is not inherently wrong; unclear ownership is the bigger problem.
+
+## <a id="aliasing-in-collections">Collection Aliasing</a>
+
+A getter returning an internal mutable collection leaks the reference:
+
+```java
+List<String> getRoles() {
+    return roles;
+}
+```
+
+Callers can mutate internal state without going through the owner's rules.
+
+The same problem occurs when a constructor stores a caller-owned mutable input directly.
+
+The final chapter addresses this with immutability and defensive copying.

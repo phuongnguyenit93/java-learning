@@ -1,16 +1,50 @@
 # BigDecimal
 
-## <a id="big-decimal-model">BigDecimal unscaled value and scale</a>
-`BigDecimal` models a decimal value as an arbitrary-precision integer plus a scale. Conceptually, value = unscaledValue × 10^-scale. Scale is part of representation, so `1.0` and `1.00` can be numerically equal while having different representations.
+`BigDecimal` is useful when the domain needs **explicit decimal semantics**, such as money, rates, or calculations where decimal `0.1` must mean exactly that decimal quantity.
 
-## <a id="big-decimal-construction">String/valueOf/double construction</a>
-Prefer decimal text or `BigDecimal.valueOf(double)` when starting from a decimal-looking floating value. `new BigDecimal(0.1)` captures the exact binary `double` value, which is usually not the decimal value a human intended.
+## <a id="big-decimal-model">BigDecimal Model</a>
 
-```java
-new BigDecimal("0.1");     // exact decimal 0.1
-BigDecimal.valueOf(0.1);   // uses canonical double string form
-new BigDecimal(0.1);       // exact binary-double value converted to decimal
+A `BigDecimal` can be understood through an unscaled value and a scale.
+
+For `123.45`:
+
+```text
+unscaled value = 12345
+scale = 2
 ```
 
-## <a id="big-decimal-arithmetic">Arithmetic and non-terminating division</a>
-BigDecimal arithmetic is exact unless a precision/rounding policy is requested. Division whose decimal expansion is non-terminating throws `ArithmeticException` when no rounding mode or `MathContext` is supplied. Monetary/business code should make scale and rounding rules explicit rather than relying on accidental defaults.
+Scale is part of the representation, so `1.0` and `1.00` can have the same numerical value but different representations.
+
+## <a id="big-decimal-construction">Constructing BigDecimal</a>
+
+For exact decimal literals, prefer:
+
+```java
+new BigDecimal("0.1")
+```
+
+or commonly:
+
+```java
+BigDecimal.valueOf(0.1)
+```
+
+Avoid `new BigDecimal(0.1)` when you expect exact decimal `0.1`, because the constructor receives the already-approximate binary `double` value.
+
+## <a id="big-decimal-arithmetic">Arithmetic and Division</a>
+
+`BigDecimal` is immutable:
+
+```java
+amount = amount.add(fee);
+```
+
+Some decimal divisions do not terminate:
+
+```java
+BigDecimal.ONE.divide(new BigDecimal("3"));
+```
+
+Without an explicit rounding/precision policy, such a division may throw `ArithmeticException`.
+
+`BigDecimal` deliberately does not invent the business rounding rule for you. The next chapter separates precision from scale.

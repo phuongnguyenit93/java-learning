@@ -1,22 +1,87 @@
-# Unicode, char and Code Points
+# Unicode and Code Points
+
+A common Java text misconception is that **one `char` always equals one user-visible character**. Modern Unicode makes that false.
 
 ## <a id="utf16-char-model">Java char and UTF-16</a>
-A Java `char` is a 16-bit UTF-16 code unit, not a guaranteed complete Unicode character. Basic Multilingual Plane code points often fit in one char; supplementary code points require a surrogate pair. String `length()` counts UTF-16 code units.
 
-## <a id="code-point">Unicode code point</a>
-A code point is a Unicode scalar/value identifier such as U+0041 or U+1F600. Java provides `codePointAt`, `codePointCount`, `offsetByCodePoints`, and `String.codePoints()` for code-point-aware processing.
+`char` is a 16-bit **UTF-16 code unit**.
 
-## <a id="surrogate-pairs">Surrogate pairs</a>
-Supplementary code points are encoded in UTF-16 using a high-surrogate plus low-surrogate pair. Indexing a String by `charAt` can split the pair, so algorithms that iterate user text character-by-character must decide whether code units or code points are the intended unit.
+Many Unicode characters in the Basic Multilingual Plane fit in one code unit, while supplementary characters require two.
 
-## <a id="unicode-iteration">Correct code-point iteration</a>
-Use `codePoints()` or advance by `Character.charCount(codePoint)`/`offsetByCodePoints` instead of blindly incrementing a char index when supplementary characters matter. Code-point correctness still does not equal user-perceived-character correctness.
+Therefore `String.length()` returns a UTF-16 code-unit count, not necessarily a Unicode code-point count or a user-perceived character count.
 
-## <a id="code-unit-code-point-grapheme">UTF-16 code unit vs code point vs grapheme cluster</a>
-A code unit is storage; a code point is a Unicode abstract character value; a grapheme cluster approximates one user-perceived character and may contain multiple code points, such as base letter + combining mark or emoji sequences. Cursor movement, truncation, and UI length may need grapheme-aware logic rather than `length()` or code-point count alone.
+## <a id="code-point">Unicode Code Point</a>
 
-## <a id="unicode-normalization">Unicode normalization forms and Normalizer</a>
-Unicode permits different code-point sequences to represent canonically equivalent text. `java.text.Normalizer` supports forms such as NFC/NFD (canonical composition/decomposition) and NFKC/NFKD (compatibility normalization). Choose normalization based on domain; compatibility normalization can intentionally change distinctions.
+A **code point** is a Unicode scalar/code value such as `U+0041` or `U+1F600`.
 
-## <a id="canonical-equivalence">Canonical equivalence and String equality</a>
-Precomposed `é` (U+00E9) and `e` + combining acute (U+0065 U+0301) can look the same but are different UTF-16/code-point sequences, so ordinary `String.equals` is false before normalization. Normalize at a defined boundary when canonical equivalence is part of identifiers/search/data matching.
+Java commonly represents code points as `int` because the Unicode space is larger than one `char`.
+
+APIs such as `codePointCount` and `codePoints()` let code operate at that level.
+
+## <a id="surrogate-pairs">Surrogate Pairs</a>
+
+UTF-16 represents supplementary code points with a high-surrogate + low-surrogate pair.
+
+One emoji can therefore produce:
+
+```text
+String.length() == 2
+codePointCount(...) == 1
+```
+
+Iterating naïvely by `char` can split a valid code point in half.
+
+## <a id="unicode-iteration">Code-point Iteration</a>
+
+When the logic truly works with Unicode code points, use code-point-aware APIs:
+
+```java
+text.codePoints().forEach(cp -> ...);
+```
+
+or use `codePointAt` with `Character.charCount(cp)` when manually advancing an index.
+
+Choose the representation level that matches the question; not every String loop needs code-point iteration.
+
+## <a id="code-unit-code-point-grapheme">Code Unit vs Code Point vs Grapheme</a>
+
+Keep three levels separate:
+
+```text
+UTF-16 code unit
+→ storage unit behind basic char/String APIs
+
+Unicode code point
+→ Unicode coded value
+
+grapheme cluster
+→ what users often perceive as one displayed character
+```
+
+A grapheme cluster may contain several code points, such as a base letter plus combining mark or a multi-code-point emoji sequence.
+
+Even a code-point count is therefore not always the same as “characters visible to the user”.
+
+## <a id="unicode-normalization">Unicode Normalization</a>
+
+Visually equivalent text can use different code-point sequences. A precomposed accented character and a base character plus combining mark are a common example.
+
+`java.text.Normalizer` supports normalization forms such as NFC and NFD.
+
+Normalization is a policy decision for comparison/search/storage, not something every String operation should perform automatically.
+
+## <a id="canonical-equivalence">Canonical Equivalence</a>
+
+Two canonically equivalent Strings can still satisfy:
+
+```java
+a.equals(b) == false
+```
+
+when their code-point sequences differ.
+
+Normalizing both to the same form may make equality align with the use case.
+
+`String.equals` compares String sequences; it does not automatically apply Unicode normalization or linguistic equivalence.
+
+The next chapter moves from representation to pattern matching with regular expressions.

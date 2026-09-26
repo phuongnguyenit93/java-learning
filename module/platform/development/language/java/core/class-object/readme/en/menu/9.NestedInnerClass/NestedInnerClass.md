@@ -1,13 +1,54 @@
 # Nested and Inner Classes
 
-## <a id="static-nested-class">Static nested class</a>
-A static nested class is namespaced inside another class but has no implicit outer-instance reference. It behaves much like another top-level class with additional access/naming relationships to its enclosing class. Use it when a helper type logically belongs to the enclosing API but does not need an enclosing object.
+Placing one type inside another can express close conceptual organization or access to surrounding context. Different nested-class forms have very different semantics.
 
-## <a id="inner-class">Inner class and outer instance</a>
-A non-static member inner class is associated with an enclosing instance and can access its members, including private ones under Java nest access rules. Creating it normally requires an outer instance, and retaining the inner object can also retain the outer object.
+## <a id="static-nested-class">Static Nested Class</a>
 
-## <a id="local-anonymous-class">Local and anonymous classes</a>
-Local classes are declared inside a block; anonymous classes create an unnamed subtype/implementation at the expression site. They are useful for one-off behavior but can become noisy compared with lambdas when only a functional interface implementation is needed; full lambda semantics belong to the functional module.
+A static nested class does **not** implicitly retain an outer instance.
 
-## <a id="capture-semantics">Captured local variables</a>
-Local/anonymous classes can capture local variables only when those variables are final or effectively final. The captured value is stable even though referenced mutable objects may still mutate. This restriction avoids pretending a changing stack local is shared as a normal mutable variable.
+```java
+class Profile {
+    static class Builder { ... }
+}
+```
+
+It behaves much like an ordinary class but lives in the outer class's namespace. It is useful when the nested type is logically related but does not need a particular outer object's state.
+
+## <a id="inner-class">Inner Class</a>
+
+A non-static nested class is an inner class and is associated with an outer instance.
+
+```java
+class Order {
+    class LineView { ... }
+}
+```
+
+Each `LineView` belongs to a particular `Order` instance and may access outer-instance members.
+
+That convenience also creates a lifetime/coupling relationship: keeping the inner object may keep the outer object reachable.
+
+## <a id="local-anonymous-class">Local and Anonymous Classes</a>
+
+Local classes are declared inside a block/method. Anonymous classes create an implementation/class instance directly in an expression without a reusable class name.
+
+They are useful for local behavior, though lambdas are often simpler when only a functional interface implementation is required.
+
+Anonymous classes still have their own object/`this` semantics; lambdas differ and belong in the functional-programming material.
+
+## <a id="capture-semantics">Captured Local Variables</a>
+
+Local/anonymous classes may capture local variables only when those variables are `final` or effectively final.
+
+```java
+int limit = 10;
+Runnable r = new Runnable() {
+    public void run() {
+        System.out.println(limit);
+    }
+};
+```
+
+The capture follows value-oriented language rules rather than sharing an arbitrarily mutable local slot.
+
+The next chapter looks at the common superclass of all ordinary reference types: `java.lang.Object`.

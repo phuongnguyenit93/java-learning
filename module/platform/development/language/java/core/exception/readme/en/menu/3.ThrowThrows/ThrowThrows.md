@@ -1,16 +1,73 @@
 # throw and throws
 
-## <a id="throw-statement">throw statement</a>
-`throw expression` transfers control by throwing one `Throwable` object. Code after an unconditional throw in the same path is unreachable. Throw the most meaningful exception object available and include context without leaking sensitive data.
+The keywords are related but serve different roles:
 
-## <a id="throws-clause">throws declaration</a>
-A `throws` clause declares exception types a method may propagate under the checked-exception rules. It does not throw anything by itself and it does not guarantee that the method will actually fail. Unchecked exceptions may be documented in `throws` but need not be declared for compilation.
+```text
+throw
+→ at runtime, throw one Throwable instance
 
-## <a id="precise-rethrow">Precise rethrow typing</a>
-Java's compiler can infer a narrower set of checked exceptions when a catch parameter is effectively final and the caught values came from known alternatives. Rethrowing the catch variable can therefore preserve a more precise `throws` contract than its syntactic catch type suggests.
+throws
+→ in a method declaration, advertise a possible checked failure
+```
 
-## <a id="override-throws-rules">Overriding methods may not broaden checked exceptions</a>
-An overriding method cannot add a broader/new checked exception that the parent contract did not allow. Otherwise code compiled against the parent type could encounter a checked failure it was never required to handle.
+## <a id="throw-statement">throw</a>
 
-## <a id="checked-exception-narrowing">Overrides may keep, narrow or remove checked exceptions</a>
-A child override may declare the same checked exception, a subtype, or no checked exception. Unchecked exceptions are not constrained by the same rule. This is part of behavioral substitutability: using the subtype through a parent reference must remain compatible with the parent's checked contract.
+`throw` immediately transfers control away from the current path:
+
+```java
+if (amount < 0) {
+    throw new IllegalArgumentException("amount must be >= 0");
+}
+```
+
+Execution does not continue with the next statement in that block. The runtime searches for a matching `catch`; otherwise the exception propagates upward.
+
+## <a id="throws-clause">throws</a>
+
+`throws` belongs to the method declaration:
+
+```java
+String load(Path path) throws IOException {
+    ...
+}
+```
+
+It does not throw anything by itself. It declares that a checked exception may escape and become the caller's responsibility.
+
+## <a id="precise-rethrow">Precise Rethrow</a>
+
+Java can preserve narrower checked types when a caught value is rethrown without being reassigned:
+
+```java
+try {
+    run();
+} catch (IOException | SQLException ex) {
+    throw ex;
+}
+```
+
+The compiler can keep the specific checked types rather than forcing a broader declaration.
+
+## <a id="override-throws-rules">throws Rules When Overriding</a>
+
+An overriding method may not broaden the parent's checked-exception contract.
+
+If the parent declares:
+
+```java
+void run() throws IOException;
+```
+
+the child may not replace it with `throws Exception`, because callers compiled against the parent contract are not prepared for that broader checked failure.
+
+## <a id="checked-exception-narrowing">Narrowing Checked Exceptions</a>
+
+An overriding method may:
+
+- keep the same checked exception;
+- declare a narrower subtype;
+- remove the checked exception entirely.
+
+Unchecked exceptions are not constrained by the same compile-time rule.
+
+Next we follow an exception that is thrown but not handled locally.

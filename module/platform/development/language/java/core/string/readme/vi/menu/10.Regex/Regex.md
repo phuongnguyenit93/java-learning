@@ -1,13 +1,53 @@
-# Biểu thức chính quy
+# Regular biểu thức
 
-## <a id="pattern-matcher">Mental model Pattern/Matcher</a>
-`Pattern` là compiled regex; `Matcher` áp pattern vào input và giữ match state. Reusable pattern nên compile một lần khi phù hợp. `matches()` yêu cầu toàn region match; `find()` tìm matching subsequence tiếp theo.
+Regular biểu thức (**regex**) là một ngôn ngữ mô tả pattern trên text. Nó hữu ích cho validation, search, extraction và replacement khi bài toán thật sự mang tính pattern matching.
 
-## <a id="regex-groups">Group và capture</a>
-Parentheses tạo capturing group trừ khi dùng non-capturing form. Group có thể reference theo number/name và expose substring từ match thành công. Numbering theo opening parenthesis nên thêm capture có thể đổi index; named group dễ maintain hơn.
+## <a id="pattern-matcher">Pattern và Matcher</a>
 
-## <a id="regex-quantifiers">Greedy/reluctant quantifier</a>
-Greedy consume nhiều nhất rồi backtrack; reluctant consume ít nhất nhưng vẫn cho phần còn lại match; possessive không trả input đã consume. Khác biệt này ảnh hưởng cả result lẫn performance.
+Java tách compiled pattern và trạng thái matching:
 
-## <a id="regex-performance">Backtracking và performance pitfall</a>
-Nested ambiguous quantifier có thể gây catastrophic backtracking với adversarial input. Regex mạnh cho lexical pattern nhưng không luôn phù hợp parser nested/recursive format. Bound input, ưu tiên pattern deterministic đơn giản và benchmark/redesign regex chạy trên untrusted large text.
+```java
+Pattern pattern = Pattern.compile("(\\d+)-(\\w+)");
+Matcher matcher = pattern.matcher(input);
+```
+
+`Pattern` mô tả regex đã compile; `Matcher` gắn pattern với một đầu vào cụ thể và giữ trạng thái tìm kiếm/match.
+
+Compile lại cùng regex trong loop nóng có thể tốn chi phí không cần thiết; có thể reuse `Pattern` khi phù hợp.
+
+## <a id="regex-groups">Group và Capture</a>
+
+Parentheses có thể tạo capturing group:
+
+```regex
+(\d+)-(\w+)
+```
+
+Sau khi match, `group(1)`, `group(2)` lấy phần text được capture tương ứng.
+
+Nếu chỉ cần grouping mà không cần capture, non-capturing group `(?:...)` có thể thể hiện intent rõ hơn.
+
+Named group cũng hữu ích khi regex phức tạp và tên mang ý nghĩa domain.
+
+## <a id="regex-quantifiers">Greedy và Reluctant Quantifier</a>
+
+Quantifier như `*`, `+`, `{m,n}` mặc định thường greedy: cố lấy nhiều đầu vào nhất rồi backtrack nếu cần.
+
+Reluctant variant như `*?`, `+?` bắt đầu với ít đầu vào hơn rồi mở rộng khi cần.
+
+Sự khác biệt này ảnh hưởng kết quả khi nhiều vị trí match có thể hợp lệ. Hãy đọc regex cùng đầu vào example thay vì chỉ nhìn cú pháp riêng lẻ.
+
+## <a id="regex-performance">Backtracking và Hiệu năng</a>
+
+Một số pattern có thể tạo lượng backtracking rất lớn trên đầu vào xấu, đặc biệt khi nested quantifier/ambiguous alternative kết hợp không cẩn thận.
+
+Với regex nhận đầu vào không tin cậy:
+
+- giữ pattern đơn giản;
+- giới hạn đầu vào khi phù hợp;
+- tránh cấu trúc dễ gây catastrophic backtracking;
+- benchmark/test worst-case thay vì chỉ test đầu vào match đẹp.
+
+Regex rất mạnh nhưng không phải parser tốt cho mọi grammar phức tạp.
+
+chương cuối của module nói về **cách viết String nhiều dòng trong source**, không phải một kiểu String mới.
