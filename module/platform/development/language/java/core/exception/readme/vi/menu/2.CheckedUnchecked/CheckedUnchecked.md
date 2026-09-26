@@ -1,18 +1,20 @@
 # Checked và Unchecked Exception
 
-Sau khi hiểu `Throwable`, câu hỏi tiếp theo là: **lỗi nào trở thành một phần của hợp đồng method mà compiler buộc bên gọi phải nhìn thấy?**
+Sau khi hiểu `Throwable`, câu hỏi tiếp theo là: **failure nào trở thành một phần của hợp đồng method mà compiler buộc bên gọi phải nhìn thấy?**
+
+Checked/unchecked là phân loại về **quy tắc compile-time**, không phải thước đo “lỗi nặng” hay “lỗi nhẹ”.
 
 ## <a id="checked-exception">Checked Exception</a>
 
-Checked exception là exception mà compiler yêu cầu method phải:
+Checked exception là exception chịu quy tắc **catch or declare**.
+
+Nếu một checked exception có thể thoát khỏi method, code phải:
 
 ```text
-catch
+catch nó
 hoặc
-declare bằng throws
+declare nó bằng throws
 ```
-
-nếu exception đó có thể thoát ra khỏi method.
 
 Ví dụ:
 
@@ -22,41 +24,165 @@ String read(Path path) throws IOException {
 }
 ```
 
-`IOException` trở thành một phần của hợp đồng ở compile time. Bên gọi phải quyết định xử lý, chuyển đổi hoặc tiếp tục truyền lỗi lên trên.
+`Files.readString(path)` có thể ném `IOException`. Nếu `read()` không catch lỗi đó, `read()` phải công bố nó trong `throws`.
 
-### VÌ SAO
+Bên gọi tiếp tục phải đưa ra quyết định:
 
-Checked exception hữu ích khi lỗi là một khả năng mà bên gọi có thể được kỳ vọng xử lý có chủ ý, ví dụ lỗi I/O hoặc lỗi tại một số ranh giới API.
+```java
+try {
+    String content = read(path);
+} catch (IOException ex) {
+    recover(ex);
+}
+```
 
-Nhược điểm là nếu dùng quá nhiều checked exception cho những lỗi bên gọi không thể xử lý thực tế, hợp đồng trở nên nặng và sinh nhiều đoạn mã chỉ để khai báo hoặc truyền tiếp exception.
+hoặc:
+
+```java
+String load(Path path) throws IOException {
+    return read(path);
+}
+```
+
+### VÌ SAO JAVA CÓ CHECKED EXCEPTION?
+
+Ý tưởng của checked exception là đưa một nhóm failure vào **compile-time contract**:
+
+```text
+method có một khả năng failure mà caller được kỳ vọng phải nhận biết
+        ↓
+compiler bắt caller xử lý hoặc tiếp tục công bố
+```
+
+Nó hữu ích ở những boundary mà caller thực sự có thể chọn hành động có ý nghĩa, ví dụ đổi file khác, báo lỗi nhập liệu, chuyển sang nguồn dự phòng hoặc chấm dứt thao tác theo cách có chủ ý.
+
+Nhược điểm xuất hiện khi caller không có khả năng phục hồi thực tế. Nếu mọi tầng đều chỉ viết:
+
+```java
+throws SomeCheckedException
+```
+
+mà không có thêm quyết định thiết kế nào, checked contract có thể trở thành boilerplate thay vì thông tin hữu ích.
 
 ## <a id="unchecked-exception">Unchecked Exception</a>
 
-Các exception thuộc `RuntimeException` là unchecked. Compiler không buộc bên gọi phải catch hoặc khai báo chúng.
+Unchecked exception không chịu quy tắc catch-or-declare.
 
-Ví dụ phổ biến:
+Hai nhóm chính:
+
+```text
+RuntimeException và các subclass
+Error và các subclass
+```
+
+Trong application code, khi nói “unchecked exception” ta thường gặp nhánh `RuntimeException`:
 
 - `NullPointerException`;
 - `IllegalArgumentException`;
 - `IllegalStateException`;
 - `IndexOutOfBoundsException`.
 
-Unchecked không có nghĩa là “không cần quan tâm”. Nó chỉ có nghĩa là **compiler không bắt buộc phải catch hoặc khai báo theo quy tắc của checked exception**.
+Ví dụ:
 
-Unchecked exception thường phù hợp với lỗi lập trình, precondition bị vi phạm, trạng thái không hợp lệ hoặc lỗi mà bên gọi gần đó không có chiến lược khôi phục hợp lý.
+```java
+void withdraw(long amount) {
+    if (amount < 0) {
+        throw new IllegalArgumentException("amount must be >= 0");
+    }
+}
+```
+
+Method không bắt buộc phải viết:
+
+```java
+void withdraw(long amount) throws IllegalArgumentException
+```
+
+Dù khai báo unchecked exception trong `throws` là **hợp lệ về cú pháp**, compiler không yêu cầu làm vậy.
+
+### Unchecked không có nghĩa là “không cần xử lý”
+
+Unchecked chỉ nói:
+
+```text
+compiler
+→ không ép caller catch hoặc declare
+```
+
+Nó không nói:
+
+```text
+runtime
+→ lỗi không quan trọng
+```
+
+`NullPointerException` vẫn có thể làm request/job thất bại. Điểm khác biệt là API không bắt mọi caller thể hiện quyết định đó bằng cú pháp checked exception.
+
+Unchecked exception thường phù hợp khi failure liên quan tới:
+
+- vi phạm precondition;
+- trạng thái object không hợp lệ;
+- lỗi lập trình;
+- failure mà caller gần đó không có chiến lược phục hồi hợp lý.
 
 ## <a id="checked-vs-unchecked-design">Chọn Checked hay Unchecked?</a>
 
-Không nên chọn chỉ bằng câu “business exception = checked” hay “modern Java = unchecked”. Hãy hỏi:
+Không nên dùng các khẩu quyết máy móc như:
 
 ```text
-Bên gọi có khả năng và trách nhiệm xử lý lỗi này không?
-        ↓
-Lỗi có cần xuất hiện rõ trong hợp đồng ở compile time không?
-        ↓
-Việc bắt bên gọi catch/declare có làm API rõ hơn hay chỉ tạo mã lặp theo khuôn mẫu?
+business exception = checked
+modern Java = unchecked
 ```
 
-Checked exception và unchecked exception thể hiện hai lựa chọn khác nhau về **chính sách lỗi của API**. Cả hai đều có chỗ dùng phù hợp.
+Thay vào đó, bắt đầu từ trách nhiệm của caller.
 
-Chương tiếp theo đi vào hai keyword dễ nhầm: `throw` và `throws`.
+### CÂU HỎI THIẾT KẾ
+
+```text
+Caller có khả năng xử lý failure này theo cách có ý nghĩa không?
+        ↓
+Có cần bắt mọi caller phải quyết định ở compile time không?
+        ↓
+Thông tin trong throws làm API rõ hơn hay chỉ tạo boilerplate?
+        ↓
+Failure này là một khả năng vận hành có thể phục hồi,
+hay phản ánh việc vi phạm contract/invariant?
+```
+
+Ví dụ, cùng là “không đọc được dữ liệu” nhưng policy có thể khác:
+
+```text
+desktop tool đọc file do user chọn
+→ IOException có thể giúp caller yêu cầu user chọn lại file
+
+internal service gọi repository
+→ có thể translate sang application exception và xử lý ở boundary cao hơn
+```
+
+Không có lựa chọn đúng cho mọi hệ thống. Điều quan trọng là **loại exception phải phục vụ handling policy của API**.
+
+### SO SÁNH COMPILE-TIME
+
+```java
+void checked() throws IOException {
+    throw new IOException("disk failure");
+}
+
+void unchecked() {
+    throw new IllegalStateException("invalid state");
+}
+```
+
+Caller của `checked()` buộc phải catch hoặc declare `IOException`. Caller của `unchecked()` không bị compiler áp quy tắc đó.
+
+### GHI NHỚ
+
+```text
+checked
+→ compiler buộc failure xuất hiện trong quyết định của caller
+
+unchecked
+→ compiler không buộc, nhưng failure vẫn tồn tại ở runtime
+```
+
+Chương tiếp theo tách hai keyword dễ nhầm: `throw` thực sự **ném một Throwable**, còn `throws` **mô tả khả năng exception thoát khỏi method**.

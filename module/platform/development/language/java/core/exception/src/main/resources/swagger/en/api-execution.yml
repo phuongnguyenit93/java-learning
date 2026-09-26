@@ -1,74 +1,106 @@
 ExceptionDesignController:
   translateBoundary():
-    execution: '<p><strong>Concept:</strong> Translate exceptions at abstraction boundaries.</p><ol><li>The
-      endpoint runs a bounded deterministic example inside <code>ExceptionDesignController#translateBoundary()</code>.</li><li>Translate
-      low-level failure while preserving cause/context.<pre><code>@GetMapping(&quot;/translate&quot;)
-      public Map&lt;String,Object&gt; translateBoundary(){ try{repository();return
-      Map.of();}catch(OrderServiceException e){return Map.of(&quot;translatedType&quot;,e.getClass().getSimpleName(),&quot;message&quot;,e.getMessage(),&quot;preservedCause&quot;,e.getCause().getClass().getSimpleName());}
-      }</code></pre></li><li>Inspect the response fields together: they are the observable
-      evidence for the rule rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
-      connect the observed result back to the linked README section before generalizing
-      the behavior.</p>'
+    execution: |-
+      <p><strong>Concept:</strong> exception translation changes failure vocabulary at an abstraction boundary while preserving the cause so diagnostics remain connected.</p>
+      <ol>
+        <li><strong>Flow:</strong> the endpoint calls <code>repository()</code>. That method creates a low-level <code>IllegalStateException("storage unavailable")</code>, catches it, and wraps it in <code>OrderServiceException("cannot load order 42", cause)</code>. The endpoint catches the wrapper and returns diagnostic fields.</li>
+        <li><strong>Code evidence:</strong><pre><code>private void repository() {
+          try {
+              throw new IllegalStateException("storage unavailable");
+          } catch (IllegalStateException e) {
+              throw new OrderServiceException("cannot load order 42", e);
+          }
+      }</code></pre></li>
+        <li><strong>Observation:</strong> the response contains <code>translatedType=OrderServiceException</code>, <code>message=cannot load order 42</code>, and <code>preservedCause=IllegalStateException</code>.</li>
+        <li><strong>Meaning:</strong> callers receive higher-level vocabulary while the original technical failure remains in the causal chain.</li>
+      </ol>
+      <p><strong>Conclusion:</strong> translate where the abstraction truly changes, and preserve the cause whenever the root failure still matters for diagnosis.</p>
     usage: true
 FinallyController:
   returnInteraction():
-    execution: '<p><strong>Concept:</strong> return/throw interactions with finally.</p><ol><li>The
-      endpoint runs a bounded deterministic example inside <code>FinallyController#returnInteraction()</code>.</li><li>Show
-      why return/throw in finally is dangerous.<pre><code>@GetMapping(&quot;/return-interaction&quot;)
-      public Map&lt;String,Object&gt; returnInteraction(){ return Map.of(&quot;normalReturnWithFinally&quot;,safeReturn(),&quot;returnInsideFinally&quot;,dangerousReturn(),&quot;warning&quot;,&quot;a
-      return in finally replaces the pending return/exception&quot;); }</code></pre></li><li>Inspect
-      the response fields together: they are the observable evidence for the rule
-      rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
-      connect the observed result back to the linked README section before generalizing
-      the behavior.</p>'
+    execution: |-
+      <p><strong>Concept:</strong> <code>finally</code> executes before a pending return completes, and abrupt completion created by <code>finally</code> can replace the earlier outcome.</p>
+      <ol>
+        <li><strong>Flow:</strong> <code>safeReturn()</code> prepares return value <code>1</code>, runs a finally block that does not return, and still produces <code>1</code>. <code>dangerousReturn()</code> also prepares <code>1</code>, but its finally block returns <code>2</code>.</li>
+        <li><strong>Code evidence:</strong><pre><code>private int safeReturn() {
+          try { return 1; }
+          finally { int ignored = 0; }
+      }
+
+      private int dangerousReturn() {
+          try { return 1; }
+          finally { return 2; }
+      }</code></pre></li>
+        <li><strong>Observation:</strong> the response reports <code>normalReturnWithFinally=1</code> but <code>returnInsideFinally=2</code>.</li>
+        <li><strong>Meaning:</strong> finally is not merely "extra cleanup"; if it returns or throws, it can replace a pending return or exception. This endpoint directly proves the return case.</li>
+      </ol>
+      <p><strong>Conclusion:</strong> use <code>finally</code> for exit work and avoid creating a new outcome from inside it.</p>
     usage: true
 PropagationController:
   propagate():
-    execution: '<p><strong>Concept:</strong> Stack unwinding and propagation.</p><ol><li>The
-      endpoint runs a bounded deterministic example inside <code>PropagationController#propagate()</code>.</li><li>Return
-      bounded causal-chain trace from nested calls.<pre><code>@GetMapping(&quot;/stack&quot;)
-      public Map&lt;String,Object&gt; propagate(){ try{levelOne();return Map.of();}catch(IllegalStateException
-      e){return Map.of(&quot;type&quot;,e.getClass().getSimpleName(),&quot;message&quot;,e.getMessage(),&quot;topFrames&quot;,Arrays.stream(e.getStackTrace()).limit(3).map(StackTraceElement::getMethodName).toList());}
-      }</code></pre></li><li>Inspect the response fields together: they are the observable
-      evidence for the rule rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
-      connect the observed result back to the linked README section before generalizing
-      the behavior.</p>'
+    execution: |-
+      <p><strong>Concept:</strong> an exception not handled locally propagates through callers; its stack trace records the execution path near the throw site.</p>
+      <ol>
+        <li><strong>Flow:</strong> the endpoint calls <code>levelOne()</code>, which calls <code>levelTwo()</code>; <code>levelTwo()</code> throws <code>IllegalStateException("boom")</code>. Neither intermediate method handles it, so the failure returns to <code>propagate()</code>.</li>
+        <li><strong>Code evidence:</strong><pre><code>private void levelOne() { levelTwo(); }
+
+      private void levelTwo() {
+          throw new IllegalStateException("boom");
+      }</code></pre></li>
+        <li><strong>Observation:</strong> the response contains <code>type=IllegalStateException</code>, <code>message=boom</code>, and <code>topFrames</code> beginning with methods near the throw site such as <code>levelTwo</code>, <code>levelOne</code>, and <code>propagate</code>.</li>
+        <li><strong>Meaning:</strong> intermediate frames do not recover automatically; control unwinds until a handler is found. The stack trace is diagnostic evidence, not a stable business contract.</li>
+      </ol>
+      <p><strong>Conclusion:</strong> propagation separates where a failure originates from where enough context exists to handle it.</p>
     usage: true
   wrapCause():
-    execution: '<p><strong>Concept:</strong> Wrapping with preserved cause.</p><ol><li>The
-      endpoint runs a bounded deterministic example inside <code>PropagationController#wrapCause()</code>.</li><li>Compare
-      preserved vs lost cause.<pre><code>@GetMapping(&quot;/wrap-cause&quot;) public
-      Map&lt;String,Object&gt; wrapCause(){ try{load();return Map.of();}catch(OrderReadException
-      e){return Map.of(&quot;wrapper&quot;,e.getClass().getSimpleName(),&quot;message&quot;,e.getMessage(),&quot;cause&quot;,e.getCause().getClass().getSimpleName(),&quot;causeMessage&quot;,e.getCause().getMessage());}
-      }</code></pre></li><li>Inspect the response fields together: they are the observable
-      evidence for the rule rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
-      connect the observed result back to the linked README section before generalizing
-      the behavior.</p>'
+    execution: |-
+      <p><strong>Concept:</strong> exception chaining lets code change abstraction type without losing the original failure stored as <code>cause</code>.</p>
+      <ol>
+        <li><strong>Flow:</strong> <code>load()</code> deliberately creates <code>IllegalArgumentException("low-level")</code>, catches it, and throws <code>OrderReadException("cannot read order", cause)</code>. The endpoint catches the wrapper.</li>
+        <li><strong>Code evidence:</strong><pre><code>private void load() {
+          try {
+              throw new IllegalArgumentException("low-level");
+          } catch (IllegalArgumentException e) {
+              throw new OrderReadException("cannot read order", e);
+          }
+      }</code></pre></li>
+        <li><strong>Observation:</strong> the response exposes <code>wrapper=OrderReadException</code>, <code>message=cannot read order</code>, <code>cause=IllegalArgumentException</code>, and <code>causeMessage=low-level</code>.</li>
+        <li><strong>Meaning:</strong> the wrapper serves the caller-facing abstraction while the cause preserves technical diagnostics.</li>
+      </ol>
+      <p><strong>Conclusion:</strong> when wrapping at an abstraction boundary, preserve the cause so translation does not become a lost-cause anti-pattern.</p>
     usage: true
 ResourceController:
   closeOrder():
-    execution: '<p><strong>Concept:</strong> Reverse resource close order.</p><ol><li>The
-      endpoint runs a bounded deterministic example inside <code>ResourceController#closeOrder()</code>.</li><li>Trace
-      reverse close order.<pre><code>@GetMapping(&quot;/close-order&quot;) public
-      Map&lt;String,Object&gt; closeOrder(){ List&lt;String&gt; trace=new ArrayList&lt;&gt;();
-      try(DemoResource a=new DemoResource(&quot;A&quot;,trace,false);DemoResource
-      b=new DemoResource(&quot;B&quot;,trace,false)){trace.add(&quot;body&quot;);}
-      return Map.of(&quot;trace&quot;,trace); }</code></pre></li><li>Inspect the response
-      fields together: they are the observable evidence for the rule rather than a
-      benchmark or production policy.</li></ol><p><strong>Conclusion:</strong> connect
-      the observed result back to the linked README section before generalizing the
-      behavior.</p>'
+    execution: |-
+      <p><strong>Concept:</strong> try-with-resources initializes resources in declaration order and closes successfully initialized resources in reverse order.</p>
+      <ol>
+        <li><strong>Flow:</strong> each <code>DemoResource</code> constructor records its open event: A then B. The body records <code>body</code>. When the block exits, Java closes B and then A.</li>
+        <li><strong>Code evidence:</strong><pre><code>try (DemoResource a = new DemoResource("A", trace, false);
+           DemoResource b = new DemoResource("B", trace, false)) {
+          trace.add("body");
+      }</code></pre></li>
+        <li><strong>Observation:</strong> the expected trace is <code>[open-A, open-B, body, close-B, close-A]</code>.</li>
+        <li><strong>Meaning:</strong> close order behaves like LIFO, which fits the common case where later resources wrap or depend on earlier ones.</li>
+      </ol>
+      <p><strong>Conclusion:</strong> TWR makes lifecycle and close order explicit instead of forcing code to coordinate several nested <code>finally</code> blocks.</p>
     usage: true
   suppressed():
-    execution: '<p><strong>Concept:</strong> Primary vs suppressed exception.</p><ol><li>The
-      endpoint runs a bounded deterministic example inside <code>ResourceController#suppressed()</code>.</li><li>Primary
-      body failure plus close failure and getSuppressed.<pre><code>@GetMapping(&quot;/suppressed&quot;)
-      public Map&lt;String,Object&gt; suppressed(){ List&lt;String&gt; trace=new ArrayList&lt;&gt;();
-      try(DemoResource r=new DemoResource(&quot;R&quot;,trace,true)){trace.add(&quot;body-fails&quot;);throw
-      new IllegalArgumentException(&quot;primary&quot;);}catch(Exception e){return
-      Map.of(&quot;primary&quot;,e.getClass().getSimpleName(),&quot;message&quot;,e.getMessage(),&quot;suppressed&quot;,Arrays.stream(e.getSuppressed()).map(x-&gt;x.getClass().getSimpleName()+&quot;:&quot;+x.getMessage()).toList(),&quot;trace&quot;,trace);}
-      }</code></pre></li><li>Inspect the response fields together: they are the observable
-      evidence for the rule rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
-      connect the observed result back to the linked README section before generalizing
-      the behavior.</p>'
+    execution: |-
+      <p><strong>Concept:</strong> when the try body has already failed and <code>close()</code> also fails, the body failure stays primary while the cleanup failure becomes suppressed.</p>
+      <ol>
+        <li><strong>Flow:</strong> resource R records <code>open-R</code>; the body records <code>body-fails</code> and throws <code>IllegalArgumentException("primary")</code>; during unwinding, <code>close()</code> records <code>close-R</code> and throws <code>IllegalStateException("close-R-failed")</code>.</li>
+        <li><strong>Code evidence:</strong><pre><code>try (DemoResource r = new DemoResource("R", trace, true)) {
+          trace.add("body-fails");
+          throw new IllegalArgumentException("primary");
+      } catch (Exception e) {
+          return Map.of(
+              "primary", e.getClass().getSimpleName(),
+              "suppressed", Arrays.stream(e.getSuppressed()).toList(),
+              "trace", trace
+          );
+      }</code></pre></li>
+        <li><strong>Observation:</strong> the primary exception remains <code>IllegalArgumentException</code>; the suppressed list contains R's close failure; the trace shows <code>open-R → body-fails → close-R</code>.</li>
+        <li><strong>Meaning:</strong> a cleanup failure must not hide the failure that already determined the main outcome. <code>getSuppressed()</code> preserves the extra diagnostic evidence.</li>
+      </ol>
+      <p><strong>Conclusion:</strong> suppression is a core part of try-with-resources failure-preservation semantics, not incidental metadata.</p>
     usage: true

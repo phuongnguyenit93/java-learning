@@ -1,24 +1,24 @@
 ExceptionDesignController:
   description: |-
-    <h2>Exception Design</h2>
-    <p>Các thí nghiệm Java Core có thể chạy để quan sát Translate exception tại abstraction boundary.</p>
+    <h2>Thiết kế Exception và Abstraction Boundary</h2>
+    <p>Nhóm thí nghiệm về exception translation: tầng cao đổi failure vocabulary nhưng vẫn giữ nguyên cause để không mất diagnostic chain.</p>
   readmeRelated:
     file: 9.ExceptionDesign/ExceptionDesign.md
 FinallyController:
   description: |-
-    <h2>Finally</h2>
-    <p>Các thí nghiệm Java Core có thể chạy để quan sát Tương tác return/throw với finally.</p>
+    <h2>Control Flow của finally</h2>
+    <p>Thí nghiệm tập trung vào pending return khi đi qua <code>finally</code>, đặc biệt trường hợp chính <code>finally</code> tạo một return mới và thay outcome trước đó.</p>
   readmeRelated:
     file: 5.TryCatchFinally/TryCatchFinally.md
 PropagationController:
   description: |-
-    <h2>Propagation</h2>
-    <p>Các thí nghiệm Java Core có thể chạy để quan sát Stack unwinding và propagation.</p>
+    <h2>Propagation, Stack Unwinding và Cause</h2>
+    <p>Các thí nghiệm cho thấy exception đi qua chuỗi lời gọi như thế nào và cách wrap một failure ở abstraction cao hơn mà vẫn bảo toàn cause gốc.</p>
   readmeRelated:
     file: 4.Propagation/Propagation.md
 ResourceController:
   description: |-
-    <h2>Resource</h2>
-    <p>Các thí nghiệm Java Core có thể chạy để quan sát Resource close theo thứ tự ngược.</p>
+    <h2>Try-with-resources và Cleanup Failure</h2>
+    <p>Các thí nghiệm quan sát lifecycle của nhiều resource: thứ tự open/close ngược nhau và cách try-with-resources giữ primary failure khi <code>close()</code> cũng thất bại.</p>
   readmeRelated:
     file: 6.TryWithResources/TryWithResources.md

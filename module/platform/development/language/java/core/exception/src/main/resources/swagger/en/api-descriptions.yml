@@ -1,9 +1,7 @@
 ExceptionDesignController:
   translateBoundary():
-    summary: Translate exceptions at abstraction boundaries
-    description: Runs a deterministic learning experiment for Translate exceptions
-      at abstraction boundaries. The response exposes concrete runtime evidence instead
-      of only describing the rule.
+    summary: Translate an exception while preserving its cause
+    description: Simulates an abstraction boundary where a low-level IllegalStateException becomes OrderServiceException. The response exposes the new type/message and proves that the original cause is still attached.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -13,25 +11,20 @@ ExceptionDesignController:
       file: 9.ExceptionDesign/ExceptionDesign.md
       anchor: exception-boundaries
     methodName: translateBoundary
-    params: [
-      ]
+    params: []
     path: com/example/learning/controller/ExceptionDesignController.java
     mapping: '@GetMapping("/translate")'
     httpMethods:
     - GET
     mappingPaths:
     - /java/core/exception/design/translate
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
 FinallyController:
   returnInteraction():
-    summary: return/throw interactions with finally
-    description: Runs a deterministic learning experiment for return/throw interactions
-      with finally. The response exposes concrete runtime evidence instead of only
-      describing the rule.
+    summary: Follow a pending return through finally
+    description: Compares a normal return with a finally block against a finally block that returns itself. The response proves that returning from finally can replace the return value already pending from try.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -41,25 +34,20 @@ FinallyController:
       file: 5.TryCatchFinally/TryCatchFinally.md
       anchor: return-finally
     methodName: returnInteraction
-    params: [
-      ]
+    params: []
     path: com/example/learning/controller/FinallyController.java
     mapping: '@GetMapping("/return-interaction")'
     httpMethods:
     - GET
     mappingPaths:
     - /java/core/exception/finally/return-interaction
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
 PropagationController:
   propagate():
-    summary: Stack unwinding and propagation
-    description: Runs a deterministic learning experiment for Stack unwinding and
-      propagation. The response exposes concrete runtime evidence instead of only
-      describing the rule.
+    summary: Observe propagation across nested calls
+    description: Creates an IllegalStateException in levelTwo(), lets it cross levelOne(), then catches it at the endpoint and returns a bounded stack trace that exposes the failure call path.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -69,24 +57,19 @@ PropagationController:
       file: 4.Propagation/Propagation.md
       anchor: exception-propagation
     methodName: propagate
-    params: [
-      ]
+    params: []
     path: com/example/learning/controller/PropagationController.java
     mapping: '@GetMapping("/stack")'
     httpMethods:
     - GET
     mappingPaths:
     - /java/core/exception/propagation/stack
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   wrapCause():
-    summary: Wrapping with preserved cause
-    description: Runs a deterministic learning experiment for Wrapping with preserved
-      cause. The response exposes concrete runtime evidence instead of only describing
-      the rule.
+    summary: Wrap an exception without losing its cause
+    description: Wraps a low-level IllegalArgumentException in OrderReadException. The response exposes both wrapper and cause so the learner can distinguish exception chaining from a lost-cause anti-pattern.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -96,25 +79,20 @@ PropagationController:
       file: 4.Propagation/Propagation.md
       anchor: exception-chaining
     methodName: wrapCause
-    params: [
-      ]
+    params: []
     path: com/example/learning/controller/PropagationController.java
     mapping: '@GetMapping("/wrap-cause")'
     httpMethods:
     - GET
     mappingPaths:
     - /java/core/exception/propagation/wrap-cause
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
 ResourceController:
   closeOrder():
-    summary: Reverse resource close order
-    description: Runs a deterministic learning experiment for Reverse resource close
-      order. The response exposes concrete runtime evidence instead of only describing
-      the rule.
+    summary: Observe open/body/close order for multiple resources
+    description: Creates two AutoCloseable resources in A-then-B order. The response trace proves that cleanup runs in reverse order, B then A, after the body completes.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -124,24 +102,19 @@ ResourceController:
       file: 6.TryWithResources/TryWithResources.md
       anchor: resource-close-order
     methodName: closeOrder
-    params: [
-      ]
+    params: []
     path: com/example/learning/controller/ResourceController.java
     mapping: '@GetMapping("/close-order")'
     httpMethods:
     - GET
     mappingPaths:
     - /java/core/exception/resource/close-order
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   suppressed():
-    summary: Primary vs suppressed exception
-    description: Runs a deterministic learning experiment for Primary vs suppressed
-      exception. The response exposes concrete runtime evidence instead of only describing
-      the rule.
+    summary: Preserve a primary failure plus a suppressed close failure
+    description: The try body deliberately throws IllegalArgumentException while the resource deliberately fails during close. The response exposes the primary exception, suppressed list, and lifecycle trace.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -151,16 +124,13 @@ ResourceController:
       file: 7.SuppressedException/SuppressedException.md
       anchor: primary-vs-suppressed
     methodName: suppressed
-    params: [
-      ]
+    params: []
     path: com/example/learning/controller/ResourceController.java
     mapping: '@GetMapping("/suppressed")'
     httpMethods:
     - GET
     mappingPaths:
     - /java/core/exception/resource/suppressed
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true

@@ -39,158 +39,444 @@
 # </quiz-schema>
 
 questions:
-  - id: exception-error-vs-exception
-    question: "Which statement best describes Error compared with Exception?"
+  - id: exception-throwable-hierarchy
+    question: "Which statement best describes Throwable's role?"
     answers:
-      - {id: A, answer: "Error generally represents serious JVM/environment failures that ordinary application code is not expected to recover from routinely.", explanation: "Correct. Throwable has Error and Exception branches with different intended recovery semantics."}
-      - {id: B, answer: "Error is a checked subclass of IOException.", explanation: "Incorrect. Throwable has Error and Exception branches with different intended recovery semantics."}
-      - {id: C, answer: "Error must always be caught before Exception.", explanation: "Incorrect. Throwable has Error and Exception branches with different intended recovery semantics."}
-      - {id: D, answer: "Exception can never represent programming bugs.", explanation: "Incorrect. Throwable has Error and Exception branches with different intended recovery semantics."}
-    correctAnswerId: A
+      - {id: A, answer: "It is only an error message.", explanation: "Throwable also participates in control flow."}
+      - {id: B, answer: "It is the root type of Java's exception mechanism, and values used by throw/catch must be compatible with it.", explanation: "Correct; Throwable is the root of Error and Exception."}
+      - {id: C, answer: "It contains only checked exceptions.", explanation: "RuntimeException and Error are unchecked."}
+      - {id: D, answer: "It has no stack trace.", explanation: "Throwable can carry a stack trace."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.Throwable/Throwable.md", anchor: "throwable-hierarchy"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: exception-error-vs-exception
+    question: "Why is catch (Throwable) usually a poor generic application handler?"
+    answers:
+      - {id: A, answer: "Java forbids the syntax.", explanation: "The syntax is legal."}
+      - {id: B, answer: "Throwable does not catch Exception.", explanation: "Throwable is Exception's supertype."}
+      - {id: C, answer: "It catches only checked exceptions.", explanation: "It also catches RuntimeException and Error."}
+      - {id: D, answer: "It can catch Error and accidentally treat serious runtime conditions like ordinary recoverable failures.", explanation: "Correct; the boundary is too broad."}
+    correctAnswerId: D
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "1.Throwable/Throwable.md", anchor: "error-vs-exception"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - id: exception-checked-contract
-    question: "What makes a checked exception part of a method compile-time contract?"
+  - id: exception-stack-trace-cause
+    question: "When wrapping a low-level exception, what is the main purpose of cause?"
     answers:
-      - {id: A, answer: "The JVM automatically retries it.", explanation: "Incorrect. Checked exceptions participate in compile-time handling/declaration rules."}
-      - {id: B, answer: "The method must catch it or declare it with throws unless control-flow analysis proves it cannot escape.", explanation: "Correct. Checked exceptions participate in compile-time handling/declaration rules."}
-      - {id: C, answer: "It is always a subclass of RuntimeException.", explanation: "Incorrect. Checked exceptions participate in compile-time handling/declaration rules."}
-      - {id: D, answer: "It can only occur in constructors.", explanation: "Incorrect. Checked exceptions participate in compile-time handling/declaration rules."}
-    correctAnswerId: B
+      - {id: A, answer: "Preserve the link to the lower-level failure in the causal chain.", explanation: "Correct; abstraction can change without losing diagnostics."}
+      - {id: B, answer: "Replace the wrapper's stack trace.", explanation: "It does not."}
+      - {id: C, answer: "Make the wrapper checked.", explanation: "Checked/unchecked depends on type hierarchy."}
+      - {id: D, answer: "Automatically retry the operation.", explanation: "Cause is not a retry policy."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.Throwable/Throwable.md", anchor: "stack-trace-cause"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: exception-checked-contract
+    question: "If a checked exception may escape a method, what does the compiler require?"
+    answers:
+      - {id: A, answer: "Convert it to Error.", explanation: "No such rule exists."}
+      - {id: B, answer: "Return null.", explanation: "Return value is unrelated."}
+      - {id: C, answer: "Catch it or declare it with throws.", explanation: "Correct; this is the catch-or-declare rule."}
+      - {id: D, answer: "Log it and continue.", explanation: "Logging does not satisfy the compile-time rule."}
+    correctAnswerId: C
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "2.CheckedUnchecked/CheckedUnchecked.md", anchor: "checked-exception"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - id: exception-throw-vs-throws
-    question: "What is the difference between throw and throws?"
+  - id: exception-unchecked-rule
+    question: "Which groups are both outside the catch-or-declare rule?"
     answers:
-      - {id: A, answer: "throw declares a method signature while throws creates the object.", explanation: "Incorrect. One is an executable statement, the other is a method/constructor declaration clause."}
-      - {id: B, answer: "They are interchangeable keywords.", explanation: "Incorrect. One is an executable statement, the other is a method/constructor declaration clause."}
-      - {id: C, answer: "throw transfers control by throwing one Throwable value; throws declares exception types that a method may let escape.", explanation: "Correct. One is an executable statement, the other is a method/constructor declaration clause."}
-      - {id: D, answer: "throws catches exceptions automatically.", explanation: "Incorrect. One is an executable statement, the other is a method/constructor declaration clause."}
+      - {id: A, answer: "IOException and SQLException.", explanation: "Both are checked exceptions."}
+      - {id: B, answer: "RuntimeException subclasses and Error subclasses.", explanation: "Correct."}
+      - {id: C, answer: "All Exception subclasses.", explanation: "Most Exception types outside RuntimeException are checked."}
+      - {id: D, answer: "Only NullPointerException.", explanation: "Unchecked is broader than one type."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.CheckedUnchecked/CheckedUnchecked.md", anchor: "unchecked-exception"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: exception-checked-vs-unchecked-design
+    question: "What is the most useful design question when choosing checked versus unchecked?"
+    answers:
+      - {id: A, answer: "How long is the exception class name?", explanation: "Irrelevant."}
+      - {id: B, answer: "Does the project use Spring?", explanation: "This is a Java/API design choice."}
+      - {id: C, answer: "Does the failure appear in a controller?", explanation: "Layer name does not decide it."}
+      - {id: D, answer: "Should callers be forced to acknowledge the failure at compile time, and can they act meaningfully on it?", explanation: "Correct; the choice should serve the caller contract."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.CheckedUnchecked/CheckedUnchecked.md", anchor: "checked-vs-unchecked-design"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: exception-throw-statement
+    question: "Which statement about throw is correct?"
+    answers:
+      - {id: A, answer: "It can throw an existing Throwable expression; it does not have to create a new object at that statement.", explanation: "Correct."}
+      - {id: B, answer: "It can be used only with checked exceptions.", explanation: "Unchecked exceptions can be thrown too."}
+      - {id: C, answer: "It only declares method metadata.", explanation: "That is the role of throws."}
+      - {id: D, answer: "Execution always continues with the next statement on the same path.", explanation: "No; throw abruptly completes the path."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.ThrowThrows/ThrowThrows.md", anchor: "throw-statement"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: exception-throws-clause
+    question: "Is declaring RuntimeException in a throws clause legal?"
+    answers:
+      - {id: A, answer: "No, it is always a compile error.", explanation: "Incorrect."}
+      - {id: B, answer: "Yes, and doing so makes it checked.", explanation: "The hierarchy does not change."}
+      - {id: C, answer: "Yes, but callers are still not forced to catch or declare it.", explanation: "Correct."}
+      - {id: D, answer: "Yes, and it prevents propagation.", explanation: "Incorrect."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "3.ThrowThrows/ThrowThrows.md", anchor: "throws-clause"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - id: exception-override-checked-narrow
-    question: "A parent method declares throws IOException. Which checked-exception declaration is valid for an overriding child method?"
+  - id: exception-precise-rethrow
+    question: "Why can catch (Exception ex) followed by throw ex sometimes still declare only IOException and SQLException?"
     answers:
-      - {id: A, answer: "It must declare exactly IOException and nothing else.", explanation: "Incorrect. An override cannot broaden the checked-exception obligation imposed on callers by the parent contract."}
-      - {id: B, answer: "It may always broaden to Throwable.", explanation: "Incorrect. An override cannot broaden the checked-exception obligation imposed on callers by the parent contract."}
-      - {id: C, answer: "It cannot declare any unchecked exception.", explanation: "Incorrect. An override cannot broaden the checked-exception obligation imposed on callers by the parent contract."}
-      - {id: D, answer: "It may declare IOException, a subtype such as FileNotFoundException, or no checked exception, but not broaden to Exception.", explanation: "Correct. An override cannot broaden the checked-exception obligation imposed on callers by the parent contract."}
+      - {id: A, answer: "Because Exception is always unchecked.", explanation: "Incorrect."}
+      - {id: B, answer: "The compiler can infer the checked types that can actually reach the catch when the parameter is not reassigned.", explanation: "Correct; this is precise rethrow."}
+      - {id: C, answer: "Because throw ex is ignored at runtime.", explanation: "Incorrect."}
+      - {id: D, answer: "Because catch converts the type to RuntimeException.", explanation: "No such conversion occurs."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.ThrowThrows/ThrowThrows.md", anchor: "precise-rethrow"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: exception-override-throws
+    question: "A parent method declares throws IOException. Which override is invalid?"
+    answers:
+      - {id: A, answer: "No checked exception declaration.", explanation: "Valid."}
+      - {id: B, answer: "throws FileNotFoundException.", explanation: "Valid; it is narrower."}
+      - {id: C, answer: "throws IOException.", explanation: "Valid."}
+      - {id: D, answer: "throws Exception.", explanation: "Correct choice; it broadens the checked contract."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "3.ThrowThrows/ThrowThrows.md", anchor: "override-throws-rules"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - id: exception-propagation-unwind
-    question: "What happens when a thrown exception is not caught in the current method?"
+  - id: exception-checked-narrowing
+    question: "Why may an override remove a checked exception declared by its parent?"
     answers:
-      - {id: A, answer: "The current call unwinds and the exception propagates to callers until a compatible handler is found or the thread terminates.", explanation: "Correct. Exception propagation follows the call stack and compatible catch selection."}
-      - {id: B, answer: "Execution resumes at the next statement automatically.", explanation: "Incorrect. Exception propagation follows the call stack and compatible catch selection."}
-      - {id: C, answer: "The exception is converted to null.", explanation: "Incorrect. Exception propagation follows the call stack and compatible catch selection."}
-      - {id: D, answer: "The JVM always restarts the method.", explanation: "Incorrect. Exception propagation follows the call stack and compatible catch selection."}
+      - {id: A, answer: "The subtype promises an equal-or-easier failure contract for callers.", explanation: "Correct."}
+      - {id: B, answer: "The checked exception becomes Error.", explanation: "It does not."}
+      - {id: C, answer: "The parent contract disappears at runtime, so the compiler ignores it.", explanation: "This is a compile-time substitutability rule."}
+      - {id: D, answer: "Overrides can never throw exceptions.", explanation: "Incorrect."}
     correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.ThrowThrows/ThrowThrows.md", anchor: "checked-exception-narrowing"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: exception-propagation
+    question: "In propagate(), an exception starts in levelTwo(), crosses levelOne(), and is caught by propagate(). What does this demonstrate?"
+    answers:
+      - {id: A, answer: "Automatic retry.", explanation: "There is no retry."}
+      - {id: B, answer: "The exception becomes null.", explanation: "It does not."}
+      - {id: C, answer: "Stack unwinding and propagation through frames until a compatible handler is found.", explanation: "Correct."}
+      - {id: D, answer: "Only the final catch frame appears in the stack trace.", explanation: "Incorrect."}
+    correctAnswerId: C
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "4.Propagation/Propagation.md", anchor: "exception-propagation"}
     apiRelated: {controller: "PropagationController", methodSignature: "propagate()"}
 
-  - id: exception-preserve-cause
-    question: "When translating a low-level exception into a higher-level exception, why should the cause usually be preserved?"
+  - id: exception-catch-selection
+    question: "Why must catch (FileNotFoundException) appear before catch (IOException)?"
     answers:
-      - {id: A, answer: "It prevents the new exception from being thrown.", explanation: "Incorrect. Exception chaining preserves causality without leaking the low-level type as the public abstraction."}
-      - {id: B, answer: "It keeps the original failure chain and diagnostic context while allowing the abstraction boundary to expose a more meaningful exception type.", explanation: "Correct. Exception chaining preserves causality without leaking the low-level type as the public abstraction."}
-      - {id: C, answer: "It guarantees automatic recovery.", explanation: "Incorrect. Exception chaining preserves causality without leaking the low-level type as the public abstraction."}
-      - {id: D, answer: "It hides every stack frame permanently.", explanation: "Incorrect. Exception chaining preserves causality without leaking the low-level type as the public abstraction."}
+      - {id: A, answer: "Because FileNotFoundException is unchecked.", explanation: "Incorrect."}
+      - {id: B, answer: "IOException is the supertype; putting it first would already catch the subtype and make the specific handler unreachable.", explanation: "Correct."}
+      - {id: C, answer: "Java chooses catches alphabetically.", explanation: "Incorrect."}
+      - {id: D, answer: "Catch handlers never accept subtypes.", explanation: "Incorrect."}
     correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.Propagation/Propagation.md", anchor: "catch-selection"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: exception-chaining
+    question: "What does wrapCause() demonstrate?"
+    answers:
+      - {id: A, answer: "The wrapper should discard its cause.", explanation: "Incorrect."}
+      - {id: B, answer: "Wrapper and cause must have the same type.", explanation: "No."}
+      - {id: C, answer: "Wrapping means recovery succeeded.", explanation: "No."}
+      - {id: D, answer: "OrderReadException changes the abstraction vocabulary while the original IllegalArgumentException remains the cause.", explanation: "Correct."}
+    correctAnswerId: D
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "4.Propagation/Propagation.md", anchor: "exception-chaining"}
     apiRelated: {controller: "PropagationController", methodSignature: "wrapCause()"}
 
-  - id: exception-finally-return-risk
-    question: "Why is returning from a finally block dangerous?"
+  - id: exception-lost-cause
+    question: "Which example is a lost-cause anti-pattern?"
     answers:
-      - {id: A, answer: "finally is skipped whenever return appears in try.", explanation: "Incorrect. finally executes during normal and exceptional exit, so its own abrupt completion can replace the earlier one."}
-      - {id: B, answer: "A return in finally is a compile-time error in every Java version.", explanation: "Incorrect. finally executes during normal and exceptional exit, so its own abrupt completion can replace the earlier one."}
-      - {id: C, answer: "It can override a return value or suppress an exception already propagating from try/catch, hiding the real outcome.", explanation: "Correct. finally executes during normal and exceptional exit, so its own abrupt completion can replace the earlier one."}
-      - {id: D, answer: "It only changes logging output.", explanation: "Incorrect. finally executes during normal and exceptional exit, so its own abrupt completion can replace the earlier one."}
+      - {id: A, answer: "Catch SQLException and throw a new wrapper without passing ex as the cause.", explanation: "Correct."}
+      - {id: B, answer: "Rethrow ex when the abstraction does not change.", explanation: "This preserves the failure."}
+      - {id: C, answer: "Create new Wrapper(message, ex).", explanation: "This preserves the cause."}
+      - {id: D, answer: "Inspect getCause().", explanation: "That is only inspection."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.Propagation/Propagation.md", anchor: "lost-cause-pitfall"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: exception-try-catch-flow
+    question: "If load() throws before process() in the same try block, what happens?"
+    answers:
+      - {id: A, answer: "process() still runs.", explanation: "No."}
+      - {id: B, answer: "process() runs twice.", explanation: "No."}
+      - {id: C, answer: "The rest of the try block is skipped and Java searches for a compatible handler.", explanation: "Correct."}
+      - {id: D, answer: "The exception automatically becomes a return value.", explanation: "No."}
     correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.TryCatchFinally/TryCatchFinally.md", anchor: "try-catch-flow"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: exception-finally-semantics
+    question: "Under ordinary JVM control flow, when can finally participate?"
+    answers:
+      - {id: A, answer: "Only on success.", explanation: "Incorrect."}
+      - {id: B, answer: "Only for checked exceptions.", explanation: "Incorrect."}
+      - {id: C, answer: "Only when catch runs.", explanation: "Incorrect."}
+      - {id: D, answer: "Normal completion, return, and exceptional completion can all pass through finally before exit.", explanation: "Correct."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.TryCatchFinally/TryCatchFinally.md", anchor: "finally-semantics"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: exception-return-finally
+    question: "returnInteraction() returns 1 for safeReturn and 2 for dangerousReturn. What follows?"
+    answers:
+      - {id: A, answer: "A return in finally can replace a pending return from try.", explanation: "Correct."}
+      - {id: B, answer: "finally is skipped when try returns.", explanation: "Incorrect."}
+      - {id: C, answer: "Returning from finally is always a compile error.", explanation: "Incorrect."}
+      - {id: D, answer: "finally cannot affect the outcome.", explanation: "Incorrect."}
+    correctAnswerId: A
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "5.TryCatchFinally/TryCatchFinally.md", anchor: "return-finally"}
     apiRelated: {controller: "FinallyController", methodSignature: "returnInteraction()"}
 
-  - id: exception-resource-close-order
-    question: "In try-with-resources with resources r1 then r2, in what order are they closed?"
+  - id: exception-multi-catch
+    question: "Which multi-catch is invalid?"
     answers:
-      - {id: A, answer: "Declaration order: r1 then r2.", explanation: "Incorrect. Try-with-resources closes initialized resources in reverse order."}
-      - {id: B, answer: "The order is random.", explanation: "Incorrect. Try-with-resources closes initialized resources in reverse order."}
-      - {id: C, answer: "Resources are never closed when the body throws.", explanation: "Incorrect. Try-with-resources closes initialized resources in reverse order."}
-      - {id: D, answer: "Reverse declaration order: r2 closes before r1.", explanation: "Correct. Try-with-resources closes initialized resources in reverse order."}
+      - {id: A, answer: "IOException | SQLException.", explanation: "Potentially valid."}
+      - {id: B, answer: "ParseException | SQLException.", explanation: "Potentially valid."}
+      - {id: C, answer: "FileNotFoundException | IOException.", explanation: "Correct choice; a subtype and its supertype cannot both be alternatives."}
+      - {id: D, answer: "IOException | ReflectiveOperationException.", explanation: "Potentially valid."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.TryCatchFinally/TryCatchFinally.md", anchor: "multi-catch"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: exception-autocloseable
+    question: "Why does try-with-resources not simply rely on the Garbage Collector?"
+    answers:
+      - {id: A, answer: "GC never collects Java objects.", explanation: "Incorrect."}
+      - {id: B, answer: "External resources need deterministic cleanup; GC is not the contract for timely close.", explanation: "Correct."}
+      - {id: C, answer: "AutoCloseable makes objects immutable.", explanation: "Incorrect."}
+      - {id: D, answer: "TWR prevents every IOException.", explanation: "Incorrect."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.TryWithResources/TryWithResources.md", anchor: "autocloseable"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: exception-resource-close-order
+    question: "What is the correct trace for closeOrder()?"
+    answers:
+      - {id: A, answer: "open-B, open-A, body, close-A, close-B.", explanation: "Incorrect."}
+      - {id: B, answer: "open-A, open-B, close-A, close-B, body.", explanation: "Incorrect."}
+      - {id: C, answer: "body, open-A, open-B, close-B, close-A.", explanation: "Incorrect."}
+      - {id: D, answer: "open-A, open-B, body, close-B, close-A.", explanation: "Correct; initialization follows declaration order and closing reverses it."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "6.TryWithResources/TryWithResources.md", anchor: "resource-close-order"}
     apiRelated: {controller: "ResourceController", methodSignature: "closeOrder()"}
 
-  - id: exception-suppressed-primary
-    question: "The try body throws A and close() then throws B. Under try-with-resources, which exception is normally primary?"
+  - id: exception-effective-final-resource
+    question: "Since Java 9, when may an existing local variable be used directly in a TWR resource specification?"
     answers:
-      - {id: A, answer: "A remains primary and B is attached as a suppressed exception.", explanation: "Correct. Suppression preserves the body failure while retaining close failures for diagnostics."}
-      - {id: B, answer: "B replaces A and A is discarded.", explanation: "Incorrect. Suppression preserves the body failure while retaining close failures for diagnostics."}
-      - {id: C, answer: "Both are converted to Error.", explanation: "Incorrect. Suppression preserves the body failure while retaining close failures for diagnostics."}
-      - {id: D, answer: "Neither is observable.", explanation: "Incorrect. Suppression preserves the body failure while retaining close failures for diagnostics."}
+      - {id: A, answer: "When it is final or effectively final.", explanation: "Correct."}
+      - {id: B, answer: "When it is reassigned later.", explanation: "Incorrect."}
+      - {id: C, answer: "Only when static.", explanation: "Incorrect."}
+      - {id: D, answer: "Only when it is a String.", explanation: "Incorrect."}
     correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.TryWithResources/TryWithResources.md", anchor: "effective-final-resource"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: exception-twr-vs-finally
+    question: "What is a key TWR advantage when both the body and close fail?"
+    answers:
+      - {id: A, answer: "It discards close failures.", explanation: "Incorrect."}
+      - {id: B, answer: "It automatically retries close.", explanation: "Incorrect."}
+      - {id: C, answer: "It keeps the primary failure and attaches cleanup failures as suppressed exceptions.", explanation: "Correct."}
+      - {id: D, answer: "It converts every failure into Error.", explanation: "Incorrect."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.TryWithResources/TryWithResources.md", anchor: "twr-vs-finally"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: exception-primary-suppressed
+    question: "In suppressed(), the body throws a primary failure and close also throws. What is the outcome?"
+    answers:
+      - {id: A, answer: "The close failure replaces the primary failure.", explanation: "Incorrect."}
+      - {id: B, answer: "The body failure stays primary and the close failure appears in getSuppressed().", explanation: "Correct."}
+      - {id: C, answer: "Both failures are discarded.", explanation: "Incorrect."}
+      - {id: D, answer: "Java creates a new Error.", explanation: "Incorrect."}
+    correctAnswerId: B
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "7.SuppressedException/SuppressedException.md", anchor: "primary-vs-suppressed"}
     apiRelated: {controller: "ResourceController", methodSignature: "suppressed()"}
 
-  - id: exception-custom-context
-    question: "What makes a custom exception useful instead of just creating another class name?"
+  - id: exception-get-suppressed
+    question: "Which distinction between cause and suppressed is correct?"
     answers:
-      - {id: A, answer: "It should always discard the original cause.", explanation: "Incorrect. Custom exceptions add value when they improve the caller-facing failure contract and diagnostics."}
-      - {id: B, answer: "It should communicate a meaningful abstraction/domain failure and preserve relevant context and cause.", explanation: "Correct. Custom exceptions add value when they improve the caller-facing failure contract and diagnostics."}
-      - {id: C, answer: "It should contain every local variable in the process.", explanation: "Incorrect. Custom exceptions add value when they improve the caller-facing failure contract and diagnostics."}
-      - {id: D, answer: "It must always extend Error.", explanation: "Incorrect. Custom exceptions add value when they improve the caller-facing failure contract and diagnostics."}
+      - {id: A, answer: "They are always the same thing.", explanation: "Incorrect."}
+      - {id: B, answer: "Cause is only for Error.", explanation: "Incorrect."}
+      - {id: C, answer: "A suppressed exception replaces the primary exception.", explanation: "Incorrect."}
+      - {id: D, answer: "Cause models a causal/translation chain; suppressed preserves an additional failure while another failure is already primary.", explanation: "Correct."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.SuppressedException/SuppressedException.md", anchor: "get-suppressed"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: exception-close-failure
+    question: "The body succeeds; B.close() fails first and A.close() then fails too. Which failure is primary?"
+    answers:
+      - {id: A, answer: "B's close failure; A's close failure is suppressed on it.", explanation: "Correct because B closes first."}
+      - {id: B, answer: "A's failure because A was declared first.", explanation: "Incorrect."}
+      - {id: C, answer: "Neither failure is kept.", explanation: "Incorrect."}
+      - {id: D, answer: "Java always creates a new IOException.", explanation: "Incorrect."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.SuppressedException/SuppressedException.md", anchor: "close-failure"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: exception-custom-purpose
+    question: "When does a custom exception add real value?"
+    answers:
+      - {id: A, answer: "Whenever you want to rename an existing exception.", explanation: "Renaming alone is not enough."}
+      - {id: B, answer: "When you want to discard the cause.", explanation: "Incorrect."}
+      - {id: C, answer: "When the type adds domain/application meaning, context, handling category, or a useful abstraction boundary.", explanation: "Correct."}
+      - {id: D, answer: "When every failure should become Error.", explanation: "Incorrect."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.CustomException/CustomException.md", anchor: "custom-exception-purpose"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: exception-custom-context
+    question: "If callers need orderId from an exception, which design is stronger?"
+    answers:
+      - {id: A, answer: "Force callers to parse the message.", explanation: "Fragile."}
+      - {id: B, answer: "Store orderId as structured data, preserve the cause, and avoid putting secrets in messages.", explanation: "Correct."}
+      - {id: C, answer: "Store it only inside the stack trace string.", explanation: "Not a structured contract."}
+      - {id: D, answer: "Drop the cause to keep the object small.", explanation: "That loses diagnostics."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "8.CustomException/CustomException.md", anchor: "exception-context"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - id: exception-boundary-translation
-    question: "Where is exception translation most useful?"
+  - id: exception-hierarchy-design
+    question: "What is the best principle for designing an exception hierarchy?"
     answers:
-      - {id: A, answer: "At every method call regardless of meaning.", explanation: "Incorrect. Translation should express a real abstraction change, not create wrapper noise."}
-      - {id: B, answer: "Only inside static initializers.", explanation: "Incorrect. Translation should express a real abstraction change, not create wrapper noise."}
-      - {id: C, answer: "At an abstraction boundary where low-level implementation failures should become a stable higher-level contract while preserving the cause.", explanation: "Correct. Translation should express a real abstraction change, not create wrapper noise."}
-      - {id: D, answer: "Only after logging the same exception in every layer.", explanation: "Incorrect. Translation should express a real abstraction change, not create wrapper noise."}
-    correctAnswerId: C
+      - {id: A, answer: "One subtype for every internal method that can fail.", explanation: "Too implementation-oriented."}
+      - {id: B, answer: "Order types by message length.", explanation: "Irrelevant."}
+      - {id: C, answer: "Mirror every internal implementation class.", explanation: "This leaks implementation detail."}
+      - {id: D, answer: "Reflect handling categories that callers genuinely need to distinguish.", explanation: "Correct."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.CustomException/CustomException.md", anchor: "exception-hierarchy-design"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: exception-boundary-translation
+    question: "What does translateBoundary() demonstrate?"
+    answers:
+      - {id: A, answer: "A low-level failure becomes a higher-level meaningful type while the original cause is preserved.", explanation: "Correct."}
+      - {id: B, answer: "Every layer should always wrap exceptions.", explanation: "Incorrect."}
+      - {id: C, answer: "Translation automatically retries.", explanation: "Incorrect."}
+      - {id: D, answer: "Translation should delete the cause.", explanation: "Incorrect."}
+    correctAnswerId: A
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "9.ExceptionDesign/ExceptionDesign.md", anchor: "exception-boundaries"}
     apiRelated: {controller: "ExceptionDesignController", methodSignature: "translateBoundary()"}
 
-  - id: exception-swallowing
-    question: "Why is catching Exception and doing nothing usually a serious design bug?"
+  - id: exception-do-not-swallow
+    question: "Why is an empty catch (Exception) often dangerous?"
     answers:
-      - {id: A, answer: "It makes checked exceptions become compile errors.", explanation: "Incorrect. A handler must recover, translate, add context, or deliberately terminate; silently swallowing loses the signal."}
-      - {id: B, answer: "It forces the JVM to shut down immediately.", explanation: "Incorrect. A handler must recover, translate, add context, or deliberately terminate; silently swallowing loses the signal."}
-      - {id: C, answer: "It automatically retries the operation forever.", explanation: "Incorrect. A handler must recover, translate, add context, or deliberately terminate; silently swallowing loses the signal."}
-      - {id: D, answer: "It destroys failure visibility and may let execution continue with an invalid assumption or partial state.", explanation: "Correct. A handler must recover, translate, add context, or deliberately terminate; silently swallowing loses the signal."}
-    correctAnswerId: D
+      - {id: A, answer: "It always fails compilation.", explanation: "It may compile."}
+      - {id: B, answer: "It automatically logs too much.", explanation: "An empty catch logs nothing."}
+      - {id: C, answer: "It erases the failure signal and callers may continue under a false success assumption.", explanation: "Correct."}
+      - {id: D, answer: "It converts unchecked exceptions into checked ones.", explanation: "Incorrect."}
+    correctAnswerId: C
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "9.ExceptionDesign/ExceptionDesign.md", anchor: "do-not-swallow"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: exception-logging-boundary
+    question: "Which logging heuristic is most reasonable?"
+    answers:
+      - {id: A, answer: "Every layer logs the full stack trace before rethrowing.", explanation: "That creates duplicate noise."}
+      - {id: B, answer: "Layers that only translate/rethrow usually avoid duplicate logging; the boundary owning the final outcome usually records it once with full context.", explanation: "Correct."}
+      - {id: C, answer: "No layer should ever log exceptions.", explanation: "Incorrect."}
+      - {id: D, answer: "Only repositories may log.", explanation: "Incorrect."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.ExceptionDesign/ExceptionDesign.md", anchor: "logging-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: exception-as-control-flow
+    question: "If 'not found' is an ordinary API state, what is usually clearer?"
+    answers:
+      - {id: A, answer: "Deliberately throw and catch an exception for the branch.", explanation: "Usually less clear."}
+      - {id: B, answer: "Throw Error.", explanation: "Wrong abstraction."}
+      - {id: C, answer: "Return from finally.", explanation: "Dangerous."}
+      - {id: D, answer: "Represent the ordinary branch with normal control flow/API results and reserve exceptions for abnormal completion.", explanation: "Correct."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.ExceptionDesign/ExceptionDesign.md", anchor: "exception-as-control-flow"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: exception-cleanup-recovery
+    question: "When is retry after an exception most appropriate?"
+    answers:
+      - {id: A, answer: "The failure may be transient, the operation is retry-safe/idempotent or duplicate-protected, and the policy is bounded with suitable backoff/timeout.", explanation: "Correct."}
+      - {id: B, answer: "Whenever any Exception is caught.", explanation: "Incorrect."}
+      - {id: C, answer: "When you want an unbounded retry loop to hide the failure.", explanation: "Incorrect."}
+      - {id: D, answer: "When the operation certainly duplicates side effects.", explanation: "Incorrect."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.ExceptionDesign/ExceptionDesign.md", anchor: "cleanup-and-recovery"}
     apiRelated: {controller: "", methodSignature: ""}

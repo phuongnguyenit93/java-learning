@@ -1,24 +1,24 @@
 ExceptionDesignController:
   description: |-
-    <h2>Exception Design</h2>
-    <p>Executable Java Core experiments related to Translate exceptions at abstraction boundaries.</p>
+    <h2>Exception Design and Abstraction Boundaries</h2>
+    <p>Experiments about exception translation: a higher layer changes failure vocabulary while preserving the original cause and diagnostic chain.</p>
   readmeRelated:
     file: 9.ExceptionDesign/ExceptionDesign.md
 FinallyController:
   description: |-
-    <h2>Finally</h2>
-    <p>Executable Java Core experiments related to return/throw interactions with finally.</p>
+    <h2>finally Control Flow</h2>
+    <p>An experiment focused on a pending return passing through <code>finally</code>, especially when <code>finally</code> creates a new return that replaces the earlier outcome.</p>
   readmeRelated:
     file: 5.TryCatchFinally/TryCatchFinally.md
 PropagationController:
   description: |-
-    <h2>Propagation</h2>
-    <p>Executable Java Core experiments related to Stack unwinding and propagation.</p>
+    <h2>Propagation, Stack Unwinding and Cause</h2>
+    <p>Experiments showing how exceptions move through nested calls and how a higher abstraction can wrap a failure without losing its original cause.</p>
   readmeRelated:
     file: 4.Propagation/Propagation.md
 ResourceController:
   description: |-
-    <h2>Resource</h2>
-    <p>Executable Java Core experiments related to Reverse resource close order.</p>
+    <h2>Try-with-resources and Cleanup Failure</h2>
+    <p>Experiments observing multi-resource lifecycle: reverse close order and the way try-with-resources preserves a primary failure when <code>close()</code> fails too.</p>
   readmeRelated:
     file: 6.TryWithResources/TryWithResources.md

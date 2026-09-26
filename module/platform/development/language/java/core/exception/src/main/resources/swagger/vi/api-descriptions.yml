@@ -1,9 +1,7 @@
 ExceptionDesignController:
   translateBoundary():
-    summary: Translate exception tại abstraction boundary
-    description: Chạy thí nghiệm học tập deterministic cho Translate exception tại
-      abstraction boundary. Response cung cấp runtime evidence cụ thể thay vì chỉ
-      mô tả quy tắc.
+    summary: Translate exception và giữ nguyên cause
+    description: Mô phỏng một abstraction boundary nơi low-level IllegalStateException được chuyển thành OrderServiceException. Response cho thấy type/message mới đồng thời chứng minh cause gốc vẫn còn.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -13,25 +11,20 @@ ExceptionDesignController:
       file: 9.ExceptionDesign/ExceptionDesign.md
       anchor: exception-boundaries
     methodName: translateBoundary
-    params: [
-      ]
+    params: []
     path: com/example/learning/controller/ExceptionDesignController.java
     mapping: '@GetMapping("/translate")'
     httpMethods:
     - GET
     mappingPaths:
     - /java/core/exception/design/translate
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
 FinallyController:
   returnInteraction():
-    summary: Tương tác return/throw với finally
-    description: Chạy thí nghiệm học tập deterministic cho Tương tác return/throw
-      với finally. Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy
-      tắc.
+    summary: Pending return đi qua finally
+    description: So sánh một return bình thường có finally với trường hợp finally tự return. Response chứng minh return trong finally có thể thay return value đang chờ thoát khỏi try.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -41,24 +34,20 @@ FinallyController:
       file: 5.TryCatchFinally/TryCatchFinally.md
       anchor: return-finally
     methodName: returnInteraction
-    params: [
-      ]
+    params: []
     path: com/example/learning/controller/FinallyController.java
     mapping: '@GetMapping("/return-interaction")'
     httpMethods:
     - GET
     mappingPaths:
     - /java/core/exception/finally/return-interaction
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
 PropagationController:
   propagate():
-    summary: Stack unwinding và propagation
-    description: Chạy thí nghiệm học tập deterministic cho Stack unwinding và propagation.
-      Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    summary: Quan sát propagation qua nested calls
+    description: Tạo IllegalStateException ở levelTwo(), để nó đi qua levelOne(), rồi catch tại endpoint và trả một phần stack trace để quan sát call path của failure.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -68,23 +57,19 @@ PropagationController:
       file: 4.Propagation/Propagation.md
       anchor: exception-propagation
     methodName: propagate
-    params: [
-      ]
+    params: []
     path: com/example/learning/controller/PropagationController.java
     mapping: '@GetMapping("/stack")'
     httpMethods:
     - GET
     mappingPaths:
     - /java/core/exception/propagation/stack
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   wrapCause():
-    summary: Wrap và preserve cause
-    description: Chạy thí nghiệm học tập deterministic cho Wrap và preserve cause.
-      Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    summary: Wrap exception mà không làm mất cause
+    description: Low-level IllegalArgumentException được wrap thành OrderReadException. Response expose cả wrapper lẫn cause để phân biệt exception translation với lost-cause anti-pattern.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -94,24 +79,20 @@ PropagationController:
       file: 4.Propagation/Propagation.md
       anchor: exception-chaining
     methodName: wrapCause
-    params: [
-      ]
+    params: []
     path: com/example/learning/controller/PropagationController.java
     mapping: '@GetMapping("/wrap-cause")'
     httpMethods:
     - GET
     mappingPaths:
     - /java/core/exception/propagation/wrap-cause
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
 ResourceController:
   closeOrder():
-    summary: Resource close theo thứ tự ngược
-    description: Chạy thí nghiệm học tập deterministic cho Resource close theo thứ
-      tự ngược. Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    summary: Quan sát thứ tự open/body/close của nhiều resource
+    description: Hai AutoCloseable được tạo theo A rồi B. Response trả trace để chứng minh resource được close theo thứ tự ngược B rồi A sau khi body hoàn tất.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -121,23 +102,19 @@ ResourceController:
       file: 6.TryWithResources/TryWithResources.md
       anchor: resource-close-order
     methodName: closeOrder
-    params: [
-      ]
+    params: []
     path: com/example/learning/controller/ResourceController.java
     mapping: '@GetMapping("/close-order")'
     httpMethods:
     - GET
     mappingPaths:
     - /java/core/exception/resource/close-order
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   suppressed():
-    summary: Primary và suppressed exception
-    description: Chạy thí nghiệm học tập deterministic cho Primary và suppressed exception.
-      Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    summary: Primary failure và suppressed close failure
+    description: Try body cố ý throw IllegalArgumentException còn resource cố ý fail khi close. Response expose primary exception, suppressed list và lifecycle trace để quan sát semantics của try-with-resources.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -147,16 +124,13 @@ ResourceController:
       file: 7.SuppressedException/SuppressedException.md
       anchor: primary-vs-suppressed
     methodName: suppressed
-    params: [
-      ]
+    params: []
     path: com/example/learning/controller/ResourceController.java
     mapping: '@GetMapping("/suppressed")'
     httpMethods:
     - GET
     mappingPaths:
     - /java/core/exception/resource/suppressed
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true

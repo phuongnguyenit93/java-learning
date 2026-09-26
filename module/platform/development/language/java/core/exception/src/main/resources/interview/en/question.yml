@@ -28,58 +28,198 @@
 # </interview-schema>
 
 questions:
-  - question: "How do you decide between a checked and unchecked exception in an API?"
-    answer: "Base the choice on the caller contract, not a blanket rule. Checked exceptions can force explicit handling of expected recoverable conditions; unchecked exceptions fit programming errors or failures callers cannot reasonably recover from locally. Keep the abstraction stable and document recovery expectations."
+  - question: "Explain the mental model of exceptions in Java: why is Throwable both an object concern and a control-flow concern?"
+    answer: "Throwable is the root model for abnormal completion. An instance carries type, message, stack trace, cause, and possibly suppressed failures; when it is thrown, it also interrupts the current success path and transfers control to a compatible handler or propagates upward. Understanding only the object fields misses half of the model: an exception is also a failure signal that changes execution."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.Throwable/Throwable.md", anchor: "throwable-hierarchy"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Distinguish Error from Exception as a design concern. Why is catch (Throwable) usually too broad?"
+    answer: "Error commonly represents serious JVM/runtime/linkage conditions that ordinary application code should not assume it can recover from. Exception is the branch applications and APIs typically model, translate, or handle. catch (Throwable) is syntactically legal but also catches Error, so a generic application handler may accidentally treat a serious runtime condition like a routine recoverable failure."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.Throwable/Throwable.md", anchor: "error-vs-exception"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "How do stack trace, message, and cause differ when debugging a wrapped exception?"
+    answer: "The message describes the failure in the current abstraction, the stack trace records the execution path near where the Throwable captured its stack, and cause links the wrapper to the lower-level failure that led to it. Translation can therefore improve caller-facing vocabulary while cause keeps root diagnostics available. Stack/message text should not be parsed as a stable business contract because refactoring and implementation changes can alter them."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.Throwable/Throwable.md", anchor: "stack-trace-cause"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "How do you decide between a checked and an unchecked exception in an API?"
+    answer: "Avoid absolute rules such as business=checked or modern Java=unchecked. Ask whether callers should be forced by the compiler to acknowledge the failure, whether they can act meaningfully on it, and whether catch-or-declare clarifies the contract or merely creates boilerplate. Checked can be valuable when compile-time acknowledgement matters; unchecked often fits contract/invariant/programming failures or cases where nearby callers cannot reasonably recover."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "2.CheckedUnchecked/CheckedUnchecked.md", anchor: "checked-vs-unchecked-design"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Explain the checked-exception rule for overriding methods and why Java imposes it."
-    answer: "An overriding method may keep, narrow, or remove checked exceptions declared by the parent method, but cannot broaden them. Code compiled against the parent contract must not suddenly be forced to handle a wider checked exception when a subtype is substituted."
+  - question: "Explain catch-or-declare and why an unchecked exception may still appear in a throws clause."
+    answer: "If a checked exception can escape a method, it must be caught or declared with throws. RuntimeException and Error are outside that requirement. Java still permits an unchecked exception in a throws clause when documenting it helps callers, but the declaration does not make it checked and does not force callers to catch or redeclare it."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.CheckedUnchecked/CheckedUnchecked.md", anchor: "checked-exception"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Contrast throw and throws in terms of timing and responsibility. Must a throw statement create a new exception?"
+    answer: "throw is an executable runtime statement: it throws a Throwable expression and abruptly completes the current path. throws is part of a method or constructor declaration and communicates exception types that may escape. throw does not require new at that point; code may rethrow an existing exception object. Because this question deliberately spans both concepts, no single Knowledge anchor is forced."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "", anchor: ""}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "What is precise rethrow and how can it keep a method contract narrower?"
+    answer: "When code catches a broad supertype such as Exception but the try block can produce only a narrower set of checked exceptions, the compiler can use flow analysis to infer the actual type set if the catch parameter is not reassigned. Rethrowing ex therefore does not necessarily require throws Exception; the method may still declare only IOException and SQLException. This supports shared handling without unnecessarily broadening the public contract."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.ThrowThrows/ThrowThrows.md", anchor: "precise-rethrow"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Explain the checked-exception rule for overriding methods and connect it to substitutability."
+    answer: "An override may keep, narrow, or remove checked exceptions declared by the parent, but it may not broaden them to a wider checked type. Callers compiled against the parent contract must be able to substitute the child without suddenly handling a checked failure the parent never promised. Unchecked exceptions are not restricted by the same catch-or-declare rule."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "3.ThrowThrows/ThrowThrows.md", anchor: "override-throws-rules"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Describe exception propagation and stack unwinding from the throw site to a handler."
-    answer: "Throwing abruptly completes the current expression/method path. The runtime searches outward through call frames for the first compatible catch. Frames in between unwind, running required cleanup/finally/TWR logic. If no handler is found, the exception terminates the thread."
+  - question: "Describe exception propagation and stack unwinding. Is cleanup skipped while frames unwind?"
+    answer: "If a method does not handle a thrown exception, control leaves that frame and the failure propagates to callers until a compatible handler or the thread boundary is reached. During unwinding, relevant finally blocks and try-with-resources cleanup still participate according to language rules; unwinding does not mean cleanup is skipped. propagate() demonstrates the levelTwo → levelOne → propagate path through its stack-trace evidence."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "4.Propagation/Propagation.md", anchor: "exception-propagation"}
     apiRelated: {controller: "PropagationController", methodSignature: "propagate()"}
 
-  - question: "Why is exception chaining important when translating failures across layers?"
-    answer: "The outer exception can speak the vocabulary of the higher abstraction while the cause retains the original technical failure, stack trace, and diagnostic chain. Without the cause, debugging often loses the event that actually initiated the failure."
+  - question: "How does Java choose a catch block, and why is parsing exception messages a weak handling strategy?"
+    answer: "Java checks handlers in source order using type compatibility, so a specific subtype handler must appear before a broader supertype handler or it becomes unreachable. Messages are diagnostic text and may change; they are not a strong structured contract. If policy differs, stable exception types or explicit context fields are a better basis for handling."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.Propagation/Propagation.md", anchor: "catch-selection"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "When should you rethrow the original exception, and when should you wrap it? Why preserve the cause?"
+    answer: "If the abstraction has not changed and the current layer only performs a legitimate side action such as auditing, rethrowing the same object may be enough. At a real abstraction boundary, a higher-level wrapper can provide caller-appropriate vocabulary. Preserving the cause keeps root technical diagnostics connected; mechanically wrapping at every layer without adding meaning only creates noise."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "4.Propagation/Propagation.md", anchor: "exception-chaining"}
     apiRelated: {controller: "PropagationController", methodSignature: "wrapCause()"}
 
-  - question: "What are the control-flow hazards of return or throw inside finally?"
-    answer: "finally runs while normal return or an exception may already be pending. If finally itself returns or throws, that abrupt completion can replace the earlier return/exception, causing lost results or lost failures. Cleanup should normally avoid changing the primary outcome."
+  - question: "What damage does the lost-cause anti-pattern cause, and how do you recognize it in code?"
+    answer: "A classic sign is catching an exception and throwing a new wrapper whose constructor does not receive the original exception. The causal chain is cut, so root stack/context information disappears from the final diagnostic view. If translation is needed, use a cause-preserving constructor; if abstraction does not change, consider rethrowing the original object."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.Propagation/Propagation.md", anchor: "lost-cause-pitfall"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Why does catching an exception not automatically mean recovery? When can catch (Exception) be reasonable?"
+    answer: "Catching only stops propagation; recovery requires producing a valid outcome or state according to the contract. catch (Exception) in a middle layer can hide bugs and failures the layer does not understand. It can be appropriate at a final application boundary that must map a family of application failures to a request/job outcome, provided it does not turn real failure into false success."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.TryCatchFinally/TryCatchFinally.md", anchor: "try-catch-flow"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Explain finally when a return or exception is already pending. Why are return or throw inside finally dangerous?"
+    answer: "finally executes before the pending outcome leaves the construct. If finally completes normally, the pending return/exception continues; if finally itself returns or throws, that new abrupt completion can replace the earlier result or failure. returnInteraction() directly proves a pending return value of 1 being replaced by 2; the same principle explains why a throw from finally can hide an original exception."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "5.TryCatchFinally/TryCatchFinally.md", anchor: "return-finally"}
     apiRelated: {controller: "FinallyController", methodSignature: "returnInteraction()"}
 
-  - question: "How does try-with-resources preserve both a body failure and a close failure?"
-    answer: "The exception from the try body remains primary. Exceptions thrown while closing resources are attached through addSuppressed and can be inspected with getSuppressed. Resources are closed in reverse declaration order."
+  - question: "When does multi-catch improve code, and what important restriction does it have?"
+    answer: "Multi-catch is useful when several exception types genuinely share the same handling policy and would otherwise duplicate handler bodies. Direct subtype/supertype alternatives are illegal, such as FileNotFoundException | IOException, because the broader type already covers the narrower one. Do not merge semantically different failures merely because today's handler happens to look similar."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.TryCatchFinally/TryCatchFinally.md", anchor: "multi-catch"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Why does try-with-resources rely on AutoCloseable instead of relying on the Garbage Collector for files, sockets, or JDBC resources?"
+    answer: "GC manages Java object memory, not a deterministic deadline for releasing OS/database resources. TWR makes ownership explicit and invokes close when leaving the block through success, return, or failure. AutoCloseable is the protocol that lets the language participate in resource cleanup predictably."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.TryWithResources/TryWithResources.md", anchor: "autocloseable"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Explain resource initialization and close order in TWR, including a failure while the second resource is being initialized."
+    answer: "Resources initialize left to right and close in reverse order. If A opens successfully, B fails during initialization, and C is never reached, TWR still closes A. This matters because later resources commonly wrap or depend on earlier ones, and partial-initialization cleanup is easy to get wrong with nested manual finally blocks."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.TryWithResources/TryWithResources.md", anchor: "resource-close-order"}
+    apiRelated: {controller: "ResourceController", methodSignature: "closeOrder()"}
+
+  - question: "What did Java 9 effective-final resource syntax improve, and why does ownership still matter?"
+    answer: "Java 9 lets an existing local variable appear directly in the TWR resource specification when it is final or effectively final, avoiding an unnecessary alias just for cleanup syntax. The syntax does not decide ownership, however. A method borrowing a caller-owned resource should not close it unless the contract transfers lifecycle responsibility; always distinguish who creates, owns, and closes the resource."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.TryWithResources/TryWithResources.md", anchor: "effective-final-resource"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "If the try body and close() both throw, how does TWR preserve the failures, and why is that safer than naive manual finally?"
+    answer: "The body exception is already the primary outcome. If close then fails during cleanup, that failure is attached as suppressed rather than replacing the primary. A naive finally can let the cleanup exception hide the original operation failure. suppressed() exposes the primary, getSuppressed(), and lifecycle trace so the preservation rule is observable."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "7.SuppressedException/SuppressedException.md", anchor: "primary-vs-suppressed"}
     apiRelated: {controller: "ResourceController", methodSignature: "suppressed()"}
 
-  - question: "What does it mean to translate exceptions at an abstraction boundary?"
-    answer: "A layer catches an implementation-specific failure and throws an exception meaningful to its own callers, preserving the cause and useful context. Translation should happen where the vocabulary/contract changes, not mechanically in every method."
+  - question: "Distinguish cause from suppressed exceptions. If the body succeeds but multiple close() calls fail, how is the primary selected?"
+    answer: "Cause represents a causal/translation relationship between a lower-level failure and a wrapper. Suppressed exceptions preserve additional failures that happen while another failure is already primary. If the body succeeds, resources close in reverse order; the first close failure becomes primary and later close failures are suppressed on it. A single Throwable may have both a cause and suppressed failures."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.SuppressedException/SuppressedException.md", anchor: "get-suppressed"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "When should you create a custom exception, and how do you choose checked versus unchecked for that custom type?"
+    answer: "Create a custom type when it adds domain/application meaning, a useful handling category, structured context, or a stable abstraction boundary; do not create one merely to rename another exception. A custom exception can extend Exception or RuntimeException. The checked/unchecked decision returns to the caller contract: do you want the compiler to force every caller to catch or declare this failure?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.CustomException/CustomException.md", anchor: "custom-exception-purpose"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "How would you design custom-exception context so it is both useful and safe?"
+    answer: "Data that callers or program logic need should be structured fields/accessors rather than text that must be parsed from the message. When wrapping, preserve the cause so diagnostics remain connected. Avoid passwords, tokens, credentials, or unnecessary sensitive payloads because exceptions commonly reach logs, tracing, and monitoring systems."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.CustomException/CustomException.md", anchor: "exception-context"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "What should a good exception hierarchy represent, and why is mirroring the full implementation often over-design?"
+    answer: "The hierarchy should represent handling categories callers genuinely need, such as a base OrderException with only the few subtypes that cause different policies. If callers handle every storage detail identically, dozens of JdbcXxxException types merely leak implementation and increase cognitive load. New types should add semantic or handling value rather than only a different name."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.CustomException/CustomException.md", anchor: "exception-hierarchy-design"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "What is exception translation at an abstraction boundary, and when should you avoid adding another wrapper layer?"
+    answer: "A layer catches an implementation-specific failure and converts it into a type expressed in the vocabulary/contract of the higher abstraction while preserving the cause. Do not wrap when the abstraction has not changed and the new type adds no meaning, context, or handling category. translateBoundary() demonstrates a higher-level type together with its preserved cause."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "9.ExceptionDesign/ExceptionDesign.md", anchor: "exception-boundaries"}
     apiRelated: {controller: "ExceptionDesignController", methodSignature: "translateBoundary()"}
 
-  - question: "Why is logging the same exception in every layer a problem, and where should logging usually happen?"
-    answer: "Repeated logging duplicates stack traces without adding meaning and obscures the event flow. Lower layers should add context or translate when needed; log at a boundary that owns the failure outcome, unless a lower layer has unique evidence it must record once."
+  - question: "Distinguish intentionally ignoring a specific failure from swallowing an exception."
+    answer: "Intentional ignore has a narrow scope, a specific type, an explicit reason, and leaves the desired outcome valid—for example, deleting a temp file when it is already absent. Swallowing is typically a broad catch that erases the failure signal and lets callers believe the operation succeeded despite partial or invalid state. The key question is whether the resulting outcome is still truthful according to the contract."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.ExceptionDesign/ExceptionDesign.md", anchor: "do-not-swallow"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Why is logging the same exception at every layer a problem, and how do you choose the logging boundary?"
+    answer: "Repository, service, and controller all logging then rethrowing produces duplicate stack traces with little added information. Layers that only translate or rethrow usually preserve context/cause without logging again; the request/job/message boundary that owns the final failure outcome often has the best context to record it once. Metrics or audit events can be exceptions to that heuristic without repeating the same full diagnostic dump."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "9.ExceptionDesign/ExceptionDesign.md", anchor: "logging-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Why should exceptions not be used as ordinary control flow? Can exception-based parsing still be reasonable?"
+    answer: "Exceptions model abnormal completion and make flow non-local, so using them for ordinary branches often hurts readability and may add unnecessary cost. If a parsing API itself reports invalid input via NumberFormatException, a small boundary that catches it and applies a documented fallback can be perfectly reasonable. The important distinction is normal state versus exceptional outcome, not a slogan that exceptions must never be caught."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.ExceptionDesign/ExceptionDesign.md", anchor: "exception-as-control-flow"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Distinguish cleanup, recovery, retry, and propagation. Give a decision model for a layer that receives an exception."
+    answer: "Cleanup releases owned resources or performs mandatory exit work and does not mean the operation recovered. Recovery produces a genuinely valid fallback outcome. Retry should be reserved for plausibly transient failures when the operation is retry-safe/idempotent or duplicate-protected and the policy is bounded with suitable backoff/timeout. If the abstraction changes, translate and preserve the cause; if the layer has no meaningful responsibility, propagate to a boundary with better context."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.ExceptionDesign/ExceptionDesign.md", anchor: "cleanup-and-recovery"}
     apiRelated: {controller: "", methodSignature: ""}

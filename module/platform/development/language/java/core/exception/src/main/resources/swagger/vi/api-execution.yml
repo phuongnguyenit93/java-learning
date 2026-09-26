@@ -1,73 +1,106 @@
 ExceptionDesignController:
   translateBoundary():
-    execution: <p><strong>Khái niệm:</strong> Translate exception tại abstraction
-      boundary.</p><ol><li>Endpoint chạy một ví dụ deterministic và bounded trong
-      <code>ExceptionDesignController#translateBoundary()</code>.</li><li>Source line
-      dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/translate&quot;)
-      public Map&lt;String,Object&gt; translateBoundary(){ try{repository();return
-      Map.of();}catch(OrderServiceException e){return Map.of(&quot;translatedType&quot;,e.getClass().getSimpleName(),&quot;message&quot;,e.getMessage(),&quot;preservedCause&quot;,e.getCause().getClass().getSimpleName());}
-      }</code></pre></li><li>Quan sát các field trong response cùng nhau; đây là evidence
-      cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
-      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
-      khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> exception translation đổi failure vocabulary tại abstraction boundary nhưng phải giữ cause để diagnostics không bị đứt.</p>
+      <ol>
+        <li><strong>Flow:</strong> endpoint gọi <code>repository()</code>. Method này tạo một low-level <code>IllegalStateException("storage unavailable")</code>, catch nó rồi wrap thành <code>OrderServiceException("cannot load order 42", cause)</code>. Endpoint catch wrapper và chuyển thông tin thành response.</li>
+        <li><strong>Code evidence:</strong><pre><code>private void repository() {
+          try {
+              throw new IllegalStateException("storage unavailable");
+          } catch (IllegalStateException e) {
+              throw new OrderServiceException("cannot load order 42", e);
+          }
+      }</code></pre></li>
+        <li><strong>Observation:</strong> response có <code>translatedType=OrderServiceException</code>, <code>message=cannot load order 42</code> và <code>preservedCause=IllegalStateException</code>.</li>
+        <li><strong>Ý nghĩa:</strong> caller nhận vocabulary của abstraction cao hơn nhưng root technical failure vẫn nằm trong causal chain.</li>
+      </ol>
+      <p><strong>Kết luận:</strong> translate khi abstraction thật sự đổi; đừng chỉ đổi tên exception và tuyệt đối không bỏ cause nếu root failure còn cần cho chẩn đoán.</p>
     usage: true
 FinallyController:
   returnInteraction():
-    execution: <p><strong>Khái niệm:</strong> Tương tác return/throw với finally.</p><ol><li>Endpoint
-      chạy một ví dụ deterministic và bounded trong <code>FinallyController#returnInteraction()</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/return-interaction&quot;)
-      public Map&lt;String,Object&gt; returnInteraction(){ return Map.of(&quot;normalReturnWithFinally&quot;,safeReturn(),&quot;returnInsideFinally&quot;,dangerousReturn(),&quot;warning&quot;,&quot;a
-      return in finally replaces the pending return/exception&quot;); }</code></pre></li><li>Quan
-      sát các field trong response cùng nhau; đây là evidence cho quy tắc, không phải
-      benchmark hay production policy.</li></ol><p><strong>Kết luận:</strong> đối
-      chiếu kết quả với README section được liên kết trước khi khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> <code>finally</code> chạy trước khi pending return hoàn tất, và abrupt completion do chính <code>finally</code> tạo ra có thể thay outcome trước đó.</p>
+      <ol>
+        <li><strong>Flow:</strong> <code>safeReturn()</code> chuẩn bị return <code>1</code>, chạy <code>finally</code> không return rồi vẫn trả <code>1</code>. <code>dangerousReturn()</code> cũng chuẩn bị <code>1</code> nhưng <code>finally</code> return <code>2</code>.</li>
+        <li><strong>Code evidence:</strong><pre><code>private int safeReturn() {
+          try { return 1; }
+          finally { int ignored = 0; }
+      }
+
+      private int dangerousReturn() {
+          try { return 1; }
+          finally { return 2; }
+      }</code></pre></li>
+        <li><strong>Observation:</strong> response trả <code>normalReturnWithFinally=1</code> nhưng <code>returnInsideFinally=2</code>.</li>
+        <li><strong>Ý nghĩa:</strong> <code>finally</code> không chỉ "chạy thêm cleanup"; nếu nó tự return/throw thì nó có thể thay pending return/exception. Endpoint này trực tiếp chứng minh trường hợp return.</li>
+      </ol>
+      <p><strong>Kết luận:</strong> dùng <code>finally</code> cho cleanup, tránh tạo một outcome mới từ bên trong <code>finally</code>.</p>
     usage: true
 PropagationController:
   propagate():
-    execution: <p><strong>Khái niệm:</strong> Stack unwinding và propagation.</p><ol><li>Endpoint
-      chạy một ví dụ deterministic và bounded trong <code>PropagationController#propagate()</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/stack&quot;)
-      public Map&lt;String,Object&gt; propagate(){ try{levelOne();return Map.of();}catch(IllegalStateException
-      e){return Map.of(&quot;type&quot;,e.getClass().getSimpleName(),&quot;message&quot;,e.getMessage(),&quot;topFrames&quot;,Arrays.stream(e.getStackTrace()).limit(3).map(StackTraceElement::getMethodName).toList());}
-      }</code></pre></li><li>Quan sát các field trong response cùng nhau; đây là evidence
-      cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
-      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
-      khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> exception không được xử lý ở method hiện tại sẽ propagate qua caller; stack trace giữ dấu vết đường gọi tới throw site.</p>
+      <ol>
+        <li><strong>Flow:</strong> endpoint gọi <code>levelOne()</code>, method này gọi <code>levelTwo()</code>, và <code>levelTwo()</code> throw <code>IllegalStateException("boom")</code>. Không có handler ở hai method trung gian nên failure quay lên <code>propagate()</code>.</li>
+        <li><strong>Code evidence:</strong><pre><code>private void levelOne() { levelTwo(); }
+
+      private void levelTwo() {
+          throw new IllegalStateException("boom");
+      }</code></pre></li>
+        <li><strong>Observation:</strong> response có <code>type=IllegalStateException</code>, <code>message=boom</code> và <code>topFrames</code> bắt đầu bằng các method gần throw site như <code>levelTwo</code>, <code>levelOne</code>, <code>propagate</code>.</li>
+        <li><strong>Ý nghĩa:</strong> các call frame trung gian không tự recover; control unwinds cho tới handler. Stack trace là evidence chẩn đoán của đường gọi chứ không phải business contract ổn định.</li>
+      </ol>
+      <p><strong>Kết luận:</strong> propagation tách nơi failure phát sinh khỏi nơi có đủ context để xử lý nó.</p>
     usage: true
   wrapCause():
-    execution: <p><strong>Khái niệm:</strong> Wrap và preserve cause.</p><ol><li>Endpoint
-      chạy một ví dụ deterministic và bounded trong <code>PropagationController#wrapCause()</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/wrap-cause&quot;)
-      public Map&lt;String,Object&gt; wrapCause(){ try{load();return Map.of();}catch(OrderReadException
-      e){return Map.of(&quot;wrapper&quot;,e.getClass().getSimpleName(),&quot;message&quot;,e.getMessage(),&quot;cause&quot;,e.getCause().getClass().getSimpleName(),&quot;causeMessage&quot;,e.getCause().getMessage());}
-      }</code></pre></li><li>Quan sát các field trong response cùng nhau; đây là evidence
-      cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
-      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
-      khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> exception chaining cho phép đổi abstraction type mà vẫn giữ failure gốc trong <code>cause</code>.</p>
+      <ol>
+        <li><strong>Flow:</strong> <code>load()</code> cố ý tạo <code>IllegalArgumentException("low-level")</code>, catch nó và throw <code>OrderReadException("cannot read order", cause)</code>. Endpoint catch wrapper.</li>
+        <li><strong>Code evidence:</strong><pre><code>private void load() {
+          try {
+              throw new IllegalArgumentException("low-level");
+          } catch (IllegalArgumentException e) {
+              throw new OrderReadException("cannot read order", e);
+          }
+      }</code></pre></li>
+        <li><strong>Observation:</strong> response đồng thời có <code>wrapper=OrderReadException</code>, <code>message=cannot read order</code>, <code>cause=IllegalArgumentException</code> và <code>causeMessage=low-level</code>.</li>
+        <li><strong>Ý nghĩa:</strong> wrapper phục vụ caller-facing abstraction; cause giữ technical diagnostics. Nếu constructor không nhận <code>e</code>, hai field cause trong response sẽ không tồn tại an toàn.</li>
+      </ol>
+      <p><strong>Kết luận:</strong> khi wrap vì abstraction boundary, preserve cause để translation không biến thành lost-cause anti-pattern.</p>
     usage: true
 ResourceController:
   closeOrder():
-    execution: <p><strong>Khái niệm:</strong> Resource close theo thứ tự ngược.</p><ol><li>Endpoint
-      chạy một ví dụ deterministic và bounded trong <code>ResourceController#closeOrder()</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/close-order&quot;)
-      public Map&lt;String,Object&gt; closeOrder(){ List&lt;String&gt; trace=new ArrayList&lt;&gt;();
-      try(DemoResource a=new DemoResource(&quot;A&quot;,trace,false);DemoResource
-      b=new DemoResource(&quot;B&quot;,trace,false)){trace.add(&quot;body&quot;);}
-      return Map.of(&quot;trace&quot;,trace); }</code></pre></li><li>Quan sát các
-      field trong response cùng nhau; đây là evidence cho quy tắc, không phải benchmark
-      hay production policy.</li></ol><p><strong>Kết luận:</strong> đối chiếu kết
-      quả với README section được liên kết trước khi khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> try-with-resources khởi tạo resource theo declaration order và close các resource đã khởi tạo thành công theo thứ tự ngược.</p>
+      <ol>
+        <li><strong>Flow:</strong> constructor của <code>DemoResource</code> ghi <code>open-A</code> rồi <code>open-B</code>; body ghi <code>body</code>; khi rời body Java gọi <code>close()</code> cho B rồi A.</li>
+        <li><strong>Code evidence:</strong><pre><code>try (DemoResource a = new DemoResource("A", trace, false);
+           DemoResource b = new DemoResource("B", trace, false)) {
+          trace.add("body");
+      }</code></pre></li>
+        <li><strong>Observation:</strong> trace kỳ vọng là <code>[open-A, open-B, body, close-B, close-A]</code>.</li>
+        <li><strong>Ý nghĩa:</strong> close order giống stack/LIFO, phù hợp với resource tạo sau thường bọc hoặc phụ thuộc resource tạo trước.</li>
+      </ol>
+      <p><strong>Kết luận:</strong> TWR biểu diễn lifecycle rõ ràng và định nghĩa close order thay vì buộc code tự quản lý nhiều <code>finally</code> lồng nhau.</p>
     usage: true
   suppressed():
-    execution: <p><strong>Khái niệm:</strong> Primary và suppressed exception.</p><ol><li>Endpoint
-      chạy một ví dụ deterministic và bounded trong <code>ResourceController#suppressed()</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/suppressed&quot;)
-      public Map&lt;String,Object&gt; suppressed(){ List&lt;String&gt; trace=new ArrayList&lt;&gt;();
-      try(DemoResource r=new DemoResource(&quot;R&quot;,trace,true)){trace.add(&quot;body-fails&quot;);throw
-      new IllegalArgumentException(&quot;primary&quot;);}catch(Exception e){return
-      Map.of(&quot;primary&quot;,e.getClass().getSimpleName(),&quot;message&quot;,e.getMessage(),&quot;suppressed&quot;,Arrays.stream(e.getSuppressed()).map(x-&gt;x.getClass().getSimpleName()+&quot;:&quot;+x.getMessage()).toList(),&quot;trace&quot;,trace);}
-      }</code></pre></li><li>Quan sát các field trong response cùng nhau; đây là evidence
-      cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
-      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
-      khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> khi try body đã fail và <code>close()</code> cũng fail, body failure vẫn là primary còn cleanup failure được gắn dưới dạng suppressed.</p>
+      <ol>
+        <li><strong>Flow:</strong> resource R ghi <code>open-R</code>; body ghi <code>body-fails</code> rồi throw <code>IllegalArgumentException("primary")</code>; trong quá trình unwind, <code>close()</code> ghi <code>close-R</code> và throw <code>IllegalStateException("close-R-failed")</code>.</li>
+        <li><strong>Code evidence:</strong><pre><code>try (DemoResource r = new DemoResource("R", trace, true)) {
+          trace.add("body-fails");
+          throw new IllegalArgumentException("primary");
+      } catch (Exception e) {
+          return Map.of(
+              "primary", e.getClass().getSimpleName(),
+              "suppressed", Arrays.stream(e.getSuppressed()).toList(),
+              "trace", trace
+          );
+      }</code></pre></li>
+        <li><strong>Observation:</strong> primary vẫn là <code>IllegalArgumentException</code>; suppressed list chứa close failure của R; trace cho thấy <code>open-R → body-fails → close-R</code>.</li>
+        <li><strong>Ý nghĩa:</strong> cleanup failure không được phép che failure đã quyết định outcome chính. <code>getSuppressed()</code> giữ evidence bổ sung cho diagnostics.</li>
+      </ol>
+      <p><strong>Kết luận:</strong> suppression là một phần cốt lõi của failure-preservation semantics trong try-with-resources, không chỉ là metadata phụ.</p>
     usage: true
