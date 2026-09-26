@@ -63,7 +63,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "2.IntegerOverflow/IntegerOverflow.md", anchor: "checked-arithmetic"}
-    apiRelated: {controller: "", methodSignature: ""}
+    apiRelated: {controller: "IntegerArithmeticController", methodSignature: "overflow()"}
 
   - id: floating-decimal-approx
     question: "Why can `0.1 + 0.2` differ from exact decimal 0.3?"
@@ -141,7 +141,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "6.PrecisionScale/PrecisionScale.md", anchor: "precision-vs-scale"}
-    apiRelated: {controller: "", methodSignature: ""}
+    apiRelated: {controller: "BigDecimalController", methodSignature: "precisionScale()"}
 
   - id: rounding-domain-policy
     question: "Which statement about financial rounding is most accurate?"
@@ -208,15 +208,249 @@ questions:
     readmeRelated: {file: "1.NumericModel/NumericModel.md", anchor: "numeric-type-model"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - id: math-exact-arithmetic
-    question: "Why would `Math.addExact(int, int)` be preferred over `a + b` when overflow must not be silent?"
+  - id: strictmath-boundary
+    question: "Which statement best describes the boundary between `Math` and `StrictMath`?"
     answers:
-      - {id: A, answer: "It converts the result to BigDecimal automatically.", explanation: "Incorrect. Exact arithmetic helpers detect overflow and throw ArithmeticException instead of silently wrapping."}
-      - {id: B, answer: "It detects integer overflow and throws ArithmeticException instead of wrapping silently.", explanation: "Correct. Exact arithmetic helpers detect overflow and throw ArithmeticException instead of silently wrapping."}
-      - {id: C, answer: "It disables two's-complement arithmetic globally.", explanation: "Incorrect. Exact arithmetic helpers detect overflow and throw ArithmeticException instead of silently wrapping."}
-      - {id: D, answer: "It guarantees the operands are positive.", explanation: "Incorrect. Exact arithmetic helpers detect overflow and throw ArithmeticException instead of silently wrapping."}
+      - {id: A, answer: "StrictMath uses arbitrary precision, so it is always exact where Math is approximate.", explanation: "Incorrect. Both APIs still operate on finite floating-point representations; StrictMath does not turn double into exact decimal arithmetic."}
+      - {id: B, answer: "Math is the normal default; StrictMath is useful when more tightly specified behavior for relevant floating-point functions is needed for reproducibility.", explanation: "Correct. The boundary is about specification/reproducibility, not arbitrary precision."}
+      - {id: C, answer: "StrictMath exists only for integer-overflow detection.", explanation: "Incorrect. Exact integer helpers are on Math; StrictMath concerns mathematical floating-point functions."}
+      - {id: D, answer: "Math and StrictMath differ because one internally uses BigDecimal.", explanation: "Incorrect. That is not their API contract."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
+    readmeRelated: {file: "9.Math/Math.md", anchor: "strictmath-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: numeric-intermediate-overflow
+    question: "For `int quantity = 1_000_000; int price = 10_000; long total = quantity * price;`, what matters most?"
+    answers:
+      - {id: A, answer: "The multiplication runs as long because the target variable is long.", explanation: "Incorrect. The arithmetic-expression type is determined before assignment conversion."}
+      - {id: B, answer: "The multiplication runs as int and may overflow before the result is widened to long.", explanation: "Correct. Widen an operand before multiplication if the operation itself must run as long."}
+      - {id: C, answer: "Java automatically switches to BigInteger if needed.", explanation: "Incorrect. Primitive arithmetic never switches to an arbitrary-precision type automatically."}
+      - {id: D, answer: "The expression does not compile because int cannot be assigned to long.", explanation: "Incorrect. The int result can widen to long after arithmetic has already executed."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.NumericModel/NumericModel.md", anchor: "numeric-conversions"}
+    apiRelated: {controller: "IntegerArithmeticController", methodSignature: "intermediateOverflow()"}
+
+  - id: integer-abs-min-boundary
+    question: "What does `Math.abs(Integer.MIN_VALUE)` return?"
+    answers:
+      - {id: A, answer: "Integer.MAX_VALUE.", explanation: "Incorrect. The positive counterpart 2147483648 does not fit in int."}
+      - {id: B, answer: "0.", explanation: "Incorrect. Math.abs does not clamp to zero."}
+      - {id: C, answer: "Integer.MIN_VALUE again because of the overflow boundary.", explanation: "Correct. MIN_VALUE has no representable positive counterpart as int."}
+      - {id: D, answer: "It always throws ArithmeticException.", explanation: "Incorrect. Unchecked Math.abs does not throw here; Math.absExact does on Java 21."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.IntegerOverflow/IntegerOverflow.md", anchor: "boundary-values"}
+    apiRelated: {controller: "IntegerArithmeticController", methodSignature: "boundaryCases()"}
+
+  - id: integer-divide-min-minus-one
+    question: "What does `Integer.MIN_VALUE / -1` produce in ordinary int division?"
+    answers:
+      - {id: A, answer: "Integer.MIN_VALUE because this is the special overflow case.", explanation: "Correct. The mathematical result 2147483648 does not fit in int, so unchecked division overflows back to MIN_VALUE."}
+      - {id: B, answer: "Integer.MAX_VALUE.", explanation: "Incorrect. Java does not saturate at MAX_VALUE."}
+      - {id: C, answer: "ArithmeticException because of overflow.", explanation: "Incorrect. Ordinary division throws for divisor zero; Math.divideExact detects this overflow."}
+      - {id: D, answer: "0.", explanation: "Incorrect. This is not truncation to zero."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.IntegerOverflow/IntegerOverflow.md", anchor: "boundary-values"}
+    apiRelated: {controller: "IntegerArithmeticController", methodSignature: "boundaryCases()"}
+
+  - id: floating-signed-zero
+    question: "Which statement about `+0.0` and `-0.0` is correct?"
+    answers:
+      - {id: A, answer: "They are always unequal with ==.", explanation: "Incorrect. 0.0 == -0.0 is true."}
+      - {id: B, answer: "They compare equal with ==, but reciprocals of +0.0 and -0.0 produce infinities with different signs.", explanation: "Correct. Signed zero can affect arithmetic even though the equality operator considers the zeros equal."}
+      - {id: C, answer: "Java has no negative zero.", explanation: "Incorrect. IEEE 754 includes signed zero."}
+      - {id: D, answer: "Both reciprocals are always NaN.", explanation: "Incorrect. Reciprocals of signed zero produce signed infinities."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.FloatingPoint/FloatingPoint.md", anchor: "nan-infinity-negative-zero"}
+    apiRelated: {controller: "FloatingPointController", methodSignature: "specialValues()"}
+
+  - id: floating-tolerance-domain
+    question: "Why should one fixed epsilon not be used for every floating-point comparison?"
+    answers:
+      - {id: A, answer: "Because epsilon works only for float, not double.", explanation: "Incorrect. Tolerance strategies can apply to either type but must fit the domain."}
+      - {id: B, answer: "Because the JVM changes epsilon between runs.", explanation: "Incorrect. Epsilon is chosen by the program."}
+      - {id: C, answer: "Because acceptable error depends on magnitude, scale, and domain requirements.", explanation: "Correct. An absolute tolerance suitable at one magnitude may be meaningless at another."}
+      - {id: D, answer: "Because == is always better than tolerance.", explanation: "Incorrect. Exact equality is appropriate only when exact represented-value equality is the contract."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.FloatingPoint/FloatingPoint.md", anchor: "floating-point-comparison"}
+    apiRelated: {controller: "FloatingPointController", methodSignature: "comparison()"}
+
+  - id: biginteger-exact-conversion
+    question: "What is the important difference between `BigInteger.intValue()` and `intValueExact()`?"
+    answers:
+      - {id: A, answer: "intValue may lose high-order bits; intValueExact throws if the value does not fit in int.", explanation: "Correct. Use exact conversion when fitting the primitive range is a boundary invariant."}
+      - {id: B, answer: "intValue always throws while intValueExact truncates.", explanation: "Incorrect. The semantics are reversed."}
+      - {id: C, answer: "The two methods are always identical.", explanation: "Incorrect. They differ when the value is outside the int range."}
+      - {id: D, answer: "intValueExact automatically returns long if int is too small.", explanation: "Incorrect. It throws ArithmeticException."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.BigInteger/BigInteger.md", anchor: "big-integer-operations"}
+    apiRelated: {controller: "BigIntegerController", methodSignature: "conversionBoundary()"}
+
+  - id: biginteger-remainder-vs-mod
+    question: "For BigInteger value `-7` and divisor/modulus `3`, which statement is correct?"
+    answers:
+      - {id: A, answer: "remainder and mod must both return -1.", explanation: "Incorrect. mod produces a non-negative modular result when the modulus is positive."}
+      - {id: B, answer: "remainder returns -1 while mod returns 2.", explanation: "Correct. The APIs have different contracts for a negative dividend."}
+      - {id: C, answer: "mod requires a negative modulus.", explanation: "Incorrect. BigInteger.mod requires a positive modulus."}
+      - {id: D, answer: "Both throw because the dividend is negative.", explanation: "Incorrect. A negative dividend is allowed; the result semantics differ."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.BigInteger/BigInteger.md", anchor: "big-integer-operations"}
+    apiRelated: {controller: "BigIntegerController", methodSignature: "remainderVsMod()"}
+
+  - id: bigdecimal-valueof-after-double-arithmetic
+    question: "What is true about `BigDecimal.valueOf(0.1 + 0.2)`?"
+    answers:
+      - {id: A, answer: "It always recovers the exact decimal intent 0.3.", explanation: "Incorrect. Floating-point arithmetic has already happened before BigDecimal is constructed."}
+      - {id: B, answer: "It does not compile because valueOf cannot accept a double.", explanation: "Incorrect. BigDecimal.valueOf(double) exists."}
+      - {id: C, answer: "It captures the decimal string of the already-computed double result, about 0.30000000000000004.", explanation: "Correct. BigDecimal cannot infer intent lost before construction."}
+      - {id: D, answer: "It reruns the addition using decimal arithmetic.", explanation: "Incorrect. BigDecimal receives the double result after the addition."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.BigDecimal/BigDecimal.md", anchor: "big-decimal-construction"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: bigdecimal-multiply-scale
+    question: "Without MathContext, how is the preferred scale of `BigDecimal.multiply` generally determined?"
+    answers:
+      - {id: A, answer: "It is always 2.", explanation: "Incorrect. Scale is not hard-coded to money semantics."}
+      - {id: B, answer: "It is left scale + right scale.", explanation: "Correct. Multiplication adds the preferred scales of the operands."}
+      - {id: C, answer: "It is max(left scale, right scale).", explanation: "Incorrect. That rule better describes add/subtract preferred scale."}
+      - {id: D, answer: "It is always 0.", explanation: "Incorrect. BigDecimal multiplication carries scale semantics from its operands."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.BigDecimal/BigDecimal.md", anchor: "big-decimal-arithmetic"}
+    apiRelated: {controller: "BigDecimalController", methodSignature: "divisionAndRounding()"}
+
+  - id: mathcontext-vs-setscale
+    question: "What best distinguishes `setScale(2, mode)` from `MathContext(4, mode)`?"
+    answers:
+      - {id: A, answer: "They always do the same thing.", explanation: "Incorrect. Scale and precision are different controls."}
+      - {id: B, answer: "setScale limits total significant digits while MathContext only formats output.", explanation: "Incorrect. The roles are reversed."}
+      - {id: C, answer: "setScale controls scale/decimal places; MathContext controls total significant-digit precision of an operation.", explanation: "Correct. This is the core distinction between scale and precision."}
+      - {id: D, answer: "MathContext works only with double.", explanation: "Incorrect. MathContext is a central BigDecimal API."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.PrecisionScale/PrecisionScale.md", anchor: "math-context"}
+    apiRelated: {controller: "BigDecimalController", methodSignature: "mathContextVsScale()"}
+
+  - id: rounding-negative-half-tie
+    question: "When rounding `-2.5` to an integer, which pair is correct?"
+    answers:
+      - {id: A, answer: "HALF_UP → -3, HALF_DOWN → -2.", explanation: "Correct. HALF_UP moves away from zero on a tie; HALF_DOWN moves toward zero."}
+      - {id: B, answer: "HALF_UP → -2, HALF_DOWN → -3.", explanation: "Incorrect. The directions are reversed."}
+      - {id: C, answer: "Both always remain -2.5.", explanation: "Incorrect. Target scale 0 requires rounding."}
+      - {id: D, answer: "Both throw because the value is negative.", explanation: "Incorrect. Negative values are rounded normally."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Rounding/Rounding.md", anchor: "rounding-modes"}
+    apiRelated: {controller: "BigDecimalController", methodSignature: "roundingModes()"}
+
+  - id: rounding-double-rounding
+    question: "Why can double rounding change the final result?"
+    answers:
+      - {id: A, answer: "Each rounding step can discard information, so later rounding receives a changed input.", explanation: "Correct. Intermediate rounding can alter the next rounding boundary."}
+      - {id: B, answer: "Because BigDecimal is mutable.", explanation: "Incorrect. BigDecimal is immutable."}
+      - {id: C, answer: "Because RoundingMode is random.", explanation: "Incorrect. Rounding modes are deterministic."}
+      - {id: D, answer: "Double rounding is always mathematically identical to rounding once.", explanation: "Incorrect. Values such as 2.445 can diverge depending on the sequence."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Rounding/Rounding.md", anchor: "rounding-at-boundaries"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: bigdecimal-hashset-treeset
+    question: "If `1.0` and `1.00` are added to both `HashSet<BigDecimal>` and `TreeSet<BigDecimal>`, what can happen?"
+    answers:
+      - {id: A, answer: "Both sets always have size 2.", explanation: "Incorrect. TreeSet uses natural ordering, where compareTo can return 0."}
+      - {id: B, answer: "HashSet has size 1 and TreeSet has size 2.", explanation: "Incorrect. The semantics are reversed in this case."}
+      - {id: C, answer: "HashSet has size 2 and TreeSet has size 1.", explanation: "Correct. HashSet uses scale-sensitive equals/hashCode; TreeSet uses compareTo."}
+      - {id: D, answer: "Both throw because the scales differ.", explanation: "Incorrect. Both collections accept these values."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.BigDecimalComparison/BigDecimalComparison.md", anchor: "big-decimal-collections"}
+    apiRelated: {controller: "BigDecimalController", methodSignature: "collectionSemantics()"}
+
+  - id: math-floor-division-negative
+    question: "For `-7` and `3`, what are `-7 / 3` and `Math.floorDiv(-7, 3)` respectively?"
+    answers:
+      - {id: A, answer: "-2 and -3.", explanation: "Correct. / truncates toward zero while floorDiv moves toward negative infinity."}
+      - {id: B, answer: "-3 and -2.", explanation: "Incorrect. The semantics are reversed."}
+      - {id: C, answer: "Both are -2.", explanation: "Incorrect. They differ when the negative result is not integral."}
+      - {id: D, answer: "Both are -3.", explanation: "Incorrect. Ordinary integer division truncates toward zero."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.Math/Math.md", anchor: "math-core-functions"}
+    apiRelated: {controller: "MathController", methodSignature: "floorDivision()"}
+
+  - id: math-abs-exact-boundary
+    question: "On Java 21, what does `Math.absExact(Integer.MIN_VALUE)` do?"
+    answers:
+      - {id: A, answer: "Returns Integer.MAX_VALUE.", explanation: "Incorrect. There is no representable positive counterpart."}
+      - {id: B, answer: "Returns Integer.MIN_VALUE like Math.abs.", explanation: "Incorrect. The exact variant detects overflow."}
+      - {id: C, answer: "Throws ArithmeticException.", explanation: "Correct. The exact helper turns the boundary overflow into explicit failure."}
+      - {id: D, answer: "Returns long 2147483648.", explanation: "Incorrect. The int overload returns int or throws."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
     readmeRelated: {file: "9.Math/Math.md", anchor: "exact-arithmetic-methods"}
+    apiRelated: {controller: "MathController", methodSignature: "exactBoundaries()"}
+
+  - id: threadlocalrandom-boundary
+    question: "When is `ThreadLocalRandom` a better fit than an ordinary shared `Random`?"
+    answers:
+      - {id: A, answer: "When many threads need pseudo-random values and unnecessary contention should be avoided.", explanation: "Correct. This is a concurrency/performance boundary, not a security boundary."}
+      - {id: B, answer: "When generating password-reset tokens.", explanation: "Incorrect. Security-sensitive unpredictability requires SecureRandom."}
+      - {id: C, answer: "Only when the code has no threads.", explanation: "Incorrect. The API is specifically relevant to concurrent use."}
+      - {id: D, answer: "Because ThreadLocalRandom is cryptographically secure.", explanation: "Incorrect. It is not a cryptographic random source."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.Random/Random.md", anchor: "threadlocal-random-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: random-modulo-pitfall
+    question: "Why is `random.nextInt() % 100` usually worse than `random.nextInt(100)` for a 0..99 range?"
+    answers:
+      - {id: A, answer: "Modulo always crashes the JVM.", explanation: "Incorrect. The issue is range/sign/distribution semantics, not a crash."}
+      - {id: B, answer: "Manual modulo can produce negative results and can introduce distribution mistakes; the bounded API expresses the contract directly.", explanation: "Correct. Prefer the bounded API when a bounded range is the intent."}
+      - {id: C, answer: "nextInt(100) is always cryptographically secure.", explanation: "Incorrect. This is still an ordinary PRNG."}
+      - {id: D, answer: "The modulo operator does not exist for int.", explanation: "Incorrect. % exists; it is simply not the better bounded-random API here."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.Random/Random.md", anchor: "pseudo-random-model"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: securerandom-setseed-nuance
+    question: "Which statement about `SecureRandom.setSeed(...)` is most accurate?"
+    answers:
+      - {id: A, answer: "Every timestamp seed automatically makes the generator more secure.", explanation: "Incorrect. A timestamp is not a strong primary entropy source."}
+      - {id: B, answer: "setSeed supplements state; but if a new PRNG is caller-seeded before its first self-seeding operation, the caller must provide enough entropy.", explanation: "Correct. Security depends on the entropy/state lifecycle, not only the class name."}
+      - {id: C, answer: "setSeed always resets all previous entropy to exactly the supplied seed.", explanation: "Incorrect. Its contract supplements seed/state rather than behaving like a simple deterministic Random reset."}
+      - {id: D, answer: "SecureRandom has no seeding concept.", explanation: "Incorrect. Seeding is central to the CSPRNG lifecycle."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "11.SecureRandom/SecureRandom.md", anchor: "entropy-seeding"}
     apiRelated: {controller: "", methodSignature: ""}

@@ -1,81 +1,176 @@
 BigDecimalController:
   construction():
-    execution: <p><strong>Khái niệm:</strong> Khởi tạo từ String/valueOf/double.</p><ol><li>Endpoint
-      chạy một ví dụ deterministic và bounded trong <code>BigDecimalController#construction()</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/construction&quot;)
-      public Map&lt;String,Object&gt; construction(){ return Map.of(&quot;fromString&quot;,new
-      BigDecimal(&quot;0.1&quot;).toString(),&quot;fromValueOf&quot;,BigDecimal.valueOf(0.1d).toString(),&quot;fromDouble&quot;,new
-      BigDecimal(0.1d).toString()); }</code></pre></li><li>Quan sát các field trong
-      response cùng nhau; đây là evidence cho quy tắc, không phải benchmark hay production
-      policy.</li></ol><p><strong>Kết luận:</strong> đối chiếu kết quả với README
-      section được liên kết trước khi khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> Cách tạo BigDecimal quyết định decimal value nào thực sự được capture.</p>
+      <p><strong>Luồng:</strong> Tạo ba value từ cùng ý tưởng 0.1 bằng String, valueOf(double) và constructor nhận double.</p>
+      <pre><code>new BigDecimal("0.1")
+      BigDecimal.valueOf(0.1d)
+      new BigDecimal(0.1d)</code></pre>
+      <p><strong>Quan sát:</strong> <code>fromString</code> và <code>fromValueOf</code> hiển thị 0.1, còn <code>fromDouble</code> lộ decimal expansion của binary double gần đúng.</p>
+      <p><strong>Kết luận:</strong> Nếu decimal intent là contract, tránh đưa binary approximation vào pipeline trước khi tạo BigDecimal.</p>
     usage: true
   comparison():
-    execution: <p><strong>Khái niệm:</strong> BigDecimal equals có tính
-      scale.</p><ol><li>Endpoint chạy một ví dụ deterministic và bounded trong <code>BigDecimalController#comparison()</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/comparison&quot;)
-      public Map&lt;String,Object&gt; comparison(){ BigDecimal a=new BigDecimal(&quot;1.0&quot;),
-      b=new BigDecimal(&quot;1.00&quot;); return Map.of(&quot;leftScale&quot;,a.scale(),&quot;rightScale&quot;,b.scale(),&quot;equals&quot;,a.equals(b),&quot;compareTo&quot;,a.compareTo(b));
-      }</code></pre></li><li>Quan sát các field trong response cùng nhau; đây là evidence
-      cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
-      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
-      khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> BigDecimal <code>equals</code> xét scale còn <code>compareTo</code> xét numerical ordering.</p>
+      <p><strong>Luồng:</strong> So sánh <code>1.0</code> với <code>1.00</code> và trả cả scale, equals, compareTo.</p>
+      <pre><code>left.equals(right)
+      left.compareTo(right)</code></pre>
+      <p><strong>Quan sát:</strong> <code>equals=false</code>, <code>compareTo=0</code>, scale hai value khác nhau.</p>
+      <p><strong>Kết luận:</strong> Representation equality và numerical equality là hai contract khác nhau.</p>
     usage: true
   divisionAndRounding():
-    execution: <p><strong>Khái niệm:</strong> Semantics của RoundingMode.</p><ol><li>Endpoint
-      chạy một ví dụ deterministic và bounded trong <code>BigDecimalController#divisionAndRounding()</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/division-rounding&quot;)
-      public Map&lt;String,Object&gt; divisionAndRounding(){ Map&lt;String,Object&gt;
-      r=new LinkedHashMap&lt;&gt;(); try{ BigDecimal.ONE.divide(new BigDecimal(&quot;3&quot;));
-      }catch(ArithmeticException e){r.put(&quot;exactDivisionFailure&quot;,e.getClass().getSimpleName());}
-      r.put(&quot;rounded&quot;,BigDecimal.ONE.divide(new BigDecimal(&quot;3&quot;),4,RoundingMode.HALF_UP).toString());
-      return r; }</code></pre></li><li>Quan sát các field trong response cùng nhau;
-      đây là evidence cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
-      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
-      khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> Exact BigDecimal division không tự invent rounding policy.</p>
+      <p><strong>Luồng:</strong> Thử exact <code>1 / 3</code>, capture failure, sau đó lặp lại với scale 4 và <code>HALF_UP</code>.</p>
+      <pre><code>BigDecimal.ONE.divide(new BigDecimal("3"))
+      BigDecimal.ONE.divide(new BigDecimal("3"), 4, RoundingMode.HALF_UP)</code></pre>
+      <p><strong>Quan sát:</strong> Exact division trả <code>ArithmeticException</code>; explicit policy trả <code>0.3333</code>.</p>
+      <p><strong>Kết luận:</strong> Rounding mode/scale là policy phải được caller hoặc domain quyết định.</p>
+    usage: true
+  precisionScale():
+    execution: |-
+      <p><strong>Khái niệm:</strong> Precision, scale và representation normalization không phải cùng một thứ.</p>
+      <p><strong>Luồng:</strong> Tạo <code>123.4500</code>, đọc precision/scale, rồi gọi <code>stripTrailingZeros()</code> và đọc lại.</p>
+      <pre><code>value.precision();
+      value.scale();
+      value.stripTrailingZeros();</code></pre>
+      <p><strong>Quan sát:</strong> Numerical value giữ nguyên nhưng precision/scale và text representation có thể thay đổi.</p>
+      <p><strong>Kết luận:</strong> Scale thuộc representation; normalization phải được dùng có chủ ý nếu equality/key semantics quan trọng.</p>
+    usage: true
+  mathContextVsScale():
+    execution: |-
+      <p><strong>Khái niệm:</strong> <code>setScale</code> kiểm soát decimal scale; <code>MathContext</code> kiểm soát significant-digit precision của operation.</p>
+      <p><strong>Luồng:</strong> Với <code>12345.67</code>, một nhánh dùng scale 1, nhánh còn lại dùng precision 4.</p>
+      <pre><code>value.setScale(1, RoundingMode.HALF_UP)
+      value.round(new MathContext(4, RoundingMode.HALF_UP))</code></pre>
+      <p><strong>Quan sát:</strong> <code>setScaleOne</code> giữ magnitude nhưng một decimal place; <code>precisionFour</code> làm tròn theo tổng significant digits.</p>
+      <p><strong>Kết luận:</strong> Chọn scale hay MathContext dựa trên policy đang kiểm soát decimal places hay total precision.</p>
+    usage: true
+  roundingModes():
+    execution: |-
+      <p><strong>Khái niệm:</strong> Các HALF mode chọn nearest candidate và chỉ khác nhau ở tie.</p>
+      <p><strong>Luồng:</strong> Round <code>2.5</code> và <code>-2.5</code> về scale 0 bằng HALF_UP, HALF_DOWN và HALF_EVEN.</p>
+      <pre><code>positive.setScale(0, RoundingMode.HALF_UP)
+      positive.setScale(0, RoundingMode.HALF_DOWN)
+      positive.setScale(0, RoundingMode.HALF_EVEN)
+      negative.setScale(0, RoundingMode.HALF_UP)</code></pre>
+      <p><strong>Quan sát:</strong> HALF_UP đi xa zero ở tie; HALF_DOWN đi về zero; HALF_EVEN chọn neighbor chẵn.</p>
+      <p><strong>Kết luận:</strong> Tên mode chỉ có ý nghĩa khi gắn với mathematical direction và business rule.</p>
+    usage: true
+  collectionSemantics():
+    execution: |-
+      <p><strong>Khái niệm:</strong> Hash collection và sorted collection có thể nhìn BigDecimal equality khác nhau.</p>
+      <p><strong>Luồng:</strong> Thêm <code>1.0</code> và <code>1.00</code> vào HashSet và TreeSet.</p>
+      <pre><code>hashSet.add(left); hashSet.add(right);
+      treeSet.add(left); treeSet.add(right);</code></pre>
+      <p><strong>Quan sát:</strong> <code>hashSetSize=2</code> nhưng <code>treeSetSize=1</code> vì HashSet dùng equals/hashCode còn TreeSet dùng natural ordering.</p>
+      <p><strong>Kết luận:</strong> Nếu BigDecimal là domain key, equality/normalization policy phải explicit.</p>
     usage: true
 FloatingPointController:
   precision():
-    execution: <p><strong>Khái niệm:</strong> Precision và rounding error.</p><ol><li>Endpoint
-      chạy một ví dụ deterministic và bounded trong <code>FloatingPointController#precision()</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/precision&quot;)
-      public Map&lt;String,Object&gt; precision(){ double v=0.1d+0.2d; return Map.of(&quot;computed&quot;,v,&quot;expectedDecimal&quot;,0.3d,&quot;exactEqual&quot;,v==0.3d,&quot;delta&quot;,Math.abs(v-0.3d));
-      }</code></pre></li><li>Quan sát các field trong response cùng nhau; đây là evidence
-      cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
-      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
-      khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> Binary floating-point không biểu diễn chính xác nhiều decimal fraction.</p>
+      <p><strong>Luồng:</strong> Tính <code>0.1 + 0.2</code>, so exact với <code>0.3</code> và đo delta.</p>
+      <pre><code>double value = 0.1d + 0.2d;
+      value == 0.3d;
+      Math.abs(value - 0.3d);</code></pre>
+      <p><strong>Quan sát:</strong> Exact equality false và delta nhỏ nhưng khác zero.</p>
+      <p><strong>Kết luận:</strong> Đây là representation property của IEEE 754, không phải Java tự làm sai phép cộng.</p>
     usage: true
   specialValues():
-    execution: <p><strong>Khái niệm:</strong> NaN, infinity và negative zero.</p><ol><li>Endpoint
-      chạy một ví dụ deterministic và bounded trong <code>FloatingPointController#specialValues()</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/special-values&quot;)
-      public Map&lt;String,Object&gt; specialValues(){ return Map.of(&quot;nanEqualsItself&quot;,Double.NaN==Double.NaN,&quot;isNaN&quot;,Double.isNaN(0.0d/0.0d),&quot;positiveInfinity&quot;,1.0d/0.0d,&quot;zeroEqualsNegativeZero&quot;,0.0d==-0.0d);
-      }</code></pre></li><li>Quan sát các field trong response cùng nhau; đây là evidence
-      cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
-      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
-      khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> IEEE 754 có NaN, infinity và signed zero với behavior riêng.</p>
+      <p><strong>Luồng:</strong> Tạo NaN bằng <code>0.0/0.0</code>, infinity bằng division by zero và so reciprocal của +0.0/-0.0.</p>
+      <pre><code>Double.isNaN(0.0d / 0.0d)
+      1.0d / 0.0d
+      1.0d / -0.0d</code></pre>
+      <p><strong>Quan sát:</strong> NaN không equals chính nó; +0.0 == -0.0 nhưng reciprocal cho +Infinity và -Infinity.</p>
+      <p><strong>Kết luận:</strong> Special values cần API kiểm tra/handling riêng thay vì áp trực giác integer.</p>
+    usage: true
+  comparison():
+    execution: |-
+      <p><strong>Khái niệm:</strong> Approximate computation thường cần tolerance thay vì exact equality.</p>
+      <p><strong>Luồng:</strong> So <code>0.1 + 0.2</code> với <code>0.3</code> bằng <code>==</code> và epsilon <code>1e-9</code>.</p>
+      <pre><code>double delta = Math.abs(actual - expected);
+      boolean withinTolerance = delta &lt;= epsilon;</code></pre>
+      <p><strong>Quan sát:</strong> <code>exactEqual=false</code> nhưng <code>withinTolerance=true</code>.</p>
+      <p><strong>Kết luận:</strong> Epsilon phải đến từ domain/error budget; endpoint chỉ chứng minh mechanism, không đưa ra universal epsilon.</p>
     usage: true
 IntegerArithmeticController:
   overflow():
-    execution: <p><strong>Khái niệm:</strong> Integer overflow và wraparound.</p><ol><li>Endpoint
-      chạy một ví dụ deterministic và bounded trong <code>IntegerArithmeticController#overflow()</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/overflow&quot;)
-      public Map&lt;String,Object&gt; overflow(){</code></pre></li><li>Quan sát các
-      field trong response cùng nhau; đây là evidence cho quy tắc, không phải benchmark
-      hay production policy.</li></ol><p><strong>Kết luận:</strong> đối chiếu kết
-      quả với README section được liên kết trước khi khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> Primitive integer overflow wrap silently, còn exact helper biến overflow thành failure explicit.</p>
+      <p><strong>Luồng:</strong> Tính <code>Integer.MAX_VALUE + 1</code> rồi gọi <code>Math.addExact(MAX_VALUE, 1)</code>.</p>
+      <pre><code>int wrapped = Integer.MAX_VALUE + 1;
+      Math.addExact(Integer.MAX_VALUE, 1);</code></pre>
+      <p><strong>Quan sát:</strong> Unchecked result là <code>Integer.MIN_VALUE</code>; checked path ghi <code>ArithmeticException</code>.</p>
+      <p><strong>Kết luận:</strong> Nếu overflow vi phạm contract, exact helper giúp fail tại arithmetic boundary thay vì truyền value sai xuống downstream logic.</p>
+    usage: true
+  intermediateOverflow():
+    execution: |-
+      <p><strong>Khái niệm:</strong> Assignment target không quyết định type của arithmetic expression đã chạy.</p>
+      <p><strong>Luồng:</strong> Với hai operand int, so <code>long wrong = quantity * unitPrice</code> với phép nhân đã widen operand trước.</p>
+      <pre><code>long wrong = quantity * unitPrice;
+      long correct = (long) quantity * unitPrice;</code></pre>
+      <p><strong>Quan sát:</strong> <code>intProductThenWidened</code> khác <code>widenBeforeMultiply</code>; <code>sameResult=false</code>.</p>
+      <p><strong>Kết luận:</strong> Numeric promotion/operation type xảy ra trước assignment conversion.</p>
+    usage: true
+  boundaryCases():
+    execution: |-
+      <p><strong>Khái niệm:</strong> <code>MIN_VALUE</code> có các asymmetric boundary case do two's-complement range.</p>
+      <p><strong>Luồng:</strong> Chạy ordinary <code>Math.abs</code> và integer division trên <code>Integer.MIN_VALUE</code>.</p>
+      <pre><code>Math.abs(Integer.MIN_VALUE)
+      Integer.MIN_VALUE / -1</code></pre>
+      <p><strong>Quan sát:</strong> Cả hai result đều là <code>Integer.MIN_VALUE</code> vì positive mathematical result không fit trong <code>int</code>.</p>
+      <p><strong>Kết luận:</strong> Boundary reasoning phải test actual primitive range; checked alternatives được tách sang experiment <code>MathController#exactBoundaries()</code>.</p>
     usage: true
 RandomController:
   seededSequence():
-    execution: <p><strong>Khái niệm:</strong> Pseudo-random model và seed.</p><ol><li>Endpoint
-      chạy một ví dụ deterministic và bounded trong <code>RandomController#seededSequence()</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/seeded-sequence&quot;)
-      public Map&lt;String,Object&gt; seededSequence(){ Random a=new Random(42L),
-      b=new Random(42L); List&lt;Integer&gt; x=List.of(a.nextInt(1000),a.nextInt(1000),a.nextInt(1000));
-      List&lt;Integer&gt; y=List.of(b.nextInt(1000),b.nextInt(1000),b.nextInt(1000));
-      return Map.of(&quot;first&quot;,x,&quot;sameSeed&quot;,y,&quot;reproducible&quot;,x.equals(y),&quot;securityBoundary&quot;,&quot;use
-      SecureRandom when unpredictability is required&quot;); }</code></pre></li><li>Quan
-      sát các field trong response cùng nhau; đây là evidence cho quy tắc, không phải
-      benchmark hay production policy.</li></ol><p><strong>Kết luận:</strong> đối
-      chiếu kết quả với README section được liên kết trước khi khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> Ordinary PRNG là deterministic từ seed/state và vì vậy có thể reproducible.</p>
+      <p><strong>Luồng:</strong> Tạo hai <code>Random(42)</code>, gọi cùng ba <code>nextInt(1000)</code> theo cùng thứ tự.</p>
+      <pre><code>Random first = new Random(42L);
+      Random second = new Random(42L);</code></pre>
+      <p><strong>Quan sát:</strong> Hai sequence giống nhau và <code>reproducible=true</code>.</p>
+      <p><strong>Kết luận:</strong> Reproducibility hữu ích cho test/simulation nhưng không phải security unpredictability; security-sensitive randomness thuộc <code>SecureRandom</code>.</p>
+    usage: true
+BigIntegerController:
+  conversionBoundary():
+    execution: |-
+      <p><strong>Khái niệm:</strong> Chuyển BigInteger về primitive là narrowing boundary có thể làm mất high-order bits.</p>
+      <p><strong>Luồng:</strong> Với một value vượt xa int, gọi cả <code>intValue()</code> và <code>intValueExact()</code>.</p>
+      <pre><code>huge.intValue();
+      huge.intValueExact();</code></pre>
+      <p><strong>Quan sát:</strong> Unchecked conversion vẫn trả một int; exact conversion ghi <code>ArithmeticException</code>.</p>
+      <p><strong>Kết luận:</strong> Dùng exact conversion khi việc fit primitive range là invariant của boundary.</p>
+    usage: true
+  remainderVsMod():
+    execution: |-
+      <p><strong>Khái niệm:</strong> <code>remainder</code> và <code>mod</code> không cùng contract với negative dividend.</p>
+      <p><strong>Luồng:</strong> Tính cả hai với <code>-7</code> và divisor/modulus <code>3</code>.</p>
+      <pre><code>value.remainder(divisor);
+      value.mod(divisor);</code></pre>
+      <p><strong>Quan sát:</strong> <code>remainder=-1</code> nhưng <code>mod=2</code>.</p>
+      <p><strong>Kết luận:</strong> Modular arithmetic yêu cầu positive modulus và non-negative result; không thay thế hai API theo tên gọi bề mặt.</p>
+    usage: true
+MathController:
+  floorDivision():
+    execution: |-
+      <p><strong>Khái niệm:</strong> Java integer division truncate toward zero, còn floor division đi về negative infinity.</p>
+      <p><strong>Luồng:</strong> So <code>-7 / 3</code> và <code>-7 % 3</code> với <code>Math.floorDiv(-7,3)</code>/<code>floorMod</code>.</p>
+      <pre><code>-7 / 3
+      Math.floorDiv(-7, 3)
+      -7 % 3
+      Math.floorMod(-7, 3)</code></pre>
+      <p><strong>Quan sát:</strong> Ordinary quotient là -2 còn floor quotient là -3; remainder/mod tương ứng cũng khác sign semantics.</p>
+      <p><strong>Kết luận:</strong> Algorithm có negative operands phải chọn division contract rõ ràng.</p>
+    usage: true
+  exactBoundaries():
+    execution: |-
+      <p><strong>Khái niệm:</strong> Java 21 exact helpers biến arithmetic boundary overflow thành exception.</p>
+      <p><strong>Luồng:</strong> So unchecked <code>abs(MIN_VALUE)</code>/<code>MIN_VALUE / -1</code> với <code>absExact</code>/<code>divideExact</code>.</p>
+      <pre><code>Math.absExact(Integer.MIN_VALUE);
+      Math.divideExact(Integer.MIN_VALUE, -1);</code></pre>
+      <p><strong>Quan sát:</strong> Unchecked paths trả MIN_VALUE; exact helpers throw <code>ArithmeticException</code>.</p>
+      <p><strong>Kết luận:</strong> Exact helper không tăng range nhưng giúp biến silent corruption thành explicit contract failure.</p>
     usage: true

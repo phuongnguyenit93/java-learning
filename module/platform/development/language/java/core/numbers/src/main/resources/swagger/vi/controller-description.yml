@@ -1,24 +1,36 @@
 BigDecimalController:
   description: |-
     <h2>BigDecimal</h2>
-    <p>Các thí nghiệm Java Core có thể chạy để quan sát Khởi tạo từ String/valueOf/double.</p>
+    <p>Thí nghiệm deterministic về construction, arithmetic, precision/scale, rounding và equality/collection semantics của BigDecimal.</p>
   readmeRelated:
     file: 5.BigDecimal/BigDecimal.md
+BigIntegerController:
+  description: |-
+    <h2>BigInteger</h2>
+    <p>Thí nghiệm về arbitrary-precision integer, conversion boundary và khác biệt giữa remainder với modular arithmetic.</p>
+  readmeRelated:
+    file: 4.BigInteger/BigInteger.md
 FloatingPointController:
   description: |-
     <h2>Floating Point</h2>
-    <p>Các thí nghiệm Java Core có thể chạy để quan sát Precision và rounding error.</p>
+    <p>Thí nghiệm về binary approximation, special values và tolerance-based comparison.</p>
   readmeRelated:
     file: 3.FloatingPoint/FloatingPoint.md
 IntegerArithmeticController:
   description: |-
     <h2>Integer Arithmetic</h2>
-    <p>Các thí nghiệm Java Core có thể chạy để quan sát Integer overflow và wraparound.</p>
+    <p>Thí nghiệm về wraparound, intermediate overflow và các boundary case của fixed-width integer.</p>
   readmeRelated:
     file: 2.IntegerOverflow/IntegerOverflow.md
+MathController:
+  description: |-
+    <h2>Math</h2>
+    <p>Thí nghiệm về floor division/modulo và exact arithmetic helper trong Java 21.</p>
+  readmeRelated:
+    file: 9.Math/Math.md
 RandomController:
   description: |-
     <h2>Random</h2>
-    <p>Các thí nghiệm Java Core có thể chạy để quan sát Pseudo-random model và seed.</p>
+    <p>Thí nghiệm deterministic về seed, reproducibility và boundary giữa ordinary PRNG với security randomness.</p>
   readmeRelated:
     file: 10.Random/Random.md

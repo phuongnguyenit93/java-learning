@@ -1,39 +1,110 @@
 # Math và StrictMath
 
-Nhiều phép toán số học phổ biến đã có helper chuẩn trong Java. Dùng API chuẩn thường rõ intent hơn và tránh tự viết lại những edge case khó.
+Java đã cung cấp nhiều standard numeric helper. Dùng API chuẩn thường thể hiện intent rõ hơn và tránh tự viết lại edge case khó.
 
 ## <a id="math-core-functions">Các hàm chính của Math</a>
 
-`Math` cung cấp nhiều nhóm thao tác:
+`Math` có thể nhóm thành:
 
-- `abs`, `min`, `max`;
-- `sqrt`, `pow`;
-- `floor`, `ceil`, `round`;
-- lượng giác/logarithm;
-- exact integer helpers;
-- một số utility liên quan floating-point.
+```text
+basic selection
+→ abs, min, max
 
-Đừng mặc định `Math` làm mọi thứ “exact”: các method floating-point vẫn tuân cách biểu diễn và rounding của `double`/`float`.
+power/root
+→ pow, sqrt, cbrt
+
+rounding helpers
+→ floor, ceil, round, rint
+
+trigonometry/logarithm
+→ sin, cos, tan, log, exp
+
+integer helpers
+→ floorDiv, floorMod, exact arithmetic
+
+floating-point helpers
+→ ulp, nextUp, nextDown, copySign...
+```
+
+### `floor`, `ceil`, `round`
+
+```java
+Math.floor(2.7);  // 2.0
+Math.ceil(2.1);   // 3.0
+Math.round(2.5);  // 3
+
+Math.floor(-2.1); // -3.0
+Math.ceil(-2.9);  // -2.0
+```
+
+`floor` nghĩa là đi về -∞, không phải “bỏ phần decimal”.
+
+### `floorDiv` và `floorMod`
+
+Java integer division thông thường truncate toward zero:
+
+```java
+System.out.println(-7 / 3); // -2
+```
+
+`Math.floorDiv` dùng floor division:
+
+```java
+System.out.println(Math.floorDiv(-7, 3)); // -3
+```
+
+Khi algorithm cần mathematical floor semantics với số âm, distinction này rất quan trọng.
 
 ## <a id="exact-arithmetic-methods">Exact Integer Arithmetic</a>
 
-Các helper như:
+Các helper:
 
 ```java
 Math.addExact
 Math.subtractExact
 Math.multiplyExact
 Math.incrementExact
+Math.decrementExact
+Math.negateExact
+Math.absExact
+Math.divideExact
+Math.toIntExact
 ```
 
-giúp biến overflow từ silent wraparound thành `ArithmeticException`.
+biến silent overflow thành `ArithmeticException`.
 
-Chúng phù hợp khi domain coi overflow là invalid trạng thái/lỗi.
+Ví dụ:
+
+```java
+long total =
+        Math.multiplyExact(
+                (long) quantity,
+                unitPrice
+        );
+```
+
+### Exact helper không làm domain thành arbitrary precision
+
+Nếu value hợp lệ có thể vượt `long`, exact helper chỉ giúp **phát hiện** overflow. Representation đúng vẫn là `BigInteger`.
+
+Với Java 21, `Math.absExact(Integer.MIN_VALUE)` và `Math.divideExact(Integer.MIN_VALUE, -1)` throw `ArithmeticException` thay vì trả silent overflow result như các phép tương ứng không checked.
 
 ## <a id="strictmath-boundary">Math và StrictMath</a>
 
-`StrictMath` ưu tiên kết quả floating-point có tính reproducible theo specification nghiêm ngặt hơn cho các transcendental function.
+`Math` là lựa chọn thông thường cho application code.
 
-Trong đa số mã ứng dụng, `Math` là lựa chọn thông thường. Chỉ cần quan tâm ranh giới này khi reproducibility/cách triển khai ngữ nghĩa của mathematical function thật sự là yêu cầu.
+`StrictMath` tồn tại cho trường hợp cần behavior của floating-point mathematical function theo contract reproducibility/specification chặt hơn.
 
-Hai chương cuối không còn nói về cách biểu diễn số mà nói về **hợp đồng của tính ngẫu nhiên**.
+```text
+Math
+→ default numeric helper API
+
+StrictMath
+→ ưu tiên specified reproducibility cho các mathematical functions liên quan
+```
+
+Không nên hiểu `StrictMath` là “Math nhưng chính xác tuyệt đối”. Các function vẫn hoạt động trên floating-point values và chịu giới hạn representation của `double/float`.
+
+Chỉ quan tâm boundary này khi cross-platform reproducibility thật sự là requirement.
+
+Hai chapter cuối chuyển từ number representation sang một contract khác: **randomness**.

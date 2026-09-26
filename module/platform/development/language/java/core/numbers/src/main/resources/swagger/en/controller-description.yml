@@ -1,24 +1,36 @@
 BigDecimalController:
   description: |-
     <h2>BigDecimal</h2>
-    <p>Executable Java Core experiments related to String/valueOf/double construction.</p>
+    <p>Deterministic experiments for BigDecimal construction, arithmetic, precision/scale, rounding, and equality/collection semantics.</p>
   readmeRelated:
     file: 5.BigDecimal/BigDecimal.md
+BigIntegerController:
+  description: |-
+    <h2>BigInteger</h2>
+    <p>Experiments for arbitrary-precision integers, primitive-conversion boundaries, and remainder versus modular arithmetic.</p>
+  readmeRelated:
+    file: 4.BigInteger/BigInteger.md
 FloatingPointController:
   description: |-
     <h2>Floating Point</h2>
-    <p>Executable Java Core experiments related to Precision and rounding error.</p>
+    <p>Experiments for binary approximation, special values, and tolerance-based comparison.</p>
   readmeRelated:
     file: 3.FloatingPoint/FloatingPoint.md
 IntegerArithmeticController:
   description: |-
     <h2>Integer Arithmetic</h2>
-    <p>Executable Java Core experiments related to Integer overflow and wraparound.</p>
+    <p>Experiments for wraparound, intermediate overflow, and fixed-width integer boundary cases.</p>
   readmeRelated:
     file: 2.IntegerOverflow/IntegerOverflow.md
+MathController:
+  description: |-
+    <h2>Math</h2>
+    <p>Experiments for floor division/modulo and Java 21 exact-arithmetic helpers.</p>
+  readmeRelated:
+    file: 9.Math/Math.md
 RandomController:
   description: |-
     <h2>Random</h2>
-    <p>Executable Java Core experiments related to Pseudo-random model and seed.</p>
+    <p>Deterministic experiments for seeds, reproducibility, and the boundary between ordinary PRNGs and security randomness.</p>
   readmeRelated:
     file: 10.Random/Random.md

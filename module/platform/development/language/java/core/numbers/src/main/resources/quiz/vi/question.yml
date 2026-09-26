@@ -63,7 +63,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "2.IntegerOverflow/IntegerOverflow.md", anchor: "checked-arithmetic"}
-    apiRelated: {controller: "", methodSignature: ""}
+    apiRelated: {controller: "IntegerArithmeticController", methodSignature: "overflow()"}
 
   - id: floating-decimal-approx
     question: "Vì sao `0.1 + 0.2` có thể khác decimal 0.3 chính xác?"
@@ -141,7 +141,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "6.PrecisionScale/PrecisionScale.md", anchor: "precision-vs-scale"}
-    apiRelated: {controller: "", methodSignature: ""}
+    apiRelated: {controller: "BigDecimalController", methodSignature: "precisionScale()"}
 
   - id: rounding-domain-policy
     question: "Statement nào về financial rounding chính xác nhất?"
@@ -208,15 +208,249 @@ questions:
     readmeRelated: {file: "1.NumericModel/NumericModel.md", anchor: "numeric-type-model"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - id: math-exact-arithmetic
-    question: "Vì sao nên dùng `Math.addExact(int, int)` thay `a + b` khi overflow không được phép xảy ra âm thầm?"
+  - id: strictmath-boundary
+    question: "Statement nào mô tả đúng nhất boundary giữa `Math` và `StrictMath`?"
     answers:
-      - {id: A, answer: "Nó tự động convert result thành BigDecimal.", explanation: "Sai. Exact arithmetic helper detect overflow và throw ArithmeticException thay vì wrap âm thầm."}
-      - {id: B, answer: "Nó detect integer overflow và throw ArithmeticException thay vì wrap âm thầm.", explanation: "Đúng. Exact arithmetic helper detect overflow và throw ArithmeticException thay vì wrap âm thầm."}
-      - {id: C, answer: "Nó disable two's-complement arithmetic trên toàn JVM.", explanation: "Sai. Exact arithmetic helper detect overflow và throw ArithmeticException thay vì wrap âm thầm."}
-      - {id: D, answer: "Nó bảo đảm operand luôn dương.", explanation: "Sai. Exact arithmetic helper detect overflow và throw ArithmeticException thay vì wrap âm thầm."}
+      - {id: A, answer: "StrictMath dùng arbitrary precision nên luôn exact hơn Math.", explanation: "Sai. Cả Math và StrictMath vẫn làm việc với floating-point hữu hạn; StrictMath không biến double thành exact decimal."}
+      - {id: B, answer: "Math là lựa chọn mặc định; StrictMath phù hợp khi cần behavior của các hàm floating-point được quy định chặt hơn để hỗ trợ reproducibility.", explanation: "Đúng. Boundary chính là contract về specification/reproducibility, không phải arbitrary precision."}
+      - {id: C, answer: "StrictMath chỉ dùng cho integer overflow.", explanation: "Sai. Exact integer helpers nằm trong Math; StrictMath chủ yếu liên quan các hàm toán học floating-point."}
+      - {id: D, answer: "Math và StrictMath khác nhau vì một bên dùng BigDecimal nội bộ.", explanation: "Sai. Đây không phải khác biệt contract giữa hai API."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
+    readmeRelated: {file: "9.Math/Math.md", anchor: "strictmath-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: numeric-intermediate-overflow
+    question: "Với `int quantity = 1_000_000; int price = 10_000; long total = quantity * price;`, điều gì quan trọng nhất?"
+    answers:
+      - {id: A, answer: "Phép nhân chạy dưới dạng long vì biến nhận là long.", explanation: "Sai. Type của arithmetic expression được xác định trước assignment conversion."}
+      - {id: B, answer: "Phép nhân chạy dưới dạng int và có thể overflow trước khi result được widen sang long.", explanation: "Đúng. Muốn operation chạy bằng long phải widen ít nhất một operand trước phép nhân."}
+      - {id: C, answer: "Java tự chuyển expression sang BigInteger khi cần.", explanation: "Sai. Primitive arithmetic không tự đổi sang arbitrary-precision type."}
+      - {id: D, answer: "Expression không compile vì int không assign được cho long.", explanation: "Sai. int result có thể widen sang long sau khi arithmetic đã chạy."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.NumericModel/NumericModel.md", anchor: "numeric-conversions"}
+    apiRelated: {controller: "IntegerArithmeticController", methodSignature: "intermediateOverflow()"}
+
+  - id: integer-abs-min-boundary
+    question: "`Math.abs(Integer.MIN_VALUE)` trả gì?"
+    answers:
+      - {id: A, answer: "Integer.MAX_VALUE.", explanation: "Sai. Positive counterpart 2147483648 không fit int."}
+      - {id: B, answer: "0.", explanation: "Sai. Math.abs không clamp về zero."}
+      - {id: C, answer: "Vẫn là Integer.MIN_VALUE do overflow boundary.", explanation: "Đúng. MIN_VALUE không có positive counterpart representable bằng int."}
+      - {id: D, answer: "Luôn throw ArithmeticException.", explanation: "Sai. Math.abs unchecked không throw cho case này; Math.absExact mới throw trên Java 21."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.IntegerOverflow/IntegerOverflow.md", anchor: "boundary-values"}
+    apiRelated: {controller: "IntegerArithmeticController", methodSignature: "boundaryCases()"}
+
+  - id: integer-divide-min-minus-one
+    question: "`Integer.MIN_VALUE / -1` trong ordinary int division cho kết quả nào?"
+    answers:
+      - {id: A, answer: "Integer.MIN_VALUE do overflow special case.", explanation: "Đúng. Mathematical result 2147483648 không fit int nên unchecked division overflow về MIN_VALUE."}
+      - {id: B, answer: "Integer.MAX_VALUE.", explanation: "Sai. Java không saturate ở MAX_VALUE."}
+      - {id: C, answer: "ArithmeticException vì overflow.", explanation: "Sai. Ordinary division chỉ throw cho divisor 0; Math.divideExact mới detect overflow này."}
+      - {id: D, answer: "0.", explanation: "Sai. Đây không phải truncation về zero."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.IntegerOverflow/IntegerOverflow.md", anchor: "boundary-values"}
+    apiRelated: {controller: "IntegerArithmeticController", methodSignature: "boundaryCases()"}
+
+  - id: floating-signed-zero
+    question: "Statement nào đúng về `+0.0` và `-0.0`?"
+    answers:
+      - {id: A, answer: "Chúng luôn khác nhau với ==.", explanation: "Sai. 0.0 == -0.0 là true."}
+      - {id: B, answer: "Chúng bằng nhau với ==, nhưng reciprocal của +0.0 và -0.0 cho infinity khác dấu.", explanation: "Đúng. Signed zero có thể ảnh hưởng arithmetic dù equality operator xem chúng bằng nhau."}
+      - {id: C, answer: "Java không có negative zero.", explanation: "Sai. IEEE 754 có signed zero."}
+      - {id: D, answer: "Cả hai reciprocal đều luôn là NaN.", explanation: "Sai. Reciprocal của signed zero tạo signed infinity."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.FloatingPoint/FloatingPoint.md", anchor: "nan-infinity-negative-zero"}
+    apiRelated: {controller: "FloatingPointController", methodSignature: "specialValues()"}
+
+  - id: floating-tolerance-domain
+    question: "Vì sao không nên dùng một epsilon cố định cho mọi floating-point comparison?"
+    answers:
+      - {id: A, answer: "Vì epsilon chỉ dùng được với float, không dùng với double.", explanation: "Sai. Tolerance strategy áp dụng được cho cả hai nhưng phải phù hợp domain."}
+      - {id: B, answer: "Vì JVM thay epsilon sau mỗi lần chạy.", explanation: "Sai. Epsilon là value do code chọn."}
+      - {id: C, answer: "Vì acceptable error phụ thuộc magnitude, scale và domain requirement.", explanation: "Đúng. Một absolute tolerance hợp lý ở magnitude này có thể vô nghĩa ở magnitude khác."}
+      - {id: D, answer: "Vì == luôn tốt hơn tolerance.", explanation: "Sai. Exact equality chỉ đúng khi exact represented-value equality là contract."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.FloatingPoint/FloatingPoint.md", anchor: "floating-point-comparison"}
+    apiRelated: {controller: "FloatingPointController", methodSignature: "comparison()"}
+
+  - id: biginteger-exact-conversion
+    question: "Khác biệt quan trọng giữa `BigInteger.intValue()` và `intValueExact()` là gì?"
+    answers:
+      - {id: A, answer: "intValue có thể mất high-order bits; intValueExact throw nếu value không fit int.", explanation: "Đúng. Đây là narrowing boundary cần exact conversion khi fit là invariant."}
+      - {id: B, answer: "intValue luôn throw còn intValueExact truncate.", explanation: "Sai. Semantics ngược lại."}
+      - {id: C, answer: "Hai method luôn giống nhau.", explanation: "Sai. Chúng khác behavior khi value ngoài int range."}
+      - {id: D, answer: "intValueExact tự chuyển sang long nếu int không đủ.", explanation: "Sai. Nó throw ArithmeticException."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.BigInteger/BigInteger.md", anchor: "big-integer-operations"}
+    apiRelated: {controller: "BigIntegerController", methodSignature: "conversionBoundary()"}
+
+  - id: biginteger-remainder-vs-mod
+    question: "Với BigInteger value `-7` và divisor/modulus `3`, statement nào đúng?"
+    answers:
+      - {id: A, answer: "remainder và mod đều bắt buộc trả -1.", explanation: "Sai. mod có non-negative modular result khi modulus dương."}
+      - {id: B, answer: "remainder trả -1 còn mod trả 2.", explanation: "Đúng. Hai API có contract khác nhau với negative dividend."}
+      - {id: C, answer: "mod yêu cầu modulus âm.", explanation: "Sai. BigInteger.mod yêu cầu modulus dương."}
+      - {id: D, answer: "Cả hai đều throw vì dividend âm.", explanation: "Sai. Negative dividend hợp lệ; khác biệt nằm ở result semantics."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.BigInteger/BigInteger.md", anchor: "big-integer-operations"}
+    apiRelated: {controller: "BigIntegerController", methodSignature: "remainderVsMod()"}
+
+  - id: bigdecimal-valueof-after-double-arithmetic
+    question: "Điều gì đúng với `BigDecimal.valueOf(0.1 + 0.2)`?"
+    answers:
+      - {id: A, answer: "Nó luôn phục hồi exact decimal intent 0.3.", explanation: "Sai. Floating-point arithmetic đã xảy ra trước khi BigDecimal được tạo."}
+      - {id: B, answer: "Nó không compile vì valueOf không nhận double.", explanation: "Sai. BigDecimal.valueOf(double) tồn tại."}
+      - {id: C, answer: "Nó capture decimal string của double result đã là khoảng 0.30000000000000004.", explanation: "Đúng. BigDecimal không thể suy ra intent đã mất trước đó."}
+      - {id: D, answer: "Nó tự rerun phép cộng bằng decimal arithmetic.", explanation: "Sai. BigDecimal chỉ nhận result double đã tính xong."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.BigDecimal/BigDecimal.md", anchor: "big-decimal-construction"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: bigdecimal-multiply-scale
+    question: "Không dùng MathContext, preferred scale của `BigDecimal.multiply` thường được xác định thế nào?"
+    answers:
+      - {id: A, answer: "Luôn bằng 2.", explanation: "Sai. Scale không gắn cứng với money semantics."}
+      - {id: B, answer: "Bằng scale trái + scale phải.", explanation: "Đúng. Multiply cộng preferred scale của hai operand."}
+      - {id: C, answer: "Bằng max(scale trái, scale phải).", explanation: "Sai. Rule này phù hợp hơn với add/subtract preferred scale."}
+      - {id: D, answer: "Luôn bằng 0.", explanation: "Sai. BigDecimal multiplication giữ scale semantics của operands."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.BigDecimal/BigDecimal.md", anchor: "big-decimal-arithmetic"}
+    apiRelated: {controller: "BigDecimalController", methodSignature: "divisionAndRounding()"}
+
+  - id: mathcontext-vs-setscale
+    question: "Khác biệt đúng nhất giữa `setScale(2, mode)` và `MathContext(4, mode)` là gì?"
+    answers:
+      - {id: A, answer: "Cả hai luôn làm cùng một việc.", explanation: "Sai. Scale và precision là hai control khác nhau."}
+      - {id: B, answer: "setScale giới hạn total significant digits còn MathContext chỉ format output.", explanation: "Sai. Vai trò bị đảo."}
+      - {id: C, answer: "setScale điều khiển scale/decimal places; MathContext điều khiển total significant-digit precision của operation.", explanation: "Đúng. Đây là distinction cốt lõi giữa scale và precision."}
+      - {id: D, answer: "MathContext chỉ dùng được với double.", explanation: "Sai. MathContext là API quan trọng của BigDecimal."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.PrecisionScale/PrecisionScale.md", anchor: "math-context"}
+    apiRelated: {controller: "BigDecimalController", methodSignature: "mathContextVsScale()"}
+
+  - id: rounding-negative-half-tie
+    question: "Khi round `-2.5` về integer, cặp result nào đúng?"
+    answers:
+      - {id: A, answer: "HALF_UP → -3, HALF_DOWN → -2.", explanation: "Đúng. HALF_UP đi xa zero ở tie; HALF_DOWN đi về zero."}
+      - {id: B, answer: "HALF_UP → -2, HALF_DOWN → -3.", explanation: "Sai. Direction bị đảo."}
+      - {id: C, answer: "Cả hai luôn → -2.5.", explanation: "Sai. Target scale 0 cần rounding."}
+      - {id: D, answer: "Cả hai throw vì value âm.", explanation: "Sai. Negative values được round bình thường."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Rounding/Rounding.md", anchor: "rounding-modes"}
+    apiRelated: {controller: "BigDecimalController", methodSignature: "roundingModes()"}
+
+  - id: rounding-double-rounding
+    question: "Vì sao double rounding có thể thay đổi final result?"
+    answers:
+      - {id: A, answer: "Vì mỗi bước rounding có thể discard information rồi bước sau dùng value đã thay đổi.", explanation: "Đúng. Intermediate rounding có thể đổi input của rounding boundary tiếp theo."}
+      - {id: B, answer: "Vì BigDecimal mutable.", explanation: "Sai. BigDecimal immutable."}
+      - {id: C, answer: "Vì RoundingMode random.", explanation: "Sai. RoundingMode deterministic."}
+      - {id: D, answer: "Double rounding luôn mathematically equivalent với round một lần.", explanation: "Sai. Ví dụ 2.445 có thể cho outcome khác tùy sequence."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Rounding/Rounding.md", anchor: "rounding-at-boundaries"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: bigdecimal-hashset-treeset
+    question: "Nếu thêm `1.0` và `1.00` vào `HashSet<BigDecimal>` và `TreeSet<BigDecimal>`, điều gì có thể xảy ra?"
+    answers:
+      - {id: A, answer: "Cả hai set luôn size 2.", explanation: "Sai. TreeSet dùng natural ordering, nơi compareTo có thể trả 0."}
+      - {id: B, answer: "HashSet size 1, TreeSet size 2.", explanation: "Sai. Semantics ngược lại trong case này."}
+      - {id: C, answer: "HashSet size 2, TreeSet size 1.", explanation: "Đúng. HashSet dùng equals/hashCode có xét scale; TreeSet dùng compareTo."}
+      - {id: D, answer: "Cả hai throw vì scale khác.", explanation: "Sai. Cả hai collection chấp nhận các value này."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.BigDecimalComparison/BigDecimalComparison.md", anchor: "big-decimal-collections"}
+    apiRelated: {controller: "BigDecimalController", methodSignature: "collectionSemantics()"}
+
+  - id: math-floor-division-negative
+    question: "Với `-7` và `3`, `-7 / 3` và `Math.floorDiv(-7, 3)` lần lượt là gì?"
+    answers:
+      - {id: A, answer: "-2 và -3.", explanation: "Đúng. / truncate toward zero còn floorDiv đi về negative infinity."}
+      - {id: B, answer: "-3 và -2.", explanation: "Sai. Hai semantics bị đảo."}
+      - {id: C, answer: "Cả hai -2.", explanation: "Sai. Chúng khác nhau khi result âm không nguyên."}
+      - {id: D, answer: "Cả hai -3.", explanation: "Sai. Ordinary integer division truncate toward zero."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.Math/Math.md", anchor: "math-core-functions"}
+    apiRelated: {controller: "MathController", methodSignature: "floorDivision()"}
+
+  - id: math-abs-exact-boundary
+    question: "Trên Java 21, `Math.absExact(Integer.MIN_VALUE)` làm gì?"
+    answers:
+      - {id: A, answer: "Trả Integer.MAX_VALUE.", explanation: "Sai. Không có positive counterpart representable."}
+      - {id: B, answer: "Trả Integer.MIN_VALUE như Math.abs.", explanation: "Sai. Exact variant detect overflow."}
+      - {id: C, answer: "Throw ArithmeticException.", explanation: "Đúng. Exact helper biến boundary overflow thành explicit failure."}
+      - {id: D, answer: "Trả long 2147483648.", explanation: "Sai. Overload int trả int hoặc throw."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
     readmeRelated: {file: "9.Math/Math.md", anchor: "exact-arithmetic-methods"}
+    apiRelated: {controller: "MathController", methodSignature: "exactBoundaries()"}
+
+  - id: threadlocalrandom-boundary
+    question: "Khi nào `ThreadLocalRandom` là lựa chọn phù hợp hơn ordinary shared `Random`?"
+    answers:
+      - {id: A, answer: "Khi nhiều thread cần pseudo-random values và muốn tránh contention không cần thiết.", explanation: "Đúng. Đây là concurrency/performance boundary, không phải security boundary."}
+      - {id: B, answer: "Khi cần password reset token.", explanation: "Sai. Security-sensitive unpredictability cần SecureRandom."}
+      - {id: C, answer: "Chỉ khi code không có thread.", explanation: "Sai. Tên và mục đích của API gắn với concurrent use."}
+      - {id: D, answer: "Vì ThreadLocalRandom cryptographically secure.", explanation: "Sai. Nó không phải cryptographic random source."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.Random/Random.md", anchor: "threadlocal-random-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: random-modulo-pitfall
+    question: "Vì sao `random.nextInt() % 100` thường kém hơn `random.nextInt(100)` khi cần range 0..99?"
+    answers:
+      - {id: A, answer: "Modulo luôn làm JVM crash.", explanation: "Sai. Vấn đề là range/sign/distribution semantics, không phải crash."}
+      - {id: B, answer: "Manual modulo có thể cho negative result và dễ tạo distribution bias nếu xử lý sai; bounded API thể hiện contract đúng hơn.", explanation: "Đúng. Ưu tiên API có bound khi đó là intent."}
+      - {id: C, answer: "nextInt(100) luôn cryptographically secure.", explanation: "Sai. Đây vẫn là ordinary PRNG."}
+      - {id: D, answer: "Modulo không tồn tại cho int.", explanation: "Sai. % tồn tại nhưng không phải bounded-random API tốt nhất."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.Random/Random.md", anchor: "pseudo-random-model"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: securerandom-setseed-nuance
+    question: "Statement nào chính xác nhất về `SecureRandom.setSeed(...)`?"
+    answers:
+      - {id: A, answer: "Mọi call setSeed bằng timestamp đều làm generator secure hơn.", explanation: "Sai. Timestamp không phải strong primary entropy source."}
+      - {id: B, answer: "setSeed bổ sung state; nhưng nếu caller seed PRNG mới trước lần self-seed đầu tiên thì caller phải bảo đảm seed có đủ entropy.", explanation: "Đúng. Security phụ thuộc entropy/state lifecycle, không chỉ tên class."}
+      - {id: C, answer: "setSeed luôn reset state về đúng seed và xóa entropy cũ.", explanation: "Sai. Contract là supplement seed/state, không phải simple deterministic reset như Random."}
+      - {id: D, answer: "SecureRandom không có seeding concept.", explanation: "Sai. Seeding là phần quan trọng của CSPRNG lifecycle."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "11.SecureRandom/SecureRandom.md", anchor: "entropy-seeding"}
     apiRelated: {controller: "", methodSignature: ""}

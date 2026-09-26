@@ -39,8 +39,8 @@ questions:
     answer: "Computed binary floating values often contain representation error. Exact equality is correct for exact binary contracts, while measurements often need absolute or relative tolerances chosen from scale and error requirements; no universal epsilon fits every case."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.FloatingPoint/FloatingPoint.md", anchor: "precision-rounding-error"}
-    apiRelated: {controller: "FloatingPointController", methodSignature: "precision()"}
+    readmeRelated: {file: "3.FloatingPoint/FloatingPoint.md", anchor: "floating-point-comparison"}
+    apiRelated: {controller: "FloatingPointController", methodSignature: "comparison()"}
 
   - question: "Compare `new BigDecimal(\"0.1\")`, `BigDecimal.valueOf(0.1)`, and `new BigDecimal(0.1)`."
     answer: "The String form represents exact decimal 0.1. valueOf uses the canonical String representation of the double and commonly preserves the intended decimal literal. The double constructor captures the exact binary double value, exposing its approximation."
@@ -60,8 +60,8 @@ questions:
     answer: "BigDecimal.equals includes scale, while compareTo considers numerical magnitude. HashSet uses equals and hashCode and may keep 1.0 and 1.00 separately; TreeSet natural ordering may treat them as the same ordering key."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.BigDecimalComparison/BigDecimalComparison.md", anchor: "big-decimal-equals"}
-    apiRelated: {controller: "BigDecimalController", methodSignature: "comparison()"}
+    readmeRelated: {file: "8.BigDecimalComparison/BigDecimalComparison.md", anchor: "big-decimal-collections"}
+    apiRelated: {controller: "BigDecimalController", methodSignature: "collectionSemantics()"}
 
   - question: "Why can rounding every intermediate monetary result differ from rounding once at the business boundary?"
     answer: "Each rounding discards information. Repeatedly discarding fractions changes later inputs, so the final total can diverge. The domain must define when rounding occurs, not only which mode is used."
@@ -82,4 +82,88 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "11.SecureRandom/SecureRandom.md", anchor: "security-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "What framework do you use to choose among `int`, `long`, `double`, `BigInteger`, and `BigDecimal` instead of choosing by habit?"
+    answer: "Start from the domain contract: whether fractional values are needed, whether decimal exactness is required, the maximum range, whether overflow/rounding is acceptable, then performance and memory. int/long fit fixed-width integers; double fits approximate measurement/scientific work; BigInteger solves integer range; BigDecimal provides explicit decimal semantics and rounding policy."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.NumericModel/NumericModel.md", anchor: "numeric-type-model"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Why can `long total = quantity * unitPrice` still be wrong when both operands are `int`?"
+    answer: "Java determines the arithmetic-expression type before assignment. int * int executes as int and can overflow; only then is the already-wrong value widened to long. Widen an operand before the multiplication if the operation itself must run as long."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.NumericModel/NumericModel.md", anchor: "numeric-conversions"}
+    apiRelated: {controller: "IntegerArithmeticController", methodSignature: "intermediateOverflow()"}
+
+  - question: "Why does `Integer.MIN_VALUE` create edge cases for `Math.abs(MIN_VALUE)` and `MIN_VALUE / -1`?"
+    answer: "A two's-complement int has one more negative value than positive values, so +2147483648 is not representable. Therefore ordinary Math.abs and MIN_VALUE / -1 both overflow back to MIN_VALUE instead of producing a positive result outside the int range."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.IntegerOverflow/IntegerOverflow.md", anchor: "boundary-values"}
+    apiRelated: {controller: "IntegerArithmeticController", methodSignature: "boundaryCases()"}
+
+  - question: "How are NaN, infinity, and signed zero different from ordinary floating values, and how should production code handle them?"
+    answer: "NaN is not equal to itself, so use isNaN; infinity may result from overflow or floating division by zero; +0.0 and -0.0 compare equal with == but their sign can still affect arithmetic such as reciprocals. When the domain requires finite values, validate with isNaN/isFinite rather than assuming every double is ordinary and finite."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.FloatingPoint/FloatingPoint.md", anchor: "nan-infinity-negative-zero"}
+    apiRelated: {controller: "FloatingPointController", methodSignature: "specialValues()"}
+
+  - question: "When should you use `BigInteger` instead of `long`, and which boundaries still matter after choosing BigInteger?"
+    answer: "Use BigInteger when legitimate integer values can exceed long and arbitrary precision justifies its allocation/arithmetic cost. It does not solve decimal fractions, and converting back to int/long is still a narrowing boundary: unchecked conversions may lose bits while exact variants throw. Number-theory code must also distinguish remainder from mod."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.BigInteger/BigInteger.md", anchor: "big-integer-operations"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Why does switching to BigDecimal after arithmetic has already happened in `double` not repair decimal semantics automatically?"
+    answer: "BigDecimal receives the value that exists at construction time. If 0.1 + 0.2 already ran in binary floating point, the approximation is now the input, for example 0.30000000000000004. BigDecimal.valueOf can represent that double's decimal string but cannot infer that the original intent was exact 0.3; an exact-decimal workflow must stay decimal from the beginning."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.BigDecimal/BigDecimal.md", anchor: "big-decimal-construction"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "How does BigDecimal arithmetic affect scale, and why does the domain still need its own output-scale policy?"
+    answer: "Without MathContext, add/subtract generally prefer max(left scale, right scale), multiply adds the operand scales, and divide starts from left scale minus right scale although an exact quotient may need more scale. Those are representation rules, not business rules; currency, tax, and API boundaries still need an explicit final scale and rounding policy."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.BigDecimal/BigDecimal.md", anchor: "big-decimal-arithmetic"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "When should you use `setScale` and when should you use `MathContext`?"
+    answer: "setScale fits contracts expressed in decimal places or a target unit scale, such as an amount requiring two decimals. MathContext limits total significant-digit precision of arithmetic and includes a rounding mode. They can produce very different results, so choose based on the policy being controlled rather than treating them as substitutes."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.PrecisionScale/PrecisionScale.md", anchor: "math-context"}
+    apiRelated: {controller: "BigDecimalController", methodSignature: "mathContextVsScale()"}
+
+  - question: "Explain `HALF_UP`, `HALF_DOWN`, and `HALF_EVEN` at ties, especially for negative values."
+    answer: "All HALF modes choose the nearest candidate when there is no tie. At a tie, HALF_UP moves away from zero, HALF_DOWN toward zero, and HALF_EVEN chooses the neighbor with an even last digit. For -2.5, HALF_UP therefore gives -3 while HALF_DOWN and HALF_EVEN give -2; UP/DOWN here are defined relative to zero, not the positive direction of the number line."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Rounding/Rounding.md", anchor: "rounding-modes"}
+    apiRelated: {controller: "BigDecimalController", methodSignature: "roundingModes()"}
+
+  - question: "If BigDecimal is a domain key, how would you design equality and normalization policy to avoid surprises across HashSet, TreeSet, and persistence?"
+    answer: "First decide whether identity includes representation/scale or only numerical quantity. If quantity defines identity, normalize at a deliberate boundary or use a consistent comparator/canonical representation; if scale carries domain meaning, do not strip it silently. equals/hashCode, ordering, serialization/persistence, and collection usage should follow one policy rather than ad-hoc normalization."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.BigDecimalComparison/BigDecimalComparison.md", anchor: "big-decimal-collections"}
+    apiRelated: {controller: "BigDecimalController", methodSignature: "collectionSemantics()"}
+
+  - question: "Differentiate the roles of `Random`, `ThreadLocalRandom`, `RandomGenerator`, and `SecureRandom` on Java 21."
+    answer: "Random is an ordinary deterministic PRNG and fixed seeds help reproducibility. ThreadLocalRandom reduces contention for ordinary randomness in concurrent code. RandomGenerator is an abstraction available on the Java 21 baseline over multiple generator algorithms, separating the API from implementation choice. SecureRandom carries a security contract around computational unpredictability and entropy; it is not the default for simulations/tests merely because it is stronger."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.Random/Random.md", anchor: "threadlocal-random-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Explain the nuance of `SecureRandom.setSeed` and why a timestamp should not be the primary entropy source."
+    answer: "setSeed supplements existing seed/state rather than behaving like Random's simple deterministic reset. For a newly created PRNG SecureRandom, if the caller seeds it before its first automatic self-seeding operation, the caller must ensure sufficient entropy. A timestamp is predictable and does not satisfy that property; provider-managed default seeding is usually the safer application default, while getInstanceStrong should be chosen only for a concrete requirement."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "11.SecureRandom/SecureRandom.md", anchor: "entropy-seeding"}
     apiRelated: {controller: "", methodSignature: ""}

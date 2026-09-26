@@ -1,83 +1,176 @@
 BigDecimalController:
   construction():
-    execution: '<p><strong>Concept:</strong> String/valueOf/double construction.</p><ol><li>The
-      endpoint runs a bounded deterministic example inside <code>BigDecimalController#construction()</code>.</li><li>Compare
-      new BigDecimal(double), String and valueOf.<pre><code>@GetMapping(&quot;/construction&quot;)
-      public Map&lt;String,Object&gt; construction(){ return Map.of(&quot;fromString&quot;,new
-      BigDecimal(&quot;0.1&quot;).toString(),&quot;fromValueOf&quot;,BigDecimal.valueOf(0.1d).toString(),&quot;fromDouble&quot;,new
-      BigDecimal(0.1d).toString()); }</code></pre></li><li>Inspect the response fields
-      together: they are the observable evidence for the rule rather than a benchmark
-      or production policy.</li></ol><p><strong>Conclusion:</strong> connect the observed
-      result back to the linked README section before generalizing the behavior.</p>'
+    execution: |-
+      <p><strong>Concept:</strong> BigDecimal construction determines which decimal value is actually captured.</p>
+      <p><strong>Flow:</strong> Create the idea 0.1 from a String, valueOf(double), and the double constructor.</p>
+      <pre><code>new BigDecimal("0.1")
+      BigDecimal.valueOf(0.1d)
+      new BigDecimal(0.1d)</code></pre>
+      <p><strong>Observation:</strong> <code>fromString</code> and <code>fromValueOf</code> display 0.1, while <code>fromDouble</code> exposes the decimal expansion of the approximate binary double.</p>
+      <p><strong>Conclusion:</strong> When decimal intent is part of the contract, avoid introducing binary approximation before constructing BigDecimal.</p>
     usage: true
   comparison():
-    execution: '<p><strong>Concept:</strong> BigDecimal equals includes scale.</p><ol><li>The
-      endpoint runs a bounded deterministic example inside <code>BigDecimalController#comparison()</code>.</li><li>Show
-      equals vs compareTo and scale.<pre><code>@GetMapping(&quot;/comparison&quot;)
-      public Map&lt;String,Object&gt; comparison(){ BigDecimal a=new BigDecimal(&quot;1.0&quot;),
-      b=new BigDecimal(&quot;1.00&quot;); return Map.of(&quot;leftScale&quot;,a.scale(),&quot;rightScale&quot;,b.scale(),&quot;equals&quot;,a.equals(b),&quot;compareTo&quot;,a.compareTo(b));
-      }</code></pre></li><li>Inspect the response fields together: they are the observable
-      evidence for the rule rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
-      connect the observed result back to the linked README section before generalizing
-      the behavior.</p>'
+    execution: |-
+      <p><strong>Concept:</strong> BigDecimal <code>equals</code> includes scale while <code>compareTo</code> compares numerical ordering.</p>
+      <p><strong>Flow:</strong> Compare <code>1.0</code> with <code>1.00</code> and return scale, equals, and compareTo evidence.</p>
+      <pre><code>left.equals(right)
+      left.compareTo(right)</code></pre>
+      <p><strong>Observation:</strong> <code>equals=false</code>, <code>compareTo=0</code>, and the scales differ.</p>
+      <p><strong>Conclusion:</strong> Representation equality and numerical equality are different contracts.</p>
     usage: true
   divisionAndRounding():
-    execution: '<p><strong>Concept:</strong> RoundingMode semantics.</p><ol><li>The
-      endpoint runs a bounded deterministic example inside <code>BigDecimalController#divisionAndRounding()</code>.</li><li>Show
-      non-terminating division failure and explicit rounding.<pre><code>@GetMapping(&quot;/division-rounding&quot;)
-      public Map&lt;String,Object&gt; divisionAndRounding(){ Map&lt;String,Object&gt;
-      r=new LinkedHashMap&lt;&gt;(); try{ BigDecimal.ONE.divide(new BigDecimal(&quot;3&quot;));
-      }catch(ArithmeticException e){r.put(&quot;exactDivisionFailure&quot;,e.getClass().getSimpleName());}
-      r.put(&quot;rounded&quot;,BigDecimal.ONE.divide(new BigDecimal(&quot;3&quot;),4,RoundingMode.HALF_UP).toString());
-      return r; }</code></pre></li><li>Inspect the response fields together: they
-      are the observable evidence for the rule rather than a benchmark or production
-      policy.</li></ol><p><strong>Conclusion:</strong> connect the observed result
-      back to the linked README section before generalizing the behavior.</p>'
+    execution: |-
+      <p><strong>Concept:</strong> Exact BigDecimal division does not invent a rounding policy.</p>
+      <p><strong>Flow:</strong> Attempt exact <code>1 / 3</code>, capture the failure, then repeat with scale 4 and <code>HALF_UP</code>.</p>
+      <pre><code>BigDecimal.ONE.divide(new BigDecimal("3"))
+      BigDecimal.ONE.divide(new BigDecimal("3"), 4, RoundingMode.HALF_UP)</code></pre>
+      <p><strong>Observation:</strong> Exact division produces <code>ArithmeticException</code>; the explicit policy produces <code>0.3333</code>.</p>
+      <p><strong>Conclusion:</strong> Scale and rounding mode are policies supplied by the caller/domain.</p>
+    usage: true
+  precisionScale():
+    execution: |-
+      <p><strong>Concept:</strong> Precision, scale, and representation normalization are different ideas.</p>
+      <p><strong>Flow:</strong> Create <code>123.4500</code>, inspect precision/scale, call <code>stripTrailingZeros()</code>, then inspect again.</p>
+      <pre><code>value.precision();
+      value.scale();
+      value.stripTrailingZeros();</code></pre>
+      <p><strong>Observation:</strong> The numerical value stays the same while precision, scale, and textual representation may change.</p>
+      <p><strong>Conclusion:</strong> Scale belongs to representation; normalization should be intentional when equality/key semantics matter.</p>
+    usage: true
+  mathContextVsScale():
+    execution: |-
+      <p><strong>Concept:</strong> <code>setScale</code> controls decimal scale; <code>MathContext</code> controls significant-digit precision.</p>
+      <p><strong>Flow:</strong> For <code>12345.67</code>, one branch uses scale 1 while another uses precision 4.</p>
+      <pre><code>value.setScale(1, RoundingMode.HALF_UP)
+      value.round(new MathContext(4, RoundingMode.HALF_UP))</code></pre>
+      <p><strong>Observation:</strong> The scale path preserves magnitude with one decimal place; the MathContext path rounds total significant digits.</p>
+      <p><strong>Conclusion:</strong> Choose scale or MathContext based on whether the policy controls decimal places or overall precision.</p>
+    usage: true
+  roundingModes():
+    execution: |-
+      <p><strong>Concept:</strong> HALF modes choose the nearest candidate and differ at ties.</p>
+      <p><strong>Flow:</strong> Round <code>2.5</code> and <code>-2.5</code> to scale 0 with HALF_UP, HALF_DOWN, and HALF_EVEN.</p>
+      <pre><code>positive.setScale(0, RoundingMode.HALF_UP)
+      positive.setScale(0, RoundingMode.HALF_DOWN)
+      positive.setScale(0, RoundingMode.HALF_EVEN)
+      negative.setScale(0, RoundingMode.HALF_UP)</code></pre>
+      <p><strong>Observation:</strong> HALF_UP moves away from zero on a tie, HALF_DOWN moves toward zero, and HALF_EVEN selects the even neighbor.</p>
+      <p><strong>Conclusion:</strong> A rounding mode only makes sense when connected to its mathematical direction and business rule.</p>
+    usage: true
+  collectionSemantics():
+    execution: |-
+      <p><strong>Concept:</strong> Hash-based and sorted collections can observe BigDecimal equality differently.</p>
+      <p><strong>Flow:</strong> Add <code>1.0</code> and <code>1.00</code> to both a HashSet and a TreeSet.</p>
+      <pre><code>hashSet.add(left); hashSet.add(right);
+      treeSet.add(left); treeSet.add(right);</code></pre>
+      <p><strong>Observation:</strong> <code>hashSetSize=2</code> while <code>treeSetSize=1</code> because HashSet uses equals/hashCode and TreeSet uses natural ordering.</p>
+      <p><strong>Conclusion:</strong> If BigDecimal is a domain key, equality and normalization policy must be explicit.</p>
     usage: true
 FloatingPointController:
   precision():
-    execution: '<p><strong>Concept:</strong> Precision and rounding error.</p><ol><li>The
-      endpoint runs a bounded deterministic example inside <code>FloatingPointController#precision()</code>.</li><li>Expose
-      0.1 + 0.2, decimal rendering and tolerance comparison.<pre><code>@GetMapping(&quot;/precision&quot;)
-      public Map&lt;String,Object&gt; precision(){ double v=0.1d+0.2d; return Map.of(&quot;computed&quot;,v,&quot;expectedDecimal&quot;,0.3d,&quot;exactEqual&quot;,v==0.3d,&quot;delta&quot;,Math.abs(v-0.3d));
-      }</code></pre></li><li>Inspect the response fields together: they are the observable
-      evidence for the rule rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
-      connect the observed result back to the linked README section before generalizing
-      the behavior.</p>'
+    execution: |-
+      <p><strong>Concept:</strong> Binary floating point cannot exactly represent many decimal fractions.</p>
+      <p><strong>Flow:</strong> Compute <code>0.1 + 0.2</code>, compare it exactly with <code>0.3</code>, and measure the delta.</p>
+      <pre><code>double value = 0.1d + 0.2d;
+      value == 0.3d;
+      Math.abs(value - 0.3d);</code></pre>
+      <p><strong>Observation:</strong> Exact equality is false and the delta is small but non-zero.</p>
+      <p><strong>Conclusion:</strong> This is an IEEE 754 representation property, not Java randomly changing addition.</p>
     usage: true
   specialValues():
-    execution: '<p><strong>Concept:</strong> NaN, infinity and negative zero.</p><ol><li>The
-      endpoint runs a bounded deterministic example inside <code>FloatingPointController#specialValues()</code>.</li><li>Compare
-      NaN/infinity/-0.0 behavior.<pre><code>@GetMapping(&quot;/special-values&quot;)
-      public Map&lt;String,Object&gt; specialValues(){ return Map.of(&quot;nanEqualsItself&quot;,Double.NaN==Double.NaN,&quot;isNaN&quot;,Double.isNaN(0.0d/0.0d),&quot;positiveInfinity&quot;,1.0d/0.0d,&quot;zeroEqualsNegativeZero&quot;,0.0d==-0.0d);
-      }</code></pre></li><li>Inspect the response fields together: they are the observable
-      evidence for the rule rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
-      connect the observed result back to the linked README section before generalizing
-      the behavior.</p>'
+    execution: |-
+      <p><strong>Concept:</strong> IEEE 754 includes NaN, infinity, and signed zero with special behavior.</p>
+      <p><strong>Flow:</strong> Produce NaN with <code>0.0/0.0</code>, infinity with division by zero, and compare reciprocals of +0.0/-0.0.</p>
+      <pre><code>Double.isNaN(0.0d / 0.0d)
+      1.0d / 0.0d
+      1.0d / -0.0d</code></pre>
+      <p><strong>Observation:</strong> NaN is not equal to itself; +0.0 == -0.0 but their reciprocals are +Infinity and -Infinity.</p>
+      <p><strong>Conclusion:</strong> Special values require dedicated checks/handling rather than integer intuition.</p>
+    usage: true
+  comparison():
+    execution: |-
+      <p><strong>Concept:</strong> Approximate computation often needs a tolerance rather than exact equality.</p>
+      <p><strong>Flow:</strong> Compare <code>0.1 + 0.2</code> with <code>0.3</code> using <code>==</code> and epsilon <code>1e-9</code>.</p>
+      <pre><code>double delta = Math.abs(actual - expected);
+      boolean withinTolerance = delta &lt;= epsilon;</code></pre>
+      <p><strong>Observation:</strong> <code>exactEqual=false</code> but <code>withinTolerance=true</code>.</p>
+      <p><strong>Conclusion:</strong> Epsilon must come from the domain/error budget; this experiment demonstrates mechanism, not a universal epsilon.</p>
     usage: true
 IntegerArithmeticController:
   overflow():
-    execution: '<p><strong>Concept:</strong> Integer overflow and wraparound.</p><ol><li>The
-      endpoint runs a bounded deterministic example inside <code>IntegerArithmeticController#overflow()</code>.</li><li>Return
-      MAX_VALUE + 1 plus checked addExact result.<pre><code>@GetMapping(&quot;/overflow&quot;)
-      public Map&lt;String,Object&gt; overflow(){</code></pre></li><li>Inspect the
-      response fields together: they are the observable evidence for the rule rather
-      than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
-      connect the observed result back to the linked README section before generalizing
-      the behavior.</p>'
+    execution: |-
+      <p><strong>Concept:</strong> Primitive integer overflow wraps silently while exact helpers make overflow explicit.</p>
+      <p><strong>Flow:</strong> Compute <code>Integer.MAX_VALUE + 1</code> and then call <code>Math.addExact(MAX_VALUE, 1)</code>.</p>
+      <pre><code>int wrapped = Integer.MAX_VALUE + 1;
+      Math.addExact(Integer.MAX_VALUE, 1);</code></pre>
+      <p><strong>Observation:</strong> The unchecked result is <code>Integer.MIN_VALUE</code>; the checked path records <code>ArithmeticException</code>.</p>
+      <p><strong>Conclusion:</strong> When overflow violates the contract, exact helpers fail at the arithmetic boundary instead of propagating corrupted values.</p>
+    usage: true
+  intermediateOverflow():
+    execution: |-
+      <p><strong>Concept:</strong> The assignment target does not determine the type of an arithmetic expression that has already executed.</p>
+      <p><strong>Flow:</strong> Compare <code>long wrong = quantity * unitPrice</code> with a multiplication that widens an operand first.</p>
+      <pre><code>long wrong = quantity * unitPrice;
+      long correct = (long) quantity * unitPrice;</code></pre>
+      <p><strong>Observation:</strong> <code>intProductThenWidened</code> differs from <code>widenBeforeMultiply</code>; <code>sameResult=false</code>.</p>
+      <p><strong>Conclusion:</strong> Numeric promotion and operation type are decided before assignment conversion.</p>
+    usage: true
+  boundaryCases():
+    execution: |-
+      <p><strong>Concept:</strong> <code>MIN_VALUE</code> has asymmetric boundary cases because of the two's-complement range.</p>
+      <p><strong>Flow:</strong> Run ordinary <code>Math.abs</code> and integer division on <code>Integer.MIN_VALUE</code>.</p>
+      <pre><code>Math.abs(Integer.MIN_VALUE)
+      Integer.MIN_VALUE / -1</code></pre>
+      <p><strong>Observation:</strong> Both results are <code>Integer.MIN_VALUE</code> because the positive mathematical result cannot fit in <code>int</code>.</p>
+      <p><strong>Conclusion:</strong> Boundary reasoning must test the actual primitive range; checked alternatives are isolated in <code>MathController#exactBoundaries()</code>.</p>
     usage: true
 RandomController:
   seededSequence():
-    execution: '<p><strong>Concept:</strong> Pseudo-random model and seed.</p><ol><li>The
-      endpoint runs a bounded deterministic example inside <code>RandomController#seededSequence()</code>.</li><li>Show
-      deterministic seeded PRNG vs SecureRandom boundary.<pre><code>@GetMapping(&quot;/seeded-sequence&quot;)
-      public Map&lt;String,Object&gt; seededSequence(){ Random a=new Random(42L),
-      b=new Random(42L); List&lt;Integer&gt; x=List.of(a.nextInt(1000),a.nextInt(1000),a.nextInt(1000));
-      List&lt;Integer&gt; y=List.of(b.nextInt(1000),b.nextInt(1000),b.nextInt(1000));
-      return Map.of(&quot;first&quot;,x,&quot;sameSeed&quot;,y,&quot;reproducible&quot;,x.equals(y),&quot;securityBoundary&quot;,&quot;use
-      SecureRandom when unpredictability is required&quot;); }</code></pre></li><li>Inspect
-      the response fields together: they are the observable evidence for the rule
-      rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
-      connect the observed result back to the linked README section before generalizing
-      the behavior.</p>'
+    execution: |-
+      <p><strong>Concept:</strong> An ordinary PRNG is deterministic from seed/state and can therefore be reproducible.</p>
+      <p><strong>Flow:</strong> Create two <code>Random(42)</code> instances and make the same three <code>nextInt(1000)</code> calls.</p>
+      <pre><code>Random first = new Random(42L);
+      Random second = new Random(42L);</code></pre>
+      <p><strong>Observation:</strong> Both sequences match and <code>reproducible=true</code>.</p>
+      <p><strong>Conclusion:</strong> Reproducibility is useful for tests/simulations but is not security unpredictability; security-sensitive randomness belongs to <code>SecureRandom</code>.</p>
+    usage: true
+BigIntegerController:
+  conversionBoundary():
+    execution: |-
+      <p><strong>Concept:</strong> Converting BigInteger to a primitive is a narrowing boundary that may discard high-order bits.</p>
+      <p><strong>Flow:</strong> For a value far beyond int range, call both <code>intValue()</code> and <code>intValueExact()</code>.</p>
+      <pre><code>huge.intValue();
+      huge.intValueExact();</code></pre>
+      <p><strong>Observation:</strong> The unchecked conversion still returns an int; the exact conversion records <code>ArithmeticException</code>.</p>
+      <p><strong>Conclusion:</strong> Use exact conversion when fitting the primitive range is a boundary invariant.</p>
+    usage: true
+  remainderVsMod():
+    execution: |-
+      <p><strong>Concept:</strong> <code>remainder</code> and <code>mod</code> have different contracts for a negative dividend.</p>
+      <p><strong>Flow:</strong> Compute both with <code>-7</code> and divisor/modulus <code>3</code>.</p>
+      <pre><code>value.remainder(divisor);
+      value.mod(divisor);</code></pre>
+      <p><strong>Observation:</strong> <code>remainder=-1</code> while <code>mod=2</code>.</p>
+      <p><strong>Conclusion:</strong> Modular arithmetic requires a positive modulus and a non-negative result; do not substitute these APIs based on surface similarity.</p>
+    usage: true
+MathController:
+  floorDivision():
+    execution: |-
+      <p><strong>Concept:</strong> Java integer division truncates toward zero while floor division moves toward negative infinity.</p>
+      <p><strong>Flow:</strong> Compare <code>-7 / 3</code> and <code>-7 % 3</code> with <code>Math.floorDiv(-7,3)</code>/<code>floorMod</code>.</p>
+      <pre><code>-7 / 3
+      Math.floorDiv(-7, 3)
+      -7 % 3
+      Math.floorMod(-7, 3)</code></pre>
+      <p><strong>Observation:</strong> The ordinary quotient is -2 while the floor quotient is -3; remainder/mod also differ in sign semantics.</p>
+      <p><strong>Conclusion:</strong> Algorithms with negative operands must choose their division contract deliberately.</p>
+    usage: true
+  exactBoundaries():
+    execution: |-
+      <p><strong>Concept:</strong> Java 21 exact helpers turn arithmetic-boundary overflow into exceptions.</p>
+      <p><strong>Flow:</strong> Compare unchecked <code>abs(MIN_VALUE)</code>/<code>MIN_VALUE / -1</code> with <code>absExact</code>/<code>divideExact</code>.</p>
+      <pre><code>Math.absExact(Integer.MIN_VALUE);
+      Math.divideExact(Integer.MIN_VALUE, -1);</code></pre>
+      <p><strong>Observation:</strong> Unchecked paths return MIN_VALUE; exact helpers throw <code>ArithmeticException</code>.</p>
+      <p><strong>Conclusion:</strong> Exact helpers do not increase range; they turn silent corruption into explicit contract failure.</p>
     usage: true

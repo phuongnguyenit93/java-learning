@@ -52,17 +52,17 @@ BigDecimalController:
       ]
     usage: true
   divisionAndRounding():
-    summary: Semantics của RoundingMode
-    description: Chạy thí nghiệm học tập deterministic cho Semantics của RoundingMode.
-      Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    summary: Division không kết thúc và rounding policy
+    description: So sánh exact division của 1/3 với division có scale và RoundingMode
+      rõ ràng để thấy BigDecimal không tự chọn business rounding policy.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 7.Rounding/Rounding.md
-      anchor: rounding-modes
+      file: 5.BigDecimal/BigDecimal.md
+      anchor: big-decimal-arithmetic
     methodName: divisionAndRounding
     params: [
       ]
@@ -72,6 +72,110 @@ BigDecimalController:
     - GET
     mappingPaths:
     - /java/core/numbers/big-decimal/division-rounding
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  precisionScale():
+    summary: Precision, scale và normalization
+    description: Quan sát precision/scale của 123.4500 trước và sau stripTrailingZeros
+      để phân biệt numerical value với representation.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 6.PrecisionScale/PrecisionScale.md
+      anchor: precision-vs-scale
+    methodName: precisionScale
+    params: [
+      ]
+    path: com/example/learning/controller/BigDecimalController.java
+    mapping: '@GetMapping("/precision-scale")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/numbers/big-decimal/precision-scale
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  mathContextVsScale():
+    summary: MathContext khác setScale
+    description: So sánh rounding theo target scale với rounding theo significant-digit
+      precision của MathContext.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 6.PrecisionScale/PrecisionScale.md
+      anchor: math-context
+    methodName: mathContextVsScale
+    params: [
+      ]
+    path: com/example/learning/controller/BigDecimalController.java
+    mapping: '@GetMapping("/math-context-vs-scale")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/numbers/big-decimal/math-context-vs-scale
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  roundingModes():
+    summary: HALF_UP, HALF_DOWN và HALF_EVEN
+    description: Chạy cùng tie value dương và âm qua ba HALF rounding modes để quan
+      sát direction khi tie.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 7.Rounding/Rounding.md
+      anchor: rounding-modes
+    methodName: roundingModes
+    params: [
+      ]
+    path: com/example/learning/controller/BigDecimalController.java
+    mapping: '@GetMapping("/rounding-modes")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/numbers/big-decimal/rounding-modes
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  collectionSemantics():
+    summary: BigDecimal trong HashSet và TreeSet
+    description: Dùng 1.0 và 1.00 để chứng minh equals/hashCode và compareTo có thể
+      dẫn tới cardinality khác nhau giữa hash-based và sorted collections.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 8.BigDecimalComparison/BigDecimalComparison.md
+      anchor: big-decimal-collections
+    methodName: collectionSemantics
+    params: [
+      ]
+    path: com/example/learning/controller/BigDecimalController.java
+    mapping: '@GetMapping("/collection-semantics")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/numbers/big-decimal/collection-semantics
     produces: [
       ]
     consumes: [
@@ -130,6 +234,32 @@ FloatingPointController:
     consumes: [
       ]
     usage: true
+  comparison():
+    summary: Exact equality và tolerance
+    description: So sánh 0.1 + 0.2 với 0.3 bằng == và bằng epsilon để thấy comparison
+      policy phụ thuộc domain tolerance.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 3.FloatingPoint/FloatingPoint.md
+      anchor: floating-point-comparison
+    methodName: comparison
+    params: [
+      ]
+    path: com/example/learning/controller/FloatingPointController.java
+    mapping: '@GetMapping("/comparison")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/numbers/floating/comparison
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
 IntegerArithmeticController:
   overflow():
     summary: Integer overflow và wraparound
@@ -157,6 +287,59 @@ IntegerArithmeticController:
     consumes: [
       ]
     usage: true
+  intermediateOverflow():
+    summary: Overflow trước khi widen
+    description: Chứng minh int * int được tính trước assignment sang long và phải
+      widen operand trước arithmetic để đổi operation type.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 1.NumericModel/NumericModel.md
+      anchor: numeric-conversions
+    methodName: intermediateOverflow
+    params: [
+      ]
+    path: com/example/learning/controller/IntegerArithmeticController.java
+    mapping: '@GetMapping("/intermediate-overflow")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/numbers/integer/intermediate-overflow
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  boundaryCases():
+    summary: MIN_VALUE boundary cases
+    description: Quan sát hai boundary case unchecked của Integer.MIN_VALUE để thấy
+      ordinary primitive arithmetic có thể trả một int hợp lệ nhưng sai với trực giác
+      đại số.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 2.IntegerOverflow/IntegerOverflow.md
+      anchor: boundary-values
+    methodName: boundaryCases
+    params: [
+      ]
+    path: com/example/learning/controller/IntegerArithmeticController.java
+    mapping: '@GetMapping("/boundary-cases")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/numbers/integer/boundary-cases
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
 RandomController:
   seededSequence():
     summary: Pseudo-random model và seed
@@ -179,6 +362,112 @@ RandomController:
     - GET
     mappingPaths:
     - /java/core/numbers/random/seeded-sequence
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+BigIntegerController:
+  conversionBoundary():
+    summary: BigInteger về primitive
+    description: So sánh intValue có thể truncate với intValueExact phát hiện value
+      không fit int.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 4.BigInteger/BigInteger.md
+      anchor: big-integer-operations
+    methodName: conversionBoundary
+    params: [
+      ]
+    path: com/example/learning/controller/BigIntegerController.java
+    mapping: '@GetMapping("/conversion-boundary")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/numbers/big-integer/conversion-boundary
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  remainderVsMod():
+    summary: remainder khác mod
+    description: Dùng -7 và modulus 3 để thấy remainder có thể âm còn mod với modulus
+      dương trả non-negative modular result.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 4.BigInteger/BigInteger.md
+      anchor: big-integer-operations
+    methodName: remainderVsMod
+    params: [
+      ]
+    path: com/example/learning/controller/BigIntegerController.java
+    mapping: '@GetMapping("/remainder-vs-mod")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/numbers/big-integer/remainder-vs-mod
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+MathController:
+  floorDivision():
+    summary: Truncating division và floor division
+    description: So sánh -7 / 3, Math.floorDiv và floorMod để thấy arithmetic với
+      số âm phụ thuộc division semantics.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 9.Math/Math.md
+      anchor: math-core-functions
+    methodName: floorDivision
+    params: [
+      ]
+    path: com/example/learning/controller/MathController.java
+    mapping: '@GetMapping("/floor-division")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/numbers/math/floor-division
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  exactBoundaries():
+    summary: Exact helper tại integer boundary
+    description: Đối chiếu silent overflow của abs/divide boundary với Math.absExact
+      và Math.divideExact trên Java 21.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 9.Math/Math.md
+      anchor: exact-arithmetic-methods
+    methodName: exactBoundaries
+    params: [
+      ]
+    path: com/example/learning/controller/MathController.java
+    mapping: '@GetMapping("/exact-boundaries")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/numbers/math/exact-boundaries
     produces: [
       ]
     consumes: [
