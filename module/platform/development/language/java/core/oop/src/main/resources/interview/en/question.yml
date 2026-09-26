@@ -83,3 +83,73 @@ questions:
     reviewed: false
     readmeRelated: {file: "7.Abstraction/Abstraction.md", anchor: "abstraction-leak"}
     apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "When can a procedural style be clearer than OOP, and when do object boundaries start adding value?"
+    answer: "Procedural style is often natural for short algorithms, stateless pipelines, or linear data transformations. Object boundaries add value when state is long-lived, invariants need protection, behavior varies by type, and multiple collaborators evolve together. OOP is not the goal by itself; the useful test is whether responsibilities and change become better localized."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.MentalModel/MentalModel.md", anchor: "oop-vs-procedural"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "A class makes every field private but returns its mutable internal List directly. Is its encapsulation still strong?"
+    answer: "Not necessarily. The caller receives an alias to internal representation and can mutate state without going through behavior that protects invariants. Private controls direct member access, while encapsulation must also control reference escape; depending on the contract, use defensive copies, immutable views, or intent-oriented operations."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.Encapsulation/Encapsulation.md", anchor: "encapsulation-model"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "What problem does Tell, Don't Ask address, and why should it not become a ban on getters?"
+    answer: "The heuristic keeps domain decisions near the object that owns the relevant state instead of having callers extract data and duplicate rules. That reduces rule leakage and coupling. Reporting, serialization, DTOs, and read models may legitimately expose data; the issue is behavior that belongs to an object's responsibility being pushed into callers, not the existence of every getter."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.Encapsulation/Encapsulation.md", anchor: "tell-dont-ask-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Does subtype polymorphism require class inheritance? Explain using an interface."
+    answer: "No. `CardPayment implements PaymentMethod` makes `CardPayment` a subtype of the `PaymentMethod` interface; variables or parameters of type `PaymentMethod` can reference a `CardPayment`, and implemented/overridden instance methods still dispatch from the runtime receiver. Class inheritance is one way to create a subtype; interface implementation is another."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.Polymorphism/Polymorphism.md", anchor: "subtype-polymorphism"}
+    apiRelated: {controller: "PolymorphismController", methodSignature: "dispatch()"}
+
+  - question: "Why can `Parent.execute()` end up running `Child.step()` when `execute()` calls `this.step()`?"
+    answer: "Running the body of `Parent.execute()` does not change the runtime receiver into a Parent. `this` still refers to the actual Child object; if `step()` is an overridable instance method, dynamic dispatch uses the receiver's runtime class and selects `Child.step()`. A call such as `super.step()` explicitly selects the supertype implementation instead."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.Polymorphism/Polymorphism.md", anchor: "dynamic-dispatch"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Why does the runtime type not make Java reselect an overload, while it can affect an override?"
+    answer: "Overload resolution selects a method signature at compile time from static argument types and invocation conversions. After an instance-method signature is resolved, the runtime receiver decides which override body executes. Therefore `Parent x = new Child(); select(x)` can choose `select(Parent)`, while `x.call()` can still execute `Child.call()` when overridden."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.OverloadingOverriding/OverloadingOverriding.md", anchor: "overloading-compile-time"}
+    apiRelated: {controller: "DispatchController", methodSignature: "overloadVsOverride()"}
+
+  - question: "What important overriding boundaries apply to visibility, return types, and checked exceptions?"
+    answer: "An override cannot reduce accessibility; a reference return type may be covariant, meaning more specific than the parent's return type; and checked exceptions may be preserved, narrowed, or removed but not broadened beyond the parent contract. `private`, `final`, `static`, and constructors have separate semantics and should not all be treated as normal overriding cases."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.OverloadingOverriding/OverloadingOverriding.md", anchor: "override-rules"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Why is `private final Player captain` not enough to conclude that the relationship is UML composition?"
+    answer: "`final` only prevents the field reference from being reassigned; it does not say that `Player` has one owner, cannot be shared, or has a lifecycle tied to `Team`. Aggregation/composition are modeling semantics expressed through creation, exposure, sharing, and lifecycle rules, not a dedicated Java keyword."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.Composition/Composition.md", anchor: "object-relationships"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "How do composition and delegation differ even though they often appear together?"
+    answer: "Composition in the broad object-design sense describes A keeping or collaborating with B; delegation describes an interaction where A hands a specific responsibility to B. `Checkout` having `Pricing` is an object relationship; `Checkout.total()` calling `pricing.price()` delegates the pricing responsibility. Composition does not mean every behavior is delegated."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.Composition/Composition.md", anchor: "delegation"}
+    apiRelated: {controller: "CompositionController", methodSignature: "strategySwap()"}
+
+  - question: "Why is an interface with a few methods not enough to guarantee a good abstraction? What else can the contract need to communicate?"
+    answer: "The interface keyword is only a mechanism. A useful abstraction must communicate enough behavior for correct use: valid inputs/preconditions, results/postconditions, failure semantics, side effects, and lifecycle or ordering constraints when they affect correctness. If callers still need implementation secrets to use it correctly, the abstraction is weak or leaking."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Abstraction/Abstraction.md", anchor: "abstraction-model"}
+    apiRelated: {controller: "", methodSignature: ""}

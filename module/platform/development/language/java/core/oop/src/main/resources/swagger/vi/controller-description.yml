@@ -1,30 +1,30 @@
 CompositionController:
   description: |-
     <h2>Composition</h2>
-    <p>Các thí nghiệm Java Core có thể chạy để quan sát trade-off giữa composition và inheritance.</p>
+    <p>Quan sát object composition, delegation và khả năng thay collaborator để thay đổi behavior mà giữ nguyên consumer.</p>
   readmeRelated:
     file: 6.Composition/Composition.md
 DispatchController:
   description: |-
     <h2>Dispatch</h2>
-    <p>Các thí nghiệm Java Core có thể chạy để đối chiếu compile-time selection của overloading với runtime dispatch của overriding.</p>
+    <p>Đối chiếu compile-time overload selection, runtime instance dispatch, static-method hiding và field hiding trên cùng một runtime object.</p>
   readmeRelated:
     file: 5.OverloadingOverriding/OverloadingOverriding.md
 EncapsulationController:
   description: |-
     <h2>Encapsulation</h2>
-    <p>Các thí nghiệm Java Core có thể chạy để quan sát cách encapsulation bảo vệ invariant của object.</p>
+    <p>Quan sát state transition hợp lệ, request bị từ chối và invariant vẫn được giữ sau failure.</p>
   readmeRelated:
     file: 2.Encapsulation/Encapsulation.md
 PolymorphismController:
   description: |-
     <h2>Polymorphism</h2>
-    <p>Các thí nghiệm Java Core có thể chạy để quan sát subtype polymorphism và runtime dynamic dispatch.</p>
+    <p>Quan sát interface-based subtype polymorphism: cùng static type nhưng runtime receiver khác nhau tạo behavior khác nhau.</p>
   readmeRelated:
     file: 4.Polymorphism/Polymorphism.md
 SubstitutabilityController:
   description: |-
     <h2>Substitutability</h2>
-    <p>Các thí nghiệm Java Core có thể chạy để quan sát substitutability và behavioral expectation giữa các implementation.</p>
+    <p>Chạy nhiều implementation qua cùng supertype contract để quan sát caller không cần special-case concrete type.</p>
   readmeRelated:
     file: 4.Polymorphism/Polymorphism.md

@@ -194,3 +194,159 @@ questions:
     reviewed: false
     readmeRelated: {file: "7.Abstraction/Abstraction.md", anchor: "abstraction-model"}
     apiRelated: {controller: "", methodSignature: ""}
+
+  - id: responsibility-boundary-localize-change
+    question: "Which sign suggests a responsibility boundary is placed well?"
+    answers:
+      - {id: A, answer: "A local rule change usually requires changing the component that owns that responsibility rather than many callers.", explanation: "Correct. A good boundary localizes change and improves cohesion instead of scattering knowledge."}
+      - {id: B, answer: "Every class has exactly one field.", explanation: "Incorrect. Field count does not define a boundary; ownership of state/rules and caller coupling matter."}
+      - {id: C, answer: "Every behavior is converted to a static method.", explanation: "Incorrect. Static methods do not automatically create responsibility boundaries or localize change."}
+      - {id: D, answer: "Callers read as many internal fields as possible.", explanation: "Incorrect. Callers that know too much internal representation usually indicate a weak boundary."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.MentalModel/MentalModel.md", anchor: "oop-boundaries"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: encapsulation-representation-leak
+    question: "`Order` has `private final List<Item> items`, but `getItems()` returns `items` directly. What is the best assessment?"
+    answers:
+      - {id: A, answer: "Encapsulation is complete because the field is private final.", explanation: "Incorrect. `private final` restricts field access/reassignment, but a returned mutable object can still be changed by callers."}
+      - {id: B, answer: "The caller can receive an alias to mutable representation and break invariants even though the field is private.", explanation: "Correct. This is representation exposure: a mutable reference escapes the object boundary."}
+      - {id: C, answer: "Java automatically copies a List on return.", explanation: "Incorrect. Java returns the reference value; there is no automatic defensive copy."}
+      - {id: D, answer: "final makes the whole object graph immutable.", explanation: "Incorrect. A final reference does not make the referenced object immutable."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.Encapsulation/Encapsulation.md", anchor: "encapsulation-model"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: tell-dont-ask-rule-location
+    question: "When does `account.withdraw(amount)` fit Tell, Don't Ask better than having the caller read balance and set it back?"
+    answers:
+      - {id: A, answer: "When validating and changing balance belongs to Account's responsibility.", explanation: "Correct. The caller expresses intent while the state owner protects its own rule and transition."}
+      - {id: B, answer: "When every getter must be banned across the system.", explanation: "Incorrect. Tell, Don't Ask is a heuristic, not a ban on all getters or read models."}
+      - {id: C, answer: "Only when the method is static.", explanation: "Incorrect. Static is unrelated to this heuristic."}
+      - {id: D, answer: "When validation should be duplicated in many callers.", explanation: "Incorrect. Duplicated caller-side rules are exactly the kind of leakage the heuristic tries to reduce."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.Encapsulation/Encapsulation.md", anchor: "tell-dont-ask-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: inheritance-constructor-chain
+    question: "When `new Child()` runs with `Child extends Parent`, which constructor model is correct?"
+    answers:
+      - {id: A, answer: "The Child constructor finishes before the Parent constructor starts.", explanation: "Incorrect. Superclass construction occurs before subclass construction can complete."}
+      - {id: B, answer: "Parent and Child create two independent objects.", explanation: "Incorrect. `new Child()` creates one object containing state from the hierarchy, not separate parent/child objects."}
+      - {id: C, answer: "The Parent constructor executes before the Child constructor completes so superclass state/invariants are established first.", explanation: "Correct. Constructor chaining initializes the superclass part before completing the subclass part."}
+      - {id: D, answer: "Constructors are inherited like instance methods.", explanation: "Incorrect. Constructors are not inherited; the subclass constructor invokes `super(...)`."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.Inheritance/Inheritance.md", anchor: "inherited-state-behavior"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fragile-base-constructor-dispatch
+    question: "Why is a base constructor calling an overridable instance method risky?"
+    answers:
+      - {id: A, answer: "Because Java always converts that method to static.", explanation: "Incorrect. An overridable instance method still participates in dynamic dispatch."}
+      - {id: B, answer: "The subclass override can run before subclass state/initializers are complete.", explanation: "Correct. The runtime receiver is already the subclass object while subclass initialization may still be incomplete."}
+      - {id: C, answer: "Because constructors cannot call any methods.", explanation: "Incorrect. Constructors may call methods; the danger is specifically calling overridable behavior."}
+      - {id: D, answer: "Because the JVM always ignores the subclass override.", explanation: "Incorrect. Early dispatch to the override is the risk."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.Inheritance/Inheritance.md", anchor: "inheritance-coupling"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: interface-subtype-polymorphism
+    question: "Can `CardPayment implements PaymentMethod` provide subtype polymorphism without `extends PaymentMethod`?"
+    answers:
+      - {id: A, answer: "Yes. Implementing an interface creates a subtype relationship and instance-method implementations still dispatch from the runtime receiver.", explanation: "Correct. Subtype polymorphism is broader than class inheritance; interface implementation also creates a subtype."}
+      - {id: B, answer: "No. Polymorphism exists only between concrete classes using extends.", explanation: "Incorrect. Interfaces are a major Java mechanism for subtype polymorphism."}
+      - {id: C, answer: "Yes, but only for static methods.", explanation: "Incorrect. Static methods are not the subtype dynamic-dispatch mechanism discussed here."}
+      - {id: D, answer: "No, because an interface is not a type.", explanation: "Incorrect. An interface is a reference type and may be the static type of variables and parameters."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.Polymorphism/Polymorphism.md", anchor: "subtype-polymorphism"}
+    apiRelated: {controller: "PolymorphismController", methodSignature: "dispatch()"}
+
+  - id: internal-virtual-dispatch
+    question: "`Parent.execute()` calls `this.step()`, while the runtime object is `Child` and `Child` overrides `step()`. Which method runs?"
+    answers:
+      - {id: A, answer: "Always Parent.step() because the call appears in Parent source code.", explanation: "Incorrect. Caller source location does not disable virtual dispatch; the runtime receiver remains Child."}
+      - {id: B, answer: "Child.step() if `step()` is an overridable instance method.", explanation: "Correct. An internal virtual call through `this` still dispatches from the runtime receiver."}
+      - {id: C, answer: "Parent.step() and Child.step() automatically run one after the other.", explanation: "Incorrect. Only the dispatched implementation runs unless the override explicitly calls `super.step()`."}
+      - {id: D, answer: "It is a compile error because a parent method cannot call another method.", explanation: "Incorrect. Parent instance methods can call other instance methods normally."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.Polymorphism/Polymorphism.md", anchor: "dynamic-dispatch"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: override-compatibility-rules
+    question: "Which override is legal if the parent declares `public Number value() throws IOException`?"
+    answers:
+      - {id: A, answer: "`protected Number value() throws IOException`", explanation: "Incorrect. An override cannot reduce accessibility from public to protected."}
+      - {id: B, answer: "`public Integer value() throws FileNotFoundException`", explanation: "Correct. A reference return type may be covariant and a checked exception may be narrowed."}
+      - {id: C, answer: "`public Object value() throws Exception`", explanation: "Incorrect. The return type is broader and the checked exception also broadens the parent contract."}
+      - {id: D, answer: "`private Integer value()`", explanation: "Incorrect. Private reduces accessibility and cannot override the public contract."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.OverloadingOverriding/OverloadingOverriding.md", anchor: "override-rules"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: covariant-return-type
+    question: "What does a covariant return allow in overriding?"
+    answers:
+      - {id: A, answer: "The child override may return a more specific reference type as long as it is a subtype of the parent's return type.", explanation: "Correct. For example, a parent returning `Animal` may be overridden with `Dog`."}
+      - {id: B, answer: "The child may freely change `int` to `long` because long is wider.", explanation: "Incorrect. Primitive return types do not use covariant return in this sense."}
+      - {id: C, answer: "The child must always return the same concrete runtime object.", explanation: "Incorrect. The rule concerns method type compatibility, not object identity."}
+      - {id: D, answer: "Return type is irrelevant to override compatibility.", explanation: "Incorrect. Return types must be compatible, with covariance allowed for references."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.OverloadingOverriding/OverloadingOverriding.md", anchor: "covariant-return"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: final-reference-not-ownership
+    question: "What does `private final Player captain` prove about ownership of the `Player`?"
+    answers:
+      - {id: A, answer: "It proves Team is the sole owner and Player dies with Team.", explanation: "Incorrect. `final` does not encode UML ownership/lifecycle semantics."}
+      - {id: B, answer: "It only proves the field reference cannot be reassigned after initialization; ownership comes from design and lifecycle rules.", explanation: "Correct. `final` syntax is not enough to infer aggregation or composition."}
+      - {id: C, answer: "It proves Player is immutable.", explanation: "Incorrect. A final reference does not make the referenced object immutable."}
+      - {id: D, answer: "It proves Player cannot be shared.", explanation: "Incorrect. The same Player reference may be held elsewhere."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.Composition/Composition.md", anchor: "object-relationships"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: ownership-lifecycle-model
+    question: "What is the most important modeling distinction between aggregation and composition?"
+    answers:
+      - {id: A, answer: "Composition expresses stronger ownership/lifecycle coupling; aggregation commonly allows the part to exist independently or be shared.", explanation: "Correct. These are modeling semantics, not separate JVM runtime constructs."}
+      - {id: B, answer: "Aggregation uses fields while composition uses local variables.", explanation: "Incorrect. Both may use ordinary references; syntax alone does not determine semantics."}
+      - {id: C, answer: "Composition makes the GC delete the part immediately when the whole goes out of scope.", explanation: "Incorrect. GC follows reachability and does not understand UML ownership labels."}
+      - {id: D, answer: "Aggregation uses only primitives while composition uses objects.", explanation: "Incorrect. That is not the distinction."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.Composition/Composition.md", anchor: "ownership-lifecycle"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: abstraction-leak-correctness
+    question: "Which case is the strongest sign of a harmful abstraction leak?"
+    answers:
+      - {id: A, answer: "A caller must know an undocumented lifecycle or error constraint of the implementation to use it correctly.", explanation: "Correct. When a hidden implementation detail affects correctness, callers must know the secret and the abstraction leaks."}
+      - {id: B, answer: "The implementation has a private helper method.", explanation: "Incorrect. A private implementation detail is not itself a leak."}
+      - {id: C, answer: "The interface has a short name.", explanation: "Incorrect. Naming length does not define abstraction leakage."}
+      - {id: D, answer: "Several implementations share one contract.", explanation: "Incorrect. Multiple implementations are often a reason the abstraction is useful."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Abstraction/Abstraction.md", anchor: "abstraction-leak"}
+    apiRelated: {controller: "", methodSignature: ""}

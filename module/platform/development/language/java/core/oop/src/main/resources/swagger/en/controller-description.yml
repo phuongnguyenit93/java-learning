@@ -1,30 +1,30 @@
 CompositionController:
   description: |-
     <h2>Composition</h2>
-    <p>Executable Java Core experiments for observing composition versus inheritance trade-offs.</p>
+    <p>Observe object composition, delegation, and replacing a collaborator to vary behavior while keeping the consumer unchanged.</p>
   readmeRelated:
     file: 6.Composition/Composition.md
 DispatchController:
   description: |-
     <h2>Dispatch</h2>
-    <p>Executable Java Core experiments contrasting compile-time overload selection with runtime override dispatch.</p>
+    <p>Contrast compile-time overload selection, runtime instance dispatch, static-method hiding, and field hiding on the same runtime object.</p>
   readmeRelated:
     file: 5.OverloadingOverriding/OverloadingOverriding.md
 EncapsulationController:
   description: |-
     <h2>Encapsulation</h2>
-    <p>Executable Java Core experiments for observing how encapsulation protects object invariants.</p>
+    <p>Observe a valid state transition, a rejected request, and an invariant that remains valid after failure.</p>
   readmeRelated:
     file: 2.Encapsulation/Encapsulation.md
 PolymorphismController:
   description: |-
     <h2>Polymorphism</h2>
-    <p>Executable Java Core experiments for observing subtype polymorphism and runtime dynamic dispatch.</p>
+    <p>Observe interface-based subtype polymorphism: the same static type with different runtime receivers produces different behavior.</p>
   readmeRelated:
     file: 4.Polymorphism/Polymorphism.md
 SubstitutabilityController:
   description: |-
     <h2>Substitutability</h2>
-    <p>Executable Java Core experiments for observing substitutability and behavioral expectations across implementations.</p>
+    <p>Run multiple implementations through one supertype contract and observe that the caller needs no concrete-type special case.</p>
   readmeRelated:
     file: 4.Polymorphism/Polymorphism.md

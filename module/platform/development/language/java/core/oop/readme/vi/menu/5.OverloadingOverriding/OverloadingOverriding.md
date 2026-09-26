@@ -38,6 +38,10 @@ Mặc dù object thật ở runtime là `Child`, biến `value` có kiểu khai 
 
 Java không chờ tới runtime rồi chọn lại overload dựa trên class thật của object.
 
+### BOUNDARY — chapter này không thay thế toàn bộ overload-resolution rules
+
+Mục tiêu ở OOP là phân biệt **compile-time overload selection** với **runtime override dispatch**. Các rule chi tiết như widening, boxing, varargs, most-specific method và ambiguity thuộc `language-basics → Methods`.
+
 ### MINH CHỨNG — `DispatchController#overloadVsOverride()`
 
 Cùng một biến:
@@ -65,6 +69,8 @@ x.call()
 ### KHÁI NIỆM
 
 Overriding xảy ra khi class con cung cấp phần triển khai mới cho một instance method được kế thừa từ class cha với signature tương thích.
+
+Trong Java, tư duy overriding cũng áp dụng khi một class cung cấp implementation cho instance-method contract kế thừa từ interface hoặc override một default method. Module `abstract-interface` sở hữu các rule chi tiết của interface; ở đây trọng tâm vẫn là **instance-method implementation được chọn động ở runtime**.
 
 ```java
 class Parent {
@@ -123,6 +129,67 @@ Ngoài ra:
 - checked exception phải tuân quy tắc tương thích;
 - nên dùng `@Override` để compiler kiểm tra giúp quan hệ override.
 
+### CỤ THỂ HÓA — visibility, return type và checked exception
+
+Override không được giảm mức truy cập:
+
+```java
+class Parent {
+    public Number value() { return 1; }
+}
+
+class Child extends Parent {
+    @Override
+    protected Number value() { return 2; } // compile error
+}
+```
+
+Return type tham chiếu có thể covariant:
+
+```java
+class Parent {
+    Number value() { return 1; }
+}
+
+class Child extends Parent {
+    @Override
+    Integer value() { return 2; } // OK
+}
+```
+
+Với checked exception, override có thể giữ nguyên, thu hẹp hoặc bỏ exception đã khai báo, nhưng không được mở rộng thành checked exception rộng hơn hợp đồng cha:
+
+```java
+class Parent {
+    void load() throws IOException {}
+}
+
+class Child extends Parent {
+    @Override
+    void load() throws FileNotFoundException {} // OK
+}
+```
+
+`throws Exception` trong `Child.load()` ở ví dụ này sẽ không hợp lệ vì làm caller của hợp đồng `Parent` phải đối mặt với một checked exception rộng hơn.
+
+### PHÂN LOẠI — các member thường bị nhầm với overriding
+
+```text
+private method
+→ không phải override target được kế thừa
+
+final instance method
+→ có thể được kế thừa nhưng không được override
+
+static method
+→ cùng signature ở subtype là hiding, không runtime override
+
+constructor
+→ không được kế thừa, không override
+```
+
+Ngoài ra Java không cho đổi một static method thành instance method hoặc ngược lại trong subtype với cùng signature. Đây là conflict ở compile time, không phải một biến thể của overriding.
+
 ## <a id="static-method-hiding">Static Method Hiding</a>
 
 Static method thuộc về type/class chứ không tham gia dynamic dispatch theo object runtime như instance method.
@@ -144,6 +211,8 @@ Việc chọn static method đi theo kiểu được biết ở compile time c�
 
 Gọi static method thông qua object có thể compile trong một số trường hợp nhưng dễ gây hiểu nhầm. Nên gọi bằng tên class để ý nghĩa rõ ràng hơn.
 
+`super.someMethod()` là một lời gọi **được chỉ định rõ implementation của supertype**, nên nó không có ý nghĩa giống lời gọi virtual thông thường qua `this.someMethod()`. `super` thường được dùng khi override muốn mở rộng thay vì thay thế hoàn toàn hành vi cha.
+
 ## <a id="field-hiding">Field Hiding</a>
 
 Field không có dynamic dispatch.
@@ -159,6 +228,8 @@ System.out.println(value.name); // parent
 `value.name` được quyết định từ kiểu khai báo của `value`, tức là `Parent`.
 
 Đây là **field hiding**, không phải đa hình của trạng thái.
+
+Hai field cùng tên trong `Parent` và `Child` là **hai member/slot khác nhau**, không phải một field duy nhất được dispatch động. Cast hoặc static type khác nhau có thể làm cùng object được quan sát qua field khác nhau, vì vậy field hiding rất dễ gây nhầm và thường nên tránh.
 
 Việc dùng cùng một tên field ở cả class cha và class con thường làm code khó hiểu, nên tránh nếu không có lý do mạnh.
 

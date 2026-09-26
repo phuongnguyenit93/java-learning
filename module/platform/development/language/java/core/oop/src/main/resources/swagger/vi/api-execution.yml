@@ -1,72 +1,102 @@
 CompositionController:
   strategySwap():
-    execution: <p><strong>Khái niệm:</strong> Trade-off composition và inheritance.</p><ol><li>Endpoint
-      chạy một ví dụ deterministic và bounded trong <code>CompositionController#strategySwap()</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/strategy-swap&quot;)
-      public Map&lt;String,Object&gt; strategySwap(){ return Map.of(&quot;regular&quot;,new
-      Checkout(new Regular()).total(1000),&quot;discount&quot;,new Checkout(new Discount()).total(1000),&quot;consumerType&quot;,&quot;Checkout
-      unchanged&quot;); }</code></pre></li><li>Quan sát các field trong response cùng
-      nhau; đây là evidence cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
-      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
-      khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> Composition cho phép thay behavior bằng collaborator thay vì kéo dài hierarchy của consumer.</p>
+      <p><strong>Flow:</strong></p>
+      <ol>
+        <li>Tạo <code>Checkout</code> với <code>Regular</code> rồi tính <code>total(1000)</code>.</li>
+        <li>Tạo một <code>Checkout</code> khác với <code>Discount</code> rồi tính cùng input.</li>
+        <li>Giữ nguyên class consumer <code>Checkout</code>; chỉ thay object <code>Pricing</code> được inject.</li>
+      </ol>
+      <p><strong>Code evidence:</strong></p>
+      <pre><code>new Checkout(new Regular()).total(1000)
+      new Checkout(new Discount()).total(1000)</code></pre>
+      <p><strong>Quan sát:</strong> <code>regular = 1000</code>, <code>discount = 800</code>, trong khi <code>consumerType = "Checkout unchanged"</code>.</p>
+      <p><strong>Ý nghĩa:</strong> variation nằm trong collaborator <code>Pricing</code>. <code>Checkout</code> delegate phần tính giá mà không cần trở thành base class có nhiều subclass.</p>
+      <p><strong>Kết luận:</strong> đây là evidence cho composition/delegation và trade-off với inheritance; nó không chứng minh rằng inheritance luôn sai.</p>
     usage: true
 DispatchController:
   overloadVsOverride():
-    execution: <p><strong>Khái niệm:</strong> Overloading là compile-time selection.</p><ol><li>Endpoint
-      chạy một ví dụ deterministic và bounded trong <code>DispatchController#overloadVsOverride()</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/overload-vs-override&quot;)
-      public Map&lt;String,Object&gt; overloadVsOverride(){ Parent x=new Child();
-      return Map.of(&quot;overload&quot;,select(x),&quot;override&quot;,x.call(),&quot;runtime&quot;,x.getClass().getSimpleName());
-      }</code></pre></li><li>Quan sát các field trong response cùng nhau; đây là evidence
-      cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
-      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
-      khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> overload chọn signature ở compile time; override chọn body instance method ở runtime.</p>
+      <p><strong>Flow:</strong></p>
+      <ol>
+        <li>Biến được khai báo <code>Parent x = new Child()</code>.</li>
+        <li><code>select(x)</code> được compiler resolve từ static type <code>Parent</code>.</li>
+        <li><code>x.call()</code> đã có signature hợp lệ, sau đó runtime receiver <code>Child</code> quyết định override body.</li>
+      </ol>
+      <p><strong>Code evidence:</strong></p>
+      <pre><code>Parent x = new Child();
+      select(x); // select(Parent)
+      x.call();  // Child.call()</code></pre>
+      <p><strong>Quan sát:</strong> response đồng thời cho <code>overload = select(Parent)</code>, <code>override = Child.call</code>, <code>runtime = Child</code>.</p>
+      <p><strong>Ý nghĩa:</strong> runtime object không làm Java quay lại chọn overload khác; runtime chỉ tham gia dispatch body của overridden instance method đã được resolve.</p>
+      <p><strong>Kết luận:</strong> không được dùng cùng một mental model cho overloading và overriding.</p>
     usage: true
   dispatchVsHiding():
-    execution: <p><strong>Khái niệm:</strong> Instance dispatch khác static/field
-      hiding.</p><ol><li>Endpoint chạy một ví dụ deterministic và bounded trong <code>DispatchController#dispatchVsHiding()</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/dispatch-vs-hiding&quot;)
-      public Map&lt;String,Object&gt; dispatchVsHiding(){ Parent x=new Child(); return
-      Map.of(&quot;instanceMethod&quot;,x.call(),&quot;staticMethod&quot;,x.staticCall(),&quot;field&quot;,x.field,&quot;runtime&quot;,x.getClass().getSimpleName());
-      }</code></pre></li><li>Quan sát các field trong response cùng nhau; đây là evidence
-      cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
-      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
-      khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> overridden instance method là virtual; hidden static method và field không dispatch theo runtime receiver.</p>
+      <p><strong>Flow:</strong> dùng cùng <code>Parent x = new Child()</code> rồi đọc ba loại member qua expression <code>x</code>.</p>
+      <p><strong>Code evidence:</strong></p>
+      <pre><code>x.call();       // overridden instance method
+      x.staticCall(); // hidden static method
+      x.field;        // hidden field</code></pre>
+      <p><strong>Quan sát:</strong> runtime object là <code>Child</code>, nhưng response cho <code>instanceMethod = Child.call</code>, <code>staticMethod = Parent.staticCall</code>, <code>field = parent-field</code>.</p>
+      <p><strong>Ý nghĩa:</strong> chỉ instance override dùng runtime dispatch. Static method và field được chọn từ compile-time qualifying/expression type.</p>
+      <p><strong>Kết luận:</strong> câu “gọi qua object thì mọi member đều polymorphic” là sai.</p>
     usage: true
 EncapsulationController:
   invariantProtection():
-    execution: <p><strong>Khái niệm:</strong> Bảo vệ invariant.</p><ol><li>Endpoint
-      chạy một ví dụ deterministic và bounded trong <code>EncapsulationController#invariantProtection()</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/invariant&quot;)
-      public Map&lt;String,Object&gt; invariantProtection(){ Account a=new Account();
-      a.withdraw(30); String failure=&quot;none&quot;; try{a.withdraw(100);}catch(IllegalArgumentException
-      e){failure=e.getMessage();} return Map.of(&quot;balance&quot;,a.balance(),&quot;rejected&quot;,failure,&quot;invariant&quot;,&quot;balance
-      never becomes negative&quot;); }</code></pre></li><li>Quan sát các field trong
-      response cùng nhau; đây là evidence cho quy tắc, không phải benchmark hay production
-      policy.</li></ol><p><strong>Kết luận:</strong> đối chiếu kết quả với README
-      section được liên kết trước khi khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> Encapsulation có giá trị khi object kiểm soát state transition và giữ invariant sau cả success lẫn failure.</p>
+      <p><strong>Flow:</strong></p>
+      <ol>
+        <li><code>Account</code> bắt đầu với balance 100.</li>
+        <li><code>withdraw(30)</code> hợp lệ nên balance thành 70.</li>
+        <li><code>withdraw(100)</code> bị reject vì amount lớn hơn balance.</li>
+      </ol>
+      <p><strong>Code evidence:</strong></p>
+      <pre><code>if (amount &lt;= 0 || amount &gt; balance) {
+          throw new IllegalArgumentException("invalid withdrawal");
+      }
+      balance -= amount;</code></pre>
+      <p><strong>Quan sát:</strong> <code>rejected = invalid withdrawal</code> và <code>balance = 70</code>; invalid request không làm object rơi vào balance âm.</p>
+      <p><strong>Ý nghĩa:</strong> behavior <code>withdraw</code> gom validation và mutation sau một boundary thay vì expose raw setter.</p>
+      <p><strong>Kết luận:</strong> private field chỉ là mechanism; invariant-preserving behavior mới là evidence chính của encapsulation ở experiment này.</p>
     usage: true
 PolymorphismController:
   dispatch():
-    execution: <p><strong>Khái niệm:</strong> Runtime dynamic dispatch.</p><ol><li>Endpoint
-      chạy một ví dụ deterministic và bounded trong <code>PolymorphismController#dispatch()</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/dispatch&quot;)
-      public Map&lt;String,Object&gt; dispatch(){ Speaker first=new Dog(), second=new
-      Cat(); return Map.of(&quot;declaredType&quot;,&quot;Speaker&quot;,&quot;firstRuntime&quot;,first.getClass().getSimpleName(),&quot;firstResult&quot;,first.speak(),&quot;secondRuntime&quot;,second.getClass().getSimpleName(),&quot;secondResult&quot;,second.speak());
-      }</code></pre></li><li>Quan sát các field trong response cùng nhau; đây là evidence
-      cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
-      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
-      khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> Interface-based subtype polymorphism và runtime dynamic dispatch.</p>
+      <p><strong>Flow:</strong></p>
+      <ol>
+        <li><code>first</code> và <code>second</code> đều có static type <code>Speaker</code>.</li>
+        <li><code>first</code> giữ <code>Dog</code>, <code>second</code> giữ <code>Cat</code>.</li>
+        <li>Cùng lời gọi <code>speak()</code> được dispatch tới implementation của runtime receiver tương ứng.</li>
+      </ol>
+      <p><strong>Code evidence:</strong></p>
+      <pre><code>Speaker first = new Dog();
+      Speaker second = new Cat();
+      first.speak();
+      second.speak();</code></pre>
+      <p><strong>Quan sát:</strong> <code>declaredType = Speaker</code> cho cả hai, nhưng runtime/result lần lượt là <code>Dog/woof</code> và <code>Cat/meow</code>.</p>
+      <p><strong>Ý nghĩa:</strong> subtype polymorphism không cần class inheritance; implementation của interface cũng tạo subtype và runtime dispatch cho instance method.</p>
+      <p><strong>Kết luận:</strong> static type xác định contract có thể gọi, runtime receiver xác định implementation override/implement nào chạy.</p>
     usage: true
 SubstitutabilityController:
   substituteImplementations():
-    execution: <p><strong>Khái niệm:</strong> Substitutability và behavioral
-      expectation.</p><ol><li>Endpoint chạy một ví dụ deterministic và bounded trong
-      <code>SubstitutabilityController#substituteImplementations()</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/implementations&quot;)
-      public List&lt;Map&lt;String,String&gt;&gt; substituteImplementations(){ return
-      List.of(run(new Upper()),run(new Lower())); }</code></pre></li><li>Quan sát
-      các field trong response cùng nhau; đây là evidence cho quy tắc, không phải
-      benchmark hay production policy.</li></ol><p><strong>Kết luận:</strong> đối
-      chiếu kết quả với README section được liên kết trước khi khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> Substitutability nghĩa là caller viết theo contract chung có thể nhận nhiều implementation mà không cần special-case type.</p>
+      <p><strong>Flow:</strong></p>
+      <ol>
+        <li><code>run(Formatter)</code> chỉ biết interface <code>Formatter</code>.</li>
+        <li>Lần một truyền <code>Upper</code>, lần hai truyền <code>Lower</code>.</li>
+        <li>Mỗi implementation thực hiện cùng contract <code>format(String)</code> theo behavior riêng.</li>
+      </ol>
+      <p><strong>Code evidence:</strong></p>
+      <pre><code>run(new Upper())
+      run(new Lower())</code></pre>
+      <p><strong>Quan sát:</strong> cùng input <code>Java</code> tạo <code>JAVA</code> và <code>java</code>, còn method <code>run</code> không branch theo concrete type.</p>
+      <p><strong>Ý nghĩa:</strong> variation được giữ phía sau contract. Experiment minh họa positive case của substitutability; nó không tự chứng minh mọi subtype có thể bảo toàn mọi behavioral expectation.</p>
+      <p><strong>Kết luận:</strong> khả năng gán subtype chỉ là điều kiện type-system; thiết kế tốt còn cần các implementation tôn trọng contract mà caller dựa vào.</p>
     usage: true

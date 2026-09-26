@@ -1,9 +1,10 @@
 CompositionController:
   strategySwap():
     summary: Trade-off composition và inheritance
-    description: Chạy thí nghiệm học tập deterministic cho Trade-off composition và
-      inheritance. Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy
-      tắc.
+    description: Giữ nguyên consumer `Checkout` nhưng thay collaborator `Pricing` giữa
+      `Regular` và `Discount`. So sánh `regular`, `discount` và `consumerType` để thấy
+      behavior thay đổi nhờ composition/delegation mà không cần tạo subclass mới cho
+      `Checkout`.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -29,8 +30,9 @@ CompositionController:
 DispatchController:
   overloadVsOverride():
     summary: Overloading là compile-time selection
-    description: Chạy thí nghiệm học tập deterministic cho Overloading là compile-time
-      selection. Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    description: Dùng cùng biến `Parent x = new Child()` cho hai lời gọi. Field `overload`
+      cho thấy signature `select(Parent)` đã được chọn từ static type ở compile time,
+      còn `override` cho thấy `Child.call()` được chọn từ runtime receiver.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -55,9 +57,9 @@ DispatchController:
     usage: true
   dispatchVsHiding():
     summary: Instance dispatch khác static/field hiding
-    description: Chạy thí nghiệm học tập deterministic cho Instance dispatch khác
-      static/field hiding. Response cung cấp runtime evidence cụ thể thay vì chỉ mô
-      tả quy tắc.
+    description: Dùng `Parent x = new Child()` để đặt overridden instance method, hidden
+      static method và hidden field cạnh nhau. So sánh `instanceMethod`, `staticMethod`,
+      `field` và `runtime` để thấy chỉ instance override dispatch theo runtime object.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -83,8 +85,9 @@ DispatchController:
 EncapsulationController:
   invariantProtection():
     summary: Bảo vệ invariant
-    description: Chạy thí nghiệm học tập deterministic cho Bảo vệ invariant. Response
-      cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    description: Thực hiện một lần rút tiền hợp lệ rồi một lần vượt quá balance. Response
+      cho thấy request sai bị từ chối trong khi balance cuối vẫn hợp lệ, minh chứng rằng
+      behavior-oriented API bảo vệ invariant thay vì cho caller mutate state tùy ý.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -110,8 +113,9 @@ EncapsulationController:
 PolymorphismController:
   dispatch():
     summary: Runtime dynamic dispatch
-    description: Chạy thí nghiệm học tập deterministic cho Runtime dynamic dispatch.
-      Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    description: Hai biến đều có static type `Speaker` nhưng giữ `Dog` và `Cat`. So sánh
+      runtime class với `speak()` result để quan sát interface-based subtype polymorphism
+      và dynamic dispatch theo runtime receiver.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -137,9 +141,9 @@ PolymorphismController:
 SubstitutabilityController:
   substituteImplementations():
     summary: Substitutability và behavioral expectation
-    description: Chạy thí nghiệm học tập deterministic cho Substitutability và behavioral
-      expectation. Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy
-      tắc.
+    description: Truyền `Upper` và `Lower` qua cùng một method chỉ biết contract `Formatter`.
+      Hai implementation tạo kết quả khác nhau nhưng caller không cần branch theo concrete
+      type, minh chứng cho substitutability trên cùng behavioral contract.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video

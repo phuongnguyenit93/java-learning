@@ -15,6 +15,68 @@ payment.pay(1000);
 
 `CheckoutService` chỉ cần biết hợp đồng của `PaymentMethod`. Nó không nhất thiết phải biết object thật ở runtime là thanh toán bằng thẻ, ví điện tử hay chuyển khoản.
 
+### JAVA MODEL — polymorphism không yêu cầu class inheritance
+
+`PaymentMethod` có thể là một `interface`:
+
+```java
+interface PaymentMethod {
+    void pay(int amount);
+}
+
+class CardPayment implements PaymentMethod {
+    @Override
+    public void pay(int amount) {
+        System.out.println("card: " + amount);
+    }
+}
+
+PaymentMethod payment = new CardPayment();
+payment.pay(1000);
+```
+
+Ở đây không có `CardPayment extends PaymentMethod`, nhưng vẫn có đầy đủ chuỗi:
+
+```text
+CardPayment implements PaymentMethod
+→ CardPayment là subtype của PaymentMethod
+→ biến PaymentMethod có thể giữ CardPayment
+→ lời gọi instance method vẫn dynamic dispatch theo runtime receiver
+```
+
+Điều này rất quan trọng: **subtype polymorphism là ý tưởng rộng hơn class inheritance**. Class inheritance là một cách tạo subtype; interface implementation là một cách khác. Các rule chi tiết của interface thuộc module `abstract-interface`.
+
+### MENTAL MODEL — static type và runtime type
+
+Với:
+
+```java
+PaymentMethod payment = new CardPayment();
+```
+
+cần giữ hai lớp thông tin tách biệt:
+
+```text
+PaymentMethod payment
+↑ static / declared type
+
+new CardPayment()
+↑ runtime type / actual object
+```
+
+Static type cho compiler biết **những member nào hợp lệ để gọi qua biểu thức `payment`**. Runtime type trở nên quan trọng khi một instance method đã hợp lệ lại có nhiều implementation override khác nhau.
+
+Ví dụ:
+
+```java
+Animal animal = new Dog();
+
+animal.sound(); // hợp lệ nếu Animal khai báo sound()
+animal.bark();  // compile error nếu Animal không khai báo bark()
+```
+
+Dù object thật là `Dog`, compiler vẫn không cho gọi `bark()` qua biến `Animal` chỉ vì runtime object có method đó.
+
 ### VÌ SAO — giảm nhánh xử lý theo từng kiểu cụ thể
 
 Không có đa hình, bên gọi thường phải tự phân loại object:
@@ -72,6 +134,44 @@ payment.pay(1000);
 Compiler kiểm tra rằng `PaymentMethod` có method `pay(...)` phù hợp. Khi chương trình chạy, nếu `CardPayment` override method đó thì body của `CardPayment` được thực thi.
 
 Cơ chế này gọi là **dynamic dispatch**.
+
+### CƠ CHẾ — lời gọi bên trong object vẫn dispatch theo runtime receiver
+
+Dynamic dispatch không chỉ xảy ra khi caller bên ngoài trực tiếp gọi một method override. Một method của class cha gọi một instance method khác qua `this` cũng vẫn làm việc với **cùng runtime object**:
+
+```java
+class PaymentMethod {
+    void execute(int amount) {
+        pay(amount); // tương đương lời gọi virtual trên this
+    }
+
+    void pay(int amount) {
+        System.out.println("generic");
+    }
+}
+
+class CardPayment extends PaymentMethod {
+    @Override
+    void pay(int amount) {
+        System.out.println("card: " + amount);
+    }
+}
+
+PaymentMethod payment = new CardPayment();
+payment.execute(1000);
+```
+
+Flow là:
+
+```text
+payment.execute(...)
+→ chạy PaymentMethod.execute(...)
+→ execute gọi this.pay(...)
+→ runtime receiver vẫn là CardPayment
+→ CardPayment.pay(...) chạy
+```
+
+Vì vậy không nên suy luận rằng “đang ở body của `PaymentMethod` thì mọi lời gọi method bên trong cũng cố định vào implementation của `PaymentMethod`”. Với overridable instance method, runtime receiver vẫn quyết định body cuối cùng.
 
 ### MINH CHỨNG — `PolymorphismController#dispatch()`
 
@@ -131,6 +231,39 @@ Ví dụ một kiểu con nên giữ các kỳ vọng như:
 Đây là tư duy gần với **Liskov Substitution Principle**, nhưng ở mức Java Core ta có thể dùng một câu hỏi đơn giản hơn:
 
 > Nếu thay cách triển khai mà bên gọi không biết, hành vi có vẫn hợp lý theo hợp đồng chung không?
+
+### FAILURE CASE — type-compatible nhưng không behavior-compatible
+
+Giả sử hợp đồng `Account` khiến caller hợp lý khi tin rằng mọi account đều hỗ trợ `withdraw(...)`:
+
+```java
+class Account {
+    void withdraw(int amount) {
+        // normal withdrawal contract
+    }
+}
+
+class FixedAccount extends Account {
+    @Override
+    void withdraw(int amount) {
+        throw new UnsupportedOperationException();
+    }
+}
+```
+
+Java vẫn cho phép:
+
+```java
+Account account = new FixedAccount();
+```
+
+Nhưng nếu mọi caller của `Account` đều phải thêm ngoại lệ riêng cho `FixedAccount`, quan hệ subtype đã không còn bảo toàn kỳ vọng hành vi chung.
+
+```text
+gán được theo type system
+≠
+thay thế tốt theo behavioral contract
+```
 
 ### MINH CHỨNG — `SubstitutabilityController#substituteImplementations()`
 

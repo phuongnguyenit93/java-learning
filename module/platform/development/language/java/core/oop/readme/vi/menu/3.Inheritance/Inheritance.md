@@ -40,6 +40,12 @@ Nếu mục tiêu duy nhất là dùng lại vài method, `composition` có th�
 
 `interface` cũng tạo được quan hệ kiểu con mà không cần kế thừa phần triển khai từ class cha. Module `abstract-interface` sẽ đi sâu hơn vào phần này.
 
+### GIỚI HẠN — Java chỉ cho một class cha trực tiếp
+
+Một class Java chỉ có thể `extends` **một class trực tiếp**. Điều này giúp tránh một số xung đột trạng thái/implementation của multiple class inheritance, nhưng đồng thời làm cho việc chọn class cha trở thành một quyết định coupling khá mạnh.
+
+`final class` chặn việc tạo subclass; `final` vì vậy không chỉ là cú pháp, mà còn có thể biểu đạt rằng type đó không mở rộng hợp đồng bằng kế thừa class.
+
 ### THỰC HÀNH — kiểm tra “is-a” bằng hành vi
 
 Đừng chỉ hỏi:
@@ -70,6 +76,22 @@ Một `CardPayment` có thể dùng `provider()` nếu method đó có quyền t
 
 Field `private` của class cha vẫn tồn tại trong object, nhưng class con không truy cập trực tiếp nó bằng member access thông thường.
 
+### PHÂN BIỆT — declared, inherited và accessible không phải một khái niệm
+
+Ba câu hỏi sau khác nhau:
+
+```text
+Member được khai báo ở đâu?
+        ↓
+Member có được kế thừa vào subtype không?
+        ↓
+Code hiện tại có quyền truy cập member đó không?
+```
+
+Ví dụ, private state của class cha vẫn là một phần trạng thái của object `Child`, nhưng source code của `Child` không được truy cập trực tiếp field đó. Ngược lại, một method của cha có thể được kế thừa và dùng được nếu access rule cho phép.
+
+Chi tiết đầy đủ của `private` / package-private / `protected` / `public` thuộc `class-object → Access Modifier`; chapter này chỉ giữ mental model cần cho inheritance.
+
 ### Constructor không được kế thừa
 
 Constructor có nhiệm vụ thiết lập trạng thái ban đầu cho từng phần của object.
@@ -83,6 +105,40 @@ super(...)
 hoặc compiler tự chèn `super()` nếu lời gọi đó hợp lệ.
 
 Điều này quan trọng vì phần trạng thái và các điều kiện bất biến của class cha phải được thiết lập đúng trước khi việc khởi tạo class con hoàn tất.
+
+### CƠ CHẾ — constructor chain đi từ phần cha tới phần con
+
+Với:
+
+```java
+class Parent {
+    Parent() {
+        System.out.println("Parent");
+    }
+}
+
+class Child extends Parent {
+    Child() {
+        System.out.println("Child");
+    }
+}
+```
+
+`new Child()` tạo một object duy nhất, nhưng quá trình constructor diễn ra theo chuỗi:
+
+```text
+new Child()
+    ↓
+Parent constructor
+    ↓
+parent state established
+    ↓
+Child constructor
+    ↓
+child state established
+```
+
+Constructor **không được kế thừa**; `super(...)` chỉ là cách constructor của subtype yêu cầu constructor của supertype khởi tạo phần state mà supertype sở hữu.
 
 ### MỐI LIÊN HỆ — được kế thừa method chưa phải là đa hình
 
@@ -104,6 +160,30 @@ Class con có thể phụ thuộc không chỉ vào hợp đồng công khai c�
 - những giả định bên trong cách triển khai của class cha.
 
 Ví dụ, nếu constructor của class cha gọi một method có thể bị override, hành vi của class con có thể chạy trước khi trạng thái riêng của class con được khởi tạo đầy đủ.
+
+```java
+class Parent {
+    Parent() {
+        printLength();
+    }
+
+    void printLength() {
+    }
+}
+
+class Child extends Parent {
+    private String name = "Java";
+
+    @Override
+    void printLength() {
+        System.out.println(name.length());
+    }
+}
+```
+
+Khi `new Child()` bắt đầu, constructor `Parent` chạy trước. Lời gọi `printLength()` vẫn dùng dynamic dispatch và có thể đi vào `Child.printLength()` **trước khi initializer `name = "Java"` của Child hoàn tất**. Khi đó `name` vẫn có giá trị mặc định `null` và lời gọi `name.length()` có thể ném `NullPointerException`.
+
+Ví dụ này cho thấy coupling của inheritance không chỉ nằm ở public API. Subclass còn có thể bị ảnh hưởng bởi **thứ tự lifecycle và cách base class thực thi nội bộ**.
 
 Đây là một dạng **fragile base class**: thay đổi ở class cha có thể gây ảnh hưởng bất ngờ tới class con.
 

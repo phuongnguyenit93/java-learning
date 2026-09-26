@@ -58,6 +58,42 @@ Abstraction
 
 We will return to abstraction at the end of the module. For now, remember: access modifiers are tools; a **meaningful boundary is the goal**.
 
+### PITFALL — a `private` field can still leak mutable state
+
+Encapsulation can be broken even without a setter. An object may expose its **internal representation** by returning a mutable reference directly:
+
+```java
+class Order {
+    private final List<String> items = new ArrayList<>();
+
+    public List<String> getItems() {
+        return items;
+    }
+}
+```
+
+A caller can now do:
+
+```java
+order.getItems().clear();
+```
+
+The field is still `private`, yet the caller holds the exact reference used internally and can mutate state without going through any `Order` rule.
+
+Keep the distinction clear:
+
+```text
+private field
+≠
+internal state automatically protected
+
+mutable reference escapes
+→ caller can mutate internal representation
+→ invariants can still be broken
+```
+
+Depending on the contract, an object may return a copy, an immutable view, or expose intent-oriented operations instead of a mutable collection. Detailed collection APIs belong in the `collection` module; the OOP lesson here is **representation exposure**.
+
 ## <a id="encapsulation-access-modifiers">Access Modifiers and Encapsulation</a>
 
 ### RELATION — how do access modifiers support encapsulation?
@@ -155,6 +191,17 @@ ShoppingCart contains no quantity <= 0
 ```
 
 Constructors or factories should establish valid state; every public operation that mutates state should preserve those invariants.
+
+Think of the invariant lifecycle as a continuous chain:
+
+```text
+construction
+→ object starts valid
+→ every public state transition enforces required rules
+→ object remains valid after the transition
+```
+
+If construction creates invalid state, or any public operation bypasses the rule, encapsulation has failed even if every field remains `private`.
 
 ### HOW — model state transitions instead of raw mutation
 

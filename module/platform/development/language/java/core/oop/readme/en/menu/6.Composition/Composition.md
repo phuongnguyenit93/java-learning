@@ -24,6 +24,24 @@ final class Checkout {
 
 `Checkout` **has-a** `Pricing`. It should not `extend Pricing` because checkout is not a pricing policy.
 
+### TERMINOLOGY — “composition” is used in two common senses
+
+In OOP discussions, **object composition** is often used broadly: build an object by combining collaborators instead of inheriting implementation.
+
+In UML/object modeling, **composition** also has a narrower meaning: a whole–part relationship with strong ownership and a part lifecycle tied closely to the whole.
+
+This chapter uses both contexts, so pay attention to the question being answered:
+
+```text
+composition as a design technique
+→ combine objects / delegate behavior instead of extending a class
+
+composition as a UML relationship
+→ strong ownership + lifecycle semantics
+```
+
+The two meanings are related but **not identical**. Merely storing a collaborator for delegation is not enough to prove UML composition.
+
 ### WHY — reuse behavior without inheriting implementation
 
 If the goal is to vary pricing strategy, composition lets us inject `Regular`, `Discount`, or another implementation without changing the type hierarchy of `Checkout`.
@@ -54,6 +72,29 @@ These terms describe relationships in an object model; they are **not four separ
 
 Java sees references; ownership meaning mostly comes from the design contract.
 
+### PITFALL — a `final` reference does not automatically mean composition
+
+For example:
+
+```java
+class Team {
+    private final Player captain;
+
+    Team(Player captain) {
+        this.captain = captain;
+    }
+}
+```
+
+`final` only means the `captain` field cannot be reassigned to a different reference after initialization. It does **not prove** that:
+
+- `Team` is the only owner of `Player`;
+- `Player` cannot be shared elsewhere;
+- `Player` must die with `Team`;
+- the relationship is composition in the modeling sense.
+
+Ownership is a **design semantic**, not something Java infers from one keyword.
+
 ### WHY — do not infer UML semantics from syntax alone
 
 Two classes both having fields is not enough to decide aggregation vs composition. Look at who creates the part, who retains it, whether it can be shared, and how lifecycle is managed.
@@ -75,6 +116,8 @@ class CheckoutService {
     private final PaymentGateway gateway;
 }
 ```
+
+A collaborator stored in a field is not necessarily strongly owned. Two services may hold the same mutable object. In that case aliasing, shared mutation, and lifecycle contracts matter more than the mere presence of a field/reference.
 
 ### TRADE-OFF
 
@@ -127,6 +170,29 @@ int total(int base) {
 ### RELATION — delegation leads to abstraction
 
 For composition to stay flexible, the consumer should depend on a **stable contract** rather than implementation details. That is why composition and abstraction often reinforce each other.
+
+### DISTINCTION — composition and delegation are not the same thing
+
+```text
+Composition
+→ A keeps/has collaborator B as part of its object structure
+
+Delegation
+→ A receives a request and hands a specific responsibility to B
+```
+
+In the module's running example, `Checkout` may keep a `Pricing` collaborator without making every `Checkout` responsibility belong to `Pricing`. When `Checkout.total(...)` calls `pricing.price(...)`, **the pricing responsibility itself** is delegated to the `Pricing` collaborator.
+
+```text
+Checkout
+→ owns checkout coordination
+
+Pricing
+→ owns pricing behavior
+
+Checkout.total(...)
+→ delegates pricing work to Pricing.price(...)
+```
 
 ### TRADE-OFF
 

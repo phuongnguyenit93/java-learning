@@ -66,6 +66,42 @@ Trừu tượng hóa (Abstraction)
 
 Ta sẽ quay lại trừu tượng hóa ở cuối module. Ở đây chỉ cần nhớ: access modifier là công cụ; **ranh giới có ý nghĩa mới là mục tiêu**.
 
+### PITFALL — field `private` nhưng trạng thái mutable vẫn có thể bị lộ
+
+Đóng gói không chỉ bị phá bởi setter. Một object cũng có thể làm lộ **representation bên trong** thông qua reference mutable:
+
+```java
+class Order {
+    private final List<String> items = new ArrayList<>();
+
+    public List<String> getItems() {
+        return items;
+    }
+}
+```
+
+Bên gọi có thể làm:
+
+```java
+order.getItems().clear();
+```
+
+Field `items` vẫn là `private`, nhưng caller đã nhận đúng reference mà `Order` đang dùng nội bộ và có thể sửa trạng thái mà không đi qua bất kỳ rule nào của `Order`.
+
+Vì vậy cần phân biệt:
+
+```text
+private field
+≠
+internal state automatically protected
+
+mutable reference escapes
+→ caller có thể sửa representation bên trong
+→ invariant vẫn có thể bị phá
+```
+
+Tùy hợp đồng, object có thể trả về bản sao, immutable view hoặc chỉ cung cấp những operation có ý nghĩa thay vì expose collection mutable trực tiếp. Chi tiết API của collection thuộc module `collection`; ở đây điều cần giữ là mental model về **representation exposure**.
+
 ## <a id="encapsulation-access-modifiers">Access Modifier và Encapsulation</a>
 
 ### MỐI LIÊN HỆ — access modifier giúp hiện thực hóa đóng gói như thế nào?
@@ -165,6 +201,17 @@ ShoppingCart không chứa sản phẩm có quantity <= 0
 ```
 
 Constructor hoặc factory nên tạo ra đối tượng ở trạng thái hợp lệ. Sau đó, mọi phương thức công khai làm thay đổi trạng thái phải tiếp tục giữ các điều kiện đó đúng.
+
+Có thể nhìn vòng đời invariant như một chuỗi liên tục:
+
+```text
+construction
+→ object bắt đầu hợp lệ
+→ mỗi public state transition kiểm tra rule cần thiết
+→ object vẫn hợp lệ sau transition
+```
+
+Nếu constructor tạo ra trạng thái sai, hoặc một method public cho phép đi vòng qua rule, encapsulation đã thất bại dù field vẫn là `private`.
 
 ### CƠ CHẾ — thay đổi trạng thái thông qua hành vi có ý nghĩa
 

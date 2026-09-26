@@ -1,74 +1,102 @@
 CompositionController:
   strategySwap():
-    execution: '<p><strong>Concept:</strong> Composition vs inheritance trade-offs.</p><ol><li>The
-      endpoint runs a bounded deterministic example inside <code>CompositionController#strategySwap()</code>.</li><li>Swap
-      composed behavior without changing consumer.<pre><code>@GetMapping(&quot;/strategy-swap&quot;)
-      public Map&lt;String,Object&gt; strategySwap(){ return Map.of(&quot;regular&quot;,new
-      Checkout(new Regular()).total(1000),&quot;discount&quot;,new Checkout(new Discount()).total(1000),&quot;consumerType&quot;,&quot;Checkout
-      unchanged&quot;); }</code></pre></li><li>Inspect the response fields together:
-      they are the observable evidence for the rule rather than a benchmark or production
-      policy.</li></ol><p><strong>Conclusion:</strong> connect the observed result
-      back to the linked README section before generalizing the behavior.</p>'
+    execution: |-
+      <p><strong>Concept:</strong> Composition varies behavior through a collaborator instead of extending the consumer hierarchy.</p>
+      <p><strong>Flow:</strong></p>
+      <ol>
+        <li>Create <code>Checkout</code> with <code>Regular</code> and calculate <code>total(1000)</code>.</li>
+        <li>Create another <code>Checkout</code> with <code>Discount</code> for the same input.</li>
+        <li>Keep the consumer class <code>Checkout</code> unchanged; only the injected <code>Pricing</code> object changes.</li>
+      </ol>
+      <p><strong>Code evidence:</strong></p>
+      <pre><code>new Checkout(new Regular()).total(1000)
+      new Checkout(new Discount()).total(1000)</code></pre>
+      <p><strong>Observation:</strong> <code>regular = 1000</code>, <code>discount = 800</code>, while <code>consumerType = "Checkout unchanged"</code>.</p>
+      <p><strong>Meaning:</strong> variation lives in the <code>Pricing</code> collaborator. <code>Checkout</code> delegates pricing instead of becoming a base class with multiple subclasses.</p>
+      <p><strong>Conclusion:</strong> this is evidence for composition/delegation and its trade-off with inheritance; it does not prove that inheritance is always wrong.</p>
     usage: true
 DispatchController:
   overloadVsOverride():
-    execution: '<p><strong>Concept:</strong> Overloading is compile-time selection.</p><ol><li>The
-      endpoint runs a bounded deterministic example inside <code>DispatchController#overloadVsOverride()</code>.</li><li>Contrast
-      overload compile-time choice with override runtime dispatch.<pre><code>@GetMapping(&quot;/overload-vs-override&quot;)
-      public Map&lt;String,Object&gt; overloadVsOverride(){ Parent x=new Child();
-      return Map.of(&quot;overload&quot;,select(x),&quot;override&quot;,x.call(),&quot;runtime&quot;,x.getClass().getSimpleName());
-      }</code></pre></li><li>Inspect the response fields together: they are the observable
-      evidence for the rule rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
-      connect the observed result back to the linked README section before generalizing
-      the behavior.</p>'
+    execution: |-
+      <p><strong>Concept:</strong> overload selects a signature at compile time; override selects an instance-method body at runtime.</p>
+      <p><strong>Flow:</strong></p>
+      <ol>
+        <li>Declare <code>Parent x = new Child()</code>.</li>
+        <li>The compiler resolves <code>select(x)</code> from the static type <code>Parent</code>.</li>
+        <li>After <code>x.call()</code> is known to be a legal signature, the runtime receiver <code>Child</code> selects the override body.</li>
+      </ol>
+      <p><strong>Code evidence:</strong></p>
+      <pre><code>Parent x = new Child();
+      select(x); // select(Parent)
+      x.call();  // Child.call()</code></pre>
+      <p><strong>Observation:</strong> the response simultaneously shows <code>overload = select(Parent)</code>, <code>override = Child.call</code>, and <code>runtime = Child</code>.</p>
+      <p><strong>Meaning:</strong> the runtime object does not cause Java to re-run overload resolution; runtime participates in dispatching the body of an already resolved overridden instance method.</p>
+      <p><strong>Conclusion:</strong> overloading and overriding require different mental models.</p>
     usage: true
   dispatchVsHiding():
-    execution: '<p><strong>Concept:</strong> Instance-method dispatch vs static-method
-      and field hiding.</p><ol><li>The endpoint runs a bounded deterministic example
-      inside <code>DispatchController#dispatchVsHiding()</code>.</li><li>With `Parent
-      x = new Child()`, compare an overridden instance method with a hidden static
-      method and hidden field to make runtime dispatch vs compile-time selection observable.<pre><code>@GetMapping(&quot;/dispatch-vs-hiding&quot;)
-      public Map&lt;String,Object&gt; dispatchVsHiding(){ Parent x=new Child(); return
-      Map.of(&quot;instanceMethod&quot;,x.call(),&quot;staticMethod&quot;,x.staticCall(),&quot;field&quot;,x.field,&quot;runtime&quot;,x.getClass().getSimpleName());
-      }</code></pre></li><li>Inspect the response fields together: they are the observable
-      evidence for the rule rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
-      connect the observed result back to the linked README section before generalizing
-      the behavior.</p>'
+    execution: |-
+      <p><strong>Concept:</strong> overridden instance methods are virtual; hidden static methods and fields do not dispatch from the runtime receiver.</p>
+      <p><strong>Flow:</strong> use the same <code>Parent x = new Child()</code> expression to access three member categories.</p>
+      <p><strong>Code evidence:</strong></p>
+      <pre><code>x.call();       // overridden instance method
+      x.staticCall(); // hidden static method
+      x.field;        // hidden field</code></pre>
+      <p><strong>Observation:</strong> the runtime object is <code>Child</code>, yet the response shows <code>instanceMethod = Child.call</code>, <code>staticMethod = Parent.staticCall</code>, and <code>field = parent-field</code>.</p>
+      <p><strong>Meaning:</strong> only the instance override uses runtime dispatch. Static methods and fields are selected from the compile-time qualifying/expression type.</p>
+      <p><strong>Conclusion:</strong> “anything accessed through an object is polymorphic” is false.</p>
     usage: true
 EncapsulationController:
   invariantProtection():
-    execution: '<p><strong>Concept:</strong> Protecting invariants.</p><ol><li>The
-      endpoint runs a bounded deterministic example inside <code>EncapsulationController#invariantProtection()</code>.</li><li>Compare
-      controlled behavior with raw state mutation attempt.<pre><code>@GetMapping(&quot;/invariant&quot;)
-      public Map&lt;String,Object&gt; invariantProtection(){ Account a=new Account();
-      a.withdraw(30); String failure=&quot;none&quot;; try{a.withdraw(100);}catch(IllegalArgumentException
-      e){failure=e.getMessage();} return Map.of(&quot;balance&quot;,a.balance(),&quot;rejected&quot;,failure,&quot;invariant&quot;,&quot;balance
-      never becomes negative&quot;); }</code></pre></li><li>Inspect the response fields
-      together: they are the observable evidence for the rule rather than a benchmark
-      or production policy.</li></ol><p><strong>Conclusion:</strong> connect the observed
-      result back to the linked README section before generalizing the behavior.</p>'
+    execution: |-
+      <p><strong>Concept:</strong> Encapsulation is valuable when the object controls state transitions and preserves invariants after both success and failure.</p>
+      <p><strong>Flow:</strong></p>
+      <ol>
+        <li><code>Account</code> starts with balance 100.</li>
+        <li><code>withdraw(30)</code> succeeds, leaving balance 70.</li>
+        <li><code>withdraw(100)</code> is rejected because the amount exceeds the balance.</li>
+      </ol>
+      <p><strong>Code evidence:</strong></p>
+      <pre><code>if (amount &lt;= 0 || amount &gt; balance) {
+          throw new IllegalArgumentException("invalid withdrawal");
+      }
+      balance -= amount;</code></pre>
+      <p><strong>Observation:</strong> <code>rejected = invalid withdrawal</code> and <code>balance = 70</code>; the invalid request never drives the object into a negative balance.</p>
+      <p><strong>Meaning:</strong> <code>withdraw</code> keeps validation and mutation behind one behavior boundary rather than exposing raw mutation.</p>
+      <p><strong>Conclusion:</strong> a private field is only a mechanism; invariant-preserving behavior is the main encapsulation evidence in this experiment.</p>
     usage: true
 PolymorphismController:
   dispatch():
-    execution: '<p><strong>Concept:</strong> Runtime dynamic dispatch.</p><ol><li>The
-      endpoint runs a bounded deterministic example inside <code>PolymorphismController#dispatch()</code>.</li><li>Base
-      reference invoking subtype implementation.<pre><code>@GetMapping(&quot;/dispatch&quot;)
-      public Map&lt;String,Object&gt; dispatch(){ Speaker first=new Dog(), second=new
-      Cat(); return Map.of(&quot;declaredType&quot;,&quot;Speaker&quot;,&quot;firstRuntime&quot;,first.getClass().getSimpleName(),&quot;firstResult&quot;,first.speak(),&quot;secondRuntime&quot;,second.getClass().getSimpleName(),&quot;secondResult&quot;,second.speak());
-      }</code></pre></li><li>Inspect the response fields together: they are the observable
-      evidence for the rule rather than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
-      connect the observed result back to the linked README section before generalizing
-      the behavior.</p>'
+    execution: |-
+      <p><strong>Concept:</strong> Interface-based subtype polymorphism and runtime dynamic dispatch.</p>
+      <p><strong>Flow:</strong></p>
+      <ol>
+        <li><code>first</code> and <code>second</code> both have static type <code>Speaker</code>.</li>
+        <li><code>first</code> holds a <code>Dog</code>; <code>second</code> holds a <code>Cat</code>.</li>
+        <li>The same <code>speak()</code> call dispatches to the implementation of each runtime receiver.</li>
+      </ol>
+      <p><strong>Code evidence:</strong></p>
+      <pre><code>Speaker first = new Dog();
+      Speaker second = new Cat();
+      first.speak();
+      second.speak();</code></pre>
+      <p><strong>Observation:</strong> <code>declaredType = Speaker</code> for both, while runtime/result pairs are <code>Dog/woof</code> and <code>Cat/meow</code>.</p>
+      <p><strong>Meaning:</strong> subtype polymorphism does not require class inheritance; implementing an interface also creates a subtype and participates in runtime instance-method dispatch.</p>
+      <p><strong>Conclusion:</strong> the static type defines the callable contract; the runtime receiver selects the concrete implementation body.</p>
     usage: true
 SubstitutabilityController:
   substituteImplementations():
-    execution: '<p><strong>Concept:</strong> Substitutability and behavioral expectations.</p><ol><li>The
-      endpoint runs a bounded deterministic example inside <code>SubstitutabilityController#substituteImplementations()</code>.</li><li>Run
-      same contract against multiple implementations and compare behavior.<pre><code>@GetMapping(&quot;/implementations&quot;)
-      public List&lt;Map&lt;String,String&gt;&gt; substituteImplementations(){ return
-      List.of(run(new Upper()),run(new Lower())); }</code></pre></li><li>Inspect the
-      response fields together: they are the observable evidence for the rule rather
-      than a benchmark or production policy.</li></ol><p><strong>Conclusion:</strong>
-      connect the observed result back to the linked README section before generalizing
-      the behavior.</p>'
+    execution: |-
+      <p><strong>Concept:</strong> Substitutability means a caller written against one contract can accept multiple implementations without concrete-type special cases.</p>
+      <p><strong>Flow:</strong></p>
+      <ol>
+        <li><code>run(Formatter)</code> knows only the <code>Formatter</code> interface.</li>
+        <li>The first call receives <code>Upper</code>; the second receives <code>Lower</code>.</li>
+        <li>Each implementation fulfills the same <code>format(String)</code> contract with different behavior.</li>
+      </ol>
+      <p><strong>Code evidence:</strong></p>
+      <pre><code>run(new Upper())
+      run(new Lower())</code></pre>
+      <p><strong>Observation:</strong> the same input <code>Java</code> becomes <code>JAVA</code> and <code>java</code>, while <code>run</code> never branches on the concrete type.</p>
+      <p><strong>Meaning:</strong> variation stays behind the contract. This experiment shows a positive substitutability case; it does not prove that every possible subtype preserves every behavioral expectation.</p>
+      <p><strong>Conclusion:</strong> type-system assignability is necessary, but good subtype design also requires implementations to honor the behavioral contract callers depend on.</p>
     usage: true

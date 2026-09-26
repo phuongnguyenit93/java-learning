@@ -32,6 +32,26 @@ CheckoutService
 → coordinates those objects to complete checkout
 ```
 
+### RUNNING EXAMPLE — which model will continue through the module?
+
+Most chapters will return to the same small set of roles so the learner can watch **one design evolve across concepts** instead of restarting in a new domain every time:
+
+```text
+Checkout / CheckoutService
+→ coordinates the checkout flow
+
+PaymentMethod
+→ payment contract/behavior with multiple implementations
+
+CardPayment / WalletPayment
+→ concrete implementations for subtyping, polymorphism, and dispatch
+
+Pricing
+→ replaceable collaborator for composition, delegation, and abstraction
+```
+
+Supporting examples such as `Account`, `Team/Player`, or `Order/OrderLine` still appear when they demonstrate a specialized pitfall such as invariants or ownership/lifecycle more clearly. They are supporting examples, not separate curricula detached from the main checkout thread.
+
 The key is that rules no longer need to be scattered across every caller. Callers send requests through methods; the responsible object protects its own state and rules.
 
 ### WHY — why not keep everything in one function?

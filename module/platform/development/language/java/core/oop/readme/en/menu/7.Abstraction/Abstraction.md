@@ -36,6 +36,34 @@ An API may hide fields with `private` while still exposing a poor abstraction th
 
 Interfaces and abstract classes are common Java mechanisms for expressing abstractions, but a concrete class or function can also form a good abstraction when its contract is clear.
 
+### CONTRACT — an abstraction is more than a method list
+
+A useful abstraction often needs to define more than method names. Depending on the domain, the contract may include:
+
+```text
+provided behavior
++
+valid inputs / preconditions
++
+results / postconditions
++
+failure semantics
++
+side effects
++
+lifecycle or ordering constraints when they affect correctness
+```
+
+For example:
+
+```java
+interface Storage {
+    void save(Data data);
+}
+```
+
+does not by itself tell callers how `save` can fail, whether it is idempotent, or whether transaction/lifecycle rules matter. Details that affect **correct usage** belong in the contract; they should not disappear merely because an interface hides the implementation.
+
 The `abstract-interface` module goes deeper into choosing interfaces vs abstract classes. Here the focus is the **design role**, not the keyword.
 
 ## <a id="program-to-abstraction">Program to Abstraction</a>
@@ -74,6 +102,16 @@ Ask the consumer: **which capability does it need, and is it depending on a conc
 
 An abstraction leaks when callers must understand implementation details to use the contract correctly.
 
+Consider an apparently simple API:
+
+```java
+interface ReportStore {
+    void save(Report report);
+}
+```
+
+If callers must secretly know that implementation A rejects certain file names, implementation B requires an extra `flush()` call, and implementation C has an undocumented size limit, then the abstraction has leaked details that are necessary for correct use.
+
 Examples:
 
 - an API says “save”, but callers must know the concrete provider to handle errors correctly;
@@ -84,6 +122,23 @@ Examples:
 ### WHY — no abstraction can hide everything
 
 The goal is not to hide every detail. Constraints that materially affect correctness or an important performance contract should be exposed or documented. Irrelevant implementation details should remain hidden.
+
+### DISTINCTION — abstraction, encapsulation, and information hiding
+
+These ideas reinforce each other but emphasize different questions:
+
+```text
+Abstraction
+→ choose the minimal model/contract the caller needs to reason about
+
+Encapsulation
+→ place state + behavior behind a controlled boundary
+
+Information hiding
+→ hide change-prone design decisions so callers do not depend on them unnecessarily
+```
+
+In real code they often work together, but separating them prevents the false conclusion that `private` or `interface` automatically produces a good abstraction.
 
 ### RELATION — connect the whole module
 

@@ -38,6 +38,26 @@ CheckoutService
 → phối hợp các đối tượng trên để hoàn thành quá trình thanh toán
 ```
 
+### RUNNING EXAMPLE — mô hình nào sẽ được dùng xuyên module?
+
+Phần lớn module sẽ quay lại cùng một nhóm vai trò để người học nhìn thấy **một thiết kế tiến hóa qua từng khái niệm**, thay vì mỗi chapter bắt đầu từ một domain hoàn toàn mới:
+
+```text
+Checkout / CheckoutService
+→ thành phần điều phối luồng checkout
+
+PaymentMethod
+→ hợp đồng/hành vi thanh toán có nhiều implementation
+
+CardPayment / WalletPayment
+→ các implementation cụ thể để quan sát subtyping, polymorphism và dispatch
+
+Pricing
+→ collaborator có thể được thay thế để quan sát composition, delegation và abstraction
+```
+
+Một vài ví dụ phụ như `Account`, `Team/Player` hoặc `Order/OrderLine` vẫn xuất hiện khi chúng minh họa tốt hơn một pitfall chuyên biệt như invariant hoặc ownership/lifecycle. Chúng là ví dụ hỗ trợ, không phải một curriculum riêng tách khỏi luồng checkout chính.
+
 Điểm quan trọng không nằm ở việc ta đã tạo bao nhiêu `class`. Điểm quan trọng là **quy tắc được đặt ở đúng nơi chịu trách nhiệm**. Đoạn mã bên ngoài gửi yêu cầu thông qua phương thức (`method`), còn đối tượng tự bảo vệ trạng thái và thực hiện các quy tắc thuộc về nó.
 
 ### VÌ SAO — tại sao không dồn tất cả vào một hàm?

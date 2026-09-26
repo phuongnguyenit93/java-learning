@@ -83,3 +83,73 @@ questions:
     reviewed: false
     readmeRelated: {file: "7.Abstraction/Abstraction.md", anchor: "abstraction-leak"}
     apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Khi nào procedural style có thể rõ ràng hơn OOP, và khi nào object boundary bắt đầu có giá trị?"
+    answer: "Procedural style thường tự nhiên cho algorithm/pipeline ngắn, stateless hoặc data transformation tuyến tính. Object boundary có giá trị khi state sống lâu, invariant cần được bảo vệ, nhiều behavior thay đổi theo type và nhiều collaborator cùng tiến hóa. OOP không phải mục tiêu tự thân; tiêu chí là responsibility và change có được localize tốt hơn hay không."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.MentalModel/MentalModel.md", anchor: "oop-vs-procedural"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Một class có toàn bộ field private nhưng trả trực tiếp mutable List nội bộ. Encapsulation có còn mạnh không?"
+    answer: "Không nhất thiết. Caller nhận alias tới internal representation có thể mutate state mà không đi qua behavior bảo vệ invariant. Private kiểm soát direct member access, nhưng encapsulation còn phải kiểm soát reference escape; tùy contract có thể dùng defensive copy, immutable view hoặc intent-oriented operations."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.Encapsulation/Encapsulation.md", anchor: "encapsulation-model"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Tell, Don't Ask giải quyết vấn đề gì và vì sao không nên biến nó thành luật cấm getter?"
+    answer: "Heuristic này nhắc đặt domain decision gần object sở hữu state thay vì caller kéo dữ liệu ra rồi duplicate rule. Nó giảm rule leakage và coupling. Nhưng reporting, serialization, DTO/read model vẫn có lý do chính đáng để expose data; vấn đề là behavior thuộc responsibility của object bị đẩy ra caller, không phải sự tồn tại của mọi getter."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.Encapsulation/Encapsulation.md", anchor: "tell-dont-ask-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Subtype polymorphism có bắt buộc phải dùng class inheritance không? Giải thích bằng interface."
+    answer: "Không. `CardPayment implements PaymentMethod` làm `CardPayment` trở thành subtype của interface `PaymentMethod`; biến/parameter kiểu `PaymentMethod` có thể giữ object `CardPayment`, và overridden/implemented instance method vẫn được chọn theo runtime receiver. Class inheritance chỉ là một cách tạo subtype; interface implementation là cách khác."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.Polymorphism/Polymorphism.md", anchor: "subtype-polymorphism"}
+    apiRelated: {controller: "PolymorphismController", methodSignature: "dispatch()"}
+
+  - question: "Vì sao `Parent.execute()` có thể chạy `Child.step()` khi `execute()` gọi `this.step()`?"
+    answer: "Body `Parent.execute()` đang chạy không làm runtime receiver đổi thành Parent. `this` vẫn trỏ tới object thật là Child; nếu `step()` là overridable instance method, dynamic dispatch dùng runtime class của receiver và chọn `Child.step()`. Chỉ lời gọi được chỉ định như `super.step()` mới cố ý chọn implementation của supertype."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.Polymorphism/Polymorphism.md", anchor: "dynamic-dispatch"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Tại sao runtime type không làm Java chọn lại overload, trong khi lại ảnh hưởng override?"
+    answer: "Overload resolution chọn method signature ở compile time từ static argument types và invocation conversions. Sau khi signature instance method đã được xác định, runtime receiver mới quyết định override body nào chạy. Vì vậy `Parent x = new Child(); select(x)` có thể chọn `select(Parent)`, còn `x.call()` vẫn chạy `Child.call()` nếu override."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.OverloadingOverriding/OverloadingOverriding.md", anchor: "overloading-compile-time"}
+    apiRelated: {controller: "DispatchController", methodSignature: "overloadVsOverride()"}
+
+  - question: "Nêu các boundary quan trọng khi override liên quan visibility, return type và checked exception."
+    answer: "Override không được giảm accessibility; reference return type có thể covariant, tức cụ thể hơn return type cha; checked exception có thể giữ nguyên, thu hẹp hoặc bỏ nhưng không được mở rộng thành checked exception rộng hơn contract cha. `private`, `final`, `static` và constructor còn có semantics riêng nên không nên gộp tất cả vào overriding."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.OverloadingOverriding/OverloadingOverriding.md", anchor: "override-rules"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Vì sao `private final Player captain` chưa đủ để kết luận quan hệ là UML composition?"
+    answer: "`final` chỉ ngăn field reference bị reassign; nó không nói `Player` có owner duy nhất, có được share hay không, hoặc lifecycle có gắn với `Team` không. Aggregation/composition là modeling semantics được thể hiện qua cách tạo, expose, share và quản lý lifecycle của object, không phải một keyword Java riêng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.Composition/Composition.md", anchor: "object-relationships"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Composition và delegation khác nhau thế nào dù thường xuất hiện cùng nhau?"
+    answer: "Composition theo nghĩa object design mô tả A giữ/cộng tác với B; delegation mô tả một interaction trong đó A chuyển một responsibility cụ thể cho B thực hiện. `Checkout` có `Pricing` là quan hệ object; `Checkout.total()` gọi `pricing.price()` là delegation của responsibility tính giá. Có composition không có nghĩa mọi behavior đều được delegate."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.Composition/Composition.md", anchor: "delegation"}
+    apiRelated: {controller: "CompositionController", methodSignature: "strategySwap()"}
+
+  - question: "Vì sao một interface với vài method chưa đủ để bảo đảm abstraction tốt? Contract của abstraction còn có thể cần gì?"
+    answer: "Keyword/interface chỉ tạo mechanism. Abstraction tốt phải truyền đạt đủ behavior mà caller cần để dùng đúng: valid input/precondition, result/postcondition, failure semantics, side effect và lifecycle/ordering constraint khi chúng ảnh hưởng correctness. Nếu caller vẫn phải biết secret của implementation để dùng đúng, abstraction đang yếu hoặc bị leak."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Abstraction/Abstraction.md", anchor: "abstraction-model"}
+    apiRelated: {controller: "", methodSignature: ""}

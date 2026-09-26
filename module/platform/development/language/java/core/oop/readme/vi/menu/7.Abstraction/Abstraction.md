@@ -53,6 +53,34 @@ Nhưng abstraction không đồng nghĩa với keyword `abstract`.
 
 Một concrete class hoặc thậm chí một function cũng có thể tạo ra abstraction tốt nếu hợp đồng của nó rõ ràng và bên sử dụng không cần biết chi tiết triển khai.
 
+### HỢP ĐỒNG — abstraction không chỉ là danh sách method
+
+Một abstraction hữu ích thường cần làm rõ nhiều hơn tên method. Tùy domain, contract có thể bao gồm:
+
+```text
+behavior được cung cấp
++
+input hợp lệ / precondition
++
+kết quả hoặc postcondition
++
+failure semantics
++
+side effects
++
+lifecycle / ordering constraints khi chúng ảnh hưởng correctness
+```
+
+Ví dụ:
+
+```java
+interface Storage {
+    void save(Data data);
+}
+```
+
+chưa tự nói cho caller biết `save` có thể thất bại thế nào, có idempotent hay không, có yêu cầu transaction/lifecycle nào không. Những chi tiết ảnh hưởng cách dùng đúng **là một phần của contract**, không nên bị giấu chỉ vì implementation nằm phía sau interface.
+
 Module `abstract-interface` sẽ đi sâu hơn vào việc chọn `interface` hay `abstract class`. Ở module này, trọng tâm là **vai trò thiết kế của abstraction**.
 
 ## <a id="program-to-abstraction">Program to Abstraction</a>
@@ -125,6 +153,16 @@ Nếu bên sử dụng chỉ cần một tập nhỏ hành vi ổn định, đó
 
 Abstraction bị **rò rỉ (leak)** khi bên sử dụng vẫn phải hiểu chi tiết triển khai mới có thể dùng hợp đồng đúng cách.
 
+Ví dụ một API tưởng như đơn giản:
+
+```java
+interface ReportStore {
+    void save(Report report);
+}
+```
+
+nhưng nếu caller phải tự biết rằng implementation A chỉ chấp nhận tên file không dấu, implementation B yêu cầu gọi `flush()` trước khi kết thúc, còn implementation C có giới hạn kích thước không được nói trong contract, thì abstraction đã không che được những chi tiết cần thiết để sử dụng đúng.
+
 Ví dụ:
 
 - API chỉ nói `save`, nhưng bên gọi phải biết nhà cung cấp cụ thể mới xử lý lỗi đúng;
@@ -146,6 +184,23 @@ Những ràng buộc ảnh hưởng tới:
 nên được công khai hoặc ghi rõ trong hợp đồng.
 
 Chỉ những chi tiết triển khai không liên quan mới nên được giấu đi.
+
+### PHÂN BIỆT — abstraction, encapsulation và information hiding
+
+Ba ý này liên quan nhưng có trọng tâm khác nhau:
+
+```text
+Abstraction
+→ chọn mô hình/hợp đồng tối thiểu mà caller cần suy nghĩ tới
+
+Encapsulation
+→ đặt state + behavior sau một boundary được kiểm soát
+
+Information hiding
+→ che những design decision có khả năng thay đổi để caller không phụ thuộc không cần thiết
+```
+
+Trong code thực tế chúng thường hỗ trợ nhau, nhưng hiểu khác biệt giúp tránh suy luận sai rằng chỉ cần `private` hoặc `interface` là tự động có một abstraction tốt.
 
 ### MỐI LIÊN HỆ — nối lại toàn bộ module OOP
 

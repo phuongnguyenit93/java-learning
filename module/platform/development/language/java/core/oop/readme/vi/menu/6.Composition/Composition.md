@@ -38,6 +38,24 @@ Checkout has-a Pricing
 
 Vì vậy `Checkout extends Pricing` sẽ không thể hiện đúng mối quan hệ của bài toán.
 
+### THUẬT NGỮ — “composition” có hai cách dùng phổ biến
+
+Trong thảo luận OOP, **object composition** thường được dùng theo nghĩa rộng: xây một object bằng cách ghép các collaborator lại với nhau thay vì kế thừa implementation.
+
+Trong UML/object modeling, **composition** còn có nghĩa hẹp hơn: một quan hệ whole–part với ownership mạnh và lifecycle của part gắn chặt với whole.
+
+Chapter này dùng cả hai ngữ cảnh, vì vậy cần nhìn câu hỏi đang được trả lời:
+
+```text
+composition như kỹ thuật thiết kế
+→ ghép object / delegate behavior thay vì extends
+
+composition như quan hệ UML
+→ strong ownership + lifecycle semantics
+```
+
+Hai cách dùng liên quan nhưng **không đồng nghĩa hoàn toàn**. Một object giữ collaborator để delegation chưa đủ để kết luận đó là UML composition.
+
 ### VÌ SAO — dùng lại hoặc thay đổi hành vi mà không cần kế thừa
 
 Nếu mục tiêu là thay cách tính giá, composition cho phép truyền vào các cách triển khai khác nhau:
@@ -79,6 +97,29 @@ Các thuật ngữ này mô tả **mức độ quan hệ giữa các object tron
 
 Java chủ yếu chỉ nhìn thấy **reference**. Ý nghĩa “sở hữu yếu” hay “sở hữu mạnh” đến từ cách ta thiết kế API và quản lý vòng đời object.
 
+### PITFALL — `final` reference không tự tạo composition
+
+Ví dụ:
+
+```java
+class Team {
+    private final Player captain;
+
+    Team(Player captain) {
+        this.captain = captain;
+    }
+}
+```
+
+`final` chỉ đảm bảo field `captain` không bị gán sang reference khác sau khi khởi tạo. Nó **không chứng minh** rằng:
+
+- `Team` là owner duy nhất của `Player`;
+- `Player` không được share cho object khác;
+- `Player` phải chết theo vòng đời của `Team`;
+- quan hệ này chắc chắn là composition theo nghĩa modeling.
+
+Ownership là **semantics của thiết kế**, không phải thuộc tính mà Java suy ra từ một keyword đơn lẻ.
+
 ### VÌ SAO — không thể nhìn syntax rồi kết luận ngay quan hệ
 
 Hai class cùng có field tham chiếu tới object khác chưa đủ để kết luận đó là aggregation hay composition.
@@ -111,6 +152,8 @@ class CheckoutService {
 ```
 
 Trong trường hợp này, `CheckoutService` giữ quan hệ lâu dài hơn với `PaymentGateway`.
+
+Một collaborator lưu trong field cũng chưa chắc bị sở hữu mạnh. Hai service hoàn toàn có thể giữ reference tới cùng một object mutable. Khi đó cần suy nghĩ thêm về aliasing, shared mutation và contract vòng đời thay vì chỉ nhìn syntax field/reference.
 
 ### ĐÁNH ĐỔI — không cần gắn nhãn cho mọi reference
 
@@ -203,6 +246,31 @@ int total(int base) {
 Nó nên phụ thuộc vào một hợp đồng ổn định như `Pricing`.
 
 Đây chính là cầu nối sang **trừu tượng hóa (abstraction)**.
+
+### PHÂN BIỆT — composition và delegation
+
+Hai thuật ngữ thường đi cùng nhau nhưng không đồng nghĩa:
+
+```text
+Composition
+→ A giữ/có collaborator B như một phần của cấu trúc object
+
+Delegation
+→ A nhận yêu cầu rồi giao một responsibility cụ thể cho B thực hiện
+```
+
+Trong running example của module, `Checkout` có thể giữ một `Pricing` mà không có nghĩa mọi hành vi của `Checkout` đều thuộc về `Pricing`. Khi `Checkout.total(...)` gọi `pricing.price(...)`, **chính responsibility tính giá** được delegation sang collaborator `Pricing`.
+
+```text
+Checkout
+→ sở hữu responsibility điều phối checkout
+
+Pricing
+→ sở hữu responsibility tính giá
+
+Checkout.total(...)
+→ delegate phần tính giá cho Pricing.price(...)
+```
 
 ### ĐÁNH ĐỔI
 

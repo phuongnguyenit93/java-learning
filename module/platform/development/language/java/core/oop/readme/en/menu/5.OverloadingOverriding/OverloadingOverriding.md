@@ -24,6 +24,10 @@ select(value); // select(Parent)
 
 Although the runtime object is `Child`, the expression `value` has compile-time type `Parent`, so `select(Parent)` is bound at compile time.
 
+### BOUNDARY — this chapter does not replace full overload-resolution rules
+
+The OOP goal is to contrast **compile-time overload selection** with **runtime override dispatch**. Detailed rules for widening, boxing, varargs, most-specific methods, and ambiguity belong to `language-basics → Methods`.
+
 ### EVIDENCE — `DispatchController#overloadVsOverride()`
 
 One variable, `Parent x = new Child()`, is used for both overload and override behavior:
@@ -45,6 +49,8 @@ That contrast is the most important takeaway from this chapter.
 ### WHAT
 
 A subclass override supplies a new implementation of an inherited instance-method contract with a compatible signature.
+
+The same overriding model also applies when a class provides an implementation for an inherited interface instance-method contract or overrides a default method. Detailed interface rules belong to `abstract-interface`; the OOP focus here is still **runtime selection of an instance-method implementation**.
 
 ```java
 class Parent {
@@ -97,6 +103,67 @@ An override also cannot reduce accessibility and must respect checked-exception 
 
 Use `@Override` whenever possible because the compiler can catch many relationship/signature mistakes early.
 
+### MAKE THE RULES CONCRETE — visibility, return type, checked exceptions
+
+An override cannot reduce accessibility:
+
+```java
+class Parent {
+    public Number value() { return 1; }
+}
+
+class Child extends Parent {
+    @Override
+    protected Number value() { return 2; } // compile error
+}
+```
+
+Reference return types may be covariant:
+
+```java
+class Parent {
+    Number value() { return 1; }
+}
+
+class Child extends Parent {
+    @Override
+    Integer value() { return 2; } // OK
+}
+```
+
+For checked exceptions, an override may keep, narrow, or remove the declared checked exception, but it cannot broaden the contract:
+
+```java
+class Parent {
+    void load() throws IOException {}
+}
+
+class Child extends Parent {
+    @Override
+    void load() throws FileNotFoundException {} // OK
+}
+```
+
+Using `throws Exception` on `Child.load()` in this example would be illegal because callers of the `Parent` contract would suddenly face a broader checked exception.
+
+### CLASSIFY THE COMMON CONFUSIONS
+
+```text
+private method
+→ not an inherited override target
+
+final instance method
+→ may be inherited but cannot be overridden
+
+static method
+→ same-signature subtype method is hiding, not runtime overriding
+
+constructor
+→ not inherited and never overridden
+```
+
+Java also does not let a subtype switch a same-signature method between static and instance form. That is a compile-time conflict, not another overriding variant.
+
 ## <a id="static-method-hiding">Static Method Hiding</a>
 
 Static methods are type-level behavior and do not dispatch from the runtime receiver like instance methods.
@@ -118,6 +185,8 @@ Selection follows the compile-time qualifying type `Parent`.
 
 Calling static methods through instances may compile in some contexts but is misleading; prefer the class name so intent is explicit.
 
+`super.someMethod()` explicitly selects the supertype implementation, so it is different from a normal virtual call through `this.someMethod()`. It is commonly used when an override extends rather than completely replaces parent behavior.
+
 ## <a id="field-hiding">Field Hiding</a>
 
 Fields are not virtual and do not participate in dynamic dispatch.
@@ -131,6 +200,8 @@ System.out.println(value.name); // parent
 ```
 
 The expression `value.name` resolves the field from compile-time type `Parent`. This is field hiding, not polymorphic state dispatch.
+
+The `Parent.name` and `Child.name` declarations represent **two distinct members/slots**, not one field chosen dynamically. Different static types or casts can expose different fields on the same runtime object, which is why field hiding is usually best avoided.
 
 Avoid reusing the same field name across a hierarchy unless there is a strong reason because it creates a confusing mental model.
 

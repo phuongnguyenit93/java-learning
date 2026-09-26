@@ -194,3 +194,159 @@ questions:
     reviewed: false
     readmeRelated: {file: "7.Abstraction/Abstraction.md", anchor: "abstraction-model"}
     apiRelated: {controller: "", methodSignature: ""}
+
+  - id: responsibility-boundary-localize-change
+    question: "Dấu hiệu nào cho thấy responsibility boundary đang được đặt hợp lý?"
+    answers:
+      - {id: A, answer: "Một thay đổi rule cục bộ thường chỉ buộc sửa thành phần sở hữu responsibility đó thay vì nhiều caller.", explanation: "Đúng. Boundary tốt giúp localize change và tăng cohesion thay vì để knowledge bị rải ra ngoài."}
+      - {id: B, answer: "Mọi class đều có đúng một field.", explanation: "Sai. Số field không quyết định boundary; điều quan trọng là ownership của state/rule và mức coupling với caller."}
+      - {id: C, answer: "Mọi behavior đều chuyển thành static method.", explanation: "Sai. Static không tự tạo responsibility boundary hay localize change."}
+      - {id: D, answer: "Caller đọc càng nhiều internal field càng tốt.", explanation: "Sai. Caller biết quá nhiều representation thường là dấu hiệu boundary yếu."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.MentalModel/MentalModel.md", anchor: "oop-boundaries"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: encapsulation-representation-leak
+    question: "`Order` có field `private final List<Item> items` nhưng `getItems()` trả trực tiếp `items`. Nhận định nào đúng nhất?"
+    answers:
+      - {id: A, answer: "Encapsulation hoàn hảo vì field là private final.", explanation: "Sai. `private final` chỉ giới hạn access/reassignment của field; mutable object được trả ra vẫn có thể bị caller sửa."}
+      - {id: B, answer: "Caller có thể nhận alias tới mutable representation và phá invariant dù field vẫn private.", explanation: "Đúng. Đây là representation exposure: reference mutable thoát khỏi boundary của object."}
+      - {id: C, answer: "Java tự động copy List khi return.", explanation: "Sai. Java trả giá trị reference; không có defensive copy tự động."}
+      - {id: D, answer: "final làm toàn bộ object graph immutable.", explanation: "Sai. `final` trên reference không làm object được tham chiếu trở thành immutable."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.Encapsulation/Encapsulation.md", anchor: "encapsulation-model"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: tell-dont-ask-rule-location
+    question: "Khi nào `account.withdraw(amount)` phù hợp tinh thần Tell, Don't Ask hơn việc caller tự đọc balance rồi set lại?"
+    answers:
+      - {id: A, answer: "Khi rule kiểm tra và thay đổi balance thuộc responsibility của Account.", explanation: "Đúng. Caller nói intent, còn object sở hữu state tự bảo vệ rule và transition của mình."}
+      - {id: B, answer: "Khi muốn cấm mọi getter trong toàn hệ thống.", explanation: "Sai. Tell, Don't Ask là heuristic, không phải lệnh cấm mọi read model/getter."}
+      - {id: C, answer: "Chỉ khi method là static.", explanation: "Sai. Static không phải điều kiện của heuristic này."}
+      - {id: D, answer: "Khi caller cần duplicate validation ở nhiều nơi.", explanation: "Sai. Duplicate rule ở caller chính là vấn đề heuristic cố giảm."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.Encapsulation/Encapsulation.md", anchor: "tell-dont-ask-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: inheritance-constructor-chain
+    question: "Khi chạy `new Child()` với `Child extends Parent`, mô hình constructor nào đúng?"
+    answers:
+      - {id: A, answer: "Child constructor chạy xong rồi Parent constructor mới chạy.", explanation: "Sai. Superclass construction phải diễn ra trước khi subclass construction hoàn tất."}
+      - {id: B, answer: "Parent và Child tạo hai object độc lập.", explanation: "Sai. `new Child()` tạo một object có các phần state của hierarchy, không tạo hai object parent/child tách biệt."}
+      - {id: C, answer: "Parent constructor được thực thi trước phần constructor của Child để thiết lập superclass state/invariant.", explanation: "Đúng. Constructor chain khởi tạo phần superclass trước rồi mới hoàn tất phần subclass."}
+      - {id: D, answer: "Constructor được inherited như instance method.", explanation: "Sai. Constructor không được kế thừa; subclass constructor gọi `super(...)`."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.Inheritance/Inheritance.md", anchor: "inherited-state-behavior"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fragile-base-constructor-dispatch
+    question: "Vì sao base constructor gọi overridable instance method là nguy hiểm?"
+    answers:
+      - {id: A, answer: "Vì Java luôn biến method đó thành static.", explanation: "Sai. Overridable instance method vẫn tham gia dynamic dispatch."}
+      - {id: B, answer: "Override của subclass có thể chạy trước khi subclass state/initializer hoàn tất.", explanation: "Đúng. Runtime receiver đã là subclass object dù phần subclass chưa khởi tạo xong, tạo fragile-base risk."}
+      - {id: C, answer: "Vì constructor không thể gọi bất kỳ method nào.", explanation: "Sai. Constructor có thể gọi method; rủi ro nằm ở việc gọi method có thể override."}
+      - {id: D, answer: "Vì JVM sẽ luôn bỏ qua subclass override.", explanation: "Sai. Chính việc override có thể được dispatch sớm mới là vấn đề."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.Inheritance/Inheritance.md", anchor: "inheritance-coupling"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: interface-subtype-polymorphism
+    question: "`CardPayment implements PaymentMethod` có thể tạo subtype polymorphism dù không `extends PaymentMethod` không?"
+    answers:
+      - {id: A, answer: "Có. Implement interface tạo subtype relationship và instance method implementation vẫn được dispatch theo runtime receiver.", explanation: "Đúng. Subtype polymorphism rộng hơn class inheritance; interface implementation cũng tạo subtype."}
+      - {id: B, answer: "Không. Polymorphism chỉ tồn tại giữa hai concrete class dùng extends.", explanation: "Sai. Interface là một cơ chế quan trọng để tạo subtype polymorphism trong Java."}
+      - {id: C, answer: "Có nhưng chỉ cho static method.", explanation: "Sai. Static method không phải cơ chế subtype dynamic dispatch đang nói tới."}
+      - {id: D, answer: "Không vì interface không phải type.", explanation: "Sai. Interface là reference type và có thể là static type của biến/parameter."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.Polymorphism/Polymorphism.md", anchor: "subtype-polymorphism"}
+    apiRelated: {controller: "PolymorphismController", methodSignature: "dispatch()"}
+
+  - id: internal-virtual-dispatch
+    question: "`Parent.execute()` gọi `this.step()`, còn object thật là `Child` và `Child` override `step()`. Method nào chạy?"
+    answers:
+      - {id: A, answer: "Luôn Parent.step() vì call nằm trong source của Parent.", explanation: "Sai. Vị trí source của caller không khóa virtual dispatch; runtime receiver vẫn là Child."}
+      - {id: B, answer: "Child.step() nếu `step()` là overridable instance method.", explanation: "Đúng. Internal virtual call qua `this` vẫn dispatch theo runtime receiver."}
+      - {id: C, answer: "Cả Parent.step() và Child.step() tự động chạy nối tiếp.", explanation: "Sai. Chỉ implementation được dispatch chạy, trừ khi override chủ động gọi `super.step()`."}
+      - {id: D, answer: "Compile error vì parent method không được gọi method khác.", explanation: "Sai. Parent instance method có thể gọi instance method khác bình thường."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.Polymorphism/Polymorphism.md", anchor: "dynamic-dispatch"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: override-compatibility-rules
+    question: "Override nào hợp lệ nếu parent có `public Number value() throws IOException`?"
+    answers:
+      - {id: A, answer: "`protected Number value() throws IOException`", explanation: "Sai. Override không được giảm accessibility từ public xuống protected."}
+      - {id: B, answer: "`public Integer value() throws FileNotFoundException`", explanation: "Đúng. Return type reference được covariant và checked exception có thể thu hẹp."}
+      - {id: C, answer: "`public Object value() throws Exception`", explanation: "Sai. Return type bị mở rộng và checked exception cũng rộng hơn contract cha."}
+      - {id: D, answer: "`private Integer value()`", explanation: "Sai. Private vừa giảm accessibility vừa không thể override public contract."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.OverloadingOverriding/OverloadingOverriding.md", anchor: "override-rules"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: covariant-return-type
+    question: "Covariant return trong overriding cho phép điều gì?"
+    answers:
+      - {id: A, answer: "Child override có thể trả reference type cụ thể hơn, miễn là subtype của return type cha.", explanation: "Đúng. Ví dụ parent trả `Animal`, child có thể trả `Dog`."}
+      - {id: B, answer: "Child có thể tùy ý đổi `int` thành `long` vì long rộng hơn.", explanation: "Sai. Primitive return không áp dụng covariant return theo cơ chế này."}
+      - {id: C, answer: "Child phải luôn trả đúng cùng concrete runtime object.", explanation: "Sai. Rule nói về type compatibility của method signature, không yêu cầu cùng object instance."}
+      - {id: D, answer: "Return type không liên quan tới override compatibility.", explanation: "Sai. Return type phải tương thích và reference return có thể covariant."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.OverloadingOverriding/OverloadingOverriding.md", anchor: "covariant-return"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: final-reference-not-ownership
+    question: "`private final Player captain` chứng minh điều gì về ownership của `Player`?"
+    answers:
+      - {id: A, answer: "Chứng minh Team là owner duy nhất và Player chết cùng Team.", explanation: "Sai. `final` không encode UML ownership/lifecycle semantics."}
+      - {id: B, answer: "Chỉ chứng minh field reference không được reassign sau initialization; ownership phải đến từ design contract/lifecycle.", explanation: "Đúng. Syntax `final` không đủ để kết luận aggregation/composition."}
+      - {id: C, answer: "Chứng minh Player immutable.", explanation: "Sai. Final reference không làm referenced object immutable."}
+      - {id: D, answer: "Chứng minh Player không thể được share.", explanation: "Sai. Cùng Player reference hoàn toàn có thể được giữ bởi object khác."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.Composition/Composition.md", anchor: "object-relationships"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: ownership-lifecycle-model
+    question: "Điểm phân biệt quan trọng nhất giữa aggregation và composition theo modeling là gì?"
+    answers:
+      - {id: A, answer: "Composition biểu đạt ownership/lifecycle mạnh hơn; aggregation thường cho part tồn tại độc lập hoặc được share.", explanation: "Đúng. Đây là modeling semantics, không phải hai bytecode/runtime construct khác nhau."}
+      - {id: B, answer: "Aggregation dùng field, composition dùng local variable.", explanation: "Sai. Cả hai có thể dùng ordinary reference; syntax một mình không quyết định semantics."}
+      - {id: C, answer: "Composition tự làm GC xóa part ngay khi whole ra scope.", explanation: "Sai. GC dựa trên reachability, không hiểu UML ownership label."}
+      - {id: D, answer: "Aggregation chỉ dùng primitive còn composition dùng object.", explanation: "Sai. Đây không phải distinction của hai relationship."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.Composition/Composition.md", anchor: "ownership-lifecycle"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: abstraction-leak-correctness
+    question: "Trường hợp nào là dấu hiệu abstraction leak đáng lo nhất?"
+    answers:
+      - {id: A, answer: "Caller phải biết một lifecycle/error constraint không được contract nói tới mới dùng implementation đúng.", explanation: "Đúng. Khi detail bị giấu lại ảnh hưởng correctness, caller buộc phải biết implementation secret và abstraction bị leak."}
+      - {id: B, answer: "Implementation có private helper method.", explanation: "Sai. Private implementation detail tự nó không phải leak."}
+      - {id: C, answer: "Interface có tên ngắn.", explanation: "Sai. Tên interface không quyết định leak."}
+      - {id: D, answer: "Có nhiều implementation cùng một contract.", explanation: "Sai. Nhiều implementation thường là lý do abstraction hữu ích, không phải dấu hiệu leak."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Abstraction/Abstraction.md", anchor: "abstraction-leak"}
+    apiRelated: {controller: "", methodSignature: ""}
