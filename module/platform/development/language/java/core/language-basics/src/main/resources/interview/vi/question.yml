@@ -28,6 +28,13 @@
 # </interview-schema>
 
 questions:
+  - question: "Nếu phải giải thích Language Basics cho người mới, bạn sẽ nối các chủ đề trong module thành một mental model như thế nào?"
+    answer: "Bắt đầu từ Java thao tác trên value có type; variable/scope giữ và giới hạn tên; boxing, operator và conversion quyết định value tham gia expression/API ra sao; control flow quyết định đường chạy; method/varargs/pass-by-value giải thích lời gọi; array là container fixed-size; package/import giải quyết namespace; null biểu diễn reference không nhận diện object; cuối cùng compile-time type và runtime type giải thích compiler check, cast, overload và dispatch. Chuỗi này là nền để học OOP, Generics, Collections và framework behavior mà không chỉ nhớ syntax rời rạc."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.PrimitiveReference/PrimitiveReference.md", anchor: "language-basics-roadmap"}
+    apiRelated: {controller: "", methodSignature: ""}
+
   - question: "Giải thích khác biệt giữa copy primitive value và copy reference value trong Java."
     answer: "Primitive assignment copy chính primitive value. Reference assignment copy reference value nên hai biến có thể cùng nhận diện một object; nó không clone object. Đây là nền tảng của aliasing và pass-by-value."
     aiGenerated: true

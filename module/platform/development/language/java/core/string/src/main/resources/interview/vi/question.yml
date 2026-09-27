@@ -28,6 +28,13 @@
 # </interview-schema>
 
 questions:
+  - question: "String là gì và vai trò của nó trong hệ thống Java là gì? Vì sao không nên biến mọi domain value thành String?"
+    answer: "String là object type cốt lõi để biểu diễn text trong Java. Nó xuất hiện nhiều ở input/output, API payload/header, configuration, log, protocol và persistence conversion boundary. Tuy nhiên business logic vẫn nên giữ Money, time, status, identifier... bằng type có semantics riêng khi phù hợp; String nên đại diện text hoặc textual boundary representation, không phải thay thế type system của domain."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.Immutability/Immutability.md", anchor: "string-purpose"}
+    apiRelated: {controller: "", methodSignature: ""}
+
   - question: "Vì sao String immutability quan trọng với Java API và runtime behavior?"
     answer: "Immutable text có thể được share, cache, pool, dùng làm hash key ổn định và truyền qua API mà caller không thể mutate value hiện có. Operation trả về value mới, giúp reasoning đơn giản hơn và hỗ trợ contract của String pool."
     aiGenerated: true

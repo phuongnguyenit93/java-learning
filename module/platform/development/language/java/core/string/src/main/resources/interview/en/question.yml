@@ -28,6 +28,13 @@
 # </interview-schema>
 
 questions:
+  - question: "What is String and what role does it play in a Java system? Why should not every domain value be modeled as String?"
+    answer: "String is Java's core object type for representing text. It appears frequently at input/output, API payload/header, configuration, logging, protocol, and persistence-conversion boundaries. Business logic should still keep values such as money, time, state, and identifiers in meaningful domain types when appropriate; String should represent text or a textual boundary representation, not replace the domain type system."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.Immutability/Immutability.md", anchor: "string-purpose"}
+    apiRelated: {controller: "", methodSignature: ""}
+
   - question: "Why is String immutability important to Java APIs and runtime behavior?"
     answer: "Immutable text can be safely shared, cached, pooled, used as a stable hash key, and passed across APIs without callers mutating an existing value. Operations return new values, which simplifies reasoning and supports the String pool contract."
     aiGenerated: true

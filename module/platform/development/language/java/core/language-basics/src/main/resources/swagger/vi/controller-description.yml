@@ -44,6 +44,7 @@ TypeSystemController:
   description: |-
     <h2>Type System</h2>
     <p>Các thí nghiệm Java Core có thể chạy để quan sát Compile-time type, runtime type và sự khác nhau giữa các conversion context.</p>
+    <p>Đây là điểm hội tụ của Language Basics: các rule về value, conversion, method invocation và runtime object chỉ trở nên nhất quán khi người học phân biệt rõ điều compiler quyết định với điều runtime mới kiểm tra hoặc dispatch.</p>
   readmeRelated:
     file: 13.TypeSystemMentalModel/TypeSystemMentalModel.md
 WrapperController:

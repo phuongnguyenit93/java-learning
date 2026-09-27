@@ -1,6 +1,16 @@
 # Identity and Equality
 
+## <a id="object-contract-purpose">What Is an Object Contract?</a>
+
+In Java, an **object contract** is not a keyword, annotation, or special interface. It is a set of **behavioral promises** that an object must keep so other code can use that object consistently.
+
+For example, when a class says two objects are equal through `equals`, Java expects `hashCode` to agree with that decision. When a type defines natural ordering through `Comparable`, or a caller supplies a `Comparator`, sorting algorithms and sorted collections expect the comparison relation to be consistent and transitive. `toString` provides a different contract: a useful textual representation for people and diagnostic tools.
+
 This module is about a set of **contracts that other Java APIs rely on to understand your objects**. `equals`, `hashCode`, `toString`, `Comparable`, and `Comparator` are not isolated utility methods. They influence collection lookup, sorting, logging, and how many frameworks treat domain objects.
+
+The compiler can usually verify method types and signatures, but it cannot prove that your implementation preserves the meaning of these contracts. Code may therefore compile while runtime behavior is wrong: a `HashSet` may retain values the domain considers duplicates, a `HashMap` lookup may fail to find an expected key, a sorted collection may treat two values as occupying the same ordering position while `equals` says otherwise, or logs and debugger output may become misleading. Library and framework code that stores, compares, sorts, or diagnoses objects relies on these promises instead of rediscovering your domain rules.
+
+Developers therefore need to understand **what each contract means, how the contracts relate, and what breaks when one is violated**. The module starts with the foundational question “same object or same logical value?”, then moves through `equals`, `hashCode`, their shared contract, `toString`, and finally ordering through `Comparable` and `Comparator`.
 
 Learning roadmap:
 

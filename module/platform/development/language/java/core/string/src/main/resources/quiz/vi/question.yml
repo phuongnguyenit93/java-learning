@@ -39,6 +39,19 @@
 # </quiz-schema>
 
 questions:
+  - id: string-purpose-and-role
+    question: "Mental model nào đúng nhất về vai trò của String trong một ứng dụng Java?"
+    answers:
+      - {id: A, answer: "String là kiểu text cốt lõi, thường xuất hiện ở input/output và boundary, nhưng domain data vẫn nên giữ type có ý nghĩa khi phù hợp.", explanation: "Đúng. String biểu diễn text rất phổ biến, nhưng không phải mọi dữ liệu đều nên bị flatten thành text trong business logic."}
+      - {id: B, answer: "Mọi number, date và domain identifier nên chuyển sang String càng sớm càng tốt.", explanation: "Sai. Làm vậy làm mất type semantics và validation có ý nghĩa của domain."}
+      - {id: C, answer: "String chỉ dùng để in console và không nên xuất hiện ở API hoặc persistence boundary.", explanation: "Sai. Text xuất hiện rộng ở API, configuration, logging, protocol và persistence conversion boundaries."}
+      - {id: D, answer: "String là primitive đại diện trực tiếp cho byte UTF-8.", explanation: "Sai. String là object biểu diễn text; external bytes cần Charset encode/decode."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.Immutability/Immutability.md", anchor: "string-purpose"}
+    apiRelated: {controller: "", methodSignature: ""}
+
   - id: string-immutability-result
     question: "Điều gì xảy ra với String ban đầu khi gọi phép biến đổi như toUpperCase() mà không gán giá trị trả về?"
     answers:

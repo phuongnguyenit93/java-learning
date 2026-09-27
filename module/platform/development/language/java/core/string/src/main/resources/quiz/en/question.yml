@@ -39,6 +39,19 @@
 # </quiz-schema>
 
 questions:
+  - id: string-purpose-and-role
+    question: "Which mental model best describes the role of String in a Java application?"
+    answers:
+      - {id: A, answer: "String is Java's core text type and is common at input/output boundaries, while domain data should still keep meaningful types when appropriate.", explanation: "Correct. String represents text pervasively, but not every value should be flattened into text inside business logic."}
+      - {id: B, answer: "Every number, date, and domain identifier should be converted to String as early as possible.", explanation: "Incorrect. That discards useful domain type semantics and validation."}
+      - {id: C, answer: "String is only for console output and should not appear at API or persistence boundaries.", explanation: "Incorrect. Text is common in APIs, configuration, logs, protocols, and persistence conversion boundaries."}
+      - {id: D, answer: "String is a primitive that directly represents UTF-8 bytes.", explanation: "Incorrect. String is an object representing text; external bytes require Charset encoding/decoding."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.Immutability/Immutability.md", anchor: "string-purpose"}
+    apiRelated: {controller: "", methodSignature: ""}
+
   - id: string-immutability-result
     question: "What happens to the original String after calling a transformation such as toUpperCase() without assigning the returned value?"
     answers:

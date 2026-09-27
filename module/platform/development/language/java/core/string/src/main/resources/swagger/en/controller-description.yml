@@ -3,6 +3,7 @@ EncodingController:
     <h2>Encoding</h2>
     <p>Observe the boundary between Java <code>String</code> values and external bytes. The endpoints show a successful same-Charset round trip and mojibake when the same bytes are decoded with a different Charset.</p>
     <p>This is evidence for the encoding data contract; it does not mean a String intrinsically carries UTF-8 or another external encoding.</p>
+    <p>The experiment connects directly to String's system role: application code works with text as <code>String</code>, while storage and transport boundaries often require that text to be encoded into bytes with an explicit Charset.</p>
   readmeRelated:
     file: 9.Encoding/Encoding.md
 RegexController:

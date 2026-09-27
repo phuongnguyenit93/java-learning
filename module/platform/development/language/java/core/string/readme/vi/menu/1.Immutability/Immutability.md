@@ -1,8 +1,18 @@
 # String và tính bất biến
 
+## <a id="string-purpose">String là gì?</a>
+
+`String` là class trong `java.lang` dùng để biểu diễn **một giá trị văn bản** trong chương trình Java. Nó là object, không phải primitive. Một `String` có thể mang những nội dung như tên người dùng, thông báo, đường dẫn, mã định danh dạng text, nội dung request/response hoặc một đoạn cấu hình. Ở mức API Java, ta làm việc với một chuỗi text; chi tiết về UTF-16 code unit, Unicode code point và ký tự người dùng nhìn thấy sẽ được tách riêng ở các chapter sau.
+
+Text cần một type riêng vì nó có những quy tắc khác dữ liệu số hoặc object domain: ta cần so sánh nội dung, tìm kiếm, cắt ghép, chuẩn hóa, xử lý Unicode, chuyển đổi giữa text và byte, và truyền nó qua nhiều boundary. Vì vậy `String` xuất hiện rất thường xuyên ở input/output, tên và identifier dạng text, API payload hoặc header, log message, configuration, protocol và persistence boundary.
+
+Điều đó không có nghĩa mọi dữ liệu nên được biến thành String. Số tiền, thời gian, trạng thái hay domain identifier thường nên giữ type có ý nghĩa riêng trong business logic; `String` phù hợp khi dữ liệu thực sự là text hoặc khi một boundary yêu cầu biểu diễn text.
+
 `String` là kiểu biểu diễn văn bản quan trọng nhất trong Java, nhưng văn bản không đơn giản chỉ là “một mảng char”. Ta cần hiểu ba lớp khác nhau: **giá trị String trong JVM, cách văn bản được mã hóa thành byte bên ngoài JVM, và cách Unicode định nghĩa ký tự**.
 
 Tính bất biến (**immutability**) là nền tảng nối các chủ đề đó lại với nhau. Vì một `String` object không thay đổi nội dung sau khi được tạo, Java có thể chia sẻ literal trong pool, dùng String làm hash key ổn định và truyền String giữa nhiều nơi mà không lo một nơi khác sửa trực tiếp nội dung object đó.
+
+Vì vậy module đi từ bản chất immutable của `String`, tới pool và equality, rồi các thao tác text và chi phí concatenation, các buffer mutable như `StringBuilder`/`StringBuffer`, sau đó mới đi ra boundary byte/encoding và mô hình Unicode. Regex và text block nằm cuối vì chúng sử dụng mental model về text đã xây dựng trước đó.
 
 Lộ trình:
 

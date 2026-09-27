@@ -3,6 +3,7 @@ EncodingController:
     <h2>Encoding</h2>
     <p>Quan sát ranh giới giữa Java <code>String</code> và external bytes. Các endpoint cho thấy round-trip khi hai phía dùng cùng Charset và mojibake khi cùng byte sequence bị decode bằng Charset khác.</p>
     <p>Đây là evidence cho data-contract của encoding; không nên suy luận rằng String tự mang sẵn UTF-8 hay một encoding bên ngoài JVM.</p>
+    <p>Experiment này nối trực tiếp với vai trò của String trong hệ thống: application xử lý text bằng <code>String</code>, còn boundary lưu trữ/truyền tải thường buộc text phải được chuyển thành byte theo một Charset cụ thể.</p>
   readmeRelated:
     file: 9.Encoding/Encoding.md
 RegexController:

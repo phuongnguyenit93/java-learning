@@ -28,6 +28,13 @@
 # </interview-schema>
 
 questions:
+  - question: "Object contract là gì, và vì sao code vẫn có thể compile nhưng collection/framework behavior sai khi contract bị phá?"
+    answer: "Object contract là tập behavioral promises mà code khác dựa vào, ví dụ equals/hashCode phải nhất quán, ordering phải giữ các luật so sánh, và toString nên cung cấp representation chẩn đoán phù hợp. Compiler chủ yếu kiểm tra type/signature chứ không chứng minh được semantic law. Vì vậy class có thể compile nhưng HashSet/HashMap lookup, sorted collection, logging hoặc framework behavior vẫn sai hoặc gây hiểu nhầm khi implementation phá contract."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.IdentityEquality/IdentityEquality.md", anchor: "object-contract-purpose"}
+    apiRelated: {controller: "", methodSignature: ""}
+
   - question: "Phân biệt object identity với logical equality và nêu case mỗi loại quan trọng."
     answer: "Identity hỏi reference có cùng nhận diện một object và dùng reference equality. Logical equality hỏi các object riêng có biểu diễn cùng domain value qua equals. Identity quan trọng với singleton/sentinel/enum; value object thường quan tâm logical equality."
     aiGenerated: true

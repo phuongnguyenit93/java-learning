@@ -39,6 +39,19 @@
 # </quiz-schema>
 
 questions:
+  - id: object-contract-purpose
+    question: "Which statement best describes an 'object contract' in Java?"
+    answers:
+      - {id: A, answer: "A keyword every class must declare before it can be used in collections.", explanation: "Incorrect. An object contract is not a Java keyword or special syntax."}
+      - {id: B, answer: "A set of behavioral promises that other code relies on, such as equality, hashing, textual representation, and ordering.", explanation: "Correct. Libraries and frameworks cannot rediscover domain semantics; they rely on contracts supplied by the type or caller."}
+      - {id: C, answer: "Only a list of method signatures whose full meaning the compiler proves at compile time.", explanation: "Incorrect. The compiler can check signatures but cannot prove every semantic law of equals/hashCode/ordering."}
+      - {id: D, answer: "Another name only for Object.equals().", explanation: "Incorrect. The module also covers hashing, textual representation, and ordering contracts."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.IdentityEquality/IdentityEquality.md", anchor: "object-contract-purpose"}
+    apiRelated: {controller: "", methodSignature: ""}
+
   - id: identity-vs-logical-equality
     question: "What does reference `==` answer for two object references?"
     answers:

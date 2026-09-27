@@ -14,6 +14,7 @@ PropagationController:
   description: |-
     <h2>Propagation, Stack Unwinding và Cause</h2>
     <p>Các thí nghiệm cho thấy exception đi qua chuỗi lời gọi như thế nào và cách wrap một failure ở abstraction cao hơn mà vẫn bảo toàn cause gốc.</p>
+    <p>Đây là runtime evidence cho vai trò nền tảng của exception: failure có một abnormal-completion channel riêng, có thể rời nơi phát sinh và đi tới boundary có đủ context để quyết định xử lý.</p>
   readmeRelated:
     file: 4.Propagation/Propagation.md
 ResourceController:

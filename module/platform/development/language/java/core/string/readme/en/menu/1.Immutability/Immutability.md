@@ -1,8 +1,18 @@
 # String and Immutability
 
+## <a id="string-purpose">What Is String?</a>
+
+`String` is the `java.lang` class used to represent **a text value** in a Java program. It is an object, not a primitive. A String can carry content such as a user name, message, path, text identifier, request/response content, or configuration text. At the Java API level we work with a sequence of text; the distinctions among UTF-16 code units, Unicode code points, and user-perceived characters are developed in later chapters.
+
+Text needs a dedicated type because its operations and boundaries differ from numeric data or domain objects: applications need content comparison, searching, extraction, transformation, Unicode handling, conversion between text and bytes, and reliable transport across boundaries. That is why `String` appears frequently in input/output, textual names and identifiers, API payloads and headers, logs, configuration, protocols, and persistence boundaries.
+
+This does not mean every piece of data should be converted to String. Money, time, state, and domain identifiers usually deserve types that preserve their meaning inside business logic; `String` is appropriate when the value is genuinely text or when a boundary requires a textual representation.
+
 `String` is Java's central text type, but text is more complicated than “an array of chars”. We need to distinguish the String value inside the JVM, the bytes used at external boundaries, and Unicode's model of characters.
 
 **Immutability** is the foundation connecting these topics. Once a `String` object is created, its content does not change in place. That makes sharing, pooling, hashing, and API boundaries much easier to reason about.
+
+The module therefore starts with String immutability, then uses it to explain pooling and equality, moves through everyday text operations and concatenation costs, introduces mutable construction buffers such as `StringBuilder` and `StringBuffer`, and only then crosses into byte encodings and Unicode. Regex and text blocks come later because they build on the text model established earlier.
 
 Roadmap:
 

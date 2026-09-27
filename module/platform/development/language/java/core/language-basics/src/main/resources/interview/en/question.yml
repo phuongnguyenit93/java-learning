@@ -28,6 +28,13 @@
 # </interview-schema>
 
 questions:
+  - question: "If you had to explain Language Basics to a beginner, how would you connect the module topics into one mental model?"
+    answer: "Start with Java manipulating typed values; variables and scope hold and bound names; boxing, operators, and conversions determine how values participate in expressions and APIs; control flow chooses execution paths; methods, varargs, and pass-by-value explain calls; arrays provide fixed-size sequences; packages/imports organize names; null represents a reference identifying no object; and compile-time versus runtime type explains compiler checks, casts, overloads, and dispatch. This chain is the foundation for OOP, Generics, Collections, and framework behavior rather than a list of disconnected syntax rules."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.PrimitiveReference/PrimitiveReference.md", anchor: "language-basics-roadmap"}
+    apiRelated: {controller: "", methodSignature: ""}
+
   - question: "Explain the difference between primitive-value copying and reference-value copying in Java."
     answer: "Primitive assignment copies the primitive value. Reference assignment copies a reference value, so two variables can identify one object; it does not clone that object. This distinction underlies aliasing and pass-by-value."
     aiGenerated: true

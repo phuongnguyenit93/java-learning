@@ -28,12 +28,12 @@
 # </interview-schema>
 
 questions:
-  - question: "Giải thích mental model của exception trong Java: tại sao Throwable vừa liên quan object vừa liên quan control flow?"
-    answer: "Throwable là root model cho abnormal completion. Một instance mang type, message, stack trace, cause và có thể có suppressed failures; nhưng khi được throw, nó còn làm đường chạy hiện tại dừng và chuyển control tới handler phù hợp hoặc propagate lên caller. Vì vậy học exception chỉ như một object dữ liệu là chưa đủ; phải hiểu cả failure signal và luồng thực thi."
+  - question: "Exception là gì, tại sao Java cần một abnormal-completion channel riêng, và vì sao Throwable vừa là object vừa liên quan control flow?"
+    answer: "Exception mechanism tách failure khỏi normal return path để failure có thể mang type/message/stack trace/cause và propagate qua nhiều call layer tới nơi có đủ trách nhiệm xử lý. Một Throwable instance là object chứa diagnostic context; khi bị throw, nó đồng thời làm path hiện tại complete bất thường và Java tìm handler hoặc unwind lên caller. So với việc mọi caller tự kiểm tra status code, cơ chế này giúp propagation và causal context có cấu trúc hơn, nhưng không nên bị dùng làm normal control flow cho các nhánh dự kiến thông thường."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.Throwable/Throwable.md", anchor: "throwable-hierarchy"}
-    apiRelated: {controller: "", methodSignature: ""}
+    readmeRelated: {file: "1.Throwable/Throwable.md", anchor: "exception-purpose"}
+    apiRelated: {controller: "PropagationController", methodSignature: "propagate()"}
 
   - question: "Phân biệt Error và Exception về mặt thiết kế. Vì sao catch Throwable thường quá rộng?"
     answer: "Error thường biểu diễn các điều kiện nghiêm trọng ở JVM/runtime/linkage mà application code không nên mặc định recover như business failure. Exception thường là failure mà API/application có thể model, translate hoặc xử lý. catch Throwable hợp lệ về cú pháp nhưng còn bắt cả Error, nên một generic handler có thể vô tình nuốt điều kiện mà process/thread không nên coi là recoverable."

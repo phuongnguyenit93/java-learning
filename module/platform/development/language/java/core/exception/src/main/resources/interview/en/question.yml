@@ -28,12 +28,12 @@
 # </interview-schema>
 
 questions:
-  - question: "Explain the mental model of exceptions in Java: why is Throwable both an object concern and a control-flow concern?"
-    answer: "Throwable is the root model for abnormal completion. An instance carries type, message, stack trace, cause, and possibly suppressed failures; when it is thrown, it also interrupts the current success path and transfers control to a compatible handler or propagates upward. Understanding only the object fields misses half of the model: an exception is also a failure signal that changes execution."
+  - question: "What is an exception, why does Java need a separate abnormal-completion channel, and why is Throwable both an object and a control-flow concept?"
+    answer: "The exception mechanism separates failure from the normal return path so a failure can carry type, message, stack trace, and cause while propagating across call layers to a responsible handler. A Throwable instance is an object containing diagnostic context; when thrown, it also makes the current path complete abruptly and causes Java to search for a handler or unwind to the caller. Compared with making every caller manually inspect status codes, this gives propagation and causal context a structured channel, but exceptions should not become ordinary expected control flow."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.Throwable/Throwable.md", anchor: "throwable-hierarchy"}
-    apiRelated: {controller: "", methodSignature: ""}
+    readmeRelated: {file: "1.Throwable/Throwable.md", anchor: "exception-purpose"}
+    apiRelated: {controller: "PropagationController", methodSignature: "propagate()"}
 
   - question: "Distinguish Error from Exception as a design concern. Why is catch (Throwable) usually too broad?"
     answer: "Error commonly represents serious JVM/runtime/linkage conditions that ordinary application code should not assume it can recover from. Exception is the branch applications and APIs typically model, translate, or handle. catch (Throwable) is syntactically legal but also catches Error, so a generic application handler may accidentally treat a serious runtime condition like a routine recoverable failure."

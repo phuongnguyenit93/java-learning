@@ -10,6 +10,7 @@ HashContractController:
     <h2>Hash Contract</h2>
     <p>Executable experiments showing that <code>equals</code> and <code>hashCode</code> form one operational contract inside hash-based collections.</p>
     <p>The endpoints focus on two practical failure modes: equal objects with different hashes, and keys whose equality/hash state changes after insertion.</p>
+    <p>This is also direct evidence for the module's larger point: library code relies on an object's behavioral contract even though the compiler cannot prove that an implementation preserves every semantic law.</p>
   readmeRelated:
     file: 4.EqualsHashCode/EqualsHashCode.md
 OrderingController:

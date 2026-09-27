@@ -10,6 +10,7 @@ HashContractController:
     <h2>Hash Contract</h2>
     <p>Nhóm thí nghiệm cho thấy <code>equals</code> và <code>hashCode</code> là một contract vận hành chung trong hash-based collection.</p>
     <p>Hai endpoint tập trung vào hai failure mode thực tế: equal object nhưng hash khác nhau, và key bị mutate sau khi đã insert.</p>
+    <p>Đây cũng là evidence trực tiếp cho câu hỏi lớn của module: library code dựa vào behavioral contract của object dù compiler không thể chứng minh implementation của bạn giữ đúng mọi semantic law.</p>
   readmeRelated:
     file: 4.EqualsHashCode/EqualsHashCode.md
 OrderingController:

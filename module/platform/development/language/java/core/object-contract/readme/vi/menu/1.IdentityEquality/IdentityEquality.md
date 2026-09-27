@@ -1,6 +1,16 @@
 # Identity và Equality
 
+## <a id="object-contract-purpose">Object Contract là gì?</a>
+
+Trong Java, **object contract** không phải keyword, annotation hay một interface đặc biệt. Nó là tập hợp những **lời hứa về hành vi** mà object của bạn phải giữ để code khác có thể sử dụng object đó một cách nhất quán.
+
+Ví dụ, khi một class định nghĩa hai object là bằng nhau qua `equals`, Java kỳ vọng `hashCode` cũng tuân theo quyết định đó. Khi một type định nghĩa natural ordering qua `Comparable`, hoặc caller đưa vào một `Comparator`, thuật toán sắp xếp và sorted collection kỳ vọng quan hệ so sánh phải nhất quán và bắc cầu. `toString` lại là contract mô tả object cho con người và công cụ chẩn đoán.
+
 Module này nói về một nhóm **hợp đồng mà các API Java khác dựa vào để hiểu object của bạn**. `equals`, `hashCode`, `toString`, `Comparable` và `Comparator` không phải những method tiện ích rời rạc. Chúng ảnh hưởng trực tiếp tới cách collection tìm kiếm, cách sắp xếp, logging và nhiều framework xử lý object.
+
+Điểm quan trọng là compiler thường chỉ kiểm tra method có đúng kiểu và đúng signature hay không; nó không thể chứng minh object của bạn giữ đúng ý nghĩa của contract. Vì vậy code vẫn có thể compile nhưng hành vi runtime bị sai: `HashSet` có thể giữ những phần tử mà domain xem là trùng, `HashMap` có thể không tìm lại được key theo cách mong đợi, sorted collection có thể xem hai object là cùng vị trí dù `equals` nói khác, hoặc log/debug output trở nên khó hiểu. Library và framework code lưu trữ, so sánh, sắp xếp hoặc chẩn đoán object đều dựa vào các lời hứa này thay vì tự đoán domain của bạn.
+
+Vì thế developer cần biết cả **ý nghĩa của từng contract, mối quan hệ giữa chúng và hậu quả khi phá vỡ chúng**. Module bắt đầu từ câu hỏi nền tảng “cùng object hay cùng giá trị?”, sau đó đi qua `equals`, `hashCode`, sự phối hợp giữa hai method, `toString`, rồi tới ordering với `Comparable` và `Comparator`.
 
 Lộ trình học:
 

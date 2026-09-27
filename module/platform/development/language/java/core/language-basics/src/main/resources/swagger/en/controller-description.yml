@@ -44,6 +44,7 @@ TypeSystemController:
   description: |-
     <h2>Type System</h2>
     <p>Executable Java Core experiments for compile-time type, runtime type, and differences among conversion contexts.</p>
+    <p>This is a convergence point for Language Basics: rules about values, conversions, method invocation, and runtime objects become coherent when the learner separates what the compiler decides from what runtime checks or dispatches.</p>
   readmeRelated:
     file: 13.TypeSystemMentalModel/TypeSystemMentalModel.md
 WrapperController:

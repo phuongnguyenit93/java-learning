@@ -1,5 +1,9 @@
 # Primitive and Reference Values
 
+## <a id="language-basics-roadmap">What Language Basics Teaches and Why It Matters</a>
+
+`Language Basics` is the foundation for understanding how Java **represents values, assigns types to data, and controls code execution**. These rules are reused by later topics such as OOP, Collections, Generics, and framework APIs. Without this foundation, higher-level features can look like disconnected syntax instead of consequences of Java's compile-time and runtime rules.
+
 Before learning `if`, methods, arrays, or OOP, answer one foundational question: **what kind of value does a Java variable actually hold?**
 
 The first mental split is:
@@ -13,6 +17,18 @@ reference value
 ```
 
 That distinction appears throughout Java Core: assignment, boxing, casting, method calls, pass-by-value, arrays, `null`, equality, and runtime types.
+
+By the end of this module, the learner should connect these topics into one coherent mental model:
+
+- Java **values and types**, especially primitive values and reference values;
+- **variables and scope**, including where names exist and are visible;
+- **wrapper types/boxing**, **operators**, and **conversions/casts** that shape how values participate in expressions and APIs;
+- **control flow** for branching and repetition;
+- **methods, invocation, and varargs**, together with **pass-by-value** so argument passing is understood precisely;
+- **arrays** as fixed-size sequences;
+- **packages and imports** for organizing and resolving type names;
+- **null** as the absence of an object identified by a reference;
+- the relationship between **compile-time type and runtime type** in type checking, overloads, casts, and dispatch.
 
 Roadmap:
 

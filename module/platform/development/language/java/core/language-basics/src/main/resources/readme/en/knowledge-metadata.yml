@@ -1,4 +1,8 @@
 1.PrimitiveReference/PrimitiveReference.md:
+  language-basics-roadmap:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
   primitive-vs-reference-model:
     difficulty: BASIC
     aiGenerated: true

@@ -39,6 +39,19 @@
 # </quiz-schema>
 
 questions:
+  - id: object-contract-purpose
+    question: "Phát biểu nào mô tả đúng nhất 'object contract' trong Java?"
+    answers:
+      - {id: A, answer: "Một keyword bắt buộc mọi class phải khai báo trước khi dùng collection.", explanation: "Sai. Object contract không phải keyword hay cú pháp riêng của Java."}
+      - {id: B, answer: "Một tập lời hứa về hành vi mà code khác dựa vào, ví dụ equality, hashing, textual representation và ordering.", explanation: "Đúng. Library/framework thường không thể tự đoán domain semantics; chúng dựa vào các contract mà type hoặc caller cung cấp."}
+      - {id: C, answer: "Chỉ là danh sách method signature mà compiler kiểm tra hoàn toàn ở compile time.", explanation: "Sai. Compiler có thể kiểm tra signature nhưng không chứng minh được mọi semantic law của equals/hashCode/ordering."}
+      - {id: D, answer: "Chỉ là tên gọi khác của Object.equals().", explanation: "Sai. Module còn bao gồm hashing, textual representation và ordering contracts."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.IdentityEquality/IdentityEquality.md", anchor: "object-contract-purpose"}
+    apiRelated: {controller: "", methodSignature: ""}
+
   - id: identity-vs-logical-equality
     question: "Reference `==` trả lời điều gì với hai object reference?"
     answers:

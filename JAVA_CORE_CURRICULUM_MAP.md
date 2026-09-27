@@ -333,7 +333,7 @@ The detailed sections below are therefore not just topic inventories; they are t
 
 #### Layer 1 — Module orientation
 
-**Entry chapter contract:** `1.PrimitiveReference/PrimitiveReference.md` must first orient the learner to Java's basic execution/value model before going into primitive/reference details. It should answer: what values exist in Java, how variables hold them, how methods consume them, and why later topics such as casting, arrays, null and dispatch depend on this model.
+**Entry chapter contract:** `1.PrimitiveReference/PrimitiveReference.md` must first contain a stable module-orientation section that answers **what "Java Language Basics" includes and what the learner is expected to understand by the end of the module** before going into primitive/reference details. It should connect values/types, variables/scope, boxing, operators/conversions, control flow, methods/invocation, pass-by-value, arrays, packages/imports, `null`, and compile-time vs runtime type into one foundation for later OOP, Generics, Collections and runtime topics. Only after that roadmap should it enter Java's basic execution/value model: what values exist, how variables hold them, how methods consume them, and why later topics such as casting, arrays, null and dispatch depend on this model.
 
 **Major terminology roles:**
 
@@ -360,6 +360,9 @@ compile-time type vs runtime type
 **Learning roadmap:**
 
 ```text
+What do Java Language Basics teach, and why are these topics one foundation?
+Language Basics Roadmap
+        ↓
 What kind of values does Java manipulate?
 Primitive vs Reference
         ↓
@@ -417,7 +420,7 @@ TypeSystemMentalModel  → Which guarantees are compile-time, and which checks h
 
 | Existing chapter | Proposed anchored H2 sections |
 | --- | --- |
-| `1.PrimitiveReference/PrimitiveReference.md` | `#primitive-vs-reference-model` — Primitive vs reference value model<br>`#primitive-ranges-and-defaults` — Primitive ranges, literals and defaults<br>`#reference-value-semantics` — What a reference value actually stores |
+| `1.PrimitiveReference/PrimitiveReference.md` | `#language-basics-roadmap` — What the Language Basics module teaches, why these foundations belong together, and what the learner should know by the end<br>`#primitive-vs-reference-model` — Primitive vs reference value model<br>`#primitive-ranges-and-defaults` — Primitive ranges, literals and defaults<br>`#reference-value-semantics` — What a reference value actually stores |
 | `2.VariablesScope/VariablesScope.md` | `#variable-kinds-and-lifetime` — Local, parameter, field and static variable lifetime<br>`#scope-and-shadowing` — Scope, shadowing and name resolution<br>`#definite-assignment` — Definite assignment rules |
 | `3.WrapperBoxing/WrapperBoxing.md` | `#wrapper-types` — Wrapper types and object semantics<br>`#boxing-unboxing` — Boxing and unboxing<br>`#wrapper-caching` — Wrapper caches and identity pitfalls<br>`#unboxing-null` — Null unboxing and NullPointerException |
 | `4.Operators/Operators.md` | `#numeric-promotion` — Numeric promotion<br>`#short-circuit-operators` — Short-circuit boolean operators<br>`#bitwise-shift` — Bitwise and shift operators<br>`#precedence-side-effects` — Precedence, evaluation order and side effects |
@@ -446,11 +449,11 @@ TypeSystemMentalModel  → Which guarantees are compile-time, and which checks h
 
 #### Quiz coverage
 
-prediction of casts/promotions; wrapper identity; short-circuit/evaluation order; method-invocation conversion; overload-resolution phases and most-specific selection; `null` overload ambiguity; pass-by-value; array covariance; null/unboxing; compile-time vs runtime type.
+module roadmap and how the basic value/type/execution rules form one foundation; prediction of casts/promotions; wrapper identity; short-circuit/evaluation order; method-invocation conversion; overload-resolution phases and most-specific selection; `null` overload ambiguity; pass-by-value; array covariance; null/unboxing; compile-time vs runtime type.
 
 #### Interview coverage
 
-explain Java pass-by-value; overload applicability/specificity and why widening/boxing/varargs produce different results; overload vs override; primitive/reference model; array covariance trade-off; wrapper pitfalls; definite assignment; null/API design; runtime checks vs compile-time guarantees.
+explain the Language Basics mental model and why the topics belong together; Java pass-by-value; overload applicability/specificity and why widening/boxing/varargs produce different results; overload vs override; primitive/reference model; array covariance trade-off; wrapper pitfalls; definite assignment; null/API design; runtime checks vs compile-time guarantees.
 
 
 ### 4.2 `numbers`
@@ -935,7 +938,7 @@ interface vs abstract class trade-offs; why default methods exist; diamond confl
 
 #### Layer 1 — Module orientation
 
-**Entry chapter contract:** `1.IdentityEquality/IdentityEquality.md` must explain what an "object contract" is: methods inherited from `Object` and ordering contracts influence how other Java APIs interpret an object. The learner should know before the details that equality, hashing, string representation and ordering are not isolated utility methods.
+**Entry chapter contract:** `1.IdentityEquality/IdentityEquality.md` must begin with a stable section that explicitly answers **what an "object contract" is, why Java developers need to know and obey these contracts, and how other APIs depend on them**. Clarify that an object contract is a set of behavioral promises/expectations rather than a Java keyword or one concrete interface. Methods inherited from `Object` and ordering contracts influence how collections, sorting, logging and frameworks interpret an object; breaking those promises can make otherwise valid-looking code behave incorrectly. Only after that foundation should the chapter distinguish identity from logical equality.
 
 **Major terminology roles:**
 
@@ -962,6 +965,9 @@ Comparator
 **Learning roadmap:**
 
 ```text
+What is an object contract, and why do Java APIs need objects to keep these promises?
+Object Contract Purpose
+        ↓
 Same reference or same logical value?
 Identity vs Equality
         ↓
@@ -1002,7 +1008,7 @@ Comparator       → Separate ordering policy from the type when multiple views/
 
 | Existing chapter | Proposed anchored H2 sections |
 | --- | --- |
-| `1.IdentityEquality/IdentityEquality.md` | `#identity-vs-equality` — Object identity vs logical equality<br>`#reference-equality` — Reference equality with ==<br>`#value-object-equality` — Value-object equality mental model |
+| `1.IdentityEquality/IdentityEquality.md` | `#object-contract-purpose` — What an object contract is, why it matters, which APIs rely on it, and what can break when a class violates it<br>`#identity-vs-equality` — Object identity vs logical equality<br>`#reference-equality` — Reference equality with ==<br>`#value-object-equality` — Value-object equality mental model |
 | `2.Equals/Equals.md` | `#equals-contract` — equals contract: reflexive/symmetric/transitive/consistent/null<br>`#equals-implementation` — Typical equals implementation<br>`#equals-inheritance-risk` — Inheritance and equality symmetry risk |
 | `3.HashCode/HashCode.md` | `#hashcode-contract` — hashCode contract<br>`#hash-distribution` — Hash distribution and performance<br>`#mutable-key-risk` — Mutable fields used in hashCode |
 | `4.EqualsHashCode/EqualsHashCode.md` | `#equals-hashcode-consistency` — Equal objects must share hash code<br>`#hash-collection-lookup` — HashMap/HashSet lookup mechanics boundary<br>`#broken-contract-effects` — Observable failures from broken contract |
@@ -1022,11 +1028,11 @@ Comparator       → Separate ordering policy from the type when multiple views/
 
 #### Quiz coverage
 
-identity vs equality; equals laws; hash consistency; mutable keys; hash collection consequences; Comparable vs Comparator; comparison contract.
+what an object contract is and why library/framework code depends on behavioral promises; identity vs equality; equals laws; hash consistency; mutable keys; hash collection consequences; Comparable vs Comparator; comparison contract.
 
 #### Interview coverage
 
-designing equals/hashCode; inheritance equality traps; why hashCode matters; mutable map keys; natural vs custom ordering; compareTo consistency; safe toString.
+explain object contracts, why the compiler cannot enforce their full semantics and what breaks when they are violated; designing equals/hashCode; inheritance equality traps; why hashCode matters; mutable map keys; natural vs custom ordering; compareTo consistency; safe toString.
 
 
 ### 4.7 `string`
@@ -1037,7 +1043,7 @@ designing equals/hashCode; inheritance equality traps; why hashCode matters; mut
 
 #### Layer 1 — Module orientation
 
-**Entry chapter contract:** `1.Immutability/Immutability.md` must first explain what a Java `String` represents, why text handling is more complex than "an array of chars", and why immutability is the foundation for pooling, sharing and safe API use.
+**Entry chapter contract:** `1.Immutability/Immutability.md` must first contain a stable section that answers **what a Java `String` is and what role text plays in an application/system**. The learner should understand that `String` is Java's core immutable text value type and is used pervasively at human/system boundaries such as input/output, names/identifiers, configuration, logging, protocol/persistence conversion and API payloads, while not implying that arbitrary structured/numeric/binary data should be modeled as String. It must then explain why text handling is more complex than "an array of chars", and only after that introduce immutability as the foundation for pooling, sharing and safe API use.
 
 **Major terminology roles:**
 
@@ -1070,6 +1076,9 @@ text block
 **Learning roadmap:**
 
 ```text
+What is a String, and why is text a first-class concern across application boundaries?
+String Purpose and Role
+        ↓
 What is a String value and why is it immutable?
 Immutability
         ↓
@@ -1127,7 +1136,7 @@ TextBlocks        → How does source representation improve without changing St
 
 | Existing chapter | Proposed anchored H2 sections |
 | --- | --- |
-| `1.Immutability/Immutability.md` | `#string-immutability` — Why String is immutable, including copy boundaries from/to mutable char arrays<br>`#immutability-consequences` — Sharing, hashing and thread-safety consequences<br>`#string-operation-new-value` — String operations return new values |
+| `1.Immutability/Immutability.md` | `#string-purpose` — What String represents, why Java needs a dedicated text type, and String's role at application/system boundaries<br>`#string-immutability` — Why String is immutable, including copy boundaries from/to mutable char arrays<br>`#immutability-consequences` — Sharing, hashing and thread-safety consequences<br>`#string-operation-new-value` — String operations return new values |
 | `2.StringPool/StringPool.md` | `#string-pool-model` — String pool mental model<br>`#literal-vs-new` — Literal vs new String<br>`#pool-identity` — Pool identity and compile-time constants |
 | `3.Equality/Equality.md` | `#string-equals` — String content equality<br>`#string-reference-equality` — Why == is not content comparison<br>`#case-insensitive-boundary` — Case-insensitive comparison and locale boundary |
 | `4.CoreStringOperations/CoreStringOperations.md` | `#string-inspection` — CharSequence boundary; length, empty/blank and indexed inspection<br>`#string-search` — contains/indexOf/prefix/suffix search<br>`#string-extraction` — substring ranges and index boundaries<br>`#string-transformation` — replace/strip/case conversion plus selected modern text operations without mutation<br>`#string-split-join` — splitting/joining text, regex boundary and split limit semantics<br>`#string-conversion-formatting` — value conversion and basic formatting |
@@ -1155,11 +1164,11 @@ TextBlocks        → How does source representation improve without changing St
 
 #### Quiz coverage
 
-immutability and mutable-array copy boundaries; pool identity; == vs equals; String vs CharSequence; core inspection/search/extraction/transformation APIs; selected modern line/repeat/indent operations; split/join regex boundary and split limit semantics; concatenation constants; builder/buffer; intern; charset mismatch; UTF-16 code units/code points/grapheme boundary; Unicode normalization/canonical equivalence; regex matching modes/flags/groups/quantifiers; text-block whitespace.
+what String represents and its role at text/system boundaries without turning every domain value into String; immutability and mutable-array copy boundaries; pool identity; == vs equals; String vs CharSequence; core inspection/search/extraction/transformation APIs; selected modern line/repeat/indent operations; split/join regex boundary and split limit semantics; concatenation constants; builder/buffer; intern; charset mismatch; UTF-16 code units/code points/grapheme boundary; Unicode normalization/canonical equivalence; regex matching modes/flags/groups/quantifiers; text-block whitespace.
 
 #### Interview coverage
 
-why String immutable and why mutable char[] input/output cannot alias-mutate it; pool behavior; String vs CharSequence abstraction/equality boundary; choosing core String operations by intent; substring/index boundaries; split limit/data-preservation semantics; transformation immutability; encoding bugs; char/code point/grapheme distinctions and segmentation boundary; canonical equivalence and normalization; StringBuilder vs StringBuffer; intern trade-offs; regex flags/performance; text blocks and runtime indentation/escape operations.
+what String is, its role in a Java system and the boundary between text representation and domain types; why String immutable and why mutable char[] input/output cannot alias-mutate it; pool behavior; String vs CharSequence abstraction/equality boundary; choosing core String operations by intent; substring/index boundaries; split limit/data-preservation semantics; transformation immutability; encoding bugs; char/code point/grapheme distinctions and segmentation boundary; canonical equivalence and normalization; StringBuilder vs StringBuffer; intern trade-offs; regex flags/performance; text blocks and runtime indentation/escape operations.
 
 
 ### 4.8 `exception`
@@ -1170,7 +1179,7 @@ why String immutable and why mutable char[] input/output cannot alias-mutate it;
 
 #### Layer 1 — Module orientation
 
-**Entry chapter contract:** `1.Throwable/Throwable.md` must explain Java's failure model before hierarchy trivia: normal control flow assumes success, exceptions represent abnormal completion, and Java needs a structured way to propagate failure information across call boundaries.
+**Entry chapter contract:** `1.Throwable/Throwable.md` must begin with a stable section that explicitly answers **what an exception is, why Java needs/uses exceptions, and what role exceptions play in a real application** before hierarchy trivia. Establish the exception mechanism as both a `Throwable` object carrying failure context and an abrupt-control-flow mechanism that separates the normal success path from failure propagation. Explain why this is more scalable than forcing every caller to inspect status codes/extra return values, and connect exceptions to API failure contracts, cross-layer propagation, cleanup, diagnostics, translation and recovery decisions. Also establish the boundary that exceptions should not be the default mechanism for ordinary expected control flow. Only then introduce the `Throwable` hierarchy.
 
 **Major terminology roles:**
 
@@ -1200,6 +1209,9 @@ exception translation / chaining
 **Learning roadmap:**
 
 ```text
+What is an exception, why does Java need it, and what role does it play across application layers?
+Exception Purpose and Role
+        ↓
 How does Java represent abnormal failure?
 Throwable
         ↓
@@ -1248,7 +1260,7 @@ ExceptionDesign    → Where should applications catch, translate, log, retry, r
 
 | Existing chapter | Proposed anchored H2 sections |
 | --- | --- |
-| `1.Throwable/Throwable.md` | `#throwable-hierarchy` — Throwable hierarchy<br>`#error-vs-exception` — Error vs Exception<br>`#stack-trace-cause` — Stack trace, cause and causal chain |
+| `1.Throwable/Throwable.md` | `#exception-purpose` — What an exception is, why Java uses the exception mechanism, its role in application failure handling, and its normal-control-flow boundary<br>`#throwable-hierarchy` — Throwable hierarchy<br>`#error-vs-exception` — Error vs Exception<br>`#stack-trace-cause` — Stack trace, cause and causal chain |
 | `2.CheckedUnchecked/CheckedUnchecked.md` | `#checked-exception` — Checked exception compile-time contract<br>`#unchecked-exception` — RuntimeException semantics<br>`#checked-vs-unchecked-design` — Choosing checked vs unchecked |
 | `3.ThrowThrows/ThrowThrows.md` | `#throw-statement` — throw statement<br>`#throws-clause` — throws declaration<br>`#precise-rethrow` — Precise rethrow typing and why the compiler can preserve narrower checked types<br>`#override-throws-rules` — Overriding methods may not broaden checked exceptions declared by the parent contract<br>`#checked-exception-narrowing` — Overrides may keep, narrow or remove checked exceptions while unchecked exceptions are not constrained the same way |
 | `4.Propagation/Propagation.md` | `#exception-propagation` — Stack unwinding and propagation<br>`#catch-selection` — Catch selection by type<br>`#exception-chaining` — Wrapping with preserved cause<br>`#lost-cause-pitfall` — Lost-cause anti-pattern |
@@ -1271,11 +1283,11 @@ ExceptionDesign    → Where should applications catch, translate, log, retry, r
 
 #### Quiz coverage
 
-Throwable hierarchy; checked/unchecked; throw vs throws; precise rethrow; overriding `throws` rules and checked-exception narrowing; propagation/catch ordering; finally return; TWR close order; suppressed exceptions; cause preservation; exception design.
+exception purpose as a separate abnormal-completion channel and its normal-control-flow boundary; Throwable hierarchy; checked/unchecked; throw vs throws; precise rethrow; overriding `throws` rules and checked-exception narrowing; propagation/catch ordering; finally return; TWR close order; suppressed exceptions; cause preservation; exception design.
 
 #### Interview coverage
 
-checked vs unchecked trade-off; checked-exception rules when overriding; precise rethrow; stack unwinding; why TWR is safer; suppressed exceptions; wrapping/translation; logging boundaries; custom exception design; swallow/rethrow pitfalls.
+explain what an exception is, why Java uses a separate abnormal-completion channel and how that differs from ordinary return/status control flow; checked vs unchecked trade-off; checked-exception rules when overriding; precise rethrow; stack unwinding; why TWR is safer; suppressed exceptions; wrapping/translation; logging boundaries; custom exception design; swallow/rethrow pitfalls.
 
 ### 4.9 `generics`
 
@@ -2265,14 +2277,14 @@ class loading lifecycle; parent delegation; why same class name can be different
 
 | Module | Chapters | Proposed H2 Knowledge sections | Proposed API experiments | Quiz target | Interview target |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| `language-basics` | 13 | 51 | 8 | 30–40 | 20–28 |
+| `language-basics` | 13 | 52 | 8 | 30–40 | 20–28 |
 | `numbers` | 11 | 34 | 7 | 28–36 | 18–24 |
 | `class-object` | 14 | 50 | 7 | 36–48 | 24–32 |
 | `oop` | 7 | 29 | 6 | 24–32 | 18–24 |
 | `abstract-interface` | 6 | 22 | 5 | 22–30 | 16–22 |
-| `object-contract` | 7 | 22 | 5 | 24–32 | 18–24 |
-| `string` | 12 | 47 | 8 | 28–38 | 18–26 |
-| `exception` | 9 | 34 | 6 | 28–38 | 20–28 |
+| `object-contract` | 7 | 23 | 5 | 24–32 | 18–24 |
+| `string` | 12 | 48 | 8 | 28–38 | 18–26 |
+| `exception` | 9 | 35 | 6 | 28–38 | 20–28 |
 | `generics` | 9 | 36 | 6 | 28–38 | 20–28 |
 | `collection` | 12 | 49 | 8 | 34–46 | 22–30 |
 | `date-time` | 12 | 41 | 6 | 30–40 | 20–28 |
@@ -2281,7 +2293,7 @@ class loading lifecycle; parent delegation; why same class name can be different
 | `annotation` | 8 | 35 | 5 | 24–32 | 18–24 |
 | `reflection` | 10 | 45 | 7 | 30–40 | 22–30 |
 | `classloader` | 9 | 39 | 7 | 28–38 | 22–30 |
-| **Total** | **161** | **620** | **105** | **450–602** | **314–430** |
+| **Total** | **161** | **624** | **105** | **450–602** | **314–430** |
 
 These totals are planning bounds, not delivery quotas. During implementation an API experiment or assessment item may be removed when it proves redundant, weak or artificial.
 

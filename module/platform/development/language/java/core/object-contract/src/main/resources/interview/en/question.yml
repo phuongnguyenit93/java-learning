@@ -28,6 +28,13 @@
 # </interview-schema>
 
 questions:
+  - question: "What is an object contract, and why can code compile while collection/framework behavior is still wrong when the contract is broken?"
+    answer: "An object contract is a set of behavioral promises that other code relies on, such as equals/hashCode consistency, valid ordering laws, and a useful diagnostic representation. The compiler mostly checks types and signatures; it cannot prove those semantic laws. A class can therefore compile while HashSet/HashMap lookup, sorted collections, logging, or framework behavior becomes incorrect or misleading because the implementation violates the expected contract."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.IdentityEquality/IdentityEquality.md", anchor: "object-contract-purpose"}
+    apiRelated: {controller: "", methodSignature: ""}
+
   - question: "Distinguish object identity from logical equality and give cases where each matters."
     answer: "Identity asks whether references designate the same object and is tested with reference equality. Logical equality asks whether separate objects represent the same domain value through equals. Identity matters for singleton/sentinel/enum-style semantics; value objects usually care about logical equality."
     aiGenerated: true

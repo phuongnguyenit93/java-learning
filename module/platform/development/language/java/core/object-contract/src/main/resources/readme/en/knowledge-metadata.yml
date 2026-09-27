@@ -1,4 +1,8 @@
 1.IdentityEquality/IdentityEquality.md:
+  object-contract-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
   identity-vs-equality:
     difficulty: BASIC
     aiGenerated: true

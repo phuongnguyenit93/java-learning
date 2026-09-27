@@ -1,4 +1,8 @@
 1.Throwable/Throwable.md:
+  exception-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
   throwable-hierarchy:
     difficulty: BASIC
     aiGenerated: true

@@ -14,6 +14,7 @@ PropagationController:
   description: |-
     <h2>Propagation, Stack Unwinding and Cause</h2>
     <p>Experiments showing how exceptions move through nested calls and how a higher abstraction can wrap a failure without losing its original cause.</p>
+    <p>This is runtime evidence for the foundational role of exceptions: a failure has a separate abnormal-completion channel that can leave its origin and travel to a boundary with enough context to decide how it should be handled.</p>
   readmeRelated:
     file: 4.Propagation/Propagation.md
 ResourceController:

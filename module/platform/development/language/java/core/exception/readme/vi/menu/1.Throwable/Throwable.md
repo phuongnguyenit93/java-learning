@@ -1,8 +1,43 @@
 # Throwable
 
+## <a id="exception-purpose">Exception là gì và vì sao Java cần nó?</a>
+
 Trong luồng thực thi bình thường, ta giả định một method sẽ hoàn thành công việc rồi trả kết quả. Nhưng chương trình thực tế luôn có khả năng **không thể tiếp tục theo đường thành công**: dữ liệu đầu vào sai, file không tồn tại, kết nối lỗi, tài nguyên đóng thất bại hoặc một invariant bị phá.
 
 Java dùng exception để biểu diễn **sự kết thúc bất thường của luồng thực thi**. Thay vì bắt mọi method trả về một “mã lỗi”, Java cho phép lỗi mang theo ngữ cảnh và truyền ngược qua chuỗi lời gọi cho tới tầng có đủ trách nhiệm để xử lý.
+
+Một exception cần được hiểu đồng thời theo hai mặt:
+
+```text
+Throwable object
+→ mang type, message, stack trace, cause và thông tin chẩn đoán khác
+
+abrupt control-flow mechanism
+→ khi được throw, đường chạy bình thường dừng và Java tìm handler phù hợp
+```
+
+Nếu chỉ dùng `boolean`, `null`, status code hoặc một giá trị trả về đặc biệt, mỗi caller phải tự nhớ kiểm tra kết quả và tự truyền thông tin lỗi lên tầng trên. Cách đó vẫn phù hợp với một số API, nhưng khi failure cần đi qua nhiều tầng thì normal result và failure dễ bị trộn vào cùng một kênh, thông tin nguyên nhân dễ mất và caller có thể bỏ quên việc kiểm tra. Exception cho Java một **kênh hoàn thành bất thường riêng**, có thể truyền qua call stack mà vẫn giữ type và cause.
+
+Vì vậy exception có nhiều vai trò trong thiết kế chương trình:
+
+```text
+API contract
+→ mô tả failure mà caller cần biết; checked exception có thể xuất hiện trong throws contract
+
+propagation across layers
+→ đưa failure từ nơi phát sinh tới tầng có đủ trách nhiệm quyết định
+
+cleanup
+→ cho phép finally / try-with-resources dọn tài nguyên khi luồng thành công bị gián đoạn
+
+diagnostics
+→ giữ type, message, stack trace, cause và suppressed exception
+
+translation / recovery
+→ tầng biên có thể wrap lỗi kỹ thuật thành ngôn ngữ domain, retry, fallback hoặc kết thúc request phù hợp
+```
+
+Exception không nên trở thành cách viết **normal control flow** cho các nhánh dự kiến xảy ra thường xuyên và có thể biểu diễn rõ hơn bằng điều kiện, return value hoặc result type. Việc ném rồi bắt exception chỉ để điều khiển vòng lặp hay chọn nhánh làm luồng thành công khó đọc và che mất ý nghĩa thật của cơ chế failure.
 
 Trong toàn module, ta sẽ dùng một câu chuyện lặp lại:
 

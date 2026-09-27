@@ -1,4 +1,8 @@
 1.Immutability/Immutability.md:
+  string-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
   string-immutability:
     difficulty: BASIC
     aiGenerated: true

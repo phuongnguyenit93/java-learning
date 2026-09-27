@@ -39,6 +39,19 @@
 # </quiz-schema>
 
 questions:
+  - id: language-basics-foundation
+    question: "Mục tiêu quan trọng nhất của module Language Basics là gì?"
+    answers:
+      - {id: A, answer: "Học thuộc toàn bộ Java API trước khi học OOP.", explanation: "Sai. Module tập trung vào language/value/execution model nền tảng, không phải catalog toàn bộ JDK."}
+      - {id: B, answer: "Xây mental model thống nhất về value/type, variable, conversion, control flow, method call, array, null và compile-time/runtime rules trước các chủ đề cao hơn.", explanation: "Đúng. Các chủ đề sau như OOP, Generics và Collections đều dựa trên những rule nền này."}
+      - {id: C, answer: "Chỉ học syntax của if/for mà không cần hiểu type system.", explanation: "Sai. Control flow chỉ là một phần; type/value và invocation model cũng là nền tảng."}
+      - {id: D, answer: "Thay thế hoàn toàn các module OOP, Generics và Collections.", explanation: "Sai. Language Basics chuẩn bị nền tảng để hiểu các module đó, không thay thế chúng."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.PrimitiveReference/PrimitiveReference.md", anchor: "language-basics-roadmap"}
+    apiRelated: {controller: "", methodSignature: ""}
+
   - id: primitive-reference-copy
     question: "Sau `List<String> b = a`, Java copy thứ gì?"
     answers:

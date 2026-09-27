@@ -1,5 +1,9 @@
 # Primitive và Reference
 
+## <a id="language-basics-roadmap">Language Basics học gì và để làm gì?</a>
+
+`Language Basics` là tầng nền tảng giải thích Java **biểu diễn giá trị, gắn type cho dữ liệu và điều khiển việc thực thi code** như thế nào. Đây là bộ quy tắc chung mà các chủ đề phía sau như OOP, Collections, Generics hay API framework đều dựa vào. Nếu chưa chắc tầng này, những khái niệm cao hơn rất dễ bị học thành cú pháp rời rạc mà không hiểu compiler và runtime đang làm gì.
+
 Trước khi học `if`, method, array hay OOP, cần trả lời một câu rất cơ bản: **một biến Java thực sự đang giữ loại giá trị nào?**
 
 Java có hai nhóm lớn trong mô hình tư duy này:
@@ -13,6 +17,18 @@ giá trị tham chiếu (reference)
 ```
 
 Sự khác biệt này nối xuyên suốt Java Core: phép gán, boxing, casting, lời gọi method, pass-by-value, array, `null`, equality và runtime type.
+
+Đến cuối module, người học cần nối được các mảnh kiến thức thành một mental model thống nhất:
+
+- Java có những **giá trị và type** nào, đặc biệt là primitive value và reference value;
+- **biến và scope** quyết định tên nào tồn tại, nhìn thấy ở đâu và khi nào;
+- **wrapper/boxing**, **operators** và **conversion/casting** làm thay đổi cách value tham gia biểu thức hoặc API;
+- **control flow** quyết định nhánh và vòng lặp nào được thực thi;
+- **method, invocation và varargs** tổ chức hành vi có thể gọi lại, còn **pass-by-value** giải thích chính xác thứ gì được truyền vào method;
+- **array** biểu diễn một dãy phần tử có kích thước cố định;
+- **package/import** tổ chức và phân giải tên type;
+- **null** biểu diễn việc một reference không nhận diện object nào;
+- **compile-time type và runtime type** cùng tham gia vào kiểm tra kiểu, overload, cast và dispatch như thế nào.
 
 Lộ trình của module:
 

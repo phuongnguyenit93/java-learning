@@ -39,6 +39,19 @@
 # </quiz-schema>
 
 questions:
+  - id: exception-purpose-channel
+    question: "Vấn đề cốt lõi mà exception mechanism giải quyết trong Java là gì?"
+    answers:
+      - {id: A, answer: "Tạo một kênh abnormal completion riêng có thể mang type/context và propagate qua call stack tới nơi có trách nhiệm xử lý.", explanation: "Đúng. Exception tách failure flow khỏi normal return path và giữ diagnostic/causal context."}
+      - {id: B, answer: "Bắt buộc mọi failure đều phải recover ngay tại method phát sinh.", explanation: "Sai. Một vai trò quan trọng của exception là cho phép failure propagate tới boundary phù hợp."}
+      - {id: C, answer: "Thay thế hoàn toàn mọi boolean, Optional hoặc result type trong mọi API.", explanation: "Sai. Các representation khác vẫn phù hợp cho nhiều expected-result design; exception dành cho abnormal completion semantics."}
+      - {id: D, answer: "Dùng throw/catch như cơ chế mặc định để viết loop và branch thông thường.", explanation: "Sai. Exception không nên là default normal-control-flow mechanism."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.Throwable/Throwable.md", anchor: "exception-purpose"}
+    apiRelated: {controller: "PropagationController", methodSignature: "propagate()"}
+
   - id: exception-throwable-hierarchy
     question: "Phát biểu nào đúng nhất về vai trò của Throwable?"
     answers:

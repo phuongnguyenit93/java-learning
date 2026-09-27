@@ -39,6 +39,19 @@
 # </quiz-schema>
 
 questions:
+  - id: exception-purpose-channel
+    question: "What core problem does Java's exception mechanism solve?"
+    answers:
+      - {id: A, answer: "It provides a separate abnormal-completion channel that can carry typed context and propagate through the call stack to a responsible handler.", explanation: "Correct. Exceptions separate failure flow from the normal return path while preserving diagnostic and causal context."}
+      - {id: B, answer: "It requires every failure to be recovered immediately in the method where it originates.", explanation: "Incorrect. A key role of exceptions is allowing failures to propagate to an appropriate boundary."}
+      - {id: C, answer: "It completely replaces booleans, Optional, or result types in every API.", explanation: "Incorrect. Other representations remain appropriate for many expected-result designs; exceptions model abnormal completion semantics."}
+      - {id: D, answer: "It is the default mechanism for ordinary loops and branch selection.", explanation: "Incorrect. Exceptions should not be the default normal-control-flow mechanism."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.Throwable/Throwable.md", anchor: "exception-purpose"}
+    apiRelated: {controller: "PropagationController", methodSignature: "propagate()"}
+
   - id: exception-throwable-hierarchy
     question: "Which statement best describes Throwable's role?"
     answers:
