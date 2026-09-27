@@ -1,0 +1,67 @@
+AnnotationInspectionController:
+  retention():
+    execution: |-
+      <p><strong>Concept:</strong> Retention determines whether an annotation use survives only in source, into the class file, or through runtime reflection.</p>
+      <p><strong>Flow:</strong> <code>Sample</code> carries three annotations with different retention policies, then the endpoint queries that class through reflection.</p>
+      <pre><code>@SourceOnly
+      @ClassOnly
+      @RuntimeVisible
+      static final class Sample {}</code></pre>
+      <p><strong>Evidence:</strong> Reflection calls <code>isAnnotationPresent(...)</code> and <code>getDeclaredAnnotations()</code> on <code>Sample.class</code>.</p>
+      <p><strong>Observation:</strong> SOURCE and CLASS are not visible through runtime reflection; RUNTIME is visible and appears in the declared runtime annotations.</p>
+      <p><strong>Conclusion:</strong> <code>RUNTIME</code> does not create behavior; it simply preserves metadata long enough for a runtime consumer to read it.</p>
+    usage: true
+BuiltInAnnotationController:
+  compilerContracts():
+    execution: |-
+      <p><strong>Concept:</strong> Some built-in annotations turn developer intent into contracts checked by the compiler.</p>
+      <p><strong>Flow:</strong> Source contains a valid <code>@Override</code> implementation and a valid <code>@FunctionalInterface</code>; the application can run only because those compile-time contracts already passed.</p>
+      <pre><code>@Override
+      public String name() { return "child"; }
+
+      @FunctionalInterface
+      interface Transformer {
+          String transform(String value);
+      }</code></pre>
+      <p><strong>Observation:</strong> The endpoint returns the dispatch result and lambda result. It does not attempt to manufacture an invalid declaration at runtime.</p>
+      <p><strong>Conclusion:</strong> An annotation may be consumed before runtime; this response is evidence of source that successfully passed those compiler contracts.</p>
+    usage: true
+InheritedAnnotationController:
+  inheritance():
+    execution: |-
+      <p><strong>Concept:</strong> <code>@Inherited</code> affects class annotation lookup only through the superclass chain.</p>
+      <p><strong>Flow:</strong> One subclass extends an annotated class, another class only implements an annotated interface, and the subclass overrides a superclass method that carries a method annotation.</p>
+      <pre><code>@AuditedType
+      static class BaseService { ... }
+
+      static final class ChildService extends BaseService { ... }
+
+      @AuditedType
+      interface AuditedContract {}
+      static final class InterfaceOnlyService implements AuditedContract {}</code></pre>
+      <p><strong>Observation:</strong> The child class sees the superclass annotation; the interface-only implementation does not. The overriding method also does not inherit the superclass method annotation.</p>
+      <p><strong>Conclusion:</strong> <code>@Inherited</code> is not a general metadata-inheritance mechanism for interfaces or members.</p>
+    usage: true
+MetaAnnotationController:
+  inspectTargets():
+    execution: |-
+      <p><strong>Concept:</strong> A meta-annotation describes the contract of another annotation type.</p>
+      <p><strong>Flow:</strong> <code>AuditedComponent</code> is configured with <code>@Target</code>, <code>@Retention</code>, and <code>@Documented</code>; the endpoint reflects the annotation type itself.</p>
+      <pre><code>@Documented
+      @Retention(RetentionPolicy.RUNTIME)
+      @Target({ElementType.TYPE, ElementType.METHOD})
+      @interface AuditedComponent {}</code></pre>
+      <p><strong>Observation:</strong> The response reports <code>TYPE</code>, <code>METHOD</code>, <code>RUNTIME</code> retention, and the documented marker.</p>
+      <p><strong>Conclusion:</strong> Target and retention are metadata about an annotation type, telling compiler/runtime where the annotation is legal and how long it survives.</p>
+    usage: true
+RepeatableAnnotationController:
+  repeatable():
+    execution: |-
+      <p><strong>Concept:</strong> A repeatable annotation uses a container contract to represent multiple annotations of the same type at one context.</p>
+      <p><strong>Flow:</strong> <code>transfer()</code> carries two <code>@Audit</code> annotations; the endpoint compares <code>getAnnotation(Audit.class)</code>, container lookup, and <code>getAnnotationsByType(Audit.class)</code>.</p>
+      <pre><code>@Audit(action = "SECURITY")
+      @Audit(action = "COMPLIANCE", level = 2)
+      void transfer() {}</code></pre>
+      <p><strong>Observation:</strong> Single lookup does not return an arbitrary repeated <code>Audit</code>; the container is present, while by-type lookup returns both logical annotations in declaration order.</p>
+      <p><strong>Conclusion:</strong> Consumers of repeatable annotations should prefer <code>*AnnotationsByType</code> when they want logical annotation values rather than handling the container themselves.</p>
+    usage: true

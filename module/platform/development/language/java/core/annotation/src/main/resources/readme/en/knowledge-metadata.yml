@@ -1,1 +1,148 @@
-{}
+1.Basic/Basic.md:
+  annotation-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  annotation-syntax:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  annotation-restrictions:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  annotation-use-sites:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+2.BuiltIn/BuiltIn.md:
+  override-annotation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  deprecated-annotation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  suppresswarnings:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  safevarargs:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  functionalinterface:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+3.CustomAnnotation/CustomAnnotation.md:
+  declare-annotation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  annotation-elements-defaults:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  marker-annotation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  custom-annotation-design:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+4.Retention/Retention.md:
+  retention-source:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  retention-class:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  retention-runtime:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  retention-use-case:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+5.Target/Target.md:
+  elementtype-targets:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  type-use-annotation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  target-design:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+6.MetaAnnotation/MetaAnnotation.md:
+  retention-meta:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  target-meta:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  documented-meta:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  inherited-meta:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  repeatable-meta:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+7.RepeatableInherited/RepeatableInherited.md:
+  repeatable-container:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  get-annotations-by-type:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  inherited-class-only:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  annotation-inheritance-boundaries:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+8.AnnotationProcessing/AnnotationProcessing.md:
+  processing-rounds:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  processor-contract:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  supported-types-source-version:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  generated-source:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  processing-vs-reflection:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  processor-pitfalls:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false

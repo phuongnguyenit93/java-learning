@@ -1,0 +1,30 @@
+AnnotationInspectionController:
+  description: |-
+    <h2>Retention và runtime inspection</h2>
+    <p>Quan sát annotation nào thực sự còn nhìn thấy được bằng reflection khi cùng một class được gắn metadata với SOURCE, CLASS và RUNTIME retention.</p>
+  readmeRelated:
+    file: 4.Retention/Retention.md
+BuiltInAnnotationController:
+  description: |-
+    <h2>Built-in compiler contracts</h2>
+    <p>Dùng các declaration hợp lệ đã compile với <code>@Override</code> và <code>@FunctionalInterface</code> để nối annotation metadata với compiler contract, không giả lập compile error ở runtime.</p>
+  readmeRelated:
+    file: 2.BuiltIn/BuiltIn.md
+InheritedAnnotationController:
+  description: |-
+    <h2>Ranh giới của @Inherited</h2>
+    <p>So sánh superclass inheritance, interface implementation và overriding method để thấy <code>@Inherited</code> chỉ ảnh hưởng class-level lookup qua superclass chain.</p>
+  readmeRelated:
+    file: 7.RepeatableInherited/RepeatableInherited.md
+MetaAnnotationController:
+  description: |-
+    <h2>Meta-annotation inspection</h2>
+    <p>Đọc <code>@Target</code>, <code>@Retention</code> và <code>@Documented</code> trên một custom annotation type để quan sát annotation type tự mô tả contract của nó.</p>
+  readmeRelated:
+    file: 5.Target/Target.md
+RepeatableAnnotationController:
+  description: |-
+    <h2>Repeatable annotation lookup</h2>
+    <p>Quan sát container representation và sự khác nhau giữa single-annotation lookup với <code>getAnnotationsByType()</code> khi cùng annotation xuất hiện nhiều lần.</p>
+  readmeRelated:
+    file: 7.RepeatableInherited/RepeatableInherited.md

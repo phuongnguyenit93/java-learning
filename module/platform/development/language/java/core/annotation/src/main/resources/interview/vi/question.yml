@@ -1,0 +1,341 @@
+# <interview-schema>
+# Cấu trúc câu hỏi Interview
+# schema-version: 2
+#
+# questions [kiểu: list; bắt buộc; mặc định: []]
+#   Danh sách câu hỏi Interview của module trong language hiện tại.
+#   mỗi phần tử:
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi phỏng vấn hiển thị cho người học.
+#     answer [kiểu: string; bắt buộc; mặc định: ""]
+#       Câu trả lời tham khảo, chỉ hiển thị khi người học chủ động mở.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu nội dung được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu nội dung đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+# </interview-schema>
+
+questions:
+  - question: >-
+      Annotation giải quyết loại bài toán nào, và vì sao bản thân một annotation không tự tạo ra behavior?
+    answer: >-
+      Annotation gắn metadata có cấu trúc vào code để compiler, tool, processor, framework hoặc code runtime đọc. Nó phù hợp khi cần mô tả đặc điểm hay contract của program element mà không nhét logic đó vào tên, comment hoặc đăng ký thủ công. Behavior chỉ xuất hiện khi một consumer đọc metadata và quyết định cảnh báo, validate, generate, register hoặc thực thi điều gì đó.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Basic/Basic.md"
+      anchor: "annotation-model"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Vì sao annotation element không được chứa object tùy ý, null hoặc cấu trúc dữ liệu động như một configuration object thông thường?
+    answer: >-
+      Annotation metadata phải có biểu diễn ổn định trong source/class-file model nên Java giới hạn element vào primitive, String, Class, enum, annotation và mảng một chiều của các loại hợp lệ đó. Giá trị cũng phải phù hợp với contract compile-time của annotation; null và object graph tùy ý không có chỗ trong mô hình này. Nếu dữ liệu lớn, động hoặc phụ thuộc runtime, object/config/database thường là abstraction phù hợp hơn.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Basic/Basic.md"
+      anchor: "annotation-restrictions"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Declaration annotation và TYPE_USE annotation khác nhau về ý nghĩa thế nào, và vì sao consumer phải phân biệt chúng?
+    answer: >-
+      Declaration annotation mô tả declaration như class, method, field hoặc parameter; TYPE_USE mô tả một lần sử dụng của type như generic argument, return type, cast hay array component. Hai loại metadata có lookup/model khác nhau, nên consumer không thể giả định annotation đặt gần cùng một đoạn cú pháp luôn thuộc cùng một semantic channel. Với runtime reflection, type-use metadata thường đi qua AnnotatedType thay vì chỉ các API declaration annotation.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Basic/Basic.md"
+      anchor: "annotation-use-sites"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      @Override bảo vệ developer khỏi lỗi gì, và tại sao nói nó không tạo ra polymorphism hay dynamic dispatch?
+    answer: >-
+      @Override biến ý định override/implement thành contract mà compiler kiểm tra, nên typo hoặc signature sai sẽ fail thay vì vô tình tạo method mới. Cơ chế overriding và dynamic dispatch của Java tồn tại độc lập với annotation; bỏ @Override không làm method hợp lệ ngừng override. Giá trị của annotation là guardrail compile-time và documentation cho ý định thiết kế.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.BuiltIn/BuiltIn.md"
+      anchor: "override-annotation"
+    apiRelated:
+      controller: "BuiltInAnnotationController"
+      methodSignature: "compilerContracts()"
+
+  - question: >-
+      Khi deprecate một public API, @Deprecated, since/forRemoval và Javadoc @deprecated nên phối hợp với nhau như thế nào?
+    answer: >-
+      @Deprecated là machine-readable signal để compiler/tool cảnh báo; since cho biết từ phiên bản nào API bị deprecate và forRemoval cho biết có dự kiến loại bỏ hay không. Javadoc @deprecated nên giải thích lý do và migration path cho con người. Deprecation không tự xóa API và forRemoval cũng không cam kết một phiên bản loại bỏ cụ thể.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.BuiltIn/BuiltIn.md"
+      anchor: "deprecated-annotation"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      @SafeVarargs khác @SuppressWarnings("unchecked") ở contract nào, và khi nào gắn @SafeVarargs lại là một lời khẳng định sai?
+    answer: >-
+      @SuppressWarnings chỉ che warning trong phạm vi được annotate; @SafeVarargs khẳng định implementation của variable-arity constructor/method không thực hiện thao tác unsafe trên non-reifiable varargs và còn ảnh hưởng warning ở call site. Với method, annotation chỉ hợp lệ khi static, final hoặc private instance method. Nếu implementation làm backing array bị heap pollution hoặc để array thoát ra nơi có thể bị ghi sai type, annotation chỉ đang che rủi ro chứ không tạo safety.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.BuiltIn/BuiltIn.md"
+      anchor: "safevarargs"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Vì sao @FunctionalInterface hữu ích dù một interface không cần annotation này vẫn có thể làm target cho lambda?
+    answer: >-
+      Functional-interface semantics đến từ Java type rules: interface phải có một function descriptor phù hợp, không phải từ @FunctionalInterface. Annotation yêu cầu compiler giữ invariant đó khi API tiến hóa, nên việc vô tình thêm abstract method không tương thích sẽ fail sớm. Default, static và private interface methods không tự phá contract; các Object-equivalent abstract declarations cũng có rule riêng khi xác định SAM.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.BuiltIn/BuiltIn.md"
+      anchor: "functionalinterface"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Khi khai báo một custom annotation bằng @interface, bạn đang định nghĩa behavior hay định nghĩa schema, và điều đó ảnh hưởng cách thiết kế thế nào?
+    answer: >-
+      @interface định nghĩa schema metadata: tên element, type và default; nó không tự thực thi behavior. Element có contract chuyên biệt như không có parameter/type parameter/throws và return type phải là annotation-element type hợp lệ. Vì consumer mới quyết định ý nghĩa runtime hoặc compile-time, thiết kế nên bắt đầu từ consumer cần dữ liệu gì thay vì bắt đầu từ cú pháp.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.CustomAnnotation/CustomAnnotation.md"
+      anchor: "declare-annotation"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Vì sao thay đổi default value của một annotation element có thể ảnh hưởng code đã compile trước đó dù annotation usage không đổi?
+    answer: >-
+      Default thuộc annotation type, không được copy thành value explicit vào từng usage thiếu element đó. Khi annotation được đọc, default hiện tại của annotation type có thể được áp dụng, nên đổi default có thể thay đổi giá trị quan sát được từ class cũ. Vì vậy default là một phần của compatibility contract; với trạng thái “không có giá trị”, nên dùng sentinel có nghĩa rõ thay vì null hoặc magic value mơ hồ.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.CustomAnnotation/CustomAnnotation.md"
+      anchor: "annotation-elements-defaults"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Bạn sẽ quyết định một requirement nên trở thành annotation hay runtime configuration bằng cách nào?
+    answer: >-
+      Hãy xác định consumer, metadata mô tả gì, được phép đặt ở đâu và cần sống đến giai đoạn nào. Annotation hợp với metadata nhỏ, khai báo, tương đối ổn định và gắn tự nhiên với code. Nếu dữ liệu lớn, thay đổi theo environment, chứa secret, có nhiều rule override hoặc cần object graph động, config file/database/runtime object thường dễ tiến hóa và vận hành hơn.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.CustomAnnotation/CustomAnnotation.md"
+      anchor: "custom-annotation-design"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      SOURCE retention có nghĩa annotation processor không đọc được annotation đó hay không? Hãy giải thích theo lifecycle compile-time.
+    answer: >-
+      Không. SOURCE chỉ nói metadata không được giữ trong class-file output; annotation processor chạy trong compilation và làm việc với source/language model trước khi metadata bị loại bỏ. Vì vậy SOURCE thường rất phù hợp cho validation hoặc code generation chỉ cần ở build time. Runtime reflection mới là consumer không thể thấy SOURCE annotation sau compilation.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.Retention/Retention.md"
+      anchor: "retention-source"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Vì sao không nên mặc định chọn RUNTIME cho mọi custom annotation, và cách chọn SOURCE, CLASS hay RUNTIME hợp lý là gì?
+    answer: >-
+      Retention nên đi từ consumer: source/compiler/static analysis thường chỉ cần SOURCE; bytecode tooling có thể cần CLASS; reflection/runtime framework cần RUNTIME. Chọn lifetime dài hơn nhu cầu làm metadata trở thành runtime surface không cần thiết và dễ khiến thiết kế phụ thuộc reflection. Câu hỏi đúng là “ai cần đọc nó ở giai đoạn nào?” chứ không phải “RUNTIME có tiện hơn không?”.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.Retention/Retention.md"
+      anchor: "retention-use-case"
+    apiRelated:
+      controller: "AnnotationInspectionController"
+      methodSignature: "retention()"
+
+  - question: >-
+      TYPE_USE khác TYPE_PARAMETER ra sao, và vì sao một runtime consumer của type annotation không nên chỉ gọi getAnnotation() trên declaration?
+    answer: >-
+      TYPE_PARAMETER mô tả declaration của type parameter như T, còn TYPE_USE mô tả một occurrence của type như String trong List<String>, return type hoặc cast. Với RUNTIME retention, type annotation thường được biểu diễn qua AnnotatedType và các subtype của nó. Declaration lookup và type-use lookup là hai semantic channel khác nhau nên consumer phải dùng model phù hợp.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Target/Target.md"
+      anchor: "type-use-annotation"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Tại sao @Target nên giới hạn annotation vào tập context nhỏ nhất có ý nghĩa, và việc mở thêm target sau này có phải thay đổi API không?
+    answer: >-
+      Target là một phần public contract: compiler dùng nó để chặn usage vô nghĩa và consumer dựa vào nó để biết cần xử lý context nào. Thêm FIELD, TYPE hay RECORD_COMPONENT mở rộng surface mà consumer phải định nghĩa semantics, nên đó là một thay đổi thiết kế chứ không chỉ nới cú pháp. Với record component còn có rule propagation riêng; không nên giả định một annotation tự được copy sang mọi field/accessor/constructor parameter liên quan.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Target/Target.md"
+      anchor: "target-design"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Nếu một annotation type được gắn custom meta-annotation, Java có tự xem mọi class dùng annotation đó là trực tiếp mang meta-annotation không?
+    answer: >-
+      Không. Java Core cho phép metadata được gắn lên annotation type, nhưng không tự định nghĩa recursive composition hay transitive lookup. Framework muốn hỗ trợ stereotype/composed annotation phải chủ động traverse và diễn giải meta-annotation theo semantics của riêng nó. Vì vậy cần tách “meta-annotation tồn tại trên annotation type” khỏi “framework coi nó như composed behavior”.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.MetaAnnotation/MetaAnnotation.md"
+      anchor: "target-meta"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Vì sao @Repeatable vẫn cần một container annotation thay vì chỉ cho phép compiler lưu nhiều instance tùy ý?
+    answer: >-
+      @Repeatable cung cấp syntax tự nhiên cho nhiều instance nhưng vẫn dựa trên một container contract xác định để biểu diễn và lookup metadata. Container phải có value() trả về mảng annotation lặp lại và phải tương thích về retention/target cùng các contract như @Documented hoặc @Inherited khi áp dụng. Nhờ vậy compiler và reflection có rules rõ thay vì một format lặp tùy ý.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.MetaAnnotation/MetaAnnotation.md"
+      anchor: "repeatable-meta"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Một repeatable annotation được viết hai lần trong source được biểu diễn và giữ thứ tự thế nào, và vì sao container không phải chi tiết có thể bỏ qua hoàn toàn?
+    answer: >-
+      Java dùng containing annotation theo contract @Repeatable để biểu diễn tập các annotation lặp; các value giữ source order theo representation của container. API reflection raw và API by-type có semantics khác nhau đối với container, nên consumer cần hiểu representation này. Trộn explicit container với repeated annotations ở cùng context còn có thể tạo combination không hợp lệ hoặc khó dự đoán.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.RepeatableInherited/RepeatableInherited.md"
+      anchor: "repeatable-container"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Vì sao consumer của repeatable annotation nên ưu tiên getAnnotationsByType() thay vì getAnnotation(), và điều gì xảy ra khi từ một annotation chuyển thành hai?
+    answer: >-
+      getAnnotation(T) dùng single-annotation semantics và không unwrap repeatable container. Khi chỉ có một annotation trực tiếp nó có thể trả về T, nhưng sau khi thêm instance thứ hai metadata có thể nằm trong container nên cùng code lookup không còn thấy T như trước. getAnnotationsByType(T) hiểu directly/indirectly present semantics, unwrap container và là contract bền hơn cho repeatable annotation.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.RepeatableInherited/RepeatableInherited.md"
+      anchor: "get-annotations-by-type"
+    apiRelated:
+      controller: "RepeatableAnnotationController"
+      methodSignature: "repeatable()"
+
+  - question: >-
+      @Inherited thực sự kế thừa điều gì, và vì sao nó không tương đương với “annotation đi theo inheritance hierarchy” nói chung?
+    answer: >-
+      @Inherited chỉ ảnh hưởng một số runtime lookup trên class declaration qua superclass chain, với annotation type có retention phù hợp. Nó không truyền annotation từ interface sang implementing class, không làm method annotation đi theo overriding method, và không áp dụng cho field hay constructor. Với repeatable + inherited, by-type lookup còn là fallback theo rule chứ không mặc định merge tất cả annotation từ mọi superclass.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.RepeatableInherited/RepeatableInherited.md"
+      anchor: "annotation-inheritance-boundaries"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Vì sao annotation processing có nhiều round, và processor phải thay đổi cách suy nghĩ thế nào so với mô hình “scan một lần rồi xong”?
+    answer: >-
+      Processor có thể sinh source/class mới, và output đó trở thành input cho round sau; cuối cùng processingOver() báo final round. Vì cùng processor có thể được gọi nhiều lần, kể cả với tập annotation rỗng, implementation phải chịu được repeated invocation và không kết luận thiếu generated type quá sớm. Final round phù hợp cho final diagnostics/cleanup, không phải để sinh type rồi mong có thêm round xử lý tiếp.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.AnnotationProcessing/AnnotationProcessing.md"
+      anchor: "processing-rounds"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Processor làm việc với Element/TypeMirror khác runtime reflection với Class<?> như thế nào, và return value của process() có ý nghĩa phối hợp gì?
+    answer: >-
+      Annotation processor làm việc trên compiler model: Element mô tả declaration, TypeMirror mô tả compile-time type và AnnotationMirror mô tả annotation; nó không nên giả định application class đã được load thành Class<?>. process() trả true nghĩa processor claim các annotation type của invocation đó, có thể ngăn processor sau xử lý cùng tập; false để chúng tiếp tục được offer. Vì vậy return true phải là quyết định contract, không phải boilerplate mặc định.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.AnnotationProcessing/AnnotationProcessing.md"
+      anchor: "processor-contract"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Chỉ viết một class extends AbstractProcessor có đủ để javac chạy processor không, và supported annotation types/source version/options giải quyết các contract khác nhau nào?
+    answer: >-
+      Không. Processor phải được compile trước, có trên processor path/build configuration và được discover qua service registration, module provides hoặc cấu hình explicit. Supported annotation types nói processor quan tâm annotation nào; supported source version nói language level mà processor hiểu; supported options công bố build-level inputs như -Akey=value. Các contract này không thay đổi source compatibility của project và cũng không thay annotation element gắn trên declaration.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.AnnotationProcessing/AnnotationProcessing.md"
+      anchor: "supported-types-source-version"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Khi processor sinh code bằng Filer, những nguyên tắc nào giúp output deterministic và an toàn qua nhiều round?
+    answer: >-
+      Processor nên tạo artifact mới qua Filer, tránh tạo cùng file nhiều lần, không overwrite source người dùng và không phụ thuộc timestamp/random/unordered iteration nếu chúng không mang semantic. Cùng source và options nên tạo cùng output, generated type có thể chỉ xuất hiện ở round sau, và diagnostics nên đi qua Messager. Với originating element phù hợp, truyền nó cho Filer cũng giúp build tool hiểu dependency tốt hơn.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.AnnotationProcessing/AnnotationProcessing.md"
+      anchor: "processor-pitfalls"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Khi nào nên dùng annotation processing thay vì runtime reflection, và vì sao annotation có Class-valued element không đồng nghĩa processor nên load Class<?>?
+    answer: >-
+      Processing phù hợp cho validation/generation ở compile time và có thể đọc SOURCE metadata trên Element/TypeMirror; reflection phù hợp khi application đang chạy và cần inspect loaded Class/Method/Field với metadata còn ở runtime. Với Class-valued element, processor nên ưu tiên AnnotationMirror/TypeMirror vì type có thể chỉ tồn tại trong compiler model; proxy-style access có thể dẫn tới MirroredTypeException/MirroredTypesException. Không cần nâng retention lên RUNTIME chỉ vì processor cần đọc annotation.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.AnnotationProcessing/AnnotationProcessing.md"
+      anchor: "processing-vs-reflection"
+    apiRelated:
+      controller: ""
+      methodSignature: ""

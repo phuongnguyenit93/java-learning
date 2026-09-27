@@ -1,0 +1,67 @@
+AnnotationInspectionController:
+  retention():
+    execution: |-
+      <p><strong>Khái niệm:</strong> Retention quyết định annotation usage còn tồn tại đến source, class file hay runtime.</p>
+      <p><strong>Luồng:</strong> <code>Sample</code> được gắn ba annotation có retention khác nhau, sau đó endpoint dùng reflection để query chính class đó.</p>
+      <pre><code>@SourceOnly
+      @ClassOnly
+      @RuntimeVisible
+      static final class Sample {}</code></pre>
+      <p><strong>Bằng chứng:</strong> Reflection gọi <code>isAnnotationPresent(...)</code> và <code>getDeclaredAnnotations()</code> trên <code>Sample.class</code>.</p>
+      <p><strong>Quan sát:</strong> SOURCE và CLASS trả false ở runtime; RUNTIME trả true và xuất hiện trong danh sách annotation được reflection nhìn thấy.</p>
+      <p><strong>Kết luận:</strong> <code>RUNTIME</code> không tạo behavior; nó chỉ giữ metadata đủ lâu để runtime consumer có thể đọc.</p>
+    usage: true
+BuiltInAnnotationController:
+  compilerContracts():
+    execution: |-
+      <p><strong>Khái niệm:</strong> Một số built-in annotation biến ý định của developer thành contract mà compiler kiểm tra.</p>
+      <p><strong>Luồng:</strong> Source chứa một implementation có <code>@Override</code> hợp lệ và một interface có <code>@FunctionalInterface</code> hợp lệ; application chỉ chạy được vì các contract compile-time đó đã pass.</p>
+      <pre><code>@Override
+      public String name() { return "child"; }
+
+      @FunctionalInterface
+      interface Transformer {
+          String transform(String value);
+      }</code></pre>
+      <p><strong>Quan sát:</strong> Endpoint trả kết quả dispatch của implementation và kết quả lambda. Nó không cố tạo một invalid declaration tại runtime.</p>
+      <p><strong>Kết luận:</strong> Annotation có thể được compiler consume trước runtime; runtime response ở đây chỉ là bằng chứng rằng source hợp lệ đã compile.</p>
+    usage: true
+InheritedAnnotationController:
+  inheritance():
+    execution: |-
+      <p><strong>Khái niệm:</strong> <code>@Inherited</code> chỉ thay đổi class annotation lookup qua superclass chain.</p>
+      <p><strong>Luồng:</strong> Một subclass kế thừa class được annotate, một class khác chỉ implements interface được annotate, và subclass override một method đã annotate ở superclass.</p>
+      <pre><code>@AuditedType
+      static class BaseService { ... }
+
+      static final class ChildService extends BaseService { ... }
+
+      @AuditedType
+      interface AuditedContract {}
+      static final class InterfaceOnlyService implements AuditedContract {}</code></pre>
+      <p><strong>Quan sát:</strong> Child class nhìn thấy annotation từ superclass; class chỉ implements annotated interface thì không. Annotation trên method base cũng không tự xuất hiện trên overriding method.</p>
+      <p><strong>Kết luận:</strong> <code>@Inherited</code> không phải cơ chế metadata inheritance tổng quát cho interface/member.</p>
+    usage: true
+MetaAnnotationController:
+  inspectTargets():
+    execution: |-
+      <p><strong>Khái niệm:</strong> Meta-annotation mô tả contract của một annotation type khác.</p>
+      <p><strong>Luồng:</strong> <code>AuditedComponent</code> được cấu hình bằng <code>@Target</code>, <code>@Retention</code> và <code>@Documented</code>; endpoint reflect chính annotation type này.</p>
+      <pre><code>@Documented
+      @Retention(RetentionPolicy.RUNTIME)
+      @Target({ElementType.TYPE, ElementType.METHOD})
+      @interface AuditedComponent {}</code></pre>
+      <p><strong>Quan sát:</strong> Response trả <code>TYPE</code>, <code>METHOD</code>, retention <code>RUNTIME</code> và trạng thái documented.</p>
+      <p><strong>Kết luận:</strong> Target và retention là metadata về annotation type, cho compiler/runtime biết annotation được dùng ở đâu và sống đến khi nào.</p>
+    usage: true
+RepeatableAnnotationController:
+  repeatable():
+    execution: |-
+      <p><strong>Khái niệm:</strong> Repeatable annotation dùng container contract để biểu diễn nhiều annotation cùng type tại một context.</p>
+      <p><strong>Luồng:</strong> Method <code>transfer()</code> có hai <code>@Audit</code>; endpoint so sánh <code>getAnnotation(Audit.class)</code>, container lookup và <code>getAnnotationsByType(Audit.class)</code>.</p>
+      <pre><code>@Audit(action = "SECURITY")
+      @Audit(action = "COMPLIANCE", level = 2)
+      void transfer() {}</code></pre>
+      <p><strong>Quan sát:</strong> Single lookup cho <code>Audit</code> không trả một arbitrary repeated value; container tồn tại, còn by-type lookup trả đủ hai annotation theo thứ tự khai báo.</p>
+      <p><strong>Kết luận:</strong> Consumer của repeatable annotation nên dùng API <code>*AnnotationsByType</code> khi cần logical annotation values thay vì tự xử lý container.</p>
+    usage: true

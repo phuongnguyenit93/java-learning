@@ -1,0 +1,137 @@
+AnnotationInspectionController:
+  retention():
+    summary: Compare SOURCE, CLASS, and RUNTIME through reflection
+    description: Apply three annotations with different retention policies to one
+      sample class and report which metadata remains visible through runtime reflection.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 4.Retention/Retention.md
+      anchor: retention-use-case
+    methodName: retention
+    params: [
+      ]
+    path: com/example/learning/controller/AnnotationInspectionController.java
+    mapping: '@GetMapping("/retention")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/annotation/inspection/retention
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+BuiltInAnnotationController:
+  compilerContracts():
+    summary: Observe built-in annotations as compiler contracts
+    description: Execute declarations that successfully compiled with @Override and
+      @FunctionalInterface while explaining why invalid variants are compile-time
+      concerns rather than runtime experiments.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 2.BuiltIn/BuiltIn.md
+      anchor: override-annotation
+    methodName: compilerContracts
+    params: [
+      ]
+    path: com/example/learning/controller/BuiltInAnnotationController.java
+    mapping: '@GetMapping("/compiler-contracts")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/annotation/built-in/compiler-contracts
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+InheritedAnnotationController:
+  inheritance():
+    summary: Check the class-inheritance boundary of @Inherited
+    description: Compare a subclass, an interface implementation, and an overriding
+      method to prove that @Inherited affects class-level lookup only through the
+      superclass chain.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 7.RepeatableInherited/RepeatableInherited.md
+      anchor: inherited-class-only
+    methodName: inheritance
+    params: [
+      ]
+    path: com/example/learning/controller/InheritedAnnotationController.java
+    mapping: '@GetMapping'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/annotation/inherited
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+MetaAnnotationController:
+  inspectTargets():
+    summary: Inspect @Target and retention on a custom annotation type
+    description: Reflect the meta-annotations on AuditedComponent and return its allowed
+      ElementType values, retention policy, and @Documented marker.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 5.Target/Target.md
+      anchor: elementtype-targets
+    methodName: inspectTargets
+    params: [
+      ]
+    path: com/example/learning/controller/MetaAnnotationController.java
+    mapping: '@GetMapping("/targets")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/annotation/meta/targets
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+RepeatableAnnotationController:
+  repeatable():
+    summary: Retrieve repeatable annotations with container-aware lookup
+    description: Apply two @Audit annotations to one method and compare single lookup,
+      container presence, and getAnnotationsByType() to observe repeatable semantics.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 7.RepeatableInherited/RepeatableInherited.md
+      anchor: get-annotations-by-type
+    methodName: repeatable
+    params: [
+      ]
+    path: com/example/learning/controller/RepeatableAnnotationController.java
+    mapping: '@GetMapping'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/annotation/repeatable
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

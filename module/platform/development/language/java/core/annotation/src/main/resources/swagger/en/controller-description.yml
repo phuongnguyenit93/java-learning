@@ -1,0 +1,30 @@
+AnnotationInspectionController:
+  description: |-
+    <h2>Retention and runtime inspection</h2>
+    <p>Observe which annotations remain visible to reflection when one class is marked with SOURCE-, CLASS-, and RUNTIME-retained metadata.</p>
+  readmeRelated:
+    file: 4.Retention/Retention.md
+BuiltInAnnotationController:
+  description: |-
+    <h2>Built-in compiler contracts</h2>
+    <p>Use declarations that successfully compiled with <code>@Override</code> and <code>@FunctionalInterface</code> to connect annotation metadata to compiler contracts without pretending runtime can reproduce compile errors.</p>
+  readmeRelated:
+    file: 2.BuiltIn/BuiltIn.md
+InheritedAnnotationController:
+  description: |-
+    <h2>@Inherited boundaries</h2>
+    <p>Compare superclass inheritance, interface implementation, and an overriding method to observe that <code>@Inherited</code> affects class-level lookup only through the superclass chain.</p>
+  readmeRelated:
+    file: 7.RepeatableInherited/RepeatableInherited.md
+MetaAnnotationController:
+  description: |-
+    <h2>Meta-annotation inspection</h2>
+    <p>Read <code>@Target</code>, <code>@Retention</code>, and <code>@Documented</code> from a custom annotation type to observe how annotation types describe their own contract.</p>
+  readmeRelated:
+    file: 5.Target/Target.md
+RepeatableAnnotationController:
+  description: |-
+    <h2>Repeatable annotation lookup</h2>
+    <p>Observe the container representation and the difference between single-annotation lookup and <code>getAnnotationsByType()</code> when the same annotation appears repeatedly.</p>
+  readmeRelated:
+    file: 7.RepeatableInherited/RepeatableInherited.md
