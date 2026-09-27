@@ -223,10 +223,12 @@ Current sidebar interaction contract:
 
 ```text
 GROUP chỉ có children
-→ click toàn row để expand/collapse
-→ hover chỉ chạy wave/cue dọc
-→ đóng = wave xuống; mở = wave lên
-→ `+` = đóng, `−` = mở
+→ nếu direct children còn GROUP hoặc mixed GROUP/MODULE: click toàn row để expand/collapse như tree bình thường
+→ nếu đây là terminal GROUP và toàn bộ direct children đều là leaf MODULE: không render MODULE inline; hover/focus mở Module Picker, click pin/unpin picker
+→ nếu GROUP là mixed GROUP/MODULE: mỗi leaf MODULE trực tiếp được presentation layer wrap thành một virtual 1-item Module Picker để sibling rows cùng cấp có cùng interaction shape
+→ Module Picker chỉ cho phép một popup mở tại một thời điểm, click ngoài/Escape đóng popup
+→ các MODULE trong picker giữ nguyên catalog order và luôn hiển thị sequence 1, 2, 3...; sequence chỉ là vị trí hiện tại, kể cả parent không có `module-order.yml`
+→ branch bình thường hover chạy wave/cue dọc; đóng = wave xuống, mở = wave lên; `+` = đóng, `−` = mở
 → default toàn tree là expanded
 
 MODULE chỉ có dashboard
@@ -234,12 +236,10 @@ MODULE chỉ có dashboard
 → hover chạy sweep trái → phải + cue `›››`
 
 MODULE vừa có children vừa có dashboard
-→ dấu `+`/`−` là boundary giữa hai vùng click
-→ từ boundary về trái: expand/collapse
-→ từ boundary sang phải: navigate dashboard
-→ hover tại bất kỳ vị trí nào trên row đều kích hoạt đồng thời cả hai animation
-→ wave dọc bị clip trong vùng trái; wave ngang bị clip trong vùng phải
-→ không animation nào được tràn qua boundary
+→ không dùng split-click hybrid row nữa
+→ row gốc được presentation layer render như structural parent thuần để expand/collapse
+→ một virtual child cùng tên được chèn đầu branch và mở 1-item Module Picker đại diện dashboard của chính MODULE đó
+→ generated catalog không bị mutate và module count không tăng; virtual child chỉ tồn tại ở presentation layer
 
 visual state
 → wave/màu directional chỉ xuất hiện khi hover/focus
@@ -2414,8 +2414,8 @@ Các invariant dưới đây phản ánh architecture hiện tại và nên đư
 32. Learning experience không phụ thuộc việc learning module có Spring Boot Application; API execution và Execution Context chỉ là optional runtime capabilities.
 33. Portal module hierarchy phải consume generated `module-catalog.json`; browser không parse `module-structure.txt` làm canonical input.
 34. Sidebar Portal `Real modules / Module thật` là content filter: giữ MODULE khi Knowledge hoặc Quiz hoặc Interview hoặc API Docs có count > 0; chỉ loại module khi cả bốn đều 0. Đây không phải định nghĩa physical real module của repository, vốn vẫn dựa trên local `gradle.properties`.
-35. Module-search self-match giữ nguyên subtree; descendant-match chỉ giữ ancestor path. Search mode vẫn phải cho phép expand/collapse.
-36. Sidebar không còn circular `>` riêng trên từng module. Dashboard-only row navigate toàn row; child-only row toggle toàn row; hybrid row chia click tại `+`/`−` nhưng hover toàn row kích hoạt đồng thời wave dọc vùng trái và wave ngang vùng phải, mỗi wave bị clip đúng vùng. Tree mặc định expanded và vẫn có global Expand all/Collapse all.
+35. Module-search self-match giữ nguyên subtree; descendant-match chỉ giữ ancestor path. Search mode vẫn phải cho phép expand/collapse ở non-terminal branches; terminal module groups dùng Module Picker.
+36. Sidebar không còn circular `>` riêng trên từng module. Dashboard-only row navigate toàn row; non-terminal child-only row toggle toàn row; terminal GROUP có toàn bộ direct children là leaf MODULE dùng một Module Picker popup thay vì inline-expand. Mixed GROUP/MODULE parents wrap direct leaf MODULE siblings thành virtual 1-item pickers. MODULE nodes có children được presentation layer tách thành structural parent + virtual self-module picker child thay vì split-click hybrid row. Picker mở bằng hover/focus, click pin/unpin, click ngoài/Escape đóng, chỉ một picker được mở tại một thời điểm và module luôn được đánh số 1..N theo catalog order. Virtual wrappers không thay đổi catalog identity/count. Tree mặc định expanded và vẫn có global Expand all/Collapse all cho branch tree.
 37. Menu/API Docs mặc định collapsed nhưng phải preserve state gần nhất khi user đổi tab rồi quay lại trong cùng module/language; Knowledge cho phép nhiều section cùng mở và không auto-close sibling section.
 38. API Docs hiện consume static generated Swagger metadata, không live-execute/debug. Controller/method order phải follow valid README relationship order thay vì alphabetical/path order; rich execution HTML phải được sanitize trước khi render.
 39. Portal generated data là build artifact: không generate `module-catalog`, Overview, Knowledge hoặc future module projections vào `project-portal/src/main/resources`.

@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { collectRealModules, formatCatalogName } from '../data/moduleCatalog';
-import { resolveModuleStats } from '../data/moduleStats';
 import { useLanguage } from '../state/LanguageContext';
 import type { ModuleCatalogNode } from '../types/learning';
 
@@ -25,12 +25,27 @@ interface TreeNodeProps {
   filter: string;
   expandRequest: SidebarExpandRequest;
   showEntireSubtree?: boolean;
+  renderAsPicker?: boolean;
 }
 
 interface SidebarExpandRequest {
   version: number;
   expanded: boolean;
 }
+
+interface ModulePickerEntry {
+  node: ModuleCatalogNode;
+  sequence: number;
+}
+
+interface ModulePickerPosition {
+  top: number;
+  left: number;
+  width: number;
+  maxHeight: number;
+}
+
+const MODULE_PICKER_OPEN_EVENT = 'java-learning:module-picker-open';
 
 function nodeMatchesSelf(node: ModuleCatalogNode, filter: string): boolean {
   if (!filter) {
@@ -80,6 +95,385 @@ function isQualifiedRealModule(
     || (apiCounts[node.routeId] ?? 0) > 0;
 }
 
+function isTerminalModuleGroup(node: ModuleCatalogNode): boolean {
+  return node.kind === 'GROUP'
+    && node.children.length > 0
+    && node.children.every(
+      (child) => child.kind === 'MODULE' && Boolean(child.routeId) && child.children.length === 0,
+    );
+}
+
+function hasMixedDirectChildren(node: ModuleCatalogNode): boolean {
+  const hasGroup = node.children.some((child) => child.kind === 'GROUP');
+  const hasModule = node.children.some((child) => child.kind === 'MODULE');
+
+  return hasGroup && hasModule;
+}
+
+function isLeafModule(node: ModuleCatalogNode): boolean {
+  return node.kind === 'MODULE' && Boolean(node.routeId) && node.children.length === 0;
+}
+
+function ModuleBadges({
+  routeId,
+  knowledgeCounts,
+  quizCounts,
+  interviewCounts,
+  apiCounts,
+}: {
+  routeId: string;
+  knowledgeCounts: Record<string, number>;
+  quizCounts: Record<string, number>;
+  interviewCounts: Record<string, number>;
+  apiCounts: Record<string, number>;
+}) {
+  const knowledgeCount = knowledgeCounts[routeId] ?? 0;
+  const quizCount = quizCounts[routeId] ?? 0;
+  const interviewCount = interviewCounts[routeId] ?? 0;
+  const apiCount = apiCounts[routeId] ?? 0;
+
+  if (knowledgeCount === 0 && quizCount === 0 && interviewCount === 0 && apiCount === 0) {
+    return null;
+  }
+
+  return (
+    <span className="module-tree__badges" aria-label="Module content counts">
+      {knowledgeCount > 0 && (
+        <span className="module-tree__badge module-tree__badge--knowledge" title="Knowledge">
+          {knowledgeCount}
+        </span>
+      )}
+      {quizCount > 0 && (
+        <span className="module-tree__badge module-tree__badge--quiz" title="Quiz">
+          {quizCount}
+        </span>
+      )}
+      {interviewCount > 0 && (
+        <span className="module-tree__badge module-tree__badge--interview" title="Interview">
+          {interviewCount}
+        </span>
+      )}
+      {apiCount > 0 && (
+        <span className="module-tree__badge module-tree__badge--api" title="API Docs">
+          {apiCount}
+        </span>
+      )}
+    </span>
+  );
+}
+
+function ModulePickerPopup({
+  group,
+  entries,
+  position,
+  activeModuleId,
+  knowledgeCounts,
+  quizCounts,
+  interviewCounts,
+  apiCounts,
+  popupRef,
+  onMouseEnter,
+  onMouseLeave,
+  onClose,
+}: {
+  group: ModuleCatalogNode;
+  entries: ModulePickerEntry[];
+  position: ModulePickerPosition;
+  activeModuleId: string;
+  knowledgeCounts: Record<string, number>;
+  quizCounts: Record<string, number>;
+  interviewCounts: Record<string, number>;
+  apiCounts: Record<string, number>;
+  popupRef: React.RefObject<HTMLDivElement | null>;
+  onMouseEnter: () => void;
+  onMouseLeave: () => void;
+  onClose: () => void;
+}) {
+  const navigate = useNavigate();
+  const { language } = useLanguage();
+  const groupName = formatCatalogName(group.name);
+
+  return createPortal(
+    <div
+      ref={popupRef}
+      className="module-picker"
+      style={{
+        top: position.top,
+        left: position.left,
+        width: position.width,
+        maxHeight: position.maxHeight,
+      }}
+      role="dialog"
+      aria-label={`${groupName} modules`}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+    >
+      <div className="module-picker__header">
+        <div>
+          <div className="module-picker__eyebrow">
+            {language === 'vi' ? 'THỨ TỰ MODULE' : 'MODULE ORDER'}
+          </div>
+          <div className="module-picker__title">{groupName}</div>
+        </div>
+        <span className="module-picker__total">
+          {entries.length} {language === 'vi' ? 'module' : 'modules'}
+        </span>
+      </div>
+
+      <div className="module-picker__list">
+        {entries.map(({ node: moduleNode, sequence }) => {
+          const routeId = moduleNode.routeId;
+
+          if (!routeId) {
+            return null;
+          }
+
+          const active = routeId === activeModuleId;
+
+          return (
+            <button
+              key={moduleNode.id}
+              type="button"
+              className={`module-picker__item${active ? ' is-active' : ''}`}
+              onClick={() => {
+                onClose();
+                navigate(`/learning/${routeId}`);
+              }}
+            >
+              <span className="module-picker__sequence" aria-label={`Order ${sequence}`}>
+                {sequence}
+              </span>
+              <span className="module-picker__module-name">{formatCatalogName(moduleNode.name)}</span>
+              <ModuleBadges
+                routeId={routeId}
+                knowledgeCounts={knowledgeCounts}
+                quizCounts={quizCounts}
+                interviewCounts={interviewCounts}
+                apiCounts={apiCounts}
+              />
+              <span className="module-picker__open-cue" aria-hidden="true">›</span>
+            </button>
+          );
+        })}
+      </div>
+    </div>,
+    document.body,
+  );
+}
+
+function ModulePickerRow({
+  group,
+  entries,
+  depth,
+  activeModuleId,
+  knowledgeCounts,
+  quizCounts,
+  interviewCounts,
+  apiCounts,
+}: {
+  group: ModuleCatalogNode;
+  entries: ModulePickerEntry[];
+  depth: number;
+  activeModuleId: string;
+  knowledgeCounts: Record<string, number>;
+  quizCounts: Record<string, number>;
+  interviewCounts: Record<string, number>;
+  apiCounts: Record<string, number>;
+}) {
+  const [pickerVisible, setPickerVisible] = useState(false);
+  const [pickerPinned, setPickerPinned] = useState(false);
+  const [pickerPosition, setPickerPosition] = useState<ModulePickerPosition | null>(null);
+  const pickerAnchorRef = useRef<HTMLButtonElement>(null);
+  const pickerPopupRef = useRef<HTMLDivElement>(null);
+  const pickerCloseTimerRef = useRef<number | null>(null);
+  const displayName = formatCatalogName(group.name);
+  const containsActiveModule = entries.some(({ node }) => node.routeId === activeModuleId);
+
+  const clearPickerCloseTimer = useCallback(() => {
+    if (pickerCloseTimerRef.current !== null) {
+      window.clearTimeout(pickerCloseTimerRef.current);
+      pickerCloseTimerRef.current = null;
+    }
+  }, []);
+
+  const closePicker = useCallback(() => {
+    clearPickerCloseTimer();
+    setPickerVisible(false);
+    setPickerPinned(false);
+  }, [clearPickerCloseTimer]);
+
+  const updatePickerPosition = useCallback(() => {
+    const anchor = pickerAnchorRef.current;
+
+    if (!anchor) {
+      return;
+    }
+
+    const rect = anchor.getBoundingClientRect();
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    const mobile = viewportWidth <= 820;
+    const width = mobile
+      ? Math.max(280, viewportWidth - 24)
+      : Math.min(580, Math.max(360, viewportWidth - rect.right - 22));
+    const left = mobile
+      ? 12
+      : Math.max(12, Math.min(rect.right + 10, viewportWidth - width - 12));
+    const top = mobile
+      ? 12
+      : Math.max(12, Math.min(rect.top - 24, viewportHeight - 540));
+
+    setPickerPosition({
+      top,
+      left,
+      width,
+      maxHeight: Math.max(240, viewportHeight - top - 12),
+    });
+  }, []);
+
+  const openPicker = useCallback(() => {
+    clearPickerCloseTimer();
+    window.dispatchEvent(new CustomEvent<string>(MODULE_PICKER_OPEN_EVENT, { detail: group.id }));
+    updatePickerPosition();
+    setPickerVisible(true);
+  }, [clearPickerCloseTimer, group.id, updatePickerPosition]);
+
+  const schedulePickerClose = useCallback(() => {
+    if (pickerPinned) {
+      return;
+    }
+
+    clearPickerCloseTimer();
+    pickerCloseTimerRef.current = window.setTimeout(() => {
+      setPickerVisible(false);
+    }, 180);
+  }, [clearPickerCloseTimer, pickerPinned]);
+
+  useEffect(() => {
+    closePicker();
+  }, [activeModuleId, closePicker]);
+
+  useEffect(() => {
+    const handleOtherPickerOpen = (event: Event) => {
+      const pickerEvent = event as CustomEvent<string>;
+
+      if (pickerEvent.detail !== group.id) {
+        closePicker();
+      }
+    };
+
+    window.addEventListener(MODULE_PICKER_OPEN_EVENT, handleOtherPickerOpen);
+
+    return () => {
+      window.removeEventListener(MODULE_PICKER_OPEN_EVENT, handleOtherPickerOpen);
+    };
+  }, [closePicker, group.id]);
+
+  useEffect(() => {
+    if (!pickerVisible) {
+      return undefined;
+    }
+
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target;
+
+      if (!(target instanceof Node)) {
+        return;
+      }
+
+      if (pickerAnchorRef.current?.contains(target) || pickerPopupRef.current?.contains(target)) {
+        return;
+      }
+
+      closePicker();
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        closePicker();
+        pickerAnchorRef.current?.focus();
+      }
+    };
+
+    const handleViewportChange = () => {
+      updatePickerPosition();
+    };
+
+    document.addEventListener('pointerdown', handlePointerDown);
+    document.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('resize', handleViewportChange);
+    window.addEventListener('scroll', handleViewportChange, true);
+
+    return () => {
+      document.removeEventListener('pointerdown', handlePointerDown);
+      document.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('resize', handleViewportChange);
+      window.removeEventListener('scroll', handleViewportChange, true);
+    };
+  }, [closePicker, pickerVisible, updatePickerPosition]);
+
+  useEffect(() => () => clearPickerCloseTimer(), [clearPickerCloseTimer]);
+
+  return (
+    <li className="module-tree__item">
+      <div className={`module-tree__row is-module-picker${containsActiveModule ? ' is-active' : ''}`}>
+        <button
+          ref={pickerAnchorRef}
+          type="button"
+          className={`module-tree__picker-zone${pickerVisible ? ' is-open' : ''}`}
+          onMouseEnter={openPicker}
+          onMouseLeave={schedulePickerClose}
+          onFocus={openPicker}
+          onBlur={schedulePickerClose}
+          onClick={() => {
+            clearPickerCloseTimer();
+
+            if (pickerPinned) {
+              closePicker();
+              return;
+            }
+
+            window.dispatchEvent(new CustomEvent<string>(MODULE_PICKER_OPEN_EVENT, { detail: group.id }));
+            updatePickerPosition();
+            setPickerPinned(true);
+            setPickerVisible(true);
+          }}
+          aria-haspopup="dialog"
+          aria-expanded={pickerVisible}
+          aria-label={`Open ${displayName} modules`}
+          title={`Open ${displayName} modules`}
+        >
+          <span className="module-tree__indent" data-depth={Math.min(depth, 5)} />
+          <span className="module-tree__vertical-cue module-tree__vertical-cue--placeholder" aria-hidden="true" />
+          <span className="module-tree__caret" aria-hidden="true">›</span>
+          <span className={`module-tree__content${containsActiveModule ? ' is-active' : ''}`}>
+            <span className="module-tree__label">{displayName}</span>
+          </span>
+          <span className="module-tree__count">{entries.length}</span>
+          <span className="module-tree__picker-cue" aria-hidden="true">›</span>
+        </button>
+      </div>
+
+      {pickerVisible && pickerPosition && (
+        <ModulePickerPopup
+          group={group}
+          entries={entries}
+          position={pickerPosition}
+          activeModuleId={activeModuleId}
+          knowledgeCounts={knowledgeCounts}
+          quizCounts={quizCounts}
+          interviewCounts={interviewCounts}
+          apiCounts={apiCounts}
+          popupRef={pickerPopupRef}
+          onMouseEnter={openPicker}
+          onMouseLeave={schedulePickerClose}
+          onClose={closePicker}
+        />
+      )}
+    </li>
+  );
+}
+
 function projectRealModuleNodes(
   nodes: ModuleCatalogNode[],
   knowledgeCounts: Record<string, number>,
@@ -115,9 +509,13 @@ function TreeNode({
   filter,
   expandRequest,
   showEntireSubtree = false,
+  renderAsPicker = false,
 }: TreeNodeProps) {
   const navigate = useNavigate();
   const hasChildren = node.children.length > 0;
+  const terminalModuleGroup = isTerminalModuleGroup(node);
+  const hasInlineChildren = hasChildren && !terminalModuleGroup;
+  const mixedDirectChildren = hasMixedDirectChildren(node);
   const [expanded, setExpanded] = useState(expandRequest.expanded);
   const [searchExpanded, setSearchExpanded] = useState(expandRequest.expanded);
   const selfMatches = nodeMatchesSelf(node, filter);
@@ -127,19 +525,24 @@ function TreeNode({
   const open = filter ? searchExpanded : expanded;
   const isModule = node.kind === 'MODULE' && Boolean(node.routeId);
   const isActive = isModule && node.routeId === activeModuleId;
-  const stats = isModule && node.routeId ? resolveModuleStats(node.routeId) : null;
-  const knowledgeCount = isModule && node.routeId ? (knowledgeCounts[node.routeId] ?? 0) : 0;
-  const quizCount = isModule && node.routeId ? (quizCounts[node.routeId] ?? 0) : 0;
-  const interviewCount = isModule && node.routeId ? (interviewCounts[node.routeId] ?? 0) : 0;
-  const apiCount = isModule && node.routeId ? (apiCounts[node.routeId] ?? 0) : 0;
+  const structuralModule = isModule && hasInlineChildren;
   const isRealModule = isQualifiedRealModule(node, knowledgeCounts, quizCounts, interviewCounts, apiCounts);
   const displayName = formatCatalogName(node.name);
+  const pickerEntries = useMemo<ModulePickerEntry[]>(() => {
+    const ordered = node.children.map((child, index) => ({ node: child, sequence: index + 1 }));
+
+    if (!filter || showEntireSubtree || selfMatches) {
+      return ordered;
+    }
+
+    return ordered.filter(({ node: child }) => nodeContainsMatch(child, filter));
+  }, [filter, node.children, selfMatches, showEntireSubtree]);
 
   useEffect(() => {
-    if (filter && visible && hasChildren) {
+    if (filter && visible && hasInlineChildren) {
       setSearchExpanded(true);
     }
-  }, [filter, visible, hasChildren]);
+  }, [filter, visible, hasInlineChildren]);
 
   useEffect(() => {
     setExpanded(expandRequest.expanded);
@@ -150,8 +553,38 @@ function TreeNode({
     return null;
   }
 
+  if (renderAsPicker && isLeafModule(node)) {
+    return (
+      <ModulePickerRow
+        group={node}
+        entries={[{ node, sequence: 1 }]}
+        depth={depth}
+        activeModuleId={activeModuleId}
+        knowledgeCounts={knowledgeCounts}
+        quizCounts={quizCounts}
+        interviewCounts={interviewCounts}
+        apiCounts={apiCounts}
+      />
+    );
+  }
+
+  if (terminalModuleGroup) {
+    return (
+      <ModulePickerRow
+        group={node}
+        entries={pickerEntries}
+        depth={depth}
+        activeModuleId={activeModuleId}
+        knowledgeCounts={knowledgeCounts}
+        quizCounts={quizCounts}
+        interviewCounts={interviewCounts}
+        apiCounts={apiCounts}
+      />
+    );
+  }
+
   const toggleChildren = () => {
-    if (hasChildren) {
+    if (hasInlineChildren) {
       if (filter) {
         setSearchExpanded((current) => !current);
       } else {
@@ -167,32 +600,17 @@ function TreeNode({
   };
 
   const content = (
-    <span className={`module-tree__content${isActive ? ' is-active' : ''}`}>
+    <span className={`module-tree__content${isActive && !structuralModule ? ' is-active' : ''}`}>
       <span className="module-tree__label">{displayName}</span>
 
-      {stats && (
-        <span className="module-tree__badges" aria-label="Module content counts">
-          {knowledgeCount > 0 && (
-            <span className="module-tree__badge module-tree__badge--knowledge" title="Knowledge">
-              {knowledgeCount}
-            </span>
-          )}
-          {quizCount > 0 && (
-            <span className="module-tree__badge module-tree__badge--quiz" title="Quiz">
-              {quizCount}
-            </span>
-          )}
-          {interviewCount > 0 && (
-            <span className="module-tree__badge module-tree__badge--interview" title="Interview">
-              {interviewCount}
-            </span>
-          )}
-          {apiCount > 0 && (
-            <span className="module-tree__badge module-tree__badge--api" title="API Docs">
-              {apiCount}
-            </span>
-          )}
-        </span>
+      {isModule && node.routeId && !structuralModule && (
+        <ModuleBadges
+          routeId={node.routeId}
+          knowledgeCounts={knowledgeCounts}
+          quizCounts={quizCounts}
+          interviewCounts={interviewCounts}
+          apiCounts={apiCounts}
+        />
       )}
     </span>
   );
@@ -200,12 +618,12 @@ function TreeNode({
   return (
     <li className="module-tree__item">
       <div
-        className={`module-tree__row${hasChildren ? ' is-expandable' : ''}${isModule ? ' is-module' : ''}${isRealModule ? ' is-real-module' : ''}${isActive ? ' is-active' : ''}`}
+        className={`module-tree__row${hasInlineChildren ? ' is-expandable' : ''}${isModule && !structuralModule ? ' is-module' : ''}${isRealModule ? ' is-real-module' : ''}${isActive && !structuralModule ? ' is-active' : ''}`}
       >
-        {hasChildren && (
+        {hasInlineChildren && (
           <button
             type="button"
-            className={`module-tree__collapse-zone${isModule ? ' is-split' : ' is-full'}${open ? ' is-open' : ' is-closed'}`}
+            className={`module-tree__collapse-zone is-full${open ? ' is-open' : ' is-closed'}`}
             onClick={toggleChildren}
             aria-expanded={open}
             aria-label={`${open ? 'Collapse' : 'Expand'} ${displayName}`}
@@ -214,11 +632,11 @@ function TreeNode({
             <span className="module-tree__indent" data-depth={Math.min(depth, 5)} />
             <span className="module-tree__vertical-cue" aria-hidden="true">{open ? '↑↑↑' : '↓↓↓'}</span>
             <span className="module-tree__caret" aria-hidden="true">{open ? '−' : '+'}</span>
-            {!isModule && content}
+            {content}
           </button>
         )}
 
-        {isModule && (
+        {isModule && !hasChildren && (
           <button
             type="button"
             className={`module-tree__dashboard-zone${hasChildren ? ' is-split' : ' is-full'}`}
@@ -229,6 +647,7 @@ function TreeNode({
             {!hasChildren && (
               <>
                 <span className="module-tree__indent" data-depth={Math.min(depth, 5)} />
+                <span className="module-tree__vertical-cue module-tree__vertical-cue--placeholder" aria-hidden="true" />
                 <span className="module-tree__caret module-tree__caret--leaf" aria-hidden="true">•</span>
               </>
             )}
@@ -240,14 +659,28 @@ function TreeNode({
         {!hasChildren && !isModule && (
           <div className="module-tree__static-zone">
             <span className="module-tree__indent" data-depth={Math.min(depth, 5)} />
+            <span className="module-tree__vertical-cue module-tree__vertical-cue--placeholder" aria-hidden="true" />
             <span className="module-tree__caret module-tree__caret--leaf" aria-hidden="true">•</span>
             {content}
           </div>
         )}
       </div>
 
-      {hasChildren && open && (
+      {hasInlineChildren && open && (
         <ul className="module-tree__branch">
+          {structuralModule && (!filter || showEntireSubtree || selfMatches) && (
+            <ModulePickerRow
+              group={node}
+              entries={[{ node, sequence: 1 }]}
+              depth={depth + 1}
+              activeModuleId={activeModuleId}
+              knowledgeCounts={knowledgeCounts}
+              quizCounts={quizCounts}
+              interviewCounts={interviewCounts}
+              apiCounts={apiCounts}
+            />
+          )}
+
           {node.children.map((child) => (
             <TreeNode
               key={child.id}
@@ -261,6 +694,7 @@ function TreeNode({
               filter={filter}
               expandRequest={expandRequest}
               showEntireSubtree={childShowEntireSubtree}
+              renderAsPicker={mixedDirectChildren && isLeafModule(child)}
             />
           ))}
         </ul>

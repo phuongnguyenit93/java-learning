@@ -1353,14 +1353,24 @@ Category tree hiện được render từ generated `module-catalog.json`.
 Current sidebar interaction:
 
 ```text
-row có children
+GROUP non-terminal hoặc mixed GROUP/MODULE
 → click toàn row để expand/collapse
 → `+` = collapsed, `−` = expanded
-→ default toàn tree expanded
-
-GROUP chỉ có children
-→ click toàn row để expand/collapse
 → hover chạy directional wave dọc: đóng thì xuống, mở thì lên
+→ nếu mixed GROUP/MODULE thì direct leaf MODULE được UI wrap thành fake menu 1-item picker; catalog thật không thay đổi
+
+GROUP terminal có toàn bộ direct children là leaf MODULE
+→ không render các MODULE con inline trong sidebar
+→ hover/focus mở Module Picker; click pin/unpin picker
+→ click ngoài hoặc Escape đóng; toàn sidebar chỉ có một picker mở tại một thời điểm
+→ module trong picker giữ catalog order và luôn đánh số 1, 2, 3... kể cả khi parent không có `module-order.yml`
+→ default tree vẫn expanded đối với các branch bình thường
+
+MODULE có children
+→ không còn split row vừa expand vừa navigate
+→ row gốc được render như structural parent thuần
+→ UI chèn một fake child cùng tên ở đầu branch; fake child mở 1-item picker chứa chính MODULE gốc
+→ fake child chỉ là presentation wrapper, không tạo catalog node mới và không làm thay đổi module count
 
 MODULE chỉ có dashboard
 → click toàn row để navigate tới module page

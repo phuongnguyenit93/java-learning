@@ -225,10 +225,12 @@ Current sidebar behavior is intentional and should be preserved unless the user 
 
 ```text
 group row with children and no dashboard
-→ click the whole row to expand/collapse
-→ hover shows only the vertical directional sweep/cue
-→ collapsed = downward cue; expanded = upward cue
-→ use `+` for collapsed and `−` for expanded
+→ if direct children still contain GROUP nodes or are mixed GROUP/MODULE, click the whole row to expand/collapse
+→ if the row is a terminal GROUP whose direct children are all leaf MODULE nodes, do not render those modules inline; hover/focus opens a Module Picker and click pins/unpins it
+→ for mixed GROUP/MODULE parents, direct leaf MODULE siblings are wrapped only in the presentation layer as virtual one-item Module Pickers so sibling rows keep a consistent interaction shape
+→ only one Module Picker may be open at once; outside click or Escape closes it
+→ picker modules preserve catalog order and always show a simple 1..N sequence even when no `module-order.yml` exists
+→ normal branch hover shows the vertical directional sweep/cue; collapsed = downward, expanded = upward, using `+` / `−`
 → default tree state is fully expanded
 
 module with dashboard only
@@ -236,13 +238,10 @@ module with dashboard only
 → hover shows the left-to-right sweep with a large `›››` cue
 
 module with both children and dashboard
-→ `+` / `−` is the click-action boundary
-→ click from the boundary toward the left = expand/collapse
-→ click from the boundary toward the right = navigate to `/learning/{routeId}`
-→ hovering anywhere on the row starts both directional animations at the same time
-→ the vertical up/down wave is clipped to the left interaction zone
-→ the horizontal left-to-right wave is clipped to the right interaction zone
-→ neither wave may spill across the `+` / `−` boundary
+→ do not use a split-action hybrid row
+→ render the original node as a structural expand/collapse parent
+→ insert a virtual first child with the same label; that child opens a one-item Module Picker for the original module dashboard
+→ this is presentation-only: do not create a fake catalog node and do not increment module counts
 
 interaction styling
 → directional color/wave cues are hidden until hover/focus
@@ -2169,8 +2168,8 @@ Preserve these unless the user explicitly changes the architecture:
 32. Module runtime capabilities remain optional from the Portal perspective: learning/documentation must not require a learning module to have its own Spring Boot Application.
 33. Portal hierarchy/routing must come from generated `module-catalog.json`, not from a hard-coded frontend tree or by parsing `module-structure.txt`.
 34. Portal sidebar `Real modules / Module thật` is a content-availability filter, not the repository's physical real-module identity rule: a MODULE qualifies when Knowledge OR Quiz OR Interview OR API Docs count is non-zero; only modules with all four counts equal to zero are removed, while required GROUP ancestors are preserved.
-35. Sidebar module search distinguishes self-match from descendant-match: self-match keeps the full subtree; descendant-match keeps only the ancestor path, and filtered trees remain collapsible.
-36. Sidebar interaction depends on node capability: child-only rows use the whole row for expand/collapse; dashboard-only modules use the whole row for navigation; hybrid module+children rows split click actions at the `+`/`−` boundary while whole-row hover activates both clipped directional cues. There is no per-module circular `>` navigation button. Tree state starts expanded and still supports global expand/collapse controls.
+35. Sidebar module search distinguishes self-match from descendant-match: self-match keeps the full subtree; descendant-match keeps only the ancestor path. Non-terminal filtered branches remain collapsible; terminal module groups remain picker-based.
+36. Sidebar interaction depends on node capability: non-terminal child-only rows use the whole row for expand/collapse; a terminal GROUP whose direct children are all leaf MODULE nodes uses one hover/click Module Picker instead of inline module rows; mixed GROUP/MODULE parents wrap direct leaf MODULE siblings as presentation-only one-item pickers; MODULE nodes with children are rendered as structural parents with a virtual self-module picker child rather than split-action hybrid rows; dashboard-only modules that are not wrapped still navigate as a whole. Only one picker may be open at once, and its modules are numbered 1..N from their catalog order regardless of whether that order came from `module-order.yml` or alphabetical fallback. Virtual wrappers never change generated catalog identity/count. There is no per-module circular `>` navigation button. Tree state starts expanded and still supports global expand/collapse controls for normal branches.
 37. Portal Menu and API Docs start collapsed by default, but tab switching must preserve the most recent in-memory expand/collapse state for the current module/language instead of remounting/resetting those panels.
 38. Knowledge supports multiple simultaneously expanded sections; opening one section must not implicitly close another. Loaded Markdown remains cached while the panel stays mounted.
 39. Portal API Docs are documentation-only in the current architecture: they render static Swagger metadata and guided `execution` content, not live execute/debug controls. Running/debugging requires downloading/running the module locally or using the module's own runtime tooling.
@@ -2290,7 +2289,7 @@ Project Portal
 → tabs are Overview → Menu → Knowledge → API Docs → Quiz → Interview → Local Run; frontend always calls relative `/api/local-run/*`; local resolves to Spring Boot, production resolves to Pages Functions, and both adapters call GitHub Actions + the rolling `local-run` GitHub Release
 → Local Run freshness uses module-scoped Git tree SHA projected as `sourceFingerprint`; release assets keep stable module filenames and store that fingerprint in the asset label
 → sidebar supports module search plus Full tree/content-bearing `Real modules` pruning without flattening hierarchy; qualifying modules are identified by content-count badges rather than a permanent special background
-→ tree defaults expanded and has `+`/`−` branch controls plus global expand/collapse; dashboard-only rows navigate as a whole, child-only rows toggle as a whole, and hybrid rows split click behavior at `+`/`−` while whole-row hover shows both clipped directional sweep cues
+→ tree defaults expanded and has `+`/`−` branch controls plus global expand/collapse; terminal groups containing only leaf modules use a single Module Picker popup with 1..N sequencing; mixed parents wrap direct leaf modules as one-item pickers; module+children nodes become structural parents with a virtual self-module picker child; ordinary dashboard-only rows still navigate as a whole
 → the whole sidebar can collapse/reopen from vertically centered edge controls; main content expands when the sidebar is hidden
 → Light/Dark theme follows OS initially and persists explicit user choice
 → generated learning data remains static/projection-first; the only current Portal server API dependency is the narrowly scoped Local Run `build/status/artifact` contract
