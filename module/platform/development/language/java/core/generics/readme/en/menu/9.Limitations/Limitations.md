@@ -103,7 +103,7 @@ Object value = new ArrayList<String>();
 // value instanceof List<String> // compile error
 ```
 
-But since Java 16, some parameterized `instanceof` checks are legal when the static type permits a checked cast, such as `List<Integer> → ArrayList<Integer>`. Type Erasure explains this nuance; the real restriction is not “all parameterized instanceof checks are forbidden.”
+But since Java 16, some parameterized `instanceof` checks are legal when the static type permits a checked cast, such as `List<Integer> → ArrayList<Integer>`. Type Erasure explains this distinction; the real restriction is not “all parameterized instanceof checks are forbidden.”
 
 ## <a id="static-type-parameter-limit">Static Context and Class Type Parameters</a>
 

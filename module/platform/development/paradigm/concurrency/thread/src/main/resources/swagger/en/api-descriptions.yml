@@ -1958,7 +1958,7 @@ SynchronizationController:
     reviewed: false
   readWriteLockPolicy():
     summary: Observe ReentrantReadWriteLock policy
-    description: Inspect default/fair read-write lock behavior and the nuance of untimed
+    description: Inspect default/fair read-write lock behavior and the special behavior of untimed
       tryLock operations. The experiment reinforces that fairness must be interpreted
       according to each API's exact contract.
     enableVideoYoutube: false

@@ -220,7 +220,7 @@ park()
 
 So the actual pattern is still a loop around the condition/cancellation state, not a call `park()` once and then default that the cause of the return is definitely `unpark()`.
 
-Another nuance: permit can be granted **after the Thread has started but before the `park()` corresponding**. Don't expand that sentence to guarantee that call `unpark(thread)` on a Thread **Not started yet** will save the permit for future runs.
+Another important detail: permit can be granted **after the Thread has started but before the `park()` corresponding**. Don't expand that sentence to guarantee that call `unpark(thread)` on a Thread **Not started yet** will save the permit for future runs.
 
 When building lower primitives/frameworks, overload `park(blocker)` useful for diagnostics. JVM can expose blocker objects via `LockSupport.getBlocker(thread)`, which helps thread dump/debugging indicate which abstraction Thread is parking instead of just seeing a vague park point.
 

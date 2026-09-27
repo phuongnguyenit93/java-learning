@@ -110,7 +110,7 @@ int cmp = a.compareTo(b);
 boolean same = a.equals(b);
 ```
 
-Với BigInteger, equality không có scale nuance như BigDecimal.
+Với BigInteger, equality không có khác biệt về scale như BigDecimal.
 
 ### Conversion về primitive là một boundary quan trọng
 

@@ -70,7 +70,7 @@ SecureRandom secureRandom = new SecureRandom();
 secureRandom.setSeed(System.currentTimeMillis()); // đừng dùng timestamp như nguồn entropy chính
 ```
 
-Nuance quan trọng: `setSeed` **supplement** seed/state đã có, nên repeated calls không tự làm giảm randomness của một instance đã được seed tốt. Nhưng với PRNG `SecureRandom` mới tạo, nếu gọi `setSeed` **trước lần `nextBytes`/`reseed` đầu tiên**, implementation sẽ không thực hiện automatic self-seeding; lúc đó caller phải bảo đảm seed cung cấp đủ entropy.
+Điểm quan trọng: `setSeed` **supplement** seed/state đã có, nên repeated calls không tự làm giảm randomness của một instance đã được seed tốt. Nhưng với PRNG `SecureRandom` mới tạo, nếu gọi `setSeed` **trước lần `nextBytes`/`reseed` đầu tiên**, implementation sẽ không thực hiện automatic self-seeding; lúc đó caller phải bảo đảm seed cung cấp đủ entropy.
 
 Vì vậy timestamp hoặc output từ ordinary `Random` không nên được dùng như nguồn entropy chính để khởi tạo security-sensitive generator.
 

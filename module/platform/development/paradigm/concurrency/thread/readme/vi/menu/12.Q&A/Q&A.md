@@ -468,7 +468,7 @@ Async nói về completion/caller relationship; non-blocking nói về cách ope
 - race;
 - error recovery.
 
-Hai nuance cần nhớ:
+Hai điểm cần nhớ:
 
 ```text
 Future do ExecutorService.submit(...) trả về

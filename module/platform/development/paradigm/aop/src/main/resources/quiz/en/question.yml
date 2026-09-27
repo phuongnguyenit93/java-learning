@@ -638,7 +638,7 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: spring-vs-boot-proxy-selection
-    question: "Which nuance correctly describes JDK-versus-class-based proxy selection in core Spring Framework versus Spring Boot?"
+    question: "Which distinction correctly describes JDK-versus-class-based proxy selection in core Spring Framework versus Spring Boot?"
     answers:
       - {id: A, answer: "Core Spring AOP commonly uses a JDK dynamic proxy when suitable interfaces are present unless class proxying is forced; Spring Boot documents `spring.aop.proxy-target-class=true` by default, so Boot commonly prefers class-based/CGLIB proxies.", explanation: "Correct. The core proxy-selection rule and Boot's auto-configuration default are related but distinct facts."}
       - {id: B, answer: "Core Spring Framework and Spring Boot always require a JDK dynamic proxy whenever the target implements any interface.", explanation: "Incorrect. Class-based proxying can be forced, and Boot documents `proxy-target-class=true` as its default."}

@@ -4,7 +4,7 @@ Sau `List`, câu hỏi thay đổi từ “phần tử nằm ở vị trí nào?
 
 ## <a id="set-semantics">Ngữ nghĩa của Set</a>
 
-Contract chung của `Set<E>` là **không chứa hai phần tử bằng nhau theo equality contract của `Set`**. Với các cách triển khai thông thường như `HashSet`, `equals` quyết định equality còn `hashCode` giúp tìm vùng ứng viên hiệu quả. Nuance riêng của sorted set như `TreeSet` sẽ được giải thích ở đúng section của nó sau khi learner đã nắm semantics cơ bản của `Set`.
+Contract chung của `Set<E>` là **không chứa hai phần tử bằng nhau theo equality contract của `Set`**. Với các cách triển khai thông thường như `HashSet`, `equals` quyết định equality còn `hashCode` giúp tìm vùng ứng viên hiệu quả. Đặc điểm riêng của sorted set như `TreeSet` sẽ được giải thích ở đúng section của nó sau khi learner đã nắm semantics cơ bản của `Set`.
 
 Ví dụ, nếu chỉ cần biết những user nào đã có đơn hàng:
 

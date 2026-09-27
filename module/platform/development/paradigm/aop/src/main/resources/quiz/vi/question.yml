@@ -1006,7 +1006,7 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: spring-vs-boot-proxy-selection
-    question: "Nuance nào mô tả đúng việc chọn JDK proxy hay class-based proxy giữa Spring Framework core và Spring Boot?"
+    question: "Điểm khác biệt nào mô tả đúng việc chọn JDK proxy hay class-based proxy giữa Spring Framework core và Spring Boot?"
     answers:
       - id: A
         answer: "Spring Framework thường dùng JDK dynamic proxy khi target có interface phù hợp trừ khi class proxy được ép; Spring Boot document `spring.aop.proxy-target-class=true` mặc định nên thường ưu tiên class-based/CGLIB proxy."

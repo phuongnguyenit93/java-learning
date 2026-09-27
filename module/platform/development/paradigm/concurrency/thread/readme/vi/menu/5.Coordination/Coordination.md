@@ -220,7 +220,7 @@ park()
 
 Vì vậy pattern thực tế vẫn là một loop quanh condition/cancellation state, không phải gọi `park()` một lần rồi mặc định rằng nguyên nhân return chắc chắn là `unpark()`.
 
-Một nuance khác: permit có thể được cấp **sau khi Thread đã start nhưng trước lần `park()` tương ứng**. Không nên mở rộng câu đó thành guarantee rằng gọi `unpark(thread)` trên một Thread **chưa start** sẽ lưu permit cho lần chạy tương lai.
+Một điểm cần lưu ý khác: permit có thể được cấp **sau khi Thread đã start nhưng trước lần `park()` tương ứng**. Không nên mở rộng câu đó thành guarantee rằng gọi `unpark(thread)` trên một Thread **chưa start** sẽ lưu permit cho lần chạy tương lai.
 
 Khi xây primitive/framework thấp hơn, overload `park(blocker)` hữu ích cho diagnostics. JVM có thể expose blocker object qua `LockSupport.getBlocker(thread)`, giúp thread dump/debugging cho biết Thread đang park thay mặt cho abstraction nào thay vì chỉ thấy một điểm park mơ hồ.
 

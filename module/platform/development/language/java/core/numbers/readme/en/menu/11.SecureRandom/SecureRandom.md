@@ -68,7 +68,7 @@ SecureRandom secureRandom = new SecureRandom();
 secureRandom.setSeed(System.currentTimeMillis()); // do not rely on a timestamp as primary entropy
 ```
 
-An important nuance is that `setSeed` **supplements** existing seed/state, so repeated calls do not by themselves reduce the randomness of an instance that was already seeded well. However, for a newly created PRNG `SecureRandom`, calling `setSeed` **before the first `nextBytes`/`reseed` call** prevents automatic self-seeding; the caller must then ensure that the supplied seed has enough entropy.
+An important detail is that `setSeed` **supplements** existing seed/state, so repeated calls do not by themselves reduce the randomness of an instance that was already seeded well. However, for a newly created PRNG `SecureRandom`, calling `setSeed` **before the first `nextBytes`/`reseed` call** prevents automatic self-seeding; the caller must then ensure that the supplied seed has enough entropy.
 
 Therefore a timestamp or output from ordinary `Random` should not be treated as the primary entropy source for a security-sensitive generator.
 

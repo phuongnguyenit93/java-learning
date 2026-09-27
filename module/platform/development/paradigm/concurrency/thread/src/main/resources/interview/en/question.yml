@@ -536,7 +536,7 @@ questions:
       methodSignature: ""
 
   - question: >-
-      How does CompletableFuture differ from Future, and what are the important allOf()/anyOf() nuances?
+      How does CompletableFuture differ from Future, and what are the important allOf()/anyOf() details?
     answer: >-
       Future is mainly a handle for completion, cancellation and blocking get(). CompletableFuture adds pipelines and composition such as thenApply, thenCompose, thenCombine and error handling. allOf() waits for all inputs and is not a fail-fast barrier; anyOf() selects the first completion, which may be success or failure. Neither automatically cancels sibling futures. Both get() and join() may block; a major difference is checked exceptions versus CompletionException or CancellationException.
     aiGenerated: true

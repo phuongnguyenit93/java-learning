@@ -56,7 +56,7 @@ Spring AOP tập trung vào method execution trên Spring-managed object qua pro
 
 Full AspectJ weaving có model rộng hơn và có thể tác động ở những join point không cần đi qua Spring proxy, tùy kiểu weaving/configuration.
 
-Một nuance khác nằm ở around advice argument rewriting. Chapter 6 dùng:
+Một điểm khác nằm ở around advice argument rewriting. Chapter 6 dùng:
 
 ```text
 ProceedingJoinPoint#proceed(Object[])

@@ -442,7 +442,7 @@ questions:
     readmeRelated: {file: "10.Random/Random.md", anchor: "pseudo-random-model"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - id: securerandom-setseed-nuance
+  - id: securerandom-setseed-behavior
     question: "Which statement about `SecureRandom.setSeed(...)` is most accurate?"
     answers:
       - {id: A, answer: "Every timestamp seed automatically makes the generator more secure.", explanation: "Incorrect. A timestamp is not a strong primary entropy source."}

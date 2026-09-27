@@ -85,7 +85,7 @@ This is still a **shallow copy**: element references are copied, but the element
 
 So `copyOf` is a snapshot of **contents**, but callers should not assume that every observable property of the source implementation, such as insertion order, is also snapshotted.
 
-A useful nuance is that `Set.copyOf(collection)` can accept a source containing equal elements and retain one representative; this differs from `Set.of(a, b, ...)`, where duplicate arguments are rejected.
+A useful detail is that `Set.copyOf(collection)` can accept a source containing equal elements and retain one representative; this differs from `Set.of(a, b, ...)`, where duplicate arguments are rejected.
 
 ## <a id="backed-view-fixed-size-snapshot">Backed Views, Fixed-Size Adapters, and Snapshots</a>
 

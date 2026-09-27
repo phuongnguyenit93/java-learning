@@ -536,7 +536,7 @@ questions:
       methodSignature: ""
 
   - question: >-
-      CompletableFuture khác Future ở đâu và allOf()/anyOf() có những nuance gì?
+      CompletableFuture khác Future ở đâu và allOf()/anyOf() có những điểm cần lưu ý nào?
     answer: >-
       Future chủ yếu là handle cho completion, cancellation và blocking get(). CompletableFuture thêm pipeline/composition như thenApply, thenCompose, thenCombine và error handling. allOf() đợi tất cả input complete và không phải fail-fast barrier; anyOf() chọn first completion, có thể là success hoặc failure. Cả hai không mặc định cancel sibling future. get() và join() đều có thể block; khác biệt nổi bật nằm ở exception API checked so với CompletionException/CancellationException.
     aiGenerated: true

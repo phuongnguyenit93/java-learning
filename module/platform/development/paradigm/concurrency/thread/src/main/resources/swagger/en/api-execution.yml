@@ -1312,7 +1312,7 @@ SynchronizationController:
       , defaultLock.isFair(),\n                    \"explicitFairIsFair\", fairLock.isFair(),\n\
       \                    \"untimedReadTryLockHonorsFairness\", false,\n        \
       \            \"untimedWriteTryLockHonorsFairness\", false,\n        ...\n  \
-      \  }</code></pre>\n  </li>\n  <li>The result records the documented nuance that\
+      \  }</code></pre>\n  </li>\n  <li>The result records the documented detail that\
       \ untimed read/write <code>tryLock()</code> calls do not honor fairness ordering,\
       \ while fair mode still carries scheduling and throughput trade-offs rather\
       \ than a strict start-order guarantee.</li>\n</ol>\n<p><b>Conclusion:</b> Observe\

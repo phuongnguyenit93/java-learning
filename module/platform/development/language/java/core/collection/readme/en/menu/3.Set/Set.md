@@ -4,7 +4,7 @@ After `List`, the question changes from “which position is this element in?”
 
 ## <a id="set-semantics">Set Semantics</a>
 
-The general `Set<E>` contract is that it does **not contain two elements that are equal under the set equality contract**. In ordinary hash-based implementations such as `HashSet`, `equals` determines equality while `hashCode` helps locate candidate elements efficiently. The sorted-set nuance of `TreeSet` is deferred to its own section after the learner has the basic Set model.
+The general `Set<E>` contract is that it does **not contain two elements that are equal under the set equality contract**. In ordinary hash-based implementations such as `HashSet`, `equals` determines equality while `hashCode` helps locate candidate elements efficiently. The sorted-set behavior of `TreeSet` is deferred to its own section after the learner has the basic Set model.
 
 For example, if we only need to know which users have orders:
 

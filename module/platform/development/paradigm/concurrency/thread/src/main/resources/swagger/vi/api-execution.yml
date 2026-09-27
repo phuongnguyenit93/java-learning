@@ -1157,7 +1157,7 @@ SynchronizationController:
       \ linkedMap(\n                    \"defaultIsFair\", defaultLock.isFair(),\n\
       \                    \"explicitUnfairIsFair\", explicitUnfairLock.isFair(),\n\
       \                    \"explicitFairIsFair\", fairLock.isFair(),\n        ...\n\
-      \    }</code></pre>\n  </li>\n  <li>Response ghi lại nuance rằng untimed tryLock\
+      \    }</code></pre>\n  </li>\n  <li>Response ghi lại điểm cần lưu ý rằng untimed tryLock\
       \ có thể barge dù lock fair, còn timed tryLock tôn trọng fairness.</li>\n  <li>Fairness\
       \ không bảo đảm thứ tự start tuyệt đối và có trade-off throughput.</li>\n</ol>\n\
       <p><b>Kết luận:</b> Quan sát fair và non-fair policy của ReentrantLock. Response\

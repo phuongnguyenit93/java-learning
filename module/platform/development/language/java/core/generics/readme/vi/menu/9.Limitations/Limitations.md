@@ -103,7 +103,7 @@ Object value = new ArrayList<String>();
 // value instanceof List<String> // compile error
 ```
 
-Nhưng từ Java 16, một số parameterized `instanceof` vẫn hợp lệ khi static type cho phép checked cast, như `List<Integer> → ArrayList<Integer>`. Phần Type Erasure đã giải thích nuance này; restriction thật sự không phải “mọi parameterized instanceof đều bị cấm”.
+Nhưng từ Java 16, một số parameterized `instanceof` vẫn hợp lệ khi static type cho phép checked cast, như `List<Integer> → ArrayList<Integer>`. Phần Type Erasure đã giải thích điểm khác biệt này; restriction thật sự không phải “mọi parameterized instanceof đều bị cấm”.
 
 ## <a id="static-type-parameter-limit">Static Context không dùng Class Type Parameter</a>
 

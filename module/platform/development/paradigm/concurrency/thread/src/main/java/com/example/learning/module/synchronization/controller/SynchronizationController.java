@@ -82,7 +82,7 @@ public class SynchronizationController {
 
     /**
      * README: readme/vi/menu/4.Synchronization/Synchronization.md#read-write-lock-policy
-     * Purpose: Quan sát default/fair policy và nuance untimed tryLock() của ReentrantReadWriteLock.
+     * Purpose: Quan sát default/fair policy và đặc điểm của untimed tryLock() trong ReentrantReadWriteLock.
      */
     @GetMapping("/read-write-lock-policy")
     public Map<String, Object> readWriteLockPolicy() {

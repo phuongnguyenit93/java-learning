@@ -161,7 +161,7 @@ questions:
     readmeRelated: {file: "10.Random/Random.md", anchor: "threadlocal-random-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Giải thích nuance của `SecureRandom.setSeed` và vì sao timestamp không nên là primary entropy source."
+  - question: "Giải thích hành vi của `SecureRandom.setSeed` và vì sao timestamp không nên là primary entropy source."
     answer: "setSeed supplements existing seed/state chứ không có simple reset semantics như Random. Với một PRNG SecureRandom mới, nếu caller chủ động setSeed trước automatic self-seeding đầu tiên thì caller phải bảo đảm input có đủ entropy. Timestamp có không gian dự đoán nhỏ và không đáp ứng property đó; default provider-managed seeding thường là lựa chọn application an toàn hơn, còn getInstanceStrong chỉ dùng khi requirement thực sự cần."
     aiGenerated: true
     reviewed: false

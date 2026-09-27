@@ -468,7 +468,7 @@ Async talks about completion/caller relationship; non-blocking talks about how o
 - race;
 - error recovery.
 
-Two nuances to remember:
+Two details to remember:
 
 ```text
 Future returned by ExecutorService.submit(...)

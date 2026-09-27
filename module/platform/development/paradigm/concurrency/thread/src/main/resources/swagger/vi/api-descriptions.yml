@@ -1938,7 +1938,7 @@ SynchronizationController:
     reviewed: false
   readWriteLockPolicy():
     summary: Quan sát policy của ReentrantReadWriteLock
-    description: Quan sát default/fair mode của read-write lock và nuance của các
+    description: Quan sát default/fair mode của read-write lock và đặc điểm của các
       untimed tryLock operation. Experiment nhắc rằng fairness policy cần đọc theo
       contract cụ thể của từng API.
     enableVideoYoutube: false

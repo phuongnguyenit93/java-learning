@@ -442,7 +442,7 @@ questions:
     readmeRelated: {file: "10.Random/Random.md", anchor: "pseudo-random-model"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - id: securerandom-setseed-nuance
+  - id: securerandom-setseed-behavior
     question: "Statement nào chính xác nhất về `SecureRandom.setSeed(...)`?"
     answers:
       - {id: A, answer: "Mọi call setSeed bằng timestamp đều làm generator secure hơn.", explanation: "Sai. Timestamp không phải strong primary entropy source."}

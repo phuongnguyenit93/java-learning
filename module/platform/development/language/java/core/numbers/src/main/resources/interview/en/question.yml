@@ -161,7 +161,7 @@ questions:
     readmeRelated: {file: "10.Random/Random.md", anchor: "threadlocal-random-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Explain the nuance of `SecureRandom.setSeed` and why a timestamp should not be the primary entropy source."
+  - question: "Explain the behavior of `SecureRandom.setSeed` and why a timestamp should not be the primary entropy source."
     answer: "setSeed supplements existing seed/state rather than behaving like Random's simple deterministic reset. For a newly created PRNG SecureRandom, if the caller seeds it before its first automatic self-seeding operation, the caller must ensure sufficient entropy. A timestamp is predictable and does not satisfy that property; provider-managed default seeding is usually the safer application default, while getInstanceStrong should be chosen only for a concrete requirement."
     aiGenerated: true
     reviewed: false

@@ -51,7 +51,7 @@ core → queue → max → rejection
 
 Spring doesn't change this ground rule.
 
-A spring-specific nuance is the exception type in the abstraction boundary. `ThreadPoolTaskExecutor` Spring Implementation `TaskExecutor` contract; when a task is rejected, the caller should handle it according to the Spring rejection semantics as `TaskRejectedException` instead of writing code that depends on that RAW `RejectedExecutionException` of JDK always passes constantly.
+A Spring-specific detail is the exception type at the abstraction boundary. `ThreadPoolTaskExecutor` Spring Implementation `TaskExecutor` contract; when a task is rejected, the caller should handle it according to the Spring rejection semantics as `TaskRejectedException` instead of writing code that depends on that RAW `RejectedExecutionException` of JDK always passes constantly.
 
 If you need a custom overload policy at the JDK layer, underlying `ThreadPoolExecutor` still use `RejectedExecutionHandler`; but the public contract that the application calls through `TaskExecutor` is a contract of Spring.
 
