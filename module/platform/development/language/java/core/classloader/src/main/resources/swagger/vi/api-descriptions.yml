@@ -1,0 +1,192 @@
+ClassLoaderChainController:
+  inspectChain():
+    summary: Quan sát chuỗi Bootstrap, Platform và Application ClassLoader
+    description: Trả về loader của controller, system loader, platform loader, loader
+      của String và toàn bộ parent chain để quan sát bootstrap được biểu diễn bằng
+      null.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 2.BuiltInClassLoaders/BuiltInClassLoaders.md
+      anchor: loader-chain
+    methodName: inspectChain
+    params: [
+      ]
+    path: com/example/learning/controller/ClassLoaderChainController.java
+    mapping: '@GetMapping("/inspect")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/classloader/chain/inspect
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+ClassLifecycleController:
+  loadWithoutInit():
+    summary: Chứng minh loading không đồng nghĩa initialization
+    description: Tạo loader mới, gọi Class.forName với initialize=false rồi true và
+      dùng dấu vết bên ngoài class để chứng minh static initialization chỉ chạy ở
+      bước thứ hai.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 1.Lifecycle/Lifecycle.md
+      anchor: load-vs-initialize
+    methodName: loadWithoutInit
+    params: [
+      ]
+    path: com/example/learning/controller/ClassLifecycleController.java
+    mapping: '@GetMapping("/load-without-init")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/classloader/lifecycle/load-without-init
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+ResourceLoadingController:
+  resolve():
+    summary: So sánh Class.getResource và ClassLoader.getResource
+    description: Tìm cùng một properties resource bằng package-relative path, absolute
+      Class path và loader-root path để quan sát khác biệt về path semantics.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 7.ResourceLoading/ResourceLoading.md
+      anchor: class-resource
+    methodName: resolve
+    params: [
+      ]
+    path: com/example/learning/controller/ResourceLoadingController.java
+    mapping: '@GetMapping("/resolve")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/classloader/resource/resolve
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+CustomClassLoaderController:
+  sameNameIdentity():
+    summary: Định nghĩa cùng class name bằng hai loader độc lập
+    description: Đọc cùng class bytes rồi load chúng qua hai SingleClassLoader riêng
+      để chứng minh cùng binary name và bytes vẫn tạo hai runtime type khác nhau.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 5.ClassIdentity/ClassIdentity.md
+      anchor: same-name-different-type
+    methodName: sameNameIdentity
+    params: [
+      ]
+    path: com/example/learning/controller/CustomClassLoaderController.java
+    mapping: '@GetMapping("/same-name-identity")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/classloader/custom/same-name-identity
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+ClassIdentityController:
+  crossLoaderCast():
+    summary: Quan sát cross-loader ClassCastException
+    description: Tạo object từ type do loader A định nghĩa rồi thử cast bằng type
+      cùng tên do loader B định nghĩa để expose trực tiếp runtime type incompatibility.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 5.ClassIdentity/ClassIdentity.md
+      anchor: class-cast-loader-failure
+    methodName: crossLoaderCast
+    params: [
+      ]
+    path: com/example/learning/controller/ClassIdentityController.java
+    mapping: '@GetMapping("/cross-loader-cast")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/classloader/identity/cross-loader-cast
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+ContextClassLoaderController:
+  temporaryTccl():
+    summary: Thực hành save, set và restore TCCL
+    description: Gắn tạm một context ClassLoader lên request thread, quan sát giá
+      trị trong scope rồi luôn khôi phục loader cũ bằng finally.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 6.ContextClassLoader/ContextClassLoader.md
+      anchor: tccl-lifecycle
+    methodName: temporaryTccl
+    params: [
+      ]
+    path: com/example/learning/controller/ContextClassLoaderController.java
+    mapping: '@GetMapping("/temporary-tccl")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/classloader/context/temporary-tccl
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+InitializationController:
+  failureState():
+    summary: Quan sát class initialization failure và erroneous state
+    description: Dùng một loader mới để tạo class identity mới, kích hoạt initialization
+      thất bại lần đầu rồi active-use lại cùng identity để quan sát failure không
+      được retry.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 8.Initialization/Initialization.md
+      anchor: initialization-failure
+    methodName: failureState
+    params: [
+      ]
+    path: com/example/learning/controller/InitializationController.java
+    mapping: '@GetMapping("/failure-state")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/classloader/initialization/failure-state
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

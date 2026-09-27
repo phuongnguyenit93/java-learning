@@ -1,1 +1,165 @@
-{}
+1.Lifecycle/Lifecycle.md:
+  loading-linking-initialization:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  linking-phases:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  initialization-trigger:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  load-vs-initialize:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+2.BuiltInClassLoaders/BuiltInClassLoaders.md:
+  bootstrap-loader:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  platform-loader:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  application-loader:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  loader-chain:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+3.ParentDelegation/ParentDelegation.md:
+  parent-delegation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  delegation-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  child-first-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  protected-packages-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+4.CustomClassLoader/CustomClassLoader.md:
+  classloader-contract:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  define-class:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  custom-source:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  custom-loader-safety:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+5.ClassIdentity/ClassIdentity.md:
+  class-identity-rule:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  same-name-different-type:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  class-cast-loader-failure:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  loader-boundary-api:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+6.ContextClassLoader/ContextClassLoader.md:
+  tccl-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  tccl-discovery:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  tccl-lifecycle:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  tccl-leak-risk:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+7.ResourceLoading/ResourceLoading.md:
+  class-resource:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  loader-resource:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  resource-enumeration:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  resource-stream-lifecycle:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  classpath-vs-filesystem:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+8.Initialization/Initialization.md:
+  clinit-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  initialization-once:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  initialization-locking:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  initialization-failure:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  constant-no-init:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+9.UnloadingLeaks/UnloadingLeaks.md:
+  class-unloading:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  loader-retention:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  static-threadlocal-leaks:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  redeploy-leak:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  unloading-observation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false

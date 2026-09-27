@@ -1,0 +1,42 @@
+ClassIdentityController:
+  description: |-
+    <h2>Class Identity across Loader Boundaries</h2>
+    <p>Observe how the same binary name with different defining loaders becomes incompatible runtime types and causes cross-loader cast failure.</p>
+  readmeRelated:
+    file: 5.ClassIdentity/ClassIdentity.md
+ClassLifecycleController:
+  description: |-
+    <h2>Loading Is Not Initialization</h2>
+    <p>Use a fresh loader on every call to prove that a runtime Class can be loaded before static initialization executes.</p>
+  readmeRelated:
+    file: 1.Lifecycle/Lifecycle.md
+ClassLoaderChainController:
+  description: |-
+    <h2>Built-in ClassLoader Chain</h2>
+    <p>Observe Application/System, Platform, and the bootstrap boundary to see different ownership for application and JDK classes.</p>
+  readmeRelated:
+    file: 2.BuiltInClassLoaders/BuiltInClassLoaders.md
+ContextClassLoaderController:
+  description: |-
+    <h2>Thread Context ClassLoader Lifecycle</h2>
+    <p>Practice save, set, and restore for TCCL in a narrow scope so loader context does not leak into unrelated work.</p>
+  readmeRelated:
+    file: 6.ContextClassLoader/ContextClassLoader.md
+CustomClassLoaderController:
+  description: |-
+    <h2>Custom Loaders and Isolated Namespaces</h2>
+    <p>Define identical class bytes through two independent loaders and observe how loader ownership creates distinct runtime types.</p>
+  readmeRelated:
+    file: 4.CustomClassLoader/CustomClassLoader.md
+InitializationController:
+  description: |-
+    <h2>Initialization Failure and Erroneous State</h2>
+    <p>Use a fresh class identity per request to observe the first initialization failure and the later active use that does not retry the initializer.</p>
+  readmeRelated:
+    file: 8.Initialization/Initialization.md
+ResourceLoadingController:
+  description: |-
+    <h2>Resource Lookup through Class and ClassLoader</h2>
+    <p>Compare package-relative, absolute Class-resource, and loader-root paths for the same packaged resource.</p>
+  readmeRelated:
+    file: 7.ResourceLoading/ResourceLoading.md

@@ -1,0 +1,111 @@
+ClassLoaderChainController:
+  inspectChain():
+    execution: |-
+      <p><strong>Concept:</strong> a modern Java process has different loader ownership boundaries; <code>Class#getClassLoader()</code> represents bootstrap loading with <code>null</code>.</p>
+      <ol>
+        <li><strong>Flow:</strong> the endpoint reads the controller loader, system loader, platform loader, and <code>String.class</code> loader, then walks <code>getParent()</code> to the bootstrap boundary.</li>
+        <li><strong>Code evidence:</strong><pre><code>ClassLoader projectLoader = ClassLoaderChainController.class.getClassLoader();
+      for (ClassLoader current = projectLoader; current != null; current = current.getParent()) {
+          chain.add(describe(current));
+      }
+      result.put("stringUsesBootstrapRepresentation", String.class.getClassLoader() == null);</code></pre></li>
+        <li><strong>Observation:</strong> the application class has a loader object, the platform loader appears in the parent chain, and <code>String.class.getClassLoader()</code> is <code>null</code>.</li>
+        <li><strong>Meaning:</strong> <code>null</code> does not mean String was never loaded; it is the API representation of the bootstrap loading mechanism.</li>
+      </ol>
+      <p><strong>Conclusion:</strong> the parent chain describes lookup/ownership boundaries, not Java class inheritance.</p>
+    usage: true
+ClassLifecycleController:
+  loadWithoutInit():
+    execution: |-
+      <p><strong>Concept:</strong> loading creates or returns a runtime <code>Class&lt;?&gt;</code>; initialization is a separate phase that executes static initialization when required.</p>
+      <ol>
+        <li><strong>Flow:</strong> each request creates a fresh <code>SingleClassLoader</code>, loads <code>LifecycleProbe</code> with <code>Class.forName(..., false, loader)</code>, then calls again with <code>true</code>.</li>
+        <li><strong>Code evidence:</strong><pre><code>Class&lt;?&gt; loaded = Class.forName(binaryName, false, loader);
+      boolean initializedAfterLoad = System.getProperty(observationKey) != null;
+      Class&lt;?&gt; initialized = Class.forName(binaryName, true, loader);
+      boolean initializedAfterExplicitInit = System.getProperty(observationKey) != null;</code></pre></li>
+        <li><strong>Observation:</strong> <code>initializedAfterClassForNameFalse=false</code> and then <code>initializedAfterClassForNameTrue=true</code>; both calls return the same Class identity for that loader.</li>
+        <li><strong>Meaning:</strong> locating/defining a class does not imply running its static initializer; the initialize flag makes the boundary observable.</li>
+      </ol>
+      <p><strong>Conclusion:</strong> when debugging startup side effects, distinguish “class loaded” from “class initialized”.</p>
+    usage: true
+ResourceLoadingController:
+  resolve():
+    execution: |-
+      <p><strong>Concept:</strong> <code>Class.getResource</code> has package-relative/absolute semantics, while <code>ClassLoader.getResource</code> uses a name from the loader resource root.</p>
+      <ol>
+        <li><strong>Flow:</strong> the endpoint finds one <code>classloader-demo.properties</code> resource through three valid paths and adds a loader lookup with a leading slash for contrast.</li>
+        <li><strong>Code evidence:</strong><pre><code>URL classRelative = ResourceLoadingController.class.getResource("classloader-demo.properties");
+      URL classAbsolute = ResourceLoadingController.class.getResource(
+              "/com/example/learning/controller/classloader-demo.properties"
+      );
+      URL loaderRoot = loader.getResource("com/example/learning/controller/classloader-demo.properties");</code></pre></li>
+        <li><strong>Observation:</strong> class-relative, class-absolute, and loader-root lookup find the same resource; a leading slash should not be carried from Class lookup into ClassLoader lookup.</li>
+        <li><strong>Meaning:</strong> path semantics come from the lookup API/context, not from how the resource happens to appear in the source tree.</li>
+      </ol>
+      <p><strong>Conclusion:</strong> choose the API/path for the namespace you intend and do not equate a class-path resource with a filesystem path.</p>
+    usage: true
+CustomClassLoaderController:
+  sameNameIdentity():
+    execution: |-
+      <p><strong>Concept:</strong> runtime identity for an ordinary named class depends on its binary name and defining ClassLoader.</p>
+      <ol>
+        <li><strong>Flow:</strong> the endpoint reads one byte array for <code>IdentityProbe</code>, creates two independent loaders with the platform loader as parent, and loads the same binary name through both.</li>
+        <li><strong>Code evidence:</strong><pre><code>Class&lt;?&gt; typeA = loaderA.loadClass(binaryName);
+      Class&lt;?&gt; typeB = loaderB.loadClass(binaryName);
+      result.put("sameClassObject", typeA == typeB);
+      result.put("sameDefiningLoader", typeA.getClassLoader() == typeB.getClassLoader());</code></pre></li>
+        <li><strong>Observation:</strong> <code>sameBinaryName=true</code> but <code>sameClassObject=false</code>, <code>sameDefiningLoader=false</code>, and assignability between the two types is false.</li>
+        <li><strong>Meaning:</strong> equal bytes do not merge namespaces; each defining loader creates its own runtime identity.</li>
+      </ol>
+      <p><strong>Conclusion:</strong> a custom loader changes more than byte location—it creates a type-isolation boundary.</p>
+    usage: true
+ClassIdentityController:
+  crossLoaderCast():
+    execution: |-
+      <p><strong>Concept:</strong> an object of the type defined by loader A is not an instance of the same-named type defined by loader B.</p>
+      <ol>
+        <li><strong>Flow:</strong> two loaders define <code>IdentityProbe</code> independently; the endpoint creates an instance from <code>typeA</code>, checks <code>typeB.isInstance</code>, then calls <code>typeB.cast</code>.</li>
+        <li><strong>Code evidence:</strong><pre><code>Object instanceA = typeA.getDeclaredConstructor().newInstance();
+      try {
+          typeB.cast(instanceA);
+          castSucceeded = true;
+      } catch (ClassCastException exception) {
+          castSucceeded = false;
+      }</code></pre></li>
+        <li><strong>Observation:</strong> the binary names match but <code>typeBSeesInstanceA=false</code>; the cast is caught as <code>ClassCastException</code>.</li>
+        <li><strong>Meaning:</strong> an “X cannot be cast to X” message can be a loader-boundary failure rather than confusion about the textual type name.</li>
+      </ol>
+      <p><strong>Conclusion:</strong> contracts/DTOs/SPIs crossing loader boundaries must be shared through loaders both sides resolve compatibly.</p>
+    usage: true
+ContextClassLoaderController:
+  temporaryTccl():
+    execution: |-
+      <p><strong>Concept:</strong> TCCL is mutable loader context attached to a thread, so temporary changes require exact restoration.</p>
+      <ol>
+        <li><strong>Flow:</strong> the endpoint saves the current TCCL, installs a named temporary loader, reads it inside the scope, and restores the previous loader in <code>finally</code>.</li>
+        <li><strong>Code evidence:</strong><pre><code>ClassLoader previous = thread.getContextClassLoader();
+      try {
+          thread.setContextClassLoader(temporary);
+      } finally {
+          thread.setContextClassLoader(previous);
+      }</code></pre></li>
+        <li><strong>Observation:</strong> <code>before</code> and <code>after</code> describe the previous context, <code>during</code> is the temporary loader, and <code>restored=true</code>.</li>
+        <li><strong>Meaning:</strong> request/executor threads can be reused; failing to restore context can give later work the wrong visibility and can retain a loader longer than intended.</li>
+      </ol>
+      <p><strong>Conclusion:</strong> keep TCCL scope small and use save → set → finally restore.</p>
+    usage: true
+InitializationController:
+  failureState():
+    execution: |-
+      <p><strong>Concept:</strong> initialization failure puts a runtime class identity into an erroneous state; a later active use does not retry its initializer.</p>
+      <ol>
+        <li><strong>Flow:</strong> every request uses a fresh loader, loads <code>FailingInitializationProbe</code> with initialize=false, then actively uses the same identity twice through <code>Class.forName(..., true, loader)</code>.</li>
+        <li><strong>Code evidence:</strong><pre><code>Class&lt;?&gt; loaded = Class.forName(binaryName, false, loader);
+      Throwable firstFailure = initialize(binaryName, loader);
+      Throwable secondFailure = initialize(binaryName, loader);</code></pre></li>
+        <li><strong>Observation:</strong> the first failure is <code>ExceptionInInitializerError</code> with the initializer cause; the later failure for the same identity is <code>NoClassDefFoundError</code>.</li>
+        <li><strong>Meaning:</strong> static initialization is not an ordinary method call that the JVM retries on every use.</li>
+      </ol>
+      <p><strong>Conclusion:</strong> logic that needs recovery/retry should use an explicit lifecycle instead of hiding inside a static initializer.</p>
+    usage: true

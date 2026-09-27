@@ -1,0 +1,482 @@
+# <quiz-schema>
+# Cấu trúc câu hỏi Quiz
+# schema-version: 3
+#
+# questions [kiểu: list; bắt buộc; mặc định: []; duy nhất theo: id]
+#   Danh sách câu hỏi Quiz của module trong language hiện tại.
+#   mỗi phần tử:
+#     id [kiểu: string; bắt buộc; mặc định: ""]
+#       ID ổn định và duy nhất của câu hỏi.
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi hiển thị cho người học.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu câu hỏi được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu câu hỏi đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+#     answers [kiểu: list; bắt buộc; số phần tử: 4; mặc định: []; duy nhất theo: id]
+#       Chính xác bốn đáp án. ID A/B/C/D là identity nội bộ ổn định, không phải vị trí hiển thị sau khi frontend shuffle.
+#       mỗi phần tử:
+#         id [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#           Identity ổn định của đáp án.
+#         answer [kiểu: string; bắt buộc; mặc định: ""]
+#           Nội dung đáp án hiển thị cho người học.
+#         explanation [kiểu: string; bắt buộc; mặc định: ""]
+#           Giải thích hiển thị khi người học chọn đáp án này, bất kể đúng hay sai.
+#     correctAnswerId [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
+# </quiz-schema>
+
+questions:
+  - id: classloader-q01
+    question: "ClassLoader giải quyết bài toán cốt lõi nào trong JVM?"
+    answers:
+      - {id: A, answer: "Biên dịch source Java thành bytecode mỗi khi method được gọi.", explanation: "Sai. javac/compile pipeline tạo class-file; ClassLoader làm việc ở runtime với class definition và resource lookup."}
+      - {id: B, answer: "Tự động chạy static initializer ngay khi file .class xuất hiện trên disk.", explanation: "Sai. File tồn tại chưa đồng nghĩa class đã load hay initialize."}
+      - {id: C, answer: "Tìm và đưa class definition vào runtime namespace để JVM có thể tạo runtime type theo lifecycle loading/linking/initialization.", explanation: "Đúng. Đây là vai trò nền tảng của subsystem class loading."}
+      - {id: D, answer: "Chỉ quản lý memory của object sau khi new.", explanation: "Sai. Object allocation/GC không phải vai trò chính của ClassLoader."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.Lifecycle/Lifecycle.md", anchor: "loading-linking-initialization"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: classloader-q02
+    question: "Phát biểu nào phân biệt đúng class-file bytes, Class<?> và initialization?"
+    answers:
+      - {id: A, answer: "Class-file bytes là input; Class<?> là runtime type metadata/identity; initialization là phase chạy semantics khởi tạo static khi bị trigger.", explanation: "Đúng. Ba khái niệm liên quan nhưng không phải cùng một trạng thái."}
+      - {id: B, answer: "Class<?> chỉ là wrapper của Path trỏ tới file .class.", explanation: "Sai. Class<?> đại diện runtime type, không phải filesystem path."}
+      - {id: C, answer: "Có Class<?> luôn chứng minh static initializer đã chạy.", explanation: "Sai. Một class có thể được load/link mà chưa initialize."}
+      - {id: D, answer: "Nếu bytes nằm trong JAR thì JVM coi class đã initialized.", explanation: "Sai. Packaging không quyết định initialization."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.Lifecycle/Lifecycle.md", anchor: "loading-linking-initialization"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: classloader-q03
+    question: "Thứ tự conceptual đúng của linking là gì?"
+    answers:
+      - {id: A, answer: "resolve → verify → prepare", explanation: "Sai. Verification đứng trước preparation và resolution trong mô hình linking."}
+      - {id: B, answer: "prepare → initialize → verify", explanation: "Sai. Initialization là phase riêng sau linking khi có trigger phù hợp."}
+      - {id: C, answer: "verify → initialize → resolve", explanation: "Sai. Initialization không nằm giữa các bước linking."}
+      - {id: D, answer: "verify → prepare → resolve", explanation: "Đúng. Resolution có thể được thực hiện lazy theo nhu cầu/runtime rules."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.Lifecycle/Lifecycle.md", anchor: "linking-phases"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: classloader-q04
+    question: "Khi class A có symbolic reference tới class/interface B, điểm bắt đầu loading B theo resolution rules là loader nào?"
+    answers:
+      - {id: A, answer: "Luôn bootstrap loader, rồi mới thử loader khác.", explanation: "Sai. Bootstrap không phải global starting point cho mọi dependency."}
+      - {id: B, answer: "Defining ClassLoader của A; loader đó có thể tiếp tục delegate.", explanation: "Đúng. Loader cuối cùng định nghĩa B sẽ là defining loader của B."}
+      - {id: C, answer: "Luôn TCCL của thread hiện tại.", explanation: "Sai. TCCL là discovery context được code chọn dùng, không thay thế rule resolution dependency này."}
+      - {id: D, answer: "Loader của class chứa main(), bất kể A thuộc loader nào.", explanation: "Sai. Không có một global application loader cho mọi symbolic reference."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.Lifecycle/Lifecycle.md", anchor: "linking-phases"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: classloader-q05
+    question: "Điều gì đúng khi gọi Class.forName(name, false, loader)?"
+    answers:
+      - {id: A, answer: "Nó chỉ kiểm tra file tồn tại và không tạo Class<?>.", explanation: "Sai. Nó có thể load/link class và trả Class<?>."}
+      - {id: B, answer: "Nó bắt buộc chạy <clinit> trước khi trả về.", explanation: "Sai. Tham số initialize=false chính là yêu cầu không chủ động initialize."}
+      - {id: C, answer: "Nó có thể load/link class nhưng không chủ động trigger initialization chỉ vì lời gọi này.", explanation: "Đúng. Đây là cách quan sát rõ ranh giới load và initialize."}
+      - {id: D, answer: "Nó luôn dùng bootstrap loader dù truyền loader khác.", explanation: "Sai. Loader argument tham gia lookup theo contract của overload này."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.Lifecycle/Lifecycle.md", anchor: "load-vs-initialize"}
+    apiRelated: {controller: "ClassLifecycleController", methodSignature: "loadWithoutInit()"}
+
+  - id: classloader-q06
+    question: "Khi inspect chain của một application class trên Java 21, cách hiểu nào đúng nhất?"
+    answers:
+      - {id: A, answer: "Bootstrap loader luôn xuất hiện như một object ClassLoader ở cuối chain.", explanation: "Sai. Java API thường biểu diễn bootstrap bằng null."}
+      - {id: B, answer: "Application/System loader thường có Platform loader làm parent; phía trên nữa bootstrap được API biểu diễn bằng null.", explanation: "Đúng. Đây là mental model built-in chain hiện đại."}
+      - {id: C, answer: "Platform loader là child của Application loader.", explanation: "Sai. Hướng parent thông thường là application → platform → bootstrap."}
+      - {id: D, answer: "Mọi class đều có cùng một ClassLoader object.", explanation: "Sai. Class ownership phụ thuộc namespace/runtime source."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.BuiltInClassLoaders/BuiltInClassLoaders.md", anchor: "loader-chain"}
+    apiRelated: {controller: "ClassLoaderChainController", methodSignature: "inspectChain()"}
+
+  - id: classloader-q07
+    question: "String.class.getClassLoader() trả null nên kết luận nào đúng?"
+    answers:
+      - {id: A, answer: "String không có runtime loader ownership.", explanation: "Sai. null là representation của bootstrap-defined class trong API."}
+      - {id: B, answer: "String được application loader định nghĩa nhưng API che object đó.", explanation: "Sai. Core class như String thường thuộc bootstrap loader."}
+      - {id: C, answer: "JVM chưa load String.", explanation: "Sai. Có Class object rồi thì kết luận đó không hợp lý."}
+      - {id: D, answer: "API dùng null để biểu diễn class được bootstrap loader định nghĩa.", explanation: "Đúng. Bootstrap không được expose như ClassLoader object thông thường."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.BuiltInClassLoaders/BuiltInClassLoaders.md", anchor: "bootstrap-loader"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: classloader-q08
+    question: "Điểm khác nhau thực dụng giữa Platform ClassLoader và Application/System ClassLoader là gì?"
+    answers:
+      - {id: A, answer: "Platform loader phục vụ một phần platform modules; Application/System loader thường nạp code từ application class path/module path phù hợp.", explanation: "Đúng. Exact ownership phụ thuộc runtime layout, nhưng vai trò khái quát là như vậy."}
+      - {id: B, answer: "Platform loader chỉ tồn tại trước Java 9.", explanation: "Sai. Java 9+ dùng Platform ClassLoader thay cho khái niệm extension loader cũ."}
+      - {id: C, answer: "Application loader luôn là bootstrap loader.", explanation: "Sai. Chúng là các vai trò khác nhau."}
+      - {id: D, answer: "Platform loader chỉ dùng để load resources, không load class.", explanation: "Sai. Nó là một ClassLoader thực sự cho platform classes phù hợp."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.BuiltInClassLoaders/BuiltInClassLoaders.md", anchor: "platform-loader"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: classloader-q09
+    question: "Thuật toán parent-first mặc định của loadClass gần nhất với flow nào?"
+    answers:
+      - {id: A, answer: "findClass trước, sau đó mới hỏi parent nếu thất bại.", explanation: "Sai. Đó gần child-first hơn, không phải default parent-first."}
+      - {id: B, answer: "Kiểm tra class đã load, delegate parent/bootstrap, rồi mới findClass nếu parent không tìm được.", explanation: "Đúng. Đây là skeleton conceptual của loadClass mặc định."}
+      - {id: C, answer: "Luôn defineClass ngay từ bytes rồi mới kiểm tra duplicate.", explanation: "Sai. Normal protocol tránh blind duplicate definition."}
+      - {id: D, answer: "Chỉ hỏi TCCL và bỏ qua parent chain.", explanation: "Sai. TCCL không phải implementation mặc định của parent delegation."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.ParentDelegation/ParentDelegation.md", anchor: "parent-delegation"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: classloader-q10
+    question: "Lợi ích chính của parent-first delegation đối với shared platform/API types là gì?"
+    answers:
+      - {id: A, answer: "Bảo đảm mọi JAR trên máy chỉ có đúng một bản vật lý.", explanation: "Sai. Delegation không loại bỏ duplicate artifacts trên disk."}
+      - {id: B, answer: "Làm JVM không bao giờ cần verification.", explanation: "Sai. Verification là lifecycle concern khác."}
+      - {id: C, answer: "Tăng khả năng các bên cùng resolve shared type về một parent-owned runtime identity nhất quán.", explanation: "Đúng. Đây là lý do rất quan trọng trong plugin/framework boundaries."}
+      - {id: D, answer: "Bắt buộc mọi implementation phải nằm trong bootstrap loader.", explanation: "Sai. Child vẫn có thể định nghĩa implementation riêng."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.ParentDelegation/ParentDelegation.md", anchor: "delegation-purpose"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: classloader-q11
+    question: "Rủi ro lớn khi áp dụng child-first quá rộng là gì?"
+    answers:
+      - {id: A, answer: "Child-first tự động disable garbage collection.", explanation: "Sai. GC không bị tắt bởi lookup order."}
+      - {id: B, answer: "Nó có thể tạo private copy của shared API/library types, dẫn tới type incompatibility hoặc behavior khác mong đợi.", explanation: "Đúng. Isolation cần boundary có chủ đích thay vì child-first cho mọi package."}
+      - {id: C, answer: "JVM không còn cho phép resource lookup.", explanation: "Sai. Resource policy là concern riêng và có thể custom."}
+      - {id: D, answer: "Mọi static initializer sẽ chạy hai lần dù class identity chỉ có một.", explanation: "Sai. Initialization gắn với runtime class identity."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.ParentDelegation/ParentDelegation.md", anchor: "child-first-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: classloader-q12
+    question: "Custom ClassLoader cố define class trong package java.example thì expectation đúng là gì?"
+    answers:
+      - {id: A, answer: "Được phép nếu bytes hợp lệ.", explanation: "Sai. Namespace java.* có protected boundary."}
+      - {id: B, answer: "Được phép nếu dùng child-first.", explanation: "Sai. Lookup policy không bypass protected package rule."}
+      - {id: C, answer: "Chỉ cần đổi TCCL là được phép.", explanation: "Sai. TCCL không thay đổi definition constraints."}
+      - {id: D, answer: "Normal custom loader không được chiếm namespace java.* và definition có thể bị từ chối bằng SecurityException.", explanation: "Đúng. Đây là runtime safety boundary độc lập với delegation preference."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.ParentDelegation/ParentDelegation.md", anchor: "protected-packages-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: classloader-q13
+    question: "Khi chỉ muốn custom cách lấy bytes nhưng vẫn dùng parent-first protocol mặc định, nên override điểm nào trước tiên?"
+    answers:
+      - {id: A, answer: "findClass", explanation: "Đúng. loadClass mặc định quản lý delegation/locking và gọi findClass khi parent không tìm thấy."}
+      - {id: B, answer: "getParent", explanation: "Sai. getParent không phải extension point cho byte lookup."}
+      - {id: C, answer: "finalize", explanation: "Sai. Không liên quan class loading contract."}
+      - {id: D, answer: "Thread.run", explanation: "Sai. TCCL/thread lifecycle là concern khác."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.CustomClassLoader/CustomClassLoader.md", anchor: "classloader-contract"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: classloader-q14
+    question: "defineClass(name, bytes, ...) thực hiện chuyển đổi conceptual nào?"
+    answers:
+      - {id: A, answer: "Từ Class<?> thành source Java.", explanation: "Sai. defineClass đi theo chiều bytes → runtime class definition."}
+      - {id: B, answer: "Từ valid class-file representation thành Class<?> thuộc namespace của defining loader đó.", explanation: "Đúng. Definition còn chịu verification và các constraint runtime."}
+      - {id: C, answer: "Từ resource URL thành filesystem File.", explanation: "Sai. Đó không phải nhiệm vụ của defineClass."}
+      - {id: D, answer: "Từ instance object thành class metadata mới.", explanation: "Sai. Object instance không phải input của defineClass."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.CustomClassLoader/CustomClassLoader.md", anchor: "define-class"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: classloader-q15
+    question: "Mapping lỗi nào đúng nhất khi chẩn đoán class-loading/linking failure?"
+    answers:
+      - {id: A, answer: "ClassNotFoundException luôn có nghĩa bytecode verifier từ chối class.", explanation: "Sai. ClassNotFoundException thường xuất hiện khi dynamic-loading API được yêu cầu tìm một binary name nhưng không tìm thấy."}
+      - {id: B, answer: "NoClassDefFoundError chỉ có thể xảy ra khi file .class chưa từng tồn tại trên disk.", explanation: "Sai. Nó còn có thể xuất hiện khi runtime không thể hoàn tất/use definition, kể cả sau initialization failure trước đó."}
+      - {id: C, answer: "VerifyError gắn với verification; NoSuchMethodError/IncompatibleClassChangeError thuộc family LinkageError; ClassNotFoundException thường gắn với explicit lookup không tìm thấy.", explanation: "Đúng. Mapping lỗi về lifecycle/runtime question giúp chẩn đoán chính xác hơn thay vì gom mọi thứ thành 'class không load được'."}
+      - {id: D, answer: "UnsupportedClassVersionError là initialization error do static block ném exception.", explanation: "Sai. Nó là class-file/linkage failure khi JVM không hỗ trợ class-file version đó."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.Lifecycle/Lifecycle.md", anchor: "linking-phases"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: classloader-q16
+    question: "Hai thread đồng thời yêu cầu cùng binary name trên một custom loader. Rule nào quan trọng nhất?"
+    answers:
+      - {id: A, answer: "Mỗi thread nên define một bản để tăng throughput.", explanation: "Sai. Cùng loader không thể define thành công cùng binary name hai lần."}
+      - {id: B, answer: "Chỉ cần synchronized static initializer, còn definition race không quan trọng.", explanation: "Sai. Class definition itself cũng có concurrency contract."}
+      - {id: C, answer: "Luôn override loadClass nhưng bỏ locking để tránh deadlock.", explanation: "Sai. Làm vậy dễ tạo duplicate-definition race."}
+      - {id: D, answer: "Giữ normal loadClass locking/protocol hoặc nếu custom thì phải bảo toàn synchronization tương đương để tránh duplicate definition.", explanation: "Đúng. Đây là lý do nên ưu tiên override findClass khi đủ dùng."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.CustomClassLoader/CustomClassLoader.md", anchor: "custom-loader-safety"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: classloader-q17
+    question: "Hai custom loaders độc lập define cùng binary name từ cùng một byte[] hợp lệ. Kết quả runtime nào đúng?"
+    answers:
+      - {id: A, answer: "JVM merge chúng thành cùng Class object vì bytes giống nhau.", explanation: "Sai. Defining-loader identity làm hai runtime type khác nhau."}
+      - {id: B, answer: "Hai Class<?> khác nhau và không tự động assignable cho nhau chỉ vì name/bytes giống nhau.", explanation: "Đúng. Runtime identity của ordinary named class/interface gồm binary name + defining loader."}
+      - {id: C, answer: "Loader thứ hai luôn bị cấm define vì binary name đã tồn tại ở JVM.", explanation: "Sai. Unrelated loaders có namespace riêng."}
+      - {id: D, answer: "Hai type chỉ khác nếu static initializer khác nhau.", explanation: "Sai. Identity không phụ thuộc initializer content."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.ClassIdentity/ClassIdentity.md", anchor: "same-name-different-type"}
+    apiRelated: {controller: "CustomClassLoaderController", methodSignature: "sameNameIdentity()"}
+
+  - id: classloader-q18
+    question: "Phát biểu nào đúng về defining loader và initiating loader?"
+    answers:
+      - {id: A, answer: "Mỗi class chỉ có một initiating loader và có thể có nhiều defining loaders.", explanation: "Sai. Với ordinary named class, defining loader là duy nhất; nhiều loaders có thể được ghi nhận là initiating loaders."}
+      - {id: B, answer: "Initiating loader luôn là TCCL.", explanation: "Sai. TCCL là thread-associated discovery context, không đồng nghĩa initiating loader."}
+      - {id: C, answer: "Một class có thể có nhiều initiating loaders qua delegation nhưng một defining loader; defining loader là phần quan trọng của runtime identity.", explanation: "Đúng. Đây là distinction cần thiết khi debug delegation."}
+      - {id: D, answer: "Hai khái niệm là từ đồng nghĩa hoàn toàn.", explanation: "Sai. Chúng mô tả hai quan hệ khác nhau."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.ClassIdentity/ClassIdentity.md", anchor: "class-identity-rule"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: classloader-q19
+    question: "Vì sao có thể gặp ClassCastException kiểu 'X cannot be cast to X' trong plugin system?"
+    answers:
+      - {id: A, answer: "Hai X có cùng binary name nhưng được định nghĩa bởi different defining loaders nên là different runtime types.", explanation: "Đúng. Message giống tên source nhưng identity runtime khác."}
+      - {id: B, answer: "JVM không hỗ trợ cast giữa hai package giống nhau.", explanation: "Sai. Vấn đề là runtime type identity, không phải chỉ package text."}
+      - {id: C, answer: "Cast luôn trigger static initialization hai lần.", explanation: "Sai. Đây không phải nguyên nhân của ClassCastException loader-boundary."}
+      - {id: D, answer: "TCCL tự động đổi type của object đang tồn tại.", explanation: "Sai. TCCL không đổi defining loader/type identity của object/class đã có."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.ClassIdentity/ClassIdentity.md", anchor: "class-cast-loader-failure"}
+    apiRelated: {controller: "ClassIdentityController", methodSignature: "crossLoaderCast()"}
+
+  - id: classloader-q20
+    question: "Thiết kế nào giảm rủi ro type mismatch khi host và plugin trao đổi qua interface Plugin?"
+    answers:
+      - {id: A, answer: "Mỗi plugin bundle một private copy của Plugin API và ưu tiên child-first cho API đó.", explanation: "Sai. Cách này dễ tạo incompatible copies của shared contract."}
+      - {id: B, answer: "Đặt shared Plugin API ở parent-visible boundary để host và child resolve về cùng Plugin.class.", explanation: "Đúng. Implementation có thể ở child nhưng contract nên được chia sẻ nhất quán."}
+      - {id: C, answer: "Serialize Class object của Plugin sang text rồi cast lại.", explanation: "Sai. Serialization không xóa loader identity."}
+      - {id: D, answer: "Đổi tên interface sau mỗi plugin load.", explanation: "Sai. Đây không giải quyết shared runtime contract."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.ClassIdentity/ClassIdentity.md", anchor: "loader-boundary-api"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: classloader-q21
+    question: "TCCL tồn tại chủ yếu để giải quyết tình huống nào?"
+    answers:
+      - {id: A, answer: "Framework/library ở parent cần một discovery context có thể nhìn thấy provider/resource ở application/child loader.", explanation: "Đúng. Đây là bài toán visibility ngược chiều so với parent delegation thông thường."}
+      - {id: B, answer: "Để thay defining loader của class đã được load.", explanation: "Sai. TCCL không mutate class ownership."}
+      - {id: C, answer: "Để JVM bỏ qua verification cho plugin.", explanation: "Sai. TCCL không can thiệp verifier."}
+      - {id: D, answer: "Để mọi thread dùng bootstrap loader cho an toàn.", explanation: "Sai. TCCL có thể là application/plugin loader tùy context."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.ContextClassLoader/ContextClassLoader.md", anchor: "tccl-purpose"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: classloader-q22
+    question: "Pattern an toàn khi tạm đổi Thread Context ClassLoader là gì?"
+    answers:
+      - {id: A, answer: "Set plugin loader một lần và để nguyên cho pool thread dùng mãi.", explanation: "Sai. Điều này gây wrong discovery context và có thể giữ loader sống."}
+      - {id: B, answer: "Luôn restore về system ClassLoader, bất kể giá trị cũ.", explanation: "Sai. Caller/container có thể đã thiết lập context loader có ý nghĩa riêng."}
+      - {id: C, answer: "Lưu giá trị cũ, set loader tạm thời trong scope nhỏ, rồi restore đúng giá trị cũ trong finally.", explanation: "Đúng. finally bảo đảm restore cả khi discovery ném exception."}
+      - {id: D, answer: "Đổi defining loader của framework class rồi đổi lại.", explanation: "Sai. Defining loader của class đã định nghĩa không thể đổi theo cách đó."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.ContextClassLoader/ContextClassLoader.md", anchor: "tccl-lifecycle"}
+    apiRelated: {controller: "ContextClassLoaderController", methodSignature: "temporaryTccl()"}
+
+  - id: classloader-q23
+    question: "Vì sao TCCL trên một long-lived thread có thể gây ClassLoader leak sau redeploy?"
+    answers:
+      - {id: A, answer: "Vì TCCL làm mọi class thành static.", explanation: "Sai. Leak đến từ reference reachability, không phải static conversion."}
+      - {id: B, answer: "Vì thread sống lâu giữ strong reference tới context ClassLoader, từ đó có thể giữ cả plugin generation reachable.", explanation: "Đúng. New child threads còn thường inherit initial TCCL từ creating thread."}
+      - {id: C, answer: "Vì JVM cấm GC khi có bất kỳ Thread object nào.", explanation: "Sai. Vấn đề là graph tham chiếu cụ thể tới loader/plugin state."}
+      - {id: D, answer: "Vì TCCL luôn là bootstrap loader và bootstrap không unload.", explanation: "Sai. Leak case ở đây thường là TCCL trỏ vào disposable plugin/application loader."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.ContextClassLoader/ContextClassLoader.md", anchor: "tccl-leak-risk"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: classloader-q24
+    question: "Với class com.example.Plugin, Plugin.class.getResource(\"config.yml\") tìm theo semantics nào?"
+    answers:
+      - {id: A, answer: "Luôn từ filesystem working directory.", explanation: "Sai. Đây là class/module resource lookup, không phải Path relative cwd."}
+      - {id: B, answer: "Package-relative, tức gần com/example/Plugin.class.", explanation: "Đúng. Không có leading slash thì Class.getResource dùng package-relative name."}
+      - {id: C, answer: "Luôn từ root của bootstrap loader.", explanation: "Sai. Lookup context là class và runtime loading/module context của nó."}
+      - {id: D, answer: "Không hợp lệ vì Class.getResource bắt buộc leading slash.", explanation: "Sai. Cả relative và absolute-style form đều có semantics rõ ràng."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.ResourceLoading/ResourceLoading.md", anchor: "class-resource"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: classloader-q25
+    question: "So sánh nào đúng giữa Class.getResource và ClassLoader.getResource?"
+    answers:
+      - {id: A, answer: "Cả hai luôn yêu cầu path bắt đầu bằng '/'.", explanation: "Sai. ClassLoader.getResource convention đúng là name không có leading slash."}
+      - {id: B, answer: "Class.getResource có package-relative/leading-slash semantics; ClassLoader.getResource dùng name tính từ loader resource root và thường không có leading slash.", explanation: "Đúng. Đây là khác biệt path model thường gây nhầm."}
+      - {id: C, answer: "ClassLoader.getResource chỉ đọc filesystem File.", explanation: "Sai. Resource có thể nằm trong JAR/runtime image/custom source."}
+      - {id: D, answer: "Resource lookup luôn initialize class chứa resource.", explanation: "Sai. Tìm resource không phải active-use trigger của class."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.ResourceLoading/ResourceLoading.md", anchor: "loader-resource"}
+    apiRelated: {controller: "ResourceLoadingController", methodSignature: "resolve()"}
+
+  - id: classloader-q26
+    question: "Khi SPI metadata có thể xuất hiện ở nhiều JAR cùng tên META-INF/services/..., API nào phù hợp hơn?"
+    answers:
+      - {id: A, answer: "getResource vì luôn chỉ có đúng một provider.", explanation: "Sai. SPI/config fragments thường cần aggregate nhiều resource cùng tên."}
+      - {id: B, answer: "Class.forName vì provider metadata là class.", explanation: "Sai. Descriptor là resource, không phải class definition."}
+      - {id: C, answer: "getResources để enumerate các matching resources theo loader policy.", explanation: "Đúng. Điều này tránh giả định sai rằng chỉ có một resource."}
+      - {id: D, answer: "System.getenv vì classpath metadata được đưa vào environment.", explanation: "Sai. Environment variables không thay thế resource enumeration."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.ResourceLoading/ResourceLoading.md", anchor: "resource-enumeration"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: classloader-q27
+    question: "Tại sao không nên chuyển mọi classpath resource URL thành java.io.File?"
+    answers:
+      - {id: A, answer: "Vì resource có thể nằm trong JAR, runtime image hoặc custom protocol, không có standalone filesystem path tương ứng.", explanation: "Đúng. Stream/URL abstraction phù hợp hơn khi chỉ cần đọc nội dung."}
+      - {id: B, answer: "Vì File chỉ hỗ trợ text còn resource có thể là binary.", explanation: "Sai. File có thể đại diện binary file; vấn đề là location/protocol."}
+      - {id: C, answer: "Vì getResource luôn trả null nếu resource nằm trong JAR.", explanation: "Sai. Resource trong JAR vẫn có thể được resolve bằng URL/stream."}
+      - {id: D, answer: "Vì mọi resource stream tự đóng nên File là dư thừa.", explanation: "Sai. Resource streams cần được đóng đúng lifecycle."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.ResourceLoading/ResourceLoading.md", anchor: "classpath-vs-filesystem"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: classloader-q28
+    question: "<clinit> nên được hiểu như thế nào?"
+    answers:
+      - {id: A, answer: "Là constructor của mọi instance.", explanation: "Sai. Instance constructor là <init>; <clinit> đại diện class/interface initialization logic."}
+      - {id: B, answer: "Là conceptual class initialization method do JVM dùng cho executable static initialization theo source order phù hợp.", explanation: "Đúng. Nó không phải method Java source mà developer gọi trực tiếp."}
+      - {id: C, answer: "Là method chạy mỗi lần đọc static field.", explanation: "Sai. Initialization diễn ra một lần cho một runtime class identity nếu thành công."}
+      - {id: D, answer: "Là bytecode verifier entry point.", explanation: "Sai. Verification thuộc linking, không phải <clinit>."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.Initialization/Initialization.md", anchor: "clinit-model"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: classloader-q29
+    question: "Hai thread cùng lúc chạm active-use đầu tiên của cùng một class chưa initialized. JVM phải bảo đảm điều gì?"
+    answers:
+      - {id: A, answer: "Cho cả hai chạy initializer song song rồi chọn kết quả đầu tiên.", explanation: "Sai. Initialization protocol được synchronized cho runtime class identity đó."}
+      - {id: B, answer: "Mỗi thread có một bản static state riêng.", explanation: "Sai. Static state thuộc runtime class identity, không phải thread-local mặc định."}
+      - {id: C, answer: "Initialization của cùng runtime class identity không chạy hai lần đồng thời; các thread phối hợp qua JVM initialization protocol.", explanation: "Đúng. Điều này vẫn có thể tạo deadlock nếu initializer phụ thuộc vòng giữa classes/threads."}
+      - {id: D, answer: "JVM bắt buộc serialize toàn bộ class initialization trên toàn process bằng một global lock.", explanation: "Sai. Contract không phải một global lock cho mọi class."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.Initialization/Initialization.md", anchor: "initialization-locking"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: classloader-q30
+    question: "Nếu static initialization của một class thất bại bằng exception thường, behavior nào đúng nhất?"
+    answers:
+      - {id: A, answer: "JVM retry initializer ở mọi active use tiếp theo.", explanation: "Sai. Class identity đó đi vào erroneous state; không có automatic retry initializer."}
+      - {id: B, answer: "Lần đầu có thể thấy ExceptionInInitializerError; lần active use sau thường thấy NoClassDefFoundError liên quan class không initialize được.", explanation: "Đúng. Exact cause chain phụ thuộc failure nhưng state không tự hồi phục."}
+      - {id: C, answer: "Class tự unload ngay lập tức dù defining loader vẫn reachable.", explanation: "Sai. Unloading phụ thuộc loader reachability/GC, không phải immediate response to init failure."}
+      - {id: D, answer: "JVM xóa static fields rồi tiếp tục dùng class bình thường.", explanation: "Sai. Erroneous initialization state làm active use tiếp theo thất bại."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.Initialization/Initialization.md", anchor: "initialization-failure"}
+    apiRelated: {controller: "InitializationController", methodSignature: "failureState()"}
+
+  - id: classloader-q31
+    question: "Trường hợp nào KHÔNG tự nó buộc class được initialize?"
+    answers:
+      - {id: A, answer: "Gọi static method khai báo bởi class chưa initialized.", explanation: "Sai. Static method invocation là active-use trigger điển hình."}
+      - {id: B, answer: "new instance của class chưa initialized.", explanation: "Sai. Constructor use buộc initialization trước khi instance creation hoàn tất."}
+      - {id: C, answer: "Đọc non-constant static field khai báo bởi class.", explanation: "Sai. Đây là trigger initialization."}
+      - {id: D, answer: "Lấy class literal SomeType.class; hoặc đọc compile-time constant đã inline.", explanation: "Đúng. Hai case này có thể không initialize class."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.Initialization/Initialization.md", anchor: "constant-no-init"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: classloader-q32
+    question: "Điều kiện cốt lõi để các class do một user-created ClassLoader định nghĩa có thể trở nên unloadable là gì?"
+    answers:
+      - {id: A, answer: "Mỗi instance của từng class phải gọi close().", explanation: "Sai. Class instances không có unload contract kiểu close."}
+      - {id: B, answer: "Defining loader và graph liên quan phải trở nên unreachable để GC có thể reclaim loader; unloading sau đó vẫn phụ thuộc JVM/GC.", explanation: "Đúng. Class unloading không phải thao tác deterministic per class."}
+      - {id: C, answer: "Chỉ cần xóa file JAR khỏi disk.", explanation: "Sai. Runtime reachability không biến mất chỉ vì artifact bị xóa."}
+      - {id: D, answer: "Chỉ cần gọi URLClassLoader.close().", explanation: "Sai. close giải phóng resource handles nhưng không tự unload already-defined classes."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.UnloadingLeaks/UnloadingLeaks.md", anchor: "class-unloading"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: classloader-q33
+    question: "Reference nào có thể giữ old plugin ClassLoader sống sau redeploy?"
+    answers:
+      - {id: A, answer: "Parent-owned static cache giữ Class/object từ plugin, ThreadLocal trên long-lived thread, listener chưa unregister hoặc TCCL còn trỏ vào plugin loader.", explanation: "Đúng. Đây đều là paths từ longer-lived roots sang disposable loader graph."}
+      - {id: B, answer: "Chỉ references hoàn toàn bên trong plugin graph dù graph đó không còn reachable từ bên ngoài.", explanation: "Sai. Internal cycles tự thân không ngăn GC nếu cả graph đã unreachable."}
+      - {id: C, answer: "Một local variable đã ra khỏi scope và không còn reachable.", explanation: "Sai. Không còn root path thì local cũ không phải retention source."}
+      - {id: D, answer: "Tên class dạng String trong log file trên disk.", explanation: "Sai. Text trên disk không phải Java object reference tới ClassLoader."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.UnloadingLeaks/UnloadingLeaks.md", anchor: "static-threadlocal-leaks"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: classloader-q34
+    question: "Phát biểu nào đúng về quan sát/unload một plugin generation?"
+    answers:
+      - {id: A, answer: "System.gc() bảo đảm class unloading hoàn tất trước khi trả về.", explanation: "Sai. System.gc() chỉ là hint; GC/unloading không deterministic theo API này."}
+      - {id: B, answer: "URLClassLoader.close() vừa close resource vừa bắt JVM unload tất cả class của loader ngay.", explanation: "Sai. close không phải unload operation."}
+      - {id: C, answer: "Sau khi dọn thread/listener/cache/TCCL và bỏ strong references, loader có thể trở nên eligible; WeakReference/logging có thể hỗ trợ quan sát nhưng không tạo guarantee về thời điểm unload.", explanation: "Đúng. Đây là cách phân biệt lifecycle cleanup với GC observation."}
+      - {id: D, answer: "JVM luôn unload từng class riêng lẻ ngay khi instance cuối cùng biến mất dù loader còn sống.", explanation: "Sai. Với custom-loader namespace, loader reachability là boundary quan trọng hơn object count của từng class."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.UnloadingLeaks/UnloadingLeaks.md", anchor: "unloading-observation"}
+    apiRelated: {controller: "", methodSignature: ""}

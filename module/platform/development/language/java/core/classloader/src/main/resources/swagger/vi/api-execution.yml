@@ -1,0 +1,111 @@
+ClassLoaderChainController:
+  inspectChain():
+    execution: |-
+      <p><strong>Khái niệm:</strong> một Java process hiện đại có các loader boundary khác nhau; bootstrap được <code>Class#getClassLoader()</code> biểu diễn bằng <code>null</code>.</p>
+      <ol>
+        <li><strong>Flow:</strong> endpoint lấy loader của controller, system loader, platform loader và <code>String.class</code>, sau đó đi ngược <code>getParent()</code> cho tới bootstrap boundary.</li>
+        <li><strong>Code evidence:</strong><pre><code>ClassLoader projectLoader = ClassLoaderChainController.class.getClassLoader();
+      for (ClassLoader current = projectLoader; current != null; current = current.getParent()) {
+          chain.add(describe(current));
+      }
+      result.put("stringUsesBootstrapRepresentation", String.class.getClassLoader() == null);</code></pre></li>
+        <li><strong>Observation:</strong> application class có loader object, platform loader nằm ở parent chain, còn <code>String.class.getClassLoader()</code> là <code>null</code>.</li>
+        <li><strong>Ý nghĩa:</strong> <code>null</code> không có nghĩa String chưa được load; đó là API representation cho bootstrap loading mechanism.</li>
+      </ol>
+      <p><strong>Kết luận:</strong> parent chain mô tả lookup/ownership boundary, không phải inheritance hierarchy của class Java.</p>
+    usage: true
+ClassLifecycleController:
+  loadWithoutInit():
+    execution: |-
+      <p><strong>Khái niệm:</strong> loading tạo hoặc trả runtime <code>Class&lt;?&gt;</code>; initialization là phase riêng chạy static initialization khi semantics yêu cầu.</p>
+      <ol>
+        <li><strong>Flow:</strong> mỗi request tạo một <code>SingleClassLoader</code> mới, load <code>LifecycleProbe</code> bằng <code>Class.forName(..., false, loader)</code>, rồi gọi lại với <code>true</code>.</li>
+        <li><strong>Code evidence:</strong><pre><code>Class&lt;?&gt; loaded = Class.forName(binaryName, false, loader);
+      boolean initializedAfterLoad = System.getProperty(observationKey) != null;
+      Class&lt;?&gt; initialized = Class.forName(binaryName, true, loader);
+      boolean initializedAfterExplicitInit = System.getProperty(observationKey) != null;</code></pre></li>
+        <li><strong>Observation:</strong> <code>initializedAfterClassForNameFalse=false</code>, sau đó <code>initializedAfterClassForNameTrue=true</code>; cả hai lời gọi trả cùng <code>Class</code> identity của loader đó.</li>
+        <li><strong>Ý nghĩa:</strong> tìm/define class không tự đồng nghĩa với chạy static block; tham số initialize của <code>Class.forName</code> làm ranh giới này quan sát được.</li>
+      </ol>
+      <p><strong>Kết luận:</strong> khi debug side effect lúc startup, luôn phân biệt “class đã load” với “class đã initialize”.</p>
+    usage: true
+ResourceLoadingController:
+  resolve():
+    execution: |-
+      <p><strong>Khái niệm:</strong> <code>Class.getResource</code> có package-relative/absolute semantics, còn <code>ClassLoader.getResource</code> dùng name tính từ loader resource root.</p>
+      <ol>
+        <li><strong>Flow:</strong> endpoint tìm cùng <code>classloader-demo.properties</code> bằng ba path hợp lệ và thêm một loader path có leading slash để đối chiếu.</li>
+        <li><strong>Code evidence:</strong><pre><code>URL classRelative = ResourceLoadingController.class.getResource("classloader-demo.properties");
+      URL classAbsolute = ResourceLoadingController.class.getResource(
+              "/com/example/learning/controller/classloader-demo.properties"
+      );
+      URL loaderRoot = loader.getResource("com/example/learning/controller/classloader-demo.properties");</code></pre></li>
+        <li><strong>Observation:</strong> class-relative, class-absolute và loader-root đều tìm được cùng resource; leading slash trên loader lookup không nên được dùng như Class absolute path.</li>
+        <li><strong>Ý nghĩa:</strong> path semantics phụ thuộc API lookup context, không phụ thuộc việc resource trông giống file trên source tree.</li>
+      </ol>
+      <p><strong>Kết luận:</strong> chọn API/path theo namespace muốn diễn đạt, và không đồng nhất classpath resource với filesystem path.</p>
+    usage: true
+CustomClassLoaderController:
+  sameNameIdentity():
+    execution: |-
+      <p><strong>Khái niệm:</strong> runtime class identity của ordinary named class phụ thuộc binary name và defining ClassLoader.</p>
+      <ol>
+        <li><strong>Flow:</strong> endpoint đọc đúng một byte array của <code>IdentityProbe</code>, tạo hai loader độc lập có platform parent, rồi load cùng binary name ở cả hai.</li>
+        <li><strong>Code evidence:</strong><pre><code>Class&lt;?&gt; typeA = loaderA.loadClass(binaryName);
+      Class&lt;?&gt; typeB = loaderB.loadClass(binaryName);
+      result.put("sameClassObject", typeA == typeB);
+      result.put("sameDefiningLoader", typeA.getClassLoader() == typeB.getClassLoader());</code></pre></li>
+        <li><strong>Observation:</strong> <code>sameBinaryName=true</code> nhưng <code>sameClassObject=false</code>, <code>sameDefiningLoader=false</code> và assignability giữa hai type là false.</li>
+        <li><strong>Ý nghĩa:</strong> cùng bytes không hợp nhất namespace; mỗi defining loader tạo runtime identity riêng.</li>
+      </ol>
+      <p><strong>Kết luận:</strong> custom loader không chỉ thay nơi đọc bytes mà còn tạo isolation boundary cho type identity.</p>
+    usage: true
+ClassIdentityController:
+  crossLoaderCast():
+    execution: |-
+      <p><strong>Khái niệm:</strong> object của type do loader A định nghĩa không phải instance của same-named type do loader B định nghĩa.</p>
+      <ol>
+        <li><strong>Flow:</strong> hai loader định nghĩa <code>IdentityProbe</code> riêng; endpoint tạo instance từ <code>typeA</code>, kiểm tra <code>typeB.isInstance</code> rồi gọi <code>typeB.cast</code>.</li>
+        <li><strong>Code evidence:</strong><pre><code>Object instanceA = typeA.getDeclaredConstructor().newInstance();
+      try {
+          typeB.cast(instanceA);
+          castSucceeded = true;
+      } catch (ClassCastException exception) {
+          castSucceeded = false;
+      }</code></pre></li>
+        <li><strong>Observation:</strong> binary name giống nhau nhưng <code>typeBSeesInstanceA=false</code>; cast bị bắt lại dưới dạng <code>ClassCastException</code>.</li>
+        <li><strong>Ý nghĩa:</strong> lỗi “X cannot be cast to X” thường là loader-boundary problem, không phải JVM nhầm tên type.</li>
+      </ol>
+      <p><strong>Kết luận:</strong> contract/DTO/SPI đi qua loader boundary phải được chia sẻ từ một loader mà hai phía resolve tương thích.</p>
+    usage: true
+ContextClassLoaderController:
+  temporaryTccl():
+    execution: |-
+      <p><strong>Khái niệm:</strong> TCCL là mutable loader context gắn với thread; thay đổi tạm thời phải được khôi phục chính xác.</p>
+      <ol>
+        <li><strong>Flow:</strong> endpoint lưu TCCL hiện tại, cài một named temporary loader, đọc lại giá trị trong scope và restore trong <code>finally</code>.</li>
+        <li><strong>Code evidence:</strong><pre><code>ClassLoader previous = thread.getContextClassLoader();
+      try {
+          thread.setContextClassLoader(temporary);
+      } finally {
+          thread.setContextClassLoader(previous);
+      }</code></pre></li>
+        <li><strong>Observation:</strong> response cho thấy <code>before</code> và <code>after</code> trùng context cũ, <code>during</code> là loader tạm, <code>restored=true</code>.</li>
+        <li><strong>Ý nghĩa:</strong> request/executor thread có thể được tái sử dụng; quên restore có thể làm work sau dùng sai visibility context và giữ loader sống lâu hơn.</li>
+      </ol>
+      <p><strong>Kết luận:</strong> TCCL nên có scope nhỏ và luôn theo pattern save → set → finally restore.</p>
+    usage: true
+InitializationController:
+  failureState():
+    execution: |-
+      <p><strong>Khái niệm:</strong> initialization failure làm runtime class identity đi vào erroneous state; lần active use sau không retry initializer.</p>
+      <ol>
+        <li><strong>Flow:</strong> mỗi request dùng loader mới, load <code>FailingInitializationProbe</code> với initialize=false, rồi active-use cùng identity hai lần bằng <code>Class.forName(..., true, loader)</code>.</li>
+        <li><strong>Code evidence:</strong><pre><code>Class&lt;?&gt; loaded = Class.forName(binaryName, false, loader);
+      Throwable firstFailure = initialize(binaryName, loader);
+      Throwable secondFailure = initialize(binaryName, loader);</code></pre></li>
+        <li><strong>Observation:</strong> failure đầu là <code>ExceptionInInitializerError</code> với cause từ initializer; failure sau của cùng identity là <code>NoClassDefFoundError</code>.</li>
+        <li><strong>Ý nghĩa:</strong> static initialization không phải một method call được JVM retry mỗi lần dùng class.</li>
+      </ol>
+      <p><strong>Kết luận:</strong> logic có khả năng recover/retry nên có lifecycle tường minh thay vì ẩn trong static initializer.</p>
+    usage: true
