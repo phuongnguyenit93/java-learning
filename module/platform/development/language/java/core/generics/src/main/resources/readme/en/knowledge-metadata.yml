@@ -1,1 +1,173 @@
-{}
+1.GenericType/GenericType.md:
+  generic-type-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  type-parameter:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  diamond-operator:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  generic-invariance-intro:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  generic-api-design:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+2.GenericMethod/GenericMethod.md:
+  generic-method-syntax:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  generic-constructor:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  type-inference:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  static-generic-method:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  generic-method-vs-type:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+3.BoundedType/BoundedType.md:
+  upper-bounded-type:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  multiple-bounds:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  recursive-bound:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  bound-api-capability:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+4.Wildcards/Wildcards.md:
+  unbounded-wildcard:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  wildcard-vs-object:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  wildcard-placement:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  extends-wildcard:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  super-wildcard:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  wildcard-capture:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+5.PECS/PECS.md:
+  pecs-rule:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  read-from-producer:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  write-to-consumer:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  pecs-api-design:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+6.Invariance/Invariance.md:
+  generic-declaration-subtyping:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  generic-invariance:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  variance-vs-arrays:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  variance-safety:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+7.RawTypes/RawTypes.md:
+  raw-type-compatibility:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  unchecked-warning:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  heap-pollution:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  raw-type-boundary:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+8.TypeErasure/TypeErasure.md:
+  erasure-model:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  erased-runtime-type:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  bridge-method:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  non-reifiable-types:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+9.Limitations/Limitations.md:
+  no-generic-primitives:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  no-new-type-parameter:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  generic-array-limit:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  static-type-parameter-limit:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  generic-exception-limit:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false

@@ -1,0 +1,166 @@
+GenericMethodController:
+  inference():
+    summary: Quan sát type inference của generic method
+    description: Gọi cùng method <code>&lt;T&gt; T echo(T)</code> với String và Integer.
+      Response cho thấy mỗi call giữ đúng return type mà không cần caller viết type
+      argument.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 2.GenericMethod/GenericMethod.md
+      anchor: type-inference
+    methodName: inference
+    params: [
+      ]
+    path: com/example/learning/controller/GenericMethodController.java
+    mapping: '@GetMapping("/inference")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/generics/method/inference
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+VarianceController:
+  invariance():
+    summary: Quan sát vì sao List<Dog> không phải List<Animal>
+    description: Tạo List<Dog>, đọc an toàn qua List<? extends Animal>, đồng thời
+      trả evidence giải thích vì sao exact assignment sang List<Animal> bị compiler
+      từ chối.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 6.Invariance/Invariance.md
+      anchor: generic-invariance
+    methodName: invariance
+    params: [
+      ]
+    path: com/example/learning/controller/VarianceController.java
+    mapping: '@GetMapping("/invariance")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/generics/variance/invariance
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+WildcardController:
+  producerConsumer():
+    summary: Quan sát Producer Extends, Consumer Super
+    description: Copy Integer từ List<? extends T> sang List<? super T>. Response
+      expose role của source/target và các value được copy để nối PECS với read/write
+      direction.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 5.PECS/PECS.md
+      anchor: pecs-rule
+    methodName: producerConsumer
+    params: [
+      ]
+    path: com/example/learning/controller/WildcardController.java
+    mapping: '@GetMapping("/producer-consumer")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/generics/wildcard/producer-consumer
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+RawTypeController:
+  heapPollution():
+    summary: Tạo heap pollution qua raw type có kiểm soát
+    description: Cho raw List trỏ vào List<String>, ghi Integer qua raw reference
+      rồi đọc lại qua typed reference để quan sát ClassCastException xuất hiện xa
+      điểm gây pollution.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 7.RawTypes/RawTypes.md
+      anchor: heap-pollution
+    methodName: heapPollution
+    params: [
+      ]
+    path: com/example/learning/controller/RawTypeController.java
+    mapping: '@GetMapping("/heap-pollution")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/generics/raw-type/heap-pollution
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+ErasureController:
+  inspectRuntimeTypes():
+    summary: So sánh runtime class của hai parameterized type
+    description: Tạo List<String> và List<Integer> rồi so sánh Class object. Response
+      chứng minh type argument khác nhau không tạo ArrayList runtime class riêng.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 8.TypeErasure/TypeErasure.md
+      anchor: erased-runtime-type
+    methodName: inspectRuntimeTypes
+    params: [
+      ]
+    path: com/example/learning/controller/ErasureController.java
+    mapping: '@GetMapping("/runtime-types")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/generics/erasure/runtime-types
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  bridgeMethod():
+    summary: Quan sát synthetic bridge method sau erasure
+    description: Inspect declared methods của StringMapper implements Mapper<String>.
+      Response expose isBridge/isSynthetic để chứng minh compiler sinh method giữ
+      erased interface contract và polymorphism.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 8.TypeErasure/TypeErasure.md
+      anchor: bridge-method
+    methodName: bridgeMethod
+    params: [
+      ]
+    path: com/example/learning/controller/ErasureController.java
+    mapping: '@GetMapping("/bridge-method")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/generics/erasure/bridge-method
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

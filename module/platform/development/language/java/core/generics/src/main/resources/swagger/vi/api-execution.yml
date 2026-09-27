@@ -1,0 +1,90 @@
+GenericMethodController:
+  inference():
+    execution: |-
+      <p><strong>Khái niệm:</strong> generic method có type parameter riêng; compiler suy luận type argument cho từng lời gọi từ argument/target context.</p>
+      <ol>
+        <li><strong>Flow:</strong> endpoint gọi cùng method <code>echo(T)</code> một lần với <code>"java"</code> và một lần với <code>21</code>.</li>
+        <li><strong>Code evidence:</strong><pre><code>private static &lt;T&gt; T echo(T value) {
+          return value;
+      }</code></pre></li>
+        <li><strong>Observation:</strong> response có <code>textRuntimeType=String</code> và <code>numberRuntimeType=Integer</code> dù source chỉ có một generic method.</li>
+        <li><strong>Ý nghĩa:</strong> <code>T</code> không phải một runtime slot cố định cho method; mỗi invocation được type-check với constraint riêng tại compile time.</li>
+      </ol>
+      <p><strong>Kết luận:</strong> generic method giúp tái sử dụng một operation mà vẫn giữ quan hệ kiểu giữa input và output cho từng call site.</p>
+    usage: true
+VarianceController:
+  invariance():
+    execution: |-
+      <p><strong>Khái niệm:</strong> <code>Dog</code> là subtype của <code>Animal</code> nhưng <code>List&lt;Dog&gt;</code> không phải subtype của <code>List&lt;Animal&gt;</code>.</p>
+      <ol>
+        <li><strong>Flow:</strong> endpoint tạo <code>List&lt;Dog&gt;</code>, rồi expose nó qua <code>List&lt;? extends Animal&gt;</code> để chỉ đọc an toàn.</li>
+        <li><strong>Code evidence:</strong><pre><code>List&lt;Dog&gt; dogs = new ArrayList&lt;&gt;();
+      List&lt;? extends Animal&gt; readableAnimals = dogs;
+      Animal first = readableAnimals.get(0);</code></pre></li>
+        <li><strong>Observation:</strong> response ghi rõ exact assignment <code>List&lt;Animal&gt; animals = dogs</code> không hợp lệ nhưng wildcard read view hoạt động.</li>
+        <li><strong>Ý nghĩa:</strong> nếu exact assignment được phép, code qua <code>List&lt;Animal&gt;</code> có thể chèn một Animal không phải Dog và phá guarantee của list gốc.</li>
+      </ol>
+      <p><strong>Kết luận:</strong> invariance chặn mutation không an toàn; wildcard mở đúng phần flexibility mà API cần.</p>
+    usage: true
+WildcardController:
+  producerConsumer():
+    execution: |-
+      <p><strong>Khái niệm:</strong> PECS mô tả data flow: producer dùng <code>? extends T</code>, consumer dùng <code>? super T</code>.</p>
+      <ol>
+        <li><strong>Flow:</strong> source là <code>List&lt;Integer&gt;</code>, target là <code>List&lt;Number&gt;</code>. Method <code>copy</code> đọc từng <code>T</code> từ source rồi ghi vào target.</li>
+        <li><strong>Code evidence:</strong><pre><code>static &lt;T&gt; void copy(
+          List&lt;? extends T&gt; source,
+          List&lt;? super T&gt; target) {
+          for (T value : source) {
+              target.add(value);
+          }
+      }</code></pre></li>
+        <li><strong>Observation:</strong> response trả <code>copiedValues=[10,20,30]</code>, source role là producer và target role là consumer.</li>
+        <li><strong>Ý nghĩa:</strong> bounds không phải decoration; chúng mở đúng thao tác read/write an toàn theo direction của dữ liệu.</li>
+      </ol>
+      <p><strong>Kết luận:</strong> PECS là heuristic thiết kế signature dựa trên việc parameter cung cấp hay nhận giá trị kiểu T.</p>
+    usage: true
+RawTypeController:
+  heapPollution():
+    execution: |-
+      <p><strong>Khái niệm:</strong> raw type có thể xuyên qua generic checking và gây heap pollution, khiến failure xuất hiện muộn hơn điểm gây sai.</p>
+      <ol>
+        <li><strong>Flow:</strong> endpoint tạo <code>List&lt;String&gt;</code>, gán nó cho raw <code>List</code>, thêm <code>Integer</code>, rồi đọc phần tử đó qua typed reference.</li>
+        <li><strong>Code evidence:</strong><pre><code>List&lt;String&gt; names = new ArrayList&lt;&gt;();
+      List raw = names;
+      raw.add(123);
+      String value = names.get(1);</code></pre></li>
+        <li><strong>Observation:</strong> raw write thành công nhưng typed read bị <code>ClassCastException</code>; response expose cả runtime contents và failure type.</li>
+        <li><strong>Ý nghĩa:</strong> unchecked warning đánh dấu nơi compiler không còn chứng minh được invariant; lỗi runtime có thể xuất hiện ở nơi hoàn toàn khác.</li>
+      </ol>
+      <p><strong>Kết luận:</strong> raw type chỉ nên tồn tại ở legacy boundary nhỏ, được validate và cô lập khỏi typed code.</p>
+    usage: true
+ErasureController:
+  inspectRuntimeTypes():
+    execution: |-
+      <p><strong>Khái niệm:</strong> type erasure không tạo runtime class riêng cho mỗi concrete type argument.</p>
+      <ol>
+        <li><strong>Flow:</strong> endpoint tạo một <code>ArrayList&lt;String&gt;</code> và một <code>ArrayList&lt;Integer&gt;</code>, rồi lấy <code>getClass()</code> của cả hai.</li>
+        <li><strong>Code evidence:</strong><pre><code>List&lt;String&gt; texts = new ArrayList&lt;&gt;();
+      List&lt;Integer&gt; numbers = new ArrayList&lt;&gt;();
+      texts.getClass() == numbers.getClass();</code></pre></li>
+        <li><strong>Observation:</strong> cả hai runtime class đều là <code>java.util.ArrayList</code> và <code>sameRuntimeClass=true</code>.</li>
+        <li><strong>Ý nghĩa:</strong> generic argument phục vụ compile-time checking; JVM không có một class <code>ArrayList&lt;String&gt;</code> riêng với <code>ArrayList&lt;Integer&gt;</code>.</li>
+      </ol>
+      <p><strong>Kết luận:</strong> erasure giải thích vì sao nhiều generic restriction xuất hiện ở runtime boundary.</p>
+    usage: true
+  bridgeMethod():
+    execution: |-
+      <p><strong>Khái niệm:</strong> compiler có thể sinh synthetic bridge method để giữ overriding/polymorphism sau khi generic signature bị erase.</p>
+      <ol>
+        <li><strong>Flow:</strong> <code>StringMapper</code> implements <code>Mapper&lt;String&gt;</code>. Endpoint inspect các declared method và expose cờ <code>isBridge()</code>/<code>isSynthetic()</code>.</li>
+        <li><strong>Code evidence:</strong><pre><code>interface Mapper&lt;T&gt; { T map(T value); }
+
+      final class StringMapper implements Mapper&lt;String&gt; {
+          public String map(String value) { return value.trim(); }
+      }</code></pre></li>
+        <li><strong>Observation:</strong> response có method developer viết và thêm một method synthetic/bridge do compiler sinh; <code>bridgeMethodCount</code> lớn hơn 0.</li>
+        <li><strong>Ý nghĩa:</strong> erased contract gần với <code>Object map(Object)</code>, nên bridge chuyển call đó về implementation <code>String map(String)</code>.</li>
+      </ol>
+      <p><strong>Kết luận:</strong> bridge method là compiler plumbing giúp source-level generic override tiếp tục tuân polymorphism ở bytecode/runtime.</p>
+    usage: true

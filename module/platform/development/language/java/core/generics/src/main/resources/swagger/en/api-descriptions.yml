@@ -1,0 +1,167 @@
+GenericMethodController:
+  inference():
+    summary: Observe generic method type inference
+    description: Calls the same <code>&lt;T&gt; T echo(T)</code> method with String
+      and Integer. The response shows each call preserving its inferred return type
+      without an explicit type argument.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 2.GenericMethod/GenericMethod.md
+      anchor: type-inference
+    methodName: inference
+    params: [
+      ]
+    path: com/example/learning/controller/GenericMethodController.java
+    mapping: '@GetMapping("/inference")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/generics/method/inference
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+VarianceController:
+  invariance():
+    summary: Observe why List<Dog> is not List<Animal>
+    description: Creates a List<Dog>, reads safely through List<? extends Animal>,
+      and returns evidence explaining why exact assignment to List<Animal> is rejected
+      by the compiler.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 6.Invariance/Invariance.md
+      anchor: generic-invariance
+    methodName: invariance
+    params: [
+      ]
+    path: com/example/learning/controller/VarianceController.java
+    mapping: '@GetMapping("/invariance")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/generics/variance/invariance
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+WildcardController:
+  producerConsumer():
+    summary: Observe Producer Extends, Consumer Super
+    description: Copies Integer values from List<? extends T> into List<? super T>.
+      The response exposes source/target roles and copied values to connect PECS with
+      read/write direction.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 5.PECS/PECS.md
+      anchor: pecs-rule
+    methodName: producerConsumer
+    params: [
+      ]
+    path: com/example/learning/controller/WildcardController.java
+    mapping: '@GetMapping("/producer-consumer")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/generics/wildcard/producer-consumer
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+RawTypeController:
+  heapPollution():
+    summary: Create controlled heap pollution through a raw type
+    description: Points a raw List at List<String>, writes an Integer through the
+      raw reference, then reads through the typed reference to observe ClassCastException
+      surfacing away from the pollution point.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 7.RawTypes/RawTypes.md
+      anchor: heap-pollution
+    methodName: heapPollution
+    params: [
+      ]
+    path: com/example/learning/controller/RawTypeController.java
+    mapping: '@GetMapping("/heap-pollution")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/generics/raw-type/heap-pollution
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+ErasureController:
+  inspectRuntimeTypes():
+    summary: Compare runtime classes of two parameterized types
+    description: Creates List<String> and List<Integer> and compares their Class objects.
+      The response proves different type arguments do not create separate runtime
+      ArrayList classes.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 8.TypeErasure/TypeErasure.md
+      anchor: erased-runtime-type
+    methodName: inspectRuntimeTypes
+    params: [
+      ]
+    path: com/example/learning/controller/ErasureController.java
+    mapping: '@GetMapping("/runtime-types")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/generics/erasure/runtime-types
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  bridgeMethod():
+    summary: Observe the synthetic bridge method after erasure
+    description: Inspects declared methods on StringMapper implements Mapper<String>.
+      The response exposes isBridge/isSynthetic to prove the compiler preserves the
+      erased interface contract and polymorphism.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 8.TypeErasure/TypeErasure.md
+      anchor: bridge-method
+    methodName: bridgeMethod
+    params: [
+      ]
+    path: com/example/learning/controller/ErasureController.java
+    mapping: '@GetMapping("/bridge-method")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/generics/erasure/bridge-method
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

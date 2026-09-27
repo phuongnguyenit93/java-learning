@@ -1355,6 +1355,8 @@ Which operations remain impossible or unsafe because of erasure/invariance?
 Generic Limitations
 ```
 
+**Learning depth contract:** this module is intentionally complete but should not imply equal mastery depth for every topic. A first pass should prioritize Generic Type, Generic Method, basic bounds, wildcards, PECS, invariance and practical raw-type safety. Recursive bounds, wildcard capture, heap pollution internals, bridge methods, reifiable/non-reifiable details and advanced restrictions are second-pass topics for compiler/runtime reasoning, framework/JDK reading and debugging. Difficulty metadata should preserve this distinction in the learning UI.
+
 **Running example / evidence strategy:** evolve `Box<T>` into a small repository/collection-style API and reuse a simple `Animal`/`Dog` hierarchy to demonstrate bounds, invariance, wildcards and PECS. Compile-time-invalid examples should be shown as code evidence rather than faked runtime endpoints.
 
 #### Layer 2 — Chapter story
@@ -1375,12 +1377,12 @@ Limitations    → Which restrictions follow from erasure, non-reifiable types a
 
 | Existing chapter | Proposed anchored H2 sections |
 | --- | --- |
-| `1.GenericType/GenericType.md` | `#generic-type-purpose` — Why generic types exist<br>`#type-parameter` — Type parameter mental model<br>`#generic-invariance-intro` — Generic invariance introduction<br>`#generic-api-design` — Designing generic APIs |
-| `2.GenericMethod/GenericMethod.md` | `#generic-method-syntax` — Generic method syntax<br>`#type-inference` — Generic method type inference<br>`#static-generic-method` — Static generic methods<br>`#generic-method-vs-type` — Method type parameter vs class type parameter |
+| `1.GenericType/GenericType.md` | `#generic-type-purpose` — What generics are, why they exist and when to use them<br>`#type-parameter` — Type parameter/type argument mental model, including generic interfaces<br>`#diamond-operator` — Diamond operator and generic-class instantiation inference<br>`#generic-invariance-intro` — Generic invariance introduction<br>`#generic-api-design` — Designing generic APIs |
+| `2.GenericMethod/GenericMethod.md` | `#generic-method-syntax` — Generic method syntax<br>`#generic-constructor` — Constructors with their own type parameters<br>`#type-inference` — Generic method type inference<br>`#static-generic-method` — Static generic methods<br>`#generic-method-vs-type` — Method type parameter vs class type parameter |
 | `3.BoundedType/BoundedType.md` | `#upper-bounded-type` — Upper-bounded type parameter<br>`#multiple-bounds` — Multiple bounds<br>`#recursive-bound` — Recursive/self bounds<br>`#bound-api-capability` — Bounds expose safe capabilities |
-| `4.Wildcards/Wildcards.md` | `#unbounded-wildcard` — Unbounded wildcard<br>`#extends-wildcard` — Upper-bounded wildcard<br>`#super-wildcard` — Lower-bounded wildcard<br>`#wildcard-capture` — Wildcard capture |
+| `4.Wildcards/Wildcards.md` | `#unbounded-wildcard` — Unbounded wildcard<br>`#wildcard-vs-object` — `List<?>` vs `List<Object>` mental model<br>`#wildcard-placement` — Wildcard use-site placement and declaration/creation restrictions<br>`#extends-wildcard` — Upper-bounded wildcard<br>`#super-wildcard` — Lower-bounded wildcard<br>`#wildcard-capture` — Wildcard capture |
 | `5.PECS/PECS.md` | `#pecs-rule` — Producer extends, consumer super<br>`#read-from-producer` — Reading from extends<br>`#write-to-consumer` — Writing to super<br>`#pecs-api-design` — Applying PECS in method signatures |
-| `6.Invariance/Invariance.md` | `#generic-invariance` — List<Integer> is not List<Number><br>`#variance-vs-arrays` — Generics invariance vs array covariance<br>`#variance-safety` — Why invariance preserves type safety |
+| `6.Invariance/Invariance.md` | `#generic-declaration-subtyping` — Declared generic inheritance still preserves subtyping for the same type argument<br>`#generic-invariance` — List<Integer> is not List<Number><br>`#variance-vs-arrays` — Generics invariance vs array covariance<br>`#variance-safety` — Why invariance preserves type safety |
 | `7.RawTypes/RawTypes.md` | `#raw-type-compatibility` — Raw types for legacy compatibility<br>`#unchecked-warning` — Unchecked warnings<br>`#heap-pollution` — Heap pollution<br>`#raw-type-boundary` — Contain raw-type boundaries |
 | `8.TypeErasure/TypeErasure.md` | `#erasure-model` — Type erasure mental model<br>`#erased-runtime-type` — Runtime type information after erasure<br>`#bridge-method` — Bridge methods<br>`#non-reifiable-types` — Reifiable vs non-reifiable types |
 | `9.Limitations/Limitations.md` | `#no-generic-primitives` — No primitive type arguments<br>`#no-new-type-parameter` — Cannot instantiate T directly<br>`#generic-array-limit` — Generic array restrictions<br>`#static-type-parameter-limit` — Static context and type parameters<br>`#generic-exception-limit` — Generic exception restrictions |
@@ -2285,7 +2287,7 @@ class loading lifecycle; parent delegation; why same class name can be different
 | `object-contract` | 7 | 23 | 5 | 24–32 | 18–24 |
 | `string` | 12 | 48 | 8 | 28–38 | 18–26 |
 | `exception` | 9 | 35 | 6 | 28–38 | 20–28 |
-| `generics` | 9 | 36 | 6 | 28–38 | 20–28 |
+| `generics` | 9 | 41 | 6 | 28–38 | 20–28 |
 | `collection` | 12 | 49 | 8 | 34–46 | 22–30 |
 | `date-time` | 12 | 41 | 6 | 30–40 | 20–28 |
 | `io` | 11 | 45 | 7 | 30–40 | 20–28 |

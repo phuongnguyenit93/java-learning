@@ -1,0 +1,90 @@
+GenericMethodController:
+  inference():
+    execution: |-
+      <p><strong>Concept:</strong> a generic method owns its type parameter and the compiler infers a type argument independently for each invocation.</p>
+      <ol>
+        <li><strong>Flow:</strong> the endpoint calls the same <code>echo(T)</code> method with <code>"java"</code> and with <code>21</code>.</li>
+        <li><strong>Code evidence:</strong><pre><code>private static &lt;T&gt; T echo(T value) {
+          return value;
+      }</code></pre></li>
+        <li><strong>Observation:</strong> the response reports <code>textRuntimeType=String</code> and <code>numberRuntimeType=Integer</code> even though the source contains one generic method.</li>
+        <li><strong>Meaning:</strong> <code>T</code> is not one fixed runtime slot for the method; each invocation is type-checked using its own compile-time constraints.</li>
+      </ol>
+      <p><strong>Conclusion:</strong> a generic method reuses one operation while preserving the input/output type relationship at each call site.</p>
+    usage: true
+VarianceController:
+  invariance():
+    execution: |-
+      <p><strong>Concept:</strong> <code>Dog</code> is a subtype of <code>Animal</code>, but <code>List&lt;Dog&gt;</code> is not a subtype of <code>List&lt;Animal&gt;</code>.</p>
+      <ol>
+        <li><strong>Flow:</strong> the endpoint creates <code>List&lt;Dog&gt;</code> and exposes it through <code>List&lt;? extends Animal&gt;</code> as a safe read view.</li>
+        <li><strong>Code evidence:</strong><pre><code>List&lt;Dog&gt; dogs = new ArrayList&lt;&gt;();
+      List&lt;? extends Animal&gt; readableAnimals = dogs;
+      Animal first = readableAnimals.get(0);</code></pre></li>
+        <li><strong>Observation:</strong> the response marks exact assignment <code>List&lt;Animal&gt; animals = dogs</code> as illegal while the wildcard read view works.</li>
+        <li><strong>Meaning:</strong> allowing exact assignment would let code through <code>List&lt;Animal&gt;</code> insert a non-Dog Animal and violate the original list guarantee.</li>
+      </ol>
+      <p><strong>Conclusion:</strong> invariance blocks unsafe mutation; wildcards restore only the flexibility an API actually needs.</p>
+    usage: true
+WildcardController:
+  producerConsumer():
+    execution: |-
+      <p><strong>Concept:</strong> PECS models data flow: producers use <code>? extends T</code>, consumers use <code>? super T</code>.</p>
+      <ol>
+        <li><strong>Flow:</strong> the source is <code>List&lt;Integer&gt;</code> and the target is <code>List&lt;Number&gt;</code>. <code>copy</code> reads each T from the source and writes it into the target.</li>
+        <li><strong>Code evidence:</strong><pre><code>static &lt;T&gt; void copy(
+          List&lt;? extends T&gt; source,
+          List&lt;? super T&gt; target) {
+          for (T value : source) {
+              target.add(value);
+          }
+      }</code></pre></li>
+        <li><strong>Observation:</strong> the response returns <code>copiedValues=[10,20,30]</code>, with source labeled producer and target labeled consumer.</li>
+        <li><strong>Meaning:</strong> wildcard bounds are not decoration; they expose exactly the safe read/write operations implied by the data direction.</li>
+      </ol>
+      <p><strong>Conclusion:</strong> PECS is a signature-design heuristic based on whether a parameter provides or receives values of T.</p>
+    usage: true
+RawTypeController:
+  heapPollution():
+    execution: |-
+      <p><strong>Concept:</strong> a raw type can bypass generic checking and create heap pollution, causing failure later than the unsafe write.</p>
+      <ol>
+        <li><strong>Flow:</strong> the endpoint creates <code>List&lt;String&gt;</code>, assigns it to raw <code>List</code>, inserts an <code>Integer</code>, then reads that element through the typed reference.</li>
+        <li><strong>Code evidence:</strong><pre><code>List&lt;String&gt; names = new ArrayList&lt;&gt;();
+      List raw = names;
+      raw.add(123);
+      String value = names.get(1);</code></pre></li>
+        <li><strong>Observation:</strong> the raw write succeeds but the typed read throws <code>ClassCastException</code>; the response exposes both runtime contents and failure type.</li>
+        <li><strong>Meaning:</strong> an unchecked warning marks a point where the compiler can no longer prove the invariant; the runtime failure may surface somewhere else.</li>
+      </ol>
+      <p><strong>Conclusion:</strong> raw types should be contained inside a small validated legacy boundary, not allowed to leak into typed application code.</p>
+    usage: true
+ErasureController:
+  inspectRuntimeTypes():
+    execution: |-
+      <p><strong>Concept:</strong> type erasure does not create a separate runtime class for every concrete type argument.</p>
+      <ol>
+        <li><strong>Flow:</strong> the endpoint creates an <code>ArrayList&lt;String&gt;</code> and an <code>ArrayList&lt;Integer&gt;</code>, then reads <code>getClass()</code> from both.</li>
+        <li><strong>Code evidence:</strong><pre><code>List&lt;String&gt; texts = new ArrayList&lt;&gt;();
+      List&lt;Integer&gt; numbers = new ArrayList&lt;&gt;();
+      texts.getClass() == numbers.getClass();</code></pre></li>
+        <li><strong>Observation:</strong> both runtime classes are <code>java.util.ArrayList</code> and <code>sameRuntimeClass=true</code>.</li>
+        <li><strong>Meaning:</strong> generic arguments support compile-time checking; the JVM does not create one runtime <code>ArrayList&lt;String&gt;</code> class and another for <code>ArrayList&lt;Integer&gt;</code>.</li>
+      </ol>
+      <p><strong>Conclusion:</strong> erasure explains why several generic restrictions appear at runtime boundaries.</p>
+    usage: true
+  bridgeMethod():
+    execution: |-
+      <p><strong>Concept:</strong> the compiler may emit a synthetic bridge method to preserve overriding and polymorphism after generic signatures are erased.</p>
+      <ol>
+        <li><strong>Flow:</strong> <code>StringMapper</code> implements <code>Mapper&lt;String&gt;</code>. The endpoint inspects declared methods and exposes <code>isBridge()</code>/<code>isSynthetic()</code>.</li>
+        <li><strong>Code evidence:</strong><pre><code>interface Mapper&lt;T&gt; { T map(T value); }
+
+      final class StringMapper implements Mapper&lt;String&gt; {
+          public String map(String value) { return value.trim(); }
+      }</code></pre></li>
+        <li><strong>Observation:</strong> the response contains the developer method plus a synthetic bridge method emitted by the compiler; <code>bridgeMethodCount</code> is greater than zero.</li>
+        <li><strong>Meaning:</strong> the erased interface contract is close to <code>Object map(Object)</code>, so the bridge routes that call to <code>String map(String)</code>.</li>
+      </ol>
+      <p><strong>Conclusion:</strong> bridge methods are compiler plumbing that keeps source-level generic overrides polymorphic at bytecode/runtime level.</p>
+    usage: true

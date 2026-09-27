@@ -1,0 +1,30 @@
+ErasureController:
+  description: |-
+    <h2>Type Erasure at Runtime</h2>
+    <p>Observe runtime class identity after erasure and the synthetic bridge method emitted by the compiler to preserve polymorphism.</p>
+  readmeRelated:
+    file: 8.TypeErasure/TypeErasure.md
+GenericMethodController:
+  description: |-
+    <h2>Generic Methods and Type Inference</h2>
+    <p>Observe the same generic method being inferred to different concrete types at different call sites.</p>
+  readmeRelated:
+    file: 2.GenericMethod/GenericMethod.md
+RawTypeController:
+  description: |-
+    <h2>Raw Types and Heap Pollution</h2>
+    <p>Let a raw reference bypass generic safety, write the wrong type, and observe the failure appearing later at a typed read.</p>
+  readmeRelated:
+    file: 7.RawTypes/RawTypes.md
+VarianceController:
+  description: |-
+    <h2>Generic Type Invariance</h2>
+    <p>Observe why Dog → Animal does not automatically make List&lt;Dog&gt; a List&lt;Animal&gt;, and how a wildcard provides a safe read view.</p>
+  readmeRelated:
+    file: 6.Invariance/Invariance.md
+WildcardController:
+  description: |-
+    <h2>Wildcards and PECS</h2>
+    <p>Copy data through a producer <code>? extends T</code> and consumer <code>? super T</code> to observe PECS as real read/write flow.</p>
+  readmeRelated:
+    file: 5.PECS/PECS.md

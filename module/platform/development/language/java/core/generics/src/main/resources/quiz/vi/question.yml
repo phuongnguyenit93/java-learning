@@ -1,0 +1,469 @@
+# <quiz-schema>
+# Cấu trúc câu hỏi Quiz
+# schema-version: 3
+#
+# questions [kiểu: list; bắt buộc; mặc định: []; duy nhất theo: id]
+#   Danh sách câu hỏi Quiz của module trong language hiện tại.
+#   mỗi phần tử:
+#     id [kiểu: string; bắt buộc; mặc định: ""]
+#       ID ổn định và duy nhất của câu hỏi.
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi hiển thị cho người học.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu câu hỏi được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu câu hỏi đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+#     answers [kiểu: list; bắt buộc; số phần tử: 4; mặc định: []; duy nhất theo: id]
+#       Chính xác bốn đáp án. ID A/B/C/D là identity nội bộ ổn định, không phải vị trí hiển thị sau khi frontend shuffle.
+#       mỗi phần tử:
+#         id [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#           Identity ổn định của đáp án.
+#         answer [kiểu: string; bắt buộc; mặc định: ""]
+#           Nội dung đáp án hiển thị cho người học.
+#         explanation [kiểu: string; bắt buộc; mặc định: ""]
+#           Giải thích hiển thị khi người học chọn đáp án này, bất kể đúng hay sai.
+#     correctAnswerId [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
+# </quiz-schema>
+
+questions:
+  - id: generics-purpose
+    question: "Generics giải quyết đồng thời hai vấn đề nào tốt hơn việc viết class riêng hoặc dùng Object?"
+    answers:
+      - {id: A, answer: "Tái sử dụng code và vẫn giữ type safety ở compile time.", explanation: "Đúng. Đây là mục đích cốt lõi của Generics."}
+      - {id: B, answer: "Tăng tốc GC và giảm mọi allocation.", explanation: "Sai. Generics không phải cơ chế quản lý bộ nhớ."}
+      - {id: C, answer: "Biến Java thành dynamically typed.", explanation: "Sai. Generics làm compile-time type checking chặt hơn."}
+      - {id: D, answer: "Tạo một runtime class mới cho mỗi type argument.", explanation: "Sai. Java Generics dùng type erasure."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.GenericType/GenericType.md", anchor: "generic-type-purpose"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: type-parameter-vs-argument
+    question: "Trong class Box<T> và biến Box<String> box, T và String lần lượt là gì?"
+    answers:
+      - {id: A, answer: "Cả hai đều là type argument.", explanation: "Sai. T được khai báo bởi generic declaration."}
+      - {id: B, answer: "T là type parameter, String là type argument.", explanation: "Đúng."}
+      - {id: C, answer: "T là wildcard, String là bound.", explanation: "Sai."}
+      - {id: D, answer: "T là raw type, String là reifiable type.", explanation: "Sai."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.GenericType/GenericType.md", anchor: "type-parameter"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: diamond-vs-raw
+    question: "Phát biểu nào đúng về new Box<>() và new Box() khi target type là Box<String>?"
+    answers:
+      - {id: A, answer: "Hai cách hoàn toàn tương đương và đều là raw type.", explanation: "Sai. Diamond vẫn là generic."}
+      - {id: B, answer: "new Box<>() dùng inference; new Box() là raw construction và có thể sinh unchecked warning.", explanation: "Đúng."}
+      - {id: C, answer: "new Box<>() chỉ hợp lệ với primitive.", explanation: "Sai."}
+      - {id: D, answer: "new Box() an toàn hơn vì JVM biết String ở runtime.", explanation: "Sai."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.GenericType/GenericType.md", anchor: "diamond-operator"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: generic-method-syntax
+    question: "Vị trí đúng của type parameter list trong generic method là gì?"
+    answers:
+      - {id: A, answer: "Sau tên method.", explanation: "Sai."}
+      - {id: B, answer: "Sau return type.", explanation: "Sai."}
+      - {id: C, answer: "Trước return type, ví dụ static <T> T echo(T value).", explanation: "Đúng."}
+      - {id: D, answer: "Chỉ được đặt ở class declaration.", explanation: "Sai. Method có thể tự generic."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.GenericMethod/GenericMethod.md", anchor: "generic-method-syntax"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: generic-constructor-scope
+    question: "Một constructor khai báo <T> Message(T source) trong class non-generic có hợp lệ không?"
+    answers:
+      - {id: A, answer: "Có. T thuộc constructor và được suy luận tại call site.", explanation: "Đúng."}
+      - {id: B, answer: "Không. Chỉ generic class mới có thể dùng T.", explanation: "Sai."}
+      - {id: C, answer: "Có, nhưng T trở thành static state của class.", explanation: "Sai."}
+      - {id: D, answer: "Chỉ hợp lệ nếu T extends Object được viết rõ.", explanation: "Sai."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.GenericMethod/GenericMethod.md", anchor: "generic-constructor"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: method-type-inference
+    question: "Điều gì đúng về type inference của generic method?"
+    answers:
+      - {id: A, answer: "JVM đoán T sau khi method bắt đầu chạy.", explanation: "Sai. Inference diễn ra ở compile time."}
+      - {id: B, answer: "Compiler suy luận từ argument, target type và các constraint của lời gọi.", explanation: "Đúng."}
+      - {id: C, answer: "T luôn trở thành Object.", explanation: "Sai."}
+      - {id: D, answer: "Caller luôn phải viết explicit type witness.", explanation: "Sai."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.GenericMethod/GenericMethod.md", anchor: "type-inference"}
+    apiRelated: {controller: "GenericMethodController", methodSignature: "inference()"}
+
+  - id: method-vs-class-type-parameter
+    question: "Khi nào generic method phù hợp hơn generic class?"
+    answers:
+      - {id: A, answer: "Khi type relationship chỉ cần trong một operation thay vì xuyên suốt state/object contract.", explanation: "Đúng."}
+      - {id: B, answer: "Khi class có nhiều field cùng dùng một T.", explanation: "Trường hợp đó thường phù hợp generic class hơn."}
+      - {id: C, answer: "Chỉ khi method là static.", explanation: "Sai. Instance method cũng có thể generic."}
+      - {id: D, answer: "Chỉ khi T là Number.", explanation: "Sai."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.GenericMethod/GenericMethod.md", anchor: "generic-method-vs-type"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: upper-bound-capability
+    question: "Vì sao <T extends Number> cho phép gọi value.doubleValue() còn <T> thì không?"
+    answers:
+      - {id: A, answer: "Vì extends làm T trở thành primitive.", explanation: "Sai."}
+      - {id: B, answer: "Vì bound bảo đảm mọi T hợp lệ có contract của Number.", explanation: "Đúng."}
+      - {id: C, answer: "Vì JVM thêm method vào T lúc runtime.", explanation: "Sai."}
+      - {id: D, answer: "Vì mọi Object đều có doubleValue().", explanation: "Sai."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.BoundedType/BoundedType.md", anchor: "upper-bounded-type"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: multiple-bounds-order
+    question: "Nếu type parameter có một class bound và nhiều interface bounds, rule nào đúng?"
+    answers:
+      - {id: A, answer: "Class bound phải đứng đầu và chỉ có tối đa một class bound.", explanation: "Đúng."}
+      - {id: B, answer: "Interface bắt buộc đứng trước class.", explanation: "Sai."}
+      - {id: C, answer: "Có thể có nhiều class bounds.", explanation: "Sai."}
+      - {id: D, answer: "Thứ tự không bao giờ ảnh hưởng erasure.", explanation: "Sai. Leftmost bound ảnh hưởng erasure."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.BoundedType/BoundedType.md", anchor: "multiple-bounds"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: recursive-bound-meaning
+    question: "<T extends Comparable<T>> mô tả điều gì?"
+    answers:
+      - {id: A, answer: "T phải là subclass trực tiếp của Object.", explanation: "Sai."}
+      - {id: B, answer: "T phải so sánh được với chính T.", explanation: "Đúng."}
+      - {id: C, answer: "T bắt buộc là enum.", explanation: "Sai."}
+      - {id: D, answer: "Đây là recursion runtime vô hạn.", explanation: "Sai. Đây là type constraint."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.BoundedType/BoundedType.md", anchor: "recursive-bound"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: unbounded-wildcard-purpose
+    question: "Khi nào List<?> thường phù hợp hơn <T> List<T>?"
+    answers:
+      - {id: A, answer: "Khi method không cần liên kết element type với parameter/return nào khác.", explanation: "Đúng."}
+      - {id: B, answer: "Khi muốn add bất kỳ Object nào.", explanation: "Sai."}
+      - {id: C, answer: "Khi muốn bỏ qua generic checking.", explanation: "Sai. Đó là raw type."}
+      - {id: D, answer: "Chỉ khi list rỗng.", explanation: "Sai."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.Wildcards/Wildcards.md", anchor: "unbounded-wildcard"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: wildcard-vs-object
+    question: "Khác biệt quan trọng nhất giữa List<?> và List<Object> là gì?"
+    answers:
+      - {id: A, answer: "List<?> biết exact element type là Object.", explanation: "Sai."}
+      - {id: B, answer: "List<Object> có exact element type Object; List<?> có một element type cụ thể nhưng caller không biết đó là gì.", explanation: "Đúng."}
+      - {id: C, answer: "List<?> là raw type.", explanation: "Sai."}
+      - {id: D, answer: "Hai kiểu hoàn toàn tương đương.", explanation: "Sai."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.Wildcards/Wildcards.md", anchor: "wildcard-vs-object"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: wildcard-placement-rule
+    question: "Dòng nào hợp lệ?"
+    answers:
+      - {id: A, answer: "class Box<?> {}", explanation: "Sai. Wildcard không khai báo named type parameter."}
+      - {id: B, answer: "new ArrayList<?>();", explanation: "Sai. Không dùng wildcard trực tiếp làm type argument của object creation."}
+      - {id: C, answer: "List<? extends Number> values;", explanation: "Đúng. Đây là wildcard ở use site."}
+      - {id: D, answer: "class X extends ArrayList<?> {}", explanation: "Sai."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.Wildcards/Wildcards.md", anchor: "wildcard-placement"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: extends-read-write
+    question: "Với List<? extends Number> values, thao tác nào an toàn theo static type?"
+    answers:
+      - {id: A, answer: "Đọc element dưới dạng Number.", explanation: "Đúng."}
+      - {id: B, answer: "Luôn add Integer.", explanation: "Sai. List thật có thể là List<Double>."}
+      - {id: C, answer: "Luôn add Double.", explanation: "Sai."}
+      - {id: D, answer: "Đọc element dưới dạng Integer.", explanation: "Không được bảo đảm."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.Wildcards/Wildcards.md", anchor: "extends-wildcard"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: super-read-write
+    question: "Với List<? super Integer> target, điều gì đúng?"
+    answers:
+      - {id: A, answer: "Có thể add Integer; khi đọc chỉ chắc chắn Object.", explanation: "Đúng."}
+      - {id: B, answer: "Không thể add bất kỳ giá trị nào.", explanation: "Sai."}
+      - {id: C, answer: "Đọc luôn ra Integer.", explanation: "Sai."}
+      - {id: D, answer: "Chỉ nhận List<Integer>, không nhận List<Number>.", explanation: "Sai."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.Wildcards/Wildcards.md", anchor: "super-wildcard"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: wildcard-capture-helper
+    question: "Wildcard capture helper như <T> void swapHelper(List<T>) giúp gì cho List<?>?"
+    answers:
+      - {id: A, answer: "Biến unknown type thành Object vĩnh viễn.", explanation: "Sai."}
+      - {id: B, answer: "Cho compiler một type variable nhất quán đại diện cho một unknown type cụ thể.", explanation: "Đúng."}
+      - {id: C, answer: "Tắt type checking.", explanation: "Sai."}
+      - {id: D, answer: "Tạo runtime subclass mới.", explanation: "Sai."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.Wildcards/Wildcards.md", anchor: "wildcard-capture"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: pecs-core-rule
+    question: "PECS viết tắt cho rule nào?"
+    answers:
+      - {id: A, answer: "Producer Extends, Consumer Super.", explanation: "Đúng."}
+      - {id: B, answer: "Producer Exact, Consumer Static.", explanation: "Sai."}
+      - {id: C, answer: "Primitive Extends, Class Super.", explanation: "Sai."}
+      - {id: D, answer: "Parameter Erasure, Cast Safety.", explanation: "Sai."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.PECS/PECS.md", anchor: "pecs-rule"}
+    apiRelated: {controller: "WildcardController", methodSignature: "producerConsumer()"}
+
+  - id: extends-not-readonly
+    question: "Vì sao nói '? extends = read-only' chỉ là cách nhớ gần đúng?"
+    answers:
+      - {id: A, answer: "Vì vẫn có thể thực hiện operation không cần một concrete element type như clear().", explanation: "Đúng."}
+      - {id: B, answer: "Vì có thể add bất kỳ subtype nào.", explanation: "Sai."}
+      - {id: C, answer: "Vì extends tự đổi thành super ở runtime.", explanation: "Sai."}
+      - {id: D, answer: "Vì compiler bỏ kiểm tra khi dùng wildcard.", explanation: "Sai."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.PECS/PECS.md", anchor: "read-from-producer"}
+    apiRelated: {controller: "WildcardController", methodSignature: "producerConsumer()"}
+
+  - id: consumer-target
+    question: "Method cần ghi Dog vào một list linh hoạt nhất nên nhận kiểu nào?"
+    answers:
+      - {id: A, answer: "List<? extends Dog>", explanation: "Sai. extends không cho phép ghi Dog an toàn."}
+      - {id: B, answer: "List<? super Dog>", explanation: "Đúng."}
+      - {id: C, answer: "List<?>", explanation: "Sai."}
+      - {id: D, answer: "Raw List", explanation: "Có thể ghi nhưng mất type safety, không phải lựa chọn đúng."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.PECS/PECS.md", anchor: "write-to-consumer"}
+    apiRelated: {controller: "WildcardController", methodSignature: "producerConsumer()"}
+
+  - id: generic-invariance
+    question: "Vì sao List<Dog> không được gán cho List<Animal>?"
+    answers:
+      - {id: A, answer: "Vì Dog không phải Animal.", explanation: "Sai. Dog vẫn là subtype của Animal."}
+      - {id: B, answer: "Vì nếu được phép, code qua List<Animal> có thể chèn Animal không phải Dog vào list gốc.", explanation: "Đúng."}
+      - {id: C, answer: "Vì List không hỗ trợ inheritance.", explanation: "Sai."}
+      - {id: D, answer: "Vì JVM không hỗ trợ Object.", explanation: "Sai."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.Invariance/Invariance.md", anchor: "generic-invariance"}
+    apiRelated: {controller: "VarianceController", methodSignature: "invariance()"}
+
+  - id: declaration-subtyping
+    question: "Nếu ArrayContainer<T> implements Container<T>, quan hệ nào đúng?"
+    answers:
+      - {id: A, answer: "ArrayContainer<String> là subtype của Container<String>.", explanation: "Đúng. Declaration inheritance vẫn hoạt động với cùng type argument."}
+      - {id: B, answer: "Container<String> là subtype của ArrayContainer<String>.", explanation: "Sai."}
+      - {id: C, answer: "ArrayContainer<Dog> tự là Container<Animal>.", explanation: "Sai. Invariance vẫn áp dụng cho type argument."}
+      - {id: D, answer: "Generic declaration không thể implements interface.", explanation: "Sai."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.Invariance/Invariance.md", anchor: "generic-declaration-subtyping"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: arrays-vs-generics
+    question: "Điểm khác nhau cốt lõi giữa array covariance và generic invariance là gì?"
+    answers:
+      - {id: A, answer: "Array cho phép subtype assignment nhưng runtime store-check có thể ném ArrayStoreException; generics chặn quan hệ nguy hiểm sớm.", explanation: "Đúng."}
+      - {id: B, answer: "Generics covariant còn array invariant.", explanation: "Sai."}
+      - {id: C, answer: "Array không biết component type ở runtime.", explanation: "Sai. Array là reified."}
+      - {id: D, answer: "Hai cơ chế giống hoàn toàn.", explanation: "Sai."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.Invariance/Invariance.md", anchor: "variance-vs-arrays"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: raw-type-purpose
+    question: "Lý do chính Java vẫn hỗ trợ raw types là gì?"
+    answers:
+      - {id: A, answer: "Để code mới viết ngắn hơn.", explanation: "Sai."}
+      - {id: B, answer: "Backward compatibility với code/API có trước Generics.", explanation: "Đúng."}
+      - {id: C, answer: "Để thay thế wildcard.", explanation: "Sai."}
+      - {id: D, answer: "Để giữ type arguments ở runtime.", explanation: "Sai."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.RawTypes/RawTypes.md", anchor: "raw-type-compatibility"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: unchecked-warning-meaning
+    question: "Unchecked warning nên được hiểu như thế nào?"
+    answers:
+      - {id: A, answer: "Compiler báo một generic guarantee không thể được chứng minh đầy đủ.", explanation: "Đúng."}
+      - {id: B, answer: "Chỉ là formatting warning vô hại.", explanation: "Sai."}
+      - {id: C, answer: "Chắc chắn runtime sẽ fail ngay.", explanation: "Sai. Warning đánh dấu mất proof, không đảm bảo failure ngay."}
+      - {id: D, answer: "Có thể luôn suppress mà không cần xem xét.", explanation: "Sai."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.RawTypes/RawTypes.md", anchor: "unchecked-warning"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: heap-pollution-failure
+    question: "Trong heap-pollution experiment, vì sao raw.add(123) có thể qua nhưng typed read sau đó ném ClassCastException?"
+    answers:
+      - {id: A, answer: "Raw reference đã xuyên qua generic checking; typed read sau đó cần cast về String.", explanation: "Đúng."}
+      - {id: B, answer: "Array covariance gây lỗi.", explanation: "Sai."}
+      - {id: C, answer: "Integer tự đổi thành String.", explanation: "Sai."}
+      - {id: D, answer: "List<String> thực ra luôn chứa Object an toàn.", explanation: "Sai."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.RawTypes/RawTypes.md", anchor: "heap-pollution"}
+    apiRelated: {controller: "RawTypeController", methodSignature: "heapPollution()"}
+
+  - id: erasure-runtime-class
+    question: "Kết quả điển hình của new ArrayList<String>().getClass() == new ArrayList<Integer>().getClass() là gì?"
+    answers:
+      - {id: A, answer: "true, vì hai parameterization dùng cùng runtime ArrayList class.", explanation: "Đúng."}
+      - {id: B, answer: "false, vì JVM tạo class riêng cho từng type argument.", explanation: "Sai."}
+      - {id: C, answer: "Compile error.", explanation: "Sai."}
+      - {id: D, answer: "Chỉ true khi list rỗng.", explanation: "Sai."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.TypeErasure/TypeErasure.md", anchor: "erased-runtime-type"}
+    apiRelated: {controller: "ErasureController", methodSignature: "inspectRuntimeTypes()"}
+
+  - id: bridge-method-purpose
+    question: "Compiler sinh bridge method chủ yếu để làm gì?"
+    answers:
+      - {id: A, answer: "Giữ overriding/polymorphism đúng sau khi generic signature bị erase.", explanation: "Đúng."}
+      - {id: B, answer: "Tối ưu GC.", explanation: "Sai."}
+      - {id: C, answer: "Thay thế mọi overloaded method.", explanation: "Sai."}
+      - {id: D, answer: "Lưu type argument trong object header.", explanation: "Sai."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.TypeErasure/TypeErasure.md", anchor: "bridge-method"}
+    apiRelated: {controller: "ErasureController", methodSignature: "bridgeMethod()"}
+
+  - id: reifiable-instanceof-java21
+    question: "Phát biểu nào đúng nhất về instanceof với generic types trên Java 21?"
+    answers:
+      - {id: A, answer: "Mọi parameterized type đều tuyệt đối bị cấm sau instanceof.", explanation: "Sai. Java 16+ cho phép một số checked cases dựa trên static type."}
+      - {id: B, answer: "Object x có thể tùy ý test x instanceof List<String> và JVM kiểm tra mọi element.", explanation: "Sai."}
+      - {id: C, answer: "Một số parameterized instanceof hợp lệ nếu static type/casting conversion cho phép, nhưng điều đó không có nghĩa runtime kiểm tra concrete element type.", explanation: "Đúng."}
+      - {id: D, answer: "Type erasure đã bị loại bỏ từ Java 16.", explanation: "Sai."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.TypeErasure/TypeErasure.md", anchor: "non-reifiable-types"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: no-generic-primitives
+    question: "Vì sao List<int> không hợp lệ trong Java Generics?"
+    answers:
+      - {id: A, answer: "Type argument phải là reference type; dùng Integer nếu cần wrapper.", explanation: "Đúng."}
+      - {id: B, answer: "int không tồn tại trong Java.", explanation: "Sai."}
+      - {id: C, answer: "Chỉ List cấm int, Box<int> thì hợp lệ.", explanation: "Sai."}
+      - {id: D, answer: "Vì int luôn lớn hơn Object.", explanation: "Sai."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.Limitations/Limitations.md", anchor: "no-generic-primitives"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: no-new-t
+    question: "Nếu generic code cần tạo T nhưng không thể new T(), thiết kế nào phù hợp?"
+    answers:
+      - {id: A, answer: "Nhận một Factory<T> hoặc object-creation strategy từ caller.", explanation: "Đúng."}
+      - {id: B, answer: "Cast new Object() thành T và tin rằng luôn đúng.", explanation: "Sai."}
+      - {id: C, answer: "Dùng raw type cho toàn bộ code.", explanation: "Sai."}
+      - {id: D, answer: "Bắt JVM tự suy luận constructor từ T lúc runtime.", explanation: "Không có cơ chế đó."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.Limitations/Limitations.md", anchor: "no-new-type-parameter"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: generic-array-restriction
+    question: "Vì sao new List<String>[10] bị cấm trong khi new String[10] hợp lệ?"
+    answers:
+      - {id: A, answer: "Array cần component type runtime để store-check; List<String> là non-reifiable.", explanation: "Đúng."}
+      - {id: B, answer: "List không phải object.", explanation: "Sai."}
+      - {id: C, answer: "String là primitive.", explanation: "Sai."}
+      - {id: D, answer: "Generics không được dùng cùng array ở bất kỳ dạng nào.", explanation: "Sai. Ví dụ List<?>[] có thể hợp lệ."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.Limitations/Limitations.md", anchor: "generic-array-limit"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: static-class-type-parameter
+    question: "Vì sao static field của Box<T> không thể có kiểu T?"
+    answers:
+      - {id: A, answer: "Static state tồn tại một lần cho class, không có một T riêng cho mỗi parameterization runtime.", explanation: "Đúng."}
+      - {id: B, answer: "Static member không được có reference type.", explanation: "Sai."}
+      - {id: C, answer: "T luôn là primitive.", explanation: "Sai."}
+      - {id: D, answer: "Vì static chỉ dùng được với String.", explanation: "Sai."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.Limitations/Limitations.md", anchor: "static-type-parameter-limit"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: generic-exception-rule
+    question: "Phát biểu nào đúng về generic exceptions?"
+    answers:
+      - {id: A, answer: "class Problem<T> extends Exception là hợp lệ.", explanation: "Sai. Generic subclass trực tiếp của Throwable bị cấm."}
+      - {id: B, answer: "Có thể catch (T ex) với mọi T.", explanation: "Sai."}
+      - {id: C, answer: "Type parameter được bound phù hợp có thể xuất hiện trong throws E.", explanation: "Đúng."}
+      - {id: D, answer: "Generics không thể xuất hiện trong bất kỳ exception-related signature nào.", explanation: "Sai."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.Limitations/Limitations.md", anchor: "generic-exception-limit"}
+    apiRelated: {controller: "", methodSignature: ""}
