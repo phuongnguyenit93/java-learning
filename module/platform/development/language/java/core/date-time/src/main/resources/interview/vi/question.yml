@@ -1,0 +1,589 @@
+# <interview-schema>
+# Cấu trúc câu hỏi Interview
+# schema-version: 2
+#
+# questions [kiểu: list; bắt buộc; mặc định: []]
+#   Danh sách câu hỏi Interview của module trong language hiện tại.
+#   mỗi phần tử:
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi phỏng vấn hiển thị cho người học.
+#     answer [kiểu: string; bắt buộc; mặc định: ""]
+#       Câu trả lời tham khảo, chỉ hiển thị khi người học chủ động mở.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu nội dung được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu nội dung đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+# </interview-schema>
+
+
+questions:
+  - question: >-
+      Vì sao Java cần nhiều mô hình date-time thay vì gom mọi thứ vào một kiểu "timestamp" chung?
+    answer: >-
+      Vì ngày trên lịch, giờ trong ngày, local date-time, một instant trên timeline và quy tắc múi giờ trả lời các câu hỏi khác nhau. Dùng một kiểu chung thường hoặc làm mất context cần thiết, hoặc buộc ta invent thêm dữ liệu mà domain không sở hữu. Thiết kế tốt chọn type giữ đúng semantics: ví dụ LocalDate cho ngày lịch, Instant cho event đã xảy ra, ZonedDateTime khi region rules là một phần của ý nghĩa.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.MentalModel/MentalModel.md"
+      anchor: "date-time-domains"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Vì sao immutability và value semantics của java.time quan trọng trong code production?
+    answer: >-
+      Các operation như plus, minus, with trả value mới thay vì sửa object gốc, nên việc truyền date-time qua nhiều layer ít tạo side effect ẩn và dễ reasoning hơn. Các type chính nên được xem như value: so sánh theo contract giá trị, không dựa vào object identity. Một lỗi migration phổ biến từ API mutable là gọi plusDays(...) nhưng quên gán kết quả mới.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.MentalModel/MentalModel.md"
+      anchor: "immutable-date-time"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Khi nhận một yêu cầu nghiệp vụ mới, bạn chọn temporal type theo nguyên tắc nào?
+    answer: >-
+      Hãy hỏi dữ liệu thật sự biết gì và chỉ model đúng phần đó. LocalDate/LocalTime/LocalDateTime giữ local calendar hoặc wall-clock facts; Instant giữ một timeline point; ZonedDateTime giữ local fields cùng ZoneId/rules; OffsetDateTime giữ concrete offset nhưng không biết region. Các type như YearMonth hay MonthDay giúp tránh invent ngày hoặc năm giả chỉ để vừa một type lớn hơn.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.MentalModel/MentalModel.md"
+      anchor: "choose-date-time-type"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Hãy giải thích boundary giữa ISO chronology, non-ISO chronology và Locale trong java.time.
+    answer: >-
+      LocalDate, LocalDateTime và các Local* concrete type tương ứng là ISO calendar types; đổi Locale không biến chúng thành calendar system khác. Locale chủ yếu ảnh hưởng cách trình bày/parse text. Khi domain thật sự dùng lịch khác ISO, java.time.chrono có các abstraction/type riêng như ChronoLocalDate; đó là nhánh nâng cao, không phải configuration của LocalDate.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.MentalModel/MentalModel.md"
+      anchor: "date-time-domains"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Vì sao một ngày sinh nên là LocalDate thay vì LocalDateTime với giờ 00:00?
+    answer: >-
+      Nếu domain chỉ biết ngày thì 00:00 là dữ liệu do code tự invent. Field giả đó có thể leak vào serialization, query database hoặc zone conversion và làm xuất hiện câu hỏi vô nghĩa như "sinh nhật xảy ra ở instant nào". LocalDate diễn đạt chính xác hơn vì cố ý không chứa time-of-day hay zone.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.LocalDate/LocalDate.md"
+      anchor: "local-date-model"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Tại sao LocalDate.of(2026, 1, 31).plusMonths(1) không đơn giản là cộng một số ngày cố định, và nếu business muốn rule khác thì làm gì?
+    answer: >-
+      plusMonths là calendar arithmetic: trước hết chuyển sang tháng đích rồi điều chỉnh ngày về một ngày hợp lệ, nên 31/01/2026 + 1 tháng trở thành 28/02/2026. Nó không có nghĩa "cộng N giây". Nếu business muốn semantics khác, ví dụ reject hoặc roll sang tháng tiếp theo, rule đó phải được encode/validate riêng thay vì suy từ behavior mặc định của JDK.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.LocalDate/LocalDate.md"
+      anchor: "calendar-validity"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Vì sao TemporalAdjusters không nên bị dùng như một business-calendar engine?
+    answer: >-
+      TemporalAdjusters cung cấp calendar mechanics tổng quát như ngày cuối tháng hay thứ Hai kế tiếp. "Ngày làm việc tiếp theo" còn phụ thuộc cuối tuần, ngày lễ, quốc gia, sàn giao dịch, policy công ty hoặc cut-off time. Những rule đó thuộc application policy và nên được encapsulate trong business calendar/service riêng.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.LocalDate/LocalDate.md"
+      anchor: "local-date-arithmetic"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Một ca làm từ 22:00 đến 06:00 bị tính duration âm khi chỉ dùng LocalTime. Bạn chẩn đoán vấn đề thế nào?
+    answer: >-
+      LocalTime chỉ biết time-of-day và arithmetic của nó wrap trong 24 giờ; nó không biết 06:00 là cùng ngày hay ngày hôm sau. Muốn tính elapsed time phải bổ sung date hoặc một rule rõ ràng. Nếu ca làm thuộc region có DST thì LocalDateTime vẫn chưa đủ; cần ZoneId/ZonedDateTime hoặc quy về Instant trước khi đo elapsed timeline time.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.LocalTime/LocalTime.md"
+      anchor: "local-time-wrap"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      LocalTime hỗ trợ nanosecond. Tại sao điều đó không có nghĩa hệ thống thật sự đo và lưu chính xác đến nanosecond?
+    answer: >-
+      Đó là representation precision của type, không phải measurement accuracy hay clock resolution. OS clock, database, message format hoặc driver có thể chỉ giữ microsecond/millisecond và truncate phần nhỏ hơn. Production code nên định nghĩa precision tại boundary và policy rounding/truncation thay vì suy từ khả năng biểu diễn của LocalTime.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.LocalTime/LocalTime.md"
+      anchor: "local-time-precision"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Khi nào một rule "09:00 mỗi ngày" nên giữ ở LocalTime, và khi nào nó phải trở thành một scheduled instant?
+    answer: >-
+      LocalTime phù hợp khi domain mới sở hữu wall-clock rule. Một occurrence cụ thể chỉ được xác định khi có date và, nếu cần global timeline meaning, region/offset. Convert quá sớm sang Instant hoặc tự invent một ngày/zone làm thay đổi semantics; hãy resolve chỉ khi use case có đủ context.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.LocalTime/LocalTime.md"
+      anchor: "local-time-model"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Vì sao LocalDateTime không nên được gọi là một global timestamp?
+    answer: >-
+      LocalDateTime có date + time nhưng không có ZoneId hay ZoneOffset, nên cùng local fields có thể map tới các Instant khác nhau ở các region khác nhau. Trong DST gap một local time có thể không tồn tại; trong overlap nó có thể xảy ra hai lần. Vì vậy nó không đủ để globally order hoặc identify event nếu chưa có context.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.LocalDateTime/LocalDateTime.md"
+      anchor: "local-date-time-ambiguity"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Hãy nêu các trường hợp production mà LocalDateTime là lựa chọn đúng chứ không phải code smell.
+    answer: >-
+      Nó đúng khi timeline mapping cố ý chưa tồn tại hoặc không thuộc dữ liệu: người dùng nhập lịch trước khi chọn zone, business rule theo local civil time, hoặc một database column thật sự mang semantics "timestamp without time zone". Điểm quan trọng là LocalDateTime phải phản ánh domain chứ không phải được chọn chỉ vì input text trông giống ngày + giờ.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.LocalDateTime/LocalDateTime.md"
+      anchor: "local-date-time-use-cases"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Bạn review đoạn code local.atZone(ZoneId.systemDefault()).toInstant() như thế nào?
+    answer: >-
+      Conversion từ local fields sang Instant cần zone thuộc domain; system default chỉ là state của môi trường và có thể khác giữa laptop, CI, container và production. Hãy truyền/configure ZoneId rõ ràng. Với user input quan trọng còn phải định nghĩa cách xử lý DST gap/overlap thay vì để assumption mặc định quyết định business outcome.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.LocalDateTime/LocalDateTime.md"
+      anchor: "local-date-time-ambiguity"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Instant là default tốt cho loại dữ liệu nào, và khi nào chỉ lưu Instant làm mất business intent?
+    answer: >-
+      Instant rất phù hợp cho occurredAt, audit log, ordering giữa hệ thống hoặc deadline có semantics timeline. Nhưng lịch tương lai như "09:00 tại Europe/Paris" còn sở hữu local civil time và region rules. Nếu chỉ giữ Instant đã resolve ban đầu, application có thể mất ZoneId cần cho display, rescheduling hoặc phản ứng khi time-zone rules thay đổi.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Instant/Instant.md"
+      anchor: "instant-use-cases"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Những rủi ro production nào xuất hiện khi hệ thống lưu hoặc truyền epoch time dưới dạng một số trần?
+    answer: >-
+      Một raw number không tự nói unit là seconds, milliseconds, microseconds hay nanoseconds; nhầm unit có thể tạo timestamp lệch cực lớn. Conversion như toEpochMilli còn có thể mất sub-millisecond precision. Schema/protocol nên ghi rõ unit hoặc dùng textual representation chuẩn có contract xác định.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Instant/Instant.md"
+      anchor: "epoch-time"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Hãy giải thích boundary thực dụng của Instant đối với leap second và đo elapsed time.
+    answer: >-
+      Với business application, có thể hiểu Instant là một point trên global UTC-oriented timeline. Ở mức specification, Java dùng Java Time-Scale và không hứa là một đồng hồ thiên văn UTC thuần túy quanh leap seconds. Ngoài ra Instant.now() là wall-clock time; khi đo code chạy bao lâu trong cùng JVM nên dùng monotonic elapsed source như System.nanoTime().
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Instant/Instant.md"
+      anchor: "instant-model"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Vì sao +01:00 không thể thay thế Europe/Paris khi thiết kế lịch theo địa điểm?
+    answer: >-
+      ZoneOffset chỉ là một độ lệch cụ thể so với UTC; ZoneId region-based định danh cả bộ quy tắc có lịch sử và có thể thay đổi theo ngày hoặc quyết định pháp lý. Nhiều region có thể cùng offset tại một thời điểm, nên không thể suy ngược chắc chắn region từ +01:00. Future scheduling cần ZoneId nếu region rules là một phần của intent.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.ZoneOffsetZoneId/ZoneOffsetZoneId.md"
+      anchor: "zone-id"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Bạn thiết kế lưu lịch tương lai thế nào khi time-zone rules có thể được cập nhật?
+    answer: >-
+      Nếu business nói theo local time của một region, nên giữ local schedule cùng ZoneId thay vì chỉ freeze offset hoặc Instant đã tính sớm. ZoneRules đến từ time-zone database và có thể thay đổi khi luật địa phương thay đổi. Khi cần occurrence, resolve với rules đang áp dụng và policy business phù hợp.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.ZoneOffsetZoneId/ZoneOffsetZoneId.md"
+      anchor: "zone-rules"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Vì sao ZoneId.systemDefault() là một dependency nguy hiểm trong service hoặc container?
+    answer: >-
+      Default zone đến từ runtime environment, nên cùng binary có thể chạy khác nhau trên laptop, CI, container hoặc production. Nếu business fact sở hữu một zone cụ thể, hãy truyền hoặc cấu hình zone đó rõ ràng. Chỉ nên dựa vào system default khi chính environment default là một phần có chủ đích của contract.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.ZoneOffsetZoneId/ZoneOffsetZoneId.md"
+      anchor: "zone-id"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Khi nào chọn ZonedDateTime, OffsetDateTime hoặc Instant cho cùng một dữ liệu thời gian?
+    answer: >-
+      Chọn ZonedDateTime khi named region và rules theo thời gian là một phần của domain, như future scheduling. OffsetDateTime phù hợp khi boundary chỉ cung cấp local fields + concrete offset và không biết region. Nếu chỉ cần identity/order trên global timeline, Instant thường đơn giản và rõ hơn.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.ZonedOffsetDateTime/ZonedOffsetDateTime.md"
+      anchor: "zoned-date-time"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      "Cùng instant" và "cùng local time" khác nhau thế nào khi đổi zone?
+    answer: >-
+      Same instant giữ nguyên vị trí trên timeline nên local clock phải thay đổi theo zone mới; đó là cách hiển thị cùng event cho người dùng ở nơi khác. Same local giữ nguyên calendar/clock fields nhưng thường đổi timeline point, tức là reinterpret lịch dưới region khác. Trước khi convert phải xác định invariant nào cần được bảo toàn.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.ZonedOffsetDateTime/ZonedOffsetDateTime.md"
+      anchor: "same-instant-vs-same-local"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Một hệ thống dùng withZoneSameLocal để hiển thị cùng một event ở zone khác. Bug nằm ở đâu?
+    answer: >-
+      Display cùng một event phải bảo toàn Instant, nên withZoneSameInstant mới đúng. withZoneSameLocal giữ local fields rồi resolve dưới rules mới, vì vậy thường tạo một event khác trên timeline. Đây là bug modeling chứ không chỉ là chọn nhầm method name.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.ZonedOffsetDateTime/ZonedOffsetDateTime.md"
+      anchor: "zone-conversion"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      withOffsetSameInstant và withOffsetSameLocal của OffsetDateTime khác nhau thế nào?
+    answer: >-
+      withOffsetSameInstant đổi local fields để giữ nguyên timeline point; withOffsetSameLocal giữ local date-time và reinterpret nó dưới offset mới nên Instant thay đổi. Vì OffsetDateTime chỉ mang concrete offset, các operation này không tra region ZoneRules hay DST như khi làm việc với ZoneId region-based.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.ZonedOffsetDateTime/ZonedOffsetDateTime.md"
+      anchor: "offset-date-time"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Vì sao "một ngày" và "24 giờ" có thể cho kết quả khác nhau quanh DST?
+    answer: >-
+      Period.ofDays(1) hoặc plusDays(1) mang calendar/local semantics: đi sang ngày lịch tiếp theo và thường giữ local time. Duration.ofHours(24) là fixed elapsed time trên timeline. Khi DST làm một local day dài 23 hoặc 25 giờ, hai operation diverge; chọn cái nào phụ thuộc business meaning.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.DurationPeriod/DurationPeriod.md"
+      anchor: "duration-vs-period"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Tại sao không thể convert "1 tháng" thành một số giây chính xác nếu chưa có context?
+    answer: >-
+      Period theo month/year/day là calendar amount; tháng có 28, 29, 30 hoặc 31 ngày và năm có thể chứa leap day. Muốn biết elapsed seconds còn cần điểm bắt đầu và đôi khi zone vì DST. Vì vậy Period.ofMonths(1) không có một Duration tương đương context-free.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.DurationPeriod/DurationPeriod.md"
+      anchor: "period-date-based"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Hãy phân tích việc dùng Period cho timeout/TTL và dùng Duration cho tuổi hoặc chu kỳ billing.
+    answer: >-
+      Timeout, TTL, latency hỏi elapsed time nên phù hợp với Duration. Tuổi, ngày đến hạn hàng tháng hoặc chu kỳ billing thường là calendar semantics nên dùng Period/date arithmetic. Dùng sai abstraction có thể trông đúng trong ngày bình thường nhưng fail ở month-end, leap day hoặc DST.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.DurationPeriod/DurationPeriod.md"
+      anchor: "duration-time-based"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Vì sao formatting nên được xem là boundary policy thay vì một phần của domain model?
+    answer: >-
+      Temporal object giữ semantics, còn text chỉ là representation cho UI, file, protocol hoặc log. Cùng LocalDate có thể được hiển thị theo nhiều format mà domain không đổi. Locale ảnh hưởng textual fields và ZoneId cung cấp local view khi format Instant; DateTimeFormatter immutable/thread-safe nên có thể tái sử dụng.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.FormattingParsing/FormattingParsing.md"
+      anchor: "date-time-formatter"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Bạn review pattern YYYY-MM-dd HH:mm như thế nào?
+    answer: >-
+      Pattern letters có semantics riêng: Y là week-based-year, không phải calendar/proleptic year; M là month còn m là minute; H khác h; uuuu khác yyyy. YYYY-MM-dd có thể hiển thị "năm" bất ngờ quanh New Year. Với protocol chuẩn, predefined ISO formatter thường an toàn và rõ hơn tự đoán pattern.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.FormattingParsing/FormattingParsing.md"
+      anchor: "format-patterns"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Vì sao parse thành công chưa có nghĩa input hợp lệ cho business?
+    answer: >-
+      ResolverStyle chỉ kiểm soát cách các temporal fields được resolve: STRICT, SMART và LENIENT có mức chấp nhận/normalize khác nhau. Sau khi có một date-time hợp lệ về calendar, application vẫn phải kiểm tra business rule như booking window, holiday, cutoff hoặc quyền người dùng. Parsing validation và business validation là hai layer khác nhau.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.FormattingParsing/FormattingParsing.md"
+      anchor: "strict-smart-lenient"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Làm sao chọn target type khi parse để không làm mất hoặc invent zone information?
+    answer: >-
+      Target phải phản ánh đúng field text thật sự chứa. Input có offset nên parse vào OffsetDateTime hoặc type giữ offset; có region zone thì ZonedDateTime; chỉ local fields thì LocalDateTime. Đừng cắt bỏ +07:00 để lấy LocalDateTime, và cũng đừng tự gắn UTC/system default khi input không hề cung cấp zone.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.FormattingParsing/FormattingParsing.md"
+      anchor: "parse-target-type"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Vì sao zoned.plusDays(1) và zoned.plus(Duration.ofHours(24)) thể hiện hai requirement khác nhau?
+    answer: >-
+      plusDays(1) là date-based arithmetic, thường bảo toàn local/calendar intent; cộng Duration 24 giờ bảo toàn elapsed timeline amount. Quanh DST hai kết quả có thể khác local time hoặc offset. Requirement phải nói "cùng giờ ngày mai" hay "sau đúng 24 giờ" thay vì chỉ nói "cộng một ngày".
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "10.ArithmeticComparison/ArithmeticComparison.md"
+      anchor: "temporal-arithmetic"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Khi nào dùng ChronoUnit.between, Duration.between hoặc Period.between?
+    answer: >-
+      ChronoUnit.between đếm số whole units cụ thể giữa hai temporal phù hợp; Duration.between diễn tả elapsed timeline amount; Period.between giữ calendar components year/month/day. Nếu cần fractional units, nên giữ precision cao hơn như Duration/nanos rồi áp dụng rounding policy của domain thay vì giả định between trả số thập phân.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "10.ArithmeticComparison/ArithmeticComparison.md"
+      anchor: "between-semantics"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Hãy giải thích khác biệt giữa equals, isEqual và compareTo trên ZonedDateTime/OffsetDateTime.
+    answer: >-
+      isEqual/isBefore/isAfter trả lời câu hỏi timeline theo Instant. equals kiểm tra object representation theo contract: OffsetDateTime quan tâm local date-time + offset; ZonedDateTime còn quan tâm ZoneId. Natural compareTo có tie-break để nhất quán với equality nên không phải instant-only ordering; nếu domain chỉ quan tâm timeline, toInstant hoặc timeline comparator rõ intent hơn.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "10.ArithmeticComparison/ArithmeticComparison.md"
+      anchor: "date-time-comparison"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Khi thiết kế time range cho event filtering, vì sao [start, end) thường là convention tốt?
+    answer: >-
+      java.time không áp một core Interval class cho mọi domain, nên inclusive/exclusive boundary phải được định nghĩa rõ. Half-open [start, end) giúp hai range kề nhau không double-count phần tử ở boundary và làm composition/chia cửa sổ đơn giản hơn. Quan trọng nhất là contract phải explicit và nhất quán.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "10.ArithmeticComparison/ArithmeticComparison.md"
+      anchor: "between-semantics"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Bạn sẽ thiết kế requirement "sau 3 ngày làm việc" như thế nào?
+    answer: >-
+      plusDays(3) chỉ biết calendar days, không biết weekend, holiday, market calendar, company leave hay cut-off. Nên tạo BusinessCalendar/service sở hữu các policy đó và dùng LocalDate/DayOfWeek như mechanics nền. Tách JDK mechanics khỏi business policy giúp rule testable và thay đổi độc lập.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "10.ArithmeticComparison/ArithmeticComparison.md"
+      anchor: "business-calendar-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Clock và InstantSource khác nhau thế nào, và service nên phụ thuộc vào cái nào?
+    answer: >-
+      InstantSource chỉ cung cấp current Instant nên là abstraction hẹp hơn cho logic chỉ cần timeline "now". Clock cũng cung cấp ZoneId và phù hợp với API như LocalDate.now(clock) hoặc ZonedDateTime.now(clock). Chọn dependency hẹp nhất vẫn giữ đúng semantics; Clock implements InstantSource nên testability vẫn tốt ở cả hai hướng.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "11.Clock/Clock.md"
+      anchor: "clock-abstraction"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Vì sao test thời gian bằng Thread.sleep thường yếu, và Clock.fixed giải quyết vấn đề gì?
+    answer: >-
+      sleep làm test chậm, phụ thuộc scheduler/CI load và vẫn dựa vào thời gian thật nên dễ flaky. Fixed Clock hoặc fixed InstantSource cho phép đặt "now" chính xác trước, tại và sau threshold mà không chờ. Khi business rule chỉ cần current time có thể kiểm soát, hãy di chuyển clock trong test thay vì chờ wall clock chạy.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "11.Clock/Clock.md"
+      anchor: "fixed-clock-testing"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Phân biệt current wall-clock time, elapsed-time measurement và scheduling trong thiết kế Java.
+    answer: >-
+      Clock/InstantSource trả lời "bây giờ là instant nào". System.nanoTime dùng để đo elapsed duration trong cùng JVM; giá trị tuyệt đối của nó không phải timestamp và không convert sang Instant. Clock cũng không chạy job hay wake thread; scheduler/executor là responsibility khác. Trộn ba khái niệm này dễ tạo test và production bug.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "11.Clock/Clock.md"
+      anchor: "clock-injection"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Khi một legacy API trả java.util.Date hoặc Calendar, chiến lược migration an toàn là gì?
+    answer: >-
+      Convert ở boundary sang modern semantic type càng sớm càng tốt, xử lý nội bộ bằng java.time rồi chỉ convert lại nếu API cũ bắt buộc. Date gần với timeline point nên bridge tự nhiên sang Instant; Calendar còn mang zone và mutable calendar fields nên khi convert phải giữ zone nếu local interpretation quan trọng. Tránh để mutability/default assumptions của legacy API lan vào core domain.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "12.LegacyInteropPitfalls/LegacyInteropPitfalls.md"
+      anchor: "legacy-date-calendar"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      JDBC 4.2 thay đổi cách modern Java code làm việc với date-time như thế nào?
+    answer: >-
+      Driver hỗ trợ JDBC 4.2 có standard mappings để setObject/getObject trực tiếp với LocalDate, LocalTime, LocalDateTime, OffsetTime và OffsetDateTime, nên code mới không bắt buộc đi vòng qua java.sql.Date/Time/Timestamp. Tuy vậy SQL type, precision và time-zone semantics vẫn thuộc contract của DB/schema/driver. Không nên suy rằng direct Instant mapping giống nhau ở mọi provider.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "12.LegacyInteropPitfalls/LegacyInteropPitfalls.md"
+      anchor: "legacy-conversion"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Vì sao một bug date-time có thể chỉ xuất hiện sau khi deploy dù chạy đúng trên máy developer?
+    answer: >-
+      Code dùng system default zone có thể nhận zone khác giữa laptop, CI, container và production. Cùng một Instant quanh midnight còn có thể map thành LocalDate khác nhau theo zone. Domain zone nên được truyền/configure explicit; default chỉ dùng khi chính environment default là một phần của contract.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "12.LegacyInteropPitfalls/LegacyInteropPitfalls.md"
+      anchor: "system-default-zone-risk"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Bạn sẽ xử lý input lịch hẹn rơi vào DST gap hoặc overlap như thế nào?
+    answer: >-
+      Kiểm tra ZoneRules cho LocalDateTime: zero valid offsets là gap, hai offsets là overlap. atZone có default resolution rule, nhưng với business input quan trọng product phải quyết định reject, điều chỉnh, hỏi user hay chọn occurrence nào. Khi user chọn occurrence trong overlap, nên giữ đủ offset/zone context để không mất quyết định đó.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "12.LegacyInteropPitfalls/LegacyInteropPitfalls.md"
+      anchor: "dst-gap-overlap"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Hãy thiết kế persistence cho ba loại dữ liệu: event đã xảy ra, lịch tương lai gắn region và local business date/time.
+    answer: >-
+      Event đã xảy ra thường nên lưu timeline point như Instant/UTC-oriented value. Future schedule theo địa điểm cần giữ local fields + ZoneId nếu regional rules là một phần của intent. Local facts như ngày sinh hoặc giờ mở cửa nên giữ LocalDate/LocalTime thay vì ép thành Instant. Mọi lựa chọn còn phải xác định DB type, precision và read-back semantics; "luôn lưu mọi thứ UTC" không phải rule đúng cho mọi domain.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "12.LegacyInteropPitfalls/LegacyInteropPitfalls.md"
+      anchor: "timestamp-storage-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""

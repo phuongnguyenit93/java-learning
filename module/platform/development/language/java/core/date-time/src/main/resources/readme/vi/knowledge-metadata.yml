@@ -1,1 +1,176 @@
-{}
+1.MentalModel/MentalModel.md:
+  date-time-domains:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  immutable-date-time:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  choose-date-time-type:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+2.LocalDate/LocalDate.md:
+  local-date-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  local-date-arithmetic:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  calendar-validity:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+3.LocalTime/LocalTime.md:
+  local-time-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  local-time-precision:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  local-time-wrap:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+4.LocalDateTime/LocalDateTime.md:
+  local-date-time-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  local-date-time-ambiguity:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  local-date-time-use-cases:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+5.Instant/Instant.md:
+  instant-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  epoch-time:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  instant-use-cases:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+6.ZoneOffsetZoneId/ZoneOffsetZoneId.md:
+  zone-offset:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  zone-id:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  zone-rules:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+7.ZonedOffsetDateTime/ZonedOffsetDateTime.md:
+  zoned-date-time:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  offset-date-time:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  same-instant-vs-same-local:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  zone-conversion:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+8.DurationPeriod/DurationPeriod.md:
+  duration-time-based:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  period-date-based:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  duration-vs-period:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+9.FormattingParsing/FormattingParsing.md:
+  date-time-formatter:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  format-patterns:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  strict-smart-lenient:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  parse-target-type:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+10.ArithmeticComparison/ArithmeticComparison.md:
+  temporal-arithmetic:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  between-semantics:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  date-time-comparison:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  business-calendar-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+11.Clock/Clock.md:
+  clock-abstraction:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  fixed-clock-testing:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  clock-injection:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+12.LegacyInteropPitfalls/LegacyInteropPitfalls.md:
+  legacy-date-calendar:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  legacy-conversion:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  system-default-zone-risk:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  dst-gap-overlap:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  timestamp-storage-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
