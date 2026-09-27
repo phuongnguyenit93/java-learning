@@ -1419,18 +1419,6 @@ pre {
   flex: 0 0 auto;
 }
 
-.download-popover {
-  position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
-  z-index: 10;
-  width: min(430px, calc(100vw - 40px));
-  border: 1px solid var(--border-strong);
-  border-radius: 10px;
-  background: var(--surface-soft);
-  box-shadow: 0 22px 60px var(--shadow);
-}
-
 .learning-content {
   min-height: 460px;
   min-width: 0;
@@ -3289,12 +3277,6 @@ pre {
   border: 1px dashed var(--border-strong);
   border-radius: 10px;
   background: var(--empty-bg);
-}
-
-.download-popover .empty-state--large {
-  min-height: 190px;
-  border: 0;
-  background: transparent;
 }
 
 .empty-state__icon {

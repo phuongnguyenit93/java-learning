@@ -33,7 +33,6 @@ export function LearningPage() {
   const [activeTab, setActiveTab] = useState<ModuleTab>('knowledge');
   const [visitedTabs, setVisitedTabs] = useState<Set<ModuleTab>>(() => new Set<ModuleTab>(['knowledge']));
   const [searchQuery, setSearchQuery] = useState('');
-  const [downloadTarget, setDownloadTarget] = useState<'api-notice' | null>(null);
   const [knowledgeIndex, setKnowledgeIndex] = useState<KnowledgeIndex | null>(null);
   const [knowledgeCounts, setKnowledgeCounts] = useState<Record<string, number>>({});
   const [quizCounts, setQuizCounts] = useState<Record<string, number>>({});
@@ -279,41 +278,10 @@ export function LearningPage() {
     }
 
     setSearchQuery('');
-    setDownloadTarget(null);
     setActiveKnowledgeCategory('all');
     setSelectedKnowledgeSection(null);
     setVisitedTabs(new Set<ModuleTab>([activeTab]));
   }, [activeModule?.id]);
-
-  useEffect(() => {
-    if (!downloadTarget) {
-      return undefined;
-    }
-
-    const handlePointerDown = (event: PointerEvent) => {
-      const target = event.target;
-
-      if (target instanceof Element && target.closest('[data-download-control]')) {
-        return;
-      }
-
-      setDownloadTarget(null);
-    };
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        setDownloadTarget(null);
-      }
-    };
-
-    document.addEventListener('pointerdown', handlePointerDown);
-    document.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      document.removeEventListener('pointerdown', handlePointerDown);
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [downloadTarget]);
 
   useEffect(() => {
     let active = true;
@@ -438,7 +406,6 @@ export function LearningPage() {
                 next.add(tab);
                 return next;
               });
-              setDownloadTarget(null);
             }}
           />
         </div>
@@ -464,7 +431,6 @@ export function LearningPage() {
                     return next;
                   });
                   setActiveTab('knowledge');
-                  setDownloadTarget(null);
                 }}
               />
             </div>
@@ -515,8 +481,18 @@ export function LearningPage() {
                 basePath={apiPath}
                 knowledgeIndex={knowledgeIndex}
                 searchQuery={searchQuery}
-                downloadOpen={downloadTarget === 'api-notice'}
-                onDownloadToggle={() => setDownloadTarget((current) => (current === 'api-notice' ? null : 'api-notice'))}
+                onDownload={() => {
+                  if (!activeModule.capabilities.execution) {
+                    return;
+                  }
+
+                  setVisitedTabs((current) => {
+                    const next = new Set(current);
+                    next.add('execution');
+                    return next;
+                  });
+                  setActiveTab('execution');
+                }}
               />
             </div>
           )}

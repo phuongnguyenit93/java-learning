@@ -272,7 +272,7 @@ Portal giữ state UI gần nhất theo module/language trong browser session kh
 
 `API Docs` hiện là **reference-only static documentation**. Nó không chạy/debug API trực tiếp trong Portal. Dữ liệu hiển thị được parse từ bốn Swagger YAML generated; rich `execution` HTML được sanitize trước khi render. Controller order bám theo numeric chapter order từ `controller-description.yml -> readmeRelated.file`; method order bám theo resolved README anchor position. Điều này giữ API reference theo learning path thay vì sort theo controller name/path.
 
-Download UI hiện dùng một shared popover contract. Popup phải anchor ngay dưới action đã mở nó; click bên ngoài, nhấn `Escape`, hoặc bấm lại chính action sẽ đóng popup. API Reference notice có thể reuse cùng Download action nhưng không được tự biến API Docs thành live execution surface.
+Download action trong API Reference hiện là navigation affordance sang `Local Run`, nơi sở hữu luồng build/download executable JAR thật. API Docs vẫn là reference-only static documentation; click Download chỉ đổi top-level tab sang `Local Run`, không biến API Docs thành live execution surface và không mở placeholder popover riêng.
 
 Theme dùng `prefers-color-scheme` cho lần đầu và lưu lựa chọn user vào `localStorage`. Theme surface/text thay đổi theo Light/Dark, còn semantic capability colors giữ cố định giữa hai theme: Overview gray, Knowledge blue, Quiz amber, Interview teal, API Docs red, Local Run purple, Download green.
 

@@ -987,7 +987,7 @@ Execution Context tiếp tục là capability độc lập và giữ ownership r
 
 ## 14. Download
 
-Không còn `Download` action ở thanh module tabs tổng. Download được đặt theo đúng context cần dùng, ví dụ API Docs và `Local Run`.
+Không còn `Download` action ở thanh module tabs tổng. Trong API Docs, nút `Download` là shortcut chuyển sang tab `Local Run`; chính `Local Run` sở hữu luồng build/download executable JAR thật. API Docs không mở placeholder popup riêng.
 
 Ví dụ nội dung download theo context:
 
@@ -1589,7 +1589,7 @@ MVP đã bắt đầu implementation. Current phase đã có:
 21. Knowledge/Quiz/Interview/API counts đều lấy từ generated/static data; sidebar `Module thật` giữ module khi ít nhất một trong bốn count > 0 và chỉ ẩn khi cả bốn = 0
 22. sidebar tree mặc định expanded, dùng `+`/`−`, có Expand all/Collapse all; qualifying content module nhận biết bằng count badges thay vì permanent background, active module mới giữ selected highlight; whole sidebar có thể collapse/reopen từ control giữa cạnh màn hình
 23. Menu mặc định collapsed + Expand all/Collapse all; Knowledge/API Docs/Menu/Quiz/Interview giữ state gần nhất khi đổi tab rồi quay lại trong cùng module/language
-24. Download action dùng popup dùng chung; popup đóng khi click ngoài, nhấn Escape hoặc toggle lại chính nút
+24. Download action trong API Docs chuyển trực tiếp sang `Local Run`; không còn placeholder popup `Download chưa có artifact`
 25. Home là placeholder có CTA sang Learning; Knowledge category filter có collapse/expand + horizontal drag-scroll
 26. semantic capability colors dùng chung cho sidebar/tabs và giữ nguyên giữa Light/Dark
 27. `Local Run` là label hiện tại của internal `execution` tab; frontend luôn gọi relative `/api/local-run/*`; local dùng Spring Boot adapter còn production dùng Cloudflare Pages Functions adapter; cả hai dispatch/poll GitHub Actions và check rolling GitHub Release Asset theo module-scoped `sourceFingerprint`; không còn mock và hai môi trường không phụ thuộc nhau

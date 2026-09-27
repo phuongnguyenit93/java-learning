@@ -1,24 +1,15 @@
-import { EmptyPanel } from './EmptyPanel';
-
 interface DownloadActionProps {
-  open: boolean;
-  onToggle: () => void;
+  onClick: () => void;
   className?: string;
 }
 
-export function DownloadAction({ open, onToggle, className = '' }: DownloadActionProps) {
+export function DownloadAction({ onClick, className = '' }: DownloadActionProps) {
   return (
-    <div className={`download-control${className ? ` ${className}` : ''}`} data-download-control>
-      <button type="button" className="download-action" onClick={onToggle} aria-expanded={open}>
+    <div className={`download-control${className ? ` ${className}` : ''}`}>
+      <button type="button" className="download-action" onClick={onClick}>
         <span aria-hidden="true">↓</span>
         Download
       </button>
-
-      {open && (
-        <div className="download-popover">
-          <EmptyPanel type="download" />
-        </div>
-      )}
     </div>
   );
 }

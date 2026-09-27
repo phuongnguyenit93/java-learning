@@ -304,7 +304,7 @@ tab switching
 → changing module/language establishes a new state boundary
 ```
 
-The API Reference notice explains that the docs are for learning/reference only and that running/debugging requires local source/runtime. Its Download action reuses the shared Download popover. Download popovers must anchor to the button that opened them and close when the user clicks outside, presses Escape, or toggles the same action again.
+The API Reference notice explains that the docs are for learning/reference only and that running/debugging requires local runtime. Its Download action navigates to the module's `Local Run` tab, which owns the real executable-JAR build/download flow. API Docs remains reference-only; do not reintroduce a placeholder Download popover there or turn API Docs itself into a live execution surface.
 
 Theme selection starts from `prefers-color-scheme` and persists user choice in `localStorage`. Capability colors are semantic and theme-independent: Overview gray, Knowledge blue, Quiz amber, Interview teal, API Docs red, Local Run purple, Download green. Light/Dark changes surrounding surfaces/text/borders, not those semantic identities.
 

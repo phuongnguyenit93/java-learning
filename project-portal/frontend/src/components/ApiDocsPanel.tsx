@@ -23,16 +23,14 @@ interface ApiDocsPanelProps {
   basePath?: string;
   knowledgeIndex: KnowledgeIndex | null;
   searchQuery: string;
-  downloadOpen: boolean;
-  onDownloadToggle: () => void;
+  onDownload: () => void;
 }
 
 export function ApiDocsPanel({
   basePath,
   knowledgeIndex,
   searchQuery,
-  downloadOpen,
-  onDownloadToggle,
+  onDownload,
 }: ApiDocsPanelProps) {
   const { language } = useLanguage();
   const [document, setDocument] = useState<ApiDocsDocument | null>(null);
@@ -353,8 +351,7 @@ export function ApiDocsPanel({
         </div>
 
         <DownloadAction
-          open={downloadOpen}
-          onToggle={onDownloadToggle}
+          onClick={onDownload}
           className="api-docs-notice__download"
         />
       </div>
