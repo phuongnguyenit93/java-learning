@@ -230,6 +230,24 @@ The goal is that a learner can answer:
 "I know what I am about to learn and why these chapters belong in one module."
 ```
 
+For a module whose module/topic name is itself a concept the learner is expected to understand — for example `collection`, `generics`, `reflection`, `annotation`, `classloader`, `exception`, or `OOP` — do not rely on an unanchored introductory paragraph to establish that concept. The entry chapter should normally contain an early stable Knowledge section that explicitly answers:
+
+```text
+What is <topic> in beginner language?
+        ↓
+What concrete problem exists without it?
+        ↓
+What simpler/older mechanism could solve part of the problem, and where does it stop being enough?
+        ↓
+Why would application code choose this concept/mechanism?
+        ↓
+Only then: what taxonomy, hierarchy, subtypes or advanced mechanics exist?
+```
+
+For example, a Collections module should not begin conceptually with `Collection → List → Set → Queue`. It should first make the learner understand why grouping dynamic data is a problem at all, what arrays already solve, what the Collections Framework adds, and only then use the hierarchy as a map of different behavioral contracts.
+
+The same rule applies elsewhere: do not start Generics with type-parameter syntax before establishing the duplication/type-safety problem; do not start Reflection with `Class` APIs before explaining why runtime inspection exists; do not start ClassLoader with delegation mechanics before explaining why class bytes must be located and defined.
+
 Do not open a module with advanced definitions while the learner still lacks the vocabulary required to understand why the definitions matter.
 
 #### Layer 2 — Concept / chapter story

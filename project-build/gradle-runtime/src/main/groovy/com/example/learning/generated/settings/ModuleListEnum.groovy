@@ -249,7 +249,7 @@ enum ModuleListEnum {
     JAVA_ANNOTATION(
             'module:platform:development:language:java:core:annotation',
             'module/platform/development/language/java/core/annotation',
-            'LIBRARY',
+            'SERVLET',
             'Java annotations',
             false,
             []
@@ -258,7 +258,7 @@ enum ModuleListEnum {
     JAVA_CLASSLOADER(
             'module:platform:development:language:java:core:classloader',
             'module/platform/development/language/java/core/classloader',
-            'LIBRARY',
+            'SERVLET',
             'Java class loading',
             false,
             []
@@ -276,7 +276,7 @@ enum ModuleListEnum {
     JAVA_COLLECTION(
             'module:platform:development:language:java:core:collection',
             'module/platform/development/language/java/core/collection',
-            'LIBRARY',
+            'SERVLET',
             'Java collections framework',
             false,
             []
@@ -312,7 +312,7 @@ enum ModuleListEnum {
     JAVA_GENERICS(
             'module:platform:development:language:java:core:generics',
             'module/platform/development/language/java/core/generics',
-            'LIBRARY',
+            'SERVLET',
             'Java generics',
             false,
             []
@@ -411,7 +411,7 @@ enum ModuleListEnum {
     JAVA_REFLECTION(
             'module:platform:development:language:java:core:reflection',
             'module/platform/development/language/java/core/reflection',
-            'LIBRARY',
+            'SERVLET',
             'Java reflection',
             false,
             []

@@ -1415,7 +1415,7 @@ why generics are invariant; PECS reasoning; erasure trade-offs; bridge methods; 
 
 #### Layer 1 — Module orientation
 
-**Entry chapter contract:** `1.Hierarchy/Hierarchy.md` must explain why collections exist before listing interfaces: programs need different data structures because ordering, uniqueness, lookup, queueing and mutation have different contracts and costs. The hierarchy is a map of those capabilities, not a memorization tree.
+**Entry chapter contract:** `1.Hierarchy/Hierarchy.md` must begin with `#collection-purpose` and make the learner understand what a collection is and why it exists **before** listing interfaces. Start from the concrete problem of managing a variable-size group of values, distinguish what arrays already solve from what the Collections Framework standardizes, then introduce the framework as a family of group-data abstractions. Only after that foundation should the chapter show the hierarchy: programs need different data structures because ordering, uniqueness, lookup, queueing and mutation have different contracts and costs. The hierarchy is a map of those capabilities, not a memorization tree.
 
 **Major terminology roles:**
 
@@ -1423,14 +1423,23 @@ why generics are invariant; PECS reasoning; erasure trade-offs; bridge methods; 
 Collection / Iterable
 → common sequence/group behavior
 
+Collections
+→ static utility/algorithm class; not the Collection interface
+
 List
 → ordered, indexable, duplicate-friendly sequence
 
 Set
 → uniqueness contract
 
+SortedSet / NavigableSet
+→ maintained ordering, ranges and nearest-element navigation
+
 Map
 → key-to-value association; not a subtype of Collection
+
+SortedMap / NavigableMap
+→ sorted-key ranges and nearest-key navigation
 
 Queue / Deque
 → insertion/removal-order-oriented data structures
@@ -1443,6 +1452,9 @@ hashing / ordering / equality
 
 mutable / immutable collection
 → who owns structural change
+
+operation complexity
+→ O(1), O(log n), O(n), amortized and expected cost as implementation-choice vocabulary
 ```
 
 **Learning roadmap:**
@@ -1450,6 +1462,9 @@ mutable / immutable collection
 ```text
 Why are there many collection interfaces instead of one container?
 Collection Hierarchy
+        ↓
+What behavior does Collection itself standardize?
+Shared Collection API + optional operations
         ↓
 Need ordered positional values?
 List
@@ -1508,17 +1523,17 @@ EnumCollections       → Why can a closed enum key/value universe enable specia
 
 | Existing chapter | Proposed anchored H2 sections |
 | --- | --- |
-| `1.Hierarchy/Hierarchy.md` | `#collection-hierarchy` — Collection/List/Set/Queue hierarchy<br>`#map-separate-hierarchy` — Why Map is not Collection<br>`#interface-vs-implementation` — Program to collection interface<br>`#collection-characteristics` — Ordering, duplicates, nulls and mutability dimensions |
-| `2.List/List.md` | `#list-semantics` — Ordered positional collection<br>`#arraylist-model` — ArrayList resizing/random access<br>`#linkedlist-model` — LinkedList node model and trade-offs<br>`#list-equality` — List equality is order-sensitive |
-| `3.Set/Set.md` | `#set-semantics` — Uniqueness semantics<br>`#hashset-model` — HashSet hashing boundary<br>`#linkedhashset-order` — LinkedHashSet insertion order<br>`#treeset-order` — TreeSet sorted order and comparison contract |
-| `4.Map/Map.md` | `#map-semantics` — Key/value mapping semantics<br>`#hashmap-model` — HashMap hashing/equality boundary<br>`#linkedhashmap-order` — LinkedHashMap encounter/access order<br>`#treemap-order` — TreeMap sorted-key model<br>`#map-compute-merge` — compute/merge style updates |
+| `1.Hierarchy/Hierarchy.md` | `#collection-purpose` — What a collection is, why group-data abstractions are needed, arrays vs Collections Framework boundary<br>`#collection-vs-collections` — Collection interface vs Collections utility class vs the framework<br>`#collection-hierarchy` — Collection/List/Set/Queue plus sorted/navigable map/set hierarchy<br>`#sorted-navigable-contracts` — Beginner overview of sorted/navigable roles before later mechanics<br>`#collection-api-contract` — Shared Collection operations, bulk operations, optional mutation and toArray boundary<br>`#functional-syntax-boundary` — Read lambda/method-reference syntax used by Collection APIs without duplicating functional-programming ownership<br>`#map-separate-hierarchy` — Why Map is not Collection<br>`#interface-vs-implementation` — Program to collection interface<br>`#collection-characteristics` — Ordering, duplicates, nulls and mutability dimensions<br>`#complexity-mental-model` — Beginner model for O(1), O(log n), O(n), amortized and expected cost |
+| `2.List/List.md` | `#list-semantics` — Ordered positional collection<br>`#list-practical-boundaries` — remove overloads, subList backed view, Arrays.asList and array/list boundary<br>`#arraylist-model` — ArrayList resizing/random access<br>`#linkedlist-model` — LinkedList node model and trade-offs<br>`#list-equality` — List equality is order-sensitive |
+| `3.Set/Set.md` | `#set-semantics` — General Set uniqueness/equality contract<br>`#set-algebra` — Union/intersection/difference through addAll/retainAll/removeAll<br>`#set-equality` — Set equality ignores encounter order<br>`#hashset-model` — HashSet hashing boundary<br>`#linkedhashset-order` — LinkedHashSet insertion order<br>`#treeset-order` — TreeSet sorted order and comparison-consistency contract |
+| `4.Map/Map.md` | `#map-semantics` — Key/value mapping semantics<br>`#map-basic-contract` — size/get/put/contains/remove/clear/putAll basic Map vocabulary<br>`#map-entry-model` — Map.Entry as one key-value mapping<br>`#map-views` — keySet/values/entrySet backed-view semantics<br>`#map-default-operations` — getOrDefault/putIfAbsent/replace/conditional remove<br>`#map-equality` — Map equality is based on mappings rather than encounter order<br>`#hashmap-model` — HashMap hashing/equality boundary<br>`#linkedhashmap-order` — LinkedHashMap encounter/access order<br>`#treemap-order` — TreeMap sorted-key model<br>`#map-compute-merge` — compute/merge style updates |
 | `5.QueueDeque/QueueDeque.md` | `#queue-semantics` — FIFO queue semantics<br>`#deque-semantics` — Double-ended queue<br>`#exception-vs-special-value` — add/remove/element vs offer/poll/peek<br>`#priority-queue` — PriorityQueue heap-order boundary |
-| `6.Iteration/Iteration.md` | `#iterator-contract` — Iterator contract<br>`#enhanced-for` — Enhanced for uses iteration<br>`#iterator-remove` — Safe iterator removal<br>`#spliterator-boundary` — Spliterator boundary and Stream handoff |
-| `7.OrderingSorting/OrderingSorting.md` | `#encounter-order` — Encounter order<br>`#natural-ordering` — Natural ordering<br>`#comparator-ordering` — Comparator-based ordering<br>`#stable-sort` — Stable sort and tie behavior |
-| `8.EqualityHashing/EqualityHashing.md` | `#element-equality-effects` — Element equals/hashCode affects collections<br>`#hash-bucket-boundary` — Hash-bucket lookup mental model<br>`#sorted-equality-boundary` — Sorted collections use comparison ordering<br>`#mutable-element-risk` — Mutable keys/elements and lookup invariants |
-| `9.MutableImmutable/MutableImmutable.md` | `#modifiable-vs-unmodifiable` — Modifiable vs unmodifiable view<br>`#immutable-factory` — List.of/Set.of/Map.of semantics<br>`#copy-of` — copyOf snapshot/reuse boundary<br>`#view-vs-copy` — View vs defensive copy |
+| `6.Iteration/Iteration.md` | `#iterator-contract` — Iterator contract<br>`#enhanced-for` — Enhanced for uses iteration<br>`#iterator-remove` — Safe iterator removal<br>`#listiterator-contract` — Bidirectional positional traversal and mutation for List<br>`#spliterator-boundary` — Spliterator boundary and Stream handoff |
+| `7.OrderingSorting/OrderingSorting.md` | `#encounter-order` — Encounter order<br>`#natural-ordering` — Natural ordering<br>`#comparison-result-contract` — Negative/zero/positive compare result semantics<br>`#comparator-ordering` — Comparator-based ordering<br>`#navigable-range-operations` — lower/floor/ceiling/higher and backed range views after ordering prerequisites<br>`#stable-sort` — Stable sort and tie behavior<br>`#collections-utility-algorithms` — Representative Collections algorithms and binary-search preconditions |
+| `8.EqualityHashing/EqualityHashing.md` | `#element-equality-effects` — Element equals/hashCode affects collections<br>`#hash-bucket-boundary` — Hash-bucket lookup mental model<br>`#sorted-equality-boundary` — Sorted collections use comparison ordering<br>`#collection-equality-boundary` — Collection has no universal value-equality rule; Queue/Deque boundary<br>`#collection-equality-contracts` — List vs Set vs Map whole-container equality<br>`#mutable-element-risk` — Mutable keys/elements and lookup invariants |
+| `9.MutableImmutable/MutableImmutable.md` | `#modifiable-vs-unmodifiable` — Modifiable vs unmodifiable view<br>`#immutable-factory` — List.of/Set.of/Map.of semantics<br>`#copy-of` — copyOf snapshot/reuse boundary<br>`#backed-view-fixed-size-snapshot` — Backed views, Arrays.asList fixed-size adapter and snapshots<br>`#view-vs-copy` — View vs defensive copy |
 | `10.FailFast/FailFast.md` | `#structural-modification` — Structural modification<br>`#fail-fast-best-effort` — Fail-fast is best-effort bug detection<br>`#concurrent-modification-exception` — ConcurrentModificationException semantics<br>`#iterator-safe-mutation` — Safe mutation through iterator |
-| `11.ImplementationChoice/ImplementationChoice.md` | `#list-choice` — ArrayList vs LinkedList<br>`#set-choice` — HashSet vs LinkedHashSet vs TreeSet<br>`#map-choice` — HashMap vs LinkedHashMap vs TreeMap<br>`#queue-choice` — ArrayDeque vs LinkedList vs PriorityQueue<br>`#choice-by-characteristics` — Choose by semantics before micro-performance |
+| `11.ImplementationChoice/ImplementationChoice.md` | `#list-choice` — ArrayList vs LinkedList<br>`#set-choice` — HashSet vs LinkedHashSet vs TreeSet<br>`#map-choice` — HashMap vs LinkedHashMap vs TreeMap<br>`#queue-choice` — ArrayDeque vs LinkedList vs PriorityQueue<br>`#null-policy-matrix` — Null policies of common implementations and factories<br>`#choice-by-characteristics` — Choose by semantics before micro-performance |
 | `12.EnumCollections/EnumCollections.md` | `#enumset-model` — EnumSet bit-vector-like specialized set<br>`#enummap-model` — EnumMap specialized map<br>`#enum-collection-benefits` — Type safety/order/performance benefits |
 
 #### Proposed API experiments
@@ -1536,11 +1551,11 @@ EnumCollections       → Why can a closed enum key/value universe enable specia
 
 #### Quiz coverage
 
-hierarchy; implementation characteristics; list/set/map/queue contracts; ordering; hashing/equality; fail-fast; immutable factories; views vs copies; implementation choice.
+collection purpose/common API; Collection vs Collections; functional-syntax boundary; hierarchy including sorted/navigable contracts; implementation characteristics; list/set/map/queue contracts; Set algebra; Map basic contract/Entry/views; backed/range views; comparison-result semantics; ordering and utility algorithms; hashing/equality including Queue boundary; fail-fast; immutable factories; views vs copies; null policies; implementation choice.
 
 #### Interview coverage
 
-how to choose collection; HashMap conceptual lookup; TreeSet/TreeMap comparison contract; mutable keys; fail-fast meaning; ArrayList vs LinkedList; unmodifiable vs immutable; PriorityQueue ordering.
+how to choose collection; shared Collection and Map contracts; Collection vs Collections; HashMap conceptual lookup; TreeSet/TreeMap sorted/navigable and comparison-result contracts; Set algebra; Map.Entry/backed views; ListIterator; Queue/Deque equality boundary; mutable keys; fail-fast meaning; ArrayList vs LinkedList; unmodifiable vs fixed-size vs snapshot; PriorityQueue ordering.
 
 
 ### 4.11 `date-time`
@@ -1932,7 +1947,7 @@ i18n vs l10n; Locale vs Currency vs ZoneId; ResourceBundle fallback; why default
 
 #### Layer 1 — Module orientation
 
-**Entry chapter contract:** `1.Basic/Basic.md` must first explain what metadata is and why code sometimes needs machine-readable declarations about other code. Only after that should it introduce `@` syntax and built-in annotations.
+**Entry chapter contract:** `1.Basic/Basic.md` must first explain **what an annotation is in beginner language** and show a concrete problem that exists without it (for example, an intention/tooling contract that comments, naming conventions or separate registration cannot express as safely or locally). The learner must understand annotation as “structured information attached to code for a consumer to read” **before** the technical term `metadata` becomes the main vocabulary. Then introduce metadata as the formal name for that idea, explain that annotations do not create behavior by themselves, identify typical consumers, and only after that move into `@` syntax and deeper mechanics.
 
 **Major terminology roles:**
 
@@ -1962,7 +1977,7 @@ reflection
 **Learning roadmap:**
 
 ```text
-Why attach metadata to code instead of encoding everything in naming/conventions?
+Why does code sometimes need to tell compilers/tools/frameworks something about itself?
 Annotation Basics
         ↓
 Which metadata contracts does Java already provide?
@@ -1987,12 +2002,12 @@ How can compile-time tools consume metadata and generate code/resources?
 Annotation Processing
 ```
 
-**Running example / evidence strategy:** define one small annotation family such as `@Audit`, `@FeatureFlag`, or `@ColumnAlias`. Reuse it to demonstrate target, retention, repeatability and runtime inspection, then show a separate compile-time processor example without pretending compile-time behavior is a runtime API feature.
+**Running example / evidence strategy:** define one small annotation family such as `@Audit`, `@FeatureFlag`, or `@ColumnAlias`. Keep its element schema stable across chapters/languages and reuse it to demonstrate target, retention, repeatability and runtime inspection. Then show a separate compile-time processor example from annotation declaration → annotated source → processor discovery/invocation → `Filer` output → later processing round, without pretending compile-time behavior is a runtime API feature.
 
 #### Layer 2 — Chapter story
 
 ```text
-Basic                → What problem does structured metadata solve compared with comments or naming conventions?
+Basic                → What is an annotation, what concrete problem exists without it, and why is structured metadata better than comments/naming/manual registration for that class of problem?
 BuiltIn              → Which compiler/tool contracts already use annotations and what guarantees do they add?
 CustomAnnotation     → How do we define domain/framework metadata with a precise schema?
 Retention            → Which consumer needs the metadata, and therefore how long must it survive?
@@ -2006,14 +2021,14 @@ AnnotationProcessing → How can compile-time tools validate or generate code fr
 
 | Existing chapter | Proposed anchored H2 sections |
 | --- | --- |
-| `1.Basic/Basic.md` | `#annotation-model` — Annotation as metadata<br>`#annotation-syntax` — Annotation syntax and elements<br>`#annotation-restrictions` — Allowed annotation element types<br>`#annotation-use-sites` — Declaration/type-use boundary |
-| `2.BuiltIn/BuiltIn.md` | `#override-annotation` — @Override compiler contract<br>`#deprecated-annotation` — @Deprecated and documentation<br>`#suppresswarnings` — @SuppressWarnings scope and responsibility<br>`#safevarargs` — @SafeVarargs and generic varargs boundary<br>`#functionalinterface` — @FunctionalInterface compiler check |
+| `1.Basic/Basic.md` | `#annotation-model` — Annotation as metadata<br>`#annotation-syntax` — Annotation syntax and elements<br>`#annotation-restrictions` — Allowed annotation element types, compile-time values, cyclic-element prohibition and Object/Annotation method-signature collisions<br>`#annotation-use-sites` — Declaration/type-use boundary |
+| `2.BuiltIn/BuiltIn.md` | `#override-annotation` — @Override compiler contract<br>`#deprecated-annotation` — @Deprecated and documentation<br>`#suppresswarnings` — @SuppressWarnings scope/responsibility plus standard Java suppression keys vs compiler-specific keys<br>`#safevarargs` — @SafeVarargs generic-varargs assertion plus declaration/call-site warning semantics<br>`#functionalinterface` — @FunctionalInterface compiler check |
 | `3.CustomAnnotation/CustomAnnotation.md` | `#declare-annotation` — Declaring annotation types<br>`#annotation-elements-defaults` — Elements and default values<br>`#marker-annotation` — Marker annotations<br>`#custom-annotation-design` — Designing meaningful metadata |
 | `4.Retention/Retention.md` | `#retention-source` — SOURCE retention<br>`#retention-class` — CLASS retention<br>`#retention-runtime` — RUNTIME retention<br>`#retention-use-case` — Choose retention by consumer |
-| `5.Target/Target.md` | `#elementtype-targets` — ElementType targets<br>`#type-use-annotation` — TYPE_USE<br>`#target-design` — Restrict annotations to valid contexts |
-| `6.MetaAnnotation/MetaAnnotation.md` | `#retention-meta` — @Retention<br>`#target-meta` — @Target<br>`#documented-meta` — @Documented<br>`#inherited-meta` — @Inherited boundary<br>`#repeatable-meta` — @Repeatable |
-| `7.RepeatableInherited/RepeatableInherited.md` | `#repeatable-container` — Repeatable annotations and container<br>`#get-annotations-by-type` — Reflection retrieval of repeated annotations<br>`#inherited-class-only` — @Inherited applies to class inheritance only<br>`#annotation-inheritance-boundaries` — Method/interface inheritance boundaries |
-| `8.AnnotationProcessing/AnnotationProcessing.md` | `#processing-rounds` — Compile-time annotation-processing rounds<br>`#processor-contract` — Processor/AbstractProcessor contract<br>`#supported-types-source-version` — Supported annotation types/source version<br>`#generated-source` — Generated source/resource output<br>`#processing-vs-reflection` — Compile-time processing vs runtime reflection<br>`#processor-pitfalls` — Determinism and generated-code pitfalls |
+| `5.Target/Target.md` | `#elementtype-targets` — ElementType targets, including practical package-info/module-info locations<br>`#type-use-annotation` — TYPE_USE<br>`#target-design` — Restrict annotations to valid contexts, including record-component propagation boundaries |
+| `6.MetaAnnotation/MetaAnnotation.md` | `#retention-meta` — @Retention<br>`#target-meta` — @Target plus custom meta-annotation/composition boundary<br>`#documented-meta` — @Documented<br>`#inherited-meta` — @Inherited boundary<br>`#repeatable-meta` — Why repetition needs @Repeatable and its container contract |
+| `7.RepeatableInherited/RepeatableInherited.md` | `#repeatable-container` — Repeatable annotations and container<br>`#get-annotations-by-type` — Directly/indirectly present, present/associated lookup model and single-vs-by-type reflection APIs<br>`#inherited-class-only` — @Inherited applies to class inheritance only<br>`#annotation-inheritance-boundaries` — Method/interface inheritance boundaries |
+| `8.AnnotationProcessing/AnnotationProcessing.md` | `#processing-rounds` — Compile-time annotation-processing rounds<br>`#processor-contract` — Processor/AbstractProcessor contract plus Element/TypeElement/TypeMirror/AnnotationMirror compiler-model mental model<br>`#supported-types-source-version` — Supported annotation types/source version, processor discovery and supported options<br>`#generated-source` — End-to-end annotated source → Filer output → later-round generated source<br>`#processing-vs-reflection` — Compile-time processing vs runtime reflection<br>`#processor-pitfalls` — Determinism and generated-code pitfalls |
 
 #### Proposed API experiments
 
@@ -2288,7 +2303,7 @@ class loading lifecycle; parent delegation; why same class name can be different
 | `string` | 12 | 48 | 8 | 28–38 | 18–26 |
 | `exception` | 9 | 35 | 6 | 28–38 | 20–28 |
 | `generics` | 9 | 41 | 6 | 28–38 | 20–28 |
-| `collection` | 12 | 49 | 8 | 34–46 | 22–30 |
+| `collection` | 12 | 71 | 8 | 34–46 | 22–30 |
 | `date-time` | 12 | 41 | 6 | 30–40 | 20–28 |
 | `io` | 11 | 45 | 7 | 30–40 | 20–28 |
 | `localization` | 11 | 43 | 7 | 26–34 | 18–24 |
