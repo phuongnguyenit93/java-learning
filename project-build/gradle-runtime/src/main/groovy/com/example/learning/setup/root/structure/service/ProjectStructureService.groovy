@@ -18,21 +18,6 @@ class ProjectStructureService {
                     'controller-description.yml'
             ]
 
-    private static final Set<String> EXCLUDED_DIRECTORIES =
-            [
-                    '.gradle',
-                    '.idea',
-                    'build',
-                    'bin',
-                    'out',
-                    'target',
-                    'node_modules',
-                    '.git',
-                    'src',
-                    'readme'
-            ] as Set
-
-
     private static final String TEXT_STRUCTURE_PATH =
             'project-build/gradle-runtime/src/main/resources/structure/module-structure.txt'
 
@@ -51,6 +36,8 @@ class ProjectStructureService {
 
     private final Logger logger
 
+    private final ModuleOrderService moduleOrderService
+
 
     ProjectStructureService(
             Logger logger
@@ -58,6 +45,12 @@ class ProjectStructureService {
 
         this.logger =
                 logger
+
+
+        this.moduleOrderService =
+                new ModuleOrderService(
+                        logger
+                )
     }
 
 
@@ -360,7 +353,10 @@ ${moduleDirectory.absolutePath}
 
 
         node.children =
-                getSubDirectories(directory)
+                moduleOrderService
+                        .getOrderedChildren(
+                                directory
+                        )
                         .collect {
                             File child ->
 
@@ -1360,51 +1356,6 @@ ${file.absolutePath}
 
         return pathSegments.size() >= 3 &&
                 pathSegments[1] == 'overview'
-    }
-
-
-    // ========================================================
-    // Directory
-    // ========================================================
-
-    private static List<File> getSubDirectories(
-            File directory
-    ) {
-
-        File[] directories =
-                directory.listFiles(
-                        {
-                            File file ->
-
-                                file.isDirectory() &&
-                                        !EXCLUDED_DIRECTORIES.contains(
-                                                file.name
-                                        )
-                        } as FileFilter
-                )
-
-
-        if (directories == null) {
-
-            throw new GradleException(
-                    """
-Unable to read directory:
-
-${directory.absolutePath}
-""".stripIndent()
-            )
-        }
-
-
-        return directories
-                .toList()
-                .sort {
-                    File left,
-                    File right ->
-
-                        left.name <=>
-                                right.name
-                }
     }
 
 

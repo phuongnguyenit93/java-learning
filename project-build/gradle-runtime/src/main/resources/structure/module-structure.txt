@@ -289,22 +289,22 @@ module
     │   │       │   ├── high-level-utils
     │   │       │   └── virtual-threads
     │   │       ├── core
-    │   │       │   ├── abstract-interface [JAVA_ABSTRACT_INTERFACE] : Java abstract class and interface
-    │   │       │   ├── annotation [JAVA_ANNOTATION] : Java annotations
+    │   │       │   ├── language-basics [JAVA_LANGUAGE_BASICS] : Java language basics
+    │   │       │   ├── numbers [JAVA_NUMBERS] : Java numeric types and arithmetic
     │   │       │   ├── class-object [JAVA_CLASS_OBJECT] : Java class and object model
-    │   │       │   ├── classloader [JAVA_CLASSLOADER] : Java class loading
-    │   │       │   ├── collection [JAVA_COLLECTION] : Java collections framework
-    │   │       │   ├── date-time [JAVA_DATE_TIME] : Java date and time API
+    │   │       │   ├── oop [JAVA_OOP] : Java object-oriented programming
+    │   │       │   ├── abstract-interface [JAVA_ABSTRACT_INTERFACE] : Java abstract class and interface
+    │   │       │   ├── object-contract [JAVA_OBJECT_CONTRACT] : Java object contracts
+    │   │       │   ├── string [JAVA_STRING] : Java String and text fundamentals
     │   │       │   ├── exception [JAVA_EXCEPTION] : Java exception handling
     │   │       │   ├── generics [JAVA_GENERICS] : Java generics
-    │   │       │   ├── io [JAVA_IO] : Java I/O and NIO
-    │   │       │   ├── language-basics [JAVA_LANGUAGE_BASICS] : Java language basics
-    │   │       │   ├── localization [JAVA_LOCALIZATION] : Java localization and internationalization
-    │   │       │   ├── numbers [JAVA_NUMBERS] : Java numeric types and arithmetic
-    │   │       │   ├── object-contract [JAVA_OBJECT_CONTRACT] : Java object contracts
-    │   │       │   ├── oop [JAVA_OOP] : Java object-oriented programming
+    │   │       │   ├── collection [JAVA_COLLECTION] : Java collections framework
+    │   │       │   ├── annotation [JAVA_ANNOTATION] : Java annotations
     │   │       │   ├── reflection [JAVA_REFLECTION] : Java reflection
-    │   │       │   └── string [JAVA_STRING] : Java String and text fundamentals
+    │   │       │   ├── classloader [JAVA_CLASSLOADER] : Java class loading
+    │   │       │   ├── date-time [JAVA_DATE_TIME] : Java date and time API
+    │   │       │   ├── io [JAVA_IO] : Java I/O and NIO
+    │   │       │   └── localization [JAVA_LOCALIZATION] : Java localization and internationalization
     │   │       ├── mapping
     │   │       │   ├── mapstruct [MAPSTRUCT] - [DEPEND]
     │   │       │   ├── model-mapper [MODEL_MAPPER] - [DEPEND] : To quickly convert between 2 Java Object (Entity to DTO) by matching key field

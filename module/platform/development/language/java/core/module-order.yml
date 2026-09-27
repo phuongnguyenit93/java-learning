@@ -1,0 +1,34 @@
+version: 1
+children:
+  language-basics:
+    order: 10
+  numbers:
+    order: 20
+  class-object:
+    order: 30
+  oop:
+    order: 40
+  abstract-interface:
+    order: 50
+  object-contract:
+    order: 60
+  string:
+    order: 70
+  exception:
+    order: 80
+  generics:
+    order: 90
+  collection:
+    order: 100
+  annotation:
+    order: 110
+  reflection:
+    order: 120
+  classloader:
+    order: 130
+  date-time:
+    order: 140
+  io:
+    order: 150
+  localization:
+    order: 160

@@ -1261,22 +1261,25 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <summary><b><a href='./module/platform/development/language/java/core'>📁 core</a></b></summary>
 <ul>
 <li>
-  <a href='./module/platform/development/language/java/core/abstract-interface'>🪄 abstract-interface</a>
+  <a href='./module/platform/development/language/java/core/language-basics'>🪄 language-basics</a>
 </li>
 <li>
-  <a href='./module/platform/development/language/java/core/annotation'>🪄 annotation</a>
+  <a href='./module/platform/development/language/java/core/numbers'>🪄 numbers</a>
 </li>
 <li>
   <a href='./module/platform/development/language/java/core/class-object'>🪄 class-object</a>
 </li>
 <li>
-  <a href='./module/platform/development/language/java/core/classloader'>🪄 classloader</a>
+  <a href='./module/platform/development/language/java/core/oop'>🪄 oop</a>
 </li>
 <li>
-  <a href='./module/platform/development/language/java/core/collection'>🪄 collection</a>
+  <a href='./module/platform/development/language/java/core/abstract-interface'>🪄 abstract-interface</a>
 </li>
 <li>
-  <a href='./module/platform/development/language/java/core/date-time'>🪄 date-time</a>
+  <a href='./module/platform/development/language/java/core/object-contract'>🪄 object-contract</a>
+</li>
+<li>
+  <a href='./module/platform/development/language/java/core/string'>🪄 string</a>
 </li>
 <li>
   <a href='./module/platform/development/language/java/core/exception'>🪄 exception</a>
@@ -1285,28 +1288,25 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <a href='./module/platform/development/language/java/core/generics'>🪄 generics</a>
 </li>
 <li>
-  <a href='./module/platform/development/language/java/core/io'>🪄 io</a>
+  <a href='./module/platform/development/language/java/core/collection'>🪄 collection</a>
 </li>
 <li>
-  <a href='./module/platform/development/language/java/core/language-basics'>🪄 language-basics</a>
-</li>
-<li>
-  <a href='./module/platform/development/language/java/core/localization'>🪄 localization</a>
-</li>
-<li>
-  <a href='./module/platform/development/language/java/core/numbers'>🪄 numbers</a>
-</li>
-<li>
-  <a href='./module/platform/development/language/java/core/object-contract'>🪄 object-contract</a>
-</li>
-<li>
-  <a href='./module/platform/development/language/java/core/oop'>🪄 oop</a>
+  <a href='./module/platform/development/language/java/core/annotation'>🪄 annotation</a>
 </li>
 <li>
   <a href='./module/platform/development/language/java/core/reflection'>🪄 reflection</a>
 </li>
 <li>
-  <a href='./module/platform/development/language/java/core/string'>🪄 string</a>
+  <a href='./module/platform/development/language/java/core/classloader'>🪄 classloader</a>
+</li>
+<li>
+  <a href='./module/platform/development/language/java/core/date-time'>🪄 date-time</a>
+</li>
+<li>
+  <a href='./module/platform/development/language/java/core/io'>🪄 io</a>
+</li>
+<li>
+  <a href='./module/platform/development/language/java/core/localization'>🪄 localization</a>
 </li>
 </ul>
 </details>

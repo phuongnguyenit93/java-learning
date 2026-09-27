@@ -336,6 +336,8 @@ Portal không hard-code các category như một website interview thông thư�
 
 Navigation được sinh từ cùng source/model đang dùng để mô tả module hierarchy của repository.
 
+Thứ tự sibling trong hierarchy được resolve ở build layer trước khi tới Portal. Parent directory có thể khai báo optional `module-order.yml` cho direct children; nếu không có file thì giữ ABC. Khi có file: `order` tăng dần, trùng `order` thì ABC, child không có order nằm cuối và cũng ABC. Portal không đọc file này và không sort lại; nó render đúng thứ tự đã được project vào `module-catalog.json`.
+
 Ví dụ:
 
 ```text

@@ -5,6 +5,7 @@ import com.example.learning.setup.root.structure.service.PortalApiProjectionServ
 import com.example.learning.setup.root.structure.service.PortalInterviewProjectionService
 import com.example.learning.setup.root.structure.service.PortalKnowledgeProjectionService
 import com.example.learning.setup.root.structure.service.PortalQuizProjectionService
+import com.example.learning.setup.root.structure.task.GenerateModuleOrderTask
 import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -74,6 +75,7 @@ ${project.path}
                 ) {
                     include '**/gradle.properties'
                     include '**/master.json'
+                    include '**/module-order.yml'
                     include '**/readme/**'
                     include '**/src/main/resources/swagger/**'
                     include '**/src/main/resources/quiz/**'
@@ -84,6 +86,30 @@ ${project.path}
                     exclude '**/out/**'
                     exclude '**/target/**'
                 }
+
+
+        project.tasks.register(
+                'generateModuleOrder',
+                GenerateModuleOrderTask
+        ) { task ->
+
+            task.group =
+                    'build setup'
+
+
+            task.description =
+                    'Create or synchronize optional module-order.yml for direct children. Use --path=<parent-path-relative-to-module>.'
+
+
+            task.rootDirectory.set(
+                    project.layout.projectDirectory
+            )
+
+
+            task.targetPath.convention(
+                    ''
+            )
+        }
 
 
         def cleanupLegacyPortalData =
