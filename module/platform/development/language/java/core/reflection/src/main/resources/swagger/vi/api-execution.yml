@@ -1,0 +1,112 @@
+AccessReflectionController:
+  accessChecks():
+    execution: |-
+      <p><strong>Khái niệm:</strong> discover được private member không đồng nghĩa với việc caller được phép invoke member đó.</p>
+      <ol>
+        <li><strong>Flow:</strong> API lấy <code>internalStatus()</code> bằng <code>getDeclaredMethod()</code>, đo <code>canAccess</code>, gọi <code>trySetAccessible()</code>, rồi chỉ invoke nếu mở quyền thành công.</li>
+        <li><strong>Code evidence:</strong><pre><code>Method method = PaymentAccessSample.class.getDeclaredMethod("internalStatus");
+      boolean before = method.canAccess(service);
+      boolean opened = method.trySetAccessible();
+      Object value = opened ? method.invoke(service) : "not-accessible";</code></pre></li>
+        <li><strong>Observation:</strong> trong module demo chạy trên classpath, response thường cho <code>canAccessBefore=false</code>, <code>trySetAccessible=true</code>, <code>canAccessAfter=true</code>.</li>
+        <li><strong>Ý nghĩa:</strong> descriptor và permission là hai lớp khác nhau; JPMS có thể khiến bước mở quyền thất bại trong môi trường module chặt hơn.</li>
+      </ol>
+      <p><strong>Kết luận:</strong> Reflection không tự xóa encapsulation; access suppression là một yêu cầu runtime có thể thành công hoặc thất bại.</p>
+    usage: true
+ClassMetadataController:
+  inspectType():
+    execution: |-
+      <p><strong>Khái niệm:</strong> <code>Class&lt;?&gt;</code> là object runtime mô tả type, không phải source code của class.</p>
+      <ol>
+        <li><strong>Flow:</strong> API dùng <code>PaymentService.class</code>, sau đó đọc kind, modifier, <code>accessFlags()</code>, superclass, interfaces và quan hệ assignability.</li>
+        <li><strong>Code evidence:</strong><pre><code>Class&lt;?&gt; type = PaymentService.class;
+      type.isRecord();
+      type.accessFlags();
+      type.getSuperclass();
+      type.getInterfaces();
+      PaymentProcessor.class.isAssignableFrom(type);</code></pre></li>
+        <li><strong>Observation:</strong> <code>PaymentService</code> là class final, superclass là <code>Object</code>, implements <code>PaymentProcessor</code>; <code>PaymentRequest</code> được nhận diện là record.</li>
+        <li><strong>Ý nghĩa:</strong> framework có thể phân loại và validate runtime type trước khi đi xuống Field/Method/Constructor.</li>
+      </ol>
+      <p><strong>Kết luận:</strong> <code>Class&lt;?&gt;</code> là cửa vào trung tâm của Reflection để chuyển từ runtime type sang metadata có cấu trúc.</p>
+    usage: true
+ConstructorReflectionController:
+  construct():
+    execution: |-
+      <p><strong>Khái niệm:</strong> constructor có thể được discover như metadata rồi dùng để tạo object khi construction path chỉ được quyết định ở runtime.</p>
+      <ol>
+        <li><strong>Flow:</strong> API lookup constructor <code>PaymentService(String)</code>, đọc parameter metadata và gọi <code>newInstance("stripe")</code>.</li>
+        <li><strong>Code evidence:</strong><pre><code>Constructor&lt;PaymentService&gt; constructor =
+        PaymentService.class.getConstructor(String.class);
+      PaymentService service = constructor.newInstance("stripe");</code></pre></li>
+        <li><strong>Observation:</strong> response cho thấy một parameter kiểu <code>String</code>, runtime type được tạo là <code>PaymentService</code>, provider là <code>stripe</code>.</li>
+        <li><strong>Ý nghĩa:</strong> object creation có thể driven bởi runtime metadata thay vì biểu thức <code>new PaymentService(...)</code> cố định trong caller.</li>
+      </ol>
+      <p><strong>Kết luận:</strong> Constructor Reflection hữu ích cho factory/container tổng quát nhưng chuyển nhiều lỗi construction sang runtime.</p>
+    usage: true
+DynamicProxyController:
+  intercept():
+    execution: |-
+      <p><strong>Khái niệm:</strong> JDK Dynamic Proxy tạo implementation của interface ở runtime và gom interception vào một <code>InvocationHandler</code>.</p>
+      <ol>
+        <li><strong>Flow:</strong> API tạo target <code>PaymentGatewayImpl</code>, bọc bằng <code>TracingHandler</code>, tạo proxy với <code>Proxy.newProxyInstance()</code> rồi gọi <code>pay(...)</code>.</li>
+        <li><strong>Code evidence:</strong><pre><code>PaymentGateway proxy = (PaymentGateway) Proxy.newProxyInstance(
+        PaymentGateway.class.getClassLoader(),
+        new Class&lt;?&gt;[]{PaymentGateway.class},
+        handler
+      );
+      String value = proxy.pay(request);</code></pre></li>
+        <li><strong>Observation:</strong> trace chứa <code>before:pay</code> rồi <code>after:pay</code>; <code>Proxy.isProxyClass(...)=true</code> và proxy vẫn <code>instanceof PaymentGateway</code>.</li>
+        <li><strong>Ý nghĩa:</strong> caller giữ contract interface type-safe trong khi behavior cross-cutting được chèn tại runtime.</li>
+      </ol>
+      <p><strong>Kết luận:</strong> JDK Proxy giải bài toán interface interception; nó không biến target thành subclass proxy và không intercept lời gọi đi thẳng vào target.</p>
+    usage: true
+FieldReflectionController:
+  inspectAndMutate():
+    execution: |-
+      <p><strong>Khái niệm:</strong> <code>Field</code> là descriptor runtime có thể đọc/ghi state khi receiver và quyền truy cập phù hợp.</p>
+      <ol>
+        <li><strong>Flow:</strong> API lookup public <code>processedCount</code>, đọc giá trị bằng <code>getInt</code>, ghi <code>5</code> bằng <code>setInt</code>, rồi discover thêm private field <code>provider</code>.</li>
+        <li><strong>Code evidence:</strong><pre><code>Field field = PaymentFieldSample.class.getField("processedCount");
+      int before = field.getInt(state);
+      field.setInt(state, 5);
+      int after = field.getInt(state);</code></pre></li>
+        <li><strong>Observation:</strong> response cho thấy <code>before=1</code>, <code>after=5</code>; private field được discover nhưng <code>canAccess</code> vẫn false từ controller này.</li>
+        <li><strong>Ý nghĩa:</strong> discovery, receiver/value compatibility và access permission là các bước khác nhau.</li>
+      </ol>
+      <p><strong>Kết luận:</strong> Reflection có thể thao tác state động, nhưng việc tìm thấy field không tự bypass access control.</p>
+    usage: true
+GenericReflectionController:
+  genericSignature():
+    execution: |-
+      <p><strong>Khái niệm:</strong> type erasure không có nghĩa mọi generic declaration metadata đều biến mất.</p>
+      <ol>
+        <li><strong>Flow:</strong> API đọc field <code>List&lt;? extends T&gt; values</code>, so sánh raw type với <code>getGenericType()</code>, rồi inspect <code>ParameterizedType</code>, <code>WildcardType</code> và <code>TypeVariable</code>.</li>
+        <li><strong>Code evidence:</strong><pre><code>Field field = Repository.class.getDeclaredField("values");
+      ParameterizedType p = (ParameterizedType) field.getGenericType();
+      WildcardType w = (WildcardType) p.getActualTypeArguments()[0];
+      TypeVariable&lt;Class&lt;Repository&gt;&gt; t = Repository.class.getTypeParameters()[0];</code></pre></li>
+        <li><strong>Observation:</strong> raw field type là <code>java.util.List</code>, generic type giữ <code>? extends T</code>; bounds của <code>T</code> gồm <code>Number</code> và <code>Comparable&lt;T&gt;</code>.</li>
+        <li><strong>Ý nghĩa:</strong> Reflection đọc generic signature ở declaration site chứ không phục hồi type argument cụ thể của mọi object sau erasure.</li>
+      </ol>
+      <p><strong>Kết luận:</strong> framework cần xử lý cây <code>Type</code>, không thể giả định generic metadata luôn là <code>Class&lt;?&gt;</code>.</p>
+    usage: true
+MethodReflectionController:
+  invoke():
+    execution: |-
+      <p><strong>Khái niệm:</strong> <code>Method.invoke()</code> thực hiện dynamic invocation và bọc exception do target method ném bằng <code>InvocationTargetException</code>.</p>
+      <ol>
+        <li><strong>Flow:</strong> API lookup <code>pay(PaymentRequest)</code>, invoke thành công, rồi lookup <code>reject()</code> và bắt wrapper khi target ném <code>IllegalStateException</code>.</li>
+        <li><strong>Code evidence:</strong><pre><code>Method pay = PaymentService.class.getMethod("pay", PaymentRequest.class);
+      Object success = pay.invoke(service, request);
+
+      try {
+          reject.invoke(service);
+      } catch (InvocationTargetException ex) {
+          Throwable cause = ex.getCause();
+      }</code></pre></li>
+        <li><strong>Observation:</strong> success trả <code>paid:ORD-42</code>; failure trả wrapper <code>InvocationTargetException</code> nhưng cause là <code>IllegalStateException</code>.</li>
+        <li><strong>Ý nghĩa:</strong> lỗi của Reflection protocol và lỗi của business target phải được phân biệt khi framework báo lỗi hoặc propagate exception.</li>
+      </ol>
+      <p><strong>Kết luận:</strong> reflective invocation chuyển selection/type/access/failure checks sang runtime; framework phải validate và unwrap đúng boundary.</p>
+    usage: true

@@ -1,0 +1,42 @@
+AccessReflectionController:
+  description: |-
+    <h2>Access Reflection Controller</h2>
+    <p>Experiments with the boundary between discovering a private member and being allowed to use it through <code>canAccess</code>/<code>trySetAccessible</code>.</p>
+  readmeRelated:
+    file: 6.AccessControl/AccessControl.md
+ClassMetadataController:
+  description: |-
+    <h2>Class Metadata Controller</h2>
+    <p>Observes what a <code>Class&lt;?&gt;</code> describes about a runtime type: kind, modifiers, access flags, superclass, interfaces, and assignability.</p>
+  readmeRelated:
+    file: 2.ClassMetadata/ClassMetadata.md
+ConstructorReflectionController:
+  description: |-
+    <h2>Constructor Reflection Controller</h2>
+    <p>Observes constructors as metadata and uses a runtime-selected constructor to create a concrete object.</p>
+  readmeRelated:
+    file: 5.Constructors/Constructors.md
+DynamicProxyController:
+  description: |-
+    <h2>Dynamic Proxy Controller</h2>
+    <p>Demonstrates JDK Dynamic Proxy generating an interface implementation at runtime and routing calls through one shared <code>InvocationHandler</code>.</p>
+  readmeRelated:
+    file: 10.DynamicProxy/DynamicProxy.md
+FieldReflectionController:
+  description: |-
+    <h2>Field Reflection Controller</h2>
+    <p>Observes field discovery, state read/write through <code>Field</code>, and the difference between finding a private field and having permission to access it.</p>
+  readmeRelated:
+    file: 3.Fields/Fields.md
+GenericReflectionController:
+  description: |-
+    <h2>Generic Reflection Controller</h2>
+    <p>Observes generic signature metadata retained after erasure through <code>ParameterizedType</code>, <code>WildcardType</code>, and <code>TypeVariable</code>.</p>
+  readmeRelated:
+    file: 7.GenericTypeInspection/GenericTypeInspection.md
+MethodReflectionController:
+  description: |-
+    <h2>Method Reflection Controller</h2>
+    <p>Observes method discovery, signature metadata, dynamic invocation, and the failure boundary between reflection and target code.</p>
+  readmeRelated:
+    file: 4.Methods/Methods.md

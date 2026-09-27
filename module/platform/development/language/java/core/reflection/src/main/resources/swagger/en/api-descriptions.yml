@@ -1,0 +1,197 @@
+AccessReflectionController:
+  accessChecks():
+    summary: Observe discovery versus reflective access on a private method
+    description: The API obtains the private internalStatus() descriptor, measures
+      canAccess before and after trySetAccessible(), and invokes only when access
+      is opened. The response separates discovering a member from being permitted
+      to use it.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 6.AccessControl/AccessControl.md
+      anchor: try-set-accessible
+    methodName: accessChecks
+    params: [
+      ]
+    path: com/example/learning/controller/AccessReflectionController.java
+    mapping: '@GetMapping("/checks")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/reflection/access/checks
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+ClassMetadataController:
+  inspectType():
+    summary: Inspect PaymentService runtime Class metadata
+    description: The API returns type kind, modifiers/access flags, superclass, interfaces,
+      assignability, and declared method names to show what Class<?> describes about
+      a runtime type.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 2.ClassMetadata/ClassMetadata.md
+      anchor: class-kind
+    methodName: inspectType
+    params: [
+      ]
+    path: com/example/learning/controller/ClassMetadataController.java
+    mapping: '@GetMapping("/inspect-type")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/reflection/class-metadata/inspect-type
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+ConstructorReflectionController:
+  construct():
+    summary: Create PaymentService through Constructor.newInstance()
+    description: The API resolves a String constructor, inspects its parameter metadata,
+      creates an instance with provider=stripe, and returns evidence about the created
+      runtime type and initialized state.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 5.Constructors/Constructors.md
+      anchor: constructor-newinstance
+    methodName: construct
+    params: [
+      ]
+    path: com/example/learning/controller/ConstructorReflectionController.java
+    mapping: '@GetMapping("/construct")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/reflection/constructors/construct
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+DynamicProxyController:
+  intercept():
+    summary: Intercept an interface call with JDK Dynamic Proxy
+    description: The API creates a PaymentGateway proxy at runtime, routes pay(...)
+      through TracingHandler, then delegates to the target. The before/after trace
+      and Proxy.isProxyClass prove interception through a generated interface implementation.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 10.DynamicProxy/DynamicProxy.md
+      anchor: invocation-handler
+    methodName: intercept
+    params: [
+      ]
+    path: com/example/learning/controller/DynamicProxyController.java
+    mapping: '@GetMapping("/intercept")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/reflection/proxy/intercept
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+FieldReflectionController:
+  inspectAndMutate():
+    summary: Read and write state through a Field descriptor
+    description: The API resolves public processedCount, reads 1, writes 5 with getInt/setInt,
+      and also shows that a private field can be discovered without automatically
+      becoming accessible.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 3.Fields/Fields.md
+      anchor: field-read-write
+    methodName: inspectAndMutate
+    params: [
+      ]
+    path: com/example/learning/controller/FieldReflectionController.java
+    mapping: '@GetMapping("/inspect-and-mutate")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/reflection/fields/inspect-and-mutate
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+GenericReflectionController:
+  genericSignature():
+    summary: Inspect generic signature metadata after erasure
+    description: The API contrasts raw List with List<? extends T>, reads the WildcardType
+      upper bound, and inspects TypeVariable bounds from Repository<T extends Number
+      & Comparable<T>>.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 7.GenericTypeInspection/GenericTypeInspection.md
+      anchor: parameterized-type
+    methodName: genericSignature
+    params: [
+      ]
+    path: com/example/learning/controller/GenericReflectionController.java
+    mapping: '@GetMapping("/generic-signature")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/reflection/generic/generic-signature
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+MethodReflectionController:
+  invoke():
+    summary: Invoke methods dynamically and observe InvocationTargetException
+    description: The API resolves pay(PaymentRequest) and invokes it successfully,
+      then invokes reject() to distinguish the InvocationTargetException wrapper from
+      the IllegalStateException actually thrown by the target method.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 4.Methods/Methods.md
+      anchor: method-invoke
+    methodName: invoke
+    params: [
+      ]
+    path: com/example/learning/controller/MethodReflectionController.java
+    mapping: '@GetMapping("/invoke")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/reflection/methods/invoke
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

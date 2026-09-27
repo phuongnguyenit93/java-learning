@@ -1,0 +1,194 @@
+AccessReflectionController:
+  accessChecks():
+    summary: Quan sát discovery và reflective access trên private method
+    description: API lấy descriptor của private internalStatus(), đo canAccess trước/sau
+      trySetAccessible(), rồi chỉ invoke khi quyền truy cập được mở. Response tách
+      rõ việc tìm thấy member với việc được phép sử dụng member đó.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 6.AccessControl/AccessControl.md
+      anchor: try-set-accessible
+    methodName: accessChecks
+    params: [
+      ]
+    path: com/example/learning/controller/AccessReflectionController.java
+    mapping: '@GetMapping("/checks")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/reflection/access/checks
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+ClassMetadataController:
+  inspectType():
+    summary: Inspect runtime Class metadata của PaymentService
+    description: API trả type kind, modifier/access flags, superclass, interfaces,
+      assignability và declared method names để quan sát những gì Class<?> mô tả về
+      một runtime type.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 2.ClassMetadata/ClassMetadata.md
+      anchor: class-kind
+    methodName: inspectType
+    params: [
+      ]
+    path: com/example/learning/controller/ClassMetadataController.java
+    mapping: '@GetMapping("/inspect-type")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/reflection/class-metadata/inspect-type
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+ConstructorReflectionController:
+  construct():
+    summary: Tạo PaymentService qua Constructor.newInstance()
+    description: API lookup constructor nhận String, đọc parameter metadata, tạo instance
+      với provider=stripe và trả bằng chứng về runtime type cùng state được khởi tạo.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 5.Constructors/Constructors.md
+      anchor: constructor-newinstance
+    methodName: construct
+    params: [
+      ]
+    path: com/example/learning/controller/ConstructorReflectionController.java
+    mapping: '@GetMapping("/construct")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/reflection/constructors/construct
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+DynamicProxyController:
+  intercept():
+    summary: Intercept lời gọi interface bằng JDK Dynamic Proxy
+    description: API tạo PaymentGateway proxy ở runtime, chuyển pay(...) qua TracingHandler
+      rồi delegate tới target. Trace before/after và Proxy.isProxyClass chứng minh
+      interception xảy ra qua generated interface implementation.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 10.DynamicProxy/DynamicProxy.md
+      anchor: invocation-handler
+    methodName: intercept
+    params: [
+      ]
+    path: com/example/learning/controller/DynamicProxyController.java
+    mapping: '@GetMapping("/intercept")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/reflection/proxy/intercept
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+FieldReflectionController:
+  inspectAndMutate():
+    summary: Đọc và ghi field thông qua Field descriptor
+    description: API lookup public processedCount, đọc giá trị 1, ghi thành 5 bằng
+      getInt/setInt và đồng thời cho thấy private field vẫn có thể được discover nhưng
+      chưa tự có quyền truy cập.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 3.Fields/Fields.md
+      anchor: field-read-write
+    methodName: inspectAndMutate
+    params: [
+      ]
+    path: com/example/learning/controller/FieldReflectionController.java
+    mapping: '@GetMapping("/inspect-and-mutate")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/reflection/fields/inspect-and-mutate
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+GenericReflectionController:
+  genericSignature():
+    summary: Inspect generic signature sau type erasure
+    description: API so sánh raw List type với List<? extends T>, đọc WildcardType
+      upper bound và TypeVariable bounds của Repository<T extends Number & Comparable<T>>.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 7.GenericTypeInspection/GenericTypeInspection.md
+      anchor: parameterized-type
+    methodName: genericSignature
+    params: [
+      ]
+    path: com/example/learning/controller/GenericReflectionController.java
+    mapping: '@GetMapping("/generic-signature")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/reflection/generic/generic-signature
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+MethodReflectionController:
+  invoke():
+    summary: Invoke method động và quan sát InvocationTargetException
+    description: API lookup pay(PaymentRequest), invoke thành công, sau đó invoke
+      reject() để tách wrapper InvocationTargetException khỏi IllegalStateException
+      thực sự do target method ném ra.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 4.Methods/Methods.md
+      anchor: method-invoke
+    methodName: invoke
+    params: [
+      ]
+    path: com/example/learning/controller/MethodReflectionController.java
+    mapping: '@GetMapping("/invoke")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/reflection/methods/invoke
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

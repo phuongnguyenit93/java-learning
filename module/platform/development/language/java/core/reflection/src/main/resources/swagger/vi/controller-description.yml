@@ -1,0 +1,42 @@
+AccessReflectionController:
+  description: |-
+    <h2>Access Reflection Controller</h2>
+    <p>Thí nghiệm về ranh giới giữa việc discover private member và quyền sử dụng member đó qua <code>canAccess</code>/<code>trySetAccessible</code>.</p>
+  readmeRelated:
+    file: 6.AccessControl/AccessControl.md
+ClassMetadataController:
+  description: |-
+    <h2>Class Metadata Controller</h2>
+    <p>Quan sát những gì một <code>Class&lt;?&gt;</code> mô tả về runtime type: kind, modifier, access flags, superclass, interfaces và assignability.</p>
+  readmeRelated:
+    file: 2.ClassMetadata/ClassMetadata.md
+ConstructorReflectionController:
+  description: |-
+    <h2>Constructor Reflection Controller</h2>
+    <p>Quan sát cách constructor được discover như metadata rồi dùng để tạo object khi concrete construction path chỉ được chọn ở runtime.</p>
+  readmeRelated:
+    file: 5.Constructors/Constructors.md
+DynamicProxyController:
+  description: |-
+    <h2>Dynamic Proxy Controller</h2>
+    <p>Minh họa JDK Dynamic Proxy tạo implementation interface ở runtime và chuyển lời gọi qua một <code>InvocationHandler</code> chung.</p>
+  readmeRelated:
+    file: 10.DynamicProxy/DynamicProxy.md
+FieldReflectionController:
+  description: |-
+    <h2>Field Reflection Controller</h2>
+    <p>Quan sát discovery, đọc và ghi state bằng <code>Field</code>, đồng thời phân biệt việc tìm thấy private field với việc có quyền truy cập.</p>
+  readmeRelated:
+    file: 3.Fields/Fields.md
+GenericReflectionController:
+  description: |-
+    <h2>Generic Reflection Controller</h2>
+    <p>Quan sát generic signature metadata còn giữ lại sau erasure qua <code>ParameterizedType</code>, <code>WildcardType</code> và <code>TypeVariable</code>.</p>
+  readmeRelated:
+    file: 7.GenericTypeInspection/GenericTypeInspection.md
+MethodReflectionController:
+  description: |-
+    <h2>Method Reflection Controller</h2>
+    <p>Quan sát method discovery, signature metadata, dynamic invocation và ranh giới lỗi giữa Reflection với code target.</p>
+  readmeRelated:
+    file: 4.Methods/Methods.md
