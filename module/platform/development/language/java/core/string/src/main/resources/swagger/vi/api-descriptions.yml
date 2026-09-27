@@ -1,15 +1,16 @@
 EncodingController:
   roundTrip():
-    summary: Encode/decode bằng Charset
-    description: Chạy thí nghiệm học tập deterministic cho Encode/decode bằng Charset.
-      Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    summary: UTF-8 round-trip String ↔ bytes
+    description: Encode text "Xin chào ☕" bằng UTF-8 rồi decode lại bằng chính UTF-8.
+      So sánh text, byte length, decoded value và field roundTrip để quan sát rằng
+      hai phía thống nhất Charset thì text có thể round-trip đúng.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 8.Encoding/Encoding.md
+      file: 9.Encoding/Encoding.md
       anchor: charset-encode-decode
     methodName: roundTrip
     params: [
@@ -26,17 +27,18 @@ EncodingController:
       ]
     usage: true
   wrongCharset():
-    summary: Rủi ro platform default charset
-    description: Chạy thí nghiệm học tập deterministic cho Rủi ro platform default
-      charset. Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    summary: Mojibake khi encode/decode khác Charset
+    description: Encode "café" bằng UTF-8 nhưng cố ý decode cùng bytes bằng ISO-8859-1.
+      Quan sát decodedAsLatin1 và same=false để thấy transport byte có thể đúng nhưng
+      interpretation contract sai vẫn làm text bị mojibake.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 8.Encoding/Encoding.md
-      anchor: default-charset-risk
+      file: 9.Encoding/Encoding.md
+      anchor: charset-encode-decode
     methodName: wrongCharset
     params: [
       ]
@@ -54,15 +56,16 @@ EncodingController:
 RegexController:
   groups():
     summary: Group và capture
-    description: Chạy thí nghiệm học tập deterministic cho Group và capture. Response
-      cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    description: Match toàn bộ "ada@example.com" bằng Pattern có named groups user/domain.
+      Response chỉ đọc group sau khi matches() thành công, giúp quan sát Pattern/Matcher
+      state và named capture trên một input deterministic.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 10.Regex/Regex.md
+      file: 11.Regex/Regex.md
       anchor: regex-groups
     methodName: groups
     params: [
@@ -80,15 +83,16 @@ RegexController:
     usage: true
   backtracking():
     summary: Backtracking và performance pitfall
-    description: Chạy thí nghiệm học tập deterministic cho Backtracking và performance
-      pitfall. Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    description: Chạy pattern "(a+)+$" trên input gần match nhưng fail ở cuối, với
+      sample cố ý bounded. elapsedNanos chỉ là evidence minh họa backtracking cost;
+      không dùng con số cụ thể như benchmark hoặc SLA.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 10.Regex/Regex.md
+      file: 11.Regex/Regex.md
       anchor: regex-performance
     methodName: backtracking
     params: [
@@ -107,15 +111,17 @@ RegexController:
 StringConcatController:
   constructionTrace():
     summary: Cost của repeated concatenation
-    description: Chạy thí nghiệm học tập deterministic cho Cost của repeated concatenation.
-      Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    description: Xây cùng text "0123" bằng repeated immutable concatenation và StringBuilder.
+      Response cho thấy result bằng nhau về content nhưng repeated concat đi qua nhiều
+      intermediate String identities; identity hash chỉ là dấu vết quan sát, không
+      phải allocation counter chính xác.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 4.Concatenation/Concatenation.md
+      file: 5.Concatenation/Concatenation.md
       anchor: loop-concat-cost
     methodName: constructionTrace
     params: [
@@ -134,8 +140,9 @@ StringConcatController:
 StringPoolController:
   identity():
     summary: Pool identity và compile-time constant
-    description: Chạy thí nghiệm học tập deterministic cho Pool identity và compile-time
-      constant. Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    description: Đặt literal "java", compile-time concat "ja"+"va", new String("java")
+      và intern() cạnh nhau. Đọc literalIdentity, newStringIdentity, contentEquals
+      và internIdentity để tách rõ content equality khỏi object identity/canonicalization.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -161,15 +168,16 @@ StringPoolController:
 UnicodeController:
   charVsCodePoint():
     summary: Surrogate pair
-    description: Chạy thí nghiệm học tập deterministic cho Surrogate pair. Response
-      cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    description: Dùng text "A😀" để so utf16Length với codePointCount và danh sách
+      codePoints. Response chứng minh length() đếm UTF-16 code unit chứ không phải
+      số Unicode code point hay user-perceived character.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 9.UnicodeCodePoint/UnicodeCodePoint.md
+      file: 10.UnicodeCodePoint/UnicodeCodePoint.md
       anchor: surrogate-pairs
     methodName: charVsCodePoint
     params: [
@@ -187,16 +195,16 @@ UnicodeController:
     usage: true
   normalization():
     summary: Canonical equivalence và String equality
-    description: Chạy thí nghiệm học tập deterministic cho Canonical equivalence và
-      String equality. Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả
-      quy tắc.
+    description: So sánh "é" precomposed với "e\u0301" decomposed trước và sau NFC.
+      Quan sát visualA/visualB, code-point sequences, equalsBefore và equalsAfterNfc
+      để thấy render giống nhau không đồng nghĩa String.equals() tự normalization.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 9.UnicodeCodePoint/UnicodeCodePoint.md
+      file: 10.UnicodeCodePoint/UnicodeCodePoint.md
       anchor: canonical-equivalence
     methodName: normalization
     params: [

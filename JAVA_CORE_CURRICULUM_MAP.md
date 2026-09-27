@@ -1057,6 +1057,9 @@ UTF-16 code unit / Unicode code point / grapheme
 StringBuilder / StringBuffer
 → mutable construction tools, not mutable String variants
 
+CharSequence
+→ shared readable character-sequence abstraction; implementations may differ in mutability and equality behavior
+
 regex
 → pattern-matching language over text
 
@@ -1075,6 +1078,9 @@ String Pool
         ↓
 How should text values actually be compared?
 Equality
+        ↓
+How do we inspect, search, extract and transform everyday String values?
+Core String Operations
         ↓
 What happens when Strings are repeatedly combined?
 Concatenation
@@ -1098,7 +1104,7 @@ How does Java make multiline source text easier to write?
 Text Blocks
 ```
 
-**Running example / evidence strategy:** carry a small piece of user text through equality, concatenation, UTF-8 encoding/decoding, supplementary Unicode, normalization and regex validation. Make every representation boundary observable with lengths, code points and bytes.
+**Running example / evidence strategy:** carry a small piece of user text through equality, core inspection/search/extraction/transformation operations, concatenation, UTF-8 encoding/decoding, supplementary Unicode, normalization and regex validation. Make every representation boundary observable with indexes, lengths, code points and bytes.
 
 #### Layer 2 — Chapter story
 
@@ -1106,6 +1112,7 @@ Text Blocks
 Immutability      → Why can text be safely shared and reused without defensive mutation rules?
 StringPool        → If String is immutable, when can the runtime safely share equal literal instances?
 Equality          → Why does pooled identity not change the rule that text values use equals?
+CoreStringOperations → How do String and CharSequence relate, and which core/modern String APIs answer inspection, search, extraction, transformation, line, split/join and formatting questions?
 Concatenation     → If String cannot mutate, what objects/results are created during text building?
 StringBuilder     → How do we explicitly use one mutable buffer for incremental construction?
 StringBuffer      → What synchronization difference exists, and what concurrency problem does it not solve?
@@ -1120,17 +1127,18 @@ TextBlocks        → How does source representation improve without changing St
 
 | Existing chapter | Proposed anchored H2 sections |
 | --- | --- |
-| `1.Immutability/Immutability.md` | `#string-immutability` — Why String is immutable<br>`#immutability-consequences` — Sharing, hashing and thread-safety consequences<br>`#string-operation-new-value` — String operations return new values |
+| `1.Immutability/Immutability.md` | `#string-immutability` — Why String is immutable, including copy boundaries from/to mutable char arrays<br>`#immutability-consequences` — Sharing, hashing and thread-safety consequences<br>`#string-operation-new-value` — String operations return new values |
 | `2.StringPool/StringPool.md` | `#string-pool-model` — String pool mental model<br>`#literal-vs-new` — Literal vs new String<br>`#pool-identity` — Pool identity and compile-time constants |
 | `3.Equality/Equality.md` | `#string-equals` — String content equality<br>`#string-reference-equality` — Why == is not content comparison<br>`#case-insensitive-boundary` — Case-insensitive comparison and locale boundary |
-| `4.Concatenation/Concatenation.md` | `#concat-semantics` — String concatenation semantics<br>`#compile-time-concat` — Compile-time constant concatenation<br>`#runtime-concat` — Runtime concatenation and implementation boundary<br>`#loop-concat-cost` — Repeated concatenation cost |
-| `5.StringBuilder/StringBuilder.md` | `#builder-mutable-buffer` — StringBuilder mutable buffer model<br>`#builder-capacity` — Length vs capacity<br>`#builder-usage` — Efficient incremental construction |
-| `6.StringBuffer/StringBuffer.md` | `#buffer-synchronization` — StringBuffer synchronization<br>`#builder-vs-buffer` — StringBuilder vs StringBuffer trade-off<br>`#thread-safety-boundary` — Why synchronized methods do not solve all composition concerns |
-| `7.Intern/Intern.md` | `#intern-semantics` — String.intern semantics<br>`#intern-identity` — Canonical pool reference<br>`#intern-tradeoffs` — Interning trade-offs and memory considerations |
-| `8.Encoding/Encoding.md` | `#text-vs-bytes` — Text vs bytes mental model<br>`#charset-encode-decode` — Charset encode/decode<br>`#default-charset-risk` — Default charset portability risk<br>`#malformed-input` — Malformed/unmappable input boundary |
-| `9.UnicodeCodePoint/UnicodeCodePoint.md` | `#utf16-char-model` — Java char and UTF-16<br>`#code-point` — Unicode code point<br>`#surrogate-pairs` — Surrogate pairs<br>`#unicode-iteration` — Correct code-point iteration<br>`#code-unit-code-point-grapheme` — UTF-16 code unit vs Unicode code point vs user-perceived grapheme cluster<br>`#unicode-normalization` — Unicode normalization forms and `Normalizer`<br>`#canonical-equivalence` — Canonically equivalent text can have different code-point sequences and binary/String equality |
-| `10.Regex/Regex.md` | `#pattern-matcher` — Pattern/Matcher model<br>`#regex-groups` — Groups and captures<br>`#regex-quantifiers` — Greedy/reluctant quantifiers<br>`#regex-performance` — Backtracking and performance pitfalls |
-| `11.TextBlocks/TextBlocks.md` | `#text-block-syntax` — Text block syntax<br>`#incidental-whitespace` — Incidental indentation<br>`#escape-processing` — Escapes and line terminators<br>`#text-block-not-template` — Text blocks are not string templates |
+| `4.CoreStringOperations/CoreStringOperations.md` | `#string-inspection` — CharSequence boundary; length, empty/blank and indexed inspection<br>`#string-search` — contains/indexOf/prefix/suffix search<br>`#string-extraction` — substring ranges and index boundaries<br>`#string-transformation` — replace/strip/case conversion plus selected modern text operations without mutation<br>`#string-split-join` — splitting/joining text, regex boundary and split limit semantics<br>`#string-conversion-formatting` — value conversion and basic formatting |
+| `5.Concatenation/Concatenation.md` | `#concat-semantics` — String concatenation semantics<br>`#compile-time-concat` — Compile-time constant concatenation<br>`#runtime-concat` — Runtime concatenation and implementation boundary<br>`#loop-concat-cost` — Repeated concatenation cost |
+| `6.StringBuilder/StringBuilder.md` | `#builder-mutable-buffer` — StringBuilder mutable buffer model<br>`#builder-capacity` — Length vs capacity<br>`#builder-usage` — Efficient incremental construction |
+| `7.StringBuffer/StringBuffer.md` | `#buffer-synchronization` — StringBuffer synchronization<br>`#builder-vs-buffer` — StringBuilder vs StringBuffer trade-off<br>`#thread-safety-boundary` — Why synchronized methods do not solve all composition concerns |
+| `8.Intern/Intern.md` | `#intern-semantics` — String.intern semantics<br>`#intern-identity` — Canonical pool reference<br>`#intern-tradeoffs` — Interning trade-offs and memory considerations |
+| `9.Encoding/Encoding.md` | `#text-vs-bytes` — Text vs bytes mental model<br>`#charset-encode-decode` — Charset encode/decode<br>`#default-charset-risk` — Default charset portability risk<br>`#malformed-input` — Malformed/unmappable input boundary |
+| `10.UnicodeCodePoint/UnicodeCodePoint.md` | `#utf16-char-model` — Java char and UTF-16<br>`#code-point` — Unicode code point<br>`#surrogate-pairs` — Surrogate pairs<br>`#unicode-iteration` — Correct code-point iteration<br>`#code-unit-code-point-grapheme` — UTF-16 code unit vs Unicode code point vs user-perceived grapheme cluster<br>`#unicode-normalization` — Unicode normalization forms and `Normalizer`<br>`#canonical-equivalence` — Canonically equivalent text can have different code-point sequences and binary/String equality |
+| `11.Regex/Regex.md` | `#pattern-matcher` — Pattern/Matcher model<br>`#regex-groups` — Groups and captures<br>`#regex-quantifiers` — Greedy/reluctant quantifiers<br>`#regex-performance` — Backtracking and performance pitfalls |
+| `12.TextBlocks/TextBlocks.md` | `#text-block-syntax` — Text block syntax<br>`#incidental-whitespace` — Incidental indentation<br>`#escape-processing` — Escapes and line terminators<br>`#text-block-not-template` — Text blocks are not string templates |
 
 #### Proposed API experiments
 
@@ -1139,7 +1147,7 @@ TextBlocks        → How does source representation improve without changing St
 | `StringPoolController` | `identity()` | `#pool-identity` | Compare literals, new String, compile-time concat and intern. |
 | `StringConcatController` | `constructionTrace()` | `#loop-concat-cost` | Compare result/counters for repeated concat vs StringBuilder. |
 | `EncodingController` | `roundTrip()` | `#charset-encode-decode` | Encode/decode same text under explicit charsets. |
-| `EncodingController` | `wrongCharset()` | `#default-charset-risk` | Demonstrate mojibake from mismatched charset. |
+| `EncodingController` | `wrongCharset()` | `#charset-encode-decode` | Demonstrate mojibake from mismatched charset. |
 | `UnicodeController` | `charVsCodePoint()` | `#surrogate-pairs` | Show length/char count/code-point count for supplementary character. |
 | `UnicodeController` | `normalization()` | `#canonical-equivalence` | Compare precomposed and combining-mark forms before and after NFC/NFD normalization, including code points and equality. |
 | `RegexController` | `groups()` | `#regex-groups` | Return matches/groups for controlled input. |
@@ -1147,11 +1155,11 @@ TextBlocks        → How does source representation improve without changing St
 
 #### Quiz coverage
 
-immutability; pool identity; == vs equals; concatenation constants; builder/buffer; intern; charset mismatch; UTF-16 code units/code points/grapheme boundary; Unicode normalization/canonical equivalence; regex groups/quantifiers; text-block whitespace.
+immutability and mutable-array copy boundaries; pool identity; == vs equals; String vs CharSequence; core inspection/search/extraction/transformation APIs; selected modern line/repeat/indent operations; split/join regex boundary and split limit semantics; concatenation constants; builder/buffer; intern; charset mismatch; UTF-16 code units/code points/grapheme boundary; Unicode normalization/canonical equivalence; regex matching modes/flags/groups/quantifiers; text-block whitespace.
 
 #### Interview coverage
 
-why String immutable; pool behavior; encoding bugs; char/code point/grapheme distinctions; canonical equivalence and normalization; StringBuilder vs StringBuffer; intern trade-offs; regex performance; text blocks.
+why String immutable and why mutable char[] input/output cannot alias-mutate it; pool behavior; String vs CharSequence abstraction/equality boundary; choosing core String operations by intent; substring/index boundaries; split limit/data-preservation semantics; transformation immutability; encoding bugs; char/code point/grapheme distinctions and segmentation boundary; canonical equivalence and normalization; StringBuilder vs StringBuffer; intern trade-offs; regex flags/performance; text blocks and runtime indentation/escape operations.
 
 
 ### 4.8 `exception`
@@ -2263,7 +2271,7 @@ class loading lifecycle; parent delegation; why same class name can be different
 | `oop` | 7 | 29 | 6 | 24–32 | 18–24 |
 | `abstract-interface` | 6 | 22 | 5 | 22–30 | 16–22 |
 | `object-contract` | 7 | 22 | 5 | 24–32 | 18–24 |
-| `string` | 11 | 41 | 8 | 28–38 | 18–26 |
+| `string` | 12 | 47 | 8 | 28–38 | 18–26 |
 | `exception` | 9 | 34 | 6 | 28–38 | 20–28 |
 | `generics` | 9 | 36 | 6 | 28–38 | 20–28 |
 | `collection` | 12 | 49 | 8 | 34–46 | 22–30 |
@@ -2273,7 +2281,7 @@ class loading lifecycle; parent delegation; why same class name can be different
 | `annotation` | 8 | 35 | 5 | 24–32 | 18–24 |
 | `reflection` | 10 | 45 | 7 | 30–40 | 22–30 |
 | `classloader` | 9 | 39 | 7 | 28–38 | 22–30 |
-| **Total** | **160** | **614** | **105** | **450–602** | **314–430** |
+| **Total** | **161** | **620** | **105** | **450–602** | **314–430** |
 
 These totals are planning bounds, not delivery quotas. During implementation an API experiment or assessment item may be removed when it proves redundant, weak or artificial.
 

@@ -37,7 +37,32 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-4.Concatenation/Concatenation.md:
+4.CoreStringOperations/CoreStringOperations.md:
+  string-inspection:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  string-search:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  string-extraction:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  string-transformation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  string-split-join:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  string-conversion-formatting:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+5.Concatenation/Concatenation.md:
   concat-semantics:
     difficulty: BASIC
     aiGenerated: true
@@ -54,7 +79,7 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-5.StringBuilder/StringBuilder.md:
+6.StringBuilder/StringBuilder.md:
   builder-mutable-buffer:
     difficulty: BASIC
     aiGenerated: true
@@ -67,7 +92,7 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-6.StringBuffer/StringBuffer.md:
+7.StringBuffer/StringBuffer.md:
   buffer-synchronization:
     difficulty: BASIC
     aiGenerated: true
@@ -80,7 +105,7 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-7.Intern/Intern.md:
+8.Intern/Intern.md:
   intern-semantics:
     difficulty: BASIC
     aiGenerated: true
@@ -93,7 +118,7 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-8.Encoding/Encoding.md:
+9.Encoding/Encoding.md:
   text-vs-bytes:
     difficulty: BASIC
     aiGenerated: true
@@ -110,7 +135,7 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-9.UnicodeCodePoint/UnicodeCodePoint.md:
+10.UnicodeCodePoint/UnicodeCodePoint.md:
   utf16-char-model:
     difficulty: BASIC
     aiGenerated: true
@@ -139,7 +164,7 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-10.Regex/Regex.md:
+11.Regex/Regex.md:
   pattern-matcher:
     difficulty: BASIC
     aiGenerated: true
@@ -156,7 +181,7 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-11.TextBlocks/TextBlocks.md:
+12.TextBlocks/TextBlocks.md:
   text-block-syntax:
     difficulty: BASIC
     aiGenerated: true

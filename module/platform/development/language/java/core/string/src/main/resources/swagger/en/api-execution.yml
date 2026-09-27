@@ -12,10 +12,11 @@ EncodingController:
       the behavior.</p>'
     usage: true
   wrongCharset():
-    execution: '<p><strong>Concept:</strong> Default charset portability risk.</p><ol><li>The
-      endpoint runs a bounded deterministic example inside <code>EncodingController#wrongCharset()</code>.</li><li>Demonstrate
-      mojibake from mismatched charset.<pre><code>@GetMapping(&quot;/wrong-charset&quot;)
-      public Map&lt;String,Object&gt; wrongCharset(){ String text=&quot;caf&#233;&quot;;
+    execution: '<p><strong>Concept:</strong> Mojibake from an encode/decode Charset
+      mismatch.</p><ol><li>The endpoint runs a bounded deterministic example inside
+      <code>EncodingController#wrongCharset()</code>.</li><li>Demonstrate mojibake
+      from mismatched charset.<pre><code>@GetMapping(&quot;/wrong-charset&quot;) public
+      Map&lt;String,Object&gt; wrongCharset(){ String text=&quot;caf&#233;&quot;;
       byte[] utf8=text.getBytes(StandardCharsets.UTF_8); String wrong=new String(utf8,StandardCharsets.ISO_8859_1);
       return Map.of(&quot;original&quot;,text,&quot;decodedAsLatin1&quot;,wrong,&quot;same&quot;,text.equals(wrong));
       }</code></pre></li><li>Inspect the response fields together: they are the observable

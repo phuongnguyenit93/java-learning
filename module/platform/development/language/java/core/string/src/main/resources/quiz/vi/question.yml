@@ -88,7 +88,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Concatenation/Concatenation.md", anchor: "compile-time-concat"}
+    readmeRelated: {file: "5.Concatenation/Concatenation.md", anchor: "compile-time-concat"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-builder-loop
@@ -101,7 +101,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.StringBuilder/StringBuilder.md", anchor: "builder-usage"}
+    readmeRelated: {file: "6.StringBuilder/StringBuilder.md", anchor: "builder-usage"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-buffer-vs-builder
@@ -114,7 +114,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.StringBuffer/StringBuffer.md", anchor: "builder-vs-buffer"}
+    readmeRelated: {file: "7.StringBuffer/StringBuffer.md", anchor: "builder-vs-buffer"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-intern-canonical
@@ -127,7 +127,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.Intern/Intern.md", anchor: "intern-identity"}
+    readmeRelated: {file: "8.Intern/Intern.md", anchor: "intern-identity"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-charset-roundtrip
@@ -140,7 +140,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.Encoding/Encoding.md", anchor: "charset-encode-decode"}
+    readmeRelated: {file: "9.Encoding/Encoding.md", anchor: "charset-encode-decode"}
     apiRelated: {controller: "EncodingController", methodSignature: "roundTrip()"}
 
   - id: string-codepoint-length
@@ -153,7 +153,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.UnicodeCodePoint/UnicodeCodePoint.md", anchor: "surrogate-pairs"}
+    readmeRelated: {file: "10.UnicodeCodePoint/UnicodeCodePoint.md", anchor: "surrogate-pairs"}
     apiRelated: {controller: "UnicodeController", methodSignature: "charVsCodePoint()"}
 
   - id: string-normalization-equality
@@ -166,7 +166,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.UnicodeCodePoint/UnicodeCodePoint.md", anchor: "canonical-equivalence"}
+    readmeRelated: {file: "10.UnicodeCodePoint/UnicodeCodePoint.md", anchor: "canonical-equivalence"}
     apiRelated: {controller: "UnicodeController", methodSignature: "normalization()"}
 
   - id: string-grapheme-boundary
@@ -179,7 +179,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.UnicodeCodePoint/UnicodeCodePoint.md", anchor: "code-unit-code-point-grapheme"}
+    readmeRelated: {file: "10.UnicodeCodePoint/UnicodeCodePoint.md", anchor: "code-unit-code-point-grapheme"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-regex-greedy
@@ -192,7 +192,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.Regex/Regex.md", anchor: "regex-quantifiers"}
+    readmeRelated: {file: "11.Regex/Regex.md", anchor: "regex-quantifiers"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-regex-backtracking-risk
@@ -205,7 +205,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.Regex/Regex.md", anchor: "regex-performance"}
+    readmeRelated: {file: "11.Regex/Regex.md", anchor: "regex-performance"}
     apiRelated: {controller: "RegexController", methodSignature: "backtracking()"}
 
   - id: string-text-block-whitespace
@@ -218,5 +218,304 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "11.TextBlocks/TextBlocks.md", anchor: "incidental-whitespace"}
+    readmeRelated: {file: "12.TextBlocks/TextBlocks.md", anchor: "incidental-whitespace"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-char-array-copy
+    question: "Sau khi tạo String bằng new String(char[]), điều gì xảy ra nếu sửa mảng char nguồn?"
+    answers:
+      - {id: A, answer: "String không đổi; constructor thiết lập copy boundary khỏi mutable array.", explanation: "Đúng. Mutable array của caller không được alias-mutate String đã tồn tại."}
+      - {id: B, answer: "String đổi theo vì String giữ trực tiếp array nguồn.", explanation: "Sai. Điều đó sẽ phá immutability contract."}
+      - {id: C, answer: "JVM ném UnsupportedOperationException khi sửa array.", explanation: "Sai. Array vẫn mutable bình thường."}
+      - {id: D, answer: "String tự động intern array.", explanation: "Sai. Đây là copy boundary, không phải interning."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.Immutability/Immutability.md", anchor: "string-immutability"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-final-constant-variable
+    question: "Phát biểu nào đúng về final String và compile-time constant?"
+    answers:
+      - {id: A, answer: "Mọi final String đều là compile-time constant.", explanation: "Sai. final chỉ cấm gán lại; value còn phải thỏa constant-variable rules."}
+      - {id: B, answer: "final String không bao giờ tham gia constant expression.", explanation: "Sai. Constant variable có thể tham gia."}
+      - {id: C, answer: "Chỉ final String có initializer là constant expression phù hợp mới là constant variable dùng trong compile-time folding.", explanation: "Đúng."}
+      - {id: D, answer: "Compile-time constant chỉ tồn tại với primitive.", explanation: "Sai. Java hỗ trợ String constant expression."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.StringPool/StringPool.md", anchor: "pool-identity"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-equals-ignore-case-locale
+    question: "Điều nào đúng về String.equalsIgnoreCase()?"
+    answers:
+      - {id: A, answer: "Nó dùng Locale.getDefault() để collation.", explanation: "Sai. equalsIgnoreCase không dùng Locale."}
+      - {id: B, answer: "Nó áp dụng case-insensitive rules của String nhưng không phải locale-aware collation.", explanation: "Đúng."}
+      - {id: C, answer: "Nó normalize Unicode về NFC trước khi so sánh.", explanation: "Sai. Normalization không tự xảy ra."}
+      - {id: D, answer: "Nó tương đương == sau khi lowercase.", explanation: "Sai. == vẫn kiểm tra identity."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.Equality/Equality.md", anchor: "case-insensitive-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-charsequence-equality
+    question: "Với String s = \"java\" và StringBuilder b = new StringBuilder(\"java\"), phát biểu nào đúng?"
+    answers:
+      - {id: A, answer: "s.equals(b) luôn true vì cả hai là CharSequence.", explanation: "Sai. CharSequence không định nghĩa cross-implementation equals contract."}
+      - {id: B, answer: "s == b là cách đúng để so text.", explanation: "Sai. == là identity."}
+      - {id: C, answer: "b.equals(s) bắt buộc true theo CharSequence.", explanation: "Sai. Interface không đặt equality contract chung."}
+      - {id: D, answer: "s.contentEquals(b) có thể true trong khi s.equals(b) là false.", explanation: "Đúng. Đây là String-vs-CharSequence content boundary."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.CoreStringOperations/CoreStringOperations.md", anchor: "string-inspection"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-empty-vs-blank
+    question: "String \"   \" có trạng thái nào?"
+    answers:
+      - {id: A, answer: "isEmpty() true và isBlank() false.", explanation: "Sai. Nó có code unit nên không empty."}
+      - {id: B, answer: "isEmpty() true và isBlank() true.", explanation: "Sai. Nó không empty."}
+      - {id: C, answer: "isEmpty() false và isBlank() true.", explanation: "Đúng. Blank cho phép chỉ whitespace."}
+      - {id: D, answer: "Cả hai đều false.", explanation: "Sai. isBlank nhận diện whitespace."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.CoreStringOperations/CoreStringOperations.md", anchor: "string-inspection"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-substring-half-open
+    question: "substring(2, 5) sử dụng range như thế nào?"
+    answers:
+      - {id: A, answer: "Lấy index 2,3,4; begin inclusive và end exclusive.", explanation: "Đúng. Đây là half-open range [2,5)."}
+      - {id: B, answer: "Lấy index 2,3,4,5.", explanation: "Sai. end index là exclusive."}
+      - {id: C, answer: "Lấy 5 ký tự bắt đầu từ index 2.", explanation: "Sai. Tham số thứ hai là end index."}
+      - {id: D, answer: "Luôn cắt theo grapheme cluster.", explanation: "Sai. String index dựa trên UTF-16 code unit."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.CoreStringOperations/CoreStringOperations.md", anchor: "string-extraction"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-replace-vs-replaceall
+    question: "Khác biệt quan trọng giữa replace(\".\", \"-\") và replaceAll(\".\", \"-\") là gì?"
+    answers:
+      - {id: A, answer: "Không có khác biệt.", explanation: "Sai. replaceAll nhận regex."}
+      - {id: B, answer: "replace dùng literal sequence; replaceAll hiểu đối số đầu là regex.", explanation: "Đúng. Dấu . trong regex có semantics khác literal dot."}
+      - {id: C, answer: "replaceAll chỉ hoạt động với char.", explanation: "Sai."}
+      - {id: D, answer: "replace mutate String còn replaceAll không.", explanation: "Sai. Cả hai trả String result."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.CoreStringOperations/CoreStringOperations.md", anchor: "string-transformation"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-lines-repeat
+    question: "Khi chỉ cần duyệt từng line của một String, API nào thể hiện intent trực tiếp trong Java hiện đại?"
+    answers:
+      - {id: A, answer: "lines()", explanation: "Đúng. lines() cung cấp Stream<String> theo line contract của API."}
+      - {id: B, answer: "intern()", explanation: "Sai. intern liên quan canonical identity."}
+      - {id: C, answer: "identityHashCode()", explanation: "Sai."}
+      - {id: D, answer: "notifyAll()", explanation: "Sai."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.CoreStringOperations/CoreStringOperations.md", anchor: "string-transformation"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-split-limit
+    question: "Với \"a,b,c,d\".split(\",\", 2), result hợp lý là gì?"
+    answers:
+      - {id: A, answer: "[a, b]", explanation: "Sai. Phần tử cuối phải giữ remainder."}
+      - {id: B, answer: "[a, b, c, d]", explanation: "Sai. Positive limit giới hạn số phần tử."}
+      - {id: C, answer: "[a,b,c,d] chỉ có một phần tử.", explanation: "Sai."}
+      - {id: D, answer: "[a, b,c,d]", explanation: "Đúng. limit=2 tạo tối đa 2 phần tử."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.CoreStringOperations/CoreStringOperations.md", anchor: "string-split-join"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-valueof-null
+    question: "String.valueOf((Object) null) trả gì?"
+    answers:
+      - {id: A, answer: "Ném NullPointerException.", explanation: "Sai. Object overload xử lý null."}
+      - {id: B, answer: "String \"null\".", explanation: "Đúng. Khác với gọi toString() trực tiếp trên null reference."}
+      - {id: C, answer: "Empty String.", explanation: "Sai."}
+      - {id: D, answer: "Một null String reference.", explanation: "Sai."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.CoreStringOperations/CoreStringOperations.md", anchor: "string-conversion-formatting"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-concat-order
+    question: "Kết quả của 1 + 2 + \"x\" và \"x\" + 1 + 2 lần lượt là gì?"
+    answers:
+      - {id: A, answer: "\"12x\" và \"x3\".", explanation: "Sai. Evaluation diễn ra left-to-right."}
+      - {id: B, answer: "\"3x\" và \"x3\".", explanation: "Sai với biểu thức thứ hai."}
+      - {id: C, answer: "\"3x\" và \"x12\".", explanation: "Đúng. Numeric addition xảy ra trước khi String xuất hiện ở biểu thức đầu."}
+      - {id: D, answer: "Cả hai compile error.", explanation: "Sai."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.Concatenation/Concatenation.md", anchor: "concat-semantics"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-builder-capacity
+    question: "Phát biểu nào đúng về StringBuilder capacity?"
+    answers:
+      - {id: A, answer: "Capacity là kích thước buffer hiện có trước khi grow; không phải maximum length.", explanation: "Đúng. Builder có thể mở rộng."}
+      - {id: B, answer: "Capacity luôn bằng length.", explanation: "Sai."}
+      - {id: C, answer: "Vượt capacity luôn ném exception.", explanation: "Sai."}
+      - {id: D, answer: "Capacity quyết định String encoding.", explanation: "Sai."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.StringBuilder/StringBuilder.md", anchor: "builder-capacity"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-builder-snapshot
+    question: "Sau String first = builder.toString(); rồi builder.append(\"x\"), điều gì xảy ra với first?"
+    answers:
+      - {id: A, answer: "first cũng tự append x.", explanation: "Sai. String result immutable."}
+      - {id: B, answer: "first trở thành StringBuilder.", explanation: "Sai."}
+      - {id: C, answer: "first giữ text cũ; mutation tiếp theo chỉ thay builder state.", explanation: "Đúng."}
+      - {id: D, answer: "first bị invalid.", explanation: "Sai."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.StringBuilder/StringBuilder.md", anchor: "builder-usage"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-buffer-compound
+    question: "Vì sao synchronized method của StringBuffer không tự làm check-then-act ở caller thành atomic?"
+    answers:
+      - {id: A, answer: "Vì synchronized chỉ hoạt động trên primitive.", explanation: "Sai."}
+      - {id: B, answer: "Thread khác có thể xen giữa các method call riêng lẻ nếu caller không giữ synchronization boundary lớn hơn.", explanation: "Đúng."}
+      - {id: C, answer: "Vì StringBuffer không synchronized.", explanation: "Sai."}
+      - {id: D, answer: "Vì append là static.", explanation: "Sai."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.StringBuffer/StringBuffer.md", anchor: "thread-safety-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-intern-cardinality
+    question: "Vì sao intern() có thể là lựa chọn tệ với input cardinality rất cao và gần như unique?"
+    answers:
+      - {id: A, answer: "Vì intern biến String thành mutable.", explanation: "Sai."}
+      - {id: B, answer: "Vì intern luôn encode UTF-16BE.", explanation: "Sai."}
+      - {id: C, answer: "Canonicalization thêm lookup/retention pressure nhưng gần như không deduplicate được gì.", explanation: "Đúng."}
+      - {id: D, answer: "Vì intern cấm equals().", explanation: "Sai."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.Intern/Intern.md", anchor: "intern-tradeoffs"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-java21-default-charset
+    question: "Với Java 21, phát biểu nào chính xác nhất về default charset của Java SE standard APIs?"
+    answers:
+      - {id: A, answer: "JEP 400 chuẩn hóa default charset thành UTF-8, nhưng protocol/file contract vẫn nên explicit.", explanation: "Đúng. Encoding vẫn là data contract."}
+      - {id: B, answer: "Default charset luôn là Windows-1252.", explanation: "Sai."}
+      - {id: C, answer: "Default charset không tồn tại nữa.", explanation: "Sai."}
+      - {id: D, answer: "External protocol tự suy ra charset từ String.", explanation: "Sai."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.Encoding/Encoding.md", anchor: "default-charset-risk"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-malformed-unmappable
+    question: "Khác biệt nào đúng giữa malformed input và unmappable character?"
+    answers:
+      - {id: A, answer: "Hai khái niệm giống nhau.", explanation: "Sai."}
+      - {id: B, answer: "Malformed chỉ xảy ra với regex.", explanation: "Sai."}
+      - {id: C, answer: "Unmappable nghĩa byte sequence không hợp lệ khi decode.", explanation: "Sai. Đó gần với malformed input."}
+      - {id: D, answer: "Malformed là sequence không hợp lệ cho encoding; unmappable là character hợp lệ nhưng target charset không biểu diễn được.", explanation: "Đúng."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.Encoding/Encoding.md", anchor: "malformed-input"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-unpaired-surrogate
+    question: "Phát biểu nào đúng về Unicode well-formedness của Java String?"
+    answers:
+      - {id: A, answer: "Mọi String luôn là Unicode scalar sequence well-formed.", explanation: "Sai. String là sequence UTF-16 code unit."}
+      - {id: B, answer: "String có thể chứa isolated surrogate; có String không đồng nghĩa Unicode text đã validate.", explanation: "Đúng."}
+      - {id: C, answer: "Surrogate chỉ tồn tại trong UTF-8.", explanation: "Sai."}
+      - {id: D, answer: "codePoints() tự sửa malformed surrogate.", explanation: "Sai."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.UnicodeCodePoint/UnicodeCodePoint.md", anchor: "code-unit-code-point-grapheme"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-grapheme-segmentation
+    question: "Khi UI cần di chuyển cursor theo ký tự người dùng cảm nhận, abstraction nào phù hợp hơn?"
+    answers:
+      - {id: A, answer: "Luôn charAt(i+1).", explanation: "Sai. Có thể cắt surrogate/grapheme."}
+      - {id: B, answer: "Luôn dùng UTF-8 byte index.", explanation: "Sai."}
+      - {id: C, answer: "Dùng text-boundary segmentation API như BreakIterator theo policy phù hợp.", explanation: "Đúng."}
+      - {id: D, answer: "intern() từng ký tự.", explanation: "Sai."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.UnicodeCodePoint/UnicodeCodePoint.md", anchor: "code-unit-code-point-grapheme"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-regex-matching-modes
+    question: "Khác biệt chính giữa matches(), lookingAt() và find() của Matcher là gì?"
+    answers:
+      - {id: A, answer: "matches kiểm tra toàn input; lookingAt bắt đầu từ đầu; find tìm subsequence match tiếp theo.", explanation: "Đúng."}
+      - {id: B, answer: "Cả ba tương đương.", explanation: "Sai."}
+      - {id: C, answer: "find chỉ dùng cho replacement.", explanation: "Sai."}
+      - {id: D, answer: "matches chỉ compile Pattern.", explanation: "Sai."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "11.Regex/Regex.md", anchor: "pattern-matcher"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-regex-flags
+    question: "Pattern.MULTILINE chủ yếu thay đổi semantics nào?"
+    answers:
+      - {id: A, answer: "Biến mọi quantifier thành possessive.", explanation: "Sai."}
+      - {id: B, answer: "Cho ^ và $ hoạt động tại line boundaries theo multiline semantics.", explanation: "Đúng."}
+      - {id: C, answer: "Tự normalize Unicode NFC.", explanation: "Sai."}
+      - {id: D, answer: "Tắt capture group.", explanation: "Sai."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "11.Regex/Regex.md", anchor: "pattern-matcher"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-textblock-indent-runtime
+    question: "Text-block incidental indentation và String.indent()/stripIndent() khác nhau ở đâu?"
+    answers:
+      - {id: A, answer: "Không khác; đều là cùng compiler phase.", explanation: "Sai."}
+      - {id: B, answer: "indent làm String mutable.", explanation: "Sai."}
+      - {id: C, answer: "Incidental indentation được compiler xử lý khi tạo literal; indent/stripIndent là runtime operations.", explanation: "Đúng."}
+      - {id: D, answer: "stripIndent chỉ hoạt động trên byte[].", explanation: "Sai."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "12.TextBlocks/TextBlocks.md", anchor: "incidental-whitespace"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-translate-escapes
+    question: "String.translateEscapes() phù hợp khi nào?"
+    answers:
+      - {id: A, answer: "Để JVM intern mọi escape.", explanation: "Sai."}
+      - {id: B, answer: "Để decode UTF-8 bytes.", explanation: "Sai."}
+      - {id: C, answer: "Để thay regex capture group.", explanation: "Sai."}
+      - {id: D, answer: "Khi runtime String chứa escape notation và input contract yêu cầu interpret các escape đó.", explanation: "Đúng."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "12.TextBlocks/TextBlocks.md", anchor: "escape-processing"}
     apiRelated: {controller: "", methodSignature: ""}

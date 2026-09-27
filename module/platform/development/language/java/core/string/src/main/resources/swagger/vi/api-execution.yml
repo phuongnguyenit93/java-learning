@@ -12,7 +12,7 @@ EncodingController:
       khái quát behavior.</p>
     usage: true
   wrongCharset():
-    execution: <p><strong>Khái niệm:</strong> Rủi ro platform default charset.</p><ol><li>Endpoint
+    execution: <p><strong>Khái niệm:</strong> Mojibake do encode/decode khác Charset.</p><ol><li>Endpoint
       chạy một ví dụ deterministic và bounded trong <code>EncodingController#wrongCharset()</code>.</li><li>Source
       line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/wrong-charset&quot;)
       public Map&lt;String,Object&gt; wrongCharset(){ String text=&quot;caf&#233;&quot;;
@@ -88,10 +88,9 @@ UnicodeController:
       khái quát behavior.</p>
     usage: true
   normalization():
-    execution: <p><strong>Khái niệm:</strong> Canonical equivalence và String
-      equality.</p><ol><li>Endpoint chạy một ví dụ deterministic và bounded trong
-      <code>UnicodeController#normalization()</code>.</li><li>Source line dưới đây
-      là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/normalization&quot;)
+    execution: <p><strong>Khái niệm:</strong> Canonical equivalence và String equality.</p><ol><li>Endpoint
+      chạy một ví dụ deterministic và bounded trong <code>UnicodeController#normalization()</code>.</li><li>Source
+      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/normalization&quot;)
       public Map&lt;String,Object&gt; normalization(){ String composed=&quot;&#233;&quot;,
       decomposed=&quot;e\u0301&quot;; String nfcA=Normalizer.normalize(composed,Normalizer.Form.NFC),
       nfcB=Normalizer.normalize(decomposed,Normalizer.Form.NFC); return Map.of(&quot;visualA&quot;,composed,&quot;visualB&quot;,decomposed,&quot;equalsBefore&quot;,composed.equals(decomposed),&quot;codePointsA&quot;,composed.codePoints().mapToObj(cp-&gt;String.format(&quot;U+%04X&quot;,cp)).toList(),&quot;codePointsB&quot;,decomposed.codePoints().mapToObj(cp-&gt;String.format(&quot;U+%04X&quot;,cp)).toList(),&quot;equalsAfterNfc&quot;,nfcA.equals(nfcB));

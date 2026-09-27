@@ -88,7 +88,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Concatenation/Concatenation.md", anchor: "compile-time-concat"}
+    readmeRelated: {file: "5.Concatenation/Concatenation.md", anchor: "compile-time-concat"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-builder-loop
@@ -101,7 +101,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.StringBuilder/StringBuilder.md", anchor: "builder-usage"}
+    readmeRelated: {file: "6.StringBuilder/StringBuilder.md", anchor: "builder-usage"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-buffer-vs-builder
@@ -114,7 +114,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.StringBuffer/StringBuffer.md", anchor: "builder-vs-buffer"}
+    readmeRelated: {file: "7.StringBuffer/StringBuffer.md", anchor: "builder-vs-buffer"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-intern-canonical
@@ -127,7 +127,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.Intern/Intern.md", anchor: "intern-identity"}
+    readmeRelated: {file: "8.Intern/Intern.md", anchor: "intern-identity"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-charset-roundtrip
@@ -140,7 +140,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.Encoding/Encoding.md", anchor: "charset-encode-decode"}
+    readmeRelated: {file: "9.Encoding/Encoding.md", anchor: "charset-encode-decode"}
     apiRelated: {controller: "EncodingController", methodSignature: "roundTrip()"}
 
   - id: string-codepoint-length
@@ -153,7 +153,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.UnicodeCodePoint/UnicodeCodePoint.md", anchor: "surrogate-pairs"}
+    readmeRelated: {file: "10.UnicodeCodePoint/UnicodeCodePoint.md", anchor: "surrogate-pairs"}
     apiRelated: {controller: "UnicodeController", methodSignature: "charVsCodePoint()"}
 
   - id: string-normalization-equality
@@ -166,7 +166,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.UnicodeCodePoint/UnicodeCodePoint.md", anchor: "canonical-equivalence"}
+    readmeRelated: {file: "10.UnicodeCodePoint/UnicodeCodePoint.md", anchor: "canonical-equivalence"}
     apiRelated: {controller: "UnicodeController", methodSignature: "normalization()"}
 
   - id: string-grapheme-boundary
@@ -179,7 +179,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.UnicodeCodePoint/UnicodeCodePoint.md", anchor: "code-unit-code-point-grapheme"}
+    readmeRelated: {file: "10.UnicodeCodePoint/UnicodeCodePoint.md", anchor: "code-unit-code-point-grapheme"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-regex-greedy
@@ -192,7 +192,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.Regex/Regex.md", anchor: "regex-quantifiers"}
+    readmeRelated: {file: "11.Regex/Regex.md", anchor: "regex-quantifiers"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-regex-backtracking-risk
@@ -205,7 +205,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.Regex/Regex.md", anchor: "regex-performance"}
+    readmeRelated: {file: "11.Regex/Regex.md", anchor: "regex-performance"}
     apiRelated: {controller: "RegexController", methodSignature: "backtracking()"}
 
   - id: string-text-block-whitespace
@@ -218,5 +218,304 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "11.TextBlocks/TextBlocks.md", anchor: "incidental-whitespace"}
+    readmeRelated: {file: "12.TextBlocks/TextBlocks.md", anchor: "incidental-whitespace"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-char-array-copy
+    question: "After creating a String with new String(char[]), what happens if the source char array is modified?"
+    answers:
+      - {id: A, answer: "The String is unchanged; construction establishes a copy boundary from the mutable array.", explanation: "Correct. Caller-owned mutable arrays cannot alias-mutate an existing String."}
+      - {id: B, answer: "The String changes because it directly keeps the caller's array.", explanation: "Incorrect. That would violate String immutability."}
+      - {id: C, answer: "The JVM throws UnsupportedOperationException when the array changes.", explanation: "Incorrect. The array remains mutable."}
+      - {id: D, answer: "The String automatically interns the array.", explanation: "Incorrect. This is a copy boundary, not interning."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.Immutability/Immutability.md", anchor: "string-immutability"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-final-constant-variable
+    question: "Which statement about final String variables and compile-time constants is correct?"
+    answers:
+      - {id: A, answer: "Every final String is a compile-time constant.", explanation: "Incorrect. final only prevents reassignment; constant-variable rules must also be satisfied."}
+      - {id: B, answer: "A final String can never participate in a constant expression.", explanation: "Incorrect. A constant variable can participate."}
+      - {id: C, answer: "Only a final String initialized with an appropriate constant expression is a constant variable eligible for compile-time folding.", explanation: "Correct."}
+      - {id: D, answer: "Compile-time constants exist only for primitives.", explanation: "Incorrect. Java supports String constant expressions."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.StringPool/StringPool.md", anchor: "pool-identity"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-equals-ignore-case-locale
+    question: "Which statement about String.equalsIgnoreCase() is correct?"
+    answers:
+      - {id: A, answer: "It uses Locale.getDefault() for collation.", explanation: "Incorrect. equalsIgnoreCase does not use Locale."}
+      - {id: B, answer: "It applies String's case-insensitive rules but is not locale-aware collation.", explanation: "Correct."}
+      - {id: C, answer: "It normalizes both Strings to NFC first.", explanation: "Incorrect. Unicode normalization is not automatic."}
+      - {id: D, answer: "It is equivalent to == after lowercasing.", explanation: "Incorrect. == still checks identity."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.Equality/Equality.md", anchor: "case-insensitive-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-charsequence-equality
+    question: "With String s = \"java\" and StringBuilder b = new StringBuilder(\"java\"), which statement is correct?"
+    answers:
+      - {id: A, answer: "s.equals(b) must be true because both implement CharSequence.", explanation: "Incorrect. CharSequence does not define one cross-implementation equals contract."}
+      - {id: B, answer: "s == b is the correct text comparison.", explanation: "Incorrect. == is identity."}
+      - {id: C, answer: "b.equals(s) is required by CharSequence to return true.", explanation: "Incorrect. The interface defines no shared equality contract."}
+      - {id: D, answer: "s.contentEquals(b) can be true while s.equals(b) is false.", explanation: "Correct. This is the String-vs-CharSequence content boundary."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.CoreStringOperations/CoreStringOperations.md", anchor: "string-inspection"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-empty-vs-blank
+    question: "What is true for the String \"   \"?"
+    answers:
+      - {id: A, answer: "isEmpty() is true and isBlank() is false.", explanation: "Incorrect. It contains code units, so it is not empty."}
+      - {id: B, answer: "Both are true.", explanation: "Incorrect. It is not empty."}
+      - {id: C, answer: "isEmpty() is false and isBlank() is true.", explanation: "Correct. Blank permits whitespace-only content."}
+      - {id: D, answer: "Both are false.", explanation: "Incorrect. isBlank recognizes whitespace."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.CoreStringOperations/CoreStringOperations.md", anchor: "string-inspection"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-substring-half-open
+    question: "How does substring(2, 5) interpret its range?"
+    answers:
+      - {id: A, answer: "It takes indexes 2, 3, and 4; begin is inclusive and end is exclusive.", explanation: "Correct. This is the half-open range [2,5)."}
+      - {id: B, answer: "It takes indexes 2 through 5 inclusive.", explanation: "Incorrect. end is exclusive."}
+      - {id: C, answer: "It takes five characters starting at index 2.", explanation: "Incorrect. The second argument is an end index."}
+      - {id: D, answer: "It always slices by grapheme cluster.", explanation: "Incorrect. String indexes use UTF-16 code units."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.CoreStringOperations/CoreStringOperations.md", anchor: "string-extraction"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-replace-vs-replaceall
+    question: "What important difference exists between replace(\".\", \"-\") and replaceAll(\".\", \"-\")?"
+    answers:
+      - {id: A, answer: "There is no difference.", explanation: "Incorrect. replaceAll interprets a regex."}
+      - {id: B, answer: "replace uses a literal sequence; replaceAll treats its first argument as a regex.", explanation: "Correct. A regex dot has different semantics from a literal dot."}
+      - {id: C, answer: "replaceAll works only with char values.", explanation: "Incorrect."}
+      - {id: D, answer: "replace mutates the String while replaceAll does not.", explanation: "Incorrect. Both return String results."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.CoreStringOperations/CoreStringOperations.md", anchor: "string-transformation"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-lines-repeat
+    question: "When you only need to iterate through the lines of a String, which modern API expresses that intent directly?"
+    answers:
+      - {id: A, answer: "lines()", explanation: "Correct. lines() provides a Stream<String> according to its line contract."}
+      - {id: B, answer: "intern()", explanation: "Incorrect. intern is about canonical identity."}
+      - {id: C, answer: "identityHashCode()", explanation: "Incorrect."}
+      - {id: D, answer: "notifyAll()", explanation: "Incorrect."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.CoreStringOperations/CoreStringOperations.md", anchor: "string-transformation"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-split-limit
+    question: "What is the expected result of \"a,b,c,d\".split(\",\", 2)?"
+    answers:
+      - {id: A, answer: "[a, b]", explanation: "Incorrect. The final element retains the remainder."}
+      - {id: B, answer: "[a, b, c, d]", explanation: "Incorrect. A positive limit caps the number of elements."}
+      - {id: C, answer: "One element containing a,b,c,d.", explanation: "Incorrect."}
+      - {id: D, answer: "[a, b,c,d]", explanation: "Correct. limit=2 creates at most two elements."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.CoreStringOperations/CoreStringOperations.md", anchor: "string-split-join"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-valueof-null
+    question: "What does String.valueOf((Object) null) return?"
+    answers:
+      - {id: A, answer: "It throws NullPointerException.", explanation: "Incorrect. The Object overload handles null."}
+      - {id: B, answer: "The String \"null\".", explanation: "Correct. This differs from invoking toString() on a null reference."}
+      - {id: C, answer: "An empty String.", explanation: "Incorrect."}
+      - {id: D, answer: "A null String reference.", explanation: "Incorrect."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.CoreStringOperations/CoreStringOperations.md", anchor: "string-conversion-formatting"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-concat-order
+    question: "What are the results of 1 + 2 + \"x\" and \"x\" + 1 + 2, respectively?"
+    answers:
+      - {id: A, answer: "\"12x\" and \"x3\".", explanation: "Incorrect. Evaluation is left-to-right."}
+      - {id: B, answer: "\"3x\" and \"x3\".", explanation: "Incorrect for the second expression."}
+      - {id: C, answer: "\"3x\" and \"x12\".", explanation: "Correct. Numeric addition occurs before String appears in the first expression."}
+      - {id: D, answer: "Both fail to compile.", explanation: "Incorrect."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.Concatenation/Concatenation.md", anchor: "concat-semantics"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-builder-capacity
+    question: "Which statement about StringBuilder capacity is correct?"
+    answers:
+      - {id: A, answer: "Capacity is available buffer size before growth; it is not a maximum length.", explanation: "Correct. The builder can grow."}
+      - {id: B, answer: "Capacity always equals length.", explanation: "Incorrect."}
+      - {id: C, answer: "Exceeding capacity always throws.", explanation: "Incorrect."}
+      - {id: D, answer: "Capacity determines String encoding.", explanation: "Incorrect."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.StringBuilder/StringBuilder.md", anchor: "builder-capacity"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-builder-snapshot
+    question: "After String first = builder.toString(); followed by builder.append(\"x\"), what happens to first?"
+    answers:
+      - {id: A, answer: "first automatically gains x too.", explanation: "Incorrect. The String result is immutable."}
+      - {id: B, answer: "first becomes a StringBuilder.", explanation: "Incorrect."}
+      - {id: C, answer: "first keeps the old text; later mutation changes only the builder state.", explanation: "Correct."}
+      - {id: D, answer: "first becomes invalid.", explanation: "Incorrect."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.StringBuilder/StringBuilder.md", anchor: "builder-usage"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-buffer-compound
+    question: "Why do synchronized StringBuffer methods not automatically make a caller's check-then-act sequence atomic?"
+    answers:
+      - {id: A, answer: "Because synchronized works only on primitives.", explanation: "Incorrect."}
+      - {id: B, answer: "Another thread may interleave between separate method calls unless the caller establishes a wider synchronization boundary.", explanation: "Correct."}
+      - {id: C, answer: "Because StringBuffer is not synchronized.", explanation: "Incorrect."}
+      - {id: D, answer: "Because append is static.", explanation: "Incorrect."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.StringBuffer/StringBuffer.md", anchor: "thread-safety-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-intern-cardinality
+    question: "Why can intern() be a poor choice for very high-cardinality, mostly unique input?"
+    answers:
+      - {id: A, answer: "Because intern makes Strings mutable.", explanation: "Incorrect."}
+      - {id: B, answer: "Because intern always encodes UTF-16BE.", explanation: "Incorrect."}
+      - {id: C, answer: "Canonicalization adds lookup/retention pressure while providing little deduplication.", explanation: "Correct."}
+      - {id: D, answer: "Because intern disables equals().", explanation: "Incorrect."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.Intern/Intern.md", anchor: "intern-tradeoffs"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-java21-default-charset
+    question: "For Java 21, which statement best describes the Java SE default charset?"
+    answers:
+      - {id: A, answer: "JEP 400 standardized the default to UTF-8, but durable protocol/file encoding should still be explicit.", explanation: "Correct. Encoding remains a data contract."}
+      - {id: B, answer: "It is always Windows-1252.", explanation: "Incorrect."}
+      - {id: C, answer: "The default charset no longer exists.", explanation: "Incorrect."}
+      - {id: D, answer: "External protocols infer their charset from String.", explanation: "Incorrect."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.Encoding/Encoding.md", anchor: "default-charset-risk"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-malformed-unmappable
+    question: "Which distinction between malformed input and an unmappable character is correct?"
+    answers:
+      - {id: A, answer: "They are the same concept.", explanation: "Incorrect."}
+      - {id: B, answer: "Malformed input occurs only in regex.", explanation: "Incorrect."}
+      - {id: C, answer: "Unmappable means an invalid byte sequence while decoding.", explanation: "Incorrect. That is closer to malformed input."}
+      - {id: D, answer: "Malformed means a sequence is invalid for the encoding; unmappable means a valid character cannot be represented in the target charset.", explanation: "Correct."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.Encoding/Encoding.md", anchor: "malformed-input"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-unpaired-surrogate
+    question: "Which statement about Unicode well-formedness of Java String is correct?"
+    answers:
+      - {id: A, answer: "Every String is always a well-formed Unicode scalar sequence.", explanation: "Incorrect. String is a sequence of UTF-16 code units."}
+      - {id: B, answer: "A String can contain an isolated surrogate; having a String does not mean Unicode text was validated.", explanation: "Correct."}
+      - {id: C, answer: "Surrogates exist only in UTF-8.", explanation: "Incorrect."}
+      - {id: D, answer: "codePoints() automatically repairs malformed surrogates.", explanation: "Incorrect."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.UnicodeCodePoint/UnicodeCodePoint.md", anchor: "code-unit-code-point-grapheme"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-grapheme-segmentation
+    question: "When a UI must move the cursor by user-perceived characters, which abstraction is more appropriate?"
+    answers:
+      - {id: A, answer: "Always charAt(i+1).", explanation: "Incorrect. This can split surrogate pairs or graphemes."}
+      - {id: B, answer: "Always use UTF-8 byte indexes.", explanation: "Incorrect."}
+      - {id: C, answer: "Use a text-boundary segmentation API such as BreakIterator under an appropriate policy.", explanation: "Correct."}
+      - {id: D, answer: "Intern every character.", explanation: "Incorrect."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.UnicodeCodePoint/UnicodeCodePoint.md", anchor: "code-unit-code-point-grapheme"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-regex-matching-modes
+    question: "What is the main difference between Matcher.matches(), lookingAt(), and find()?"
+    answers:
+      - {id: A, answer: "matches checks the entire input, lookingAt starts at the beginning, and find locates the next matching subsequence.", explanation: "Correct."}
+      - {id: B, answer: "They are equivalent.", explanation: "Incorrect."}
+      - {id: C, answer: "find is only for replacement.", explanation: "Incorrect."}
+      - {id: D, answer: "matches only compiles Pattern.", explanation: "Incorrect."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "11.Regex/Regex.md", anchor: "pattern-matcher"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-regex-flags
+    question: "What does Pattern.MULTILINE primarily change?"
+    answers:
+      - {id: A, answer: "It makes all quantifiers possessive.", explanation: "Incorrect."}
+      - {id: B, answer: "It allows ^ and $ to operate at line boundaries under multiline semantics.", explanation: "Correct."}
+      - {id: C, answer: "It automatically normalizes Unicode to NFC.", explanation: "Incorrect."}
+      - {id: D, answer: "It disables capturing groups.", explanation: "Incorrect."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "11.Regex/Regex.md", anchor: "pattern-matcher"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-textblock-indent-runtime
+    question: "How do text-block incidental indentation and String.indent()/stripIndent() differ?"
+    answers:
+      - {id: A, answer: "They are the same compiler phase.", explanation: "Incorrect."}
+      - {id: B, answer: "indent makes String mutable.", explanation: "Incorrect."}
+      - {id: C, answer: "Incidental indentation is compiler processing when creating the literal; indent/stripIndent are runtime operations.", explanation: "Correct."}
+      - {id: D, answer: "stripIndent works only on byte arrays.", explanation: "Incorrect."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "12.TextBlocks/TextBlocks.md", anchor: "incidental-whitespace"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: string-translate-escapes
+    question: "When is String.translateEscapes() appropriate?"
+    answers:
+      - {id: A, answer: "To make the JVM intern every escape.", explanation: "Incorrect."}
+      - {id: B, answer: "To decode UTF-8 bytes.", explanation: "Incorrect."}
+      - {id: C, answer: "To replace regex capture groups.", explanation: "Incorrect."}
+      - {id: D, answer: "When a runtime String contains escape notation and the input contract intentionally requires interpreting those escapes.", explanation: "Correct."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "12.TextBlocks/TextBlocks.md", anchor: "escape-processing"}
     apiRelated: {controller: "", methodSignature: ""}

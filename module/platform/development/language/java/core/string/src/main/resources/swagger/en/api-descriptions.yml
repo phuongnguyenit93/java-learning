@@ -1,16 +1,16 @@
 EncodingController:
   roundTrip():
-    summary: Charset encode/decode
-    description: Runs a deterministic learning experiment for Charset encode/decode.
-      The response exposes concrete runtime evidence instead of only describing the
-      rule.
+    summary: UTF-8 String ↔ bytes round trip
+    description: Encodes "Xin chào ☕" as UTF-8 and decodes the same bytes with UTF-8.
+      Compare the text, byte length, decoded value, and roundTrip flag to observe
+      that matching Charset contracts preserve the text.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 8.Encoding/Encoding.md
+      file: 9.Encoding/Encoding.md
       anchor: charset-encode-decode
     methodName: roundTrip
     params: [
@@ -27,18 +27,18 @@ EncodingController:
       ]
     usage: true
   wrongCharset():
-    summary: Default charset portability risk
-    description: Runs a deterministic learning experiment for Default charset portability
-      risk. The response exposes concrete runtime evidence instead of only describing
-      the rule.
+    summary: Mojibake from a Charset mismatch
+    description: Encodes "café" as UTF-8 but intentionally decodes those bytes as
+      ISO-8859-1. Observe decodedAsLatin1 and same=false to see that intact bytes
+      can still produce wrong text when the interpretation contract disagrees.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 8.Encoding/Encoding.md
-      anchor: default-charset-risk
+      file: 9.Encoding/Encoding.md
+      anchor: charset-encode-decode
     methodName: wrongCharset
     params: [
       ]
@@ -56,16 +56,16 @@ EncodingController:
 RegexController:
   groups():
     summary: Groups and captures
-    description: Runs a deterministic learning experiment for Groups and captures.
-      The response exposes concrete runtime evidence instead of only describing the
-      rule.
+    description: Matches the entire "ada@example.com" input with named user/domain
+      groups. The response reads captures only after matches() succeeds, making Pattern/Matcher
+      state and named-group extraction observable.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 10.Regex/Regex.md
+      file: 11.Regex/Regex.md
       anchor: regex-groups
     methodName: groups
     params: [
@@ -83,16 +83,16 @@ RegexController:
     usage: true
   backtracking():
     summary: Backtracking and performance pitfalls
-    description: Runs a deterministic learning experiment for Backtracking and performance
-      pitfalls. The response exposes concrete runtime evidence instead of only describing
-      the rule.
+    description: Runs the risky shape "(a+)+$" against a bounded near-match that fails
+      at the end. elapsedNanos is illustrative evidence of backtracking cost, not
+      a benchmark or performance guarantee.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 10.Regex/Regex.md
+      file: 11.Regex/Regex.md
       anchor: regex-performance
     methodName: backtracking
     params: [
@@ -111,16 +111,17 @@ RegexController:
 StringConcatController:
   constructionTrace():
     summary: Repeated concatenation cost
-    description: Runs a deterministic learning experiment for Repeated concatenation
-      cost. The response exposes concrete runtime evidence instead of only describing
-      the rule.
+    description: Builds the same "0123" text with repeated immutable concatenation
+      and with StringBuilder. Equal final content is shown alongside changing intermediate
+      String identities; identity hashes are observation aids, not precise allocation
+      counters.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 4.Concatenation/Concatenation.md
+      file: 5.Concatenation/Concatenation.md
       anchor: loop-concat-cost
     methodName: constructionTrace
     params: [
@@ -139,9 +140,9 @@ StringConcatController:
 StringPoolController:
   identity():
     summary: Pool identity and compile-time constants
-    description: Runs a deterministic learning experiment for Pool identity and compile-time
-      constants. The response exposes concrete runtime evidence instead of only describing
-      the rule.
+    description: Places the "java" literal, compile-time "ja"+"va", new String("java"),
+      and intern() side by side. Read literalIdentity, newStringIdentity, contentEquals,
+      and internIdentity to separate content equality from canonical object identity.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -167,15 +168,16 @@ StringPoolController:
 UnicodeController:
   charVsCodePoint():
     summary: Surrogate pairs
-    description: Runs a deterministic learning experiment for Surrogate pairs. The
-      response exposes concrete runtime evidence instead of only describing the rule.
+    description: Uses "A😀" to compare utf16Length, codePointCount, and the actual
+      code points. The response demonstrates that length() counts UTF-16 code units,
+      not Unicode code points or user-perceived characters.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 9.UnicodeCodePoint/UnicodeCodePoint.md
+      file: 10.UnicodeCodePoint/UnicodeCodePoint.md
       anchor: surrogate-pairs
     methodName: charVsCodePoint
     params: [
@@ -193,16 +195,16 @@ UnicodeController:
     usage: true
   normalization():
     summary: Canonical equivalence and String equality
-    description: Runs a deterministic learning experiment for Canonical equivalence
-      and String equality. The response exposes concrete runtime evidence instead
-      of only describing the rule.
+    description: Compares precomposed "é" with decomposed "e\u0301" before and after
+      NFC normalization. Observe rendered values, code-point sequences, equalsBefore,
+      and equalsAfterNfc to see that String.equals() does not normalize automatically.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 9.UnicodeCodePoint/UnicodeCodePoint.md
+      file: 10.UnicodeCodePoint/UnicodeCodePoint.md
       anchor: canonical-equivalence
     methodName: normalization
     params: [

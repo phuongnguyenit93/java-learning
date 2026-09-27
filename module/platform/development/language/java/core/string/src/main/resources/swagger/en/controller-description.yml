@@ -1,30 +1,35 @@
 EncodingController:
   description: |-
     <h2>Encoding</h2>
-    <p>Executable Java Core experiments related to Charset encode/decode.</p>
+    <p>Observe the boundary between Java <code>String</code> values and external bytes. The endpoints show a successful same-Charset round trip and mojibake when the same bytes are decoded with a different Charset.</p>
+    <p>This is evidence for the encoding data contract; it does not mean a String intrinsically carries UTF-8 or another external encoding.</p>
   readmeRelated:
-    file: 8.Encoding/Encoding.md
+    file: 9.Encoding/Encoding.md
 RegexController:
   description: |-
     <h2>Regex</h2>
-    <p>Executable Java Core experiments related to Groups and captures.</p>
+    <p>Observe <code>Pattern</code>/<code>Matcher</code>, named captures, and bounded evidence for backtracking cost.</p>
+    <p>The performance endpoint illustrates a risky pattern shape; its exact timing is not a benchmark or SLA.</p>
   readmeRelated:
-    file: 10.Regex/Regex.md
+    file: 11.Regex/Regex.md
 StringConcatController:
   description: |-
     <h2>String Concatenation</h2>
-    <p>Executable Java Core experiments related to Repeated concatenation cost.</p>
+    <p>Compare repeated immutable concatenation with one mutable <code>StringBuilder</code> construction flow.</p>
+    <p>Returned identity hashes are observation aids for this sample, not precise allocation measurements.</p>
   readmeRelated:
-    file: 4.Concatenation/Concatenation.md
+    file: 5.Concatenation/Concatenation.md
 StringPoolController:
   description: |-
     <h2>String Pool</h2>
-    <p>Executable Java Core experiments related to Pool identity and compile-time constants.</p>
+    <p>Observe literal pooling, compile-time constant folding, <code>new String(...)</code>, content equality, and <code>intern()</code> in one response.</p>
+    <p>The endpoint deliberately uses <code>==</code> to demonstrate identity; business text comparison still follows content semantics.</p>
   readmeRelated:
     file: 2.StringPool/StringPool.md
 UnicodeController:
   description: |-
     <h2>Unicode</h2>
-    <p>Executable Java Core experiments related to Surrogate pairs.</p>
+    <p>Observe the difference between UTF-16 code units, Unicode code points, and canonically equivalent text.</p>
+    <p>The endpoints return counts/code-point evidence and equality before/after normalization so conclusions do not rely on visual rendering alone.</p>
   readmeRelated:
-    file: 9.UnicodeCodePoint/UnicodeCodePoint.md
+    file: 10.UnicodeCodePoint/UnicodeCodePoint.md
