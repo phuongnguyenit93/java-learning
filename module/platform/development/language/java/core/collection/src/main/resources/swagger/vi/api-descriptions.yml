@@ -1,0 +1,168 @@
+ListController:
+  arrayVsLinked():
+    summary: So sánh mental model ArrayList và LinkedList
+    description: Thực hiện indexed read, middle insert và head insert trên hai List implementation để quan sát trực tiếp behavior gắn với resizable-array và doubly-linked-node model mà không giả vờ benchmark thời gian.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 2.List/List.md
+      anchor: arraylist-model
+    methodName: arrayVsLinked
+    params: []
+    path: com/example/learning/controller/ListController.java
+    mapping: '@GetMapping("/array-vs-linked")'
+    httpMethods: [GET]
+    mappingPaths: [/java/core/collection/list/array-vs-linked]
+    produces: []
+    consumes: []
+    usage: true
+SetController:
+  uniquenessAndOrder():
+    summary: Quan sát uniqueness và order contract của Set
+    description: Cho cùng input chứa duplicate đi qua HashSet, LinkedHashSet và TreeSet. Response chứng minh duplicate bị loại đồng thời phân biệt unordered, insertion-order và sorted-order behavior.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 3.Set/Set.md
+      anchor: set-semantics
+    methodName: uniquenessAndOrder
+    params: []
+    path: com/example/learning/controller/SetController.java
+    mapping: '@GetMapping("/uniqueness-and-order")'
+    httpMethods: [GET]
+    mappingPaths: [/java/core/collection/set/uniqueness-and-order]
+    produces: []
+    consumes: []
+    usage: true
+MapController:
+  orderingAndCompute():
+    summary: Quan sát compute và merge trên Map
+    description: Bắt đầu từ LinkedHashMap có dữ liệu rồi dùng compute, computeIfAbsent và merge để cập nhật hoặc tạo mapping. Response cho thấy giá trị trước/sau và encounter order của key.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 4.Map/Map.md
+      anchor: map-compute-merge
+    methodName: orderingAndCompute
+    params: []
+    path: com/example/learning/controller/MapController.java
+    mapping: '@GetMapping("/ordering-and-compute")'
+    httpMethods: [GET]
+    mappingPaths: [/java/core/collection/map/ordering-and-compute]
+    produces: []
+    consumes: []
+    usage: true
+QueueController:
+  queueOperations():
+    summary: So sánh hai nhóm operation của Queue
+    description: Gọi poll/peek và remove/element trên queue rỗng rồi tiếp tục offer/poll dữ liệu thật. Response cho thấy special-value path và exception path biểu diễn failure khác nhau như thế nào.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 5.QueueDeque/QueueDeque.md
+      anchor: exception-vs-special-value
+    methodName: queueOperations
+    params: []
+    path: com/example/learning/controller/QueueController.java
+    mapping: '@GetMapping("/queue-operations")'
+    httpMethods: [GET]
+    mappingPaths: [/java/core/collection/queue/queue-operations]
+    produces: []
+    consumes: []
+    usage: true
+IterationController:
+  failFast():
+    summary: Kích hoạt fail-fast rồi xóa an toàn qua Iterator
+    description: Tạo Iterator trên ArrayList, structural-modify list ngoài iterator để quan sát ConcurrentModificationException, sau đó thực hiện cùng nhu cầu xóa bằng Iterator.remove() trên list khác.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 10.FailFast/FailFast.md
+      anchor: concurrent-modification-exception
+    methodName: failFast
+    params: []
+    path: com/example/learning/controller/IterationController.java
+    mapping: '@GetMapping("/fail-fast")'
+    httpMethods: [GET]
+    mappingPaths: [/java/core/collection/iteration/fail-fast]
+    produces: []
+    consumes: []
+    usage: true
+ImmutabilityController:
+  viewVsCopy():
+    summary: So sánh unmodifiable view với snapshot copy
+    description: Tạo Collections.unmodifiableList(source) và List.copyOf(source), thay đổi source rồi thử mutate cả hai kết quả. Response làm rõ live backed view khác structural snapshot như thế nào dù cả hai đều reject add().
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 9.MutableImmutable/MutableImmutable.md
+      anchor: view-vs-copy
+    methodName: viewVsCopy
+    params: []
+    path: com/example/learning/controller/ImmutabilityController.java
+    mapping: '@GetMapping("/view-vs-copy")'
+    httpMethods: [GET]
+    mappingPaths: [/java/core/collection/immutability/view-vs-copy]
+    produces: []
+    consumes: []
+    usage: true
+HashingController:
+  mutableKey():
+    summary: Quan sát HashMap lookup hỏng khi key bị mutate
+    description: Put một mutable key vào HashMap, đổi field tham gia equals/hashCode rồi thử lookup bằng cùng reference và key tương đương mới. Response chứng minh entry vẫn tồn tại nhưng lookup invariant đã bị phá.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 8.EqualityHashing/EqualityHashing.md
+      anchor: mutable-element-risk
+    methodName: mutableKey
+    params: []
+    path: com/example/learning/controller/HashingController.java
+    mapping: '@GetMapping("/mutable-key")'
+    httpMethods: [GET]
+    mappingPaths: [/java/core/collection/hashing/mutable-key]
+    produces: []
+    consumes: []
+    usage: true
+EnumCollectionController:
+  specializedCollections():
+    summary: Quan sát EnumSet và EnumMap chuyên biệt cho enum
+    description: Chèn enum constants theo thứ tự khác declaration order rồi trả iteration order của EnumSet và EnumMap. Response cho thấy closed key space và declaration-order behavior của hai specialized collections.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 12.EnumCollections/EnumCollections.md
+      anchor: enum-collection-benefits
+    methodName: specializedCollections
+    params: []
+    path: com/example/learning/controller/EnumCollectionController.java
+    mapping: '@GetMapping("/specialized-collections")'
+    httpMethods: [GET]
+    mappingPaths: [/java/core/collection/enum/specialized-collections]
+    produces: []
+    consumes: []
+    usage: true

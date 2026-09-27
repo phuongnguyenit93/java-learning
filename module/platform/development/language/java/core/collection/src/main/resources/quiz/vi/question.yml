@@ -1,0 +1,560 @@
+# <quiz-schema>
+# Cấu trúc câu hỏi Quiz
+# schema-version: 3
+#
+# questions [kiểu: list; bắt buộc; mặc định: []; duy nhất theo: id]
+#   Danh sách câu hỏi Quiz của module trong language hiện tại.
+#   mỗi phần tử:
+#     id [kiểu: string; bắt buộc; mặc định: ""]
+#       ID ổn định và duy nhất của câu hỏi.
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi hiển thị cho người học.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu câu hỏi được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu câu hỏi đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+#     answers [kiểu: list; bắt buộc; số phần tử: 4; mặc định: []; duy nhất theo: id]
+#       Chính xác bốn đáp án. ID A/B/C/D là identity nội bộ ổn định, không phải vị trí hiển thị sau khi frontend shuffle.
+#       mỗi phần tử:
+#         id [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#           Identity ổn định của đáp án.
+#         answer [kiểu: string; bắt buộc; mặc định: ""]
+#           Nội dung đáp án hiển thị cho người học.
+#         explanation [kiểu: string; bắt buộc; mặc định: ""]
+#           Giải thích hiển thị khi người học chọn đáp án này, bất kể đúng hay sai.
+#     correctAnswerId [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
+# </quiz-schema>
+
+questions:
+  - id: collection-q01
+    question: "Vì sao Java Collections Framework vẫn cần thiết khi array đã có thể chứa nhiều giá trị?"
+    answers:
+      - {id: A, answer: "Nó cung cấp các abstraction và implementation chuẩn cho nhóm dữ liệu động với các hành vi như thứ tự, tính duy nhất, lookup theo key và queueing.", explanation: "Đúng. Array giải quyết lưu trữ theo index với kích thước xác định, còn JCF chuẩn hóa nhiều contract và thao tác phổ biến cho nhóm dữ liệu."}
+      - {id: B, answer: "Vì array không thể lưu object.", explanation: "Sai. Array có thể lưu reference tới object; framework bổ sung contract và hành vi cấu trúc dữ liệu có thể tái sử dụng."}
+      - {id: C, answer: "Vì JCF thay thế hoàn toàn mọi trường hợp dùng array trong Java.", explanation: "Sai. Array vẫn hữu ích cho dữ liệu kích thước cố định và các boundary API hoặc performance phù hợp."}
+      - {id: D, answer: "Vì JCF chủ yếu là framework persistence cho các row trong database.", explanation: "Sai. JCF là framework collection trong bộ nhớ, không phải framework persistence database."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.Hierarchy/Hierarchy.md", anchor: "collection-purpose"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: collection-q02
+    question: "Phát biểu nào phân biệt đúng Collection, Collections và Java Collections Framework?"
+    answers:
+      - {id: A, answer: "Collection là utility class, Collections là root interface, còn JCF chỉ gồm List và Set.", explanation: "Sai. Vai trò của Collection và Collections bị đảo ngược, và JCF rộng hơn List và Set."}
+      - {id: B, answer: "Collection là interface gốc cho các nhóm phần tử, Collections là utility class chứa static method, còn JCF là toàn bộ họ interface, implementation và algorithm liên quan.", explanation: "Đúng. Ba tên gần giống nhau nhưng đại diện cho ba vai trò khác nhau trong framework."}
+      - {id: C, answer: "Collection và Collections là hai alias; JCF là package java.collection.", explanation: "Sai. Chúng là các type khác nhau, còn JCF là một khái niệm framework chứ không phải package đó."}
+      - {id: D, answer: "Collections là implementation của Collection được ArrayList sử dụng.", explanation: "Sai. Collections là utility class và không implement Collection."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.Hierarchy/Hierarchy.md", anchor: "collection-vs-collections"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: collection-q03
+    question: "Một method chỉ cần truy cập theo index và duyệt theo thứ tự. Declaration nào diễn đạt dependency tốt nhất?"
+    answers:
+      - {id: A, answer: "ArrayList<Order>, vì caller luôn nên phụ thuộc concrete storage class.", explanation: "Sai. Phụ thuộc concrete class làm lộ nhiều chi tiết implementation hơn mức method cần."}
+      - {id: B, answer: "Object, vì type càng rộng thì luôn càng tốt.", explanation: "Sai. Object không biểu đạt các operation mà method cần."}
+      - {id: C, answer: "List<Order>, vì nó nói đúng contract cần dùng nhưng vẫn để implementation có thể thay đổi.", explanation: "Đúng. Nên phụ thuộc interface nhỏ nhất vẫn biểu đạt đầy đủ hành vi mà code cần."}
+      - {id: D, answer: "Collection<Order>, vì Collection đảm bảo có get(index).", explanation: "Sai. Collection không định nghĩa positional get(index)."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.Hierarchy/Hierarchy.md", anchor: "interface-vs-implementation"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: collection-q04
+    question: "Vì sao list.add(x) có thể ném UnsupportedOperationException dù add được khai báo trong Collection?"
+    answers:
+      - {id: A, answer: "Vì add chỉ dùng được khi element implement Cloneable.", explanation: "Sai. Cloneable không liên quan tới Collection.add."}
+      - {id: B, answer: "Vì method của Collection chỉ là gợi ý compile-time và implementation có thể âm thầm bỏ qua.", explanation: "Sai. Optional operation không được hỗ trợ phải fail rõ ràng, thường bằng UnsupportedOperationException."}
+      - {id: C, answer: "Vì add là default method luôn ném exception trừ khi ArrayList override.", explanation: "Sai. Điểm cốt lõi là contract optional operation, không phải một default implementation chung như vậy."}
+      - {id: D, answer: "Vì các operation thay đổi dữ liệu là optional; implementation như List.of(...) có thể cố ý từ chối chúng.", explanation: "Đúng. Interface cung cấp vocabulary chung, còn collection cụ thể có thể là unmodifiable."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.Hierarchy/Hierarchy.md", anchor: "collection-api-contract"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: collection-q05
+    question: "Đặc tính nào là nền tảng của contract List?"
+    answers:
+      - {id: A, answer: "Phần tử có encounter order và vị trí index, đồng thời các phần tử bằng nhau vẫn có thể xuất hiện nhiều lần.", explanation: "Đúng. List mô hình hóa một sequence có thứ tự, có vị trí và không ép uniqueness."}
+      - {id: B, answer: "Mỗi phần tử phải duy nhất và thứ tự duyệt không quan trọng.", explanation: "Sai. Mô tả này gần với semantics của Set hơn."}
+      - {id: C, answer: "Mỗi phần tử phải có một key riêng tách khỏi value.", explanation: "Sai. Quan hệ key-to-value thuộc Map."}
+      - {id: D, answer: "Head luôn là phần tử nhỏ nhất theo Comparator.", explanation: "Sai. Đây có thể là hành vi của priority queue, không phải semantics của List."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.List/List.md", anchor: "list-semantics"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: collection-q06
+    question: "Với workload chủ yếu random access theo index và append, vì sao ArrayList thường là lựa chọn mặc định tốt hơn LinkedList?"
+    answers:
+      - {id: A, answer: "LinkedList.get(index) là O(1), còn ArrayList.get(index) phải duyệt node.", explanation: "Sai. Chi phí bị đảo ngược: ArrayList truy cập index trực tiếp, còn LinkedList phải traversal node."}
+      - {id: B, answer: "ArrayList có indexed access O(1) và append amortized O(1), còn LinkedList phải traversal với index bất kỳ và có overhead cho từng node.", explanation: "Đúng. Đây là hệ quả trực tiếp của mô hình lưu trữ và chi phí operation phổ biến của hai implementation."}
+      - {id: C, answer: "ArrayList không bao giờ phải cấp lại backing storage.", explanation: "Sai. Nó có thể resize và copy backing array; append là amortized O(1), không phải mọi lần đều làm lượng công việc hằng số."}
+      - {id: D, answer: "LinkedList không thể thêm hoặc xóa ở hai đầu.", explanation: "Sai. LinkedList hỗ trợ endpoint operations hiệu quả và còn implement Deque."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "11.ImplementationChoice/ImplementationChoice.md", anchor: "list-choice"}
+    apiRelated: {controller: "ListController", methodSignature: "arrayVsLinked()"}
+
+  - id: collection-q07
+    question: "Với List<Integer> values = new ArrayList<>(List.of(10, 20, 30)), lệnh values.remove(1) làm gì?"
+    answers:
+      - {id: A, answer: "Xóa Integer có value bằng 1 nếu tồn tại.", explanation: "Sai. Argument primitive int chọn overload remove(int index)."}
+      - {id: B, answer: "Xóa tất cả value bằng 1.", explanation: "Sai. List.remove không xóa mọi phần tử match, và lời gọi này chọn overload theo index."}
+      - {id: C, answer: "Xóa phần tử ở index 1, tức value 20.", explanation: "Đúng. Muốn xóa value 10 theo object equality có thể dùng remove(Integer.valueOf(10))."}
+      - {id: D, answer: "Không compile vì remove bị ambiguous với List<Integer>.", explanation: "Sai. Overload resolution chọn remove(int)."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.List/List.md", anchor: "list-practical-boundaries"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: collection-q08
+    question: "Contract quan trọng của list.subList(from, to) là gì?"
+    answers:
+      - {id: A, answer: "Luôn tạo deep immutable copy của các phần tử được chọn.", explanation: "Sai. subList không phải một bản sao deep độc lập."}
+      - {id: B, answer: "Trả về một ArrayList mutable độc lập chứa các reference đã copy.", explanation: "Sai. Kết quả vẫn liên kết với list gốc."}
+      - {id: C, answer: "Trả về fixed-size array adapter và không cho thay element.", explanation: "Sai. Điều này nhầm subList với boundary array/list."}
+      - {id: D, answer: "Trả về backed view của một vùng; mutation được hỗ trợ qua view sẽ phản ánh vào source list.", explanation: "Đúng. Structural modification trực tiếp trên source ngoài protocol của view cũng có thể làm view không còn hợp lệ."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.List/List.md", anchor: "list-practical-boundaries"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: collection-q09
+    question: "Phát biểu nào về Arrays.asList(array) là đúng?"
+    answers:
+      - {id: A, answer: "Nó tạo fixed-size list backed by array: set được hỗ trợ, nhưng add/remove làm thay đổi size thì không.", explanation: "Đúng. Thay đổi qua set phản ánh vào backing array và ngược lại."}
+      - {id: B, answer: "Nó tạo một java.util.ArrayList có thể resize và độc lập với array.", explanation: "Sai. List trả về có size cố định và được backing bởi array."}
+      - {id: C, answer: "Nó giống hệt List.of nên mọi thao tác thay thế element đều bị từ chối.", explanation: "Sai. Arrays.asList cho phép set dù không cho thay đổi size."}
+      - {id: D, answer: "Nó deep-copy array, bao gồm clone từng element.", explanation: "Sai. Nó được backing bởi array gốc và không deep-clone element."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.List/List.md", anchor: "list-practical-boundaries"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: collection-q10
+    question: "Có thể dùng common Set/Collection API thế nào để biểu diễn phép giao của hai mutable set mà không cần tự viết nested loop?"
+    answers:
+      - {id: A, answer: "Gọi addAll trên set thứ nhất.", explanation: "Sai. addAll biểu diễn cập nhật gần với phép hợp, không phải phép giao."}
+      - {id: B, answer: "Copy một set rồi gọi retainAll(other) trên bản copy.", explanation: "Đúng. retainAll chỉ giữ lại những member cũng có trong collection còn lại."}
+      - {id: C, answer: "Gọi clear trên cả hai set rồi so sánh size.", explanation: "Sai. Cách đó phá dữ liệu và không tính phép giao."}
+      - {id: D, answer: "Chuyển cả hai set thành map vì Set không có bulk operation.", explanation: "Sai. Collection có các bulk operation như retainAll, removeAll và addAll."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.Set/Set.md", anchor: "set-algebra"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: collection-q11
+    question: "Hai Set bằng nhau theo contract Set khi nào?"
+    answers:
+      - {id: A, answer: "Chỉ khi cùng concrete implementation và cùng iteration order.", explanation: "Sai. Set equality cố ý độc lập với concrete implementation và encounter order."}
+      - {id: B, answer: "Chỉ khi mọi element được insert theo đúng cùng thứ tự thời gian.", explanation: "Sai. Insertion order không tham gia Set.equals."}
+      - {id: C, answer: "Khi chúng có cùng size và cùng các member, không phụ thuộc encounter order.", explanation: "Đúng. Vì vậy HashSet và LinkedHashSet vẫn có thể equals dù thứ tự duyệt khác nhau."}
+      - {id: D, answer: "Khi hashCode của hai set tình cờ bằng nhau.", explanation: "Sai. Set bằng nhau phải có hash code tương thích, nhưng hash code bằng nhau không chứng minh equality."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.Set/Set.md", anchor: "set-equality"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: collection-q12
+    question: "Mental model nào giải thích đúng nhất membership lookup của HashSet?"
+    answers:
+      - {id: A, answer: "Nó sort toàn bộ element ở mỗi lần contains rồi binary search.", explanation: "Sai. HashSet dựa trên hashing chứ không mặc định sorted."}
+      - {id: B, answer: "Nó chỉ so sánh object identity và không bao giờ gọi equals.", explanation: "Sai. HashSet thông thường dùng equals cho logical equality."}
+      - {id: C, answer: "Nó luôn scan toàn bộ element vì hashCode chỉ dùng khi in object.", explanation: "Sai. Hashing giúp thu hẹp vùng ứng viên để có expected-fast lookup."}
+      - {id: D, answer: "hashCode giúp thu hẹp bucket/vùng ứng viên, rồi equals xác nhận element có bằng nhau về logic hay không.", explanation: "Đúng. Contract equals/hashCode ổn định là điều kiện quan trọng cho hành vi đúng của hash-based collection."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.Set/Set.md", anchor: "hashset-model"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: collection-q13
+    question: "Một service cần ID duy nhất và phải duyệt theo thứ tự chúng được insert lần đầu. Lựa chọn nào khớp contract nhất?"
+    answers:
+      - {id: A, answer: "LinkedHashSet, vì nó kết hợp uniqueness của Set với encounter order xác định dựa trên insertion.", explanation: "Đúng. Add lại một element đã tồn tại không tạo duplicate và thông thường không tự chuyển nó về cuối."}
+      - {id: B, answer: "HashSet, vì Java 21 đảm bảo HashSet giữ insertion order.", explanation: "Sai. HashSet vẫn không hứa một encounter order cụ thể."}
+      - {id: C, answer: "TreeSet, vì TreeSet giữ thứ tự insert đầu tiên thay vì sorted order.", explanation: "Sai. TreeSet được sắp theo comparison, không theo chronology của insertion."}
+      - {id: D, answer: "ArrayList, vì List tự động từ chối duplicate.", explanation: "Sai. List cho phép phần tử trùng."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.Set/Set.md", anchor: "linkedhashset-order"}
+    apiRelated: {controller: "SetController", methodSignature: "uniquenessAndOrder()"}
+
+  - id: collection-q14
+    question: "Vì sao TreeSet có thể chỉ giữ một trong hai object khi comparator.compare(a, b) trả 0 dù a.equals(b) là false?"
+    answers:
+      - {id: A, answer: "Vì TreeSet âm thầm chuyển mọi element thành String rồi so sánh String.", explanation: "Sai. TreeSet dùng natural ordering hoặc Comparator đã cấu hình."}
+      - {id: B, answer: "Vì TreeSet dùng comparison equivalence để xác định vị trí logic cho uniqueness; compare == 0 nghĩa là hai element trùng nhau theo sorted-set contract.", explanation: "Đúng. Đây là lý do ordering của sorted set thường nên consistent with equals."}
+      - {id: C, answer: "Vì Set cho phép duplicate nhưng TreeSet ngẫu nhiên bỏ bớt để tối ưu performance.", explanation: "Sai. Set không cho duplicate về logic, và TreeSet tuân theo ordering contract của nó."}
+      - {id: D, answer: "Điều này chỉ xảy ra nếu cả hai object có cùng hashCode.", explanation: "Sai. TreeSet dựa trên comparison, không dựa trên hash bucket."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.Set/Set.md", anchor: "treeset-order"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: collection-q15
+    question: "Map<K,V> về bản chất mô hình hóa điều gì?"
+    answers:
+      - {id: A, answer: "Một positional sequence nơi duplicate key được lưu ở các index khác nhau.", explanation: "Sai. Map không phải positional structure và mỗi key chỉ có tối đa một mapping hiện tại."}
+      - {id: B, answer: "Một tập value trong đó cả key và value đều phải unique toàn cục.", explanation: "Sai. Key là duy nhất, nhưng nhiều key có thể ánh xạ tới các value bằng nhau."}
+      - {id: C, answer: "Các mapping từ key duy nhất sang value; put trên key đã có sẽ thay value cũ và trả về value trước đó.", explanation: "Đúng. Map là abstraction key-to-value và không phải subtype của Collection."}
+      - {id: D, answer: "Một queue trong đó key luôn là insertion index.", explanation: "Sai. Queue và Map diễn đạt các contract khác nhau."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.Map/Map.md", anchor: "map-semantics"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: collection-q16
+    question: "Điều gì xảy ra khi thực hiện một thao tác remove được hỗ trợ thông qua map.keySet()?"
+    answers:
+      - {id: A, answer: "Chỉ detached copy của key view thay đổi; Map không bị ảnh hưởng.", explanation: "Sai. keySet thông thường là view được backing bởi map."}
+      - {id: B, answer: "Key được thay bằng null nhưng mapping vẫn tồn tại.", explanation: "Sai. Xóa key khỏi view sẽ xóa mapping tương ứng."}
+      - {id: C, answer: "Operation luôn phải ném exception vì mọi Map view đều immutable.", explanation: "Sai. Một số mutation như removal được các backed view này hỗ trợ."}
+      - {id: D, answer: "Mapping tương ứng bị xóa khỏi backing Map vì keySet là backed view.", explanation: "Đúng. keySet, values và entrySet là live view với khả năng mutation phụ thuộc từng operation."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.Map/Map.md", anchor: "map-views"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: collection-q17
+    question: "Nếu một Map implementation cho phép null value, vì sao containsKey(k) vẫn có thể cần thiết sau các thao tác lookup kiểu get/getOrDefault?"
+    answers:
+      - {id: A, answer: "Vì kết quả null có thể mơ hồ giữa không có mapping và mapping có value null; containsKey kiểm tra sự tồn tại của key một cách rõ ràng.", explanation: "Đúng. Presence và mapped value là hai câu hỏi khác nhau khi null value được phép."}
+      - {id: B, answer: "Vì containsKey sort map trước khi tìm nên mọi lookup trở nên deterministic.", explanation: "Sai. containsKey kiểm tra key presence; nó không thiết lập sorted order."}
+      - {id: C, answer: "Vì getOrDefault luôn insert default value vào map.", explanation: "Sai. getOrDefault chỉ trả fallback và không insert nó."}
+      - {id: D, answer: "Vì get không đọc được entry được tạo bởi putIfAbsent.", explanation: "Sai. get đọc mapping hiện tại bất kể operation nào đã tạo mapping đó."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.Map/Map.md", anchor: "map-default-operations"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: collection-q18
+    question: "Lựa chọn implementation nào khớp đúng với yêu cầu ordering của Map?"
+    answers:
+      - {id: A, answer: "HashMap cho sorted key, LinkedHashMap cho no order, TreeMap cho insertion order.", explanation: "Sai. Các ordering contract đã bị ghép nhầm."}
+      - {id: B, answer: "HashMap khi không cần encounter order, LinkedHashMap cho insertion/access order, TreeMap cho sorted key order.", explanation: "Đúng. Ba implementation khác nhau chủ yếu ở ordering contract và chi phí đi kèm."}
+      - {id: C, answer: "Cả ba đều đảm bảo cùng insertion order; chỉ khác memory usage.", explanation: "Sai. Các contract ordering quan sát được khác nhau rõ rệt."}
+      - {id: D, answer: "TreeMap là implementation duy nhất hỗ trợ lookup theo key.", explanation: "Sai. Cả ba đều là Map implementation và đều hỗ trợ key lookup."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "11.ImplementationChoice/ImplementationChoice.md", anchor: "map-choice"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: collection-q19
+    question: "Phát biểu nào về computeIfAbsent và merge là đúng?"
+    answers:
+      - {id: A, answer: "computeIfAbsent luôn tạo mapping kể cả khi mapping function trả null.", explanation: "Sai. Nếu function trả null thì mapping không được tạo."}
+      - {id: B, answer: "merge bỏ qua value cũ và luôn overwrite mà không gọi remapping function.", explanation: "Sai. Khi đã có non-null value, merge gọi remapping function."}
+      - {id: C, answer: "computeIfAbsent phù hợp để tạo value như List khi chưa có non-null mapping; merge có thể gộp value hiện tại và sẽ xóa mapping nếu remapping result là null.", explanation: "Đúng. Hai operation này diễn đạt trực tiếp các pattern read-compute-write phổ biến với semantics null rõ ràng."}
+      - {id: D, answer: "Cả hai làm mọi update trên bất kỳ Map nào trở thành atomic giữa nhiều thread.", explanation: "Sai. Atomicity phụ thuộc contract của concurrent-map implementation cụ thể, không phải plain Map."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.Map/Map.md", anchor: "map-compute-merge"}
+    apiRelated: {controller: "MapController", methodSignature: "orderingAndCompute()"}
+
+  - id: collection-q20
+    question: "Với Queue, cặp method nào thể hiện đúng sự khác nhau giữa failure bằng exception và failure bằng special value?"
+    answers:
+      - {id: A, answer: "add/offer giống hệt nhau và đều luôn ném exception khi insert thất bại.", explanation: "Sai. add dùng contract exception-style, còn offer báo insertion failure bằng false."}
+      - {id: B, answer: "remove/poll đều trả null khi queue rỗng.", explanation: "Sai. remove ném NoSuchElementException; poll trả null."}
+      - {id: C, answer: "element/peek đều ném exception khi queue rỗng.", explanation: "Sai. element ném exception, còn peek trả null."}
+      - {id: D, answer: "remove so với poll và element so với peek là cùng loại queue action nhưng khác contract báo failure bằng exception hay special value.", explanation: "Đúng. add/offer tạo cặp tương tự cho insertion."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.QueueDeque/QueueDeque.md", anchor: "exception-vs-special-value"}
+    apiRelated: {controller: "QueueController", methodSignature: "queueOperations()"}
+
+  - id: collection-q21
+    question: "Một Deque có thể biểu diễn cả FIFO và LIFO như thế nào?"
+    answers:
+      - {id: A, answer: "FIFO có thể dùng offerLast/pollFirst, còn LIFO có thể dùng push/pop trên cùng abstraction hai đầu.", explanation: "Đúng. Deque hỗ trợ thao tác ở cả hai đầu nên biểu diễn được cả queue và stack pattern."}
+      - {id: B, answer: "Deque chỉ hỗ trợ FIFO; LIFO bắt buộc dùng legacy Stack.", explanation: "Sai. Deque còn là abstraction stack được ưu tiên trong code hiện đại."}
+      - {id: C, answer: "Deque sort element trước mỗi lần remove nên FIFO và LIFO thực chất là alias.", explanation: "Sai. Hai pattern khác nhau bởi endpoint semantics, không phải sorting."}
+      - {id: D, answer: "Deque có index như List; FIFO nghĩa là remove(index 0), còn LIFO là remove(lastIndex).", explanation: "Sai. Deque cung cấp endpoint operations chứ không phải positional indexing như List."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.QueueDeque/QueueDeque.md", anchor: "deque-semantics"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: collection-q22
+    question: "Giả định nào về PriorityQueue là không an toàn?"
+    answers:
+      - {id: A, answer: "peek quan sát head hiện tại mà không xóa nó.", explanation: "Đây là hành vi Queue hợp lệ nên không phải giả định sai."}
+      - {id: B, answer: "Duyệt bằng iterator sẽ trả toàn bộ element theo đúng priority-sorted order giống như gọi poll lặp lại.", explanation: "Đúng. Đây là giả định không an toàn: iteration của PriorityQueue không hứa priority order; repeated poll mới thể hiện thứ tự lấy theo ưu tiên."}
+      - {id: C, answer: "offer và poll thông thường điều chỉnh heap với chi phí logarithmic.", explanation: "Điều này phù hợp với implementation model nên không phải giả định sai."}
+      - {id: D, answer: "Comparator có thể quyết định element nào trở thành head.", explanation: "Điều này đúng; Comparator hoặc natural ordering quyết định priority."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.QueueDeque/QueueDeque.md", anchor: "priority-queue"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: collection-q23
+    question: "Enhanced for liên hệ với Iterator như thế nào khi duyệt Collection thông thường?"
+    answers:
+      - {id: A, answer: "Enhanced for bỏ qua Iterable và đọc trực tiếp private storage của collection.", explanation: "Sai. Với object Iterable, enhanced for là syntax của language dựa trên iteration protocol."}
+      - {id: B, answer: "Iterator chỉ dùng cho array, còn collection bắt buộc phải duyệt bằng index.", explanation: "Sai. Array là trường hợp riêng của language; collection thường expose iterator."}
+      - {id: C, answer: "Enhanced for cung cấp syntax thuận tiện trên traversal kiểu Iterable/Iterator, còn dùng Iterator trực tiếp cho phép thao tác cursor như remove.", explanation: "Đúng. Syntax che việc quản lý iterator khi code không cần quyền điều khiển bổ sung."}
+      - {id: D, answer: "Mọi Iterator đều đảm bảo sorted traversal bất kể source collection.", explanation: "Sai. Iterator order tuân theo contract của source collection."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.Iteration/Iteration.md", anchor: "enhanced-for"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: collection-q24
+    question: "ListIterator bổ sung khả năng gì so với một Iterator chỉ duyệt tiến?"
+    answers:
+      - {id: A, answer: "Tự động làm mọi List trở thành thread-safe.", explanation: "Sai. Khả năng traversal không bổ sung thread safety."}
+      - {id: B, answer: "Chuyển List thành Set trong lúc duyệt.", explanation: "Sai. ListIterator vẫn làm việc theo List semantics."}
+      - {id: C, answer: "Đảm bảo O(1) indexed access kể cả cho LinkedList.", explanation: "Sai. Iterator không thay đổi complexity của storage bên dưới."}
+      - {id: D, answer: "Hỗ trợ duyệt hai chiều, quan sát index lân cận và các operation add/set/remove phối hợp với cursor.", explanation: "Đúng. ListIterator là traversal interface hai chiều, có vị trí, chuyên cho List."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.Iteration/Iteration.md", anchor: "listiterator-contract"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: collection-q25
+    question: "Ranh giới chính giữa Iterator và Spliterator là gì?"
+    answers:
+      - {id: A, answer: "Spliterator bổ sung characteristics của source và khả năng chia traversal bằng trySplit, có thể hỗ trợ Stream; bản thân nó không tự biến xử lý thành parallel.", explanation: "Đúng. Nó kết hợp traversal với metadata và khả năng split khi phù hợp."}
+      - {id: B, answer: "Spliterator chỉ tồn tại để mutate collection trong lúc duyệt.", explanation: "Sai. Mutation không phải vai trò chính của nó."}
+      - {id: C, answer: "Iterator có thể chia workload thành các partition cân bằng còn Spliterator thì không.", explanation: "Sai. trySplit chính là capability đặc trưng của Spliterator."}
+      - {id: D, answer: "Gọi spliterator() làm collection trở thành thread-safe.", explanation: "Sai. Spliterator không cung cấp synchronization hay ownership guarantee."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.Iteration/Iteration.md", anchor: "spliterator-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: collection-q26
+    question: "Phát biểu nào mô tả đúng encounter order?"
+    answers:
+      - {id: A, answer: "Nó luôn có nghĩa là natural ascending sort order.", explanation: "Sai. Encounter order có thể đến từ index, insertion order, sorted order hoặc một traversal contract xác định khác."}
+      - {id: B, answer: "Đó là thứ tự mà traversal tuần tự gặp các phần tử; một collection có thể có encounter order xác định mà không hề sorted.", explanation: "Đúng. ArrayList và LinkedHashSet là ví dụ có order nhưng không mặc định sorted."}
+      - {id: C, answer: "Nếu HashSet in ra cùng thứ tự hai lần thì thứ tự đó trở thành API contract.", explanation: "Sai. Quan sát tình cờ ổn định không tạo ra guarantee nếu contract không hứa."}
+      - {id: D, answer: "Chỉ List mới có thể có encounter order.", explanation: "Sai. Set, Map, Deque và các cấu trúc khác cũng có thể định nghĩa encounter order."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.OrderingSorting/OrderingSorting.md", anchor: "encounter-order"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: collection-q27
+    question: "Java yêu cầu điều gì ở kết quả của compareTo/Comparator khi xác lập ordering?"
+    answers:
+      - {id: A, answer: "Method bắt buộc chỉ được trả đúng -1, 0 hoặc 1.", explanation: "Sai. Bất kỳ int âm, 0 hoặc dương đều truyền đạt ordering relation."}
+      - {id: B, answer: "Chỉ 0 có ý nghĩa; số âm và dương có thể dùng thay thế cho nhau.", explanation: "Sai. Dấu âm và dương biểu thị quan hệ nhỏ hơn và lớn hơn."}
+      - {id: C, answer: "Kết quả âm nghĩa là left < right, 0 nghĩa là tương đương theo ordering, dương nghĩa là left > right; độ lớn tuyệt đối không mang ý nghĩa đặc biệt.", explanation: "Đúng. Natural ordering đến từ Comparable, còn Comparator cung cấp quy tắc ordering bên ngoài type."}
+      - {id: D, answer: "Giá trị tuyệt đối càng lớn nghĩa là hai object càng cách xa nhau và phải đặt xa nhau hơn trong collection.", explanation: "Sai. Độ lớn của kết quả compare không phải distance metric."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.OrderingSorting/OrderingSorting.md", anchor: "comparison-result-contract"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: collection-q28
+    question: "NavigableSet.subSet và NavigableMap.subMap đại diện cho điều gì?"
+    answers:
+      - {id: A, answer: "Detached snapshot không bao giờ phản ánh thay đổi của collection gốc.", explanation: "Sai. Kết quả range của navigable collection là backed view."}
+      - {id: B, answer: "Unordered hash copy chỉ dùng để contains nhanh hơn.", explanation: "Sai. Chúng giữ sorted/navigable ordering contract."}
+      - {id: C, answer: "Stream chỉ được consume một lần.", explanation: "Sai. Đây là collection/map range view, không phải Stream pipeline."}
+      - {id: D, answer: "Backed range view trên sorted structure, với bound inclusive/exclusive tùy overload được chọn.", explanation: "Đúng. Thay đổi được hỗ trợ trong view và source vẫn liên kết với nhau theo range contract."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.OrderingSorting/OrderingSorting.md", anchor: "navigable-range-operations"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: collection-q29
+    question: "Stable sort của List đảm bảo điều gì với hai element mà Comparator xem là bằng nhau?"
+    answers:
+      - {id: A, answer: "Thứ tự tương đối của chúng trước khi sort được giữ nguyên.", explanation: "Đúng. Stability bảo toàn prior order giữa các phần tử tied theo comparator."}
+      - {id: B, answer: "Một trong hai element bị xóa để đảm bảo uniqueness.", explanation: "Sai. Sort List không biến nó thành Set."}
+      - {id: C, answer: "Hai element trở thành equals theo equals dù trước đó không equals.", explanation: "Sai. Sorting không thay đổi object equality contract."}
+      - {id: D, answer: "Comparator bị bỏ qua với tie và identity hash code sẽ quyết định order.", explanation: "Sai. Stable sort giữ nguyên thứ tự tương đối đang có."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.OrderingSorting/OrderingSorting.md", anchor: "stable-sort"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: collection-q30
+    question: "Precondition nào là thiết yếu trước khi dùng Collections.binarySearch(list, key, comparator)?"
+    answers:
+      - {id: A, answer: "List phải là LinkedList vì binary search chỉ được định nghĩa cho linked node.", explanation: "Sai. Điều kiện cốt lõi là ordering consistency, không phải một List implementation cụ thể."}
+      - {id: B, answer: "List phải được sort sẵn theo đúng cùng ordering dùng cho search.", explanation: "Đúng. Nếu không, kết quả không còn ý nghĩa theo binary-search contract."}
+      - {id: C, answer: "Mọi element phải có hashCode duy nhất.", explanation: "Sai. Binary search dựa vào ordering, không dựa vào hash bucket."}
+      - {id: D, answer: "List phải unmodifiable để search so sánh an toàn.", explanation: "Sai. Mutability không phải precondition của binary search."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.OrderingSorting/OrderingSorting.md", anchor: "collections-utility-algorithms"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: collection-q31
+    question: "Phát biểu nào về equality của cả container là đúng?"
+    answers:
+      - {id: A, answer: "Mọi Collection dùng cùng một value-equality rule: cùng iteration sequence thì equals.", explanation: "Sai. Collection tự nó không định nghĩa một universal value-equality contract."}
+      - {id: B, answer: "List và Set equality đều phụ thuộc order, còn Map equality dựa trên identity.", explanation: "Sai. List phụ thuộc order; Set và Map equality không phụ thuộc encounter order."}
+      - {id: C, answer: "List so sánh từng vị trí, Set so sánh membership, Map so sánh mapping; một số Queue/Deque implementation như ArrayDeque vẫn giữ identity-based Object equality.", explanation: "Đúng. Container equality thuộc contract của subtype/implementation liên quan."}
+      - {id: D, answer: "Hai container equals nếu hashCode của chúng giống nhau.", explanation: "Sai. Hash code giống nhau không bao giờ đủ để chứng minh equality."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.EqualityHashing/EqualityHashing.md", anchor: "collection-equality-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: collection-q32
+    question: "Vì sao thay đổi field tham gia equals/hashCode của HashMap key sau khi put là nguy hiểm?"
+    answers:
+      - {id: A, answer: "HashMap tự động rehash riêng entry đó mỗi khi field đổi; chỉ tốn performance nhưng vẫn đúng.", explanation: "Sai. Object mutation thông thường không thông báo cho map để entry được chuyển vị trí."}
+      - {id: B, answer: "Value gắn với key tự động bị clone và có thể tách khỏi object gốc.", explanation: "Sai. Rủi ro nằm ở vị trí lookup của key, không phải automatic cloning của value."}
+      - {id: C, answer: "Key tự biến thành null vì Map cấm mutable key.", explanation: "Sai. Mutable key không bị cấm về syntax; vấn đề là equality/hash state không ổn định."}
+      - {id: D, answer: "Hash mới của key có thể dẫn lookup tới bucket khác trong khi entry được lưu bằng hash cũ, khiến mapping trông như bị mất khi tìm kiếm.", explanation: "Đúng. Hash-based collection cần equality/hash của key ổn định trong thời gian key được lưu."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.EqualityHashing/EqualityHashing.md", anchor: "mutable-element-risk"}
+    apiRelated: {controller: "HashingController", methodSignature: "mutableKey()"}
+
+  - id: collection-q33
+    question: "Một method muốn expose dữ liệu hiện tại theo kiểu read-only nhưng phải quyết định caller có thấy structural change về sau của internal list hay không. Phân biệt nào quan trọng?"
+    answers:
+      - {id: A, answer: "Collections.unmodifiableList(source) là backed read-only view nhìn thấy thay đổi sau đó của source, còn List.copyOf(source) là unmodifiable structural snapshot của nội dung tại thời điểm copy.", explanation: "Đúng. Cả hai chặn structural mutation qua reference trả về, nhưng mối quan hệ với thay đổi source về sau là khác nhau."}
+      - {id: B, answer: "Cả hai API luôn trả đúng cùng object identity với source.", explanation: "Sai. Caller không nên dựa vào identity, và semantics của hai cách cũng khác nhau."}
+      - {id: C, answer: "List.copyOf deep-clone mọi mutable element.", explanation: "Sai. Đây là shallow structural copy; object bên trong không được deep clone."}
+      - {id: D, answer: "Unmodifiable view đóng băng source list nên owner cũng không thể thay đổi source nữa.", explanation: "Sai. Owner vẫn có thể mutate source, và backed view sẽ quan sát các thay đổi được hỗ trợ."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.MutableImmutable/MutableImmutable.md", anchor: "view-vs-copy"}
+    apiRelated: {controller: "ImmutabilityController", methodSignature: "viewVsCopy()"}
+
+  - id: collection-q34
+    question: "Phát biểu nào phân biệt đúng List.of, List.copyOf và Arrays.asList?"
+    answers:
+      - {id: A, answer: "Cả ba đều là resizable mutable list và chấp nhận null element.", explanation: "Sai. Contract về mutability và null của chúng khác nhau rõ rệt."}
+      - {id: B, answer: "List.of và List.copyOf tạo list unmodifiable và từ chối null, còn Arrays.asList là fixed-size list backed by array, cho phép set nhưng không cho thay đổi size.", explanation: "Đúng. copyOf là structural snapshot của source, trong khi Arrays.asList vẫn liên kết với array."}
+      - {id: C, answer: "Arrays.asList là unmodifiable còn List.of cho phép set ở index có sẵn.", explanation: "Sai. Phát biểu này đảo ngược mutation contract của chúng."}
+      - {id: D, answer: "List.copyOf được đảm bảo giữ mọi custom encounter-order semantics và object identity của source implementation.", explanation: "Sai. Contract là unmodifiable copy của nội dung, không đảm bảo giữ arbitrary implementation identity hay mọi semantics chuyên biệt."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.MutableImmutable/MutableImmutable.md", anchor: "backed-view-fixed-size-snapshot"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: collection-q35
+    question: "ConcurrentModificationException từ fail-fast iterator của ArrayList thực sự nói lên điều gì?"
+    answers:
+      - {id: A, answer: "Nó chứng minh có hai thread sửa list đúng cùng thời điểm.", explanation: "Sai. Một thread duy nhất cũng có thể gây CME nếu structural modification collection ngoài iterator."}
+      - {id: B, answer: "Nó là cơ chế synchronization được đảm bảo để ngăn race condition.", explanation: "Sai. Fail-fast detection chỉ là best-effort và không phải thread synchronization."}
+      - {id: C, answer: "Iterator phát hiện structural modification không phù hợp với traversal state của nó; exception là tín hiệu bug chứ không phải correctness mechanism.", explanation: "Đúng. Correctness phải đến từ mutation qua iterator được hỗ trợ hoặc concurrency model phù hợp."}
+      - {id: D, answer: "Nó có nghĩa là list chứa duplicate element.", explanation: "Sai. Duplicate không liên quan tới fail-fast traversal."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.FailFast/FailFast.md", anchor: "concurrent-modification-exception"}
+    apiRelated: {controller: "IterationController", methodSignature: "failFast()"}
+
+  - id: collection-q36
+    question: "Vì sao phải kiểm tra null policy theo concrete collection contract thay vì suy ra chỉ từ List/Set/Map/Queue?"
+    answers:
+      - {id: A, answer: "Vì mọi implementation đều cho null nhưng interface che thông tin đó.", explanation: "Sai. Nhiều implementation và factory collection phổ biến từ chối null."}
+      - {id: B, answer: "Vì null policy phụ thuộc implementation: ví dụ HashMap cho một null key, ArrayDeque từ chối null, còn List.of/Set.of/Map.of và các family copyOf từ chối nội dung null.", explanation: "Đúng. Abstraction không định nghĩa một universal null policy cho mọi implementation."}
+      - {id: C, answer: "Vì null được chuyển thành primitive 0 trước khi vào collection.", explanation: "Sai. null không được chuyển thành primitive default value."}
+      - {id: D, answer: "Vì chỉ sorted collection mới có thể chứa null.", explanation: "Sai. Nhiều collection không sorted cho phép null, còn các sorted collection dùng natural ordering phổ biến lại từ chối null."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "11.ImplementationChoice/ImplementationChoice.md", anchor: "null-policy-matrix"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: collection-q37
+    question: "Bước đầu tiên mạnh nhất khi chọn collection implementation là gì?"
+    answers:
+      - {id: A, answer: "Chọn HashMap hoặc ArrayList trước vì thường nhanh, rồi chỉnh business rule cho phù hợp.", explanation: "Sai. Semantic requirement phải đi trước thói quen hoặc micro-optimization."}
+      - {id: B, answer: "Benchmark mọi JDK collection trước khi xác định abstraction cần dùng.", explanation: "Sai. Benchmark chỉ có ý nghĩa sau khi đã hiểu semantics bắt buộc và hot operations."}
+      - {id: C, answer: "Luôn chọn implementation có asymptotic lookup cost thấp nhất dù ordering contract không đúng.", explanation: "Sai. Cấu trúc nhanh nhưng sai semantics vẫn là lựa chọn sai."}
+      - {id: D, answer: "Xác định abstraction và semantics cần thiết trước—vị trí, uniqueness, key lookup, ordering, endpoint/priority behavior—sau đó mới xét operation cost, memory, null và mutability.", explanation: "Đúng. Implementation choice phải theo behavioral contract mà application thực sự cần."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "11.ImplementationChoice/ImplementationChoice.md", anchor: "choice-by-characteristics"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: collection-q38
+    question: "Vì sao EnumSet phù hợp mạnh với một tập enum flag hoặc trạng thái?"
+    answers:
+      - {id: A, answer: "Nó chuyên cho một enum type, dùng representation kiểu bit vector gọn, duyệt theo thứ tự khai báo enum và từ chối null element.", explanation: "Đúng. Representation chuyên biệt đồng thời làm closed enum domain trở nên rõ trong type."}
+      - {id: B, answer: "Nó giữ arbitrary insertion order nên thay thế LinkedHashSet cho mọi ordered set.", explanation: "Sai. EnumSet duyệt theo declaration order của enum, không theo arbitrary insertion order."}
+      - {id: C, answer: "Nó cho phép trộn constant từ nhiều enum type trong cùng set miễn ordinal khác nhau.", explanation: "Sai. Một EnumSet gắn với đúng một enum type."}
+      - {id: D, answer: "Trong Java 21 nó là SequencedSet nên có addFirst/addLast/reversed.", explanation: "Sai. EnumSet có declaration-order iteration xác định nhưng không implement SequencedSet."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "12.EnumCollections/EnumCollections.md", anchor: "enumset-model"}
+    apiRelated: {controller: "EnumCollectionController", methodSignature: "specializedCollections()"}
+
+  - id: collection-q39
+    question: "Phát biểu nào mô tả đúng EnumMap?"
+    answers:
+      - {id: A, answer: "Nó hash arbitrary Object key nhưng ưu tiên in enum key trước cho tiện.", explanation: "Sai. EnumMap chỉ nhận key từ một enum type và dùng representation chuyên biệt."}
+      - {id: B, answer: "Nó chuyên cho một enum key type, duyệt key theo thứ tự khai báo enum, từ chối null key và có thể lưu null value.", explanation: "Đúng. Declaration order ổn định là một phần trong enum-specific contract của nó."}
+      - {id: C, answer: "Nó giữ access order giống LinkedHashMap được tạo với accessOrder=true.", explanation: "Sai. EnumMap order theo declaration order của enum, không theo lịch sử truy cập."}
+      - {id: D, answer: "Nó implement SequencedMap trong Java 21 vì mọi map có order xác định đều bắt buộc như vậy.", explanation: "Sai. EnumMap có order xác định nhưng không implement SequencedMap."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "12.EnumCollections/EnumCollections.md", anchor: "enummap-model"}
+    apiRelated: {controller: "EnumCollectionController", methodSignature: "specializedCollections()"}
+
+  - id: collection-q40
+    question: "Quan hệ đúng trong Java 21 giữa encounter order xác định và các Sequenced interface là gì?"
+    answers:
+      - {id: A, answer: "Mọi collection có iteration order dự đoán được đều tự động implement SequencedCollection hoặc SequencedMap.", explanation: "Sai. Có encounter order xác định không đồng nghĩa với tham gia Sequenced interface; EnumSet và EnumMap là hai phản ví dụ."}
+      - {id: B, answer: "Sequenced interface thay thế List, Deque, SortedSet và SortedMap nên các contract cũ không còn quan trọng.", explanation: "Sai. Java 21 tích hợp sequenced capability vào các contract hiện có chứ không thay thế chúng."}
+      - {id: C, answer: "SequencedCollection/SequencedSet/SequencedMap chuẩn hóa vocabulary first/last/reversed cho các type tham gia, còn một số type khác vẫn có thể định nghĩa encounter order mà không implement chúng.", explanation: "Đúng. LinkedHashSet và LinkedHashMap tham gia, còn EnumSet và EnumMap có order xác định nhưng không dùng Sequenced interface."}
+      - {id: D, answer: "SequencedMap là subtype của Collection nên Java 21 đã đưa Map vào Collection hierarchy.", explanation: "Sai. Map vẫn nằm ở hierarchy riêng."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.Hierarchy/Hierarchy.md", anchor: "collection-hierarchy"}
+    apiRelated: {controller: "", methodSignature: ""}

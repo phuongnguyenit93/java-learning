@@ -1,1 +1,296 @@
-{}
+1.Hierarchy/Hierarchy.md:
+  collection-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  collection-vs-collections:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  collection-hierarchy:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  sorted-navigable-contracts:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  collection-api-contract:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  functional-syntax-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  map-separate-hierarchy:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  interface-vs-implementation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  collection-characteristics:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  complexity-mental-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+2.List/List.md:
+  list-semantics:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  list-practical-boundaries:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  arraylist-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  linkedlist-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  list-equality:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+3.Set/Set.md:
+  set-semantics:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  set-algebra:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  set-equality:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  hashset-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  linkedhashset-order:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  treeset-order:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+4.Map/Map.md:
+  map-semantics:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  map-basic-contract:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  map-entry-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  map-views:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  map-default-operations:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  map-equality:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  hashmap-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  linkedhashmap-order:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  treemap-order:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  map-compute-merge:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+5.QueueDeque/QueueDeque.md:
+  queue-semantics:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  deque-semantics:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  exception-vs-special-value:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  priority-queue:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+6.Iteration/Iteration.md:
+  iterator-contract:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  enhanced-for:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  iterator-remove:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  listiterator-contract:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  spliterator-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+7.OrderingSorting/OrderingSorting.md:
+  encounter-order:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  natural-ordering:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  comparison-result-contract:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  comparator-ordering:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  navigable-range-operations:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  stable-sort:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  collections-utility-algorithms:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+8.EqualityHashing/EqualityHashing.md:
+  element-equality-effects:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  hash-bucket-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  sorted-equality-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  collection-equality-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  collection-equality-contracts:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  mutable-element-risk:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+9.MutableImmutable/MutableImmutable.md:
+  modifiable-vs-unmodifiable:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  immutable-factory:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  copy-of:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  backed-view-fixed-size-snapshot:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  view-vs-copy:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+10.FailFast/FailFast.md:
+  structural-modification:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  fail-fast-best-effort:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  concurrent-modification-exception:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  iterator-safe-mutation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+11.ImplementationChoice/ImplementationChoice.md:
+  list-choice:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  set-choice:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  map-choice:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  queue-choice:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  null-policy-matrix:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  choice-by-characteristics:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+12.EnumCollections/EnumCollections.md:
+  enumset-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  enummap-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  enum-collection-benefits:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false

@@ -1,0 +1,127 @@
+ListController:
+  arrayVsLinked():
+    execution: |-
+      <p><strong>Concept:</strong> <code>ArrayList</code> and <code>LinkedList</code> share the List contract but use different storage models, so operation costs differ.</p>
+      <ol>
+        <li><strong>Flow:</strong> the endpoint creates both lists with the same values, reads by index, inserts in the middle, and performs a head insertion on LinkedList.</li>
+        <li><strong>Code evidence:</strong><pre><code>List&lt;String&gt; arrayList = new ArrayList&lt;&gt;(List.of("A", "B", "C"));
+      String before = arrayList.get(1);
+      arrayList.add(1, "X");
+
+      LinkedList&lt;String&gt; linkedList = new LinkedList&lt;&gt;(List.of("A", "B", "C"));
+      linkedList.add(1, "X");
+      linkedList.addFirst("HEAD");</code></pre></li>
+        <li><strong>Observation:</strong> the response reports <code>arrayIndexOneBeforeInsert=B</code>, ArrayList becomes <code>[A,X,B,C]</code>, and LinkedList exposes the comparable middle insert plus a natural head operation.</li>
+        <li><strong>Meaning:</strong> ArrayList supports direct indexed access while middle insertion shifts values; LinkedList supports end relinking naturally but indexed lookup still traverses nodes.</li>
+      </ol>
+      <p><strong>Conclusion:</strong> choose the implementation from workload and semantics, not from the slogan “LinkedList inserts faster.”</p>
+    usage: true
+SetController:
+  uniquenessAndOrder():
+    execution: |-
+      <p><strong>Concept:</strong> <code>Set</code> makes uniqueness part of the contract, while encounter order depends on the implementation.</p>
+      <ol>
+        <li><strong>Flow:</strong> the input <code>[B,A,B,C,A]</code> is copied into HashSet, LinkedHashSet, and TreeSet.</li>
+        <li><strong>Code evidence:</strong><pre><code>Set&lt;String&gt; hashSet = new HashSet&lt;&gt;(input);
+      Set&lt;String&gt; linkedHashSet = new LinkedHashSet&lt;&gt;(input);
+      Set&lt;String&gt; treeSet = new TreeSet&lt;&gt;(input);</code></pre></li>
+        <li><strong>Observation:</strong> <code>uniqueSize=3</code>, adding B again returns false; LinkedHashSet exposes <code>[B,A,C]</code>, TreeSet exposes <code>[A,B,C]</code>, and HashSet explicitly publishes no encounter-order guarantee.</li>
+        <li><strong>Meaning:</strong> uniqueness is common Set semantics, while insertion or sorted order is an additional implementation capability.</li>
+      </ol>
+      <p><strong>Conclusion:</strong> choose a Set by both uniqueness needs and the ordering contract callers require.</p>
+    usage: true
+MapController:
+  orderingAndCompute():
+    execution: |-
+      <p><strong>Concept:</strong> <code>compute</code>, <code>computeIfAbsent</code>, and <code>merge</code> express mapping-update intent directly.</p>
+      <ol>
+        <li><strong>Flow:</strong> the endpoint starts with <code>{NEW=2, PAID=1}</code>, increments NEW, creates PACKING if absent, accumulates PAID, and creates SHIPPED through merge.</li>
+        <li><strong>Code evidence:</strong><pre><code>counts.compute("NEW", (status, current) -&gt; current == null ? 1 : current + 1);
+      counts.computeIfAbsent("PACKING", status -&gt; 0);
+      counts.merge("PAID", 2, Integer::sum);
+      counts.merge("SHIPPED", 1, Integer::sum);</code></pre></li>
+        <li><strong>Observation:</strong> NEW becomes 3, PAID becomes 3, PACKING and SHIPPED are created, and the LinkedHashMap response retains key encounter order.</li>
+        <li><strong>Meaning:</strong> these methods replace get-if-put patterns with update expressions closer to intent, but plain Map still has no cross-thread atomicity guarantee.</li>
+      </ol>
+      <p><strong>Conclusion:</strong> use compute/merge when updates genuinely depend on an existing mapping or need controlled creation of a missing mapping.</p>
+    usage: true
+QueueController:
+  queueOperations():
+    execution: |-
+      <p><strong>Concept:</strong> Queue exposes two operation families with the same intent but different failure signaling: exceptions versus special return values.</p>
+      <ol>
+        <li><strong>Flow:</strong> the endpoint calls <code>poll/peek</code> and <code>remove/element</code> on an empty ArrayDeque, then offers A/B and polls the head.</li>
+        <li><strong>Code evidence:</strong><pre><code>String pollOnEmpty = queue.poll();
+      String peekOnEmpty = queue.peek();
+      try { queue.remove(); } catch (NoSuchElementException ex) { ... }
+      queue.offer("A");
+      queue.offer("B");</code></pre></li>
+        <li><strong>Observation:</strong> poll/peek return null on empty; remove/element are recorded as <code>NoSuchElementException</code>; after offers, poll returns A and B remains at the head.</li>
+        <li><strong>Meaning:</strong> empty/full can be ordinary state or an invariant violation, so failure representation should match the caller's semantics.</li>
+      </ol>
+      <p><strong>Conclusion:</strong> neither method family is universally better; choose the failure contract that communicates the domain situation correctly.</p>
+    usage: true
+IterationController:
+  failFast():
+    execution: |-
+      <p><strong>Concept:</strong> a fail-fast iterator can detect structural modification outside the iterator even in one thread; mutation through the iterator follows a different contract.</p>
+      <ol>
+        <li><strong>Flow:</strong> the endpoint obtains an ArrayList iterator, reads U01, adds U04 directly to the list, and invokes iterator.next(); then it removes U02 from another list through Iterator.remove().</li>
+        <li><strong>Code evidence:</strong><pre><code>Iterator&lt;String&gt; iterator = unsafe.iterator();
+      iterator.next();
+      unsafe.add("U04");
+      iterator.next(); // CME
+
+      if (safeIterator.next().equals("U02")) {
+          safeIterator.remove();
+      }</code></pre></li>
+        <li><strong>Observation:</strong> the response reports <code>iteratorDetected=ConcurrentModificationException</code>, while the safely mutated list becomes <code>[U01,U03]</code>.</li>
+        <li><strong>Meaning:</strong> CME is a traversal-contract bug signal, not proof of a data race and not a thread-safety mechanism.</li>
+      </ol>
+      <p><strong>Conclusion:</strong> when removing the current element during traversal, use the mutation path explicitly supported by the iterator.</p>
+    usage: true
+ImmutabilityController:
+  viewVsCopy():
+    execution: |-
+      <p><strong>Concept:</strong> an unmodifiable view and an unmodifiable snapshot both reject mutation through their references, but they differ in backing state.</p>
+      <ol>
+        <li><strong>Flow:</strong> the endpoint creates source [A,B], <code>Collections.unmodifiableList(source)</code>, and <code>List.copyOf(source)</code>, then appends C to source.</li>
+        <li><strong>Code evidence:</strong><pre><code>List&lt;String&gt; unmodifiableView = Collections.unmodifiableList(source);
+      List&lt;String&gt; snapshot = List.copyOf(source);
+      source.add("C");</code></pre></li>
+        <li><strong>Observation:</strong> the view becomes <code>[A,B,C]</code>, the snapshot stays <code>[A,B]</code>, and both report <code>UnsupportedOperationException</code> when add is attempted through their own references.</li>
+        <li><strong>Meaning:</strong> “cannot mutate through this reference” does not answer whether the object shares backing state with a source.</li>
+      </ol>
+      <p><strong>Conclusion:</strong> use a view for a read-only facade that reflects source changes; use a copy when an independent structural snapshot is required.</p>
+    usage: true
+HashingController:
+  mutableKey():
+    execution: |-
+      <p><strong>Concept:</strong> state used by a hash key's <code>equals/hashCode</code> must remain stable while the key is stored in HashMap.</p>
+      <ol>
+        <li><strong>Flow:</strong> the endpoint stores key ORDER-1, confirms lookup works, changes the same object's id to ORDER-2, and performs lookup again.</li>
+        <li><strong>Code evidence:</strong><pre><code>orders.put(key, "PAID");
+      key.setId("ORDER-2");
+      orders.containsKey(key);
+      orders.containsKey(new MutableKey("ORDER-2"));</code></pre></li>
+        <li><strong>Observation:</strong> direct entry traversal still shows key ORDER-2/value PAID, but lookup by both the same reference and a newly equivalent key returns false.</li>
+        <li><strong>Meaning:</strong> the entry was placed using the old hash; mutation makes later lookups compute a new hash and search a different location.</li>
+      </ol>
+      <p><strong>Conclusion:</strong> do not mutate equality/hash state while an object is used as a hash key or hash-set element.</p>
+    usage: true
+EnumCollectionController:
+  specializedCollections():
+    execution: |-
+      <p><strong>Concept:</strong> EnumSet and EnumMap exploit a finite enum universe to provide specialized collections with enum-declaration-order traversal.</p>
+      <ol>
+        <li><strong>Flow:</strong> the endpoint inserts SHIPPED, NEW, and PAID in an order different from the enum declaration order into EnumSet and EnumMap.</li>
+        <li><strong>Code evidence:</strong><pre><code>EnumSet&lt;OrderStatus&gt; active = EnumSet.of(SHIPPED, NEW, PAID);
+      EnumMap&lt;OrderStatus, Integer&gt; limits = new EnumMap&lt;&gt;(OrderStatus.class);
+      limits.put(SHIPPED, 40);
+      limits.put(NEW, 10);
+      limits.put(PAID, 20);</code></pre></li>
+        <li><strong>Observation:</strong> both EnumSet and EnumMap key traversal report <code>NEW, PAID, SHIPPED</code>, following declaration order rather than insertion order.</li>
+        <li><strong>Meaning:</strong> the closed enum key space and specialized representation provide clearer semantics than choosing HashSet/HashMap by habit.</li>
+      </ol>
+      <p><strong>Conclusion:</strong> when the domain element/key is one enum type, consider EnumSet/EnumMap before general-purpose collections.</p>
+    usage: true

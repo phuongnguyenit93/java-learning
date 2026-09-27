@@ -1,0 +1,48 @@
+ListController:
+  description: |-
+    <h2>ArrayList and LinkedList</h2>
+    <p>Observe two List implementations performing comparable operations on different storage models, connecting semantics with operation costs.</p>
+  readmeRelated:
+    file: 2.List/List.md
+SetController:
+  description: |-
+    <h2>Set Uniqueness and Order</h2>
+    <p>Send the same duplicate-containing input through HashSet, LinkedHashSet, and TreeSet to observe uniqueness and different ordering contracts.</p>
+  readmeRelated:
+    file: 3.Set/Set.md
+MapController:
+  description: |-
+    <h2>Map Updates and Encounter Order</h2>
+    <p>Observe how compute, computeIfAbsent, and merge update mappings in a LinkedHashMap with defined encounter order.</p>
+  readmeRelated:
+    file: 4.Map/Map.md
+QueueController:
+  description: |-
+    <h2>Queue Operation Pairs</h2>
+    <p>Compare queue operations that return special values with operations that throw exceptions when the queue is empty.</p>
+  readmeRelated:
+    file: 5.QueueDeque/QueueDeque.md
+IterationController:
+  description: |-
+    <h2>Fail-Fast Iteration</h2>
+    <p>Create a structural modification outside an active iterator to observe ConcurrentModificationException, then compare it with valid Iterator.remove() mutation.</p>
+  readmeRelated:
+    file: 10.FailFast/FailFast.md
+ImmutabilityController:
+  description: |-
+    <h2>Unmodifiable View vs Snapshot</h2>
+    <p>Compare Collections.unmodifiableList(source) with List.copyOf(source) before and after source mutation to make the view-versus-copy boundary observable.</p>
+  readmeRelated:
+    file: 9.MutableImmutable/MutableImmutable.md
+HashingController:
+  description: |-
+    <h2>Mutable Hash Keys</h2>
+    <p>Mutate state used by equals/hashCode after a key is stored in HashMap and observe the lookup invariant breaking.</p>
+  readmeRelated:
+    file: 8.EqualityHashing/EqualityHashing.md
+EnumCollectionController:
+  description: |-
+    <h2>EnumSet and EnumMap</h2>
+    <p>Observe enum-specialized collections preserving domain type and iterating according to enum declaration order.</p>
+  readmeRelated:
+    file: 12.EnumCollections/EnumCollections.md

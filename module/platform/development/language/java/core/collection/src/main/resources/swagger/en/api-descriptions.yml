@@ -1,0 +1,168 @@
+ListController:
+  arrayVsLinked():
+    summary: Compare the ArrayList and LinkedList mental models
+    description: Performs indexed reads, middle insertion, and head insertion across two List implementations to expose the resizable-array and doubly-linked-node models without pretending to benchmark wall-clock time.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 2.List/List.md
+      anchor: arraylist-model
+    methodName: arrayVsLinked
+    params: []
+    path: com/example/learning/controller/ListController.java
+    mapping: '@GetMapping("/array-vs-linked")'
+    httpMethods: [GET]
+    mappingPaths: [/java/core/collection/list/array-vs-linked]
+    produces: []
+    consumes: []
+    usage: true
+SetController:
+  uniquenessAndOrder():
+    summary: Observe Set uniqueness and ordering contracts
+    description: Sends the same duplicate-containing input through HashSet, LinkedHashSet, and TreeSet. The response proves duplicate elimination while contrasting unspecified, insertion, and sorted encounter order.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 3.Set/Set.md
+      anchor: set-semantics
+    methodName: uniquenessAndOrder
+    params: []
+    path: com/example/learning/controller/SetController.java
+    mapping: '@GetMapping("/uniqueness-and-order")'
+    httpMethods: [GET]
+    mappingPaths: [/java/core/collection/set/uniqueness-and-order]
+    produces: []
+    consumes: []
+    usage: true
+MapController:
+  orderingAndCompute():
+    summary: Observe compute and merge Map updates
+    description: Starts with a populated LinkedHashMap and uses compute, computeIfAbsent, and merge to update or create mappings. The response exposes before/after values and key encounter order.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 4.Map/Map.md
+      anchor: map-compute-merge
+    methodName: orderingAndCompute
+    params: []
+    path: com/example/learning/controller/MapController.java
+    mapping: '@GetMapping("/ordering-and-compute")'
+    httpMethods: [GET]
+    mappingPaths: [/java/core/collection/map/ordering-and-compute]
+    produces: []
+    consumes: []
+    usage: true
+QueueController:
+  queueOperations():
+    summary: Compare the two Queue operation families
+    description: Calls poll/peek and remove/element on an empty queue, then offers and polls real data. The response shows how special-value and exception-based operations represent failure differently.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 5.QueueDeque/QueueDeque.md
+      anchor: exception-vs-special-value
+    methodName: queueOperations
+    params: []
+    path: com/example/learning/controller/QueueController.java
+    mapping: '@GetMapping("/queue-operations")'
+    httpMethods: [GET]
+    mappingPaths: [/java/core/collection/queue/queue-operations]
+    produces: []
+    consumes: []
+    usage: true
+IterationController:
+  failFast():
+    summary: Trigger fail-fast and then mutate safely through Iterator
+    description: Creates an Iterator over ArrayList, structurally modifies the list outside that iterator to observe ConcurrentModificationException, then performs the removal safely through Iterator.remove() on a separate list.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 10.FailFast/FailFast.md
+      anchor: concurrent-modification-exception
+    methodName: failFast
+    params: []
+    path: com/example/learning/controller/IterationController.java
+    mapping: '@GetMapping("/fail-fast")'
+    httpMethods: [GET]
+    mappingPaths: [/java/core/collection/iteration/fail-fast]
+    produces: []
+    consumes: []
+    usage: true
+ImmutabilityController:
+  viewVsCopy():
+    summary: Compare an unmodifiable view with a snapshot copy
+    description: Creates Collections.unmodifiableList(source) and List.copyOf(source), mutates source, then attempts to mutate both results. The response distinguishes a live backed view from a structural snapshot even though both reject add().
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 9.MutableImmutable/MutableImmutable.md
+      anchor: view-vs-copy
+    methodName: viewVsCopy
+    params: []
+    path: com/example/learning/controller/ImmutabilityController.java
+    mapping: '@GetMapping("/view-vs-copy")'
+    httpMethods: [GET]
+    mappingPaths: [/java/core/collection/immutability/view-vs-copy]
+    produces: []
+    consumes: []
+    usage: true
+HashingController:
+  mutableKey():
+    summary: Observe HashMap lookup failure after mutating a key
+    description: Stores a mutable key in HashMap, changes state used by equals/hashCode, then tries lookup with both the same reference and a newly equivalent key. The response proves the entry remains stored while the lookup invariant is broken.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 8.EqualityHashing/EqualityHashing.md
+      anchor: mutable-element-risk
+    methodName: mutableKey
+    params: []
+    path: com/example/learning/controller/HashingController.java
+    mapping: '@GetMapping("/mutable-key")'
+    httpMethods: [GET]
+    mappingPaths: [/java/core/collection/hashing/mutable-key]
+    produces: []
+    consumes: []
+    usage: true
+EnumCollectionController:
+  specializedCollections():
+    summary: Observe EnumSet and EnumMap specialization
+    description: Inserts enum constants in an order different from declaration order and returns EnumSet/EnumMap traversal order. The response exposes their closed key space and enum-declaration-order behavior.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 12.EnumCollections/EnumCollections.md
+      anchor: enum-collection-benefits
+    methodName: specializedCollections
+    params: []
+    path: com/example/learning/controller/EnumCollectionController.java
+    mapping: '@GetMapping("/specialized-collections")'
+    httpMethods: [GET]
+    mappingPaths: [/java/core/collection/enum/specialized-collections]
+    produces: []
+    consumes: []
+    usage: true
