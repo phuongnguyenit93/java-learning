@@ -329,7 +329,7 @@ The detailed sections below are therefore not just topic inventories; they are t
 
 **API applicability:** Yes — runtime type/casting/pass-by-value/array/method behavior are observable.
 
-**Suggested assessment size:** Quiz 30–40; Interview 20–28. These are coverage ranges, not quotas.
+**Suggested assessment size:** Quiz 34–44; Interview 22–30. These are coverage ranges, not quotas.
 
 #### Layer 1 — Module orientation
 
@@ -1562,7 +1562,7 @@ how to choose collection; shared Collection and Map contracts; Collection vs Col
 
 **API applicability:** Yes — zones, DST, arithmetic and deterministic Clock experiments are valuable.
 
-**Suggested assessment size:** Quiz 30–40; Interview 20–28. These are coverage ranges, not quotas.
+**Suggested assessment size:** Quiz 34–44; Interview 24–30. These are coverage ranges, not quotas.
 
 #### Layer 1 — Module orientation
 
@@ -1690,7 +1690,7 @@ Instant vs LocalDateTime vs ZonedDateTime; storing timestamps; DST bugs; Duratio
 
 **API applicability:** Conditional — controlled temp resources could demonstrate stream/channel/resource semantics, but the current `JAVA_IO` module is `LIBRARY` with `BUILD_SWAGGER=FALSE`, so API Docs are intentionally absent unless real runtime learning APIs are introduced later.
 
-**Suggested assessment size:** Quiz 34–44; Interview 24–30. These are coverage ranges, not quotas.
+**Suggested assessment size:** Quiz 30–40; Interview 20–28. These are coverage ranges, not quotas.
 
 #### Layer 1 — Module orientation
 
@@ -2345,12 +2345,12 @@ class loading lifecycle; parent delegation; why same class name can be different
 | `generics` | 9 | 41 | 6 | 28–38 | 20–28 |
 | `collection` | 12 | 71 | 8 | 34–46 | 22–30 |
 | `date-time` | 12 | 41 | 6 | 30–40 | 20–28 |
-| `io` | 11 | 54 | 12 | 34–44 | 24–30 |
+| `io` | 11 | 45 | 7 | 30–40 | 20–28 |
 | `localization` | 13 | 55 | 11 | 26–34 | 18–24 |
 | `annotation` | 8 | 35 | 5 | 24–32 | 18–24 |
 | `reflection` | 10 | 45 | 7 | 30–40 | 22–30 |
 | `classloader` | 9 | 39 | 7 | 28–38 | 22–30 |
-| **Total** | **163** | **645** | **114** | **454–606** | **318–432** |
+| **Total** | **163** | **636** | **109** | **450–602** | **314–430** |
 
 These totals are planning bounds, not delivery quotas. During implementation an API experiment or assessment item may be removed when it proves redundant, weak or artificial.
 
