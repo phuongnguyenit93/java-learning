@@ -1,0 +1,153 @@
+LocaleController:
+  compareLocales():
+    execution: |-
+      <p><strong>Concept:</strong> <code>Locale</code> is language/cultural context consumed by localization APIs; it is not physical location, time zone, or currency.</p>
+      <ol>
+        <li><strong>Flow:</strong> create <code>vi-VN</code>, <code>en-US</code>, and <code>zh-Hant-TW</code>, expose language/script/region, then read default DISPLAY/FORMAT locales.</li>
+        <li><strong>Code evidence:</strong><pre><code>Locale.forLanguageTag("zh-Hant-TW");
+      Locale.getDefault(Locale.Category.DISPLAY);
+      Locale.getDefault(Locale.Category.FORMAT);</code></pre></li>
+        <li><strong>Observation:</strong> <code>zh-Hant-TW</code> has language <code>zh</code>, script <code>Hant</code>, region <code>TW</code>; default categories are JVM state.</li>
+        <li><strong>Meaning:</strong> Locale supplies context so formatters, bundles, and collators can select conventions.</li>
+      </ol>
+      <p><strong>Conclusion:</strong> model Locale explicitly at user-facing boundaries and do not infer ZoneId, Currency, or physical location from it.</p>
+    usage: true
+BundleController:
+  resolveBundle():
+    execution: |-
+      <p><strong>Concept:</strong> <code>ResourceBundle</code> looks up pre-authored resources through a candidate chain; it does not translate text automatically.</p>
+      <ol>
+        <li><strong>Flow:</strong> resolve <code>vi-VN</code>, <code>en-GB</code>, and <code>fr-FR</code> with default-locale fallback deliberately disabled.</li>
+        <li><strong>Code evidence:</strong><pre><code>ResourceBundle.Control control =
+      ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_PROPERTIES);
+      ResourceBundle.getBundle("i18n.messages", locale, control);</code></pre></li>
+        <li><strong>Observation:</strong> vi-VN selects a specific bundle, en-GB falls back to en, and fr-FR reaches ROOT/base.</li>
+        <li><strong>Meaning:</strong> candidate locales and a base bundle enable controlled reuse without making the JVM default locale a hidden dependency.</li>
+      </ol>
+      <p><strong>Conclusion:</strong> design bundle families and fallback policy intentionally and detect missing translations before production.</p>
+    usage: true
+MessageController:
+  format():
+    execution: |-
+      <p><strong>Concept:</strong> <code>ResourceBundle</code> owns the translated pattern while <code>MessageFormat</code> inserts arguments under a Locale.</p>
+      <ol>
+        <li><strong>Flow:</strong> load <code>order.created</code> for vi-VN and en-US, then format the same order id <code>1001</code> and customer <code>An</code>.</li>
+        <li><strong>Code evidence:</strong><pre><code>String pattern = bundle.getString("order.created");
+      MessageFormat formatter = new MessageFormat(pattern, locale);
+      formatter.format(new Object[]{1001L, "An"});</code></pre></li>
+        <li><strong>Observation:</strong> arguments remain the same while wording and placement come from the localized pattern.</li>
+        <li><strong>Meaning:</strong> translators own complete sentence structure instead of developers concatenating English-shaped fragments.</li>
+      </ol>
+      <p><strong>Conclusion:</strong> use stable message keys, complete localized patterns, and an explicit Locale for parameterized messages.</p>
+    usage: true
+NumberLocalizationController:
+  formatAndParse():
+    execution: |-
+      <p><strong>Concept:</strong> a numeric domain value and human-readable numeric text are different representations.</p>
+      <ol>
+        <li><strong>Flow:</strong> keep <code>BigDecimal("1234567.89")</code>, format it for vi-VN/en-US, parse it back, and verify the parser consumed the whole input.</li>
+        <li><strong>Code evidence:</strong><pre><code>DecimalFormat format = (DecimalFormat) NumberFormat.getNumberInstance(locale);
+      format.setParseBigDecimal(true);
+      Number parsed = format.parse(text, position);</code></pre></li>
+        <li><strong>Observation:</strong> separators change by locale while the parsed numeric meaning returns to the same value.</li>
+        <li><strong>Meaning:</strong> servers should not parse localized user input through an accidental default locale.</li>
+      </ol>
+      <p><strong>Conclusion:</strong> keep canonical numeric types in the domain and convert to localized text only at human boundaries.</p>
+    usage: true
+  compact():
+    execution: |-
+      <p><strong>Concept:</strong> compact numbers are a presentation style whose patterns belong to locale data.</p>
+      <ol>
+        <li><strong>Flow:</strong> format <code>1_200_000</code> in SHORT and LONG styles for en-US and vi-VN.</li>
+        <li><strong>Code evidence:</strong><pre><code>NumberFormat.getCompactNumberInstance(locale, NumberFormat.Style.SHORT);
+      NumberFormat.getCompactNumberInstance(locale, NumberFormat.Style.LONG);</code></pre></li>
+        <li><strong>Observation:</strong> compact output changes by locale/style while the canonical value remains unchanged.</li>
+        <li><strong>Meaning:</strong> applications should not hard-code K/M/B or assume one abbreviation system is universal.</li>
+      </ol>
+      <p><strong>Conclusion:</strong> compact formatting suits dashboards and constrained UI; business data retains the full numeric value.</p>
+    usage: true
+CurrencyController:
+  currencyVsLocale():
+    execution: |-
+      <p><strong>Concept:</strong> <code>Currency</code> identifies a monetary unit; <code>Locale</code> supplies presentation conventions.</p>
+      <ol>
+        <li><strong>Flow:</strong> inspect VND/USD metadata, then intentionally format USD with vi-VN and VND with en-US.</li>
+        <li><strong>Code evidence:</strong><pre><code>NumberFormat format = NumberFormat.getCurrencyInstance(locale);
+      format.setCurrency(currency);
+      format.format(amount);</code></pre></li>
+        <li><strong>Observation:</strong> the currency code stays fixed while symbol placement, separators, and display conventions depend on Locale.</li>
+        <li><strong>Meaning:</strong> transaction currency cannot be reconstructed from a user's language preference.</li>
+      </ol>
+      <p><strong>Conclusion:</strong> keep amount + Currency explicit in the domain; localization only renders them for readers.</p>
+    usage: true
+CollationController:
+  sort():
+    execution: |-
+      <p><strong>Concept:</strong> raw <code>String.compareTo</code> order is not a linguistic ordering contract.</p>
+      <ol>
+        <li><strong>Flow:</strong> sort the same names with String ordering and a vi-VN <code>Collator</code>.</li>
+        <li><strong>Code evidence:</strong><pre><code>stringOrder.sort(String::compareTo);
+      Collator collator = Collator.getInstance(Locale.forLanguageTag("vi-VN"));
+      vietnameseOrder.sort(collator);</code></pre></li>
+        <li><strong>Observation:</strong> the orders can differ because Collator applies linguistic rules instead of raw code-unit order.</li>
+        <li><strong>Meaning:</strong> user-facing names and technical keys often require different comparison contracts.</li>
+      </ol>
+      <p><strong>Conclusion:</strong> choose comparison by semantics; lowercasing then comparing is not a substitute for collation.</p>
+    usage: true
+DateTimeLocalizationController:
+  format():
+    execution: |-
+      <p><strong>Concept:</strong> <code>ZoneId</code> chooses the local time corresponding to an Instant; <code>Locale</code> chooses how that local time is presented.</p>
+      <ol>
+        <li><strong>Flow:</strong> place one Instant in Ho Chi Minh/New York and format each view with vi-VN/en-US.</li>
+        <li><strong>Code evidence:</strong><pre><code>instant.atZone(zone);
+      DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)
+          .withLocale(locale);</code></pre></li>
+        <li><strong>Observation:</strong> changing the zone changes local clock time; changing Locale changes the representation.</li>
+        <li><strong>Meaning:</strong> language preference and time-zone preference are separate user/domain concerns.</li>
+      </ol>
+      <p><strong>Conclusion:</strong> preserve instant/zone semantics in the date-time model and apply Locale separately at presentation boundaries.</p>
+    usage: true
+  weekAndNumberingConventions():
+    execution: |-
+      <p><strong>Concept:</strong> Locale can affect week conventions, digit style, and selected extended formatter preferences.</p>
+      <ol>
+        <li><strong>Flow:</strong> read <code>WeekFields</code>/<code>DecimalStyle</code> for en-US and vi-VN, then apply <code>th-TH-u-ca-buddhist-nu-thai</code> using <code>localizedBy</code>.</li>
+        <li><strong>Code evidence:</strong><pre><code>WeekFields.of(locale);
+      DecimalStyle.of(locale);
+      formatter.localizedBy(Locale.forLanguageTag("th-TH-u-ca-buddhist-nu-thai"));</code></pre></li>
+        <li><strong>Observation:</strong> first day/minimal days, digits, and chronology/presentation preferences can vary with locale data/extensions.</li>
+        <li><strong>Meaning:</strong> locale-sensitive calendar conventions are still distinct from fixed business-calendar rules.</li>
+      </ol>
+      <p><strong>Conclusion:</strong> use locale conventions for presentation and encode accounting/scheduling rules explicitly in the domain.</p>
+    usage: true
+TextSegmentationController:
+  boundaries():
+    execution: |-
+      <p><strong>Concept:</strong> natural-language boundaries cannot always be inferred from UTF-16 chars, spaces, periods, or newlines.</p>
+      <ol>
+        <li><strong>Flow:</strong> run character/word/sentence/line <code>BreakIterator</code> instances over one string containing a combining mark.</li>
+        <li><strong>Code evidence:</strong><pre><code>BreakIterator.getCharacterInstance(locale);
+      BreakIterator.getWordInstance(locale);
+      BreakIterator.getSentenceInstance(locale);
+      BreakIterator.getLineInstance(locale);</code></pre></li>
+        <li><strong>Observation:</strong> the API returns boundary-based segments; callers still decide how each segment is used as a word/token/layout unit.</li>
+        <li><strong>Meaning:</strong> cursor movement, selection, truncation, and wrapping need Unicode/language-aware boundaries instead of naive splitting.</li>
+      </ol>
+      <p><strong>Conclusion:</strong> BreakIterator performs boundary analysis; it is not a full NLP engine or renderer.</p>
+    usage: true
+BidirectionalTextController:
+  analyze():
+    execution: |-
+      <p><strong>Concept:</strong> bidi text has logical order in a String and visual direction described through directional runs.</p>
+      <ol>
+        <li><strong>Flow:</strong> analyze Hebrew plus <code>Java 21</code>, inspect base direction, mixed state, and each run.</li>
+        <li><strong>Code evidence:</strong><pre><code>Bidi bidi = new Bidi(text, Bidi.DIRECTION_DEFAULT_LEFT_TO_RIGHT);
+      bidi.getRunStart(i);
+      bidi.getRunLimit(i);
+      bidi.getRunLevel(i);</code></pre></li>
+        <li><strong>Observation:</strong> one String can contain both RTL and LTR runs; embedding-level parity indicates each run's direction.</li>
+        <li><strong>Meaning:</strong> manually reversing Arabic/Hebrew text breaks logical content and mishandles numbers, punctuation, and embedded Latin.</li>
+      </ol>
+      <p><strong>Conclusion:</strong> keep Unicode text in logical order, use standard bidi analysis, and let the renderer own final visual layout.</p>
+    usage: true

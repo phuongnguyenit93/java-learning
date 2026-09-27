@@ -1863,6 +1863,12 @@ Number/Currency formatting
 Collator
 → locale-sensitive text ordering/comparison
 
+BreakIterator
+→ locale-sensitive character/word/sentence/line boundary analysis for natural-language text
+
+Bidi
+→ logical-vs-visual ordering support for left-to-right/right-to-left mixed text
+
 fallback/default locale
 → resolution behavior that can become a hidden dependency
 ```
@@ -1902,6 +1908,12 @@ Fallback
         ↓
 Why are system/default locale assumptions dangerous?
 Locale Pitfalls
+        ↓
+Why can natural-language text not always be split correctly with char indexes, spaces or punctuation?
+Text Segmentation
+        ↓
+Why can mixed LTR/RTL text have different logical and visual orders?
+Bidirectional Text
 ```
 
 **Running example / evidence strategy:** reuse one product/order presentation with the same canonical domain values rendered for `vi-VN` and `en-US`: message text, decimal amount, currency, date and sorting. Keep time-zone conversion separate so Locale vs ZoneId does not blur.
@@ -1920,6 +1932,8 @@ Collator             → Why does lexical order require language-sensitive rules
 DateTimeLocalization → How do date/time display conventions vary while the underlying instant/zone semantics stay separate?
 Fallback             → How does resource resolution degrade from specific locale to more general/default resources?
 LocalePitfalls       → Where do default locale, case conversion and hidden environment assumptions create bugs?
+TextSegmentation     → Why do character, word, sentence and line boundaries require Unicode/language-aware analysis?
+BidirectionalText    → Why can logical text order differ from visual order for RTL and mixed-direction content?
 ```
 
 #### Knowledge map
@@ -1931,12 +1945,14 @@ LocalePitfalls       → Where do default locale, case conversion and hidden env
 | `3.LanguageTags/LanguageTags.md` | `#bcp47-language-tag` — BCP 47 language tag mental model<br>`#for-language-tag` — Locale.forLanguageTag<br>`#language-script-region` — Language/script/region subtags<br>`#canonicalization-boundary` — Canonicalization and validity boundary |
 | `4.ResourceBundle/ResourceBundle.md` | `#resourcebundle-model` — ResourceBundle lookup model<br>`#bundle-naming` — Bundle naming and candidate locales<br>`#properties-vs-class-bundle` — Properties vs class-based bundle<br>`#bundle-cache` — ResourceBundle caching boundary |
 | `5.MessageFormat/MessageFormat.md` | `#messageformat-model` — MessageFormat placeholders<br>`#messageformat-types` — number/date/choice formatting boundary<br>`#quote-escaping` — Apostrophe quoting/escaping<br>`#messageformat-locale` — Locale-specific MessageFormat |
-| `6.NumberFormatting/NumberFormatting.md` | `#number-format` — Locale-sensitive NumberFormat<br>`#decimal-format` — DecimalFormat patterns and symbols<br>`#parsing-numbers` — Locale-sensitive number parsing<br>`#formatting-vs-domain-value` — Formatting must not change domain numeric meaning |
+| `6.NumberFormatting/NumberFormatting.md` | `#number-format` — Locale-sensitive NumberFormat<br>`#decimal-format` — DecimalFormat patterns and symbols<br>`#compact-number-format` — CompactNumberFormat and compact number styles<br>`#parsing-numbers` — Locale-sensitive number parsing<br>`#formatting-vs-domain-value` — Formatting must not change domain numeric meaning |
 | `7.Currency/Currency.md` | `#currency-model` — Currency code/default fraction digits<br>`#currency-vs-locale` — Locale suggests currency but is not currency<br>`#currency-format` — Currency NumberFormat<br>`#money-boundary` — Currency formatting vs monetary-domain modeling |
 | `8.Collator/Collator.md` | `#collator-model` — Locale-sensitive text comparison<br>`#collation-strength` — Collation strength/decomposition<br>`#collator-vs-string-order` — Collator vs Unicode/code-unit ordering<br>`#sorting-user-text` — Sorting user-visible text |
-| `9.DateTimeLocalization/DateTimeLocalization.md` | `#localized-date-format` — Localized date/time styles<br>`#locale-vs-zone` — Locale vs ZoneId responsibilities<br>`#localized-pattern` — Localized pattern generation<br>`#localized-parsing` — Locale-sensitive parsing boundary |
+| `9.DateTimeLocalization/DateTimeLocalization.md` | `#localized-date-format` — Localized date/time styles<br>`#locale-vs-zone` — Locale vs ZoneId responsibilities<br>`#locale-week-conventions` — Locale-sensitive week conventions with WeekFields<br>`#localized-numbering-calendar` — DecimalStyle and Unicode locale extension boundary<br>`#localized-pattern` — Localized pattern generation<br>`#localized-parsing` — Locale-sensitive parsing boundary |
 | `10.Fallback/Fallback.md` | `#bundle-candidate-chain` — ResourceBundle candidate/fallback chain<br>`#default-locale-fallback` — Default Locale fallback<br>`#base-bundle` — Base bundle role<br>`#missing-resource` — MissingResourceException and missing keys |
 | `11.LocalePitfalls/LocalePitfalls.md` | `#turkish-i` — Locale-sensitive case conversion and Turkish-I style pitfalls<br>`#default-locale-production-risk` — Machine default Locale changes behavior<br>`#format-parse-roundtrip` — Formatting is not always a stable machine serialization format<br>`#translation-key-design` — Stable message keys and parameterized messages |
+| `12.TextSegmentation/TextSegmentation.md` | `#breakiterator-model` — Why natural-language segmentation needs BreakIterator<br>`#character-boundary` — User-perceived character boundary and grapheme-cluster relation<br>`#word-sentence-boundary` — Locale-sensitive word and sentence boundaries<br>`#line-boundary` — Line-break opportunities vs naive newline/space splitting<br>`#breakiterator-boundary` — BreakIterator role, locale sensitivity and module boundary |
+| `13.BidirectionalText/BidirectionalText.md` | `#bidi-model` — Logical order vs visual order and why bidi exists<br>`#ltr-rtl-runs` — LTR/RTL directional runs in mixed text<br>`#java-bidi` — java.text.Bidi model and observable API<br>`#bidi-boundary` — Bidi analysis vs actual text rendering/layout responsibility |
 
 #### Proposed API experiments
 
@@ -1946,17 +1962,21 @@ LocalePitfalls       → Where do default locale, case conversion and hidden env
 | `BundleController` | `resolveBundle()` | `#bundle-candidate-chain` | Show candidate locale chain and selected message. |
 | `MessageController` | `format()` | `#messageformat-locale` | Same message/arguments rendered under multiple locales. |
 | `NumberLocalizationController` | `formatAndParse()` | `#number-format` | Format same BigDecimal under locales and parse controlled text. |
+| `NumberLocalizationController` | `compact()` | `#compact-number-format` | Compare SHORT/LONG compact number output under multiple locales. |
 | `CurrencyController` | `currencyVsLocale()` | `#currency-vs-locale` | Show locale-derived currency plus explicit Currency differences. |
 | `CollationController` | `sort()` | `#collator-vs-string-order` | Compare String natural order with locale Collator order. |
 | `DateTimeLocalizationController` | `format()` | `#locale-vs-zone` | Same instant rendered with independent locale and zone settings. |
+| `DateTimeLocalizationController` | `weekAndNumberingConventions()` | `#locale-week-conventions` | Compare locale-sensitive first-day/minimal-days plus localized decimal style/locale extensions. |
+| `TextSegmentationController` | `boundaries()` | `#breakiterator-model` | Show character/word/sentence/line boundaries for controlled multilingual text. |
+| `BidirectionalTextController` | `analyze()` | `#bidi-model` | Show base direction and directional runs for mixed LTR/RTL text. |
 
 #### Quiz coverage
 
-Locale structure/defaults; language tags; ResourceBundle lookup/fallback; MessageFormat escaping; number/currency formatting; Collator; locale vs zone; default-locale pitfalls.
+Locale structure/defaults; language tags/matching; ResourceBundle lookup/fallback; MessageFormat escaping; number/currency/compact-number formatting; Collator; locale vs zone; locale-sensitive week/numbering conventions; BreakIterator text boundaries; Bidi logical/visual order; default-locale pitfalls.
 
 #### Interview coverage
 
-i18n vs l10n; Locale vs Currency vs ZoneId; ResourceBundle fallback; why default Locale is dangerous; MessageFormat; locale-sensitive comparison; separating domain data from presentation.
+i18n vs l10n; Locale vs Currency vs ZoneId; ResourceBundle fallback; why default Locale is dangerous; MessageFormat; locale-sensitive comparison; text segmentation vs naive splitting; logical vs visual order in bidi text; locale-sensitive week/numbering conventions; separating domain data from presentation.
 
 
 ### 4.14 `annotation`
@@ -2326,11 +2346,11 @@ class loading lifecycle; parent delegation; why same class name can be different
 | `collection` | 12 | 71 | 8 | 34–46 | 22–30 |
 | `date-time` | 12 | 41 | 6 | 30–40 | 20–28 |
 | `io` | 11 | 54 | 12 | 34–44 | 24–30 |
-| `localization` | 11 | 43 | 7 | 26–34 | 18–24 |
+| `localization` | 13 | 55 | 11 | 26–34 | 18–24 |
 | `annotation` | 8 | 35 | 5 | 24–32 | 18–24 |
 | `reflection` | 10 | 45 | 7 | 30–40 | 22–30 |
 | `classloader` | 9 | 39 | 7 | 28–38 | 22–30 |
-| **Total** | **161** | **633** | **110** | **454–606** | **318–432** |
+| **Total** | **163** | **645** | **114** | **454–606** | **318–432** |
 
 These totals are planning bounds, not delivery quotas. During implementation an API experiment or assessment item may be removed when it proves redundant, weak or artificial.
 

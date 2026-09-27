@@ -1,1 +1,233 @@
-{}
+1.MentalModel/MentalModel.md:
+  i18n-vs-l10n:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  locale-sensitive-data:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  localization-boundaries:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+2.Locale/Locale.md:
+  locale-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  locale-construction:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  default-locale:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  locale-equality:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+3.LanguageTags/LanguageTags.md:
+  bcp47-language-tag:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  for-language-tag:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  language-script-region:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  canonicalization-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+4.ResourceBundle/ResourceBundle.md:
+  resourcebundle-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  bundle-naming:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  properties-vs-class-bundle:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  bundle-cache:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+5.MessageFormat/MessageFormat.md:
+  messageformat-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  messageformat-types:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  quote-escaping:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  messageformat-locale:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+6.NumberFormatting/NumberFormatting.md:
+  number-format:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  decimal-format:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  compact-number-format:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  parsing-numbers:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  formatting-vs-domain-value:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+7.Currency/Currency.md:
+  currency-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  currency-vs-locale:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  currency-format:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  money-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+8.Collator/Collator.md:
+  collator-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  collation-strength:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  collator-vs-string-order:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  sorting-user-text:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+9.DateTimeLocalization/DateTimeLocalization.md:
+  localized-date-format:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  locale-vs-zone:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  locale-week-conventions:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  localized-numbering-calendar:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  localized-pattern:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  localized-parsing:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+10.Fallback/Fallback.md:
+  bundle-candidate-chain:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  default-locale-fallback:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  base-bundle:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  missing-resource:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+11.LocalePitfalls/LocalePitfalls.md:
+  turkish-i:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  default-locale-production-risk:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  format-parse-roundtrip:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  translation-key-design:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+12.TextSegmentation/TextSegmentation.md:
+  breakiterator-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  character-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  word-sentence-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  line-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  breakiterator-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+13.BidirectionalText/BidirectionalText.md:
+  bidi-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  ltr-rtl-runs:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  java-bidi:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  bidi-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false

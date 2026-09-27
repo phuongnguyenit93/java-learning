@@ -348,7 +348,7 @@ enum ModuleListEnum {
     JAVA_LOCALIZATION(
             'module:platform:development:language:java:core:localization',
             'module/platform/development/language/java/core/localization',
-            'LIBRARY',
+            'SERVLET',
             'Java localization and internationalization',
             false,
             []
