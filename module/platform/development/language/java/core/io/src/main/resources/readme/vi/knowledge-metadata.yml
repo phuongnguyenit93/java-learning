@@ -1,1 +1,227 @@
-{}
+1.MentalModel/MentalModel.md:
+  io-data-flow:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  bytes-vs-characters:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  blocking-io-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  resource-lifecycle:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+2.ByteStreams/ByteStreams.md:
+  inputstream-outputstream:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  standard-console-io:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  read-contract:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  partial-read-write:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  typed-binary-io:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  byte-stream-use-cases:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+3.CharacterStreams/CharacterStreams.md:
+  reader-writer:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  charset-bridge:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  character-buffering:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+4.BufferedIO/BufferedIO.md:
+  buffering-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  flush-semantics:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  buffer-size-tradeoff:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  buffered-wrappers:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+5.File/File.md:
+  legacy-file-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  file-path-limitations:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  file-api-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+6.PathFiles/PathFiles.md:
+  path-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  filesystem-provider-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  resolve-normalize:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  files-operations:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  temporary-files:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  file-attributes:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  file-permissions-ownership:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  directory-stream-walk:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  watch-service-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+7.BuffersChannels/BuffersChannels.md:
+  buffer-state:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  byte-order-structured-binary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  flip-clear-compact:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  channel-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  scatter-gather-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  bytebuffer-types:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+8.FileChannel/FileChannel.md:
+  filechannel-random-access:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  asynchronous-filechannel-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  filechannel-transfer:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  file-lock-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  memory-mapped-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+9.ResourceManagement/ResourceManagement.md:
+  closeable-lifecycle:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  try-with-resources-io:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  resource-ownership:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  close-wrapper-chain:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+10.Serialization/Serialization.md:
+  java-serialization-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  serializable-graph:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  serialversionuid:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  transient-field:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  serialization-security-risk:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+11.ChoosingIO/ChoosingIO.md:
+  choose-stream-reader-channel:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  memory-vs-streaming:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  charset-explicit:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  io-error-handling:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  io-performance-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false

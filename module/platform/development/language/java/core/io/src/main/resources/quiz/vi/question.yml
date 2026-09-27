@@ -1,0 +1,560 @@
+# <quiz-schema>
+# Cấu trúc câu hỏi Quiz
+# schema-version: 3
+#
+# questions [kiểu: list; bắt buộc; mặc định: []; duy nhất theo: id]
+#   Danh sách câu hỏi Quiz của module trong language hiện tại.
+#   mỗi phần tử:
+#     id [kiểu: string; bắt buộc; mặc định: ""]
+#       ID ổn định và duy nhất của câu hỏi.
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi hiển thị cho người học.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu câu hỏi được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu câu hỏi đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+#     answers [kiểu: list; bắt buộc; số phần tử: 4; mặc định: []; duy nhất theo: id]
+#       Chính xác bốn đáp án. ID A/B/C/D là identity nội bộ ổn định, không phải vị trí hiển thị sau khi frontend shuffle.
+#       mỗi phần tử:
+#         id [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#           Identity ổn định của đáp án.
+#         answer [kiểu: string; bắt buộc; mặc định: ""]
+#           Nội dung đáp án hiển thị cho người học.
+#         explanation [kiểu: string; bắt buộc; mặc định: ""]
+#           Giải thích hiển thị khi người học chọn đáp án này, bất kể đúng hay sai.
+#     correctAnswerId [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
+# </quiz-schema>
+
+questions:
+  - id: io-q01
+    question: "Phát biểu nào mô tả đúng nhất I/O trong một chương trình Java?"
+    answers:
+      - {id: A, answer: "Chỉ là thao tác đọc và ghi file trên disk.", explanation: "Sai. File chỉ là một loại source/sink; I/O còn gồm console, memory, socket và tài nguyên khác."}
+      - {id: B, answer: "Là việc dữ liệu đi qua ranh giới process giữa source và sink.", explanation: "Đúng. Mental model source → data flow → sink bao quát file, console, memory, socket và các tài nguyên khác."}
+      - {id: C, answer: "Là cách JVM tự động lưu mọi object trong RAM xuống disk.", explanation: "Sai. Object trong RAM không tự trở thành dữ liệu bền vững khi process kết thúc."}
+      - {id: D, answer: "Chỉ là các API trong package java.io.", explanation: "Sai. Java I/O còn bao gồm NIO như java.nio.file và java.nio.channels."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.MentalModel/MentalModel.md", anchor: "io-data-flow"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q02
+    question: "Khi copy một ảnh PNG, abstraction nào giữ đúng semantics dữ liệu nhất?"
+    answers:
+      - {id: A, answer: "Reader/Writer vì chúng xử lý dữ liệu cấp cao hơn.", explanation: "Sai. PNG là binary; decode thành characters có thể làm thay đổi bytes."}
+      - {id: B, answer: "String vì mọi dữ liệu cuối cùng đều có thể chuyển thành text.", explanation: "Sai. Ép binary thành text thêm một encoding contract không tồn tại trong format ảnh."}
+      - {id: C, answer: "PrintWriter vì có thể print từng byte.", explanation: "Sai. PrintWriter là character/text-oriented API và có error semantics riêng."}
+      - {id: D, answer: "InputStream/OutputStream hoặc Channel để giữ payload là raw bytes.", explanation: "Đúng. Binary payload nên được giữ ở byte abstraction trừ khi format định nghĩa text."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.MentalModel/MentalModel.md", anchor: "bytes-vs-characters"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q03
+    question: "Điểm khác biệt cốt lõi của non-blocking I/O là gì?"
+    answers:
+      - {id: A, answer: "Lời gọi có thể trả về khi chưa tiến triển, còn chương trình tổ chức readiness/retry sau.", explanation: "Đúng. Non-blocking thay đổi cách tổ chức việc chờ; nó không xóa latency của tài nguyên bên ngoài."}
+      - {id: B, answer: "Disk và network trở nên không còn latency.", explanation: "Sai. Latency vật lý vẫn tồn tại."}
+      - {id: C, answer: "Mọi operation luôn chạy trên một thread mới.", explanation: "Sai. Non-blocking không đồng nghĩa tự tạo thread cho từng operation."}
+      - {id: D, answer: "Operation luôn hoàn thành toàn bộ dữ liệu trong một lần gọi.", explanation: "Sai. Partial/no-progress vẫn có thể xảy ra tùy API."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.MentalModel/MentalModel.md", anchor: "blocking-io-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q04
+    question: "Vì sao try-with-resources quan trọng với I/O dù Java có garbage collector?"
+    answers:
+      - {id: A, answer: "Vì GC không thu hồi bất kỳ object I/O nào.", explanation: "Sai. GC vẫn quản lý object Java, nhưng external resource có lifetime riêng."}
+      - {id: B, answer: "Vì close() làm object immutable.", explanation: "Sai. close() liên quan release resource, không phải immutability."}
+      - {id: C, answer: "Vì file descriptor/native handle cần được release tại thời điểm xác định thay vì chờ GC.", explanation: "Đúng. External resources có thể cạn hoặc giữ lock lâu nếu cleanup không deterministic."}
+      - {id: D, answer: "Vì try-with-resources tự quyết định ai sở hữu mọi shared resource.", explanation: "Sai. TWR đảm bảo close cho resource được khai báo, nhưng ownership architecture vẫn phải do code thiết kế."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.MentalModel/MentalModel.md", anchor: "resource-lifecycle"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q05
+    question: "InputStream và OutputStream chủ yếu cung cấp contract nào?"
+    answers:
+      - {id: A, answer: "Đọc/ghi characters với charset mặc định.", explanation: "Sai. Reader/Writer là character-oriented abstraction."}
+      - {id: B, answer: "Đọc/ghi primitive theo field schema cố định.", explanation: "Sai. DataInput/DataOutput bổ sung typed binary contract."}
+      - {id: C, answer: "Đọc byte từ source và ghi byte tới sink, bất kể resource cụ thể phía sau là gì.", explanation: "Đúng. Subclass quyết định source/sink cụ thể còn base abstraction giữ byte-stream contract."}
+      - {id: D, answer: "Chỉ thao tác với file local.", explanation: "Sai. Byte streams có thể bọc file, memory, socket và nhiều nguồn/đích khác."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.ByteStreams/ByteStreams.md", anchor: "inputstream-outputstream"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q06
+    question: "Tại sao System.console() có thể trả null trong IDE hoặc CI?"
+    answers:
+      - {id: A, answer: "Vì process có thể không được gắn với interactive console thật.", explanation: "Đúng. Standard streams có thể tồn tại/redirect trong khi Console không khả dụng."}
+      - {id: B, answer: "Vì Console chỉ tồn tại trên Linux.", explanation: "Sai. Vấn đề là môi trường chạy/terminal attachment, không phải riêng hệ điều hành."}
+      - {id: C, answer: "Vì System.out đã dùng mất Console.", explanation: "Sai. System.out và Console không loại trừ nhau theo cách đó."}
+      - {id: D, answer: "Vì readPassword() luôn bị JVM vô hiệu hóa.", explanation: "Sai. readPassword() là capability của Console khi console tồn tại."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.ByteStreams/ByteStreams.md", anchor: "standard-console-io"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q07
+    question: "Đoạn code dùng int n = in.available(); rồi cấp byte[n] để đọc toàn bộ stream sai ở đâu?"
+    answers:
+      - {id: A, answer: "available() chỉ dùng được với OutputStream.", explanation: "Sai. available() là method của InputStream."}
+      - {id: B, answer: "available() chỉ ước lượng bytes có thể đọc/skip mà không block, không phải tổng bytes còn lại.", explanation: "Đúng. Nó có thể trả 0 dù stream chưa EOF và không nên dùng làm kích thước toàn payload."}
+      - {id: C, answer: "available() luôn trả Integer.MAX_VALUE.", explanation: "Sai. Giá trị phụ thuộc stream và thời điểm gọi."}
+      - {id: D, answer: "Mảng byte không thể dùng với InputStream.", explanation: "Sai. Bulk read vào byte[] là pattern bình thường."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.ByteStreams/ByteStreams.md", anchor: "read-contract"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q08
+    question: "Khi in.read(buffer) trả 37 với buffer dài 1024, code nên xử lý thế nào?"
+    answers:
+      - {id: A, answer: "Xử lý đủ 1024 bytes vì buffer đã được cấp phát từng đó.", explanation: "Sai. Chỉ 37 bytes đầu là dữ liệu mới của lần read này."}
+      - {id: B, answer: "Bỏ qua lần read vì chưa đầy buffer.", explanation: "Sai. Partial read là hợp lệ và 37 bytes phải được xử lý."}
+      - {id: C, answer: "Xử lý đúng 37 bytes rồi tiếp tục đọc cho tới EOF hoặc đủ framing requirement.", explanation: "Đúng. Return count là contract về progress thực tế."}
+      - {id: D, answer: "Coi 37 là EOF marker.", explanation: "Sai. EOF được biểu diễn bằng -1 khi không đọc được byte nào do đã hết stream."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.ByteStreams/ByteStreams.md", anchor: "partial-read-write"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q09
+    question: "Một record binary gồm int length rồi length bytes payload. Reader an toàn nên làm gì?"
+    answers:
+      - {id: A, answer: "Tin length và allocate ngay để giữ format đơn giản.", explanation: "Sai. Length từ input cần được validate để tránh allocation bất hợp lý hoặc malicious input."}
+      - {id: B, answer: "Dùng read() một lần và giả định đủ length bytes.", explanation: "Sai. Một lần read có thể partial."}
+      - {id: C, answer: "Bỏ field length và dựa vào available().", explanation: "Sai. available() không phải framing contract."}
+      - {id: D, answer: "Validate length theo protocol rồi dùng readFully hoặc loop để lấy đúng payload; EOF giữa record là truncation/error.", explanation: "Đúng. Typed binary cần schema/framing và exact-read semantics rõ ràng."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.ByteStreams/ByteStreams.md", anchor: "typed-binary-io"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q10
+    question: "Phát biểu nào đúng về DataOutputStream.writeUTF / DataInputStream.readUTF?"
+    answers:
+      - {id: A, answer: "Chúng dùng modified UTF-8 theo contract riêng, không phải UTF-8 text file tổng quát.", explanation: "Đúng. Không nên coi writeUTF/readUTF là format UTF-8 interoperable mặc định."}
+      - {id: B, answer: "Chúng luôn ghi raw UTF-8 không có length/framing.", explanation: "Sai. Contract có framing và modified UTF-8 semantics riêng."}
+      - {id: C, answer: "Chúng tương đương Files.writeString(..., UTF_8).", explanation: "Sai. Hai format khác nhau về representation và framing."}
+      - {id: D, answer: "Chúng chỉ hỗ trợ ASCII.", explanation: "Sai. Modified UTF-8 hỗ trợ representation rộng hơn ASCII."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.ByteStreams/ByteStreams.md", anchor: "typed-binary-io"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q11
+    question: "Phát biểu nào đúng về Reader.read(char[]) và PrintWriter?"
+    answers:
+      - {id: A, answer: "Reader.read(char[]) luôn lấp đầy mảng nếu chưa EOF.", explanation: "Sai. Character read cũng có thể partial và phải dùng số lượng thực tế trả về."}
+      - {id: B, answer: "PrintWriter luôn ném IOException trực tiếp từ print/println.", explanation: "Sai. PrintWriter ghi lỗi vào error state và caller có thể dùng checkError()."}
+      - {id: C, answer: "Reader.read(char[]) có thể partial; PrintWriter có convenience API nhưng error semantics khác writer thông thường.", explanation: "Đúng. Cả hai điểm đều quan trọng khi xử lý text I/O chính xác."}
+      - {id: D, answer: "Reader chỉ đọc được ASCII.", explanation: "Sai. Reader làm việc với characters sau decoding, không giới hạn ở ASCII."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.CharacterStreams/CharacterStreams.md", anchor: "reader-writer"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q12
+    question: "Vai trò chính của InputStreamReader là gì?"
+    answers:
+      - {id: A, answer: "Decode bytes thành characters theo Charset.", explanation: "Đúng. Nó là bridge từ byte-oriented input sang character-oriented Reader."}
+      - {id: B, answer: "Nén bytes trước khi đọc.", explanation: "Sai. Compression là concern khác."}
+      - {id: C, answer: "Đảm bảo mọi input đều là UTF-8.", explanation: "Sai. Charset phải được chọn theo data contract."}
+      - {id: D, answer: "Biến InputStream thành FileChannel.", explanation: "Sai. Đây không phải channel adapter."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.CharacterStreams/CharacterStreams.md", anchor: "charset-bridge"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q13
+    question: "Một protocol yêu cầu UTF-8 hợp lệ tuyệt đối. Cách xử lý malformed input phù hợp nhất là gì?"
+    answers:
+      - {id: A, answer: "Luôn IGNORE để service không fail.", explanation: "Sai. Ignore có thể silently làm mất dữ liệu và vi phạm protocol."}
+      - {id: B, answer: "Dùng CharsetDecoder với CodingErrorAction.REPORT để reject dữ liệu không hợp lệ.", explanation: "Đúng. Khi validity là contract, REPORT làm lỗi xuất hiện thay vì bị che bằng replacement."}
+      - {id: C, answer: "Đổi sang platform default charset.", explanation: "Sai. Điều này làm contract càng mơ hồ và có thể decode sai hơn."}
+      - {id: D, answer: "Đọc bytes rồi cast từng byte thành char.", explanation: "Sai. UTF-8 là encoding nhiều byte và không thể decode đúng bằng cast đơn giản."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.CharacterStreams/CharacterStreams.md", anchor: "charset-bridge"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q14
+    question: "BufferedReader/BufferedWriter thay đổi điều gì so với Reader/Writer bên dưới?"
+    answers:
+      - {id: A, answer: "Thay đổi charset của dữ liệu.", explanation: "Sai. Buffering không thay đổi encoding contract."}
+      - {id: B, answer: "Tự động làm resource thread-safe.", explanation: "Sai. Buffering không phải concurrency guarantee."}
+      - {id: C, answer: "Biến text thành binary format.", explanation: "Sai. Payload semantics vẫn là characters."}
+      - {id: D, answer: "Thêm vùng nhớ tạm để batch I/O và cung cấp tiện ích như readLine ở character layer.", explanation: "Đúng. Buffering giảm underlying calls nhưng không đổi meaning của dữ liệu."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.CharacterStreams/CharacterStreams.md", anchor: "character-buffering"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q15
+    question: "Lợi ích chính của buffering thường đến từ đâu?"
+    answers:
+      - {id: A, answer: "Nó làm disk vật lý nhanh hơn.", explanation: "Sai. Buffer không thay đổi tốc độ vật lý của storage."}
+      - {id: B, answer: "Nó giảm số lần đi qua boundary I/O đắt hơn bằng cách gom nhiều thao tác nhỏ.", explanation: "Đúng. Đây là mental model cốt lõi của Buffered I/O."}
+      - {id: C, answer: "Nó bảo đảm mọi write đều durable ngay lập tức.", explanation: "Sai. Buffering và durability là hai concern khác nhau."}
+      - {id: D, answer: "Nó loại bỏ nhu cầu close resource.", explanation: "Sai. Wrapper buffering vẫn có lifecycle cần quản lý."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.BufferedIO/BufferedIO.md", anchor: "buffering-purpose"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q16
+    question: "Sau writer.flush(), điều gì chắc chắn nhất theo abstraction hiện tại?"
+    answers:
+      - {id: A, answer: "Dữ liệu đã nằm vĩnh viễn trên physical disk.", explanation: "Sai. OS/filesystem/device cache có thể vẫn giữ dữ liệu."}
+      - {id: B, answer: "JVM đã gọi FileChannel.force(true).", explanation: "Sai. flush không tự đồng nghĩa với force."}
+      - {id: C, answer: "Dữ liệu buffered của wrapper được đẩy xuống tầng bên dưới theo contract của wrapper.", explanation: "Đúng. Durability sâu hơn cần contract/cơ chế khác."}
+      - {id: D, answer: "Resource đã được close.", explanation: "Sai. flush không đóng resource."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.BufferedIO/BufferedIO.md", anchor: "flush-semantics"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q17
+    question: "Vì sao buffer lớn hơn không phải lúc nào cũng tốt hơn?"
+    answers:
+      - {id: A, answer: "Vì Java cấm buffer lớn hơn 8 KB.", explanation: "Sai. Không có giới hạn chung như vậy cho Buffered I/O."}
+      - {id: B, answer: "Vì buffer lớn luôn làm throughput giảm về 0.", explanation: "Sai. Hiệu ứng phụ thuộc workload và tầng I/O."}
+      - {id: C, answer: "Vì buffer size không ảnh hưởng memory usage.", explanation: "Sai. Nhiều stream với buffer lớn làm tăng memory footprint."}
+      - {id: D, answer: "Vì lợi ích giảm underlying calls có diminishing returns trong khi memory/latency trade-off có thể tăng.", explanation: "Đúng. Buffer size nên dựa trên workload và measurement, không phải quy tắc càng lớn càng nhanh."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.BufferedIO/BufferedIO.md", anchor: "buffer-size-tradeoff"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q18
+    question: "new File(\"missing.txt\") chứng minh điều gì?"
+    answers:
+      - {id: A, answer: "Chỉ tạo object pathname; file thật có thể chưa tồn tại.", explanation: "Đúng. java.io.File không phải opened file handle."}
+      - {id: B, answer: "Luôn tạo file vật lý ngay lập tức.", explanation: "Sai. Constructor không tạo target trên filesystem."}
+      - {id: C, answer: "Luôn mở file descriptor.", explanation: "Sai. File object chủ yếu biểu diễn pathname/metadata API."}
+      - {id: D, answer: "Luôn kiểm tra quyền truy cập lúc construct.", explanation: "Sai. Nhiều filesystem operation chỉ xảy ra khi gọi method tương ứng."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.File/File.md", anchor: "legacy-file-model"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q19
+    question: "Lý do chính để ưu tiên Path/Files thay java.io.File trong code hiện đại là gì?"
+    answers:
+      - {id: A, answer: "Path luôn nhanh hơn File ở mọi operation.", explanation: "Sai. Ưu tiên chủ yếu đến từ API model/capability, không phải guarantee performance tuyệt đối."}
+      - {id: B, answer: "File không thể biểu diễn đường dẫn tuyệt đối.", explanation: "Sai. File có thể biểu diễn absolute pathname."}
+      - {id: C, answer: "Path/Files tách path representation khỏi filesystem operations và hỗ trợ richer attributes/options/errors.", explanation: "Đúng. NIO.2 có model rõ và phong phú hơn cho modern filesystem work."}
+      - {id: D, answer: "File đã bị xóa khỏi Java 21.", explanation: "Sai. java.io.File vẫn tồn tại để tương thích/interop."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.File/File.md", anchor: "file-api-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q20
+    question: "Path.of(\"data\", \"note.txt\") tạo ra điều gì?"
+    answers:
+      - {id: A, answer: "Một file thật đã được tạo trên disk.", explanation: "Sai. Tạo Path không đồng nghĩa filesystem I/O."}
+      - {id: B, answer: "Một opened stream tới file đó.", explanation: "Sai. Path là value mô tả đường dẫn, không phải stream."}
+      - {id: C, answer: "Một FileStore mới.", explanation: "Sai. FileStore là backing storage abstraction khác."}
+      - {id: D, answer: "Một object mô hình hóa path; target có thể tồn tại hoặc không.", explanation: "Đúng. Files operation mới thực sự yêu cầu filesystem làm việc."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.PathFiles/PathFiles.md", anchor: "path-model"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q21
+    question: "Phát biểu nào đúng về Path, FileSystem, FileSystemProvider và FileStore?"
+    answers:
+      - {id: A, answer: "Mọi Path luôn thuộc cùng một default filesystem của JVM.", explanation: "Sai. Path có thể thuộc alternate/provider-backed filesystem."}
+      - {id: B, answer: "FileStore là alias khác của Path.", explanation: "Sai. FileStore mô tả backing storage/capabilities, không phải path value."}
+      - {id: C, answer: "FileSystemProvider chỉ dùng khi tự viết custom provider và không liên quan Files.", explanation: "Sai. Provider là implementation layer đứng sau filesystem operations dù app thường không gọi trực tiếp."}
+      - {id: D, answer: "Mỗi Path thuộc FileSystem; provider thực hiện semantics, còn FileStore mô tả backing storage/capability.", explanation: "Đúng. Mental model này giải thích nhiều portability boundary của NIO.2."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.PathFiles/PathFiles.md", anchor: "filesystem-provider-model"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q22
+    question: "Khác biệt chính giữa normalize() và toRealPath() là gì?"
+    answers:
+      - {id: A, answer: "normalize() truy cập filesystem còn toRealPath() chỉ xử lý chuỗi.", explanation: "Sai. Hướng này bị đảo ngược."}
+      - {id: B, answer: "normalize() xử lý cú pháp path không cần target tồn tại; toRealPath() truy cập filesystem và resolve theo link/options.", explanation: "Đúng. Vì vậy normalize không chứng minh file identity."}
+      - {id: C, answer: "Hai method luôn trả cùng kết quả.", explanation: "Sai. Symlink và existence làm semantics khác nhau."}
+      - {id: D, answer: "toRealPath() chỉ thêm working directory mà không chạm filesystem.", explanation: "Sai. toAbsolutePath gần với ý đó hơn; toRealPath cần filesystem."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.PathFiles/PathFiles.md", anchor: "resolve-normalize"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q23
+    question: "Một ứng dụng gọi Files.copy(sourceDir, targetDir). Điều gì KHÔNG được đảm bảo?"
+    answers:
+      - {id: A, answer: "Toàn bộ cây con của sourceDir được copy recursive.", explanation: "Đúng. Files.copy trên directory không tự recursive copy tree."}
+      - {id: B, answer: "Target directory tương ứng có thể được tạo theo contract copy.", explanation: "Sai. Đây là behavior có thể xảy ra; vấn đề là nội dung cây con không tự được copy."}
+      - {id: C, answer: "Operation có thể ném IOException.", explanation: "Sai. Filesystem failures vẫn có thể xảy ra."}
+      - {id: D, answer: "Copy behavior có thể bị ảnh hưởng bởi options và symbolic links.", explanation: "Sai. Đây chính là một phần của contract cần hiểu."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.PathFiles/PathFiles.md", anchor: "files-operations"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q24
+    question: "Điều nào đúng về temporary files/directories?"
+    answers:
+      - {id: A, answer: "JVM luôn recursive-delete mọi temp directory khi process kết thúc.", explanation: "Sai. Cleanup ownership vẫn thuộc application/design."}
+      - {id: B, answer: "DELETE_ON_CLOSE bảo đảm cleanup tuyệt đối kể cả process crash.", explanation: "Sai. Đây không phải crash-proof cleanup guarantee chung."}
+      - {id: C, answer: "Code tạo temp resource nên xác định ownership/cleanup; temp directory có contents thường cần cleanup tree explicit.", explanation: "Đúng. Temp không có nghĩa tự động vô trách nhiệm về lifecycle."}
+      - {id: D, answer: "Temp file không phải filesystem resource nên không cần close stream mở trên nó.", explanation: "Sai. Stream/channel mở trên temp file vẫn là external resource."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.PathFiles/PathFiles.md", anchor: "temporary-files"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q25
+    question: "Code cần POSIX permissions nhưng deploy lên filesystem không hỗ trợ PosixFileAttributeView. Cách tư duy nào đúng?"
+    answers:
+      - {id: A, answer: "Java sẽ tự giả lập POSIX permission ở mọi provider.", explanation: "Sai. Attribute views là capability phụ thuộc filesystem/provider."}
+      - {id: B, answer: "Kiểm capability như FileStore.supportsFileAttributeView và có policy fallback/fail phù hợp.", explanation: "Đúng. Portability yêu cầu không hard-code giả định Unix."}
+      - {id: C, answer: "Chuyển Path sang File thì POSIX sẽ xuất hiện.", explanation: "Sai. Đổi abstraction không tạo capability mà filesystem không có."}
+      - {id: D, answer: "Dùng normalize() để bật POSIX mode.", explanation: "Sai. normalize chỉ xử lý path syntax."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.PathFiles/PathFiles.md", anchor: "file-permissions-ownership"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q26
+    question: "Vì sao Stream<Path> trả về từ Files.walk nên được dùng trong try-with-resources?"
+    answers:
+      - {id: A, answer: "Vì mọi java.util.stream.Stream đều bắt buộc giữ file descriptor.", explanation: "Sai. Nhiều Stream API pipeline thuần memory không giữ external resource."}
+      - {id: B, answer: "Vì Stream API không hỗ trợ close nếu không có TWR.", explanation: "Sai. Stream implements AutoCloseable; vấn đề là bảo đảm lifecycle."}
+      - {id: C, answer: "Vì Files.walk có thể giữ directory resources mở; Stream API shape không loại bỏ external-resource lifetime.", explanation: "Đúng. Ownership được quyết định bởi API producer, không chỉ bởi generic type."}
+      - {id: D, answer: "Vì walk luôn ghi file tạm trong lúc duyệt.", explanation: "Sai. Đó không phải lý do resource lifecycle tồn tại."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.PathFiles/PathFiles.md", anchor: "directory-stream-walk"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q27
+    question: "WatchService nhận OVERFLOW event. Cách xử lý đúng về mặt mental model là gì?"
+    answers:
+      - {id: A, answer: "Có event detail đã mất; nên rescan/reconcile trạng thái thay vì giả định event list đầy đủ.", explanation: "Đúng. WatchService là notification mechanism chứ không phải transaction log hoàn hảo."}
+      - {id: B, answer: "OVERFLOW nghĩa là directory đã bị xóa chắc chắn.", explanation: "Sai. Nó báo event có thể bị mất/overflow queue."}
+      - {id: C, answer: "Bỏ qua và tiếp tục vì mọi create/delete vẫn chắc chắn còn đủ.", explanation: "Sai. Chính OVERFLOW nói không còn guarantee đó."}
+      - {id: D, answer: "Chuyển sang Files.exists là sẽ reconstruct chính xác event history.", explanation: "Sai. Rescan có thể reconstruct current state, không phải lịch sử transaction đã mất."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.PathFiles/PathFiles.md", anchor: "watch-service-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q28
+    question: "Sau khi put 6 bytes vào ByteBuffer rồi muốn đọc 6 bytes đó, operation nào thường cần gọi trước?"
+    answers:
+      - {id: A, answer: "clear()", explanation: "Sai. clear mở buffer cho pha ghi mới và sẽ làm read boundary sai."}
+      - {id: B, answer: "compact()", explanation: "Sai. compact dùng khi còn dữ liệu chưa đọc và muốn tiếp tục ghi."}
+      - {id: C, answer: "rewind() luôn đủ vì limit tự thành 6.", explanation: "Sai. rewind giữ limit hiện tại; sau write mode limit thường vẫn là capacity."}
+      - {id: D, answer: "flip() để limit = lượng đã ghi và position = 0.", explanation: "Đúng. flip chuyển buffer từ write phase sang read phase."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.BuffersChannels/BuffersChannels.md", anchor: "buffer-state"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q29
+    question: "Điều nào mô tả đúng clear(), compact() và rewind()?"
+    answers:
+      - {id: A, answer: "clear() xóa bytes thành 0; compact() giải phóng memory; rewind() đổi byte order.", explanation: "Sai. Cả ba mô tả sai state semantics."}
+      - {id: B, answer: "clear() mở toàn bộ buffer cho ghi mới; compact() giữ unread data rồi chuẩn bị ghi; rewind() đọc lại cùng region từ đầu.", explanation: "Đúng. Đây là ba transition khác nhau trong Buffer state machine."}
+      - {id: C, answer: "compact() và clear() luôn tương đương.", explanation: "Sai. compact bảo toàn unread data, clear thì không."}
+      - {id: D, answer: "rewind() luôn đặt limit = capacity.", explanation: "Sai. rewind giữ current limit và đặt position về 0."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.BuffersChannels/BuffersChannels.md", anchor: "flip-clear-compact"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q30
+    question: "Cùng 4 bytes được getInt() dưới BIG_ENDIAN và LITTLE_ENDIAN có thể cho kết quả khác nhau vì sao?"
+    answers:
+      - {id: A, answer: "Vì endianness quyết định thứ tự significance của các byte trong primitive nhiều byte.", explanation: "Đúng. Byte order là binary format contract."}
+      - {id: B, answer: "Vì LITTLE_ENDIAN tự nén bytes.", explanation: "Sai. Endianness không phải compression."}
+      - {id: C, answer: "Vì getInt() dùng charset khác nhau.", explanation: "Sai. Charset liên quan text encoding, không phải primitive byte order."}
+      - {id: D, answer: "Vì direct buffer luôn dùng LITTLE_ENDIAN còn heap buffer luôn BIG_ENDIAN.", explanation: "Sai. Byte order là thuộc tính cấu hình của buffer; buffer mới mặc định BIG_ENDIAN."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.BuffersChannels/BuffersChannels.md", anchor: "byte-order-structured-binary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q31
+    question: "Một WritableByteChannel.write(buffer) có thể ghi ít hơn buffer.remaining(). Code đúng nên làm gì?"
+    answers:
+      - {id: A, answer: "Coi đó là IOException dù method không ném lỗi.", explanation: "Sai. Partial progress có thể hợp lệ."}
+      - {id: B, answer: "Theo dõi position/return value và tiếp tục cho tới khi đạt contract mong muốn; với non-blocking phải xử lý zero-progress đúng cách.", explanation: "Đúng. Channel API expose progress thực tế và không hứa full transfer trong một call."}
+      - {id: C, answer: "Gọi clear() ngay sau mỗi write để ép ghi hết.", explanation: "Sai. clear có thể làm mất thông tin về phần dữ liệu chưa ghi."}
+      - {id: D, answer: "Giả định FileChannel luôn là full-write nên không cần loop.", explanation: "Sai. Channel operations cần tôn trọng partial semantics."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.BuffersChannels/BuffersChannels.md", anchor: "channel-model"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q32
+    question: "Scattering read / gathering write nên được hiểu thế nào?"
+    answers:
+      - {id: A, answer: "Là parallel I/O tự tạo nhiều thread cho mỗi buffer.", explanation: "Sai. Scatter/gather là multi-buffer transfer, không phải parallelism."}
+      - {id: B, answer: "Chỉ dùng được với character streams.", explanation: "Sai. Đây là channel/ByteBuffer-oriented model."}
+      - {id: C, answer: "Phân phối read vào nhiều buffer hoặc gom write từ nhiều buffer theo thứ tự, vẫn có partial semantics.", explanation: "Đúng. Header/body là use case điển hình."}
+      - {id: D, answer: "Luôn nhanh hơn mọi single-buffer operation.", explanation: "Sai. Đây là capability/layout tool, không có universal performance guarantee."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.BuffersChannels/BuffersChannels.md", anchor: "scatter-gather-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q33
+    question: "Khi nào direct ByteBuffer là lựa chọn hợp lý nhất?"
+    answers:
+      - {id: A, answer: "Luôn luôn, vì off-heap chắc chắn nhanh hơn heap.", explanation: "Sai. Allocation/deallocation và memory pressure của direct buffer có cost riêng."}
+      - {id: B, answer: "Chỉ khi buffer lớn hơn Integer.MAX_VALUE.", explanation: "Sai. ByteBuffer capacity vẫn bị giới hạn bởi int indexing."}
+      - {id: C, answer: "Khi code cần String API nhanh hơn.", explanation: "Sai. Direct buffer không phải text abstraction."}
+      - {id: D, answer: "Khi I/O path/workload đo đạc cho thấy native-friendly direct memory có lợi hơn cost của nó.", explanation: "Đúng. Direct buffer là optimization/tool có trade-off, không phải default tuyệt đối."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.BuffersChannels/BuffersChannels.md", anchor: "bytebuffer-types"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q34
+    question: "Ưu điểm quan trọng của FileChannel positional read như read(buffer, position) là gì?"
+    answers:
+      - {id: A, answer: "Có thể đọc tại offset cụ thể mà không nhất thiết thay đổi channel position hiện tại.", explanation: "Đúng. Đây là random/positional I/O capability quan trọng của FileChannel."}
+      - {id: B, answer: "Luôn đọc đủ buffer trong một call.", explanation: "Sai. Partial read vẫn áp dụng."}
+      - {id: C, answer: "Tự động memory-map file.", explanation: "Sai. Mapping là API khác."}
+      - {id: D, answer: "Tự động khóa file để tránh concurrent access.", explanation: "Sai. File locking là capability riêng."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.FileChannel/FileChannel.md", anchor: "filechannel-random-access"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q35
+    question: "Phát biểu nào đúng về AsynchronousFileChannel?"
+    answers:
+      - {id: A, answer: "Nó bảo đảm operation hoàn thành toàn bộ requested bytes một lần.", explanation: "Sai. Partial completion vẫn phải được xử lý."}
+      - {id: B, answer: "Nó cung cấp positional file I/O với completion qua Future hoặc CompletionHandler.", explanation: "Đúng. Đây là khác biệt chính về completion/orchestration model."}
+      - {id: C, answer: "Nó là non-blocking SocketChannel dành cho network.", explanation: "Sai. Đây là asynchronous file channel, không phải networking channel."}
+      - {id: D, answer: "Nó luôn nhanh hơn FileChannel trong mọi workload.", explanation: "Sai. Async không có universal performance superiority."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.FileChannel/FileChannel.md", anchor: "asynchronous-filechannel-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q36
+    question: "FileChannel.transferTo(...) trả số byte nhỏ hơn requested. Kết luận đúng là gì?"
+    answers:
+      - {id: A, answer: "File chắc chắn bị corrupt.", explanation: "Sai. Partial transfer có thể hợp lệ theo contract."}
+      - {id: B, answer: "Method luôn retry nội bộ cho tới đủ nên return value không quan trọng.", explanation: "Sai. Caller phải quan tâm progress thực tế."}
+      - {id: C, answer: "Nếu cần chuyển đủ range, caller phải tiếp tục từ progress đã đạt; transfer completion cũng không tự bảo đảm durability.", explanation: "Đúng. Partial transfer và persistence là hai concern riêng."}
+      - {id: D, answer: "Chỉ có thể xảy ra khi file rỗng.", explanation: "Sai. Nhiều nguyên nhân/provider condition có thể dẫn tới partial transfer."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.FileChannel/FileChannel.md", anchor: "filechannel-transfer"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q37
+    question: "Điều nào đúng về file lock và memory mapping?"
+    answers:
+      - {id: A, answer: "File lock là thay thế trực tiếp cho synchronized giữa threads trong JVM.", explanation: "Sai. File lock chủ yếu là OS/filesystem coordination và có platform semantics riêng."}
+      - {id: B, answer: "Đóng FileChannel luôn unmap mọi MappedByteBuffer ngay lập tức.", explanation: "Sai. Mapping đã tạo có lifetime độc lập với channel."}
+      - {id: C, answer: "Shared lock luôn giữ nguyên shared trên mọi platform.", explanation: "Sai. Platform có thể convert request thành exclusive; kiểm isShared() nếu cần mode thực tế."}
+      - {id: D, answer: "Cả lock và mmap đều có OS/filesystem/virtual-memory boundary nên phải dùng theo requirement cụ thể, không như magic solution.", explanation: "Đúng. Semantics/lifecycle/performance của chúng phụ thuộc nền tảng và workload."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.FileChannel/FileChannel.md", anchor: "file-lock-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q38
+    question: "Một service nhận InputStream do caller truyền vào và không tạo nó. Ownership rule mặc định hợp lý nhất là gì?"
+    answers:
+      - {id: A, answer: "Không tự close trừ khi contract nói service nhận ownership.", explanation: "Đúng. Borrower không nên âm thầm đóng resource của owner khác."}
+      - {id: B, answer: "Luôn close để tránh leak bất kể contract.", explanation: "Sai. Điều đó có thể phá caller vẫn cần dùng stream."}
+      - {id: C, answer: "Chờ GC vì caller truyền vào thì không cần close.", explanation: "Sai. Resource vẫn cần owner chịu trách nhiệm cleanup."}
+      - {id: D, answer: "Wrap bằng BufferedInputStream thì ownership tự chuyển sang service.", explanation: "Sai. Wrapper không tự thay đổi ownership contract nếu API không nói vậy."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.ResourceManagement/ResourceManagement.md", anchor: "resource-ownership"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q39
+    question: "Phát biểu nào đúng nhất về native Java serialization?"
+    answers:
+      - {id: A, answer: "Là format persistence/network nên dùng mặc định vì giữ object graph tự động.", explanation: "Sai. Nó gắn chặt với Java class/version và có security/compatibility risks."}
+      - {id: B, answer: "ObjectInputFilter làm deserialization dữ liệu không tin cậy trở nên hoàn toàn an toàn.", explanation: "Sai. Filter là defense-in-depth, không phải guarantee tuyệt đối."}
+      - {id: C, answer: "Nó giữ object graph/reference semantics nhưng nên tránh làm general interchange format, đặc biệt với untrusted input.", explanation: "Đúng. Đây là boundary cốt lõi của native serialization."}
+      - {id: D, answer: "transient làm toàn bộ class không còn Serializable.", explanation: "Sai. transient chỉ loại field khỏi default serialized state."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.Serialization/Serialization.md", anchor: "serialization-security-risk"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q40
+    question: "Khi chọn I/O API cho một file có thể rất lớn, nguyên tắc nào tốt nhất?"
+    answers:
+      - {id: A, answer: "Luôn dùng readAllBytes vì code ngắn nhất.", explanation: "Sai. Load-all có thể gây memory pressure lớn khi input không có bound nhỏ."}
+      - {id: B, answer: "Chọn abstraction theo payload/access/lifecycle, ưu tiên streaming cho dữ liệu lớn và chỉ optimize sau khi đo bottleneck.", explanation: "Đúng. Correctness và bounded memory đến trước optimization."}
+      - {id: C, answer: "Luôn dùng memory mapping vì đây là API thấp nhất.", explanation: "Sai. Mapping có boundary/lifecycle và không phải default cho mọi workload."}
+      - {id: D, answer: "Luôn dùng AsynchronousFileChannel để tránh mọi lỗi performance.", explanation: "Sai. Async là orchestration model khác, không phải universal performance fix."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "11.ChoosingIO/ChoosingIO.md", anchor: "choose-stream-reader-channel"}
+    apiRelated: {controller: "", methodSignature: ""}

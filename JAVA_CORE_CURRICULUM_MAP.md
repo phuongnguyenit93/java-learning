@@ -1688,9 +1688,9 @@ Instant vs LocalDateTime vs ZonedDateTime; storing timestamps; DST bugs; Duratio
 
 ### 4.12 `io`
 
-**API applicability:** Yes — controlled temp resources can demonstrate stream/channel/resource semantics safely.
+**API applicability:** Conditional — controlled temp resources could demonstrate stream/channel/resource semantics, but the current `JAVA_IO` module is `LIBRARY` with `BUILD_SWAGGER=FALSE`, so API Docs are intentionally absent unless real runtime learning APIs are introduced later.
 
-**Suggested assessment size:** Quiz 30–40; Interview 20–28. These are coverage ranges, not quotas.
+**Suggested assessment size:** Quiz 34–44; Interview 24–30. These are coverage ranges, not quotas.
 
 #### Layer 1 — Module orientation
 
@@ -1702,6 +1702,9 @@ Instant vs LocalDateTime vs ZonedDateTime; storing timestamps; DST bugs; Duratio
 InputStream / OutputStream
 → byte-oriented I/O
 
+DataInput / DataOutput
+→ structured primitive binary values over byte-oriented I/O
+
 Reader / Writer
 → character-oriented I/O with text decoding/encoding concerns
 
@@ -1711,11 +1714,23 @@ buffering
 File / Path / Files
 → legacy path object vs modern filesystem API model
 
+FileSystem / FileSystemProvider / FileStore
+→ Path ownership, provider-backed semantics/capabilities and backing storage model
+
+WatchService
+→ filesystem change notifications with provider/platform boundaries
+
 channel / buffer
 → NIO data-transfer model separated from stream abstraction
 
+ByteOrder
+→ multi-byte primitive layout contract for binary data
+
 FileChannel
 → file-oriented channel operations and random-access capabilities
+
+AsynchronousFileChannel
+→ asynchronous positional file I/O boundary
 
 AutoCloseable / try-with-resources
 → deterministic ownership/release of external resources
@@ -1727,7 +1742,7 @@ AutoCloseable / try-with-resources
 What is moving, from where to where, and who owns the resource?
 I/O Mental Model
         ↓
-Is the payload raw bytes?
+Is the payload raw bytes or structured primitive binary data?
 Byte Streams
         ↓
 Is the payload text?
@@ -1739,13 +1754,13 @@ Buffered I/O
 How did Java historically represent filesystem paths?
 File
         ↓
-What is the modern filesystem API?
+What is the modern filesystem API, including provider-backed semantics, temporary resources, attributes and change notification?
 Path / Files
         ↓
-How does NIO model data with Channel + Buffer?
+How does NIO model data with Channel + Buffer, byte order and multi-buffer transfer?
 Buffers / Channels
         ↓
-What file-specific operations become possible with FileChannel?
+What file-specific synchronous/asynchronous operations become possible with FileChannel-family APIs?
 FileChannel
         ↓
 How do we guarantee close/release behavior?
@@ -1758,19 +1773,19 @@ How do we choose the simplest correct I/O abstraction?
 Choosing I/O
 ```
 
-**Running example / evidence strategy:** move one UTF-8 text payload from memory to a temporary file and back, first as bytes, then characters, then buffered/channel-based forms. Keep charset and resource ownership explicit so the learner sees why String/Unicode knowledge matters.
+**Running example / evidence strategy:** move one UTF-8 text payload from memory to a temporary file and back, first as bytes, then characters, then buffered/channel-based forms. Add one compact structured-binary record with fixed primitive fields to demonstrate DataInput/DataOutput and ByteOrder without turning the module into a binary-protocol course. Use a controlled temporary directory for WatchService evidence and a bounded file for asynchronous/scatter-gather examples. Keep charset, framing, byte order and resource ownership explicit.
 
 #### Layer 2 — Chapter story
 
 ```text
 MentalModel        → What are source, sink, payload unit and resource lifetime?
-ByteStreams        → When must data remain opaque bytes rather than text?
+ByteStreams        → When must data remain opaque bytes, and how are primitive values given a binary field contract?
 CharacterStreams   → How do bytes become characters through a Charset-aware layer?
 BufferedIO         → Why does batching improve throughput and where does flushing matter?
 File               → What does the legacy File abstraction represent and what are its limitations?
-PathFiles          → How do Path and Files separate path identity from filesystem operations?
-BuffersChannels    → Why does NIO separate storage of data from the conduit that moves it?
-FileChannel        → When do random access, position and channel-specific file operations matter?
+PathFiles          → How do Path, FileSystem/provider and Files separate path identity, filesystem capabilities, storage metadata and operations?
+BuffersChannels    → Why does NIO separate storage of data from the conduit that moves it, and how do byte order/scatter-gather affect binary transfer?
+FileChannel        → When do random access, position, channel-specific operations and asynchronous file I/O matter?
 ResourceManagement → Why must external handles be closed deterministically instead of waiting for GC?
 Serialization      → What does object serialization promise, and why is it not a general persistence/network format recommendation?
 ChoosingIO         → Given payload, scale and operation pattern, which abstraction is simplest and correct?
@@ -1781,13 +1796,13 @@ ChoosingIO         → Given payload, scale and operation pattern, which abstrac
 | Existing chapter | Proposed anchored H2 sections |
 | --- | --- |
 | `1.MentalModel/MentalModel.md` | `#io-data-flow` — I/O as data flow between source/sink<br>`#bytes-vs-characters` — Byte vs character abstraction<br>`#blocking-io-boundary` — Blocking I/O mental model<br>`#resource-lifecycle` — I/O resources have lifecycle |
-| `2.ByteStreams/ByteStreams.md` | `#inputstream-outputstream` — InputStream/OutputStream model<br>`#read-contract` — read return values and EOF<br>`#partial-read-write` — Reads/writes may be partial<br>`#byte-stream-use-cases` — Binary data use cases |
+| `2.ByteStreams/ByteStreams.md` | `#inputstream-outputstream` — InputStream/OutputStream model<br>`#standard-console-io` — Standard streams and Console boundary<br>`#read-contract` — read return values and EOF<br>`#partial-read-write` — Reads/writes may be partial<br>`#typed-binary-io` — DataInput/DataOutput structured primitive binary I/O<br>`#byte-stream-use-cases` — Binary data use cases |
 | `3.CharacterStreams/CharacterStreams.md` | `#reader-writer` — Reader/Writer model<br>`#charset-bridge` — InputStreamReader/OutputStreamWriter charset bridge<br>`#character-buffering` — Character buffering |
 | `4.BufferedIO/BufferedIO.md` | `#buffering-purpose` — Why buffering reduces calls<br>`#flush-semantics` — flush semantics<br>`#buffer-size-tradeoff` — Buffer size trade-off<br>`#buffered-wrappers` — BufferedInputStream/Reader/Writer |
 | `5.File/File.md` | `#legacy-file-model` — java.io.File is path-like metadata API<br>`#file-path-limitations` — Legacy File limitations<br>`#file-api-boundary` — Why prefer Path/Files for modern code |
-| `6.PathFiles/PathFiles.md` | `#path-model` — Path is filesystem path abstraction<br>`#resolve-normalize` — resolve/normalize/relativize<br>`#files-operations` — Files read/write/copy/move/delete<br>`#file-attributes` — Attributes and metadata<br>`#directory-stream-walk` — Directory listing/walking and resource concerns |
-| `7.BuffersChannels/BuffersChannels.md` | `#buffer-state` — Buffer position/limit/capacity<br>`#flip-clear-compact` — flip/clear/compact<br>`#channel-model` — Channel read/write model<br>`#bytebuffer-types` — Heap vs direct ByteBuffer boundary |
-| `8.FileChannel/FileChannel.md` | `#filechannel-random-access` — Random-position I/O<br>`#filechannel-transfer` — transferTo/transferFrom<br>`#file-lock-boundary` — File locking boundary<br>`#memory-mapped-boundary` — Memory-mapped file boundary |
+| `6.PathFiles/PathFiles.md` | `#path-model` — Path is filesystem path abstraction<br>`#filesystem-provider-model` — FileSystem/FileSystemProvider/FileStore ownership and capability model<br>`#resolve-normalize` — resolve/normalize/relativize<br>`#files-operations` — Files read/write/copy/move/delete<br>`#temporary-files` — Temporary files/directories and cleanup ownership<br>`#file-attributes` — Attributes and metadata<br>`#file-permissions-ownership` — File owner/permission views and portability boundary<br>`#directory-stream-walk` — Directory listing/walking and resource concerns<br>`#watch-service-boundary` — WatchService filesystem-change notification boundary |
+| `7.BuffersChannels/BuffersChannels.md` | `#buffer-state` — Buffer position/limit/capacity<br>`#byte-order-structured-binary` — ByteOrder and multi-byte primitive layout<br>`#flip-clear-compact` — flip/clear/compact<br>`#channel-model` — Channel read/write model<br>`#scatter-gather-boundary` — Scattering/gathering multi-buffer channel I/O boundary<br>`#bytebuffer-types` — Heap vs direct ByteBuffer boundary |
+| `8.FileChannel/FileChannel.md` | `#filechannel-random-access` — Random-position I/O and RandomAccessFile comparison boundary<br>`#asynchronous-filechannel-boundary` — AsynchronousFileChannel positional async I/O boundary<br>`#filechannel-transfer` — transferTo/transferFrom<br>`#file-lock-boundary` — File locking boundary<br>`#memory-mapped-boundary` — Memory-mapped file boundary |
 | `9.ResourceManagement/ResourceManagement.md` | `#closeable-lifecycle` — Closeable/AutoCloseable<br>`#try-with-resources-io` — Try-with-resources for I/O<br>`#resource-ownership` — Who owns and closes a stream<br>`#close-wrapper-chain` — Closing wrapper chains |
 | `10.Serialization/Serialization.md` | `#java-serialization-model` — Object serialization model<br>`#serializable-graph` — Serializable object graph<br>`#serialversionuid` — serialVersionUID/version compatibility<br>`#transient-field` — transient fields<br>`#serialization-security-risk` — Native serialization security/compatibility risks |
 | `11.ChoosingIO/ChoosingIO.md` | `#choose-stream-reader-channel` — Choose stream/reader/channel/path by problem<br>`#memory-vs-streaming` — Streaming vs loading whole content<br>`#charset-explicit` — Make charset explicit<br>`#io-error-handling` — I/O error/partial-operation handling<br>`#io-performance-boundary` — Measure before optimizing I/O |
@@ -1798,19 +1813,24 @@ ChoosingIO         → Given payload, scale and operation pattern, which abstrac
 | --- | --- | --- | --- |
 | `StreamController` | `byteVsCharacter()` | `#bytes-vs-characters` | Round-trip binary/text and expose byte/char counts. |
 | `ReadContractController` | `eofAndPartialRead()` | `#read-contract` | Controlled custom stream proves EOF/read-count semantics. |
+| `BinaryDataController` | `primitiveRoundTrip()` | `#typed-binary-io` | Write/read ordered primitive fields and expose framing/EOF behavior. |
 | `PathFilesController` | `resolveNormalize()` | `#resolve-normalize` | Return path transformation results without touching arbitrary filesystem. |
+| `PathFilesController` | `filesystemCapabilities()` | `#filesystem-provider-model` | Expose provider/store identity and supported attribute-view capabilities for controlled paths. |
+| `PathFilesController` | `watchDirectory()` | `#watch-service-boundary` | Observe controlled create/modify/delete notifications and reset lifecycle. |
 | `BufferController` | `stateTransitions()` | `#flip-clear-compact` | Expose position/limit/capacity after put/flip/get/compact. |
+| `BufferController` | `byteOrder()` | `#byte-order-structured-binary` | Decode the same bytes as big-endian vs little-endian and compare results. |
+| `FileChannelController` | `asyncRead()` | `#asynchronous-filechannel-boundary` | Observe completion of a controlled positional asynchronous file read. |
 | `ResourceController` | `closeOrder()` | `#resource-ownership` | Trace nested resource close behavior. |
 | `SerializationController` | `roundTrip()` | `#java-serialization-model` | Serialize safe sample to byte[] then deserialize and inspect transient field. |
 | `SerializationController` | `versionRisk()` | `#serialization-security-risk` | Explain/observe metadata, without deserializing untrusted input. |
 
 #### Quiz coverage
 
-byte vs char; EOF/read contract; charset bridges; buffering/flush; Path operations; Buffer state machine; channels; resource ownership; serialization graph/version/transient risks.
+byte vs char; standard/console I/O; EOF/read contract; typed primitive binary I/O and framing; charset bridges; buffering/flush; Path/FileSystem/provider/store model; Path operations/temp resources/permissions; WatchService boundary; Buffer state machine and byte order; channels/scatter-gather; synchronous vs asynchronous file I/O; resource ownership; serialization graph/version/transient risks.
 
 #### Interview coverage
 
-InputStream vs Reader; explicit charset; Path/Files vs File; flip/clear/compact; blocking I/O; try-with-resources ownership; serialization risks; streaming large files.
+InputStream vs Reader; DataInput/DataOutput vs object serialization; explicit charset; Path/Files vs File; FileSystem/provider capability boundaries; temp-resource ownership; WatchService delivery limitations; flip/clear/compact; byte order; scatter/gather; blocking vs asynchronous file I/O; try-with-resources ownership; serialization risks; streaming large files.
 
 ### 4.13 `localization`
 
@@ -2305,12 +2325,12 @@ class loading lifecycle; parent delegation; why same class name can be different
 | `generics` | 9 | 41 | 6 | 28–38 | 20–28 |
 | `collection` | 12 | 71 | 8 | 34–46 | 22–30 |
 | `date-time` | 12 | 41 | 6 | 30–40 | 20–28 |
-| `io` | 11 | 45 | 7 | 30–40 | 20–28 |
+| `io` | 11 | 54 | 12 | 34–44 | 24–30 |
 | `localization` | 11 | 43 | 7 | 26–34 | 18–24 |
 | `annotation` | 8 | 35 | 5 | 24–32 | 18–24 |
 | `reflection` | 10 | 45 | 7 | 30–40 | 22–30 |
 | `classloader` | 9 | 39 | 7 | 28–38 | 22–30 |
-| **Total** | **161** | **624** | **105** | **450–602** | **314–430** |
+| **Total** | **161** | **633** | **110** | **454–606** | **318–432** |
 
 These totals are planning bounds, not delivery quotas. During implementation an API experiment or assessment item may be removed when it proves redundant, weak or artificial.
 

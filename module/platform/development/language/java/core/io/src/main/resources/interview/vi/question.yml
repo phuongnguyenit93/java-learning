@@ -1,0 +1,299 @@
+# <interview-schema>
+# Cấu trúc câu hỏi Interview
+# schema-version: 2
+#
+# questions [kiểu: list; bắt buộc; mặc định: []]
+#   Danh sách câu hỏi Interview của module trong language hiện tại.
+#   mỗi phần tử:
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi phỏng vấn hiển thị cho người học.
+#     answer [kiểu: string; bắt buộc; mặc định: ""]
+#       Câu trả lời tham khảo, chỉ hiển thị khi người học chủ động mở.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu nội dung được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu nội dung đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+# </interview-schema>
+
+questions:
+  - question: >-
+      Hãy giải thích I/O là gì theo mental model source → data flow → sink, và vì sao chương trình chỉ xử lý dữ liệu trong RAM là chưa đủ cho phần lớn ứng dụng thực tế.
+    answer: >-
+      I/O là việc dữ liệu đi qua ranh giới của process giữa một source và một sink. RAM chỉ giữ working state của process; khi process kết thúc, dữ liệu đó không tự trở thành file bền vững, cũng không giúp chương trình nhận input, đọc file hay giao tiếp với tài nguyên bên ngoài. Mental model source/sink giúp tách ý nghĩa của payload khỏi nơi dữ liệu đến hoặc đi, nên cùng một contract đọc/ghi có thể áp dụng cho file, memory, console hoặc socket.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.MentalModel/MentalModel.md", anchor: "io-data-flow"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Khi nào nên nghĩ dữ liệu là bytes và khi nào nên nghĩ là characters? Vì sao chọn sai abstraction có thể làm hỏng dữ liệu?
+    answer: >-
+      Bytes là representation nhị phân thô, phù hợp ảnh, file nén, protocol binary hoặc dữ liệu chưa được diễn giải thành text. Characters chỉ đúng khi payload có semantics văn bản và có charset xác định cách bytes ↔ characters. Dùng Reader cho ảnh có thể decode các byte thành ký tự sai rồi encode lại khác ban đầu; ngược lại xử lý text chỉ bằng byte mà không xác định charset dễ tạo mojibake hoặc lỗi round-trip.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.MentalModel/MentalModel.md", anchor: "bytes-vs-characters"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Blocking I/O và non-blocking I/O khác nhau ở điểm nào? Tại sao non-blocking không có nghĩa là tài nguyên bên ngoài không còn độ trễ?
+    answer: >-
+      Với blocking I/O, thread gọi operation chờ cho tới khi operation tiến triển đủ để trả kết quả hoặc lỗi. Với non-blocking I/O, lời gọi có thể trả ngay khi chưa có tiến triển, còn readiness/event-loop tổ chức việc quay lại sau. Độ trễ của disk/network vẫn tồn tại; khác biệt là cách chương trình tổ chức thời gian chờ và thread, không phải phép biến I/O thành tức thời.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.MentalModel/MentalModel.md", anchor: "blocking-io-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Vì sao garbage collector không thay thế được close() đối với file, socket hay channel?
+    answer: >-
+      GC quản lý lifetime của object Java trên heap, còn file descriptor/native handle là tài nguyên bên ngoài heap và thường có giới hạn ở OS. Nếu chờ GC, thời điểm release không xác định và ứng dụng có thể cạn handle hoặc giữ lock/resource lâu hơn dự kiến. Vì vậy code cần ownership rõ ràng và deterministic cleanup, thường qua try-with-resources.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.MentalModel/MentalModel.md", anchor: "resource-lifecycle"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Hãy giải thích contract của InputStream.read, partial read, EOF, available() và mark/reset. Những giả định sai phổ biến là gì?
+    answer: >-
+      `read()` trả byte 0..255 hoặc `-1` ở EOF; bulk read trả số byte thực tế và không hứa lấp đầy buffer. `available()` chỉ ước lượng số byte có thể đọc/skip mà không block, không phải tổng số byte còn lại. `mark/reset` chỉ đáng tin khi `markSupported()` là true. Bug phổ biến là xem một lần read là đủ, dùng toàn bộ buffer thay vì phần `count`, hoặc dùng available() để cấp phát toàn bộ payload.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.ByteStreams/ByteStreams.md", anchor: "read-contract"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      System.in, System.out/System.err và Console khác nhau thế nào? Vì sao System.console() có thể trả null trong IDE, CI hoặc khi redirect I/O?
+    answer: >-
+      `System.in` là standard input, còn `System.out` và `System.err` là `PrintStream` cho standard output/error; các stream này có thể bị redirect hoặc pipe, không nhất thiết gắn với terminal tương tác. `Console` biểu diễn interactive console và có API như `readPassword`; khi process không có console thật, `System.console()` có thể là null. Code portable phải có fallback hoặc contract rõ ràng thay vì giả định mọi môi trường đều có terminal.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.ByteStreams/ByteStreams.md", anchor: "standard-console-io"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      DataInputStream/DataOutputStream giải quyết bài toán gì mà raw byte stream chưa giải quyết? Hãy nói về field order, framing, readFully, EOF và writeUTF/readUTF.
+    answer: >-
+      Raw stream chỉ di chuyển bytes; typed binary I/O thêm contract để ghi/đọc primitive theo thứ tự field mà hai bên đã thống nhất. Reader phải biết schema/framing, validate length trước allocation và dùng `readFully` khi cần đúng N bytes; EOF giữa record thường là dữ liệu truncated chứ không phải kết thúc hợp lệ. `writeUTF/readUTF` dùng modified UTF-8 theo contract riêng của DataInput/DataOutput, không phải format UTF-8 text tổng quát để trao đổi tùy ý.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.ByteStreams/ByteStreams.md", anchor: "typed-binary-io"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Reader/Writer khác InputStream/OutputStream ở abstraction nào? Vì sao Reader.read(char[]) vẫn phải xử lý partial read và PrintWriter có error semantics đáng chú ý?
+    answer: >-
+      Reader/Writer làm việc với characters, còn byte stream làm việc với raw bytes. `Reader.read(char[])` vẫn trả số char thực tế, nên caller không được mặc định mảng đã đầy. `PrintWriter` tiện cho print/println/printf nhưng không propagate `IOException` từ các method ghi theo cách writer thông thường; khi cần biết lỗi I/O phải xem `checkError()`, nên convenience này không phù hợp mọi error-handling contract.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.CharacterStreams/CharacterStreams.md", anchor: "reader-writer"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      InputStreamReader/OutputStreamWriter và Charset đóng vai trò gì? Khi nào cần CharsetDecoder với REPORT thay vì chấp nhận replacement?
+    answer: >-
+      Bridge classes chịu trách nhiệm decode bytes thành characters và encode characters thành bytes theo một `Charset`. Nếu format/protocol yêu cầu dữ liệu hợp lệ tuyệt đối, silent replacement có thể che corruption; khi đó `CharsetDecoder`/`CharsetEncoder` với `CodingErrorAction.REPORT` giúp reject malformed/unmappable input. Charset là một phần của data contract, không nên để caller đoán từ môi trường nếu format đã quy định rõ.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.CharacterStreams/CharacterStreams.md", anchor: "charset-bridge"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Buffering cải thiện I/O như thế nào, flush() thực sự bảo đảm điều gì và vì sao flush không đồng nghĩa dữ liệu đã bền vững trên disk?
+    answer: >-
+      Buffering gom nhiều thao tác nhỏ trong memory để giảm số lần đi qua boundary đắt hơn tới tầng I/O bên dưới. `flush()` yêu cầu wrapper đẩy dữ liệu đang giữ xuống tầng tiếp theo, nhưng dữ liệu vẫn có thể nằm trong OS/filesystem/device cache. Durability là yêu cầu khác, có thể cần `FileChannel.force` hoặc cơ chế storage-specific; gọi flush/force quá thường xuyên cũng có cost nên phải xuất phát từ durability contract thật sự.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.BufferedIO/BufferedIO.md", anchor: "flush-semantics"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Vì sao java.io.File không nên được hiểu là “một file đang mở”, và tại sao code Java hiện đại thường ưu tiên Path/Files?
+    answer: >-
+      `File` chủ yếu là legacy pathname/metadata abstraction; tạo object File không mở file và target thậm chí có thể chưa tồn tại. `Path` tách representation đường dẫn khỏi `Files` là lớp thao tác filesystem, có model phong phú hơn cho attributes, links, copy/move options, tree walking và exception cụ thể. `File` vẫn xuất hiện ở API cũ, nhưng không nên là default chỉ vì tên của nó trực quan.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.File/File.md", anchor: "file-api-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Hãy giải thích quan hệ Path → FileSystem → FileSystemProvider → FileStore và vì sao mental model này quan trọng cho portability.
+    answer: >-
+      Mỗi `Path` thuộc một `FileSystem`; filesystem được triển khai bởi `FileSystemProvider`, còn `FileStore` mô tả backing storage/capability. Vì provider/filesystem khác nhau có thể hỗ trợ khác nhau về POSIX attributes, atomic move, symlink hay WatchService, code không nên suy luận capability từ máy developer. `Path.toFile()` cũng không universal cho non-default provider, nên modern code nên giữ `Path` và kiểm capability khi requirement phụ thuộc provider.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.PathFiles/PathFiles.md", anchor: "filesystem-provider-model"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      normalize(), toAbsolutePath(), toRealPath() và Files.isSameFile() trả lời những câu hỏi khác nhau thế nào, đặc biệt khi có symbolic link?
+    answer: >-
+      `normalize()` chỉ rút gọn cú pháp như `.` và `name/..` mà không truy cập filesystem. `toAbsolutePath()` tạo dạng absolute theo context hiện tại nhưng chưa chứng minh identity; `toRealPath()` truy cập filesystem, yêu cầu target tồn tại và resolve link theo option. Khi cần biết hai path có cùng file identity hay không, `Files.isSameFile` phù hợp hơn so với so sánh chuỗi hay normalize thuần cú pháp.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.PathFiles/PathFiles.md", anchor: "resolve-normalize"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Những boundary nào cần nhớ khi dùng Files.copy/move/delete và ATOMIC_MOVE? Vì sao “copy directory” không tự động nghĩa là recursive copy?
+    answer: >-
+      `Files.copy` với directory chỉ tạo directory đích tương ứng, không copy cả cây; delete cũng không recursive với directory không rỗng. Copy source symlink mặc định có thể follow target còn move di chuyển chính link. `ATOMIC_MOVE` phụ thuộc filesystem, có thể ném `AtomicMoveNotSupportedException`; các option khác bị bỏ qua và behavior khi target tồn tại có thể provider-specific, nên publish policy phải explicit thay vì dựa vào trực giác.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.PathFiles/PathFiles.md", anchor: "files-operations"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Temporary file/directory nên được quản lý ownership và cleanup thế nào? DELETE_ON_CLOSE có phải là lời giải cleanup tuyệt đối không?
+    answer: >-
+      Code tạo temp resource nên xác định rõ ai sở hữu nó và khi nào cleanup; temp directory chứa nhiều file thường cần cleanup theo tree thay vì chỉ xóa directory cha. `DELETE_ON_CLOSE` chỉ là một option hữu ích trong vài trường hợp và vẫn phụ thuộc provider/lifecycle của handle, không thay thế policy cleanup tổng thể. Nếu process crash hoặc resource không được đóng đúng, application vẫn cần hiểu boundary của cơ chế temp mà nó đang dùng.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.PathFiles/PathFiles.md", anchor: "temporary-files"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      File owner/permission attributes trong NIO.2 có portability boundary nào? Vì sao không nên giả định POSIX permission tồn tại ở mọi filesystem?
+    answer: >-
+      NIO.2 expose nhiều attribute view như basic, POSIX, DOS và owner, nhưng provider/store quyết định view nào được hỗ trợ. `FileStore.supportsFileAttributeView(...)` giúp kiểm capability, còn operation cụ thể vẫn có thể fail vì permission, race hoặc file state. Code portable phải xem permission model là capability của filesystem/provider thay vì hard-code giả định Unix trên mọi môi trường.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.PathFiles/PathFiles.md", anchor: "file-permissions-ownership"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Files.list/walk/find/lines trả java.util.stream.Stream, vậy tại sao vẫn phải close? Điều này nói gì về resource ownership của Stream API được tạo từ I/O?
+    answer: >-
+      Các stream này là Stream API ở mức xử lý phần tử nhưng phía dưới vẫn giữ directory/file resource mở trong lúc traversal hoặc reading. Vì vậy chúng có close lifecycle và nên nằm trong try-with-resources. Đây là ví dụ quan trọng cho thấy type `Stream<T>` không tự nói tài nguyên có external lifetime hay không; ownership phải được suy ra từ API tạo ra stream.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.PathFiles/PathFiles.md", anchor: "directory-stream-walk"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      WatchService nên được dùng với mental model nào? Vì sao không nên coi nó là transaction log chính xác của filesystem?
+    answer: >-
+      `WatchService` đăng ký directory và phát event create/modify/delete qua `WatchKey`; consumer lấy key bằng `take/poll`, đọc events rồi `reset()` key. Event có thể coalesce, `OVERFLOW` báo mất chi tiết, behavior phụ thuộc provider và việc watch không recursive mặc định. Vì vậy watcher phù hợp để phát hiện “có thay đổi, hãy kiểm tra lại trạng thái” hơn là làm audit log hoặc nguồn sự thật transaction-level.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.PathFiles/PathFiles.md", anchor: "watch-service-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Hãy mô tả state machine của Buffer với position/limit/capacity và vai trò của flip, clear, compact, mark/reset, rewind.
+    answer: >-
+      Khi ghi vào buffer, `position` tiến tới `limit`; sau đó `flip()` đặt limit thành lượng dữ liệu vừa ghi và position về 0 để đọc. `clear()` mở toàn bộ vùng cho pha ghi mới nhưng không xóa byte cũ; `compact()` giữ phần chưa đọc rồi chuẩn bị ghi tiếp. `rewind()` đọc lại cùng vùng từ đầu, còn mark/reset là bookmark tạm và bị discard bởi các transition nhất định. Hiểu sai state thường dẫn tới underflow/overflow hoặc đọc dữ liệu stale.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.BuffersChannels/BuffersChannels.md", anchor: "flip-clear-compact"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      ByteOrder là gì và tại sao endianness là correctness contract chứ không phải tuning detail?
+    answer: >-
+      Multi-byte primitive như int/long cần quy tắc xác định byte nào là phần high-order/low-order. `ByteBuffer` mặc định big-endian nhưng có thể đổi sang little-endian; cùng 4 bytes có thể cho int khác nhau tùy order. Vì vậy binary format/protocol phải quy định endianness và code phải cấu hình đúng trước `getInt/putInt` hoặc typed view, nếu không dữ liệu vẫn “đọc được” nhưng semantic value sai.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.BuffersChannels/BuffersChannels.md", anchor: "byte-order-structured-binary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Channel + Buffer model khác Stream model ở đâu? Scatter/gather giải quyết bài toán gì và tại sao nó không đồng nghĩa parallel I/O?
+    answer: >-
+      Channel tách conduit khỏi vùng chứa dữ liệu explicit là `Buffer`, nhờ đó code quản lý state/position và có các capability NIO cụ thể. Scattering read phân phối bytes vào nhiều buffer, gathering write lấy bytes từ nhiều buffer theo thứ tự, phù hợp layout kiểu header + body. Một operation vẫn có thể partial và không tự tạo thread hay parallelism; scatter/gather là multi-buffer transfer, không phải concurrent execution.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.BuffersChannels/BuffersChannels.md", anchor: "scatter-gather-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Heap ByteBuffer và direct ByteBuffer nên được chọn theo tiêu chí nào? Vì sao direct buffer không phải lựa chọn mặc định luôn nhanh hơn?
+    answer: >-
+      Heap buffer sống trong Java heap và thường thuận tiện cho allocation/access của application. Direct buffer dùng off-heap/native-friendly memory và có thể giảm một số copy trong native I/O path, nhưng allocation/deallocation đắt hơn và memory pressure khó thấy hơn trong heap metrics. Chỉ nên chọn direct buffer khi workload/channel path và benchmark chứng minh lợi ích, thay vì xem `allocateDirect` là optimization mặc định.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.BuffersChannels/BuffersChannels.md", anchor: "bytebuffer-types"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      FileChannel random access khác sequential stream như thế nào, và RandomAccessFile nằm ở đâu trong bức tranh này?
+    answer: >-
+      `FileChannel` hỗ trợ position và cả positional read/write không nhất thiết thay đổi channel position, nên phù hợp khi cần truy cập offset cụ thể. `RandomAccessFile` là API legacy hơn, vừa implement `DataInput/DataOutput` vừa có `seek`; channel lấy từ nó chia sẻ position liên quan với file pointer. Code mới thường ưu tiên FileChannel khi cần NIO capabilities, nhưng hiểu RandomAccessFile giúp đọc code cũ và thấy evolution của API.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.FileChannel/FileChannel.md", anchor: "filechannel-random-access"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      AsynchronousFileChannel khác FileChannel ở mô hình completion nào? Những trách nhiệm nào vẫn thuộc caller dù operation là async?
+    answer: >-
+      `AsynchronousFileChannel` thực hiện positional I/O và trả completion qua `Future` hoặc `CompletionHandler`, nên caller không cần block chính thread gọi cho tới khi operation xong. Nhưng caller vẫn phải quản lý channel lifetime, buffer lifetime, partial completion, failure và concurrency policy. Async không đảm bảo nhanh hơn; nó là orchestration model khác, còn executor/cancellation/memory-visibility sâu thuộc concurrency curriculum.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.FileChannel/FileChannel.md", anchor: "asynchronous-filechannel-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      transferTo/transferFrom và force() giải quyết hai bài toán khác nhau thế nào? Vì sao vẫn phải xử lý partial transfer và durability contract?
+    answer: >-
+      `transferTo/transferFrom` tối ưu hình dạng copy giữa channel/file nhưng số byte thực tế có thể nhỏ hơn requested, nên caller phải theo dõi progress nếu cần chuyển đủ. `force(false/true)` liên quan durability: yêu cầu đẩy content, và với true cả metadata cần thiết, xuống storage stack. Transfer API không bảo đảm durability; completion của copy và persistence sau failure là hai contract khác nhau.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.FileChannel/FileChannel.md", anchor: "filechannel-transfer"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      File lock và memory-mapped file có những boundary nào khiến chúng không nên được xem như “magic concurrency/performance solution”?
+    answer: >-
+      File lock chủ yếu là cơ chế coordination theo filesystem/OS; shared lock có thể bị nâng thành exclusive và semantics/advisory behavior phụ thuộc nền tảng, nên nó không thay Java thread lock. Memory mapping đưa file pages vào virtual-memory model, có page fault, size/window/lifetime và mutation/truncate boundary; đóng FileChannel không tự unmap mapping đã tạo. Cả hai đều cần requirement cụ thể thay vì dùng theo trực giác “nhanh hơn/an toàn hơn”.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.FileChannel/FileChannel.md", anchor: "file-lock-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Trong một chain wrapper như BufferedReader → InputStreamReader → InputStream, ai nên close resource? Try-with-resources giúp gì và không giải quyết được gì?
+    answer: >-
+      Ownership phải do design quyết định: thường component mở resource chịu trách nhiệm đóng, còn borrower không tự close tài nguyên của người khác. Với wrapper chain, close outer wrapper thường delegate xuống inner resource, nên tránh double-ownership mơ hồ. Try-with-resources bảo đảm deterministic close và close order, nhưng không tự quyết định ownership architecture hay biến shared resource thành an toàn để bất kỳ caller nào cũng đóng.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.ResourceManagement/ResourceManagement.md", anchor: "resource-ownership"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Native Java serialization mô hình hóa object graph như thế nào, và serialVersionUID/transient liên quan gì tới compatibility contract?
+    answer: >-
+      `ObjectOutputStream` ghi object graph reachable của các object Serializable, giữ reference relationships chứ không chỉ dump từng object độc lập. `serialVersionUID` tham gia kiểm tra compatibility giữa class descriptor lúc ghi và class khi đọc; `transient` loại field khỏi default serialized state nhưng không biến format thành schema ổn định. Vì serialization gắn chặt với Java class/version, nó không nên được chọn mặc định cho persistence hay network interchange lâu dài.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.Serialization/Serialization.md", anchor: "serialversionuid"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Vì sao deserialize dữ liệu không tin cậy là rủi ro bảo mật? ObjectInputFilter giúp gì và tại sao vẫn không biến native serialization thành format an toàn mặc định?
+    answer: >-
+      Deserialization có thể khiến JVM load/instantiate object graph và kích hoạt các gadget path nguy hiểm trước khi application “kiểm tra dữ liệu” theo cách thông thường. `ObjectInputFilter` có thể giới hạn class, depth, array size và graph size, nhưng filter phải được cấu hình trước lần đọc object đầu tiên và chỉ là defense-in-depth. Boundary tốt nhất vẫn là không deserialize native Java object stream từ nguồn không tin cậy nếu có format an toàn hơn.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.Serialization/Serialization.md", anchor: "serialization-security-risk"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Khi review một yêu cầu I/O mới, bạn sẽ chọn Stream/Reader/Files/Channel và chiến lược memory/error/performance theo trình tự nào?
+    answer: >-
+      Bắt đầu từ semantics của payload: bytes, text hay structured binary; sau đó xét size bound, sequential/random access, charset/byte order/framing, resource ownership và failure policy. Dữ liệu lớn nên streaming/chunking thay vì load-all; partial read/write và filesystem race phải là một phần của correctness. Chỉ tối ưu buffer size, direct buffer, transfer, mapping hoặc async sau khi đo được bottleneck cụ thể; API “mạnh hơn” không tự động đúng hơn hay nhanh hơn.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "11.ChoosingIO/ChoosingIO.md", anchor: "choose-stream-reader-channel"}
+    apiRelated: {controller: "", methodSignature: ""}
