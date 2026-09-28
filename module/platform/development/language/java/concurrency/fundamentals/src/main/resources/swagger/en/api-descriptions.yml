@@ -1,0 +1,660 @@
+BasicThreadController:
+  threadLifeCycle():
+    summary: Observe all Thread.State values
+    description: Drive a worker through NEW, RUNNABLE, TIMED_WAITING, BLOCKED, WAITING,
+      and TERMINATED. The experiment helps distinguish why each state occurs instead
+      of treating every waiting state as the same concept.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: threadLifeCycle
+    params: [
+      ]
+    path: com/example/learning/module/basic/controller/BasicThreadController.java
+    mapping: '@GetMapping("/thread-life-cycle")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /basic/thread-life-cycle
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: thread-state
+    aiGenerated: true
+    reviewed: false
+  processAndThread():
+    summary: Observe the JVM process and HTTP request Thread
+    description: Return the JVM PID together with the name, id, daemon flag, and state
+      of the Thread handling the HTTP request. The experiment shows that a request
+      is executed by a concrete Thread inside the JVM process.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: processAndThread
+    params: [
+      ]
+    path: com/example/learning/module/basic/controller/BasicThreadController.java
+    mapping: '@GetMapping("/process-thread")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /basic/process-thread
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: process-and-thread
+    aiGenerated: true
+    reviewed: false
+  startVsRun():
+    summary: Compare Thread.run() and Thread.start()
+    description: Run the same Runnable by calling run() directly and by calling start()
+      on a new Thread. The result shows that run() is a normal method call on the
+      caller Thread, while start() begins the lifecycle of a separate Thread.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: startVsRun
+    params: [
+      ]
+    path: com/example/learning/module/basic/controller/BasicThreadController.java
+    mapping: '@GetMapping("/start-vs-run")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /basic/start-vs-run
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: start-vs-run
+    aiGenerated: true
+    reviewed: false
+CreateThreadController:
+  createByRunnable():
+    summary: Run a Runnable on a dedicated Thread
+    description: Separate the work into a Runnable and pass that task to a Thread
+      for execution. The experiment clarifies that Runnable describes WHAT to run
+      while Thread determines WHERE execution happens.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: createByRunnable
+    params: [
+      ]
+    path: com/example/learning/module/basic/controller/CreateThreadController.java
+    mapping: '@GetMapping("/runnable")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /create/runnable
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: create-thread
+    aiGenerated: true
+    reviewed: false
+  createByCallable():
+    summary: Run Callable with FutureTask and Thread
+    description: Wrap a Callable in FutureTask so it can be executed by a direct Thread,
+      then obtain the result through FutureTask.get(). The experiment shows that Callable
+      can produce a result but does not create or run on a Thread by itself.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: createByCallable
+    params: [
+      ]
+    path: com/example/learning/module/basic/controller/CreateThreadController.java
+    mapping: '@GetMapping("/callable")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /create/callable
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: create-thread
+    aiGenerated: true
+    reviewed: false
+  createByExtends():
+    summary: Create a Thread by extending Thread
+    description: Instantiate a Thread subclass whose work is implemented directly
+      in run(). The experiment demonstrates how task logic and the execution mechanism
+      become coupled when inheriting from Thread.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: createByExtends
+    params: [
+      ]
+    path: com/example/learning/module/basic/controller/CreateThreadController.java
+    mapping: '@GetMapping("/extends")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /create/extends
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: create-thread
+    aiGenerated: true
+    reviewed: false
+DaemonThreadController:
+  inspectDaemonRules():
+    summary: Observe daemon flag and inheritance
+    description: Inspect the daemon status of the request Thread, a child Thread that
+      inherits the flag, and a child explicitly configured with setDaemon(true) before
+      start. The endpoint demonstrates daemon properties and inheritance, not JVM
+      shutdown timing.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: inspectDaemonRules
+    params: [
+      ]
+    path: com/example/learning/module/basic/controller/DaemonThreadController.java
+    mapping: '@GetMapping("/inspect")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /daemon/inspect
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: daemon-thread
+    aiGenerated: true
+    reviewed: false
+ThreadLocalController:
+  isolation():
+    summary: Observe ThreadLocal isolation
+    description: Two Threads use the same ThreadLocal object but set and read different
+      request ids. The experiment demonstrates that values are associated with each
+      Thread rather than being a single shared mutable value protected by a lock.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: isolation
+    params: [
+      ]
+    path: com/example/learning/module/context/controller/ThreadLocalController.java
+    mapping: '@GetMapping("/isolation")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /context/isolation
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: thread-local-isolation
+    aiGenerated: true
+    reviewed: false
+  inheritance():
+    summary: Observe InheritableThreadLocal at Thread creation
+    description: The parent sets context A, creates a child Thread, then changes the
+      context to B before the child starts. The child still sees A, showing that inheritance
+      occurs at the Thread creation boundary rather than on each task execution.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: inheritance
+    params: [
+      ]
+    path: com/example/learning/module/context/controller/ThreadLocalController.java
+    mapping: '@GetMapping("/inheritance")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /context/inheritance
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: inheritable-thread-local
+    aiGenerated: true
+    reviewed: false
+  poolReuseProblem():
+    summary: Demonstrate stale context with worker reuse
+    description: Use a worker pool created once to show that InheritableThreadLocal
+      does not refresh context for every task submission. A later task can still see
+      the context inherited when the worker was originally created.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: poolReuseProblem
+    params: [
+      ]
+    path: com/example/learning/module/context/controller/ThreadLocalController.java
+    mapping: '@GetMapping("/pool-reuse-problem")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /context/pool-reuse-problem
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: thread-pool-problem
+    aiGenerated: true
+    reviewed: false
+  explicitPropagation():
+    summary: Propagate context with capture, restore, and cleanup
+    description: Create a worker before the parent has context, then wrap the task
+      to capture context at submission, restore it on the worker, and clean it up
+      afterward. The experiment demonstrates explicit context propagation that remains
+      safe when workers are reused.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: explicitPropagation
+    params: [
+      ]
+    path: com/example/learning/module/context/controller/ThreadLocalController.java
+    mapping: '@GetMapping("/explicit-propagation")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /context/explicit-propagation
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: context-propagation
+    aiGenerated: true
+    reviewed: false
+InterruptionController:
+  interruptBusyWorker():
+    summary: Cancel a CPU loop with cooperative interruption
+    description: Start a worker running a busy loop with an isInterrupted() cancellation
+      point, then call interrupt(). The worker observes the signal itself, exits the
+      loop, and terminates rather than being forcibly killed by the JVM.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: interruptBusyWorker
+    params: [
+      ]
+    path: com/example/learning/module/interruption/controller/InterruptionController.java
+    mapping: '@GetMapping("/busy-loop")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /interruption/busy-loop
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: interrupt-mental-model
+    aiGenerated: true
+    reviewed: false
+  inspectInterruptFlag():
+    summary: Compare isInterrupted() and Thread.interrupted()
+    description: Interrupt a worker and read interruption status repeatedly with both
+      APIs. The experiment shows that isInterrupted() only observes the flag while
+      Thread.interrupted() reads and clears the current Thread's flag.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: inspectInterruptFlag
+    params: [
+      ]
+    path: com/example/learning/module/interruption/controller/InterruptionController.java
+    mapping: '@GetMapping("/flag")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /interruption/flag
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: interrupt-flag
+    aiGenerated: true
+    reviewed: false
+  interruptSleepingWorker():
+    summary: Interrupt a sleeping Thread and restore the flag
+    description: Interrupt a worker blocked in Thread.sleep() to receive InterruptedException,
+      observe that the flag is cleared in the catch block, then restore it with Thread.currentThread().interrupt().
+      The experiment connects the exception path with the interruption signal.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: interruptSleepingWorker
+    params: [
+      ]
+    path: com/example/learning/module/interruption/controller/InterruptionController.java
+    mapping: '@GetMapping("/sleep")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /interruption/sleep
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: interrupted-exception
+    aiGenerated: true
+    reviewed: false
+  cancelWithCleanup():
+    summary: Clean up resources when a task is cancelled
+    description: Simulate a worker holding a resource and interrupt it while work
+      is in progress. A finally block cleans the resource whether cancellation is
+      observed through the loop condition or InterruptedException, demonstrating deterministic
+      cleanup.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: cancelWithCleanup
+    params: [
+      ]
+    path: com/example/learning/module/interruption/controller/InterruptionController.java
+    mapping: '@GetMapping("/cleanup")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /interruption/cleanup
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: interrupt-cleanup
+    aiGenerated: true
+    reviewed: false
+  interruptSynchronizedWaiter():
+    summary: Show that synchronized monitor acquisition is not interruptible
+    description: Hold an intrinsic monitor so a worker becomes BLOCKED, then interrupt
+      that worker. It still waits until the monitor is released even though its interrupt
+      flag is set, then acquires the monitor and can observe the signal.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: interruptSynchronizedWaiter
+    params: [
+      ]
+    path: com/example/learning/module/interruption/controller/InterruptionController.java
+    mapping: '@GetMapping("/synchronized-blocked")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /interruption/synchronized-blocked
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: interrupt-limitations
+    aiGenerated: true
+    reviewed: false
+  stopFlagVsInterrupt():
+    summary: Compare a stop flag with interrupt while blocked
+    description: Set a volatile stop flag while a worker is sleeping and observe that
+      it remains TIMED_WAITING, then use interrupt() to wake the blocking operation.
+      The experiment shows that an application state flag does not integrate with
+      Java's interruption protocol.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: stopFlagVsInterrupt
+    params: [
+      ]
+    path: com/example/learning/module/interruption/controller/InterruptionController.java
+    mapping: '@GetMapping("/stop-flag-vs-interrupt")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /interruption/stop-flag-vs-interrupt
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: interrupt-vs-stop-flag
+    aiGenerated: true
+    reviewed: false
+ConcurrencyProblemController:
+  raceCondition():
+    summary: Create a lost update to observe a race condition
+    description: Coordinate two Threads so they read the same snapshot before either
+      is allowed to write, creating a deterministic lost update. The result compares
+      the expected sequential value with the actual value and illustrates an atomicity
+      problem in read-modify-write logic.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: raceCondition
+    params: [
+      ]
+    path: com/example/learning/module/concurrency/problem/controller/ConcurrencyProblemController.java
+    mapping: '@GetMapping("/race-condition")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /concurrency/problem/race-condition
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: shared-state-race-condition
+    aiGenerated: true
+    reviewed: false
+  startJoinHappensBefore():
+    summary: Observe happens-before from start() and join()
+    description: Write data before Thread.start(), let the worker read and update
+      state, then read again after Thread.join(). The experiment shows that start
+      and join provide memory-consistency guarantees in addition to lifecycle coordination.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: startJoinHappensBefore
+    params: [
+      ]
+    path: com/example/learning/module/concurrency/problem/controller/ConcurrencyProblemController.java
+    mapping: '@GetMapping("/happens-before-start-join")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /concurrency/problem/happens-before-start-join
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: happens-before
+    aiGenerated: true
+    reviewed: false
+  volatilePublication():
+    summary: Publish data through a volatile flag
+    description: A writer updates plain data and then publishes a volatile flag; a
+      reader accesses the data only after observing the flag. The experiment demonstrates
+      the happens-before edge created by volatile write/read and how earlier writes
+      become visible.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: volatilePublication
+    params: [
+      ]
+    path: com/example/learning/module/concurrency/problem/controller/ConcurrencyProblemController.java
+    mapping: '@GetMapping("/volatile-publication")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /concurrency/problem/volatile-publication
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: volatile-publication
+    aiGenerated: true
+    reviewed: false
+  volatileIsNotAtomic():
+    summary: Prove volatile does not provide atomicity
+    description: Perform a compound increment on volatile state with controlled interleaving
+      to create a lost update. The experiment shows that volatile provides visibility
+      and ordering but does not make a read-modify-write sequence atomic.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: volatileIsNotAtomic
+    params: [
+      ]
+    path: com/example/learning/module/concurrency/problem/controller/ConcurrencyProblemController.java
+    mapping: '@GetMapping("/volatile-not-atomic")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /concurrency/problem/volatile-not-atomic
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: volatile-publication
+    aiGenerated: true
+    reviewed: false
+  deadlockRisk():
+    summary: Observe circular lock dependency safely
+    description: Two workers hold different first locks in opposite order and use
+      tryLock for the second lock. The experiment reproduces the shape of circular
+      wait while using timeouts and cleanup so no permanent deadlock remains.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: deadlockRisk
+    params: [
+      ]
+    path: com/example/learning/module/concurrency/problem/controller/ConcurrencyProblemController.java
+    mapping: '@GetMapping("/deadlock-risk")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /concurrency/problem/deadlock-risk
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: progress-problems
+    aiGenerated: true
+    reviewed: false
+  deadlockPrevention():
+    summary: Prevent deadlock with global lock ordering
+    description: Multiple workers need the same two locks but are required to acquire
+      them in the same A-then-B order. The experiment shows that consistent lock ordering
+      removes circular-wait dependency by design.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: deadlockPrevention
+    params: [
+      ]
+    path: com/example/learning/module/concurrency/problem/controller/ConcurrencyProblemController.java
+    mapping: '@GetMapping("/deadlock-prevention")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /concurrency/problem/deadlock-prevention
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: deadlock-prevention
+    aiGenerated: true
+    reviewed: false
+  boundedLivelock():
+    summary: Simulate livelock with bounded execution
+    description: Two workers repeatedly react and back off symmetrically, staying
+      active without making progress for a finite number of rounds. The experiment
+      demonstrates active-without-progress behavior without leaving an infinite loop.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: boundedLivelock
+    params: [
+      ]
+    path: com/example/learning/module/concurrency/problem/controller/ConcurrencyProblemController.java
+    mapping: '@GetMapping("/livelock")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /concurrency/problem/livelock
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: progress-problems
+    aiGenerated: true
+    reviewed: false

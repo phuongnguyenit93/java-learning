@@ -1,0 +1,654 @@
+BasicThreadController:
+  threadLifeCycle():
+    summary: Quan sát các trạng thái Thread.State
+    description: Điều khiển một worker đi qua NEW, RUNNABLE, TIMED_WAITING, BLOCKED,
+      WAITING và TERMINATED. Experiment giúp phân biệt nguyên nhân của từng trạng
+      thái thay vì gom mọi trạng thái chờ thành một khái niệm chung.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: threadLifeCycle
+    params: [
+      ]
+    path: com/example/learning/module/basic/controller/BasicThreadController.java
+    mapping: '@GetMapping("/thread-life-cycle")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /basic/thread-life-cycle
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: thread-state
+    aiGenerated: true
+    reviewed: false
+  processAndThread():
+    summary: Quan sát Process và HTTP request Thread
+    description: Trả về PID của JVM cùng tên, id, daemon flag và state của Thread
+      đang xử lý HTTP request. Experiment cho thấy request thực sự chạy trên một execution
+      thread cụ thể bên trong JVM process.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: processAndThread
+    params: [
+      ]
+    path: com/example/learning/module/basic/controller/BasicThreadController.java
+    mapping: '@GetMapping("/process-thread")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /basic/process-thread
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: process-and-thread
+    aiGenerated: true
+    reviewed: false
+  startVsRun():
+    summary: So sánh Thread.run() và Thread.start()
+    description: Chạy cùng một Runnable bằng cách gọi run() trực tiếp và bằng start()
+      trên một Thread mới. Kết quả cho thấy run() chỉ là method call trên caller thread,
+      còn start() mới bắt đầu lifecycle của một Thread riêng.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: startVsRun
+    params: [
+      ]
+    path: com/example/learning/module/basic/controller/BasicThreadController.java
+    mapping: '@GetMapping("/start-vs-run")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /basic/start-vs-run
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: start-vs-run
+    aiGenerated: true
+    reviewed: false
+CreateThreadController:
+  createByRunnable():
+    summary: Chạy Runnable trên một Thread riêng
+    description: Tách công việc thành Runnable rồi truyền task đó cho một Thread để
+      thực thi. Experiment làm rõ Runnable mô tả WHAT to run còn Thread quyết định
+      WHERE execution happens.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: createByRunnable
+    params: [
+      ]
+    path: com/example/learning/module/basic/controller/CreateThreadController.java
+    mapping: '@GetMapping("/runnable")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /create/runnable
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: create-thread
+    aiGenerated: true
+    reviewed: false
+  createByCallable():
+    summary: Chạy Callable bằng FutureTask và Thread
+    description: Bọc Callable bằng FutureTask để nó có thể được một Thread trực tiếp
+      thực thi, sau đó lấy result qua FutureTask.get(). Experiment chứng minh Callable
+      có kết quả nhưng không tự tạo hay tự chạy trên Thread mới.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: createByCallable
+    params: [
+      ]
+    path: com/example/learning/module/basic/controller/CreateThreadController.java
+    mapping: '@GetMapping("/callable")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /create/callable
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: create-thread
+    aiGenerated: true
+    reviewed: false
+  createByExtends():
+    summary: Tạo Thread bằng cách extends Thread
+    description: Khởi tạo một subclass của Thread và chạy task được gắn trực tiếp
+      vào run(). Experiment minh họa cách task và execution mechanism bị coupling
+      khi kế thừa Thread.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: createByExtends
+    params: [
+      ]
+    path: com/example/learning/module/basic/controller/CreateThreadController.java
+    mapping: '@GetMapping("/extends")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /create/extends
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: create-thread
+    aiGenerated: true
+    reviewed: false
+DaemonThreadController:
+  inspectDaemonRules():
+    summary: Quan sát daemon flag và inheritance
+    description: Quan sát daemon status của request thread, child thread kế thừa daemon
+      flag và một child được setDaemon(true) trước khi start. Endpoint chỉ chứng minh
+      daemon property và inheritance, không dùng để kết luận thời điểm JVM shutdown.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: inspectDaemonRules
+    params: [
+      ]
+    path: com/example/learning/module/basic/controller/DaemonThreadController.java
+    mapping: '@GetMapping("/inspect")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /daemon/inspect
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: daemon-thread
+    aiGenerated: true
+    reviewed: false
+ThreadLocalController:
+  isolation():
+    summary: Quan sát ThreadLocal isolation
+    description: Hai Thread dùng cùng một ThreadLocal object nhưng set và đọc hai
+      request id khác nhau. Experiment chứng minh value được gắn theo từng Thread
+      thay vì là shared mutable value cần lock.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: isolation
+    params: [
+      ]
+    path: com/example/learning/module/context/controller/ThreadLocalController.java
+    mapping: '@GetMapping("/isolation")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /context/isolation
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: thread-local-isolation
+    aiGenerated: true
+    reviewed: false
+  inheritance():
+    summary: Quan sát InheritableThreadLocal khi tạo Thread
+    description: Parent đặt context A, tạo child Thread, sau đó đổi context thành
+      B trước khi child start. Child vẫn thấy A, cho thấy inheritance xảy ra tại creation
+      boundary chứ không được copy lại mỗi lần task chạy.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: inheritance
+    params: [
+      ]
+    path: com/example/learning/module/context/controller/ThreadLocalController.java
+    mapping: '@GetMapping("/inheritance")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /context/inheritance
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: inheritable-thread-local
+    aiGenerated: true
+    reviewed: false
+  poolReuseProblem():
+    summary: Chứng minh stale context khi worker được reuse
+    description: Dùng worker pool được tạo một lần để cho thấy InheritableThreadLocal
+      không tự cập nhật context mới theo từng task submission. Task sau có thể vẫn
+      thấy context cũ được inherit khi worker ban đầu được tạo.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: poolReuseProblem
+    params: [
+      ]
+    path: com/example/learning/module/context/controller/ThreadLocalController.java
+    mapping: '@GetMapping("/pool-reuse-problem")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /context/pool-reuse-problem
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: thread-pool-problem
+    aiGenerated: true
+    reviewed: false
+  explicitPropagation():
+    summary: Truyền context theo capture, restore và cleanup
+    description: Tạo worker trước khi parent có context rồi wrap task để capture context
+      ở submission boundary, restore trên worker và cleanup sau execution. Experiment
+      minh họa pattern explicit context propagation an toàn với worker reuse.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: explicitPropagation
+    params: [
+      ]
+    path: com/example/learning/module/context/controller/ThreadLocalController.java
+    mapping: '@GetMapping("/explicit-propagation")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /context/explicit-propagation
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: context-propagation
+    aiGenerated: true
+    reviewed: false
+InterruptionController:
+  interruptBusyWorker():
+    summary: Hủy CPU loop bằng cooperative interruption
+    description: Start một worker chạy busy loop có cancellation point dựa trên isInterrupted(),
+      sau đó gửi interrupt(). Worker tự quan sát signal, thoát loop và kết thúc thay
+      vì bị JVM cưỡng bức kill.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: interruptBusyWorker
+    params: [
+      ]
+    path: com/example/learning/module/interruption/controller/InterruptionController.java
+    mapping: '@GetMapping("/busy-loop")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /interruption/busy-loop
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: interrupt-mental-model
+    aiGenerated: true
+    reviewed: false
+  inspectInterruptFlag():
+    summary: So sánh isInterrupted() và Thread.interrupted()
+    description: Interrupt worker rồi đọc interrupt status nhiều lần bằng hai API.
+      Experiment cho thấy isInterrupted() chỉ quan sát flag còn Thread.interrupted()
+      đọc và clear flag của current thread.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: inspectInterruptFlag
+    params: [
+      ]
+    path: com/example/learning/module/interruption/controller/InterruptionController.java
+    mapping: '@GetMapping("/flag")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /interruption/flag
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: interrupt-flag
+    aiGenerated: true
+    reviewed: false
+  interruptSleepingWorker():
+    summary: Interrupt Thread đang sleep và restore flag
+    description: Interrupt một worker đang Thread.sleep() để nhận InterruptedException,
+      quan sát flag đã bị clear trong catch rồi restore bằng Thread.currentThread().interrupt().
+      Experiment nối exception path với interruption signal.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: interruptSleepingWorker
+    params: [
+      ]
+    path: com/example/learning/module/interruption/controller/InterruptionController.java
+    mapping: '@GetMapping("/sleep")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /interruption/sleep
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: interrupted-exception
+    aiGenerated: true
+    reviewed: false
+  cancelWithCleanup():
+    summary: Cleanup tài nguyên khi task bị cancel
+    description: Mô phỏng worker đang giữ resource rồi gửi interrupt trong lúc làm
+      việc. finally luôn cleanup resource dù cancellation được quan sát qua loop condition
+      hay InterruptedException, chứng minh cancellation cần deterministic cleanup.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: cancelWithCleanup
+    params: [
+      ]
+    path: com/example/learning/module/interruption/controller/InterruptionController.java
+    mapping: '@GetMapping("/cleanup")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /interruption/cleanup
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: interrupt-cleanup
+    aiGenerated: true
+    reviewed: false
+  interruptSynchronizedWaiter():
+    summary: Chứng minh synchronized monitor acquisition không interruptible
+    description: Giữ intrinsic monitor để worker rơi vào BLOCKED rồi gọi interrupt().
+      Worker vẫn phải chờ monitor được release dù interrupt flag đã set, sau đó mới
+      acquire monitor và quan sát signal.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: interruptSynchronizedWaiter
+    params: [
+      ]
+    path: com/example/learning/module/interruption/controller/InterruptionController.java
+    mapping: '@GetMapping("/synchronized-blocked")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /interruption/synchronized-blocked
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: interrupt-limitations
+    aiGenerated: true
+    reviewed: false
+  stopFlagVsInterrupt():
+    summary: So sánh stop flag và interrupt khi worker block
+    description: Set volatile stop flag khi worker đang sleep và quan sát worker vẫn
+      bị TIMED_WAITING, sau đó dùng interrupt() để đánh thức blocking operation. Experiment
+      làm rõ state flag không tích hợp với interruption protocol của Java.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: stopFlagVsInterrupt
+    params: [
+      ]
+    path: com/example/learning/module/interruption/controller/InterruptionController.java
+    mapping: '@GetMapping("/stop-flag-vs-interrupt")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /interruption/stop-flag-vs-interrupt
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: interrupt-vs-stop-flag
+    aiGenerated: true
+    reviewed: false
+ConcurrencyProblemController:
+  raceCondition():
+    summary: Tạo lost update để quan sát race condition
+    description: Điều phối hai Thread cùng đọc một snapshot rồi mới được phép ghi
+      để tạo lost update một cách deterministic. Kết quả so sánh expected sequential
+      result với actual result và minh họa atomicity problem của read-modify-write.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: raceCondition
+    params: [
+      ]
+    path: com/example/learning/module/concurrency/problem/controller/ConcurrencyProblemController.java
+    mapping: '@GetMapping("/race-condition")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /concurrency/problem/race-condition
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: shared-state-race-condition
+    aiGenerated: true
+    reviewed: false
+  startJoinHappensBefore():
+    summary: Quan sát happens-before của start() và join()
+    description: Ghi dữ liệu trước Thread.start(), để worker đọc và ghi dữ liệu mới,
+      rồi đọc lại sau Thread.join(). Experiment chứng minh start và join không chỉ
+      phối hợp lifecycle mà còn tạo memory-consistency guarantees.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: startJoinHappensBefore
+    params: [
+      ]
+    path: com/example/learning/module/concurrency/problem/controller/ConcurrencyProblemController.java
+    mapping: '@GetMapping("/happens-before-start-join")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /concurrency/problem/happens-before-start-join
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: happens-before
+    aiGenerated: true
+    reviewed: false
+  volatilePublication():
+    summary: Publish dữ liệu bằng volatile flag
+    description: Writer ghi plain data rồi publish bằng một volatile flag; reader
+      chỉ đọc data sau khi quan sát flag. Experiment minh họa volatile write/read
+      tạo happens-before edge giúp publish các write xảy ra trước đó.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: volatilePublication
+    params: [
+      ]
+    path: com/example/learning/module/concurrency/problem/controller/ConcurrencyProblemController.java
+    mapping: '@GetMapping("/volatile-publication")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /concurrency/problem/volatile-publication
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: volatile-publication
+    aiGenerated: true
+    reviewed: false
+  volatileIsNotAtomic():
+    summary: Chứng minh volatile không đảm bảo atomicity
+    description: Thực hiện compound increment trên volatile state với interleaving
+      được điều khiển để tạo lost update. Experiment cho thấy volatile cung cấp visibility
+      và ordering nhưng không biến read-modify-write thành một atomic operation.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: volatileIsNotAtomic
+    params: [
+      ]
+    path: com/example/learning/module/concurrency/problem/controller/ConcurrencyProblemController.java
+    mapping: '@GetMapping("/volatile-not-atomic")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /concurrency/problem/volatile-not-atomic
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: volatile-publication
+    aiGenerated: true
+    reviewed: false
+  deadlockRisk():
+    summary: Quan sát circular lock dependency an toàn
+    description: Hai worker giữ hai lock theo thứ tự đối nghịch rồi dùng tryLock để
+      thử lấy lock còn lại. Experiment tái hiện hình dạng circular wait nhưng có timeout
+      và cleanup để không tạo permanent deadlock.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: deadlockRisk
+    params: [
+      ]
+    path: com/example/learning/module/concurrency/problem/controller/ConcurrencyProblemController.java
+    mapping: '@GetMapping("/deadlock-risk")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /concurrency/problem/deadlock-risk
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: progress-problems
+    aiGenerated: true
+    reviewed: false
+  deadlockPrevention():
+    summary: Phòng deadlock bằng global lock ordering
+    description: Cho nhiều worker cần cùng hai lock nhưng bắt buộc acquire theo cùng
+      thứ tự A rồi B. Experiment cho thấy consistent lock ordering loại bỏ circular-wait
+      dependency ngay từ design.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: deadlockPrevention
+    params: [
+      ]
+    path: com/example/learning/module/concurrency/problem/controller/ConcurrencyProblemController.java
+    mapping: '@GetMapping("/deadlock-prevention")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /concurrency/problem/deadlock-prevention
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: deadlock-prevention
+    aiGenerated: true
+    reviewed: false
+  boundedLivelock():
+    summary: Mô phỏng livelock theo cách bounded
+    description: Hai worker liên tục phản ứng và back off đối xứng nên vẫn hoạt động
+      nhưng không tạo progress trong số vòng hữu hạn. Experiment minh họa active-without-progress
+      mà không để lại infinite loop.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: boundedLivelock
+    params: [
+      ]
+    path: com/example/learning/module/concurrency/problem/controller/ConcurrencyProblemController.java
+    mapping: '@GetMapping("/livelock")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /concurrency/problem/livelock
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: progress-problems
+    aiGenerated: true
+    reviewed: false

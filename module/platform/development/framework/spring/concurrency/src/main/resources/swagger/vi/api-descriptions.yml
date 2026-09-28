@@ -1,0 +1,56 @@
+TaskExecutorController:
+  asyncWithContext():
+    summary: Chạy @Async với custom executor và context propagation
+    description: Đặt DemoContext, MDC và RequestAttributes trên caller rồi gọi bean
+      @Async sử dụng custom ThreadPoolTaskExecutor. TaskDecorator capture, restore
+      và cleanup context để response chứng minh worker nhận đúng request context trên
+      Thread khác.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: asyncWithContext
+    params: [
+      ]
+    path: com/example/learning/module/executor/controller/TaskExecutorController.java
+    mapping: '@GetMapping("/async-context")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-executor/async-context
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: spring-async-demo
+    aiGenerated: true
+    reviewed: false
+  asyncVoidException():
+    summary: Quan sát exception của void @Async
+    description: Gọi một void @Async method cố tình throw và quan sát AsyncUncaughtExceptionHandler
+      nhận failure qua correlation id. Experiment cũng phân biệt exception trong method
+      body với rejection xảy ra đồng bộ tại submission boundary.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: asyncVoidException
+    params: [
+      ]
+    path: com/example/learning/module/executor/controller/TaskExecutorController.java
+    mapping: '@GetMapping("/void-exception")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-executor/void-exception
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: async-return-type
+    aiGenerated: true
+    reviewed: false

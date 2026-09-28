@@ -1,0 +1,14 @@
+version: 1
+children:
+  fundamentals:
+    order: 1
+  high-level-utils:
+    order: 2
+  executor-service:
+    order: 3
+  fork-join:
+    order: 4
+  async-programming:
+    order: 5
+  virtual-threads:
+    order: 6

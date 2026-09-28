@@ -1,0 +1,137 @@
+VirtualThreadController:
+  basic():
+    summary: Quan sát thuộc tính cơ bản của Virtual Thread
+    description: Tạo một Virtual Thread Java 2. và trả về isVirtual, daemon flag,
+      priority cùng state sau join. Experiment làm rõ Virtual Thread vẫn là Thread
+      nhưng có lifecycle properties khác Platform Thread.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: basic
+    params: [
+      ]
+    path: com/example/learning/module/virtualThread/controller/VirtualThreadController.java
+    mapping: '@GetMapping("/basic")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /virtual-thread/basic
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: virtual-thread-basic
+    aiGenerated: true
+    reviewed: false
+  creationApi():
+    summary: So sánh API tạo Virtual Thread trực tiếp
+    description: Tạo Virtual Thread bằng Thread.startVirtualThread() và Thread.ofVirtual().start(),
+      sau đó join cả hai. Experiment chứng minh Virtual Thread có thể được tạo trực
+      tiếp mà không bắt buộc đi qua ExecutorService.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: creationApi
+    params: [
+      ]
+    path: com/example/learning/module/virtualThread/controller/VirtualThreadController.java
+    mapping: '@GetMapping("/creation-api")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /virtual-thread/creation-api
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: virtual-thread-creation
+    aiGenerated: true
+    reviewed: false
+  blockingScale():
+    summary: So sánh blocking task trên platform pool và Virtual Thread
+    description: Chạy cùng một nhóm sleep-based blocking task trên fixed platform
+      pool và virtual-thread-per-task executor rồi đo thời gian minh họa. Kết quả
+      dùng để quan sát concurrency shape, không phải benchmark production.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: blockingScale
+    params: [
+      ]
+    path: com/example/learning/module/virtualThread/controller/VirtualThreadController.java
+    mapping: '@GetMapping("/blocking-scale")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /virtual-thread/blocking-scale
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: virtual-executor
+    aiGenerated: true
+    reviewed: false
+  limitedResource():
+    summary: Giới hạn downstream concurrency khi dùng Virtual Thread
+    description: Tạo nhiều Virtual Thread nhưng dùng Semaphore để chỉ cho một số task
+      hữu hạn cùng vào external-resource section. Experiment chứng minh Virtual Thread
+      rẻ không làm database, API hoặc resource downstream trở thành vô hạn.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: limitedResource
+    params: [
+      ]
+    path: com/example/learning/module/virtualThread/controller/VirtualThreadController.java
+    mapping: '@GetMapping("/limited-resource")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /virtual-thread/limited-resource
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: resource-limits
+    aiGenerated: true
+    reviewed: false
+  threadLocal():
+    summary: Quan sát ThreadLocal trên Virtual Thread
+    description: Dùng ThreadLocal và InheritableThreadLocal trên nhiều Virtual Thread
+      để quan sát isolation, cleanup, inheritance mặc định và khả năng tắt inheritance
+      bằng builder. Experiment nhấn mạnh Virtual Thread không thay đổi ThreadLocal
+      lifecycle rules.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: threadLocal
+    params: [
+      ]
+    path: com/example/learning/module/virtualThread/controller/VirtualThreadController.java
+    mapping: '@GetMapping("/thread-local")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /virtual-thread/thread-local
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: virtual-thread-thread-local
+    aiGenerated: true
+    reviewed: false

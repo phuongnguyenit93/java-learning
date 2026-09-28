@@ -1,0 +1,56 @@
+# <interview-schema>
+# Cấu trúc câu hỏi Interview
+# schema-version: 2
+#
+# questions [kiểu: list; bắt buộc; mặc định: []]
+#   Danh sách câu hỏi Interview của module trong language hiện tại.
+#   mỗi phần tử:
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi phỏng vấn hiển thị cho người học.
+#     answer [kiểu: string; bắt buộc; mặc định: ""]
+#       Câu trả lời tham khảo, chỉ hiển thị khi người học chủ động mở.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu nội dung được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu nội dung đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+# </interview-schema>
+
+questions:
+  - question: >-
+      Context propagation đúng qua Executor hoặc Spring TaskDecorator nên theo flow nào?
+    answer: >-
+      Mental model là capture context tại submission boundary, restore nó trên worker trước khi task chạy, rồi cleanup hoặc restore previous state trong finally. Spring TaskDecorator là nơi phù hợp để đóng gói pattern này cho ThreadPoolTaskExecutor, ví dụ với correlation id, MDC hoặc RequestAttributes. Propagation không kéo dài lifecycle của HTTP request, nên khi có thể nên capture các immutable value thực sự cần thay vì giữ request object quá lâu.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.Spring_Task_Executor/SpringExecutor.md"
+      anchor: "task-decorator"
+    apiRelated:
+      controller: "TaskExecutorController"
+      methodSignature: "asyncWithContext()"
+
+  - question: >-
+      @Async hoạt động như thế nào và vì sao self-invocation có thể không async?
+    answer: >-
+      @Async hoạt động qua Spring async infrastructure và proxy/interceptor; @EnableAsync thường được dùng để bật infrastructure. Khi invocation đi qua proxy, method được dispatch tới TaskExecutor được resolve. Nếu một method gọi trực tiếp một @Async method khác trên chính this, lời gọi có thể bypass proxy nên interception không xảy ra. Với void @Async, caller không có Future để nhận failure; cần AsyncUncaughtExceptionHandler/logging/metrics và vẫn phải xử lý submission rejection riêng.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.Spring_Task_Executor/SpringExecutor.md"
+      anchor: "async-annotation"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+

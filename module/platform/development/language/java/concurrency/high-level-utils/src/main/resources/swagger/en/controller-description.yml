@@ -1,0 +1,12 @@
+CoordinationController:
+  description: |-
+    <h2>Coordination Controller</h2>
+    <p>A collection of Thread coordination primitives including join, wait/notify, Condition, LockSupport, BlockingQueue, and higher-level synchronizers.</p>
+  readmeRelated:
+    file: 2.Coordination/Coordination.md
+SynchronizationController:
+  description: |-
+    <h2>Synchronization Controller</h2>
+    <p>Experiments with synchronized, Lock, ReadWriteLock, StampedLock, atomic/CAS tools, and concurrent collections for protecting shared mutable state.</p>
+  readmeRelated:
+    file: 1.Synchronization/Synchronization.md

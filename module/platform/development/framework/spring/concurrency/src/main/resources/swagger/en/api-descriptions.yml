@@ -1,0 +1,57 @@
+TaskExecutorController:
+  asyncWithContext():
+    summary: Run @Async with a custom executor and context propagation
+    description: Set DemoContext, MDC, and RequestAttributes on the caller, then invoke
+      an @Async bean backed by a custom ThreadPoolTaskExecutor. TaskDecorator captures,
+      restores, and cleans context so the response proves the worker sees the correct
+      request context on a different Thread.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: asyncWithContext
+    params: [
+      ]
+    path: com/example/learning/module/executor/controller/TaskExecutorController.java
+    mapping: '@GetMapping("/async-context")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-executor/async-context
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: spring-async-demo
+    aiGenerated: true
+    reviewed: false
+  asyncVoidException():
+    summary: Observe exceptions from void @Async methods
+    description: Invoke a void @Async method that intentionally throws and observe
+      AsyncUncaughtExceptionHandler receiving the failure through a correlation id.
+      The experiment also distinguishes method-body failure from synchronous rejection
+      at the submission boundary.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: asyncVoidException
+    params: [
+      ]
+    path: com/example/learning/module/executor/controller/TaskExecutorController.java
+    mapping: '@GetMapping("/void-exception")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-executor/void-exception
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: async-return-type
+    aiGenerated: true
+    reviewed: false

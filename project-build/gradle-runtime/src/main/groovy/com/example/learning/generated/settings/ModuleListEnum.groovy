@@ -31,10 +31,19 @@ enum ModuleListEnum {
     ),
 
     ASPECT(
+            'module:platform:development:framework:spring:aspect',
+            'module/platform/development/framework/spring/aspect',
+            'SERVLET',
+            'Spring Aspect-Oriented Programming with proxy-based interception, advice, pointcuts and AOP infrastructure',
+            false,
+            []
+    ),
+
+    ASPECT_ORIENTED_PROGRAMMING(
             'module:platform:development:paradigm:aop',
             'module/platform/development/paradigm/aop',
-            'SERVLET',
-            '',
+            'LIBRARY',
+            'Aspect-Oriented Programming concepts, cross-cutting concerns, terminology and implementation models',
             false,
             []
     ),
@@ -102,11 +111,65 @@ enum ModuleListEnum {
             []
     ),
 
+    DATA_ORIENTED_PROGRAMMING(
+            'module:platform:development:paradigm:data-oriented',
+            'module/platform/development/paradigm/data-oriented',
+            'LIBRARY',
+            'Data-Oriented Programming principles and data-centric program design',
+            false,
+            []
+    ),
+
+    DECLARATIVE_PROGRAMMING(
+            'module:platform:development:paradigm:declarative',
+            'module/platform/development/paradigm/declarative',
+            'LIBRARY',
+            'Declarative Programming paradigm, intent-oriented specification and related styles',
+            false,
+            []
+    ),
+
+    DEPENDENCY_INJECTION(
+            'module:platform:development:design-pattern:dependency-injection',
+            'module/platform/development/design-pattern/dependency-injection',
+            'LIBRARY',
+            'Dependency Injection and Inversion of Control design concepts',
+            false,
+            []
+    ),
+
     DISTRIBUTED_TRACING(
             'module:microservice:module:platform:tracing',
             'module/microservice/module/platform/tracing',
             'LIBRARY',
             '',
+            false,
+            []
+    ),
+
+    DOMAIN_DRIVEN_DESIGN(
+            'module:platform:development:architecture:domain-driven-design',
+            'module/platform/development/architecture/domain-driven-design',
+            'LIBRARY',
+            'Domain-Driven Design fundamentals, strategic design and tactical design',
+            false,
+            []
+    ),
+
+    DOMAIN_SPECIFIC_LANGUAGE(
+            'module:platform:development:language:domain-specific-language',
+            'module/platform/development/language/domain-specific-language',
+            'LIBRARY',
+            'Domain-Specific Language concepts, design, parsing and execution models',
+            false,
+            []
+    ),
+
+    DRIVEN_DEVELOPMENT_METHODOLOGIES(
+            'module:platform:development:methodology:driven-development',
+            'module/platform/development/methodology/driven-development',
+            'LIBRARY',
+            'Software development methodologies including TDD, BDD, ATDD, FDD and MDD',
             false,
             []
     ),
@@ -147,11 +210,11 @@ enum ModuleListEnum {
             []
     ),
 
-    FORK_JOIN_WORK_STEALING(
-            'module:platform:development:paradigm:concurrency:forkjoin-workstealing',
-            'module/platform/development/paradigm/concurrency/forkjoin-workstealing',
-            '',
-            '',
+    FUNCTIONAL_PROGRAMMING(
+            'module:platform:development:paradigm:functional',
+            'module/platform/development/paradigm/functional',
+            'LIBRARY',
+            'Functional Programming paradigm concepts and trade-offs',
             false,
             []
     ),
@@ -219,11 +282,29 @@ enum ModuleListEnum {
             []
     ),
 
+    HIBERNATE(
+            'module:platform:development:persistence:orm:hibernate',
+            'module/platform/development/persistence/orm/hibernate',
+            'LIBRARY',
+            'Hibernate ORM implementation, unit-of-work behavior and persistence mechanics',
+            false,
+            []
+    ),
+
     HIKARI_CP(
             'module:infrastructure:system:database:connection-pool:hikariCP',
             'module/infrastructure/system/database/connection-pool/hikariCP',
             'PLATFORM',
             '',
+            false,
+            []
+    ),
+
+    IMPERATIVE_PROGRAMMING(
+            'module:platform:development:paradigm:imperative',
+            'module/platform/development/paradigm/imperative',
+            'LIBRARY',
+            'Imperative Programming paradigm, state, commands and procedural organization',
             false,
             []
     ),
@@ -235,6 +316,15 @@ enum ModuleListEnum {
             'A service of microservice app . This service store inventory info',
             false,
             ['SPRING_JPA', 'GLOBAL_EXCEPTION_HANDLER', 'EUREKA_CLIENT']
+    ),
+
+    JACKSON(
+            'module:platform:development:serialization:jackson',
+            'module/platform/development/serialization/jackson',
+            'SERVLET',
+            'Jackson data binding, JSON serialization and deserialization for Java applications',
+            false,
+            []
     ),
 
     JAVA_ABSTRACT_INTERFACE(
@@ -255,11 +345,29 @@ enum ModuleListEnum {
             []
     ),
 
+    JAVA_ASYNC_PROGRAMMING(
+            'module:platform:development:language:java:concurrency:async-programming',
+            'module/platform/development/language/java/concurrency/async-programming',
+            'SERVLET',
+            'Java asynchronous programming with Future and CompletableFuture',
+            false,
+            []
+    ),
+
     JAVA_CLASSLOADER(
             'module:platform:development:language:java:core:classloader',
             'module/platform/development/language/java/core/classloader',
             'SERVLET',
             'Java class loading',
+            false,
+            []
+    ),
+
+    JAVA_CLASS_FILE_API(
+            'module:platform:development:language:java:version:java24:class-file-api',
+            'module/platform/development/language/java/version/java24/class-file-api',
+            'LIBRARY',
+            'Java 24 standard Class-File API',
             false,
             []
     ),
@@ -282,11 +390,29 @@ enum ModuleListEnum {
             []
     ),
 
+    JAVA_CONCURRENCY_FUNDAMENTALS(
+            'module:platform:development:language:java:concurrency:fundamentals',
+            'module/platform/development/language/java/concurrency/fundamentals',
+            'SERVLET',
+            'Java concurrency fundamentals, Thread lifecycle and Java Memory Model',
+            false,
+            []
+    ),
+
     JAVA_DATE_TIME(
             'module:platform:development:language:java:core:date-time',
             'module/platform/development/language/java/core/date-time',
             'LIBRARY',
             'Java date and time API',
+            false,
+            []
+    ),
+
+    JAVA_DYNAMIC_RUNTIME(
+            'module:platform:development:language:java:advance:dynamic-runtime',
+            'module/platform/development/language/java/advance/dynamic-runtime',
+            'LIBRARY',
+            'Advanced Java dynamic invocation and runtime linkage',
             false,
             []
     ),
@@ -300,11 +426,29 @@ enum ModuleListEnum {
             []
     ),
 
+    JAVA_EXECUTOR_SERVICE(
+            'module:platform:development:language:java:concurrency:executor-service',
+            'module/platform/development/language/java/concurrency/executor-service',
+            'SERVLET',
+            'Java executors, thread pools, scheduling and lifecycle',
+            false,
+            []
+    ),
+
+    JAVA_FORK_JOIN(
+            'module:platform:development:language:java:concurrency:fork-join',
+            'module/platform/development/language/java/concurrency/fork-join',
+            'SERVLET',
+            'Java Fork/Join Framework and work-stealing execution',
+            false,
+            []
+    ),
+
     JAVA_FUNCTIONAL_PROGRAMMING(
-            'module:platform:development:paradigm:functional',
-            'module/platform/development/paradigm/functional',
+            'module:platform:development:language:java:core:functional-programming',
+            'module/platform/development/language/java/core/functional-programming',
             'LIBRARY',
-            'Java functional programming',
+            'Java functional programming with functional interfaces, lambdas, method references, Optional and composition',
             false,
             []
     ),
@@ -314,6 +458,24 @@ enum ModuleListEnum {
             'module/platform/development/language/java/core/generics',
             'SERVLET',
             'Java generics',
+            false,
+            []
+    ),
+
+    JAVA_HIGH_LEVEL_CONCURRENCY_UTILS(
+            'module:platform:development:language:java:concurrency:high-level-utils',
+            'module/platform/development/language/java/concurrency/high-level-utils',
+            'SERVLET',
+            'Java synchronization, coordination and concurrent utilities',
+            false,
+            []
+    ),
+
+    JAVA_INSTRUMENTATION(
+            'module:platform:development:language:java:advance:instrumentation',
+            'module/platform/development/language/java/advance/instrumentation',
+            'LIBRARY',
+            'Java instrumentation, agents and class transformation',
             false,
             []
     ),
@@ -359,6 +521,15 @@ enum ModuleListEnum {
             'module/platform/development/language/java/version/java9/module-system',
             'LIBRARY',
             'Java Platform Module System',
+            false,
+            []
+    ),
+
+    JAVA_NATIVE_INTEROPERABILITY(
+            'module:platform:development:language:java:advance:native-interoperability',
+            'module/platform/development/language/java/advance/native-interoperability',
+            'LIBRARY',
+            'Java native interoperability, foreign memory and operating-system boundaries',
             false,
             []
     ),
@@ -417,6 +588,24 @@ enum ModuleListEnum {
             []
     ),
 
+    JAVA_RUNTIME_DIAGNOSTICS(
+            'module:platform:development:language:java:advance:runtime-diagnostics',
+            'module/platform/development/language/java/advance/runtime-diagnostics',
+            'LIBRARY',
+            'Java runtime diagnostics, management and troubleshooting',
+            false,
+            []
+    ),
+
+    JAVA_RUNTIME_EXTENSIBILITY(
+            'module:platform:development:language:java:advance:runtime-extensibility',
+            'module/platform/development/language/java/advance/runtime-extensibility',
+            'LIBRARY',
+            'Java runtime extensibility, SPI and plugin architecture',
+            false,
+            []
+    ),
+
     JAVA_SECURITY_CRYPTOGRAPHY(
             'module:platform:development:language:java:advance:security-cryptography',
             'module/platform/development/language/java/advance/security-cryptography',
@@ -440,6 +629,33 @@ enum ModuleListEnum {
             'module/platform/development/language/java/core/string',
             'SERVLET',
             'Java String and text fundamentals',
+            false,
+            []
+    ),
+
+    JAVA_VIRTUAL_THREADS(
+            'module:platform:development:language:java:concurrency:virtual-threads',
+            'module/platform/development/language/java/concurrency/virtual-threads',
+            'SERVLET',
+            'Java virtual threads and modern thread-per-task execution',
+            false,
+            []
+    ),
+
+    JDBC(
+            'module:platform:development:persistence:relational-access:jdbc',
+            'module/platform/development/persistence/relational-access/jdbc',
+            'LIBRARY',
+            'Java Database Connectivity API for relational database access',
+            false,
+            []
+    ),
+
+    JPA_SPECIFICATION(
+            'module:platform:development:persistence:orm:jpa',
+            'module/platform/development/persistence/orm/jpa',
+            'LIBRARY',
+            'Jakarta Persistence specification, persistence context, entity lifecycle and ORM contracts',
             false,
             []
     ),
@@ -507,15 +723,6 @@ enum ModuleListEnum {
             []
     ),
 
-    MAPSTRUCT(
-            'module:platform:development:language:java:mapping:mapstruct',
-            'module/platform/development/language/java/mapping/mapstruct',
-            'SERVLET',
-            '',
-            true,
-            []
-    ),
-
     MICROSERVICE(
             'module:microservice',
             'module/microservice',
@@ -525,21 +732,39 @@ enum ModuleListEnum {
             []
     ),
 
-    MODEL_MAPPER(
-            'module:platform:development:language:java:mapping:model-mapper',
-            'module/platform/development/language/java/mapping/model-mapper',
-            'SERVLET',
-            'To quickly convert between 2 Java Object (Entity to DTO) by matching key field',
-            true,
+    MODEL_VIEW_CONTROLLER(
+            'module:platform:development:architecture:mvc',
+            'module/platform/development/architecture/mvc',
+            'LIBRARY',
+            'Model-View-Controller architectural pattern',
+            false,
             []
     ),
 
-    OBJECT_MAPPER(
-            'module:platform:development:language:java:mapping:object-mapper',
-            'module/platform/development/language/java/mapping/object-mapper',
+    MYBATIS(
+            'module:platform:development:persistence:relational-access:mybatis',
+            'module/platform/development/persistence/relational-access/mybatis',
+            'LIBRARY',
+            'MyBatis SQL mapping and data mapper framework',
+            false,
+            []
+    ),
+
+    OBJECT_MAPPING(
+            'module:platform:development:data-mapping:object-mapping',
+            'module/platform/development/data-mapping/object-mapping',
             'SERVLET',
-            'Convert Java Object to JSON (or XML , YAML)',
-            true,
+            'Object-to-object mapping concepts and implementations including manual mapping, MapStruct and ModelMapper',
+            false,
+            []
+    ),
+
+    OBJECT_ORIENTED_PROGRAMMING(
+            'module:platform:development:paradigm:object-oriented',
+            'module/platform/development/paradigm/object-oriented',
+            'LIBRARY',
+            'Object-Oriented Programming paradigm concepts and object collaboration',
+            false,
             []
     ),
 
@@ -588,19 +813,19 @@ enum ModuleListEnum {
             []
     ),
 
-    RESILIENCE_4J(
-            'module:microservice:module:platform:resilience4j',
-            'module/microservice/module/platform/resilience4j',
+    REACTIVE_PROGRAMMING(
+            'module:platform:development:paradigm:reactive',
+            'module/platform/development/paradigm/reactive',
             'LIBRARY',
-            '',
+            'Reactive Programming paradigm, data flow and backpressure concepts',
             false,
             []
     ),
 
-    SCHEDULE(
-            'module:platform:development:paradigm:concurrency:schedule:task',
-            'module/platform/development/paradigm/concurrency/schedule/task',
-            'SERVLET',
+    RESILIENCE_4J(
+            'module:microservice:module:platform:resilience4j',
+            'module/microservice/module/platform/resilience4j',
+            'LIBRARY',
             '',
             false,
             []
@@ -612,6 +837,15 @@ enum ModuleListEnum {
             '',
             'To check and monitor system info when running',
             true,
+            []
+    ),
+
+    SPRING_CONCURRENCY(
+            'module:platform:development:framework:spring:concurrency',
+            'module/platform/development/framework/spring/concurrency',
+            'SERVLET',
+            'Spring task execution, async methods, scheduling, context propagation and virtual-thread integration',
+            false,
             []
     ),
 
@@ -655,15 +889,6 @@ enum ModuleListEnum {
             'module:platform:development:framework:spring:web',
             'module/platform/development/framework/spring/web',
             'PLATFORM',
-            '',
-            false,
-            []
-    ),
-
-    THREAD(
-            'module:platform:development:paradigm:concurrency:thread',
-            'module/platform/development/paradigm/concurrency/thread',
-            'SERVLET',
             '',
             false,
             []

@@ -1,0 +1,381 @@
+LeakController:
+  threadLeakPattern():
+    summary: Quan sát pattern Thread leak theo cách bounded
+    description: Giữ một worker sống có chủ đích để quan sát aliveBeforeCleanup, sau
+      đó release và join để xác nhận worker đã kết thúc. Demo minh họa lifecycle bug
+      mà không thực sự để lại leaked Thread.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: threadLeakPattern
+    params: [
+      ]
+    path: com/example/learning/module/leak/controller/LeakController.java
+    mapping: '@GetMapping("/thread-pattern")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /leak/thread-pattern
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: thread-leak
+    aiGenerated: true
+    reviewed: false
+  poolLeakPattern():
+    summary: Quan sát pool leak do quên shutdown
+    description: Tạo một ExecutorService cục bộ và quan sát pool chưa shutdown ở giữa
+      experiment, sau đó cleanup bằng shutdown và awaitTermination. Mục tiêu là làm
+      rõ ownership của executor và trách nhiệm kết thúc lifecycle.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: poolLeakPattern
+    params: [
+      ]
+    path: com/example/learning/module/leak/controller/LeakController.java
+    mapping: '@GetMapping("/pool-pattern")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /leak/pool-pattern
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: pool-leak
+    aiGenerated: true
+    reviewed: false
+  queuePressure():
+    summary: Quan sát queue backlog và rejection
+    description: Dùng pool với bounded queue nhỏ, giữ worker bận rồi submit đủ task
+      để làm đầy queue và kích hoạt rejection. Experiment minh họa resource pressure
+      của backlog mà không tạo unbounded memory growth thật.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: queuePressure
+    params: [
+      ]
+    path: com/example/learning/module/leak/controller/LeakController.java
+    mapping: '@GetMapping("/queue-pressure")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /leak/queue-pressure
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: queue-growth
+    aiGenerated: true
+    reviewed: false
+ThreadPoolController:
+  executorFlow():
+    summary: Quan sát core, queue, max và rejection
+    description: Dùng ThreadPoolExecutor cấu hình core=1, max=2, queue=1 và giữ task
+      bằng latch để thấy task 1 tạo core worker, task 2 vào queue, task 3 mở worker
+      bổ sung và task 4 bị reject.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: executorFlow
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/executor-flow")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /thread-pool/executor-flow
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: thread-pool-flow
+    aiGenerated: true
+    reviewed: false
+  executeVsSubmit():
+    summary: So sánh execute() và submit()
+    description: Cho Runnable throw exception qua execute() và submit() để quan sát
+      hai failure channel khác nhau. execute() đi qua uncaught-exception path của
+      worker, còn submit() lưu failure trong Future và expose qua get().
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: executeVsSubmit
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/execute-vs-submit")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /thread-pool/execute-vs-submit
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: execute-vs-submit
+    aiGenerated: true
+    reviewed: false
+  fixedPoolReuse():
+    summary: Quan sát worker reuse trong fixed thread pool
+    description: Submit nhiều task vào fixed pool nhỏ và ghi lại worker names để thấy
+      cùng một nhóm worker được reuse thay vì tạo một Thread mới cho mỗi task. Executor
+      được shutdown sau experiment.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: fixedPoolReuse
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/fixed-pool-reuse")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /thread-pool/fixed-pool-reuse
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: executors-factories
+    aiGenerated: true
+    reviewed: false
+  executorFactories():
+    summary: So sánh các Executors factory
+    description: Chạy các case bounded với fixed, cached, single và scheduled executor
+      để quan sát worker count, serialization, queueing và delayed execution. Mục
+      tiêu là hiểu semantics thật thay vì chọn factory chỉ dựa trên tên.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: executorFactories
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/executor-factories")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /thread-pool/executor-factories
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: executors-factories
+    aiGenerated: true
+    reviewed: false
+  scheduledExecution():
+    summary: So sánh fixed-rate và fixed-delay scheduling
+    description: Chạy task lâu hơn interval cấu hình rồi ghi timeline của scheduleAtFixedRate
+      và scheduleWithFixedDelay. Experiment cho thấy fixed-rate bám cadence theo mốc
+      start còn fixed-delay chờ một khoảng sau completion, đồng thời cùng periodic
+      task không tự overlap với chính nó.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: scheduledExecution
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/scheduled-execution")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /thread-pool/scheduled-execution
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: scheduled-execution
+    aiGenerated: true
+    reviewed: false
+  scheduledFailure():
+    summary: Quan sát exception làm dừng periodic task
+    description: Tạo periodic task throw ngay lần chạy đầu tiên rồi quan sát ScheduledFuture
+      complete exceptionally và các lần chạy tiếp theo bị suppress. Experiment nhấn
+      mạnh periodic job cần error observability rõ ràng.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: scheduledFailure
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/scheduled-failure")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /thread-pool/scheduled-failure
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: scheduled-failure
+    aiGenerated: true
+    reviewed: false
+  callerRuns():
+    summary: Quan sát CallerRunsPolicy tạo feedback pressure
+    description: Làm đầy worker và queue rồi submit thêm task để CallerRunsPolicy
+      chạy task ngay trên caller thread. Khi caller phải tự xử lý công việc, tốc độ
+      submission giảm và tạo feedback pressure thay vì queue tự block execute().
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: callerRuns
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/caller-runs")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /thread-pool/caller-runs
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: rejection-policy
+    aiGenerated: true
+    reviewed: false
+  discardPolicies():
+    summary: So sánh DiscardPolicy và DiscardOldestPolicy
+    description: Làm đầy pool để quan sát DiscardPolicy bỏ task mới im lặng, còn DiscardOldestPolicy
+      loại phần tử ở head của work queue rồi thử submit task mới lại. Experiment làm
+      rõ mất task là business semantics.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: discardPolicies
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/discard-policies")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /thread-pool/discard-policies
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: rejection-policy
+    aiGenerated: true
+    reviewed: false
+  customRejectionHandler():
+    summary: Ghi nhận overload bằng custom rejection handler
+    description: Dùng custom RejectedExecutionHandler để đếm rejection và expose overload
+      trước khi reject rõ ràng. Experiment minh họa rejection có thể trở thành metric
+      hoặc alertable event thay vì chỉ là exception kỹ thuật.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: customRejectionHandler
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/custom-rejection-handler")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /thread-pool/custom-rejection-handler
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: custom-rejection-handler
+    aiGenerated: true
+    reviewed: false
+  gracefulShutdown():
+    summary: Thực hiện graceful shutdown ExecutorService
+    description: Cho task hoàn thành rồi gọi shutdown() và awaitTermination() để xác
+      nhận executor kết thúc trước khi request return. Experiment minh họa orderly
+      shutdown và ownership của resource do code tự tạo.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: gracefulShutdown
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/graceful-shutdown")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /thread-pool/graceful-shutdown
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: graceful-shutdown
+    aiGenerated: true
+    reviewed: false
+  forcedShutdown():
+    summary: Quan sát shutdownNow() và task chưa bắt đầu
+    description: Giữ một task đang chạy và một task trong queue, để graceful wait
+      timeout rồi gọi shutdownNow(). Running task nhận interruption nếu cooperate,
+      còn task chưa start được trả lại cho caller và không được thực thi.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: forcedShutdown
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/forced-shutdown")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /thread-pool/forced-shutdown
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: graceful-shutdown
+    aiGenerated: true
+    reviewed: false

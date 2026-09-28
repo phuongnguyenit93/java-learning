@@ -1,0 +1,145 @@
+AsyncController:
+  future():
+    execution: "<p><b>Concept:</b> API tạo một single-thread executor và submit mộ\
+      t Callable bị giữ bởi CountDownLatch để quan sát trạng thái Future trước khi\
+      \ task được phép hoàn thành.</p>\n<ol>\n  <li>Kiểm tra isDone khi worker vẫ\
+      n đang chờ latch.\n    <div><i>Nguồn: AsyncService.futureDemo()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; futureDemo() throws Exception\
+      \ {\n            ExecutorService executor = Executors.newSingleThreadExecutor();\n\
+      \            CountDownLatch allowCompletion = new CountDownLatch(1);\n    \n\
+      \            try {\n                Callable&lt;String&gt; task = () -&gt; {\n\
+      \                    allowCompletion.await();\n                    return \"\
+      PAYMENT_OK\";\n                };\n        ...\n    }</code></pre>\n  </li>\n\
+      \  <li>Mở latch rồi gọi get với timeout để lấy PAYMENT_OK và xác nhận Future\
+      \ đã hoàn thành.</li>\n  <li>Cuối cùng shutdownNow và chờ executor terminate\
+      \ để không để lại worker.</li>\n</ol>\n<p><b>Kết luận:</b> Quan sát Callable\
+      \ và Future. Response và Execution Context là bằng chứng runtime cho behavior\
+      \ này; đoạn source colocated ở trên cho thấy code path tạo experiment.</p>"
+    usage: true
+  futureCancellation():
+    execution: |-
+      <p><b>Concept:</b> API chạy hai thí nghiệm Future.cancel trên task đang chờ CountDownLatch.</p>
+      <ol>
+        <li>Với cancel(false), Future chuyển sang cancelled nhưng worker không bị interrupt; service chủ động mở latch để task kết thúc.
+          <div><i>Nguồn: AsyncService.futureCancellationDemo()</i></div>
+          <pre><code>    public Map&lt;String, Object&gt; futureCancellationDemo() throws InterruptedException {
+                  return map(
+                          "cancelWithoutInterrupt", cancellationSample(false),
+                          "cancelWithInterrupt", cancellationSample(true)
+                  );
+              }</code></pre>
+        </li>
+        <li>Với cancel(true), worker đang await nhận interrupt và ghi nhận cờ interrupted.</li>
+        <li>Cả hai trường hợp đều kiểm tra get ném CancellationException và executor được cleanup.</li>
+      </ol>
+      <p><b>Kết luận:</b> So sánh Future.cancel(false) và cancel(true). Response và Execution Context là bằng chứng runtime cho behavior này; đoạn source colocated ở trên cho thấy code path tạo experiment.</p>
+    usage: true
+  pipeline():
+    execution: "<p><b>Concept:</b> API dựng một pipeline CompletableFuture trên fixed\
+      \ pool 2 thread.</p>\n<ol>\n  <li>Tỷ giá và chuỗi lấy order rồi price chạy bấ\
+      t đồng bộ.\n    <div><i>Nguồn: AsyncService.pipelineDemo()</i></div>\n    <pre><code>\
+      \    public CompletableFuture&lt;Map&lt;String, Object&gt;&gt; pipelineDemo()\
+      \ {\n            ExecutorService executor = Executors.newFixedThreadPool(2);\n\
+      \            List&lt;String&gt; stageThreads = Collections.synchronizedList(new\
+      \ ArrayList&lt;&gt;());\n    \n            CompletableFuture&lt;Double&gt; exchangeRate\
+      \ = CompletableFuture.supplyAsync(() -&gt; {\n                stageThreads.add(\"\
+      rate:\" + Thread.currentThread().getName());\n                sleep(40);\n \
+      \               return 25_000.0;\n            }, executor);\n        ...\n \
+      \   }</code></pre>\n  </li>\n  <li>thenCombineAsync nhân giá USD với tỷ giá\
+      , sau đó thenApplyAsync cộng phí vận chuyển.</li>\n  <li>Tên thread của từng\
+      \ stage được ghi lại và executor chỉ shutdown khi pipeline hoàn tất.</li>\n\
+      </ol>\n<p><b>Kết luận:</b> Kết hợp pipeline bằng CompletableFuture. Response\
+      \ và Execution Context là bằng chứng runtime cho behavior này; đoạn source colocated\
+      \ ở trên cho thấy code path tạo experiment.</p>"
+    usage: true
+  fastest():
+    execution: "<p><b>Concept:</b> API điều khiển hai CompletableFuture bằng latch\
+      \ để minh họa anyOf theo completion đầu tiên.</p>\n<ol>\n  <li>Server A đượ\
+      c mở trước nên thắng race; Server B vẫn được mở và hoàn tất sau đó.\n    <div><i>Nguồ\
+      n: AsyncService.fastestCompletionDemo()</i></div>\n    <pre><code>    public\
+      \ CompletableFuture&lt;Map&lt;String, Object&gt;&gt; fastestCompletionDemo()\
+      \ {\n            ExecutorService executor = Executors.newFixedThreadPool(2);\n\
+      \            CountDownLatch allowServerA = new CountDownLatch(1);\n        \
+      \    CountDownLatch allowServerB = new CountDownLatch(1);\n    \n          \
+      \  CompletableFuture&lt;String&gt; serverA = CompletableFuture.supplyAsync(()\
+      \ -&gt; {\n                await(allowServerA);\n                return \"Server\
+      \ A: 200 USD\";\n            }, executor);\n        ...\n    }</code></pre>\n\
+      \  </li>\n  <li>Một race phụ cho future lỗi hoàn thành trước future thành cô\
+      ng để chứng minh exceptional completion cũng có thể thắng anyOf.</li>\n  <li>Kiể\
+      m tra future thua không bị tự động cancel.</li>\n</ol>\n<p><b>Kết luận:</b>\
+      \ Quan sát semantics của CompletableFuture.anyOf. Response và Execution Context\
+      \ là bằng chứng runtime cho behavior này; đoạn source colocated ở trên cho thấ\
+      y code path tạo experiment.</p>"
+    usage: true
+  exceptionHandling():
+    execution: "<p><b>Concept:</b> API tạo một CompletableFuture cố ý ném IllegalStateException\
+      \ rồi dùng handle để biến cả nhánh thành công và lỗi thành một kết quả thống\
+      \ nhất.</p>\n<ol>\n  <li>Stage nguồn complete exceptionally.\n    <div><i>Nguồ\
+      n: AsyncService.exceptionHandlingDemo()</i></div>\n    <pre><code>    public\
+      \ CompletableFuture&lt;Map&lt;String, Object&gt;&gt; exceptionHandlingDemo()\
+      \ {\n            CompletableFuture&lt;String&gt; failed = CompletableFuture.supplyAsync(()\
+      \ -&gt; {\n                throw new IllegalStateException(\"simulated failure\"\
+      );\n            });\n    \n            return failed.handle((value, error) -&gt;\
+      \ map(\n                    \"success\", error == null,\n                  \
+      \  \"value\", value,\n                    \"recovered\", error != null,\n  \
+      \      ...\n    }</code></pre>\n  </li>\n  <li>handle nhận error, đánh dấu recovered\
+      \ và trả FALLBACK thay vì để exception lan ra response.</li>\n</ol>\n<p><b>Kế\
+      t luận:</b> Xử lý exceptional completion trong CompletableFuture. Response và\
+      \ Execution Context là bằng chứng runtime cho behavior này; đoạn source colocated\
+      \ ở trên cho thấy code path tạo experiment.</p>"
+    usage: true
+  executionVariant():
+    execution: "<p><b>Concept:</b> API dùng một completedFuture để quan sát chính\
+      \ xác execution policy của continuation.</p>\n<ol>\n  <li>thenApply trên stage\
+      \ đã complete được chạy ngay trên caller thread.\n    <div><i>Nguồn: AsyncService.executionVariantDemo()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; executionVariantDemo()\
+      \ throws Exception {\n            String callerThread = Thread.currentThread().getName();\n\
+      \            ExecutorService executor = Executors.newSingleThreadExecutor(runnable\
+      \ -&gt;\n                    new Thread(runnable, \"async-variant-worker\")\n\
+      \            );\n    \n            try {\n                AtomicBoolean nonAsyncRanInline\
+      \ = new AtomicBoolean(false);\n                AtomicBoolean asyncUsedConfiguredExecutor\
+      \ = new AtomicBoolean(false);\n        ...\n    }</code></pre>\n  </li>\n  <li>thenApplyAsync\
+      \ được gắn explicit executor một thread tên async-variant-worker.</li>\n  <li>Kế\
+      t quả so sánh thread thực tế rồi shutdown executor.</li>\n</ol>\n<p><b>Kết luậ\
+      n:</b> So sánh thenApply và thenApplyAsync. Response và Execution Context là\
+      \ bằng chứng runtime cho behavior này; đoạn source colocated ở trên cho thấ\
+      y code path tạo experiment.</p>"
+    usage: true
+  allOf():
+    execution: "<p><b>Concept:</b> API chạy hai nhóm thí nghiệm với CompletableFuture.allOf.</p>\n\
+      <ol>\n  <li>Ba task inventory, payment và shipping chạy trên fixed pool; allOf\
+      \ chỉ complete khi cả ba xong và từng kết quả được đọc từ future gốc.\n    <div><i>Nguồ\
+      n: AsyncService.allOfDemo()</i></div>\n    <pre><code>    public Map&lt;String,\
+      \ Object&gt; allOfDemo() throws Exception {\n            ExecutorService executor\
+      \ = Executors.newFixedThreadPool(3);\n            try {\n                CompletableFuture&lt;String&gt;\
+      \ inventory = CompletableFuture.supplyAsync(() -&gt; \"IN_STOCK\", executor);\n\
+      \                CompletableFuture&lt;String&gt; payment = CompletableFuture.supplyAsync(()\
+      \ -&gt; \"PAID\", executor);\n                CompletableFuture&lt;String&gt;\
+      \ shipping = CompletableFuture.supplyAsync(() -&gt; \"READY\", executor);\n\
+      \    \n                CompletableFuture&lt;Void&gt; all = CompletableFuture.allOf(inventory,\
+      \ payment, shipping);\n                all.get(2, TimeUnit.SECONDS);\n     \
+      \   ...\n    }</code></pre>\n  </li>\n  <li>Nhóm thứ hai cho một future fail\
+      \ trước trong khi sibling chưa xong; aggregate chỉ hoàn tất sau sibling rồi\
+      \ complete exceptionally.</li>\n  <li>Sự cố của một input không tự cancel sibling.</li>\n\
+      </ol>\n<p><b>Kết luận:</b> Quan sát semantics của CompletableFuture.allOf. Response\
+      \ và Execution Context là bằng chứng runtime cho behavior này; đoạn source colocated\
+      \ ở trên cho thấy code path tạo experiment.</p>"
+    usage: true
+  timeoutCancellation():
+    execution: |-
+      <p><b>Concept:</b> API so sánh timeout và cancellation của CompletableFuture với công việc thật đang chạy bên dưới.</p>
+      <ol>
+        <li>orTimeout làm future complete với TimeoutException nhưng worker đang chờ latch không bị interrupt.
+          <div><i>Nguồn: AsyncService.timeoutCancellationDemo()</i></div>
+          <pre><code>    public Map&lt;String, Object&gt; timeoutCancellationDemo() throws InterruptedException {
+                  return map(
+                          "orTimeout", completableFutureTimeoutSample(),
+                          "completableFutureCancelTrue", completableFutureCancellationSample()
+                  );
+              }</code></pre>
+        </li>
+        <li>cancel(true) làm CompletableFuture cancelled nhưng mayInterruptIfRunning không dừng worker supplyAsync trong thí nghiệm này.</li>
+        <li>Service mở latch và shutdown executor để kết thúc underlying work một cách xác định.</li>
+      </ol>
+      <p><b>Kết luận:</b> Phân biệt timeout và cancellation của CompletableFuture. Response và Execution Context là bằng chứng runtime cho behavior này; đoạn source colocated ở trên cho thấy code path tạo experiment.</p>
+    usage: true

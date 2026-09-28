@@ -1,0 +1,450 @@
+BasicThreadController:
+  processAndThread():
+    execution: "<p><b>Concept:</b> The service inspects the JVM process and the exact\
+      \ thread handling the HTTP request.</p>\n<ol>\n  <li>It reads the current process\
+      \ id from <code>ProcessHandle.current()</code>.\n    <div><i>Source: BasicThreadService.describeProcessAndCurrentThread()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; describeProcessAndCurrentThread()\
+      \ {\n            Thread currentThread = Thread.currentThread();\n    \n    \
+      \        Map&lt;String, Object&gt; result = new LinkedHashMap&lt;&gt;();\n \
+      \           result.put(\"processId\", ProcessHandle.current().pid());\n    \
+      \        result.put(\"threadName\", currentThread.getName());\n            result.put(\"\
+      threadId\", currentThread.threadId());\n            result.put(\"threadState\"\
+      , currentThread.getState().name());\n            result.put(\"daemon\", currentThread.isDaemon());\n\
+      \        ...\n    }</code></pre>\n  </li>\n  <li>It reads the current thread\
+      \ name, id, state, and daemon flag.</li>\n  <li>Those values are returned directly\
+      \ so the request can be tied to one execution thread inside the JVM process.</li>\n\
+      </ol>\n<p><b>Conclusion:</b> Observe the JVM process and HTTP request Thread.\
+      \ The response and Execution Context are the runtime evidence for this behavior;\
+      \ the colocated source snippet shows the code path that creates the experiment.</p>"
+    usage: true
+  startVsRun():
+    execution: "<p><b>Concept:</b> The service executes equivalent tasks through direct\
+      \ <code>run()</code> invocation and through <code>Thread.start()</code>.</p>\n\
+      <ol>\n  <li>A runnable is called with <code>run()</code>, so it executes on\
+      \ the HTTP caller thread.\n    <div><i>Source: BasicThreadService.compareRunAndStart()</i></div>\n\
+      \    <pre><code>    public List&lt;String&gt; compareRunAndStart() throws InterruptedException\
+      \ {\n            String callerThreadName = Thread.currentThread().getName();\n\
+      \    \n            Runnable directTask = () -&gt; System.out.println(\n    \
+      \                \"run() trực tiếp đang chạy trên: \"\n                    \
+      \        + Thread.currentThread().getName()\n            );\n    \n        \
+      \    directTask.run();\n        ...\n    }</code></pre>\n  </li>\n  <li>A second\
+      \ runnable is placed in a named <code>Thread</code> and started, so its task\
+      \ executes on <code>basic-start-worker</code>.</li>\n  <li>The service joins\
+      \ the worker and returns both thread identities.</li>\n</ol>\n<p><b>Conclusion:</b>\
+      \ Compare Thread.run() and Thread.start(). The response and Execution Context\
+      \ are the runtime evidence for this behavior; the colocated source snippet shows\
+      \ the code path that creates the experiment.</p>"
+    usage: true
+  threadLifeCycle():
+    execution: "<p><b>Concept:</b> The service drives one worker through observable\
+      \ <code>Thread.State</code> values with latches and monitors.</p>\n<ol>\n  <li>Before\
+      \ start it records <code>NEW</code>, then keeps the worker spinning long enough\
+      \ to observe <code>RUNNABLE</code>.\n    <div><i>Source: BasicThreadService.observeThreadLifecycle()</i></div>\n\
+      \    <pre><code>    public List&lt;String&gt; observeThreadLifecycle() throws\
+      \ InterruptedException {\n            List&lt;String&gt; observations = new\
+      \ ArrayList&lt;&gt;();\n    \n            AtomicBoolean stayRunnable = new AtomicBoolean(true);\n\
+      \            CountDownLatch runnableEntered = new CountDownLatch(1);\n     \
+      \       CountDownLatch timedWaitGate = new CountDownLatch(1);\n    \n      \
+      \      Object blockedMonitor = new Object();\n            Object waitingMonitor\
+      \ = new Object();\n        ...\n    }</code></pre>\n  </li>\n  <li>A timed latch\
+      \ wait produces <code>TIMED_WAITING</code>.</li>\n  <li>The caller holds a monitor\
+      \ while releasing the latch, forcing the worker into <code>BLOCKED</code>.</li>\n\
+      \  <li>The worker then calls <code>wait()</code> to enter <code>WAITING</code>;\
+      \ the caller notifies it, joins it, and records <code>TERMINATED</code>.</li>\n\
+      </ol>\n<p><b>Conclusion:</b> Observe all Thread.State values. The response and\
+      \ Execution Context are the runtime evidence for this behavior; the colocated\
+      \ source snippet shows the code path that creates the experiment.</p>"
+    usage: true
+CreateThreadController:
+  createByExtends():
+    execution: "<p><b>Concept:</b> The service creates a concrete <code>MyWorker</code>\
+      \ subclass of <code>Thread</code>.</p>\n<ol>\n  <li>The request thread constructs\
+      \ the named worker.\n    <div><i>Source: CreateThreadService.createByExtends()</i></div>\n\
+      \    <pre><code>    public List&lt;String&gt; createByExtends() throws InterruptedException\
+      \ {\n            String callerThread = Thread.currentThread().getName();\n \
+      \   \n            MyWorker worker = new MyWorker(\"extends-thread-worker\");\n\
+      \            try {\n                worker.start();\n                joinOrFail(worker);\n\
+      \            } finally {\n                cleanup(worker);\n        ...\n  \
+      \  }</code></pre>\n  </li>\n  <li><code>start()</code> invokes the subclass\
+      \ implementation of <code>run()</code> on <code>extends-thread-worker</code>.</li>\n\
+      \  <li>The service joins the worker, performs bounded cleanup if necessary,\
+      \ and returns caller and worker thread names.</li>\n</ol>\n<p><b>Conclusion:</b>\
+      \ Create a Thread by extending Thread. The response and Execution Context are\
+      \ the runtime evidence for this behavior; the colocated source snippet shows\
+      \ the code path that creates the experiment.</p>"
+    usage: true
+  createByRunnable():
+    execution: "<p><b>Concept:</b> The service separates the task from the thread\
+      \ by using a <code>Runnable</code>.</p>\n<ol>\n  <li>A runnable captures its\
+      \ executing thread name.\n    <div><i>Source: CreateThreadService.createByRunnable()</i></div>\n\
+      \    <pre><code>    public List&lt;String&gt; createByRunnable() throws InterruptedException\
+      \ {\n            String callerThread = Thread.currentThread().getName();\n \
+      \   \n            Runnable task = () -&gt; System.out.println(\n           \
+      \         \"Runnable.run() đang chạy trên thread: \"\n                     \
+      \       + Thread.currentThread().getName()\n            );\n    \n         \
+      \   Thread worker = new Thread(\n        ...\n    }</code></pre>\n  </li>\n\
+      \  <li>The runnable is passed to a new named <code>Thread</code> and started.</li>\n\
+      \  <li>The service joins and cleans up the worker, then returns the caller and\
+      \ <code>runnable-thread-worker</code> identities.</li>\n</ol>\n<p><b>Conclusion:</b>\
+      \ Run a Runnable on a dedicated Thread. The response and Execution Context are\
+      \ the runtime evidence for this behavior; the colocated source snippet shows\
+      \ the code path that creates the experiment.</p>"
+    usage: true
+  createByCallable():
+    execution: "<p><b>Concept:</b> The service adapts a value-returning <code>Callable</code>\
+      \ to a thread by wrapping it in <code>FutureTask</code>.</p>\n<ol>\n  <li>The\
+      \ callable is wrapped in <code>FutureTask&lt;String&gt;</code>.\n    <div><i>Source:\
+      \ CreateThreadService.createByCallable()</i></div>\n    <pre><code>    public\
+      \ List&lt;String&gt; createByCallable()\n                throws ExecutionException,\
+      \ InterruptedException {\n            String callerThread = Thread.currentThread().getName();\n\
+      \    \n            Callable&lt;String&gt; task = () -&gt;\n                \
+      \    \"Callable.call() đang chạy trên thread: \"\n                         \
+      \   + Thread.currentThread().getName();\n    \n            FutureTask&lt;String&gt;\
+      \ futureTask = new FutureTask&lt;&gt;(task);\n        ...\n    }</code></pre>\n\
+      \  </li>\n  <li>A named thread executes that future task.</li>\n  <li>The service\
+      \ waits up to two seconds for <code>FutureTask.get()</code>, joins the worker,\
+      \ and returns both caller information and the value produced by <code>call()</code>.</li>\n\
+      </ol>\n<p><b>Conclusion:</b> Run Callable with FutureTask and Thread. The response\
+      \ and Execution Context are the runtime evidence for this behavior; the colocated\
+      \ source snippet shows the code path that creates the experiment.</p>"
+    usage: true
+DaemonThreadController:
+  inspectDaemonRules():
+    execution: "<p><b>Concept:</b> The API inspects daemon inheritance without starting\
+      \ the child thread.</p>\n<ol>\n  <li>It reads the daemon flag of the current\
+      \ HTTP request thread.\n    <div><i>Source: DaemonThreadService.inspectDaemonRules()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; inspectDaemonRules() {\n\
+      \            Thread requestThread = Thread.currentThread();\n    \n        \
+      \    Thread childThread = new Thread(\n                    () -&gt; {\n    \
+      \                    // Không cần chạy trong demo này.\n                   \
+      \ },\n                    \"daemon-inspection-child\"\n            );\n    \
+      \    ...\n    }</code></pre>\n  </li>\n  <li>It constructs a child thread and\
+      \ records the daemon flag inherited at construction time.</li>\n  <li>It calls\
+      \ <code>setDaemon(true)</code> before the child is started and returns the before/after\
+      \ flags; JVM-exit behavior is intentionally left to the separate standalone\
+      \ demo.</li>\n</ol>\n<p><b>Conclusion:</b> Observe daemon flag and inheritance.\
+      \ The response and Execution Context are the runtime evidence for this behavior;\
+      \ the colocated source snippet shows the code path that creates the experiment.</p>"
+    usage: true
+ConcurrencyProblemController:
+  raceCondition():
+    execution: "<p><b>Concept:</b> The service creates a deterministic lost update\
+      \ on an unsynchronized integer.</p>\n<ol>\n  <li>Two workers read the same counter\
+      \ value into separate snapshots.\n    <div><i>Source: ConcurrencyProblemService.deterministicRaceCondition()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; deterministicRaceCondition()\n\
+      \                throws InterruptedException {\n    \n            PlainCounter\
+      \ counter = new PlainCounter();\n    \n            AtomicInteger snapshotA =\
+      \ new AtomicInteger();\n            AtomicInteger snapshotB = new AtomicInteger();\n\
+      \    \n            CountDownLatch bothRead = new CountDownLatch(2);\n      \
+      \  ...\n    }</code></pre>\n  </li>\n  <li>A latch holds both workers until\
+      \ both reads have happened.</li>\n  <li>Each worker writes its own <code>snapshot\
+      \ + 1</code>, so one update overwrites the other.</li>\n  <li>After joining\
+      \ both workers, the response compares the sequential expectation of two with\
+      \ the actual value and reports the lost update.</li>\n</ol>\n<p><b>Conclusion:</b>\
+      \ Create a lost update to observe a race condition. The response and Execution\
+      \ Context are the runtime evidence for this behavior; the colocated source snippet\
+      \ shows the code path that creates the experiment.</p>"
+    usage: true
+  startJoinHappensBefore():
+    execution: "<p><b>Concept:</b> The experiment uses plain fields and relies on\
+      \ the memory-consistency guarantees of <code>Thread.start()</code> and <code>join()</code>.</p>\n\
+      <ol>\n  <li>The parent writes <code>beforeStart = 7</code> before starting the\
+      \ worker.\n    <div><i>Source: ConcurrencyProblemService.startJoinHappensBefore()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; startJoinHappensBefore()\n\
+      \                throws InterruptedException {\n    \n            StartJoinState\
+      \ state = new StartJoinState();\n            state.beforeStart = 7;\n    \n\
+      \            Thread worker = new Thread(() -&gt; {\n                state.observedByWorker\
+      \ = state.beforeStart;\n                state.writtenByWorker = 42;\n      \
+      \  ...\n    }</code></pre>\n  </li>\n  <li>The worker reads that value and writes\
+      \ <code>writtenByWorker = 42</code>.</li>\n  <li>The parent joins the worker,\
+      \ then reads the worker-written value and returns both observations.</li>\n\
+      </ol>\n<p><b>Conclusion:</b> Observe happens-before from start() and join().\
+      \ The response and Execution Context are the runtime evidence for this behavior;\
+      \ the colocated source snippet shows the code path that creates the experiment.</p>"
+    usage: true
+  volatilePublication():
+    execution: "<p><b>Concept:</b> A writer publishes ordinary data through a volatile\
+      \ readiness flag.</p>\n<ol>\n  <li>The reader starts first and spins on volatile\
+      \ <code>ready</code>.\n    <div><i>Source: ConcurrencyProblemService.volatilePublication()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; volatilePublication()\n\
+      \                throws InterruptedException {\n    \n            PublicationState\
+      \ state = new PublicationState();\n            Thread reader = new Thread(()\
+      \ -&gt; {\n                while (!state.ready) {\n                    if (Thread.currentThread().isInterrupted())\
+      \ {\n                        return;\n                    }\n        ...\n \
+      \   }</code></pre>\n  </li>\n  <li>The writer stores <code>data = 42</code>\
+      \ and then sets <code>ready = true</code>.</li>\n  <li>Once the reader observes\
+      \ the volatile write, it reads the previously written data, and both threads\
+      \ are joined before the values are returned.</li>\n</ol>\n<p><b>Conclusion:</b>\
+      \ Publish data through a volatile flag. The response and Execution Context are\
+      \ the runtime evidence for this behavior; the colocated source snippet shows\
+      \ the code path that creates the experiment.</p>"
+    usage: true
+  volatileIsNotAtomic():
+    execution: "<p><b>Concept:</b> The service repeats the deterministic lost-update\
+      \ experiment with the counter field declared <code>volatile</code>.</p>\n<ol>\n\
+      \  <li>Both workers read the same volatile value before either is allowed to\
+      \ write.\n    <div><i>Source: ConcurrencyProblemService.volatileIsNotAtomic()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; volatileIsNotAtomic()\n\
+      \                throws InterruptedException {\n    \n            VolatileCounter\
+      \ counter = new VolatileCounter();\n    \n            AtomicInteger snapshotA\
+      \ = new AtomicInteger();\n            AtomicInteger snapshotB = new AtomicInteger();\n\
+      \    \n            CountDownLatch bothRead = new CountDownLatch(2);\n      \
+      \  ...\n    }</code></pre>\n  </li>\n  <li>After the latch releases them, each\
+      \ stores <code>snapshot + 1</code>.</li>\n  <li>The final value is still lower\
+      \ than the sequential expectation, demonstrating that visibility does not make\
+      \ the read-modify-write sequence atomic.</li>\n</ol>\n<p><b>Conclusion:</b>\
+      \ Prove volatile does not provide atomicity. The response and Execution Context\
+      \ are the runtime evidence for this behavior; the colocated source snippet shows\
+      \ the code path that creates the experiment.</p>"
+    usage: true
+  deadlockRisk():
+    execution: "<p><b>Concept:</b> The service constructs circular lock ownership\
+      \ while using non-blocking second-lock attempts so the demo cannot hang.</p>\n\
+      <ol>\n  <li>Worker A locks A and worker B locks B.\n    <div><i>Source: ConcurrencyProblemService.deadlockRisk()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; deadlockRisk()\n      \
+      \          throws InterruptedException {\n    \n            ReentrantLock lockA\
+      \ = new ReentrantLock();\n            ReentrantLock lockB = new ReentrantLock();\n\
+      \    \n            CountDownLatch bothHoldingFirstLock = new CountDownLatch(2);\n\
+      \            CountDownLatch bothTriedSecondLock = new CountDownLatch(2);\n \
+      \   \n        ...\n    }</code></pre>\n  </li>\n  <li>A latch ensures both first\
+      \ locks are held before each worker calls <code>tryLock()</code> on the other\
+      \ lock.</li>\n  <li>Both second-lock attempts fail, exposing the circular dependency\
+      \ that would deadlock with blocking acquisition.</li>\n  <li>Each worker releases\
+      \ its first lock and terminates cleanly.</li>\n</ol>\n<p><b>Conclusion:</b>\
+      \ Observe circular lock dependency safely. The response and Execution Context\
+      \ are the runtime evidence for this behavior; the colocated source snippet shows\
+      \ the code path that creates the experiment.</p>"
+    usage: true
+  deadlockPrevention():
+    execution: "<p><b>Concept:</b> Both workers use the same global lock order to\
+      \ remove circular wait.</p>\n<ol>\n  <li>A start latch releases the two workers\
+      \ together.\n    <div><i>Source: ConcurrencyProblemService.deadlockPrevention()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; deadlockPrevention()\n\
+      \                throws InterruptedException {\n    \n            ReentrantLock\
+      \ lockA = new ReentrantLock();\n            ReentrantLock lockB = new ReentrantLock();\n\
+      \            CountDownLatch start = new CountDownLatch(1);\n            AtomicInteger\
+      \ completed = new AtomicInteger();\n    \n            Runnable orderedTask =\
+      \ () -&gt; {\n        ...\n    }</code></pre>\n  </li>\n  <li>Each worker acquires\
+      \ lock A first and lock B second, performs its work, then releases B and A.</li>\n\
+      \  <li>The caller joins both workers and reports that both completed with the\
+      \ fixed <code>A -&gt; B</code> order.</li>\n</ol>\n<p><b>Conclusion:</b> Prevent\
+      \ deadlock with global lock ordering. The response and Execution Context are\
+      \ the runtime evidence for this behavior; the colocated source snippet shows\
+      \ the code path that creates the experiment.</p>"
+    usage: true
+  boundedLivelock():
+    execution: "<p><b>Concept:</b> The service models livelock for exactly five synchronized\
+      \ rounds so the API remains bounded.</p>\n<ol>\n  <li>Both workers announce\
+      \ that they are trying to proceed and meet at a barrier.\n    <div><i>Source:\
+      \ ConcurrencyProblemService.boundedLivelock()</i></div>\n    <pre><code>   \
+      \ public Map&lt;String, Object&gt; boundedLivelock()\n                throws\
+      \ InterruptedException {\n    \n            int rounds = 5;\n    \n        \
+      \    AtomicBoolean workerATrying = new AtomicBoolean(false);\n            AtomicBoolean\
+      \ workerBTrying = new AtomicBoolean(false);\n            AtomicInteger workerABackoffs\
+      \ = new AtomicInteger();\n            AtomicInteger workerBBackoffs = new AtomicInteger();\n\
+      \        ...\n    }</code></pre>\n  </li>\n  <li>Each sees the other trying,\
+      \ backs off, and meets at another barrier before the next round.</li>\n  <li>Because\
+      \ they react symmetrically, they keep changing state without making progress;\
+      \ after five rounds both threads terminate and the backoff counts are returned.</li>\n\
+      </ol>\n<p><b>Conclusion:</b> Simulate livelock with bounded execution. The response\
+      \ and Execution Context are the runtime evidence for this behavior; the colocated\
+      \ source snippet shows the code path that creates the experiment.</p>"
+    usage: true
+ThreadLocalController:
+  isolation():
+    execution: "<p><b>Concept:</b> Two platform threads use the same static <code>ThreadLocal</code>\
+      \ but store different request values.</p>\n<ol>\n  <li>Thread A sets <code>REQ-A</code>\
+      \ and Thread B sets <code>REQ-B</code>.\n    <div><i>Source: ThreadLocalService.isolationDemo()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; isolationDemo() throws\
+      \ InterruptedException {\n            AtomicReference&lt;String&gt; threadAValue\
+      \ = new AtomicReference&lt;&gt;();\n            AtomicReference&lt;String&gt;\
+      \ threadBValue = new AtomicReference&lt;&gt;();\n    \n            Thread threadA\
+      \ = new Thread(() -&gt; useLocalContext(\"REQ-A\", threadAValue), \"context-a\"\
+      );\n            Thread threadB = new Thread(() -&gt; useLocalContext(\"REQ-B\"\
+      , threadBValue), \"context-b\");\n            try {\n                threadA.start();\n\
+      \                threadB.start();\n        ...\n    }</code></pre>\n  </li>\n\
+      \  <li>Each reads its own value and removes it in <code>finally</code>.</li>\n\
+      \  <li>After both threads are joined, the caller also reads the <code>ThreadLocal</code>,\
+      \ demonstrating that the values are isolated per thread.</li>\n</ol>\n<p><b>Conclusion:</b>\
+      \ Observe ThreadLocal isolation. The response and Execution Context are the\
+      \ runtime evidence for this behavior; the colocated source snippet shows the\
+      \ code path that creates the experiment.</p>"
+    usage: true
+  inheritance():
+    execution: "<p><b>Concept:</b> The service shows when an <code>InheritableThreadLocal</code>\
+      \ value is captured for a newly created thread.</p>\n<ol>\n  <li>The parent\
+      \ sets <code>PARENT-A</code> and constructs the child.\n    <div><i>Source:\
+      \ ThreadLocalService.inheritanceDemo()</i></div>\n    <pre><code>    public\
+      \ Map&lt;String, Object&gt; inheritanceDemo() throws InterruptedException {\n\
+      \            AtomicReference&lt;String&gt; childValue = new AtomicReference&lt;&gt;();\n\
+      \            INHERITABLE_CONTEXT.set(\"PARENT-A\");\n    \n            Thread\
+      \ child = new Thread(() -&gt; childValue.set(INHERITABLE_CONTEXT.get()), \"\
+      inheritable-child\");\n            INHERITABLE_CONTEXT.set(\"PARENT-B\");\n\
+      \    \n            try {\n                child.start();\n        ...\n    }</code></pre>\n\
+      \  </li>\n  <li>Before starting the child, the parent changes its own value\
+      \ to <code>PARENT-B</code>.</li>\n  <li>The child still observes <code>PARENT-A</code>,\
+      \ the value inherited at thread construction, and the parent removes its context\
+      \ during cleanup.</li>\n</ol>\n<p><b>Conclusion:</b> Observe InheritableThreadLocal\
+      \ at Thread creation. The response and Execution Context are the runtime evidence\
+      \ for this behavior; the colocated source snippet shows the code path that creates\
+      \ the experiment.</p>"
+    usage: true
+  poolReuseProblem():
+    execution: "<p><b>Concept:</b> A one-thread pool demonstrates why inherited context\
+      \ and worker reuse do not mix safely.</p>\n<ol>\n  <li>The parent sets <code>USER_A</code>\
+      \ and submits the first task, causing the pool worker to inherit that value.\n\
+      \    <div><i>Source: ThreadLocalService.poolReuseProblemDemo()</i></div>\n \
+      \   <pre><code>    public Map&lt;String, Object&gt; poolReuseProblemDemo() throws\
+      \ Exception {\n            ExecutorService pool = Executors.newFixedThreadPool(1);\n\
+      \            try {\n                INHERITABLE_CONTEXT.set(\"USER_A\");\n \
+      \               Future&lt;String&gt; first = pool.submit(INHERITABLE_CONTEXT::get);\n\
+      \                String firstValue = first.get(2, TimeUnit.SECONDS);\n    \n\
+      \                INHERITABLE_CONTEXT.set(\"USER_B\");\n                Future&lt;String&gt;\
+      \ second = pool.submit(INHERITABLE_CONTEXT::get);\n        ...\n    }</code></pre>\n\
+      \  </li>\n  <li>The parent changes its context to <code>USER_B</code> and submits\
+      \ a second task.</li>\n  <li>The same worker is reused and still reads <code>USER_A</code>,\
+      \ so the response marks the stale context before the pool is shut down.</li>\n\
+      </ol>\n<p><b>Conclusion:</b> Demonstrate stale context with worker reuse. The\
+      \ response and Execution Context are the runtime evidence for this behavior;\
+      \ the colocated source snippet shows the code path that creates the experiment.</p>"
+    usage: true
+  explicitPropagation():
+    execution: "<p><b>Concept:</b> The service explicitly propagates a plain <code>ThreadLocal</code>\
+      \ into an already-created pool worker.</p>\n<ol>\n  <li>A warm-up task creates\
+      \ the single pool worker before any context is set.\n    <div><i>Source: ThreadLocalService.explicitPropagationDemo()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; explicitPropagationDemo()\
+      \ throws Exception {\n            ExecutorService pool = Executors.newFixedThreadPool(1);\n\
+      \            try {\n                pool.submit(() -&gt; null).get(2, TimeUnit.SECONDS);\
+      \ // tạo worker trước khi set context\n                LOCAL_CONTEXT.set(\"\
+      USER_B\");\n    \n                Callable&lt;String&gt; propagated = propagate(LOCAL_CONTEXT::get);\n\
+      \                String observed = pool.submit(propagated).get(2, TimeUnit.SECONDS);\n\
+      \    \n        ...\n    }</code></pre>\n  </li>\n  <li>The caller stores <code>USER_B</code>\
+      \ and wraps the real callable with a propagation helper that captures that value.</li>\n\
+      \  <li>The wrapper installs the captured value on the worker, runs the task,\
+      \ then restores the worker's previous context in <code>finally</code>.</li>\n\
+      </ol>\n<p><b>Conclusion:</b> Propagate context with capture, restore, and cleanup.\
+      \ The response and Execution Context are the runtime evidence for this behavior;\
+      \ the colocated source snippet shows the code path that creates the experiment.</p>"
+    usage: true
+InterruptionController:
+  interruptBusyWorker():
+    execution: "<p><b>Concept:</b> A CPU-bound worker cooperatively polls its interrupt\
+      \ status.</p>\n<ol>\n  <li>The worker signals that it has started, then spins\
+      \ while <code>isInterrupted()</code> is false and counts iterations.\n    <div><i>Source:\
+      \ InterruptionService.interruptBusyWorker()</i></div>\n    <pre><code>    public\
+      \ Map&lt;String, Object&gt; interruptBusyWorker() throws InterruptedException\
+      \ {\n            CountDownLatch started = new CountDownLatch(1);\n         \
+      \   AtomicLong iterations = new AtomicLong();\n            AtomicBoolean interruptObserved\
+      \ = new AtomicBoolean(false);\n    \n            Thread worker = new Thread(()\
+      \ -&gt; {\n                started.countDown();\n    \n                while\
+      \ (!Thread.currentThread().isInterrupted()) {\n        ...\n    }</code></pre>\n\
+      \  </li>\n  <li>The request thread calls <code>interrupt()</code>.</li>\n  <li>The\
+      \ worker observes the flag, exits its loop, records that interruption was seen,\
+      \ and is joined before its final state is returned.</li>\n</ol>\n<p><b>Conclusion:</b>\
+      \ Cancel a CPU loop with cooperative interruption. The response and Execution\
+      \ Context are the runtime evidence for this behavior; the colocated source snippet\
+      \ shows the code path that creates the experiment.</p>"
+    usage: true
+  inspectInterruptFlag():
+    execution: "<p><b>Concept:</b> The worker compares the non-clearing and clearing\
+      \ interrupt-status APIs in a controlled sequence.</p>\n<ol>\n  <li>The caller\
+      \ interrupts the worker before allowing it to continue.\n    <div><i>Source:\
+      \ InterruptionService.inspectInterruptFlag()</i></div>\n    <pre><code>    public\
+      \ Map&lt;String, Object&gt; inspectInterruptFlag() throws InterruptedException\
+      \ {\n            CountDownLatch started = new CountDownLatch(1);\n         \
+      \   AtomicBoolean proceed = new AtomicBoolean(false);\n    \n            AtomicBoolean\
+      \ firstIsInterrupted = new AtomicBoolean();\n            AtomicBoolean secondIsInterrupted\
+      \ = new AtomicBoolean();\n            AtomicBoolean firstInterrupted = new AtomicBoolean();\n\
+      \            AtomicBoolean secondInterrupted = new AtomicBoolean();\n      \
+      \      AtomicBoolean finalIsInterrupted = new AtomicBoolean();\n        ...\n\
+      \    }</code></pre>\n  </li>\n  <li>Two calls to <code>isInterrupted()</code>\
+      \ both observe the flag without clearing it.</li>\n  <li>The first static <code>Thread.interrupted()</code>\
+      \ returns true and clears the current thread's flag.</li>\n  <li>A second <code>Thread.interrupted()</code>\
+      \ and the final <code>isInterrupted()</code> therefore observe false.</li>\n\
+      </ol>\n<p><b>Conclusion:</b> Compare isInterrupted() and Thread.interrupted().\
+      \ The response and Execution Context are the runtime evidence for this behavior;\
+      \ the colocated source snippet shows the code path that creates the experiment.</p>"
+    usage: true
+  interruptSleepingWorker():
+    execution: "<p><b>Concept:</b> The service interrupts a worker that is blocked\
+      \ in <code>Thread.sleep()</code>.</p>\n<ol>\n  <li>The worker signals just before\
+      \ entering a long sleep.\n    <div><i>Source: InterruptionService.interruptSleepingWorker()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; interruptSleepingWorker()\
+      \ throws InterruptedException {\n            CountDownLatch readyToSleep = new\
+      \ CountDownLatch(1);\n            AtomicBoolean interruptedExceptionCaught =\
+      \ new AtomicBoolean(false);\n            AtomicBoolean flagBeforeRestore = new\
+      \ AtomicBoolean(true);\n            AtomicBoolean flagAfterRestore = new AtomicBoolean(false);\n\
+      \    \n            Thread worker = new Thread(() -&gt; {\n                try\
+      \ {\n                    readyToSleep.countDown();\n        ...\n    }</code></pre>\n\
+      \  </li>\n  <li>The caller interrupts it, causing <code>sleep()</code> to throw\
+      \ <code>InterruptedException</code> and clear the interrupt status.</li>\n \
+      \ <li>The catch block records the cleared flag, explicitly restores it with\
+      \ <code>interrupt()</code>, and records the restored state.</li>\n  <li>The\
+      \ caller joins the worker and returns the observations.</li>\n</ol>\n<p><b>Conclusion:</b>\
+      \ Interrupt a sleeping Thread and restore the flag. The response and Execution\
+      \ Context are the runtime evidence for this behavior; the colocated source snippet\
+      \ shows the code path that creates the experiment.</p>"
+    usage: true
+  cancelWithCleanup():
+    execution: "<p><b>Concept:</b> The worker models a cancellable task that owns\
+      \ a resource and must release it on every exit path.</p>\n<ol>\n  <li>It marks\
+      \ the resource open and loops while no interrupt is pending, sleeping briefly\
+      \ between checks.\n    <div><i>Source: InterruptionService.cancelWithCleanup()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; cancelWithCleanup() throws\
+      \ InterruptedException {\n            CountDownLatch resourceOpened = new CountDownLatch(1);\n\
+      \            AtomicBoolean resourceOpen = new AtomicBoolean(false);\n      \
+      \      AtomicBoolean interruptionObserved = new AtomicBoolean(false);\n    \
+      \        AtomicBoolean cleanupCalled = new AtomicBoolean(false);\n    \n   \
+      \         Thread worker = new Thread(() -&gt; {\n                resourceOpen.set(true);\n\
+      \                resourceOpened.countDown();\n        ...\n    }</code></pre>\n\
+      \  </li>\n  <li>The caller interrupts the worker; an interrupted sleep restores\
+      \ the flag so the loop terminates cooperatively.</li>\n  <li>A <code>finally</code>\
+      \ block closes the resource and records that cleanup ran.</li>\n  <li>The request\
+      \ waits for termination and returns interruption, cleanup, and resource-state\
+      \ flags.</li>\n</ol>\n<p><b>Conclusion:</b> Clean up resources when a task is\
+      \ cancelled. The response and Execution Context are the runtime evidence for\
+      \ this behavior; the colocated source snippet shows the code path that creates\
+      \ the experiment.</p>"
+    usage: true
+  interruptSynchronizedWaiter():
+    execution: "<p><b>Concept:</b> The caller deliberately holds an intrinsic monitor\
+      \ while a worker tries to enter the same <code>synchronized</code> block.</p>\n\
+      <ol>\n  <li>The worker reaches the monitor acquisition point and becomes <code>BLOCKED</code>.\n\
+      \    <div><i>Source: InterruptionService.interruptSynchronizedWaiter()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; interruptSynchronizedWaiter()\
+      \ throws InterruptedException {\n            Object monitor = new Object();\n\
+      \            CountDownLatch attemptingMonitor = new CountDownLatch(1);\n   \
+      \ \n            AtomicBoolean acquiredMonitor = new AtomicBoolean(false);\n\
+      \            AtomicBoolean interruptedWhenAcquired = new AtomicBoolean(false);\n\
+      \    \n            Thread worker = new Thread(() -&gt; {\n                attemptingMonitor.countDown();\n\
+      \        ...\n    }</code></pre>\n  </li>\n  <li>The caller interrupts it while\
+      \ still holding the monitor and verifies that the worker remains <code>BLOCKED</code>;\
+      \ the interrupt flag is set but monitor acquisition is not cancelled.</li>\n\
+      \  <li>After the caller leaves the synchronized block, the worker acquires the\
+      \ monitor, observes the pending interrupt flag, exits, and is joined.</li>\n\
+      </ol>\n<p><b>Conclusion:</b> Show that synchronized monitor acquisition is not\
+      \ interruptible. The response and Execution Context are the runtime evidence\
+      \ for this behavior; the colocated source snippet shows the code path that creates\
+      \ the experiment.</p>"
+    usage: true
+  stopFlagVsInterrupt():
+    execution: "<p><b>Concept:</b> The demo contrasts a visible stop flag with interruption\
+      \ while a worker is inside a blocking operation.</p>\n<ol>\n  <li>The worker\
+      \ loops on a volatile stop flag but spends each iteration in a long <code>sleep()</code>.\n\
+      \    <div><i>Source: InterruptionService.stopFlagVsInterrupt()</i></div>\n \
+      \   <pre><code>    public Map&lt;String, Object&gt; stopFlagVsInterrupt() throws\
+      \ InterruptedException {\n            StopSignal stopSignal = new StopSignal();\n\
+      \            CountDownLatch blockingOperationEntered = new CountDownLatch(1);\n\
+      \            AtomicBoolean interruptedExceptionCaught = new AtomicBoolean(false);\n\
+      \    \n            Thread worker = new Thread(() -&gt; {\n                while\
+      \ (!stopSignal.stopRequested) {\n                    try {\n               \
+      \         blockingOperationEntered.countDown();\n        ...\n    }</code></pre>\n\
+      \  </li>\n  <li>The caller sets the stop flag and immediately observes that\
+      \ the sleeping worker is still alive and timed-waiting.</li>\n  <li>The caller\
+      \ then interrupts the worker, waking the sleep with <code>InterruptedException</code>;\
+      \ the worker restores the flag and exits.</li>\n  <li>The result shows that\
+      \ the stop flag alone did not unblock the operation.</li>\n</ol>\n<p><b>Conclusion:</b>\
+      \ Compare a stop flag with interrupt while blocked. The response and Execution\
+      \ Context are the runtime evidence for this behavior; the colocated source snippet\
+      \ shows the code path that creates the experiment.</p>"
+    usage: true

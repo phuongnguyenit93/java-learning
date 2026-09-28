@@ -1,0 +1,297 @@
+LeakController:
+  threadLeakPattern():
+    execution: |-
+      <p><b>Concept:</b> The service creates a thread that waits indefinitely on a latch to model a thread-leak pattern, then bounds the demo with cleanup.</p>
+      <ol>
+        <li>The worker starts and blocks waiting for a stop latch.
+          <div><i>Source: LeakService.threadLeakPatternDemo()</i></div>
+          <pre><code>    public Map&lt;String, Object&gt; threadLeakPatternDemo() throws InterruptedException {
+                  CountDownLatch stop = new CountDownLatch(1);
+                  Thread worker = new Thread(() -&gt; await(stop), "bounded-leak-demo-thread");
+                  boolean aliveBeforeCleanup;
+                  try {
+                      worker.start();
+                      waitUntilAlive(worker);
+                      aliveBeforeCleanup = worker.isAlive();
+                  } finally {
+              ...
+          }</code></pre>
+        </li>
+        <li>The service records that the thread is alive and would remain so if the owning code never released it.</li>
+        <li>In <code>finally</code>, the latch is released and the worker is joined with a deadline; the response confirms the worker is no longer alive.</li>
+      </ol>
+      <p><b>Conclusion:</b> Observe a Thread leak pattern safely. The response and Execution Context are the runtime evidence for this behavior; the colocated source snippet shows the code path that creates the experiment.</p>
+    usage: true
+  poolLeakPattern():
+    execution: "<p><b>Concept:</b> A fixed thread pool completes two trivial tasks\
+      \ but is intentionally inspected before shutdown.</p>\n<ol>\n  <li>Two tasks\
+      \ count down a latch and the caller waits for both to finish.\n    <div><i>Source:\
+      \ LeakService.poolLeakPatternDemo()</i></div>\n    <pre><code>    public Map&lt;String,\
+      \ Object&gt; poolLeakPatternDemo() throws InterruptedException {\n         \
+      \   ExecutorService pool = Executors.newFixedThreadPool(2);\n            CountDownLatch\
+      \ tasksDone = new CountDownLatch(2);\n    \n            try {\n            \
+      \    pool.execute(tasksDone::countDown);\n                pool.execute(tasksDone::countDown);\n\
+      \                if (!tasksDone.await(2, TimeUnit.SECONDS)) {\n            \
+      \        throw new IllegalStateException(\"Pool leak demo task không hoàn thà\
+      nh đúng hạn.\");\n        ...\n    }</code></pre>\n  </li>\n  <li>The service\
+      \ records that the executor is still not shut down after its work is complete,\
+      \ illustrating the ownership leak if shutdown were forgotten.</li>\n  <li>The\
+      \ <code>finally</code> block performs graceful shutdown with a forced fallback\
+      \ if termination takes too long.</li>\n</ol>\n<p><b>Conclusion:</b> Observe\
+      \ a pool leak caused by missing shutdown. The response and Execution Context\
+      \ are the runtime evidence for this behavior; the colocated source snippet shows\
+      \ the code path that creates the experiment.</p>"
+    usage: true
+  queuePressure():
+    execution: |-
+      <p><b>Concept:</b> The service creates a single-worker <code>ThreadPoolExecutor</code> with a queue capacity of three and <code>AbortPolicy</code>.</p>
+      <ol>
+        <li>The worker is occupied by a latch-blocked task.
+          <div><i>Source: LeakService.queuePressureDemo()</i></div>
+          <pre><code>    public Map&lt;String, Object&gt; queuePressureDemo() throws InterruptedException {
+                  CountDownLatch releaseWorker = new CountDownLatch(1);
+                  ThreadPoolExecutor executor = new ThreadPoolExecutor(
+                          1,
+                          1,
+                          0,
+                          TimeUnit.MILLISECONDS,
+                          new LinkedBlockingQueue&lt;&gt;(3),
+                          new ThreadPoolExecutor.AbortPolicy()
+              ...
+          }</code></pre>
+        </li>
+        <li>Four additional tasks are submitted while the worker remains busy; three fill the bounded queue and the fourth is rejected.</li>
+        <li>The response reports queue size and rejection count, then releases the worker and shuts the executor down.</li>
+      </ol>
+      <p><b>Conclusion:</b> Observe queue backlog and rejection. The response and Execution Context are the runtime evidence for this behavior; the colocated source snippet shows the code path that creates the experiment.</p>
+    usage: true
+ThreadPoolController:
+  executorFlow():
+    execution: |-
+      <p><b>Concept:</b> The service drives a <code>ThreadPoolExecutor</code> through its core-thread, queue, maximum-thread, and rejection decisions.</p>
+      <ol>
+        <li>Task 1 creates the single core worker.
+          <div><i>Source: ThreadPoolService.executorFlowDemo()</i></div>
+          <pre><code>    public Map&lt;String, Object&gt; executorFlowDemo() throws InterruptedException {
+                  CountDownLatch releaseTasks = new CountDownLatch(1);
+                  ThreadPoolExecutor executor = new ThreadPoolExecutor(
+                          1,
+                          2,
+                          10,
+                          TimeUnit.SECONDS,
+                          new LinkedBlockingQueue&lt;&gt;(1),
+                          namedFactory("flow-worker-"),
+              ...
+          }</code></pre>
+        </li>
+        <li>Task 2 is queued because the core worker is busy and the queue has one slot.</li>
+        <li>Task 3 causes a second worker to be created up to <code>maximumPoolSize = 2</code>.</li>
+        <li>Task 4 arrives with both workers busy and the queue full, so <code>AbortPolicy</code> rejects it; snapshots record pool and queue sizes at each stage.</li>
+      </ol>
+      <p><b>Conclusion:</b> Observe core, queue, max, and rejection. The response and Execution Context are the runtime evidence for this behavior; the colocated source snippet shows the code path that creates the experiment.</p>
+    usage: true
+  executeVsSubmit():
+    execution: |-
+      <p><b>Concept:</b> Two single-thread executors expose the different exception channels of <code>execute()</code> and <code>submit()</code>.</p>
+      <ol>
+        <li>An <code>execute()</code> task throws, and a custom uncaught-exception handler on the worker records that failure.
+          <div><i>Source: ThreadPoolService.executeVsSubmitDemo()</i></div>
+          <pre><code>    public Map&lt;String, Object&gt; executeVsSubmitDemo() throws InterruptedException {
+                  AtomicReference&lt;Throwable&gt; executeUncaught = new AtomicReference&lt;&gt;();
+                  CountDownLatch executeExceptionObserved = new CountDownLatch(1);
+                  ThreadFactory executeFactory = runnable -&gt; {
+                      Thread thread = new Thread(runnable, "execute-exception-worker");
+                      thread.setUncaughtExceptionHandler((ignored, error) -&gt; {
+                          executeUncaught.set(error);
+                          executeExceptionObserved.countDown();
+                      });
+              ...
+          }</code></pre>
+        </li>
+        <li>A <code>submit()</code> task throws, but its exception is captured inside the returned <code>Future</code>.</li>
+        <li>The caller invokes <code>get()</code>, receives <code>ExecutionException</code>, records its cause, and shuts both executors down.</li>
+      </ol>
+      <p><b>Conclusion:</b> Compare execute() and submit(). The response and Execution Context are the runtime evidence for this behavior; the colocated source snippet shows the code path that creates the experiment.</p>
+    usage: true
+  fixedPoolReuse():
+    execution: "<p><b>Concept:</b> A fixed pool of two named workers executes six\
+      \ short tasks.</p>\n<ol>\n  <li>Every task records the worker thread name into\
+      \ a concurrent set and counts down a completion latch.\n    <div><i>Source:\
+      \ ThreadPoolService.fixedPoolReuseDemo()</i></div>\n    <pre><code>    public\
+      \ Map&lt;String, Object&gt; fixedPoolReuseDemo() throws InterruptedException\
+      \ {\n            Set&lt;String&gt; workerNames = ConcurrentHashMap.newKeySet();\n\
+      \            ExecutorService executor = Executors.newFixedThreadPool(2, namedFactory(\"\
+      fixed-worker-\"));\n            CountDownLatch completed = new CountDownLatch(6);\n\
+      \    \n            try {\n                for (int i = 0; i &lt; 6; i++) {\n\
+      \                    executor.execute(() -&gt; {\n                        workerNames.add(Thread.currentThread().getName());\n\
+      \        ...\n    }</code></pre>\n  </li>\n  <li>The service waits until all\
+      \ six tasks finish.</li>\n  <li>The returned worker-name set demonstrates reuse\
+      \ of the same small worker pool across more tasks than threads, after which\
+      \ the executor is shut down.</li>\n</ol>\n<p><b>Conclusion:</b> Observe worker\
+      \ reuse in a fixed thread pool. The response and Execution Context are the runtime\
+      \ evidence for this behavior; the colocated source snippet shows the code path\
+      \ that creates the experiment.</p>"
+    usage: true
+  executorFactories():
+    execution: |-
+      <p><b>Concept:</b> The endpoint runs bounded samples for four <code>Executors</code> factory methods.</p>
+      <ol>
+        <li>A fixed pool with two blocked workers queues the remaining submitted tasks.
+          <div><i>Source: ThreadPoolService.executorFactoriesDemo()</i></div>
+          <pre><code>    public Map&lt;String, Object&gt; executorFactoriesDemo() throws InterruptedException {
+                  return map(
+                          "fixedThreadPool", fixedPoolFactorySample(),
+                          "cachedThreadPool", cachedPoolFactorySample(),
+                          "singleThreadExecutor", singleThreadFactorySample(),
+                          "scheduledThreadPool", scheduledPoolFactorySample()
+                  );
+              }</code></pre>
+        </li>
+        <li>A cached pool receives four simultaneous blocked tasks and grows because no worker is idle.</li>
+        <li>A single-thread executor processes three tasks in submission order.</li>
+        <li>A scheduled pool runs a task after a requested delay and records the worker and elapsed time.</li>
+      </ol>
+      <p><b>Conclusion:</b> Compare Executors factory methods. The response and Execution Context are the runtime evidence for this behavior; the colocated source snippet shows the code path that creates the experiment.</p>
+    usage: true
+  scheduledExecution():
+    execution: |-
+      <p><b>Concept:</b> The service measures three executions each for fixed-rate and fixed-delay scheduling on a single scheduled worker.</p>
+      <ol>
+        <li>Both modes use a 30 ms configured interval while each task deliberately sleeps for about 60 ms.
+          <div><i>Source: ThreadPoolService.scheduledExecutionModesDemo()</i></div>
+          <pre><code>    public Map&lt;String, Object&gt; scheduledExecutionModesDemo() throws InterruptedException {
+                  return map(
+                          "fixedRate", observePeriodicSchedule(true),
+                          "fixedDelay", observePeriodicSchedule(false)
+                  );
+              }</code></pre>
+        </li>
+        <li>For fixed rate, missed schedule times do not create overlapping executions on the single worker, so later runs can start as soon as the previous run finishes.</li>
+        <li>For fixed delay, each next run waits for the configured delay after the previous run ends.</li>
+        <li>The response contains start/end timestamps and the observed inter-run gaps.</li>
+      </ol>
+      <p><b>Conclusion:</b> Compare fixed-rate and fixed-delay scheduling. The response and Execution Context are the runtime evidence for this behavior; the colocated source snippet shows the code path that creates the experiment.</p>
+    usage: true
+  scheduledFailure():
+    execution: |-
+      <p><b>Concept:</b> A single-thread scheduled executor runs a fixed-rate task that throws on every invocation.</p>
+      <ol>
+        <li>The first execution increments a counter and throws <code>IllegalStateException</code>.
+          <div><i>Source: ThreadPoolService.scheduledFailureDemo()</i></div>
+          <pre><code>    public Map&lt;String, Object&gt; scheduledFailureDemo() throws InterruptedException {
+                  ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor(
+                          namedFactory("scheduled-failure-worker-")
+                  );
+                  AtomicInteger runs = new AtomicInteger();
+                  ScheduledFuture&lt;?&gt; periodic = null;
+                  try {
+                      periodic = executor.scheduleAtFixedRate(() -&gt; {
+                          runs.incrementAndGet();
+              ...
+          }</code></pre>
+        </li>
+        <li>The periodic <code>ScheduledFuture</code> completes exceptionally; <code>get()</code> exposes the failure through <code>ExecutionException</code>.</li>
+        <li>The service records that only one run occurred because subsequent executions of that periodic task are suppressed after the uncaught failure.</li>
+      </ol>
+      <p><b>Conclusion:</b> Observe periodic task suppression after failure. The response and Execution Context are the runtime evidence for this behavior; the colocated source snippet shows the code path that creates the experiment.</p>
+    usage: true
+  callerRuns():
+    execution: "<p><b>Concept:</b> The service saturates a one-worker, one-queue-slot\
+      \ executor configured with <code>CallerRunsPolicy</code>.</p>\n<ol>\n  <li>A\
+      \ latch-blocked task occupies the worker.\n    <div><i>Source: ThreadPoolService.callerRunsDemo()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; callerRunsDemo() throws\
+      \ InterruptedException {\n            CountDownLatch releaseWorker = new CountDownLatch(1);\n\
+      \            AtomicReference&lt;String&gt; fallbackThread = new AtomicReference&lt;&gt;();\n\
+      \            String callerThread = Thread.currentThread().getName();\n    \n\
+      \            ThreadPoolExecutor executor = new ThreadPoolExecutor(\n       \
+      \             1,\n                    1,\n                    0,\n        ...\n\
+      \    }</code></pre>\n  </li>\n  <li>A second task fills the only queue slot.</li>\n\
+      \  <li>The next submitted task is rejected by normal capacity checks, so <code>CallerRunsPolicy</code>\
+      \ executes it synchronously on the HTTP caller thread.</li>\n  <li>The service\
+      \ compares the caller and fallback thread names, then releases and shuts down\
+      \ the executor.</li>\n</ol>\n<p><b>Conclusion:</b> Observe feedback pressure\
+      \ from CallerRunsPolicy. The response and Execution Context are the runtime\
+      \ evidence for this behavior; the colocated source snippet shows the code path\
+      \ that creates the experiment.</p>"
+    usage: true
+  discardPolicies():
+    execution: |-
+      <p><b>Concept:</b> Two saturated one-worker executors demonstrate the data-loss semantics of discard rejection policies.</p>
+      <ol>
+        <li>With <code>DiscardPolicy</code>, a running task occupies the worker, one task fills the queue, and the next task is silently dropped.
+          <div><i>Source: ThreadPoolService.discardPoliciesDemo()</i></div>
+          <pre><code>    public Map&lt;String, Object&gt; discardPoliciesDemo() throws InterruptedException {
+                  return map(
+                          "discardPolicy", discardPolicySample(),
+                          "discardOldestPolicy", discardOldestPolicySample()
+                  );
+              }</code></pre>
+        </li>
+        <li>With <code>DiscardOldestPolicy</code>, the queued oldest task is removed when a newer task arrives, and the newer task takes its place.</li>
+        <li>After releasing the worker, counters reveal which queued tasks actually ran.</li>
+      </ol>
+      <p><b>Conclusion:</b> Compare DiscardPolicy and DiscardOldestPolicy. The response and Execution Context are the runtime evidence for this behavior; the colocated source snippet shows the code path that creates the experiment.</p>
+    usage: true
+  customRejectionHandler():
+    execution: "<p><b>Concept:</b> The executor uses a custom <code>RejectedExecutionHandler</code>\
+      \ to make overload observable and explicit.</p>\n<ol>\n  <li>A blocked worker\
+      \ and one queued task saturate the one-thread, one-slot executor.\n    <div><i>Source:\
+      \ ThreadPoolService.customRejectionHandlerDemo()</i></div>\n    <pre><code>\
+      \    public Map&lt;String, Object&gt; customRejectionHandlerDemo() throws InterruptedException\
+      \ {\n            CountDownLatch releaseWorker = new CountDownLatch(1);\n   \
+      \         AtomicInteger rejectionCount = new AtomicInteger();\n            AtomicReference&lt;String&gt;\
+      \ rejectedByThread = new AtomicReference&lt;&gt;();\n    \n            ThreadPoolExecutor\
+      \ executor = new ThreadPoolExecutor(\n                    1,\n             \
+      \       1,\n                    0,\n        ...\n    }</code></pre>\n  </li>\n\
+      \  <li>A third submission invokes the custom handler on the submitting thread.</li>\n\
+      \  <li>The handler increments a rejection counter, records that thread name,\
+      \ and throws <code>RejectedExecutionException</code>.</li>\n  <li>The service\
+      \ catches the exception, releases the worker, and returns the recorded overload\
+      \ metadata.</li>\n</ol>\n<p><b>Conclusion:</b> Record overload with a custom\
+      \ rejection handler. The response and Execution Context are the runtime evidence\
+      \ for this behavior; the colocated source snippet shows the code path that creates\
+      \ the experiment.</p>"
+    usage: true
+  gracefulShutdown():
+    execution: "<p><b>Concept:</b> A two-thread fixed pool receives four short tasks\
+      \ before a graceful shutdown is initiated.</p>\n<ol>\n  <li>Each task sleeps\
+      \ briefly and increments a completion counter.\n    <div><i>Source: ThreadPoolService.gracefulShutdownDemo()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; gracefulShutdownDemo()\
+      \ throws InterruptedException {\n            ExecutorService executor = Executors.newFixedThreadPool(2,\
+      \ namedFactory(\"shutdown-worker-\"));\n            AtomicInteger completed\
+      \ = new AtomicInteger();\n    \n            try {\n                for (int\
+      \ i = 0; i &lt; 4; i++) {\n                    executor.execute(() -&gt; {\n\
+      \                        try {\n                            Thread.sleep(20);\n\
+      \        ...\n    }</code></pre>\n  </li>\n  <li>The service calls <code>shutdown()</code>,\
+      \ which rejects new work but allows submitted tasks to finish.</li>\n  <li>It\
+      \ waits up to two seconds for termination and only falls back to <code>shutdownNow()</code>\
+      \ if needed.</li>\n  <li>The response reports completed task count and the executor's\
+      \ shutdown/termination state.</li>\n</ol>\n<p><b>Conclusion:</b> Gracefully\
+      \ shut down an ExecutorService. The response and Execution Context are the runtime\
+      \ evidence for this behavior; the colocated source snippet shows the code path\
+      \ that creates the experiment.</p>"
+    usage: true
+  forcedShutdown():
+    execution: |-
+      <p><b>Concept:</b> A single-thread executor is arranged with one running blocked task and one queued task before forceful shutdown.</p>
+      <ol>
+        <li>The running task waits on a latch while a second runnable remains queued.
+          <div><i>Source: ThreadPoolService.forcedShutdownDemo()</i></div>
+          <pre><code>    public Map&lt;String, Object&gt; forcedShutdownDemo() throws InterruptedException {
+                  ExecutorService executor = Executors.newSingleThreadExecutor(namedFactory("forced-shutdown-"));
+                  CountDownLatch started = new CountDownLatch(1);
+                  CountDownLatch release = new CountDownLatch(1);
+                  AtomicInteger interruptedWorkers = new AtomicInteger();
+                  AtomicInteger queuedTaskRuns = new AtomicInteger();
+                  Runnable queuedTask = queuedTaskRuns::incrementAndGet;
+                  try {
+                      executor.execute(() -&gt; {
+              ...
+          }</code></pre>
+        </li>
+        <li>The service first calls <code>shutdown()</code> and confirms that the executor does not terminate within a short wait.</li>
+        <li><code>shutdownNow()</code> interrupts the running worker and returns the queued task that never started.</li>
+        <li>The result reports interruption, the returned pending task, its zero run count, and final termination.</li>
+      </ol>
+      <p><b>Conclusion:</b> Observe shutdownNow() and never-started tasks. The response and Execution Context are the runtime evidence for this behavior; the colocated source snippet shows the code path that creates the experiment.</p>
+    usage: true

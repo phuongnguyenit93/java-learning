@@ -31,7 +31,5 @@ dependencies {
 implementationModule {
 	serviceList = "" +
 			"DATABASE_${databaseType}," +
-			"SPRING_DEVTOOL," +
-			"MODEL_MAPPER," +
-			"OBJECT_MAPPER"
+			"SPRING_DEVTOOL"
 }

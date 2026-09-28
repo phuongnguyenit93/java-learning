@@ -5,8 +5,11 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.retry:spring-retry'
     implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+    annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
 }
 
 implementationModule {
-    serviceList = "MAPSTRUCT,RESILIENCE_4J,DISTRIBUTED_TRACING,PROMETHEUS_GRAFANA"
+    serviceList = "RESILIENCE_4J,DISTRIBUTED_TRACING,PROMETHEUS_GRAFANA"
 }

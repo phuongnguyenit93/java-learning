@@ -1,0 +1,12 @@
+LeakController:
+  description: |-
+    <h2>Leak Controller</h2>
+    <p>Các demo bounded về Thread leak, pool lifecycle leak và queue pressure; mọi resource được cleanup trong cùng experiment để không để lại leak thật.</p>
+  readmeRelated:
+    file: 2.Leak/Leak.md
+ThreadPoolController:
+  description: |-
+    <h2>Thread Pool Controller</h2>
+    <p>Khảo sát ThreadPoolExecutor flow, Executors factory, scheduling, rejection policy và lifecycle từ graceful đến forced shutdown.</p>
+  readmeRelated:
+    file: 1.Thread_Pool_Executor/ThreadPoolExecutor.md

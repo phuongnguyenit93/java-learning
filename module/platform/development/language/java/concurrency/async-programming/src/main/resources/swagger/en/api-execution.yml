@@ -1,0 +1,154 @@
+AsyncController:
+  future():
+    execution: "<p><b>Concept:</b> The controller delegates to a single-thread executor\
+      \ and returns the observed state of one <code>Future</code>.</p>\n<ol>\n  <li>A\
+      \ callable blocks on a latch and is submitted to the executor.\n    <div><i>Source:\
+      \ AsyncService.futureDemo()</i></div>\n    <pre><code>    public Map&lt;String,\
+      \ Object&gt; futureDemo() throws Exception {\n            ExecutorService executor\
+      \ = Executors.newSingleThreadExecutor();\n            CountDownLatch allowCompletion\
+      \ = new CountDownLatch(1);\n    \n            try {\n                Callable&lt;String&gt;\
+      \ task = () -&gt; {\n                    allowCompletion.await();\n        \
+      \            return \"PAYMENT_OK\";\n                };\n        ...\n    }</code></pre>\n\
+      \  </li>\n  <li>The service checks <code>isDone()</code> while the task is still\
+      \ blocked, releases the latch, then reads the result with a two-second timeout.</li>\n\
+      \  <li>It reports the result and final done state, then shuts the executor down\
+      \ in <code>finally</code>.</li>\n</ol>\n<p><b>Conclusion:</b> Observe Callable\
+      \ and Future. The response and Execution Context are the runtime evidence for\
+      \ this behavior; the colocated source snippet shows the code path that creates\
+      \ the experiment.</p>"
+    usage: true
+  futureCancellation():
+    execution: |-
+      <p><b>Concept:</b> The service runs the same latch-blocked task twice to compare <code>Future.cancel(false)</code> with <code>cancel(true)</code>.</p>
+      <ol>
+        <li>Each sample waits until its worker has started.
+          <div><i>Source: AsyncService.futureCancellationDemo()</i></div>
+          <pre><code>    public Map&lt;String, Object&gt; futureCancellationDemo() throws InterruptedException {
+                  return map(
+                          "cancelWithoutInterrupt", cancellationSample(false),
+                          "cancelWithInterrupt", cancellationSample(true)
+                  );
+              }</code></pre>
+        </li>
+        <li>With <code>false</code>, the future becomes cancelled but the worker remains blocked until the service releases its latch.</li>
+        <li>With <code>true</code>, the blocked worker is interrupted and exits through its <code>InterruptedException</code> path.</li>
+        <li>Both samples confirm that <code>get()</code> throws <code>CancellationException</code> and then clean up their executor.</li>
+      </ol>
+      <p><b>Conclusion:</b> Compare Future.cancel(false) and cancel(true). The response and Execution Context are the runtime evidence for this behavior; the colocated source snippet shows the code path that creates the experiment.</p>
+    usage: true
+  pipeline():
+    execution: "<p><b>Concept:</b> A two-thread executor drives a multi-stage <code>CompletableFuture</code>\
+      \ pipeline.</p>\n<ol>\n  <li>An exchange-rate stage and an order stage start\
+      \ asynchronously.\n    <div><i>Source: AsyncService.pipelineDemo()</i></div>\n\
+      \    <pre><code>    public CompletableFuture&lt;Map&lt;String, Object&gt;&gt;\
+      \ pipelineDemo() {\n            ExecutorService executor = Executors.newFixedThreadPool(2);\n\
+      \            List&lt;String&gt; stageThreads = Collections.synchronizedList(new\
+      \ ArrayList&lt;&gt;());\n    \n            CompletableFuture&lt;Double&gt; exchangeRate\
+      \ = CompletableFuture.supplyAsync(() -&gt; {\n                stageThreads.add(\"\
+      rate:\" + Thread.currentThread().getName());\n                sleep(40);\n \
+      \               return 25_000.0;\n            }, executor);\n        ...\n \
+      \   }</code></pre>\n  </li>\n  <li>The order stage composes into a price lookup.</li>\n\
+      \  <li>The price and exchange rate are combined into a VND total.</li>\n  <li>A\
+      \ final async stage adds shipping and returns the recorded worker thread for\
+      \ each stage; the executor is shut down when the pipeline completes.</li>\n\
+      </ol>\n<p><b>Conclusion:</b> Compose a CompletableFuture pipeline. The response\
+      \ and Execution Context are the runtime evidence for this behavior; the colocated\
+      \ source snippet shows the code path that creates the experiment.</p>"
+    usage: true
+  fastest():
+    execution: "<p><b>Concept:</b> The service uses gated futures to make <code>anyOf</code>\
+      \ behavior deterministic.</p>\n<ol>\n  <li>Server A is released first, so its\
+      \ completion wins the first race; Server B is then released so all demo work\
+      \ finishes.\n    <div><i>Source: AsyncService.fastestCompletionDemo()</i></div>\n\
+      \    <pre><code>    public CompletableFuture&lt;Map&lt;String, Object&gt;&gt;\
+      \ fastestCompletionDemo() {\n            ExecutorService executor = Executors.newFixedThreadPool(2);\n\
+      \            CountDownLatch allowServerA = new CountDownLatch(1);\n        \
+      \    CountDownLatch allowServerB = new CountDownLatch(1);\n    \n          \
+      \  CompletableFuture&lt;String&gt; serverA = CompletableFuture.supplyAsync(()\
+      \ -&gt; {\n                await(allowServerA);\n                return \"Server\
+      \ A: 200 USD\";\n            }, executor);\n        ...\n    }</code></pre>\n\
+      \  </li>\n  <li>A second race completes one future exceptionally before a later\
+      \ successful future.</li>\n  <li>The response records that exceptional completion\
+      \ can win <code>anyOf</code>, <code>join()</code> then throws, and the later\
+      \ sibling is not automatically cancelled.</li>\n</ol>\n<p><b>Conclusion:</b>\
+      \ Observe CompletableFuture.anyOf semantics. The response and Execution Context\
+      \ are the runtime evidence for this behavior; the colocated source snippet shows\
+      \ the code path that creates the experiment.</p>"
+    usage: true
+  exceptionHandling():
+    execution: "<p><b>Concept:</b> The service starts a <code>CompletableFuture</code>\
+      \ that immediately throws a simulated exception.</p>\n<ol>\n  <li>The failed\
+      \ stage completes exceptionally.\n    <div><i>Source: AsyncService.exceptionHandlingDemo()</i></div>\n\
+      \    <pre><code>    public CompletableFuture&lt;Map&lt;String, Object&gt;&gt;\
+      \ exceptionHandlingDemo() {\n            CompletableFuture&lt;String&gt; failed\
+      \ = CompletableFuture.supplyAsync(() -&gt; {\n                throw new IllegalStateException(\"\
+      simulated failure\");\n            });\n    \n            return failed.handle((value,\
+      \ error) -&gt; map(\n                    \"success\", error == null,\n     \
+      \               \"value\", value,\n                    \"recovered\", error\
+      \ != null,\n        ...\n    }</code></pre>\n  </li>\n  <li>A <code>handle</code>\
+      \ stage receives both value and error and converts the failure into a normal\
+      \ result map.</li>\n  <li>The returned future therefore completes successfully\
+      \ with recovery metadata and a <code>FALLBACK</code> value.</li>\n</ol>\n<p><b>Conclusion:</b>\
+      \ Handle exceptional CompletableFuture completion. The response and Execution\
+      \ Context are the runtime evidence for this behavior; the colocated source snippet\
+      \ shows the code path that creates the experiment.</p>"
+    usage: true
+  executionVariant():
+    execution: "<p><b>Concept:</b> The service compares continuation execution policy\
+      \ on an already-completed future.</p>\n<ol>\n  <li><code>thenApply</code> is\
+      \ attached to a completed stage and its thread name is captured, showing that\
+      \ it runs inline on the caller in this experiment.\n    <div><i>Source: AsyncService.executionVariantDemo()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; executionVariantDemo()\
+      \ throws Exception {\n            String callerThread = Thread.currentThread().getName();\n\
+      \            ExecutorService executor = Executors.newSingleThreadExecutor(runnable\
+      \ -&gt;\n                    new Thread(runnable, \"async-variant-worker\")\n\
+      \            );\n    \n            try {\n                AtomicBoolean nonAsyncRanInline\
+      \ = new AtomicBoolean(false);\n                AtomicBoolean asyncUsedConfiguredExecutor\
+      \ = new AtomicBoolean(false);\n        ...\n    }</code></pre>\n  </li>\n  <li><code>thenApplyAsync</code>\
+      \ is given a dedicated single-thread executor named <code>async-variant-worker</code>.</li>\n\
+      \  <li>The response reports both thread names and the observed executor choice\
+      \ before the executor is shut down.</li>\n</ol>\n<p><b>Conclusion:</b> Compare\
+      \ thenApply and thenApplyAsync. The response and Execution Context are the runtime\
+      \ evidence for this behavior; the colocated source snippet shows the code path\
+      \ that creates the experiment.</p>"
+    usage: true
+  allOf():
+    execution: "<p><b>Concept:</b> The service exercises both successful and exceptional\
+      \ <code>CompletableFuture.allOf</code> aggregation.</p>\n<ol>\n  <li>Three tasks\
+      \ run on a three-thread pool and the first aggregate waits for all of them.\n\
+      \    <div><i>Source: AsyncService.allOfDemo()</i></div>\n    <pre><code>   \
+      \ public Map&lt;String, Object&gt; allOfDemo() throws Exception {\n        \
+      \    ExecutorService executor = Executors.newFixedThreadPool(3);\n         \
+      \   try {\n                CompletableFuture&lt;String&gt; inventory = CompletableFuture.supplyAsync(()\
+      \ -&gt; \"IN_STOCK\", executor);\n                CompletableFuture&lt;String&gt;\
+      \ payment = CompletableFuture.supplyAsync(() -&gt; \"PAID\", executor);\n  \
+      \              CompletableFuture&lt;String&gt; shipping = CompletableFuture.supplyAsync(()\
+      \ -&gt; \"READY\", executor);\n    \n                CompletableFuture&lt;Void&gt;\
+      \ all = CompletableFuture.allOf(inventory, payment, shipping);\n           \
+      \     all.get(2, TimeUnit.SECONDS);\n        ...\n    }</code></pre>\n  </li>\n\
+      \  <li>For the failure case, one input is completed exceptionally while another\
+      \ sibling is still incomplete.</li>\n  <li>The service observes that the aggregate\
+      \ does not finish until the remaining sibling completes, then <code>join()</code>\
+      \ exposes the failure and the successful sibling remains uncancelled.</li>\n\
+      </ol>\n<p><b>Conclusion:</b> Observe CompletableFuture.allOf semantics. The\
+      \ response and Execution Context are the runtime evidence for this behavior;\
+      \ the colocated source snippet shows the code path that creates the experiment.</p>"
+    usage: true
+  timeoutCancellation():
+    execution: |-
+      <p><b>Concept:</b> The service runs two latch-blocked <code>CompletableFuture</code> experiments to separate future state from underlying task interruption.</p>
+      <ol>
+        <li><code>orTimeout</code> completes the future with <code>TimeoutException</code>, but the worker is not interrupted and continues until the latch is released.
+          <div><i>Source: AsyncService.timeoutCancellationDemo()</i></div>
+          <pre><code>    public Map&lt;String, Object&gt; timeoutCancellationDemo() throws InterruptedException {
+                  return map(
+                          "orTimeout", completableFutureTimeoutSample(),
+                          "completableFutureCancelTrue", completableFutureCancellationSample()
+                  );
+              }</code></pre>
+        </li>
+        <li><code>cancel(true)</code> marks the <code>CompletableFuture</code> cancelled and makes <code>join()</code> throw <code>CancellationException</code>, yet the submitted worker is still not interrupted in this setup.</li>
+        <li>Both workers are explicitly released and executors are cleaned up.</li>
+      </ol>
+      <p><b>Conclusion:</b> Distinguish CompletableFuture timeout from cancellation. The response and Execution Context are the runtime evidence for this behavior; the colocated source snippet shows the code path that creates the experiment.</p>
+    usage: true

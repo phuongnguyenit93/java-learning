@@ -1,0 +1,12 @@
+LeakController:
+  description: |-
+    <h2>Leak Controller</h2>
+    <p>Bounded demonstrations of Thread leaks, executor lifecycle leaks, and queue pressure; every resource is cleaned up within the experiment.</p>
+  readmeRelated:
+    file: 2.Leak/Leak.md
+ThreadPoolController:
+  description: |-
+    <h2>Thread Pool Controller</h2>
+    <p>Explores ThreadPoolExecutor flow, Executors factories, scheduling, rejection policies, and lifecycle from graceful to forced shutdown.</p>
+  readmeRelated:
+    file: 1.Thread_Pool_Executor/ThreadPoolExecutor.md

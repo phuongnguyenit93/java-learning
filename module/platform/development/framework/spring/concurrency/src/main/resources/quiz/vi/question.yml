@@ -1,0 +1,116 @@
+# <quiz-schema>
+# Cấu trúc câu hỏi Quiz
+# schema-version: 3
+#
+# questions [kiểu: list; bắt buộc; mặc định: []; duy nhất theo: id]
+#   Danh sách câu hỏi Quiz của module trong language hiện tại.
+#   mỗi phần tử:
+#     id [kiểu: string; bắt buộc; mặc định: ""]
+#       ID ổn định và duy nhất của câu hỏi.
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi hiển thị cho người học.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu câu hỏi được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu câu hỏi đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+#     answers [kiểu: list; bắt buộc; số phần tử: 4; mặc định: []; duy nhất theo: id]
+#       Chính xác bốn đáp án. ID A/B/C/D là identity nội bộ ổn định, không phải vị trí hiển thị sau khi frontend shuffle.
+#       mỗi phần tử:
+#         id [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#           Identity ổn định của đáp án.
+#         answer [kiểu: string; bắt buộc; mặc định: ""]
+#           Nội dung đáp án hiển thị cho người học.
+#         explanation [kiểu: string; bắt buộc; mặc định: ""]
+#           Giải thích hiển thị khi người học chọn đáp án này, bất kể đúng hay sai.
+#     correctAnswerId [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
+# </quiz-schema>
+
+questions:
+  - id: spring-async-proxy
+    question: "Một method `@Async` được gọi từ method khác trong cùng bean bằng `this.asyncMethod()`. Tại sao call có thể không async trong default proxy mode?"
+    answers:
+      - id: A
+        answer: "Vì `@Async` chỉ chạy được trên static method."
+        explanation: "Sai. @Async không yêu cầu method static."
+      - id: B
+        answer: "Vì JVM không cho một object gọi method của chính nó."
+        explanation: "Sai. Self-call hoàn toàn hợp lệ về Java; vấn đề nằm ở Spring proxy interception."
+      - id: C
+        answer: "Vì self-invocation có thể bypass Spring proxy, nên async interceptor không có cơ hội dispatch invocation sang TaskExecutor."
+        explanation: "Đúng. Async boundary thường rõ ràng hơn khi nằm giữa hai Spring bean và call đi qua proxy."
+      - id: D
+        answer: "Vì mọi @Async method bắt buộc phải trả `void`."
+        explanation: "Sai. @Async có thể dùng `Future`/`CompletableFuture` và các return type được framework hỗ trợ."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.Spring_Task_Executor/SpringExecutor.md"
+      anchor: "async-annotation"
+    apiRelated:
+      controller: "TaskExecutorController"
+      methodSignature: "asyncWithContext()"
+
+  - id: spring-task-decorator-context
+    question: "Responsibility phù hợp nhất của Spring `TaskDecorator` trong module là gì?"
+    answers:
+      - id: A
+        answer: "Capture context ở caller, restore trên worker trước task, rồi cleanup/restore previous context trong `finally`."
+        explanation: "Đúng. Đây là bridge trực tiếp từ ThreadLocal/context propagation sang ThreadPoolTaskExecutor."
+      - id: B
+        answer: "Thay thế hoàn toàn rejection handling và Future exception handling."
+        explanation: "Sai. Decorator tập trung vào execution context; failure observation/rejection có contract riêng."
+      - id: C
+        answer: "Giữ nguyên toàn bộ HTTP request object vô thời hạn để task background dùng bất cứ lúc nào."
+        explanation: "Sai. Propagation không kéo dài lifecycle của HTTP request; nên capture các giá trị cần thiết thay vì phụ thuộc dài hạn vào request object."
+      - id: D
+        answer: "Ép mọi @Async method chạy trên caller thread."
+        explanation: "Sai. TaskDecorator không thay execution strategy thành synchronous caller execution."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.Spring_Task_Executor/SpringExecutor.md"
+      anchor: "task-decorator"
+    apiRelated:
+      controller: "TaskExecutorController"
+      methodSignature: "asyncWithContext()"
+
+  - id: spring-async-void-failure
+    question: "Một `void @Async` method ném exception sau khi đã được dispatch thành công. Caller có nhận exception đó qua `Future` không?"
+    answers:
+      - id: A
+        answer: "Có, Spring luôn tạo Future ẩn và throw lại cho HTTP caller."
+        explanation: "Sai. `void @Async` không trả completion handle cho caller."
+      - id: B
+        answer: "Không. Cần error channel riêng như `AsyncUncaughtExceptionHandler`, logging hoặc metrics; submission rejection lại là failure khác ở admission boundary."
+        explanation: "Đúng. README phân biệt exception trong async method body với failure xảy ra ngay khi submit task."
+      - id: C
+        answer: "Không cần xử lý vì mọi exception của @Async đều bị bỏ qua theo contract."
+        explanation: "Sai. Failure vẫn cần được quan sát qua strategy phù hợp."
+      - id: D
+        answer: "Chỉ cần TaskDecorator là đủ để bắt mọi loại async failure."
+        explanation: "Sai. TaskDecorator tập trung context propagation và không phải universal async exception handler."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.Spring_Task_Executor/SpringExecutor.md"
+      anchor: "async-return-type"
+    apiRelated:
+      controller: "TaskExecutorController"
+      methodSignature: "asyncVoidException()"
+

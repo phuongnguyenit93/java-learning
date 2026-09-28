@@ -1,0 +1,565 @@
+# <quiz-schema>
+# Cấu trúc câu hỏi Quiz
+# schema-version: 3
+#
+# questions [kiểu: list; bắt buộc; mặc định: []; duy nhất theo: id]
+#   Danh sách câu hỏi Quiz của module trong language hiện tại.
+#   mỗi phần tử:
+#     id [kiểu: string; bắt buộc; mặc định: ""]
+#       ID ổn định và duy nhất của câu hỏi.
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi hiển thị cho người học.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu câu hỏi được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu câu hỏi đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+#     answers [kiểu: list; bắt buộc; số phần tử: 4; mặc định: []; duy nhất theo: id]
+#       Chính xác bốn đáp án. ID A/B/C/D là identity nội bộ ổn định, không phải vị trí hiển thị sau khi frontend shuffle.
+#       mỗi phần tử:
+#         id [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#           Identity ổn định của đáp án.
+#         answer [kiểu: string; bắt buộc; mặc định: ""]
+#           Nội dung đáp án hiển thị cho người học.
+#         explanation [kiểu: string; bắt buộc; mặc định: ""]
+#           Giải thích hiển thị khi người học chọn đáp án này, bất kể đúng hay sai.
+#     correctAnswerId [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
+# </quiz-schema>
+
+questions:
+  - id: thread-start-vs-run
+    question: "Một `Thread worker` đã được tạo. Phát biểu nào mô tả đúng nhất khác biệt giữa `worker.run()` và `worker.start()`?"
+    answers:
+      - id: A
+        answer: "Cả hai đều tạo một thread mới, nhưng `start()` có priority cao hơn."
+        explanation: "Sai. `run()` gọi method bình thường trên thread hiện tại; priority không phải điểm khác biệt giữa hai lời gọi này."
+      - id: B
+        answer: "`run()` chạy trên caller thread, còn `start()` bắt đầu lifecycle của thread mới và JVM sẽ thực thi `run()` trên thread đó."
+        explanation: "Đúng. Đây là mental model cốt lõi của README: `run()` là method call, còn `start()` khởi động execution của một Thread riêng."
+      - id: C
+        answer: "`run()` chỉ dùng cho daemon thread, còn `start()` chỉ dùng cho user thread."
+        explanation: "Sai. Daemon hay user thread không quyết định việc dùng `run()` hay `start()`."
+      - id: D
+        answer: "`start()` có thể gọi nhiều lần trên cùng một Thread object miễn là lần trước đã kết thúc."
+        explanation: "Sai. Một `Thread` object chỉ có thể được `start()` một lần; gọi lại sẽ gây `IllegalThreadStateException`."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Basic/Basic.md"
+      anchor: "start-vs-run"
+    apiRelated:
+      controller: "BasicThreadController"
+      methodSignature: "startVsRun()"
+
+  - id: task-vs-execution-mechanism
+    question: "Trong mental model của module, vai trò nào sau đây là đúng?"
+    answers:
+      - id: A
+        answer: "`Callable` là một loại Thread có khả năng trả về kết quả."
+        explanation: "Sai. `Callable` mô tả task có kết quả/checked exception; nó không tự tạo hay đại diện cho execution thread."
+      - id: B
+        answer: "`Runnable` quyết định thread pool nào sẽ chạy task."
+        explanation: "Sai. `Runnable` mô tả công việc; execution policy thuộc `Thread`/`Executor`."
+      - id: C
+        answer: "`Runnable`/`Callable` mô tả WHAT to run; `Thread`/`Executor` quyết định WHERE/HOW execution diễn ra."
+        explanation: "Đúng. Việc tách task khỏi execution mechanism là nền tảng để hiểu Executor và Thread Pool."
+      - id: D
+        answer: "`Executor` chỉ là cú pháp ngắn cho `new Thread(task).start()`."
+        explanation: "Sai. Executor còn quản lý execution strategy, worker reuse, queue, lifecycle và có thể có rejection policy."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Basic/Basic.md"
+      anchor: "thread-task"
+    apiRelated:
+      controller: "CreateThreadController"
+      methodSignature: "createByRunnable()"
+
+  - id: thread-state-blocked
+    question: "Một thread đang cố đi vào `synchronized(monitor)` nhưng monitor đang bị thread khác giữ. `Thread.State` phù hợp nhất là gì?"
+    answers:
+      - id: A
+        answer: "WAITING"
+        explanation: "Sai. `WAITING` thường xuất hiện với chờ vô thời hạn như `wait()`, `join()` hoặc `park()`, không phải chờ intrinsic monitor."
+      - id: B
+        answer: "TIMED_WAITING"
+        explanation: "Sai. `TIMED_WAITING` là trạng thái chờ có giới hạn thời gian như `sleep()` hoặc `join(timeout)`."
+      - id: C
+        answer: "RUNNABLE"
+        explanation: "Sai. Thread có thể ở RUNNABLE khi sẵn sàng/chạy CPU, nhưng chờ intrinsic monitor có state riêng."
+      - id: D
+        answer: "BLOCKED"
+        explanation: "Đúng. Trong `Thread.State`, BLOCKED có nghĩa cụ thể là đang chờ intrinsic monitor để vào vùng `synchronized`."
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Basic/Basic.md"
+      anchor: "thread-state"
+    apiRelated:
+      controller: "BasicThreadController"
+      methodSignature: "threadLifeCycle()"
+
+  - id: daemon-jvm-lifecycle
+    question: "Phát biểu nào đúng về daemon thread và lifecycle của JVM?"
+    answers:
+      - id: A
+        answer: "Daemon thread luôn có priority thấp hơn user thread."
+        explanation: "Sai. Daemon là thuộc tính liên quan đến JVM liveness, không phải quy tắc về scheduling priority."
+      - id: B
+        answer: "JVM không bắt buộc phải tiếp tục sống chỉ để chờ daemon thread hoàn thành khi không còn user thread nào sống."
+        explanation: "Đúng. Đây là lý do daemon thread không phù hợp cho công việc bắt buộc phải hoàn tất trước khi process kết thúc nếu không có cơ chế bảo đảm khác."
+      - id: C
+        answer: "Kết thúc một HTTP request chứng minh daemon thread do request tạo ra cũng đã kết thúc."
+        explanation: "Sai. Spring Boot vẫn còn nhiều thread khác giữ JVM sống; request kết thúc không chứng minh rule JVM shutdown."
+      - id: D
+        answer: "Có thể đổi `setDaemon(true)` bất kỳ lúc nào sau khi thread đã `start()`."
+        explanation: "Sai. Daemon flag phải được cấu hình trước khi thread được start."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Basic/Basic.md"
+      anchor: "daemon-thread"
+    apiRelated:
+      controller: "DaemonThreadController"
+      methodSignature: "inspectDaemonRules()"
+
+  - id: interrupt-cooperative-cancellation
+    question: "Một worker chạy vòng lặp CPU-bound dài và không gọi API blocking. Muốn `interrupt()` có hiệu lực theo cooperative cancellation, worker nên làm gì?"
+    answers:
+      - id: A
+        answer: "Không cần làm gì; JVM sẽ cưỡng bức dừng worker ngay khi nhận interrupt."
+        explanation: "Sai. `interrupt()` không phải kill command. CPU-bound loop phải tự quan sát cancellation signal."
+      - id: B
+        answer: "Gọi `Thread.stop()` sau khi nhận interrupt để chắc chắn thoát."
+        explanation: "Sai. `Thread.stop()` đã deprecated vì có thể dừng thread ở thời điểm không an toàn và phá invariant."
+      - id: C
+        answer: "Đặt cancellation point hợp lý bằng cách kiểm tra `Thread.currentThread().isInterrupted()`."
+        explanation: "Đúng. Với code không đi qua interruptible blocking API, worker phải chủ động kiểm tra interrupt status và kết thúc có kiểm soát."
+      - id: D
+        answer: "Chuyển worker thành daemon thread."
+        explanation: "Sai. Daemon status không biến interrupt thành forced cancellation."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.Interruption/Interruption.md"
+      anchor: "interrupt-mental-model"
+    apiRelated:
+      controller: "InterruptionController"
+      methodSignature: "interruptBusyWorker()"
+
+  - id: interrupted-flag-clear
+    question: "Phát biểu nào đúng về `isInterrupted()` và `Thread.interrupted()`?"
+    answers:
+      - id: A
+        answer: "`isInterrupted()` chỉ đọc trạng thái; `Thread.interrupted()` đọc interrupt status của current thread và clear nó."
+        explanation: "Đúng. Đây là khác biệt quan trọng: một API quan sát, API static kia vừa quan sát vừa consume/clear signal của current thread."
+      - id: B
+        answer: "Cả hai đều luôn clear interrupt status."
+        explanation: "Sai. `isInterrupted()` không clear status."
+      - id: C
+        answer: "`Thread.interrupted()` có thể kiểm tra interrupt status của bất kỳ target thread nào được truyền vào."
+        explanation: "Sai. Đây là static method kiểm tra current thread và không nhận target thread làm tham số."
+      - id: D
+        answer: "`isInterrupted()` chỉ dùng được khi thread đang BLOCKED."
+        explanation: "Sai. Interrupt status có thể được kiểm tra ở nhiều trạng thái; nó không giới hạn cho BLOCKED."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.Interruption/Interruption.md"
+      anchor: "interrupt-flag"
+    apiRelated:
+      controller: "InterruptionController"
+      methodSignature: "inspectInterruptFlag()"
+
+  - id: interrupt-synchronized-monitor
+    question: "Thread B đang BLOCKED để chờ intrinsic monitor của `synchronized`. Thread A gọi `threadB.interrupt()`. Điều gì đúng nhất?"
+    answers:
+      - id: A
+        answer: "B lập tức nhận `InterruptedException` và rời hàng chờ monitor."
+        explanation: "Sai. Intrinsic monitor acquisition của `synchronized` không phải interruptible wait theo cách `sleep()`/`wait()` hoạt động."
+      - id: B
+        answer: "B lập tức chuyển sang TERMINATED."
+        explanation: "Sai. Interrupt không cưỡng bức kết thúc thread."
+      - id: C
+        answer: "Interrupt bị bỏ qua hoàn toàn và status luôn vẫn false."
+        explanation: "Sai. Interrupt status có thể được set dù B vẫn đang BLOCKED."
+      - id: D
+        answer: "B vẫn có thể tiếp tục BLOCKED cho tới khi monitor được release; sau đó code có thể quan sát interrupt status."
+        explanation: "Đúng. Nếu cần lock acquisition phản ứng trực tiếp với cancellation, `ReentrantLock.lockInterruptibly()` là lựa chọn phù hợp hơn."
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.Interruption/Interruption.md"
+      anchor: "interrupt-limitations"
+    apiRelated:
+      controller: "InterruptionController"
+      methodSignature: "interruptSynchronizedWaiter()"
+
+  - id: volatile-not-compound-atomic
+    question: "Có `volatile int count` và nhiều thread cùng chạy `count++`. Nhận định nào đúng?"
+    answers:
+      - id: A
+        answer: "`volatile` biến toàn bộ `count++` thành một atomic instruction."
+        explanation: "Sai. `count++` vẫn là read-modify-write và các thread có thể interleave gây lost update."
+      - id: B
+        answer: "`volatile` cung cấp visibility/ordering cho read/write liên quan, nhưng không làm compound increment trở nên atomic."
+        explanation: "Đúng. Nếu cần atomic increment, cân nhắc `AtomicInteger`, lock hoặc cơ chế phù hợp với invariant."
+      - id: C
+        answer: "`volatile` chỉ có tác dụng khi biến là reference, không có tác dụng với `int`."
+        explanation: "Sai. `volatile` áp dụng được cho primitive như `int`, nhưng semantics không bao gồm compound atomicity."
+      - id: D
+        answer: "`count++` an toàn vì mỗi thread có stack riêng."
+        explanation: "Sai. Field `count` là shared mutable state; stack riêng không bảo vệ object/field dùng chung."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.Concurrency_Problems/ConcurrencyProblem.md"
+      anchor: "volatile-publication"
+    apiRelated:
+      controller: "ConcurrencyProblemController"
+      methodSignature: "volatileIsNotAtomic()"
+
+  - id: happens-before-start-join
+    question: "Flow nào dưới đây tạo ra guarantee phù hợp với rule `Thread.start()` và `Thread.join()` của JMM?"
+    answers:
+      - id: A
+        answer: "Parent ghi data sau `start()`, worker chắc chắn thấy data đó ngay."
+        explanation: "Sai. Start rule bảo đảm actions trước `start()` happens-before actions của started thread, không phải mọi write sau đó."
+      - id: B
+        answer: "Worker ghi data sau khi kết thúc, parent đọc trước `join()` vẫn luôn thấy write mới."
+        explanation: "Sai. Nếu chưa có synchronization edge phù hợp, không thể suy luận guarantee đó chỉ từ thời gian thực."
+      - id: C
+        answer: "Parent ghi data trước `start()` để worker thấy; worker ghi kết quả rồi kết thúc; parent `join()` thành công trước khi đọc kết quả."
+        explanation: "Đúng. Actions trước `start()` được truyền sang worker; actions của worker happens-before code tiếp tục sau successful `join()`."
+      - id: D
+        answer: "`start()` và `join()` chỉ quản lý lifecycle, không có memory-consistency guarantee."
+        explanation: "Sai. README nhấn mạnh chúng vừa coordination lifecycle vừa tạo các happens-before edge quan trọng."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.Concurrency_Problems/ConcurrencyProblem.md"
+      anchor: "happens-before"
+    apiRelated:
+      controller: "ConcurrencyProblemController"
+      methodSignature: "startJoinHappensBefore()"
+
+  - id: safe-publication-this-escape
+    question: "Tại sao publish `this` từ constructor trước khi constructor hoàn tất là nguy hiểm trong concurrent code?"
+    answers:
+      - id: A
+        answer: "Thread khác có thể quan sát object trước khi invariant/initialization hoàn tất, làm suy yếu reasoning về safe publication và final-field initialization safety."
+        explanation: "Đúng. Nên hoàn tất construction trước rồi publish object qua một boundary có memory-consistency contract rõ ràng."
+      - id: B
+        answer: "Vì JVM luôn copy object sang stack của thread khác."
+        explanation: "Sai. Object vẫn nằm trên heap; vấn đề là publication boundary và visibility/initialization guarantee."
+      - id: C
+        answer: "Vì mọi field `final` trở thành mutable sau khi `this` escape."
+        explanation: "Sai. `final` không trở thành mutable; vấn đề là object có thể bị quan sát quá sớm."
+      - id: D
+        answer: "Vì constructor bắt buộc phải chạy trong `synchronized`."
+        explanation: "Sai. Constructor không bắt buộc phải synchronized; điều quan trọng là invariant và cách publish reference."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.Concurrency_Problems/ConcurrencyProblem.md"
+      anchor: "safe-publication-final"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - id: progress-deadlock-livelock-starvation
+    question: "Tình huống nào mô tả livelock chính xác nhất?"
+    answers:
+      - id: A
+        answer: "Hai thread giữ lock theo vòng tròn và đều đứng yên chờ nhau."
+        explanation: "Sai. Đó là hình thái deadlock điển hình với circular wait."
+      - id: B
+        answer: "Một thread hiếm khi được CPU/lock/resource trong khi các thread khác vẫn tiến triển."
+        explanation: "Sai. Đó là starvation."
+      - id: C
+        answer: "Hai thread đã TERMINATED nên không còn công việc."
+        explanation: "Sai. TERMINATED không phải liveness problem kiểu livelock."
+      - id: D
+        answer: "Các thread vẫn hoạt động và liên tục phản ứng/back off với nhau nhưng không tạo được progress hữu ích."
+        explanation: "Đúng. Livelock là active but no progress; khác deadlock ở chỗ các thread vẫn đang thực hiện hành động."
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.Concurrency_Problems/ConcurrencyProblem.md"
+      anchor: "progress-problems"
+    apiRelated:
+      controller: "ConcurrencyProblemController"
+      methodSignature: "boundedLivelock()"
+
+  - id: threadlocal-worker-cleanup
+    question: "Tại sao `ThreadLocal.remove()` đặc biệt quan trọng khi task chạy trên thread pool?"
+    answers:
+      - id: A
+        answer: "Vì remove làm worker thread bị hủy và pool tạo worker mới."
+        explanation: "Sai. `remove()` xóa association của ThreadLocal trên current thread; nó không terminate worker."
+      - id: B
+        answer: "Vì ThreadLocal value luôn được chia sẻ cho mọi worker nếu không remove."
+        explanation: "Sai. ThreadLocal là per-thread association; rủi ro nằm ở cùng worker được reuse cho task khác."
+      - id: C
+        answer: "Vì remove biến object thành immutable."
+        explanation: "Sai. Cleanup context không thay đổi mutability của object."
+      - id: D
+        answer: "Vì worker sống lâu và được reuse; context cũ có thể rò sang task sau hoặc giữ reference lâu hơn dự kiến nếu không cleanup trong `finally`."
+        explanation: "Đúng. Pattern an toàn là set/capture → try work → finally remove/restore."
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Context/ThreadLocal.md"
+      anchor: "thread-local-cleanup"
+    apiRelated:
+      controller: "ThreadLocalController"
+      methodSignature: "poolReuseProblem()"
+
+  - id: inheritable-threadlocal-pool-reuse
+    question: "Vì sao `InheritableThreadLocal` không phải giải pháp đáng tin cậy để propagate request context qua thread pool?"
+    answers:
+      - id: A
+        answer: "Vì InheritableThreadLocal chỉ hoạt động với daemon thread."
+        explanation: "Sai. Semantics chính liên quan creation-time inheritance, không phải daemon status."
+      - id: B
+        answer: "Giá trị được inherit khi child thread được tạo; pooled worker thường được tạo từ trước rồi reuse cho nhiều task nên không có lần tạo child mới cho mỗi submission."
+        explanation: "Đúng. Vì vậy task sau có thể thấy stale inherited context; explicit capture/restore/cleanup phù hợp hơn."
+      - id: C
+        answer: "Vì thread pool cấm mọi ThreadLocal."
+        explanation: "Sai. ThreadLocal vẫn dùng được, nhưng lifecycle và cleanup phải được quản lý đúng."
+      - id: D
+        answer: "Vì mỗi task trong pool luôn chạy trên một process riêng."
+        explanation: "Sai. Worker threads vẫn nằm trong cùng JVM process."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Context/ThreadLocal.md"
+      anchor: "inheritable-thread-local"
+    apiRelated:
+      controller: "ThreadLocalController"
+      methodSignature: "poolReuseProblem()"
+
+  - id: interrupted-exception-restore-status
+    question: "Một worker đang `sleep()` nhận interrupt và đi vào `catch (InterruptedException e)`. Nếu method không propagate exception nhưng muốn tầng trên vẫn biết cancellation đã được yêu cầu, pattern phù hợp là gì?"
+    answers:
+      - id: A
+        answer: "Bỏ qua exception vì interrupt status luôn tự giữ nguyên là `true`."
+        explanation: "Sai. Với nhiều interruptible blocking API, interrupt status thường đã bị clear khi `InterruptedException` được ném."
+      - id: B
+        answer: "Gọi `Thread.currentThread().interrupt()` để restore interrupt status rồi return/kết thúc theo policy của method."
+        explanation: "Đúng. Khi không propagate `InterruptedException`, restore status là pattern phổ biến để bảo toàn cancellation signal cho code phía trên."
+      - id: C
+        answer: "Gọi `Thread.interrupted()` liên tục cho đến khi trả `true`."
+        explanation: "Sai. `Thread.interrupted()` còn clear status của current thread, nên dùng tùy tiện có thể làm mất signal."
+      - id: D
+        answer: "Chuyển worker thành daemon thread để signal được giữ lại."
+        explanation: "Sai. Daemon status không liên quan đến việc preserve interrupt status."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.Interruption/Interruption.md"
+      anchor: "interrupted-exception"
+    apiRelated:
+      controller: "InterruptionController"
+      methodSignature: "interruptSleepingWorker()"
+
+  - id: interrupt-vs-volatile-stop-flag
+    question: "Worker đang ở giữa `Thread.sleep(30_000)`. Khác biệt quan trọng giữa chỉ set `volatile boolean stopRequested = true` và gọi `worker.interrupt()` là gì?"
+    answers:
+      - id: A
+        answer: "Stop flag tự đánh thức `sleep()` ngay như interrupt."
+        explanation: "Sai. Stop flag chỉ là application state; worker thường chỉ đọc lại nó khi có cơ hội chạy tiếp."
+      - id: B
+        answer: "`interrupt()` có thể làm interruptible blocking operation như `sleep()` kết thúc sớm bằng `InterruptedException`, còn stop flag tự nó không làm việc đó."
+        explanation: "Đúng. Cả hai có thể tham gia cooperative cancellation, nhưng interruption được tích hợp với nhiều blocking API của Java."
+      - id: C
+        answer: "Stop flag luôn mạnh hơn vì nó cưỡng bức kill worker."
+        explanation: "Sai. Stop flag cũng là cooperative state; nó không cưỡng bức dừng Thread."
+      - id: D
+        answer: "Hai cách hoàn toàn tương đương trong mọi blocking API."
+        explanation: "Sai. README nhấn mạnh sự khác nhau về khả năng đánh thức nhiều interruptible waits."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.Interruption/Interruption.md"
+      anchor: "interrupt-vs-stop-flag"
+    apiRelated:
+      controller: "InterruptionController"
+      methodSignature: "stopFlagVsInterrupt()"
+
+  - id: race-condition-lost-update
+    question: "Hai thread cùng tăng một plain `int count` bằng `count++`. Vì sao có thể xảy ra lost update?"
+    answers:
+      - id: A
+        answer: "Vì `count++` là read-modify-write; hai thread có thể cùng đọc giá trị cũ rồi cùng ghi kết quả dựa trên snapshot đó."
+        explanation: "Đúng. `count++` nhìn như một expression nhưng không phải một operation nguyên tử ở mức invariant này."
+      - id: B
+        answer: "Vì mỗi thread có heap riêng và hai heap không đồng bộ."
+        explanation: "Sai. Các thread trong cùng process có thể cùng truy cập object trên heap của process."
+      - id: C
+        answer: "Vì JVM bắt buộc thực thi `count++` theo thứ tự ngược."
+        explanation: "Sai. Vấn đề là interleaving không được kiểm soát, không phải JVM bắt buộc đảo thứ tự."
+      - id: D
+        answer: "Chỉ có thể xảy ra nếu `count` là `final`."
+        explanation: "Sai. `final` không phải nguyên nhân của lost update; shared mutable access mới là trọng tâm."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.Concurrency_Problems/ConcurrencyProblem.md"
+      anchor: "shared-state-race-condition"
+    apiRelated:
+      controller: "ConcurrencyProblemController"
+      methodSignature: "raceCondition()"
+
+  - id: deadlock-prevention-lock-ordering
+    question: "Một hệ thống thường cần đồng thời Lock A và Lock B. Thiết kế nào giúp phá Coffman condition `circular wait` ngay từ đầu?"
+    answers:
+      - id: A
+        answer: "Mỗi code path tự chọn thứ tự lock ngẫu nhiên để giảm contention."
+        explanation: "Sai. Thứ tự không nhất quán chính là điều dễ tạo dependency cycle A → B và B → A."
+      - id: B
+        answer: "Thống nhất global lock ordering, ví dụ mọi nơi luôn acquire A trước rồi mới acquire B."
+        explanation: "Đúng. Consistent lock ordering loại bỏ circular-wait dependency theo design."
+      - id: C
+        answer: "Tăng priority cho Thread giữ Lock A."
+        explanation: "Sai. Thread priority không phá cấu trúc circular wait của lock dependency."
+      - id: D
+        answer: "Đổi cả hai lock thành daemon lock."
+        explanation: "Sai. Lock không có daemon semantics."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.Concurrency_Problems/ConcurrencyProblem.md"
+      anchor: "deadlock-prevention"
+    apiRelated:
+      controller: "ConcurrencyProblemController"
+      methodSignature: "deadlockPrevention()"
+
+  - id: explicit-context-propagation
+    question: "Khi propagate request context từ caller thread sang pooled worker, flow nào phù hợp với README?"
+    answers:
+      - id: A
+        answer: "Dựa hoàn toàn vào `InheritableThreadLocal` vì worker pool tạo child thread mới cho mỗi task."
+        explanation: "Sai. Pooled worker thường được tạo trước và reuse, nên creation-time inheritance không phản ánh context của từng submission."
+      - id: B
+        answer: "Capture context tại submission boundary → restore trên worker trước task → cleanup/restore previous state trong `finally`."
+        explanation: "Đúng. Đây là mental model cốt lõi cho explicit propagation và Spring TaskDecorator."
+      - id: C
+        answer: "Đặt context vào static mutable field để mọi thread đọc chung."
+        explanation: "Sai. Cách này biến context thành shared mutable state và làm mất isolation mong muốn."
+      - id: D
+        answer: "Không cleanup vì worker luôn bị destroy sau mỗi task."
+        explanation: "Sai. Worker pool được reuse, chính vì vậy cleanup là bắt buộc về lifecycle."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Context/ThreadLocal.md"
+      anchor: "context-propagation"
+    apiRelated:
+      controller: "ThreadLocalController"
+      methodSignature: "explicitPropagation()"
+
+  - id: scheduler-vs-execution-thread
+    question: "Quan hệ đúng giữa Scheduler và Thread/Executor là gì?"
+    answers:
+      - id: A
+        answer: "Scheduler quyết định task chạy ở CPU core nào; Thread chỉ quyết định thời điểm trigger."
+        explanation: "Sai. README tách ngược lại: scheduler quyết định WHEN, còn thread/executor quyết định nơi execution diễn ra."
+      - id: B
+        answer: "Scheduler quyết định khi nào task được trigger; executor/thread quyết định task chạy ở đâu."
+        explanation: "Đúng. Scheduling và execution là hai trách nhiệm liên quan nhưng khác nhau."
+      - id: C
+        answer: "Dùng `while(true) { sleep(); runJob(); }` luôn tương đương scheduler framework về lifecycle và drift."
+        explanation: "Sai. README cảnh báo loop kiểu này khó quản lý lifecycle, drift, cancellation và exception hơn."
+      - id: D
+        answer: "Scheduler không sử dụng thread nào để thực thi task."
+        explanation: "Sai. Đến thời điểm trigger, task vẫn phải được thực thi trên một execution thread phù hợp."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.Q&A/Q&A.md"
+      anchor: "schedule-thread"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - id: scheduler-wakeup-vs-interrupt
+    question: "Scheduler đến deadline và làm task sẵn sàng chạy có đồng nghĩa với việc gọi `interrupt()` lên một thread đang chờ không?"
+    answers:
+      - id: A
+        answer: "Có. Mọi scheduler wake-up đều được biểu diễn bằng interrupt signal."
+        explanation: "Sai. README tách hai semantics này ra rõ ràng."
+      - id: B
+        answer: "Không. Scheduler dùng scheduling/condition mechanism để chờ deadline và trigger task; `interrupt()` là cancellation/interruption signal cho Thread/task."
+        explanation: "Đúng. Cả hai đều liên quan chờ/đánh thức nhưng contract và mục đích khác nhau."
+      - id: C
+        answer: "Chỉ khác tên API, còn interrupt status luôn được set khi schedule đến hạn."
+        explanation: "Sai. Deadline scheduling không mặc định set interrupt status."
+      - id: D
+        answer: "Scheduler chỉ hoạt động với daemon thread, còn interrupt chỉ với user thread."
+        explanation: "Sai. Daemon status không phải ranh giới giữa hai khái niệm."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.Q&A/Q&A.md"
+      anchor: "schedule-interrupt"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - id: batch-vs-schedule
+    question: "Cách phân biệt ngắn gọn giữa Batch và Schedule theo README là gì?"
+    answers:
+      - id: A
+        answer: "Schedule trả lời WHEN bắt đầu; Batch tập trung WHAT/HOW của workload lớn được chia và xử lý."
+        explanation: "Đúng. Batch có thể được scheduler trigger nhưng hai khái niệm không đồng nhất."
+      - id: B
+        answer: "Batch chỉ là tên khác của `ScheduledExecutorService`."
+        explanation: "Sai. Batch là workload/processing model rộng hơn, có thể dùng thread pool, partitioning, queue, transaction..."
+      - id: C
+        answer: "Mọi batch job bắt buộc phải chạy theo cron schedule."
+        explanation: "Sai. Batch không bắt buộc phải được trigger bằng scheduler."
+      - id: D
+        answer: "Schedule mô tả cách partition dữ liệu, còn Batch chỉ mô tả thời điểm chạy."
+        explanation: "Sai. Đây là đảo ngược mental model trong README."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.Q&A/Q&A.md"
+      anchor: "batch-schedule"
+    apiRelated:
+      controller: ""
+      methodSignature: ""

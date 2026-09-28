@@ -450,7 +450,31 @@ java/core
 → stable language/standard-library foundations used broadly across versions
 
 paradigm/functional
-→ functional programming mental model, functional interfaces, lambdas, method references, Optional
+→ language-neutral functional programming paradigm, pure functions, immutability, composition, referential transparency and trade-offs
+
+java/core/functional-programming
+→ Java functional programming mechanics such as functional interfaces, lambdas, method references, variable capture and Optional
+
+development/persistence/relational-access
+→ application-side relational data access technologies such as JDBC and MyBatis
+
+development/persistence/orm
+→ persistence specifications and ORM implementations such as Jakarta Persistence (JPA) and Hibernate
+
+framework/spring/data
+→ Spring-specific repository/data-access abstractions and integrations
+
+infrastructure/system/database
+→ database engines, storage/runtime behavior, query optimization, migration, connection pools and database-side concerns
+
+development/data-mapping/object-mapping
+→ object-to-object mapping concepts and implementations such as manual mapping, MapStruct and ModelMapper
+
+development/serialization/jackson
+→ Jackson data binding and Java object ↔ JSON serialization/deserialization
+
+language/java
+→ Java language, Java SE/runtime APIs and Java-specific mechanics; mapping/serialization libraries should not be owned here merely because they are implemented in Java
 
 java/version/java8/stream-api
 → Stream API mechanics and pipeline behavior

@@ -1,0 +1,386 @@
+LeakController:
+  threadLeakPattern():
+    summary: Observe a Thread leak pattern safely
+    description: Intentionally keep a worker alive long enough to observe aliveBeforeCleanup,
+      then release and join it to confirm termination. The demo illustrates a lifecycle
+      leak pattern without actually leaving a leaked Thread behind.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: threadLeakPattern
+    params: [
+      ]
+    path: com/example/learning/module/leak/controller/LeakController.java
+    mapping: '@GetMapping("/thread-pattern")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /leak/thread-pattern
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: thread-leak
+    aiGenerated: true
+    reviewed: false
+  poolLeakPattern():
+    summary: Observe a pool leak caused by missing shutdown
+    description: Create a local ExecutorService and observe that it is still running
+      in the middle of the experiment, then clean it up with shutdown and awaitTermination.
+      The example clarifies executor ownership and lifecycle responsibility.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: poolLeakPattern
+    params: [
+      ]
+    path: com/example/learning/module/leak/controller/LeakController.java
+    mapping: '@GetMapping("/pool-pattern")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /leak/pool-pattern
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: pool-leak
+    aiGenerated: true
+    reviewed: false
+  queuePressure():
+    summary: Observe queue backlog and rejection
+    description: Use a pool with a small bounded queue, keep the worker busy, and
+      submit enough work to fill the queue and trigger rejection. The experiment demonstrates
+      backlog resource pressure without creating real unbounded memory growth.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: queuePressure
+    params: [
+      ]
+    path: com/example/learning/module/leak/controller/LeakController.java
+    mapping: '@GetMapping("/queue-pressure")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /leak/queue-pressure
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: queue-growth
+    aiGenerated: true
+    reviewed: false
+ThreadPoolController:
+  executorFlow():
+    summary: Observe core, queue, max, and rejection
+    description: Use ThreadPoolExecutor with core=1, max=2, and queue=1 while tasks
+      are held by latches. Task 1 creates the core worker, task 2 queues, task 3 creates
+      an extra worker, and task 4 is rejected.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: executorFlow
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/executor-flow")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /thread-pool/executor-flow
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: thread-pool-flow
+    aiGenerated: true
+    reviewed: false
+  executeVsSubmit():
+    summary: Compare execute() and submit()
+    description: Run a failing Runnable through execute() and submit() to observe
+      different failure channels. execute() follows the worker's uncaught-exception
+      path, while submit() stores failure in a Future and exposes it through get().
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: executeVsSubmit
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/execute-vs-submit")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /thread-pool/execute-vs-submit
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: execute-vs-submit
+    aiGenerated: true
+    reviewed: false
+  fixedPoolReuse():
+    summary: Observe worker reuse in a fixed thread pool
+    description: Submit multiple tasks to a small fixed pool and record worker names
+      to show that the same worker set is reused instead of creating a new Thread
+      per task. The executor is shut down after the experiment.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: fixedPoolReuse
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/fixed-pool-reuse")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /thread-pool/fixed-pool-reuse
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: executors-factories
+    aiGenerated: true
+    reviewed: false
+  executorFactories():
+    summary: Compare Executors factory methods
+    description: Run bounded cases with fixed, cached, single, and scheduled executors
+      to observe worker count, serialization, queueing, and delayed execution. The
+      goal is to understand actual semantics rather than choose a factory from its
+      name alone.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: executorFactories
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/executor-factories")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /thread-pool/executor-factories
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: executors-factories
+    aiGenerated: true
+    reviewed: false
+  scheduledExecution():
+    summary: Compare fixed-rate and fixed-delay scheduling
+    description: Run work that takes longer than the configured interval and record
+      timelines for scheduleAtFixedRate and scheduleWithFixedDelay. The experiment
+      shows cadence based on scheduled starts versus delay after completion and confirms
+      a single periodic task does not overlap with itself.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: scheduledExecution
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/scheduled-execution")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /thread-pool/scheduled-execution
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: scheduled-execution
+    aiGenerated: true
+    reviewed: false
+  scheduledFailure():
+    summary: Observe periodic task suppression after failure
+    description: Create a periodic task that throws on its first run, then observe
+      that the ScheduledFuture completes exceptionally and later executions are suppressed.
+      The experiment highlights the need for explicit error observability in periodic
+      jobs.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: scheduledFailure
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/scheduled-failure")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /thread-pool/scheduled-failure
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: scheduled-failure
+    aiGenerated: true
+    reviewed: false
+  callerRuns():
+    summary: Observe feedback pressure from CallerRunsPolicy
+    description: Saturate the worker and queue, then submit another task so CallerRunsPolicy
+      executes it on the caller Thread. Making the submitter perform work slows further
+      submission and creates feedback pressure instead of blocking execute() on queue
+      capacity.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: callerRuns
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/caller-runs")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /thread-pool/caller-runs
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: rejection-policy
+    aiGenerated: true
+    reviewed: false
+  discardPolicies():
+    summary: Compare DiscardPolicy and DiscardOldestPolicy
+    description: Saturate the pool to observe DiscardPolicy silently dropping the
+      new task while DiscardOldestPolicy removes the queue head and retries the new
+      task. The experiment makes clear that task loss is a business semantic, not
+      just a technical detail.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: discardPolicies
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/discard-policies")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /thread-pool/discard-policies
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: rejection-policy
+    aiGenerated: true
+    reviewed: false
+  customRejectionHandler():
+    summary: Record overload with a custom rejection handler
+    description: Use a custom RejectedExecutionHandler to count rejection and expose
+      overload before rejecting explicitly. The experiment shows how rejection can
+      become a metric or alertable event rather than only a technical exception.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: customRejectionHandler
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/custom-rejection-handler")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /thread-pool/custom-rejection-handler
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: custom-rejection-handler
+    aiGenerated: true
+    reviewed: false
+  gracefulShutdown():
+    summary: Gracefully shut down an ExecutorService
+    description: Allow submitted work to complete, call shutdown(), and await termination
+      so the executor is fully terminated before the request returns. The experiment
+      demonstrates orderly shutdown and clear ownership of a resource created by application
+      code.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: gracefulShutdown
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/graceful-shutdown")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /thread-pool/graceful-shutdown
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: graceful-shutdown
+    aiGenerated: true
+    reviewed: false
+  forcedShutdown():
+    summary: Observe shutdownNow() and never-started tasks
+    description: Keep one task running and another queued, let the graceful wait time
+      out, then call shutdownNow(). A cooperative running task is interrupted while
+      the never-started queued task is returned to the caller and does not execute.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: forcedShutdown
+    params: [
+      ]
+    path: com/example/learning/module/pool/controller/ThreadPoolController.java
+    mapping: '@GetMapping("/forced-shutdown")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /thread-pool/forced-shutdown
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: graceful-shutdown
+    aiGenerated: true
+    reviewed: false

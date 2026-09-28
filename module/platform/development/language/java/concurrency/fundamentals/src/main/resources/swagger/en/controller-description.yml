@@ -1,0 +1,36 @@
+BasicThreadController:
+  description: |-
+    <h2>Basic Thread Controller</h2>
+    <p>Foundational experiments covering the JVM process, HTTP request Threads, start() versus run(), and the full Thread.State lifecycle.</p>
+  readmeRelated:
+    file: 1.Basic/Basic.md
+CreateThreadController:
+  description: |-
+    <h2>Create Thread Controller</h2>
+    <p>Compares ways to connect a task with an execution mechanism: extending Thread, Runnable plus Thread, and Callable plus FutureTask plus Thread.</p>
+  readmeRelated:
+    file: 1.Basic/Basic.md
+DaemonThreadController:
+  description: |-
+    <h2>Daemon Thread Controller</h2>
+    <p>Observes daemon flags and Thread inheritance rules in Spring Boot; this endpoint is not used to infer JVM shutdown timing directly.</p>
+  readmeRelated:
+    file: 1.Basic/Basic.md
+ConcurrencyProblemController:
+  description: |-
+    <h2>Concurrency Problem Controller</h2>
+    <p>Experiments covering race conditions, the Java Memory Model, happens-before, volatile, and progress problems such as deadlock and livelock.</p>
+  readmeRelated:
+    file: 3.Concurrency_Problems/ConcurrencyProblem.md
+ThreadLocalController:
+  description: |-
+    <h2>Thread Local Controller</h2>
+    <p>Demonstrates ThreadLocal isolation, InheritableThreadLocal, stale context from worker reuse, and explicit context propagation patterns.</p>
+  readmeRelated:
+    file: 5.Context/ThreadLocal.md
+InterruptionController:
+  description: |-
+    <h2>Interruption Controller</h2>
+    <p>Experiments for cooperative cancellation, interrupt flags, InterruptedException, cleanup, interruption limits, and comparison with custom stop flags.</p>
+  readmeRelated:
+    file: 2.Interruption/Interruption.md

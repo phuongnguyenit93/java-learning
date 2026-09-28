@@ -1,0 +1,497 @@
+CoordinationController:
+  join():
+    execution: "<p><b>Concept:</b> The service starts one worker whose only action\
+      \ is to mark itself complete.</p>\n<ol>\n  <li>The caller starts the worker.\n\
+      \    <div><i>Source: CoordinationService.joinDemo()</i></div>\n    <pre><code>\
+      \    public Map&lt;String, Object&gt; joinDemo() throws InterruptedException\
+      \ {\n            AtomicBoolean workerCompleted = new AtomicBoolean(false);\n\
+      \            Thread worker = new Thread(() -&gt; workerCompleted.set(true),\
+      \ \"join-worker\");\n    \n            try {\n                worker.start();\n\
+      \                joinOrFail(worker);\n            } finally {\n            \
+      \    cleanupThreads(worker);\n        ...\n    }</code></pre>\n  </li>\n  <li>A\
+      \ bounded <code>join()</code> waits for it to terminate.</li>\n  <li>The response\
+      \ is produced only after the join and reports both the completion flag and the\
+      \ final <code>TERMINATED</code> state.</li>\n</ol>\n<p><b>Conclusion:</b> Coordinate\
+      \ lifecycle with Thread.join(). The response and Execution Context are the runtime\
+      \ evidence for this behavior; the colocated source snippet shows the code path\
+      \ that creates the experiment.</p>"
+    usage: true
+  waitNotify():
+    execution: "<p><b>Concept:</b> Three workers wait on the same monitor using a\
+      \ predicate loop.</p>\n<ol>\n  <li>The service waits until all three workers\
+      \ are in the monitor wait set.\n    <div><i>Source: CoordinationService.waitNotifyDemo()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; waitNotifyDemo() throws\
+      \ InterruptedException {\n            Object monitor = new Object();\n     \
+      \       BooleanBox ready = new BooleanBox();\n            CountDownLatch waitersEntered\
+      \ = new CountDownLatch(3);\n            AtomicInteger awakenedBeforeReady =\
+      \ new AtomicInteger();\n            AtomicInteger completed = new AtomicInteger();\n\
+      \            List&lt;Thread&gt; waiters = new ArrayList&lt;&gt;();\n    \n \
+      \           try {\n        ...\n    }</code></pre>\n  </li>\n  <li>It calls\
+      \ <code>notify()</code> while the readiness predicate is still false, so one\
+      \ waiter wakes, checks the predicate, and waits again.</li>\n  <li>The service\
+      \ then sets the predicate to true and calls <code>notifyAll()</code>.</li>\n\
+      \  <li>All workers leave the loop, complete, and are joined before the result\
+      \ is returned.</li>\n</ol>\n<p><b>Conclusion:</b> Coordinate with wait(), notify(),\
+      \ and notifyAll(). The response and Execution Context are the runtime evidence\
+      \ for this behavior; the colocated source snippet shows the code path that creates\
+      \ the experiment.</p>"
+    usage: true
+  condition():
+    execution: |-
+      <p><b>Concept:</b> One <code>ReentrantLock</code> owns two independent <code>Condition</code> wait sets.</p>
+      <ol>
+        <li>A data waiter awaits <code>dataAvailable</code> and a shutdown waiter awaits <code>shutdownRequested</code>.
+          <div><i>Source: CoordinationService.conditionDemo()</i></div>
+          <pre><code>    public Map&lt;String, Object&gt; conditionDemo() throws InterruptedException {
+                  ReentrantLock lock = new ReentrantLock();
+                  Condition dataAvailable = lock.newCondition();
+                  Condition shutdownRequested = lock.newCondition();
+                  BooleanBox dataReady = new BooleanBox();
+                  BooleanBox shutdown = new BooleanBox();
+                  CountDownLatch waitersStarted = new CountDownLatch(2);
+                  AtomicBoolean dataWaiterProceeded = new AtomicBoolean(false);
+                  AtomicBoolean shutdownWaiterProceeded = new AtomicBoolean(false);
+              ...
+          }</code></pre>
+        </li>
+        <li>The caller signals only <code>dataAvailable</code> and verifies that the shutdown waiter has not proceeded.</li>
+        <li>It then sets the shutdown predicate and signals the second condition.</li>
+        <li>Both workers are joined and the response records the targeted wake-up behavior.</li>
+      </ol>
+      <p><b>Conclusion:</b> Coordinate multiple Conditions with ReentrantLock. The response and Execution Context are the runtime evidence for this behavior; the colocated source snippet shows the code path that creates the experiment.</p>
+    usage: true
+  lockSupport():
+    execution: |-
+      <p><b>Concept:</b> Three workers demonstrate targeted parking, blocker metadata, and interrupt behavior with <code>LockSupport</code>.</p>
+      <ol>
+        <li>All workers park with the same blocker object, and the service verifies that the blocker is visible.
+          <div><i>Source: CoordinationService.lockSupportDemo()</i></div>
+          <pre><code>    public Map&lt;String, Object&gt; lockSupportDemo() throws InterruptedException {
+                  Object blocker = new Object();
+                  CountDownLatch parked = new CountDownLatch(3);
+                  AtomicBoolean allowFirst = new AtomicBoolean(false);
+                  AtomicBoolean allowSecond = new AtomicBoolean(false);
+                  AtomicBoolean firstResumed = new AtomicBoolean(false);
+                  AtomicBoolean secondResumed = new AtomicBoolean(false);
+                  AtomicBoolean interruptedParkReturned = new AtomicBoolean(false);
+                  AtomicBoolean interruptStatusObservedAfterPark = new AtomicBoolean(false);
+              ...
+          }</code></pre>
+        </li>
+        <li>Only the second worker is unparked first, while the first remains parked.</li>
+        <li>The third worker is interrupted; <code>park()</code> returns without throwing and its interrupt flag remains set.</li>
+        <li>The first worker is finally unparked and all workers are cleaned up.</li>
+      </ol>
+      <p><b>Conclusion:</b> Observe LockSupport park and unpark. The response and Execution Context are the runtime evidence for this behavior; the colocated source snippet shows the code path that creates the experiment.</p>
+    usage: true
+  blockingQueue():
+    execution: "<p><b>Concept:</b> A producer and consumer communicate through an\
+      \ <code>ArrayBlockingQueue</code> with capacity two.</p>\n<ol>\n  <li>The producer\
+      \ inserts five items with blocking <code>put()</code>.\n    <div><i>Source:\
+      \ CoordinationService.blockingQueueDemo()</i></div>\n    <pre><code>    public\
+      \ Map&lt;String, Object&gt; blockingQueueDemo() throws InterruptedException\
+      \ {\n            BlockingQueue&lt;String&gt; queue = new ArrayBlockingQueue&lt;&gt;(2);\n\
+      \            List&lt;String&gt; consumed = java.util.Collections.synchronizedList(new\
+      \ ArrayList&lt;&gt;());\n    \n            Thread producer = new Thread(() -&gt;\
+      \ {\n                try {\n                    for (int i = 1; i &lt;= 5; i++)\
+      \ {\n                        queue.put(\"item-\" + i);\n                   \
+      \ }\n        ...\n    }</code></pre>\n  </li>\n  <li>The consumer removes five\
+      \ items with blocking <code>take()</code>.</li>\n  <li>The bounded queue provides\
+      \ the backpressure between their speeds; the service joins both threads and\
+      \ returns the consumed sequence and final empty state.</li>\n</ol>\n<p><b>Conclusion:</b>\
+      \ Build producer-consumer coordination with BlockingQueue. The response and\
+      \ Execution Context are the runtime evidence for this behavior; the colocated\
+      \ source snippet shows the code path that creates the experiment.</p>"
+    usage: true
+  blockingQueueVariants():
+    execution: "<p><b>Concept:</b> The service runs three finite queue experiments\
+      \ in one request.</p>\n<ol>\n  <li>A fair <code>ArrayBlockingQueue</code> of\
+      \ size two is filled and a third non-blocking <code>offer</code> is observed\
+      \ to fail.\n    <div><i>Source: CoordinationService.blockingQueueVariantsDemo()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; blockingQueueVariantsDemo()\
+      \ throws InterruptedException {\n            ArrayBlockingQueue&lt;String&gt;\
+      \ arrayQueue = new ArrayBlockingQueue&lt;&gt;(2, true);\n            arrayQueue.put(\"\
+      A\");\n            arrayQueue.put(\"B\");\n            boolean arrayOfferWhenFull\
+      \ = arrayQueue.offer(\"C\");\n    \n            LinkedBlockingQueue&lt;String&gt;\
+      \ linkedQueue = new LinkedBlockingQueue&lt;&gt;(3);\n            linkedQueue.put(\"\
+      L1\");\n            linkedQueue.put(\"L2\");\n        ...\n    }</code></pre>\n\
+      \  </li>\n  <li>A capacity-three <code>LinkedBlockingQueue</code> is filled\
+      \ and two items are removed with <code>drainTo</code>.</li>\n  <li>A <code>PriorityBlockingQueue</code>\
+      \ receives three prioritized tasks and is polled in priority order, while the\
+      \ response notes that this queue is not capacity-bounded.</li>\n</ol>\n<p><b>Conclusion:</b>\
+      \ Compare common BlockingQueue implementations. The response and Execution Context\
+      \ are the runtime evidence for this behavior; the colocated source snippet shows\
+      \ the code path that creates the experiment.</p>"
+    usage: true
+  priorityQueueSemantics():
+    execution: "<p><b>Concept:</b> The service inserts two equal-priority tasks and\
+      \ one higher-priority task into a <code>PriorityBlockingQueue</code>.</p>\n\
+      <ol>\n  <li>All elements are polled until the queue is empty.\n    <div><i>Source:\
+      \ CoordinationService.priorityQueueSemanticsDemo()</i></div>\n    <pre><code>\
+      \    public Map&lt;String, Object&gt; priorityQueueSemanticsDemo() {\n     \
+      \       PriorityBlockingQueue&lt;PriorityTask&gt; queue = new PriorityBlockingQueue&lt;&gt;();\n\
+      \            queue.add(new PriorityTask(1, \"same-priority-a\"));\n        \
+      \    queue.add(new PriorityTask(1, \"same-priority-b\"));\n            queue.add(new\
+      \ PriorityTask(0, \"higher-priority\"));\n    \n            List&lt;String&gt;\
+      \ observedOrder = new ArrayList&lt;&gt;();\n            PriorityTask task;\n\
+      \            while ((task = queue.poll()) != null) {\n        ...\n    }</code></pre>\n\
+      \  </li>\n  <li>The response verifies that the higher-priority item comes first.</li>\n\
+      \  <li>It deliberately does not treat the observed order of equal-priority elements\
+      \ as a FIFO guarantee and records that the queue has no bounded-capacity backpressure.</li>\n\
+      </ol>\n<p><b>Conclusion:</b> Observe PriorityBlockingQueue semantics. The response\
+      \ and Execution Context are the runtime evidence for this behavior; the colocated\
+      \ source snippet shows the code path that creates the experiment.</p>"
+    usage: true
+  synchronousQueue():
+    execution: "<p><b>Concept:</b> The service uses a zero-capacity <code>SynchronousQueue</code>\
+      \ to demonstrate direct handoff.</p>\n<ol>\n  <li>The producer starts first\
+      \ and blocks in <code>put(\"payload\")</code> because no consumer is waiting.\n\
+      \    <div><i>Source: CoordinationService.synchronousQueueDemo()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; synchronousQueueDemo()\
+      \ throws InterruptedException {\n            SynchronousQueue&lt;String&gt;\
+      \ queue = new SynchronousQueue&lt;&gt;();\n            AtomicReference&lt;String&gt;\
+      \ received = new AtomicReference&lt;&gt;();\n    \n            Thread consumer\
+      \ = new Thread(() -&gt; {\n                try {\n                    received.set(queue.take());\n\
+      \                } catch (InterruptedException e) {\n                    Thread.currentThread().interrupt();\n\
+      \        ...\n    }</code></pre>\n  </li>\n  <li>After that waiting state is\
+      \ observed, the consumer starts and calls <code>take()</code>.</li>\n  <li>The\
+      \ producer and consumer rendezvous, both terminate, and the queue still reports\
+      \ size zero because it never stores the element.</li>\n</ol>\n<p><b>Conclusion:</b>\
+      \ Observe direct handoff with SynchronousQueue. The response and Execution Context\
+      \ are the runtime evidence for this behavior; the colocated source snippet shows\
+      \ the code path that creates the experiment.</p>"
+    usage: true
+  synchronizers():
+    execution: |-
+      <p><b>Concept:</b> The endpoint executes five bounded coordination samples and returns their observations together.</p>
+      <ol>
+        <li>A <code>CountDownLatch</code> waits for two workers.
+          <div><i>Source: CoordinationService.synchronizersDemo()</i></div>
+          <pre><code>    public Map&lt;String, Object&gt; synchronizersDemo() throws InterruptedException {
+                  Map&lt;String, Object&gt; result = new LinkedHashMap&lt;&gt;();
+                  result.put("countDownLatch", countDownLatchSample());
+                  result.put("cyclicBarrier", cyclicBarrierSample());
+                  result.put("semaphore", semaphoreSample());
+                  result.put("phaser", phaserSample());
+                  result.put("exchanger", exchangerSample());
+                  return result;
+              }</code></pre>
+        </li>
+        <li>A two-party <code>CyclicBarrier</code> releases both parties and runs its barrier action once.</li>
+        <li>A two-permit <code>Semaphore</code> limits four workers to at most two active holders.</li>
+        <li>A <code>Phaser</code> coordinates two worker phases with registration and deregistration.</li>
+        <li>An <code>Exchanger</code> pairs two workers and swaps their values.</li>
+      </ol>
+      <p><b>Conclusion:</b> Compare higher-level synchronizers. The response and Execution Context are the runtime evidence for this behavior; the colocated source snippet shows the code path that creates the experiment.</p>
+    usage: true
+  synchronizersTimeout():
+    execution: "<p><b>Concept:</b> The service exercises timeout and failure paths\
+      \ across several synchronizers.</p>\n<ol>\n  <li>A timed latch wait expires\
+      \ while its worker remains able to finish later.\n    <div><i>Source: CoordinationService.synchronizerTimeoutDemo()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; synchronizerTimeoutDemo()\
+      \ throws InterruptedException {\n            Map&lt;String, Object&gt; result\
+      \ = new LinkedHashMap&lt;&gt;();\n    \n            CountDownLatch workerFinished\
+      \ = new CountDownLatch(1);\n            CountDownLatch workerStarted = new CountDownLatch(1);\n\
+      \            CountDownLatch releaseWorker = new CountDownLatch(1);\n       \
+      \     AtomicBoolean workerContinuedAfterCallerTimeout = new AtomicBoolean(false);\n\
+      \            Thread slowWorker = new Thread(() -&gt; {\n                try\
+      \ {\n        ...\n    }</code></pre>\n  </li>\n  <li>A lone barrier participant\
+      \ times out and breaks the barrier; after <code>reset()</code>, a new generation\
+      \ of two parties passes successfully.</li>\n  <li>A semaphore with both permits\
+      \ held rejects a timed extra acquire and later restores its permit count.</li>\n\
+      \  <li>A phaser demonstrates deregistration across phases with bounded interruptible\
+      \ waits.</li>\n  <li>An exchanger shows both timeout without a partner and interruption\
+      \ of a blocking exchange.</li>\n</ol>\n<p><b>Conclusion:</b> Observe synchronizer\
+      \ timeout and failure behavior. The response and Execution Context are the runtime\
+      \ evidence for this behavior; the colocated source snippet shows the code path\
+      \ that creates the experiment.</p>"
+    usage: true
+  semaphorePermitAccounting():
+    execution: "<p><b>Concept:</b> The service demonstrates that <code>Semaphore</code>\
+      \ tracks permits, not ownership.</p>\n<ol>\n  <li>A semaphore starts with one\
+      \ permit.\n    <div><i>Source: CoordinationService.semaphorePermitAccountingDemo()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; semaphorePermitAccountingDemo()\
+      \ {\n            Semaphore semaphore = new Semaphore(1);\n            int initialPermits\
+      \ = semaphore.availablePermits();\n    \n            semaphore.release();\n\
+      \            int permitsAfterUnmatchedRelease = semaphore.availablePermits();\n\
+      \    \n            boolean acquiredTwice = semaphore.tryAcquire(2);\n      \
+      \      if (acquiredTwice) {\n        ...\n    }</code></pre>\n  </li>\n  <li>The\
+      \ caller performs an unmatched <code>release()</code>, increasing the available\
+      \ count to two.</li>\n  <li>It then successfully acquires both permits at once\
+      \ and releases them again.</li>\n  <li>The returned values show why code must\
+      \ release only permits it actually acquired.</li>\n</ol>\n<p><b>Conclusion:</b>\
+      \ Prove Semaphore does not enforce ownership. The response and Execution Context\
+      \ are the runtime evidence for this behavior; the colocated source snippet shows\
+      \ the code path that creates the experiment.</p>"
+    usage: true
+SynchronizationController:
+  synchronizedCounter():
+    execution: "<p><b>Concept:</b> Four workers concurrently update one counter whose\
+      \ increment and read methods are synchronized on the counter instance.</p>\n\
+      <ol>\n  <li>A start latch releases all workers together.\n    <div><i>Source:\
+      \ SynchronizationService.synchronizedCounter()</i></div>\n    <pre><code>  \
+      \  public Map&lt;String, Object&gt; synchronizedCounter() throws InterruptedException\
+      \ {\n            SynchronizedCounter counter = new SynchronizedCounter();\n\
+      \            int workerCount = 4;\n            int incrementsPerWorker = 1_000;\n\
+      \            CountDownLatch start = new CountDownLatch(1);\n            List&lt;Thread&gt;\
+      \ workers = new ArrayList&lt;&gt;();\n    \n            try {\n            \
+      \    for (int i = 0; i &lt; workerCount; i++) {\n        ...\n    }</code></pre>\n\
+      \  </li>\n  <li>Each worker performs 1,000 compound <code>value++</code> operations\
+      \ through the synchronized method.</li>\n  <li>The caller joins every worker\
+      \ and compares the final value with the expected 4,000 updates.</li>\n</ol>\n\
+      <p><b>Conclusion:</b> Protect a compound update with synchronized. The response\
+      \ and Execution Context are the runtime evidence for this behavior; the colocated\
+      \ source snippet shows the code path that creates the experiment.</p>"
+    usage: true
+  reentrantLock():
+    execution: "<p><b>Concept:</b> The current request thread acquires the same <code>ReentrantLock</code>\
+      \ twice.</p>\n<ol>\n  <li>After the first <code>lock()</code>, the service records\
+      \ hold count one.\n    <div><i>Source: SynchronizationService.reentrantLockDemo()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; reentrantLockDemo() {\n\
+      \            ReentrantLock lock = new ReentrantLock();\n    \n            lock.lock();\n\
+      \            try {\n                int holdCountAfterFirstAcquire = lock.getHoldCount();\n\
+      \    \n                lock.lock();\n                try {\n        ...\n  \
+      \  }</code></pre>\n  </li>\n  <li>The same thread calls <code>lock()</code>\
+      \ again successfully and observes hold count two.</li>\n  <li>Nested <code>finally</code>\
+      \ blocks call <code>unlock()</code> twice so the hold count is fully released.</li>\n\
+      </ol>\n<p><b>Conclusion:</b> Observe ReentrantLock reentrancy. The response\
+      \ and Execution Context are the runtime evidence for this behavior; the colocated\
+      \ source snippet shows the code path that creates the experiment.</p>"
+    usage: true
+  tryLock():
+    execution: "<p><b>Concept:</b> One worker deliberately holds a <code>ReentrantLock</code>\
+      \ while a contender performs a timed acquisition attempt.</p>\n<ol>\n  <li>The\
+      \ holder acquires the lock and waits on a release latch.\n    <div><i>Source:\
+      \ SynchronizationService.tryLockDemo()</i></div>\n    <pre><code>    public\
+      \ Map&lt;String, Object&gt; tryLockDemo() throws InterruptedException {\n  \
+      \          ReentrantLock lock = new ReentrantLock();\n            CountDownLatch\
+      \ holderHasLock = new CountDownLatch(1);\n            CountDownLatch releaseHolder\
+      \ = new CountDownLatch(1);\n            AtomicBoolean contenderAcquired = new\
+      \ AtomicBoolean(false);\n    \n            Thread holder = new Thread(() -&gt;\
+      \ {\n                lock.lock();\n                try {\n        ...\n    }</code></pre>\n\
+      \  </li>\n  <li>The contender waits until ownership is established, then calls\
+      \ <code>tryLock(100 ms)</code>.</li>\n  <li>The timeout expires before the holder\
+      \ is released, so the contender does not enter the critical section.</li>\n\
+      \  <li>The caller then releases the holder and joins both workers.</li>\n</ol>\n\
+      <p><b>Conclusion:</b> Observe tryLock(timeout) while a lock is busy. The response\
+      \ and Execution Context are the runtime evidence for this behavior; the colocated\
+      \ source snippet shows the code path that creates the experiment.</p>"
+    usage: true
+  interruptibleLock():
+    execution: "<p><b>Concept:</b> The request thread holds a <code>ReentrantLock</code>\
+      \ so a worker must wait in <code>lockInterruptibly()</code>.</p>\n<ol>\n  <li>The\
+      \ service starts the waiter and waits until it is blocked waiting for the explicit\
+      \ lock.\n    <div><i>Source: SynchronizationService.interruptibleLockDemo()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; interruptibleLockDemo()\
+      \ throws InterruptedException {\n            ReentrantLock lock = new ReentrantLock();\n\
+      \            CountDownLatch waiterStarted = new CountDownLatch(1);\n       \
+      \     AtomicBoolean waiterInterrupted = new AtomicBoolean(false);\n        \
+      \    AtomicBoolean waiterAcquired = new AtomicBoolean(false);\n    \n      \
+      \      lock.lock();\n            Thread waiter = new Thread(() -&gt; {\n   \
+      \             waiterStarted.countDown();\n        ...\n    }</code></pre>\n\
+      \  </li>\n  <li>The waiter is interrupted before the lock is released.</li>\n\
+      \  <li><code>lockInterruptibly()</code> throws <code>InterruptedException</code>;\
+      \ the waiter records interruption and never acquires the lock.</li>\n  <li>The\
+      \ caller releases its lock and cleans up the terminated worker.</li>\n</ol>\n\
+      <p><b>Conclusion:</b> Cancel a lock waiter with lockInterruptibly(). The response\
+      \ and Execution Context are the runtime evidence for this behavior; the colocated\
+      \ source snippet shows the code path that creates the experiment.</p>"
+    usage: true
+  reentrantLockPolicy():
+    execution: "<p><b>Concept:</b> This endpoint inspects <code>ReentrantLock</code>\
+      \ policy configuration rather than running a contention race.</p>\n<ol>\n  <li>It\
+      \ constructs the default lock, an explicitly unfair lock, and a fair lock and\
+      \ reads each <code>isFair()</code> value.\n    <div><i>Source: SynchronizationService.reentrantLockPolicyDemo()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; reentrantLockPolicyDemo()\
+      \ {\n            ReentrantLock defaultLock = new ReentrantLock();\n        \
+      \    ReentrantLock explicitUnfairLock = new ReentrantLock(false);\n        \
+      \    ReentrantLock fairLock = new ReentrantLock(true);\n    \n            return\
+      \ linkedMap(\n                    \"defaultIsFair\", defaultLock.isFair(),\n\
+      \                    \"explicitUnfairIsFair\", explicitUnfairLock.isFair(),\n\
+      \                    \"explicitFairIsFair\", fairLock.isFair(),\n        ...\n\
+      \    }</code></pre>\n  </li>\n  <li>The returned metadata also records the API\
+      \ semantics used by the lesson. Untimed <code>tryLock()</code> may barge despite\
+      \ fairness, timed acquisition honors the fairness policy, and fairness does\
+      \ not guarantee thread-start order or eliminate scheduler variance.</li>\n</ol>\n\
+      <p><b>Conclusion:</b> Observe fair and non-fair ReentrantLock policy. The response\
+      \ and Execution Context are the runtime evidence for this behavior; the colocated\
+      \ source snippet shows the code path that creates the experiment.</p>"
+    usage: true
+  readWriteLock():
+    execution: "<p><b>Concept:</b> Two readers and one writer demonstrate shared-read\
+      \ and exclusive-write behavior.</p>\n<ol>\n  <li>Both reader threads acquire\
+      \ the read lock and wait on a latch, allowing the service to observe two concurrent\
+      \ readers.\n    <div><i>Source: SynchronizationService.readWriteLockDemo()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; readWriteLockDemo() throws\
+      \ InterruptedException {\n            ReentrantReadWriteLock lock = new ReentrantReadWriteLock();\n\
+      \            CountDownLatch readersStarted = new CountDownLatch(2);\n      \
+      \      CountDownLatch releaseReaders = new CountDownLatch(1);\n            CountDownLatch\
+      \ writerAttempting = new CountDownLatch(1);\n            AtomicInteger activeReaders\
+      \ = new AtomicInteger();\n            AtomicInteger maxConcurrentReaders = new\
+      \ AtomicInteger();\n            AtomicBoolean writerAcquired = new AtomicBoolean(false);\n\
+      \    \n        ...\n    }</code></pre>\n  </li>\n  <li>The writer then attempts\
+      \ the write lock and is observed waiting while the readers still hold their\
+      \ locks.</li>\n  <li>The caller releases both readers; after their read locks\
+      \ are released, the writer acquires and releases the write lock.</li>\n  <li>All\
+      \ three threads are joined and the concurrency observations are returned.</li>\n\
+      </ol>\n<p><b>Conclusion:</b> Observe concurrent readers and an exclusive writer.\
+      \ The response and Execution Context are the runtime evidence for this behavior;\
+      \ the colocated source snippet shows the code path that creates the experiment.</p>"
+    usage: true
+  readWriteLockDowngrade():
+    execution: "<p><b>Concept:</b> The request thread performs the supported write-to-read\
+      \ downgrade sequence and then probes the unsupported reverse upgrade.</p>\n\
+      <ol>\n  <li>It acquires the write lock, then acquires the read lock before releasing\
+      \ the write lock.\n    <div><i>Source: SynchronizationService.readWriteLockDowngradeDemo()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; readWriteLockDowngradeDemo()\
+      \ throws InterruptedException {\n            ReentrantReadWriteLock lock = new\
+      \ ReentrantReadWriteLock();\n            AtomicBoolean competingWriterAcquired\
+      \ = new AtomicBoolean(false);\n            CountDownLatch competingWriterAttempting\
+      \ = new CountDownLatch(1);\n    \n            lock.writeLock().lock();\n   \
+      \         boolean readHeldAfterWriteAcquire;\n            boolean writeReleasedWhileReadHeld;\n\
+      \    \n        ...\n    }</code></pre>\n  </li>\n  <li>A competing writer starts\
+      \ and remains blocked while the downgraded read lock is still held.</li>\n \
+      \ <li>After the read lock is released, the competing writer proceeds and terminates.</li>\n\
+      \  <li>The service finally holds only a read lock and performs a short timed\
+      \ write-lock attempt, showing that direct read-to-write upgrade does not succeed.</li>\n\
+      </ol>\n<p><b>Conclusion:</b> Perform write-to-read lock downgrade. The response\
+      \ and Execution Context are the runtime evidence for this behavior; the colocated\
+      \ source snippet shows the code path that creates the experiment.</p>"
+    usage: true
+  readWriteLockPolicy():
+    execution: "<p><b>Concept:</b> This endpoint inspects policy characteristics of\
+      \ <code>ReentrantReadWriteLock</code> without starting contender threads.</p>\n\
+      <ol>\n  <li>It creates the default lock and an explicitly fair lock and reads\
+      \ their fairness settings.\n    <div><i>Source: SynchronizationService.readWriteLockPolicyDemo()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; readWriteLockPolicyDemo()\
+      \ {\n            ReentrantReadWriteLock defaultLock = new ReentrantReadWriteLock();\n\
+      \            ReentrantReadWriteLock fairLock = new ReentrantReadWriteLock(true);\n\
+      \    \n            return linkedMap(\n                    \"defaultIsFair\"\
+      , defaultLock.isFair(),\n                    \"explicitFairIsFair\", fairLock.isFair(),\n\
+      \                    \"untimedReadTryLockHonorsFairness\", false,\n        \
+      \            \"untimedWriteTryLockHonorsFairness\", false,\n        ...\n  \
+      \  }</code></pre>\n  </li>\n  <li>The result records the documented detail that\
+      \ untimed read/write <code>tryLock()</code> calls do not honor fairness ordering,\
+      \ while fair mode still carries scheduling and throughput trade-offs rather\
+      \ than a strict start-order guarantee.</li>\n</ol>\n<p><b>Conclusion:</b> Observe\
+      \ ReentrantReadWriteLock policy. The response and Execution Context are the\
+      \ runtime evidence for this behavior; the colocated source snippet shows the\
+      \ code path that creates the experiment.</p>"
+    usage: true
+  stampedLock():
+    execution: "<p><b>Concept:</b> A reader starts with an optimistic <code>StampedLock</code>\
+      \ read while a coordinated writer changes the protected value.</p>\n<ol>\n \
+      \ <li>The reader obtains an optimistic stamp and snapshots value 100.\n    <div><i>Source:\
+      \ SynchronizationService.stampedLockDemo()</i></div>\n    <pre><code>    public\
+      \ Map&lt;String, Object&gt; stampedLockDemo() throws InterruptedException {\n\
+      \            StampedLock lock = new StampedLock();\n            DoubleBox box\
+      \ = new DoubleBox(100.0);\n            CountDownLatch readerSnapshotTaken =\
+      \ new CountDownLatch(1);\n            CountDownLatch writerFinished = new CountDownLatch(1);\n\
+      \            AtomicBoolean stampValid = new AtomicBoolean(true);\n         \
+      \   double[] initialSnapshot = new double[1];\n            double[] fallbackValue\
+      \ = new double[1];\n    \n        ...\n    }</code></pre>\n  </li>\n  <li>After\
+      \ that snapshot, the writer acquires the write lock, changes the value to 120,\
+      \ and releases it.</li>\n  <li>The reader validates its old stamp, finds it\
+      \ invalid, falls back to a real read lock, and rereads the updated value.</li>\n\
+      \  <li>The service returns the original snapshot, validation result, and fallback\
+      \ value.</li>\n</ol>\n<p><b>Conclusion:</b> Observe StampedLock optimistic read\
+      \ and fallback. The response and Execution Context are the runtime evidence\
+      \ for this behavior; the colocated source snippet shows the code path that creates\
+      \ the experiment.</p>"
+    usage: true
+  stampedLockLimitations():
+    execution: "<p><b>Concept:</b> The request thread directly probes two <code>StampedLock</code>\
+      \ limitations.</p>\n<ol>\n  <li>It acquires a write stamp and then calls <code>tryWriteLock()</code>\
+      \ again from the same thread; the second acquisition returns zero because the\
+      \ lock is not reentrant.\n    <div><i>Source: SynchronizationService.stampedLockLimitationsDemo()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; stampedLockLimitationsDemo()\
+      \ {\n            StampedLock lock = new StampedLock();\n            long firstWriteStamp\
+      \ = lock.writeLock();\n            long reentrantTryStamp;\n            boolean\
+      \ conditionSupported;\n    \n            try {\n                reentrantTryStamp\
+      \ = lock.tryWriteLock();\n                if (reentrantTryStamp != 0L) {\n \
+      \       ...\n    }</code></pre>\n  </li>\n  <li>It converts the read view to\
+      \ the <code>Lock</code> interface and calls <code>newCondition()</code>, which\
+      \ throws <code>UnsupportedOperationException</code>.</li>\n  <li>The original\
+      \ write stamp is released in <code>finally</code>.</li>\n</ol>\n<p><b>Conclusion:</b>\
+      \ Observe StampedLock limitations. The response and Execution Context are the\
+      \ runtime evidence for this behavior; the colocated source snippet shows the\
+      \ code path that creates the experiment.</p>"
+    usage: true
+  atomicTools():
+    execution: "<p><b>Concept:</b> Four workers update three atomic-style counters\
+      \ after a common start latch.</p>\n<ol>\n  <li>Each worker performs 1,000 increments\
+      \ on both <code>AtomicInteger</code> and <code>LongAdder</code>.\n    <div><i>Source:\
+      \ SynchronizationService.atomicToolsDemo()</i></div>\n    <pre><code>    public\
+      \ Map&lt;String, Object&gt; atomicToolsDemo() throws InterruptedException {\n\
+      \            AtomicInteger atomicInteger = new AtomicInteger();\n          \
+      \  LongAdder longAdder = new LongAdder();\n            LongAccumulator maximum\
+      \ = new LongAccumulator(Long::max, Long.MIN_VALUE);\n            int workerCount\
+      \ = 4;\n            int increments = 1_000;\n            CountDownLatch start\
+      \ = new CountDownLatch(1);\n            List&lt;Thread&gt; workers = new ArrayList&lt;&gt;();\n\
+      \    \n        ...\n    }</code></pre>\n  </li>\n  <li>Each worker also submits\
+      \ a distinct value to a <code>LongAccumulator</code> configured with <code>max</code>.</li>\n\
+      \  <li>After all workers are joined, the service returns the exact total from\
+      \ the two counters and the maximum accumulated worker value.</li>\n</ol>\n<p><b>Conclusion:</b>\
+      \ Compare AtomicInteger, LongAdder, and LongAccumulator. The response and Execution\
+      \ Context are the runtime evidence for this behavior; the colocated source snippet\
+      \ shows the code path that creates the experiment.</p>"
+    usage: true
+  atomicCas():
+    execution: "<p><b>Concept:</b> The endpoint performs deterministic compare-and-set\
+      \ operations, including an ABA sequence.</p>\n<ol>\n  <li>An <code>AtomicInteger</code>\
+      \ successfully changes 10 to 20, then rejects a CAS using the stale expected\
+      \ value 10.\n    <div><i>Source: SynchronizationService.atomicCasDemo()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; atomicCasDemo() {\n   \
+      \         AtomicInteger number = new AtomicInteger(10);\n            boolean\
+      \ casWithExpectedValue = number.compareAndSet(10, 20);\n            boolean\
+      \ casWithStaleExpectedValue = number.compareAndSet(10, 30);\n    \n        \
+      \    String stateA = new String(\"A\");\n            String stateB = new String(\"\
+      B\");\n            String stateC = new String(\"C\");\n    \n        ...\n \
+      \   }</code></pre>\n  </li>\n  <li>A plain <code>AtomicReference</code> changes\
+      \ A to B and back to the same A object; a stale reference then successfully\
+      \ CASes A to C, demonstrating ABA.</li>\n  <li>An <code>AtomicStampedReference</code>\
+      \ performs A-to-B-to-A while incrementing the stamp, so a CAS using the original\
+      \ stale stamp fails and reveals the intermediate changes.</li>\n</ol>\n<p><b>Conclusion:</b>\
+      \ Observe CAS, ABA, and stamped references. The response and Execution Context\
+      \ are the runtime evidence for this behavior; the colocated source snippet shows\
+      \ the code path that creates the experiment.</p>"
+    usage: true
+  concurrentCollections():
+    execution: "<p><b>Concept:</b> The service combines three finite concurrent-collection\
+      \ demonstrations.</p>\n<ol>\n  <li>Four workers call <code>ConcurrentHashMap.merge</code>\
+      \ 250 times each on the same key, producing an atomic total of 1,000.\n    <div><i>Source:\
+      \ SynchronizationService.concurrentCollectionsDemo()</i></div>\n    <pre><code>\
+      \    public Map&lt;String, Object&gt; concurrentCollectionsDemo() throws InterruptedException\
+      \ {\n            ConcurrentHashMap&lt;String, Integer&gt; counts = new ConcurrentHashMap&lt;&gt;();\n\
+      \            List&lt;Thread&gt; workers = new ArrayList&lt;&gt;();\n    \n \
+      \           try {\n                for (int i = 0; i &lt; 4; i++) {\n      \
+      \              Thread worker = new Thread(() -&gt; {\n                     \
+      \   for (int j = 0; j &lt; 250; j++) {\n                            counts.merge(\"\
+      request\", 1, Integer::sum);\n        ...\n    }</code></pre>\n  </li>\n  <li>A\
+      \ <code>CopyOnWriteArrayList</code> iterator is created before adding a fourth\
+      \ element, so that iterator sees the old snapshot while the current list contains\
+      \ the new value.</li>\n  <li>A <code>ConcurrentLinkedQueue</code> is offered\
+      \ A and B, then polled until empty, including a final null poll.</li>\n</ol>\n\
+      <p><b>Conclusion:</b> Observe atomic operations in concurrent collections. The\
+      \ response and Execution Context are the runtime evidence for this behavior;\
+      \ the colocated source snippet shows the code path that creates the experiment.</p>"
+    usage: true
+  concurrentSkipList():
+    execution: "<p><b>Concept:</b> Four workers concurrently insert disjoint key ranges\
+      \ into one <code>ConcurrentSkipListMap</code>.</p>\n<ol>\n  <li>A latch releases\
+      \ all workers together.\n    <div><i>Source: SynchronizationService.concurrentSkipListDemo()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; concurrentSkipListDemo()\
+      \ throws InterruptedException {\n            ConcurrentSkipListMap&lt;Integer,\
+      \ String&gt; map = new ConcurrentSkipListMap&lt;&gt;();\n            CountDownLatch\
+      \ start = new CountDownLatch(1);\n            List&lt;Thread&gt; workers = new\
+      \ ArrayList&lt;&gt;();\n    \n            try {\n                for (int workerId\
+      \ = 0; workerId &lt; 4; workerId++) {\n                    int offset = workerId\
+      \ * 25;\n                    Thread worker = new Thread(() -&gt; {\n       \
+      \ ...\n    }</code></pre>\n  </li>\n  <li>Each worker inserts 25 keys in descending\
+      \ order within its own range.</li>\n  <li>After all workers are joined, the\
+      \ service reads the key set and verifies that the map exposes the combined keys\
+      \ in ascending sorted order from 0 through 99.</li>\n</ol>\n<p><b>Conclusion:</b>\
+      \ Observe a sorted concurrent map. The response and Execution Context are the\
+      \ runtime evidence for this behavior; the colocated source snippet shows the\
+      \ code path that creates the experiment.</p>"
+    usage: true

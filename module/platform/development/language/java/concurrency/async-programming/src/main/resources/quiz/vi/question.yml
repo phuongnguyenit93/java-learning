@@ -1,0 +1,166 @@
+# <quiz-schema>
+# Cấu trúc câu hỏi Quiz
+# schema-version: 3
+#
+# questions [kiểu: list; bắt buộc; mặc định: []; duy nhất theo: id]
+#   Danh sách câu hỏi Quiz của module trong language hiện tại.
+#   mỗi phần tử:
+#     id [kiểu: string; bắt buộc; mặc định: ""]
+#       ID ổn định và duy nhất của câu hỏi.
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi hiển thị cho người học.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu câu hỏi được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu câu hỏi đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+#     answers [kiểu: list; bắt buộc; số phần tử: 4; mặc định: []; duy nhất theo: id]
+#       Chính xác bốn đáp án. ID A/B/C/D là identity nội bộ ổn định, không phải vị trí hiển thị sau khi frontend shuffle.
+#       mỗi phần tử:
+#         id [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#           Identity ổn định của đáp án.
+#         answer [kiểu: string; bắt buộc; mặc định: ""]
+#           Nội dung đáp án hiển thị cho người học.
+#         explanation [kiểu: string; bắt buộc; mặc định: ""]
+#           Giải thích hiển thị khi người học chọn đáp án này, bất kể đúng hay sai.
+#     correctAnswerId [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
+# </quiz-schema>
+
+questions:
+  - id: async-not-nonblocking
+    question: "`CompletableFuture.supplyAsync(() -> blockingJdbcCall())` cho phép caller tiếp tục sớm. Điều nào vẫn có thể đúng?"
+    answers:
+      - id: A
+        answer: "JDBC call tự động trở thành non-blocking vì nằm trong CompletableFuture."
+        explanation: "Sai. Wrapper async không thay đổi semantics blocking của JDBC operation."
+      - id: B
+        answer: "Worker chạy lambda vẫn có thể bị block trong JDBC; async mô tả quan hệ caller/completion, không đồng nghĩa non-blocking."
+        explanation: "Đúng. Đây là distinction quan trọng giữa async, parallel, blocking và non-blocking."
+      - id: C
+        answer: "Task chắc chắn chạy song song với mọi task khác trong process."
+        explanation: "Sai. Parallelism phụ thuộc executor, số worker, scheduling và workload."
+      - id: D
+        answer: "Không thread nào bị sử dụng trong suốt JDBC call."
+        explanation: "Sai. Với blocking JDBC trong platform worker thông thường, worker thread vẫn bị giữ trong thời gian chờ."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Async/Async.md"
+      anchor: "async-mental-model"
+    apiRelated:
+      controller: "AsyncController"
+      methodSignature: "pipeline()"
+
+  - id: completable-allof-anyof
+    question: "Phát biểu nào đúng về `CompletableFuture.allOf()` và `anyOf()`?"
+    answers:
+      - id: A
+        answer: "`allOf()` luôn fail-fast ngay khi một child fail và tự cancel các child còn lại."
+        explanation: "Sai. README nhấn mạnh allOf không nên được hiểu là fail-fast/cancel-siblings policy."
+      - id: B
+        answer: "`anyOf()` luôn chọn business result tốt nhất, ví dụ giá rẻ nhất."
+        explanation: "Sai. anyOf chọn completion đầu tiên, không hiểu business ranking."
+      - id: C
+        answer: "`allOf()` aggregate completion của tất cả input; `anyOf()` hoàn thành theo input hoàn thành đầu tiên, và completion đầu tiên có thể là success hoặc failure."
+        explanation: "Đúng. Cả hai là completion aggregation primitives, không tự cung cấp business selection/cancellation policy."
+      - id: D
+        answer: "`allOf()` trả trực tiếp danh sách typed result của mọi future."
+        explanation: "Sai. `allOf()` trả `CompletableFuture<Void>`; muốn typed result phải giữ reference đến từng future."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Async/Async.md"
+      anchor: "combine-race"
+    apiRelated:
+      controller: "AsyncController"
+      methodSignature: "allOf()"
+
+  - id: future-cancel-semantics
+    question: "Với `Future` trả về từ `ExecutorService.submit(...)`, cách hiểu nào đúng về `cancel(true)`?"
+    answers:
+      - id: A
+        answer: "Nếu cancellation được chấp nhận, implementation có thể interrupt thread đang chạy task, nhưng task vẫn cần hợp tác với interruption."
+        explanation: "Đúng. `true` không có nghĩa JVM cưỡng bức kill task; nó là cancellation request có thể đi kèm interruption."
+      - id: B
+        answer: "Nó bảo đảm task rollback mọi side effect đã thực hiện."
+        explanation: "Sai. Future cancellation không phải transaction rollback."
+      - id: C
+        answer: "Nó tương đương hoàn toàn với `CompletableFuture.cancel(true)` về việc interrupt underlying worker."
+        explanation: "Sai. README phân biệt rõ: tham số mayInterruptIfRunning của CompletableFuture không điều khiển underlying processing theo cùng cách."
+      - id: D
+        answer: "Sau cancel, `get()` vẫn phải trả kết quả cuối cùng nếu underlying code chạy xong."
+        explanation: "Sai. Future đã cancelled thì `get()` sẽ thể hiện cancellation, thường qua `CancellationException`, dù underlying task có thể còn chạy trong một số trường hợp."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Async/Async.md"
+      anchor: "future"
+    apiRelated:
+      controller: "AsyncController"
+      methodSignature: "futureCancellation()"
+
+  - id: completablefuture-get-vs-join
+    question: "Nhận định nào đúng nhất về `CompletableFuture.get()` và `join()`?"
+    answers:
+      - id: A
+        answer: "`join()` là non-blocking variant của `get()`."
+        explanation: "Sai. Nếu stage chưa complete, `join()` vẫn có thể chờ."
+      - id: B
+        answer: "Khác biệt nổi bật nằm ở exception API: `get()` dùng checked exceptions như `ExecutionException`, còn `join()` expose exceptional completion qua unchecked `CompletionException`."
+        explanation: "Đúng. Cả hai đều có thể chờ completion; chúng không phải hai execution model khác nhau."
+      - id: C
+        answer: "`get()` chỉ dùng với Future thường, không dùng được với CompletableFuture."
+        explanation: "Sai. CompletableFuture implement Future và hỗ trợ `get()`."
+      - id: D
+        answer: "`join()` luôn chạy continuation trên common pool."
+        explanation: "Sai. `join()` là operation chờ/lấy result, không phải policy dispatch continuation."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Async/Async.md"
+      anchor: "completable-future-pipeline"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - id: completablefuture-cancel-underlying-work
+    question: "Với `CompletableFuture.cancel(true)` trong experiment của module, điều nào đúng về underlying worker đang block?"
+    answers:
+      - id: A
+        answer: "`true` bắt buộc interrupt underlying worker giống hệt mọi Future implementation khác."
+        explanation: "Sai. README phân biệt rõ semantics này với Future do `ExecutorService.submit(...)` trả về."
+      - id: B
+        answer: "Future chuyển sang cancelled state, nhưng `mayInterruptIfRunning` không điều khiển underlying processing của CompletableFuture; worker có thể vẫn cần cleanup/release riêng."
+        explanation: "Đúng. Cancellation của completion state không phải primitive cưỡng bức kill Thread."
+      - id: C
+        answer: "Cancel sẽ rollback mọi side effect của lambda."
+        explanation: "Sai. CompletableFuture cancellation không phải transaction rollback."
+      - id: D
+        answer: "Cancel chỉ có tác dụng sau khi future đã complete thành công."
+        explanation: "Sai. Cancellation là một terminal completion path khi được chấp nhận trước completion."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Async/Async.md"
+      anchor: "timeout-cancellation"
+    apiRelated:
+      controller: "AsyncController"
+      methodSignature: "timeoutCancellation()"
+

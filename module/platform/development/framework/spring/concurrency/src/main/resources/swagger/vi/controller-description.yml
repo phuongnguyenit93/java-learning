@@ -1,0 +1,6 @@
+TaskExecutorController:
+  description: |-
+    <h2>Task Executor Controller</h2>
+    <p>Minh họa Spring TaskExecutor và @Async với custom executor, TaskDecorator context propagation và failure handling của void async method.</p>
+  readmeRelated:
+    file: 2.Spring_Task_Executor/SpringExecutor.md

@@ -1,0 +1,684 @@
+CoordinationController:
+  join():
+    summary: Coordinate lifecycle with Thread.join()
+    description: Start a worker and use join() so the caller waits until that worker
+      terminates before continuing. The experiment demonstrates lifecycle dependency
+      and reinforces that join also carries a happens-before guarantee for worker
+      writes.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: join
+    params: [
+      ]
+    path: com/example/learning/module/coordination/controller/CoordinationController.java
+    mapping: '@GetMapping("/join")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /coordination/join
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: join
+    aiGenerated: true
+    reviewed: false
+  waitNotify():
+    summary: Coordinate with wait(), notify(), and notifyAll()
+    description: Use several waiters, a predicate loop, notify(), and notifyAll()
+      to observe the wait set and monitor reacquisition. Notification only asks a
+      waiter to check again; the predicate determines whether execution may actually
+      continue.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: waitNotify
+    params: [
+      ]
+    path: com/example/learning/module/coordination/controller/CoordinationController.java
+    mapping: '@GetMapping("/wait-notify")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /coordination/wait-notify
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: wait-notify
+    aiGenerated: true
+    reviewed: false
+  condition():
+    summary: Coordinate multiple Conditions with ReentrantLock
+    description: Create two independent Condition queues on the same ReentrantLock
+      and signal each one for its corresponding predicate. The experiment shows that
+      Condition is the explicit-lock counterpart of wait/notify and that await() releases
+      then reacquires the lock.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: condition
+    params: [
+      ]
+    path: com/example/learning/module/coordination/controller/CoordinationController.java
+    mapping: '@GetMapping("/condition")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /coordination/condition
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: condition
+    aiGenerated: true
+    reviewed: false
+  lockSupport():
+    summary: Observe LockSupport park and unpark
+    description: Park several workers to show that unpark(thread) targets a specific
+      Thread, blocker metadata can be inspected, and interruption can make park()
+      return without throwing InterruptedException. Cleanup ensures every worker terminates.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: lockSupport
+    params: [
+      ]
+    path: com/example/learning/module/coordination/controller/CoordinationController.java
+    mapping: '@GetMapping("/lock-support")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /coordination/lock-support
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: lock-support
+    aiGenerated: true
+    reviewed: false
+  blockingQueue():
+    summary: Build producer-consumer coordination with BlockingQueue
+    description: Run a bounded producer and consumer using BlockingQueue operations,
+      then join both Threads. The experiment demonstrates queue-based coordination
+      without leaving an infinite consumer running after the request.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: blockingQueue
+    params: [
+      ]
+    path: com/example/learning/module/coordination/controller/CoordinationController.java
+    mapping: '@GetMapping("/blocking-queue")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /coordination/blocking-queue
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: producer-consumer
+    aiGenerated: true
+    reviewed: false
+  blockingQueueVariants():
+    summary: Compare common BlockingQueue implementations
+    description: Observe ArrayBlockingQueue capacity, drainTo on LinkedBlockingQueue,
+      and priority ordering in PriorityBlockingQueue through bounded examples. The
+      goal is to select a queue based on capacity, ordering, and handoff semantics.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: blockingQueueVariants
+    params: [
+      ]
+    path: com/example/learning/module/coordination/controller/CoordinationController.java
+    mapping: '@GetMapping("/blocking-queue-variants")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /coordination/blocking-queue-variants
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: blocking-queue-variants
+    aiGenerated: true
+    reviewed: false
+  priorityQueueSemantics():
+    summary: Observe PriorityBlockingQueue semantics
+    description: Insert tasks with different and equal priorities to observe ordering
+      behavior. The experiment emphasizes that higher priority is preferred, equal
+      priority has no FIFO contract, and the queue does not provide bounded backpressure.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: priorityQueueSemantics
+    params: [
+      ]
+    path: com/example/learning/module/coordination/controller/CoordinationController.java
+    mapping: '@GetMapping("/priority-queue-semantics")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /coordination/priority-queue-semantics
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: priority-queue-semantics
+    aiGenerated: true
+    reviewed: false
+  synchronousQueue():
+    summary: Observe direct handoff with SynchronousQueue
+    description: Pair producer put and consumer take operations through SynchronousQueue
+      to show that every element requires a matching operation on the other side.
+      This queue is a rendezvous point and does not buffer backlog like a normal queue.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: synchronousQueue
+    params: [
+      ]
+    path: com/example/learning/module/coordination/controller/CoordinationController.java
+    mapping: '@GetMapping("/synchronous-queue")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /coordination/synchronous-queue
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: synchronous-queue
+    aiGenerated: true
+    reviewed: false
+  synchronizers():
+    summary: Compare higher-level synchronizers
+    description: Run bounded examples with CountDownLatch, CyclicBarrier, Semaphore,
+      Phaser, and Exchanger to observe different coordination dependencies. The response
+      focuses on synchronization semantics rather than timing benchmarks.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: synchronizers
+    params: [
+      ]
+    path: com/example/learning/module/coordination/controller/CoordinationController.java
+    mapping: '@GetMapping("/synchronizers")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /coordination/synchronizers
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: synchronizers
+    aiGenerated: true
+    reviewed: false
+  synchronizersTimeout():
+    summary: Observe synchronizer timeout and failure behavior
+    description: Demonstrate latch timeout, broken/reset barrier behavior, semaphore
+      acquisition timeout, dynamic Phaser participation, and Exchanger timeout/interruption.
+      The experiment shows that each synchronizer has distinct failure and recovery
+      semantics.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: synchronizersTimeout
+    params: [
+      ]
+    path: com/example/learning/module/coordination/controller/CoordinationController.java
+    mapping: '@GetMapping("/synchronizers-timeout")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /coordination/synchronizers-timeout
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: synchronizer-timeout-failure
+    aiGenerated: true
+    reviewed: false
+  semaphorePermitAccounting():
+    summary: Prove Semaphore does not enforce ownership
+    description: Intentionally release a permit without acquiring it and observe the
+      available permit count increase incorrectly, then acquire beyond the original
+      capacity. The experiment emphasizes that permit accounting is the application's
+      responsibility.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: semaphorePermitAccounting
+    params: [
+      ]
+    path: com/example/learning/module/coordination/controller/CoordinationController.java
+    mapping: '@GetMapping("/semaphore-permit-accounting")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /coordination/semaphore-permit-accounting
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: semaphore-permit-accounting
+    aiGenerated: true
+    reviewed: false
+SynchronizationController:
+  synchronizedCounter():
+    summary: Protect a compound update with synchronized
+    description: Let multiple Threads increment a shared counter under an intrinsic
+      monitor. The experiment shows how synchronized creates a critical section around
+      a compound update and prevents lost updates.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: synchronizedCounter
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/synchronized-counter")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/synchronized-counter
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: synchronized-monitor
+    aiGenerated: true
+    reviewed: false
+  reentrantLock():
+    summary: Observe ReentrantLock reentrancy
+    description: Acquire the same ReentrantLock multiple times from one Thread and
+      inspect the hold count before matching unlock operations. The experiment shows
+      that the lock is reentrant but every successful acquisition must still be balanced
+      by release.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: reentrantLock
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/reentrant-lock")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/reentrant-lock
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: reentrant-lock
+    aiGenerated: true
+    reviewed: false
+  tryLock():
+    summary: Observe tryLock(timeout) while a lock is busy
+    description: One Thread holds the lock while another uses tryLock with a bounded
+      timeout. The experiment shows how acquisition can fail in a controlled way instead
+      of waiting indefinitely.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: tryLock
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/try-lock")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/try-lock
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: reentrant-lock
+    aiGenerated: true
+    reviewed: false
+  interruptibleLock():
+    summary: Cancel a lock waiter with lockInterruptibly()
+    description: Hold a ReentrantLock so a worker waits using lockInterruptibly(),
+      then interrupt that worker. The experiment shows that explicit locks can provide
+      interruptible acquisition unlike a Thread BLOCKED on synchronized monitor entry.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: interruptibleLock
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/interruptible-lock")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/interruptible-lock
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: reentrant-lock
+    aiGenerated: true
+    reviewed: false
+  reentrantLockPolicy():
+    summary: Observe fair and non-fair ReentrantLock policy
+    description: Compare ReentrantLock policies and emphasize that fairness is not
+      a guarantee about Thread.start order. Untimed tryLock() may barge, so it cannot
+      be used to infer the entire fairness contract.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: reentrantLockPolicy
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/reentrant-lock-policy")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/reentrant-lock-policy
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: reentrant-lock
+    aiGenerated: true
+    reviewed: false
+  readWriteLock():
+    summary: Observe concurrent readers and an exclusive writer
+    description: Allow multiple readers to hold the read lock concurrently while a
+      writer waits. The experiment demonstrates that ReentrantReadWriteLock supports
+      shared reads while write access remains exclusive.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: readWriteLock
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/read-write-lock")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/read-write-lock
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: read-write-lock
+    aiGenerated: true
+    reviewed: false
+  readWriteLockDowngrade():
+    summary: Perform write-to-read lock downgrade
+    description: Hold the write lock, acquire the read lock before releasing the write
+      lock, and keep a protected view without an unguarded gap. The experiment demonstrates
+      the correct lock-downgrade sequence.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: readWriteLockDowngrade
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/read-write-lock-downgrade")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/read-write-lock-downgrade
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: read-write-lock
+    aiGenerated: true
+    reviewed: false
+  readWriteLockPolicy():
+    summary: Observe ReentrantReadWriteLock policy
+    description: Inspect default/fair read-write lock behavior and the special behavior of untimed
+      tryLock operations. The experiment reinforces that fairness must be interpreted
+      according to each API's exact contract.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: readWriteLockPolicy
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/read-write-lock-policy")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/read-write-lock-policy
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: read-write-lock-policy
+    aiGenerated: true
+    reviewed: false
+  stampedLock():
+    summary: Observe StampedLock optimistic read and fallback
+    description: Take an optimistic stamp, let a writer change state so the stamp
+      becomes invalid, then validate and fall back to a read lock. The experiment
+      demonstrates that optimistic reads are valid only when validation succeeds.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: stampedLock
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/stamped-lock")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/stamped-lock
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: stamped-lock
+    aiGenerated: true
+    reviewed: false
+  stampedLockLimitations():
+    summary: Observe StampedLock limitations
+    description: 'Check two important limitations: StampedLock is not reentrant, and
+      its Lock views do not provide Condition support. The experiment prevents applying
+      a ReentrantLock mental model to StampedLock.'
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: stampedLockLimitations
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/stamped-lock-limitations")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/stamped-lock-limitations
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: stamped-lock-limitations
+    aiGenerated: true
+    reviewed: false
+  atomicTools():
+    summary: Compare AtomicInteger, LongAdder, and LongAccumulator
+    description: Run deterministic operations with AtomicInteger, LongAdder, and LongAccumulator
+      to observe the different roles of atomic updates and distributed accumulation.
+      The experiment focuses on semantics rather than throughput benchmarking.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: atomicTools
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/atomic-tools")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/atomic-tools
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: adder-accumulator
+    aiGenerated: true
+    reviewed: false
+  atomicCas():
+    summary: Observe CAS, ABA, and stamped references
+    description: Use compareAndSet for conditional atomic update, then create an ABA
+      sequence on the value and use a stamp to detect that state changed and returned
+      to the same value. The experiment exposes the limitation of value-only CAS.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: atomicCas
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/atomic-cas")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/atomic-cas
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: atomic-cas
+    aiGenerated: true
+    reviewed: false
+  concurrentCollections():
+    summary: Observe atomic operations in concurrent collections
+    description: Demonstrate atomic map updates, snapshot-style iteration, and a non-blocking
+      queue with suitable concurrent collections. The experiment emphasizes that thread-safe
+      individual operations do not automatically make every multi-step business invariant
+      atomic.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: concurrentCollections
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/concurrent-collections")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/concurrent-collections
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: concurrent-collections
+    aiGenerated: true
+    reviewed: false
+  concurrentSkipList():
+    summary: Observe a sorted concurrent map
+    description: Update ConcurrentSkipListMap from multiple Threads and read key order
+      after completion. The experiment shows that the collection supports concurrent
+      access while preserving sorted map ordering.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: concurrentSkipList
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/concurrent-skip-list")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/concurrent-skip-list
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: concurrent-collections
+    aiGenerated: true
+    reviewed: false

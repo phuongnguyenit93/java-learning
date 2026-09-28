@@ -1,0 +1,98 @@
+1.Synchronization/Synchronization.md:
+  synchronized-monitor:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  reentrant-lock:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  read-write-lock:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  read-write-lock-policy:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  stamped-lock:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  stamped-lock-limitations:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  atomic-cas:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  adder-accumulator:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  concurrent-collections:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  synchronization-choice:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  synchronization-experiments:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+2.Coordination/Coordination.md:
+  join:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  wait-notify:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  condition:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  lock-support:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  producer-consumer:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  blocking-queue-variants:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  priority-queue-semantics:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  synchronous-queue:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  synchronizers:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  semaphore-permit-accounting:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  synchronizer-timeout-failure:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  coordination-choice:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  coordination-experiments:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false

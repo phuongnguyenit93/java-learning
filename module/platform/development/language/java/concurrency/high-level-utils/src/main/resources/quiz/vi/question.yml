@@ -1,0 +1,341 @@
+# <quiz-schema>
+# Cấu trúc câu hỏi Quiz
+# schema-version: 3
+#
+# questions [kiểu: list; bắt buộc; mặc định: []; duy nhất theo: id]
+#   Danh sách câu hỏi Quiz của module trong language hiện tại.
+#   mỗi phần tử:
+#     id [kiểu: string; bắt buộc; mặc định: ""]
+#       ID ổn định và duy nhất của câu hỏi.
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi hiển thị cho người học.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu câu hỏi được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu câu hỏi đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+#     answers [kiểu: list; bắt buộc; số phần tử: 4; mặc định: []; duy nhất theo: id]
+#       Chính xác bốn đáp án. ID A/B/C/D là identity nội bộ ổn định, không phải vị trí hiển thị sau khi frontend shuffle.
+#       mỗi phần tử:
+#         id [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#           Identity ổn định của đáp án.
+#         answer [kiểu: string; bắt buộc; mặc định: ""]
+#           Nội dung đáp án hiển thị cho người học.
+#         explanation [kiểu: string; bắt buộc; mặc định: ""]
+#           Giải thích hiển thị khi người học chọn đáp án này, bất kể đúng hay sai.
+#     correctAnswerId [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
+# </quiz-schema>
+
+questions:
+  - id: synchronized-monitor-identity
+    question: "Hai instance khác nhau cùng gọi một `synchronized` instance method. Khi nào chúng mặc định tranh chấp cùng monitor?"
+    answers:
+      - id: A
+        answer: "Luôn luôn, vì method có keyword `synchronized`."
+        explanation: "Sai. Instance synchronized method khóa `this`; hai instance khác nhau thường là hai monitor khác nhau."
+      - id: B
+        answer: "Chỉ khi thực tế chúng dùng cùng monitor; instance synchronized method mặc định khóa từng `this` riêng."
+        explanation: "Đúng. Lock identity quan trọng hơn tên method. `static synchronized` lại dùng monitor của Class object."
+      - id: C
+        answer: "Không bao giờ, vì Java không cho hai object dùng chung monitor."
+        explanation: "Sai. Code hoàn toàn có thể đồng bộ trên một shared lock object chung."
+      - id: D
+        answer: "Chỉ khi cả hai thread là daemon."
+        explanation: "Sai. Daemon status không liên quan đến monitor identity."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Synchronization/Synchronization.md"
+      anchor: "synchronized-monitor"
+    apiRelated:
+      controller: "SynchronizationController"
+      methodSignature: "synchronizedCounter()"
+
+  - id: reentrantlock-interruptible-wait
+    question: "Bạn cần một thread đang chờ lock có thể phản ứng với `interrupt()`. API nào phù hợp nhất?"
+    answers:
+      - id: A
+        answer: "`synchronized` block thông thường"
+        explanation: "Sai. Chờ intrinsic monitor của synchronized không phải interruptible lock acquisition."
+      - id: B
+        answer: "`ReentrantLock.lock()`"
+        explanation: "Sai. `lock()` không cung cấp semantics chờ lock có thể bị interrupt như API chuyên dụng."
+      - id: C
+        answer: "`ReentrantLock.lockInterruptibly()`"
+        explanation: "Đúng. Đây là một lợi ích của explicit Lock khi cancellation trong thời gian chờ lock là requirement."
+      - id: D
+        answer: "`Thread.yield()` trước khi lấy lock"
+        explanation: "Sai. `yield()` không biến lock acquisition thành interruptible."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Synchronization/Synchronization.md"
+      anchor: "reentrant-lock"
+    apiRelated:
+      controller: "SynchronizationController"
+      methodSignature: "interruptibleLock()"
+
+  - id: read-write-lock-downgrade
+    question: "Với `ReentrantReadWriteLock`, flow nào được README mô tả là lock downgrading hợp lệ?"
+    answers:
+      - id: A
+        answer: "Đang giữ write lock → acquire read lock → release write lock → tiếp tục giữ read lock."
+        explanation: "Đúng. Đây là write-to-read downgrade. Nó giữ continuity của quyền đọc sau khi mutation kết thúc."
+      - id: B
+        answer: "Đang giữ read lock → acquire write lock mà không release read lock và chờ tới khi thành công."
+        explanation: "Sai. Read-to-write upgrade không được hỗ trợ theo cách giữ read lock rồi chờ upgrade; flow cần được redesign/re-coordinate."
+      - id: C
+        answer: "Release mọi lock rồi gọi `Thread.sleep()` để trở thành reader."
+        explanation: "Sai. Sleep không phải lock downgrading protocol."
+      - id: D
+        answer: "Chuyển read lock thành write lock bằng `notifyAll()`."
+        explanation: "Sai. `notifyAll()` là monitor coordination API, không chuyển mode của ReadWriteLock."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Synchronization/Synchronization.md"
+      anchor: "read-write-lock"
+    apiRelated:
+      controller: "SynchronizationController"
+      methodSignature: "readWriteLockDowngrade()"
+
+  - id: stamped-lock-optimistic-validation
+    question: "Khi dùng `StampedLock.tryOptimisticRead()`, bước nào là bắt buộc trước khi tin rằng snapshot đọc được vẫn hợp lệ?"
+    answers:
+      - id: A
+        answer: "Gọi `Thread.yield()` để writer có cơ hội chạy."
+        explanation: "Sai. Scheduler hint không xác nhận tính hợp lệ của optimistic snapshot."
+      - id: B
+        answer: "Chuyển stamp thành `ReentrantLock`."
+        explanation: "Sai. StampedLock có semantics riêng; stamp không phải ReentrantLock."
+      - id: C
+        answer: "Chỉ cần kiểm tra dữ liệu khác null."
+        explanation: "Sai. Dữ liệu không null không chứng minh rằng writer không xen vào trong lúc đọc."
+      - id: D
+        answer: "Gọi `validate(stamp)`; nếu validation fail thì fallback sang real read lock và đọc lại."
+        explanation: "Đúng. Optimistic read là read-and-validate strategy, không phải đọc an toàn mà không cần xác nhận."
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Synchronization/Synchronization.md"
+      anchor: "stamped-lock"
+    apiRelated:
+      controller: "SynchronizationController"
+      methodSignature: "stampedLock()"
+
+  - id: cas-aba-problem
+    question: "Một `AtomicReference` thay đổi A → B → A. Observer cũ vẫn giữ expected A và CAS sang C. Đây minh họa vấn đề gì?"
+    answers:
+      - id: A
+        answer: "Spurious wakeup"
+        explanation: "Sai. Spurious wakeup liên quan đến condition waiting, không phải lịch sử state trong CAS."
+      - id: B
+        answer: "ABA; plain CAS có thể chỉ thấy current reference lại là A và không biết state từng đi qua B."
+        explanation: "Đúng. Khi history/version là một phần của correctness, có thể cần `AtomicStampedReference` hoặc version tương đương."
+      - id: C
+        answer: "Deadlock vì A quay lại A."
+        explanation: "Sai. ABA không phải circular lock dependency."
+      - id: D
+        answer: "Visibility bug luôn được giải quyết bằng thêm `volatile` vào AtomicReference."
+        explanation: "Sai. AtomicReference đã có atomic/memory semantics riêng; vấn đề ở đây là inability của plain CAS trong việc nhận biết intermediate history."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Synchronization/Synchronization.md"
+      anchor: "atomic-cas"
+    apiRelated:
+      controller: "SynchronizationController"
+      methodSignature: "atomicCas()"
+
+  - id: wait-notify-predicate-loop
+    question: "Tại sao `Object.wait()` nên nằm trong `while (!condition)` thay vì chỉ `if (!condition)`?"
+    answers:
+      - id: A
+        answer: "Vì `wait()` luôn timeout ít nhất một lần trước khi được notify."
+        explanation: "Sai. `wait()` không timeout nếu dùng overload không timeout; lý do chính là condition có thể chưa đúng khi thread thức dậy."
+      - id: B
+        answer: "Vì `notifyAll()` tự động giữ monitor cho waiter tới khi condition đúng."
+        explanation: "Sai. Waiter được đánh thức vẫn phải cạnh tranh để reacquire monitor, và state có thể thay đổi."
+      - id: C
+        answer: "Để re-check predicate sau spurious wakeup hoặc sau khi waiter thức dậy nhưng condition đã thay đổi trước khi reacquire monitor."
+        explanation: "Đúng. Notification chỉ là tín hiệu để kiểm tra lại; predicate mới quyết định có được tiếp tục hay không."
+      - id: D
+        answer: "Để `wait()` không release monitor."
+        explanation: "Sai. `wait()` thực tế release monitor trong thời gian chờ; `sleep()` mới không release monitor chỉ vì đang ngủ."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.Coordination/Coordination.md"
+      anchor: "wait-notify"
+    apiRelated:
+      controller: "CoordinationController"
+      methodSignature: "waitNotify()"
+
+  - id: blocking-queue-backpressure
+    question: "Trong producer-consumer, requirement là buffer có capacity hữu hạn và producer phải chờ khi queue đầy. Lựa chọn nào phù hợp nhất?"
+    answers:
+      - id: A
+        answer: "Một bounded `BlockingQueue` và dùng semantics như `put()`/`offer(timeout)`."
+        explanation: "Đúng. BlockingQueue cung cấp condition-waiting/backpressure semantics trực tiếp thay vì tự viết busy loop."
+      - id: B
+        answer: "`ConcurrentLinkedQueue` với vòng `while(true) poll()` không backoff."
+        explanation: "Sai. `poll()` là non-blocking và trả null khi rỗng; busy polling vô hạn vừa lãng phí CPU vừa không tạo bounded backpressure."
+      - id: C
+        answer: "`PriorityBlockingQueue` mặc định vì nó luôn có capacity hữu hạn."
+        explanation: "Sai. PriorityBlockingQueue là effectively unbounded và không tạo backpressure bằng capacity như ArrayBlockingQueue."
+      - id: D
+        answer: "`SynchronousQueue` để giữ backlog hàng nghìn phần tử."
+        explanation: "Sai. SynchronousQueue không lưu element; nó là direct handoff/rendezvous giữa producer và consumer."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.Coordination/Coordination.md"
+      anchor: "producer-consumer"
+    apiRelated:
+      controller: "CoordinationController"
+      methodSignature: "blockingQueue()"
+
+  - id: semaphore-over-release
+    question: "Semaphore ban đầu có 1 permit. Code gọi `release()` dù trước đó `acquire()` thất bại. Rủi ro chính là gì?"
+    answers:
+      - id: A
+        answer: "JVM tự động bỏ qua release thừa vì Semaphore kiểm tra lock ownership."
+        explanation: "Sai. Semaphore không enforce ownership như lock."
+      - id: B
+        answer: "Thread bị chuyển sang daemon."
+        explanation: "Sai. Permit accounting không liên quan daemon status."
+      - id: C
+        answer: "Semaphore tự giảm permit về 0 để bù lỗi."
+        explanation: "Sai. Không có cơ chế tự sửa như vậy."
+      - id: D
+        answer: "Permit count có thể tăng sai, làm concurrency limit bị phá; chỉ nên release khi acquire thực sự thành công."
+        explanation: "Đúng. Pattern `boolean acquired` + `finally` giúp tránh over-release khi acquire fail hoặc bị interrupt."
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.Coordination/Coordination.md"
+      anchor: "semaphore-permit-accounting"
+    apiRelated:
+      controller: "CoordinationController"
+      methodSignature: "semaphorePermitAccounting()"
+
+  - id: fair-lock-untimed-trylock
+    question: "Với `new ReentrantLock(true)`, nhận định nào đúng về fairness và `tryLock()` không timeout?"
+    answers:
+      - id: A
+        answer: "Untimed `tryLock()` bắt buộc xếp hàng theo fairness policy như mọi acquisition khác."
+        explanation: "Sai. README nêu rõ untimed `tryLock()` có thể opportunistically acquire và barge nếu lock đang available."
+      - id: B
+        answer: "Fairness bảo đảm Thread được `start()` trước luôn acquire lock trước."
+        explanation: "Sai. Fairness là acquisition policy, không phải guarantee về `Thread.start()` hay thứ tự log."
+      - id: C
+        answer: "Untimed `tryLock()` có thể barge; timed `tryLock(timeout, unit)` mới tham gia fair ordering policy khi phải chờ."
+        explanation: "Đúng. Đây là footgun quan trọng khi thiết kế protocol dựa trên fair lock."
+      - id: D
+        answer: "Fair lock loại bỏ hoàn toàn starvation mà không có throughput cost."
+        explanation: "Sai. Fairness có thể giảm barging/starvation nhưng thường có trade-off về throughput và không phải lời hứa tuyệt đối."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Synchronization/Synchronization.md"
+      anchor: "reentrant-lock"
+    apiRelated:
+      controller: "SynchronizationController"
+      methodSignature: "reentrantLockPolicy()"
+
+  - id: longadder-sum-snapshot
+    question: "Khi nhiều thread vẫn đang update một `LongAdder`, nên hiểu `sum()` như thế nào?"
+    answers:
+      - id: A
+        answer: "`sum()` luôn là atomic snapshot tuyệt đối của toàn bộ counter tại một thời điểm duy nhất."
+        explanation: "Sai. README nhấn mạnh `sum()` không bảo đảm atomic snapshot trong lúc concurrent updates vẫn diễn ra."
+      - id: B
+        answer: "`sum()` chỉ hợp lệ nếu LongAdder có đúng một cell."
+        explanation: "Sai. LongAdder được thiết kế để aggregate nhiều cell; vấn đề là snapshot semantics khi writer vẫn chạy."
+      - id: C
+        answer: "Khi concurrent updates đã dừng, `sum()` cho tổng chính xác; trong lúc writer còn chạy không nên dùng nó như atomic admission check."
+        explanation: "Đúng. Vì vậy không dùng pattern `sum() < limit` rồi `increment()` như một compound atomic rule."
+      - id: D
+        answer: "`sum()` tự khóa mọi writer cho đến khi đọc xong."
+        explanation: "Sai. Đó không phải contract được mô tả cho LongAdder."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Synchronization/Synchronization.md"
+      anchor: "adder-accumulator"
+    apiRelated:
+      controller: "SynchronizationController"
+      methodSignature: "atomicTools()"
+
+  - id: locksupport-permit-semantics
+    question: "Phát biểu nào đúng về `LockSupport.park()` / `unpark(thread)`?"
+    answers:
+      - id: A
+        answer: "Permit là counter tích lũy vô hạn; gọi `unpark()` 10 lần cho phép 10 lần `park()` sau đó đi qua."
+        explanation: "Sai. Mental model gần với trạng thái có permit/chưa có permit, không phải counter cộng dồn vô hạn."
+      - id: B
+        answer: "`park()` luôn ném `InterruptedException` khi thread bị interrupt."
+        explanation: "Sai. `park()` có thể return do interrupt nhưng không ném `InterruptedException`; caller phải tự kiểm tra status/predicate."
+      - id: C
+        answer: "`unpark(thread)` có thể target một Thread cụ thể, và `park()` vẫn nên nằm trong loop kiểm tra condition/cancellation vì có thể return do permit, interrupt hoặc spurious return."
+        explanation: "Đúng. Đây là semantics cốt lõi được README nhấn mạnh."
+      - id: D
+        answer: "Dùng `park()` bắt buộc phải đang giữ intrinsic monitor giống `Object.wait()`."
+        explanation: "Sai. LockSupport không yêu cầu ownership của intrinsic monitor."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.Coordination/Coordination.md"
+      anchor: "lock-support"
+    apiRelated:
+      controller: "CoordinationController"
+      methodSignature: "lockSupport()"
+
+  - id: priority-blocking-queue-fairness
+    question: "Với `PriorityBlockingQueue`, giả sử nhiều item có cùng priority. Có thể mặc định điều gì?"
+    answers:
+      - id: A
+        answer: "Các item cùng priority luôn FIFO theo contract mặc định."
+        explanation: "Sai. README cảnh báo không nên dựa vào FIFO khi priority bằng nhau nếu ordering đó không được encode rõ."
+      - id: B
+        answer: "Queue có bounded capacity mặc định nên producer luôn nhận backpressure khi đầy."
+        explanation: "Sai. PriorityBlockingQueue là effectively unbounded và không cung cấp bounded-capacity backpressure như ArrayBlockingQueue."
+      - id: C
+        answer: "Nếu cần stable FIFO trong cùng priority, comparator/data model nên có tie-breaker như sequence number."
+        explanation: "Đúng. Priority và fairness/FIFO là các semantics khác nhau."
+      - id: D
+        answer: "Low-priority item không bao giờ có nguy cơ chờ lâu nếu high-priority item tới liên tục."
+        explanation: "Sai. Low-priority work có thể phải chờ rất lâu; đây là business scheduling concern."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.Coordination/Coordination.md"
+      anchor: "priority-queue-semantics"
+    apiRelated:
+      controller: "CoordinationController"
+      methodSignature: "priorityQueueSemantics()"
+

@@ -1,0 +1,53 @@
+1.Virtual_Thread/VirtualThread.md:
+  virtual-thread-basic:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  virtual-thread-creation:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  mount-unmount:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  virtual-executor:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  throughput-latency:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  resource-limits:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  virtual-thread-thread-local:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  pinning-java2.:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  virtual-thread-locking:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  spring-virtual-thread:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  executor-autoclose:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  virtual-thread-choice:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  virtual-thread-experiments:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false

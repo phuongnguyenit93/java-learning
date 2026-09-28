@@ -1,185 +1,38 @@
-<a id="back-to-top"></a>
+# Thuật ngữ cốt lõi của AOP
 
-# AOP Terminology
+## <a id="aop-aspect">1. Aspect</a>
 
-## Menu
-- [1. Các thuật ngữ chính](#terminology-map)
-- [2. Demo trong module](#terminology-demo)
-- [3. @AspectJ style không đồng nghĩa AspectJ weaving](#spring-aop-vs-aspectj-style)
-- [4. Kết luận](#terminology-conclusion)
+**Aspect** là đơn vị gom một cross-cutting concern cùng với rule xác định nơi concern đó được áp dụng.
 
-Phần này gắn các thuật ngữ AOP vào một method call thật thay vì học thuộc định nghĩa rời rạc.
+## <a id="aop-join-point">2. Join Point</a>
 
-## <a id="terminology-map">1. Các thuật ngữ chính</a>
+**Join Point** là một điểm có ý nghĩa trong execution model nơi behavior bổ sung có thể tham gia.
 
-<details>
-<summary>Click for details</summary>
+Tùy implementation, join point có thể là method execution, constructor, field access hoặc một loại execution event khác.
 
-Trong experiment của module:
+## <a id="aop-pointcut">3. Pointcut</a>
 
-```text
-TerminologyAspect
-→ Aspect
+**Pointcut** là rule chọn một tập join point.
 
-explainTerms(...)
-→ Advice
-
-execution(...TerminologyService.execute(..))
-→ Pointcut expression
-
-TerminologyService.execute()
-→ Join Point (method execution) đang được chọn
-
-TerminologyService instance
-→ Target Object
-
-object được inject vào Controller
-→ AOP Proxy
-```
-
-Trong **Spring AOP**, join point model là **method execution**. Pointcut chọn một subset các method execution đó, còn proxy boundary quyết định invocation có thực sự đi vào AOP chain hay không.
-
-`weaving` là thuật ngữ AOP tổng quát cho quá trình liên kết Aspect với target/advised object. Spring AOP thực hiện việc này ở runtime bằng proxy; full AspectJ còn có compile-time hoặc load-time weaving và hỗ trợ join point model rộng hơn.
-
-</details>
-
-- [Quay lại đầu trang](#back-to-top)
-
----
-
-## <a id="terminology-demo">2. Demo trong module</a>
-
-<details>
-<summary>Click for details</summary>
-
-Controller:
+Nói ngắn gọn:
 
 ```text
-TerminologyController#inspectTerminology()
+Join Point = nơi có thể can thiệp
+Pointcut   = rule chọn nơi cần can thiệp
 ```
 
-Endpoint:
+## <a id="aop-advice">4. Advice</a>
 
-```text
-GET /aop/terminology/inspect
-```
+**Advice** là behavior được thực thi tại join point đã được chọn.
 
-Target:
+Conceptually, advice có thể chạy trước, sau hoặc bao quanh behavior chính tùy execution model.
 
-```text
-TerminologyService#execute()
-```
+## <a id="aop-target">5. Target</a>
 
-Advice:
+**Target** là behavior hoặc component gốc mà cross-cutting behavior được áp dụng lên.
 
-```text
-TerminologyAspect#explainTerms(...)
-```
+## <a id="aop-weaving">6. Weaving</a>
 
-Response `facts` cho biết:
+**Weaving** là quá trình kết hợp aspect với target để tạo ra effective behavior.
 
-- object được inject có phải AOP proxy hay không;
-- runtime class của object được inject;
-- target class thật.
-
-Response `events` còn ghi:
-
-```text
-aspect=TerminologyAspect
-advice=@Before
-join-point=...
-proxy-class=...
-target-class=TerminologyService
-target:TerminologyService.execute
-```
-
-</details>
-
-- [Quay lại đầu trang](#back-to-top)
-
----
-
-## <a id="spring-aop-vs-aspectj-style">3. @AspectJ style không đồng nghĩa AspectJ weaving</a>
-
-<details>
-<summary>Click for details</summary>
-
-Module sử dụng các annotation:
-
-```text
-@Aspect
-@Before
-@Around
-```
-
-Các annotation này thuộc **@AspectJ declaration style**, nhưng runtime của module vẫn là **Spring AOP proxy-based**.
-
-Mental model:
-
-```text
-AspectJ annotation syntax
-        ↓
-Spring đọc metadata + pointcut expression
-        ↓
-Spring tạo AOP proxy
-        ↓
-method invocation đi qua proxy
-```
-
-Module không cấu hình AspectJ compiler hay load-time weaving agent.
-
-Vì vậy cần tách ba khái niệm:
-
-```text
-weaving
-→ khái niệm AOP tổng quát
-
-Spring AOP runtime weaving
-→ proxy-based
-
-AspectJ compile-time / load-time weaving
-→ bytecode weaving + join point model rộng hơn
-```
-
-Một distinction khác rất quan trọng:
-
-```text
-@Aspect
-→ khai báo class có semantics của Aspect
-
-@Component hoặc @Bean
-→ đưa Aspect instance vào Spring ApplicationContext
-```
-
-`@Aspect` tự nó không phải component-scanning annotation. Các Aspect trong module dùng cả `@Aspect` và `@Component` vì Spring cần Aspect đó tồn tại như một bean để auto-proxy infrastructure sử dụng.
-
-Phần `15.RuntimeBoundary` sẽ quay lại distinction này ở mức infrastructure.
-
----
-
-</details>
-
-- [Quay lại đầu trang](#back-to-top)
-
----
-
-## <a id="terminology-conclusion">4. Kết luận</a>
-
-<details>
-<summary>Click for details</summary>
-
-Một cách đọc call chain:
-
-```text
-Controller
-→ AOP Proxy
-→ Pointcut chọn Join Point
-→ Advice chạy
-→ Target Object
-```
-
-Aspect là nơi gom cross-cutting behavior; Advice là behavior cụ thể chạy tại một join point được pointcut chọn.
-
-</details>
-
-- [Quay lại đầu trang](#back-to-top)
+Weaving không bắt buộc phải dùng cùng một cơ chế ở mọi implementation; nó có thể xảy ra ở build time, load time hoặc runtime.

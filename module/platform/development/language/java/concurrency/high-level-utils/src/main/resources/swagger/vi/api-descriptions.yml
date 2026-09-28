@@ -1,0 +1,679 @@
+CoordinationController:
+  join():
+    summary: Phối hợp lifecycle bằng Thread.join()
+    description: Start worker rồi dùng join() để caller chờ đến khi worker kết thúc
+      trước khi tiếp tục. Experiment minh họa dependency theo lifecycle và nhắc rằng
+      join còn mang happens-before guarantee cho các write của worker.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: join
+    params: [
+      ]
+    path: com/example/learning/module/coordination/controller/CoordinationController.java
+    mapping: '@GetMapping("/join")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /coordination/join
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: join
+    aiGenerated: true
+    reviewed: false
+  waitNotify():
+    summary: Phối hợp bằng wait(), notify() và notifyAll()
+    description: Dùng nhiều waiter, predicate loop, notify() và notifyAll() để quan
+      sát wait set và việc waiter phải reacquire monitor trước khi tiếp tục. Notification
+      chỉ là tín hiệu kiểm tra lại; predicate mới quyết định Thread có thể đi tiếp
+      hay không.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: waitNotify
+    params: [
+      ]
+    path: com/example/learning/module/coordination/controller/CoordinationController.java
+    mapping: '@GetMapping("/wait-notify")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /coordination/wait-notify
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: wait-notify
+    aiGenerated: true
+    reviewed: false
+  condition():
+    summary: Phối hợp nhiều Condition với ReentrantLock
+    description: Tạo hai Condition độc lập trên cùng ReentrantLock và signal từng
+      condition theo predicate tương ứng. Experiment cho thấy Condition là explicit-lock
+      counterpart của wait/notify và await() release rồi reacquire lock.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: condition
+    params: [
+      ]
+    path: com/example/learning/module/coordination/controller/CoordinationController.java
+    mapping: '@GetMapping("/condition")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /coordination/condition
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: condition
+    aiGenerated: true
+    reviewed: false
+  lockSupport():
+    summary: Quan sát LockSupport park và unpark
+    description: Park nhiều worker để chứng minh unpark(thread) target đúng Thread,
+      blocker metadata có thể được quan sát và interrupt làm park() return mà không
+      ném InterruptedException. Cleanup đảm bảo mọi worker đều kết thúc.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: lockSupport
+    params: [
+      ]
+    path: com/example/learning/module/coordination/controller/CoordinationController.java
+    mapping: '@GetMapping("/lock-support")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /coordination/lock-support
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: lock-support
+    aiGenerated: true
+    reviewed: false
+  blockingQueue():
+    summary: Xây producer-consumer với BlockingQueue
+    description: Chạy producer và consumer trên một BlockingQueue hữu hạn bằng các
+      operation blocking rồi join cả hai Thread. Experiment minh họa buffer trung
+      gian và coordination an toàn mà không để consumer chạy vô hạn.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: blockingQueue
+    params: [
+      ]
+    path: com/example/learning/module/coordination/controller/CoordinationController.java
+    mapping: '@GetMapping("/blocking-queue")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /coordination/blocking-queue
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: producer-consumer
+    aiGenerated: true
+    reviewed: false
+  blockingQueueVariants():
+    summary: So sánh các BlockingQueue phổ biến
+    description: Quan sát capacity của ArrayBlockingQueue, drainTo trên LinkedBlockingQueue
+      và priority ordering của PriorityBlockingQueue trong các case bounded. Mục tiêu
+      là chọn queue theo capacity, ordering và handoff semantics.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: blockingQueueVariants
+    params: [
+      ]
+    path: com/example/learning/module/coordination/controller/CoordinationController.java
+    mapping: '@GetMapping("/blocking-queue-variants")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /coordination/blocking-queue-variants
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: blocking-queue-variants
+    aiGenerated: true
+    reviewed: false
+  priorityQueueSemantics():
+    summary: Quan sát semantics của PriorityBlockingQueue
+    description: Đưa các task có priority khác nhau và bằng nhau vào PriorityBlockingQueue
+      để quan sát ordering. Experiment nhấn mạnh priority cao được ưu tiên nhưng equal
+      priority không có FIFO contract và queue không cung cấp bounded backpressure.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: priorityQueueSemantics
+    params: [
+      ]
+    path: com/example/learning/module/coordination/controller/CoordinationController.java
+    mapping: '@GetMapping("/priority-queue-semantics")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /coordination/priority-queue-semantics
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: priority-queue-semantics
+    aiGenerated: true
+    reviewed: false
+  synchronousQueue():
+    summary: Quan sát direct handoff với SynchronousQueue
+    description: Cho producer put và consumer take qua SynchronousQueue để thấy mỗi
+      phần tử cần một operation phía đối diện tương ứng. Queue này là rendezvous point
+      và không giữ backlog như buffer thông thường.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: synchronousQueue
+    params: [
+      ]
+    path: com/example/learning/module/coordination/controller/CoordinationController.java
+    mapping: '@GetMapping("/synchronous-queue")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /coordination/synchronous-queue
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: synchronous-queue
+    aiGenerated: true
+    reviewed: false
+  synchronizers():
+    summary: So sánh các synchronizer cấp cao
+    description: Chạy các experiment bounded với CountDownLatch, CyclicBarrier, Semaphore,
+      Phaser và Exchanger để quan sát các kiểu dependency khác nhau. Response tập
+      trung vào coordination semantics thay vì benchmark timing.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: synchronizers
+    params: [
+      ]
+    path: com/example/learning/module/coordination/controller/CoordinationController.java
+    mapping: '@GetMapping("/synchronizers")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /coordination/synchronizers
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: synchronizers
+    aiGenerated: true
+    reviewed: false
+  synchronizersTimeout():
+    summary: Quan sát timeout và failure của synchronizer
+    description: Minh họa latch timeout, broken/reset barrier, semaphore acquisition
+      timeout, Phaser dynamic participation và Exchanger timeout/interruption. Experiment
+      cho thấy mỗi synchronizer có failure state và recovery semantics riêng.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: synchronizersTimeout
+    params: [
+      ]
+    path: com/example/learning/module/coordination/controller/CoordinationController.java
+    mapping: '@GetMapping("/synchronizers-timeout")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /coordination/synchronizers-timeout
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: synchronizer-timeout-failure
+    aiGenerated: true
+    reviewed: false
+  semaphorePermitAccounting():
+    summary: Chứng minh Semaphore không enforce ownership
+    description: Cố tình release permit khi chưa acquire để thấy available permits
+      tăng sai, sau đó quan sát có thể acquire vượt capacity ban đầu. Experiment nhấn
+      mạnh permit accounting là trách nhiệm của application.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: semaphorePermitAccounting
+    params: [
+      ]
+    path: com/example/learning/module/coordination/controller/CoordinationController.java
+    mapping: '@GetMapping("/semaphore-permit-accounting")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /coordination/semaphore-permit-accounting
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: semaphore-permit-accounting
+    aiGenerated: true
+    reviewed: false
+SynchronizationController:
+  synchronizedCounter():
+    summary: Bảo vệ compound update bằng synchronized
+    description: Cho nhiều Thread cùng increment shared counter dưới intrinsic monitor.
+      Experiment chứng minh synchronized biến compound update cần bảo vệ thành critical
+      section và tránh lost update.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: synchronizedCounter
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/synchronized-counter")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/synchronized-counter
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: synchronized-monitor
+    aiGenerated: true
+    reviewed: false
+  reentrantLock():
+    summary: Quan sát tính reentrant của ReentrantLock
+    description: Cùng một Thread acquire ReentrantLock nhiều lần và quan sát hold
+      count trước khi unlock tương ứng. Experiment chứng minh lock là reentrant nhưng
+      mỗi lần acquire vẫn cần release cân bằng.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: reentrantLock
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/reentrant-lock")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/reentrant-lock
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: reentrant-lock
+    aiGenerated: true
+    reviewed: false
+  tryLock():
+    summary: Quan sát tryLock(timeout) khi lock đang bận
+    description: Một Thread giữ lock trong khi Thread khác dùng tryLock với timeout
+      hữu hạn. Experiment cho thấy acquisition có thể fail có kiểm soát thay vì chờ
+      vô hạn.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: tryLock
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/try-lock")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/try-lock
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: reentrant-lock
+    aiGenerated: true
+    reviewed: false
+  interruptibleLock():
+    summary: Hủy Thread đang chờ lock bằng lockInterruptibly()
+    description: Giữ ReentrantLock để worker phải chờ bằng lockInterruptibly(), sau
+      đó interrupt worker. Experiment cho thấy explicit lock có thể cung cấp interruptible
+      acquisition, khác với Thread đang BLOCKED chờ synchronized monitor.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: interruptibleLock
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/interruptible-lock")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/interruptible-lock
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: reentrant-lock
+    aiGenerated: true
+    reviewed: false
+  reentrantLockPolicy():
+    summary: Quan sát fair và non-fair policy của ReentrantLock
+    description: So sánh policy của ReentrantLock và nhấn mạnh fairness không phải
+      guarantee về Thread.start order. Untimed tryLock() có thể barge nên không được
+      dùng để suy ra toàn bộ fairness behavior.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: reentrantLockPolicy
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/reentrant-lock-policy")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/reentrant-lock-policy
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: reentrant-lock
+    aiGenerated: true
+    reviewed: false
+  readWriteLock():
+    summary: Quan sát concurrent readers và exclusive writer
+    description: Cho nhiều reader giữ read lock đồng thời trong khi writer phải đợi.
+      Experiment minh họa ReentrantReadWriteLock cho phép shared reads nhưng write
+      access vẫn exclusive.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: readWriteLock
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/read-write-lock")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/read-write-lock
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: read-write-lock
+    aiGenerated: true
+    reviewed: false
+  readWriteLockDowngrade():
+    summary: Thực hiện write-to-read lock downgrade
+    description: Giữ write lock, acquire read lock trước rồi mới release write lock
+      để hạ cấp quyền truy cập mà không mở cửa sổ không được bảo vệ. Experiment minh
+      họa đúng thứ tự lock downgrade.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: readWriteLockDowngrade
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/read-write-lock-downgrade")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/read-write-lock-downgrade
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: read-write-lock
+    aiGenerated: true
+    reviewed: false
+  readWriteLockPolicy():
+    summary: Quan sát policy của ReentrantReadWriteLock
+    description: Quan sát default/fair mode của read-write lock và đặc điểm của các
+      untimed tryLock operation. Experiment nhắc rằng fairness policy cần đọc theo
+      contract cụ thể của từng API.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: readWriteLockPolicy
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/read-write-lock-policy")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/read-write-lock-policy
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: read-write-lock-policy
+    aiGenerated: true
+    reviewed: false
+  stampedLock():
+    summary: Quan sát optimistic read và fallback của StampedLock
+    description: Lấy optimistic stamp, cho writer thay đổi state để stamp invalid,
+      sau đó validate và fallback sang read lock. Experiment minh họa optimistic read
+      chỉ hợp lệ khi validation thành công.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: stampedLock
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/stamped-lock")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/stamped-lock
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: stamped-lock
+    aiGenerated: true
+    reviewed: false
+  stampedLockLimitations():
+    summary: Quan sát giới hạn của StampedLock
+    description: 'Kiểm tra hai limitation quan trọng: StampedLock không reentrant
+      và các Lock view của nó không cung cấp Condition. Experiment giúp tránh áp mental
+      model của ReentrantLock sang StampedLock.'
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: stampedLockLimitations
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/stamped-lock-limitations")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/stamped-lock-limitations
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: stamped-lock-limitations
+    aiGenerated: true
+    reviewed: false
+  atomicTools():
+    summary: So sánh AtomicInteger, LongAdder và LongAccumulator
+    description: Chạy các thao tác xác định với AtomicInteger, LongAdder và LongAccumulator
+      để quan sát vai trò khác nhau của atomic update và distributed accumulation.
+      Experiment tập trung vào semantics chứ không benchmark throughput.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: atomicTools
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/atomic-tools")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/atomic-tools
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: adder-accumulator
+    aiGenerated: true
+    reviewed: false
+  atomicCas():
+    summary: Quan sát CAS, ABA và stamped reference
+    description: Dùng compareAndSet để minh họa conditional atomic update, sau đó
+      tạo ABA trên value và dùng stamp để phát hiện state đã thay đổi rồi quay lại
+      giá trị cũ. Experiment làm rõ giới hạn của value-only CAS.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: atomicCas
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/atomic-cas")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/atomic-cas
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: atomic-cas
+    aiGenerated: true
+    reviewed: false
+  concurrentCollections():
+    summary: Quan sát atomic operation của concurrent collections
+    description: Minh họa atomic map update, snapshot-style iteration và non-blocking
+      queue bằng các concurrent collection phù hợp. Experiment nhấn mạnh thread-safe
+      từng operation không đồng nghĩa mọi multi-step business invariant tự trở thành
+      atomic.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: concurrentCollections
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/concurrent-collections")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/concurrent-collections
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: concurrent-collections
+    aiGenerated: true
+    reviewed: false
+  concurrentSkipList():
+    summary: Quan sát sorted concurrent map
+    description: Update ConcurrentSkipListMap từ nhiều Thread rồi đọc key order sau
+      khi hoàn thành. Experiment cho thấy collection vừa hỗ trợ concurrent access
+      vừa duy trì sorted ordering theo contract của map.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: concurrentSkipList
+    params: [
+      ]
+    path: com/example/learning/module/synchronization/controller/SynchronizationController.java
+    mapping: '@GetMapping("/concurrent-skip-list")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /synchronization/concurrent-skip-list
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: concurrent-collections
+    aiGenerated: true
+    reviewed: false

@@ -1,0 +1,141 @@
+# <quiz-schema>
+# Cấu trúc câu hỏi Quiz
+# schema-version: 3
+#
+# questions [kiểu: list; bắt buộc; mặc định: []; duy nhất theo: id]
+#   Danh sách câu hỏi Quiz của module trong language hiện tại.
+#   mỗi phần tử:
+#     id [kiểu: string; bắt buộc; mặc định: ""]
+#       ID ổn định và duy nhất của câu hỏi.
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi hiển thị cho người học.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu câu hỏi được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu câu hỏi đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+#     answers [kiểu: list; bắt buộc; số phần tử: 4; mặc định: []; duy nhất theo: id]
+#       Chính xác bốn đáp án. ID A/B/C/D là identity nội bộ ổn định, không phải vị trí hiển thị sau khi frontend shuffle.
+#       mỗi phần tử:
+#         id [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#           Identity ổn định của đáp án.
+#         answer [kiểu: string; bắt buộc; mặc định: ""]
+#           Nội dung đáp án hiển thị cho người học.
+#         explanation [kiểu: string; bắt buộc; mặc định: ""]
+#           Giải thích hiển thị khi người học chọn đáp án này, bất kể đúng hay sai.
+#     correctAnswerId [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
+# </quiz-schema>
+
+questions:
+  - id: virtual-thread-blocking-model
+    question: "Một virtual thread gọi blocking I/O được runtime hỗ trợ unmount. Cách mô tả nào đúng nhất?"
+    answers:
+      - id: A
+        answer: "Blocking call đã trở thành reactive non-blocking API."
+        explanation: "Sai. Operation vẫn semantically blocking; chỉ execution cost model thay đổi vì virtual thread có thể được unmount khỏi carrier."
+      - id: B
+        answer: "Virtual thread vẫn đang chờ về mặt logic, nhưng JVM có thể unmount nó để carrier chạy virtual thread khác."
+        explanation: "Đúng. Đây là cách virtual thread hỗ trợ thread-per-task style scale tốt hơn cho nhiều workload chờ/blocking."
+      - id: C
+        answer: "Carrier thread bị dành riêng cho virtual thread đó cho tới khi I/O xong trong mọi trường hợp."
+        explanation: "Sai. Với supported blocking operation, mục tiêu chính là có thể free carrier; pinning là trường hợp cần xem riêng."
+      - id: D
+        answer: "Không còn bất kỳ Thread object nào liên quan đến task."
+        explanation: "Sai. Virtual thread vẫn là Java `Thread`; nó chỉ có implementation/scheduling model nhẹ hơn platform thread."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Virtual_Thread/VirtualThread.md"
+      anchor: "mount-unmount"
+    apiRelated:
+      controller: "VirtualThreadController"
+      methodSignature: "blockingScale()"
+
+  - id: virtual-thread-downstream-limit
+    question: "Service có thể tạo rất nhiều virtual thread nhưng DB chỉ có 20 connections. Thiết kế nào đúng hơn?"
+    answers:
+      - id: A
+        answer: "Tạo càng nhiều virtual thread càng tốt vì virtual thread làm DB connection trở nên vô hạn."
+        explanation: "Sai. Virtual thread không mở rộng capacity của downstream resource như DB pool."
+      - id: B
+        answer: "Tăng Thread priority của virtual thread để DB phục vụ nhanh hơn."
+        explanation: "Sai. Java 2. virtual thread có fixed NORM_PRIORITY và priority cũng không tạo thêm DB capacity."
+      - id: C
+        answer: "Vẫn giới hạn admission/concurrency theo downstream capacity, ví dụ Semaphore/rate limiter/resource pool phù hợp."
+        explanation: "Đúng. Virtual thread giải bài toán thread scalability, không xóa bỏ giới hạn connection, API rate limit, file descriptor hay resource hữu hạn."
+      - id: D
+        answer: "Bỏ connection pool vì virtual thread đã thay thế mọi loại pool."
+        explanation: "Sai. Resource pool và thread pool giải các bài toán khác nhau; DB connections vẫn là resource hữu hạn cần quản lý."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Virtual_Thread/VirtualThread.md"
+      anchor: "resource-limits"
+    apiRelated:
+      controller: "VirtualThreadController"
+      methodSignature: "limitedResource()"
+
+  - id: virtual-thread-pinning-java2.
+    question: "Trong Java 2., tình huống nào là một pinning risk đáng chú ý đối với virtual thread?"
+    answers:
+      - id: A
+        answer: "Virtual thread thực hiện blocking lâu trong khi đang giữ intrinsic monitor `synchronized`, khiến carrier có thể không được giải phóng như mong muốn."
+        explanation: "Đúng. README gắn caveat này cụ thể với Java 2. và nhấn mạnh behavior có thể thay đổi ở JDK mới hơn."
+      - id: B
+        answer: "Virtual thread gọi `ThreadLocal.get()` một lần."
+        explanation: "Sai. ThreadLocal có memory/lifecycle concerns ở scale lớn, nhưng đây không phải pinning rule được mô tả."
+      - id: C
+        answer: "Virtual thread có tên dài hơn 20 ký tự."
+        explanation: "Sai. Thread name không tạo pinning."
+      - id: D
+        answer: "Virtual thread được tạo bằng `Thread.startVirtualThread(...)` thay vì executor."
+        explanation: "Sai. Creation API không phải nguyên nhân pinning."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Virtual_Thread/VirtualThread.md"
+      anchor: "pinning-java2."
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - id: virtual-thread-daemon-priority
+    question: "Trong Java 2., phát biểu nào đúng về daemon status và priority của virtual thread?"
+    answers:
+      - id: A
+        answer: "Virtual thread luôn là daemon thread và dùng `Thread.NORM_PRIORITY`."
+        explanation: "Đúng. README nhấn mạnh không dùng thread priority như tuning knob cho virtual-thread scalability."
+      - id: B
+        answer: "Virtual thread luôn là user thread để giữ JVM sống."
+        explanation: "Sai. Trong Java 2., virtual thread là daemon thread."
+      - id: C
+        answer: "Có thể tăng priority virtual thread lên MAX_PRIORITY để tăng downstream capacity."
+        explanation: "Sai. Priority cố định ở NORM_PRIORITY, và priority cũng không tạo thêm capacity cho downstream resource."
+      - id: D
+        answer: "Daemon status của virtual thread thay đổi theo số carrier thread."
+        explanation: "Sai. Đây không phải semantics được mô tả."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Virtual_Thread/VirtualThread.md"
+      anchor: "virtual-thread-basic"
+    apiRelated:
+      controller: "VirtualThreadController"
+      methodSignature: "basic()"
+

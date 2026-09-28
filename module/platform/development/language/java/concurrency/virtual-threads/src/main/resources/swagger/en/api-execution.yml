@@ -1,0 +1,104 @@
+VirtualThreadController:
+  basic():
+    execution: "<p><b>Concept:</b> The service starts one named virtual thread and\
+      \ inspects it from inside and after completion.</p>\n<ol>\n  <li><code>Thread.ofVirtual().name(...).start(...)</code>\
+      \ creates and starts the worker.\n    <div><i>Source: VirtualThreadService.basicDemo()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; basicDemo() throws InterruptedException\
+      \ {\n            AtomicBoolean virtual = new AtomicBoolean(false);\n       \
+      \     AtomicReference&lt;String&gt; description = new AtomicReference&lt;&gt;();\n\
+      \    \n            Thread worker = Thread.ofVirtual()\n                    .name(\"\
+      virtual-basic\")\n                    .start(() -&gt; {\n                  \
+      \      virtual.set(Thread.currentThread().isVirtual());\n                  \
+      \      description.set(Thread.currentThread().toString());\n        ...\n  \
+      \  }</code></pre>\n  </li>\n  <li>Inside the worker, the code records <code>isVirtual()</code>\
+      \ and the thread description.</li>\n  <li>The caller joins the virtual thread\
+      \ and returns its virtual flag, daemon status, priority, textual description,\
+      \ and final terminated state.</li>\n</ol>\n<p><b>Conclusion:</b> Observe core\
+      \ Virtual Thread properties. The response and Execution Context are the runtime\
+      \ evidence for this behavior; the colocated source snippet shows the code path\
+      \ that creates the experiment.</p>"
+    usage: true
+  creationApi():
+    execution: "<p><b>Concept:</b> The service creates two real virtual threads using\
+      \ the two primary creation styles.</p>\n<ol>\n  <li><code>Thread.startVirtualThread(...)</code>\
+      \ starts one task directly.\n    <div><i>Source: VirtualThreadService.creationApisDemo()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; creationApisDemo() throws\
+      \ InterruptedException {\n            AtomicBoolean startVirtualThreadIsVirtual\
+      \ = new AtomicBoolean(false);\n            AtomicBoolean builderIsVirtual =\
+      \ new AtomicBoolean(false);\n            AtomicReference&lt;String&gt; builderName\
+      \ = new AtomicReference&lt;&gt;();\n    \n            Thread direct = Thread.startVirtualThread(\n\
+      \                    () -&gt; startVirtualThreadIsVirtual.set(Thread.currentThread().isVirtual())\n\
+      \            );\n            Thread builder = Thread.ofVirtual()\n        ...\n\
+      \    }</code></pre>\n  </li>\n  <li><code>Thread.ofVirtual().name(\"virtual-builder\"\
+      ).start(...)</code> creates the second task through a builder.</li>\n  <li>Each\
+      \ task records that its current thread is virtual; both are joined and the builder-created\
+      \ thread's name is returned.</li>\n</ol>\n<p><b>Conclusion:</b> Compare direct\
+      \ Virtual Thread creation APIs. The response and Execution Context are the runtime\
+      \ evidence for this behavior; the colocated source snippet shows the code path\
+      \ that creates the experiment.</p>"
+    usage: true
+  blockingScale():
+    execution: "<p><b>Concept:</b> The service runs the same .00 blocking sleep tasks\
+      \ through a small platform-thread pool and through a virtual-thread-per-task\
+      \ executor.</p>\n<ol>\n  <li>A fixed platform pool with .0 workers submits .00\
+      \ tasks that each sleep for 20 ms; closing the executor waits for them to finish\
+      \ and the elapsed time is recorded.\n    <div><i>Source: VirtualThreadService.blockingScaleDemo()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; blockingScaleDemo() throws\
+      \ Exception {\n            int tasks = .00;\n            Duration wait = Duration.ofMillis(20);\n\
+      \    \n            long platformStart = System.nanoTime();\n            try\
+      \ (var platformExecutor = Executors.newFixedThreadPool(.0)) {\n            \
+      \    for (int i = 0; i &lt; tasks; i++) {\n                    platformExecutor.submit(()\
+      \ -&gt; {\n                        Thread.sleep(wait);\n        ...\n    }</code></pre>\n\
+      \  </li>\n  <li>The experiment is repeated with <code>newVirtualThreadPerTaskExecutor()</code>,\
+      \ giving each submitted task a virtual thread.</li>\n  <li>The response returns\
+      \ both elapsed times as an illustrative measurement and explicitly marks the\
+      \ experiment as non-benchmark-grade.</li>\n</ol>\n<p><b>Conclusion:</b> Compare\
+      \ blocking work on platform and Virtual Threads. The response and Execution\
+      \ Context are the runtime evidence for this behavior; the colocated source snippet\
+      \ shows the code path that creates the experiment.</p>"
+    usage: true
+  limitedResource():
+    execution: "<p><b>Concept:</b> Thirty virtual-thread tasks compete for a resource\
+      \ guarded by a five-permit <code>Semaphore</code>.</p>\n<ol>\n  <li>Each virtual\
+      \ thread acquires a permit before entering the simulated resource section.\n\
+      \    <div><i>Source: VirtualThreadService.limitedResourceDemo()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; limitedResourceDemo() throws\
+      \ Exception {\n            int tasks = 30;\n            int permits = 5;\n \
+      \           Semaphore semaphore = new Semaphore(permits);\n            AtomicInteger\
+      \ active = new AtomicInteger();\n            AtomicInteger maxActive = new AtomicInteger();\n\
+      \            CountDownLatch done = new CountDownLatch(tasks);\n    \n      \
+      \      try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {\n\
+      \        ...\n    }</code></pre>\n  </li>\n  <li>Atomic counters track current\
+      \ and maximum simultaneous entrants while each holder sleeps briefly.</li>\n\
+      \  <li>Every task releases its permit in <code>finally</code> and counts down\
+      \ a completion latch.</li>\n  <li>The response verifies that concurrency inside\
+      \ the limited resource never exceeded five despite having many cheap virtual\
+      \ threads.</li>\n</ol>\n<p><b>Conclusion:</b> Limit downstream concurrency with\
+      \ Virtual Threads. The response and Execution Context are the runtime evidence\
+      \ for this behavior; the colocated source snippet shows the code path that creates\
+      \ the experiment.</p>"
+    usage: true
+  threadLocal():
+    execution: "<p><b>Concept:</b> The service checks plain and inheritable thread-local\
+      \ behavior on virtual threads.</p>\n<ol>\n  <li>The first virtual thread sets\
+      \ a plain <code>ThreadLocal</code>, reads it, removes it in <code>finally</code>,\
+      \ and verifies cleanup.\n    <div><i>Source: VirtualThreadService.threadLocalDemo()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; threadLocalDemo() throws\
+      \ InterruptedException {\n            ThreadLocal&lt;String&gt; context = new\
+      \ ThreadLocal&lt;&gt;();\n            InheritableThreadLocal&lt;String&gt; inheritableContext\
+      \ = new InheritableThreadLocal&lt;&gt;();\n            AtomicReference&lt;String&gt;\
+      \ firstObserved = new AtomicReference&lt;&gt;();\n            AtomicReference&lt;String&gt;\
+      \ secondObserved = new AtomicReference&lt;&gt;();\n            AtomicReference&lt;String&gt;\
+      \ inheritedByDefault = new AtomicReference&lt;&gt;();\n            AtomicReference&lt;String&gt;\
+      \ inheritedWhenDisabled = new AtomicReference&lt;&gt;();\n            AtomicBoolean\
+      \ cleanedInsideFirstThread = new AtomicBoolean(false);\n    \n        ...\n\
+      \    }</code></pre>\n  </li>\n  <li>A second virtual thread reads the same plain\
+      \ <code>ThreadLocal</code> and sees null because the state is per thread.</li>\n\
+      \  <li>The parent then sets an <code>InheritableThreadLocal</code>; one virtual\
+      \ thread inherits it by default, while another is created with <code>inheritInheritableThreadLocals(false)</code>\
+      \ and sees null.</li>\n  <li>The parent context is removed after both threads\
+      \ finish.</li>\n</ol>\n<p><b>Conclusion:</b> Observe ThreadLocal on Virtual\
+      \ Threads. The response and Execution Context are the runtime evidence for this\
+      \ behavior; the colocated source snippet shows the code path that creates the\
+      \ experiment.</p>"
+    usage: true

@@ -21,12 +21,12 @@
     "SERVICE_NAME": {
         "DESCRIPTION": "Define name for this module. Use this name for task and many automation gradle",
         "TYPE": "string",
-        "VALUE": "JAVA_FUNCTIONAL_PROGRAMMING"
+        "VALUE": "FUNCTIONAL_PROGRAMMING"
     },
     "SERVICE_NAME_DESCRIBE": {
         "DESCRIPTION": "Describe this module function",
         "TYPE": "string",
-        "VALUE": "Java functional programming"
+        "VALUE": "Functional Programming paradigm concepts and trade-offs"
     },
     "IS_MODULE_DEPEND": {
         "DESCRIPTION": "To define this module added to group list dependency depend or not",

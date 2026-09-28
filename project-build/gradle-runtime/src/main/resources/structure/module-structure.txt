@@ -188,6 +188,9 @@ module
     │       ├── pmd
     │       └── spotbugs
     ├── development
+    │   ├── architecture
+    │   │   ├── domain-driven-design [DOMAIN_DRIVEN_DESIGN] : Domain-Driven Design fundamentals, strategic design and tactical design
+    │   │   └── mvc [MODEL_VIEW_CONTROLLER] : Model-View-Controller architectural pattern
     │   ├── build-tool
     │   │   ├── ant
     │   │   ├── gradle
@@ -207,6 +210,8 @@ module
     │   │   │   │       └── development-plugin
     │   │   │   └── task
     │   │   └── maven
+    │   ├── data-mapping
+    │   │   └── object-mapping [OBJECT_MAPPING] : Object-to-object mapping concepts and implementations including manual mapping, MapStruct and ModelMapper
     │   ├── design-pattern
     │   │   ├── anti-patterns
     │   │   ├── behavioral
@@ -217,6 +222,7 @@ module
     │   │   │   ├── builder
     │   │   │   ├── factory-method
     │   │   │   └── singleton
+    │   │   ├── dependency-injection [DEPENDENCY_INJECTION] : Dependency Injection and Inversion of Control design concepts
     │   │   ├── distributed-system
     │   │   │   ├── bulkhead
     │   │   │   ├── cqrs
@@ -231,6 +237,7 @@ module
     │   ├── framework
     │   │   ├── spring
     │   │   │   ├── actuator [SPRING_ACTUATOR] - [DEPEND] : To check and monitor system info when running
+    │   │   │   ├── aspect [ASPECT] : Spring Aspect-Oriented Programming with proxy-based interception, advice, pointcuts and AOP infrastructure
     │   │   │   ├── basic
     │   │   │   │   ├── annotation
     │   │   │   │   │   ├── configuration
@@ -244,6 +251,8 @@ module
     │   │   │   │   │   └── scope
     │   │   │   │   ├── profile
     │   │   │   │   └── properties
+    │   │   │   ├── batch
+    │   │   │   ├── concurrency [SPRING_CONCURRENCY] : Spring task execution, async methods, scheduling, context propagation and virtual-thread integration
     │   │   │   ├── conditional
     │   │   │   ├── data
     │   │   │   │   └── jpa [SPRING_JPA] - [DEPEND]
@@ -277,17 +286,24 @@ module
     │   │       │   └── custom-starter
     │   │       └── testing
     │   ├── language
-    │   │   ├── domain-specific-language
+    │   │   ├── domain-specific-language [DOMAIN_SPECIFIC_LANGUAGE] : Domain-Specific Language concepts, design, parsing and execution models
     │   │   └── java
     │   │       ├── advance
+    │   │       │   ├── dynamic-runtime [JAVA_DYNAMIC_RUNTIME] : Advanced Java dynamic invocation and runtime linkage
+    │   │       │   ├── instrumentation [JAVA_INSTRUMENTATION] : Java instrumentation, agents and class transformation
     │   │       │   ├── jvm [JAVA_JVM] : Java Virtual Machine internals
+    │   │       │   ├── native-interoperability [JAVA_NATIVE_INTEROPERABILITY] : Java native interoperability, foreign memory and operating-system boundaries
     │   │       │   ├── networking [JAVA_NETWORKING] : Java networking APIs
+    │   │       │   ├── runtime-diagnostics [JAVA_RUNTIME_DIAGNOSTICS] : Java runtime diagnostics, management and troubleshooting
+    │   │       │   ├── runtime-extensibility [JAVA_RUNTIME_EXTENSIBILITY] : Java runtime extensibility, SPI and plugin architecture
     │   │       │   └── security-cryptography [JAVA_SECURITY_CRYPTOGRAPHY] : Java security and cryptography APIs
     │   │       ├── concurrency
-    │   │       │   ├── async-programming
-    │   │       │   ├── executor-service
-    │   │       │   ├── high-level-utils
-    │   │       │   └── virtual-threads
+    │   │       │   ├── fundamentals [JAVA_CONCURRENCY_FUNDAMENTALS] : Java concurrency fundamentals, Thread lifecycle and Java Memory Model
+    │   │       │   ├── high-level-utils [JAVA_HIGH_LEVEL_CONCURRENCY_UTILS] : Java synchronization, coordination and concurrent utilities
+    │   │       │   ├── executor-service [JAVA_EXECUTOR_SERVICE] : Java executors, thread pools, scheduling and lifecycle
+    │   │       │   ├── fork-join [JAVA_FORK_JOIN] : Java Fork/Join Framework and work-stealing execution
+    │   │       │   ├── async-programming [JAVA_ASYNC_PROGRAMMING] : Java asynchronous programming with Future and CompletableFuture
+    │   │       │   └── virtual-threads [JAVA_VIRTUAL_THREADS] : Java virtual threads and modern thread-per-task execution
     │   │       ├── core
     │   │       │   ├── language-basics [JAVA_LANGUAGE_BASICS] : Java language basics
     │   │       │   ├── numbers [JAVA_NUMBERS] : Java numeric types and arithmetic
@@ -304,45 +320,39 @@ module
     │   │       │   ├── classloader [JAVA_CLASSLOADER] : Java class loading
     │   │       │   ├── date-time [JAVA_DATE_TIME] : Java date and time API
     │   │       │   ├── io [JAVA_IO] : Java I/O and NIO
-    │   │       │   └── localization [JAVA_LOCALIZATION] : Java localization and internationalization
-    │   │       ├── mapping
-    │   │       │   ├── mapstruct [MAPSTRUCT] - [DEPEND]
-    │   │       │   ├── model-mapper [MODEL_MAPPER] - [DEPEND] : To quickly convert between 2 Java Object (Entity to DTO) by matching key field
-    │   │       │   └── object-mapper [OBJECT_MAPPER] - [DEPEND] : Convert Java Object to JSON (or XML , YAML)
-    │   │       ├── persistence
-    │   │       │   ├── orm
-    │   │       │   │   ├── hibernate
-    │   │       │   │   └── jpa-specification
-    │   │       │   └── sql
-    │   │       │       ├── jdbc
-    │   │       │       └── mybatis
+    │   │       │   ├── localization [JAVA_LOCALIZATION] : Java localization and internationalization
+    │   │       │   └── functional-programming [JAVA_FUNCTIONAL_PROGRAMMING] : Java functional programming with functional interfaces, lambdas, method references, Optional and composition
     │   │       └── version
     │   │           ├── java11
     │   │           ├── java16
     │   │           │   └── record [JAVA_RECORD]
     │   │           ├── java17
+    │   │           ├── java24
+    │   │           │   └── class-file-api [JAVA_CLASS_FILE_API] : Java 24 standard Class-File API
     │   │           ├── java7
     │   │           ├── java8
     │   │           │   └── stream-api [JAVA_STREAM_API] : Java Stream API
     │   │           └── java9
     │   │               └── module-system [JAVA_MODULE_SYSTEM] : Java Platform Module System
+    │   ├── methodology
+    │   │   └── driven-development [DRIVEN_DEVELOPMENT_METHODOLOGIES] : Software development methodologies including TDD, BDD, ATDD, FDD and MDD
     │   ├── paradigm
-    │   │   ├── aop [ASPECT]
-    │   │   ├── concurrency
-    │   │   │   ├── batch
-    │   │   │   ├── forkjoin-workstealing [FORK_JOIN_WORK_STEALING]
-    │   │   │   ├── schedule
-    │   │   │   │   └── task [SCHEDULE]
-    │   │   │   └── thread [THREAD]
-    │   │   ├── di-ioc
-    │   │   ├── functional [JAVA_FUNCTIONAL_PROGRAMMING] : Java functional programming
-    │   │   ├── mvc-pattern
-    │   │   │   ├── controller
-    │   │   │   ├── model
-    │   │   │   └── service
-    │   │   ├── object-oriented
-    │   │   └── reactive-stream
-    │   │       └── webflux
+    │   │   ├── aop [ASPECT_ORIENTED_PROGRAMMING] : Aspect-Oriented Programming concepts, cross-cutting concerns, terminology and implementation models
+    │   │   ├── data-oriented [DATA_ORIENTED_PROGRAMMING] : Data-Oriented Programming principles and data-centric program design
+    │   │   ├── declarative [DECLARATIVE_PROGRAMMING] : Declarative Programming paradigm, intent-oriented specification and related styles
+    │   │   ├── functional [FUNCTIONAL_PROGRAMMING] : Functional Programming paradigm concepts and trade-offs
+    │   │   ├── imperative [IMPERATIVE_PROGRAMMING] : Imperative Programming paradigm, state, commands and procedural organization
+    │   │   ├── object-oriented [OBJECT_ORIENTED_PROGRAMMING] : Object-Oriented Programming paradigm concepts and object collaboration
+    │   │   └── reactive [REACTIVE_PROGRAMMING] : Reactive Programming paradigm, data flow and backpressure concepts
+    │   ├── persistence
+    │   │   ├── orm
+    │   │   │   ├── hibernate [HIBERNATE] : Hibernate ORM implementation, unit-of-work behavior and persistence mechanics
+    │   │   │   └── jpa [JPA_SPECIFICATION] : Jakarta Persistence specification, persistence context, entity lifecycle and ORM contracts
+    │   │   └── relational-access
+    │   │       ├── jdbc [JDBC] : Java Database Connectivity API for relational database access
+    │   │       └── mybatis [MYBATIS] : MyBatis SQL mapping and data mapper framework
+    │   ├── serialization
+    │   │   └── jackson [JACKSON] : Jackson data binding, JSON serialization and deserialization for Java applications
     │   └── validation
     │       ├── benchmark
     │       │   ├── microbenchmark

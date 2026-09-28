@@ -32,22 +32,6 @@
             "org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0"
         ]
     },
-    "MAPSTRUCT": {
-        "DESCRIBE": "",
-        "annotationProcessor": [
-            "org.mapstruct:mapstruct-processor:1.5.5.Final",
-            "org.projectlombok:lombok-mapstruct-binding:0.2.0"
-        ]
-    },
-    "MODEL_MAPPER": {
-        "DESCRIBE": "To quickly convert between 2 Java Object (Entity to DTO) by matching key field",
-        "api": [
-            "org.modelmapper:modelmapper:3.2.0"
-        ]
-    },
-    "OBJECT_MAPPER": {
-        "DESCRIBE": "Convert Java Object to JSON (or XML , YAML)"
-    },
     "FLEXMARK_MARKDOWN": {
         "DESCRIBE": ""
     },

@@ -1126,7 +1126,7 @@ Allowed format:
 [A-Za-z_][A-Za-z0-9_]*
 
 Examples:
- - MAPSTRUCT
+ - OBJECT_MAPPING
  - DATABASE_MONGODB
  - GLOBAL_EXCEPTION_HANDLER
 """.stripIndent()

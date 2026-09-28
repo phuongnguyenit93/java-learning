@@ -1,0 +1,216 @@
+# <quiz-schema>
+# Cấu trúc câu hỏi Quiz
+# schema-version: 3
+#
+# questions [kiểu: list; bắt buộc; mặc định: []; duy nhất theo: id]
+#   Danh sách câu hỏi Quiz của module trong language hiện tại.
+#   mỗi phần tử:
+#     id [kiểu: string; bắt buộc; mặc định: ""]
+#       ID ổn định và duy nhất của câu hỏi.
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi hiển thị cho người học.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu câu hỏi được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu câu hỏi đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+#     answers [kiểu: list; bắt buộc; số phần tử: 4; mặc định: []; duy nhất theo: id]
+#       Chính xác bốn đáp án. ID A/B/C/D là identity nội bộ ổn định, không phải vị trí hiển thị sau khi frontend shuffle.
+#       mỗi phần tử:
+#         id [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#           Identity ổn định của đáp án.
+#         answer [kiểu: string; bắt buộc; mặc định: ""]
+#           Nội dung đáp án hiển thị cho người học.
+#         explanation [kiểu: string; bắt buộc; mặc định: ""]
+#           Giải thích hiển thị khi người học chọn đáp án này, bất kể đúng hay sai.
+#     correctAnswerId [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
+# </quiz-schema>
+
+questions:
+  - id: thread-pool-execution-flow
+    question: "Với `ThreadPoolExecutor(core=1, max=2, queueCapacity=1)` đang RUNNING, thứ tự xử lý admission tiêu chuẩn khi submit task mới là gì?"
+    answers:
+      - id: A
+        answer: "Luôn tạo tới max worker trước, sau đó mới dùng queue."
+        explanation: "Sai. Queue thường được thử sau khi đạt core, trước khi mở rộng tới maximumPoolSize."
+      - id: B
+        answer: "Nếu worker < core thì tạo worker; nếu không thì thử enqueue; queue full mới cân nhắc tăng worker tới max; hết capacity thì reject."
+        explanation: "Đúng. Đây là flow cốt lõi của ThreadPoolExecutor trong README: core → queue → max → rejection."
+      - id: C
+        answer: "Nếu queue full, `execute()` mặc định block caller cho đến khi queue trống."
+        explanation: "Sai. `execute()` không có contract tự block caller để tạo backpressure."
+      - id: D
+        answer: "`maximumPoolSize` luôn quyết định worker count ngay cả khi queue còn nhận task."
+        explanation: "Sai. Với queue còn nhận task, pool có thể không cần mở rộng tới max."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Thread_Pool_Executor/ThreadPoolExecutor.md"
+      anchor: "thread-pool-flow"
+    apiRelated:
+      controller: "ThreadPoolController"
+      methodSignature: "executorFlow()"
+
+  - id: executor-execute-vs-submit
+    question: "Điểm khác biệt thực tế quan trọng giữa `execute(Runnable)` và `submit(...)` khi task throw exception là gì?"
+    answers:
+      - id: A
+        answer: "`execute()` luôn retry task, còn `submit()` không retry."
+        explanation: "Sai. Retry không phải semantics mặc định tạo nên khác biệt giữa hai API."
+      - id: B
+        answer: "`submit()` luôn in stack trace ra console ngay lập tức."
+        explanation: "Sai. Failure của submit thường được giữ trong Future; nếu bỏ quên Future, failure có thể không được quan sát theo cách developer mong đợi."
+      - id: C
+        answer: "`execute()` không trả Future và uncaught failure đi theo worker uncaught-exception path; `submit()` trả Future và failure được quan sát qua `get()` như `ExecutionException`."
+        explanation: "Đúng. Đây là lý do submit-and-forget có thể làm mất kênh quan sát failure quan trọng."
+      - id: D
+        answer: "Chỉ `execute()` mới nhận Runnable; `submit()` chỉ nhận Callable."
+        explanation: "Sai. `submit()` có overload cho cả Runnable và Callable."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Thread_Pool_Executor/ThreadPoolExecutor.md"
+      anchor: "executor-abstraction"
+    apiRelated:
+      controller: "ThreadPoolController"
+      methodSignature: "executeVsSubmit()"
+
+  - id: caller-runs-feedback
+    question: "Tại sao `CallerRunsPolicy` có thể tạo feedback pressure khi pool bị saturation?"
+    answers:
+      - id: A
+        answer: "Task bị đẩy sang chạy trên caller thread, làm caller bận xử lý task và tự nhiên giảm tốc độ submit thêm công việc."
+        explanation: "Đúng. Đây là feedback/backpressure effect ở submission path, không phải queue tự block `execute()`."
+      - id: B
+        answer: "Policy tăng `maximumPoolSize` vô hạn."
+        explanation: "Sai. CallerRunsPolicy không thay đổi max pool size."
+      - id: C
+        answer: "Policy silently drop task mới."
+        explanation: "Sai. Silent drop là đặc trưng của DiscardPolicy."
+      - id: D
+        answer: "Policy lưu task vào disk để chạy sau."
+        explanation: "Sai. Durable fallback cần được application thiết kế riêng; CallerRunsPolicy không làm việc đó."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Thread_Pool_Executor/ThreadPoolExecutor.md"
+      anchor: "rejection-policy"
+    apiRelated:
+      controller: "ThreadPoolController"
+      methodSignature: "callerRuns()"
+
+  - id: executor-shutdown-now
+    question: "Phát biểu nào đúng nhất về `ExecutorService.shutdownNow()`?"
+    answers:
+      - id: A
+        answer: "Nó đảm bảo kill ngay mọi running task bất kể task có hợp tác hay không."
+        explanation: "Sai. Java interruption là cooperative; task không hợp tác có thể không dừng ngay."
+      - id: B
+        answer: "Nó chờ mọi queued task chạy xong rồi mới return."
+        explanation: "Sai. `shutdownNow()` cố ngăn task chưa start và trả về danh sách task chưa bắt đầu."
+      - id: C
+        answer: "Nó reset executor về trạng thái RUNNING sau khi interrupt worker."
+        explanation: "Sai. Shutdown là lifecycle transition hướng tới termination, không phải reset."
+      - id: D
+        answer: "Nó cố interrupt running tasks và trả về các task chưa start, nhưng không thể bảo đảm dừng ngay code không hợp tác với interruption."
+        explanation: "Đúng. Đây là lý do graceful shutdown vẫn cần timeout, cleanup và task cancellation semantics rõ ràng."
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Thread_Pool_Executor/ThreadPoolExecutor.md"
+      anchor: "graceful-shutdown"
+    apiRelated:
+      controller: "ThreadPoolController"
+      methodSignature: "forcedShutdown()"
+
+  - id: lifecycle-leak-ownership
+    question: "Dấu hiệu nào phản ánh rõ nhất một executor lifecycle/ownership bug thay vì chỉ là pool đang bận tạm thời?"
+    answers:
+      - id: A
+        answer: "Một worker ở WAITING trong thread dump."
+        explanation: "Sai. WAITING có thể hoàn toàn bình thường với idle pool worker có owner và lifecycle rõ ràng."
+      - id: B
+        answer: "Một request có latency tăng trong vài mili giây."
+        explanation: "Sai. Một spike đơn lẻ không đủ để kết luận leak."
+      - id: C
+        answer: "Pool size ổn định trong khi completedTaskCount tăng."
+        explanation: "Sai. Đây có thể là biểu hiện của worker reuse bình thường."
+      - id: D
+        answer: "Request rate đã ổn định nhưng số pool/thread-name prefix mới vẫn tăng dần và các pool cũ không được shutdown."
+        explanation: "Đúng. Đây là tín hiệu mạnh về resource được tạo mà không có owner/shutdown lifecycle phù hợp."
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.Leak/Leak.md"
+      anchor: "lifecycle-rule"
+    apiRelated:
+      controller: "LeakController"
+      methodSignature: "poolLeakPattern()"
+
+  - id: queue-growth-resource-pressure
+    question: "Thread count của service giữ ổn định nhưng `queueSize` tăng liên tục vì arrival rate lớn hơn service rate. Kết luận nào hợp lý nhất?"
+    answers:
+      - id: A
+        answer: "Hệ thống chắc chắn an toàn vì worker count không tăng."
+        explanation: "Sai. Backlog vẫn giữ task/object/context, làm memory và latency tăng dù số thread ổn định."
+      - id: B
+        answer: "Đây có thể là saturation/backlog pressure; cần nhìn queue depth, latency, rejection và downstream capacity chứ không chỉ thread count."
+        explanation: "Đúng. README nhấn mạnh queue growth cũng là resource pressure và cần bounded capacity/overload strategy."
+      - id: C
+        answer: "Cách tốt nhất luôn là tăng queue thành unbounded."
+        explanation: "Sai. Unbounded queue có thể chỉ che overload bằng cách tích tụ memory/latency."
+      - id: D
+        answer: "Queue tăng chỉ ảnh hưởng CPU, không ảnh hưởng memory."
+        explanation: "Sai. Queued tasks có thể giữ nhiều object/context trong heap và làm memory pressure tăng."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.Leak/Leak.md"
+      anchor: "queue-growth"
+    apiRelated:
+      controller: "LeakController"
+      methodSignature: "queuePressure()"
+
+  - id: scheduled-periodic-failure
+    question: "Một task được schedule bằng `scheduleAtFixedRate()` và một execution ném exception ra ngoài mà không được handle. Theo README, điều gì xảy ra với các execution tiếp theo của cùng periodic task?"
+    answers:
+      - id: A
+        answer: "Scheduler mặc định bỏ qua failure và chắc chắn tiếp tục mọi lần chạy sau."
+        explanation: "Sai. Không nên dựa vào assumption đó."
+      - id: B
+        answer: "Các execution tiếp theo của cùng periodic task bị suppress theo contract của scheduled executor."
+        explanation: "Đúng. Vì vậy periodic job production cần error observation/handling policy rõ ràng."
+      - id: C
+        answer: "Executor tự động chuyển task sang fixed-delay mode."
+        explanation: "Sai. Failure không tự đổi scheduling mode."
+      - id: D
+        answer: "Scheduler tự clone task sang worker khác và retry vô hạn."
+        explanation: "Sai. Retry tự động như vậy không phải semantics được mô tả."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Thread_Pool_Executor/ThreadPoolExecutor.md"
+      anchor: "scheduled-execution"
+    apiRelated:
+      controller: "ThreadPoolController"
+      methodSignature: "scheduledFailure()"
+

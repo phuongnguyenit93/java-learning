@@ -1,0 +1,82 @@
+1.Thread_Pool_Executor/ThreadPoolExecutor.md:
+  executor-abstraction:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  thread-pool-flow:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  pool-properties:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  pool-sizing:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  executors-factories:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  scheduled-execution:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  rejection-policy:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  custom-rejection-handler:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  graceful-shutdown:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  thread-factory-observability:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  thread-pool-experiments:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+2.Leak/Leak.md:
+  thread-leak:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  pool-leak:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  queue-growth:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  cached-pool-risk:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  scheduled-leak:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  thread-local-leak:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  observability:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  lifecycle-rule:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  leak-experiments:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false

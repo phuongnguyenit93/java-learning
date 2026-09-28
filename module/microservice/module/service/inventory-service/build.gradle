@@ -4,9 +4,12 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'io.hawt:hawtio-springboot:4.0.0'
     implementation 'org.jolokia:jolokia-server-core'
+    implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+    annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
 }
 
 implementationModule {
     serviceList =
-            'DISTRIBUTED_TRACING,PROMETHEUS_GRAFANA,MAPSTRUCT'
+            'DISTRIBUTED_TRACING,PROMETHEUS_GRAFANA'
 }

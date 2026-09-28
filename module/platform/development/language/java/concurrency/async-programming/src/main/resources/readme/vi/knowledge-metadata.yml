@@ -1,0 +1,37 @@
+1.Async/Async.md:
+  async-mental-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  future:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  completable-future-pipeline:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  async-variant:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  combine-race:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  exception-handling:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  executor-choice:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  timeout-cancellation:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  async-experiments:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false

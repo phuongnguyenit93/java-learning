@@ -1,0 +1,139 @@
+VirtualThreadController:
+  basic():
+    summary: Observe core Virtual Thread properties
+    description: Create a Java 2. Virtual Thread and return isVirtual, daemon flag,
+      priority, and state after join. The experiment shows that a Virtual Thread is
+      still a Thread while having different lifecycle properties from a Platform Thread.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: basic
+    params: [
+      ]
+    path: com/example/learning/module/virtualThread/controller/VirtualThreadController.java
+    mapping: '@GetMapping("/basic")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /virtual-thread/basic
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: virtual-thread-basic
+    aiGenerated: true
+    reviewed: false
+  creationApi():
+    summary: Compare direct Virtual Thread creation APIs
+    description: Create Virtual Threads with Thread.startVirtualThread() and Thread.ofVirtual().start(),
+      then join both. The experiment shows that Virtual Threads can be created directly
+      without requiring ExecutorService.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: creationApi
+    params: [
+      ]
+    path: com/example/learning/module/virtualThread/controller/VirtualThreadController.java
+    mapping: '@GetMapping("/creation-api")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /virtual-thread/creation-api
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: virtual-thread-creation
+    aiGenerated: true
+    reviewed: false
+  blockingScale():
+    summary: Compare blocking work on platform and Virtual Threads
+    description: Run the same sleep-based blocking workload on a fixed platform pool
+      and a virtual-thread-per-task executor and record illustrative elapsed time.
+      The result demonstrates concurrency shape and is not intended as a production
+      benchmark.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: blockingScale
+    params: [
+      ]
+    path: com/example/learning/module/virtualThread/controller/VirtualThreadController.java
+    mapping: '@GetMapping("/blocking-scale")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /virtual-thread/blocking-scale
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: virtual-executor
+    aiGenerated: true
+    reviewed: false
+  limitedResource():
+    summary: Limit downstream concurrency with Virtual Threads
+    description: Create many Virtual Threads but use a Semaphore so only a bounded
+      number may enter the simulated external-resource section at once. The experiment
+      shows that cheap Threads do not make databases, APIs, or other downstream resources
+      unlimited.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: limitedResource
+    params: [
+      ]
+    path: com/example/learning/module/virtualThread/controller/VirtualThreadController.java
+    mapping: '@GetMapping("/limited-resource")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /virtual-thread/limited-resource
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: resource-limits
+    aiGenerated: true
+    reviewed: false
+  threadLocal():
+    summary: Observe ThreadLocal on Virtual Threads
+    description: Use ThreadLocal and InheritableThreadLocal across multiple Virtual
+      Threads to observe isolation, cleanup, default inheritance, and disabling inheritance
+      through the builder. The experiment shows that Virtual Threads do not change
+      ThreadLocal lifecycle rules.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: threadLocal
+    params: [
+      ]
+    path: com/example/learning/module/virtualThread/controller/VirtualThreadController.java
+    mapping: '@GetMapping("/thread-local")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /virtual-thread/thread-local
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: virtual-thread-thread-local
+    aiGenerated: true
+    reviewed: false

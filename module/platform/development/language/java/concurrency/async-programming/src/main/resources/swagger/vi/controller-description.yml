@@ -1,0 +1,6 @@
+AsyncController:
+  description: |-
+    <h2>Async Controller</h2>
+    <p>Nhóm API minh họa Future, CompletableFuture, completion pipeline, exception handling, timeout, cancellation và execution policy của asynchronous task.</p>
+  readmeRelated:
+    file: 1.Async/Async.md

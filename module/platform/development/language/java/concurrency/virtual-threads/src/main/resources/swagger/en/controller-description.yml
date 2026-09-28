@@ -1,0 +1,6 @@
+VirtualThreadController:
+  description: |-
+    <h2>Virtual Thread Controller</h2>
+    <p>Demonstrates Java 2. Virtual Threads: core properties, creation APIs, blocking scalability, downstream limits, and ThreadLocal semantics.</p>
+  readmeRelated:
+    file: 1.Virtual_Thread/VirtualThread.md

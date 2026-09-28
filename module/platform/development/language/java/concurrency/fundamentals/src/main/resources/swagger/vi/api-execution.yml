@@ -1,0 +1,410 @@
+BasicThreadController:
+  processAndThread():
+    execution: "<p><b>Concept:</b> API đọc trực tiếp execution context của request\
+      \ hiện tại.</p>\n<ol>\n  <li>Lấy PID từ ProcessHandle.current().\n    <div><i>Nguồ\
+      n: BasicThreadService.describeProcessAndCurrentThread()</i></div>\n    <pre><code>\
+      \    public Map&lt;String, Object&gt; describeProcessAndCurrentThread() {\n\
+      \            Thread currentThread = Thread.currentThread();\n    \n        \
+      \    Map&lt;String, Object&gt; result = new LinkedHashMap&lt;&gt;();\n     \
+      \       result.put(\"processId\", ProcessHandle.current().pid());\n        \
+      \    result.put(\"threadName\", currentThread.getName());\n            result.put(\"\
+      threadId\", currentThread.threadId());\n            result.put(\"threadState\"\
+      , currentThread.getState().name());\n            result.put(\"daemon\", currentThread.isDaemon());\n\
+      \        ...\n    }</code></pre>\n  </li>\n  <li>Lấy tên, id, state và daemon\
+      \ flag của Thread đang xử lý HTTP request.</li>\n  <li>Trả các giá trị quan\
+      \ sát được mà không tạo worker mới.</li>\n</ol>\n<p><b>Kết luận:</b> Quan sá\
+      t Process và HTTP request Thread. Response và Execution Context là bằng chứ\
+      ng runtime cho behavior này; đoạn source colocated ở trên cho thấy code path\
+      \ tạo experiment.</p>"
+    usage: true
+  startVsRun():
+    execution: "<p><b>Concept:</b> API chạy cùng kiểu Runnable theo hai cơ chế khá\
+      c nhau để đối chiếu thread thực thi.</p>\n<ol>\n  <li>Gọi run trực tiếp nên\
+      \ task chạy ngay trên request thread.\n    <div><i>Nguồn: BasicThreadService.compareRunAndStart()</i></div>\n\
+      \    <pre><code>    public List&lt;String&gt; compareRunAndStart() throws InterruptedException\
+      \ {\n            String callerThreadName = Thread.currentThread().getName();\n\
+      \    \n            Runnable directTask = () -&gt; System.out.println(\n    \
+      \                \"run() trực tiếp đang chạy trên: \"\n                    \
+      \        + Thread.currentThread().getName()\n            );\n    \n        \
+      \    directTask.run();\n        ...\n    }</code></pre>\n  </li>\n  <li>Tạo\
+      \ Thread basic-start-worker rồi gọi start để JVM chạy task trên worker riêng.</li>\n\
+      \  <li>join worker trước khi trả về và cleanup nếu cần.</li>\n</ol>\n<p><b>Kế\
+      t luận:</b> So sánh Thread.run() và Thread.start(). Response và Execution Context\
+      \ là bằng chứng runtime cho behavior này; đoạn source colocated ở trên cho thấ\
+      y code path tạo experiment.</p>"
+    usage: true
+  threadLifeCycle():
+    execution: "<p><b>Concept:</b> API chủ động dẫn một worker qua các trạng thái\
+      \ Thread.State có thể quan sát.</p>\n<ol>\n  <li>Ghi NEW, start worker và giữ\
+      \ spin để bắt RUNNABLE.\n    <div><i>Nguồn: BasicThreadService.observeThreadLifecycle()</i></div>\n\
+      \    <pre><code>    public List&lt;String&gt; observeThreadLifecycle() throws\
+      \ InterruptedException {\n            List&lt;String&gt; observations = new\
+      \ ArrayList&lt;&gt;();\n    \n            AtomicBoolean stayRunnable = new AtomicBoolean(true);\n\
+      \            CountDownLatch runnableEntered = new CountDownLatch(1);\n     \
+      \       CountDownLatch timedWaitGate = new CountDownLatch(1);\n    \n      \
+      \      Object blockedMonitor = new Object();\n            Object waitingMonitor\
+      \ = new Object();\n        ...\n    }</code></pre>\n  </li>\n  <li>Dùng timed\
+      \ latch tạo TIMED_WAITING, giữ monitor để ép BLOCKED, rồi wait trên monitor\
+      \ khác để tạo WAITING.</li>\n  <li>notifyAll cho worker chạy tiếp, join và ghi\
+      \ TERMINATED; finally giải phóng mọi gate để cleanup.</li>\n</ol>\n<p><b>Kế\
+      t luận:</b> Quan sát các trạng thái Thread.State. Response và Execution Context\
+      \ là bằng chứng runtime cho behavior này; đoạn source colocated ở trên cho thấ\
+      y code path tạo experiment.</p>"
+    usage: true
+CreateThreadController:
+  createByExtends():
+    execution: "<p><b>Concept:</b> API tạo MyWorker là subclass của Thread và gắn\
+      \ logic trực tiếp trong run.</p>\n<ol>\n  <li>Ghi nhận request thread.\n   \
+      \ <div><i>Nguồn: CreateThreadService.createByExtends()</i></div>\n    <pre><code>\
+      \    public List&lt;String&gt; createByExtends() throws InterruptedException\
+      \ {\n            String callerThread = Thread.currentThread().getName();\n \
+      \   \n            MyWorker worker = new MyWorker(\"extends-thread-worker\");\n\
+      \            try {\n                worker.start();\n                joinOrFail(worker);\n\
+      \            } finally {\n                cleanup(worker);\n        ...\n  \
+      \  }</code></pre>\n  </li>\n  <li>Khởi động MyWorker tên extends-thread-worker\
+      \ để run trên thread riêng.</li>\n  <li>join worker rồi trả tên caller và worker,\
+      \ kèm cleanup nếu worker chưa dừng.</li>\n</ol>\n<p><b>Kết luận:</b> Tạo Thread\
+      \ bằng cách extends Thread. Response và Execution Context là bằng chứng runtime\
+      \ cho behavior này; đoạn source colocated ở trên cho thấy code path tạo experiment.</p>"
+    usage: true
+  createByRunnable():
+    execution: "<p><b>Concept:</b> API tách task Runnable khỏi đối tượng Thread thự\
+      c thi.</p>\n<ol>\n  <li>Tạo Runnable chỉ chứa phần công việc.\n    <div><i>Nguồ\
+      n: CreateThreadService.createByRunnable()</i></div>\n    <pre><code>    public\
+      \ List&lt;String&gt; createByRunnable() throws InterruptedException {\n    \
+      \        String callerThread = Thread.currentThread().getName();\n    \n   \
+      \         Runnable task = () -&gt; System.out.println(\n                   \
+      \ \"Runnable.run() đang chạy trên thread: \"\n                            +\
+      \ Thread.currentThread().getName()\n            );\n    \n            Thread\
+      \ worker = new Thread(\n        ...\n    }</code></pre>\n  </li>\n  <li>Gắn\
+      \ Runnable vào Thread runnable-thread-worker và gọi start.</li>\n  <li>join\
+      \ trước khi trả kết quả để xác nhận task chạy trên worker khác caller.</li>\n\
+      </ol>\n<p><b>Kết luận:</b> Chạy Runnable trên một Thread riêng. Response và\
+      \ Execution Context là bằng chứng runtime cho behavior này; đoạn source colocated\
+      \ ở trên cho thấy code path tạo experiment.</p>"
+    usage: true
+  createByCallable():
+    execution: "<p><b>Concept:</b> API bọc Callable trong FutureTask rồi dùng Thread\
+      \ thường để thực thi.</p>\n<ol>\n  <li>Callable trả về chuỗi chứa tên thread\
+      \ thực tế.\n    <div><i>Nguồn: CreateThreadService.createByCallable()</i></div>\n\
+      \    <pre><code>    public List&lt;String&gt; createByCallable()\n         \
+      \       throws ExecutionException, InterruptedException {\n            String\
+      \ callerThread = Thread.currentThread().getName();\n    \n            Callable&lt;String&gt;\
+      \ task = () -&gt;\n                    \"Callable.call() đang chạy trên thread:\
+      \ \"\n                            + Thread.currentThread().getName();\n    \n\
+      \            FutureTask&lt;String&gt; futureTask = new FutureTask&lt;&gt;(task);\n\
+      \        ...\n    }</code></pre>\n  </li>\n  <li>FutureTask vừa là Runnable\
+      \ cho Thread callable-thread-worker vừa là Future chứa kết quả.</li>\n  <li>get\
+      \ với timeout lấy giá trị, sau đó join và cleanup worker.</li>\n</ol>\n<p><b>Kế\
+      t luận:</b> Chạy Callable bằng FutureTask và Thread. Response và Execution Context\
+      \ là bằng chứng runtime cho behavior này; đoạn source colocated ở trên cho thấ\
+      y code path tạo experiment.</p>"
+    usage: true
+DaemonThreadController:
+  inspectDaemonRules():
+    execution: "<p><b>Concept:</b> API quan sát daemon flag mà không cần chạy child\
+      \ thread.</p>\n<ol>\n  <li>Đọc daemon status của request thread.\n    <div><i>Nguồ\
+      n: DaemonThreadService.inspectDaemonRules()</i></div>\n    <pre><code>    public\
+      \ Map&lt;String, Object&gt; inspectDaemonRules() {\n            Thread requestThread\
+      \ = Thread.currentThread();\n    \n            Thread childThread = new Thread(\n\
+      \                    () -&gt; {\n                        // Không cần chạy trong\
+      \ demo này.\n                    },\n                    \"daemon-inspection-child\"\
+      \n            );\n        ...\n    }</code></pre>\n  </li>\n  <li>Tạo child\
+      \ Thread và đọc flag mặc định để thấy nó kế thừa trạng thái từ thread tạo ra.</li>\n\
+      \  <li>Gọi setDaemon(true) trước khi start và trả lại trạng thái mới; JVM lifecycle\
+      \ đầy đủ được tách sang DaemonJvmExitDemo.</li>\n</ol>\n<p><b>Kết luận:</b>\
+      \ Quan sát daemon flag và inheritance. Response và Execution Context là bằng\
+      \ chứng runtime cho behavior này; đoạn source colocated ở trên cho thấy code\
+      \ path tạo experiment.</p>"
+    usage: true
+ConcurrencyProblemController:
+  raceCondition():
+    execution: "<p><b>Concept:</b> API tạo lost update theo cách deterministic trê\
+      n một counter thường.</p>\n<ol>\n  <li>Hai worker cùng đọc counter trước và\
+      \ đồng bộ bằng CountDownLatch để chắc chắn đều thấy cùng snapshot.\n    <div><i>Nguồ\
+      n: ConcurrencyProblemService.deterministicRaceCondition()</i></div>\n    <pre><code>\
+      \    public Map&lt;String, Object&gt; deterministicRaceCondition()\n       \
+      \         throws InterruptedException {\n    \n            PlainCounter counter\
+      \ = new PlainCounter();\n    \n            AtomicInteger snapshotA = new AtomicInteger();\n\
+      \            AtomicInteger snapshotB = new AtomicInteger();\n    \n        \
+      \    CountDownLatch bothRead = new CountDownLatch(2);\n        ...\n    }</code></pre>\n\
+      \  </li>\n  <li>Sau đó cả hai cùng ghi snapshot + 1.</li>\n  <li>Kết quả cuố\
+      i chỉ tăng một lần thay vì hai, cho thấy read-modify-write không atomic.</li>\n\
+      </ol>\n<p><b>Kết luận:</b> Tạo lost update để quan sát race condition. Response\
+      \ và Execution Context là bằng chứng runtime cho behavior này; đoạn source colocated\
+      \ ở trên cho thấy code path tạo experiment.</p>"
+    usage: true
+  startJoinHappensBefore():
+    execution: "<p><b>Concept:</b> API dùng Thread.start và Thread.join để quan sá\
+      t happens-before mà không dùng volatile.</p>\n<ol>\n  <li>Parent ghi beforeStart\
+      \ = 7 trước khi start worker.\n    <div><i>Nguồn: ConcurrencyProblemService.startJoinHappensBefore()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; startJoinHappensBefore()\n\
+      \                throws InterruptedException {\n    \n            StartJoinState\
+      \ state = new StartJoinState();\n            state.beforeStart = 7;\n    \n\
+      \            Thread worker = new Thread(() -&gt; {\n                state.observedByWorker\
+      \ = state.beforeStart;\n                state.writtenByWorker = 42;\n      \
+      \  ...\n    }</code></pre>\n  </li>\n  <li>Worker đọc giá trị đó rồi ghi writtenByWorker\
+      \ = 42.</li>\n  <li>Sau join, parent đọc được giá trị worker đã ghi và trả lạ\
+      i cả hai chiều visibility.</li>\n</ol>\n<p><b>Kết luận:</b> Quan sát happens-before\
+      \ của start() và join(). Response và Execution Context là bằng chứng runtime\
+      \ cho behavior này; đoạn source colocated ở trên cho thấy code path tạo experiment.</p>"
+    usage: true
+  volatilePublication():
+    execution: "<p><b>Concept:</b> API publish dữ liệu thường thông qua một volatile\
+      \ flag.</p>\n<ol>\n  <li>Reader spin chờ ready trở thành true.\n    <div><i>Nguồ\
+      n: ConcurrencyProblemService.volatilePublication()</i></div>\n    <pre><code>\
+      \    public Map&lt;String, Object&gt; volatilePublication()\n              \
+      \  throws InterruptedException {\n    \n            PublicationState state =\
+      \ new PublicationState();\n            Thread reader = new Thread(() -&gt; {\n\
+      \                while (!state.ready) {\n                    if (Thread.currentThread().isInterrupted())\
+      \ {\n                        return;\n                    }\n        ...\n \
+      \   }</code></pre>\n  </li>\n  <li>Writer ghi data = 42 trước rồi mới ghi volatile\
+      \ ready = true.</li>\n  <li>Khi reader thấy ready, nó đọc data và service join\
+      \ cả hai thread để xác nhận publication thành công.</li>\n</ol>\n<p><b>Kết luậ\
+      n:</b> Publish dữ liệu bằng volatile flag. Response và Execution Context là\
+      \ bằng chứng runtime cho behavior này; đoạn source colocated ở trên cho thấ\
+      y code path tạo experiment.</p>"
+    usage: true
+  volatileIsNotAtomic():
+    execution: "<p><b>Concept:</b> API lặp lại lost update nhưng counter được khai\
+      \ báo volatile.</p>\n<ol>\n  <li>Hai worker cùng đọc volatile value và đồng\
+      \ bộ để giữ cùng snapshot.\n    <div><i>Nguồn: ConcurrencyProblemService.volatileIsNotAtomic()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; volatileIsNotAtomic()\n\
+      \                throws InterruptedException {\n    \n            VolatileCounter\
+      \ counter = new VolatileCounter();\n    \n            AtomicInteger snapshotA\
+      \ = new AtomicInteger();\n            AtomicInteger snapshotB = new AtomicInteger();\n\
+      \    \n            CountDownLatch bothRead = new CountDownLatch(2);\n      \
+      \  ...\n    }</code></pre>\n  </li>\n  <li>Mỗi worker tự tính snapshot + 1 rồ\
+      i ghi lại.</li>\n  <li>Visibility của volatile vẫn không ghép chuỗi read-modify-write\
+      \ thành một thao tác atomic nên kết quả có lost update.</li>\n</ol>\n<p><b>Kế\
+      t luận:</b> Chứng minh volatile không đảm bảo atomicity. Response và Execution\
+      \ Context là bằng chứng runtime cho behavior này; đoạn source colocated ở trê\
+      n cho thấy code path tạo experiment.</p>"
+    usage: true
+  deadlockRisk():
+    execution: "<p><b>Concept:</b> API mô phỏng circular lock dependency mà không\
+      \ để request deadlock vĩnh viễn.</p>\n<ol>\n  <li>Worker A giữ lock A, worker\
+      \ B giữ lock B và barrier bằng latch để cả hai cùng sở hữu lock đầu tiên.\n\
+      \    <div><i>Nguồn: ConcurrencyProblemService.deadlockRisk()</i></div>\n   \
+      \ <pre><code>    public Map&lt;String, Object&gt; deadlockRisk()\n         \
+      \       throws InterruptedException {\n    \n            ReentrantLock lockA\
+      \ = new ReentrantLock();\n            ReentrantLock lockB = new ReentrantLock();\n\
+      \    \n            CountDownLatch bothHoldingFirstLock = new CountDownLatch(2);\n\
+      \            CountDownLatch bothTriedSecondLock = new CountDownLatch(2);\n \
+      \   \n        ...\n    }</code></pre>\n  </li>\n  <li>Mỗi worker dùng tryLock\
+      \ không chờ để thử lấy lock còn lại.</li>\n  <li>Cả hai thất bại ở lock thứ\
+      \ hai, ghi nhận circular dependency rồi nhả lock ban đầu và kết thúc.</li>\n\
+      </ol>\n<p><b>Kết luận:</b> Quan sát circular lock dependency an toàn. Response\
+      \ và Execution Context là bằng chứng runtime cho behavior này; đoạn source colocated\
+      \ ở trên cho thấy code path tạo experiment.</p>"
+    usage: true
+  deadlockPrevention():
+    execution: "<p><b>Concept:</b> API loại bỏ circular wait bằng một global lock\
+      \ order cố định.</p>\n<ol>\n  <li>Hai worker cùng chờ start latch.\n    <div><i>Nguồ\
+      n: ConcurrencyProblemService.deadlockPrevention()</i></div>\n    <pre><code>\
+      \    public Map&lt;String, Object&gt; deadlockPrevention()\n               \
+      \ throws InterruptedException {\n    \n            ReentrantLock lockA = new\
+      \ ReentrantLock();\n            ReentrantLock lockB = new ReentrantLock();\n\
+      \            CountDownLatch start = new CountDownLatch(1);\n            AtomicInteger\
+      \ completed = new AtomicInteger();\n    \n            Runnable orderedTask =\
+      \ () -&gt; {\n        ...\n    }</code></pre>\n  </li>\n  <li>Cả hai luôn acquire\
+      \ lock A trước rồi lock B.</li>\n  <li>Sau critical section chúng nhả theo thứ\
+      \ tự ngược; cả hai hoàn thành mà không tạo vòng chờ.</li>\n</ol>\n<p><b>Kết\
+      \ luận:</b> Phòng deadlock bằng global lock ordering. Response và Execution\
+      \ Context là bằng chứng runtime cho behavior này; đoạn source colocated ở trê\
+      n cho thấy code path tạo experiment.</p>"
+    usage: true
+  boundedLivelock():
+    execution: "<p><b>Concept:</b> API tạo một livelock hữu hạn bằng hai worker liê\
+      n tục nhường nhau.</p>\n<ol>\n  <li>Mỗi vòng, cả hai cùng đánh dấu đang thử\
+      \ và gặp nhau qua CyclicBarrier.\n    <div><i>Nguồn: ConcurrencyProblemService.boundedLivelock()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; boundedLivelock()\n   \
+      \             throws InterruptedException {\n    \n            int rounds =\
+      \ 5;\n    \n            AtomicBoolean workerATrying = new AtomicBoolean(false);\n\
+      \            AtomicBoolean workerBTrying = new AtomicBoolean(false);\n     \
+      \       AtomicInteger workerABackoffs = new AtomicInteger();\n            AtomicInteger\
+      \ workerBBackoffs = new AtomicInteger();\n        ...\n    }</code></pre>\n\
+      \  </li>\n  <li>Khi thấy đối phương cũng đang thử, cả hai cùng back off rồi\
+      \ lặp lại.</li>\n  <li>Sau 5 vòng service trả số lần backoff và cho thấy worker\
+      \ hoạt động liên tục nhưng không tạo progress.</li>\n</ol>\n<p><b>Kết luận:</b>\
+      \ Mô phỏng livelock theo cách bounded. Response và Execution Context là bằng\
+      \ chứng runtime cho behavior này; đoạn source colocated ở trên cho thấy code\
+      \ path tạo experiment.</p>"
+    usage: true
+ThreadLocalController:
+  isolation():
+    execution: "<p><b>Concept:</b> API tạo hai platform thread và dùng cùng một ThreadLocal\
+      \ với hai giá trị khác nhau.</p>\n<ol>\n  <li>Thread A set REQ-A, Thread B set\
+      \ REQ-B.\n    <div><i>Nguồn: ThreadLocalService.isolationDemo()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; isolationDemo() throws\
+      \ InterruptedException {\n            AtomicReference&lt;String&gt; threadAValue\
+      \ = new AtomicReference&lt;&gt;();\n            AtomicReference&lt;String&gt;\
+      \ threadBValue = new AtomicReference&lt;&gt;();\n    \n            Thread threadA\
+      \ = new Thread(() -&gt; useLocalContext(\"REQ-A\", threadAValue), \"context-a\"\
+      );\n            Thread threadB = new Thread(() -&gt; useLocalContext(\"REQ-B\"\
+      , threadBValue), \"context-b\");\n            try {\n                threadA.start();\n\
+      \                threadB.start();\n        ...\n    }</code></pre>\n  </li>\n\
+      \  <li>Mỗi thread đọc lại đúng context của chính mình rồi remove trong finally.</li>\n\
+      \  <li>Caller không set giá trị nên ThreadLocal trên request thread vẫn null.</li>\n\
+      </ol>\n<p><b>Kết luận:</b> Quan sát ThreadLocal isolation. Response và Execution\
+      \ Context là bằng chứng runtime cho behavior này; đoạn source colocated ở trê\
+      n cho thấy code path tạo experiment.</p>"
+    usage: true
+  inheritance():
+    execution: "<p><b>Concept:</b> API kiểm tra thời điểm InheritableThreadLocal đ\
+      ược sao chép sang child thread.</p>\n<ol>\n  <li>Parent set PARENT-A rồi tạ\
+      o child Thread.\n    <div><i>Nguồn: ThreadLocalService.inheritanceDemo()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; inheritanceDemo() throws\
+      \ InterruptedException {\n            AtomicReference&lt;String&gt; childValue\
+      \ = new AtomicReference&lt;&gt;();\n            INHERITABLE_CONTEXT.set(\"PARENT-A\"\
+      );\n    \n            Thread child = new Thread(() -&gt; childValue.set(INHERITABLE_CONTEXT.get()),\
+      \ \"inheritable-child\");\n            INHERITABLE_CONTEXT.set(\"PARENT-B\"\
+      );\n    \n            try {\n                child.start();\n        ...\n \
+      \   }</code></pre>\n  </li>\n  <li>Trước khi start child, parent đổi thành PARENT-B.</li>\n\
+      \  <li>Child vẫn quan sát PARENT-A vì giá trị được snapshot lúc Thread được\
+      \ tạo; parent context được remove khi xong.</li>\n</ol>\n<p><b>Kết luận:</b>\
+      \ Quan sát InheritableThreadLocal khi tạo Thread. Response và Execution Context\
+      \ là bằng chứng runtime cho behavior này; đoạn source colocated ở trên cho thấ\
+      y code path tạo experiment.</p>"
+    usage: true
+  poolReuseProblem():
+    execution: "<p><b>Concept:</b> API dùng pool một worker để cho thấy InheritableThreadLocal\
+      \ không phù hợp với thread reuse.</p>\n<ol>\n  <li>Parent set USER_A và submit\
+      \ task đầu, khiến worker được tạo và kế thừa USER_A.\n    <div><i>Nguồn: ThreadLocalService.poolReuseProblemDemo()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; poolReuseProblemDemo()\
+      \ throws Exception {\n            ExecutorService pool = Executors.newFixedThreadPool(1);\n\
+      \            try {\n                INHERITABLE_CONTEXT.set(\"USER_A\");\n \
+      \               Future&lt;String&gt; first = pool.submit(INHERITABLE_CONTEXT::get);\n\
+      \                String firstValue = first.get(2, TimeUnit.SECONDS);\n    \n\
+      \                INHERITABLE_CONTEXT.set(\"USER_B\");\n                Future&lt;String&gt;\
+      \ second = pool.submit(INHERITABLE_CONTEXT::get);\n        ...\n    }</code></pre>\n\
+      \  </li>\n  <li>Parent đổi thành USER_B rồi submit task thứ hai lên cùng worker.</li>\n\
+      \  <li>Task thứ hai vẫn thấy USER_A, minh họa stale context khi pool tái sử\
+      \ dụng thread.</li>\n</ol>\n<p><b>Kết luận:</b> Chứng minh stale context khi\
+      \ worker được reuse. Response và Execution Context là bằng chứng runtime cho\
+      \ behavior này; đoạn source colocated ở trên cho thấy code path tạo experiment.</p>"
+    usage: true
+  explicitPropagation():
+    execution: "<p><b>Concept:</b> API truyền ThreadLocal sang pool bằng wrapper chủ\
+      \ động capture và restore context.</p>\n<ol>\n  <li>Tạo worker trước để nó khô\
+      ng thể kế thừa context về sau.\n    <div><i>Nguồn: ThreadLocalService.explicitPropagationDemo()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; explicitPropagationDemo()\
+      \ throws Exception {\n            ExecutorService pool = Executors.newFixedThreadPool(1);\n\
+      \            try {\n                pool.submit(() -&gt; null).get(2, TimeUnit.SECONDS);\
+      \ // tạo worker trước khi set context\n                LOCAL_CONTEXT.set(\"\
+      USER_B\");\n    \n                Callable&lt;String&gt; propagated = propagate(LOCAL_CONTEXT::get);\n\
+      \                String observed = pool.submit(propagated).get(2, TimeUnit.SECONDS);\n\
+      \    \n        ...\n    }</code></pre>\n  </li>\n  <li>Caller set USER_B, wrapper\
+      \ capture giá trị rồi set nó vào worker ngay trước task.call.</li>\n  <li>Sau\
+      \ task, wrapper khôi phục context cũ của worker và caller remove giá trị.</li>\n\
+      </ol>\n<p><b>Kết luận:</b> Truyền context theo capture, restore và cleanup.\
+      \ Response và Execution Context là bằng chứng runtime cho behavior này; đoạ\
+      n source colocated ở trên cho thấy code path tạo experiment.</p>"
+    usage: true
+InterruptionController:
+  interruptBusyWorker():
+    execution: "<p><b>Concept:</b> API start một CPU-bound worker quay vòng cho tớ\
+      i khi thấy interrupt flag.</p>\n<ol>\n  <li>Worker báo started rồi tăng bộ đ\
+      ếm trong vòng while kiểm tra isInterrupted.\n    <div><i>Nguồn: InterruptionService.interruptBusyWorker()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; interruptBusyWorker() throws\
+      \ InterruptedException {\n            CountDownLatch started = new CountDownLatch(1);\n\
+      \            AtomicLong iterations = new AtomicLong();\n            AtomicBoolean\
+      \ interruptObserved = new AtomicBoolean(false);\n    \n            Thread worker\
+      \ = new Thread(() -&gt; {\n                started.countDown();\n    \n    \
+      \            while (!Thread.currentThread().isInterrupted()) {\n        ...\n\
+      \    }</code></pre>\n  </li>\n  <li>Caller gọi interrupt và join.</li>\n  <li>Worker\
+      \ tự quan sát signal, thoát vòng lặp và kết thúc; interrupt ở đây là cooperative\
+      \ cancellation chứ không ép thread dừng.</li>\n</ol>\n<p><b>Kết luận:</b> Hủ\
+      y CPU loop bằng cooperative interruption. Response và Execution Context là bằ\
+      ng chứng runtime cho behavior này; đoạn source colocated ở trên cho thấy code\
+      \ path tạo experiment.</p>"
+    usage: true
+  inspectInterruptFlag():
+    execution: "<p><b>Concept:</b> API đặt interrupt flag trước khi cho worker đọ\
+      c nó nhiều cách.</p>\n<ol>\n  <li>Hai lần isInterrupted đều chỉ đọc nên vẫn\
+      \ trả true.\n    <div><i>Nguồn: InterruptionService.inspectInterruptFlag()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; inspectInterruptFlag()\
+      \ throws InterruptedException {\n            CountDownLatch started = new CountDownLatch(1);\n\
+      \            AtomicBoolean proceed = new AtomicBoolean(false);\n    \n     \
+      \       AtomicBoolean firstIsInterrupted = new AtomicBoolean();\n          \
+      \  AtomicBoolean secondIsInterrupted = new AtomicBoolean();\n            AtomicBoolean\
+      \ firstInterrupted = new AtomicBoolean();\n            AtomicBoolean secondInterrupted\
+      \ = new AtomicBoolean();\n            AtomicBoolean finalIsInterrupted = new\
+      \ AtomicBoolean();\n        ...\n    }</code></pre>\n  </li>\n  <li>Lần đầu\
+      \ Thread.interrupted trả true đồng thời clear flag.</li>\n  <li>Lần Thread.interrupted\
+      \ tiếp theo và isInterrupted cuối cùng trả false, minh họa khác biệt giữa query\
+      \ và query-and-clear.</li>\n</ol>\n<p><b>Kết luận:</b> So sánh isInterrupted()\
+      \ và Thread.interrupted(). Response và Execution Context là bằng chứng runtime\
+      \ cho behavior này; đoạn source colocated ở trên cho thấy code path tạo experiment.</p>"
+    usage: true
+  interruptSleepingWorker():
+    execution: "<p><b>Concept:</b> API interrupt một worker đang Thread.sleep.</p>\n\
+      <ol>\n  <li>Worker vào sleep dài và caller gọi interrupt.\n    <div><i>Nguồ\
+      n: InterruptionService.interruptSleepingWorker()</i></div>\n    <pre><code>\
+      \    public Map&lt;String, Object&gt; interruptSleepingWorker() throws InterruptedException\
+      \ {\n            CountDownLatch readyToSleep = new CountDownLatch(1);\n    \
+      \        AtomicBoolean interruptedExceptionCaught = new AtomicBoolean(false);\n\
+      \            AtomicBoolean flagBeforeRestore = new AtomicBoolean(true);\n  \
+      \          AtomicBoolean flagAfterRestore = new AtomicBoolean(false);\n    \n\
+      \            Thread worker = new Thread(() -&gt; {\n                try {\n\
+      \                    readyToSleep.countDown();\n        ...\n    }</code></pre>\n\
+      \  </li>\n  <li>sleep ném InterruptedException đồng thời clear interrupt flag,\
+      \ nên service ghi nhận flag false ngay trong catch.</li>\n  <li>Worker chủ đ\
+      ộng gọi interrupt lại để restore flag rồi kết thúc.</li>\n</ol>\n<p><b>Kết luậ\
+      n:</b> Interrupt Thread đang sleep và restore flag. Response và Execution Context\
+      \ là bằng chứng runtime cho behavior này; đoạn source colocated ở trên cho thấ\
+      y code path tạo experiment.</p>"
+    usage: true
+  cancelWithCleanup():
+    execution: "<p><b>Concept:</b> API mô phỏng worker giữ một resource rồi bị cancel.</p>\n\
+      <ol>\n  <li>Worker đánh dấu resource đang mở và chạy vòng lặp có sleep.\n  \
+      \  <div><i>Nguồn: InterruptionService.cancelWithCleanup()</i></div>\n    <pre><code>\
+      \    public Map&lt;String, Object&gt; cancelWithCleanup() throws InterruptedException\
+      \ {\n            CountDownLatch resourceOpened = new CountDownLatch(1);\n  \
+      \          AtomicBoolean resourceOpen = new AtomicBoolean(false);\n        \
+      \    AtomicBoolean interruptionObserved = new AtomicBoolean(false);\n      \
+      \      AtomicBoolean cleanupCalled = new AtomicBoolean(false);\n    \n     \
+      \       Thread worker = new Thread(() -&gt; {\n                resourceOpen.set(true);\n\
+      \                resourceOpened.countDown();\n        ...\n    }</code></pre>\n\
+      \  </li>\n  <li>Caller interrupt; worker bắt InterruptedException, restore flag\
+      \ và thoát loop.</li>\n  <li>Khối finally luôn đóng resource và đánh dấu cleanupCalled\
+      \ trước khi thread terminate.</li>\n</ol>\n<p><b>Kết luận:</b> Cleanup tài nguyê\
+      n khi task bị cancel. Response và Execution Context là bằng chứng runtime cho\
+      \ behavior này; đoạn source colocated ở trên cho thấy code path tạo experiment.</p>"
+    usage: true
+  interruptSynchronizedWaiter():
+    execution: "<p><b>Concept:</b> API giữ intrinsic monitor trên request thread đ\
+      ể ép worker vào trạng thái BLOCKED khi cố synchronized.</p>\n<ol>\n  <li>Sau\
+      \ khi quan sát BLOCKED, caller gọi interrupt.\n    <div><i>Nguồn: InterruptionService.interruptSynchronizedWaiter()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; interruptSynchronizedWaiter()\
+      \ throws InterruptedException {\n            Object monitor = new Object();\n\
+      \            CountDownLatch attemptingMonitor = new CountDownLatch(1);\n   \
+      \ \n            AtomicBoolean acquiredMonitor = new AtomicBoolean(false);\n\
+      \            AtomicBoolean interruptedWhenAcquired = new AtomicBoolean(false);\n\
+      \    \n            Thread worker = new Thread(() -&gt; {\n                attemptingMonitor.countDown();\n\
+      \        ...\n    }</code></pre>\n  </li>\n  <li>Worker vẫn BLOCKED; interrupt\
+      \ chỉ đặt flag vì chờ intrinsic monitor không interruptible.</li>\n  <li>Khi\
+      \ caller rời synchronized, worker mới acquire monitor và thấy interrupt flag\
+      \ vẫn đang được giữ.</li>\n</ol>\n<p><b>Kết luận:</b> Chứng minh synchronized\
+      \ monitor acquisition không interruptible. Response và Execution Context là\
+      \ bằng chứng runtime cho behavior này; đoạn source colocated ở trên cho thấ\
+      y code path tạo experiment.</p>"
+    usage: true
+  stopFlagVsInterrupt():
+    execution: "<p><b>Concept:</b> API so sánh volatile stop flag với interrupt khi\
+      \ worker đang ở blocking sleep.</p>\n<ol>\n  <li>Worker vào Thread.sleep dà\
+      i trong vòng lặp kiểm tra stopRequested.\n    <div><i>Nguồn: InterruptionService.stopFlagVsInterrupt()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; stopFlagVsInterrupt() throws\
+      \ InterruptedException {\n            StopSignal stopSignal = new StopSignal();\n\
+      \            CountDownLatch blockingOperationEntered = new CountDownLatch(1);\n\
+      \            AtomicBoolean interruptedExceptionCaught = new AtomicBoolean(false);\n\
+      \    \n            Thread worker = new Thread(() -&gt; {\n                while\
+      \ (!stopSignal.stopRequested) {\n                    try {\n               \
+      \         blockingOperationEntered.countDown();\n        ...\n    }</code></pre>\n\
+      \  </li>\n  <li>Caller chỉ set stop flag nhưng worker vẫn sống và tiếp tục TIMED_WAITING\
+      \ vì chưa có cơ hội đọc flag.</li>\n  <li>Caller interrupt để đánh thức sleep;\
+      \ worker bắt InterruptedException và kết thúc ngay.</li>\n</ol>\n<p><b>Kết luậ\
+      n:</b> So sánh stop flag và interrupt khi worker block. Response và Execution\
+      \ Context là bằng chứng runtime cho behavior này; đoạn source colocated ở trê\
+      n cho thấy code path tạo experiment.</p>"
+    usage: true

@@ -848,6 +848,19 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <ul>
 <li>
 <details>
+  <summary><b><a href='./module/platform/development/architecture'>📁 architecture</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/architecture/domain-driven-design'>🪄 domain-driven-design</a>
+</li>
+<li>
+  <a href='./module/platform/development/architecture/mvc'>🪄 mvc</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
   <summary><b><a href='./module/platform/development/build-tool'>📁 build-tool</a></b></summary>
 <ul>
 <li>
@@ -933,6 +946,16 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </li>
 <li>
 <details>
+  <summary><b><a href='./module/platform/development/data-mapping'>📁 data-mapping</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/data-mapping/object-mapping'>🪄 object-mapping</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
   <summary><b><a href='./module/platform/development/design-pattern'>📁 design-pattern</a></b></summary>
 <ul>
 <li>
@@ -969,6 +992,9 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </li>
 </ul>
 </details>
+</li>
+<li>
+  <a href='./module/platform/development/design-pattern/dependency-injection'>🪄 dependency-injection</a>
 </li>
 <li>
 <details>
@@ -1026,6 +1052,9 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <a href='./module/platform/development/framework/spring/actuator'>🪄 actuator</a>
 </li>
 <li>
+  <a href='./module/platform/development/framework/spring/aspect'>🪄 aspect</a>
+</li>
+<li>
 <details>
   <summary><b><a href='./module/platform/development/framework/spring/basic'>📁 basic</a></b></summary>
 <ul>
@@ -1079,6 +1108,12 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </li>
 </ul>
 </details>
+</li>
+<li>
+  <a href='./module/platform/development/framework/spring/batch'>🪄 batch</a>
+</li>
+<li>
+  <a href='./module/platform/development/framework/spring/concurrency'>🪄 concurrency</a>
 </li>
 <li>
   <a href='./module/platform/development/framework/spring/conditional'>🪄 conditional</a>
@@ -1226,10 +1261,25 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <summary><b><a href='./module/platform/development/language/java/advance'>📁 advance</a></b></summary>
 <ul>
 <li>
+  <a href='./module/platform/development/language/java/advance/dynamic-runtime'>🪄 dynamic-runtime</a>
+</li>
+<li>
+  <a href='./module/platform/development/language/java/advance/instrumentation'>🪄 instrumentation</a>
+</li>
+<li>
   <a href='./module/platform/development/language/java/advance/jvm'>🪄 jvm</a>
 </li>
 <li>
+  <a href='./module/platform/development/language/java/advance/native-interoperability'>🪄 native-interoperability</a>
+</li>
+<li>
   <a href='./module/platform/development/language/java/advance/networking'>🪄 networking</a>
+</li>
+<li>
+  <a href='./module/platform/development/language/java/advance/runtime-diagnostics'>🪄 runtime-diagnostics</a>
+</li>
+<li>
+  <a href='./module/platform/development/language/java/advance/runtime-extensibility'>🪄 runtime-extensibility</a>
 </li>
 <li>
   <a href='./module/platform/development/language/java/advance/security-cryptography'>🪄 security-cryptography</a>
@@ -1242,13 +1292,19 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <summary><b><a href='./module/platform/development/language/java/concurrency'>📁 concurrency</a></b></summary>
 <ul>
 <li>
-  <a href='./module/platform/development/language/java/concurrency/async-programming'>🪄 async-programming</a>
+  <a href='./module/platform/development/language/java/concurrency/fundamentals'>🪄 fundamentals</a>
+</li>
+<li>
+  <a href='./module/platform/development/language/java/concurrency/high-level-utils'>🪄 high-level-utils</a>
 </li>
 <li>
   <a href='./module/platform/development/language/java/concurrency/executor-service'>🪄 executor-service</a>
 </li>
 <li>
-  <a href='./module/platform/development/language/java/concurrency/high-level-utils'>🪄 high-level-utils</a>
+  <a href='./module/platform/development/language/java/concurrency/fork-join'>🪄 fork-join</a>
+</li>
+<li>
+  <a href='./module/platform/development/language/java/concurrency/async-programming'>🪄 async-programming</a>
 </li>
 <li>
   <a href='./module/platform/development/language/java/concurrency/virtual-threads'>🪄 virtual-threads</a>
@@ -1308,54 +1364,8 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
   <a href='./module/platform/development/language/java/core/localization'>🪄 localization</a>
 </li>
-</ul>
-</details>
-</li>
 <li>
-<details>
-  <summary><b><a href='./module/platform/development/language/java/mapping'>📁 mapping</a></b></summary>
-<ul>
-<li>
-  <a href='./module/platform/development/language/java/mapping/mapstruct'>🪄 mapstruct</a>
-</li>
-<li>
-  <a href='./module/platform/development/language/java/mapping/model-mapper'>🪄 model-mapper</a>
-</li>
-<li>
-  <a href='./module/platform/development/language/java/mapping/object-mapper'>🪄 object-mapper</a>
-</li>
-</ul>
-</details>
-</li>
-<li>
-<details>
-  <summary><b><a href='./module/platform/development/language/java/persistence'>📁 persistence</a></b></summary>
-<ul>
-<li>
-<details>
-  <summary><b><a href='./module/platform/development/language/java/persistence/orm'>📁 orm</a></b></summary>
-<ul>
-<li>
-  <a href='./module/platform/development/language/java/persistence/orm/hibernate'>🪄 hibernate</a>
-</li>
-<li>
-  <a href='./module/platform/development/language/java/persistence/orm/jpa-specification'>🪄 jpa-specification</a>
-</li>
-</ul>
-</details>
-</li>
-<li>
-<details>
-  <summary><b><a href='./module/platform/development/language/java/persistence/sql'>📁 sql</a></b></summary>
-<ul>
-<li>
-  <a href='./module/platform/development/language/java/persistence/sql/jdbc'>🪄 jdbc</a>
-</li>
-<li>
-  <a href='./module/platform/development/language/java/persistence/sql/mybatis'>🪄 mybatis</a>
-</li>
-</ul>
-</details>
+  <a href='./module/platform/development/language/java/core/functional-programming'>🪄 functional-programming</a>
 </li>
 </ul>
 </details>
@@ -1379,6 +1389,16 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </li>
 <li>
   <a href='./module/platform/development/language/java/version/java17'>🪄 java17</a>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/language/java/version/java24'>📁 java24</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/language/java/version/java24/class-file-api'>🪄 class-file-api</a>
+</li>
+</ul>
+</details>
 </li>
 <li>
   <a href='./module/platform/development/language/java/version/java7'>🪄 java7</a>
@@ -1414,71 +1434,81 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </li>
 <li>
 <details>
+  <summary><b><a href='./module/platform/development/methodology'>📁 methodology</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/methodology/driven-development'>🪄 driven-development</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
   <summary><b><a href='./module/platform/development/paradigm'>📁 paradigm</a></b></summary>
 <ul>
 <li>
   <a href='./module/platform/development/paradigm/aop'>🪄 aop</a>
 </li>
 <li>
-<details>
-  <summary><b><a href='./module/platform/development/paradigm/concurrency'>📁 concurrency</a></b></summary>
-<ul>
-<li>
-  <a href='./module/platform/development/paradigm/concurrency/batch'>🪄 batch</a>
+  <a href='./module/platform/development/paradigm/data-oriented'>🪄 data-oriented</a>
 </li>
 <li>
-  <a href='./module/platform/development/paradigm/concurrency/forkjoin-workstealing'>🪄 forkjoin-workstealing</a>
-</li>
-<li>
-<details>
-  <summary><b><a href='./module/platform/development/paradigm/concurrency/schedule'>📁 schedule</a></b></summary>
-<ul>
-<li>
-  <a href='./module/platform/development/paradigm/concurrency/schedule/task'>🪄 task</a>
-</li>
-</ul>
-</details>
-</li>
-<li>
-  <a href='./module/platform/development/paradigm/concurrency/thread'>🪄 thread</a>
-</li>
-</ul>
-</details>
-</li>
-<li>
-  <a href='./module/platform/development/paradigm/di-ioc'>🪄 di-ioc</a>
+  <a href='./module/platform/development/paradigm/declarative'>🪄 declarative</a>
 </li>
 <li>
   <a href='./module/platform/development/paradigm/functional'>🪄 functional</a>
 </li>
 <li>
-<details>
-  <summary><b><a href='./module/platform/development/paradigm/mvc-pattern'>📁 mvc-pattern</a></b></summary>
-<ul>
-<li>
-  <a href='./module/platform/development/paradigm/mvc-pattern/controller'>🪄 controller</a>
-</li>
-<li>
-  <a href='./module/platform/development/paradigm/mvc-pattern/model'>🪄 model</a>
-</li>
-<li>
-  <a href='./module/platform/development/paradigm/mvc-pattern/service'>🪄 service</a>
-</li>
-</ul>
-</details>
+  <a href='./module/platform/development/paradigm/imperative'>🪄 imperative</a>
 </li>
 <li>
   <a href='./module/platform/development/paradigm/object-oriented'>🪄 object-oriented</a>
 </li>
 <li>
-<details>
-  <summary><b><a href='./module/platform/development/paradigm/reactive-stream'>📁 reactive-stream</a></b></summary>
-<ul>
-<li>
-  <a href='./module/platform/development/paradigm/reactive-stream/webflux'>🪄 webflux</a>
+  <a href='./module/platform/development/paradigm/reactive'>🪄 reactive</a>
 </li>
 </ul>
 </details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/persistence'>📁 persistence</a></b></summary>
+<ul>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/persistence/orm'>📁 orm</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/persistence/orm/hibernate'>🪄 hibernate</a>
+</li>
+<li>
+  <a href='./module/platform/development/persistence/orm/jpa'>🪄 jpa</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/persistence/relational-access'>📁 relational-access</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/persistence/relational-access/jdbc'>🪄 jdbc</a>
+</li>
+<li>
+  <a href='./module/platform/development/persistence/relational-access/mybatis'>🪄 mybatis</a>
+</li>
+</ul>
+</details>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/serialization'>📁 serialization</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/serialization/jackson'>🪄 jackson</a>
 </li>
 </ul>
 </details>

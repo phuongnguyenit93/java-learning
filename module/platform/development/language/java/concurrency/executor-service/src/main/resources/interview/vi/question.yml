@@ -1,0 +1,121 @@
+# <interview-schema>
+# Cấu trúc câu hỏi Interview
+# schema-version: 2
+#
+# questions [kiểu: list; bắt buộc; mặc định: []]
+#   Danh sách câu hỏi Interview của module trong language hiện tại.
+#   mỗi phần tử:
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi phỏng vấn hiển thị cho người học.
+#     answer [kiểu: string; bắt buộc; mặc định: ""]
+#       Câu trả lời tham khảo, chỉ hiển thị khi người học chủ động mở.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu nội dung được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu nội dung đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+# </interview-schema>
+
+questions:
+  - question: >-
+      ThreadPoolExecutor xử lý một task mới theo thứ tự nào?
+    answer: >-
+      Mental model là: nếu worker count nhỏ hơn corePoolSize thì tạo core worker; nếu không thì thử enqueue; nếu queue đầy và worker count còn nhỏ hơn maximumPoolSize thì tạo worker bổ sung; nếu vẫn không nhận được thì đi vào rejection policy. execute() không tự block caller chỉ vì queue đầy. Vì vậy maximumPoolSize thường chỉ phát huy khi queue không còn nhận thêm task.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Thread_Pool_Executor/ThreadPoolExecutor.md"
+      anchor: "thread-pool-flow"
+    apiRelated:
+      controller: "ThreadPoolController"
+      methodSignature: "executorFlow()"
+
+  - question: >-
+      execute() và submit() khác nhau như thế nào về result và failure observation?
+    answer: >-
+      execute(Runnable) trả void; exception thoát khỏi task đi theo uncaught-exception path của worker. submit(Runnable/Callable) trả Future và giữ result hoặc failure trong Future; get() expose failure qua ExecutionException. Vì vậy submit một task quan trọng rồi bỏ luôn Future có thể làm application mất một failure-observation channel quan trọng.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Thread_Pool_Executor/ThreadPoolExecutor.md"
+      anchor: "executor-abstraction"
+    apiRelated:
+      controller: "ThreadPoolController"
+      methodSignature: "executeVsSubmit()"
+
+  - question: >-
+      Có thể chọn pool size chỉ bằng công thức CPU-bound = Ncpu và I/O-bound > Ncpu không?
+    answer: >-
+      Không. Các công thức đó chỉ là heuristic khởi đầu. Production sizing phải xét arrival rate, service time, latency SLO, downstream capacity, queue memory, contention và overload behavior. Các factory tiện lợi cũng có trade-off: fixed/single thường dùng queue rất lớn, cached pool có thể tăng platform Thread mạnh với SynchronousQueue. Cần hiểu queue, capacity và rejection semantics thật sự.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Thread_Pool_Executor/ThreadPoolExecutor.md"
+      anchor: "pool-sizing"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      scheduleAtFixedRate() và scheduleWithFixedDelay() khác nhau thế nào, và exception trong periodic task có hậu quả gì?
+    answer: >-
+      Fixed rate cố duy trì cadence theo các mốc start dự kiến; fixed delay chờ một khoảng delay sau khi lần chạy trước hoàn thành rồi mới lên lịch lượt tiếp theo. Cùng một periodic task không overlap với chính nó theo contract của ScheduledThreadPoolExecutor. Nếu một execution của periodic task để exception thoát ra ngoài, các execution tiếp theo của chính periodic task đó bị suppress, nên production job cần failure-observation/handling rõ ràng.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Thread_Pool_Executor/ThreadPoolExecutor.md"
+      anchor: "scheduled-execution"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Các rejection policy của ThreadPoolExecutor thể hiện overload semantics như thế nào?
+    answer: >-
+      AbortPolicy ném RejectedExecutionException. CallerRunsPolicy cho caller chạy task nếu executor chưa shutdown, tạo feedback pressure vì caller bị chậm lại. DiscardPolicy bỏ task mới im lặng. DiscardOldestPolicy bỏ head của work queue rồi thử submit lại task mới. Hai policy discard thay đổi business semantics về task nào có thể mất, nên chỉ dùng khi loss thực sự được hiểu và chấp nhận.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Thread_Pool_Executor/ThreadPoolExecutor.md"
+      anchor: "rejection-policy"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      shutdown() và shutdownNow() của ExecutorService khác nhau như thế nào?
+    answer: >-
+      shutdown() ngừng nhận task mới nhưng cho queued/running task tiếp tục. shutdownNow() cố interrupt running task và trả về các task chưa bắt đầu, nhưng không thể cưỡng bức một task không hợp tác với interruption phải dừng ngay. Executor do code tạo ra phải có owner chịu trách nhiệm shutdown; awaitTermination thường được dùng để giới hạn thời gian graceful shutdown trước khi cân nhắc forced shutdown.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Thread_Pool_Executor/ThreadPoolExecutor.md"
+      anchor: "graceful-shutdown"
+    apiRelated:
+      controller: "ThreadPoolController"
+      methodSignature: "forcedShutdown()"
+
+  - question: >-
+      Khi nào một Thread, pool hoặc queue được coi là leak/resource pressure và nên quan sát gì trong production?
+    answer: >-
+      Leak xảy ra khi resource sống lâu hơn ownership/intention và thiếu lifecycle phù hợp, ví dụ Thread không có cancellation path, pool tạo theo request nhưng quên shutdown, duplicated scheduler hoặc stale ThreadLocal. Thread count ổn định vẫn có thể nguy hiểm nếu queue backlog tăng. Production nên theo dõi thread/pool count, active count, queue depth, memory, CPU, rejection và shutdown duration, đồng thời so sánh nhiều thread dump theo thời gian để tìm owner và lifecycle bug.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.Leak/Leak.md"
+      anchor: "observability"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+

@@ -1,0 +1,93 @@
+VirtualThreadController:
+  basic():
+    execution: "<p><b>Concept:</b> API tạo một virtual thread thật bằng Thread.ofVirtual().name().start().</p>\n\
+      <ol>\n  <li>Worker tự đọc isVirtual và chuỗi mô tả của chính nó.\n    <div><i>Nguồ\
+      n: VirtualThreadService.basicDemo()</i></div>\n    <pre><code>    public Map&lt;String,\
+      \ Object&gt; basicDemo() throws InterruptedException {\n            AtomicBoolean\
+      \ virtual = new AtomicBoolean(false);\n            AtomicReference&lt;String&gt;\
+      \ description = new AtomicReference&lt;&gt;();\n    \n            Thread worker\
+      \ = Thread.ofVirtual()\n                    .name(\"virtual-basic\")\n     \
+      \               .start(() -&gt; {\n                        virtual.set(Thread.currentThread().isVirtual());\n\
+      \                        description.set(Thread.currentThread().toString());\n\
+      \        ...\n    }</code></pre>\n  </li>\n  <li>Caller join virtual thread\
+      \ và cleanup nếu cần.</li>\n  <li>Response ghi thêm daemon flag, priority và\
+      \ state sau join để quan sát các thuộc tính runtime.</li>\n</ol>\n<p><b>Kết\
+      \ luận:</b> Quan sát thuộc tính cơ bản của Virtual Thread. Response và Execution\
+      \ Context là bằng chứng runtime cho behavior này; đoạn source colocated ở trê\
+      n cho thấy code path tạo experiment.</p>"
+    usage: true
+  creationApi():
+    execution: "<p><b>Concept:</b> API tạo hai virtual thread bằng hai API khác nhau.</p>\n\
+      <ol>\n  <li>Thread.startVirtualThread chạy task thứ nhất và ghi nhận isVirtual.\n\
+      \    <div><i>Nguồn: VirtualThreadService.creationApisDemo()</i></div>\n    <pre><code>\
+      \    public Map&lt;String, Object&gt; creationApisDemo() throws InterruptedException\
+      \ {\n            AtomicBoolean startVirtualThreadIsVirtual = new AtomicBoolean(false);\n\
+      \            AtomicBoolean builderIsVirtual = new AtomicBoolean(false);\n  \
+      \          AtomicReference&lt;String&gt; builderName = new AtomicReference&lt;&gt;();\n\
+      \    \n            Thread direct = Thread.startVirtualThread(\n            \
+      \        () -&gt; startVirtualThreadIsVirtual.set(Thread.currentThread().isVirtual())\n\
+      \            );\n            Thread builder = Thread.ofVirtual()\n        ...\n\
+      \    }</code></pre>\n  </li>\n  <li>Thread.ofVirtual().name(\"virtual-builder\"\
+      ).start chạy task thứ hai và ghi lại tên được cấu hình.</li>\n  <li>Service\
+      \ join cả hai và xác nhận chúng đều terminate.</li>\n</ol>\n<p><b>Kết luận:</b>\
+      \ So sánh API tạo Virtual Thread trực tiếp. Response và Execution Context là\
+      \ bằng chứng runtime cho behavior này; đoạn source colocated ở trên cho thấ\
+      y code path tạo experiment.</p>"
+    usage: true
+  blockingScale():
+    execution: "<p><b>Concept:</b> API chạy cùng .00 blocking task, mỗi task sleep\
+      \ 20 ms, bằng hai loại executor.</p>\n<ol>\n  <li>Fixed platform pool chỉ có\
+      \ .0 worker nên các task blocking phải chạy theo nhiều đợt.\n    <div><i>Nguồ\
+      n: VirtualThreadService.blockingScaleDemo()</i></div>\n    <pre><code>    public\
+      \ Map&lt;String, Object&gt; blockingScaleDemo() throws Exception {\n       \
+      \     int tasks = .00;\n            Duration wait = Duration.ofMillis(20);\n\
+      \    \n            long platformStart = System.nanoTime();\n            try\
+      \ (var platformExecutor = Executors.newFixedThreadPool(.0)) {\n            \
+      \    for (int i = 0; i &lt; tasks; i++) {\n                    platformExecutor.submit(()\
+      \ -&gt; {\n                        Thread.sleep(wait);\n        ...\n    }</code></pre>\n\
+      \  </li>\n  <li>VirtualThreadPerTaskExecutor cấp một virtual thread cho mỗi\
+      \ task blocking.</li>\n  <li>Service đo elapsed time của hai lượt như một demo\
+      \ định tính, không coi đây là benchmark chuẩn.</li>\n</ol>\n<p><b>Kết luận:</b>\
+      \ So sánh blocking task trên platform pool và Virtual Thread. Response và Execution\
+      \ Context là bằng chứng runtime cho behavior này; đoạn source colocated ở trê\
+      n cho thấy code path tạo experiment.</p>"
+    usage: true
+  limitedResource():
+    execution: "<p><b>Concept:</b> API submit 30 task lên VirtualThreadPerTaskExecutor\
+      \ nhưng đặt Semaphore chỉ có 5 permit trước resource giả lập.</p>\n<ol>\n  <li>Mỗ\
+      i virtual thread phải acquire permit trước khi tăng active count và sleep ngắ\
+      n.\n    <div><i>Nguồn: VirtualThreadService.limitedResourceDemo()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; limitedResourceDemo() throws\
+      \ Exception {\n            int tasks = 30;\n            int permits = 5;\n \
+      \           Semaphore semaphore = new Semaphore(permits);\n            AtomicInteger\
+      \ active = new AtomicInteger();\n            AtomicInteger maxActive = new AtomicInteger();\n\
+      \            CountDownLatch done = new CountDownLatch(tasks);\n    \n      \
+      \      try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {\n\
+      \        ...\n    }</code></pre>\n  </li>\n  <li>Service theo dõi max concurrent\
+      \ thread bên trong vùng tài nguyên.</li>\n  <li>Task luôn release permit trong\
+      \ finally; kết quả xác nhận concurrency không vượt quá 5 dù có nhiều virtual\
+      \ thread.</li>\n</ol>\n<p><b>Kết luận:</b> Giới hạn downstream concurrency khi\
+      \ dùng Virtual Thread. Response và Execution Context là bằng chứng runtime cho\
+      \ behavior này; đoạn source colocated ở trên cho thấy code path tạo experiment.</p>"
+    usage: true
+  threadLocal():
+    execution: "<p><b>Concept:</b> API kiểm tra ThreadLocal và InheritableThreadLocal\
+      \ trên virtual thread.</p>\n<ol>\n  <li>Virtual thread đầu set plain ThreadLocal,\
+      \ đọc rồi remove; virtual thread thứ hai không thấy giá trị đó vì ThreadLocal\
+      \ vẫn per-thread.\n    <div><i>Nguồn: VirtualThreadService.threadLocalDemo()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; threadLocalDemo() throws\
+      \ InterruptedException {\n            ThreadLocal&lt;String&gt; context = new\
+      \ ThreadLocal&lt;&gt;();\n            InheritableThreadLocal&lt;String&gt; inheritableContext\
+      \ = new InheritableThreadLocal&lt;&gt;();\n            AtomicReference&lt;String&gt;\
+      \ firstObserved = new AtomicReference&lt;&gt;();\n            AtomicReference&lt;String&gt;\
+      \ secondObserved = new AtomicReference&lt;&gt;();\n            AtomicReference&lt;String&gt;\
+      \ inheritedByDefault = new AtomicReference&lt;&gt;();\n            AtomicReference&lt;String&gt;\
+      \ inheritedWhenDisabled = new AtomicReference&lt;&gt;();\n            AtomicBoolean\
+      \ cleanedInsideFirstThread = new AtomicBoolean(false);\n    \n        ...\n\
+      \    }</code></pre>\n  </li>\n  <li>Parent set InheritableThreadLocal rồi tạ\
+      o một virtual thread mặc định để quan sát giá trị kế thừa.</li>\n  <li>Một builder\
+      \ khác tắt inheritInheritableThreadLocals nên child không nhận context; parent\
+      \ cleanup sau khi join.</li>\n</ol>\n<p><b>Kết luận:</b> Quan sát ThreadLocal\
+      \ trên Virtual Thread. Response và Execution Context là bằng chứng runtime cho\
+      \ behavior này; đoạn source colocated ở trên cho thấy code path tạo experiment.</p>"
+    usage: true

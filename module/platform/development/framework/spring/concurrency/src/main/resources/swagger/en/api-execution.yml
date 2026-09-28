@@ -1,0 +1,41 @@
+TaskExecutorController:
+  asyncWithContext():
+    execution: |-
+      <p><b>Concept:</b> The controller seeds request-scoped demo context, then dispatches work through Spring <code>@Async</code> and a custom <code>ThreadPoolTaskExecutor</code>.</p>
+      <ol>
+        <li>The HTTP thread saves any previous <code>DemoContext</code> and MDC value, sets both to <code>REQUEST-123</code>, and calls the proxied async service.
+          <div><i>Source: TaskExecutorService.runAsync()</i></div>
+          <pre><code>    @Async("threadLearningTaskExecutor")
+              public CompletableFuture&lt;Map&lt;String, Object&gt;&gt; runAsync(String callerThread) {
+                  Map&lt;String, Object&gt; result = new LinkedHashMap&lt;&gt;();
+                  result.put("callerThread", callerThread);
+                  result.put("workerThread", Thread.currentThread().getName());
+                  result.put("workerContext", DemoContext.get());
+                  result.put("workerMdcRequestId", MDC.get("requestId"));
+                  result.put("workerHasRequestAttributes", RequestContextHolder.getRequestAttributes() != null);
+                  result.put("differentThread", !callerThread.equals(Thread.currentThread().getName()));
+              ...
+          }</code></pre>
+        </li>
+        <li><code>DemoTaskDecorator</code> captures the demo context, MDC, and request attributes at submission time, installs them on the worker, and restores the worker's previous state afterward.</li>
+        <li>The async service reports caller/worker thread names and the propagated values; the controller restores its own previous context immediately after submission.</li>
+      </ol>
+      <p><b>Conclusion:</b> Run @Async with a custom executor and context propagation. The response and Execution Context are the runtime evidence for this behavior; the colocated source snippet shows the code path that creates the experiment.</p>
+    usage: true
+  asyncVoidException():
+    execution: |-
+      <p><b>Concept:</b> The endpoint observes failure from an <code>@Async void</code> method through the configured <code>AsyncUncaughtExceptionHandler</code>.</p>
+      <ol>
+        <li>The controller creates a correlation id and registers a pending observation future in <code>AsyncExceptionProbe</code>.
+          <div><i>Source: TaskExecutorService.failWithoutFuture()</i></div>
+          <pre><code>    @Async("threadLearningTaskExecutor")
+              public void failWithoutFuture(String correlationId) {
+                  throw new IllegalStateException("async void failure: " + correlationId);
+              }</code></pre>
+        </li>
+        <li>The async service method throws <code>IllegalStateException</code> on the custom executor.</li>
+        <li>The uncaught-exception handler extracts the correlation id, records method/error/thread metadata, and completes the observation future.</li>
+        <li>If submission itself is rejected synchronously, the controller completes that same probe exceptionally so the registration still terminates and cleans itself up.</li>
+      </ol>
+      <p><b>Conclusion:</b> Observe exceptions from void @Async methods. The response and Execution Context are the runtime evidence for this behavior; the colocated source snippet shows the code path that creates the experiment.</p>
+    usage: true

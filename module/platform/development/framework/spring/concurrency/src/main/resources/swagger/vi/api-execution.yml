@@ -1,0 +1,40 @@
+TaskExecutorController:
+  asyncWithContext():
+    execution: |-
+      <p><b>Concept:</b> API đặt DemoContext và MDC requestId trên request thread rồi gọi method có @Async.</p>
+      <ol>
+        <li>ThreadPoolTaskExecutor dùng DemoTaskDecorator để capture DemoContext, MDC và RequestAttributes tại lúc submit.
+          <div><i>Nguồn: TaskExecutorService.runAsync()</i></div>
+          <pre><code>    @Async("threadLearningTaskExecutor")
+              public CompletableFuture&lt;Map&lt;String, Object&gt;&gt; runAsync(String callerThread) {
+                  Map&lt;String, Object&gt; result = new LinkedHashMap&lt;&gt;();
+                  result.put("callerThread", callerThread);
+                  result.put("workerThread", Thread.currentThread().getName());
+                  result.put("workerContext", DemoContext.get());
+                  result.put("workerMdcRequestId", MDC.get("requestId"));
+                  result.put("workerHasRequestAttributes", RequestContextHolder.getRequestAttributes() != null);
+                  result.put("differentThread", !callerThread.equals(Thread.currentThread().getName()));
+              ...
+          }</code></pre>
+        </li>
+        <li>Decorator cài các context đó lên worker, runAsync ghi nhận worker thread và giá trị quan sát được.</li>
+        <li>Sau task, decorator khôi phục context cũ của worker; controller cũng khôi phục context cũ của caller trong finally.</li>
+      </ol>
+      <p><b>Kết luận:</b> Chạy @Async với custom executor và context propagation. Response và Execution Context là bằng chứng runtime cho behavior này; đoạn source colocated ở trên cho thấy code path tạo experiment.</p>
+    usage: true
+  asyncVoidException():
+    execution: |-
+      <p><b>Concept:</b> API theo dõi exception của method @Async trả void bằng correlationId.</p>
+      <ol>
+        <li>Controller đăng ký một CompletableFuture quan sát trong AsyncExceptionProbe rồi gọi failWithoutFuture.
+          <div><i>Nguồn: TaskExecutorService.failWithoutFuture()</i></div>
+          <pre><code>    @Async("threadLearningTaskExecutor")
+              public void failWithoutFuture(String correlationId) {
+                  throw new IllegalStateException("async void failure: " + correlationId);
+              }</code></pre>
+        </li>
+        <li>Method async cố ý ném IllegalStateException; AsyncUncaughtExceptionHandler lấy correlationId và complete future bằng metadata lỗi.</li>
+        <li>Nếu executor reject ngay lúc submit, controller complete future exceptionally để registration vẫn được cleanup.</li>
+      </ol>
+      <p><b>Kết luận:</b> Quan sát exception của void @Async. Response và Execution Context là bằng chứng runtime cho behavior này; đoạn source colocated ở trên cho thấy code path tạo experiment.</p>
+    usage: true

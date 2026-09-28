@@ -4,7 +4,9 @@
 
 ## 1. Scope
 
-This map covers all 16 real modules under `module/platform/development/language/java/core`:
+There are now 17 real modules under `module/platform/development/language/java/core`.
+
+The original 16-module detailed curriculum remains the locked Wave 1–3 baseline below. `functional-programming` was later relocated here from `paradigm/functional` because its existing curriculum is Java-specific; its detailed normalization and wave assignment remain pending a dedicated curriculum review.
 
 ```text
 language-basics
@@ -16,6 +18,7 @@ object-contract
 string
 exception
 generics
+functional-programming
 collection
 date-time
 io
@@ -225,7 +228,10 @@ Use one primary home per concept. Cross-module links are encouraged; duplicated 
 Important boundaries for Java Core:
 
 ```text
-functional programming / lambda / Optional
+Java functional programming / lambda / Optional
+→ java/core/functional-programming
+
+functional programming paradigm
 → paradigm/functional
 
 Stream API
@@ -244,7 +250,7 @@ security / cryptography APIs
 → java/advance/security-cryptography
 
 threading / concurrency primitives
-→ Java/concurrency and paradigm/concurrency modules
+→ java/concurrency
 ```
 
 Core modules may reference those topics only where necessary to explain a boundary.
@@ -283,6 +289,8 @@ localization
 ```
 
 Within each wave, stabilize README anchors before implementing relations downstream.
+
+`functional-programming` is intentionally not inserted into Wave 1–3 by this structural migration. Do not infer a wave position from its physical directory location; assign it explicitly in a later curriculum review.
 
 Within each module, however, the order is now:
 

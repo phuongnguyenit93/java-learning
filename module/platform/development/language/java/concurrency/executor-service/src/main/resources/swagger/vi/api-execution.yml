@@ -1,0 +1,282 @@
+LeakController:
+  threadLeakPattern():
+    execution: |-
+      <p><b>Concept:</b> API tạo một thread chờ CountDownLatch để mô phỏng thread bị bỏ quên.</p>
+      <ol>
+        <li>Sau start, service xác nhận worker còn sống và sẽ tiếp tục tồn tại nếu latch không bao giờ được mở.
+          <div><i>Nguồn: LeakService.threadLeakPatternDemo()</i></div>
+          <pre><code>    public Map&lt;String, Object&gt; threadLeakPatternDemo() throws InterruptedException {
+                  CountDownLatch stop = new CountDownLatch(1);
+                  Thread worker = new Thread(() -&gt; await(stop), "bounded-leak-demo-thread");
+                  boolean aliveBeforeCleanup;
+                  try {
+                      worker.start();
+                      waitUntilAlive(worker);
+                      aliveBeforeCleanup = worker.isAlive();
+                  } finally {
+              ...
+          }</code></pre>
+        </li>
+        <li>Trong finally, latch được countDown và service join worker với deadline.</li>
+        <li>Response đối chiếu trạng thái trước và sau cleanup.</li>
+      </ol>
+      <p><b>Kết luận:</b> Quan sát pattern Thread leak theo cách bounded. Response và Execution Context là bằng chứng runtime cho behavior này; đoạn source colocated ở trên cho thấy code path tạo experiment.</p>
+    usage: true
+  poolLeakPattern():
+    execution: "<p><b>Concept:</b> API tạo fixed thread pool 2 worker và chạy hai\
+      \ task ngắn.</p>\n<ol>\n  <li>Sau khi task hoàn tất, pool vẫn chưa shutdown\
+      \ nên các worker thuộc quyền sở hữu của executor vẫn tồn tại.\n    <div><i>Nguồ\
+      n: LeakService.poolLeakPatternDemo()</i></div>\n    <pre><code>    public Map&lt;String,\
+      \ Object&gt; poolLeakPatternDemo() throws InterruptedException {\n         \
+      \   ExecutorService pool = Executors.newFixedThreadPool(2);\n            CountDownLatch\
+      \ tasksDone = new CountDownLatch(2);\n    \n            try {\n            \
+      \    pool.execute(tasksDone::countDown);\n                pool.execute(tasksDone::countDown);\n\
+      \                if (!tasksDone.await(2, TimeUnit.SECONDS)) {\n            \
+      \        throw new IllegalStateException(\"Pool leak demo task không hoàn thà\
+      nh đúng hạn.\");\n        ...\n    }</code></pre>\n  </li>\n  <li>Response ghi\
+      \ nhận pattern sẽ leak nếu owner quên shutdown.</li>\n  <li>Finally gọi shutdown\
+      \ và awaitTermination, fallback shutdownNow nếu cần.</li>\n</ol>\n<p><b>Kết\
+      \ luận:</b> Quan sát pool leak do quên shutdown. Response và Execution Context\
+      \ là bằng chứng runtime cho behavior này; đoạn source colocated ở trên cho thấ\
+      y code path tạo experiment.</p>"
+    usage: true
+  queuePressure():
+    execution: |-
+      <p><b>Concept:</b> API tạo ThreadPoolExecutor một worker với bounded queue capacity 3 và AbortPolicy.</p>
+      <ol>
+        <li>Task đầu giữ worker bận bằng latch.
+          <div><i>Nguồn: LeakService.queuePressureDemo()</i></div>
+          <pre><code>    public Map&lt;String, Object&gt; queuePressureDemo() throws InterruptedException {
+                  CountDownLatch releaseWorker = new CountDownLatch(1);
+                  ThreadPoolExecutor executor = new ThreadPoolExecutor(
+                          1,
+                          1,
+                          0,
+                          TimeUnit.MILLISECONDS,
+                          new LinkedBlockingQueue&lt;&gt;(3),
+                          new ThreadPoolExecutor.AbortPolicy()
+              ...
+          }</code></pre>
+        </li>
+        <li>Bốn task tiếp theo được submit khi worker đang bận; ba task lấp queue và task dư bị reject.</li>
+        <li>Finally mở latch rồi shutdown, minh họa bounded queue giới hạn backlog thay vì tăng vô hạn.</li>
+      </ol>
+      <p><b>Kết luận:</b> Quan sát queue backlog và rejection. Response và Execution Context là bằng chứng runtime cho behavior này; đoạn source colocated ở trên cho thấy code path tạo experiment.</p>
+    usage: true
+ThreadPoolController:
+  executorFlow():
+    execution: |-
+      <p><b>Concept:</b> API cấu hình ThreadPoolExecutor core=1, max=2 và queue capacity=1 để quan sát thuật toán nhận task.</p>
+      <ol>
+        <li>Task 1 tạo core worker; task 2 đi vào queue.
+          <div><i>Nguồn: ThreadPoolService.executorFlowDemo()</i></div>
+          <pre><code>    public Map&lt;String, Object&gt; executorFlowDemo() throws InterruptedException {
+                  CountDownLatch releaseTasks = new CountDownLatch(1);
+                  ThreadPoolExecutor executor = new ThreadPoolExecutor(
+                          1,
+                          2,
+                          10,
+                          TimeUnit.SECONDS,
+                          new LinkedBlockingQueue&lt;&gt;(1),
+                          namedFactory("flow-worker-"),
+              ...
+          }</code></pre>
+        </li>
+        <li>Task 3 làm queue đầy nên pool tăng lên worker thứ hai.</li>
+        <li>Task 4 gặp cả pool max và queue full nên AbortPolicy reject; cuối cùng latch được mở và executor shutdown.</li>
+      </ol>
+      <p><b>Kết luận:</b> Quan sát core, queue, max và rejection. Response và Execution Context là bằng chứng runtime cho behavior này; đoạn source colocated ở trên cho thấy code path tạo experiment.</p>
+    usage: true
+  executeVsSubmit():
+    execution: |-
+      <p><b>Concept:</b> API chạy hai task cố ý ném exception bằng execute và submit trên hai executor riêng.</p>
+      <ol>
+        <li>Exception từ execute đi ra uncaught exception channel của worker và được UncaughtExceptionHandler ghi nhận.
+          <div><i>Nguồn: ThreadPoolService.executeVsSubmitDemo()</i></div>
+          <pre><code>    public Map&lt;String, Object&gt; executeVsSubmitDemo() throws InterruptedException {
+                  AtomicReference&lt;Throwable&gt; executeUncaught = new AtomicReference&lt;&gt;();
+                  CountDownLatch executeExceptionObserved = new CountDownLatch(1);
+                  ThreadFactory executeFactory = runnable -&gt; {
+                      Thread thread = new Thread(runnable, "execute-exception-worker");
+                      thread.setUncaughtExceptionHandler((ignored, error) -&gt; {
+                          executeUncaught.set(error);
+                          executeExceptionObserved.countDown();
+                      });
+              ...
+          }</code></pre>
+        </li>
+        <li>submit trả Future; exception được giữ trong Future và xuất hiện dưới dạng ExecutionException khi get.</li>
+        <li>Cả hai executor được shutdown sau khi quan sát xong.</li>
+      </ol>
+      <p><b>Kết luận:</b> So sánh execute() và submit(). Response và Execution Context là bằng chứng runtime cho behavior này; đoạn source colocated ở trên cho thấy code path tạo experiment.</p>
+    usage: true
+  fixedPoolReuse():
+    execution: "<p><b>Concept:</b> API submit 6 task vào fixed pool chỉ có 2 worker.</p>\n\
+      <ol>\n  <li>Mỗi task ghi tên thread chạy nó vào một concurrent set.\n    <div><i>Nguồ\
+      n: ThreadPoolService.fixedPoolReuseDemo()</i></div>\n    <pre><code>    public\
+      \ Map&lt;String, Object&gt; fixedPoolReuseDemo() throws InterruptedException\
+      \ {\n            Set&lt;String&gt; workerNames = ConcurrentHashMap.newKeySet();\n\
+      \            ExecutorService executor = Executors.newFixedThreadPool(2, namedFactory(\"\
+      fixed-worker-\"));\n            CountDownLatch completed = new CountDownLatch(6);\n\
+      \    \n            try {\n                for (int i = 0; i &lt; 6; i++) {\n\
+      \                    executor.execute(() -&gt; {\n                        workerNames.add(Thread.currentThread().getName());\n\
+      \        ...\n    }</code></pre>\n  </li>\n  <li>CountDownLatch chờ đủ 6 task\
+      \ hoàn thành.</li>\n  <li>Số tên worker duy nhất cho thấy nhiều task được tá\
+      i sử dụng trên cùng hai thread thay vì tạo thread mới cho từng task.</li>\n\
+      </ol>\n<p><b>Kết luận:</b> Quan sát worker reuse trong fixed thread pool. Response\
+      \ và Execution Context là bằng chứng runtime cho behavior này; đoạn source colocated\
+      \ ở trên cho thấy code path tạo experiment.</p>"
+    usage: true
+  executorFactories():
+    execution: |-
+      <p><b>Concept:</b> API chạy bốn thí nghiệm bounded cho các factory trong Executors.</p>
+      <ol>
+        <li>Fixed pool giới hạn số worker và queue task dư; cached pool tăng worker khi không có thread rảnh.
+          <div><i>Nguồn: ThreadPoolService.executorFactoriesDemo()</i></div>
+          <pre><code>    public Map&lt;String, Object&gt; executorFactoriesDemo() throws InterruptedException {
+                  return map(
+                          "fixedThreadPool", fixedPoolFactorySample(),
+                          "cachedThreadPool", cachedPoolFactorySample(),
+                          "singleThreadExecutor", singleThreadFactorySample(),
+                          "scheduledThreadPool", scheduledPoolFactorySample()
+                  );
+              }</code></pre>
+        </li>
+        <li>SingleThreadExecutor chạy ba task tuần tự theo submission order.</li>
+        <li>ScheduledThreadPool chạy một task sau delay và ghi nhận thread cùng thời gian thực thi.</li>
+      </ol>
+      <p><b>Kết luận:</b> So sánh các Executors factory. Response và Execution Context là bằng chứng runtime cho behavior này; đoạn source colocated ở trên cho thấy code path tạo experiment.</p>
+    usage: true
+  scheduledExecution():
+    execution: |-
+      <p><b>Concept:</b> API đo timeline của cùng một task định kỳ theo fixed-rate và fixed-delay.</p>
+      <ol>
+        <li>Mỗi mode chạy 3 lần trên scheduler một thread; mỗi lần làm việc 60 ms trong khi interval cấu hình 30 ms.
+          <div><i>Nguồn: ThreadPoolService.scheduledExecutionModesDemo()</i></div>
+          <pre><code>    public Map&lt;String, Object&gt; scheduledExecutionModesDemo() throws InterruptedException {
+                  return map(
+                          "fixedRate", observePeriodicSchedule(true),
+                          "fixedDelay", observePeriodicSchedule(false)
+                  );
+              }</code></pre>
+        </li>
+        <li>Service ghi start, end và gap giữa các lần chạy rồi cancel periodic future.</li>
+        <li>Kết quả cho thấy fixed-rate cố bám lịch còn fixed-delay đợi thêm delay sau khi lần trước kết thúc, và task không overlap trên single-thread scheduler.</li>
+      </ol>
+      <p><b>Kết luận:</b> So sánh fixed-rate và fixed-delay scheduling. Response và Execution Context là bằng chứng runtime cho behavior này; đoạn source colocated ở trên cho thấy code path tạo experiment.</p>
+    usage: true
+  scheduledFailure():
+    execution: |-
+      <p><b>Concept:</b> API scheduleAtFixedRate một task luôn ném IllegalStateException.</p>
+      <ol>
+        <li>Lần chạy đầu tăng counter rồi fail.
+          <div><i>Nguồn: ThreadPoolService.scheduledFailureDemo()</i></div>
+          <pre><code>    public Map&lt;String, Object&gt; scheduledFailureDemo() throws InterruptedException {
+                  ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor(
+                          namedFactory("scheduled-failure-worker-")
+                  );
+                  AtomicInteger runs = new AtomicInteger();
+                  ScheduledFuture&lt;?&gt; periodic = null;
+                  try {
+                      periodic = executor.scheduleAtFixedRate(() -&gt; {
+                          runs.incrementAndGet();
+              ...
+          }</code></pre>
+        </li>
+        <li>ScheduledFuture complete exceptionally và get trả ExecutionException.</li>
+        <li>Scheduler suppress các lần chạy định kỳ tiếp theo của chính task đó; finally cancel và shutdown executor.</li>
+      </ol>
+      <p><b>Kết luận:</b> Quan sát exception làm dừng periodic task. Response và Execution Context là bằng chứng runtime cho behavior này; đoạn source colocated ở trên cho thấy code path tạo experiment.</p>
+    usage: true
+  callerRuns():
+    execution: "<p><b>Concept:</b> API làm bão hòa executor một worker và queue mộ\
+      t phần tử với CallerRunsPolicy.</p>\n<ol>\n  <li>Task đầu giữ worker bận, task\
+      \ thứ hai lấp queue.\n    <div><i>Nguồn: ThreadPoolService.callerRunsDemo()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; callerRunsDemo() throws\
+      \ InterruptedException {\n            CountDownLatch releaseWorker = new CountDownLatch(1);\n\
+      \            AtomicReference&lt;String&gt; fallbackThread = new AtomicReference&lt;&gt;();\n\
+      \            String callerThread = Thread.currentThread().getName();\n    \n\
+      \            ThreadPoolExecutor executor = new ThreadPoolExecutor(\n       \
+      \             1,\n                    1,\n                    0,\n        ...\n\
+      \    }</code></pre>\n  </li>\n  <li>Task thứ ba bị reject khỏi pool nhưng CallerRunsPolicy\
+      \ chạy ngay trên thread gọi execute.</li>\n  <li>Service so sánh callerThread\
+      \ với fallbackThread để xác nhận backpressure đã đẩy việc về caller.</li>\n\
+      </ol>\n<p><b>Kết luận:</b> Quan sát CallerRunsPolicy tạo feedback pressure.\
+      \ Response và Execution Context là bằng chứng runtime cho behavior này; đoạ\
+      n source colocated ở trên cho thấy code path tạo experiment.</p>"
+    usage: true
+  discardPolicies():
+    execution: |-
+      <p><b>Concept:</b> API chạy hai executor bão hòa để so sánh DiscardPolicy và DiscardOldestPolicy.</p>
+      <ol>
+        <li>DiscardPolicy âm thầm bỏ task mới khi worker bận và queue đầy.
+          <div><i>Nguồn: ThreadPoolService.discardPoliciesDemo()</i></div>
+          <pre><code>    public Map&lt;String, Object&gt; discardPoliciesDemo() throws InterruptedException {
+                  return map(
+                          "discardPolicy", discardPolicySample(),
+                          "discardOldestPolicy", discardOldestPolicySample()
+                  );
+              }</code></pre>
+        </li>
+        <li>DiscardOldestPolicy loại task cũ đang nằm trong queue rồi đưa task mới vào thay thế.</li>
+        <li>Sau khi mở latch, các counter cho biết task nào thực sự đã chạy.</li>
+      </ol>
+      <p><b>Kết luận:</b> So sánh DiscardPolicy và DiscardOldestPolicy. Response và Execution Context là bằng chứng runtime cho behavior này; đoạn source colocated ở trên cho thấy code path tạo experiment.</p>
+    usage: true
+  customRejectionHandler():
+    execution: "<p><b>Concept:</b> API bão hòa executor rồi dùng RejectedExecutionHandler\
+      \ tự viết.</p>\n<ol>\n  <li>Worker đầu bị giữ và queue được lấp đầy.\n    <div><i>Nguồ\
+      n: ThreadPoolService.customRejectionHandlerDemo()</i></div>\n    <pre><code>\
+      \    public Map&lt;String, Object&gt; customRejectionHandlerDemo() throws InterruptedException\
+      \ {\n            CountDownLatch releaseWorker = new CountDownLatch(1);\n   \
+      \         AtomicInteger rejectionCount = new AtomicInteger();\n            AtomicReference&lt;String&gt;\
+      \ rejectedByThread = new AtomicReference&lt;&gt;();\n    \n            ThreadPoolExecutor\
+      \ executor = new ThreadPoolExecutor(\n                    1,\n             \
+      \       1,\n                    0,\n        ...\n    }</code></pre>\n  </li>\n\
+      \  <li>Submission tiếp theo gọi handler trên chính caller thread; handler tă\
+      ng rejection counter, ghi tên thread và ném RejectedExecutionException.</li>\n\
+      \  <li>Controller nhận kết quả cho thấy overload vừa được ghi nhận vừa được\
+      \ báo lỗi rõ ràng.</li>\n</ol>\n<p><b>Kết luận:</b> Ghi nhận overload bằng custom\
+      \ rejection handler. Response và Execution Context là bằng chứng runtime cho\
+      \ behavior này; đoạn source colocated ở trên cho thấy code path tạo experiment.</p>"
+    usage: true
+  gracefulShutdown():
+    execution: "<p><b>Concept:</b> API submit 4 task ngắn vào fixed pool 2 worker\
+      \ rồi gọi shutdown.</p>\n<ol>\n  <li>shutdown ngừng nhận task mới nhưng cho\
+      \ running và queued task hoàn tất.\n    <div><i>Nguồn: ThreadPoolService.gracefulShutdownDemo()</i></div>\n\
+      \    <pre><code>    public Map&lt;String, Object&gt; gracefulShutdownDemo()\
+      \ throws InterruptedException {\n            ExecutorService executor = Executors.newFixedThreadPool(2,\
+      \ namedFactory(\"shutdown-worker-\"));\n            AtomicInteger completed\
+      \ = new AtomicInteger();\n    \n            try {\n                for (int\
+      \ i = 0; i &lt; 4; i++) {\n                    executor.execute(() -&gt; {\n\
+      \                        try {\n                            Thread.sleep(20);\n\
+      \        ...\n    }</code></pre>\n  </li>\n  <li>awaitTermination chờ tối đ\
+      a 2 giây và chỉ fallback shutdownNow nếu quá hạn.</li>\n  <li>Response trả số\
+      \ task hoàn thành cùng trạng thái shutdown/terminated.</li>\n</ol>\n<p><b>Kế\
+      t luận:</b> Thực hiện graceful shutdown ExecutorService. Response và Execution\
+      \ Context là bằng chứng runtime cho behavior này; đoạn source colocated ở trê\
+      n cho thấy code path tạo experiment.</p>"
+    usage: true
+  forcedShutdown():
+    execution: |-
+      <p><b>Concept:</b> API tạo single-thread executor với một task đang block và một task còn nằm trong queue.</p>
+      <ol>
+        <li>Gọi shutdown trước và chờ ngắn để chứng minh executor chưa thể terminate.
+          <div><i>Nguồn: ThreadPoolService.forcedShutdownDemo()</i></div>
+          <pre><code>    public Map&lt;String, Object&gt; forcedShutdownDemo() throws InterruptedException {
+                  ExecutorService executor = Executors.newSingleThreadExecutor(namedFactory("forced-shutdown-"));
+                  CountDownLatch started = new CountDownLatch(1);
+                  CountDownLatch release = new CountDownLatch(1);
+                  AtomicInteger interruptedWorkers = new AtomicInteger();
+                  AtomicInteger queuedTaskRuns = new AtomicInteger();
+                  Runnable queuedTask = queuedTaskRuns::incrementAndGet;
+                  try {
+                      executor.execute(() -&gt; {
+              ...
+          }</code></pre>
+        </li>
+        <li>shutdownNow interrupt running task và trả danh sách task chưa từng bắt đầu.</li>
+        <li>Service xác nhận queued task không chạy, worker nhận interrupt và executor terminate sau force.</li>
+      </ol>
+      <p><b>Kết luận:</b> Quan sát shutdownNow() và task chưa bắt đầu. Response và Execution Context là bằng chứng runtime cho behavior này; đoạn source colocated ở trên cho thấy code path tạo experiment.</p>
+    usage: true

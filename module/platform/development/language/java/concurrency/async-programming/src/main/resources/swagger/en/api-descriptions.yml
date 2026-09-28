@@ -1,0 +1,222 @@
+AsyncController:
+  future():
+    summary: Observe Callable and Future
+    description: Submit a Callable to an ExecutorService, keep the task incomplete
+      to observe isDone=false, then release it and retrieve the result with Future.get().
+      The experiment shows that Future separates submission from result retrieval
+      while get() is still a blocking wait.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: future
+    params: [
+      ]
+    path: com/example/learning/module/async/controller/AsyncController.java
+    mapping: '@GetMapping("/future")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /async/future
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: future
+    aiGenerated: true
+    reviewed: false
+  futureCancellation():
+    summary: Compare Future.cancel(false) and cancel(true)
+    description: Run two blocking tasks and cancel them with cancel(false) and cancel(true)
+      to observe cancellation state and interruption behavior. cancel(true) may interrupt
+      a running worker, while cancel(false) does not request interruption and the
+      underlying task may continue.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: futureCancellation
+    params: [
+      ]
+    path: com/example/learning/module/async/controller/AsyncController.java
+    mapping: '@GetMapping("/future-cancellation")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /async/future-cancellation
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: future-cancellation
+    aiGenerated: true
+    reviewed: false
+  pipeline():
+    summary: Compose a CompletableFuture pipeline
+    description: Create independent asynchronous branches for an order and an exchange
+      rate, combine them with thenCombine, then transform the result with thenApply.
+      The experiment demonstrates completion-based composition without manually blocking
+      for every intermediate value.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: pipeline
+    params: [
+      ]
+    path: com/example/learning/module/async/controller/AsyncController.java
+    mapping: '@GetMapping("/pipeline")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /async/pipeline
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: completable-future-pipeline
+    aiGenerated: true
+    reviewed: false
+  fastest():
+    summary: Observe CompletableFuture.anyOf semantics
+    description: Control completion order across several CompletableFuture instances
+      to show that anyOf selects the first completion, including an exceptional one.
+      Sibling futures are not automatically cancelled when the aggregate completes.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: fastest
+    params: [
+      ]
+    path: com/example/learning/module/async/controller/AsyncController.java
+    mapping: '@GetMapping("/fastest")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /async/fastest
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: combine-race
+    aiGenerated: true
+    reviewed: false
+  exceptionHandling():
+    summary: Handle exceptional CompletableFuture completion
+    description: Intentionally fail a stage and use handle() to convert either success
+      or failure into a controlled result. The experiment shows that pipeline failures
+      are completion states that can be observed and composed further.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: exceptionHandling
+    params: [
+      ]
+    path: com/example/learning/module/async/controller/AsyncController.java
+    mapping: '@GetMapping("/exception")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /async/exception
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: exception-handling
+    aiGenerated: true
+    reviewed: false
+  executionVariant():
+    summary: Compare thenApply and thenApplyAsync
+    description: Use an already-completed stage to show that thenApply may run inline
+      on the caller while thenApplyAsync with an explicit executor is dispatched through
+      that executor. The goal is to understand execution policy rather than assume
+      every async variant always uses a different Thread.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: executionVariant
+    params: [
+      ]
+    path: com/example/learning/module/async/controller/AsyncController.java
+    mapping: '@GetMapping("/execution-variant")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /async/execution-variant
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: async-variant
+    aiGenerated: true
+    reviewed: false
+  allOf():
+    summary: Observe CompletableFuture.allOf semantics
+    description: Fail one input before another sibling completes to demonstrate that
+      allOf is not a fail-fast barrier. The aggregate completes after the required
+      inputs finish, may complete exceptionally, and does not automatically cancel
+      siblings.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: allOf
+    params: [
+      ]
+    path: com/example/learning/module/async/controller/AsyncController.java
+    mapping: '@GetMapping("/all-of")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /async/all-of
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: combine-race
+    aiGenerated: true
+    reviewed: false
+  timeoutCancellation():
+    summary: Distinguish CompletableFuture timeout from cancellation
+    description: Compare orTimeout() with CompletableFuture.cancel(true) while underlying
+      work is blocked. Both change future completion state but neither inherently
+      interrupts or kills the underlying work, so cleanup must be designed separately.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    methodName: timeoutCancellation
+    params: [
+      ]
+    path: com/example/learning/module/async/controller/AsyncController.java
+    mapping: '@GetMapping("/timeout-cancellation")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /async/timeout-cancellation
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: ''
+      anchor: timeout-cancellation
+    aiGenerated: true
+    reviewed: false

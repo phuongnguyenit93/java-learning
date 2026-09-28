@@ -1,0 +1,6 @@
+VirtualThreadController:
+  description: |-
+    <h2>Virtual Thread Controller</h2>
+    <p>Minh họa Virtual Thread trên Java 2.: thuộc tính cơ bản, API tạo thread, blocking scalability, downstream limits và ThreadLocal semantics.</p>
+  readmeRelated:
+    file: 1.Virtual_Thread/VirtualThread.md

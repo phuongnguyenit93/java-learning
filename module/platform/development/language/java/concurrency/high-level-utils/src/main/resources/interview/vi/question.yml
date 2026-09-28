@@ -1,0 +1,199 @@
+# <interview-schema>
+# Cấu trúc câu hỏi Interview
+# schema-version: 2
+#
+# questions [kiểu: list; bắt buộc; mặc định: []]
+#   Danh sách câu hỏi Interview của module trong language hiện tại.
+#   mỗi phần tử:
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi phỏng vấn hiển thị cho người học.
+#     answer [kiểu: string; bắt buộc; mặc định: ""]
+#       Câu trả lời tham khảo, chỉ hiển thị khi người học chủ động mở.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu nội dung được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu nội dung đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+# </interview-schema>
+
+questions:
+  - question: >-
+      synchronized cung cấp những guarantee gì và instance synchronized khác static synchronized ra sao?
+    answer: >-
+      synchronized cung cấp mutual exclusion và memory-consistency guarantee khi release/acquire cùng monitor. Instance synchronized method khóa monitor của this, còn static synchronized khóa Class object. Hai instance khác nhau không tự chặn nhau nếu chúng dùng hai monitor khác nhau; điều quan trọng là các code path có thực sự cạnh tranh cùng monitor hay không.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Synchronization/Synchronization.md"
+      anchor: "synchronized-monitor"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      ReentrantLock có gì khác synchronized và vì sao unlock phải nằm trong finally?
+    answer: >-
+      ReentrantLock cung cấp explicit locking cùng các khả năng như tryLock(), timed tryLock(), lockInterruptibly(), fairness và nhiều Condition. Nó reentrant, nghĩa là Thread đang giữ lock có thể acquire lại chính lock đó và hold count tăng lên. Mỗi acquire phải được release tương ứng; unlock trong finally giúp tránh giữ lock vô hạn nếu critical section ném exception hoặc thoát sớm.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Synchronization/Synchronization.md"
+      anchor: "reentrant-lock"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Fair ReentrantLock có đảm bảo Thread start trước sẽ lấy lock trước không?
+    answer: >-
+      Không. Fairness là acquisition policy cho các Thread đang cạnh tranh lock, không phải guarantee về Thread.start(), scheduler hay thứ tự log. Một footgun quan trọng là untimed tryLock() vẫn có thể barge trên fair lock nếu lock đang available; timed tryLock(timeout, unit) mới tham gia fair ordering policy khi phải chờ. Fairness cũng có thể đổi throughput lấy việc giảm barging/starvation.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Synchronization/Synchronization.md"
+      anchor: "reentrant-lock"
+    apiRelated:
+      controller: "SynchronizationController"
+      methodSignature: "reentrantLockPolicy()"
+
+  - question: >-
+      ReentrantReadWriteLock phù hợp khi nào và downgrade/upgrade có semantics gì?
+    answer: >-
+      Read lock cho phép nhiều reader cùng giữ, còn write lock là exclusive. Nó đáng cân nhắc khi workload read-heavy thật sự và critical section đọc đủ lớn để concurrency có lợi. Write-to-read downgrade được hỗ trợ bằng cách giữ write lock, lấy read lock rồi release write lock. Read-to-write upgrade không được hỗ trợ như một thao tác nâng cấp an toàn; cần release/re-coordinate theo protocol phù hợp.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Synchronization/Synchronization.md"
+      anchor: "read-write-lock"
+    apiRelated:
+      controller: "SynchronizationController"
+      methodSignature: "readWriteLockDowngrade()"
+
+  - question: >-
+      StampedLock optimistic read hoạt động thế nào và có những hạn chế gì?
+    answer: >-
+      Reader gọi tryOptimisticRead(), đọc snapshot rồi validate(stamp). Nếu validation fail thì phải fallback sang read lock thật trước khi tin dữ liệu. StampedLock không reentrant, Lock view không cung cấp Condition, programmer phải quản lý stamp đúng mode và optimistic read luôn cần validate. Vì vậy nó không đơn giản là một ReadWriteLock nhanh hơn.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Synchronization/Synchronization.md"
+      anchor: "stamped-lock"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      CAS là gì và ABA problem là gì?
+    answer: >-
+      CAS cập nhật state chỉ khi current value/reference vẫn bằng expected value mà caller dựa vào để tính transition; nếu thất bại thường phải đọc lại và retry. ABA xảy ra khi state đi A → B → A, làm plain CAS thấy giá trị cuối vẫn là A và không biết history đã thay đổi. Khi intermediate transition là một phần correctness, AtomicStampedReference có thể dùng stamp/version để phát hiện trường hợp đó.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Synchronization/Synchronization.md"
+      anchor: "atomic-cas"
+    apiRelated:
+      controller: "SynchronizationController"
+      methodSignature: "atomicCas()"
+
+  - question: >-
+      Khi nào nên dùng LongAdder thay vì AtomicLong và có caveat gì với sum()?
+    answer: >-
+      LongAdder phù hợp cho counter có contention cao như metrics vì update được phân tán vào nhiều cell. Tuy nhiên sum() không phải atomic snapshot khi các Thread khác vẫn update. Vì vậy LongAdder không phù hợp cho sequence ID hoặc admission rule kiểu sum() < limit rồi increment. LongAccumulator cũng nên dùng reduction function dễ reasoning và side-effect-free vì function có thể được áp dụng lại trong concurrent update/retry.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Synchronization/Synchronization.md"
+      anchor: "adder-accumulator"
+    apiRelated:
+      controller: "SynchronizationController"
+      methodSignature: "atomicTools()"
+
+  - question: >-
+      ConcurrentHashMap có làm mọi chuỗi get rồi put trở thành atomic không?
+    answer: >-
+      Không. ConcurrentHashMap bảo vệ semantics của các operation mà API định nghĩa, nhưng một chuỗi get() rồi put() riêng rẽ vẫn có thể race. Khi cần compound update nên ưu tiên API như putIfAbsent(), compute(), computeIfAbsent(), merge() hoặc replace(key, oldValue, newValue). Tương tự, chọn concurrent collection dựa trên access pattern và semantics cần có, không chỉ vì tên chứa chữ Concurrent.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Synchronization/Synchronization.md"
+      anchor: "concurrent-collections"
+    apiRelated:
+      controller: "SynchronizationController"
+      methodSignature: "concurrentCollections()"
+
+  - question: >-
+      Vì sao Object.wait() phải nằm trong while và wait() khác Thread.sleep() ở điểm quan trọng nào?
+    answer: >-
+      Notification chỉ là tín hiệu để waiter kiểm tra lại predicate, không phải bằng chứng condition đã đúng. while xử lý spurious wakeup, nhiều waiter cạnh tranh và state thay đổi trước khi Thread reacquire monitor. wait() yêu cầu caller đang giữ monitor và sẽ release monitor trong lúc chờ; sleep() không release monitor chỉ vì Thread đang ngủ. notify()/notifyAll() cũng không trao monitor ngay cho waiter.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.Coordination/Coordination.md"
+      anchor: "wait-notify"
+    apiRelated:
+      controller: "CoordinationController"
+      methodSignature: "waitNotify()"
+
+  - question: >-
+      LockSupport.park()/unpark() khác wait()/notify() ở những điểm nào?
+    answer: >-
+      LockSupport không yêu cầu intrinsic monitor và unpark(thread) target một Thread cụ thể. Permit có thể được cấp sau khi Thread đã start nhưng trước lần park tương ứng, nhưng permit không phải counter cộng dồn vô hạn. park() có thể return do permit, interrupt hoặc spurious return và không ném InterruptedException, nên caller vẫn phải dùng predicate/cancellation loop và kiểm tra interrupt status khi cần.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.Coordination/Coordination.md"
+      anchor: "lock-support"
+    apiRelated:
+      controller: "CoordinationController"
+      methodSignature: "lockSupport()"
+
+  - question: >-
+      BlockingQueue giải quyết Producer–Consumer và backpressure như thế nào, và các implementation phổ biến khác nhau ra sao?
+    answer: >-
+      BlockingQueue có waiting semantics như put/take và timed offer/poll; bounded queue có thể tạo backpressure khi đầy. ArrayBlockingQueue có capacity cố định; LinkedBlockingQueue chỉ bounded khi cấu hình capacity và mặc định capacity rất lớn; SynchronousQueue không lưu phần tử mà direct handoff; PriorityBlockingQueue sắp theo priority và effectively unbounded, đồng thời không có FIFO contract cho các item cùng priority.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.Coordination/Coordination.md"
+      anchor: "producer-consumer"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      CountDownLatch, CyclicBarrier, Semaphore, Phaser và Exchanger nên được phân biệt thế nào?
+    answer: >-
+      CountDownLatch là one-shot để chờ N việc hoàn thành. CyclicBarrier cho một nhóm Thread gặp nhau ở checkpoint và có thể tái sử dụng qua nhiều generation nếu không broken. Semaphore quản lý permit để giới hạn concurrent access. Phaser phù hợp workflow nhiều phase với participant có thể register/deregister động. Exchanger là rendezvous point để hai Thread trao đổi object. Chọn primitive theo dependency chứ không theo tên API.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.Coordination/Coordination.md"
+      anchor: "synchronizers"
+    apiRelated:
+      controller: "CoordinationController"
+      methodSignature: "synchronizers()"
+
+  - question: >-
+      Semaphore có ownership giống Lock không và vì sao over-release nguy hiểm?
+    answer: >-
+      Semaphore không enforce ownership như Lock. Code có thể release() dù Thread hiện tại chưa acquire permit, làm permit count tăng sai và phá giới hạn concurrency. Pattern an toàn là ghi nhận acquisition thành công rồi chỉ release trong finally nếu thật sự đã acquire. Timeout/interruption ở acquire cũng phải được tính vào permit accounting.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.Coordination/Coordination.md"
+      anchor: "semaphore-permit-accounting"
+    apiRelated:
+      controller: "CoordinationController"
+      methodSignature: "semaphorePermitAccounting()"
+
