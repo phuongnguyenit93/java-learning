@@ -92,6 +92,8 @@ API Docs / Quiz / Interview
 
 No new Knowledge Menu/lesson generation should start before the roadmap is reviewed. If downstream work reveals a missing prerequisite or learning milestone, report a **ROADMAP GAP** rather than silently inventing a different curriculum. For legacy modules, design the roadmap independently first, then audit existing Knowledge against it.
 
+Roadmap files live at `roadmap/<language>/roadmap.yml`. `BUILD_ROADMAP` defaults to `TRUE`, `MODULE_LANGUAGE` controls which localized files are provisioned, and each language owns its roadmap independently. Build logic may synchronize the generated schema comment but must preserve the human/AI-owned roadmap content.
+
 ---
 
 ## 4. Main architecture boundaries

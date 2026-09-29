@@ -1,0 +1,136 @@
+version: 1
+
+title:
+  vi: Cấu trúc Roadmap Module
+  en: Module Roadmap Structure
+
+principles:
+  ownership:
+    vi: Mỗi language tự chịu trách nhiệm cho roadmap của chính nó. Không suy luận hoặc đồng bộ cấu trúc từ roadmap của language khác.
+    en: Each language owns its own roadmap. Do not infer or synchronize its structure from another language roadmap.
+  order:
+    vi: Thứ tự item trong roadmap chính là thứ tự học mặc định. Chỉ dùng dependsOn khi cần biểu diễn dependency rõ hơn thứ tự tuyến tính.
+    en: Item order in roadmap is the default learning order. Use dependsOn only when a dependency needs to be expressed beyond the linear order.
+  flexibility:
+    vi: Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
+    en: The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
+
+thinkingFramework:
+  - id: purpose
+    title:
+      vi: PURPOSE
+      en: PURPOSE
+    questions:
+      - vi: Topic/module này là gì?
+        en: What is this topic/module?
+      - vi: Vì sao nó tồn tại?
+        en: Why does it exist?
+      - vi: Không có nó thì learner gặp vấn đề gì?
+        en: What problem exists without it?
+  - id: foundation
+    title:
+      vi: FOUNDATION
+      en: FOUNDATION
+    questions:
+      - vi: Learner cần prerequisite hoặc mental model nào trước?
+        en: What prerequisite or mental model must the learner have first?
+  - id: core-model
+    title:
+      vi: CORE MODEL
+      en: CORE MODEL
+    questions:
+      - vi: Những abstraction hoặc building block lớn nào tạo nên chủ đề này?
+        en: What major abstractions or building blocks make up this topic?
+  - id: mechanics
+    title:
+      vi: MECHANICS
+      en: MECHANICS
+    questions:
+      - vi: Nó hoạt động như thế nào ở mức language/runtime/API phù hợp với module?
+        en: How does it work at the language/runtime/API level appropriate for this module?
+  - id: usage
+    title:
+      vi: USAGE
+      en: USAGE
+    questions:
+      - vi: Nó được dùng như thế nào trong code thực tế?
+        en: How is it used in real code?
+  - id: decision-trade-off
+    title:
+      vi: DECISION / TRADE-OFF
+      en: DECISION / TRADE-OFF
+    questions:
+      - vi: Khi nào nên chọn cơ chế này thay vì cơ chế khác?
+        en: When should this mechanism be chosen over another?
+      - vi: Khi nào không nên dùng?
+        en: When should it not be used?
+  - id: failure-pitfall
+    title:
+      vi: FAILURE / PITFALL
+      en: FAILURE / PITFALL
+    questions:
+      - vi: Những sai lầm, compile-time failure hoặc runtime failure nào đáng biết?
+        en: What mistakes, compile-time failures, or runtime failures matter?
+  - id: integration
+    title:
+      vi: INTEGRATION
+      en: INTEGRATION
+    questions:
+      - vi: Chủ đề này kết nối với những concept/module lân cận nào?
+        en: How does this topic connect to neighboring concepts/modules?
+  - id: synthesis
+    title:
+      vi: SYNTHESIS
+      en: SYNTHESIS
+    questions:
+      - vi: Sau cùng learner phải giữ mental model end-to-end nào?
+        en: What end-to-end mental model should the learner retain?
+
+document:
+  root:
+    name: roadmap
+    type: list
+    required: true
+    default: []
+    uniqueBy: id
+    description:
+      vi: Danh sách milestone cấp cao của roadmap cho language hiện tại.
+      en: High-level learning milestones for the current language roadmap.
+    item:
+      type: object
+      fields:
+        id:
+          type: string
+          required: true
+          default: ""
+          description:
+            vi: ID ổn định và duy nhất của milestone trong roadmap language hiện tại.
+            en: Stable and unique milestone identity within the current language roadmap.
+        title:
+          type: string
+          required: true
+          default: ""
+          description:
+            vi: Tên milestone hiển thị cho learner.
+            en: Milestone title displayed to the learner.
+        purpose:
+          type: string
+          required: true
+          default: ""
+          description:
+            vi: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
+            en: What the learner should understand or achieve from this milestone.
+        dependsOn:
+          type: list
+          required: false
+          default: []
+          description:
+            vi: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
+            en: Prerequisite milestone ids when item order alone is not enough to express the dependency.
+        objectives:
+          type: list
+          required: false
+          default: []
+          description:
+            vi: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+            en: Milestone-level learning objectives; do not use this to list every small fact/API/syntax item.

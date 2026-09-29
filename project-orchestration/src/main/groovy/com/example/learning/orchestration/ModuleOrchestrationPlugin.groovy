@@ -137,6 +137,32 @@ class ModuleOrchestrationPlugin
         }
 
         // ====================================================
+        // Roadmap setup
+        //
+        // Roadmap is upstream from README/Knowledge.
+        // Each active MODULE_LANGUAGE owns its own roadmap file.
+        // ====================================================
+
+        if (
+                ProjectPropertyUtils.isEnabled(
+                        project,
+                        'BUILD_ROADMAP'
+                )
+        ) {
+
+            project.pluginManager.apply(
+                    ProjectPluginEnum.ROADMAP_SETUP_PLUGIN.id
+            )
+        }
+        else {
+
+            project.logger.info(
+                    '[PROJECT-ORCHESTRATION] Skip ROADMAP setup for {} because BUILD_ROADMAP != TRUE.',
+                    project.path
+            )
+        }
+
+        // ====================================================
         // README setup
         // ====================================================
 

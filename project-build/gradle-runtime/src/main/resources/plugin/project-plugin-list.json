@@ -40,6 +40,11 @@
         "implementationClass": "com.example.learning.setup.module.readme.plugin.ReadmeSetupPlugin"
     },
     {
+        "name": "roadmapSetupPlugin",
+        "id": "com.example.learning.setup.module.roadmap.plugin",
+        "implementationClass": "com.example.learning.setup.module.roadmap.plugin.RoadmapSetupPlugin"
+    },
+    {
         "name": "swaggerSetupPlugin",
         "id": "com.example.learning.setup.module.swagger.plugin",
         "implementationClass": "com.example.learning.setup.module.swagger.plugin.SwaggerSetupPlugin"

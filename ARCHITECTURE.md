@@ -104,6 +104,19 @@ Portal projection
 
 Roadmap là upstream source-of-truth cho learning order và milestone grouping. README/Menu chỉ triển khai roadmap thành Knowledge section cụ thể; API Docs, Quiz và Interview là downstream reinforcement/evidence và không được tự mở rộng curriculum.
 
+Roadmap setup hiện follow module capability flow:
+
+```text
+automation/master.json
+→ BUILD_ROADMAP (default TRUE)
+→ MODULE_LANGUAGE
+→ ModuleOrchestrationPlugin
+→ RoadmapSetupPlugin
+→ roadmap/<language>/roadmap.yml
+```
+
+Mỗi language roadmap tự sở hữu curriculum của nó; Gradle chỉ tạo/sync generated schema comment và không overwrite phần `roadmap:` do human/AI viết.
+
 Với legacy module, roadmap phải được thiết kế độc lập từ module scope/curriculum goal trước, rồi mới audit Knowledge hiện tại. Điều này tránh việc historical menu order vô tình trở thành curriculum mới.
 
 Canonical contract nằm trong [`MODULE_ROADMAP.md`](./MODULE_ROADMAP.md); authoring/review workflow nằm trong [`MODULE_LEARNING_AGENTS.md`](./MODULE_LEARNING_AGENTS.md).

@@ -26,7 +26,8 @@ class ModuleOrderService {
                     'node_modules',
                     '.git',
                     'src',
-                    'readme'
+                    'readme',
+                    'roadmap'
             ] as Set
 
 

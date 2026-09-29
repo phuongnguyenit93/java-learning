@@ -95,6 +95,14 @@ Do not optimize for raw counts. A smaller coherent module is better than a large
 
 Before generating a new Knowledge Menu or lesson content, the module must have an **approved roadmap** derived from the shared Roadmap Skeleton contract in `MODULE_ROADMAP.md`.
 
+Roadmap source files are localized:
+
+```text
+roadmap/<language>/roadmap.yml
+```
+
+`BUILD_ROADMAP` defaults to `TRUE`, and `MODULE_LANGUAGE` determines which localized skeleton files are provisioned. Each language owns its roadmap independently; do not assume that VI and EN must have identical roadmap structure.
+
 Required dependency:
 
 ```text

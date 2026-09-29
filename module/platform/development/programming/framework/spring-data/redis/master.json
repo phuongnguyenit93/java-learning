@@ -51,6 +51,11 @@
         "VALUE": "TRUE",
         "GROUP": "README"
     },
+    "BUILD_ROADMAP": {
+        "DESCRIPTION": "Enable localized roadmap skeletons for this module based on MODULE_LANGUAGE",
+        "TYPE": "boolean",
+        "VALUE": "TRUE"
+    },
     "BUILD_QUIZ": {
         "DESCRIPTION": "Enable localized Quiz question skeletons and Portal Quiz projection for this module",
         "TYPE": "boolean",

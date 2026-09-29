@@ -34,7 +34,7 @@ If the roadmap is wrong, downstream content must not compensate by silently inve
 
 ## 2. Roadmap plugin contract
 
-The roadmap capability should be implemented as a dedicated plugin/workflow with two phases:
+The roadmap capability is implemented as a dedicated module setup plugin/workflow with two phases:
 
 ```text
 Phase A — Roadmap Skeleton
@@ -59,6 +59,25 @@ classify: aligned / missing / misplaced / too deep / duplicate / out of scope
 ```
 
 This prevents historical content order from becoming the new roadmap by accident.
+
+### On-disk contract
+
+Roadmap files are localized and live inside each module:
+
+```text
+<module>/
+└── roadmap/
+    ├── vi/
+    │   └── roadmap.yml
+    └── en/
+        └── roadmap.yml
+```
+
+`MODULE_LANGUAGE` decides which language skeletons exist. `BUILD_ROADMAP` enables/disables the capability and defaults to `TRUE` in the canonical `automation/master.json`.
+
+Each language owns its own roadmap. The build system does **not** require different languages to have the same node ids, node count, ordering or dependencies.
+
+The Gradle generator owns only the generated schema/comment block. The actual `roadmap:` content is human/AI-owned and must not be overwritten during normal synchronization.
 
 ---
 
