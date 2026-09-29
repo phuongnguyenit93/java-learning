@@ -10,6 +10,8 @@
 # - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
 # - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
 # - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal dùng danh sách này để mở popup trên marker và điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
 #
 # ROADMAP THINKING FRAMEWORK
 # PURPOSE
@@ -39,4 +41,165 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: language-purpose
+    title: Mục đích của Java Language Basics
+    purpose: Hiểu Java Language Basics bao gồm những nền tảng nào, vì sao các nền tảng này phải được học cùng nhau và chúng chuẩn bị cho các module Java phía sau như thế nào.
+    relatedKnowledge:
+      - PrimitiveReference
+    objectives:
+      - Giải thích được Java Language Basics là nền tảng về value, type, execution và source structure chứ không chỉ là tập hợp syntax rời rạc.
+      - Nhận biết được những vấn đề cơ bản mà một chương trình Java phải giải quyết như biểu diễn dữ liệu, điều khiển luồng thực thi, tổ chức hành vi và quản lý phạm vi.
+      - Hình thành bức tranh tổng thể để biết mỗi milestone tiếp theo trả lời câu hỏi nào trong chương trình Java.
+
+  - id: source-code-structure
+    title: Cấu trúc mã nguồn Java
+    purpose: Hiểu một chương trình Java được tổ chức từ source file đến type, method, statement và expression để learner biết code được đặt ở đâu và các thành phần liên hệ với nhau thế nào.
+    relatedKnowledge:
+      - PackagesImports
+    relatedModules:
+      - routeId: JAVA_CLASS_OBJECT
+        label: Class & Object
+        note: Mở rộng cách type declaration trở thành class/object trong Java.
+      - routeId: JAVA_ANNOTATION
+        label: Annotation
+        note: Metadata gắn trực tiếp lên các thành phần source code.
+    objectives:
+      - Phân biệt vai trò của source file, package, import, type declaration, method, statement và expression.
+      - Hiểu identifiers, keywords, literals và comments là các thành phần hỗ trợ việc viết và đọc source code.
+      - Có mental model đủ để đọc một chương trình Java nhỏ trước khi đi sâu vào value, type và execution.
+
+  - id: values-and-variables
+    title: Giá trị và biến
+    purpose: Hiểu chương trình Java thao tác trên value như thế nào và variable cung cấp tên, nơi lưu trữ logic và lifecycle cho các value đó ra sao.
+    relatedKnowledge:
+      - VariablesScope
+      - PrimitiveReference
+    relatedModules:
+      - routeId: JAVA_NUMBERS
+        label: Numbers
+        note: Đi sâu vào biểu diễn và tính toán với các kiểu số.
+      - routeId: JAVA_STRING
+        label: String
+        note: Mở rộng cách Java biểu diễn và thao tác dữ liệu văn bản.
+    objectives:
+      - Phân biệt value với variable và hiểu declaration, initialization, assignment.
+      - Nhận biết local variable, parameter, field và static field ở mức định hướng, chưa đi sâu vào scope/lifetime.
+      - Hiểu definite assignment và default value khác nhau tùy loại variable.
+
+  - id: type-system-basics
+    title: Nền tảng hệ thống kiểu
+    purpose: Xây dựng mental model về primitive type, reference type và các boundary khi value di chuyển giữa các type để learner hiểu điều gì được kiểm tra ở compile time và điều gì có thể thất bại ở runtime.
+    relatedKnowledge:
+      - PrimitiveReference
+      - WrapperBoxing
+      - Casting
+      - "Null"
+      - TypeSystemMentalModel
+    relatedModules:
+      - routeId: JAVA_OOP
+        label: Object-Oriented Programming
+        note: Type hierarchy, inheritance và polymorphism mở rộng trực tiếp mental model này.
+      - routeId: JAVA_GENERICS
+        label: Generics
+        note: Type safety và parameterized types ở compile time.
+      - routeId: JAVA_OBJECT_CONTRACT
+        label: Object Contract
+        note: Các contract chung của object như equals, hashCode và identity.
+    objectives:
+      - Phân biệt primitive value với reference value và hiểu null chỉ áp dụng cho reference.
+      - Hiểu assignment compatibility, widening, narrowing và casting ở mức nền tảng.
+      - Hiểu wrapper type, boxing và unboxing như cầu nối giữa primitive và object-based API.
+      - Phân biệt declared type với runtime type ở mức chuẩn bị cho OOP, Generics và Collections.
+
+  - id: expressions-and-operators
+    title: Biểu thức và toán tử
+    purpose: Hiểu Java tạo ra value mới và quyết định kết quả tính toán thông qua expression, operator, promotion, precedence và evaluation order như thế nào.
+    relatedKnowledge:
+      - Operators
+      - Casting
+    objectives:
+      - Đọc được expression và xác định value/result mà expression tạo ra.
+      - Hiểu các nhóm operator chính và numeric promotion ở mức cần thiết cho code cơ bản.
+      - Hiểu short-circuit, precedence, associativity và side effect có thể thay đổi kết quả hoặc khả năng đọc code.
+
+  - id: program-control-flow
+    title: Luồng điều khiển chương trình
+    purpose: Hiểu chương trình lựa chọn, lặp và chuyển hướng execution flow như thế nào thay vì luôn chạy tuần tự từ trên xuống dưới.
+    relatedKnowledge:
+      - ControlFlow
+    objectives:
+      - Sử dụng được branching với if và switch theo đúng mental model.
+      - Hiểu loop với for, while và do-while cùng vai trò của break và continue.
+      - Nhận biết khi control flow trở nên khó đọc và cần được đơn giản hóa.
+
+  - id: methods-and-data-flow
+    title: Method và luồng dữ liệu
+    purpose: Hiểu behavior được đóng gói, gọi và truyền dữ liệu qua method như thế nào, bao gồm cách Java lựa chọn lời gọi phù hợp và cách argument thực sự được truyền.
+    relatedKnowledge:
+      - Methods
+      - Varargs
+      - PassByValue
+    relatedModules:
+      - routeId: JAVA_FUNCTIONAL_PROGRAMMING
+        label: Functional Programming
+        note: Method behavior được biểu diễn và truyền như dữ liệu.
+      - routeId: JAVA_REFLECTION
+        label: Reflection
+        note: Quan sát và invoke method/type metadata ở runtime.
+    objectives:
+      - Hiểu method declaration, parameter, argument, return value và invocation.
+      - Hiểu overloading ở mức nền tảng và vai trò của invocation conversion khi chọn method.
+      - Hiểu varargs là cơ chế gọi method dựa trên array chứ không phải một kiểu parameter hoàn toàn mới.
+      - Giải thích được Java luôn pass-by-value và phân biệt object mutation với reference reassignment.
+
+  - id: scope-and-variable-lifetime
+    title: Scope và vòng đời của biến
+    purpose: Sau khi đã có method và control flow, hiểu chính xác tên nào có thể được truy cập ở đâu, value tồn tại trong bao lâu và vì sao shadowing hoặc scope sai dễ tạo bug.
+    relatedKnowledge:
+      - VariablesScope
+      - PackagesImports
+    objectives:
+      - Phân biệt scope của local variable, parameter, field và static field.
+      - Hiểu block scope, method scope, class-level state và variable lifetime.
+      - Nhận biết shadowing, name resolution và các lỗi thiết kế liên quan đến scope.
+
+  - id: arrays
+    title: Array
+    purpose: Hiểu cách Java biểu diễn một nhóm value có cùng component type trong cấu trúc fixed-size và các boundary quan trọng của array trước khi chuyển sang Collections.
+    relatedKnowledge:
+      - Arrays
+    relatedModules:
+      - routeId: JAVA_COLLECTION
+        label: Collections
+        note: Các data structure linh hoạt hơn array và API thao tác dữ liệu cấp cao hơn.
+      - routeId: JAVA_GENERICS
+        label: Generics
+        note: Cơ sở type-safety cho các collection API.
+    objectives:
+      - Hiểu array type, creation, initialization, indexing và length.
+      - Hiểu multidimensional array thực chất là array của array.
+      - Nhận biết array covariance và ArrayStoreException như một boundary giữa compile-time type và runtime check.
+      - Hiểu giới hạn fixed-size của array và vì sao Collections tồn tại.
+
+  - id: language-basics-synthesis
+    title: Tổng hợp Java Language Basics
+    purpose: Kết nối source structure, value, variable, type, expression, control flow, method, scope và array thành một mental model end-to-end của một chương trình Java cơ bản.
+    relatedKnowledge:
+      - TypeSystemMentalModel
+      - PrimitiveReference
+      - Methods
+    relatedModules:
+      - routeId: JAVA_OOP
+        label: OOP
+        note: Bước tiếp theo để tổ chức state và behavior thành object model.
+      - routeId: JAVA_COLLECTION
+        label: Collections
+        note: Bước tiếp theo để quản lý tập dữ liệu động.
+      - routeId: JAVA_EXCEPTION
+        label: Exception
+        note: Bước tiếp theo để mô hình hóa và xử lý failure flow.
+    objectives:
+      - Theo dõi được một value từ lúc được khai báo, biến đổi, truyền qua method đến khi ảnh hưởng đến control flow hoặc state.
+      - Phân biệt được các quyết định compile-time với runtime check trong những tình huống cơ bản.
+      - Giải thích được các giới hạn của Language Basics và xác định phần nào sẽ được mở rộng ở OOP, Generics, Collections, Exception và các module Java tiếp theo.

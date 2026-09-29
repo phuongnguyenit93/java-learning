@@ -52,6 +52,8 @@ API Docs / Quiz / Interview
 
 The roadmap is designed at **milestone level**, not as a list of every keyword/API/fact. For existing modules, first design the target roadmap independently from the current generated Knowledge order, then compare the old content against it. Existing content is evidence to audit, not the authority that defines the new learning path.
 
+Optional relation metadata must preserve that direction of authority. `relatedKnowledge` maps an approved milestone to existing/planned Knowledge category ids in the same module for Portal navigation; it may be filled or refined after Knowledge architecture exists and must never be used to derive milestone order. `relatedModules` represents neighboring-module navigation only and does not create child curriculum nodes. During legacy migration, provisional `relatedKnowledge` mappings to old categories are acceptable even when the fit is imperfect, provided they are treated as temporary navigation metadata rather than curriculum proof.
+
 ### Pedagogical model applied by this map
 
 This map now answers both:

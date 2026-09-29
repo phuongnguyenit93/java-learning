@@ -104,6 +104,22 @@ Portal projection
 
 Roadmap là upstream source-of-truth cho learning order và milestone grouping. README/Menu chỉ triển khai roadmap thành Knowledge section cụ thể; API Docs, Quiz và Interview là downstream reinforcement/evidence và không được tự mở rộng curriculum.
 
+Roadmap có hai optional relation layers nhưng cả hai đều **không phải curriculum source mới**:
+
+```text
+relatedKnowledge
+→ Knowledge category id trong cùng module
+→ supporting/navigation mapping
+→ có thể refine sau Knowledge architecture
+
+relatedModules
+→ neighboring module route
+→ cross-module navigation
+→ không tạo child milestone
+```
+
+Milestone/order phải được thiết kế và approve độc lập trước. Với legacy content, mapping `relatedKnowledge` tạm thời sang category cũ được phép để migrate Portal nhưng không được reverse-engineer roadmap từ mapping đó.
+
 Roadmap setup hiện follow module capability flow:
 
 ```text
@@ -241,6 +257,7 @@ Learning page
 ├── "Tìm kiến thức" search
 ├── Overview
 ├── Menu
+├── Roadmap
 ├── Knowledge
 ├── API Docs
 ├── Quiz
@@ -249,7 +266,7 @@ Learning page
 └── Download action
 ```
 
-Module hierarchy/routing hiện lấy từ generated `module-catalog.json`. `Overview` consume build-time projection từ language `BASE.md`. `Menu` và `Knowledge` consume Knowledge build-time projection theo module/language/category/section contract; section Markdown chỉ được fetch khi user mở section. `Quiz` và `Interview` consume localized `question.yml` projection generated từ module resource. Build-time API projection cũng đã có: module có đủ bốn Swagger YAML chuẩn cho một language sẽ được copy nguyên vẹn vào `module/{ROUTE_ID}/api/{lang}/` và catalog expose base path tương ứng. Knowledge/Quiz/Interview/API counts ở sidebar đều preload từ generated/static projection theo active language. `Local Run` có UI Build/Download JAR + Run Locally và một contract relative `/api/local-run/{build,status,artifact}` dùng chung. Khi chạy local, browser → Spring Boot `project-portal` → GitHub REST API; khi chạy production, browser → Cloudflare Pages Functions → GitHub theo cùng contract. Cả hai adapter dispatch/poll guarded `local-run-build.yml` và đọc rolling GitHub Release tag `local-run`. Workflow build `bootJar` rồi upload raw JAR trực tiếp thành Release Asset; browser download trực tiếp từ `browser_download_url`, nên Cloudflare không buffer/unzip Actions Artifact nữa. Browser gửi `moduleId + sourceFingerprint`; workflow vẫn tự resolve `SERVICE_NAME` sang đúng real `SERVLET`/`REACTIVE` module, tự recompute fingerprint và không nhận Gradle task/path tùy ý. Token local lấy từ process environment hoặc `.env`; token production nằm trong Cloudflare secret. Hai runtime adapter độc lập, không gọi lẫn nhau. CSS dùng stylesheet riêng; inline CSS không phải convention của Portal.
+Module hierarchy/routing hiện lấy từ generated `module-catalog.json`. `Overview` consume build-time projection từ language `BASE.md`. `Menu` và `Knowledge` consume Knowledge build-time projection theo module/language/category/section contract; section Markdown chỉ được fetch khi user mở section. `Roadmap` consume localized `roadmap/<lang>/roadmap.yml` projection: Level 1 render milestone timeline trên center spine; optional `relatedKnowledge` luôn hiển thị ở phía đối diện milestone, resolve category/count từ Knowledge index và click item chuyển sang Knowledge tab với category đó active; numbered marker giữ pulse animation khi milestone có supporting Knowledge. Optional `relatedModules` render clickable satellite cards để chuyển giữa module mà không biến relation thành nested curriculum. `Quiz` và `Interview` consume localized `question.yml` projection generated từ module resource. Build-time API projection cũng đã có: module có đủ bốn Swagger YAML chuẩn cho một language sẽ được copy nguyên vẹn vào `module/{ROUTE_ID}/api/{lang}/` và catalog expose base path tương ứng. Knowledge/Quiz/Interview/API counts ở sidebar đều preload từ generated/static projection theo active language. `Local Run` có UI Build/Download JAR + Run Locally và một contract relative `/api/local-run/{build,status,artifact}` dùng chung. Khi chạy local, browser → Spring Boot `project-portal` → GitHub REST API; khi chạy production, browser → Cloudflare Pages Functions → GitHub theo cùng contract. Cả hai adapter dispatch/poll guarded `local-run-build.yml` và đọc rolling GitHub Release tag `local-run`. Workflow build `bootJar` rồi upload raw JAR trực tiếp thành Release Asset; browser download trực tiếp từ `browser_download_url`, nên Cloudflare không buffer/unzip Actions Artifact nữa. Browser gửi `moduleId + sourceFingerprint`; workflow vẫn tự resolve `SERVICE_NAME` sang đúng real `SERVLET`/`REACTIVE` module, tự recompute fingerprint và không nhận Gradle task/path tùy ý. Token local lấy từ process environment hoặc `.env`; token production nằm trong Cloudflare secret. Hai runtime adapter độc lập, không gọi lẫn nhau. CSS dùng stylesheet riêng; inline CSS không phải convention của Portal.
 
 Sibling ordering trong generated module tree có optional parent-local contract `module-order.yml`. File nằm ngay trong parent directory cần order và chỉ áp dụng cho direct child directories của parent đó. `order` nhỏ hơn đứng trước; cùng `order` thì sort ABC; child không có/không được gán `order` đứng sau các child có order và tiếp tục sort ABC. Không có `module-order.yml` thì behavior giữ nguyên ABC. Root task `generateModuleOrder --path=<relative-to-module>` tạo/sync shape file, preserve order human-owned, thêm child mới với `order` rỗng và bỏ stale child; normal Gradle sync chỉ đọc file, không mutate. `ProjectStructureService` áp dụng order trước khi generate `STRUCTURE.md`, `module-structure.txt` và `module-catalog.json`, vì vậy Portal chỉ consume projected order và không sort lại.
 

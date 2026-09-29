@@ -9,6 +9,26 @@ export interface ModuleStats {
   apiDocs: number;
 }
 
+export interface RoadmapRelatedModule {
+  routeId: string;
+  label?: string;
+  note?: string;
+}
+
+export interface RoadmapMilestone {
+  id: string;
+  title: string;
+  purpose: string;
+  dependsOn: string[];
+  objectives: string[];
+  relatedKnowledge: string[];
+  relatedModules: RoadmapRelatedModule[];
+}
+
+export interface RoadmapDocument {
+  roadmap: RoadmapMilestone[];
+}
+
 export interface CapabilityState {
   knowledge: boolean;
   quiz: boolean;

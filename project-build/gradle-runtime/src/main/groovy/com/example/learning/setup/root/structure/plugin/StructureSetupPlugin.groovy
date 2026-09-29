@@ -5,6 +5,7 @@ import com.example.learning.setup.root.structure.service.PortalApiProjectionServ
 import com.example.learning.setup.root.structure.service.PortalInterviewProjectionService
 import com.example.learning.setup.root.structure.service.PortalKnowledgeProjectionService
 import com.example.learning.setup.root.structure.service.PortalQuizProjectionService
+import com.example.learning.setup.root.structure.service.PortalRoadmapProjectionService
 import com.example.learning.setup.root.structure.task.GenerateModuleOrderTask
 import org.gradle.api.GradleException
 import org.gradle.api.Plugin
@@ -66,6 +67,12 @@ ${project.path}
                 )
 
 
+        PortalRoadmapProjectionService roadmapService =
+                new PortalRoadmapProjectionService(
+                        project.logger
+                )
+
+
         def portalDataInputs =
                 project.fileTree(
                         new File(
@@ -80,6 +87,7 @@ ${project.path}
                     include '**/src/main/resources/swagger/**'
                     include '**/src/main/resources/quiz/**'
                     include '**/src/main/resources/interview/**'
+                    include '**/roadmap/**'
 
                     exclude '**/build/**'
                     exclude '**/.gradle/**'
@@ -311,6 +319,39 @@ ${project.path}
                 }
 
 
+        def generatePortalRoadmap =
+                project.tasks.register(
+                        'generatePortalRoadmap'
+                ) {
+                    task ->
+
+                        task.group =
+                                'learning portal'
+
+
+                        task.description =
+                                'Copy localized Roadmap roadmap.yml files into static Portal Roadmap projections.'
+
+
+                        task.dependsOn(
+                                cleanupLegacyPortalData
+                        )
+
+
+                        task.inputs.files(
+                                portalDataInputs
+                        )
+
+
+                        task.doLast {
+
+                            roadmapService.generate(
+                                    project
+                            )
+                        }
+                }
+
+
         generatePortalKnowledge.configure {
             task ->
 
@@ -347,6 +388,15 @@ ${project.path}
         }
 
 
+        generatePortalRoadmap.configure {
+            task ->
+
+                task.mustRunAfter(
+                        generatePortalModuleData
+                )
+        }
+
+
         project.tasks.register(
                 'generatePortalData'
         ) {
@@ -365,7 +415,8 @@ ${project.path}
                         generatePortalKnowledge,
                         generatePortalApi,
                         generatePortalQuiz,
-                        generatePortalInterview
+                        generatePortalInterview,
+                        generatePortalRoadmap
                 )
         }
 

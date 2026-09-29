@@ -10,6 +10,7 @@ import { ModuleSidebar } from '../components/ModuleSidebar';
 import { ModuleTabs, type ModuleTab } from '../components/ModuleTabs';
 import { OverviewPanel } from '../components/OverviewPanel';
 import { QuizPanel } from '../components/QuizPanel';
+import { RoadmapPanel } from '../components/RoadmapPanel';
 import {
   collectRealModules,
   findModuleByRouteId,
@@ -425,6 +426,29 @@ export function LearningPage() {
                   setSearchQuery('');
                   setActiveKnowledgeCategory(categoryId);
                   setSelectedKnowledgeSection(sectionId);
+                  setVisitedTabs((current) => {
+                    const next = new Set(current);
+                    next.add('knowledge');
+                    return next;
+                  });
+                  setActiveTab('knowledge');
+                }}
+              />
+            </div>
+          )}
+          {visitedTabs.has('roadmap') && (
+            <div hidden={activeTab !== 'roadmap'}>
+              <RoadmapPanel
+                key={`${activeModule.id}:roadmap`}
+                moduleId={activeModule.id}
+                moduleName={activeModule.shortName}
+                modules={realModules}
+                knowledgeIndex={knowledgeIndex}
+                searchQuery={searchQuery}
+                onSelectKnowledge={(categoryId) => {
+                  setSearchQuery('');
+                  setActiveKnowledgeCategory(categoryId);
+                  setSelectedKnowledgeSection(null);
                   setVisitedTabs((current) => {
                     const next = new Set(current);
                     next.add('knowledge');

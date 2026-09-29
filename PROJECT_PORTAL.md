@@ -22,7 +22,7 @@ CSS stylesheet thuần
 
 Mục tiêu dài hạn vẫn là tạo một **Learning Portal** độc lập với runtime của từng learning module, để mọi learning module đều có một điểm truy cập chung dù module đó có hay không có Spring Boot `Application`.
 
-Current phase vẫn static-first và chưa gọi REST API của chính Portal. Module hierarchy/routing lấy từ generated `module-catalog.json`; Overview, Menu, Knowledge, Quiz, Interview và API Docs đều consume build-time projection thật. **Roadmap** là capability target mới cần được project từ source roadmap của module; Portal chỉ hiển thị, không tự suy ra roadmap từ Knowledge.
+Current phase vẫn static-first và chưa gọi REST API của chính Portal. Module hierarchy/routing lấy từ generated `module-catalog.json`; Overview, Menu, Knowledge, Roadmap, Quiz, Interview và API Docs đều có build-time projection thật. Roadmap projection copy trực tiếp source `roadmap/<lang>/roadmap.yml`; Portal chỉ consume source roadmap này, không tự suy ra roadmap từ Knowledge.
 
 ### 1.1 Current physical structure
 
@@ -41,6 +41,7 @@ project-portal/
 │       └── {ROUTE_ID}/
 │           ├── overview/
 │           ├── knowledge/
+│           ├── roadmap/{lang}/roadmap.yml
 │           ├── quiz/{lang}/question.yml
 │           ├── interview/{lang}/question.yml
 │           └── api/{lang}/
@@ -284,7 +285,7 @@ Ví dụ với module runnable `THREAD`:
 ```text
 Thread & Concurrency
 
-[Overview] [Roadmap] [Menu] [Knowledge] [API Docs] [Quiz] [Interview] [Local Run]
+[Overview] [Menu] [Roadmap] [Knowledge] [API Docs] [Quiz] [Interview] [Local Run]
 
 Progress
 ████████░░
@@ -310,7 +311,7 @@ Ví dụ với module không runnable:
 ```text
 Gradle Cache
 
-[Overview] [Roadmap] [Menu] [Knowledge] [Quiz]
+[Overview] [Menu] [Roadmap] [Knowledge] [Quiz]
 
 Knowledge
 1. Cache Concepts
@@ -322,7 +323,7 @@ Quiz
 25 questions
 ```
 
-Current phase đã dựng navigation shell và đã migrate Overview/Menu/Knowledge/API Docs/Quiz/Interview sang generated/static data. `Local Run` có UI hai khung Build/Download JAR + Run Locally và dùng cùng relative API contract `/api/local-run/*` ở mọi môi trường. Localhost xử lý contract bằng Spring Boot `project-portal`; production xử lý contract bằng Cloudflare Pages Functions. Hai adapter độc lập, cùng dispatch/poll GitHub Actions và cùng đọc rolling GitHub Release `local-run`; token GitHub luôn nằm server-side.
+Current phase đã dựng navigation shell và đã migrate Overview/Menu/Roadmap/Knowledge/API Docs/Quiz/Interview sang generated/static data. `Local Run` có UI hai khung Build/Download JAR + Run Locally và dùng cùng relative API contract `/api/local-run/*` ở mọi môi trường. Localhost xử lý contract bằng Spring Boot `project-portal`; production xử lý contract bằng Cloudflare Pages Functions. Hai adapter độc lập, cùng dispatch/poll GitHub Actions và cùng đọc rolling GitHub Release `local-run`; token GitHub luôn nằm server-side.
 
 `Roadmap` nằm kế bên `Menu` nhưng có responsibility khác:
 
@@ -338,7 +339,20 @@ Menu
 → điều hướng chi tiết vào nội dung
 ```
 
-Roadmap interaction chỉ nên điều hướng/highlight **đầu mục/milestone hoặc chapter/section heading**, không trỏ tới từng câu hoặc fact nhỏ. Khi roadmap source/projection được implement, roadmap phải đứng upstream của Menu/Knowledge theo `MODULE_ROADMAP.md`.
+Roadmap interaction có hai loại relation riêng: `relatedKnowledge` thuộc module hiện tại và luôn hiển thị ở phía đối diện milestone trên timeline, click item sẽ chuyển sang đúng Knowledge category; numbered marker vẫn giữ pulse animation để nhấn mạnh milestone có Knowledge hỗ trợ. `relatedModules` hiển thị thành card phụ cạnh milestone và click để chuyển sang module khác. Cả hai chỉ là navigation/support relation, không tạo nested curriculum graph và không thay đổi learning order của Level 1. Roadmap source/projection + frontend Roadmap tab đều đã implement và Roadmap vẫn đứng upstream của Menu/Knowledge theo `MODULE_ROADMAP.md`.
+
+Visual contract hiện tại:
+
+```text
+milestone ở trái  ···  (marker pulse)  ···  Related Knowledge ở phải
+Related Knowledge trái  ···  (marker pulse)  ···  milestone ở phải
+
+Related Modules
+→ satellite card nằm ngoài milestone card khi được khai báo
+→ click sang module đích
+```
+
+`relatedKnowledge` resolve title + section count từ Knowledge index hiện hành; click item chuyển sang tab `Knowledge` và active category tương ứng, không reload module. Marker pulse là affordance thị giác, không còn là trigger mở popup.
 
 Các tab/action về lâu dài phải được render theo capability thực tế của module.
 
@@ -1504,13 +1518,13 @@ Target user flow:
                  chọn một module
                          │
                          ▼
-                     Overview
-                         │
-                         ▼
-                      Roadmap
+                    Overview
                          │
                          ▼
                        Menu
+                         │
+                         ▼
+                     Roadmap
                          │
                          ▼
                     Knowledge
@@ -1634,13 +1648,15 @@ MVP đã bắt đầu implementation. Current phase đã có:
 30. Gradle plugin stub generator đã Linux-safe về filename casing để CI không tạo duplicate plugin khác casing
 31. Quiz source/generator đã migrate thật: `BUILD_QUIZ` → orchestration → localized `question.yml`; canonical schema drive localized comment + validation; Portal copy static projection, shuffle answer position một lần khi load và giữ stable answer identity để check đúng/sai. THREAD hiện có 52 câu VI và 52 câu EN dựa trên README, kèm governance + optional Knowledge/API relations
 32. Interview source/generator đã migrate thật: `BUILD_INTERVIEW` → orchestration → localized `question.yml`; canonical schema drive localized comment + validation; Portal copy static projection, preload count và render reference answer collapsed/expandable với governance + Related Knowledge/API. THREAD hiện có 46 câu VI và 46 câu EN dựa trên README
-33. top-level module tabs hiện theo thứ tự `Overview → Menu → Knowledge → API Docs → Quiz → Interview → Local Run`
+33. top-level module tabs hiện theo thứ tự `Overview → Menu → Roadmap → Knowledge → API Docs → Quiz → Interview → Local Run`
+34. Roadmap build projection đã implement: root task `generatePortalRoadmap` copy localized `roadmap/<lang>/roadmap.yml` của các module có `BUILD_ROADMAP=TRUE` vào `project-portal/build/generated/portal-data/module/{ROUTE_ID}/roadmap/<lang>/roadmap.yml`; `generatePortalData` đã include task này
+35. Roadmap frontend đã implement: vertical center timeline, milestone card xen kẽ trái/phải, numbered ring marker, `relatedKnowledge` luôn hiển thị ở phía đối diện milestone, và `relatedModules` satellite cards nối dotted line; responsive layout collapse về single-column timeline trên màn hình nhỏ
+36. Roadmap Related Knowledge prototype đã implement cho `JAVA_LANGUAGE_BASICS`: marker giữ pulse nhẹ nhưng không còn mở popup; Related Knowledge luôn visible, resolve category/count từ Knowledge index và click item chuyển sang Knowledge tab với đúng category active; current mapping chỉ là provisional mapping trên Knowledge cũ và không được coi là curriculum proof
 ```
 
 Chưa implement trong current phase:
 
 ```text
-Roadmap source/projection + Roadmap tab next to Menu
 capability availability resolver từ actual resource/artifact state
 Spring Boot Portal REST integration ngoài Local Run local adapter
 Execution Context aggregation

@@ -1,7 +1,7 @@
 import { useLanguage } from '../state/LanguageContext';
 import type { ModuleStats } from '../types/learning';
 
-export type ModuleTab = 'overview' | 'menu' | 'knowledge' | 'quiz' | 'interview' | 'api' | 'execution';
+export type ModuleTab = 'overview' | 'menu' | 'roadmap' | 'knowledge' | 'quiz' | 'interview' | 'api' | 'execution';
 
 interface ModuleTabsProps {
   activeTab: ModuleTab;
@@ -13,6 +13,7 @@ interface ModuleTabsProps {
 const tabs: Array<{ id: ModuleTab; vi: string; en: string; countKey?: keyof ModuleStats }> = [
   { id: 'overview', vi: 'Overview', en: 'Overview' },
   { id: 'menu', vi: 'Menu', en: 'Menu' },
+  { id: 'roadmap', vi: 'Roadmap', en: 'Roadmap' },
   { id: 'knowledge', vi: 'Knowledge', en: 'Knowledge', countKey: 'knowledge' },
   { id: 'api', vi: 'API Docs', en: 'API Docs', countKey: 'apiDocs' },
   { id: 'quiz', vi: 'Quiz', en: 'Quiz', countKey: 'quiz' },

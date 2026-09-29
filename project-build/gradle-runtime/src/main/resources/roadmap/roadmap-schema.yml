@@ -134,3 +134,17 @@ document:
           description:
             vi: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
             en: Milestone-level learning objectives; do not use this to list every small fact/API/syntax item.
+        relatedKnowledge:
+          type: list
+          required: false
+          default: []
+          description:
+            vi: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal dùng danh sách này để mở popup trên marker và điều hướng sang Knowledge category tương ứng.
+            en: Knowledge category ids in the current module that support this milestone. Portal uses this list for the marker popup and navigation to the matching Knowledge category.
+        relatedModules:
+          type: list
+          required: false
+          default: []
+          description:
+            vi: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
+            en: Related modules displayed as Portal Level 2 cards. Each item requires routeId and may provide localized label/note; this relation is navigation only and does not create child milestones or change learning order.

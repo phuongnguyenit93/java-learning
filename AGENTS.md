@@ -94,6 +94,13 @@ No new Knowledge Menu/lesson generation should start before the roadmap is revie
 
 Roadmap files live at `roadmap/<language>/roadmap.yml`. `BUILD_ROADMAP` defaults to `TRUE`, `MODULE_LANGUAGE` controls which localized files are provisioned, and each language owns its roadmap independently. Build logic may synchronize the generated schema comment but must preserve the human/AI-owned roadmap content.
 
+Roadmap relation metadata has strict semantics:
+
+- `relatedKnowledge` contains Knowledge category ids from the **same module**. It is supporting/navigation metadata only. In Portal it is always visible on the side opposite the milestone; clicking an item opens the Knowledge tab with that category active. It must not be used to reverse-engineer or redefine milestone order.
+- `relatedModules` contains cross-module Portal targets. It renders as secondary/satellite cards and may navigate to another module, but it does not create child roadmap nodes or a nested curriculum graph.
+- The numbered milestone marker may pulse when supporting Knowledge exists, but that animation is presentation only and carries no curriculum semantics.
+- For legacy modules, `relatedKnowledge` may temporarily map to existing categories even when coverage is imperfect; treat that as migration metadata to refine later, not evidence that the roadmap itself is correct.
+
 ---
 
 ## 4. Main architecture boundaries

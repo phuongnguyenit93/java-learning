@@ -10,6 +10,8 @@
 # - purpose [string, required]: What the learner should understand or achieve from this milestone.
 # - dependsOn [list, optional]: Prerequisite milestone ids when item order alone is not enough to express the dependency.
 # - objectives [list, optional]: Milestone-level learning objectives; do not use this to list every small fact/API/syntax item.
+# - relatedKnowledge [list, optional]: Knowledge category ids in the current module that support this milestone. Portal uses this list for the marker popup and navigation to the matching Knowledge category.
+# - relatedModules [list, optional]: Related modules displayed as Portal Level 2 cards. Each item requires routeId and may provide localized label/note; this relation is navigation only and does not create child milestones or change learning order.
 #
 # ROADMAP THINKING FRAMEWORK
 # PURPOSE
@@ -39,4 +41,165 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: language-purpose
+    title: Java Language Basics Purpose
+    purpose: Understand which foundations belong to Java Language Basics, why they need to be learned together, and how they prepare the learner for later Java modules.
+    relatedKnowledge:
+      - PrimitiveReference
+    objectives:
+      - Explain Java Language Basics as a foundation of values, types, execution, and source structure rather than a collection of unrelated syntax.
+      - Recognize the basic problems every Java program must solve, including representing data, controlling execution, organizing behavior, and managing visibility.
+      - Build an overall map of which learner question each following milestone answers.
+
+  - id: source-code-structure
+    title: Java Source Code Structure
+    purpose: Understand how a Java program is organized from source file to type, method, statement, and expression so the learner knows where code belongs and how its pieces relate.
+    relatedKnowledge:
+      - PackagesImports
+    relatedModules:
+      - routeId: JAVA_CLASS_OBJECT
+        label: Class & Object
+        note: Expand from type declarations into Java classes and objects.
+      - routeId: JAVA_ANNOTATION
+        label: Annotation
+        note: Metadata attached directly to source-level program elements.
+    objectives:
+      - Distinguish the roles of source files, packages, imports, type declarations, methods, statements, and expressions.
+      - Understand identifiers, keywords, literals, and comments as supporting elements for writing and reading source code.
+      - Build enough structural context to read a small Java program before studying values, types, and execution in detail.
+
+  - id: values-and-variables
+    title: Values and Variables
+    purpose: Understand how Java programs manipulate values and how variables provide names, logical storage locations, and lifecycle context for those values.
+    relatedKnowledge:
+      - VariablesScope
+      - PrimitiveReference
+    relatedModules:
+      - routeId: JAVA_NUMBERS
+        label: Numbers
+        note: Go deeper into numeric representation and computation.
+      - routeId: JAVA_STRING
+        label: String
+        note: Expand how Java represents and manipulates textual data.
+    objectives:
+      - Distinguish a value from a variable and understand declaration, initialization, and assignment.
+      - Recognize local variables, parameters, fields, and static fields at an orientation level before studying scope and lifetime in depth.
+      - Understand how definite assignment and default values differ across variable kinds.
+
+  - id: type-system-basics
+    title: Type System Basics
+    purpose: Build a mental model of primitive types, reference types, and the boundaries values cross between types so the learner understands what is checked at compile time and what can still fail at runtime.
+    relatedKnowledge:
+      - PrimitiveReference
+      - WrapperBoxing
+      - Casting
+      - "Null"
+      - TypeSystemMentalModel
+    relatedModules:
+      - routeId: JAVA_OOP
+        label: Object-Oriented Programming
+        note: Type hierarchies, inheritance, and polymorphism extend this mental model.
+      - routeId: JAVA_GENERICS
+        label: Generics
+        note: Compile-time type safety and parameterized types.
+      - routeId: JAVA_OBJECT_CONTRACT
+        label: Object Contract
+        note: Shared object contracts such as equals, hashCode, and identity.
+    objectives:
+      - Distinguish primitive values from reference values and understand that null applies only to references.
+      - Understand assignment compatibility, widening, narrowing, and casting at a foundational level.
+      - Understand wrapper types, boxing, and unboxing as the bridge between primitives and object-based APIs.
+      - Distinguish declared type from runtime type as preparation for OOP, Generics, and Collections.
+
+  - id: expressions-and-operators
+    title: Expressions and Operators
+    purpose: Understand how Java produces new values and determines computation results through expressions, operators, promotion, precedence, and evaluation order.
+    relatedKnowledge:
+      - Operators
+      - Casting
+    objectives:
+      - Read an expression and identify the value or result it produces.
+      - Understand the major operator groups and numeric promotion required for basic Java code.
+      - Understand how short-circuiting, precedence, associativity, and side effects can affect results and readability.
+
+  - id: program-control-flow
+    title: Program Control Flow
+    purpose: Understand how a Java program chooses, repeats, and redirects execution instead of always running sequentially from top to bottom.
+    relatedKnowledge:
+      - ControlFlow
+    objectives:
+      - Use branching with if and switch with the correct execution mental model.
+      - Understand loops with for, while, and do-while together with break and continue.
+      - Recognize when control flow becomes difficult to reason about and should be simplified.
+
+  - id: methods-and-data-flow
+    title: Methods and Data Flow
+    purpose: Understand how behavior is packaged, invoked, and supplied with data through methods, including how Java selects an applicable call and how arguments are actually passed.
+    relatedKnowledge:
+      - Methods
+      - Varargs
+      - PassByValue
+    relatedModules:
+      - routeId: JAVA_FUNCTIONAL_PROGRAMMING
+        label: Functional Programming
+        note: Represent and pass behavior as data.
+      - routeId: JAVA_REFLECTION
+        label: Reflection
+        note: Inspect and invoke method/type metadata at runtime.
+    objectives:
+      - Understand method declarations, parameters, arguments, return values, and invocation.
+      - Understand overloading at a foundational level and the role of invocation conversions in method selection.
+      - Understand varargs as an array-backed invocation mechanism rather than a fundamentally separate parameter model.
+      - Explain that Java is always pass-by-value and distinguish object mutation from reference reassignment.
+
+  - id: scope-and-variable-lifetime
+    title: Scope and Variable Lifetime
+    purpose: After methods and control flow are established, understand exactly which names are accessible where, how long values remain associated with variables, and why shadowing or incorrect scope easily causes defects.
+    relatedKnowledge:
+      - VariablesScope
+      - PackagesImports
+    objectives:
+      - Distinguish the scope of local variables, parameters, fields, and static fields.
+      - Understand block scope, method scope, class-level state, and variable lifetime.
+      - Recognize shadowing, name resolution, and common design problems caused by poor scope choices.
+
+  - id: arrays
+    title: Arrays
+    purpose: Understand how Java represents multiple values of a component type in a fixed-size structure and learn the important array boundaries before moving to Collections.
+    relatedKnowledge:
+      - Arrays
+    relatedModules:
+      - routeId: JAVA_COLLECTION
+        label: Collections
+        note: More flexible data structures and higher-level data APIs than arrays.
+      - routeId: JAVA_GENERICS
+        label: Generics
+        note: The type-safety foundation behind collection APIs.
+    objectives:
+      - Understand array types, creation, initialization, indexing, and length.
+      - Understand that multidimensional arrays are arrays of arrays.
+      - Recognize array covariance and ArrayStoreException as a boundary between compile-time typing and runtime checks.
+      - Understand the fixed-size limitation of arrays and why Collections exist.
+
+  - id: language-basics-synthesis
+    title: Putting Java Language Basics Together
+    purpose: Connect source structure, values, variables, types, expressions, control flow, methods, scope, and arrays into an end-to-end mental model of a basic Java program.
+    relatedKnowledge:
+      - TypeSystemMentalModel
+      - PrimitiveReference
+      - Methods
+    relatedModules:
+      - routeId: JAVA_OOP
+        label: OOP
+        note: The next step for organizing state and behavior into an object model.
+      - routeId: JAVA_COLLECTION
+        label: Collections
+        note: The next step for managing dynamic groups of data.
+      - routeId: JAVA_EXCEPTION
+        label: Exception
+        note: The next step for modeling and handling failure flow.
+    objectives:
+      - Trace a value from declaration through transformation and method calls to its effect on control flow or state.
+      - Distinguish compile-time decisions from runtime checks in common basic-language scenarios.
+      - Explain the boundaries of Language Basics and identify what OOP, Generics, Collections, Exceptions, and later Java modules expand next.

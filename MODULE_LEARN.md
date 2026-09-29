@@ -37,6 +37,23 @@ lesson + code evidence
 
 Không dùng README cũ làm roadmap mặc định. Với module cũ, thiết kế roadmap độc lập trước rồi mới audit nội dung hiện tại theo các trạng thái `aligned / missing / misplaced / too deep / duplicate / out of scope`.
 
+Roadmap relation metadata không được đảo ngược source-of-truth:
+
+```text
+milestone/order
+→ thiết kế và approve trước
+
+relatedKnowledge
+→ map tới Knowledge category cùng module để navigation/support
+→ có thể điền/refine sau khi Knowledge structure rõ
+
+relatedModules
+→ cross-module navigation
+→ không phải child milestone
+```
+
+Với legacy module, mapping `relatedKnowledge` tạm thời sang chapter/category cũ là hợp lệ để migrate UI, nhưng không được dùng mapping đó làm lý do giữ nguyên historical chapter order.
+
 ### Trường hợp A - Module đã có nội dung cần giữ để so sánh
 
 Áp dụng khi:

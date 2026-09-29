@@ -141,6 +141,23 @@ Knowledge Writer
 
 Roadmap nodes are **not individual facts, methods, keywords or tiny syntax items**. One roadmap milestone may own several Knowledge sections.
 
+Roadmap relation ownership is intentionally split:
+
+```text
+Roadmap Designer / Reviewer
+→ milestone order
+→ dependencies
+→ optional relatedModules as cross-module context/navigation
+
+Knowledge Architect
+→ expands approved milestones into concrete Knowledge categories/sections
+→ may then add/refine relatedKnowledge ids for same-module navigation
+```
+
+`relatedKnowledge` is not a second curriculum source. It must point to Knowledge category ids in the current module and must not be used to derive or reorder milestones. Portal renders it permanently on the side opposite the milestone and clicking an item activates that Knowledge category. For legacy migration, a provisional mapping to old categories is allowed and should be labeled/reviewed as migration work when semantic fit is imperfect.
+
+`relatedModules` is also navigation/support metadata only. It may expose neighboring modules but does not make those modules children of the milestone and does not create a nested roadmap graph.
+
 If Knowledge authoring reveals a missing prerequisite or missing milestone, emit/report a **ROADMAP GAP**. Do not silently add an unrelated chapter and continue as if the roadmap were unchanged.
 
 For an existing/legacy module, do not build the new roadmap by copying the current menu order. Design the roadmap independently from module scope/curriculum goals first, then audit the old Knowledge against it.
