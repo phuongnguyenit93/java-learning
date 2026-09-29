@@ -10,6 +10,8 @@
 # - purpose [string, required]: What the learner should understand or achieve from this milestone.
 # - dependsOn [list, optional]: Prerequisite milestone ids when item order alone is not enough to express the dependency.
 # - objectives [list, optional]: Milestone-level learning objectives; do not use this to list every small fact/API/syntax item.
+# - relatedKnowledge [list, optional]: Knowledge category ids in the current module that support this milestone. Portal displays this list on the side opposite the milestone and clicking an item navigates to the matching Knowledge category.
+# - relatedModules [list, optional]: Related modules displayed as Portal Level 2 cards. Each item requires routeId and may provide localized label/note; this relation is navigation only and does not create child milestones or change learning order.
 #
 # ROADMAP THINKING FRAMEWORK
 # PURPOSE
@@ -39,4 +41,60 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: oop-purpose
+    title: Object-Oriented Design Purpose
+    purpose: Understand OOP as organizing software around collaborating objects that own state, behavior, and responsibilities.
+    relatedModules:
+      - routeId: JAVA_CLASS_OBJECT
+        label: Class & Object
+        note: Class/Object provides the Java mechanisms that OOP design builds upon.
+    objectives:
+      - Explain why object boundaries can make change and invariants easier to manage.
+      - Distinguish OOP design concepts from individual Java syntax features.
+  - id: encapsulation-and-invariants
+    title: Encapsulation and Invariants
+    purpose: Understand encapsulation as protecting valid state behind behavior rather than merely making fields private.
+    objectives:
+      - Design object behavior that protects invariants.
+      - Recognize when excessive getters/setters leak responsibility.
+  - id: subtyping-and-inheritance
+    title: Subtyping and Inheritance
+    purpose: Understand inheritance as one mechanism for establishing subtype relationships and reuse, together with its coupling costs.
+    objectives:
+      - Reason about is-a substitutability rather than inheritance for code reuse alone.
+      - Recognize fragile hierarchies and invalid subtype relationships.
+  - id: polymorphism-and-dispatch
+    title: Polymorphism and Dynamic Dispatch
+    purpose: Understand how one abstraction can execute different runtime behavior through overriding and dynamic dispatch.
+    objectives:
+      - Separate reference type from runtime implementation behavior.
+      - Use substitutability as the core test for useful polymorphism.
+  - id: method-selection-model
+    title: Compile-Time vs Runtime Method Selection
+    purpose: Build a clean model of overloading, overriding, dynamic dispatch, and method hiding so similar syntax is not confused.
+    objectives:
+      - Explain which choices are resolved at compile time and which at runtime.
+      - Predict behavior when overloads and overrides interact.
+  - id: composition-and-delegation
+    title: Composition and Delegation
+    purpose: Understand object collaboration as an alternative to inheritance when behavior should be reused without rigid subtype coupling.
+    objectives:
+      - Prefer composition when responsibilities can be assembled independently.
+      - Use delegation without hiding ownership or lifecycle responsibilities.
+  - id: abstraction-and-contracts
+    title: Abstraction and Behavioral Contracts
+    purpose: Understand abstraction as exposing the behavior callers need while hiding irrelevant implementation detail.
+    relatedModules:
+      - routeId: JAVA_ABSTRACT_INTERFACE
+        label: Abstract Class & Interface
+        note: This module provides the Java mechanisms used to express reusable abstractions and contracts.
+    objectives:
+      - Depend on stable behavioral contracts instead of concrete implementation details.
+      - Recognize when abstract classes or interfaces are the appropriate Java mechanism.
+  - id: oop-synthesis
+    title: OOP Design Synthesis
+    purpose: Connect encapsulation, subtyping, polymorphism, composition, and abstraction into one decision model for object-oriented design.
+    objectives:
+      - Choose inheritance, composition, or abstraction from responsibility and change pressure.
+      - Recognize that the OOP “pillars” are tools, not independent goals.

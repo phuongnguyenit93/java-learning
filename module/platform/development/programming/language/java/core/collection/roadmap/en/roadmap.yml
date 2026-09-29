@@ -10,6 +10,8 @@
 # - purpose [string, required]: What the learner should understand or achieve from this milestone.
 # - dependsOn [list, optional]: Prerequisite milestone ids when item order alone is not enough to express the dependency.
 # - objectives [list, optional]: Milestone-level learning objectives; do not use this to list every small fact/API/syntax item.
+# - relatedKnowledge [list, optional]: Knowledge category ids in the current module that support this milestone. Portal displays this list on the side opposite the milestone and clicking an item navigates to the matching Knowledge category.
+# - relatedModules [list, optional]: Related modules displayed as Portal Level 2 cards. Each item requires routeId and may provide localized label/note; this relation is navigation only and does not create child milestones or change learning order.
 #
 # ROADMAP THINKING FRAMEWORK
 # PURPOSE
@@ -39,4 +41,86 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: collection-purpose-and-hierarchy
+    title: Collection Purpose and Hierarchy
+    purpose: Understand why Java has several collection abstractions and how ordering, uniqueness, lookup, mutability, and cost shape the hierarchy.
+    relatedModules:
+      - routeId: JAVA_GENERICS
+        label: Generics
+        note: Collection APIs rely on generic type parameters, wildcards, and PECS for type-safe reuse.
+    objectives:
+      - Distinguish Collection, List, Set, Queue, Map, and sorted/navigable roles.
+      - Choose interfaces from required behavior before choosing implementations.
+  - id: shared-api-and-characteristics
+    title: Shared APIs and Collection Characteristics
+    purpose: Understand the operations and behavioral dimensions shared across collection abstractions, including optional mutation and bulk operations.
+    objectives:
+      - Reason about ordering, duplicates, null policy, mutability, and complexity independently.
+      - Understand why Map forms a separate hierarchy from Collection.
+  - id: list-semantics
+    title: List Semantics and Positional Data
+    purpose: Understand ordered positional collections and the trade-offs between common list implementations and backed views.
+    objectives:
+      - Choose between random-access and node-oriented list behavior from workload.
+      - Recognize remove overloads, subList views, and array/list boundary pitfalls.
+  - id: set-semantics
+    title: Set Semantics and Uniqueness
+    purpose: Understand sets as uniqueness-oriented collections whose behavior depends on equality or ordering contracts.
+    objectives:
+      - Distinguish hash-based, insertion-ordered, and sorted set semantics.
+      - Use set algebra without assuming all implementations share the same cost/order behavior.
+  - id: map-semantics
+    title: Map Semantics and Key-Based Lookup
+    purpose: Understand key/value mappings, Map.Entry, backed views, and how key contracts drive lookup behavior.
+    objectives:
+      - Reason about keys, values, entries, duplicate-key replacement, and view mutation.
+      - Choose hash-based or sorted maps from lookup and ordering requirements.
+  - id: queue-and-deque
+    title: Queue and Deque Contracts
+    purpose: Understand FIFO, LIFO, double-ended operations, priority ordering, and the throwing-versus-sentinel operation pairs.
+    objectives:
+      - Choose offer/poll/peek versus add/remove/element intentionally.
+      - Recognize PriorityQueue ordering without assuming full sorted iteration.
+  - id: iteration-and-functional-use
+    title: Iteration and Functional Collection Use
+    purpose: Understand traversal through Iterator/ListIterator/for-each and the boundary between collection ownership and functional-style operations.
+    relatedModules:
+      - routeId: JAVA_FUNCTIONAL_PROGRAMMING
+        label: Functional Programming
+        note: Lambda, method-reference, and stream-style behavior used around collections is owned by Functional Programming.
+    objectives:
+      - Traverse without depending on implementation details.
+      - Recognize safe iterator mutation and when lambda/method-reference syntax belongs to functional programming.
+  - id: ordering-and-navigation
+    title: Ordering, Sorting, and Navigation
+    purpose: Understand encounter order, natural/comparator ordering, sorted/navigable structures, and the preconditions of ordering algorithms.
+    objectives:
+      - Reason about comparison results and stable sorting behavior.
+      - Use navigable range operations and backed range views correctly.
+  - id: equality-hashing-and-mutation
+    title: Equality, Hashing, and Mutation Safety
+    purpose: Understand how element/key contracts and structural modification affect lookup, whole-container equality, and iteration safety.
+    relatedModules:
+      - routeId: JAVA_OBJECT_CONTRACT
+        label: Object Contract
+        note: equals, hashCode, Comparable, and Comparator laws directly control collection behavior.
+    objectives:
+      - Predict consequences of mutable keys/elements in hash-based or sorted structures.
+      - Understand fail-fast as best-effort bug detection rather than synchronization.
+  - id: mutability-views-and-factories
+    title: Mutability, Views, and Immutable Factories
+    purpose: Distinguish modifiable collections, fixed-size/backed views, unmodifiable wrappers, and immutable snapshots/factories.
+    objectives:
+      - Identify who owns mutation and whether changes are shared through a view.
+      - Choose copies or views according to ownership and lifecycle needs.
+  - id: implementation-choice-and-specialization
+    title: Implementation Choice and Specialized Collections
+    purpose: Combine semantics and complexity into an implementation-choice model, including enum-specific structures when their constraints fit.
+    relatedModules:
+      - routeId: JAVA_CLASS_OBJECT
+        label: Class & Object
+        note: Java enums and their type semantics are introduced in Class & Object.
+    objectives:
+      - Choose implementations from access pattern, ordering, mutation, memory, and complexity requirements.
+      - Recognize EnumSet/EnumMap as specialized structures rather than generic defaults.

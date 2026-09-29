@@ -10,6 +10,8 @@
 # - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
 # - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
 # - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
 #
 # ROADMAP THINKING FRAMEWORK
 # PURPOSE
@@ -39,4 +41,75 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: numeric-model
+    title: Mô hình biểu diễn số
+    purpose: Hiểu vì sao Java cần nhiều cách biểu diễn số khác nhau và vì sao range, độ chính xác, chi phí lưu trữ và hiệu năng tạo ra các trade-off khác nhau.
+    relatedModules:
+      - routeId: JAVA_LANGUAGE_BASICS
+        label: Language Basics
+        note: Primitive numeric type, conversion và promotion là nền tảng trực tiếp của module này.
+    objectives:
+      - Chọn giữa integer cố định, floating point, BigInteger và BigDecimal theo semantics của bài toán.
+      - Nhận biết việc chọn numeric type là một phần của correctness chứ không chỉ là syntax.
+  - id: integer-boundaries
+    title: Integer cố định và Overflow
+    purpose: Hiểu vì sao phép toán số nguyên dù là exact vẫn có thể sai khi vượt qua giới hạn của biểu diễn fixed-width.
+    objectives:
+      - Reason được về MIN/MAX boundary và hành vi wraparound.
+      - Biết khi nào nên dùng checked arithmetic để overflow trở thành failure rõ ràng.
+  - id: floating-point
+    title: Xấp xỉ Floating-Point
+    purpose: Xây dựng mental model binary floating-point để giải thích precision error, special value và hành vi comparison.
+    objectives:
+      - Giải thích được vì sao nhiều phân số thập phân không thể biểu diễn chính xác bằng binary floating point.
+      - Xử lý có chủ đích NaN, infinity, negative zero và tolerance-based comparison.
+  - id: arbitrary-precision-integers
+    title: Số nguyên độ chính xác tùy ý
+    purpose: Hiểu cách BigInteger loại bỏ giới hạn range fixed-width và điều gì thay đổi khi arithmetic trở thành object-based và immutable.
+    objectives:
+      - Sử dụng BigInteger mà không giả định semantics của primitive operator.
+      - Nhận biết conversion và performance boundary của arbitrary-precision arithmetic.
+  - id: exact-decimal-model
+    title: Mô hình số thập phân chính xác
+    purpose: Hiểu BigDecimal như mô hình decimal value + scale rõ ràng cho các workflow cần semantics thập phân chính xác.
+    objectives:
+      - Khởi tạo BigDecimal mà không vô tình mang theo lỗi binary floating-point.
+      - Reason rõ về arithmetic, scale và non-terminating division.
+  - id: precision-scale-rounding
+    title: Precision, Scale và chính sách làm tròn
+    purpose: Hiểu rằng decimal precision và rounding là một phần của value policy/domain contract chứ không phải bước formatting cuối cùng.
+    objectives:
+      - Phân biệt precision với scale và hiểu vai trò của MathContext.
+      - Chọn thời điểm và rounding mode có chủ đích tại domain boundary.
+  - id: numeric-comparison-contracts
+    title: Contract so sánh và bằng nhau của số
+    purpose: Hiểu vì sao numerical equivalence, object equality và ordering có thể trả lời các câu hỏi khác nhau đối với numeric object.
+    relatedModules:
+      - routeId: JAVA_OBJECT_CONTRACT
+        label: Object Contract
+        note: Equality, hashing và ordering contract giải thích vì sao các object tương đương về số học có thể hành xử khác nhau trong API.
+      - routeId: JAVA_COLLECTION
+        label: Collections
+        note: Hash-based và sorted collection làm cho lựa chọn equality/ordering của numeric value trở nên quan sát được.
+    objectives:
+      - Giải thích semantics khác nhau giữa BigDecimal.equals và compareTo.
+      - Dự đoán hệ quả khi numeric value được dùng làm collection key hoặc phần tử được sort.
+  - id: math-and-safe-arithmetic
+    title: Math helper và arithmetic an toàn
+    purpose: Học khi nào standard numeric helper làm intent rõ hơn và khi nào exact arithmetic method nên biến overflow thành failure thay vì wraparound im lặng.
+    objectives:
+      - Dùng các Math helper chính với expectation đúng về numeric semantics.
+      - Nhận biết boundary giữa convenience helper và semantics của representation.
+  - id: randomness-contracts
+    title: Contract của Randomness
+    purpose: Phân biệt pseudo-random deterministic với unpredictability phục vụ security và chọn đúng contract mà use case cần.
+    objectives:
+      - Hiểu seed-driven reproducibility của PRNG thông thường.
+      - Nhận biết khi nào cần SecureRandom và đâu là boundary chuyển sang cryptography.
+  - id: numeric-synthesis
+    title: Tổng hợp lựa chọn mô hình số
+    purpose: Kết nối range, exactness, precision, equality, rounding và randomness thành một decision model thống nhất cho numeric code.
+    objectives:
+      - Chọn representation và policy từ domain requirement thay vì thói quen.
+      - Nhận biết nơi numeric bug lan sang collection, persistence, formatting hoặc security concern.

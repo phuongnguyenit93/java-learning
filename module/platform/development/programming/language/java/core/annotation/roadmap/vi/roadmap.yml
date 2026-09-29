@@ -10,6 +10,8 @@
 # - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
 # - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
 # - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
 #
 # ROADMAP THINKING FRAMEWORK
 # PURPOSE
@@ -39,4 +41,62 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: annotation-purpose
+    title: Mục đích Annotation và Structured Metadata
+    purpose: Hiểu annotation là structured information gắn vào code để compiler, tool hoặc framework tiêu thụ.
+    objectives:
+      - Giải thích vì sao comment hoặc naming convention không đủ cho machine-readable contract.
+      - Nhận biết annotation không tự tạo behavior; consumer mới mang lại ý nghĩa cho metadata.
+  - id: built-in-annotations
+    title: Built-In Annotation và compiler/tool contract
+    purpose: Hiểu cách các annotation chuẩn như Override, Deprecated, SuppressWarnings, SafeVarargs và FunctionalInterface biểu diễn contract cho tool.
+    objectives:
+      - Phân biệt compiler-checked guarantee với documentation/tooling hint.
+      - Dùng built-in annotation tại scope nhỏ nhất nhưng có ý nghĩa.
+  - id: custom-annotation-schema
+    title: Custom Annotation Type
+    purpose: Hiểu cách định nghĩa metadata vocabulary riêng với typed element, default và semantic ownership rõ ràng.
+    objectives:
+      - Thiết kế annotation element biểu diễn metadata ổn định thay vì hidden behavior.
+      - Nhận biết allowed element type và compile-time value restriction.
+  - id: retention-lifecycle
+    title: Retention và vòng đời Metadata
+    purpose: Hiểu SOURCE, CLASS và RUNTIME retention quyết định consumer nào còn quan sát được annotation.
+    objectives:
+      - Chọn retention theo consumer lifecycle thay vì thói quen.
+      - Giải thích vì sao runtime reflection không thể thấy metadata đã bị loại bỏ trước đó.
+  - id: targets-and-use-sites
+    title: Target và Use Site
+    purpose: Hiểu annotation hợp lệ ở đâu và khác biệt giữa declaration metadata với type-use metadata.
+    objectives:
+      - Giới hạn annotation use vào context nơi semantics thực sự hợp lệ.
+      - Nhận biết TYPE_USE cùng boundary của record/package/module.
+  - id: meta-annotations-and-composition
+    title: Meta-Annotation và cấu hình Annotation
+    purpose: Hiểu annotation dùng để cấu hình chính annotation type, bao gồm retention, target, documentation, inheritance và repeatability.
+    objectives:
+      - Đọc meta-annotation như một phần contract của annotation type.
+      - Tránh nhầm composed annotation kiểu framework là language feature vượt ngoài metadata đã declare.
+  - id: repeatable-and-inherited-semantics
+    title: Repeatable và Inherited Semantics
+    purpose: Hiểu repeatable annotation dựa trên container và phạm vi class-inheritance hẹp của Inherited.
+    objectives:
+      - Dự đoán lookup behavior single-versus-by-type của repeated annotation.
+      - Nhận biết method/interface annotation inheritance theo rule khác.
+  - id: compile-time-processing
+    title: Annotation Processing ở Compile-Time
+    purpose: Hiểu annotation processor là compile-time consumer inspect source model và generate source/resource qua nhiều processing round.
+    objectives:
+      - Theo dõi concept processor discovery, supported type, processing round và Filer output.
+      - Tách compile-time generation khỏi runtime reflection.
+  - id: runtime-consumption-boundary
+    title: Boundary tiêu thụ Metadata ở Runtime
+    purpose: Hiểu boundary nơi annotation ownership kết thúc và runtime consumer như reflection/framework bắt đầu.
+    relatedModules:
+      - routeId: JAVA_REFLECTION
+        label: Reflection
+        note: Reflection là Java Core mechanism chính để tiêu thụ annotation metadata có RUNTIME retention.
+    objectives:
+      - Chỉ dùng RUNTIME retention khi thực sự có runtime consumer.
+      - Chuyển sang Reflection cho runtime inspection thay vì lặp lại member/invocation model ở đây.

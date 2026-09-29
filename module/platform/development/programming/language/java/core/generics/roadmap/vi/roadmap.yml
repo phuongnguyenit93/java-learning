@@ -10,6 +10,8 @@
 # - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
 # - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
 # - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
 #
 # ROADMAP THINKING FRAMEWORK
 # PURPOSE
@@ -39,4 +41,70 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: generics-purpose
+    title: Type-safe reuse với Generics
+    purpose: Hiểu vì sao parameterized type an toàn và expressive hơn việc lưu Object rồi cast ở mọi nơi.
+    relatedModules:
+      - routeId: JAVA_COLLECTION
+        label: Collections
+        note: Collections Framework là một trong các consumer quan trọng nhất của Java generics.
+    objectives:
+      - Giải thích compile-time type safety và reusable algorithm qua type parameter.
+      - Nhận biết nơi generics loại bỏ cast mà không thay đổi runtime object identity.
+  - id: generic-types-and-methods
+    title: Generic Type và Generic Method
+    purpose: Hiểu type parameter nên thuộc type hay một operation tùy nơi reusable relationship thực sự được sở hữu.
+    objectives:
+      - Declare và consume generic class/interface với type parameter có ý nghĩa.
+      - Dùng generic method khi type relationship chỉ thuộc một operation.
+  - id: bounded-type-parameters
+    title: Bound và capability yêu cầu
+    purpose: Hiểu bounded type parameter như cách yêu cầu capability nhưng vẫn giữ generic reuse.
+    objectives:
+      - Dùng upper bound để biểu diễn operation khả dụng trên type parameter.
+      - Nhận biết multiple/recursive bound là dạng nâng cao của cùng capability model.
+  - id: wildcards-and-type-families
+    title: Wildcard và họ type
+    purpose: Hiểu wildcard khi API cần nhận một họ parameterized type mà không biết chính xác một type argument.
+    objectives:
+      - Phân biệt unbounded, upper-bounded và lower-bounded wildcard.
+      - Hiểu wildcard capture như compiler model thay vì mẹo ghi nhớ.
+  - id: pecs-data-direction
+    title: PECS và hướng dữ liệu
+    purpose: Dùng hướng producer/consumer của dữ liệu để chọn wildcard variance có chủ đích.
+    objectives:
+      - Áp dụng extends cho producer và super cho consumer dựa trên API intent.
+      - Nhận biết khi không cần wildcard vì cần cả read và write symmetry.
+  - id: invariance-and-subtyping
+    title: Generic Invariance và Subtyping
+    purpose: Hiểu vì sao List<Dog> không phải subtype của List<Animal> và cách wildcard variance tạo flexibility có kiểm soát.
+    objectives:
+      - Tách class inheritance khỏi parameterized-type subtyping.
+      - Dự đoán assignment compatibility giữa các generic type.
+  - id: raw-types-and-legacy-boundaries
+    title: Raw Type và Legacy Boundary
+    purpose: Hiểu cách raw type bypass generic guarantee và vì sao unchecked warning phản ánh safety boundary thực sự.
+    objectives:
+      - Khoanh vùng raw-type interoperability thay vì làm unchecked operation lan rộng.
+      - Hiểu compiler warning là bằng chứng type guarantee bị yếu đi.
+  - id: erasure-runtime-model
+    title: Type Erasure và Runtime Metadata
+    purpose: Hiểu cách generic type argument hướng dẫn compilation trong khi phần lớn runtime execution dùng erased type.
+    relatedModules:
+      - routeId: JAVA_REFLECTION
+        label: Reflection
+        note: Reflection expose generic signature metadata còn tồn tại sau erasure.
+    objectives:
+      - Giải thích bridge method và erased signature ở mức conceptual.
+      - Phân biệt erased execution với retained generic signature metadata.
+  - id: generic-limitations-and-synthesis
+    title: Giới hạn Generics và API Design
+    purpose: Kết nối erasure, invariance, reifiability, heap pollution và wildcard trade-off thành generic API design model thực tế.
+    relatedModules:
+      - routeId: JAVA_FUNCTIONAL_PROGRAMMING
+        label: Functional Programming
+        note: Standard functional interface sử dụng generics mạnh để biểu diễn input/output relationship.
+    objectives:
+      - Nhận biết operation vẫn không thể hoặc không an toàn do erasure/invariance.
+      - Thiết kế generic API type-safe mà không lạm dụng bound phức tạp.

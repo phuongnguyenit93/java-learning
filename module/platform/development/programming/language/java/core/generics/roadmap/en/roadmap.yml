@@ -10,6 +10,8 @@
 # - purpose [string, required]: What the learner should understand or achieve from this milestone.
 # - dependsOn [list, optional]: Prerequisite milestone ids when item order alone is not enough to express the dependency.
 # - objectives [list, optional]: Milestone-level learning objectives; do not use this to list every small fact/API/syntax item.
+# - relatedKnowledge [list, optional]: Knowledge category ids in the current module that support this milestone. Portal displays this list on the side opposite the milestone and clicking an item navigates to the matching Knowledge category.
+# - relatedModules [list, optional]: Related modules displayed as Portal Level 2 cards. Each item requires routeId and may provide localized label/note; this relation is navigation only and does not create child milestones or change learning order.
 #
 # ROADMAP THINKING FRAMEWORK
 # PURPOSE
@@ -39,4 +41,70 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: generics-purpose
+    title: Type-Safe Reuse with Generics
+    purpose: Understand why parameterized types are safer and more expressive than storing Object and casting everywhere.
+    relatedModules:
+      - routeId: JAVA_COLLECTION
+        label: Collections
+        note: The Collections Framework is one of the most important consumers of Java generics.
+    objectives:
+      - Explain compile-time type safety and reusable algorithms through type parameters.
+      - Recognize where generics remove casts without changing runtime object identity.
+  - id: generic-types-and-methods
+    title: Generic Types and Generic Methods
+    purpose: Understand where type parameters belong when the reusable relationship is owned by a type versus by one operation.
+    objectives:
+      - Declare and consume generic classes/interfaces with meaningful type parameters.
+      - Use generic methods when the type relationship is local to one operation.
+  - id: bounded-type-parameters
+    title: Bounds and Required Capabilities
+    purpose: Understand bounded type parameters as a way to require capabilities while preserving generic reuse.
+    objectives:
+      - Use upper bounds to express operations available on a type parameter.
+      - Recognize multiple and recursive bounds as advanced forms of the same capability model.
+  - id: wildcards-and-type-families
+    title: Wildcards and Type Families
+    purpose: Understand wildcards when an API must accept a family of parameterized types without naming one exact type argument.
+    objectives:
+      - Distinguish unbounded, upper-bounded, and lower-bounded wildcards.
+      - Use wildcard capture as a compiler model rather than a memorized trick.
+  - id: pecs-data-direction
+    title: PECS and Data Direction
+    purpose: Use producer/consumer data direction to choose wildcard variance intentionally.
+    objectives:
+      - Apply extends for producers and super for consumers from API intent.
+      - Recognize when no wildcard is needed because read/write symmetry matters.
+  - id: invariance-and-subtyping
+    title: Generic Invariance and Subtyping
+    purpose: Understand why List<Dog> is not a subtype of List<Animal> and how wildcard variance provides controlled flexibility.
+    objectives:
+      - Separate class inheritance from parameterized-type subtyping.
+      - Predict assignment compatibility across generic types.
+  - id: raw-types-and-legacy-boundaries
+    title: Raw Types and Legacy Boundaries
+    purpose: Understand how raw types bypass generic guarantees and why unchecked warnings indicate a real safety boundary.
+    objectives:
+      - Contain raw-type interoperability instead of spreading unchecked operations.
+      - Interpret compiler warnings as evidence of weakened type guarantees.
+  - id: erasure-runtime-model
+    title: Type Erasure and Runtime Metadata
+    purpose: Understand how generic type arguments guide compilation while much executable runtime behavior uses erased types.
+    relatedModules:
+      - routeId: JAVA_REFLECTION
+        label: Reflection
+        note: Reflection exposes the generic signature metadata that remains available after erasure.
+    objectives:
+      - Explain bridge methods and erased signatures at a conceptual level.
+      - Distinguish erased execution from retained generic signature metadata.
+  - id: generic-limitations-and-synthesis
+    title: Generic Limitations and API Design
+    purpose: Connect erasure, invariance, reifiability, heap pollution, and wildcard trade-offs into a practical generic API design model.
+    relatedModules:
+      - routeId: JAVA_FUNCTIONAL_PROGRAMMING
+        label: Functional Programming
+        note: Standard functional interfaces use generics heavily to express input/output relationships.
+    objectives:
+      - Recognize operations that remain impossible or unsafe because of erasure/invariance.
+      - Design generic APIs that are type-safe without overusing complex bounds.

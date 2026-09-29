@@ -10,6 +10,8 @@
 # - purpose [string, required]: What the learner should understand or achieve from this milestone.
 # - dependsOn [list, optional]: Prerequisite milestone ids when item order alone is not enough to express the dependency.
 # - objectives [list, optional]: Milestone-level learning objectives; do not use this to list every small fact/API/syntax item.
+# - relatedKnowledge [list, optional]: Knowledge category ids in the current module that support this milestone. Portal displays this list on the side opposite the milestone and clicking an item navigates to the matching Knowledge category.
+# - relatedModules [list, optional]: Related modules displayed as Portal Level 2 cards. Each item requires routeId and may provide localized label/note; this relation is navigation only and does not create child milestones or change learning order.
 #
 # ROADMAP THINKING FRAMEWORK
 # PURPOSE
@@ -39,4 +41,80 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: functional-programming-purpose
+    title: Functional Programming in Java
+    purpose: Understand functional programming in Java as treating behavior as composable values while controlling state and side effects.
+    objectives:
+      - Explain what functional style adds to ordinary imperative Java.
+      - Recognize that Java remains multi-paradigm rather than becoming a purely functional language.
+  - id: functional-interfaces
+    title: Functional Interfaces and SAM Contracts
+    purpose: Understand a functional interface as the target contract that allows one abstract behavior to be represented by a lambda or method reference.
+    relatedModules:
+      - routeId: JAVA_ABSTRACT_INTERFACE
+        label: Abstract Class & Interface
+        note: Functional interfaces build directly on Java interface contract semantics.
+    objectives:
+      - Recognize SAM contracts and common java.util.function interface shapes.
+      - Choose domain-specific interfaces only when standard ones do not express intent well.
+  - id: lambdas-and-target-typing
+    title: Lambdas and Target Typing
+    purpose: Understand lambda syntax through target typing, parameter/return compatibility, and delayed execution rather than as anonymous magic.
+    objectives:
+      - Explain how the target functional interface determines lambda typing.
+      - Distinguish declaring behavior from executing behavior.
+  - id: method-references
+    title: Method References
+    purpose: Understand method references as concise adapters to an existing method/constructor when the target functional signature matches.
+    objectives:
+      - Distinguish static, bound, unbound, and constructor references.
+      - Prefer method references only when they improve readability over equivalent lambdas.
+  - id: capture-and-closure-semantics
+    title: Variable Capture and Closure Semantics
+    purpose: Understand how lambdas capture surrounding values and why local variables must be final or effectively final.
+    objectives:
+      - Distinguish captured local values from mutable object state reached through references.
+      - Recognize hidden state/side-effect risks inside closures.
+  - id: function-types-and-composition
+    title: Standard Function Types and Composition
+    purpose: Understand Function, Consumer, Supplier, Predicate, operators, and composition as reusable behavior-building blocks.
+    relatedModules:
+      - routeId: JAVA_GENERICS
+        label: Generics
+        note: Generic input/output relationships make standard functional interfaces reusable across types.
+    objectives:
+      - Choose functional interface shapes from data flow and return behavior.
+      - Compose behavior without hiding side effects or readability costs.
+  - id: functional-pipelines
+    title: Functional Pipelines and Stream Boundary
+    purpose: Understand pipeline-style transformation as composing lazy/intermediate behavior toward a terminal result, without turning this module into collection implementation study.
+    relatedModules:
+      - routeId: JAVA_COLLECTION
+        label: Collections
+        note: Collections provide common data sources and sinks; their hierarchy and implementation trade-offs remain owned by Collection.
+    objectives:
+      - Recognize mapping, filtering, reduction, and terminal-operation roles.
+      - Separate pipeline behavior from the underlying collection data structure.
+  - id: optional-composition
+    title: Optional and Explicit Absence
+    purpose: Understand Optional as a composable representation of possible absence at selected API boundaries rather than a universal replacement for null.
+    objectives:
+      - Use map/flatMap/filter/orElse-style composition to keep absence explicit.
+      - Recognize inappropriate uses such as blanket field/parameter replacement.
+  - id: side-effects-failures-and-debugging
+    title: Side Effects, Failures, and Debugging
+    purpose: Understand the trade-offs of compact functional code when mutation, checked exceptions, debugging, or hidden work enter the pipeline.
+    relatedModules:
+      - routeId: JAVA_EXCEPTION
+        label: Exceptions
+        note: Checked/unchecked exception semantics remain owned by the Exception module.
+    objectives:
+      - Keep side effects visible and controlled in functional pipelines.
+      - Recognize checked-exception friction and choose explicit adaptation boundaries.
+  - id: functional-synthesis
+    title: Functional Programming Synthesis
+    purpose: Connect functional interfaces, lambdas, capture, composition, pipelines, Optional, and side-effect control into one practical Java style model.
+    objectives:
+      - Choose functional style when it makes data flow and behavior composition clearer.
+      - Fall back to imperative/object-oriented structure when stateful workflow or debugging clarity benefits from it.

@@ -10,6 +10,8 @@
 # - purpose [string, required]: What the learner should understand or achieve from this milestone.
 # - dependsOn [list, optional]: Prerequisite milestone ids when item order alone is not enough to express the dependency.
 # - objectives [list, optional]: Milestone-level learning objectives; do not use this to list every small fact/API/syntax item.
+# - relatedKnowledge [list, optional]: Knowledge category ids in the current module that support this milestone. Portal displays this list on the side opposite the milestone and clicking an item navigates to the matching Knowledge category.
+# - relatedModules [list, optional]: Related modules displayed as Portal Level 2 cards. Each item requires routeId and may provide localized label/note; this relation is navigation only and does not create child milestones or change learning order.
 #
 # ROADMAP THINKING FRAMEWORK
 # PURPOSE
@@ -39,4 +41,62 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: date-time-model
+    title: Date-Time Mental Model
+    purpose: Understand that calendar date, wall-clock time, local date-time, timeline instant, offset, and zone answer different questions.
+    objectives:
+      - Choose a date-time type from the meaning of the domain value.
+      - Avoid treating all temporal values as interchangeable timestamps.
+  - id: local-date-and-time
+    title: Local Calendar and Wall-Clock Values
+    purpose: Understand LocalDate, LocalTime, and LocalDateTime as values without global timeline meaning.
+    objectives:
+      - Use local types for domain concepts that intentionally have no offset/zone.
+      - Recognize when attaching a zone later can create ambiguity.
+  - id: instant-and-timeline
+    title: Instant and Global Timeline
+    purpose: Understand Instant as a precise point on the UTC-based timeline and distinguish it from human calendar representation.
+    objectives:
+      - Use Instant for machine-oriented event time and ordering.
+      - Convert between Instant and human-facing zoned representations intentionally.
+  - id: offsets-zones-and-zoned-values
+    title: Offsets, Zones, and Zoned Values
+    purpose: Understand fixed UTC offsets versus named region rules and how OffsetDateTime/ZonedDateTime carry that context.
+    objectives:
+      - Distinguish ZoneOffset from ZoneId and DST-aware region rules.
+      - Choose OffsetDateTime or ZonedDateTime from interchange versus rule-aware needs.
+  - id: duration-and-period
+    title: Elapsed Time vs Calendar Amount
+    purpose: Understand Duration and Period as different models for time-based and date-based amounts.
+    objectives:
+      - Use Duration for elapsed timeline-based quantities.
+      - Use Period for calendar-aware year/month/day quantities.
+  - id: formatting-and-parsing
+    title: Formatting and Parsing
+    purpose: Understand date-time formatters as explicit text boundaries rather than part of the temporal value itself.
+    relatedModules:
+      - routeId: JAVA_LOCALIZATION
+        label: Localization
+        note: Locale-sensitive date/time presentation belongs to the broader localization model.
+    objectives:
+      - Use standard and custom formatters with explicit expectations.
+      - Keep parsing/formatting separate from core temporal semantics.
+  - id: arithmetic-comparison-and-dst
+    title: Arithmetic, Comparison, and DST Boundaries
+    purpose: Understand how temporal arithmetic and comparison depend on the chosen type and how zone transitions create gaps or overlaps.
+    objectives:
+      - Choose timeline versus calendar arithmetic intentionally.
+      - Recognize ambiguous or invalid local times around DST transitions.
+  - id: clock-and-testability
+    title: Clock and Testable Time
+    purpose: Understand Clock as an injectable source of “now” that separates time-dependent behavior from the system clock.
+    objectives:
+      - Make time-sensitive code deterministic in tests.
+      - Avoid scattering direct now() calls through business logic.
+  - id: legacy-interop-and-synthesis
+    title: Legacy Interop and Date-Time Synthesis
+    purpose: Connect modern java.time types with legacy Date/Calendar interop while avoiding default-zone and conversion pitfalls.
+    objectives:
+      - Convert across legacy and modern APIs at explicit boundaries.
+      - Choose the smallest temporal model that preserves the domain meaning.

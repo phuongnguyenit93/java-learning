@@ -10,6 +10,8 @@
 # - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
 # - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
 # - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
 #
 # ROADMAP THINKING FRAMEWORK
 # PURPOSE
@@ -39,4 +41,62 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: exception-purpose
+    title: Mục đích Exception và Abnormal Completion
+    purpose: Hiểu exception như abnormal-completion channel riêng, mang failure context qua các call boundary.
+    objectives:
+      - Giải thích vì sao exception scale tốt hơn việc ép mọi caller kiểm tra status value.
+      - Nhận biết exception không phải default mechanism cho ordinary expected control flow.
+  - id: throwable-model
+    title: Throwable và Failure Taxonomy
+    purpose: Hiểu Throwable vừa là failure object vừa là root của exceptional-control-flow hierarchy trong Java.
+    objectives:
+      - Phân biệt vai trò Error, Exception, RuntimeException, cause và stack trace.
+      - Dùng hierarchy để reason về catch boundary thay vì ghi nhớ class.
+  - id: checked-and-unchecked-contracts
+    title: Checked và Unchecked Contract
+    purpose: Hiểu khi nào failure trở thành một phần của compile-time method contract và trade-off giữa checked với unchecked design.
+    objectives:
+      - Giải thích compiler obligation của checked exception.
+      - Chọn exception style theo recoverability và abstraction contract.
+  - id: throwing-and-propagation
+    title: Throwing, Declaring và Propagation
+    purpose: Hiểu cách failure được tạo, declare, match và propagate qua stack unwinding.
+    objectives:
+      - Phân biệt throw với throws và hiểu override/rethrow constraint.
+      - Theo dõi catch selection và causal chain qua nhiều layer.
+  - id: handling-and-cleanup
+    title: Handling và Cleanup
+    purpose: Hiểu cách try/catch/finally tách recovery decision khỏi cleanup mà vẫn giữ failure semantics.
+    objectives:
+      - Chỉ catch tại nơi có meaningful handling hoặc translation.
+      - Reason về finally behavior mà không che primary failure.
+  - id: resource-safe-failure
+    title: Resource Safety và Suppressed Failure
+    purpose: Hiểu try-with-resources, close order và suppressed exception khi cả work lẫn cleanup đều có thể fail.
+    relatedModules:
+      - routeId: JAVA_IO
+        label: I/O
+        note: I/O resource làm exception-safe cleanup và try-with-resources đặc biệt rõ.
+    objectives:
+      - Dùng AutoCloseable resource an toàn qua structured lifetime management.
+      - Giữ primary và suppressed failure context.
+  - id: custom-exceptions-and-context
+    title: Custom Exception và Causal Context
+    purpose: Học khi nào exception type mới tạo abstraction value và cách giữ context hữu ích mà không làm lộ low-level detail.
+    objectives:
+      - Chỉ thiết kế exception hierarchy nhỏ khi nó làm rõ caller decision.
+      - Giữ cause và contextual data cần thiết khi wrap.
+  - id: exception-boundary-design
+    title: Translation, Logging, Recovery và Propagation
+    purpose: Xây dựng boundary-oriented model để quyết định nơi failure nên translate, log, recover hoặc tiếp tục propagate.
+    objectives:
+      - Tránh swallow failure và duplicate logging qua nhiều layer.
+      - Tách cleanup, recovery, translation và observability responsibility.
+  - id: exception-synthesis
+    title: Tổng hợp Exception Handling
+    purpose: Kết nối failure representation, propagation, cleanup, abstraction và recovery thành một end-to-end error-handling model.
+    objectives:
+      - Theo dõi một failure từ origin qua translation tới responsible handling boundary.
+      - Nhận biết khi exception design đang thêm context hay chỉ thêm wrapper.

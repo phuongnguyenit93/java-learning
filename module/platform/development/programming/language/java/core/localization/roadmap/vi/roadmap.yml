@@ -10,6 +10,8 @@
 # - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
 # - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
 # - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
 #
 # ROADMAP THINKING FRAMEWORK
 # PURPOSE
@@ -39,4 +41,70 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: localization-model
+    title: Mental Model Localization
+    purpose: Hiểu localization là điều chỉnh presentation và language convention mà không thay đổi underlying domain meaning.
+    objectives:
+      - Tách domain value khỏi presentation text/number/date theo locale.
+      - Nhận biết internationalization design là bài toán data/resource boundary.
+  - id: locale-and-language-tags
+    title: Locale và Language Tag
+    purpose: Hiểu Locale biểu diễn gì và cách language tag kiểu BCP 47 mang language/region/script information qua hệ thống.
+    objectives:
+      - Tạo và compare locale identity có chủ đích.
+      - Tránh xem language, region, script và timezone là cùng một concept.
+  - id: resource-bundles-and-fallback
+    title: ResourceBundle và Fallback
+    purpose: Hiểu localized resource lookup, bundle naming, candidate selection và fallback behavior.
+    objectives:
+      - Tổ chức localized resource mà không duplicate domain logic.
+      - Dự đoán điều gì xảy ra khi thiếu exact locale resource.
+  - id: localized-messages
+    title: Localized Message có tham số
+    purpose: Hiểu MessageFormat là cách locale-aware để compose message có parameter mà không nối chuỗi thủ công.
+    objectives:
+      - Giữ translatable message structure trong resource thay vì code.
+      - Xử lý quoting và argument formatting có chủ đích.
+  - id: numbers-and-currency
+    title: Number và Currency theo Locale
+    purpose: Hiểu khác biệt giữa numeric/currency domain value với cách chúng được format/parse theo locale.
+    relatedModules:
+      - routeId: JAVA_NUMBERS
+        label: Numbers
+        note: Numeric representation và rounding thuộc Numbers; Localization sở hữu presentation.
+    objectives:
+      - Dùng locale-sensitive number formatting mà không thay đổi numeric meaning.
+      - Tách currency identity khỏi localized currency display.
+  - id: collation-and-text-order
+    title: Collation theo Locale
+    purpose: Hiểu vì sao thứ tự text người dùng nhìn thấy phụ thuộc locale rule thay vì raw Unicode/String natural order.
+    relatedModules:
+      - routeId: JAVA_STRING
+        label: String
+        note: Unicode, normalization và core String semantics là prerequisite cho locale-aware text processing.
+    objectives:
+      - Dùng Collator khi linguistic ordering quan trọng.
+      - Reason về collation strength và decomposition mà không thay đổi string identity.
+  - id: date-time-localization
+    title: Date-Time Presentation theo Locale
+    purpose: Hiểu localization của temporal presentation nhưng vẫn tách Locale khỏi ZoneId và timeline semantics.
+    relatedModules:
+      - routeId: JAVA_DATE_TIME
+        label: Date-Time
+        note: Date-Time sở hữu temporal meaning, zone và arithmetic; Localization sở hữu presentation convention.
+    objectives:
+      - Format date/time theo locale convention mà không đổi temporal value.
+      - Giữ timezone decision thuộc date-time model.
+  - id: text-segmentation-and-bidi
+    title: Text Segmentation và Bidirectional Text
+    purpose: Hiểu vì sao natural-language boundary và visual order có thể khác code-unit index, space và logical storage order.
+    objectives:
+      - Nhận biết word/sentence/grapheme segmentation phụ thuộc locale.
+      - Hiểu boundary giữa logical order và visual order trong mixed LTR/RTL text.
+  - id: locale-defaults-and-synthesis
+    title: Default, Fallback và tổng hợp Localization
+    purpose: Kết nối locale identity, resource, formatting, collation, temporal presentation và text behavior đồng thời tránh hidden system-default assumption.
+    objectives:
+      - Làm locale choice rõ ràng tại application boundary.
+      - Nhận biết khi fallback hữu ích và khi nó che missing localization data.

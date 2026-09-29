@@ -10,6 +10,8 @@
 # - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
 # - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
 # - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
 #
 # ROADMAP THINKING FRAMEWORK
 # PURPOSE
@@ -39,4 +41,70 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: runtime-type-lifecycle
+    title: Từ Class Byte tới Runtime Type
+    purpose: Hiểu vì sao JVM vẫn cần loading, linking và initialization stage sau khi class byte đã tồn tại.
+    relatedModules:
+      - routeId: JAVA_CLASS_OBJECT
+        label: Class & Object
+        note: Class/Object giới thiệu class initialization và object construction từ góc nhìn language.
+    objectives:
+      - Phân biệt concept loading, verification, preparation, resolution và initialization.
+      - Giải thích vì sao “class file tồn tại” khác “Class đã loaded và initialized”.
+  - id: built-in-loaders
+    title: Built-In ClassLoader
+    purpose: Hiểu vai trò bootstrap, platform và application loader trong JVM thông thường.
+    objectives:
+      - Inspect loader nào sở hữu JDK, platform và application class.
+      - Hiểu null bootstrap representation trong ClassLoader API.
+  - id: parent-delegation
+    title: Parent Delegation
+    purpose: Hiểu parent-first lookup là strategy bảo vệ consistency và core-type identity chứ không phải recursion tùy ý.
+    objectives:
+      - Theo dõi delegation path trước local class definition.
+      - Nhận biết child-first strategy là deliberate exception có isolation risk.
+  - id: custom-loaders-and-isolation
+    title: Custom ClassLoader và Isolation
+    purpose: Hiểu cách application load byte từ alternate source hoặc isolated namespace qua custom loader.
+    objectives:
+      - Hiểu responsibility của loadClass/findClass/defineClass.
+      - Nhận biết concern về synchronization, package, security và API boundary.
+  - id: class-identity
+    title: Class Identity qua nhiều Loader
+    purpose: Hiểu runtime type identity là binary name cộng defining ClassLoader.
+    relatedModules:
+      - routeId: JAVA_REFLECTION
+        label: Reflection
+        note: Reflection quan sát Class object có identity được thiết lập bởi defining loader.
+    objectives:
+      - Giải thích vì sao class cùng tên từ loader khác nhau không tương thích.
+      - Thiết kế shared API boundary để plugin/container type vẫn assignable.
+  - id: thread-context-classloader
+    title: Thread Context ClassLoader
+    purpose: Hiểu vì sao framework code thuộc parent đôi khi cần thread-associated loader để discover child/application provider.
+    objectives:
+      - Dùng TCCL theo scope save/set/restore.
+      - Nhận biết long-lived thread reference là nguồn classloader leak tiềm năng.
+  - id: classpath-resource-loading
+    title: Classpath Resource Loading
+    purpose: Hiểu class-relative và loader-root resource lookup mà không nhầm classpath resource với filesystem file.
+    relatedModules:
+      - routeId: JAVA_IO
+        label: I/O
+        note: I/O sở hữu stream/file handling thông thường; ClassLoader sở hữu classpath resource discovery semantics.
+    objectives:
+      - Phân biệt path semantics của Class.getResource và ClassLoader.getResource.
+      - Quản lý resource stream và multiple-resource lookup có chủ đích.
+  - id: class-initialization
+    title: Class Initialization Trigger và Failure
+    purpose: Hiểu điều gì trigger class initialization, cách initialization được synchronize và failure ảnh hưởng lần dùng sau như thế nào.
+    objectives:
+      - Phân biệt loading với initialization và active-use trigger.
+      - Hiểu concept ExceptionInInitializerError và erroneous class state.
+  - id: unloading-leaks-and-synthesis
+    title: Unloading, Retention và ClassLoader Leak
+    purpose: Hiểu class unload theo reachability của defining loader và vì sao một loader bị retain có thể giữ cả application/plugin graph.
+    objectives:
+      - Nhận biết retention pattern qua static, ThreadLocal, listener, cache và TCCL.
+      - Hiểu unloading phụ thuộc GC chứ không phải deterministic lifecycle code.

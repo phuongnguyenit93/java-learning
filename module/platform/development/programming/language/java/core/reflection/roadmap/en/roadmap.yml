@@ -10,6 +10,8 @@
 # - purpose [string, required]: What the learner should understand or achieve from this milestone.
 # - dependsOn [list, optional]: Prerequisite milestone ids when item order alone is not enough to express the dependency.
 # - objectives [list, optional]: Milestone-level learning objectives; do not use this to list every small fact/API/syntax item.
+# - relatedKnowledge [list, optional]: Knowledge category ids in the current module that support this milestone. Portal displays this list on the side opposite the milestone and clicking an item navigates to the matching Knowledge category.
+# - relatedModules [list, optional]: Related modules displayed as Portal Level 2 cards. Each item requires routeId and may provide localized label/note; this relation is navigation only and does not create child milestones or change learning order.
 #
 # ROADMAP THINKING FRAMEWORK
 # PURPOSE
@@ -39,4 +41,80 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: reflection-purpose
+    title: Reflection Purpose and Dynamic Inspection
+    purpose: Understand reflection as a deliberate escape from ordinary static access when runtime structure must be discovered dynamically.
+    relatedModules:
+      - routeId: JAVA_ANNOTATION
+        label: Annotations
+        note: Runtime-retained annotations are common metadata consumed through reflection.
+    objectives:
+      - Explain why frameworks and tooling need runtime metadata.
+      - Recognize why ordinary application code should not default to reflection.
+  - id: class-metadata
+    title: Class Metadata
+    purpose: Understand Class<?> as the runtime description of a loaded type and the entry point to reflective structure.
+    relatedModules:
+      - routeId: JAVA_CLASSLOADER
+        label: ClassLoader
+        note: A Class object exists only after a loader defines the runtime type identity.
+    objectives:
+      - Inspect names, kind, modifiers, superclass, interfaces, and declared/public members.
+      - Distinguish metadata about a type from instances of that type.
+  - id: reflective-fields
+    title: Reflective Field Inspection and Access
+    purpose: Understand how field descriptors expose names, modifiers, raw/generic types, and controlled read/write operations.
+    objectives:
+      - Distinguish inherited public fields from declared fields.
+      - Treat reflective mutation as an exceptional boundary with encapsulation costs.
+  - id: reflective-methods
+    title: Method Discovery and Invocation
+    purpose: Understand how methods are selected and invoked from metadata rather than direct Java call syntax.
+    objectives:
+      - Inspect signatures, modifiers, parameters, return types, and declared exceptions.
+      - Understand InvocationTargetException and reflective invocation failure boundaries.
+  - id: reflective-construction
+    title: Constructor Discovery and Dynamic Instantiation
+    purpose: Understand how constructors can be discovered and invoked when construction choices are determined at runtime.
+    objectives:
+      - Inspect constructor metadata and instantiate controlled types dynamically.
+      - Recognize instantiation, access, and target-failure modes.
+  - id: reflective-access-control
+    title: Reflective Access and Encapsulation
+    purpose: Understand that reflection still interacts with language access rules and strong JPMS encapsulation.
+    objectives:
+      - Use canAccess/trySetAccessible with explicit awareness of module boundaries.
+      - Recognize maintenance and security costs of bypassing normal access.
+  - id: generic-signature-inspection
+    title: Generic Signature Inspection
+    purpose: Understand what generic signature metadata remains inspectable after type erasure.
+    relatedModules:
+      - routeId: JAVA_GENERICS
+        label: Generics
+        note: Generics owns erasure, bounds, wildcards, and compile-time type relationships.
+    objectives:
+      - Navigate Class, ParameterizedType, TypeVariable, WildcardType, and GenericArrayType.
+      - Separate erased execution from retained signature metadata.
+  - id: dynamic-invocation
+    title: Dynamic Invocation Semantics
+    purpose: Understand conversions, dispatch, and failures when invocation is driven dynamically instead of by compile-time syntax.
+    objectives:
+      - Reason about boxing, unboxing, widening, varargs, and invocation mismatch.
+      - Recognize the boundary between reflection and MethodHandle-style dynamic invocation.
+  - id: dynamic-proxies
+    title: Dynamic Proxies and Interception
+    purpose: Understand JDK dynamic proxies as runtime-generated interface implementations that route calls through an InvocationHandler.
+    relatedModules:
+      - routeId: JAVA_ABSTRACT_INTERFACE
+        label: Abstract Class & Interface
+        note: JDK dynamic proxies require interface contracts as their runtime proxy surface.
+    objectives:
+      - Trace proxy creation, handler invocation, delegation, and Object-method boundaries.
+      - Recognize the interface-based limitations of JDK proxies.
+  - id: reflection-risks-and-synthesis
+    title: Reflection Costs, Risks, and Synthesis
+    purpose: Connect dynamic flexibility with lost compile-time safety, hidden coupling, access risk, performance, refactoring, and native-image constraints.
+    objectives:
+      - Use reflection only when runtime dynamism justifies its costs.
+      - Design metadata discovery/caching boundaries that keep reflective code contained.

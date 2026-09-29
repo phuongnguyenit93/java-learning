@@ -10,6 +10,8 @@
 # - purpose [string, required]: What the learner should understand or achieve from this milestone.
 # - dependsOn [list, optional]: Prerequisite milestone ids when item order alone is not enough to express the dependency.
 # - objectives [list, optional]: Milestone-level learning objectives; do not use this to list every small fact/API/syntax item.
+# - relatedKnowledge [list, optional]: Knowledge category ids in the current module that support this milestone. Portal displays this list on the side opposite the milestone and clicking an item navigates to the matching Knowledge category.
+# - relatedModules [list, optional]: Related modules displayed as Portal Level 2 cards. Each item requires routeId and may provide localized label/note; this relation is navigation only and does not create child milestones or change learning order.
 #
 # ROADMAP THINKING FRAMEWORK
 # PURPOSE
@@ -39,4 +41,76 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: string-purpose
+    title: String Purpose and Text Boundaries
+    purpose: Understand String as Java’s primary immutable text value and identify the application boundaries where text representation matters.
+    objectives:
+      - Separate text representation from domain values such as numbers, dates, or identifiers.
+      - Recognize when text crosses storage, network, UI, or serialization boundaries.
+  - id: immutability-and-value-semantics
+    title: Immutability and Value Semantics
+    purpose: Understand why String is immutable and how immutability affects sharing, hashing, thread-safety, and transformation APIs.
+    objectives:
+      - Treat String operations as producing new values rather than mutating existing ones.
+      - Recognize safe-sharing benefits and allocation trade-offs.
+  - id: pool-identity-and-equality
+    title: Pool, Identity, and Equality
+    purpose: Understand why equal text may or may not share identity and why content equality must not be confused with reference identity.
+    relatedModules:
+      - routeId: JAVA_OBJECT_CONTRACT
+        label: Object Contract
+        note: String equality and hashing are concrete examples of general object contracts.
+    objectives:
+      - Explain literal pooling and the literal/new String distinction.
+      - Choose content-comparison APIs intentionally.
+  - id: core-string-operations
+    title: Core String Operations
+    purpose: Learn to inspect, search, extract, split, join, transform, and format text while respecting index and immutability boundaries.
+    objectives:
+      - Choose operations by intent rather than memorizing isolated methods.
+      - Recognize range, split, regex, and whitespace edge cases.
+  - id: text-construction
+    title: Concatenation and Mutable Builders
+    purpose: Understand the cost model of repeated concatenation and when StringBuilder or StringBuffer is the appropriate construction tool.
+    objectives:
+      - Distinguish compile-time concatenation from repeated runtime construction.
+      - Choose mutable builders without assuming String itself becomes mutable.
+  - id: encoding-and-charset
+    title: Encoding and Charset Boundaries
+    purpose: Understand how text becomes bytes and bytes become text, and why charset choice must be explicit at system boundaries.
+    relatedModules:
+      - routeId: JAVA_IO
+        label: I/O
+        note: Character streams and file/network I/O make charset decisions operational.
+    objectives:
+      - Separate Unicode text values from encoded byte sequences.
+      - Avoid platform-default charset assumptions.
+  - id: unicode-text-model
+    title: Unicode, Code Points, and User-Visible Text
+    purpose: Understand why Java char, Unicode code point, grapheme, and normalized text are different levels of the text model.
+    relatedModules:
+      - routeId: JAVA_LOCALIZATION
+        label: Localization
+        note: Locale-aware collation, segmentation, and presentation build on the Unicode text model.
+    objectives:
+      - Avoid assuming one char equals one user-visible character.
+      - Recognize normalization and segmentation boundaries.
+  - id: regex-patterns
+    title: Regular Expressions and Pattern Matching
+    purpose: Understand regex as a pattern language for text matching and transformation, together with its readability and performance boundaries.
+    objectives:
+      - Use regex when pattern semantics justify the complexity.
+      - Recognize escaping, backtracking, and flag-related pitfalls.
+  - id: text-blocks
+    title: Text Blocks
+    purpose: Understand text blocks as source-level multiline String syntax without confusing them with templating or a different runtime type.
+    objectives:
+      - Reason about incidental indentation, escapes, and line terminators.
+      - Use text blocks when source readability improves.
+  - id: string-synthesis
+    title: String and Text Processing Synthesis
+    purpose: Connect value semantics, construction, encoding, Unicode, patterns, and presentation boundaries into one text-processing model.
+    objectives:
+      - Choose the correct text abstraction before optimizing implementation details.
+      - Identify when the problem moves into I/O or localization rather than String itself.

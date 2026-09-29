@@ -10,6 +10,8 @@
 # - purpose [string, required]: What the learner should understand or achieve from this milestone.
 # - dependsOn [list, optional]: Prerequisite milestone ids when item order alone is not enough to express the dependency.
 # - objectives [list, optional]: Milestone-level learning objectives; do not use this to list every small fact/API/syntax item.
+# - relatedKnowledge [list, optional]: Knowledge category ids in the current module that support this milestone. Portal displays this list on the side opposite the milestone and clicking an item navigates to the matching Knowledge category.
+# - relatedModules [list, optional]: Related modules displayed as Portal Level 2 cards. Each item requires routeId and may provide localized label/note; this relation is navigation only and does not create child milestones or change learning order.
 #
 # ROADMAP THINKING FRAMEWORK
 # PURPOSE
@@ -39,4 +41,62 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: exception-purpose
+    title: Exception Purpose and Abnormal Completion
+    purpose: Understand exceptions as a separate abnormal-completion channel that carries failure context across call boundaries.
+    objectives:
+      - Explain why exceptions scale better than forcing every caller to inspect status values.
+      - Recognize that exceptions are not the default mechanism for ordinary expected control flow.
+  - id: throwable-model
+    title: Throwable and Failure Taxonomy
+    purpose: Understand Throwable as both a failure object and the root of Java’s exceptional-control-flow hierarchy.
+    objectives:
+      - Distinguish Error, Exception, RuntimeException, cause, and stack trace roles.
+      - Use hierarchy knowledge to reason about catch boundaries rather than memorizing classes.
+  - id: checked-and-unchecked-contracts
+    title: Checked and Unchecked Contracts
+    purpose: Understand when failure becomes part of the compile-time method contract and the trade-offs of checked versus unchecked design.
+    objectives:
+      - Explain compiler obligations for checked exceptions.
+      - Choose exception style according to recoverability and abstraction contracts.
+  - id: throwing-and-propagation
+    title: Throwing, Declaring, and Propagation
+    purpose: Understand how failures are created, declared, matched, and propagated through stack unwinding.
+    objectives:
+      - Distinguish throw from throws and understand override/rethrow constraints.
+      - Trace catch selection and causal chains across layers.
+  - id: handling-and-cleanup
+    title: Handling and Cleanup
+    purpose: Understand how try/catch/finally separates recovery decisions from cleanup while preserving failure semantics.
+    objectives:
+      - Catch only where meaningful handling or translation can occur.
+      - Reason about finally behavior without hiding primary failures.
+  - id: resource-safe-failure
+    title: Resource Safety and Suppressed Failures
+    purpose: Understand try-with-resources, close order, and suppressed exceptions when both work and cleanup can fail.
+    relatedModules:
+      - routeId: JAVA_IO
+        label: I/O
+        note: I/O resources make exception-safe cleanup and try-with-resources especially visible.
+    objectives:
+      - Use AutoCloseable resources safely through structured lifetime management.
+      - Preserve primary and suppressed failure context.
+  - id: custom-exceptions-and-context
+    title: Custom Exceptions and Causal Context
+    purpose: Learn when a new exception type adds abstraction value and how to preserve useful context without leaking low-level details.
+    objectives:
+      - Design small exception hierarchies only when they clarify caller decisions.
+      - Preserve causes and relevant contextual data during wrapping.
+  - id: exception-boundary-design
+    title: Translation, Logging, Recovery, and Propagation
+    purpose: Build a boundary-oriented model for deciding where failures should be translated, logged, recovered, or allowed to continue upward.
+    objectives:
+      - Avoid swallowing failures and duplicate logging across layers.
+      - Separate cleanup, recovery, translation, and observability responsibilities.
+  - id: exception-synthesis
+    title: Exception Handling Synthesis
+    purpose: Connect failure representation, propagation, cleanup, abstraction, and recovery into one end-to-end error-handling model.
+    objectives:
+      - Follow one failure from origin through translation to the responsible handling boundary.
+      - Recognize when an exception design is adding context versus merely adding wrappers.

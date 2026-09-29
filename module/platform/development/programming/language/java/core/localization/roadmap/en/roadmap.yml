@@ -10,6 +10,8 @@
 # - purpose [string, required]: What the learner should understand or achieve from this milestone.
 # - dependsOn [list, optional]: Prerequisite milestone ids when item order alone is not enough to express the dependency.
 # - objectives [list, optional]: Milestone-level learning objectives; do not use this to list every small fact/API/syntax item.
+# - relatedKnowledge [list, optional]: Knowledge category ids in the current module that support this milestone. Portal displays this list on the side opposite the milestone and clicking an item navigates to the matching Knowledge category.
+# - relatedModules [list, optional]: Related modules displayed as Portal Level 2 cards. Each item requires routeId and may provide localized label/note; this relation is navigation only and does not create child milestones or change learning order.
 #
 # ROADMAP THINKING FRAMEWORK
 # PURPOSE
@@ -39,4 +41,70 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: localization-model
+    title: Localization Mental Model
+    purpose: Understand localization as adapting presentation and language conventions without changing the underlying domain meaning.
+    objectives:
+      - Separate domain values from locale-specific text/number/date presentation.
+      - Recognize internationalization design as a data/resource boundary problem.
+  - id: locale-and-language-tags
+    title: Locale and Language Tags
+    purpose: Understand what Locale identifies and how BCP 47-style language tags carry language/region/script information across systems.
+    objectives:
+      - Create and compare locale identities intentionally.
+      - Avoid treating language, region, script, and timezone as the same concept.
+  - id: resource-bundles-and-fallback
+    title: ResourceBundle and Fallback
+    purpose: Understand localized resource lookup, bundle naming, candidate selection, and fallback behavior.
+    objectives:
+      - Organize localized resources without duplicating domain logic.
+      - Predict what happens when an exact locale resource is missing.
+  - id: localized-messages
+    title: Parameterized Localized Messages
+    purpose: Understand MessageFormat as a locale-aware way to compose parameterized messages without manual concatenation.
+    objectives:
+      - Keep translatable message structure in resources rather than code.
+      - Handle quoting and argument formatting intentionally.
+  - id: numbers-and-currency
+    title: Locale-Sensitive Numbers and Currency
+    purpose: Understand the difference between numeric/currency domain values and how those values are formatted or parsed for a locale.
+    relatedModules:
+      - routeId: JAVA_NUMBERS
+        label: Numbers
+        note: Numeric representation and rounding belong to Numbers; localization owns presentation.
+    objectives:
+      - Use locale-sensitive number formatting without changing numeric meaning.
+      - Separate currency identity from localized currency display.
+  - id: collation-and-text-order
+    title: Locale-Sensitive Collation
+    purpose: Understand why user-facing text order depends on locale rules rather than raw Unicode/String natural order.
+    relatedModules:
+      - routeId: JAVA_STRING
+        label: String
+        note: Unicode, normalization, and core String semantics are prerequisites for locale-aware text processing.
+    objectives:
+      - Use Collator when linguistic ordering matters.
+      - Reason about collation strength and decomposition without changing string identity.
+  - id: date-time-localization
+    title: Locale-Sensitive Date-Time Presentation
+    purpose: Understand localization of temporal presentation while keeping Locale separate from ZoneId and timeline semantics.
+    relatedModules:
+      - routeId: JAVA_DATE_TIME
+        label: Date-Time
+        note: Date-Time owns temporal meaning, zones, and arithmetic; Localization owns presentation conventions.
+    objectives:
+      - Format dates/times using locale conventions without changing the temporal value.
+      - Keep timezone decisions owned by the date-time model.
+  - id: text-segmentation-and-bidi
+    title: Text Segmentation and Bidirectional Text
+    purpose: Understand why natural-language boundaries and visual order can differ from code-unit indexes, spaces, and logical storage order.
+    objectives:
+      - Recognize word/sentence/grapheme segmentation as locale-sensitive.
+      - Understand the logical-versus-visual order boundary in mixed LTR/RTL text.
+  - id: locale-defaults-and-synthesis
+    title: Defaults, Fallbacks, and Localization Synthesis
+    purpose: Connect locale identity, resources, formatting, collation, temporal presentation, and text behavior while avoiding hidden system-default assumptions.
+    objectives:
+      - Make locale choice explicit at application boundaries.
+      - Recognize when fallback is useful versus when it hides missing localization data.

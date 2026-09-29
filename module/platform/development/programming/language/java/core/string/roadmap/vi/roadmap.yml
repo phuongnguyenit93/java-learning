@@ -10,6 +10,8 @@
 # - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
 # - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
 # - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
 #
 # ROADMAP THINKING FRAMEWORK
 # PURPOSE
@@ -39,4 +41,76 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: string-purpose
+    title: Mục đích của String và text boundary
+    purpose: Hiểu String là immutable text value chính của Java và xác định các application boundary nơi text representation quan trọng.
+    objectives:
+      - Tách text representation khỏi domain value như number, date hoặc identifier.
+      - Nhận biết khi text đi qua storage, network, UI hoặc serialization boundary.
+  - id: immutability-and-value-semantics
+    title: Immutability và Value Semantics
+    purpose: Hiểu vì sao String immutable và cách immutability ảnh hưởng đến sharing, hashing, thread-safety và transformation API.
+    objectives:
+      - Xem String operation là tạo value mới thay vì mutate value cũ.
+      - Nhận biết lợi ích safe-sharing và allocation trade-off.
+  - id: pool-identity-and-equality
+    title: String Pool, Identity và Equality
+    purpose: Hiểu vì sao text bằng nhau có thể có hoặc không cùng identity và vì sao content equality không được nhầm với reference identity.
+    relatedModules:
+      - routeId: JAVA_OBJECT_CONTRACT
+        label: Object Contract
+        note: String equality và hashing là ví dụ cụ thể của object contract tổng quát.
+    objectives:
+      - Giải thích literal pooling và khác biệt literal/new String.
+      - Chọn content-comparison API có chủ đích.
+  - id: core-string-operations
+    title: Các thao tác String cốt lõi
+    purpose: Học cách inspect, search, extract, split, join, transform và format text đồng thời tôn trọng index và immutability boundary.
+    objectives:
+      - Chọn operation theo intent thay vì ghi nhớ method rời rạc.
+      - Nhận biết edge case về range, split, regex và whitespace.
+  - id: text-construction
+    title: Nối chuỗi và Mutable Builder
+    purpose: Hiểu cost model của repeated concatenation và khi nào StringBuilder/StringBuffer là construction tool phù hợp.
+    objectives:
+      - Phân biệt compile-time concatenation với repeated runtime construction.
+      - Chọn mutable builder mà không nhầm rằng String trở nên mutable.
+  - id: encoding-and-charset
+    title: Encoding và Charset Boundary
+    purpose: Hiểu cách text trở thành byte và byte trở thành text, cùng lý do charset phải rõ ràng tại system boundary.
+    relatedModules:
+      - routeId: JAVA_IO
+        label: I/O
+        note: Character stream và file/network I/O biến charset decision thành behavior thực tế.
+    objectives:
+      - Tách Unicode text value khỏi encoded byte sequence.
+      - Tránh assumption dựa trên platform-default charset.
+  - id: unicode-text-model
+    title: Unicode, Code Point và text người dùng nhìn thấy
+    purpose: Hiểu vì sao Java char, Unicode code point, grapheme và normalized text là các tầng khác nhau của text model.
+    relatedModules:
+      - routeId: JAVA_LOCALIZATION
+        label: Localization
+        note: Collation, segmentation và presentation theo locale dựa trên Unicode text model.
+    objectives:
+      - Tránh giả định một char bằng một ký tự người dùng nhìn thấy.
+      - Nhận biết normalization và segmentation boundary.
+  - id: regex-patterns
+    title: Regular Expression và Pattern Matching
+    purpose: Hiểu regex như pattern language cho text matching/transformation cùng readability và performance boundary.
+    objectives:
+      - Dùng regex khi pattern semantics thực sự cần complexity đó.
+      - Nhận biết pitfall về escaping, backtracking và flag.
+  - id: text-blocks
+    title: Text Block
+    purpose: Hiểu text block là source-level multiline String syntax, không phải template hay runtime type khác.
+    objectives:
+      - Reason về incidental indentation, escape và line terminator.
+      - Dùng text block khi source readability được cải thiện.
+  - id: string-synthesis
+    title: Tổng hợp String và Text Processing
+    purpose: Kết nối value semantics, construction, encoding, Unicode, pattern và presentation boundary thành một text-processing model thống nhất.
+    objectives:
+      - Chọn đúng text abstraction trước khi tối ưu implementation detail.
+      - Nhận biết khi bài toán chuyển sang I/O hoặc localization thay vì String.

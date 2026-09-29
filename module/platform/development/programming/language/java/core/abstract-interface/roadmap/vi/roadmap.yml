@@ -10,6 +10,8 @@
 # - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
 # - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
 # - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
 #
 # ROADMAP THINKING FRAMEWORK
 # PURPOSE
@@ -39,4 +41,60 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: abstraction-mechanism-purpose
+    title: Vì sao Java cần abstraction không thể instantiate
+    purpose: Hiểu design problem mà abstract class và interface giải quyết trước khi so sánh syntax.
+    relatedModules:
+      - routeId: JAVA_OOP
+        label: OOP
+        note: OOP cung cấp design context cho abstraction, substitutability và polymorphism.
+    objectives:
+      - Tách nhu cầu behavioral contract khỏi concrete object construction.
+      - Nhận biết khi caller cần abstraction thay vì concrete implementation.
+  - id: abstract-classes
+    title: Abstract Class
+    purpose: Hiểu abstract class như class hierarchy được implement một phần, có thể chia sẻ state, construction và behavior.
+    objectives:
+      - Dùng abstract member và concrete shared behavior có chủ đích.
+      - Nhận biết hệ quả của single inheritance và constructor coupling.
+  - id: interfaces-as-contracts
+    title: Interface như Contract
+    purpose: Hiểu interface như behavioral type contract giúp caller không bị khóa vào một concrete class hierarchy.
+    relatedModules:
+      - routeId: JAVA_FUNCTIONAL_PROGRAMMING
+        label: Functional Programming
+        note: Functional interface là target type giúp Java lambda hoạt động.
+    objectives:
+      - Mô hình hóa capability và role bằng interface.
+      - Hiểu interface implementation mà không giả định shared instance state.
+  - id: choosing-abstract-class-or-interface
+    title: Abstract Class và Interface
+    purpose: Xây dựng decision model để chọn giữa shared implementation/state và behavioral contract linh hoạt.
+    objectives:
+      - Chọn dựa trên ownership, state, evolution và hierarchy constraint.
+      - Tránh dùng một mechanism chỉ vì quen thuộc.
+  - id: interface-hierarchies
+    title: Interface Inheritance và Contract Composition
+    purpose: Hiểu cách interface extends interface khác để compose capability mà không tạo object state inheritance.
+    objectives:
+      - Xây dựng contract hierarchy mà không chia nhỏ API quá mức.
+      - Reason về inherited abstract/default member.
+  - id: interface-evolution
+    title: Default, Static và Private Interface Method
+    purpose: Hiểu cách interface có thể evolve behavior nhưng vẫn giữ ranh giới rõ giữa contract và implementation.
+    objectives:
+      - Dùng default method cho compatible contract evolution thay vì thay thế class design.
+      - Hiểu vai trò và call semantics của static/private interface method.
+  - id: multiple-inheritance-conflicts
+    title: Multiple Interface Inheritance và Conflict Resolution
+    purpose: Hiểu điều gì xảy ra khi nhiều interface path cung cấp behavior chồng lấn và cách Java resolve hoặc yêu cầu resolve rõ ràng.
+    objectives:
+      - Dự đoán default-method conflict rule.
+      - Resolve diamond-like contract ambiguity mà không nhầm với multiple class inheritance.
+  - id: abstraction-mechanism-synthesis
+    title: Tổng hợp cơ chế Abstraction
+    purpose: Kết nối abstract class, interface, contract inheritance và evolution thành một API-design decision model thống nhất.
+    objectives:
+      - Chọn mechanism dựa trên contract, state, reuse và evolution need.
+      - Giải thích cách các mechanism này hỗ trợ polymorphism mà không tự định nghĩa toàn bộ OOP design.

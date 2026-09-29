@@ -10,6 +10,8 @@
 # - purpose [string, required]: What the learner should understand or achieve from this milestone.
 # - dependsOn [list, optional]: Prerequisite milestone ids when item order alone is not enough to express the dependency.
 # - objectives [list, optional]: Milestone-level learning objectives; do not use this to list every small fact/API/syntax item.
+# - relatedKnowledge [list, optional]: Knowledge category ids in the current module that support this milestone. Portal displays this list on the side opposite the milestone and clicking an item navigates to the matching Knowledge category.
+# - relatedModules [list, optional]: Related modules displayed as Portal Level 2 cards. Each item requires routeId and may provide localized label/note; this relation is navigation only and does not create child milestones or change learning order.
 #
 # ROADMAP THINKING FRAMEWORK
 # PURPOSE
@@ -39,4 +41,76 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: class-object-model
+    title: Class and Object Model
+    purpose: Understand the distinction between a type definition and a runtime object with identity, state, and behavior.
+    relatedModules:
+      - routeId: JAVA_OOP
+        label: Object-Oriented Programming
+        note: OOP builds design principles on top of the class/object mechanisms introduced here.
+    objectives:
+      - Explain how fields and methods define the state/behavior shape of instances.
+      - Track object references separately from the objects they refer to.
+  - id: construction-and-invariants
+    title: Construction and Valid State
+    purpose: Understand how constructors establish invariants and how constructor overloading/chaining shapes object creation.
+    objectives:
+      - Reason about default constructors, explicit constructors, and constructor failure.
+      - Design constructors that establish usable state before an object escapes.
+  - id: this-super-and-chaining
+    title: this, super, and Construction Chains
+    purpose: Understand how the current instance and superclass context participate in member access and constructor chaining.
+    objectives:
+      - Use this and super with the correct member/constructor semantics.
+      - Trace parent/child constructor order without confusing object identity.
+  - id: visibility-and-member-ownership
+    title: Visibility and Member Ownership
+    purpose: Understand who can access a member and whether that member belongs to the class or to each instance.
+    objectives:
+      - Use access modifiers as language-level boundaries.
+      - Distinguish static, instance, final, and constant semantics.
+  - id: initialization-lifecycle
+    title: Initialization Order and Object Lifecycle
+    purpose: Connect static initialization, instance initialization, inheritance, allocation, and constructor execution into one lifecycle.
+    relatedModules:
+      - routeId: JAVA_CLASSLOADER
+        label: ClassLoader
+        note: Class initialization is one stage of the broader JVM loading/linking/initialization lifecycle.
+    objectives:
+      - Trace class and instance initialization order across inheritance.
+      - Recognize constructor dynamic-dispatch and this-escape hazards.
+  - id: nested-types-and-capture
+    title: Nested and Inner Types
+    purpose: Understand when a type belongs inside another type and what surrounding instance/local context it can capture.
+    objectives:
+      - Distinguish static nested, inner, local, and anonymous classes.
+      - Reason about outer-instance and captured-local relationships.
+  - id: object-root-and-enum
+    title: Object Root Type and Enum Values
+    purpose: Understand the universal Object base type and Java enums as typed, instance-based closed sets.
+    relatedModules:
+      - routeId: JAVA_OBJECT_CONTRACT
+        label: Object Contract
+        note: The behavioral laws of equals, hashCode, toString, and ordering are owned by Object Contract.
+    objectives:
+      - Recognize the core Object methods without duplicating their full behavioral contracts.
+      - Use enum fields, methods, interfaces, and constant-specific behavior intentionally.
+  - id: copying-aliasing-mutability
+    title: Copying, Aliasing, and Mutability
+    purpose: Understand whether an operation copies a reference, an object shell, or an entire mutable object graph, and how aliasing changes behavior.
+    objectives:
+      - Distinguish reference copy, shallow copy, and deep copy.
+      - Predict shared-state effects when multiple references reach the same mutable object.
+  - id: immutability-and-defensive-copy
+    title: Immutability and Defensive Copying
+    purpose: Learn how ownership boundaries and defensive copies make object state safer to share.
+    objectives:
+      - Design immutable objects beyond merely marking fields final.
+      - Protect mutable inputs and outputs at API boundaries.
+  - id: class-object-synthesis
+    title: Class/Object Lifecycle Synthesis
+    purpose: Connect construction, visibility, initialization, identity, aliasing, and immutability into one object-lifecycle mental model.
+    objectives:
+      - Explain how a Java object becomes valid, observable, shared, and eventually unreachable.
+      - Identify which deeper concerns belong to OOP, Object Contract, Reflection, or ClassLoader.

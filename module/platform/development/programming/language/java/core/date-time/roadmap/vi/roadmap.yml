@@ -10,6 +10,8 @@
 # - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
 # - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
 # - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
 #
 # ROADMAP THINKING FRAMEWORK
 # PURPOSE
@@ -39,4 +41,62 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: date-time-model
+    title: Mental Model Date-Time
+    purpose: Hiểu calendar date, wall-clock time, local date-time, timeline instant, offset và zone trả lời các câu hỏi khác nhau.
+    objectives:
+      - Chọn date-time type từ ý nghĩa domain value.
+      - Tránh xem mọi temporal value như timestamp có thể thay thế lẫn nhau.
+  - id: local-date-and-time
+    title: Calendar và Wall-Clock value cục bộ
+    purpose: Hiểu LocalDate, LocalTime và LocalDateTime là value chưa có global timeline meaning.
+    objectives:
+      - Dùng local type cho domain concept cố ý không có offset/zone.
+      - Nhận biết khi việc gắn zone sau đó có thể tạo ambiguity.
+  - id: instant-and-timeline
+    title: Instant và Global Timeline
+    purpose: Hiểu Instant là một điểm chính xác trên timeline dựa trên UTC và tách nó khỏi human calendar representation.
+    objectives:
+      - Dùng Instant cho machine-oriented event time và ordering.
+      - Convert giữa Instant với human-facing zoned representation có chủ đích.
+  - id: offsets-zones-and-zoned-values
+    title: Offset, Zone và Zoned Value
+    purpose: Hiểu fixed UTC offset khác named region rule như thế nào và cách OffsetDateTime/ZonedDateTime mang context đó.
+    objectives:
+      - Phân biệt ZoneOffset với ZoneId và region rule có DST.
+      - Chọn OffsetDateTime hay ZonedDateTime theo nhu cầu interchange hoặc rule-aware.
+  - id: duration-and-period
+    title: Elapsed Time và Calendar Amount
+    purpose: Hiểu Duration và Period là hai model khác nhau cho time-based amount và date-based amount.
+    objectives:
+      - Dùng Duration cho elapsed quantity dựa trên timeline.
+      - Dùng Period cho quantity year/month/day theo calendar.
+  - id: formatting-and-parsing
+    title: Formatting và Parsing
+    purpose: Hiểu date-time formatter là text boundary rõ ràng chứ không phải một phần của temporal value.
+    relatedModules:
+      - routeId: JAVA_LOCALIZATION
+        label: Localization
+        note: Date/time presentation theo locale thuộc localization model rộng hơn.
+    objectives:
+      - Dùng standard/custom formatter với expectation rõ ràng.
+      - Tách parsing/formatting khỏi core temporal semantics.
+  - id: arithmetic-comparison-and-dst
+    title: Arithmetic, Comparison và DST Boundary
+    purpose: Hiểu temporal arithmetic/comparison phụ thuộc type được chọn và cách zone transition tạo gap/overlap.
+    objectives:
+      - Chọn timeline arithmetic hay calendar arithmetic có chủ đích.
+      - Nhận biết local time ambiguous hoặc invalid quanh DST transition.
+  - id: clock-and-testability
+    title: Clock và thời gian có thể test
+    purpose: Hiểu Clock như injectable source của “now”, tách time-dependent behavior khỏi system clock.
+    objectives:
+      - Làm time-sensitive code deterministic trong test.
+      - Tránh rải direct now() call khắp business logic.
+  - id: legacy-interop-and-synthesis
+    title: Legacy Interop và tổng hợp Date-Time
+    purpose: Kết nối modern java.time type với legacy Date/Calendar interop đồng thời tránh default-zone và conversion pitfall.
+    objectives:
+      - Convert giữa legacy và modern API tại boundary rõ ràng.
+      - Chọn temporal model nhỏ nhất nhưng vẫn giữ domain meaning.

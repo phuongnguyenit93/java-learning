@@ -10,6 +10,8 @@
 # - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
 # - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
 # - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
 #
 # ROADMAP THINKING FRAMEWORK
 # PURPOSE
@@ -39,4 +41,80 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: functional-programming-purpose
+    title: Functional Programming trong Java
+    purpose: Hiểu functional programming trong Java là biểu diễn behavior như value có thể compose, đồng thời kiểm soát state và side effect.
+    objectives:
+      - Giải thích functional style bổ sung gì cho imperative Java thông thường.
+      - Nhận biết Java vẫn là multi-paradigm chứ không trở thành pure functional language.
+  - id: functional-interfaces
+    title: Functional Interface và SAM Contract
+    purpose: Hiểu functional interface là target contract cho phép một abstract behavior được biểu diễn bằng lambda hoặc method reference.
+    relatedModules:
+      - routeId: JAVA_ABSTRACT_INTERFACE
+        label: Abstract Class & Interface
+        note: Functional interface dựa trực tiếp trên interface contract semantics của Java.
+    objectives:
+      - Nhận biết SAM contract và shape phổ biến của java.util.function interface.
+      - Chỉ tạo domain-specific interface khi standard interface không biểu diễn intent tốt.
+  - id: lambdas-and-target-typing
+    title: Lambda và Target Typing
+    purpose: Hiểu lambda syntax qua target typing, parameter/return compatibility và delayed execution thay vì xem nó như magic.
+    objectives:
+      - Giải thích cách target functional interface quyết định lambda typing.
+      - Phân biệt declare behavior với execute behavior.
+  - id: method-references
+    title: Method Reference
+    purpose: Hiểu method reference là adapter ngắn gọn tới method/constructor có sẵn khi target functional signature phù hợp.
+    objectives:
+      - Phân biệt static, bound, unbound và constructor reference.
+      - Chỉ ưu tiên method reference khi readability tốt hơn lambda tương đương.
+  - id: capture-and-closure-semantics
+    title: Variable Capture và Closure Semantics
+    purpose: Hiểu cách lambda capture surrounding value và vì sao local variable phải final hoặc effectively final.
+    objectives:
+      - Phân biệt captured local value với mutable object state truy cập qua reference.
+      - Nhận biết hidden state/side-effect risk bên trong closure.
+  - id: function-types-and-composition
+    title: Standard Function Type và Composition
+    purpose: Hiểu Function, Consumer, Supplier, Predicate, operator và composition như các behavior-building block có thể reuse.
+    relatedModules:
+      - routeId: JAVA_GENERICS
+        label: Generics
+        note: Generic input/output relationship giúp standard functional interface reuse được qua nhiều type.
+    objectives:
+      - Chọn functional interface shape theo data flow và return behavior.
+      - Compose behavior mà không che side effect hoặc readability cost.
+  - id: functional-pipelines
+    title: Functional Pipeline và Stream Boundary
+    purpose: Hiểu pipeline-style transformation là compose lazy/intermediate behavior hướng tới terminal result, nhưng không biến module này thành nơi học collection implementation.
+    relatedModules:
+      - routeId: JAVA_COLLECTION
+        label: Collections
+        note: Collection cung cấp data source/sink phổ biến; hierarchy và implementation trade-off vẫn thuộc Collection.
+    objectives:
+      - Nhận biết vai trò mapping, filtering, reduction và terminal operation.
+      - Tách pipeline behavior khỏi underlying collection data structure.
+  - id: optional-composition
+    title: Optional và Explicit Absence
+    purpose: Hiểu Optional là composable representation của possible absence tại một số API boundary, không phải universal replacement cho null.
+    objectives:
+      - Dùng map/flatMap/filter/orElse-style composition để giữ absence rõ ràng.
+      - Nhận biết use case không phù hợp như thay mọi field/parameter bằng Optional.
+  - id: side-effects-failures-and-debugging
+    title: Side Effect, Failure và Debugging
+    purpose: Hiểu trade-off của functional code ngắn gọn khi mutation, checked exception, debugging hoặc hidden work đi vào pipeline.
+    relatedModules:
+      - routeId: JAVA_EXCEPTION
+        label: Exception
+        note: Checked/unchecked exception semantics vẫn thuộc module Exception.
+    objectives:
+      - Giữ side effect visible và controlled trong functional pipeline.
+      - Nhận biết friction của checked exception và chọn adaptation boundary rõ ràng.
+  - id: functional-synthesis
+    title: Tổng hợp Functional Programming
+    purpose: Kết nối functional interface, lambda, capture, composition, pipeline, Optional và side-effect control thành một model functional Java thực tế.
+    objectives:
+      - Chọn functional style khi nó làm data flow và behavior composition rõ hơn.
+      - Quay về imperative/object-oriented structure khi stateful workflow hoặc debugging clarity được lợi.

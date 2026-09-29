@@ -10,6 +10,8 @@
 # - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
 # - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
 # - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
 #
 # ROADMAP THINKING FRAMEWORK
 # PURPOSE
@@ -39,4 +41,86 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: collection-purpose-and-hierarchy
+    title: Mục đích và hierarchy của Collection
+    purpose: Hiểu vì sao Java cần nhiều collection abstraction và cách ordering, uniqueness, lookup, mutability và cost định hình hierarchy.
+    relatedModules:
+      - routeId: JAVA_GENERICS
+        label: Generics
+        note: Collection API dựa mạnh vào generic type parameter, wildcard và PECS để reuse type-safe.
+    objectives:
+      - Phân biệt vai trò Collection, List, Set, Queue, Map và sorted/navigable.
+      - Chọn interface từ behavior cần thiết trước khi chọn implementation.
+  - id: shared-api-and-characteristics
+    title: Shared API và đặc tính Collection
+    purpose: Hiểu operation và behavioral dimension chung giữa các collection abstraction, bao gồm optional mutation và bulk operation.
+    objectives:
+      - Reason độc lập về ordering, duplicate, null policy, mutability và complexity.
+      - Hiểu vì sao Map là hierarchy riêng khỏi Collection.
+  - id: list-semantics
+    title: List và dữ liệu theo vị trí
+    purpose: Hiểu ordered positional collection và trade-off giữa các list implementation phổ biến với backed view.
+    objectives:
+      - Chọn random-access hay node-oriented list behavior theo workload.
+      - Nhận biết pitfall của remove overload, subList view và array/list boundary.
+  - id: set-semantics
+    title: Set và semantics uniqueness
+    purpose: Hiểu set là collection hướng đến uniqueness, với behavior phụ thuộc equality hoặc ordering contract.
+    objectives:
+      - Phân biệt hash-based, insertion-ordered và sorted set semantics.
+      - Dùng set algebra mà không giả định mọi implementation có cùng cost/order behavior.
+  - id: map-semantics
+    title: Map và lookup theo key
+    purpose: Hiểu key/value mapping, Map.Entry, backed view và cách key contract quyết định lookup behavior.
+    objectives:
+      - Reason về key, value, entry, duplicate-key replacement và view mutation.
+      - Chọn hash-based hay sorted map theo lookup và ordering requirement.
+  - id: queue-and-deque
+    title: Queue và Deque Contract
+    purpose: Hiểu FIFO, LIFO, double-ended operation, priority ordering và các cặp operation throw exception so với trả sentinel.
+    objectives:
+      - Chọn offer/poll/peek hay add/remove/element có chủ đích.
+      - Hiểu PriorityQueue ordering mà không giả định iteration được sort hoàn toàn.
+  - id: iteration-and-functional-use
+    title: Iteration và functional usage của Collection
+    purpose: Hiểu traversal qua Iterator/ListIterator/for-each và boundary giữa collection ownership với functional-style operation.
+    relatedModules:
+      - routeId: JAVA_FUNCTIONAL_PROGRAMMING
+        label: Functional Programming
+        note: Lambda, method reference và stream-style behavior dùng quanh collection được đào sâu ở Functional Programming.
+    objectives:
+      - Traverse mà không phụ thuộc implementation detail.
+      - Nhận biết iterator mutation an toàn và khi lambda/method-reference syntax thuộc functional programming.
+  - id: ordering-and-navigation
+    title: Ordering, Sorting và Navigation
+    purpose: Hiểu encounter order, natural/comparator ordering, sorted/navigable structure và precondition của ordering algorithm.
+    objectives:
+      - Reason về comparison result và stable sorting behavior.
+      - Dùng navigable range operation và backed range view đúng cách.
+  - id: equality-hashing-and-mutation
+    title: Equality, Hashing và Mutation Safety
+    purpose: Hiểu cách element/key contract và structural modification ảnh hưởng lookup, whole-container equality và iteration safety.
+    relatedModules:
+      - routeId: JAVA_OBJECT_CONTRACT
+        label: Object Contract
+        note: equals, hashCode, Comparable và Comparator law trực tiếp điều khiển collection behavior.
+    objectives:
+      - Dự đoán hệ quả của mutable key/element trong hash-based hoặc sorted structure.
+      - Hiểu fail-fast là best-effort bug detection chứ không phải synchronization.
+  - id: mutability-views-and-factories
+    title: Mutability, View và Immutable Factory
+    purpose: Phân biệt modifiable collection, fixed-size/backed view, unmodifiable wrapper và immutable snapshot/factory.
+    objectives:
+      - Xác định ai sở hữu mutation và thay đổi có được share qua view hay không.
+      - Chọn copy hay view theo ownership và lifecycle need.
+  - id: implementation-choice-and-specialization
+    title: Lựa chọn implementation và Specialized Collection
+    purpose: Kết hợp semantics và complexity thành implementation-choice model, bao gồm enum-specific structure khi constraint phù hợp.
+    relatedModules:
+      - routeId: JAVA_CLASS_OBJECT
+        label: Class & Object
+        note: Java enum và type semantics của chúng được giới thiệu ở Class & Object.
+    objectives:
+      - Chọn implementation theo access pattern, ordering, mutation, memory và complexity requirement.
+      - Nhận biết EnumSet/EnumMap là specialized structure chứ không phải generic default.

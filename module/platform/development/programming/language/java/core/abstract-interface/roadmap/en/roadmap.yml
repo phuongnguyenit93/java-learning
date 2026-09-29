@@ -10,6 +10,8 @@
 # - purpose [string, required]: What the learner should understand or achieve from this milestone.
 # - dependsOn [list, optional]: Prerequisite milestone ids when item order alone is not enough to express the dependency.
 # - objectives [list, optional]: Milestone-level learning objectives; do not use this to list every small fact/API/syntax item.
+# - relatedKnowledge [list, optional]: Knowledge category ids in the current module that support this milestone. Portal displays this list on the side opposite the milestone and clicking an item navigates to the matching Knowledge category.
+# - relatedModules [list, optional]: Related modules displayed as Portal Level 2 cards. Each item requires routeId and may provide localized label/note; this relation is navigation only and does not create child milestones or change learning order.
 #
 # ROADMAP THINKING FRAMEWORK
 # PURPOSE
@@ -39,4 +41,60 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: abstraction-mechanism-purpose
+    title: Why Java Needs Non-Instantiable Abstractions
+    purpose: Understand the design problem solved by abstract classes and interfaces before comparing their syntax.
+    relatedModules:
+      - routeId: JAVA_OOP
+        label: OOP
+        note: OOP provides the design context for abstraction, substitutability, and polymorphism.
+    objectives:
+      - Separate behavioral contract needs from concrete object construction.
+      - Identify when callers need an abstraction rather than a concrete implementation.
+  - id: abstract-classes
+    title: Abstract Classes
+    purpose: Understand abstract classes as partially implemented class hierarchies with shared state, construction, and behavior.
+    objectives:
+      - Use abstract members and concrete shared behavior intentionally.
+      - Recognize the single-inheritance and constructor coupling implications.
+  - id: interfaces-as-contracts
+    title: Interfaces as Contracts
+    purpose: Understand interfaces as behavioral type contracts that decouple callers from one concrete class hierarchy.
+    relatedModules:
+      - routeId: JAVA_FUNCTIONAL_PROGRAMMING
+        label: Functional Programming
+        note: Functional interfaces are the target types that make Java lambdas possible.
+    objectives:
+      - Model capabilities and roles through interfaces.
+      - Understand interface implementation without assuming shared instance state.
+  - id: choosing-abstract-class-or-interface
+    title: Abstract Class vs Interface
+    purpose: Build a decision model for choosing shared implementation/state versus flexible behavioral contracts.
+    objectives:
+      - Choose from ownership, state, evolution, and hierarchy constraints.
+      - Avoid using either mechanism merely because it is familiar.
+  - id: interface-hierarchies
+    title: Interface Inheritance and Contract Composition
+    purpose: Understand how interfaces extend other interfaces to compose capabilities without creating object state inheritance.
+    objectives:
+      - Build contract hierarchies without over-fragmenting APIs.
+      - Reason about inherited abstract/default members.
+  - id: interface-evolution
+    title: Default, Static, and Private Interface Methods
+    purpose: Understand how interfaces can evolve behavior while keeping the distinction between contract and implementation clear.
+    objectives:
+      - Use default methods for compatible contract evolution rather than as a replacement for class design.
+      - Understand static/private interface method roles and call semantics.
+  - id: multiple-inheritance-conflicts
+    title: Multiple Interface Inheritance and Conflict Resolution
+    purpose: Understand what happens when several interface paths provide overlapping behavior and how Java resolves or requires explicit resolution.
+    objectives:
+      - Predict default-method conflict rules.
+      - Resolve diamond-like contract ambiguity without confusing it with multiple class inheritance.
+  - id: abstraction-mechanism-synthesis
+    title: Abstraction Mechanism Synthesis
+    purpose: Connect abstract classes, interfaces, contract inheritance, and evolution into one API-design decision model.
+    objectives:
+      - Select mechanisms according to contract, state, reuse, and evolution needs.
+      - Explain how these mechanisms support polymorphism without defining OOP design by themselves.

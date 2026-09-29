@@ -10,6 +10,8 @@
 # - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
 # - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
 # - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
 #
 # ROADMAP THINKING FRAMEWORK
 # PURPOSE
@@ -39,4 +41,60 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: oop-purpose
+    title: Mục đích của thiết kế OOP
+    purpose: Hiểu OOP là cách tổ chức phần mềm quanh các object cộng tác, mỗi object sở hữu state, behavior và responsibility.
+    relatedModules:
+      - routeId: JAVA_CLASS_OBJECT
+        label: Class & Object
+        note: Class/Object cung cấp các Java mechanism mà OOP design dựa vào.
+    objectives:
+      - Giải thích vì sao object boundary giúp quản lý thay đổi và invariant tốt hơn.
+      - Phân biệt OOP design concept với từng Java syntax feature riêng lẻ.
+  - id: encapsulation-and-invariants
+    title: Encapsulation và Invariant
+    purpose: Hiểu encapsulation là bảo vệ valid state phía sau behavior chứ không chỉ đơn giản là đặt field thành private.
+    objectives:
+      - Thiết kế object behavior bảo vệ invariant.
+      - Nhận biết khi getter/setter quá mức làm rò rỉ responsibility.
+  - id: subtyping-and-inheritance
+    title: Subtyping và Inheritance
+    purpose: Hiểu inheritance là một mechanism để thiết lập subtype relationship và reuse, đồng thời thấy rõ coupling cost.
+    objectives:
+      - Reason theo is-a substitutability thay vì chỉ dùng inheritance để reuse code.
+      - Nhận biết fragile hierarchy và subtype relationship không hợp lệ.
+  - id: polymorphism-and-dispatch
+    title: Polymorphism và Dynamic Dispatch
+    purpose: Hiểu cách một abstraction có thể thực thi runtime behavior khác nhau thông qua overriding và dynamic dispatch.
+    objectives:
+      - Tách reference type khỏi runtime implementation behavior.
+      - Dùng substitutability làm phép kiểm tra cốt lõi cho polymorphism hữu ích.
+  - id: method-selection-model
+    title: Method selection ở compile-time và runtime
+    purpose: Xây dựng model rõ ràng về overloading, overriding, dynamic dispatch và method hiding để không nhầm các mechanism gần giống nhau.
+    objectives:
+      - Giải thích lựa chọn nào được resolve ở compile time và lựa chọn nào ở runtime.
+      - Dự đoán behavior khi overload và override tương tác.
+  - id: composition-and-delegation
+    title: Composition và Delegation
+    purpose: Hiểu object collaboration như một lựa chọn thay cho inheritance khi cần reuse behavior mà không tạo subtype coupling cứng.
+    objectives:
+      - Ưu tiên composition khi responsibility có thể được lắp ghép độc lập.
+      - Dùng delegation mà không làm mờ ownership hoặc lifecycle responsibility.
+  - id: abstraction-and-contracts
+    title: Abstraction và Behavioral Contract
+    purpose: Hiểu abstraction là expose behavior caller cần trong khi ẩn implementation detail không liên quan.
+    relatedModules:
+      - routeId: JAVA_ABSTRACT_INTERFACE
+        label: Abstract Class & Interface
+        note: Module này cung cấp Java mechanism để biểu diễn reusable abstraction và contract.
+    objectives:
+      - Phụ thuộc vào behavioral contract ổn định thay vì concrete implementation detail.
+      - Nhận biết khi nào abstract class hoặc interface là Java mechanism phù hợp.
+  - id: oop-synthesis
+    title: Tổng hợp thiết kế OOP
+    purpose: Kết nối encapsulation, subtyping, polymorphism, composition và abstraction thành một decision model thống nhất cho OOP design.
+    objectives:
+      - Chọn inheritance, composition hoặc abstraction dựa trên responsibility và change pressure.
+      - Nhận biết các “pillar” OOP là tool chứ không phải mục tiêu độc lập.

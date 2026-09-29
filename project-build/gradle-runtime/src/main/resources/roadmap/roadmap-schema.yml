@@ -139,8 +139,8 @@ document:
           required: false
           default: []
           description:
-            vi: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal dùng danh sách này để mở popup trên marker và điều hướng sang Knowledge category tương ứng.
-            en: Knowledge category ids in the current module that support this milestone. Portal uses this list for the marker popup and navigation to the matching Knowledge category.
+            vi: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+            en: Knowledge category ids in the current module that support this milestone. Portal displays this list on the side opposite the milestone and clicking an item navigates to the matching Knowledge category.
         relatedModules:
           type: list
           required: false

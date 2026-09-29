@@ -10,6 +10,8 @@
 # - purpose [string, required]: What the learner should understand or achieve from this milestone.
 # - dependsOn [list, optional]: Prerequisite milestone ids when item order alone is not enough to express the dependency.
 # - objectives [list, optional]: Milestone-level learning objectives; do not use this to list every small fact/API/syntax item.
+# - relatedKnowledge [list, optional]: Knowledge category ids in the current module that support this milestone. Portal displays this list on the side opposite the milestone and clicking an item navigates to the matching Knowledge category.
+# - relatedModules [list, optional]: Related modules displayed as Portal Level 2 cards. Each item requires routeId and may provide localized label/note; this relation is navigation only and does not create child milestones or change learning order.
 #
 # ROADMAP THINKING FRAMEWORK
 # PURPOSE
@@ -39,4 +41,64 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: object-contract-purpose
+    title: Object Contract Purpose
+    purpose: Understand an object contract as a set of behavioral promises that other Java APIs rely on rather than as one keyword or interface.
+    relatedModules:
+      - routeId: JAVA_CLASS_OBJECT
+        label: Class & Object
+        note: Object Contract builds on the universal Object methods and object identity model.
+    objectives:
+      - Explain why broken contracts create surprising behavior outside the class that defines them.
+      - Identify equality, hashing, representation, and ordering as separate but connected contracts.
+  - id: identity-and-logical-equality
+    title: Identity vs Logical Equality
+    purpose: Distinguish whether two references point to the same object from whether two objects represent the same logical value.
+    objectives:
+      - Separate == reference identity from equals-based logical equality.
+      - Recognize value-object scenarios where logical equality matters.
+  - id: equals-contract
+    title: The equals Contract
+    purpose: Understand the behavioral laws a correct equals implementation must preserve across time and object relationships.
+    objectives:
+      - Reason about reflexive, symmetric, transitive, consistent, and null behavior.
+      - Avoid equality implementations that break subtype or mutable-state assumptions.
+  - id: hashing-consistency
+    title: hashCode and Hash Consistency
+    purpose: Understand why equal objects must produce compatible hashes and how hash-based APIs depend on that promise.
+    relatedModules:
+      - routeId: JAVA_COLLECTION
+        label: Collections
+        note: HashSet and HashMap make equals/hashCode contracts directly observable.
+    objectives:
+      - Explain the equals/hashCode consistency rule.
+      - Predict failures caused by mutable keys or inconsistent hash implementations.
+  - id: human-readable-representation
+    title: Human-Readable Representation
+    purpose: Understand toString as a diagnostic and representation contract whose usefulness and safety depend on deliberate design.
+    objectives:
+      - Produce stable and meaningful representations for debugging and tooling.
+      - Avoid leaking sensitive or misleading state through textual representation.
+  - id: natural-ordering
+    title: Natural Ordering with Comparable
+    purpose: Understand how a type defines one natural order and which behavioral properties compareTo must preserve.
+    objectives:
+      - Interpret negative/zero/positive comparison results correctly.
+      - Reason about consistency between ordering and logical equality.
+  - id: alternate-ordering
+    title: Alternate Ordering with Comparator
+    purpose: Understand caller-defined ordering as a separate strategy from the type’s natural order.
+    objectives:
+      - Compose and reverse comparators without changing domain equality.
+      - Choose between Comparable and Comparator from ownership and use-case needs.
+  - id: contract-synthesis
+    title: Contract Interaction Synthesis
+    purpose: Connect identity, equality, hashing, representation, mutability, and ordering into one model for library-safe objects.
+    relatedModules:
+      - routeId: JAVA_NUMBERS
+        label: Numbers
+        note: BigDecimal is a useful example of equality and ordering answering different questions.
+    objectives:
+      - Predict how a class behaves in hash-based and sorted data structures.
+      - Recognize domain-specific cases such as BigDecimal where equality and ordering intentionally differ.

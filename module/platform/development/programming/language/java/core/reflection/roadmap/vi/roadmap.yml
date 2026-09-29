@@ -10,6 +10,8 @@
 # - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
 # - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
 # - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
 #
 # ROADMAP THINKING FRAMEWORK
 # PURPOSE
@@ -39,4 +41,80 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: reflection-purpose
+    title: Mục đích Reflection và Dynamic Inspection
+    purpose: Hiểu reflection là deliberate escape khỏi static access thông thường khi runtime structure cần được discover động.
+    relatedModules:
+      - routeId: JAVA_ANNOTATION
+        label: Annotation
+        note: Annotation có RUNTIME retention là metadata phổ biến được consume qua reflection.
+    objectives:
+      - Giải thích vì sao framework và tooling cần runtime metadata.
+      - Nhận biết vì sao application code thông thường không nên mặc định dùng reflection.
+  - id: class-metadata
+    title: Class Metadata
+    purpose: Hiểu Class<?> là runtime description của một loaded type và là entry point vào reflective structure.
+    relatedModules:
+      - routeId: JAVA_CLASSLOADER
+        label: ClassLoader
+        note: Class object chỉ tồn tại sau khi ClassLoader define runtime type identity.
+    objectives:
+      - Inspect name, kind, modifier, superclass, interface và declared/public member.
+      - Phân biệt metadata về type với instance của type đó.
+  - id: reflective-fields
+    title: Inspect và access Field bằng Reflection
+    purpose: Hiểu cách Field descriptor expose name, modifier, raw/generic type và controlled read/write operation.
+    objectives:
+      - Phân biệt inherited public field với declared field.
+      - Xem reflective mutation là exceptional boundary có encapsulation cost.
+  - id: reflective-methods
+    title: Discover và invoke Method
+    purpose: Hiểu cách method được chọn và invoke từ metadata thay vì direct Java call syntax.
+    objectives:
+      - Inspect signature, modifier, parameter, return type và declared exception.
+      - Hiểu InvocationTargetException và reflective invocation failure boundary.
+  - id: reflective-construction
+    title: Discover Constructor và Dynamic Instantiation
+    purpose: Hiểu cách constructor được discover và invoke khi construction choice được quyết định ở runtime.
+    objectives:
+      - Inspect constructor metadata và instantiate controlled type động.
+      - Nhận biết instantiation, access và target-failure mode.
+  - id: reflective-access-control
+    title: Reflective Access và Encapsulation
+    purpose: Hiểu reflection vẫn tương tác với language access rule và strong encapsulation của JPMS.
+    objectives:
+      - Dùng canAccess/trySetAccessible với nhận thức rõ về module boundary.
+      - Nhận biết maintenance/security cost khi bypass normal access.
+  - id: generic-signature-inspection
+    title: Inspect Generic Signature
+    purpose: Hiểu generic signature metadata nào vẫn có thể inspect sau type erasure.
+    relatedModules:
+      - routeId: JAVA_GENERICS
+        label: Generics
+        note: Generics sở hữu erasure, bound, wildcard và compile-time type relationship.
+    objectives:
+      - Đi qua Class, ParameterizedType, TypeVariable, WildcardType và GenericArrayType.
+      - Tách erased execution khỏi retained signature metadata.
+  - id: dynamic-invocation
+    title: Dynamic Invocation Semantics
+    purpose: Hiểu conversion, dispatch và failure khi invocation được điều khiển động thay vì qua compile-time syntax.
+    objectives:
+      - Reason về boxing, unboxing, widening, varargs và invocation mismatch.
+      - Nhận biết boundary giữa reflection và dynamic invocation kiểu MethodHandle.
+  - id: dynamic-proxies
+    title: Dynamic Proxy và Interception
+    purpose: Hiểu JDK dynamic proxy là runtime-generated interface implementation chuyển call qua InvocationHandler.
+    relatedModules:
+      - routeId: JAVA_ABSTRACT_INTERFACE
+        label: Abstract Class & Interface
+        note: JDK dynamic proxy cần interface contract làm runtime proxy surface.
+    objectives:
+      - Theo dõi proxy creation, handler invocation, delegation và Object-method boundary.
+      - Nhận biết interface-based limitation của JDK proxy.
+  - id: reflection-risks-and-synthesis
+    title: Cost, Risk và tổng hợp Reflection
+    purpose: Kết nối dynamic flexibility với mất compile-time safety, hidden coupling, access risk, performance, refactoring và native-image constraint.
+    objectives:
+      - Chỉ dùng reflection khi runtime dynamism thực sự đáng với cost.
+      - Thiết kế metadata discovery/caching boundary để reflective code được khoanh vùng.

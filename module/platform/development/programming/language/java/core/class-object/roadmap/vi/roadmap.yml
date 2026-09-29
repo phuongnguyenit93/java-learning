@@ -10,6 +10,8 @@
 # - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
 # - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
 # - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
 #
 # ROADMAP THINKING FRAMEWORK
 # PURPOSE
@@ -39,4 +41,76 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: class-object-model
+    title: Mô hình Class và Object
+    purpose: Hiểu sự khác nhau giữa type definition và runtime object có identity, state và behavior.
+    relatedModules:
+      - routeId: JAVA_OOP
+        label: OOP
+        note: OOP xây dựng các design principle trên nền class/object mechanism của module này.
+    objectives:
+      - Giải thích cách field và method định nghĩa state/behavior của instance.
+      - Theo dõi object reference tách biệt với object mà reference trỏ tới.
+  - id: construction-and-invariants
+    title: Khởi tạo và trạng thái hợp lệ
+    purpose: Hiểu cách constructor thiết lập invariant và cách constructor overloading/chaining định hình quá trình tạo object.
+    objectives:
+      - Reason được về default constructor, explicit constructor và constructor failure.
+      - Thiết kế constructor thiết lập usable state trước khi object bị expose.
+  - id: this-super-and-chaining
+    title: this, super và chuỗi khởi tạo
+    purpose: Hiểu cách current instance và superclass context tham gia member access và constructor chaining.
+    objectives:
+      - Dùng this và super đúng semantics của member/constructor.
+      - Theo dõi parent/child constructor order mà không nhầm object identity.
+  - id: visibility-and-member-ownership
+    title: Visibility và quyền sở hữu member
+    purpose: Hiểu ai có thể access member và member đó thuộc class hay thuộc từng instance.
+    objectives:
+      - Dùng access modifier như language-level boundary.
+      - Phân biệt semantics của static, instance, final và constant.
+  - id: initialization-lifecycle
+    title: Thứ tự initialization và vòng đời tạo object
+    purpose: Kết nối static initialization, instance initialization, inheritance, allocation và constructor execution thành một lifecycle thống nhất.
+    relatedModules:
+      - routeId: JAVA_CLASSLOADER
+        label: ClassLoader
+        note: Class initialization là một stage trong lifecycle loading/linking/initialization rộng hơn của JVM.
+    objectives:
+      - Theo dõi class/instance initialization order qua inheritance.
+      - Nhận biết rủi ro dynamic dispatch trong constructor và this-escape.
+  - id: nested-types-and-capture
+    title: Nested và Inner Type
+    purpose: Hiểu khi nào một type nên nằm bên trong type khác và nó có thể capture surrounding instance/local context nào.
+    objectives:
+      - Phân biệt static nested, inner, local và anonymous class.
+      - Reason về outer-instance và captured-local relationship.
+  - id: object-root-and-enum
+    title: Object root type và Enum value
+    purpose: Hiểu Object như root type chung và enum Java như tập closed value có type và instance semantics.
+    relatedModules:
+      - routeId: JAVA_OBJECT_CONTRACT
+        label: Object Contract
+        note: Các behavioral law của equals, hashCode, toString và ordering được đào sâu ở Object Contract.
+    objectives:
+      - Nhận biết core Object method mà không lặp lại full behavioral contract của chúng.
+      - Dùng enum field, method, interface và constant-specific behavior có chủ đích.
+  - id: copying-aliasing-mutability
+    title: Copying, Aliasing và Mutability
+    purpose: Hiểu một thao tác đang copy reference, object shell hay toàn bộ mutable object graph và cách aliasing làm thay đổi behavior.
+    objectives:
+      - Phân biệt reference copy, shallow copy và deep copy.
+      - Dự đoán shared-state effect khi nhiều reference cùng truy cập một mutable object.
+  - id: immutability-and-defensive-copy
+    title: Immutability và Defensive Copy
+    purpose: Học cách ownership boundary và defensive copy làm object state an toàn hơn khi được chia sẻ.
+    objectives:
+      - Thiết kế immutable object vượt ra ngoài việc chỉ đánh dấu field final.
+      - Bảo vệ mutable input/output tại API boundary.
+  - id: class-object-synthesis
+    title: Tổng hợp vòng đời Class/Object
+    purpose: Kết nối construction, visibility, initialization, identity, aliasing và immutability thành một mental model thống nhất về object lifecycle.
+    objectives:
+      - Giải thích được cách Java object trở nên valid, observable, shared và cuối cùng unreachable.
+      - Xác định concern sâu hơn thuộc OOP, Object Contract, Reflection hay ClassLoader.

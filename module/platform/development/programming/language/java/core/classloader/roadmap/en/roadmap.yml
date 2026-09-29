@@ -10,6 +10,8 @@
 # - purpose [string, required]: What the learner should understand or achieve from this milestone.
 # - dependsOn [list, optional]: Prerequisite milestone ids when item order alone is not enough to express the dependency.
 # - objectives [list, optional]: Milestone-level learning objectives; do not use this to list every small fact/API/syntax item.
+# - relatedKnowledge [list, optional]: Knowledge category ids in the current module that support this milestone. Portal displays this list on the side opposite the milestone and clicking an item navigates to the matching Knowledge category.
+# - relatedModules [list, optional]: Related modules displayed as Portal Level 2 cards. Each item requires routeId and may provide localized label/note; this relation is navigation only and does not create child milestones or change learning order.
 #
 # ROADMAP THINKING FRAMEWORK
 # PURPOSE
@@ -39,4 +41,70 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: runtime-type-lifecycle
+    title: From Class Bytes to Runtime Type
+    purpose: Understand why the JVM needs loading, linking, and initialization stages after class bytes already exist.
+    relatedModules:
+      - routeId: JAVA_CLASS_OBJECT
+        label: Class & Object
+        note: Class/Object introduces class initialization and object construction from the language perspective.
+    objectives:
+      - Distinguish loading, verification, preparation, resolution, and initialization conceptually.
+      - Explain why “class file exists” is different from “Class is loaded and initialized”.
+  - id: built-in-loaders
+    title: Built-In ClassLoaders
+    purpose: Understand the bootstrap, platform, and application loader roles in a normal JVM.
+    objectives:
+      - Inspect which loader owns JDK, platform, and application classes.
+      - Understand the null bootstrap representation in ClassLoader APIs.
+  - id: parent-delegation
+    title: Parent Delegation
+    purpose: Understand parent-first lookup as a consistency and core-type identity strategy rather than arbitrary recursion.
+    objectives:
+      - Trace the delegation path before local class definition.
+      - Recognize child-first strategies as deliberate exceptions with isolation risks.
+  - id: custom-loaders-and-isolation
+    title: Custom ClassLoaders and Isolation
+    purpose: Understand how applications load bytes from alternate sources or isolated namespaces through custom loaders.
+    objectives:
+      - Understand loadClass/findClass/defineClass responsibilities.
+      - Recognize synchronization, package, security, and API-boundary concerns.
+  - id: class-identity
+    title: Class Identity Across Loaders
+    purpose: Understand runtime type identity as binary name plus defining ClassLoader.
+    relatedModules:
+      - routeId: JAVA_REFLECTION
+        label: Reflection
+        note: Reflection observes Class objects whose identity is established by their defining loaders.
+    objectives:
+      - Explain why same-name classes from different loaders are incompatible.
+      - Design shared API boundaries so plugin/container types remain assignable.
+  - id: thread-context-classloader
+    title: Thread Context ClassLoader
+    purpose: Understand why parent-owned framework code sometimes needs a thread-associated loader to discover child/application providers.
+    objectives:
+      - Use TCCL in save/set/restore scopes.
+      - Recognize long-lived thread references as a potential loader-leak source.
+  - id: classpath-resource-loading
+    title: Classpath Resource Loading
+    purpose: Understand class-relative and loader-root resource lookup without confusing classpath resources with filesystem files.
+    relatedModules:
+      - routeId: JAVA_IO
+        label: I/O
+        note: I/O owns ordinary stream/file handling; ClassLoader owns classpath resource discovery semantics.
+    objectives:
+      - Distinguish Class.getResource and ClassLoader.getResource path semantics.
+      - Manage resource streams and multiple-resource lookup intentionally.
+  - id: class-initialization
+    title: Class Initialization Triggers and Failure
+    purpose: Understand what triggers class initialization, how initialization is synchronized, and how failure affects later use.
+    objectives:
+      - Distinguish loading from initialization and active-use triggers.
+      - Understand ExceptionInInitializerError and erroneous class state conceptually.
+  - id: unloading-leaks-and-synthesis
+    title: Unloading, Retention, and Loader Leaks
+    purpose: Understand that classes unload with their defining loader reachability and why one retained loader can retain an entire application/plugin graph.
+    objectives:
+      - Recognize static, ThreadLocal, listener, cache, and TCCL retention patterns.
+      - Treat unloading as GC-dependent rather than deterministic lifecycle code.

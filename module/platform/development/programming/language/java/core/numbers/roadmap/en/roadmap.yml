@@ -10,6 +10,8 @@
 # - purpose [string, required]: What the learner should understand or achieve from this milestone.
 # - dependsOn [list, optional]: Prerequisite milestone ids when item order alone is not enough to express the dependency.
 # - objectives [list, optional]: Milestone-level learning objectives; do not use this to list every small fact/API/syntax item.
+# - relatedKnowledge [list, optional]: Knowledge category ids in the current module that support this milestone. Portal displays this list on the side opposite the milestone and clicking an item navigates to the matching Knowledge category.
+# - relatedModules [list, optional]: Related modules displayed as Portal Level 2 cards. Each item requires routeId and may provide localized label/note; this relation is navigation only and does not create child milestones or change learning order.
 #
 # ROADMAP THINKING FRAMEWORK
 # PURPOSE
@@ -39,4 +41,75 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: numeric-model
+    title: Numeric Representation Model
+    purpose: Understand why Java provides several numeric representations and how range, exactness, storage cost, and performance force different trade-offs.
+    relatedModules:
+      - routeId: JAVA_LANGUAGE_BASICS
+        label: Language Basics
+        note: Primitive numeric types, conversions, and promotion are prerequisites for this module.
+    objectives:
+      - Choose between fixed-width integers, floating point, BigInteger, and BigDecimal by problem semantics.
+      - Recognize that numeric type choice is part of correctness, not just syntax.
+  - id: integer-boundaries
+    title: Fixed-Width Integers and Overflow
+    purpose: Understand how exact whole-number arithmetic can still fail when a fixed-width representation crosses its range boundary.
+    objectives:
+      - Reason about MIN/MAX boundaries and wraparound behavior.
+      - Use checked arithmetic when overflow must become an explicit failure.
+  - id: floating-point
+    title: Floating-Point Approximation
+    purpose: Build the binary floating-point mental model needed to explain precision error, special values, and comparison behavior.
+    objectives:
+      - Explain why many decimal fractions cannot be represented exactly in binary floating point.
+      - Handle NaN, infinity, negative zero, and tolerance-based comparisons intentionally.
+  - id: arbitrary-precision-integers
+    title: Arbitrary-Precision Integers
+    purpose: Understand how BigInteger removes fixed-width range limits and what changes when arithmetic becomes object-based and immutable.
+    objectives:
+      - Use BigInteger operations without assuming primitive operator semantics.
+      - Recognize conversion and performance boundaries of arbitrary-precision arithmetic.
+  - id: exact-decimal-model
+    title: Exact Decimal Arithmetic
+    purpose: Understand BigDecimal as an explicit decimal value plus scale model for workflows where decimal semantics matter.
+    objectives:
+      - Construct BigDecimal values without accidentally importing binary floating-point error.
+      - Reason about arithmetic, scale, and non-terminating division explicitly.
+  - id: precision-scale-rounding
+    title: Precision, Scale, and Rounding Policy
+    purpose: Understand that decimal precision and rounding are part of the value policy and domain contract, not a formatting afterthought.
+    objectives:
+      - Distinguish precision from scale and understand MathContext.
+      - Choose rounding points and modes intentionally at domain boundaries.
+  - id: numeric-comparison-contracts
+    title: Numeric Equality and Ordering Contracts
+    purpose: Understand why numerical equivalence, object equality, and ordering can answer different questions for numeric objects.
+    relatedModules:
+      - routeId: JAVA_OBJECT_CONTRACT
+        label: Object Contract
+        note: Equality, hashing, and ordering contracts explain why numerically equivalent objects may behave differently in APIs.
+      - routeId: JAVA_COLLECTION
+        label: Collections
+        note: Hash-based and sorted collections make numeric equality/ordering choices observable.
+    objectives:
+      - Explain BigDecimal equals versus compareTo semantics.
+      - Predict consequences when numeric values are used as collection keys or sorted elements.
+  - id: math-and-safe-arithmetic
+    title: Math Helpers and Safe Arithmetic
+    purpose: Learn when standard numeric helpers make intent clearer and when exact arithmetic methods should enforce failure instead of silent wraparound.
+    objectives:
+      - Use core Math helpers with the correct numeric expectations.
+      - Recognize the boundary between convenience helpers and representation semantics.
+  - id: randomness-contracts
+    title: Randomness Contracts
+    purpose: Distinguish deterministic pseudo-random generation from security-oriented unpredictability and choose the contract that the use case actually requires.
+    objectives:
+      - Understand seed-driven reproducibility for ordinary PRNGs.
+      - Recognize when SecureRandom is required and where cryptography-specific concerns begin.
+  - id: numeric-synthesis
+    title: Choosing the Right Numeric Model
+    purpose: Connect range, exactness, precision, equality, rounding, and randomness into one decision model for numeric code.
+    objectives:
+      - Select representations and policies from domain requirements rather than habit.
+      - Identify where numeric bugs cross into collection, persistence, formatting, or security concerns.

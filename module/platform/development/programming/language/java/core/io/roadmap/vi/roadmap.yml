@@ -10,6 +10,8 @@
 # - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
 # - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
 # - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
 #
 # ROADMAP THINKING FRAMEWORK
 # PURPOSE
@@ -39,4 +41,70 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: io-mental-model
+    title: Mental Model I/O và Resource Ownership
+    purpose: Hiểu I/O là di chuyển dữ liệu giữa source và sink đồng thời quản lý blocking, buffering, encoding và resource lifetime.
+    objectives:
+      - Xác định payload type, source/sink, ownership và lifetime trước khi chọn API.
+      - Nhận biết correctness bao gồm đóng resource và giữ đúng data boundary.
+  - id: bytes-and-characters
+    title: Byte Stream và Character Stream
+    purpose: Phân biệt raw byte transport với text I/O cần charset-aware decoding và encoding.
+    relatedModules:
+      - routeId: JAVA_STRING
+        label: String
+        note: String sở hữu charset/Unicode text model mà character I/O dựa vào.
+    objectives:
+      - Chọn InputStream/OutputStream cho byte và Reader/Writer cho text.
+      - Tránh trộn text semantics với arbitrary binary payload.
+  - id: buffered-io
+    title: Buffered I/O
+    purpose: Hiểu vì sao buffering giảm số lượng small I/O operation đắt đỏ và cách wrapper composition thay đổi behavior.
+    objectives:
+      - Dùng buffering khi access pattern hưởng lợi từ ít underlying operation hơn.
+      - Flush có chủ đích mà không giả định mọi wrapper có cùng semantics.
+  - id: filesystem-model
+    title: "Filesystem Model: File, Path và Files"
+    purpose: Hiểu chuyển đổi từ legacy File sang Path/Files và provider-backed model của modern filesystem operation.
+    objectives:
+      - Dùng Path/Files cho traversal, attribute, temp resource và watch service hiện đại.
+      - Tránh giả định mọi path đều map tới local java.io.File.
+  - id: buffers-and-channels
+    title: Buffer và Channel
+    purpose: Hiểu explicit data-transfer model của NIO bằng buffer, channel, position, limit và byte order.
+    objectives:
+      - Reason về buffer state transition thay vì xem Buffer như array đơn giản.
+      - Dùng channel/buffer transfer khi lower-level control thực sự cần thiết.
+  - id: file-channels-and-advanced-file-io
+    title: FileChannel và Advanced File I/O
+    purpose: Hiểu file-specific channel capability như positioning, locking, mapping, transfer và asynchronous boundary.
+    objectives:
+      - Chỉ chọn advanced file API khi capability của nó giải quyết nhu cầu cụ thể.
+      - Nhận biết lifecycle consideration của memory mapping và asynchronous I/O.
+  - id: resource-management
+    title: Resource Lifetime và Failure Safety
+    purpose: Hiểu deterministic resource release và cách structured cleanup tương tác với I/O failure.
+    relatedModules:
+      - routeId: JAVA_EXCEPTION
+        label: Exception
+        note: Exception sở hữu propagation, suppressed-failure và cleanup semantics mà I/O resource sử dụng.
+    objectives:
+      - Dùng try-with-resources như ownership structure mặc định cho closeable I/O.
+      - Giữ failure context khi cả work và close operation cùng fail.
+  - id: serialization-boundary
+    title: Boundary của Java Object Serialization
+    purpose: Hiểu Java object serialization là object-graph persistence mechanism đặc biệt với compatibility và security concern.
+    objectives:
+      - Nhận biết serialization identity/versioning và object-graph implication.
+      - Xem native Java serialization là lựa chọn nhiều boundary chứ không phải universal data format.
+  - id: io-choice-synthesis
+    title: Chọn I/O abstraction đơn giản nhưng đúng
+    purpose: Kết nối byte, text, buffering, filesystem API, channel, ownership và serialization thành một decision model thống nhất.
+    relatedModules:
+      - routeId: JAVA_CLASSLOADER
+        label: ClassLoader
+        note: Classpath resource lookup có semantics khác filesystem path I/O.
+    objectives:
+      - Ưu tiên API level cao nhất vẫn giữ đúng semantics và performance cần thiết.
+      - Nhận biết khi resource lookup thuộc ClassLoader thay vì filesystem I/O thông thường.

@@ -10,6 +10,8 @@
 # - purpose [string, required]: What the learner should understand or achieve from this milestone.
 # - dependsOn [list, optional]: Prerequisite milestone ids when item order alone is not enough to express the dependency.
 # - objectives [list, optional]: Milestone-level learning objectives; do not use this to list every small fact/API/syntax item.
+# - relatedKnowledge [list, optional]: Knowledge category ids in the current module that support this milestone. Portal displays this list on the side opposite the milestone and clicking an item navigates to the matching Knowledge category.
+# - relatedModules [list, optional]: Related modules displayed as Portal Level 2 cards. Each item requires routeId and may provide localized label/note; this relation is navigation only and does not create child milestones or change learning order.
 #
 # ROADMAP THINKING FRAMEWORK
 # PURPOSE
@@ -39,4 +41,70 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: io-mental-model
+    title: I/O Mental Model and Resource Ownership
+    purpose: Understand I/O as moving data between sources and sinks while managing blocking, buffering, encoding, and resource lifetime.
+    objectives:
+      - Identify payload type, source/sink, ownership, and lifetime before choosing an API.
+      - Recognize that correctness includes closing resources and preserving data boundaries.
+  - id: bytes-and-characters
+    title: Byte Streams and Character Streams
+    purpose: Distinguish raw byte transport from text I/O that requires charset-aware decoding and encoding.
+    relatedModules:
+      - routeId: JAVA_STRING
+        label: String
+        note: String owns the charset/Unicode text model that character I/O relies on.
+    objectives:
+      - Choose InputStream/OutputStream for bytes and Reader/Writer for text.
+      - Avoid mixing text semantics with arbitrary binary payloads.
+  - id: buffered-io
+    title: Buffered I/O
+    purpose: Understand why buffering reduces expensive small I/O operations and how wrapper composition changes behavior.
+    objectives:
+      - Use buffering where access patterns benefit from fewer underlying operations.
+      - Flush intentionally without assuming every wrapper has the same semantics.
+  - id: filesystem-model
+    title: "Filesystem Model: File, Path, and Files"
+    purpose: Understand the transition from legacy File to Path/Files and the provider-backed model of modern filesystem operations.
+    objectives:
+      - Use Path/Files for modern filesystem traversal, attributes, temp resources, and watch services.
+      - Avoid assuming every path maps to a local java.io.File.
+  - id: buffers-and-channels
+    title: Buffers and Channels
+    purpose: Understand NIO’s explicit data-transfer model using buffers, channels, positions, limits, and byte order.
+    objectives:
+      - Reason about buffer state transitions rather than treating Buffer as a simple array.
+      - Use channel/buffer transfer when lower-level control is justified.
+  - id: file-channels-and-advanced-file-io
+    title: FileChannel and Advanced File I/O
+    purpose: Understand file-specific channel capabilities such as positioning, locking, mapping, transfer, and asynchronous boundaries.
+    objectives:
+      - Choose advanced file APIs only when their capabilities solve a concrete need.
+      - Recognize memory-mapping and asynchronous I/O lifecycle considerations.
+  - id: resource-management
+    title: Resource Lifetime and Failure Safety
+    purpose: Understand deterministic resource release and how structured cleanup interacts with I/O failures.
+    relatedModules:
+      - routeId: JAVA_EXCEPTION
+        label: Exceptions
+        note: Exception owns propagation, suppressed-failure, and cleanup semantics used by I/O resources.
+    objectives:
+      - Use try-with-resources as the default ownership structure for closeable I/O.
+      - Preserve failure context when both work and close operations fail.
+  - id: serialization-boundary
+    title: Java Object Serialization Boundary
+    purpose: Understand Java object serialization as a special object-graph persistence mechanism with compatibility and security concerns.
+    objectives:
+      - Recognize serialization identity/versioning and object-graph implications.
+      - Treat native Java serialization as a boundary-heavy choice rather than a universal data format.
+  - id: io-choice-synthesis
+    title: Choosing the Simplest Correct I/O Abstraction
+    purpose: Connect bytes, text, buffering, filesystem APIs, channels, ownership, and serialization into one decision model.
+    relatedModules:
+      - routeId: JAVA_CLASSLOADER
+        label: ClassLoader
+        note: Classpath resource lookup has different semantics from filesystem path I/O.
+    objectives:
+      - Prefer the highest-level API that preserves required semantics and performance.
+      - Identify when resource lookup belongs to ClassLoader rather than ordinary filesystem I/O.

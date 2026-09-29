@@ -10,6 +10,8 @@
 # - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
 # - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
 # - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
 #
 # ROADMAP THINKING FRAMEWORK
 # PURPOSE
@@ -39,4 +41,64 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: object-contract-purpose
+    title: Mục đích của Object Contract
+    purpose: Hiểu object contract là tập behavioral promise mà Java API khác phụ thuộc vào, chứ không phải một keyword hay interface đơn lẻ.
+    relatedModules:
+      - routeId: JAVA_CLASS_OBJECT
+        label: Class & Object
+        note: Object Contract dựa trên Object method chung và object identity model từ Class & Object.
+    objectives:
+      - Giải thích vì sao contract bị phá vỡ gây behavior bất ngờ ở bên ngoài class định nghĩa nó.
+      - Nhận biết equality, hashing, representation và ordering là các contract riêng nhưng liên kết với nhau.
+  - id: identity-and-logical-equality
+    title: Identity và Logical Equality
+    purpose: Phân biệt hai reference cùng trỏ một object với hai object biểu diễn cùng logical value.
+    objectives:
+      - Tách == reference identity khỏi equals-based logical equality.
+      - Nhận biết scenario value object nơi logical equality quan trọng.
+  - id: equals-contract
+    title: Contract của equals
+    purpose: Hiểu các behavioral law mà một equals implementation đúng phải giữ được theo thời gian và giữa các object.
+    objectives:
+      - Reason về reflexive, symmetric, transitive, consistent và null behavior.
+      - Tránh equality implementation phá vỡ subtype hoặc mutable-state assumption.
+  - id: hashing-consistency
+    title: hashCode và Hash Consistency
+    purpose: Hiểu vì sao object bằng nhau phải tạo hash tương thích và cách hash-based API phụ thuộc vào promise đó.
+    relatedModules:
+      - routeId: JAVA_COLLECTION
+        label: Collections
+        note: HashSet và HashMap làm equals/hashCode contract trở nên trực tiếp quan sát được.
+    objectives:
+      - Giải thích equals/hashCode consistency rule.
+      - Dự đoán failure do mutable key hoặc hash implementation không nhất quán.
+  - id: human-readable-representation
+    title: Biểu diễn object cho người và tool
+    purpose: Hiểu toString như diagnostic/representation contract cần được thiết kế có chủ đích về usefulness và safety.
+    objectives:
+      - Tạo representation ổn định và có ý nghĩa cho debugging/tooling.
+      - Tránh làm lộ sensitive hoặc misleading state qua textual representation.
+  - id: natural-ordering
+    title: Natural Ordering với Comparable
+    purpose: Hiểu cách một type định nghĩa một natural order và các behavioral property mà compareTo phải giữ.
+    objectives:
+      - Hiểu đúng semantics của comparison result âm/0/dương.
+      - Reason về consistency giữa ordering và logical equality.
+  - id: alternate-ordering
+    title: Alternate Ordering với Comparator
+    purpose: Hiểu caller-defined ordering như strategy tách biệt khỏi natural order của type.
+    objectives:
+      - Compose/reverse comparator mà không thay đổi domain equality.
+      - Chọn giữa Comparable và Comparator dựa trên ownership và use-case.
+  - id: contract-synthesis
+    title: Tổng hợp tương tác giữa các Contract
+    purpose: Kết nối identity, equality, hashing, representation, mutability và ordering thành một model cho object an toàn khi dùng với library.
+    relatedModules:
+      - routeId: JAVA_NUMBERS
+        label: Numbers
+        note: BigDecimal là ví dụ rõ về equality và ordering trả lời hai câu hỏi khác nhau.
+    objectives:
+      - Dự đoán class behavior trong hash-based và sorted data structure.
+      - Nhận biết case domain-specific như BigDecimal nơi equality và ordering cố ý khác nhau.
