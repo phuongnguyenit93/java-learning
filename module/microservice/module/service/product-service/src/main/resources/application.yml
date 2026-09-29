@@ -1,7 +1,7 @@
 # AUTO-GENERATED MERGED YAML
 # You can check at module/microservice/module/service/inventory-service/src/main/resources/application.yml
 # Source: INVENTORY_SERVICE
-# Dependencies: SPRING_WEB, SPRING_SWAGGER
+# Dependencies: SPRING_WEB
 
 ---
 spring:

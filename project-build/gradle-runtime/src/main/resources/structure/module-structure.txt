@@ -2,76 +2,92 @@ module
 ├── infrastructure
 │   ├── devops
 │   │   ├── artifact-management
-│   │   │   ├── central-portal
+│   │   │   ├── maven-central
 │   │   │   └── nexus
 │   │   ├── ci-cd
-│   │   ├── docker
-│   │   ├── environment
-│   │   │   └── isolation
-│   │   ├── git
-│   │   ├── jenkins
-│   │   └── k8s
+│   │   │   ├── fundamentals
+│   │   │   ├── github-actions
+│   │   │   ├── gitlab-ci
+│   │   │   └── jenkins
+│   │   ├── configuration-management
+│   │   │   └── ansible
+│   │   ├── containerization
+│   │   │   └── docker
+│   │   ├── deployment
+│   │   │   └── deployment-strategy
+│   │   ├── environment-management
+│   │   ├── infrastructure-as-code
+│   │   │   └── terraform
+│   │   ├── orchestration
+│   │   │   └── kubernetes
+│   │   └── source-control
+│   │       └── git
 │   └── system
 │       ├── database
-│       │   ├── advance
-│       │   │   ├── function
-│       │   │   ├── package
-│       │   │   └── procedures
-│       │   ├── connection-pool
-│       │   │   └── hikariCP [HIKARI_CP]
-│       │   ├── migration
-│       │   │   ├── flyway [FLYWAY]
-│       │   │   └── liquibase
-│       │   ├── nosql
-│       │   │   ├── clickhouse
-│       │   │   ├── elasticsearch
-│       │   │   ├── influxDB
-│       │   │   ├── loki
-│       │   │   ├── mongoDB [DATABASE_MONGODB]
-│       │   │   │   └── aggregation
-│       │   │   ├── neo4j
-│       │   │   └── redis
-│       │   │       └── lua-scripting
+│       │   ├── connection-management
+│       │   │   └── hikari-cp [HIKARI_CP]
+│       │   ├── engine
+│       │   │   ├── analytical
+│       │   │   │   └── clickhouse
+│       │   │   ├── document
+│       │   │   │   └── mongodb [DATABASE_MONGODB]
+│       │   │   │       └── aggregation
+│       │   │   ├── graph
+│       │   │   │   └── neo4j
+│       │   │   ├── key-value
+│       │   │   │   └── redis
+│       │   │   │       └── lua-scripting
+│       │   │   ├── relational
+│       │   │   │   ├── mysql [DATABASE_MYSQL]
+│       │   │   │   ├── oracle [DATABASE_ORACLE]
+│       │   │   │   │   ├── advance
+│       │   │   │   │   │   ├── package
+│       │   │   │   │   │   └── procedure
+│       │   │   │   │   └── setup
+│       │   │   │   └── postgresql [DATABASE_POSTGRESQL]
+│       │   │   │       ├── advance
+│       │   │   │       │   ├── functions
+│       │   │   │       │   └── trigger
+│       │   │   │       └── setup
+│       │   │   ├── search
+│       │   │   │   └── elasticsearch
+│       │   │   └── time-series
+│       │   │       └── influxdb
 │       │   ├── performance
-│       │   │   ├── orm-performance
-│       │   │   └── query-optimization
-│       │   └── rdbms
-│       │       ├── mysql [DATABASE_MYSQL]
-│       │       ├── oracle [DATABASE_ORACLE]
-│       │       │   ├── advance
-│       │       │   │   ├── package
-│       │       │   │   └── procedure
-│       │       │   └── setup
-│       │       └── postgresql [DATABASE_POSTGRESQL]
-│       │           ├── advance
-│       │           │   ├── functions
-│       │           │   └── trigger
-│       │           └── setup
+│       │   │   ├── database-caching
+│       │   │   ├── execution-plan
+│       │   │   ├── indexing
+│       │   │   ├── locking
+│       │   │   ├── partitioning
+│       │   │   ├── query-optimization
+│       │   │   └── statistics
+│       │   └── schema-migration
+│       │       ├── flyway [FLYWAY]
+│       │       └── liquibase
 │       ├── network
 │       │   ├── api-gateway
-│       │   │   ├── kong
-│       │   │   ├── rate-limiting
-│       │   │   └── spring-cloud-gateway
+│       │   │   └── kong
 │       │   ├── protocol
 │       │   │   ├── http
-│       │   │   ├── ssl-tls
-│       │   │   └── tcp-udp
+│       │   │   ├── tcp-udp
+│       │   │   └── tls
 │       │   ├── proxy
 │       │   │   ├── haproxy
 │       │   │   └── nginx
-│       │   └── service-mesh
-│       │       ├── istio
-│       │       └── linkerd
+│       │   ├── service-mesh
+│       │   │   ├── istio
+│       │   │   └── linkerd
+│       │   └── traffic-management
+│       │       └── rate-limiting
 │       ├── observability
-│       │   ├── console
-│       │   │   └── hawtio [HAWTIO]
 │       │   ├── diagnostic
 │       │   │   ├── profiling
-│       │   │   │   ├── jconsole
 │       │   │   │   ├── jprofiler
-│       │   │   │   └── visual-vm
+│       │   │   │   └── visualvm
 │       │   │   ├── runtime-analysis
 │       │   │   │   └── arthas [ARTHAS]
+│       │   │   ├── runtime-monitoring
+│       │   │   │   └── jconsole
 │       │   │   └── thread-dump
 │       │   │       └── jstack
 │       │   ├── logging
@@ -89,10 +105,10 @@ module
 │       │   │   │   └── redaction
 │       │   │   └── storage-analysis
 │       │   │       ├── elk-stack
-│       │   │       │   ├── elasticsearch
 │       │   │       │   └── kibana
 │       │   │       └── loki-stack
-│       │   │           └── loki
+│       │   ├── management-console
+│       │   │   └── hawtio [HAWTIO]
 │       │   ├── metrics
 │       │   │   ├── aggregation
 │       │   │   ├── time-series
@@ -106,43 +122,51 @@ module
 │       │           ├── jaeger
 │       │           ├── tempo
 │       │           └── zipkin
-│       ├── security
-│       │   ├── iam
-│       │   │   ├── keycloak
-│       │   │   └── token-lifecycle
-│       │   └── vault
-│       │       ├── hashicorp
-│       │       └── secret-lifecycle
-│       └── server
-│           ├── jetty
-│           └── tomcat
+│       ├── runtime
+│       │   └── servlet-container
+│       │       ├── jetty
+│       │       └── tomcat
+│       └── security
+│           ├── identity-access-management
+│           │   ├── keycloak
+│           │   └── token-lifecycle
+│           └── secrets-management
+│               ├── hashicorp-vault
+│               └── secret-lifecycle
 ├── integration
-│   ├── broker
-│   │   ├── activeMQ
-│   │   ├── kafka [KAFKA]
-│   │   │   └── service
-│   │   │       ├── consumer
-│   │   │       │   ├── accountant [KAFKA_CONSUMER_ACCOUNTANT]
-│   │   │       │   └── notification [KAFKA_CONSUMER_NOTIFICATION]
-│   │   │       ├── control [KAFKA_CONTROL]
-│   │   │       ├── producer
-│   │   │       │   └── bank [KAFKA_PRODUCER_BANK]
-│   │   │       └── server [KAFKA_SERVER]
-│   │   └── rabbitMQ
-│   ├── oneway
-│   │   ├── grpc
-│   │   ├── httpRequest
-│   │   │   ├── blocking
-│   │   │   │   ├── feign-client
-│   │   │   │   ├── http-url-connection
-│   │   │   │   ├── rest-client
-│   │   │   │   └── rest-template
-│   │   │   └── nonBlocking
-│   │   │       └── web-client
-│   │   └── sse
-│   └── twoway
-│       ├── rsocket
-│       └── websocket
+│   ├── http
+│   │   ├── request-response
+│   │   │   └── client
+│   │   │       ├── java
+│   │   │       │   ├── http-client
+│   │   │       │   └── http-url-connection
+│   │   │       ├── spring-cloud
+│   │   │       │   └── feign-client
+│   │   │       └── spring-framework
+│   │   │           ├── rest-client
+│   │   │           ├── rest-template
+│   │   │           └── web-client
+│   │   ├── server-sent-events
+│   │   └── webhook
+│   ├── messaging
+│   │   ├── event-streaming
+│   │   │   └── kafka [KAFKA]
+│   │   │       └── service
+│   │   │           ├── consumer
+│   │   │           │   ├── accountant [KAFKA_CONSUMER_ACCOUNTANT]
+│   │   │           │   └── notification [KAFKA_CONSUMER_NOTIFICATION]
+│   │   │           ├── control [KAFKA_CONTROL]
+│   │   │           ├── producer
+│   │   │           │   └── bank [KAFKA_PRODUCER_BANK]
+│   │   │           └── server [KAFKA_SERVER]
+│   │   └── message-broker
+│   │       ├── activemq
+│   │       └── rabbitmq
+│   ├── realtime
+│   │   ├── rsocket
+│   │   └── websocket
+│   └── rpc
+│       └── grpc
 ├── microservice [MICROSERVICE] : This is a microservice service system app
 │   └── module
 │       ├── deployments
@@ -180,206 +204,344 @@ module
     │   ├── ibm
     │   └── oracle
     ├── code-quality
-    │   ├── continous-inspection
+    │   ├── continuous-inspection
     │   │   └── sonarqube
+    │   ├── formatting
+    │   │   └── spotless
     │   └── static-analysis
     │       ├── checkstyle [CHECKSTYLE]
     │       ├── error-prone
     │       ├── pmd
     │       └── spotbugs
     ├── development
-    │   ├── architecture
-    │   │   ├── domain-driven-design [DOMAIN_DRIVEN_DESIGN] : Domain-Driven Design fundamentals, strategic design and tactical design
-    │   │   └── mvc [MODEL_VIEW_CONTROLLER] : Model-View-Controller architectural pattern
-    │   ├── build-tool
-    │   │   ├── ant
-    │   │   ├── gradle
-    │   │   │   ├── cache
-    │   │   │   ├── open-rewrite [OPEN_REWRITE_GRADLE]
-    │   │   │   ├── plugin
-    │   │   │   │   ├── development
-    │   │   │   │   │   ├── internal-plugin
-    │   │   │   │   │   │   ├── build-src
-    │   │   │   │   │   │   ├── convention-plugin
-    │   │   │   │   │   │   └── included-plugin
-    │   │   │   │   │   └── published-plugin
-    │   │   │   │   │       ├── gradle-plugin-portal
-    │   │   │   │   │       └── maven-repository
-    │   │   │   │   └── usage
-    │   │   │   │       ├── core-plugin
-    │   │   │   │       └── development-plugin
-    │   │   │   └── task
-    │   │   └── maven
-    │   ├── data-mapping
-    │   │   └── object-mapping [OBJECT_MAPPING] : Object-to-object mapping concepts and implementations including manual mapping, MapStruct and ModelMapper
-    │   ├── design-pattern
-    │   │   ├── anti-patterns
-    │   │   ├── behavioral
-    │   │   │   ├── observer
-    │   │   │   ├── state
-    │   │   │   └── strategy
-    │   │   ├── creational
-    │   │   │   ├── builder
-    │   │   │   ├── factory-method
-    │   │   │   └── singleton
-    │   │   ├── dependency-injection [DEPENDENCY_INJECTION] : Dependency Injection and Inversion of Control design concepts
-    │   │   ├── distributed-system
-    │   │   │   ├── bulkhead
-    │   │   │   ├── cqrs
-    │   │   │   ├── event-sourcing
-    │   │   │   ├── saga
-    │   │   │   └── sidecar
-    │   │   ├── solid-principles
-    │   │   └── structural
-    │   │       ├── adapter
-    │   │       ├── facade
-    │   │       └── proxy
-    │   ├── framework
-    │   │   ├── spring
-    │   │   │   ├── actuator [SPRING_ACTUATOR] - [DEPEND] : To check and monitor system info when running
-    │   │   │   ├── aspect [ASPECT] : Spring Aspect-Oriented Programming with proxy-based interception, advice, pointcuts and AOP infrastructure
-    │   │   │   ├── basic
-    │   │   │   │   ├── annotation
-    │   │   │   │   │   ├── configuration
-    │   │   │   │   │   └── stereotype
-    │   │   │   │   │       ├── component
-    │   │   │   │   │       ├── controller
-    │   │   │   │   │       ├── repository
-    │   │   │   │   │       └── service
-    │   │   │   │   ├── core
-    │   │   │   │   │   ├── bean
-    │   │   │   │   │   └── scope
-    │   │   │   │   ├── profile
-    │   │   │   │   └── properties
-    │   │   │   ├── batch
-    │   │   │   ├── concurrency [SPRING_CONCURRENCY] : Spring task execution, async methods, scheduling, context propagation and virtual-thread integration
-    │   │   │   ├── conditional
-    │   │   │   ├── data
-    │   │   │   │   └── jpa [SPRING_JPA] - [DEPEND]
-    │   │   │   ├── devtool [SPRING_DEVTOOL] - [DEPEND] : Extension for developer to auto restart and apply code to app at develop phase
-    │   │   │   ├── functional-endpoint
-    │   │   │   ├── global-exception-handler [GLOBAL_EXCEPTION_HANDLER] - [DEPEND] : Module stored custom exception handler case. Use by @EnableCustomExceptionHandler
-    │   │   │   ├── import
-    │   │   │   ├── profile
-    │   │   │   ├── reactive [SPRING_REACTIVE] : Shared YAML composition module for Spring WebFlux applications
-    │   │   │   ├── security
-    │   │   │   │   ├── authentication
-    │   │   │   │   │   ├── basic
-    │   │   │   │   │   └── jwt
-    │   │   │   │   ├── authorization
-    │   │   │   │   │   ├── method-security
-    │   │   │   │   │   ├── oauth
-    │   │   │   │   │   │   └── scope
-    │   │   │   │   │   ├── permission-based
-    │   │   │   │   │   └── role-based
-    │   │   │   │   └── resource-server
-    │   │   │   ├── swagger [SPRING_SWAGGER] - [DEPEND] : To auto generate list RestfulAPI to front-end page
-    │   │   │   ├── test-property-source
-    │   │   │   └── web [SPRING_WEB]
-    │   │   └── spring-boot
-    │   │       ├── auto-configuration
-    │   │       ├── embedded-server
-    │   │       ├── externalized-configuration
-    │   │       ├── native-image
-    │   │       ├── packaging
-    │   │       ├── starter
-    │   │       │   └── custom-starter
+    │   ├── data
+    │   │   ├── data-mapping
+    │   │   │   └── object-mapping [OBJECT_MAPPING] : Object-to-object mapping concepts and implementations including manual mapping, MapStruct and ModelMapper
+    │   │   ├── persistence
+    │   │   │   ├── orm
+    │   │   │   │   ├── hibernate [HIBERNATE] : Hibernate ORM implementation, unit-of-work behavior and persistence mechanics
+    │   │   │   │   └── jpa [JPA_SPECIFICATION] : Jakarta Persistence specification, persistence context, entity lifecycle and ORM contracts
+    │   │   │   └── relational-access
+    │   │   │       ├── jdbc [JDBC] : Java Database Connectivity API for relational database access
+    │   │   │       └── mybatis [MYBATIS] : MyBatis SQL mapping and data mapper framework
+    │   │   └── serialization
+    │   │       └── jackson [JACKSON] : Jackson data binding, JSON serialization and deserialization for Java applications
+    │   ├── engineering
+    │   │   ├── build-tool
+    │   │   │   ├── ant
+    │   │   │   ├── gradle
+    │   │   │   │   ├── cache
+    │   │   │   │   ├── open-rewrite [OPEN_REWRITE_GRADLE]
+    │   │   │   │   ├── plugin
+    │   │   │   │   │   ├── development
+    │   │   │   │   │   │   ├── internal-plugin
+    │   │   │   │   │   │   │   ├── build-src
+    │   │   │   │   │   │   │   ├── convention-plugin
+    │   │   │   │   │   │   │   └── included-plugin
+    │   │   │   │   │   │   └── published-plugin
+    │   │   │   │   │   │       ├── gradle-plugin-portal
+    │   │   │   │   │   │       └── maven-repository
+    │   │   │   │   │   └── usage
+    │   │   │   │   │       ├── core-plugin
+    │   │   │   │   │       └── development-plugin
+    │   │   │   │   └── task
+    │   │   │   └── maven
+    │   │   └── validation
+    │   │       ├── benchmark
+    │   │       │   ├── microbenchmark
+    │   │       │   │   └── jmh
+    │   │       │   └── system-benchmark
+    │   │       ├── performance
+    │   │       │   ├── benchmark
+    │   │       │   ├── jmeter
+    │   │       │   └── load-test
     │   │       └── testing
-    │   ├── language
-    │   │   ├── domain-specific-language [DOMAIN_SPECIFIC_LANGUAGE] : Domain-Specific Language concepts, design, parsing and execution models
-    │   │   └── java
-    │   │       ├── advance
-    │   │       │   ├── dynamic-runtime [JAVA_DYNAMIC_RUNTIME] : Advanced Java dynamic invocation and runtime linkage
-    │   │       │   ├── instrumentation [JAVA_INSTRUMENTATION] : Java instrumentation, agents and class transformation
-    │   │       │   ├── jvm [JAVA_JVM] : Java Virtual Machine internals
-    │   │       │   ├── native-interoperability [JAVA_NATIVE_INTEROPERABILITY] : Java native interoperability, foreign memory and operating-system boundaries
-    │   │       │   ├── networking [JAVA_NETWORKING] : Java networking APIs
-    │   │       │   ├── runtime-diagnostics [JAVA_RUNTIME_DIAGNOSTICS] : Java runtime diagnostics, management and troubleshooting
-    │   │       │   ├── runtime-extensibility [JAVA_RUNTIME_EXTENSIBILITY] : Java runtime extensibility, SPI and plugin architecture
-    │   │       │   └── security-cryptography [JAVA_SECURITY_CRYPTOGRAPHY] : Java security and cryptography APIs
-    │   │       ├── concurrency
-    │   │       │   ├── fundamentals [JAVA_CONCURRENCY_FUNDAMENTALS] : Java concurrency fundamentals, Thread lifecycle and Java Memory Model
-    │   │       │   ├── high-level-utils [JAVA_HIGH_LEVEL_CONCURRENCY_UTILS] : Java synchronization, coordination and concurrent utilities
-    │   │       │   ├── executor-service [JAVA_EXECUTOR_SERVICE] : Java executors, thread pools, scheduling and lifecycle
-    │   │       │   ├── fork-join [JAVA_FORK_JOIN] : Java Fork/Join Framework and work-stealing execution
-    │   │       │   ├── async-programming [JAVA_ASYNC_PROGRAMMING] : Java asynchronous programming with Future and CompletableFuture
-    │   │       │   └── virtual-threads [JAVA_VIRTUAL_THREADS] : Java virtual threads and modern thread-per-task execution
-    │   │       ├── core
-    │   │       │   ├── language-basics [JAVA_LANGUAGE_BASICS] : Java language basics
-    │   │       │   ├── numbers [JAVA_NUMBERS] : Java numeric types and arithmetic
-    │   │       │   ├── class-object [JAVA_CLASS_OBJECT] : Java class and object model
-    │   │       │   ├── oop [JAVA_OOP] : Java object-oriented programming
-    │   │       │   ├── abstract-interface [JAVA_ABSTRACT_INTERFACE] : Java abstract class and interface
-    │   │       │   ├── object-contract [JAVA_OBJECT_CONTRACT] : Java object contracts
-    │   │       │   ├── string [JAVA_STRING] : Java String and text fundamentals
-    │   │       │   ├── exception [JAVA_EXCEPTION] : Java exception handling
-    │   │       │   ├── generics [JAVA_GENERICS] : Java generics
-    │   │       │   ├── collection [JAVA_COLLECTION] : Java collections framework
-    │   │       │   ├── annotation [JAVA_ANNOTATION] : Java annotations
-    │   │       │   ├── reflection [JAVA_REFLECTION] : Java reflection
-    │   │       │   ├── classloader [JAVA_CLASSLOADER] : Java class loading
-    │   │       │   ├── date-time [JAVA_DATE_TIME] : Java date and time API
-    │   │       │   ├── io [JAVA_IO] : Java I/O and NIO
-    │   │       │   ├── localization [JAVA_LOCALIZATION] : Java localization and internationalization
-    │   │       │   └── functional-programming [JAVA_FUNCTIONAL_PROGRAMMING] : Java functional programming with functional interfaces, lambdas, method references, Optional and composition
-    │   │       └── version
-    │   │           ├── java11
-    │   │           ├── java16
-    │   │           │   └── record [JAVA_RECORD]
-    │   │           ├── java17
-    │   │           ├── java24
-    │   │           │   └── class-file-api [JAVA_CLASS_FILE_API] : Java 24 standard Class-File API
-    │   │           ├── java7
-    │   │           ├── java8
-    │   │           │   └── stream-api [JAVA_STREAM_API] : Java Stream API
-    │   │           └── java9
-    │   │               └── module-system [JAVA_MODULE_SYSTEM] : Java Platform Module System
-    │   ├── methodology
-    │   │   └── driven-development [DRIVEN_DEVELOPMENT_METHODOLOGIES] : Software development methodologies including TDD, BDD, ATDD, FDD and MDD
-    │   ├── paradigm
-    │   │   ├── aop [ASPECT_ORIENTED_PROGRAMMING] : Aspect-Oriented Programming concepts, cross-cutting concerns, terminology and implementation models
-    │   │   ├── data-oriented [DATA_ORIENTED_PROGRAMMING] : Data-Oriented Programming principles and data-centric program design
-    │   │   ├── declarative [DECLARATIVE_PROGRAMMING] : Declarative Programming paradigm, intent-oriented specification and related styles
-    │   │   ├── functional [FUNCTIONAL_PROGRAMMING] : Functional Programming paradigm concepts and trade-offs
-    │   │   ├── imperative [IMPERATIVE_PROGRAMMING] : Imperative Programming paradigm, state, commands and procedural organization
-    │   │   ├── object-oriented [OBJECT_ORIENTED_PROGRAMMING] : Object-Oriented Programming paradigm concepts and object collaboration
-    │   │   └── reactive [REACTIVE_PROGRAMMING] : Reactive Programming paradigm, data flow and backpressure concepts
-    │   ├── persistence
-    │   │   ├── orm
-    │   │   │   ├── hibernate [HIBERNATE] : Hibernate ORM implementation, unit-of-work behavior and persistence mechanics
-    │   │   │   └── jpa [JPA_SPECIFICATION] : Jakarta Persistence specification, persistence context, entity lifecycle and ORM contracts
-    │   │   └── relational-access
-    │   │       ├── jdbc [JDBC] : Java Database Connectivity API for relational database access
-    │   │       └── mybatis [MYBATIS] : MyBatis SQL mapping and data mapper framework
-    │   ├── serialization
-    │   │   └── jackson [JACKSON] : Jackson data binding, JSON serialization and deserialization for Java applications
-    │   └── validation
-    │       ├── benchmark
-    │       │   ├── microbenchmark
-    │       │   │   └── jmh
-    │       │   └── system-benchmark
-    │       ├── performance
-    │       │   ├── benchmark
-    │       │   ├── jmeter
-    │       │   └── load-test
-    │       └── testing
-    │           ├── functional
-    │           │   ├── e2e-test
-    │           │   ├── integration-test
-    │           │   └── unit-test
-    │           └── non-functional
-    │               ├── performance-test
-    │               │   └── concept
-    │               │       ├── endurance-test
-    │               │       ├── load-test
-    │               │       ├── scalability-test
-    │               │       ├── spike-test
-    │               │       ├── stress-test
-    │               │       └── volume-test
-    │               └── tooling
-    │                   ├── gatling
-    │                   ├── jmeter
-    │                   └── k6
+    │   │           ├── functional
+    │   │           │   ├── e2e-test
+    │   │           │   ├── integration-test
+    │   │           │   └── unit-test
+    │   │           └── non-functional
+    │   │               ├── performance-test
+    │   │               │   └── concept
+    │   │               │       ├── endurance-test
+    │   │               │       ├── load-test
+    │   │               │       ├── scalability-test
+    │   │               │       ├── spike-test
+    │   │               │       ├── stress-test
+    │   │               │       └── volume-test
+    │   │               └── tooling
+    │   │                   ├── gatling
+    │   │                   ├── jmeter
+    │   │                   └── k6
+    │   ├── programming
+    │   │   ├── framework
+    │   │   │   ├── spring-ai
+    │   │   │   ├── spring-amqp
+    │   │   │   ├── spring-batch [SPRING_BATCH] : Spring Batch job and step processing, chunk-oriented processing, restartability, fault tolerance and scaling
+    │   │   │   ├── spring-boot
+    │   │   │   │   ├── actuator [SPRING_BOOT_ACTUATOR] : Spring Boot Actuator knowledge: production-ready endpoints, health, metrics, diagnostics, security and observability
+    │   │   │   │   ├── auto-configuration [SPRING_BOOT_AUTO_CONFIGURATION] : Spring Boot auto-configuration model, conditional registration, ordering, diagnostics and custom auto-configuration
+    │   │   │   │   ├── externalized-configuration [SPRING_BOOT_EXTERNALIZED_CONFIGURATION] : Spring Boot externalized configuration including config data, property precedence, binding, profiles, validation and metadata
+    │   │   │   │   ├── fundamentals [SPRING_BOOT_FUNDAMENTALS] : Spring Boot fundamentals including application bootstrap, starters, embedded servers, lifecycle, packaging and development experience
+    │   │   │   │   ├── native-image [SPRING_BOOT_NATIVE_IMAGE] : Spring Boot AOT and native image support including GraalVM integration, runtime hints, testing and trade-offs
+    │   │   │   │   └── testing [SPRING_BOOT_TESTING] : Spring Boot testing support including application context tests, test slices, test auto-configuration and integration testing
+    │   │   │   ├── spring-cloud
+    │   │   │   │   └── gateway
+    │   │   │   ├── spring-data
+    │   │   │   │   ├── jdbc [SPRING_DATA_JDBC] : Spring Data JDBC aggregate-oriented relational persistence, repositories, mapping and transactions
+    │   │   │   │   ├── jpa [SPRING_JPA] - [DEPEND]
+    │   │   │   │   ├── mongodb [SPRING_DATA_MONGODB] : Spring Data MongoDB repositories, mapping, queries, aggregation, transactions and reactive integration
+    │   │   │   │   ├── r2dbc [SPRING_DATA_R2DBC] : Spring Data R2DBC reactive relational access, repositories, mapping, transactions and backpressure-aware database workflows
+    │   │   │   │   └── redis [SPRING_DATA_REDIS] : Spring Data Redis templates, repositories, serialization, caching, pub-sub and reactive access
+    │   │   │   ├── spring-framework
+    │   │   │   │   ├── aspect [ASPECT] : Spring Aspect-Oriented Programming with proxy-based interception, advice, pointcuts and AOP infrastructure
+    │   │   │   │   ├── concurrency [SPRING_CONCURRENCY] : Spring task execution, async methods, scheduling, context propagation and virtual-thread integration
+    │   │   │   │   ├── core-container [SPRING_CORE_CONTAINER] : Spring Core Container, bean management, dependency injection, scopes, environment, profiles, conditional registration and configuration composition
+    │   │   │   │   ├── global-exception-handler [GLOBAL_EXCEPTION_HANDLER] - [DEPEND] : Module stored custom exception handler case. Use by @EnableCustomExceptionHandler
+    │   │   │   │   ├── reactive [SPRING_REACTIVE] : Shared YAML composition module for Spring WebFlux applications
+    │   │   │   │   ├── testing [SPRING_TESTING] : Spring TestContext Framework including context configuration, profiles, test properties, context caching, transactions and integration testing
+    │   │   │   │   └── web [SPRING_WEB]
+    │   │   │   ├── spring-graphql
+    │   │   │   ├── spring-grpc
+    │   │   │   ├── spring-hateoas
+    │   │   │   ├── spring-integration [SPRING_INTEGRATION] : Spring Integration knowledge for Enterprise Integration Patterns, messaging channels, endpoints, routers, transformers, gateways and adapters
+    │   │   │   ├── spring-kafka
+    │   │   │   ├── spring-ldap
+    │   │   │   ├── spring-modulith [SPRING_MODULITH] : Spring Modulith application modules, structural verification, module events, testing, observability and documentation
+    │   │   │   ├── spring-rest-docs
+    │   │   │   ├── spring-security
+    │   │   │   │   ├── fundamentals [SPRING_SECURITY_FUNDAMENTALS] : Spring Security fundamentals including filter chain, authentication, authorization, security context, method security and common web protections
+    │   │   │   │   └── oauth2 [SPRING_SECURITY_OAUTH2] : Spring Security OAuth2 and OpenID Connect including clients, resource servers, JWT, scopes and authorization-server concepts
+    │   │   │   ├── spring-session [SPRING_SESSION] : Spring Session externalized HTTP session management, repositories, Redis/JDBC backing stores and Spring Security integration
+    │   │   │   ├── spring-shell
+    │   │   │   ├── spring-web-services
+    │   │   │   └── springdoc
+    │   │   │       └── openapi [SPRINGDOC_OPENAPI] : Springdoc OpenAPI knowledge and examples for documenting Spring web APIs
+    │   │   ├── language
+    │   │   │   ├── domain-specific-language [DOMAIN_SPECIFIC_LANGUAGE] : Domain-Specific Language concepts, design, parsing and execution models
+    │   │   │   └── java
+    │   │   │       ├── advance
+    │   │   │       │   ├── dynamic-runtime [JAVA_DYNAMIC_RUNTIME] : Advanced Java dynamic invocation and runtime linkage
+    │   │   │       │   ├── instrumentation [JAVA_INSTRUMENTATION] : Java instrumentation, agents and class transformation
+    │   │   │       │   ├── jvm [JAVA_JVM] : Java Virtual Machine internals
+    │   │   │       │   ├── native-interoperability [JAVA_NATIVE_INTEROPERABILITY] : Java native interoperability, foreign memory and operating-system boundaries
+    │   │   │       │   ├── networking [JAVA_NETWORKING] : Java networking APIs
+    │   │   │       │   ├── runtime-diagnostics [JAVA_RUNTIME_DIAGNOSTICS] : Java runtime diagnostics, management and troubleshooting
+    │   │   │       │   ├── runtime-extensibility [JAVA_RUNTIME_EXTENSIBILITY] : Java runtime extensibility, SPI and plugin architecture
+    │   │   │       │   └── security-cryptography [JAVA_SECURITY_CRYPTOGRAPHY] : Java security and cryptography APIs
+    │   │   │       ├── concurrency
+    │   │   │       │   ├── fundamentals [JAVA_CONCURRENCY_FUNDAMENTALS] : Java concurrency fundamentals, Thread lifecycle and Java Memory Model
+    │   │   │       │   ├── high-level-utils [JAVA_HIGH_LEVEL_CONCURRENCY_UTILS] : Java synchronization, coordination and concurrent utilities
+    │   │   │       │   ├── executor-service [JAVA_EXECUTOR_SERVICE] : Java executors, thread pools, scheduling and lifecycle
+    │   │   │       │   ├── fork-join [JAVA_FORK_JOIN] : Java Fork/Join Framework and work-stealing execution
+    │   │   │       │   ├── async-programming [JAVA_ASYNC_PROGRAMMING] : Java asynchronous programming with Future and CompletableFuture
+    │   │   │       │   └── virtual-threads [JAVA_VIRTUAL_THREADS] : Java virtual threads and modern thread-per-task execution
+    │   │   │       ├── core
+    │   │   │       │   ├── language-basics [JAVA_LANGUAGE_BASICS] : Java language basics
+    │   │   │       │   ├── numbers [JAVA_NUMBERS] : Java numeric types and arithmetic
+    │   │   │       │   ├── class-object [JAVA_CLASS_OBJECT] : Java class and object model
+    │   │   │       │   ├── oop [JAVA_OOP] : Java object-oriented programming
+    │   │   │       │   ├── abstract-interface [JAVA_ABSTRACT_INTERFACE] : Java abstract class and interface
+    │   │   │       │   ├── object-contract [JAVA_OBJECT_CONTRACT] : Java object contracts
+    │   │   │       │   ├── string [JAVA_STRING] : Java String and text fundamentals
+    │   │   │       │   ├── exception [JAVA_EXCEPTION] : Java exception handling
+    │   │   │       │   ├── generics [JAVA_GENERICS] : Java generics
+    │   │   │       │   ├── collection [JAVA_COLLECTION] : Java collections framework
+    │   │   │       │   ├── annotation [JAVA_ANNOTATION] : Java annotations
+    │   │   │       │   ├── reflection [JAVA_REFLECTION] : Java reflection
+    │   │   │       │   ├── classloader [JAVA_CLASSLOADER] : Java class loading
+    │   │   │       │   ├── date-time [JAVA_DATE_TIME] : Java date and time API
+    │   │   │       │   ├── io [JAVA_IO] : Java I/O and NIO
+    │   │   │       │   ├── localization [JAVA_LOCALIZATION] : Java localization and internationalization
+    │   │   │       │   └── functional-programming [JAVA_FUNCTIONAL_PROGRAMMING] : Java functional programming with functional interfaces, lambdas, method references, Optional and composition
+    │   │   │       └── version
+    │   │   │           ├── java10
+    │   │   │           │   ├── application-class-data-sharing [JAVA_10_APPLICATION_CLASS_DATA_SHARING] : Java 10 - Application Class-Data Sharing
+    │   │   │           │   ├── container-awareness [JAVA_10_CONTAINER_AWARENESS] : Java 10 - Container Awareness
+    │   │   │           │   ├── local-variable-type-inference [JAVA_10_LOCAL_VARIABLE_TYPE_INFERENCE] : Java 10 - Local Variable Type Inference
+    │   │   │           │   └── parallel-full-gc-for-g1 [JAVA_10_PARALLEL_FULL_GC_FOR_G1] : Java 10 - Parallel Full GC for G1
+    │   │   │           ├── java11
+    │   │   │           │   ├── deployment-stack-removal [JAVA_11_DEPLOYMENT_STACK_REMOVAL] : Java 11 - Deployment Stack Removal
+    │   │   │           │   ├── epsilon-gc [JAVA_11_EPSILON_GC] : Java 11 - Epsilon GC
+    │   │   │           │   ├── flight-recorder [JAVA_11_FLIGHT_RECORDER] : Java 11 - Flight Recorder
+    │   │   │           │   ├── http-client [JAVA_11_HTTP_CLIENT] : Java 11 - HTTP Client
+    │   │   │           │   ├── java-ee-corba-removal [JAVA_11_JAVA_EE_CORBA_REMOVAL] : Java 11 - Java EE and CORBA Module Removal
+    │   │   │           │   ├── lambda-parameter-var-syntax [JAVA_11_LAMBDA_PARAMETER_VAR_SYNTAX] : Java 11 - Lambda Parameter var Syntax
+    │   │   │           │   ├── single-file-source-code-launch [JAVA_11_SINGLE_FILE_SOURCE_CODE_LAUNCH] : Java 11 - Single-File Source-Code Launch
+    │   │   │           │   ├── tls13 [JAVA_11_TLS13] : Java 11 - TLS 1.3
+    │   │   │           │   └── zgc-experimental [JAVA_11_ZGC_EXPERIMENTAL] : Java 11 - ZGC Experimental
+    │   │   │           ├── java14
+    │   │   │           │   ├── cms-gc-removal [JAVA_14_CMS_GC_REMOVAL] : Java 14 - CMS Garbage Collector Removal
+    │   │   │           │   ├── helpful-null-pointer-exceptions [JAVA_14_HELPFUL_NULL_POINTER_EXCEPTIONS] : Java 14 - Helpful NullPointerExceptions
+    │   │   │           │   ├── jfr-event-streaming [JAVA_14_JFR_EVENT_STREAMING] : Java 14 - JFR Event Streaming
+    │   │   │           │   ├── numa-aware-g1 [JAVA_14_NUMA_AWARE_G1] : Java 14 - NUMA-Aware G1
+    │   │   │           │   ├── pack200-removal [JAVA_14_PACK200_REMOVAL] : Java 14 - Pack200 Removal
+    │   │   │           │   └── switch-expressions [JAVA_14_SWITCH_EXPRESSIONS] : Java 14 - Switch Expressions
+    │   │   │           ├── java15
+    │   │   │           │   ├── biased-locking-disabled [JAVA_15_BIASED_LOCKING_DISABLED] : Java 15 - Biased Locking Disabled
+    │   │   │           │   ├── eddsa [JAVA_15_EDDSA] : Java 15 - EdDSA
+    │   │   │           │   ├── hidden-classes [JAVA_15_HIDDEN_CLASSES] : Java 15 - Hidden Classes
+    │   │   │           │   ├── nashorn-removal [JAVA_15_NASHORN_REMOVAL] : Java 15 - Nashorn Removal
+    │   │   │           │   ├── shenandoah-production [JAVA_15_SHENANDOAH_PRODUCTION] : Java 15 - Shenandoah Production
+    │   │   │           │   ├── solaris-sparc-port-removal [JAVA_15_SOLARIS_SPARC_PORT_REMOVAL] : Java 15 - Solaris and SPARC Port Removal
+    │   │   │           │   ├── text-blocks [JAVA_15_TEXT_BLOCKS] : Java 15 - Text Blocks
+    │   │   │           │   └── zgc-production [JAVA_15_ZGC_PRODUCTION] : Java 15 - ZGC Production
+    │   │   │           ├── java16
+    │   │   │           │   ├── elastic-metaspace [JAVA_16_ELASTIC_METASPACE] : Java 16 - Elastic Metaspace
+    │   │   │           │   ├── jpackage [JAVA_16_JPACKAGE] : Java 16 - jpackage
+    │   │   │           │   ├── pattern-matching-instanceof [JAVA_16_PATTERN_MATCHING_INSTANCEOF] : Java 16 - Pattern Matching for instanceof
+    │   │   │           │   ├── record [JAVA_RECORD]
+    │   │   │           │   ├── strong-encapsulation-by-default [JAVA_16_STRONG_ENCAPSULATION_BY_DEFAULT] : Java 16 - Strong Encapsulation by Default
+    │   │   │           │   └── unix-domain-socket-channels [JAVA_16_UNIX_DOMAIN_SOCKET_CHANNELS] : Java 16 - Unix-Domain Socket Channels
+    │   │   │           ├── java17
+    │   │   │           │   ├── context-specific-deserialization-filters [JAVA_17_CONTEXT_SPECIFIC_DESERIALIZATION_FILTERS] : Java 17 - Context-Specific Deserialization Filters
+    │   │   │           │   ├── enhanced-prng [JAVA_17_ENHANCED_PRNG] : Java 17 - Enhanced Pseudo-Random Number Generators
+    │   │   │           │   ├── macos-aarch64-port [JAVA_17_MACOS_AARCH64_PORT] : Java 17 - macOS AArch64 Port
+    │   │   │           │   ├── sealed-classes [JAVA_17_SEALED_CLASSES] : Java 17 - Sealed Classes
+    │   │   │           │   ├── security-manager-deprecated-for-removal [JAVA_17_SECURITY_MANAGER_DEPRECATED_FOR_REMOVAL] : Java 17 - Security Manager Deprecated for Removal
+    │   │   │           │   ├── strict-floating-point-semantics [JAVA_17_STRICT_FLOATING_POINT_SEMANTICS] : Java 17 - Always-Strict Floating-Point Semantics
+    │   │   │           │   └── strong-encapsulation [JAVA_17_STRONG_ENCAPSULATION] : Java 17 - Strong Encapsulation
+    │   │   │           ├── java18
+    │   │   │           │   ├── core-reflection-method-handles [JAVA_18_CORE_REFLECTION_METHOD_HANDLES] : Java 18 - Core Reflection Reimplemented with Method Handles
+    │   │   │           │   ├── finalization-deprecated-for-removal [JAVA_18_FINALIZATION_DEPRECATED_FOR_REMOVAL] : Java 18 - Finalization Deprecated for Removal
+    │   │   │           │   ├── inet-address-resolver-spi [JAVA_18_INET_ADDRESS_RESOLVER_SPI] : Java 18 - InetAddress Resolver SPI
+    │   │   │           │   ├── javadoc-code-snippets [JAVA_18_JAVADOC_CODE_SNIPPETS] : Java 18 - Javadoc Code Snippets
+    │   │   │           │   ├── simple-web-server [JAVA_18_SIMPLE_WEB_SERVER] : Java 18 - Simple Web Server
+    │   │   │           │   └── utf8-by-default [JAVA_18_UTF8_BY_DEFAULT] : Java 18 - UTF-8 by Default
+    │   │   │           ├── java21
+    │   │   │           │   ├── generational-zgc [JAVA_21_GENERATIONAL_ZGC] : Java 21 - Generational ZGC
+    │   │   │           │   ├── kem-api [JAVA_21_KEM_API] : Java 21 - Key Encapsulation Mechanism API
+    │   │   │           │   ├── pattern-matching-switch [JAVA_21_PATTERN_MATCHING_SWITCH] : Java 21 - Pattern Matching for switch
+    │   │   │           │   ├── record-patterns [JAVA_21_RECORD_PATTERNS] : Java 21 - Record Patterns
+    │   │   │           │   ├── sequenced-collections [JAVA_21_SEQUENCED_COLLECTIONS] : Java 21 - Sequenced Collections
+    │   │   │           │   └── virtual-threads [JAVA_21_VIRTUAL_THREADS] : Java 21 - Virtual Threads
+    │   │   │           ├── java22
+    │   │   │           │   ├── foreign-function-memory-api [JAVA_22_FOREIGN_FUNCTION_MEMORY_API] : Java 22 - Foreign Function and Memory API
+    │   │   │           │   ├── g1-region-pinning [JAVA_22_G1_REGION_PINNING] : Java 22 - G1 Region Pinning
+    │   │   │           │   ├── multi-file-source-code-launch [JAVA_22_MULTI_FILE_SOURCE_CODE_LAUNCH] : Java 22 - Multi-File Source-Code Launch
+    │   │   │           │   └── unnamed-variables-and-patterns [JAVA_22_UNNAMED_VARIABLES_AND_PATTERNS] : Java 22 - Unnamed Variables and Patterns
+    │   │   │           ├── java23
+    │   │   │           │   ├── generational-zgc-default [JAVA_23_GENERATIONAL_ZGC_DEFAULT] : Java 23 - Generational ZGC by Default
+    │   │   │           │   └── markdown-documentation-comments [JAVA_23_MARKDOWN_DOCUMENTATION_COMMENTS] : Java 23 - Markdown Documentation Comments
+    │   │   │           ├── java24
+    │   │   │           │   ├── aot-class-loading-linking [JAVA_24_AOT_CLASS_LOADING_LINKING] : Java 24 - Ahead-of-Time Class Loading and Linking
+    │   │   │           │   ├── class-file-api [JAVA_CLASS_FILE_API] : Java 24 standard Class-File API
+    │   │   │           │   ├── generational-zgc-only [JAVA_24_GENERATIONAL_ZGC_ONLY] : Java 24 - Generational ZGC Only
+    │   │   │           │   ├── ml-dsa [JAVA_24_ML_DSA] : Java 24 - ML-DSA
+    │   │   │           │   ├── ml-kem [JAVA_24_ML_KEM] : Java 24 - ML-KEM
+    │   │   │           │   ├── security-manager-disabled [JAVA_24_SECURITY_MANAGER_DISABLED] : Java 24 - Security Manager Permanently Disabled
+    │   │   │           │   ├── stream-gatherers [JAVA_24_STREAM_GATHERERS] : Java 24 - Stream Gatherers
+    │   │   │           │   └── virtual-thread-synchronization [JAVA_24_VIRTUAL_THREAD_SYNCHRONIZATION] : Java 24 - Synchronize Virtual Threads without Pinning
+    │   │   │           ├── java25
+    │   │   │           │   ├── compact-object-headers [JAVA_25_COMPACT_OBJECT_HEADERS] : Java 25 - Compact Object Headers
+    │   │   │           │   ├── compact-source-files-instance-main-methods [JAVA_25_COMPACT_SOURCE_FILES_INSTANCE_MAIN_METHODS] : Java 25 - Compact Source Files and Instance Main Methods
+    │   │   │           │   ├── flexible-constructor-bodies [JAVA_25_FLEXIBLE_CONSTRUCTOR_BODIES] : Java 25 - Flexible Constructor Bodies
+    │   │   │           │   ├── module-import-declarations [JAVA_25_MODULE_IMPORT_DECLARATIONS] : Java 25 - Module Import Declarations
+    │   │   │           │   └── scoped-values [JAVA_25_SCOPED_VALUES] : Java 25 - Scoped Values
+    │   │   │           ├── java26
+    │   │   │           │   ├── aot-object-caching-any-gc [JAVA_26_AOT_OBJECT_CACHING_ANY_GC] : Java 26 - Ahead-of-Time Object Caching with Any GC
+    │   │   │           │   ├── applet-api-removal [JAVA_26_APPLET_API_REMOVAL] : Java 26 - Applet API Removal
+    │   │   │           │   ├── final-field-mutation-warnings [JAVA_26_FINAL_FIELD_MUTATION_WARNINGS] : Java 26 - Final Field Mutation Warnings
+    │   │   │           │   ├── g1-throughput [JAVA_26_G1_THROUGHPUT] : Java 26 - G1 Throughput Improvements
+    │   │   │           │   └── http3-client [JAVA_26_HTTP3_CLIENT] : Java 26 - HTTP 3 Client
+    │   │   │           ├── java27
+    │   │   │           │   ├── compact-object-headers-default [JAVA_27_COMPACT_OBJECT_HEADERS_DEFAULT] : Java 27 - Compact Object Headers by Default
+    │   │   │           │   ├── g1-default-all-environments [JAVA_27_G1_DEFAULT_ALL_ENVIRONMENTS] : Java 27 - G1 Default in All Environments
+    │   │   │           │   ├── jfr-in-process-data-redaction [JAVA_27_JFR_IN_PROCESS_DATA_REDACTION] : Java 27 - JFR In-Process Data Redaction
+    │   │   │           │   └── post-quantum-hybrid-tls [JAVA_27_POST_QUANTUM_HYBRID_TLS] : Java 27 - Post-Quantum Hybrid Key Exchange for TLS 1.3
+    │   │   │           ├── java5
+    │   │   │           │   ├── annotations [JAVA_5_ANNOTATIONS] : Java 5 - Annotations
+    │   │   │           │   ├── autoboxing-unboxing [JAVA_5_AUTOBOXING_UNBOXING] : Java 5 - Autoboxing and Unboxing
+    │   │   │           │   ├── class-data-sharing [JAVA_5_CLASS_DATA_SHARING] : Java 5 - Class Data Sharing
+    │   │   │           │   ├── concurrency-utilities [JAVA_5_CONCURRENCY_UTILITIES] : Java 5 - Concurrency Utilities
+    │   │   │           │   ├── enhanced-for-loop [JAVA_5_ENHANCED_FOR_LOOP] : Java 5 - Enhanced For Loop
+    │   │   │           │   ├── enums [JAVA_5_ENUMS] : Java 5 - Enums
+    │   │   │           │   ├── generics [JAVA_5_GENERICS] : Java 5 - Generics
+    │   │   │           │   ├── static-import [JAVA_5_STATIC_IMPORT] : Java 5 - Static Import
+    │   │   │           │   └── varargs [JAVA_5_VARARGS] : Java 5 - Varargs
+    │   │   │           ├── java6
+    │   │   │           │   ├── annotation-processing-api [JAVA_6_ANNOTATION_PROCESSING_API] : Java 6 - Annotation Processing API
+    │   │   │           │   ├── compiler-api [JAVA_6_COMPILER_API] : Java 6 - Compiler API
+    │   │   │           │   ├── jdbc4 [JAVA_6_JDBC4] : Java 6 - JDBC 4
+    │   │   │           │   ├── scripting-api [JAVA_6_SCRIPTING_API] : Java 6 - Scripting API
+    │   │   │           │   └── service-loader [JAVA_6_SERVICE_LOADER] : Java 6 - ServiceLoader
+    │   │   │           ├── java7
+    │   │   │           │   ├── binary-literals [JAVA_7_BINARY_LITERALS] : Java 7 - Binary Literals
+    │   │   │           │   ├── diamond-operator [JAVA_7_DIAMOND_OPERATOR] : Java 7 - Diamond Operator
+    │   │   │           │   ├── fork-join [JAVA_7_FORK_JOIN] : Java 7 - Fork Join Framework
+    │   │   │           │   ├── invokedynamic [JAVA_7_INVOKEDYNAMIC] : Java 7 - invokedynamic
+    │   │   │           │   ├── method-handles [JAVA_7_METHOD_HANDLES] : Java 7 - Method Handles
+    │   │   │           │   ├── multi-catch [JAVA_7_MULTI_CATCH] : Java 7 - Multi-Catch
+    │   │   │           │   ├── nio2 [JAVA_7_NIO2] : Java 7 - NIO.2
+    │   │   │           │   ├── precise-rethrow [JAVA_7_PRECISE_RETHROW] : Java 7 - Precise Rethrow
+    │   │   │           │   ├── strings-in-switch [JAVA_7_STRINGS_IN_SWITCH] : Java 7 - Strings in Switch
+    │   │   │           │   ├── try-with-resources [JAVA_7_TRY_WITH_RESOURCES] : Java 7 - Try-With-Resources
+    │   │   │           │   └── underscores-in-numeric-literals [JAVA_7_UNDERSCORES_IN_NUMERIC_LITERALS] : Java 7 - Underscores in Numeric Literals
+    │   │   │           ├── java8
+    │   │   │           │   ├── base64-api [JAVA_8_BASE64_API] : Java 8 - Base64 API
+    │   │   │           │   ├── completable-future [JAVA_8_COMPLETABLE_FUTURE] : Java 8 - CompletableFuture
+    │   │   │           │   ├── date-time-api [JAVA_8_DATE_TIME_API] : Java 8 - Date-Time API
+    │   │   │           │   ├── default-interface-methods [JAVA_8_DEFAULT_INTERFACE_METHODS] : Java 8 - Default Interface Methods
+    │   │   │           │   ├── functional-interfaces [JAVA_8_FUNCTIONAL_INTERFACES] : Java 8 - Functional Interfaces
+    │   │   │           │   ├── lambda-expressions [JAVA_8_LAMBDA_EXPRESSIONS] : Java 8 - Lambda Expressions
+    │   │   │           │   ├── metaspace [JAVA_8_METASPACE] : Java 8 - Metaspace
+    │   │   │           │   ├── method-references [JAVA_8_METHOD_REFERENCES] : Java 8 - Method References
+    │   │   │           │   ├── nashorn-javascript-engine [JAVA_8_NASHORN_JAVASCRIPT_ENGINE] : Java 8 - Nashorn JavaScript Engine
+    │   │   │           │   ├── optional [JAVA_8_OPTIONAL] : Java 8 - Optional
+    │   │   │           │   ├── repeatable-annotations [JAVA_8_REPEATABLE_ANNOTATIONS] : Java 8 - Repeatable Annotations
+    │   │   │           │   ├── stream-api [JAVA_STREAM_API] : Java Stream API
+    │   │   │           │   └── type-annotations [JAVA_8_TYPE_ANNOTATIONS] : Java 8 - Type Annotations
+    │   │   │           └── java9
+    │   │   │               ├── collection-factory-methods [JAVA_9_COLLECTION_FACTORY_METHODS] : Java 9 - Collection Factory Methods
+    │   │   │               ├── compact-strings [JAVA_9_COMPACT_STRINGS] : Java 9 - Compact Strings
+    │   │   │               ├── flow-api [JAVA_9_FLOW_API] : Java 9 - Flow API
+    │   │   │               ├── g1-default-gc [JAVA_9_G1_DEFAULT_GC] : Java 9 - G1 as Default Garbage Collector
+    │   │   │               ├── jlink [JAVA_9_JLINK] : Java 9 - jlink
+    │   │   │               ├── jshell [JAVA_9_JSHELL] : Java 9 - JShell
+    │   │   │               ├── module-system [JAVA_MODULE_SYSTEM] : Java Platform Module System
+    │   │   │               ├── multi-release-jar [JAVA_9_MULTI_RELEASE_JAR] : Java 9 - Multi-Release JAR
+    │   │   │               ├── private-interface-methods [JAVA_9_PRIVATE_INTERFACE_METHODS] : Java 9 - Private Interface Methods
+    │   │   │               ├── process-api-updates [JAVA_9_PROCESS_API_UPDATES] : Java 9 - Process API Updates
+    │   │   │               └── stack-walking-api [JAVA_9_STACK_WALKING_API] : Java 9 - Stack-Walking API
+    │   │   └── paradigm
+    │   │       ├── aop [ASPECT_ORIENTED_PROGRAMMING] : Aspect-Oriented Programming concepts, cross-cutting concerns, terminology and implementation models
+    │   │       ├── data-oriented [DATA_ORIENTED_PROGRAMMING] : Data-Oriented Programming principles and data-centric program design
+    │   │       ├── declarative [DECLARATIVE_PROGRAMMING] : Declarative Programming paradigm, intent-oriented specification and related styles
+    │   │       ├── functional [FUNCTIONAL_PROGRAMMING] : Functional Programming paradigm concepts and trade-offs
+    │   │       ├── imperative [IMPERATIVE_PROGRAMMING] : Imperative Programming paradigm, state, commands and procedural organization
+    │   │       ├── object-oriented [OBJECT_ORIENTED_PROGRAMMING] : Object-Oriented Programming paradigm concepts and object collaboration
+    │   │       └── reactive [REACTIVE_PROGRAMMING] : Reactive Programming paradigm, data flow and backpressure concepts
+    │   ├── software-design
+    │   │   ├── architecture
+    │   │   │   ├── domain-driven-design [DOMAIN_DRIVEN_DESIGN] : Domain-Driven Design fundamentals, strategic design and tactical design
+    │   │   │   └── mvc [MODEL_VIEW_CONTROLLER] : Model-View-Controller architectural pattern
+    │   │   └── design-pattern
+    │   │       ├── anti-patterns
+    │   │       ├── behavioral
+    │   │       │   ├── observer
+    │   │       │   ├── state
+    │   │       │   └── strategy
+    │   │       ├── creational
+    │   │       │   ├── builder
+    │   │       │   ├── factory-method
+    │   │       │   └── singleton
+    │   │       ├── dependency-injection [DEPENDENCY_INJECTION] : Dependency Injection and Inversion of Control design concepts
+    │   │       ├── distributed-system
+    │   │       │   ├── bulkhead
+    │   │       │   ├── cqrs
+    │   │       │   ├── event-sourcing
+    │   │       │   ├── saga
+    │   │       │   └── sidecar
+    │   │       ├── solid-principles
+    │   │       └── structural
+    │   │           ├── adapter
+    │   │           ├── facade
+    │   │           └── proxy
+    │   └── software-process
+    │       └── methodology
+    │           ├── agile-development [AGILE_DEVELOPMENT] : Agile software development principles, iterative delivery and related methods such as Scrum, Kanban, XP and Lean
+    │           ├── driven-development [DRIVEN_DEVELOPMENT_METHODOLOGIES] : Driven development approaches and practices including TDD, BDD, ATDD, FDD and MDD
+    │           └── lifecycle-models [SOFTWARE_LIFECYCLE_MODELS] : Software development lifecycle models including Waterfall, Iterative, Incremental, Spiral and V-Model
     ├── digital
     ├── social
     └── support

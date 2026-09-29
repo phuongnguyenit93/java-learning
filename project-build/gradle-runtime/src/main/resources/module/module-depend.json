@@ -5,38 +5,32 @@
             "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client"
         ]
     },
-    "SPRING_ACTUATOR": {
-        "DESCRIBE": "To check and monitor system info when running",
-        "api": [
-            "org.springframework.boot:spring-boot-starter-actuator"
-        ]
-    },
     "SPRING_JPA": {
         "DESCRIBE": "",
         "api": [
             "org.springframework.boot:spring-boot-starter-data-jpa"
         ]
     },
-    "SPRING_DEVTOOL": {
-        "DESCRIBE": "Extension for developer to auto restart and apply code to app at develop phase",
-        "developmentOnly": [
-            "org.springframework.boot:spring-boot-devtools"
-        ]
-    },
     "GLOBAL_EXCEPTION_HANDLER": {
         "DESCRIBE": "Module stored custom exception handler case. Use by @EnableCustomExceptionHandler"
-    },
-    "SPRING_SWAGGER": {
-        "DESCRIBE": "To auto generate list RestfulAPI to front-end page",
-        "api": [
-            "org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0"
-        ]
     },
     "FLEXMARK_MARKDOWN": {
         "DESCRIBE": ""
     },
     "AZURE_TRANSLATE": {
         "DESCRIBE": "Translate using Azure service"
+    },
+    "SPRING_ACTUATOR": {
+        "DESCRIBE": "Runtime dependency wrapper for Spring Boot Actuator",
+        "api": [
+            "org.springframework.boot:spring-boot-starter-actuator"
+        ]
+    },
+    "SPRING_DEVTOOL": {
+        "DESCRIBE": "Runtime development-only dependency wrapper for Spring Boot DevTools",
+        "developmentOnly": [
+            "org.springframework.boot:spring-boot-devtools"
+        ]
     },
     "GLOBAL_EXECUTION_CONTEXT": {
         "DESCRIBE": "Stack-neutral execution capture models, store and generated source-context lookup",

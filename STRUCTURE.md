@@ -18,7 +18,7 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <summary><b><a href='./module/infrastructure/devops/artifact-management'>📁 artifact-management</a></b></summary>
 <ul>
 <li>
-  <a href='./module/infrastructure/devops/artifact-management/central-portal'>🪄 central-portal</a>
+  <a href='./module/infrastructure/devops/artifact-management/maven-central'>🪄 maven-central</a>
 </li>
 <li>
   <a href='./module/infrastructure/devops/artifact-management/nexus'>🪄 nexus</a>
@@ -27,29 +27,86 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </details>
 </li>
 <li>
-  <a href='./module/infrastructure/devops/ci-cd'>🪄 ci-cd</a>
-</li>
-<li>
-  <a href='./module/infrastructure/devops/docker'>🪄 docker</a>
-</li>
-<li>
 <details>
-  <summary><b><a href='./module/infrastructure/devops/environment'>📁 environment</a></b></summary>
+  <summary><b><a href='./module/infrastructure/devops/ci-cd'>📁 ci-cd</a></b></summary>
 <ul>
 <li>
-  <a href='./module/infrastructure/devops/environment/isolation'>🪄 isolation</a>
+  <a href='./module/infrastructure/devops/ci-cd/fundamentals'>🪄 fundamentals</a>
+</li>
+<li>
+  <a href='./module/infrastructure/devops/ci-cd/github-actions'>🪄 github-actions</a>
+</li>
+<li>
+  <a href='./module/infrastructure/devops/ci-cd/gitlab-ci'>🪄 gitlab-ci</a>
+</li>
+<li>
+  <a href='./module/infrastructure/devops/ci-cd/jenkins'>🪄 jenkins</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
-  <a href='./module/infrastructure/devops/git'>🪄 git</a>
+<details>
+  <summary><b><a href='./module/infrastructure/devops/configuration-management'>📁 configuration-management</a></b></summary>
+<ul>
+<li>
+  <a href='./module/infrastructure/devops/configuration-management/ansible'>🪄 ansible</a>
+</li>
+</ul>
+</details>
 </li>
 <li>
-  <a href='./module/infrastructure/devops/jenkins'>🪄 jenkins</a>
+<details>
+  <summary><b><a href='./module/infrastructure/devops/containerization'>📁 containerization</a></b></summary>
+<ul>
+<li>
+  <a href='./module/infrastructure/devops/containerization/docker'>🪄 docker</a>
+</li>
+</ul>
+</details>
 </li>
 <li>
-  <a href='./module/infrastructure/devops/k8s'>🪄 k8s</a>
+<details>
+  <summary><b><a href='./module/infrastructure/devops/deployment'>📁 deployment</a></b></summary>
+<ul>
+<li>
+  <a href='./module/infrastructure/devops/deployment/deployment-strategy'>🪄 deployment-strategy</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+  <a href='./module/infrastructure/devops/environment-management'>🪄 environment-management</a>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/infrastructure/devops/infrastructure-as-code'>📁 infrastructure-as-code</a></b></summary>
+<ul>
+<li>
+  <a href='./module/infrastructure/devops/infrastructure-as-code/terraform'>🪄 terraform</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/infrastructure/devops/orchestration'>📁 orchestration</a></b></summary>
+<ul>
+<li>
+  <a href='./module/infrastructure/devops/orchestration/kubernetes'>🪄 kubernetes</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/infrastructure/devops/source-control'>📁 source-control</a></b></summary>
+<ul>
+<li>
+  <a href='./module/infrastructure/devops/source-control/git'>🪄 git</a>
+</li>
+</ul>
+</details>
 </li>
 </ul>
 </details>
@@ -64,78 +121,144 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <ul>
 <li>
 <details>
-  <summary><b><a href='./module/infrastructure/system/database/advance'>📁 advance</a></b></summary>
+  <summary><b><a href='./module/infrastructure/system/database/connection-management'>📁 connection-management</a></b></summary>
 <ul>
 <li>
-  <a href='./module/infrastructure/system/database/advance/function'>🪄 function</a>
-</li>
-<li>
-  <a href='./module/infrastructure/system/database/advance/package'>🪄 package</a>
-</li>
-<li>
-  <a href='./module/infrastructure/system/database/advance/procedures'>🪄 procedures</a>
+  <a href='./module/infrastructure/system/database/connection-management/hikari-cp'>🪄 hikari-cp</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='./module/infrastructure/system/database/connection-pool'>📁 connection-pool</a></b></summary>
+  <summary><b><a href='./module/infrastructure/system/database/engine'>📁 engine</a></b></summary>
 <ul>
 <li>
-  <a href='./module/infrastructure/system/database/connection-pool/hikariCP'>🪄 hikariCP</a>
+<details>
+  <summary><b><a href='./module/infrastructure/system/database/engine/analytical'>📁 analytical</a></b></summary>
+<ul>
+<li>
+  <a href='./module/infrastructure/system/database/engine/analytical/clickhouse'>🪄 clickhouse</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='./module/infrastructure/system/database/migration'>📁 migration</a></b></summary>
+  <summary><b><a href='./module/infrastructure/system/database/engine/document'>📁 document</a></b></summary>
 <ul>
 <li>
-  <a href='./module/infrastructure/system/database/migration/flyway'>🪄 flyway</a>
-</li>
+<details>
+  <summary><b><a href='./module/infrastructure/system/database/engine/document/mongodb'>📁 mongodb</a></b></summary>
+<ul>
 <li>
-  <a href='./module/infrastructure/system/database/migration/liquibase'>🪄 liquibase</a>
+  <a href='./module/infrastructure/system/database/engine/document/mongodb/aggregation'>🪄 aggregation</a>
+</li>
+</ul>
+</details>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='./module/infrastructure/system/database/nosql'>📁 nosql</a></b></summary>
+  <summary><b><a href='./module/infrastructure/system/database/engine/graph'>📁 graph</a></b></summary>
 <ul>
 <li>
-  <a href='./module/infrastructure/system/database/nosql/clickhouse'>🪄 clickhouse</a>
-</li>
-<li>
-  <a href='./module/infrastructure/system/database/nosql/elasticsearch'>🪄 elasticsearch</a>
-</li>
-<li>
-  <a href='./module/infrastructure/system/database/nosql/influxDB'>🪄 influxDB</a>
-</li>
-<li>
-  <a href='./module/infrastructure/system/database/nosql/loki'>🪄 loki</a>
-</li>
-<li>
-<details>
-  <summary><b><a href='./module/infrastructure/system/database/nosql/mongoDB'>📁 mongoDB</a></b></summary>
-<ul>
-<li>
-  <a href='./module/infrastructure/system/database/nosql/mongoDB/aggregation'>🪄 aggregation</a>
+  <a href='./module/infrastructure/system/database/engine/graph/neo4j'>🪄 neo4j</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
-  <a href='./module/infrastructure/system/database/nosql/neo4j'>🪄 neo4j</a>
+<details>
+  <summary><b><a href='./module/infrastructure/system/database/engine/key-value'>📁 key-value</a></b></summary>
+<ul>
+<li>
+<details>
+  <summary><b><a href='./module/infrastructure/system/database/engine/key-value/redis'>📁 redis</a></b></summary>
+<ul>
+<li>
+  <a href='./module/infrastructure/system/database/engine/key-value/redis/lua-scripting'>🪄 lua-scripting</a>
+</li>
+</ul>
+</details>
+</li>
+</ul>
+</details>
 </li>
 <li>
 <details>
-  <summary><b><a href='./module/infrastructure/system/database/nosql/redis'>📁 redis</a></b></summary>
+  <summary><b><a href='./module/infrastructure/system/database/engine/relational'>📁 relational</a></b></summary>
 <ul>
 <li>
-  <a href='./module/infrastructure/system/database/nosql/redis/lua-scripting'>🪄 lua-scripting</a>
+  <a href='./module/infrastructure/system/database/engine/relational/mysql'>🪄 mysql</a>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/infrastructure/system/database/engine/relational/oracle'>📁 oracle</a></b></summary>
+<ul>
+<li>
+<details>
+  <summary><b><a href='./module/infrastructure/system/database/engine/relational/oracle/advance'>📁 advance</a></b></summary>
+<ul>
+<li>
+  <a href='./module/infrastructure/system/database/engine/relational/oracle/advance/package'>🪄 package</a>
+</li>
+<li>
+  <a href='./module/infrastructure/system/database/engine/relational/oracle/advance/procedure'>🪄 procedure</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+  <a href='./module/infrastructure/system/database/engine/relational/oracle/setup'>🪄 setup</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/infrastructure/system/database/engine/relational/postgresql'>📁 postgresql</a></b></summary>
+<ul>
+<li>
+<details>
+  <summary><b><a href='./module/infrastructure/system/database/engine/relational/postgresql/advance'>📁 advance</a></b></summary>
+<ul>
+<li>
+  <a href='./module/infrastructure/system/database/engine/relational/postgresql/advance/functions'>🪄 functions</a>
+</li>
+<li>
+  <a href='./module/infrastructure/system/database/engine/relational/postgresql/advance/trigger'>🪄 trigger</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+  <a href='./module/infrastructure/system/database/engine/relational/postgresql/setup'>🪄 setup</a>
+</li>
+</ul>
+</details>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/infrastructure/system/database/engine/search'>📁 search</a></b></summary>
+<ul>
+<li>
+  <a href='./module/infrastructure/system/database/engine/search/elasticsearch'>🪄 elasticsearch</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/infrastructure/system/database/engine/time-series'>📁 time-series</a></b></summary>
+<ul>
+<li>
+  <a href='./module/infrastructure/system/database/engine/time-series/influxdb'>🪄 influxdb</a>
 </li>
 </ul>
 </details>
@@ -148,66 +271,38 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <summary><b><a href='./module/infrastructure/system/database/performance'>📁 performance</a></b></summary>
 <ul>
 <li>
-  <a href='./module/infrastructure/system/database/performance/orm-performance'>🪄 orm-performance</a>
+  <a href='./module/infrastructure/system/database/performance/database-caching'>🪄 database-caching</a>
+</li>
+<li>
+  <a href='./module/infrastructure/system/database/performance/execution-plan'>🪄 execution-plan</a>
+</li>
+<li>
+  <a href='./module/infrastructure/system/database/performance/indexing'>🪄 indexing</a>
+</li>
+<li>
+  <a href='./module/infrastructure/system/database/performance/locking'>🪄 locking</a>
+</li>
+<li>
+  <a href='./module/infrastructure/system/database/performance/partitioning'>🪄 partitioning</a>
 </li>
 <li>
   <a href='./module/infrastructure/system/database/performance/query-optimization'>🪄 query-optimization</a>
 </li>
-</ul>
-</details>
-</li>
 <li>
-<details>
-  <summary><b><a href='./module/infrastructure/system/database/rdbms'>📁 rdbms</a></b></summary>
-<ul>
-<li>
-  <a href='./module/infrastructure/system/database/rdbms/mysql'>🪄 mysql</a>
-</li>
-<li>
-<details>
-  <summary><b><a href='./module/infrastructure/system/database/rdbms/oracle'>📁 oracle</a></b></summary>
-<ul>
-<li>
-<details>
-  <summary><b><a href='./module/infrastructure/system/database/rdbms/oracle/advance'>📁 advance</a></b></summary>
-<ul>
-<li>
-  <a href='./module/infrastructure/system/database/rdbms/oracle/advance/package'>🪄 package</a>
-</li>
-<li>
-  <a href='./module/infrastructure/system/database/rdbms/oracle/advance/procedure'>🪄 procedure</a>
-</li>
-</ul>
-</details>
-</li>
-<li>
-  <a href='./module/infrastructure/system/database/rdbms/oracle/setup'>🪄 setup</a>
+  <a href='./module/infrastructure/system/database/performance/statistics'>🪄 statistics</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='./module/infrastructure/system/database/rdbms/postgresql'>📁 postgresql</a></b></summary>
+  <summary><b><a href='./module/infrastructure/system/database/schema-migration'>📁 schema-migration</a></b></summary>
 <ul>
 <li>
-<details>
-  <summary><b><a href='./module/infrastructure/system/database/rdbms/postgresql/advance'>📁 advance</a></b></summary>
-<ul>
-<li>
-  <a href='./module/infrastructure/system/database/rdbms/postgresql/advance/functions'>🪄 functions</a>
+  <a href='./module/infrastructure/system/database/schema-migration/flyway'>🪄 flyway</a>
 </li>
 <li>
-  <a href='./module/infrastructure/system/database/rdbms/postgresql/advance/trigger'>🪄 trigger</a>
-</li>
-</ul>
-</details>
-</li>
-<li>
-  <a href='./module/infrastructure/system/database/rdbms/postgresql/setup'>🪄 setup</a>
-</li>
-</ul>
-</details>
+  <a href='./module/infrastructure/system/database/schema-migration/liquibase'>🪄 liquibase</a>
 </li>
 </ul>
 </details>
@@ -226,12 +321,6 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
   <a href='./module/infrastructure/system/network/api-gateway/kong'>🪄 kong</a>
 </li>
-<li>
-  <a href='./module/infrastructure/system/network/api-gateway/rate-limiting'>🪄 rate-limiting</a>
-</li>
-<li>
-  <a href='./module/infrastructure/system/network/api-gateway/spring-cloud-gateway'>🪄 spring-cloud-gateway</a>
-</li>
 </ul>
 </details>
 </li>
@@ -243,10 +332,10 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <a href='./module/infrastructure/system/network/protocol/http'>🪄 http</a>
 </li>
 <li>
-  <a href='./module/infrastructure/system/network/protocol/ssl-tls'>🪄 ssl-tls</a>
+  <a href='./module/infrastructure/system/network/protocol/tcp-udp'>🪄 tcp-udp</a>
 </li>
 <li>
-  <a href='./module/infrastructure/system/network/protocol/tcp-udp'>🪄 tcp-udp</a>
+  <a href='./module/infrastructure/system/network/protocol/tls'>🪄 tls</a>
 </li>
 </ul>
 </details>
@@ -277,6 +366,16 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </ul>
 </details>
 </li>
+<li>
+<details>
+  <summary><b><a href='./module/infrastructure/system/network/traffic-management'>📁 traffic-management</a></b></summary>
+<ul>
+<li>
+  <a href='./module/infrastructure/system/network/traffic-management/rate-limiting'>🪄 rate-limiting</a>
+</li>
+</ul>
+</details>
+</li>
 </ul>
 </details>
 </li>
@@ -286,16 +385,6 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <ul>
 <li>
 <details>
-  <summary><b><a href='./module/infrastructure/system/observability/console'>📁 console</a></b></summary>
-<ul>
-<li>
-  <a href='./module/infrastructure/system/observability/console/hawtio'>🪄 hawtio</a>
-</li>
-</ul>
-</details>
-</li>
-<li>
-<details>
   <summary><b><a href='./module/infrastructure/system/observability/diagnostic'>📁 diagnostic</a></b></summary>
 <ul>
 <li>
@@ -303,13 +392,10 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <summary><b><a href='./module/infrastructure/system/observability/diagnostic/profiling'>📁 profiling</a></b></summary>
 <ul>
 <li>
-  <a href='./module/infrastructure/system/observability/diagnostic/profiling/jconsole'>🪄 jconsole</a>
-</li>
-<li>
   <a href='./module/infrastructure/system/observability/diagnostic/profiling/jprofiler'>🪄 jprofiler</a>
 </li>
 <li>
-  <a href='./module/infrastructure/system/observability/diagnostic/profiling/visual-vm'>🪄 visual-vm</a>
+  <a href='./module/infrastructure/system/observability/diagnostic/profiling/visualvm'>🪄 visualvm</a>
 </li>
 </ul>
 </details>
@@ -320,6 +406,16 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <ul>
 <li>
   <a href='./module/infrastructure/system/observability/diagnostic/runtime-analysis/arthas'>🪄 arthas</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/infrastructure/system/observability/diagnostic/runtime-monitoring'>📁 runtime-monitoring</a></b></summary>
+<ul>
+<li>
+  <a href='./module/infrastructure/system/observability/diagnostic/runtime-monitoring/jconsole'>🪄 jconsole</a>
 </li>
 </ul>
 </details>
@@ -398,26 +494,26 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <summary><b><a href='./module/infrastructure/system/observability/logging/storage-analysis/elk-stack'>📁 elk-stack</a></b></summary>
 <ul>
 <li>
-  <a href='./module/infrastructure/system/observability/logging/storage-analysis/elk-stack/elasticsearch'>🪄 elasticsearch</a>
-</li>
-<li>
   <a href='./module/infrastructure/system/observability/logging/storage-analysis/elk-stack/kibana'>🪄 kibana</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
+  <a href='./module/infrastructure/system/observability/logging/storage-analysis/loki-stack'>🪄 loki-stack</a>
+</li>
+</ul>
+</details>
+</li>
+</ul>
+</details>
+</li>
+<li>
 <details>
-  <summary><b><a href='./module/infrastructure/system/observability/logging/storage-analysis/loki-stack'>📁 loki-stack</a></b></summary>
+  <summary><b><a href='./module/infrastructure/system/observability/management-console'>📁 management-console</a></b></summary>
 <ul>
 <li>
-  <a href='./module/infrastructure/system/observability/logging/storage-analysis/loki-stack/loki'>🪄 loki</a>
-</li>
-</ul>
-</details>
-</li>
-</ul>
-</details>
+  <a href='./module/infrastructure/system/observability/management-console/hawtio'>🪄 hawtio</a>
 </li>
 </ul>
 </details>
@@ -486,46 +582,53 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </li>
 <li>
 <details>
+  <summary><b><a href='./module/infrastructure/system/runtime'>📁 runtime</a></b></summary>
+<ul>
+<li>
+<details>
+  <summary><b><a href='./module/infrastructure/system/runtime/servlet-container'>📁 servlet-container</a></b></summary>
+<ul>
+<li>
+  <a href='./module/infrastructure/system/runtime/servlet-container/jetty'>🪄 jetty</a>
+</li>
+<li>
+  <a href='./module/infrastructure/system/runtime/servlet-container/tomcat'>🪄 tomcat</a>
+</li>
+</ul>
+</details>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
   <summary><b><a href='./module/infrastructure/system/security'>📁 security</a></b></summary>
 <ul>
 <li>
 <details>
-  <summary><b><a href='./module/infrastructure/system/security/iam'>📁 iam</a></b></summary>
+  <summary><b><a href='./module/infrastructure/system/security/identity-access-management'>📁 identity-access-management</a></b></summary>
 <ul>
 <li>
-  <a href='./module/infrastructure/system/security/iam/keycloak'>🪄 keycloak</a>
+  <a href='./module/infrastructure/system/security/identity-access-management/keycloak'>🪄 keycloak</a>
 </li>
 <li>
-  <a href='./module/infrastructure/system/security/iam/token-lifecycle'>🪄 token-lifecycle</a>
+  <a href='./module/infrastructure/system/security/identity-access-management/token-lifecycle'>🪄 token-lifecycle</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='./module/infrastructure/system/security/vault'>📁 vault</a></b></summary>
+  <summary><b><a href='./module/infrastructure/system/security/secrets-management'>📁 secrets-management</a></b></summary>
 <ul>
 <li>
-  <a href='./module/infrastructure/system/security/vault/hashicorp'>🪄 hashicorp</a>
+  <a href='./module/infrastructure/system/security/secrets-management/hashicorp-vault'>🪄 hashicorp-vault</a>
 </li>
 <li>
-  <a href='./module/infrastructure/system/security/vault/secret-lifecycle'>🪄 secret-lifecycle</a>
+  <a href='./module/infrastructure/system/security/secrets-management/secret-lifecycle'>🪄 secret-lifecycle</a>
 </li>
 </ul>
 </details>
-</li>
-</ul>
-</details>
-</li>
-<li>
-<details>
-  <summary><b><a href='./module/infrastructure/system/server'>📁 server</a></b></summary>
-<ul>
-<li>
-  <a href='./module/infrastructure/system/server/jetty'>🪄 jetty</a>
-</li>
-<li>
-  <a href='./module/infrastructure/system/server/tomcat'>🪄 tomcat</a>
 </li>
 </ul>
 </details>
@@ -542,96 +645,54 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <ul>
 <li>
 <details>
-  <summary><b><a href='./module/integration/broker'>📁 broker</a></b></summary>
-<ul>
-<li>
-  <a href='./module/integration/broker/activeMQ'>🪄 activeMQ</a>
-</li>
-<li>
-<details>
-  <summary><b><a href='./module/integration/broker/kafka'>📁 kafka</a></b></summary>
+  <summary><b><a href='./module/integration/http'>📁 http</a></b></summary>
 <ul>
 <li>
 <details>
-  <summary><b><a href='./module/integration/broker/kafka/service'>📁 service</a></b></summary>
+  <summary><b><a href='./module/integration/http/request-response'>📁 request-response</a></b></summary>
 <ul>
 <li>
 <details>
-  <summary><b><a href='./module/integration/broker/kafka/service/consumer'>📁 consumer</a></b></summary>
+  <summary><b><a href='./module/integration/http/request-response/client'>📁 client</a></b></summary>
 <ul>
-<li>
-  <a href='./module/integration/broker/kafka/service/consumer/accountant'>🪄 accountant</a>
-</li>
-<li>
-  <a href='./module/integration/broker/kafka/service/consumer/notification'>🪄 notification</a>
-</li>
-</ul>
-</details>
-</li>
-<li>
-  <a href='./module/integration/broker/kafka/service/control'>🪄 control</a>
-</li>
 <li>
 <details>
-  <summary><b><a href='./module/integration/broker/kafka/service/producer'>📁 producer</a></b></summary>
+  <summary><b><a href='./module/integration/http/request-response/client/java'>📁 java</a></b></summary>
 <ul>
 <li>
-  <a href='./module/integration/broker/kafka/service/producer/bank'>🪄 bank</a>
-</li>
-</ul>
-</details>
+  <a href='./module/integration/http/request-response/client/java/http-client'>🪄 http-client</a>
 </li>
 <li>
-  <a href='./module/integration/broker/kafka/service/server'>🪄 server</a>
-</li>
-</ul>
-</details>
-</li>
-</ul>
-</details>
-</li>
-<li>
-  <a href='./module/integration/broker/rabbitMQ'>🪄 rabbitMQ</a>
+  <a href='./module/integration/http/request-response/client/java/http-url-connection'>🪄 http-url-connection</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='./module/integration/oneway'>📁 oneway</a></b></summary>
+  <summary><b><a href='./module/integration/http/request-response/client/spring-cloud'>📁 spring-cloud</a></b></summary>
 <ul>
 <li>
-  <a href='./module/integration/oneway/grpc'>🪄 grpc</a>
-</li>
-<li>
-<details>
-  <summary><b><a href='./module/integration/oneway/httpRequest'>📁 httpRequest</a></b></summary>
-<ul>
-<li>
-<details>
-  <summary><b><a href='./module/integration/oneway/httpRequest/blocking'>📁 blocking</a></b></summary>
-<ul>
-<li>
-  <a href='./module/integration/oneway/httpRequest/blocking/feign-client'>🪄 feign-client</a>
-</li>
-<li>
-  <a href='./module/integration/oneway/httpRequest/blocking/http-url-connection'>🪄 http-url-connection</a>
-</li>
-<li>
-  <a href='./module/integration/oneway/httpRequest/blocking/rest-client'>🪄 rest-client</a>
-</li>
-<li>
-  <a href='./module/integration/oneway/httpRequest/blocking/rest-template'>🪄 rest-template</a>
+  <a href='./module/integration/http/request-response/client/spring-cloud/feign-client'>🪄 feign-client</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='./module/integration/oneway/httpRequest/nonBlocking'>📁 nonBlocking</a></b></summary>
+  <summary><b><a href='./module/integration/http/request-response/client/spring-framework'>📁 spring-framework</a></b></summary>
 <ul>
 <li>
-  <a href='./module/integration/oneway/httpRequest/nonBlocking/web-client'>🪄 web-client</a>
+  <a href='./module/integration/http/request-response/client/spring-framework/rest-client'>🪄 rest-client</a>
+</li>
+<li>
+  <a href='./module/integration/http/request-response/client/spring-framework/rest-template'>🪄 rest-template</a>
+</li>
+<li>
+  <a href='./module/integration/http/request-response/client/spring-framework/web-client'>🪄 web-client</a>
+</li>
+</ul>
+</details>
 </li>
 </ul>
 </details>
@@ -640,20 +701,103 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </details>
 </li>
 <li>
-  <a href='./module/integration/oneway/sse'>🪄 sse</a>
+  <a href='./module/integration/http/server-sent-events'>🪄 server-sent-events</a>
+</li>
+<li>
+  <a href='./module/integration/http/webhook'>🪄 webhook</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='./module/integration/twoway'>📁 twoway</a></b></summary>
+  <summary><b><a href='./module/integration/messaging'>📁 messaging</a></b></summary>
 <ul>
 <li>
-  <a href='./module/integration/twoway/rsocket'>🪄 rsocket</a>
+<details>
+  <summary><b><a href='./module/integration/messaging/event-streaming'>📁 event-streaming</a></b></summary>
+<ul>
+<li>
+<details>
+  <summary><b><a href='./module/integration/messaging/event-streaming/kafka'>📁 kafka</a></b></summary>
+<ul>
+<li>
+<details>
+  <summary><b><a href='./module/integration/messaging/event-streaming/kafka/service'>📁 service</a></b></summary>
+<ul>
+<li>
+<details>
+  <summary><b><a href='./module/integration/messaging/event-streaming/kafka/service/consumer'>📁 consumer</a></b></summary>
+<ul>
+<li>
+  <a href='./module/integration/messaging/event-streaming/kafka/service/consumer/accountant'>🪄 accountant</a>
 </li>
 <li>
-  <a href='./module/integration/twoway/websocket'>🪄 websocket</a>
+  <a href='./module/integration/messaging/event-streaming/kafka/service/consumer/notification'>🪄 notification</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+  <a href='./module/integration/messaging/event-streaming/kafka/service/control'>🪄 control</a>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/integration/messaging/event-streaming/kafka/service/producer'>📁 producer</a></b></summary>
+<ul>
+<li>
+  <a href='./module/integration/messaging/event-streaming/kafka/service/producer/bank'>🪄 bank</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+  <a href='./module/integration/messaging/event-streaming/kafka/service/server'>🪄 server</a>
+</li>
+</ul>
+</details>
+</li>
+</ul>
+</details>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/integration/messaging/message-broker'>📁 message-broker</a></b></summary>
+<ul>
+<li>
+  <a href='./module/integration/messaging/message-broker/activemq'>🪄 activemq</a>
+</li>
+<li>
+  <a href='./module/integration/messaging/message-broker/rabbitmq'>🪄 rabbitmq</a>
+</li>
+</ul>
+</details>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/integration/realtime'>📁 realtime</a></b></summary>
+<ul>
+<li>
+  <a href='./module/integration/realtime/rsocket'>🪄 rsocket</a>
+</li>
+<li>
+  <a href='./module/integration/realtime/websocket'>🪄 websocket</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/integration/rpc'>📁 rpc</a></b></summary>
+<ul>
+<li>
+  <a href='./module/integration/rpc/grpc'>🪄 grpc</a>
 </li>
 </ul>
 </details>
@@ -812,10 +956,20 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <ul>
 <li>
 <details>
-  <summary><b><a href='./module/platform/code-quality/continous-inspection'>📁 continous-inspection</a></b></summary>
+  <summary><b><a href='./module/platform/code-quality/continuous-inspection'>📁 continuous-inspection</a></b></summary>
 <ul>
 <li>
-  <a href='./module/platform/code-quality/continous-inspection/sonarqube'>🪄 sonarqube</a>
+  <a href='./module/platform/code-quality/continuous-inspection/sonarqube'>🪄 sonarqube</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/code-quality/formatting'>📁 formatting</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/code-quality/formatting/spotless'>🪄 spotless</a>
 </li>
 </ul>
 </details>
@@ -848,67 +1002,44 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <ul>
 <li>
 <details>
-  <summary><b><a href='./module/platform/development/architecture'>📁 architecture</a></b></summary>
+  <summary><b><a href='./module/platform/development/data'>📁 data</a></b></summary>
 <ul>
 <li>
-  <a href='./module/platform/development/architecture/domain-driven-design'>🪄 domain-driven-design</a>
-</li>
+<details>
+  <summary><b><a href='./module/platform/development/data/data-mapping'>📁 data-mapping</a></b></summary>
+<ul>
 <li>
-  <a href='./module/platform/development/architecture/mvc'>🪄 mvc</a>
+  <a href='./module/platform/development/data/data-mapping/object-mapping'>🪄 object-mapping</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='./module/platform/development/build-tool'>📁 build-tool</a></b></summary>
-<ul>
-<li>
-  <a href='./module/platform/development/build-tool/ant'>🪄 ant</a>
-</li>
-<li>
-<details>
-  <summary><b><a href='./module/platform/development/build-tool/gradle'>📁 gradle</a></b></summary>
-<ul>
-<li>
-  <a href='./module/platform/development/build-tool/gradle/cache'>🪄 cache</a>
-</li>
-<li>
-  <a href='./module/platform/development/build-tool/gradle/open-rewrite'>🪄 open-rewrite</a>
-</li>
-<li>
-<details>
-  <summary><b><a href='./module/platform/development/build-tool/gradle/plugin'>📁 plugin</a></b></summary>
+  <summary><b><a href='./module/platform/development/data/persistence'>📁 persistence</a></b></summary>
 <ul>
 <li>
 <details>
-  <summary><b><a href='./module/platform/development/build-tool/gradle/plugin/development'>📁 development</a></b></summary>
+  <summary><b><a href='./module/platform/development/data/persistence/orm'>📁 orm</a></b></summary>
 <ul>
 <li>
-<details>
-  <summary><b><a href='./module/platform/development/build-tool/gradle/plugin/development/internal-plugin'>📁 internal-plugin</a></b></summary>
-<ul>
-<li>
-  <a href='./module/platform/development/build-tool/gradle/plugin/development/internal-plugin/build-src'>🪄 build-src</a>
+  <a href='./module/platform/development/data/persistence/orm/hibernate'>🪄 hibernate</a>
 </li>
 <li>
-  <a href='./module/platform/development/build-tool/gradle/plugin/development/internal-plugin/convention-plugin'>🪄 convention-plugin</a>
-</li>
-<li>
-  <a href='./module/platform/development/build-tool/gradle/plugin/development/internal-plugin/included-plugin'>🪄 included-plugin</a>
+  <a href='./module/platform/development/data/persistence/orm/jpa'>🪄 jpa</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='./module/platform/development/build-tool/gradle/plugin/development/published-plugin'>📁 published-plugin</a></b></summary>
+  <summary><b><a href='./module/platform/development/data/persistence/relational-access'>📁 relational-access</a></b></summary>
 <ul>
 <li>
-  <a href='./module/platform/development/build-tool/gradle/plugin/development/published-plugin/gradle-plugin-portal'>🪄 gradle-plugin-portal</a>
+  <a href='./module/platform/development/data/persistence/relational-access/jdbc'>🪄 jdbc</a>
 </li>
 <li>
-  <a href='./module/platform/development/build-tool/gradle/plugin/development/published-plugin/maven-repository'>🪄 maven-repository</a>
+  <a href='./module/platform/development/data/persistence/relational-access/mybatis'>🪄 mybatis</a>
 </li>
 </ul>
 </details>
@@ -918,121 +1049,10 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </li>
 <li>
 <details>
-  <summary><b><a href='./module/platform/development/build-tool/gradle/plugin/usage'>📁 usage</a></b></summary>
+  <summary><b><a href='./module/platform/development/data/serialization'>📁 serialization</a></b></summary>
 <ul>
 <li>
-  <a href='./module/platform/development/build-tool/gradle/plugin/usage/core-plugin'>🪄 core-plugin</a>
-</li>
-<li>
-  <a href='./module/platform/development/build-tool/gradle/plugin/usage/development-plugin'>🪄 development-plugin</a>
-</li>
-</ul>
-</details>
-</li>
-</ul>
-</details>
-</li>
-<li>
-  <a href='./module/platform/development/build-tool/gradle/task'>🪄 task</a>
-</li>
-</ul>
-</details>
-</li>
-<li>
-  <a href='./module/platform/development/build-tool/maven'>🪄 maven</a>
-</li>
-</ul>
-</details>
-</li>
-<li>
-<details>
-  <summary><b><a href='./module/platform/development/data-mapping'>📁 data-mapping</a></b></summary>
-<ul>
-<li>
-  <a href='./module/platform/development/data-mapping/object-mapping'>🪄 object-mapping</a>
-</li>
-</ul>
-</details>
-</li>
-<li>
-<details>
-  <summary><b><a href='./module/platform/development/design-pattern'>📁 design-pattern</a></b></summary>
-<ul>
-<li>
-  <a href='./module/platform/development/design-pattern/anti-patterns'>🪄 anti-patterns</a>
-</li>
-<li>
-<details>
-  <summary><b><a href='./module/platform/development/design-pattern/behavioral'>📁 behavioral</a></b></summary>
-<ul>
-<li>
-  <a href='./module/platform/development/design-pattern/behavioral/observer'>🪄 observer</a>
-</li>
-<li>
-  <a href='./module/platform/development/design-pattern/behavioral/state'>🪄 state</a>
-</li>
-<li>
-  <a href='./module/platform/development/design-pattern/behavioral/strategy'>🪄 strategy</a>
-</li>
-</ul>
-</details>
-</li>
-<li>
-<details>
-  <summary><b><a href='./module/platform/development/design-pattern/creational'>📁 creational</a></b></summary>
-<ul>
-<li>
-  <a href='./module/platform/development/design-pattern/creational/builder'>🪄 builder</a>
-</li>
-<li>
-  <a href='./module/platform/development/design-pattern/creational/factory-method'>🪄 factory-method</a>
-</li>
-<li>
-  <a href='./module/platform/development/design-pattern/creational/singleton'>🪄 singleton</a>
-</li>
-</ul>
-</details>
-</li>
-<li>
-  <a href='./module/platform/development/design-pattern/dependency-injection'>🪄 dependency-injection</a>
-</li>
-<li>
-<details>
-  <summary><b><a href='./module/platform/development/design-pattern/distributed-system'>📁 distributed-system</a></b></summary>
-<ul>
-<li>
-  <a href='./module/platform/development/design-pattern/distributed-system/bulkhead'>🪄 bulkhead</a>
-</li>
-<li>
-  <a href='./module/platform/development/design-pattern/distributed-system/cqrs'>🪄 cqrs</a>
-</li>
-<li>
-  <a href='./module/platform/development/design-pattern/distributed-system/event-sourcing'>🪄 event-sourcing</a>
-</li>
-<li>
-  <a href='./module/platform/development/design-pattern/distributed-system/saga'>🪄 saga</a>
-</li>
-<li>
-  <a href='./module/platform/development/design-pattern/distributed-system/sidecar'>🪄 sidecar</a>
-</li>
-</ul>
-</details>
-</li>
-<li>
-  <a href='./module/platform/development/design-pattern/solid-principles'>🪄 solid-principles</a>
-</li>
-<li>
-<details>
-  <summary><b><a href='./module/platform/development/design-pattern/structural'>📁 structural</a></b></summary>
-<ul>
-<li>
-  <a href='./module/platform/development/design-pattern/structural/adapter'>🪄 adapter</a>
-</li>
-<li>
-  <a href='./module/platform/development/design-pattern/structural/facade'>🪄 facade</a>
-</li>
-<li>
-  <a href='./module/platform/development/design-pattern/structural/proxy'>🪄 proxy</a>
+  <a href='./module/platform/development/data/serialization/jackson'>🪄 jackson</a>
 </li>
 </ul>
 </details>
@@ -1042,44 +1062,58 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </li>
 <li>
 <details>
-  <summary><b><a href='./module/platform/development/framework'>📁 framework</a></b></summary>
+  <summary><b><a href='./module/platform/development/engineering'>📁 engineering</a></b></summary>
 <ul>
 <li>
 <details>
-  <summary><b><a href='./module/platform/development/framework/spring'>📁 spring</a></b></summary>
+  <summary><b><a href='./module/platform/development/engineering/build-tool'>📁 build-tool</a></b></summary>
 <ul>
 <li>
-  <a href='./module/platform/development/framework/spring/actuator'>🪄 actuator</a>
-</li>
-<li>
-  <a href='./module/platform/development/framework/spring/aspect'>🪄 aspect</a>
+  <a href='./module/platform/development/engineering/build-tool/ant'>🪄 ant</a>
 </li>
 <li>
 <details>
-  <summary><b><a href='./module/platform/development/framework/spring/basic'>📁 basic</a></b></summary>
+  <summary><b><a href='./module/platform/development/engineering/build-tool/gradle'>📁 gradle</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/engineering/build-tool/gradle/cache'>🪄 cache</a>
+</li>
+<li>
+  <a href='./module/platform/development/engineering/build-tool/gradle/open-rewrite'>🪄 open-rewrite</a>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/engineering/build-tool/gradle/plugin'>📁 plugin</a></b></summary>
 <ul>
 <li>
 <details>
-  <summary><b><a href='./module/platform/development/framework/spring/basic/annotation'>📁 annotation</a></b></summary>
+  <summary><b><a href='./module/platform/development/engineering/build-tool/gradle/plugin/development'>📁 development</a></b></summary>
 <ul>
 <li>
-  <a href='./module/platform/development/framework/spring/basic/annotation/configuration'>🪄 configuration</a>
+<details>
+  <summary><b><a href='./module/platform/development/engineering/build-tool/gradle/plugin/development/internal-plugin'>📁 internal-plugin</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/engineering/build-tool/gradle/plugin/development/internal-plugin/build-src'>🪄 build-src</a>
+</li>
+<li>
+  <a href='./module/platform/development/engineering/build-tool/gradle/plugin/development/internal-plugin/convention-plugin'>🪄 convention-plugin</a>
+</li>
+<li>
+  <a href='./module/platform/development/engineering/build-tool/gradle/plugin/development/internal-plugin/included-plugin'>🪄 included-plugin</a>
+</li>
+</ul>
+</details>
 </li>
 <li>
 <details>
-  <summary><b><a href='./module/platform/development/framework/spring/basic/annotation/stereotype'>📁 stereotype</a></b></summary>
+  <summary><b><a href='./module/platform/development/engineering/build-tool/gradle/plugin/development/published-plugin'>📁 published-plugin</a></b></summary>
 <ul>
 <li>
-  <a href='./module/platform/development/framework/spring/basic/annotation/stereotype/component'>🪄 component</a>
+  <a href='./module/platform/development/engineering/build-tool/gradle/plugin/development/published-plugin/gradle-plugin-portal'>🪄 gradle-plugin-portal</a>
 </li>
 <li>
-  <a href='./module/platform/development/framework/spring/basic/annotation/stereotype/controller'>🪄 controller</a>
-</li>
-<li>
-  <a href='./module/platform/development/framework/spring/basic/annotation/stereotype/repository'>🪄 repository</a>
-</li>
-<li>
-  <a href='./module/platform/development/framework/spring/basic/annotation/stereotype/service'>🪄 service</a>
+  <a href='./module/platform/development/engineering/build-tool/gradle/plugin/development/published-plugin/maven-repository'>🪄 maven-repository</a>
 </li>
 </ul>
 </details>
@@ -1089,155 +1123,121 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </li>
 <li>
 <details>
-  <summary><b><a href='./module/platform/development/framework/spring/basic/core'>📁 core</a></b></summary>
+  <summary><b><a href='./module/platform/development/engineering/build-tool/gradle/plugin/usage'>📁 usage</a></b></summary>
 <ul>
 <li>
-  <a href='./module/platform/development/framework/spring/basic/core/bean'>🪄 bean</a>
+  <a href='./module/platform/development/engineering/build-tool/gradle/plugin/usage/core-plugin'>🪄 core-plugin</a>
 </li>
 <li>
-  <a href='./module/platform/development/framework/spring/basic/core/scope'>🪄 scope</a>
+  <a href='./module/platform/development/engineering/build-tool/gradle/plugin/usage/development-plugin'>🪄 development-plugin</a>
+</li>
+</ul>
+</details>
 </li>
 </ul>
 </details>
 </li>
 <li>
-  <a href='./module/platform/development/framework/spring/basic/profile'>🪄 profile</a>
-</li>
-<li>
-  <a href='./module/platform/development/framework/spring/basic/properties'>🪄 properties</a>
+  <a href='./module/platform/development/engineering/build-tool/gradle/task'>🪄 task</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
-  <a href='./module/platform/development/framework/spring/batch'>🪄 batch</a>
-</li>
-<li>
-  <a href='./module/platform/development/framework/spring/concurrency'>🪄 concurrency</a>
-</li>
-<li>
-  <a href='./module/platform/development/framework/spring/conditional'>🪄 conditional</a>
-</li>
-<li>
-<details>
-  <summary><b><a href='./module/platform/development/framework/spring/data'>📁 data</a></b></summary>
-<ul>
-<li>
-  <a href='./module/platform/development/framework/spring/data/jpa'>🪄 jpa</a>
-</li>
-</ul>
-</details>
-</li>
-<li>
-  <a href='./module/platform/development/framework/spring/devtool'>🪄 devtool</a>
-</li>
-<li>
-  <a href='./module/platform/development/framework/spring/functional-endpoint'>🪄 functional-endpoint</a>
-</li>
-<li>
-  <a href='./module/platform/development/framework/spring/global-exception-handler'>🪄 global-exception-handler</a>
-</li>
-<li>
-  <a href='./module/platform/development/framework/spring/import'>🪄 import</a>
-</li>
-<li>
-  <a href='./module/platform/development/framework/spring/profile'>🪄 profile</a>
-</li>
-<li>
-  <a href='./module/platform/development/framework/spring/reactive'>🪄 reactive</a>
-</li>
-<li>
-<details>
-  <summary><b><a href='./module/platform/development/framework/spring/security'>📁 security</a></b></summary>
-<ul>
-<li>
-<details>
-  <summary><b><a href='./module/platform/development/framework/spring/security/authentication'>📁 authentication</a></b></summary>
-<ul>
-<li>
-  <a href='./module/platform/development/framework/spring/security/authentication/basic'>🪄 basic</a>
-</li>
-<li>
-  <a href='./module/platform/development/framework/spring/security/authentication/jwt'>🪄 jwt</a>
+  <a href='./module/platform/development/engineering/build-tool/maven'>🪄 maven</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='./module/platform/development/framework/spring/security/authorization'>📁 authorization</a></b></summary>
+  <summary><b><a href='./module/platform/development/engineering/validation'>📁 validation</a></b></summary>
 <ul>
-<li>
-  <a href='./module/platform/development/framework/spring/security/authorization/method-security'>🪄 method-security</a>
-</li>
 <li>
 <details>
-  <summary><b><a href='./module/platform/development/framework/spring/security/authorization/oauth'>📁 oauth</a></b></summary>
+  <summary><b><a href='./module/platform/development/engineering/validation/benchmark'>📁 benchmark</a></b></summary>
 <ul>
 <li>
-  <a href='./module/platform/development/framework/spring/security/authorization/oauth/scope'>🪄 scope</a>
+<details>
+  <summary><b><a href='./module/platform/development/engineering/validation/benchmark/microbenchmark'>📁 microbenchmark</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/engineering/validation/benchmark/microbenchmark/jmh'>🪄 jmh</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
-  <a href='./module/platform/development/framework/spring/security/authorization/permission-based'>🪄 permission-based</a>
-</li>
-<li>
-  <a href='./module/platform/development/framework/spring/security/authorization/role-based'>🪄 role-based</a>
-</li>
-</ul>
-</details>
-</li>
-<li>
-  <a href='./module/platform/development/framework/spring/security/resource-server'>🪄 resource-server</a>
-</li>
-</ul>
-</details>
-</li>
-<li>
-  <a href='./module/platform/development/framework/spring/swagger'>🪄 swagger</a>
-</li>
-<li>
-  <a href='./module/platform/development/framework/spring/test-property-source'>🪄 test-property-source</a>
-</li>
-<li>
-  <a href='./module/platform/development/framework/spring/web'>🪄 web</a>
+  <a href='./module/platform/development/engineering/validation/benchmark/system-benchmark'>🪄 system-benchmark</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='./module/platform/development/framework/spring-boot'>📁 spring-boot</a></b></summary>
+  <summary><b><a href='./module/platform/development/engineering/validation/performance'>📁 performance</a></b></summary>
 <ul>
 <li>
-  <a href='./module/platform/development/framework/spring-boot/auto-configuration'>🪄 auto-configuration</a>
+  <a href='./module/platform/development/engineering/validation/performance/benchmark'>🪄 benchmark</a>
 </li>
 <li>
-  <a href='./module/platform/development/framework/spring-boot/embedded-server'>🪄 embedded-server</a>
+  <a href='./module/platform/development/engineering/validation/performance/jmeter'>🪄 jmeter</a>
 </li>
 <li>
-  <a href='./module/platform/development/framework/spring-boot/externalized-configuration'>🪄 externalized-configuration</a>
-</li>
-<li>
-  <a href='./module/platform/development/framework/spring-boot/native-image'>🪄 native-image</a>
-</li>
-<li>
-  <a href='./module/platform/development/framework/spring-boot/packaging'>🪄 packaging</a>
-</li>
-<li>
-<details>
-  <summary><b><a href='./module/platform/development/framework/spring-boot/starter'>📁 starter</a></b></summary>
-<ul>
-<li>
-  <a href='./module/platform/development/framework/spring-boot/starter/custom-starter'>🪄 custom-starter</a>
+  <a href='./module/platform/development/engineering/validation/performance/load-test'>🪄 load-test</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
-  <a href='./module/platform/development/framework/spring-boot/testing'>🪄 testing</a>
+<details>
+  <summary><b><a href='./module/platform/development/engineering/validation/testing'>📁 testing</a></b></summary>
+<ul>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/engineering/validation/testing/functional'>📁 functional</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/engineering/validation/testing/functional/e2e-test'>🪄 e2e-test</a>
+</li>
+<li>
+  <a href='./module/platform/development/engineering/validation/testing/functional/integration-test'>🪄 integration-test</a>
+</li>
+<li>
+  <a href='./module/platform/development/engineering/validation/testing/functional/unit-test'>🪄 unit-test</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/engineering/validation/testing/non-functional'>📁 non-functional</a></b></summary>
+<ul>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/engineering/validation/testing/non-functional/performance-test'>📁 performance-test</a></b></summary>
+<ul>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/engineering/validation/testing/non-functional/performance-test/concept'>📁 concept</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/engineering/validation/testing/non-functional/performance-test/concept/endurance-test'>🪄 endurance-test</a>
+</li>
+<li>
+  <a href='./module/platform/development/engineering/validation/testing/non-functional/performance-test/concept/load-test'>🪄 load-test</a>
+</li>
+<li>
+  <a href='./module/platform/development/engineering/validation/testing/non-functional/performance-test/concept/scalability-test'>🪄 scalability-test</a>
+</li>
+<li>
+  <a href='./module/platform/development/engineering/validation/testing/non-functional/performance-test/concept/spike-test'>🪄 spike-test</a>
+</li>
+<li>
+  <a href='./module/platform/development/engineering/validation/testing/non-functional/performance-test/concept/stress-test'>🪄 stress-test</a>
+</li>
+<li>
+  <a href='./module/platform/development/engineering/validation/testing/non-functional/performance-test/concept/volume-test'>🪄 volume-test</a>
 </li>
 </ul>
 </details>
@@ -1247,178 +1247,19 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </li>
 <li>
 <details>
-  <summary><b><a href='./module/platform/development/language'>📁 language</a></b></summary>
+  <summary><b><a href='./module/platform/development/engineering/validation/testing/non-functional/tooling'>📁 tooling</a></b></summary>
 <ul>
 <li>
-  <a href='./module/platform/development/language/domain-specific-language'>🪄 domain-specific-language</a>
+  <a href='./module/platform/development/engineering/validation/testing/non-functional/tooling/gatling'>🪄 gatling</a>
 </li>
 <li>
-<details>
-  <summary><b><a href='./module/platform/development/language/java'>📁 java</a></b></summary>
-<ul>
-<li>
-<details>
-  <summary><b><a href='./module/platform/development/language/java/advance'>📁 advance</a></b></summary>
-<ul>
-<li>
-  <a href='./module/platform/development/language/java/advance/dynamic-runtime'>🪄 dynamic-runtime</a>
+  <a href='./module/platform/development/engineering/validation/testing/non-functional/tooling/jmeter'>🪄 jmeter</a>
 </li>
 <li>
-  <a href='./module/platform/development/language/java/advance/instrumentation'>🪄 instrumentation</a>
-</li>
-<li>
-  <a href='./module/platform/development/language/java/advance/jvm'>🪄 jvm</a>
-</li>
-<li>
-  <a href='./module/platform/development/language/java/advance/native-interoperability'>🪄 native-interoperability</a>
-</li>
-<li>
-  <a href='./module/platform/development/language/java/advance/networking'>🪄 networking</a>
-</li>
-<li>
-  <a href='./module/platform/development/language/java/advance/runtime-diagnostics'>🪄 runtime-diagnostics</a>
-</li>
-<li>
-  <a href='./module/platform/development/language/java/advance/runtime-extensibility'>🪄 runtime-extensibility</a>
-</li>
-<li>
-  <a href='./module/platform/development/language/java/advance/security-cryptography'>🪄 security-cryptography</a>
+  <a href='./module/platform/development/engineering/validation/testing/non-functional/tooling/k6'>🪄 k6</a>
 </li>
 </ul>
 </details>
-</li>
-<li>
-<details>
-  <summary><b><a href='./module/platform/development/language/java/concurrency'>📁 concurrency</a></b></summary>
-<ul>
-<li>
-  <a href='./module/platform/development/language/java/concurrency/fundamentals'>🪄 fundamentals</a>
-</li>
-<li>
-  <a href='./module/platform/development/language/java/concurrency/high-level-utils'>🪄 high-level-utils</a>
-</li>
-<li>
-  <a href='./module/platform/development/language/java/concurrency/executor-service'>🪄 executor-service</a>
-</li>
-<li>
-  <a href='./module/platform/development/language/java/concurrency/fork-join'>🪄 fork-join</a>
-</li>
-<li>
-  <a href='./module/platform/development/language/java/concurrency/async-programming'>🪄 async-programming</a>
-</li>
-<li>
-  <a href='./module/platform/development/language/java/concurrency/virtual-threads'>🪄 virtual-threads</a>
-</li>
-</ul>
-</details>
-</li>
-<li>
-<details>
-  <summary><b><a href='./module/platform/development/language/java/core'>📁 core</a></b></summary>
-<ul>
-<li>
-  <a href='./module/platform/development/language/java/core/language-basics'>🪄 language-basics</a>
-</li>
-<li>
-  <a href='./module/platform/development/language/java/core/numbers'>🪄 numbers</a>
-</li>
-<li>
-  <a href='./module/platform/development/language/java/core/class-object'>🪄 class-object</a>
-</li>
-<li>
-  <a href='./module/platform/development/language/java/core/oop'>🪄 oop</a>
-</li>
-<li>
-  <a href='./module/platform/development/language/java/core/abstract-interface'>🪄 abstract-interface</a>
-</li>
-<li>
-  <a href='./module/platform/development/language/java/core/object-contract'>🪄 object-contract</a>
-</li>
-<li>
-  <a href='./module/platform/development/language/java/core/string'>🪄 string</a>
-</li>
-<li>
-  <a href='./module/platform/development/language/java/core/exception'>🪄 exception</a>
-</li>
-<li>
-  <a href='./module/platform/development/language/java/core/generics'>🪄 generics</a>
-</li>
-<li>
-  <a href='./module/platform/development/language/java/core/collection'>🪄 collection</a>
-</li>
-<li>
-  <a href='./module/platform/development/language/java/core/annotation'>🪄 annotation</a>
-</li>
-<li>
-  <a href='./module/platform/development/language/java/core/reflection'>🪄 reflection</a>
-</li>
-<li>
-  <a href='./module/platform/development/language/java/core/classloader'>🪄 classloader</a>
-</li>
-<li>
-  <a href='./module/platform/development/language/java/core/date-time'>🪄 date-time</a>
-</li>
-<li>
-  <a href='./module/platform/development/language/java/core/io'>🪄 io</a>
-</li>
-<li>
-  <a href='./module/platform/development/language/java/core/localization'>🪄 localization</a>
-</li>
-<li>
-  <a href='./module/platform/development/language/java/core/functional-programming'>🪄 functional-programming</a>
-</li>
-</ul>
-</details>
-</li>
-<li>
-<details>
-  <summary><b><a href='./module/platform/development/language/java/version'>📁 version</a></b></summary>
-<ul>
-<li>
-  <a href='./module/platform/development/language/java/version/java11'>🪄 java11</a>
-</li>
-<li>
-<details>
-  <summary><b><a href='./module/platform/development/language/java/version/java16'>📁 java16</a></b></summary>
-<ul>
-<li>
-  <a href='./module/platform/development/language/java/version/java16/record'>🪄 record</a>
-</li>
-</ul>
-</details>
-</li>
-<li>
-  <a href='./module/platform/development/language/java/version/java17'>🪄 java17</a>
-</li>
-<li>
-<details>
-  <summary><b><a href='./module/platform/development/language/java/version/java24'>📁 java24</a></b></summary>
-<ul>
-<li>
-  <a href='./module/platform/development/language/java/version/java24/class-file-api'>🪄 class-file-api</a>
-</li>
-</ul>
-</details>
-</li>
-<li>
-  <a href='./module/platform/development/language/java/version/java7'>🪄 java7</a>
-</li>
-<li>
-<details>
-  <summary><b><a href='./module/platform/development/language/java/version/java8'>📁 java8</a></b></summary>
-<ul>
-<li>
-  <a href='./module/platform/development/language/java/version/java8/stream-api'>🪄 stream-api</a>
-</li>
-</ul>
-</details>
-</li>
-<li>
-<details>
-  <summary><b><a href='./module/platform/development/language/java/version/java9'>📁 java9</a></b></summary>
-<ul>
-<li>
-  <a href='./module/platform/development/language/java/version/java9/module-system'>🪄 module-system</a>
 </li>
 </ul>
 </details>
@@ -1434,174 +1275,158 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </li>
 <li>
 <details>
-  <summary><b><a href='./module/platform/development/methodology'>📁 methodology</a></b></summary>
+  <summary><b><a href='./module/platform/development/programming'>📁 programming</a></b></summary>
 <ul>
 <li>
-  <a href='./module/platform/development/methodology/driven-development'>🪄 driven-development</a>
+<details>
+  <summary><b><a href='./module/platform/development/programming/framework'>📁 framework</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-ai'>🪄 spring-ai</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-amqp'>🪄 spring-amqp</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-batch'>🪄 spring-batch</a>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/programming/framework/spring-boot'>📁 spring-boot</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-boot/actuator'>🪄 actuator</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-boot/auto-configuration'>🪄 auto-configuration</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-boot/externalized-configuration'>🪄 externalized-configuration</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-boot/fundamentals'>🪄 fundamentals</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-boot/native-image'>🪄 native-image</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-boot/testing'>🪄 testing</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='./module/platform/development/paradigm'>📁 paradigm</a></b></summary>
+  <summary><b><a href='./module/platform/development/programming/framework/spring-cloud'>📁 spring-cloud</a></b></summary>
 <ul>
 <li>
-  <a href='./module/platform/development/paradigm/aop'>🪄 aop</a>
-</li>
-<li>
-  <a href='./module/platform/development/paradigm/data-oriented'>🪄 data-oriented</a>
-</li>
-<li>
-  <a href='./module/platform/development/paradigm/declarative'>🪄 declarative</a>
-</li>
-<li>
-  <a href='./module/platform/development/paradigm/functional'>🪄 functional</a>
-</li>
-<li>
-  <a href='./module/platform/development/paradigm/imperative'>🪄 imperative</a>
-</li>
-<li>
-  <a href='./module/platform/development/paradigm/object-oriented'>🪄 object-oriented</a>
-</li>
-<li>
-  <a href='./module/platform/development/paradigm/reactive'>🪄 reactive</a>
+  <a href='./module/platform/development/programming/framework/spring-cloud/gateway'>🪄 gateway</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='./module/platform/development/persistence'>📁 persistence</a></b></summary>
+  <summary><b><a href='./module/platform/development/programming/framework/spring-data'>📁 spring-data</a></b></summary>
 <ul>
 <li>
-<details>
-  <summary><b><a href='./module/platform/development/persistence/orm'>📁 orm</a></b></summary>
-<ul>
-<li>
-  <a href='./module/platform/development/persistence/orm/hibernate'>🪄 hibernate</a>
+  <a href='./module/platform/development/programming/framework/spring-data/jdbc'>🪄 jdbc</a>
 </li>
 <li>
-  <a href='./module/platform/development/persistence/orm/jpa'>🪄 jpa</a>
+  <a href='./module/platform/development/programming/framework/spring-data/jpa'>🪄 jpa</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-data/mongodb'>🪄 mongodb</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-data/r2dbc'>🪄 r2dbc</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-data/redis'>🪄 redis</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='./module/platform/development/persistence/relational-access'>📁 relational-access</a></b></summary>
+  <summary><b><a href='./module/platform/development/programming/framework/spring-framework'>📁 spring-framework</a></b></summary>
 <ul>
 <li>
-  <a href='./module/platform/development/persistence/relational-access/jdbc'>🪄 jdbc</a>
+  <a href='./module/platform/development/programming/framework/spring-framework/aspect'>🪄 aspect</a>
 </li>
 <li>
-  <a href='./module/platform/development/persistence/relational-access/mybatis'>🪄 mybatis</a>
-</li>
-</ul>
-</details>
-</li>
-</ul>
-</details>
+  <a href='./module/platform/development/programming/framework/spring-framework/concurrency'>🪄 concurrency</a>
 </li>
 <li>
-<details>
-  <summary><b><a href='./module/platform/development/serialization'>📁 serialization</a></b></summary>
-<ul>
-<li>
-  <a href='./module/platform/development/serialization/jackson'>🪄 jackson</a>
-</li>
-</ul>
-</details>
+  <a href='./module/platform/development/programming/framework/spring-framework/core-container'>🪄 core-container</a>
 </li>
 <li>
-<details>
-  <summary><b><a href='./module/platform/development/validation'>📁 validation</a></b></summary>
-<ul>
+  <a href='./module/platform/development/programming/framework/spring-framework/global-exception-handler'>🪄 global-exception-handler</a>
+</li>
 <li>
-<details>
-  <summary><b><a href='./module/platform/development/validation/benchmark'>📁 benchmark</a></b></summary>
-<ul>
+  <a href='./module/platform/development/programming/framework/spring-framework/reactive'>🪄 reactive</a>
+</li>
 <li>
-<details>
-  <summary><b><a href='./module/platform/development/validation/benchmark/microbenchmark'>📁 microbenchmark</a></b></summary>
-<ul>
+  <a href='./module/platform/development/programming/framework/spring-framework/testing'>🪄 testing</a>
+</li>
 <li>
-  <a href='./module/platform/development/validation/benchmark/microbenchmark/jmh'>🪄 jmh</a>
+  <a href='./module/platform/development/programming/framework/spring-framework/web'>🪄 web</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
-  <a href='./module/platform/development/validation/benchmark/system-benchmark'>🪄 system-benchmark</a>
+  <a href='./module/platform/development/programming/framework/spring-graphql'>🪄 spring-graphql</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-grpc'>🪄 spring-grpc</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-hateoas'>🪄 spring-hateoas</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-integration'>🪄 spring-integration</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-kafka'>🪄 spring-kafka</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-ldap'>🪄 spring-ldap</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-modulith'>🪄 spring-modulith</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-rest-docs'>🪄 spring-rest-docs</a>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/programming/framework/spring-security'>📁 spring-security</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-security/fundamentals'>🪄 fundamentals</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-security/oauth2'>🪄 oauth2</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
-<details>
-  <summary><b><a href='./module/platform/development/validation/performance'>📁 performance</a></b></summary>
-<ul>
-<li>
-  <a href='./module/platform/development/validation/performance/benchmark'>🪄 benchmark</a>
+  <a href='./module/platform/development/programming/framework/spring-session'>🪄 spring-session</a>
 </li>
 <li>
-  <a href='./module/platform/development/validation/performance/jmeter'>🪄 jmeter</a>
+  <a href='./module/platform/development/programming/framework/spring-shell'>🪄 spring-shell</a>
 </li>
 <li>
-  <a href='./module/platform/development/validation/performance/load-test'>🪄 load-test</a>
-</li>
-</ul>
-</details>
+  <a href='./module/platform/development/programming/framework/spring-web-services'>🪄 spring-web-services</a>
 </li>
 <li>
 <details>
-  <summary><b><a href='./module/platform/development/validation/testing'>📁 testing</a></b></summary>
+  <summary><b><a href='./module/platform/development/programming/framework/springdoc'>📁 springdoc</a></b></summary>
 <ul>
 <li>
-<details>
-  <summary><b><a href='./module/platform/development/validation/testing/functional'>📁 functional</a></b></summary>
-<ul>
-<li>
-  <a href='./module/platform/development/validation/testing/functional/e2e-test'>🪄 e2e-test</a>
-</li>
-<li>
-  <a href='./module/platform/development/validation/testing/functional/integration-test'>🪄 integration-test</a>
-</li>
-<li>
-  <a href='./module/platform/development/validation/testing/functional/unit-test'>🪄 unit-test</a>
-</li>
-</ul>
-</details>
-</li>
-<li>
-<details>
-  <summary><b><a href='./module/platform/development/validation/testing/non-functional'>📁 non-functional</a></b></summary>
-<ul>
-<li>
-<details>
-  <summary><b><a href='./module/platform/development/validation/testing/non-functional/performance-test'>📁 performance-test</a></b></summary>
-<ul>
-<li>
-<details>
-  <summary><b><a href='./module/platform/development/validation/testing/non-functional/performance-test/concept'>📁 concept</a></b></summary>
-<ul>
-<li>
-  <a href='./module/platform/development/validation/testing/non-functional/performance-test/concept/endurance-test'>🪄 endurance-test</a>
-</li>
-<li>
-  <a href='./module/platform/development/validation/testing/non-functional/performance-test/concept/load-test'>🪄 load-test</a>
-</li>
-<li>
-  <a href='./module/platform/development/validation/testing/non-functional/performance-test/concept/scalability-test'>🪄 scalability-test</a>
-</li>
-<li>
-  <a href='./module/platform/development/validation/testing/non-functional/performance-test/concept/spike-test'>🪄 spike-test</a>
-</li>
-<li>
-  <a href='./module/platform/development/validation/testing/non-functional/performance-test/concept/stress-test'>🪄 stress-test</a>
-</li>
-<li>
-  <a href='./module/platform/development/validation/testing/non-functional/performance-test/concept/volume-test'>🪄 volume-test</a>
+  <a href='./module/platform/development/programming/framework/springdoc/openapi'>🪄 openapi</a>
 </li>
 </ul>
 </details>
@@ -1611,22 +1436,815 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </li>
 <li>
 <details>
-  <summary><b><a href='./module/platform/development/validation/testing/non-functional/tooling'>📁 tooling</a></b></summary>
+  <summary><b><a href='./module/platform/development/programming/language'>📁 language</a></b></summary>
 <ul>
 <li>
-  <a href='./module/platform/development/validation/testing/non-functional/tooling/gatling'>🪄 gatling</a>
+  <a href='./module/platform/development/programming/language/domain-specific-language'>🪄 domain-specific-language</a>
 </li>
 <li>
-  <a href='./module/platform/development/validation/testing/non-functional/tooling/jmeter'>🪄 jmeter</a>
+<details>
+  <summary><b><a href='./module/platform/development/programming/language/java'>📁 java</a></b></summary>
+<ul>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/programming/language/java/advance'>📁 advance</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/programming/language/java/advance/dynamic-runtime'>🪄 dynamic-runtime</a>
 </li>
 <li>
-  <a href='./module/platform/development/validation/testing/non-functional/tooling/k6'>🪄 k6</a>
+  <a href='./module/platform/development/programming/language/java/advance/instrumentation'>🪄 instrumentation</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/advance/jvm'>🪄 jvm</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/advance/native-interoperability'>🪄 native-interoperability</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/advance/networking'>🪄 networking</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/advance/runtime-diagnostics'>🪄 runtime-diagnostics</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/advance/runtime-extensibility'>🪄 runtime-extensibility</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/advance/security-cryptography'>🪄 security-cryptography</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/programming/language/java/concurrency'>📁 concurrency</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/programming/language/java/concurrency/fundamentals'>🪄 fundamentals</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/concurrency/high-level-utils'>🪄 high-level-utils</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/concurrency/executor-service'>🪄 executor-service</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/concurrency/fork-join'>🪄 fork-join</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/concurrency/async-programming'>🪄 async-programming</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/concurrency/virtual-threads'>🪄 virtual-threads</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/programming/language/java/core'>📁 core</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/programming/language/java/core/language-basics'>🪄 language-basics</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/core/numbers'>🪄 numbers</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/core/class-object'>🪄 class-object</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/core/oop'>🪄 oop</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/core/abstract-interface'>🪄 abstract-interface</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/core/object-contract'>🪄 object-contract</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/core/string'>🪄 string</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/core/exception'>🪄 exception</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/core/generics'>🪄 generics</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/core/collection'>🪄 collection</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/core/annotation'>🪄 annotation</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/core/reflection'>🪄 reflection</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/core/classloader'>🪄 classloader</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/core/date-time'>🪄 date-time</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/core/io'>🪄 io</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/core/localization'>🪄 localization</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/core/functional-programming'>🪄 functional-programming</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/programming/language/java/version'>📁 version</a></b></summary>
+<ul>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/programming/language/java/version/java10'>📁 java10</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java10/application-class-data-sharing'>🪄 application-class-data-sharing</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java10/container-awareness'>🪄 container-awareness</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java10/local-variable-type-inference'>🪄 local-variable-type-inference</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java10/parallel-full-gc-for-g1'>🪄 parallel-full-gc-for-g1</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/programming/language/java/version/java11'>📁 java11</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java11/deployment-stack-removal'>🪄 deployment-stack-removal</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java11/epsilon-gc'>🪄 epsilon-gc</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java11/flight-recorder'>🪄 flight-recorder</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java11/http-client'>🪄 http-client</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java11/java-ee-corba-removal'>🪄 java-ee-corba-removal</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java11/lambda-parameter-var-syntax'>🪄 lambda-parameter-var-syntax</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java11/single-file-source-code-launch'>🪄 single-file-source-code-launch</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java11/tls13'>🪄 tls13</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java11/zgc-experimental'>🪄 zgc-experimental</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/programming/language/java/version/java14'>📁 java14</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java14/cms-gc-removal'>🪄 cms-gc-removal</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java14/helpful-null-pointer-exceptions'>🪄 helpful-null-pointer-exceptions</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java14/jfr-event-streaming'>🪄 jfr-event-streaming</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java14/numa-aware-g1'>🪄 numa-aware-g1</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java14/pack200-removal'>🪄 pack200-removal</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java14/switch-expressions'>🪄 switch-expressions</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/programming/language/java/version/java15'>📁 java15</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java15/biased-locking-disabled'>🪄 biased-locking-disabled</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java15/eddsa'>🪄 eddsa</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java15/hidden-classes'>🪄 hidden-classes</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java15/nashorn-removal'>🪄 nashorn-removal</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java15/shenandoah-production'>🪄 shenandoah-production</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java15/solaris-sparc-port-removal'>🪄 solaris-sparc-port-removal</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java15/text-blocks'>🪄 text-blocks</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java15/zgc-production'>🪄 zgc-production</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/programming/language/java/version/java16'>📁 java16</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java16/elastic-metaspace'>🪄 elastic-metaspace</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java16/jpackage'>🪄 jpackage</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java16/pattern-matching-instanceof'>🪄 pattern-matching-instanceof</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java16/record'>🪄 record</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java16/strong-encapsulation-by-default'>🪄 strong-encapsulation-by-default</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java16/unix-domain-socket-channels'>🪄 unix-domain-socket-channels</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/programming/language/java/version/java17'>📁 java17</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java17/context-specific-deserialization-filters'>🪄 context-specific-deserialization-filters</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java17/enhanced-prng'>🪄 enhanced-prng</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java17/macos-aarch64-port'>🪄 macos-aarch64-port</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java17/sealed-classes'>🪄 sealed-classes</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java17/security-manager-deprecated-for-removal'>🪄 security-manager-deprecated-for-removal</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java17/strict-floating-point-semantics'>🪄 strict-floating-point-semantics</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java17/strong-encapsulation'>🪄 strong-encapsulation</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/programming/language/java/version/java18'>📁 java18</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java18/core-reflection-method-handles'>🪄 core-reflection-method-handles</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java18/finalization-deprecated-for-removal'>🪄 finalization-deprecated-for-removal</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java18/inet-address-resolver-spi'>🪄 inet-address-resolver-spi</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java18/javadoc-code-snippets'>🪄 javadoc-code-snippets</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java18/simple-web-server'>🪄 simple-web-server</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java18/utf8-by-default'>🪄 utf8-by-default</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/programming/language/java/version/java21'>📁 java21</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java21/generational-zgc'>🪄 generational-zgc</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java21/kem-api'>🪄 kem-api</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java21/pattern-matching-switch'>🪄 pattern-matching-switch</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java21/record-patterns'>🪄 record-patterns</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java21/sequenced-collections'>🪄 sequenced-collections</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java21/virtual-threads'>🪄 virtual-threads</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/programming/language/java/version/java22'>📁 java22</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java22/foreign-function-memory-api'>🪄 foreign-function-memory-api</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java22/g1-region-pinning'>🪄 g1-region-pinning</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java22/multi-file-source-code-launch'>🪄 multi-file-source-code-launch</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java22/unnamed-variables-and-patterns'>🪄 unnamed-variables-and-patterns</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/programming/language/java/version/java23'>📁 java23</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java23/generational-zgc-default'>🪄 generational-zgc-default</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java23/markdown-documentation-comments'>🪄 markdown-documentation-comments</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/programming/language/java/version/java24'>📁 java24</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java24/aot-class-loading-linking'>🪄 aot-class-loading-linking</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java24/class-file-api'>🪄 class-file-api</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java24/generational-zgc-only'>🪄 generational-zgc-only</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java24/ml-dsa'>🪄 ml-dsa</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java24/ml-kem'>🪄 ml-kem</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java24/security-manager-disabled'>🪄 security-manager-disabled</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java24/stream-gatherers'>🪄 stream-gatherers</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java24/virtual-thread-synchronization'>🪄 virtual-thread-synchronization</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/programming/language/java/version/java25'>📁 java25</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java25/compact-object-headers'>🪄 compact-object-headers</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java25/compact-source-files-instance-main-methods'>🪄 compact-source-files-instance-main-methods</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java25/flexible-constructor-bodies'>🪄 flexible-constructor-bodies</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java25/module-import-declarations'>🪄 module-import-declarations</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java25/scoped-values'>🪄 scoped-values</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/programming/language/java/version/java26'>📁 java26</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java26/aot-object-caching-any-gc'>🪄 aot-object-caching-any-gc</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java26/applet-api-removal'>🪄 applet-api-removal</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java26/final-field-mutation-warnings'>🪄 final-field-mutation-warnings</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java26/g1-throughput'>🪄 g1-throughput</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java26/http3-client'>🪄 http3-client</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/programming/language/java/version/java27'>📁 java27</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java27/compact-object-headers-default'>🪄 compact-object-headers-default</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java27/g1-default-all-environments'>🪄 g1-default-all-environments</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java27/jfr-in-process-data-redaction'>🪄 jfr-in-process-data-redaction</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java27/post-quantum-hybrid-tls'>🪄 post-quantum-hybrid-tls</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/programming/language/java/version/java5'>📁 java5</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java5/annotations'>🪄 annotations</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java5/autoboxing-unboxing'>🪄 autoboxing-unboxing</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java5/class-data-sharing'>🪄 class-data-sharing</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java5/concurrency-utilities'>🪄 concurrency-utilities</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java5/enhanced-for-loop'>🪄 enhanced-for-loop</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java5/enums'>🪄 enums</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java5/generics'>🪄 generics</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java5/static-import'>🪄 static-import</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java5/varargs'>🪄 varargs</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/programming/language/java/version/java6'>📁 java6</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java6/annotation-processing-api'>🪄 annotation-processing-api</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java6/compiler-api'>🪄 compiler-api</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java6/jdbc4'>🪄 jdbc4</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java6/scripting-api'>🪄 scripting-api</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java6/service-loader'>🪄 service-loader</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/programming/language/java/version/java7'>📁 java7</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java7/binary-literals'>🪄 binary-literals</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java7/diamond-operator'>🪄 diamond-operator</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java7/fork-join'>🪄 fork-join</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java7/invokedynamic'>🪄 invokedynamic</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java7/method-handles'>🪄 method-handles</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java7/multi-catch'>🪄 multi-catch</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java7/nio2'>🪄 nio2</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java7/precise-rethrow'>🪄 precise-rethrow</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java7/strings-in-switch'>🪄 strings-in-switch</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java7/try-with-resources'>🪄 try-with-resources</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java7/underscores-in-numeric-literals'>🪄 underscores-in-numeric-literals</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/programming/language/java/version/java8'>📁 java8</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java8/base64-api'>🪄 base64-api</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java8/completable-future'>🪄 completable-future</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java8/date-time-api'>🪄 date-time-api</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java8/default-interface-methods'>🪄 default-interface-methods</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java8/functional-interfaces'>🪄 functional-interfaces</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java8/lambda-expressions'>🪄 lambda-expressions</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java8/metaspace'>🪄 metaspace</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java8/method-references'>🪄 method-references</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java8/nashorn-javascript-engine'>🪄 nashorn-javascript-engine</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java8/optional'>🪄 optional</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java8/repeatable-annotations'>🪄 repeatable-annotations</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java8/stream-api'>🪄 stream-api</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java8/type-annotations'>🪄 type-annotations</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/programming/language/java/version/java9'>📁 java9</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java9/collection-factory-methods'>🪄 collection-factory-methods</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java9/compact-strings'>🪄 compact-strings</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java9/flow-api'>🪄 flow-api</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java9/g1-default-gc'>🪄 g1-default-gc</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java9/jlink'>🪄 jlink</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java9/jshell'>🪄 jshell</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java9/module-system'>🪄 module-system</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java9/multi-release-jar'>🪄 multi-release-jar</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java9/private-interface-methods'>🪄 private-interface-methods</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java9/process-api-updates'>🪄 process-api-updates</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java9/stack-walking-api'>🪄 stack-walking-api</a>
 </li>
 </ul>
 </details>
 </li>
 </ul>
 </details>
+</li>
+</ul>
+</details>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/programming/paradigm'>📁 paradigm</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/programming/paradigm/aop'>🪄 aop</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/paradigm/data-oriented'>🪄 data-oriented</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/paradigm/declarative'>🪄 declarative</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/paradigm/functional'>🪄 functional</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/paradigm/imperative'>🪄 imperative</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/paradigm/object-oriented'>🪄 object-oriented</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/paradigm/reactive'>🪄 reactive</a>
+</li>
+</ul>
+</details>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/software-design'>📁 software-design</a></b></summary>
+<ul>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/software-design/architecture'>📁 architecture</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/software-design/architecture/domain-driven-design'>🪄 domain-driven-design</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/architecture/mvc'>🪄 mvc</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/software-design/design-pattern'>📁 design-pattern</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/software-design/design-pattern/anti-patterns'>🪄 anti-patterns</a>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/software-design/design-pattern/behavioral'>📁 behavioral</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/software-design/design-pattern/behavioral/observer'>🪄 observer</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/design-pattern/behavioral/state'>🪄 state</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/design-pattern/behavioral/strategy'>🪄 strategy</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/software-design/design-pattern/creational'>📁 creational</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/software-design/design-pattern/creational/builder'>🪄 builder</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/design-pattern/creational/factory-method'>🪄 factory-method</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/design-pattern/creational/singleton'>🪄 singleton</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/design-pattern/dependency-injection'>🪄 dependency-injection</a>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/software-design/design-pattern/distributed-system'>📁 distributed-system</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/software-design/design-pattern/distributed-system/bulkhead'>🪄 bulkhead</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/design-pattern/distributed-system/cqrs'>🪄 cqrs</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/design-pattern/distributed-system/event-sourcing'>🪄 event-sourcing</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/design-pattern/distributed-system/saga'>🪄 saga</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/design-pattern/distributed-system/sidecar'>🪄 sidecar</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/design-pattern/solid-principles'>🪄 solid-principles</a>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/software-design/design-pattern/structural'>📁 structural</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/software-design/design-pattern/structural/adapter'>🪄 adapter</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/design-pattern/structural/facade'>🪄 facade</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/design-pattern/structural/proxy'>🪄 proxy</a>
+</li>
+</ul>
+</details>
+</li>
+</ul>
+</details>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/software-process'>📁 software-process</a></b></summary>
+<ul>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/software-process/methodology'>📁 methodology</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/software-process/methodology/agile-development'>🪄 agile-development</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-process/methodology/driven-development'>🪄 driven-development</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-process/methodology/lifecycle-models'>🪄 lifecycle-models</a>
 </li>
 </ul>
 </details>

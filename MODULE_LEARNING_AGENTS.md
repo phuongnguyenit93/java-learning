@@ -15,15 +15,19 @@ ARCHITECTURE.md
 
 MODULE_LEARNING_AGENTS.md
 → how an AI agent builds one module into a coherent learning experience
+
+MODULE_ROADMAP.md
+→ canonical roadmap skeleton, roadmap approval gate and downstream dependency contract
 ```
 
-Read `AGENTS.md` and `ARCHITECTURE.md` before using this playbook. Their ownership, lifecycle, source-of-truth, localization, and preservation rules remain authoritative.
+Read `AGENTS.md`, `ARCHITECTURE.md` and `MODULE_ROADMAP.md` before using this playbook. Their ownership, lifecycle, source-of-truth, localization, and preservation rules remain authoritative.
 
 In this document, **build a module** means building its learning content and learning relationships. It does **not** mean changing the Gradle build architecture unless the task explicitly requires that.
 
 The target learning surfaces are:
 
 ```text
+Roadmap
 Knowledge
 API Docs / guided API experiments when applicable
 Quiz
@@ -44,6 +48,14 @@ Preferred relationship:
 ```text
 Module topic
     ↓
+Roadmap Skeleton
+    ↓
+Module Roadmap
+    ↓
+Roadmap Review / approval
+    ↓
+README / Knowledge Menu structure
+    ↓
 Knowledge curriculum
     ↓
 API experiments when the module exposes learning APIs
@@ -58,6 +70,9 @@ Coverage Review
 The content surfaces have different roles:
 
 ```text
+Roadmap
+→ canonical learning milestones, ordering, dependencies and module-level mental journey
+
 Knowledge
 → canonical explanation of the concepts
 
@@ -75,6 +90,52 @@ Coverage Review
 ```
 
 Do not optimize for raw counts. A smaller coherent module is better than a large module filled with duplicate or weak material.
+
+### Roadmap-first source-of-truth invariant
+
+Before generating a new Knowledge Menu or lesson content, the module must have an **approved roadmap** derived from the shared Roadmap Skeleton contract in `MODULE_ROADMAP.md`.
+
+Required dependency:
+
+```text
+module identity / scope / neighboring-module boundaries
+        ↓
+Roadmap Skeleton
+        ↓
+Module Roadmap
+        ↓
+Roadmap Reviewer
+        ↓ approved
+Knowledge Architect
+        ↓
+README / Knowledge Menu
+        ↓
+Knowledge Writer
+        ↓
+API / Quiz / Interview
+```
+
+Responsibilities must remain distinct:
+
+```text
+Roadmap Designer
+→ chooses milestone-level learning journey
+
+Roadmap Reviewer
+→ checks prerequisite order, scope, practical completeness and granularity
+
+Knowledge Architect
+→ expands approved roadmap nodes into concrete Knowledge sections
+
+Knowledge Writer
+→ teaches each approved section with the required WHAT/WHY/RELATION/HOW/EVIDENCE flow
+```
+
+Roadmap nodes are **not individual facts, methods, keywords or tiny syntax items**. One roadmap milestone may own several Knowledge sections.
+
+If Knowledge authoring reveals a missing prerequisite or missing milestone, emit/report a **ROADMAP GAP**. Do not silently add an unrelated chapter and continue as if the roadmap were unchanged.
+
+For an existing/legacy module, do not build the new roadmap by copying the current menu order. Design the roadmap independently from module scope/curriculum goals first, then audit the old Knowledge against it.
 
 ### Pedagogical coherence is a first-class requirement
 
@@ -194,9 +255,9 @@ The exact visible heading may vary by chapter, but the underlying learning role 
 
 Every mature learning module should be understandable at **three nested layers**.
 
-#### Layer 1 — Module mental model / roadmap
+#### Layer 1 — Approved Module Roadmap
 
-The learner needs an orientation layer before deep terminology.
+The learner needs an explicit orientation layer before deep terminology. This layer is now a first-class upstream curriculum artifact, not merely a diagram embedded after the README has already been authored.
 
 At minimum, the first chapter or equivalent entry chapter must explain in beginner-friendly language:
 
@@ -212,7 +273,7 @@ What should the learner understand by the end of the module?
 
 The chapter does not have to be literally named `MentalModel`, but it must perform this function.
 
-The first chapter should include a **terminology map / roadmap**, for example:
+The first chapter should **reflect and explain the approved roadmap**, for example:
 
 ```text
 core idea
@@ -251,6 +312,8 @@ For example, a Collections module should not begin conceptually with `Collection
 The same rule applies elsewhere: do not start Generics with type-parameter syntax before establishing the duplication/type-safety problem; do not start Reflection with `Class` APIs before explaining why runtime inspection exists; do not start ClassLoader with delegation mechanics before explaining why class bytes must be located and defined.
 
 Do not open a module with advanced definitions while the learner still lacks the vocabulary required to understand why the definitions matter.
+
+The entry chapter is downstream from the roadmap: if it needs a milestone that the roadmap does not contain, fix/review the roadmap first rather than letting README structure diverge.
 
 #### Layer 2 — Concept / chapter story
 
@@ -446,49 +509,216 @@ Before adding a topic to a module, inspect neighboring learning areas and choose
 Typical boundary examples:
 
 ```text
-java/core
+programming/language/java/core
 → stable language/standard-library foundations used broadly across versions
 
-paradigm/functional
+programming/paradigm/functional
 → language-neutral functional programming paradigm, pure functions, immutability, composition, referential transparency and trade-offs
 
-java/core/functional-programming
+programming/language/java/core/functional-programming
 → Java functional programming mechanics such as functional interfaces, lambdas, method references, variable capture and Optional
 
-development/persistence/relational-access
+development/data/persistence/relational-access
 → application-side relational data access technologies such as JDBC and MyBatis
 
-development/persistence/orm
+development/data/persistence/orm
 → persistence specifications and ORM implementations such as Jakarta Persistence (JPA) and Hibernate
 
-framework/spring/data
+programming/framework/spring-data
 → Spring-specific repository/data-access abstractions and integrations
 
-infrastructure/system/database
-→ database engines, storage/runtime behavior, query optimization, migration, connection pools and database-side concerns
+programming/framework/spring-framework/core-container
+→ Spring IoC container fundamentals including beans, dependency injection, component scanning, Java configuration, bean resolution, scopes, lifecycle, Environment, profiles, @Import, @Conditional and container extension points
 
-development/data-mapping/object-mapping
+programming/framework/spring-framework/testing
+→ Spring TestContext Framework including context configuration, ApplicationContext testing, active profiles, @TestPropertySource, context caching, transactional testing and integration-test infrastructure
+
+programming/framework/spring-boot/fundamentals
+→ Spring Boot fundamentals including SpringApplication, @SpringBootApplication, starters, embedded servers, application lifecycle, packaging, DevTools and the Spring Framework vs Spring Boot boundary
+
+programming/framework/spring-boot/auto-configuration
+→ Spring Boot auto-configuration including conditional registration, classpath/property-driven configuration, ordering, exclusion, diagnostics, custom auto-configuration and custom starters
+
+programming/framework/spring-boot/externalized-configuration
+→ Spring Boot externalized configuration including Config Data, properties/YAML, binding, precedence, profile-specific configuration, validation and configuration metadata
+
+programming/framework/spring-boot/testing
+→ Spring Boot-specific testing including @SpringBootTest, web environments, test slices, test auto-configuration, dependency replacement, Testcontainers and integration-test strategy
+
+programming/framework/spring-boot/native-image
+→ Spring Boot AOT and native-image support including GraalVM, closed-world constraints, runtime hints, native testing and runtime/build trade-offs
+
+programming/framework/spring-boot/actuator
+→ Spring Boot production-ready features including Actuator endpoints, health, metrics, runtime diagnostics, endpoint exposure, custom endpoints, security and observability integration
+
+programming/framework/spring-integration
+→ Spring Integration and Enterprise Integration Patterns including messages, channels, endpoints, gateways, routers, filters, transformers, splitters, aggregators and adapters
+
+programming/framework/springdoc/openapi
+→ Springdoc/OpenAPI learning knowledge and examples; runtime Swagger/OpenAPI capability belongs to project-build/springboot-runtime
+
+programming/framework/spring-security/fundamentals
+→ Spring Security fundamentals including SecurityFilterChain, SecurityContext, authentication, authorization, method security, session management, CSRF, CORS and exception handling
+
+programming/framework/spring-security/oauth2
+→ Spring Security OAuth2/OpenID Connect including clients, resource servers, JWT, scopes, token validation and authorization-server concepts
+
+programming/framework/spring-data/mongodb
+→ Spring Data MongoDB repositories, object mapping, query methods, MongoTemplate, aggregation, transactions, auditing and reactive integration
+
+programming/framework/spring-data/redis
+→ Spring Data Redis templates, serialization, repositories, TTL, cache integration, Pub/Sub, Streams and reactive access
+
+programming/framework/spring-data/r2dbc
+→ Spring Data R2DBC reactive relational persistence including mapping, repositories, DatabaseClient, R2dbcEntityTemplate, transactions and backpressure-aware access
+
+programming/framework/spring-data/jdbc
+→ Spring Data JDBC aggregate-oriented relational persistence, repositories, mapping, queries, transactions and its boundary with JPA
+
+programming/framework/spring-batch
+→ Spring Batch jobs, steps, chunk processing, item reader/processor/writer, tasklets, restartability, fault tolerance and scaling
+
+programming/framework/spring-session
+→ Spring Session externalized session management including repositories, Redis/JDBC backing stores, expiration and Spring Security integration
+
+programming/framework/spring-modulith
+→ Spring Modulith application modules, structural verification, module events, testing, observability and generated documentation
+
+integration/messaging/message-broker
+→ native message-broker technologies and messaging semantics such as RabbitMQ and ActiveMQ; Spring AMQP abstractions belong to programming/framework/spring-amqp
+
+integration/messaging/event-streaming
+→ native event-streaming technologies and semantics such as Apache Kafka; Spring for Apache Kafka abstractions belong to programming/framework/spring-kafka
+
+integration/http/request-response
+→ HTTP request/response integration concepts plus application-to-application client choices; Integration owns usage patterns, trade-offs and cross-client comparison, while language/framework owners retain deep implementation internals
+
+integration/http/request-response/client/java
+→ Java HTTP client options used for integration, including legacy HttpURLConnection and modern java.net.http.HttpClient; Java networking owns deep JDK API/runtime mechanics
+
+integration/http/request-response/client/spring-framework
+→ Spring Framework HTTP client options used for integration, including RestClient, RestTemplate and WebClient; programming/framework/spring-framework/web owns deep framework internals
+
+integration/http/request-response/client/spring-cloud
+→ Spring Cloud declarative/service-to-service HTTP clients such as OpenFeign; Spring Cloud/microservice curriculum owns discovery, load-balancing and framework-specific internals
+
+integration/http/server-sent-events
+→ HTTP server-to-client event streaming with Server-Sent Events
+
+integration/http/webhook
+→ HTTP callback integration including delivery, retry, duplicate handling, idempotency, signatures and replay protection
+
+integration/rpc/grpc
+→ native gRPC/RPC concepts including protobuf contracts, unary and streaming interaction models; Spring gRPC integration belongs to programming/framework/spring-grpc
+
+integration/realtime/websocket
+→ full-duplex WebSocket communication concepts and protocol behavior
+
+integration/realtime/rsocket
+→ RSocket interaction models and protocol-level reactive communication
+
+platform/code-quality/static-analysis
+→ source/compiler/bytecode analysis that detects coding-rule violations, bug patterns and code smells; examples include Checkstyle, PMD, SpotBugs and Error Prone
+
+platform/code-quality/formatting
+→ deterministic source formatting and format enforcement; Spotless may orchestrate formatting engines, while formatting must not be treated as bug/static analysis
+
+platform/code-quality/continuous-inspection
+→ continuous aggregation of quality/security/maintainability measurements and policy gates across analysis results; SonarQube is the canonical example
+
+platform/code-quality/test-quality
+→ reserved ownership for test-effectiveness evidence such as coverage or mutation testing when that curriculum is introduced; do not place JaCoCo/PIT under static-analysis merely because they produce quality metrics
+
+infrastructure/devops/source-control
+→ source-control workflows and tooling such as Git, branching, merge/rebase, tags and repository collaboration mechanics
+
+infrastructure/devops/ci-cd
+→ continuous integration/delivery/deployment concepts and pipeline implementations; fundamentals owns pipeline/stage/artifact-promotion/quality-gate concepts, while Jenkins, GitHub Actions and GitLab CI own tool-specific mechanics
+
+infrastructure/devops/containerization
+→ container build/runtime packaging knowledge such as Docker images, containers, Dockerfile, layers, BuildKit, volumes, networks and Compose
+
+infrastructure/devops/orchestration
+→ container orchestration knowledge such as Kubernetes scheduling, workloads, services, configuration, rollout and cluster-level application management
+
+infrastructure/devops/artifact-management
+→ artifact publication, repository management, coordinates, immutability and promotion workflows; Maven Central and Nexus are canonical examples
+
+infrastructure/devops/infrastructure-as-code
+→ declarative infrastructure provisioning and state/drift management such as Terraform
+
+infrastructure/devops/configuration-management
+→ host/application configuration automation and desired-state operations such as Ansible
+
+infrastructure/devops/environment-management
+→ environment strategy and promotion across local/dev/test/staging/production, including parity, configuration boundaries and ephemeral environments
+
+infrastructure/devops/deployment
+→ application deployment strategies such as rolling, recreate, blue-green, canary, rollback and zero-downtime delivery
+
+DevOps knowledge under module/** is curriculum. Repository-specific build/generation/runtime machinery under project-build/** and project-orchestration/** remains implementation infrastructure for java-learning itself and must not replace the learning modules above.
+
+Keep neighboring infrastructure ownership explicit: observability stays under infrastructure/system/observability, protocols/proxy/generic API-gateway/service-mesh stay under infrastructure/system/network, identity/access and secrets lifecycle stay under infrastructure/system/security, runtime containers stay under infrastructure/system/runtime, and microservice architecture/patterns stay under module/microservice. Framework-specific implementations such as Spring Cloud Gateway remain with their framework owner.
+
+infrastructure/system/database
+→ database engines plus database-side operational concerns. Engines are grouped by data/workload model (relational, document, key-value, graph, search, time-series, analytical). Connection management and schema migration are explicit supporting domains.
+
+infrastructure/system/database/performance
+→ database-side performance mechanics such as query optimization, indexing, execution plans, statistics, partitioning, locking and database caching. ORM performance does not belong here because ORM is an application/persistence abstraction.
+
+infrastructure/system/database/engine/search/elasticsearch
+→ Elasticsearch as a search/analytics engine. Observability/ELK curricula may reference this canonical engine module instead of recreating Elasticsearch internals.
+
+infrastructure/system/observability
+→ runtime visibility and diagnosis: logging, metrics, tracing, profiling/runtime analysis, thread dumps and management consoles. Loki belongs here as logging infrastructure rather than under generic database taxonomy.
+
+infrastructure/system/network
+→ system-level protocol, proxy, generic API-gateway, traffic-management and service-mesh concerns. Spring Cloud Gateway is framework-specific and belongs to programming/framework/spring-cloud/gateway.
+
+infrastructure/system/security
+→ infrastructure identity/access management and secrets management, including Keycloak, token lifecycle, HashiCorp Vault and secret lifecycle. Spring Security remains the application/framework security owner.
+
+infrastructure/system/runtime
+→ application runtime/container infrastructure such as servlet containers Tomcat and Jetty.
+
+development/data/data-mapping/object-mapping
 → object-to-object mapping concepts and implementations such as manual mapping, MapStruct and ModelMapper
 
-development/serialization/jackson
+development/data/serialization/jackson
 → Jackson data binding and Java object ↔ JSON serialization/deserialization
 
-language/java
+programming/language/java
 → Java language, Java SE/runtime APIs and Java-specific mechanics; mapping/serialization libraries should not be owned here merely because they are implemented in Java
 
-java/version/java8/stream-api
+development/software-process/methodology/lifecycle-models
+→ software development lifecycle models and phase/feedback structures such as Waterfall, Iterative, Incremental, Spiral and V-Model
+
+development/software-process/methodology/agile-development
+→ Agile principles and related methods/frameworks such as Scrum, Kanban, Extreme Programming and Lean Software Development
+
+development/software-process/methodology/driven-development
+→ driven development approaches and practices such as TDD, BDD, ATDD, FDD and MDD
+
+programming/language/java/version/java8/stream-api
 → Stream API mechanics and pipeline behavior
 
-java/version/java9/module-system
+programming/language/java/version/java9/module-system
 → JPMS / module-info / module path / strong encapsulation
 
-java/advance/jvm
+programming/language/java/version/java*/<feature>
+→ version-specific Java feature/change modules. A material language, library, tooling, runtime, GC, security, removal, or migration change may have its own real module directly under the Java release that introduced/finalized that change.
+
+Java version modules are intentionally feature-granular. Do not force multiple independent changes into one release-summary module merely to reduce module count. A related concept may also have another learning owner elsewhere (for example Generics in Java Core or Virtual Threads in Concurrency); version placement records the release/evolution dimension, and navigation/cross-linking may connect the related modules.
+
+Do not create a version feature module for every microscopic release-note item. The threshold is still a meaningful learning topic with its own definition, reason for existence, behavioral/mechanical impact, or migration consequence.
+
+programming/language/java/advance/jvm
 → JVM internals, bytecode, runtime memory, GC, JIT, Java Memory Model
 
-java/advance/networking
+programming/language/java/advance/networking
 → Java networking APIs such as Socket/ServerSocket, NIO channels/selectors, URI/URL and HttpClient
 
-java/advance/security-cryptography
+programming/language/java/advance/security-cryptography
 → Java security/cryptography APIs such as providers, digests, MAC, cipher, signatures, keys, KeyStore and certificates
 ```
 

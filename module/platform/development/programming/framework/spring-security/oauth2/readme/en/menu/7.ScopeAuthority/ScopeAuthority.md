@@ -1,0 +1,1 @@
+﻿# Scopes and authorities

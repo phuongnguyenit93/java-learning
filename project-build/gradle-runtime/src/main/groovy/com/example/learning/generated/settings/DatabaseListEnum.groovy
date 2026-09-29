@@ -6,25 +6,25 @@ enum DatabaseListEnum {
     MONGODB(
             'DATABASE_MONGODB',
             'NOSQL',
-            'module:infrastructure:system:database:nosql:mongoDB'
+            'module:infrastructure:system:database:engine:document:mongodb'
     ),
 
     MYSQL(
             'DATABASE_MYSQL',
             'SQL',
-            'module:infrastructure:system:database:rdbms:mysql'
+            'module:infrastructure:system:database:engine:relational:mysql'
     ),
 
     ORACLE(
             'DATABASE_ORACLE',
             'SQL',
-            'module:infrastructure:system:database:rdbms:oracle'
+            'module:infrastructure:system:database:engine:relational:oracle'
     ),
 
     POSTGRESQL(
             'DATABASE_POSTGRESQL',
             'SQL',
-            'module:infrastructure:system:database:rdbms:postgresql'
+            'module:infrastructure:system:database:engine:relational:postgresql'
     );
 
 

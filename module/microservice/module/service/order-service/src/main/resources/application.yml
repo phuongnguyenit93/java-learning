@@ -1,7 +1,7 @@
 # AUTO-GENERATED MERGED YAML
 # You can check at module/microservice/module/service/order-service/src/main/resources/application.yml
 # Source: ORDER_SERVICE
-# Dependencies: SPRING_WEB, SPRING_SWAGGER, SPRING_ACTUATOR, RESILIENCE_4J, DISTRIBUTED_TRACING
+# Dependencies: SPRING_WEB, SPRING_ACTUATOR, RESILIENCE_4J, DISTRIBUTED_TRACING
 
 ---
 spring:

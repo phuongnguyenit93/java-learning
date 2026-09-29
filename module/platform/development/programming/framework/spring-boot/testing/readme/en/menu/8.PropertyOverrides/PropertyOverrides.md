@@ -1,0 +1,1 @@
+﻿# Property overrides in tests

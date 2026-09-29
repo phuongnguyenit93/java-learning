@@ -13,6 +13,7 @@ Mục tiêu của tài liệu là trả lời các câu hỏi cấp repository:
 - Generated file và human-owned file được phân biệt như thế nào?
 - Build-time capability và runtime capability kết nối với nhau ra sao?
 - Một capability mới nên được đặt ở đâu?
+- Learning content lấy artifact nào làm upstream source of truth?
 
 Tài liệu này **không phân tích package/source code bên trong `module/`**. `module/` chỉ được đề cập ở mức contract, metadata, build lifecycle và dependency boundary.
 
@@ -56,6 +57,8 @@ java-learning/
 ├── settings.gradle                 # Composite build entry point
 ├── README.md
 ├── ARCHITECTURE.md
+├── MODULE_ROADMAP.md               # Roadmap-first learning architecture
+├── MODULE_LEARNING_AGENTS.md       # Module learning workflow/review rules
 ├── PROJECT_PORTAL.md               # Portal-specific architecture/design
 └── STRUCTURE.md                    # Generated module map
 ```
@@ -74,6 +77,36 @@ project-build/springboot-runtime
 ```
 
 `module/` là consumer chính của các capability trên, nhưng nội dung package bên trong module nằm ngoài phạm vi tài liệu này.
+
+### 3.0 Learning artifact dependency
+
+Learning modules có thêm một **content architecture** độc lập với Gradle WHAT/WHEN/HOW boundary:
+
+```text
+module scope / curriculum boundary
+        ↓
+Roadmap Skeleton
+        ↓
+approved Module Roadmap
+        ↓
+README / Knowledge Menu
+        ↓
+Knowledge lessons
+        ↓
+API Docs / executable evidence when applicable
+        ↓
+Quiz
+        ↓
+Interview
+        ↓
+Portal projection
+```
+
+Roadmap là upstream source-of-truth cho learning order và milestone grouping. README/Menu chỉ triển khai roadmap thành Knowledge section cụ thể; API Docs, Quiz và Interview là downstream reinforcement/evidence và không được tự mở rộng curriculum.
+
+Với legacy module, roadmap phải được thiết kế độc lập từ module scope/curriculum goal trước, rồi mới audit Knowledge hiện tại. Điều này tránh việc historical menu order vô tình trở thành curriculum mới.
+
+Canonical contract nằm trong [`MODULE_ROADMAP.md`](./MODULE_ROADMAP.md); authoring/review workflow nằm trong [`MODULE_LEARNING_AGENTS.md`](./MODULE_LEARNING_AGENTS.md).
 
 ### 3.1 `project-portal` boundary
 
@@ -1552,6 +1585,15 @@ springboot-runtime/execution-context-servlet
 
 Trong đó core là stack-neutral và Servlet adapter sở hữu Spring MVC/Servlet integration. Reactive adapter là target tương lai, chưa phải implementation hiện tại.
 
+Các Spring Boot dependency capability dùng chung cũng thuộc runtime boundary này:
+
+\`\`\`text
+springboot-runtime/actuator
+springboot-runtime/devtools
+\`\`\`
+
+Hai module này chỉ sở hữu runtime/dependency wiring. Knowledge tương ứng vẫn thuộc \`module/platform/development/programming/framework/spring-boot/**\`; runtime \`SERVICE_NAME\` có thể được consumer dùng mà không buộc learning module phải kiêm dependency wrapper.
+
 ---
 
 ## 22. Shared Swagger runtime
@@ -2462,7 +2504,7 @@ Một capability mới trong `springboot-runtime` nên xác định:
 11. Package phải tránh accidental component scan nếu capability dựa trên auto-configuration.
 12. Không được đưa Gradle implementation vào runtime artifact.
 
-Swagger runtime hiện là reference implementation rõ nhất cho boundary này.
+Swagger runtime hiện là reference implementation rõ nhất cho boundary này; Actuator và DevTools dùng cùng ownership principle nhưng ở dạng dependency capability wrapper đơn giản hơn.
 
 ---
 

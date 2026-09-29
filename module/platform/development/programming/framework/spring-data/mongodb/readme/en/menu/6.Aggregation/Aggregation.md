@@ -1,0 +1,1 @@
+﻿# Aggregation with Spring Data

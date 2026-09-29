@@ -28,6 +28,7 @@ build/
 *.iws
 *.idea
 *.run
+*.hprof
 
 # VS Code #
 .vscode/

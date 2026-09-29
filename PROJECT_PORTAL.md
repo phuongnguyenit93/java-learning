@@ -22,7 +22,7 @@ CSS stylesheet thuần
 
 Mục tiêu dài hạn vẫn là tạo một **Learning Portal** độc lập với runtime của từng learning module, để mọi learning module đều có một điểm truy cập chung dù module đó có hay không có Spring Boot `Application`.
 
-Current phase vẫn static-first và chưa gọi REST API của chính Portal. Module hierarchy/routing lấy từ generated `module-catalog.json`; Overview, Menu, Knowledge, Quiz, Interview và API Docs đều consume build-time projection thật.
+Current phase vẫn static-first và chưa gọi REST API của chính Portal. Module hierarchy/routing lấy từ generated `module-catalog.json`; Overview, Menu, Knowledge, Quiz, Interview và API Docs đều consume build-time projection thật. **Roadmap** là capability target mới cần được project từ source roadmap của module; Portal chỉ hiển thị, không tự suy ra roadmap từ Knowledge.
 
 ### 1.1 Current physical structure
 
@@ -284,7 +284,7 @@ Ví dụ với module runnable `THREAD`:
 ```text
 Thread & Concurrency
 
-[Overview] [Menu] [Knowledge] [API Docs] [Quiz] [Interview] [Local Run]
+[Overview] [Roadmap] [Menu] [Knowledge] [API Docs] [Quiz] [Interview] [Local Run]
 
 Progress
 ████████░░
@@ -310,7 +310,7 @@ Ví dụ với module không runnable:
 ```text
 Gradle Cache
 
-[Overview] [Knowledge] [Quiz]
+[Overview] [Roadmap] [Menu] [Knowledge] [Quiz]
 
 Knowledge
 1. Cache Concepts
@@ -323,6 +323,22 @@ Quiz
 ```
 
 Current phase đã dựng navigation shell và đã migrate Overview/Menu/Knowledge/API Docs/Quiz/Interview sang generated/static data. `Local Run` có UI hai khung Build/Download JAR + Run Locally và dùng cùng relative API contract `/api/local-run/*` ở mọi môi trường. Localhost xử lý contract bằng Spring Boot `project-portal`; production xử lý contract bằng Cloudflare Pages Functions. Hai adapter độc lập, cùng dispatch/poll GitHub Actions và cùng đọc rolling GitHub Release `local-run`; token GitHub luôn nằm server-side.
+
+`Roadmap` nằm kế bên `Menu` nhưng có responsibility khác:
+
+```text
+Roadmap
+→ milestone cấp cao
+→ thứ tự học
+→ quan hệ trước/sau và dependency
+→ cho learner biết đang ở đâu và học gì tiếp theo
+
+Menu
+→ danh sách Knowledge chapter/section cụ thể
+→ điều hướng chi tiết vào nội dung
+```
+
+Roadmap interaction chỉ nên điều hướng/highlight **đầu mục/milestone hoặc chapter/section heading**, không trỏ tới từng câu hoặc fact nhỏ. Khi roadmap source/projection được implement, roadmap phải đứng upstream của Menu/Knowledge theo `MODULE_ROADMAP.md`.
 
 Các tab/action về lâu dài phải được render theo capability thực tế của module.
 
@@ -1487,25 +1503,33 @@ Target user flow:
                          │
                  chọn một module
                          │
+                         ▼
+                     Overview
+                         │
+                         ▼
+                      Roadmap
+                         │
+                         ▼
+                       Menu
+                         │
+                         ▼
+                    Knowledge
+                         │
              ┌───────────┼───────────┐
-             │           │           │
              ▼           ▼           ▼
-          Overview    Knowledge   Quiz / Interview
-                         │           │
-                         └─────┬─────┘
-                               │
-                      module runnable?
-                         /            \
-                       yes            no
-                        │              │
-                        ▼              │
-                    API Docs           │
-                        │              │
-                    Execution          │
-                        │              │
-                        └──────┬───────┘
-                               ▼
-                           Download
+         API Docs      Quiz      Interview
+             │
+             ▼
+      module runnable?
+          /      \
+        yes      no
+         │        │
+         ▼        │
+     Local Run    │
+         │        │
+         └───┬────┘
+             ▼
+          Download
 ```
 
 Portal hướng đến việc liên kết các lớp học tập:
@@ -1616,6 +1640,7 @@ MVP đã bắt đầu implementation. Current phase đã có:
 Chưa implement trong current phase:
 
 ```text
+Roadmap source/projection + Roadmap tab next to Menu
 capability availability resolver từ actual resource/artifact state
 Spring Boot Portal REST integration ngoài Local Run local adapter
 Execution Context aggregation

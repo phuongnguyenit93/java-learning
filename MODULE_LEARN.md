@@ -2,9 +2,11 @@
 
 Tài liệu này mô tả quy ước dùng khi chuẩn hóa một **learning module** trong repository.
 
+Roadmap architecture/source-of-truth contract được định nghĩa trong [`MODULE_ROADMAP.md`](./MODULE_ROADMAP.md). Tài liệu này tập trung vào workflow refactor/authoring sau khi contract đó được áp dụng.
+
 Mục tiêu chính:
 
-- sửa lại learning flow trước khi sửa sâu code;
+- thiết kế/review **Module Roadmap trước**, rồi mới sửa learning flow/README/code;
 - giữ nguyên code/README hiện tại để có thể so sánh thủ công **khi module có nội dung cũ cần bảo toàn**;
 - chỉ tạo staging area riêng khi thật sự cần so sánh bản cũ và bản refactor;
 - đảm bảo README và experiment trong code liên kết trực tiếp với nhau;
@@ -16,6 +18,24 @@ Mục tiêu chính:
 ## 1. Flow tổng quát
 
 Trước tiên phải xác định module thuộc **một trong hai trường hợp** sau.
+
+Trước cả hai workflow, roadmap-first là invariant chung:
+
+```text
+module scope
+    ↓
+Roadmap Skeleton
+    ↓
+Module Roadmap
+    ↓
+Roadmap Review / approval
+    ↓
+README / Knowledge structure
+    ↓
+lesson + code evidence
+```
+
+Không dùng README cũ làm roadmap mặc định. Với module cũ, thiết kế roadmap độc lập trước rồi mới audit nội dung hiện tại theo các trạng thái `aligned / missing / misplaced / too deep / duplicate / out of scope`.
 
 ### Trường hợp A - Module đã có nội dung cần giữ để so sánh
 
@@ -41,9 +61,9 @@ Flow:
 Làm theo từng vertical slice/topic:
 
 ```text
-BASE.md
+Approved Module Roadmap
     ↓
-chốt learning flow tổng
+BASE.md / Knowledge Menu derived from roadmap
     ↓
 Topic hiện tại
     ↓
@@ -79,9 +99,9 @@ Khi đó **không tạo `menu2` và `moduleb`**.
 Flow:
 
 ```text
-BASE.md
+Approved Module Roadmap
     ↓
-chốt learning flow
+BASE.md / Knowledge Menu derived from roadmap
     ↓
 Topic hiện tại
     ↓
@@ -103,9 +123,13 @@ staging không phải bước bắt buộc cho mọi learning module
 
 Trong cả hai trường hợp, không sửa toàn bộ README trước rồi mới sửa toàn bộ Java. Vẫn ưu tiên vertical slice/topic-by-topic.
 
+Nếu trong lúc viết README/code phát hiện một prerequisite hoặc milestone mà roadmap chưa có, dừng việc tự mở rộng scope và ghi nhận **ROADMAP GAP** để review roadmap trước.
+
 ---
 
 ## 2. Ownership của README
+
+README là **downstream artifact của roadmap**. Nó chịu trách nhiệm triển khai roadmap thành Knowledge Menu và lesson cụ thể; nó không được quyền tự thay đổi learning order cấp module mà không quay lại roadmap review.
 
 Trong một module có README generation:
 

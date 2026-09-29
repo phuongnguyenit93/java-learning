@@ -1,7 +1,7 @@
 # AUTO-GENERATED MERGED YAML
 # You can check at module/microservice/module/infrastructure/admin-server/src/main/resources/application.yml
 # Source: ADMIN_SERVER
-# Dependencies: SPRING_WEB, SPRING_SWAGGER
+# Dependencies: SPRING_WEB
 
 ---
 eureka:

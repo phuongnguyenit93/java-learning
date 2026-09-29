@@ -1,0 +1,267 @@
+# Module Roadmap Architecture
+
+## 1. Purpose
+
+This file defines the canonical **roadmap-first learning architecture** for every learning module in `java-learning`.
+
+The central dependency is:
+
+```text
+Module / Topic
+    ↓
+Roadmap Skeleton
+    ↓
+Module Roadmap
+    ↓
+README / Knowledge Menu structure
+    ↓
+Knowledge / Lessons
+    ↓
+API Docs / executable evidence when applicable
+    ↓
+Quiz
+    ↓
+Interview
+    ↓
+Integrated Coverage Review
+```
+
+The roadmap is an **upstream curriculum artifact**, not a visualization generated after Knowledge already exists.
+
+If the roadmap is wrong, downstream content must not compensate by silently inventing a different curriculum.
+
+---
+
+## 2. Roadmap plugin contract
+
+The roadmap capability should be implemented as a dedicated plugin/workflow with two phases:
+
+```text
+Phase A — Roadmap Skeleton
+→ define the reusable planning questions and quality gates
+
+Phase B — Module Roadmap
+→ instantiate an ordered learning journey for one concrete module/topic
+```
+
+The plugin must not start by reading generated Knowledge and reverse-engineering a roadmap from it. For an existing module, the preferred migration flow is:
+
+```text
+module identity + curriculum boundary + neighboring modules
+        ↓
+design roadmap independently
+        ↓
+review roadmap
+        ↓
+compare existing Knowledge against the approved roadmap
+        ↓
+classify: aligned / missing / misplaced / too deep / duplicate / out of scope
+```
+
+This prevents historical content order from becoming the new roadmap by accident.
+
+---
+
+## 3. Roadmap Skeleton
+
+The skeleton is a planning framework, not a fixed list of chapters. A module does **not** need one node for every skeleton question.
+
+The skeleton should force the designer to consider at least these dimensions:
+
+```text
+PURPOSE
+→ What is this module/topic?
+→ Why does it exist?
+→ What problem exists without it?
+
+FOUNDATION
+→ What prerequisite mental model must exist first?
+
+CORE MODEL
+→ What are the major abstractions/building blocks?
+
+MECHANICS
+→ How does the language/runtime/API make the idea work?
+
+USAGE
+→ How is it used in real code?
+
+DECISION / TRADE-OFF
+→ When should one mechanism be chosen over another?
+
+FAILURE / PITFALL
+→ What mistakes, compile-time failures or runtime failures matter?
+
+INTEGRATION
+→ How does the topic connect to neighboring Java concepts/modules?
+
+SYNTHESIS
+→ What end-to-end mental model should the learner retain?
+```
+
+These are **design questions**, not mandatory visible headings.
+
+---
+
+## 4. Module Roadmap rules
+
+A roadmap contains **learning milestones**, not individual facts, methods, keywords or isolated syntax items.
+
+Good roadmap granularity:
+
+```text
+Purpose
+→ Type Model
+→ Control Flow
+→ Methods & Data Flow
+→ Scope & Lifetime
+→ Arrays
+→ Synthesis
+```
+
+Too granular for roadmap level:
+
+```text
+add()
+remove()
+get()
+size()
+for
+while
+byte
+short
+```
+
+Those belong in the Knowledge Menu or lesson content.
+
+Each roadmap node should establish:
+
+```text
+stable identity
+title
+learning purpose
+why this node exists here
+dependency on earlier nodes when relevant
+what the learner should understand before moving on
+which conceptual area downstream Knowledge may expand
+```
+
+One roadmap milestone may own several Knowledge chapters/sections.
+
+---
+
+## 5. Roadmap approval gate
+
+No Knowledge Menu or new lesson content should be generated until the roadmap has passed a roadmap review.
+
+The review checks:
+
+```text
+missing prerequisite?
+wrong learning order?
+scope leakage into another module?
+missing practical concern?
+node too implementation-specific?
+node too granular?
+duplicate responsibility?
+important concept isolated from its motivation?
+learner can explain the module end-to-end after following the path?
+```
+
+If a downstream generator finds a curriculum gap, it must report a **ROADMAP GAP**. It must not silently alter the learning journey.
+
+---
+
+## 6. README / Knowledge generation from roadmap
+
+After roadmap approval:
+
+```text
+Roadmap node
+    ↓
+Knowledge Menu sections needed to satisfy that milestone
+    ↓
+lesson content for those sections
+```
+
+The README/Knowledge generator asks:
+
+> What Knowledge sections are required for the learner to complete this roadmap node?
+
+It must not independently ask:
+
+> What facts about this Java topic can I list?
+
+The existing chapter-level authoring rule still applies inside each section:
+
+```text
+WHAT
+→ WHY
+→ problem without it / limitation before it
+→ RELATION
+→ HOW
+→ EVIDENCE / example
+→ PITFALL / TRADE-OFF when relevant
+→ PRACTICAL USE
+```
+
+---
+
+## 7. Downstream artifact rules
+
+All later artifacts inherit scope from the approved roadmap and Knowledge structure:
+
+```text
+Roadmap
+    ↓
+Knowledge
+    ├── API Docs / experiments prove observable behavior
+    ├── Quiz tests learning objectives and misconceptions
+    └── Interview tests explanation, trade-offs and practical reasoning
+```
+
+API Docs, Quiz and Interview must never become alternate curriculum designers.
+
+Raw count is not a success metric. Traceability and coverage of the roadmap are more important than volume.
+
+---
+
+## 8. Portal presentation
+
+The Learning Portal should present **Roadmap next to Menu** so the learner can distinguish the two levels:
+
+```text
+Roadmap
+→ where am I?
+→ what comes next?
+→ how do the major concepts connect?
+
+Menu
+→ what exact Knowledge sections can I open?
+```
+
+Roadmap interaction should navigate/highlight **roadmap milestones or chapter/section headings**, not individual sentences or tiny knowledge facts.
+
+The Portal is a projection/consumer only. It must not become the source of truth for roadmap design.
+
+---
+
+## 9. Source-of-truth invariant
+
+For learning architecture, the precedence is:
+
+```text
+Curriculum boundary / module scope
+        ↓
+approved Module Roadmap
+        ↓
+README / Knowledge Menu
+        ↓
+Knowledge lessons
+        ↓
+API Docs / Quiz / Interview
+        ↓
+Portal projection
+```
+
+When an older module disagrees with a newly approved roadmap, treat that as migration/audit work. Do not redefine the roadmap merely to preserve accidental historical ordering.

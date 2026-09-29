@@ -1,0 +1,43 @@
+﻿project:
+  contextPath: corecontainer
+  port: 0
+
+spring:
+  profiles:
+    active: loc
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+school:
+  name: School Dev
+class:
+  name: classDev
+student:
+  name: devStu
+
+---
+spring:
+  config:
+    activate:
+      on-profile: loc
+school:
+  name: School Loc
+class:
+  name: classLoc
+student:
+  name: locStu
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+school:
+  name: School Prod
+class:
+  name: classProd
+student:
+  name: prodStu

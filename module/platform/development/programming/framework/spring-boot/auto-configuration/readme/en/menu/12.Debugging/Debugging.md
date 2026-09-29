@@ -1,0 +1,1 @@
+﻿# Debugging auto-configuration

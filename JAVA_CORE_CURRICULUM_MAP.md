@@ -4,9 +4,9 @@
 
 ## 1. Scope
 
-There are now 17 real modules under `module/platform/development/language/java/core`.
+There are now 17 real modules under `module/platform/development/programming/language/java/core`.
 
-The original 16-module detailed curriculum remains the locked Wave 1–3 baseline below. `functional-programming` was later relocated here from `paradigm/functional` because its existing curriculum is Java-specific; its detailed normalization and wave assignment remain pending a dedicated curriculum review.
+The original 16-module detailed curriculum remains the locked Wave 1–3 baseline below. `functional-programming` was later relocated here from `programming/paradigm/functional` because its existing curriculum is Java-specific; its detailed normalization and wave assignment remain pending a dedicated curriculum review.
 
 ```text
 language-basics
@@ -28,7 +28,29 @@ reflection
 classloader
 ```
 
-The existing chapter paths are treated as the curriculum skeleton and should remain stable unless a later human review explicitly changes the taxonomy.
+The existing chapter paths remain important historical/planning input, but **they are no longer allowed to substitute for an approved Module Roadmap**. A roadmap may reveal that an existing chapter is misplaced, overly granular, missing a prerequisite, or better grouped under a larger milestone; such changes still require review rather than silent restructuring.
+
+### Roadmap-first contract
+
+Every Java Core module must follow this planning dependency:
+
+```text
+module scope / curriculum boundary
+        ↓
+shared Roadmap Skeleton
+        ↓
+module-specific Roadmap
+        ↓
+Roadmap Review / approval
+        ↓
+README / Knowledge Menu derived from roadmap nodes
+        ↓
+Knowledge lessons
+        ↓
+API Docs / Quiz / Interview
+```
+
+The roadmap is designed at **milestone level**, not as a list of every keyword/API/fact. For existing modules, first design the target roadmap independently from the current generated Knowledge order, then compare the old content against it. Existing content is evidence to audit, not the authority that defines the new learning path.
 
 ### Pedagogical model applied by this map
 
@@ -83,9 +105,13 @@ Do not interpret H2/API/Quiz/Interview coverage counts as proof of pedagogical c
 The implementation dependency is:
 
 ```text
-chapter/H1
+module scope
     ↓
-module mental model / terminology roadmap
+Roadmap Skeleton
+    ↓
+approved Module Roadmap
+    ↓
+README / Knowledge chapter structure
     ↓
 chapter problem / motivation / transition story
     ↓
@@ -229,28 +255,33 @@ Important boundaries for Java Core:
 
 ```text
 Java functional programming / lambda / Optional
-→ java/core/functional-programming
+→ programming/language/java/core/functional-programming
 
 functional programming paradigm
-→ paradigm/functional
+→ programming/paradigm/functional
 
 Stream API
-→ java/version/java8/stream-api
+→ programming/language/java/version/java8/stream-api
 
 JPMS
-→ java/version/java9/module-system
+→ programming/language/java/version/java9/module-system
+
+Java version-specific features and major release changes
+→ programming/language/java/version/java*/<feature>
+
+Version curricula are feature-granular: each material language/library/tooling/runtime/GC/security/removal change may be a real module under the release that introduced or finalized it. The same concept may have a deeper canonical curriculum elsewhere; navigation and relations handle that overlap instead of collapsing all version changes into one release-summary README.
 
 JVM / GC / JIT / Java Memory Model
-→ java/advance/jvm
+→ programming/language/java/advance/jvm
 
 networking APIs
-→ java/advance/networking
+→ programming/language/java/advance/networking
 
 security / cryptography APIs
-→ java/advance/security-cryptography
+→ programming/language/java/advance/security-cryptography
 
 threading / concurrency primitives
-→ java/concurrency
+→ programming/language/java/concurrency
 ```
 
 Core modules may reference those topics only where necessary to explain a boundary.
@@ -2411,7 +2442,7 @@ Cross-links should point to the primary module rather than repeating the full ex
 - `reflection` may link to `generics` for erasure before explaining retained generic signature metadata;
 - `classloader` may link to `class-object` for initialization fundamentals and to `reflection` for `Class` inspection;
 - `annotation` should link to `reflection` only for runtime inspection, while compile-time annotation processing stays owned by `annotation`;
-- `numbers/SecureRandom` should stop at the randomness boundary and link to `java/advance/security-cryptography` for cryptographic use;
+- `numbers/SecureRandom` should stop at the randomness boundary and link to `programming/language/java/advance/security-cryptography` for cryptographic use;
 - `string/StringBuffer` should not duplicate concurrency curriculum; synchronization details beyond its API boundary belong to concurrency modules.
 
 ## 7. Implementation acceptance gates

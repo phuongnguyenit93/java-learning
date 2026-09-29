@@ -14,6 +14,8 @@ Use:
 AGENTS.md       → how an AI should work in this repository
 ARCHITECTURE.md → why the repository is structured this way
 README.md       → high-level project orientation
+MODULE_ROADMAP.md → canonical roadmap-first learning architecture
+MODULE_LEARNING_AGENTS.md → how module learning content is designed/reviewed
 PROJECT_PORTAL.md → detailed Learning Portal design/current implementation
 STRUCTURE.md    → generated module tree/navigation
 ```
@@ -54,20 +56,41 @@ For repository-level work, read in this order:
 1. AGENTS.md
 2. ARCHITECTURE.md
 3. README.md
-4. settings.gradle
-5. build.gradle
-6. project-orchestration/
-7. project-build/gradle-runtime/
-8. project-build/springboot-runtime/
-9. project-portal/ and PROJECT_PORTAL.md when portal/frontend work is involved
-10. STRUCTURE.md when module navigation is needed
-11. module metadata/build.gradle for the concrete task
-12. module source packages only when the requested work requires them
+4. MODULE_ROADMAP.md + MODULE_LEARNING_AGENTS.md when learning-content work is involved
+5. settings.gradle
+6. build.gradle
+7. project-orchestration/
+8. project-build/gradle-runtime/
+9. project-build/springboot-runtime/
+10. project-portal/ and PROJECT_PORTAL.md when portal/frontend work is involved
+11. STRUCTURE.md when module navigation is needed
+12. module metadata/build.gradle for the concrete task
+13. module source packages only when the requested work requires them
 ```
 
 Do not read the entire `module/` source tree just to answer a build-system question.
 
 The architecture documentation intentionally does not claim knowledge of package design inside every learning module.
+
+### Learning-content source-of-truth rule
+
+For learning-content creation/refactor, do not treat an existing README/menu as the highest-level curriculum source. The required order is:
+
+```text
+module scope / curriculum boundary
+        ↓
+Roadmap Skeleton
+        ↓
+approved Module Roadmap
+        ↓
+README / Knowledge Menu
+        ↓
+Knowledge lessons
+        ↓
+API Docs / Quiz / Interview
+```
+
+No new Knowledge Menu/lesson generation should start before the roadmap is reviewed. If downstream work reveals a missing prerequisite or learning milestone, report a **ROADMAP GAP** rather than silently inventing a different curriculum. For legacy modules, design the roadmap independently first, then audit existing Knowledge against it.
 
 ---
 

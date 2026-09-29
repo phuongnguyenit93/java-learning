@@ -1,7 +1,7 @@
 # AUTO-GENERATED MERGED YAML
 # You can check at module/microservice/module/infrastructure/eureka-server/src/main/resources/application.yml
 # Source: EUREKA_SERVER
-# Dependencies: SPRING_WEB, SPRING_SWAGGER, PROMETHEUS, SPRING_ACTUATOR
+# Dependencies: SPRING_WEB, PROMETHEUS, SPRING_ACTUATOR
 
 ---
 spring:
