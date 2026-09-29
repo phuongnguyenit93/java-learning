@@ -50,8 +50,8 @@
   --overview-text: #e7eaf0;
   --menu-bg: #26362f;
   --menu-text: #a7dfbd;
-  --roadmap-bg: #3b2f20;
-  --roadmap-text: #ffd39a;
+  --roadmap-bg: #293551;
+  --roadmap-text: #b9ccff;
   --knowledge-bg: #163a63;
   --knowledge-text: #8cc7ff;
   --quiz-bg: #4a3512;
@@ -1234,6 +1234,18 @@ pre {
   color: var(--knowledge-text);
 }
 
+.module-tree__badge--roadmap {
+  width: 20px;
+  min-width: 20px;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--roadmap-text) 68%, transparent);
+  border-radius: 50%;
+  background: var(--roadmap-bg);
+  color: var(--roadmap-text);
+  font-size: 10px;
+  line-height: 1;
+}
+
 .module-tree__badge--quiz {
   background: var(--quiz-bg);
   color: var(--quiz-text);
@@ -1689,6 +1701,31 @@ pre {
 .roadmap-step--tone-5 {
   --roadmap-accent: #ea8e79;
   --roadmap-accent-soft: rgba(234, 142, 121, 0.2);
+}
+
+.roadmap-step--tone-6 {
+  --roadmap-accent: #b9a4f4;
+  --roadmap-accent-soft: rgba(185, 164, 244, 0.2);
+}
+
+.roadmap-step--tone-7 {
+  --roadmap-accent: #79d2cf;
+  --roadmap-accent-soft: rgba(121, 210, 207, 0.2);
+}
+
+.roadmap-step--tone-8 {
+  --roadmap-accent: #e7a7c4;
+  --roadmap-accent-soft: rgba(231, 167, 196, 0.2);
+}
+
+.roadmap-step--tone-9 {
+  --roadmap-accent: #a9d77c;
+  --roadmap-accent-soft: rgba(169, 215, 124, 0.2);
+}
+
+.roadmap-step--tone-10 {
+  --roadmap-accent: #8ea9f0;
+  --roadmap-accent-soft: rgba(142, 169, 240, 0.2);
 }
 
 .roadmap-step__side {

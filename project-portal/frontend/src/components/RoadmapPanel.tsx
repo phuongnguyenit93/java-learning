@@ -183,7 +183,7 @@ export function RoadmapPanel({
             return (
               <article
                 key={milestone.id}
-                className={`roadmap-step roadmap-step--${side} roadmap-step--tone-${(index % 5) + 1}${relatedKnowledge.length > 0 ? ' has-related-knowledge' : ''}`}
+                className={`roadmap-step roadmap-step--${side} roadmap-step--tone-${(index % 10) + 1}${relatedKnowledge.length > 0 ? ' has-related-knowledge' : ''}`}
               >
                 <div className={`roadmap-step__side roadmap-step__side--${side}`}>
                   {side === 'left' && relatedModules.length > 0 && (

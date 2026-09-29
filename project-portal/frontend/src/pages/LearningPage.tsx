@@ -78,6 +78,16 @@ export function LearningPage() {
 
   const activeModuleNode = requestedModule ?? realModules[0];
   const activeModuleId = activeModuleNode?.routeId ?? activeModuleNode?.serviceName ?? activeModuleNode?.name ?? '';
+  const roadmapAvailability = useMemo(
+    () => (catalog
+      ? Object.fromEntries(
+        collectRealModules(catalog.root)
+          .filter((node): node is typeof node & { routeId: string } => Boolean(node.routeId && node.roadmap?.[language]))
+          .map((node) => [node.routeId, true]),
+      )
+      : {}),
+    [catalog, language],
+  );
   const activeStats = useMemo(
     () => resolveModuleStats(activeModuleId),
     [activeModuleId],
@@ -353,6 +363,7 @@ export function LearningPage() {
         quizCounts={quizCounts}
         interviewCounts={interviewCounts}
         apiCounts={apiCounts}
+        roadmapAvailability={roadmapAvailability}
       />
 
       {!sidebarCollapsed && (

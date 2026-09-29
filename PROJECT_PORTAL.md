@@ -446,7 +446,7 @@ module-catalog.json
 Learning Portal
 ```
 
-Catalog hiện đã advertise localized Overview/Knowledge/Quiz/Interview/API path dựa trên declared module capability + resource thực tế mà generator tìm thấy. Một capability resolver tổng quát hơn cho mọi future artifact/runtime vẫn là target phase sau; không nhét fake availability vào catalog.
+Catalog hiện đã advertise localized Overview/Roadmap/Knowledge/Quiz/Interview/API path dựa trên declared module capability + resource thực tế mà generator tìm thấy. Với Roadmap, catalog chỉ advertise language khi `roadmap.yml` thực sự có ít nhất một milestone, nên skeleton `roadmap: []` không được tính là available content. Một capability resolver tổng quát hơn cho mọi future artifact/runtime vẫn là target phase sau; không nhét fake availability vào catalog.
 
 Điều này giữ được nguyên tắc:
 
@@ -548,7 +548,7 @@ module path
 available capabilities
 ```
 
-`SERVICE_NAME_DESCRIBE` hiện là description chính hiển thị ngay dưới tên module ở Learning header. Sidebar chỉ hiển thị tên menu ngắn gọn và các capability count badges; không lặp lại detailed description dưới dạng tooltip.
+`SERVICE_NAME_DESCRIBE` hiện là description chính hiển thị ngay dưới tên module ở Learning header. Sidebar chỉ hiển thị tên menu ngắn gọn và capability badges; Roadmap dùng badge tròn `R` theo màu semantic của tab Roadmap, còn Knowledge/Quiz/Interview/API Docs dùng count badge. Không lặp lại detailed description dưới dạng tooltip.
 
 Không nên thêm metadata mới nếu thông tin đã có owner phù hợp trong `master.json` hoặc `properties.json`.
 
@@ -1440,14 +1440,15 @@ Full tree / Đầy đủ
 
 Real modules / Module thật
 → đây là content filter của Portal, không phải định nghĩa physical real module theo `gradle.properties`
-→ giữ MODULE nếu Knowledge > 0 OR Quiz > 0 OR Interview > 0 OR API Docs > 0
-→ chỉ ẩn MODULE khi cả bốn count đều = 0
+→ giữ MODULE nếu Roadmap available OR Knowledge > 0 OR Quiz > 0 OR Interview > 0 OR API Docs > 0
+→ Roadmap chỉ available khi localized `roadmap.yml` có ít nhất một milestone
+→ chỉ ẩn MODULE khi Roadmap không available và cả bốn count đều = 0
 → giữ GROUP ancestor cần thiết để bảo toàn hierarchy
 → prune branch không chứa module còn content
 → không flatten thành list
 ```
 
-MODULE đạt điều kiện `Module thật` **không có permanent background riêng**. Knowledge/Quiz/Interview/API count badges đã là tín hiệu đủ rõ cho content availability; background persistent chỉ dành cho active/selected module. Directional hover color/wave chỉ xuất hiện khi pointer/focus đi vào interactive row.
+MODULE đạt điều kiện `Module thật` **không có permanent background riêng**. Badge `R` của Roadmap cùng Knowledge/Quiz/Interview/API count badges là tín hiệu content availability; background persistent chỉ dành cho active/selected module. Directional hover color/wave chỉ xuất hiện khi pointer/focus đi vào interactive row.
 
 Toàn sidebar có thể đóng/mở độc lập với tree branch state. Control đóng sidebar nằm giữa chiều cao ở mép phải sidebar; khi sidebar bị ẩn, main content giãn ra và một control `>` ở giữa mép trái màn hình mở sidebar lại. Desktop sidebar ưu tiên đủ rộng để tên menu hiển thị đầy đủ thay vì ellipsis. Header module hiển thị thêm description từ `SERVICE_NAME_DESCRIBE`; sidebar chỉ giữ tên menu ngắn gọn thay vì tooltip/detail description.
 
@@ -1636,8 +1637,8 @@ MVP đã bắt đầu implementation. Current phase đã có:
 18. build-time API metadata projection: copy complete localized four-file Swagger sets vào `module/{ROUTE_ID}/api/{lang}/` + expose `api` base path trong module catalog
 19. API Docs frontend consume trực tiếp generated Swagger YAML; controller/method order follow README mapping, rich execution HTML được sanitize, API Reference là reference-only chứ không live execute/debug
 20. API methods có human-owned `aiGenerated/reviewed`; Knowledge/API Docs/Related API popup render shared governance badge + tooltip; API ↔ Knowledge tiếp tục dùng duy nhất `readmeRelated`
-21. Knowledge/Quiz/Interview/API counts đều lấy từ generated/static data; sidebar `Module thật` giữ module khi ít nhất một trong bốn count > 0 và chỉ ẩn khi cả bốn = 0
-22. sidebar tree mặc định expanded, dùng `+`/`−`, có Expand all/Collapse all; qualifying content module nhận biết bằng count badges thay vì permanent background, active module mới giữ selected highlight; whole sidebar có thể collapse/reopen từ control giữa cạnh màn hình
+21. Knowledge/Quiz/Interview/API counts đều lấy từ generated/static data; generated catalog expose localized Roadmap path chỉ khi roadmap source có milestone. Sidebar `Module thật` giữ module khi Roadmap available hoặc ít nhất một trong bốn count > 0
+22. sidebar tree mặc định expanded, dùng `+`/`−`, có Expand all/Collapse all; qualifying content module nhận biết bằng badge Roadmap `R` + Knowledge/Quiz/Interview/API count badges thay vì permanent background, active module mới giữ selected highlight; whole sidebar có thể collapse/reopen từ control giữa cạnh màn hình
 23. Menu mặc định collapsed + Expand all/Collapse all; Knowledge/API Docs/Menu/Quiz/Interview giữ state gần nhất khi đổi tab rồi quay lại trong cùng module/language
 24. Download action trong API Docs chuyển trực tiếp sang `Local Run`; không còn placeholder popup `Download chưa có artifact`
 25. Home là placeholder có CTA sang Learning; Knowledge category filter có collapse/expand + horizontal drag-scroll

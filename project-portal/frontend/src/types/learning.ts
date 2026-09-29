@@ -73,6 +73,7 @@ export interface ModuleCatalogNode {
   moduleDepend?: boolean;
   overview?: Partial<Record<Language, string>>;
   knowledge?: Partial<Record<Language, string>>;
+  roadmap?: Partial<Record<Language, string>>;
   quiz?: Partial<Record<Language, string>>;
   interview?: Partial<Record<Language, string>>;
   api?: Partial<Record<Language, string>>;

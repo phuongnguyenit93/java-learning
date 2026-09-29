@@ -318,6 +318,19 @@ ${moduleDirectory.absolutePath}
                     )
 
 
+            node.roadmapLanguages =
+                    findRoadmapLanguages(
+                            directory,
+                            moduleLanguages,
+                            !'FALSE'.equalsIgnoreCase(
+                                    getMasterValue(
+                                            master,
+                                            'BUILD_ROADMAP'
+                                    )
+                            )
+                    )
+
+
             node.apiLanguages =
                     findApiLanguages(
                             directory,
@@ -720,6 +733,22 @@ ${moduleDirectory.absolutePath}
             }
 
 
+            if (!node.roadmapLanguages.isEmpty()) {
+
+                result.roadmap =
+                        node.roadmapLanguages
+                                .toList()
+                                .sort()
+                                .collectEntries {
+                                    String language ->
+
+                                        [
+                                                (language): "/module/${resolveRouteId(node)}/roadmap/${language}/roadmap.yml"
+                                        ]
+                                }
+            }
+
+
             if (!node.apiLanguages.isEmpty()) {
 
                 result.api =
@@ -983,6 +1012,75 @@ ${moduleDirectory.absolutePath}
 
 
         return result
+    }
+
+
+    private static Set<String> findRoadmapLanguages(
+            File moduleDirectory,
+            List<String> moduleLanguages,
+            boolean roadmapEnabled
+    ) {
+
+        if (!roadmapEnabled) {
+            return [] as Set<String>
+        }
+
+
+        File roadmapDirectory =
+                new File(
+                        moduleDirectory,
+                        'roadmap'
+                )
+
+
+        if (!roadmapDirectory.isDirectory()) {
+            return [] as Set<String>
+        }
+
+
+        Set<String> result =
+                new LinkedHashSet<>()
+
+
+        moduleLanguages.each {
+            String language ->
+
+                File roadmapFile =
+                        new File(
+                                roadmapDirectory,
+                                "${language}/roadmap.yml"
+                        )
+
+
+                if (
+                        roadmapFile.isFile() &&
+                                containsRoadmapMilestone(
+                                        roadmapFile
+                                )
+                ) {
+                    result.add(
+                            language
+                    )
+                }
+        }
+
+
+        return result
+    }
+
+
+    private static boolean containsRoadmapMilestone(
+            File roadmapFile
+    ) {
+
+        return roadmapFile
+                .getText('UTF-8')
+                .readLines()
+                .any {
+                    String line ->
+
+                        line ==~ /^\s*-\s+id:\s*.+$/
+                }
     }
 
 
@@ -1606,6 +1704,7 @@ ${exception.message}
         boolean moduleDepend
         Map<String, File> overviewSources = [:]
         Set<String> knowledgeLanguages = [] as Set<String>
+        Set<String> roadmapLanguages = [] as Set<String>
         Set<String> apiLanguages = [] as Set<String>
         Set<String> quizLanguages = [] as Set<String>
         Set<String> interviewLanguages = [] as Set<String>
