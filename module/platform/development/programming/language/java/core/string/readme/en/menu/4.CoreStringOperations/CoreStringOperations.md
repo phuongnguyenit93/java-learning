@@ -20,7 +20,7 @@ convert / format
 
 Most operations that produce different content return a **new String**. The original String does not change.
 
-### String is a CharSequence
+## <a id="string-char-sequence">String as a CharSequence</a>
 
 `String` implements `CharSequence`, an abstraction for a sequence of `char` values that can be read by index:
 
@@ -53,6 +53,8 @@ StringBuilder b = new StringBuilder("java");
 s.equals(b);        // false
 s.contentEquals(b); // true
 ```
+
+When the contract is content comparison against a `CharSequence`, there is no need to convert every character sequence into a `String` first; `contentEquals(...)` expresses that intent directly.
 
 So:
 
@@ -87,6 +89,8 @@ These three states are different:
 "   "     → not empty, but blank
 " Java "  → neither empty nor blank
 ```
+
+`isBlank()` uses `Character.isWhitespace(...)`: an empty String or one containing only code points that API classifies as whitespace is blank.
 
 `length()` and `charAt()` operate in terms of **UTF-16 code units**. A Java `char` is not guaranteed to equal one user-visible character; the Unicode chapter develops that boundary in detail.
 
@@ -137,7 +141,7 @@ Regex belongs here only when the real problem is **pattern matching**, not merel
 `contains` does not interpret regex:
 
 ```java
-"file-123.txt".contains("\d+") // false
+System.out.println("file-123.txt".contains("\\d+")); // false
 ```
 
 ```text
@@ -188,7 +192,7 @@ end > length()
 begin > end
 ```
 
-## <a id="string-transformation">Transforming Text Without Mutating String</a>
+## <a id="string-transformation">Text Transformation</a>
 
 APIs such as `replace`, `trim`, `strip`, `toUpperCase`, and `toLowerCase` describe a **new value**:
 
@@ -202,7 +206,7 @@ System.out.println(raw);     // "  java-core  "
 System.out.println(renamed); // "java-string"
 ```
 
-`trim()` and `strip()` are not simply two names for the same rule: `strip()` uses the broader Unicode whitespace model, while `trim()` follows Java's older, narrower trimming rule.
+`trim()` and `strip()` are not simply two names for the same rule. `strip()` removes leading/trailing characters according to `Character.isWhitespace(...)`, while `trim()` follows Java's historical rule of removing leading/trailing characters whose code is at most `U+0020`. `strip()` is therefore usually the better fit for Java's Unicode-aware whitespace API, but `Character.isWhitespace` should not be treated as identical to every Unicode whitespace property.
 
 Related operations include:
 
@@ -218,17 +222,14 @@ text.stripTrailing();
 "a.b".replaceAll(".", "-"); // "---"
 ```
 
-`replace` takes literal characters/sequences. `replaceAll` takes a regex, where `.` means “any character”.
+`replace` takes literal characters/sequences. `replaceAll` takes a regex, where `.` uses regex dot semantics: by default it matches a character except a line terminator, and `DOTALL` can change that rule. The `"a.b"` example has no line terminator, so all three characters are replaced.
 
 ### Some modern text operations
 
 You do not need to memorize every `String` method, but several newer operations express intent clearly:
 
 ```java
-String lines = """
-        alpha
-        beta
-        """;
+String lines = "alpha\nbeta\n";
 
 lines.lines().forEach(System.out::println);
 
@@ -278,14 +279,14 @@ When a delimiter is intended to be literal but has regex meaning, quote it delib
 `split(regex)` has the same behavior as `split(regex, 0)`: the regex is applied repeatedly and trailing empty strings are discarded:
 
 ```java
-"a,b,".split(",").length // 2
-"a,b,".split(",", 0).length // 2
+System.out.println("a,b,".split(",").length);    // 2
+System.out.println("a,b,".split(",", 0).length); // 2
 ```
 
 When `limit < 0`, matching is not positively bounded and trailing empty strings are preserved:
 
 ```java
-"a,b,".split(",", -1).length // 3
+System.out.println("a,b,".split(",", -1).length); // 3
 ```
 
 When `limit > 0`, the result contains at most `limit` elements, so the regex is applied at most `limit - 1` times. The final element keeps the remaining input:

@@ -43,74 +43,100 @@
 
 roadmap:
   - id: string-purpose
-    title: String Purpose and Text Boundaries
-    purpose: Understand String as Java’s primary immutable text value and identify the application boundaries where text representation matters.
+    title: What String Is and Why Text Matters
+    purpose: Build a first mental model of String as Java’s core immutable reference type for text values, why Java needs a dedicated text abstraction, and where text representation appears at application and system boundaries.
+    relatedKnowledge:
+      - Immutability
     objectives:
-      - Separate text representation from domain values such as numbers, dates, or identifiers.
-      - Recognize when text crosses storage, network, UI, or serialization boundaries.
+      - Explain what a String value represents and why text is more than just an array of char values.
+      - Separate text representation from structured, numeric, date/time, binary, or other domain values.
+      - Recognize text at input/output, configuration, logging, persistence, network, UI, and API boundaries.
   - id: immutability-and-value-semantics
     title: Immutability and Value Semantics
     purpose: Understand why String is immutable and how immutability affects sharing, hashing, thread-safety, and transformation APIs.
+    relatedKnowledge:
+      - Immutability
     objectives:
       - Treat String operations as producing new values rather than mutating existing ones.
-      - Recognize safe-sharing benefits and allocation trade-offs.
+      - Understand why mutable char arrays cannot alias-mutate an existing String value.
+      - Recognize safe-sharing, hashing, thread-safety, and allocation consequences.
   - id: pool-identity-and-equality
-    title: Pool, Identity, and Equality
-    purpose: Understand why equal text may or may not share identity and why content equality must not be confused with reference identity.
+    title: String Pool, Reference Identity, and Equality
+    purpose: Understand why equal String values may or may not share the same reference and why pooled identity never replaces content-based comparison.
+    relatedKnowledge:
+      - StringPool
+      - Equality
     relatedModules:
       - routeId: JAVA_OBJECT_CONTRACT
         label: Object Contract
         note: String equality and hashing are concrete examples of general object contracts.
     objectives:
       - Explain literal pooling and the literal/new String distinction.
-      - Choose content-comparison APIs intentionally.
+      - Distinguish reference comparison with == from content comparison with equals().
+      - Recognize why case-insensitive comparison and locale-sensitive text rules require additional care.
   - id: core-string-operations
     title: Core String Operations
     purpose: Learn to inspect, search, extract, split, join, transform, and format text while respecting index and immutability boundaries.
+    relatedKnowledge:
+      - CoreStringOperations
     objectives:
+      - Understand String as a CharSequence implementation and the abstraction boundary this creates in APIs.
       - Choose operations by intent rather than memorizing isolated methods.
-      - Recognize range, split, regex, and whitespace edge cases.
+      - Recognize index/range, split-limit, regex, case-conversion, and whitespace edge cases.
   - id: text-construction
-    title: Concatenation and Mutable Builders
-    purpose: Understand the cost model of repeated concatenation and when StringBuilder or StringBuffer is the appropriate construction tool.
+    title: Text Construction and Reuse Trade-offs
+    purpose: Understand the cost model of repeated concatenation, when mutable builders are appropriate, and why explicit String canonicalization is a specialized reuse technique rather than a default optimization.
+    relatedKnowledge:
+      - Concatenation
+      - StringBuilder
+      - StringBuffer
+      - Intern
     objectives:
       - Distinguish compile-time concatenation from repeated runtime construction.
-      - Choose mutable builders without assuming String itself becomes mutable.
-  - id: encoding-and-charset
-    title: Encoding and Charset Boundaries
-    purpose: Understand how text becomes bytes and bytes become text, and why charset choice must be explicit at system boundaries.
-    relatedModules:
-      - routeId: JAVA_IO
-        label: I/O
-        note: Character streams and file/network I/O make charset decisions operational.
-    objectives:
-      - Separate Unicode text values from encoded byte sequences.
-      - Avoid platform-default charset assumptions.
+      - Use StringBuilder for efficient incremental construction without assuming String itself becomes mutable.
+      - Explain StringBuffer’s synchronization difference and the boundary of what that synchronization guarantees.
+      - Explain what intern() returns and how canonical reference reuse differs from ordinary content equality.
+      - Evaluate memory and cardinality trade-offs instead of treating interning as a default optimization.
   - id: unicode-text-model
     title: Unicode, Code Points, and User-Visible Text
     purpose: Understand why Java char, Unicode code point, grapheme, and normalized text are different levels of the text model.
+    relatedKnowledge:
+      - UnicodeCodePoint
     relatedModules:
       - routeId: JAVA_LOCALIZATION
         label: Localization
         note: Locale-aware collation, segmentation, and presentation build on the Unicode text model.
     objectives:
       - Avoid assuming one char equals one user-visible character.
-      - Recognize normalization and segmentation boundaries.
+      - Distinguish UTF-16 code units, Unicode code points, and user-perceived grapheme clusters.
+      - Recognize normalization, canonical-equivalence, and segmentation boundaries.
+  - id: encoding-and-charset
+    title: Encoding and Charset Boundaries
+    purpose: Understand how Unicode text becomes bytes and bytes become text, and why charset choice must be explicit at external system boundaries.
+    relatedKnowledge:
+      - Encoding
+    relatedModules:
+      - routeId: JAVA_IO
+        label: I/O
+        note: Character streams and file/network I/O make charset decisions operational.
+    objectives:
+      - Separate in-memory text from encoded byte sequences.
+      - Connect encoding and decoding decisions to the Unicode text model learned earlier.
+      - Avoid platform-default charset assumptions.
   - id: regex-patterns
     title: Regular Expressions and Pattern Matching
     purpose: Understand regex as a pattern language for text matching and transformation, together with its readability and performance boundaries.
+    relatedKnowledge:
+      - Regex
     objectives:
       - Use regex when pattern semantics justify the complexity.
       - Recognize escaping, backtracking, and flag-related pitfalls.
-  - id: text-blocks
-    title: Text Blocks
-    purpose: Understand text blocks as source-level multiline String syntax without confusing them with templating or a different runtime type.
-    objectives:
-      - Reason about incidental indentation, escapes, and line terminators.
-      - Use text blocks when source readability improves.
   - id: string-synthesis
-    title: String and Text Processing Synthesis
-    purpose: Connect value semantics, construction, encoding, Unicode, patterns, and presentation boundaries into one text-processing model.
+    title: Source Representation and String Processing Synthesis
+    purpose: Connect value semantics, construction, Unicode, encoding, patterns, source representation, and neighboring-module boundaries into one text-processing model.
+    relatedKnowledge:
+      - TextBlocks
     objectives:
-      - Choose the correct text abstraction before optimizing implementation details.
+      - Choose the correct text representation or abstraction before optimizing implementation details.
+      - Recognize text blocks as source-level String syntax rather than a separate runtime text model.
       - Identify when the problem moves into I/O or localization rather than String itself.

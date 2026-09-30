@@ -1,16 +1,16 @@
 EncodingController:
   roundTrip():
-    summary: UTF-8 String ↔ bytes round trip
-    description: Encodes "Xin chào ☕" as UTF-8 and decodes the same bytes with UTF-8.
-      Compare the text, byte length, decoded value, and roundTrip flag to observe
-      that matching Charset contracts preserve the text.
+    summary: UTF-8 text/bytes round trip
+    description: Encodes "Xin chào ☕" to bytes with UTF-8 and decodes the same bytes
+      with UTF-8. Compare text, utf8Bytes, decoded, and roundTrip to observe a content-preserving
+      round trip when both sides use the same Charset and the data is representable.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 9.Encoding/Encoding.md
+      file: 10.Encoding/Encoding.md
       anchor: charset-encode-decode
     methodName: roundTrip
     params: [
@@ -28,16 +28,17 @@ EncodingController:
     usage: true
   wrongCharset():
     summary: Mojibake from a Charset mismatch
-    description: Encodes "café" as UTF-8 but intentionally decodes those bytes as
-      ISO-8859-1. Observe decodedAsLatin1 and same=false to see that intact bytes
-      can still produce wrong text when the interpretation contract disagrees.
+    description: Encodes "café" with UTF-8 but intentionally decodes the same bytes
+      as ISO-8859-1. Observe original, decodedAsLatin1, and same=false to see that
+      bytes can arrive intact while reconstructed text is wrong because the interpretation
+      contract disagrees.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 9.Encoding/Encoding.md
+      file: 10.Encoding/Encoding.md
       anchor: charset-encode-decode
     methodName: wrongCharset
     params: [
@@ -55,10 +56,10 @@ EncodingController:
     usage: true
 RegexController:
   groups():
-    summary: Groups and captures
-    description: Matches the entire "ada@example.com" input with named user/domain
-      groups. The response reads captures only after matches() succeeds, making Pattern/Matcher
-      state and named-group extraction observable.
+    summary: Named capturing groups
+    description: Matches the entire "ada@example.com" input with a Pattern containing
+      named user/domain groups. Captures are read only after matches() succeeds, exposing
+      the relationship between Pattern, Matcher state, and captured data.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -82,10 +83,11 @@ RegexController:
       ]
     usage: true
   backtracking():
-    summary: Backtracking and performance pitfalls
-    description: Runs the risky shape "(a+)+$" against a bounded near-match that fails
-      at the end. elapsedNanos is illustrative evidence of backtracking cost, not
-      a benchmark or performance guarantee.
+    summary: Regex backtracking cost
+    description: Runs the risky pattern "(a+)+$" against a deliberately bounded near-match
+      that fails on a trailing !. Observe matched=false, boundedSample=true, and elapsedNanos
+      as illustrative evidence of backtracking cost. elapsedNanos is not a benchmark,
+      SLA, or stable performance threshold.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -110,11 +112,11 @@ RegexController:
     usage: true
 StringConcatController:
   constructionTrace():
-    summary: Repeated concatenation cost
-    description: Builds the same "0123" text with repeated immutable concatenation
-      and with StringBuilder. Equal final content is shown alongside changing intermediate
-      String identities; identity hashes are observation aids, not precise allocation
-      counters.
+    summary: Repeated String concatenation cost
+    description: Builds the same "0123" result using repeated String concatenation
+      and StringBuilder. concatResult and builderResult establish equal final content;
+      concatIntermediateIdentities only help observe intermediate String results and
+      are not allocation counters or exact proof of object-allocation count.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -139,10 +141,12 @@ StringConcatController:
     usage: true
 StringPoolController:
   identity():
-    summary: Pool identity and compile-time constants
-    description: Places the "java" literal, compile-time "ja"+"va", new String("java"),
-      and intern() side by side. Read literalIdentity, newStringIdentity, contentEquals,
-      and internIdentity to separate content equality from canonical object identity.
+    summary: String pool and reference identity
+    description: Places the "java" literal, constant expression "ja"+"va", new String("java"),
+      and intern() side by side. literalIdentity=true demonstrates canonical identity
+      for the constant String; newStringIdentity=false with contentEquals=true separates
+      identity from content; internIdentity=true shows the canonical reference returned
+      by intern().
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -167,17 +171,18 @@ StringPoolController:
     usage: true
 UnicodeController:
   charVsCodePoint():
-    summary: Surrogate pairs
-    description: Uses "A😀" to compare utf16Length, codePointCount, and the actual
-      code points. The response demonstrates that length() counts UTF-16 code units,
-      not Unicode code points or user-perceived characters.
+    summary: UTF-16 code units and Unicode code points
+    description: Uses "A😀" to compare utf16Length=3 with codePointCount=2 and the
+      returned codePoints. The experiment demonstrates that length() counts UTF-16
+      code units; the supplementary emoji occupies two code units but one code point.
+      It does not measure user-perceived grapheme clusters.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 10.UnicodeCodePoint/UnicodeCodePoint.md
+      file: 9.UnicodeCodePoint/UnicodeCodePoint.md
       anchor: surrogate-pairs
     methodName: charVsCodePoint
     params: [
@@ -194,17 +199,18 @@ UnicodeController:
       ]
     usage: true
   normalization():
-    summary: Canonical equivalence and String equality
-    description: Compares precomposed "é" with decomposed "e\u0301" before and after
-      NFC normalization. Observe rendered values, code-point sequences, equalsBefore,
-      and equalsAfterNfc to see that String.equals() does not normalize automatically.
+    summary: Canonical equivalence and equals()
+    description: Compares precomposed "é" with decomposed "e\u0301". equalsBefore=false
+      and the different code-point lists show that visual rendering does not determine
+      String equality; after both values are normalized to NFC, equalsAfterNfc=true.
+      This endpoint demonstrates NFC only; it does not run NFD, NFKC, or NFKD.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 10.UnicodeCodePoint/UnicodeCodePoint.md
+      file: 9.UnicodeCodePoint/UnicodeCodePoint.md
       anchor: canonical-equivalence
     methodName: normalization
     params: [

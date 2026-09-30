@@ -1,54 +1,48 @@
-# String and Immutability
+# String Purpose and Immutability
 
 ## <a id="string-purpose">What Is String?</a>
 
 `String` is the `java.lang` class used to represent **a text value** in a Java program. It is an object, not a primitive. A String can carry content such as a user name, message, path, text identifier, request/response content, or configuration text. At the Java API level we work with a sequence of text; the distinctions among UTF-16 code units, Unicode code points, and user-perceived characters are developed in later chapters.
 
-Text needs a dedicated type because its operations and boundaries differ from numeric data or domain objects: applications need content comparison, searching, extraction, transformation, Unicode handling, conversion between text and bytes, and reliable transport across boundaries. That is why `String` appears frequently in input/output, textual names and identifiers, API payloads and headers, logs, configuration, protocols, and persistence boundaries.
+Text needs a dedicated type because its operations and boundaries differ from numeric data or domain objects: applications need content comparison, searching, extraction, transformation, Unicode handling, conversion between text and bytes, and reliable transport across boundaries. That is why `String` appears frequently in input/output, user interfaces, textual names and identifiers, API payloads and headers, logs, configuration, persistence, and network/protocol boundaries.
 
 This does not mean every piece of data should be converted to String. Money, time, state, and domain identifiers usually deserve types that preserve their meaning inside business logic; `String` is appropriate when the value is genuinely text or when a boundary requires a textual representation.
 
-`String` is Java's central text type, but text is more complicated than “an array of chars”. We need to distinguish the String value inside the JVM, the bytes used at external boundaries, and Unicode's model of characters.
+`String` is Java's central text type, but text is more complicated than “an array of chars”. We need to distinguish the String value inside the JVM, Unicode's model of characters, and the encoded bytes used at external boundaries.
 
-**Immutability** is the foundation connecting these topics. Once a `String` object is created, its content does not change in place. That makes sharing, pooling, hashing, and API boundaries much easier to reason about.
+**Immutability** is the foundation connecting these topics. Once a `String` object is created, its content does not change in place. A **String literal** is a String written directly in source code, such as `"java"`; immutable literal values can participate in String-pool sharing. Immutability also makes hashing and API boundaries much easier to reason about.
 
-The module therefore starts with String immutability, then uses it to explain pooling and equality, moves through everyday text operations and concatenation costs, introduces mutable construction buffers such as `StringBuilder` and `StringBuffer`, and only then crosses into byte encodings and Unicode. Regex and text blocks come later because they build on the text model established earlier.
+The module therefore starts by defining String and its role, then explains immutability, pooling, equality, everyday operations, construction costs, mutable builders, and explicit canonical reuse. It then establishes the Unicode text model before crossing the text/byte boundary through Charset, and finishes with regular expressions plus source-level multiline representation.
 
 Roadmap:
 
 ```text
+What is String, and why does Java need a dedicated text abstraction?
+String Purpose
+        ↓
 Can a String value change in place?
-Immutability
+Immutability and Value Semantics
         ↓
 Why can equal literals sometimes share identity?
-String Pool
-        ↓
-How should text values be compared?
-Equality
+String Pool → Reference Identity → Content Equality
         ↓
 Which APIs inspect, search, extract, and transform String values?
 Core String Operations
         ↓
 What happens when Strings are combined repeatedly?
-Concatenation
-        ↓
-What if we need a mutable construction buffer?
-StringBuilder → StringBuffer
-        ↓
-What does String.intern canonicalize?
-Intern
-        ↓
-How does text become bytes and bytes become text?
-Encoding / Charset
+Concatenation → StringBuilder → StringBuffer → intern()
         ↓
 Why is char not always one user-visible character?
 Unicode / Code Point / Grapheme
         ↓
+How does Unicode text become bytes and bytes become text?
+Encoding / Charset
+        ↓
 How do we describe text patterns?
 Regex
         ↓
-How do we write multiline String literals cleanly?
-Text Blocks
+How do we represent multiline String literals and connect the whole model?
+Text Blocks → Synthesis
 ```
 
 ## <a id="string-immutability">Why Is String Immutable?</a>
@@ -166,19 +160,7 @@ The important contract is that application code does not receive a mutable-array
 
 ## <a id="immutability-consequences">Consequences of Immutability</a>
 
-String immutability does not make every object containing a String thread-safe. It guarantees only that the String value itself cannot be mutated.
-
-```text
-immutable String
-→ sharing the same String object is usually safe
-
-mutable List<String>
-→ the collection can still change
-```
-
-Stable content is also why String works naturally as a `HashMap` key.
-
-But an immutable String does not make its container immutable:
+String immutability guarantees only that the String value itself cannot be mutated. Sharing the same String object is therefore usually safe with respect to its content, but that does not make a container holding Strings immutable or automatically thread-safe.
 
 ```java
 List<String> names = new ArrayList<>();
@@ -186,12 +168,17 @@ names.add("Ada");
 ```
 
 ```text
-immutable String
-→ element text does not mutate
+String element value
+→ immutable
 
-mutable List<String>
-→ list can still add/remove/reorder
+List<String> structure
+→ can still add/remove/reorder
+
+List thread-safety
+→ is a separate question; it does not follow from String immutability
 ```
+
+Stable content is also why String works naturally as a `HashMap` key.
 
 ### Immutable is not the same as final
 
@@ -211,7 +198,7 @@ final variable
 → variable cannot be reassigned after initialization
 ```
 
-## <a id="string-operation-new-value">String Operations Return New Values</a>
+## <a id="string-operation-new-value">String Operation Results</a>
 
 Use the returned result when an operation transforms text:
 
@@ -237,9 +224,12 @@ the method returns a String representing the result
 
 Do not use identity to validate text:
 
-```java
-result == s      // identity question
-result.equals(s) // content question
+```text
+result == s
+→ identity question
+
+result.equals(s)
+→ content question
 ```
 
 The next chapter uses immutability to explain safe literal sharing in the String pool.

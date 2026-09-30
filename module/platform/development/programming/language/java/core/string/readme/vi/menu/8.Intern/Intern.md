@@ -1,6 +1,6 @@
 # String.intern
 
-String pool có thể chia sẻ identity cho literal và một số String đã được chuẩn hóa. `String.intern()` là API cho phép yêu cầu một **reference chuẩn trong pool** tương ứng với cùng nội dung text.
+String Pool có thể dùng chung định danh tham chiếu cho literal và một số String đã được chuẩn hóa. `String.intern()` là API cho phép yêu cầu một **tham chiếu chuẩn trong pool** tương ứng với cùng nội dung văn bản.
 
 ## <a id="intern-semantics">String.intern làm gì?</a>
 
@@ -10,30 +10,30 @@ Khi gọi:
 String canonical = value.intern();
 ```
 
-JVM trả về reference đại diện trong String pool cho chuỗi có cùng nội dung.
+JVM trả về tham chiếu đại diện trong String Pool cho chuỗi có cùng nội dung.
 
-Contract mental model:
+Mô hình tư duy:
 
 ```text
 value.intern()
         │
         ├── pool đã có String equals(value)
-        │      → trả canonical pooled reference đã có
+        │      → trả tham chiếu chuẩn hóa đã có trong pool
         │
         └── chưa có
-               → value trở thành canonical representative
-               → trả canonical reference
+               → value trở thành đại diện chuẩn hóa
+               → trả tham chiếu chuẩn hóa
 ```
 
-Điều này không thay đổi nội dung của `value` và cũng không làm `String` trở nên mutable. `intern()` chỉ liên quan tới **identity/canonicalization**, không thay đổi equality ngữ nghĩa.
+Điều này không thay đổi nội dung của `value` và cũng không làm `String` trở nên có thể thay đổi. `intern()` chỉ liên quan tới **định danh tham chiếu và chuẩn hóa**, không thay đổi ngữ nghĩa so sánh nội dung.
 
-### WHY intern tồn tại?
+### VÌ SAO intern() tồn tại?
 
-Intern cho phép application yêu cầu canonical identity cho equal String values. Nó có thể hữu ích trong một số workload có tập value lặp lại nhiều và cardinality được kiểm soát.
+`intern()` cho phép mã ứng dụng yêu cầu một tham chiếu chuẩn cho các String có cùng nội dung. Nó có thể hữu ích trong một số khối lượng xử lý có tập giá trị lặp lại nhiều và số lượng giá trị khác nhau được kiểm soát.
 
-Nếu mục tiêu chỉ là “hai chuỗi có cùng nội dung?”, `equals` đã là API đúng; không cần intern trước khi compare.
+Nếu mục tiêu chỉ là “hai chuỗi có cùng nội dung?”, `equals` đã là API đúng; không cần gọi `intern()` trước khi so sánh.
 
-## <a id="intern-identity">Canonical Reference</a>
+## <a id="intern-identity">Tham chiếu chuẩn hóa</a>
 
 Ví dụ:
 
@@ -42,39 +42,39 @@ String a = new String("java");
 String b = a.intern();
 String c = "java";
 
-b == c // true
+System.out.println(b == c); // true
 ```
 
-Sau `intern()`, `b` dùng canonical pooled reference cho nội dung `"java"`.
+Sau `intern()`, `b` dùng tham chiếu chuẩn trong pool cho nội dung `"java"`.
 
-Nhưng business logic vẫn nên dùng `equals` khi câu hỏi là **nội dung có bằng nhau không**. Không nên chuyển mọi comparison sang identity chỉ vì có `intern()`.
+Nhưng logic nghiệp vụ vẫn nên dùng `equals` khi câu hỏi là **nội dung có bằng nhau không**. Không nên chuyển mọi phép so sánh sang định danh tham chiếu chỉ vì có `intern()`.
 
-Intern nối trực tiếp với literal:
+`intern()` nối trực tiếp với cơ chế literal trong String Pool:
 
 ```java
 String runtime = new String("java");
 String canonical = runtime.intern();
 String literal = "java";
 
-canonical == literal // true
+System.out.println(canonical == literal); // true
 ```
 
-Đây là identity experiment hợp lệ vì canonicalization chính là concept đang quan sát.
+Đây là thí nghiệm hợp lệ về định danh tham chiếu vì chuẩn hóa chính là khái niệm đang được quan sát.
 
-## <a id="intern-tradeoffs">Đánh đổi của Interning</a>
+## <a id="intern-tradeoffs">Đánh đổi khi dùng intern()</a>
 
-Interning có thể giảm số object identity khác nhau cho một tập String lặp lại nhiều, nhưng không phải optimization mặc định cho mọi ứng dụng.
+`intern()` có thể giảm số đối tượng tham chiếu khác nhau cho một tập String lặp lại nhiều, nhưng không phải tối ưu mặc định cho mọi ứng dụng.
 
 Chi phí/cân nhắc gồm:
 
-- thao tác lookup/canonicalization;
-- giữ nhiều String trong pool;
-- memory pressure nếu intern dữ liệu có cardinality rất lớn;
-- làm mã phụ thuộc không cần thiết vào identity.
+- chi phí tra cứu và chuẩn hóa;
+- tăng quy mô và chi phí quản lý của bảng String khi intern nhiều giá trị;
+- tăng áp lực bộ nhớ/tra cứu nếu dữ liệu có số lượng giá trị khác nhau rất lớn;
+- làm mã phụ thuộc không cần thiết vào định danh tham chiếu.
 
-### High-cardinality và untrusted input
+### Số lượng giá trị khác nhau lớn và đầu vào không tin cậy
 
-Nếu intern value gần như unique:
+Nếu các giá trị được intern gần như đều duy nhất:
 
 ```text
 user-000001
@@ -83,23 +83,23 @@ user-000003
 ...
 ```
 
-canonicalization có thể không đem lại deduplication đáng kể nhưng vẫn thêm lookup/retention pressure.
+việc chuẩn hóa có thể không đem lại lợi ích loại bỏ trùng lặp đáng kể nhưng vẫn thêm chi phí tra cứu và áp lực lên cấu trúc quản lý String đã intern.
 
-Đặc biệt không nên intern user-controlled data cardinality cao chỉ vì “tiết kiệm memory”.
+Đặc biệt không nên intern dữ liệu do người dùng kiểm soát có số lượng giá trị khác nhau rất lớn chỉ vì “tiết kiệm bộ nhớ”.
 
-### Không dựa vào folklore JVM cũ
+### Không dựa vào quan niệm cũ về JVM
 
-Các câu kiểu “interned strings luôn nằm ở PermGen” là knowledge gắn với implementation/version cũ, không phải Java language contract.
+Các câu kiểu “interned strings luôn nằm ở PermGen” hoặc “đã intern thì chắc chắn bị giữ mãi đến khi JVM kết thúc” đều không phải hợp đồng của ngôn ngữ Java. Vị trí lưu, cấu trúc bảng và hành vi thu gom là chi tiết triển khai của JVM.
 
-Application nên reasoning theo:
+Ứng dụng nên cân nhắc theo:
 
 ```text
-canonical identity
-lookup cost
-retention/memory profile
-workload cardinality
+định danh tham chiếu chuẩn hóa
+chi phí tra cứu
+đặc điểm bảng String và bộ nhớ
+số lượng giá trị khác nhau trong khối lượng xử lý
 ```
 
-Chỉ intern khi workload và measurement cho thấy lợi ích rõ ràng, hoặc hợp đồng thực sự cần canonical identity.
+Chỉ intern khi khối lượng xử lý và đo đạc thực tế cho thấy lợi ích rõ ràng, hoặc hợp đồng thực sự cần một tham chiếu chuẩn hóa.
 
-chương tiếp theo rời khỏi identity và đi qua một ranh giới quan trọng hơn: **String trong JVM biến thành byte bên ngoài JVM bằng cách nào?**
+Chương tiếp theo rời khỏi bài toán định danh tham chiếu để xây mô hình Unicode bên trong `String`: **`char`, điểm mã Unicode và ký tự người dùng nhìn thấy khác nhau thế nào?** Sau đó mô-đun mới đi qua ranh giới văn bản ↔ byte bằng Charset.

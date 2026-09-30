@@ -1,101 +1,85 @@
 EncodingController:
   roundTrip():
-    execution: <p><strong>Khái niệm:</strong> Encode/decode bằng Charset.</p><ol><li>Endpoint
-      chạy một ví dụ deterministic và bounded trong <code>EncodingController#roundTrip()</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/round-trip&quot;)
-      public Map&lt;String,Object&gt; roundTrip(){ String text=&quot;Xin ch&#224;o
-      ☕&quot;; byte[] bytes=text.getBytes(StandardCharsets.UTF_8); return Map.of(&quot;text&quot;,text,&quot;utf8Bytes&quot;,bytes.length,&quot;decoded&quot;,new
-      String(bytes,StandardCharsets.UTF_8),&quot;roundTrip&quot;,text.equals(new String(bytes,StandardCharsets.UTF_8)));
-      }</code></pre></li><li>Quan sát các field trong response cùng nhau; đây là evidence
-      cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
-      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
-      khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> Charset là hợp đồng chuyển đổi giữa văn bản và byte.</p>
+      <ol>
+        <li><strong>Luồng:</strong> tạo <code>"Xin chào ☕"</code> → <code>getBytes(UTF_8)</code> → <code>new String(bytes, UTF_8)</code>.</li>
+        <li><strong>Bằng chứng mã:</strong><pre><code>byte[] bytes = text.getBytes(StandardCharsets.UTF_8);&#10;String decoded = new String(bytes, StandardCharsets.UTF_8);</code></pre>Cùng <code>StandardCharsets.UTF_8</code> được dùng ở cả hai chiều.</li>
+        <li><strong>Quan sát:</strong> <code>decoded</code> bằng <code>text</code> và <code>roundTrip=true</code>; <code>utf8Bytes</code> là số byte, không phải <code>String.length()</code>.</li>
+        <li><strong>Kết luận:</strong> một vòng chuyển đổi có thể giữ nguyên nội dung khi Charset và dữ liệu tương thích. Không suy luận rằng String tự mang sẵn UTF-8.</li>
+      </ol>
     usage: true
   wrongCharset():
-    execution: <p><strong>Khái niệm:</strong> Mojibake do encode/decode khác Charset.</p><ol><li>Endpoint
-      chạy một ví dụ deterministic và bounded trong <code>EncodingController#wrongCharset()</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/wrong-charset&quot;)
-      public Map&lt;String,Object&gt; wrongCharset(){ String text=&quot;caf&#233;&quot;;
-      byte[] utf8=text.getBytes(StandardCharsets.UTF_8); String wrong=new String(utf8,StandardCharsets.ISO_8859_1);
-      return Map.of(&quot;original&quot;,text,&quot;decodedAsLatin1&quot;,wrong,&quot;same&quot;,text.equals(wrong));
-      }</code></pre></li><li>Quan sát các field trong response cùng nhau; đây là evidence
-      cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
-      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
-      khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> cùng một dãy byte có thể tạo văn bản khác nếu hai phía không thống nhất Charset.</p>
+      <ol>
+        <li><strong>Luồng:</strong> mã hóa <code>"café"</code> bằng UTF-8 nhưng giải mã byte đó bằng ISO-8859-1.</li>
+        <li><strong>Bằng chứng mã:</strong><pre><code>byte[] utf8 = text.getBytes(StandardCharsets.UTF_8);&#10;String wrong = new String(utf8, StandardCharsets.ISO_8859_1);</code></pre>Hai phía cố ý dùng Charset khác nhau.</li>
+        <li><strong>Quan sát:</strong> <code>decodedAsLatin1</code> khác <code>original</code> và <code>same=false</code>.</li>
+        <li><strong>Kết luận:</strong> byte có thể được truyền nguyên vẹn nhưng văn bản vẫn sai do hợp đồng diễn giải khác nhau; đây là mojibake, không phải bằng chứng byte bị mất.</li>
+      </ol>
     usage: true
 RegexController:
   groups():
-    execution: <p><strong>Khái niệm:</strong> Group và capture.</p><ol><li>Endpoint
-      chạy một ví dụ deterministic và bounded trong <code>RegexController#groups()</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/groups&quot;)
-      public Map&lt;String,Object&gt; groups(){ Matcher m=Pattern.compile(&quot;(?&lt;user&gt;[a-z]+)@(?&lt;domain&gt;[a-z.]+)&quot;).matcher(&quot;ada@example.com&quot;);
-      boolean found=m.matches(); return Map.of(&quot;matched&quot;,found,&quot;user&quot;,found?m.group(&quot;user&quot;):&quot;&quot;,&quot;domain&quot;,found?m.group(&quot;domain&quot;):&quot;&quot;);
-      }</code></pre></li><li>Quan sát các field trong response cùng nhau; đây là evidence
-      cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
-      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
-      khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> Matcher giữ trạng thái so khớp và group chỉ có ý nghĩa sau một lần so khớp thành công.</p>
+      <ol>
+        <li><strong>Luồng:</strong> compile Pattern có named group <code>user</code>/<code>domain</code> → tạo Matcher với <code>ada@example.com</code> → gọi <code>matches()</code> → đọc group.</li>
+        <li><strong>Bằng chứng mã:</strong><pre><code>boolean found = m.matches();&#10;String user = found ? m.group("user") : "";</code></pre>Nhóm chỉ được đọc sau trạng thái so khớp thành công.</li>
+        <li><strong>Quan sát:</strong> phản hồi có <code>matched=true</code>, <code>user=ada</code>, <code>domain=example.com</code>.</li>
+        <li><strong>Kết luận:</strong> Pattern mô tả mẫu; Matcher gắn mẫu với đầu vào và giữ trạng thái/phần bắt giữ của lần so khớp đó.</li>
+      </ol>
     usage: true
   backtracking():
-    execution: <p><strong>Khái niệm:</strong> Backtracking và performance pitfall.</p><ol><li>Endpoint
-      chạy một ví dụ deterministic và bounded trong <code>RegexController#backtracking()</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/backtracking&quot;)
-      public Map&lt;String,Object&gt; backtracking(){ String input=&quot;a&quot;.repeat(18)+&quot;!&quot;;
-      Pattern risky=Pattern.compile(&quot;(a+)+$&quot;); long start=System.nanoTime();
-      boolean matched=risky.matcher(input).matches(); long elapsed=System.nanoTime()-start;
-      return Map.of(&quot;inputLength&quot;,input.length(),&quot;matched&quot;,matched,&quot;boundedSample&quot;,true,&quot;elapsedNanos&quot;,elapsed,&quot;warning&quot;,&quot;nested
-      ambiguous quantifiers can backtrack heavily; timing is illustrative only&quot;);
-      }</code></pre></li><li>Quan sát các field trong response cùng nhau; đây là evidence
-      cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
-      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
-      khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> lượng từ lồng nhau mơ hồ có thể làm bộ máy Regex thử nhiều đường quay lui.</p>
+      <ol>
+        <li><strong>Luồng:</strong> Pattern <code>(a+)+$</code> chạy trên 18 ký tự <code>a</code> rồi gặp <code>!</code>, khiến phép so khớp thất bại ở cuối.</li>
+        <li><strong>Bằng chứng mã:</strong><pre><code>String input = "a".repeat(18) + "!";&#10;Pattern risky = Pattern.compile("(a+)+$");</code></pre>Đầu vào được cố ý giới hạn; endpoint chỉ đo một lần.</li>
+        <li><strong>Quan sát:</strong> <code>matched=false</code>, <code>boundedSample=true</code>; <code>elapsedNanos</code> chỉ cho thấy có chi phí trong lần chạy cụ thể.</li>
+        <li><strong>Kết luận:</strong> thiết kế Regex và giới hạn đầu vào quan trọng. Không dùng số đo thời gian này như benchmark, SLA hoặc ngưỡng an toàn chung.</li>
+      </ol>
     usage: true
 StringConcatController:
   constructionTrace():
-    execution: <p><strong>Khái niệm:</strong> Cost của repeated concatenation.</p><ol><li>Endpoint
-      chạy một ví dụ deterministic và bounded trong <code>StringConcatController#constructionTrace()</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/construction&quot;)
-      public Map&lt;String,Object&gt; constructionTrace(){ String s=&quot;&quot;;
-      List&lt;Integer&gt; ids=new ArrayList&lt;&gt;(); for(int i=0;i&lt;4;i++){s=s+i;ids.add(System.identityHashCode(s));}
-      StringBuilder b=new StringBuilder(); for(int i=0;i&lt;4;i++)b.append(i); return
-      Map.of(&quot;concatResult&quot;,s,&quot;concatIntermediateIdentities&quot;,ids,&quot;builderResult&quot;,b.toString(),&quot;builderIdentity&quot;,System.identityHashCode(b));
-      }</code></pre></li><li>Quan sát các field trong response cùng nhau; đây là evidence
-      cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
-      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
-      khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> nối String lặp lại xây các kết quả bất biến kế tiếp, trong khi StringBuilder tái sử dụng một bộ đệm có thể thay đổi.</p>
+      <ol>
+        <li><strong>Luồng:</strong> vòng lặp thứ nhất thực hiện <code>s = s + i</code>; vòng lặp thứ hai gọi <code>b.append(i)</code>.</li>
+        <li><strong>Bằng chứng mã:</strong><pre><code>s = s + i;&#10;ids.add(System.identityHashCode(s));&#10;b.append(i);</code></pre>Cả hai nhánh đều xây chuỗi <code>0123</code>.</li>
+        <li><strong>Quan sát:</strong> <code>concatResult</code> bằng <code>builderResult</code>. <code>concatIntermediateIdentities</code> minh họa các kết quả trung gian.</li>
+        <li><strong>Kết luận:</strong> cùng nội dung cuối không có nghĩa cùng chiến lược xây chuỗi. Giá trị hash định danh không phải bộ đếm cấp phát đối tượng và có thể va chạm, nên không dùng nó để đếm chính xác số đối tượng.</li>
+      </ol>
     usage: true
 StringPoolController:
   identity():
-    execution: <p><strong>Khái niệm:</strong> Pool identity và compile-time constant.</p><ol><li>Endpoint
-      chạy một ví dụ deterministic và bounded trong <code>StringPoolController#identity()</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/identity&quot;)
-      public Map&lt;String,Object&gt; identity(){ String literalA=&quot;java&quot;,literalB=&quot;ja&quot;+&quot;va&quot;,runtime=new
-      String(&quot;java&quot;),interned=runtime.intern(); return Map.of(&quot;literalIdentity&quot;,literalA==literalB,&quot;newStringIdentity&quot;,literalA==runtime,&quot;contentEquals&quot;,literalA.equals(runtime),&quot;internIdentity&quot;,literalA==interned);
-      }</code></pre></li><li>Quan sát các field trong response cùng nhau; đây là evidence
-      cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
-      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
-      khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> so sánh nội dung và định danh tham chiếu là hai câu hỏi khác nhau.</p>
+      <ol>
+        <li><strong>Luồng:</strong> tạo literal <code>"java"</code>, hằng nối <code>"ja"+"va"</code>, <code>new String("java")</code>, rồi gọi <code>intern()</code>.</li>
+        <li><strong>Bằng chứng mã:</strong><pre><code>String literalB = "ja" + "va";&#10;String runtime = new String("java");&#10;String interned = runtime.intern();</code></pre>Endpoint trả cả <code>==</code> và <code>equals()</code>.</li>
+        <li><strong>Quan sát:</strong> <code>literalIdentity=true</code>, <code>newStringIdentity=false</code>, <code>contentEquals=true</code>, <code>internIdentity=true</code>.</li>
+        <li><strong>Kết luận:</strong> literal/hằng String có tham chiếu chuẩn hóa; <code>new</code> tạo đối tượng riêng; <code>intern()</code> lấy tham chiếu chuẩn hóa. So sánh nội dung vẫn dùng <code>equals()</code>.</li>
+      </ol>
     usage: true
 UnicodeController:
   charVsCodePoint():
-    execution: <p><strong>Khái niệm:</strong> Surrogate pair.</p><ol><li>Endpoint
-      chạy một ví dụ deterministic và bounded trong <code>UnicodeController#charVsCodePoint()</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/char-vs-code-point&quot;)
-      public Map&lt;String,Object&gt; charVsCodePoint(){ String value=&quot;A😀&quot;;
-      return Map.of(&quot;text&quot;,value,&quot;utf16Length&quot;,value.length(),&quot;codePointCount&quot;,value.codePointCount(0,value.length()),&quot;codePoints&quot;,value.codePoints().mapToObj(cp-&gt;String.format(&quot;U+%04X&quot;,cp)).toList());
-      }</code></pre></li><li>Quan sát các field trong response cùng nhau; đây là evidence
-      cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
-      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
-      khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> <code>String.length()</code> đếm đơn vị mã UTF-16, không đếm điểm mã hay grapheme cluster.</p>
+      <ol>
+        <li><strong>Luồng:</strong> dùng String <code>"A😀"</code> và tính <code>length()</code>, <code>codePointCount(...)</code>, <code>codePoints()</code>.</li>
+        <li><strong>Bằng chứng mã:</strong><pre><code>value.length();&#10;value.codePointCount(0, value.length());&#10;value.codePoints();</code></pre>Ba API quan sát cùng String ở các mức đếm khác nhau.</li>
+        <li><strong>Quan sát:</strong> <code>utf16Length=3</code>, <code>codePointCount=2</code>, code point là <code>U+0041</code> và <code>U+1F600</code>.</li>
+        <li><strong>Kết luận:</strong> chọn đơn vị đếm theo bài toán. Endpoint không chứng minh số ký tự người dùng cảm nhận và không phải Unicode validator.</li>
+      </ol>
     usage: true
   normalization():
-    execution: <p><strong>Khái niệm:</strong> Canonical equivalence và String equality.</p><ol><li>Endpoint
-      chạy một ví dụ deterministic và bounded trong <code>UnicodeController#normalization()</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>@GetMapping(&quot;/normalization&quot;)
-      public Map&lt;String,Object&gt; normalization(){ String composed=&quot;&#233;&quot;,
-      decomposed=&quot;e\u0301&quot;; String nfcA=Normalizer.normalize(composed,Normalizer.Form.NFC),
-      nfcB=Normalizer.normalize(decomposed,Normalizer.Form.NFC); return Map.of(&quot;visualA&quot;,composed,&quot;visualB&quot;,decomposed,&quot;equalsBefore&quot;,composed.equals(decomposed),&quot;codePointsA&quot;,composed.codePoints().mapToObj(cp-&gt;String.format(&quot;U+%04X&quot;,cp)).toList(),&quot;codePointsB&quot;,decomposed.codePoints().mapToObj(cp-&gt;String.format(&quot;U+%04X&quot;,cp)).toList(),&quot;equalsAfterNfc&quot;,nfcA.equals(nfcB));
-      }</code></pre></li><li>Quan sát các field trong response cùng nhau; đây là evidence
-      cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
-      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
-      khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> hai String tương đương chuẩn tắc có thể khác chuỗi điểm mã và <code>equals()</code> trước khi chuẩn hóa.</p>
+      <ol>
+        <li><strong>Luồng:</strong> so <code>"é"</code> dựng sẵn với <code>"e\u0301"</code> phân rã → quan sát equality/code points → chuẩn hóa cả hai về NFC → so lại.</li>
+        <li><strong>Bằng chứng mã:</strong><pre><code>String nfcA = Normalizer.normalize(composed, Normalizer.Form.NFC);&#10;String nfcB = Normalizer.normalize(decomposed, Normalizer.Form.NFC);</code></pre>Controller chỉ chạy NFC.</li>
+        <li><strong>Quan sát:</strong> <code>equalsBefore=false</code>, hai danh sách code point khác nhau, <code>equalsAfterNfc=true</code>.</li>
+        <li><strong>Kết luận:</strong> hiển thị giống nhau không làm <code>String.equals()</code> tự chuẩn hóa. Experiment này chỉ chứng minh NFC, không chạy NFD/NFKC/NFKD.</li>
+      </ol>
     usage: true

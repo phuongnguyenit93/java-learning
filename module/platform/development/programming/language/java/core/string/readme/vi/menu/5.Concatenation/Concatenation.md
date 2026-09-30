@@ -1,20 +1,20 @@
-# String Concatenation
+# Nối chuỗi String
 
-Toán tử `+` làm việc rất tiện với String, nhưng cần phân biệt **ngữ nghĩa ngôn ngữ** với **chi tiết triển khai compiler/runtime**.
+Toán tử `+` làm việc rất tiện với String, nhưng cần phân biệt **ngữ nghĩa của ngôn ngữ Java** với **chi tiết triển khai của trình biên dịch/JVM**.
 
 ## <a id="concat-semantics">Nối String bằng +</a>
 
-Khi một operand là String trong ngữ cảnh concatenation, Java tạo ra String result biểu diễn nội dung đã nối.
+Khi một toán hạng là String trong ngữ cảnh nối chuỗi, Java tạo ra một kết quả String biểu diễn nội dung đã nối.
 
 ```java
 String message = "Hello " + name;
 ```
 
-String cũ không bị mutate; result là một String value mới về mặt ngữ nghĩa.
+String cũ không bị sửa tại chỗ; kết quả là một giá trị String mới về mặt ngữ nghĩa.
 
-### String conversion xảy ra trong expression
+### Chuyển đổi sang String trong biểu thức
 
-Concatenation có thể nhận primitive hoặc reference value:
+Phép nối chuỗi có thể nhận giá trị nguyên thủy hoặc giá trị tham chiếu:
 
 ```java
 String message = "count=" + 42;       // "count=42"
@@ -23,34 +23,34 @@ Object value = null;
 String text = "value=" + value;       // "value=null"
 ```
 
-Java thực hiện string conversion cho operand phù hợp; application không cần gọi `toString()` thủ công cho mọi phần.
+Java thực hiện chuyển đổi sang String cho toán hạng phù hợp; mã ứng dụng không cần gọi `toString()` thủ công cho mọi phần.
 
-Nhưng điều này cũng có thể che bug: nếu `null` là invalid domain state, hãy validate state thay vì để concatenation biến nó thành text `"null"` rồi đi xa hơn.
+Nhưng điều này cũng có thể che lỗi: nếu `null` là trạng thái nghiệp vụ không hợp lệ, hãy kiểm tra trạng thái thay vì để phép nối chuỗi biến nó thành văn bản `"null"` rồi tiếp tục xử lý.
 
-Khi biểu thức trộn số và String, evaluation order ảnh hưởng kết quả:
+Khi biểu thức trộn số và String, thứ tự đánh giá toán hạng ảnh hưởng kết quả:
 
-Java evaluate operand từ trái sang phải. Đây là lý do numeric addition có thể xảy ra trước khi expression bước vào String concatenation.
+Java đánh giá toán hạng từ trái sang phải. Đây là lý do phép cộng số có thể xảy ra trước khi biểu thức chuyển sang ngữ cảnh nối String.
 
-Tránh nhét side effect phức tạp vào cùng expression; tách bước giúp reasoning và debugging rõ hơn.
+Tránh nhét tác dụng phụ phức tạp vào cùng một biểu thức; tách bước giúp suy luận và gỡ lỗi rõ hơn.
 
 ```java
-1 + 2 + "x"   // "3x"
-"x" + 1 + 2   // "x12"
+System.out.println(1 + 2 + "x"); // "3x"
+System.out.println("x" + 1 + 2); // "x12"
 ```
 
-## <a id="compile-time-concat">Concatenation ở Compile Time</a>
+## <a id="compile-time-concat">Nối chuỗi tại thời điểm biên dịch</a>
 
-Nếu toàn bộ biểu thức là compile-time constant, compiler có thể gộp ngay:
+Nếu toàn bộ biểu thức nối là **biểu thức hằng (constant expression)**, Java đánh giá nó tại thời điểm biên dịch:
 
 ```java
 String value = "ja" + "va";
 ```
 
-về ngữ nghĩa có thể tương đương literal `"java"` và tham gia constant pool.
+kết quả là một hằng String và được intern, nên trong ví dụ này nó dùng cùng tham chiếu chuẩn hóa với literal `"java"`.
 
-Đây là lý do một số demo `==` với concatenated literal cho `true`, nhưng không được suy rộng sang runtime concatenation.
+Đây là lý do `==` trong những ví dụ **biểu thức hằng** như trên có thể cho `true` theo quy ước của Java; không được suy rộng điều đó sang phép nối có giá trị chỉ biết khi chương trình chạy.
 
-Constant variable cũng có thể tham gia:
+Biến hằng cũng có thể tham gia:
 
 ```java
 final String left = "ja";
@@ -60,49 +60,72 @@ String b = "java";
 System.out.println(a == b); // true
 ```
 
-Điểm quyết định là **compile-time constant expression**, không chỉ keyword `final`.
+### `final` chưa chắc là hằng số tại thời điểm biên dịch
 
-## <a id="runtime-concat">Concatenation ở Runtime</a>
+Một biến `final` chỉ tham gia biểu thức hằng khi nó thực sự là **biến hằng (constant variable)**:
 
-Với runtime values, compiler/JVM có thể dùng các strategy khác nhau tùy Java version, ví dụ builder-like lowering hoặc `invokedynamic` concat machinery.
+```java
+final String prefix = "ja";
+String a = prefix + "va";
+String b = "java";
 
-mã ứng dụng nên phụ thuộc vào **language ngữ nghĩa**, không phụ thuộc vào việc bytecode hiện tại dùng đúng class helper nào.
+System.out.println(a == b); // true
+```
 
-Vì vậy không nên học rule kiểu:
+Nhưng giá trị chỉ biết khi chương trình chạy thì khác:
+
+```java
+final String prefix = args.length > 0 ? args[0] : "ja";
+String a = prefix + "va";
+String b = "java";
+
+System.out.println(a.equals(b)); // câu hỏi về nội dung
+```
+
+`final` nghĩa là tham chiếu không được gán lại; nó không tự động biến mọi biểu thức khi chạy thành hằng số tại thời điểm biên dịch. Điểm quyết định là **biểu thức hằng tại thời điểm biên dịch**, không chỉ từ khóa `final`.
+
+## <a id="runtime-concat">Nối chuỗi khi chương trình chạy</a>
+
+Với giá trị chỉ biết khi chạy, trình biên dịch/JVM có thể dùng các chiến lược khác nhau tùy phiên bản Java, ví dụ hạ xuống cơ chế giống `StringBuilder` hoặc dùng `invokedynamic` cho phép nối chuỗi.
+
+Mã ứng dụng nên phụ thuộc vào **ngữ nghĩa của ngôn ngữ**, không phụ thuộc vào việc bytecode hiện tại dùng đúng lớp hỗ trợ nào.
+
+Vì vậy không nên học quy tắc kiểu:
 
 ```text
 mọi dấu + với String
-→ compiler luôn tạo StringBuilder
+→ trình biên dịch luôn tạo StringBuilder
 ```
 
-Đó không phải language contract. Java hiện đại có thể dùng concat strategy khác, và implementation có quyền thay đổi.
+Đó không phải hợp đồng của ngôn ngữ. Java hiện đại có thể dùng chiến lược nối khác, và chi tiết triển khai có quyền thay đổi.
 
 ## <a id="loop-concat-cost">Chi phí khi nối lặp lại</a>
 
-Trong loop lớn:
+Trong vòng lặp lớn:
 
 ```java
+String[] parts = {"java", "-", "core"};
 String result = "";
-for (...) {
+for (String part : parts) {
     result += part;
 }
 ```
 
-mỗi bước có thể tạo thêm intermediate String/value-copy cost.
+mỗi bước có thể tạo thêm String trung gian và chi phí sao chép giá trị.
 
-Mental model:
+Mô hình tư duy:
 
 ```text
 ""
- + part1 → result 1
- + part2 → result 2 lớn hơn
- + part3 → result 3 lớn hơn
+ + part1 → kết quả 1
+ + part2 → kết quả 2 lớn hơn
+ + part3 → kết quả 3 lớn hơn
  ...
 ```
 
-Khi text tăng dần qua nhiều iteration, cùng prefix có thể bị copy nhiều lần. Với workload đủ lớn, tổng copying tăng đáng kể so với dùng một mutable buffer.
+Khi văn bản tăng dần qua nhiều vòng lặp, cùng một phần tiền tố có thể bị sao chép nhiều lần. Với khối lượng xử lý đủ lớn, tổng chi phí sao chép tăng đáng kể so với dùng một bộ đệm có thể thay đổi.
 
-Nếu đang xây một chuỗi tăng dần qua nhiều bước, `StringBuilder` thể hiện intent rõ hơn và thường hiệu quả hơn.
+Nếu đang xây một chuỗi tăng dần qua nhiều bước, `StringBuilder` thể hiện mục đích rõ hơn và thường hiệu quả hơn.
 
 Điều đó **không có nghĩa mọi dấu + đều xấu**:
 
@@ -110,6 +133,6 @@ Nếu đang xây một chuỗi tăng dần qua nhiều bước, `StringBuilder` 
 String fullName = firstName + " " + lastName;
 ```
 
-Một expression nhỏ, rõ intent thường nên giữ đơn giản. Builder có giá trị nhất khi construction là **incremental**, đặc biệt trong loop hoặc branch phức tạp.
+Một biểu thức nhỏ và rõ ràng thường nên giữ đơn giản. `StringBuilder` có giá trị nhất khi quá trình xây chuỗi là **tăng dần qua nhiều bước**, đặc biệt trong vòng lặp hoặc nhánh xử lý phức tạp.
 
-chương tiếp theo đi vào chính mutable buffer đó.
+Chương tiếp theo đi vào chính bộ đệm có thể thay đổi đó.

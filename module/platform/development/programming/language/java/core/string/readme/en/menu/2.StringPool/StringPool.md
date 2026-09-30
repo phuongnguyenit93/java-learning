@@ -59,7 +59,7 @@ The constructor changes object creation, not the immutability contract.
 
 ## <a id="pool-identity">Pool Identity and Constant Expressions</a>
 
-Compile-time constant concatenation may be folded into the same pooled literal:
+A compile-time String constant expression produces an interned constant String, so it can share the canonical reference of the corresponding literal:
 
 ```java
 String a = "ja" + "va";
@@ -68,29 +68,7 @@ String b = "java";
 
 Runtime concatenation does not carry the same identity guarantee.
 
-### final does not automatically mean compile-time constant
-
-A `final` variable participates in a constant expression only when it is actually a Java **constant variable**:
-
-```java
-final String prefix = "ja";
-String a = prefix + "va";
-String b = "java";
-
-System.out.println(a == b); // true
-```
-
-But a value determined at runtime is different:
-
-```java
-final String prefix = args.length > 0 ? args[0] : "ja";
-String a = prefix + "va";
-String b = "java";
-
-System.out.println(a.equals(b));
-```
-
-`final` prevents reassignment; it does not convert every runtime expression into a compile-time constant.
+The exact rules for **constant expressions**, `final` variables, and compile-time concatenation belong to the Concatenation chapter. The pool-level mental model is only that identity depends on how the value is produced; content comparison still uses `equals`.
 
 ### Practical rule
 
@@ -105,6 +83,6 @@ need a canonical pooled reference deliberately?
 → intern(), with explicit trade-offs
 ```
 
-Application logic should never depend on pool identity for text equality.
+Application logic should never depend on pool identity for text equality. The pool is a canonical-reuse mechanism; for literals and constant String expressions, interning is part of Java's specified semantics rather than merely an optional runtime optimization.
 
 The next chapter focuses directly on String comparison rules.

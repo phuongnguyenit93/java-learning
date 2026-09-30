@@ -1109,7 +1109,7 @@ explain object contracts, why the compiler cannot enforce their full semantics a
 
 #### Layer 1 — Module orientation
 
-**Entry chapter contract:** `1.Immutability/Immutability.md` must first contain a stable section that answers **what a Java `String` is and what role text plays in an application/system**. The learner should understand that `String` is Java's core immutable text value type and is used pervasively at human/system boundaries such as input/output, names/identifiers, configuration, logging, protocol/persistence conversion and API payloads, while not implying that arbitrary structured/numeric/binary data should be modeled as String. It must then explain why text handling is more complex than "an array of chars", and only after that introduce immutability as the foundation for pooling, sharing and safe API use.
+**Entry chapter contract:** `1.Immutability/Immutability.md` must first contain a stable section that answers **what a Java `String` is and what role text plays in an application/system**. The learner should understand that `String` is Java's core immutable reference type for text values and is used pervasively at human/system boundaries such as input/output, names/identifiers, configuration, logging, protocol/persistence conversion and API payloads, while not implying that arbitrary structured/numeric/binary data should be modeled as String. It must then explain why text handling is more complex than "an array of chars", and only after that introduce immutability as the foundation for pooling, sharing and safe API use.
 
 **Major terminology roles:**
 
@@ -1166,11 +1166,11 @@ StringBuilder → StringBuffer
 What does canonicalizing a String identity mean?
 intern
         ↓
-How does text become bytes and bytes become text?
-Encoding / Charset
-        ↓
 Why is Java char not always one user-visible character?
 Unicode / Code Point / Grapheme / Normalization
+        ↓
+How does Unicode text become bytes and bytes become text?
+Encoding / Charset
         ↓
 How do we describe text patterns?
 Regex
@@ -1179,7 +1179,7 @@ How does Java make multiline source text easier to write?
 Text Blocks
 ```
 
-**Running example / evidence strategy:** carry a small piece of user text through equality, core inspection/search/extraction/transformation operations, concatenation, UTF-8 encoding/decoding, supplementary Unicode, normalization and regex validation. Make every representation boundary observable with indexes, lengths, code points and bytes.
+**Running example / evidence strategy:** carry a small piece of user text through equality, core inspection/search/extraction/transformation operations, concatenation, supplementary Unicode, normalization, UTF-8 encoding/decoding and regex validation. Make every representation boundary observable with indexes, lengths, code points and bytes.
 
 #### Layer 2 — Chapter story
 
@@ -1192,8 +1192,8 @@ Concatenation     → If String cannot mutate, what objects/results are created 
 StringBuilder     → How do we explicitly use one mutable buffer for incremental construction?
 StringBuffer      → What synchronization difference exists, and what concurrency problem does it not solve?
 Intern            → What does explicit canonicalization do and what trade-offs does it introduce?
-Encoding          → Why does external I/O require an explicit mapping between text and bytes?
 UnicodeCodePoint  → Why do char, code point and user-perceived character differ, and why can canonical-equivalent text compare differently?
+Encoding          → Why does external I/O require an explicit mapping between Unicode text and bytes?
 Regex             → When is pattern matching useful, and where can backtracking become a cost/risk?
 TextBlocks        → How does source representation improve without changing String runtime semantics?
 ```
@@ -1202,18 +1202,18 @@ TextBlocks        → How does source representation improve without changing St
 
 | Existing chapter | Proposed anchored H2 sections |
 | --- | --- |
-| `1.Immutability/Immutability.md` | `#string-purpose` — What String represents, why Java needs a dedicated text type, and String's role at application/system boundaries<br>`#string-immutability` — Why String is immutable, including copy boundaries from/to mutable char arrays<br>`#immutability-consequences` — Sharing, hashing and thread-safety consequences<br>`#string-operation-new-value` — String operations return new values |
+| `1.Immutability/Immutability.md` | `#string-purpose` — What String represents, why Java needs a dedicated text type, and String's role at application/system boundaries<br>`#string-immutability` — Why String is immutable, including copy boundaries from/to mutable char arrays<br>`#immutability-consequences` — Sharing, hashing and thread-safety consequences<br>`#string-operation-new-value` — How to reason about returned String results without assuming in-place mutation or guaranteed new allocation |
 | `2.StringPool/StringPool.md` | `#string-pool-model` — String pool mental model<br>`#literal-vs-new` — Literal vs new String<br>`#pool-identity` — Pool identity and compile-time constants |
 | `3.Equality/Equality.md` | `#string-equals` — String content equality<br>`#string-reference-equality` — Why == is not content comparison<br>`#case-insensitive-boundary` — Case-insensitive comparison and locale boundary |
-| `4.CoreStringOperations/CoreStringOperations.md` | `#string-inspection` — CharSequence boundary; length, empty/blank and indexed inspection<br>`#string-search` — contains/indexOf/prefix/suffix search<br>`#string-extraction` — substring ranges and index boundaries<br>`#string-transformation` — replace/strip/case conversion plus selected modern text operations without mutation<br>`#string-split-join` — splitting/joining text, regex boundary and split limit semantics<br>`#string-conversion-formatting` — value conversion and basic formatting |
+| `4.CoreStringOperations/CoreStringOperations.md` | `#string-char-sequence` — String as a CharSequence and the abstraction/equality boundary<br>`#string-inspection` — length, empty/blank and indexed inspection<br>`#string-search` — contains/indexOf/prefix/suffix search<br>`#string-extraction` — substring ranges and index boundaries<br>`#string-transformation` — replace/strip/case conversion plus selected modern text operations and their immutable-result semantics<br>`#string-split-join` — splitting/joining text, regex boundary and split limit semantics<br>`#string-conversion-formatting` — value conversion and basic formatting |
 | `5.Concatenation/Concatenation.md` | `#concat-semantics` — String concatenation semantics<br>`#compile-time-concat` — Compile-time constant concatenation<br>`#runtime-concat` — Runtime concatenation and implementation boundary<br>`#loop-concat-cost` — Repeated concatenation cost |
-| `6.StringBuilder/StringBuilder.md` | `#builder-mutable-buffer` — StringBuilder mutable buffer model<br>`#builder-capacity` — Length vs capacity<br>`#builder-usage` — Efficient incremental construction |
+| `6.StringBuilder/StringBuilder.md` | `#builder-mutable-buffer` — StringBuilder mutable buffer model<br>`#builder-usage` — Efficient incremental construction and toString snapshot boundary<br>`#builder-capacity` — Length vs capacity and capacity-management refinement |
 | `7.StringBuffer/StringBuffer.md` | `#buffer-synchronization` — StringBuffer synchronization<br>`#builder-vs-buffer` — StringBuilder vs StringBuffer trade-off<br>`#thread-safety-boundary` — Why synchronized methods do not solve all composition concerns |
 | `8.Intern/Intern.md` | `#intern-semantics` — String.intern semantics<br>`#intern-identity` — Canonical pool reference<br>`#intern-tradeoffs` — Interning trade-offs and memory considerations |
-| `9.Encoding/Encoding.md` | `#text-vs-bytes` — Text vs bytes mental model<br>`#charset-encode-decode` — Charset encode/decode<br>`#default-charset-risk` — Default charset portability risk<br>`#malformed-input` — Malformed/unmappable input boundary |
-| `10.UnicodeCodePoint/UnicodeCodePoint.md` | `#utf16-char-model` — Java char and UTF-16<br>`#code-point` — Unicode code point<br>`#surrogate-pairs` — Surrogate pairs<br>`#unicode-iteration` — Correct code-point iteration<br>`#code-unit-code-point-grapheme` — UTF-16 code unit vs Unicode code point vs user-perceived grapheme cluster<br>`#unicode-normalization` — Unicode normalization forms and `Normalizer`<br>`#canonical-equivalence` — Canonically equivalent text can have different code-point sequences and binary/String equality |
-| `11.Regex/Regex.md` | `#pattern-matcher` — Pattern/Matcher model<br>`#regex-groups` — Groups and captures<br>`#regex-quantifiers` — Greedy/reluctant quantifiers<br>`#regex-performance` — Backtracking and performance pitfalls |
-| `12.TextBlocks/TextBlocks.md` | `#text-block-syntax` — Text block syntax<br>`#incidental-whitespace` — Incidental indentation<br>`#escape-processing` — Escapes and line terminators<br>`#text-block-not-template` — Text blocks are not string templates |
+| `9.UnicodeCodePoint/UnicodeCodePoint.md` | `#utf16-char-model` — Java char and UTF-16<br>`#code-point` — Unicode code point<br>`#surrogate-pairs` — Surrogate pairs<br>`#unicode-iteration` — Correct code-point iteration<br>`#code-unit-code-point-grapheme` — UTF-16 code unit vs Unicode code point vs user-perceived grapheme cluster<br>`#unicode-normalization` — Unicode normalization forms and `Normalizer`<br>`#canonical-equivalence` — Canonically equivalent text can have different code-point sequences and binary/String equality |
+| `10.Encoding/Encoding.md` | `#text-vs-bytes` — Text and bytes as distinct representations<br>`#charset-encode-decode` — Charset encode/decode<br>`#default-charset-risk` — Default charset portability risk<br>`#malformed-input` — Malformed/unmappable input boundary |
+| `11.Regex/Regex.md` | `#regex-purpose` — What regex is, why pattern matching exists, when direct String APIs are simpler, and when a parser is a better abstraction<br>`#pattern-matcher` — Pattern/Matcher model and matching modes<br>`#regex-syntax-boundary` — Java/regex escaping layers, basic syntax and flags<br>`#regex-groups` — Groups and captures<br>`#regex-quantifiers` — Greedy/reluctant quantifiers<br>`#regex-performance` — Backtracking and performance pitfalls |
+| `12.TextBlocks/TextBlocks.md` | `#text-block-syntax` — Text block syntax<br>`#incidental-whitespace` — Incidental indentation<br>`#escape-processing` — Escapes and line terminators<br>`#text-block-not-template` — Text blocks versus interpolation/template behavior<br>`#string-synthesis` — End-to-end String processing model and handoff to I/O/Localization boundaries |
 
 #### Proposed API experiments
 

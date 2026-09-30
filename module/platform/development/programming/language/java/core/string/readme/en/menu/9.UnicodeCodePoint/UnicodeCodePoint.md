@@ -39,10 +39,10 @@ APIs such as `codePointCount` and `codePoints()` let code operate at that level.
 Another useful helper is:
 
 ```java
-Character.toChars(0x1F600); // surrogate-pair char[] for 😀
+char[] chars = Character.toChars(0x1F600); // surrogate-pair char[] for 😀
 ```
 
-An `int` is not automatically a valid Unicode code point; use `Character.isValidCodePoint` when the value is not trusted.
+An `int` is not automatically within the Unicode code-point range. `Character.isValidCodePoint(cp)` checks the `0..0x10FFFF` range, but that does **not** mean `cp` is a Unicode scalar value: surrogate code points `U+D800..U+DFFF` are still within the code-point range. If the domain requires a valid scalar value, exclude the surrogate range in addition to checking the range.
 
 ## <a id="surrogate-pairs">Surrogate Pairs</a>
 
@@ -74,8 +74,10 @@ Those two `char` values are not two user-visible characters.
 When the logic truly works with Unicode code points, use code-point-aware APIs:
 
 ```java
-text.codePoints().forEach(cp -> ...);
+text.codePoints().forEach(System.out::println);
 ```
+
+Real code can replace `System.out::println` with the domain operation that processes each code point.
 
 or use `codePointAt` with `Character.charCount(cp)` when manually advancing an index.
 
@@ -171,7 +173,9 @@ A `String` is a sequence of UTF-16 code units; it does not automatically guarant
 String malformed = "\uD83D"; // isolated high-surrogate code unit
 ```
 
-So “I have a String” is not the same as “I have already validated a Unicode scalar sequence”. This matters especially when encoding bytes or accepting text from an untrusted boundary.
+APIs such as `codePoints()` and `codePointCount(...)` are **not Unicode validators** either. They combine a well-formed surrogate pair into one code point, but an unpaired surrogate is still processed as its own value rather than automatically causing validation failure.
+
+So “I have a String” or “I iterated it with codePoints()” is not the same as “I have already validated a Unicode scalar sequence”. This matters especially when encoding bytes or accepting text from an untrusted boundary.
 
 ## <a id="unicode-normalization">Unicode Normalization</a>
 
@@ -188,8 +192,11 @@ NFD
 NFC
 → canonical decomposition + composition
 
-NFKD / NFKC
-→ compatibility normalization
+NFKD
+→ compatibility decomposition
+
+NFKC
+→ compatibility decomposition + composition
 ```
 
 NFKC/NFKD may remove compatibility distinctions beyond canonical normalization, so do not choose them merely because they sound “stronger”.
@@ -203,7 +210,7 @@ Do not normalize every input blindly. Identifiers, security-sensitive tokens, si
 Two canonically equivalent Strings can still satisfy:
 
 ```java
-a.equals(b) == false
+System.out.println(a.equals(b)); // false
 ```
 
 when their code-point sequences differ.
@@ -228,4 +235,4 @@ a.equals(b); // true
 
 Canonical equivalence is a Unicode concept; linguistic equality or search may require a higher locale/collation layer.
 
-The next chapter moves from representation to pattern matching with regular expressions.
+The next chapter uses this Unicode model at an external boundary: how does Java text become bytes and return from bytes through an explicit Charset?

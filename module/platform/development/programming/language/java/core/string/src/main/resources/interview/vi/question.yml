@@ -28,162 +28,162 @@
 # </interview-schema>
 
 questions:
-  - question: "String là gì và vai trò của nó trong hệ thống Java là gì? Vì sao không nên biến mọi domain value thành String?"
-    answer: "String là object type cốt lõi để biểu diễn text trong Java. Nó xuất hiện nhiều ở input/output, API payload/header, configuration, log, protocol và persistence conversion boundary. Tuy nhiên business logic vẫn nên giữ Money, time, status, identifier... bằng type có semantics riêng khi phù hợp; String nên đại diện text hoặc textual boundary representation, không phải thay thế type system của domain."
+  - question: "String là gì và nó đóng vai trò gì trong một hệ thống Java? Vì sao không nên mô hình hóa mọi giá trị nghiệp vụ thành String?"
+    answer: "String là kiểu tham chiếu cốt lõi của Java để biểu diễn văn bản. Nó xuất hiện nhiều ở đầu vào/đầu ra, giao diện người dùng, API, cấu hình, log, giao thức, lưu trữ và các ranh giới truyền dữ liệu. Tuy nhiên các giá trị như tiền, thời gian, trạng thái hay mã định danh nghiệp vụ vẫn nên dùng kiểu có ngữ nghĩa riêng khi phù hợp; String nên biểu diễn văn bản hoặc dạng văn bản tại ranh giới, không thay thế hệ kiểu của miền nghiệp vụ."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "1.Immutability/Immutability.md", anchor: "string-purpose"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Vì sao String immutability quan trọng với Java API và runtime behavior?"
-    answer: "Immutable text có thể được share, cache, pool, dùng làm hash key ổn định và truyền qua API mà caller không thể mutate value hiện có. Operation trả về value mới, giúp reasoning đơn giản hơn và hỗ trợ contract của String pool."
+  - question: "Vì sao tính bất biến của String quan trọng đối với API Java và cách chương trình vận hành?"
+    answer: "Nội dung String không bị sửa tại chỗ nên có thể chia sẻ an toàn về mặt nội dung, dùng làm khóa băm ổn định và tham gia String Pool. Các phép biến đổi trả về một kết quả String thay vì sửa đối tượng cũ; kết quả đó không nhất thiết phải là một đối tượng khác nếu nội dung không cần thay đổi. Điều này giúp giảm rủi ro nhiều tham chiếu cùng trỏ tới dữ liệu có thể thay đổi và làm hợp đồng API dễ suy luận hơn."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "1.Immutability/Immutability.md", anchor: "string-immutability"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Giải thích mental model của String pool và vì sao == vẫn không phải mặc định đúng để so sánh text."
-    answer: "Pool có thể canonicalize literal và value được intern nên một số String bằng nhau dùng chung identity. Việc share đó là contract của pooling, không phải value equality. == kiểm tra identity; equals kiểm tra nội dung."
+  - question: "Giải thích mô hình tư duy của String Pool và vì sao == vẫn không phải lựa chọn mặc định để so sánh nội dung văn bản."
+    answer: "String Pool cung cấp tham chiếu chuẩn hóa cho String literal, hằng String và các giá trị được intern(). Vì vậy một số String có cùng nội dung có thể dùng chung định danh tham chiếu. Tuy nhiên == chỉ kiểm tra định danh tham chiếu, còn equals() kiểm tra nội dung String. Literal/hằng String được intern theo ngữ nghĩa Java; logic nghiệp vụ không nên dựa vào định danh tham chiếu trong pool để thay cho so sánh bằng nhau theo nội dung."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "2.StringPool/StringPool.md", anchor: "string-pool-model"}
-    apiRelated: {controller: "", methodSignature: ""}
+    apiRelated: {controller: "StringPoolController", methodSignature: "identity()"}
 
-  - question: "String, Unicode và Charset liên hệ với nhau thế nào khi data đi qua I/O boundary?"
-    answer: "String biểu diễn text trong Java trên UTF-16 code unit/code point model. Storage hoặc transmission bên ngoài dùng bytes. Charset định nghĩa mapping giữa text và bytes, nên hai phía phải thống nhất encoding."
+  - question: "String, Unicode và Charset liên hệ với nhau thế nào khi dữ liệu đi qua ranh giới I/O?"
+    answer: "String là giá trị văn bản mà các API cơ bản đánh chỉ số theo đơn vị mã UTF-16. Khi văn bản đi ra tệp, mạng hoặc giao thức byte, Charset xác định cách mã hóa văn bản thành byte và giải mã byte trở lại văn bản. Hai phía phải thống nhất Charset và chính sách xử lý lỗi phù hợp; String bản thân không mang sẵn UTF-8 hay một cách mã hóa byte bên ngoài JVM."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.Encoding/Encoding.md", anchor: "charset-encode-decode"}
+    readmeRelated: {file: "10.Encoding/Encoding.md", anchor: "charset-encode-decode"}
     apiRelated: {controller: "EncodingController", methodSignature: "roundTrip()"}
 
-  - question: "Vì sao char không phải synonym an toàn cho một ký tự người dùng nhìn thấy?"
-    answer: "char là một UTF-16 code unit. Supplementary Unicode code point cần hai char, và một grapheme người dùng cảm nhận có thể gồm nhiều code point như base letter + combining mark hoặc emoji sequence."
+  - question: "Vì sao char không phải là từ đồng nghĩa an toàn cho một ký tự người dùng nhìn thấy?"
+    answer: "char là một đơn vị mã UTF-16. Một điểm mã Unicode ngoài BMP cần hai char dưới dạng surrogate pair, còn một cụm ký tự người dùng cảm nhận có thể gồm nhiều điểm mã, chẳng hạn chữ cái cơ sở + dấu kết hợp hoặc chuỗi emoji. Vì vậy char, code point và grapheme cluster là ba tầng xử lý khác nhau."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.UnicodeCodePoint/UnicodeCodePoint.md", anchor: "code-unit-code-point-grapheme"}
+    readmeRelated: {file: "9.UnicodeCodePoint/UnicodeCodePoint.md", anchor: "code-unit-code-point-grapheme"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Khi nào Unicode normalization quan trọng trong application logic?"
-    answer: "Text nhìn giống nhau có thể dùng canonical code-point sequence khác nhau. Hãy normalize tại boundary so sánh/search/storage khi domain cần canonical equivalence, nhưng nhớ normalization không thay thế locale-aware collation hay general case folding."
+  - question: "Khi nào chuẩn hóa Unicode quan trọng trong logic ứng dụng?"
+    answer: "Hai văn bản nhìn giống nhau có thể dùng các chuỗi điểm mã tương đương chuẩn tắc khác nhau, ví dụ ký tự dựng sẵn và ký tự cơ sở + dấu kết hợp. Nếu nghiệp vụ cần coi chúng tương đương trong so sánh, tìm kiếm hoặc lưu trữ, hãy chuẩn hóa tại một ranh giới có chủ đích. Chuẩn hóa Unicode không thay thế so sánh theo Locale, Collator hay quy tắc chữ hoa/thường của ngôn ngữ tự nhiên."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.UnicodeCodePoint/UnicodeCodePoint.md", anchor: "unicode-normalization"}
-    apiRelated: {controller: "", methodSignature: ""}
+    readmeRelated: {file: "9.UnicodeCodePoint/UnicodeCodePoint.md", anchor: "unicode-normalization"}
+    apiRelated: {controller: "UnicodeController", methodSignature: "normalization()"}
 
-  - question: "Bạn chọn giữa String concatenation, StringBuilder và StringBuffer như thế nào?"
-    answer: "Dùng concatenation cho expression đơn giản dễ đọc; compiler tối ưu nhiều trường hợp. Dùng StringBuilder cho incremental construction rõ ràng, nhất là loop. StringBuffer thêm synchronized method cho legacy/shared-buffer scenario, nhưng synchronization không giải quyết toàn bộ concurrency design."
+  - question: "Bạn chọn giữa phép nối String, StringBuilder và StringBuffer như thế nào?"
+    answer: "Dùng phép nối String cho biểu thức nhỏ, rõ ràng. Dùng StringBuilder khi xây chuỗi tăng dần qua nhiều bước hoặc vòng lặp để tránh tạo/sao chép nhiều String trung gian. StringBuffer cung cấp đồng bộ hóa ở nhiều phương thức và chủ yếu phù hợp khi thực sự cần bộ đệm ký tự dùng chung hoặc phải tương thích API cũ; đồng bộ hóa từng phương thức không tự giải quyết luồng xử lý nhiều bước."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "7.StringBuffer/StringBuffer.md", anchor: "builder-vs-buffer"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "String.intern giải quyết vấn đề gì và vì sao không nên dùng bừa bãi?"
-    answer: "Interning canonicalize các String value bằng nhau về một pooled identity, hữu ích cho workload kiểu symbol chuyên biệt. Nó cũng tạo trade-off về quản lý pool và memory retention, nên value equality thông thường không nên phụ thuộc interning."
+  - question: "String.intern() giải quyết vấn đề gì và vì sao không nên dùng một cách máy móc?"
+    answer: "intern() trả về tham chiếu chuẩn hóa trong String Pool cho nội dung tương ứng. Cơ chế này có thể hữu ích trong khối lượng xử lý chuyên biệt có tập giá trị lặp lại và được kiểm soát, nhưng nó thêm chi phí tra cứu/quản lý bảng String và làm mã dễ phụ thuộc không cần thiết vào định danh tham chiếu. Với dữ liệu có số lượng giá trị khác nhau rất lớn, lợi ích loại bỏ trùng lặp thường thấp."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "8.Intern/Intern.md", anchor: "intern-tradeoffs"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Bạn review regex cho production safety như thế nào thay vì chỉ kiểm tra correctness?"
-    answer: "Kiểm tra input bound, nested quantifier/alternative mơ hồ, catastrophic-backtracking risk, khả năng reuse compiled Pattern và xem parser/string operation đơn giản có rõ hơn không. Match đúng không đồng nghĩa runtime cost có thể dự đoán."
+  - question: "Bạn rà soát một Regex cho môi trường vận hành thực tế như thế nào thay vì chỉ kiểm tra nó so khớp đúng?"
+    answer: "Ngoài tính đúng đắn, cần kiểm tra giới hạn đầu vào, lượng từ/nhánh lựa chọn lồng nhau mơ hồ, nguy cơ quay lui bùng nổ, việc tái sử dụng Pattern đã biên dịch và xem API String hoặc bộ phân tích cú pháp (parser) có đơn giản hơn không. Một Regex so khớp đúng trên đầu vào thuận lợi vẫn có thể có chi phí lúc chạy khó dự đoán trên đầu vào xấu."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "11.Regex/Regex.md", anchor: "regex-performance"}
     apiRelated: {controller: "RegexController", methodSignature: "backtracking()"}
 
-  - question: "Tính bất biến của String được giữ như thế nào khi String được tạo từ char[] mutable hoặc khi gọi toCharArray()?"
-    answer: "String phải tách khỏi mutable-array alias. Khi tạo String từ char[], thay đổi array gốc sau đó không làm String đổi nội dung; toCharArray() cũng trả một array độc lập để caller có thể mutate mà không sửa String. Internal storage thực tế vẫn là implementation detail của JVM."
+  - question: "Tính bất biến của String được giữ thế nào khi tạo String từ char[] hoặc khi gọi toCharArray()?"
+    answer: "String phải tách khỏi alias tới mảng có thể thay đổi. Sau khi new String(char[]) hoàn tất, sửa mảng nguồn không được làm String đã tạo đổi nội dung; toCharArray() cũng trả về một mảng độc lập mà bên gọi có thể sửa. Cách String lưu dữ liệu nội bộ vẫn là chi tiết triển khai của JVM."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "1.Immutability/Immutability.md", anchor: "string-immutability"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Vì sao một biến final String chưa chắc làm phép nối trở thành compile-time constant expression?"
-    answer: "final chỉ cấm gán lại reference. Để tham gia constant expression, biến phải là constant variable được khởi tạo bằng constant expression mà compiler biết tại compile time. Một final String nhận value từ args, method call hoặc dữ liệu runtime vẫn không có guarantee folding/pool identity như literal constant."
+  - question: "Vì sao một biến final String chưa chắc làm phép nối trở thành biểu thức hằng tại thời điểm biên dịch?"
+    answer: "final chỉ ngăn gán lại tham chiếu. Muốn tham gia biểu thức hằng, biến phải là biến hằng được khởi tạo bằng biểu thức hằng mà trình biên dịch biết tại thời điểm biên dịch. final String nhận giá trị từ args, lời gọi phương thức hoặc dữ liệu chỉ biết khi chương trình chạy không có bảo đảm việc tính trước/tham chiếu intern như một String biểu thức hằng."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.StringPool/StringPool.md", anchor: "pool-identity"}
+    readmeRelated: {file: "5.Concatenation/Concatenation.md", anchor: "compile-time-concat"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "String và CharSequence khác nhau thế nào về immutability và equality contract?"
-    answer: "String implement CharSequence nhưng CharSequence không hứa immutable; StringBuilder và StringBuffer cũng là CharSequence nhưng mutable. String.equals kiểm tra equality theo contract của String và không tạo một cross-implementation equality contract cho mọi CharSequence. Khi cần so content giữa String và CharSequence phù hợp, contentEquals thể hiện intent rõ hơn."
+  - question: "String và CharSequence khác nhau thế nào về tính bất biến và hợp đồng so sánh bằng nhau?"
+    answer: "String triển khai CharSequence, nhưng CharSequence không hứa bất biến; StringBuilder và StringBuffer cũng triển khai CharSequence nhưng có thể thay đổi. String.equals() chỉ tuân theo hợp đồng so sánh bằng nhau của String, không tạo hợp đồng so sánh bằng nhau chung giữa mọi kiểu triển khai. Khi cần so nội dung String với một CharSequence phù hợp, contentEquals(...) thể hiện ý định trực tiếp hơn."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.Equality/Equality.md", anchor: "string-equals"}
+    readmeRelated: {file: "4.CoreStringOperations/CoreStringOperations.md", anchor: "string-char-sequence"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Bạn chọn String API trực tiếp hay regex như thế nào khi inspect, search, extract và transform text?"
-    answer: "Chọn theo câu hỏi cần giải quyết: length/isBlank/charAt để inspect, startsWith/contains/indexOf cho literal search, substring cho known index boundaries, replace cho literal replacement và regex khi thật sự cần pattern matching. Regex không nên là mặc định cho mọi thao tác text vì String API thường rõ intent hơn cho case đơn giản."
+  - question: "Bạn chọn API String trực tiếp hay Regex thế nào khi kiểm tra, tìm kiếm, trích xuất hoặc biến đổi văn bản?"
+    answer: "Chọn theo ý định: length()/isBlank()/charAt() cho kiểm tra, startsWith()/contains()/indexOf() cho tìm literal, substring() cho phạm vi chỉ số đã biết, replace() cho thay thế literal, và Regex khi bài toán thật sự cần so khớp mẫu. Regex không nên là mặc định cho mọi thao tác văn bản vì API trực tiếp thường biểu đạt bài toán đơn giản rõ hơn."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.CoreStringOperations/CoreStringOperations.md", anchor: "string-search"}
+    readmeRelated: {file: "11.Regex/Regex.md", anchor: "regex-purpose"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Giải thích semantics của String.split(regex, limit) khi limit dương, bằng 0 và âm."
-    answer: "limit > 0 tạo tối đa limit phần tử và phần tử cuối giữ phần input còn lại; limit == 0 áp regex không có positive bound nhưng loại trailing empty strings; limit < 0 cũng không có positive bound và giữ trailing empty strings. Vì vậy limit là một phần của data-parsing contract, không chỉ là performance option."
+  - question: "Giải thích String.split(regex, limit) khi limit dương, bằng 0 và âm."
+    answer: "limit > 0 tạo tối đa limit phần tử và phần tử cuối giữ phần đầu vào còn lại. limit == 0 không đặt giới hạn dương nhưng loại các chuỗi rỗng ở cuối. limit < 0 cũng không đặt giới hạn dương và giữ các chuỗi rỗng ở cuối. Tham số limit vì vậy ảnh hưởng trực tiếp tới dữ liệu đầu ra, không chỉ là một tùy chọn hiệu năng."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "4.CoreStringOperations/CoreStringOperations.md", anchor: "string-split-join"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Vì sao không nên nói mọi phép nối String bằng + luôn được compiler đổi thành StringBuilder, và tại sao += trong loop vẫn có thể tốn kém?"
-    answer: "Java chỉ quy định semantics của concatenation; compiler/runtime có thể dùng strategy khác nhau như invokedynamic nên không được phụ thuộc vào một lowering cụ thể. Với repeated +=, mỗi bước vẫn có thể tạo result immutable mới và copy prefix ngày càng dài, nên tổng copying có thể lớn hơn một mutable construction buffer."
+  - question: "Vì sao không nên nói mọi phép nối String bằng + luôn được trình biên dịch đổi thành StringBuilder, và vì sao += trong vòng lặp vẫn có thể tốn kém?"
+    answer: "Java quy định ngữ nghĩa phép nối, còn trình biên dịch/môi trường chạy có thể dùng các chiến lược triển khai khác nhau như invokedynamic. Mã ứng dụng không nên phụ thuộc vào một cách hạ biểu thức xuống mã thực thi cụ thể. Với += lặp lại, mỗi bước có thể tạo kết quả String bất biến mới và sao chép phần tiền tố ngày càng dài, nên tổng lượng sao chép có thể lớn hơn khi dùng một bộ đệm có thể thay đổi."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "5.Concatenation/Concatenation.md", anchor: "loop-concat-cost"}
     apiRelated: {controller: "StringConcatController", methodSignature: "constructionTrace()"}
 
-  - question: "Phân biệt length, capacity và snapshot semantics của StringBuilder.toString()."
-    answer: "length là số code unit hiện có; capacity là kích thước buffer hiện tại trước khi cần grow và chỉ là performance concern, không phải maximum length. toString() tạo một immutable String result theo nội dung tại thời điểm gọi; builder có thể tiếp tục mutate nhưng String snapshot đã tạo không đổi."
+  - question: "Phân biệt length, capacity và ý nghĩa của StringBuilder.toString() tại thời điểm gọi."
+    answer: "length() là số đơn vị mã UTF-16 hiện có; capacity() là dung lượng bộ đệm trước khi cần mở rộng và là mối quan tâm hiệu năng chứ không phải độ dài tối đa. toString() tạo một String biểu diễn nội dung tại thời điểm gọi; thay đổi builder về sau không làm String đã tạo thay đổi."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.StringBuilder/StringBuilder.md", anchor: "builder-usage"}
+    readmeRelated: {file: "", anchor: ""}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Vì sao các method synchronized của StringBuffer không làm một workflow nhiều bước tự động atomic?"
-    answer: "Synchronization của StringBuffer bảo vệ từng method call riêng lẻ. Một sequence như đọc length, quyết định rồi append gồm nhiều operation, nên thread khác vẫn có thể xen vào giữa các bước. Nếu invariant phải bao phủ toàn sequence, caller cần một synchronization boundary lớn hơn hoặc design tránh shared mutable buffer."
+  - question: "Vì sao các phương thức synchronized của StringBuffer không làm một luồng xử lý nhiều bước tự động nguyên tử (atomic)?"
+    answer: "StringBuffer đồng bộ hóa từng lời gọi phương thức. Một chuỗi như đọc length, quyết định rồi append gồm nhiều thao tác riêng, nên luồng khác vẫn có thể xen vào giữa. Nếu một điều kiện bất biến phải bao phủ toàn chuỗi, bên gọi cần ranh giới đồng bộ lớn hơn hoặc thiết kế tránh bộ đệm dùng chung."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "7.StringBuffer/StringBuffer.md", anchor: "thread-safety-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Tại sao interning dữ liệu high-cardinality hoặc user-controlled thường là một optimization tệ?"
-    answer: "Nếu phần lớn value gần như unique, interning ít tạo deduplication nhưng vẫn thêm lookup/canonicalization và retention pressure trong pool. Nó còn làm code phụ thuộc identity không cần thiết. Chỉ nên intern khi cardinality/workload được kiểm soát và measurement hoặc contract thật sự chứng minh lợi ích."
+  - question: "Vì sao intern dữ liệu có số lượng giá trị khác nhau rất lớn hoặc do người dùng kiểm soát thường là một tối ưu kém?"
+    answer: "Khi phần lớn giá trị gần như duy nhất, intern() đem lại rất ít lợi ích loại bỏ trùng lặp nhưng vẫn thêm chi phí tra cứu và quản lý bảng String. Nó cũng có thể làm mã phụ thuộc không cần thiết vào định danh tham chiếu. Chỉ nên intern khi khối lượng xử lý/số lượng giá trị khác nhau được kiểm soát và có lý do hoặc đo đạc thực tế chứng minh lợi ích."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "8.Intern/Intern.md", anchor: "intern-tradeoffs"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Trong Java 21 default charset thường là UTF-8, vậy vì sao file/protocol contract vẫn nên ghi Charset explicit?"
-    answer: "Từ JDK 18, các API chuẩn mặc định sang UTF-8 theo JEP 400, nên mental model cũ về default luôn thay đổi theo OS không còn đúng cho Java 21. Tuy vậy encoding ở file/network boundary là data contract giữa producer và consumer; dùng StandardCharsets.UTF_8 làm contract rõ ràng, reviewable và độc lập với compatibility hoặc implementation configuration."
+  - question: "Trong Java 21, vì sao vẫn nên ghi Charset rõ ràng ở hợp đồng tệp hoặc giao thức dù Charset mặc định của Java là UTF-8?"
+    answer: "Từ JDK 18, JEP 400 quy định UTF-8 là Charset mặc định của Java, nên Charset.defaultCharset() trên JDK chuẩn Java 21 là UTF-8 và các API dùng Charset mặc định theo hợp đồng sẽ theo lựa chọn đó. Tuy nhiên cách mã hóa tại ranh giới dữ liệu vẫn là hợp đồng giữa hai phía; console và một số luồng chuẩn còn có cơ chế Charset riêng. Dùng StandardCharsets.UTF_8 khi phù hợp giúp ý định rõ ràng và không phụ thuộc ngầm vào cấu hình tương thích."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.Encoding/Encoding.md", anchor: "default-charset-risk"}
+    readmeRelated: {file: "10.Encoding/Encoding.md", anchor: "default-charset-risk"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Malformed input và unmappable character khác nhau thế nào khi encode/decode text?"
-    answer: "Malformed nghĩa là input sequence không hợp lệ theo encoding đang xử lý, ví dụ byte sequence sai đối với UTF-8 hoặc malformed character input ở encoder. Unmappable nghĩa là input hợp lệ nhưng target charset không biểu diễn được, ví dụ é khi encode sang US-ASCII. CharsetEncoder/Decoder cho phép chọn REPORT, REPLACE hoặc IGNORE có chủ ý."
+  - question: "Đầu vào sai định dạng (malformed input) và ký tự không thể ánh xạ (unmappable character) khác nhau thế nào khi mã hóa/giải mã?"
+    answer: "Malformed nghĩa là cấu trúc đầu vào không hợp lệ cho thao tác đang thực hiện, ví dụ byte UTF-8 sai cấu trúc khi giải mã hoặc surrogate đứng riêng khi mã hóa. Unmappable nghĩa là đầu vào hợp lệ nhưng Charset đích không biểu diễn được, ví dụ é khi mã hóa sang US-ASCII. Các phiên bản phương thức tiện dụng getBytes(Charset) và new String(bytes, Charset) dùng giá trị thay thế; khi cần REPORT/IGNORE/chính sách tùy chỉnh hãy dùng CharsetEncoder/CharsetDecoder."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.Encoding/Encoding.md", anchor: "malformed-input"}
+    readmeRelated: {file: "10.Encoding/Encoding.md", anchor: "malformed-input"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Vì sao có một String không đồng nghĩa text đã well-formed Unicode, và vì sao code point vẫn chưa bằng grapheme?"
-    answer: "String là sequence UTF-16 code unit và có thể chứa surrogate không ghép cặp, nên bản thân type String không validate một Unicode scalar sequence hoàn chỉnh. Ngay cả với well-formed code points, một grapheme người dùng nhìn thấy vẫn có thể gồm nhiều code point; UI cursor/delete/count có thể cần segmentation boundary thay vì char hoặc code-point indexing."
+  - question: "Vì sao có một String không đồng nghĩa văn bản đã hợp lệ hoàn toàn theo Unicode, và vì sao điểm mã vẫn chưa bằng cụm ký tự?"
+    answer: "String là chuỗi đơn vị mã UTF-16 và có thể chứa surrogate đứng riêng; codePoints() cũng không phải bộ xác thực Unicode. Ngoài ra một cụm ký tự người dùng nhìn thấy có thể gồm nhiều điểm mã. Vì vậy logic giao diện về con trỏ, xóa hoặc đếm ký tự có thể cần ranh giới phân đoạn văn bản thay vì chỉ số char hoặc điểm mã."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.UnicodeCodePoint/UnicodeCodePoint.md", anchor: "code-unit-code-point-grapheme"}
+    readmeRelated: {file: "9.UnicodeCodePoint/UnicodeCodePoint.md", anchor: "code-unit-code-point-grapheme"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Pattern flags thay đổi regex semantics như thế nào, và vì sao không nên bật flag theo thói quen?"
-    answer: "MULTILINE thay đổi behavior của ^/$ theo line, DOTALL cho phép . match line terminator, CASE_INSENSITIVE thay case matching, còn UNICODE_CASE và UNICODE_CHARACTER_CLASS mở rộng Unicode semantics cho case/classes. Flag là một phần của regex contract nên có thể thay cả correctness lẫn performance; chúng cũng không thay thế locale-sensitive Collator rules."
+  - question: "Các cờ Pattern thay đổi ngữ nghĩa Regex thế nào, và vì sao không nên bật cờ theo thói quen?"
+    answer: "MULTILINE thay đổi cách ^/$ hoạt động theo ranh giới dòng, DOTALL cho phép . khớp ký tự kết thúc dòng, CASE_INSENSITIVE thay đổi so khớp hoa/thường, còn UNICODE_CASE và UNICODE_CHARACTER_CLASS mở rộng một số ngữ nghĩa Unicode. Cờ là một phần của hợp đồng Regex, có thể ảnh hưởng tính đúng đắn và hiệu năng, và không thay thế quy tắc Locale/Collator."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "11.Regex/Regex.md", anchor: "pattern-matcher"}
+    readmeRelated: {file: "11.Regex/Regex.md", anchor: "regex-syntax-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Phân biệt processing của text block trong source với String.indent/stripIndent và translateEscapes ở runtime."
-    answer: "Text block được compiler xử lý source-level như line terminator normalization, incidental indentation và escape processing để tạo một String value. String.indent/stripIndent là runtime transformations trên multiline String đã tồn tại; translateEscapes() cũng chạy ở runtime để interpret escape notation có trong String data. Đây là các mechanism khác nhau dù cùng làm việc với text/whitespace/escape."
+  - question: "Phân biệt việc xử lý Text Block trong mã nguồn với String.indent()/stripIndent() và translateEscapes() khi chương trình chạy."
+    answer: "Text Block được trình biên dịch xử lý ở mức mã nguồn để chuẩn hóa dòng, xử lý thụt lề phát sinh và ký tự thoát rồi tạo String. indent()/stripIndent() là các phép biến đổi trên String đã tồn tại khi chương trình chạy; translateEscapes() cũng là thao tác khi chương trình chạy để diễn giải tập ký tự thoát của API. Đặc biệt translateEscapes() không xử lý Unicode escape dạng \\uXXXX như trình biên dịch."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "12.TextBlocks/TextBlocks.md", anchor: "escape-processing"}

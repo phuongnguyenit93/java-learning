@@ -1,43 +1,58 @@
-# Regular biểu thức
+# Biểu thức chính quy (Regex)
 
-Regular biểu thức (**regex**) là một ngôn ngữ mô tả pattern trên text. Nó hữu ích cho validation, search, extraction và replacement khi bài toán thật sự mang tính pattern matching.
+## <a id="regex-purpose">Regex là gì và khi nào nên dùng?</a>
+
+Biểu thức chính quy (**Regex**) là một ngôn ngữ mô tả **mẫu văn bản**. Nó tồn tại để giải quyết những câu hỏi không còn là tìm một chuỗi cố định, ví dụ: “đầu vào có đúng cấu trúc mong muốn không?”, “hãy tìm mọi đoạn khớp một quy luật”, hoặc “hãy trích xuất các phần có hình dạng xác định”.
+
+Regex hữu ích cho kiểm tra hợp lệ, tìm kiếm, trích xuất và thay thế khi bài toán thật sự mang tính **so khớp mẫu**. Nếu chỉ cần tìm một chuỗi cố định, kiểm tra tiền tố/hậu tố hoặc thay thế literal, API `String` trực tiếp thường đơn giản và dễ đọc hơn.
+
+```text
+tìm "users" đúng nguyên văn
+→ contains / indexOf
+
+tìm mọi chuỗi chữ số theo một quy luật
+→ Regex
+
+ngữ pháp dữ liệu phức tạp, có cấu trúc nhiều tầng
+→ cân nhắc bộ phân tích cú pháp (parser) thay vì cố nhồi mọi thứ vào Regex
+```
 
 ## <a id="pattern-matcher">Pattern và Matcher</a>
 
-Java tách compiled pattern và trạng thái matching:
+Java tách mẫu đã biên dịch và trạng thái so khớp:
 
 ```java
 Pattern pattern = Pattern.compile("(\\d+)-(\\w+)");
 Matcher matcher = pattern.matcher(input);
 ```
 
-`Pattern` mô tả regex đã compile; `Matcher` gắn pattern với một đầu vào cụ thể và giữ trạng thái tìm kiếm/match.
+`Pattern` mô tả Regex đã được biên dịch; `Matcher` gắn mẫu đó với một đầu vào cụ thể và giữ trạng thái tìm kiếm/so khớp.
 
-Compile lại cùng regex trong loop nóng có thể tốn chi phí không cần thiết; có thể reuse `Pattern` khi phù hợp.
+Biên dịch lại cùng Regex trong một vòng lặp nóng có thể tốn chi phí không cần thiết; có thể tái sử dụng `Pattern` khi phù hợp.
 
 ### Pattern và Matcher có vai trò khác nhau
 
 ```text
-regex source
-    ↓ compile
+Regex trong mã nguồn
+    ↓ biên dịch
 Pattern
     ↓ matcher(input)
 Matcher
-    ↓ execute/search + giữ match state
+    ↓ thực thi/tìm kiếm + giữ trạng thái so khớp
 ```
 
-`Pattern` immutable và có thể share; `Matcher` giữ mutable matching state nên thường tạo theo từng input/use.
+`Pattern` bất biến và có thể dùng chung; `Matcher` giữ trạng thái so khớp có thể thay đổi nên thường tạo theo từng đầu vào/lần sử dụng.
 
 ### matches, lookingAt và find
 
-Ba operation trả lời ba câu hỏi khác nhau:
+Ba thao tác trả lời ba câu hỏi khác nhau:
 
 ```java
 Pattern digits = Pattern.compile("\\d+");
 String input = "123 abc 456";
 
-digits.matcher(input).matches();   // toàn bộ input có match pattern?
-digits.matcher(input).lookingAt(); // input có bắt đầu bằng match?
+digits.matcher(input).matches();   // toàn bộ đầu vào có khớp mẫu?
+digits.matcher(input).lookingAt(); // đầu vào có bắt đầu bằng phần khớp?
 
 Matcher finder = digits.matcher(input);
 while (finder.find()) {
@@ -46,52 +61,56 @@ while (finder.find()) {
 ```
 
 ```text
-validation toàn chuỗi
+kiểm tra toàn chuỗi
 → matches
 
-prefix pattern
+mẫu ở đầu chuỗi
 → lookingAt
 
-search/extraction nhiều match
+tìm kiếm/trích xuất nhiều phần khớp
 → find
 ```
 
-### Java escaping và regex escaping là hai layer
+## <a id="regex-syntax-boundary">Cú pháp Regex và ranh giới sử dụng</a>
 
-Muốn regex runtime là `\d+`:
+Trước khi đi sâu vào nhóm và lượng từ, cần phân biệt rõ ba tầng: khi nào Regex thực sự cần thiết, cú pháp Regex được biểu diễn thế nào trong String literal của Java, và các cờ biên dịch thay đổi quy tắc so khớp ra sao.
+
+### Ký tự thoát của Java và Regex là hai tầng khác nhau
+
+Muốn Regex khi chạy là `\d+`:
 
 ```java
 Pattern.compile("\\d+");
 ```
 
 ```text
-Java source "\\d+"
-        ↓ Java string parsing
-runtime String "\d+"
-        ↓ regex parsing
-digit pattern
+mã nguồn Java "\\d+"
+        ↓ Java phân tích String literal
+String khi chạy "\d+"
+        ↓ Regex phân tích mẫu
+mẫu chữ số
 ```
 
-Đây là nguyên nhân rất nhiều regex Java trông có “gấp đôi backslash”.
+Đây là nguyên nhân rất nhiều Regex trong Java trông có “gấp đôi dấu gạch chéo ngược”.
 
-Nếu text đến từ user/config và phải match như literal, `Pattern.quote(text)` giúp tránh interpret metacharacter ngoài ý muốn.
+Nếu văn bản đến từ người dùng/cấu hình và phải được so khớp như literal, `Pattern.quote(text)` giúp tránh diễn giải ký tự đặc biệt ngoài ý muốn.
 
-### Building blocks cơ bản
+### Các thành phần cơ bản
 
 ```text
-[abc]     character class
-[^abc]    negated class
-^ / $     boundary anchors
-a|b       alternation
-(...)     group
-\d \w   predefined classes
+[abc]     lớp ký tự
+[^abc]    lớp ký tự phủ định
+^ / $     mốc biên
+a|b       lựa chọn
+(...)     nhóm
+\d \w   lớp dựng sẵn
 ```
 
-Không cần regex khi String API literal search đã đủ rõ.
+Không cần Regex khi API String cho tìm kiếm literal đã đủ rõ; đây là ranh giới lựa chọn đã thiết lập ở đầu chương.
 
-### Pattern flags thay đổi matching semantics
+### Cờ của Pattern thay đổi ngữ nghĩa so khớp
 
-Cùng một regex source có thể mang semantics khác khi compile với flags:
+Cùng một Regex có thể mang ngữ nghĩa khác khi biên dịch với các cờ khác nhau:
 
 ```java
 Pattern multiline = Pattern.compile(
@@ -105,42 +124,42 @@ Pattern dotAll = Pattern.compile(
 );
 ```
 
-Một số flags quan trọng:
+Một số cờ quan trọng:
 
 ```text
 CASE_INSENSITIVE
-→ case-insensitive matching
+→ so khớp không phân biệt hoa/thường
 
 MULTILINE
-→ ^ và $ có thể hoạt động theo từng line
+→ ^ và $ có thể hoạt động theo từng dòng
 
 DOTALL
-→ . cũng match line terminator
+→ . cũng khớp ký tự kết thúc dòng
 
 UNICODE_CASE
-→ Unicode-aware case folding khi kết hợp case-insensitive behavior
+→ áp dụng quy tắc chữ hoa/thường theo Unicode khi kết hợp với so khớp không phân biệt hoa/thường
 
 UNICODE_CHARACTER_CLASS
-→ predefined/POSIX character classes dùng Unicode semantics rộng hơn
+→ các lớp ký tự dựng sẵn/POSIX dùng ngữ nghĩa Unicode rộng hơn
 ```
 
-Không nên bật flag “cho chắc”. Flag là một phần của regex contract và có thể thay đổi cả correctness lẫn performance.
+Không nên bật cờ “cho chắc”. Cờ là một phần của hợp đồng Regex và có thể thay đổi cả tính đúng đắn lẫn hiệu năng.
 
-Đặc biệt, regex Unicode semantics không nên bị nhầm với locale-sensitive language rules: regex flag và `Locale/Collator` giải quyết các abstraction khác nhau.
+Đặc biệt, ngữ nghĩa Unicode của Regex không nên bị nhầm với quy tắc ngôn ngữ phụ thuộc vùng miền: cờ Regex và `Locale/Collator` giải quyết các tầng trừu tượng khác nhau.
 
-## <a id="regex-groups">Group và Capture</a>
+## <a id="regex-groups">Nhóm và phần được bắt giữ</a>
 
-Parentheses có thể tạo capturing group:
+Dấu ngoặc có thể tạo nhóm bắt giữ:
 
 ```regex
 (\d+)-(\w+)
 ```
 
-Sau khi match, `group(1)`, `group(2)` lấy phần text được capture tương ứng.
+Sau khi so khớp thành công, `group(1)`, `group(2)` lấy phần văn bản được bắt giữ tương ứng.
 
-Nếu chỉ cần grouping mà không cần capture, non-capturing group `(?:...)` có thể thể hiện intent rõ hơn.
+Nếu chỉ cần nhóm mà không cần bắt giữ, nhóm không bắt giữ `(?:...)` có thể thể hiện mục đích rõ hơn.
 
-Named group cũng hữu ích khi regex phức tạp và tên mang ý nghĩa domain.
+Nhóm có tên cũng hữu ích khi Regex phức tạp và tên mang ý nghĩa nghiệp vụ.
 
 ```java
 Pattern p = Pattern.compile(
@@ -156,47 +175,47 @@ if (m.matches()) {
 
 ### group(0) và group(n)
 
-Sau successful match:
+Sau khi so khớp thành công:
 
 ```text
 group(0)
-→ toàn bộ match
+→ toàn bộ phần khớp
 
 group(1..n)
-→ capture group tương ứng
+→ nhóm bắt giữ tương ứng
 ```
 
-Gọi `group(...)` khi chưa có successful match state sẽ gây `IllegalStateException`.
+Gọi `group(...)` khi chưa có trạng thái so khớp thành công sẽ gây `IllegalStateException`.
 
-### Replacement cũng có syntax riêng
+### Chuỗi thay thế cũng có cú pháp riêng
 
-Trong replacement của `replaceAll`/`Matcher.replaceAll`, `$` và `\` có ý nghĩa đặc biệt. Nếu replacement phải là literal runtime text, dùng `Matcher.quoteReplacement(...)` khi phù hợp.
+Trong chuỗi thay thế của `replaceAll`/`Matcher.replaceAll`, `$` và `\` có ý nghĩa đặc biệt. Nếu phần thay thế phải được hiểu là văn bản literal khi chạy, dùng `Matcher.quoteReplacement(...)` khi phù hợp.
 
-## <a id="regex-quantifiers">Greedy và Reluctant Quantifier</a>
+## <a id="regex-quantifiers">Lượng từ tham lam và không tham lam</a>
 
-Quantifier như `*`, `+`, `{m,n}` mặc định thường greedy: cố lấy nhiều đầu vào nhất rồi backtrack nếu cần.
+Lượng từ như `*`, `+`, `{m,n}` mặc định thường tham lam: cố lấy nhiều đầu vào nhất rồi quay lui nếu cần.
 
-Reluctant variant như `*?`, `+?` bắt đầu với ít đầu vào hơn rồi mở rộng khi cần.
+Biến thể không tham lam như `*?`, `+?` bắt đầu với ít đầu vào hơn rồi mở rộng khi cần.
 
-Java còn có **possessive quantifier** như `*+`, `++`, không backtrack phần đã consume. Nó có thể hữu ích để kiểm soát backtracking khi semantics phù hợp, nhưng không phải “phiên bản nhanh hơn” có thể thay greedy một cách máy móc.
+Java còn có **lượng từ chiếm hữu (possessive quantifier)** như `*+`, `++`, không quay lui phần đã tiêu thụ. Nó có thể hữu ích để kiểm soát backtracking khi ngữ nghĩa phù hợp, nhưng không phải “phiên bản nhanh hơn” có thể thay thế lượng từ tham lam một cách máy móc.
 
-Sự khác biệt này ảnh hưởng kết quả khi nhiều vị trí match có thể hợp lệ. Hãy đọc regex cùng đầu vào example thay vì chỉ nhìn cú pháp riêng lẻ.
+Sự khác biệt này ảnh hưởng kết quả khi nhiều vị trí so khớp có thể hợp lệ. Hãy đọc Regex cùng đầu vào ví dụ thay vì chỉ nhìn cú pháp riêng lẻ.
 
 Ví dụ:
 
 ```text
-input: <a><b>
+đầu vào: <a><b>
 
 <.*>
-→ greedy, có thể lấy <a><b>
+→ tham lam, có thể lấy <a><b>
 
 <.*?>
-→ reluctant, match đầu tiên có thể là <a>
+→ không tham lam, phần khớp đầu tiên có thể là <a>
 ```
 
-## <a id="regex-performance">Backtracking và Hiệu năng</a>
+## <a id="regex-performance">Quay lui (backtracking) và hiệu năng</a>
 
-Một số pattern có thể tạo lượng backtracking rất lớn trên đầu vào xấu, đặc biệt khi nested quantifier/ambiguous alternative kết hợp không cẩn thận.
+Một số mẫu có thể tạo lượng quay lui (backtracking) rất lớn trên đầu vào xấu, đặc biệt khi lượng từ lồng nhau hoặc các nhánh lựa chọn mơ hồ kết hợp không cẩn thận.
 
 Ví dụ dạng rủi ro:
 
@@ -204,22 +223,22 @@ Ví dụ dạng rủi ro:
 (a+)+$
 ```
 
-Input dài gần-match nhưng fail ở cuối có thể buộc engine thử rất nhiều partition trước khi kết luận.
+Đầu vào dài gần khớp nhưng thất bại ở cuối có thể buộc bộ máy Regex thử rất nhiều cách phân chia trước khi kết luận.
 
 Với regex nhận đầu vào không tin cậy:
 
-- giữ pattern đơn giản;
+- giữ mẫu đơn giản;
 - giới hạn đầu vào khi phù hợp;
-- tránh cấu trúc dễ gây catastrophic backtracking;
-- benchmark/test worst-case thay vì chỉ test đầu vào match đẹp.
+- tránh cấu trúc dễ gây quay lui bùng nổ (catastrophic backtracking);
+- đo đạc/kiểm thử trường hợp xấu nhất thay vì chỉ kiểm thử đầu vào khớp đẹp.
 
 Ngoài ra:
 
-- reuse compiled `Pattern` khi cùng pattern chạy lặp lại nhiều;
-- tránh dùng regex để parse grammar phức tạp khi parser/state machine rõ hơn;
-- đặt size/time boundary ở layer ứng dụng nếu regex xử lý untrusted large input;
-- review nested quantifier và overlapping alternation.
+- tái sử dụng `Pattern` đã biên dịch khi cùng một mẫu chạy lặp lại nhiều;
+- tránh dùng Regex để phân tích ngữ pháp phức tạp khi bộ phân tích cú pháp hoặc máy trạng thái rõ ràng hơn;
+- đặt giới hạn kích thước/thời gian ở tầng ứng dụng nếu Regex xử lý đầu vào lớn không tin cậy;
+- rà soát lượng từ lồng nhau và các nhánh lựa chọn chồng lấn.
 
-Regex rất mạnh nhưng không phải parser tốt cho mọi grammar phức tạp.
+Regex rất mạnh nhưng không phải bộ phân tích cú pháp phù hợp cho mọi ngữ pháp phức tạp.
 
-chương cuối của module nói về **cách viết String nhiều dòng trong source**, không phải một kiểu String mới.
+Chương cuối của mô-đun nói về **cách viết String nhiều dòng trong mã nguồn** và tổng hợp toàn bộ mô hình xử lý String, không phải một kiểu String mới.

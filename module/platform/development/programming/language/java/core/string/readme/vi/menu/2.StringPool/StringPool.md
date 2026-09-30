@@ -1,21 +1,21 @@
 # String Pool
 
-Vì String immutable, JVM có thể an toàn chia sẻ một số String có cùng nội dung thay vì luôn tạo object mới. Đây là ý tưởng nền tảng của **String pool**.
+Vì String bất biến, JVM có thể an toàn dùng chung một số String có cùng nội dung thay vì luôn tạo đối tượng mới. Đây là ý tưởng nền tảng của **String Pool**.
 
 ## <a id="string-pool-model">String Pool là gì?</a>
 
-String pool lưu các reference chuẩn hóa cho một số String, đặc biệt là String literal và giá trị được `intern()`.
+String Pool lưu các tham chiếu chuẩn hóa cho một số String, đặc biệt là String literal và giá trị được `intern()`.
 
-### WHY — vì sao pool tồn tại?
+### VÌ SAO — vì sao String Pool tồn tại?
 
-String xuất hiện cực nhiều trong source code: class name, key, message, path, token, constant... Nếu literal giống nhau luôn tạo object mới, runtime sẽ giữ nhiều object có cùng content mà không mang thêm semantic value.
+String xuất hiện cực nhiều trong mã nguồn: tên lớp, khóa, thông báo, đường dẫn, token, hằng số... Nếu literal giống nhau luôn tạo đối tượng mới, JVM sẽ giữ nhiều đối tượng có cùng nội dung mà không mang thêm ý nghĩa.
 
-Vì String immutable, Java có thể canonicalize một số value:
+Vì String bất biến, Java có thể chuẩn hóa một số giá trị về cùng tham chiếu đại diện:
 
 ```text
-equal immutable String values
+những giá trị String bất biến có cùng nội dung
         ↓
-chia sẻ một canonical identity an toàn
+chia sẻ một định danh tham chiếu chuẩn hóa an toàn
         ↓
 String pool
 ```
@@ -25,13 +25,13 @@ String a = "java";
 String b = "java";
 ```
 
-Vì hai literal có cùng nội dung được intern, `a` và `b` tham chiếu cùng canonical pooled String object.
+Vì hai literal có cùng nội dung được intern, `a` và `b` tham chiếu cùng một đối tượng String chuẩn trong pool.
 
-Với String literal, đây không chỉ là một optimization ngẫu nhiên: literal và constant String được intern theo contract của Java. Cách JVM lưu pool ở đâu trong memory là implementation detail; learner không nên gắn mental model với PermGen hay một data structure nội bộ cụ thể.
+Với String literal, đây không chỉ là một tối ưu ngẫu nhiên: literal và hằng String được intern theo hợp đồng của Java. Việc JVM lưu pool ở đâu trong bộ nhớ là chi tiết triển khai; người học không nên gắn mô hình tư duy với PermGen hay một cấu trúc dữ liệu nội bộ cụ thể.
 
-Điểm cần nhớ là pool là **identity optimization/canonicalization**, không thay đổi hợp đồng so sánh text: muốn so nội dung vẫn dùng `equals`.
+Điểm cần nhớ là pool là cơ chế **tối ưu và chuẩn hóa định danh tham chiếu**, không thay đổi hợp đồng so sánh nội dung văn bản: muốn so nội dung vẫn dùng `equals`.
 
-Pool cũng không phải một `Map` public mà application có thể iterate, remove hay mutate. Hãy dùng nó như mental model cho canonical identity.
+Pool cũng không phải một `Map` công khai mà ứng dụng có thể duyệt, xóa hay sửa trực tiếp. Hãy dùng nó như mô hình tư duy cho tham chiếu chuẩn hóa.
 
 ## <a id="literal-vs-new">Literal và new String</a>
 
@@ -40,18 +40,18 @@ String a = "java";
 String b = new String("java");
 ```
 
-`a` trỏ tới pooled literal, còn `new String(...)` yêu cầu tạo String object mới.
+`a` trỏ tới literal trong pool, còn `new String(...)` yêu cầu tạo một đối tượng String mới.
 
 Vì vậy:
 
 ```java
-a == b      // false
-a.equals(b) // true
+System.out.println(a == b);      // false
+System.out.println(a.equals(b)); // true
 ```
 
-Không dùng `new String("...")` nếu chỉ cần một literal bình thường; nó thường thêm object không cần thiết.
+Không dùng `new String("...")` nếu chỉ cần một literal bình thường; nó thường thêm đối tượng không cần thiết.
 
-`new` không làm String trở nên mutable:
+`new` không làm String trở nên có thể thay đổi:
 
 ```java
 String x = new String("java");
@@ -60,56 +60,34 @@ x.toUpperCase();
 System.out.println(x); // java
 ```
 
-Constructor chỉ thay đổi cách object được tạo, không thay đổi immutability contract.
+Hàm khởi tạo (constructor) chỉ thay đổi cách đối tượng được tạo, không thay đổi quy ước bất biến.
 
-## <a id="pool-identity">String Pool và Identity</a>
+## <a id="pool-identity">String Pool và định danh tham chiếu</a>
 
-Compile-time constant concatenation có thể được gộp thành cùng pooled literal:
+Phép nối là biểu thức hằng tại thời điểm biên dịch tạo ra một hằng String được intern, nên có thể dùng cùng tham chiếu chuẩn hóa với literal tương ứng:
 
 ```java
 String a = "ja" + "va";
 String b = "java";
 ```
 
-Trong khi concatenation phụ thuộc runtime value không có cùng guarantee về identity.
+Trong khi phép nối phụ thuộc giá trị chỉ biết khi chạy không có cùng bảo đảm về định danh tham chiếu.
 
-### final chưa chắc là compile-time constant
+Quy tắc chính xác về **biểu thức hằng (constant expression)**, biến `final` và phép nối tại thời điểm biên dịch được trình bày ở chương Nối chuỗi; tại đây chỉ cần giữ mô hình tư duy rằng định danh tham chiếu trong String Pool phụ thuộc vào cách giá trị được tạo, còn so sánh nội dung vẫn dùng `equals`.
 
-Một `final` variable chỉ tham gia constant expression khi nó thực sự là **constant variable**:
-
-```java
-final String prefix = "ja";
-String a = prefix + "va";
-String b = "java";
-
-System.out.println(a == b); // true
-```
-
-Nhưng value chỉ biết ở runtime thì khác:
-
-```java
-final String prefix = args.length > 0 ? args[0] : "ja";
-String a = prefix + "va";
-String b = "java";
-
-System.out.println(a.equals(b)); // content question
-```
-
-`final` nghĩa là reference không được gán lại; nó không tự động biến mọi runtime expression thành compile-time constant.
-
-### Rule thực dụng
+### Quy tắc thực dụng
 
 ```text
-cùng object?
+cùng đối tượng?
 → ==
 
-cùng text?
+cùng nội dung văn bản?
 → equals
 
-cần canonical pooled reference có chủ ý?
-→ intern(), với trade-off rõ ràng
+cần tham chiếu chuẩn hóa trong pool một cách có chủ ý?
+→ intern(), với đánh đổi rõ ràng
 ```
 
-Đừng viết business logic dựa trên pooled identity. Pooling là optimization/runtime hành vi; **text equality vẫn là `equals`**.
+Đừng viết logic nghiệp vụ dựa trên định danh tham chiếu trong pool. String Pool là cơ chế chuẩn hóa/tái sử dụng tham chiếu của Java/JVM; với literal và hằng String, việc intern còn gắn với contract của Java chứ không chỉ là tối ưu triển khai. **So sánh nội dung văn bản vẫn dùng `equals`**.
 
-chương tiếp theo tập trung trực tiếp vào quy tắc so sánh String.
+Chương tiếp theo tập trung trực tiếp vào quy tắc so sánh String.

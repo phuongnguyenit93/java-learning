@@ -42,6 +42,10 @@
     aiGenerated: true
     reviewed: false
 4.CoreStringOperations/CoreStringOperations.md:
+  string-char-sequence:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
   string-inspection:
     difficulty: BASIC
     aiGenerated: true
@@ -88,11 +92,11 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  builder-capacity:
+  builder-usage:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  builder-usage:
+  builder-capacity:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
@@ -122,24 +126,7 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-9.Encoding/Encoding.md:
-  text-vs-bytes:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-  charset-encode-decode:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-  default-charset-risk:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-  malformed-input:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-10.UnicodeCodePoint/UnicodeCodePoint.md:
+9.UnicodeCodePoint/UnicodeCodePoint.md:
   utf16-char-model:
     difficulty: BASIC
     aiGenerated: true
@@ -168,8 +155,33 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+10.Encoding/Encoding.md:
+  text-vs-bytes:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  charset-encode-decode:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  default-charset-risk:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  malformed-input:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
 11.Regex/Regex.md:
+  regex-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
   pattern-matcher:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  regex-syntax-boundary:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
@@ -199,6 +211,10 @@
     aiGenerated: true
     reviewed: false
   text-block-not-template:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  string-synthesis:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false

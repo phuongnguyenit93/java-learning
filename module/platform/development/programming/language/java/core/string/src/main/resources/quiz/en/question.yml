@@ -55,14 +55,14 @@ questions:
   - id: string-immutability-result
     question: "What happens to the original String after calling a transformation such as toUpperCase() without assigning the returned value?"
     answers:
-      - {id: A, answer: "The original String is unchanged because String is immutable; the operation returns another String value.", explanation: "Correct. String operations do not mutate the existing object; callers must use the returned value."}
-      - {id: B, answer: "The original String is modified in place.", explanation: "Incorrect. String operations do not mutate the existing object; callers must use the returned value."}
-      - {id: C, answer: "The original becomes null.", explanation: "Incorrect. String operations do not mutate the existing object; callers must use the returned value."}
-      - {id: D, answer: "The JVM mutates the pooled value for every reference.", explanation: "Incorrect. String operations do not mutate the existing object; callers must use the returned value."}
+      - {id: A, answer: "The original String is not mutated; callers must use the returned result, and the API does not guarantee a distinct object when the content needs no change.", explanation: "Correct. Immutability guarantees no in-place mutation, not that every operation allocates a different object."}
+      - {id: B, answer: "The original String is modified in place.", explanation: "Incorrect. String transformation methods do not mutate the existing String object."}
+      - {id: C, answer: "The original automatically becomes null.", explanation: "Incorrect. Ignoring the return value does not change the current reference to null."}
+      - {id: D, answer: "The JVM mutates a pooled String so every reference changes.", explanation: "Incorrect. Shared String values remain immutable."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.Immutability/Immutability.md", anchor: "string-immutability"}
+    readmeRelated: {file: "1.Immutability/Immutability.md", anchor: "string-operation-new-value"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-pool-identity
@@ -92,12 +92,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-compile-time-concat
-    question: "Why can \"ja\" + \"va\" share the same pooled identity as the literal \"java\" in a constant expression?"
+    question: "Why does \"ja\" + \"va\" share the canonical pooled reference of the literal \"java\" when it is a constant expression?"
     answers:
       - {id: A, answer: "Every runtime concatenation is automatically interned.", explanation: "Incorrect. Compile-time constant folding is different from ordinary runtime concatenation."}
       - {id: B, answer: "StringBuilder always returns pooled Strings.", explanation: "Incorrect. Compile-time constant folding is different from ordinary runtime concatenation."}
       - {id: C, answer: "The garbage collector merges all equal Strings immediately.", explanation: "Incorrect. Compile-time constant folding is different from ordinary runtime concatenation."}
-      - {id: D, answer: "The compiler can fold constant-expression concatenation into one literal before runtime.", explanation: "Correct. Compile-time constant folding is different from ordinary runtime concatenation."}
+      - {id: D, answer: "Java evaluates the constant expression at compile time, and the resulting constant String is interned.", explanation: "Correct. This is specified constant-expression behavior, not an optional optimization that applies to arbitrary runtime concatenation."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
@@ -153,7 +153,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.Encoding/Encoding.md", anchor: "charset-encode-decode"}
+    readmeRelated: {file: "10.Encoding/Encoding.md", anchor: "charset-encode-decode"}
     apiRelated: {controller: "EncodingController", methodSignature: "roundTrip()"}
 
   - id: string-codepoint-length
@@ -166,7 +166,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.UnicodeCodePoint/UnicodeCodePoint.md", anchor: "surrogate-pairs"}
+    readmeRelated: {file: "9.UnicodeCodePoint/UnicodeCodePoint.md", anchor: "surrogate-pairs"}
     apiRelated: {controller: "UnicodeController", methodSignature: "charVsCodePoint()"}
 
   - id: string-normalization-equality
@@ -179,7 +179,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.UnicodeCodePoint/UnicodeCodePoint.md", anchor: "canonical-equivalence"}
+    readmeRelated: {file: "9.UnicodeCodePoint/UnicodeCodePoint.md", anchor: "canonical-equivalence"}
     apiRelated: {controller: "UnicodeController", methodSignature: "normalization()"}
 
   - id: string-grapheme-boundary
@@ -187,12 +187,12 @@ questions:
     answers:
       - {id: A, answer: "They are three names for exactly the same unit.", explanation: "Incorrect. Text processing layers differ; user-visible characters can span multiple code points and code units."}
       - {id: B, answer: "A grapheme cluster is always one Java char.", explanation: "Incorrect. Text processing layers differ; user-visible characters can span multiple code points and code units."}
-      - {id: C, answer: "A code unit is an encoding unit, a code point identifies a Unicode scalar value, and a grapheme cluster approximates one user-perceived character.", explanation: "Correct. Text processing layers differ; user-visible characters can span multiple code points and code units."}
+      - {id: C, answer: "A UTF-16 code unit is one storage/indexing unit, a code point is a value in the Unicode code space, and a grapheme cluster approximates one user-perceived character; Unicode scalar values additionally exclude the surrogate range.", explanation: "Correct. Code point, scalar value, code unit, and user-perceived character are related but distinct concepts."}
       - {id: D, answer: "A code point is always two UTF-16 code units.", explanation: "Incorrect. Text processing layers differ; user-visible characters can span multiple code points and code units."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.UnicodeCodePoint/UnicodeCodePoint.md", anchor: "code-unit-code-point-grapheme"}
+    readmeRelated: {file: "9.UnicodeCodePoint/UnicodeCodePoint.md", anchor: "code-unit-code-point-grapheme"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-regex-greedy
@@ -250,14 +250,14 @@ questions:
   - id: string-final-constant-variable
     question: "Which statement about final String variables and compile-time constants is correct?"
     answers:
-      - {id: A, answer: "Every final String is a compile-time constant.", explanation: "Incorrect. final only prevents reassignment; constant-variable rules must also be satisfied."}
+      - {id: A, answer: "Every final String is a compile-time constant.", explanation: "Incorrect. final prevents reassignment, but constant-variable rules must also be satisfied."}
       - {id: B, answer: "A final String can never participate in a constant expression.", explanation: "Incorrect. A constant variable can participate."}
-      - {id: C, answer: "Only a final String initialized with an appropriate constant expression is a constant variable eligible for compile-time folding.", explanation: "Correct."}
+      - {id: C, answer: "Only a final String initialized with an appropriate constant expression is a constant variable eligible for compile-time evaluation.", explanation: "Correct. A value from args, a method call, or other runtime data does not become a constant variable merely because the reference is final."}
       - {id: D, answer: "Compile-time constants exist only for primitives.", explanation: "Incorrect. Java supports String constant expressions."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.StringPool/StringPool.md", anchor: "pool-identity"}
+    readmeRelated: {file: "5.Concatenation/Concatenation.md", anchor: "compile-time-concat"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-equals-ignore-case-locale
@@ -277,13 +277,13 @@ questions:
     question: "With String s = \"java\" and StringBuilder b = new StringBuilder(\"java\"), which statement is correct?"
     answers:
       - {id: A, answer: "s.equals(b) must be true because both implement CharSequence.", explanation: "Incorrect. CharSequence does not define one cross-implementation equals contract."}
-      - {id: B, answer: "s == b is the correct text comparison.", explanation: "Incorrect. == is identity."}
+      - {id: B, answer: "s == b is the correct text comparison.", explanation: "Incorrect. == compares reference identity."}
       - {id: C, answer: "b.equals(s) is required by CharSequence to return true.", explanation: "Incorrect. The interface defines no shared equality contract."}
-      - {id: D, answer: "s.contentEquals(b) can be true while s.equals(b) is false.", explanation: "Correct. This is the String-vs-CharSequence content boundary."}
+      - {id: D, answer: "s.contentEquals(b) can be true while s.equals(b) is false.", explanation: "Correct. contentEquals(...) expresses String-to-CharSequence content comparison directly."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.CoreStringOperations/CoreStringOperations.md", anchor: "string-inspection"}
+    readmeRelated: {file: "4.CoreStringOperations/CoreStringOperations.md", anchor: "string-char-sequence"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-empty-vs-blank
@@ -421,7 +421,7 @@ questions:
     answers:
       - {id: A, answer: "Because intern makes Strings mutable.", explanation: "Incorrect."}
       - {id: B, answer: "Because intern always encodes UTF-16BE.", explanation: "Incorrect."}
-      - {id: C, answer: "Canonicalization adds lookup/retention pressure while providing little deduplication.", explanation: "Correct."}
+      - {id: C, answer: "Canonicalization adds lookup and String-table management cost while providing little deduplication.", explanation: "Correct. With mostly unique values, sharing benefits are small while management costs remain."}
       - {id: D, answer: "Because intern disables equals().", explanation: "Incorrect."}
     correctAnswerId: C
     aiGenerated: true
@@ -432,14 +432,14 @@ questions:
   - id: string-java21-default-charset
     question: "For Java 21, which statement best describes the Java SE default charset?"
     answers:
-      - {id: A, answer: "JEP 400 standardized the default to UTF-8, but durable protocol/file encoding should still be explicit.", explanation: "Correct. Encoding remains a data contract."}
+      - {id: A, answer: "JEP 400 defines UTF-8 as the Java default charset, so APIs whose contract uses the default follow it; durable file/protocol contracts should still be explicit, and consoles/some standard streams have separate charset behavior.", explanation: "Correct. Java default charset should not be generalized into a claim that every I/O stream uses Charset.defaultCharset()."}
       - {id: B, answer: "It is always Windows-1252.", explanation: "Incorrect."}
       - {id: C, answer: "The default charset no longer exists.", explanation: "Incorrect."}
       - {id: D, answer: "External protocols infer their charset from String.", explanation: "Incorrect."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.Encoding/Encoding.md", anchor: "default-charset-risk"}
+    readmeRelated: {file: "10.Encoding/Encoding.md", anchor: "default-charset-risk"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-malformed-unmappable
@@ -448,11 +448,11 @@ questions:
       - {id: A, answer: "They are the same concept.", explanation: "Incorrect."}
       - {id: B, answer: "Malformed input occurs only in regex.", explanation: "Incorrect."}
       - {id: C, answer: "Unmappable means an invalid byte sequence while decoding.", explanation: "Incorrect. That is closer to malformed input."}
-      - {id: D, answer: "Malformed means a sequence is invalid for the encoding; unmappable means a valid character cannot be represented in the target charset.", explanation: "Correct."}
+      - {id: D, answer: "Malformed means structurally invalid input for the encode/decode operation; unmappable means valid character input that the target charset cannot represent.", explanation: "Correct. Malformed UTF-8 bytes and a valid é encoded to US-ASCII illustrate the distinction."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.Encoding/Encoding.md", anchor: "malformed-input"}
+    readmeRelated: {file: "10.Encoding/Encoding.md", anchor: "malformed-input"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-unpaired-surrogate
@@ -465,7 +465,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.UnicodeCodePoint/UnicodeCodePoint.md", anchor: "code-unit-code-point-grapheme"}
+    readmeRelated: {file: "9.UnicodeCodePoint/UnicodeCodePoint.md", anchor: "code-unit-code-point-grapheme"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-grapheme-segmentation
@@ -478,7 +478,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.UnicodeCodePoint/UnicodeCodePoint.md", anchor: "code-unit-code-point-grapheme"}
+    readmeRelated: {file: "9.UnicodeCodePoint/UnicodeCodePoint.md", anchor: "code-unit-code-point-grapheme"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-regex-matching-modes
@@ -504,7 +504,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "11.Regex/Regex.md", anchor: "pattern-matcher"}
+    readmeRelated: {file: "11.Regex/Regex.md", anchor: "regex-syntax-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-textblock-indent-runtime
@@ -526,7 +526,7 @@ questions:
       - {id: A, answer: "To make the JVM intern every escape.", explanation: "Incorrect."}
       - {id: B, answer: "To decode UTF-8 bytes.", explanation: "Incorrect."}
       - {id: C, answer: "To replace regex capture groups.", explanation: "Incorrect."}
-      - {id: D, answer: "When a runtime String contains escape notation and the input contract intentionally requires interpreting those escapes.", explanation: "Correct."}
+      - {id: D, answer: "When a runtime String contains escape notation and the input contract intentionally requires interpreting the escapes; this API does not process Unicode-escape notation such as \\uXXXX the way the compiler does.", explanation: "Correct. translateEscapes() handles its runtime escape set, while Java Unicode escapes are a separate source-processing mechanism."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false

@@ -1,16 +1,17 @@
 EncodingController:
   roundTrip():
-    summary: UTF-8 round-trip String ↔ bytes
-    description: Encode text "Xin chào ☕" bằng UTF-8 rồi decode lại bằng chính UTF-8.
-      So sánh text, byte length, decoded value và field roundTrip để quan sát rằng
-      hai phía thống nhất Charset thì text có thể round-trip đúng.
+    summary: Vòng mã hóa/giải mã UTF-8
+    description: Mã hóa "Xin chào ☕" thành byte bằng UTF-8 rồi giải mã chính dãy byte
+      đó bằng UTF-8. So sánh text, utf8Bytes, decoded và roundTrip để quan sát một
+      vòng chuyển đổi giữ nguyên nội dung khi hai phía dùng cùng Charset và dữ liệu
+      đều biểu diễn được.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 9.Encoding/Encoding.md
+      file: 10.Encoding/Encoding.md
       anchor: charset-encode-decode
     methodName: roundTrip
     params: [
@@ -27,17 +28,18 @@ EncodingController:
       ]
     usage: true
   wrongCharset():
-    summary: Mojibake khi encode/decode khác Charset
-    description: Encode "café" bằng UTF-8 nhưng cố ý decode cùng bytes bằng ISO-8859-1.
-      Quan sát decodedAsLatin1 và same=false để thấy transport byte có thể đúng nhưng
-      interpretation contract sai vẫn làm text bị mojibake.
+    summary: Mojibake khi hai phía dùng khác Charset
+    description: Mã hóa "café" bằng UTF-8 nhưng cố ý giải mã cùng byte bằng ISO-8859-1.
+      Quan sát original, decodedAsLatin1 và same=false để thấy byte có thể được truyền
+      nguyên vẹn nhưng văn bản vẫn sai nếu hợp đồng diễn giải Charset không thống
+      nhất.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 9.Encoding/Encoding.md
+      file: 10.Encoding/Encoding.md
       anchor: charset-encode-decode
     methodName: wrongCharset
     params: [
@@ -55,10 +57,10 @@ EncodingController:
     usage: true
 RegexController:
   groups():
-    summary: Group và capture
-    description: Match toàn bộ "ada@example.com" bằng Pattern có named groups user/domain.
-      Response chỉ đọc group sau khi matches() thành công, giúp quan sát Pattern/Matcher
-      state và named capture trên một input deterministic.
+    summary: Nhóm bắt giữ có tên
+    description: So khớp toàn bộ "ada@example.com" bằng Pattern có hai nhóm có tên
+      user/domain. Phản hồi chỉ lấy group sau khi matches() thành công, giúp quan
+      sát quan hệ giữa Pattern, Matcher, trạng thái so khớp và dữ liệu bắt giữ.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -82,10 +84,11 @@ RegexController:
       ]
     usage: true
   backtracking():
-    summary: Backtracking và performance pitfall
-    description: Chạy pattern "(a+)+$" trên input gần match nhưng fail ở cuối, với
-      sample cố ý bounded. elapsedNanos chỉ là evidence minh họa backtracking cost;
-      không dùng con số cụ thể như benchmark hoặc SLA.
+    summary: Quay lui và chi phí Regex
+    description: Chạy mẫu rủi ro "(a+)+$" trên đầu vào có giới hạn gồm nhiều ký tự
+      a rồi thất bại ở dấu ! cuối. Quan sát matched=false, boundedSample=true và elapsedNanos
+      như bằng chứng minh họa cho chi phí quay lui. elapsedNanos không phải phép đo
+      benchmark hay SLA hay ngưỡng hiệu năng ổn định.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -110,11 +113,11 @@ RegexController:
     usage: true
 StringConcatController:
   constructionTrace():
-    summary: Cost của repeated concatenation
-    description: Xây cùng text "0123" bằng repeated immutable concatenation và StringBuilder.
-      Response cho thấy result bằng nhau về content nhưng repeated concat đi qua nhiều
-      intermediate String identities; identity hash chỉ là dấu vết quan sát, không
-      phải allocation counter chính xác.
+    summary: Chi phí nối String lặp lại
+    description: Xây cùng kết quả "0123" bằng phép nối String lặp lại và bằng StringBuilder.
+      concatResult và builderResult chứng minh hai cách cho cùng nội dung; concatIntermediateIdentities
+      chỉ giúp quan sát các kết quả String trung gian, không phải bộ đếm cấp phát
+      và không nên dùng để suy ra chính xác số object đã cấp phát.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -139,10 +142,12 @@ StringConcatController:
     usage: true
 StringPoolController:
   identity():
-    summary: Pool identity và compile-time constant
-    description: Đặt literal "java", compile-time concat "ja"+"va", new String("java")
-      và intern() cạnh nhau. Đọc literalIdentity, newStringIdentity, contentEquals
-      và internIdentity để tách rõ content equality khỏi object identity/canonicalization.
+    summary: String Pool và định danh tham chiếu
+    description: Đặt literal "java", biểu thức hằng "ja"+"va", new String("java")
+      và intern() cạnh nhau. literalIdentity=true cho thấy hằng String dùng chung
+      tham chiếu chuẩn hóa; newStringIdentity=false nhưng contentEquals=true tách
+      định danh tham chiếu khỏi nội dung; internIdentity=true cho thấy intern() trả
+      tham chiếu chuẩn hóa tương ứng.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -167,17 +172,18 @@ StringPoolController:
     usage: true
 UnicodeController:
   charVsCodePoint():
-    summary: Surrogate pair
-    description: Dùng text "A😀" để so utf16Length với codePointCount và danh sách
-      codePoints. Response chứng minh length() đếm UTF-16 code unit chứ không phải
-      số Unicode code point hay user-perceived character.
+    summary: Đơn vị mã UTF-16 và điểm mã Unicode
+    description: Dùng "A😀" để so utf16Length=3 với codePointCount=2 và danh sách
+      codePoints. Experiment chứng minh length() đếm đơn vị mã UTF-16; emoji ngoài
+      BMP chiếm hai đơn vị mã nhưng chỉ một điểm mã. Nó chưa đo số grapheme cluster
+      của giao diện người dùng.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 10.UnicodeCodePoint/UnicodeCodePoint.md
+      file: 9.UnicodeCodePoint/UnicodeCodePoint.md
       anchor: surrogate-pairs
     methodName: charVsCodePoint
     params: [
@@ -194,17 +200,18 @@ UnicodeController:
       ]
     usage: true
   normalization():
-    summary: Canonical equivalence và String equality
-    description: So sánh "é" precomposed với "e\u0301" decomposed trước và sau NFC.
-      Quan sát visualA/visualB, code-point sequences, equalsBefore và equalsAfterNfc
-      để thấy render giống nhau không đồng nghĩa String.equals() tự normalization.
+    summary: Tương đương chuẩn tắc và equals()
+    description: So sánh "é" dựng sẵn với "e\u0301" phân rã. equalsBefore=false và
+      hai danh sách code point khác nhau cho thấy hình thức hiển thị không quyết định
+      String equality; sau khi chuẩn hóa cả hai về NFC, equalsAfterNfc=true. Endpoint
+      chỉ minh họa NFC, không chạy NFD/NFKC/NFKD.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 10.UnicodeCodePoint/UnicodeCodePoint.md
+      file: 9.UnicodeCodePoint/UnicodeCodePoint.md
       anchor: canonical-equivalence
     methodName: normalization
     params: [

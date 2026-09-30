@@ -1,6 +1,21 @@
 # Regular Expressions
 
-A regular expression (**regex**) is a pattern language for text. It is useful for validation, search, extraction, and replacement when the problem is genuinely pattern-oriented.
+## <a id="regex-purpose">What Regex Is and When to Use It</a>
+
+A regular expression (**regex**) is a language for describing **text patterns**. It exists for questions that are no longer simple literal lookup, such as “does this input have the required shape?”, “find every substring following this rule”, or “extract components with a defined textual form”.
+
+Regex is useful for validation, search, extraction, and replacement when the problem is genuinely **pattern-oriented**. If the task is only literal search, prefix/suffix testing, or literal replacement, direct `String` APIs are usually simpler and easier to read.
+
+```text
+find the literal text "users"
+→ contains / indexOf
+
+find every run of digits matching a rule
+→ regex
+
+parse a deeply structured grammar
+→ consider a parser instead of forcing everything into regex
+```
 
 ## <a id="pattern-matcher">Pattern and Matcher</a>
 
@@ -56,6 +71,10 @@ search / repeated extraction
 → find
 ```
 
+## <a id="regex-syntax-boundary">Regex Syntax and Usage Boundaries</a>
+
+Before groups and quantifiers, separate three concerns: when regex complexity is justified, how regex syntax is represented inside Java String literals, and how compilation flags change matching behavior.
+
 ### Java escaping and regex escaping are two layers
 
 To make the runtime regex `\d+`:
@@ -87,7 +106,7 @@ a|b       alternation
 \d \w   predefined classes
 ```
 
-Do not reach for regex when a direct literal String operation is clearer.
+Do not reach for regex when a direct literal String operation is clearer; that decision boundary was established at the start of the chapter.
 
 ### Pattern flags change matching semantics
 

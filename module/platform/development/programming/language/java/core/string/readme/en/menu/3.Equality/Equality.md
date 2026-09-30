@@ -10,7 +10,7 @@ String pooling can make `==` appear to compare content in simple demos. That is 
 String a = new String("java");
 String b = new String("java");
 
-a.equals(b) // true
+System.out.println(a.equals(b)); // true
 ```
 
 When the question is “do these text values contain the same sequence?”, `equals` is the normal operation.
@@ -48,7 +48,7 @@ Objects.equals(left, right);
 
 ### Ordering is not equality
 
-`compareTo` answers a lexicographic-order question:
+`compareTo` answers a lexicographic-order question over the String's `char`/UTF-16 code-unit sequence:
 
 ```java
 "abc".compareTo("abc"); // 0
@@ -58,20 +58,7 @@ Objects.equals(left, right);
 
 Do not assume the result is always `-1`, `0`, or `1`; the sign is the relevant contract.
 
-Natural String ordering is useful for technical ordering. Human-language ordering may require `Collator` from the localization boundary.
-
-### contentEquals
-
-When comparing with another `CharSequence`:
-
-```java
-String text = "java";
-StringBuilder builder = new StringBuilder("java");
-
-text.contentEquals(builder); // true
-```
-
-There is no need to convert every character sequence into String merely to compare content.
+This is String's natural ordering, not human-language collation. It is useful for many technical values; locale/language-sensitive ordering may require `Collator` from the localization boundary.
 
 ## <a id="string-reference-equality">== Checks Identity</a>
 
@@ -114,7 +101,7 @@ Do not assume lowercasing with the platform default locale is a universal compar
 A common pitfall is:
 
 ```java
-a.toLowerCase().equals(b.toLowerCase())
+a.toLowerCase().equals(b.toLowerCase());
 ```
 
 The no-argument conversion uses the process default Locale and creates intermediate Strings. If the domain needs locale-sensitive comparison, Locale must be an explicit part of the contract.

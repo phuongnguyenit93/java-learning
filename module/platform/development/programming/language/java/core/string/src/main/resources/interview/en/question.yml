@@ -29,161 +29,161 @@
 
 questions:
   - question: "What is String and what role does it play in a Java system? Why should not every domain value be modeled as String?"
-    answer: "String is Java's core object type for representing text. It appears frequently at input/output, API payload/header, configuration, logging, protocol, and persistence-conversion boundaries. Business logic should still keep values such as money, time, state, and identifiers in meaningful domain types when appropriate; String should represent text or a textual boundary representation, not replace the domain type system."
+    answer: "String is Java's core reference type for text. It appears frequently at input/output, UI, API, configuration, logging, protocol, persistence, and transport boundaries. Domain values such as money, time, state, and identifiers should still keep meaningful domain types when appropriate; String should represent text or a textual boundary representation, not replace the domain type system."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "1.Immutability/Immutability.md", anchor: "string-purpose"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: "Why is String immutability important to Java APIs and runtime behavior?"
-    answer: "Immutable text can be safely shared, cached, pooled, used as a stable hash key, and passed across APIs without callers mutating an existing value. Operations return new values, which simplifies reasoning and supports the String pool contract."
+    answer: "String content does not mutate in place, so the same value can be shared safely with respect to its content, used as a stable hash key, and participate in pooling. Transformations return a String result rather than modifying the old object, but the result is not guaranteed to be a distinct allocation when no content change is needed. This simplifies aliasing and API reasoning."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "1.Immutability/Immutability.md", anchor: "string-immutability"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: "Explain the String pool mental model and why == is still the wrong default for text comparison."
-    answer: "The pool can canonicalize literals and explicitly interned values so some equal Strings share identity. That sharing is an implementation/runtime contract for pooling, not value equality. == checks identity; equals checks characters."
+    answer: "The String pool provides canonical references for literals, constant String expressions, and explicitly interned values, so some equal Strings can share identity. Literal/constant interning is part of Java semantics. == checks reference identity, while equals() checks String content; business logic should not use pool identity as a substitute for value equality."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "2.StringPool/StringPool.md", anchor: "string-pool-model"}
-    apiRelated: {controller: "", methodSignature: ""}
+    apiRelated: {controller: "StringPoolController", methodSignature: "identity()"}
 
   - question: "How do String, Unicode, and Charset relate when data crosses an I/O boundary?"
-    answer: "A String represents text as Java characters/code points over UTF-16 code units. External storage/transmission uses bytes. Charset defines the reversible mapping between text and bytes, so both sides must agree on the encoding."
+    answer: "String represents text, while its basic indexing APIs operate on UTF-16 code units. Files, networks, and byte-oriented protocols use bytes. Charset defines how text is encoded to bytes and decoded back, so both sides need a compatible Charset and error policy; String itself does not intrinsically carry UTF-8 or another external encoding."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.Encoding/Encoding.md", anchor: "charset-encode-decode"}
+    readmeRelated: {file: "10.Encoding/Encoding.md", anchor: "charset-encode-decode"}
     apiRelated: {controller: "EncodingController", methodSignature: "roundTrip()"}
 
-  - question: "Why is char not a safe synonym for a user-visible character?"
-    answer: "char is one UTF-16 code unit. A supplementary Unicode code point uses two chars, and one user-perceived grapheme may contain multiple code points such as a base letter plus combining marks or emoji sequences."
+  - question: "Why is char not a safe synonym for one user-visible character?"
+    answer: "char is one UTF-16 code unit. A supplementary Unicode code point requires two char values as a surrogate pair, while one user-perceived grapheme can contain multiple code points, such as a base letter plus combining marks or an emoji sequence. char, code point, and grapheme cluster therefore represent different processing layers."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.UnicodeCodePoint/UnicodeCodePoint.md", anchor: "code-unit-code-point-grapheme"}
+    readmeRelated: {file: "9.UnicodeCodePoint/UnicodeCodePoint.md", anchor: "code-unit-code-point-grapheme"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: "When does Unicode normalization matter in application logic?"
-    answer: "Visually equivalent text can use different canonical code-point sequences. Normalize at a deliberate comparison/search/storage boundary when the domain requires canonical equivalence, while remembering normalization is not locale-aware collation or general case folding."
+    answer: "Visually equivalent text can use different canonically equivalent code-point sequences, such as a precomposed character versus a base character plus combining mark. Normalize at a deliberate comparison/search/storage boundary when the domain requires canonical equivalence. Normalization is not locale-aware collation or general language case handling."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.UnicodeCodePoint/UnicodeCodePoint.md", anchor: "unicode-normalization"}
-    apiRelated: {controller: "", methodSignature: ""}
+    readmeRelated: {file: "9.UnicodeCodePoint/UnicodeCodePoint.md", anchor: "unicode-normalization"}
+    apiRelated: {controller: "UnicodeController", methodSignature: "normalization()"}
 
   - question: "How would you choose between String concatenation, StringBuilder, and StringBuffer?"
-    answer: "Use ordinary concatenation for simple readable expressions; compilers already optimize many cases. Use StringBuilder for explicit incremental construction, especially loops. StringBuffer adds synchronized methods for legacy/shared-buffer scenarios, but synchronization does not solve broader compound-operation concurrency design."
+    answer: "Use ordinary String concatenation for small readable expressions. Use StringBuilder for explicit incremental construction, especially loops or many steps, to avoid repeated intermediate String creation/copying. StringBuffer synchronizes many methods and mainly fits genuinely shared-buffer or legacy-API scenarios; method-level synchronization does not solve compound concurrency workflows automatically."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "7.StringBuffer/StringBuffer.md", anchor: "builder-vs-buffer"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "What problem does String.intern solve, and why should it not be applied indiscriminately?"
-    answer: "Interning canonicalizes equal String values to one pooled identity, which can help specialized symbol-like workloads. It also creates pool-management and memory-retention trade-offs, so normal value equality should not depend on interning."
+  - question: "What problem does String.intern() solve, and why should it not be applied indiscriminately?"
+    answer: "intern() returns the canonical String-pool reference for the corresponding content. It can help specialized controlled workloads with repeated values, but it adds lookup/String-table management cost and can couple code unnecessarily to identity. With very high-cardinality, mostly unique data, deduplication benefits are usually small."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "8.Intern/Intern.md", anchor: "intern-tradeoffs"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: "How do you review a regex for production safety rather than only correctness?"
-    answer: "Check input bounds, ambiguous nested quantifiers/alternatives, catastrophic-backtracking risk, compilation reuse, and whether a parser or simpler string operation is clearer. Correct matching behavior alone does not guarantee predictable runtime cost."
+    answer: "Check input bounds, ambiguous nested quantifiers/alternatives, catastrophic-backtracking risk, reuse of compiled Pattern objects, and whether a direct String API or parser is simpler. A regex can match correctly on friendly input while still having unpredictable runtime cost on adversarial input."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "11.Regex/Regex.md", anchor: "regex-performance"}
     apiRelated: {controller: "RegexController", methodSignature: "backtracking()"}
 
   - question: "How is String immutability preserved when a String is created from a mutable char[] or when toCharArray() is called?"
-    answer: "A String must be isolated from mutable-array aliases. Mutating the original char[] after String construction does not change the String, and toCharArray() returns an independent array that callers may mutate without changing the String. The actual internal storage remains a JVM implementation detail."
+    answer: "String must be isolated from mutable-array aliases. Modifying the source char[] after String construction does not change the String, and toCharArray() returns an independent array that callers may mutate without changing the String. The actual internal storage remains a JVM implementation detail."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "1.Immutability/Immutability.md", anchor: "string-immutability"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: "Why does declaring a String variable final not necessarily make concatenation a compile-time constant expression?"
-    answer: "final only prevents reassignment of the reference. To participate in a constant expression, the variable must be a constant variable initialized from a constant expression known at compile time. A final String initialized from args, a method call, or runtime data therefore has no compile-time folding or pooled-identity guarantee."
+    answer: "final only prevents reassignment. To participate in a constant expression, the variable must be a constant variable initialized from a compile-time constant expression. A final String initialized from args, a method call, or other runtime data therefore has no compile-time folding/interned-identity guarantee."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.StringPool/StringPool.md", anchor: "pool-identity"}
+    readmeRelated: {file: "5.Concatenation/Concatenation.md", anchor: "compile-time-concat"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: "How do String and CharSequence differ in their immutability and equality contracts?"
-    answer: "String implements CharSequence, but CharSequence does not promise immutability; StringBuilder and StringBuffer are mutable CharSequence implementations. String.equals follows the String equality contract and does not define cross-implementation equality for every CharSequence. When comparing String content with another suitable CharSequence, contentEquals expresses that intent directly."
+    answer: "String implements CharSequence, but CharSequence does not promise immutability; StringBuilder and StringBuffer are mutable CharSequence implementations. String.equals() follows the String equality contract and does not define one cross-implementation equality contract for all CharSequence types. contentEquals(...) directly expresses String-to-CharSequence content comparison when that is the intent."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.Equality/Equality.md", anchor: "string-equals"}
+    readmeRelated: {file: "4.CoreStringOperations/CoreStringOperations.md", anchor: "string-char-sequence"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: "How do you choose between direct String APIs and regex when inspecting, searching, extracting, or transforming text?"
-    answer: "Choose by intent: length/isBlank/charAt for inspection, startsWith/contains/indexOf for literal search, substring for known index boundaries, replace for literal replacement, and regex when the problem truly requires pattern matching. Regex should not be the default for every text operation because direct String APIs usually communicate simple intent more clearly."
+    answer: "Choose by intent: length()/isBlank()/charAt() for inspection, startsWith()/contains()/indexOf() for literal search, substring() for known index boundaries, replace() for literal replacement, and regex when the problem genuinely requires pattern matching. Regex should not be the default for every text operation because direct String APIs usually communicate simple intent more clearly."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.CoreStringOperations/CoreStringOperations.md", anchor: "string-search"}
+    readmeRelated: {file: "11.Regex/Regex.md", anchor: "regex-purpose"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: "Explain String.split(regex, limit) semantics for positive, zero, and negative limit values."
-    answer: "With limit > 0, the result has at most limit elements and the last element keeps the remaining input. With limit == 0, matching has no positive bound but trailing empty strings are discarded. With limit < 0, matching also has no positive bound and trailing empty strings are preserved. The limit is therefore part of the data-parsing contract, not merely a performance option."
+    answer: "With limit > 0, the result has at most limit elements and the last element keeps the remaining input. With limit == 0, matching has no positive bound but trailing empty strings are discarded. With limit < 0, matching also has no positive bound and trailing empty strings are preserved. The limit therefore changes result data, not merely performance."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "4.CoreStringOperations/CoreStringOperations.md", anchor: "string-split-join"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: "Why is it wrong to say every String + operation is always compiled into StringBuilder, and why can += inside a loop still be expensive?"
-    answer: "Java specifies concatenation semantics, while compiler/runtime implementations may use different strategies such as invokedynamic, so application code must not depend on one lowering. Repeated += can still create successive immutable results and copy an increasingly large prefix, producing much more copying than an explicit mutable construction buffer."
+    answer: "Java specifies concatenation semantics while compiler/runtime implementations may use different strategies such as invokedynamic, so application code must not depend on one lowering. Repeated += can still create successive immutable String results and copy an increasingly large prefix, producing substantially more copying than reusing one mutable construction buffer."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "5.Concatenation/Concatenation.md", anchor: "loop-concat-cost"}
     apiRelated: {controller: "StringConcatController", methodSignature: "constructionTrace()"}
 
-  - question: "How do length, capacity, and the snapshot semantics of StringBuilder.toString() differ?"
-    answer: "length is the number of code units currently stored; capacity is the current internal buffer space before growth and is a performance concern rather than a maximum length. toString() produces an immutable String representing the builder content at that call; later builder mutations do not change the previously produced String."
+  - question: "How do length, capacity, and StringBuilder.toString() semantics differ?"
+    answer: "length() is the current UTF-16 code-unit count; capacity() is the current internal buffer space before growth and is a performance concern rather than a maximum length. toString() produces a String representing the builder content at that call; later builder mutations do not change the already produced String."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.StringBuilder/StringBuilder.md", anchor: "builder-usage"}
+    readmeRelated: {file: "", anchor: ""}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: "Why do synchronized StringBuffer methods not make a multi-step workflow automatically atomic?"
-    answer: "StringBuffer synchronization protects individual method calls. A sequence such as reading length, deciding, then appending spans multiple operations, so another thread can still interleave between them. If an invariant must cover the whole sequence, the caller needs a larger synchronization boundary or a design that avoids the shared mutable buffer."
+    answer: "StringBuffer synchronization protects individual method calls. A sequence such as reading length, deciding, then appending spans multiple operations, so another thread can still interleave. If one invariant must cover the entire sequence, the caller needs a wider synchronization boundary or a design that avoids the shared mutable buffer."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "7.StringBuffer/StringBuffer.md", anchor: "thread-safety-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: "Why is interning high-cardinality or user-controlled data usually a poor optimization?"
-    answer: "When most values are nearly unique, interning provides little deduplication while still adding lookup/canonicalization work and retention pressure in the pool. It can also couple code unnecessarily to identity. Intern only when cardinality/workload is controlled and measurement or an actual canonical-identity contract justifies it."
+    answer: "When most values are nearly unique, interning provides little deduplication while still adding lookup/canonicalization and String-table management cost. It can also couple code unnecessarily to identity. Intern only when cardinality/workload is controlled and measurement or a real canonical-identity requirement justifies it."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "8.Intern/Intern.md", anchor: "intern-tradeoffs"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "If the default charset in Java 21 is normally UTF-8, why should file or protocol contracts still specify a Charset explicitly?"
-    answer: "Since JDK 18, standard Java APIs default to UTF-8 under JEP 400, so the old model that the default always varies with OS is no longer the normal Java 21 behavior. Encoding at file/network boundaries is still a data contract between producer and consumer; StandardCharsets.UTF_8 makes that contract explicit, reviewable, and independent of compatibility or implementation configuration."
+  - question: "If Java's default charset is UTF-8 in Java 21, why should file or protocol contracts still specify a Charset explicitly?"
+    answer: "Since JDK 18, JEP 400 defines UTF-8 as the Java default charset, so Charset.defaultCharset() is UTF-8 under standard Java 21 behavior and APIs whose contract uses the default follow it. File/network encoding is still a producer-consumer contract, and consoles/some standard streams have separate charset behavior. Explicit StandardCharsets.UTF_8 makes the intended boundary contract reviewable and independent of compatibility configuration."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.Encoding/Encoding.md", anchor: "default-charset-risk"}
+    readmeRelated: {file: "10.Encoding/Encoding.md", anchor: "default-charset-risk"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: "What is the difference between malformed input and an unmappable character during text encoding or decoding?"
-    answer: "Malformed means the input sequence is invalid for the encoding being processed, such as an illegal UTF-8 byte sequence or malformed character input to an encoder. Unmappable means the input is valid but the target charset cannot represent it, such as é when encoding to US-ASCII. CharsetEncoder/Decoder lets the application deliberately choose REPORT, REPLACE, or IGNORE."
+    answer: "Malformed means the input structure is invalid for the encode/decode operation, such as malformed UTF-8 bytes or an unpaired surrogate presented to an encoder. Unmappable means valid input cannot be represented by the target charset, such as é for US-ASCII. Convenience getBytes(Charset)/new String(bytes, Charset) replace invalid input; CharsetEncoder/CharsetDecoder is required when REPORT, IGNORE, or another explicit policy is needed."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.Encoding/Encoding.md", anchor: "malformed-input"}
+    readmeRelated: {file: "10.Encoding/Encoding.md", anchor: "malformed-input"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Why does having a String not guarantee well-formed Unicode text, and why is a code point still not the same as a grapheme?"
-    answer: "A String is a sequence of UTF-16 code units and may contain an unpaired surrogate, so the type itself does not validate a complete Unicode scalar sequence. Even with well-formed code points, one user-perceived grapheme may contain several code points; UI cursor, deletion, or counting logic may therefore need segmentation boundaries rather than char or code-point indexing."
+  - question: "Why does having a String not guarantee well-formed Unicode text, and why is a code point still not the same as a grapheme cluster?"
+    answer: "A String is a sequence of UTF-16 code units and may contain an unpaired surrogate; codePoints() is not a Unicode validator either. Even with well-formed code points, one user-perceived grapheme may contain several code points, so UI cursor/deletion/counting logic may need text-segmentation boundaries rather than char or code-point indexing."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.UnicodeCodePoint/UnicodeCodePoint.md", anchor: "code-unit-code-point-grapheme"}
+    readmeRelated: {file: "9.UnicodeCodePoint/UnicodeCodePoint.md", anchor: "code-unit-code-point-grapheme"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: "How do Pattern flags change regex semantics, and why should they not be enabled by habit?"
-    answer: "MULTILINE changes how ^/$ behave across lines, DOTALL lets . match line terminators, CASE_INSENSITIVE changes case matching, and UNICODE_CASE/UNICODE_CHARACTER_CLASS broaden Unicode semantics for case and character classes. Flags are part of the regex contract and can affect both correctness and performance; they also do not replace locale-sensitive Collator rules."
+    answer: "MULTILINE changes how ^/$ behave at line boundaries, DOTALL lets . match line terminators, CASE_INSENSITIVE changes case matching, and UNICODE_CASE/UNICODE_CHARACTER_CLASS broaden selected Unicode semantics. Flags are part of the regex contract and can affect correctness and performance; they do not replace Locale/Collator rules."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "11.Regex/Regex.md", anchor: "pattern-matcher"}
+    readmeRelated: {file: "11.Regex/Regex.md", anchor: "regex-syntax-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "How does text-block processing in source differ from String.indent/stripIndent and translateEscapes at runtime?"
-    answer: "A text block is processed by the compiler at source level through steps such as line-terminator normalization, incidental-indentation handling, and escape processing to produce a String value. String.indent/stripIndent are runtime transformations on an existing multiline String, and translateEscapes() is another runtime operation that interprets escape notation stored in String data. They are separate mechanisms even though all deal with text, whitespace, or escapes."
+  - question: "How does text-block processing in source differ from String.indent()/stripIndent() and translateEscapes() at runtime?"
+    answer: "A text block is processed by the compiler at source level through line-terminator normalization, incidental-indentation handling, and escape processing to produce a String. indent()/stripIndent() transform an existing runtime String; translateEscapes() interprets its runtime escape set and does not process Unicode-escape notation such as \\uXXXX the way the compiler does."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "12.TextBlocks/TextBlocks.md", anchor: "escape-processing"}

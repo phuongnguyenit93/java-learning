@@ -1,75 +1,75 @@
 # StringBuffer
 
-`StringBuffer` có API gần giống `StringBuilder` nhưng nhiều method được synchronized. Điều đó tạo một số guarantees ở mức từng thao tác, nhưng không tự động giải quyết mọi bài toán concurrency.
+`StringBuffer` có API gần giống `StringBuilder` nhưng nhiều phương thức được `synchronized`. Điều đó tạo một số bảo đảm ở mức từng thao tác, nhưng không tự động giải quyết mọi bài toán đồng thời.
 
-## <a id="buffer-synchronization">Synchronization trong StringBuffer</a>
+## <a id="buffer-synchronization">Cơ chế đồng bộ trong StringBuffer</a>
 
-Các method như `append` được synchronization theo object buffer, giúp tránh một số race ở mức method call riêng lẻ khi nhiều thread cùng truy cập.
+Các phương thức như `append` được đồng bộ hóa theo đối tượng `StringBuffer`, giúp tránh một số tranh chấp ở mức từng lời gọi phương thức khi nhiều luồng cùng truy cập.
 
-Đánh đổi là synchronization overhead và contention.
+Đánh đổi là chi phí đồng bộ hóa và tranh chấp tài nguyên.
 
-Nếu builder chỉ được dùng trong một thread/local scope, `StringBuilder` thường đơn giản và nhanh hơn.
+Nếu bộ đệm chỉ được dùng trong phạm vi một luồng hoặc một phương thức, `StringBuilder` thường đơn giản và nhanh hơn.
 
-### WHAT synchronization đảm bảo?
+### Cơ chế đồng bộ đảm bảo điều gì?
 
 Ở mức khái niệm:
 
 ```text
-thread A gọi append(...)
+luồng A gọi append(...)
         │
-        └── synchronized trên StringBuffer instance
+        └── synchronized trên cùng đối tượng StringBuffer
 
-thread B gọi append(...)
+luồng B gọi append(...)
         │
-        └── phối hợp qua cùng monitor cho method call đó
+        └── phối hợp qua cùng monitor cho lời gọi phương thức đó
 ```
 
-Điều này khác `StringBuilder`, nơi API không cung cấp synchronization nội bộ tương tự.
+Điều này khác `StringBuilder`, nơi API không cung cấp cơ chế đồng bộ hóa nội bộ tương tự.
 
-Nhưng “có synchronized method” không có nghĩa mọi multi-step workflow là atomic.
+Nhưng “có phương thức synchronized” không có nghĩa mọi chuỗi nhiều bước đều nguyên tử (atomic).
 
 ## <a id="builder-vs-buffer">StringBuilder hay StringBuffer?</a>
 
-Heuristic:
+Quy tắc lựa chọn nhanh:
 
 ```text
-không cần shared mutable buffer giữa nhiều thread
+không cần bộ đệm có thể thay đổi dùng chung giữa nhiều luồng
 → StringBuilder
 
-thật sự cần synchronized mutable character buffer
+thật sự cần bộ đệm ký tự có thể thay đổi với đồng bộ hóa nội bộ
 → cân nhắc StringBuffer
 ```
 
-Trong nhiều thiết kế tốt, thay vì share một mutable buffer giữa threads, mỗi thread xây kết quả riêng rồi combine ở ranh giới rõ ràng.
+Trong nhiều thiết kế tốt, thay vì chia sẻ một bộ đệm có thể thay đổi giữa nhiều luồng, mỗi luồng xây kết quả riêng rồi kết hợp ở một ranh giới rõ ràng.
 
-Comparison thực dụng:
+So sánh thực dụng:
 
 ```text
-single-thread / local construction
+xây chuỗi cục bộ trong một luồng
 → StringBuilder
 
-legacy API yêu cầu StringBuffer
+API cũ yêu cầu StringBuffer
 → StringBuffer
 
-shared mutable buffer thật sự cần method-level synchronization
-→ cân nhắc StringBuffer, nhưng review toàn workflow
+bộ đệm dùng chung thật sự cần đồng bộ hóa ở mức từng phương thức
+→ cân nhắc StringBuffer, nhưng phải rà soát toàn bộ luồng xử lý
 ```
 
-Không chọn `StringBuffer` chỉ vì “thread-safe nghe an toàn hơn”. Synchronization có cost và shared mutable state làm design phức tạp hơn.
+Không chọn `StringBuffer` chỉ vì “an toàn luồng nghe an toàn hơn”. Đồng bộ hóa có chi phí và trạng thái có thể thay đổi dùng chung làm thiết kế phức tạp hơn.
 
-## <a id="thread-safety-boundary">Giới hạn Thread-safety</a>
+## <a id="thread-safety-boundary">Giới hạn của an toàn luồng</a>
 
-Hai method synchronized riêng lẻ không làm một chuỗi nhiều bước trở thành atomic.
+Hai phương thức synchronized riêng lẻ không làm một chuỗi nhiều bước trở thành nguyên tử.
 
 Ví dụ logic kiểu:
 
 ```text
-đọc length
-→ quyết định dựa trên length
+đọc độ dài
+→ quyết định dựa trên độ dài
 → append
 ```
 
-có thể bị thread khác xen vào giữa các bước nếu bên gọi không có synchronization lớn hơn.
+có thể bị luồng khác xen vào giữa các bước nếu bên gọi không có phạm vi đồng bộ hóa lớn hơn.
 
 Ví dụ:
 
@@ -79,20 +79,20 @@ if (buffer.length() < 100) {
 }
 ```
 
-`length()` và `append()` có thể synchronized riêng, nhưng check-then-act ở caller gồm **hai operation**. Thread khác có thể thay đổi buffer giữa chúng.
+`length()` và `append()` có thể được đồng bộ hóa riêng, nhưng chuỗi kiểm tra-rồi-thực-hiện ở bên gọi gồm **hai thao tác**. Luồng khác có thể thay đổi bộ đệm giữa chúng.
 
-Nếu invariant cần bao phủ:
+Nếu điều kiện bất biến cần bao phủ:
 
 ```text
-read state
-→ decide
-→ mutate
+đọc trạng thái
+→ quyết định
+→ thay đổi
 ```
 
-thì synchronization boundary phải bao phủ toàn sequence hoặc design nên tránh shared mutable buffer.
+thì phạm vi đồng bộ hóa phải bao phủ toàn bộ chuỗi thao tác hoặc thiết kế nên tránh bộ đệm có thể thay đổi dùng chung.
 
-Thread-safety phải được đánh giá ở **thao tác ranh giới của use case**, không chỉ nhìn annotation/synchronized của từng method.
+An toàn luồng phải được đánh giá ở **toàn bộ thao tác nghiệp vụ cần bảo vệ**, không chỉ nhìn annotation hoặc `synchronized` của từng phương thức.
 
-Concurrency primitives, locks và Java Memory Model không thuộc chapter này; module concurrency sở hữu phần sâu đó.
+Các cơ chế nguyên thủy của lập trình đồng thời, khóa và Java Memory Model không thuộc chương này; phần chuyên sâu đó thuộc mô-đun Concurrency.
 
-chương tiếp theo quay lại String pool và giải thích explicit canonicalization bằng `String.intern()`.
+Chương tiếp theo quay lại String Pool và giải thích việc chuẩn hóa tham chiếu có chủ đích bằng `String.intern()`.

@@ -43,74 +43,100 @@
 
 roadmap:
   - id: string-purpose
-    title: Mục đích của String và text boundary
-    purpose: Hiểu String là immutable text value chính của Java và xác định các application boundary nơi text representation quan trọng.
+    title: String là gì và vì sao Java cần một kiểu riêng để biểu diễn văn bản?
+    purpose: Xây dựng hình dung ban đầu về String như một kiểu tham chiếu bất biến cốt lõi của Java dùng để biểu diễn văn bản, lý do Java cần một mức trừu tượng riêng cho văn bản và những ranh giới ứng dụng/hệ thống nơi dữ liệu văn bản xuất hiện.
+    relatedKnowledge:
+      - Immutability
     objectives:
-      - Tách text representation khỏi domain value như number, date hoặc identifier.
-      - Nhận biết khi text đi qua storage, network, UI hoặc serialization boundary.
+      - Giải thích một giá trị String biểu diễn điều gì và vì sao văn bản không đơn giản chỉ là một mảng char.
+      - Phân biệt dữ liệu văn bản với dữ liệu có cấu trúc, số, ngày giờ, nhị phân hoặc các giá trị nghiệp vụ khác.
+      - Nhận biết văn bản tại các ranh giới nhập/xuất, cấu hình, ghi log, lưu trữ, mạng, UI và API.
   - id: immutability-and-value-semantics
-    title: Immutability và Value Semantics
-    purpose: Hiểu vì sao String immutable và cách immutability ảnh hưởng đến sharing, hashing, thread-safety và transformation API.
+    title: Tính bất biến và ngữ nghĩa giá trị
+    purpose: Hiểu vì sao String là bất biến và tính bất biến ảnh hưởng thế nào đến việc chia sẻ dữ liệu, giá trị băm, an toàn luồng và các API biến đổi chuỗi.
+    relatedKnowledge:
+      - Immutability
     objectives:
-      - Xem String operation là tạo value mới thay vì mutate value cũ.
-      - Nhận biết lợi ích safe-sharing và allocation trade-off.
+      - Hiểu rằng thao tác trên String tạo ra giá trị mới thay vì sửa trực tiếp giá trị hiện có.
+      - Hiểu vì sao mảng char có thể thay đổi không thể sửa gián tiếp một String đã được tạo.
+      - Nhận biết hệ quả của tính bất biến đối với chia sẻ an toàn, băm, an toàn luồng và cấp phát bộ nhớ.
   - id: pool-identity-and-equality
-    title: String Pool, Identity và Equality
-    purpose: Hiểu vì sao text bằng nhau có thể có hoặc không cùng identity và vì sao content equality không được nhầm với reference identity.
+    title: String Pool, định danh tham chiếu và so sánh nội dung
+    purpose: Hiểu vì sao hai String có nội dung giống nhau có thể cùng hoặc khác tham chiếu và vì sao việc dùng chung đối tượng trong String Pool không thay thế quy tắc so sánh nội dung.
+    relatedKnowledge:
+      - StringPool
+      - Equality
     relatedModules:
       - routeId: JAVA_OBJECT_CONTRACT
-        label: Object Contract
-        note: String equality và hashing là ví dụ cụ thể của object contract tổng quát.
+        label: Quy ước đối tượng (Object Contract)
+        note: Cách String triển khai equals() và hashCode() là ví dụ cụ thể của các quy ước chung dành cho đối tượng.
     objectives:
-      - Giải thích literal pooling và khác biệt literal/new String.
-      - Chọn content-comparison API có chủ đích.
+      - Giải thích cơ chế dùng chung literal chuỗi (String literal) và sự khác biệt với new String(...).
+      - Phân biệt so sánh tham chiếu bằng == với so sánh nội dung bằng equals().
+      - Nhận biết vì sao so sánh không phân biệt hoa thường và các quy tắc văn bản phụ thuộc thiết lập vùng miền (locale) cần được xử lý cẩn thận hơn.
   - id: core-string-operations
     title: Các thao tác String cốt lõi
-    purpose: Học cách inspect, search, extract, split, join, transform và format text đồng thời tôn trọng index và immutability boundary.
+    purpose: Học cách kiểm tra, tìm kiếm, trích xuất, tách, ghép, biến đổi và định dạng văn bản mà vẫn hiểu đúng giới hạn chỉ số và tính bất biến của String.
+    relatedKnowledge:
+      - CoreStringOperations
     objectives:
-      - Chọn operation theo intent thay vì ghi nhớ method rời rạc.
-      - Nhận biết edge case về range, split, regex và whitespace.
+      - Hiểu String là một kiểu triển khai CharSequence và ý nghĩa của tầng trừu tượng này khi thiết kế hoặc sử dụng API.
+      - Chọn thao tác theo mục đích thay vì ghi nhớ các phương thức rời rạc.
+      - Nhận biết các trường hợp biên về chỉ số/phạm vi, giới hạn khi dùng split(), Regex, chuyển đổi hoa-thường và khoảng trắng.
   - id: text-construction
-    title: Nối chuỗi và Mutable Builder
-    purpose: Hiểu cost model của repeated concatenation và khi nào StringBuilder/StringBuffer là construction tool phù hợp.
+    title: Xây dựng chuỗi và đánh đổi khi tái sử dụng
+    purpose: Hiểu chi phí của việc nối String lặp lại, khi nào nên dùng StringBuilder/StringBuffer và vì sao chuẩn hóa tham chiếu String chỉ là một kỹ thuật tái sử dụng chuyên biệt chứ không phải tối ưu mặc định.
+    relatedKnowledge:
+      - Concatenation
+      - StringBuilder
+      - StringBuffer
+      - Intern
     objectives:
-      - Phân biệt compile-time concatenation với repeated runtime construction.
-      - Chọn mutable builder mà không nhầm rằng String trở nên mutable.
+      - Phân biệt nối hằng chuỗi tại thời điểm biên dịch với việc nối chuỗi lặp lại khi chương trình đang chạy.
+      - Dùng StringBuilder cho việc xây dựng chuỗi tăng dần mà không nhầm rằng bản thân String có thể thay đổi.
+      - Giải thích khác biệt đồng bộ của StringBuffer và giới hạn của sự bảo đảm đó.
+      - Giải thích intern() trả về gì và vì sao việc dùng chung tham chiếu chuẩn hóa khác với việc hai String có nội dung bằng nhau.
+      - Cân nhắc chi phí bộ nhớ và số lượng giá trị khác nhau thay vì xem intern() là một tối ưu mặc định.
+  - id: unicode-text-model
+    title: Unicode, điểm mã và ký tự người dùng nhìn thấy
+    purpose: Hiểu vì sao char của Java, điểm mã Unicode (code point), cụm ký tự người dùng cảm nhận (grapheme) và văn bản đã chuẩn hóa là các tầng biểu diễn khác nhau của cùng một nội dung văn bản.
+    relatedKnowledge:
+      - UnicodeCodePoint
+    relatedModules:
+      - routeId: JAVA_LOCALIZATION
+        label: Bản địa hóa (Localization)
+        note: So sánh thứ tự, phân tách và hiển thị văn bản theo vùng miền (locale) đều dựa trên mô hình Unicode.
+    objectives:
+      - Tránh giả định một char bằng một ký tự người dùng nhìn thấy.
+      - Phân biệt đơn vị mã UTF-16 (code unit), điểm mã Unicode (code point) và cụm ký tự (grapheme cluster).
+      - Nhận biết ranh giới của chuẩn hóa Unicode, tương đương chuẩn tắc và phân tách ký tự.
   - id: encoding-and-charset
-    title: Encoding và Charset Boundary
-    purpose: Hiểu cách text trở thành byte và byte trở thành text, cùng lý do charset phải rõ ràng tại system boundary.
+    title: Mã hóa văn bản và bộ ký tự (Charset)
+    purpose: Hiểu cách văn bản Unicode được chuyển thành byte và byte được chuyển lại thành văn bản, cùng lý do Charset phải được xác định rõ tại các ranh giới bên ngoài hệ thống.
+    relatedKnowledge:
+      - Encoding
     relatedModules:
       - routeId: JAVA_IO
         label: I/O
-        note: Character stream và file/network I/O biến charset decision thành behavior thực tế.
+        note: Luồng ký tự và I/O qua tệp hoặc mạng là nơi lựa chọn Charset trực tiếp ảnh hưởng đến dữ liệu thực tế.
     objectives:
-      - Tách Unicode text value khỏi encoded byte sequence.
-      - Tránh assumption dựa trên platform-default charset.
-  - id: unicode-text-model
-    title: Unicode, Code Point và text người dùng nhìn thấy
-    purpose: Hiểu vì sao Java char, Unicode code point, grapheme và normalized text là các tầng khác nhau của text model.
-    relatedModules:
-      - routeId: JAVA_LOCALIZATION
-        label: Localization
-        note: Collation, segmentation và presentation theo locale dựa trên Unicode text model.
-    objectives:
-      - Tránh giả định một char bằng một ký tự người dùng nhìn thấy.
-      - Nhận biết normalization và segmentation boundary.
+      - Phân biệt văn bản đang được xử lý trong bộ nhớ với dãy byte đã được mã hóa.
+      - Liên hệ việc mã hóa/giải mã với mô hình Unicode đã học trước đó.
+      - Tránh phụ thuộc ngầm vào Charset mặc định của nền tảng.
   - id: regex-patterns
-    title: Regular Expression và Pattern Matching
-    purpose: Hiểu regex như pattern language cho text matching/transformation cùng readability và performance boundary.
+    title: Biểu thức chính quy (Regex) và so khớp mẫu
+    purpose: Hiểu Regex như một ngôn ngữ mô tả mẫu để tìm kiếm, kiểm tra và biến đổi văn bản, đồng thời nhận biết giới hạn về độ dễ đọc và hiệu năng.
+    relatedKnowledge:
+      - Regex
     objectives:
-      - Dùng regex khi pattern semantics thực sự cần complexity đó.
-      - Nhận biết pitfall về escaping, backtracking và flag.
-  - id: text-blocks
-    title: Text Block
-    purpose: Hiểu text block là source-level multiline String syntax, không phải template hay runtime type khác.
-    objectives:
-      - Reason về incidental indentation, escape và line terminator.
-      - Dùng text block khi source readability được cải thiện.
+      - Dùng Regex khi bài toán thực sự cần mô tả mẫu thay vì các thao tác String đơn giản.
+      - Nhận biết các lỗi thường gặp liên quan đến ký tự thoát (escape), quay lui (backtracking) và cờ cấu hình.
   - id: string-synthesis
-    title: Tổng hợp String và Text Processing
-    purpose: Kết nối value semantics, construction, encoding, Unicode, pattern và presentation boundary thành một text-processing model thống nhất.
+    title: Biểu diễn String trong mã nguồn và tổng hợp mô hình xử lý
+    purpose: Kết nối ngữ nghĩa giá trị, xây dựng chuỗi, Unicode, mã hóa, so khớp mẫu, cách biểu diễn chuỗi trong mã nguồn và ranh giới với các module lân cận thành một mô hình xử lý văn bản thống nhất.
+    relatedKnowledge:
+      - TextBlocks
     objectives:
-      - Chọn đúng text abstraction trước khi tối ưu implementation detail.
-      - Nhận biết khi bài toán chuyển sang I/O hoặc localization thay vì String.
+      - Chọn đúng cách biểu diễn hoặc mức trừu tượng cho văn bản trước khi tối ưu chi tiết cài đặt.
+      - Hiểu Text Block chỉ là cú pháp ở mã nguồn để viết String nhiều dòng, không tạo ra một mô hình văn bản mới khi chương trình chạy.
+      - Nhận biết khi bài toán đã chuyển sang phạm vi I/O hoặc bản địa hóa thay vì bản thân String.

@@ -1,6 +1,6 @@
-# Text Block
+# Text Block và tổng hợp mô hình xử lý String
 
-Text block giúp viết multiline String dễ đọc hơn trong mã nguồn. Nó thay đổi **cú pháp biểu diễn literal trong source**, không tạo một runtime type mới.
+Text Block giúp viết String nhiều dòng dễ đọc hơn trong mã nguồn. Nó thay đổi **cú pháp biểu diễn String literal trong mã nguồn**, không tạo một kiểu dữ liệu mới khi chạy.
 
 ## <a id="text-block-syntax">Cú pháp Text Block</a>
 
@@ -12,13 +12,13 @@ String json = """
     """;
 ```
 
-Result vẫn là `java.lang.String` bình thường.
+Kết quả vẫn là `java.lang.String` bình thường.
 
-Text block đặc biệt hữu ích cho JSON, SQL, HTML hoặc text mẫu nhiều dòng vì giảm escape/concatenation noise.
+Text Block đặc biệt hữu ích cho JSON, SQL, HTML hoặc văn bản mẫu nhiều dòng vì giảm nhiễu do ký tự thoát và phép nối chuỗi.
 
-### Text block là source syntax, không phải runtime type mới
+### Text Block là cú pháp mã nguồn, không phải kiểu dữ liệu mới khi chạy
 
-Hai cách viết có thể tạo cùng String value:
+Hai cách viết có thể tạo cùng một giá trị String:
 
 ```java
 String a = "hello\nworld\n";
@@ -31,35 +31,35 @@ String b = """
 a.equals(b); // true
 ```
 
-Mọi rule về immutability, equality, encoding và Unicode của String vẫn áp dụng y hệt.
+Mọi quy tắc về tính bất biến, so sánh bằng nhau, mã hóa và Unicode của String vẫn áp dụng y hệt.
 
-### Opening delimiter
+### Dấu mở đầu
 
-Sau opening `"""`, text block cần line terminator theo syntax của Java. Nội dung thực sự bắt đầu ở các line sau, giúp source multiline có structure rõ ràng.
+Sau dấu mở `"""`, Text Block cần ký tự kết thúc dòng theo cú pháp Java. Nội dung thực sự bắt đầu ở các dòng sau, giúp mã nguồn nhiều dòng có cấu trúc rõ ràng.
 
-## <a id="incidental-whitespace">Incidental Indentation</a>
+## <a id="incidental-whitespace">Thụt lề phát sinh trong mã nguồn</a>
 
-Compiler xử lý một phần indentation mang tính “trình bày source” để text block có thể đặt đẹp trong mã mà không bắt buộc đầu ra giữ toàn bộ khoảng trắng đầu dòng đó.
+Trình biên dịch xử lý một phần thụt lề chỉ phục vụ trình bày mã nguồn để Text Block có thể đặt đẹp trong mã mà không bắt buộc đầu ra giữ toàn bộ khoảng trắng đầu dòng đó.
 
-Mental model:
+Mô hình tư duy:
 
 ```text
-source indentation để code đẹp
-        ↓ compiler xác định incidental indent
-strip phần incidental
+thụt lề trong mã nguồn để code dễ đọc
+        ↓ trình biên dịch xác định phần thụt lề phát sinh
+loại phần thụt lề phát sinh
         ↓
-String content
+nội dung String
 ```
 
-Vị trí closing delimiter có thể ảnh hưởng lượng indentation được xem là incidental, nên delimiter/content cần đặt nhất quán.
+Vị trí dấu đóng có thể ảnh hưởng lượng thụt lề được xem là phát sinh, nên dấu đóng và nội dung cần được đặt nhất quán.
 
-Whitespace bên trong text vẫn quan trọng. Khi đầu ra phải exact, hãy kiểm tra rendered string thay vì suy luận bằng mắt từ indentation của source.
+Khoảng trắng bên trong văn bản vẫn quan trọng. Khi đầu ra phải chính xác, hãy kiểm tra String thực tế thay vì suy luận bằng mắt từ thụt lề của mã nguồn.
 
-Trailing whitespace trên line cũng được xử lý để tránh invisible source formatting vô tình trở thành data. Nếu cần giữ trailing space có chủ ý, dùng escape như `\s` hoặc strategy rõ ràng.
+Khoảng trắng ở cuối dòng cũng được xử lý để tránh định dạng vô hình trong mã nguồn vô tình trở thành dữ liệu. Nếu cần giữ khoảng trắng cuối dòng có chủ ý, dùng ký tự thoát như `\s` hoặc cách biểu diễn rõ ràng.
 
-### Trailing newline và closing delimiter
+### Dòng mới cuối cùng và dấu đóng
 
-Hai shape có thể cho result khác về newline cuối:
+Hai cách đặt dấu đóng có thể cho kết quả khác về dòng mới cuối cùng:
 
 ```java
 String withNewline = """
@@ -70,11 +70,11 @@ String withoutNewline = """
         hello""";
 ```
 
-Khi exact output quan trọng, test bằng `length()` hoặc hiển thị escaped form thay vì nhìn source bằng mắt.
+Khi đầu ra chính xác quan trọng, kiểm tra bằng `length()` hoặc hiển thị dạng có ký tự thoát thay vì chỉ nhìn mã nguồn bằng mắt.
 
 ### String.indent và stripIndent
 
-Multiline text không chỉ xuất hiện dưới dạng text block literal. `String` cũng có API để làm việc trực tiếp với indentation:
+Văn bản nhiều dòng không chỉ xuất hiện dưới dạng Text Block literal. `String` cũng có API để làm việc trực tiếp với thụt lề:
 
 ```java
 String text = "alpha\nbeta\n";
@@ -83,25 +83,25 @@ String indented = text.indent(4);
 String stripped = indented.stripIndent();
 ```
 
-Mental model:
+Mô hình tư duy:
 
 ```text
-text block incidental indentation
-→ compiler xử lý khi tạo literal từ source
+thụt lề phát sinh của Text Block
+→ trình biên dịch xử lý khi tạo literal từ mã nguồn
 
 String.indent / stripIndent
-→ runtime String operations
+→ thao tác String khi chương trình chạy
 ```
 
-Hai tầng này liên quan về mục đích đọc multiline text, nhưng không phải cùng một mechanism.
+Hai tầng này liên quan về mục đích xử lý văn bản nhiều dòng, nhưng không phải cùng một cơ chế.
 
-## <a id="escape-processing">Escape và Line Terminator</a>
+## <a id="escape-processing">Ký tự thoát và ký tự kết thúc dòng</a>
 
-Text block vẫn xử lý escape sequence theo quy tắc của Java và có ngữ nghĩa riêng cho line terminator/closing delimiter.
+Text Block vẫn xử lý chuỗi ký tự thoát theo quy tắc của Java và có ngữ nghĩa riêng cho ký tự kết thúc dòng/dấu đóng.
 
-Không phải mọi `\` đều biến mất, và text block không có nghĩa “raw string”. Nếu cần exact backslash hoặc newline hành vi, hãy kiểm tra Java string value cuối cùng.
+Không phải mọi `\` đều biến mất, và Text Block không có nghĩa là “chuỗi thô (raw string)”. Nếu cần chính xác hành vi của dấu gạch chéo ngược hoặc ký tự xuống dòng, hãy kiểm tra giá trị String cuối cùng.
 
-### `\s` giữ một space có chủ ý
+### `\s` giữ một khoảng trắng có chủ ý
 
 ```java
 String value = """
@@ -110,11 +110,11 @@ String value = """
         """;
 ```
 
-`\s` được translate thành space sau bước xử lý incidental whitespace, nên hữu ích khi trailing space là data thật.
+`\s` được chuyển thành một khoảng trắng sau bước xử lý thụt lề phát sinh, nên hữu ích khi khoảng trắng cuối dòng là dữ liệu thật.
 
-### Line continuation
+### Nối dòng trong mã nguồn
 
-Backslash ở cuối physical line có thể suppress line terminator:
+Dấu gạch chéo ngược (backslash) ở cuối dòng vật lý có thể loại bỏ ký tự kết thúc dòng đó:
 
 ```java
 String sentence = """
@@ -123,24 +123,24 @@ String sentence = """
         """;
 ```
 
-Đây là escape semantics của source, không phải String runtime mutation.
+Đây là ngữ nghĩa ký tự thoát của mã nguồn, không phải thao tác sửa String khi chạy.
 
 ### Thứ tự xử lý quan trọng
 
-Ở mức mental model:
+Ở mức mô hình tư duy:
 
 ```text
-normalize line terminators
-→ strip incidental whitespace
-→ process escape sequences
-→ String value
+chuẩn hóa ký tự kết thúc dòng
+→ loại khoảng trắng phát sinh
+→ xử lý chuỗi ký tự thoát
+→ giá trị String
 ```
 
-Điều này giải thích vì sao `\s` có thể bảo toàn space mà source whitespace thông thường có thể bị strip.
+Điều này giải thích vì sao `\s` có thể bảo toàn khoảng trắng mà khoảng trắng trình bày trong mã nguồn thông thường có thể bị loại.
 
 ### translateEscapes
 
-`translateEscapes()` hữu ích khi **runtime String** chứa escape notation và application có chủ ý muốn interpret chúng:
+`translateEscapes()` hữu ích khi **String lúc chương trình đang chạy** chứa ký hiệu ký tự thoát và ứng dụng có chủ ý muốn diễn giải chúng:
 
 ```java
 String escaped = "line1\\nline2";
@@ -150,18 +150,18 @@ System.out.println(translated);
 ```
 
 ```text
-runtime text "\\n"
+văn bản khi chạy "\\n"
 → translateEscapes()
-→ newline character
+→ ký tự xuống dòng
 ```
 
-Đây khác với escape processing của Java source literal: source escapes được compiler xử lý khi compile, còn `translateEscapes()` là một runtime String operation.
+Điều này khác với xử lý ký tự thoát của literal trong mã nguồn Java: ký tự thoát trong mã nguồn được trình biên dịch xử lý khi biên dịch, còn `translateEscapes()` là một thao tác String khi chương trình chạy. Đặc biệt, nó **không diễn giải Unicode escape dạng `\\uXXXX`**; chuỗi như `"\\u0041"` không biến thành `"A"` qua `translateEscapes()` mà là đầu vào escape không hợp lệ cho API này.
 
-Không chạy `translateEscapes()` trên arbitrary user input chỉ vì thấy backslash; việc interpret escape notation phải là một phần rõ ràng của input contract.
+Không chạy `translateEscapes()` trên đầu vào người dùng tùy ý chỉ vì thấy dấu gạch chéo ngược; việc diễn giải ký hiệu ký tự thoát phải là một phần rõ ràng của hợp đồng đầu vào.
 
-## <a id="text-block-not-template">Text Block và String Template</a>
+## <a id="text-block-not-template">Text Block và nội suy chuỗi</a>
 
-Text block không tự interpolation variable:
+Text Block không tự nội suy biến:
 
 ```java
 """
@@ -169,9 +169,9 @@ Hello ${name}
 """
 ```
 
-không tự thay `${name}` thành value.
+không tự thay `${name}` thành giá trị.
 
-Muốn chèn dữ liệu vẫn cần formatting, concatenation hoặc API/template mechanism phù hợp.
+Muốn chèn dữ liệu vẫn cần định dạng, nối chuỗi hoặc API/cơ chế mẫu (template) phù hợp.
 
 ```java
 String template = """
@@ -181,17 +181,43 @@ String template = """
 String message = template.formatted(name);
 ```
 
-Text block chỉ làm representation trong source dễ đọc hơn; nó không biến `%s`, `${name}` hay ký hiệu tùy ý thành interpolation nếu không có API khác xử lý.
+Text Block chỉ làm cách biểu diễn trong mã nguồn dễ đọc hơn; nó không biến `%s`, `${name}` hay ký hiệu tùy ý thành nội suy nếu không có API khác xử lý.
 
-Kết thúc module, mô hình tư duy nên là:
+## <a id="string-synthesis">Tổng hợp mô hình xử lý String</a>
+
+Kết thúc mô-đun, mô hình tư duy nên là:
 
 ```text
-String immutable
-→ có thể chia sẻ/pool
-→ equality dùng value, không dựa vào pool identity
-→ builder dùng khi cần mutable construction
-→ text/bytes cần Charset
-→ char/code point/grapheme là các tầng biểu diễn khác nhau
-→ regex mô tả pattern
-→ text block chỉ cải thiện cú pháp trong mã nguồn
+String bất biến
+→ có thể chia sẻ/dùng pool
+→ so sánh nội dung theo giá trị, không dựa vào định danh tham chiếu trong pool
+→ StringBuilder/StringBuffer dùng khi cần bộ đệm xây chuỗi có thể thay đổi
+→ char / điểm mã / cụm ký tự là các tầng biểu diễn khác nhau
+→ văn bản / byte cần Charset
+→ Regex mô tả mẫu
+→ Text Block chỉ cải thiện cú pháp trong mã nguồn
 ```
+
+Khi gặp một bài toán xử lý văn bản thực tế, hãy xác định đúng tầng trước khi chọn API:
+
+```text
+cần biểu diễn giá trị văn bản trong Java
+→ String
+
+cần xây nội dung tăng dần qua nhiều bước
+→ StringBuilder / StringBuffer khi thực sự cần đặc tính đồng bộ
+
+cần xử lý ký tự Unicode đúng tầng
+→ đơn vị mã / điểm mã / cụm ký tự theo yêu cầu
+
+cần đưa văn bản qua tệp, mạng hoặc giao thức byte
+→ Charset + mã hóa/giải mã rõ ràng
+
+cần mô tả mẫu tìm kiếm/kiểm tra
+→ Regex khi String API đơn giản không đủ
+
+cần viết String literal nhiều dòng dễ đọc hơn
+→ Text Block
+```
+
+Nếu yêu cầu chuyển sang sắp xếp, so sánh hoặc phân tách văn bản theo ngôn ngữ/vùng miền, bài toán đã đi sang mô-đun **Bản địa hóa (Localization)**. Nếu yêu cầu tập trung vào đọc/ghi tệp, luồng hoặc kênh byte, phần sâu hơn thuộc mô-đun **I/O**.

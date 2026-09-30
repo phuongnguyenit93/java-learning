@@ -1,6 +1,6 @@
 # Encoding and Charset
 
-`String` represents text inside Java, while files, network payloads, and wire protocols ultimately move **bytes**. Encoding is the mapping between those two representations.
+After establishing the Unicode model used by Java text, the next boundary is external representation. Files, network payloads, and wire protocols ultimately move **bytes**, and encoding maps between those bytes and Java text.
 
 ## <a id="text-vs-bytes">Text vs Bytes</a>
 
@@ -69,7 +69,7 @@ A round trip preserves text only when the charset and error policy can represent
 
 ## <a id="default-charset-risk">Default Charset Risk</a>
 
-Since **JDK 18**, Java SE standard APIs use UTF-8 as the default charset under JEP 400. In Java 21, `Charset.defaultCharset()` is UTF-8 unless changed in an implementation-specific way.
+Since **JDK 18**, JEP 400 defines UTF-8 as the **Java default charset**. Under standard JDK behavior on Java 21, `Charset.defaultCharset()` is therefore UTF-8, and APIs whose contract says they use the default charset follow that choice; an explicitly selected compatibility/runtime configuration can deliberately change it. Do not generalize this to “every standard I/O stream uses `Charset.defaultCharset()`”: consoles and some standard streams have separate charset behavior.
 
 The older mental model that “the Java default charset normally follows each OS/locale” is therefore no longer the Java 21 default.
 
@@ -95,7 +95,7 @@ Using the runtime default is fine when that is genuinely the API contract; durab
 
 Encoding/decoding can fail semantically:
 
-- **malformed input**: a byte sequence is invalid for the charset;
+- **malformed input**: the input sequence is structurally invalid for the encode/decode operation, such as malformed UTF-8 bytes during decoding or an unpaired surrogate during encoding;
 - **unmappable character**: a character cannot be represented in the target charset.
 
 `CharsetDecoder` and `CharsetEncoder` can report, replace, or ignore such cases. Choose that policy intentionally; silent replacement can hide data corruption.
@@ -104,17 +104,18 @@ Encoding/decoding can fail semantically:
 
 ```text
 malformed input
-→ byte/code-unit sequence is invalid for the encoding being read
+→ input structure is invalid for the decoder/encoder
+→ for example malformed UTF-8 bytes or an unpaired UTF-16 surrogate
 
 unmappable character
 → valid character cannot be represented in the target charset
 ```
 
-A UTF-8 decoder can encounter malformed bytes; an encoder targeting US-ASCII can encounter a valid Unicode `é` that ASCII cannot represent.
+A UTF-8 decoder can encounter malformed bytes, while an encoder can encounter malformed UTF-16 input such as an unpaired surrogate. By contrast, a valid Unicode `é` encoded to US-ASCII is **unmappable** because ASCII cannot represent that character.
 
 ### Convenience APIs vs strict validation
 
-`getBytes(Charset)` and `new String(bytes, charset)` are convenient for common cases. When invalid input must be handled precisely, use `CharsetEncoder` / `CharsetDecoder` with an explicit `CodingErrorAction.REPORT`, `REPLACE`, or `IGNORE` policy.
+`getBytes(Charset)` and `new String(bytes, charset)` are convenient for common cases, but these convenience overloads are specified to **replace** malformed/unmappable input using the charset's replacement rather than report it to the caller. If invalid data must be detected, ignored, or handled with a custom policy, use `CharsetEncoder` / `CharsetDecoder` with an explicit `CodingErrorAction.REPORT`, `REPLACE`, or `IGNORE` policy.
 
 ```text
 data integrity matters
@@ -127,4 +128,4 @@ IGNORE
 → can silently lose data, so it needs a deliberate reason
 ```
 
-The next chapter asks whether Java `char` is really the same thing as one Unicode character a user sees.
+The next chapter moves from representation boundaries to **regular expressions**, where patterns describe how text should be matched, searched, or transformed.

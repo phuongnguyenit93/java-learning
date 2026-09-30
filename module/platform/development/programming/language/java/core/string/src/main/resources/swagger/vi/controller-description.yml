@@ -1,36 +1,36 @@
 EncodingController:
   description: |-
-    <h2>Encoding</h2>
-    <p>Quan sát ranh giới giữa Java <code>String</code> và external bytes. Các endpoint cho thấy round-trip khi hai phía dùng cùng Charset và mojibake khi cùng byte sequence bị decode bằng Charset khác.</p>
-    <p>Đây là evidence cho data-contract của encoding; không nên suy luận rằng String tự mang sẵn UTF-8 hay một encoding bên ngoài JVM.</p>
-    <p>Experiment này nối trực tiếp với vai trò của String trong hệ thống: application xử lý text bằng <code>String</code>, còn boundary lưu trữ/truyền tải thường buộc text phải được chuyển thành byte theo một Charset cụ thể.</p>
+    <h2>Mã hóa văn bản và Charset</h2>
+    <p>Các API trong controller này minh họa ranh giới <code>String ↔ byte[]</code>: cùng một văn bản được mã hóa thành byte theo Charset, rồi byte phải được giải mã bằng hợp đồng Charset tương thích.</p>
+    <p><code>roundTrip()</code> cho thấy trường hợp hai phía cùng dùng UTF-8; <code>wrongCharset()</code> cố ý giải mã byte UTF-8 bằng ISO-8859-1 để tạo mojibake. Hai experiment giúp phân biệt lỗi truyền byte với lỗi diễn giải byte.</p>
+    <p>Không suy luận rằng bản thân <code>String</code> “có sẵn UTF-8”. Charset chỉ xuất hiện khi văn bản đi qua ranh giới byte.</p>
   readmeRelated:
-    file: 9.Encoding/Encoding.md
+    file: 10.Encoding/Encoding.md
 RegexController:
   description: |-
-    <h2>Regex</h2>
-    <p>Quan sát <code>Pattern</code>/<code>Matcher</code>, named capture và chi phí của backtracking trên một input bounded.</p>
-    <p>Endpoint performance chỉ minh họa shape rủi ro; timing cụ thể không phải benchmark hay SLA.</p>
+    <h2>Biểu thức chính quy (Regex)</h2>
+    <p>Các API trong controller này minh họa hai mặt quan trọng của Regex: trích xuất dữ liệu bằng <code>Pattern</code>/<code>Matcher</code> và chi phí quay lui khi mẫu có cấu trúc rủi ro.</p>
+    <p><code>groups()</code> cho thấy chỉ đọc nhóm bắt giữ sau khi phép so khớp thành công. <code>backtracking()</code> dùng một đầu vào nhỏ, có giới hạn để quan sát dạng rủi ro; thời gian đo được chỉ là bằng chứng minh họa, không phải benchmark hay SLA.</p>
   readmeRelated:
     file: 11.Regex/Regex.md
 StringConcatController:
   description: |-
-    <h2>String Concatenation</h2>
-    <p>So sánh repeated immutable concatenation với một mutable <code>StringBuilder</code> trong cùng construction flow.</p>
-    <p>Identity hash được trả về chỉ để quan sát object identity thay đổi trong sample, không phải phép đo allocation chính xác.</p>
+    <h2>Nối và xây dựng String</h2>
+    <p>Experiment so sánh việc nối String lặp lại với việc dùng một <code>StringBuilder</code> để xây cùng kết quả <code>"0123"</code>.</p>
+    <p>Các giá trị hash định danh trung gian chỉ giúp quan sát rằng phép nối lặp lại đi qua nhiều kết quả String; chúng không phải bộ đếm cấp phát và cũng không phải bằng chứng tuyệt đối về số đối tượng được cấp phát.</p>
   readmeRelated:
     file: 5.Concatenation/Concatenation.md
 StringPoolController:
   description: |-
-    <h2>String Pool</h2>
-    <p>Quan sát literal pooling, compile-time constant folding, <code>new String(...)</code>, content equality và <code>intern()</code> trong cùng response.</p>
-    <p>Endpoint cố ý dùng <code>==</code> để minh họa identity; business text comparison vẫn phải dựa trên content semantics.</p>
+    <h2>String Pool và định danh tham chiếu</h2>
+    <p>Experiment đặt String literal, biểu thức hằng nối chuỗi, <code>new String(...)</code> và <code>intern()</code> cạnh nhau để tách rõ so sánh nội dung khỏi so sánh định danh tham chiếu.</p>
+    <p>Endpoint cố ý dùng <code>==</code> để quan sát định danh tham chiếu. Trong mã nghiệp vụ, so sánh nội dung String vẫn dựa trên <code>equals()</code>.</p>
   readmeRelated:
     file: 2.StringPool/StringPool.md
 UnicodeController:
   description: |-
-    <h2>Unicode</h2>
-    <p>Quan sát sự khác nhau giữa UTF-16 code unit, Unicode code point và canonical-equivalent text.</p>
-    <p>Các endpoint trả cả count/code-point evidence và equality trước/sau normalization để tránh suy luận chỉ từ hình thức hiển thị.</p>
+    <h2>Unicode trong String</h2>
+    <p>Các API trong controller này minh họa hai vấn đề khác nhau: một điểm mã ngoài BMP có thể chiếm hai đơn vị mã UTF-16, và hai String tương đương chuẩn tắc có thể có chuỗi điểm mã khác nhau.</p>
+    <p><code>charVsCodePoint()</code> cung cấp số đếm/điểm mã quan sát được; <code>normalization()</code> so sánh bằng nhau trước và sau NFC. Không suy luận chỉ từ cách văn bản được hiển thị.</p>
   readmeRelated:
-    file: 10.UnicodeCodePoint/UnicodeCodePoint.md
+    file: 9.UnicodeCodePoint/UnicodeCodePoint.md

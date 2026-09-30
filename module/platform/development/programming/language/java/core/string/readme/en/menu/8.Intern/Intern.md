@@ -38,7 +38,7 @@ String a = new String("java");
 String b = a.intern();
 String c = "java";
 
-b == c // true
+System.out.println(b == c); // true
 ```
 
 `b` uses the canonical pooled reference for `"java"`.
@@ -52,7 +52,7 @@ String runtime = new String("java");
 String canonical = runtime.intern();
 String literal = "java";
 
-canonical == literal // true
+System.out.println(canonical == literal); // true
 ```
 
 This is an appropriate identity experiment because canonicalization itself is the concept being observed.
@@ -61,7 +61,7 @@ This is an appropriate identity experiment because canonicalization itself is th
 
 Interning can reduce duplicate identities for a highly repetitive String set, but it is not a default optimization for all applications.
 
-Consider lookup/canonicalization cost, pool retention, high-cardinality input, and unnecessary identity coupling.
+Consider lookup/canonicalization cost, String-table size/management cost, high-cardinality input, memory pressure, and unnecessary identity coupling.
 
 ### High-cardinality and untrusted input
 
@@ -74,23 +74,23 @@ user-000003
 ...
 ```
 
-canonicalization may provide little deduplication while still adding lookup and retention pressure.
+canonicalization may provide little deduplication while still adding lookup cost and pressure on the runtime structure that manages interned strings.
 
 Avoid interning high-cardinality user-controlled data merely because it sounds memory-efficient.
 
 ### Avoid old JVM folklore
 
-Statements such as “interned strings always live in PermGen” are implementation/version-specific history, not a Java language contract.
+Statements such as “interned strings always live in PermGen” or “an interned String is guaranteed to remain retained until JVM shutdown” are not Java language contracts. Storage location, table structure, and garbage-collection behavior are JVM implementation details.
 
 Reason in terms of:
 
 ```text
 canonical identity
 lookup cost
-retention/memory profile
+String-table/memory profile
 workload cardinality
 ```
 
 Intern when the workload and measurements justify it, or when canonical identity is genuinely part of the design.
 
-The next chapter crosses a more important representation boundary: how does Java text become external bytes?
+The next chapter leaves reference identity behind and establishes the Unicode model inside a String: how do `char`, Unicode code points, and user-perceived characters differ? Only after that does the module cross the text/byte boundary through Charset.
