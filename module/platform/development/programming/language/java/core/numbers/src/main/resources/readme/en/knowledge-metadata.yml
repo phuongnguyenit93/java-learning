@@ -145,3 +145,16 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+12.NumericSynthesis/NumericSynthesis.md:
+  numeric-decision-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  numeric-policy-boundaries:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  numeric-synthesis-cases:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false

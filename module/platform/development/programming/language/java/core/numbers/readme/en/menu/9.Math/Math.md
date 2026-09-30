@@ -1,4 +1,4 @@
-# Math and StrictMath
+# Math Helpers and Safe Arithmetic
 
 Java already provides many standard numeric helpers. Using them communicates intent clearly and avoids reimplementing subtle edge cases.
 
@@ -68,6 +68,8 @@ Math.decrementExact
 Math.negateExact
 Math.absExact
 Math.divideExact
+Math.floorDivExact
+Math.ceilDivExact
 Math.toIntExact
 ```
 
@@ -103,4 +105,4 @@ Do not read `StrictMath` as "perfectly exact Math". It still operates on floatin
 
 The boundary matters when cross-platform reproducibility is itself a requirement.
 
-The final two chapters move from number representation to a different contract: **randomness**.
+The next two chapters move from number representation to a different contract: **randomness**. A final synthesis chapter then reconnects every representation and policy into one decision model.

@@ -1,4 +1,4 @@
-# Integer Overflow
+# Fixed-Width Integers and Overflow
 
 Primitive integers feel exact, but they are exact only **inside a fixed range**. Crossing `MIN_VALUE` or `MAX_VALUE` does not automatically switch Java to `BigInteger` or throw an exception.
 
@@ -66,21 +66,7 @@ Moving from `int` to `long` increases the range; it does not eliminate overflow.
 
 ## <a id="checked-arithmetic">Checked Arithmetic</a>
 
-When overflow is a **contract failure**, use exact helpers:
-
-```java
-Math.addExact(a, b);
-Math.subtractExact(a, b);
-Math.multiplyExact(a, b);
-Math.incrementExact(a);
-Math.decrementExact(a);
-Math.negateExact(a);
-Math.absExact(a);
-Math.divideExact(a, b);
-Math.toIntExact(longValue);
-```
-
-They turn overflow into `ArithmeticException`.
+When overflow is a **contract failure**, checked arithmetic makes the failure explicit instead of accepting wraparound.
 
 ```java
 try {
@@ -88,6 +74,16 @@ try {
 } catch (ArithmeticException ex) {
     System.out.println("overflow detected");
 }
+```
+
+The `Math` chapter later owns the complete exact-arithmetic helper catalog and API mechanics. The important idea here is the decision boundary:
+
+```text
+ordinary fixed-width arithmetic
+→ overflow may wrap
+
+checked arithmetic
+→ overflow becomes ArithmeticException
 ```
 
 This does not mean every arithmetic operation must be checked. Some low-level algorithms intentionally rely on wraparound. The domain contract decides.

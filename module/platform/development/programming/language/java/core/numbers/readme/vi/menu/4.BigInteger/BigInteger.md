@@ -1,10 +1,10 @@
-# BigInteger
+# Số nguyên phạm vi tùy ý với BigInteger
 
-Khi `long` không đủ range, giải pháp đúng thường không phải “hy vọng overflow không xảy ra” mà là dùng representation không bị fixed-width primitive giới hạn.
+Khi `long` không đủ phạm vi, giải pháp đúng thường không phải “hy vọng tràn số không xảy ra” mà là dùng cách biểu diễn không bị giới hạn bởi kiểu nguyên thủy có độ rộng cố định.
 
 ## <a id="big-integer-model">BigInteger là gì?</a>
 
-`BigInteger` biểu diễn integer với arbitrary precision trong giới hạn bộ nhớ thực tế.
+`BigInteger` biểu diễn số nguyên với độ chính xác tùy ý (arbitrary precision) trong giới hạn bộ nhớ thực tế.
 
 ```java
 BigInteger value =
@@ -20,60 +20,60 @@ BigInteger zero = BigInteger.ZERO;
 BigInteger one = BigInteger.ONE;
 ```
 
-### WHY
+### VÌ SAO
 
 `BigInteger` phù hợp khi:
 
-- combinatorial values tăng rất nhanh;
-- counters/domain identifiers vượt `long`;
-- arbitrary-precision integer arithmetic là một phần của algorithm;
-- một số cryptographic arithmetic cần integer rất lớn.
+- các giá trị tổ hợp tăng rất nhanh;
+- bộ đếm/định danh của bài toán vượt `long`;
+- phép toán số nguyên với độ chính xác tùy ý là một phần của thuật toán;
+- một số phép toán mật mã cần số nguyên rất lớn.
 
-Trade-off:
+Đánh đổi:
 
 ```text
-primitive integer
-→ fixed-size
+kiểu số nguyên thủy
+→ kích thước cố định
 → rất nhanh
-→ ít allocation
+→ ít cấp phát bộ nhớ
 
 BigInteger
-→ arbitrary precision
-→ object-based
-→ arithmetic cost tăng theo kích thước value
+→ độ chính xác tùy ý
+→ dựa trên đối tượng
+→ chi phí phép toán tăng theo kích thước giá trị
 ```
 
-Không nên dùng `BigInteger` chỉ vì “an toàn hơn” nếu `long` đã đủ và performance/interop quan trọng.
+Không nên dùng `BigInteger` chỉ vì “an toàn hơn” nếu `long` đã đủ và hiệu năng/khả năng tương tác với API khác là quan trọng.
 
-## <a id="big-integer-immutability">BigInteger là Immutable</a>
+## <a id="big-integer-immutability">Tính bất biến của BigInteger</a>
 
-`BigInteger` không có arithmetic operator overload kiểu `+`, `-`, `*`. Thay vào đó, operation là method và trả object mới:
+`BigInteger` không nạp chồng toán tử số học kiểu `+`, `-`, `*`. Thay vào đó, phép toán được thực hiện bằng phương thức và trả về đối tượng mới:
 
 ```java
 BigInteger a = BigInteger.TEN;
 
-a.add(BigInteger.ONE); // result bị bỏ qua
+a.add(BigInteger.ONE); // kết quả bị bỏ qua
 System.out.println(a); // 10
 
 a = a.add(BigInteger.ONE);
 System.out.println(a); // 11
 ```
 
-Mental model:
+Cách ghi nhớ:
 
 ```text
-BigInteger object
-→ value không đổi
+đối tượng BigInteger
+→ giá trị không đổi
 
-variable reference
-→ có thể trỏ sang object mới
+biến tham chiếu
+→ có thể trỏ sang đối tượng mới
 ```
 
-Immutability giúp value sharing dễ reasoning hơn, nhưng cũng có nghĩa một chuỗi arithmetic có thể tạo nhiều intermediate object.
+Tính bất biến giúp việc chia sẻ giá trị dễ suy luận hơn, nhưng cũng có nghĩa một chuỗi phép toán có thể tạo nhiều đối tượng trung gian.
 
-## <a id="big-integer-operations">Operation và Conversion Boundary</a>
+## <a id="big-integer-operations">Phép toán và ranh giới chuyển đổi</a>
 
-Core operations:
+Các phép toán chính:
 
 ```java
 a.add(b);
@@ -86,7 +86,7 @@ a.pow(3);
 a.gcd(b);
 ```
 
-### Integer division vẫn là integer division
+### Phép chia BigInteger vẫn là phép chia số nguyên
 
 ```java
 BigInteger seven = BigInteger.valueOf(7);
@@ -95,24 +95,24 @@ BigInteger two = BigInteger.valueOf(2);
 System.out.println(seven.divide(two)); // 3
 ```
 
-`BigInteger` giải quyết **range**, không biến integer arithmetic thành decimal arithmetic.
+`BigInteger` giải quyết **phạm vi**, không biến phép toán số nguyên thành phép toán thập phân.
 
 ### `remainder` và `mod` không hoàn toàn đồng nghĩa
 
-`remainder` đi theo integer remainder semantics và có thể cho result âm nếu dividend âm. `mod(m)` dùng modular arithmetic, yêu cầu modulus dương và trả non-negative result trong range `0 <= result < m`.
+`remainder` tuân theo ngữ nghĩa phép dư số nguyên và có thể cho kết quả âm nếu số bị chia âm. `mod(m)` dùng số học mô-đun, yêu cầu mô-đun dương và trả kết quả không âm trong phạm vi `0 <= result < m`.
 
-Đây là distinction quan trọng trong number-theory/cryptographic arithmetic; không nên thay hai method cho nhau chỉ vì cả hai trông giống phép "%".
+Đây là điểm khác biệt quan trọng trong lý thuyết số/phép toán mật mã; không nên thay hai phương thức cho nhau chỉ vì cả hai trông giống phép "%".
 
-### Comparison
+### So sánh
 
 ```java
 int cmp = a.compareTo(b);
 boolean same = a.equals(b);
 ```
 
-Với BigInteger, equality không có khác biệt về scale như BigDecimal.
+Với BigInteger, quan hệ bằng nhau không có khác biệt về scale như BigDecimal.
 
-### Conversion về primitive là một boundary quan trọng
+### Chuyển đổi về kiểu nguyên thủy là một ranh giới quan trọng
 
 ```java
 BigInteger huge = new BigInteger("999999999999999999999");
@@ -120,19 +120,19 @@ BigInteger huge = new BigInteger("999999999999999999999");
 int truncated = huge.intValue();
 ```
 
-`intValue()` có thể giữ lại low-order bits thay vì báo lỗi. Nếu cần đảm bảo value fit:
+`intValue()` có thể chỉ giữ lại các bit thấp thay vì báo lỗi. Nếu cần bảo đảm giá trị nằm gọn trong kiểu đích:
 
 ```java
-int exact = huge.intValueExact();   // ArithmeticException nếu không fit
+int exact = huge.intValueExact();   // ArithmeticException nếu không nằm gọn trong kiểu
 long exactLong = huge.longValueExact();
 ```
 
-Rule thực tế:
+Quy tắc thực tế:
 
 ```text
-BigInteger → primitive
-→ coi như narrowing boundary
-→ dùng exact conversion nếu overflow phải bị phát hiện
+BigInteger → kiểu nguyên thủy
+→ coi như ranh giới thu hẹp kiểu
+→ dùng chuyển đổi chính xác nếu tràn số phải được phát hiện
 ```
 
-Nếu vấn đề không phải integer range mà là **decimal exactness + rounding policy**, BigInteger chưa đủ; chương tiếp theo là `BigDecimal`.
+Nếu vấn đề không phải phạm vi số nguyên mà là **độ chính xác thập phân + chính sách làm tròn**, BigInteger chưa đủ; chương tiếp theo là `BigDecimal`.

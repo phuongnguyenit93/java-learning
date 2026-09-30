@@ -1,36 +1,36 @@
 BigDecimalController:
   description: |-
     <h2>BigDecimal</h2>
-    <p>Thí nghiệm deterministic về construction, arithmetic, precision/scale, rounding và equality/collection semantics của BigDecimal.</p>
+    <p>Các thí nghiệm có kết quả xác định trước về cách khởi tạo, phép toán, độ chính xác (precision)/scale, làm tròn và quy tắc bằng nhau khi BigDecimal được dùng trong Collection.</p>
   readmeRelated:
     file: 5.BigDecimal/BigDecimal.md
 BigIntegerController:
   description: |-
     <h2>BigInteger</h2>
-    <p>Thí nghiệm về arbitrary-precision integer, conversion boundary và khác biệt giữa remainder với modular arithmetic.</p>
+    <p>Các thí nghiệm về số nguyên phạm vi tùy ý, ranh giới khi chuyển về kiểu nguyên thủy và khác biệt giữa phương thức remainder với phép toán mô-đun.</p>
   readmeRelated:
     file: 4.BigInteger/BigInteger.md
 FloatingPointController:
   description: |-
-    <h2>Floating Point</h2>
-    <p>Thí nghiệm về binary approximation, special values và tolerance-based comparison.</p>
+    <h2>Số dấu phẩy động</h2>
+    <p>Các thí nghiệm về biểu diễn nhị phân xấp xỉ, giá trị đặc biệt và phép so sánh theo sai số chấp nhận.</p>
   readmeRelated:
     file: 3.FloatingPoint/FloatingPoint.md
 IntegerArithmeticController:
   description: |-
-    <h2>Integer Arithmetic</h2>
-    <p>Thí nghiệm về wraparound, intermediate overflow và các boundary case của fixed-width integer.</p>
+    <h2>Phép toán số nguyên</h2>
+    <p>Các thí nghiệm về giá trị quay vòng khi tràn số, tràn số ở phép tính trung gian và các trường hợp biên của số nguyên độ rộng cố định.</p>
   readmeRelated:
     file: 2.IntegerOverflow/IntegerOverflow.md
 MathController:
   description: |-
     <h2>Math</h2>
-    <p>Thí nghiệm về floor division/modulo và exact arithmetic helper trong Java 21.</p>
+    <p>Các thí nghiệm về phép chia lấy sàn/phép toán mô-đun và các phương thức số học có kiểm tra tràn số trong Java 21.</p>
   readmeRelated:
     file: 9.Math/Math.md
 RandomController:
   description: |-
     <h2>Random</h2>
-    <p>Thí nghiệm deterministic về seed, reproducibility và boundary giữa ordinary PRNG với security randomness.</p>
+    <p>Thí nghiệm có kết quả tái lập về giá trị khởi tạo (seed) và ranh giới giữa PRNG thông thường với nguồn ngẫu nhiên dùng cho yêu cầu bảo mật.</p>
   readmeRelated:
     file: 10.Random/Random.md

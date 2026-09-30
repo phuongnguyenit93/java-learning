@@ -1,4 +1,4 @@
-# <quiz-schema>
+﻿# <quiz-schema>
 # Quiz Question Structure
 # schema-version: 3
 #
@@ -128,7 +128,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "5.BigDecimal/BigDecimal.md", anchor: "big-decimal-arithmetic"}
-    apiRelated: {controller: "", methodSignature: ""}
+    apiRelated: {controller: "BigDecimalController", methodSignature: "divisionAndRounding()"}
 
   - id: precision-vs-scale
     question: "For `new BigDecimal(\"123.4500\")`, what do precision and scale describe?"
@@ -336,7 +336,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "5.BigDecimal/BigDecimal.md", anchor: "big-decimal-arithmetic"}
-    apiRelated: {controller: "BigDecimalController", methodSignature: "divisionAndRounding()"}
+    apiRelated: {controller: "", methodSignature: ""}
 
   - id: mathcontext-vs-setscale
     question: "What best distinguishes `setScale(2, mode)` from `MathContext(4, mode)`?"
@@ -453,4 +453,30 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "11.SecureRandom/SecureRandom.md", anchor: "entropy-seeding"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: numeric-policy-boundary
+    question: "After choosing the right numeric representation, what still needs a separate decision?"
+    answers:
+      - {id: A, answer: "Nothing; the type automatically defines every application rule.", explanation: "Incorrect. A representation defines a value/arithmetic model, while risky boundaries still require explicit application policy."}
+      - {id: B, answer: "Policies such as overflow detection, comparison tolerance, rounding, equality, and security requirements for randomness.", explanation: "Correct. Representation and policy are separate decisions and the policy must come from the problem requirements."}
+      - {id: C, answer: "Only the Java variable name, because numeric behavior is otherwise fully decided.", explanation: "Incorrect. Variable names do not define overflow, tolerance, rounding, or security policy."}
+      - {id: D, answer: "Only how the number is formatted for display.", explanation: "Incorrect. Several numeric policies affect correctness before presentation is involved."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "12.NumericSynthesis/NumericSynthesis.md", anchor: "numeric-policy-boundaries"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: numeric-synthesis-case-selection
+    question: "Which set best matches these requirements: exact decimal money, approximate scientific measurements, integers beyond long, and an unpredictable security token?"
+    answers:
+      - {id: A, answer: "double for all four cases.", explanation: "Incorrect. One representation cannot satisfy decimal exactness, arbitrary integer range, and security randomness at the same time."}
+      - {id: B, answer: "BigDecimal for all four cases.", explanation: "Incorrect. BigDecimal fits exact decimal work but does not replace BigInteger, floating-point measurement, or SecureRandom."}
+      - {id: C, answer: "BigDecimal; double; BigInteger; SecureRandom.", explanation: "Correct. Each choice follows the core requirement of the value rather than habit."}
+      - {id: D, answer: "int; BigInteger; float; Random seeded with the current timestamp.", explanation: "Incorrect. This set does not satisfy the stated decimal-exactness, range, and unpredictability requirements."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "12.NumericSynthesis/NumericSynthesis.md", anchor: "numeric-synthesis-cases"}
     apiRelated: {controller: "", methodSignature: ""}

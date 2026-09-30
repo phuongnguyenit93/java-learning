@@ -1,8 +1,9 @@
 BigDecimalController:
   construction():
     summary: Khởi tạo từ String/valueOf/double
-    description: Chạy thí nghiệm học tập deterministic cho Khởi tạo từ String/valueOf/double.
-      Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    description: Chạy thí nghiệm có kết quả xác định trước cho ba cách khởi tạo từ
+      String/valueOf/double. Phản hồi cung cấp bằng chứng khi chạy thực tế thay vì
+      chỉ mô tả quy tắc.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -26,9 +27,10 @@ BigDecimalController:
       ]
     usage: true
   comparison():
-    summary: BigDecimal equals có tính scale
-    description: Chạy thí nghiệm học tập deterministic cho BigDecimal equals có tính
-      scale. Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    summary: BigDecimal.equals xét cả scale
+    description: Chạy thí nghiệm có kết quả xác định trước để thấy BigDecimal.equals
+      có xét scale. Phản hồi cung cấp bằng chứng khi chạy thực tế thay vì chỉ mô tả
+      quy tắc.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -52,9 +54,9 @@ BigDecimalController:
       ]
     usage: true
   divisionAndRounding():
-    summary: Division không kết thúc và rounding policy
-    description: So sánh exact division của 1/3 với division có scale và RoundingMode
-      rõ ràng để thấy BigDecimal không tự chọn business rounding policy.
+    summary: Phép chia không kết thúc và chính sách làm tròn
+    description: So sánh phép chia chính xác 1/3 với phép chia có scale và RoundingMode
+      rõ ràng để thấy BigDecimal không tự chọn chính sách làm tròn của nghiệp vụ.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -78,9 +80,9 @@ BigDecimalController:
       ]
     usage: true
   precisionScale():
-    summary: Precision, scale và normalization
-    description: Quan sát precision/scale của 123.4500 trước và sau stripTrailingZeros
-      để phân biệt numerical value với representation.
+    summary: Độ chính xác (precision), scale và chuẩn hóa cách biểu diễn
+    description: Quan sát độ chính xác (precision)/scale của 123.4500 trước và sau
+      stripTrailingZeros để phân biệt giá trị số học với cách biểu diễn.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -105,8 +107,8 @@ BigDecimalController:
     usage: true
   mathContextVsScale():
     summary: MathContext khác setScale
-    description: So sánh rounding theo target scale với rounding theo significant-digit
-      precision của MathContext.
+    description: So sánh làm tròn theo scale đích với làm tròn theo độ chính xác (precision)
+      tính bằng chữ số có nghĩa của MathContext.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -131,8 +133,8 @@ BigDecimalController:
     usage: true
   roundingModes():
     summary: HALF_UP, HALF_DOWN và HALF_EVEN
-    description: Chạy cùng tie value dương và âm qua ba HALF rounding modes để quan
-      sát direction khi tie.
+    description: Chạy cùng giá trị nằm đúng điểm giữa ở cả phía dương và âm qua ba
+      chế độ HALF để quan sát hướng làm tròn khi hai kết quả lân cận cách đều nhau.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -158,7 +160,8 @@ BigDecimalController:
   collectionSemantics():
     summary: BigDecimal trong HashSet và TreeSet
     description: Dùng 1.0 và 1.00 để chứng minh equals/hashCode và compareTo có thể
-      dẫn tới cardinality khác nhau giữa hash-based và sorted collections.
+      dẫn tới số lượng phần tử khác nhau giữa Collection dựa trên hash và Collection
+      có sắp xếp.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -183,9 +186,9 @@ BigDecimalController:
     usage: true
 FloatingPointController:
   precision():
-    summary: Precision và rounding error
-    description: Chạy thí nghiệm học tập deterministic cho Precision và rounding error.
-      Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    summary: Sai số biểu diễn của số dấu phẩy động
+    description: Chạy thí nghiệm có kết quả xác định trước cho sai số của 0.1 + 0.2.
+      Phản hồi cung cấp bằng chứng khi chạy thực tế thay vì chỉ mô tả quy tắc.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -209,9 +212,9 @@ FloatingPointController:
       ]
     usage: true
   specialValues():
-    summary: NaN, infinity và negative zero
-    description: Chạy thí nghiệm học tập deterministic cho NaN, infinity và negative
-      zero. Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    summary: NaN, vô cực và số 0 âm
+    description: Chạy thí nghiệm có kết quả xác định trước cho NaN, vô cực và số 0
+      âm. Phản hồi cung cấp bằng chứng khi chạy thực tế thay vì chỉ mô tả quy tắc.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -235,9 +238,9 @@ FloatingPointController:
       ]
     usage: true
   comparison():
-    summary: Exact equality và tolerance
-    description: So sánh 0.1 + 0.2 với 0.3 bằng == và bằng epsilon để thấy comparison
-      policy phụ thuộc domain tolerance.
+    summary: So sánh chính xác và sai số chấp nhận
+    description: So sánh 0.1 + 0.2 với 0.3 bằng == và bằng epsilon để thấy chính sách
+      so sánh phải phụ thuộc mức sai số mà bài toán chấp nhận.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -262,9 +265,10 @@ FloatingPointController:
     usage: true
 IntegerArithmeticController:
   overflow():
-    summary: Integer overflow và wraparound
-    description: Chạy thí nghiệm học tập deterministic cho Integer overflow và wraparound.
-      Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    summary: Tràn số nguyên và giá trị quay vòng
+    description: Chạy thí nghiệm có kết quả xác định trước cho tràn số nguyên và hiện
+      tượng giá trị quay vòng. Phản hồi cung cấp bằng chứng khi chạy thực tế thay
+      vì chỉ mô tả quy tắc.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -288,9 +292,9 @@ IntegerArithmeticController:
       ]
     usage: true
   intermediateOverflow():
-    summary: Overflow trước khi widen
-    description: Chứng minh int * int được tính trước assignment sang long và phải
-      widen operand trước arithmetic để đổi operation type.
+    summary: Tràn số trước khi nâng sang kiểu rộng hơn
+    description: Chứng minh int * int được tính trước phép gán sang long và phải nâng
+      ít nhất một toán hạng sang long trước phép nhân để đổi kiểu của phép toán.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -314,10 +318,10 @@ IntegerArithmeticController:
       ]
     usage: true
   boundaryCases():
-    summary: MIN_VALUE boundary cases
-    description: Quan sát hai boundary case unchecked của Integer.MIN_VALUE để thấy
-      ordinary primitive arithmetic có thể trả một int hợp lệ nhưng sai với trực giác
-      đại số.
+    summary: Các trường hợp biên của MIN_VALUE
+    description: Quan sát hai trường hợp biên không kiểm tra của Integer.MIN_VALUE
+      để thấy phép toán kiểu nguyên thủy thông thường có thể trả một int hợp lệ nhưng
+      sai với trực giác đại số.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -342,9 +346,10 @@ IntegerArithmeticController:
     usage: true
 RandomController:
   seededSequence():
-    summary: Pseudo-random model và seed
-    description: Chạy thí nghiệm học tập deterministic cho Pseudo-random model và
-      seed. Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    summary: Mô hình giả ngẫu nhiên và giá trị khởi tạo (seed)
+    description: Chạy thí nghiệm có kết quả tái lập để quan sát cùng giá trị khởi
+      tạo (seed) tạo cùng chuỗi giả ngẫu nhiên. Phản hồi cung cấp bằng chứng khi chạy
+      thực tế thay vì chỉ mô tả quy tắc.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -369,9 +374,9 @@ RandomController:
     usage: true
 BigIntegerController:
   conversionBoundary():
-    summary: BigInteger về primitive
-    description: So sánh intValue có thể truncate với intValueExact phát hiện value
-      không fit int.
+    summary: Chuyển BigInteger về kiểu nguyên thủy
+    description: So sánh intValue có thể cắt bỏ bit cao với intValueExact phát hiện
+      giá trị không nằm trong phạm vi int.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -396,8 +401,8 @@ BigIntegerController:
     usage: true
   remainderVsMod():
     summary: remainder khác mod
-    description: Dùng -7 và modulus 3 để thấy remainder có thể âm còn mod với modulus
-      dương trả non-negative modular result.
+    description: Dùng -7 và mô-đun 3 để thấy remainder có thể âm còn mod với mô-đun
+      dương trả kết quả mô-đun không âm.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -422,9 +427,9 @@ BigIntegerController:
     usage: true
 MathController:
   floorDivision():
-    summary: Truncating division và floor division
-    description: So sánh -7 / 3, Math.floorDiv và floorMod để thấy arithmetic với
-      số âm phụ thuộc division semantics.
+    summary: Phép chia cắt về 0 và phép chia lấy sàn
+    description: So sánh -7 / 3, Math.floorDiv và floorMod để thấy phép toán với số
+      âm phụ thuộc ngữ nghĩa phép chia.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -448,9 +453,9 @@ MathController:
       ]
     usage: true
   exactBoundaries():
-    summary: Exact helper tại integer boundary
-    description: Đối chiếu silent overflow của abs/divide boundary với Math.absExact
-      và Math.divideExact trên Java 21.
+    summary: Phép toán có kiểm tra tại biên số nguyên
+    description: Đối chiếu tràn số âm thầm tại biên của phép trị tuyệt đối/phép chia
+      với Math.absExact và Math.divideExact trên Java 21.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video

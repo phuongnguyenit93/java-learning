@@ -24,7 +24,7 @@ BigDecimalController:
       <p><strong>Flow:</strong> Attempt exact <code>1 / 3</code>, capture the failure, then repeat with scale 4 and <code>HALF_UP</code>.</p>
       <pre><code>BigDecimal.ONE.divide(new BigDecimal("3"))
       BigDecimal.ONE.divide(new BigDecimal("3"), 4, RoundingMode.HALF_UP)</code></pre>
-      <p><strong>Observation:</strong> Exact division produces <code>ArithmeticException</code>; the explicit policy produces <code>0.3333</code>.</p>
+      <p><strong>Observation:</strong> The exact divide call throws <code>ArithmeticException</code>; the controller catches it and records <code>exactDivisionFailure</code>, while the scale-4 + <code>HALF_UP</code> branch returns <code>0.3333</code>.</p>
       <p><strong>Conclusion:</strong> Scale and rounding mode are policies supplied by the caller/domain.</p>
     usage: true
   precisionScale():

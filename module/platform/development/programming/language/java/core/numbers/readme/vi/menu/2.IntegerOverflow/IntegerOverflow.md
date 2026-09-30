@@ -1,19 +1,19 @@
-# Integer Overflow
+# Số nguyên độ rộng cố định và tràn số
 
-Số nguyên primitive nhìn có vẻ “exact”, nhưng chỉ exact **trong phạm vi fixed-width**. Khi arithmetic vượt `MIN_VALUE` hoặc `MAX_VALUE`, Java không tự đổi sang `BigInteger` và cũng không mặc định throw exception.
+Số nguyên kiểu nguyên thủy nhìn có vẻ “chính xác”, nhưng chỉ chính xác **trong phạm vi của kiểu có độ rộng cố định**. Khi phép toán vượt `MIN_VALUE` hoặc `MAX_VALUE`, Java không tự đổi sang `BigInteger` và cũng không mặc định ném ngoại lệ.
 
-## <a id="integer-overflow-wraparound">Overflow và Wraparound</a>
+## <a id="integer-overflow-wraparound">Tràn số và giá trị quay vòng (Wraparound)</a>
 
-### WHAT
+### KHÁI NIỆM
 
-`int` là signed 32-bit integer. Giá trị lớn nhất và nhỏ nhất là:
+`int` là số nguyên có dấu 32 bit. Giá trị lớn nhất và nhỏ nhất là:
 
 ```text
 Integer.MIN_VALUE = -2^31
 Integer.MAX_VALUE =  2^31 - 1
 ```
 
-Khi phép toán đi ra ngoài range đó, kết quả wrap theo arithmetic fixed-width:
+Khi phép toán đi ra ngoài phạm vi đó, kết quả quay vòng theo quy tắc của số nguyên độ rộng cố định:
 
 ```java
 int value = Integer.MAX_VALUE;
@@ -22,23 +22,23 @@ value++;
 System.out.println(value); // Integer.MIN_VALUE
 ```
 
-### WHY nguy hiểm?
+### VÌ SAO nguy hiểm?
 
-Overflow thường **không tạo exception**:
+Tràn số thường **không tạo ngoại lệ**:
 
 ```text
-input hợp lệ
+đầu vào hợp lệ
     ↓
-arithmetic overflow
+phép toán bị tràn số
     ↓
-giá trị wrap nhưng vẫn là int hợp lệ
+giá trị quay vòng nhưng vẫn là int hợp lệ
     ↓
-business logic tiếp tục chạy với dữ liệu sai
+logic nghiệp vụ tiếp tục chạy với dữ liệu sai
 ```
 
-Nếu giá trị là quantity, cents, counter, timeout, offset hoặc capacity, bug có thể xuất hiện xa nơi overflow thực sự xảy ra.
+Nếu giá trị là số lượng, số xu, bộ đếm, thời gian chờ, độ lệch hoặc dung lượng, lỗi có thể xuất hiện rất xa nơi tràn số thực sự xảy ra.
 
-### HOW — intermediate result mới là nơi cần nhìn
+### CƠ CHẾ — kết quả trung gian mới là nơi cần nhìn
 
 ```java
 int quantity = 1_000_000;
@@ -47,9 +47,9 @@ int unitPrice = 10_000;
 long total = quantity * unitPrice;
 ```
 
-Phép nhân vẫn là `int * int`. Assignment sang `long` diễn ra **sau arithmetic**.
+Phép nhân vẫn là `int * int`. Phép gán sang `long` diễn ra **sau phép toán**.
 
-Cách đúng nếu range của result cần `long`:
+Cách đúng nếu phạm vi của kết quả cần `long`:
 
 ```java
 long total = (long) quantity * unitPrice;
@@ -64,23 +64,11 @@ long b = 4_000_000_000L;
 long product = a * b; // long cũng có thể overflow
 ```
 
-Đổi từ `int` sang `long` chỉ tăng range, không loại bỏ overflow vĩnh viễn.
+Đổi từ `int` sang `long` chỉ tăng phạm vi, không loại bỏ nguy cơ tràn số vĩnh viễn.
 
-## <a id="checked-arithmetic">Checked Arithmetic</a>
+## <a id="checked-arithmetic">Phép toán có kiểm tra tràn (Checked Arithmetic)</a>
 
-Khi overflow phải được coi là **contract failure**, dùng exact helper thay vì silent wrap:
-
-```java
-Math.addExact(a, b);
-Math.subtractExact(a, b);
-Math.multiplyExact(a, b);
-Math.incrementExact(a);
-Math.decrementExact(a);
-Math.negateExact(a);
-Math.absExact(a);
-Math.divideExact(a, b);
-Math.toIntExact(longValue);
-```
+Khi tràn số phải được coi là **vi phạm yêu cầu của bài toán**, phép toán có kiểm tra giúp biến tràn số thành lỗi rõ ràng thay vì để giá trị âm thầm quay vòng.
 
 Ví dụ:
 
@@ -92,25 +80,25 @@ try {
 }
 ```
 
-Mental model:
+Danh sách đầy đủ các phương thức `*Exact` và cách dùng API chi tiết thuộc chương `Math` phía sau. Ở đây cần giữ mô hình quyết định:
 
 ```text
-ordinary arithmetic
-→ overflow có thể wrap
+phép toán thông thường
+→ tràn số có thể làm giá trị quay vòng
 
-exact arithmetic helper
-→ overflow được biến thành ArithmeticException
+phương thức `*Exact`
+→ tràn số được biến thành ArithmeticException
 ```
 
-Không phải mọi arithmetic đều cần helper. Nếu wraparound là chủ ý của low-level algorithm thì checked arithmetic có thể không phù hợp. Nhưng với quantity/money/counter domain, silent overflow thường là bug.
+Không phải mọi phép toán đều cần phương thức kiểm tra. Nếu việc quay vòng là chủ ý của thuật toán mức thấp thì phép toán có kiểm tra có thể không phù hợp. Nhưng với các bài toán số lượng/tiền/bộ đếm, tràn số âm thầm thường là lỗi.
 
-Với baseline Java 21 của repository, `absExact` và `divideExact` đặc biệt hữu ích cho hai boundary case ở phần sau: `MIN_VALUE` không có positive counterpart cùng primitive type, và `MIN_VALUE / -1` overflow.
+Với Java 21 là phiên bản nền của dự án, `absExact` và `divideExact` đặc biệt hữu ích cho hai trường hợp biên ở phần sau: `MIN_VALUE` không có giá trị dương tương ứng trong cùng kiểu nguyên thủy, và `MIN_VALUE / -1` bị tràn.
 
 ## <a id="boundary-values">Giá trị biên MIN/MAX</a>
 
 ### Vì sao MIN_VALUE đặc biệt?
 
-Signed two's-complement có một giá trị âm nhiều hơn phía dương:
+Kiểu số nguyên có dấu dùng biểu diễn bù hai (two's complement) có một giá trị âm nhiều hơn phía dương:
 
 ```text
 int
@@ -125,7 +113,7 @@ int abs = Math.abs(Integer.MIN_VALUE);
 System.out.println(abs); // vẫn là Integer.MIN_VALUE
 ```
 
-`Math.abs` không thể trả `2147483648` dưới dạng `int` vì giá trị đó nằm ngoài range. Với overload `int` này, kết quả overflow và vẫn là `Integer.MIN_VALUE`; method không tự throw chỉ vì case này.
+`Math.abs` không thể trả `2147483648` dưới dạng `int` vì giá trị đó nằm ngoài phạm vi. Với overload nhận `int` này, kết quả bị tràn và vẫn là `Integer.MIN_VALUE`; phương thức không tự ném ngoại lệ chỉ vì trường hợp này.
 
 Tương tự, phép:
 
@@ -134,11 +122,11 @@ int x = Integer.MIN_VALUE / -1;
 System.out.println(x); // Integer.MIN_VALUE
 ```
 
-Về toán học cần `2147483648`, nhưng `int` không biểu diễn được. Java định nghĩa special overflow case này trả lại `Integer.MIN_VALUE` thay vì throw overflow exception; chỉ division by zero mới throw `ArithmeticException` trong integer division.
+Về toán học cần `2147483648`, nhưng `int` không biểu diễn được. Java định nghĩa trường hợp tràn đặc biệt này trả lại `Integer.MIN_VALUE` thay vì ném ngoại lệ tràn số; chỉ phép chia cho 0 mới ném `ArithmeticException` trong phép chia số nguyên.
 
-### Boundary testing
+### Kiểm thử giá trị biên
 
-Khi logic có nguy cơ gần range limit, nên test:
+Khi logic có nguy cơ chạm giới hạn phạm vi, nên kiểm thử:
 
 ```text
 MIN_VALUE
@@ -150,8 +138,8 @@ MAX_VALUE - 1
 MAX_VALUE
 ```
 
-và các expression có **intermediate multiplication/addition**.
+và các biểu thức có **phép nhân/phép cộng trung gian**.
 
-Nếu domain thực sự có thể vượt `long`, đừng vá từng overflow case. Khi đó representation phù hợp hơn là `BigInteger`.
+Nếu bài toán thực sự có thể vượt `long`, đừng vá từng trường hợp tràn số. Khi đó cách biểu diễn phù hợp hơn là `BigInteger`.
 
-Trước khi tới `BigInteger`, ta cần hiểu một trade-off khác: floating-point không wrap theo cùng kiểu nhưng lại **không biểu diễn chính xác mọi decimal fraction**.
+Trước khi tới `BigInteger`, ta cần hiểu một đánh đổi khác: số dấu phẩy động không quay vòng theo cùng kiểu nhưng lại **không biểu diễn chính xác mọi phân số thập phân**.

@@ -1,8 +1,8 @@
-# Mô hình số trong Java
+# Các cách Java biểu diễn số
 
-Java không có một kiểu số duy nhất phù hợp với mọi bài toán. Mỗi cách biểu diễn đánh đổi giữa **phạm vi giá trị, độ chính xác, hiệu năng, bộ nhớ và cách làm tròn**.
+Java không có một kiểu số duy nhất phù hợp với mọi bài toán. Mỗi cách biểu diễn đánh đổi giữa **phạm vi giá trị, khả năng biểu diễn chính xác, hiệu năng, bộ nhớ và cách làm tròn**.
 
-Đây là mô hình tư duy quan trọng nhất của module:
+Đây là mô hình tư duy quan trọng nhất của mô-đun:
 
 ```text
 int / long
@@ -13,67 +13,67 @@ float / double
   nhưng nhiều số thập phân chỉ được biểu diễn gần đúng
 
 BigInteger
-→ số nguyên không bị giới hạn bởi độ rộng cố định của primitive
+→ số nguyên không bị giới hạn bởi độ rộng cố định của kiểu nguyên thủy
 
 BigDecimal
-→ số thập phân với value + scale rõ ràng,
-  phù hợp khi decimal semantics và rounding policy quan trọng
+→ số thập phân với giá trị + scale rõ ràng,
+  phù hợp khi ngữ nghĩa thập phân và chính sách làm tròn quan trọng
 ```
 
-Không có representation nào đồng thời cho ta phạm vi vô hạn, decimal chính xác tuyệt đối, tốc độ của primitive và footprint nhỏ. Vì vậy học Numbers trước hết là học **chọn representation phù hợp với contract của bài toán**.
+Không có cách biểu diễn nào đồng thời cho ta phạm vi vô hạn, số thập phân chính xác tuyệt đối, tốc độ của kiểu nguyên thủy và mức dùng bộ nhớ nhỏ. Vì vậy học Numbers trước hết là học **chọn cách biểu diễn phù hợp với yêu cầu của bài toán**.
 
 Lộ trình:
 
 ```text
-Chọn kiểu số nào?
-Numeric Model
+Vì sao Java cần nhiều cách biểu diễn số?
+Các cách Java biểu diễn số
         ↓
-Số nguyên fixed-width có thể sai kiểu gì?
-Integer Overflow
+Số nguyên độ rộng cố định có thể sai như thế nào?
+Số nguyên độ rộng cố định và tràn số
         ↓
 Vì sao 0.1 + 0.2 gây bất ngờ?
-Floating Point
+Số dấu phẩy động và sai số biểu diễn
         ↓
 Nếu phạm vi số nguyên không đủ?
-BigInteger
+Số nguyên phạm vi tùy ý với BigInteger
         ↓
-Nếu cần decimal chính xác?
-BigDecimal
+Nếu cần số thập phân chính xác?
+Số thập phân chính xác với BigDecimal
         ↓
-Precision và scale khác nhau thế nào?
-Precision & Scale
+Độ chính xác (precision), scale và làm tròn trở thành chính sách như thế nào?
+Độ chính xác (precision), scale và chính sách làm tròn
         ↓
-Khi nào cần làm tròn và dùng policy nào?
-Rounding
+Vì sao bằng nhau về số học và bằng nhau giữa đối tượng có thể khác nhau?
+Quy tắc bằng nhau và thứ tự của giá trị số
         ↓
-Vì sao equals và compareTo của BigDecimal khác nhau?
-BigDecimal Comparison
+`Math` cung cấp tiện ích nào?
+Tiện ích toán học và phép toán an toàn
         ↓
-`Math` cung cấp helper nào?
-Math
+Sinh số giả ngẫu nhiên và SecureRandom khác nhau ở yêu cầu nào?
+Sinh số ngẫu nhiên trong lập trình và yêu cầu bảo mật
         ↓
-Random khác SecureRandom ở contract nào?
-Random → SecureRandom
+Cuối cùng chọn cách biểu diễn và chính sách nào?
+Chọn mô hình số phù hợp
 ```
 
-Ba nhóm ví dụ sẽ được dùng xuyên module:
+Ba nhóm ví dụ sẽ được dùng xuyên suốt mô-đun:
 
 ```text
-counter / quantity / ID
-→ integer semantics và overflow
+bộ đếm / số lượng / ID
+→ ngữ nghĩa số nguyên và tràn số
 
-sensor / scientific measurement
-→ floating-point approximation và tolerance
+cảm biến / đo lường khoa học
+→ xấp xỉ dấu phẩy động và sai số chấp nhận
 
-money / rate / tax
-→ BigDecimal, precision, scale và rounding policy
+tiền / tỷ lệ / thuế
+→ BigDecimal, độ chính xác, scale và chính sách làm tròn
 ```
 
 ## <a id="numeric-type-model">Các nhóm kiểu số</a>
 
-### WHAT — Java có những representation số nào?
+### KHÁI NIỆM — Java có những cách biểu diễn số nào?
 
-Các primitive integer:
+Các kiểu số nguyên thủy:
 
 | Kiểu | Số bit | Giá trị nhỏ nhất | Giá trị lớn nhất |
 | --- | ---: | ---: | ---: |
@@ -82,71 +82,71 @@ Các primitive integer:
 | `int` | 32 | -2³¹ | 2³¹ - 1 |
 | `long` | 64 | -2⁶³ | 2⁶³ - 1 |
 
-`char` cũng là primitive integral type nhưng dùng để biểu diễn UTF-16 code unit; về mục đích học Numbers, trọng tâm arithmetic thường nằm ở `byte/short/int/long`.
+`char` cũng là kiểu nguyên thủy dạng số nguyên nhưng dùng để biểu diễn một đơn vị mã UTF-16 (code unit); trong phạm vi học Numbers, trọng tâm phép toán số học thường nằm ở `byte/short/int/long`.
 
-Floating-point primitive:
+Các kiểu nguyên thủy dấu phẩy động:
 
 ```text
 float   → IEEE 754 binary32
 double  → IEEE 754 binary64
 ```
 
-Các object type quan trọng:
+Các kiểu đối tượng quan trọng:
 
 ```text
 BigInteger
-→ arbitrary-precision integer
+→ số nguyên có độ chính xác tùy ý (arbitrary precision)
 
 BigDecimal
-→ unscaled integer có arbitrary precision + scale kiểu int
-→ decimal semantics và rounding policy rõ ràng
+→ số nguyên chưa áp dụng scale (unscaled integer) có độ chính xác tùy ý + scale kiểu int
+→ ngữ nghĩa thập phân và chính sách làm tròn rõ ràng
 ```
 
-### WHY — Vì sao cần nhiều kiểu?
+### VÌ SAO — Vì sao cần nhiều kiểu?
 
-Hãy bắt đầu từ câu hỏi của domain thay vì từ cú pháp Java:
+Hãy bắt đầu từ yêu cầu của bài toán thay vì từ cú pháp Java:
 
-| Bài toán | Representation thường phù hợp | Lý do chính |
+| Bài toán | Cách biểu diễn thường phù hợp | Lý do chính |
 | --- | --- | --- |
-| số lượng, index, counter nhỏ | `int` | nhanh, đơn giản, đủ range |
-| timestamp/count lớn | `long` | range lớn hơn |
-| scientific/sensor/graphics | `double` | wide range + hardware support |
-| integer vượt `long` | `BigInteger` | không fixed-width |
-| tiền, tax, rate decimal | `BigDecimal` | decimal semantics + explicit rounding |
+| số lượng, chỉ số, bộ đếm nhỏ | `int` | nhanh, đơn giản, đủ phạm vi |
+| mốc thời gian/số đếm lớn | `long` | phạm vi lớn hơn |
+| khoa học/cảm biến/đồ họa | `double` | phạm vi rộng + được phần cứng hỗ trợ |
+| số nguyên vượt `long` | `BigInteger` | không bị giới hạn bởi độ rộng cố định |
+| tiền, thuế, tỷ lệ thập phân | `BigDecimal` | ngữ nghĩa thập phân + cách làm tròn tường minh |
 
-Một ID database thường nên là `long` không phải vì cần làm toán, mà vì cần **range đủ rộng**. Một số đo nhiệt độ có thể dùng `double` vì domain chấp nhận tolerance. Một số tiền lại thường không nên dùng `double` vì contract cần decimal semantics.
+Một ID trong cơ sở dữ liệu thường nên là `long` không phải vì cần làm toán, mà vì cần **phạm vi đủ rộng**. Một số đo nhiệt độ có thể dùng `double` vì bài toán chấp nhận một mức sai số. Một số tiền lại thường không nên dùng `double` vì yêu cầu cần ngữ nghĩa thập phân rõ ràng.
 
-### HOW — Chọn representation bằng contract
+### CÁCH CHỌN — Chọn cách biểu diễn theo yêu cầu bài toán
 
 Khi gặp một giá trị số, hỏi theo thứ tự:
 
 ```text
-1. Có cần fractional value không?
+1. Có cần phần thập phân không?
         ↓
-2. Có cần decimal exactness không?
+2. Có cần giá trị thập phân chính xác không?
         ↓
-3. Range tối đa là bao nhiêu?
+3. Phạm vi tối đa là bao nhiêu?
         ↓
-4. Overflow/rounding có được phép không?
+4. Có cho phép tràn số/làm tròn không?
         ↓
-5. Performance/footprint có quan trọng không?
+5. Hiệu năng/mức dùng bộ nhớ có quan trọng không?
 ```
 
-Không nên chọn `double` chỉ vì “chứa được số lớn”, cũng không nên dùng `BigDecimal` cho mọi phép toán chỉ vì “chính xác hơn”. Mỗi representation giải quyết một contract khác nhau.
+Không nên chọn `double` chỉ vì “chứa được số lớn”, cũng không nên dùng `BigDecimal` cho mọi phép toán chỉ vì “chính xác hơn”. Mỗi cách biểu diễn giải quyết một nhóm yêu cầu khác nhau.
 
-## <a id="integer-vs-floating">Integer và Floating-point</a>
+## <a id="integer-vs-floating">Số nguyên và số dấu phẩy động</a>
 
-Integer arithmetic và floating-point arithmetic có **failure mode khác nhau**.
+Phép toán số nguyên và phép toán dấu phẩy động có **kiểu sai khác nhau**.
 
 ```text
-integer
-→ exact trong representable range
-→ overflow/wraparound khi vượt range
+số nguyên
+→ chính xác trong phạm vi biểu diễn được
+→ tràn số/quay vòng khi vượt phạm vi
 
-floating-point
-→ wide dynamic range
-→ nhiều giá trị chỉ là approximation
-→ có NaN / infinity / signed zero
+số dấu phẩy động
+→ phạm vi động rộng
+→ nhiều giá trị chỉ là xấp xỉ
+→ có NaN / vô cực / số 0 có dấu
 ```
 
 Ví dụ:
@@ -162,18 +162,18 @@ System.out.println(total); // 0.30000000000000004
 
 Hai kết quả “lạ” này không cùng nguyên nhân:
 
-- integer sai vì **range hữu hạn**;
-- floating-point lệch vì **representation hữu hạn trong hệ nhị phân**.
+- số nguyên sai vì **phạm vi hữu hạn**;
+- số dấu phẩy động lệch vì **cách biểu diễn hữu hạn trong hệ nhị phân**.
 
-Điều quan trọng không phải “kiểu nào chính xác hơn” một cách chung chung, mà là **kiểu nào đúng contract hơn**.
+Điều quan trọng không phải “kiểu nào chính xác hơn” một cách chung chung, mà là **kiểu nào phù hợp với yêu cầu hơn**.
 
-## <a id="numeric-conversions">Chuyển đổi và Numeric Promotion</a>
+## <a id="numeric-conversions">Chuyển đổi và nâng kiểu số (Numeric Promotion)</a>
 
-### Cơ chế quan trọng: operation type được quyết định trước assignment
+### Cơ chế quan trọng: kiểu của phép toán được quyết định trước phép gán
 
-Trước khi arithmetic chạy, Java áp dụng các rule về conversion và numeric promotion.
+Trước khi phép toán số học chạy, Java áp dụng các quy tắc về chuyển đổi và nâng kiểu số (numeric promotion).
 
-Các integer type nhỏ hơn `int` thường được promote lên `int`:
+Các kiểu số nguyên nhỏ hơn `int` thường được nâng lên `int`:
 
 ```java
 byte a = 10;
@@ -185,7 +185,7 @@ int result = a + b;
 
 Đây là lý do `byte + byte` không tự cho ra `byte`.
 
-Với expression trộn kiểu:
+Với biểu thức trộn nhiều kiểu:
 
 ```java
 int i = 10;
@@ -196,7 +196,7 @@ long x = i + l;
 double y = l + d;
 ```
 
-### Pitfall: widen ở assignment không cứu được overflow đã xảy ra
+### Lỗi thường gặp: mở rộng kiểu ở phép gán không cứu được tràn số đã xảy ra
 
 ```java
 int quantity = 1_000_000;
@@ -205,35 +205,35 @@ int price = 10_000;
 long wrong = quantity * price;
 ```
 
-Người mới thường nghĩ `wrong` là `long` nên an toàn. Nhưng flow thực tế là:
+Người mới thường nghĩ `wrong` là `long` nên an toàn. Nhưng luồng thực tế là:
 
 ```text
 int * int
     ↓
-arithmetic chạy dưới dạng int
+phép toán chạy dưới dạng int
     ↓
-có thể overflow
+có thể tràn số
     ↓
-kết quả int đã sai
+kết quả int đã bị sai
     ↓
-convert sang long
+chuyển sang long
 ```
 
-Muốn phép nhân chạy dưới dạng `long`, phải widen **trước arithmetic**:
+Muốn phép nhân chạy dưới dạng `long`, phải mở rộng kiểu **trước khi thực hiện phép toán**:
 
 ```java
 long correct = (long) quantity * price;
 ```
 
-### Cast không phục hồi dữ liệu đã mất
+### Ép kiểu không phục hồi dữ liệu đã mất
 
 ```java
 int overflowed = Integer.MAX_VALUE + 1;
 long widened = (long) overflowed;
 ```
 
-`widened` chỉ chứa phiên bản `long` của giá trị đã overflow. Cast sau cùng không thể quay lại phép toán ban đầu.
+`widened` chỉ chứa phiên bản `long` của giá trị đã bị tràn. Ép kiểu ở bước cuối không thể quay lại phép toán ban đầu.
 
-Tương tự, nếu arithmetic `double` đã tạo rounding error rồi mới đưa vào `BigDecimal`, BigDecimal không thể biết decimal intent ban đầu là gì.
+Tương tự, nếu phép toán `double` đã tạo sai số làm tròn rồi mới đưa vào `BigDecimal`, BigDecimal không thể biết ý nghĩa thập phân ban đầu mà người viết mã mong muốn là gì.
 
-Chương tiếp theo bắt đầu với failure mode dễ bỏ qua nhất của integer: **overflow nhưng chương trình vẫn tiếp tục chạy**.
+Chương tiếp theo bắt đầu với dạng lỗi dễ bỏ qua nhất của số nguyên: **bị tràn nhưng chương trình vẫn tiếp tục chạy**.

@@ -1,4 +1,4 @@
-# SecureRandom
+# SecureRandom and Security Requirements
 
 When randomness is part of a security contract, "looks random" is not enough. The important property is that an attacker should have difficulty predicting internal state and future output.
 
@@ -111,6 +111,4 @@ Deeper topics such as key-size selection, cipher modes, nonce uniqueness, IV con
 
 Using `SecureRandom` alone is not enough to design cryptography safely. It solves the **random-source** part of a larger protocol contract.
 
-After this module, the key question for any numeric value is:
-
-> Which representation and policy match the problem contract: range, exactness, decimal semantics, rounding, or unpredictability?
+The next chapter combines the entire module into one decision process: choose the representation first, then make overflow, comparison, rounding, and randomness policies explicit where the domain requires them.

@@ -1,176 +1,176 @@
 BigDecimalController:
   construction():
     execution: |-
-      <p><strong>Khái niệm:</strong> Cách tạo BigDecimal quyết định decimal value nào thực sự được capture.</p>
-      <p><strong>Luồng:</strong> Tạo ba value từ cùng ý tưởng 0.1 bằng String, valueOf(double) và constructor nhận double.</p>
+      <p><strong>Khái niệm:</strong> Cách tạo BigDecimal quyết định giá trị thập phân nào thực sự được ghi nhận.</p>
+      <p><strong>Luồng:</strong> Tạo ba giá trị từ cùng ý tưởng 0.1 bằng String, valueOf(double) và hàm tạo nhận double.</p>
       <pre><code>new BigDecimal("0.1")
       BigDecimal.valueOf(0.1d)
       new BigDecimal(0.1d)</code></pre>
-      <p><strong>Quan sát:</strong> <code>fromString</code> và <code>fromValueOf</code> hiển thị 0.1, còn <code>fromDouble</code> lộ decimal expansion của binary double gần đúng.</p>
-      <p><strong>Kết luận:</strong> Nếu decimal intent là contract, tránh đưa binary approximation vào pipeline trước khi tạo BigDecimal.</p>
+      <p><strong>Quan sát:</strong> <code>fromString</code> và <code>fromValueOf</code> hiển thị 0.1, còn <code>fromDouble</code> lộ khai triển thập phân của giá trị double nhị phân xấp xỉ.</p>
+      <p><strong>Kết luận:</strong> Nếu ý nghĩa thập phân là một phần của yêu cầu, tránh đưa sai số nhị phân vào luồng xử lý trước khi tạo BigDecimal.</p>
     usage: true
   comparison():
     execution: |-
-      <p><strong>Khái niệm:</strong> BigDecimal <code>equals</code> xét scale còn <code>compareTo</code> xét numerical ordering.</p>
+      <p><strong>Khái niệm:</strong> BigDecimal <code>equals</code> xét scale còn <code>compareTo</code> xét thứ tự theo giá trị số học.</p>
       <p><strong>Luồng:</strong> So sánh <code>1.0</code> với <code>1.00</code> và trả cả scale, equals, compareTo.</p>
       <pre><code>left.equals(right)
       left.compareTo(right)</code></pre>
-      <p><strong>Quan sát:</strong> <code>equals=false</code>, <code>compareTo=0</code>, scale hai value khác nhau.</p>
-      <p><strong>Kết luận:</strong> Representation equality và numerical equality là hai contract khác nhau.</p>
+      <p><strong>Quan sát:</strong> <code>equals=false</code>, <code>compareTo=0</code>, scale của hai giá trị khác nhau.</p>
+      <p><strong>Kết luận:</strong> Bằng nhau theo cách biểu diễn và bằng nhau theo giá trị số học là hai quy tắc khác nhau.</p>
     usage: true
   divisionAndRounding():
     execution: |-
-      <p><strong>Khái niệm:</strong> Exact BigDecimal division không tự invent rounding policy.</p>
-      <p><strong>Luồng:</strong> Thử exact <code>1 / 3</code>, capture failure, sau đó lặp lại với scale 4 và <code>HALF_UP</code>.</p>
+      <p><strong>Khái niệm:</strong> Phép chia BigDecimal chính xác không tự đặt ra chính sách làm tròn.</p>
+      <p><strong>Luồng:</strong> Thử phép chia chính xác <code>1 / 3</code>, ghi nhận lỗi, sau đó lặp lại với scale 4 và <code>HALF_UP</code>.</p>
       <pre><code>BigDecimal.ONE.divide(new BigDecimal("3"))
       BigDecimal.ONE.divide(new BigDecimal("3"), 4, RoundingMode.HALF_UP)</code></pre>
-      <p><strong>Quan sát:</strong> Exact division trả <code>ArithmeticException</code>; explicit policy trả <code>0.3333</code>.</p>
-      <p><strong>Kết luận:</strong> Rounding mode/scale là policy phải được caller hoặc domain quyết định.</p>
+      <p><strong>Quan sát:</strong> Lệnh chia chính xác ném <code>ArithmeticException</code>; phương thức bắt ngoại lệ và ghi <code>exactDivisionFailure</code>, còn nhánh có scale 4 + <code>HALF_UP</code> trả <code>0.3333</code>.</p>
+      <p><strong>Kết luận:</strong> RoundingMode và scale là chính sách phải do bên gọi hoặc nghiệp vụ quyết định.</p>
     usage: true
   precisionScale():
     execution: |-
-      <p><strong>Khái niệm:</strong> Precision, scale và representation normalization không phải cùng một thứ.</p>
-      <p><strong>Luồng:</strong> Tạo <code>123.4500</code>, đọc precision/scale, rồi gọi <code>stripTrailingZeros()</code> và đọc lại.</p>
+      <p><strong>Khái niệm:</strong> Độ chính xác (precision), scale và chuẩn hóa cách biểu diễn không phải cùng một thứ.</p>
+      <p><strong>Luồng:</strong> Tạo <code>123.4500</code>, đọc độ chính xác (precision)/scale, rồi gọi <code>stripTrailingZeros()</code> và đọc lại.</p>
       <pre><code>value.precision();
       value.scale();
       value.stripTrailingZeros();</code></pre>
-      <p><strong>Quan sát:</strong> Numerical value giữ nguyên nhưng precision/scale và text representation có thể thay đổi.</p>
-      <p><strong>Kết luận:</strong> Scale thuộc representation; normalization phải được dùng có chủ ý nếu equality/key semantics quan trọng.</p>
+      <p><strong>Quan sát:</strong> Giá trị số học giữ nguyên nhưng độ chính xác (precision)/scale và biểu diễn văn bản có thể thay đổi.</p>
+      <p><strong>Kết luận:</strong> Scale thuộc cách biểu diễn; việc chuẩn hóa phải có chủ đích nếu quy tắc bằng nhau hoặc khóa dữ liệu là quan trọng.</p>
     usage: true
   mathContextVsScale():
     execution: |-
-      <p><strong>Khái niệm:</strong> <code>setScale</code> kiểm soát decimal scale; <code>MathContext</code> kiểm soát significant-digit precision của operation.</p>
-      <p><strong>Luồng:</strong> Với <code>12345.67</code>, một nhánh dùng scale 1, nhánh còn lại dùng precision 4.</p>
+      <p><strong>Khái niệm:</strong> <code>setScale</code> kiểm soát scale thập phân; <code>MathContext</code> kiểm soát độ chính xác (precision) theo chữ số có nghĩa của phép toán.</p>
+      <p><strong>Luồng:</strong> Với <code>12345.67</code>, một nhánh dùng scale 1, nhánh còn lại dùng độ chính xác 4 chữ số.</p>
       <pre><code>value.setScale(1, RoundingMode.HALF_UP)
       value.round(new MathContext(4, RoundingMode.HALF_UP))</code></pre>
-      <p><strong>Quan sát:</strong> <code>setScaleOne</code> giữ magnitude nhưng một decimal place; <code>precisionFour</code> làm tròn theo tổng significant digits.</p>
-      <p><strong>Kết luận:</strong> Chọn scale hay MathContext dựa trên policy đang kiểm soát decimal places hay total precision.</p>
+      <p><strong>Quan sát:</strong> <code>setScaleOne</code> giữ độ lớn nhưng còn một chữ số thập phân; <code>precisionFour</code> làm tròn theo tổng số chữ số có nghĩa.</p>
+      <p><strong>Kết luận:</strong> Chọn scale hay MathContext dựa trên chính sách đang kiểm soát số chữ số thập phân hay tổng độ chính xác.</p>
     usage: true
   roundingModes():
     execution: |-
-      <p><strong>Khái niệm:</strong> Các HALF mode chọn nearest candidate và chỉ khác nhau ở tie.</p>
-      <p><strong>Luồng:</strong> Round <code>2.5</code> và <code>-2.5</code> về scale 0 bằng HALF_UP, HALF_DOWN và HALF_EVEN.</p>
+      <p><strong>Khái niệm:</strong> Các chế độ HALF chọn giá trị gần nhất và chỉ khác nhau khi giá trị nằm đúng giữa hai ứng viên.</p>
+      <p><strong>Luồng:</strong> Làm tròn <code>2.5</code> và <code>-2.5</code> về scale 0 bằng HALF_UP, HALF_DOWN và HALF_EVEN.</p>
       <pre><code>positive.setScale(0, RoundingMode.HALF_UP)
       positive.setScale(0, RoundingMode.HALF_DOWN)
       positive.setScale(0, RoundingMode.HALF_EVEN)
       negative.setScale(0, RoundingMode.HALF_UP)</code></pre>
-      <p><strong>Quan sát:</strong> HALF_UP đi xa zero ở tie; HALF_DOWN đi về zero; HALF_EVEN chọn neighbor chẵn.</p>
-      <p><strong>Kết luận:</strong> Tên mode chỉ có ý nghĩa khi gắn với mathematical direction và business rule.</p>
+      <p><strong>Quan sát:</strong> HALF_UP đi xa số 0 khi ở chính giữa; HALF_DOWN đi về số 0; HALF_EVEN chọn giá trị lân cận có chữ số cuối chẵn.</p>
+      <p><strong>Kết luận:</strong> Tên chế độ chỉ có ý nghĩa khi gắn với hướng làm tròn toán học và quy tắc nghiệp vụ.</p>
     usage: true
   collectionSemantics():
     execution: |-
-      <p><strong>Khái niệm:</strong> Hash collection và sorted collection có thể nhìn BigDecimal equality khác nhau.</p>
+      <p><strong>Khái niệm:</strong> Collection dựa trên hash và collection có sắp xếp có thể nhìn quy tắc bằng nhau của BigDecimal khác nhau.</p>
       <p><strong>Luồng:</strong> Thêm <code>1.0</code> và <code>1.00</code> vào HashSet và TreeSet.</p>
       <pre><code>hashSet.add(left); hashSet.add(right);
       treeSet.add(left); treeSet.add(right);</code></pre>
-      <p><strong>Quan sát:</strong> <code>hashSetSize=2</code> nhưng <code>treeSetSize=1</code> vì HashSet dùng equals/hashCode còn TreeSet dùng natural ordering.</p>
-      <p><strong>Kết luận:</strong> Nếu BigDecimal là domain key, equality/normalization policy phải explicit.</p>
+      <p><strong>Quan sát:</strong> <code>hashSetSize=2</code> nhưng <code>treeSetSize=1</code> vì HashSet dùng equals/hashCode còn TreeSet dùng thứ tự tự nhiên.</p>
+      <p><strong>Kết luận:</strong> Nếu BigDecimal là khóa nghiệp vụ, quy tắc bằng nhau và chuẩn hóa phải được quy định rõ.</p>
     usage: true
 FloatingPointController:
   precision():
     execution: |-
-      <p><strong>Khái niệm:</strong> Binary floating-point không biểu diễn chính xác nhiều decimal fraction.</p>
-      <p><strong>Luồng:</strong> Tính <code>0.1 + 0.2</code>, so exact với <code>0.3</code> và đo delta.</p>
+      <p><strong>Khái niệm:</strong> Số dấu phẩy động nhị phân không biểu diễn chính xác nhiều phân số thập phân.</p>
+      <p><strong>Luồng:</strong> Tính <code>0.1 + 0.2</code>, so sánh chính xác với <code>0.3</code> và đo độ lệch.</p>
       <pre><code>double value = 0.1d + 0.2d;
       value == 0.3d;
       Math.abs(value - 0.3d);</code></pre>
-      <p><strong>Quan sát:</strong> Exact equality false và delta nhỏ nhưng khác zero.</p>
-      <p><strong>Kết luận:</strong> Đây là representation property của IEEE 754, không phải Java tự làm sai phép cộng.</p>
+      <p><strong>Quan sát:</strong> So sánh chính xác cho kết quả false và độ lệch nhỏ nhưng khác 0.</p>
+      <p><strong>Kết luận:</strong> Đây là đặc tính biểu diễn của IEEE 754, không phải Java tự làm sai phép cộng.</p>
     usage: true
   specialValues():
     execution: |-
-      <p><strong>Khái niệm:</strong> IEEE 754 có NaN, infinity và signed zero với behavior riêng.</p>
-      <p><strong>Luồng:</strong> Tạo NaN bằng <code>0.0/0.0</code>, infinity bằng division by zero và so reciprocal của +0.0/-0.0.</p>
+      <p><strong>Khái niệm:</strong> IEEE 754 có NaN, vô cực và số 0 có dấu với hành vi riêng.</p>
+      <p><strong>Luồng:</strong> Tạo NaN bằng <code>0.0/0.0</code>, tạo vô cực bằng phép chia cho 0 và so nghịch đảo của +0.0/-0.0.</p>
       <pre><code>Double.isNaN(0.0d / 0.0d)
       1.0d / 0.0d
       1.0d / -0.0d</code></pre>
-      <p><strong>Quan sát:</strong> NaN không equals chính nó; +0.0 == -0.0 nhưng reciprocal cho +Infinity và -Infinity.</p>
-      <p><strong>Kết luận:</strong> Special values cần API kiểm tra/handling riêng thay vì áp trực giác integer.</p>
+      <p><strong>Quan sát:</strong> NaN không bằng chính nó; +0.0 == -0.0 nhưng nghịch đảo cho +Infinity và -Infinity.</p>
+      <p><strong>Kết luận:</strong> Các giá trị đặc biệt cần API kiểm tra và xử lý riêng thay vì áp trực giác của số nguyên.</p>
     usage: true
   comparison():
     execution: |-
-      <p><strong>Khái niệm:</strong> Approximate computation thường cần tolerance thay vì exact equality.</p>
+      <p><strong>Khái niệm:</strong> Tính toán xấp xỉ thường cần sai số chấp nhận thay vì so sánh chính xác.</p>
       <p><strong>Luồng:</strong> So <code>0.1 + 0.2</code> với <code>0.3</code> bằng <code>==</code> và epsilon <code>1e-9</code>.</p>
       <pre><code>double delta = Math.abs(actual - expected);
       boolean withinTolerance = delta &lt;= epsilon;</code></pre>
       <p><strong>Quan sát:</strong> <code>exactEqual=false</code> nhưng <code>withinTolerance=true</code>.</p>
-      <p><strong>Kết luận:</strong> Epsilon phải đến từ domain/error budget; endpoint chỉ chứng minh mechanism, không đưa ra universal epsilon.</p>
+      <p><strong>Kết luận:</strong> Epsilon phải đến từ yêu cầu sai số của bài toán; thí nghiệm chỉ chứng minh cơ chế, không đưa ra một epsilon dùng cho mọi trường hợp.</p>
     usage: true
 IntegerArithmeticController:
   overflow():
     execution: |-
-      <p><strong>Khái niệm:</strong> Primitive integer overflow wrap silently, còn exact helper biến overflow thành failure explicit.</p>
+      <p><strong>Khái niệm:</strong> Tràn số nguyên kiểu nguyên thủy làm giá trị quay vòng âm thầm, còn phương thức có kiểm tra biến tràn số thành lỗi rõ ràng.</p>
       <p><strong>Luồng:</strong> Tính <code>Integer.MAX_VALUE + 1</code> rồi gọi <code>Math.addExact(MAX_VALUE, 1)</code>.</p>
       <pre><code>int wrapped = Integer.MAX_VALUE + 1;
       Math.addExact(Integer.MAX_VALUE, 1);</code></pre>
-      <p><strong>Quan sát:</strong> Unchecked result là <code>Integer.MIN_VALUE</code>; checked path ghi <code>ArithmeticException</code>.</p>
-      <p><strong>Kết luận:</strong> Nếu overflow vi phạm contract, exact helper giúp fail tại arithmetic boundary thay vì truyền value sai xuống downstream logic.</p>
+      <p><strong>Quan sát:</strong> Kết quả không kiểm tra là <code>Integer.MIN_VALUE</code>; nhánh có kiểm tra ghi <code>ArithmeticException</code>.</p>
+      <p><strong>Kết luận:</strong> Nếu tràn số vi phạm yêu cầu, phương thức có kiểm tra giúp phát hiện lỗi ngay tại phép toán thay vì truyền giá trị sai sang logic phía sau.</p>
     usage: true
   intermediateOverflow():
     execution: |-
-      <p><strong>Khái niệm:</strong> Assignment target không quyết định type của arithmetic expression đã chạy.</p>
-      <p><strong>Luồng:</strong> Với hai operand int, so <code>long wrong = quantity * unitPrice</code> với phép nhân đã widen operand trước.</p>
+      <p><strong>Khái niệm:</strong> Biến nhận kết quả không quyết định kiểu của biểu thức số học đã được thực thi.</p>
+      <p><strong>Luồng:</strong> Với hai toán hạng int, so <code>long wrong = quantity * unitPrice</code> với phép nhân đã nâng kiểu một toán hạng trước.</p>
       <pre><code>long wrong = quantity * unitPrice;
       long correct = (long) quantity * unitPrice;</code></pre>
       <p><strong>Quan sát:</strong> <code>intProductThenWidened</code> khác <code>widenBeforeMultiply</code>; <code>sameResult=false</code>.</p>
-      <p><strong>Kết luận:</strong> Numeric promotion/operation type xảy ra trước assignment conversion.</p>
+      <p><strong>Kết luận:</strong> Nâng kiểu số và kiểu của phép toán được xác định trước bước chuyển đổi khi gán.</p>
     usage: true
   boundaryCases():
     execution: |-
-      <p><strong>Khái niệm:</strong> <code>MIN_VALUE</code> có các asymmetric boundary case do two's-complement range.</p>
-      <p><strong>Luồng:</strong> Chạy ordinary <code>Math.abs</code> và integer division trên <code>Integer.MIN_VALUE</code>.</p>
+      <p><strong>Khái niệm:</strong> <code>MIN_VALUE</code> có các trường hợp biên bất đối xứng do phạm vi biểu diễn bù hai (two's complement).</p>
+      <p><strong>Luồng:</strong> Chạy <code>Math.abs</code> thông thường và phép chia số nguyên trên <code>Integer.MIN_VALUE</code>.</p>
       <pre><code>Math.abs(Integer.MIN_VALUE)
       Integer.MIN_VALUE / -1</code></pre>
-      <p><strong>Quan sát:</strong> Cả hai result đều là <code>Integer.MIN_VALUE</code> vì positive mathematical result không fit trong <code>int</code>.</p>
-      <p><strong>Kết luận:</strong> Boundary reasoning phải test actual primitive range; checked alternatives được tách sang experiment <code>MathController#exactBoundaries()</code>.</p>
+      <p><strong>Quan sát:</strong> Cả hai kết quả đều là <code>Integer.MIN_VALUE</code> vì kết quả toán học dương không nằm trong phạm vi của <code>int</code>.</p>
+      <p><strong>Kết luận:</strong> Phân tích trường hợp biên phải kiểm tra phạm vi thật của kiểu nguyên thủy; các phương án có kiểm tra được tách sang thí nghiệm <code>MathController#exactBoundaries()</code>.</p>
     usage: true
 RandomController:
   seededSequence():
     execution: |-
-      <p><strong>Khái niệm:</strong> Ordinary PRNG là deterministic từ seed/state và vì vậy có thể reproducible.</p>
+      <p><strong>Khái niệm:</strong> PRNG thông thường có tính tất định từ giá trị khởi tạo (seed)/trạng thái nên có thể tái lập.</p>
       <p><strong>Luồng:</strong> Tạo hai <code>Random(42)</code>, gọi cùng ba <code>nextInt(1000)</code> theo cùng thứ tự.</p>
       <pre><code>Random first = new Random(42L);
       Random second = new Random(42L);</code></pre>
-      <p><strong>Quan sát:</strong> Hai sequence giống nhau và <code>reproducible=true</code>.</p>
-      <p><strong>Kết luận:</strong> Reproducibility hữu ích cho test/simulation nhưng không phải security unpredictability; security-sensitive randomness thuộc <code>SecureRandom</code>.</p>
+      <p><strong>Quan sát:</strong> Hai chuỗi giống nhau và <code>reproducible=true</code>.</p>
+      <p><strong>Kết luận:</strong> Khả năng tái lập hữu ích cho kiểm thử/mô phỏng nhưng không đồng nghĩa với tính khó dự đoán cho bảo mật; ngẫu nhiên nhạy cảm với bảo mật thuộc <code>SecureRandom</code>.</p>
     usage: true
 BigIntegerController:
   conversionBoundary():
     execution: |-
-      <p><strong>Khái niệm:</strong> Chuyển BigInteger về primitive là narrowing boundary có thể làm mất high-order bits.</p>
-      <p><strong>Luồng:</strong> Với một value vượt xa int, gọi cả <code>intValue()</code> và <code>intValueExact()</code>.</p>
+      <p><strong>Khái niệm:</strong> Chuyển BigInteger về kiểu nguyên thủy là ranh giới thu hẹp có thể làm mất các bit bậc cao.</p>
+      <p><strong>Luồng:</strong> Với một giá trị vượt xa phạm vi int, gọi cả <code>intValue()</code> và <code>intValueExact()</code>.</p>
       <pre><code>huge.intValue();
       huge.intValueExact();</code></pre>
-      <p><strong>Quan sát:</strong> Unchecked conversion vẫn trả một int; exact conversion ghi <code>ArithmeticException</code>.</p>
-      <p><strong>Kết luận:</strong> Dùng exact conversion khi việc fit primitive range là invariant của boundary.</p>
+      <p><strong>Quan sát:</strong> Chuyển đổi không kiểm tra vẫn trả một int; chuyển đổi có kiểm tra ghi <code>ArithmeticException</code>.</p>
+      <p><strong>Kết luận:</strong> Dùng chuyển đổi có kiểm tra khi việc nằm trong phạm vi kiểu nguyên thủy là điều kiện bắt buộc tại ranh giới này.</p>
     usage: true
   remainderVsMod():
     execution: |-
-      <p><strong>Khái niệm:</strong> <code>remainder</code> và <code>mod</code> không cùng contract với negative dividend.</p>
-      <p><strong>Luồng:</strong> Tính cả hai với <code>-7</code> và divisor/modulus <code>3</code>.</p>
+      <p><strong>Khái niệm:</strong> <code>remainder</code> và <code>mod</code> không có cùng quy tắc với số bị chia âm.</p>
+      <p><strong>Luồng:</strong> Tính cả hai với <code>-7</code> và số chia/mô-đun <code>3</code>.</p>
       <pre><code>value.remainder(divisor);
       value.mod(divisor);</code></pre>
       <p><strong>Quan sát:</strong> <code>remainder=-1</code> nhưng <code>mod=2</code>.</p>
-      <p><strong>Kết luận:</strong> Modular arithmetic yêu cầu positive modulus và non-negative result; không thay thế hai API theo tên gọi bề mặt.</p>
+      <p><strong>Kết luận:</strong> Phép toán mô-đun yêu cầu mô-đun dương và kết quả không âm; không thay thế hai API theo tên gọi bề mặt.</p>
     usage: true
 MathController:
   floorDivision():
     execution: |-
-      <p><strong>Khái niệm:</strong> Java integer division truncate toward zero, còn floor division đi về negative infinity.</p>
+      <p><strong>Khái niệm:</strong> Phép chia số nguyên Java cắt về 0, còn phép chia lấy sàn đi về âm vô cực.</p>
       <p><strong>Luồng:</strong> So <code>-7 / 3</code> và <code>-7 % 3</code> với <code>Math.floorDiv(-7,3)</code>/<code>floorMod</code>.</p>
       <pre><code>-7 / 3
       Math.floorDiv(-7, 3)
       -7 % 3
       Math.floorMod(-7, 3)</code></pre>
-      <p><strong>Quan sát:</strong> Ordinary quotient là -2 còn floor quotient là -3; remainder/mod tương ứng cũng khác sign semantics.</p>
-      <p><strong>Kết luận:</strong> Algorithm có negative operands phải chọn division contract rõ ràng.</p>
+      <p><strong>Quan sát:</strong> Thương số thông thường là -2 còn thương lấy sàn là -3; phần dư và floorMod tương ứng cũng khác quy tắc dấu.</p>
+      <p><strong>Kết luận:</strong> Thuật toán có toán hạng âm phải chọn quy tắc phép chia rõ ràng.</p>
     usage: true
   exactBoundaries():
     execution: |-
-      <p><strong>Khái niệm:</strong> Java 21 exact helpers biến arithmetic boundary overflow thành exception.</p>
-      <p><strong>Luồng:</strong> So unchecked <code>abs(MIN_VALUE)</code>/<code>MIN_VALUE / -1</code> với <code>absExact</code>/<code>divideExact</code>.</p>
+      <p><strong>Khái niệm:</strong> Các phương thức có kiểm tra của Java 21 biến tràn số ở biên phép toán thành ngoại lệ.</p>
+      <p><strong>Luồng:</strong> So nhánh không kiểm tra <code>abs(MIN_VALUE)</code>/<code>MIN_VALUE / -1</code> với <code>absExact</code>/<code>divideExact</code>.</p>
       <pre><code>Math.absExact(Integer.MIN_VALUE);
       Math.divideExact(Integer.MIN_VALUE, -1);</code></pre>
-      <p><strong>Quan sát:</strong> Unchecked paths trả MIN_VALUE; exact helpers throw <code>ArithmeticException</code>.</p>
-      <p><strong>Kết luận:</strong> Exact helper không tăng range nhưng giúp biến silent corruption thành explicit contract failure.</p>
+      <p><strong>Quan sát:</strong> Các nhánh không kiểm tra trả MIN_VALUE; các phương thức có kiểm tra ném <code>ArithmeticException</code>.</p>
+      <p><strong>Kết luận:</strong> Phương thức có kiểm tra không tăng phạm vi giá trị nhưng giúp biến sai lệch âm thầm thành lỗi rõ ràng.</p>
     usage: true

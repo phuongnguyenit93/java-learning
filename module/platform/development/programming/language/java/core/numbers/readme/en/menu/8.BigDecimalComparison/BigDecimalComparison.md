@@ -1,4 +1,4 @@
-# Comparing BigDecimal
+# Numeric Equality and Ordering Contracts
 
 `BigDecimal` supports two different comparison questions:
 

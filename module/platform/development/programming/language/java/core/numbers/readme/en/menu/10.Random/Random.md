@@ -1,4 +1,4 @@
-# Random
+# Pseudo-Random Generation
 
 `Random` does not produce "absolute randomness". It produces a **pseudo-random** sequence from internal state/seed using a deterministic algorithm.
 

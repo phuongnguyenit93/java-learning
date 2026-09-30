@@ -1,4 +1,4 @@
-# Numeric Model in Java
+# How Java Represents Numbers
 
 Java does not have one numeric representation that is ideal for every problem. Each representation trades off **range, exactness, performance, memory footprint, and rounding behavior**.
 
@@ -25,35 +25,35 @@ No representation gives unlimited range, exact decimal behavior, primitive speed
 Roadmap:
 
 ```text
-Which representation fits the problem?
-Numeric Model
+Why does Java need several numeric representations?
+How Java Represents Numbers
         ↓
 How can fixed-width integers fail?
-Integer Overflow
+Fixed-Width Integers and Overflow
         ↓
 Why does 0.1 + 0.2 surprise people?
-Floating Point
+Floating-Point Approximation
         ↓
 What if integer range is not enough?
-BigInteger
+Arbitrary-Precision Integers
         ↓
 What if exact decimal semantics matter?
-BigDecimal
+Exact Decimal Arithmetic
         ↓
-How do precision and scale differ?
-Precision & Scale
+How do precision, scale, and rounding become explicit policy?
+Precision, Scale, and Rounding Policy
         ↓
-When and how should values be rounded?
-Rounding
-        ↓
-Why do BigDecimal equals and compareTo differ?
-BigDecimal Comparison
+Why can numerical equality and object equality answer different questions?
+Numeric Equality and Ordering Contracts
         ↓
 Which standard numeric helpers already exist?
-Math
+Math Helpers and Safe Arithmetic
         ↓
 How do pseudo-random and security randomness differ?
-Random → SecureRandom
+Random Generation and Security Requirements
+        ↓
+How do all of these choices come together in real code?
+Choosing the Right Numeric Model
 ```
 
 Three recurring value families are used throughout the module:

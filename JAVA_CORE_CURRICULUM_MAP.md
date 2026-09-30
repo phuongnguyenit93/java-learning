@@ -547,11 +547,8 @@ BigInteger
 What if exact decimal semantics matter?
 BigDecimal
         ↓
-How do precision and scale affect a decimal value?
-Precision & Scale
-        ↓
-When and how should results be rounded?
-Rounding
+How do precision, scale, and rounding become explicit policy?
+Precision & Scale → Rounding
         ↓
 Why can numerically equal BigDecimal values behave differently in equality/collections?
 BigDecimal Comparison
@@ -561,6 +558,9 @@ Math
         ↓
 How do pseudo-random and security randomness differ?
 Random → SecureRandom
+        ↓
+How do the representation and policy choices come together?
+Numeric Synthesis
 ```
 
 **Running example / evidence strategy:** reuse three value families: counters/IDs for integers, sensor/scientific values for floating point, and money/rates for BigDecimal. Use code to make representation failures visible before introducing the safer alternative.
@@ -579,6 +579,7 @@ BigDecimalComparison    → Why do equals and numerical comparison answer differ
 Math                    → Which common numeric operations should use standard helpers?
 Random                  → What does deterministic pseudo-randomness mean?
 SecureRandom            → When does unpredictability become part of the contract?
+NumericSynthesis        → How do we choose a representation and its policies from the problem requirements?
 ```
 
 #### Knowledge map
@@ -596,26 +597,38 @@ SecureRandom            → When does unpredictability become part of the contra
 | `9.Math/Math.md` | `#math-core-functions` — Core Math functions<br>`#exact-arithmetic-methods` — Exact integer arithmetic helpers<br>`#strictmath-boundary` — Math vs StrictMath boundary |
 | `10.Random/Random.md` | `#pseudo-random-model` — Pseudo-random model and seed<br>`#threadlocal-random-boundary` — Random vs ThreadLocalRandom boundary<br>`#random-not-security` — Why ordinary PRNG is not security |
 | `11.SecureRandom/SecureRandom.md` | `#secure-random-purpose` — SecureRandom purpose<br>`#entropy-seeding` — Entropy and seeding mental model<br>`#security-boundary` — Security usage boundary and handoff to cryptography module |
+| `12.NumericSynthesis/NumericSynthesis.md` | `#numeric-decision-model` — Representation decision model from domain requirements<br>`#numeric-policy-boundaries` — Representation vs policy and neighboring-module boundaries<br>`#numeric-synthesis-cases` — End-to-end selection examples and final checklist |
 
 #### Proposed API experiments
 
 | Controller | Experiment / method concept | Primary Knowledge anchor | Observation |
 | --- | --- | --- | --- |
 | `IntegerArithmeticController` | `overflow()` | `#integer-overflow-wraparound` | Return MAX_VALUE + 1 plus checked addExact result. |
+| `IntegerArithmeticController` | `intermediateOverflow()` | `#numeric-conversions` | Show that `int * int` may overflow before assignment widens the result to `long`. |
+| `IntegerArithmeticController` | `boundaryCases()` | `#boundary-values` | Expose `MIN_VALUE` behavior for unchecked `abs` and division by `-1`. |
 | `FloatingPointController` | `precision()` | `#precision-rounding-error` | Expose 0.1 + 0.2, decimal rendering and tolerance comparison. |
 | `FloatingPointController` | `specialValues()` | `#nan-infinity-negative-zero` | Compare NaN/infinity/-0.0 behavior. |
+| `FloatingPointController` | `comparison()` | `#floating-point-comparison` | Compare exact equality with a deliberately chosen tolerance. |
+| `BigIntegerController` | `conversionBoundary()` | `#big-integer-operations` | Contrast unchecked primitive conversion with `intValueExact()`. |
+| `BigIntegerController` | `remainderVsMod()` | `#big-integer-operations` | Show remainder versus modular arithmetic for a negative dividend. |
 | `BigDecimalController` | `construction()` | `#big-decimal-construction` | Compare new BigDecimal(double), String and valueOf. |
 | `BigDecimalController` | `comparison()` | `#big-decimal-equals` | Show equals vs compareTo and scale. |
-| `BigDecimalController` | `divisionAndRounding()` | `#rounding-modes` | Show non-terminating division failure and explicit rounding. |
+| `BigDecimalController` | `divisionAndRounding()` | `#big-decimal-arithmetic` | Show non-terminating division failure and explicit rounding policy. |
+| `BigDecimalController` | `precisionScale()` | `#precision-vs-scale` | Observe precision/scale before and after normalization. |
+| `BigDecimalController` | `mathContextVsScale()` | `#math-context` | Contrast decimal-place scale with significant-digit precision. |
+| `BigDecimalController` | `roundingModes()` | `#rounding-modes` | Compare HALF_UP, HALF_DOWN and HALF_EVEN for positive and negative ties. |
+| `BigDecimalController` | `collectionSemantics()` | `#big-decimal-collections` | Show HashSet vs TreeSet consequences of equals/hashCode vs compareTo. |
+| `MathController` | `floorDivision()` | `#math-core-functions` | Contrast truncating integer division/remainder with floorDiv/floorMod for negative operands. |
+| `MathController` | `exactBoundaries()` | `#exact-arithmetic-methods` | Show checked `absExact`/`divideExact` failures at `MIN_VALUE` boundaries. |
 | `RandomController` | `seededSequence()` | `#pseudo-random-model` | Show deterministic seeded PRNG vs SecureRandom boundary. |
 
 #### Quiz coverage
 
-overflow prediction; floating-point special values; BigDecimal construction/scale/equals; rounding modes; exact arithmetic; PRNG vs SecureRandom.
+numeric-model selection and synthesis; numeric promotion/intermediate overflow; overflow prediction and exact arithmetic; floating-point approximation/special values/tolerance; BigInteger immutability/conversion/modulo; BigDecimal construction/arithmetic/precision/scale/equals; rounding policy; Math/StrictMath boundaries; PRNG vs SecureRandom; cross-module numeric-policy boundaries.
 
 #### Interview coverage
 
-why money uses BigDecimal; equals vs compareTo implications; binary floating-point; overflow handling; precision vs scale; rounding policy; SecureRandom boundary.
+end-to-end numeric representation and policy selection; integer overflow and promotion; binary floating-point and comparison strategy; BigInteger boundaries; why money uses BigDecimal; precision vs scale; rounding policy; equals vs compareTo implications; Math helper boundaries; Random/ThreadLocalRandom/RandomGenerator/SecureRandom roles; SecureRandom handoff to cryptography; collection/persistence/formatting/security boundary reasoning.
 
 
 ### 4.3 `class-object`
@@ -2376,7 +2389,7 @@ class loading lifecycle; parent delegation; why same class name can be different
 | Module | Chapters | Proposed H2 Knowledge sections | Proposed API experiments | Quiz target | Interview target |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | `language-basics` | 13 | 52 | 8 | 30–40 | 20–28 |
-| `numbers` | 11 | 34 | 7 | 28–36 | 18–24 |
+| `numbers` | 12 | 37 | 7 | 28–36 | 18–24 |
 | `class-object` | 14 | 50 | 7 | 36–48 | 24–32 |
 | `oop` | 7 | 29 | 6 | 24–32 | 18–24 |
 | `abstract-interface` | 6 | 22 | 5 | 22–30 | 16–22 |

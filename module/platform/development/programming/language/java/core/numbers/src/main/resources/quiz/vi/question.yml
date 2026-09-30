@@ -1,4 +1,4 @@
-# <quiz-schema>
+﻿# <quiz-schema>
 # Cấu trúc câu hỏi Quiz
 # schema-version: 3
 #
@@ -40,12 +40,12 @@
 
 questions:
   - id: integer-overflow-wrap
-    question: "`Integer.MAX_VALUE + 1` làm gì trong int arithmetic thông thường?"
+    question: "`Integer.MAX_VALUE + 1` làm gì trong phép toán int thông thường?"
     answers:
-      - {id: A, answer: "Nó wrap thành Integer.MIN_VALUE và không tự throw.", explanation: "Đúng. Primitive integer overflow wrap theo fixed-width signed integer semantics trừ khi dùng exact helper."}
-      - {id: B, answer: "Nó tự thành long.", explanation: "Sai. Primitive integer overflow wrap theo fixed-width signed integer semantics trừ khi dùng exact helper."}
-      - {id: C, answer: "Nó tự ném ArithmeticException.", explanation: "Sai. Primitive integer overflow wrap theo fixed-width signed integer semantics trừ khi dùng exact helper."}
-      - {id: D, answer: "Nó dừng ở Integer.MAX_VALUE.", explanation: "Sai. Primitive integer overflow wrap theo fixed-width signed integer semantics trừ khi dùng exact helper."}
+      - {id: A, answer: "Nó quay vòng thành Integer.MIN_VALUE và không tự ném exception.", explanation: "Đúng. Tràn số nguyên kiểu nguyên thủy quay vòng theo ngữ nghĩa số nguyên có dấu độ rộng cố định, trừ khi dùng phương thức có kiểm tra."}
+      - {id: B, answer: "Nó tự thành long.", explanation: "Sai. Tràn số nguyên kiểu nguyên thủy quay vòng theo ngữ nghĩa số nguyên có dấu độ rộng cố định trừ khi dùng phương thức có kiểm tra."}
+      - {id: C, answer: "Nó tự ném ArithmeticException.", explanation: "Sai. Tràn số nguyên kiểu nguyên thủy quay vòng theo ngữ nghĩa số nguyên có dấu độ rộng cố định trừ khi dùng phương thức có kiểm tra."}
+      - {id: D, answer: "Nó dừng ở Integer.MAX_VALUE.", explanation: "Sai. Tràn số nguyên kiểu nguyên thủy quay vòng theo ngữ nghĩa số nguyên có dấu độ rộng cố định trừ khi dùng phương thức có kiểm tra."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -55,10 +55,10 @@ questions:
   - id: integer-add-exact
     question: "Khi nào `Math.addExact` phù hợp hơn `+` thông thường cho int?"
     answers:
-      - {id: A, answer: "Khi mọi operand là floating point.", explanation: "Sai. Exact helper ném ArithmeticException khi result không represent được."}
-      - {id: B, answer: "Khi overflow phải được phát hiện thay vì silently wrap.", explanation: "Đúng. Exact helper ném ArithmeticException khi result không represent được."}
-      - {id: C, answer: "Khi overflow nên clamp ở MAX_VALUE.", explanation: "Sai. Exact helper ném ArithmeticException khi result không represent được."}
-      - {id: D, answer: "Chỉ khi dùng BigDecimal.", explanation: "Sai. Exact helper ném ArithmeticException khi result không represent được."}
+      - {id: A, answer: "Khi mọi toán hạng là dấu phẩy động.", explanation: "Sai. Phương thức có kiểm tra ném ArithmeticException khi kết quả không biểu diễn được."}
+      - {id: B, answer: "Khi tràn số phải được phát hiện thay vì quay vòng âm thầm.", explanation: "Đúng. Phương thức có kiểm tra ném ArithmeticException khi kết quả không biểu diễn được."}
+      - {id: C, answer: "Khi tràn số nên bị giữ lại ở MAX_VALUE.", explanation: "Sai. Phương thức có kiểm tra ném ArithmeticException khi kết quả không biểu diễn được."}
+      - {id: D, answer: "Chỉ khi dùng BigDecimal.", explanation: "Sai. Phương thức có kiểm tra ném ArithmeticException khi kết quả không biểu diễn được."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -66,12 +66,12 @@ questions:
     apiRelated: {controller: "IntegerArithmeticController", methodSignature: "overflow()"}
 
   - id: floating-decimal-approx
-    question: "Vì sao `0.1 + 0.2` có thể khác decimal 0.3 chính xác?"
+    question: "Vì sao `0.1 + 0.2` có thể khác giá trị thập phân 0.3 chính xác?"
     answers:
-      - {id: A, answer: "JVM random thay đổi double.", explanation: "Sai. IEEE 754 binary floating point biểu diễn nhiều decimal fraction theo giá trị gần đúng."}
-      - {id: B, answer: "Addition dùng String conversion nội bộ.", explanation: "Sai. IEEE 754 binary floating point biểu diễn nhiều decimal fraction theo giá trị gần đúng."}
-      - {id: C, answer: "Phần lớn decimal fraction không có finite binary floating-point representation nên operation dùng value representable gần nhất.", explanation: "Đúng. IEEE 754 binary floating point biểu diễn nhiều decimal fraction theo giá trị gần đúng."}
-      - {id: D, answer: "double lưu decimal chính xác nhưng println làm đổi.", explanation: "Sai. IEEE 754 binary floating point biểu diễn nhiều decimal fraction theo giá trị gần đúng."}
+      - {id: A, answer: "JVM ngẫu nhiên thay đổi giá trị double.", explanation: "Sai. IEEE 754 dùng dấu phẩy động nhị phân nên nhiều phân số thập phân chỉ được biểu diễn gần đúng."}
+      - {id: B, answer: "Phép cộng nội bộ chuyển mọi thứ sang String.", explanation: "Sai. IEEE 754 dùng dấu phẩy động nhị phân nên nhiều phân số thập phân chỉ được biểu diễn gần đúng."}
+      - {id: C, answer: "Phần lớn phân số thập phân không có biểu diễn dấu phẩy động nhị phân hữu hạn nên phép toán dùng giá trị biểu diễn gần nhất.", explanation: "Đúng. IEEE 754 dùng dấu phẩy động nhị phân nên nhiều phân số thập phân chỉ được biểu diễn gần đúng."}
+      - {id: D, answer: "double lưu chính xác số thập phân, chỉ println làm thay đổi kết quả.", explanation: "Sai. IEEE 754 dùng dấu phẩy động nhị phân nên nhiều phân số thập phân chỉ được biểu diễn gần đúng."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
@@ -79,12 +79,12 @@ questions:
     apiRelated: {controller: "FloatingPointController", methodSignature: "precision()"}
 
   - id: nan-comparison
-    question: "Cách đúng để test một double có phải NaN không?"
+    question: "Cách đúng để kiểm tra một double có phải NaN không?"
     answers:
-      - {id: A, answer: "Dùng `value == Double.NaN`.", explanation: "Sai. NaN unordered và ngay cả `NaN == NaN` cũng false."}
-      - {id: B, answer: "Dùng `value > Double.MAX_VALUE`.", explanation: "Sai. NaN unordered và ngay cả `NaN == NaN` cũng false."}
-      - {id: C, answer: "Dùng `value == null`.", explanation: "Sai. NaN unordered và ngay cả `NaN == NaN` cũng false."}
-      - {id: D, answer: "Dùng `Double.isNaN(value)`, không so equality với `Double.NaN`.", explanation: "Đúng. NaN unordered và ngay cả `NaN == NaN` cũng false."}
+      - {id: A, answer: "Dùng `value == Double.NaN`.", explanation: "Sai. NaN không tuân theo quan hệ bằng thông thường và ngay cả `NaN == NaN` cũng là false."}
+      - {id: B, answer: "Dùng `value > Double.MAX_VALUE`.", explanation: "Sai. NaN không tuân theo quan hệ bằng thông thường và ngay cả `NaN == NaN` cũng là false."}
+      - {id: C, answer: "Dùng `value == null`.", explanation: "Sai. NaN không tuân theo quan hệ bằng thông thường và ngay cả `NaN == NaN` cũng là false."}
+      - {id: D, answer: "Dùng `Double.isNaN(value)`, không so sánh bằng với `Double.NaN`.", explanation: "Đúng. NaN không tuân theo quan hệ bằng thông thường và ngay cả `NaN == NaN` cũng là false."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
@@ -92,12 +92,12 @@ questions:
     apiRelated: {controller: "FloatingPointController", methodSignature: "specialValues()"}
 
   - id: biginteger-immutable
-    question: "Điều gì xảy ra nếu gọi `a.add(BigInteger.ONE)` rồi bỏ return value?"
+    question: "Điều gì xảy ra nếu gọi `a.add(BigInteger.ONE)` rồi bỏ giá trị trả về?"
     answers:
-      - {id: A, answer: "`a` không đổi vì BigInteger immutable và arithmetic trả value mới.", explanation: "Đúng. BigInteger operation không mutate receiver."}
-      - {id: B, answer: "a increment tại chỗ.", explanation: "Sai. BigInteger operation không mutate receiver."}
-      - {id: C, answer: "JVM chỉ mutate a khi nó final.", explanation: "Sai. BigInteger operation không mutate receiver."}
-      - {id: D, answer: "Call illegal vì BigInteger không có add method.", explanation: "Sai. BigInteger operation không mutate receiver."}
+      - {id: A, answer: "`a` không đổi vì BigInteger bất biến và phép toán trả về giá trị mới.", explanation: "Đúng. Phép toán BigInteger không thay đổi đối tượng nhận lời gọi."}
+      - {id: B, answer: "a tăng tại chỗ.", explanation: "Sai. BigInteger phép toán không thay đổi đối tượng nhận lời gọi."}
+      - {id: C, answer: "JVM chỉ thay đổi a khi nó là final.", explanation: "Sai. Phép toán BigInteger không thay đổi đối tượng nhận lời gọi."}
+      - {id: D, answer: "Lời gọi không hợp lệ vì BigInteger không có phương thức add.", explanation: "Sai. BigInteger có phương thức add, nhưng đối tượng là bất biến."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -107,10 +107,10 @@ questions:
   - id: bigdecimal-double-constructor
     question: "Vì sao `new BigDecimal(0.1)` thường gây bất ngờ?"
     answers:
-      - {id: A, answer: "BigDecimal round mọi input thành integer.", explanation: "Sai. Khi intent là decimal, String constructor hoặc valueOf thường phù hợp hơn."}
-      - {id: B, answer: "Nó capture exact binary double value, không phải decimal 0.1 mà con người nghĩ.", explanation: "Đúng. Khi intent là decimal, String constructor hoặc valueOf thường phù hợp hơn."}
-      - {id: C, answer: "Constructor luôn trả null.", explanation: "Sai. Khi intent là decimal, String constructor hoặc valueOf thường phù hợp hơn."}
-      - {id: D, answer: "BigDecimal không represent decimal fraction.", explanation: "Sai. Khi intent là decimal, String constructor hoặc valueOf thường phù hợp hơn."}
+      - {id: A, answer: "BigDecimal làm tròn mọi đầu vào thành số nguyên.", explanation: "Sai. Khi ý nghĩa mong muốn là thập phân, constructor nhận String hoặc `valueOf` thường phù hợp hơn."}
+      - {id: B, answer: "Nó ghi nhận chính xác giá trị double nhị phân, không phải số thập phân 0.1 mà con người đang nghĩ tới.", explanation: "Đúng. Khi ý nghĩa mong muốn là thập phân, constructor nhận String hoặc `valueOf` thường phù hợp hơn."}
+      - {id: C, answer: "Constructor luôn trả null.", explanation: "Sai. Khi ý nghĩa mong muốn là thập phân, constructor nhận String hoặc `valueOf` thường phù hợp hơn."}
+      - {id: D, answer: "BigDecimal không biểu diễn được phân số thập phân.", explanation: "Sai. BigDecimal được thiết kế để biểu diễn giá trị thập phân."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -118,25 +118,25 @@ questions:
     apiRelated: {controller: "BigDecimalController", methodSignature: "construction()"}
 
   - id: bigdecimal-nonterminating-division
-    question: "Điều gì xảy ra với `BigDecimal.ONE.divide(new BigDecimal(\"3\"))` nếu không có rounding policy?"
+    question: "Điều gì xảy ra với `BigDecimal.ONE.divide(new BigDecimal(\"3\"))` nếu không có chính sách làm tròn?"
     answers:
-      - {id: A, answer: "Nó silently trả 0.33.", explanation: "Sai. BigDecimal division exact trừ khi cung cấp precision hoặc rounding policy."}
-      - {id: B, answer: "Nó trả positive infinity.", explanation: "Sai. BigDecimal division exact trừ khi cung cấp precision hoặc rounding policy."}
-      - {id: C, answer: "Nó ném ArithmeticException vì decimal expansion không kết thúc.", explanation: "Đúng. BigDecimal division exact trừ khi cung cấp precision hoặc rounding policy."}
-      - {id: D, answer: "Nó tự convert sang double.", explanation: "Sai. BigDecimal division exact trừ khi cung cấp precision hoặc rounding policy."}
+      - {id: A, answer: "Nó âm thầm trả 0.33.", explanation: "Sai. BigDecimal mặc định yêu cầu phép chia chính xác nếu chưa cung cấp precision hoặc chính sách làm tròn."}
+      - {id: B, answer: "Nó trả vô cực dương.", explanation: "Sai. BigDecimal không dùng vô cực như double."}
+      - {id: C, answer: "Nó ném ArithmeticException vì khai triển thập phân không kết thúc.", explanation: "Đúng. BigDecimal không tự đoán chính sách làm tròn cho phép chia không kết thúc."}
+      - {id: D, answer: "Nó tự chuyển sang double.", explanation: "Sai. BigDecimal không tự chuyển phép chia sang double."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "5.BigDecimal/BigDecimal.md", anchor: "big-decimal-arithmetic"}
-    apiRelated: {controller: "", methodSignature: ""}
+    apiRelated: {controller: "BigDecimalController", methodSignature: "divisionAndRounding()"}
 
   - id: precision-vs-scale
     question: "Với `new BigDecimal(\"123.4500\")`, precision và scale mô tả gì?"
     answers:
-      - {id: A, answer: "Cả hai luôn bằng số digit sau decimal point.", explanation: "Sai. Precision và scale là hai representation property khác nhau."}
-      - {id: B, answer: "Precision luôn là 2 với tiền.", explanation: "Sai. Precision và scale là hai representation property khác nhau."}
-      - {id: C, answer: "Scale là số byte trong memory.", explanation: "Sai. Precision và scale là hai representation property khác nhau."}
-      - {id: D, answer: "Precision đếm significant digit; scale biểu diễn decimal-place positioning, ở đây là 4.", explanation: "Đúng. Precision và scale là hai representation property khác nhau."}
+      - {id: A, answer: "Cả hai luôn bằng số chữ số sau dấu thập phân.", explanation: "Sai. Precision và scale mô tả hai đặc tính khác nhau."}
+      - {id: B, answer: "Precision luôn bằng 2 khi làm việc với tiền.", explanation: "Sai. Precision là tổng số chữ số có nghĩa, không bị cố định bởi bài toán tiền tệ."}
+      - {id: C, answer: "Scale là số byte dùng trong bộ nhớ.", explanation: "Sai. Scale liên quan vị trí dấu thập phân, không phải kích thước bộ nhớ."}
+      - {id: D, answer: "Precision đếm chữ số có nghĩa; scale mô tả vị trí dấu thập phân, ở đây scale là 4.", explanation: "Đúng. Precision và scale mô tả hai đặc tính khác nhau."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
@@ -144,12 +144,12 @@ questions:
     apiRelated: {controller: "BigDecimalController", methodSignature: "precisionScale()"}
 
   - id: rounding-domain-policy
-    question: "Statement nào về financial rounding chính xác nhất?"
+    question: "Phát biểu nào về làm tròn tài chính chính xác nhất?"
     answers:
-      - {id: A, answer: "Mode và boundary đúng đến từ domain rule; không có universal two-decimal HALF_UP cho mọi money calculation.", explanation: "Đúng. Tax, interest, conversion, line item và settlement có thể cần policy khác nhau."}
-      - {id: B, answer: "HALF_UP luôn đúng cho mọi currency và domain.", explanation: "Sai. Tax, interest, conversion, line item và settlement có thể cần policy khác nhau."}
-      - {id: C, answer: "Luôn round sau mọi arithmetic operation.", explanation: "Sai. Tax, interest, conversion, line item và settlement có thể cần policy khác nhau."}
-      - {id: D, answer: "Rounding mode không bao giờ ảnh hưởng total.", explanation: "Sai. Tax, interest, conversion, line item và settlement có thể cần policy khác nhau."}
+      - {id: A, answer: "RoundingMode và thời điểm làm tròn phải đến từ quy tắc nghiệp vụ; không có quy tắc HALF_UP hai chữ số thập phân đúng cho mọi phép tính tiền.", explanation: "Đúng. Thuế, lãi suất, chuyển đổi, từng dòng giao dịch và quyết toán có thể cần chính sách khác nhau."}
+      - {id: B, answer: "HALF_UP luôn đúng cho mọi loại tiền tệ và mọi nghiệp vụ.", explanation: "Sai. Quy tắc làm tròn phụ thuộc yêu cầu cụ thể."}
+      - {id: C, answer: "Luôn làm tròn sau mọi phép toán.", explanation: "Sai. Làm tròn quá sớm có thể làm mất thông tin và thay đổi kết quả cuối."}
+      - {id: D, answer: "RoundingMode không bao giờ ảnh hưởng tổng cuối cùng.", explanation: "Sai. RoundingMode và thời điểm làm tròn đều có thể thay đổi kết quả."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -157,12 +157,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: bigdecimal-equals-compareto
-    question: "`new BigDecimal(\"1.0\")` và `new BigDecimal(\"1.00\")` compare thế nào?"
+    question: "`new BigDecimal(\"1.0\")` và `new BigDecimal(\"1.00\")` so sánh như thế nào?"
     answers:
-      - {id: A, answer: "Cả equals và compareTo đều báo magnitude khác.", explanation: "Sai. BigDecimal equality tính representation scale; numeric comparison bỏ qua khác biệt scale đó."}
-      - {id: B, answer: "`equals` false vì scale khác, còn `compareTo` trả 0 vì numerical magnitude bằng nhau.", explanation: "Đúng. BigDecimal equality tính representation scale; numeric comparison bỏ qua khác biệt scale đó."}
-      - {id: C, answer: "equals true và compareTo nonzero.", explanation: "Sai. BigDecimal equality tính representation scale; numeric comparison bỏ qua khác biệt scale đó."}
-      - {id: D, answer: "Không method nào compare được scale khác nhau.", explanation: "Sai. BigDecimal equality tính representation scale; numeric comparison bỏ qua khác biệt scale đó."}
+      - {id: A, answer: "Cả equals và compareTo đều cho biết hai giá trị khác nhau về độ lớn số học.", explanation: "Sai. `equals` xét scale, còn `compareTo` so sánh theo giá trị số học."}
+      - {id: B, answer: "`equals` là false vì scale khác, còn `compareTo` trả 0 vì độ lớn số học bằng nhau.", explanation: "Đúng. `equals` xét cách biểu diễn gồm scale, còn `compareTo` bỏ qua khác biệt scale khi so sánh độ lớn."}
+      - {id: C, answer: "equals là true và compareTo trả giá trị khác 0.", explanation: "Sai. Trong trường hợp 1.0 và 1.00, kết quả thực tế ngược lại."}
+      - {id: D, answer: "Không phương thức nào so sánh được hai BigDecimal có scale khác nhau.", explanation: "Sai. Cả equals và compareTo đều hoạt động, nhưng trả lời hai câu hỏi khác nhau."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -170,12 +170,12 @@ questions:
     apiRelated: {controller: "BigDecimalController", methodSignature: "comparison()"}
 
   - id: random-seed-reproducible
-    question: "Vì sao fixed seed hữu ích cho `Random` trong test?"
+    question: "Vì sao seed cố định hữu ích cho `Random` trong kiểm thử?"
     answers:
-      - {id: A, answer: "Nó làm Random cryptographically secure.", explanation: "Sai. PRNG thông thường deterministic từ seed và internal state."}
-      - {id: B, answer: "Nó guarantee mọi number unique.", explanation: "Sai. PRNG thông thường deterministic từ seed và internal state."}
-      - {id: C, answer: "Nó làm pseudo-random sequence reproducible với cùng algorithm và state evolution.", explanation: "Đúng. PRNG thông thường deterministic từ seed và internal state."}
-      - {id: D, answer: "Nó disable mọi randomness API.", explanation: "Sai. PRNG thông thường deterministic từ seed và internal state."}
+      - {id: A, answer: "Nó làm Random an toàn về mặt mật mã.", explanation: "Sai. PRNG thông thường có tính tất định từ seed và trạng thái nội bộ."}
+      - {id: B, answer: "Nó bảo đảm mọi số sinh ra đều duy nhất.", explanation: "Sai. PRNG thông thường có tính tất định từ seed và trạng thái nội bộ."}
+      - {id: C, answer: "Nó làm chuỗi giả ngẫu nhiên có thể tái lập với cùng thuật toán và quá trình thay đổi trạng thái.", explanation: "Đúng. PRNG thông thường có tính tất định từ seed và trạng thái nội bộ."}
+      - {id: D, answer: "Nó vô hiệu hóa mọi API sinh số ngẫu nhiên.", explanation: "Sai. Seed cố định chỉ giúp tái lập chuỗi, không vô hiệu hóa API."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
@@ -183,12 +183,12 @@ questions:
     apiRelated: {controller: "RandomController", methodSignature: "seededSequence()"}
 
   - id: secure-random-boundary
-    question: "Nguồn nào nên ưu tiên cho security-sensitive token?"
+    question: "Nguồn nào nên ưu tiên cho token nhạy cảm về bảo mật?"
     answers:
-      - {id: A, answer: "Random seed bằng currentTimeMillis.", explanation: "Sai. Random và ThreadLocalRandom không được design làm cryptographically strong unpredictability source."}
-      - {id: B, answer: "Math.random vì nó static.", explanation: "Sai. Random và ThreadLocalRandom không được design làm cryptographically strong unpredictability source."}
-      - {id: C, answer: "Counter convert sang hex.", explanation: "Sai. Random và ThreadLocalRandom không được design làm cryptographically strong unpredictability source."}
-      - {id: D, answer: "SecureRandom vì unpredictability là một phần security contract.", explanation: "Đúng. Random và ThreadLocalRandom không được design làm cryptographically strong unpredictability source."}
+      - {id: A, answer: "Random được seed bằng currentTimeMillis.", explanation: "Sai. Random và ThreadLocalRandom không được thiết kế để cung cấp tính khó dự đoán mạnh về mặt mật mã."}
+      - {id: B, answer: "Math.random vì đây là phương thức static.", explanation: "Sai. Math.random không phải nguồn ngẫu nhiên mật mã."}
+      - {id: C, answer: "Một bộ đếm rồi chuyển sang hex.", explanation: "Sai. Bộ đếm có thể dự đoán và không đáp ứng yêu cầu bảo mật."}
+      - {id: D, answer: "SecureRandom vì tính khó dự đoán là một phần của yêu cầu bảo mật.", explanation: "Đúng. SecureRandom được dùng khi khả năng chống dự đoán là yêu cầu của bài toán."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
@@ -196,12 +196,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: numeric-model-domain
-    question: "Câu hỏi đầu tiên tốt nhất khi chọn giữa integer type, floating-point type và BigDecimal là gì?"
+    question: "Câu hỏi đầu tiên tốt nhất khi chọn giữa kiểu số nguyên, kiểu dấu phẩy động và BigDecimal là gì?"
     answers:
-      - {id: A, answer: "Type name nào ngắn nhất để gõ?", explanation: "Sai. Chọn numeric type nên dựa vào range, exactness, scale và performance requirement của domain."}
-      - {id: B, answer: "Type nào có memory footprint lớn nhất?", explanation: "Sai. Chọn numeric type nên dựa vào range, exactness, scale và performance requirement của domain."}
-      - {id: C, answer: "Domain cần range và semantics về exactness/precision như thế nào?", explanation: "Đúng. Chọn numeric type nên dựa vào range, exactness, scale và performance requirement của domain."}
-      - {id: D, answer: "Có thể convert mọi value sang String trước không?", explanation: "Sai. Chọn numeric type nên dựa vào range, exactness, scale và performance requirement của domain."}
+      - {id: A, answer: "Tên kiểu nào ngắn nhất để gõ?", explanation: "Sai. Chọn kiểu số nên dựa vào phạm vi, tính chính xác, scale và yêu cầu hiệu năng của nghiệp vụ."}
+      - {id: B, answer: "Kiểu nào dùng nhiều bộ nhớ nhất?", explanation: "Sai. Chọn kiểu số nên dựa vào ý nghĩa, phạm vi và yêu cầu chính xác của bài toán trước khi xét chi phí."}
+      - {id: C, answer: "Bài toán cần phạm vi và mức chính xác/xấp xỉ như thế nào?", explanation: "Đúng. Cách biểu diễn số phải xuất phát từ yêu cầu của giá trị, không phải từ tên kiểu hay thói quen."}
+      - {id: D, answer: "Có thể chuyển mọi giá trị sang String trước không?", explanation: "Sai. Chọn kiểu số nên dựa vào phạm vi, tính chính xác, scale và yêu cầu hiệu năng của nghiệp vụ."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
@@ -209,12 +209,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: strictmath-boundary
-    question: "Statement nào mô tả đúng nhất boundary giữa `Math` và `StrictMath`?"
+    question: "Phát biểu nào mô tả đúng nhất ranh giới giữa `Math` và `StrictMath`?"
     answers:
-      - {id: A, answer: "StrictMath dùng arbitrary precision nên luôn exact hơn Math.", explanation: "Sai. Cả Math và StrictMath vẫn làm việc với floating-point hữu hạn; StrictMath không biến double thành exact decimal."}
-      - {id: B, answer: "Math là lựa chọn mặc định; StrictMath phù hợp khi cần behavior của các hàm floating-point được quy định chặt hơn để hỗ trợ reproducibility.", explanation: "Đúng. Boundary chính là contract về specification/reproducibility, không phải arbitrary precision."}
-      - {id: C, answer: "StrictMath chỉ dùng cho integer overflow.", explanation: "Sai. Exact integer helpers nằm trong Math; StrictMath chủ yếu liên quan các hàm toán học floating-point."}
-      - {id: D, answer: "Math và StrictMath khác nhau vì một bên dùng BigDecimal nội bộ.", explanation: "Sai. Đây không phải khác biệt contract giữa hai API."}
+      - {id: A, answer: "StrictMath dùng số có độ chính xác tùy ý nên luôn chính xác hơn Math.", explanation: "Sai. Cả Math và StrictMath vẫn làm việc với số dấu phẩy động hữu hạn; StrictMath không biến double thành thập phân chính xác."}
+      - {id: B, answer: "Math là lựa chọn mặc định; StrictMath phù hợp khi cần hành vi của các hàm dấu phẩy động được đặc tả chặt hơn để hỗ trợ khả năng tái lập.", explanation: "Đúng. Khác biệt chính nằm ở đặc tả và khả năng tái lập, không phải ở số học độ chính xác tùy ý."}
+      - {id: C, answer: "StrictMath chỉ dùng để xử lý tràn số nguyên.", explanation: "Sai. Các phương thức số nguyên có kiểm tra nằm trong Math; StrictMath chủ yếu liên quan các hàm toán học dấu phẩy động."}
+      - {id: D, answer: "Math và StrictMath khác nhau vì một bên dùng BigDecimal nội bộ.", explanation: "Sai. Đây không phải khác biệt giữa hai API."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -224,10 +224,10 @@ questions:
   - id: numeric-intermediate-overflow
     question: "Với `int quantity = 1_000_000; int price = 10_000; long total = quantity * price;`, điều gì quan trọng nhất?"
     answers:
-      - {id: A, answer: "Phép nhân chạy dưới dạng long vì biến nhận là long.", explanation: "Sai. Type của arithmetic expression được xác định trước assignment conversion."}
-      - {id: B, answer: "Phép nhân chạy dưới dạng int và có thể overflow trước khi result được widen sang long.", explanation: "Đúng. Muốn operation chạy bằng long phải widen ít nhất một operand trước phép nhân."}
-      - {id: C, answer: "Java tự chuyển expression sang BigInteger khi cần.", explanation: "Sai. Primitive arithmetic không tự đổi sang arbitrary-precision type."}
-      - {id: D, answer: "Expression không compile vì int không assign được cho long.", explanation: "Sai. int result có thể widen sang long sau khi arithmetic đã chạy."}
+      - {id: A, answer: "Phép nhân chạy dưới dạng long vì biến nhận là long.", explanation: "Sai. Kiểu của biểu thức số học được xác định trước bước chuyển đổi khi gán."}
+      - {id: B, answer: "Phép nhân chạy dưới dạng int và có thể tràn số trước khi kết quả được nâng sang long.", explanation: "Đúng. Muốn phép nhân chạy bằng long phải nâng ít nhất một toán hạng lên long trước phép nhân."}
+      - {id: C, answer: "Java tự chuyển biểu thức sang BigInteger khi cần.", explanation: "Sai. Phép toán trên kiểu nguyên thủy không tự chuyển sang BigInteger."}
+      - {id: D, answer: "Biểu thức không biên dịch vì int không gán được cho long.", explanation: "Sai. Kết quả int có thể được nâng sang long sau khi phép toán đã chạy."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -237,10 +237,10 @@ questions:
   - id: integer-abs-min-boundary
     question: "`Math.abs(Integer.MIN_VALUE)` trả gì?"
     answers:
-      - {id: A, answer: "Integer.MAX_VALUE.", explanation: "Sai. Positive counterpart 2147483648 không fit int."}
-      - {id: B, answer: "0.", explanation: "Sai. Math.abs không clamp về zero."}
-      - {id: C, answer: "Vẫn là Integer.MIN_VALUE do overflow boundary.", explanation: "Đúng. MIN_VALUE không có positive counterpart representable bằng int."}
-      - {id: D, answer: "Luôn throw ArithmeticException.", explanation: "Sai. Math.abs unchecked không throw cho case này; Math.absExact mới throw trên Java 21."}
+      - {id: A, answer: "Integer.MAX_VALUE.", explanation: "Sai. Giá trị dương tương ứng 2147483648 không nằm trong phạm vi int."}
+      - {id: B, answer: "0.", explanation: "Sai. Math.abs không giới hạn kết quả về 0."}
+      - {id: C, answer: "Vẫn là Integer.MIN_VALUE do tràn số tại biên.", explanation: "Đúng. MIN_VALUE không có giá trị dương tương ứng có thể biểu diễn bằng int."}
+      - {id: D, answer: "Luôn ném ArithmeticException.", explanation: "Sai. Math.abs thông thường không ném lỗi cho trường hợp này; Math.absExact mới ném trên Java 21."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
@@ -248,12 +248,12 @@ questions:
     apiRelated: {controller: "IntegerArithmeticController", methodSignature: "boundaryCases()"}
 
   - id: integer-divide-min-minus-one
-    question: "`Integer.MIN_VALUE / -1` trong ordinary int division cho kết quả nào?"
+    question: "`Integer.MIN_VALUE / -1` trong phép chia int thông thường cho kết quả nào?"
     answers:
-      - {id: A, answer: "Integer.MIN_VALUE do overflow special case.", explanation: "Đúng. Mathematical result 2147483648 không fit int nên unchecked division overflow về MIN_VALUE."}
-      - {id: B, answer: "Integer.MAX_VALUE.", explanation: "Sai. Java không saturate ở MAX_VALUE."}
-      - {id: C, answer: "ArithmeticException vì overflow.", explanation: "Sai. Ordinary division chỉ throw cho divisor 0; Math.divideExact mới detect overflow này."}
-      - {id: D, answer: "0.", explanation: "Sai. Đây không phải truncation về zero."}
+      - {id: A, answer: "Integer.MIN_VALUE do trường hợp tràn số đặc biệt.", explanation: "Đúng. Kết quả toán học 2147483648 không nằm trong phạm vi int nên phép chia không kiểm tra quay về MIN_VALUE."}
+      - {id: B, answer: "Integer.MAX_VALUE.", explanation: "Sai. Java không giới hạn ở MAX_VALUE."}
+      - {id: C, answer: "ArithmeticException vì tràn số.", explanation: "Sai. Phép chia thông thường chỉ ném khi số chia bằng 0; Math.divideExact mới phát hiện trường hợp tràn số này."}
+      - {id: D, answer: "0.", explanation: "Sai. Đây không phải trường hợp cắt kết quả về 0."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -261,12 +261,12 @@ questions:
     apiRelated: {controller: "IntegerArithmeticController", methodSignature: "boundaryCases()"}
 
   - id: floating-signed-zero
-    question: "Statement nào đúng về `+0.0` và `-0.0`?"
+    question: "Phát biểu nào đúng về `+0.0` và `-0.0`?"
     answers:
       - {id: A, answer: "Chúng luôn khác nhau với ==.", explanation: "Sai. 0.0 == -0.0 là true."}
-      - {id: B, answer: "Chúng bằng nhau với ==, nhưng reciprocal của +0.0 và -0.0 cho infinity khác dấu.", explanation: "Đúng. Signed zero có thể ảnh hưởng arithmetic dù equality operator xem chúng bằng nhau."}
-      - {id: C, answer: "Java không có negative zero.", explanation: "Sai. IEEE 754 có signed zero."}
-      - {id: D, answer: "Cả hai reciprocal đều luôn là NaN.", explanation: "Sai. Reciprocal của signed zero tạo signed infinity."}
+      - {id: B, answer: "Chúng bằng nhau với ==, nhưng nghịch đảo của +0.0 và -0.0 cho vô cực khác dấu.", explanation: "Đúng. Số 0 có dấu có thể ảnh hưởng phép toán dù toán tử == xem chúng bằng nhau."}
+      - {id: C, answer: "Java không có số 0 âm.", explanation: "Sai. IEEE 754 có số 0 có dấu."}
+      - {id: D, answer: "Cả hai nghịch đảo đều luôn là NaN.", explanation: "Sai. Nghịch đảo của số 0 có dấu tạo vô cực có dấu tương ứng."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -274,12 +274,12 @@ questions:
     apiRelated: {controller: "FloatingPointController", methodSignature: "specialValues()"}
 
   - id: floating-tolerance-domain
-    question: "Vì sao không nên dùng một epsilon cố định cho mọi floating-point comparison?"
+    question: "Vì sao không nên dùng một epsilon cố định cho mọi phép so sánh dấu phẩy động?"
     answers:
-      - {id: A, answer: "Vì epsilon chỉ dùng được với float, không dùng với double.", explanation: "Sai. Tolerance strategy áp dụng được cho cả hai nhưng phải phù hợp domain."}
-      - {id: B, answer: "Vì JVM thay epsilon sau mỗi lần chạy.", explanation: "Sai. Epsilon là value do code chọn."}
-      - {id: C, answer: "Vì acceptable error phụ thuộc magnitude, scale và domain requirement.", explanation: "Đúng. Một absolute tolerance hợp lý ở magnitude này có thể vô nghĩa ở magnitude khác."}
-      - {id: D, answer: "Vì == luôn tốt hơn tolerance.", explanation: "Sai. Exact equality chỉ đúng khi exact represented-value equality là contract."}
+      - {id: A, answer: "Vì epsilon chỉ dùng được với float, không dùng với double.", explanation: "Sai. Chiến lược sai số chấp nhận áp dụng được cho cả hai nhưng phải phù hợp bài toán."}
+      - {id: B, answer: "Vì JVM thay epsilon sau mỗi lần chạy.", explanation: "Sai. Epsilon là giá trị do code lựa chọn."}
+      - {id: C, answer: "Vì sai số chấp nhận phụ thuộc độ lớn số học, scale và yêu cầu nghiệp vụ.", explanation: "Đúng. Một sai số tuyệt đối chấp nhận hợp lý ở độ lớn số học này có thể vô nghĩa ở độ lớn số học khác."}
+      - {id: D, answer: "Vì == luôn tốt hơn so sánh theo sai số.", explanation: "Sai. So sánh chính xác chỉ đúng khi bài toán thực sự yêu cầu hai giá trị biểu diễn phải bằng nhau tuyệt đối."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
@@ -289,10 +289,10 @@ questions:
   - id: biginteger-exact-conversion
     question: "Khác biệt quan trọng giữa `BigInteger.intValue()` và `intValueExact()` là gì?"
     answers:
-      - {id: A, answer: "intValue có thể mất high-order bits; intValueExact throw nếu value không fit int.", explanation: "Đúng. Đây là narrowing boundary cần exact conversion khi fit là invariant."}
-      - {id: B, answer: "intValue luôn throw còn intValueExact truncate.", explanation: "Sai. Semantics ngược lại."}
-      - {id: C, answer: "Hai method luôn giống nhau.", explanation: "Sai. Chúng khác behavior khi value ngoài int range."}
-      - {id: D, answer: "intValueExact tự chuyển sang long nếu int không đủ.", explanation: "Sai. Nó throw ArithmeticException."}
+      - {id: A, answer: "intValue có thể mất các bit bậc cao; intValueExact ném lỗi nếu giá trị không nằm trong phạm vi int.", explanation: "Đúng. Khi việc nằm trong phạm vi int là điều kiện bắt buộc, nên dùng biến thể có kiểm tra."}
+      - {id: B, answer: "intValue luôn ném lỗi còn intValueExact cắt bớt dữ liệu.", explanation: "Sai. Ngữ nghĩa thực tế ngược lại."}
+      - {id: C, answer: "Hai phương thức luôn giống nhau.", explanation: "Sai. Chúng khác nhau khi giá trị nằm ngoài phạm vi int."}
+      - {id: D, answer: "intValueExact tự chuyển sang long nếu int không đủ.", explanation: "Sai. Nó ném ArithmeticException."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -300,12 +300,12 @@ questions:
     apiRelated: {controller: "BigIntegerController", methodSignature: "conversionBoundary()"}
 
   - id: biginteger-remainder-vs-mod
-    question: "Với BigInteger value `-7` và divisor/modulus `3`, statement nào đúng?"
+    question: "Với BigInteger có giá trị `-7` và số chia/modulus `3`, phát biểu nào đúng?"
     answers:
-      - {id: A, answer: "remainder và mod đều bắt buộc trả -1.", explanation: "Sai. mod có non-negative modular result khi modulus dương."}
-      - {id: B, answer: "remainder trả -1 còn mod trả 2.", explanation: "Đúng. Hai API có contract khác nhau với negative dividend."}
+      - {id: A, answer: "remainder và mod đều bắt buộc trả -1.", explanation: "Sai. mod trả kết quả modulo không âm khi modulus dương."}
+      - {id: B, answer: "remainder trả -1 còn mod trả 2.", explanation: "Đúng. Hai API có quy tắc khác nhau khi số bị chia âm."}
       - {id: C, answer: "mod yêu cầu modulus âm.", explanation: "Sai. BigInteger.mod yêu cầu modulus dương."}
-      - {id: D, answer: "Cả hai đều throw vì dividend âm.", explanation: "Sai. Negative dividend hợp lệ; khác biệt nằm ở result semantics."}
+      - {id: D, answer: "Cả hai đều ném lỗi vì số bị chia âm.", explanation: "Sai. Số bị chia âm hợp lệ; khác biệt nằm ở quy tắc của kết quả."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -315,10 +315,10 @@ questions:
   - id: bigdecimal-valueof-after-double-arithmetic
     question: "Điều gì đúng với `BigDecimal.valueOf(0.1 + 0.2)`?"
     answers:
-      - {id: A, answer: "Nó luôn phục hồi exact decimal intent 0.3.", explanation: "Sai. Floating-point arithmetic đã xảy ra trước khi BigDecimal được tạo."}
-      - {id: B, answer: "Nó không compile vì valueOf không nhận double.", explanation: "Sai. BigDecimal.valueOf(double) tồn tại."}
-      - {id: C, answer: "Nó capture decimal string của double result đã là khoảng 0.30000000000000004.", explanation: "Đúng. BigDecimal không thể suy ra intent đã mất trước đó."}
-      - {id: D, answer: "Nó tự rerun phép cộng bằng decimal arithmetic.", explanation: "Sai. BigDecimal chỉ nhận result double đã tính xong."}
+      - {id: A, answer: "Nó luôn phục hồi chính xác ý nghĩa thập phân 0.3.", explanation: "Sai. Phép toán dấu phẩy động đã xảy ra trước khi BigDecimal được tạo."}
+      - {id: B, answer: "Nó không biên dịch vì valueOf không nhận double.", explanation: "Sai. BigDecimal.valueOf(double) tồn tại."}
+      - {id: C, answer: "Nó ghi nhận chuỗi thập phân của kết quả double đã là khoảng 0.30000000000000004.", explanation: "Đúng. BigDecimal không thể suy ra ý nghĩa ban đầu đã mất trước đó."}
+      - {id: D, answer: "Nó tự chạy lại phép cộng bằng số học thập phân.", explanation: "Sai. BigDecimal chỉ nhận kết quả double sau khi phép cộng đã hoàn thành."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
@@ -326,24 +326,24 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: bigdecimal-multiply-scale
-    question: "Không dùng MathContext, preferred scale của `BigDecimal.multiply` thường được xác định thế nào?"
+    question: "Không dùng MathContext, scale ưu tiên của `BigDecimal.multiply` thường được xác định thế nào?"
     answers:
-      - {id: A, answer: "Luôn bằng 2.", explanation: "Sai. Scale không gắn cứng với money semantics."}
-      - {id: B, answer: "Bằng scale trái + scale phải.", explanation: "Đúng. Multiply cộng preferred scale của hai operand."}
-      - {id: C, answer: "Bằng max(scale trái, scale phải).", explanation: "Sai. Rule này phù hợp hơn với add/subtract preferred scale."}
-      - {id: D, answer: "Luôn bằng 0.", explanation: "Sai. BigDecimal multiplication giữ scale semantics của operands."}
+      - {id: A, answer: "Luôn bằng 2.", explanation: "Sai. Scale không bị gắn cứng với ngữ nghĩa tiền tệ."}
+      - {id: B, answer: "Bằng scale trái + scale phải.", explanation: "Đúng. Phép nhân cộng scale ưu tiên của hai toán hạng."}
+      - {id: C, answer: "Bằng max(scale trái, scale phải).", explanation: "Sai. Quy tắc này gần với scale ưu tiên của add/subtract hơn."}
+      - {id: D, answer: "Luôn bằng 0.", explanation: "Sai. Phép nhân BigDecimal giữ ngữ nghĩa scale từ các toán hạng."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "5.BigDecimal/BigDecimal.md", anchor: "big-decimal-arithmetic"}
-    apiRelated: {controller: "BigDecimalController", methodSignature: "divisionAndRounding()"}
+    apiRelated: {controller: "", methodSignature: ""}
 
   - id: mathcontext-vs-setscale
     question: "Khác biệt đúng nhất giữa `setScale(2, mode)` và `MathContext(4, mode)` là gì?"
     answers:
-      - {id: A, answer: "Cả hai luôn làm cùng một việc.", explanation: "Sai. Scale và precision là hai control khác nhau."}
-      - {id: B, answer: "setScale giới hạn total significant digits còn MathContext chỉ format output.", explanation: "Sai. Vai trò bị đảo."}
-      - {id: C, answer: "setScale điều khiển scale/decimal places; MathContext điều khiển total significant-digit precision của operation.", explanation: "Đúng. Đây là distinction cốt lõi giữa scale và precision."}
+      - {id: A, answer: "Cả hai luôn làm cùng một việc.", explanation: "Sai. Scale và precision là hai cơ chế điều khiển khác nhau."}
+      - {id: B, answer: "setScale giới hạn tổng số chữ số có nghĩa còn MathContext chỉ định dạng đầu ra.", explanation: "Sai. Vai trò bị đảo."}
+      - {id: C, answer: "setScale điều khiển scale/số chữ số thập phân; MathContext điều khiển precision theo tổng số chữ số có nghĩa của phép toán.", explanation: "Đúng. Đây là khác biệt cốt lõi giữa scale và precision."}
       - {id: D, answer: "MathContext chỉ dùng được với double.", explanation: "Sai. MathContext là API quan trọng của BigDecimal."}
     correctAnswerId: C
     aiGenerated: true
@@ -352,12 +352,12 @@ questions:
     apiRelated: {controller: "BigDecimalController", methodSignature: "mathContextVsScale()"}
 
   - id: rounding-negative-half-tie
-    question: "Khi round `-2.5` về integer, cặp result nào đúng?"
+    question: "Khi làm tròn `-2.5` về số nguyên, cặp kết quả nào đúng?"
     answers:
-      - {id: A, answer: "HALF_UP → -3, HALF_DOWN → -2.", explanation: "Đúng. HALF_UP đi xa zero ở tie; HALF_DOWN đi về zero."}
-      - {id: B, answer: "HALF_UP → -2, HALF_DOWN → -3.", explanation: "Sai. Direction bị đảo."}
-      - {id: C, answer: "Cả hai luôn → -2.5.", explanation: "Sai. Target scale 0 cần rounding."}
-      - {id: D, answer: "Cả hai throw vì value âm.", explanation: "Sai. Negative values được round bình thường."}
+      - {id: A, answer: "HALF_UP → -3, HALF_DOWN → -2.", explanation: "Đúng. HALF_UP đi xa 0 ở điểm giữa; HALF_DOWN đi về 0."}
+      - {id: B, answer: "HALF_UP → -2, HALF_DOWN → -3.", explanation: "Sai. Hướng bị đảo."}
+      - {id: C, answer: "Cả hai luôn → -2.5.", explanation: "Sai. Scale đích 0 yêu cầu phải làm tròn."}
+      - {id: D, answer: "Cả hai ném lỗi vì giá trị âm.", explanation: "Sai. Giá trị âm được làm tròn bình thường."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -365,12 +365,12 @@ questions:
     apiRelated: {controller: "BigDecimalController", methodSignature: "roundingModes()"}
 
   - id: rounding-double-rounding
-    question: "Vì sao double rounding có thể thay đổi final result?"
+    question: "Vì sao làm tròn hai lần có thể thay đổi kết quả cuối cùng?"
     answers:
-      - {id: A, answer: "Vì mỗi bước rounding có thể discard information rồi bước sau dùng value đã thay đổi.", explanation: "Đúng. Intermediate rounding có thể đổi input của rounding boundary tiếp theo."}
-      - {id: B, answer: "Vì BigDecimal mutable.", explanation: "Sai. BigDecimal immutable."}
-      - {id: C, answer: "Vì RoundingMode random.", explanation: "Sai. RoundingMode deterministic."}
-      - {id: D, answer: "Double rounding luôn mathematically equivalent với round một lần.", explanation: "Sai. Ví dụ 2.445 có thể cho outcome khác tùy sequence."}
+      - {id: A, answer: "Vì mỗi bước làm tròn có thể làm mất thông tin rồi bước sau dùng giá trị đã thay đổi.", explanation: "Đúng. Làm tròn trung gian có thể đổi đầu vào của ranh giới làm tròn tiếp theo."}
+      - {id: B, answer: "Vì BigDecimal có thể thay đổi nội bộ.", explanation: "Sai. BigDecimal là bất biến."}
+      - {id: C, answer: "Vì RoundingMode hoạt động ngẫu nhiên.", explanation: "Sai. RoundingMode có tính tất định."}
+      - {id: D, answer: "Làm tròn hai lần luôn tương đương về mặt toán học với làm tròn một lần.", explanation: "Sai. Một số giá trị có thể cho kết quả khác tùy trình tự làm tròn."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -380,10 +380,10 @@ questions:
   - id: bigdecimal-hashset-treeset
     question: "Nếu thêm `1.0` và `1.00` vào `HashSet<BigDecimal>` và `TreeSet<BigDecimal>`, điều gì có thể xảy ra?"
     answers:
-      - {id: A, answer: "Cả hai set luôn size 2.", explanation: "Sai. TreeSet dùng natural ordering, nơi compareTo có thể trả 0."}
-      - {id: B, answer: "HashSet size 1, TreeSet size 2.", explanation: "Sai. Semantics ngược lại trong case này."}
-      - {id: C, answer: "HashSet size 2, TreeSet size 1.", explanation: "Đúng. HashSet dùng equals/hashCode có xét scale; TreeSet dùng compareTo."}
-      - {id: D, answer: "Cả hai throw vì scale khác.", explanation: "Sai. Cả hai collection chấp nhận các value này."}
+      - {id: A, answer: "Cả hai set luôn có kích thước 2.", explanation: "Sai. TreeSet dùng thứ tự tự nhiên, nơi compareTo có thể trả 0."}
+      - {id: B, answer: "HashSet có kích thước 1, TreeSet có kích thước 2.", explanation: "Sai. Hành vi thực tế ngược lại trong trường hợp này."}
+      - {id: C, answer: "HashSet có kích thước 2, TreeSet có kích thước 1.", explanation: "Đúng. HashSet dùng equals/hashCode có xét scale; TreeSet dùng compareTo."}
+      - {id: D, answer: "Cả hai ném vì scale khác.", explanation: "Sai. Cả hai collection chấp nhận các giá trị này."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
@@ -393,10 +393,10 @@ questions:
   - id: math-floor-division-negative
     question: "Với `-7` và `3`, `-7 / 3` và `Math.floorDiv(-7, 3)` lần lượt là gì?"
     answers:
-      - {id: A, answer: "-2 và -3.", explanation: "Đúng. / truncate toward zero còn floorDiv đi về negative infinity."}
-      - {id: B, answer: "-3 và -2.", explanation: "Sai. Hai semantics bị đảo."}
-      - {id: C, answer: "Cả hai -2.", explanation: "Sai. Chúng khác nhau khi result âm không nguyên."}
-      - {id: D, answer: "Cả hai -3.", explanation: "Sai. Ordinary integer division truncate toward zero."}
+      - {id: A, answer: "-2 và -3.", explanation: "Đúng. Toán tử / cắt kết quả về 0 còn floorDiv lấy sàn về phía âm vô cực."}
+      - {id: B, answer: "-3 và -2.", explanation: "Sai. Hai ngữ nghĩa bị đảo."}
+      - {id: C, answer: "Cả hai -2.", explanation: "Sai. Chúng khác nhau khi kết quả âm không nguyên."}
+      - {id: D, answer: "Cả hai -3.", explanation: "Sai. Phép chia số nguyên thông thường cắt kết quả về 0."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -406,10 +406,10 @@ questions:
   - id: math-abs-exact-boundary
     question: "Trên Java 21, `Math.absExact(Integer.MIN_VALUE)` làm gì?"
     answers:
-      - {id: A, answer: "Trả Integer.MAX_VALUE.", explanation: "Sai. Không có positive counterpart representable."}
-      - {id: B, answer: "Trả Integer.MIN_VALUE như Math.abs.", explanation: "Sai. Exact variant detect overflow."}
-      - {id: C, answer: "Throw ArithmeticException.", explanation: "Đúng. Exact helper biến boundary overflow thành explicit failure."}
-      - {id: D, answer: "Trả long 2147483648.", explanation: "Sai. Overload int trả int hoặc throw."}
+      - {id: A, answer: "Trả Integer.MAX_VALUE.", explanation: "Sai. Không có giá trị dương tương ứng có thể biểu diễn."}
+      - {id: B, answer: "Trả Integer.MIN_VALUE như Math.abs.", explanation: "Sai. Biến thể có kiểm tra phát hiện tràn số."}
+      - {id: C, answer: "Ném ArithmeticException.", explanation: "Đúng. Phương thức có kiểm tra biến tràn số ở ranh giới thành lỗi rõ ràng."}
+      - {id: D, answer: "Trả long 2147483648.", explanation: "Sai. Overload nhận int sẽ trả int hoặc ném lỗi."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
@@ -417,12 +417,12 @@ questions:
     apiRelated: {controller: "MathController", methodSignature: "exactBoundaries()"}
 
   - id: threadlocalrandom-boundary
-    question: "Khi nào `ThreadLocalRandom` là lựa chọn phù hợp hơn ordinary shared `Random`?"
+    question: "Khi nào `ThreadLocalRandom` phù hợp hơn việc dùng chung một `Random` thông thường?"
     answers:
-      - {id: A, answer: "Khi nhiều thread cần pseudo-random values và muốn tránh contention không cần thiết.", explanation: "Đúng. Đây là concurrency/performance boundary, không phải security boundary."}
-      - {id: B, answer: "Khi cần password reset token.", explanation: "Sai. Security-sensitive unpredictability cần SecureRandom."}
-      - {id: C, answer: "Chỉ khi code không có thread.", explanation: "Sai. Tên và mục đích của API gắn với concurrent use."}
-      - {id: D, answer: "Vì ThreadLocalRandom cryptographically secure.", explanation: "Sai. Nó không phải cryptographic random source."}
+      - {id: A, answer: "Khi nhiều luồng cần giá trị giả ngẫu nhiên và muốn tránh tranh chấp không cần thiết.", explanation: "Đúng. Đây là ranh giới về đồng thời/hiệu năng, không phải bảo mật."}
+      - {id: B, answer: "Khi cần token đặt lại mật khẩu.", explanation: "Sai. Trường hợp nhạy cảm bảo mật cần tính khó dự đoán của SecureRandom."}
+      - {id: C, answer: "Chỉ khi code không có luồng.", explanation: "Sai. ThreadLocalRandom đặc biệt phù hợp khi có nhiều luồng."}
+      - {id: D, answer: "Vì ThreadLocalRandom an toàn về mặt mật mã.", explanation: "Sai. Nó không phải nguồn ngẫu nhiên mật mã."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -430,12 +430,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: random-modulo-pitfall
-    question: "Vì sao `random.nextInt() % 100` thường kém hơn `random.nextInt(100)` khi cần range 0..99?"
+    question: "Vì sao `random.nextInt() % 100` thường kém hơn `random.nextInt(100)` khi cần phạm vi 0..99?"
     answers:
-      - {id: A, answer: "Modulo luôn làm JVM crash.", explanation: "Sai. Vấn đề là range/sign/distribution semantics, không phải crash."}
-      - {id: B, answer: "Manual modulo có thể cho negative result và dễ tạo distribution bias nếu xử lý sai; bounded API thể hiện contract đúng hơn.", explanation: "Đúng. Ưu tiên API có bound khi đó là intent."}
-      - {id: C, answer: "nextInt(100) luôn cryptographically secure.", explanation: "Sai. Đây vẫn là ordinary PRNG."}
-      - {id: D, answer: "Modulo không tồn tại cho int.", explanation: "Sai. % tồn tại nhưng không phải bounded-random API tốt nhất."}
+      - {id: A, answer: "Modulo luôn làm JVM sập.", explanation: "Sai. Vấn đề nằm ở phạm vi, dấu và phân phối, không phải JVM bị sập."}
+      - {id: B, answer: "Tự dùng phép modulo có thể cho kết quả âm và dễ tạo sai lệch phân phối nếu xử lý sai; API có giới hạn thể hiện ý định rõ hơn.", explanation: "Đúng. Khi cần phạm vi hữu hạn, nên ưu tiên API có tham số bound."}
+      - {id: C, answer: "nextInt(100) luôn an toàn về mặt mật mã.", explanation: "Sai. Đây vẫn là PRNG thông thường."}
+      - {id: D, answer: "Modulo không tồn tại cho int.", explanation: "Sai. Toán tử % tồn tại, nhưng thường không phải cách tốt nhất để biểu diễn yêu cầu sinh số trong phạm vi."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -443,14 +443,40 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: securerandom-setseed-behavior
-    question: "Statement nào chính xác nhất về `SecureRandom.setSeed(...)`?"
+    question: "Phát biểu nào chính xác nhất về `SecureRandom.setSeed(...)`?"
     answers:
-      - {id: A, answer: "Mọi call setSeed bằng timestamp đều làm generator secure hơn.", explanation: "Sai. Timestamp không phải strong primary entropy source."}
-      - {id: B, answer: "setSeed bổ sung state; nhưng nếu caller seed PRNG mới trước lần self-seed đầu tiên thì caller phải bảo đảm seed có đủ entropy.", explanation: "Đúng. Security phụ thuộc entropy/state lifecycle, không chỉ tên class."}
-      - {id: C, answer: "setSeed luôn reset state về đúng seed và xóa entropy cũ.", explanation: "Sai. Contract là supplement seed/state, không phải simple deterministic reset như Random."}
-      - {id: D, answer: "SecureRandom không có seeding concept.", explanation: "Sai. Seeding là phần quan trọng của CSPRNG lifecycle."}
+      - {id: A, answer: "Mọi lần gọi setSeed bằng timestamp đều làm bộ sinh an toàn hơn.", explanation: "Sai. Timestamp không phải nguồn entropy chính đủ mạnh."}
+      - {id: B, answer: "setSeed bổ sung trạng thái; nhưng nếu bên gọi seed một PRNG mới trước lần tự khởi tạo seed đầu tiên thì bên gọi phải bảo đảm seed có đủ entropy.", explanation: "Đúng. Mức an toàn phụ thuộc vòng đời entropy/trạng thái, không chỉ tên lớp."}
+      - {id: C, answer: "setSeed luôn đặt lại trạng thái đúng bằng seed mới và xóa entropy cũ.", explanation: "Sai. Hợp đồng của setSeed là bổ sung seed/trạng thái chứ không đặt lại tất định đơn giản như Random."}
+      - {id: D, answer: "SecureRandom không có khái niệm seeding.", explanation: "Sai. Seeding là phần quan trọng trong vòng đời CSPRNG."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "11.SecureRandom/SecureRandom.md", anchor: "entropy-seeding"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: numeric-policy-boundary
+    question: "Sau khi đã chọn đúng cách biểu diễn số, điều gì vẫn phải được quyết định riêng?"
+    answers:
+      - {id: A, answer: "Không còn gì; chọn đúng kiểu dữ liệu tự quyết định mọi quy tắc xử lý.", explanation: "Sai. Cách biểu diễn chỉ xác định mô hình giá trị và phép toán; ứng dụng vẫn phải quyết định các chính sách tại ranh giới có rủi ro."}
+      - {id: B, answer: "Các chính sách như phát hiện tràn số, sai số so sánh, làm tròn, quy tắc bằng nhau và yêu cầu bảo mật khi sinh số ngẫu nhiên.", explanation: "Đúng. Cách biểu diễn và chính sách xử lý là hai quyết định khác nhau; chính sách phải xuất phát từ yêu cầu của bài toán."}
+      - {id: C, answer: "Chỉ tên biến Java, vì hành vi số học đã hoàn toàn cố định.", explanation: "Sai. Tên biến không định nghĩa tràn số, sai số so sánh, làm tròn hay chính sách bảo mật."}
+      - {id: D, answer: "Chỉ cách định dạng khi in ra màn hình.", explanation: "Sai. Nhiều chính sách ảnh hưởng trực tiếp tới tính đúng đắn trước cả bước hiển thị."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "12.NumericSynthesis/NumericSynthesis.md", anchor: "numeric-policy-boundaries"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: numeric-synthesis-case-selection
+    question: "Bộ lựa chọn nào phù hợp nhất với các yêu cầu: tiền tệ thập phân chính xác, số đo khoa học xấp xỉ, số nguyên vượt phạm vi long và token cần khó dự đoán?"
+    answers:
+      - {id: A, answer: "double cho cả bốn trường hợp.", explanation: "Sai. Một kiểu không đáp ứng đồng thời thập phân chính xác, số nguyên phạm vi tùy ý và ngẫu nhiên cho bảo mật."}
+      - {id: B, answer: "BigDecimal cho cả bốn trường hợp.", explanation: "Sai. BigDecimal phù hợp thập phân chính xác nhưng không thay thế BigInteger, phép đo dấu phẩy động hay SecureRandom."}
+      - {id: C, answer: "BigDecimal; double; BigInteger; SecureRandom.", explanation: "Đúng. Mỗi lựa chọn khớp với yêu cầu cốt lõi của từng giá trị thay vì chọn theo thói quen."}
+      - {id: D, answer: "int; BigInteger; float; Random với timestamp seed.", explanation: "Sai. Bộ lựa chọn này không đáp ứng các yêu cầu về thập phân chính xác, phạm vi và tính khó dự đoán."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "12.NumericSynthesis/NumericSynthesis.md", anchor: "numeric-synthesis-cases"}
     apiRelated: {controller: "", methodSignature: ""}

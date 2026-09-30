@@ -1,28 +1,28 @@
-# Math và StrictMath
+# Tiện ích toán học và phép toán an toàn
 
-Java đã cung cấp nhiều standard numeric helper. Dùng API chuẩn thường thể hiện intent rõ hơn và tránh tự viết lại edge case khó.
+Java đã cung cấp nhiều tiện ích số chuẩn. Dùng API chuẩn thường thể hiện mục đích rõ hơn và tránh tự viết lại các trường hợp biên khó.
 
 ## <a id="math-core-functions">Các hàm chính của Math</a>
 
 `Math` có thể nhóm thành:
 
 ```text
-basic selection
+chọn giá trị cơ bản
 → abs, min, max
 
-power/root
+lũy thừa/căn
 → pow, sqrt, cbrt
 
-rounding helpers
+tiện ích làm tròn
 → floor, ceil, round, rint
 
-trigonometry/logarithm
+lượng giác/logarit
 → sin, cos, tan, log, exp
 
-integer helpers
-→ floorDiv, floorMod, exact arithmetic
+tiện ích số nguyên
+→ floorDiv, floorMod, phép toán có kiểm tra tràn
 
-floating-point helpers
+tiện ích số dấu phẩy động
 → ulp, nextUp, nextDown, copySign...
 ```
 
@@ -37,27 +37,27 @@ Math.floor(-2.1); // -3.0
 Math.ceil(-2.9);  // -2.0
 ```
 
-`floor` nghĩa là đi về -∞, không phải “bỏ phần decimal”.
+`floor` nghĩa là đi về -∞, không phải “bỏ phần thập phân”.
 
 ### `floorDiv` và `floorMod`
 
-Java integer division thông thường truncate toward zero:
+Phép chia số nguyên thông thường của Java cắt về phía 0:
 
 ```java
 System.out.println(-7 / 3); // -2
 ```
 
-`Math.floorDiv` dùng floor division:
+`Math.floorDiv` dùng phép chia lấy sàn:
 
 ```java
 System.out.println(Math.floorDiv(-7, 3)); // -3
 ```
 
-Khi algorithm cần mathematical floor semantics với số âm, distinction này rất quan trọng.
+Khi thuật toán cần đúng ngữ nghĩa lấy sàn toán học với số âm, điểm khác biệt này rất quan trọng.
 
-## <a id="exact-arithmetic-methods">Exact Integer Arithmetic</a>
+## <a id="exact-arithmetic-methods">Phép toán số nguyên có kiểm tra</a>
 
-Các helper:
+Các phương thức hỗ trợ:
 
 ```java
 Math.addExact
@@ -68,10 +68,12 @@ Math.decrementExact
 Math.negateExact
 Math.absExact
 Math.divideExact
+Math.floorDivExact
+Math.ceilDivExact
 Math.toIntExact
 ```
 
-biến silent overflow thành `ArithmeticException`.
+biến tràn số âm thầm thành `ArithmeticException`.
 
 Ví dụ:
 
@@ -83,28 +85,28 @@ long total =
         );
 ```
 
-### Exact helper không làm domain thành arbitrary precision
+### Phương thức kiểm tra tràn không tạo ra phạm vi tùy ý
 
-Nếu value hợp lệ có thể vượt `long`, exact helper chỉ giúp **phát hiện** overflow. Representation đúng vẫn là `BigInteger`.
+Nếu giá trị hợp lệ có thể vượt `long`, các phương thức `*Exact` chỉ giúp **phát hiện** tràn số. Cách biểu diễn đúng vẫn là `BigInteger`.
 
-Với Java 21, `Math.absExact(Integer.MIN_VALUE)` và `Math.divideExact(Integer.MIN_VALUE, -1)` throw `ArithmeticException` thay vì trả silent overflow result như các phép tương ứng không checked.
+Với Java 21, `Math.absExact(Integer.MIN_VALUE)` và `Math.divideExact(Integer.MIN_VALUE, -1)` ném `ArithmeticException` thay vì trả kết quả tràn số âm thầm như các phép tương ứng không có kiểm tra.
 
 ## <a id="strictmath-boundary">Math và StrictMath</a>
 
-`Math` là lựa chọn thông thường cho application code.
+`Math` là lựa chọn thông thường cho mã ứng dụng.
 
-`StrictMath` tồn tại cho trường hợp cần behavior của floating-point mathematical function theo contract reproducibility/specification chặt hơn.
+`StrictMath` tồn tại cho trường hợp cần hành vi của các hàm toán học trên số dấu phẩy động tuân theo yêu cầu chặt hơn về khả năng tái lập kết quả/đặc tả.
 
 ```text
 Math
-→ default numeric helper API
+→ API tiện ích số mặc định
 
 StrictMath
-→ ưu tiên specified reproducibility cho các mathematical functions liên quan
+→ ưu tiên khả năng tái lập đã được đặc tả cho các hàm toán học liên quan
 ```
 
-Không nên hiểu `StrictMath` là “Math nhưng chính xác tuyệt đối”. Các function vẫn hoạt động trên floating-point values và chịu giới hạn representation của `double/float`.
+Không nên hiểu `StrictMath` là “Math nhưng chính xác tuyệt đối”. Các hàm vẫn hoạt động trên giá trị dấu phẩy động và chịu giới hạn biểu diễn của `double/float`.
 
-Chỉ quan tâm boundary này khi cross-platform reproducibility thật sự là requirement.
+Chỉ cần quan tâm ranh giới này khi khả năng tái lập kết quả giữa các nền tảng thực sự là một yêu cầu.
 
-Hai chapter cuối chuyển từ number representation sang một contract khác: **randomness**.
+Hai chương tiếp theo chuyển từ cách biểu diễn số sang một nhóm yêu cầu khác: **sinh số ngẫu nhiên**. Sau đó chương tổng hợp sẽ nối các lựa chọn này thành một mô hình ra quyết định thống nhất.

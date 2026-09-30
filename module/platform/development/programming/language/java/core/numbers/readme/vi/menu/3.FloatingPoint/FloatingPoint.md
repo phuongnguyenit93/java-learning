@@ -1,32 +1,32 @@
-# Floating-point
+# Số dấu phẩy động và sai số biểu diễn
 
-`float` và `double` được thiết kế cho **wide range + efficient real-number computation**. Đổi lại, chúng dùng binary floating-point nên nhiều decimal value quen thuộc không có representation nhị phân hữu hạn.
+`float` và `double` được thiết kế cho **phạm vi rộng + tính toán số thực hiệu quả**. Đổi lại, chúng dùng biểu diễn dấu phẩy động nhị phân nên nhiều giá trị thập phân quen thuộc không có biểu diễn nhị phân hữu hạn.
 
-## <a id="binary-floating-point">Biểu diễn Binary Floating-point</a>
+## <a id="binary-floating-point">Biểu diễn dấu phẩy động nhị phân</a>
 
-### WHAT
+### KHÁI NIỆM
 
 Theo IEEE 754, floating-point có thể hình dung bằng ba phần:
 
 ```text
 sign
- + exponent
- + significand
+ + số mũ (exponent)
+ + phần định trị (significand)
 ```
 
-`float` dùng binary32; `double` dùng binary64. Trong Java application code, `double` thường là lựa chọn mặc định khi cần floating-point vì có precision/range tốt hơn `float`.
+`float` dùng binary32; `double` dùng binary64. Trong mã ứng dụng Java, `double` thường là lựa chọn mặc định khi cần số dấu phẩy động vì có độ chính xác/phạm vi tốt hơn `float`.
 
-### WHY 0.1 không “vừa” trong binary?
+### VÌ SAO 0.1 không “vừa” trong hệ nhị phân?
 
-Một số fraction hữu hạn trong hệ 10 lại lặp vô hạn trong hệ 2.
+Một số phân số hữu hạn trong hệ 10 lại lặp vô hạn trong hệ 2.
 
 ```text
-0.5 decimal
-→ 0.1 binary
+0.5 thập phân
+→ 0.1 nhị phân
 → biểu diễn hữu hạn
 
-0.1 decimal
-→ binary fraction lặp
+0.1 thập phân
+→ phân số nhị phân lặp
 → chỉ lưu được giá trị gần nhất
 ```
 
@@ -37,34 +37,34 @@ double x = 0.1 + 0.2;
 System.out.println(x); // 0.30000000000000004
 ```
 
-Đây không phải bug riêng của Java mà là hệ quả của finite binary floating-point representation.
+Đây không phải lỗi riêng của Java mà là hệ quả của cách biểu diễn dấu phẩy động nhị phân với số bit hữu hạn.
 
-## <a id="precision-rounding-error">Sai số Precision và Rounding</a>
+## <a id="precision-rounding-error">Sai số biểu diễn và làm tròn</a>
 
-### HOW sai số xuất hiện?
+### CƠ CHẾ — sai số xuất hiện như thế nào?
 
-Với ordinary finite result nằm trong representable range, arithmetic thường phải đưa mathematical result về floating-point value gần nhất theo rounding semantics của IEEE 754/Java.
+Với kết quả hữu hạn thông thường nằm trong phạm vi biểu diễn được, phép toán thường phải đưa kết quả toán học về giá trị dấu phẩy động gần nhất theo quy tắc làm tròn của IEEE 754/Java.
 
 ```text
-mathematical exact result
+kết quả toán học chính xác
         ↓
-nearest representable binary value
+giá trị nhị phân biểu diễn được gần nhất
         ↓
-next operation
+phép toán tiếp theo
         ↓
-round again
+làm tròn lần nữa
 ```
 
-Nhưng không phải mọi result đều chỉ trở thành một finite approximation:
+Nhưng không phải mọi kết quả đều chỉ trở thành một giá trị xấp xỉ hữu hạn:
 
 ```text
-magnitude quá lớn
-→ overflow
+mức độ lớn quá cao
+→ tràn số
 → có thể thành +Infinity / -Infinity
 
-magnitude quá nhỏ
-→ underflow
-→ có thể thành subnormal value hoặc signed zero
+độ lớn quá nhỏ
+→ tràn dưới (underflow)
+→ có thể thành giá trị dưới chuẩn (subnormal) hoặc số 0 có dấu
 ```
 
 Sai số nhỏ có thể tích lũy:
@@ -77,7 +77,7 @@ for (int i = 0; i < 10; i++) {
 System.out.println(total);
 ```
 
-Floating-point arithmetic cũng không phải lúc nào associative theo trực giác toán học:
+Phép toán dấu phẩy động cũng không phải lúc nào có tính kết hợp theo trực giác toán học:
 
 ```java
 double a = 1e16;
@@ -92,28 +92,28 @@ System.out.println(a + (b + c)); // với cách nhóm khác
 
 `double` thường phù hợp cho:
 
-- sensor/measurement;
-- statistics;
-- graphics;
-- scientific/engineering computation;
-- simulation;
-- các domain có tolerance rõ ràng.
+- cảm biến/đo lường;
+- thống kê;
+- đồ họa;
+- tính toán khoa học/kỹ thuật;
+- mô phỏng;
+- các bài toán có mức sai số chấp nhận rõ ràng.
 
-Nó thường không phù hợp nếu contract yêu cầu **decimal semantics exact**, ví dụ nhiều workflow money/tax/rate.
+Nó thường không phù hợp nếu yêu cầu đòi hỏi **ngữ nghĩa thập phân chính xác**, ví dụ nhiều quy trình tính tiền/thuế/tỷ lệ.
 
-## <a id="nan-infinity-negative-zero">NaN, Infinity và Negative Zero</a>
+## <a id="nan-infinity-negative-zero">NaN, vô cực và số 0 âm</a>
 
-IEEE 754 có special values:
+IEEE 754 có các giá trị đặc biệt:
 
 ```text
 NaN
-→ kết quả không phải numerical value thông thường
+→ kết quả không phải giá trị số thông thường
 
 Infinity / -Infinity
-→ overflow hoặc một số division-by-zero case
+→ tràn số hoặc một số trường hợp chia cho 0
 
 +0.0 / -0.0
-→ hai representation của zero có sign khác nhau
+→ hai cách biểu diễn số 0 có dấu khác nhau
 ```
 
 Ví dụ:
@@ -127,7 +127,7 @@ System.out.println(Double.isNaN(nan));      // true
 System.out.println(Double.isInfinite(inf)); // true
 ```
 
-### NaN propagation
+### Sự lan truyền của NaN
 
 ```java
 double result = Double.NaN + 10;
@@ -140,24 +140,24 @@ System.out.println(result); // NaN
 Double.isNaN(value)
 ```
 
-### Signed zero
+### Số 0 có dấu
 
 ```java
 System.out.println(0.0 == -0.0); // true
 ```
 
-nhưng sign vẫn có thể ảnh hưởng arithmetic:
+nhưng dấu vẫn có thể ảnh hưởng đến phép toán:
 
 ```java
 System.out.println(1.0 / 0.0);  // Infinity
 System.out.println(1.0 / -0.0); // -Infinity
 ```
 
-## <a id="floating-point-comparison">So sánh Floating-point</a>
+## <a id="floating-point-comparison">So sánh số dấu phẩy động</a>
 
-`==` chỉ nên dùng khi contract thực sự là **exact represented-value equality**.
+`==` chỉ nên dùng khi yêu cầu thực sự là **hai giá trị được biểu diễn phải bằng nhau chính xác**.
 
-Với approximate computation, thường cần tolerance:
+Với phép tính gần đúng, thường cần một ngưỡng sai số chấp nhận:
 
 ```java
 double actual = 0.1 + 0.2;
@@ -167,17 +167,17 @@ double epsilon = 1e-9;
 boolean close = Math.abs(actual - expected) <= epsilon;
 ```
 
-Nhưng một epsilon tuyệt đối không phù hợp cho mọi magnitude:
+Nhưng một epsilon tuyệt đối không phù hợp cho mọi độ lớn:
 
 ```text
 giá trị quanh 0.000001
 và
 giá trị quanh 1_000_000_000
 
-→ có thể cần tolerance strategy khác nhau
+→ có thể cần chiến lược sai số chấp nhận khác nhau
 ```
 
-Trong code nghiêm túc, tolerance nên đến từ domain/error budget, không phải “magic epsilon”.
+Trong mã thực tế, mức sai số chấp nhận nên đến từ yêu cầu bài toán/ngân sách sai số, không phải một “epsilon thần kỳ” tùy ý.
 
 Ngoài ra Java có:
 
@@ -187,6 +187,6 @@ Double.isFinite(value);
 Double.isNaN(value);
 ```
 
-`Double.compare` không có semantics giống hệt toán tử `==`: nó cung cấp total ordering hữu ích cho sorting, trong đó NaN và signed zero được xử lý theo rule của API. Vì vậy hãy chọn API theo câu hỏi domain đang cần trả lời.
+`Double.compare` không có ngữ nghĩa giống hệt toán tử `==`: nó cung cấp thứ tự toàn phần (total ordering) hữu ích cho việc sắp xếp, trong đó NaN và số 0 có dấu được xử lý theo quy tắc của API. Vì vậy hãy chọn API theo câu hỏi mà bài toán đang cần trả lời.
 
-Nếu vấn đề là **integer range**, chương sau dùng `BigInteger`. Nếu vấn đề là **exact decimal semantics**, ta sẽ tới `BigDecimal`.
+Nếu vấn đề là **phạm vi số nguyên**, chương sau dùng `BigInteger`. Nếu vấn đề là **ngữ nghĩa thập phân chính xác**, ta sẽ tới `BigDecimal`.

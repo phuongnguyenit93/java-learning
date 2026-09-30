@@ -43,73 +43,100 @@
 
 roadmap:
   - id: numeric-model
-    title: Mô hình biểu diễn số
-    purpose: Hiểu vì sao Java cần nhiều cách biểu diễn số khác nhau và vì sao range, độ chính xác, chi phí lưu trữ và hiệu năng tạo ra các trade-off khác nhau.
+    title: Các cách Java biểu diễn số
+    purpose: Hiểu vì sao Java cần nhiều cách biểu diễn số khác nhau và vì sao phạm vi giá trị, khả năng biểu diễn chính xác, chi phí lưu trữ và hiệu năng luôn tạo ra sự đánh đổi.
+    relatedKnowledge:
+      - NumericModel
     relatedModules:
       - routeId: JAVA_LANGUAGE_BASICS
-        label: Language Basics
-        note: Primitive numeric type, conversion và promotion là nền tảng trực tiếp của module này.
+        label: Kiến thức nền tảng về ngôn ngữ
+        note: Kiểu số nguyên thủy, chuyển đổi kiểu và quy tắc nâng kiểu số là nền tảng trực tiếp của mô-đun này.
     objectives:
-      - Chọn giữa integer cố định, floating point, BigInteger và BigDecimal theo semantics của bài toán.
-      - Nhận biết việc chọn numeric type là một phần của correctness chứ không chỉ là syntax.
+      - Nhận diện ở mức khái quát vai trò của số nguyên độ rộng cố định, số dấu phẩy động, BigInteger và BigDecimal trước khi đi sâu vào từng cách biểu diễn.
+      - Nhận biết việc chọn kiểu số là một phần của tính đúng đắn chứ không chỉ là vấn đề cú pháp.
+      - Liên hệ chuyển đổi và nâng kiểu số với nguy cơ mất phạm vi hoặc độ chính xác khi đi giữa các cách biểu diễn.
   - id: integer-boundaries
-    title: Integer cố định và Overflow
-    purpose: Hiểu vì sao phép toán số nguyên dù là exact vẫn có thể sai khi vượt qua giới hạn của biểu diễn fixed-width.
+    title: Số nguyên độ rộng cố định và tràn số
+    purpose: Hiểu vì sao phép toán số nguyên dù cho kết quả toán học là chính xác vẫn có thể sai khi vượt qua giới hạn của kiểu có độ rộng cố định.
+    relatedKnowledge:
+      - IntegerOverflow
     objectives:
-      - Reason được về MIN/MAX boundary và hành vi wraparound.
-      - Biết khi nào nên dùng checked arithmetic để overflow trở thành failure rõ ràng.
+      - Phân tích được giới hạn MIN/MAX và hiện tượng giá trị quay vòng khi xảy ra tràn số.
+      - Nhận biết khi nào tràn số phải được phát hiện thay vì chấp nhận hiện tượng giá trị quay vòng.
   - id: floating-point
-    title: Xấp xỉ Floating-Point
-    purpose: Xây dựng mental model binary floating-point để giải thích precision error, special value và hành vi comparison.
+    title: Số dấu phẩy động và sai số biểu diễn
+    purpose: Xây dựng mô hình tư duy về dấu phẩy động nhị phân để giải thích sai số biểu diễn, các giá trị đặc biệt và hành vi so sánh.
+    relatedKnowledge:
+      - FloatingPoint
     objectives:
-      - Giải thích được vì sao nhiều phân số thập phân không thể biểu diễn chính xác bằng binary floating point.
-      - Xử lý có chủ đích NaN, infinity, negative zero và tolerance-based comparison.
+      - Giải thích được vì sao nhiều phân số thập phân không thể biểu diễn chính xác trong hệ nhị phân.
+      - Xử lý có chủ đích NaN, vô cực, số 0 âm và phép so sánh theo sai số chấp nhận.
   - id: arbitrary-precision-integers
-    title: Số nguyên độ chính xác tùy ý
-    purpose: Hiểu cách BigInteger loại bỏ giới hạn range fixed-width và điều gì thay đổi khi arithmetic trở thành object-based và immutable.
+    title: Số nguyên phạm vi tùy ý với BigInteger
+    purpose: Hiểu cách BigInteger loại bỏ giới hạn phạm vi của kiểu số nguyên độ rộng cố định và điều gì thay đổi khi phép toán được thực hiện qua đối tượng bất biến.
+    relatedKnowledge:
+      - BigInteger
     objectives:
-      - Sử dụng BigInteger mà không giả định semantics của primitive operator.
-      - Nhận biết conversion và performance boundary của arbitrary-precision arithmetic.
+      - Sử dụng BigInteger mà không giả định có thể áp dụng toán tử giống như với kiểu nguyên thủy.
+      - Nhận biết giới hạn khi chuyển đổi dữ liệu và chi phí hiệu năng của phép toán trên số nguyên phạm vi tùy ý.
   - id: exact-decimal-model
-    title: Mô hình số thập phân chính xác
-    purpose: Hiểu BigDecimal như mô hình decimal value + scale rõ ràng cho các workflow cần semantics thập phân chính xác.
+    title: Số thập phân chính xác với BigDecimal
+    purpose: Hiểu BigDecimal như mô hình giá trị thập phân có scale rõ ràng cho các bài toán cần ngữ nghĩa thập phân chính xác.
+    relatedKnowledge:
+      - BigDecimal
     objectives:
-      - Khởi tạo BigDecimal mà không vô tình mang theo lỗi binary floating-point.
-      - Reason rõ về arithmetic, scale và non-terminating division.
+      - Khởi tạo BigDecimal mà không vô tình mang theo sai số của số dấu phẩy động nhị phân.
+      - Hiểu rõ phép toán, scale và trường hợp phép chia thập phân không kết thúc.
   - id: precision-scale-rounding
-    title: Precision, Scale và chính sách làm tròn
-    purpose: Hiểu rằng decimal precision và rounding là một phần của value policy/domain contract chứ không phải bước formatting cuối cùng.
+    title: Độ chính xác (precision), scale và chính sách làm tròn
+    purpose: Hiểu rằng độ chính xác (precision), scale và cách làm tròn là một phần của quy tắc giá trị và nghiệp vụ chứ không phải chỉ là bước định dạng cuối cùng.
+    relatedKnowledge:
+      - PrecisionScale
+      - Rounding
     objectives:
       - Phân biệt precision với scale và hiểu vai trò của MathContext.
-      - Chọn thời điểm và rounding mode có chủ đích tại domain boundary.
+      - Chọn thời điểm và RoundingMode có chủ đích tại ranh giới nghiệp vụ.
   - id: numeric-comparison-contracts
-    title: Contract so sánh và bằng nhau của số
-    purpose: Hiểu vì sao numerical equivalence, object equality và ordering có thể trả lời các câu hỏi khác nhau đối với numeric object.
+    title: Quy tắc bằng nhau và thứ tự của giá trị số
+    purpose: Hiểu vì sao tương đương về mặt số học, bằng nhau giữa các đối tượng và thứ tự sắp xếp có thể trả lời những câu hỏi khác nhau.
+    relatedKnowledge:
+      - BigDecimalComparison
     relatedModules:
       - routeId: JAVA_OBJECT_CONTRACT
-        label: Object Contract
-        note: Equality, hashing và ordering contract giải thích vì sao các object tương đương về số học có thể hành xử khác nhau trong API.
+        label: Quy ước của Object
+        note: Các quy tắc equals, hashCode và thứ tự giải thích vì sao những đối tượng tương đương về số học vẫn có thể hành xử khác nhau trong API.
       - routeId: JAVA_COLLECTION
-        label: Collections
-        note: Hash-based và sorted collection làm cho lựa chọn equality/ordering của numeric value trở nên quan sát được.
+        label: Collection
+        note: Các cấu trúc dữ liệu dựa trên giá trị băm (hash) và các cấu trúc có sắp xếp làm cho khác biệt giữa bằng nhau và thứ tự của giá trị số trở nên quan sát được.
     objectives:
-      - Giải thích semantics khác nhau giữa BigDecimal.equals và compareTo.
-      - Dự đoán hệ quả khi numeric value được dùng làm collection key hoặc phần tử được sort.
+      - Giải thích sự khác nhau về ngữ nghĩa giữa BigDecimal.equals và compareTo.
+      - Dự đoán hệ quả khi giá trị số được dùng làm khóa của Map hoặc làm phần tử trong cấu trúc có sắp xếp.
   - id: math-and-safe-arithmetic
-    title: Math helper và arithmetic an toàn
-    purpose: Học khi nào standard numeric helper làm intent rõ hơn và khi nào exact arithmetic method nên biến overflow thành failure thay vì wraparound im lặng.
+    title: Tiện ích toán học và phép toán an toàn
+    purpose: Học khi nào các tiện ích số chuẩn làm ý định của đoạn mã rõ hơn và khi nào phép toán có kiểm tra nên biến tràn số thành lỗi thay vì để giá trị quay vòng âm thầm.
+    relatedKnowledge:
+      - Math
     objectives:
-      - Dùng các Math helper chính với expectation đúng về numeric semantics.
-      - Nhận biết boundary giữa convenience helper và semantics của representation.
+      - Dùng các hàm Math cốt lõi và các phương thức kiểm tra tràn số với kỳ vọng đúng về ngữ nghĩa của từng kiểu số.
+      - Phân biệt vai trò của tiện ích API với ngữ nghĩa vốn có của cách biểu diễn số.
   - id: randomness-contracts
-    title: Contract của Randomness
-    purpose: Phân biệt pseudo-random deterministic với unpredictability phục vụ security và chọn đúng contract mà use case cần.
+    title: Sinh số ngẫu nhiên trong lập trình và yêu cầu bảo mật
+    purpose: Phân biệt bộ sinh số giả ngẫu nhiên có thể tái lập từ giá trị khởi tạo (seed) với SecureRandom khi tính khó dự đoán là một phần của yêu cầu bảo mật, từ đó chọn đúng cơ chế cho từng trường hợp sử dụng.
+    relatedKnowledge:
+      - Random
+      - SecureRandom
+    relatedModules:
+      - routeId: JAVA_SECURITY_CRYPTOGRAPHY
+        label: Bảo mật và mật mã học
+        note: Mô-đun Numbers chỉ dừng ở việc chọn SecureRandom và mô hình entropy cùng giá trị khởi tạo (seed) cơ bản; sinh khóa, IV/nonce, mã hóa và chữ ký thuộc mô-đun bảo mật và mật mã học.
     objectives:
-      - Hiểu seed-driven reproducibility của PRNG thông thường.
-      - Nhận biết khi nào cần SecureRandom và đâu là boundary chuyển sang cryptography.
+      - Hiểu khả năng tái lập kết quả từ giá trị khởi tạo (seed) của bộ sinh số giả ngẫu nhiên thông thường.
+      - Nhận biết khi nào cần SecureRandom và đâu là ranh giới chuyển sang kiến thức mật mã học.
   - id: numeric-synthesis
-    title: Tổng hợp lựa chọn mô hình số
-    purpose: Kết nối range, exactness, precision, equality, rounding và randomness thành một decision model thống nhất cho numeric code.
+    title: Chọn mô hình số phù hợp
+    purpose: Kết nối lựa chọn cách biểu diễn số, giới hạn phạm vi, sai số, làm tròn, quy tắc so sánh và cơ chế sinh số ngẫu nhiên thành một mô hình ra quyết định thống nhất khi viết mã xử lý số.
+    relatedKnowledge:
+      - NumericSynthesis
     objectives:
-      - Chọn representation và policy từ domain requirement thay vì thói quen.
-      - Nhận biết nơi numeric bug lan sang collection, persistence, formatting hoặc security concern.
+      - Chọn cách biểu diễn và chính sách xử lý dựa trên yêu cầu nghiệp vụ thay vì thói quen.
+      - Nhận biết nơi lỗi xử lý số có thể lan sang cấu trúc dữ liệu, lưu trữ dữ liệu, định dạng hiển thị hoặc bảo mật.

@@ -84,13 +84,6 @@ questions:
     readmeRelated: {file: "11.SecureRandom/SecureRandom.md", anchor: "security-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "What framework do you use to choose among `int`, `long`, `double`, `BigInteger`, and `BigDecimal` instead of choosing by habit?"
-    answer: "Start from the domain contract: whether fractional values are needed, whether decimal exactness is required, the maximum range, whether overflow/rounding is acceptable, then performance and memory. int/long fit fixed-width integers; double fits approximate measurement/scientific work; BigInteger solves integer range; BigDecimal provides explicit decimal semantics and rounding policy."
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "1.NumericModel/NumericModel.md", anchor: "numeric-type-model"}
-    apiRelated: {controller: "", methodSignature: ""}
-
   - question: "Why can `long total = quantity * unitPrice` still be wrong when both operands are `int`?"
     answer: "Java determines the arithmetic-expression type before assignment. int * int executes as int and can overflow; only then is the already-wrong value widened to long. Widen an operand before the multiplication if the operation itself must run as long."
     aiGenerated: true
@@ -166,4 +159,18 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "11.SecureRandom/SecureRandom.md", anchor: "entropy-seeding"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "What decision framework do you use to choose among `int`, `long`, `double`, `BigInteger`, and `BigDecimal` instead of choosing by habit?"
+    answer: "Start from the meaning of the value: whether fractions are needed, whether exact decimal behavior is required, the maximum range, whether overflow or rounding is acceptable, and only then performance and memory. int/long fit fixed-width integers; double fits approximate measurement/scientific work; BigInteger solves integer range; BigDecimal provides explicit decimal semantics and rounding policy."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "12.NumericSynthesis/NumericSynthesis.md", anchor: "numeric-decision-model"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Apply the complete Numbers decision process to five cases: a bounded counter, scientific measurement, money, an integer beyond long, and a security-sensitive token. What do you choose and which policies still need to be explicit?"
+    answer: "A bounded counter usually uses int/long and still needs an overflow policy. Scientific measurement usually uses double plus a comparison/error strategy. Money uses BigDecimal with explicit scale/precision/rounding and equality policy. Integers beyond long use BigInteger with controlled narrowing conversions. A security-sensitive token uses SecureRandom; key generation, IV/nonces, encryption, and signatures hand off to Security & Cryptography."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "12.NumericSynthesis/NumericSynthesis.md", anchor: "numeric-synthesis-cases"}
     apiRelated: {controller: "", methodSignature: ""}

@@ -43,48 +43,64 @@
 
 roadmap:
   - id: numeric-model
-    title: Numeric Representation Model
+    title: How Java Represents Numbers
     purpose: Understand why Java provides several numeric representations and how range, exactness, storage cost, and performance force different trade-offs.
+    relatedKnowledge:
+      - NumericModel
     relatedModules:
       - routeId: JAVA_LANGUAGE_BASICS
         label: Language Basics
         note: Primitive numeric types, conversions, and promotion are prerequisites for this module.
     objectives:
-      - Choose between fixed-width integers, floating point, BigInteger, and BigDecimal by problem semantics.
+      - Recognize the high-level roles of fixed-width integers, floating point, BigInteger, and BigDecimal before studying each representation in depth.
       - Recognize that numeric type choice is part of correctness, not just syntax.
+      - Connect numeric conversions and promotion with possible range or precision loss across representations.
   - id: integer-boundaries
     title: Fixed-Width Integers and Overflow
     purpose: Understand how exact whole-number arithmetic can still fail when a fixed-width representation crosses its range boundary.
+    relatedKnowledge:
+      - IntegerOverflow
     objectives:
       - Reason about MIN/MAX boundaries and wraparound behavior.
-      - Use checked arithmetic when overflow must become an explicit failure.
+      - Recognize when overflow must be detected instead of accepting wraparound behavior.
   - id: floating-point
     title: Floating-Point Approximation
     purpose: Build the binary floating-point mental model needed to explain precision error, special values, and comparison behavior.
+    relatedKnowledge:
+      - FloatingPoint
     objectives:
       - Explain why many decimal fractions cannot be represented exactly in binary floating point.
       - Handle NaN, infinity, negative zero, and tolerance-based comparisons intentionally.
   - id: arbitrary-precision-integers
     title: Arbitrary-Precision Integers
     purpose: Understand how BigInteger removes fixed-width range limits and what changes when arithmetic becomes object-based and immutable.
+    relatedKnowledge:
+      - BigInteger
     objectives:
       - Use BigInteger operations without assuming primitive operator semantics.
       - Recognize conversion and performance boundaries of arbitrary-precision arithmetic.
   - id: exact-decimal-model
     title: Exact Decimal Arithmetic
     purpose: Understand BigDecimal as an explicit decimal value plus scale model for workflows where decimal semantics matter.
+    relatedKnowledge:
+      - BigDecimal
     objectives:
       - Construct BigDecimal values without accidentally importing binary floating-point error.
       - Reason about arithmetic, scale, and non-terminating division explicitly.
   - id: precision-scale-rounding
     title: Precision, Scale, and Rounding Policy
     purpose: Understand that decimal precision and rounding are part of the value policy and domain contract, not a formatting afterthought.
+    relatedKnowledge:
+      - PrecisionScale
+      - Rounding
     objectives:
       - Distinguish precision from scale and understand MathContext.
       - Choose rounding points and modes intentionally at domain boundaries.
   - id: numeric-comparison-contracts
     title: Numeric Equality and Ordering Contracts
     purpose: Understand why numerical equivalence, object equality, and ordering can answer different questions for numeric objects.
+    relatedKnowledge:
+      - BigDecimalComparison
     relatedModules:
       - routeId: JAVA_OBJECT_CONTRACT
         label: Object Contract
@@ -98,18 +114,29 @@ roadmap:
   - id: math-and-safe-arithmetic
     title: Math Helpers and Safe Arithmetic
     purpose: Learn when standard numeric helpers make intent clearer and when exact arithmetic methods should enforce failure instead of silent wraparound.
+    relatedKnowledge:
+      - Math
     objectives:
-      - Use core Math helpers with the correct numeric expectations.
+      - Use core Math helpers and overflow-checking methods with the correct numeric expectations.
       - Recognize the boundary between convenience helpers and representation semantics.
   - id: randomness-contracts
-    title: Randomness Contracts
-    purpose: Distinguish deterministic pseudo-random generation from security-oriented unpredictability and choose the contract that the use case actually requires.
+    title: Random Generation and Security Requirements
+    purpose: Distinguish reproducible pseudo-random generation from SecureRandom when unpredictability is part of the security requirement, then choose the mechanism the use case actually requires.
+    relatedKnowledge:
+      - Random
+      - SecureRandom
+    relatedModules:
+      - routeId: JAVA_SECURITY_CRYPTOGRAPHY
+        label: Security & Cryptography
+        note: Numbers stops at choosing SecureRandom and the basic entropy/seeding model; key generation, IV/nonces, encryption, and signatures belong to the security-cryptography module.
     objectives:
       - Understand seed-driven reproducibility for ordinary PRNGs.
       - Recognize when SecureRandom is required and where cryptography-specific concerns begin.
   - id: numeric-synthesis
     title: Choosing the Right Numeric Model
     purpose: Connect range, exactness, precision, equality, rounding, and randomness into one decision model for numeric code.
+    relatedKnowledge:
+      - NumericSynthesis
     objectives:
       - Select representations and policies from domain requirements rather than habit.
       - Identify where numeric bugs cross into collection, persistence, formatting, or security concerns.

@@ -1,15 +1,15 @@
-# BigDecimal
+# Số thập phân chính xác với BigDecimal
 
-`BigDecimal` phù hợp khi domain cần **decimal semantics rõ ràng**, ví dụ money, tax, rates hoặc các phép tính mà decimal `0.1` phải mang đúng ý nghĩa thập phân.
+`BigDecimal` phù hợp khi bài toán cần **ngữ nghĩa thập phân rõ ràng**, ví dụ tiền, thuế, tỷ lệ hoặc các phép tính mà số `0.1` phải mang đúng ý nghĩa thập phân.
 
-Nó không đơn giản là “double nhưng chính xác hơn”. BigDecimal có model và policy riêng.
+Nó không đơn giản là “double nhưng chính xác hơn”. BigDecimal có mô hình và các quy tắc sử dụng riêng.
 
 ## <a id="big-decimal-model">Mô hình BigDecimal</a>
 
 Có thể hiểu một `BigDecimal` bằng:
 
 ```text
- unscaled value (BigInteger arbitrary precision)
+ giá trị chưa áp dụng scale (BigInteger có độ chính xác tùy ý)
       ×
 10^(-scale)
 
@@ -22,31 +22,31 @@ Ví dụ:
 ```text
 123.45
 
-unscaled value = 12345
+giá trị chưa áp dụng scale = 12345
 scale          = 2
 ```
 
-`1.0` và `1.00` có cùng numerical value nhưng scale khác nhau. Scale là một phần của representation và sẽ quan trọng ở chapter comparison.
+`1.0` và `1.00` có cùng giá trị số nhưng scale khác nhau. Scale là một phần của cách biểu diễn và sẽ quan trọng ở chương so sánh.
 
-Vì vậy “arbitrary precision” của BigDecimal chủ yếu nói về **unscaled integer / số lượng chữ số**, không có nghĩa scale cũng là một integer không giới hạn.
+Vì vậy “độ chính xác tùy ý” (arbitrary precision) của BigDecimal chủ yếu nói về **số nguyên chưa áp dụng scale / số lượng chữ số**, không có nghĩa scale cũng là một số nguyên không giới hạn.
 
-### WHY BigDecimal thuộc Numbers?
+### VÌ SAO BigDecimal thuộc Numbers?
 
-Với money/rate/tax, câu hỏi không chỉ là:
+Với tiền/tỷ lệ/thuế, câu hỏi không chỉ là:
 
 > giá trị gần đúng có đủ tốt không?
 
 mà còn là:
 
-> domain muốn giữ bao nhiêu decimal places, khi nào round, round theo mode nào, equality có xét scale không?
+> bài toán muốn giữ bao nhiêu chữ số thập phân, khi nào làm tròn, làm tròn theo chế độ nào, phép so sánh bằng nhau có xét scale không?
 
-BigDecimal đưa các policy này ra rõ ràng thay vì giấu chúng trong floating-point approximation.
+BigDecimal buộc các chính sách này phải được thể hiện rõ thay vì giấu chúng trong giá trị xấp xỉ của số dấu phẩy động.
 
 ## <a id="big-decimal-construction">Khởi tạo BigDecimal</a>
 
-### Construction từ String
+### Tạo từ String
 
-Khi có decimal literal/text exact:
+Khi có literal/chuỗi thập phân chính xác:
 
 ```java
 BigDecimal rate = new BigDecimal("0.1");
@@ -58,39 +58,39 @@ BigDecimal rate = new BigDecimal("0.1");
 BigDecimal value = BigDecimal.valueOf(0.1);
 ```
 
-`valueOf(double)` dùng decimal string representation của `double`, nên với literal như `0.1` nó thường cho result đúng với decimal intent mà programmer mong đợi.
+`valueOf(double)` dùng dạng chuỗi thập phân của `double`, nên với literal như `0.1` nó thường cho kết quả đúng với ý nghĩa thập phân mà người viết mã mong đợi.
 
-### Pitfall: `new BigDecimal(double)`
+### Lỗi thường gặp: `new BigDecimal(double)`
 
 ```java
 BigDecimal bad = new BigDecimal(0.1);
 ```
 
-Constructor nhận **binary floating-point value thực tế**, nên result có thể giống:
+Constructor nhận **giá trị dấu phẩy động nhị phân thực tế**, nên kết quả có thể giống:
 
 ```text
 0.10000000000000000555...
 ```
 
-### Quan trọng: BigDecimal không thể hồi phục intent đã mất
+### Quan trọng: BigDecimal không thể khôi phục ý nghĩa đã mất
 
 ```java
 double x = 0.1 + 0.2;
 BigDecimal value = BigDecimal.valueOf(x);
 ```
 
-Ở đây arithmetic floating-point đã xảy ra trước:
+Ở đây phép toán dấu phẩy động đã xảy ra trước:
 
 ```text
 0.1 + 0.2
-→ binary floating-point approximation
+→ giá trị xấp xỉ dấu phẩy động nhị phân
 → 0.30000000000000004
 → BigDecimal.valueOf(...)
 ```
 
-BigDecimal không biết programmer “muốn” decimal `0.3`.
+BigDecimal không biết người viết mã “muốn” giá trị thập phân `0.3`.
 
-Nếu exact decimal semantics là contract, hãy giữ pipeline ở BigDecimal từ đầu:
+Nếu ngữ nghĩa thập phân chính xác là yêu cầu, hãy giữ toàn bộ chuỗi tính toán ở BigDecimal ngay từ đầu:
 
 ```java
 BigDecimal result =
@@ -98,9 +98,9 @@ BigDecimal result =
                 .add(new BigDecimal("0.2"));
 ```
 
-## <a id="big-decimal-arithmetic">Arithmetic và Division</a>
+## <a id="big-decimal-arithmetic">Phép toán và phép chia</a>
 
-BigDecimal immutable:
+BigDecimal là bất biến:
 
 ```java
 BigDecimal amount = new BigDecimal("10.00");
@@ -110,7 +110,7 @@ amount.add(fee); // amount không đổi
 amount = amount.add(fee);
 ```
 
-Core operations:
+Các phép toán chính:
 
 ```java
 amount.add(fee);
@@ -119,9 +119,9 @@ amount.multiply(rate);
 amount.divide(divisor);
 ```
 
-### Arithmetic cũng mang theo scale semantics
+### Phép toán cũng mang theo ngữ nghĩa của scale
 
-Không chỉ numerical value thay đổi; preferred scale của result còn phụ thuộc operation. Ví dụ, không dùng `MathContext`:
+Không chỉ giá trị số thay đổi; scale ưu tiên của kết quả còn phụ thuộc phép toán. Ví dụ, khi không dùng `MathContext`:
 
 ```text
 add/subtract
@@ -130,22 +130,22 @@ add/subtract
 multiply
 → preferred scale = scale trái + scale phải
 
-divide exact
-→ preferred scale bắt đầu từ scale trái - scale phải,
-  nhưng exact quotient có thể cần scale lớn hơn
+phép chia chính xác
+→ scale ưu tiên bắt đầu từ scale trái - scale phải,
+  nhưng thương chính xác có thể cần scale lớn hơn
 ```
 
-Vì vậy scale của result không nên được đoán chỉ bằng cách nhìn input text. Nếu domain yêu cầu output scale cố định, policy đó vẫn cần được áp dụng rõ ràng ở boundary thích hợp.
+Vì vậy không nên đoán scale của kết quả chỉ bằng cách nhìn chuỗi đầu vào. Nếu bài toán yêu cầu scale đầu ra cố định, chính sách đó vẫn cần được áp dụng rõ ràng tại ranh giới thích hợp.
 
-### Division có thể cần rounding policy
+### Phép chia có thể cần chính sách làm tròn
 
 ```java
 BigDecimal.ONE.divide(new BigDecimal("3"));
 ```
 
-`1 / 3` không có decimal representation hữu hạn, nên exact division không thể hoàn thành và có thể throw `ArithmeticException`.
+`1 / 3` không có biểu diễn thập phân hữu hạn, nên phép chia chính xác không thể hoàn thành và có thể ném `ArithmeticException`.
 
-Bạn phải đưa policy:
+Bạn phải chỉ định chính sách:
 
 ```java
 BigDecimal result =
@@ -156,23 +156,23 @@ BigDecimal result =
         );
 ```
 
-### BigDecimal không tự quyết định business rule
+### BigDecimal không tự quyết định quy tắc nghiệp vụ
 
 Nó không biết:
 
-- currency cần scale 2 hay 0;
-- tax phải round từng line item hay tổng cuối;
-- rate intermediate giữ bao nhiêu precision;
-- legal rule dùng HALF_UP hay mode khác.
+- tiền tệ cần scale 2 hay 0;
+- thuế phải làm tròn từng dòng hay tổng cuối;
+- tỷ lệ trung gian giữ bao nhiêu độ chính xác;
+- quy định pháp lý dùng HALF_UP hay chế độ khác.
 
-Đây là feature, không phải thiếu sót:
+Đây là chủ đích thiết kế, không phải thiếu sót:
 
 ```text
 BigDecimal
-→ cung cấp decimal arithmetic
+→ cung cấp phép toán thập phân
 
-domain policy
-→ quyết định precision / scale / rounding boundary
+quy tắc nghiệp vụ
+→ quyết định độ chính xác / scale / ranh giới làm tròn
 ```
 
-Chương tiếp theo phân biệt **precision và scale**, hai khái niệm rất dễ bị dùng lẫn.
+Chương tiếp theo phân biệt **độ chính xác (precision) và scale**, hai khái niệm rất dễ bị dùng lẫn.

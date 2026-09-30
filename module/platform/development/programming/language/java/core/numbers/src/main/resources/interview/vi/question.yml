@@ -28,142 +28,149 @@
 # </interview-schema>
 
 questions:
-  - question: "Giải thích integer overflow trong Java và cách xử lý counter không được phép overflow."
-    answer: "Primitive integer arithmetic wrap ở fixed-width boundary. Nếu overflow vi phạm contract, validate bound hoặc dùng Math exact helper hay type rộng/arbitrary-precision để failure explicit."
+  - question: "Giải thích tràn số nguyên trong Java và cách xử lý một bộ đếm không được phép tràn số."
+    answer: "Phép toán trên số nguyên kiểu nguyên thủy quay vòng khi vượt phạm vi của kiểu có độ rộng cố định. Nếu tràn số vi phạm yêu cầu, hãy kiểm tra giới hạn, dùng các phương thức có kiểm tra của Math hoặc chọn kiểu rộng hơn/BigInteger để lỗi được phát hiện rõ ràng."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "2.IntegerOverflow/IntegerOverflow.md", anchor: "integer-overflow-wraparound"}
     apiRelated: {controller: "IntegerArithmeticController", methodSignature: "overflow()"}
 
-  - question: "Vì sao chiến lược so sánh floating-point phải phụ thuộc domain?"
-    answer: "Computed binary floating value thường có representation error. Exact equality đúng cho exact binary contract, còn measurement thường cần absolute hoặc relative tolerance theo scale và error requirement; không có universal epsilon."
+  - question: "Vì sao chiến lược so sánh số dấu phẩy động phải phụ thuộc bài toán?"
+    answer: "Giá trị dấu phẩy động nhị phân sau tính toán thường có sai số biểu diễn. So sánh chính xác phù hợp khi yêu cầu cần đúng từng giá trị nhị phân, còn phép đo thường cần sai số tuyệt đối hoặc tương đối dựa trên độ lớn và mức sai số cho phép; không có một epsilon dùng đúng cho mọi trường hợp."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "3.FloatingPoint/FloatingPoint.md", anchor: "floating-point-comparison"}
     apiRelated: {controller: "FloatingPointController", methodSignature: "comparison()"}
 
   - question: "So sánh `new BigDecimal(\"0.1\")`, `BigDecimal.valueOf(0.1)` và `new BigDecimal(0.1)`."
-    answer: "String form biểu diễn exact decimal 0.1. valueOf dùng canonical String representation của double và thường giữ intent decimal. Double constructor capture exact binary double value nên lộ approximation."
+    answer: "Khởi tạo từ String biểu diễn chính xác giá trị thập phân 0.1. `valueOf` dùng biểu diễn String chuẩn của double và thường giữ được ý nghĩa thập phân mong muốn. Constructor nhận double ghi nhận chính xác giá trị double nhị phân nên làm lộ sai số xấp xỉ."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "5.BigDecimal/BigDecimal.md", anchor: "big-decimal-construction"}
     apiRelated: {controller: "BigDecimalController", methodSignature: "construction()"}
 
-  - question: "Giải thích khác biệt giữa BigDecimal precision, scale và MathContext."
-    answer: "Precision đếm significant digit; scale xác định decimal positioning. MathContext cung cấp operation precision cộng rounding mode. Set scale không giống limit significant-digit precision."
+  - question: "Giải thích khác biệt giữa precision, scale và MathContext của BigDecimal."
+    answer: "Precision đếm tổng số chữ số có nghĩa; scale xác định vị trí dấu thập phân. MathContext quy định precision của phép toán cùng với RoundingMode. `setScale` không giống với việc giới hạn tổng số chữ số có nghĩa."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "6.PrecisionScale/PrecisionScale.md", anchor: "precision-vs-scale"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Vì sao BigDecimal có thể behavior khác nhau giữa HashSet và TreeSet?"
-    answer: "BigDecimal.equals tính scale, còn compareTo xét numerical magnitude. HashSet dùng equals và hashCode nên có thể giữ 1.0 và 1.00 riêng; TreeSet natural ordering có thể xem chúng cùng ordering key."
+  - question: "Vì sao BigDecimal có thể hành xử khác nhau giữa HashSet và TreeSet?"
+    answer: "BigDecimal.equals xét cả scale, còn compareTo so sánh theo giá trị số học. HashSet dùng equals/hashCode nên có thể giữ 1.0 và 1.00 như hai phần tử khác nhau; TreeSet dùng thứ tự tự nhiên nên có thể xem chúng là cùng một khóa sắp xếp."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "8.BigDecimalComparison/BigDecimalComparison.md", anchor: "big-decimal-collections"}
     apiRelated: {controller: "BigDecimalController", methodSignature: "collectionSemantics()"}
 
-  - question: "Vì sao round mọi intermediate monetary result có thể khác round một lần ở business boundary?"
-    answer: "Mỗi lần round đều discard information. Round lặp làm input cho bước sau thay đổi nên final total có thể khác. Domain phải định nghĩa cả thời điểm rounding chứ không chỉ mode."
+  - question: "Vì sao làm tròn mọi kết quả tiền tệ trung gian có thể cho kết quả khác với chỉ làm tròn một lần ở ranh giới nghiệp vụ?"
+    answer: "Mỗi lần làm tròn đều loại bỏ một phần thông tin. Làm tròn lặp lại khiến dữ liệu đầu vào của bước sau đã thay đổi nên tổng cuối cùng có thể khác. Nghiệp vụ phải quy định cả thời điểm làm tròn, không chỉ RoundingMode."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "7.Rounding/Rounding.md", anchor: "rounding-at-boundaries"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Khác biệt concept giữa pseudo-random reproducible và security randomness là gì?"
-    answer: "PRNG thường deterministic từ seed và state, hữu ích cho test và simulation. Security randomness cần computational unpredictability trước attacker và nên dùng SecureRandom với entropy/provider phù hợp."
+  - question: "Khác biệt khái niệm giữa giả ngẫu nhiên có thể tái lập và ngẫu nhiên phục vụ bảo mật là gì?"
+    answer: "PRNG thông thường có tính tất định từ seed và trạng thái, hữu ích cho kiểm thử và mô phỏng. Ngẫu nhiên phục vụ bảo mật phải khó dự đoán về mặt tính toán đối với kẻ tấn công và nên dùng SecureRandom với nguồn entropy cùng nhà cung cấp bảo mật phù hợp."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "10.Random/Random.md", anchor: "pseudo-random-model"}
     apiRelated: {controller: "RandomController", methodSignature: "seededSequence()"}
 
-  - question: "Numbers module nên dừng ở đâu khi dạy SecureRandom?"
-    answer: "Nó nên chốt khi nào unpredictability cần SecureRandom và mental model entropy/seeding cơ bản. Key generation, IV/nonce, signature, encryption và provider policy thuộc security-cryptography module."
+  - question: "Mô-đun Numbers nên dừng ở đâu khi dạy SecureRandom?"
+    answer: "Numbers nên giải thích khi nào yêu cầu khó dự đoán cần SecureRandom và mô hình entropy/seeding cơ bản. Sinh khóa, IV/nonce, chữ ký, mã hóa và chính sách nhà cung cấp bảo mật thuộc mô-đun Security & Cryptography."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "11.SecureRandom/SecureRandom.md", anchor: "security-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Bạn chọn giữa `int`, `long`, `double`, `BigInteger` và `BigDecimal` theo framework nào thay vì chọn theo thói quen?"
-    answer: "Bắt đầu từ domain contract: có fractional value không, có cần exact decimal semantics không, range tối đa là gì, overflow/rounding có được phép không, rồi mới xét performance và memory. int/long hợp fixed-width integer; double hợp approximate scientific/measurement work; BigInteger giải quyết integer range; BigDecimal giải quyết explicit decimal semantics và rounding policy."
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "1.NumericModel/NumericModel.md", anchor: "numeric-type-model"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - question: "Vì sao `long total = quantity * unitPrice` vẫn có thể sai nếu cả hai operand là `int`?"
-    answer: "Java xác định type của expression trước assignment. int * int chạy bằng int, có thể overflow, rồi value đã sai mới widen sang long. Muốn phép nhân chạy bằng long phải widen một operand trước arithmetic, ví dụ cast quantity sang long trước phép nhân."
+  - question: "Vì sao `long total = quantity * unitPrice` vẫn có thể sai nếu cả hai toán hạng là `int`?"
+    answer: "Java xác định kiểu của biểu thức trước bước gán. `int * int` chạy bằng int và có thể tràn số; sau đó giá trị đã sai mới được nâng sang long. Muốn phép nhân chạy bằng long phải nâng ít nhất một toán hạng lên long trước phép nhân, ví dụ ép `quantity` sang long."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "1.NumericModel/NumericModel.md", anchor: "numeric-conversions"}
     apiRelated: {controller: "IntegerArithmeticController", methodSignature: "intermediateOverflow()"}
 
-  - question: "Tại sao `Integer.MIN_VALUE` tạo ra các edge case như `Math.abs(MIN_VALUE)` và `MIN_VALUE / -1`?"
-    answer: "Two's-complement int có một negative value nhiều hơn positive side, nên +2147483648 không represent được. Vì vậy ordinary Math.abs và phép chia MIN_VALUE / -1 đều overflow về MIN_VALUE thay vì tạo positive result ngoài int range."
+  - question: "Tại sao `Integer.MIN_VALUE` tạo ra các trường hợp biên như `Math.abs(MIN_VALUE)` và `MIN_VALUE / -1`?"
+    answer: "Kiểu int theo bù hai có nhiều hơn phía dương một giá trị âm, nên +2147483648 không thể biểu diễn bằng int. Vì vậy `Math.abs(MIN_VALUE)` thông thường và `MIN_VALUE / -1` đều tràn số quay về MIN_VALUE thay vì tạo ra kết quả dương ngoài phạm vi int."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "2.IntegerOverflow/IntegerOverflow.md", anchor: "boundary-values"}
     apiRelated: {controller: "IntegerArithmeticController", methodSignature: "boundaryCases()"}
 
-  - question: "NaN, infinity và signed zero khác ordinary floating value ở điểm nào và code production nên xử lý ra sao?"
-    answer: "NaN không bằng chính nó nên phải dùng isNaN; infinity có thể xuất hiện từ overflow hoặc floating division by zero; +0.0 và -0.0 bằng nhau với == nhưng sign vẫn ảnh hưởng arithmetic như reciprocal. Code nên kiểm tra isNaN/isFinite khi domain không cho phép special values thay vì giả định mọi double là finite number thông thường."
+  - question: "NaN, vô cực và số 0 có dấu khác giá trị dấu phẩy động thông thường ở điểm nào, và code thực tế nên xử lý ra sao?"
+    answer: "NaN không bằng chính nó nên phải dùng `isNaN`; vô cực có thể xuất hiện do tràn số dấu phẩy động hoặc chia cho 0; +0.0 và -0.0 bằng nhau với == nhưng dấu vẫn ảnh hưởng phép toán như nghịch đảo. Khi bài toán chỉ chấp nhận giá trị hữu hạn, cần kiểm tra `isNaN`/`isFinite` thay vì giả định mọi double đều là số hữu hạn thông thường."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "3.FloatingPoint/FloatingPoint.md", anchor: "nan-infinity-negative-zero"}
     apiRelated: {controller: "FloatingPointController", methodSignature: "specialValues()"}
 
-  - question: "Khi nào bạn dùng `BigInteger` thay `long`, và boundary nào vẫn phải cẩn thận sau khi đã dùng BigInteger?"
-    answer: "Dùng BigInteger khi legitimate integer range có thể vượt long và arbitrary precision đáng với allocation/arithmetic cost. BigInteger không giải quyết decimal fraction, và conversion ngược về int/long vẫn là narrowing boundary: intValue/longValue có thể mất bits còn exact variants throw nếu không fit. Với number-theory code còn phải phân biệt remainder với mod."
+  - question: "Khi nào bạn dùng `BigInteger` thay `long`, và ranh giới nào vẫn phải cẩn thận sau khi đã dùng BigInteger?"
+    answer: "Dùng BigInteger khi giá trị số nguyên hợp lệ có thể vượt phạm vi long và chấp nhận chi phí cấp phát/tính toán cao hơn. BigInteger không giải quyết phân số thập phân, và việc chuyển ngược về int/long vẫn là ranh giới thu hẹp: `intValue`/`longValue` có thể mất bit, còn các biến thể `*ValueExact` ném lỗi nếu giá trị không nằm trong phạm vi đích. Với bài toán số học mô-đun còn phải phân biệt remainder với mod."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "4.BigInteger/BigInteger.md", anchor: "big-integer-operations"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Vì sao chuyển sang BigDecimal sau khi đã tính bằng `double` không tự sửa được lỗi decimal semantics?"
-    answer: "BigDecimal chỉ nhận value tại thời điểm construction. Nếu 0.1 + 0.2 đã chạy bằng binary floating point thì approximation đã trở thành input, ví dụ 0.30000000000000004. BigDecimal.valueOf có thể biểu diễn decimal string của value đó nhưng không biết intent ban đầu là 0.3; exact decimal workflow phải giữ pipeline decimal từ đầu."
+  - question: "Vì sao chuyển sang BigDecimal sau khi đã tính bằng `double` không tự khôi phục được ngữ nghĩa thập phân chính xác?"
+    answer: "BigDecimal chỉ nhận giá trị tồn tại tại thời điểm khởi tạo. Nếu 0.1 + 0.2 đã được tính bằng dấu phẩy động nhị phân thì sai số xấp xỉ đã trở thành đầu vào, ví dụ 0.30000000000000004. `BigDecimal.valueOf` có thể biểu diễn chuỗi thập phân của giá trị double đó nhưng không thể suy ra ý nghĩa ban đầu là chính xác 0.3; luồng cần thập phân chính xác phải giữ mô hình thập phân ngay từ đầu."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "5.BigDecimal/BigDecimal.md", anchor: "big-decimal-construction"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "BigDecimal arithmetic ảnh hưởng scale như thế nào, và vì sao domain vẫn cần output-scale policy riêng?"
-    answer: "Không dùng MathContext, add/subtract thường có preferred scale bằng max hai scale, multiply cộng hai scale, divide bắt đầu từ scale trái trừ scale phải nhưng exact quotient có thể cần scale lớn hơn. Các rule này là arithmetic representation semantics, không phải business rule; currency/tax/API boundary vẫn phải quyết định scale cuối và rounding một cách explicit."
+  - question: "Phép toán BigDecimal ảnh hưởng scale như thế nào, và vì sao nghiệp vụ vẫn cần chính sách scale đầu ra riêng?"
+    answer: "Khi không dùng MathContext, add/subtract thường có scale ưu tiên bằng giá trị lớn hơn trong hai scale, multiply cộng hai scale, còn divide bắt đầu từ scale trái trừ scale phải nhưng thương chính xác có thể cần scale lớn hơn. Đây là quy tắc biểu diễn của phép toán chứ không phải quy tắc nghiệp vụ; ranh giới tiền tệ, thuế hay API vẫn phải quy định scale cuối và cách làm tròn rõ ràng."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "5.BigDecimal/BigDecimal.md", anchor: "big-decimal-arithmetic"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: "Khi nào nên dùng `setScale` và khi nào nên dùng `MathContext`?"
-    answer: "setScale phù hợp khi contract nói về decimal places hoặc unit scale của result, ví dụ amount cần 2 decimals. MathContext giới hạn total significant-digit precision của arithmetic và đi kèm rounding mode. Hai API có thể cho hình dạng result rất khác; chọn chúng theo policy muốn kiểm soát, không dùng thay thế nhau."
+    answer: "`setScale` phù hợp khi yêu cầu được diễn đạt bằng số chữ số thập phân hoặc scale của đơn vị, ví dụ số tiền cần 2 chữ số thập phân. MathContext giới hạn tổng số chữ số có nghĩa của phép toán và đi kèm RoundingMode. Hai API có thể cho kết quả rất khác nhau, vì vậy phải chọn theo chính sách muốn kiểm soát chứ không dùng thay thế cho nhau."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "6.PrecisionScale/PrecisionScale.md", anchor: "math-context"}
     apiRelated: {controller: "BigDecimalController", methodSignature: "mathContextVsScale()"}
 
-  - question: "Giải thích `HALF_UP`, `HALF_DOWN` và `HALF_EVEN` ở tie, đặc biệt với số âm."
-    answer: "Các HALF mode đều chọn nearest candidate khi không tie. Ở tie, HALF_UP đi xa zero, HALF_DOWN đi về zero, còn HALF_EVEN chọn neighbor có digit chẵn. Vì vậy với -2.5, HALF_UP cho -3 còn HALF_DOWN và HALF_EVEN cho -2; từ UP/DOWN ở đây phải hiểu theo hướng so với zero, không phải theo trục số dương."
+  - question: "Giải thích `HALF_UP`, `HALF_DOWN` và `HALF_EVEN` khi giá trị nằm đúng giữa hai kết quả, đặc biệt với số âm."
+    answer: "Các chế độ HALF đều chọn giá trị lân cận gần nhất khi không có trường hợp hòa. Khi đúng giữa hai giá trị, HALF_UP đi xa 0, HALF_DOWN đi về 0, còn HALF_EVEN chọn giá trị lân cận có chữ số cuối chẵn. Vì vậy với -2.5, HALF_UP cho -3 còn HALF_DOWN và HALF_EVEN cho -2; UP/DOWN ở đây được hiểu theo hướng so với 0, không phải theo chiều dương của trục số."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "7.Rounding/Rounding.md", anchor: "rounding-modes"}
     apiRelated: {controller: "BigDecimalController", methodSignature: "roundingModes()"}
 
-  - question: "Nếu BigDecimal là domain key, bạn sẽ thiết kế equality/normalization policy thế nào để tránh surprise giữa HashSet, TreeSet và persistence?"
-    answer: "Trước tiên quyết định identity dựa trên representation gồm scale hay numerical quantity. Nếu quantity là identity, có thể normalize tại boundary hoặc dùng comparison/canonical representation nhất quán; nếu scale mang nghĩa domain thì không được silently strip. Quan trọng là equals/hashCode, ordering, serialization/persistence và collection usage phải cùng một policy thay vì normalize ad hoc."
+  - question: "Nếu BigDecimal là khóa nghiệp vụ, bạn sẽ thiết kế quy tắc bằng nhau và chuẩn hóa thế nào để tránh bất ngờ giữa HashSet, TreeSet và lưu trữ dữ liệu?"
+    answer: "Trước tiên phải quyết định định danh có bao gồm scale hay chỉ dựa trên giá trị số học. Nếu giá trị số học quyết định định danh, có thể chuẩn hóa tại một ranh giới rõ ràng hoặc dùng comparator/cách biểu diễn chuẩn nhất quán; nếu scale mang ý nghĩa nghiệp vụ thì không được tự ý loại bỏ. equals/hashCode, thứ tự, tuần tự hóa/lưu trữ và cách dùng collection phải tuân theo cùng một chính sách thay vì chuẩn hóa tùy tiện."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "8.BigDecimalComparison/BigDecimalComparison.md", anchor: "big-decimal-collections"}
     apiRelated: {controller: "BigDecimalController", methodSignature: "collectionSemantics()"}
 
   - question: "Phân biệt vai trò của `Random`, `ThreadLocalRandom`, `RandomGenerator` và `SecureRandom` trong Java 21."
-    answer: "Random là ordinary deterministic PRNG và fixed seed hữu ích cho reproducibility. ThreadLocalRandom giảm contention cho ordinary randomness trong concurrent code. RandomGenerator là abstraction có sẵn trên Java 21 baseline cho nhiều generator algorithm, giúp tách API khỏi implementation choice. SecureRandom có security contract về computational unpredictability và entropy; nó không phải lựa chọn mặc định cho simulation/test chỉ vì mạnh hơn."
+    answer: "Random là PRNG thông thường có tính tất định; seed cố định hữu ích khi cần tái lập. ThreadLocalRandom giảm tranh chấp khi nhiều luồng cần số giả ngẫu nhiên thông thường. RandomGenerator là abstraction có sẵn trong Java 21 cho nhiều thuật toán sinh số, giúp tách API khỏi lựa chọn triển khai cụ thể. SecureRandom có yêu cầu bảo mật về tính khó dự đoán và entropy; nó không phải lựa chọn mặc định cho mô phỏng/kiểm thử chỉ vì mạnh hơn."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "10.Random/Random.md", anchor: "threadlocal-random-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Giải thích hành vi của `SecureRandom.setSeed` và vì sao timestamp không nên là primary entropy source."
-    answer: "setSeed supplements existing seed/state chứ không có simple reset semantics như Random. Với một PRNG SecureRandom mới, nếu caller chủ động setSeed trước automatic self-seeding đầu tiên thì caller phải bảo đảm input có đủ entropy. Timestamp có không gian dự đoán nhỏ và không đáp ứng property đó; default provider-managed seeding thường là lựa chọn application an toàn hơn, còn getInstanceStrong chỉ dùng khi requirement thực sự cần."
+  - question: "Giải thích hành vi của `SecureRandom.setSeed` và vì sao timestamp không nên là nguồn entropy chính."
+    answer: "`setSeed` bổ sung vào seed/trạng thái hiện có, không có ngữ nghĩa đặt lại tất định đơn giản như Random. Với một SecureRandom mới, nếu bên gọi chủ động gọi `setSeed` trước lần tự khởi tạo seed đầu tiên thì bên gọi phải cung cấp đủ entropy. Timestamp có không gian dự đoán nhỏ nên không đáp ứng yêu cầu đó; để nhà cung cấp bảo mật quản lý seed mặc định thường an toàn hơn cho ứng dụng, còn `getInstanceStrong()` chỉ nên dùng khi có yêu cầu cụ thể."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "11.SecureRandom/SecureRandom.md", anchor: "entropy-seeding"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Bạn chọn giữa `int`, `long`, `double`, `BigInteger` và `BigDecimal` theo khung quyết định nào thay vì chọn theo thói quen?"
+    answer: "Bắt đầu từ ý nghĩa của giá trị: có cần phần thập phân không, có yêu cầu chính xác theo thập phân không, phạm vi lớn nhất là gì, tràn số hoặc làm tròn có được phép không, rồi mới xét chi phí hiệu năng và bộ nhớ. int/long phù hợp số nguyên độ rộng cố định; double phù hợp phép đo hoặc tính toán khoa học chấp nhận xấp xỉ; BigInteger giải quyết phạm vi số nguyên; BigDecimal cung cấp ngữ nghĩa thập phân và chính sách làm tròn rõ ràng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "12.NumericSynthesis/NumericSynthesis.md", anchor: "numeric-decision-model"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Áp dụng toàn bộ mô hình quyết định của Numbers cho năm trường hợp: bộ đếm có giới hạn, số đo khoa học, tiền tệ, số nguyên vượt long và token nhạy cảm bảo mật. Bạn chọn gì và còn phải quy định chính sách nào?"
+    answer: "Bộ đếm có giới hạn thường dùng int/long và phải quyết định có phát hiện tràn số hay không. Số đo khoa học thường dùng double cùng chiến lược sai số so sánh. Tiền tệ dùng BigDecimal với scale/precision/RoundingMode và quy tắc bằng nhau rõ ràng. Số nguyên vượt long dùng BigInteger và kiểm soát khi chuyển về kiểu nguyên thủy. Token nhạy cảm bảo mật dùng SecureRandom; chi tiết khóa, IV/nonce, mã hóa và chữ ký chuyển sang Security & Cryptography."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "12.NumericSynthesis/NumericSynthesis.md", anchor: "numeric-synthesis-cases"}
     apiRelated: {controller: "", methodSignature: ""}
