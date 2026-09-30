@@ -1,122 +1,121 @@
 ArrayController:
   covarianceFailure():
-    execution: <p><strong>Khái niệm:</strong> Array covariance và ArrayStoreException.</p><ol><li>Endpoint
-      chạy một ví dụ deterministic và bounded trong <code>ArrayController#covarianceFailure()</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>public
-      Map&lt;String, Object&gt; covarianceFailure() {</code></pre></li><li>Quan sát
-      các field trong response cùng nhau; đây là evidence cho quy tắc, không phải
-      benchmark hay production policy.</li></ol><p><strong>Kết luận:</strong> đối
-      chiếu kết quả với README section được liên kết trước khi khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> Mảng tham chiếu có tính hiệp biến, nhưng đối tượng mảng vẫn giữ kiểu thành phần thực tế để JVM kiểm tra mỗi lần ghi.</p>
+      <ol>
+      <li><strong>Luồng:</strong> tạo <code>Object[] view = new String[]{"safe"}</code>. Góc nhìn lúc biên dịch là <code>Object[]</code>, còn đối tượng thực tế là <code>String[]</code>.</li>
+      <li><strong>Bằng chứng mã:</strong> <code>view[0] = 123;</code> hợp lệ khi biên dịch qua góc nhìn <code>Object[]</code>, nhưng JVM kiểm tra kiểu thành phần của đối tượng mảng khi chạy.</li>
+      <li><strong>Quan sát:</strong> phản hồi ghi nhận <code>failure=ArrayStoreException</code>; phần tử ban đầu vẫn là <code>safe</code>.</li>
+      </ol>
+      <p><strong>Kết luận:</strong> tính hiệp biến của mảng không loại bỏ kiểm tra kiểu lúc chạy; nó chuyển một phần rủi ro từ thời điểm biên dịch sang thời điểm ghi phần tử.</p>
     usage: true
   copyReferenceElements():
-    execution: <p><strong>Khái niệm:</strong> Copy reference array không deep-copy
-      object được element tham chiếu.</p><ol><li>Tạo <code>User[] original</code>
-      rồi gọi <code>Arrays.copyOf</code> để tạo array object mới.</li><li>Endpoint
-      so sánh identity của hai array và identity của element index 0:<pre><code>User[]
-      copied = Arrays.copyOf(original, original.length); boolean differentArrays =
-      original != copied; boolean sameElementReference = original[0] == copied[0];</code></pre></li><li>Sau
-      đó mutate object qua <code>copied[0]</code> và đọc lại qua <code>original[0]</code>.</li><li><strong>Quan
-      sát:</strong> <code>differentArrayObjects=true</code>, <code>sameElementReference=true</code>,
-      và tên đọc từ original đổi thành B.</li></ol><p><strong>Kết luận:</strong> array
-      copy tạo container mới nhưng với reference element nó chỉ copy reference value;
-      object bên trong vẫn có thể được chia sẻ.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> Sao chép mảng tham chiếu tạo đối tượng mảng mới nhưng không tự sao chép sâu các đối tượng mà phần tử đang tham chiếu.</p>
+      <ol>
+      <li><strong>Luồng:</strong> tạo <code>User[] original</code> rồi gọi <code>Arrays.copyOf(original, original.length)</code>.</li>
+      <li><strong>Bằng chứng mã:</strong> <code>original != copied</code> kiểm tra hai đối tượng mảng khác nhau; <code>original[0] == copied[0]</code> kiểm tra hai phần tử vẫn chứa các bản sao của cùng một giá trị tham chiếu.</li>
+      <li><strong>Quan sát:</strong> sau <code>copied[0].name = "B"</code>, đọc qua <code>original[0].name</code> cũng thấy <code>B</code>.</li>
+      </ol>
+      <p><strong>Kết luận:</strong> <code>Arrays.copyOf</code> sao chép giá trị của từng phần tử; với phần tử tham chiếu, đó là sao chép nông giá trị tham chiếu chứ không phải sao chép sâu đồ thị đối tượng.</p>
     usage: true
 CastingController:
   safeAndUnsafeCast(String):
-    execution: <p><strong>Khái niệm:</strong> Reference upcast và downcast.</p><ol><li>Endpoint
-      chạy một ví dụ deterministic và bounded trong <code>CastingController#safeAndUnsafeCast(String)</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>public
-      Map&lt;String, Object&gt; safeAndUnsafeCast(@RequestParam(defaultValue = &quot;hello&quot;)
-      String input) {</code></pre></li><li>Quan sát các field trong response cùng
-      nhau; đây là evidence cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
-      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
-      khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> Downcast tham chiếu có thể hợp lệ về quan hệ kiểu khi biên dịch nhưng vẫn thất bại nếu đối tượng thực tế không thuộc kiểu đích.</p>
+      <ol>
+      <li><strong>Luồng:</strong> gán <code>String input</code> cho <code>Object value</code>, sau đó thực hiện một nhánh có kiểm tra <code>instanceof String text</code> và một downcast trực tiếp sang <code>Integer</code>.</li>
+      <li><strong>Bằng chứng mã:</strong> <code>value instanceof String text ? text.toUpperCase() : "not-string"</code> chỉ dùng biến pattern sau khi kiểm tra thành công; <code>(Integer) value</code> yêu cầu JVM kiểm tra đối tượng thực tế.</li>
+      <li><strong>Quan sát:</strong> với đầu vào chuỗi, nhánh String thành công còn downcast sang Integer được bắt dưới dạng <code>ClassCastException</code>.</li>
+      </ol>
+      <p><strong>Kết luận:</strong> ép kiểu không biến đối tượng thành kiểu khác; downcast chỉ hợp lệ khi đối tượng thực tế tương thích với kiểu đích.</p>
     usage: true
 MethodDispatchController:
   overloadVsOverride():
-    execution: <p><strong>Khái niệm:</strong> Overload selection và override dispatch.</p><ol><li>Endpoint
-      chạy một ví dụ deterministic và bounded trong <code>MethodDispatchController#overloadVsOverride()</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>public
-      Map&lt;String, Object&gt; overloadVsOverride() {</code></pre></li><li>Quan sát
-      các field trong response cùng nhau; đây là evidence cho quy tắc, không phải
-      benchmark hay production policy.</li></ol><p><strong>Kết luận:</strong> đối
-      chiếu kết quả với README section được liên kết trước khi khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> Phân giải overload và phân phối override xảy ra ở hai thời điểm khác nhau.</p>
+      <ol>
+      <li><strong>Luồng:</strong> <code>Parent declared = new Child()</code> tạo một biến có kiểu khai báo Parent nhưng trỏ tới đối tượng Child.</li>
+      <li><strong>Bằng chứng mã:</strong> <code>choose(declared)</code> được chọn từ kiểu khai báo nên gọi <code>choose(Parent)</code>; <code>declared.describe()</code> là lời gọi instance đã ghi đè nên được phân phối tới <code>Child.describe()</code> ở lúc chạy.</li>
+      <li><strong>Quan sát:</strong> phản hồi đồng thời trả <code>overloadChosen=choose(Parent)</code> và <code>overrideBody=Child.describe</code>.</li>
+      </ol>
+      <p><strong>Kết luận:</strong> kiểu thực tế của receiver không làm quá trình chọn overload chạy lại; nó chỉ tham gia phân phối thân phương thức instance đã được chọn.</p>
     usage: true
 OperatorController:
   shortCircuit():
-    execution: <p><strong>Khái niệm:</strong> Short-circuit boolean operator.</p><ol><li>Endpoint
-      chạy một ví dụ deterministic và bounded trong <code>OperatorController#shortCircuit()</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>public
-      Map&lt;String, Object&gt; shortCircuit() {</code></pre></li><li>Quan sát các
-      field trong response cùng nhau; đây là evidence cho quy tắc, không phải benchmark
-      hay production policy.</li></ol><p><strong>Kết luận:</strong> đối chiếu kết
-      quả với README section được liên kết trước khi khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> <code>&amp;&amp;</code> và <code>||</code> đánh giá ngắn mạch.</p>
+      <ol>
+      <li><strong>Luồng:</strong> API gọi <code>left(false, trace) &amp;&amp; right(trace)</code> rồi <code>left(true, trace) || right(trace)</code>.</li>
+      <li><strong>Bằng chứng mã:</strong> ở biểu thức đầu, vế trái đã quyết định kết quả false; ở biểu thức sau, vế trái đã quyết định kết quả true.</li>
+      <li><strong>Quan sát:</strong> <code>right(trace)</code> không được gọi trong cả hai biểu thức, vì vậy trace chỉ ghi hai lần gọi <code>left(...)</code>.</li>
+      </ol>
+      <p><strong>Kết luận:</strong> đánh giá ngắn mạch là ngữ nghĩa thực thi, không chỉ là tối ưu hóa; mã không nên phụ thuộc vào tác dụng phụ nằm trong nhánh có thể bị bỏ qua.</p>
     usage: true
 OverloadResolutionController:
   selectionMatrix():
-    execution: <p><strong>Khái niệm:</strong> Các phase của overload resolution.</p><ol><li>Endpoint
-      chạy một ví dụ deterministic và bounded trong <code>OverloadResolutionController#selectionMatrix()</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>public
-      Map&lt;String, Object&gt; selectionMatrix() {</code></pre></li><li>Quan sát
-      các field trong response cùng nhau; đây là evidence cho quy tắc, không phải
-      benchmark hay production policy.</li></ol><p><strong>Kết luận:</strong> đối
-      chiếu kết quả với README section được liên kết trước khi khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> Java xét khả năng áp dụng của overload theo các giai đoạn; widening số lượng tham số cố định được xét trước boxing/varargs ở giai đoạn sau.</p>
+      <ol>
+      <li><strong>Luồng:</strong> chạy <code>pick(1)</code>, <code>pick(Integer.valueOf(1))</code> và <code>pick(new int[]{1, 2})</code> trên cùng tập overload.</li>
+      <li><strong>Bằng chứng mã:</strong> các overload là <code>pick(long)</code>, <code>pick(Integer)</code> và <code>pick(int...)</code>.</li>
+      <li><strong>Quan sát:</strong> literal int chọn <code>pick(long)</code> bằng mở rộng kiểu ở giai đoạn sớm; Integer chọn overload cùng kiểu; mảng int truyền tường minh áp dụng trực tiếp cho tham số <code>int[]</code> của varargs.</li>
+      <li>Phản hồi còn ghi trường hợp chỉ tồn tại ở thời điểm biên dịch: nếu có hai overload không liên quan <code>pick(String)</code> và <code>pick(StringBuilder)</code>, lời gọi <code>pick(null)</code> sẽ mơ hồ.</li>
+      </ol>
+      <p><strong>Kết luận:</strong> đừng dự đoán overload chỉ bằng cảm giác “kiểu nào gần hơn”; phải xét giai đoạn áp dụng rồi mới xét ứng viên cụ thể nhất.</p>
     usage: true
 PassByValueController:
   mutateAndReassign():
-    execution: <p><strong>Khái niệm:</strong> Copy reference và mutation nhìn thấy
-      từ caller.</p><ol><li>Endpoint chạy một ví dụ deterministic và bounded trong
-      <code>PassByValueController#mutateAndReassign()</code>.</li><li>Source line
-      dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>public
-      Map&lt;String, Object&gt; mutateAndReassign() {</code></pre></li><li>Quan sát
-      các field trong response cùng nhau; đây là evidence cho quy tắc, không phải
-      benchmark hay production policy.</li></ol><p><strong>Kết luận:</strong> đối
-      chiếu kết quả với README section được liên kết trước khi khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> Java luôn truyền bằng giá trị, kể cả khi giá trị được sao chép là một tham chiếu.</p>
+      <ol>
+      <li><strong>Luồng:</strong> bên gọi tạo <code>Box callerBox</code> có giá trị 1 rồi truyền vào <code>mutateThenReassign</code>.</li>
+      <li><strong>Bằng chứng mã:</strong> <code>box.value = 2</code> thay đổi đối tượng dùng chung; sau đó <code>box = new Box(99)</code> chỉ gán lại biến tham số cục bộ và <code>box.value = 100</code> tác động lên đối tượng mới đó.</li>
+      <li><strong>Quan sát:</strong> bên gọi vẫn giữ cùng tính đồng nhất ban đầu nhưng quan sát <code>callerValueAfter=2</code>, không phải 100.</li>
+      </ol>
+      <p><strong>Kết luận:</strong> thay đổi đối tượng có thể nhìn thấy qua nhiều bản sao của cùng giá trị tham chiếu; gán lại tham số không thay đổi ô biến của bên gọi.</p>
     usage: true
 TypeSystemController:
   inspectRuntimeType(Object):
-    execution: <p><strong>Khái niệm:</strong> Compile-time type và runtime type.</p><ol><li>Endpoint
-      chạy một ví dụ deterministic và bounded trong <code>TypeSystemController#inspectRuntimeType(Object)</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>public
-      Map&lt;String, Object&gt; inspectRuntimeType(@RequestParam(defaultValue = &quot;sample&quot;)
-      Object value) {</code></pre></li><li>Quan sát các field trong response cùng
-      nhau; đây là evidence cho quy tắc, không phải benchmark hay production policy.</li></ol><p><strong>Kết
-      luận:</strong> đối chiếu kết quả với README section được liên kết trước khi
-      khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> kiểu lúc biên dịch và kiểu lúc chạy trả lời hai câu hỏi khác nhau.</p>
+      <ol>
+      <li><strong>Luồng:</strong> API nhận một giá trị rồi giữ nó qua biến <code>Object declaredAsObject</code>.</li>
+      <li><strong>Bằng chứng mã:</strong> góc nhìn tĩnh được ghi là <code>Object</code>; <code>declaredAsObject.getClass().getName()</code> và <code>instanceof String</code> quan sát thông tin của đối tượng ở lúc chạy.</li>
+      <li><strong>Quan sát:</strong> cùng một tham chiếu có thể có kiểu khai báo tổng quát hơn lớp thực tế của đối tượng.</li>
+      </ol>
+      <p><strong>Kết luận:</strong> trình biên dịch dùng kiểu tĩnh để kiểm tra nhiều quy tắc; kiểu thực tế chỉ tham gia những cơ chế cần thông tin lúc chạy như kiểm tra kiểu và phân phối override.</p>
     usage: true
   conversionContexts():
-    execution: <p><strong>Khái niệm:</strong> Java áp dụng conversion rule khác nhau
-      tùy context.</p><ol><li>Một constant assignment vào <code>byte</code> giữ static
-      type byte.</li><li>Hai operand byte tham gia arithmetic được numeric promotion
-      thành int; endpoint chứng minh bằng overload <code>identify(byte)</code>/<code>identify(int)</code>:<pre><code>result.put("assignmentConstantType",
-      identify(assignmentConstant)); result.put("bytePlusByteExpressionType", identify(left
-      + right));</code></pre></li><li>Lời gọi <code>acceptLong(10)</code> cho thấy
-      method-invocation widening từ int sang long; <code>Integer boxed = 10</code>
-      cho thấy boxing.</li><li>Response còn ghi compile-time boundary rằng <code>useByte(1)</code>
-      không tự dùng narrowing constant conversion như assignment.</li></ol><p><strong>Kết
-      luận:</strong> đừng hỏi chỉ “value này convert được không”; phải hỏi đang ở
-      assignment, operator, method invocation hay explicit-cast context.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> Java không dùng một tập chuyển đổi duy nhất cho mọi ngữ cảnh.</p>
+      <ol>
+      <li><strong>Phép gán:</strong> <code>byte assignmentConstant = 1</code> hợp lệ vì hằng 1 nằm trong phạm vi byte.</li>
+      <li><strong>Biểu thức toán tử:</strong> <code>left + right</code> với hai byte được thăng hạng thành int; overload <code>identify(byte)</code>/<code>identify(int)</code> làm kiểu biểu thức quan sát được.</li>
+      <li><strong>Lời gọi phương thức:</strong> <code>acceptLong(10)</code> cho thấy int được mở rộng sang long; <code>Integer boxed = 10</code> cho thấy boxing.</li>
+      <li><strong>Ranh giới:</strong> với một phương thức nhận byte, lời gọi <code>useByte(1)</code> không tự nhận phép thu hẹp hằng vốn được phép trong ngữ cảnh phép gán.</li>
+      </ol>
+      <p><strong>Kết luận:</strong> trước khi dự đoán mã có biên dịch hay không, hãy xác định đang ở ngữ cảnh phép gán, toán tử, lời gọi phương thức hay ép kiểu tường minh.</p>
     usage: true
 WrapperController:
   wrapperIdentity():
-    execution: <p><strong>Khái niệm:</strong> Wrapper cache và bẫy identity.</p><ol><li>Endpoint
-      chạy một ví dụ deterministic và bounded trong <code>WrapperController#wrapperIdentity()</code>.</li><li>Source
-      line dưới đây là code evidence trực tiếp tạo behavior được quan sát:<pre><code>public
-      Map&lt;String, Object&gt; wrapperIdentity() {</code></pre></li><li>Quan sát
-      các field trong response cùng nhau; đây là evidence cho quy tắc, không phải
-      benchmark hay production policy.</li></ol><p><strong>Kết luận:</strong> đối
-      chiếu kết quả với README section được liên kết trước khi khái quát behavior.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> <code>==</code> trên wrapper kiểm tra tính đồng nhất của tham chiếu; bộ nhớ đệm không phải hợp đồng so sánh giá trị.</p>
+      <ol>
+      <li><strong>Luồng:</strong> tạo hai cặp Integer mang 127 và 1000, sau đó so sánh cả <code>==</code> và <code>equals</code>.</li>
+      <li><strong>Bằng chứng:</strong> 127 nằm trong khoảng bộ nhớ đệm bắt buộc tối thiểu của Integer nên hai giá trị boxing theo trường hợp này có tính đồng nhất trùng nhau. Với 1000, Java không bảo đảm một hợp đồng về tính đồng nhất chung cho mọi JVM/cấu hình; phần triển khai có thể mở rộng bộ nhớ đệm.</li>
+      <li><strong>Quan sát:</strong> API trả chính kết quả <code>smallIdentity</code>/<code>largeIdentity</code> thay vì yêu cầu người học suy ra so sánh bằng theo giá trị từ chúng; <code>equals</code> được quan sát riêng cho hai đối tượng cùng kiểu Integer.</li>
+      </ol>
+      <p><strong>Kết luận:</strong> không viết logic nghiệp vụ dựa trên tính đồng nhất của wrapper. Với hai wrapper cùng kiểu cần so giá trị, dùng hợp đồng so sánh bằng theo giá trị phù hợp; khi so số khác kiểu wrapper, hãy chuẩn hóa/chuyển đổi theo hợp đồng số mong muốn.</p>
     usage: true
 ControlFlowController:
   patternSwitch():
-    execution: <p><strong>Khái niệm:</strong> Java 21 switch expression có thể match
-      reference value bằng type pattern và xử lý null rõ ràng.</p><ol><li>Endpoint
-      gọi cùng helper với Integer, String, null và Double.</li><li>Helper dùng pattern
-      switch:<pre><code>return switch (value) { case Integer integer -&gt; "integer:"
-      + integer; case String text -&gt; "string:" + text; case null -&gt; "null";
-      default -&gt; "other:" + value.getClass().getSimpleName(); };</code></pre></li><li><strong>Quan
-      sát:</strong> mỗi input đi đúng một branch; pattern case vừa kiểm tra runtime
-      type vừa bind variable có static type tương ứng, còn null được xử lý bởi <code>case
-      null</code>.</li></ol><p><strong>Kết luận:</strong> pattern switch phù hợp khi
-      nhiều nhánh cùng phân loại một selector và cần value result rõ ràng.</p>
+    execution: |-
+      <p><strong>Khái niệm:</strong> Java 21 cho phép <code>switch</code> phân loại giá trị tham chiếu bằng type pattern và xử lý null tường minh.</p>
+      <ol>
+      <li><strong>Luồng:</strong> cùng helper được gọi với Integer, String, null và Double.</li>
+      <li><strong>Bằng chứng mã:</strong> <code>case Integer integer</code> và <code>case String text</code> vừa kiểm tra kiểu thực tế vừa tạo biến pattern có kiểu tĩnh tương ứng; <code>case null</code> xử lý null; <code>default</code> xử lý các giá trị còn lại.</li>
+      <li><strong>Quan sát:</strong> mỗi đầu vào chọn đúng một nhánh và biểu thức switch tạo ra một giá trị String.</li>
+      </ol>
+      <p><strong>Kết luận:</strong> pattern switch phù hợp khi nhiều nhánh cùng phân loại một giá trị chọn và bảng quyết định tạo giá trị rõ hơn chuỗi điều kiện dài.</p>
     usage: true

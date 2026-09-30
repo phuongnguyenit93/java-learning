@@ -1,55 +1,55 @@
 ArrayController:
   description: |-
-    <h2>Array</h2>
-    <p>Các thí nghiệm Java Core có thể chạy để quan sát Array covariance, ArrayStoreException và semantics khi copy reference array.</p>
+    <h2>Mảng</h2>
+    <p>Các thí nghiệm Java Core giúp quan sát tính hiệp biến của mảng, ArrayStoreException và ngữ nghĩa khi sao chép mảng tham chiếu.</p>
   readmeRelated:
     file: 10.Arrays/Arrays.md
 CastingController:
   description: |-
-    <h2>Casting</h2>
-    <p>Các thí nghiệm Java Core có thể chạy để quan sát Reference upcast và downcast.</p>
+    <h2>Ép kiểu tham chiếu</h2>
+    <p>Các thí nghiệm Java Core giúp quan sát upcast, downcast và ranh giới kiểm tra kiểu ở thời điểm chạy.</p>
   readmeRelated:
-    file: 5.Casting/Casting.md
+    file: 8.Casting/Casting.md
 ControlFlowController:
   description: |-
-    <h2>Control Flow</h2>
-    <p>Các thí nghiệm Java 21 có thể chạy để quan sát switch expression, type-pattern matching, pattern binding và case null.</p>
+    <h2>Java 21 Pattern Switch</h2>
+    <p>Thí nghiệm Java 21 giúp quan sát biểu thức switch, type pattern, biến pattern và cách xử lý null bằng <code>case null</code>.</p>
   readmeRelated:
-    file: 6.ControlFlow/ControlFlow.md
+    file: 15.TypeSystemMentalModel/TypeSystemMentalModel.md
 MethodDispatchController:
   description: |-
-    <h2>Method Dispatch</h2>
-    <p>Các thí nghiệm Java Core có thể chạy để quan sát Overload selection và override dispatch.</p>
+    <h2>Chọn overload và phân phối override</h2>
+    <p>Thí nghiệm cho thấy overload được chọn ở thời điểm biên dịch, còn thân phương thức override được phân phối theo kiểu thực tế của đối tượng ở thời điểm chạy.</p>
   readmeRelated:
-    file: 13.TypeSystemMentalModel/TypeSystemMentalModel.md
+    file: 15.TypeSystemMentalModel/TypeSystemMentalModel.md
 OperatorController:
   description: |-
-    <h2>Operator</h2>
-    <p>Các thí nghiệm Java Core có thể chạy để quan sát Short-circuit boolean operator.</p>
+    <h2>Toán tử</h2>
+    <p>Thí nghiệm giúp quan sát toán tử logic đánh giá ngắn mạch và thứ tự đánh giá biểu thức.</p>
   readmeRelated:
-    file: 4.Operators/Operators.md
+    file: 7.Operators/Operators.md
 OverloadResolutionController:
   description: |-
-    <h2>Overload Resolution</h2>
-    <p>Các thí nghiệm Java Core có thể chạy để quan sát Các phase của overload resolution.</p>
+    <h2>Phân giải nạp chồng</h2>
+    <p>Thí nghiệm giúp quan sát các giai đoạn chọn overload giữa mở rộng kiểu, boxing và varargs.</p>
   readmeRelated:
-    file: 7.Methods/Methods.md
+    file: 11.Methods/Methods.md
 PassByValueController:
   description: |-
-    <h2>Pass By Value</h2>
-    <p>Các thí nghiệm Java Core có thể chạy để quan sát Copy reference và mutation nhìn thấy từ caller.</p>
+    <h2>Truyền bằng giá trị</h2>
+    <p>Thí nghiệm cho thấy Java sao chép giá trị tham chiếu: thay đổi đối tượng dùng chung có thể được bên gọi quan sát, còn gán lại tham số chỉ có tác dụng cục bộ.</p>
   readmeRelated:
-    file: 9.PassByValue/PassByValue.md
+    file: 13.PassByValue/PassByValue.md
 TypeSystemController:
   description: |-
-    <h2>Type System</h2>
-    <p>Các thí nghiệm Java Core có thể chạy để quan sát Compile-time type, runtime type và sự khác nhau giữa các conversion context.</p>
-    <p>Đây là điểm hội tụ của Language Basics: các rule về value, conversion, method invocation và runtime object chỉ trở nên nhất quán khi người học phân biệt rõ điều compiler quyết định với điều runtime mới kiểm tra hoặc dispatch.</p>
+    <h2>Hệ thống kiểu</h2>
+    <p>Các thí nghiệm giúp quan sát kiểu lúc biên dịch, kiểu lúc chạy và sự khác nhau giữa các ngữ cảnh chuyển đổi.</p>
+    <p>Đây là điểm hội tụ của Language Basics: các quy tắc về giá trị, chuyển đổi và lời gọi phương thức chỉ trở nên nhất quán khi phân biệt rõ điều trình biên dịch quyết định với điều chỉ có thể kiểm tra hoặc phân phối ở thời điểm chạy.</p>
   readmeRelated:
-    file: 13.TypeSystemMentalModel/TypeSystemMentalModel.md
+    file: 15.TypeSystemMentalModel/TypeSystemMentalModel.md
 WrapperController:
   description: |-
-    <h2>Wrapper</h2>
-    <p>Các thí nghiệm Java Core có thể chạy để quan sát Wrapper cache và bẫy identity.</p>
+    <h2>Kiểu bao</h2>
+    <p>Thí nghiệm giúp quan sát bộ nhớ đệm của kiểu bao và bẫy khi dùng <code>==</code> để suy luận tính bằng nhau theo giá trị.</p>
   readmeRelated:
-    file: 3.WrapperBoxing/WrapperBoxing.md
+    file: 6.WrapperBoxing/WrapperBoxing.md

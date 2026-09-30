@@ -43,163 +43,201 @@
 
 roadmap:
   - id: language-purpose
-    title: Mục đích của Java Language Basics
-    purpose: Hiểu Java Language Basics bao gồm những nền tảng nào, vì sao các nền tảng này phải được học cùng nhau và chúng chuẩn bị cho các module Java phía sau như thế nào.
+    title: Bức tranh tổng thể về nền tảng ngôn ngữ Java
+    purpose: Hiểu mô-đun này bao gồm những nền tảng nào, vì sao chúng cần được học cùng nhau và chúng chuẩn bị cho các mô-đun Java tiếp theo như thế nào.
     relatedKnowledge:
-      - PrimitiveReference
+      - LanguagePurpose
     objectives:
-      - Giải thích được Java Language Basics là nền tảng về value, type, execution và source structure chứ không chỉ là tập hợp syntax rời rạc.
+      - Giải thích được đây là nền tảng về giá trị, kiểu dữ liệu, cách thực thi và cấu trúc mã nguồn chứ không chỉ là tập hợp cú pháp rời rạc.
       - Nhận biết được những vấn đề cơ bản mà một chương trình Java phải giải quyết như biểu diễn dữ liệu, điều khiển luồng thực thi, tổ chức hành vi và quản lý phạm vi.
-      - Hình thành bức tranh tổng thể để biết mỗi milestone tiếp theo trả lời câu hỏi nào trong chương trình Java.
+      - Hình thành bức tranh tổng thể để biết mỗi chặng học tiếp theo giúp giải đáp câu hỏi gì khi đọc và viết một chương trình Java.
 
   - id: source-code-structure
-    title: Cấu trúc mã nguồn Java
-    purpose: Hiểu một chương trình Java được tổ chức từ source file đến type, method, statement và expression để learner biết code được đặt ở đâu và các thành phần liên hệ với nhau thế nào.
+    title: Cách một chương trình Java được tổ chức
+    purpose: Hiểu một chương trình Java được tổ chức từ tệp mã nguồn đến khai báo kiểu, phương thức, câu lệnh và biểu thức để người học biết mã nguồn được đặt ở đâu và các thành phần liên hệ với nhau thế nào.
     relatedKnowledge:
-      - PackagesImports
+      - SourceCodeStructure
     relatedModules:
       - routeId: JAVA_CLASS_OBJECT
-        label: Class & Object
-        note: Mở rộng cách type declaration trở thành class/object trong Java.
-      - routeId: JAVA_ANNOTATION
-        label: Annotation
-        note: Metadata gắn trực tiếp lên các thành phần source code.
+        label: Lớp và đối tượng
+        note: Mở rộng từ khai báo kiểu sang cách Java tổ chức lớp và đối tượng.
     objectives:
-      - Phân biệt vai trò của source file, package, import, type declaration, method, statement và expression.
-      - Hiểu identifiers, keywords, literals và comments là các thành phần hỗ trợ việc viết và đọc source code.
-      - Có mental model đủ để đọc một chương trình Java nhỏ trước khi đi sâu vào value, type và execution.
+      - Phân biệt vai trò của tệp mã nguồn, `package`, `import`, khai báo kiểu, phương thức, câu lệnh và biểu thức ở mức định hướng.
+      - Hiểu định danh, từ khóa, giá trị viết trực tiếp (literal) và chú thích mã nguồn là các thành phần hỗ trợ việc viết và đọc chương trình Java.
+      - Có mô hình tư duy đủ để đọc một chương trình Java nhỏ trước khi đi sâu vào giá trị, kiểu dữ liệu và cách thực thi.
 
-  - id: values-and-variables
-    title: Giá trị và biến
-    purpose: Hiểu chương trình Java thao tác trên value như thế nào và variable cung cấp tên, nơi lưu trữ logic và lifecycle cho các value đó ra sao.
+  - id: values-and-type-categories
+    title: Giá trị, kiểu nguyên thủy và kiểu tham chiếu
+    purpose: Hiểu Java thao tác trên những loại giá trị nào và vì sao cần phân biệt kiểu nguyên thủy với kiểu tham chiếu trước khi học cách lưu giữ, truyền và biến đổi các giá trị đó.
     relatedKnowledge:
-      - VariablesScope
       - PrimitiveReference
     relatedModules:
       - routeId: JAVA_NUMBERS
-        label: Numbers
+        label: Kiểu số
         note: Đi sâu vào biểu diễn và tính toán với các kiểu số.
       - routeId: JAVA_STRING
         label: String
         note: Mở rộng cách Java biểu diễn và thao tác dữ liệu văn bản.
     objectives:
-      - Phân biệt value với variable và hiểu declaration, initialization, assignment.
-      - Nhận biết local variable, parameter, field và static field ở mức định hướng, chưa đi sâu vào scope/lifetime.
-      - Hiểu definite assignment và default value khác nhau tùy loại variable.
+      - Phân biệt giá trị nguyên thủy với giá trị tham chiếu và hiểu biến của mỗi nhóm kiểu thực sự lưu giữ loại giá trị nào.
+      - Nhận biết các kiểu nguyên thủy và cách giá trị viết trực tiếp (literal) biểu diễn dữ liệu ở mức nền tảng.
+      - Hiểu tham chiếu là một giá trị dùng để trỏ tới đối tượng, không phải bản thân đối tượng.
+      - Xây dựng nền tảng để hiểu `null`, kiểu bao, ép kiểu, mảng và hệ thống kiểu ở các chặng tiếp theo.
 
-  - id: type-system-basics
-    title: Nền tảng hệ thống kiểu
-    purpose: Xây dựng mental model về primitive type, reference type và các boundary khi value di chuyển giữa các type để learner hiểu điều gì được kiểm tra ở compile time và điều gì có thể thất bại ở runtime.
+  - id: scope-and-variable-lifetime
+    title: Biến, phạm vi và vòng đời
+    purpose: Hiểu cách khai báo và gán giá trị cho biến, các loại biến tồn tại trong Java, tên nào có thể được truy cập ở đâu và biến tồn tại trong bao lâu.
     relatedKnowledge:
-      - PrimitiveReference
-      - WrapperBoxing
-      - Casting
+      - VariablesScope
+    objectives:
+      - Phân biệt khai báo, khởi tạo và gán giá trị cho biến.
+      - Phân biệt phạm vi của biến cục bộ, tham số, trường và trường `static`.
+      - Hiểu phạm vi khối lệnh, phạm vi phương thức, trạng thái cấp lớp và vòng đời của biến.
+      - Hiểu quy tắc phải gán giá trị trước khi dùng và giá trị mặc định khác nhau tùy loại biến.
+      - Nhận biết hiện tượng che khuất tên, cách Java phân giải tên và các lỗi thiết kế thường gặp do chọn phạm vi không phù hợp.
+
+  - id: null-and-reference-safety
+    title: Giá trị `null` và an toàn khi dùng tham chiếu
+    purpose: Sau khi hiểu kiểu tham chiếu, xây dựng mô hình đúng về `null`, hiểu khi nào truy cập qua `null` thất bại và chuẩn bị cho các tình huống xử lý giá trị có thể vắng mặt ở những chặng sau.
+    relatedKnowledge:
       - "Null"
-      - TypeSystemMentalModel
+    objectives:
+      - Hiểu `null` chỉ áp dụng cho kiểu tham chiếu và không phải là một đối tượng.
+      - Nhận biết thao tác truy cập qua `null` dẫn tới `NullPointerException` trong những trường hợp nào.
+      - Phân biệt việc một biến tham chiếu có giá trị `null` với việc biến đó tham chiếu tới một đối tượng thực sự.
+      - Nhận biết ở mức định hướng rằng giá trị có thể là `null` ảnh hưởng đến cách sử dụng API và sẽ cần được xử lý bằng luồng điều khiển phù hợp sau đó.
+
+  - id: wrapper-boxing
+    title: Kiểu bao, đóng hộp và mở hộp
+    purpose: Hiểu vì sao Java cần kiểu bao cho các giá trị nguyên thủy và cách đóng hộp, mở hộp giúp các giá trị nguyên thủy tham gia vào các API làm việc với đối tượng.
+    relatedKnowledge:
+      - WrapperBoxing
     relatedModules:
       - routeId: JAVA_OOP
-        label: Object-Oriented Programming
-        note: Type hierarchy, inheritance và polymorphism mở rộng trực tiếp mental model này.
+        label: Lập trình hướng đối tượng
+        note: Mở rộng cách các đối tượng và kiểu tham chiếu tham gia vào mô hình hướng đối tượng.
       - routeId: JAVA_GENERICS
         label: Generics
-        note: Type safety và parameterized types ở compile time.
-      - routeId: JAVA_OBJECT_CONTRACT
-        label: Object Contract
-        note: Các contract chung của object như equals, hashCode và identity.
+        note: Mở rộng an toàn kiểu và kiểu có tham số ở thời điểm biên dịch.
     objectives:
-      - Phân biệt primitive value với reference value và hiểu null chỉ áp dụng cho reference.
-      - Hiểu assignment compatibility, widening, narrowing và casting ở mức nền tảng.
-      - Hiểu wrapper type, boxing và unboxing như cầu nối giữa primitive và object-based API.
-      - Phân biệt declared type với runtime type ở mức chuẩn bị cho OOP, Generics và Collections.
+      - Hiểu kiểu bao và lý do Java cần kiểu bao cho các giá trị nguyên thủy.
+      - Hiểu đóng hộp và mở hộp (`boxing`/`unboxing`) như cầu nối giữa giá trị nguyên thủy và API làm việc với đối tượng.
+      - Nhận biết các rủi ro cơ bản như so sánh tính đồng nhất của đối tượng ở kiểu bao và mở hộp giá trị `null`.
 
   - id: expressions-and-operators
-    title: Biểu thức và toán tử
-    purpose: Hiểu Java tạo ra value mới và quyết định kết quả tính toán thông qua expression, operator, promotion, precedence và evaluation order như thế nào.
+    title: Biểu thức, toán tử và chuyển đổi kiểu
+    purpose: Hiểu Java tạo ra giá trị mới, kết hợp các giá trị và chuyển chúng giữa các kiểu thông qua biểu thức, toán tử, thăng hạng kiểu số và ép kiểu như thế nào.
     relatedKnowledge:
       - Operators
       - Casting
     objectives:
-      - Đọc được expression và xác định value/result mà expression tạo ra.
-      - Hiểu các nhóm operator chính và numeric promotion ở mức cần thiết cho code cơ bản.
-      - Hiểu short-circuit, precedence, associativity và side effect có thể thay đổi kết quả hoặc khả năng đọc code.
+      - Đọc được biểu thức và xác định giá trị hoặc kết quả mà biểu thức tạo ra.
+      - Hiểu các nhóm toán tử chính, thăng hạng kiểu số, mở rộng kiểu và thu hẹp kiểu ở mức cần thiết cho mã Java cơ bản.
+      - Hiểu ép kiểu giữa các kiểu nguyên thủy và giữa các kiểu tham chiếu ở mức nền tảng.
+      - Hiểu đánh giá ngắn mạch (`short-circuit evaluation`), độ ưu tiên, tính kết hợp, thứ tự đánh giá và tác dụng phụ có thể ảnh hưởng đến kết quả hoặc khả năng đọc mã.
 
   - id: program-control-flow
     title: Luồng điều khiển chương trình
-    purpose: Hiểu chương trình lựa chọn, lặp và chuyển hướng execution flow như thế nào thay vì luôn chạy tuần tự từ trên xuống dưới.
+    purpose: Hiểu chương trình lựa chọn nhánh, lặp và chuyển hướng luồng thực thi như thế nào thay vì luôn chạy tuần tự từ trên xuống dưới.
     relatedKnowledge:
       - ControlFlow
     objectives:
-      - Sử dụng được branching với if và switch theo đúng mental model.
-      - Hiểu loop với for, while và do-while cùng vai trò của break và continue.
-      - Nhận biết khi control flow trở nên khó đọc và cần được đơn giản hóa.
+      - Sử dụng được rẽ nhánh với `if` và `switch` theo đúng mô hình thực thi.
+      - Hiểu vòng lặp `for`, `while`, `do-while` cùng vai trò của `break` và `continue`.
+      - Nhận biết khi luồng điều khiển trở nên khó đọc và cần được đơn giản hóa.
+
+  - id: arrays
+    title: Mảng
+    purpose: Hiểu cách Java biểu diễn một nhóm giá trị bằng cấu trúc có kích thước cố định và các giới hạn quan trọng của mảng trước khi dùng mảng trong lời gọi phương thức hoặc chuyển sang Collections.
+    relatedKnowledge:
+      - Arrays
+    relatedModules:
+      - routeId: JAVA_COLLECTION
+        label: Collections
+        note: Các cấu trúc dữ liệu linh hoạt hơn mảng và API thao tác với tập dữ liệu ở mức cao hơn.
+    objectives:
+      - Hiểu kiểu mảng, cách tạo, khởi tạo, truy cập bằng chỉ số và thuộc tính `length`.
+      - Hiểu mảng nhiều chiều thực chất là mảng chứa các mảng khác.
+      - Nhận biết tính hiệp biến của mảng và `ArrayStoreException` như một ranh giới giữa kiểm tra lúc biên dịch và kiểm tra lúc chạy.
+      - Hiểu giới hạn kích thước cố định của mảng và vì sao Collections tồn tại.
 
   - id: methods-and-data-flow
-    title: Method và luồng dữ liệu
-    purpose: Hiểu behavior được đóng gói, gọi và truyền dữ liệu qua method như thế nào, bao gồm cách Java lựa chọn lời gọi phù hợp và cách argument thực sự được truyền.
+    title: Phương thức và cách dữ liệu được truyền
+    purpose: Hiểu hành vi được tổ chức và gọi thông qua phương thức như thế nào, Java lựa chọn phương thức phù hợp ra sao và dữ liệu thực sự được truyền vào lời gọi bằng cách nào.
     relatedKnowledge:
       - Methods
       - Varargs
       - PassByValue
     relatedModules:
       - routeId: JAVA_FUNCTIONAL_PROGRAMMING
-        label: Functional Programming
-        note: Method behavior được biểu diễn và truyền như dữ liệu.
+        label: Lập trình hàm
+        note: Mở rộng cách hành vi có thể được biểu diễn và truyền như dữ liệu.
       - routeId: JAVA_REFLECTION
         label: Reflection
-        note: Quan sát và invoke method/type metadata ở runtime.
+        note: Mở rộng khả năng kiểm tra cấu trúc và gọi phương thức thông qua siêu dữ liệu ở thời điểm chạy.
     objectives:
-      - Hiểu method declaration, parameter, argument, return value và invocation.
-      - Hiểu overloading ở mức nền tảng và vai trò của invocation conversion khi chọn method.
-      - Hiểu varargs là cơ chế gọi method dựa trên array chứ không phải một kiểu parameter hoàn toàn mới.
-      - Giải thích được Java luôn pass-by-value và phân biệt object mutation với reference reassignment.
+      - Hiểu khai báo phương thức, tham số, đối số, giá trị trả về và lời gọi phương thức.
+      - Hiểu nạp chồng phương thức ở mức nền tảng và vai trò của các phép chuyển đổi khi Java lựa chọn phương thức được gọi.
+      - Hiểu `varargs` cho phép phương thức nhận số lượng đối số thay đổi và được triển khai dựa trên mảng, không phải một mô hình tham số hoàn toàn khác.
+      - Giải thích được Java luôn truyền bằng giá trị (`pass-by-value`) và phân biệt thay đổi trạng thái đối tượng với gán lại biến tham chiếu.
 
-  - id: scope-and-variable-lifetime
-    title: Scope và vòng đời của biến
-    purpose: Sau khi đã có method và control flow, hiểu chính xác tên nào có thể được truy cập ở đâu, value tồn tại trong bao lâu và vì sao shadowing hoặc scope sai dễ tạo bug.
+  - id: packages-imports-and-name-organization
+    title: `package`, `import` và cách Java tổ chức tên
+    purpose: Hiểu Java gom các kiểu vào không gian tên bằng `package`, hỗ trợ sử dụng tên bằng `import` và tạo ranh giới truy cập trong cùng package như thế nào khi chương trình bắt đầu có nhiều tệp mã nguồn.
     relatedKnowledge:
-      - VariablesScope
       - PackagesImports
-    objectives:
-      - Phân biệt scope của local variable, parameter, field và static field.
-      - Hiểu block scope, method scope, class-level state và variable lifetime.
-      - Nhận biết shadowing, name resolution và các lỗi thiết kế liên quan đến scope.
-
-  - id: arrays
-    title: Array
-    purpose: Hiểu cách Java biểu diễn một nhóm value có cùng component type trong cấu trúc fixed-size và các boundary quan trọng của array trước khi chuyển sang Collections.
-    relatedKnowledge:
-      - Arrays
     relatedModules:
-      - routeId: JAVA_COLLECTION
-        label: Collections
-        note: Các data structure linh hoạt hơn array và API thao tác dữ liệu cấp cao hơn.
+      - routeId: JAVA_CLASS_OBJECT
+        label: Lớp và đối tượng
+        note: Mở rộng cách lớp, thành viên và các mức truy cập được tổ chức trong mã nguồn Java.
+    objectives:
+      - Hiểu `package` dùng để tổ chức không gian tên và giảm xung đột tên giữa các kiểu.
+      - Hiểu `import` hỗ trợ phân giải tên trong mã nguồn và không phải cơ chế tải lớp vào bộ nhớ.
+      - Nhận biết vai trò của `static import` và khi nào việc lạm dụng nó làm mã khó đọc.
+      - Hiểu quyền truy cập mặc định trong cùng package (`package-private`) ở mức nền tảng trước khi học sâu các từ khóa kiểm soát quyền truy cập trong các mô-đun hướng đối tượng.
+
+  - id: type-system-boundaries
+    title: Ranh giới giữa kiểm tra lúc biên dịch và lúc chạy
+    purpose: Kết nối kiểu khai báo, kiểu thực tế lúc chạy, khả năng gán, ép kiểu và cơ chế chọn lời gọi để hiểu Java bảo đảm điều gì khi biên dịch và điều gì vẫn phải kiểm tra khi chương trình chạy.
+    relatedKnowledge:
+      - TypeSystemMentalModel
+      - Casting
+      - "Null"
+      - Methods
+      - Arrays
+      - WrapperBoxing
+    relatedModules:
+      - routeId: JAVA_OOP
+        label: Lập trình hướng đối tượng
+        note: Kế thừa, đa hình và cơ chế phân phối lời gọi (`dispatch`) mở rộng trực tiếp mô hình kiểu ở thời điểm chạy.
       - routeId: JAVA_GENERICS
         label: Generics
-        note: Cơ sở type-safety cho các collection API.
+        note: Mở rộng các bảo đảm an toàn kiểu ở thời điểm biên dịch.
     objectives:
-      - Hiểu array type, creation, initialization, indexing và length.
-      - Hiểu multidimensional array thực chất là array của array.
-      - Nhận biết array covariance và ArrayStoreException như một boundary giữa compile-time type và runtime check.
-      - Hiểu giới hạn fixed-size của array và vì sao Collections tồn tại.
+      - Phân biệt kiểu khai báo với kiểu thực tế của đối tượng ở thời điểm chạy.
+      - Hiểu tính tương thích khi gán và các trường hợp cần kiểm tra hoặc ép kiểu ở thời điểm chạy.
+      - Phân biệt việc chọn phương thức nạp chồng lúc biên dịch với cơ chế phân phối lời gọi phương thức ghi đè lúc chạy ở mức chuẩn bị cho lập trình hướng đối tượng.
+      - Nhận biết các ranh giới mà trình biên dịch không thể loại bỏ hoàn toàn lỗi lúc chạy.
 
   - id: language-basics-synthesis
-    title: Tổng hợp Java Language Basics
-    purpose: Kết nối source structure, value, variable, type, expression, control flow, method, scope và array thành một mental model end-to-end của một chương trình Java cơ bản.
+    title: Tổng hợp nền tảng ngôn ngữ Java
+    purpose: Kết nối cấu trúc mã nguồn, giá trị, biến, kiểu dữ liệu, biểu thức, luồng điều khiển, phương thức, phạm vi, mảng, cách tổ chức tên bằng `package`/`import` và `null` thành một mô hình tư duy xuyên suốt để hiểu một chương trình Java cơ bản.
     relatedKnowledge:
+      - LanguageBasicsSynthesis
       - TypeSystemMentalModel
       - PrimitiveReference
       - Methods
     relatedModules:
       - routeId: JAVA_OOP
-        label: OOP
-        note: Bước tiếp theo để tổ chức state và behavior thành object model.
+        label: Lập trình hướng đối tượng
+        note: Bước tiếp theo để tổ chức trạng thái và hành vi thành mô hình đối tượng.
       - routeId: JAVA_COLLECTION
         label: Collections
         note: Bước tiếp theo để quản lý tập dữ liệu động.
       - routeId: JAVA_EXCEPTION
         label: Exception
-        note: Bước tiếp theo để mô hình hóa và xử lý failure flow.
+        note: Bước tiếp theo để mô hình hóa và xử lý luồng lỗi.
     objectives:
-      - Theo dõi được một value từ lúc được khai báo, biến đổi, truyền qua method đến khi ảnh hưởng đến control flow hoặc state.
-      - Phân biệt được các quyết định compile-time với runtime check trong những tình huống cơ bản.
-      - Giải thích được các giới hạn của Language Basics và xác định phần nào sẽ được mở rộng ở OOP, Generics, Collections, Exception và các module Java tiếp theo.
+      - Theo dõi được một giá trị từ lúc được khai báo, biến đổi, truyền qua phương thức đến khi ảnh hưởng đến luồng điều khiển hoặc trạng thái.
+      - Phân biệt được các quyết định ở thời điểm biên dịch với các kiểm tra ở thời điểm chạy trong những tình huống cơ bản.
+      - Giải thích được giới hạn của mô-đun nền tảng này và xác định phần nào sẽ được mở rộng ở lập trình hướng đối tượng, Generics, Collections, Exception và các mô-đun Java tiếp theo.

@@ -1,8 +1,7 @@
 ArrayController:
   covarianceFailure():
-    summary: Array covariance và ArrayStoreException
-    description: Chạy thí nghiệm học tập deterministic cho Array covariance và ArrayStoreException.
-      Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    summary: Hiệp biến của mảng và ArrayStoreException
+    description: Minh họa việc phép gán hiệp biến có thể hợp lệ lúc biên dịch nhưng phép ghi phần tử không tương thích vẫn bị kiểm tra ở thời điểm chạy và ném ArrayStoreException.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -26,10 +25,8 @@ ArrayController:
       ]
     usage: true
   copyReferenceElements():
-    summary: Copy array và reference element dùng chung
-    description: Tạo một reference array mới bằng Arrays.copyOf rồi chứng minh array
-      object mới vẫn chứa bản copy của reference value, nên hai array có thể cùng
-      quan sát mutation trên cùng element object.
+    summary: Sao chép mảng tham chiếu và chia sẻ đối tượng phần tử
+    description: Tạo mảng mới bằng Arrays.copyOf rồi chứng minh hai mảng là hai đối tượng khác nhau nhưng các phần tử tham chiếu tương ứng vẫn có thể cùng nhận diện một đối tượng.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -54,17 +51,16 @@ ArrayController:
     usage: true
 CastingController:
   safeAndUnsafeCast(String):
-    summary: Reference upcast và downcast
-    description: Chạy thí nghiệm học tập deterministic cho Reference upcast và downcast.
-      Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    summary: Ép kiểu tham chiếu an toàn và lỗi ClassCastException
+    description: So sánh kiểm tra kiểu bằng instanceof với một downcast không tương thích để quan sát ranh giới giữa quan hệ kiểu hợp lệ lúc biên dịch và kiểm tra đối tượng thực tế ở lúc chạy.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 5.Casting/Casting.md
-      anchor: reference-upcast-downcast
+      file: 15.TypeSystemMentalModel/TypeSystemMentalModel.md
+      anchor: class-cast-failure
     methodName: safeAndUnsafeCast
     params:
     - input
@@ -81,16 +77,15 @@ CastingController:
     usage: true
 MethodDispatchController:
   overloadVsOverride():
-    summary: Overload selection và override dispatch
-    description: Chạy thí nghiệm học tập deterministic cho Overload selection và override
-      dispatch. Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    summary: Chọn overload lúc biên dịch và phân phối override lúc chạy
+    description: Cho thấy chữ ký overload được chọn từ kiểu khai báo ở thời điểm biên dịch, còn thân phương thức instance đã ghi đè được chọn theo kiểu thực tế của đối tượng ở thời điểm chạy.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 13.TypeSystemMentalModel/TypeSystemMentalModel.md
+      file: 15.TypeSystemMentalModel/TypeSystemMentalModel.md
       anchor: overload-vs-override-dispatch
     methodName: overloadVsOverride
     params: [
@@ -108,16 +103,15 @@ MethodDispatchController:
     usage: true
 OperatorController:
   shortCircuit():
-    summary: Short-circuit boolean operator
-    description: Chạy thí nghiệm học tập deterministic cho Short-circuit boolean operator.
-      Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    summary: Đánh giá ngắn mạch của toán tử logic
+    description: Ghi lại thứ tự đánh giá để chứng minh toán hạng bên phải của && hoặc || có thể không được thực thi khi kết quả đã được quyết định từ toán hạng bên trái.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 4.Operators/Operators.md
+      file: 7.Operators/Operators.md
       anchor: short-circuit-operators
     methodName: shortCircuit
     params: [
@@ -135,17 +129,15 @@ OperatorController:
     usage: true
 OverloadResolutionController:
   selectionMatrix():
-    summary: Các phase của overload resolution
-    description: Chạy thí nghiệm học tập deterministic cho Các phase của overload
-      resolution. Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy
-      tắc.
+    summary: Các giai đoạn phân giải nạp chồng
+    description: So sánh mở rộng kiểu nguyên thủy, boxing và varargs để quan sát vì sao ứng viên áp dụng được ở giai đoạn sớm được xét trước các lựa chọn ở giai đoạn sau.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 7.Methods/Methods.md
+      file: 11.Methods/Methods.md
       anchor: overload-resolution-phases
     methodName: selectionMatrix
     params: [
@@ -163,17 +155,15 @@ OverloadResolutionController:
     usage: true
 PassByValueController:
   mutateAndReassign():
-    summary: Copy reference và mutation nhìn thấy từ caller
-    description: Chạy thí nghiệm học tập deterministic cho Copy reference và mutation
-      nhìn thấy từ caller. Response cung cấp runtime evidence cụ thể thay vì chỉ mô
-      tả quy tắc.
+    summary: Sao chép giá trị tham chiếu và gán lại tham số
+    description: Chứng minh thay đổi trạng thái qua bản sao của giá trị tham chiếu có thể được bên gọi quan sát, trong khi gán lại chính biến tham số chỉ có tác dụng bên trong phương thức.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 9.PassByValue/PassByValue.md
+      file: 13.PassByValue/PassByValue.md
       anchor: reference-copy-mutation
     methodName: mutateAndReassign
     params: [
@@ -191,16 +181,15 @@ PassByValueController:
     usage: true
 TypeSystemController:
   inspectRuntimeType(Object):
-    summary: Compile-time type và runtime type
-    description: Chạy thí nghiệm học tập deterministic cho Compile-time type và runtime
-      type. Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    summary: Kiểu lúc biên dịch và kiểu lúc chạy
+    description: Đặt giá trị dưới góc nhìn Object rồi trả về lớp thực tế và kết quả instanceof để phân biệt thông tin kiểu mà trình biên dịch biết với kiểu đối tượng quan sát được ở thời điểm chạy.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 13.TypeSystemMentalModel/TypeSystemMentalModel.md
+      file: 15.TypeSystemMentalModel/TypeSystemMentalModel.md
       anchor: compile-time-vs-runtime-type
     methodName: inspectRuntimeType
     params:
@@ -217,16 +206,15 @@ TypeSystemController:
       ]
     usage: true
   conversionContexts():
-    summary: Conversion context thay đổi rule áp dụng
-    description: So sánh assignment conversion, numeric promotion, method-invocation
-      widening và boxing bằng các kết quả quan sát được trong cùng một endpoint.
+    summary: Quy tắc chuyển đổi phụ thuộc ngữ cảnh
+    description: Đặt cạnh nhau phép gán hằng, thăng hạng kiểu số học, mở rộng kiểu khi gọi phương thức và boxing để chứng minh mỗi ngữ cảnh Java cho phép một tập chuyển đổi khác nhau.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 13.TypeSystemMentalModel/TypeSystemMentalModel.md
+      file: 15.TypeSystemMentalModel/TypeSystemMentalModel.md
       anchor: assignment-compatibility
     methodName: conversionContexts
     params: [
@@ -244,16 +232,15 @@ TypeSystemController:
     usage: true
 WrapperController:
   wrapperIdentity():
-    summary: Wrapper cache và bẫy identity
-    description: Chạy thí nghiệm học tập deterministic cho Wrapper cache và bẫy identity.
-      Response cung cấp runtime evidence cụ thể thay vì chỉ mô tả quy tắc.
+    summary: Bộ nhớ đệm kiểu bao và bẫy khi dùng ==
+    description: So sánh == với equals trên các Integer trong và ngoài khoảng cache thường gặp để nhấn mạnh rằng == kiểm tra tính đồng nhất của tham chiếu chứ không phải hợp đồng so sánh giá trị.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 3.WrapperBoxing/WrapperBoxing.md
+      file: 6.WrapperBoxing/WrapperBoxing.md
       anchor: wrapper-caching
     methodName: wrapperIdentity
     params: [
@@ -272,16 +259,15 @@ WrapperController:
 ControlFlowController:
   patternSwitch():
     summary: Java 21 pattern switch và case null
-    description: Chạy cùng một switch expression với Integer, String, null và một
-      fallback type để quan sát type-pattern binding, case null và default branch.
+    description: Chạy cùng một biểu thức switch với Integer, String, null và một kiểu khác để quan sát type pattern, biến pattern, case null và nhánh default trong Java 21.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 6.ControlFlow/ControlFlow.md
-      anchor: switch-expression
+      file: 15.TypeSystemMentalModel/TypeSystemMentalModel.md
+      anchor: instanceof-safe-cast
     methodName: patternSwitch
     params: [
       ]

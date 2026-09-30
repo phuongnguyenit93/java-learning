@@ -1,12 +1,20 @@
 # Arrays
 
-An array is a special object representing a **fixed-size sequence** of elements with one component type. Array variables are reference variables, so ordinary reference-copy, `null`, and pass-by-value rules still apply.
+An array is a special object representing a **fixed-size sequence** of elements with one component type. Array variables are reference variables, so ordinary reference-copy and `null` rules apply; pass-by-value is connected after methods are introduced.
 
 ## <a id="array-type-model">Array Type Model</a>
 
 Arrays have a runtime array type, a fixed `length`, zero-based indexes, and element default values based on the component type.
 
-The array itself is an object and can be shared through several references or set to `null`.
+The array itself is an object and can be shared through several references or set to `null`. A null array reference is different from an existing reference array whose elements start as null:
+
+```java
+String[] a = null;          // no array object
+String[] b = new String[1]; // array exists; b[0] == null
+int[] empty = new int[0];   // a real array object with length 0
+```
+
+Null and an empty array are different states: `null` identifies no array object, while `new int[0]` creates a valid array object that simply contains no elements.
 
 Declaration and creation are separate operations:
 
@@ -47,7 +55,34 @@ boolean[] flags = new boolean[2]; // [false, false]
 String[] names = new String[2];   // [null, null]
 ```
 
+For a reference array, a null element still fails when dereferenced:
+
+```java
+User[] users = new User[1];
+users[0].getName(); // NullPointerException because users[0] == null
+```
+
 Indexed loops are useful when position or mutation matters; enhanced-for is clearer when only element values are needed.
+
+The enhanced-for loop variable receives an element value on each iteration. Reassigning that local variable does **not** replace the array slot:
+
+```java
+int[] numbers = {1, 2, 3};
+for (int number : numbers) {
+    number = 0; // changes only the local loop variable
+}
+```
+
+Use an index or another appropriate API when the array slot itself must change.
+
+Enhanced-for also works with `Iterable` values such as Collections introduced later. The loop-variable rule is the same: reassigning the local loop variable does not replace the element stored in the container.
+
+```java
+List<String> items = List.of("A", "B"); // preview of a Collection API
+for (String item : items) {
+    item = item.toLowerCase(); // does not replace an element in items
+}
+```
 
 `==` compares array reference identity rather than element contents. Use utilities such as `Arrays.equals`, `Arrays.copyOf`, or `System.arraycopy` when content comparison/copying is the real intent.
 
@@ -118,4 +153,4 @@ data[1] = new int[5];
 
 Nested loops should therefore use each row's own `length` and honor the nullability contract for rows.
 
-The next chapter moves from values and containers to package-level naming and visibility.
+The next chapter uses arrays as the foundation for varargs and then explains how data crosses a method-call boundary.

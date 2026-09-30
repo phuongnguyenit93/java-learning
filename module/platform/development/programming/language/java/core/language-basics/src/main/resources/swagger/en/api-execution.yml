@@ -105,13 +105,19 @@ TypeSystemController:
     usage: true
 WrapperController:
   wrapperIdentity():
-    execution: '<p><strong>Concept:</strong> Wrapper caches and identity pitfalls.</p><ol><li>The
-      endpoint runs a bounded deterministic example inside <code>WrapperController#wrapperIdentity()</code>.</li><li>Compare
-      == and equals across cached/non-cached wrappers.<pre><code>public Map&lt;String,
-      Object&gt; wrapperIdentity() {</code></pre></li><li>Inspect the response fields
-      together: they are the observable evidence for the rule rather than a benchmark
-      or production policy.</li></ol><p><strong>Conclusion:</strong> connect the observed
-      result back to the linked README section before generalizing the behavior.</p>'
+    execution: '<p><strong>Concept:</strong> <code>==</code> on wrapper references checks
+      identity, while caching is not a value-equality contract.</p><ol><li>The endpoint
+      creates two Integer pairs for 127 and 1000, then compares both <code>==</code> and
+      <code>equals</code>.</li><li>127 is within Integer''s required minimum cache range,
+      so these boxing conversions must reuse the cached identity. Java does not provide
+      a portable guarantee that 1000 is never cached; an implementation may cache a
+      wider range.</li><li><strong>Observation:</strong> treat <code>smallIdentity</code>
+      and <code>largeIdentity</code> as observed identity results, not as a numeric-equality
+      rule; <code>equals</code> separately demonstrates value equality for the same wrapper
+      type.</li></ol><p><strong>Conclusion:</strong> do not base business logic on wrapper
+      identity. For equal-value comparison within one wrapper type use its value contract;
+      for cross-wrapper numeric comparison, normalize or convert according to the intended
+      numeric contract.</p>'
     usage: true
 ControlFlowController:
   patternSwitch():

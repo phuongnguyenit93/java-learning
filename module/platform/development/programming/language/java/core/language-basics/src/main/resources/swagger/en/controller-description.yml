@@ -9,47 +9,47 @@ CastingController:
     <h2>Casting</h2>
     <p>Executable Java Core experiments related to Reference upcast and downcast.</p>
   readmeRelated:
-    file: 5.Casting/Casting.md
+    file: 8.Casting/Casting.md
 ControlFlowController:
   description: |-
     <h2>Control Flow</h2>
     <p>Executable Java 21 experiments for switch expressions, type-pattern matching, pattern binding, and case null.</p>
   readmeRelated:
-    file: 6.ControlFlow/ControlFlow.md
+    file: 15.TypeSystemMentalModel/TypeSystemMentalModel.md
 MethodDispatchController:
   description: |-
     <h2>Method Dispatch</h2>
     <p>Executable Java Core experiments related to Overload selection vs override dispatch.</p>
   readmeRelated:
-    file: 13.TypeSystemMentalModel/TypeSystemMentalModel.md
+    file: 15.TypeSystemMentalModel/TypeSystemMentalModel.md
 OperatorController:
   description: |-
     <h2>Operator</h2>
     <p>Executable Java Core experiments related to Short-circuit boolean operators.</p>
   readmeRelated:
-    file: 4.Operators/Operators.md
+    file: 7.Operators/Operators.md
 OverloadResolutionController:
   description: |-
     <h2>Overload Resolution</h2>
     <p>Executable Java Core experiments related to Overload resolution phases.</p>
   readmeRelated:
-    file: 7.Methods/Methods.md
+    file: 11.Methods/Methods.md
 PassByValueController:
   description: |-
     <h2>Pass By Value</h2>
     <p>Executable Java Core experiments related to Copied references and visible object mutation.</p>
   readmeRelated:
-    file: 9.PassByValue/PassByValue.md
+    file: 13.PassByValue/PassByValue.md
 TypeSystemController:
   description: |-
     <h2>Type System</h2>
     <p>Executable Java Core experiments for compile-time type, runtime type, and differences among conversion contexts.</p>
     <p>This is a convergence point for Language Basics: rules about values, conversions, method invocation, and runtime objects become coherent when the learner separates what the compiler decides from what runtime checks or dispatches.</p>
   readmeRelated:
-    file: 13.TypeSystemMentalModel/TypeSystemMentalModel.md
+    file: 15.TypeSystemMentalModel/TypeSystemMentalModel.md
 WrapperController:
   description: |-
     <h2>Wrapper</h2>
     <p>Executable Java Core experiments related to Wrapper caches and identity pitfalls.</p>
   readmeRelated:
-    file: 3.WrapperBoxing/WrapperBoxing.md
+    file: 6.WrapperBoxing/WrapperBoxing.md

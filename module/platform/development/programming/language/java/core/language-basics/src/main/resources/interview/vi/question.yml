@@ -28,163 +28,170 @@
 # </interview-schema>
 
 questions:
-  - question: "Nếu phải giải thích Language Basics cho người mới, bạn sẽ nối các chủ đề trong module thành một mental model như thế nào?"
-    answer: "Bắt đầu từ Java thao tác trên value có type; variable/scope giữ và giới hạn tên; boxing, operator và conversion quyết định value tham gia expression/API ra sao; control flow quyết định đường chạy; method/varargs/pass-by-value giải thích lời gọi; array là container fixed-size; package/import giải quyết namespace; null biểu diễn reference không nhận diện object; cuối cùng compile-time type và runtime type giải thích compiler check, cast, overload và dispatch. Chuỗi này là nền để học OOP, Generics, Collections và framework behavior mà không chỉ nhớ syntax rời rạc."
+  - question: "Nếu phải giải thích Language Basics cho người mới, bạn sẽ nối các chủ đề trong mô-đun thành một mô hình tư duy như thế nào?"
+    answer: "Bắt đầu từ cách một tệp Java được tổ chức; tiếp theo là mô hình giá trị nguyên thủy/tham chiếu, biến/phạm vi/vòng đời, null, kiểu bao và boxing/unboxing; sau đó nối sang biểu thức, toán tử, ép kiểu, luồng điều khiển và mảng; rồi đến phương thức, varargs, pass-by-value, package/import; cuối cùng phân biệt kiểu lúc biên dịch với kiểu lúc chạy và ghép toàn bộ thành một mô hình xuyên suốt. Chuỗi này giúp học OOP, Generics, Collections và các framework sau đó mà không chỉ ghi nhớ cú pháp rời rạc."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.PrimitiveReference/PrimitiveReference.md", anchor: "language-basics-roadmap"}
+    readmeRelated: {file: "16.LanguageBasicsSynthesis/LanguageBasicsSynthesis.md", anchor: "language-basics-synthesis"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Giải thích khác biệt giữa copy primitive value và copy reference value trong Java."
-    answer: "Primitive assignment copy chính primitive value. Reference assignment copy reference value nên hai biến có thể cùng nhận diện một object; nó không clone object. Đây là nền tảng của aliasing và pass-by-value."
+  - question: "Khi đọc một tệp Java nhỏ từ trên xuống, bạn nên nhận diện những lớp cấu trúc nào trước khi phân tích logic chi tiết?"
+    answer: "Đọc từ ngoài vào trong: tệp mã nguồn → package/import → khai báo kiểu → thành viên → thân phương thức/constructor → câu lệnh và biểu thức. Sau đó nhận diện định danh, từ khóa, literal và chú thích. Bản đồ này giúp người mới biết mỗi đoạn mã nằm ở đâu trước khi suy luận về kiểu, giá trị hay luồng điều khiển."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.PrimitiveReference/PrimitiveReference.md", anchor: "primitive-vs-reference-model"}
+    readmeRelated: {file: "2.SourceCodeStructure/SourceCodeStructure.md", anchor: "source-file-type-structure"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Vì sao field có default value còn local variable phải definite assignment?"
-    answer: "Object/class initialization cấp default value cho field trước explicit initialization. Local variable chịu compile-time definite-assignment analysis và không được đọc tới khi mọi reachable path đã assign."
+  - question: "Giải thích khác biệt giữa sao chép giá trị nguyên thủy và sao chép giá trị tham chiếu trong Java."
+    answer: "Phép gán với primitive sao chép chính giá trị nguyên thủy. Phép gán với reference sao chép giá trị tham chiếu, vì vậy hai biến có thể cùng nhận diện một đối tượng; Java không tự sao chép đối tượng đó. Đây là nền tảng để hiểu hiện tượng nhiều tham chiếu cùng trỏ một đối tượng, thay đổi trạng thái đối tượng và pass-by-value."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.VariablesScope/VariablesScope.md", anchor: "definite-assignment"}
+    readmeRelated: {file: "3.PrimitiveReference/PrimitiveReference.md", anchor: "primitive-vs-reference-model"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Mô tả widening, boxing, varargs và most-specific selection tương tác thế nào trong overload resolution."
-    answer: "Compiler tìm candidate theo phase có thứ tự, ưu tiên fixed-arity conversion ở phase sớm trước boxing/varargs. Trong cùng phase nó chọn most-specific method. Runtime receiver type không chọn lại overload."
+  - question: "Vì sao trường có giá trị mặc định còn biến cục bộ phải thỏa definite assignment?"
+    answer: "Trong quá trình khởi tạo đối tượng/lớp, trường được cấp giá trị mặc định theo quy tắc ngôn ngữ trước khi biểu thức khởi tạo tường minh chạy. Biến cục bộ thì không có cơ chế mặc định đó; trình biên dịch dùng phân tích definite assignment và chỉ cho đọc biến khi mọi đường thực thi liên quan đều bảo đảm biến đã được gán."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.Methods/Methods.md", anchor: "overload-resolution-phases"}
+    readmeRelated: {file: "4.VariablesScope/VariablesScope.md", anchor: "definite-assignment"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Mở rộng kiểu (widening), boxing, varargs và bước chọn phương thức cụ thể nhất tương tác thế nào trong overload resolution?"
+    answer: "Trình biên dịch xét khả năng áp dụng của overload theo các giai đoạn có thứ tự. Các lời gọi có số lượng tham số cố định (fixed-arity) dùng chuyển đổi ở giai đoạn sớm được xét trước các giai đoạn boxing/varargs muộn hơn; sau khi xác định tập ứng viên trong một giai đoạn, trình biên dịch mới chọn phương thức cụ thể nhất. Kiểu thực tế của đối tượng nhận ở lúc chạy không làm overload resolution chạy lại."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "11.Methods/Methods.md", anchor: "overload-resolution-phases"}
     apiRelated: {controller: "OverloadResolutionController", methodSignature: "selectionMatrix()"}
 
-  - question: "Chứng minh Java pass-by-value dù callee có thể mutate object mà caller nhìn thấy."
-    answer: "Parameter nhận bản copy của reference value. Mutate qua copied reference ảnh hưởng shared object, nhưng reassign parameter không đổi caller variable. Đó chính là pass-by-value của reference."
+  - question: "Chứng minh Java là pass-by-value dù phương thức được gọi có thể thay đổi một đối tượng mà bên gọi nhìn thấy."
+    answer: "Tham số nhận một bản sao của giá trị tham chiếu. Hai tham chiếu sau đó có thể cùng nhận diện một đối tượng có thể thay đổi nên việc thay đổi trạng thái qua tham số được bên gọi quan sát. Nhưng nếu gán lại tham số sang đối tượng khác, biến của bên gọi không đổi. Chính sự khác nhau giữa thay đổi trạng thái đối tượng và gán lại tham số chứng minh Java vẫn là pass-by-value."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.PassByValue/PassByValue.md", anchor: "java-pass-by-value"}
-    apiRelated: {controller: "", methodSignature: ""}
+    readmeRelated: {file: "13.PassByValue/PassByValue.md", anchor: "java-pass-by-value"}
+    apiRelated: {controller: "PassByValueController", methodSignature: "mutateAndReassign()"}
 
-  - question: "Vì sao array covariant còn generics thường invariant, và hậu quả safety của array là gì?"
-    answer: "Java cho subtype array được view như supertype array vì historical type-system design, nên write cần runtime component-type check và có thể ném ArrayStoreException. Generics ưu tiên compile-time invariance."
+  - question: "Vì sao mảng có tính hiệp biến (covariant) còn kiểu generic thường bất biến (invariant), và hậu quả an toàn của mảng là gì?"
+    answer: "Java cho phép mảng của kiểu con được nhìn qua tham chiếu mảng của kiểu cha. Vì vậy trình biên dịch có thể chấp nhận một phép ghi qua góc nhìn tổng quát, còn JVM phải kiểm tra kiểu thành phần thực tế của mảng khi chạy; nếu không tương thích sẽ ném ArrayStoreException. Generics thường bất biến để chặn loại lỗi này sớm hơn ở lúc biên dịch."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "10.Arrays/Arrays.md", anchor: "array-covariance-risk"}
     apiRelated: {controller: "ArrayController", methodSignature: "covarianceFailure()"}
 
-  - question: "Trong method call Java thông thường, decision nào dùng compile-time type và decision nào dùng runtime type?"
-    answer: "Compile-time type quyết định member availability, overload selection, assignment và cast. Sau khi chọn instance-method signature, runtime receiver class chọn override implementation. Field và static method không dynamic dispatch."
+  - question: "Trong lời gọi phương thức Java thông thường, quyết định nào dựa vào kiểu lúc biên dịch và quyết định nào dựa vào kiểu lúc chạy?"
+    answer: "Kiểu tĩnh quyết định thành viên nào khả dụng, overload nào được chọn và nhiều quy tắc gán/ép kiểu. Sau khi một chữ ký phương thức instance đã được chọn, lớp thực tế của đối tượng nhận quyết định thân override nào chạy. Trường và phương thức static không dùng cơ chế phân phối động (dynamic dispatch) theo cách phương thức instance đã override dùng."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "13.TypeSystemMentalModel/TypeSystemMentalModel.md", anchor: "compile-time-vs-runtime-type"}
+    readmeRelated: {file: "15.TypeSystemMentalModel/TypeSystemMentalModel.md", anchor: "compile-time-vs-runtime-type"}
     apiRelated: {controller: "TypeSystemController", methodSignature: "inspectRuntimeType(Object)"}
 
-  - question: "Vì sao wrapper type có thể tạo NullPointerException trong expression nhìn như numeric?"
-    answer: "Arithmetic/comparison có thể trigger implicit unboxing. Nếu wrapper reference null thì không có primitive value để lấy, nên unboxing ném NullPointerException trước arithmetic."
+  - question: "Vì sao kiểu bao (wrapper) có thể gây NullPointerException trong một biểu thức nhìn giống phép toán số học bình thường?"
+    answer: "Phép toán hoặc so sánh có thể kích hoạt unboxing ngầm. Nếu tham chiếu wrapper là null thì không có giá trị nguyên thủy để lấy ra, vì vậy NullPointerException xảy ra tại bước unboxing trước khi phép toán số học thật sự được thực hiện."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.WrapperBoxing/WrapperBoxing.md", anchor: "unboxing-null"}
+    readmeRelated: {file: "6.WrapperBoxing/WrapperBoxing.md", anchor: "unboxing-null"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "API nên quyết định giữa null, empty result, exception hay Optional-like absence thế nào?"
-    answer: "Chọn theo domain semantics: absence là expected, exceptional hay khác empty value? Document contract nhất quán. Mục tiêu không phải cấm null máy móc mà làm absence explicit và dễ đoán."
+  - question: "Một API nên quyết định giữa null, kết quả rỗng, ngoại lệ hay kiểu biểu diễn trạng thái vắng giá trị như Optional dựa trên điều gì?"
+    answer: "Dựa trên ngữ nghĩa của hợp đồng: trạng thái vắng giá trị có phải trạng thái bình thường không, có khác một kết quả rỗng không, hay thực sự là tình huống lỗi? Điều quan trọng là chọn một biểu diễn nhất quán và tài liệu hóa rõ. Mục tiêu không phải cấm null máy móc mà làm trạng thái vắng giá trị có ý nghĩa và dễ dự đoán."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "12.Null/Null.md", anchor: "null-api-design"}
+    readmeRelated: {file: "5.Null/Null.md", anchor: "null-api-design"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "`var` có làm Java trở thành dynamically typed không? Khi nào dùng `var` giúp code rõ hơn hoặc khó đọc hơn?"
-    answer: "Không. `var` chỉ yêu cầu compiler suy ra static type của local variable từ initializer; type vẫn cố định cho compile-time checking. Nó hữu ích khi initializer làm type quá rõ hoặc type viết dài, nhưng explicit type tốt hơn khi inference che mất thông tin quan trọng đối với người đọc."
+  - question: "`var` có làm Java trở thành ngôn ngữ kiểu động không? Khi nào `var` giúp hoặc làm giảm khả năng đọc?"
+    answer: "Không. `var` chỉ yêu cầu trình biên dịch suy ra kiểu tĩnh của biến cục bộ từ biểu thức khởi tạo; kiểu đó vẫn cố định cho kiểm tra lúc biên dịch. `var` hữu ích khi biểu thức khởi tạo đã làm kiểu rất rõ hoặc tên kiểu quá dài, nhưng ghi kiểu tường minh có thể tốt hơn khi kiểu là thông tin quan trọng mà người đọc cần thấy ngay."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.VariablesScope/VariablesScope.md", anchor: "variable-kinds-and-lifetime"}
+    readmeRelated: {file: "4.VariablesScope/VariablesScope.md", anchor: "variable-kinds-and-lifetime"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Giải thích flow scope của pattern variable bằng `instanceof String s && ...` và guard clause phủ định pattern."
-    answer: "Pattern variable chỉ tồn tại ở nơi compiler chứng minh pattern đã match. Với `&&`, vế phải chỉ chạy sau match nên dùng được `s`. Với `if (!(x instanceof String s)) return;`, execution đi tiếp chỉ khi match thành công nên `s` có thể dùng sau guard. Scope vì vậy phụ thuộc control-flow guarantee chứ không chỉ dấu ngoặc block."
+  - question: "Giải thích phạm vi theo luồng (flow scope) của pattern variable với `instanceof String s && ...` và một mệnh đề bảo vệ phủ định pattern."
+    answer: "Pattern variable chỉ tồn tại ở nơi trình biên dịch có thể chứng minh pattern đã khớp. Ở vế phải của `&&`, điều đó được bảo đảm vì vế phải chỉ chạy sau khi vế trái true. Với `if (!(x instanceof String s)) return;`, luồng phía sau chỉ có thể đi tới khi pattern đã khớp, nên `s` dùng được sau mệnh đề bảo vệ. Phạm vi vì vậy phụ thuộc luồng điều khiển chứ không chỉ dấu ngoặc block."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.VariablesScope/VariablesScope.md", anchor: "scope-and-shadowing"}
+    readmeRelated: {file: "15.TypeSystemMentalModel/TypeSystemMentalModel.md", anchor: "instanceof-safe-cast"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Vì sao dùng `==` để so wrapper như Integer có thể tạo bug dù một số value nhỏ đôi khi cho kết quả true?"
-    answer: "`==` trên wrapper reference kiểm tra identity, không phải numeric value equality. Một số wrapper instance có thể được cache nên identity trùng cho vài value và làm demo có vẻ đúng; code không nên dựa vào cache. Dùng `equals` hoặc primitive comparison khi contract cần value equality."
+  - question: "Vì sao dùng `==` với wrapper như Integer có thể gây lỗi dù một số giá trị nhỏ đôi khi cho true?"
+    answer: "`==` trên tham chiếu wrapper kiểm tra tính đồng nhất, không phải so sánh bằng theo giá trị. Một số đối tượng có thể được lấy từ bộ nhớ đệm nên tính đồng nhất tình cờ trùng ở một số giá trị, khiến ví dụ minh họa có vẻ đúng. Với hai wrapper cùng kiểu và cần so giá trị, dùng `equals` hoặc unbox; nếu so khác kiểu wrapper thì phải chuẩn hóa/chuyển đổi theo hợp đồng số mong muốn thay vì dựa vào bộ nhớ đệm."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.WrapperBoxing/WrapperBoxing.md", anchor: "wrapper-caching"}
+    readmeRelated: {file: "6.WrapperBoxing/WrapperBoxing.md", anchor: "wrapper-caching"}
     apiRelated: {controller: "WrapperController", methodSignature: "wrapperIdentity()"}
 
-  - question: "Giải thích vì sao `byte + byte` cho kết quả expression type int và vì sao `b += 1` khác `b = b + 1`."
-    answer: "Binary numeric promotion thường nâng byte/short/char operand lên int trước arithmetic, nên `b + 1` có type int. Simple assignment về byte cần conversion hợp lệ/cast. Compound assignment có rule riêng bao gồm conversion về target type và evaluate left side một lần, vì vậy không phải textual expansion đơn giản của `b = b + 1`."
+  - question: "Vì sao `byte + byte` có kiểu biểu thức là int và vì sao `b += 1` khác `b = b + 1`?"
+    answer: "Binary numeric promotion thường nâng byte/short/char lên int trước phép toán, nên `b + 1` có kiểu int. Gán thông thường trở lại byte cần một chuyển đổi hợp lệ hoặc ép kiểu. Phép gán kết hợp (compound assignment) có quy tắc riêng bao gồm bước chuyển đổi về kiểu biến đích và chỉ đánh giá vế trái một lần, nên nó không chỉ là phép thay chữ cho `b = b + 1`."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Operators/Operators.md", anchor: "numeric-promotion"}
+    readmeRelated: {file: "7.Operators/Operators.md", anchor: "numeric-promotion"}
     apiRelated: {controller: "TypeSystemController", methodSignature: "conversionContexts()"}
 
-  - question: "Widening primitive conversion có luôn bảo đảm giữ chính xác value không? Narrowing cast bảo đảm điều gì và không bảo đảm điều gì?"
-    answer: "Widening là phân loại conversion của type system, không phải guarantee về precision cho mọi cặp type; ví dụ long lớn sang double có thể mất precision. Narrowing cast cho phép conversion explicit nhưng có thể truncate/wrap/mất information khi value không fit. Cast không thay thế domain range validation."
+  - question: "Chuyển đổi mở rộng kiểu nguyên thủy (widening primitive conversion) có luôn giữ chính xác giá trị không? Ép kiểu thu hẹp (narrowing cast) bảo đảm điều gì và không bảo đảm điều gì?"
+    answer: "Widening là một phân loại chuyển đổi của hệ thống kiểu, không phải lời hứa luôn giữ độ chính xác; ví dụ một long đủ lớn chuyển sang double có thể mất độ chính xác. Narrowing cast chỉ cho phép chuyển đổi tường minh; nó vẫn có thể cắt bớt, bao vòng hoặc mất thông tin khi giá trị không phù hợp kiểu đích. Ép kiểu không thay thế kiểm tra phạm vi theo nghiệp vụ."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.Casting/Casting.md", anchor: "primitive-casting"}
+    readmeRelated: {file: "8.Casting/Casting.md", anchor: "primitive-casting"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Short-circuit `&&`/`||` và conditional operator `?:` giống nhau ở điểm nào về evaluation, và vì sao side effect trong branch dễ gây bug?"
-    answer: "Cả hai đều có conditional evaluation: một phần expression có thể không chạy. `&&`/`||` quyết định có evaluate vế phải hay không; `?:` chỉ evaluate một trong hai result branch. Nếu correctness phụ thuộc side effect ở branch có thể bị skip, behavior trở nên khó thấy và dễ sai; nên tách side effect quan trọng thành statement rõ ràng."
+  - question: "Đánh giá ngắn mạch (short-circuit) của `&&`/`||` và toán tử điều kiện `?:` giống nhau ở điểm nào, và vì sao tác dụng phụ trong nhánh bị bỏ qua dễ gây lỗi?"
+    answer: "Cả hai đều có đánh giá có điều kiện: một phần biểu thức có thể không chạy. `&&`/`||` quyết định có đánh giá toán hạng phải hay không; `?:` chỉ đánh giá một trong hai biểu thức kết quả. Nếu tính đúng đắn phụ thuộc vào tác dụng phụ trong phần có thể bị bỏ qua, mã trở nên khó đọc và mong manh; tác dụng phụ quan trọng thường nên được tách thành câu lệnh rõ ràng."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Operators/Operators.md", anchor: "short-circuit-operators"}
+    readmeRelated: {file: "7.Operators/Operators.md", anchor: "short-circuit-operators"}
     apiRelated: {controller: "OperatorController", methodSignature: "shortCircuit()"}
 
-  - question: "Mô tả execution order của classic for loop và giải thích chính xác `continue` tác động tới update expression thế nào."
-    answer: "Classic for chạy initialization một lần, rồi condition → body → update → condition. `continue` bỏ phần còn lại của body nhưng chuyển tới update expression trước khi kiểm tra condition lần tiếp theo. Đây là khác biệt quan trọng khi update có side effect hoặc termination phụ thuộc update."
+  - question: "Mô tả thứ tự thực thi của vòng `for` cổ điển và giải thích chính xác `continue` tác động tới biểu thức cập nhật thế nào."
+    answer: "Vòng `for` cổ điển chạy phần khởi tạo một lần, sau đó lặp điều kiện → thân vòng lặp → cập nhật → điều kiện. `continue` không nhãn bỏ phần thân còn lại của lượt lặp hiện tại nhưng vẫn chuyển tới biểu thức cập nhật trước lần kiểm tra điều kiện tiếp theo. Điều này quan trọng nếu phần cập nhật có tác dụng phụ hoặc quyết định việc vòng lặp có kết thúc hay không."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.ControlFlow/ControlFlow.md", anchor: "loop-control"}
+    readmeRelated: {file: "9.ControlFlow/ControlFlow.md", anchor: "loop-control"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Java 21 pattern switch mở rộng mental model của switch như thế nào? `case null` và pattern variable có ý nghĩa gì?"
-    answer: "Switch có thể phân loại reference selector bằng type pattern, không chỉ constant/enum/String case. `case Integer i` vừa kiểm tra runtime type vừa bind `i` có static type Integer trong branch. `case null` cho phép null contract explicit; default không nên được hiểu máy móc là tự xử lý null. Pattern switch phù hợp khi nhiều branch cùng classify một selector."
+  - question: "Java 21 pattern switch mở rộng mô hình switch thế nào? `case null` và pattern variable có ý nghĩa gì?"
+    answer: "Switch có thể phân loại giá trị chọn (selector) kiểu tham chiếu bằng type pattern, không chỉ các case hằng/enum/String. `case Integer i` vừa kiểm tra kiểu thực tế lúc chạy vừa tạo biến `i` có kiểu tĩnh Integer trong nhánh đó. `case null` làm cách xử lý null trở nên tường minh; không nên mặc định hiểu `default` là tự xử lý null. Pattern switch hữu ích khi nhiều nhánh cùng phân loại một giá trị chọn."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.ControlFlow/ControlFlow.md", anchor: "switch-expression"}
+    readmeRelated: {file: "15.TypeSystemMentalModel/TypeSystemMentalModel.md", anchor: "instanceof-safe-cast"}
     apiRelated: {controller: "ControlFlowController", methodSignature: "patternSwitch()"}
 
-  - question: "Rule về return path của non-void method liên hệ thế nào với definite assignment?"
-    answer: "Cả hai đều là compile-time control-flow analysis. Với local variable, compiler phải chứng minh value đã được assign trước khi đọc trên mọi relevant path. Với non-void method, compiler phải chứng minh không có reachable normal path kết thúc method mà thiếu return value; path kết thúc bằng throw không complete normally nên không cần return tiếp."
+  - question: "Quy tắc về đường trả về của phương thức non-void liên hệ thế nào với definite assignment?"
+    answer: "Cả hai đều là phân tích luồng điều khiển ở thời điểm biên dịch. Với biến cục bộ, trình biên dịch phải chứng minh biến đã được gán trước khi đọc trên mọi đường liên quan. Với phương thức non-void, trình biên dịch phải chứng minh không có đường thực thi bình thường có thể đi tới cuối phương thức mà thiếu giá trị trả về; đường kết thúc bằng `throw` không hoàn tất bình thường nên không cần return sau đó."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.Methods/Methods.md", anchor: "method-signature"}
+    readmeRelated: {file: "11.Methods/Methods.md", anchor: "method-signature"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Vì sao thứ tự evaluate argument từ trái sang phải vẫn không phải lý do tốt để viết call chứa nhiều side effect?"
-    answer: "Java định nghĩa argument expression chạy từ trái sang phải trước khi vào method body, nên kết quả có thể dự đoán. Nhưng call như `f(i++, update(i))` buộc người đọc mô phỏng state transition trong một expression dài, làm intent và review khó hơn. Tách intermediate value thành statement thường rõ và an toàn hơn."
+  - question: "Vì sao Java định nghĩa thứ tự đánh giá đối số từ trái sang phải vẫn không phải lý do tốt để viết lời gọi chứa nhiều tác dụng phụ?"
+    answer: "Thứ tự là xác định nên kết quả có thể dự đoán, nhưng một lời gọi như `f(i++, update(i))` buộc người đọc mô phỏng nhiều thay đổi trạng thái trong một biểu thức dày đặc. Điều đó làm ý đồ và việc rà soát khó hơn. Tách các giá trị trung gian thành câu lệnh thường rõ ràng hơn dù ngôn ngữ đã định nghĩa thứ tự đánh giá."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.Methods/Methods.md", anchor: "method-call-evaluation"}
+    readmeRelated: {file: "11.Methods/Methods.md", anchor: "method-call-evaluation"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Varargs khác gì giữa zero arguments, truyền array có sẵn và explicit null array? Generic varargs tạo risk gì?"
-    answer: "Trong body varargs vẫn là array. Zero arguments tương ứng array rỗng; truyền compatible array dùng chính array đó; `(T[]) null` truyền null array reference. Với generic varargs, array runtime component model kết hợp type erasure có thể tạo heap pollution nếu implementation ghi/expose array không an toàn. `@SafeVarargs` là cam kết safety, không phải nút tắt warning tùy ý."
+  - question: "Varargs khác gì giữa không truyền đối số, truyền một mảng có sẵn và truyền tường minh một mảng null? Varargs với kiểu generic có rủi ro gì?"
+    answer: "Trong thân phương thức, varargs vẫn là một mảng. Không truyền đối số tương ứng mảng rỗng; truyền mảng tương thích có thể dùng chính mảng đó; `(T[]) null` truyền một tham chiếu mảng null. Với generic varargs, mô hình mảng lúc chạy kết hợp type erasure có thể dẫn tới heap pollution nếu phần triển khai ghi vào hoặc làm lộ mảng không an toàn. `@SafeVarargs` là một cam kết an toàn, không chỉ là nút tắt cảnh báo."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.Varargs/Varargs.md", anchor: "varargs-generics-warning"}
+    readmeRelated: {file: "12.Varargs/Varargs.md", anchor: "varargs-generics-warning"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "`Arrays.copyOf` trên reference array copy thứ gì? Vì sao mutate object qua copied array vẫn có thể nhìn thấy từ original array?"
-    answer: "Nó tạo array object mới và copy từng element value. Với reference array, element value là reference, nên original và copied có thể chứa hai bản copy của cùng reference tới một object. Mutate object qua một array vì thế visible qua array kia; đây là shallow element-reference copying, không phải deep copy object graph."
+  - question: "`Arrays.copyOf` sao chép gì với mảng tham chiếu, và vì sao thay đổi đối tượng qua mảng sao chép vẫn có thể nhìn thấy từ mảng gốc?"
+    answer: "Nó tạo một đối tượng mảng mới và sao chép giá trị từng phần tử. Với mảng tham chiếu, giá trị phần tử chính là tham chiếu, vì vậy mảng gốc và mảng sao chép có thể chứa hai bản sao của cùng tham chiếu tới một đối tượng. Thay đổi đối tượng qua một mảng vì thế có thể quan sát qua mảng còn lại; đây là sao chép nông các tham chiếu phần tử chứ không phải sao chép sâu đồ thị đối tượng."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "10.Arrays/Arrays.md", anchor: "array-initialization"}
     apiRelated: {controller: "ArrayController", methodSignature: "copyReferenceElements()"}
 
-  - question: "Vì sao `com.example` và `com.example.internal` không có quan hệ package-private cha/con, và import có thay đổi access hoặc class loading không?"
-    answer: "Java xem chúng là hai package khác nhau; common name prefix chỉ giống hierarchy tổ chức, không tạo access inheritance. Package-private yêu cầu cùng package thực sự. Import chỉ ảnh hưởng source name resolution, không cấp thêm visibility và không khiến JVM eager-load tất cả type được import."
+  - question: "Vì sao `com.example` và `com.example.internal` không có quan hệ cha/con về quyền package-private, và import có thay đổi quyền truy cập hoặc việc nạp lớp không?"
+    answer: "Java xem chúng là hai package khác nhau; tiền tố tên chung chỉ thể hiện cách tổ chức tên, không tạo kế thừa quyền truy cập. Package-private yêu cầu cùng package thực sự. Import chỉ ảnh hưởng phân giải tên trong mã nguồn; nó không cấp thêm khả năng truy cập và cũng không khiến JVM nạp sẵn mọi kiểu được import."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "11.PackagesImports/PackagesImports.md", anchor: "package-access"}
+    readmeRelated: {file: "14.PackagesImports/PackagesImports.md", anchor: "package-access"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Khi hai dòng Java gần giống nhau nhưng một dòng compile còn dòng kia không, vì sao nên xác định conversion context trước?"
-    answer: "Assignment, operator expression, method invocation và explicit cast không dùng đúng cùng một tập conversion. Ví dụ constant `1` có thể assignment trực tiếp vào byte nếu fit, nhưng `useByte(1)` không tự dùng narrowing constant conversion đó; `byte + byte` lại được numeric promotion thành int. Xác định context trước giúp rule trở nên nhất quán thay vì có vẻ ngẫu nhiên."
+  - question: "Khi hai dòng Java gần giống nhau nhưng một dòng biên dịch còn dòng kia không, vì sao nên xác định ngữ cảnh chuyển đổi (conversion context) trước?"
+    answer: "Phép gán, biểu thức toán tử, lời gọi phương thức và ép kiểu tường minh không cho phép đúng cùng một tập chuyển đổi. Ví dụ hằng `1` có thể gán trực tiếp vào byte khi nằm trong phạm vi, nhưng `useByte(1)` không tự nhận phép thu hẹp hằng trong ngữ cảnh gán; `byte + byte` lại được thăng hạng kiểu số thành int. Xác định ngữ cảnh trước khiến các quy tắc nhất quán thay vì có vẻ ngẫu nhiên."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "13.TypeSystemMentalModel/TypeSystemMentalModel.md", anchor: "assignment-compatibility"}
+    readmeRelated: {file: "15.TypeSystemMentalModel/TypeSystemMentalModel.md", anchor: "assignment-compatibility"}
     apiRelated: {controller: "TypeSystemController", methodSignature: "conversionContexts()"}

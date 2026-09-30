@@ -43,26 +43,39 @@ questions:
     question: "What is the main goal of the Language Basics module?"
     answers:
       - {id: A, answer: "Memorize the entire Java API before learning OOP.", explanation: "Incorrect. The module focuses on the foundational language/value/execution model, not the whole JDK catalog."}
-      - {id: B, answer: "Build one coherent mental model of values/types, variables, conversions, control flow, method calls, arrays, null, and compile-time/runtime rules before higher-level topics.", explanation: "Correct. Later topics such as OOP, Generics, and Collections depend on these rules."}
+      - {id: B, answer: "Build one coherent mental model from source structure, values/types, variables/scope, null, wrappers, expressions/conversions, control flow, arrays, method calls, name organization, and compile-time/runtime boundaries.", explanation: "Correct. Later topics such as OOP, Generics, and Collections depend on these foundations."}
       - {id: C, answer: "Learn only if/for syntax without understanding the type system.", explanation: "Incorrect. Control flow is only one part; the type/value and invocation models are also foundational."}
       - {id: D, answer: "Completely replace the OOP, Generics, and Collections modules.", explanation: "Incorrect. Language Basics prepares the foundation for those modules; it does not replace them."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.PrimitiveReference/PrimitiveReference.md", anchor: "language-basics-roadmap"}
+    readmeRelated: {file: "1.LanguagePurpose/LanguagePurpose.md", anchor: "language-basics-roadmap"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: source-code-statement-expression
+    question: "In `int total = price * quantity;`, which statement is correct?"
+    answers:
+      - {id: A, answer: "`price * quantity` is an expression; the whole variable declaration ending in `;` is a statement.", explanation: "Correct. An expression produces or contributes to a value, while a statement represents a program action/control step."}
+      - {id: B, answer: "`price * quantity` is a statement and the whole line is a data type.", explanation: "Incorrect. The multiplication is an expression; the complete variable declaration is the statement."}
+      - {id: C, answer: "Both are only source comments and do not participate in execution.", explanation: "Incorrect. This is ordinary executable Java source, not a comment."}
+      - {id: D, answer: "Java makes no distinction between expressions and statements.", explanation: "Incorrect. They are distinct syntactic/semantic concepts that matter when reading Java code."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.SourceCodeStructure/SourceCodeStructure.md", anchor: "statement-expression-model"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: primitive-reference-copy
-    question: "After `List<String> b = a`, what does Java copy?"
+    question: "After `User b = a`, what does Java copy?"
     answers:
-      - {id: A, answer: "The reference value; both variables can identify the same List object.", explanation: "Correct. Reference assignment copies the reference value, not the object graph."}
-      - {id: B, answer: "A new deep copy of the List.", explanation: "Incorrect. Reference assignment copies the reference value, not the object graph."}
-      - {id: C, answer: "Only the current list size.", explanation: "Incorrect. Reference assignment copies the reference value, not the object graph."}
+      - {id: A, answer: "The reference value; both variables can identify the same User object.", explanation: "Correct. Reference assignment copies the reference value, not the object graph."}
+      - {id: B, answer: "A new deep copy of the User object.", explanation: "Incorrect. Reference assignment does not clone the object."}
+      - {id: C, answer: "Only one field value from the User object.", explanation: "Incorrect. Java copies the reference value stored in `a`."}
       - {id: D, answer: "The physical memory address as a primitive long.", explanation: "Incorrect. Reference assignment copies the reference value, not the object graph."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.PrimitiveReference/PrimitiveReference.md", anchor: "primitive-vs-reference-model"}
+    readmeRelated: {file: "3.PrimitiveReference/PrimitiveReference.md", anchor: "primitive-vs-reference-model"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: local-definite-assignment
@@ -75,20 +88,20 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.VariablesScope/VariablesScope.md", anchor: "definite-assignment"}
+    readmeRelated: {file: "4.VariablesScope/VariablesScope.md", anchor: "definite-assignment"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: wrapper-identity-cache
-    question: "What is the safe rule for comparing numeric wrapper values?"
+    question: "When two values use the same numeric wrapper type, what is the safe comparison rule?"
     answers:
       - {id: A, answer: "Always use `==` because autoboxing removes object identity.", explanation: "Incorrect. `==` compares object identity while wrapper caching is not a value-equality contract."}
       - {id: B, answer: "Use `hashCode()` equality only.", explanation: "Incorrect. `==` compares object identity while wrapper caching is not a value-equality contract."}
-      - {id: C, answer: "Use value equality such as `equals`, not `==`, because wrapper identity may be cached or distinct.", explanation: "Correct. `==` compares object identity while wrapper caching is not a value-equality contract."}
+      - {id: C, answer: "Use value equality such as `equals` or unbox; do not rely on `==`, because wrapper identity may be cached or distinct.", explanation: "Correct. `==` compares object identity while wrapper caching is not a value-equality contract. For different wrapper types, normalize or convert according to the intended numeric comparison."}
       - {id: D, answer: "Wrapper values cannot be compared after boxing.", explanation: "Incorrect. `==` compares object identity while wrapper caching is not a value-equality contract."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.WrapperBoxing/WrapperBoxing.md", anchor: "wrapper-caching"}
+    readmeRelated: {file: "6.WrapperBoxing/WrapperBoxing.md", anchor: "wrapper-caching"}
     apiRelated: {controller: "WrapperController", methodSignature: "wrapperIdentity()"}
 
   - id: wrapper-null-unboxing
@@ -101,7 +114,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.WrapperBoxing/WrapperBoxing.md", anchor: "unboxing-null"}
+    readmeRelated: {file: "6.WrapperBoxing/WrapperBoxing.md", anchor: "unboxing-null"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: numeric-promotion-byte
@@ -114,7 +127,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Operators/Operators.md", anchor: "numeric-promotion"}
+    readmeRelated: {file: "7.Operators/Operators.md", anchor: "numeric-promotion"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: short-circuit-null-guard
@@ -127,7 +140,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Operators/Operators.md", anchor: "short-circuit-operators"}
+    readmeRelated: {file: "7.Operators/Operators.md", anchor: "short-circuit-operators"}
     apiRelated: {controller: "OperatorController", methodSignature: "shortCircuit()"}
 
   - id: reference-downcast-runtime
@@ -140,8 +153,8 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.Casting/Casting.md", anchor: "class-cast-failure"}
-    apiRelated: {controller: "", methodSignature: ""}
+    readmeRelated: {file: "15.TypeSystemMentalModel/TypeSystemMentalModel.md", anchor: "class-cast-failure"}
+    apiRelated: {controller: "CastingController", methodSignature: "safeAndUnsafeCast(String)"}
 
   - id: overload-phase-widening
     question: "With overloads `f(long)`, `f(Integer)`, and `f(int...)`, which is selected by `f(1)`?"
@@ -153,7 +166,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.Methods/Methods.md", anchor: "overload-resolution-phases"}
+    readmeRelated: {file: "11.Methods/Methods.md", anchor: "overload-resolution-phases"}
     apiRelated: {controller: "OverloadResolutionController", methodSignature: "selectionMatrix()"}
 
   - id: null-overload-ambiguity
@@ -166,7 +179,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.Methods/Methods.md", anchor: "null-overload-ambiguity"}
+    readmeRelated: {file: "11.Methods/Methods.md", anchor: "null-overload-ambiguity"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: java-pass-by-value
@@ -179,8 +192,8 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.PassByValue/PassByValue.md", anchor: "java-pass-by-value"}
-    apiRelated: {controller: "", methodSignature: ""}
+    readmeRelated: {file: "13.PassByValue/PassByValue.md", anchor: "java-pass-by-value"}
+    apiRelated: {controller: "PassByValueController", methodSignature: "mutateAndReassign()"}
 
   - id: array-covariance-runtime
     question: "Why can `Object[] a = new String[1]; a[0] = 123;` compile but fail?"
@@ -205,7 +218,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.ControlFlow/ControlFlow.md", anchor: "switch-expression"}
+    readmeRelated: {file: "9.ControlFlow/ControlFlow.md", anchor: "switch-expression"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: compile-runtime-type-dispatch
@@ -218,7 +231,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "13.TypeSystemMentalModel/TypeSystemMentalModel.md", anchor: "overload-vs-override-dispatch"}
+    readmeRelated: {file: "15.TypeSystemMentalModel/TypeSystemMentalModel.md", anchor: "overload-vs-override-dispatch"}
     apiRelated: {controller: "MethodDispatchController", methodSignature: "overloadVsOverride()"}
 
   - id: package-private-boundary
@@ -231,7 +244,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "11.PackagesImports/PackagesImports.md", anchor: "package-access"}
+    readmeRelated: {file: "14.PackagesImports/PackagesImports.md", anchor: "package-access"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: varargs-array-model
@@ -244,7 +257,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.Varargs/Varargs.md", anchor: "varargs-array-model"}
+    readmeRelated: {file: "12.Varargs/Varargs.md", anchor: "varargs-array-model"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: primitive-byte-range
@@ -257,7 +270,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.PrimitiveReference/PrimitiveReference.md", anchor: "primitive-ranges-and-defaults"}
+    readmeRelated: {file: "3.PrimitiveReference/PrimitiveReference.md", anchor: "primitive-ranges-and-defaults"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: floating-literal-default-type
@@ -270,7 +283,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.PrimitiveReference/PrimitiveReference.md", anchor: "primitive-ranges-and-defaults"}
+    readmeRelated: {file: "3.PrimitiveReference/PrimitiveReference.md", anchor: "primitive-ranges-and-defaults"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: var-is-static-typing
@@ -283,7 +296,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.VariablesScope/VariablesScope.md", anchor: "variable-kinds-and-lifetime"}
+    readmeRelated: {file: "4.VariablesScope/VariablesScope.md", anchor: "variable-kinds-and-lifetime"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: pattern-variable-flow-scope
@@ -296,7 +309,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.VariablesScope/VariablesScope.md", anchor: "scope-and-shadowing"}
+    readmeRelated: {file: "15.TypeSystemMentalModel/TypeSystemMentalModel.md", anchor: "instanceof-safe-cast"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: compound-assignment-byte
@@ -309,7 +322,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Operators/Operators.md", anchor: "numeric-promotion"}
+    readmeRelated: {file: "7.Operators/Operators.md", anchor: "numeric-promotion"}
     apiRelated: {controller: "TypeSystemController", methodSignature: "conversionContexts()"}
 
   - id: conditional-operator-lazy-branch
@@ -322,7 +335,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Operators/Operators.md", anchor: "short-circuit-operators"}
+    readmeRelated: {file: "7.Operators/Operators.md", anchor: "short-circuit-operators"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: primitive-narrowing-cast
@@ -335,7 +348,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.Casting/Casting.md", anchor: "primitive-casting"}
+    readmeRelated: {file: "8.Casting/Casting.md", anchor: "primitive-casting"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: for-continue-update-order
@@ -348,7 +361,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.ControlFlow/ControlFlow.md", anchor: "loop-control"}
+    readmeRelated: {file: "9.ControlFlow/ControlFlow.md", anchor: "loop-control"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: switch-pattern-null-case
@@ -361,7 +374,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.ControlFlow/ControlFlow.md", anchor: "switch-expression"}
+    readmeRelated: {file: "15.TypeSystemMentalModel/TypeSystemMentalModel.md", anchor: "instanceof-safe-cast"}
     apiRelated: {controller: "ControlFlowController", methodSignature: "patternSwitch()"}
 
   - id: non-void-return-path
@@ -374,7 +387,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.Methods/Methods.md", anchor: "method-signature"}
+    readmeRelated: {file: "11.Methods/Methods.md", anchor: "method-signature"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: argument-evaluation-left-to-right
@@ -387,7 +400,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.Methods/Methods.md", anchor: "method-call-evaluation"}
+    readmeRelated: {file: "11.Methods/Methods.md", anchor: "method-call-evaluation"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: varargs-null-vs-empty
@@ -400,7 +413,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.Varargs/Varargs.md", anchor: "varargs-array-model"}
+    readmeRelated: {file: "12.Varargs/Varargs.md", anchor: "varargs-array-model"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: array-copy-reference-elements
@@ -426,7 +439,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "11.PackagesImports/PackagesImports.md", anchor: "package-access"}
+    readmeRelated: {file: "14.PackagesImports/PackagesImports.md", anchor: "package-access"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: conversion-context-difference
@@ -439,5 +452,18 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "13.TypeSystemMentalModel/TypeSystemMentalModel.md", anchor: "assignment-compatibility"}
+    readmeRelated: {file: "15.TypeSystemMentalModel/TypeSystemMentalModel.md", anchor: "assignment-compatibility"}
     apiRelated: {controller: "TypeSystemController", methodSignature: "conversionContexts()"}
+
+  - id: language-basics-end-to-end-flow
+    question: "Given `int[] scores = {10}; addBonus(scores, 15); boolean passed = scores[0] > 20;`, where `addBonus` executes `scores[0] += bonus`, which explanation is correct?"
+    answers:
+      - {id: A, answer: "Java copies the array reference value into the parameter; the method mutates the same array object to 25; the caller observes 25, so `passed` is true.", explanation: "Correct. This connects values/expressions, arrays, method calls, pass-by-value, and a boolean result used by control flow."}
+      - {id: B, answer: "Java deep-copies the array before the call, so the caller still sees 10 and `passed` is false.", explanation: "Incorrect. Pass-by-value copies the reference value; it does not deep-copy the array object."}
+      - {id: C, answer: "The method receives the caller's `scores` variable slot by reference, which is why it can change the element.", explanation: "Incorrect. Java is still pass-by-value; the two reference variables simply identify the same mutable array object."}
+      - {id: D, answer: "The expression `scores[0] > 20` is decided at compile time, so it does not depend on the value after the call.", explanation: "Incorrect. The expression type is checked at compile time, but its boolean value is computed from runtime array state."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "16.LanguageBasicsSynthesis/LanguageBasicsSynthesis.md", anchor: "end-to-end-value-flow"}
+    apiRelated: {controller: "", methodSignature: ""}

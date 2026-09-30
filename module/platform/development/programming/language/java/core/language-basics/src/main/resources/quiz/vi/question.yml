@@ -40,155 +40,168 @@
 
 questions:
   - id: language-basics-foundation
-    question: "Mục tiêu quan trọng nhất của module Language Basics là gì?"
+    question: "Mục tiêu quan trọng nhất của mô-đun Language Basics là gì?"
     answers:
-      - {id: A, answer: "Học thuộc toàn bộ Java API trước khi học OOP.", explanation: "Sai. Module tập trung vào language/value/execution model nền tảng, không phải catalog toàn bộ JDK."}
-      - {id: B, answer: "Xây mental model thống nhất về value/type, variable, conversion, control flow, method call, array, null và compile-time/runtime rules trước các chủ đề cao hơn.", explanation: "Đúng. Các chủ đề sau như OOP, Generics và Collections đều dựa trên những rule nền này."}
-      - {id: C, answer: "Chỉ học syntax của if/for mà không cần hiểu type system.", explanation: "Sai. Control flow chỉ là một phần; type/value và invocation model cũng là nền tảng."}
-      - {id: D, answer: "Thay thế hoàn toàn các module OOP, Generics và Collections.", explanation: "Sai. Language Basics chuẩn bị nền tảng để hiểu các module đó, không thay thế chúng."}
+      - {id: A, answer: "Học thuộc toàn bộ Java API trước khi học OOP.", explanation: "Sai. Mô-đun tập trung vào nền tảng của ngôn ngữ Java, không phải danh mục toàn bộ JDK."}
+      - {id: B, answer: "Xây một mô hình tư duy thống nhất từ cấu trúc mã nguồn, giá trị/kiểu, biến/phạm vi, null, kiểu bao, biểu thức/chuyển đổi, luồng điều khiển, mảng, lời gọi phương thức đến ranh giới lúc biên dịch/lúc chạy.", explanation: "Đúng. Các chủ đề cao hơn như OOP, Generics và Collections đều dựa trên những quy tắc nền này."}
+      - {id: C, answer: "Chỉ học cú pháp của if/for mà không cần hiểu hệ thống kiểu.", explanation: "Sai. Luồng điều khiển chỉ là một phần; mô hình giá trị, kiểu và lời gọi cũng là nền tảng."}
+      - {id: D, answer: "Thay thế hoàn toàn các mô-đun OOP, Generics và Collections.", explanation: "Sai. Language Basics chuẩn bị nền tảng để hiểu các mô-đun đó, không thay thế chúng."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.PrimitiveReference/PrimitiveReference.md", anchor: "language-basics-roadmap"}
+    readmeRelated: {file: "1.LanguagePurpose/LanguagePurpose.md", anchor: "language-basics-roadmap"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - id: primitive-reference-copy
-    question: "Sau `List<String> b = a`, Java copy thứ gì?"
+  - id: source-code-statement-expression
+    question: "Trong `int total = price * quantity;`, nhận định nào đúng?"
     answers:
-      - {id: A, answer: "Reference value; cả hai biến có thể nhận diện cùng một List object.", explanation: "Đúng. Reference assignment copy reference value chứ không copy object graph."}
-      - {id: B, answer: "Một deep copy mới của List.", explanation: "Sai. Reference assignment copy reference value chứ không copy object graph."}
-      - {id: C, answer: "Chỉ current list size.", explanation: "Sai. Reference assignment copy reference value chứ không copy object graph."}
-      - {id: D, answer: "Địa chỉ bộ nhớ vật lý dưới dạng primitive long.", explanation: "Sai. Reference assignment copy reference value chứ không copy object graph."}
+      - {id: A, answer: "`price * quantity` là một biểu thức; toàn bộ khai báo biến kết thúc bằng `;` là một câu lệnh.", explanation: "Đúng. Biểu thức tạo hoặc góp phần tạo giá trị, còn câu lệnh biểu diễn một bước hành động/điều khiển của chương trình."}
+      - {id: B, answer: "`price * quantity` là một câu lệnh và toàn bộ dòng là một kiểu dữ liệu.", explanation: "Sai. Phép nhân là biểu thức; toàn bộ khai báo biến mới là câu lệnh."}
+      - {id: C, answer: "Cả hai chỉ là chú thích mã nguồn nên không tham gia thực thi.", explanation: "Sai. Đây là mã Java thực thi bình thường, không phải comment."}
+      - {id: D, answer: "Java không phân biệt biểu thức và câu lệnh.", explanation: "Sai. Đây là hai khái niệm cú pháp/ngữ nghĩa khác nhau và ảnh hưởng cách đọc mã."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.PrimitiveReference/PrimitiveReference.md", anchor: "primitive-vs-reference-model"}
+    readmeRelated: {file: "2.SourceCodeStructure/SourceCodeStructure.md", anchor: "statement-expression-model"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: primitive-reference-copy
+    question: "Sau `User b = a`, Java sao chép thứ gì?"
+    answers:
+      - {id: A, answer: "Giá trị tham chiếu; `a` và `b` có thể cùng nhận diện một đối tượng `User`.", explanation: "Đúng. Phép gán tham chiếu sao chép giá trị tham chiếu, không sao chép toàn bộ đồ thị đối tượng."}
+      - {id: B, answer: "Một bản sao sâu mới của đối tượng `User`.", explanation: "Sai. Phép gán tham chiếu không tự clone đối tượng."}
+      - {id: C, answer: "Chỉ giá trị của một trường trong `User`.", explanation: "Sai. Java sao chép chính giá trị tham chiếu đang nằm trong biến `a`."}
+      - {id: D, answer: "Địa chỉ bộ nhớ vật lý dưới dạng `long` nguyên thủy.", explanation: "Sai. Mô hình ngôn ngữ Java không cho lập trình viên thao tác tham chiếu như một địa chỉ nguyên thủy."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.PrimitiveReference/PrimitiveReference.md", anchor: "primitive-vs-reference-model"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: local-definite-assignment
-    question: "Vì sao local `int x;` không được đọc trước khi compiler thấy assignment trên mọi path?"
+    question: "Vì sao biến cục bộ `int x;` không được đọc trước khi trình biên dịch thấy nó đã được gán trên mọi đường thực thi liên quan?"
     answers:
-      - {id: A, answer: "Vì mọi local variable implicit final.", explanation: "Sai. Field có default value khi initialize, còn local phải definitely assigned trước khi đọc."}
-      - {id: B, answer: "Local variable chịu compile-time definite-assignment analysis và không có automatic default value.", explanation: "Đúng. Field có default value khi initialize, còn local phải definitely assigned trước khi đọc."}
-      - {id: C, answer: "Vì JVM initialize local thành null.", explanation: "Sai. Field có default value khi initialize, còn local phải definitely assigned trước khi đọc."}
-      - {id: D, answer: "Vì chỉ static method được initialize local variable.", explanation: "Sai. Field có default value khi initialize, còn local phải definitely assigned trước khi đọc."}
+      - {id: A, answer: "Vì mọi biến cục bộ đều ngầm `final`.", explanation: "Sai. `final` không phải lý do của quy tắc definite assignment."}
+      - {id: B, answer: "Vì biến cục bộ chịu phân tích definite assignment lúc biên dịch và không nhận giá trị mặc định tự động.", explanation: "Đúng. Trường có giá trị mặc định trong quá trình khởi tạo; biến cục bộ thì phải được gán chắc chắn trước khi đọc."}
+      - {id: C, answer: "Vì JVM khởi tạo mọi biến cục bộ thành null.", explanation: "Sai. Biến cục bộ không được cấp giá trị mặc định theo cách trường được cấp."}
+      - {id: D, answer: "Vì chỉ phương thức `static` mới được khởi tạo biến cục bộ.", explanation: "Sai. Biến cục bộ có thể xuất hiện trong cả phương thức static và instance."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.VariablesScope/VariablesScope.md", anchor: "definite-assignment"}
+    readmeRelated: {file: "4.VariablesScope/VariablesScope.md", anchor: "definite-assignment"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: wrapper-identity-cache
-    question: "Rule an toàn để so sánh numeric wrapper value là gì?"
+    question: "Khi hai giá trị cùng kiểu wrapper biểu diễn cùng một giá trị số, quy tắc an toàn nào đúng?"
     answers:
-      - {id: A, answer: "Luôn dùng `==` vì autoboxing loại bỏ object identity.", explanation: "Sai. `==` so object identity, còn wrapper cache không phải value-equality contract."}
-      - {id: B, answer: "Chỉ so `hashCode()`.", explanation: "Sai. `==` so object identity, còn wrapper cache không phải value-equality contract."}
-      - {id: C, answer: "Dùng value equality như `equals`, không dùng `==`, vì wrapper identity có thể cache hoặc distinct.", explanation: "Đúng. `==` so object identity, còn wrapper cache không phải value-equality contract."}
-      - {id: D, answer: "Wrapper value không thể compare sau boxing.", explanation: "Sai. `==` so object identity, còn wrapper cache không phải value-equality contract."}
+      - {id: A, answer: "Luôn dùng `==` vì autoboxing loại bỏ tính đồng nhất của đối tượng.", explanation: "Sai. `==` trên tham chiếu vẫn kiểm tra tính đồng nhất."}
+      - {id: B, answer: "Chỉ cần so `hashCode()`.", explanation: "Sai. `hashCode()` không phải phép so sánh bằng trực tiếp."}
+      - {id: C, answer: "Với cùng kiểu wrapper và cần so giá trị, dùng `equals` hoặc unbox; không dựa vào `==` vì cache không phải hợp đồng so sánh bằng theo giá trị.", explanation: "Đúng. Với wrapper khác kiểu, cần chuẩn hóa/chuyển đổi theo hợp đồng số mong muốn trước khi so sánh."}
+      - {id: D, answer: "Wrapper không thể so sánh giá trị sau boxing.", explanation: "Sai. Có thể so sánh theo giá trị bằng hợp đồng phù hợp; vấn đề là không nhầm tính đồng nhất với so sánh bằng theo giá trị."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.WrapperBoxing/WrapperBoxing.md", anchor: "wrapper-caching"}
+    readmeRelated: {file: "6.WrapperBoxing/WrapperBoxing.md", anchor: "wrapper-caching"}
     apiRelated: {controller: "WrapperController", methodSignature: "wrapperIdentity()"}
 
   - id: wrapper-null-unboxing
     question: "Điều gì xảy ra khi `Integer count = null; int x = count;` chạy?"
     answers:
-      - {id: A, answer: "x trở thành 0.", explanation: "Sai. Wrapper null không thể cung cấp primitive value mà unboxing yêu cầu."}
-      - {id: B, answer: "Compiler silently bỏ assignment.", explanation: "Sai. Wrapper null không thể cung cấp primitive value mà unboxing yêu cầu."}
-      - {id: C, answer: "x trở thành Integer.MIN_VALUE.", explanation: "Sai. Wrapper null không thể cung cấp primitive value mà unboxing yêu cầu."}
-      - {id: D, answer: "Unboxing cần object value nên sẽ ném NullPointerException.", explanation: "Đúng. Wrapper null không thể cung cấp primitive value mà unboxing yêu cầu."}
+      - {id: A, answer: "`x` trở thành 0.", explanation: "Sai. `null` không cung cấp được giá trị nguyên thủy cho unboxing."}
+      - {id: B, answer: "Trình biên dịch bỏ qua phép gán.", explanation: "Sai. Mã có thể biên dịch nhưng lỗi xuất hiện khi unboxing ở lúc chạy."}
+      - {id: C, answer: "`x` trở thành `Integer.MIN_VALUE`.", explanation: "Sai. Không có quy tắc thay `null` bằng giá trị số đặc biệt."}
+      - {id: D, answer: "Unboxing cố lấy giá trị nguyên thủy từ reference null nên ném `NullPointerException`.", explanation: "Đúng. Đây là rủi ro riêng khi wrapper có thể là null."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.WrapperBoxing/WrapperBoxing.md", anchor: "unboxing-null"}
+    readmeRelated: {file: "6.WrapperBoxing/WrapperBoxing.md", anchor: "unboxing-null"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: numeric-promotion-byte
-    question: "Với `byte a=1,b=2`, type của `a + b` trước explicit cast là gì?"
+    question: "Với `byte a = 1, b = 2;`, kiểu của biểu thức `a + b` trước khi ép kiểu tường minh là gì?"
     answers:
-      - {id: A, answer: "int", explanation: "Đúng. Binary numeric promotion nâng byte/short lên int khi arithmetic."}
-      - {id: B, answer: "byte", explanation: "Sai. Binary numeric promotion nâng byte/short lên int khi arithmetic."}
-      - {id: C, answer: "short", explanation: "Sai. Binary numeric promotion nâng byte/short lên int khi arithmetic."}
-      - {id: D, answer: "long", explanation: "Sai. Binary numeric promotion nâng byte/short lên int khi arithmetic."}
+      - {id: A, answer: "`int`", explanation: "Đúng. Binary numeric promotion nâng các toán hạng byte/short/char lên int trong phép toán số học kiểu này."}
+      - {id: B, answer: "`byte`", explanation: "Sai. Kiểu của biến đầu vào không đồng nghĩa kiểu của kết quả phép toán vẫn là byte."}
+      - {id: C, answer: "`short`", explanation: "Sai. Java không chọn short làm kiểu kết quả trung gian ở đây."}
+      - {id: D, answer: "`long`", explanation: "Sai. Không có toán hạng long buộc biểu thức phải nâng lên long."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Operators/Operators.md", anchor: "numeric-promotion"}
+    readmeRelated: {file: "7.Operators/Operators.md", anchor: "numeric-promotion"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: short-circuit-null-guard
-    question: "Vì sao `value != null && value.isBlank()` an toàn khỏi dereference null?"
+    question: "Vì sao `value != null && value.isBlank()` không gọi `isBlank()` khi `value` là null?"
     answers:
-      - {id: A, answer: "`isBlank()` tự nhận null.", explanation: "Sai. Short-circuit là control-flow semantics: vế trái false thì vế phải không chạy."}
-      - {id: B, answer: "`&&` chỉ evaluate operand phải khi operand trái true.", explanation: "Đúng. Short-circuit là control-flow semantics: vế trái false thì vế phải không chạy."}
-      - {id: C, answer: "Compiler thay null bằng empty string.", explanation: "Sai. Short-circuit là control-flow semantics: vế trái false thì vế phải không chạy."}
-      - {id: D, answer: "Cả hai vế chạy nhưng NPE bị ignore.", explanation: "Sai. Short-circuit là control-flow semantics: vế trái false thì vế phải không chạy."}
+      - {id: A, answer: "Vì `isBlank()` tự xử lý null.", explanation: "Sai. Lời gọi instance trên null vẫn có thể gây lỗi nếu nó thực sự được thực thi."}
+      - {id: B, answer: "Vì `&&` chỉ đánh giá vế phải khi vế trái là true.", explanation: "Đúng. Đây là đánh giá ngắn mạch của toán tử logic."}
+      - {id: C, answer: "Vì trình biên dịch đổi null thành chuỗi rỗng.", explanation: "Sai. Java không tự thay null bằng chuỗi rỗng."}
+      - {id: D, answer: "Vì cả hai vế vẫn chạy nhưng `NullPointerException` bị bỏ qua.", explanation: "Sai. Vế phải không được thực thi khi vế trái đã là false."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Operators/Operators.md", anchor: "short-circuit-operators"}
+    readmeRelated: {file: "7.Operators/Operators.md", anchor: "short-circuit-operators"}
     apiRelated: {controller: "OperatorController", methodSignature: "shortCircuit()"}
 
   - id: reference-downcast-runtime
-    question: "Một downcast compile được. Điều gì vẫn quyết định nó có thành công không?"
+    question: "Một downcast biên dịch được. Điều gì vẫn quyết định nó có thành công khi chạy không?"
     answers:
-      - {id: A, answer: "Variable name phải giống target class.", explanation: "Sai. Cast đổi compile-time view nhưng runtime vẫn type-check downcast."}
-      - {id: B, answer: "Target type phải final.", explanation: "Sai. Cast đổi compile-time view nhưng runtime vẫn type-check downcast."}
-      - {id: C, answer: "Runtime object phải thật sự compatible với target type yêu cầu.", explanation: "Đúng. Cast đổi compile-time view nhưng runtime vẫn type-check downcast."}
-      - {id: D, answer: "Source reference phải tạo trong cùng method.", explanation: "Sai. Cast đổi compile-time view nhưng runtime vẫn type-check downcast."}
+      - {id: A, answer: "Tên biến phải giống tên lớp đích.", explanation: "Sai. Tên biến không quyết định tính hợp lệ của downcast."}
+      - {id: B, answer: "Kiểu đích bắt buộc phải là `final`.", explanation: "Sai. `final` không phải điều kiện chung cho downcast."}
+      - {id: C, answer: "Đối tượng thực tế phải tương thích với kiểu đích yêu cầu.", explanation: "Đúng. JVM kiểm tra kiểu thực tế khi thực hiện downcast."}
+      - {id: D, answer: "Reference nguồn phải được tạo trong cùng phương thức.", explanation: "Sai. Vị trí tạo reference không quyết định kết quả kiểm tra kiểu."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.Casting/Casting.md", anchor: "class-cast-failure"}
-    apiRelated: {controller: "", methodSignature: ""}
+    readmeRelated: {file: "15.TypeSystemMentalModel/TypeSystemMentalModel.md", anchor: "class-cast-failure"}
+    apiRelated: {controller: "CastingController", methodSignature: "safeAndUnsafeCast(String)"}
 
   - id: overload-phase-widening
-    question: "Với overload `f(long)`, `f(Integer)`, `f(int...)`, `f(1)` chọn method nào?"
+    question: "Với các overload `f(long)`, `f(Integer)`, `f(int...)`, lời gọi `f(1)` chọn phương thức nào?"
     answers:
-      - {id: A, answer: "`f(Integer)` vì boxing luôn ưu tiên cao nhất.", explanation: "Sai. Overload resolution theo phase; candidate applicable ở phase sớm chặn việc chọn varargs phase sau."}
-      - {id: B, answer: "`f(int...)` vì element type là exact int.", explanation: "Sai. Overload resolution theo phase; candidate applicable ở phase sớm chặn việc chọn varargs phase sau."}
-      - {id: C, answer: "Call luôn ambiguous.", explanation: "Sai. Overload resolution theo phase; candidate applicable ở phase sớm chặn việc chọn varargs phase sau."}
-      - {id: D, answer: "`f(long)` vì fixed-arity widening applicable được xét trước boxing và varargs fallback.", explanation: "Đúng. Overload resolution theo phase; candidate applicable ở phase sớm chặn việc chọn varargs phase sau."}
+      - {id: A, answer: "`f(Integer)` vì boxing luôn được ưu tiên cao nhất.", explanation: "Sai. Boxing không được ưu tiên trước widening primitive ở giai đoạn sớm hơn."}
+      - {id: B, answer: "`f(int...)` vì phần tử varargs có kiểu chính xác là int.", explanation: "Sai. Varargs được xét ở giai đoạn muộn hơn khi đã có overload áp dụng được trước đó."}
+      - {id: C, answer: "Lời gọi luôn mơ hồ.", explanation: "Sai. Trường hợp này có lựa chọn xác định."}
+      - {id: D, answer: "`f(long)` vì fixed-arity widening áp dụng được ở giai đoạn trước boxing và varargs.", explanation: "Đúng. Phân giải overload xét các giai đoạn khả dụng theo thứ tự."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.Methods/Methods.md", anchor: "overload-resolution-phases"}
+    readmeRelated: {file: "11.Methods/Methods.md", anchor: "overload-resolution-phases"}
     apiRelated: {controller: "OverloadResolutionController", methodSignature: "selectionMatrix()"}
 
   - id: null-overload-ambiguity
-    question: "Vì sao `f(null)` có thể ambiguous khi overload nhận `String` và `StringBuilder`?"
+    question: "Vì sao `f(null)` có thể mơ hồ khi có overload nhận `String` và `StringBuilder`?"
     answers:
-      - {id: A, answer: "null compatible với cả hai reference type không liên quan và không overload nào specific hơn.", explanation: "Đúng. Most-specific selection không chọn được giữa hai unrelated reference parameter type với null literal."}
-      - {id: B, answer: "null chỉ truyền được cho String.", explanation: "Sai. Most-specific selection không chọn được giữa hai unrelated reference parameter type với null literal."}
-      - {id: C, answer: "StringBuilder luôn specific hơn String.", explanation: "Sai. Most-specific selection không chọn được giữa hai unrelated reference parameter type với null literal."}
-      - {id: D, answer: "null là primitive và phải boxing trước.", explanation: "Sai. Most-specific selection không chọn được giữa hai unrelated reference parameter type với null literal."}
+      - {id: A, answer: "`null` tương thích với cả hai kiểu tham chiếu không liên quan và không overload nào cụ thể hơn overload kia.", explanation: "Đúng. Quy tắc chọn phương thức cụ thể nhất không thể quyết định giữa hai kiểu tham số không có quan hệ kế thừa phù hợp."}
+      - {id: B, answer: "`null` chỉ truyền được cho `String`.", explanation: "Sai. `null` có thể tương thích với nhiều kiểu tham chiếu."}
+      - {id: C, answer: "`StringBuilder` luôn cụ thể hơn `String`.", explanation: "Sai. Hai lớp này không có quan hệ subtype theo cách đó."}
+      - {id: D, answer: "`null` là primitive nên phải boxing trước.", explanation: "Sai. `null` không phải primitive."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.Methods/Methods.md", anchor: "null-overload-ambiguity"}
+    readmeRelated: {file: "11.Methods/Methods.md", anchor: "null-overload-ambiguity"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: java-pass-by-value
-    question: "Method mutate object nhận qua parameter và caller thấy mutation. Điều này có chứng minh Java pass-by-reference không?"
+    question: "Một phương thức thay đổi đối tượng nhận qua tham số và bên gọi quan sát được thay đổi đó. Điều này có chứng minh Java pass-by-reference không?"
     answers:
-      - {id: A, answer: "Có, mọi visible mutation đều chứng minh pass-by-reference.", explanation: "Sai. Parameter reassignment chỉ local, còn mutation qua copied reference có thể visible."}
-      - {id: B, answer: "Không. Java copy reference value và cả hai reference cùng nhận diện một mutable object.", explanation: "Đúng. Parameter reassignment chỉ local, còn mutation qua copied reference có thể visible."}
-      - {id: C, answer: "Có, nhưng chỉ với collection.", explanation: "Sai. Parameter reassignment chỉ local, còn mutation qua copied reference có thể visible."}
-      - {id: D, answer: "Không, vì method không thể mutate object.", explanation: "Sai. Parameter reassignment chỉ local, còn mutation qua copied reference có thể visible."}
+      - {id: A, answer: "Có, mọi thay đổi nhìn thấy từ bên gọi đều chứng minh pass-by-reference.", explanation: "Sai. Hai biến có thể giữ hai bản sao của cùng một giá trị tham chiếu và cùng truy cập một đối tượng."}
+      - {id: B, answer: "Không. Java sao chép giá trị tham chiếu; hai reference sau đó có thể cùng nhận diện một đối tượng có thể thay đổi.", explanation: "Đúng. Gán lại tham số chỉ cục bộ, còn thay đổi trạng thái của đối tượng dùng chung có thể được bên gọi quan sát."}
+      - {id: C, answer: "Có, nhưng chỉ với Collections.", explanation: "Sai. Quy tắc pass-by-value áp dụng cho mọi kiểu giá trị Java truyền vào phương thức."}
+      - {id: D, answer: "Không, vì phương thức không thể thay đổi đối tượng.", explanation: "Sai. Phương thức có thể thay đổi đối tượng có thể biến đổi thông qua tham chiếu."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.PassByValue/PassByValue.md", anchor: "java-pass-by-value"}
-    apiRelated: {controller: "", methodSignature: ""}
+    readmeRelated: {file: "13.PassByValue/PassByValue.md", anchor: "java-pass-by-value"}
+    apiRelated: {controller: "PassByValueController", methodSignature: "mutateAndReassign()"}
 
   - id: array-covariance-runtime
-    question: "Vì sao `Object[] a = new String[1]; a[0] = 123;` compile nhưng fail?"
+    question: "Vì sao `Object[] a = new String[1]; a[0] = 123;` biên dịch được nhưng thất bại khi chạy?"
     answers:
-      - {id: A, answer: "Integer không phải Object.", explanation: "Sai. Assignment được phép qua Object[] view, sau đó runtime store check ném ArrayStoreException."}
-      - {id: B, answer: "Object[] không store được value nào.", explanation: "Sai. Assignment được phép qua Object[] view, sau đó runtime store check ném ArrayStoreException."}
-      - {id: C, answer: "Array covariant nhưng runtime array nhớ component type String và reject store incompatible.", explanation: "Đúng. Assignment được phép qua Object[] view, sau đó runtime store check ném ArrayStoreException."}
-      - {id: D, answer: "Array đổi runtime type thành Object[] sau assignment.", explanation: "Sai. Assignment được phép qua Object[] view, sau đó runtime store check ném ArrayStoreException."}
+      - {id: A, answer: "Vì `Integer` không phải `Object`.", explanation: "Sai. Integer là subtype của Object; vấn đề nằm ở kiểu thực tế của đối tượng mảng."}
+      - {id: B, answer: "Vì `Object[]` không thể chứa giá trị nào.", explanation: "Sai. Object[] có thể chứa reference tương thích; ở đây biến chỉ đang nhìn một đối tượng String[]."}
+      - {id: C, answer: "Mảng là covariant, nhưng đối tượng mảng thực tế vẫn là `String[]`; JVM từ chối ghi Integer và ném `ArrayStoreException`.", explanation: "Đúng. Assignment qua góc nhìn Object[] hợp lệ lúc biên dịch nhưng store check xảy ra lúc chạy."}
+      - {id: D, answer: "Sau phép gán, mảng đổi kiểu thực tế thành `Object[]`.", explanation: "Sai. Phép gán không thay đổi lớp thực tế của đối tượng mảng."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
@@ -196,220 +209,220 @@ questions:
     apiRelated: {controller: "ArrayController", methodSignature: "covarianceFailure()"}
 
   - id: switch-expression-yield
-    question: "Một property quan trọng của modern switch expression là gì?"
+    question: "Một đặc điểm quan trọng của switch expression hiện đại là gì?"
     answers:
-      - {id: A, answer: "Chỉ dùng được với int.", explanation: "Sai. Switch expression là value-producing construct với rule semantics rõ ràng."}
-      - {id: B, answer: "Mọi case tự chạy case tiếp theo.", explanation: "Sai. Switch expression là value-producing construct với rule semantics rõ ràng."}
-      - {id: C, answer: "Không thể đứng bên phải assignment.", explanation: "Sai. Switch expression là value-producing construct với rule semantics rõ ràng."}
-      - {id: D, answer: "Nó có thể produce value bằng arrow rule hoặc `yield`, tránh accidental classic fall-through.", explanation: "Đúng. Switch expression là value-producing construct với rule semantics rõ ràng."}
+      - {id: A, answer: "Chỉ dùng được với `int`.", explanation: "Sai. Switch hỗ trợ nhiều kiểu selector hợp lệ hơn int."}
+      - {id: B, answer: "Mọi nhánh tự động chạy tiếp nhánh kế tiếp.", explanation: "Sai. Arrow rule của switch expression không có kiểu fall-through ngầm như classic colon case."}
+      - {id: C, answer: "Không thể đứng bên phải phép gán.", explanation: "Sai. Switch expression tạo ra giá trị và có thể dùng trong biểu thức."}
+      - {id: D, answer: "Nó có thể tạo giá trị bằng arrow rule hoặc `yield`, đồng thời tránh accidental fall-through kiểu classic switch.", explanation: "Đúng. Đây là điểm quan trọng của switch expression."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.ControlFlow/ControlFlow.md", anchor: "switch-expression"}
+    readmeRelated: {file: "9.ControlFlow/ControlFlow.md", anchor: "switch-expression"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: compile-runtime-type-dispatch
-    question: "Với `Animal a = new Dog()`, statement nào đúng?"
+    question: "Với `Animal a = new Dog()`, nhận định nào đúng?"
     answers:
-      - {id: A, answer: "Overload/member availability dùng compile-time view Animal, còn overridden instance method dispatch tới Dog ở runtime.", explanation: "Đúng. Java tách compile-time signature selection khỏi runtime override dispatch."}
-      - {id: B, answer: "Mọi member lookup dùng Dog vì đó là runtime class.", explanation: "Sai. Java tách compile-time signature selection khỏi runtime override dispatch."}
-      - {id: C, answer: "Mọi method call dùng Animal vì đó là declared type.", explanation: "Sai. Java tách compile-time signature selection khỏi runtime override dispatch."}
-      - {id: D, answer: "Assignment biến Dog object thành Animal object.", explanation: "Sai. Java tách compile-time signature selection khỏi runtime override dispatch."}
+      - {id: A, answer: "Thành viên khả dụng và overload được chọn theo kiểu lúc biên dịch `Animal`; phương thức instance đã override có thể dispatch tới `Dog` ở lúc chạy.", explanation: "Đúng. Java tách chọn chữ ký lúc biên dịch khỏi dynamic dispatch của override lúc chạy."}
+      - {id: B, answer: "Mọi tra cứu thành viên đều dùng `Dog` vì đó là lớp thực tế.", explanation: "Sai. Kiểu tĩnh vẫn quyết định thành viên nào có thể được gọi từ biểu thức."}
+      - {id: C, answer: "Mọi lời gọi phương thức đều dùng thân `Animal` vì đó là kiểu khai báo.", explanation: "Sai. Phương thức instance đã override được dispatch động theo đối tượng nhận thực tế."}
+      - {id: D, answer: "Phép gán biến đối tượng Dog thành một đối tượng Animal mới.", explanation: "Sai. Đối tượng không bị chuyển đổi thành đối tượng khác chỉ vì reference có kiểu tổng quát hơn."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "13.TypeSystemMentalModel/TypeSystemMentalModel.md", anchor: "overload-vs-override-dispatch"}
+    readmeRelated: {file: "15.TypeSystemMentalModel/TypeSystemMentalModel.md", anchor: "overload-vs-override-dispatch"}
     apiRelated: {controller: "MethodDispatchController", methodSignature: "overloadVsOverride()"}
 
   - id: package-private-boundary
-    question: "Member có access gì khi không khai báo access modifier?"
+    question: "Thành viên không khai báo từ khóa kiểm soát truy cập có mức truy cập nào?"
     answers:
-      - {id: A, answer: "Private trong declaring method.", explanation: "Sai. Không modifier nghĩa là package access, khác protected và public."}
-      - {id: B, answer: "Package-private: accessible từ code trong cùng package.", explanation: "Đúng. Không modifier nghĩa là package access, khác protected và public."}
-      - {id: C, answer: "Chỉ protected trong mọi subclass.", explanation: "Sai. Không modifier nghĩa là package access, khác protected và public."}
-      - {id: D, answer: "Public trong toàn module.", explanation: "Sai. Không modifier nghĩa là package access, khác protected và public."}
+      - {id: A, answer: "Private trong phương thức khai báo nó.", explanation: "Sai. Thành viên không có modifier là package-private, không phải private theo phương thức."}
+      - {id: B, answer: "Package-private: mã trong cùng package có thể truy cập theo các quy tắc Java tương ứng.", explanation: "Đúng. Đây còn được gọi là package access."}
+      - {id: C, answer: "Luôn protected trong mọi subclass.", explanation: "Sai. Không ghi modifier không đồng nghĩa protected."}
+      - {id: D, answer: "Public trong toàn mô-đun.", explanation: "Sai. Package-private bị giới hạn theo package, không theo module học tập này."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "11.PackagesImports/PackagesImports.md", anchor: "package-access"}
+    readmeRelated: {file: "14.PackagesImports/PackagesImports.md", anchor: "package-access"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: varargs-array-model
-    question: "Bên trong method khai báo `void log(String... values)`, `values` thực chất là gì?"
+    question: "Bên trong phương thức `void log(String... values)`, biến `values` thực chất có kiểu gì?"
     answers:
-      - {id: A, answer: "Một collection type đặc biệt không liên quan array.", explanation: "Sai. Varargs là syntax bao quanh array parameter; bên trong method nó hoạt động như String[]."}
-      - {id: B, answer: "Một parameter kiểu `String[]`.", explanation: "Đúng. Varargs là syntax bao quanh array parameter; bên trong method nó hoạt động như String[]."}
-      - {id: C, answer: "Một Stream<String> được tạo tự động.", explanation: "Sai. Varargs là syntax bao quanh array parameter; bên trong method nó hoạt động như String[]."}
-      - {id: D, answer: "Một String được compiler nối các value bằng dấu phẩy.", explanation: "Sai. Varargs là syntax bao quanh array parameter; bên trong method nó hoạt động như String[]."}
+      - {id: A, answer: "Một Collection đặc biệt không liên quan tới mảng.", explanation: "Sai. Varargs được biểu diễn bằng tham số mảng ở bên trong phương thức."}
+      - {id: B, answer: "`String[]`.", explanation: "Đúng. Cú pháp varargs là cách khai báo/triệu gọi thuận tiện quanh một tham số mảng."}
+      - {id: C, answer: "Một `Stream<String>` được tạo tự động.", explanation: "Sai. Java không tự chuyển varargs thành Stream."}
+      - {id: D, answer: "Một `String` đã nối các đối số bằng dấu phẩy.", explanation: "Sai. Các đối số được gom theo mô hình mảng, không ghép thành chuỗi."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.Varargs/Varargs.md", anchor: "varargs-array-model"}
+    readmeRelated: {file: "12.Varargs/Varargs.md", anchor: "varargs-array-model"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: primitive-byte-range
-    question: "Range của primitive `byte` trong Java là gì?"
+    question: "Phạm vi giá trị của primitive `byte` trong Java là gì?"
     answers:
-      - {id: A, answer: "-128 đến 127.", explanation: "Đúng. byte là integer signed 8-bit nên có range -2^7 đến 2^7 - 1."}
-      - {id: B, answer: "0 đến 255.", explanation: "Sai. Java byte là signed, không phải unsigned 8-bit."}
-      - {id: C, answer: "-255 đến 255.", explanation: "Sai. Range này không tương ứng representation signed 8-bit của byte."}
-      - {id: D, answer: "Phụ thuộc CPU/JVM đang chạy.", explanation: "Sai. Java định nghĩa kích thước primitive ổn định giữa platform."}
+      - {id: A, answer: "-128 đến 127.", explanation: "Đúng. `byte` là số nguyên có dấu 8 bit: -2^7 đến 2^7 - 1."}
+      - {id: B, answer: "0 đến 255.", explanation: "Sai. Java `byte` là signed, không phải unsigned 8 bit."}
+      - {id: C, answer: "-255 đến 255.", explanation: "Sai. Phạm vi này không tương ứng kiểu byte của Java."}
+      - {id: D, answer: "Phụ thuộc hệ điều hành và CPU.", explanation: "Sai. Kích thước và phạm vi primitive của Java được ngôn ngữ quy định, không đổi theo nền tảng theo cách này."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.PrimitiveReference/PrimitiveReference.md", anchor: "primitive-ranges-and-defaults"}
+    readmeRelated: {file: "3.PrimitiveReference/PrimitiveReference.md", anchor: "primitive-ranges-and-defaults"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: floating-literal-default-type
-    question: "Vì sao `float ratio = 1.5;` không compile nếu không cast hoặc thêm suffix?"
+    question: "Vì sao `float ratio = 1.5;` không biên dịch nếu không ép kiểu hoặc thêm suffix?"
     answers:
-      - {id: A, answer: "Vì mọi floating-point literal đều là float.", explanation: "Sai. Floating-point literal không suffix mặc định là double."}
-      - {id: B, answer: "Vì `1.5` có compile-time type double và assignment sang float cần conversion phù hợp, thường dùng `1.5F`.", explanation: "Đúng. Literal type ảnh hưởng assignment compatibility."}
-      - {id: C, answer: "Vì float không chứa được số thập phân.", explanation: "Sai. float biểu diễn floating-point value nhưng có precision/range riêng."}
-      - {id: D, answer: "Vì local variable không có default value.", explanation: "Sai. Definite assignment không phải nguyên nhân ở đây."}
+      - {id: A, answer: "Vì mọi floating-point literal đều là `float`.", explanation: "Sai. Literal số chấm động không có suffix mặc định là double."}
+      - {id: B, answer: "Vì `1.5` có kiểu lúc biên dịch là `double`; gán sang float cần chuyển đổi phù hợp, thường viết `1.5F`.", explanation: "Đúng. Kiểu của literal ảnh hưởng tính tương thích khi gán."}
+      - {id: C, answer: "Vì `float` không biểu diễn được số thập phân.", explanation: "Sai. float biểu diễn số chấm động, chỉ khác phạm vi và độ chính xác so với double."}
+      - {id: D, answer: "Vì biến cục bộ không có giá trị mặc định.", explanation: "Sai. Definite assignment không phải nguyên nhân của lỗi kiểu này."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.PrimitiveReference/PrimitiveReference.md", anchor: "primitive-ranges-and-defaults"}
+    readmeRelated: {file: "3.PrimitiveReference/PrimitiveReference.md", anchor: "primitive-ranges-and-defaults"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: var-is-static-typing
-    question: "Với `var value = \"Java\";`, statement nào đúng?"
+    question: "Với `var value = \"Java\";`, nhận định nào đúng?"
     answers:
-      - {id: A, answer: "value không có type cho tới runtime.", explanation: "Sai. Compiler suy ra static type từ initializer."}
-      - {id: B, answer: "value có static type String; `var` chỉ yêu cầu compiler suy ra type local variable.", explanation: "Đúng. var không biến Java thành dynamic typing."}
-      - {id: C, answer: "value có thể đổi sang int ở assignment tiếp theo.", explanation: "Sai. Static type đã được suy ra là String."}
-      - {id: D, answer: "var chỉ dùng cho field của class.", explanation: "Sai. var là local-variable type inference trong các context được Java cho phép."}
+      - {id: A, answer: "`value` không có kiểu cho tới lúc chạy.", explanation: "Sai. Trình biên dịch suy ra kiểu tĩnh ngay từ biểu thức khởi tạo."}
+      - {id: B, answer: "`value` có kiểu tĩnh `String`; `var` chỉ yêu cầu trình biên dịch suy ra kiểu của biến cục bộ.", explanation: "Đúng. `var` không làm Java trở thành ngôn ngữ kiểu động."}
+      - {id: C, answer: "`value` có thể được gán int ở câu lệnh kế tiếp.", explanation: "Sai. Kiểu tĩnh đã được suy ra là String và không đổi."}
+      - {id: D, answer: "`var` chỉ dùng cho trường của class.", explanation: "Sai. `var` là cơ chế suy luận kiểu cho biến cục bộ trong các ngữ cảnh Java cho phép."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.VariablesScope/VariablesScope.md", anchor: "variable-kinds-and-lifetime"}
+    readmeRelated: {file: "4.VariablesScope/VariablesScope.md", anchor: "variable-kinds-and-lifetime"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: pattern-variable-flow-scope
-    question: "Vì sao `text` hợp lệ ở vế phải của `value instanceof String text && !text.isBlank()`?"
+    question: "Vì sao `text` dùng được ở vế phải của `value instanceof String text && !text.isBlank()`?"
     answers:
-      - {id: A, answer: "Vì mọi variable khai báo trong condition có scope toàn method.", explanation: "Sai. Pattern variable chỉ tồn tại nơi compiler guarantee pattern đã match."}
-      - {id: B, answer: "Vì `&&` chỉ evaluate vế phải khi vế trái true, nên compiler biết pattern đã match trước khi dùng text.", explanation: "Đúng. Đây là flow scoping dựa trên control-flow guarantee."}
-      - {id: C, answer: "Vì instanceof tự chuyển text thành global variable.", explanation: "Sai. Pattern binding vẫn có scope được compiler kiểm soát."}
-      - {id: D, answer: "Vì String luôn khác null.", explanation: "Sai. Null behavior không giải thích scope của pattern variable."}
+      - {id: A, answer: "Vì mọi biến khai báo trong điều kiện đều có scope toàn phương thức.", explanation: "Sai. Pattern variable có flow scope, không tự mở rộng ra toàn phương thức."}
+      - {id: B, answer: "Vì vế phải của `&&` chỉ chạy khi pattern ở vế trái đã match, nên trình biên dịch biết `text` chắc chắn tồn tại tại đó.", explanation: "Đúng. Đây là flow scoping dựa trên bảo đảm của luồng điều khiển."}
+      - {id: C, answer: "Vì `instanceof` biến `text` thành biến toàn cục.", explanation: "Sai. Pattern variable vẫn chịu phạm vi được trình biên dịch kiểm tra."}
+      - {id: D, answer: "Vì mọi `String` luôn khác null.", explanation: "Sai. Null không phải lý do quyết định scope của biến pattern."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.VariablesScope/VariablesScope.md", anchor: "scope-and-shadowing"}
+    readmeRelated: {file: "15.TypeSystemMentalModel/TypeSystemMentalModel.md", anchor: "instanceof-safe-cast"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: compound-assignment-byte
-    question: "Với `byte b = 1;`, vì sao `b += 1` compile nhưng `b = b + 1` không compile nếu không cast?"
+    question: "Với `byte b = 1;`, vì sao `b += 1` biên dịch nhưng `b = b + 1` không biên dịch nếu không ép kiểu?"
     answers:
-      - {id: A, answer: "`+=` bỏ qua type checking.", explanation: "Sai. Compound assignment vẫn có language-defined conversion rules."}
-      - {id: B, answer: "`b + 1` được numeric promotion thành int, còn compound assignment có conversion ngầm về target type theo rule riêng.", explanation: "Đúng. Hai biểu thức không hoàn toàn tương đương về conversion semantics."}
-      - {id: C, answer: "`b + 1` tạo long còn `+=` tạo short.", explanation: "Sai. byte arithmetic thường được promote thành int."}
-      - {id: D, answer: "Chỉ vì literal 1 được cache.", explanation: "Sai. Wrapper cache không liên quan primitive arithmetic này."}
+      - {id: A, answer: "Vì `+=` bỏ qua kiểm tra kiểu.", explanation: "Sai. Compound assignment vẫn có quy tắc chuyển đổi do ngôn ngữ định nghĩa."}
+      - {id: B, answer: "`b + 1` được numeric promotion thành int, còn compound assignment có quy tắc chuyển đổi ngầm trở lại kiểu đích.", explanation: "Đúng. Hai dạng không hoàn toàn tương đương về ngữ nghĩa chuyển đổi."}
+      - {id: C, answer: "`b + 1` tạo long còn `+=` tạo short.", explanation: "Sai. Biểu thức byte + int literal trong ví dụ này được tính ở kiểu int."}
+      - {id: D, answer: "Vì literal 1 được cache.", explanation: "Sai. Wrapper cache không liên quan tới phép toán primitive này."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Operators/Operators.md", anchor: "numeric-promotion"}
+    readmeRelated: {file: "7.Operators/Operators.md", anchor: "numeric-promotion"}
     apiRelated: {controller: "TypeSystemController", methodSignature: "conversionContexts()"}
 
   - id: conditional-operator-lazy-branch
-    question: "Trong `condition ? left() : right()`, Java evaluate hai result expression thế nào?"
+    question: "Trong `condition ? left() : right()`, Java đánh giá hai biểu thức kết quả thế nào?"
     answers:
-      - {id: A, answer: "Luôn evaluate cả left() và right() trước rồi chọn value.", explanation: "Sai. Conditional operator chỉ evaluate branch được chọn."}
-      - {id: B, answer: "Chỉ evaluate left() nếu condition true, hoặc chỉ evaluate right() nếu condition false.", explanation: "Đúng. Chỉ một result expression được chạy."}
-      - {id: C, answer: "Không evaluate expression nào vì ?: chỉ dùng ở compile time.", explanation: "Sai. Đây là runtime value-producing expression."}
-      - {id: D, answer: "Thứ tự không được Java định nghĩa.", explanation: "Sai. Branch được chọn từ condition và chỉ branch đó được evaluate."}
+      - {id: A, answer: "Luôn gọi cả `left()` và `right()` trước rồi mới chọn kết quả.", explanation: "Sai. Toán tử điều kiện chỉ đánh giá nhánh được chọn."}
+      - {id: B, answer: "Chỉ gọi `left()` khi điều kiện là true hoặc chỉ gọi `right()` khi điều kiện là false.", explanation: "Đúng. Chỉ một trong hai biểu thức kết quả được thực thi."}
+      - {id: C, answer: "Không biểu thức nào chạy vì `?:` chỉ hoạt động lúc biên dịch.", explanation: "Sai. Đây là biểu thức tạo giá trị ở lúc chạy."}
+      - {id: D, answer: "Java không định nghĩa nhánh nào được đánh giá trước.", explanation: "Sai. Điều kiện quyết định chính xác nhánh kết quả nào được đánh giá."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Operators/Operators.md", anchor: "short-circuit-operators"}
+    readmeRelated: {file: "7.Operators/Operators.md", anchor: "short-circuit-operators"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: primitive-narrowing-cast
     question: "Kết quả của `byte b = (byte) 130;` là gì?"
     answers:
-      - {id: A, answer: "130, vì cast luôn giữ nguyên numeric value.", explanation: "Sai. Narrowing có thể mất information khi value không fit target range."}
-      - {id: B, answer: "Compile error vì Java không cho cast int sang byte.", explanation: "Sai. Explicit narrowing cast được phép."}
-      - {id: C, answer: "-126 do narrowing giữ các bit thấp theo conversion rule của byte.", explanation: "Đúng. Cast cho phép conversion nhưng không bảo đảm domain value được giữ nguyên."}
-      - {id: D, answer: "0 vì overflow luôn reset về zero.", explanation: "Sai. Narrowing integer conversion không có rule reset về zero."}
+      - {id: A, answer: "130, vì cast luôn giữ nguyên giá trị số.", explanation: "Sai. Narrowing có thể làm mất thông tin khi giá trị không vừa phạm vi kiểu đích."}
+      - {id: B, answer: "Lỗi biên dịch vì Java cấm ép int sang byte.", explanation: "Sai. Ép kiểu thu hẹp tường minh từ int sang byte được phép."}
+      - {id: C, answer: "-126, do narrowing integer conversion giữ các bit thấp tương ứng với byte.", explanation: "Đúng. Cast cho phép chuyển đổi nhưng không bảo đảm giữ nguyên giá trị theo miền nghiệp vụ."}
+      - {id: D, answer: "0 vì overflow luôn đặt lại về zero.", explanation: "Sai. Java không có quy tắc reset về zero khi narrowing int sang byte."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.Casting/Casting.md", anchor: "primitive-casting"}
+    readmeRelated: {file: "8.Casting/Casting.md", anchor: "primitive-casting"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: for-continue-update-order
-    question: "Trong classic `for(init; condition; update)`, `continue` trong body chuyển control tới đâu?"
+    question: "Trong `for(init; condition; update)`, `continue` không nhãn trong thân vòng lặp chuyển điều khiển tới đâu?"
     answers:
-      - {id: A, answer: "Thoát hẳn loop.", explanation: "Sai. Đó là behavior của break, không phải continue."}
-      - {id: B, answer: "Chạy update expression rồi quay lại condition.", explanation: "Đúng. Classic for vẫn thực hiện update trước lần condition check tiếp theo."}
-      - {id: C, answer: "Quay thẳng về init expression.", explanation: "Sai. Initialization chỉ chạy một lần."}
-      - {id: D, answer: "Bỏ update và chạy body lại ngay.", explanation: "Sai. continue của classic for chuyển tới update."}
+      - {id: A, answer: "Thoát hẳn vòng lặp.", explanation: "Sai. Đó là vai trò của `break`, không phải `continue`."}
+      - {id: B, answer: "Tới biểu thức `update`, rồi mới kiểm tra `condition` cho vòng tiếp theo.", explanation: "Đúng. Vòng `for` cổ điển vẫn thực hiện phần cập nhật sau `continue` của lượt lặp hiện tại."}
+      - {id: C, answer: "Quay lại biểu thức `init`.", explanation: "Sai. Init chỉ chạy một lần khi bắt đầu vòng lặp."}
+      - {id: D, answer: "Bỏ qua `update` và chạy lại thân vòng lặp ngay.", explanation: "Sai. `continue` của vòng `for` cổ điển không bỏ qua biểu thức cập nhật."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.ControlFlow/ControlFlow.md", anchor: "loop-control"}
+    readmeRelated: {file: "9.ControlFlow/ControlFlow.md", anchor: "loop-control"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: switch-pattern-null-case
-    question: "Trong Java 21 pattern switch trên reference selector, `case null` có vai trò gì?"
+    question: "Trong Java 21 pattern switch trên selector kiểu tham chiếu, `case null` có vai trò gì?"
     answers:
-      - {id: A, answer: "Cho phép xử lý null explicit như một case thay vì giả định default tự xử lý null.", explanation: "Đúng. case null làm null semantics của switch rõ ràng."}
-      - {id: B, answer: "Biến null thành empty String trước khi match.", explanation: "Sai. Switch không tự convert null thành String."}
-      - {id: C, answer: "Chỉ hợp lệ với primitive selector.", explanation: "Sai. null liên quan reference selector."}
-      - {id: D, answer: "Luôn chạy sau default.", explanation: "Sai. Case selection chọn một matching branch, không phải fall-through sequence kiểu này."}
+      - {id: A, answer: "Cho phép xử lý null tường minh như một nhánh riêng thay vì giả định `default` tự xử lý null.", explanation: "Đúng. `case null` làm hợp đồng null của switch rõ ràng."}
+      - {id: B, answer: "Biến null thành chuỗi rỗng trước khi match.", explanation: "Sai. Switch không tự chuyển null thành String."}
+      - {id: C, answer: "Chỉ hợp lệ với selector primitive.", explanation: "Sai. `null` liên quan đến selector kiểu tham chiếu."}
+      - {id: D, answer: "Luôn chạy sau `default`.", explanation: "Sai. Switch chọn nhánh phù hợp; đây không phải chuỗi fall-through như mô tả."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.ControlFlow/ControlFlow.md", anchor: "switch-expression"}
+    readmeRelated: {file: "15.TypeSystemMentalModel/TypeSystemMentalModel.md", anchor: "instanceof-safe-cast"}
     apiRelated: {controller: "ControlFlowController", methodSignature: "patternSwitch()"}
 
   - id: non-void-return-path
-    question: "Vì sao method `int f(boolean ok) { if (ok) return 1; }` không compile?"
+    question: "Vì sao `int f(boolean ok) { if (ok) return 1; }` không biên dịch?"
     answers:
-      - {id: A, answer: "Vì if không được dùng trong method trả int.", explanation: "Sai. if hoàn toàn hợp lệ trong non-void method."}
-      - {id: B, answer: "Vì có reachable normal path đi tới cuối method mà không trả int value.", explanation: "Đúng. Compiler kiểm tra normal completion của mọi relevant path."}
-      - {id: C, answer: "Vì boolean parameter phải static.", explanation: "Sai. Parameter không cần static."}
-      - {id: D, answer: "Vì return chỉ được phép một lần trong method.", explanation: "Sai. Java cho phép nhiều return path."}
+      - {id: A, answer: "Vì `if` không được dùng trong phương thức trả int.", explanation: "Sai. `if` hoàn toàn hợp lệ trong phương thức non-void."}
+      - {id: B, answer: "Vì tồn tại đường thực thi có thể đi tới cuối phương thức một cách bình thường mà không trả về int.", explanation: "Đúng. Trình biên dịch kiểm tra các đường normal completion của phương thức non-void."}
+      - {id: C, answer: "Vì tham số boolean bắt buộc phải static.", explanation: "Sai. Tham số phương thức không cần static."}
+      - {id: D, answer: "Vì một phương thức chỉ được có một `return`.", explanation: "Sai. Java cho phép nhiều return path."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.Methods/Methods.md", anchor: "method-signature"}
+    readmeRelated: {file: "11.Methods/Methods.md", anchor: "method-signature"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: argument-evaluation-left-to-right
-    question: "Java evaluate argument expression của `call(first(), second())` theo thứ tự nào?"
+    question: "Java đánh giá các biểu thức đối số của `call(first(), second())` theo thứ tự nào?"
     answers:
-      - {id: A, answer: "second() trước vì gần dấu đóng ngoặc hơn.", explanation: "Sai. Java evaluate argument expressions từ trái sang phải."}
-      - {id: B, answer: "first() rồi second(), trước khi method body được chạy.", explanation: "Đúng. Defined evaluation order giúp dự đoán side effect, dù code nên tránh argument quá side-effect-heavy."}
-      - {id: C, answer: "Compiler tự chọn thứ tự tối ưu bất kỳ.", explanation: "Sai. Java xác định thứ tự evaluation của arguments."}
-      - {id: D, answer: "Hai expression chỉ chạy sau khi vào method body.", explanation: "Sai. Argument values phải được tính trước invocation."}
+      - {id: A, answer: "`second()` trước vì gần dấu đóng ngoặc hơn.", explanation: "Sai. Java đánh giá argument expressions từ trái sang phải."}
+      - {id: B, answer: "`first()` rồi `second()`, trước khi thân phương thức được thực thi.", explanation: "Đúng. Thứ tự đánh giá đối số được Java xác định rõ."}
+      - {id: C, answer: "Trình biên dịch có thể tự chọn thứ tự bất kỳ.", explanation: "Sai. Java không để trình biên dịch tùy ý đổi thứ tự này."}
+      - {id: D, answer: "Hai biểu thức chỉ chạy sau khi đã vào thân phương thức.", explanation: "Sai. Giá trị đối số phải được tính trước khi invocation bắt đầu."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.Methods/Methods.md", anchor: "method-call-evaluation"}
+    readmeRelated: {file: "11.Methods/Methods.md", anchor: "method-call-evaluation"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: varargs-null-vs-empty
     question: "Khác biệt giữa `log()` và `log((String[]) null)` với `void log(String... values)` là gì?"
     answers:
-      - {id: A, answer: "Không khác; cả hai luôn nhận null.", explanation: "Sai. Call không argument tạo/nhận array rỗng theo varargs invocation semantics."}
-      - {id: B, answer: "`log()` nhận array length 0, còn casted null truyền một null array reference.", explanation: "Đúng. Empty varargs và explicit null array là hai state khác nhau."}
-      - {id: C, answer: "`log()` không compile nếu không có argument.", explanation: "Sai. Zero arguments là use case bình thường của varargs."}
-      - {id: D, answer: "Casted null được đổi thành array có một null element.", explanation: "Sai. `(String[]) null` là null array reference, không phải array length 1."}
+      - {id: A, answer: "Không khác; cả hai luôn nhận null.", explanation: "Sai. Gọi không có đối số varargs không đồng nghĩa truyền null."}
+      - {id: B, answer: "`log()` nhận mảng độ dài 0, còn `(String[]) null` truyền một reference mảng null.", explanation: "Đúng. Mảng varargs rỗng và null array là hai trạng thái khác nhau."}
+      - {id: C, answer: "`log()` không biên dịch nếu không có đối số.", explanation: "Sai. Zero-argument call là trường hợp hợp lệ của varargs."}
+      - {id: D, answer: "`(String[]) null` được đổi thành mảng có một phần tử null.", explanation: "Sai. Đây là null array reference, không phải mảng độ dài 1."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.Varargs/Varargs.md", anchor: "varargs-array-model"}
+    readmeRelated: {file: "12.Varargs/Varargs.md", anchor: "varargs-array-model"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: array-copy-reference-elements
-    question: "Sau `User[] copy = Arrays.copyOf(original, original.length)`, điều gì đúng với reference elements?"
+    question: "Sau `User[] copy = Arrays.copyOf(original, original.length)`, điều gì đúng với các phần tử tham chiếu?"
     answers:
-      - {id: A, answer: "Mọi User object được deep-copy tự động.", explanation: "Sai. Arrays.copyOf tạo array mới nhưng copy từng element value; với reference element đó là reference value."}
-      - {id: B, answer: "Hai array là object khác nhau nhưng element tương ứng có thể cùng trỏ một User object.", explanation: "Đúng. Vì vậy mutation qua element của copy có thể visible qua original."}
-      - {id: C, answer: "Hai biến array luôn trỏ chính cùng array object.", explanation: "Sai. Arrays.copyOf tạo array object mới."}
-      - {id: D, answer: "Reference element bị chuyển thành primitive address.", explanation: "Sai. Java vẫn giữ reference semantics bình thường."}
+      - {id: A, answer: "Mọi đối tượng `User` được sao chép sâu tự động.", explanation: "Sai. `Arrays.copyOf` tạo mảng mới nhưng sao chép giá trị từng phần tử; với phần tử tham chiếu thì giá trị đó chính là tham chiếu."}
+      - {id: B, answer: "Hai mảng là hai đối tượng khác nhau nhưng phần tử tương ứng có thể cùng nhận diện một đối tượng `User`.", explanation: "Đúng. Vì vậy thay đổi đối tượng qua phần tử của mảng sao chép có thể quan sát được qua mảng gốc."}
+      - {id: C, answer: "Hai biến mảng vẫn luôn trỏ tới cùng một đối tượng mảng.", explanation: "Sai. `Arrays.copyOf` tạo một đối tượng mảng mới."}
+      - {id: D, answer: "Phần tử reference bị chuyển thành địa chỉ primitive.", explanation: "Sai. Java vẫn dùng reference semantics bình thường."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -417,27 +430,40 @@ questions:
     apiRelated: {controller: "ArrayController", methodSignature: "copyReferenceElements()"}
 
   - id: package-subpackage-access
-    question: "`com.example` và `com.example.internal` có quan hệ package-private access như thế nào?"
+    question: "`com.example` và `com.example.internal` có quan hệ package-private như thế nào?"
     answers:
-      - {id: A, answer: "internal tự kế thừa mọi package-private member từ com.example.", explanation: "Sai. Shared name prefix không tạo access inheritance."}
-      - {id: B, answer: "Chúng là hai package khác nhau; package-private trong com.example không tự accessible từ com.example.internal.", explanation: "Đúng. Package-name hierarchy không phải access hierarchy."}
-      - {id: C, answer: "Hai package được Java xem là cùng package vì có common prefix.", explanation: "Sai. Fully qualified package name phải match package boundary tương ứng."}
-      - {id: D, answer: "subpackage luôn có public access vào package cha dù member private.", explanation: "Sai. Tên package không override access rules."}
+      - {id: A, answer: "`internal` tự kế thừa mọi thành viên package-private từ `com.example`.", explanation: "Sai. Tiền tố tên chung không tạo quan hệ kế thừa quyền truy cập."}
+      - {id: B, answer: "Chúng là hai package khác nhau; thành viên package-private trong `com.example` không tự truy cập được từ `com.example.internal`.", explanation: "Đúng. Phân cấp tên package không phải phân cấp quyền truy cập."}
+      - {id: C, answer: "Java xem chúng là cùng package vì có tiền tố chung.", explanation: "Sai. Tên package đầy đủ khác nhau thì đó là các package khác nhau."}
+      - {id: D, answer: "Subpackage luôn truy cập được thành viên private của package cha.", explanation: "Sai. Cách đặt tên package không vượt qua quy tắc truy cập của Java."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "11.PackagesImports/PackagesImports.md", anchor: "package-access"}
+    readmeRelated: {file: "14.PackagesImports/PackagesImports.md", anchor: "package-access"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: conversion-context-difference
-    question: "Vì sao `byte b = 1;` hợp lệ nhưng `useByte(1)` không tự hợp lệ chỉ vì literal 1 fit byte?"
+    question: "Vì sao `byte b = 1;` hợp lệ nhưng `useByte(1)` không tự hợp lệ chỉ vì literal 1 nằm trong phạm vi byte?"
     answers:
-      - {id: A, answer: "Assignment và method invocation có bộ conversion rule khác nhau; narrowing constant assignment không tự được áp dụng như method-invocation conversion.", explanation: "Đúng. Phải xác định conversion context trước khi dự đoán compile behavior."}
-      - {id: B, answer: "Method parameter không bao giờ nhận primitive.", explanation: "Sai. Method parameter hoàn toàn có thể là byte/int/long và primitive khác."}
-      - {id: C, answer: "Literal 1 đổi runtime type sau khi vào method.", explanation: "Sai. Đây là compile-time applicability issue."}
-      - {id: D, answer: "Vì byte chỉ được dùng cho field.", explanation: "Sai. byte dùng được cho local, field, parameter và nhiều context khác."}
+      - {id: A, answer: "Phép gán và method invocation cho phép các tập chuyển đổi khác nhau; narrowing constant conversion của assignment không tự áp dụng như method-invocation conversion.", explanation: "Đúng. Phải xác định conversion context trước khi dự đoán mã có biên dịch hay không."}
+      - {id: B, answer: "Tham số phương thức không bao giờ nhận primitive.", explanation: "Sai. Tham số hoàn toàn có thể là byte, int, long và các primitive khác."}
+      - {id: C, answer: "Literal 1 đổi kiểu lúc chạy sau khi vào phương thức.", explanation: "Sai. Đây là vấn đề khả năng áp dụng ở thời điểm biên dịch."}
+      - {id: D, answer: "Vì `byte` chỉ dùng được cho trường.", explanation: "Sai. byte dùng được cho biến cục bộ, trường, tham số và nhiều ngữ cảnh khác."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "13.TypeSystemMentalModel/TypeSystemMentalModel.md", anchor: "assignment-compatibility"}
+    readmeRelated: {file: "15.TypeSystemMentalModel/TypeSystemMentalModel.md", anchor: "assignment-compatibility"}
     apiRelated: {controller: "TypeSystemController", methodSignature: "conversionContexts()"}
+
+  - id: language-basics-end-to-end-flow
+    question: "Với `int[] scores = {10}; addBonus(scores, 15); boolean passed = scores[0] > 20;`, trong đó `addBonus` thực hiện `scores[0] += bonus`, chuỗi giải thích nào đúng?"
+    answers:
+      - {id: A, answer: "Java sao chép giá trị tham chiếu của mảng vào tham số; phương thức thay đổi cùng đối tượng mảng thành 25; bên gọi quan sát 25 nên `passed` là true.", explanation: "Đúng. Đây là chuỗi xuyên suốt từ giá trị/biểu thức, mảng, lời gọi phương thức, pass-by-value đến kết quả boolean dùng cho luồng điều khiển."}
+      - {id: B, answer: "Java sao chép sâu mảng trước lời gọi nên bên gọi vẫn thấy 10 và `passed` là false.", explanation: "Sai. Pass-by-value sao chép giá trị tham chiếu, không tự sao chép sâu đối tượng mảng."}
+      - {id: C, answer: "Phương thức nhận trực tiếp ô biến `scores` của bên gọi theo pass-by-reference nên mới thay được phần tử.", explanation: "Sai. Java vẫn pass-by-value; hai biến tham chiếu chỉ cùng nhận diện một đối tượng mảng có thể thay đổi."}
+      - {id: D, answer: "Biểu thức `scores[0] > 20` được quyết định lúc biên dịch nên không phụ thuộc giá trị sau lời gọi.", explanation: "Sai. Kiểu của biểu thức được kiểm tra lúc biên dịch, còn giá trị boolean được tính từ trạng thái mảng ở lúc chạy."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "16.LanguageBasicsSynthesis/LanguageBasicsSynthesis.md", anchor: "end-to-end-value-flow"}
+    apiRelated: {controller: "", methodSignature: ""}

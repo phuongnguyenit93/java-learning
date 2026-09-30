@@ -55,18 +55,18 @@ ArrayController:
     usage: true
 CastingController:
   safeAndUnsafeCast(String):
-    summary: Reference upcast and downcast
-    description: Runs a deterministic learning experiment for Reference upcast and
-      downcast. The response exposes concrete runtime evidence instead of only describing
-      the rule.
+    summary: Safe reference checks and ClassCastException
+    description: Compares an instanceof-guarded String path with an incompatible Integer
+      downcast, exposing the boundary between compile-time cast legality and runtime object
+      compatibility.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 5.Casting/Casting.md
-      anchor: reference-upcast-downcast
+      file: 15.TypeSystemMentalModel/TypeSystemMentalModel.md
+      anchor: class-cast-failure
     methodName: safeAndUnsafeCast
     params:
     - input
@@ -93,7 +93,7 @@ MethodDispatchController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 13.TypeSystemMentalModel/TypeSystemMentalModel.md
+      file: 15.TypeSystemMentalModel/TypeSystemMentalModel.md
       anchor: overload-vs-override-dispatch
     methodName: overloadVsOverride
     params: [
@@ -121,7 +121,7 @@ OperatorController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 4.Operators/Operators.md
+      file: 7.Operators/Operators.md
       anchor: short-circuit-operators
     methodName: shortCircuit
     params: [
@@ -149,7 +149,7 @@ OverloadResolutionController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 7.Methods/Methods.md
+      file: 11.Methods/Methods.md
       anchor: overload-resolution-phases
     methodName: selectionMatrix
     params: [
@@ -177,7 +177,7 @@ PassByValueController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 9.PassByValue/PassByValue.md
+      file: 13.PassByValue/PassByValue.md
       anchor: reference-copy-mutation
     methodName: mutateAndReassign
     params: [
@@ -205,7 +205,7 @@ TypeSystemController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 13.TypeSystemMentalModel/TypeSystemMentalModel.md
+      file: 15.TypeSystemMentalModel/TypeSystemMentalModel.md
       anchor: compile-time-vs-runtime-type
     methodName: inspectRuntimeType
     params:
@@ -231,7 +231,7 @@ TypeSystemController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 13.TypeSystemMentalModel/TypeSystemMentalModel.md
+      file: 15.TypeSystemMentalModel/TypeSystemMentalModel.md
       anchor: assignment-compatibility
     methodName: conversionContexts
     params: [
@@ -259,7 +259,7 @@ WrapperController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 3.WrapperBoxing/WrapperBoxing.md
+      file: 6.WrapperBoxing/WrapperBoxing.md
       anchor: wrapper-caching
     methodName: wrapperIdentity
     params: [
@@ -286,8 +286,8 @@ ControlFlowController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 6.ControlFlow/ControlFlow.md
-      anchor: switch-expression
+      file: 15.TypeSystemMentalModel/TypeSystemMentalModel.md
+      anchor: instanceof-safe-cast
     methodName: patternSwitch
     params: [
       ]

@@ -1,8 +1,8 @@
 input:
   summary: 'Tham số đầu vào: input'
-  description: Điều khiển sample input bounded của learning endpoint này.
+  description: Chọn giá trị đầu vào giới hạn được dùng trong thí nghiệm học tập này.
   usage: true
 value:
   summary: 'Tham số đầu vào: value'
-  description: Điều khiển sample input bounded của learning endpoint này.
+  description: Chọn giá trị đầu vào giới hạn được dùng trong thí nghiệm học tập này.
   usage: true

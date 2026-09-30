@@ -46,7 +46,7 @@ roadmap:
     title: Java Language Basics Purpose
     purpose: Understand which foundations belong to Java Language Basics, why they need to be learned together, and how they prepare the learner for later Java modules.
     relatedKnowledge:
-      - PrimitiveReference
+      - LanguagePurpose
     objectives:
       - Explain Java Language Basics as a foundation of values, types, execution, and source structure rather than a collection of unrelated syntax.
       - Recognize the basic problems every Java program must solve, including representing data, controlling execution, organizing behavior, and managing visibility.
@@ -56,24 +56,20 @@ roadmap:
     title: Java Source Code Structure
     purpose: Understand how a Java program is organized from source file to type, method, statement, and expression so the learner knows where code belongs and how its pieces relate.
     relatedKnowledge:
-      - PackagesImports
+      - SourceCodeStructure
     relatedModules:
       - routeId: JAVA_CLASS_OBJECT
         label: Class & Object
         note: Expand from type declarations into Java classes and objects.
-      - routeId: JAVA_ANNOTATION
-        label: Annotation
-        note: Metadata attached directly to source-level program elements.
     objectives:
       - Distinguish the roles of source files, packages, imports, type declarations, methods, statements, and expressions.
       - Understand identifiers, keywords, literals, and comments as supporting elements for writing and reading source code.
       - Build enough structural context to read a small Java program before studying values, types, and execution in detail.
 
-  - id: values-and-variables
-    title: Values and Variables
-    purpose: Understand how Java programs manipulate values and how variables provide names, logical storage locations, and lifecycle context for those values.
+  - id: values-and-type-categories
+    title: Values, Primitive Types, and Reference Types
+    purpose: Understand what kinds of values Java manipulates and why primitive and reference types must be distinguished before learning how values are stored, passed, and transformed.
     relatedKnowledge:
-      - VariablesScope
       - PrimitiveReference
     relatedModules:
       - routeId: JAVA_NUMBERS
@@ -83,44 +79,61 @@ roadmap:
         label: String
         note: Expand how Java represents and manipulates textual data.
     objectives:
-      - Distinguish a value from a variable and understand declaration, initialization, and assignment.
-      - Recognize local variables, parameters, fields, and static fields at an orientation level before studying scope and lifetime in depth.
-      - Understand how definite assignment and default values differ across variable kinds.
+      - Distinguish primitive values from reference values and understand what kind of value variables of each type category actually store.
+      - Recognize primitive types and how literals represent values at a foundational level.
+      - Understand that a reference is a value that refers to an object rather than the object itself.
+      - Build the foundation for null, wrapper types, casting, arrays, and later type-system concepts.
 
-  - id: type-system-basics
-    title: Type System Basics
-    purpose: Build a mental model of primitive types, reference types, and the boundaries values cross between types so the learner understands what is checked at compile time and what can still fail at runtime.
+  - id: scope-and-variable-lifetime
+    title: Variables, Scope, and Lifetime
+    purpose: Understand how variables are declared and assigned, which variable kinds exist in Java, which names are accessible where, and how long variables remain meaningful.
     relatedKnowledge:
-      - PrimitiveReference
-      - WrapperBoxing
-      - Casting
+      - VariablesScope
+    objectives:
+      - Distinguish declaration, initialization, and assignment.
+      - Distinguish the scope of local variables, parameters, fields, and static fields.
+      - Understand block scope, method scope, class-level state, and variable lifetime.
+      - Understand how definite assignment and default values differ across variable kinds.
+      - Recognize shadowing, name resolution, and common design problems caused by poor scope choices.
+
+  - id: null-and-reference-safety
+    title: Null and Reference Safety
+    purpose: After reference types are established, build the correct mental model of null, understand when dereferencing null fails, and prepare for later control-flow decisions around values that may be absent.
+    relatedKnowledge:
       - "Null"
-      - TypeSystemMentalModel
+    objectives:
+      - Understand that null applies to reference types and is not itself an object.
+      - Recognize which dereference operations can cause NullPointerException.
+      - Distinguish a reference variable holding null from one that refers to an actual object.
+      - Recognize at an orientation level that nullable values affect API usage and later require appropriate control-flow handling.
+
+  - id: wrapper-boxing
+    title: Wrapper Types, Boxing, and Unboxing
+    purpose: Understand why Java provides wrapper types for primitive values and how boxing and unboxing allow primitive values to participate in object-based APIs.
+    relatedKnowledge:
+      - WrapperBoxing
     relatedModules:
       - routeId: JAVA_OOP
         label: Object-Oriented Programming
-        note: Type hierarchies, inheritance, and polymorphism extend this mental model.
+        note: Extends how objects and reference types participate in Java's object model.
       - routeId: JAVA_GENERICS
         label: Generics
         note: Compile-time type safety and parameterized types.
-      - routeId: JAVA_OBJECT_CONTRACT
-        label: Object Contract
-        note: Shared object contracts such as equals, hashCode, and identity.
     objectives:
-      - Distinguish primitive values from reference values and understand that null applies only to references.
-      - Understand assignment compatibility, widening, narrowing, and casting at a foundational level.
-      - Understand wrapper types, boxing, and unboxing as the bridge between primitives and object-based APIs.
-      - Distinguish declared type from runtime type as preparation for OOP, Generics, and Collections.
+      - Understand why wrapper types exist for primitive values.
+      - Understand boxing and unboxing as the bridge between primitives and object-based APIs.
+      - Recognize basic wrapper risks such as identity comparison and null unboxing.
 
   - id: expressions-and-operators
-    title: Expressions and Operators
-    purpose: Understand how Java produces new values and determines computation results through expressions, operators, promotion, precedence, and evaluation order.
+    title: Expressions, Operators, and Type Conversion
+    purpose: Understand how Java produces and combines values and moves them across type boundaries through expressions, operators, numeric promotion, and casting.
     relatedKnowledge:
       - Operators
       - Casting
     objectives:
       - Read an expression and identify the value or result it produces.
-      - Understand the major operator groups and numeric promotion required for basic Java code.
+      - Understand the major operator groups, numeric promotion, widening, and narrowing required for basic Java code.
+      - Understand primitive and reference casting at a foundational level.
       - Understand how short-circuiting, precedence, associativity, and side effects can affect results and readability.
 
   - id: program-control-flow
@@ -132,6 +145,21 @@ roadmap:
       - Use branching with if and switch with the correct execution mental model.
       - Understand loops with for, while, and do-while together with break and continue.
       - Recognize when control flow becomes difficult to reason about and should be simplified.
+
+  - id: arrays
+    title: Arrays
+    purpose: Understand how Java represents multiple values in a fixed-size structure and learn the important array boundaries before using arrays in method calls or moving on to Collections.
+    relatedKnowledge:
+      - Arrays
+    relatedModules:
+      - routeId: JAVA_COLLECTION
+        label: Collections
+        note: More flexible data structures and higher-level data APIs than arrays.
+    objectives:
+      - Understand array types, creation, initialization, indexing, and length.
+      - Understand that multidimensional arrays are arrays of arrays.
+      - Recognize array covariance and ArrayStoreException as a boundary between compile-time typing and runtime checks.
+      - Understand the fixed-size limitation of arrays and why Collections exist.
 
   - id: methods-and-data-flow
     title: Methods and Data Flow
@@ -153,39 +181,49 @@ roadmap:
       - Understand varargs as an array-backed invocation mechanism rather than a fundamentally separate parameter model.
       - Explain that Java is always pass-by-value and distinguish object mutation from reference reassignment.
 
-  - id: scope-and-variable-lifetime
-    title: Scope and Variable Lifetime
-    purpose: After methods and control flow are established, understand exactly which names are accessible where, how long values remain associated with variables, and why shadowing or incorrect scope easily causes defects.
+  - id: packages-imports-and-name-organization
+    title: Packages, Imports, and Name Organization
+    purpose: Understand how Java groups types into namespaces with packages, makes names convenient to use with imports, and creates package-level access boundaries as programs grow across multiple source files.
     relatedKnowledge:
-      - VariablesScope
       - PackagesImports
-    objectives:
-      - Distinguish the scope of local variables, parameters, fields, and static fields.
-      - Understand block scope, method scope, class-level state, and variable lifetime.
-      - Recognize shadowing, name resolution, and common design problems caused by poor scope choices.
-
-  - id: arrays
-    title: Arrays
-    purpose: Understand how Java represents multiple values of a component type in a fixed-size structure and learn the important array boundaries before moving to Collections.
-    relatedKnowledge:
-      - Arrays
     relatedModules:
-      - routeId: JAVA_COLLECTION
-        label: Collections
-        note: More flexible data structures and higher-level data APIs than arrays.
+      - routeId: JAVA_CLASS_OBJECT
+        label: Class & Object
+        note: Extends how classes, members, and access levels are organized in Java source code.
+    objectives:
+      - Understand packages as namespaces that organize types and reduce naming conflicts.
+      - Understand that imports support source-level name resolution rather than loading classes into memory.
+      - Recognize the role of static imports and the readability cost of overusing them.
+      - Understand package-private access at a foundational level before studying access modifiers more deeply in object-oriented modules.
+
+  - id: type-system-boundaries
+    title: Compile-Time and Runtime Type Boundaries
+    purpose: Connect declared type, runtime type, assignment compatibility, casting, and method selection so the learner understands which guarantees Java provides at compile time and which checks remain for runtime.
+    relatedKnowledge:
+      - TypeSystemMentalModel
+      - Casting
+      - "Null"
+      - Methods
+      - Arrays
+      - WrapperBoxing
+    relatedModules:
+      - routeId: JAVA_OOP
+        label: Object-Oriented Programming
+        note: Inheritance, polymorphism, and runtime dispatch extend this type model.
       - routeId: JAVA_GENERICS
         label: Generics
-        note: The type-safety foundation behind collection APIs.
+        note: Extends compile-time type-safety guarantees.
     objectives:
-      - Understand array types, creation, initialization, indexing, and length.
-      - Understand that multidimensional arrays are arrays of arrays.
-      - Recognize array covariance and ArrayStoreException as a boundary between compile-time typing and runtime checks.
-      - Understand the fixed-size limitation of arrays and why Collections exist.
+      - Distinguish declared type from the runtime type of an object.
+      - Understand assignment compatibility and cases that still require runtime checking or casting.
+      - Distinguish compile-time overload selection from runtime override dispatch at an orientation level for later OOP study.
+      - Recognize boundaries where compile-time checks cannot eliminate every runtime type failure.
 
   - id: language-basics-synthesis
     title: Putting Java Language Basics Together
-    purpose: Connect source structure, values, variables, types, expressions, control flow, methods, scope, and arrays into an end-to-end mental model of a basic Java program.
+    purpose: Connect source structure, values, variables, types, expressions, control flow, methods, scope, arrays, package/import name organization, null, and compile-time/runtime boundaries into an end-to-end mental model of a basic Java program.
     relatedKnowledge:
+      - LanguageBasicsSynthesis
       - TypeSystemMentalModel
       - PrimitiveReference
       - Methods

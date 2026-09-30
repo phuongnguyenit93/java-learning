@@ -374,7 +374,7 @@ The detailed sections below are therefore not just topic inventories; they are t
 
 #### Layer 1 — Module orientation
 
-**Entry chapter contract:** `1.PrimitiveReference/PrimitiveReference.md` must first contain a stable module-orientation section that answers **what "Java Language Basics" includes and what the learner is expected to understand by the end of the module** before going into primitive/reference details. It should connect values/types, variables/scope, boxing, operators/conversions, control flow, methods/invocation, pass-by-value, arrays, packages/imports, `null`, and compile-time vs runtime type into one foundation for later OOP, Generics, Collections and runtime topics. Only after that roadmap should it enter Java's basic execution/value model: what values exist, how variables hold them, how methods consume them, and why later topics such as casting, arrays, null and dispatch depend on this model.
+**Entry chapter contract:** `1.LanguagePurpose/LanguagePurpose.md` owns module orientation. It must first answer **what "Java Language Basics" includes, why these foundations belong together, what problems they solve, and what the learner is expected to understand by the end of the module**. It should connect source structure, values/types, variables/scope, `null`, boxing, operators/conversions, control flow, arrays, methods/invocation, varargs, pass-by-value, packages/imports, and compile-time vs runtime type into one foundation for later OOP, Generics, Collections and runtime topics. Detailed primitive/reference mechanics begin only after `2.SourceCodeStructure/SourceCodeStructure.md` has given the learner enough source anatomy to read a small Java program.
 
 **Major terminology roles:**
 
@@ -402,13 +402,19 @@ compile-time type vs runtime type
 
 ```text
 What do Java Language Basics teach, and why are these topics one foundation?
-Language Basics Roadmap
+Module Purpose
+        ↓
+How is a Java source program organized?
+Source Code Structure
         ↓
 What kind of values does Java manipulate?
 Primitive vs Reference
         ↓
 Where do values live and which name can see them?
 Variables & Scope
+        ↓
+What does "no object" mean for a reference?
+Null
         ↓
 How do primitives participate in object APIs?
 Wrapper / Boxing
@@ -419,20 +425,20 @@ Operators → Casting
 How does execution choose a path?
 Control Flow
         ↓
-How is reusable behavior called?
-Methods → Varargs → Pass-by-Value
-        ↓
 How does Java represent repeated values?
 Arrays
+        ↓
+How is reusable behavior called?
+Methods → Varargs → Pass-by-Value
         ↓
 How are names organized and access bounded?
 Packages / Imports
         ↓
-What does "no object" mean for a reference?
-Null
-        ↓
 How do declared type, runtime type and dispatch fit together?
 Type System Mental Model
+        ↓
+How do all foundations connect end-to-end?
+Language Basics Synthesis
 ```
 
 **Running example / evidence strategy:** use a few tiny recurring values (`int`, `Integer`, `String`, a simple `User` object and arrays of them) and evolve the same calls through assignment, conversion, method invocation, mutation/reassignment and runtime-type checks. Avoid inventing a domain model just to demonstrate syntax.
@@ -442,38 +448,44 @@ Type System Mental Model
 Each chapter should answer one learner question before technical rules:
 
 ```text
-PrimitiveReference     → What does a Java variable actually hold?
-VariablesScope         → Where can that variable be used, and for how long?
-WrapperBoxing          → How can primitive values participate in object-oriented/generic APIs?
-Operators              → How are values combined, compared and promoted?
-Casting                → What happens when one type must become another?
-ControlFlow            → How does the program choose what executes next?
-Methods                → How is behavior named, selected and invoked?
-Varargs                → How can a method accept a variable number of arguments?
-PassByValue            → What exactly gets copied into a method call?
-Arrays                 → How does Java model a fixed-size sequence of values?
-PackagesImports        → How are names grouped and visibility bounded?
-Null                   → What does the absence of an object mean at runtime?
-TypeSystemMentalModel  → Which guarantees are compile-time, and which checks happen at runtime?
+LanguagePurpose          → What does Language Basics teach, and why do these foundations belong together?
+SourceCodeStructure      → Where does code live from source file to type, method, statement and expression?
+PrimitiveReference       → What kinds of values does Java manipulate, and what does a reference value mean?
+VariablesScope           → Where can a variable be used, for how long, and when must it be assigned?
+Null                     → What does the absence of a referenced object mean before dereference/control-flow handling?
+WrapperBoxing            → How can primitive values participate in object-oriented/generic APIs?
+Operators                → How are values combined, compared and promoted?
+Casting                  → What happens when one type must become another?
+ControlFlow              → How does the program choose what executes next, including path-sensitive assignment?
+Arrays                   → How does Java model a fixed-size sequence, defaults, iteration and runtime component checks?
+Methods                  → How is behavior declared, selected and invoked?
+Varargs                  → How does an array-backed parameter accept a variable number of arguments?
+PassByValue              → What exactly gets copied into a method call?
+PackagesImports          → How are names grouped, resolved and visibility bounded?
+TypeSystemMentalModel    → Which guarantees are compile-time, and which checks happen at runtime?
+LanguageBasicsSynthesis  → How do value flow, scope, calls and compile/runtime boundaries form one model?
 ```
 
 #### Knowledge map
 
 | Existing chapter | Proposed anchored H2 sections |
 | --- | --- |
-| `1.PrimitiveReference/PrimitiveReference.md` | `#language-basics-roadmap` — What the Language Basics module teaches, why these foundations belong together, and what the learner should know by the end<br>`#primitive-vs-reference-model` — Primitive vs reference value model<br>`#primitive-ranges-and-defaults` — Primitive ranges, literals and defaults<br>`#reference-value-semantics` — What a reference value actually stores |
-| `2.VariablesScope/VariablesScope.md` | `#variable-kinds-and-lifetime` — Local, parameter, field and static variable lifetime<br>`#scope-and-shadowing` — Scope, shadowing and name resolution<br>`#definite-assignment` — Definite assignment rules |
-| `3.WrapperBoxing/WrapperBoxing.md` | `#wrapper-types` — Wrapper types and object semantics<br>`#boxing-unboxing` — Boxing and unboxing<br>`#wrapper-caching` — Wrapper caches and identity pitfalls<br>`#unboxing-null` — Null unboxing and NullPointerException |
-| `4.Operators/Operators.md` | `#numeric-promotion` — Numeric promotion<br>`#short-circuit-operators` — Short-circuit boolean operators<br>`#bitwise-shift` — Bitwise and shift operators<br>`#precedence-side-effects` — Precedence, evaluation order and side effects |
-| `5.Casting/Casting.md` | `#primitive-casting` — Widening and narrowing primitive conversions<br>`#reference-upcast-downcast` — Reference upcast and downcast<br>`#instanceof-safe-cast` — instanceof and safe casting<br>`#class-cast-failure` — ClassCastException boundaries |
-| `6.ControlFlow/ControlFlow.md` | `#branching-model` — if/switch branching model<br>`#loop-control` — for/while/do-while and break/continue<br>`#switch-expression` — switch expression and yield<br>`#control-flow-pitfalls` — Control-flow readability and common pitfalls |
-| `7.Methods/Methods.md` | `#method-signature` — Method signature, parameters and return<br>`#method-invocation-conversion` — Method invocation conversions: identity, primitive/reference widening, boxing/unboxing and varargs applicability<br>`#overload-resolution-phases` — Overload resolution phases and why fixed-arity candidates are considered before varargs fallback<br>`#most-specific-overload` — Selecting the most-specific applicable overload<br>`#null-overload-ambiguity` — `null` arguments and ambiguous unrelated reference overloads<br>`#method-call-evaluation` — Argument evaluation order<br>`#recursion-stack` — Recursion and call-stack cost |
-| `8.Varargs/Varargs.md` | `#varargs-array-model` — Varargs are arrays<br>`#varargs-overload` — Varargs and overload resolution<br>`#varargs-generics-warning` — Generic varargs and heap-pollution boundary |
-| `9.PassByValue/PassByValue.md` | `#java-pass-by-value` — Java is always pass-by-value<br>`#reference-copy-mutation` — Copied references and visible object mutation<br>`#reassignment-vs-mutation` — Parameter reassignment vs object mutation |
+| `1.LanguagePurpose/LanguagePurpose.md` | `#language-basics-roadmap` — What the module teaches, why these foundations belong together, and the accepted learning journey |
+| `2.SourceCodeStructure/SourceCodeStructure.md` | `#source-file-type-structure` — Source file → package/import → type → member/body orientation<br>`#statement-expression-model` — Statement vs expression<br>`#lexical-elements` — Identifiers, keywords/restricted identifiers, literals and comments |
+| `3.PrimitiveReference/PrimitiveReference.md` | `#primitive-vs-reference-model` — Primitive vs reference value model<br>`#primitive-ranges-and-defaults` — Primitive types, ranges and literal syntax; variable/array default rules are owned downstream<br>`#reference-value-semantics` — What a reference value stores, aliases and assignment-copy semantics |
+| `4.VariablesScope/VariablesScope.md` | `#variable-kinds-and-lifetime` — Declaration/initialization, local/parameter/field/static lifetime and field defaults<br>`#scope-and-shadowing` — Lexical scope, shadowing and name resolution<br>`#definite-assignment` — Basic definite-assignment rule; path-sensitive branch/loop analysis is reinforced in ControlFlow |
+| `5.Null/Null.md` | `#null-reference` — null as a reference value<br>`#null-dereference` — Dereference failure<br>`#null-comparison` — Comparing a reference with null before later control-flow guards<br>`#null-api-design` — Nullability as an API-design concern |
+| `6.WrapperBoxing/WrapperBoxing.md` | `#wrapper-types` — Wrapper types and object semantics<br>`#boxing-unboxing` — Boxing and unboxing<br>`#wrapper-caching` — Wrapper caches and identity pitfalls<br>`#unboxing-null` — Null unboxing and NullPointerException |
+| `7.Operators/Operators.md` | `#numeric-promotion` — Numeric promotion<br>`#short-circuit-operators` — Short-circuit boolean operators<br>`#bitwise-shift` — Bitwise and shift operators<br>`#precedence-side-effects` — Precedence, evaluation order and side effects |
+| `8.Casting/Casting.md` | `#primitive-casting` — Widening and narrowing primitive conversions<br>`#reference-upcast-downcast` — Foundational reference upcast/downcast; runtime checking/pattern flow is consolidated in TypeSystemMentalModel |
+| `9.ControlFlow/ControlFlow.md` | `#branching-model` — if/switch branching model<br>`#loop-control` — for/while/do-while and break/continue<br>`#switch-expression` — switch expression and yield<br>`#control-flow-pitfalls` — Readability/common pitfalls; branch/loop definite-assignment reasoning is reinforced here |
 | `10.Arrays/Arrays.md` | `#array-type-model` — Array type, length and covariance<br>`#array-initialization` — Array creation and initialization<br>`#array-covariance-risk` — Array covariance and ArrayStoreException<br>`#multidimensional-arrays` — Multidimensional arrays are arrays of arrays |
-| `11.PackagesImports/PackagesImports.md` | `#package-namespace` — Packages as namespaces<br>`#import-resolution` — Imports and name resolution<br>`#static-import` — Static import<br>`#package-access` — Package-private access boundary |
-| `12.Null/Null.md` | `#null-reference` — null as a reference value<br>`#null-dereference` — Dereference failure<br>`#null-comparison` — Null comparison and control flow<br>`#null-api-design` — Nullability as an API-design concern |
-| `13.TypeSystemMentalModel/TypeSystemMentalModel.md` | `#compile-time-vs-runtime-type` — Compile-time type vs runtime type<br>`#assignment-compatibility` — Assignment compatibility<br>`#overload-vs-override-dispatch` — Overload selection vs override dispatch<br>`#type-system-boundaries` — Type-system guarantees and runtime checks |
+| `11.Methods/Methods.md` | `#method-signature` — Method declaration/signature, parameters and return/exit semantics<br>`#method-invocation-conversion` — Invocation conversions<br>`#overload-resolution-phases` — Overload phases<br>`#most-specific-overload` — Most-specific candidate<br>`#null-overload-ambiguity` — null ambiguity<br>`#method-call-evaluation` — Argument evaluation order<br>`#recursion-stack` — Recursion/call-stack boundary |
+| `12.Varargs/Varargs.md` | `#varargs-array-model` — Varargs are array-backed<br>`#varargs-overload` — Varargs and overload resolution<br>`#varargs-generics-warning` — Advanced Generics/heap-pollution boundary |
+| `13.PassByValue/PassByValue.md` | `#java-pass-by-value` — Java is always pass-by-value<br>`#reference-copy-mutation` — Copied references and visible object mutation<br>`#reassignment-vs-mutation` — Parameter reassignment vs object mutation |
+| `14.PackagesImports/PackagesImports.md` | `#package-namespace` — Packages as namespaces/source organization<br>`#import-resolution` — Imports and name resolution<br>`#static-import` — Static import<br>`#package-access` — Package-private access boundary |
+| `15.TypeSystemMentalModel/TypeSystemMentalModel.md` | `#compile-time-vs-runtime-type` — Compile-time vs runtime type<br>`#assignment-compatibility` — Assignment compatibility and conversion contexts<br>`#instanceof-safe-cast` — Runtime type test, pattern binding and flow scope<br>`#class-cast-failure` — ClassCastException boundary<br>`#overload-vs-override-dispatch` — Overload selection vs override dispatch<br>`#type-system-boundaries` — Type-system guarantees and runtime checks |
+| `16.LanguageBasicsSynthesis/LanguageBasicsSynthesis.md` | `#language-basics-synthesis` — End-to-end reasoning chain, including the former TypeSystem final synthesis<br>`#end-to-end-value-flow` — Trace one value through assignment/conversion/array/method flow<br>`#language-basics-next-boundaries` — Handoff to OOP, Generics, Collections, Exception, Numbers and String |
 
 #### Proposed API experiments
 
