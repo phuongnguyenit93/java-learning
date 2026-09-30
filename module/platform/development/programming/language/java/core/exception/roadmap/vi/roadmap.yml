@@ -43,60 +43,78 @@
 
 roadmap:
   - id: exception-purpose
-    title: Mục đích Exception và Abnormal Completion
-    purpose: Hiểu exception như abnormal-completion channel riêng, mang failure context qua các call boundary.
+    title: Exception là gì và vì sao Java cần nó?
+    purpose: Hiểu Exception là cơ chế biểu diễn tình huống bất thường hoặc thất bại tách khỏi luồng thành công bình thường, giúp thông tin về sự cố đi qua nhiều lời gọi phương thức mà không buộc mọi tầng phải trả và kiểm tra mã trạng thái.
+    relatedKnowledge:
+      - ExceptionPurpose
     objectives:
-      - Giải thích vì sao exception scale tốt hơn việc ép mọi caller kiểm tra status value.
-      - Nhận biết exception không phải default mechanism cho ordinary expected control flow.
+      - Giải thích vai trò của Exception trong việc tách luồng xử lý thành công khỏi luồng xử lý khi thất bại và truyền ngữ cảnh đến nơi có trách nhiệm xử lý.
+      - Nhận biết Exception không nên được dùng như cơ chế mặc định cho luồng điều khiển bình thường đã được dự kiến trước.
   - id: throwable-model
-    title: Throwable và Failure Taxonomy
-    purpose: Hiểu Throwable vừa là failure object vừa là root của exceptional-control-flow hierarchy trong Java.
+    title: Throwable và cách Java phân loại lỗi
+    purpose: Hiểu Throwable là đối tượng mang thông tin về sự cố và là gốc của hệ phân cấp kiểu mà Java dùng cho cơ chế Exception.
+    relatedKnowledge:
+      - ThrowableModel
     objectives:
-      - Phân biệt vai trò Error, Exception, RuntimeException, cause và stack trace.
-      - Dùng hierarchy để reason về catch boundary thay vì ghi nhớ class.
+      - Phân biệt vai trò của Error, Exception, RuntimeException, nguyên nhân (cause) và dấu vết ngăn xếp (stack trace).
+      - Dùng quan hệ phân cấp kiểu để hiểu loại lỗi nào nên hoặc không nên được bắt, thay vì chỉ ghi nhớ tên lớp.
   - id: checked-and-unchecked-contracts
-    title: Checked và Unchecked Contract
-    purpose: Hiểu khi nào failure trở thành một phần của compile-time method contract và trade-off giữa checked với unchecked design.
+    title: Checked Exception và Unchecked Exception
+    purpose: Hiểu khi nào một lỗi trở thành một phần của hợp đồng phương thức được trình biên dịch kiểm tra và sự khác nhau về trách nhiệm xử lý giữa checked với unchecked exception.
+    relatedKnowledge:
+      - CheckedUncheckedContracts
     objectives:
-      - Giải thích compiler obligation của checked exception.
-      - Chọn exception style theo recoverability và abstraction contract.
+      - Giải thích yêu cầu bắt hoặc khai báo mà trình biên dịch áp dụng cho checked exception.
+      - Chọn checked hay unchecked dựa trên khả năng phục hồi và hợp đồng của tầng trừu tượng, không dựa trên thói quen.
   - id: throwing-and-propagation
-    title: Throwing, Declaring và Propagation
-    purpose: Hiểu cách failure được tạo, declare, match và propagate qua stack unwinding.
+    title: throw, throws và sự lan truyền Exception
+    purpose: Hiểu cách Exception được ném, khai báo và tiếp tục lan truyền qua ngăn xếp lời gọi khi chưa có nơi xử lý phù hợp.
+    relatedKnowledge:
+      - ThrowingPropagation
     objectives:
-      - Phân biệt throw với throws và hiểu override/rethrow constraint.
-      - Theo dõi catch selection và causal chain qua nhiều layer.
+      - Phân biệt `throw` với `throws` và hiểu vai trò của chúng trong hợp đồng phương thức.
+      - Theo dõi quá trình tháo dỡ ngăn xếp (stack unwinding), cách Java chọn khối `catch` và chuỗi nguyên nhân qua nhiều tầng.
   - id: handling-and-cleanup
-    title: Handling và Cleanup
-    purpose: Hiểu cách try/catch/finally tách recovery decision khỏi cleanup mà vẫn giữ failure semantics.
+    title: Xử lý Exception với try/catch/finally
+    purpose: Hiểu cách `try`, `catch` và `finally` điều khiển luồng khi có Exception và thực hiện công việc dọn dẹp mà không che mất kết quả hoặc sự cố đang chờ xử lý.
+    relatedKnowledge:
+      - HandlingCleanup
     objectives:
-      - Chỉ catch tại nơi có meaningful handling hoặc translation.
-      - Reason về finally behavior mà không che primary failure.
+      - Theo dõi luồng thực thi qua `try` và `catch` khi có hoặc không có Exception.
+      - Hiểu vai trò của `finally` và tránh để logic dọn dẹp che mất kết quả hoặc lỗi đang chờ xử lý.
   - id: resource-safe-failure
-    title: Resource Safety và Suppressed Failure
-    purpose: Hiểu try-with-resources, close order và suppressed exception khi cả work lẫn cleanup đều có thể fail.
+    title: Quản lý tài nguyên an toàn với try-with-resources
+    purpose: Hiểu cách try-with-resources và AutoCloseable quản lý vòng đời tài nguyên, thứ tự đóng và giữ lại lỗi chính khi quá trình đóng tài nguyên cũng phát sinh lỗi.
+    relatedKnowledge:
+      - ResourceSafeFailure
     relatedModules:
       - routeId: JAVA_IO
         label: I/O
-        note: I/O resource làm exception-safe cleanup và try-with-resources đặc biệt rõ.
+        note: Tài nguyên I/O là ví dụ điển hình để quan sát việc đóng tài nguyên an toàn khi có Exception.
     objectives:
-      - Dùng AutoCloseable resource an toàn qua structured lifetime management.
-      - Giữ primary và suppressed failure context.
+      - Hiểu hợp đồng AutoCloseable và thứ tự đóng tài nguyên theo chiều ngược trong try-with-resources.
+      - Phân biệt lỗi chính, Suppressed Exception và nguyên nhân (cause); hiểu Suppressed Exception là lỗi phụ được Java lưu kèm khi quá trình dọn dẹp cũng thất bại.
   - id: custom-exceptions-and-context
-    title: Custom Exception và Causal Context
-    purpose: Học khi nào exception type mới tạo abstraction value và cách giữ context hữu ích mà không làm lộ low-level detail.
+    title: Ngoại lệ tùy chỉnh (Custom Exception)
+    purpose: Hiểu khi nào một loại Exception riêng giúp diễn đạt lỗi ở đúng mức trừu tượng và cách giữ nguyên nhân cùng dữ liệu ngữ cảnh hữu ích mà không làm lộ chi tiết tầng thấp không cần thiết.
+    relatedKnowledge:
+      - CustomExceptionsContext
     objectives:
-      - Chỉ thiết kế exception hierarchy nhỏ khi nó làm rõ caller decision.
-      - Giữ cause và contextual data cần thiết khi wrap.
+      - Chỉ tạo ngoại lệ tùy chỉnh hoặc cây phân cấp nhỏ khi nó giúp mã gọi đưa ra quyết định rõ ràng hơn.
+      - Giữ nguyên nhân (cause) và dữ liệu ngữ cảnh cần thiết khi bọc Exception, thay vì chỉ thay thông điệp hoặc tạo thêm lớp bọc vô nghĩa.
   - id: exception-boundary-design
-    title: Translation, Logging, Recovery và Propagation
-    purpose: Xây dựng boundary-oriented model để quyết định nơi failure nên translate, log, recover hoặc tiếp tục propagate.
+    title: Ranh giới xử lý Exception trong ứng dụng
+    purpose: Xây dựng mô hình xuyên suốt để quyết định ở tầng nào Exception nên được chuyển đổi, ghi log, thử lại, phục hồi hoặc tiếp tục lan truyền.
+    relatedKnowledge:
+      - ExceptionBoundaryDesign
     objectives:
-      - Tránh swallow failure và duplicate logging qua nhiều layer.
-      - Tách cleanup, recovery, translation và observability responsibility.
+      - Tránh nuốt lỗi, ghi log lặp lại ở nhiều tầng và dùng Exception cho luồng điều khiển bình thường.
+      - Tách trách nhiệm dọn dẹp, phục hồi, chuyển đổi lỗi và ghi nhận thông tin phục vụ quan sát/chẩn đoán giữa các ranh giới xử lý.
   - id: exception-synthesis
-    title: Tổng hợp Exception Handling
-    purpose: Kết nối failure representation, propagation, cleanup, abstraction và recovery thành một end-to-end error-handling model.
+    title: Tổng hợp mô hình xử lý Exception
+    purpose: Kết nối biểu diễn lỗi, lan truyền, xử lý, dọn dẹp tài nguyên, chuyển đổi và phục hồi thành một mô hình xử lý lỗi xuyên suốt.
+    relatedKnowledge:
+      - ExceptionSynthesis
     objectives:
-      - Theo dõi một failure từ origin qua translation tới responsible handling boundary.
-      - Nhận biết khi exception design đang thêm context hay chỉ thêm wrapper.
+      - Theo dõi một lỗi từ nơi phát sinh qua các bước lan truyền hoặc chuyển đổi đến ranh giới chịu trách nhiệm cuối cùng.
+      - Nhận biết khi việc bọc Exception thực sự bổ sung ngữ cảnh và khi nó chỉ tạo thêm một lớp bọc không cần thiết.

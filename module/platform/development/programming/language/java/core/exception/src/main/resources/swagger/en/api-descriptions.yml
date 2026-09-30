@@ -8,7 +8,7 @@ ExceptionDesignController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 9.ExceptionDesign/ExceptionDesign.md
+      file: 8.ExceptionBoundaryDesign/ExceptionBoundaryDesign.md
       anchor: exception-boundaries
     methodName: translateBoundary
     params: []
@@ -31,7 +31,7 @@ FinallyController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 5.TryCatchFinally/TryCatchFinally.md
+      file: 5.HandlingCleanup/HandlingCleanup.md
       anchor: return-finally
     methodName: returnInteraction
     params: []
@@ -54,7 +54,7 @@ PropagationController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 4.Propagation/Propagation.md
+      file: 4.ThrowingPropagation/ThrowingPropagation.md
       anchor: exception-propagation
     methodName: propagate
     params: []
@@ -69,14 +69,14 @@ PropagationController:
     usage: true
   wrapCause():
     summary: Wrap an exception without losing its cause
-    description: Wraps a low-level IllegalArgumentException in OrderReadException. The response exposes both wrapper and cause so the learner can distinguish exception chaining from a lost-cause anti-pattern.
+    description: Wraps IllegalArgumentException in OrderReadException. The response exposes both the new exception and its original cause, demonstrating exception chaining rather than deciding whether abstraction translation is appropriate.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 4.Propagation/Propagation.md
+      file: 4.ThrowingPropagation/ThrowingPropagation.md
       anchor: exception-chaining
     methodName: wrapCause
     params: []
@@ -99,7 +99,7 @@ ResourceController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 6.TryWithResources/TryWithResources.md
+      file: 6.ResourceSafeFailure/ResourceSafeFailure.md
       anchor: resource-close-order
     methodName: closeOrder
     params: []
@@ -121,7 +121,7 @@ ResourceController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 7.SuppressedException/SuppressedException.md
+      file: 6.ResourceSafeFailure/ResourceSafeFailure.md
       anchor: primary-vs-suppressed
     methodName: suppressed
     params: []

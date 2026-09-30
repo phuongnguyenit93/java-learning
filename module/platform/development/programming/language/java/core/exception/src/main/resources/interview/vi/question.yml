@@ -28,198 +28,212 @@
 # </interview-schema>
 
 questions:
-  - question: "Exception là gì, tại sao Java cần một abnormal-completion channel riêng, và vì sao Throwable vừa là object vừa liên quan control flow?"
-    answer: "Exception mechanism tách failure khỏi normal return path để failure có thể mang type/message/stack trace/cause và propagate qua nhiều call layer tới nơi có đủ trách nhiệm xử lý. Một Throwable instance là object chứa diagnostic context; khi bị throw, nó đồng thời làm path hiện tại complete bất thường và Java tìm handler hoặc unwind lên caller. So với việc mọi caller tự kiểm tra status code, cơ chế này giúp propagation và causal context có cấu trúc hơn, nhưng không nên bị dùng làm normal control flow cho các nhánh dự kiến thông thường."
+  - question: "Exception là gì, tại sao Java cần một kênh kết thúc bất thường riêng, và vì sao Throwable vừa mang dữ liệu vừa ảnh hưởng luồng điều khiển?"
+    answer: "Cơ chế exception tách lỗi khỏi đường trả về bình thường để lỗi có thể mang kiểu, thông điệp, stack trace và cause rồi lan truyền qua nhiều tầng gọi tới nơi có đủ trách nhiệm xử lý. Một Throwable vừa là đối tượng chứa thông tin chẩn đoán, vừa trở thành tín hiệu điều khiển luồng khi bị throw: đường chạy hiện tại kết thúc bất thường và Java tìm khối xử lý phù hợp hoặc tiếp tục lần ngược ngăn xếp. So với việc mọi bên gọi tự kiểm tra mã trạng thái, cơ chế này tạo một kênh lỗi có cấu trúc hơn; nhưng exception không nên thay thế luồng điều khiển bình thường cho các nhánh dự kiến."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.Throwable/Throwable.md", anchor: "exception-purpose"}
+    readmeRelated: {file: "1.ExceptionPurpose/ExceptionPurpose.md", anchor: "exception-purpose"}
     apiRelated: {controller: "PropagationController", methodSignature: "propagate()"}
 
   - question: "Phân biệt Error và Exception về mặt thiết kế. Vì sao catch Throwable thường quá rộng?"
-    answer: "Error thường biểu diễn các điều kiện nghiêm trọng ở JVM/runtime/linkage mà application code không nên mặc định recover như business failure. Exception thường là failure mà API/application có thể model, translate hoặc xử lý. catch Throwable hợp lệ về cú pháp nhưng còn bắt cả Error, nên một generic handler có thể vô tình nuốt điều kiện mà process/thread không nên coi là recoverable."
+    answer: "Error thường biểu diễn các điều kiện nghiêm trọng liên quan tới JVM, môi trường chạy hoặc quá trình liên kết lớp mà mã ứng dụng không nên mặc định có thể phục hồi như một lỗi thông thường. Exception thường là nhánh lỗi mà API/ứng dụng có thể mô hình hóa, xử lý, chuyển đổi hoặc tiếp tục lan truyền. catch (Throwable) hợp lệ về cú pháp nhưng còn bắt cả Error, nên dùng nó như khối xử lý chung có thể vô tình coi lỗi nghiêm trọng của môi trường chạy như một lỗi có thể phục hồi."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.Throwable/Throwable.md", anchor: "error-vs-exception"}
+    readmeRelated: {file: "2.ThrowableModel/ThrowableModel.md", anchor: "error-vs-exception"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Stack trace, message và cause khác nhau thế nào khi debug một exception đã bị wrap?"
-    answer: "Message mô tả failure ở abstraction hiện tại; stack trace cho biết call path gần nơi Throwable ghi stack; cause liên kết tới failure thấp hơn đã dẫn tới wrapper. Khi translate exception, wrapper có thể cho caller vocabulary tốt hơn còn cause giữ root diagnostics. Không nên parse stack trace/message như business contract vì chúng dễ thay đổi theo refactor."
+  - question: "Stack trace, message và cause khác nhau thế nào khi chẩn đoán một exception đã được bọc?"
+    answer: "Message mô tả lỗi ở mức trừu tượng hiện tại; stack trace cho biết đường gọi gần nơi Throwable ghi lại ngăn xếp; cause liên kết exception hiện tại với lỗi thấp hơn đã dẫn tới nó. Khi chuyển đổi exception, kiểu mới có thể phù hợp hơn với bên gọi còn cause vẫn giữ nguyên nhân gốc để chẩn đoán. Không nên phân tích stack trace hoặc message như một hợp đồng nghiệp vụ ổn định vì chúng có thể thay đổi sau refactor."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.Throwable/Throwable.md", anchor: "stack-trace-cause"}
+    readmeRelated: {file: "2.ThrowableModel/ThrowableModel.md", anchor: "stack-trace-cause"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: "Bạn quyết định dùng checked hay unchecked exception trong API như thế nào?"
-    answer: "Không có rule tuyệt đối kiểu business=checked hay modern Java=unchecked. Hãy hỏi caller có nên bị compiler buộc nhận biết failure này không, caller có khả năng xử lý có ý nghĩa không, và catch-or-declare có làm contract rõ hơn hay chỉ tạo boilerplate. Checked phù hợp khi compile-time acknowledgement có giá trị; unchecked phù hợp khi nearby caller không có recovery hợp lý hoặc failure phản ánh contract/invariant/programming error."
+    answer: "Không có quy tắc tuyệt đối kiểu lỗi nghiệp vụ luôn là checked hay Java hiện đại luôn dùng unchecked. Hãy hỏi bên gọi có nên bị trình biên dịch buộc phải nhận biết lỗi này không, họ có khả năng xử lý nó một cách có ý nghĩa không, và catch-or-declare có làm hợp đồng API rõ hơn hay chỉ tạo mã lặp. Checked phù hợp khi việc bắt buộc xác nhận lỗi tại thời điểm biên dịch có giá trị; unchecked thường hợp với lỗi vi phạm hợp đồng, invariant, lỗi lập trình hoặc trường hợp các bên gọi gần đó không thể phục hồi hợp lý."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.CheckedUnchecked/CheckedUnchecked.md", anchor: "checked-vs-unchecked-design"}
+    readmeRelated: {file: "3.CheckedUncheckedContracts/CheckedUncheckedContracts.md", anchor: "checked-vs-unchecked-design"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: "Giải thích catch-or-declare và vì sao unchecked exception vẫn có thể xuất hiện trong throws clause."
-    answer: "Nếu checked exception có thể escape, method phải catch hoặc declare nó bằng throws. RuntimeException và Error không chịu rule này. Java vẫn cho phép khai báo unchecked exception trong throws để document contract nếu hữu ích, nhưng declaration đó không biến exception thành checked và không bắt caller phải catch/declare."
+    answer: "Nếu checked exception có thể thoát khỏi phương thức, phương thức phải bắt nó hoặc khai báo bằng throws. RuntimeException và Error không chịu quy tắc catch-or-declare này. Java vẫn cho phép ghi unchecked exception trong throws để mô tả hợp đồng nếu hữu ích, nhưng việc khai báo không biến nó thành checked và cũng không bắt bên gọi phải catch hoặc khai báo lại."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.CheckedUnchecked/CheckedUnchecked.md", anchor: "checked-exception"}
+    readmeRelated: {file: "3.CheckedUncheckedContracts/CheckedUncheckedContracts.md", anchor: "checked-exception"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Phân biệt throw và throws về thời điểm và trách nhiệm. Một statement throw có bắt buộc phải new exception không?"
-    answer: "throw là executable statement tại runtime: nó ném một Throwable expression và làm path hiện tại complete bất thường. throws nằm trong declaration để công bố những exception type có thể escape method/constructor. throw không bắt buộc new ngay tại chỗ; có thể rethrow một exception instance đã bắt được. Câu hỏi này trải qua cả hai concept nên relation API không cần ép gán."
+  - question: "Phân biệt throw và throws về thời điểm và trách nhiệm. Một câu lệnh throw có bắt buộc phải tạo exception mới không?"
+    answer: "throw là câu lệnh thực thi khi chương trình chạy: nó ném một biểu thức Throwable và làm đường chạy hiện tại kết thúc bất thường. throws nằm trong phần khai báo phương thức/constructor để mô tả những exception có thể thoát ra. throw không bắt buộc phải dùng new tại chỗ; có thể ném lại một exception instance đã có. Vì câu hỏi đồng thời bao quát cả throw và throws nên không ép liên kết tới một Knowledge anchor duy nhất."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "", anchor: ""}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Precise rethrow là gì và nó giúp giữ method contract hẹp hơn ra sao?"
-    answer: "Khi catch bằng supertype như Exception nhưng try chỉ có thể phát sinh một tập checked exception hẹp, compiler có thể dùng flow analysis để suy luận tập type thực sự của catch parameter nếu nó không bị gán lại. Vì vậy throw ex không nhất thiết buộc method khai báo throws Exception; có thể vẫn chỉ declare IOException, SQLException. Nó cho phép shared handling logic mà không làm contract rộng không cần thiết."
+  - question: "Mô tả exception propagation và stack unwinding. Việc dọn dẹp có bị bỏ qua khi ngăn xếp được lần ngược không?"
+    answer: "Khi phương thức không bắt exception, lỗi tiếp tục lan truyền tới bên gọi cho tới khi gặp khối xử lý phù hợp hoặc ranh giới của thread. Trong lúc stack unwinding diễn ra, các khối finally và phần dọn dẹp của try-with-resources vẫn tham gia theo quy tắc ngôn ngữ; lần ngược ngăn xếp không có nghĩa bỏ qua dọn dẹp. Endpoint propagate() cho thấy đường levelTwo → levelOne → propagate qua stack trace."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.ThrowThrows/ThrowThrows.md", anchor: "precise-rethrow"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - question: "Giải thích rule của checked exception khi overriding và liên hệ với substitutability."
-    answer: "Override có thể giữ, narrow hoặc bỏ checked exception của parent, nhưng không được broaden thành checked supertype rộng hơn. Caller compile theo parent contract phải có thể thay object con vào mà không bị buộc xử lý một checked failure mới mà parent chưa hứa. Unchecked exceptions không chịu cùng restriction catch-or-declare này."
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "3.ThrowThrows/ThrowThrows.md", anchor: "override-throws-rules"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - question: "Mô tả exception propagation và stack unwinding. Cleanup có bị bỏ qua khi frame unwind không?"
-    answer: "Khi method không catch exception, control rời frame đó và failure tiếp tục tới caller cho đến handler phù hợp hoặc thread boundary. Trong quá trình unwind, finally và try-with-resources cleanup liên quan vẫn tham gia theo language contract; unwind không có nghĩa bỏ qua cleanup. Endpoint propagate() minh họa đường levelTwo → levelOne → propagate bằng stack trace."
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "4.Propagation/Propagation.md", anchor: "exception-propagation"}
+    readmeRelated: {file: "4.ThrowingPropagation/ThrowingPropagation.md", anchor: "exception-propagation"}
     apiRelated: {controller: "PropagationController", methodSignature: "propagate()"}
 
-  - question: "Java chọn catch block như thế nào và vì sao không nên phân nhánh handling bằng cách parse exception message?"
-    answer: "Java xét catch theo source order và type compatibility; catch cụ thể phải đứng trước supertype rộng để tránh unreachable branch. Message là diagnostic text có thể thay đổi và không phải structured contract. Nếu caller cần policy khác nhau, exception type hoặc structured context là nền tảng ổn định hơn."
+  - question: "Java chọn khối catch như thế nào và vì sao không nên phân nhánh xử lý bằng cách đọc nội dung exception message?"
+    answer: "Java xét các khối catch theo thứ tự trong mã nguồn và tính tương thích kiểu. Catch cho kiểu cụ thể phải đứng trước kiểu cha rộng hơn, nếu không nhánh cụ thể có thể trở thành unreachable. Message là văn bản chẩn đoán có thể thay đổi, không phải hợp đồng có cấu trúc. Nếu cần chính sách xử lý khác nhau, kiểu exception hoặc dữ liệu ngữ cảnh có cấu trúc là nền tảng ổn định hơn."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Propagation/Propagation.md", anchor: "catch-selection"}
+    readmeRelated: {file: "4.ThrowingPropagation/ThrowingPropagation.md", anchor: "catch-selection"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Khi nào nên rethrow nguyên exception và khi nào nên wrap? Vì sao phải giữ cause?"
-    answer: "Nếu abstraction không đổi và tầng hiện tại chỉ audit/bổ sung side effect hợp lệ, rethrow nguyên object có thể đủ. Khi vocabulary/contract đổi tại abstraction boundary, wrap bằng higher-level type có thể hợp lý. Cause phải được giữ để caller có abstraction tốt hơn mà diagnostics vẫn dẫn về technical failure gốc; wrap máy móc ở mọi layer chỉ tạo noise."
+  - question: "Exception chaining hoạt động như thế nào khi tạo một exception mới từ exception cũ, và wrapCause() chứng minh điều gì?"
+    answer: "Exception mới có thể nhận exception cũ trong constructor làm cause. Nhờ đó kiểu/thông điệp mới và lỗi gốc cùng tồn tại trong một chuỗi nguyên nhân. wrapCause() trả cả OrderReadException lẫn IllegalArgumentException gốc để làm quan hệ này quan sát được. Việc có nên bọc exception tại một ranh giới trừu tượng hay không là quyết định thiết kế riêng ở chương về ranh giới xử lý."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Propagation/Propagation.md", anchor: "exception-chaining"}
+    readmeRelated: {file: "4.ThrowingPropagation/ThrowingPropagation.md", anchor: "exception-chaining"}
     apiRelated: {controller: "PropagationController", methodSignature: "wrapCause()"}
 
-  - question: "Lost-cause anti-pattern gây hậu quả gì và bạn nhận ra nó trong code như thế nào?"
-    answer: "Dấu hiệu điển hình là catch exception rồi throw wrapper mới nhưng constructor không nhận exception gốc. Causal chain bị cắt, root stack trace/context biến mất khỏi wrapper và log cuối chỉ thấy failure mới. Nếu cần translation, dùng constructor có cause; nếu abstraction không đổi, cân nhắc rethrow nguyên object."
+  - question: "Lost-cause anti-pattern gây hậu quả gì và bạn nhận ra nó trong mã nguồn như thế nào?"
+    answer: "Dấu hiệu điển hình là bắt exception rồi ném một lớp bọc mới nhưng constructor không nhận exception gốc. Chuỗi nguyên nhân bị cắt, stack trace và ngữ cảnh của lỗi gốc không còn nối với exception mới. Nếu cần chuyển đổi exception, hãy dùng constructor nhận cause; nếu mức trừu tượng không đổi, có thể cân nhắc ném lại chính exception cũ."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Propagation/Propagation.md", anchor: "lost-cause-pitfall"}
+    readmeRelated: {file: "4.ThrowingPropagation/ThrowingPropagation.md", anchor: "lost-cause-pitfall"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Vì sao 'đã catch' không đồng nghĩa với 'đã recover'? Khi nào catch Exception có thể chấp nhận được?"
-    answer: "Catch chỉ dừng propagation; recovery đòi hỏi code tạo ra outcome/trạng thái hợp lệ theo contract. catch Exception ở middle layer dễ che bug và nuốt failure không hiểu. Nó có thể hợp lý ở final application boundary cần map một tập application failures thành response/job outcome thống nhất, miễn là boundary không biến lỗi thành success giả."
+  - question: "Precise rethrow là gì và nó giúp giữ hợp đồng phương thức hẹp hơn ra sao?"
+    answer: "Khi catch bằng kiểu cha như Exception nhưng khối try chỉ có thể phát sinh một tập checked exception hẹp, trình biên dịch có thể dùng phân tích luồng để suy luận các kiểu thực sự có thể đi vào tham số catch nếu tham số đó không bị gán lại. Vì vậy throw ex không nhất thiết buộc phương thức khai báo throws Exception; phương thức vẫn có thể chỉ khai báo IOException và SQLException. Cơ chế này cho phép dùng chung logic xử lý mà không làm hợp đồng rộng hơn cần thiết."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.TryCatchFinally/TryCatchFinally.md", anchor: "try-catch-flow"}
+    readmeRelated: {file: "4.ThrowingPropagation/ThrowingPropagation.md", anchor: "precise-rethrow"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Giải thích finally khi có return hoặc throw đang pending. Vì sao return/throw bên trong finally nguy hiểm?"
-    answer: "finally chạy trước khi pending outcome rời cấu trúc. Nếu finally complete bình thường, pending return/exception tiếp tục; nhưng nếu chính finally return hoặc throw, abrupt completion mới có thể thay outcome trước đó và che result/root failure. returnInteraction() chứng minh return 1 bị return 2 trong finally thay thế; cùng nguyên lý áp dụng với throw."
+  - question: "Giải thích quy tắc của checked exception khi overriding và liên hệ với substitutability."
+    answer: "Phương thức ghi đè có thể giữ nguyên, thu hẹp hoặc bỏ checked exception đã được lớp cha khai báo, nhưng không được mở rộng thành một checked exception rộng hơn. Bên gọi được biên dịch theo hợp đồng của lớp cha phải có thể thay đối tượng con vào mà không bị buộc xử lý một checked exception mới mà lớp cha chưa công bố. Unchecked exception không chịu cùng giới hạn catch-or-declare này."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.TryCatchFinally/TryCatchFinally.md", anchor: "return-finally"}
+    readmeRelated: {file: "4.ThrowingPropagation/ThrowingPropagation.md", anchor: "override-throws-rules"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Vì sao 'đã catch' không đồng nghĩa với 'đã phục hồi'? Khi nào catch (Exception) có thể chấp nhận được?"
+    answer: "Catch chỉ dừng quá trình lan truyền; phục hồi đòi hỏi chương trình tạo ra một kết quả hoặc trạng thái hợp lệ theo hợp đồng. catch (Exception) ở tầng trung gian dễ che lỗi lập trình hoặc bắt những lỗi mà tầng đó không hiểu. Nó có thể hợp lý ở ranh giới cuối của ứng dụng khi cần ánh xạ một nhóm lỗi thành kết quả thống nhất, miễn là không biến thất bại thật thành thành công giả."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.HandlingCleanup/HandlingCleanup.md", anchor: "try-catch-flow"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Khi nào multi-catch giúp mã nguồn rõ hơn và giới hạn quan trọng của nó là gì?"
+    answer: "Multi-catch phù hợp khi nhiều kiểu exception thực sự dùng cùng một chính sách xử lý, giúp tránh lặp lại cùng thân khối xử lý. Các kiểu trong cùng multi-catch không được có quan hệ kiểu con/kiểu cha với nhau; ví dụ FileNotFoundException | IOException là không hợp lệ. Cũng không nên gom những lỗi có ngữ nghĩa khác nhau chỉ vì hiện tại phần xử lý trông giống nhau."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.HandlingCleanup/HandlingCleanup.md", anchor: "multi-catch"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Giải thích finally khi đang có return hoặc exception chờ hoàn tất. Vì sao return/throw bên trong finally nguy hiểm?"
+    answer: "finally chạy trước khi kết quả đang chờ rời khỏi cấu trúc try/catch. Nếu finally hoàn thành bình thường, return hoặc exception đang chờ tiếp tục được giữ. Nhưng nếu chính finally return hoặc throw, lý do hoàn thành mới có thể thay thế kết quả/lỗi trước đó. returnInteraction() chứng minh return 1 bị return 2 trong finally thay thế; nguyên lý tương tự áp dụng khi finally ném exception mới."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.HandlingCleanup/HandlingCleanup.md", anchor: "return-finally"}
     apiRelated: {controller: "FinallyController", methodSignature: "returnInteraction()"}
 
-  - question: "Khi nào multi-catch giúp code tốt hơn và giới hạn quan trọng của nó là gì?"
-    answer: "Multi-catch phù hợp khi nhiều exception type thực sự dùng cùng handling policy, giúp tránh duplicate handler body. Không được đặt subtype và supertype trực tiếp trong cùng alternatives, ví dụ FileNotFoundException | IOException. Cũng không nên gom những failure có semantics khác chỉ vì hiện tại vài dòng xử lý trông giống nhau."
+  - question: "Vì sao try-with-resources cần AutoCloseable và không nên dựa vào Garbage Collector để giải phóng tài nguyên file/socket/JDBC?"
+    answer: "GC quản lý bộ nhớ của đối tượng Java, không phải cơ chế đảm bảo giải phóng tài nguyên hệ điều hành hoặc cơ sở dữ liệu đúng thời điểm. TWR biểu diễn quyền sở hữu tài nguyên và gọi close() khi rời khối qua đường thành công, return hoặc exception. AutoCloseable là giao ước để Java biết một tài nguyên có thể được đóng như thế nào."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.TryCatchFinally/TryCatchFinally.md", anchor: "multi-catch"}
+    readmeRelated: {file: "6.ResourceSafeFailure/ResourceSafeFailure.md", anchor: "autocloseable"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Vì sao try-with-resources cần AutoCloseable và không nên dựa vào Garbage Collector để giải phóng file/socket/JDBC resource?"
-    answer: "GC quản lý lifetime memory của Java object, không phải contract cho thời điểm giải phóng OS/database resource. TWR biểu diễn ownership và gọi close deterministic khi rời block bằng success, return hoặc exception. AutoCloseable là protocol để language biết resource có lifecycle cleanup như thế nào."
+  - question: "Giải thích thứ tự khởi tạo/đóng tài nguyên trong TWR, kể cả khi tài nguyên thứ hai khởi tạo thất bại."
+    answer: "Các tài nguyên được khởi tạo từ trái sang phải và đóng theo thứ tự ngược. Nếu A mở thành công, B thất bại khi khởi tạo và C chưa được tạo, TWR vẫn đóng A. Điều này quan trọng vì tài nguyên tạo sau thường bọc hoặc phụ thuộc tài nguyên tạo trước, còn việc tự xử lý khởi tạo dở dang bằng nhiều finally lồng nhau rất dễ sai."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.TryWithResources/TryWithResources.md", anchor: "autocloseable"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - question: "Giải thích resource initialization/close order trong TWR, kể cả trường hợp resource thứ hai khởi tạo thất bại."
-    answer: "Resources được khởi tạo trái sang phải và close theo thứ tự ngược. Nếu A mở thành công, B fail khi khởi tạo và C chưa tạo, TWR vẫn close A. Điều này quan trọng vì resource tạo sau thường wrap/phụ thuộc resource trước, và partial initialization cleanup rất dễ viết sai với nested finally thủ công."
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "6.TryWithResources/TryWithResources.md", anchor: "resource-close-order"}
+    readmeRelated: {file: "6.ResourceSafeFailure/ResourceSafeFailure.md", anchor: "resource-close-order"}
     apiRelated: {controller: "ResourceController", methodSignature: "closeOrder()"}
 
-  - question: "Effective-final resource từ Java 9 giải quyết điều gì, và tại sao ownership vẫn quan trọng?"
-    answer: "Java 9 cho phép local variable đã tồn tại xuất hiện trực tiếp trong resource specification nếu final/effectively final, giảm nhu cầu tạo alias chỉ để dùng TWR. Nhưng syntax không tự quyết định ownership: method chỉ mượn caller-owned resource không nên tự close nếu contract không giao lifecycle cho nó. Phải phân biệt ai tạo, ai sở hữu và ai close."
+  - question: "Nếu phần thân try và close() cùng ném exception, TWR giữ các lỗi như thế nào và vì sao tốt hơn finally thủ công?"
+    answer: "Exception từ phần thân đang là lỗi chính. Nếu close() cũng thất bại trong lúc dọn dẹp, lỗi đóng tài nguyên được gắn dưới dạng suppressed exception thay vì che lỗi chính. finally thủ công viết không cẩn thận có thể để lỗi close() thay thế lỗi ban đầu. Endpoint suppressed() cho phép quan sát trực tiếp lỗi chính, getSuppressed() và thứ tự dọn dẹp."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.TryWithResources/TryWithResources.md", anchor: "effective-final-resource"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - question: "Nếu try body và close() cùng throw, TWR giữ các failure như thế nào và vì sao semantics này tốt hơn manual finally?"
-    answer: "Exception từ body đang là primary outcome. Khi close() tiếp tục fail trong cleanup, failure đó được attach bằng suppressed exception thay vì che primary. Manual finally naïve có thể để close failure thay original failure, làm diagnostics sai trọng tâm. suppressed() expose trực tiếp primary, getSuppressed() và trace cleanup."
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "7.SuppressedException/SuppressedException.md", anchor: "primary-vs-suppressed"}
+    readmeRelated: {file: "6.ResourceSafeFailure/ResourceSafeFailure.md", anchor: "primary-vs-suppressed"}
     apiRelated: {controller: "ResourceController", methodSignature: "suppressed()"}
 
-  - question: "Phân biệt cause với suppressed exception. Nếu body thành công nhưng nhiều close() cùng fail thì primary được chọn thế nào?"
-    answer: "Cause biểu diễn causal/translation chain giữa failure tầng thấp và wrapper; suppressed biểu diễn failure phụ xuất hiện trong khi một primary khác đang tồn tại. Nếu body thành công, close theo reverse order; close failure đầu tiên trở thành primary và các close failure tiếp theo được suppressed trên nó. Hai cơ chế có thể cùng tồn tại trên một Throwable."
+  - question: "Phân biệt cause với suppressed exception. Nếu phần thân thành công nhưng nhiều close() cùng thất bại thì lỗi chính được chọn thế nào?"
+    answer: "Cause biểu diễn quan hệ nguyên nhân giữa exception hiện tại và lỗi thấp hơn dẫn tới nó; suppressed exception giữ các lỗi phụ xảy ra khi một lỗi khác đã là kết quả chính. Nếu phần thân thành công, các tài nguyên đóng theo thứ tự ngược; lỗi close() đầu tiên trở thành lỗi chính và các lỗi close() tiếp theo được suppressed trên nó. Một Throwable có thể đồng thời có cả cause và suppressed exceptions."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.SuppressedException/SuppressedException.md", anchor: "get-suppressed"}
+    readmeRelated: {file: "6.ResourceSafeFailure/ResourceSafeFailure.md", anchor: "get-suppressed"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Khi nào nên tạo custom exception và chọn checked hay unchecked cho custom type ra sao?"
-    answer: "Tạo custom type khi nó thêm domain/application meaning, handling category, structured context hoặc abstraction boundary ổn định; không tạo chỉ để đổi tên. Custom exception có thể extends Exception hoặc RuntimeException. Quyết định checked/unchecked quay lại caller contract: có muốn compiler buộc mọi caller catch/declare hay không."
+  - question: "Cú pháp tài nguyên effectively final từ Java 9 giải quyết điều gì, và tại sao quyền sở hữu vẫn quan trọng?"
+    answer: "Java 9 cho phép một biến cục bộ đã tồn tại xuất hiện trực tiếp trong phần khai báo tài nguyên nếu nó là final hoặc effectively final, nhờ đó không cần tạo biến thay thế chỉ để dùng TWR. Nhưng cú pháp không tự quyết định quyền sở hữu: phương thức chỉ mượn tài nguyên do bên gọi sở hữu không nên tự đóng nếu hợp đồng không giao vòng đời tài nguyên cho nó. Phải phân biệt rõ ai tạo, ai sở hữu và ai đóng tài nguyên."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.CustomException/CustomException.md", anchor: "custom-exception-purpose"}
+    readmeRelated: {file: "6.ResourceSafeFailure/ResourceSafeFailure.md", anchor: "effective-final-resource"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Bạn thiết kế context của custom exception như thế nào để vừa hữu ích vừa an toàn?"
-    answer: "Dữ liệu caller/program cần dùng nên là field/accessor có cấu trúc thay vì bắt parse message. Khi wrap, giữ cause để diagnostics không bị đứt. Message/context không nên chứa password, token, credential hoặc payload nhạy cảm không cần thiết vì exception thường đi vào log/tracing."
+  - question: "Khi nào nên tạo custom exception và chọn checked hay unchecked cho kiểu tùy chỉnh đó ra sao?"
+    answer: "Tạo custom exception khi kiểu mới bổ sung ý nghĩa ở mức ứng dụng/miền nghiệp vụ, tạo nhóm xử lý hữu ích, mang ngữ cảnh có cấu trúc hoặc tạo một ranh giới trừu tượng ổn định. Không nên tạo kiểu mới chỉ để đổi tên exception cũ. Custom exception có thể kế thừa Exception hoặc RuntimeException; lựa chọn checked/unchecked quay lại hợp đồng với bên gọi: có muốn trình biên dịch buộc họ catch hoặc khai báo lỗi này hay không."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.CustomException/CustomException.md", anchor: "exception-context"}
+    readmeRelated: {file: "7.CustomExceptionsContext/CustomExceptionsContext.md", anchor: "custom-exception-purpose"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Một exception hierarchy tốt nên phản ánh điều gì? Vì sao mirror toàn bộ implementation thường là over-design?"
-    answer: "Hierarchy nên phản ánh handling categories mà caller thực sự cần phân biệt, ví dụ base OrderException và vài subtype có policy khác nhau. Nếu caller xử lý mọi storage detail giống nhau, tạo hàng chục JdbcXxxException chỉ leak implementation và tăng cognitive load. Type mới cần có semantic/handling value, không chỉ tên khác."
+  - question: "Bạn thiết kế ngữ cảnh của custom exception như thế nào để vừa hữu ích vừa an toàn?"
+    answer: "Dữ liệu mà bên gọi hoặc logic chương trình cần dùng nên được lưu bằng trường dữ liệu/phương thức truy cập có cấu trúc thay vì bắt họ phân tích message. Khi bọc exception, phải giữ cause để chuỗi chẩn đoán không bị đứt. Message/ngữ cảnh cũng không nên chứa mật khẩu, token, thông tin xác thực hoặc dữ liệu nhạy cảm không cần thiết vì exception thường đi vào log và hệ thống truy vết."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.CustomException/CustomException.md", anchor: "exception-hierarchy-design"}
+    readmeRelated: {file: "7.CustomExceptionsContext/CustomExceptionsContext.md", anchor: "exception-context"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Exception translation tại abstraction boundary là gì và khi nào không nên wrap thêm một layer nữa?"
-    answer: "Tầng hiện tại catch implementation-specific failure và chuyển sang type phù hợp vocabulary/contract của abstraction cao hơn, đồng thời preserve cause. Không nên wrap nếu abstraction không đổi và wrapper mới không thêm meaning, handling category hoặc context. translateBoundary() minh họa type cao hơn cùng preserved cause."
+  - question: "Một exception hierarchy tốt nên phản ánh điều gì? Vì sao sao chép toàn bộ cấu trúc triển khai vào hierarchy thường là thiết kế thừa?"
+    answer: "Hierarchy nên phản ánh các nhóm xử lý mà bên gọi thực sự cần phân biệt, ví dụ một OrderException gốc và vài kiểu con có chính sách khác nhau. Nếu bên gọi xử lý mọi chi tiết lưu trữ giống nhau, tạo hàng chục JdbcXxxException chỉ làm lộ chi tiết triển khai và tăng gánh nặng nhận thức. Kiểu mới cần bổ sung ý nghĩa hoặc giá trị xử lý, không chỉ khác tên."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.ExceptionDesign/ExceptionDesign.md", anchor: "exception-boundaries"}
+    readmeRelated: {file: "7.CustomExceptionsContext/CustomExceptionsContext.md", anchor: "exception-hierarchy-design"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Chuyển đổi exception tại ranh giới trừu tượng là gì và khi nào không nên bọc thêm một lớp nữa?"
+    answer: "Tầng hiện tại bắt lỗi mang chi tiết triển khai rồi chuyển sang kiểu phù hợp với ngôn ngữ/hợp đồng của mức trừu tượng cao hơn, đồng thời giữ cause. Không nên bọc nếu mức trừu tượng không đổi và lớp bọc mới không bổ sung ý nghĩa, nhóm xử lý hoặc ngữ cảnh. translateBoundary() minh họa một kiểu lỗi ở tầng cao hơn cùng nguyên nhân gốc vẫn được giữ lại."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.ExceptionBoundaryDesign/ExceptionBoundaryDesign.md", anchor: "exception-boundaries"}
     apiRelated: {controller: "ExceptionDesignController", methodSignature: "translateBoundary()"}
 
-  - question: "Phân biệt intentionally ignoring một failure cụ thể với swallowing exception."
-    answer: "Intentional ignore có scope hẹp, type cụ thể, lý do rõ và outcome sau đó vẫn hợp lệ, ví dụ xóa temp file nhưng file đã không tồn tại. Swallowing thường là catch rộng rồi bỏ trống, xóa failure signal và khiến caller tưởng operation thành công dù state có thể partial. Điểm cốt lõi là semantics của outcome, không phải việc có catch hay không."
+  - question: "Khi nào nên ném lại nguyên exception và khi nào nên bọc bằng exception mới? Vì sao phải giữ cause?"
+    answer: "Nếu mức trừu tượng không đổi và tầng hiện tại chỉ thực hiện một tác vụ phụ hợp lệ như audit, ném lại chính exception cũ có thể đã đủ. Khi hợp đồng hoặc ngôn ngữ lỗi thay đổi thật sự tại một ranh giới trừu tượng, bọc bằng kiểu ở tầng cao hơn có thể hợp lý. Nếu tạo exception mới thì phải giữ cause để thông tin chẩn đoán vẫn dẫn về lỗi kỹ thuật gốc; bọc máy móc ở mọi tầng chỉ làm chuỗi lỗi dài hơn mà không tăng giá trị."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.ExceptionDesign/ExceptionDesign.md", anchor: "do-not-swallow"}
+    readmeRelated: {file: "8.ExceptionBoundaryDesign/ExceptionBoundaryDesign.md", anchor: "exception-boundaries"}
+    apiRelated: {controller: "ExceptionDesignController", methodSignature: "translateBoundary()"}
+
+  - question: "Phân biệt việc cố ý bỏ qua một lỗi cụ thể với việc nuốt exception."
+    answer: "Bỏ qua có chủ ý phải có phạm vi hẹp, kiểu lỗi cụ thể, lý do rõ và trạng thái sau đó vẫn hợp lệ; ví dụ xóa file tạm khi file đã không tồn tại. Nuốt exception thường là catch rộng rồi bỏ trống, làm mất tín hiệu lỗi và khiến bên gọi tưởng thao tác thành công dù trạng thái có thể chưa hoàn chỉnh. Điểm cốt lõi là kết quả có còn đúng theo hợp đồng hay không."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.ExceptionBoundaryDesign/ExceptionBoundaryDesign.md", anchor: "do-not-swallow"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Vì sao log cùng exception ở mọi layer là vấn đề và bạn chọn logging boundary thế nào?"
-    answer: "Repository/service/controller cùng log rồi rethrow tạo duplicate stack traces nhưng ít thông tin mới. Layer chỉ translate/rethrow thường nên preserve context/cause mà không log lại; boundary kết thúc request/job/message thường có context đầy đủ để record một lần. Ngoại lệ là metric/audit/evidence riêng nhưng không nên dump cùng failure lặp vô ích."
+  - question: "Vì sao ghi log cùng một exception ở mọi tầng là vấn đề và nên chọn ranh giới ghi log thế nào?"
+    answer: "Repository, service và controller cùng ghi log rồi ném lại sẽ tạo nhiều stack trace gần giống nhau nhưng ít thông tin mới. Tầng chỉ chuyển đổi hoặc ném lại thường nên giữ ngữ cảnh/cause mà không ghi lại cùng lỗi; ranh giới kết thúc yêu cầu, tác vụ hoặc thông điệp thường có đủ ngữ cảnh để ghi nhận một lần. Số liệu đo lường (metric) hoặc audit có thể được phát riêng, nhưng không nên lặp lại cùng một bản ghi chẩn đoán đầy đủ."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.ExceptionDesign/ExceptionDesign.md", anchor: "logging-boundary"}
+    readmeRelated: {file: "8.ExceptionBoundaryDesign/ExceptionBoundaryDesign.md", anchor: "logging-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Tại sao không nên dùng exception như normal control flow? Có trường hợp parse bằng exception vẫn hợp lý không?"
-    answer: "Exception model abnormal completion và làm flow phi tuyến; dùng nó cho nhánh bình thường thường giảm readability và có thể tốn chi phí không cần thiết. Nếu API vốn báo parse failure bằng NumberFormatException, một boundary nhỏ catch rồi áp fallback có thể hợp lý vì đó là contract tự nhiên của API. Quan trọng là phân biệt normal state với exceptional outcome."
+  - question: "Tại sao không nên dùng exception như luồng điều khiển bình thường? Có trường hợp API phân tích dữ liệu bằng exception vẫn hợp lý không?"
+    answer: "Exception mô hình hóa sự kết thúc bất thường và làm luồng điều khiển trở nên không cục bộ; dùng nó cho nhánh bình thường thường làm mã khó đọc hơn và có thể tạo chi phí không cần thiết. Nếu một API như Integer.parseInt() vốn dùng NumberFormatException để báo dữ liệu không hợp lệ, một ranh giới nhỏ bắt exception rồi áp dụng fallback đã được xác định có thể hợp lý. Quan trọng là phân biệt trạng thái bình thường với kết quả bất thường."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.ExceptionDesign/ExceptionDesign.md", anchor: "exception-as-control-flow"}
+    readmeRelated: {file: "8.ExceptionBoundaryDesign/ExceptionBoundaryDesign.md", anchor: "exception-as-control-flow"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Phân biệt cleanup, recovery, retry và propagation. Hãy đưa ra decision model khi exception tới một layer."
-    answer: "Cleanup giải phóng resource/exit work và không có nghĩa operation recover. Recovery tạo outcome hợp lệ bằng fallback thật sự. Retry chỉ nên dùng cho failure có khả năng transient khi operation retry-safe/idempotent hoặc có duplicate protection, với bound/backoff/timeout. Nếu abstraction đổi thì translate + preserve cause; nếu layer không có trách nhiệm có ý nghĩa thì propagate lên boundary có context hơn."
+  - question: "Phân biệt dọn dẹp, phục hồi, thử lại và lan truyền. Hãy đưa ra mô hình ra quyết định khi exception tới một tầng."
+    answer: "Dọn dẹp giải phóng tài nguyên hoặc hoàn tất công việc bắt buộc khi rời phạm vi, nhưng không có nghĩa thao tác đã phục hồi. Phục hồi phải tạo ra một kết quả hợp lệ thật sự. Thử lại chỉ nên dùng cho lỗi có khả năng tạm thời khi thao tác an toàn để lặp lại hoặc có cơ chế chống tác dụng phụ trùng lặp, đồng thời phải có giới hạn, backoff và timeout phù hợp. Nếu mức trừu tượng thay đổi thì có thể chuyển đổi exception và giữ cause; nếu tầng không có trách nhiệm xử lý có ý nghĩa thì nên tiếp tục lan truyền."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.ExceptionDesign/ExceptionDesign.md", anchor: "cleanup-and-recovery"}
+    readmeRelated: {file: "8.ExceptionBoundaryDesign/ExceptionBoundaryDesign.md", anchor: "cleanup-and-recovery"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Hãy nối toàn bộ module thành một luồng xuyên suốt: từ hợp đồng checked/unchecked khi thiết kế API tới throw, sự lan truyền, dọn dẹp, cause/suppressed, chuyển đổi exception và ranh giới xử lý cuối."
+    answer: "Ở mức thiết kế API, chọn checked hay unchecked dựa trên việc bên gọi có cần bị trình biên dịch buộc phải nhận biết lỗi hay không. Khi chạy, throw làm đường chạy kết thúc bất thường; nếu chưa có khối xử lý thì exception tiếp tục lan truyền và ngăn xếp được lần ngược, trong khi finally/TWR vẫn thực hiện dọn dẹp. Nếu tạo exception mới phải giữ cause; nếu close() trong TWR cũng thất bại thì lỗi phụ được giữ dưới dạng suppressed theo quy tắc của lỗi chính. Tầng có đủ ngữ cảnh mới quyết định phục hồi, thử lại, chuyển đổi hoặc ánh xạ kết quả cuối và ghi log/quan sát. Nếu tầng không có chính sách có ý nghĩa thì tiếp tục lan truyền thay vì nuốt hoặc bọc lỗi máy móc."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.ExceptionSynthesis/ExceptionSynthesis.md", anchor: "exception-synthesis"}
     apiRelated: {controller: "", methodSignature: ""}

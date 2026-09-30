@@ -43,60 +43,78 @@
 
 roadmap:
   - id: exception-purpose
-    title: Exception Purpose and Abnormal Completion
-    purpose: Understand exceptions as a separate abnormal-completion channel that carries failure context across call boundaries.
+    title: What Exceptions Are and Why Java Uses Them
+    purpose: Understand exceptions as a failure mechanism separate from the normal success path, allowing failure context to cross method calls without forcing every layer to return and inspect status values.
+    relatedKnowledge:
+      - ExceptionPurpose
     objectives:
-      - Explain why exceptions scale better than forcing every caller to inspect status values.
+      - Explain how exceptions separate successful execution from failure propagation and carry context to the boundary responsible for handling it.
       - Recognize that exceptions are not the default mechanism for ordinary expected control flow.
   - id: throwable-model
-    title: Throwable and Failure Taxonomy
-    purpose: Understand Throwable as both a failure object and the root of Java’s exceptional-control-flow hierarchy.
+    title: Throwable and Java's Failure Hierarchy
+    purpose: Understand Throwable as the object that carries failure information and as the root of Java's exception type hierarchy.
+    relatedKnowledge:
+      - ThrowableModel
     objectives:
       - Distinguish Error, Exception, RuntimeException, cause, and stack trace roles.
-      - Use hierarchy knowledge to reason about catch boundaries rather than memorizing classes.
+      - Use the type hierarchy to reason about which failures should or should not be caught instead of merely memorizing classes.
   - id: checked-and-unchecked-contracts
-    title: Checked and Unchecked Contracts
-    purpose: Understand when failure becomes part of the compile-time method contract and the trade-offs of checked versus unchecked design.
+    title: Checked and Unchecked Exception Contracts
+    purpose: Understand when a failure becomes part of the compiler-enforced method contract and how checked and unchecked exceptions assign different responsibilities to callers.
+    relatedKnowledge:
+      - CheckedUncheckedContracts
     objectives:
       - Explain compiler obligations for checked exceptions.
-      - Choose exception style according to recoverability and abstraction contracts.
+      - Choose checked or unchecked exceptions according to recoverability and abstraction contracts rather than habit.
   - id: throwing-and-propagation
-    title: Throwing, Declaring, and Propagation
-    purpose: Understand how failures are created, declared, matched, and propagated through stack unwinding.
+    title: throw, throws, and Exception Propagation
+    purpose: Understand how exceptions are thrown, declared, and allowed to continue through the call stack when no suitable handling boundary exists yet.
+    relatedKnowledge:
+      - ThrowingPropagation
     objectives:
-      - Distinguish throw from throws and understand override/rethrow constraints.
-      - Trace catch selection and causal chains across layers.
+      - Distinguish `throw` from `throws` and understand their roles in method contracts.
+      - Trace stack unwinding, catch selection, and the causal chain across multiple layers.
   - id: handling-and-cleanup
-    title: Handling and Cleanup
-    purpose: Understand how try/catch/finally separates recovery decisions from cleanup while preserving failure semantics.
+    title: Handling Exceptions with try/catch/finally
+    purpose: Understand how `try`, `catch`, and `finally` route control when an exception occurs and perform cleanup without hiding a pending result or failure.
+    relatedKnowledge:
+      - HandlingCleanup
     objectives:
-      - Catch only where meaningful handling or translation can occur.
-      - Reason about finally behavior without hiding primary failures.
+      - Trace control flow through `try` and `catch` when exceptions are and are not thrown.
+      - Understand the role of `finally` and avoid cleanup logic that hides a pending result or failure.
   - id: resource-safe-failure
-    title: Resource Safety and Suppressed Failures
-    purpose: Understand try-with-resources, close order, and suppressed exceptions when both work and cleanup can fail.
+    title: Resource Safety with try-with-resources
+    purpose: Understand how try-with-resources and AutoCloseable manage resource lifetime, close order, and preservation of the primary failure when resource cleanup also fails.
+    relatedKnowledge:
+      - ResourceSafeFailure
     relatedModules:
       - routeId: JAVA_IO
         label: I/O
-        note: I/O resources make exception-safe cleanup and try-with-resources especially visible.
+        note: I/O resources make safe resource cleanup under exception conditions especially visible.
     objectives:
-      - Use AutoCloseable resources safely through structured lifetime management.
-      - Preserve primary and suppressed failure context.
+      - Understand the AutoCloseable contract and reverse close order in try-with-resources.
+      - Distinguish primary failures, suppressed exceptions, and causes so information is preserved when both work and cleanup fail.
   - id: custom-exceptions-and-context
-    title: Custom Exceptions and Causal Context
-    purpose: Learn when a new exception type adds abstraction value and how to preserve useful context without leaking low-level details.
+    title: Designing Custom Exceptions
+    purpose: Understand when a dedicated exception type adds meaning at the right abstraction level and how to preserve causes and useful context without leaking unnecessary low-level details.
+    relatedKnowledge:
+      - CustomExceptionsContext
     objectives:
-      - Design small exception hierarchies only when they clarify caller decisions.
-      - Preserve causes and relevant contextual data during wrapping.
+      - Create custom exceptions or small hierarchies only when they clarify caller decisions.
+      - Preserve causes and relevant contextual data when wrapping instead of merely replacing messages or adding meaningless wrappers.
   - id: exception-boundary-design
-    title: Translation, Logging, Recovery, and Propagation
-    purpose: Build a boundary-oriented model for deciding where failures should be translated, logged, recovered, or allowed to continue upward.
+    title: Designing Exception Boundaries
+    purpose: Build an end-to-end model for deciding where exceptions should be translated, logged, retried, recovered, or allowed to continue propagating.
+    relatedKnowledge:
+      - ExceptionBoundaryDesign
     objectives:
-      - Avoid swallowing failures and duplicate logging across layers.
-      - Separate cleanup, recovery, translation, and observability responsibilities.
+      - Avoid swallowing failures, duplicate logging across layers, and using exceptions for ordinary expected control flow.
+      - Separate cleanup, recovery, translation, and observability responsibilities across handling boundaries.
   - id: exception-synthesis
     title: Exception Handling Synthesis
-    purpose: Connect failure representation, propagation, cleanup, abstraction, and recovery into one end-to-end error-handling model.
+    purpose: Connect failure representation, propagation, handling, resource cleanup, translation, and recovery into one end-to-end error-handling model.
+    relatedKnowledge:
+      - ExceptionSynthesis
     objectives:
-      - Follow one failure from origin through translation to the responsible handling boundary.
-      - Recognize when an exception design is adding context versus merely adding wrappers.
+      - Follow one failure from origin through propagation or translation to the responsible handling boundary.
+      - Recognize when exception wrapping adds useful context versus merely adding another wrapper.

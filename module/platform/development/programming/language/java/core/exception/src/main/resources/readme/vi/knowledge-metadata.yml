@@ -1,8 +1,9 @@
-1.Throwable/Throwable.md:
+1.ExceptionPurpose/ExceptionPurpose.md:
   exception-purpose:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+2.ThrowableModel/ThrowableModel.md:
   throwable-hierarchy:
     difficulty: BASIC
     aiGenerated: true
@@ -15,7 +16,7 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-2.CheckedUnchecked/CheckedUnchecked.md:
+3.CheckedUncheckedContracts/CheckedUncheckedContracts.md:
   checked-exception:
     difficulty: BASIC
     aiGenerated: true
@@ -25,10 +26,10 @@
     aiGenerated: true
     reviewed: false
   checked-vs-unchecked-design:
-    difficulty: BASIC
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-3.ThrowThrows/ThrowThrows.md:
+4.ThrowingPropagation/ThrowingPropagation.md:
   throw-statement:
     difficulty: BASIC
     aiGenerated: true
@@ -37,19 +38,6 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  precise-rethrow:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-  override-throws-rules:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-  checked-exception-narrowing:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-4.Propagation/Propagation.md:
   exception-propagation:
     difficulty: BASIC
     aiGenerated: true
@@ -59,15 +47,31 @@
     aiGenerated: true
     reviewed: false
   exception-chaining:
-    difficulty: BASIC
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
   lost-cause-pitfall:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  precise-rethrow:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  override-throws-rules:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  checked-exception-narrowing:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+5.HandlingCleanup/HandlingCleanup.md:
+  try-catch-flow:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-5.TryCatchFinally/TryCatchFinally.md:
-  try-catch-flow:
+  multi-catch:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
@@ -76,14 +80,10 @@
     aiGenerated: true
     reviewed: false
   return-finally:
-    difficulty: BASIC
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  multi-catch:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-6.TryWithResources/TryWithResources.md:
+6.ResourceSafeFailure/ResourceSafeFailure.md:
   autocloseable:
     difficulty: BASIC
     aiGenerated: true
@@ -92,43 +92,42 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  effective-final-resource:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
   twr-vs-finally:
-    difficulty: BASIC
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-7.SuppressedException/SuppressedException.md:
   primary-vs-suppressed:
-    difficulty: BASIC
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
   get-suppressed:
-    difficulty: BASIC
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
   close-failure:
-    difficulty: BASIC
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-8.CustomException/CustomException.md:
+  effective-final-resource:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+7.CustomExceptionsContext/CustomExceptionsContext.md:
   custom-exception-purpose:
-    difficulty: BASIC
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
   exception-context:
-    difficulty: BASIC
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
   exception-hierarchy-design:
-    difficulty: BASIC
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-9.ExceptionDesign/ExceptionDesign.md:
+8.ExceptionBoundaryDesign/ExceptionBoundaryDesign.md:
   exception-boundaries:
-    difficulty: BASIC
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
   do-not-swallow:
@@ -136,7 +135,7 @@
     aiGenerated: true
     reviewed: false
   logging-boundary:
-    difficulty: BASIC
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
   exception-as-control-flow:
@@ -144,6 +143,11 @@
     aiGenerated: true
     reviewed: false
   cleanup-and-recovery:
-    difficulty: BASIC
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+9.ExceptionSynthesis/ExceptionSynthesis.md:
+  exception-synthesis:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false

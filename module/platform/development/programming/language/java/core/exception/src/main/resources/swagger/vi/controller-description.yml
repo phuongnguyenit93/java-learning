@@ -1,25 +1,25 @@
 ExceptionDesignController:
   description: |-
-    <h2>Thiết kế Exception và Abstraction Boundary</h2>
-    <p>Nhóm thí nghiệm về exception translation: tầng cao đổi failure vocabulary nhưng vẫn giữ nguyên cause để không mất diagnostic chain.</p>
+    <h2>Thiết kế ranh giới xử lý Exception</h2>
+    <p>Nhóm thí nghiệm về chuyển đổi exception tại ranh giới trừu tượng: tầng cao dùng kiểu lỗi phù hợp với hợp đồng của mình nhưng vẫn giữ <code>cause</code> để không làm đứt chuỗi nguyên nhân.</p>
   readmeRelated:
-    file: 9.ExceptionDesign/ExceptionDesign.md
+    file: 8.ExceptionBoundaryDesign/ExceptionBoundaryDesign.md
 FinallyController:
   description: |-
-    <h2>Control Flow của finally</h2>
-    <p>Thí nghiệm tập trung vào pending return khi đi qua <code>finally</code>, đặc biệt trường hợp chính <code>finally</code> tạo một return mới và thay outcome trước đó.</p>
+    <h2>Luồng điều khiển của finally</h2>
+    <p>Thí nghiệm tập trung vào giá trị trả về đang chờ khi đi qua <code>finally</code>, đặc biệt trường hợp chính <code>finally</code> tạo một <code>return</code> mới và thay kết quả trước đó.</p>
   readmeRelated:
-    file: 5.TryCatchFinally/TryCatchFinally.md
+    file: 5.HandlingCleanup/HandlingCleanup.md
 PropagationController:
   description: |-
-    <h2>Propagation, Stack Unwinding và Cause</h2>
-    <p>Các thí nghiệm cho thấy exception đi qua chuỗi lời gọi như thế nào và cách wrap một failure ở abstraction cao hơn mà vẫn bảo toàn cause gốc.</p>
-    <p>Đây là runtime evidence cho vai trò nền tảng của exception: failure có một abnormal-completion channel riêng, có thể rời nơi phát sinh và đi tới boundary có đủ context để quyết định xử lý.</p>
+    <h2>Lan truyền, stack unwinding và Cause</h2>
+    <p>Các thí nghiệm cho thấy exception đi qua chuỗi lời gọi như thế nào và cách tạo một exception mới mà vẫn giữ exception cũ làm <code>cause</code>.</p>
+    <p>Đây là bằng chứng khi chương trình chạy cho cơ chế lan truyền và chuỗi nguyên nhân; quyết định có nên chuyển đổi exception tại ranh giới trừu tượng thuộc nhóm thí nghiệm thiết kế riêng.</p>
   readmeRelated:
-    file: 4.Propagation/Propagation.md
+    file: 4.ThrowingPropagation/ThrowingPropagation.md
 ResourceController:
   description: |-
-    <h2>Try-with-resources và Cleanup Failure</h2>
-    <p>Các thí nghiệm quan sát lifecycle của nhiều resource: thứ tự open/close ngược nhau và cách try-with-resources giữ primary failure khi <code>close()</code> cũng thất bại.</p>
+    <h2>Try-with-resources và lỗi khi dọn dẹp</h2>
+    <p>Các thí nghiệm quan sát vòng đời của nhiều tài nguyên: thứ tự mở/đóng ngược nhau và cách try-with-resources giữ lỗi chính khi <code>close()</code> cũng thất bại.</p>
   readmeRelated:
-    file: 6.TryWithResources/TryWithResources.md
+    file: 6.ResourceSafeFailure/ResourceSafeFailure.md

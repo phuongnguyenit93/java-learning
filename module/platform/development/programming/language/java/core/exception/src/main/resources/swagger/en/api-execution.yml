@@ -54,7 +54,7 @@ PropagationController:
     usage: true
   wrapCause():
     execution: |-
-      <p><strong>Concept:</strong> exception chaining lets code change abstraction type without losing the original failure stored as <code>cause</code>.</p>
+      <p><strong>Concept:</strong> exception chaining lets code create a new exception without losing the original failure stored as <code>cause</code>.</p>
       <ol>
         <li><strong>Flow:</strong> <code>load()</code> deliberately creates <code>IllegalArgumentException("low-level")</code>, catches it, and throws <code>OrderReadException("cannot read order", cause)</code>. The endpoint catches the wrapper.</li>
         <li><strong>Code evidence:</strong><pre><code>private void load() {
@@ -65,9 +65,9 @@ PropagationController:
           }
       }</code></pre></li>
         <li><strong>Observation:</strong> the response exposes <code>wrapper=OrderReadException</code>, <code>message=cannot read order</code>, <code>cause=IllegalArgumentException</code>, and <code>causeMessage=low-level</code>.</li>
-        <li><strong>Meaning:</strong> the wrapper serves the caller-facing abstraction while the cause preserves technical diagnostics.</li>
+        <li><strong>Meaning:</strong> the new exception has its own message/type while <code>cause</code> preserves the causal link to the original failure.</li>
       </ol>
-      <p><strong>Conclusion:</strong> when wrapping at an abstraction boundary, preserve the cause so translation does not become a lost-cause anti-pattern.</p>
+      <p><strong>Conclusion:</strong> when creating a new exception from an older one, preserve the cause. Whether the exception should be translated at an abstraction boundary is a separate design decision.</p>
     usage: true
 ResourceController:
   closeOrder():

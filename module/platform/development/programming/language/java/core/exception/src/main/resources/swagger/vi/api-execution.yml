@@ -1,28 +1,28 @@
 ExceptionDesignController:
   translateBoundary():
     execution: |-
-      <p><strong>Khái niệm:</strong> exception translation đổi failure vocabulary tại abstraction boundary nhưng phải giữ cause để diagnostics không bị đứt.</p>
+      <p><strong>Khái niệm:</strong> chuyển đổi exception tại ranh giới trừu tượng thay đổi ngôn ngữ lỗi nhưng phải giữ <code>cause</code> để chuỗi chẩn đoán không bị đứt.</p>
       <ol>
-        <li><strong>Flow:</strong> endpoint gọi <code>repository()</code>. Method này tạo một low-level <code>IllegalStateException("storage unavailable")</code>, catch nó rồi wrap thành <code>OrderServiceException("cannot load order 42", cause)</code>. Endpoint catch wrapper và chuyển thông tin thành response.</li>
-        <li><strong>Code evidence:</strong><pre><code>private void repository() {
+        <li><strong>Luồng:</strong> endpoint gọi <code>repository()</code>. Phương thức này tạo <code>IllegalStateException("storage unavailable")</code> ở tầng thấp, bắt nó rồi bọc thành <code>OrderServiceException("cannot load order 42", cause)</code>. Endpoint bắt exception mới và chuyển thông tin thành kết quả trả về.</li>
+        <li><strong>Bằng chứng từ code:</strong><pre><code>private void repository() {
           try {
               throw new IllegalStateException("storage unavailable");
           } catch (IllegalStateException e) {
               throw new OrderServiceException("cannot load order 42", e);
           }
       }</code></pre></li>
-        <li><strong>Observation:</strong> response có <code>translatedType=OrderServiceException</code>, <code>message=cannot load order 42</code> và <code>preservedCause=IllegalStateException</code>.</li>
-        <li><strong>Ý nghĩa:</strong> caller nhận vocabulary của abstraction cao hơn nhưng root technical failure vẫn nằm trong causal chain.</li>
+        <li><strong>Quan sát:</strong> kết quả trả về có <code>translatedType=OrderServiceException</code>, <code>message=cannot load order 42</code> và <code>preservedCause=IllegalStateException</code>.</li>
+        <li><strong>Ý nghĩa:</strong> bên gọi nhận kiểu lỗi phù hợp với mức trừu tượng cao hơn nhưng lỗi kỹ thuật gốc vẫn nằm trong chuỗi nguyên nhân.</li>
       </ol>
-      <p><strong>Kết luận:</strong> translate khi abstraction thật sự đổi; đừng chỉ đổi tên exception và tuyệt đối không bỏ cause nếu root failure còn cần cho chẩn đoán.</p>
+      <p><strong>Kết luận:</strong> chỉ chuyển đổi khi mức trừu tượng thật sự thay đổi; đừng chỉ đổi tên exception và không được làm mất <code>cause</code> nếu lỗi gốc còn cần cho chẩn đoán.</p>
     usage: true
 FinallyController:
   returnInteraction():
     execution: |-
-      <p><strong>Khái niệm:</strong> <code>finally</code> chạy trước khi pending return hoàn tất, và abrupt completion do chính <code>finally</code> tạo ra có thể thay outcome trước đó.</p>
+      <p><strong>Khái niệm:</strong> <code>finally</code> chạy trước khi giá trị trả về đang chờ hoàn tất, và việc chính <code>finally</code> tạo ra một cách kết thúc bất thường mới có thể thay kết quả trước đó.</p>
       <ol>
-        <li><strong>Flow:</strong> <code>safeReturn()</code> chuẩn bị return <code>1</code>, chạy <code>finally</code> không return rồi vẫn trả <code>1</code>. <code>dangerousReturn()</code> cũng chuẩn bị <code>1</code> nhưng <code>finally</code> return <code>2</code>.</li>
-        <li><strong>Code evidence:</strong><pre><code>private int safeReturn() {
+        <li><strong>Luồng:</strong> <code>safeReturn()</code> chuẩn bị trả <code>1</code>, chạy <code>finally</code> không return rồi vẫn trả <code>1</code>. <code>dangerousReturn()</code> cũng chuẩn bị <code>1</code> nhưng <code>finally</code> return <code>2</code>.</li>
+        <li><strong>Bằng chứng từ code:</strong><pre><code>private int safeReturn() {
           try { return 1; }
           finally { int ignored = 0; }
       }
@@ -31,65 +31,65 @@ FinallyController:
           try { return 1; }
           finally { return 2; }
       }</code></pre></li>
-        <li><strong>Observation:</strong> response trả <code>normalReturnWithFinally=1</code> nhưng <code>returnInsideFinally=2</code>.</li>
-        <li><strong>Ý nghĩa:</strong> <code>finally</code> không chỉ "chạy thêm cleanup"; nếu nó tự return/throw thì nó có thể thay pending return/exception. Endpoint này trực tiếp chứng minh trường hợp return.</li>
+        <li><strong>Quan sát:</strong> kết quả trả về có <code>normalReturnWithFinally=1</code> nhưng <code>returnInsideFinally=2</code>.</li>
+        <li><strong>Ý nghĩa:</strong> <code>finally</code> không chỉ dùng để dọn dẹp; nếu nó tự return/throw thì nó có thể thay return hoặc exception đang chờ. Endpoint này trực tiếp chứng minh trường hợp return.</li>
       </ol>
-      <p><strong>Kết luận:</strong> dùng <code>finally</code> cho cleanup, tránh tạo một outcome mới từ bên trong <code>finally</code>.</p>
+      <p><strong>Kết luận:</strong> dùng <code>finally</code> cho công việc khi rời phạm vi và tránh tạo một kết quả mới từ bên trong <code>finally</code>.</p>
     usage: true
 PropagationController:
   propagate():
     execution: |-
-      <p><strong>Khái niệm:</strong> exception không được xử lý ở method hiện tại sẽ propagate qua caller; stack trace giữ dấu vết đường gọi tới throw site.</p>
+      <p><strong>Khái niệm:</strong> exception không được xử lý ở phương thức hiện tại sẽ lan truyền tới bên gọi; stack trace giữ dấu vết đường gọi gần vị trí <code>throw</code>.</p>
       <ol>
-        <li><strong>Flow:</strong> endpoint gọi <code>levelOne()</code>, method này gọi <code>levelTwo()</code>, và <code>levelTwo()</code> throw <code>IllegalStateException("boom")</code>. Không có handler ở hai method trung gian nên failure quay lên <code>propagate()</code>.</li>
-        <li><strong>Code evidence:</strong><pre><code>private void levelOne() { levelTwo(); }
+        <li><strong>Luồng:</strong> endpoint gọi <code>levelOne()</code>, phương thức này gọi <code>levelTwo()</code>, và <code>levelTwo()</code> ném <code>IllegalStateException("boom")</code>. Không có khối xử lý ở hai phương thức trung gian nên exception lan truyền lên <code>propagate()</code>.</li>
+        <li><strong>Bằng chứng từ code:</strong><pre><code>private void levelOne() { levelTwo(); }
 
       private void levelTwo() {
           throw new IllegalStateException("boom");
       }</code></pre></li>
-        <li><strong>Observation:</strong> response có <code>type=IllegalStateException</code>, <code>message=boom</code> và <code>topFrames</code> bắt đầu bằng các method gần throw site như <code>levelTwo</code>, <code>levelOne</code>, <code>propagate</code>.</li>
-        <li><strong>Ý nghĩa:</strong> các call frame trung gian không tự recover; control unwinds cho tới handler. Stack trace là evidence chẩn đoán của đường gọi chứ không phải business contract ổn định.</li>
+        <li><strong>Quan sát:</strong> kết quả trả về có <code>type=IllegalStateException</code>, <code>message=boom</code> và <code>topFrames</code> bắt đầu bằng các phương thức gần vị trí ném lỗi như <code>levelTwo</code>, <code>levelOne</code>, <code>propagate</code>.</li>
+        <li><strong>Ý nghĩa:</strong> các khung ngăn xếp trung gian không tự phục hồi; Java lần ngược ngăn xếp cho tới khi tìm được khối xử lý. Stack trace là dữ liệu chẩn đoán của đường gọi chứ không phải hợp đồng nghiệp vụ ổn định.</li>
       </ol>
-      <p><strong>Kết luận:</strong> propagation tách nơi failure phát sinh khỏi nơi có đủ context để xử lý nó.</p>
+      <p><strong>Kết luận:</strong> cơ chế lan truyền tách nơi lỗi phát sinh khỏi nơi có đủ ngữ cảnh để xử lý nó.</p>
     usage: true
   wrapCause():
     execution: |-
-      <p><strong>Khái niệm:</strong> exception chaining cho phép đổi abstraction type mà vẫn giữ failure gốc trong <code>cause</code>.</p>
+      <p><strong>Khái niệm:</strong> exception chaining cho phép tạo exception mới nhưng vẫn giữ exception gốc trong <code>cause</code>.</p>
       <ol>
-        <li><strong>Flow:</strong> <code>load()</code> cố ý tạo <code>IllegalArgumentException("low-level")</code>, catch nó và throw <code>OrderReadException("cannot read order", cause)</code>. Endpoint catch wrapper.</li>
-        <li><strong>Code evidence:</strong><pre><code>private void load() {
+        <li><strong>Luồng:</strong> <code>load()</code> cố ý tạo <code>IllegalArgumentException("low-level")</code>, bắt nó rồi ném <code>OrderReadException("cannot read order", cause)</code>. Endpoint bắt exception mới.</li>
+        <li><strong>Bằng chứng từ code:</strong><pre><code>private void load() {
           try {
               throw new IllegalArgumentException("low-level");
           } catch (IllegalArgumentException e) {
               throw new OrderReadException("cannot read order", e);
           }
       }</code></pre></li>
-        <li><strong>Observation:</strong> response đồng thời có <code>wrapper=OrderReadException</code>, <code>message=cannot read order</code>, <code>cause=IllegalArgumentException</code> và <code>causeMessage=low-level</code>.</li>
-        <li><strong>Ý nghĩa:</strong> wrapper phục vụ caller-facing abstraction; cause giữ technical diagnostics. Nếu constructor không nhận <code>e</code>, hai field cause trong response sẽ không tồn tại an toàn.</li>
+        <li><strong>Quan sát:</strong> kết quả trả về đồng thời có <code>wrapper=OrderReadException</code>, <code>message=cannot read order</code>, <code>cause=IllegalArgumentException</code> và <code>causeMessage=low-level</code>.</li>
+        <li><strong>Ý nghĩa:</strong> exception mới mang thông điệp riêng còn <code>cause</code> giữ quan hệ tới lỗi gốc. Nếu constructor không nhận <code>e</code>, chuỗi nguyên nhân bị cắt.</li>
       </ol>
-      <p><strong>Kết luận:</strong> khi wrap vì abstraction boundary, preserve cause để translation không biến thành lost-cause anti-pattern.</p>
+      <p><strong>Kết luận:</strong> khi tạo exception mới từ exception cũ, hãy giữ <code>cause</code>. Việc có nên chuyển đổi exception tại ranh giới trừu tượng hay không là quyết định thiết kế riêng.</p>
     usage: true
 ResourceController:
   closeOrder():
     execution: |-
-      <p><strong>Khái niệm:</strong> try-with-resources khởi tạo resource theo declaration order và close các resource đã khởi tạo thành công theo thứ tự ngược.</p>
+      <p><strong>Khái niệm:</strong> try-with-resources khởi tạo tài nguyên theo thứ tự khai báo và đóng các tài nguyên đã khởi tạo thành công theo thứ tự ngược.</p>
       <ol>
-        <li><strong>Flow:</strong> constructor của <code>DemoResource</code> ghi <code>open-A</code> rồi <code>open-B</code>; body ghi <code>body</code>; khi rời body Java gọi <code>close()</code> cho B rồi A.</li>
-        <li><strong>Code evidence:</strong><pre><code>try (DemoResource a = new DemoResource("A", trace, false);
+        <li><strong>Luồng:</strong> constructor của <code>DemoResource</code> ghi <code>open-A</code> rồi <code>open-B</code>; phần thân ghi <code>body</code>; khi rời phần thân Java gọi <code>close()</code> cho B rồi A.</li>
+        <li><strong>Bằng chứng từ code:</strong><pre><code>try (DemoResource a = new DemoResource("A", trace, false);
            DemoResource b = new DemoResource("B", trace, false)) {
           trace.add("body");
       }</code></pre></li>
-        <li><strong>Observation:</strong> trace kỳ vọng là <code>[open-A, open-B, body, close-B, close-A]</code>.</li>
-        <li><strong>Ý nghĩa:</strong> close order giống stack/LIFO, phù hợp với resource tạo sau thường bọc hoặc phụ thuộc resource tạo trước.</li>
+        <li><strong>Quan sát:</strong> trace kỳ vọng là <code>[open-A, open-B, body, close-B, close-A]</code>.</li>
+        <li><strong>Ý nghĩa:</strong> thứ tự đóng giống stack/LIFO, phù hợp với trường hợp tài nguyên tạo sau bọc hoặc phụ thuộc tài nguyên tạo trước.</li>
       </ol>
-      <p><strong>Kết luận:</strong> TWR biểu diễn lifecycle rõ ràng và định nghĩa close order thay vì buộc code tự quản lý nhiều <code>finally</code> lồng nhau.</p>
+      <p><strong>Kết luận:</strong> TWR biểu diễn vòng đời tài nguyên rõ ràng và định nghĩa thứ tự đóng thay vì buộc mã nguồn tự quản lý nhiều <code>finally</code> lồng nhau.</p>
     usage: true
   suppressed():
     execution: |-
-      <p><strong>Khái niệm:</strong> khi try body đã fail và <code>close()</code> cũng fail, body failure vẫn là primary còn cleanup failure được gắn dưới dạng suppressed.</p>
+      <p><strong>Khái niệm:</strong> khi phần thân try đã thất bại và <code>close()</code> cũng thất bại, lỗi từ phần thân vẫn là lỗi chính còn lỗi dọn dẹp được gắn dưới dạng suppressed exception.</p>
       <ol>
-        <li><strong>Flow:</strong> resource R ghi <code>open-R</code>; body ghi <code>body-fails</code> rồi throw <code>IllegalArgumentException("primary")</code>; trong quá trình unwind, <code>close()</code> ghi <code>close-R</code> và throw <code>IllegalStateException("close-R-failed")</code>.</li>
-        <li><strong>Code evidence:</strong><pre><code>try (DemoResource r = new DemoResource("R", trace, true)) {
+        <li><strong>Luồng:</strong> tài nguyên R ghi <code>open-R</code>; phần thân ghi <code>body-fails</code> rồi ném <code>IllegalArgumentException("primary")</code>; trong quá trình stack unwinding, <code>close()</code> ghi <code>close-R</code> và ném <code>IllegalStateException("close-R-failed")</code>.</li>
+        <li><strong>Bằng chứng từ code:</strong><pre><code>try (DemoResource r = new DemoResource("R", trace, true)) {
           trace.add("body-fails");
           throw new IllegalArgumentException("primary");
       } catch (Exception e) {
@@ -99,8 +99,8 @@ ResourceController:
               "trace", trace
           );
       }</code></pre></li>
-        <li><strong>Observation:</strong> primary vẫn là <code>IllegalArgumentException</code>; suppressed list chứa close failure của R; trace cho thấy <code>open-R → body-fails → close-R</code>.</li>
-        <li><strong>Ý nghĩa:</strong> cleanup failure không được phép che failure đã quyết định outcome chính. <code>getSuppressed()</code> giữ evidence bổ sung cho diagnostics.</li>
+        <li><strong>Quan sát:</strong> lỗi chính vẫn là <code>IllegalArgumentException</code>; danh sách suppressed chứa lỗi từ <code>close()</code> của R; trace cho thấy <code>open-R → body-fails → close-R</code>.</li>
+        <li><strong>Ý nghĩa:</strong> lỗi dọn dẹp không được phép che lỗi đã quyết định kết quả chính. <code>getSuppressed()</code> giữ thêm bằng chứng phục vụ chẩn đoán.</li>
       </ol>
-      <p><strong>Kết luận:</strong> suppression là một phần cốt lõi của failure-preservation semantics trong try-with-resources, không chỉ là metadata phụ.</p>
+      <p><strong>Kết luận:</strong> suppression là một phần cốt lõi của cơ chế bảo toàn thông tin lỗi trong try-with-resources, không chỉ là metadata phụ.</p>
     usage: true

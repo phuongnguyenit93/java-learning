@@ -1,14 +1,14 @@
 ExceptionDesignController:
   translateBoundary():
-    summary: Translate exception và giữ nguyên cause
-    description: Mô phỏng một abstraction boundary nơi low-level IllegalStateException được chuyển thành OrderServiceException. Response cho thấy type/message mới đồng thời chứng minh cause gốc vẫn còn.
+    summary: Chuyển đổi exception và giữ nguyên cause
+    description: Mô phỏng một ranh giới trừu tượng nơi IllegalStateException ở tầng thấp được chuyển thành OrderServiceException. Kết quả trả về cho thấy kiểu/thông điệp mới đồng thời chứng minh cause gốc vẫn được giữ.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 9.ExceptionDesign/ExceptionDesign.md
+      file: 8.ExceptionBoundaryDesign/ExceptionBoundaryDesign.md
       anchor: exception-boundaries
     methodName: translateBoundary
     params: []
@@ -23,15 +23,15 @@ ExceptionDesignController:
     usage: true
 FinallyController:
   returnInteraction():
-    summary: Pending return đi qua finally
-    description: So sánh một return bình thường có finally với trường hợp finally tự return. Response chứng minh return trong finally có thể thay return value đang chờ thoát khỏi try.
+    summary: Giá trị trả về đang chờ đi qua finally
+    description: So sánh một return bình thường có finally với trường hợp finally tự return. Kết quả trả về chứng minh return trong finally có thể thay giá trị đang chờ thoát khỏi try.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 5.TryCatchFinally/TryCatchFinally.md
+      file: 5.HandlingCleanup/HandlingCleanup.md
       anchor: return-finally
     methodName: returnInteraction
     params: []
@@ -46,15 +46,15 @@ FinallyController:
     usage: true
 PropagationController:
   propagate():
-    summary: Quan sát propagation qua nested calls
-    description: Tạo IllegalStateException ở levelTwo(), để nó đi qua levelOne(), rồi catch tại endpoint và trả một phần stack trace để quan sát call path của failure.
+    summary: Quan sát exception lan truyền qua chuỗi lời gọi
+    description: Tạo IllegalStateException ở levelTwo(), để nó đi qua levelOne(), rồi bắt tại endpoint và trả một phần stack trace để quan sát đường gọi của lỗi.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 4.Propagation/Propagation.md
+      file: 4.ThrowingPropagation/ThrowingPropagation.md
       anchor: exception-propagation
     methodName: propagate
     params: []
@@ -68,15 +68,15 @@ PropagationController:
     consumes: []
     usage: true
   wrapCause():
-    summary: Wrap exception mà không làm mất cause
-    description: Low-level IllegalArgumentException được wrap thành OrderReadException. Response expose cả wrapper lẫn cause để phân biệt exception translation với lost-cause anti-pattern.
+    summary: Tạo exception mới mà không làm mất cause
+    description: IllegalArgumentException được bọc thành OrderReadException. Kết quả trả về cho thấy đồng thời exception mới và cause gốc, qua đó chứng minh cơ chế exception chaining và đối lập với lost-cause anti-pattern.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 4.Propagation/Propagation.md
+      file: 4.ThrowingPropagation/ThrowingPropagation.md
       anchor: exception-chaining
     methodName: wrapCause
     params: []
@@ -91,15 +91,15 @@ PropagationController:
     usage: true
 ResourceController:
   closeOrder():
-    summary: Quan sát thứ tự open/body/close của nhiều resource
-    description: Hai AutoCloseable được tạo theo A rồi B. Response trả trace để chứng minh resource được close theo thứ tự ngược B rồi A sau khi body hoàn tất.
+    summary: Quan sát thứ tự mở/thân/đóng của nhiều tài nguyên
+    description: Hai AutoCloseable được tạo theo thứ tự A rồi B. Kết quả trả về một trace chứng minh tài nguyên được đóng theo thứ tự ngược B rồi A sau khi phần thân hoàn tất.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 6.TryWithResources/TryWithResources.md
+      file: 6.ResourceSafeFailure/ResourceSafeFailure.md
       anchor: resource-close-order
     methodName: closeOrder
     params: []
@@ -113,15 +113,15 @@ ResourceController:
     consumes: []
     usage: true
   suppressed():
-    summary: Primary failure và suppressed close failure
-    description: Try body cố ý throw IllegalArgumentException còn resource cố ý fail khi close. Response expose primary exception, suppressed list và lifecycle trace để quan sát semantics của try-with-resources.
+    summary: Lỗi chính và lỗi đóng tài nguyên bị suppressed
+    description: Phần thân try cố ý ném IllegalArgumentException còn tài nguyên cố ý thất bại khi close(). Kết quả trả về cho thấy exception chính, danh sách suppressed và trace vòng đời để quan sát quy tắc của try-with-resources.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 7.SuppressedException/SuppressedException.md
+      file: 6.ResourceSafeFailure/ResourceSafeFailure.md
       anchor: primary-vs-suppressed
     methodName: suppressed
     params: []

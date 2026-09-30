@@ -40,68 +40,68 @@
 
 questions:
   - id: exception-purpose-channel
-    question: "Vấn đề cốt lõi mà exception mechanism giải quyết trong Java là gì?"
+    question: "Cơ chế exception giải quyết vấn đề cốt lõi nào trong Java?"
     answers:
-      - {id: A, answer: "Tạo một kênh abnormal completion riêng có thể mang type/context và propagate qua call stack tới nơi có trách nhiệm xử lý.", explanation: "Đúng. Exception tách failure flow khỏi normal return path và giữ diagnostic/causal context."}
-      - {id: B, answer: "Bắt buộc mọi failure đều phải recover ngay tại method phát sinh.", explanation: "Sai. Một vai trò quan trọng của exception là cho phép failure propagate tới boundary phù hợp."}
-      - {id: C, answer: "Thay thế hoàn toàn mọi boolean, Optional hoặc result type trong mọi API.", explanation: "Sai. Các representation khác vẫn phù hợp cho nhiều expected-result design; exception dành cho abnormal completion semantics."}
-      - {id: D, answer: "Dùng throw/catch như cơ chế mặc định để viết loop và branch thông thường.", explanation: "Sai. Exception không nên là default normal-control-flow mechanism."}
+      - {id: A, answer: "Tạo một kênh kết thúc bất thường riêng, có thể mang kiểu/ngữ cảnh và lan truyền qua ngăn xếp lời gọi tới nơi có trách nhiệm xử lý.", explanation: "Đúng. Exception tách luồng lỗi khỏi đường trả về bình thường và giữ ngữ cảnh chẩn đoán/chuỗi nguyên nhân."}
+      - {id: B, answer: "Bắt buộc mọi lỗi đều phải được phục hồi ngay tại phương thức phát sinh.", explanation: "Sai. Một vai trò quan trọng của exception là cho phép lỗi lan truyền tới ranh giới phù hợp."}
+      - {id: C, answer: "Thay thế hoàn toàn mọi boolean, Optional hoặc kiểu kết quả khác trong mọi API.", explanation: "Sai. Các cách biểu diễn khác vẫn phù hợp cho nhiều trường hợp kết quả dự kiến; exception dành cho sự kết thúc bất thường."}
+      - {id: D, answer: "Dùng throw/catch như cơ chế mặc định để viết vòng lặp và nhánh thông thường.", explanation: "Sai. Exception không nên là cơ chế mặc định cho luồng điều khiển bình thường."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.Throwable/Throwable.md", anchor: "exception-purpose"}
+    readmeRelated: {file: "1.ExceptionPurpose/ExceptionPurpose.md", anchor: "exception-purpose"}
     apiRelated: {controller: "PropagationController", methodSignature: "propagate()"}
 
   - id: exception-throwable-hierarchy
     question: "Phát biểu nào đúng nhất về vai trò của Throwable?"
     answers:
-      - {id: A, answer: "Chỉ là message lỗi.", explanation: "Throwable còn tham gia control flow."}
-      - {id: B, answer: "Là root type của cơ chế exception và object được throw/catch phải tương thích với nó.", explanation: "Đúng; Throwable là gốc của Error và Exception."}
+      - {id: A, answer: "Chỉ là thông điệp lỗi.", explanation: "Throwable còn tham gia luồng điều khiển."}
+      - {id: B, answer: "Là kiểu gốc của cơ chế exception; đối tượng được throw/catch phải tương thích với Throwable.", explanation: "Đúng; Throwable là gốc của Error và Exception."}
       - {id: C, answer: "Chỉ chứa checked exception.", explanation: "RuntimeException và Error là unchecked."}
       - {id: D, answer: "Không có stack trace.", explanation: "Throwable có thể mang stack trace."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.Throwable/Throwable.md", anchor: "throwable-hierarchy"}
+    readmeRelated: {file: "2.ThrowableModel/ThrowableModel.md", anchor: "throwable-hierarchy"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exception-error-vs-exception
-    question: "Vì sao catch (Throwable) thường không nên là handler chung của application code?"
+    question: "Vì sao catch (Throwable) thường không nên là khối xử lý chung của ứng dụng code?"
     answers:
       - {id: A, answer: "Java cấm cú pháp này.", explanation: "Cú pháp hợp lệ."}
-      - {id: B, answer: "Throwable không bắt Exception.", explanation: "Throwable là supertype của Exception."}
+      - {id: B, answer: "Throwable không bắt Exception.", explanation: "Throwable là kiểu cha của Exception."}
       - {id: C, answer: "Nó chỉ bắt checked exception.", explanation: "Nó còn bắt RuntimeException và Error."}
-      - {id: D, answer: "Nó có thể bắt cả Error và vô tình xử lý lỗi runtime nghiêm trọng như failure thông thường.", explanation: "Đúng; vấn đề là boundary quá rộng."}
+      - {id: D, answer: "Nó có thể bắt cả Error và vô tình xử lý lỗi nghiêm trọng của môi trường chạy như lỗi thông thường.", explanation: "Đúng; vấn đề là ranh giới quá rộng."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.Throwable/Throwable.md", anchor: "error-vs-exception"}
+    readmeRelated: {file: "2.ThrowableModel/ThrowableModel.md", anchor: "error-vs-exception"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exception-stack-trace-cause
-    question: "Khi wrap low-level exception, cause giúp ích gì?"
+    question: "Khi bọc một exception tầng thấp, cause giúp ích gì?"
     answers:
-      - {id: A, answer: "Giữ liên kết tới failure gốc trong causal chain.", explanation: "Đúng; abstraction có thể đổi mà diagnostics vẫn còn."}
-      - {id: B, answer: "Xóa stack trace wrapper.", explanation: "Không."}
+      - {id: A, answer: "Giữ liên kết tới lỗi gốc trong chuỗi nguyên nhân.", explanation: "Đúng; mức trừu tượng có thể đổi mà thông tin chẩn đoán vẫn còn."}
+      - {id: B, answer: "Xóa stack trace lớp bọc.", explanation: "Không."}
       - {id: C, answer: "Biến unchecked thành checked.", explanation: "Classification không đổi."}
-      - {id: D, answer: "Tự động retry.", explanation: "Cause không phải retry policy."}
+      - {id: D, answer: "Tự động thử lại.", explanation: "Cause không phải thử lại chính sách."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.Throwable/Throwable.md", anchor: "stack-trace-cause"}
+    readmeRelated: {file: "2.ThrowableModel/ThrowableModel.md", anchor: "stack-trace-cause"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exception-checked-contract
-    question: "Nếu checked exception có thể thoát khỏi method, compiler yêu cầu gì?"
+    question: "Nếu checked exception có thể thoát khỏi phương thức, trình biên dịch yêu cầu gì?"
     answers:
       - {id: A, answer: "Convert thành Error.", explanation: "Không có rule này."}
       - {id: B, answer: "Return null.", explanation: "Không liên quan."}
       - {id: C, answer: "Catch hoặc declare bằng throws.", explanation: "Đúng; đây là catch-or-declare rule."}
-      - {id: D, answer: "Log rồi tiếp tục.", explanation: "Logging không thỏa compile-time rule."}
+      - {id: D, answer: "Log rồi tiếp tục.", explanation: "Ghi log không thỏa quy tắc tại thời điểm biên dịch."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.CheckedUnchecked/CheckedUnchecked.md", anchor: "checked-exception"}
+    readmeRelated: {file: "3.CheckedUncheckedContracts/CheckedUncheckedContracts.md", anchor: "checked-exception"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exception-unchecked-rule
@@ -114,137 +114,137 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.CheckedUnchecked/CheckedUnchecked.md", anchor: "unchecked-exception"}
+    readmeRelated: {file: "3.CheckedUncheckedContracts/CheckedUncheckedContracts.md", anchor: "unchecked-exception"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exception-checked-vs-unchecked-design
     question: "Câu hỏi nào quan trọng nhất khi chọn checked hay unchecked?"
     answers:
-      - {id: A, answer: "Tên type dài bao nhiêu.", explanation: "Không liên quan."}
+      - {id: A, answer: "Tên kiểu dài bao nhiêu.", explanation: "Không liên quan."}
       - {id: B, answer: "Có dùng Spring không.", explanation: "Đây là Java/API design."}
-      - {id: C, answer: "Có controller không.", explanation: "Layer name không quyết định."}
-      - {id: D, answer: "Caller có nên bị buộc nhận biết failure ở compile time và có handling policy có ý nghĩa không.", explanation: "Đúng; lựa chọn phục vụ caller contract."}
+      - {id: C, answer: "Có controller không.", explanation: "tầng name không quyết định."}
+      - {id: D, answer: "Bên gọi có nên bị buộc nhận biết lỗi tại thời điểm biên dịch và có chính sách xử lý có ý nghĩa không.", explanation: "Đúng; lựa chọn phải phục vụ hợp đồng với bên gọi."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.CheckedUnchecked/CheckedUnchecked.md", anchor: "checked-vs-unchecked-design"}
+    readmeRelated: {file: "3.CheckedUncheckedContracts/CheckedUncheckedContracts.md", anchor: "checked-vs-unchecked-design"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exception-throw-statement
     question: "Phát biểu nào đúng về throw?"
     answers:
-      - {id: A, answer: "Có thể throw một Throwable expression đã tồn tại, không bắt buộc new ngay tại statement.", explanation: "Đúng."}
+      - {id: A, answer: "Có thể throw một Throwable biểu thức đã tồn tại, không bắt buộc new ngay tại câu lệnh.", explanation: "Đúng."}
       - {id: B, answer: "Chỉ dùng với checked exception.", explanation: "Unchecked cũng có thể throw."}
       - {id: C, answer: "Chỉ khai báo metadata.", explanation: "Đó là throws."}
-      - {id: D, answer: "Statement sau throw vẫn chạy trên cùng path.", explanation: "Không; path complete bất thường."}
+      - {id: D, answer: "Câu lệnh sau throw vẫn chạy trên cùng đường thực thi.", explanation: "Không; đường chạy kết thúc bất thường."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.ThrowThrows/ThrowThrows.md", anchor: "throw-statement"}
+    readmeRelated: {file: "4.ThrowingPropagation/ThrowingPropagation.md", anchor: "throw-statement"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exception-throws-clause
     question: "Khai báo RuntimeException trong throws clause có hợp lệ không?"
     answers:
-      - {id: A, answer: "Không, luôn compile error.", explanation: "Sai."}
+      - {id: A, answer: "Không, luôn lỗi biên dịch.", explanation: "Sai."}
       - {id: B, answer: "Có và làm nó thành checked.", explanation: "Hierarchy không đổi."}
-      - {id: C, answer: "Có, nhưng compiler vẫn không buộc caller catch/declare.", explanation: "Đúng."}
+      - {id: C, answer: "Có, nhưng trình biên dịch vẫn không buộc bên gọi catch/declare.", explanation: "Đúng."}
       - {id: D, answer: "Có và ngăn propagation.", explanation: "Sai."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.ThrowThrows/ThrowThrows.md", anchor: "throws-clause"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - id: exception-precise-rethrow
-    question: "Vì sao catch (Exception ex) rồi throw ex đôi khi vẫn chỉ cần declare IOException, SQLException?"
-    answers:
-      - {id: A, answer: "Exception luôn unchecked.", explanation: "Sai."}
-      - {id: B, answer: "Compiler suy luận checked types thực sự có thể tới catch khi parameter không bị gán lại.", explanation: "Đúng; đó là precise rethrow."}
-      - {id: C, answer: "throw ex không thực thi.", explanation: "Sai."}
-      - {id: D, answer: "Catch tự convert type.", explanation: "Không có conversion."}
-    correctAnswerId: B
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "3.ThrowThrows/ThrowThrows.md", anchor: "precise-rethrow"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - id: exception-override-throws
-    question: "Parent declare throws IOException. Override nào không hợp lệ?"
-    answers:
-      - {id: A, answer: "Không declare checked exception.", explanation: "Hợp lệ."}
-      - {id: B, answer: "throws FileNotFoundException.", explanation: "Hợp lệ; subtype."}
-      - {id: C, answer: "throws IOException.", explanation: "Hợp lệ."}
-      - {id: D, answer: "throws Exception.", explanation: "Đúng lựa chọn; nó broaden checked contract."}
-    correctAnswerId: D
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "3.ThrowThrows/ThrowThrows.md", anchor: "override-throws-rules"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - id: exception-checked-narrowing
-    question: "Vì sao override có thể bỏ checked exception của parent?"
-    answers:
-      - {id: A, answer: "Subtype đang hứa contract bằng hoặc dễ xử lý hơn cho caller.", explanation: "Đúng."}
-      - {id: B, answer: "Checked exception biến thành Error.", explanation: "Không."}
-      - {id: C, answer: "Parent contract biến mất runtime nên compiler bỏ qua.", explanation: "Đây là compile-time substitutability rule."}
-      - {id: D, answer: "Override không thể throw exception.", explanation: "Sai."}
-    correctAnswerId: A
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "3.ThrowThrows/ThrowThrows.md", anchor: "checked-exception-narrowing"}
+    readmeRelated: {file: "4.ThrowingPropagation/ThrowingPropagation.md", anchor: "throws-clause"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exception-propagation
-    question: "Trong propagate(), exception từ levelTwo() qua levelOne() rồi tới handler. Điều gì được minh họa?"
+    question: "Trong propagate(), exception từ levelTwo() qua levelOne() rồi tới khối xử lý. Điều gì được minh họa?"
     answers:
-      - {id: A, answer: "Automatic retry.", explanation: "Không có retry."}
+      - {id: A, answer: "Automatic thử lại.", explanation: "Không có thử lại."}
       - {id: B, answer: "Exception thành null.", explanation: "Không."}
-      - {id: C, answer: "Stack unwinding và propagation qua các frame cho tới catch phù hợp.", explanation: "Đúng."}
-      - {id: D, answer: "Chỉ frame catch xuất hiện trong stack trace.", explanation: "Sai."}
+      - {id: C, answer: "Stack unwinding và propagation qua các khung ngăn xếp cho tới catch phù hợp.", explanation: "Đúng."}
+      - {id: D, answer: "Chỉ khung ngăn xếp catch xuất hiện trong stack trace.", explanation: "Sai."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Propagation/Propagation.md", anchor: "exception-propagation"}
+    readmeRelated: {file: "4.ThrowingPropagation/ThrowingPropagation.md", anchor: "exception-propagation"}
     apiRelated: {controller: "PropagationController", methodSignature: "propagate()"}
 
   - id: exception-catch-selection
     question: "Vì sao catch FileNotFoundException phải đứng trước catch IOException?"
     answers:
       - {id: A, answer: "Vì FileNotFoundException unchecked.", explanation: "Sai."}
-      - {id: B, answer: "IOException là supertype; đặt trước sẽ làm catch subtype unreachable.", explanation: "Đúng."}
+      - {id: B, answer: "IOException là kiểu cha; đặt trước sẽ làm catch kiểu con unreachable.", explanation: "Đúng."}
       - {id: C, answer: "Java chọn theo alphabet.", explanation: "Sai."}
-      - {id: D, answer: "Catch không nhận subtype.", explanation: "Sai."}
+      - {id: D, answer: "Catch không nhận kiểu con.", explanation: "Sai."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Propagation/Propagation.md", anchor: "catch-selection"}
+    readmeRelated: {file: "4.ThrowingPropagation/ThrowingPropagation.md", anchor: "catch-selection"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exception-chaining
     question: "wrapCause() cho thấy điều gì?"
     answers:
-      - {id: A, answer: "Wrapper nên bỏ cause.", explanation: "Sai."}
-      - {id: B, answer: "Wrapper và cause phải cùng type.", explanation: "Không."}
-      - {id: C, answer: "Wrapping đồng nghĩa recovery.", explanation: "Không."}
-      - {id: D, answer: "OrderReadException đổi abstraction vocabulary nhưng IllegalArgumentException gốc vẫn là cause.", explanation: "Đúng."}
+      - {id: A, answer: "lớp bọc nên bỏ cause.", explanation: "Sai."}
+      - {id: B, answer: "Lớp bọc và cause phải cùng kiểu.", explanation: "Không."}
+      - {id: C, answer: "Wrapping đồng nghĩa phục hồi.", explanation: "Không."}
+      - {id: D, answer: "OrderReadException là exception mới nhưng IllegalArgumentException gốc vẫn được giữ làm cause.", explanation: "Đúng; đây là cơ chế exception chaining."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Propagation/Propagation.md", anchor: "exception-chaining"}
+    readmeRelated: {file: "4.ThrowingPropagation/ThrowingPropagation.md", anchor: "exception-chaining"}
     apiRelated: {controller: "PropagationController", methodSignature: "wrapCause()"}
 
   - id: exception-lost-cause
     question: "Đâu là lost-cause anti-pattern?"
     answers:
-      - {id: A, answer: "Catch SQLException rồi throw wrapper mới mà không truyền ex vào cause.", explanation: "Đúng."}
-      - {id: B, answer: "Rethrow ex khi abstraction không đổi.", explanation: "Giữ nguyên failure."}
-      - {id: C, answer: "new Wrapper(message, ex).", explanation: "Giữ cause."}
+      - {id: A, answer: "Catch SQLException rồi throw lớp bọc mới mà không truyền ex vào cause.", explanation: "Đúng."}
+      - {id: B, answer: "Ném lại ex khi mức trừu tượng không đổi.", explanation: "Giữ nguyên lỗi."}
+      - {id: C, answer: "new lớp bọc(thông điệp, ex).", explanation: "Giữ cause."}
       - {id: D, answer: "Đọc getCause().", explanation: "Chỉ inspection."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Propagation/Propagation.md", anchor: "lost-cause-pitfall"}
+    readmeRelated: {file: "4.ThrowingPropagation/ThrowingPropagation.md", anchor: "lost-cause-pitfall"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: exception-precise-rethrow
+    question: "Vì sao catch (Exception ex) rồi throw ex đôi khi vẫn chỉ cần declare IOException, SQLException?"
+    answers:
+      - {id: A, answer: "Exception luôn unchecked.", explanation: "Sai."}
+      - {id: B, answer: "trình biên dịch suy luận checked types thực sự có thể tới catch khi tham số không bị gán lại.", explanation: "Đúng; đó là precise rethrow."}
+      - {id: C, answer: "throw ex không thực thi.", explanation: "Sai."}
+      - {id: D, answer: "Catch tự chuyển đổi kiểu.", explanation: "Không có chuyển đổi kiểu tự động."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.ThrowingPropagation/ThrowingPropagation.md", anchor: "precise-rethrow"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: exception-override-throws
+    question: "Parent declare throws IOException. Override nào không hợp lệ?"
+    answers:
+      - {id: A, answer: "Không declare checked exception.", explanation: "Hợp lệ."}
+      - {id: B, answer: "throws FileNotFoundException.", explanation: "Hợp lệ; kiểu con."}
+      - {id: C, answer: "throws IOException.", explanation: "Hợp lệ."}
+      - {id: D, answer: "throws Exception.", explanation: "Đúng lựa chọn; nó broaden checked hợp đồng."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.ThrowingPropagation/ThrowingPropagation.md", anchor: "override-throws-rules"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: exception-checked-narrowing
+    question: "Vì sao override có thể bỏ checked exception của parent?"
+    answers:
+      - {id: A, answer: "kiểu con đang hứa hợp đồng bằng hoặc dễ xử lý hơn cho bên gọi.", explanation: "Đúng."}
+      - {id: B, answer: "Checked exception biến thành Error.", explanation: "Không."}
+      - {id: C, answer: "Hợp đồng của lớp cha biến mất khi chạy nên trình biên dịch bỏ qua.", explanation: "Đây là quy tắc substitutability tại thời điểm biên dịch."}
+      - {id: D, answer: "Override không thể throw exception.", explanation: "Sai."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.ThrowingPropagation/ThrowingPropagation.md", anchor: "checked-exception-narrowing"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exception-try-catch-flow
@@ -252,64 +252,64 @@ questions:
     answers:
       - {id: A, answer: "process() vẫn chạy.", explanation: "Không."}
       - {id: B, answer: "process() chạy hai lần.", explanation: "Không."}
-      - {id: C, answer: "Phần còn lại của try bị bỏ qua và Java tìm handler tương thích.", explanation: "Đúng."}
+      - {id: C, answer: "Phần còn lại của try bị bỏ qua và Java tìm khối xử lý tương thích.", explanation: "Đúng."}
       - {id: D, answer: "Exception tự biến thành return value.", explanation: "Không."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.TryCatchFinally/TryCatchFinally.md", anchor: "try-catch-flow"}
+    readmeRelated: {file: "5.HandlingCleanup/HandlingCleanup.md", anchor: "try-catch-flow"}
     apiRelated: {controller: "", methodSignature: ""}
-
-  - id: exception-finally-semantics
-    question: "Trong control flow JVM bình thường, finally thường tham gia khi nào?"
-    answers:
-      - {id: A, answer: "Chỉ success.", explanation: "Không."}
-      - {id: B, answer: "Chỉ checked exception.", explanation: "Không."}
-      - {id: C, answer: "Chỉ khi catch chạy.", explanation: "Không."}
-      - {id: D, answer: "Normal completion, return và exceptional completion đều có thể đi qua finally trước khi thoát.", explanation: "Đúng."}
-    correctAnswerId: D
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "5.TryCatchFinally/TryCatchFinally.md", anchor: "finally-semantics"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - id: exception-return-finally
-    question: "returnInteraction() trả 1 cho safeReturn và 2 cho dangerousReturn. Kết luận đúng?"
-    answers:
-      - {id: A, answer: "Return trong finally có thể thay pending return từ try.", explanation: "Đúng."}
-      - {id: B, answer: "finally bị skip khi try return.", explanation: "Sai."}
-      - {id: C, answer: "return trong finally luôn compile error.", explanation: "Sai."}
-      - {id: D, answer: "finally không ảnh hưởng outcome.", explanation: "Sai."}
-    correctAnswerId: A
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "5.TryCatchFinally/TryCatchFinally.md", anchor: "return-finally"}
-    apiRelated: {controller: "FinallyController", methodSignature: "returnInteraction()"}
 
   - id: exception-multi-catch
     question: "Multi-catch nào không hợp lệ?"
     answers:
       - {id: A, answer: "IOException | SQLException.", explanation: "Có thể hợp lệ."}
       - {id: B, answer: "ParseException | SQLException.", explanation: "Có thể hợp lệ."}
-      - {id: C, answer: "FileNotFoundException | IOException.", explanation: "Đúng lựa chọn; subtype và supertype không thể cùng là alternatives."}
+      - {id: C, answer: "FileNotFoundException | IOException.", explanation: "Đúng lựa chọn; kiểu con và kiểu cha không thể cùng xuất hiện trong các lựa chọn của multi-catch."}
       - {id: D, answer: "IOException | ReflectiveOperationException.", explanation: "Có thể hợp lệ."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.TryCatchFinally/TryCatchFinally.md", anchor: "multi-catch"}
+    readmeRelated: {file: "5.HandlingCleanup/HandlingCleanup.md", anchor: "multi-catch"}
     apiRelated: {controller: "", methodSignature: ""}
+
+  - id: exception-finally-semantics
+    question: "Trong luồng điều khiển JVM bình thường, finally thường tham gia khi nào?"
+    answers:
+      - {id: A, answer: "Chỉ thành công.", explanation: "Không."}
+      - {id: B, answer: "Chỉ checked exception.", explanation: "Không."}
+      - {id: C, answer: "Chỉ khi catch chạy.", explanation: "Không."}
+      - {id: D, answer: "Hoàn thành bình thường, return và kết thúc bất thường đều có thể đi qua finally trước khi thoát.", explanation: "Đúng."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.HandlingCleanup/HandlingCleanup.md", anchor: "finally-semantics"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: exception-return-finally
+    question: "returnInteraction() trả 1 cho safeReturn và 2 cho dangerousReturn. Kết luận đúng?"
+    answers:
+      - {id: A, answer: "Return trong finally có thể thay giá trị trả về đang chờ từ try.", explanation: "Đúng."}
+      - {id: B, answer: "finally bị skip khi try return.", explanation: "Sai."}
+      - {id: C, answer: "return trong finally luôn là lỗi biên dịch.", explanation: "Sai."}
+      - {id: D, answer: "finally không ảnh hưởng kết quả.", explanation: "Sai."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.HandlingCleanup/HandlingCleanup.md", anchor: "return-finally"}
+    apiRelated: {controller: "FinallyController", methodSignature: "returnInteraction()"}
 
   - id: exception-autocloseable
     question: "Vì sao TWR không chỉ dựa vào Garbage Collector?"
     answers:
-      - {id: A, answer: "GC không thu hồi object.", explanation: "Sai."}
-      - {id: B, answer: "External resource cần cleanup deterministic; GC không phải contract cho việc close đúng lúc.", explanation: "Đúng."}
-      - {id: C, answer: "AutoCloseable làm object immutable.", explanation: "Sai."}
+      - {id: A, answer: "GC không thu hồi đối tượng.", explanation: "Sai."}
+      - {id: B, answer: "Tài nguyên bên ngoài cần được dọn dẹp đúng thời điểm xác định; GC không phải hợp đồng đảm bảo close đúng lúc.", explanation: "Đúng."}
+      - {id: C, answer: "AutoCloseable làm đối tượng immutable.", explanation: "Sai."}
       - {id: D, answer: "TWR ngăn mọi IOException.", explanation: "Sai."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.TryWithResources/TryWithResources.md", anchor: "autocloseable"}
+    readmeRelated: {file: "6.ResourceSafeFailure/ResourceSafeFailure.md", anchor: "autocloseable"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exception-resource-close-order
@@ -318,15 +318,67 @@ questions:
       - {id: A, answer: "open-B, open-A, body, close-A, close-B.", explanation: "Sai."}
       - {id: B, answer: "open-A, open-B, close-A, close-B, body.", explanation: "Sai."}
       - {id: C, answer: "body, open-A, open-B, close-B, close-A.", explanation: "Sai."}
-      - {id: D, answer: "open-A, open-B, body, close-B, close-A.", explanation: "Đúng; mở theo declaration, đóng ngược."}
+      - {id: D, answer: "open-A, open-B, body, close-B, close-A.", explanation: "Đúng; mở theo khai báo, đóng ngược."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.TryWithResources/TryWithResources.md", anchor: "resource-close-order"}
+    readmeRelated: {file: "6.ResourceSafeFailure/ResourceSafeFailure.md", anchor: "resource-close-order"}
     apiRelated: {controller: "ResourceController", methodSignature: "closeOrder()"}
 
+  - id: exception-twr-vs-finally
+    question: "Lợi thế quan trọng của TWR khi phần thân và close() đều thất bại là gì?"
+    answers:
+      - {id: A, answer: "Bỏ close lỗi.", explanation: "Sai."}
+      - {id: B, answer: "thử lại close tự động.", explanation: "Sai."}
+      - {id: C, answer: "Giữ lỗi chính và gắn lỗi dọn dẹp dưới dạng suppressed exception.", explanation: "Đúng."}
+      - {id: D, answer: "Biến mọi lỗi thành Error.", explanation: "Sai."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.ResourceSafeFailure/ResourceSafeFailure.md", anchor: "twr-vs-finally"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: exception-primary-suppressed
+    question: "Trong suppressed(), phần thân ném lỗi chính rồi close() cũng ném lỗi. Kết quả nào đúng?"
+    answers:
+      - {id: A, answer: "Lỗi close() thay lỗi chính.", explanation: "Sai."}
+      - {id: B, answer: "Lỗi từ phần thân vẫn là lỗi chính; lỗi close() nằm trong getSuppressed().", explanation: "Đúng."}
+      - {id: C, answer: "Hai lỗi bị loại bỏ.", explanation: "Sai."}
+      - {id: D, answer: "Tạo Error mới.", explanation: "Sai."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.ResourceSafeFailure/ResourceSafeFailure.md", anchor: "primary-vs-suppressed"}
+    apiRelated: {controller: "ResourceController", methodSignature: "suppressed()"}
+
+  - id: exception-get-suppressed
+    question: "Phân biệt cause và suppressed nào đúng?"
+    answers:
+      - {id: A, answer: "Hai khái niệm luôn giống nhau.", explanation: "Sai."}
+      - {id: B, answer: "Cause chỉ dùng cho Error.", explanation: "Sai."}
+      - {id: C, answer: "Suppressed thay lỗi chính.", explanation: "Sai."}
+      - {id: D, answer: "Cause biểu diễn chuỗi nguyên nhân; suppressed exception giữ lỗi phụ khi một lỗi khác đã là kết quả chính.", explanation: "Đúng."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.ResourceSafeFailure/ResourceSafeFailure.md", anchor: "get-suppressed"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: exception-close-failure
+    question: "Phần thân thành công; B.close() thất bại trước rồi A.close() cũng thất bại. Lỗi nào là lỗi chính?"
+    answers:
+      - {id: A, answer: "lỗi từ B.close(); lỗi A.close() bị suppressed trên nó.", explanation: "Đúng; B đóng trước."}
+      - {id: B, answer: "Lỗi từ A vì A được khai báo trước.", explanation: "Sai."}
+      - {id: C, answer: "Không lỗi nào.", explanation: "Sai."}
+      - {id: D, answer: "Một IOException mới luôn được tạo.", explanation: "Sai."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.ResourceSafeFailure/ResourceSafeFailure.md", anchor: "close-failure"}
+    apiRelated: {controller: "", methodSignature: ""}
+
   - id: exception-effective-final-resource
-    question: "Từ Java 9, existing local variable có thể dùng trực tiếp trong resource specification khi nào?"
+    question: "Từ Java 9, biến cục bộ đã tồn tại có thể dùng trực tiếp trong phần khai báo tài nguyên khi nào?"
     answers:
       - {id: A, answer: "Khi final hoặc effectively final.", explanation: "Đúng."}
       - {id: B, answer: "Khi bị gán lại sau đó.", explanation: "Sai."}
@@ -335,59 +387,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.TryWithResources/TryWithResources.md", anchor: "effective-final-resource"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - id: exception-twr-vs-finally
-    question: "Lợi thế quan trọng của TWR khi body và close đều fail là gì?"
-    answers:
-      - {id: A, answer: "Bỏ close failure.", explanation: "Sai."}
-      - {id: B, answer: "Retry close tự động.", explanation: "Sai."}
-      - {id: C, answer: "Giữ primary failure và attach cleanup failure dưới dạng suppressed.", explanation: "Đúng."}
-      - {id: D, answer: "Biến mọi failure thành Error.", explanation: "Sai."}
-    correctAnswerId: C
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "6.TryWithResources/TryWithResources.md", anchor: "twr-vs-finally"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - id: exception-primary-suppressed
-    question: "Trong suppressed(), body throw primary rồi close cũng throw. Outcome đúng?"
-    answers:
-      - {id: A, answer: "Close failure thay primary.", explanation: "Sai."}
-      - {id: B, answer: "Body failure vẫn primary; close failure nằm trong getSuppressed().", explanation: "Đúng."}
-      - {id: C, answer: "Hai failure bị discard.", explanation: "Sai."}
-      - {id: D, answer: "Tạo Error mới.", explanation: "Sai."}
-    correctAnswerId: B
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "7.SuppressedException/SuppressedException.md", anchor: "primary-vs-suppressed"}
-    apiRelated: {controller: "ResourceController", methodSignature: "suppressed()"}
-
-  - id: exception-get-suppressed
-    question: "Phân biệt cause và suppressed nào đúng?"
-    answers:
-      - {id: A, answer: "Hai khái niệm luôn giống nhau.", explanation: "Sai."}
-      - {id: B, answer: "Cause chỉ dùng cho Error.", explanation: "Sai."}
-      - {id: C, answer: "Suppressed thay primary.", explanation: "Sai."}
-      - {id: D, answer: "Cause biểu diễn causal/translation chain; suppressed giữ failure phụ khi một failure khác đã là outcome chính.", explanation: "Đúng."}
-    correctAnswerId: D
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "7.SuppressedException/SuppressedException.md", anchor: "get-suppressed"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - id: exception-close-failure
-    question: "Body thành công; B.close() fail trước rồi A.close() cũng fail. Failure nào primary?"
-    answers:
-      - {id: A, answer: "Failure từ B.close(); failure A.close() bị suppressed trên nó.", explanation: "Đúng; B đóng trước."}
-      - {id: B, answer: "Failure A vì A khai báo trước.", explanation: "Sai."}
-      - {id: C, answer: "Không failure nào.", explanation: "Sai."}
-      - {id: D, answer: "Một IOException mới luôn được tạo.", explanation: "Sai."}
-    correctAnswerId: A
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "7.SuppressedException/SuppressedException.md", anchor: "close-failure"}
+    readmeRelated: {file: "6.ResourceSafeFailure/ResourceSafeFailure.md", anchor: "effective-final-resource"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exception-custom-purpose
@@ -395,101 +395,114 @@ questions:
     answers:
       - {id: A, answer: "Chỉ để đổi tên exception cũ.", explanation: "Không đủ."}
       - {id: B, answer: "Để bỏ cause.", explanation: "Sai."}
-      - {id: C, answer: "Khi type mới thêm domain meaning, context, handling category hoặc abstraction boundary hữu ích.", explanation: "Đúng."}
-      - {id: D, answer: "Khi muốn mọi failure là Error.", explanation: "Sai."}
+      - {id: C, answer: "Khi kiểu mới bổ sung ý nghĩa miền nghiệp vụ, ngữ cảnh, nhóm xử lý hoặc một ranh giới trừu tượng hữu ích.", explanation: "Đúng."}
+      - {id: D, answer: "Khi muốn mọi lỗi là Error.", explanation: "Sai."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.CustomException/CustomException.md", anchor: "custom-exception-purpose"}
+    readmeRelated: {file: "7.CustomExceptionsContext/CustomExceptionsContext.md", anchor: "custom-exception-purpose"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exception-custom-context
-    question: "Nếu caller cần orderId từ exception, thiết kế nào tốt hơn?"
+    question: "Nếu bên gọi cần orderId từ exception, thiết kế nào tốt hơn?"
     answers:
-      - {id: A, answer: "Bắt caller parse message.", explanation: "Fragile."}
-      - {id: B, answer: "Lưu orderId thành field/accessor có cấu trúc, giữ cause và tránh nhét secret vào message.", explanation: "Đúng."}
-      - {id: C, answer: "Chỉ lưu trong stack trace string.", explanation: "Không phải structured contract."}
-      - {id: D, answer: "Bỏ cause cho ngắn.", explanation: "Mất diagnostics."}
+      - {id: A, answer: "Bắt bên gọi phân tích thông điệp.", explanation: "Fragile."}
+      - {id: B, answer: "Lưu orderId thành trường dữ liệu/phương thức truy cập có cấu trúc, giữ cause và tránh nhét secret vào thông điệp.", explanation: "Đúng."}
+      - {id: C, answer: "Chỉ lưu trong chuỗi stack trace.", explanation: "Không phải hợp đồng có cấu trúc."}
+      - {id: D, answer: "Bỏ cause cho ngắn.", explanation: "Mất thông tin chẩn đoán."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.CustomException/CustomException.md", anchor: "exception-context"}
+    readmeRelated: {file: "7.CustomExceptionsContext/CustomExceptionsContext.md", anchor: "exception-context"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exception-hierarchy-design
     question: "Nguyên tắc tốt nhất cho exception hierarchy là gì?"
     answers:
-      - {id: A, answer: "Một subtype cho mọi method nội bộ.", explanation: "Quá chi tiết."}
-      - {id: B, answer: "Sắp theo độ dài message.", explanation: "Không liên quan."}
-      - {id: C, answer: "Phản chiếu toàn bộ implementation classes.", explanation: "Dễ leak implementation."}
-      - {id: D, answer: "Phản ánh các handling category mà caller thực sự cần phân biệt.", explanation: "Đúng."}
+      - {id: A, answer: "Một kiểu con cho mọi phương thức nội bộ.", explanation: "Quá chi tiết."}
+      - {id: B, answer: "Sắp theo độ dài thông điệp.", explanation: "Không liên quan."}
+      - {id: C, answer: "Phản chiếu toàn bộ các lớp triển khai.", explanation: "Dễ làm lộ chi tiết triển khai."}
+      - {id: D, answer: "Phản ánh các nhóm xử lý mà bên gọi thực sự cần phân biệt.", explanation: "Đúng."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.CustomException/CustomException.md", anchor: "exception-hierarchy-design"}
+    readmeRelated: {file: "7.CustomExceptionsContext/CustomExceptionsContext.md", anchor: "exception-hierarchy-design"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exception-boundary-translation
     question: "translateBoundary() minh họa điều gì?"
     answers:
-      - {id: A, answer: "Low-level failure được đổi thành type có ý nghĩa ở boundary cao hơn nhưng cause gốc vẫn được giữ.", explanation: "Đúng."}
-      - {id: B, answer: "Mọi layer đều phải wrap.", explanation: "Sai."}
-      - {id: C, answer: "Translation tự retry.", explanation: "Sai."}
-      - {id: D, answer: "Translation phải xóa cause.", explanation: "Sai."}
+      - {id: A, answer: "Lỗi tầng thấp được chuyển thành kiểu có ý nghĩa ở ranh giới cao hơn nhưng cause gốc vẫn được giữ.", explanation: "Đúng."}
+      - {id: B, answer: "Mọi tầng đều phải bọc exception.", explanation: "Sai."}
+      - {id: C, answer: "Việc chuyển đổi exception tự thử lại.", explanation: "Sai."}
+      - {id: D, answer: "Việc chuyển đổi exception phải xóa cause.", explanation: "Sai."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.ExceptionDesign/ExceptionDesign.md", anchor: "exception-boundaries"}
+    readmeRelated: {file: "8.ExceptionBoundaryDesign/ExceptionBoundaryDesign.md", anchor: "exception-boundaries"}
     apiRelated: {controller: "ExceptionDesignController", methodSignature: "translateBoundary()"}
 
   - id: exception-do-not-swallow
     question: "Vì sao catch Exception rồi bỏ trống thường nguy hiểm?"
     answers:
-      - {id: A, answer: "Luôn compile fail.", explanation: "Không."}
+      - {id: A, answer: "Luôn lỗi biên dịch.", explanation: "Không."}
       - {id: B, answer: "Tự log quá nhiều.", explanation: "Empty catch không log."}
-      - {id: C, answer: "Failure signal bị xóa và caller có thể tiếp tục với giả định success sai.", explanation: "Đúng."}
+      - {id: C, answer: "Tín hiệu lỗi bị xóa và bên gọi có thể tiếp tục với giả định thành công sai.", explanation: "Đúng."}
       - {id: D, answer: "Biến unchecked thành checked.", explanation: "Không."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.ExceptionDesign/ExceptionDesign.md", anchor: "do-not-swallow"}
+    readmeRelated: {file: "8.ExceptionBoundaryDesign/ExceptionBoundaryDesign.md", anchor: "do-not-swallow"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exception-logging-boundary
-    question: "Heuristic logging nào hợp lý?"
+    question: "Quy tắc kinh nghiệm nào về ghi log là hợp lý?"
     answers:
-      - {id: A, answer: "Mọi layer log full stack rồi rethrow.", explanation: "Tạo duplicate noise."}
-      - {id: B, answer: "Layer chỉ translate/rethrow thường không log lại; boundary sở hữu outcome thường log một lần với context đủ.", explanation: "Đúng."}
+      - {id: A, answer: "Mọi tầng đều ghi toàn bộ stack trace rồi ném lại.", explanation: "Tạo trùng lặp nhiễu."}
+      - {id: B, answer: "Tầng chỉ chuyển đổi/ném lại thường không ghi log lại; ranh giới sở hữu kết quả thường ghi log một lần với đủ ngữ cảnh.", explanation: "Đúng."}
       - {id: C, answer: "Không bao giờ log.", explanation: "Sai."}
-      - {id: D, answer: "Chỉ repository được log.", explanation: "Sai."}
+      - {id: D, answer: "Chỉ tầng repository được ghi log.", explanation: "Sai."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.ExceptionDesign/ExceptionDesign.md", anchor: "logging-boundary"}
+    readmeRelated: {file: "8.ExceptionBoundaryDesign/ExceptionBoundaryDesign.md", anchor: "logging-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exception-as-control-flow
-    question: "Nếu 'không tìm thấy' là state bình thường, hướng nào thường rõ hơn?"
+    question: "Nếu 'không tìm thấy' là trạng thái bình thường, hướng nào thường rõ hơn?"
     answers:
-      - {id: A, answer: "Cố ý gây exception để branch.", explanation: "Thường khó đọc."}
-      - {id: B, answer: "Throw Error.", explanation: "Sai abstraction."}
+      - {id: A, answer: "Cố ý gây exception để nhánh.", explanation: "Thường khó đọc."}
+      - {id: B, answer: "Throw Error.", explanation: "Sai mức trừu tượng."}
       - {id: C, answer: "Return trong finally.", explanation: "Nguy hiểm."}
-      - {id: D, answer: "Dùng normal control flow/API result rõ ràng và dành exception cho abnormal completion.", explanation: "Đúng."}
+      - {id: D, answer: "Dùng luồng điều khiển bình thường hoặc kết quả API rõ ràng, và dành exception cho sự kết thúc bất thường.", explanation: "Đúng."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.ExceptionDesign/ExceptionDesign.md", anchor: "exception-as-control-flow"}
+    readmeRelated: {file: "8.ExceptionBoundaryDesign/ExceptionBoundaryDesign.md", anchor: "exception-as-control-flow"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exception-cleanup-recovery
-    question: "Khi nào retry sau exception hợp lý nhất?"
+    question: "Khi nào thử lại sau exception hợp lý nhất?"
     answers:
-      - {id: A, answer: "Failure có khả năng transient, operation retry-safe/idempotent hoặc có duplicate protection, và policy bounded/backoff/timeout rõ.", explanation: "Đúng."}
+      - {id: A, answer: "Lỗi có khả năng tạm thời, thao tác an toàn để thử lại/idempotent hoặc có cơ chế chống tác dụng phụ trùng lặp, và chính sách có giới hạn/backoff/timeout rõ ràng.", explanation: "Đúng."}
       - {id: B, answer: "Bất cứ khi nào catch Exception.", explanation: "Sai."}
-      - {id: C, answer: "Khi muốn che failure bằng retry vô hạn.", explanation: "Sai."}
-      - {id: D, answer: "Khi operation chắc chắn tạo duplicate side effect.", explanation: "Sai."}
+      - {id: C, answer: "Khi muốn che lỗi bằng thử lại vô hạn.", explanation: "Sai."}
+      - {id: D, answer: "Khi thao tác chắc chắn tạo tác dụng phụ trùng lặp.", explanation: "Sai."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.ExceptionDesign/ExceptionDesign.md", anchor: "cleanup-and-recovery"}
+    readmeRelated: {file: "8.ExceptionBoundaryDesign/ExceptionBoundaryDesign.md", anchor: "cleanup-and-recovery"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: exception-synthesis
+    question: "Mô hình nào mô tả đúng nhất cách xử lý một lỗi xuyên suốt module Exception?"
+    answers:
+      - {id: A, answer: "Mọi lỗi đều phải được catch ngay tại nơi phát sinh.", explanation: "Sai; cơ chế lan truyền cho phép lỗi đi tới tầng có đủ trách nhiệm xử lý."}
+      - {id: B, answer: "Chọn checked/unchecked ở mức hợp đồng; khi chạy, exception có thể lan truyền, việc dọn dẹp vẫn diễn ra, ranh giới phù hợp có thể phục hồi/chuyển đổi và phải giữ cause hoặc suppressed exception khi cần.", explanation: "Đúng; đây là mô hình tổng hợp của module."}
+      - {id: C, answer: "Mỗi tầng nên bọc và ghi log lại exception một lần.", explanation: "Sai; bọc/ghi log lặp lại thường chỉ tạo nhiễu nếu không thêm ý nghĩa."}
+      - {id: D, answer: "try-with-resources loại bỏ nhu cầu hiểu sự lan truyền và ranh giới xử lý.", explanation: "Sai; TWR chỉ giải quyết quyền sở hữu và dọn dẹp tài nguyên."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.ExceptionSynthesis/ExceptionSynthesis.md", anchor: "exception-synthesis"}
     apiRelated: {controller: "", methodSignature: ""}

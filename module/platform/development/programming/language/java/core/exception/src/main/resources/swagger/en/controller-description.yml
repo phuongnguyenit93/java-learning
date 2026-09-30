@@ -3,23 +3,23 @@ ExceptionDesignController:
     <h2>Exception Design and Abstraction Boundaries</h2>
     <p>Experiments about exception translation: a higher layer changes failure vocabulary while preserving the original cause and diagnostic chain.</p>
   readmeRelated:
-    file: 9.ExceptionDesign/ExceptionDesign.md
+    file: 8.ExceptionBoundaryDesign/ExceptionBoundaryDesign.md
 FinallyController:
   description: |-
     <h2>finally Control Flow</h2>
     <p>An experiment focused on a pending return passing through <code>finally</code>, especially when <code>finally</code> creates a new return that replaces the earlier outcome.</p>
   readmeRelated:
-    file: 5.TryCatchFinally/TryCatchFinally.md
+    file: 5.HandlingCleanup/HandlingCleanup.md
 PropagationController:
   description: |-
     <h2>Propagation, Stack Unwinding and Cause</h2>
-    <p>Experiments showing how exceptions move through nested calls and how a higher abstraction can wrap a failure without losing its original cause.</p>
-    <p>This is runtime evidence for the foundational role of exceptions: a failure has a separate abnormal-completion channel that can leave its origin and travel to a boundary with enough context to decide how it should be handled.</p>
+    <p>Experiments showing how exceptions move through nested calls and how a new exception can preserve an older exception as its <code>cause</code>.</p>
+    <p>This is runtime evidence for propagation and causal chaining; whether a layer should translate an exception at an abstraction boundary is covered by the separate design experiment.</p>
   readmeRelated:
-    file: 4.Propagation/Propagation.md
+    file: 4.ThrowingPropagation/ThrowingPropagation.md
 ResourceController:
   description: |-
     <h2>Try-with-resources and Cleanup Failure</h2>
     <p>Experiments observing multi-resource lifecycle: reverse close order and the way try-with-resources preserves a primary failure when <code>close()</code> fails too.</p>
   readmeRelated:
-    file: 6.TryWithResources/TryWithResources.md
+    file: 6.ResourceSafeFailure/ResourceSafeFailure.md
