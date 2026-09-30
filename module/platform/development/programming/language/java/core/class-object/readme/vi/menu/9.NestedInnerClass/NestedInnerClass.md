@@ -1,10 +1,10 @@
-# Nested và Inner Class
+# Lớp lồng nhau và lớp nội bộ
 
-Đặt một type bên trong type khác có thể thể hiện rằng chúng liên quan chặt về mặt tổ chức hoặc cần dùng ngữ cảnh bao quanh. Nhưng các dạng nested class khác nhau có ngữ nghĩa rất khác nhau.
+Lớp lồng nhau là lớp được khai báo bên trong một lớp khác. Trong đó, **lớp nội bộ (inner class)** là lớp lồng nhau không `static` và gắn với một đối tượng của lớp bên ngoài. Cách tổ chức này hữu ích khi hai kiểu liên quan chặt hoặc lớp bên trong cần dùng ngữ cảnh bao quanh, nhưng từng dạng lớp lồng nhau có ngữ nghĩa khác nhau.
 
-## <a id="static-nested-class">Static Nested Class</a>
+## <a id="static-nested-class">Lớp lồng static</a>
 
-Static nested class được khai báo với `static` và **không tự giữ reference tới instance của class bên ngoài**.
+Lớp lồng `static` được khai báo với `static` và **không tự giữ tham chiếu tới đối tượng của lớp bên ngoài**.
 
 ```java
 class BankAccount {
@@ -16,17 +16,17 @@ class BankAccount {
 }
 ```
 
-Nó gần giống một class bình thường về ngữ nghĩa instance, chỉ được đặt trong phạm vi tên của class bên ngoài. Cách này phù hợp cho type phụ có quan hệ logic mạnh với `BankAccount` nhưng không cần trạng thái của một account cụ thể.
+Nó gần giống một lớp bình thường về ngữ nghĩa đối tượng, chỉ được đặt trong phạm vi tên của lớp bên ngoài. Cách này phù hợp cho kiểu phụ có quan hệ logic mạnh với `BankAccount` nhưng không cần trạng thái của một tài khoản cụ thể.
 
-Ta có thể tạo nó mà không cần một `BankAccount` instance:
+Ta có thể tạo nó mà không cần một đối tượng `BankAccount`:
 
 ```java
 BankAccount.Builder builder = new BankAccount.Builder();
 ```
 
-## <a id="inner-class">Inner Class</a>
+## <a id="inner-class">Lớp nội bộ</a>
 
-Non-static nested class là inner class và gắn với một instance cụ thể của class bên ngoài:
+Lớp lồng không `static` là lớp nội bộ và gắn với một đối tượng cụ thể của lớp bên ngoài:
 
 ```java
 class BankAccount {
@@ -40,28 +40,28 @@ class BankAccount {
 }
 ```
 
-Mỗi `BalanceView` thuộc về một `BankAccount` cụ thể và có thể truy cập member của instance bên ngoài.
+Mỗi `BalanceView` thuộc về một `BankAccount` cụ thể và có thể truy cập thành viên của đối tượng bên ngoài.
 
-Cú pháp tạo object làm mối quan hệ này nhìn thấy rất rõ:
+Cú pháp tạo đối tượng làm mối quan hệ này nhìn thấy rất rõ:
 
 ```java
 BankAccount account = new BankAccount("A-01");
 BankAccount.BalanceView view = account.new BalanceView();
 ```
 
-Điều này tiện nhưng cũng tạo quan hệ phụ thuộc về vòng đời: giữ inner object có thể đồng thời khiến object bên ngoài tiếp tục còn reachable.
+Điều này tiện nhưng cũng tạo quan hệ phụ thuộc về thời gian tồn tại: giữ đối tượng lớp nội bộ có thể đồng thời khiến đối tượng bên ngoài tiếp tục còn được truy cập tới.
 
-## <a id="local-anonymous-class">Local và Anonymous Class</a>
+## <a id="local-anonymous-class">Lớp cục bộ và lớp vô danh</a>
 
-Local class được khai báo trong block/method. Anonymous class tạo một cách triển khai hoặc class instance ngay tại biểu thức mà không đặt tên type riêng.
+Lớp cục bộ được khai báo trong khối/phương thức. Lớp vô danh tạo một cách triển khai hoặc đối tượng lớp ngay tại biểu thức mà không đặt tên kiểu riêng.
 
-Chúng hữu ích cho hành vi cục bộ, nhưng lambda thường đơn giản hơn nếu chỉ cần implement functional interface.
+Chúng hữu ích cho hành vi cục bộ. Nếu chỉ cần triển khai một **giao diện hàm (functional interface)**, lambda thường ngắn gọn hơn; chi tiết đó thuộc mô-đun lập trình hàm/lambda.
 
-Anonymous class vẫn là object/class với `this` riêng; lambda có ngữ nghĩa `this` khác và thuộc module functional/lambda.
+Lớp vô danh vẫn tạo đối tượng với `this` riêng; lambda có ngữ nghĩa `this` khác.
 
-## <a id="capture-semantics">Captured Local Variable</a>
+## <a id="capture-semantics">Sử dụng biến cục bộ từ phạm vi bên ngoài</a>
 
-Local/anonymous/inner-related mã có thể capture local variable chỉ khi variable là `final` hoặc **effectively final**.
+Lớp cục bộ hoặc lớp vô danh chỉ có thể sử dụng một biến cục bộ từ phạm vi bên ngoài khi biến đó là `final` hoặc **effectively final** — nghĩa là sau khi được gán giá trị, nó không bị gán lại.
 
 ```java
 int limit = 10;
@@ -72,6 +72,6 @@ Runnable r = new Runnable() {
 };
 ```
 
-Local variable được capture theo giá trị phù hợp với mô hình ngôn ngữ; Java không cho local/anonymous class chia sẻ tùy ý một “ô biến cục bộ” có thể bị thay đổi sau khi capture.
+Biến cục bộ được các lớp này **capture theo giá trị**. Nếu giá trị đó là một tham chiếu, giá trị tham chiếu được capture vẫn trỏ tới cùng đối tượng; Java không tạo một bản sao sâu của đối tượng và cũng không cho lớp cục bộ/lớp vô danh chia sẻ một “ô biến cục bộ” có thể bị gán lại sau đó.
 
-Chương tiếp theo nhìn vào superclass chung của các class thông thường: `java.lang.Object`.
+Chương tiếp theo nhìn vào lớp cha gốc chung của các lớp Java thông thường: `java.lang.Object`.

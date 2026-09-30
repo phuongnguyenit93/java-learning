@@ -1,32 +1,32 @@
-# Vòng đời tạo Object
+# Quá trình tạo đối tượng
 
-`new Child()` nhìn như một biểu thức đơn giản, nhưng phía sau là nhiều bước: cấp phát bộ nhớ (allocation), gán giá trị mặc định, chuỗi constructor, field/block initialization và cuối cùng mới có một object sử dụng được theo hợp đồng của class.
+`new Child()` nhìn như một biểu thức đơn giản, nhưng phía sau là nhiều bước: cấp phát bộ nhớ, gán giá trị mặc định, chuỗi hàm khởi tạo, khởi tạo trường/khối và cuối cùng mới có một đối tượng sử dụng được theo hợp đồng của lớp. Học toàn bộ chuỗi này giúp phân biệt “đã có vùng nhớ” với “đã có đối tượng hợp lệ”.
 
-## <a id="allocation-initialization-construction">Các bước tạo Object</a>
+## <a id="allocation-initialization-construction">Các bước tạo đối tượng</a>
 
 Một mô hình tư duy đủ dùng:
 
 ```text
-allocate memory cho object
+cấp phát bộ nhớ cho đối tượng
         ↓
-field nhận default zero/null/false
+trường nhận giá trị mặc định 0/null/false
         ↓
-khởi tạo phần superclass
+khởi tạo phần lớp cha
         ↓
-instance field initializer / initializer block
+khởi tạo trường / khối khởi tạo đối tượng
         ↓
-constructor body của class hiện tại
+thân hàm khởi tạo của lớp hiện tại
         ↓
-reference được trả về cho bên gọi nếu quá trình khởi tạo thành công
+tham chiếu được trả về cho bên gọi nếu quá trình khởi tạo thành công
 ```
 
-Đừng nhầm “memory đã được allocate” với “object đã ở trạng thái hợp lệ”. Invariant chỉ nên được coi là hoàn tất sau khi constructor chain kết thúc đúng.
+Đừng nhầm “bộ nhớ đã được cấp phát” với “đối tượng đã ở trạng thái hợp lệ”. Các điều kiện hợp lệ chỉ nên được coi là hoàn tất sau khi chuỗi hàm khởi tạo kết thúc thành công.
 
-## <a id="constructor-dynamic-dispatch-risk">Dynamic Dispatch trong Constructor</a>
+## <a id="constructor-dynamic-dispatch-risk">Gọi phương thức bị ghi đè trong hàm khởi tạo</a>
 
-Instance method call vẫn có dynamic dispatch ngay cả khi đang ở constructor.
+Lời gọi phương thức của đối tượng vẫn chọn cách triển khai theo kiểu thực tế ngay cả khi đang ở trong hàm khởi tạo.
 
-Nếu superclass constructor gọi một overridable method, cách triển khai ở subclass có thể chạy **trước khi subclass trạng thái được initialize đầy đủ**.
+Nếu hàm khởi tạo của lớp cha gọi một phương thức có thể bị ghi đè, cách triển khai ở lớp con có thể chạy **trước khi trạng thái của lớp con được khởi tạo đầy đủ**.
 
 ```java
 class Parent {
@@ -42,11 +42,11 @@ class Child extends Parent {
 
 `print()` có thể nhìn thấy `value == null` khi được gọi từ `Parent()`.
 
-Nguyên tắc an toàn: tránh gọi overridable method từ constructor.
+Nguyên tắc an toàn: tránh gọi phương thức có thể bị ghi đè từ hàm khởi tạo.
 
-## <a id="this-escape">this Escape</a>
+## <a id="this-escape">Chia sẻ this trước khi khởi tạo xong</a>
 
-`this` escape xảy ra khi reference tới object đang được khởi tạo bị công bố ra bên ngoài trước khi quá trình khởi tạo hoàn tất.
+Rủi ro thường gọi là `this escape` xảy ra khi tham chiếu tới đối tượng đang được khởi tạo bị chia sẻ ra bên ngoài trước khi quá trình khởi tạo hoàn tất.
 
 Ví dụ rủi ro:
 
@@ -54,8 +54,8 @@ Ví dụ rủi ro:
 registry.add(this);
 ```
 
-trong constructor, hoặc đăng listener/callback có thể chạy ngay.
+trong hàm khởi tạo, hoặc đăng ký listener/callback có thể chạy ngay.
 
-Mã bên ngoài có thể quan sát object ở trạng thái chưa hoàn chỉnh. Trong mã chạy đồng thời, việc công bố object quá sớm còn gây rủi ro visibility nghiêm trọng hơn.
+Mã bên ngoài có thể quan sát đối tượng ở trạng thái chưa hoàn chỉnh. Trong mã chạy đồng thời, việc công bố đối tượng quá sớm còn gây vấn đề về khả năng nhìn thấy trạng thái giữa các luồng.
 
-Chương tiếp theo chuyển từ vòng đời sang cách tổ chức type: **khi nào một class nên được đặt bên trong class khác và inner class giữ ngữ cảnh gì?**
+Chương tiếp theo chuyển từ quá trình tạo đối tượng sang cách tổ chức kiểu: **khi nào một lớp nên được đặt bên trong lớp khác và lớp nội bộ giữ ngữ cảnh gì?**

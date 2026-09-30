@@ -28,198 +28,205 @@
 # </interview-schema>
 
 questions:
-  - question: "Giải thích quan hệ giữa class, object, reference, identity và state."
-    answer: "Class định nghĩa type và implementation. Object là runtime instance có identity và instance state. Variable giữ reference value nhận diện object. Nhiều reference có thể cùng tới một object, còn hai object distinct có thể có state equal."
+  - question: "Giải thích mối quan hệ giữa class, object, reference, identity và trạng thái."
+    answer: "Class định nghĩa kiểu và cách triển khai. Object là một instance khi chương trình chạy, có identity và trạng thái riêng. Biến tham chiếu giữ giá trị reference để trỏ tới object. Nhiều reference có thể cùng trỏ tới một object, còn hai object khác nhau vẫn có thể có trạng thái bằng nhau."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "1.ClassObject/ClassObject.md", anchor: "class-object-model"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Constructor nên guarantee gì trước khi object được publish?"
-    answer: "Nó nên establish invariant cần thiết và initialize owned state. Publish this hay register callback quá sớm có thể expose partially initialized object, nên construction thường phải hoàn tất trước khi external code quan sát."
+  - question: "Constructor nên bảo đảm điều gì trước khi object được công bố ra bên ngoài?"
+    answer: "Constructor nên thiết lập các điều kiện cần thiết để trạng thái luôn hợp lệ (invariant) và khởi tạo trạng thái mà object sở hữu. Công bố this hoặc đăng ký callback quá sớm có thể làm lộ một object chưa được khởi tạo hoàn chỉnh, vì vậy quá trình tạo object nên hoàn tất trước khi code bên ngoài quan sát nó."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "2.Constructor/Constructor.md", anchor: "constructor-purpose"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Mô tả order instance initialization qua superclass và subclass."
-    answer: "Field bắt đầu bằng default value. Superclass construction hoàn tất trước. Ở từng class level, instance field initializer và instance initializer block chạy theo textual order trước constructor body. Điều này giải thích constructor-dispatch hazard."
+  - question: "Mô tả thứ tự khởi tạo instance qua lớp cha và lớp con."
+    answer: "Các field bắt đầu với giá trị mặc định của JVM. Phần lớp cha được khởi tạo trước. Ở mỗi cấp class, instance field initializer và instance initializer block chạy theo thứ tự xuất hiện trong source code trước phần thân constructor. Thứ tự này giải thích vì sao dynamic dispatch từ constructor có thể nguy hiểm."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "7.InitializationOrder/InitializationOrder.md", anchor: "inheritance-initialization-order"}
     apiRelated: {controller: "InitializationController", methodSignature: "traceOrder()"}
 
-  - question: "Vì sao protected access subtle hơn private/package-private/public khi xuyên package?"
-    answer: "Subclass ngoài package chỉ có protected access theo subclass-context và qualifying-expression rule; nó không thể tùy ý access protected member qua mọi superclass instance. Same-package access là phần semantics khác."
+  - question: "Vì sao quyền truy cập protected phức tạp hơn private, package-private và public khi đi qua ranh giới package?"
+    answer: "Subclass ở package khác chỉ được truy cập protected theo ngữ cảnh subclass và quy tắc của biểu thức đứng trước member; nó không thể tùy ý truy cập protected member qua mọi instance của lớp cha. Quyền truy cập từ cùng package là một trường hợp riêng."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "4.AccessModifier/AccessModifier.md", anchor: "protected-cross-package"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Vì sao enum không chỉ là nhóm integer constant?"
-    answer: "Mỗi enum constant là instance của special class. Enum có field, constructor, method, interface và constant-specific behavior trong khi vẫn giữ finite named instance set và identity semantics."
+  - question: "Vì sao enum không chỉ là một nhóm hằng số nguyên?"
+    answer: "Mỗi enum constant là một instance của enum type. Enum có thể có field, constructor, method, implement interface và cung cấp hành vi riêng cho từng constant, đồng thời vẫn giữ một tập hữu hạn các instance có tên với identity ổn định."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "11.Enum/Enum.md", anchor: "enum-type-model"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Deep copy nên có nghĩa gì trong domain model thực tế?"
-    answer: "Nó nên duplicate mutable reachable state mà object mới phải own độc lập. Immutable value có thể share, cycle cần xử lý và external resource có thể không copy được. Depth là ownership contract chứ không phải universal recursive rule."
+  - question: "Deep copy nên được hiểu thế nào trong một domain model thực tế?"
+    answer: "Deep copy nên sao chép phần trạng thái mutable mà object mới cần sở hữu độc lập. Giá trị bất biến có thể dùng chung; cấu trúc có vòng lặp cần được xử lý cẩn thận; tài nguyên bên ngoài có thể không sao chép được. Độ sâu sao chép là một phần của hợp đồng quyền sở hữu, không phải quy tắc đệ quy áp dụng giống nhau cho mọi object."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "12.CopySemantics/CopySemantics.md", anchor: "deep-copy"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Aliasing và mutability kết hợp tạo hidden coupling thế nào?"
-    answer: "Nếu nhiều reference cùng tới một mutable object, component này có thể thay state mà component khác nhìn thấy mà không có explicit data transfer. Ownership rule, encapsulation, immutability và defensive copy giảm coupling đó."
+  - question: "Aliasing và trạng thái mutable kết hợp tạo ra sự phụ thuộc ẩn như thế nào?"
+    answer: "Nếu nhiều reference cùng trỏ tới một object mutable, một thành phần có thể thay đổi trạng thái mà thành phần khác nhìn thấy dù không có bước truyền dữ liệu tường minh. Quy tắc quyền sở hữu, đóng gói, tính bất biến và sao chép phòng vệ giúp giảm kiểu phụ thuộc này."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "13.ObjectAliasingMutability/ObjectAliasingMutability.md", anchor: "aliasing-model"}
     apiRelated: {controller: "AliasingController", methodSignature: "mutateAlias()"}
 
-  - question: "Vì sao final field không đủ guarantee deep immutability?"
-    answer: "final chỉ ngăn reassign field reference, còn referenced object vẫn có thể mutate qua reference này hoặc alias khác. Deep immutability cần reachable state liên quan immutable hoặc exclusive-owned và không mutate sau construction."
+  - question: "Vì sao một field final chưa đủ để bảo đảm tính bất biến sâu?"
+    answer: "final chỉ ngăn việc gán lại reference của field. Object được tham chiếu vẫn có thể bị thay đổi qua reference này hoặc qua alias khác. Tính bất biến sâu yêu cầu phần trạng thái còn truy cập được phải bất biến, hoặc được sở hữu độc quyền và không bị thay đổi sau khi object được tạo xong."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "14.ImmutabilityDefensiveCopy/ImmutabilityDefensiveCopy.md", anchor: "deep-immutability"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Vì sao mô hình class/object của Java gom state và behavior lại thay vì để caller thao tác trực tiếp mọi dữ liệu?"
-    answer: "Lợi ích cốt lõi là ownership của invariant. Nếu BankAccount expose balance để mọi nơi sửa tự do, từng caller phải tự nhớ các rule như không được rút quá số dư. Khi state và operation bảo vệ state nằm sau object boundary, các rule đó được tập trung ở một nơi và invalid state khó xuất hiện hơn. Điều này không có nghĩa mọi field đều cần getter/setter; boundary hữu ích là behavior và constraint mà object thực sự sở hữu."
+  - question: "Vì sao mô hình class/object của Java đặt trạng thái và hành vi cùng nhau thay vì để code gọi thao tác trực tiếp mọi dữ liệu?"
+    answer: "Lợi ích cốt lõi là object có thể sở hữu và bảo vệ các điều kiện để trạng thái luôn hợp lệ (invariant). Nếu BankAccount công khai balance để mọi nơi sửa tự do, mỗi nơi gọi phải tự nhớ các quy tắc như không được rút quá số dư. Khi trạng thái và các thao tác bảo vệ trạng thái nằm sau ranh giới object, các quy tắc được tập trung ở một nơi và trạng thái không hợp lệ khó xuất hiện hơn. Điều đó không có nghĩa mọi field đều cần getter/setter; ranh giới hữu ích nằm ở hành vi và ràng buộc mà object thực sự sở hữu."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "1.ClassObject/ClassObject.md", anchor: "class-object-model"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Object lifetime khác scope của một reference variable thế nào, và vì sao external resource không nên phụ thuộc vào GC?"
-    answer: "Một local variable có thể ra khỏi scope nhưng object vẫn reachable qua reference khác, nên GC eligibility dựa trên reachability chứ không dựa trên lexical lifetime của một biến. File, socket và external resource tương tự cần release deterministic vì GC timing không xác định và memory reachability không phải resource-management contract. Với resource kiểu này nên dùng explicit cleanup như AutoCloseable/try-with-resources."
+  - question: "Vòng đời object khác phạm vi của một biến tham chiếu thế nào, và vì sao tài nguyên bên ngoài không nên phụ thuộc vào GC?"
+    answer: "Một biến local có thể ra khỏi phạm vi nhưng object vẫn còn được truy cập qua reference khác, nên việc object có đủ điều kiện để GC thu gom phụ thuộc vào reachability chứ không chỉ vào phạm vi từ vựng của một biến. File, socket và các tài nguyên bên ngoài tương tự cần được giải phóng theo cách xác định vì thời điểm GC chạy không xác định và khả năng truy cập bộ nhớ không phải hợp đồng quản lý tài nguyên. Với loại tài nguyên này nên dùng cơ chế dọn dẹp tường minh như AutoCloseable và try-with-resources."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "1.ClassObject/ClassObject.md", anchor: "object-reference-lifecycle"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Khác nhau giữa overloaded constructor, default constructor và implicit super() call là gì?"
-    answer: "Overloaded constructor là các constructor do ta khai báo với parameter list khác nhau. Default constructor là constructor không tham số do compiler sinh chỉ khi class không khai báo constructor nào. Riêng implicit super() là constructor invocation được Java chèn khi constructor không bắt đầu bằng this(...) hoặc super(...). Lời gọi implicit đó phải resolve tới accessible superclass constructor, nếu không code sẽ không compile."
+  - question: "Khác nhau giữa constructor nạp chồng, constructor mặc định và lời gọi super() ngầm định là gì?"
+    answer: "Constructor nạp chồng là các constructor do ta khai báo với danh sách tham số khác nhau. Constructor mặc định là constructor không tham số do trình biên dịch sinh khi class không khai báo constructor nào. Với class có lớp cha, nếu constructor không bắt đầu bằng this(...) hoặc super(...), Java chèn lời gọi super() không tham số; lời gọi này phải trỏ tới constructor lớp cha có thể truy cập thì mã mới biên dịch. Object là class gốc nên không có lớp cha để gọi."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "2.Constructor/Constructor.md", anchor: "default-constructor"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: "Giải thích this(...) và super(...), và vì sao cả hai không có nghĩa là tạo thêm một object khác."
-    answer: "this(...) delegate sang constructor khác trong cùng class; super(...) gọi superclass constructor ở bước tiếp theo của construction. Cả hai tạo thành một constructor chain cho cùng một runtime object. super không trỏ tới một parent object thứ hai nằm bên trong child. Phần superclass và subclass được initialize như các phần của cùng một object identity."
+    answer: "this(...) ủy quyền sang constructor khác trong cùng class; super(...) gọi constructor của lớp cha ở bước tiếp theo của quá trình tạo object. Các lời gọi này tạo thành một chuỗi constructor cho cùng một object đang được tạo. super không trỏ tới một object lớp cha thứ hai nằm bên trong object lớp con; phần lớp cha và lớp con chỉ là các phần được khởi tạo của cùng một identity."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "3.ThisSuper/ThisSuper.md", anchor: "constructor-chaining-order"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Khi nào state nên là static thay vì instance state, và mutable static state mang rủi ro gì?"
-    answer: "Dùng instance state khi value thuộc từng object, ví dụ balance của một account. Dùng static state khi value thực sự thuộc class-level concept chứ không thuộc một receiver cụ thể. Mutable static state được share toàn cục giữa các instance nên tăng coupling, test interference, lifecycle complexity và concurrency risk. static nên biểu diễn ownership, không nên là shortcut để tạo global access tiện lợi."
+  - question: "Khi nào trạng thái nên là static thay vì thuộc từng instance, và trạng thái static mutable mang rủi ro gì?"
+    answer: "Dùng trạng thái instance khi giá trị thuộc về từng object, ví dụ balance của một tài khoản. Dùng trạng thái static khi giá trị thực sự thuộc về khái niệm ở cấp class chứ không thuộc một object nhận lời gọi cụ thể. Trạng thái static mutable được dùng chung giữa các instance nên làm tăng mức phụ thuộc, gây ảnh hưởng chéo giữa test, làm vòng đời khó quản lý hơn và tăng rủi ro đồng thời. static nên phản ánh quyền sở hữu, không nên chỉ là lối tắt để tạo truy cập toàn cục."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "5.StaticFinal/StaticFinal.md", anchor: "static-vs-instance"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Vì sao final List<String> tags chưa làm BankAccount trở thành immutable?"
-    answer: "final chỉ ngăn field reference bị reassign sau lần gán hợp lệ; nó không đóng băng List object. Code còn giữ reference tới List vẫn có thể add/remove element nếu ownership và exposure không được kiểm soát. Vì vậy immutability phụ thuộc cả reachable object graph và alias, không chỉ phụ thuộc final modifier ở outer object."
+  - question: "Vì sao final List<String> tags chưa đủ để làm BankAccount trở thành bất biến?"
+    answer: "final chỉ ngăn reference của field bị gán lại sau lần gán hợp lệ; nó không đóng băng object List. Code còn giữ reference tới List vẫn có thể thêm hoặc xóa phần tử nếu quyền sở hữu và cách làm lộ reference không được kiểm soát. Vì vậy tính bất biến phụ thuộc vào cả đồ thị object còn truy cập được và các alias, không chỉ vào modifier final trên object bên ngoài."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "5.StaticFinal/StaticFinal.md", anchor: "final-variable-reference"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Class initialization và instance initialization khác nhau thế nào?"
-    answer: "Class initialization chuẩn bị static state của class và khi cần sẽ initialize superclass trước; static field/block sau đó chạy theo textual order. Instance initialization xảy ra cho từng object construction. Sau superclass construction, instance field initializer và instance block của class level hiện tại chạy theo textual order trước constructor body. Trộn lẫn hai lifecycle này sẽ dẫn tới kỳ vọng sai về thời điểm state sẵn sàng."
+  - question: "Khởi tạo class và khởi tạo instance khác nhau thế nào?"
+    answer: "Khởi tạo class chuẩn bị trạng thái static và khi cần sẽ khởi tạo lớp cha trước; các static field initializer và static block sau đó chạy theo thứ tự xuất hiện trong source code. Khởi tạo instance xảy ra cho từng object được tạo. Sau khi phần lớp cha hoàn tất, instance field initializer và instance initializer block của class hiện tại chạy theo thứ tự source trước phần thân constructor. Nhầm lẫn hai vòng đời này dễ dẫn tới kỳ vọng sai về thời điểm trạng thái sẵn sàng."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "7.InitializationOrder/InitializationOrder.md", anchor: "class-initialization-order"}
     apiRelated: {controller: "InitializationController", methodSignature: "traceOrder()"}
 
-  - question: "Initializer block hữu ích khi nào, và khi nào nó làm object construction khó hiểu hơn?"
-    answer: "Simple field initializer thường rõ nhất cho default state đơn giản; constructor/helper thường rõ hơn cho validation hoặc setup cần context. Instance initializer có thể hữu ích khi nhiều constructor thật sự share một bước initialization nhỏ; static initializer phù hợp cho class setup khó biểu diễn bằng một expression. Chúng trở thành vấn đề khi logic quan trọng, I/O hoặc side effect bị giấu ở vị trí reader khó đoán."
+  - question: "Initializer block hữu ích khi nào, và khi nào nó làm quá trình tạo object khó hiểu hơn?"
+    answer: "Field initializer đơn giản thường rõ nhất cho trạng thái mặc định đơn giản; constructor hoặc helper thường rõ hơn khi cần kiểm tra dữ liệu hay thiết lập có ngữ cảnh. Instance initializer có thể hữu ích khi nhiều constructor thực sự dùng chung một bước khởi tạo nhỏ; static initializer phù hợp cho bước thiết lập ở cấp class khó biểu diễn bằng một biểu thức. Chúng trở thành vấn đề khi logic quan trọng, I/O hoặc tác dụng phụ bị giấu ở nơi người đọc khó đoán."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "6.InitializationBlocks/InitializationBlocks.md", anchor: "initializer-use-cases"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Khác nhau giữa memory đã được allocate/default-initialize và một object đã construction hợp lệ là gì?"
-    answer: "Allocation tạo storage cho object và instance field ban đầu nhận JVM default value như 0, false, null. Điều đó chưa có nghĩa invariant của class đã được thiết lập. Superclass construction, field/initializer execution và constructor body vẫn phải hoàn tất thành công. Code quan sát object quá sớm vì vậy có thể thấy một object đã có memory nhưng semantic state chưa hợp lệ."
+  - question: "Khác nhau giữa việc bộ nhớ đã được cấp phát/gán giá trị mặc định và việc một object đã được tạo hợp lệ là gì?"
+    answer: "Bước cấp phát tạo vùng nhớ cho object và các instance field ban đầu nhận giá trị mặc định của JVM như 0, false hoặc null. Điều đó chưa có nghĩa các điều kiện để trạng thái của class luôn hợp lệ đã được thiết lập. Constructor lớp cha, các field/initializer và phần thân constructor vẫn phải hoàn tất thành công. Vì vậy code quan sát object quá sớm có thể thấy một object đã có bộ nhớ nhưng trạng thái về mặt nghiệp vụ hoặc ngữ nghĩa vẫn chưa hợp lệ."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "8.ObjectCreationLifecycle/ObjectCreationLifecycle.md", anchor: "allocation-initialization-construction"}
     apiRelated: {controller: "ConstructionController", methodSignature: "constructorDispatchRisk()"}
 
-  - question: "Dùng constructorDispatchRisk() để giải thích vì sao dynamic dispatch từ constructor nguy hiểm."
-    answer: "Parent() gọi hook(), và normal virtual dispatch đi tới Child.hook() vì runtime object là Child. Nhưng Child field initializer chưa chạy nên override quan sát value ở default value 0. Sau construction, value là 42. API cố ý expose cả hai giá trị. Rủi ro không phải dispatch ngừng hoạt động; ngược lại, nó hoạt động trước khi subclass invariant sẵn sàng."
+  - question: "Dùng constructorDispatchRisk() để giải thích vì sao dynamic dispatch từ constructor có thể nguy hiểm."
+    answer: "Parent() gọi hook(), và dynamic dispatch đi tới Child.hook() vì object thực tế là Child. Nhưng field initializer của Child chưa chạy nên method override nhìn thấy value vẫn ở giá trị mặc định 0. Sau khi tạo object xong, value là 42. API cố ý cho thấy cả hai giá trị. Rủi ro nằm ở việc dispatch hoạt động trước khi các điều kiện để trạng thái lớp con luôn hợp lệ được thiết lập đầy đủ."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "8.ObjectCreationLifecycle/ObjectCreationLifecycle.md", anchor: "constructor-dynamic-dispatch-risk"}
     apiRelated: {controller: "ConstructionController", methodSignature: "constructorDispatchRisk()"}
 
-  - question: "this escape là gì, và vì sao nó đặc biệt nguy hiểm trong concurrent code?"
-    answer: "this escape là publish reference tới object trước khi construction hoàn tất, ví dụ register this vào listener hoặc global registry ngay trong constructor. Code khác có thể quan sát invariant chưa hoàn chỉnh. Trong concurrency, premature publication còn liên quan visibility và safe-publication rule, nên thread khác có thể thấy state trước khi construction được publish an toàn. Chi tiết Java Memory Model thuộc module concurrency, nhưng construction boundary cần được tôn trọng ngay ở đây."
+  - question: "this escape là gì, và vì sao nó đặc biệt nguy hiểm trong code đồng thời?"
+    answer: "this escape là việc công bố reference tới object trước khi constructor hoàn tất, ví dụ đăng ký this vào listener hoặc registry toàn cục ngay trong constructor. Code khác có thể quan sát object khi các điều kiện để trạng thái luôn hợp lệ chưa được thiết lập đầy đủ. Trong môi trường nhiều thread, việc công bố quá sớm còn liên quan đến khả năng nhìn thấy dữ liệu và quy tắc công bố an toàn, nên thread khác có thể thấy trạng thái trước khi object được công bố đúng cách. Chi tiết Java Memory Model thuộc module concurrency, nhưng ranh giới của quá trình tạo object cần được tôn trọng ngay từ đây."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "8.ObjectCreationLifecycle/ObjectCreationLifecycle.md", anchor: "this-escape"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: "Khi nào nên chọn static nested class thay vì non-static inner class?"
-    answer: "Chọn static nested class khi type chỉ cần được namespace dưới outer type nhưng không cần state của một outer object cụ thể; cách này tránh implicit outer-instance relationship. Chọn non-static inner class khi mỗi nested instance thật sự thuộc và cần truy cập một outer instance cụ thể. Giữ inner object cũng có thể làm outer object tiếp tục reachable."
+    answer: "Chọn static nested class khi kiểu chỉ cần được nhóm tên bên trong outer type nhưng không cần trạng thái của một outer object cụ thể; cách này tránh quan hệ ngầm với outer instance. Chọn non-static inner class khi mỗi instance lồng thực sự thuộc về và cần truy cập một outer instance cụ thể. Việc giữ inner object cũng có thể khiến outer object tiếp tục còn được truy cập."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "9.NestedInnerClass/NestedInnerClass.md", anchor: "static-nested-class"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "capture() chứng minh gì về effectively-final local variable so với enclosing-instance field?"
-    answer: "LocalCalculator đọc localBase, một method-local variable chỉ gán một lần nên effectively final, và outerOffset, một field của enclosing controller instance. Java giới hạn captured local variable, còn instance field được truy cập qua enclosing object context. capture() trả cả hai input và computed result để distinction này quan sát được."
+  - question: "capture() cho thấy điều gì về biến local effectively final so với field của instance bao quanh?"
+    answer: "LocalCalculator đọc localBase, một biến local trong method chỉ được gán một lần nên effectively final, và outerOffset, một field của controller instance bao quanh. Java giới hạn các biến local được capture, còn instance field được truy cập thông qua ngữ cảnh của object bao quanh. capture() trả về cả hai giá trị đầu vào và kết quả tính toán để khác biệt này có thể quan sát được."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "9.NestedInnerClass/NestedInnerClass.md", anchor: "capture-semantics"}
     apiRelated: {controller: "NestedClassController", methodSignature: "capture()"}
 
-  - question: "Nói Object là root class nghĩa là gì, và một Object-typed reference che giấu điều gì?"
-    answer: "Mọi ordinary class ngoài Object đều có Object ở đâu đó trong superclass chain, nên một Object reference có thể trỏ tới instance của bất kỳ class nào. Nhưng compile-time type Object chỉ expose Object contract; subtype-specific member cần type information phù hợp và thường cần cast hoặc pattern check. Primitive không phải Object subtype; wrapper giúp primitive value tham gia reference-based API."
+  - question: "Nói Object là class gốc nghĩa là gì, và một reference có kiểu Object che giấu điều gì?"
+    answer: "Mọi class thông thường ngoài Object đều có Object ở đâu đó trong chuỗi lớp cha, nên một reference kiểu Object có thể trỏ tới instance của nhiều class khác nhau. Tuy nhiên, kiểu tại thời điểm biên dịch là Object chỉ cho phép dùng các member thuộc hợp đồng của Object; member riêng của subtype cần thông tin kiểu phù hợp và thường cần ép kiểu hoặc pattern check. Primitive không phải subtype của Object; wrapper type giúp giá trị primitive tham gia các API dựa trên reference."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "10.ObjectClass/ObjectClass.md", anchor: "object-root-type"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Vì sao Object.clone() và finalization thường là default kém phù hợp cho modern domain design?"
-    answer: "Object.clone() có shallow-copy và construction/invariant semantics khó diễn đạt ownership rõ ràng, nên explicit copy constructor, factory, builder hoặc mapping thường dễ hiểu hơn. Finalization có timing nondeterministic và đã deprecated for removal nên không nên quản lý critical external resource. Với cleanup nên ưu tiên cơ chế deterministic như AutoCloseable và try-with-resources."
+  - question: "Vì sao Object.clone() và finalization thường không phải lựa chọn mặc định phù hợp cho thiết kế domain hiện đại?"
+    answer: "Object.clone() mặc định gắn với shallow copy và có ngữ nghĩa tạo object/bảo toàn các điều kiện để trạng thái luôn hợp lệ khó diễn đạt quyền sở hữu rõ ràng, nên copy constructor, factory, builder hoặc mapper tường minh thường dễ hiểu hơn. Finalization có thời điểm chạy không xác định và đã bị deprecated for removal, nên không nên dùng để quản lý tài nguyên bên ngoài quan trọng. Với việc dọn dẹp tài nguyên, nên ưu tiên cơ chế xác định như AutoCloseable và try-with-resources."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "10.ObjectClass/ObjectClass.md", anchor: "clone-finalize-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Enum constant có thể hoạt động như một closed strategy set thế nào, và enumBehavior() chứng minh điều gì?"
-    answer: "Enum có thể implement interface và từng constant cung cấp method body khác nhau. FeeTier.STANDARD và FeeTier.PREMIUM cùng thỏa FeePolicy nhưng tính fee khác nhau, nên caller dùng một typed contract trên tập value đóng đã biết. enumBehavior() còn cho thấy identity qua valueOf và declaration order qua values()."
+  - question: "Enum constant có thể hoạt động như một tập chiến lược đóng như thế nào, và enumBehavior() cho thấy điều gì?"
+    answer: "Enum có thể implement interface và mỗi constant có thể cung cấp phần thân method khác nhau. FeeTier.STANDARD và FeeTier.PREMIUM cùng thỏa FeePolicy nhưng tính phí khác nhau, nên code gọi làm việc với một hợp đồng có kiểu rõ ràng trên một tập giá trị đóng đã biết. enumBehavior() còn cho thấy identity qua valueOf() và thứ tự khai báo qua values()."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "11.Enum/Enum.md", anchor: "enum-constant-specific"}
     apiRelated: {controller: "EnumController", methodSignature: "enumBehavior()"}
 
-  - question: "Vì sao ordinal() là persistence key kém an toàn, và enum nên dùng gì khi đi qua storage/protocol boundary?"
-    answer: "ordinal() sinh từ declaration position, nên insert hoặc reorder constant sẽ đổi numeric value và có thể làm persisted data bị hiểu sai âm thầm. Nếu enum cần durable external identity, nên định nghĩa stable field như code và map có chủ đích. name() cũng là compatibility concern nếu constant có thể bị rename."
+  - question: "Vì sao ordinal() là khóa lưu trữ kém an toàn, và enum nên dùng gì khi đi qua ranh giới lưu trữ hoặc giao thức?"
+    answer: "ordinal() được tạo từ vị trí khai báo, nên việc chèn hoặc đổi thứ tự constant sẽ làm giá trị số thay đổi và có thể khiến dữ liệu đã lưu bị hiểu sai mà không báo lỗi. Nếu enum cần một định danh bên ngoài bền vững, nên định nghĩa một field ổn định như code và ánh xạ có chủ đích. name() cũng cần được cân nhắc về tương thích nếu constant có thể bị đổi tên."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "11.Enum/Enum.md", anchor: "enum-values-valueof"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Với domain object có invariant, bạn ưu tiên copy strategy nào và vì sao?"
-    answer: "Ưu tiên explicit copy constructor, factory, builder hoặc mapper mô tả rõ field nào share, duplicate, transform hoặc revalidate. Cách này làm ownership và invariant visible trong normal construction code. Blanket serialization copy hoặc Object.clone() có thể che mất các quyết định đó. Strategy tốt phụ thuộc domain contract chứ không phụ thuộc mục tiêu copy cơ học sâu nhất có thể."
+  - question: "Với domain object có các điều kiện phải luôn giữ trạng thái hợp lệ (invariant), bạn ưu tiên chiến lược sao chép nào và vì sao?"
+    answer: "Ưu tiên copy constructor, factory, builder hoặc mapper tường minh để mô tả rõ field nào được dùng chung, sao chép, biến đổi hoặc kiểm tra lại. Cách này làm quyền sở hữu và các điều kiện cần giữ trạng thái hợp lệ hiện rõ trong code tạo object thông thường. Sao chép toàn bộ bằng serialization hoặc Object.clone() có thể che mất các quyết định đó. Chiến lược tốt phụ thuộc vào hợp đồng của domain, không phụ thuộc vào mục tiêu sao chép cơ học càng sâu càng tốt."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "12.CopySemantics/CopySemantics.md", anchor: "copy-strategies"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "defensiveCopy() bảo vệ cả input và output ownership boundary như thế nào?"
-    answer: "Snapshot copy mutable input của caller bằng List.copyOf nên mutation về sau trên List gốc không thay đổi stored state. Accessor trả List đã unmodifiable nên caller cũng không mutate snapshot qua returned reference. Endpoint cho thấy callerInputAfterMutation có VIP, storedSnapshot không đổi và returnedCollectionMutable là false."
+  - question: "defensiveCopy() bảo vệ ranh giới quyền sở hữu của đầu vào và đầu ra như thế nào?"
+    answer: "Method tạo một snapshot từ List đầu vào mutable bằng List.copyOf(), nên các thay đổi về sau trên List gốc không làm đổi trạng thái đã lưu. Accessor trả chính List snapshot không thể thay đổi đó, nên code gọi cũng không thể sửa trạng thái đã lưu qua reference được trả về. Endpoint cho thấy callerInputAfterMutation có VIP, storedSnapshot vẫn không đổi và returnedCollectionMutable là false."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "14.ImmutabilityDefensiveCopy/ImmutabilityDefensiveCopy.md", anchor: "defensive-copy-output"}
     apiRelated: {controller: "ImmutabilityController", methodSignature: "defensiveCopy()"}
 
-  - question: "Unmodifiable view khác deep immutability thế nào?"
-    answer: "Unmodifiable view chỉ ngăn mutation thông qua reference hoặc API đó. Underlying collection hoặc nested element vẫn có thể thay đổi ở nơi khác nếu còn alias. Deep immutability là object-graph contract mạnh hơn: reachable state liên quan không thay đổi observable sau construction. Vì vậy unmodifiable wrapper tự nó không chứng minh toàn bộ object graph immutable."
+  - question: "Unmodifiable view khác tính bất biến sâu như thế nào?"
+    answer: "Unmodifiable view chỉ ngăn thay đổi thông qua reference hoặc API đó. Collection bên dưới hoặc phần tử lồng vẫn có thể bị thay đổi ở nơi khác nếu còn alias. Tính bất biến sâu là một hợp đồng mạnh hơn trên toàn bộ đồ thị object: phần trạng thái liên quan còn truy cập được không thay đổi theo cách quan sát được sau khi object được tạo xong. Vì vậy một unmodifiable wrapper tự nó chưa chứng minh toàn bộ đồ thị object là bất biến."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "14.ImmutabilityDefensiveCopy/ImmutabilityDefensiveCopy.md", anchor: "deep-immutability"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Hãy nối toàn bộ mô hình Class/Object từ lúc định nghĩa class đến khi object được chia sẻ và bảo vệ trạng thái."
+    answer: "Class định nghĩa trạng thái và hành vi. Quá trình tạo object cấp phát bộ nhớ, gán giá trị mặc định, chạy chuỗi constructor cùng các bước khởi tạo cho tới khi các điều kiện hợp lệ cần thiết hoàn tất. Sau đó reference quyết định cách object được truy cập và chia sẻ; ngữ nghĩa sao chép quyết định phần trạng thái nào còn dùng chung; nhiều reference cùng trỏ tới trạng thái mutable tạo ra mức phụ thuộc; tính bất biến và sao chép phòng vệ giúp kiểm soát ranh giới quyền sở hữu. Các hợp đồng equals/hashCode chi tiết hơn thuộc Object Contract, còn nạp class và khởi tạo class sâu hơn thuộc ClassLoader."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "15.ClassObjectSynthesis/ClassObjectSynthesis.md", anchor: "class-object-synthesis"}
     apiRelated: {controller: "", methodSignature: ""}

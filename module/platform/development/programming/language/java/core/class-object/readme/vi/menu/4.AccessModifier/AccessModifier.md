@@ -1,32 +1,32 @@
-# Access Modifier
+# Phạm vi truy cập thành viên
 
-Access modifier là cơ chế ngôn ngữ để đặt **ranh giới truy cập**. Nó hỗ trợ encapsulation bằng cách giới hạn mã nào được phép phụ thuộc trực tiếp vào member/type.
+Từ bổ nghĩa truy cập là cơ chế ngôn ngữ để đặt **ranh giới truy cập**. Nó hỗ trợ đóng gói bằng cách giới hạn mã nào được phép phụ thuộc trực tiếp vào thành viên hoặc kiểu.
 
 ## <a id="access-levels">Các mức truy cập</a>
 
-Java có bốn mức chính cho member:
+Java có bốn mức chính cho thành viên:
 
 ```text
 private
-→ chỉ trong declaring class
+→ chỉ trong lớp khai báo
 
 package-private
-→ các type trong cùng package
+→ các kiểu trong cùng package
 
 protected
-→ package + một số quyền truy cập qua subclass
+→ package + một số quyền truy cập qua lớp con
 
 public
-→ mọi nơi có thể nhìn thấy type/member theo quy tắc module/package
+→ mọi nơi có thể nhìn thấy kiểu/thành viên theo quy tắc module/package
 ```
 
-Không có keyword `package-private`; đó là trạng thái khi không ghi modifier.
+Không có từ khóa `package-private`; đó là mức truy cập khi không ghi từ bổ nghĩa truy cập.
 
-## <a id="protected-cross-package">protected khác Package</a>
+## <a id="protected-cross-package">protected giữa các package</a>
 
-`protected` thường bị hiểu đơn giản là “subclass truy cập được”. Ngoài package, quy tắc còn phụ thuộc **subclass ngữ cảnh và qualifying reference**.
+`protected` thường bị hiểu đơn giản là “lớp con truy cập được”. Ngoài package, quy tắc còn phụ thuộc vào **ngữ cảnh lớp con và kiểu tham chiếu dùng để truy cập**.
 
-Một subclass ở package khác không có quyền tùy ý dùng protected member thông qua mọi superclass instance.
+Một lớp con ở package khác không có quyền tùy ý dùng thành viên `protected` thông qua mọi đối tượng của lớp cha.
 
 Ví dụ, giả sử `Parent` nằm trong package `a` và có một field `protected`:
 
@@ -38,7 +38,7 @@ public class Parent {
 }
 ```
 
-Một subclass trong package `b` có thể truy cập member kế thừa qua đúng ngữ cảnh subclass, nhưng không thể truy cập tùy ý qua một reference kiểu `Parent`:
+Một lớp con trong package `b` có thể truy cập thành viên kế thừa qua đúng ngữ cảnh lớp con, nhưng không thể truy cập tùy ý qua một tham chiếu kiểu `Parent`:
 
 ```java
 package b;
@@ -57,68 +57,71 @@ class Child extends Parent {
 }
 ```
 
-Vì vậy không nên ghi nhớ `protected` bằng câu rút gọn “subclass luôn truy cập được”. Hãy xem nó là một quy tắc truy cập cụ thể của ngôn ngữ.
+Vì vậy không nên ghi nhớ `protected` bằng câu rút gọn “lớp con luôn truy cập được”. Hãy xem nó là một quy tắc truy cập cụ thể của ngôn ngữ.
 
-## <a id="encapsulation-boundary">Access Control và Encapsulation</a>
+## <a id="encapsulation-boundary">Kiểm soát truy cập và đóng gói</a>
 
-`private` không tự động tạo thiết kế tốt, nhưng access control là công cụ quan trọng để giảm mức phụ thuộc (coupling).
+`private` không tự động tạo thiết kế tốt, nhưng kiểm soát truy cập là công cụ quan trọng để giảm mức phụ thuộc giữa các phần mã.
 
 Một nguyên tắc thực dụng:
 
 ```text
-member không cần public
+thành viên không cần public
 → đừng public chỉ để “tiện gọi”
 
-trạng thái có invariant
-→ hạn chế raw mutation từ bên ngoài
+trạng thái có điều kiện hợp lệ cần bảo vệ
+→ hạn chế việc thay đổi trực tiếp từ bên ngoài
 ```
 
 Phạm vi API công khai càng nhỏ thì càng ít bên gọi phụ thuộc trực tiếp vào chi tiết cách triển khai.
 
-## <a id="java-modifier-map">Bản đồ Modifier trong Java</a>
+## <a id="java-modifier-map">Phân biệt với các từ bổ nghĩa khác</a>
 
-Access modifier chỉ là **một nhóm** trong số các modifier/keyword có thể xuất hiện quanh class, field và method. Không nên học tất cả chúng như một danh sách từ khóa rời rạc; mỗi nhóm tồn tại để giải quyết một loại vấn đề khác nhau.
+Từ bổ nghĩa truy cập chỉ là **một nhóm** trong số các từ bổ nghĩa/từ khóa có thể xuất hiện quanh lớp, trường và phương thức. Không nên học tất cả chúng như một danh sách phẳng; mỗi nhóm giải quyết một loại vấn đề khác nhau. Bảng dưới đây chỉ giúp nhận diện ranh giới, không thay thế các mô-đun chuyên sâu tương ứng.
 
 ```text
 Quyền truy cập
 → public, protected, private
 
-Class/Object structure
-→ static, final
+Thành viên thuộc lớp hay từng đối tượng
+→ static
 
-Abstraction / inheritance
+Giới hạn gán lại / ghi đè / kế thừa
+→ final
+
+Trừu tượng hóa / kế thừa
 → abstract
 
-Concurrency
+Lập trình đồng thời
 → synchronized, volatile
 
-Serialization
+Tuần tự hóa
 → transient
 
-Native interoperability
+Tương tác với mã gốc (native)
 → native
 
-Floating-point semantics / lịch sử ngôn ngữ
+Ngữ nghĩa dấu phẩy động / lịch sử ngôn ngữ
 → strictfp
 ```
 
 Ý nghĩa ở mức định hướng:
 
-| Keyword | Câu hỏi nó giải quyết | Học sâu ở đâu? |
+| Từ khóa | Câu hỏi nó giải quyết | Học sâu ở đâu? |
 | --- | --- | --- |
-| `public`, `protected`, `private` | Mã nào được phép truy cập member/type? | **Class Object → Access Modifier** |
-| `static` | Member thuộc class hay từng object? | **Class Object → Static / Final** |
-| `final` | Có được gán lại, override hoặc kế thừa tiếp không, tùy vị trí sử dụng? | **Class Object → Static / Final** |
-| `abstract` | Class/method nào chỉ định nghĩa hợp đồng một phần và cần subtype hoàn thiện? | **Abstract Interface** |
-| `synchronized` | Nhiều thread phối hợp quyền truy cập vào critical section/monitor như thế nào? | **Concurrency → Thread → Synchronization** |
-| `volatile` | Thay đổi của field được các thread khác nhìn thấy và sắp thứ tự theo Java Memory Model như thế nào? | **Concurrency → Thread → Java Memory Model** |
-| `transient` | Field nào không tham gia Java native serialization? | **IO → Serialization** |
-| `native` | Method nào được triển khai bên ngoài mã Java? | **JNI / native interoperability boundary** |
-| `strictfp` | Floating-point strictness được biểu diễn ra sao trong lịch sử Java? | **Numbers / language-history boundary** |
+| `public`, `protected`, `private` | Mã nào được phép truy cập thành viên/kiểu? | **Class Object → Phạm vi truy cập** |
+| `static` | Thành viên thuộc lớp hay từng đối tượng? | **Class Object → static / final** |
+| `final` | Có được gán lại, ghi đè hoặc kế thừa tiếp không, tùy vị trí sử dụng? | **Class Object → static / final** |
+| `abstract` | Lớp/phương thức nào chỉ định nghĩa hợp đồng một phần và cần kiểu con hoàn thiện? | **Lớp trừu tượng và giao diện** |
+| `synchronized` | Nhiều luồng phối hợp khi đi vào vùng mã cần đồng bộ như thế nào? | **Lập trình đồng thời → Luồng → Đồng bộ** |
+| `volatile` | Thay đổi của trường được các luồng khác nhìn thấy và sắp thứ tự theo Java Memory Model như thế nào? | **Lập trình đồng thời → Luồng → Java Memory Model** |
+| `transient` | Trường nào không tham gia cơ chế tuần tự hóa Java? | **IO → Tuần tự hóa** |
+| `native` | Phương thức nào được triển khai bên ngoài mã Java? | **JNI / ranh giới tương tác với mã gốc** |
+| `strictfp` | Quy tắc dấu phẩy động nghiêm ngặt được biểu diễn ra sao trong lịch sử Java? | **Kiểu số / ranh giới lịch sử ngôn ngữ** |
 
 ### GHI NHỚ — đừng suy luận theo hình thức
 
-Các keyword trên có thể cùng đứng trước field, method hoặc class nhưng **không vì thế mà chúng cùng một khái niệm**.
+Các từ khóa trên có thể cùng đứng trước trường, phương thức hoặc lớp nhưng **không vì thế mà chúng cùng một khái niệm**.
 
 Ví dụ:
 
@@ -133,10 +136,10 @@ private
 → giới hạn quyền truy cập
 
 volatile
-→ liên quan visibility/ordering giữa các thread
+→ liên quan khả năng nhìn thấy thay đổi và thứ tự giữa các luồng
 ```
 
-`private` không làm field thread-safe, và `volatile` cũng không tạo encapsulation.
+`private` không làm trường trở nên an toàn khi nhiều luồng cùng truy cập, và `volatile` cũng không tạo đóng gói.
 
 Tương tự:
 
@@ -144,8 +147,8 @@ Tương tự:
 public synchronized void update() { ... }
 ```
 
-`public` nói **ai được gọi method**; `synchronized` nói **các thread phối hợp khi thực thi method đó như thế nào**.
+`public` nói **ai được gọi phương thức**; `synchronized` nói **các luồng phối hợp khi thực thi phương thức đó như thế nào**.
 
-Phần Class Object chỉ cần giúp bạn nhận diện đúng vai trò của các modifier. Những modifier gắn với concurrency, serialization hoặc native code nên được học sâu tại module giải thích chính vấn đề mà chúng giải quyết.
+Phần Class Object chỉ cần giúp bạn nhận diện đúng vai trò của các từ bổ nghĩa. Những từ bổ nghĩa gắn với lập trình đồng thời, tuần tự hóa hoặc mã gốc (native) nên được học sâu tại mô-đun giải thích chính vấn đề mà chúng giải quyết.
 
-Chương tiếp theo tách hai trục khác: **member thuộc class hay object**, và **giá trị/reference có được gán lại hay không**.
+Chương tiếp theo tách hai trục khác: **thành viên thuộc lớp hay đối tượng**, và **giá trị/tham chiếu có được gán lại hay không**.

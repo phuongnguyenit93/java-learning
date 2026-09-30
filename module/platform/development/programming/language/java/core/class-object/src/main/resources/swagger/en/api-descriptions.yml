@@ -2,8 +2,8 @@ AliasingController:
   mutateAlias():
     summary: Observe aliasing through shared mutable state
     description: Creates two BankAccount references to the same object, mutates tags
-      through one alias, and returns identity plus state evidence showing why the other
-      reference observes the same mutation.
+      through one alias, and returns identity plus state evidence showing why the
+      other reference observes the same mutation.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -85,7 +85,8 @@ EnumController:
   enumBehavior():
     summary: Observe enum identity and constant-specific behavior
     description: Uses FeeTier constants that implement one interface with different
-      behavior, then exposes fee results, valueOf identity, and values declaration order.
+      behavior, then exposes fee results, valueOf identity, and values declaration
+      order.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -110,10 +111,12 @@ EnumController:
     usage: true
 ImmutabilityController:
   defensiveCopy():
-    summary: Observe defensive copy on input and output
-    description: Builds an immutable-style BankAccountSnapshot from mutable caller input,
-      mutates the original List, and verifies that the returned collection cannot mutate
-      the stored snapshot.
+    summary: Observe input defensive copy and safe exposure of unmodifiable stored
+      state
+    description: Builds BankAccountSnapshot with List.copyOf on mutable caller input,
+      mutates the original List, and verifies that the stored List remains unchanged
+      and cannot be mutated through the accessor. The accessor returns the stored
+      List itself; it does not make an output defensive copy.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -140,8 +143,10 @@ InitializationController:
   traceOrder():
     summary: Trace parent and child initialization order
     description: Records superclass construction, child field initialization, child
-      instance initialization, and the child constructor in the order they actually run,
-      while also exposing class-initialization evidence.
+      instance initialization, and the child constructor in the order they actually
+      run, while also returning the static trace recorded when Parent and Child were
+      initialized for the first time. Their static initializers do not rerun on each
+      request.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -167,9 +172,9 @@ InitializationController:
 NestedClassController:
   capture():
     summary: Observe local capture and outer-instance access
-    description: Uses a local class that reads an effectively-final local variable and
-      an enclosing controller field, making the two surrounding contexts observable in
-      one deterministic result.
+    description: Uses a local class that reads an effectively-final local variable
+      and an enclosing controller field, making the two surrounding contexts observable
+      in one deterministic result.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video

@@ -40,12 +40,12 @@
 
 questions:
   - id: class-vs-object
-    question: "Statement nào phân biệt class và object đúng nhất?"
+    question: "Phát biểu nào phân biệt class và object đúng nhất?"
     answers:
-      - {id: A, answer: "Class định nghĩa type và implementation blueprint; object là runtime instance có identity và instance state riêng.", explanation: "Đúng. Nhiều object có thể share một class definition nhưng giữ state khác nhau."}
-      - {id: B, answer: "Class luôn là runtime instance còn object là source code.", explanation: "Sai. Nhiều object có thể share một class definition nhưng giữ state khác nhau."}
-      - {id: C, answer: "Object chỉ tồn tại khi mọi field static.", explanation: "Sai. Nhiều object có thể share một class definition nhưng giữ state khác nhau."}
-      - {id: D, answer: "Class và mọi object của nó share một identity.", explanation: "Sai. Nhiều object có thể share một class definition nhưng giữ state khác nhau."}
+      - {id: A, answer: "Class định nghĩa kiểu và khuôn mẫu triển khai; object là một instance khi chương trình chạy, có định danh (identity) và trạng thái riêng.", explanation: "Đúng. Nhiều object có thể dùng chung một định nghĩa class nhưng mỗi object vẫn có trạng thái riêng."}
+      - {id: B, answer: "Class luôn là instance khi chương trình chạy, còn object chỉ là mã nguồn.", explanation: "Sai. Class là định nghĩa kiểu; object mới là instance được tạo khi chương trình chạy."}
+      - {id: C, answer: "Object chỉ tồn tại khi mọi field đều là static.", explanation: "Sai. Object có thể chứa các field thuộc từng instance; static không phải điều kiện để object tồn tại."}
+      - {id: D, answer: "Class và mọi object được tạo từ class đó dùng chung một identity.", explanation: "Sai. Mỗi object có identity riêng, còn class là định nghĩa mà các object cùng dựa vào."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -53,12 +53,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: constructor-default-rule
-    question: "Khi nào Java cung cấp implicit default no-arg constructor?"
+    question: "Khi nào Java tự sinh hàm khởi tạo mặc định không tham số?"
     answers:
-      - {id: A, answer: "Luôn có dù đã khai báo custom constructor.", explanation: "Sai. Khai báo bất kỳ constructor nào làm compiler không sinh implicit default constructor."}
-      - {id: B, answer: "Chỉ khi class không khai báo constructor, đồng thời superclass constructor phù hợp phải accessible.", explanation: "Đúng. Khai báo bất kỳ constructor nào làm compiler không sinh implicit default constructor."}
-      - {id: C, answer: "Chỉ với abstract class.", explanation: "Sai. Khai báo bất kỳ constructor nào làm compiler không sinh implicit default constructor."}
-      - {id: D, answer: "Chỉ khi mọi field final.", explanation: "Sai. Khai báo bất kỳ constructor nào làm compiler không sinh implicit default constructor."}
+      - {id: A, answer: "Luôn được sinh, kể cả khi lớp đã khai báo constructor riêng.", explanation: "Sai. Chỉ cần lớp khai báo bất kỳ constructor nào thì trình biên dịch sẽ không sinh constructor mặc định."}
+      - {id: B, answer: "Khi lớp không khai báo constructor nào. Constructor mặc định được sinh sẽ ngầm gọi super(); với lớp khác Object, lời gọi đó còn phải hợp lệ thì mã mới biên dịch.", explanation: "Đúng. Điều kiện để constructor mặc định được sinh là lớp không khai báo constructor; khả năng biên dịch của lời gọi super() là bước kiểm tra riêng."}
+      - {id: C, answer: "Chỉ với lớp abstract.", explanation: "Sai. Việc lớp có abstract hay không không ảnh hưởng đến quy tắc sinh constructor mặc định."}
+      - {id: D, answer: "Chỉ khi mọi field đều final.", explanation: "Sai. Việc field có final hay không không ảnh hưởng đến quy tắc sinh constructor mặc định."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -66,12 +66,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: constructor-chaining
-    question: "Quan hệ giữa `this(...)` và `super(...)` trong constructor chain là gì?"
+    question: "Quan hệ giữa `this(...)` và `super(...)` trong chuỗi hàm khởi tạo là gì?"
     answers:
-      - {id: A, answer: "Cả hai phải được gọi ở hai statement đầu.", explanation: "Sai. Construction theo một ordered chain chứ không có hai first constructor call cạnh tranh."}
-      - {id: B, answer: "super tạo một parent object riêng.", explanation: "Sai. Construction theo một ordered chain chứ không có hai first constructor call cạnh tranh."}
-      - {id: C, answer: "Constructor first delegate hoặc sang constructor cùng class hoặc sang superclass constructor, và chain cuối cùng đi tới superclass.", explanation: "Đúng. Construction theo một ordered chain chứ không có hai first constructor call cạnh tranh."}
-      - {id: D, answer: "this chỉ dùng trong static method.", explanation: "Sai. Construction theo một ordered chain chứ không có hai first constructor call cạnh tranh."}
+      - {id: A, answer: "Cả hai phải xuất hiện thành hai lời gọi liên tiếp ở đầu constructor.", explanation: "Sai. Một constructor chỉ bắt đầu bằng một nhánh ủy quyền; không gọi this(...) và super(...) như hai bước song song."}
+      - {id: B, answer: "super tạo một đối tượng lớp cha riêng biệt.", explanation: "Sai. super không tạo đối tượng thứ hai; phần lớp cha và lớp con thuộc cùng một đối tượng."}
+      - {id: C, answer: "Với lớp khác Object, constructor hoặc ủy quyền sang constructor khác cùng lớp bằng this(...), hoặc gọi/ngầm gọi constructor lớp cha bằng super(...); chuỗi this(...) cuối cùng phải dẫn tới super(...).", explanation: "Đúng. Chuỗi constructor của cùng một object lần lượt đi qua các constructor cần thiết và cuối cùng đi lên lớp cha; Object là lớp gốc nên không có superclass."}
+      - {id: D, answer: "this chỉ dùng trong phương thức static.", explanation: "Sai. this đại diện cho object hiện tại và không tồn tại trong ngữ cảnh static."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
@@ -79,12 +79,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: protected-cross-package
-    question: "Mô tả nào về protected access xuyên package chính xác?"
+    question: "Mô tả nào về quyền truy cập protected giữa các package là chính xác?"
     answers:
-      - {id: A, answer: "Protected giống public ngoài package.", explanation: "Sai. Protected subtle hơn mô tả package cộng mọi subclass ở mọi nơi."}
-      - {id: B, answer: "Protected chỉ visible trong declaring class.", explanation: "Sai. Protected subtle hơn mô tả package cộng mọi subclass ở mọi nơi."}
-      - {id: C, answer: "Mọi unrelated class đều access protected field qua instance.", explanation: "Sai. Protected subtle hơn mô tả package cộng mọi subclass ở mọi nơi."}
-      - {id: D, answer: "Subclass có protected access theo subclass-context và qualifying-expression rule, không phải access tùy ý qua mọi superclass instance.", explanation: "Đúng. Protected subtle hơn mô tả package cộng mọi subclass ở mọi nơi."}
+      - {id: A, answer: "protected hoạt động giống public khi truy cập từ package khác.", explanation: "Sai. protected có quy tắc riêng khi truy cập qua ranh giới package, đặc biệt với subclass."}
+      - {id: B, answer: "protected chỉ nhìn thấy bên trong chính class khai báo member đó.", explanation: "Sai. protected còn cho phép truy cập trong cùng package và trong một số ngữ cảnh của subclass."}
+      - {id: C, answer: "Mọi class không liên quan đều có thể truy cập field protected qua bất kỳ instance nào.", explanation: "Sai. Class không liên quan ở package khác không có quyền truy cập như vậy."}
+      - {id: D, answer: "Subclass ở package khác được truy cập protected theo ngữ cảnh subclass và quy tắc của biểu thức đứng trước member, không phải tùy ý qua mọi instance của lớp cha.", explanation: "Đúng. protected có quy tắc chặt hơn việc hiểu đơn giản là 'package cộng mọi subclass'."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
@@ -92,12 +92,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: final-reference-mutability
-    question: "`final List<String> names = new ArrayList<>();` guarantee điều gì?"
+    question: "`final List<String> names = new ArrayList<>();` bảo đảm điều gì?"
     answers:
-      - {id: A, answer: "Variable không reassign sang list khác được, nhưng List object được reference vẫn có thể mutate.", explanation: "Đúng. final constrain assignment của variable, không tạo deep immutability cho referenced object."}
-      - {id: B, answer: "List trở thành deep immutable.", explanation: "Sai. final constrain assignment của variable, không tạo deep immutability cho referenced object."}
-      - {id: C, answer: "Mọi element insert vào đều final.", explanation: "Sai. final constrain assignment của variable, không tạo deep immutability cho referenced object."}
-      - {id: D, answer: "Reference reassign được nhưng element không đổi.", explanation: "Sai. final constrain assignment của variable, không tạo deep immutability cho referenced object."}
+      - {id: A, answer: "Biến names không thể được gán lại sang List khác, nhưng object List mà nó tham chiếu tới vẫn có thể thay đổi.", explanation: "Đúng. final giới hạn việc gán lại biến tham chiếu; nó không làm object được tham chiếu trở thành bất biến sâu."}
+      - {id: B, answer: "List trở thành bất biến sâu (deep immutable).", explanation: "Sai. final không ngăn các thao tác thay đổi nội dung của List."}
+      - {id: C, answer: "Mọi phần tử thêm vào List đều tự động trở thành final.", explanation: "Sai. final áp dụng cho biến names, không tự áp dụng cho các phần tử bên trong List."}
+      - {id: D, answer: "Có thể gán names sang List khác, nhưng không thể thay đổi phần tử.", explanation: "Sai. Điều ngược lại mới đúng: names không thể được gán lại, còn List vẫn có thể thay đổi nếu bản thân List cho phép."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -105,12 +105,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: initialization-parent-child
-    question: "Trong `new Child()`, broad order nào đúng?"
+    question: "Trong `new Child()`, thứ tự khởi tạo tổng quát nào là đúng?"
     answers:
-      - {id: A, answer: "Child constructor body chạy trước mọi parent constructor.", explanation: "Sai. Một object được initialize qua superclass chain trước khi subclass construction hoàn tất."}
-      - {id: B, answer: "Superclass construction chạy trước subclass instance initializer và subclass constructor body.", explanation: "Đúng. Một object được initialize qua superclass chain trước khi subclass construction hoàn tất."}
-      - {id: C, answer: "Mọi subclass field initialize trước superclass constructor.", explanation: "Sai. Một object được initialize qua superclass chain trước khi subclass construction hoàn tất."}
-      - {id: D, answer: "Constructor order random theo JVM.", explanation: "Sai. Một object được initialize qua superclass chain trước khi subclass construction hoàn tất."}
+      - {id: A, answer: "Phần thân constructor của Child chạy trước mọi constructor của lớp cha.", explanation: "Sai. Phần lớp cha phải được khởi tạo trước khi quá trình khởi tạo lớp con hoàn tất."}
+      - {id: B, answer: "Quá trình khởi tạo lớp cha chạy trước initializer của instance lớp con và trước phần thân constructor lớp con.", explanation: "Đúng. Khi tạo một object thuộc lớp con, Java khởi tạo phần lớp cha trước rồi mới hoàn tất phần lớp con."}
+      - {id: C, answer: "Mọi field của lớp con được khởi tạo trước constructor của lớp cha.", explanation: "Sai. Field initializer của lớp con chạy sau khi constructor lớp cha đã hoàn tất."}
+      - {id: D, answer: "Thứ tự constructor là ngẫu nhiên tùy JVM.", explanation: "Sai. Java định nghĩa rõ thứ tự khởi tạo qua chuỗi kế thừa."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -118,12 +118,12 @@ questions:
     apiRelated: {controller: "InitializationController", methodSignature: "traceOrder()"}
 
   - id: constructor-override-risk
-    question: "Vì sao gọi overridable method từ superclass constructor có rủi ro?"
+    question: "Vì sao gọi một method có thể bị override từ constructor của lớp cha lại có rủi ro?"
     answers:
-      - {id: A, answer: "Override bị disable trong construction.", explanation: "Sai. Virtual dispatch vẫn áp dụng trong construction nên override có thể thấy default field value."}
-      - {id: B, answer: "Nó luôn tạo hai object riêng.", explanation: "Sai. Virtual dispatch vẫn áp dụng trong construction nên override có thể thấy default field value."}
-      - {id: C, answer: "Runtime dispatch có thể tới subclass override trước khi subclass field explicit initialization hoàn tất.", explanation: "Đúng. Virtual dispatch vẫn áp dụng trong construction nên override có thể thấy default field value."}
-      - {id: D, answer: "JVM bỏ qua superclass constructor.", explanation: "Sai. Virtual dispatch vẫn áp dụng trong construction nên override có thể thấy default field value."}
+      - {id: A, answer: "Cơ chế override bị tắt trong lúc object đang được tạo.", explanation: "Sai. Dynamic dispatch vẫn hoạt động trong constructor, nên method override ở lớp con vẫn có thể được gọi."}
+      - {id: B, answer: "Nó luôn tạo ra hai object riêng biệt.", explanation: "Sai. Toàn bộ quá trình vẫn đang xây dựng cùng một object."}
+      - {id: C, answer: "Dynamic dispatch có thể gọi method override của lớp con trước khi các field của lớp con được khởi tạo tường minh.", explanation: "Đúng. Method override có thể quan sát các field lớp con khi chúng vẫn còn giá trị mặc định của JVM."}
+      - {id: D, answer: "JVM bỏ qua constructor của lớp cha.", explanation: "Sai. Constructor lớp cha vẫn chạy; rủi ro nằm ở việc dynamic dispatch xảy ra quá sớm."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
@@ -131,12 +131,12 @@ questions:
     apiRelated: {controller: "ConstructionController", methodSignature: "constructorDispatchRisk()"}
 
   - id: inner-class-outer
-    question: "Điểm gì phân biệt non-static member inner class với static nested class?"
+    question: "Điểm nào phân biệt non-static inner class với static nested class?"
     answers:
-      - {id: A, answer: "Static nested class luôn extend outer class.", explanation: "Sai. Static nested class không có implicit outer-instance reference."}
-      - {id: B, answer: "Inner class không access được outer member.", explanation: "Sai. Static nested class không có implicit outer-instance reference."}
-      - {id: C, answer: "Chỉ static nested class mới có method.", explanation: "Sai. Static nested class không có implicit outer-instance reference."}
-      - {id: D, answer: "Inner class gắn với enclosing instance và có thể implicit access state của outer instance.", explanation: "Đúng. Static nested class không có implicit outer-instance reference."}
+      - {id: A, answer: "static nested class luôn kế thừa outer class.", explanation: "Sai. static nested class chỉ được khai báo bên trong outer class; nó không tự động kế thừa outer class."}
+      - {id: B, answer: "Inner class không thể truy cập member của outer class.", explanation: "Sai. non-static inner class gắn với một outer instance và có thể truy cập member của instance đó."}
+      - {id: C, answer: "Chỉ static nested class mới có method.", explanation: "Sai. Cả hai loại class lồng đều có thể khai báo method."}
+      - {id: D, answer: "non-static inner class gắn với một outer instance và có thể ngầm truy cập trạng thái của outer instance đó.", explanation: "Đúng. static nested class không có tham chiếu ngầm tới một outer instance cụ thể."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
@@ -144,12 +144,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: enum-ordinal-persistence
-    question: "Vì sao enum `ordinal()` thường không nên persist làm durable business identifier?"
+    question: "Vì sao thường không nên lưu `ordinal()` của enum làm định danh nghiệp vụ lâu dài?"
     answers:
-      - {id: A, answer: "Reorder hoặc insert constant làm ordinal đổi nên persisted meaning có thể silently thay đổi.", explanation: "Đúng. Dùng stable external code explicit khi enum identity đi qua storage/protocol boundary."}
-      - {id: B, answer: "ordinal luôn random.", explanation: "Sai. Dùng stable external code explicit khi enum identity đi qua storage/protocol boundary."}
-      - {id: C, answer: "ordinal không đọc được runtime.", explanation: "Sai. Dùng stable external code explicit khi enum identity đi qua storage/protocol boundary."}
-      - {id: D, answer: "Mọi enum constant có ordinal 0.", explanation: "Sai. Dùng stable external code explicit khi enum identity đi qua storage/protocol boundary."}
+      - {id: A, answer: "Đổi thứ tự hoặc chèn thêm constant có thể làm ordinal thay đổi, khiến dữ liệu đã lưu bị hiểu sai mà không báo lỗi.", explanation: "Đúng. Khi enum đi qua ranh giới lưu trữ hoặc giao thức, nên dùng một mã bên ngoài ổn định được định nghĩa tường minh."}
+      - {id: B, answer: "ordinal luôn được sinh ngẫu nhiên.", explanation: "Sai. ordinal phản ánh vị trí khai báo của constant, vì vậy nó có thể đổi khi source code được sắp xếp lại."}
+      - {id: C, answer: "Không thể đọc ordinal khi chương trình đang chạy.", explanation: "Sai. Có thể gọi ordinal(), nhưng không nên dùng nó làm định danh bền vững."}
+      - {id: D, answer: "Mọi enum constant đều có ordinal bằng 0.", explanation: "Sai. Các constant nhận ordinal theo thứ tự khai báo bắt đầu từ 0."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -157,12 +157,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: shallow-copy-nested
-    question: "Rủi ro chính của shallow copy chứa mutable nested List là gì?"
+    question: "Rủi ro chính của shallow copy khi object chứa một List lồng có thể thay đổi là gì?"
     answers:
-      - {id: A, answer: "Shallow copy luôn deep-copy mọi collection.", explanation: "Sai. Shallow copy duplicate field value nguyên trạng, bao gồm reference value."}
-      - {id: B, answer: "Outer object mới nhưng hai copy vẫn có thể share cùng nested List reference.", explanation: "Đúng. Shallow copy duplicate field value nguyên trạng, bao gồm reference value."}
-      - {id: C, answer: "Outer object mới phải cùng identity.", explanation: "Sai. Shallow copy duplicate field value nguyên trạng, bao gồm reference value."}
-      - {id: D, answer: "Primitive field không thể shallow copy.", explanation: "Sai. Shallow copy duplicate field value nguyên trạng, bao gồm reference value."}
+      - {id: A, answer: "Shallow copy luôn tạo deep copy cho mọi collection.", explanation: "Sai. Shallow copy sao chép giá trị của từng field; với field tham chiếu, giá trị được sao chép vẫn là cùng một reference."}
+      - {id: B, answer: "Object bên ngoài là object mới, nhưng bản gốc và bản sao vẫn có thể cùng tham chiếu tới một List lồng.", explanation: "Đúng. Vì reference tới List được sao chép nguyên giá trị, hai object có thể cùng chia sẻ List đó."}
+      - {id: C, answer: "Object bên ngoài mới bắt buộc phải có cùng identity với object gốc.", explanation: "Sai. Bản sao là object khác; vấn đề là các object lồng có thể vẫn được dùng chung."}
+      - {id: D, answer: "Field kiểu primitive không thể được sao chép nông.", explanation: "Sai. Giá trị primitive vẫn được sao chép bình thường trong shallow copy."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -172,10 +172,10 @@ questions:
   - id: aliasing-visible-mutation
     question: "Object aliasing nghĩa là gì?"
     answers:
-      - {id: A, answer: "Hai object khác nhau tình cờ có field equal.", explanation: "Sai. Aliasing nói về shared object identity, không phải variable name giống nhau."}
-      - {id: B, answer: "Variable khai báo final.", explanation: "Sai. Aliasing nói về shared object identity, không phải variable name giống nhau."}
-      - {id: C, answer: "Nhiều reference nhận diện cùng object nên mutation qua alias này có thể thấy qua alias khác.", explanation: "Đúng. Aliasing nói về shared object identity, không phải variable name giống nhau."}
-      - {id: D, answer: "Class có nhiều constructor.", explanation: "Sai. Aliasing nói về shared object identity, không phải variable name giống nhau."}
+      - {id: A, answer: "Hai object khác nhau tình cờ có các field bằng nhau.", explanation: "Sai. Aliasing nói về nhiều reference cùng trỏ tới một object, không phải hai object có trạng thái giống nhau."}
+      - {id: B, answer: "Một biến được khai báo final.", explanation: "Sai. final và aliasing là hai khái niệm khác nhau."}
+      - {id: C, answer: "Nhiều reference cùng trỏ tới một object, nên thay đổi qua một alias có thể được quan sát qua alias khác.", explanation: "Đúng. Aliasing xuất hiện khi nhiều reference cùng nhận diện một object."}
+      - {id: D, answer: "Một class có nhiều constructor.", explanation: "Sai. Số lượng constructor không liên quan đến aliasing."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
@@ -183,12 +183,12 @@ questions:
     apiRelated: {controller: "AliasingController", methodSignature: "mutateAlias()"}
 
   - id: defensive-copy-input
-    question: "Vì sao immutable object có thể defensive copy mutable constructor argument?"
+    question: "Vì sao một object bất biến có thể cần sao chép phòng vệ đối số mutable truyền vào constructor?"
     answers:
-      - {id: A, answer: "Để constructor chạy hai lần.", explanation: "Sai. Immutability yêu cầu kiểm soát reachable mutable state, không chỉ final field."}
-      - {id: B, answer: "Vì final field không store object được.", explanation: "Sai. Immutability yêu cầu kiểm soát reachable mutable state, không chỉ final field."}
-      - {id: C, answer: "Để đổi reference equality thành primitive equality.", explanation: "Sai. Immutability yêu cầu kiểm soát reachable mutable state, không chỉ final field."}
-      - {id: D, answer: "Để ngăn caller giữ alias và mutate internal state sau construction.", explanation: "Đúng. Immutability yêu cầu kiểm soát reachable mutable state, không chỉ final field."}
+      - {id: A, answer: "Để constructor chạy hai lần.", explanation: "Sai. Sao chép phòng vệ dùng để kiểm soát trạng thái mutable có thể bị chia sẻ qua reference."}
+      - {id: B, answer: "Vì field final không thể lưu object.", explanation: "Sai. Field final vẫn có thể tham chiếu tới object; final chỉ ngăn việc gán lại reference đó."}
+      - {id: C, answer: "Để biến so sánh reference thành so sánh primitive.", explanation: "Sai. Sao chép phòng vệ liên quan đến quyền sở hữu và khả năng thay đổi trạng thái, không phải cơ chế so sánh."}
+      - {id: D, answer: "Để ngăn code gọi giữ một alias rồi thay đổi trạng thái bên trong object sau khi constructor hoàn tất.", explanation: "Đúng. Tính bất biến đòi hỏi kiểm soát cả trạng thái mutable có thể truy cập qua các reference liên quan."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
@@ -196,12 +196,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: defensive-copy-output
-    question: "Vấn đề khi trả trực tiếp mutable internal collection là gì?"
+    question: "Vấn đề gì xảy ra khi trả trực tiếp một collection nội bộ có thể thay đổi?"
     answers:
-      - {id: A, answer: "Nó leak alias cho phép caller mutate internal state ngoài owning object contract.", explanation: "Đúng. Nên trả immutable representation, copy hoặc documented view theo ownership semantics."}
-      - {id: B, answer: "Nó luôn tự copy collection.", explanation: "Sai. Nên trả immutable representation, copy hoặc documented view theo ownership semantics."}
-      - {id: C, answer: "Nó làm method thành static.", explanation: "Sai. Nên trả immutable representation, copy hoặc documented view theo ownership semantics."}
-      - {id: D, answer: "Nó ngăn caller đọc element.", explanation: "Sai. Nên trả immutable representation, copy hoặc documented view theo ownership semantics."}
+      - {id: A, answer: "Nó làm lộ alias, cho phép code gọi thay đổi trạng thái nội bộ ngoài các thao tác mà object sở hữu.", explanation: "Đúng. Nên trả một biểu diễn bất biến, một bản sao, hoặc một view có hợp đồng quyền sở hữu được mô tả rõ."}
+      - {id: B, answer: "Nó luôn tự động sao chép collection trước khi trả về.", explanation: "Sai. Trả trực tiếp field mutable thường trả chính reference nội bộ."}
+      - {id: C, answer: "Nó tự biến method thành static.", explanation: "Sai. Cách trả collection không quyết định method có static hay không."}
+      - {id: D, answer: "Nó ngăn code gọi đọc các phần tử.", explanation: "Sai. Vấn đề chính là code gọi có thể thay đổi collection nội bộ, không phải không đọc được."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -209,12 +209,12 @@ questions:
     apiRelated: {controller: "ImmutabilityController", methodSignature: "defensiveCopy()"}
 
   - id: clone-finalization-boundary
-    question: "Guidance hiện đại nào phù hợp nhất cho copying và cleanup?"
+    question: "Cách tiếp cận hiện đại nào phù hợp nhất cho việc sao chép object và dọn dẹp tài nguyên?"
     answers:
-      - {id: A, answer: "Dùng finalizer làm cách chính để close file.", explanation: "Sai. Clone có shallow-copy/invariant semantics awkward và finalization đã deprecated for removal."}
-      - {id: B, answer: "Ưu tiên explicit copy constructor/factory cho copy policy và AutoCloseable style deterministic cleanup cho resource.", explanation: "Đúng. Clone có shallow-copy/invariant semantics awkward và finalization đã deprecated for removal."}
-      - {id: C, answer: "Dùng Object.clone cho mọi domain object.", explanation: "Sai. Clone có shallow-copy/invariant semantics awkward và finalization đã deprecated for removal."}
-      - {id: D, answer: "Chờ GC trước khi release mọi external resource.", explanation: "Sai. Clone có shallow-copy/invariant semantics awkward và finalization đã deprecated for removal."}
+      - {id: A, answer: "Dùng finalizer làm cơ chế chính để đóng file.", explanation: "Sai. Finalization không có thời điểm chạy xác định và đã bị deprecated for removal; không nên dùng để quản lý tài nguyên quan trọng."}
+      - {id: B, answer: "Ưu tiên copy constructor/factory tường minh cho chính sách sao chép và dùng AutoCloseable với cơ chế dọn dẹp xác định cho tài nguyên.", explanation: "Đúng. Cách này làm rõ chính sách sao chép và vòng đời tài nguyên hơn so với Object.clone() hoặc finalization."}
+      - {id: C, answer: "Dùng Object.clone() cho mọi domain object.", explanation: "Sai. Object.clone() có ngữ nghĩa shallow copy và thường khó diễn đạt rõ cách bảo toàn các điều kiện để trạng thái luôn hợp lệ (invariant)."}
+      - {id: D, answer: "Chờ GC rồi mới giải phóng mọi tài nguyên bên ngoài.", explanation: "Sai. GC không bảo đảm thời điểm dọn dẹp tài nguyên bên ngoài như file hoặc socket."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -222,12 +222,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: instance-initializer-order
-    question: "Trong một class, instance initializer block chạy khi nào so với constructor body?"
+    question: "Trong một class, instance initializer block chạy khi nào so với phần thân constructor?"
     answers:
-      - {id: A, answer: "Sau khi constructor body đã return.", explanation: "Sai. Instance field initializer và instance initializer block chạy trước constructor body của class đó, sau khi superclass constructor hoàn tất."}
-      - {id: B, answer: "Chỉ khi constructor gọi explicit chúng.", explanation: "Sai. Instance field initializer và instance initializer block chạy trước constructor body của class đó, sau khi superclass constructor hoàn tất."}
-      - {id: C, answer: "Trước khi superclass constructor bắt đầu.", explanation: "Sai. Instance field initializer và instance initializer block chạy trước constructor body của class đó, sau khi superclass constructor hoàn tất."}
-      - {id: D, answer: "Trước constructor body của class đó, sau bước superclass construction của object.", explanation: "Đúng. Instance field initializer và instance initializer block chạy trước constructor body của class đó, sau khi superclass constructor hoàn tất."}
+      - {id: A, answer: "Sau khi phần thân constructor đã kết thúc.", explanation: "Sai. Field initializer và instance initializer block của class chạy trước phần thân constructor của chính class đó, sau khi constructor lớp cha hoàn tất."}
+      - {id: B, answer: "Chỉ khi constructor gọi chúng một cách tường minh.", explanation: "Sai. Java tự chạy các instance initializer theo quy tắc khởi tạo; constructor không cần gọi chúng trực tiếp."}
+      - {id: C, answer: "Trước khi constructor của lớp cha bắt đầu.", explanation: "Sai. Constructor lớp cha hoàn tất trước khi các initializer của lớp con chạy."}
+      - {id: D, answer: "Sau khi phần lớp cha được khởi tạo và trước phần thân constructor của class hiện tại.", explanation: "Đúng. Đây là vị trí của field initializer và instance initializer block trong quá trình tạo object."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
@@ -235,12 +235,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: instance-state-identity
-    question: "Hai object BankAccount có cùng giá trị field. Điều nào vẫn có thể đúng?"
+    question: "Hai object BankAccount có cùng giá trị các field. Điều nào vẫn có thể đúng?"
     answers:
-      - {id: A, answer: "Chúng bắt buộc là cùng một object vì state giống nhau.", explanation: "Sai. State bằng nhau không đồng nghĩa object identity giống nhau."}
-      - {id: B, answer: "Chúng có thể là hai object khác identity dù state hiện tại giống nhau.", explanation: "Đúng. Identity và state là hai khái niệm khác nhau."}
-      - {id: C, answer: "Cả hai không thể có instance field.", explanation: "Sai. Mỗi object có thể giữ instance state riêng."}
-      - {id: D, answer: "Java tự merge hai object để tiết kiệm bộ nhớ.", explanation: "Sai. Object thông thường không bị merge chỉ vì field value giống nhau."}
+      - {id: A, answer: "Chúng bắt buộc là cùng một object vì trạng thái giống nhau.", explanation: "Sai. Trạng thái bằng nhau không có nghĩa hai reference cùng trỏ tới một identity."}
+      - {id: B, answer: "Chúng có thể là hai object có identity khác nhau dù trạng thái hiện tại giống nhau.", explanation: "Đúng. Identity và trạng thái là hai khái niệm riêng."}
+      - {id: C, answer: "Cả hai không thể có field thuộc instance.", explanation: "Sai. Mỗi object có thể giữ trạng thái instance riêng."}
+      - {id: D, answer: "Java tự gộp hai object lại để tiết kiệm bộ nhớ.", explanation: "Sai. Object thông thường không bị gộp chỉ vì các field đang có cùng giá trị."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -248,12 +248,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: reference-reachability-lifetime
-    question: "Một local reference ra khỏi scope. Khi nào object mà nó từng trỏ tới vẫn có thể còn tồn tại?"
+    question: "Một biến tham chiếu local đã ra khỏi phạm vi. Khi nào object mà nó từng trỏ tới vẫn có thể còn tồn tại?"
     answers:
-      - {id: A, answer: "Khi vẫn còn một reachable reference khác trỏ tới object đó.", explanation: "Đúng. GC dựa trên reachability, không dựa trên việc một biến vừa ra khỏi lexical scope."}
-      - {id: B, answer: "Không bao giờ; hết local scope là object bị hủy ngay.", explanation: "Sai. Object vẫn có thể reachable qua reference khác."}
-      - {id: C, answer: "Chỉ khi mọi field đều static.", explanation: "Sai. Static field không phải điều kiện bắt buộc để object còn reachable."}
-      - {id: D, answer: "Chỉ đến hết statement hiện tại.", explanation: "Sai. Lifetime không phụ thuộc ranh giới statement theo cách đó."}
+      - {id: A, answer: "Khi vẫn còn một reference khác có thể truy cập được và đang trỏ tới object đó.", explanation: "Đúng. GC dựa trên khả năng còn truy cập được object (reachability), không dựa chỉ vào việc một biến local đã ra khỏi phạm vi từ vựng."}
+      - {id: B, answer: "Không bao giờ; hết phạm vi của biến local là object bị hủy ngay.", explanation: "Sai. Object vẫn có thể còn được truy cập qua reference khác."}
+      - {id: C, answer: "Chỉ khi mọi field đều static.", explanation: "Sai. static field không phải điều kiện bắt buộc để object còn được truy cập."}
+      - {id: D, answer: "Chỉ tồn tại đến hết câu lệnh hiện tại.", explanation: "Sai. Vòng đời object không bị ràng buộc đơn giản bởi ranh giới của một câu lệnh."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -261,12 +261,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: constructor-invariants
-    question: "Thiết kế constructor nào bảo vệ tốt invariant rằng opening balance không được âm?"
+    question: "Thiết kế constructor nào bảo vệ tốt điều kiện rằng trạng thái luôn hợp lệ (invariant), cụ thể số dư ban đầu không được âm?"
     answers:
-      - {id: A, answer: "Cho phép mọi giá trị rồi yêu cầu caller nhớ gọi một method sửa lại sau đó.", explanation: "Sai. Cách này cho phép object nửa-hợp-lệ thoát ra ngoài."}
-      - {id: B, answer: "Validate opening balance trong constructor và reject input sai trước khi object được trả về.", explanation: "Đúng. Constructor nên thiết lập invariant cần thiết trước khi object usable."}
-      - {id: C, answer: "Để mọi field public để caller tự sửa invariant.", explanation: "Sai. Cách này làm yếu ownership boundary thay vì bảo vệ invariant."}
-      - {id: D, answer: "Đưa validation vào finalize().", explanation: "Sai. Finalization không liên quan và diễn ra quá muộn."}
+      - {id: A, answer: "Chấp nhận mọi giá trị rồi yêu cầu code gọi nhớ sửa lại bằng một method khác.", explanation: "Sai. Cách này cho phép một object chưa thỏa điều kiện hợp lệ bị đưa ra ngoài."}
+      - {id: B, answer: "Kiểm tra số dư ban đầu trong constructor và từ chối đầu vào sai trước khi object được tạo thành công.", explanation: "Đúng. Constructor nên bảo đảm các điều kiện để trạng thái luôn hợp lệ trước khi object có thể được sử dụng."}
+      - {id: C, answer: "Để mọi field là public để code gọi tự sửa trạng thái cho hợp lệ.", explanation: "Sai. Cách này làm yếu ranh giới sở hữu thay vì bảo vệ trạng thái."}
+      - {id: D, answer: "Đưa bước kiểm tra vào finalize().", explanation: "Sai. Finalization không liên quan đến việc bảo đảm object hợp lệ khi vừa được tạo."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -274,12 +274,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: constructor-overloading-signature
-    question: "Vì sao class có thể khai báo cả BankAccount(String id) và BankAccount(String id, int balance)?"
+    question: "Vì sao một class có thể khai báo cả BankAccount(String id) và BankAccount(String id, int balance)?"
     answers:
-      - {id: A, answer: "Vì parameter list khác nhau nên đây là hai overloaded constructor khác nhau.", explanation: "Đúng. Constructor overloading được phân biệt bằng parameter list, không phải return type."}
-      - {id: B, answer: "Constructor chỉ được khác nhau bằng return type.", explanation: "Sai. Constructor không có return type; overload resolution dựa trên parameter list."}
-      - {id: C, answer: "Java chỉ cho một constructor mỗi class nên code này không compile.", explanation: "Sai. Một class có thể có nhiều overloaded constructor."}
-      - {id: D, answer: "Constructor thứ hai thực ra là static method.", explanation: "Sai. Tên trùng class và không có return type thì đó là constructor."}
+      - {id: A, answer: "Vì danh sách tham số khác nhau nên đây là hai constructor nạp chồng (overloaded constructor).", explanation: "Đúng. Constructor nạp chồng được phân biệt bằng danh sách tham số, không phải kiểu trả về."}
+      - {id: B, answer: "Constructor chỉ được phân biệt bằng kiểu trả về.", explanation: "Sai. Constructor không có kiểu trả về; việc chọn overload dựa trên danh sách tham số."}
+      - {id: C, answer: "Java chỉ cho phép một constructor trong mỗi class nên đoạn mã này không biên dịch.", explanation: "Sai. Một class có thể khai báo nhiều constructor nạp chồng."}
+      - {id: D, answer: "Constructor thứ hai thực ra là một static method.", explanation: "Sai. Một member có tên trùng tên class và không có kiểu trả về là constructor."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -287,12 +287,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: constructor-failure-publication
-    question: "Constructor throw exception sau khi đã register this vào global registry. Mô tả nào chính xác nhất?"
+    question: "Constructor ném exception sau khi đã đăng ký this vào một registry toàn cục. Mô tả nào chính xác nhất?"
     answers:
-      - {id: A, answer: "Biểu thức new vẫn trả về object đã initialize đầy đủ.", explanation: "Sai. Constructor throw thì new không trả về một reference construction thành công."}
-      - {id: B, answer: "JVM tự rollback mọi side effect đã xảy ra trước exception.", explanation: "Sai. Java không tự undo arbitrary side effect trước lỗi."}
-      - {id: C, answer: "Caller không nhận object construction thành công, nhưng side effect ở registry vẫn có thể expose partially constructed instance.", explanation: "Đúng. Constructor failure không tự đảo ngược external publication."}
-      - {id: D, answer: "Constructor không được phép throw exception.", explanation: "Sai. Constructor có thể throw khi không thiết lập được valid state."}
+      - {id: A, answer: "Biểu thức new vẫn trả về một object đã được khởi tạo đầy đủ.", explanation: "Sai. Nếu constructor ném exception thì biểu thức new không trả về một reference của quá trình tạo object thành công."}
+      - {id: B, answer: "JVM tự hoàn tác mọi tác dụng phụ đã xảy ra trước exception.", explanation: "Sai. Java không tự hoàn tác các tác dụng phụ tùy ý đã xảy ra trước lỗi."}
+      - {id: C, answer: "Code gọi không nhận được object được tạo thành công, nhưng registry vẫn có thể giữ và làm lộ một instance chưa được khởi tạo hoàn chỉnh.", explanation: "Đúng. Constructor thất bại không tự đảo ngược việc object đã bị công bố ra bên ngoài."}
+      - {id: D, answer: "Constructor không được phép ném exception.", explanation: "Sai. Constructor có thể ném exception khi không thể thiết lập trạng thái hợp lệ."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
@@ -300,12 +300,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: this-current-instance
-    question: "Bên trong instance method, this trỏ tới gì?"
+    question: "Bên trong một instance method, this đại diện cho gì?"
     answers:
-      - {id: A, answer: "Object hiện tại mà instance code đang thực thi trên đó.", explanation: "Đúng. this là current receiver trong instance context."}
-      - {id: B, answer: "Một superclass object riêng nằm bên trong object hiện tại.", explanation: "Sai. Không có một parent object tách biệt được đại diện bởi this."}
-      - {id: C, answer: "Class object của type hiện tại.", explanation: "Sai. Runtime Class object khác với instance receiver."}
-      - {id: D, answer: "Một reference chỉ có trong static method.", explanation: "Sai. Static context không có implicit this."}
+      - {id: A, answer: "Object hiện tại mà instance method đang thực thi trên đó.", explanation: "Đúng. this là reference ngầm tới object nhận lời gọi trong ngữ cảnh instance."}
+      - {id: B, answer: "Một object lớp cha riêng nằm bên trong object hiện tại.", explanation: "Sai. this đại diện cho chính object hiện tại; không có một object lớp cha tách biệt bên trong nó."}
+      - {id: C, answer: "Object Class mô tả kiểu hiện tại.", explanation: "Sai. Object Class khi chạy khác với instance nhận lời gọi method."}
+      - {id: D, answer: "Một reference chỉ tồn tại trong static method.", explanation: "Sai. Ngữ cảnh static không có this ngầm định."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -313,12 +313,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: super-same-object
-    question: "Mental model nào đúng nhất cho super bên trong subclass instance?"
+    question: "Cách hiểu nào đúng nhất về super bên trong một instance của lớp con?"
     answers:
-      - {id: A, answer: "super trỏ tới parent object thứ hai được allocate cạnh subclass object.", explanation: "Sai. Construction tạo một object, không tạo parent object tách biệt nằm bên trong."}
-      - {id: B, answer: "super thay đổi cách Java chọn superclass constructor/member trong cùng object context.", explanation: "Đúng. Nó biểu diễn superclass access/construction context của cùng object."}
-      - {id: C, answer: "super là alias của null cho tới khi child constructor xong.", explanation: "Sai. super không phải mutable reference variable."}
-      - {id: D, answer: "Có thể reassign super sang một superclass instance khác.", explanation: "Sai. super là language syntax, không phải variable có thể gán lại."}
+      - {id: A, answer: "super trỏ tới một object lớp cha thứ hai được cấp phát bên cạnh object lớp con.", explanation: "Sai. Quá trình tạo chỉ tạo một object, không tạo thêm một object lớp cha tách biệt bên trong."}
+      - {id: B, answer: "super yêu cầu Java chọn constructor hoặc member của lớp cha trong ngữ cảnh của cùng object hiện tại.", explanation: "Đúng. super biểu diễn cách truy cập phần lớp cha của cùng một object."}
+      - {id: C, answer: "super là một alias của null cho tới khi constructor lớp con hoàn tất.", explanation: "Sai. super không phải một biến tham chiếu mutable."}
+      - {id: D, answer: "Có thể gán lại super sang một instance lớp cha khác.", explanation: "Sai. super là cú pháp của ngôn ngữ, không phải biến có thể gán lại."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -326,12 +326,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: access-package-private
-    question: "Package-private access được khai báo thế nào cho một member?"
+    question: "Quyền truy cập package-private được khai báo thế nào cho một member?"
     answers:
       - {id: A, answer: "Dùng keyword package.", explanation: "Sai. Java không có keyword package-private."}
-      - {id: B, answer: "Không ghi public, protected hay private.", explanation: "Đúng. Không có explicit access modifier nghĩa là package-private."}
-      - {id: C, answer: "Dùng protected package.", explanation: "Sai. Đây không phải Java syntax hợp lệ."}
-      - {id: D, answer: "Đánh dấu member là static.", explanation: "Sai. static nói class-vs-instance ownership, không nói access level."}
+      - {id: B, answer: "Không ghi public, protected hoặc private.", explanation: "Đúng. Khi không có access modifier tường minh, member có quyền truy cập package-private."}
+      - {id: C, answer: "Dùng cú pháp protected package.", explanation: "Sai. Đây không phải cú pháp hợp lệ của Java."}
+      - {id: D, answer: "Đánh dấu member là static.", explanation: "Sai. static nói về việc member thuộc class hay instance, không nói về mức truy cập."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -339,12 +339,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: encapsulation-small-surface
-    question: "Vì sao public API surface nhỏ hơn có thể giúp encapsulation tốt hơn?"
+    question: "Vì sao bề mặt public API nhỏ hơn có thể giúp đóng gói tốt hơn?"
     answers:
-      - {id: A, answer: "Nó giảm số điểm mà caller có thể phụ thuộc trực tiếp vào implementation detail.", explanation: "Đúng. Ít member public hơn nghĩa là ít coupling point trực tiếp hơn."}
-      - {id: B, answer: "Nó guarantee implementation thread-safe.", explanation: "Sai. Access control và thread safety là hai vấn đề khác nhau."}
-      - {id: C, answer: "Nó tự biến mọi object thành immutable.", explanation: "Sai. Immutability cần ownership/mutation guarantee mạnh hơn."}
-      - {id: D, answer: "Nó ngăn class có constructor.", explanation: "Sai. Constructor availability không liên quan tới ý này."}
+      - {id: A, answer: "Nó giảm số điểm mà code gọi có thể phụ thuộc trực tiếp vào chi tiết triển khai.", explanation: "Đúng. Ít member public hơn thường tạo ít điểm phụ thuộc trực tiếp hơn giữa các phần của chương trình."}
+      - {id: B, answer: "Nó bảo đảm implementation luôn thread-safe.", explanation: "Sai. Kiểm soát quyền truy cập và an toàn luồng là hai vấn đề khác nhau."}
+      - {id: C, answer: "Nó tự biến mọi object thành bất biến.", explanation: "Sai. Tính bất biến còn phụ thuộc vào quyền sở hữu và khả năng thay đổi trạng thái."}
+      - {id: D, answer: "Nó ngăn class có constructor.", explanation: "Sai. Số lượng member public không quyết định class có constructor hay không."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -352,12 +352,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: modifier-domain-separation
-    question: "Phân biệt rõ nhất giữa private và volatile trên cùng một field là gì?"
+    question: "Khác biệt rõ nhất giữa private và volatile khi cùng xuất hiện trên một field là gì?"
     answers:
-      - {id: A, answer: "private kiểm soát ai được access field; volatile liên quan visibility/ordering giữa các thread.", explanation: "Đúng. Hai modifier giải quyết hai problem domain khác nhau dù đứng trên cùng declaration."}
-      - {id: B, answer: "Cả hai đều là access modifier có cùng ý nghĩa.", explanation: "Sai. volatile thuộc concurrency/JMM, không phải access level."}
-      - {id: C, answer: "volatile làm field chỉ visible trong declaring class.", explanation: "Sai. Đó là vai trò của private."}
-      - {id: D, answer: "private guarantee atomic compound update giữa các thread.", explanation: "Sai. Access restriction không tạo concurrency atomicity."}
+      - {id: A, answer: "private kiểm soát nơi nào được truy cập field; volatile liên quan đến khả năng nhìn thấy giá trị và thứ tự thao tác giữa các thread.", explanation: "Đúng. Hai modifier giải quyết hai nhóm vấn đề khác nhau dù cùng nằm trên một khai báo field."}
+      - {id: B, answer: "Cả hai đều là access modifier có cùng ý nghĩa.", explanation: "Sai. volatile thuộc cơ chế đồng thời và Java Memory Model, không phải mức truy cập."}
+      - {id: C, answer: "volatile làm field chỉ nhìn thấy bên trong class khai báo nó.", explanation: "Sai. Đó là vai trò của private, không phải volatile."}
+      - {id: D, answer: "private bảo đảm một phép cập nhật phức hợp luôn nguyên tử giữa các thread.", explanation: "Sai. Hạn chế quyền truy cập không tự tạo tính nguyên tử cho thao tác đồng thời."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -365,12 +365,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: static-instance-sharing
-    question: "Statement nào phân biệt đúng static field và instance field?"
+    question: "Phát biểu nào phân biệt đúng static field và instance field?"
     answers:
-      - {id: A, answer: "Mỗi object có một copy riêng của cả hai field.", explanation: "Sai. Static state gắn với class, không phải một copy cho từng instance."}
-      - {id: B, answer: "Static field được dùng chung ở class level, còn mỗi object giữ instance-field state riêng.", explanation: "Đúng. static state và instance state có ownership scope khác nhau."}
-      - {id: C, answer: "Instance field chỉ access được từ static method.", explanation: "Sai. Instance method tự nhiên làm việc với instance state qua receiver."}
-      - {id: D, answer: "Static method có implicit this trỏ tới class.", explanation: "Sai. Static method không có implicit this."}
+      - {id: A, answer: "Mỗi object có một bản riêng của cả static field lẫn instance field.", explanation: "Sai. Trạng thái static thuộc class và được dùng chung, không có một bản riêng cho từng instance."}
+      - {id: B, answer: "static field thuộc class và được dùng chung, còn mỗi object giữ trạng thái riêng trong các instance field.", explanation: "Đúng. Hai loại field có phạm vi sở hữu khác nhau."}
+      - {id: C, answer: "Instance field chỉ có thể được truy cập từ static method.", explanation: "Sai. Instance method làm việc trực tiếp với trạng thái của object nhận lời gọi."}
+      - {id: D, answer: "static method có this ngầm định trỏ tới class.", explanation: "Sai. static method không có this ngầm định."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -378,12 +378,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: static-init-once-class
-    question: "Static field initializer và static initializer block chạy khi nào?"
+    question: "static field initializer và static initializer block chạy khi nào?"
     answers:
-      - {id: A, answer: "Mỗi lần new object.", explanation: "Sai. Đó là instance initialization, không phải class initialization."}
-      - {id: B, answer: "Trong class initialization, theo superclass/source ordering rule.", explanation: "Đúng. Static initialization thuộc lifecycle của class, không thuộc mỗi construction."}
-      - {id: C, answer: "Chỉ sau khi constructor body đầu tiên chạy xong.", explanation: "Sai. Class initialization cần thiết xảy ra trước normal use kích hoạt nó."}
-      - {id: D, answer: "Chỉ khi System.gc() chạy.", explanation: "Sai. Garbage collection không liên quan tới class initialization."}
+      - {id: A, answer: "Mỗi lần tạo object bằng new.", explanation: "Sai. Đó là khởi tạo instance, không phải khởi tạo class."}
+      - {id: B, answer: "Trong quá trình khởi tạo class, theo quy tắc khởi tạo lớp cha trước và theo thứ tự khai báo trong source code.", explanation: "Đúng. Khởi tạo static thuộc vòng đời của class, không lặp lại cho mỗi object được tạo."}
+      - {id: C, answer: "Chỉ sau khi phần thân constructor đầu tiên chạy xong.", explanation: "Sai. Khi cần khởi tạo class, bước này xảy ra trước lần sử dụng bình thường kích hoạt nó."}
+      - {id: D, answer: "Chỉ khi System.gc() chạy.", explanation: "Sai. Garbage collection không liên quan đến việc khởi tạo class."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -391,12 +391,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: compile-time-constant
-    question: "Field nào là compile-time constant theo constant-expression rule thông thường của Java?"
+    question: "Field nào là hằng số tại thời điểm biên dịch theo quy tắc constant expression thông thường của Java?"
     answers:
-      - {id: A, answer: "static final int LIMIT = 3;", explanation: "Đúng. Primitive static final được initialize bằng constant expression có thể là compile-time constant."}
-      - {id: B, answer: "static final int LIMIT = Integer.parseInt(\"3\");", explanation: "Sai. Method call khiến đây là runtime initialization, không phải constant expression."}
+      - {id: A, answer: "static final int LIMIT = 3;", explanation: "Đúng. Một biến primitive static final được gán bằng constant expression có thể là hằng số tại thời điểm biên dịch."}
+      - {id: B, answer: "static final int LIMIT = Integer.parseInt(\"3\");", explanation: "Sai. Lời gọi method khiến giá trị phải được tính khi chương trình chạy, nên đây không phải constant expression."}
       - {id: C, answer: "static int LIMIT = 3;", explanation: "Sai. Không có final thì đây không phải constant variable."}
-      - {id: D, answer: "final List<Integer> LIMITS = new ArrayList<>();", explanation: "Sai. Mutable object reference như vậy không phải primitive/String compile-time constant."}
+      - {id: D, answer: "final List<Integer> LIMITS = new ArrayList<>();", explanation: "Sai. Reference tới một object mutable như List không phải hằng số primitive/String tại thời điểm biên dịch."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -406,10 +406,10 @@ questions:
   - id: static-initializer-timing
     question: "Vì sao nên tránh I/O phức tạp trong static initializer?"
     answers:
-      - {id: A, answer: "Static initializer không được chứa statement.", explanation: "Sai. Nó có thể chứa statement; vấn đề là lifecycle và failure semantics."}
-      - {id: B, answer: "Failure xảy ra trong class initialization nên startup và error handling khó reasoning hơn.", explanation: "Đúng. Công việc bị gắn chặt vào timing/failure của class initialization."}
-      - {id: C, answer: "Static initializer chạy sau mọi instance method call.", explanation: "Sai. Nó thuộc class initialization."}
-      - {id: D, answer: "I/O tự biến static field thành instance field.", explanation: "Sai. Loại công việc không thay đổi ownership của member."}
+      - {id: A, answer: "static initializer không được chứa câu lệnh.", explanation: "Sai. Nó có thể chứa câu lệnh; vấn đề nằm ở vòng đời và cách lỗi trong quá trình khởi tạo class ảnh hưởng đến chương trình."}
+      - {id: B, answer: "Nếu I/O thất bại trong lúc khởi tạo class, quá trình khởi động và xử lý lỗi sẽ khó theo dõi hơn.", explanation: "Đúng. Công việc I/O bị gắn chặt vào thời điểm và lỗi của class initialization."}
+      - {id: C, answer: "static initializer luôn chạy sau mọi lời gọi instance method.", explanation: "Sai. Nó thuộc quá trình khởi tạo class và có thể chạy trước khi bất kỳ instance nào được tạo."}
+      - {id: D, answer: "I/O tự biến static field thành instance field.", explanation: "Sai. Loại công việc được thực hiện không thay đổi member thuộc class hay instance."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -417,12 +417,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: initializer-readability
-    question: "Khi nào initializer block là lựa chọn hợp lý?"
+    question: "Khi nào initializer block là một lựa chọn hợp lý?"
     answers:
-      - {id: A, answer: "Bất cứ khi nào Java syntax cho phép, không cần quan tâm readability.", explanation: "Sai. Mechanism nên phục vụ clarity thay vì dùng chỉ vì tồn tại."}
-      - {id: B, answer: "Khi nó thật sự làm shared initialization rõ hơn so với duplicate logic ở nhiều constructor.", explanation: "Đúng. Readability và lifecycle clarity là tiêu chí chính."}
-      - {id: C, answer: "Chỉ dùng cho network I/O.", explanation: "Sai. Initializer block không phải hook dành riêng cho I/O."}
-      - {id: D, answer: "Chỉ tồn tại trong interface.", explanation: "Sai. Instance initializer block là feature của class construction."}
+      - {id: A, answer: "Bất cứ khi nào cú pháp Java cho phép, không cần quan tâm đến độ dễ đọc.", explanation: "Sai. Nên chọn cơ chế giúp mã dễ hiểu hơn, không dùng chỉ vì ngôn ngữ có hỗ trợ."}
+      - {id: B, answer: "Khi nó thực sự làm phần khởi tạo dùng chung rõ ràng hơn so với việc lặp lại cùng logic trong nhiều constructor.", explanation: "Đúng. Độ dễ đọc và việc hiểu rõ vòng đời khởi tạo là tiêu chí chính."}
+      - {id: C, answer: "Chỉ dùng cho I/O mạng.", explanation: "Sai. Initializer block không phải cơ chế dành riêng cho I/O."}
+      - {id: D, answer: "Chỉ tồn tại trong interface.", explanation: "Sai. Instance initializer block là một phần của quá trình khởi tạo class instance."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -430,12 +430,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: class-init-super-first
-    question: "Khi subclass cần được class-initialize, broad ordering rule nào áp dụng?"
+    question: "Khi một subclass cần được khởi tạo ở mức class, quy tắc thứ tự tổng quát nào được áp dụng?"
     answers:
-      - {id: A, answer: "Required superclass initialization xảy ra trước static initialization của subclass.", explanation: "Đúng. Class initialization đi theo superclass relationship trước khi subclass static field/block chạy."}
-      - {id: B, answer: "Subclass static block luôn chạy trước superclass static state.", explanation: "Sai. Required superclass class initialization xảy ra trước."}
-      - {id: C, answer: "Static initialization order là random.", explanation: "Sai. Java định nghĩa ordering rule."}
-      - {id: D, answer: "Class initialization chạy một lần cho mỗi object allocation.", explanation: "Sai. Nó thuộc class lifecycle, không thuộc từng object."}
+      - {id: A, answer: "Nếu cần, lớp cha được khởi tạo ở mức class trước phần khởi tạo static của subclass.", explanation: "Đúng. Java khởi tạo class theo quan hệ lớp cha trước khi chạy static field initializer và static block của lớp con."}
+      - {id: B, answer: "static block của subclass luôn chạy trước trạng thái static của lớp cha.", explanation: "Sai. Lớp cha cần được khởi tạo trước lớp con."}
+      - {id: C, answer: "Thứ tự khởi tạo static là ngẫu nhiên.", explanation: "Sai. Java định nghĩa rõ quy tắc thứ tự khởi tạo."}
+      - {id: D, answer: "Class initialization chạy lại một lần cho mỗi object được cấp phát.", explanation: "Sai. Đây là vòng đời của class, không phải bước lặp lại cho từng object."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -443,12 +443,12 @@ questions:
     apiRelated: {controller: "InitializationController", methodSignature: "traceOrder()"}
 
   - id: object-creation-default-values
-    question: "Trong object creation, điều gì tồn tại trước khi explicit instance field initializer chạy?"
+    question: "Trong quá trình tạo object, điều gì đã tồn tại trước khi instance field initializer tường minh chạy?"
     answers:
-      - {id: A, answer: "Field trước hết có JVM default value như 0, false và null.", explanation: "Đúng. Allocation/default initialization diễn ra trước explicit field/block initialization."}
-      - {id: B, answer: "Mọi field đã có final source-code initializer value ngay lập tức.", explanation: "Sai. Explicit initialization chạy ở bước sau."}
-      - {id: C, answer: "Object chưa có memory cho tới khi constructor return.", explanation: "Sai. Memory/default state tồn tại trước khi constructor hoàn tất."}
-      - {id: D, answer: "Chỉ static field có value; instance field chưa tồn tại.", explanation: "Sai. Instance storage đã tồn tại và bắt đầu bằng default value."}
+      - {id: A, answer: "Các field trước hết nhận giá trị mặc định của JVM như 0, false và null.", explanation: "Đúng. Bước cấp phát và gán giá trị mặc định xảy ra trước field initializer hoặc initializer block tường minh."}
+      - {id: B, answer: "Mọi field lập tức có giá trị từ initializer trong source code.", explanation: "Sai. Phần khởi tạo tường minh chạy ở bước sau khi các field đã nhận giá trị mặc định."}
+      - {id: C, answer: "Object chưa được cấp phát bộ nhớ cho tới khi constructor kết thúc.", explanation: "Sai. Bộ nhớ và trạng thái mặc định đã tồn tại trước khi constructor hoàn tất."}
+      - {id: D, answer: "Chỉ static field có giá trị; instance field chưa tồn tại.", explanation: "Sai. Vùng nhớ cho instance field đã tồn tại và ban đầu chứa giá trị mặc định."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -456,12 +456,12 @@ questions:
     apiRelated: {controller: "ConstructionController", methodSignature: "constructorDispatchRisk()"}
 
   - id: this-escape-publication
-    question: "Hành động nào trong constructor là rủi ro this-escape điển hình?"
+    question: "Hành động nào trong constructor là ví dụ điển hình của rủi ro this escape?"
     answers:
-      - {id: A, answer: "Gán constructor parameter vào private field.", explanation: "Sai. Field assignment thông thường không publish object ra ngoài."}
-      - {id: B, answer: "Register this vào external listener/registry có thể dùng object trước khi construction xong.", explanation: "Đúng. External publication có thể expose partially initialized state."}
-      - {id: C, answer: "Gọi this(...) làm constructor delegation step.", explanation: "Sai. Constructor chaining tự nó không phải external publication."}
-      - {id: D, answer: "Gán primitive final field đúng một lần.", explanation: "Sai. Đây là initialization bình thường."}
+      - {id: A, answer: "Gán tham số constructor vào một private field.", explanation: "Sai. Việc gán field thông thường không tự công bố object ra bên ngoài."}
+      - {id: B, answer: "Đăng ký this vào listener hoặc registry bên ngoài có thể dùng object trước khi constructor hoàn tất.", explanation: "Đúng. Công bố object quá sớm có thể làm lộ trạng thái chưa được khởi tạo hoàn chỉnh."}
+      - {id: C, answer: "Gọi this(...) để ủy quyền sang constructor khác.", explanation: "Sai. Chuỗi constructor tự nó không phải là việc công bố object ra bên ngoài."}
+      - {id: D, answer: "Gán một field primitive final đúng một lần.", explanation: "Sai. Đây là một bước khởi tạo bình thường."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -469,12 +469,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: static-nested-no-outer
-    question: "Cú pháp tạo object nào chứng minh static nested class không cần outer instance?"
+    question: "Cú pháp tạo object nào cho thấy static nested class không cần một outer instance?"
     answers:
-      - {id: A, answer: "BankAccount.Builder b = new BankAccount.Builder();", explanation: "Đúng. Static nested class được tạo qua outer type name mà không cần outer object receiver."}
-      - {id: B, answer: "BankAccount.Builder b = account.new Builder();", explanation: "Sai. Cú pháp này gắn với non-static inner class."}
-      - {id: C, answer: "Builder b = super.new Builder();", explanation: "Sai. Đây không phải nested-class creation syntax hợp lệ."}
-      - {id: D, answer: "Builder b = this();", explanation: "Sai. this() là constructor delegation syntax."}
+      - {id: A, answer: "BankAccount.Builder b = new BankAccount.Builder();", explanation: "Đúng. static nested class được tạo thông qua tên outer type mà không cần một outer object cụ thể."}
+      - {id: B, answer: "BankAccount.Builder b = account.new Builder();", explanation: "Sai. Cú pháp này dùng cho non-static inner class gắn với một outer instance."}
+      - {id: C, answer: "Builder b = super.new Builder();", explanation: "Sai. Đây không phải cú pháp hợp lệ để tạo nested class."}
+      - {id: D, answer: "Builder b = this();", explanation: "Sai. this() là cú pháp ủy quyền constructor, không phải cú pháp tạo nested class."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -482,12 +482,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: local-anonymous-this
-    question: "Statement nào phân biệt đúng anonymous class và lambda về this?"
+    question: "Phát biểu nào phân biệt đúng anonymous class và lambda về this?"
     answers:
-      - {id: A, answer: "Anonymous class có object/this semantics riêng, còn lambda dùng this theo enclosing context.", explanation: "Đúng. Đây là semantic difference quan trọng dù cả hai đều dùng cho local behavior."}
-      - {id: B, answer: "Cả hai đều không access được enclosing state.", explanation: "Sai. Cả hai có thể tương tác với enclosing context theo rule tương ứng."}
-      - {id: C, answer: "Lambda luôn tạo named nested class trong source code.", explanation: "Sai. Lambda syntax không khai báo một named class."}
-      - {id: D, answer: "Anonymous class chỉ tồn tại trong static method.", explanation: "Sai. Nó cũng có thể dùng trong instance context."}
+      - {id: A, answer: "Anonymous class có object và this riêng, còn lambda dùng this của ngữ cảnh bao quanh.", explanation: "Đúng. Đây là khác biệt ngữ nghĩa quan trọng giữa hai cơ chế dù cả hai đều có thể dùng cho hành vi cục bộ."}
+      - {id: B, answer: "Cả hai đều không thể truy cập trạng thái của ngữ cảnh bao quanh.", explanation: "Sai. Cả hai có thể làm việc với ngữ cảnh bao quanh theo các quy tắc tương ứng."}
+      - {id: C, answer: "Lambda luôn khai báo một nested class có tên trong source code.", explanation: "Sai. Cú pháp lambda không khai báo một class có tên."}
+      - {id: D, answer: "Anonymous class chỉ tồn tại bên trong static method.", explanation: "Sai. Anonymous class cũng có thể được dùng trong ngữ cảnh instance."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -495,12 +495,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: effectively-final-capture
-    question: "Vì sao local class trong capture() đọc được localBase = 40?"
+    question: "Vì sao local class trong capture() có thể đọc localBase = 40?"
     answers:
-      - {id: A, answer: "Vì localBase là effectively final: được gán một lần và không bị reassign.", explanation: "Đúng. Local/anonymous class chỉ capture local variable final hoặc effectively final."}
-      - {id: B, answer: "Vì mọi int variable đều implicit static.", explanation: "Sai. Local primitive variable không implicit static."}
-      - {id: C, answer: "Vì captured local có thể tự do reassign sau capture.", explanation: "Sai. Reassignment sẽ làm mất effectively-final status."}
-      - {id: D, answer: "Vì local class copy toàn bộ stack frame rồi biến nó thành mutable.", explanation: "Sai. Đây không phải Java language model cho captured local."}
+      - {id: A, answer: "Vì localBase là effectively final: nó được gán một lần và không bị gán lại.", explanation: "Đúng. Local class và anonymous class chỉ capture biến local là final hoặc effectively final."}
+      - {id: B, answer: "Vì mọi biến int đều ngầm là static.", explanation: "Sai. Biến primitive local không tự động trở thành static."}
+      - {id: C, answer: "Vì biến local đã capture vẫn có thể được gán lại tự do sau đó.", explanation: "Sai. Nếu bị gán lại, biến không còn thỏa điều kiện effectively final."}
+      - {id: D, answer: "Vì local class sao chép toàn bộ stack frame rồi biến nó thành mutable.", explanation: "Sai. Đây không phải mô hình ngôn ngữ Java dùng để mô tả việc capture biến local."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -508,12 +508,12 @@ questions:
     apiRelated: {controller: "NestedClassController", methodSignature: "capture()"}
 
   - id: object-root-primitives
-    question: "Statement nào đúng về java.lang.Object và primitive?"
+    question: "Phát biểu nào đúng về java.lang.Object và kiểu primitive?"
     answers:
-      - {id: A, answer: "int trực tiếp extends Object.", explanation: "Sai. Primitive type không phải class subtype của Object."}
-      - {id: B, answer: "Các class thông thường có Object trong superclass chain, còn primitive dùng wrapper type khi tham gia reference-based API.", explanation: "Đúng. Boxing giúp primitive value tham gia API dựa trên reference."}
-      - {id: C, answer: "Object là primitive supertype.", explanation: "Sai. Object là một class."}
-      - {id: D, answer: "Chỉ final class mới kế thừa Object.", explanation: "Sai. final không quyết định root superclass."}
+      - {id: A, answer: "int trực tiếp extends Object.", explanation: "Sai. Kiểu primitive không phải subtype dạng class của Object."}
+      - {id: B, answer: "Các class thông thường có Object trong chuỗi lớp cha, còn primitive dùng wrapper type khi tham gia API dựa trên reference.", explanation: "Đúng. Boxing cho phép giá trị primitive tham gia các API làm việc với reference."}
+      - {id: C, answer: "Object là supertype của các primitive.", explanation: "Sai. Object là một class; primitive không nằm trong hệ phân cấp class đó."}
+      - {id: D, answer: "Chỉ final class mới kế thừa Object.", explanation: "Sai. final không quyết định lớp gốc trong chuỗi kế thừa."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -521,12 +521,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: object-method-boundary
-    question: "Trong curriculum này, detailed equals/hashCode contract nên học sâu ở đâu?"
+    question: "Trong lộ trình này, hợp đồng equals/hashCode chi tiết nên được học sâu ở đâu?"
     answers:
-      - {id: A, answer: "Chỉ trong class-object vì Object khai báo các method đó.", explanation: "Sai. Module này chỉ orientation về Object và chuyển deep contract sang module khác."}
-      - {id: B, answer: "Trong object-contract, còn class-object chỉ giữ overview về root methods.", explanation: "Đúng. Đây là module boundary đã được thiết kế."}
-      - {id: C, answer: "Chỉ trong chapter enum.", explanation: "Sai. Equality/hash contract rộng hơn enum."}
-      - {id: D, answer: "Đây là JVM-internal nên không cần học.", explanation: "Sai. Đây là Java object contract quan trọng."}
+      - {id: A, answer: "Chỉ trong class-object vì Object khai báo các method đó.", explanation: "Sai. Module này chỉ giới thiệu tổng quan về Object; hợp đồng chi tiết được chuyển sang module khác."}
+      - {id: B, answer: "Trong object-contract; class-object chỉ giữ phần tổng quan về các method gốc của Object.", explanation: "Đúng. Đây là ranh giới nội dung đã được thiết kế giữa các module."}
+      - {id: C, answer: "Chỉ trong chương enum.", explanation: "Sai. Hợp đồng equality/hash áp dụng rộng hơn enum."}
+      - {id: D, answer: "Đây chỉ là chi tiết nội bộ của JVM nên không cần học.", explanation: "Sai. Đây là hợp đồng quan trọng khi thiết kế object trong Java."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -534,12 +534,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: enum-instance-identity
-    question: "Vì sao == phù hợp để so sánh enum constant?"
+    question: "Vì sao toán tử == phù hợp để so sánh các enum constant?"
     answers:
-      - {id: A, answer: "Mỗi enum constant đã khai báo có singleton identity ổn định trong enum type đó.", explanation: "Đúng. Enum comparison tự nhiên dựa trên constant identity."}
-      - {id: B, answer: "Enum thực chất là primitive int.", explanation: "Sai. Enum constant là object, không phải integer alias."}
-      - {id: C, answer: "== gọi equals() bằng deep reflection cho enum.", explanation: "Sai. == so sánh reference identity."}
-      - {id: D, answer: "Mọi enum constant đều là cùng một object.", explanation: "Sai. Mỗi named constant là một enum instance khác."}
+      - {id: A, answer: "Mỗi enum constant đã khai báo có một identity duy nhất và ổn định trong enum type đó.", explanation: "Đúng. So sánh enum tự nhiên dựa trên identity của constant."}
+      - {id: B, answer: "Enum thực chất chỉ là primitive int.", explanation: "Sai. Enum constant là object, không phải bí danh của một số nguyên."}
+      - {id: C, answer: "== gọi equals() bằng cơ chế phản chiếu sâu cho enum.", explanation: "Sai. == so sánh identity của reference."}
+      - {id: D, answer: "Mọi enum constant đều là cùng một object.", explanation: "Sai. Mỗi constant có tên là một enum instance riêng."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -547,12 +547,12 @@ questions:
     apiRelated: {controller: "EnumController", methodSignature: "enumBehavior()"}
 
   - id: enum-interface-behavior
-    question: "FeeTier implements FeePolicy chứng minh điều gì?"
+    question: "Việc FeeTier implements FeePolicy cho thấy điều gì?"
     answers:
-      - {id: A, answer: "Enum không thể implement interface nên code không hợp lệ.", explanation: "Sai. Enum có thể implement interface."}
-      - {id: B, answer: "Một tập enum constant đóng có thể cùng thỏa một interface nhưng từng constant cung cấp behavior khác nhau.", explanation: "Đúng. Đây là typed closed values kết hợp polymorphic behavior."}
-      - {id: C, answer: "Mỗi enum constant trở thành một top-level class declaration riêng.", explanation: "Sai. Constant-specific body thuộc enum model, không phải top-level source type riêng."}
-      - {id: D, answer: "Implement interface làm enum mất identity semantics.", explanation: "Sai. Constant vẫn là enum instance có stable identity."}
+      - {id: A, answer: "Enum không thể implement interface nên đoạn mã không hợp lệ.", explanation: "Sai. Enum có thể implement interface."}
+      - {id: B, answer: "Một tập enum constant đóng có thể cùng thỏa một interface nhưng mỗi constant vẫn cung cấp hành vi khác nhau.", explanation: "Đúng. Đây là cách kết hợp tập giá trị có kiểu rõ ràng với hành vi đa hình."}
+      - {id: C, answer: "Mỗi enum constant trở thành một top-level class riêng trong source code.", explanation: "Sai. Phần thân riêng của constant vẫn thuộc mô hình enum, không phải một khai báo top-level class riêng."}
+      - {id: D, answer: "Việc implement interface làm enum mất ngữ nghĩa identity.", explanation: "Sai. Mỗi constant vẫn là một enum instance có identity ổn định."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -560,12 +560,12 @@ questions:
     apiRelated: {controller: "EnumController", methodSignature: "enumBehavior()"}
 
   - id: reference-copy-not-object
-    question: "Sau BankAccount b = a;, thứ gì đã được copy?"
+    question: "Sau câu lệnh BankAccount b = a;, thứ gì đã được sao chép?"
     answers:
-      - {id: A, answer: "Toàn bộ BankAccount object graph.", explanation: "Sai. Reference assignment thông thường không clone object."}
-      - {id: B, answer: "Chỉ reference value, nên a và b cùng nhận diện một object.", explanation: "Đúng. Đây là reference copy, không phải object copy."}
-      - {id: C, answer: "Chỉ primitive field bên trong account.", explanation: "Sai. Phép gán này không copy field nào cả."}
-      - {id: D, answer: "Một object mới có identity bằng nhau.", explanation: "Sai. Object identity không được duplicate theo cách này."}
+      - {id: A, answer: "Toàn bộ đồ thị object của BankAccount.", explanation: "Sai. Phép gán reference thông thường không clone object."}
+      - {id: B, answer: "Chỉ giá trị reference, nên a và b cùng trỏ tới một object.", explanation: "Đúng. Đây là sao chép reference, không phải sao chép object."}
+      - {id: C, answer: "Chỉ các field primitive bên trong account.", explanation: "Sai. Phép gán này không sao chép các field bên trong object."}
+      - {id: D, answer: "Một object mới có cùng identity được tạo ra.", explanation: "Sai. Phép gán reference không tạo object mới và không sao chép identity."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -573,14 +573,27 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: deep-copy-ownership
-    question: "Điều gì nên quyết định một nested object có cần được duplicate trong deep copy hay không?"
+    question: "Điều gì nên quyết định một object lồng có cần được sao chép trong deep copy hay không?"
     answers:
-      - {id: A, answer: "Một universal rule rằng mọi reachable object luôn phải clone.", explanation: "Sai. Copy depth phụ thuộc ownership và domain semantics."}
-      - {id: B, answer: "Object mới có cần independent ownership đối với mutable reachable state đó hay không.", explanation: "Đúng. Immutable value có thể share, còn mutable owned state có thể cần duplicate."}
-      - {id: C, answer: "Field name có chứa chữ copy hay không.", explanation: "Sai. Naming không định nghĩa ownership semantics."}
-      - {id: D, answer: "Chỉ dựa vào việc nested object có override toString() hay không.", explanation: "Sai. String representation không liên quan copy ownership."}
+      - {id: A, answer: "Một quy tắc chung rằng mọi object còn truy cập được đều luôn phải clone.", explanation: "Sai. Độ sâu sao chép phụ thuộc vào quyền sở hữu và ngữ nghĩa của domain."}
+      - {id: B, answer: "Object mới có cần sở hữu độc lập phần trạng thái mutable đó hay không.", explanation: "Đúng. Giá trị bất biến có thể dùng chung, còn trạng thái mutable thuộc quyền sở hữu riêng có thể cần được sao chép."}
+      - {id: C, answer: "Tên field có chứa chữ copy hay không.", explanation: "Sai. Cách đặt tên không xác định ngữ nghĩa quyền sở hữu."}
+      - {id: D, answer: "Chỉ dựa vào việc object lồng có override toString() hay không.", explanation: "Sai. Cách biểu diễn chuỗi không quyết định chính sách sao chép."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "12.CopySemantics/CopySemantics.md", anchor: "deep-copy"}
     apiRelated: {controller: "CopyController", methodSignature: "shallowVsDeep()"}
+
+  - id: class-object-synthesis-chain
+    question: "Mô hình nào nối đúng các phần chính của Class/Object từ lúc định nghĩa lớp đến khi chia sẻ trạng thái?"
+    answers:
+      - {id: A, answer: "Lớp được định nghĩa → đối tượng dùng được ngay → sau đó mới cấp phát bộ nhớ và chạy constructor.", explanation: "Sai. Cấp phát và khởi tạo là một phần của quá trình tạo đối tượng trước khi đối tượng trở nên dùng được."}
+      - {id: B, answer: "Lớp được định nghĩa → tạo đối tượng gồm cấp phát/khởi tạo và hoàn tất constructor → đối tượng được sử dụng/chia sẻ → sao chép, dùng chung tham chiếu và tính bất biến quyết định cách quản lý trạng thái dùng chung.", explanation: "Đúng. Đây là chuỗi tổng hợp nối quá trình tạo đối tượng, chia sẻ tham chiếu, ngữ nghĩa sao chép và tính bất biến thành một mô hình thống nhất."}
+      - {id: C, answer: "static và final tự động làm mọi đối tượng bất biến nên không cần quan tâm tham chiếu hay sao chép.", explanation: "Sai. static nói về quyền sở hữu cấp lớp, final giới hạn việc gán/ghi đè; cả hai không tự loại bỏ dùng chung tham chiếu hay trạng thái lồng có thể thay đổi."}
+      - {id: D, answer: "Object, enum và lớp lồng là ba cơ chế thay thế cho constructor.", explanation: "Sai. Đây là các khái niệm khác nhau trong mô hình đối tượng, không thay thế quá trình khởi tạo đối tượng."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "15.ClassObjectSynthesis/ClassObjectSynthesis.md", anchor: "class-object-synthesis"}
+    apiRelated: {controller: "", methodSignature: ""}

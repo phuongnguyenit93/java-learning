@@ -1,6 +1,6 @@
-# Constructor
+# Construction and Valid State
 
-A constructor is more than syntax executed after `new`. It is where an object transitions from “being created” to **having valid initial state**.
+A constructor is a special declaration in a class, used during object construction to establish initial state. It is more than syntax associated with `new`: it is where an object transitions from “being created” to **having valid initial state**.
 
 ## <a id="constructor-purpose">Constructor Purpose</a>
 
@@ -33,7 +33,7 @@ BankAccount(String id) {
 
 `this(...)` delegates to another constructor in the same class so validation/initialization logic can stay in one place.
 
-If a constructor does not explicitly begin with `this(...)` or `super(...)`, Java inserts an implicit no-argument `super()` call. That call must resolve to an accessible superclass constructor; otherwise compilation fails.
+For a class that has a superclass, if a constructor does not explicitly begin with `this(...)` or `super(...)`, Java inserts an implicit no-argument `super()` call. That call must resolve to an accessible superclass constructor; otherwise compilation fails. `java.lang.Object` is the root exception because it has no superclass.
 
 ## <a id="default-constructor">Default Constructor</a>
 
@@ -55,6 +55,6 @@ A constructor may throw if it cannot establish valid state.
 
 If construction fails, the `new` expression does not return a fully constructed reference to the caller. However, side effects performed before failure can still have happened.
 
-Avoid publishing `this` from a constructor too early; the Object Creation Lifecycle chapter returns to that risk.
+Avoid publishing `this` from a constructor too early; the Object Creation Process chapter returns to that risk.
 
-Next we examine the two special references used during instance construction/member access: `this` and `super`.
+Next we examine the `this` reference for the current object and the `super` keyword/forms used to select superclass construction/member context.

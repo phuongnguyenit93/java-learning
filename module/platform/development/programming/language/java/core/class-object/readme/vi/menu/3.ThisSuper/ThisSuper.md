@@ -1,19 +1,19 @@
-# this và super
+# this, super và chuỗi khởi tạo
 
-Trong instance ngữ cảnh, Java cần cách nói rõ **object hiện tại** và **phần hành vi/trạng thái thuộc superclass**. Hai keyword `this` và `super` phục vụ đúng vai trò đó.
+Trong mã chạy trên một đối tượng cụ thể, Java cần cách nói rõ **đối tượng hiện tại** và **ngữ cảnh của lớp cha**. Hai từ khóa `this` và `super` phục vụ đúng vai trò đó.
 
-Lý do thực tế là quá trình khởi tạo và truy cập member cần đi qua nhiều ngữ cảnh: một constructor có thể tái sử dụng constructor khác trong cùng class, còn subclass phải khởi tạo phần superclass của chính object đó trước khi hoàn thiện trạng thái riêng.
+Lý do thực tế là quá trình khởi tạo và truy cập thành viên cần đi qua nhiều ngữ cảnh: một hàm khởi tạo có thể tái sử dụng hàm khởi tạo khác trong cùng lớp, còn lớp con phải khởi tạo phần thuộc lớp cha của chính đối tượng đó trước khi hoàn thiện trạng thái riêng.
 
 ## <a id="this-reference">this</a>
 
-`this` là reference tới object hiện tại trong instance ngữ cảnh.
+`this` là tham chiếu tới đối tượng hiện tại trong ngữ cảnh của một thể hiện.
 
 Nó thường được dùng để:
 
-- phân biệt field với parameter cùng tên;
-- truyền object hiện tại sang method khác;
-- gọi constructor khác bằng `this(...)`;
-- trả về instance hiện tại trong fluent API nếu thiết kế phù hợp.
+- phân biệt trường dữ liệu với tham số cùng tên;
+- truyền đối tượng hiện tại sang phương thức khác;
+- gọi hàm khởi tạo khác bằng `this(...)`;
+- khi cần, trả về chính đối tượng hiện tại trong API kiểu nối chuỗi lời gọi.
 
 ```java
 class BankAccount {
@@ -31,13 +31,13 @@ class BankAccount {
 }
 ```
 
-Ở đây `this(id, 0)` gọi lại constructor **trong cùng class**, còn `this.id = id` truy cập field của object hiện tại.
+Ở đây `this(id, 0)` gọi lại hàm khởi tạo **trong cùng lớp**, còn `this.id = id` truy cập trường dữ liệu của đối tượng hiện tại.
 
-Không có `this` trong static ngữ cảnh vì static member không gắn với một instance cụ thể.
+Không có `this` trong ngữ cảnh `static` vì thành viên `static` không gắn với một đối tượng cụ thể.
 
 ## <a id="super-access">super</a>
 
-`super` cho phép truy cập constructor/member của superclass theo quy tắc của Java.
+`super` cho phép truy cập hàm khởi tạo hoặc thành viên của lớp cha theo quy tắc của Java.
 
 ```java
 class SavingsAccount extends BankAccount {
@@ -50,21 +50,21 @@ class SavingsAccount extends BankAccount {
 }
 ```
 
-`super(id, balance)` khởi tạo phần `BankAccount` trước khi constructor của `SavingsAccount` thiết lập trạng thái riêng của subclass.
+`super(id, balance)` khởi tạo phần `BankAccount` trước khi hàm khởi tạo của `SavingsAccount` thiết lập trạng thái riêng của lớp con.
 
-`super` không phải một object thứ hai nằm bên trong subclass. Object vẫn là một instance duy nhất; keyword này chỉ thay đổi cách Java chọn member hoặc constructor của superclass trong mã nguồn.
+`super` không phải một đối tượng thứ hai nằm bên trong đối tượng lớp con. Vẫn chỉ có một đối tượng; từ khóa này thay đổi cách mã nguồn chọn thành viên hoặc hàm khởi tạo của lớp cha.
 
-## <a id="constructor-chaining-order">Quy tắc this()/super()</a>
+## <a id="constructor-chaining-order">Chuỗi gọi this()/super()</a>
 
-Mỗi constructor cuối cùng phải dẫn tới một superclass constructor.
+Với mọi lớp khác `Object`, chuỗi hàm khởi tạo cuối cùng phải dẫn tới hàm khởi tạo của lớp cha; đi theo chuỗi kế thừa sẽ kết thúc ở `Object()`.
 
 ```text
 this(...)
-→ constructor khác cùng class
+→ hàm khởi tạo khác cùng lớp
 → cuối cùng phải tới super(...)
 ```
 
-Lời gọi constructor này phải tuân quy tắc đặc biệt của Java ở đầu chuỗi constructor.
+Các lời gọi này phải tuân quy tắc đặc biệt của Java về vị trí trong chuỗi khởi tạo.
 
 Với ví dụ trên, chuỗi gọi là:
 
@@ -76,6 +76,6 @@ new SavingsAccount(...)
 → Object()
 ```
 
-Hiểu chuỗi này là nền tảng để đọc initialization order ở các chương sau.
+Hiểu chuỗi này là nền tảng để đọc thứ tự khởi tạo ở các chương sau.
 
-Trước đó, chương tiếp theo trả lời: **những member nào bên ngoài hoặc subclass được phép truy cập?**
+Trước đó, chương tiếp theo trả lời: **những thành viên nào mã bên ngoài hoặc lớp con được phép truy cập?**

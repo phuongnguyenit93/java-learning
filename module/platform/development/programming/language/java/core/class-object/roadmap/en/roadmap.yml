@@ -44,73 +44,128 @@
 roadmap:
   - id: class-object-model
     title: Class and Object Model
-    purpose: Understand the distinction between a type definition and a runtime object with identity, state, and behavior.
+    purpose: Understand a class as Java's way to describe a kind of entity with shared state and behavior, an object as each concrete runtime instance, and why this model is needed instead of treating related data and operations as disconnected pieces.
+    relatedKnowledge:
+      - ClassObject
     relatedModules:
+      - routeId: JAVA_LANGUAGE_BASICS
+        label: Language Basics
+        note: Reference types, variables, scope, and source structure provide the direct foundation for learning classes and objects.
       - routeId: JAVA_OOP
         label: Object-Oriented Programming
         note: OOP builds design principles on top of the class/object mechanisms introduced here.
     objectives:
-      - Explain how fields and methods define the state/behavior shape of instances.
-      - Track object references separately from the objects they refer to.
+      - Distinguish classes, objects, state, behavior, object identity, and references that point to objects.
+      - Understand that reference-variable scope is not the same thing as how long an object remains reachable by the program.
   - id: construction-and-invariants
     title: Construction and Valid State
-    purpose: Understand how constructors establish invariants and how constructor overloading/chaining shapes object creation.
+    purpose: Understand why a newly created object should begin in a usable state and how constructors, constructor overloading, and constructor chaining organize that process.
+    relatedKnowledge:
+      - Constructor
     objectives:
       - Reason about default constructors, explicit constructors, and constructor failure.
       - Design constructors that establish usable state before an object escapes.
   - id: this-super-and-chaining
     title: this, super, and Construction Chains
-    purpose: Understand how the current instance and superclass context participate in member access and constructor chaining.
+    purpose: Understand how this represents the current instance, how super selects superclass context, and how both participate in member access and constructor chaining.
+    relatedKnowledge:
+      - ThisSuper
     objectives:
       - Use this and super with the correct member/constructor semantics.
       - Trace parent/child constructor order without confusing object identity.
-  - id: visibility-and-member-ownership
-    title: Visibility and Member Ownership
-    purpose: Understand who can access a member and whether that member belongs to the class or to each instance.
+  - id: access-control
+    title: Member Access Control
+    purpose: Understand who may access a class member and why Java provides access levels to create encapsulation boundaries.
+    relatedKnowledge:
+      - AccessModifier
     objectives:
-      - Use access modifiers as language-level boundaries.
-      - Distinguish static, instance, final, and constant semantics.
+      - Distinguish private, package-private, protected, and public by their real access scope.
+      - Recognize that access modifiers solve visibility concerns rather than synchronization, serialization, or lifecycle concerns.
+  - id: class-instance-member-ownership
+    title: Class Members, Instance Members, and final
+    purpose: Understand what belongs to the class, what belongs to each object, and how final constrains reassignment and constant design.
+    relatedKnowledge:
+      - StaticFinal
+    objectives:
+      - Distinguish static members from per-instance members.
+      - Distinguish final primitive/reference variables from compile-time constants.
   - id: initialization-lifecycle
-    title: Initialization Order and Object Lifecycle
-    purpose: Connect static initialization, instance initialization, inheritance, allocation, and constructor execution into one lifecycle.
+    title: Initialization Order and Object Creation
+    purpose: Distinguish class initialization from per-object initialization, then connect field initialization, instance initialization blocks, inheritance, allocation, and constructor execution into the creation of one complete object.
+    relatedKnowledge:
+      - InitializationBlocks
+      - InitializationOrder
+      - ObjectCreationLifecycle
     relatedModules:
       - routeId: JAVA_CLASSLOADER
         label: ClassLoader
         note: Class initialization is one stage of the broader JVM loading/linking/initialization lifecycle.
     objectives:
+      - Understand that static initialization blocks belong to class initialization; creating an object may trigger this step if the class is not initialized yet, but static blocks do not run once per new object.
+      - Distinguish field initialization, instance initialization blocks, and constructor execution within per-instance creation.
       - Trace class and instance initialization order across inheritance.
       - Recognize constructor dynamic-dispatch and this-escape hazards.
   - id: nested-types-and-capture
     title: Nested and Inner Types
     purpose: Understand when a type belongs inside another type and what surrounding instance/local context it can capture.
+    relatedKnowledge:
+      - NestedInnerClass
     objectives:
       - Distinguish static nested, inner, local, and anonymous classes.
       - Reason about outer-instance and captured-local relationships.
-  - id: object-root-and-enum
-    title: Object Root Type and Enum Values
-    purpose: Understand the universal Object base type and Java enums as typed, instance-based closed sets.
+  - id: object-root-type
+    title: Object as the Common Root Class
+    purpose: Understand Object as the common root class that Java classes directly or indirectly inherit from and why objects share a basic set of behaviors.
+    relatedKnowledge:
+      - ObjectClass
     relatedModules:
       - routeId: JAVA_OBJECT_CONTRACT
         label: Object Contract
-        note: The behavioral laws of equals, hashCode, toString, and ordering are owned by Object Contract.
+        note: The behavioral laws of equals, hashCode, toString, and related contracts are owned by Object Contract.
     objectives:
-      - Recognize the core Object methods without duplicating their full behavioral contracts.
-      - Use enum fields, methods, interfaces, and constant-specific behavior intentionally.
-  - id: copying-aliasing-mutability
-    title: Copying, Aliasing, and Mutability
-    purpose: Understand whether an operation copies a reference, an object shell, or an entire mutable object graph, and how aliasing changes behavior.
+      - Recognize the core Object methods and their broad roles without duplicating their full behavioral contracts.
+      - Identify the boundary between introductory Object behavior here and the deeper contracts owned by Object Contract.
+  - id: enum-model
+    title: Enum Type Model
+    purpose: Understand why enum is suitable for modeling a fixed, typed set of values instead of relying on loosely related constants.
+    relatedKnowledge:
+      - Enum
+    relatedModules:
+      - routeId: JAVA_ABSTRACT_INTERFACE
+        label: Abstract Classes and Interfaces
+        note: Enums can implement interfaces, while the full interface mechanism and design model are owned by Abstract Interface.
+    objectives:
+      - Understand that each enum constant is an instance of its enum type.
+      - Use enum fields, constructors, and methods while recognizing interface implementation and constant-specific behavior without duplicating interface design curriculum.
+  - id: copy-semantics
+    title: Object Copy Semantics
+    purpose: Understand when copying only creates another reference, when it creates a new outer object that still shares nested state, and when independent mutable state requires a deeper copy.
+    relatedKnowledge:
+      - CopySemantics
     objectives:
       - Distinguish reference copy, shallow copy, and deep copy.
-      - Predict shared-state effects when multiple references reach the same mutable object.
+      - Recognize copy constructors, factories, and explicit mapping as common strategies rather than treating clone as the default copying model.
+  - id: shared-references-and-mutability
+    title: Shared References and Mutability
+    purpose: Understand aliasing as multiple references reaching the same object and why mutation through one reference can be observed through the others.
+    relatedKnowledge:
+      - ObjectAliasingMutability
+    objectives:
+      - Distinguish reference reassignment from mutation of the referenced object.
+      - Predict shared-state effects, including mutable state nested inside an object graph.
   - id: immutability-and-defensive-copy
     title: Immutability and Defensive Copying
-    purpose: Learn how ownership boundaries and defensive copies make object state safer to share.
+    purpose: Understand immutable design and defensive copying as two strategies for controlling risks created by mutable state and shared references.
+    relatedKnowledge:
+      - ImmutabilityDefensiveCopy
     objectives:
       - Design immutable objects beyond merely marking fields final.
       - Protect mutable inputs and outputs at API boundaries.
   - id: class-object-synthesis
     title: Class/Object Lifecycle Synthesis
-    purpose: Connect construction, visibility, initialization, identity, aliasing, and immutability into one object-lifecycle mental model.
+    purpose: Connect class definition, object construction, the Object root model, access control, initialization, reference sharing, copying, and immutability into one coherent model for reading and designing Java code.
+    relatedKnowledge:
+      - ClassObjectSynthesis
     objectives:
-      - Explain how a Java object becomes valid, observable, shared, and eventually unreachable.
+      - Explain the journey from class definition to an object being created, used, shared, copied, and protected from unintended state changes.
       - Identify which deeper concerns belong to OOP, Object Contract, Reflection, or ClassLoader.

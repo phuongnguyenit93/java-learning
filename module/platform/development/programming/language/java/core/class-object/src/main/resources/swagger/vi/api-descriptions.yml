@@ -1,9 +1,9 @@
 AliasingController:
   mutateAlias():
-    summary: Quan sát aliasing qua trạng thái mutable dùng chung
-    description: Tạo hai reference BankAccount cùng trỏ tới một object, thay đổi tags
-      qua một alias rồi trả về bằng chứng về identity và state để thấy vì sao reference
-      còn lại quan sát cùng mutation.
+    summary: Quan sát dùng chung tham chiếu qua trạng thái có thể thay đổi
+    description: Tạo hai tham chiếu BankAccount cùng trỏ tới một đối tượng, thay đổi
+      tags qua một tham chiếu rồi trả về bằng chứng về danh tính và trạng thái để
+      thấy vì sao tham chiếu còn lại cũng quan sát cùng thay đổi.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -28,10 +28,10 @@ AliasingController:
     usage: true
 ConstructionController:
   constructorDispatchRisk():
-    summary: Quan sát dynamic dispatch trong quá trình construction
-    description: Cho superclass constructor gọi một overridable method rồi so sánh giá
-      trị field của subclass được quan sát trong superclass constructor với giá trị sau
-      khi construction hoàn tất.
+    summary: Quan sát điều phối động trong quá trình tạo đối tượng
+    description: Cho hàm khởi tạo lớp cha gọi một phương thức có thể bị ghi đè rồi
+      so sánh giá trị trường của lớp con được quan sát trong hàm khởi tạo lớp cha
+      với giá trị sau khi quá trình tạo đối tượng hoàn tất.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -56,9 +56,10 @@ ConstructionController:
     usage: true
 CopyController:
   shallowVsDeep():
-    summary: So sánh behavior của shallow copy và deep copy
-    description: Tạo shallow copy và deep copy của BankAccount, thay đổi nested mutable
-      state ở source rồi cho thấy copy nào còn dùng chung cùng một List.
+    summary: So sánh sao chép nông và sao chép sâu
+    description: Tạo bản sao nông và bản sao sâu của BankAccount, thay đổi trạng thái
+      lồng có thể thay đổi ở đối tượng nguồn rồi cho thấy bản sao nào còn dùng chung
+      cùng một List.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -83,9 +84,10 @@ CopyController:
     usage: true
 EnumController:
   enumBehavior():
-    summary: Quan sát enum identity và behavior riêng theo constant
-    description: Dùng các FeeTier constant cùng implement một interface nhưng có behavior
-      khác nhau, sau đó trả về fee, identity từ valueOf và declaration order từ values.
+    summary: Quan sát danh tính enum và hành vi riêng của từng hằng
+    description: Dùng các hằng FeeTier cùng triển khai một giao diện nhưng có hành
+      vi khác nhau, sau đó trả về mức phí, kết quả kiểm tra danh tính từ valueOf và
+      thứ tự khai báo từ values.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -110,9 +112,11 @@ EnumController:
     usage: true
 ImmutabilityController:
   defensiveCopy():
-    summary: Quan sát defensive copy ở input và output
-    description: Tạo BankAccountSnapshot theo hướng immutable từ mutable input của caller,
-      thay đổi List gốc rồi kiểm tra collection trả ra không thể sửa stored state.
+    summary: Quan sát sao chép phòng vệ ở đầu vào và danh sách lưu trữ không thể sửa
+    description: Tạo BankAccountSnapshot từ danh sách đầu vào có thể thay đổi bằng
+      List.copyOf, thay đổi List gốc rồi xác nhận bản chụp trạng thái không đổi và
+      danh sách được trả ra không thể sửa. Phương thức truy cập trả trực tiếp danh
+      sách đã lưu; API không thực hiện sao chép phòng vệ ở đầu ra.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -137,10 +141,12 @@ ImmutabilityController:
     usage: true
 InitializationController:
   traceOrder():
-    summary: Trace initialization order giữa parent và child
-    description: Ghi lại superclass construction, child field initialization, child
-      instance initialization và child constructor theo đúng runtime order, đồng thời
-      trả thêm class-initialization evidence.
+    summary: Ghi vết thứ tự khởi tạo giữa lớp cha và lớp con
+    description: Ghi lại hàm khởi tạo lớp cha, phần khởi tạo trường của lớp con, khối
+      khởi tạo đối tượng của lớp con và hàm khởi tạo lớp con theo đúng thứ tự thực
+      thi. API cũng trả vết đã được ghi bởi phần khởi tạo static khi các lớp Parent
+      và Child được khởi tạo lần đầu; các khối static không chạy lại theo từng lần
+      gọi API.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -165,9 +171,9 @@ InitializationController:
     usage: true
 NestedClassController:
   capture():
-    summary: Quan sát local capture và outer-instance access
-    description: Dùng local class đọc cả effectively-final local variable và field của
-      enclosing controller, giúp quan sát hai surrounding context trong cùng kết quả.
+    summary: Quan sát việc dùng biến cục bộ và trạng thái đối tượng bao quanh
+    description: Dùng lớp cục bộ đọc cả biến cục bộ effectively final và trường của
+      controller bao quanh, giúp quan sát hai nguồn ngữ cảnh trong cùng kết quả.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video

@@ -1,81 +1,81 @@
 AliasingController:
   mutateAlias():
     execution: |-
-      <p><strong>Khái niệm:</strong> Aliasing xảy ra khi nhiều reference cùng nhận diện một mutable object.</p>
-      <p><strong>Luồng:</strong> Tạo một <code>BankAccount</code>, gán thêm một reference tới đúng object đó rồi mutate tags thông qua alias.</p>
+      <p><strong>Khái niệm:</strong> Dùng chung tham chiếu (aliasing) xảy ra khi nhiều tham chiếu cùng trỏ tới một đối tượng có thể thay đổi.</p>
+      <p><strong>Luồng:</strong> Tạo một <code>BankAccount</code>, gán thêm một tham chiếu tới đúng đối tượng đó rồi thay đổi tags thông qua tham chiếu thứ hai.</p>
       <pre><code>BankAccount account = new BankAccount();
       BankAccount alias = account;
       alias.tags().add("VIP");</code></pre>
-      <p><strong>Ý nghĩa:</strong> Phép gán chỉ copy reference value; nó không tạo account thứ hai.</p>
-      <p><strong>Quan sát:</strong> <code>sameIdentity</code> là true và cả hai danh sách tags đều chứa <code>VIP</code>.</p>
-      <p><strong>Kết luận:</strong> Shared mutable state tạo coupling quan sát được giữa các alias.</p>
+      <p><strong>Ý nghĩa:</strong> Phép gán chỉ sao chép giá trị tham chiếu; nó không tạo tài khoản thứ hai.</p>
+      <p><strong>Quan sát:</strong> <code>sameIdentity</code> là <code>true</code> và cả hai danh sách tags đều chứa <code>VIP</code>.</p>
+      <p><strong>Kết luận:</strong> Trạng thái có thể thay đổi dùng chung tạo ra sự phụ thuộc có thể quan sát giữa các tham chiếu.</p>
     usage: true
 ConstructionController:
   constructorDispatchRisk():
     execution: |-
-      <p><strong>Khái niệm:</strong> Dynamic dispatch vẫn hoạt động khi object đang được construct.</p>
-      <p><strong>Luồng:</strong> <code>Parent()</code> gọi <code>hook()</code>; runtime dispatch đi tới <code>Child.hook()</code> trước khi child field initializer gán <code>42</code>.</p>
+      <p><strong>Khái niệm:</strong> Cơ chế điều phối động (dynamic dispatch) vẫn hoạt động khi đối tượng đang được tạo.</p>
+      <p><strong>Luồng:</strong> <code>Parent()</code> gọi <code>hook()</code>; khi chương trình chạy, lời gọi được điều phối tới <code>Child.hook()</code> trước khi phần khởi tạo trường của lớp con gán <code>42</code>.</p>
       <pre><code>Parent() { hook(); }
       int value = 42;
       @Override void hook() { observed = value; }</code></pre>
-      <p><strong>Ý nghĩa:</strong> Runtime object đã là <code>Child</code> nhưng subclass initialization chưa hoàn tất.</p>
-      <p><strong>Quan sát:</strong> Response cho thấy <code>valueObservedDuringSuperConstructor = 0</code> và <code>valueAfterConstruction = 42</code>.</p>
-      <p><strong>Kết luận:</strong> Tránh gọi overridable method từ constructor trừ khi design chủ động chấp nhận partially initialized subclass state.</p>
+      <p><strong>Ý nghĩa:</strong> Đối tượng khi chạy đã có kiểu thực tế là <code>Child</code>, nhưng phần khởi tạo trạng thái lớp con chưa hoàn tất.</p>
+      <p><strong>Quan sát:</strong> Kết quả trả về cho thấy <code>valueObservedDuringSuperConstructor = 0</code> và <code>valueAfterConstruction = 42</code>.</p>
+      <p><strong>Kết luận:</strong> Tránh gọi phương thức có thể bị ghi đè từ hàm khởi tạo, vì cách triển khai của lớp con có thể chạy khi trạng thái lớp con mới chỉ được khởi tạo một phần.</p>
     usage: true
 CopyController:
   shallowVsDeep():
     execution: |-
-      <p><strong>Khái niệm:</strong> Shallow copy tạo outer object mới nhưng nested reference vẫn có thể được dùng chung.</p>
-      <p><strong>Luồng:</strong> Tạo shallow copy dùng lại List tags và deep copy tạo List mới, sau đó mutate source.</p>
+      <p><strong>Khái niệm:</strong> Sao chép nông (shallow copy) tạo đối tượng bên ngoài mới nhưng tham chiếu lồng bên trong vẫn có thể được dùng chung.</p>
+      <p><strong>Luồng:</strong> Tạo bản sao nông dùng lại List tags và bản sao sâu tạo List mới, sau đó thay đổi đối tượng nguồn.</p>
       <pre><code>BankAccount shallowCopy() { return new BankAccount(id, tags); }
       BankAccount deepCopy() { return new BankAccount(id, new ArrayList&lt;&gt;(tags)); }</code></pre>
-      <p><strong>Ý nghĩa:</strong> Copy depth là quyết định ownership đối với reachable mutable state.</p>
-      <p><strong>Quan sát:</strong> <code>shallowSharesNested</code> là true, <code>deepSharesNested</code> là false và chỉ shallow copy thấy mutation về sau của source.</p>
-      <p><strong>Kết luận:</strong> Chọn copy depth theo ownership contract mong muốn, không chỉ theo từ "copy".</p>
+      <p><strong>Ý nghĩa:</strong> Độ sâu sao chép là quyết định về quyền sở hữu đối với trạng thái có thể thay đổi mà đối tượng có thể truy cập tới.</p>
+      <p><strong>Quan sát:</strong> <code>shallowSharesNested</code> là <code>true</code>, <code>deepSharesNested</code> là <code>false</code> và chỉ bản sao nông thấy thay đổi về sau của đối tượng nguồn.</p>
+      <p><strong>Kết luận:</strong> Chọn độ sâu sao chép theo quan hệ sở hữu mong muốn, không chỉ dựa vào từ “sao chép”.</p>
     usage: true
 EnumController:
   enumBehavior():
     execution: |-
-      <p><strong>Khái niệm:</strong> Enum constant là instance thật và có thể có behavior riêng theo từng constant.</p>
-      <p><strong>Luồng:</strong> <code>STANDARD</code> và <code>PREMIUM</code> cùng implement <code>FeePolicy</code> nhưng tính fee khác nhau; endpoint đồng thời dùng <code>valueOf</code> và <code>values()</code>.</p>
+      <p><strong>Khái niệm:</strong> Hằng enum là một thể hiện thực sự của kiểu enum và có thể có hành vi riêng theo từng hằng.</p>
+      <p><strong>Luồng:</strong> <code>STANDARD</code> và <code>PREMIUM</code> cùng triển khai <code>FeePolicy</code> nhưng tính phí khác nhau; API đồng thời dùng <code>valueOf</code> và <code>values()</code>.</p>
       <pre><code>enum FeeTier implements FeePolicy {
           STANDARD { public int feeFor(int amount) { return amount / 100; } },
           PREMIUM  { public int feeFor(int amount) { return 0; } }
       }</code></pre>
-      <p><strong>Quan sát:</strong> Hai constant trả fee khác nhau, <code>valueOf("PREMIUM") == PREMIUM</code> là true và <code>values()</code> giữ declaration order.</p>
-      <p><strong>Kết luận:</strong> Enum có thể mô hình hóa closed typed strategy set; persistence nên dùng stable code riêng thay vì <code>ordinal()</code>.</p>
+      <p><strong>Quan sát:</strong> Hai hằng trả mức phí khác nhau, <code>valueOf("PREMIUM") == PREMIUM</code> là <code>true</code> và <code>values()</code> giữ thứ tự khai báo.</p>
+      <p><strong>Kết luận:</strong> Enum có thể mô hình hóa một tập giá trị hữu hạn có kiểu với hành vi riêng; khi cần mã lưu trữ ổn định, hãy dùng trường mã riêng thay vì <code>ordinal()</code>.</p>
     usage: true
 ImmutabilityController:
   defensiveCopy():
     execution: |-
-      <p><strong>Khái niệm:</strong> Defensive copy bảo vệ ownership boundary khỏi mutable alias bên ngoài.</p>
-      <p><strong>Luồng:</strong> Copy mutable input của caller vào <code>BankAccountSnapshot</code>, mutate List gốc rồi thử mutate List mà snapshot trả ra.</p>
+      <p><strong>Khái niệm:</strong> Sao chép phòng vệ ở đầu vào tách quyền sở hữu trạng thái khỏi tham chiếu có thể thay đổi do bên gọi giữ.</p>
+      <p><strong>Luồng:</strong> Dùng <code>List.copyOf(input)</code> để tạo danh sách lưu trữ không thể sửa, thay đổi List đầu vào ban đầu rồi thử sửa chính danh sách mà đối tượng <code>BankAccountSnapshot</code> trả ra.</p>
       <pre><code>BankAccountSnapshot(List&lt;String&gt; input) { tags = List.copyOf(input); }
       List&lt;String&gt; tags() { return tags; }</code></pre>
-      <p><strong>Ý nghĩa:</strong> Copy input cắt caller alias; stored List không sửa được ngăn output mutation qua accessor.</p>
-      <p><strong>Quan sát:</strong> Caller input có thêm <code>VIP</code>, storedSnapshot không đổi và <code>returnedCollectionMutable</code> là false.</p>
-      <p><strong>Kết luận:</strong> final field chưa đủ tạo immutability; reachable mutable state và alias cũng phải được kiểm soát.</p>
+      <p><strong>Ý nghĩa:</strong> Sao chép đầu vào cắt liên kết với List có thể thay đổi của bên gọi. Phương thức <code>tags()</code> trả trực tiếp danh sách đã lưu; danh sách này an toàn để đưa ra ngoài vì bản thân nó không cho phép sửa, không phải vì phương thức truy cập tạo thêm một bản sao phòng vệ ở đầu ra.</p>
+      <p><strong>Quan sát:</strong> Danh sách đầu vào của bên gọi có thêm <code>VIP</code>, <code>storedSnapshot</code> không đổi và <code>returnedCollectionMutable</code> là <code>false</code>.</p>
+      <p><strong>Kết luận:</strong> Trường <code>final</code> chưa đủ để tạo tính bất biến; trạng thái có thể thay đổi phía sau tham chiếu và cách tham chiếu được chia sẻ cũng phải được kiểm soát.</p>
     usage: true
 InitializationController:
   traceOrder():
     execution: |-
-      <p><strong>Khái niệm:</strong> Superclass construction xảy ra trước subclass field/block initialization và subclass constructor body.</p>
-      <p><strong>Luồng:</strong> Tạo <code>Child</code>; parent constructor ghi trace trước, sau đó child field initialization, child instance initialization và child constructor ghi theo runtime order.</p>
+      <p><strong>Khái niệm:</strong> Phần khởi tạo của lớp cha xảy ra trước phần khởi tạo trường/khối của lớp con và thân hàm khởi tạo lớp con.</p>
+      <p><strong>Luồng:</strong> Tạo <code>Child</code>; hàm khởi tạo lớp cha ghi vết trước, sau đó phần khởi tạo trường của lớp con, khối khởi tạo đối tượng và hàm khởi tạo lớp con ghi theo đúng thứ tự thực thi.</p>
       <pre><code>private final int field = initField();
       { trace.add("child-instance-initializer"); }
       Child(List&lt;String&gt; trace) { super(trace); trace.add("child-constructor"); }</code></pre>
-      <p><strong>Quan sát:</strong> <code>instanceConstruction</code> là <code>[parent-constructor, child-field-initializer, child-instance-initializer, child-constructor]</code>; static initialization được trả riêng.</p>
-      <p><strong>Kết luận:</strong> Initialization order là deterministic và giải thích vì sao subclass behavior bị gọi sớm có thể thấy default value.</p>
+      <p><strong>Quan sát:</strong> <code>instanceConstruction</code> là <code>[parent-constructor, child-field-initializer, child-instance-initializer, child-constructor]</code>. <code>staticInitialization</code> chứa vết đã ghi khi <code>Parent</code> và <code>Child</code> được khởi tạo lớp lần đầu; các khối <code>static</code> không chạy lại cho mỗi lần gọi API.</p>
+      <p><strong>Kết luận:</strong> Thứ tự khởi tạo được Java xác định rõ và giải thích vì sao hành vi lớp con bị gọi quá sớm có thể quan sát giá trị mặc định.</p>
     usage: true
 NestedClassController:
   capture():
     execution: |-
-      <p><strong>Khái niệm:</strong> Local class có thể truy cập enclosing-instance state và local variable nếu local variable là final/effectively final.</p>
-      <p><strong>Luồng:</strong> <code>LocalCalculator</code> đọc method-local <code>localBase</code> và enclosing field <code>outerOffset</code>, rồi cộng hai giá trị.</p>
+      <p><strong>Khái niệm:</strong> Lớp cục bộ có thể truy cập trạng thái của đối tượng bao quanh và biến cục bộ khi biến đó là <code>final</code> hoặc effectively final.</p>
+      <p><strong>Luồng:</strong> <code>LocalCalculator</code> đọc biến cục bộ <code>localBase</code> của phương thức và trường <code>outerOffset</code> của đối tượng bao quanh, rồi cộng hai giá trị.</p>
       <pre><code>int localBase = 40;
       class LocalCalculator {
           int answer() { return localBase + outerOffset; }
       }</code></pre>
-      <p><strong>Quan sát:</strong> Response cho thấy <code>capturedLocal = 40</code>, <code>outerInstanceValue = 2</code> và <code>computed = 42</code>.</p>
-      <p><strong>Kết luận:</strong> Captured local phải final/effectively final, còn field được truy cập qua enclosing object context.</p>
+      <p><strong>Quan sát:</strong> Kết quả trả về cho thấy <code>capturedLocal = 40</code>, <code>outerInstanceValue = 2</code> và <code>computed = 42</code>.</p>
+      <p><strong>Kết luận:</strong> Biến cục bộ được sử dụng từ lớp cục bộ phải là <code>final</code> hoặc effectively final, còn trường được truy cập thông qua ngữ cảnh của đối tượng bao quanh.</p>
     usage: true

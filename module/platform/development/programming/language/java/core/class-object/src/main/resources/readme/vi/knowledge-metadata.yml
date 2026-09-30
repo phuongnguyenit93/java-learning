@@ -212,3 +212,12 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+15.ClassObjectSynthesis/ClassObjectSynthesis.md:
+  class-object-synthesis:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  class-object-module-boundaries:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false

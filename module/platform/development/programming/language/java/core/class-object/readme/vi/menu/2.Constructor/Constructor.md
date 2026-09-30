@@ -1,10 +1,10 @@
-# Constructor
+# Hàm khởi tạo (constructor) và trạng thái hợp lệ
 
-Constructor không chỉ là cú pháp chạy sau `new`. Nó là nơi object chuyển từ “đang được tạo” sang **một instance có trạng thái ban đầu hợp lệ**.
+Hàm khởi tạo (`constructor`) là một khai báo đặc biệt của lớp, được dùng trong quá trình tạo đối tượng để thiết lập trạng thái ban đầu. Nó không chỉ là cú pháp đi kèm `new`; đây là nơi đối tượng chuyển từ “đang được tạo” sang **một thể hiện có trạng thái ban đầu hợp lệ**.
 
-## <a id="constructor-purpose">Mục đích của Constructor</a>
+## <a id="constructor-purpose">Mục đích của hàm khởi tạo</a>
 
-Constructor nên thiết lập những invariant cần có ngay khi object trở nên sử dụng được.
+Hàm khởi tạo nên thiết lập những điều kiện để trạng thái luôn hợp lệ (`invariant`) ngay khi đối tượng trở nên sử dụng được.
 
 ```java
 class BankAccount {
@@ -19,11 +19,11 @@ class BankAccount {
 }
 ```
 
-Sau constructor, bên gọi không nên nhận một object “nửa hợp lệ” rồi phải gọi thêm nhiều setter bắt buộc mới dùng được.
+Sau hàm khởi tạo, bên gọi không nên nhận một đối tượng “nửa hợp lệ” rồi phải gọi thêm nhiều phương thức gán bắt buộc mới dùng được.
 
-## <a id="constructor-overloading">Constructor Overloading</a>
+## <a id="constructor-overloading">Nạp chồng và nối chuỗi hàm khởi tạo</a>
 
-Một class có thể có nhiều constructor với danh sách tham số khác nhau.
+Một lớp có thể có nhiều hàm khởi tạo với danh sách tham số khác nhau.
 
 ```java
 BankAccount(String id) {
@@ -31,13 +31,13 @@ BankAccount(String id) {
 }
 ```
 
-`this(...)` cho phép một constructor gọi constructor khác trong cùng class để gom logic khởi tạo về một nơi.
+`this(...)` cho phép một hàm khởi tạo gọi hàm khởi tạo khác trong cùng lớp để gom logic khởi tạo về một nơi.
 
-Chuỗi gọi constructor (constructor chaining) giúp tránh lặp lại validation. Nếu constructor không bắt đầu bằng `this(...)` hoặc `super(...)`, Java sẽ ngầm chèn lời gọi `super()` không tham số. Lời gọi đó phải khớp với một constructor có thể truy cập của superclass; nếu không, mã sẽ không biên dịch.
+Chuỗi gọi hàm khởi tạo giúp tránh lặp lại kiểm tra dữ liệu. Với một lớp có lớp cha, nếu hàm khởi tạo không bắt đầu bằng `this(...)` hoặc `super(...)`, Java sẽ ngầm chèn lời gọi `super()` không tham số. Lời gọi đó phải khớp với một hàm khởi tạo có thể truy cập của lớp cha; nếu không, mã sẽ không biên dịch. `java.lang.Object` là ngoại lệ gốc vì nó không có lớp cha.
 
-## <a id="default-constructor">Default Constructor</a>
+## <a id="default-constructor">Hàm khởi tạo mặc định</a>
 
-Compiler chỉ tự tạo no-đối số default constructor khi class **không khai báo bất kỳ constructor nào**.
+Trình biên dịch chỉ tự tạo hàm khởi tạo mặc định không tham số khi lớp **không khai báo bất kỳ hàm khởi tạo nào**.
 
 Ngay khi bạn viết một constructor:
 
@@ -45,16 +45,16 @@ Ngay khi bạn viết một constructor:
 BankAccount(String id) { ... }
 ```
 
-compiler không tự thêm `BankAccount()` nữa.
+trình biên dịch không tự thêm `BankAccount()` nữa.
 
-Điều này thường gây nhầm khi framework hoặc đoạn mã khác yêu cầu constructor không tham số.
+Điều này thường gây nhầm khi framework hoặc đoạn mã khác yêu cầu hàm khởi tạo không tham số.
 
-## <a id="constructor-exceptions">Constructor thất bại</a>
+## <a id="constructor-exceptions">Khi hàm khởi tạo thất bại</a>
 
-Constructor có thể throw exception nếu không thể tạo object hợp lệ.
+Hàm khởi tạo có thể ném ngoại lệ nếu không thể tạo đối tượng hợp lệ.
 
-Nếu quá trình khởi tạo thất bại, bên gọi không nhận một reference tới object hoàn chỉnh từ biểu thức `new`. Nhưng các tác động phụ đã xảy ra trước lỗi (ví dụ đăng ký object ra bên ngoài) vẫn có thể tồn tại.
+Nếu quá trình khởi tạo thất bại, bên gọi không nhận một tham chiếu tới đối tượng hoàn chỉnh từ biểu thức `new`. Nhưng các tác động phụ đã xảy ra trước lỗi, ví dụ đăng ký đối tượng ra bên ngoài, vẫn có thể tồn tại.
 
-Vì vậy tránh để `this` “thoát” khỏi constructor quá sớm; chương Object Creation Lifecycle sẽ quay lại rủi ro này.
+Vì vậy tránh chia sẻ `this` ra ngoài trước khi hàm khởi tạo hoàn tất; chương về quá trình tạo đối tượng sẽ quay lại rủi ro này.
 
-Chương tiếp theo giải thích hai reference đặc biệt trong quá trình khởi tạo và truy cập member: `this` và `super`.
+Chương tiếp theo giải thích tham chiếu `this` tới đối tượng hiện tại và từ khóa/cú pháp `super` dùng để chọn ngữ cảnh hàm khởi tạo hoặc thành viên của lớp cha.

@@ -99,7 +99,7 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: "What is the difference between an overloaded constructor, a default constructor, and an implicit super() call?"
-    answer: "Overloaded constructors are constructors you declare with different parameter lists. A default constructor is compiler-generated only when the class declares no constructor at all. Separately, when a constructor does not explicitly delegate with this(...) or super(...), Java inserts an implicit no-argument super() constructor invocation. That implicit call must resolve to an accessible superclass constructor or compilation fails."
+    answer: "Overloaded constructors are constructors you declare with different parameter lists. A default constructor is compiler-generated when the class declares no constructor at all. Separately, for a class that has a superclass, when a constructor does not explicitly delegate with this(...) or super(...), Java inserts an implicit no-argument super() invocation. That invocation must resolve to an accessible superclass constructor or compilation fails. Object is the root exception because it has no superclass."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "2.Constructor/Constructor.md", anchor: "default-constructor"}
@@ -222,4 +222,11 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "14.ImmutabilityDefensiveCopy/ImmutabilityDefensiveCopy.md", anchor: "deep-immutability"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Connect the full Class/Object model from class definition through sharing and state protection."
+    answer: "A class defines state and behavior. Object creation allocates storage, applies default values, and runs constructor/initialization steps until required invariants are established. References then determine how the object is accessed and shared; copy semantics determine which state remains shared; aliasing plus mutability creates coupling; immutability and defensive copying help control ownership boundaries. Deeper equals/hashCode laws belong to Object Contract, while loading and class-initialization mechanics belong to ClassLoader."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "15.ClassObjectSynthesis/ClassObjectSynthesis.md", anchor: "class-object-synthesis"}
     apiRelated: {controller: "", methodSignature: ""}

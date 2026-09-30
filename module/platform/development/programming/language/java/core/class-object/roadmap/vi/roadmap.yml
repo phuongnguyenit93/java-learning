@@ -43,74 +43,129 @@
 
 roadmap:
   - id: class-object-model
-    title: Mô hình Class và Object
-    purpose: Hiểu sự khác nhau giữa type definition và runtime object có identity, state và behavior.
+    title: Lớp (class) và đối tượng (object)
+    purpose: Hiểu lớp là cách Java mô tả một loại thực thể có dữ liệu và hành vi chung, còn đối tượng là từng thực thể cụ thể được tạo khi chương trình chạy; từ đó thấy vì sao cần một mô hình tổ chức thay cho việc quản lý dữ liệu và thao tác liên quan như các phần rời rạc.
+    relatedKnowledge:
+      - ClassObject
     relatedModules:
+      - routeId: JAVA_LANGUAGE_BASICS
+        label: Kiến thức nền tảng về ngôn ngữ
+        note: Kiểu tham chiếu, biến, phạm vi và cấu trúc mã nguồn là nền tảng trực tiếp trước khi học sâu về lớp và đối tượng.
       - routeId: JAVA_OOP
-        label: OOP
-        note: OOP xây dựng các design principle trên nền class/object mechanism của module này.
+        label: Lập trình hướng đối tượng (OOP)
+        note: OOP xây dựng các nguyên lý thiết kế trên nền tảng lớp và đối tượng được học trong mô-đun này.
     objectives:
-      - Giải thích cách field và method định nghĩa state/behavior của instance.
-      - Theo dõi object reference tách biệt với object mà reference trỏ tới.
+      - Phân biệt lớp, đối tượng, trạng thái, hành vi, danh tính của đối tượng và biến tham chiếu đang trỏ tới đối tượng.
+      - Hiểu một biến tham chiếu có thể ra khỏi phạm vi sử dụng trong khi đối tượng vẫn còn được truy cập qua một tham chiếu khác.
   - id: construction-and-invariants
-    title: Khởi tạo và trạng thái hợp lệ
-    purpose: Hiểu cách constructor thiết lập invariant và cách constructor overloading/chaining định hình quá trình tạo object.
+    title: Hàm khởi tạo (constructor) và trạng thái hợp lệ
+    purpose: Hiểu vì sao một đối tượng cần được tạo ra ở trạng thái dùng được ngay từ đầu, và cách hàm khởi tạo, nạp chồng hàm khởi tạo và gọi nối tiếp hàm khởi tạo tổ chức quá trình đó.
+    relatedKnowledge:
+      - Constructor
     objectives:
-      - Reason được về default constructor, explicit constructor và constructor failure.
-      - Thiết kế constructor thiết lập usable state trước khi object bị expose.
+      - Phân biệt hàm khởi tạo mặc định, hàm khởi tạo do lập trình viên khai báo và trường hợp khởi tạo thất bại.
+      - Thiết kế hàm khởi tạo thiết lập trạng thái hợp lệ trước khi đối tượng được đưa ra cho phần còn lại của chương trình sử dụng.
   - id: this-super-and-chaining
     title: this, super và chuỗi khởi tạo
-    purpose: Hiểu cách current instance và superclass context tham gia member access và constructor chaining.
+    purpose: Hiểu this đại diện cho đối tượng hiện tại, super đại diện cho ngữ cảnh lớp cha, và cách hai từ khóa này tham gia truy cập thành viên cũng như nối chuỗi hàm khởi tạo.
+    relatedKnowledge:
+      - ThisSuper
     objectives:
-      - Dùng this và super đúng semantics của member/constructor.
-      - Theo dõi parent/child constructor order mà không nhầm object identity.
-  - id: visibility-and-member-ownership
-    title: Visibility và quyền sở hữu member
-    purpose: Hiểu ai có thể access member và member đó thuộc class hay thuộc từng instance.
+      - Dùng this và super đúng ngữ nghĩa khi truy cập thành viên và gọi hàm khởi tạo.
+      - Theo dõi đúng thứ tự hàm khởi tạo của lớp cha và lớp con mà không hiểu nhầm rằng có nhiều đối tượng khác nhau được tạo ra.
+  - id: access-control
+    title: Phạm vi truy cập thành viên
+    purpose: Hiểu ai được phép nhìn thấy hoặc sử dụng một thành viên của lớp, và vì sao Java cần các mức truy cập để tạo ranh giới đóng gói.
+    relatedKnowledge:
+      - AccessModifier
     objectives:
-      - Dùng access modifier như language-level boundary.
-      - Phân biệt semantics của static, instance, final và constant.
+      - Phân biệt private, phạm vi mặc định theo package (package-private), protected và public theo phạm vi truy cập thực tế.
+      - Hiểu các từ bổ nghĩa truy cập chỉ quyết định ai có thể truy cập thành viên; static và final giải quyết những vấn đề khác và được học ở chặng tiếp theo.
+  - id: class-instance-member-ownership
+    title: Thành viên cấp lớp, thành viên cấp đối tượng và final
+    purpose: Hiểu dữ liệu hoặc hành vi nào thuộc về toàn bộ lớp, dữ liệu hoặc hành vi nào thuộc từng đối tượng, và final giới hạn việc gán lại như thế nào.
+    relatedKnowledge:
+      - StaticFinal
+    objectives:
+      - Phân biệt thành viên static với thành viên của từng đối tượng.
+      - Phân biệt final trên biến nguyên thủy, biến tham chiếu và hằng số tại thời điểm biên dịch.
   - id: initialization-lifecycle
-    title: Thứ tự initialization và vòng đời tạo object
-    purpose: Kết nối static initialization, instance initialization, inheritance, allocation và constructor execution thành một lifecycle thống nhất.
+    title: Thứ tự khởi tạo và quá trình tạo đối tượng
+    purpose: Phân biệt khởi tạo lớp với khởi tạo từng đối tượng, rồi kết nối khởi tạo trường, khối khởi tạo đối tượng, kế thừa, cấp phát bộ nhớ và thực thi hàm khởi tạo thành quá trình tạo một đối tượng hoàn chỉnh.
+    relatedKnowledge:
+      - InitializationBlocks
+      - InitializationOrder
+      - ObjectCreationLifecycle
     relatedModules:
       - routeId: JAVA_CLASSLOADER
         label: ClassLoader
-        note: Class initialization là một stage trong lifecycle loading/linking/initialization rộng hơn của JVM.
+        note: Khởi tạo lớp chỉ là một giai đoạn trong vòng đời nạp, liên kết và khởi tạo lớp rộng hơn của JVM.
     objectives:
-      - Theo dõi class/instance initialization order qua inheritance.
-      - Nhận biết rủi ro dynamic dispatch trong constructor và this-escape.
+      - Hiểu khối khởi tạo static thuộc quá trình khởi tạo lớp; việc tạo đối tượng có thể kích hoạt bước này nếu lớp chưa được khởi tạo, nhưng khối static không chạy lại cho mỗi đối tượng mới.
+      - Phân biệt vai trò của khởi tạo trường, khối khởi tạo đối tượng và hàm khởi tạo trong quá trình tạo từng instance.
+      - Theo dõi đúng thứ tự các bước khởi tạo lớp và đối tượng khi có kế thừa.
+      - Nhận biết rủi ro khi hàm khởi tạo gọi phương thức có thể bị lớp con ghi đè hoặc chia sẻ tham chiếu this ra ngoài trước khi đối tượng khởi tạo xong.
   - id: nested-types-and-capture
-    title: Nested và Inner Type
-    purpose: Hiểu khi nào một type nên nằm bên trong type khác và nó có thể capture surrounding instance/local context nào.
+    title: Lớp lồng nhau và lớp nội bộ
+    purpose: Hiểu khi nào một lớp nên được khai báo bên trong lớp khác và loại lớp đó có thể truy cập thành viên của đối tượng bao quanh hoặc sử dụng biến cục bộ từ phạm vi bên ngoài như thế nào.
+    relatedKnowledge:
+      - NestedInnerClass
     objectives:
-      - Phân biệt static nested, inner, local và anonymous class.
-      - Reason về outer-instance và captured-local relationship.
-  - id: object-root-and-enum
-    title: Object root type và Enum value
-    purpose: Hiểu Object như root type chung và enum Java như tập closed value có type và instance semantics.
+      - Phân biệt lớp lồng static, lớp nội bộ, lớp cục bộ và lớp vô danh.
+      - Giải thích quan hệ với đối tượng bao quanh và điều kiện để lớp bên trong có thể sử dụng biến cục bộ từ phạm vi bên ngoài.
+  - id: object-root-type
+    title: Object – lớp gốc chung
+    purpose: Hiểu Object là lớp gốc chung mà các lớp Java khác trực tiếp hoặc gián tiếp kế thừa và vì sao các đối tượng có một tập hành vi cơ bản dùng chung.
+    relatedKnowledge:
+      - ObjectClass
     relatedModules:
       - routeId: JAVA_OBJECT_CONTRACT
-        label: Object Contract
-        note: Các behavioral law của equals, hashCode, toString và ordering được đào sâu ở Object Contract.
+        label: Quy ước của Object
+        note: Quy tắc hành vi đầy đủ của equals, hashCode, toString và các quan hệ liên quan được học sâu trong mô-đun Quy ước của Object.
     objectives:
-      - Nhận biết core Object method mà không lặp lại full behavioral contract của chúng.
-      - Dùng enum field, method, interface và constant-specific behavior có chủ đích.
-  - id: copying-aliasing-mutability
-    title: Copying, Aliasing và Mutability
-    purpose: Hiểu một thao tác đang copy reference, object shell hay toàn bộ mutable object graph và cách aliasing làm thay đổi behavior.
+      - Nhận biết các phương thức cốt lõi của Object và vai trò khái quát của chúng.
+      - Biết ranh giới của mô-đun này là giới thiệu nền tảng, còn các quy ước hành vi chi tiết thuộc mô-đun Quy ước của Object.
+  - id: enum-model
+    title: Kiểu liệt kê (enum)
+    purpose: Hiểu vì sao enum phù hợp để mô hình một tập giá trị hữu hạn có kiểu, thay vì dùng các hằng số rời rạc khó kiểm soát.
+    relatedKnowledge:
+      - Enum
+    relatedModules:
+      - routeId: JAVA_ABSTRACT_INTERFACE
+        label: Lớp trừu tượng và giao diện
+        note: enum có thể triển khai giao diện (interface), nhưng cơ chế và thiết kế giao diện được học đầy đủ ở mô-đun Lớp trừu tượng và giao diện.
     objectives:
-      - Phân biệt reference copy, shallow copy và deep copy.
-      - Dự đoán shared-state effect khi nhiều reference cùng truy cập một mutable object.
+      - Hiểu mỗi hằng enum là một thể hiện của chính kiểu enum đó.
+      - Dùng trường, hàm khởi tạo và phương thức trong enum; nhận biết khả năng triển khai giao diện và hành vi riêng theo từng hằng mà không học lấn sang thiết kế giao diện.
+  - id: copy-semantics
+    title: Cách sao chép đối tượng
+    purpose: Hiểu khi nào thao tác sao chép chỉ tạo thêm một tham chiếu, khi nào tạo một đối tượng mới nhưng vẫn dùng chung trạng thái bên trong, và khi nào cần tách toàn bộ trạng thái có thể thay đổi.
+    relatedKnowledge:
+      - CopySemantics
+    objectives:
+      - Phân biệt sao chép tham chiếu, sao chép nông và sao chép sâu.
+      - Nhận biết vai trò của hàm khởi tạo sao chép, phương thức tạo đối tượng và sao chép thủ công từng trường thay cho việc phụ thuộc vào clone như lựa chọn mặc định.
+  - id: shared-references-and-mutability
+    title: Dùng chung tham chiếu và trạng thái có thể thay đổi
+    purpose: Hiểu hiện tượng nhiều biến tham chiếu cùng trỏ tới một đối tượng và vì sao thay đổi trạng thái qua một tham chiếu có thể được quan sát qua những tham chiếu khác.
+    relatedKnowledge:
+      - ObjectAliasingMutability
+    objectives:
+      - Phân biệt việc gán lại một biến tham chiếu với việc thay đổi trạng thái của đối tượng mà biến đó trỏ tới.
+      - Dự đoán ảnh hưởng của trạng thái dùng chung, kể cả khi đối tượng chứa các đối tượng con cũng có trạng thái có thể thay đổi.
   - id: immutability-and-defensive-copy
-    title: Immutability và Defensive Copy
-    purpose: Học cách ownership boundary và defensive copy làm object state an toàn hơn khi được chia sẻ.
+    title: Tính bất biến và sao chép phòng vệ
+    purpose: Hiểu cách thiết kế đối tượng bất biến và tạo bản sao phòng vệ như hai chiến lược kiểm soát rủi ro phát sinh từ trạng thái có thể thay đổi và tham chiếu dùng chung.
+    relatedKnowledge:
+      - ImmutabilityDefensiveCopy
     objectives:
-      - Thiết kế immutable object vượt ra ngoài việc chỉ đánh dấu field final.
-      - Bảo vệ mutable input/output tại API boundary.
+      - Thiết kế đối tượng bất biến vượt ra ngoài việc chỉ đánh dấu các trường là final.
+      - Tạo bản sao phù hợp khi nhận dữ liệu có thể thay đổi vào đối tượng hoặc trả dữ liệu đó ra ngoài để tránh làm lộ trạng thái nội bộ.
   - id: class-object-synthesis
-    title: Tổng hợp vòng đời Class/Object
-    purpose: Kết nối construction, visibility, initialization, identity, aliasing và immutability thành một mental model thống nhất về object lifecycle.
+    title: Tổng hợp mô hình lớp và đối tượng
+    purpose: Kết nối việc định nghĩa lớp, tạo đối tượng, quan hệ với Object, kiểm soát truy cập, khởi tạo, dùng chung tham chiếu, sao chép và thiết kế bất biến thành một mô hình thống nhất để đọc và thiết kế mã Java.
+    relatedKnowledge:
+      - ClassObjectSynthesis
     objectives:
-      - Giải thích được cách Java object trở nên valid, observable, shared và cuối cùng unreachable.
-      - Xác định concern sâu hơn thuộc OOP, Object Contract, Reflection hay ClassLoader.
+      - Giải thích được toàn bộ hành trình từ định nghĩa lớp đến khi một đối tượng được tạo, sử dụng, chia sẻ và bảo vệ trạng thái.
+      - Xác định phần kiến thức sâu hơn thuộc OOP, Quy ước của Object, Reflection hoặc ClassLoader để tránh học trùng phạm vi.

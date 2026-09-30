@@ -1,6 +1,6 @@
 # Initialization Blocks
 
-Java can initialize state through field initializers, static blocks, instance initializer blocks, and constructors. Understanding the role of each location prevents construction code from becoming hard to follow.
+Java can initialize state through field initializers, static blocks, instance initializer blocks, and constructors. This chapter focuses on **what each mechanism is for**; the next chapters combine them into exact ordering and the complete object-creation process.
 
 ## <a id="static-initializer">Static Initializer</a>
 

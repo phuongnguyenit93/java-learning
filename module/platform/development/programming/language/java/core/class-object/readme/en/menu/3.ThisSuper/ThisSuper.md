@@ -1,4 +1,4 @@
-# this and super
+# this, super, and Construction Chains
 
 Inside instance code, Java needs a way to refer to **the current object** and to **superclass construction/member context**. `this` and `super` express those roles.
 
@@ -56,7 +56,7 @@ class SavingsAccount extends BankAccount {
 
 ## <a id="constructor-chaining-order">this()/super() Chaining</a>
 
-Every constructor chain eventually reaches a superclass constructor.
+For every class other than `Object`, a constructor chain eventually reaches a superclass constructor; following the inheritance chain ultimately ends at `Object()`.
 
 ```text
 this(...)

@@ -1,4 +1,4 @@
-# Aliasing and Mutability
+# Shared References and Mutability
 
 Aliasing occurs when multiple references point to the same object. With immutable values this is usually safe. With mutable objects, a change through one alias may appear unexpectedly elsewhere.
 
@@ -44,4 +44,4 @@ Callers can now mutate `tags` without going through `BankAccount`'s rules.
 
 The same problem occurs when a constructor stores a caller-owned mutable input directly.
 
-The final chapter addresses this with immutability and defensive copying.
+The next chapter addresses this with immutability and defensive copying.

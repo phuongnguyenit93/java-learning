@@ -1,8 +1,8 @@
-# Aliasing và Mutability
+# Dùng chung tham chiếu và trạng thái có thể thay đổi
 
-Aliasing xảy ra khi nhiều reference cùng trỏ tới một object. Với object bất biến (immutable), điều này thường an toàn. Với object có thể thay đổi (mutable), thay đổi qua một alias có thể xuất hiện “bất ngờ” ở nơi khác.
+Hiện tượng nhiều tham chiếu cùng trỏ tới một đối tượng thường được gọi là **aliasing**. Với đối tượng bất biến, việc dùng chung này thường dễ kiểm soát. Với đối tượng có thể thay đổi, thay đổi qua một tham chiếu có thể xuất hiện “bất ngờ” ở nơi khác.
 
-## <a id="aliasing-model">Nhiều Reference, Một Object</a>
+## <a id="aliasing-model">Nhiều tham chiếu, một đối tượng</a>
 
 ```java
 BankAccount account = new BankAccount("A-01", new ArrayList<>());
@@ -12,27 +12,27 @@ alias.tags().add("VIP");
 System.out.println(account.tags()); // [VIP]
 ```
 
-Phép gán không sao chép `BankAccount`; nó chỉ sao chép reference.
+Phép gán không sao chép `BankAccount`; nó chỉ sao chép giá trị tham chiếu.
 
-Mô hình tư duy này nối trực tiếp với Java pass-by-value: method nhận một bản sao của giá trị reference, vì vậy vẫn có thể thay đổi cùng một object.
+Mô hình tư duy này nối trực tiếp với quy tắc **Java luôn truyền tham trị (pass-by-value)**: phương thức nhận một bản sao của giá trị tham chiếu, vì vậy bản sao đó vẫn có thể trỏ tới và thay đổi cùng một đối tượng.
 
 ## <a id="shared-mutable-state">Trạng thái có thể thay đổi dùng chung</a>
 
-Trạng thái có thể thay đổi và được dùng chung làm việc suy luận khó hơn vì một object có thể bị thay đổi từ nhiều nơi.
+Trạng thái có thể thay đổi và được dùng chung làm việc suy luận khó hơn vì một đối tượng có thể bị thay đổi từ nhiều nơi.
 
 Hậu quả thường gặp:
 
-- invariant bị phá ngoài nơi sở hữu;
-- test phụ thuộc thứ tự;
-- race condition trong mã đồng thời;
-- cache/view bị thay đổi gián tiếp;
+- điều kiện hợp lệ bị phá ngoài nơi sở hữu;
+- kiểm thử phụ thuộc thứ tự;
+- điều kiện tranh chấp (`race condition`) trong mã đồng thời;
+- dữ liệu đệm hoặc khung nhìn bị thay đổi gián tiếp;
 - khó biết nơi nào chịu trách nhiệm cập nhật trạng thái.
 
-Không phải mọi mutability đều xấu; vấn đề là **quan hệ sở hữu và ranh giới thay đổi trạng thái có rõ không**.
+Không phải mọi trạng thái có thể thay đổi đều xấu; vấn đề là **quan hệ sở hữu và ranh giới thay đổi trạng thái có rõ không**.
 
-## <a id="aliasing-in-collections">Aliasing qua Collection và Getter</a>
+## <a id="aliasing-in-collections">Lộ tham chiếu qua tập hợp và phương thức getter</a>
 
-Một getter trả trực tiếp collection nội bộ có thể thay đổi sẽ làm lộ reference. Với ví dụ `BankAccount` xuyên suốt:
+Một phương thức getter trả trực tiếp tập hợp nội bộ có thể thay đổi sẽ làm lộ tham chiếu. Với ví dụ `BankAccount` xuyên suốt:
 
 ```java
 List<String> tags() {
@@ -42,6 +42,6 @@ List<String> tags() {
 
 Bên gọi có thể thay đổi `tags` mà không đi qua quy tắc của `BankAccount`.
 
-Tương tự, nếu constructor lưu thẳng reference tới collection đầu vào có thể thay đổi, bên gọi vẫn có thể sửa collection đó sau này.
+Tương tự, nếu hàm khởi tạo lưu thẳng tham chiếu tới tập hợp đầu vào có thể thay đổi, bên gọi vẫn có thể sửa tập hợp đó sau này.
 
-Chương cuối giải quyết vấn đề này bằng **bất biến (immutability) và defensive copy**.
+Chương tiếp theo giải quyết vấn đề này bằng **tính bất biến và sao chép phòng vệ**.

@@ -1,6 +1,6 @@
-# Nested and Inner Classes
+# Nested and Inner Types
 
-Placing one type inside another can express close conceptual organization or access to surrounding context. Different nested-class forms have very different semantics.
+A nested class is declared inside another class. An **inner class** is specifically a non-static nested class associated with an enclosing instance. Placing one type inside another can express close conceptual organization or access to surrounding context, but the different nested-class forms have very different semantics.
 
 ## <a id="static-nested-class">Static Nested Class</a>
 
@@ -72,6 +72,6 @@ Runnable r = new Runnable() {
 };
 ```
 
-The capture follows value-oriented language rules rather than sharing an arbitrarily mutable local slot.
+The local variable is **captured by value**. If that value is a reference, the captured reference still points to the same object; Java does not deep-copy that object and does not expose a reassignable local-variable slot to the local/anonymous class.
 
 The next chapter looks at the root class shared by ordinary class instances: `java.lang.Object`.

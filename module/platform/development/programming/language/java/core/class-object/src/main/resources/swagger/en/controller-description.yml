@@ -25,13 +25,13 @@ EnumController:
 ImmutabilityController:
   description: |-
     <h2>Immutability</h2>
-    <p>Observe how snapshot ownership and defensive copying prevent caller aliases from mutating internal state.</p>
+    <p>Observe how an input defensive copy separates caller-owned mutable state, while the stored unmodifiable List can be exposed directly without an output defensive copy.</p>
   readmeRelated:
     file: 14.ImmutabilityDefensiveCopy/ImmutabilityDefensiveCopy.md
 InitializationController:
   description: |-
     <h2>Initialization</h2>
-    <p>Trace class and instance initialization across a superclass/subclass construction path.</p>
+    <p>Trace instance construction across a superclass/subclass path and inspect the static trace recorded when the nested Parent and Child classes were initialized for the first time.</p>
   readmeRelated:
     file: 7.InitializationOrder/InitializationOrder.md
 NestedClassController:

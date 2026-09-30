@@ -1,4 +1,4 @@
-# Access Modifiers
+# Member Access Control
 
 Access modifiers define **visibility boundaries**. They support encapsulation by limiting which code may depend directly on a type or member.
 
@@ -83,8 +83,11 @@ Access modifiers are only **one group** among the modifiers and keywords that ca
 Access control
 → public, protected, private
 
-Class/object structure
-→ static, final
+Class-vs-instance membership
+→ static
+
+Reassignment / overriding / inheritance restrictions
+→ final
 
 Abstraction / inheritance
 → abstract

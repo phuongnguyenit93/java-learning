@@ -48,11 +48,11 @@ EnumController:
 ImmutabilityController:
   defensiveCopy():
     execution: |-
-      <p><strong>Concept:</strong> Defensive copying protects an object's ownership boundary from mutable aliases.</p>
-      <p><strong>Flow:</strong> Copy mutable caller input into <code>BankAccountSnapshot</code>, mutate the caller List, then attempt to mutate the List returned by the snapshot.</p>
+      <p><strong>Concept:</strong> An input defensive copy separates the snapshot's ownership from a mutable caller alias; safe output here comes from storing an unmodifiable List.</p>
+      <p><strong>Flow:</strong> Create the stored List with <code>List.copyOf(input)</code>, mutate the caller List, then attempt to mutate the same stored List returned by the snapshot accessor.</p>
       <pre><code>BankAccountSnapshot(List&lt;String&gt; input) { tags = List.copyOf(input); }
       List&lt;String&gt; tags() { return tags; }</code></pre>
-      <p><strong>Meaning:</strong> Input copying breaks the caller alias; an unmodifiable stored List prevents output mutation through the accessor.</p>
+      <p><strong>Meaning:</strong> Input copying breaks the caller alias. <code>tags()</code> returns the stored List directly; that exposure is safe because the stored List is unmodifiable, not because the accessor creates an output defensive copy.</p>
       <p><strong>Observation:</strong> Caller input gains <code>VIP</code>, storedSnapshot does not, and <code>returnedCollectionMutable</code> is false.</p>
       <p><strong>Conclusion:</strong> final fields alone do not guarantee immutability; reachable mutable state and aliases must also be controlled.</p>
     usage: true
@@ -64,7 +64,7 @@ InitializationController:
       <pre><code>private final int field = initField();
       { trace.add("child-instance-initializer"); }
       Child(List&lt;String&gt; trace) { super(trace); trace.add("child-constructor"); }</code></pre>
-      <p><strong>Observation:</strong> <code>instanceConstruction</code> is <code>[parent-constructor, child-field-initializer, child-instance-initializer, child-constructor]</code>; static initialization is returned separately.</p>
+      <p><strong>Observation:</strong> <code>instanceConstruction</code> is <code>[parent-constructor, child-field-initializer, child-instance-initializer, child-constructor]</code>. <code>staticInitialization</code> contains the trace recorded when <code>Parent</code> and <code>Child</code> were initialized for the first time; those static initializers do not rerun per request.</p>
       <p><strong>Conclusion:</strong> Initialization order is deterministic and explains why premature subclass behavior may observe default values.</p>
     usage: true
 NestedClassController:

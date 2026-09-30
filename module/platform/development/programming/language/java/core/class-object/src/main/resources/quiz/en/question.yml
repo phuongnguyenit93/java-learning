@@ -55,10 +55,10 @@ questions:
   - id: constructor-default-rule
     question: "When does Java provide an implicit default no-argument constructor?"
     answers:
-      - {id: A, answer: "Always, even after custom constructors are declared.", explanation: "Incorrect. Declaring any constructor stops the compiler from generating the implicit default constructor."}
-      - {id: B, answer: "Only when the class declares no constructor, subject to an accessible superclass constructor.", explanation: "Correct. Declaring any constructor stops the compiler from generating the implicit default constructor."}
-      - {id: C, answer: "Only for abstract classes.", explanation: "Incorrect. Declaring any constructor stops the compiler from generating the implicit default constructor."}
-      - {id: D, answer: "Only when every field is final.", explanation: "Incorrect. Declaring any constructor stops the compiler from generating the implicit default constructor."}
+      - {id: A, answer: "Always, even after the class declares its own constructor.", explanation: "Incorrect. Declaring any constructor prevents the compiler from generating a default constructor."}
+      - {id: B, answer: "When the class declares no constructor. The generated default constructor implicitly invokes super(); for a class other than Object, that invocation must also be valid for compilation to succeed.", explanation: "Correct. Generation depends on the absence of constructor declarations; whether the implicit super() invocation compiles is a separate check."}
+      - {id: C, answer: "Only for abstract classes.", explanation: "Incorrect. The default-constructor generation rule does not depend on whether the class is abstract."}
+      - {id: D, answer: "Only when every field is final.", explanation: "Incorrect. Field finality does not control whether a default constructor is generated."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -70,7 +70,7 @@ questions:
     answers:
       - {id: A, answer: "Both must be called as the first two statements.", explanation: "Incorrect. Construction follows one ordered chain rather than two competing first constructor calls."}
       - {id: B, answer: "super creates a separate parent object.", explanation: "Incorrect. Construction follows one ordered chain rather than two competing first constructor calls."}
-      - {id: C, answer: "A constructor delegates first either to another constructor in the same class or to a superclass constructor, and the chain ultimately reaches the superclass.", explanation: "Correct. Construction follows one ordered chain rather than two competing first constructor calls."}
+      - {id: C, answer: "For a class other than Object, a constructor either delegates to another constructor in the same class with this(...) or invokes/implicitly invokes a superclass constructor with super(...); a this(...) chain eventually reaches super(...).", explanation: "Correct. One construction chain walks through constructor delegation and then up the superclass chain; Object is the root class with no superclass."}
       - {id: D, answer: "this can only be used in static methods.", explanation: "Incorrect. Construction follows one ordered chain rather than two competing first constructor calls."}
     correctAnswerId: C
     aiGenerated: true
@@ -584,3 +584,16 @@ questions:
     reviewed: false
     readmeRelated: {file: "12.CopySemantics/CopySemantics.md", anchor: "deep-copy"}
     apiRelated: {controller: "CopyController", methodSignature: "shallowVsDeep()"}
+
+  - id: class-object-synthesis-chain
+    question: "Which model correctly connects the main Class/Object concepts from class definition through shared state?"
+    answers:
+      - {id: A, answer: "Define the class → use the object immediately → allocate memory and run constructors afterward.", explanation: "Incorrect. Allocation and initialization are part of object creation before the object becomes usable."}
+      - {id: B, answer: "Define the class → create the object through allocation/initialization and completed construction → use/share the object → copy, aliasing, and immutability choices govern shared state.", explanation: "Correct. This connects construction, reference sharing, copy semantics, and immutability into one model."}
+      - {id: C, answer: "static and final automatically make every object immutable, so references and copying no longer matter.", explanation: "Incorrect. static controls class-level ownership and final constrains reassignment/overriding; neither automatically removes aliasing or mutable nested state."}
+      - {id: D, answer: "Object, enum, and nested classes are three replacements for constructors.", explanation: "Incorrect. They are different parts of the object model and do not replace object construction."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "15.ClassObjectSynthesis/ClassObjectSynthesis.md", anchor: "class-object-synthesis"}
+    apiRelated: {controller: "", methodSignature: ""}

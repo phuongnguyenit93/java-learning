@@ -1,42 +1,42 @@
 AliasingController:
   description: |-
-    <h2>Aliasing</h2>
-    <p>Quan sát cách hai reference cùng trỏ tới một mutable object nên cùng thấy một identity và cùng quan sát mutation.</p>
+    <h2>Dùng chung tham chiếu</h2>
+    <p>Quan sát cách hai tham chiếu cùng trỏ tới một đối tượng có thể thay đổi, vì vậy chúng có cùng danh tính đối tượng và cùng nhìn thấy thay đổi trạng thái.</p>
   readmeRelated:
     file: 13.ObjectAliasingMutability/ObjectAliasingMutability.md
 ConstructionController:
   description: |-
-    <h2>Construction</h2>
-    <p>Quan sát vì sao dynamic dispatch từ superclass constructor có thể chạy subclass code trước khi subclass state được initialize.</p>
+    <h2>Quá trình tạo đối tượng</h2>
+    <p>Quan sát vì sao cơ chế điều phối động (dynamic dispatch) từ hàm khởi tạo lớp cha có thể chạy mã lớp con trước khi trạng thái lớp con được khởi tạo.</p>
   readmeRelated:
     file: 8.ObjectCreationLifecycle/ObjectCreationLifecycle.md
 CopyController:
   description: |-
-    <h2>Copy</h2>
-    <p>So sánh shallow copy và deep copy bằng cách quan sát ownership của nested mutable state.</p>
+    <h2>Sao chép đối tượng</h2>
+    <p>So sánh sao chép nông (shallow copy) và sao chép sâu (deep copy) bằng cách quan sát quyền sở hữu của trạng thái lồng có thể thay đổi.</p>
   readmeRelated:
     file: 12.CopySemantics/CopySemantics.md
 EnumController:
   description: |-
-    <h2>Enum</h2>
-    <p>Quan sát enum identity, values/valueOf, interface implementation và behavior riêng theo từng constant.</p>
+    <h2>Kiểu liệt kê (enum)</h2>
+    <p>Quan sát danh tính của hằng enum, <code>values()</code>/<code>valueOf()</code>, việc triển khai giao diện và hành vi riêng của từng hằng.</p>
   readmeRelated:
     file: 11.Enum/Enum.md
 ImmutabilityController:
   description: |-
-    <h2>Immutability</h2>
-    <p>Quan sát cách snapshot ownership và defensive copy ngăn caller alias sửa internal state.</p>
+    <h2>Tính bất biến</h2>
+    <p>Quan sát cách sao chép phòng vệ ở đầu vào tách tham chiếu của bên gọi, còn danh sách được lưu ở dạng không thể sửa và được trả trực tiếp một cách an toàn.</p>
   readmeRelated:
     file: 14.ImmutabilityDefensiveCopy/ImmutabilityDefensiveCopy.md
 InitializationController:
   description: |-
-    <h2>Initialization</h2>
-    <p>Trace class initialization và instance initialization xuyên qua một chuỗi superclass/subclass.</p>
+    <h2>Khởi tạo</h2>
+    <p>Ghi vết thứ tự khởi tạo lớp và khởi tạo từng đối tượng qua quan hệ lớp cha/lớp con; phần khởi tạo <code>static</code> chỉ chạy khi lớp được khởi tạo lần đầu.</p>
   readmeRelated:
     file: 7.InitializationOrder/InitializationOrder.md
 NestedClassController:
   description: |-
-    <h2>Nested Class</h2>
-    <p>Quan sát local class truy cập effectively-final local variable và state của enclosing instance.</p>
+    <h2>Lớp lồng nhau</h2>
+    <p>Quan sát lớp cục bộ truy cập biến cục bộ effectively final và trạng thái của đối tượng bao quanh.</p>
   readmeRelated:
     file: 9.NestedInnerClass/NestedInnerClass.md

@@ -1,4 +1,4 @@
-# Immutability and Defensive Copy
+# Immutability and Defensive Copying
 
 When observable state cannot change after construction, sharing becomes much easier to reason about. But `final` fields alone are not enough; the entire reachable object graph and exposed references matter.
 
@@ -76,22 +76,13 @@ An unmodifiable view is not automatically deep immutability; the underlying data
 
 ```text
 shallow immutability
-→ outer references/state cannot be reassigned
+→ the outer object's directly observable state does not change
+→ but referenced child objects may still be mutable
 
 deep immutability
-→ the relevant reachable object graph has immutable contracts
+→ immutability extends through the relevant reachable state that must be protected
 ```
 
 Not every domain needs deep immutability, but ownership and mutation boundaries should be explicit.
 
-The module's final mental model is:
-
-```text
-class defines state/behavior
-→ constructor establishes valid state
-→ access modifiers define boundaries
-→ initialization order controls when state becomes ready
-→ reference copying creates aliasing
-→ mutability requires clear ownership
-→ immutability/defensive copying makes sharing safer
-```
+The next chapter collects the complete module into one end-to-end model and makes the handoff to OOP, Object Contract, Reflection, and ClassLoader explicit.
