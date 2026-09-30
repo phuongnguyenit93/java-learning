@@ -131,12 +131,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: collection-q08
-    question: "Contract quan trọng của list.subList(from, to) là gì?"
+    question: "Quy ước quan trọng của list.subList(from, to) là gì?"
     answers:
-      - {id: A, answer: "Luôn tạo deep immutable copy của các phần tử được chọn.", explanation: "Sai. subList không phải một bản sao deep độc lập."}
-      - {id: B, answer: "Trả về một ArrayList mutable độc lập chứa các reference đã copy.", explanation: "Sai. Kết quả vẫn liên kết với list gốc."}
-      - {id: C, answer: "Trả về fixed-size array adapter và không cho thay element.", explanation: "Sai. Điều này nhầm subList với boundary array/list."}
-      - {id: D, answer: "Trả về backed view của một vùng; mutation được hỗ trợ qua view sẽ phản ánh vào source list.", explanation: "Đúng. Structural modification trực tiếp trên source ngoài protocol của view cũng có thể làm view không còn hợp lệ."}
+      - {id: A, answer: "Luôn tạo một bản sao bất biến sâu của các phần tử được chọn.", explanation: "Sai. subList không phải một bản sao sâu độc lập."}
+      - {id: B, answer: "Trả về một ArrayList độc lập chứa các tham chiếu đã sao chép.", explanation: "Sai. Kết quả vẫn liên kết với List gốc."}
+      - {id: C, answer: "Trả về adapter mảng cố định kích thước và không cho thay phần tử.", explanation: "Sai. Điều này nhầm subList với ranh giới giữa mảng và List."}
+      - {id: D, answer: "Trả về một khung nhìn liên kết với một vùng; thay đổi được hỗ trợ qua khung nhìn sẽ phản ánh vào List nguồn.", explanation: "Đúng. Nếu List nền bị thay đổi cấu trúc ngoài subList được trả về, ngữ nghĩa của subList trở thành không xác định; CME chỉ có thể là cách một lớp triển khai phát hiện trạng thái đó."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
@@ -482,12 +482,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: collection-q35
-    question: "ConcurrentModificationException từ fail-fast iterator của ArrayList thực sự nói lên điều gì?"
+    question: "ConcurrentModificationException từ Iterator fail-fast của ArrayList thực sự nói lên điều gì?"
     answers:
-      - {id: A, answer: "Nó chứng minh có hai thread sửa list đúng cùng thời điểm.", explanation: "Sai. Một thread duy nhất cũng có thể gây CME nếu structural modification collection ngoài iterator."}
-      - {id: B, answer: "Nó là cơ chế synchronization được đảm bảo để ngăn race condition.", explanation: "Sai. Fail-fast detection chỉ là best-effort và không phải thread synchronization."}
-      - {id: C, answer: "Iterator phát hiện structural modification không phù hợp với traversal state của nó; exception là tín hiệu bug chứ không phải correctness mechanism.", explanation: "Đúng. Correctness phải đến từ mutation qua iterator được hỗ trợ hoặc concurrency model phù hợp."}
-      - {id: D, answer: "Nó có nghĩa là list chứa duplicate element.", explanation: "Sai. Duplicate không liên quan tới fail-fast traversal."}
+      - {id: A, answer: "Nó chứng minh có hai luồng sửa List đúng cùng thời điểm.", explanation: "Sai. Một luồng duy nhất cũng có thể gây CME nếu thay đổi cấu trúc collection bên ngoài Iterator."}
+      - {id: B, answer: "Nó là cơ chế đồng bộ được bảo đảm để ngăn tranh chấp dữ liệu.", explanation: "Sai. Fail-fast chỉ cố gắng phát hiện lỗi và không phải cơ chế đồng bộ luồng."}
+      - {id: C, answer: "Iterator phát hiện thay đổi cấu trúc không phù hợp với trạng thái duyệt của nó; ngoại lệ là tín hiệu lỗi chứ không phải cơ chế bảo đảm tính đúng đắn.", explanation: "Đúng. Tính đúng đắn phải đến từ thao tác qua Iterator được hỗ trợ hoặc mô hình xử lý đồng thời phù hợp."}
+      - {id: D, answer: "Nó có nghĩa là List chứa phần tử trùng.", explanation: "Sai. Phần tử trùng không liên quan tới fail-fast khi duyệt."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
@@ -495,10 +495,10 @@ questions:
     apiRelated: {controller: "IterationController", methodSignature: "failFast()"}
 
   - id: collection-q36
-    question: "Vì sao phải kiểm tra null policy theo concrete collection contract thay vì suy ra chỉ từ List/Set/Map/Queue?"
+    question: "Vì sao phải kiểm tra chính sách null theo quy ước của collection cụ thể thay vì suy ra chỉ từ List/Set/Map/Queue?"
     answers:
       - {id: A, answer: "Vì mọi implementation đều cho null nhưng interface che thông tin đó.", explanation: "Sai. Nhiều implementation và factory collection phổ biến từ chối null."}
-      - {id: B, answer: "Vì null policy phụ thuộc implementation: ví dụ HashMap cho một null key, ArrayDeque từ chối null, còn List.of/Set.of/Map.of và các family copyOf từ chối nội dung null.", explanation: "Đúng. Abstraction không định nghĩa một universal null policy cho mọi implementation."}
+      - {id: B, answer: "Vì chính sách null phụ thuộc cách triển khai: ví dụ HashMap cho một khóa null, ArrayDeque từ chối null, còn List.of/Set.of/Map.of và các họ copyOf từ chối nội dung null.", explanation: "Đúng. Mô hình trừu tượng không định nghĩa một chính sách null chung cho mọi cách triển khai."}
       - {id: C, answer: "Vì null được chuyển thành primitive 0 trước khi vào collection.", explanation: "Sai. null không được chuyển thành primitive default value."}
       - {id: D, answer: "Vì chỉ sorted collection mới có thể chứa null.", explanation: "Sai. Nhiều collection không sorted cho phép null, còn các sorted collection dùng natural ordering phổ biến lại từ chối null."}
     correctAnswerId: B
@@ -508,12 +508,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: collection-q37
-    question: "Bước đầu tiên mạnh nhất khi chọn collection implementation là gì?"
+    question: "Bước đầu tiên quan trọng nhất khi chọn cách triển khai collection là gì?"
     answers:
-      - {id: A, answer: "Chọn HashMap hoặc ArrayList trước vì thường nhanh, rồi chỉnh business rule cho phù hợp.", explanation: "Sai. Semantic requirement phải đi trước thói quen hoặc micro-optimization."}
-      - {id: B, answer: "Benchmark mọi JDK collection trước khi xác định abstraction cần dùng.", explanation: "Sai. Benchmark chỉ có ý nghĩa sau khi đã hiểu semantics bắt buộc và hot operations."}
-      - {id: C, answer: "Luôn chọn implementation có asymptotic lookup cost thấp nhất dù ordering contract không đúng.", explanation: "Sai. Cấu trúc nhanh nhưng sai semantics vẫn là lựa chọn sai."}
-      - {id: D, answer: "Xác định abstraction và semantics cần thiết trước—vị trí, uniqueness, key lookup, ordering, endpoint/priority behavior—sau đó mới xét operation cost, memory, null và mutability.", explanation: "Đúng. Implementation choice phải theo behavioral contract mà application thực sự cần."}
+      - {id: A, answer: "Chọn HashMap hoặc ArrayList trước vì thường nhanh, rồi chỉnh quy tắc nghiệp vụ cho phù hợp.", explanation: "Sai. Yêu cầu về ngữ nghĩa phải đi trước thói quen hoặc tối ưu vi mô."}
+      - {id: B, answer: "Đo hiệu năng mọi collection của JDK trước khi xác định mô hình cần dùng.", explanation: "Sai. Đo hiệu năng chỉ có ý nghĩa sau khi đã hiểu ngữ nghĩa bắt buộc và các thao tác chính."}
+      - {id: C, answer: "Luôn chọn cách triển khai có chi phí tra cứu tiệm cận thấp nhất dù quy ước thứ tự không đúng.", explanation: "Sai. Cấu trúc nhanh nhưng sai ngữ nghĩa vẫn là lựa chọn sai."}
+      - {id: D, answer: "Xác định mô hình và ngữ nghĩa cần thiết trước—vị trí, tính duy nhất, tra cứu theo khóa, thứ tự, thao tác đầu/cuối hoặc độ ưu tiên—rồi mới xét chi phí, bộ nhớ, khả năng thay đổi, giới hạn null/phương thức tạo và cấu trúc chuyên biệt như EnumSet/EnumMap.", explanation: "Đúng. Cách triển khai phải theo quy ước hành vi trước, sau đó mới xét quyền sở hữu, giới hạn tạo dữ liệu, chuyên biệt hóa và cuối cùng là tối ưu vi mô."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
@@ -547,12 +547,12 @@ questions:
     apiRelated: {controller: "EnumCollectionController", methodSignature: "specializedCollections()"}
 
   - id: collection-q40
-    question: "Quan hệ đúng trong Java 21 giữa encounter order xác định và các Sequenced interface là gì?"
+    question: "Quan hệ đúng trong Java 21 giữa thứ tự duyệt xác định và các interface Sequenced là gì?"
     answers:
-      - {id: A, answer: "Mọi collection có iteration order dự đoán được đều tự động implement SequencedCollection hoặc SequencedMap.", explanation: "Sai. Có encounter order xác định không đồng nghĩa với tham gia Sequenced interface; EnumSet và EnumMap là hai phản ví dụ."}
-      - {id: B, answer: "Sequenced interface thay thế List, Deque, SortedSet và SortedMap nên các contract cũ không còn quan trọng.", explanation: "Sai. Java 21 tích hợp sequenced capability vào các contract hiện có chứ không thay thế chúng."}
-      - {id: C, answer: "SequencedCollection/SequencedSet/SequencedMap chuẩn hóa vocabulary first/last/reversed cho các type tham gia, còn một số type khác vẫn có thể định nghĩa encounter order mà không implement chúng.", explanation: "Đúng. LinkedHashSet và LinkedHashMap tham gia, còn EnumSet và EnumMap có order xác định nhưng không dùng Sequenced interface."}
-      - {id: D, answer: "SequencedMap là subtype của Collection nên Java 21 đã đưa Map vào Collection hierarchy.", explanation: "Sai. Map vẫn nằm ở hierarchy riêng."}
+      - {id: A, answer: "Mọi collection có thứ tự duyệt dự đoán được đều tự động triển khai SequencedCollection hoặc SequencedMap.", explanation: "Sai. Có thứ tự duyệt xác định không đồng nghĩa với tham gia interface Sequenced; EnumSet và EnumMap là hai phản ví dụ."}
+      - {id: B, answer: "Các interface Sequenced thay thế List, Deque, SortedSet và SortedMap nên các quy ước cũ không còn quan trọng.", explanation: "Sai. Java 21 tích hợp khả năng Sequenced vào các quy ước hiện có chứ không thay thế chúng."}
+      - {id: C, answer: "SequencedCollection/SequencedSet/SequencedMap chuẩn hóa truy cập đầu/cuối và reversed() cho các kiểu tham gia, còn một số kiểu khác vẫn có thể định nghĩa thứ tự duyệt mà không triển khai chúng.", explanation: "Đúng. LinkedHashSet và LinkedHashMap tham gia, còn EnumSet và EnumMap có thứ tự xác định nhưng không dùng các interface Sequenced."}
+      - {id: D, answer: "SequencedMap là kiểu con của Collection nên Java 21 đã đưa Map vào hệ phân cấp Collection.", explanation: "Sai. Map vẫn nằm ở hệ phân cấp riêng."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false

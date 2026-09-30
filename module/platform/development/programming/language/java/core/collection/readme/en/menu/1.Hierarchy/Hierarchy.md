@@ -1,4 +1,4 @@
-# Java Collections Hierarchy
+# Collection Foundation: Why the Collections Framework Exists
 
 Before learning `List`, `Set`, `Map`, or `Queue`, start with a simpler question: **what is a collection, and why does a Java program need one?**
 
@@ -127,26 +127,27 @@ Three similarly named things should stay separate:
 
 Once the learner understands **why a group abstraction is needed**, the hierarchy becomes useful: it answers **which behavior does this group require?**
 
-A useful roadmap for the module is:
+A useful high-level roadmap for the module is:
 
 ```text
-Need to hold a group of values
+Why does the Collections Framework exist?
         ↓
-Need positional order and duplicates?     → List
+What core contracts solve different data problems?
+List / Set / Map / Queue / Deque
         ↓
-Need uniqueness?                          → Set
+How can code traverse them through common protocols?
+Iterator / ListIterator / Spliterator boundary
         ↓
-Need lookup by a separate key?            → Map
+How do ordering, comparison, and navigation work?
         ↓
-Need FIFO/LIFO/end/priority processing?   → Queue / Deque
+How do equality and hashing affect lookup correctness?
         ↓
-Need traversal independent of implementation? → Iterator
+Who owns mutation, and how do views/fail-fast behavior change it?
         ↓
-Then study ordering, equality/hashCode, mutability,
-fail-fast behavior, and implementation costs
+How do we choose an implementation or specialized structure?
 ```
 
-By the end of the module, the goal is to start from **required behavior** and select an interface and implementation deliberately, instead of defaulting to `ArrayList` or `HashMap` by habit.
+The next four chapters expand the second milestone into `List`, `Set`, `Map`, and `Queue`/`Deque`. Later chapters then revisit those contracts through traversal, ordering, equality/hashing, mutation, and implementation choice. By the end of the module, the goal is to start from **required behavior** and select an interface and implementation deliberately, instead of defaulting to `ArrayList` or `HashMap` by habit.
 
 ## <a id="collection-hierarchy">Collection Hierarchy</a>
 

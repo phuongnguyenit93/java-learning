@@ -42,85 +42,89 @@
 # </roadmap-schema>
 
 roadmap:
-  - id: collection-purpose-and-hierarchy
-    title: Collection Purpose and Hierarchy
-    purpose: Understand why Java has several collection abstractions and how ordering, uniqueness, lookup, mutability, and cost shape the hierarchy.
+  - id: collection-foundation
+    title: Why the Collections Framework Exists
+    purpose: Understand what a collection is, what arrays already solve, why variable-size group data needs richer abstractions, what the Collections Framework standardizes, and how its hierarchy represents different capabilities rather than a tree to memorize.
+    relatedKnowledge:
+      - Hierarchy
     relatedModules:
       - routeId: JAVA_GENERICS
         label: Generics
         note: Collection APIs rely on generic type parameters, wildcards, and PECS for type-safe reuse.
     objectives:
-      - Distinguish Collection, List, Set, Queue, Map, and sorted/navigable roles.
-      - Choose interfaces from required behavior before choosing implementations.
-  - id: shared-api-and-characteristics
-    title: Shared APIs and Collection Characteristics
-    purpose: Understand the operations and behavioral dimensions shared across collection abstractions, including optional mutation and bulk operations.
+      - Distinguish Collection, Collections, Iterable, and Map at a beginner level and understand why Map forms a separate hierarchy.
+      - Recognize the shared Collection API and reason separately about order, duplicates, null policy, mutability, and operation complexity.
+      - Choose an interface from required behavior before choosing a concrete implementation.
+  - id: core-collection-contracts
+    title: Core Collection Contracts
+    purpose: Build a mental model of List, Set, Map, Queue, and Deque as different answers to different data-access and processing needs.
+    relatedKnowledge:
+      - List
+      - Set
+      - Map
+      - QueueDeque
     objectives:
-      - Reason about ordering, duplicates, null policy, mutability, and complexity independently.
-      - Understand why Map forms a separate hierarchy from Collection.
-  - id: list-semantics
-    title: List Semantics and Positional Data
-    purpose: Understand ordered positional collections and the trade-offs between common list implementations and backed views.
-    objectives:
-      - Choose between random-access and node-oriented list behavior from workload.
-      - Recognize remove overloads, subList views, and array/list boundary pitfalls.
-  - id: set-semantics
-    title: Set Semantics and Uniqueness
-    purpose: Understand sets as uniqueness-oriented collections whose behavior depends on equality or ordering contracts.
-    objectives:
-      - Distinguish hash-based, insertion-ordered, and sorted set semantics.
-      - Use set algebra without assuming all implementations share the same cost/order behavior.
-  - id: map-semantics
-    title: Map Semantics and Key-Based Lookup
-    purpose: Understand key/value mappings, Map.Entry, backed views, and how key contracts drive lookup behavior.
-    objectives:
-      - Reason about keys, values, entries, duplicate-key replacement, and view mutation.
-      - Choose hash-based or sorted maps from lookup and ordering requirements.
-  - id: queue-and-deque
-    title: Queue and Deque Contracts
-    purpose: Understand FIFO, LIFO, double-ended operations, priority ordering, and the throwing-versus-sentinel operation pairs.
-    objectives:
-      - Choose offer/poll/peek versus add/remove/element intentionally.
-      - Recognize PriorityQueue ordering without assuming full sorted iteration.
-  - id: iteration-and-functional-use
-    title: Iteration and Functional Collection Use
-    purpose: Understand traversal through Iterator/ListIterator/for-each and the boundary between collection ownership and functional-style operations.
+      - Distinguish ordered positional data, uniqueness, key-based lookup, FIFO/LIFO processing, double-ended access, and priority-based removal.
+      - Understand that each contract has different rules for duplicates, order, lookup, and mutation before comparing implementations.
+      - Recognize representative boundaries such as List positional operations, Set algebra, Map entries/views, and Queue/Deque failure contracts without treating them as one universal API.
+  - id: traversal-and-iteration
+    title: Traversal and Iteration
+    purpose: Understand how algorithms traverse collections through common iteration protocols without depending on concrete implementations.
+    relatedKnowledge:
+      - Iteration
     relatedModules:
       - routeId: JAVA_FUNCTIONAL_PROGRAMMING
         label: Functional Programming
         note: Lambda, method-reference, and stream-style behavior used around collections is owned by Functional Programming.
     objectives:
-      - Traverse without depending on implementation details.
-      - Recognize safe iterator mutation and when lambda/method-reference syntax belongs to functional programming.
-  - id: ordering-and-navigation
-    title: Ordering, Sorting, and Navigation
-    purpose: Understand encounter order, natural/comparator ordering, sorted/navigable structures, and the preconditions of ordering algorithms.
+      - Use Iterator, enhanced for, and ListIterator with the correct traversal model.
+      - Recognize safe iterator mutation and treat Spliterator/Stream behavior as a boundary to Functional Programming.
+  - id: ordering-comparison-and-navigation
+    title: Ordering, Comparison, and Navigation
+    purpose: Understand the difference between encounter order and sorted order, how comparison contracts define ordering, and how sorted/navigable collections expose range and nearest-element operations.
+    relatedKnowledge:
+      - OrderingSorting
+    relatedModules:
+      - routeId: JAVA_OBJECT_CONTRACT
+        label: Object Contract
+        note: Comparable and Comparator contracts define the ordering rules used by sorted collections and sorting algorithms.
     objectives:
-      - Reason about comparison results and stable sorting behavior.
-      - Use navigable range operations and backed range views correctly.
-  - id: equality-hashing-and-mutation
-    title: Equality, Hashing, and Mutation Safety
-    purpose: Understand how element/key contracts and structural modification affect lookup, whole-container equality, and iteration safety.
+      - Interpret negative, zero, and positive comparison results and distinguish natural from Comparator-based ordering.
+      - Use stable sorting, binary-search preconditions, navigable operations, and backed range views correctly.
+  - id: equality-hashing-and-lookup
+    title: Equality, Hashing, and Lookup Correctness
+    purpose: Understand how equals, hashCode, and comparison consistency control uniqueness, lookup, and whole-container equality, including why mutable keys or elements can break collection assumptions.
+    relatedKnowledge:
+      - EqualityHashing
     relatedModules:
       - routeId: JAVA_OBJECT_CONTRACT
         label: Object Contract
         note: equals, hashCode, Comparable, and Comparator laws directly control collection behavior.
     objectives:
-      - Predict consequences of mutable keys/elements in hash-based or sorted structures.
-      - Understand fail-fast as best-effort bug detection rather than synchronization.
-  - id: mutability-views-and-factories
-    title: Mutability, Views, and Immutable Factories
-    purpose: Distinguish modifiable collections, fixed-size/backed views, unmodifiable wrappers, and immutable snapshots/factories.
+      - Predict the consequences of inconsistent or mutable keys/elements in hash-based and sorted structures.
+      - Distinguish List, Set, Map, and Queue/Deque equality boundaries.
+  - id: mutation-views-and-fail-fast
+    title: Mutation Ownership, Views, and Fail-Fast Behavior
+    purpose: Understand who owns structural change, how views and immutable/unmodifiable forms affect mutation, and why structural modification during traversal can invalidate iterator assumptions.
+    relatedKnowledge:
+      - MutableImmutable
+      - FailFast
     objectives:
-      - Identify who owns mutation and whether changes are shared through a view.
-      - Choose copies or views according to ownership and lifecycle needs.
+      - Distinguish modifiable collections, fixed-size adapters, backed views, unmodifiable wrappers, immutable factory/copy results, and defensive copies.
+      - Predict whether a change is allowed and whether it is shared through a view.
+      - Treat fail-fast behavior as best-effort bug detection, not as synchronization or a concurrency guarantee.
+      - Mutate safely through supported iterator operations when appropriate and understand what ConcurrentModificationException does and does not guarantee.
   - id: implementation-choice-and-specialization
-    title: Implementation Choice and Specialized Collections
-    purpose: Combine semantics and complexity into an implementation-choice model, including enum-specific structures when their constraints fit.
+    title: Choosing Implementations and Specialized Collections
+    purpose: Synthesize collection semantics, operation complexity, memory, mutation, ordering, and null constraints into a practical implementation-choice model, including enum-specialized structures when their constraints fit.
+    relatedKnowledge:
+      - ImplementationChoice
+      - EnumCollections
     relatedModules:
       - routeId: JAVA_CLASS_OBJECT
         label: Class & Object
         note: Java enums and their type semantics are introduced in Class & Object.
     objectives:
-      - Choose implementations from access pattern, ordering, mutation, memory, and complexity requirements.
-      - Recognize EnumSet/EnumMap as specialized structures rather than generic defaults.
+      - Compare common List, Set, Map, and Queue implementations from the workload they are meant to serve, treating semantic correctness as the first filter.
+      - Account for operation complexity, memory, ordering, mutation, null policies, and factory restrictions before optimizing micro-performance.
+      - Recognize EnumSet and EnumMap as specialized choices for enum domains rather than general-purpose defaults.

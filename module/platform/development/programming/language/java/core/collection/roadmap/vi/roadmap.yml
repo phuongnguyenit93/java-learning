@@ -42,85 +42,89 @@
 # </roadmap-schema>
 
 roadmap:
-  - id: collection-purpose-and-hierarchy
-    title: Mục đích và hierarchy của Collection
-    purpose: Hiểu vì sao Java cần nhiều collection abstraction và cách ordering, uniqueness, lookup, mutability và cost định hình hierarchy.
+  - id: collection-foundation
+    title: Collection là gì và vì sao Collections Framework tồn tại?
+    purpose: Hiểu Collection là gì, mảng đã giải quyết được điều gì, vì sao nhóm dữ liệu có kích thước thay đổi cần mô hình phong phú hơn, Collections Framework chuẩn hóa điều gì và vì sao hệ thống phân cấp của nó thể hiện nhiều khả năng khác nhau thay vì là một cây phải học thuộc.
+    relatedKnowledge:
+      - Hierarchy
     relatedModules:
       - routeId: JAVA_GENERICS
         label: Generics
-        note: Collection API dựa mạnh vào generic type parameter, wildcard và PECS để reuse type-safe.
+        note: API của Collection sử dụng tham số kiểu generic, wildcard và PECS để tái sử dụng mã mà vẫn an toàn kiểu dữ liệu.
     objectives:
-      - Phân biệt vai trò Collection, List, Set, Queue, Map và sorted/navigable.
-      - Chọn interface từ behavior cần thiết trước khi chọn implementation.
-  - id: shared-api-and-characteristics
-    title: Shared API và đặc tính Collection
-    purpose: Hiểu operation và behavioral dimension chung giữa các collection abstraction, bao gồm optional mutation và bulk operation.
+      - Phân biệt ở mức nhập môn vai trò của Collection, Collections, Iterable và Map, đồng thời hiểu vì sao Map nằm ở hệ thống phân cấp riêng.
+      - Nhận biết API chung của Collection và phân tích riêng biệt thứ tự, phần tử trùng lặp, chính sách null, khả năng thay đổi và độ phức tạp của thao tác.
+      - Chọn interface theo hành vi cần có trước khi chọn lớp triển khai cụ thể.
+  - id: core-collection-contracts
+    title: Các mô hình dữ liệu cốt lõi
+    purpose: Xây dựng cách nhìn tổng thể về List, Set, Map, Queue và Deque như những lời giải khác nhau cho các nhu cầu truy cập và xử lý dữ liệu khác nhau.
+    relatedKnowledge:
+      - List
+      - Set
+      - Map
+      - QueueDeque
     objectives:
-      - Reason độc lập về ordering, duplicate, null policy, mutability và complexity.
-      - Hiểu vì sao Map là hierarchy riêng khỏi Collection.
-  - id: list-semantics
-    title: List và dữ liệu theo vị trí
-    purpose: Hiểu ordered positional collection và trade-off giữa các list implementation phổ biến với backed view.
-    objectives:
-      - Chọn random-access hay node-oriented list behavior theo workload.
-      - Nhận biết pitfall của remove overload, subList view và array/list boundary.
-  - id: set-semantics
-    title: Set và semantics uniqueness
-    purpose: Hiểu set là collection hướng đến uniqueness, với behavior phụ thuộc equality hoặc ordering contract.
-    objectives:
-      - Phân biệt hash-based, insertion-ordered và sorted set semantics.
-      - Dùng set algebra mà không giả định mọi implementation có cùng cost/order behavior.
-  - id: map-semantics
-    title: Map và lookup theo key
-    purpose: Hiểu key/value mapping, Map.Entry, backed view và cách key contract quyết định lookup behavior.
-    objectives:
-      - Reason về key, value, entry, duplicate-key replacement và view mutation.
-      - Chọn hash-based hay sorted map theo lookup và ordering requirement.
-  - id: queue-and-deque
-    title: Queue và Deque Contract
-    purpose: Hiểu FIFO, LIFO, double-ended operation, priority ordering và các cặp operation throw exception so với trả sentinel.
-    objectives:
-      - Chọn offer/poll/peek hay add/remove/element có chủ đích.
-      - Hiểu PriorityQueue ordering mà không giả định iteration được sort hoàn toàn.
-  - id: iteration-and-functional-use
-    title: Iteration và functional usage của Collection
-    purpose: Hiểu traversal qua Iterator/ListIterator/for-each và boundary giữa collection ownership với functional-style operation.
+      - Phân biệt dữ liệu có thứ tự và vị trí, tính duy nhất, tra cứu theo khóa, xử lý FIFO/LIFO, thao tác hai đầu và lấy phần tử theo độ ưu tiên.
+      - Hiểu mỗi mô hình có quy tắc khác nhau về phần tử trùng lặp, thứ tự, tra cứu và thay đổi dữ liệu trước khi so sánh các lớp triển khai.
+      - Nhận biết các ranh giới tiêu biểu như thao tác theo vị trí của List, phép toán tập hợp của Set, Map.Entry/view của Map và cách Queue/Deque báo thất bại mà không xem chúng là một API chung duy nhất.
+  - id: traversal-and-iteration
+    title: Duyệt dữ liệu với Iterator
+    purpose: Hiểu cách thuật toán duyệt các cấu trúc dữ liệu thông qua giao thức duyệt chung mà không phụ thuộc vào lớp triển khai cụ thể.
+    relatedKnowledge:
+      - Iteration
     relatedModules:
       - routeId: JAVA_FUNCTIONAL_PROGRAMMING
-        label: Functional Programming
-        note: Lambda, method reference và stream-style behavior dùng quanh collection được đào sâu ở Functional Programming.
+        label: Lập trình hàm
+        note: Lambda, tham chiếu phương thức và cách xử lý theo Stream dùng quanh collection được đào sâu trong module Lập trình hàm.
     objectives:
-      - Traverse mà không phụ thuộc implementation detail.
-      - Nhận biết iterator mutation an toàn và khi lambda/method-reference syntax thuộc functional programming.
-  - id: ordering-and-navigation
-    title: Ordering, Sorting và Navigation
-    purpose: Hiểu encounter order, natural/comparator ordering, sorted/navigable structure và precondition của ordering algorithm.
-    objectives:
-      - Reason về comparison result và stable sorting behavior.
-      - Dùng navigable range operation và backed range view đúng cách.
-  - id: equality-hashing-and-mutation
-    title: Equality, Hashing và Mutation Safety
-    purpose: Hiểu cách element/key contract và structural modification ảnh hưởng lookup, whole-container equality và iteration safety.
+      - Dùng Iterator, vòng lặp for-each và ListIterator theo đúng mô hình duyệt của chúng.
+      - Nhận biết cách thay đổi dữ liệu an toàn qua Iterator và xem Spliterator/Stream là ranh giới chuyển sang module Lập trình hàm.
+  - id: ordering-comparison-and-navigation
+    title: Thứ tự, so sánh và điều hướng
+    purpose: Hiểu sự khác nhau giữa thứ tự duyệt và thứ tự sắp xếp, cách quy ước so sánh xác định thứ tự và cách SortedSet/NavigableSet hoặc SortedMap/NavigableMap hỗ trợ truy vấn phạm vi hay phần tử gần nhất.
+    relatedKnowledge:
+      - OrderingSorting
     relatedModules:
       - routeId: JAVA_OBJECT_CONTRACT
-        label: Object Contract
-        note: equals, hashCode, Comparable và Comparator law trực tiếp điều khiển collection behavior.
+        label: Quy ước của Object
+        note: Các quy tắc của Comparable và Comparator xác định thứ tự được dùng bởi các cấu trúc có sắp xếp và các thuật toán sắp xếp.
     objectives:
-      - Dự đoán hệ quả của mutable key/element trong hash-based hoặc sorted structure.
-      - Hiểu fail-fast là best-effort bug detection chứ không phải synchronization.
-  - id: mutability-views-and-factories
-    title: Mutability, View và Immutable Factory
-    purpose: Phân biệt modifiable collection, fixed-size/backed view, unmodifiable wrapper và immutable snapshot/factory.
+      - Hiểu ý nghĩa kết quả so sánh âm, bằng 0, dương và phân biệt thứ tự tự nhiên với thứ tự do Comparator xác định.
+      - Dùng sắp xếp ổn định, điều kiện của tìm kiếm nhị phân, các thao tác điều hướng và backed view theo phạm vi đúng cách.
+  - id: equality-hashing-and-lookup
+    title: Tính bằng nhau, hash và tính đúng đắn khi tra cứu
+    purpose: Hiểu cách equals, hashCode và tính nhất quán của phép so sánh chi phối tính duy nhất, tra cứu và tính bằng nhau của cả cấu trúc, bao gồm lý do khóa hoặc phần tử có thể thay đổi có thể phá vỡ các giả định của cấu trúc dữ liệu.
+    relatedKnowledge:
+      - EqualityHashing
+    relatedModules:
+      - routeId: JAVA_OBJECT_CONTRACT
+        label: Quy ước của Object
+        note: Các quy tắc của equals, hashCode, Comparable và Comparator trực tiếp chi phối hành vi của các cấu trúc dữ liệu này.
     objectives:
-      - Xác định ai sở hữu mutation và thay đổi có được share qua view hay không.
-      - Chọn copy hay view theo ownership và lifecycle need.
+      - Dự đoán hệ quả khi quy ước không nhất quán hoặc khi khóa/phần tử thay đổi trong cấu trúc dựa trên hash hay cấu trúc có sắp xếp.
+      - Phân biệt quy tắc so sánh bằng nhau của List, Set, Map và Queue/Deque.
+  - id: mutation-views-and-fail-fast
+    title: Khả năng thay đổi, view và Fail-Fast
+    purpose: Hiểu ai sở hữu quyền thay đổi cấu trúc, view và các dạng không cho sửa/bất biến ảnh hưởng đến thay đổi dữ liệu ra sao, đồng thời hiểu vì sao thay đổi cấu trúc khi đang duyệt có thể làm mất hiệu lực các giả định của Iterator.
+    relatedKnowledge:
+      - MutableImmutable
+      - FailFast
+    objectives:
+      - Phân biệt cấu trúc có thể sửa, cấu trúc cố định kích thước, backed view, lớp bọc không cho sửa, kết quả bất biến từ phương thức tạo/copyOf và bản sao phòng vệ.
+      - Dự đoán thao tác nào được phép và thay đổi có được phản ánh sang đối tượng khác thông qua view hay không.
+      - Hiểu fail-fast chỉ cố gắng phát hiện lỗi và không bảo đảm tuyệt đối; đây không phải cơ chế đồng bộ hay bảo đảm an toàn khi chạy đồng thời.
+      - Thay đổi dữ liệu an toàn qua thao tác được Iterator hỗ trợ khi phù hợp và hiểu ConcurrentModificationException thực sự đảm bảo điều gì, không đảm bảo điều gì.
   - id: implementation-choice-and-specialization
-    title: Lựa chọn implementation và Specialized Collection
-    purpose: Kết hợp semantics và complexity thành implementation-choice model, bao gồm enum-specific structure khi constraint phù hợp.
+    title: Lựa chọn cách triển khai và cấu trúc chuyên biệt
+    purpose: Tổng hợp hành vi cần có, độ phức tạp thao tác, bộ nhớ, khả năng thay đổi, yêu cầu về thứ tự và chính sách null thành cách chọn lớp triển khai thực tế, đồng thời nhận biết khi nào cấu trúc chuyên biệt cho enum phù hợp hơn.
+    relatedKnowledge:
+      - ImplementationChoice
+      - EnumCollections
     relatedModules:
       - routeId: JAVA_CLASS_OBJECT
-        label: Class & Object
-        note: Java enum và type semantics của chúng được giới thiệu ở Class & Object.
+        label: Lớp & đối tượng
+        note: Enum trong Java và đặc tính kiểu dữ liệu của enum được giới thiệu trong module Lớp & đối tượng.
     objectives:
-      - Chọn implementation theo access pattern, ordering, mutation, memory và complexity requirement.
-      - Nhận biết EnumSet/EnumMap là specialized structure chứ không phải generic default.
+      - So sánh các lớp triển khai List, Set, Map và Queue phổ biến theo loại công việc mà chúng phù hợp, lấy tính đúng đắn về hành vi làm bộ lọc đầu tiên.
+      - Tính đến độ phức tạp thao tác, bộ nhớ, thứ tự, khả năng thay đổi, chính sách null và giới hạn của các phương thức tạo trước khi tối ưu vi mô.
+      - Nhận biết EnumSet và EnumMap là lựa chọn chuyên biệt cho miền enum, không phải mặc định thay thế các cấu trúc đa dụng.

@@ -1,4 +1,4 @@
-# Ordering and Sorting
+# Ordering, Comparison, and Navigation
 
 A collection often has to answer more than “which elements are present?” It may also need to answer “in what order are those elements observed?”. That order can come from the data structure, from the elements' natural ordering, or from a comparison rule supplied by the caller. These sources are related, but they are not the same thing.
 
@@ -25,7 +25,7 @@ Examples:
 - `TreeSet` encounters elements in the set's sorted order.
 - `HashSet` does not promise a specific encounter order, so application logic should not depend on whatever order happens to be observed.
 
-Java 21 makes encounter order more explicit through `SequencedCollection`, `SequencedSet`, and `SequencedMap`. For example, `List` is a `SequencedCollection` and `SortedSet` is a `SequencedSet`. These abstractions expose first/last operations and reverse-ordered views through `reversed()` where the concrete type supports them.
+Java 21 makes encounter order more explicit through `SequencedCollection`, `SequencedSet`, and `SequencedMap`. For example, `List` is a `SequencedCollection` and `SortedSet` is a `SequencedSet`. These abstractions define first/last access and a reverse-ordered view through `reversed()`. Mutating end operations such as `addFirst`, `addLast`, `removeFirst`, or `removeLast` are optional and can still be unsupported by a concrete implementation.
 
 ```java
 List<Order> original = new ArrayList<>(orders);

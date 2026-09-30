@@ -1,6 +1,6 @@
-# Set
+# Core Collection Contracts — Set
 
-After `List`, the question changes from “which position is this element in?” to “may the same logical value appear more than once?” When the answer is no, `Set` expresses that intent better than a `List` plus duplicate checks scattered through application code.
+The **Core Collection Contracts** milestone now shifts from positional data to uniqueness: “may the same logical value appear more than once?” When the answer is no, `Set` expresses that intent better than a `List` plus duplicate checks scattered through application code.
 
 ## <a id="set-semantics">Set Semantics</a>
 

@@ -1,12 +1,12 @@
-# Set
+# Các mô hình dữ liệu cốt lõi — Set
 
-Sau `List`, câu hỏi thay đổi từ “phần tử nằm ở vị trí nào?” sang “mỗi giá trị logic có được xuất hiện nhiều hơn một lần không?”. Khi câu trả lời là không, `Set` diễn đạt ý định tốt hơn một `List` rồi tự kiểm tra trùng bằng code bên ngoài.
+Sau `List`, câu hỏi thay đổi từ “phần tử nằm ở vị trí nào?” sang “mỗi giá trị logic có được xuất hiện nhiều hơn một lần không?”. Khi câu trả lời là không, `Set` diễn đạt ý định tốt hơn một `List` rồi tự kiểm tra trùng bằng mã nguồn bên ngoài.
 
 ## <a id="set-semantics">Ngữ nghĩa của Set</a>
 
-Contract chung của `Set<E>` là **không chứa hai phần tử bằng nhau theo equality contract của `Set`**. Với các cách triển khai thông thường như `HashSet`, `equals` quyết định equality còn `hashCode` giúp tìm vùng ứng viên hiệu quả. Đặc điểm riêng của sorted set như `TreeSet` sẽ được giải thích ở đúng section của nó sau khi learner đã nắm semantics cơ bản của `Set`.
+Quy ước chung của `Set<E>` là **không chứa hai phần tử bằng nhau theo quy tắc tính bằng nhau của `Set`**. Với các cách triển khai thông thường như `HashSet`, `equals` quyết định tính bằng nhau còn `hashCode` giúp tìm vùng ứng viên hiệu quả. Đặc điểm riêng của Set có sắp xếp như `TreeSet` sẽ được giải thích ở đúng phần của nó sau khi người học đã nắm ngữ nghĩa cơ bản của `Set`.
 
-Ví dụ, nếu chỉ cần biết những user nào đã có đơn hàng:
+Ví dụ, nếu chỉ cần biết những người dùng nào đã có đơn hàng:
 
 ```java
 Set<Long> userIds = new HashSet<>();
@@ -24,15 +24,15 @@ boolean first = userIds.add(9L);  // true
 boolean again = userIds.add(9L);  // false
 ```
 
-`Set` không hứa truy cập theo index. Nếu code cần “phần tử thứ ba”, đó thường là dấu hiệu cần `List` hoặc một abstraction có encounter order rõ hơn.
+`Set` không hứa truy cập theo chỉ số. Nếu mã nguồn cần “phần tử thứ ba”, đó thường là dấu hiệu cần `List` hoặc một mô hình trừu tượng có thứ tự duyệt rõ hơn.
 
-Chính sách `null` không giống nhau giữa các implementation. `HashSet` và `LinkedHashSet` cho phép một phần tử `null`; `TreeSet` dùng natural ordering thông thường sẽ không chấp nhận `null`. API nên dựa vào contract/documentation của implementation cụ thể thay vì giả định mọi `Set` giống nhau.
+Chính sách `null` không giống nhau giữa các cách triển khai. `HashSet` và `LinkedHashSet` cho phép một phần tử `null`; `TreeSet` dùng thứ tự tự nhiên thông thường sẽ không chấp nhận `null`. API nên dựa vào quy ước/tài liệu của cách triển khai cụ thể thay vì giả định mọi `Set` giống nhau.
 
-Từ Java 21, `SequencedSet` kết hợp uniqueness của `Set` với encounter order có đầu/cuối. `LinkedHashSet` và các sorted-set interfaces hiện đại tham gia abstraction này, nên code có thể nói rõ khi cả uniqueness lẫn order đều là một phần của hợp đồng.
+Từ Java 21, `SequencedSet` kết hợp tính duy nhất của `Set` với thứ tự duyệt có đầu/cuối. `LinkedHashSet` và các interface Set có sắp xếp hiện đại tham gia mô hình trừu tượng này, nên mã nguồn có thể nói rõ khi cả tính duy nhất lẫn thứ tự đều là một phần của quy ước.
 
 ## <a id="set-algebra">Các phép toán tập hợp bằng Set API</a>
 
-Vì `Set` mô hình hóa một tập phần tử duy nhất, các bulk operation của `Collection` có thể được đọc theo đúng tư duy tập hợp:
+Vì `Set` mô hình hóa một tập phần tử duy nhất, các thao tác hàng loạt của `Collection` có thể được đọc theo đúng tư duy tập hợp:
 
 ```java
 Set<Long> first = new HashSet<>(Set.of(1L, 2L, 3L));
@@ -60,11 +60,11 @@ Set<Long> difference = new HashSet<>(first);
 difference.removeAll(second); // [1, 2]
 ```
 
-Điểm quan trọng là các operation này **thay đổi set nhận lời gọi** nếu set đó mutable. Khi muốn giữ dữ liệu gốc, tạo một copy trước rồi thao tác trên copy như các ví dụ trên.
+Điểm quan trọng là các thao tác này **thay đổi Set nhận lời gọi** nếu Set đó có thể thay đổi. Khi muốn giữ dữ liệu gốc, hãy tạo một bản sao trước rồi thao tác trên bản sao như các ví dụ trên.
 
-## <a id="set-equality">Equality của Set không phụ thuộc thứ tự</a>
+## <a id="set-equality">Tính bằng nhau của Set không phụ thuộc thứ tự</a>
 
-Hai `Set` bằng nhau khi chúng có cùng kích thước và mỗi phần tử của set này cũng nằm trong set kia. **Encounter order không tham gia `Set.equals`.**
+Hai `Set` bằng nhau khi chúng có cùng kích thước và mỗi phần tử của set này cũng nằm trong set kia. **thứ tự duyệt không tham gia `Set.equals`.**
 
 ```java
 Set<Long> a = new HashSet<>(List.of(10L, 20L, 30L));
@@ -73,11 +73,11 @@ Set<Long> b = new LinkedHashSet<>(List.of(30L, 20L, 10L));
 System.out.println(a.equals(b)); // true
 ```
 
-Điều này khác `List.equals`, nơi vị trí của từng phần tử là một phần của equality. Vì vậy nếu business value chỉ quan tâm “có những thành viên nào” chứ không quan tâm thứ tự, `Set` thường biểu diễn semantics đúng hơn `List`.
+Điều này khác `List.equals`, nơi vị trí của từng phần tử là một phần của tính bằng nhau. Vì vậy nếu giá trị nghiệp vụ chỉ quan tâm “có những thành viên nào” chứ không quan tâm thứ tự, `Set` thường biểu diễn ngữ nghĩa đúng hơn `List`.
 
 ## <a id="hashset-model">Mô hình HashSet</a>
 
-`HashSet` phù hợp khi câu hỏi chính là membership/uniqueness và không cần một encounter order cụ thể. Mental model hữu ích là:
+`HashSet` phù hợp khi câu hỏi chính là kiểm tra thành viên/tính duy nhất và không cần một thứ tự duyệt cụ thể. Mô hình tư duy hữu ích là:
 
 ```text
 element
@@ -97,21 +97,21 @@ if (processedOrderIds.add(order.id())) {
 }
 ```
 
-Ở đây `add` vừa kiểm tra vừa ghi nhận uniqueness, tránh pattern “`contains` rồi mới `add`” không cần thiết trong code đơn thread.
+Ở đây `add` vừa kiểm tra vừa ghi nhận tính duy nhất, tránh mẫu “`contains` rồi mới `add`” không cần thiết trong mã nguồn đơn luồng.
 
-Chi tiết bucket, resize hay tree bin là chi tiết implementation và có thể thay đổi. Điều contract cần người dùng hiểu là:
+Chi tiết bucket, tăng dung lượng hay tree bin là chi tiết cách triển khai và có thể thay đổi. Điều người dùng cần hiểu từ quy ước là:
 
-1. element phải duy trì hành vi equality/hash ổn định khi đang nằm trong set;
+1. phần tử phải duy trì hành vi tính bằng nhau/hash ổn định khi đang nằm trong set;
 2. hash giúp tìm vùng ứng viên;
-3. `equals` xác nhận equality đối với hash-based collection.
+3. `equals` xác nhận tính bằng nhau đối với collection dựa trên hash.
 
-Nếu một object thay đổi field tham gia `equals/hashCode` sau khi đã được thêm vào `HashSet`, lookup có thể trở nên sai lệch theo góc nhìn người dùng vì object không còn nằm ở bucket phù hợp với hash mới. Module Equality/Hashing sẽ đi sâu vào invariant này; ở đây chỉ cần tránh dùng key/element mutable theo cách làm thay đổi identity logic.
+Nếu một đối tượng thay đổi trường tham gia `equals/hashCode` sau khi đã được thêm vào `HashSet`, tra cứu có thể trở nên sai lệch theo góc nhìn người dùng vì đối tượng không còn nằm ở bucket phù hợp với hash mới. Chương **Tính bằng nhau, hash và tính đúng đắn khi tra cứu** sẽ đi sâu vào bất biến này; ở đây chỉ cần tránh dùng khóa/phần tử có thể thay đổi theo cách làm thay đổi logic định danh.
 
-`HashSet` không đảm bảo iteration order. Một output “có vẻ ổn định” ở vài lần chạy không phải contract để dựa vào.
+`HashSet` không đảm bảo thứ tự duyệt. Một kết quả “có vẻ ổn định” ở vài lần chạy không phải quy ước để dựa vào.
 
 ## <a id="linkedhashset-order">Thứ tự của LinkedHashSet</a>
 
-`LinkedHashSet` thêm một encounter order xác định vào uniqueness của hash set. Với thao tác `add` thông thường, thứ tự mặc định là thứ tự phần tử được chèn lần đầu.
+`LinkedHashSet` thêm một thứ tự duyệt xác định vào tính duy nhất của HashSet. Với thao tác `add` thông thường, thứ tự mặc định là thứ tự phần tử được chèn lần đầu.
 
 ```java
 Set<Long> userIds = new LinkedHashSet<>();
@@ -123,17 +123,17 @@ userIds.add(2L);
 System.out.println(userIds); // [7, 2, 9]
 ```
 
-Thêm lại `2L` không tạo phần tử mới và không tự động chuyển nó về cuối theo semantics của `add` thông thường.
+Thêm lại `2L` không tạo phần tử mới và không tự động chuyển nó về cuối theo ngữ nghĩa của `add` thông thường.
 
-Đây là lựa chọn tốt khi business logic cần cả hai điều:
+Đây là lựa chọn tốt khi logic nghiệp vụ cần cả hai điều:
 
 ```text
 không trùng
     +
-giữ encounter order có thể dự đoán
+giữ thứ tự duyệt có thể dự đoán
 ```
 
-Ví dụ, ta có thể lấy danh sách user duy nhất theo thứ tự user xuất hiện lần đầu trong stream đơn hàng:
+Ví dụ, ta có thể lấy danh sách người dùng duy nhất theo thứ tự họ xuất hiện lần đầu trong luồng dữ liệu đơn hàng:
 
 ```java
 Set<Long> usersInFirstSeenOrder = new LinkedHashSet<>();
@@ -142,13 +142,13 @@ for (Order order : orders) {
 }
 ```
 
-Trong Java 21, `LinkedHashSet` triển khai `SequencedSet`. Ngoài encounter order vốn có, nó có API first/last, explicit positioning như `addFirst`/`addLast` và view `reversed()`. Điều này làm rõ hơn rằng order của cấu trúc là contract quan sát được, không chỉ là một chi tiết in ra đẹp mắt.
+Trong Java 21, `LinkedHashSet` triển khai `SequencedSet`. Ngoài thứ tự duyệt vốn có, nó có API đầu/cuối, khả năng định vị rõ ràng như `addFirst`/`addLast` và khung nhìn `reversed()`. Điều này làm rõ hơn rằng thứ tự của cấu trúc là quy ước quan sát được, không chỉ là một chi tiết in ra đẹp mắt.
 
-Đổi từ `HashSet` sang `LinkedHashSet` có thêm chi phí lưu thông tin liên kết thứ tự. Vì vậy chỉ trả chi phí đó khi order thật sự là yêu cầu có giá trị.
+Đổi từ `HashSet` sang `LinkedHashSet` có thêm chi phí lưu thông tin liên kết thứ tự. Vì vậy chỉ trả chi phí đó khi thứ tự thật sự là yêu cầu có giá trị.
 
 ## <a id="treeset-order">Thứ tự của TreeSet</a>
 
-`TreeSet` giải quyết một bài toán khác: nó giữ phần tử theo **sorted order** thay vì insertion order.
+`TreeSet` giải quyết một bài toán khác: nó giữ phần tử theo **thứ tự sắp xếp** thay vì thứ tự chèn.
 
 ```java
 Set<Long> orderIds = new TreeSet<>();
@@ -161,7 +161,7 @@ System.out.println(orderIds); // [10, 20, 30]
 
 Thứ tự đến từ:
 
-- natural ordering của element nếu không truyền comparator;
+- thứ tự tự nhiên của phần tử nếu không truyền comparator;
 - hoặc một `Comparator<? super E>` được cung cấp khi tạo set.
 
 ```java
@@ -173,7 +173,7 @@ Set<User> usersByName = new TreeSet<>(
 );
 ```
 
-Với `TreeSet`, kết quả so sánh bằng 0 quyết định rằng hai element chiếm cùng một vị trí logic trong set:
+Với `TreeSet`, kết quả so sánh bằng 0 quyết định rằng hai phần tử chiếm cùng một vị trí logic trong set:
 
 ```java
 Comparator<User> byNameOnly = Comparator.comparing(User::name);
@@ -185,8 +185,8 @@ users.add(new User(2, "An"));
 System.out.println(users.size()); // 1
 ```
 
-Hai `User` trên có id khác nhau nhưng comparator chỉ nhìn `name`, nên `compare(a, b) == 0` và `TreeSet` xem chúng là cùng vị trí cho mục đích lưu trữ. Nếu ordering không nhất quán với `equals`, behavior của `TreeSet` vẫn xác định nhưng sorted set không còn thực hiện sạch contract equality chung của `Set`. Trong thực tế, comparator dùng cho `TreeSet` nên nhất quán với notion of equality mà API muốn công bố, hoặc cần chọn cấu trúc khác.
+Hai `User` trên có id khác nhau nhưng comparator chỉ nhìn `name`, nên `compare(a, b) == 0` và `TreeSet` xem chúng là cùng vị trí cho mục đích lưu trữ. Nếu thứ tự không nhất quán với `equals`, hành vi của `TreeSet` vẫn xác định nhưng Set có sắp xếp không còn thực hiện sạch quy ước tính bằng nhau chung của `Set`. Trong thực tế, comparator dùng cho `TreeSet` nên nhất quán với khái niệm tính bằng nhau mà API muốn công bố, hoặc cần chọn cấu trúc khác.
 
-`TreeSet` thường có O(log n) cho `add`, `contains` và `remove`. Đổi lại, nó cung cấp sorted/navigable operations như `first`, `last`, `lower`, `higher`, `floor` và `ceiling`.
+`TreeSet` thường có O(log n) cho `add`, `contains` và `remove`. Đổi lại, nó cung cấp các thao tác sắp xếp/điều hướng như `first`, `last`, `lower`, `higher`, `floor` và `ceiling`.
 
-Từ Java 21, sorted-set hierarchy cũng có sequenced semantics, nên đầu/cuối và view đảo có thể được diễn đạt thống nhất. Dù API hiện đại hơn, điều cần chọn vẫn là **sorted order** chứ không phải insertion order.
+Từ Java 21, hệ phân cấp Set có sắp xếp cũng có ngữ nghĩa Sequenced, nên đầu/cuối và khung nhìn đảo có thể được diễn đạt thống nhất. Dù API hiện đại hơn, lý do chọn cấu trúc này vẫn là **thứ tự sắp xếp**, không phải thứ tự chèn.

@@ -343,7 +343,7 @@ questions:
   - question: >-
       When choosing a Collection implementation for a new API, where should the decision start instead of choosing by habit?
     answer: >-
-      Start with semantics: positional order, uniqueness, key lookup, FIFO/LIFO, priority, or sorted navigation. Then consider encounter order, null policy, mutability/ownership, and the costs of the operations that dominate the real workload. Only after the contract is correct should implementation-level performance drive the choice; Big-O or a microbenchmark cannot rescue a data structure with the wrong semantics.
+      Start with semantics: positional order, uniqueness, key lookup, FIFO/LIFO, priority, or sorted navigation. Then consider encounter order, mutability/ownership, null and factory restrictions, memory overhead, and the costs of the operations that dominate the real workload. Check whether the domain admits a specialized structure such as EnumSet or EnumMap before defaulting to a general-purpose implementation. Only after the contract is correct should implementation-level performance drive the choice; Big-O or a microbenchmark cannot rescue a data structure with the wrong semantics.
     aiGenerated: true
     reviewed: false
     readmeRelated:

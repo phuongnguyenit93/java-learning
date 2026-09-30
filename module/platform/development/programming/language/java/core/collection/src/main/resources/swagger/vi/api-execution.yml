@@ -3,71 +3,71 @@ ListController:
     execution: |-
       <p><strong>Khái niệm:</strong> cùng là <code>List</code> nhưng <code>ArrayList</code> và <code>LinkedList</code> dựa trên mô hình lưu trữ khác nhau, nên chi phí thao tác không giống nhau.</p>
       <ol>
-        <li><strong>Flow:</strong> endpoint tạo hai list cùng dữ liệu, đọc một phần tử theo index, chèn giữa list và thêm một phần tử ở đầu LinkedList.</li>
-        <li><strong>Code evidence:</strong><pre><code>List&lt;String&gt; arrayList = new ArrayList&lt;&gt;(List.of("A", "B", "C"));
+        <li><strong>Luồng thực thi:</strong> API tạo hai List cùng dữ liệu, đọc một phần tử theo chỉ số, chèn giữa List và thêm một phần tử ở đầu LinkedList.</li>
+        <li><strong>Bằng chứng từ code:</strong><pre><code>List&lt;String&gt; arrayList = new ArrayList&lt;&gt;(List.of("A", "B", "C"));
       String before = arrayList.get(1);
       arrayList.add(1, "X");
 
       LinkedList&lt;String&gt; linkedList = new LinkedList&lt;&gt;(List.of("A", "B", "C"));
       linkedList.add(1, "X");
       linkedList.addFirst("HEAD");</code></pre></li>
-        <li><strong>Observation:</strong> response trả <code>arrayIndexOneBeforeInsert=B</code>, ArrayList sau middle insert là <code>[A,X,B,C]</code>, còn LinkedList expose cả middle insert và head operation.</li>
-        <li><strong>Ý nghĩa:</strong> ArrayList hỗ trợ direct indexed access nhưng middle insert phải dịch phần tử; LinkedList có thao tác đầu/cuối tự nhiên nhưng indexed lookup vẫn cần traversal.</li>
+        <li><strong>Quan sát:</strong> kết quả trả <code>arrayIndexOneBeforeInsert=B</code>, ArrayList sau khi chèn giữa là <code>[A,X,B,C]</code>, còn LinkedList thể hiện cả thao tác chèn giữa và thêm ở đầu.</li>
+        <li><strong>Ý nghĩa:</strong> ArrayList hỗ trợ truy cập trực tiếp theo chỉ số nhưng chèn giữa phải dịch các phần tử; LinkedList có thao tác đầu/cuối tự nhiên nhưng tra cứu theo chỉ số vẫn cần duyệt qua các nút.</li>
       </ol>
-      <p><strong>Kết luận:</strong> chọn implementation theo workload và semantics, không dựa vào câu khẩu quyết “LinkedList insert nhanh hơn”.</p>
+      <p><strong>Kết luận:</strong> chọn lớp triển khai theo kiểu sử dụng và ngữ nghĩa cần có, không dựa vào câu khẩu quyết “LinkedList chèn nhanh hơn”.</p>
     usage: true
 SetController:
   uniquenessAndOrder():
     execution: |-
-      <p><strong>Khái niệm:</strong> <code>Set</code> đưa uniqueness vào contract, còn encounter order phụ thuộc implementation.</p>
+      <p><strong>Khái niệm:</strong> <code>Set</code> đưa tính duy nhất vào quy ước của cấu trúc, còn thứ tự duyệt phụ thuộc lớp triển khai.</p>
       <ol>
-        <li><strong>Flow:</strong> input <code>[B,A,B,C,A]</code> được đưa vào HashSet, LinkedHashSet và TreeSet.</li>
-        <li><strong>Code evidence:</strong><pre><code>Set&lt;String&gt; hashSet = new HashSet&lt;&gt;(input);
+        <li><strong>Luồng thực thi:</strong> dữ liệu <code>[B,A,B,C,A]</code> được đưa vào HashSet, LinkedHashSet và TreeSet.</li>
+        <li><strong>Bằng chứng từ code:</strong><pre><code>Set&lt;String&gt; hashSet = new HashSet&lt;&gt;(input);
       Set&lt;String&gt; linkedHashSet = new LinkedHashSet&lt;&gt;(input);
       Set&lt;String&gt; treeSet = new TreeSet&lt;&gt;(input);</code></pre></li>
-        <li><strong>Observation:</strong> <code>uniqueSize=3</code>, thêm lại B trả false; LinkedHashSet giữ <code>[B,A,C]</code>, TreeSet trả <code>[A,B,C]</code>, còn HashSet không công bố order guarantee.</li>
-        <li><strong>Ý nghĩa:</strong> uniqueness là semantics chung của Set, nhưng insertion order hay sorted order là capability bổ sung của implementation cụ thể.</li>
+        <li><strong>Quan sát:</strong> <code>uniqueSize=3</code>, thêm lại B trả false; LinkedHashSet giữ <code>[B,A,C]</code>, TreeSet trả <code>[A,B,C]</code>, còn HashSet không cam kết thứ tự duyệt.</li>
+        <li><strong>Ý nghĩa:</strong> tính duy nhất là ngữ nghĩa chung của Set, còn thứ tự chèn hay thứ tự sắp xếp là khả năng bổ sung của lớp triển khai cụ thể.</li>
       </ol>
-      <p><strong>Kết luận:</strong> chọn Set dựa trên cả uniqueness và order contract mà caller cần.</p>
+      <p><strong>Kết luận:</strong> chọn Set dựa trên cả yêu cầu về tính duy nhất và quy ước thứ tự mà bên sử dụng cần.</p>
     usage: true
 MapController:
   orderingAndCompute():
     execution: |-
-      <p><strong>Khái niệm:</strong> các default method <code>compute</code>, <code>computeIfAbsent</code> và <code>merge</code> diễn đạt update intent trực tiếp trên mapping.</p>
+      <p><strong>Khái niệm:</strong> các phương thức mặc định <code>compute</code>, <code>computeIfAbsent</code> và <code>merge</code> diễn đạt trực tiếp ý định cập nhật ánh xạ.</p>
       <ol>
-        <li><strong>Flow:</strong> endpoint bắt đầu với <code>{NEW=2, PAID=1}</code>, tăng NEW, tạo PACKING nếu thiếu, cộng PAID và tạo SHIPPED bằng merge.</li>
-        <li><strong>Code evidence:</strong><pre><code>counts.compute("NEW", (status, current) -&gt; current == null ? 1 : current + 1);
+        <li><strong>Luồng thực thi:</strong> API bắt đầu với <code>{NEW=2, PAID=1}</code>, tăng NEW, tạo PACKING nếu thiếu, cộng PAID và tạo SHIPPED bằng merge.</li>
+        <li><strong>Bằng chứng từ code:</strong><pre><code>counts.compute("NEW", (status, current) -&gt; current == null ? 1 : current + 1);
       counts.computeIfAbsent("PACKING", status -&gt; 0);
       counts.merge("PAID", 2, Integer::sum);
       counts.merge("SHIPPED", 1, Integer::sum);</code></pre></li>
-        <li><strong>Observation:</strong> NEW trở thành 3, PAID thành 3, PACKING và SHIPPED được tạo; LinkedHashMap vẫn expose encounter order của các key.</li>
-        <li><strong>Ý nghĩa:</strong> các operation này thay thế pattern get-if-put bằng một update expression gần với ý định hơn, nhưng plain Map không vì thế mà có concurrent atomicity guarantee.</li>
+        <li><strong>Quan sát:</strong> NEW trở thành 3, PAID thành 3, PACKING và SHIPPED được tạo; LinkedHashMap vẫn giữ thứ tự duyệt của các khóa.</li>
+        <li><strong>Ý nghĩa:</strong> các thao tác này thay thế mẫu get-if-put bằng biểu thức cập nhật gần với ý định hơn, nhưng Map thông thường không vì thế mà có bảo đảm nguyên tử khi nhiều luồng cùng truy cập.</li>
       </ol>
-      <p><strong>Kết luận:</strong> dùng compute/merge khi update logic thực sự dựa trên mapping hiện tại hoặc cần tạo mapping khi thiếu.</p>
+      <p><strong>Kết luận:</strong> dùng compute/merge khi logic cập nhật thực sự dựa trên ánh xạ hiện tại hoặc cần tạo ánh xạ khi thiếu.</p>
     usage: true
 QueueController:
   queueOperations():
     execution: |-
-      <p><strong>Khái niệm:</strong> Queue có hai family operation cùng mục đích nhưng báo failure bằng exception hoặc special value.</p>
+      <p><strong>Khái niệm:</strong> Queue có hai nhóm thao tác cùng mục đích nhưng báo thất bại bằng ngoại lệ hoặc giá trị đặc biệt.</p>
       <ol>
-        <li><strong>Flow:</strong> endpoint gọi <code>poll/peek</code> và <code>remove/element</code> trên ArrayDeque rỗng, rồi offer A/B và poll phần tử đầu.</li>
-        <li><strong>Code evidence:</strong><pre><code>String pollOnEmpty = queue.poll();
+        <li><strong>Luồng thực thi:</strong> API gọi <code>poll/peek</code> và <code>remove/element</code> trên ArrayDeque rỗng, rồi offer A/B và poll phần tử đầu.</li>
+        <li><strong>Bằng chứng từ code:</strong><pre><code>String pollOnEmpty = queue.poll();
       String peekOnEmpty = queue.peek();
       try { queue.remove(); } catch (NoSuchElementException ex) { ... }
       queue.offer("A");
       queue.offer("B");</code></pre></li>
-        <li><strong>Observation:</strong> poll/peek trả null khi rỗng; remove/element được ghi nhận là <code>NoSuchElementException</code>; poll sau khi offer trả A và head còn lại là B.</li>
-        <li><strong>Ý nghĩa:</strong> empty có thể là trạng thái bình thường hoặc invariant violation; API family được chọn theo semantics của failure đó.</li>
+        <li><strong>Quan sát:</strong> poll/peek trả null khi rỗng; remove/element được ghi nhận là <code>NoSuchElementException</code>; poll sau khi offer trả A và phần tử đầu còn lại là B.</li>
+        <li><strong>Ý nghĩa:</strong> trạng thái rỗng có thể là tình huống bình thường hoặc dấu hiệu bất biến bị vi phạm; nhóm API nên được chọn theo ý nghĩa của thất bại đó.</li>
       </ol>
-      <p><strong>Kết luận:</strong> không có cặp method nào “luôn tốt hơn”; hãy chọn cách biểu diễn failure phù hợp với caller.</p>
+      <p><strong>Kết luận:</strong> không có cặp phương thức nào “luôn tốt hơn”; hãy chọn cách biểu diễn thất bại phù hợp với bên sử dụng.</p>
     usage: true
 IterationController:
   failFast():
     execution: |-
-      <p><strong>Khái niệm:</strong> iterator fail-fast có thể phát hiện structural modification ngoài iterator ngay cả trong một thread; mutation qua chính iterator có contract khác.</p>
+      <p><strong>Khái niệm:</strong> Iterator fail-fast có thể phát hiện thay đổi cấu trúc bên ngoài Iterator ngay cả trong một luồng; thay đổi qua chính Iterator tuân theo quy ước khác.</p>
       <ol>
-        <li><strong>Flow:</strong> endpoint lấy iterator từ ArrayList, đọc U01, thêm U04 trực tiếp vào list rồi gọi iterator.next(); sau đó tạo list khác và xóa U02 qua Iterator.remove().</li>
-        <li><strong>Code evidence:</strong><pre><code>Iterator&lt;String&gt; iterator = unsafe.iterator();
+        <li><strong>Luồng thực thi:</strong> API lấy Iterator từ ArrayList, đọc U01, thêm U04 trực tiếp vào List rồi gọi iterator.next(); sau đó tạo List khác và xóa U02 qua Iterator.remove().</li>
+        <li><strong>Bằng chứng từ code:</strong><pre><code>Iterator&lt;String&gt; iterator = unsafe.iterator();
       iterator.next();
       unsafe.add("U04");
       iterator.next(); // CME
@@ -75,53 +75,53 @@ IterationController:
       if (safeIterator.next().equals("U02")) {
           safeIterator.remove();
       }</code></pre></li>
-        <li><strong>Observation:</strong> response có <code>iteratorDetected=ConcurrentModificationException</code> và safe list trở thành <code>[U01,U03]</code>.</li>
-        <li><strong>Ý nghĩa:</strong> CME là bug-detection signal cho traversal contract, không phải proof của data race hay thread-safety.</li>
+        <li><strong>Quan sát:</strong> kết quả có <code>iteratorDetected=ConcurrentModificationException</code> và List được thay đổi an toàn trở thành <code>[U01,U03]</code>.</li>
+        <li><strong>Ý nghĩa:</strong> CME là tín hiệu phát hiện lỗi liên quan quy ước duyệt, không phải bằng chứng về tranh chấp dữ liệu hay cơ chế bảo đảm an toàn luồng.</li>
       </ol>
-      <p><strong>Kết luận:</strong> khi cần xóa phần tử hiện tại trong traversal, dùng mutation path mà iterator hỗ trợ thay vì sửa collection ngoài iterator.</p>
+      <p><strong>Kết luận:</strong> khi cần xóa phần tử hiện tại trong lúc duyệt, dùng con đường thay đổi mà Iterator hỗ trợ thay vì sửa collection từ bên ngoài Iterator.</p>
     usage: true
 ImmutabilityController:
   viewVsCopy():
     execution: |-
-      <p><strong>Khái niệm:</strong> unmodifiable view và unmodifiable snapshot đều reject mutation qua reference của chúng nhưng khác nhau về backing state.</p>
+      <p><strong>Khái niệm:</strong> khung nhìn không cho sửa và bản chụp không cho sửa đều từ chối thay đổi qua tham chiếu của chúng nhưng khác nhau về việc có chia sẻ trạng thái với nguồn hay không.</p>
       <ol>
-        <li><strong>Flow:</strong> endpoint tạo source [A,B], một <code>Collections.unmodifiableList(source)</code> và một <code>List.copyOf(source)</code>, rồi thêm C vào source.</li>
-        <li><strong>Code evidence:</strong><pre><code>List&lt;String&gt; unmodifiableView = Collections.unmodifiableList(source);
+        <li><strong>Luồng thực thi:</strong> API tạo nguồn [A,B], một <code>Collections.unmodifiableList(source)</code> và một <code>List.copyOf(source)</code>, rồi thêm C vào nguồn.</li>
+        <li><strong>Bằng chứng từ code:</strong><pre><code>List&lt;String&gt; unmodifiableView = Collections.unmodifiableList(source);
       List&lt;String&gt; snapshot = List.copyOf(source);
       source.add("C");</code></pre></li>
-        <li><strong>Observation:</strong> view sau source mutation là <code>[A,B,C]</code>, snapshot vẫn <code>[A,B]</code>; cả hai đều ném <code>UnsupportedOperationException</code> khi add qua chính reference đó.</li>
-        <li><strong>Ý nghĩa:</strong> “không sửa được qua reference này” không trả lời câu hỏi dữ liệu có share backing state với nguồn hay không.</li>
+        <li><strong>Quan sát:</strong> khung nhìn sau khi nguồn thay đổi là <code>[A,B,C]</code>, còn bản chụp vẫn <code>[A,B]</code>; cả hai đều ném <code>UnsupportedOperationException</code> khi add qua chính tham chiếu đó.</li>
+        <li><strong>Ý nghĩa:</strong> “không sửa được qua tham chiếu này” không trả lời câu hỏi dữ liệu có chia sẻ trạng thái với nguồn hay không.</li>
       </ol>
-      <p><strong>Kết luận:</strong> dùng view khi muốn read-only facade phản ánh source; dùng copy khi cần structural snapshot độc lập.</p>
+      <p><strong>Kết luận:</strong> dùng khung nhìn khi muốn giao diện chỉ đọc vẫn phản ánh thay đổi của nguồn; dùng bản sao khi cần bản chụp cấu trúc độc lập.</p>
     usage: true
 HashingController:
   mutableKey():
     execution: |-
-      <p><strong>Khái niệm:</strong> state tham gia <code>equals/hashCode</code> của hash key phải ổn định khi key đang nằm trong HashMap.</p>
+      <p><strong>Khái niệm:</strong> trạng thái tham gia <code>equals/hashCode</code> của khóa hash phải ổn định khi khóa đang nằm trong HashMap.</p>
       <ol>
-        <li><strong>Flow:</strong> endpoint put key ORDER-1 vào map, xác nhận lookup thành công, đổi id của cùng object thành ORDER-2 rồi lookup lại.</li>
-        <li><strong>Code evidence:</strong><pre><code>orders.put(key, "PAID");
+        <li><strong>Luồng thực thi:</strong> API đưa khóa ORDER-1 vào Map, xác nhận tra cứu thành công, đổi id của cùng đối tượng thành ORDER-2 rồi tra cứu lại.</li>
+        <li><strong>Bằng chứng từ code:</strong><pre><code>orders.put(key, "PAID");
       key.setId("ORDER-2");
       orders.containsKey(key);
       orders.containsKey(new MutableKey("ORDER-2"));</code></pre></li>
-        <li><strong>Observation:</strong> entry vẫn chứa key id ORDER-2/value PAID khi duyệt trực tiếp, nhưng lookup bằng same reference và key tương đương mới đều false.</li>
-        <li><strong>Ý nghĩa:</strong> key được lưu theo bucket tính từ hash cũ; mutation làm lookup dùng hash mới nên không tìm đúng vị trí đã lưu.</li>
+        <li><strong>Quan sát:</strong> entry vẫn chứa khóa id ORDER-2/giá trị PAID khi duyệt trực tiếp, nhưng tra cứu bằng cùng tham chiếu và khóa tương đương mới đều trả false.</li>
+        <li><strong>Ý nghĩa:</strong> khóa được lưu theo bucket tính từ hash cũ; thay đổi khóa làm lần tra cứu sau dùng hash mới nên không tìm đúng vị trí đã lưu.</li>
       </ol>
-      <p><strong>Kết luận:</strong> tránh mutate field tham gia equality/hash khi object đang là hash key hoặc hash-set element.</p>
+      <p><strong>Kết luận:</strong> tránh thay đổi trường tham gia tính bằng nhau/hash khi đối tượng đang là khóa hash hoặc phần tử trong collection dựa trên hash.</p>
     usage: true
 EnumCollectionController:
   specializedCollections():
     execution: |-
-      <p><strong>Khái niệm:</strong> EnumSet và EnumMap khai thác enum universe hữu hạn để cung cấp collection chuyên biệt với declaration-order traversal.</p>
+      <p><strong>Khái niệm:</strong> EnumSet và EnumMap khai thác miền enum hữu hạn để cung cấp collection chuyên biệt với thứ tự duyệt theo thứ tự khai báo.</p>
       <ol>
-        <li><strong>Flow:</strong> endpoint insert SHIPPED, NEW, PAID theo thứ tự không giống enum declaration order vào EnumSet và EnumMap.</li>
-        <li><strong>Code evidence:</strong><pre><code>EnumSet&lt;OrderStatus&gt; active = EnumSet.of(SHIPPED, NEW, PAID);
+        <li><strong>Luồng thực thi:</strong> API chèn SHIPPED, NEW, PAID theo thứ tự khác thứ tự khai báo enum vào EnumSet và EnumMap.</li>
+        <li><strong>Bằng chứng từ code:</strong><pre><code>EnumSet&lt;OrderStatus&gt; active = EnumSet.of(SHIPPED, NEW, PAID);
       EnumMap&lt;OrderStatus, Integer&gt; limits = new EnumMap&lt;&gt;(OrderStatus.class);
       limits.put(SHIPPED, 40);
       limits.put(NEW, 10);
       limits.put(PAID, 20);</code></pre></li>
-        <li><strong>Observation:</strong> cả EnumSet và EnumMap key traversal đều theo <code>NEW, PAID, SHIPPED</code>, tức declaration order, không theo insertion order.</li>
-        <li><strong>Ý nghĩa:</strong> specialized representation và closed enum key space tạo semantics rõ ràng hơn so với chọn HashSet/HashMap chỉ theo thói quen.</li>
+        <li><strong>Quan sát:</strong> cả EnumSet và thứ tự khóa của EnumMap đều theo <code>NEW, PAID, SHIPPED</code>, tức thứ tự khai báo chứ không phải thứ tự chèn.</li>
+        <li><strong>Ý nghĩa:</strong> cách biểu diễn chuyên biệt và miền khóa enum hữu hạn tạo ngữ nghĩa rõ ràng hơn so với chọn HashSet/HashMap chỉ theo thói quen.</li>
       </ol>
-      <p><strong>Kết luận:</strong> khi domain key/element là một enum cụ thể, hãy cân nhắc EnumSet/EnumMap trước collection tổng quát.</p>
+      <p><strong>Kết luận:</strong> khi phần tử hoặc khóa của miền dữ liệu là một enum cụ thể, hãy cân nhắc EnumSet/EnumMap trước collection tổng quát.</p>
     usage: true

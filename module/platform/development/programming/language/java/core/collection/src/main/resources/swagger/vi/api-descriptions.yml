@@ -1,7 +1,7 @@
 ListController:
   arrayVsLinked():
-    summary: So sánh mental model ArrayList và LinkedList
-    description: Thực hiện indexed read, middle insert và head insert trên hai List implementation để quan sát trực tiếp behavior gắn với resizable-array và doubly-linked-node model mà không giả vờ benchmark thời gian.
+    summary: So sánh mô hình ArrayList và LinkedList
+    description: Thực hiện đọc theo chỉ số, chèn giữa và thêm ở đầu trên hai lớp triển khai List để quan sát hành vi của mô hình mảng tăng kích thước và danh sách liên kết kép, không biến ví dụ thành phép đo hiệu năng giả tạo.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -21,8 +21,8 @@ ListController:
     usage: true
 SetController:
   uniquenessAndOrder():
-    summary: Quan sát uniqueness và order contract của Set
-    description: Cho cùng input chứa duplicate đi qua HashSet, LinkedHashSet và TreeSet. Response chứng minh duplicate bị loại đồng thời phân biệt unordered, insertion-order và sorted-order behavior.
+    summary: Quan sát tính duy nhất và quy ước thứ tự của Set
+    description: Cho cùng dữ liệu đầu vào chứa phần tử trùng đi qua HashSet, LinkedHashSet và TreeSet. Kết quả chứng minh phần tử trùng bị loại đồng thời phân biệt không cam kết thứ tự, thứ tự chèn và thứ tự sắp xếp.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -43,7 +43,7 @@ SetController:
 MapController:
   orderingAndCompute():
     summary: Quan sát compute và merge trên Map
-    description: Bắt đầu từ LinkedHashMap có dữ liệu rồi dùng compute, computeIfAbsent và merge để cập nhật hoặc tạo mapping. Response cho thấy giá trị trước/sau và encounter order của key.
+    description: Bắt đầu từ LinkedHashMap có dữ liệu rồi dùng compute, computeIfAbsent và merge để cập nhật hoặc tạo ánh xạ. Kết quả cho thấy giá trị trước/sau và thứ tự duyệt của khóa.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -63,8 +63,8 @@ MapController:
     usage: true
 QueueController:
   queueOperations():
-    summary: So sánh hai nhóm operation của Queue
-    description: Gọi poll/peek và remove/element trên queue rỗng rồi tiếp tục offer/poll dữ liệu thật. Response cho thấy special-value path và exception path biểu diễn failure khác nhau như thế nào.
+    summary: So sánh hai nhóm thao tác của Queue
+    description: Gọi poll/peek và remove/element trên Queue rỗng rồi tiếp tục offer/poll dữ liệu thật. Kết quả cho thấy cách trả giá trị đặc biệt và cách ném ngoại lệ biểu diễn thất bại khác nhau như thế nào.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -85,7 +85,7 @@ QueueController:
 IterationController:
   failFast():
     summary: Kích hoạt fail-fast rồi xóa an toàn qua Iterator
-    description: Tạo Iterator trên ArrayList, structural-modify list ngoài iterator để quan sát ConcurrentModificationException, sau đó thực hiện cùng nhu cầu xóa bằng Iterator.remove() trên list khác.
+    description: Tạo Iterator trên ArrayList, thay đổi cấu trúc List bên ngoài Iterator để quan sát ConcurrentModificationException, sau đó thực hiện cùng nhu cầu xóa bằng Iterator.remove() trên List khác.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -105,8 +105,8 @@ IterationController:
     usage: true
 ImmutabilityController:
   viewVsCopy():
-    summary: So sánh unmodifiable view với snapshot copy
-    description: Tạo Collections.unmodifiableList(source) và List.copyOf(source), thay đổi source rồi thử mutate cả hai kết quả. Response làm rõ live backed view khác structural snapshot như thế nào dù cả hai đều reject add().
+    summary: So sánh khung nhìn không cho sửa với bản chụp độc lập
+    description: Tạo Collections.unmodifiableList(source) và List.copyOf(source), thay đổi nguồn rồi thử sửa cả hai kết quả. Kết quả làm rõ khung nhìn liên kết với nguồn khác bản chụp cấu trúc như thế nào dù cả hai đều từ chối add().
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -126,8 +126,8 @@ ImmutabilityController:
     usage: true
 HashingController:
   mutableKey():
-    summary: Quan sát HashMap lookup hỏng khi key bị mutate
-    description: Put một mutable key vào HashMap, đổi field tham gia equals/hashCode rồi thử lookup bằng cùng reference và key tương đương mới. Response chứng minh entry vẫn tồn tại nhưng lookup invariant đã bị phá.
+    summary: Quan sát tra cứu HashMap hỏng khi khóa bị thay đổi
+    description: Đưa một khóa có thể thay đổi vào HashMap, đổi trường tham gia equals/hashCode rồi thử tra cứu bằng cùng tham chiếu và một khóa tương đương mới. Kết quả chứng minh entry vẫn tồn tại nhưng quy tắc tra cứu đã bị phá.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -148,7 +148,7 @@ HashingController:
 EnumCollectionController:
   specializedCollections():
     summary: Quan sát EnumSet và EnumMap chuyên biệt cho enum
-    description: Chèn enum constants theo thứ tự khác declaration order rồi trả iteration order của EnumSet và EnumMap. Response cho thấy closed key space và declaration-order behavior của hai specialized collections.
+    description: Chèn các hằng enum theo thứ tự khác thứ tự khai báo rồi trả thứ tự duyệt của EnumSet và EnumMap. Kết quả cho thấy miền khóa hữu hạn và hành vi duyệt theo thứ tự khai báo của hai collection chuyên biệt.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video

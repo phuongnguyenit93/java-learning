@@ -136,7 +136,7 @@ questions:
       - {id: A, answer: "It always creates a deep immutable copy of the selected elements.", explanation: "Incorrect. subList is not an independent deep copy."}
       - {id: B, answer: "It returns an unrelated mutable ArrayList containing copied references.", explanation: "Incorrect. The result remains connected to the original list."}
       - {id: C, answer: "It returns a fixed-size array adapter that cannot replace elements.", explanation: "Incorrect. That confuses subList with array/list adapter behavior."}
-      - {id: D, answer: "It returns a backed view of a range, so supported mutations through the view affect the source list.", explanation: "Correct. Direct structural changes to the source outside the view protocol can also invalidate the view."}
+      - {id: D, answer: "It returns a backed view of a range, so supported mutations through the view affect the source list.", explanation: "Correct. If the backing list is structurally modified outside the returned subList, the subList semantics become undefined; a CME may be an implementation symptom, not the contract itself."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
@@ -513,7 +513,7 @@ questions:
       - {id: A, answer: "Choose HashMap or ArrayList first because they are usually fastest, then adapt the business rules to fit.", explanation: "Incorrect. Semantic requirements come before micro-optimization or habit."}
       - {id: B, answer: "Benchmark every JDK collection before deciding what abstraction is required.", explanation: "Incorrect. Benchmarks matter only after the required semantics and hot operations are understood."}
       - {id: C, answer: "Always choose the implementation with the lowest asymptotic lookup cost even if its ordering contract is wrong.", explanation: "Incorrect. A faster structure with the wrong semantics is still the wrong choice."}
-      - {id: D, answer: "Identify the required abstraction and semantics first—position, uniqueness, key lookup, ordering, endpoint/priority behavior—then evaluate operation cost, memory, nulls, and mutability.", explanation: "Correct. Implementation choice should follow the behavioral contract the application needs."}
+      - {id: D, answer: "Identify the required abstraction and semantics first—position, uniqueness, key lookup, ordering, endpoint/priority behavior—then evaluate operation cost, memory, mutability, null/factory constraints, and whether a specialized structure such as EnumSet/EnumMap fits the domain.", explanation: "Correct. Implementation choice should follow the behavioral contract first, then ownership, factory constraints, specialization, and only later micro-performance."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false

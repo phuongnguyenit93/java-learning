@@ -1,6 +1,6 @@
-# Fail-Fast Iterators
+# Mutation During Iteration and Fail-Fast Behavior
 
-An iterator keeps traversal state. If the collection structure changes outside that iterator while traversal is in progress, the iterator's position may no longer mean what it originally meant. Many standard Java collection implementations respond with **fail-fast** behavior so that a broken traversal is detected early instead of silently continuing.
+Continuing the **Mutation Ownership, Views, and Fail-Fast Behavior** milestone, an iterator keeps traversal state while the collection may still be mutable. If the collection structure changes outside that iterator while traversal is in progress, the iterator's position may no longer mean what it originally meant. Many standard Java collection implementations respond with **fail-fast** behavior so that a broken traversal is detected early instead of silently continuing.
 
 Fail-fast is a bug-detection mechanism for collection traversal. It is not a thread-synchronization mechanism and must not be the basis of correctness.
 
@@ -19,6 +19,8 @@ users.set(0, "U10"); // not structural for ArrayList
 ```
 
 For a `Map`, adding/removing a mapping is generally structural, while replacing the value for an existing key generally does not change the key structure. Application code should not depend on internal fields such as a particular implementation's `modCount`; the collection/iterator contract is the reliable boundary.
+
+One useful exception to the simple rule is an access-order `LinkedHashMap`: an access such as `get` can move an entry in encounter order, and that reordering can count as a structural modification for its fail-fast iterators. “Structural” must therefore be read from the concrete collection's contract, not reduced to “size changed.”
 
 ## <a id="fail-fast-best-effort">Fail-Fast Is Best-Effort</a>
 

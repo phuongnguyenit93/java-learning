@@ -1,48 +1,48 @@
 ListController:
   description: |-
     <h2>ArrayList và LinkedList</h2>
-    <p>Quan sát hai implementation của List thực hiện cùng thao tác nhưng dựa trên mô hình lưu trữ khác nhau, từ đó nối semantics với chi phí thao tác.</p>
+    <p>Quan sát hai lớp triển khai của List thực hiện các thao tác tương đương nhưng dựa trên mô hình lưu trữ khác nhau, từ đó liên hệ ngữ nghĩa với chi phí thao tác.</p>
   readmeRelated:
     file: 2.List/List.md
 SetController:
   description: |-
-    <h2>Uniqueness và Order của Set</h2>
-    <p>Đưa cùng dữ liệu có phần tử trùng qua HashSet, LinkedHashSet và TreeSet để quan sát uniqueness và các order contract khác nhau.</p>
+    <h2>Tính duy nhất và thứ tự của Set</h2>
+    <p>Đưa cùng dữ liệu có phần tử trùng qua HashSet, LinkedHashSet và TreeSet để quan sát tính duy nhất cùng các quy ước thứ tự khác nhau.</p>
   readmeRelated:
     file: 3.Set/Set.md
 MapController:
   description: |-
-    <h2>Map Update và Encounter Order</h2>
-    <p>Quan sát compute, computeIfAbsent và merge cập nhật mapping như thế nào trên một LinkedHashMap có encounter order xác định.</p>
+    <h2>Cập nhật Map và thứ tự duyệt</h2>
+    <p>Quan sát compute, computeIfAbsent và merge cập nhật ánh xạ như thế nào trên một LinkedHashMap có thứ tự duyệt xác định.</p>
   readmeRelated:
     file: 4.Map/Map.md
 QueueController:
   description: |-
-    <h2>Queue Operation Pairs</h2>
-    <p>So sánh các cặp operation trả special value với các operation ném exception khi queue đang rỗng.</p>
+    <h2>Hai nhóm thao tác của Queue</h2>
+    <p>So sánh nhóm thao tác trả giá trị đặc biệt với nhóm thao tác ném ngoại lệ khi Queue đang rỗng.</p>
   readmeRelated:
     file: 5.QueueDeque/QueueDeque.md
 IterationController:
   description: |-
-    <h2>Fail-Fast Iterator</h2>
-    <p>Tạo một structural modification ngoài iterator để quan sát ConcurrentModificationException, rồi so sánh với mutation hợp lệ qua Iterator.remove().</p>
+    <h2>Iterator Fail-Fast</h2>
+    <p>Tạo một thay đổi cấu trúc bên ngoài Iterator để quan sát ConcurrentModificationException, rồi so sánh với cách xóa hợp lệ qua Iterator.remove().</p>
   readmeRelated:
     file: 10.FailFast/FailFast.md
 ImmutabilityController:
   description: |-
-    <h2>Unmodifiable View và Snapshot</h2>
-    <p>So sánh Collections.unmodifiableList(source) với List.copyOf(source) trước và sau khi source thay đổi để thấy rõ view khác copy.</p>
+    <h2>Khung nhìn không cho sửa và bản chụp</h2>
+    <p>So sánh Collections.unmodifiableList(source) với List.copyOf(source) trước và sau khi nguồn thay đổi để thấy rõ khung nhìn liên kết khác bản sao độc lập như thế nào.</p>
   readmeRelated:
     file: 9.MutableImmutable/MutableImmutable.md
 HashingController:
   description: |-
-    <h2>Mutable Hash Key</h2>
-    <p>Thay đổi field tham gia equals/hashCode sau khi key đã nằm trong HashMap để quan sát lookup invariant bị phá vỡ.</p>
+    <h2>Khóa hash có thể thay đổi</h2>
+    <p>Thay đổi trường tham gia equals/hashCode sau khi khóa đã nằm trong HashMap để quan sát quy tắc tra cứu bị phá vỡ.</p>
   readmeRelated:
     file: 8.EqualityHashing/EqualityHashing.md
 EnumCollectionController:
   description: |-
     <h2>EnumSet và EnumMap</h2>
-    <p>Quan sát collection chuyên biệt cho enum giữ domain type và duyệt theo thứ tự khai báo enum như thế nào.</p>
+    <p>Quan sát collection chuyên biệt cho enum biểu đạt miền kiểu dữ liệu và duyệt theo thứ tự khai báo enum như thế nào.</p>
   readmeRelated:
     file: 12.EnumCollections/EnumCollections.md

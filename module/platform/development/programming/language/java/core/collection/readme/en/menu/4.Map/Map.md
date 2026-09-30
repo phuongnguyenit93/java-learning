@@ -1,6 +1,6 @@
-# Map
+# Core Collection Contracts — Map
 
-After `List` and `Set`, one common requirement still does not fit `Collection<E>` well: finding a value through a **separate key**. An application may own many `Order` objects while incoming requests identify them by `orderId`. `Map<K, V>` models that relationship directly.
+The **Core Collection Contracts** milestone next reaches a requirement that does not fit `Collection<E>` well: finding a value through a **separate key**. An application may own many `Order` objects while incoming requests identify them by `orderId`. `Map<K, V>` models that relationship directly.
 
 ## <a id="map-semantics">Map Semantics</a>
 
@@ -264,6 +264,8 @@ Map<UserKey, User> users = new TreeMap<>(
 ```
 
 As with `TreeSet`, a comparison result of zero means two keys occupy the same logical map position. If the comparator ignores an important field, putting a second key can replace the value associated with the first.
+
+For a sorted map, it is therefore strongly preferable that the ordering be **consistent with `equals`**. A `TreeMap` whose ordering treats two unequal keys as comparison-equal still has defined behavior, but it no longer cleanly follows the general `Map` equality contract because key equivalence inside the tree is being decided by comparison rather than by `equals`.
 
 `TreeMap` typically provides O(log n) `get`, `put`, and `remove` operations in exchange for navigable operations such as `firstEntry`, `lastEntry`, `lowerEntry`, `floorEntry`, `ceilingEntry`, and `higherEntry`.
 

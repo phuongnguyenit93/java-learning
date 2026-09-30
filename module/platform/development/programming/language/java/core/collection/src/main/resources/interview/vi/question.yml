@@ -29,9 +29,9 @@
 
 questions:
   - question: >-
-      Collection là gì, tại sao Java cần Collections Framework khi đã có array?
+      Collection là gì, tại sao Java cần Collections Framework khi đã có mảng?
     answer: >-
-      Collection là abstraction để quản lý một nhóm phần tử như một object thay vì quản lý từng biến riêng lẻ. Array đã giải được việc chứa nhiều phần tử cùng component type nhưng kích thước cố định và không tự cung cấp các contract như uniqueness, lookup theo key, FIFO/LIFO, bulk operation hay nhiều chiến lược ordering. Collections Framework chuẩn hóa các interface, implementation và algorithm cho những nhu cầu đó. Chọn Collection không có nghĩa array vô dụng; array vẫn phù hợp khi kích thước cố định hoặc API/performance boundary yêu cầu nó.
+      Collection là mô hình trừu tượng để quản lý một nhóm phần tử như một đối tượng thay vì quản lý từng biến riêng lẻ. Mảng đã giải được việc chứa nhiều phần tử cùng kiểu thành phần nhưng có kích thước cố định và không tự cung cấp các quy ước như tính duy nhất, tra cứu theo khóa, FIFO/LIFO, thao tác hàng loạt hay nhiều chiến lược về thứ tự. Collections Framework chuẩn hóa các interface, lớp triển khai và thuật toán cho những nhu cầu đó. Chọn Collection không có nghĩa mảng trở nên vô dụng; mảng vẫn phù hợp khi kích thước cố định hoặc ranh giới API/hiệu năng yêu cầu nó.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -44,7 +44,7 @@ questions:
   - question: >-
       Phân biệt Collection<E>, Collections và Java Collections Framework.
     answer: >-
-      Collection<E> là interface gốc cho các nhóm phần tử như List, Set và Queue. Collections là utility class chứa static algorithm/helper như sort, reverse, binarySearch hoặc các wrapper unmodifiable. Java Collections Framework là khái niệm rộng hơn bao gồm các interface, implementation và utility liên quan, trong đó Map cũng thuộc framework dù không kế thừa Collection<E>.
+      Collection<E> là interface gốc cho các nhóm phần tử như List, Set và Queue. Collections là lớp tiện ích chứa các thuật toán/phương thức tĩnh như sort, reverse, binarySearch hoặc các lớp bọc không cho sửa. Java Collections Framework là khái niệm rộng hơn, bao gồm các interface, lớp triển khai và tiện ích liên quan; Map cũng thuộc framework dù không kế thừa Collection<E>.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -57,7 +57,7 @@ questions:
   - question: >-
       Vì sao thường khai báo List<Order> orders = new ArrayList<>() thay vì ArrayList<Order> ở cả hai phía?
     answer: >-
-      Kiểu biến List<Order> công bố contract mà caller cần, còn new ArrayList<>() chọn implementation hiện tại. Khi code chỉ phụ thuộc List, implementation có thể đổi sang một List khác mà ít ảnh hưởng tới caller. Tuy nhiên “program to interface” không có nghĩa bỏ qua implementation: performance, null policy, mutability và ordering thực tế vẫn phụ thuộc object cụ thể nên phải chọn implementation có chủ đích.
+      Kiểu biến List<Order> công bố quy ước mà bên sử dụng cần, còn new ArrayList<>() chọn lớp triển khai hiện tại. Khi mã nguồn chỉ phụ thuộc List, lớp triển khai có thể đổi sang một List khác mà ít ảnh hưởng tới bên sử dụng. Tuy nhiên “program to interface” không có nghĩa bỏ qua lớp triển khai: hiệu năng, chính sách null, khả năng thay đổi và thứ tự thực tế vẫn phụ thuộc đối tượng cụ thể nên phải chọn có chủ đích.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -70,7 +70,7 @@ questions:
   - question: >-
       Collection interface công bố add/remove/clear nhưng tại sao gọi chúng vẫn có thể ném UnsupportedOperationException?
     answer: >-
-      Nhiều mutation method của Collection là optional operation. Interface tạo vocabulary chung để các implementation có thể hỗ trợ khi phù hợp, nhưng một concrete collection có quyền không hỗ trợ mutation, ví dụ List.of(...). Vì vậy compile-time method availability không đồng nghĩa runtime object chắc chắn cho phép operation. API consumer phải hiểu mutability contract của object nhận được, không chỉ nhìn type Collection/List.
+      Nhiều phương thức thay đổi dữ liệu của Collection là thao tác tùy chọn. Interface tạo một tập thao tác chung để các lớp triển khai hỗ trợ khi phù hợp, nhưng một collection cụ thể có quyền không hỗ trợ thay đổi, ví dụ List.of(...). Vì vậy việc phương thức tồn tại ở thời điểm biên dịch không đồng nghĩa đối tượng lúc chạy chắc chắn cho phép thao tác đó. Bên sử dụng API phải hiểu quy ước về khả năng thay đổi của đối tượng nhận được, không chỉ nhìn kiểu Collection/List.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -81,9 +81,9 @@ questions:
       methodSignature: ""
 
   - question: >-
-      ArrayList và LinkedList khác nhau về mental model và khi nào LinkedList thật sự có lợi?
+      ArrayList và LinkedList khác nhau về mô hình tư duy và khi nào LinkedList thật sự có lợi?
     answer: >-
-      ArrayList dùng vùng lưu trữ dạng mảng có khả năng tăng capacity nên get/set theo index O(1), append thường amortized O(1), còn insert/remove giữa list phải dịch phần tử. LinkedList dùng node liên kết hai chiều; tìm vị trí bằng index là O(n), nhưng khi thuật toán đã có iterator/node đúng vị trí thì relink quanh vị trí đó rẻ. Vì vậy không nên nói chung rằng LinkedList insert nhanh hơn ArrayList; với workload Java thông thường, ArrayList thường là mặc định tốt hơn trừ khi pattern thao tác hai đầu hoặc traversal-position mutation thực sự phù hợp LinkedList.
+      ArrayList dùng vùng lưu trữ dạng mảng có khả năng tăng dung lượng nên get/set theo chỉ số là O(1), thêm cuối thường có chi phí amortized O(1), còn chèn/xóa giữa List phải dịch phần tử. LinkedList dùng các nút liên kết hai chiều; tìm vị trí bằng chỉ số là O(n), nhưng khi thuật toán đã có Iterator/nút đúng vị trí thì việc nối lại liên kết quanh vị trí đó rẻ. Vì vậy không nên nói chung rằng LinkedList chèn nhanh hơn ArrayList; với kiểu sử dụng Java thông thường, ArrayList thường là mặc định tốt hơn trừ khi thao tác hai đầu hoặc thay đổi tại vị trí Iterator thực sự phù hợp LinkedList.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -96,7 +96,7 @@ questions:
   - question: >-
       Hãy giải thích sự khác nhau giữa Arrays.asList, List.of, List.copyOf và new ArrayList<>(source).
     answer: >-
-      Arrays.asList(array) là fixed-size list backed by array: set được nhưng add/remove đổi size không được, và thay element có thể phản ánh hai chiều với array. List.of tạo unmodifiable list từ các argument và không cho null. List.copyOf tạo unmodifiable structural snapshot của collection đầu vào, cũng reject null và có thể reuse input phù hợp. new ArrayList<>(source) tạo một mutable list có structural state riêng; các cách này đều là shallow đối với object element.
+      Arrays.asList(array) tạo một List cố định kích thước liên kết với mảng: set được nhưng add/remove làm đổi kích thước thì không, và thay phần tử có thể phản ánh hai chiều với mảng. List.of tạo List không cho sửa từ các đối số và không cho null. List.copyOf tạo bản chụp cấu trúc không cho sửa của collection đầu vào, cũng từ chối null và có thể tái sử dụng đầu vào phù hợp. new ArrayList<>(source) tạo một List có thể sửa với trạng thái cấu trúc riêng; tất cả các cách này vẫn là bản sao nông đối với các đối tượng phần tử.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -109,7 +109,7 @@ questions:
   - question: >-
       Vì sao dùng Set thay vì List rồi tự kiểm tra trùng? addAll, retainAll và removeAll có ý nghĩa gì với Set?
     answer: >-
-      Set đưa uniqueness vào chính contract của cấu trúc nên caller không phải rải duplicate-check logic khắp code. Với Set, addAll có thể đọc như union, retainAll như intersection và removeAll như difference. Các bulk operation này thường mutate set nhận lời gọi, nên nếu cần giữ input phải copy trước. Việc dùng Set còn ảnh hưởng equality của cả container: member giống nhau thì hai Set có thể equal dù encounter order khác.
+      Set đưa tính duy nhất vào chính quy ước của cấu trúc nên bên sử dụng không phải rải logic kiểm tra trùng lặp khắp mã nguồn. Với Set, addAll có thể đọc như phép hợp, retainAll như phép giao và removeAll như phép hiệu. Các thao tác hàng loạt này thường thay đổi Set nhận lời gọi, nên nếu cần giữ dữ liệu đầu vào phải tạo bản sao trước. Việc dùng Set còn ảnh hưởng tính bằng nhau của cả cấu trúc: cùng các phần tử thì hai Set có thể bằng nhau dù thứ tự duyệt khác.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -120,9 +120,9 @@ questions:
       methodSignature: "uniquenessAndOrder()"
 
   - question: >-
-      TreeSet xác định uniqueness như thế nào và vì sao Comparator không consistent with equals có thể gây bất ngờ?
+      TreeSet xác định tính duy nhất như thế nào và vì sao Comparator không nhất quán với equals có thể gây bất ngờ?
     answer: >-
-      TreeSet dùng ordering để đặt phần tử và xem compare(a,b)==0 là cùng một vị trí logic. Nếu comparator trả 0 cho hai object mà equals lại false, TreeSet vẫn có behavior xác định nhưng semantics uniqueness khác trực giác equality-based của Set. Vì vậy comparator dùng cho TreeSet thường nên consistent with equals hoặc phải có tie-breaker phù hợp với identity nghiệp vụ mà set muốn biểu diễn.
+      TreeSet dùng thứ tự so sánh để đặt phần tử và xem compare(a,b)==0 là cùng một vị trí logic. Nếu comparator trả 0 cho hai đối tượng mà equals lại false, TreeSet vẫn có hành vi xác định nhưng ngữ nghĩa về tính duy nhất khác trực giác dựa trên equals của Set. Vì vậy comparator dùng cho TreeSet thường nên nhất quán với equals hoặc phải có tiêu chí phân xử phù hợp với định danh nghiệp vụ mà Set muốn biểu diễn.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -135,7 +135,7 @@ questions:
   - question: >-
       Vì sao Map không kế thừa Collection và Map.Entry đại diện cho điều gì?
     answer: >-
-      Collection quản lý các element đơn lẻ, còn Map quản lý mapping key→value; operation add(E) không đủ mô tả việc một mapping cần cả key lẫn value. Map.Entry<K,V> là một mapping riêng lẻ bên trong map. Khi cần cả key và value, entrySet thường là đơn vị traversal đúng hơn pattern duyệt key rồi gọi get(key) lại.
+      Collection quản lý các phần tử đơn lẻ, còn Map quản lý ánh xạ khóa→giá trị; thao tác add(E) không đủ mô tả việc một ánh xạ cần cả khóa lẫn giá trị. Map.Entry<K,V> là một ánh xạ riêng lẻ bên trong Map. Khi cần cả khóa và giá trị, entrySet thường là đơn vị duyệt phù hợp hơn mẫu duyệt khóa rồi gọi get(key) lại.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -146,9 +146,9 @@ questions:
       methodSignature: ""
 
   - question: >-
-      keySet(), values() và entrySet() của Map là copy hay view? Điều này ảnh hưởng thiết kế API thế nào?
+      keySet(), values() và entrySet() của Map là bản sao hay khung nhìn? Điều này ảnh hưởng thiết kế API thế nào?
     answer: >-
-      Chúng thường là backed views của map gốc, không phải collection độc lập. Mutation được hỗ trợ qua view có thể thay đổi map và thay đổi map cũng được view quan sát. Một số operation không có đủ thông tin nên bị unsupported, ví dụ keySet().add(key) không biết value nào cần gắn. Nếu API cần snapshot độc lập phải copy rõ ràng thay vì trả view rồi giả định caller không tác động tới backing state.
+      Chúng thường là các khung nhìn liên kết với Map gốc, không phải collection độc lập. Thay đổi được hỗ trợ qua khung nhìn có thể thay đổi Map và thay đổi Map cũng được khung nhìn quan sát. Một số thao tác không có đủ thông tin nên không được hỗ trợ, ví dụ keySet().add(key) không biết giá trị nào cần gắn. Nếu API cần bản chụp độc lập phải tạo bản sao rõ ràng thay vì trả khung nhìn rồi giả định bên sử dụng không tác động tới trạng thái nền.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -159,9 +159,9 @@ questions:
       methodSignature: ""
 
   - question: >-
-      Mô tả mental model lookup của HashMap và vì sao key mutable nguy hiểm.
+      Mô tả mô hình tra cứu của HashMap và vì sao khóa có thể thay đổi là nguy hiểm.
     answer: >-
-      HashMap dùng hashCode để chọn vùng ứng viên rồi dùng equals để xác nhận key. Vì vậy key phải giữ ổn định những state tham gia hashCode/equals trong thời gian nằm trong map. Nếu field đó thay đổi sau put, object vẫn nằm trong internal structure cũ nhưng lookup theo hash mới có thể không tìm thấy nó. Đây là invariant của hash-based collection, không phải lỗi ngẫu nhiên của containsKey/get.
+      HashMap dùng hashCode để chọn vùng ứng viên rồi dùng equals để xác nhận khóa. Vì vậy khóa phải giữ ổn định các trạng thái tham gia hashCode/equals trong thời gian nằm trong Map. Nếu trường đó thay đổi sau put, đối tượng vẫn nằm trong cấu trúc nội bộ cũ nhưng tra cứu theo hash mới có thể không tìm thấy nó. Đây là bất biến của collection dựa trên hash, không phải lỗi ngẫu nhiên của containsKey/get.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -172,9 +172,9 @@ questions:
       methodSignature: "mutableKey()"
 
   - question: >-
-      LinkedHashMap và TreeMap đều có order nhưng order đó khác nhau thế nào?
+      LinkedHashMap và TreeMap đều có thứ tự nhưng thứ tự đó khác nhau thế nào?
     answer: >-
-      LinkedHashMap giữ encounter order dựa trên insertion order hoặc access order tùy cách cấu hình. TreeMap duy trì key theo natural ordering hoặc Comparator và hỗ trợ sorted/navigable operations. Vì vậy cần hỏi nghiệp vụ muốn “nhớ lịch sử encounter/access” hay muốn “duy trì quan hệ sắp xếp theo key”; cùng có order nhưng contract và chi phí khác nhau.
+      LinkedHashMap giữ thứ tự duyệt dựa trên thứ tự chèn hoặc thứ tự truy cập tùy cách cấu hình. TreeMap duy trì khóa theo thứ tự tự nhiên hoặc Comparator và hỗ trợ các thao tác sắp xếp/điều hướng. Vì vậy cần hỏi nghiệp vụ muốn “nhớ lịch sử chèn/truy cập” hay muốn “duy trì quan hệ sắp xếp theo khóa”; cùng có thứ tự nhưng quy ước và chi phí khác nhau.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -185,9 +185,9 @@ questions:
       methodSignature: ""
 
   - question: >-
-      compute/merge của Map giải quyết pattern gì và tại sao không nên tự suy ra atomicity cho Map thường?
+      compute/merge của Map giải quyết mẫu bài toán gì và tại sao không nên tự suy ra tính nguyên tử cho Map thường?
     answer: >-
-      compute/merge gom logic read-current-value rồi derive/write value mới thành operation có intent rõ hơn pattern get→if→put, rất hữu ích cho counter, grouping hoặc accumulation. Nhưng interface Map thường không hứa rằng operation đó trở thành atomic giữa nhiều thread. Atomicity cụ thể thuộc contract của concurrent implementation như ConcurrentMap/ConcurrentHashMap và nằm trong concurrency curriculum.
+      compute/merge gom logic đọc giá trị hiện tại rồi tính/ghi giá trị mới thành thao tác có ý định rõ hơn mẫu get→if→put, rất hữu ích cho bộ đếm, gom nhóm hoặc tích lũy. Nhưng interface Map thường không hứa thao tác đó trở thành nguyên tử giữa nhiều luồng. Tính nguyên tử cụ thể thuộc quy ước của cách triển khai đồng thời như ConcurrentMap/ConcurrentHashMap và nằm trong module về xử lý đồng thời.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -198,9 +198,9 @@ questions:
       methodSignature: "orderingAndCompute()"
 
   - question: >-
-      Queue và Deque khác List ở mental model nào? Khi nào nên dùng offer/poll/peek thay vì add/remove/element?
+      Queue và Deque khác List ở mô hình tư duy nào? Khi nào nên dùng offer/poll/peek thay vì add/remove/element?
     answer: >-
-      Queue/Deque nhấn mạnh thứ tự xử lý và các đầu được phép thao tác thay vì positional indexing. Queue API có hai nhóm operation: add/remove/element báo failure bằng exception, còn offer/poll/peek dùng return value đặc biệt như false/null. Nếu empty/full là trạng thái bình thường, special-value pair thường tiện hơn; nếu failure biểu thị invariant bị phá, exception pair có thể phù hợp. Deque mở hai đầu nên biểu diễn cả FIFO queue và LIFO stack.
+      Queue/Deque nhấn mạnh thứ tự xử lý và các đầu được phép thao tác thay vì truy cập theo vị trí. Queue API có hai nhóm thao tác: add/remove/element báo thất bại bằng ngoại lệ, còn offer/poll/peek dùng giá trị trả về đặc biệt như false/null. Nếu rỗng/đầy là trạng thái bình thường, nhóm trả giá trị đặc biệt thường tiện hơn; nếu thất bại biểu thị bất biến bị phá, nhóm ném ngoại lệ có thể phù hợp. Deque mở hai đầu nên biểu diễn được cả Queue FIFO và Stack LIFO.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -211,9 +211,9 @@ questions:
       methodSignature: "queueOperations()"
 
   - question: >-
-      PriorityQueue có phải là một list luôn được sort không? Vì sao iterator của nó dễ gây hiểu nhầm?
+      PriorityQueue có phải là một List luôn được sắp xếp không? Vì sao Iterator của nó dễ gây hiểu nhầm?
     answer: >-
-      Không. PriorityQueue chỉ đảm bảo head là phần tử có priority cao nhất/thấp nhất theo ordering của queue; internal heap không cần duy trì toàn bộ sequence ở sorted order. Muốn consume đúng priority phải poll lặp lại. Iterator không hứa trả tất cả phần tử theo priority order, và các phần tử compare bằng nhau cũng không có stable ordering mặc định.
+      Không. PriorityQueue chỉ đảm bảo phần tử đầu là phần tử có độ ưu tiên cao nhất/thấp nhất theo quy tắc sắp xếp của Queue; heap nội bộ không cần duy trì toàn bộ chuỗi theo thứ tự đã sắp xếp. Muốn lấy dữ liệu đúng thứ tự ưu tiên phải poll lặp lại. Iterator không hứa trả tất cả phần tử theo thứ tự ưu tiên, và các phần tử so sánh bằng nhau cũng không có thứ tự ổn định mặc định.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -224,9 +224,9 @@ questions:
       methodSignature: ""
 
   - question: >-
-      Iterator, enhanced for và ListIterator khác nhau về vai trò như thế nào?
+      Iterator, vòng lặp for-each và ListIterator khác nhau về vai trò như thế nào?
     answer: >-
-      Iterator là traversal protocol tuần tự với hasNext/next và optional remove. Enhanced for là syntax dùng Iterable/Iterator ở phía dưới để code đọc dễ hơn nhưng không expose cursor trực tiếp. ListIterator dành riêng cho List, hỗ trợ đi hai chiều, index và mutation theo vị trí như add/set/remove. Chọn abstraction đơn giản nhất đáp ứng thuật toán; không dùng ListIterator chỉ vì nó có nhiều method hơn.
+      Iterator là giao thức duyệt tuần tự với hasNext/next và thao tác remove tùy chọn. Vòng for-each là cú pháp dùng Iterable/Iterator ở phía dưới để mã nguồn dễ đọc hơn nhưng không lộ con trỏ duyệt trực tiếp. ListIterator dành riêng cho List, hỗ trợ đi hai chiều, chỉ số và thay đổi theo vị trí như add/set/remove. Chọn mô hình đơn giản nhất đáp ứng thuật toán; không dùng ListIterator chỉ vì nó có nhiều phương thức hơn.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -237,9 +237,9 @@ questions:
       methodSignature: ""
 
   - question: >-
-      ConcurrentModificationException có nghĩa gì và vì sao fail-fast không phải cơ chế thread-safety?
+      ConcurrentModificationException có nghĩa gì và vì sao fail-fast không phải cơ chế an toàn luồng?
     answer: >-
-      CME thường có nghĩa iterator phát hiện structural modification làm traversal contract không còn hợp lệ; một thread duy nhất cũng có thể gây ra nó khi sửa collection trực tiếp ngoài iterator đang dùng. Fail-fast chỉ là best-effort bug detection, không phải guarantee phát hiện mọi modification và không tạo synchronization. Vì vậy không được dùng “không thấy CME” làm bằng chứng code concurrent an toàn.
+      CME thường có nghĩa Iterator phát hiện thay đổi cấu trúc làm quy ước duyệt không còn phù hợp; một luồng duy nhất cũng có thể gây ra nó khi sửa collection trực tiếp ngoài Iterator đang dùng. Fail-fast chỉ cố gắng phát hiện lỗi, không bảo đảm phát hiện mọi thay đổi và không tạo đồng bộ hóa. Vì vậy không được dùng “không thấy CME” làm bằng chứng rằng mã nguồn truy cập đồng thời là an toàn.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -250,9 +250,9 @@ questions:
       methodSignature: "failFast()"
 
   - question: >-
-      Spliterator khác Iterator ở boundary nào và tại sao Spliterator không tự đồng nghĩa với parallel execution?
+      Spliterator khác Iterator ở ranh giới nào và tại sao Spliterator không tự đồng nghĩa với thực thi song song?
     answer: >-
-      Iterator tối ưu cho traversal tuần tự từng phần tử. Spliterator bổ sung metadata/characteristics về nguồn và khả năng trySplit để chia traversal cho consumer cao hơn như Stream. Việc source có Spliterator chỉ tạo khả năng partition; parallelStream/stream engine mới quyết định execution strategy, và Spliterator cũng không tự cung cấp thread-safety cho underlying collection.
+      Iterator tối ưu cho việc duyệt tuần tự từng phần tử. Spliterator bổ sung metadata/đặc tính của nguồn và khả năng trySplit để chia quá trình duyệt cho thành phần cấp cao hơn như Stream. Việc nguồn có Spliterator chỉ tạo khả năng chia dữ liệu; parallelStream/cơ chế Stream mới quyết định chiến lược thực thi, và Spliterator cũng không tự cung cấp an toàn luồng cho collection bên dưới.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -263,9 +263,9 @@ questions:
       methodSignature: ""
 
   - question: >-
-      Encounter order, insertion order và sorted order khác nhau thế nào?
+      Thứ tự duyệt, thứ tự chèn và thứ tự sắp xếp khác nhau thế nào?
     answer: >-
-      Encounter order là thứ tự traversal nhìn thấy phần tử. Insertion order là một cách tạo encounter order, ví dụ LinkedHashSet mặc định, nhưng không phải mọi ordered collection đều dùng insertion order. TreeSet có encounter order theo sorted ordering, còn List theo index order. HashSet không hứa order cụ thể. Vì vậy thấy output lặp lại cùng một thứ tự không đủ để biến thứ tự đó thành contract.
+      Thứ tự duyệt là thứ tự mà quá trình duyệt nhìn thấy phần tử. Thứ tự chèn là một cách tạo thứ tự duyệt, ví dụ LinkedHashSet mặc định, nhưng không phải mọi collection có thứ tự đều dùng thứ tự chèn. TreeSet duyệt theo thứ tự sắp xếp, còn List theo thứ tự chỉ số. HashSet không hứa thứ tự cụ thể. Vì vậy thấy kết quả lặp lại cùng một thứ tự không đủ để biến thứ tự đó thành quy ước.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -278,7 +278,7 @@ questions:
   - question: >-
       Comparable và Comparator khác nhau thế nào? Kết quả compare âm, 0 và dương được hiểu ra sao?
     answer: >-
-      Comparable đặt natural ordering bên trong type qua compareTo; Comparator đặt ordering bên ngoài để cùng type có nhiều cách sắp xếp. Contract chỉ quan tâm dấu: âm nghĩa là a đứng trước b, 0 là bằng nhau theo ordering, dương là a đứng sau b; caller không được giả định chỉ có -1/0/1. Với TreeSet/TreeMap, compare==0 còn ảnh hưởng uniqueness nên comparator là một phần quan trọng của data contract.
+      Comparable đặt thứ tự tự nhiên bên trong kiểu qua compareTo; Comparator đặt thứ tự bên ngoài để cùng một kiểu có nhiều cách sắp xếp. Quy ước chỉ quan tâm dấu: âm nghĩa là a đứng trước b, 0 là bằng nhau theo thứ tự, dương là a đứng sau b; bên sử dụng không được giả định chỉ có -1/0/1. Với TreeSet/TreeMap, compare==0 còn ảnh hưởng tính duy nhất nên comparator là một phần quan trọng của quy ước dữ liệu.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -291,7 +291,7 @@ questions:
   - question: >-
       Khi nào NavigableSet/NavigableMap đáng dùng thay vì HashSet/HashMap?
     answer: >-
-      Dùng sorted/navigable structure khi bài toán cần duy trì ordering và thực hiện query theo quan hệ thứ tự như lower/floor/ceiling/higher hoặc range subSet/subMap/head/tail. HashSet/HashMap phù hợp hơn khi trọng tâm là lookup membership/key nhanh theo equality/hash và không cần order-based navigation. Các range result của tree collections thường là backed views nên cũng phải hiểu mutability/aliasing của chúng.
+      Dùng cấu trúc Sorted/Navigable khi bài toán cần duy trì thứ tự và truy vấn theo quan hệ thứ tự như lower/floor/ceiling/higher hoặc các phạm vi subSet/subMap/head/tail. HashSet/HashMap phù hợp hơn khi trọng tâm là tra cứu thành viên/khóa nhanh theo tính bằng nhau/hash và không cần điều hướng theo thứ tự. Các kết quả phạm vi của cấu trúc cây thường là khung nhìn liên kết nên cũng phải hiểu khả năng thay đổi và việc chia sẻ trạng thái của chúng.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -302,9 +302,9 @@ questions:
       methodSignature: ""
 
   - question: >-
-      Equality của List, Set, Map và Queue có giống nhau không?
+      Quy tắc tính bằng nhau của List, Set, Map và Queue có giống nhau không?
     answer: >-
-      Không. List định nghĩa value equality theo size và element ở từng vị trí; Set theo cùng member không phụ thuộc encounter order; Map theo cùng mapping. Collection/Queue không có một universal element-based equality contract, nên ArrayDeque/PriorityQueue thường giữ identity equality từ Object. LinkedList là List nên dùng List equality dù cũng có thể dùng như Deque. Vì vậy “cùng phần tử” không đủ để kết luận mọi collection equal nhau.
+      Không. List định nghĩa tính bằng nhau theo kích thước và phần tử ở từng vị trí; Set theo cùng các phần tử không phụ thuộc thứ tự duyệt; Map theo cùng các ánh xạ. Collection/Queue không có một quy tắc bằng nhau theo phần tử chung, nên ArrayDeque/PriorityQueue thường giữ tính bằng nhau theo định danh từ Object. LinkedList là List nên dùng quy tắc của List dù cũng có thể dùng như Deque. Vì vậy “cùng phần tử” không đủ để kết luận mọi collection bằng nhau.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -315,9 +315,9 @@ questions:
       methodSignature: ""
 
   - question: >-
-      Vì sao mutable key/element có thể làm HashMap, HashSet, TreeMap hoặc TreeSet hoạt động khó hiểu?
+      Vì sao khóa/phần tử có thể thay đổi có thể làm HashMap, HashSet, TreeMap hoặc TreeSet hoạt động khó hiểu?
     answer: >-
-      Hash-based structure dựa vào state tham gia hashCode/equals để tìm bucket; sorted structure dựa vào state tham gia comparison để đặt vị trí trong tree. Nếu state đó thay đổi khi object đang nằm trong collection, object có thể không còn tìm được theo key/equality mới hoặc tree ordering bị phá invariant quan sát. Giải pháp thường là dùng key/value identity ổn định hoặc remove rồi reinsert sau mutation có chủ đích.
+      Cấu trúc dựa trên hash dùng trạng thái tham gia hashCode/equals để tìm bucket; cấu trúc có sắp xếp dùng trạng thái tham gia phép so sánh để đặt vị trí trong cây. Nếu trạng thái đó thay đổi khi đối tượng đang nằm trong collection, đối tượng có thể không còn được tìm thấy theo khóa/tính bằng nhau mới hoặc thứ tự cây bị phá vỡ. Giải pháp thường là dùng định danh khóa/phần tử ổn định hoặc xóa rồi chèn lại sau thay đổi có chủ đích.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -328,9 +328,9 @@ questions:
       methodSignature: "mutableKey()"
 
   - question: >-
-      Phân biệt mutable collection, unmodifiable view, fixed-size adapter và snapshot copy.
+      Phân biệt collection có thể sửa, khung nhìn không cho sửa, cấu trúc cố định kích thước và bản chụp độc lập.
     answer: >-
-      Mutable collection cho phép structural mutation theo contract. Collections.unmodifiableList(source) là read-only wrapper nhưng vẫn nhìn thấy source đổi vì share backing state. Arrays.asList(array) là fixed-size adapter: set được nhưng add/remove đổi size không được và share array backing. List.copyOf(source) là unmodifiable structural snapshot, không nhìn thấy structural change sau đó của source nhưng vẫn shallow đối với mutable element object. Vì vậy “không add được” chưa đủ để kết luận hai object có cùng semantics.
+      Collection có thể sửa cho phép thay đổi cấu trúc theo quy ước của nó. Collections.unmodifiableList(source) là lớp bọc không cho sửa nhưng vẫn nhìn thấy nguồn thay đổi vì chia sẻ trạng thái nền. Arrays.asList(array) là cấu trúc cố định kích thước: set được nhưng add/remove làm đổi kích thước thì không, đồng thời vẫn liên kết với mảng. List.copyOf(source) là bản chụp cấu trúc không cho sửa, không nhìn thấy thay đổi cấu trúc về sau của nguồn nhưng vẫn là bản sao nông đối với đối tượng phần tử. Vì vậy “không add được” chưa đủ để kết luận hai đối tượng có cùng ngữ nghĩa.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -341,9 +341,9 @@ questions:
       methodSignature: "viewVsCopy()"
 
   - question: >-
-      Nếu phải chọn implementation Collection cho một API mới, nên bắt đầu từ đâu thay vì chọn theo thói quen?
+      Nếu phải chọn cách triển khai Collection cho một API mới, nên bắt đầu từ đâu thay vì chọn theo thói quen?
     answer: >-
-      Bắt đầu từ semantics: có cần positional order, uniqueness, key lookup, FIFO/LIFO, priority hay sorted navigation không. Sau đó xét encounter order, null policy, mutability/ownership và chi phí operation quan trọng trong workload. Chỉ sau khi contract đúng mới tối ưu performance bằng ArrayList/HashMap/TreeMap...; micro-benchmark hoặc Big-O không cứu được một data structure có semantics sai.
+      Bắt đầu từ ngữ nghĩa: có cần vị trí, tính duy nhất, tra cứu theo khóa, FIFO/LIFO, độ ưu tiên hay điều hướng theo thứ tự không. Sau đó xét thứ tự duyệt, quyền thay đổi/sở hữu dữ liệu, giới hạn null và phương thức tạo, chi phí bộ nhớ cùng chi phí của các thao tác chính. Trước khi mặc định dùng cấu trúc đa dụng, kiểm tra xem miền dữ liệu có phù hợp với cấu trúc chuyên biệt như EnumSet/EnumMap hay không. Chỉ sau khi quy ước đã đúng mới để hiệu năng của lớp triển khai quyết định; Big-O hoặc phép đo vi mô không cứu được một cấu trúc có ngữ nghĩa sai.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -354,9 +354,9 @@ questions:
       methodSignature: ""
 
   - question: >-
-      Vì sao null policy phải được đọc theo implementation/factory thay vì chỉ nhìn interface?
+      Vì sao chính sách null phải được đọc theo cách triển khai/phương thức tạo thay vì chỉ nhìn interface?
     answer: >-
-      List/Set/Map/Queue interface không áp một null policy giống nhau cho mọi implementation. ArrayList và HashMap cho null theo contract riêng; ArrayDeque/PriorityQueue reject null; List.of/Set.of/Map.of và copyOf reject null. TreeSet/TreeMap với natural ordering thường không chấp nhận null key/element vì không so sánh được. Đặc biệt Queue dùng null từ poll/peek để biểu diễn empty nên null element sẽ làm semantics mơ hồ.
+      Các interface List/Set/Map/Queue không áp một chính sách null giống nhau cho mọi cách triển khai. ArrayList và HashMap cho phép null theo quy ước riêng; ArrayDeque/PriorityQueue từ chối null; List.of/Set.of/Map.of và các họ copyOf cũng từ chối null. TreeSet/TreeMap với thứ tự tự nhiên thông thường không chấp nhận khóa/phần tử null vì không thể so sánh. Đặc biệt Queue dùng null từ poll/peek để biểu diễn trạng thái rỗng nên phần tử null sẽ làm ý nghĩa bị nhập nhằng.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -369,7 +369,7 @@ questions:
   - question: >-
       EnumSet và EnumMap khác collection tổng quát ở điểm nào và khi nào nên chọn chúng?
     answer: >-
-      Chúng chuyên biệt cho một enum universe đã biết. EnumSet thường dùng representation kiểu bit-vector; EnumMap dùng representation hướng array cho enum key. Cả hai duyệt theo thứ tự khai báo enum, cho semantics domain rõ và thường compact/efficient hơn cấu trúc tổng quát. EnumSet reject null element; EnumMap reject null key nhưng có thể chứa null value. Defined order của chúng không có nghĩa chúng implement Java 21 SequencedSet/SequencedMap.
+      Chúng chuyên biệt cho một miền enum đã biết. EnumSet thường dùng cách biểu diễn kiểu vector bit; EnumMap dùng cách lưu trữ dựa trên mảng cho khóa enum. Cả hai duyệt theo thứ tự khai báo enum, biểu đạt miền dữ liệu rõ và thường gọn/hiệu quả hơn cấu trúc tổng quát. EnumSet từ chối phần tử null; EnumMap từ chối khóa null nhưng có thể chứa giá trị null. Việc chúng có thứ tự xác định không có nghĩa chúng triển khai SequencedSet/SequencedMap trong Java 21.
     aiGenerated: true
     reviewed: false
     readmeRelated:

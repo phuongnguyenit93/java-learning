@@ -1,10 +1,10 @@
-# Map
+# Các mô hình dữ liệu cốt lõi — Map
 
-Sau `List` và `Set`, ta vẫn còn một nhu cầu rất phổ biến mà `Collection<E>` không biểu đạt tốt: tìm một value bằng một **key riêng**. Ví dụ, hệ thống có nhiều `Order` nhưng request thường đưa vào `orderId`. `Map<K, V>` mô hình hóa trực tiếp quan hệ đó.
+Sau `List` và `Set`, ta vẫn còn một nhu cầu rất phổ biến mà `Collection<E>` không biểu đạt tốt: tìm một giá trị bằng một **khóa riêng**. Ví dụ, hệ thống có nhiều `Order` nhưng yêu cầu đầu vào thường cung cấp `orderId`. `Map<K, V>` mô hình hóa trực tiếp quan hệ đó.
 
 ## <a id="map-semantics">Ngữ nghĩa của Map</a>
 
-`Map<K, V>` lưu các mapping `key → value`. Mỗi key chỉ xuất hiện tối đa một lần, trong khi nhiều key có thể trỏ tới các value bằng nhau.
+`Map<K, V>` lưu các ánh xạ `khóa → giá trị`. Mỗi khóa chỉ xuất hiện tối đa một lần, trong khi nhiều khóa có thể trỏ tới các giá trị bằng nhau.
 
 ```java
 Map<Long, Order> orderById = new HashMap<>();
@@ -15,7 +15,7 @@ orderById.put(1002L, new Order(1002, 8, 90));
 Order order = orderById.get(1002L);
 ```
 
-Nếu `put` một key đã tồn tại, mapping cũ bị thay thế và method trả về value trước đó:
+Nếu `put` một khóa đã tồn tại, ánh xạ cũ bị thay thế và phương thức trả về giá trị trước đó:
 
 ```java
 Order previous = orderById.put(
@@ -24,23 +24,23 @@ Order previous = orderById.put(
 );
 ```
 
-Điều này khác `Set`: `Set` hỏi “element này đã tồn tại chưa?”, còn `Map` hỏi “key này đang ánh xạ tới value nào?”.
+Điều này khác `Set`: `Set` hỏi “phần tử này đã tồn tại chưa?”, còn `Map` hỏi “khóa này đang ánh xạ tới giá trị nào?”.
 
 ## <a id="map-basic-contract">Các thao tác cơ bản của Map</a>
 
-Vì `Map` không kế thừa `Collection`, nó có vocabulary cơ bản riêng. Một learner mới nên nắm nhóm operation này trước khi đi tới `compute`/`merge`:
+Vì `Map` không kế thừa `Collection`, nó có tập thao tác cơ bản riêng. Người học mới nên nắm nhóm thao tác này trước khi đi tới `compute`/`merge`:
 
-| Ý định | Operation |
+| Ý định | thao tác |
 | --- | --- |
-| số mapping | `size()` |
+| số ánh xạ | `size()` |
 | map có rỗng không | `isEmpty()` |
-| đọc value theo key | `get(key)` |
-| thêm/thay mapping | `put(key, value)` |
-| có key hay không | `containsKey(key)` |
-| có value hay không | `containsValue(value)` |
-| xóa mapping theo key | `remove(key)` |
-| xóa toàn bộ mapping | `clear()` |
-| copy toàn bộ mapping từ map khác | `putAll(otherMap)` |
+| đọc giá trị theo khóa | `get(key)` |
+| thêm/thay ánh xạ | `put(key, value)` |
+| có khóa hay không | `containsKey(key)` |
+| có giá trị hay không | `containsValue(value)` |
+| xóa ánh xạ theo khóa | `remove(key)` |
+| xóa toàn bộ ánh xạ | `clear()` |
+| sao chép toàn bộ ánh xạ từ Map khác | `putAll(otherMap)` |
 
 ```java
 Map<Long, Order> orders = new HashMap<>();
@@ -54,11 +54,11 @@ Order found = orders.get(1002L);
 orders.remove(1001L);
 ```
 
-`containsKey` thường quan trọng hơn `containsValue`: lookup theo key là abstraction chính của `Map`, còn tìm theo value thường phải kiểm tra nhiều mapping và không phải lý do chính để chọn map.
+`containsKey` thường quan trọng hơn `containsValue`: tra cứu theo khóa là mô hình trừu tượng chính của `Map`, còn tìm theo giá trị thường phải kiểm tra nhiều ánh xạ và không phải lý do chính để chọn Map.
 
-## <a id="map-entry-model">Map.Entry là một mapping key → value</a>
+## <a id="map-entry-model">Map.Entry biểu diễn một ánh xạ khóa → giá trị</a>
 
-`Map.Entry<K, V>` đại diện cho **một mapping riêng lẻ** bên trong map: một key đi cùng value hiện tại của nó.
+`Map.Entry<K, V>` đại diện cho **một ánh xạ riêng lẻ** bên trong Map: một khóa đi cùng giá trị hiện tại của nó.
 
 ```java
 for (Map.Entry<Long, Order> entry : orderById.entrySet()) {
@@ -68,9 +68,9 @@ for (Map.Entry<Long, Order> entry : orderById.entrySet()) {
 }
 ```
 
-Khi thuật toán cần cả key lẫn value, `entrySet()` cho đúng đơn vị dữ liệu cần duyệt và tránh pattern “duyệt key rồi lại `get(key)`”. Một số entry view cho phép `setValue`, nhưng đó là optional/mutable-view behavior của map cụ thể; code không nên giả định mọi `Map.Entry` đều sửa được.
+Khi thuật toán cần cả khóa lẫn giá trị, `entrySet()` cho đúng đơn vị dữ liệu cần duyệt và tránh mẫu “duyệt khóa rồi lại `get(key)`”. Một số entry dạng khung nhìn cho phép `setValue`, nhưng đây là thao tác tùy chọn và phụ thuộc quy ước của Map cụ thể; mã nguồn không nên giả định mọi `Map.Entry` đều sửa được.
 
-Ba collection view giúp duyệt map theo các góc khác nhau:
+Ba khung nhìn dạng Collection giúp duyệt Map theo các góc khác nhau:
 
 ```java
 Set<Long> keys = orderById.keySet();
@@ -78,7 +78,7 @@ Collection<Order> values = orderById.values();
 Set<Map.Entry<Long, Order>> entries = orderById.entrySet();
 ```
 
-Khi cần cả key và value, duyệt `entrySet()` thường rõ ràng hơn gọi `get(key)` sau khi duyệt key:
+Khi cần cả khóa và giá trị, duyệt `entrySet()` thường rõ ràng hơn gọi `get(key)` sau khi duyệt khóa:
 
 ```java
 for (Map.Entry<Long, Order> entry : orderById.entrySet()) {
@@ -86,13 +86,13 @@ for (Map.Entry<Long, Order> entry : orderById.entrySet()) {
 }
 ```
 
-Chính sách `null` và ordering phụ thuộc cách triển khai. `HashMap` cho phép một null key và nhiều null values; `Map.of(...)` từ chối cả hai. Không nên dùng `get(key) == null` để phân biệt “không có mapping” với “mapping tới null” nếu cách triển khai cho phép null value; khi cần phân biệt, dùng `containsKey`.
+Chính sách `null` và thứ tự phụ thuộc cách triển khai. `HashMap` cho phép một khóa `null` và nhiều giá trị `null`; `Map.of(...)` từ chối cả hai. Không nên dùng `get(key) == null` để phân biệt “không có ánh xạ” với “ánh xạ tới null” nếu cách triển khai cho phép giá trị `null`; khi cần phân biệt, dùng `containsKey`.
 
-`Map` cơ bản không hứa một encounter order chung. Từ Java 21, `SequencedMap` **chuẩn hóa** vocabulary first/last/reversed cho những map tham gia abstraction này. Tuy nhiên “có order xác định” không đồng nghĩa “phải là `SequencedMap`”: `EnumMap`, chẳng hạn, duyệt theo thứ tự khai báo enum nhưng không triển khai `SequencedMap`.
+`Map` cơ bản không hứa một thứ tự duyệt chung. Từ Java 21, `SequencedMap` **chuẩn hóa** nhóm thao tác `first`/`last`/`reversed` cho những Map tham gia mô hình trừu tượng này. Tuy nhiên “có thứ tự xác định” không đồng nghĩa “phải là `SequencedMap`”: `EnumMap`, chẳng hạn, duyệt theo thứ tự khai báo enum nhưng không triển khai `SequencedMap`.
 
-## <a id="map-views">keySet, values và entrySet là backed views</a>
+## <a id="map-views">keySet, values và entrySet là các khung nhìn liên kết với Map</a>
 
-`keySet()`, `values()` và `entrySet()` không mặc định tạo ba collection độc lập. Chúng là **view được backing bởi map gốc**: thay đổi hợp lệ qua một phía có thể được quan sát từ phía còn lại.
+`keySet()`, `values()` và `entrySet()` không mặc định tạo ba collection độc lập. Chúng là **khung nhìn liên kết với Map gốc**: thay đổi hợp lệ qua một phía có thể được quan sát từ phía còn lại.
 
 ```java
 Map<Long, String> names = new HashMap<>();
@@ -108,18 +108,18 @@ names.put(3L, "Chi");
 System.out.println(keys.contains(3L));      // true
 ```
 
-Các view không có mọi mutation operation. Ví dụ `keySet().add(key)` không có đủ information để tạo một mapping vì không biết value, nên operation đó không được hỗ trợ. Khi cần snapshot độc lập, copy rõ ràng:
+Các khung nhìn không hỗ trợ mọi thao tác thay đổi dữ liệu. Ví dụ `keySet().add(key)` không có đủ thông tin để tạo một ánh xạ vì không biết giá trị, nên thao tác đó không được hỗ trợ. Khi cần bản chụp độc lập, hãy tạo bản sao rõ ràng:
 
 ```java
 Set<Long> keySnapshot = Set.copyOf(names.keySet());
 List<String> valueSnapshot = List.copyOf(names.values());
 ```
 
-Đây là cùng family khái niệm với `List.subList`: **view chia sẻ backing state**, còn copy có structural state riêng.
+Đây là cùng một nhóm khái niệm với `List.subList`: **khung nhìn chia sẻ trạng thái với nguồn**, còn bản sao có trạng thái cấu trúc riêng.
 
 ## <a id="map-default-operations">Các thao tác Map thường dùng trước compute/merge</a>
 
-Trước khi cần `compute` hoặc `merge`, nhiều logic map được diễn đạt đủ rõ bằng các operation mức đơn giản hơn:
+Trước khi cần `compute` hoặc `merge`, nhiều logic Map được diễn đạt đủ rõ bằng các thao tác mức đơn giản hơn:
 
 ```java
 Order fallback = new Order(-1, -1, 0);
@@ -137,16 +137,16 @@ boolean replaced = orderById.replace(
 boolean removed = orderById.remove(1003L, new Order(1003, 9, 85));
 ```
 
-- `getOrDefault` chỉ cung cấp fallback khi key **không có mapping**; nếu key tồn tại và đang map tới `null`, kết quả vẫn là `null`; method không insert fallback;
-- `putIfAbsent` chỉ ghi khi key chưa có mapping non-null;
-- `replace` chỉ thay khi key đang tồn tại theo overload tương ứng;
-- `remove(key, value)` chỉ xóa khi cả key và value hiện tại match.
+- `getOrDefault` chỉ cung cấp giá trị dự phòng khi khóa **không có ánh xạ**; nếu khóa tồn tại và đang ánh xạ tới `null`, kết quả vẫn là `null`; phương thức không chèn giá trị dự phòng;
+- `putIfAbsent` chỉ ghi khi khóa chưa có ánh xạ khác `null`;
+- `replace` chỉ thay khi khóa đang tồn tại theo phiên bản nạp chồng tương ứng;
+- `remove(key, value)` chỉ xóa khi cả khóa và giá trị hiện tại khớp.
 
-Các default method này làm intent rõ hơn pattern `containsKey → get → put/remove`. Trong môi trường nhiều thread, không suy ra atomicity từ interface `Map`; concurrent implementation có contract riêng thuộc module concurrency.
+Các phương thức mặc định này làm ý định rõ hơn mẫu `containsKey → get → put/remove`. Trong môi trường nhiều luồng, không suy ra tính nguyên tử từ interface `Map`; các cách triển khai đồng thời có quy ước riêng thuộc module về xử lý đồng thời.
 
-## <a id="map-equality">Equality của Map dựa trên các mapping</a>
+## <a id="map-equality">Tính bằng nhau của Map dựa trên các ánh xạ</a>
 
-Hai `Map` bằng nhau khi chúng biểu diễn cùng tập mapping `key → value`. Encounter order và concrete implementation không quyết định `Map.equals`.
+Hai `Map` bằng nhau khi chúng biểu diễn cùng tập ánh xạ `khóa → giá trị`. Thứ tự duyệt và lớp triển khai cụ thể không quyết định `Map.equals`.
 
 ```java
 Map<Long, String> a = new HashMap<>();
@@ -160,22 +160,22 @@ b.put(1L, "A");
 System.out.println(a.equals(b)); // true
 ```
 
-Equality của key/value bên trong vẫn dựa vào equality contract của chính chúng. Chi tiết thiết kế `equals/hashCode` thuộc module Object Contract; ở đây cần nhớ rằng thay đổi ordering implementation không tự làm hai map khác value nếu mappings vẫn giống nhau.
+Tính bằng nhau của khóa/giá trị bên trong vẫn dựa vào quy tắc tính bằng nhau của chính chúng. Chi tiết thiết kế `equals/hashCode` thuộc module **Quy ước của Object**; ở đây cần nhớ rằng thay đổi cách triển khai thứ tự không tự làm hai Map khác nhau nếu các ánh xạ vẫn giống nhau.
 
 ## <a id="hashmap-model">Mô hình HashMap</a>
 
-`HashMap` là implementation tổng quát khi cần key lookup nhanh và không cần encounter order cụ thể.
+`HashMap` là cách triển khai tổng quát khi cần tra cứu theo khóa nhanh và không cần thứ tự duyệt cụ thể.
 
-Mental model:
+Mô hình tư duy:
 
 ```text
-key
+khóa
  ↓ hashCode()
 chọn vùng/bucket ứng viên
  ↓
-equals() xác nhận key tương đương
+equals() xác nhận khóa tương đương
  ↓
-value tương ứng
+giá trị tương ứng
 ```
 
 ```java
@@ -187,9 +187,9 @@ for (Order order : orders) {
 Order found = orderById.get(1002L);
 ```
 
-Với hash distribution hợp lý, `put`, `get` và `remove` có expected cost gần O(1). Đây là đặc tính kỳ vọng của hash table, không phải đảm bảo worst-case tuyệt đối cho mọi key và mọi trạng thái.
+Với phân bố hash hợp lý, `put`, `get` và `remove` có chi phí kỳ vọng gần O(1). Đây là đặc tính kỳ vọng của bảng băm, không phải bảo đảm tuyệt đối cho trường hợp xấu nhất với mọi khóa và mọi trạng thái.
 
-Giống `HashSet`, correctness phụ thuộc vào key giữ `equals/hashCode` ổn định trong thời gian nó nằm trong map. Nếu field tham gia hash thay đổi sau `put`, lookup bằng key có thể không tìm được mapping như mong đợi.
+Giống `HashSet`, tính đúng đắn phụ thuộc vào khóa giữ `equals/hashCode` ổn định trong thời gian nó nằm trong Map. Nếu trường tham gia hash thay đổi sau `put`, tra cứu bằng khóa có thể không tìm được ánh xạ như mong đợi.
 
 ```java
 record OrderKey(long id) {}
@@ -198,17 +198,17 @@ Map<OrderKey, Order> map = new HashMap<>();
 map.put(new OrderKey(1001), order);
 ```
 
-Record là ví dụ thuận tiện vì key identity của nó là value-based và immutable. Không bắt buộc key phải là record; điều quan trọng là equality/hash contract phù hợp và ổn định.
+Record là ví dụ thuận tiện vì định danh logic của khóa dựa trên giá trị và record là bất biến. Không bắt buộc khóa phải là record; điều quan trọng là quy ước tính bằng nhau/hash phải phù hợp và ổn định.
 
-`HashMap` không đảm bảo iteration order. Nếu output đang vô tình trùng với insertion order, đó vẫn không phải contract.
+`HashMap` không đảm bảo thứ tự duyệt. Nếu kết quả đang vô tình trùng với thứ tự chèn, đó vẫn không phải quy ước.
 
 ## <a id="linkedhashmap-order">Thứ tự của LinkedHashMap</a>
 
-`LinkedHashMap` giữ mapping như hash map nhưng đồng thời duy trì encounter order. Có hai mode quan trọng.
+`LinkedHashMap` giữ ánh xạ như HashMap nhưng đồng thời duy trì thứ tự duyệt. Có hai chế độ quan trọng.
 
-### Insertion order
+### thứ tự chèn
 
-Constructor thông thường giữ thứ tự key được chèn lần đầu:
+Constructor thông thường giữ thứ tự khóa được chèn lần đầu:
 
 ```java
 Map<Long, Order> orders = new LinkedHashMap<>();
@@ -219,9 +219,9 @@ orders.put(20L, order20);
 System.out.println(orders.keySet()); // [30, 10, 20]
 ```
 
-`put` lại value cho một key đã có không tự động biến nó thành key mới ở cuối theo insertion-order semantics thông thường.
+`put` lại giá trị cho một khóa đã có không tự động biến nó thành khóa mới ở cuối theo ngữ nghĩa thứ tự chèn thông thường.
 
-### Access order
+### thứ tự truy cập
 
 Constructor có tham số `accessOrder = true` dùng thứ tự truy cập thay vì thứ tự chèn:
 
@@ -235,13 +235,13 @@ recent.get(1L);
 System.out.println(recent.keySet()); // [2, 3, 1]
 ```
 
-Mode này là nền tảng hữu ích cho một số cache/LRU patterns, nhưng cache production còn có eviction, concurrency và memory policy riêng; `LinkedHashMap` chỉ cung cấp cơ chế ordering nền.
+Chế độ này là nền tảng hữu ích cho một số mẫu cache/LRU, nhưng cache dùng trong hệ thống thực tế còn có chính sách loại bỏ, xử lý đồng thời và bộ nhớ riêng; `LinkedHashMap` chỉ cung cấp cơ chế thứ tự nền.
 
-Trong Java 21, `LinkedHashMap` triển khai `SequencedMap`. API có thể truy cập entry đầu/cuối, explicit positioning và reversed view mà không cần tự chuyển qua key list. Điều này làm encounter order trở thành một capability rõ ràng trong type system.
+Trong Java 21, `LinkedHashMap` triển khai `SequencedMap`. API có thể truy cập entry đầu/cuối, định vị rõ ràng và khung nhìn đảo thứ tự mà không cần tự chuyển qua List khóa. Điều này làm thứ tự duyệt trở thành một khả năng rõ ràng trong hệ thống kiểu.
 
 ## <a id="treemap-order">Thứ tự của TreeMap</a>
 
-`TreeMap` duy trì mapping theo **sorted order của key**.
+`TreeMap` duy trì ánh xạ theo **thứ tự sắp xếp của khóa**.
 
 ```java
 Map<Long, Order> orders = new TreeMap<>();
@@ -252,7 +252,7 @@ orders.put(20L, order20);
 System.out.println(orders.keySet()); // [10, 20, 30]
 ```
 
-Key được sắp theo natural ordering hoặc theo `Comparator` truyền vào constructor.
+Khóa được sắp theo thứ tự tự nhiên hoặc theo `Comparator` truyền vào constructor.
 
 ```java
 record UserKey(long id, String region) {}
@@ -263,19 +263,21 @@ Map<UserKey, User> users = new TreeMap<>(
 );
 ```
 
-Giống `TreeSet`, kết quả comparison bằng 0 quyết định rằng hai key là cùng một vị trí logic đối với `TreeMap`. Nếu comparator bỏ qua field quan trọng, `put` key thứ hai có thể thay thế value của key thứ nhất.
+Giống `TreeSet`, kết quả so sánh bằng 0 quyết định rằng hai khóa là cùng một vị trí logic đối với `TreeMap`. Nếu comparator bỏ qua trường quan trọng, `put` khóa thứ hai có thể thay thế giá trị của khóa thứ nhất.
 
-`TreeMap` thường có O(log n) cho `get`, `put` và `remove`, đổi lại có các navigable operations như `firstEntry`, `lastEntry`, `lowerEntry`, `floorEntry`, `ceilingEntry` và `higherEntry`.
+Vì vậy với Map có sắp xếp, thứ tự nên **nhất quán với `equals`**. Một `TreeMap` mà phép so sánh xem hai khóa không bằng nhau theo `equals` là tương đương vẫn có hành vi xác định, nhưng nó không còn tuân theo sạch quy ước chung về tính bằng nhau của `Map`, vì quan hệ tương đương giữa các khóa bên trong cây đang được quyết định bởi phép so sánh thay vì `equals`.
 
-Với natural ordering thông thường, `TreeMap` không cho null key vì không thể so sánh nó theo contract đó. Null value vẫn có thể được lưu. Comparator tùy chỉnh có thể định nghĩa xử lý null key, nhưng API nên làm điều đó có chủ đích.
+`TreeMap` thường có O(log n) cho `get`, `put` và `remove`, đổi lại có các thao tác điều hướng như `firstEntry`, `lastEntry`, `lowerEntry`, `floorEntry`, `ceilingEntry` và `higherEntry`.
 
-Trong Java 21, sorted-map hierarchy cũng tham gia `SequencedMap`, nên first/last/reversed semantics có interface chung. Lý do chọn `TreeMap` vẫn là nhu cầu **sorted lookup/navigation theo key**.
+Với thứ tự tự nhiên thông thường, `TreeMap` không cho null khóa vì không thể so sánh nó theo quy ước đó. Null giá trị vẫn có thể được lưu. Comparator tùy chỉnh có thể định nghĩa xử lý null khóa, nhưng API nên làm điều đó có chủ đích.
+
+Trong Java 21, hệ phân cấp Map có sắp xếp cũng tham gia `SequencedMap`, nên ngữ nghĩa đầu/cuối/đảo thứ tự có interface chung. Lý do chọn `TreeMap` vẫn là nhu cầu **tra cứu/điều hướng theo khóa có sắp xếp**.
 
 ## <a id="map-compute-merge">Cập nhật bằng compute và merge</a>
 
-Nhiều bài toán map có dạng “đọc value cũ, tính value mới rồi ghi lại”. `Map` có các method giúp diễn đạt trực tiếp pattern này.
+Nhiều bài toán Map có dạng “đọc giá trị cũ, tính giá trị mới rồi ghi lại”. `Map` có các phương thức giúp diễn đạt trực tiếp mẫu này.
 
-Đếm số đơn hàng theo user:
+Đếm số đơn hàng theo người dùng:
 
 ```java
 Map<Long, Integer> orderCountByUser = new HashMap<>();
@@ -285,13 +287,13 @@ for (Order order : orders) {
 }
 ```
 
-`merge(key, value, remappingFunction)` yêu cầu `value` đưa vào là non-null:
+`merge(key, value, remappingFunction)` yêu cầu `value` đưa vào khác `null`:
 
-- nếu chưa có mapping hoặc mapping hiện tại là `null`, dùng value được cung cấp;
-- nếu đã có non-null value, gọi remapping function với old/new value;
-- nếu remapping function trả `null`, mapping bị xóa.
+- nếu chưa có ánh xạ hoặc ánh xạ hiện tại là `null`, dùng giá trị được cung cấp;
+- nếu đã có giá trị khác `null`, gọi hàm ánh xạ lại với giá trị cũ/mới;
+- nếu hàm ánh xạ lại trả `null`, ánh xạ bị xóa.
 
-Tạo collection theo key:
+Tạo collection theo khóa:
 
 ```java
 Map<Long, List<Order>> ordersByUser = new HashMap<>();
@@ -303,9 +305,9 @@ for (Order order : orders) {
 }
 ```
 
-`computeIfAbsent` chỉ tạo value khi key chưa có mapping non-null; nếu mapping function trả `null` thì không tạo mapping.
+`computeIfAbsent` chỉ tạo giá trị khi khóa chưa có ánh xạ khác `null`; nếu hàm ánh xạ trả `null` thì không tạo ánh xạ.
 
-Khi cần tính lại dựa trên cả key và value hiện tại:
+Khi cần tính lại dựa trên cả khóa và giá trị hiện tại:
 
 ```java
 totals.compute(userId, (id, current) ->
@@ -313,6 +315,6 @@ totals.compute(userId, (id, current) ->
 );
 ```
 
-Nếu remapping function của `compute` trả `null`, mapping bị xóa.
+Nếu hàm ánh xạ lại của `compute` trả `null`, ánh xạ bị xóa.
 
-Các API này làm logic cập nhật ngắn và gần với ý định hơn pattern `get → if → put`. Tuy nhiên không nên suy ra rằng mọi `Map` khiến chuỗi update trở thành atomic trong môi trường nhiều thread; atomicity cụ thể thuộc contract của implementation như `ConcurrentMap`/`ConcurrentHashMap` và thuộc curriculum concurrency.
+Các API này làm logic cập nhật ngắn và gần với ý định hơn mẫu `get → if → put`. Tuy nhiên không nên suy ra rằng mọi `Map` khiến chuỗi cập nhật trở thành nguyên tử trong môi trường nhiều luồng; tính nguyên tử cụ thể thuộc quy ước của các cách triển khai như `ConcurrentMap`/`ConcurrentHashMap` và thuộc module về xử lý đồng thời.
