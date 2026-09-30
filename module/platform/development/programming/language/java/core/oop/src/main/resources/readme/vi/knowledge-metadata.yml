@@ -121,3 +121,7 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+  oop-synthesis:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false

@@ -43,58 +43,95 @@
 
 roadmap:
   - id: oop-purpose
-    title: Mục đích của thiết kế OOP
-    purpose: Hiểu OOP là cách tổ chức phần mềm quanh các object cộng tác, mỗi object sở hữu state, behavior và responsibility.
+    title: Lập trình hướng đối tượng (OOP) là gì và vì sao cần?
+    purpose: Hiểu lập trình hướng đối tượng là cách tổ chức phần mềm quanh các đối tượng cùng cộng tác, mỗi đối tượng chịu trách nhiệm về trạng thái và hành vi của chính nó để các quy tắc không bị phân tán khắp chương trình.
+    relatedKnowledge:
+      - MentalModel
     relatedModules:
       - routeId: JAVA_CLASS_OBJECT
-        label: Class & Object
-        note: Class/Object cung cấp các Java mechanism mà OOP design dựa vào.
+        label: Lớp và đối tượng
+        note: Mô-đun Lớp và đối tượng cung cấp các cơ chế Java mà tư duy thiết kế hướng đối tượng sử dụng.
     objectives:
-      - Giải thích vì sao object boundary giúp quản lý thay đổi và invariant tốt hơn.
-      - Phân biệt OOP design concept với từng Java syntax feature riêng lẻ.
+      - Giải thích cách tổ chức theo thủ tục vẫn phù hợp với các luồng xử lý đơn giản, nhưng dữ liệu và quy tắc dễ bị phân tán khi mô hình có nhiều trạng thái, hành vi và biến thể cùng thay đổi.
+      - Giải thích vì sao việc gom trạng thái, hành vi và trách nhiệm về đúng đối tượng có thể giúp cô lập thay đổi và giữ quy tắc nhất quán hơn.
+      - So sánh ở mức định hướng cách phân rã theo thủ tục với cách phân rã theo đối tượng mà không coi một cách luôn tốt hơn cách còn lại.
+      - Phân biệt khái niệm thiết kế OOP với các cú pháp hoặc cơ chế Java dùng để biểu diễn chúng.
+
   - id: encapsulation-and-invariants
-    title: Encapsulation và Invariant
-    purpose: Hiểu encapsulation là bảo vệ valid state phía sau behavior chứ không chỉ đơn giản là đặt field thành private.
+    title: Đóng gói và bảo vệ trạng thái hợp lệ
+    purpose: Hiểu đóng gói là trao cho đối tượng quyền kiểm soát trạng thái hợp lệ của nó thông qua hành vi, chứ không chỉ đơn giản là đặt trường thành private.
+    relatedKnowledge:
+      - Encapsulation
     objectives:
-      - Thiết kế object behavior bảo vệ invariant.
-      - Nhận biết khi getter/setter quá mức làm rò rỉ responsibility.
+      - Thiết kế hành vi của đối tượng để bảo vệ các điều kiện bất biến và ngăn trạng thái không hợp lệ.
+      - Phân biệt đóng gói với việc chỉ che giấu dữ liệu bằng các từ khóa kiểm soát truy cập.
+      - Nhận biết khi lạm dụng getter/setter làm rò rỉ trách nhiệm của đối tượng ra bên ngoài.
+
   - id: subtyping-and-inheritance
-    title: Subtyping và Inheritance
-    purpose: Hiểu inheritance là một mechanism để thiết lập subtype relationship và reuse, đồng thời thấy rõ coupling cost.
+    title: Kế thừa và quan hệ kiểu con
+    purpose: Hiểu kế thừa là một cơ chế để thiết lập quan hệ kiểu con và tái sử dụng hành vi, đồng thời nhận ra chi phí phụ thuộc chặt mà cây kế thừa có thể tạo ra.
+    relatedKnowledge:
+      - Inheritance
     objectives:
-      - Reason theo is-a substitutability thay vì chỉ dùng inheritance để reuse code.
-      - Nhận biết fragile hierarchy và subtype relationship không hợp lệ.
+      - Suy luận theo quan hệ "là một" (`is-a`) và khả năng thay thế thay vì chỉ dùng kế thừa để tái sử dụng mã.
+      - Phân biệt mục đích mô hình hóa kiểu con với mục đích tái sử dụng triển khai.
+      - Nhận biết hệ phân cấp kế thừa dễ vỡ và quan hệ kiểu con không hợp lệ.
+
   - id: polymorphism-and-dispatch
-    title: Polymorphism và Dynamic Dispatch
-    purpose: Hiểu cách một abstraction có thể thực thi runtime behavior khác nhau thông qua overriding và dynamic dispatch.
+    title: Đa hình và phân phối động
+    purpose: Hiểu cách cùng một kiểu chung có thể biểu hiện các hành vi khác nhau lúc chạy khi biến tham chiếu trỏ tới các đối tượng thuộc những kiểu con khác nhau, nhờ ghi đè phương thức và cơ chế phân phối động.
+    relatedKnowledge:
+      - Polymorphism
     objectives:
-      - Tách reference type khỏi runtime implementation behavior.
-      - Dùng substitutability làm phép kiểm tra cốt lõi cho polymorphism hữu ích.
+      - Phân biệt kiểu của biến tham chiếu với kiểu thực tế của đối tượng và hành vi được chọn lúc chạy.
+      - Dùng khả năng thay thế làm tiêu chí cốt lõi để đánh giá một quan hệ đa hình có hợp lý hay không.
+      - Nhận biết đa hình giúp mã sử dụng phụ thuộc vào hợp đồng chung thay vì rẽ nhánh theo từng cách triển khai cụ thể.
+
   - id: method-selection-model
-    title: Method selection ở compile-time và runtime
-    purpose: Xây dựng model rõ ràng về overloading, overriding, dynamic dispatch và method hiding để không nhầm các mechanism gần giống nhau.
+    title: Cách Java chọn phương thức
+    purpose: Phân biệt cách Java chọn lời gọi lúc biên dịch với cách phương thức ghi đè được phân phối lúc chạy; dùng nạp chồng và che khuất thành viên làm các trường hợp đối chiếu để tránh nhầm những cơ chế này với đa hình động.
+    relatedKnowledge:
+      - OverloadingOverriding
     objectives:
-      - Giải thích lựa chọn nào được resolve ở compile time và lựa chọn nào ở runtime.
-      - Dự đoán behavior khi overload và override tương tác.
+      - Giải thích lựa chọn phương thức nạp chồng nào được quyết định lúc biên dịch và phương thức ghi đè nào được phân phối lúc chạy.
+      - Phân biệt phân phối động của phương thức đối tượng với che khuất phương thức `static` và trường dữ liệu.
+      - Dự đoán hành vi khi nạp chồng và ghi đè xuất hiện cùng nhau.
+
   - id: composition-and-delegation
-    title: Composition và Delegation
-    purpose: Hiểu object collaboration như một lựa chọn thay cho inheritance khi cần reuse behavior mà không tạo subtype coupling cứng.
+    title: Cộng tác giữa các đối tượng bằng kết hợp và ủy quyền
+    purpose: Hiểu sự cộng tác giữa các đối tượng như một lựa chọn thay cho kế thừa khi cần tái sử dụng hành vi hoặc ghép trách nhiệm mà không tạo quan hệ kiểu con và phụ thuộc cứng không cần thiết.
+    relatedKnowledge:
+      - Composition
     objectives:
-      - Ưu tiên composition khi responsibility có thể được lắp ghép độc lập.
-      - Dùng delegation mà không làm mờ ownership hoặc lifecycle responsibility.
+      - Phân biệt phụ thuộc (dependency), liên kết (association), kết tập (aggregation) và hợp thành (composition) ở mức mô hình hóa quan hệ, quyền sở hữu và vòng đời.
+      - Ưu tiên kết hợp đối tượng khi các trách nhiệm có thể được ghép và thay thế độc lập thay vì ép chúng vào một cây kế thừa.
+      - Dùng ủy quyền (delegation) để tái sử dụng hành vi mà không làm mờ trách nhiệm sở hữu hoặc quản lý vòng đời.
+
   - id: abstraction-and-contracts
-    title: Abstraction và Behavioral Contract
-    purpose: Hiểu abstraction là expose behavior caller cần trong khi ẩn implementation detail không liên quan.
+    title: Trừu tượng hóa và hợp đồng hành vi
+    purpose: Hiểu trừu tượng hóa là chỉ công khai những hành vi mà bên sử dụng cần và che giấu các chi tiết triển khai không liên quan, để mã phụ thuộc vào trách nhiệm ổn định thay vì lớp cụ thể.
+    relatedKnowledge:
+      - Abstraction
     relatedModules:
       - routeId: JAVA_ABSTRACT_INTERFACE
-        label: Abstract Class & Interface
-        note: Module này cung cấp Java mechanism để biểu diễn reusable abstraction và contract.
+        label: Lớp trừu tượng và giao diện (`interface`)
+        note: Mô-đun này đi sâu vào các cơ chế Java dùng để biểu diễn lớp trừu tượng, `interface` và các hợp đồng có thể tái sử dụng.
     objectives:
-      - Phụ thuộc vào behavioral contract ổn định thay vì concrete implementation detail.
-      - Nhận biết khi nào abstract class hoặc interface là Java mechanism phù hợp.
+      - Thiết kế mã phụ thuộc vào hợp đồng hành vi ổn định thay vì chi tiết của cách triển khai cụ thể.
+      - Phân biệt khái niệm trừu tượng hóa trong thiết kế với `abstract class` và `interface` là các cơ chế Java để biểu diễn nó.
+      - Nhận biết rò rỉ trừu tượng và đánh đổi khi hợp đồng che giấu không đúng chi tiết.
+
   - id: oop-synthesis
-    title: Tổng hợp thiết kế OOP
-    purpose: Kết nối encapsulation, subtyping, polymorphism, composition và abstraction thành một decision model thống nhất cho OOP design.
+    title: Tổng hợp tư duy thiết kế hướng đối tượng
+    purpose: Kết nối đóng gói, quan hệ kiểu con, đa hình, kết hợp đối tượng và trừu tượng hóa thành một mô hình ra quyết định thống nhất khi thiết kế phần mềm hướng đối tượng.
+    relatedKnowledge:
+      - MentalModel
+      - Encapsulation
+      - Inheritance
+      - Polymorphism
+      - Composition
+      - Abstraction
     objectives:
-      - Chọn inheritance, composition hoặc abstraction dựa trên responsibility và change pressure.
-      - Nhận biết các “pillar” OOP là tool chứ không phải mục tiêu độc lập.
+      - Chọn giữa kế thừa và kết hợp đối tượng dựa trên khả năng thay thế, trách nhiệm và áp lực thay đổi; dùng trừu tượng hóa để giữ mã sử dụng phụ thuộc vào hợp đồng ổn định.
+      - Nhận biết bốn “trụ cột” OOP là các công cụ phối hợp với nhau chứ không phải bốn mục tiêu độc lập cần áp dụng bằng mọi giá.
+      - Nhận biết khi mô hình đối tượng giúp quản lý trạng thái, trách nhiệm và biến thể tốt hơn, đồng thời tránh áp dụng OOP quá mức cho bài toán đơn giản không cần các ranh giới đó.

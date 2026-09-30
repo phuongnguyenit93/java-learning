@@ -153,3 +153,10 @@ questions:
     reviewed: false
     readmeRelated: {file: "7.Abstraction/Abstraction.md", anchor: "abstraction-model"}
     apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "How do you synthesize the choice among inheritance, composition, and abstraction in OOP, and when should you avoid making a problem more object-oriented?"
+    answer: "Use inheritance when there is a genuine subtype relationship and callers need substitutability under one contract. Use composition/delegation when the goal is to assemble or vary behavior without an `is-a` relationship. Use abstraction to keep consumers dependent on a stable contract instead of implementation details. For a short data transformation, pure algorithm, or linear flow with no meaningful long-lived state, invariants, or variation points, extra classes and interfaces may only add ceremony."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Abstraction/Abstraction.md", anchor: "oop-synthesis"}
+    apiRelated: {controller: "CompositionController", methodSignature: "strategySwap()"}

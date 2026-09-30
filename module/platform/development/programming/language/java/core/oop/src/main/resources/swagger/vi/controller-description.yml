@@ -1,30 +1,30 @@
 CompositionController:
   description: |-
-    <h2>Composition</h2>
-    <p>Quan sát object composition, delegation và khả năng thay collaborator để thay đổi behavior mà giữ nguyên consumer.</p>
+    <h2>Kết hợp đối tượng và ủy quyền</h2>
+    <p>Quan sát cách kết hợp đối tượng, ủy quyền và thay đối tượng cộng tác có thể làm hành vi thay đổi mà vẫn giữ nguyên thành phần sử dụng.</p>
   readmeRelated:
     file: 6.Composition/Composition.md
 DispatchController:
   description: |-
-    <h2>Dispatch</h2>
-    <p>Đối chiếu compile-time overload selection, runtime instance dispatch, static-method hiding và field hiding trên cùng một runtime object.</p>
+    <h2>Lựa chọn lời gọi và phân phối động</h2>
+    <p>Đối chiếu lựa chọn nạp chồng lúc biên dịch, phân phối phương thức đối tượng lúc chạy, che khuất phương thức <code>static</code> và che khuất trường trên cùng một đối tượng.</p>
   readmeRelated:
     file: 5.OverloadingOverriding/OverloadingOverriding.md
 EncapsulationController:
   description: |-
-    <h2>Encapsulation</h2>
-    <p>Quan sát state transition hợp lệ, request bị từ chối và invariant vẫn được giữ sau failure.</p>
+    <h2>Đóng gói và điều kiện bất biến</h2>
+    <p>Quan sát một phép chuyển trạng thái hợp lệ, một yêu cầu bị từ chối và điều kiện bất biến vẫn được bảo vệ sau thất bại.</p>
   readmeRelated:
     file: 2.Encapsulation/Encapsulation.md
 PolymorphismController:
   description: |-
-    <h2>Polymorphism</h2>
-    <p>Quan sát interface-based subtype polymorphism: cùng static type nhưng runtime receiver khác nhau tạo behavior khác nhau.</p>
+    <h2>Đa hình và phân phối động</h2>
+    <p>Quan sát đa hình kiểu con qua <code>interface</code>: cùng kiểu khai báo nhưng đối tượng nhận lời gọi lúc chạy khác nhau tạo ra hành vi khác nhau.</p>
   readmeRelated:
     file: 4.Polymorphism/Polymorphism.md
 SubstitutabilityController:
   description: |-
-    <h2>Substitutability</h2>
-    <p>Chạy nhiều implementation qua cùng supertype contract để quan sát caller không cần special-case concrete type.</p>
+    <h2>Khả năng thay thế</h2>
+    <p>Chạy nhiều cách triển khai qua cùng hợp đồng kiểu chung để quan sát bên gọi không cần rẽ nhánh riêng theo từng kiểu cụ thể.</p>
   readmeRelated:
     file: 4.Polymorphism/Polymorphism.md

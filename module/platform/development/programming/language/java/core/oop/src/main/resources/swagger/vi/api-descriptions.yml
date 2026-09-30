@@ -1,10 +1,10 @@
 CompositionController:
   strategySwap():
-    summary: Trade-off composition và inheritance
-    description: Giữ nguyên consumer `Checkout` nhưng thay collaborator `Pricing` giữa
-      `Regular` và `Discount`. So sánh `regular`, `discount` và `consumerType` để thấy
-      behavior thay đổi nhờ composition/delegation mà không cần tạo subclass mới cho
-      `Checkout`.
+    summary: Đánh đổi giữa kết hợp đối tượng và kế thừa
+    description: Giữ nguyên thành phần sử dụng `Checkout` nhưng thay đối tượng cộng tác
+      `Pricing` giữa `Regular` và `Discount`. So sánh `regular`, `discount` và
+      `consumerType` để thấy hành vi thay đổi nhờ kết hợp đối tượng/ủy quyền mà không cần
+      tạo lớp con mới cho `Checkout`.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -29,10 +29,11 @@ CompositionController:
     usage: true
 DispatchController:
   overloadVsOverride():
-    summary: Overloading là compile-time selection
-    description: Dùng cùng biến `Parent x = new Child()` cho hai lời gọi. Field `overload`
-      cho thấy signature `select(Parent)` đã được chọn từ static type ở compile time,
-      còn `override` cho thấy `Child.call()` được chọn từ runtime receiver.
+    summary: Nạp chồng được chọn lúc biên dịch
+    description: Dùng cùng biến `Parent x = new Child()` cho hai lời gọi. Trường
+      `overload` cho thấy chữ ký `select(Parent)` đã được chọn từ kiểu khai báo lúc biên
+      dịch, còn `override` cho thấy `Child.call()` được chọn theo đối tượng nhận lời gọi
+      lúc chạy.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -56,10 +57,11 @@ DispatchController:
       ]
     usage: true
   dispatchVsHiding():
-    summary: Instance dispatch khác static/field hiding
-    description: Dùng `Parent x = new Child()` để đặt overridden instance method, hidden
-      static method và hidden field cạnh nhau. So sánh `instanceMethod`, `staticMethod`,
-      `field` và `runtime` để thấy chỉ instance override dispatch theo runtime object.
+    summary: Phân phối phương thức đối tượng khác che khuất `static`/trường
+    description: Dùng `Parent x = new Child()` để đặt phương thức đối tượng bị ghi đè,
+      phương thức `static` bị che khuất và trường bị che khuất cạnh nhau. So sánh
+      `instanceMethod`, `staticMethod`, `field` và `runtime` để thấy chỉ phương thức đối tượng
+      bị ghi đè được phân phối theo đối tượng lúc chạy.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -84,10 +86,10 @@ DispatchController:
     usage: true
 EncapsulationController:
   invariantProtection():
-    summary: Bảo vệ invariant
-    description: Thực hiện một lần rút tiền hợp lệ rồi một lần vượt quá balance. Response
-      cho thấy request sai bị từ chối trong khi balance cuối vẫn hợp lệ, minh chứng rằng
-      behavior-oriented API bảo vệ invariant thay vì cho caller mutate state tùy ý.
+    summary: Bảo vệ điều kiện bất biến
+    description: Thực hiện một lần rút tiền hợp lệ rồi một lần vượt quá số dư. Phản hồi
+      cho thấy yêu cầu sai bị từ chối trong khi số dư cuối vẫn hợp lệ, minh chứng rằng
+      API hướng hành vi bảo vệ điều kiện bất biến thay vì cho bên gọi thay đổi trạng thái tùy ý.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -112,10 +114,10 @@ EncapsulationController:
     usage: true
 PolymorphismController:
   dispatch():
-    summary: Runtime dynamic dispatch
-    description: Hai biến đều có static type `Speaker` nhưng giữ `Dog` và `Cat`. So sánh
-      runtime class với `speak()` result để quan sát interface-based subtype polymorphism
-      và dynamic dispatch theo runtime receiver.
+    summary: Phân phối động lúc chạy
+    description: Hai biến đều có kiểu khai báo `Speaker` nhưng giữ `Dog` và `Cat`. So sánh
+      lớp thực tế lúc chạy với kết quả `speak()` để quan sát đa hình kiểu con qua
+      `interface` và phân phối động theo đối tượng nhận lời gọi lúc chạy.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -140,10 +142,10 @@ PolymorphismController:
     usage: true
 SubstitutabilityController:
   substituteImplementations():
-    summary: Substitutability và behavioral expectation
-    description: Truyền `Upper` và `Lower` qua cùng một method chỉ biết contract `Formatter`.
-      Hai implementation tạo kết quả khác nhau nhưng caller không cần branch theo concrete
-      type, minh chứng cho substitutability trên cùng behavioral contract.
+    summary: Khả năng thay thế và kỳ vọng hành vi
+    description: Truyền `Upper` và `Lower` qua cùng một phương thức chỉ biết hợp đồng
+      `Formatter`. Hai cách triển khai tạo kết quả khác nhau nhưng bên gọi không cần rẽ
+      nhánh theo từng kiểu cụ thể, minh chứng cho khả năng thay thế trên cùng hợp đồng hành vi.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video

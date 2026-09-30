@@ -1,4 +1,4 @@
-# Inheritance
+# Subtyping and Inheritance
 
 Encapsulation lets each object protect its own boundary. Now we need to model cases where a concrete type can be treated as a more general type, for example when a `CardPayment` can be used wherever code only needs a `PaymentMethod`.
 
@@ -76,45 +76,13 @@ class CardPayment extends PaymentMethod {
 
 A `CardPayment` may use `provider()` when it is accessible while also providing behavior of its own.
 
-### Constructors are not inherited
+### BOUNDARY WITH CLASS-OBJECT — constructors are not inherited
 
-Constructors establish state for each layer of the object. A subclass constructor invokes a superclass constructor explicitly with `super(...)` or implicitly when a valid `super()` call can be inserted.
+Constructors are **not inherited**. Constructing a subclass object still requires the superclass-owned portion of state to be initialized through the appropriate `this(...)` / `super(...)` chain.
 
-This matters because the base-class state and invariants must be established before subclass construction is complete.
+A subclass constructor may first delegate to another constructor in the same class with `this(...)`; that chain must eventually reach a superclass constructor through an explicit `super(...)` call or an implicitly inserted `super()` when valid. Superclass construction completes before subclass instance initializers run and before the subclass constructor body executes.
 
-### HOW — constructor chaining initializes the superclass part first
-
-For example:
-
-```java
-class Parent {
-    Parent() {
-        System.out.println("Parent");
-    }
-}
-
-class Child extends Parent {
-    Child() {
-        System.out.println("Child");
-    }
-}
-```
-
-`new Child()` creates one object, but construction proceeds through a chain:
-
-```text
-new Child()
-    ↓
-Parent constructor
-    ↓
-parent state established
-    ↓
-Child constructor
-    ↓
-child state established
-```
-
-Constructors are **not inherited**; `super(...)` is how the subtype constructor asks the supertype constructor to initialize the state owned by the supertype.
+The full `this(...)`, `super(...)`, constructor-chaining, and initialization-order mechanics belong to `class-object → this, super, and constructor chaining`. OOP only needs the design consequence: **a subclass can become coupled to how its superclass establishes and manages superclass-owned state**.
 
 ### RELATION — inherited behavior is not yet the interesting part of polymorphism
 
@@ -126,31 +94,9 @@ Simply “having a method from a parent” is not the key mechanism. When a subc
 
 A subclass may depend not only on a public contract but also on initialization order, protected hooks, and assumptions about base-class behavior.
 
-For example, if a base constructor calls an overridable method, subclass behavior can run before subclass state is fully initialized. That is one form of fragile-base risk.
+For example, a superclass constructor can call an overridable method and dynamic dispatch can reach subclass behavior **before subclass state is fully initialized**. A subclass reference field may still hold its default `null` value, so subclass code that assumes initialization is complete can throw `NullPointerException`.
 
-```java
-class Parent {
-    Parent() {
-        printLength();
-    }
-
-    void printLength() {
-    }
-}
-
-class Child extends Parent {
-    private String name = "Java";
-
-    @Override
-    void printLength() {
-        System.out.println(name.length());
-    }
-}
-```
-
-During `new Child()`, the `Parent` constructor runs before `Child` field initialization is complete. The call to `printLength()` still uses dynamic dispatch and can reach `Child.printLength()` while `name` still has its default value `null`, causing `name.length()` to throw `NullPointerException`.
-
-This shows that inheritance coupling is not limited to public signatures. A subclass can also depend on **lifecycle order and internal execution decisions of the base class**.
+The detailed execution mechanics and runnable example belong to `class-object → Object Creation Lifecycle → Dynamic Dispatch During Construction`. The OOP lesson is the **coupling consequence**: a subclass can depend on **lifecycle order and internal execution decisions of the base class**, not only public signatures. That is one form of fragile-base risk.
 
 ### TRADE-OFF — when is inheritance justified?
 

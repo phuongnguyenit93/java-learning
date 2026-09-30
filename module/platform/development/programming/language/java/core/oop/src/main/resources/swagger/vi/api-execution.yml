@@ -1,102 +1,102 @@
 CompositionController:
   strategySwap():
     execution: |-
-      <p><strong>Khái niệm:</strong> Composition cho phép thay behavior bằng collaborator thay vì kéo dài hierarchy của consumer.</p>
-      <p><strong>Flow:</strong></p>
+      <p><strong>Khái niệm:</strong> Kết hợp đối tượng cho phép thay đổi hành vi bằng cách thay đối tượng cộng tác thay vì kéo dài hệ phân cấp kế thừa của thành phần sử dụng.</p>
+      <p><strong>Luồng:</strong></p>
       <ol>
         <li>Tạo <code>Checkout</code> với <code>Regular</code> rồi tính <code>total(1000)</code>.</li>
-        <li>Tạo một <code>Checkout</code> khác với <code>Discount</code> rồi tính cùng input.</li>
-        <li>Giữ nguyên class consumer <code>Checkout</code>; chỉ thay object <code>Pricing</code> được inject.</li>
+        <li>Tạo một <code>Checkout</code> khác với <code>Discount</code> rồi tính cùng đầu vào.</li>
+        <li>Giữ nguyên lớp sử dụng <code>Checkout</code>; chỉ thay đối tượng <code>Pricing</code> được truyền vào.</li>
       </ol>
-      <p><strong>Code evidence:</strong></p>
+      <p><strong>Đoạn mã minh chứng:</strong></p>
       <pre><code>new Checkout(new Regular()).total(1000)
       new Checkout(new Discount()).total(1000)</code></pre>
       <p><strong>Quan sát:</strong> <code>regular = 1000</code>, <code>discount = 800</code>, trong khi <code>consumerType = "Checkout unchanged"</code>.</p>
-      <p><strong>Ý nghĩa:</strong> variation nằm trong collaborator <code>Pricing</code>. <code>Checkout</code> delegate phần tính giá mà không cần trở thành base class có nhiều subclass.</p>
-      <p><strong>Kết luận:</strong> đây là evidence cho composition/delegation và trade-off với inheritance; nó không chứng minh rằng inheritance luôn sai.</p>
+      <p><strong>Ý nghĩa:</strong> điểm biến đổi nằm trong đối tượng cộng tác <code>Pricing</code>. <code>Checkout</code> ủy quyền phần tính giá mà không cần trở thành lớp cha có nhiều lớp con.</p>
+      <p><strong>Kết luận:</strong> đây là minh chứng cho kết hợp đối tượng/ủy quyền và đánh đổi với kế thừa; nó không có nghĩa kế thừa luôn sai.</p>
     usage: true
 DispatchController:
   overloadVsOverride():
     execution: |-
-      <p><strong>Khái niệm:</strong> overload chọn signature ở compile time; override chọn body instance method ở runtime.</p>
-      <p><strong>Flow:</strong></p>
+      <p><strong>Khái niệm:</strong> nạp chồng chọn chữ ký lúc biên dịch; ghi đè chọn phần thân phương thức đối tượng lúc chạy.</p>
+      <p><strong>Luồng:</strong></p>
       <ol>
         <li>Biến được khai báo <code>Parent x = new Child()</code>.</li>
-        <li><code>select(x)</code> được compiler resolve từ static type <code>Parent</code>.</li>
-        <li><code>x.call()</code> đã có signature hợp lệ, sau đó runtime receiver <code>Child</code> quyết định override body.</li>
+        <li><code>select(x)</code> được trình biên dịch chọn từ kiểu khai báo <code>Parent</code>.</li>
+        <li><code>x.call()</code> đã có chữ ký hợp lệ, sau đó đối tượng nhận lời gọi lúc chạy <code>Child</code> quyết định phần thân ghi đè.</li>
       </ol>
-      <p><strong>Code evidence:</strong></p>
+      <p><strong>Đoạn mã minh chứng:</strong></p>
       <pre><code>Parent x = new Child();
       select(x); // select(Parent)
       x.call();  // Child.call()</code></pre>
-      <p><strong>Quan sát:</strong> response đồng thời cho <code>overload = select(Parent)</code>, <code>override = Child.call</code>, <code>runtime = Child</code>.</p>
-      <p><strong>Ý nghĩa:</strong> runtime object không làm Java quay lại chọn overload khác; runtime chỉ tham gia dispatch body của overridden instance method đã được resolve.</p>
-      <p><strong>Kết luận:</strong> không được dùng cùng một mental model cho overloading và overriding.</p>
+      <p><strong>Quan sát:</strong> phản hồi đồng thời cho <code>overload = select(Parent)</code>, <code>override = Child.call</code>, <code>runtime = Child</code>.</p>
+      <p><strong>Ý nghĩa:</strong> đối tượng lúc chạy không làm Java quay lại chọn phương thức nạp chồng khác; lúc chạy chỉ tham gia phân phối phần thân của phương thức đối tượng đã được ghi đè.</p>
+      <p><strong>Kết luận:</strong> không được dùng cùng một mô hình tư duy cho nạp chồng và ghi đè.</p>
     usage: true
   dispatchVsHiding():
     execution: |-
-      <p><strong>Khái niệm:</strong> overridden instance method là virtual; hidden static method và field không dispatch theo runtime receiver.</p>
-      <p><strong>Flow:</strong> dùng cùng <code>Parent x = new Child()</code> rồi đọc ba loại member qua expression <code>x</code>.</p>
-      <p><strong>Code evidence:</strong></p>
+      <p><strong>Khái niệm:</strong> phương thức đối tượng bị ghi đè dùng phân phối động; phương thức <code>static</code> bị che khuất và trường dữ liệu không được phân phối theo đối tượng lúc chạy.</p>
+      <p><strong>Luồng:</strong> dùng cùng <code>Parent x = new Child()</code> rồi quan sát ba loại thành viên qua biểu thức <code>x</code>.</p>
+      <p><strong>Đoạn mã minh chứng:</strong></p>
       <pre><code>x.call();       // overridden instance method
       x.staticCall(); // hidden static method
       x.field;        // hidden field</code></pre>
-      <p><strong>Quan sát:</strong> runtime object là <code>Child</code>, nhưng response cho <code>instanceMethod = Child.call</code>, <code>staticMethod = Parent.staticCall</code>, <code>field = parent-field</code>.</p>
-      <p><strong>Ý nghĩa:</strong> chỉ instance override dùng runtime dispatch. Static method và field được chọn từ compile-time qualifying/expression type.</p>
-      <p><strong>Kết luận:</strong> câu “gọi qua object thì mọi member đều polymorphic” là sai.</p>
+      <p><strong>Quan sát:</strong> đối tượng lúc chạy là <code>Child</code>, nhưng phản hồi cho <code>instanceMethod = Child.call</code>, <code>staticMethod = Parent.staticCall</code>, <code>field = parent-field</code>.</p>
+      <p><strong>Ý nghĩa:</strong> chỉ phương thức đối tượng bị ghi đè dùng phân phối động lúc chạy. Phương thức <code>static</code> và trường được chọn từ kiểu biểu thức đã biết lúc biên dịch.</p>
+      <p><strong>Kết luận:</strong> câu “gọi qua đối tượng thì mọi thành viên đều đa hình” là sai.</p>
     usage: true
 EncapsulationController:
   invariantProtection():
     execution: |-
-      <p><strong>Khái niệm:</strong> Encapsulation có giá trị khi object kiểm soát state transition và giữ invariant sau cả success lẫn failure.</p>
-      <p><strong>Flow:</strong></p>
+      <p><strong>Khái niệm:</strong> Đóng gói có giá trị khi đối tượng kiểm soát phép chuyển trạng thái và bảo vệ điều kiện bất biến sau cả thành công lẫn thất bại.</p>
+      <p><strong>Luồng:</strong></p>
       <ol>
-        <li><code>Account</code> bắt đầu với balance 100.</li>
-        <li><code>withdraw(30)</code> hợp lệ nên balance thành 70.</li>
-        <li><code>withdraw(100)</code> bị reject vì amount lớn hơn balance.</li>
+        <li><code>Account</code> bắt đầu với số dư 100.</li>
+        <li><code>withdraw(30)</code> hợp lệ nên số dư thành 70.</li>
+        <li><code>withdraw(100)</code> bị từ chối vì số tiền lớn hơn số dư.</li>
       </ol>
-      <p><strong>Code evidence:</strong></p>
+      <p><strong>Đoạn mã minh chứng:</strong></p>
       <pre><code>if (amount &lt;= 0 || amount &gt; balance) {
           throw new IllegalArgumentException("invalid withdrawal");
       }
       balance -= amount;</code></pre>
-      <p><strong>Quan sát:</strong> <code>rejected = invalid withdrawal</code> và <code>balance = 70</code>; invalid request không làm object rơi vào balance âm.</p>
-      <p><strong>Ý nghĩa:</strong> behavior <code>withdraw</code> gom validation và mutation sau một boundary thay vì expose raw setter.</p>
-      <p><strong>Kết luận:</strong> private field chỉ là mechanism; invariant-preserving behavior mới là evidence chính của encapsulation ở experiment này.</p>
+      <p><strong>Quan sát:</strong> <code>rejected = invalid withdrawal</code> và <code>balance = 70</code>; yêu cầu không hợp lệ không làm đối tượng rơi vào trạng thái số dư âm.</p>
+      <p><strong>Ý nghĩa:</strong> hành vi <code>withdraw</code> gom kiểm tra và thay đổi trạng thái sau một ranh giới thay vì công khai setter thô.</p>
+      <p><strong>Kết luận:</strong> trường <code>private</code> chỉ là cơ chế; hành vi bảo vệ điều kiện bất biến mới là minh chứng chính của đóng gói trong thí nghiệm này.</p>
     usage: true
 PolymorphismController:
   dispatch():
     execution: |-
-      <p><strong>Khái niệm:</strong> Interface-based subtype polymorphism và runtime dynamic dispatch.</p>
-      <p><strong>Flow:</strong></p>
+      <p><strong>Khái niệm:</strong> Đa hình kiểu con qua <code>interface</code> và phân phối động lúc chạy.</p>
+      <p><strong>Luồng:</strong></p>
       <ol>
-        <li><code>first</code> và <code>second</code> đều có static type <code>Speaker</code>.</li>
+        <li><code>first</code> và <code>second</code> đều có kiểu khai báo <code>Speaker</code>.</li>
         <li><code>first</code> giữ <code>Dog</code>, <code>second</code> giữ <code>Cat</code>.</li>
-        <li>Cùng lời gọi <code>speak()</code> được dispatch tới implementation của runtime receiver tương ứng.</li>
+        <li>Cùng lời gọi <code>speak()</code> được phân phối tới cách triển khai của đối tượng nhận lời gọi lúc chạy tương ứng.</li>
       </ol>
-      <p><strong>Code evidence:</strong></p>
+      <p><strong>Đoạn mã minh chứng:</strong></p>
       <pre><code>Speaker first = new Dog();
       Speaker second = new Cat();
       first.speak();
       second.speak();</code></pre>
-      <p><strong>Quan sát:</strong> <code>declaredType = Speaker</code> cho cả hai, nhưng runtime/result lần lượt là <code>Dog/woof</code> và <code>Cat/meow</code>.</p>
-      <p><strong>Ý nghĩa:</strong> subtype polymorphism không cần class inheritance; implementation của interface cũng tạo subtype và runtime dispatch cho instance method.</p>
-      <p><strong>Kết luận:</strong> static type xác định contract có thể gọi, runtime receiver xác định implementation override/implement nào chạy.</p>
+      <p><strong>Quan sát:</strong> <code>declaredType = Speaker</code> cho cả hai, nhưng lớp/kết quả lúc chạy lần lượt là <code>Dog/woof</code> và <code>Cat/meow</code>.</p>
+      <p><strong>Ý nghĩa:</strong> đa hình kiểu con không cần kế thừa lớp; triển khai <code>interface</code> cũng tạo kiểu con và tham gia phân phối động cho phương thức đối tượng.</p>
+      <p><strong>Kết luận:</strong> kiểu khai báo xác định hợp đồng có thể gọi, còn đối tượng nhận lời gọi lúc chạy xác định cách triển khai nào thực thi.</p>
     usage: true
 SubstitutabilityController:
   substituteImplementations():
     execution: |-
-      <p><strong>Khái niệm:</strong> Substitutability nghĩa là caller viết theo contract chung có thể nhận nhiều implementation mà không cần special-case type.</p>
-      <p><strong>Flow:</strong></p>
+      <p><strong>Khái niệm:</strong> Khả năng thay thế nghĩa là bên gọi viết theo hợp đồng chung có thể nhận nhiều cách triển khai mà không cần rẽ nhánh riêng theo từng kiểu.</p>
+      <p><strong>Luồng:</strong></p>
       <ol>
-        <li><code>run(Formatter)</code> chỉ biết interface <code>Formatter</code>.</li>
+        <li><code>run(Formatter)</code> chỉ biết <code>interface Formatter</code>.</li>
         <li>Lần một truyền <code>Upper</code>, lần hai truyền <code>Lower</code>.</li>
-        <li>Mỗi implementation thực hiện cùng contract <code>format(String)</code> theo behavior riêng.</li>
+        <li>Mỗi cách triển khai thực hiện cùng hợp đồng <code>format(String)</code> theo hành vi riêng.</li>
       </ol>
-      <p><strong>Code evidence:</strong></p>
+      <p><strong>Đoạn mã minh chứng:</strong></p>
       <pre><code>run(new Upper())
       run(new Lower())</code></pre>
-      <p><strong>Quan sát:</strong> cùng input <code>Java</code> tạo <code>JAVA</code> và <code>java</code>, còn method <code>run</code> không branch theo concrete type.</p>
-      <p><strong>Ý nghĩa:</strong> variation được giữ phía sau contract. Experiment minh họa positive case của substitutability; nó không tự chứng minh mọi subtype có thể bảo toàn mọi behavioral expectation.</p>
-      <p><strong>Kết luận:</strong> khả năng gán subtype chỉ là điều kiện type-system; thiết kế tốt còn cần các implementation tôn trọng contract mà caller dựa vào.</p>
+      <p><strong>Quan sát:</strong> cùng đầu vào <code>Java</code> tạo <code>JAVA</code> và <code>java</code>, còn phương thức <code>run</code> không rẽ nhánh theo kiểu cụ thể.</p>
+      <p><strong>Ý nghĩa:</strong> điểm biến đổi được giữ phía sau hợp đồng. Thí nghiệm minh họa một trường hợp thay thế tốt; nó không tự chứng minh mọi kiểu con đều bảo toàn mọi kỳ vọng hành vi.</p>
+      <p><strong>Kết luận:</strong> khả năng gán kiểu con chỉ là điều kiện của hệ thống kiểu; thiết kế tốt còn cần các cách triển khai tôn trọng hợp đồng mà bên gọi dựa vào.</p>
     usage: true

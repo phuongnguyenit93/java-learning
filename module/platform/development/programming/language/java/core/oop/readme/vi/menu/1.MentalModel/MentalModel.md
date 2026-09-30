@@ -1,4 +1,4 @@
-# Mô hình tư duy về OOP
+# Lập trình hướng đối tượng (OOP) là gì và vì sao cần?
 
 Lập trình hướng đối tượng (**Object-Oriented Programming - OOP**) không bắt đầu từ `class`, `extends` hay `interface`. Nó bắt đầu từ một câu hỏi thiết kế: **nên đặt dữ liệu, quy tắc và trách nhiệm ở đâu để khi chương trình thay đổi, ảnh hưởng không lan ra khắp nơi?**
 
@@ -16,7 +16,7 @@ Trong OOP, chương trình được tổ chức xoay quanh các **đối tượn
 - một **trách nhiệm (responsibility)** rõ ràng;
 - các **hành vi (behavior)** mà bên ngoài có thể yêu cầu nó thực hiện.
 
-Một đối tượng vì vậy không chỉ là “một nơi chứa các `field`”. Khi thiết kế một đối tượng, ta nên trả lời được ba câu hỏi:
+Một đối tượng vì vậy không chỉ là “một nơi chứa các trường (`field`)”. Khi thiết kế một đối tượng, ta nên trả lời được ba câu hỏi:
 
 1. đối tượng này sở hữu trạng thái nào;
 2. nó chịu trách nhiệm về điều gì;
@@ -38,25 +38,25 @@ CheckoutService
 → phối hợp các đối tượng trên để hoàn thành quá trình thanh toán
 ```
 
-### RUNNING EXAMPLE — mô hình nào sẽ được dùng xuyên module?
+### VÍ DỤ XUYÊN SUỐT — mô hình nào sẽ được dùng xuyên mô-đun?
 
-Phần lớn module sẽ quay lại cùng một nhóm vai trò để người học nhìn thấy **một thiết kế tiến hóa qua từng khái niệm**, thay vì mỗi chapter bắt đầu từ một domain hoàn toàn mới:
+Phần lớn mô-đun sẽ quay lại cùng một nhóm vai trò để người học nhìn thấy **một thiết kế tiến hóa qua từng khái niệm**, thay vì mỗi chương bắt đầu từ một miền bài toán hoàn toàn mới:
 
 ```text
 Checkout / CheckoutService
 → thành phần điều phối luồng checkout
 
 PaymentMethod
-→ hợp đồng/hành vi thanh toán có nhiều implementation
+→ hợp đồng/hành vi thanh toán có nhiều cách triển khai
 
 CardPayment / WalletPayment
-→ các implementation cụ thể để quan sát subtyping, polymorphism và dispatch
+→ các cách triển khai cụ thể để quan sát quan hệ kiểu con, đa hình và phân phối lời gọi
 
 Pricing
-→ collaborator có thể được thay thế để quan sát composition, delegation và abstraction
+→ đối tượng cộng tác có thể được thay thế để quan sát kết hợp đối tượng, ủy quyền và trừu tượng hóa
 ```
 
-Một vài ví dụ phụ như `Account`, `Team/Player` hoặc `Order/OrderLine` vẫn xuất hiện khi chúng minh họa tốt hơn một pitfall chuyên biệt như invariant hoặc ownership/lifecycle. Chúng là ví dụ hỗ trợ, không phải một curriculum riêng tách khỏi luồng checkout chính.
+Một vài ví dụ phụ như `Account`, `Team/Player` hoặc `Order/OrderLine` vẫn xuất hiện khi chúng minh họa tốt hơn một cạm bẫy chuyên biệt như điều kiện bất biến hoặc quyền sở hữu/vòng đời. Chúng là ví dụ hỗ trợ, không phải một lộ trình kiến thức riêng tách khỏi luồng checkout chính.
 
 Điểm quan trọng không nằm ở việc ta đã tạo bao nhiêu `class`. Điểm quan trọng là **quy tắc được đặt ở đúng nơi chịu trách nhiệm**. Đoạn mã bên ngoài gửi yêu cầu thông qua phương thức (`method`), còn đối tượng tự bảo vệ trạng thái và thực hiện các quy tắc thuộc về nó.
 
@@ -81,45 +81,50 @@ quy tắc thanh toán
 
 Vì vậy, giá trị của OOP không nằm ở việc “chia chương trình thành thật nhiều class”, mà nằm ở việc **đặt đúng dữ liệu và hành vi vào đúng nơi chịu trách nhiệm**.
 
-### MỐI LIÊN HỆ — các khái niệm trong module nối với nhau thế nào?
+### MỐI LIÊN HỆ — các chặng trong mô-đun nối với nhau thế nào?
 
 Các chương tiếp theo không phải những định nghĩa rời rạc. Chúng hình thành một chuỗi câu hỏi:
 
 ```text
+Lập trình hướng đối tượng (OOP) là gì và vì sao cần?
+        ↓
 Một đối tượng sở hữu trạng thái
         ↓
 Làm sao ngăn bên ngoài phá trạng thái đó?
-Đóng gói (Encapsulation)
+Đóng gói và bảo vệ trạng thái hợp lệ
         ↓
 Làm sao một kiểu có thể được dùng như một kiểu tổng quát hơn?
-Kế thừa / kiểu con (Inheritance / Subtyping)
+Kế thừa và quan hệ kiểu con
         ↓
 Làm sao cùng một hợp đồng nhưng mỗi kiểu có hành vi khác nhau?
-Đa hình (Polymorphism)
+Đa hình và phân phối động
         ↓
 Java chọn phương thức ở lúc biên dịch và lúc chạy như thế nào?
-Overloading / Overriding / Dynamic Dispatch / Hiding
+Cách Java chọn phương thức
         ↓
 Nếu kế thừa làm các lớp phụ thuộc nhau quá chặt thì sao?
-Composition / Delegation
+Cộng tác giữa các đối tượng bằng kết hợp và ủy quyền
         ↓
 Bên sử dụng thực sự cần biết điều gì?
-Trừu tượng hóa (Abstraction)
+Trừu tượng hóa và hợp đồng hành vi
+        ↓
+Kết nối các quyết định trên thành một mô hình thống nhất
+Tổng hợp tư duy thiết kế hướng đối tượng
 ```
 
-`Encapsulation`, `Inheritance`, `Polymorphism` và `Abstraction` thường được gọi là “bốn trụ cột của OOP”. Cách gọi này hữu ích để ghi nhớ, nhưng không nên hiểu chúng là bốn phần độc lập. Chúng liên hệ chặt chẽ và thường được sử dụng cùng với `Composition`, `Delegation` và cách chia trách nhiệm rõ ràng.
+Đóng gói, kế thừa, đa hình và trừu tượng hóa thường được gọi là “bốn trụ cột của OOP”. Cách gọi này hữu ích để ghi nhớ, nhưng không nên hiểu chúng là bốn phần độc lập. Chúng liên hệ chặt chẽ và thường được sử dụng cùng với kết hợp đối tượng, ủy quyền và cách chia trách nhiệm rõ ràng.
 
 ### CƠ CHẾ — Java hỗ trợ OOP bằng những gì?
 
 Java cung cấp nhiều cơ chế như:
 
-- `class` và object;
-- access modifier như `private`, `protected`, `public`;
+- `class` và đối tượng;
+- từ khóa kiểm soát truy cập như `private`, `protected`, `public`;
 - `extends` và `implements`;
 - overriding;
 - overloading;
-- cơ chế chọn phương thức khi chạy (**dynamic dispatch**);
-- giữ tham chiếu tới đối tượng khác để tạo `composition`.
+- cơ chế chọn phương thức khi chạy (**phân phối động - dynamic dispatch**);
+- giữ tham chiếu tới đối tượng khác để tạo **kết hợp đối tượng (composition)**.
 
 Nhưng cần phân biệt rõ:
 
@@ -128,14 +133,14 @@ Khái niệm thiết kế
 → đóng gói, trách nhiệm, đa hình, khả năng thay thế, trừu tượng hóa...
 
 Cơ chế của Java
-→ private, extends, implements, override, overload, dynamic dispatch...
+→ `private`, `extends`, `implements`, ghi đè, nạp chồng, phân phối động...
 ```
 
-Một chương trình dùng đầy đủ keyword của OOP vẫn có thể thiết kế kém. Ngược lại, thiết kế tốt bắt đầu từ việc hiểu trách nhiệm và mối quan hệ giữa các đối tượng, sau đó mới chọn cơ chế Java phù hợp.
+Một chương trình dùng đầy đủ từ khóa và cơ chế thường gắn với OOP vẫn có thể thiết kế kém. Ngược lại, thiết kế tốt bắt đầu từ việc hiểu trách nhiệm và mối quan hệ giữa các đối tượng, sau đó mới chọn cơ chế Java phù hợp.
 
 ### THỰC HÀNH — câu hỏi tự kiểm tra
 
-Khi nhìn vào một `class`, đừng chỉ hỏi “class này có những field và method nào?”. Hãy thử hỏi:
+Khi nhìn vào một `class`, đừng chỉ hỏi “class này có những trường và phương thức nào?”. Hãy thử hỏi:
 
 1. trạng thái nào thực sự thuộc về nó;
 2. quy tắc nào nó phải tự bảo vệ;
@@ -164,7 +169,7 @@ checkoutService.checkout(cart);
 thay vì phải tự làm toàn bộ các bước:
 
 ```text
-đọc từng field của ShoppingCart
+đọc từng trường của ShoppingCart
 → tự tính giá
 → tự kiểm tra loại thanh toán
 → tự cập nhật trạng thái Order
@@ -191,7 +196,7 @@ Ngay khi ta nói “đối tượng này sở hữu trạng thái”, câu hỏi
 Một dấu hiệu đáng chú ý là:
 
 ```text
-nếu bên gọi phải lấy rất nhiều field ra ngoài để thực hiện một quy tắc
+nếu bên gọi phải lấy rất nhiều trường ra ngoài để thực hiện một quy tắc
 → có thể quy tắc đó đang nằm sai ranh giới trách nhiệm
 ```
 
@@ -218,7 +223,7 @@ Lập trình theo thủ tục thường tổ chức chương trình quanh **các
 
 ### VÌ SAO — OOP không phải lúc nào cũng tốt hơn
 
-Một phép biến đổi dữ liệu ngắn hoặc một thuật toán thuần có thể rõ ràng hơn nếu viết thành hàm. Nếu ép mọi thứ thành một cây kế thừa gồm nhiều object, chương trình có thể trở nên rườm rà mà không nhận được lợi ích gì.
+Một phép biến đổi dữ liệu ngắn hoặc một thuật toán thuần có thể rõ ràng hơn nếu viết thành hàm. Nếu ép mọi thứ thành một cây kế thừa gồm nhiều đối tượng, chương trình có thể trở nên rườm rà mà không nhận được lợi ích gì.
 
 Ngược lại, khi bài toán có:
 
@@ -227,17 +232,17 @@ Ngược lại, khi bài toán có:
 - nhiều cách triển khai khác nhau;
 - nhiều thành phần phải phối hợp với nhau;
 
-thì việc chia trách nhiệm theo object thường giúp suy luận và thay đổi dễ hơn.
+thì việc chia trách nhiệm theo đối tượng thường giúp suy luận và thay đổi dễ hơn.
 
-Java hỗ trợ cả hai phong cách. Một chương trình Java tốt hoàn toàn có thể dùng object để sở hữu trách nhiệm và dùng hàm hoặc lambda cho những phép biến đổi cục bộ.
+Java hỗ trợ cả hai phong cách. Một chương trình Java tốt hoàn toàn có thể dùng đối tượng để sở hữu trách nhiệm và dùng hàm hoặc lambda cho những phép biến đổi cục bộ.
 
 ### MINH CHỨNG — nên quan sát điều gì khi học OOP?
 
 Đừng đánh giá một thiết kế OOP bằng số lượng class. Hãy xem một thay đổi có được khoanh vùng tốt hơn hay không.
 
-Ví dụ, nếu thêm một cách tính giá mới mà `Checkout` không phải sửa, đó là minh chứng tốt hơn nhiều so với việc chỉ chứng minh rằng Java có keyword `interface`.
+Ví dụ, nếu thêm một cách tính giá mới mà `Checkout` không phải sửa, đó là minh chứng tốt hơn nhiều so với việc chỉ chứng minh rằng Java có từ khóa `interface`.
 
-### THỰC HÀNH — câu hỏi xuyên suốt module
+### THỰC HÀNH — câu hỏi xuyên suốt mô-đun
 
 Khi học từng khái niệm tiếp theo, hãy luôn hỏi:
 

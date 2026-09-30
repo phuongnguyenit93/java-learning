@@ -1,4 +1,4 @@
-# OOP Mental Model
+# What Is Object-Oriented Programming (OOP) and Why Use It?
 
 OOP does not begin with `class`, `extends`, or `interface`. It begins with a design question: **where should state, rules, and responsibilities live so that change does not spread across the whole program?**
 
@@ -62,28 +62,33 @@ OOP tries to **localize change**: pricing rules live near the pricing responsibi
 
 ### RELATION — how do the topics in this module fit together?
 
-The following chapters are not seven isolated definitions. They form one chain of questions:
+These milestones are not isolated definitions. They form one chain of questions:
 
 ```text
+What Is Object-Oriented Programming (OOP) and Why Use It?
+        ↓
 An object owns state
         ↓
 How does it keep that state valid?
-Encapsulation
+Encapsulation and Invariants
         ↓
 How can one type be treated as another compatible type?
-Inheritance / Subtyping
+Subtyping and Inheritance
         ↓
 How can one contract produce different behavior?
-Polymorphism
+Polymorphism and Dynamic Dispatch
         ↓
 How does Java choose methods at compile time vs runtime?
-Overloading / Overriding / Dispatch / Hiding
+How Java Selects Methods
         ↓
 What if inheritance creates too much coupling?
-Composition / Delegation
+Object Collaboration through Composition and Delegation
         ↓
 What should callers know, and what should remain hidden?
-Abstraction
+Abstraction and Behavioral Contracts
+        ↓
+How do these choices fit together?
+OOP Design Synthesis
 ```
 
 `Encapsulation`, `inheritance`, `polymorphism`, and `abstraction` are commonly taught as the “four pillars of OOP”. Treat that as a useful mnemonic, not four unrelated keywords. They interact closely, and practical designs often use them together with composition, delegation, and clear responsibility boundaries.

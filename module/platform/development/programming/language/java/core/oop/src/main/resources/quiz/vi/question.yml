@@ -40,12 +40,12 @@
 
 questions:
   - id: oop-responsibility
-    question: "Một câu hỏi OOP design hữu ích ngoài việc liệt kê field là gì?"
+    question: "Ngoài việc liệt kê các trường dữ liệu, câu hỏi thiết kế OOP nào hữu ích hơn?"
     answers:
-      - {id: A, answer: "Object nào sở hữu rule này và bảo vệ state/invariant liên quan?", explanation: "Đúng. OOP chủ yếu về responsibility boundary và collaboration, không chỉ đặt data vào class."}
-      - {id: B, answer: "Làm sao mọi operation thành static?", explanation: "Sai. OOP chủ yếu về responsibility boundary và collaboration, không chỉ đặt data vào class."}
-      - {id: C, answer: "Làm sao một class chứa toàn system?", explanation: "Sai. OOP chủ yếu về responsibility boundary và collaboration, không chỉ đặt data vào class."}
-      - {id: D, answer: "Làm sao mọi field public?", explanation: "Sai. OOP chủ yếu về responsibility boundary và collaboration, không chỉ đặt data vào class."}
+      - {id: A, answer: "Đối tượng nào sở hữu quy tắc này và chịu trách nhiệm bảo vệ trạng thái/điều kiện bất biến liên quan?", explanation: "Đúng. OOP tập trung vào ranh giới trách nhiệm và sự cộng tác, không chỉ đưa dữ liệu vào class."}
+      - {id: B, answer: "Làm sao biến mọi thao tác thành `static`?", explanation: "Sai. `static` không tự tạo ranh giới trách nhiệm hay mô hình đối tượng tốt."}
+      - {id: C, answer: "Làm sao gom toàn bộ hệ thống vào một class?", explanation: "Sai. Một class biết quá nhiều trách nhiệm thường làm thay đổi lan rộng hơn."}
+      - {id: D, answer: "Làm sao công khai mọi trường dữ liệu?", explanation: "Sai. Công khai dữ liệu nội bộ thường làm yếu ranh giới và tăng coupling."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -53,12 +53,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: encapsulation-invariant
-    question: "Vì sao `account.withdraw(amount)` thường encapsulation mạnh hơn expose `setBalance`?"
+    question: "Vì sao `account.withdraw(amount)` thường thể hiện đóng gói tốt hơn việc công khai `setBalance`?"
     answers:
-      - {id: A, answer: "Method tự làm mọi field immutable.", explanation: "Sai. Encapsulation kiểm soát valid mutation chứ không chỉ field visibility."}
-      - {id: B, answer: "Behavior có thể validate state transition đầy đủ và preserve domain invariant.", explanation: "Đúng. Encapsulation kiểm soát valid mutation chứ không chỉ field visibility."}
-      - {id: C, answer: "Setter không thể public trong Java.", explanation: "Sai. Encapsulation kiểm soát valid mutation chứ không chỉ field visibility."}
-      - {id: D, answer: "withdraw loại bỏ nhu cầu constructor.", explanation: "Sai. Encapsulation kiểm soát valid mutation chứ không chỉ field visibility."}
+      - {id: A, answer: "Phương thức tự làm mọi trường dữ liệu trở thành bất biến.", explanation: "Sai. Đóng gói kiểm soát cách trạng thái được thay đổi hợp lệ; nó không tự làm dữ liệu bất biến."}
+      - {id: B, answer: "Hành vi có thể kiểm tra phép chuyển trạng thái và bảo vệ điều kiện bất biến của `Account`.", explanation: "Đúng. Quy tắc và thay đổi trạng thái được giữ trong đối tượng sở hữu trách nhiệm."}
+      - {id: C, answer: "Setter không thể là `public` trong Java.", explanation: "Sai. Java cho phép setter `public`; vấn đề là thiết kế ranh giới, không phải cú pháp."}
+      - {id: D, answer: "`withdraw` loại bỏ nhu cầu dùng hàm khởi tạo.", explanation: "Sai. Hàm khởi tạo và hành vi thay đổi trạng thái giải quyết các nhiệm vụ khác nhau."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -66,12 +66,12 @@ questions:
     apiRelated: {controller: "EncapsulationController", methodSignature: "invariantProtection()"}
 
   - id: inheritance-subtype
-    question: "Khi nào class inheritance hợp lý nhất?"
+    question: "Khi nào kế thừa class hợp lý nhất?"
     answers:
-      - {id: A, answer: "Bất cứ khi nào hai class có cùng một field name.", explanation: "Sai. Inheritance tạo subtype và base-class coupling mạnh nên behavior quan trọng hơn shared field."}
-      - {id: B, answer: "Bất cứ khi nào composition cần constructor.", explanation: "Sai. Inheritance tạo subtype và base-class coupling mạnh nên behavior quan trọng hơn shared field."}
-      - {id: C, answer: "Khi child là behavioral subtype thật sự có thể honor superclass contract, không chỉ reuse code.", explanation: "Đúng. Inheritance tạo subtype và base-class coupling mạnh nên behavior quan trọng hơn shared field."}
-      - {id: D, answer: "Khi child cần utility method không liên quan.", explanation: "Sai. Inheritance tạo subtype và base-class coupling mạnh nên behavior quan trọng hơn shared field."}
+      - {id: A, answer: "Bất cứ khi nào hai class có một trường cùng tên.", explanation: "Sai. Trùng trường dữ liệu không tạo ra quan hệ kiểu con có ý nghĩa."}
+      - {id: B, answer: "Bất cứ khi nào kết hợp đối tượng cần dùng hàm khởi tạo.", explanation: "Sai. Việc cần hàm khởi tạo không phải tiêu chí chọn kế thừa."}
+      - {id: C, answer: "Khi class con thực sự là kiểu con về hành vi, có thể tôn trọng hợp đồng của class cha chứ không chỉ tái sử dụng mã.", explanation: "Đúng. Kế thừa tạo quan hệ kiểu con và coupling với class cha, nên khả năng thay thế quan trọng hơn việc dùng lại vài dòng mã."}
+      - {id: D, answer: "Khi class con cần một phương thức tiện ích không liên quan.", explanation: "Sai. Chỉ để dùng lại tiện ích thường là dấu hiệu nên cân nhắc composition/delegation."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
@@ -79,12 +79,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: runtime-dispatch
-    question: "Với overridden instance method trên `Parent p = new Child()`, implementation nào chạy?"
+    question: "Với phương thức instance bị ghi đè trên `Parent p = new Child()`, phần triển khai nào chạy?"
     answers:
-      - {id: A, answer: "Luôn Parent body vì variable là Parent.", explanation: "Sai. Signature được biết ở compile time, còn override body được chọn ở runtime."}
-      - {id: B, answer: "Cả hai body tự chạy.", explanation: "Sai. Signature được biết ở compile time, còn override body được chọn ở runtime."}
-      - {id: C, answer: "Method call luôn ambiguous.", explanation: "Sai. Signature được biết ở compile time, còn override body được chọn ở runtime."}
-      - {id: D, answer: "Child override vì instance-method override dispatch dùng runtime receiver class.", explanation: "Đúng. Signature được biết ở compile time, còn override body được chọn ở runtime."}
+      - {id: A, answer: "Luôn chạy phần thân của `Parent` vì biến có kiểu `Parent`.", explanation: "Sai. Kiểu khai báo quyết định lời gọi nào hợp lệ, còn phần thân ghi đè được phân phối theo đối tượng lúc chạy."}
+      - {id: B, answer: "Cả hai phần thân tự động chạy.", explanation: "Sai. Chỉ phần triển khai được phân phối chạy, trừ khi code chủ động gọi thêm `super`."}
+      - {id: C, answer: "Lời gọi luôn mơ hồ và không biên dịch.", explanation: "Sai. Đây là trường hợp đa hình động bình thường khi chữ ký lời gọi hợp lệ."}
+      - {id: D, answer: "Chạy phần ghi đè của `Child` vì phân phối động dùng class của đối tượng nhận lời gọi lúc chạy.", explanation: "Đúng. Đây là cơ chế cốt lõi của đa hình kiểu con với phương thức instance."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
@@ -92,12 +92,12 @@ questions:
     apiRelated: {controller: "PolymorphismController", methodSignature: "dispatch()"}
 
   - id: substitutability-behavior
-    question: "Subtype substitutability tốt yêu cầu gì ngoài việc compile?"
+    question: "Khả năng thay thế tốt của kiểu con cần gì ngoài việc chương trình biên dịch?"
     answers:
-      - {id: A, answer: "Subtype nên preserve behavioral expectation, invariant, accepted state và postcondition có ý nghĩa của supertype contract.", explanation: "Đúng. Static type compatibility không tự guarantee caller vẫn đúng về behavior."}
-      - {id: B, answer: "Chỉ cần class name giống nhau.", explanation: "Sai. Static type compatibility không tự guarantee caller vẫn đúng về behavior."}
-      - {id: C, answer: "Subtype phải thêm public field.", explanation: "Sai. Static type compatibility không tự guarantee caller vẫn đúng về behavior."}
-      - {id: D, answer: "Subtype luôn phải throw nhiều exception hơn.", explanation: "Sai. Static type compatibility không tự guarantee caller vẫn đúng về behavior."}
+      - {id: A, answer: "Kiểu con phải bảo toàn các kỳ vọng hành vi có ý nghĩa của hợp đồng kiểu cha, như invariant, input hợp lệ, postcondition và side effect.", explanation: "Đúng. Tương thích kiểu tĩnh không tự bảo đảm bên gọi vẫn đúng về hành vi."}
+      - {id: B, answer: "Chỉ cần tên class giống nhau.", explanation: "Sai. Tên class không quyết định khả năng thay thế."}
+      - {id: C, answer: "Kiểu con phải thêm nhiều trường `public` hơn.", explanation: "Sai. Trường dữ liệu công khai không tạo ra hợp đồng hành vi đúng."}
+      - {id: D, answer: "Kiểu con luôn phải ném nhiều exception hơn.", explanation: "Sai. Mở rộng lỗi theo cách phá hợp đồng có thể làm khả năng thay thế tệ hơn."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -105,12 +105,12 @@ questions:
     apiRelated: {controller: "SubstitutabilityController", methodSignature: "substituteImplementations()"}
 
   - id: overloading-compile-time
-    question: "Overload được chọn khi nào?"
+    question: "Java chọn phiên bản nạp chồng (overload) vào thời điểm nào?"
     answers:
-      - {id: A, answer: "Chỉ sau khi method body bắt đầu.", explanation: "Sai. Runtime object type không làm Java chọn lại overload sau compilation."}
-      - {id: B, answer: "Ở compile time từ declared argument type và applicable conversion.", explanation: "Đúng. Runtime object type không làm Java chọn lại overload sau compilation."}
-      - {id: C, answer: "Bởi garbage collector.", explanation: "Sai. Runtime object type không làm Java chọn lại overload sau compilation."}
-      - {id: D, answer: "Luôn từ runtime class của mọi argument.", explanation: "Sai. Runtime object type không làm Java chọn lại overload sau compilation."}
+      - {id: A, answer: "Chỉ sau khi phần thân phương thức bắt đầu chạy.", explanation: "Sai. Overload resolution diễn ra trước khi chương trình chạy."}
+      - {id: B, answer: "Lúc biên dịch, dựa trên kiểu của biểu thức đối số và các phép chuyển đổi lời gọi áp dụng được.", explanation: "Đúng. Kiểu đối tượng thực tế lúc chạy không làm Java chọn lại overload."}
+      - {id: C, answer: "Do garbage collector quyết định.", explanation: "Sai. GC không tham gia overload resolution."}
+      - {id: D, answer: "Luôn dựa vào class thực tế lúc chạy của mọi đối số.", explanation: "Sai. Đó là nhầm lẫn giữa overload resolution và dynamic dispatch."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -118,12 +118,12 @@ questions:
     apiRelated: {controller: "DispatchController", methodSignature: "overloadVsOverride()"}
 
   - id: static-method-hiding
-    question: "Với `Parent p = new Child()`, hidden static method được chọn thế nào khi gọi qua `p`?"
+    question: "Với `Parent p = new Child()`, phương thức `static` bị che khuất được chọn thế nào khi gọi qua `p`?"
     answers:
-      - {id: A, answer: "Child version luôn chạy qua virtual dispatch.", explanation: "Sai. Static member selection gắn với qualifying type, không runtime receiver dispatch."}
-      - {id: B, answer: "Cả hai static method chạy.", explanation: "Sai. Static member selection gắn với qualifying type, không runtime receiver dispatch."}
-      - {id: C, answer: "Theo compile-time type Parent; static method là hiding, không dynamic override.", explanation: "Đúng. Static member selection gắn với qualifying type, không runtime receiver dispatch."}
-      - {id: D, answer: "Static method không thể cùng signature ở parent/child.", explanation: "Sai. Static member selection gắn với qualifying type, không runtime receiver dispatch."}
+      - {id: A, answer: "Phiên bản của `Child` luôn chạy qua phân phối động.", explanation: "Sai. Phương thức `static` không được phân phối theo đối tượng nhận lời gọi lúc chạy như phương thức instance bị ghi đè."}
+      - {id: B, answer: "Cả hai phương thức `static` cùng chạy.", explanation: "Sai. Chỉ một phương thức được chọn."}
+      - {id: C, answer: "Theo kiểu `Parent` được biết lúc biên dịch; đây là che khuất phương thức (method hiding), không phải ghi đè động.", explanation: "Đúng. Việc chọn phương thức `static` gắn với kiểu dùng để truy cập."}
+      - {id: D, answer: "Java cấm class cha và class con có phương thức `static` cùng chữ ký.", explanation: "Sai. Khi điều kiện kế thừa phù hợp, class con có thể che khuất phương thức `static` của class cha."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
@@ -133,10 +133,10 @@ questions:
   - id: field-hiding
     question: "`p.field` được chọn thế nào với `Parent p = new Child()` khi cả hai class có `field`?"
     answers:
-      - {id: A, answer: "Child field luôn thắng runtime.", explanation: "Sai. Field hiding dùng compile-time member selection, khác overridden instance method."}
-      - {id: B, answer: "Hai field value được merge.", explanation: "Sai. Field hiding dùng compile-time member selection, khác overridden instance method."}
-      - {id: C, answer: "JVM ném ClassCastException.", explanation: "Sai. Field hiding dùng compile-time member selection, khác overridden instance method."}
-      - {id: D, answer: "Parent field được chọn từ compile-time type của `p`; field không virtual.", explanation: "Đúng. Field hiding dùng compile-time member selection, khác overridden instance method."}
+      - {id: A, answer: "Trường của `Child` luôn được chọn lúc chạy.", explanation: "Sai. Trường dữ liệu không dùng dynamic dispatch."}
+      - {id: B, answer: "Hai giá trị trường được hợp nhất.", explanation: "Sai. Đây là hai thành viên riêng biệt."}
+      - {id: C, answer: "JVM ném `ClassCastException`.", explanation: "Sai. Việc truy cập trường hợp lệ không tự gây lỗi ép kiểu."}
+      - {id: D, answer: "Trường của `Parent` được chọn theo kiểu khai báo của `p`; trường không phải thành viên được phân phối động.", explanation: "Đúng. Che khuất trường khác với ghi đè phương thức instance."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
@@ -144,12 +144,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: composition-vs-inheritance
-    question: "Vì sao composition thường được ưu tiên để reuse behavior?"
+    question: "Vì sao kết hợp đối tượng (composition) thường phù hợp hơn khi mục tiêu chỉ là tái sử dụng hoặc thay đổi hành vi?"
     answers:
-      - {id: A, answer: "Nó giữ collaborator replaceable và tránh couple type vào base-class hierarchy khi không có subtype relationship thật.", explanation: "Đúng. Inheritance giá trị với subtype polymorphism thật; composition linh hoạt hơn cho delegated behavior."}
-      - {id: B, answer: "Composition làm mọi call static.", explanation: "Sai. Inheritance giá trị với subtype polymorphism thật; composition linh hoạt hơn cho delegated behavior."}
-      - {id: C, answer: "Inheritance illegal trong Java.", explanation: "Sai. Inheritance giá trị với subtype polymorphism thật; composition linh hoạt hơn cho delegated behavior."}
-      - {id: D, answer: "Composition luôn loại mọi object reference.", explanation: "Sai. Inheritance giá trị với subtype polymorphism thật; composition linh hoạt hơn cho delegated behavior."}
+      - {id: A, answer: "Nó giữ đối tượng cộng tác có thể thay thế và tránh ràng buộc type vào cây class cha khi không có quan hệ kiểu con thật.", explanation: "Đúng. Kế thừa phù hợp với subtype polymorphism thực sự; composition linh hoạt hơn cho hành vi được ủy quyền."}
+      - {id: B, answer: "Composition làm mọi lời gọi thành `static`.", explanation: "Sai. Composition không thay đổi quy tắc của phương thức `static` và phương thức instance."}
+      - {id: C, answer: "Inheritance không hợp lệ trong Java.", explanation: "Sai. Java hỗ trợ inheritance; vấn đề là chọn đúng quan hệ."}
+      - {id: D, answer: "Composition luôn loại bỏ mọi tham chiếu đối tượng.", explanation: "Sai. Composition thường được biểu diễn chính bằng tham chiếu tới đối tượng khác."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -159,10 +159,10 @@ questions:
   - id: object-relationship-model
     question: "Dependency, association, aggregation và composition nên được hiểu thế nào trong Java?"
     answers:
-      - {id: A, answer: "Mỗi relationship có JVM bytecode instruction riêng.", explanation: "Sai. Java không có keyword hay GC semantics riêng trực tiếp enforce các distinction kiểu UML này."}
-      - {id: B, answer: "Là modeling relationship biểu diễn bằng ordinary reference và ownership/lifecycle convention, không phải bốn runtime construct đặc biệt.", explanation: "Đúng. Java không có keyword hay GC semantics riêng trực tiếp enforce các distinction kiểu UML này."}
-      - {id: C, answer: "Aggregation tự ngăn garbage collection.", explanation: "Sai. Java không có keyword hay GC semantics riêng trực tiếp enforce các distinction kiểu UML này."}
-      - {id: D, answer: "Composition chỉ biểu diễn bằng inheritance.", explanation: "Sai. Java không có keyword hay GC semantics riêng trực tiếp enforce các distinction kiểu UML này."}
+      - {id: A, answer: "Mỗi quan hệ có một lệnh bytecode JVM riêng.", explanation: "Sai. Java không có keyword hay ngữ nghĩa GC riêng trực tiếp áp đặt các phân loại UML này."}
+      - {id: B, answer: "Là các quan hệ mô hình hóa được biểu diễn bằng tham chiếu thông thường cùng quy ước về quyền sở hữu/vòng đời, không phải bốn cơ chế lúc chạy riêng.", explanation: "Đúng. Ý nghĩa đến từ thiết kế API và vòng đời, không phải một từ khóa Java riêng cho từng quan hệ."}
+      - {id: C, answer: "Aggregation tự động ngăn garbage collection.", explanation: "Sai. GC dựa trên reachability, không hiểu nhãn aggregation/composition."}
+      - {id: D, answer: "Composition chỉ có thể biểu diễn bằng inheritance.", explanation: "Sai. Composition và inheritance mô hình hóa các loại quan hệ khác nhau."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -170,12 +170,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: delegation-boundary
-    question: "Delegation nghĩa là gì trong object design?"
+    question: "Ủy quyền (delegation) nghĩa là gì trong thiết kế đối tượng?"
     answers:
-      - {id: A, answer: "Copy mọi method implementation vào caller.", explanation: "Sai. Delegation hỗ trợ composition và separation of responsibility mà không cần subtype inheritance."}
-      - {id: B, answer: "Dùng reflection cho mọi call.", explanation: "Sai. Delegation hỗ trợ composition và separation of responsibility mà không cần subtype inheritance."}
-      - {id: C, answer: "Object chuyển responsibility cho collaborator khác sở hữu behavior liên quan.", explanation: "Đúng. Delegation hỗ trợ composition và separation of responsibility mà không cần subtype inheritance."}
-      - {id: D, answer: "Làm mọi collaborator thành global static variable.", explanation: "Sai. Delegation hỗ trợ composition và separation of responsibility mà không cần subtype inheritance."}
+      - {id: A, answer: "Sao chép mọi phần triển khai phương thức vào bên gọi.", explanation: "Sai. Đó không phải delegation và làm tăng trùng lặp."}
+      - {id: B, answer: "Dùng reflection cho mọi lời gọi.", explanation: "Sai. Reflection không phải điều kiện của delegation."}
+      - {id: C, answer: "Một đối tượng chuyển một trách nhiệm cụ thể cho đối tượng cộng tác sở hữu hành vi liên quan.", explanation: "Đúng. Delegation hỗ trợ composition và tách trách nhiệm mà không cần tạo quan hệ kiểu con."}
+      - {id: D, answer: "Biến mọi đối tượng cộng tác thành biến `static` toàn cục.", explanation: "Sai. Điều đó làm tăng shared state và không phải delegation."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
@@ -183,12 +183,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: abstraction-contract
-    question: "Điều gì làm một abstraction hữu ích?"
+    question: "Điều gì làm một trừu tượng hóa (abstraction) hữu ích?"
     answers:
-      - {id: A, answer: "Nó luôn phải là abstract class.", explanation: "Sai. Chỉ có interface keyword không guarantee abstraction tốt; contract và boundary mới quan trọng."}
-      - {id: B, answer: "Nó phải giấu mọi performance/lifecycle constraint.", explanation: "Sai. Chỉ có interface keyword không guarantee abstraction tốt; contract và boundary mới quan trọng."}
-      - {id: C, answer: "Nó phải chỉ có đúng một implementation mãi mãi.", explanation: "Sai. Chỉ có interface keyword không guarantee abstraction tốt; contract và boundary mới quan trọng."}
-      - {id: D, answer: "Nó expose essential contract caller cần và ẩn implementation detail cần được tự do thay đổi.", explanation: "Đúng. Chỉ có interface keyword không guarantee abstraction tốt; contract và boundary mới quan trọng."}
+      - {id: A, answer: "Nó luôn phải là `abstract class`.", explanation: "Sai. `abstract class` chỉ là một cơ chế Java; abstraction là khái niệm thiết kế rộng hơn."}
+      - {id: B, answer: "Nó phải giấu mọi ràng buộc hiệu năng và vòng đời.", explanation: "Sai. Những ràng buộc ảnh hưởng tính đúng đắn có thể cần được công khai trong hợp đồng."}
+      - {id: C, answer: "Nó phải chỉ có đúng một cách triển khai mãi mãi.", explanation: "Sai. Số cách triển khai không quyết định chất lượng trừu tượng hóa."}
+      - {id: D, answer: "Nó công khai hợp đồng thiết yếu mà bên sử dụng cần và che các chi tiết triển khai nên được tự do thay đổi.", explanation: "Đúng. Hợp đồng rõ ràng và ranh giới có ý nghĩa mới là điều quan trọng."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
@@ -196,12 +196,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: responsibility-boundary-localize-change
-    question: "Dấu hiệu nào cho thấy responsibility boundary đang được đặt hợp lý?"
+    question: "Dấu hiệu nào cho thấy ranh giới trách nhiệm đang được đặt hợp lý?"
     answers:
-      - {id: A, answer: "Một thay đổi rule cục bộ thường chỉ buộc sửa thành phần sở hữu responsibility đó thay vì nhiều caller.", explanation: "Đúng. Boundary tốt giúp localize change và tăng cohesion thay vì để knowledge bị rải ra ngoài."}
-      - {id: B, answer: "Mọi class đều có đúng một field.", explanation: "Sai. Số field không quyết định boundary; điều quan trọng là ownership của state/rule và mức coupling với caller."}
-      - {id: C, answer: "Mọi behavior đều chuyển thành static method.", explanation: "Sai. Static không tự tạo responsibility boundary hay localize change."}
-      - {id: D, answer: "Caller đọc càng nhiều internal field càng tốt.", explanation: "Sai. Caller biết quá nhiều representation thường là dấu hiệu boundary yếu."}
+      - {id: A, answer: "Một thay đổi quy tắc cục bộ thường chỉ buộc sửa thành phần sở hữu trách nhiệm đó thay vì nhiều bên gọi.", explanation: "Đúng. Ranh giới tốt giúp cô lập thay đổi và tăng tính gắn kết thay vì để kiến thức bị rải ra ngoài."}
+      - {id: B, answer: "Mọi class đều có đúng một trường.", explanation: "Sai. Số trường không quyết định ranh giới; quyền sở hữu trạng thái/quy tắc và mức phụ thuộc với bên gọi mới quan trọng."}
+      - {id: C, answer: "Mọi hành vi đều chuyển thành phương thức `static`.", explanation: "Sai. `static` không tự tạo ranh giới trách nhiệm hay cô lập thay đổi."}
+      - {id: D, answer: "Bên gọi đọc càng nhiều trường nội bộ càng tốt.", explanation: "Sai. Bên gọi biết quá nhiều cách biểu diễn nội bộ thường là dấu hiệu ranh giới yếu."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -209,12 +209,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: encapsulation-representation-leak
-    question: "`Order` có field `private final List<Item> items` nhưng `getItems()` trả trực tiếp `items`. Nhận định nào đúng nhất?"
+    question: "`Order` có trường `private final List<Item> items` nhưng `getItems()` trả trực tiếp `items`. Nhận định nào đúng nhất?"
     answers:
-      - {id: A, answer: "Encapsulation hoàn hảo vì field là private final.", explanation: "Sai. `private final` chỉ giới hạn access/reassignment của field; mutable object được trả ra vẫn có thể bị caller sửa."}
-      - {id: B, answer: "Caller có thể nhận alias tới mutable representation và phá invariant dù field vẫn private.", explanation: "Đúng. Đây là representation exposure: reference mutable thoát khỏi boundary của object."}
-      - {id: C, answer: "Java tự động copy List khi return.", explanation: "Sai. Java trả giá trị reference; không có defensive copy tự động."}
-      - {id: D, answer: "final làm toàn bộ object graph immutable.", explanation: "Sai. `final` trên reference không làm object được tham chiếu trở thành immutable."}
+      - {id: A, answer: "Đóng gói đã hoàn hảo vì trường là `private final`.", explanation: "Sai. `private final` chỉ giới hạn truy cập trực tiếp và việc gán lại tham chiếu; đối tượng có thể thay đổi được trả ra vẫn có thể bị bên gọi sửa."}
+      - {id: B, answer: "Bên gọi có thể nhận một tham chiếu dùng chung (alias) tới cách biểu diễn nội bộ có thể thay đổi và phá invariant dù trường vẫn `private`.", explanation: "Đúng. Đây là việc làm lộ cách biểu diễn nội bộ: tham chiếu có thể thay đổi thoát khỏi ranh giới của đối tượng."}
+      - {id: C, answer: "Java tự động sao chép `List` khi return.", explanation: "Sai. Java trả giá trị tham chiếu; không có defensive copy tự động."}
+      - {id: D, answer: "`final` làm toàn bộ đồ thị đối tượng trở thành bất biến.", explanation: "Sai. `final` trên tham chiếu không làm đối tượng được tham chiếu trở thành bất biến."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -222,12 +222,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: tell-dont-ask-rule-location
-    question: "Khi nào `account.withdraw(amount)` phù hợp tinh thần Tell, Don't Ask hơn việc caller tự đọc balance rồi set lại?"
+    question: "Khi nào `account.withdraw(amount)` phù hợp tinh thần Tell, Don't Ask hơn việc bên gọi tự đọc balance rồi gán lại?"
     answers:
-      - {id: A, answer: "Khi rule kiểm tra và thay đổi balance thuộc responsibility của Account.", explanation: "Đúng. Caller nói intent, còn object sở hữu state tự bảo vệ rule và transition của mình."}
-      - {id: B, answer: "Khi muốn cấm mọi getter trong toàn hệ thống.", explanation: "Sai. Tell, Don't Ask là heuristic, không phải lệnh cấm mọi read model/getter."}
-      - {id: C, answer: "Chỉ khi method là static.", explanation: "Sai. Static không phải điều kiện của heuristic này."}
-      - {id: D, answer: "Khi caller cần duplicate validation ở nhiều nơi.", explanation: "Sai. Duplicate rule ở caller chính là vấn đề heuristic cố giảm."}
+      - {id: A, answer: "Khi quy tắc kiểm tra và thay đổi balance thuộc trách nhiệm của `Account`.", explanation: "Đúng. Bên gọi thể hiện ý định, còn đối tượng sở hữu trạng thái tự bảo vệ quy tắc và phép chuyển trạng thái."}
+      - {id: B, answer: "Khi muốn cấm mọi getter trong toàn hệ thống.", explanation: "Sai. Tell, Don't Ask là heuristic, không phải lệnh cấm getter hay read model."}
+      - {id: C, answer: "Chỉ khi phương thức là `static`.", explanation: "Sai. `static` không phải điều kiện của heuristic này."}
+      - {id: D, answer: "Khi cần lặp validation ở nhiều bên gọi.", explanation: "Sai. Lặp quy tắc ở bên gọi chính là vấn đề heuristic cố giảm."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -235,12 +235,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: inheritance-constructor-chain
-    question: "Khi chạy `new Child()` với `Child extends Parent`, mô hình constructor nào đúng?"
+    question: "Khi chạy `new Child()` với `Child extends Parent`, mô hình hàm khởi tạo nào đúng?"
     answers:
-      - {id: A, answer: "Child constructor chạy xong rồi Parent constructor mới chạy.", explanation: "Sai. Superclass construction phải diễn ra trước khi subclass construction hoàn tất."}
-      - {id: B, answer: "Parent và Child tạo hai object độc lập.", explanation: "Sai. `new Child()` tạo một object có các phần state của hierarchy, không tạo hai object parent/child tách biệt."}
-      - {id: C, answer: "Parent constructor được thực thi trước phần constructor của Child để thiết lập superclass state/invariant.", explanation: "Đúng. Constructor chain khởi tạo phần superclass trước rồi mới hoàn tất phần subclass."}
-      - {id: D, answer: "Constructor được inherited như instance method.", explanation: "Sai. Constructor không được kế thừa; subclass constructor gọi `super(...)`."}
+      - {id: A, answer: "Hàm khởi tạo `Child` hoàn tất rồi hàm khởi tạo `Parent` mới chạy.", explanation: "Sai. Phần của lớp cha phải được khởi tạo trước khi quá trình khởi tạo lớp con hoàn tất."}
+      - {id: B, answer: "`Parent` và `Child` tạo thành hai đối tượng độc lập.", explanation: "Sai. `new Child()` tạo một đối tượng duy nhất có phần trạng thái của cả hệ phân cấp, không tạo hai đối tượng cha/con tách biệt."}
+      - {id: C, answer: "Phần khởi tạo của `Parent` diễn ra trước khi phần khởi tạo của `Child` hoàn tất để trạng thái/điều kiện bất biến của lớp cha được thiết lập trước.", explanation: "Đúng. Chuỗi khởi tạo đi qua phần lớp cha trước rồi mới hoàn tất phần lớp con. Chi tiết cơ chế thuộc `class-object`; ở OOP, đây còn là một ví dụ cho thấy lớp con có thể phụ thuộc vào vòng đời của lớp cha."}
+      - {id: D, answer: "Hàm khởi tạo được kế thừa giống phương thức đối tượng.", explanation: "Sai. Hàm khởi tạo không được kế thừa; chuỗi hàm khởi tạo chỉ phối hợp việc thiết lập các phần trạng thái của cùng một đối tượng."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
@@ -248,12 +248,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fragile-base-constructor-dispatch
-    question: "Vì sao base constructor gọi overridable instance method là nguy hiểm?"
+    question: "Vì sao hàm khởi tạo của lớp cha gọi phương thức đối tượng có thể bị ghi đè lại nguy hiểm?"
     answers:
-      - {id: A, answer: "Vì Java luôn biến method đó thành static.", explanation: "Sai. Overridable instance method vẫn tham gia dynamic dispatch."}
-      - {id: B, answer: "Override của subclass có thể chạy trước khi subclass state/initializer hoàn tất.", explanation: "Đúng. Runtime receiver đã là subclass object dù phần subclass chưa khởi tạo xong, tạo fragile-base risk."}
-      - {id: C, answer: "Vì constructor không thể gọi bất kỳ method nào.", explanation: "Sai. Constructor có thể gọi method; rủi ro nằm ở việc gọi method có thể override."}
-      - {id: D, answer: "Vì JVM sẽ luôn bỏ qua subclass override.", explanation: "Sai. Chính việc override có thể được dispatch sớm mới là vấn đề."}
+      - {id: A, answer: "Vì Java luôn biến phương thức đó thành `static`.", explanation: "Sai. Phương thức đối tượng có thể bị ghi đè vẫn tham gia phân phối động."}
+      - {id: B, answer: "Phần ghi đè của lớp con có thể chạy trước khi trạng thái/bộ khởi tạo của lớp con hoàn tất.", explanation: "Đúng. Đối tượng nhận lời gọi lúc chạy đã là đối tượng lớp con dù phần lớp con có thể chưa khởi tạo xong. Đây là cơ chế dẫn tới rủi ro fragile base class và mức phụ thuộc mạnh vào vòng đời của lớp cha."}
+      - {id: C, answer: "Vì hàm khởi tạo không thể gọi bất kỳ phương thức nào.", explanation: "Sai. Hàm khởi tạo có thể gọi phương thức; rủi ro nằm ở việc gọi hành vi có thể bị ghi đè trong giai đoạn khởi tạo."}
+      - {id: D, answer: "Vì JVM luôn bỏ qua phần ghi đè của lớp con.", explanation: "Sai. Chính việc phân phối sớm tới phần ghi đè mới là vấn đề."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -263,10 +263,10 @@ questions:
   - id: interface-subtype-polymorphism
     question: "`CardPayment implements PaymentMethod` có thể tạo subtype polymorphism dù không `extends PaymentMethod` không?"
     answers:
-      - {id: A, answer: "Có. Implement interface tạo subtype relationship và instance method implementation vẫn được dispatch theo runtime receiver.", explanation: "Đúng. Subtype polymorphism rộng hơn class inheritance; interface implementation cũng tạo subtype."}
-      - {id: B, answer: "Không. Polymorphism chỉ tồn tại giữa hai concrete class dùng extends.", explanation: "Sai. Interface là một cơ chế quan trọng để tạo subtype polymorphism trong Java."}
-      - {id: C, answer: "Có nhưng chỉ cho static method.", explanation: "Sai. Static method không phải cơ chế subtype dynamic dispatch đang nói tới."}
-      - {id: D, answer: "Không vì interface không phải type.", explanation: "Sai. Interface là reference type và có thể là static type của biến/parameter."}
+      - {id: A, answer: "Có. Triển khai `interface` tạo quan hệ kiểu con và phương thức instance vẫn được phân phối theo đối tượng nhận lời gọi lúc chạy.", explanation: "Đúng. Đa hình kiểu con rộng hơn kế thừa class; triển khai `interface` cũng tạo subtype."}
+      - {id: B, answer: "Không. Polymorphism chỉ tồn tại giữa hai concrete class dùng `extends`.", explanation: "Sai. `interface` là một cơ chế quan trọng để tạo subtype polymorphism trong Java."}
+      - {id: C, answer: "Có nhưng chỉ cho phương thức `static`.", explanation: "Sai. `static` không phải cơ chế dynamic dispatch đang nói tới."}
+      - {id: D, answer: "Không vì `interface` không phải type.", explanation: "Sai. `interface` là reference type và có thể là static type của biến/parameter."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -274,12 +274,12 @@ questions:
     apiRelated: {controller: "PolymorphismController", methodSignature: "dispatch()"}
 
   - id: internal-virtual-dispatch
-    question: "`Parent.execute()` gọi `this.step()`, còn object thật là `Child` và `Child` override `step()`. Method nào chạy?"
+    question: "`Parent.execute()` gọi `this.step()`, còn đối tượng thực tế là `Child` và `Child` ghi đè `step()`. Phương thức nào chạy?"
     answers:
-      - {id: A, answer: "Luôn Parent.step() vì call nằm trong source của Parent.", explanation: "Sai. Vị trí source của caller không khóa virtual dispatch; runtime receiver vẫn là Child."}
-      - {id: B, answer: "Child.step() nếu `step()` là overridable instance method.", explanation: "Đúng. Internal virtual call qua `this` vẫn dispatch theo runtime receiver."}
-      - {id: C, answer: "Cả Parent.step() và Child.step() tự động chạy nối tiếp.", explanation: "Sai. Chỉ implementation được dispatch chạy, trừ khi override chủ động gọi `super.step()`."}
-      - {id: D, answer: "Compile error vì parent method không được gọi method khác.", explanation: "Sai. Parent instance method có thể gọi instance method khác bình thường."}
+      - {id: A, answer: "Luôn `Parent.step()` vì lời gọi nằm trong mã nguồn của `Parent`.", explanation: "Sai. Vị trí mã nguồn của bên gọi không khóa phân phối động; đối tượng nhận lời gọi lúc chạy vẫn là `Child`."}
+      - {id: B, answer: "`Child.step()` nếu `step()` là phương thức instance có thể bị ghi đè.", explanation: "Đúng. Lời gọi động qua `this` vẫn được phân phối theo đối tượng nhận lời gọi lúc chạy."}
+      - {id: C, answer: "`Parent.step()` và `Child.step()` tự động chạy nối tiếp.", explanation: "Sai. Chỉ phần triển khai được phân phối chạy, trừ khi override chủ động gọi `super.step()`."}
+      - {id: D, answer: "Lỗi biên dịch vì phương thức của class cha không được gọi phương thức khác.", explanation: "Sai. Phương thức instance của class cha có thể gọi phương thức instance khác bình thường."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -287,12 +287,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: override-compatibility-rules
-    question: "Override nào hợp lệ nếu parent có `public Number value() throws IOException`?"
+    question: "Override nào hợp lệ nếu class cha có `public Number value() throws IOException`?"
     answers:
-      - {id: A, answer: "`protected Number value() throws IOException`", explanation: "Sai. Override không được giảm accessibility từ public xuống protected."}
-      - {id: B, answer: "`public Integer value() throws FileNotFoundException`", explanation: "Đúng. Return type reference được covariant và checked exception có thể thu hẹp."}
-      - {id: C, answer: "`public Object value() throws Exception`", explanation: "Sai. Return type bị mở rộng và checked exception cũng rộng hơn contract cha."}
-      - {id: D, answer: "`private Integer value()`", explanation: "Sai. Private vừa giảm accessibility vừa không thể override public contract."}
+      - {id: A, answer: "`protected Number value() throws IOException`", explanation: "Sai. Override không được giảm phạm vi truy cập từ `public` xuống `protected`."}
+      - {id: B, answer: "`public Integer value() throws FileNotFoundException`", explanation: "Đúng. Reference return type được phép covariant và checked exception có thể thu hẹp."}
+      - {id: C, answer: "`public Object value() throws Exception`", explanation: "Sai. Kiểu trả về bị mở rộng và checked exception cũng rộng hơn hợp đồng cha."}
+      - {id: D, answer: "`private Integer value()`", explanation: "Sai. `private` vừa giảm accessibility vừa không thể override hợp đồng `public`."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -302,10 +302,10 @@ questions:
   - id: covariant-return-type
     question: "Covariant return trong overriding cho phép điều gì?"
     answers:
-      - {id: A, answer: "Child override có thể trả reference type cụ thể hơn, miễn là subtype của return type cha.", explanation: "Đúng. Ví dụ parent trả `Animal`, child có thể trả `Dog`."}
-      - {id: B, answer: "Child có thể tùy ý đổi `int` thành `long` vì long rộng hơn.", explanation: "Sai. Primitive return không áp dụng covariant return theo cơ chế này."}
-      - {id: C, answer: "Child phải luôn trả đúng cùng concrete runtime object.", explanation: "Sai. Rule nói về type compatibility của method signature, không yêu cầu cùng object instance."}
-      - {id: D, answer: "Return type không liên quan tới override compatibility.", explanation: "Sai. Return type phải tương thích và reference return có thể covariant."}
+      - {id: A, answer: "Override ở class con có thể trả reference type cụ thể hơn, miễn là type đó là subtype của return type ở class cha.", explanation: "Đúng. Ví dụ class cha trả `Animal`, class con có thể trả `Dog`."}
+      - {id: B, answer: "Class con có thể tùy ý đổi `int` thành `long` vì `long` rộng hơn.", explanation: "Sai. Primitive return không áp dụng covariant return theo cơ chế này."}
+      - {id: C, answer: "Class con phải luôn trả đúng cùng một đối tượng.", explanation: "Sai. Quy tắc nói về khả năng tương thích kiểu của chữ ký phương thức, không yêu cầu cùng instance."}
+      - {id: D, answer: "Return type không liên quan tới override compatibility.", explanation: "Sai. Return type phải tương thích; reference return có thể covariant."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -313,12 +313,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: final-reference-not-ownership
-    question: "`private final Player captain` chứng minh điều gì về ownership của `Player`?"
+    question: "`private final Player captain` chứng minh điều gì về quyền sở hữu của `Player`?"
     answers:
-      - {id: A, answer: "Chứng minh Team là owner duy nhất và Player chết cùng Team.", explanation: "Sai. `final` không encode UML ownership/lifecycle semantics."}
-      - {id: B, answer: "Chỉ chứng minh field reference không được reassign sau initialization; ownership phải đến từ design contract/lifecycle.", explanation: "Đúng. Syntax `final` không đủ để kết luận aggregation/composition."}
-      - {id: C, answer: "Chứng minh Player immutable.", explanation: "Sai. Final reference không làm referenced object immutable."}
-      - {id: D, answer: "Chứng minh Player không thể được share.", explanation: "Sai. Cùng Player reference hoàn toàn có thể được giữ bởi object khác."}
+      - {id: A, answer: "Chứng minh `Team` là bên sở hữu duy nhất và `Player` kết thúc vòng đời cùng `Team`.", explanation: "Sai. `final` không mã hóa ngữ nghĩa quyền sở hữu/vòng đời của UML."}
+      - {id: B, answer: "Chỉ chứng minh tham chiếu ở trường không được gán lại sau khởi tạo; quyền sở hữu phải đến từ hợp đồng và quy tắc vòng đời của thiết kế.", explanation: "Đúng. Cú pháp `final` không đủ để kết luận aggregation hay composition."}
+      - {id: C, answer: "Chứng minh `Player` là bất biến.", explanation: "Sai. `final` trên tham chiếu không làm đối tượng được tham chiếu trở thành bất biến."}
+      - {id: D, answer: "Chứng minh `Player` không thể được chia sẻ.", explanation: "Sai. Cùng một tham chiếu `Player` hoàn toàn có thể được đối tượng khác giữ."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -326,12 +326,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: ownership-lifecycle-model
-    question: "Điểm phân biệt quan trọng nhất giữa aggregation và composition theo modeling là gì?"
+    question: "Điểm phân biệt quan trọng nhất giữa aggregation và composition theo mô hình hóa là gì?"
     answers:
-      - {id: A, answer: "Composition biểu đạt ownership/lifecycle mạnh hơn; aggregation thường cho part tồn tại độc lập hoặc được share.", explanation: "Đúng. Đây là modeling semantics, không phải hai bytecode/runtime construct khác nhau."}
-      - {id: B, answer: "Aggregation dùng field, composition dùng local variable.", explanation: "Sai. Cả hai có thể dùng ordinary reference; syntax một mình không quyết định semantics."}
-      - {id: C, answer: "Composition tự làm GC xóa part ngay khi whole ra scope.", explanation: "Sai. GC dựa trên reachability, không hiểu UML ownership label."}
-      - {id: D, answer: "Aggregation chỉ dùng primitive còn composition dùng object.", explanation: "Sai. Đây không phải distinction của hai relationship."}
+      - {id: A, answer: "Composition biểu đạt quyền sở hữu/vòng đời mạnh hơn; aggregation thường cho phép part tồn tại độc lập hoặc được chia sẻ.", explanation: "Đúng. Đây là ngữ nghĩa mô hình hóa, không phải hai cơ chế runtime/bytecode khác nhau."}
+      - {id: B, answer: "Aggregation dùng trường, composition dùng biến cục bộ.", explanation: "Sai. Cả hai có thể dùng tham chiếu thông thường; cú pháp một mình không quyết định ngữ nghĩa."}
+      - {id: C, answer: "Composition làm GC tự xóa thành phần ngay khi toàn thể ra khỏi scope.", explanation: "Sai. GC dựa trên khả năng truy cập (reachability), không hiểu nhãn quyền sở hữu của UML."}
+      - {id: D, answer: "Aggregation chỉ dùng kiểu nguyên thủy còn composition chỉ dùng đối tượng.", explanation: "Sai. Đó không phải điểm phân biệt của hai quan hệ."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -339,14 +339,27 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: abstraction-leak-correctness
-    question: "Trường hợp nào là dấu hiệu abstraction leak đáng lo nhất?"
+    question: "Trường hợp nào là dấu hiệu rò rỉ trừu tượng (abstraction leak) đáng lo nhất?"
     answers:
-      - {id: A, answer: "Caller phải biết một lifecycle/error constraint không được contract nói tới mới dùng implementation đúng.", explanation: "Đúng. Khi detail bị giấu lại ảnh hưởng correctness, caller buộc phải biết implementation secret và abstraction bị leak."}
-      - {id: B, answer: "Implementation có private helper method.", explanation: "Sai. Private implementation detail tự nó không phải leak."}
-      - {id: C, answer: "Interface có tên ngắn.", explanation: "Sai. Tên interface không quyết định leak."}
-      - {id: D, answer: "Có nhiều implementation cùng một contract.", explanation: "Sai. Nhiều implementation thường là lý do abstraction hữu ích, không phải dấu hiệu leak."}
+      - {id: A, answer: "Bên gọi phải biết một ràng buộc về vòng đời/lỗi mà hợp đồng không nói tới thì mới dùng cách triển khai đúng.", explanation: "Đúng. Khi chi tiết bị che lại ảnh hưởng tính đúng đắn, bên gọi buộc phải biết bí mật của cách triển khai và abstraction đã rò rỉ."}
+      - {id: B, answer: "Cách triển khai có một phương thức hỗ trợ `private`.", explanation: "Sai. Chi tiết triển khai `private` tự nó không phải rò rỉ trừu tượng."}
+      - {id: C, answer: "`interface` có tên ngắn.", explanation: "Sai. Tên `interface` không quyết định rò rỉ trừu tượng."}
+      - {id: D, answer: "Có nhiều cách triển khai cùng một hợp đồng.", explanation: "Sai. Nhiều cách triển khai thường là lý do abstraction hữu ích, không phải dấu hiệu rò rỉ."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "7.Abstraction/Abstraction.md", anchor: "abstraction-leak"}
     apiRelated: {controller: "", methodSignature: ""}
+
+  - id: oop-synthesis-decision-model
+    question: "Một thiết kế cần nhiều cách tính giá có thể thay đổi độc lập, nhưng các cách tính này không tạo quan hệ `is-a` có ý nghĩa với `Checkout`. Lựa chọn nào phù hợp nhất?"
+    answers:
+      - {id: A, answer: "Tạo thêm subclass của `Checkout` cho từng cách tính giá vì OOP luôn ưu tiên inheritance.", explanation: "Sai. Khi không có quan hệ kiểu con thật sự, inheritance chỉ để thay hành vi thường làm coupling tăng không cần thiết."}
+      - {id: B, answer: "Giữ `Checkout` phụ thuộc vào một hợp đồng `Pricing`, truyền cách triển khai bằng composition/delegation và chỉ tạo abstraction nếu hợp đồng đó thực sự ổn định, có ý nghĩa.", explanation: "Đúng. Đây là mô hình ra quyết định tổng hợp: composition cho điểm biến đổi không cần subtype, abstraction giữ thành phần sử dụng phụ thuộc vào hợp đồng ổn định."}
+      - {id: C, answer: "Đưa mọi công thức vào một `if/else` toàn cục vì ranh giới đối tượng không bao giờ cần thiết.", explanation: "Sai. Điều kiện tập trung có thể hợp lý ở bài toán rất nhỏ, nhưng với điểm biến đổi độc lập nó dễ làm trách nhiệm và thay đổi dồn vào một nơi."}
+      - {id: D, answer: "Tạo một interface cho mọi class trong hệ thống dù không có điểm biến đổi hay ranh giới rõ ràng.", explanation: "Sai. OOP không yêu cầu abstraction cho mọi class; abstraction chỉ nên tồn tại khi tạo hợp đồng hoặc ranh giới có ý nghĩa."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Abstraction/Abstraction.md", anchor: "oop-synthesis"}
+    apiRelated: {controller: "CompositionController", methodSignature: "strategySwap()"}

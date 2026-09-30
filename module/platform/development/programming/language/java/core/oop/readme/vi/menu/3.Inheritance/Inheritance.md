@@ -1,4 +1,4 @@
-# Kế thừa (Inheritance)
+# Kế thừa và quan hệ kiểu con
 
 Đóng gói giúp từng đối tượng tự bảo vệ ranh giới của mình. Bước tiếp theo là mô hình hóa trường hợp một kiểu cụ thể có thể được sử dụng như một kiểu tổng quát hơn.
 
@@ -16,11 +16,11 @@ PaymentMethod payment = new CardPayment();
 
 Ở đây `CardPayment` có thể được gán cho một biến có kiểu `PaymentMethod`.
 
-Tuy nhiên, “is-a” không nên chỉ được hiểu là “hai class có vài field giống nhau”. Ý nghĩa quan trọng hơn là:
+Tuy nhiên, “is-a” không nên chỉ được hiểu là “hai class có vài trường giống nhau”. Ý nghĩa quan trọng hơn là:
 
 > Một đối tượng của kiểu con có thể được dùng ở nơi kiểu cha được yêu cầu mà vẫn giữ được hành vi hợp lý theo hợp đồng của kiểu cha.
 
-Nếu `CardPayment` chỉ kế thừa để dùng lại vài dòng code nhưng lại phá những kỳ vọng quan trọng của `PaymentMethod`, chương trình có thể vẫn biên dịch nhưng thiết kế đã có vấn đề.
+Nếu `CardPayment` chỉ kế thừa để dùng lại vài dòng mã nhưng lại phá những kỳ vọng quan trọng của `PaymentMethod`, chương trình có thể vẫn biên dịch nhưng thiết kế đã có vấn đề.
 
 ### MỐI LIÊN HỆ — kế thừa và subtyping không hoàn toàn cùng mục tiêu
 
@@ -28,23 +28,23 @@ Kế thừa class trong Java có thể mang hai mục đích khác nhau:
 
 ```text
 Dùng lại phần triển khai
-→ nhận lại một phần trạng thái hoặc method từ class cha
+→ nhận lại một phần trạng thái hoặc phương thức từ class cha
 
 Tạo quan hệ kiểu con
-→ object của class con dùng được ở nơi class cha được yêu cầu
+→ đối tượng của class con dùng được ở nơi class cha được yêu cầu
 ```
 
 Hai mục đích này thường bị trộn lẫn.
 
-Nếu mục tiêu duy nhất là dùng lại vài method, `composition` có thể tạo ít phụ thuộc hơn. Nếu bên sử dụng thực sự cần thay thế nhiều cách triển khai thông qua một kiểu chung, quan hệ kiểu con mới có ý nghĩa rõ ràng hơn.
+Nếu mục tiêu duy nhất là dùng lại vài phương thức, kết hợp đối tượng (`composition`) có thể tạo ít phụ thuộc hơn. Nếu bên sử dụng thực sự cần thay thế nhiều cách triển khai thông qua một kiểu chung, quan hệ kiểu con mới có ý nghĩa rõ ràng hơn.
 
-`interface` cũng tạo được quan hệ kiểu con mà không cần kế thừa phần triển khai từ class cha. Module `abstract-interface` sẽ đi sâu hơn vào phần này.
+`interface` cũng tạo được quan hệ kiểu con mà không cần kế thừa phần triển khai từ class cha. Mô-đun `abstract-interface` sẽ đi sâu hơn vào phần này.
 
 ### GIỚI HẠN — Java chỉ cho một class cha trực tiếp
 
-Một class Java chỉ có thể `extends` **một class trực tiếp**. Điều này giúp tránh một số xung đột trạng thái/implementation của multiple class inheritance, nhưng đồng thời làm cho việc chọn class cha trở thành một quyết định coupling khá mạnh.
+Một class Java chỉ có thể `extends` **một class trực tiếp**. Điều này giúp tránh một số xung đột trạng thái/cách triển khai của đa kế thừa class, nhưng đồng thời làm cho việc chọn class cha trở thành một quyết định tạo phụ thuộc khá mạnh.
 
-`final class` chặn việc tạo subclass; `final` vì vậy không chỉ là cú pháp, mà còn có thể biểu đạt rằng type đó không mở rộng hợp đồng bằng kế thừa class.
+`final class` chặn việc tạo class con; `final` vì vậy không chỉ là cú pháp, mà còn có thể biểu đạt rằng kiểu đó không mở rộng hợp đồng bằng kế thừa class.
 
 ### THỰC HÀNH — kiểm tra “is-a” bằng hành vi
 
@@ -58,7 +58,7 @@ Hãy hỏi mạnh hơn:
 
 ## <a id="inherited-state-behavior">Thành phần được kế thừa</a>
 
-### CƠ CHẾ — một object của class con gồm những gì?
+### CƠ CHẾ — một đối tượng của class con gồm những gì?
 
 Đối tượng của class con chứa phần trạng thái và hành vi được định nghĩa từ class cha, đồng thời có thể bổ sung phần riêng của class con.
 
@@ -72,79 +72,39 @@ class CardPayment extends PaymentMethod {
 }
 ```
 
-Một `CardPayment` có thể dùng `provider()` nếu method đó có quyền truy cập phù hợp, đồng thời có thêm `cardNetwork()`.
+Một `CardPayment` có thể dùng `provider()` nếu phương thức đó có quyền truy cập phù hợp, đồng thời có thêm `cardNetwork()`.
 
-Field `private` của class cha vẫn tồn tại trong object, nhưng class con không truy cập trực tiếp nó bằng member access thông thường.
+Trường `private` của class cha vẫn tồn tại trong đối tượng, nhưng class con không truy cập trực tiếp nó bằng cú pháp truy cập thành viên thông thường.
 
-### PHÂN BIỆT — declared, inherited và accessible không phải một khái niệm
+### PHÂN BIỆT — nơi khai báo, việc được kế thừa và quyền truy cập là ba câu hỏi khác nhau
 
 Ba câu hỏi sau khác nhau:
 
 ```text
-Member được khai báo ở đâu?
+Thành viên được khai báo ở đâu?
         ↓
-Member có được kế thừa vào subtype không?
+Thành viên có được kế thừa vào kiểu con không?
         ↓
-Code hiện tại có quyền truy cập member đó không?
+Mã hiện tại có quyền truy cập thành viên đó không?
 ```
 
-Ví dụ, private state của class cha vẫn là một phần trạng thái của object `Child`, nhưng source code của `Child` không được truy cập trực tiếp field đó. Ngược lại, một method của cha có thể được kế thừa và dùng được nếu access rule cho phép.
+Ví dụ, trạng thái `private` của class cha vẫn là một phần trạng thái của đối tượng `Child`, nhưng mã nguồn của `Child` không được truy cập trực tiếp trường đó. Ngược lại, một phương thức của cha có thể được kế thừa và dùng được nếu quy tắc truy cập cho phép.
 
-Chi tiết đầy đủ của `private` / package-private / `protected` / `public` thuộc `class-object → Access Modifier`; chapter này chỉ giữ mental model cần cho inheritance.
+Chi tiết đầy đủ của `private` / package-private / `protected` / `public` thuộc `class-object → Access Modifier`; chương này chỉ giữ mô hình tư duy cần cho kế thừa.
 
-### Constructor không được kế thừa
+### RANH GIỚI VỚI CLASS-OBJECT — hàm khởi tạo không được kế thừa
 
-Constructor có nhiệm vụ thiết lập trạng thái ban đầu cho từng phần của object.
+Hàm khởi tạo **không được kế thừa**. Khi tạo đối tượng của class con, phần trạng thái do class cha sở hữu vẫn phải được khởi tạo thông qua chuỗi `this(...)` / `super(...)` phù hợp.
 
-Constructor của class con phải gọi constructor của class cha thông qua:
+Một hàm khởi tạo của class con có thể ủy quyền cho hàm khởi tạo khác cùng class bằng `this(...)`; chuỗi đó cuối cùng phải dẫn tới hàm khởi tạo của class cha bằng `super(...)` tường minh hoặc `super()` được chèn ngầm khi hợp lệ. Việc khởi tạo phần class cha hoàn tất trước khi các bộ khởi tạo trường/khối khởi tạo của class con chạy, rồi mới tới thân hàm khởi tạo của class con.
 
-```java
-super(...)
-```
+Chi tiết đầy đủ về `this(...)`, `super(...)`, chuỗi hàm khởi tạo và thứ tự khởi tạo thuộc mô-đun `class-object → this, super và chuỗi khởi tạo`. OOP chỉ cần giữ hệ quả thiết kế: **class con có thể phụ thuộc vào cách class cha thiết lập và quản lý phần trạng thái của nó**.
 
-hoặc compiler tự chèn `super()` nếu lời gọi đó hợp lệ.
+### MỐI LIÊN HỆ — được kế thừa phương thức chưa phải là đa hình
 
-Điều này quan trọng vì phần trạng thái và các điều kiện bất biến của class cha phải được thiết lập đúng trước khi việc khởi tạo class con hoàn tất.
+Việc class con có sẵn phương thức từ class cha chưa phải điểm quan trọng nhất.
 
-### CƠ CHẾ — constructor chain đi từ phần cha tới phần con
-
-Với:
-
-```java
-class Parent {
-    Parent() {
-        System.out.println("Parent");
-    }
-}
-
-class Child extends Parent {
-    Child() {
-        System.out.println("Child");
-    }
-}
-```
-
-`new Child()` tạo một object duy nhất, nhưng quá trình constructor diễn ra theo chuỗi:
-
-```text
-new Child()
-    ↓
-Parent constructor
-    ↓
-parent state established
-    ↓
-Child constructor
-    ↓
-child state established
-```
-
-Constructor **không được kế thừa**; `super(...)` chỉ là cách constructor của subtype yêu cầu constructor của supertype khởi tạo phần state mà supertype sở hữu.
-
-### MỐI LIÊN HỆ — được kế thừa method chưa phải là đa hình
-
-Việc class con có sẵn method từ class cha chưa phải điểm quan trọng nhất.
-
-Điều thú vị xuất hiện khi class con **ghi đè (override)** một instance method và bên gọi giữ biến tham chiếu có kiểu cha. Khi đó Java phải quyết định phần triển khai nào sẽ chạy tại thời điểm thực thi (runtime).
+Điều thú vị xuất hiện khi class con **ghi đè (override)** một phương thức đối tượng và bên gọi giữ biến tham chiếu có kiểu cha. Khi đó Java phải quyết định phần triển khai nào sẽ chạy tại thời điểm thực thi.
 
 Đó là cầu nối sang **đa hình (polymorphism)**.
 
@@ -155,52 +115,30 @@ Việc class con có sẵn method từ class cha chưa phải điểm quan trọ
 Class con có thể phụ thuộc không chỉ vào hợp đồng công khai của class cha mà còn vào:
 
 - thứ tự khởi tạo;
-- protected method;
-- cách class cha gọi các method có thể override;
+- phương thức `protected`;
+- cách class cha gọi các phương thức có thể bị ghi đè;
 - những giả định bên trong cách triển khai của class cha.
 
-Ví dụ, nếu constructor của class cha gọi một method có thể bị override, hành vi của class con có thể chạy trước khi trạng thái riêng của class con được khởi tạo đầy đủ.
+Một ví dụ điển hình là class cha gọi phương thức có thể bị ghi đè trong quá trình khởi tạo. Phân phối động vẫn có thể đi vào phần triển khai của class con **trước khi trạng thái riêng của class con được khởi tạo đầy đủ**; trường tham chiếu khi đó vẫn có thể mang giá trị mặc định `null`, nên code của class con có thể gặp `NullPointerException` nếu giả định trạng thái đã sẵn sàng.
 
-```java
-class Parent {
-    Parent() {
-        printLength();
-    }
+Cơ chế và ví dụ thực thi chi tiết thuộc `class-object → Vòng đời tạo Object → Dynamic Dispatch trong Constructor`. Trong OOP, điều cần giữ là **hệ quả coupling**: mức phụ thuộc do kế thừa không chỉ nằm ở API công khai; class con còn có thể bị ảnh hưởng bởi **thứ tự vòng đời và quyết định thực thi nội bộ của class cha**.
 
-    void printLength() {
-    }
-}
+Đây là một dạng **fragile base class** (class cha dễ gây hiệu ứng dây chuyền): thay đổi ở class cha có thể gây ảnh hưởng bất ngờ tới class con.
 
-class Child extends Parent {
-    private String name = "Java";
-
-    @Override
-    void printLength() {
-        System.out.println(name.length());
-    }
-}
-```
-
-Khi `new Child()` bắt đầu, constructor `Parent` chạy trước. Lời gọi `printLength()` vẫn dùng dynamic dispatch và có thể đi vào `Child.printLength()` **trước khi initializer `name = "Java"` của Child hoàn tất**. Khi đó `name` vẫn có giá trị mặc định `null` và lời gọi `name.length()` có thể ném `NullPointerException`.
-
-Ví dụ này cho thấy coupling của inheritance không chỉ nằm ở public API. Subclass còn có thể bị ảnh hưởng bởi **thứ tự lifecycle và cách base class thực thi nội bộ**.
-
-Đây là một dạng **fragile base class**: thay đổi ở class cha có thể gây ảnh hưởng bất ngờ tới class con.
-
-### ĐÁNH ĐỔI — khi nào inheritance hợp lý?
+### ĐÁNH ĐỔI — khi nào kế thừa hợp lý?
 
 Kế thừa phù hợp hơn khi:
 
 - quan hệ kiểu con có ý nghĩa thực sự về hành vi;
 - bên sử dụng cần khả năng thay thế giữa các kiểu con;
 - class cha có hợp đồng tương đối ổn định;
-- class con không phải override hàng loạt method chỉ để tránh các giả định của class cha.
+- class con không phải ghi đè hàng loạt phương thức chỉ để tránh các giả định của class cha.
 
 Kế thừa đáng nghi khi lý do chính chỉ là:
 
-> “Tôi muốn dùng lại vài method cho đỡ phải copy.”
+> “Tôi muốn dùng lại vài phương thức để khỏi phải sao chép mã.”
 
-Trong trường hợp đó, `composition` hoặc `delegation` thường rõ ràng và ít phụ thuộc hơn.
+Trong trường hợp đó, kết hợp đối tượng (`composition`) hoặc ủy quyền (`delegation`) thường rõ ràng và ít phụ thuộc hơn.
 
 ### MỐI LIÊN HỆ — từ kế thừa sang đa hình
 

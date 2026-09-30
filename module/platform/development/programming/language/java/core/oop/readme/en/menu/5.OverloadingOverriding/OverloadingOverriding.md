@@ -1,4 +1,4 @@
-# Overloading and Overriding
+# How Java Selects Methods
 
 This is a **Java mechanism chapter** placed next to polymorphism because the terms are commonly confused. Overloading is **not an OOP pillar**. It is compile-time method selection. Overriding + dynamic dispatch are the mechanisms directly responsible for subtype-polymorphic runtime behavior.
 
@@ -94,10 +94,10 @@ Not every same-named subclass method is an override.
 
 | Case | Runtime overriding? | Remember |
 | --- | --- | --- |
-| Compatible instance method | Yes | Dynamic dispatch |
+| Inherited, overridable instance method with a compatible signature | Yes | Dynamic dispatch |
 | `final` instance method | No | Subclass cannot override it |
 | `private` method | No | Not an inherited override target |
-| Same-signature `static` method | No | Method hiding |
+| Subtype `static` method with the same signature as an inherited superclass `static` method | No | Method hiding |
 
 An override also cannot reduce accessibility and must respect checked-exception compatibility.
 
@@ -155,8 +155,8 @@ private method
 final instance method
 → may be inherited but cannot be overridden
 
-static method
-→ same-signature subtype method is hiding, not runtime overriding
+inherited static method
+→ a same-signature subtype static method is hiding, not runtime overriding
 
 constructor
 → not inherited and never overridden

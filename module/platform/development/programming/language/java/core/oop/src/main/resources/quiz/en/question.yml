@@ -239,8 +239,8 @@ questions:
     answers:
       - {id: A, answer: "The Child constructor finishes before the Parent constructor starts.", explanation: "Incorrect. Superclass construction occurs before subclass construction can complete."}
       - {id: B, answer: "Parent and Child create two independent objects.", explanation: "Incorrect. `new Child()` creates one object containing state from the hierarchy, not separate parent/child objects."}
-      - {id: C, answer: "The Parent constructor executes before the Child constructor completes so superclass state/invariants are established first.", explanation: "Correct. Constructor chaining initializes the superclass part before completing the subclass part."}
-      - {id: D, answer: "Constructors are inherited like instance methods.", explanation: "Incorrect. Constructors are not inherited; the subclass constructor invokes `super(...)`."}
+      - {id: C, answer: "The Parent portion is constructed before Child construction completes so superclass state/invariants are established first.", explanation: "Correct. Constructor chaining initializes the superclass portion before completing the subclass portion. The mechanics belong to class-object; in OOP this also illustrates lifecycle coupling between subclass and superclass."}
+      - {id: D, answer: "Constructors are inherited like instance methods.", explanation: "Incorrect. Constructors are not inherited; constructor chaining coordinates initialization of the same object."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
@@ -248,11 +248,11 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fragile-base-constructor-dispatch
-    question: "Why is a base constructor calling an overridable instance method risky?"
+    question: "Why is a superclass constructor calling an overridable instance method risky?"
     answers:
       - {id: A, answer: "Because Java always converts that method to static.", explanation: "Incorrect. An overridable instance method still participates in dynamic dispatch."}
-      - {id: B, answer: "The subclass override can run before subclass state/initializers are complete.", explanation: "Correct. The runtime receiver is already the subclass object while subclass initialization may still be incomplete."}
-      - {id: C, answer: "Because constructors cannot call any methods.", explanation: "Incorrect. Constructors may call methods; the danger is specifically calling overridable behavior."}
+      - {id: B, answer: "The subclass override can run before subclass state/initializers are complete.", explanation: "Correct. The runtime receiver is already the subclass object while subclass initialization may still be incomplete. This is the mechanism behind fragile-base lifecycle coupling."}
+      - {id: C, answer: "Because constructors cannot call any methods.", explanation: "Incorrect. Constructors may call methods; the danger is specifically calling overridable behavior during initialization."}
       - {id: D, answer: "Because the JVM always ignores the subclass override.", explanation: "Incorrect. Early dispatch to the override is the risk."}
     correctAnswerId: B
     aiGenerated: true
@@ -350,3 +350,16 @@ questions:
     reviewed: false
     readmeRelated: {file: "7.Abstraction/Abstraction.md", anchor: "abstraction-leak"}
     apiRelated: {controller: "", methodSignature: ""}
+
+  - id: oop-synthesis-decision-model
+    question: "A checkout needs several independently replaceable pricing behaviors, but those behaviors do not form a meaningful `is-a` relationship with `Checkout`. Which design best fits the OOP decision model?"
+    answers:
+      - {id: A, answer: "Create a new Checkout subclass for every pricing behavior because OOP always prefers inheritance.", explanation: "Incorrect. Without a real subtype relationship, inheritance used only to vary behavior adds unnecessary coupling."}
+      - {id: B, answer: "Depend on a meaningful `Pricing` contract, supply implementations through composition/delegation, and introduce the abstraction only when the contract is a useful stable boundary.", explanation: "Correct. Composition handles variation without fake subtyping, while abstraction keeps the consumer dependent on a stable contract."}
+      - {id: C, answer: "Put every pricing rule in one global if/else because object boundaries are never useful.", explanation: "Incorrect. A small conditional can be fine, but independently evolving variation often benefits from a responsibility boundary."}
+      - {id: D, answer: "Create an interface for every class even when there is no variation point or meaningful boundary.", explanation: "Incorrect. OOP does not require an abstraction for every class; the abstraction should represent a useful contract or boundary."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Abstraction/Abstraction.md", anchor: "oop-synthesis"}
+    apiRelated: {controller: "CompositionController", methodSignature: "strategySwap()"}

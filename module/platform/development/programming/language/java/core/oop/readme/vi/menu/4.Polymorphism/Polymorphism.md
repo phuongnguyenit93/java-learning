@@ -1,6 +1,6 @@
-# Đa hình (Polymorphism)
+# Đa hình và phân phối động
 
-Kế thừa và quan hệ kiểu con cho phép một object cụ thể được nhìn thông qua một kiểu tổng quát hơn. Đa hình biến khả năng đó thành một công cụ thiết kế: **bên gọi làm việc với một hợp đồng chung, còn hành vi thực tế có thể thay đổi theo cách triển khai tại runtime**.
+Kế thừa và quan hệ kiểu con cho phép một đối tượng cụ thể được nhìn thông qua một kiểu tổng quát hơn. Đa hình biến khả năng đó thành một công cụ thiết kế: **bên gọi làm việc với một hợp đồng chung, còn hành vi thực tế có thể thay đổi theo cách triển khai lúc chạy**.
 
 ## <a id="subtype-polymorphism">Đa hình kiểu con</a>
 
@@ -13,9 +13,9 @@ PaymentMethod payment = new CardPayment();
 payment.pay(1000);
 ```
 
-`CheckoutService` chỉ cần biết hợp đồng của `PaymentMethod`. Nó không nhất thiết phải biết object thật ở runtime là thanh toán bằng thẻ, ví điện tử hay chuyển khoản.
+`CheckoutService` chỉ cần biết hợp đồng của `PaymentMethod`. Nó không nhất thiết phải biết đối tượng thực tế lúc chạy là thanh toán bằng thẻ, ví điện tử hay chuyển khoản.
 
-### JAVA MODEL — polymorphism không yêu cầu class inheritance
+### MÔ HÌNH TRONG JAVA — đa hình không yêu cầu kế thừa lớp
 
 `PaymentMethod` có thể là một `interface`:
 
@@ -39,14 +39,14 @@ payment.pay(1000);
 
 ```text
 CardPayment implements PaymentMethod
-→ CardPayment là subtype của PaymentMethod
+→ CardPayment là kiểu con của PaymentMethod
 → biến PaymentMethod có thể giữ CardPayment
-→ lời gọi instance method vẫn dynamic dispatch theo runtime receiver
+→ lời gọi phương thức đối tượng vẫn được phân phối động theo đối tượng nhận lời gọi thực tế
 ```
 
-Điều này rất quan trọng: **subtype polymorphism là ý tưởng rộng hơn class inheritance**. Class inheritance là một cách tạo subtype; interface implementation là một cách khác. Các rule chi tiết của interface thuộc module `abstract-interface`.
+Điều này rất quan trọng: **đa hình kiểu con rộng hơn kế thừa class**. Kế thừa class là một cách tạo kiểu con; triển khai `interface` là một cách khác. Các quy tắc chi tiết của `interface` thuộc mô-đun `abstract-interface`.
 
-### MENTAL MODEL — static type và runtime type
+### MÔ HÌNH TƯ DUY — kiểu khai báo và kiểu thực tế lúc chạy
 
 Với:
 
@@ -58,13 +58,13 @@ cần giữ hai lớp thông tin tách biệt:
 
 ```text
 PaymentMethod payment
-↑ static / declared type
+↑ kiểu tĩnh / kiểu khai báo
 
 new CardPayment()
-↑ runtime type / actual object
+↑ kiểu thực tế lúc chạy / đối tượng thực tế
 ```
 
-Static type cho compiler biết **những member nào hợp lệ để gọi qua biểu thức `payment`**. Runtime type trở nên quan trọng khi một instance method đã hợp lệ lại có nhiều implementation override khác nhau.
+Kiểu khai báo cho trình biên dịch biết **những thành viên nào hợp lệ để gọi qua biểu thức `payment`**. Kiểu thực tế lúc chạy trở nên quan trọng khi một phương thức đối tượng đã hợp lệ lại có nhiều cách triển khai ghi đè khác nhau.
 
 Ví dụ:
 
@@ -72,14 +72,14 @@ Ví dụ:
 Animal animal = new Dog();
 
 animal.sound(); // hợp lệ nếu Animal khai báo sound()
-animal.bark();  // compile error nếu Animal không khai báo bark()
+animal.bark();  // lỗi biên dịch nếu Animal không khai báo bark()
 ```
 
-Dù object thật là `Dog`, compiler vẫn không cho gọi `bark()` qua biến `Animal` chỉ vì runtime object có method đó.
+Dù đối tượng thực tế là `Dog`, trình biên dịch vẫn không cho gọi `bark()` qua biến `Animal` chỉ vì đối tượng thực tế có phương thức đó.
 
 ### VÌ SAO — giảm nhánh xử lý theo từng kiểu cụ thể
 
-Không có đa hình, bên gọi thường phải tự phân loại object:
+Không có đa hình, bên gọi thường phải tự phân loại đối tượng:
 
 ```text
 nếu là CardPayment
@@ -100,28 +100,28 @@ payment.pay(amount);
 
 Bên gọi chỉ yêu cầu hành vi `pay`. Object cụ thể tự quyết định cách thực hiện.
 
-Điều này không có nghĩa mọi `if` đều xấu. Lợi ích xuất hiện khi nhánh điều kiện chỉ tồn tại vì bên gọi đang tự chọn hành vi dựa trên kiểu object.
+Điều này không có nghĩa mọi `if` đều xấu. Lợi ích xuất hiện khi nhánh điều kiện chỉ tồn tại vì bên gọi đang tự chọn hành vi dựa trên kiểu đối tượng.
 
 ### MỐI LIÊN HỆ — đa hình cần một hợp đồng có ý nghĩa
 
-Dynamic dispatch chỉ thực sự hữu ích khi các cách triển khai tuân theo cùng một hợp đồng hành vi.
+Phân phối động chỉ thực sự hữu ích khi các cách triển khai tuân theo cùng một hợp đồng hành vi.
 
 Nếu mỗi kiểu con có quy tắc hoàn toàn khác nhau đến mức bên gọi vẫn phải xử lý riêng từng loại, thiết kế đa hình chỉ còn mang tính hình thức.
 
-## <a id="dynamic-dispatch">Dynamic Dispatch</a>
+## <a id="dynamic-dispatch">Phân phối động (Dynamic Dispatch)</a>
 
-### CƠ CHẾ — Java chọn method như thế nào?
+### CƠ CHẾ — Java chọn phương thức như thế nào?
 
-Với một **instance method bị override**, Java tách quá trình thành hai bước:
+Với một **phương thức đối tượng bị ghi đè**, Java tách quá trình thành hai bước:
 
 ```text
 Lúc biên dịch (compile time)
 → kiểm tra kiểu tham chiếu và kiểu tham số
-→ xác định method signature hợp lệ
+→ xác định chữ ký phương thức hợp lệ
 
 Lúc chạy (runtime)
-→ nhìn vào class thật của object nhận lời gọi
-→ chọn phần triển khai override cụ thể
+→ nhìn vào class thực tế của đối tượng nhận lời gọi
+→ chọn phần triển khai ghi đè cụ thể
 ```
 
 Ví dụ:
@@ -131,18 +131,18 @@ PaymentMethod payment = new CardPayment();
 payment.pay(1000);
 ```
 
-Compiler kiểm tra rằng `PaymentMethod` có method `pay(...)` phù hợp. Khi chương trình chạy, nếu `CardPayment` override method đó thì body của `CardPayment` được thực thi.
+Trình biên dịch kiểm tra rằng `PaymentMethod` có phương thức `pay(...)` phù hợp. Khi chương trình chạy, nếu `CardPayment` ghi đè phương thức đó thì phần thân của `CardPayment` được thực thi.
 
-Cơ chế này gọi là **dynamic dispatch**.
+Cơ chế này gọi là **phân phối động (dynamic dispatch)**.
 
-### CƠ CHẾ — lời gọi bên trong object vẫn dispatch theo runtime receiver
+### CƠ CHẾ — lời gọi bên trong đối tượng vẫn phân phối theo đối tượng nhận lời gọi thực tế
 
-Dynamic dispatch không chỉ xảy ra khi caller bên ngoài trực tiếp gọi một method override. Một method của class cha gọi một instance method khác qua `this` cũng vẫn làm việc với **cùng runtime object**:
+Phân phối động không chỉ xảy ra khi bên gọi bên ngoài trực tiếp gọi một phương thức ghi đè. Một phương thức của class cha gọi một phương thức đối tượng khác qua `this` cũng vẫn làm việc với **cùng đối tượng thực tế lúc chạy**:
 
 ```java
 class PaymentMethod {
     void execute(int amount) {
-        pay(amount); // tương đương lời gọi virtual trên this
+        pay(amount); // vẫn là lời gọi được phân phối động qua this
     }
 
     void pay(int amount) {
@@ -167,11 +167,11 @@ Flow là:
 payment.execute(...)
 → chạy PaymentMethod.execute(...)
 → execute gọi this.pay(...)
-→ runtime receiver vẫn là CardPayment
+→ đối tượng nhận lời gọi thực tế vẫn là CardPayment
 → CardPayment.pay(...) chạy
 ```
 
-Vì vậy không nên suy luận rằng “đang ở body của `PaymentMethod` thì mọi lời gọi method bên trong cũng cố định vào implementation của `PaymentMethod`”. Với overridable instance method, runtime receiver vẫn quyết định body cuối cùng.
+Vì vậy không nên suy luận rằng “đang ở phần thân của `PaymentMethod` thì mọi lời gọi phương thức bên trong cũng cố định vào cách triển khai của `PaymentMethod`”. Với phương thức đối tượng có thể bị ghi đè, đối tượng nhận lời gọi thực tế lúc chạy vẫn quyết định phần thân cuối cùng.
 
 ### MINH CHỨNG — `PolymorphismController#dispatch()`
 
@@ -194,16 +194,16 @@ second.speak()
 
 Điểm cần quan sát là:
 
-> **cùng kiểu khai báo nhưng hành vi ở runtime có thể khác nhau**.
+> **cùng kiểu khai báo nhưng hành vi lúc chạy có thể khác nhau**.
 
-### GIỚI HẠN — không phải member nào cũng dynamic dispatch
+### GIỚI HẠN — không phải thành viên nào cũng dùng phân phối động
 
-Instance method bị override có dynamic dispatch.
+Phương thức đối tượng bị ghi đè có phân phối động.
 
 Nhưng:
 
-- static method không hoạt động theo cách này;
-- field cũng không hoạt động theo cách này.
+- phương thức `static` không hoạt động theo cách này;
+- trường dữ liệu cũng không hoạt động theo cách này.
 
 Sự khác biệt này sẽ được làm rõ ở chương `Overloading` và `Overriding`.
 
@@ -217,14 +217,14 @@ Java có thể cho phép:
 Parent value = new Child();
 ```
 
-nhưng điều đó chỉ chứng minh **type compatibility**.
+nhưng điều đó chỉ chứng minh **khả năng tương thích kiểu (type compatibility)**.
 
 Về mặt thiết kế, `Child` chỉ thực sự là một kiểu con tốt nếu nó vẫn đáp ứng những kỳ vọng quan trọng mà bên gọi có đối với `Parent`.
 
 Ví dụ một kiểu con nên giữ các kỳ vọng như:
 
 - không bất ngờ thu hẹp đầu vào hợp lệ một cách vô lý;
-- kết quả sau khi gọi method vẫn giữ các cam kết quan trọng;
+- kết quả sau khi gọi phương thức vẫn giữ các cam kết quan trọng;
 - invariant vẫn đúng;
 - side effect và cách báo lỗi không phá giả định của hợp đồng chung.
 
@@ -232,14 +232,14 @@ Ví dụ một kiểu con nên giữ các kỳ vọng như:
 
 > Nếu thay cách triển khai mà bên gọi không biết, hành vi có vẫn hợp lý theo hợp đồng chung không?
 
-### FAILURE CASE — type-compatible nhưng không behavior-compatible
+### TRƯỜNG HỢP VI PHẠM — tương thích kiểu nhưng không tương thích hành vi
 
-Giả sử hợp đồng `Account` khiến caller hợp lý khi tin rằng mọi account đều hỗ trợ `withdraw(...)`:
+Giả sử hợp đồng `Account` khiến bên gọi có lý do hợp lý để tin rằng mọi tài khoản đều hỗ trợ `withdraw(...)`:
 
 ```java
 class Account {
     void withdraw(int amount) {
-        // normal withdrawal contract
+        // hợp đồng rút tiền thông thường
     }
 }
 
@@ -257,17 +257,17 @@ Java vẫn cho phép:
 Account account = new FixedAccount();
 ```
 
-Nhưng nếu mọi caller của `Account` đều phải thêm ngoại lệ riêng cho `FixedAccount`, quan hệ subtype đã không còn bảo toàn kỳ vọng hành vi chung.
+Nhưng nếu mọi bên gọi của `Account` đều phải thêm ngoại lệ riêng cho `FixedAccount`, quan hệ kiểu con đã không còn bảo toàn kỳ vọng hành vi chung.
 
 ```text
-gán được theo type system
+gán được theo hệ thống kiểu
 ≠
-thay thế tốt theo behavioral contract
+thay thế tốt theo hợp đồng hành vi
 ```
 
 ### MINH CHỨNG — `SubstitutabilityController#substituteImplementations()`
 
-Ví dụ thực thi truyền nhiều cách triển khai vào cùng một method nhận `Formatter`:
+Ví dụ thực thi truyền nhiều cách triển khai vào cùng một phương thức nhận `Formatter`:
 
 ```text
 run(new Upper())
@@ -278,7 +278,7 @@ Method `run(...)` chỉ biết hợp đồng của `Formatter`. Nó không cần
 
 ### THỰC HÀNH — dấu hiệu khả năng thay thế đang yếu
 
-Nếu code thường xuyên phải viết:
+Nếu mã thường xuyên phải viết:
 
 ```java
 if (payment instanceof SpecialPayment) {
@@ -286,14 +286,14 @@ if (payment instanceof SpecialPayment) {
 }
 ```
 
-hãy kiểm tra lại abstraction hoặc quan hệ kiểu con.
+hãy kiểm tra lại trừu tượng hóa hoặc quan hệ kiểu con.
 
 ### MỐI LIÊN HỆ — câu hỏi tiếp theo
 
-Ta vừa thấy method bị override được chọn ở runtime. Nhưng Java còn có:
+Ta vừa thấy phương thức bị ghi đè được chọn lúc chạy. Nhưng Java còn có:
 
-- `overloading` được chọn chủ yếu ở compile time;
-- static method hiding;
-- field hiding.
+- `overloading` được chọn chủ yếu lúc biên dịch;
+- che khuất phương thức `static`;
+- che khuất trường dữ liệu.
 
 Nếu không tách rõ các cơ chế này, rất dễ hiểu sai đa hình. Chương tiếp theo tập trung vào chính sự khác biệt đó.

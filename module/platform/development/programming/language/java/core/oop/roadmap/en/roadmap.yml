@@ -43,58 +43,95 @@
 
 roadmap:
   - id: oop-purpose
-    title: Object-Oriented Design Purpose
-    purpose: Understand OOP as organizing software around collaborating objects that own state, behavior, and responsibilities.
+    title: What Is Object-Oriented Programming (OOP) and Why Use It?
+    purpose: Understand object-oriented programming as organizing software around collaborating objects that own state, behavior, and responsibilities so rules do not become scattered across the program.
+    relatedKnowledge:
+      - MentalModel
     relatedModules:
       - routeId: JAVA_CLASS_OBJECT
         label: Class & Object
         note: Class/Object provides the Java mechanisms that OOP design builds upon.
     objectives:
-      - Explain why object boundaries can make change and invariants easier to manage.
+      - Explain why procedural organization can remain appropriate for simple flows, yet data and rules can become scattered as a model accumulates state, behavior, and variants that change together.
+      - Explain why assigning state, behavior, and responsibility to objects can localize change and keep rules more consistent.
+      - Compare procedural decomposition with object-oriented decomposition at an orientation level without treating either style as universally superior.
       - Distinguish OOP design concepts from individual Java syntax features.
+
   - id: encapsulation-and-invariants
     title: Encapsulation and Invariants
     purpose: Understand encapsulation as protecting valid state behind behavior rather than merely making fields private.
+    relatedKnowledge:
+      - Encapsulation
     objectives:
       - Design object behavior that protects invariants.
+      - Distinguish encapsulation from data hiding or access modifiers alone.
       - Recognize when excessive getters/setters leak responsibility.
+
   - id: subtyping-and-inheritance
     title: Subtyping and Inheritance
     purpose: Understand inheritance as one mechanism for establishing subtype relationships and reuse, together with its coupling costs.
+    relatedKnowledge:
+      - Inheritance
     objectives:
       - Reason about is-a substitutability rather than inheritance for code reuse alone.
+      - Distinguish subtype modeling from implementation reuse.
       - Recognize fragile hierarchies and invalid subtype relationships.
+
   - id: polymorphism-and-dispatch
     title: Polymorphism and Dynamic Dispatch
-    purpose: Understand how one abstraction can execute different runtime behavior through overriding and dynamic dispatch.
+    purpose: Understand how the same common supertype can exhibit different runtime behavior when a reference points to objects of different subtypes through overriding and dynamic dispatch.
+    relatedKnowledge:
+      - Polymorphism
     objectives:
       - Separate reference type from runtime implementation behavior.
       - Use substitutability as the core test for useful polymorphism.
+      - Recognize how polymorphism lets callers depend on one contract instead of branching on concrete implementations.
+
   - id: method-selection-model
-    title: Compile-Time vs Runtime Method Selection
-    purpose: Build a clean model of overloading, overriding, dynamic dispatch, and method hiding so similar syntax is not confused.
+    title: How Java Selects Methods
+    purpose: Distinguish compile-time call selection from runtime dispatch of overridden instance methods, using overloading and member hiding as contrasts so these mechanisms are not confused with dynamic polymorphism.
+    relatedKnowledge:
+      - OverloadingOverriding
     objectives:
       - Explain which choices are resolved at compile time and which at runtime.
+      - Distinguish instance-method dispatch from static-method hiding and field hiding.
       - Predict behavior when overloads and overrides interact.
+
   - id: composition-and-delegation
-    title: Composition and Delegation
-    purpose: Understand object collaboration as an alternative to inheritance when behavior should be reused without rigid subtype coupling.
+    title: Object Collaboration through Composition and Delegation
+    purpose: Understand object collaboration as an alternative to inheritance when behavior or responsibilities should be reused and assembled without unnecessary subtype coupling.
+    relatedKnowledge:
+      - Composition
     objectives:
+      - Distinguish dependency, association, aggregation, and composition as modeling relationships with different ownership and lifecycle implications.
       - Prefer composition when responsibilities can be assembled independently.
       - Use delegation without hiding ownership or lifecycle responsibilities.
+
   - id: abstraction-and-contracts
     title: Abstraction and Behavioral Contracts
     purpose: Understand abstraction as exposing the behavior callers need while hiding irrelevant implementation detail.
+    relatedKnowledge:
+      - Abstraction
     relatedModules:
       - routeId: JAVA_ABSTRACT_INTERFACE
         label: Abstract Class & Interface
         note: This module provides the Java mechanisms used to express reusable abstractions and contracts.
     objectives:
       - Depend on stable behavioral contracts instead of concrete implementation details.
-      - Recognize when abstract classes or interfaces are the appropriate Java mechanism.
+      - Distinguish the design concept of abstraction from abstract classes and interfaces as Java mechanisms used to express it.
+      - Recognize abstraction leaks and the trade-offs of hiding the wrong details.
+
   - id: oop-synthesis
     title: OOP Design Synthesis
     purpose: Connect encapsulation, subtyping, polymorphism, composition, and abstraction into one decision model for object-oriented design.
+    relatedKnowledge:
+      - MentalModel
+      - Encapsulation
+      - Inheritance
+      - Polymorphism
+      - Composition
+      - Abstraction
     objectives:
-      - Choose inheritance, composition, or abstraction from responsibility and change pressure.
+      - Choose between inheritance and composition from substitutability, responsibility, and change pressure, and use abstraction to keep callers dependent on stable contracts.
       - Recognize that the OOP “pillars” are tools, not independent goals.
+      - Recognize when an object model helps manage state, responsibility, and variation, and when applying OOP to a simpler problem would only add unnecessary complexity.

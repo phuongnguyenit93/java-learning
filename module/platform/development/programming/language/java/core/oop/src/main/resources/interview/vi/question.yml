@@ -28,128 +28,135 @@
 # </interview-schema>
 
 questions:
-  - question: "Giải thích OOP thế nào mà không chỉ lặp slogan bốn pillar?"
-    answer: "OOP phân rã system thành object có responsibility, state, behavior và collaboration boundary. Encapsulation, inheritance, polymorphism và abstraction là tool trong model đó, không phải mục tiêu cuối; mục tiêu là rule localized và change dễ hiểu."
+  - question: "Bạn sẽ giải thích OOP thế nào mà không chỉ lặp lại khẩu hiệu 'bốn trụ cột'?"
+    answer: "OOP tổ chức hệ thống quanh các đối tượng có trạng thái, hành vi, trách nhiệm và ranh giới cộng tác. Đóng gói, kế thừa, đa hình và trừu tượng hóa là các công cụ trong mô hình đó, không phải mục tiêu cuối cùng; mục tiêu là đặt quy tắc đúng chỗ và cô lập thay đổi để hệ thống dễ hiểu hơn."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "1.MentalModel/MentalModel.md", anchor: "oop-object-collaboration"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Encapsulation khác việc chỉ làm field private thế nào?"
-    answer: "Private kiểm soát visibility. Encapsulation kiểm soát valid access/mutation qua abstraction ổn định bảo vệ invariant và ẩn decision. Class có private field nhưng unrestricted setter vẫn có encapsulation yếu."
+  - question: "Đóng gói khác việc chỉ đặt trường dữ liệu thành `private` như thế nào?"
+    answer: "`private` kiểm soát quyền truy cập trực tiếp. Đóng gói kiểm soát cách trạng thái được đọc và thay đổi thông qua một ranh giới ổn định để bảo vệ invariant và che các quyết định nội bộ. Một class có toàn bộ trường `private` nhưng setter không kiểm soát vẫn có thể đóng gói yếu."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "2.Encapsulation/Encapsulation.md", anchor: "encapsulation-model"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Substitutability nghĩa là gì trong Java inheritance hierarchy?"
-    answer: "Code viết theo supertype phải tiếp tục behavior đúng khi nhận subtype. Điều này gồm invariant, accepted input, output, side effect và checked-contract expectation, không chỉ pass compiler type check."
+  - question: "Khả năng thay thế (substitutability) nghĩa là gì trong một hệ phân cấp kế thừa Java?"
+    answer: "Code viết theo kiểu cha phải tiếp tục hoạt động đúng khi nhận một kiểu con. Kiểu con cần tôn trọng các kỳ vọng hành vi có ý nghĩa như invariant, input hợp lệ, output, side effect và các cam kết của hợp đồng; chỉ vượt qua kiểm tra kiểu của trình biên dịch là chưa đủ."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "4.Polymorphism/Polymorphism.md", anchor: "substitutability"}
     apiRelated: {controller: "SubstitutabilityController", methodSignature: "substituteImplementations()"}
 
-  - question: "So sánh overriding, static-method hiding và field hiding với `Parent x = new Child()`."
-    answer: "Overridden instance method dispatch tới Child ở runtime. Hidden static method và hidden field được chọn từ compile-time view Parent. Đây là các language mechanism khác nhau dù access qua cùng expression."
+  - question: "So sánh overriding, che khuất phương thức `static` và che khuất trường với `Parent x = new Child()`."
+    answer: "Instance method bị ghi đè được phân phối tới `Child` lúc chạy. Phương thức `static` bị che khuất và trường bị che khuất được chọn theo kiểu `Parent` đã biết lúc biên dịch. Đây là các cơ chế ngôn ngữ khác nhau dù được truy cập qua cùng biểu thức `x`."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "5.OverloadingOverriding/OverloadingOverriding.md", anchor: "dispatch-vs-hiding"}
     apiRelated: {controller: "DispatchController", methodSignature: "dispatchVsHiding()"}
 
-  - question: "Quyết định giữa inheritance và composition thế nào?"
-    answer: "Dùng inheritance khi child là behavioral subtype thật và shared base contract/implementation có giá trị. Dùng composition khi chủ yếu cần reuse behavior, replaceable strategy hoặc coupling/ownership lỏng hơn mà không tạo is-a contract."
+  - question: "Bạn quyết định giữa kế thừa và kết hợp đối tượng (composition) như thế nào?"
+    answer: "Dùng kế thừa khi class con thực sự là kiểu con về hành vi và bên sử dụng cần khả năng thay thế theo một hợp đồng chung. Dùng composition khi mục tiêu chủ yếu là tái sử dụng/thay đổi hành vi, thay strategy hoặc giảm coupling/quyền sở hữu mà không cần tạo quan hệ `is-a`."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "6.Composition/Composition.md", anchor: "composition-vs-inheritance"}
     apiRelated: {controller: "CompositionController", methodSignature: "strategySwap()"}
 
-  - question: "Khác biệt practical giữa dependency, association, aggregation và composition trong Java code là gì?"
-    answer: "Chúng truyền đạt mức relationship/ownership khác nhau chứ không phải runtime feature riêng: temporary use, long-lived association, weak/shared ownership và strong ownership/lifecycle. Ordinary reference implement chúng; API/lifecycle convention truyền meaning."
+  - question: "Khác biệt thực tế giữa dependency, association, aggregation và composition trong code Java là gì?"
+    answer: "Chúng mô tả mức độ quan hệ và quyền sở hữu khác nhau chứ không phải bốn tính năng runtime riêng: dùng tạm thời, liên kết lâu dài, sở hữu yếu/có thể chia sẻ và sở hữu mạnh gắn với vòng đời. Java dùng các tham chiếu thông thường; ý nghĩa đến từ API và quy ước vòng đời của thiết kế."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "6.Composition/Composition.md", anchor: "object-relationships"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Fragile-base-class risk là gì?"
-    answer: "Subclass phụ thuộc implementation assumption, initialization, protected hook và overridable behavior của base. Change ở base tưởng local có thể đổi subclass behavior, nên inheritance tạo coupling mạnh hơn delegation."
+  - question: "Rủi ro fragile base class là gì?"
+    answer: "Class con có thể phụ thuộc vào giả định triển khai, thứ tự khởi tạo, hook `protected` và hành vi có thể bị ghi đè của class cha. Một thay đổi tưởng như cục bộ ở class cha có thể làm hành vi class con thay đổi, vì vậy inheritance tạo coupling mạnh hơn delegation."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "3.Inheritance/Inheritance.md", anchor: "inheritance-coupling"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Khi nào abstraction bị xem là leaky, và mọi leak có tự động là bug không?"
-    answer: "Abstraction leak khi caller phải hiểu implementation detail mới dùng đúng, như lifecycle, ordering, provider error hoặc performance cliff. Một số constraint vốn relevant và nên document; vấn đề là giấu detail ảnh hưởng correctness."
+  - question: "Khi nào một abstraction bị xem là rò rỉ (leaky), và mọi rò rỉ có tự động là lỗi không?"
+    answer: "Abstraction bị rò rỉ khi bên gọi phải hiểu chi tiết triển khai mới dùng đúng, chẳng hạn vòng đời, thứ tự, lỗi của provider hoặc điểm suy giảm hiệu năng. Không phải mọi chi tiết lộ ra đều là bug; các ràng buộc ảnh hưởng correctness cần được công khai hoặc tài liệu hóa."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "7.Abstraction/Abstraction.md", anchor: "abstraction-leak"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Khi nào procedural style có thể rõ ràng hơn OOP, và khi nào object boundary bắt đầu có giá trị?"
-    answer: "Procedural style thường tự nhiên cho algorithm/pipeline ngắn, stateless hoặc data transformation tuyến tính. Object boundary có giá trị khi state sống lâu, invariant cần được bảo vệ, nhiều behavior thay đổi theo type và nhiều collaborator cùng tiến hóa. OOP không phải mục tiêu tự thân; tiêu chí là responsibility và change có được localize tốt hơn hay không."
+  - question: "Khi nào phong cách thủ tục có thể rõ ràng hơn OOP, và khi nào ranh giới đối tượng bắt đầu có giá trị?"
+    answer: "Phong cách thủ tục thường tự nhiên cho thuật toán ngắn, pipeline không trạng thái hoặc phép biến đổi dữ liệu tuyến tính. Ranh giới đối tượng có giá trị khi trạng thái sống lâu, invariant cần được bảo vệ, hành vi thay đổi theo type hoặc nhiều đối tượng cộng tác cùng tiến hóa. OOP không phải mục tiêu tự thân; tiêu chí là trách nhiệm và thay đổi có được cô lập tốt hơn hay không."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "1.MentalModel/MentalModel.md", anchor: "oop-vs-procedural"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Một class có toàn bộ field private nhưng trả trực tiếp mutable List nội bộ. Encapsulation có còn mạnh không?"
-    answer: "Không nhất thiết. Caller nhận alias tới internal representation có thể mutate state mà không đi qua behavior bảo vệ invariant. Private kiểm soát direct member access, nhưng encapsulation còn phải kiểm soát reference escape; tùy contract có thể dùng defensive copy, immutable view hoặc intent-oriented operations."
+  - question: "Một class có toàn bộ trường `private` nhưng trả trực tiếp `List` nội bộ có thể thay đổi. Đóng gói có còn mạnh không?"
+    answer: "Không nhất thiết. Bên gọi có thể nhận một tham chiếu dùng chung (alias) tới cách biểu diễn nội bộ và thay đổi trạng thái mà không đi qua hành vi bảo vệ invariant. `private` chỉ kiểm soát truy cập thành viên trực tiếp; đóng gói còn phải kiểm soát việc tham chiếu nội bộ thoát ra ngoài. Tùy hợp đồng có thể dùng bản sao phòng vệ (defensive copy), góc nhìn bất biến hoặc các thao tác thể hiện đúng ý định."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "2.Encapsulation/Encapsulation.md", anchor: "encapsulation-model"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: "Tell, Don't Ask giải quyết vấn đề gì và vì sao không nên biến nó thành luật cấm getter?"
-    answer: "Heuristic này nhắc đặt domain decision gần object sở hữu state thay vì caller kéo dữ liệu ra rồi duplicate rule. Nó giảm rule leakage và coupling. Nhưng reporting, serialization, DTO/read model vẫn có lý do chính đáng để expose data; vấn đề là behavior thuộc responsibility của object bị đẩy ra caller, không phải sự tồn tại của mọi getter."
+    answer: "Heuristic này nhắc đặt quyết định nghiệp vụ gần đối tượng sở hữu trạng thái thay vì để bên gọi kéo dữ liệu ra rồi lặp lại quy tắc. Nó giảm rò rỉ quy tắc và coupling. Reporting, serialization, DTO/read model vẫn có lý do chính đáng để công khai dữ liệu; vấn đề là hành vi thuộc trách nhiệm của đối tượng bị đẩy ra bên gọi, không phải sự tồn tại của mọi getter."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "2.Encapsulation/Encapsulation.md", anchor: "tell-dont-ask-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Subtype polymorphism có bắt buộc phải dùng class inheritance không? Giải thích bằng interface."
-    answer: "Không. `CardPayment implements PaymentMethod` làm `CardPayment` trở thành subtype của interface `PaymentMethod`; biến/parameter kiểu `PaymentMethod` có thể giữ object `CardPayment`, và overridden/implemented instance method vẫn được chọn theo runtime receiver. Class inheritance chỉ là một cách tạo subtype; interface implementation là cách khác."
+  - question: "Subtype polymorphism có bắt buộc phải dùng class inheritance không? Giải thích bằng `interface`."
+    answer: "Không. `CardPayment implements PaymentMethod` làm `CardPayment` trở thành subtype của `interface` `PaymentMethod`; biến hoặc tham số kiểu `PaymentMethod` có thể giữ đối tượng `CardPayment`, và phương thức instance được triển khai/ghi đè vẫn được phân phối theo đối tượng nhận lời gọi lúc chạy. Kế thừa class chỉ là một cách tạo subtype; triển khai `interface` là một cách khác."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "4.Polymorphism/Polymorphism.md", anchor: "subtype-polymorphism"}
     apiRelated: {controller: "PolymorphismController", methodSignature: "dispatch()"}
 
   - question: "Vì sao `Parent.execute()` có thể chạy `Child.step()` khi `execute()` gọi `this.step()`?"
-    answer: "Body `Parent.execute()` đang chạy không làm runtime receiver đổi thành Parent. `this` vẫn trỏ tới object thật là Child; nếu `step()` là overridable instance method, dynamic dispatch dùng runtime class của receiver và chọn `Child.step()`. Chỉ lời gọi được chỉ định như `super.step()` mới cố ý chọn implementation của supertype."
+    answer: "Việc phần thân `Parent.execute()` đang chạy không làm đối tượng nhận lời gọi lúc chạy đổi thành `Parent`. `this` vẫn trỏ tới đối tượng thực tế là `Child`; nếu `step()` là phương thức instance có thể bị ghi đè, dynamic dispatch dùng class của receiver lúc chạy và chọn `Child.step()`. Chỉ lời gọi tường minh như `super.step()` mới cố ý chọn phần triển khai của kiểu cha."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "4.Polymorphism/Polymorphism.md", anchor: "dynamic-dispatch"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Tại sao runtime type không làm Java chọn lại overload, trong khi lại ảnh hưởng override?"
-    answer: "Overload resolution chọn method signature ở compile time từ static argument types và invocation conversions. Sau khi signature instance method đã được xác định, runtime receiver mới quyết định override body nào chạy. Vì vậy `Parent x = new Child(); select(x)` có thể chọn `select(Parent)`, còn `x.call()` vẫn chạy `Child.call()` nếu override."
+  - question: "Tại sao kiểu lúc chạy không làm Java chọn lại overload, trong khi lại ảnh hưởng override?"
+    answer: "Overload resolution chọn chữ ký phương thức lúc biên dịch từ kiểu tĩnh của đối số và các phép chuyển đổi lời gọi. Sau khi chữ ký phương thức instance đã được xác định, đối tượng nhận lời gọi lúc chạy mới quyết định phần thân override nào chạy. Vì vậy `Parent x = new Child(); select(x)` có thể chọn `select(Parent)`, còn `x.call()` vẫn chạy `Child.call()` nếu có override."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "5.OverloadingOverriding/OverloadingOverriding.md", anchor: "overloading-compile-time"}
     apiRelated: {controller: "DispatchController", methodSignature: "overloadVsOverride()"}
 
-  - question: "Nêu các boundary quan trọng khi override liên quan visibility, return type và checked exception."
-    answer: "Override không được giảm accessibility; reference return type có thể covariant, tức cụ thể hơn return type cha; checked exception có thể giữ nguyên, thu hẹp hoặc bỏ nhưng không được mở rộng thành checked exception rộng hơn contract cha. `private`, `final`, `static` và constructor còn có semantics riêng nên không nên gộp tất cả vào overriding."
+  - question: "Nêu các ranh giới quan trọng khi override liên quan phạm vi truy cập, kiểu trả về và checked exception."
+    answer: "Override không được giảm accessibility; reference return type có thể covariant, tức cụ thể hơn return type của class cha; checked exception có thể giữ nguyên, thu hẹp hoặc bỏ nhưng không được mở rộng thành checked exception rộng hơn hợp đồng cha. `private`, `final`, `static` và constructor còn có ngữ nghĩa riêng nên không nên gộp tất cả vào overriding."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "5.OverloadingOverriding/OverloadingOverriding.md", anchor: "override-rules"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: "Vì sao `private final Player captain` chưa đủ để kết luận quan hệ là UML composition?"
-    answer: "`final` chỉ ngăn field reference bị reassign; nó không nói `Player` có owner duy nhất, có được share hay không, hoặc lifecycle có gắn với `Team` không. Aggregation/composition là modeling semantics được thể hiện qua cách tạo, expose, share và quản lý lifecycle của object, không phải một keyword Java riêng."
+    answer: "`final` chỉ ngăn tham chiếu ở trường bị gán lại; nó không nói `Player` có một bên sở hữu duy nhất, có được chia sẻ hay không, hoặc vòng đời có gắn với `Team` không. Aggregation/composition là ngữ nghĩa mô hình hóa được thể hiện qua cách tạo, công khai, chia sẻ và quản lý vòng đời của đối tượng, không phải một từ khóa Java riêng."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "6.Composition/Composition.md", anchor: "object-relationships"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: "Composition và delegation khác nhau thế nào dù thường xuất hiện cùng nhau?"
-    answer: "Composition theo nghĩa object design mô tả A giữ/cộng tác với B; delegation mô tả một interaction trong đó A chuyển một responsibility cụ thể cho B thực hiện. `Checkout` có `Pricing` là quan hệ object; `Checkout.total()` gọi `pricing.price()` là delegation của responsibility tính giá. Có composition không có nghĩa mọi behavior đều được delegate."
+    answer: "Composition theo nghĩa thiết kế đối tượng mô tả A giữ hoặc cộng tác với B; delegation mô tả một tương tác trong đó A chuyển một trách nhiệm cụ thể cho B thực hiện. `Checkout` có `Pricing` là một quan hệ giữa các đối tượng; `Checkout.total()` gọi `pricing.price()` là delegation của trách nhiệm tính giá. Có composition không có nghĩa mọi hành vi đều được delegate."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "6.Composition/Composition.md", anchor: "delegation"}
     apiRelated: {controller: "CompositionController", methodSignature: "strategySwap()"}
 
-  - question: "Vì sao một interface với vài method chưa đủ để bảo đảm abstraction tốt? Contract của abstraction còn có thể cần gì?"
-    answer: "Keyword/interface chỉ tạo mechanism. Abstraction tốt phải truyền đạt đủ behavior mà caller cần để dùng đúng: valid input/precondition, result/postcondition, failure semantics, side effect và lifecycle/ordering constraint khi chúng ảnh hưởng correctness. Nếu caller vẫn phải biết secret của implementation để dùng đúng, abstraction đang yếu hoặc bị leak."
+  - question: "Vì sao một `interface` với vài phương thức chưa đủ để bảo đảm abstraction tốt? Hợp đồng của abstraction còn có thể cần gì?"
+    answer: "Từ khóa `interface` chỉ cung cấp một cơ chế. Abstraction tốt phải truyền đạt đủ hành vi mà bên gọi cần để dùng đúng: input hợp lệ/precondition, kết quả/postcondition, ngữ nghĩa khi thất bại, side effect và ràng buộc vòng đời/thứ tự khi chúng ảnh hưởng tính đúng đắn. Nếu bên gọi vẫn phải biết bí mật của cách triển khai để dùng đúng, abstraction đang yếu hoặc bị rò rỉ."
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "7.Abstraction/Abstraction.md", anchor: "abstraction-model"}
     apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Hãy tổng hợp cách chọn giữa kế thừa, kết hợp đối tượng và trừu tượng hóa trong một thiết kế OOP. Khi nào không nên làm bài toán phức tạp hơn bằng OOP?"
+    answer: "Dùng kế thừa khi có quan hệ kiểu con thực sự và cần khả năng thay thế theo cùng hợp đồng. Dùng kết hợp đối tượng/ủy quyền khi mục tiêu là ghép hoặc thay đổi hành vi mà không cần quan hệ `is-a`. Dùng trừu tượng hóa để giữ bên sử dụng phụ thuộc vào hợp đồng ổn định thay vì chi tiết triển khai. Với phép biến đổi dữ liệu ngắn, thuật toán thuần hoặc luồng tuyến tính không có trạng thái dài hạn, invariant hay điểm biến đổi đáng kể, thêm nhiều class/interface có thể chỉ tăng độ phức tạp."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Abstraction/Abstraction.md", anchor: "oop-synthesis"}
+    apiRelated: {controller: "CompositionController", methodSignature: "strategySwap()"}

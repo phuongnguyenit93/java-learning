@@ -1,4 +1,4 @@
-# Abstraction
+# Abstraction and Behavioral Contracts
 
 After encapsulation, subtyping, polymorphism, and composition, we can ask the final question: **what does a caller actually need to know to use a capability?** Abstraction keeps that essential view and removes irrelevant implementation detail from the caller's mental model.
 
@@ -140,7 +140,7 @@ Information hiding
 
 In real code they often work together, but separating them prevents the false conclusion that `private` or `interface` automatically produces a good abstraction.
 
-### RELATION — connect the whole module
+## <a id="oop-synthesis">OOP Design Synthesis</a>
 
 OOP can now be seen as one continuous flow:
 
@@ -155,6 +155,35 @@ Object owns state + responsibility
 ```
 
 `Overloading` appears in this module to distinguish compile-time method selection from runtime polymorphism; it is not a separate OOP pillar.
+
+### DECISION MODEL — how should these tools work together?
+
+The concepts in this module are not a checklist to apply mechanically. They answer different design questions:
+
+```text
+Does an object own state that must remain valid?
+→ use encapsulation to control valid state transitions
+
+Must one type genuinely be usable as a more general type?
+→ consider subtyping and inheritance
+
+Does a caller need one contract with multiple implementations?
+→ use polymorphism and substitutability
+
+Is the goal only to assemble or vary behavior without a subtype relationship?
+→ prefer composition and delegation
+
+Does a caller know too many implementation details?
+→ introduce a stable abstraction/contract at the right boundary
+```
+
+Inheritance and composition are not globally mutually exclusive. A design may use inheritance where a real subtype relationship exists and composition where objects only need to collaborate. Abstraction can sit around either choice so consumers depend on stable contracts rather than implementation details.
+
+### TRADE-OFF — when is a richer object model unnecessary?
+
+For a short data transformation, a pure algorithm, or a linear flow with no meaningful long-lived state, invariants, or variation points, adding many classes, interfaces, and delegation layers may increase ceremony without improving the design.
+
+The goal of OOP is not to maximize the number of objects. It is to create **responsibility boundaries that make software easier to understand and change**. If an abstraction, hierarchy, or collaborator creates no meaningful boundary or variation point, reconsider whether it is needed.
 
 ### PRACTICE — end-of-module review criteria
 

@@ -1,4 +1,4 @@
-# Đóng gói (Encapsulation)
+# Đóng gói và bảo vệ trạng thái hợp lệ
 
 Ở chương trước, ta đã đưa trạng thái và trách nhiệm về cho đối tượng. Nhưng nếu đoạn mã bên ngoài vẫn có thể thay đổi trạng thái tùy ý thì đối tượng chưa thực sự kiểm soát được trách nhiệm của mình.
 
@@ -12,7 +12,7 @@
 
 `private` là một cơ chế của Java hỗ trợ đóng gói, nhưng `private` không phải bản thân khái niệm đóng gói.
 
-Ví dụ sau dùng field `private` nhưng ranh giới vẫn yếu:
+Ví dụ sau dùng trường `private` nhưng ranh giới vẫn yếu:
 
 ```java
 class Account {
@@ -48,7 +48,7 @@ class Account {
 
 ### VÌ SAO — điều cần che giấu thực sự là gì?
 
-Mục tiêu không phải là biến mọi field thành “bí mật”. Điều quan trọng là bên ngoài không nên phụ thuộc vào **cách lưu dữ liệu và cách ra quyết định nội bộ** nếu đó không phải trách nhiệm của nó.
+Mục tiêu không phải là biến mọi trường thành “bí mật”. Điều quan trọng là bên ngoài không nên phụ thuộc vào **cách lưu dữ liệu và cách ra quyết định nội bộ** nếu đó không phải trách nhiệm của nó.
 
 Nếu sau này `balance` đổi từ `int` sang một kiểu `Money`, đoạn mã chỉ gọi `withdraw(...)` có thể không cần sửa. Ngược lại, đoạn mã tự đọc `balance`, tự tính toán rồi gọi setter sẽ phụ thuộc chặt vào cách biểu diễn dữ liệu cũ.
 
@@ -64,11 +64,11 @@ Trừu tượng hóa (Abstraction)
 → bên sử dụng thực sự cần nhìn thấy hợp đồng và hành vi nào?
 ```
 
-Ta sẽ quay lại trừu tượng hóa ở cuối module. Ở đây chỉ cần nhớ: access modifier là công cụ; **ranh giới có ý nghĩa mới là mục tiêu**.
+Ta sẽ quay lại trừu tượng hóa ở cuối mô-đun. Ở đây chỉ cần nhớ: từ khóa kiểm soát truy cập là công cụ; **ranh giới có ý nghĩa mới là mục tiêu**.
 
-### PITFALL — field `private` nhưng trạng thái mutable vẫn có thể bị lộ
+### CẠM BẪY — trường `private` nhưng trạng thái có thể thay đổi vẫn có thể bị lộ
 
-Đóng gói không chỉ bị phá bởi setter. Một object cũng có thể làm lộ **representation bên trong** thông qua reference mutable:
+Đóng gói không chỉ bị phá bởi setter. Một đối tượng cũng có thể làm lộ **cách biểu diễn dữ liệu bên trong** thông qua tham chiếu tới dữ liệu có thể thay đổi:
 
 ```java
 class Order {
@@ -86,35 +86,35 @@ Bên gọi có thể làm:
 order.getItems().clear();
 ```
 
-Field `items` vẫn là `private`, nhưng caller đã nhận đúng reference mà `Order` đang dùng nội bộ và có thể sửa trạng thái mà không đi qua bất kỳ rule nào của `Order`.
+Trường `items` vẫn là `private`, nhưng bên gọi đã nhận đúng tham chiếu mà `Order` đang dùng nội bộ và có thể sửa trạng thái mà không đi qua bất kỳ quy tắc nào của `Order`.
 
 Vì vậy cần phân biệt:
 
 ```text
-private field
+trường private
 ≠
-internal state automatically protected
+trạng thái bên trong tự động được bảo vệ
 
-mutable reference escapes
-→ caller có thể sửa representation bên trong
-→ invariant vẫn có thể bị phá
+tham chiếu có thể thay đổi bị lộ ra ngoài
+→ bên gọi có thể sửa cách biểu diễn dữ liệu bên trong
+→ điều kiện bất biến vẫn có thể bị phá
 ```
 
-Tùy hợp đồng, object có thể trả về bản sao, immutable view hoặc chỉ cung cấp những operation có ý nghĩa thay vì expose collection mutable trực tiếp. Chi tiết API của collection thuộc module `collection`; ở đây điều cần giữ là mental model về **representation exposure**.
+Tùy hợp đồng, đối tượng có thể trả về bản sao, một góc nhìn chỉ đọc hoặc chỉ cung cấp những thao tác có ý nghĩa thay vì công khai trực tiếp collection có thể thay đổi. Chi tiết API của collection thuộc mô-đun `collection`; ở đây điều cần giữ là mô hình tư duy về **việc làm lộ cách biểu diễn dữ liệu bên trong**.
 
-## <a id="encapsulation-access-modifiers">Access Modifier và Encapsulation</a>
+## <a id="encapsulation-access-modifiers">Từ khóa kiểm soát truy cập và đóng gói</a>
 
-### MỐI LIÊN HỆ — access modifier giúp hiện thực hóa đóng gói như thế nào?
+### MỐI LIÊN HỆ — từ khóa kiểm soát truy cập giúp hiện thực hóa đóng gói như thế nào?
 
 Đóng gói là **khái niệm thiết kế**: đối tượng phải kiểm soát được trạng thái và chi tiết triển khai nào được phép lộ ra ngoài.
 
 Access modifier là một trong những **cơ chế của Java** giúp biến ranh giới thiết kế đó thành ràng buộc trong mã nguồn.
 
-Java có bốn mức truy cập chính cho member:
+Java có bốn mức truy cập chính cho thành viên:
 
 ```text
 private
-→ chỉ class sở hữu truy cập trực tiếp
+→ chỉ class khai báo thành viên đó truy cập trực tiếp
 
 package-private
 → các class trong cùng package có thể truy cập
@@ -150,7 +150,7 @@ class Account {
 }
 ```
 
-Field là `private`, nhưng `public setBalance(...)` vẫn cho phép bên ngoài đưa object vào trạng thái không hợp lệ.
+Trường là `private`, nhưng `public setBalance(...)` vẫn cho phép bên ngoài đưa đối tượng vào trạng thái không hợp lệ.
 
 Ngược lại:
 
@@ -177,18 +177,18 @@ private
 encapsulation
 
 private + API có ranh giới hợp lý + quy tắc được bảo vệ
-→ hỗ trợ encapsulation tốt hơn
+→ hỗ trợ đóng gói tốt hơn
 ```
 
-### GHI CHÚ — tìm hiểu chi tiết Access Modifier ở đâu?
+### GHI CHÚ — tìm hiểu chi tiết kiểm soát truy cập ở đâu?
 
 Phần này chỉ giải thích **mối quan hệ giữa Encapsulation và Access Modifier trong thiết kế OOP**.
 
-Để học chi tiết các quy tắc của Java như `private`, package-private, `protected`, `public`, đặc biệt là `protected` khác package và phạm vi truy cập chính xác, hãy xem module **Class Object → Access Modifier**.
+Để học chi tiết các quy tắc của Java như `private`, package-private, `protected`, `public`, đặc biệt là `protected` khác package và phạm vi truy cập chính xác, hãy xem mô-đun **Class Object → Access Modifier**.
 
 ## <a id="invariant-protection">Bảo vệ điều kiện bất biến</a>
 
-### KHÁI NIỆM — invariant là gì?
+### KHÁI NIỆM — điều kiện bất biến (invariant) là gì?
 
 **Invariant** có thể hiểu là một **điều kiện luôn phải đúng để đối tượng được xem là hợp lệ**.
 
@@ -206,16 +206,16 @@ Có thể nhìn vòng đời invariant như một chuỗi liên tục:
 
 ```text
 construction
-→ object bắt đầu hợp lệ
-→ mỗi public state transition kiểm tra rule cần thiết
-→ object vẫn hợp lệ sau transition
+→ đối tượng bắt đầu hợp lệ
+→ mỗi thao tác công khai làm thay đổi trạng thái đều kiểm tra quy tắc cần thiết
+→ đối tượng vẫn hợp lệ sau khi thay đổi
 ```
 
-Nếu constructor tạo ra trạng thái sai, hoặc một method public cho phép đi vòng qua rule, encapsulation đã thất bại dù field vẫn là `private`.
+Nếu hàm khởi tạo tạo ra trạng thái sai, hoặc một phương thức công khai cho phép đi vòng qua quy tắc, đóng gói đã thất bại dù trường vẫn là `private`.
 
 ### CƠ CHẾ — thay đổi trạng thái thông qua hành vi có ý nghĩa
 
-Thay vì cung cấp setter cho từng field, hãy cung cấp phương thức biểu diễn đúng hành động cần thực hiện:
+Thay vì cung cấp setter cho từng trường, hãy cung cấp phương thức biểu diễn đúng hành động cần thực hiện:
 
 ```java
 account.withdraw(30);
@@ -231,7 +231,7 @@ Bên gọi không cần biết số dư đang được lưu như thế nào.
 
 ### MINH CHỨNG — `EncapsulationController#invariantProtection()`
 
-Ví dụ thực thi của module tạo một `Account` có số dư ban đầu là `100`, rút `30`, sau đó thử rút thêm `100`.
+Ví dụ thực thi của mô-đun tạo một `Account` có số dư ban đầu là `100`, rút `30`, sau đó thử rút thêm `100`.
 
 Điều cần quan sát không chỉ là exception. Điểm quan trọng là:
 
@@ -245,13 +245,13 @@ trạng thái cuối vẫn hợp lệ
 
 Đó là giá trị thực tế của đóng gói: đối tượng tự chịu trách nhiệm về các thay đổi trạng thái của chính nó.
 
-### THỰC HÀNH — trước khi viết setter, hãy tìm invariant
+### THỰC HÀNH — trước khi viết setter, hãy tìm điều kiện bất biến
 
 Trước khi thêm một setter, hãy hỏi:
 
-> Field này có tham gia vào quy tắc nào cùng với các field khác không?
+> Trường này có tham gia vào quy tắc nào cùng với các trường khác không?
 
-Nếu có, một phương thức thể hiện đúng ý định thường an toàn hơn nhiều so với việc cho phép thay đổi từng field độc lập.
+Nếu có, một phương thức thể hiện đúng ý định thường an toàn hơn nhiều so với việc cho phép thay đổi từng trường độc lập.
 
 ## <a id="tell-dont-ask-boundary">Tell, Don't Ask</a>
 
@@ -277,13 +277,13 @@ account.withdraw(amount);
 
 ### VÌ SAO — tránh lặp lại quy tắc ở nhiều nơi
 
-Nếu nhiều đoạn mã cùng tự kiểm tra số dư, cùng tự tính toán và cùng tự cập nhật field, quy tắc sẽ bị lặp lại.
+Nếu nhiều đoạn mã cùng tự kiểm tra số dư, cùng tự tính toán và cùng tự cập nhật trường, quy tắc sẽ bị lặp lại.
 
 Khi sau này thêm phí giao dịch hoặc số tiền dự phòng, tất cả những nơi đó đều phải sửa. Nếu quy tắc nằm trong `Account`, thay đổi có thể được khoanh vùng trong chính đối tượng này.
 
 ### ĐÁNH ĐỔI — không biến nguyên tắc thành luật tuyệt đối
 
-Không phải lúc nào việc đọc dữ liệu cũng xấu. Báo cáo, serialization hoặc read model thường cần lấy dữ liệu ra ngoài. DTO cũng không cần giả vờ thành một domain object giàu hành vi.
+Không phải lúc nào việc đọc dữ liệu cũng xấu. Báo cáo, tuần tự hóa (serialization) hoặc mô hình chỉ đọc thường cần lấy dữ liệu ra ngoài. DTO cũng không cần giả vờ thành một đối tượng miền giàu hành vi.
 
 `Tell, don't ask` hữu ích nhất khi ta phát hiện **quy tắc nghiệp vụ đang nằm bên ngoài đối tượng sở hữu trạng thái**.
 
