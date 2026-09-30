@@ -4,7 +4,7 @@ EqualityController:
     <p>Executable experiments that make the difference between <strong>reference identity</strong> and <strong>logical equality</strong> directly observable.</p>
     <p>The goal is to see distinct objects compare logically equal instead of merely memorizing that <code>==</code> and <code>equals</code> are different.</p>
   readmeRelated:
-    file: 1.IdentityEquality/IdentityEquality.md
+    file: 2.IdentityEquality/IdentityEquality.md
 HashContractController:
   description: |-
     <h2>Hash Contract</h2>
@@ -12,11 +12,11 @@ HashContractController:
     <p>The endpoints focus on two practical failure modes: equal objects with different hashes, and keys whose equality/hash state changes after insertion.</p>
     <p>This is also direct evidence for the module's larger point: library code relies on an object's behavioral contract even though the compiler cannot prove that an implementation preserves every semantic law.</p>
   readmeRelated:
-    file: 4.EqualsHashCode/EqualsHashCode.md
+    file: 5.EqualsHashCode/EqualsHashCode.md
 OrderingController:
   description: |-
     <h2>Ordering</h2>
     <p>Executable experiments comparing natural ordering through <code>Comparable</code> with caller-owned ordering through <code>Comparator</code>.</p>
     <p>They also expose what happens when ordering equality (<code>compareTo == 0</code>) differs from logical equality.</p>
   readmeRelated:
-    file: 7.Comparator/Comparator.md
+    file: 8.Comparator/Comparator.md

@@ -49,7 +49,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.IdentityEquality/IdentityEquality.md", anchor: "object-contract-purpose"}
+    readmeRelated: {file: "1.ObjectContractPurpose/ObjectContractPurpose.md", anchor: "object-contract-purpose"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: identity-vs-logical-equality
@@ -62,7 +62,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.IdentityEquality/IdentityEquality.md", anchor: "identity-vs-equality"}
+    readmeRelated: {file: "2.IdentityEquality/IdentityEquality.md", anchor: "identity-vs-equality"}
     apiRelated: {controller: "EqualityController", methodSignature: "identityVsEquality()"}
 
   - id: equals-contract-laws
@@ -75,7 +75,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.Equals/Equals.md", anchor: "equals-contract"}
+    readmeRelated: {file: "3.Equals/Equals.md", anchor: "equals-contract"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: equals-inheritance-symmetry
@@ -88,7 +88,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.Equals/Equals.md", anchor: "equals-inheritance-risk"}
+    readmeRelated: {file: "3.Equals/Equals.md", anchor: "equals-inheritance-risk"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: hashcode-equals-rule
@@ -101,33 +101,33 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.HashCode/HashCode.md", anchor: "hashcode-contract"}
+    readmeRelated: {file: "4.HashCode/HashCode.md", anchor: "hashcode-contract"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: mutable-hash-key
     question: "Why is mutating equality/hash fields of a HashMap key after insertion dangerous?"
     answers:
-      - {id: A, answer: "Its current hash may point to a different bucket than where it was stored, so lookup or removal can fail.", explanation: "Correct. Hash-based collections assume key equality/hash state remains stable while stored."}
+      - {id: A, answer: "A later lookup may follow a different hash-derived search path from the one used when the key was stored, so lookup or removal can fail.", explanation: "Correct. Hash-based collections assume key equality/hash state remains stable while stored."}
       - {id: B, answer: "HashMap automatically deep-copies every key.", explanation: "Incorrect. Hash-based collections assume key equality/hash state remains stable while stored."}
       - {id: C, answer: "Changing the key always rehashes that single entry automatically.", explanation: "Incorrect. Hash-based collections assume key equality/hash state remains stable while stored."}
       - {id: D, answer: "Mutable keys are converted into Strings.", explanation: "Incorrect. Hash-based collections assume key equality/hash state remains stable while stored."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.HashCode/HashCode.md", anchor: "mutable-key-risk"}
+    readmeRelated: {file: "5.EqualsHashCode/EqualsHashCode.md", anchor: "mutable-key-risk"}
     apiRelated: {controller: "HashContractController", methodSignature: "mutableKey()"}
 
   - id: broken-equals-hash
     question: "What can happen when two equal objects return different hash codes?"
     answers:
-      - {id: A, answer: "The JVM automatically rewrites equals.", explanation: "Incorrect. Hash narrows the candidate location before equality confirms the match."}
-      - {id: B, answer: "HashSet may appear to keep duplicates and HashMap lookup with an equal key can miss the entry.", explanation: "Correct. Hash narrows the candidate location before equality confirms the match."}
-      - {id: C, answer: "Every collection switches to identity comparison.", explanation: "Incorrect. Hash narrows the candidate location before equality confirms the match."}
-      - {id: D, answer: "The compiler rejects the class.", explanation: "Incorrect. Hash narrows the candidate location before equality confirms the match."}
+      - {id: A, answer: "The JVM automatically rewrites equals.", explanation: "Incorrect. A hash-based collection uses the hash to narrow candidates before equality confirms a match."}
+      - {id: B, answer: "HashSet may appear to keep duplicates and HashMap lookup with an equal key can miss the entry.", explanation: "Correct. A hash-based collection uses the hash to narrow candidates before equality confirms a match."}
+      - {id: C, answer: "Every collection switches to identity comparison.", explanation: "Incorrect. A hash-based collection uses the hash to narrow candidates before equality confirms a match."}
+      - {id: D, answer: "The compiler rejects the class.", explanation: "Incorrect. A hash-based collection uses the hash to narrow candidates before equality confirms a match."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.EqualsHashCode/EqualsHashCode.md", anchor: "broken-contract-effects"}
+    readmeRelated: {file: "5.EqualsHashCode/EqualsHashCode.md", anchor: "broken-contract-effects"}
     apiRelated: {controller: "HashContractController", methodSignature: "brokenHashSetLookup()"}
 
   - id: tostring-sensitive-data
@@ -140,7 +140,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.ToString/ToString.md", anchor: "tostring-sensitive-data"}
+    readmeRelated: {file: "6.ToString/ToString.md", anchor: "tostring-sensitive-data"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: comparable-subtraction-overflow
@@ -153,7 +153,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.Comparable/Comparable.md", anchor: "compareto-contract"}
+    readmeRelated: {file: "7.Comparable/Comparable.md", anchor: "compareto-contract"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: compareto-equals-consistency
@@ -166,7 +166,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.Comparable/Comparable.md", anchor: "compareto-equals-consistency"}
+    readmeRelated: {file: "7.Comparable/Comparable.md", anchor: "compareto-equals-consistency"}
     apiRelated: {controller: "OrderingController", methodSignature: "compareToEquals()"}
 
   - id: comparator-mutability
@@ -179,7 +179,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.Comparator/Comparator.md", anchor: "comparator-contract"}
+    readmeRelated: {file: "8.Comparator/Comparator.md", anchor: "comparator-contract"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: default-object-equals-identity
@@ -192,7 +192,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.IdentityEquality/IdentityEquality.md", anchor: "reference-equality"}
+    readmeRelated: {file: "2.IdentityEquality/IdentityEquality.md", anchor: "reference-equality"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: equals-overload-vs-override
@@ -205,7 +205,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.Equals/Equals.md", anchor: "equals-implementation"}
+    readmeRelated: {file: "3.Equals/Equals.md", anchor: "equals-implementation"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: equals-field-selection
@@ -218,7 +218,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.Equals/Equals.md", anchor: "equals-implementation"}
+    readmeRelated: {file: "3.Equals/Equals.md", anchor: "equals-implementation"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: equals-getclass-instanceof-policy
@@ -231,7 +231,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.Equals/Equals.md", anchor: "equals-inheritance-risk"}
+    readmeRelated: {file: "3.Equals/Equals.md", anchor: "equals-inheritance-risk"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: hash-collision-not-equality
@@ -244,7 +244,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.HashCode/HashCode.md", anchor: "hash-distribution"}
+    readmeRelated: {file: "4.HashCode/HashCode.md", anchor: "hash-distribution"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: hashcode-cross-jvm-stability
@@ -257,20 +257,20 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.HashCode/HashCode.md", anchor: "hashcode-contract"}
+    readmeRelated: {file: "4.HashCode/HashCode.md", anchor: "hashcode-contract"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: hashmap-lookup-flow
     question: "Which mental model best describes lookup in a hash-based collection?"
     answers:
-      - {id: A, answer: "Call equals on every key first, then calculate a hash.", explanation: "Incorrect. Hashing is used first to narrow the candidate region."}
+      - {id: A, answer: "Call equals on every key first, then calculate a hash.", explanation: "Incorrect. Hashing is used first to narrow the candidate set/search path."}
       - {id: B, answer: "hashCode fully proves equality; equals is only for logging.", explanation: "Incorrect. A hash alone cannot establish equality."}
-      - {id: C, answer: "hashCode narrows candidates, then equals confirms the logical match.", explanation: "Correct. This is the key boundary model for hash lookup."}
+      - {id: C, answer: "hashCode provides input for narrowing candidates, then equals confirms the logical match.", explanation: "Correct. The collection may transform/use the hash internally; hashCode itself does not promise a concrete bucket."}
       - {id: D, answer: "The collection only uses reference ==.", explanation: "Incorrect. HashMap and HashSet rely on equals/hashCode contracts."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.EqualsHashCode/EqualsHashCode.md", anchor: "hash-collection-lookup"}
+    readmeRelated: {file: "5.EqualsHashCode/EqualsHashCode.md", anchor: "hash-collection-lookup"}
     apiRelated: {controller: "HashContractController", methodSignature: "brokenHashSetLookup()"}
 
   - id: tostring-default-not-unique-id
@@ -279,11 +279,11 @@ questions:
       - {id: A, answer: "The suffix is a JVM-guaranteed unique object ID.", explanation: "Incorrect. The suffix comes from hashCode in hexadecimal and collisions are possible."}
       - {id: B, answer: "The suffix is derived from hashCode in hexadecimal and is not a uniqueness guarantee.", explanation: "Correct. The default representation is not a persistent or unique identity."}
       - {id: C, answer: "It is Java's standard serialization format.", explanation: "Incorrect. toString is a diagnostic representation, not a serialization contract."}
-      - {id: D, answer: "The format is guaranteed to remain stable across all JVM runs.", explanation: "Incorrect. There is no such cross-run stability guarantee."}
+      - {id: D, answer: "The default Object.toString representation is guaranteed to remain a stable persistence format across JVM runs.", explanation: "Incorrect. The default Object representation makes no such persistence-format guarantee; a specific class could only offer one by explicitly documenting its own override contract."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.ToString/ToString.md", anchor: "tostring-purpose"}
+    readmeRelated: {file: "6.ToString/ToString.md", anchor: "tostring-purpose"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: tostring-vs-serialization
@@ -296,7 +296,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.ToString/ToString.md", anchor: "tostring-design"}
+    readmeRelated: {file: "6.ToString/ToString.md", anchor: "tostring-design"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: tostring-recursive-graph
@@ -309,7 +309,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.ToString/ToString.md", anchor: "tostring-design"}
+    readmeRelated: {file: "6.ToString/ToString.md", anchor: "tostring-design"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: natural-order-design-choice
@@ -322,7 +322,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.Comparable/Comparable.md", anchor: "natural-order"}
+    readmeRelated: {file: "7.Comparable/Comparable.md", anchor: "natural-order"}
     apiRelated: {controller: "OrderingController", methodSignature: "naturalVsCustom()"}
 
   - id: comparable-null-contract
@@ -335,7 +335,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.Comparable/Comparable.md", anchor: "compareto-contract"}
+    readmeRelated: {file: "7.Comparable/Comparable.md", anchor: "compareto-contract"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: comparable-zero-third-value
@@ -348,7 +348,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.Comparable/Comparable.md", anchor: "compareto-contract"}
+    readmeRelated: {file: "7.Comparable/Comparable.md", anchor: "compareto-contract"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: comparator-tiebreaker-tree-set
@@ -361,7 +361,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.Comparator/Comparator.md", anchor: "comparator-composition"}
+    readmeRelated: {file: "8.Comparator/Comparator.md", anchor: "comparator-composition"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: comparator-null-policy
@@ -374,7 +374,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.Comparator/Comparator.md", anchor: "comparator-composition"}
+    readmeRelated: {file: "8.Comparator/Comparator.md", anchor: "comparator-composition"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: comparator-zero-third-value
@@ -387,7 +387,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.Comparator/Comparator.md", anchor: "comparator-contract"}
+    readmeRelated: {file: "8.Comparator/Comparator.md", anchor: "comparator-contract"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: sorting-stability-vs-comparator
@@ -400,7 +400,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.Comparator/Comparator.md", anchor: "sorting-stability-boundary"}
+    readmeRelated: {file: "8.Comparator/Comparator.md", anchor: "sorting-stability-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: sorted-set-reverse-equality-mismatch
@@ -413,5 +413,18 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.Comparator/Comparator.md", anchor: "comparator-contract"}
+    readmeRelated: {file: "8.Comparator/Comparator.md", anchor: "comparator-contract"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: contract-synthesis-api-choice
+    question: "A domain type is used in HashSet, TreeSet, and diagnostic logs. Which statement best connects the contracts those APIs observe?"
+    answers:
+      - {id: A, answer: "HashSet uses equals/hashCode, TreeSet uses ordering comparison, and logs may use toString; the contracts answer different questions and must be designed deliberately.", explanation: "Correct. The same object can be observed through equality, hashing, ordering, and text-representation contracts depending on the API."}
+      - {id: B, answer: "All three APIs use only reference ==, so overriding equals or compareTo has no effect.", explanation: "Incorrect. Hash-based, sorted, and diagnostic APIs observe different contracts."}
+      - {id: C, answer: "A unique hashCode automatically defines TreeSet ordering and safe log output.", explanation: "Incorrect. hashCode does not define ordering, uniqueness, or diagnostic representation."}
+      - {id: D, answer: "Changing Comparator also changes the type's equals implementation for HashSet.", explanation: "Incorrect. Ordering policy and logical equality are separate contracts."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.ContractSynthesis/ContractSynthesis.md", anchor: "contract-synthesis"}
     apiRelated: {controller: "", methodSignature: ""}

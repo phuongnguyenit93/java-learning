@@ -41,7 +41,7 @@ HashContractController:
         <li>Look it up using <code>equal</code>.</li>
       </ol>
       <p><strong>Expected observation:</strong> the response shows <code>equals=true</code>, different hash values, and <code>containsEqualObject=false</code>.</p>
-      <p><strong>Meaning:</strong> hashing narrows candidates before equality confirms a match. If equal objects are routed to different hash regions, lookup may never reach the <code>equals</code> check.</p>
+      <p><strong>Meaning:</strong> the collection uses hashing to narrow candidates before equality confirms a match. If equal objects produce different hashes, lookup may follow a different search path and never reach the stored equal candidate for an <code>equals</code> check.</p>
       <p><strong>Conclusion:</strong> overriding <code>equals</code> and <code>hashCode</code> should be treated as one design change.</p>
     usage: true
   mutableKey():
@@ -86,7 +86,7 @@ OrderingController:
   compareToEquals():
     execution: |-
       <p><strong>Concept:</strong> sorted collections use comparison semantics, while hash-based collections use <code>equals/hashCode</code>.</p>
-      <p><strong>Setup:</strong> <code>BigDecimal("1.0")</code> and <code>BigDecimal("1.00")</code> are a standard example: <code>equals</code> considers scale and returns false, while <code>compareTo</code> treats them as the same numeric position and returns zero.</p>
+      <p><strong>Setup:</strong> <code>BigDecimal("1.0")</code> and <code>BigDecimal("1.00")</code> are a standard example: their representations have different scale so <code>equals</code> returns false, while <code>compareTo</code> treats them as the same numeric value for ordering and returns zero.</p>
       <p><strong>Flow:</strong></p>
       <ol>
         <li>Measure <code>a.equals(b)</code> and <code>a.compareTo(b)</code>.</li>
@@ -100,6 +100,6 @@ OrderingController:
       Set&lt;BigDecimal&gt; hash = new HashSet&lt;&gt;(List.of(a, b));
       Set&lt;BigDecimal&gt; tree = new TreeSet&lt;&gt;(List.of(a, b));</code></pre>
       <p><strong>Expected observation:</strong> <code>equals=false</code>, <code>compareTo=0</code>, <code>hashSetSize=2</code>, <code>treeSetSize=1</code>.</p>
-      <p><strong>Meaning:</strong> <code>TreeSet</code> uses ordering to determine duplicate keys, so comparison zero can collapse objects that <code>equals</code> considers different.</p>
-      <p><strong>Conclusion:</strong> natural/comparator ordering should be consistent with <code>equals</code> when practical; if it is intentionally inconsistent, callers must understand sorted-collection semantics.</p>
+      <p><strong>Meaning:</strong> <code>TreeSet</code> uses ordering to determine key equivalence, so comparison zero can collapse objects that <code>equals</code> considers different. The behavior is defined by the ordering, but it may differ from the equality semantics of the general <code>Set</code> contract.</p>
+      <p><strong>Conclusion:</strong> natural/comparator ordering should be consistent with <code>equals</code> when practical; if it is intentionally inconsistent, callers must understand the consequences for sorted collections.</p>
     usage: true

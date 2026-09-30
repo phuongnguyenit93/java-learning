@@ -1,15 +1,15 @@
 EqualityController:
   identityVsEquality():
     execution: |-
-      <p><strong>Khái niệm:</strong> reference identity và logical equality là hai contract khác nhau.</p>
-      <p><strong>Flow:</strong></p>
+      <p><strong>Khái niệm:</strong> định danh tham chiếu và phép bằng nhau về mặt logic là hai quy ước khác nhau.</p>
+      <p><strong>Luồng:</strong></p>
       <ol>
-        <li>Tạo hai instance <code>Value</code> khác nhau nhưng cùng <code>id = 7</code>.</li>
-        <li>So sánh bằng <code>==</code> để kiểm tra identity.</li>
-        <li>So sánh bằng <code>equals</code> để kiểm tra logical equality.</li>
-        <li>So sánh <code>hashCode</code> để kiểm tra contract đi kèm equality.</li>
+        <li>Tạo hai đối tượng <code>Value</code> riêng biệt nhưng cùng <code>id = 7</code>.</li>
+        <li>So sánh bằng <code>==</code> để kiểm tra định danh.</li>
+        <li>So sánh bằng <code>equals</code> để kiểm tra phép bằng nhau về mặt logic.</li>
+        <li>So sánh <code>hashCode</code> để kiểm tra quy ước đi kèm phép bằng nhau.</li>
       </ol>
-      <p><strong>Code evidence:</strong></p>
+      <p><strong>Minh chứng bằng mã:</strong></p>
       <pre><code>Value a = new Value(7), b = new Value(7);
       return Map.of(
           "sameReference", a == b,
@@ -17,14 +17,14 @@ EqualityController:
           "sameHash", a.hashCode() == b.hashCode()
       );</code></pre>
       <p><strong>Quan sát mong đợi:</strong> <code>sameReference=false</code>, <code>logicalEquals=true</code>, <code>sameHash=true</code>.</p>
-      <p><strong>Ý nghĩa:</strong> hai object có thể khác identity nhưng đại diện cùng logical value. Hash equality không chứng minh hai object equal, nhưng equal object bắt buộc phải có cùng hash.</p>
-      <p><strong>Kết luận:</strong> dùng <code>==</code> khi identity thật sự là điều cần hỏi; dùng <code>equals</code> khi domain cần logical equality.</p>
+      <p><strong>Ý nghĩa:</strong> hai đối tượng có thể khác định danh nhưng đại diện cùng một giá trị logic. Cùng mã băm không chứng minh hai đối tượng bằng nhau, nhưng hai đối tượng bằng nhau bắt buộc phải có cùng mã băm.</p>
+      <p><strong>Kết luận:</strong> dùng <code>==</code> khi định danh thật sự là điều cần hỏi; dùng <code>equals</code> khi nghiệp vụ cần phép bằng nhau về mặt logic.</p>
     usage: true
 HashContractController:
   brokenHashSetLookup():
     execution: |-
-      <p><strong>Khái niệm:</strong> <code>equals</code> và <code>hashCode</code> phải nhất quán để hash-based lookup hoạt động đúng kỳ vọng.</p>
-      <p><strong>Setup:</strong> class <code>Broken</code> cố ý vi phạm contract: equality chỉ dựa trên <code>id</code>, còn hash được truyền riêng.</p>
+      <p><strong>Khái niệm:</strong> <code>equals</code> và <code>hashCode</code> phải nhất quán để tra cứu dựa trên mã băm hoạt động đúng kỳ vọng.</p>
+      <p><strong>Thiết lập:</strong> lớp <code>Broken</code> cố ý vi phạm quy ước: phép bằng nhau chỉ dựa trên <code>id</code>, còn mã băm được truyền riêng.</p>
       <pre><code>static final class Broken {
           final int id;
           final int hash;
@@ -33,73 +33,73 @@ HashContractController:
           }
           public int hashCode() { return hash; }
       }</code></pre>
-      <p><strong>Flow:</strong></p>
+      <p><strong>Luồng:</strong></p>
       <ol>
         <li>Tạo <code>stored = Broken(1, 101)</code> và <code>equal = Broken(1, 202)</code>.</li>
-        <li><code>stored.equals(equal)</code> là <code>true</code> nhưng hash khác nhau.</li>
-        <li>Insert <code>stored</code> vào <code>HashSet</code>.</li>
-        <li>Lookup bằng <code>equal</code>.</li>
+        <li><code>stored.equals(equal)</code> là <code>true</code> nhưng mã băm khác nhau.</li>
+        <li>Đưa <code>stored</code> vào <code>HashSet</code>.</li>
+        <li>Tra cứu bằng <code>equal</code>.</li>
       </ol>
-      <p><strong>Quan sát mong đợi:</strong> response cho thấy <code>equals=true</code>, hai hash khác nhau và <code>containsEqualObject=false</code>.</p>
-      <p><strong>Ý nghĩa:</strong> hash được dùng để thu hẹp candidate trước khi equality xác nhận match. Nếu equal object đi tới vùng hash khác, lookup có thể không bao giờ tới bước <code>equals</code>.</p>
-      <p><strong>Kết luận:</strong> override <code>equals</code> và <code>hashCode</code> phải được xem như một thay đổi thiết kế chung.</p>
+      <p><strong>Quan sát mong đợi:</strong> kết quả cho thấy <code>equals=true</code>, hai mã băm khác nhau và <code>containsEqualObject=false</code>.</p>
+      <p><strong>Ý nghĩa:</strong> cấu trúc dữ liệu dùng mã băm để thu hẹp nhóm ứng viên trước khi <code>equals</code> xác nhận kết quả. Nếu hai đối tượng bằng nhau tạo mã băm khác nhau, lần tra cứu có thể đi theo đường tìm kiếm khác và không chạm tới ứng viên đã lưu để gọi <code>equals</code>.</p>
+      <p><strong>Kết luận:</strong> ghi đè <code>equals</code> và <code>hashCode</code> phải được xem như một thay đổi thiết kế chung.</p>
     usage: true
   mutableKey():
     execution: |-
-      <p><strong>Khái niệm:</strong> equality/hash state của key phải ổn định trong thời gian key nằm trong hash-based collection.</p>
-      <p><strong>Flow:</strong></p>
+      <p><strong>Khái niệm:</strong> trạng thái liên quan tới phép bằng nhau và mã băm của khóa nên ổn định trong thời gian khóa nằm trong cấu trúc dữ liệu dựa trên mã băm.</p>
+      <p><strong>Luồng:</strong></p>
       <ol>
-        <li>Tạo <code>MutableKey(1)</code> và insert vào <code>HashMap</code>.</li>
-        <li>Kiểm tra <code>containsKey</code> trước mutation.</li>
-        <li>Đổi <code>key.id</code> từ <code>1</code> sang <code>2</code>; cả <code>equals</code> và <code>hashCode</code> đều phụ thuộc vào field này.</li>
+        <li>Tạo <code>MutableKey(1)</code> và đưa vào <code>HashMap</code>.</li>
+        <li>Kiểm tra <code>containsKey</code> trước khi thay đổi.</li>
+        <li>Đổi <code>key.id</code> từ <code>1</code> sang <code>2</code>; cả <code>equals</code> và <code>hashCode</code> đều phụ thuộc vào trường dữ liệu này.</li>
         <li>Kiểm tra lại <code>containsKey</code>.</li>
       </ol>
-      <p><strong>Code evidence:</strong></p>
+      <p><strong>Minh chứng bằng mã:</strong></p>
       <pre><code>map.put(key, "value");
       boolean before = map.containsKey(key);
       key.id = 2;
       boolean after = map.containsKey(key);</code></pre>
-      <p><strong>Quan sát:</strong> endpoint trả cả trạng thái trước/sau mutation cùng current hash để người học nhìn thấy hậu quả thực tế trên JDK đang chạy.</p>
-      <p><strong>Boundary:</strong> khi key đã phá assumption về state ổn định, Java collection không cam kết một failure shape duy nhất cho mọi implementation. Experiment này là evidence của rủi ro, không phải một API guarantee rằng mọi lookup sau mutation luôn trả false.</p>
-      <p><strong>Kết luận:</strong> immutable key hoặc ít nhất immutable equality/hash fields là lựa chọn dễ reasoning nhất.</p>
+      <p><strong>Quan sát:</strong> endpoint trả cả trạng thái trước/sau thay đổi cùng mã băm hiện tại để người học nhìn thấy hậu quả thực tế trên JDK đang chạy.</p>
+      <p><strong>Ranh giới:</strong> khi khóa đã phá giả định về trạng thái ổn định, cấu trúc dữ liệu Java không cam kết một dạng thất bại duy nhất cho mọi phần triển khai. Thí nghiệm này là minh chứng của rủi ro, không phải bảo đảm API rằng mọi lần tra cứu sau thay đổi luôn trả <code>false</code>.</p>
+      <p><strong>Kết luận:</strong> khóa bất biến, hoặc ít nhất các trường tham gia phép bằng nhau và mã băm không thay đổi, là lựa chọn dễ suy luận nhất.</p>
     usage: true
 OrderingController:
   naturalVsCustom():
     execution: |-
-      <p><strong>Khái niệm:</strong> <code>Comparable</code> đặt natural order trong type; <code>Comparator</code> đặt ordering policy ở caller.</p>
-      <p><strong>Setup:</strong> <code>Person</code> implements <code>Comparable&lt;Person&gt;</code> theo <code>age</code>, trong khi caller tạo comparator theo <code>name</code>.</p>
+      <p><strong>Khái niệm:</strong> <code>Comparable</code> đặt thứ tự tự nhiên trong kiểu dữ liệu; <code>Comparator</code> đặt chính sách sắp xếp ở đoạn mã sử dụng.</p>
+      <p><strong>Thiết lập:</strong> <code>Person</code> triển khai <code>Comparable&lt;Person&gt;</code> theo <code>age</code>, trong khi đoạn mã sử dụng tạo comparator theo <code>name</code>.</p>
       <pre><code>record Person(String name, int age) implements Comparable&lt;Person&gt; {
           public int compareTo(Person o) {
               return Integer.compare(age, o.age);
           }
       }</code></pre>
-      <p><strong>Flow:</strong></p>
+      <p><strong>Luồng:</strong></p>
       <ol>
-        <li>Copy cùng source list sang hai list độc lập.</li>
-        <li><code>Collections.sort(natural)</code> dùng natural order theo age.</li>
-        <li><code>byName.sort(Comparator.comparing(Person::name))</code> dùng policy theo name.</li>
+        <li>Sao chép cùng danh sách nguồn sang hai danh sách độc lập.</li>
+        <li><code>Collections.sort(natural)</code> dùng thứ tự tự nhiên theo tuổi.</li>
+        <li><code>byName.sort(Comparator.comparing(Person::name))</code> dùng chính sách theo tên.</li>
       </ol>
-      <p><strong>Quan sát mong đợi:</strong> natural order đặt Bob(30) trước Ada(40), còn custom order đặt Ada trước Bob.</p>
-      <p><strong>Ý nghĩa:</strong> cùng dữ liệu có thể có một natural order và nhiều contextual order. Không nên sửa <code>compareTo</code> chỉ để phục vụ một view cụ thể.</p>
-      <p><strong>Kết luận:</strong> dùng <code>Comparable</code> khi type có một default order rõ ràng; dùng <code>Comparator</code> cho alternate/business-specific ordering.</p>
+      <p><strong>Quan sát mong đợi:</strong> thứ tự tự nhiên đặt Bob(30) trước Ada(40), còn thứ tự tùy chỉnh đặt Ada trước Bob.</p>
+      <p><strong>Ý nghĩa:</strong> cùng dữ liệu có thể có một thứ tự tự nhiên và nhiều thứ tự theo ngữ cảnh. Không nên sửa <code>compareTo</code> chỉ để phục vụ một góc nhìn cụ thể.</p>
+      <p><strong>Kết luận:</strong> dùng <code>Comparable</code> khi kiểu dữ liệu có một thứ tự mặc định rõ ràng; dùng <code>Comparator</code> cho các thứ tự thay thế hoặc phụ thuộc nghiệp vụ.</p>
     usage: true
   compareToEquals():
     execution: |-
-      <p><strong>Khái niệm:</strong> sorted collections dùng comparison semantics, còn hash-based collections dùng <code>equals/hashCode</code>.</p>
-      <p><strong>Setup:</strong> <code>BigDecimal("1.0")</code> và <code>BigDecimal("1.00")</code> là ví dụ chuẩn: <code>equals</code> xét scale nên trả false, còn <code>compareTo</code> xét numeric ordering nên trả 0.</p>
-      <p><strong>Flow:</strong></p>
+      <p><strong>Khái niệm:</strong> cấu trúc dữ liệu có thứ tự dùng quan hệ so sánh, còn cấu trúc dựa trên mã băm dùng <code>equals/hashCode</code>.</p>
+      <p><strong>Thiết lập:</strong> <code>BigDecimal("1.0")</code> và <code>BigDecimal("1.00")</code> có scale khác nhau nên <code>equals</code> trả <code>false</code>, trong khi <code>compareTo</code> xem chúng có cùng giá trị số cho mục đích sắp xếp và trả 0.</p>
+      <p><strong>Luồng:</strong></p>
       <ol>
         <li>Đo trực tiếp <code>a.equals(b)</code> và <code>a.compareTo(b)</code>.</li>
-        <li>Insert cả hai vào <code>HashSet</code>.</li>
-        <li>Insert cả hai vào <code>TreeSet</code>.</li>
-        <li>So sánh size của hai collection.</li>
+        <li>Đưa cả hai vào <code>HashSet</code>.</li>
+        <li>Đưa cả hai vào <code>TreeSet</code>.</li>
+        <li>So sánh kích thước của hai cấu trúc dữ liệu.</li>
       </ol>
-      <p><strong>Code evidence:</strong></p>
+      <p><strong>Minh chứng bằng mã:</strong></p>
       <pre><code>BigDecimal a = new BigDecimal("1.0");
       BigDecimal b = new BigDecimal("1.00");
       Set&lt;BigDecimal&gt; hash = new HashSet&lt;&gt;(List.of(a, b));
       Set&lt;BigDecimal&gt; tree = new TreeSet&lt;&gt;(List.of(a, b));</code></pre>
       <p><strong>Quan sát mong đợi:</strong> <code>equals=false</code>, <code>compareTo=0</code>, <code>hashSetSize=2</code>, <code>treeSetSize=1</code>.</p>
-      <p><strong>Ý nghĩa:</strong> <code>TreeSet</code> dùng ordering để quyết định key trùng, nên comparison bằng 0 có thể collapse hai object mà <code>equals</code> xem là khác nhau.</p>
-      <p><strong>Kết luận:</strong> natural/comparator ordering nên consistent với <code>equals</code> khi có thể; nếu cố ý không consistent, caller phải hiểu semantics của sorted collection.</p>
+      <p><strong>Ý nghĩa:</strong> <code>TreeSet</code> dùng thứ tự để xác định tính tương đương của khóa, nên kết quả so sánh bằng 0 có thể gộp hai đối tượng mà <code>equals</code> xem là khác nhau. Hành vi này được xác định bởi thứ tự, nhưng có thể khác ngữ nghĩa bằng nhau trong quy tắc chung của <code>Set</code>.</p>
+      <p><strong>Kết luận:</strong> thứ tự tự nhiên hoặc thứ tự từ comparator nên nhất quán với <code>equals</code> khi hợp lý; nếu cố ý khác nhau, đoạn mã sử dụng phải hiểu hệ quả với cấu trúc dữ liệu có thứ tự.</p>
     usage: true

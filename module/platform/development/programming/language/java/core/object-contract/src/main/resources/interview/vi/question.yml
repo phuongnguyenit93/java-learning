@@ -28,149 +28,156 @@
 # </interview-schema>
 
 questions:
-  - question: "Object contract là gì, và vì sao code vẫn có thể compile nhưng collection/framework behavior sai khi contract bị phá?"
-    answer: "Object contract là tập behavioral promises mà code khác dựa vào, ví dụ equals/hashCode phải nhất quán, ordering phải giữ các luật so sánh, và toString nên cung cấp representation chẩn đoán phù hợp. Compiler chủ yếu kiểm tra type/signature chứ không chứng minh được semantic law. Vì vậy class có thể compile nhưng HashSet/HashMap lookup, sorted collection, logging hoặc framework behavior vẫn sai hoặc gây hiểu nhầm khi implementation phá contract."
+  - question: "Quy ước của Object là gì, và vì sao mã nguồn vẫn có thể biên dịch nhưng hành vi của cấu trúc dữ liệu/framework lại sai khi quy ước bị phá vỡ?"
+    answer: "Quy ước của Object là tập các cam kết về hành vi mà mã nguồn khác dựa vào, ví dụ equals/hashCode phải nhất quán, quan hệ thứ tự phải giữ các tính chất so sánh, và toString nên cung cấp biểu diễn chẩn đoán phù hợp. Trình biên dịch chủ yếu kiểm tra kiểu và chữ ký chứ không chứng minh được các quy tắc ngữ nghĩa. Vì vậy một lớp có thể biên dịch nhưng tra cứu HashSet/HashMap, cấu trúc có thứ tự, log hoặc hành vi framework vẫn sai hoặc gây hiểu nhầm khi phần triển khai vi phạm quy ước."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.IdentityEquality/IdentityEquality.md", anchor: "object-contract-purpose"}
+    readmeRelated: {file: "1.ObjectContractPurpose/ObjectContractPurpose.md", anchor: "object-contract-purpose"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Phân biệt object identity với logical equality và nêu case mỗi loại quan trọng."
-    answer: "Identity hỏi reference có cùng nhận diện một object và dùng reference equality. Logical equality hỏi các object riêng có biểu diễn cùng domain value qua equals. Identity quan trọng với singleton/sentinel/enum; value object thường quan tâm logical equality."
+  - question: "Phân biệt định danh đối tượng với phép bằng nhau về mặt logic và nêu trường hợp mỗi loại quan trọng."
+    answer: "Định danh hỏi hai tham chiếu có cùng trỏ tới một đối tượng hay không. Phép bằng nhau về mặt logic hỏi các đối tượng riêng biệt có đại diện cùng giá trị nghiệp vụ qua equals hay không. Định danh quan trọng với enum, đối tượng đơn nhất (singleton), đối tượng đánh dấu (sentinel); đối tượng giá trị thường quan tâm phép bằng nhau về mặt logic."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.IdentityEquality/IdentityEquality.md", anchor: "identity-vs-equality"}
+    readmeRelated: {file: "2.IdentityEquality/IdentityEquality.md", anchor: "identity-vs-equality"}
     apiRelated: {controller: "EqualityController", methodSignature: "identityVsEquality()"}
 
-  - question: "Vì sao reflexivity, symmetry, transitivity, consistency và null handling quan trọng trong equals?"
-    answer: "Chúng làm equality thành relation ổn định mà library có thể reasoning. Vi phạm tạo behavior phụ thuộc order/unstable trong collection, deduplication, caching và test dù compiler vẫn accept code."
+  - question: "Vì sao tính phản xạ, đối xứng, bắc cầu, nhất quán và cách xử lý null quan trọng trong equals?"
+    answer: "Các tính chất này làm phép bằng nhau trở thành một quan hệ ổn định mà thư viện có thể dựa vào để suy luận. Vi phạm chúng có thể tạo hành vi phụ thuộc thứ tự hoặc không ổn định trong cấu trúc dữ liệu, loại bỏ phần tử trùng, lưu đệm và kiểm thử dù trình biên dịch vẫn chấp nhận mã nguồn."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.Equals/Equals.md", anchor: "equals-contract"}
+    readmeRelated: {file: "3.Equals/Equals.md", anchor: "equals-contract"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Vì sao value equality qua open inheritance hierarchy khó design?"
-    answer: "Parent có thể chỉ compare base state trong khi child thêm equality-relevant state, tạo tension symmetry/transitivity. Composition, closed hierarchy hoặc class-based equality thường tránh contradiction."
+  - question: "Vì sao phép bằng nhau theo giá trị trong một cây kế thừa mở khó thiết kế?"
+    answer: "Lớp cha có thể chỉ so sánh trạng thái cơ sở trong khi lớp con thêm trạng thái có ý nghĩa với phép bằng nhau, từ đó tạo xung đột với tính đối xứng hoặc bắc cầu. Kết hợp đối tượng (composition), hệ phân cấp đóng hoặc phép bằng nhau dựa trên đúng lớp thực tế thường giúp tránh mâu thuẫn này."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.Equals/Equals.md", anchor: "equals-inheritance-risk"}
+    readmeRelated: {file: "3.Equals/Equals.md", anchor: "equals-inheritance-risk"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Giải thích concept HashMap dùng hashCode và equals thế nào khi lookup."
-    answer: "Hash thu hẹp nơi tìm, còn equality xác nhận logical key trong candidate/collision. Vì vậy equal key phải cùng hash, nhưng cùng hash không suy ra equal key."
+  - question: "Giải thích ở mức mô hình tư duy HashMap dùng hashCode và equals như thế nào khi tra cứu."
+    answer: "Với khóa khác null, hashCode cung cấp đầu vào để HashMap thu hẹp phạm vi tìm kiếm, còn equals xác nhận khóa logic trong nhóm ứng viên hoặc trường hợp va chạm. Vì vậy hai khóa bằng nhau phải tạo cùng mã băm, nhưng cùng mã băm không suy ra hai khóa bằng nhau. Đây là mô hình ở mức ranh giới; hashCode không tự cam kết một vị trí lưu trữ nội bộ cụ thể."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.EqualsHashCode/EqualsHashCode.md", anchor: "equals-hashcode-consistency"}
+    readmeRelated: {file: "5.EqualsHashCode/EqualsHashCode.md", anchor: "equals-hashcode-consistency"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Property nào làm một key tốt cho hash-based collection?"
-    answer: "Equality và hashCode phải đúng, consistent với nhau và dựa trên state ổn định khi key stored. Immutable value object thường là key dễ reasoning nhất."
+  - question: "Những tính chất nào giúp một khóa phù hợp với cấu trúc dữ liệu dựa trên mã băm?"
+    answer: "Phép bằng nhau và hashCode phải đúng, nhất quán với nhau, đồng thời trạng thái liên quan nên ổn định trong thời gian khóa đang được lưu. Đối tượng giá trị bất biến thường là loại khóa dễ suy luận nhất."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.HashCode/HashCode.md", anchor: "mutable-key-risk"}
+    readmeRelated: {file: "5.EqualsHashCode/EqualsHashCode.md", anchor: "mutable-key-risk"}
     apiRelated: {controller: "HashContractController", methodSignature: "mutableKey()"}
 
-  - question: "Vì sao consistency giữa compareTo và equals quan trọng?"
-    answer: "Sorted set/map thường xem compareTo zero là cùng ordering key, còn API khác dùng equals. Nếu hai notion khác nhau, size/membership semantics có thể khác, như BigDecimal scale variant."
+  - question: "Vì sao tính nhất quán giữa compareTo và equals lại quan trọng?"
+    answer: "Set/Map có thứ tự thường xem compareTo trả 0 là cùng một khóa theo thứ tự, trong khi nhiều API khác dùng equals. Nếu hai khái niệm khác nhau, kích thước và hành vi membership có thể khác, như trường hợp các BigDecimal có scale khác nhau."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.Comparable/Comparable.md", anchor: "compareto-equals-consistency"}
+    readmeRelated: {file: "7.Comparable/Comparable.md", anchor: "compareto-equals-consistency"}
     apiRelated: {controller: "OrderingController", methodSignature: "compareToEquals()"}
 
-  - question: "Khi nào ordering nên nằm trong Comparable và khi nào dùng Comparator?"
-    answer: "Comparable phù hợp cho một natural order intrinsic và dễ đoán của type. Comparator tốt cho alternate view, domain-specific sort hoặc khi type không nên own ordering policy."
+  - question: "Khi nào thứ tự nên nằm trong Comparable và khi nào nên dùng Comparator?"
+    answer: "Comparable phù hợp khi kiểu dữ liệu có một thứ tự tự nhiên rõ ràng, dễ dự đoán và thuộc về chính kiểu đó. Comparator phù hợp cho các góc nhìn thay thế, sắp xếp phụ thuộc nghiệp vụ hoặc khi kiểu dữ liệu không nên sở hữu chính sách thứ tự."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.Comparator/Comparator.md", anchor: "external-order"}
+    readmeRelated: {file: "8.Comparator/Comparator.md", anchor: "external-order"}
     apiRelated: {controller: "OrderingController", methodSignature: "naturalVsCustom()"}
 
-  - question: "Production-quality toString nên tối ưu điều gì?"
-    answer: "Human diagnostic value, output concise/deterministic và safety. Nó nên tránh expensive side effect/sensitive data và không nên bị xem là stable serialization contract nếu không thiết kế explicit."
+  - question: "Một toString dùng tốt trong thực tế nên tối ưu điều gì?"
+    answer: "Nó nên ưu tiên giá trị chẩn đoán cho con người, kết quả ngắn gọn/dễ đọc và an toàn. Nó nên tránh tác dụng phụ tốn kém hoặc bất ngờ, không làm lộ dữ liệu nhạy cảm và không nên bị xem như quy ước tuần tự hóa ổn định trừ khi lớp chủ đích công bố một định dạng như vậy."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.ToString/ToString.md", anchor: "tostring-sensitive-data"}
+    readmeRelated: {file: "6.ToString/ToString.md", anchor: "tostring-sensitive-data"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Nếu một class không override equals/hashCode thì Object mặc định cho semantics gì, và khi nào semantics đó là đủ?"
-    answer: "`Object.equals` mặc định là identity-based: chỉ cùng object mới equal; `Object.hashCode` tương thích với semantics đó. Điều này đủ khi identity chính là meaning của object, ví dụ sentinel/singleton-style object hoặc object không cần value semantics. Khi domain cần hai instance độc lập đại diện cùng value/entity, phải thiết kế logical equality và hashCode tương ứng."
+  - question: "Nếu một lớp không ghi đè equals/hashCode thì Object mặc định cho ngữ nghĩa gì, và khi nào ngữ nghĩa đó là đủ?"
+    answer: "`Object.equals` mặc định dựa trên định danh: chỉ cùng một đối tượng mới bằng nhau; `Object.hashCode` tương thích với cách hiểu đó. Điều này đủ khi định danh chính là ý nghĩa cần quan tâm, ví dụ đối tượng đánh dấu/đơn nhất hoặc đối tượng không cần ngữ nghĩa theo giá trị. Khi nghiệp vụ cần hai đối tượng riêng biệt đại diện cùng một giá trị/thực thể, phải thiết kế phép bằng nhau về mặt logic và hashCode tương ứng."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.IdentityEquality/IdentityEquality.md", anchor: "reference-equality"}
+    readmeRelated: {file: "2.IdentityEquality/IdentityEquality.md", anchor: "reference-equality"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Bạn chọn field cho equals/hashCode của entity và value object khác nhau như thế nào?"
-    answer: "Value object thường equal theo toàn bộ thành phần định nghĩa value; entity thường equal theo stable domain identity thay vì mọi mutable state. Không nên máy móc đưa mọi field vào generator. Field equality phải phản ánh domain meaning và nên ổn định nếu object dùng làm key."
+  - question: "Bạn chọn trường dữ liệu cho equals/hashCode của thực thể và đối tượng giá trị khác nhau như thế nào?"
+    answer: "Đối tượng giá trị thường bằng nhau theo các thành phần định nghĩa giá trị; thực thể thường bằng nhau theo định danh nghiệp vụ ổn định thay vì mọi trạng thái có thể thay đổi. Không nên máy móc đưa mọi trường mà công cụ sinh mã nhìn thấy vào phép bằng nhau. Các trường tham gia phải phản ánh ý nghĩa nghiệp vụ và nên ổn định nếu đối tượng được dùng làm khóa."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.IdentityEquality/IdentityEquality.md", anchor: "value-object-equality"}
+    readmeRelated: {file: "2.IdentityEquality/IdentityEquality.md", anchor: "value-object-equality"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Phân biệt override equals đúng với việc vô tình overload equals và giải thích vì sao @Override quan trọng."
-    answer: "Contract chuẩn là `equals(Object)`. `equals(UserId)` chỉ tạo overload; collection hoặc code gọi qua Object vẫn có thể dùng implementation kế thừa. `@Override` giúp compiler xác nhận exact signature và bắt lỗi ngay khi method không thực sự override Object contract."
+  - question: "Phân biệt ghi đè equals đúng với việc vô tình nạp chồng equals và giải thích vì sao @Override quan trọng."
+    answer: "Chữ ký chuẩn là `equals(Object)`. `equals(UserId)` chỉ tạo nạp chồng; cấu trúc dữ liệu hoặc mã gọi qua Object vẫn có thể dùng phần triển khai kế thừa. `@Override` giúp trình biên dịch xác nhận đúng chữ ký và bắt lỗi khi phương thức không thực sự ghi đè quy ước của Object."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.Equals/Equals.md", anchor: "equals-implementation"}
+    readmeRelated: {file: "3.Equals/Equals.md", anchor: "equals-implementation"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Hash collision ảnh hưởng correctness và performance khác nhau như thế nào?"
-    answer: "Collision tự nó không phá correctness vì collection vẫn dùng equals để phân biệt candidate. Nhưng phân bố hash kém làm nhiều key dồn vào cùng candidate region, tăng chi phí lookup. Correctness đến từ equals/hashCode contract; distribution chủ yếu ảnh hưởng performance."
+  - question: "Va chạm băm ảnh hưởng tính đúng đắn và hiệu năng khác nhau như thế nào?"
+    answer: "Va chạm tự nó không phá tính đúng đắn vì cấu trúc dữ liệu vẫn có thể dùng equals để phân biệt các khóa ứng viên. Phân bố mã băm kém làm tăng số ứng viên phải kiểm tra và có thể tăng chi phí tra cứu. Tính đúng đắn đến từ quy ước equals/hashCode; chất lượng phân bố chủ yếu ảnh hưởng hiệu năng."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.HashCode/HashCode.md", anchor: "hash-distribution"}
+    readmeRelated: {file: "4.HashCode/HashCode.md", anchor: "hash-distribution"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Vì sao hashCode không nên được dùng như unique ID, security fingerprint hoặc persistent identifier?"
-    answer: "HashCode là int hữu hạn nên collision hợp lệ, không có security property và Object contract không bảo đảm cùng value giữa các JVM execution. Nó tồn tại để hỗ trợ hash-based object contract, không để thay thế domain ID, cryptographic hash hay persistence key."
+  - question: "Vì sao hashCode không nên được dùng như mã định danh duy nhất, dấu vân tay bảo mật hoặc mã định danh lưu trữ bền vững?"
+    answer: "hashCode là `int` hữu hạn nên va chạm là hợp lệ, nó không có tính chất mật mã và quy ước của Object không bảo đảm cùng một giá trị giữa các lần chạy JVM khác nhau. Mục đích của nó là hỗ trợ cấu trúc dữ liệu dựa trên mã băm, không thay thế ID nghiệp vụ, hàm băm mật mã hay khóa lưu trữ."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.HashCode/HashCode.md", anchor: "hashcode-contract"}
+    readmeRelated: {file: "4.HashCode/HashCode.md", anchor: "hashcode-contract"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Phân biệt hai failure mode: override equals nhưng hashCode không consistent, và mutable key thay đổi sau khi insert."
-    answer: "Case đầu là implementation contract sai ngay từ đầu: equal objects có thể đi tới hash region khác nhau. Case hai có thể bắt đầu với implementation đúng nhưng key đổi equality/hash state sau insertion, khiến vị trí lưu cũ không còn khớp lookup state mới. Cả hai đều phá assumption của hash collection nhưng nguyên nhân khác nhau."
+  - question: "Phân biệt hai dạng lỗi: ghi đè equals nhưng hashCode không nhất quán, và khóa thay đổi sau khi đã được đưa vào cấu trúc dữ liệu."
+    answer: "Trường hợp đầu là vi phạm quy ước ngay từ đầu: hai đối tượng bằng nhau có thể tạo mã băm khác nhau, khiến lần tra cứu đi theo đường tìm kiếm khác. Trường hợp sau có thể bắt đầu với phần triển khai đúng nhưng khóa đổi trạng thái equals/hashCode sau khi được đưa vào, khiến lần tra cứu mới không còn phù hợp với cấu trúc đã được xây theo trạng thái cũ. Cả hai đều phá giả định của cấu trúc dựa trên mã băm nhưng nguyên nhân khác nhau."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.EqualsHashCode/EqualsHashCode.md", anchor: "broken-contract-effects"}
+    readmeRelated: {file: "5.EqualsHashCode/EqualsHashCode.md", anchor: "broken-contract-effects"}
     apiRelated: {controller: "HashContractController", methodSignature: "brokenHashSetLookup()"}
 
-  - question: "toString khác serialization contract ở mục tiêu và mức ổn định như thế nào?"
-    answer: "toString ưu tiên diagnostic readability cho con người và có thể thay đổi khi nhu cầu debug thay đổi; format mặc định cũng không phải unique identity hay cross-run stable contract. Serialization cần machine-readable schema, compatibility/versioning policy và parser rõ ràng. Không nên parse ngược toString trừ khi type explicitly cam kết format đó."
+  - question: "toString khác quy ước tuần tự hóa dữ liệu ở mục tiêu và mức ổn định như thế nào?"
+    answer: "toString ưu tiên khả năng đọc phục vụ chẩn đoán cho con người và định dạng chẩn đoán có thể thay đổi theo nhu cầu gỡ lỗi; biểu diễn mặc định cũng không phải định danh duy nhất hay định dạng lưu trữ ổn định giữa các lần chạy. Tuần tự hóa dữ liệu cần lược đồ dành cho máy, chính sách tương thích/phiên bản và bộ phân tích rõ ràng. Không nên phân tích ngược toString trừ khi kiểu dữ liệu chủ đích công bố một định dạng như vậy."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.ToString/ToString.md", anchor: "tostring-design"}
+    readmeRelated: {file: "6.ToString/ToString.md", anchor: "tostring-design"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Một compareTo production-quality cần giữ những contract nào ngoài việc trả số âm/0/dương?"
-    answer: "Ordering phải có sign antisymmetry, transitivity và zero-equivalence consistency: nếu a compare b bằng 0 thì a và b phải có cùng relation về dấu với phần tử thứ ba. `x.compareTo(null)` phải throw NullPointerException. Caller chỉ dựa vào dấu, nên nên dùng Integer.compare/Long.compare thay vì phép trừ có thể overflow."
+  - question: "Một compareTo dùng tốt trong thực tế cần giữ những quy tắc nào ngoài việc trả số âm/0/dương?"
+    answer: "Quan hệ thứ tự phải có đối xứng ngược về dấu, tính bắc cầu và tính nhất quán của lớp tương đương bằng 0: nếu a so với b bằng 0 thì a và b phải có cùng quan hệ về dấu với phần tử thứ ba. `x.compareTo(null)` phải ném NullPointerException. Đoạn mã sử dụng chỉ dựa vào dấu, nên dùng Integer.compare/Long.compare thay vì phép trừ có thể tràn số."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.Comparable/Comparable.md", anchor: "compareto-contract"}
+    readmeRelated: {file: "7.Comparable/Comparable.md", anchor: "compareto-contract"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Mô tả cả hai chiều mà ordering không consistent với equals có thể làm TreeSet khác Set expectation."
-    answer: "Nếu equals false nhưng compare bằng 0, TreeSet có thể collapse hai logical value khác nhau. Nếu equals true nhưng compare khác 0, TreeSet có thể giữ cả hai value dù Set semantics thông thường khiến người đọc kỳ vọng chúng trùng. Vì sorted set dùng ordering comparison để xác định duplicate key."
+  - question: "Mô tả cả hai chiều mà thứ tự không nhất quán với equals có thể làm TreeSet khác kỳ vọng thông thường của Set."
+    answer: "Nếu equals là false nhưng phép so sánh trả 0, TreeSet có thể gộp hai giá trị logic khác nhau. Nếu equals là true nhưng phép so sánh khác 0, TreeSet có thể giữ cả hai dù ngữ nghĩa Set thông thường khiến người đọc kỳ vọng chúng trùng. Nguyên nhân là Set có thứ tự dùng phép so sánh thứ tự để xác định tính tương đương của khóa."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.Comparable/Comparable.md", anchor: "compareto-equals-consistency"}
+    readmeRelated: {file: "7.Comparable/Comparable.md", anchor: "compareto-equals-consistency"}
     apiRelated: {controller: "OrderingController", methodSignature: "compareToEquals()"}
 
-  - question: "Bạn thiết kế Comparator nhiều field cho TreeSet như thế nào để tránh vô tình collapse object khác nhau?"
-    answer: "Bắt đầu từ primary business key rồi thêm tie-breaker bằng `thenComparing` cho tới khi `compare(a,b)==0` đúng với notion ordering-key mà collection cần. Nếu muốn giữ mọi entity distinct, thường cần stable unique field cuối chain. Nhưng không nên thêm tie-breaker vô nghĩa nếu domain thật sự muốn coi chúng cùng ordering key."
+  - question: "Bạn thiết kế Comparator nhiều trường cho TreeSet như thế nào để tránh vô tình gộp các đối tượng khác nhau?"
+    answer: "Bắt đầu từ khóa nghiệp vụ chính rồi thêm tiêu chí phân định bằng `thenComparing` cho tới khi `compare(a,b)==0` khớp với khái niệm tương đương theo thứ tự mà cấu trúc dữ liệu cần. Nếu muốn giữ mọi thực thể riêng biệt, thường cần một trường duy nhất và ổn định làm tiêu chí cuối. Nhưng không nên thêm tiêu chí vô nghĩa nếu nghiệp vụ thật sự muốn coi chúng là cùng một khóa theo thứ tự."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.Comparator/Comparator.md", anchor: "comparator-composition"}
+    readmeRelated: {file: "8.Comparator/Comparator.md", anchor: "comparator-composition"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Vì sao comparator phụ thuộc current time hoặc mutable external configuration nguy hiểm hơn comparator thuần trên object state?"
-    answer: "Cùng cặp object có thể đổi thứ tự giữa các lần compare dù object không đổi, phá sign/transitivity/consistency assumptions của sort và tree structure. Với TreeSet/TreeMap, cấu trúc đã được bố trí theo ordering cũ nhưng comparator mới có thể tìm theo relation khác. Comparator nên deterministic trên stable ordering state trong thời gian collection sử dụng nó."
+  - question: "Vì sao Comparator phụ thuộc vào thời gian hiện tại hoặc cấu hình bên ngoài có thể thay đổi nguy hiểm hơn Comparator thuần dựa trên trạng thái đối tượng?"
+    answer: "Cùng một cặp đối tượng có thể đổi thứ tự giữa các lần so sánh dù chính đối tượng không đổi, phá giả định về dấu, tính bắc cầu và tính nhất quán của thuật toán sắp xếp/cấu trúc cây. Với TreeSet/TreeMap, cấu trúc có thể đã được bố trí theo thứ tự cũ nhưng lần tìm kiếm sau lại dùng quan hệ mới. Comparator nên cho kết quả xác định trên trạng thái thứ tự ổn định trong thời gian cấu trúc dữ liệu sử dụng nó."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.Comparator/Comparator.md", anchor: "comparator-contract"}
+    readmeRelated: {file: "8.Comparator/Comparator.md", anchor: "comparator-contract"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Phân biệt sort stability với comparator consistency và nêu một use case của stable sort."
-    answer: "Comparator consistency nói ordering function có coherent hay không; stability là property của sorting algorithm/API: các phần tử compare bằng 0 giữ encounter order tương đối. Stable sort hữu ích khi đã có một ordering phụ trước đó hoặc encounter order có ý nghĩa. Stable algorithm không sửa comparator non-transitive, và comparator đúng cũng không tự bảo đảm sort stable."
+  - question: "Phân biệt tính ổn định của phép sắp xếp với tính nhất quán của Comparator và nêu một trường hợp cần sắp xếp ổn định."
+    answer: "Tính nhất quán của Comparator nói hàm xác định thứ tự có tạo một quan hệ đúng hay không; tính ổn định là thuộc tính của thuật toán/API sắp xếp: các phần tử so sánh bằng 0 giữ thứ tự xuất hiện tương đối. Sắp xếp ổn định hữu ích khi thứ tự phụ trước đó hoặc thứ tự xuất hiện ban đầu có ý nghĩa. Thuật toán ổn định không sửa được Comparator không bắc cầu, và Comparator đúng cũng không tự làm mọi phép sắp xếp trở nên ổn định."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.Comparator/Comparator.md", anchor: "sorting-stability-boundary"}
+    readmeRelated: {file: "8.Comparator/Comparator.md", anchor: "sorting-stability-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Giả sử một kiểu nghiệp vụ vừa được dùng làm khóa HashMap, vừa nằm trong TreeSet, vừa xuất hiện trong log vận hành. Bạn sẽ kiểm tra những quy ước nào trước khi chấp nhận thiết kế?"
+    answer: "Trước hết phải xác định ý nghĩa nghiệp vụ của định danh và phép bằng nhau, kiểm tra các quy tắc của equals và bảo đảm hai đối tượng bằng nhau luôn có cùng mã băm. Trạng thái tham gia equals/hashCode phải đủ ổn định khi đối tượng đang làm khóa. Tiếp theo cần quyết định kiểu dữ liệu có thật sự sở hữu một thứ tự tự nhiên hay nên để đoạn mã sử dụng cung cấp Comparator, rồi kiểm tra tính bắc cầu và chủ đích nhất quán/không nhất quán với equals. Cuối cùng, toString phải hữu ích cho chẩn đoán nhưng không làm lộ dữ liệu nhạy cảm hay bị nhầm thành định dạng lưu trữ. Mục tiêu không phải làm mọi quy ước giống nhau mà làm từng quy ước rõ ràng và có thể dự đoán với API sử dụng nó."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.ContractSynthesis/ContractSynthesis.md", anchor: "contract-synthesis"}
     apiRelated: {controller: "", methodSignature: ""}

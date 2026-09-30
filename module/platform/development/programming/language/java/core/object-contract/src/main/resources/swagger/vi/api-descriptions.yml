@@ -1,16 +1,16 @@
 EqualityController:
   identityVsEquality():
-    summary: Phân biệt reference identity và logical equality
+    summary: Phân biệt định danh tham chiếu và phép bằng nhau về mặt logic
     description: |-
-      Tạo hai instance `Value` khác reference nhưng cùng `id`, sau đó trả về đồng thời kết quả `==`, `equals` và so sánh hash.
-      Experiment cho thấy identity và logical equality trả lời hai câu hỏi khác nhau, đồng thời củng cố rằng equal object phải có hash nhất quán.
+      Tạo hai đối tượng `Value` riêng biệt nhưng cùng `id`, sau đó trả về đồng thời kết quả `==`, `equals` và so sánh mã băm.
+      Thí nghiệm cho thấy định danh và phép bằng nhau về mặt logic trả lời hai câu hỏi khác nhau, đồng thời củng cố quy tắc rằng các đối tượng bằng nhau phải tạo cùng mã băm.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 1.IdentityEquality/IdentityEquality.md
+      file: 2.IdentityEquality/IdentityEquality.md
       anchor: identity-vs-equality
     methodName: identityVsEquality
     params: [
@@ -28,17 +28,17 @@ EqualityController:
     usage: true
 HashContractController:
   brokenHashSetLookup():
-    summary: HashSet lookup khi equals/hashCode contract bị phá
+    summary: Tra cứu HashSet khi quy ước equals/hashCode bị phá vỡ
     description: |-
-      Tạo hai key có `equals == true` nhưng cố ý trả hai hash code khác nhau, insert một key vào `HashSet` rồi lookup bằng key logically equal còn lại.
-      Response biến một lỗi contract trừu tượng thành failure quan sát được: collection có thể không tìm thấy logical value mà `equals` nói là bằng nhau.
+      Tạo hai khóa có `equals == true` nhưng cố ý trả hai mã băm khác nhau, đưa một khóa vào `HashSet` rồi tra cứu bằng khóa bằng nhau về mặt logic còn lại.
+      Kết quả biến một vi phạm quy ước trừu tượng thành hành vi có thể quan sát: cấu trúc dữ liệu có thể không tìm thấy giá trị mà `equals` nói là bằng nhau.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 4.EqualsHashCode/EqualsHashCode.md
+      file: 5.EqualsHashCode/EqualsHashCode.md
       anchor: broken-contract-effects
     methodName: brokenHashSetLookup
     params: [
@@ -55,17 +55,17 @@ HashContractController:
       ]
     usage: true
   mutableKey():
-    summary: Rủi ro mutate hash/equality state sau insertion
+    summary: Rủi ro thay đổi trạng thái equals/hashCode sau khi đưa khóa vào
     description: |-
-      Insert một mutable key vào `HashMap`, kiểm tra lookup trước mutation, thay đổi field tham gia `equals/hashCode`, rồi kiểm tra lại.
-      Experiment cho thấy vì sao key dùng trong hash-based collection nên có equality/hash state ổn định; kết quả sau mutation là evidence của implementation hiện tại, không phải một contract bảo đảm lookup luôn fail theo cùng cách.
+      Đưa một khóa có thể thay đổi vào `HashMap`, kiểm tra tra cứu trước khi thay đổi, sửa trường dữ liệu tham gia `equals/hashCode`, rồi kiểm tra lại.
+      Thí nghiệm cho thấy vì sao khóa trong cấu trúc dữ liệu dựa trên mã băm nên giữ trạng thái liên quan tới phép bằng nhau và mã băm ổn định; kết quả sau thay đổi là minh chứng của phần triển khai đang chạy, không phải quy ước bảo đảm mọi lần tra cứu đều thất bại theo cùng một cách.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 3.HashCode/HashCode.md
+      file: 5.EqualsHashCode/EqualsHashCode.md
       anchor: mutable-key-risk
     methodName: mutableKey
     params: [
@@ -83,17 +83,17 @@ HashContractController:
     usage: true
 OrderingController:
   naturalVsCustom():
-    summary: Natural ordering so với Comparator tùy chỉnh
+    summary: Thứ tự tự nhiên so với Comparator tùy chỉnh
     description: |-
-      Dùng cùng một danh sách `Person`: `Collections.sort` áp dụng natural order từ `Comparable` theo age, còn `Comparator.comparing(Person::name)` áp dụng ordering policy bên ngoài theo name.
-      Hai kết quả cho thấy ordering nằm ở type hay ở caller là một quyết định thiết kế, không phải hai cú pháp tương đương.
+      Dùng cùng một danh sách `Person`: `Collections.sort` áp dụng thứ tự tự nhiên từ `Comparable` theo `age`, còn `Comparator.comparing(Person::name)` áp dụng chính sách sắp xếp bên ngoài theo `name`.
+      Hai kết quả cho thấy thứ tự do kiểu dữ liệu sở hữu hay do đoạn mã sử dụng cung cấp là một quyết định thiết kế, không phải hai cú pháp tương đương.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 7.Comparator/Comparator.md
+      file: 8.Comparator/Comparator.md
       anchor: external-order
     methodName: naturalVsCustom
     params: [
@@ -113,14 +113,14 @@ OrderingController:
     summary: Khi compareTo và equals không nhất quán
     description: |-
       So sánh `BigDecimal("1.0")` với `BigDecimal("1.00")`: `equals` trả false nhưng `compareTo` trả 0, sau đó đưa cả hai vào `HashSet` và `TreeSet`.
-      Response chứng minh hash-based collection và sorted collection có thể có size khác nhau vì chúng dùng hai notion "same key" khác nhau.
+      Kết quả cho thấy cấu trúc dựa trên mã băm và cấu trúc có thứ tự có thể có kích thước khác nhau khi phép bằng nhau và thứ tự xác định tính tương đương của khóa theo hai cách khác nhau.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 6.Comparable/Comparable.md
+      file: 7.Comparable/Comparable.md
       anchor: compareto-equals-consistency
     methodName: compareToEquals
     params: [

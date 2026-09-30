@@ -10,7 +10,7 @@ EqualityController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 1.IdentityEquality/IdentityEquality.md
+      file: 2.IdentityEquality/IdentityEquality.md
       anchor: identity-vs-equality
     methodName: identityVsEquality
     params: [
@@ -38,7 +38,7 @@ HashContractController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 4.EqualsHashCode/EqualsHashCode.md
+      file: 5.EqualsHashCode/EqualsHashCode.md
       anchor: broken-contract-effects
     methodName: brokenHashSetLookup
     params: [
@@ -65,7 +65,7 @@ HashContractController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 3.HashCode/HashCode.md
+      file: 5.EqualsHashCode/EqualsHashCode.md
       anchor: mutable-key-risk
     methodName: mutableKey
     params: [
@@ -93,7 +93,7 @@ OrderingController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 7.Comparator/Comparator.md
+      file: 8.Comparator/Comparator.md
       anchor: external-order
     methodName: naturalVsCustom
     params: [
@@ -113,14 +113,14 @@ OrderingController:
     summary: When compareTo and equals disagree
     description: |-
       Compares `BigDecimal("1.0")` with `BigDecimal("1.00")`: `equals` is false while `compareTo` is zero, then inserts both values into a `HashSet` and a `TreeSet`.
-      The response demonstrates why hash-based and sorted collections can report different sizes when they use different notions of "same key".
+      The response demonstrates why hash-based and sorted collections can report different sizes when equality and ordering define key equivalence differently.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 6.Comparable/Comparable.md
+      file: 7.Comparable/Comparable.md
       anchor: compareto-equals-consistency
     methodName: compareToEquals
     params: [

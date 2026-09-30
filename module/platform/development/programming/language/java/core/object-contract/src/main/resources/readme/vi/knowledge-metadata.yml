@@ -1,8 +1,9 @@
-1.IdentityEquality/IdentityEquality.md:
+1.ObjectContractPurpose/ObjectContractPurpose.md:
   object-contract-purpose:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+2.IdentityEquality/IdentityEquality.md:
   identity-vs-equality:
     difficulty: BASIC
     aiGenerated: true
@@ -15,7 +16,7 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-2.Equals/Equals.md:
+3.Equals/Equals.md:
   equals-contract:
     difficulty: BASIC
     aiGenerated: true
@@ -25,23 +26,19 @@
     aiGenerated: true
     reviewed: false
   equals-inheritance-risk:
-    difficulty: BASIC
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-3.HashCode/HashCode.md:
+4.HashCode/HashCode.md:
   hashcode-contract:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
   hash-distribution:
-    difficulty: BASIC
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  mutable-key-risk:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-4.EqualsHashCode/EqualsHashCode.md:
+5.EqualsHashCode/EqualsHashCode.md:
   equals-hashcode-consistency:
     difficulty: BASIC
     aiGenerated: true
@@ -54,7 +51,11 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-5.ToString/ToString.md:
+  mutable-key-risk:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+6.ToString/ToString.md:
   tostring-purpose:
     difficulty: BASIC
     aiGenerated: true
@@ -67,33 +68,38 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-6.Comparable/Comparable.md:
+7.Comparable/Comparable.md:
   natural-order:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
   compareto-contract:
-    difficulty: BASIC
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
   compareto-equals-consistency:
-    difficulty: BASIC
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-7.Comparator/Comparator.md:
+8.Comparator/Comparator.md:
   external-order:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
   comparator-composition:
-    difficulty: BASIC
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
   comparator-contract:
-    difficulty: BASIC
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
   sorting-stability-boundary:
-    difficulty: BASIC
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+9.ContractSynthesis/ContractSynthesis.md:
+  contract-synthesis:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false

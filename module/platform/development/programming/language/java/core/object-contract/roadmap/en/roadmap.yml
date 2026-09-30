@@ -43,58 +43,85 @@
 
 roadmap:
   - id: object-contract-purpose
-    title: Object Contract Purpose
-    purpose: Understand an object contract as a set of behavioral promises that other Java APIs rely on rather than as one keyword or interface.
+    title: What Is an Object Contract?
+    purpose: Build a mental model of an object contract as a set of behavioral promises that Java APIs rely on, why those promises exist, and what can break when a class violates them.
+    relatedKnowledge:
+      - ObjectContractPurpose
     relatedModules:
       - routeId: JAVA_CLASS_OBJECT
         label: Class & Object
-        note: Object Contract builds on the universal Object methods and object identity model.
+        note: Object Contract builds on the universal Object methods and the object identity model introduced in Class & Object.
     objectives:
-      - Explain why broken contracts create surprising behavior outside the class that defines them.
-      - Identify equality, hashing, representation, and ordering as separate but connected contracts.
+      - Explain why library and framework code needs objects to keep documented behavioral promises.
+      - Identify equality, hashing, text representation, and ordering as separate but connected contracts.
+      - Explain why the compiler cannot fully enforce these semantic contracts and why violations can surface far away from the class that caused them.
   - id: identity-and-logical-equality
-    title: Identity vs Logical Equality
-    purpose: Distinguish whether two references point to the same object from whether two objects represent the same logical value.
+    title: Object Identity vs Logical Equality
+    purpose: Distinguish the question "are these references the same object?" from "should these objects be considered the same logical value?".
+    relatedKnowledge:
+      - IdentityEquality
     objectives:
-      - Separate == reference identity from equals-based logical equality.
-      - Recognize value-object scenarios where logical equality matters.
+      - Separate reference identity with == from logical equality with equals.
+      - Recognize domain values where distinct instances should still compare as logically equal.
   - id: equals-contract
     title: The equals Contract
-    purpose: Understand the behavioral laws a correct equals implementation must preserve across time and object relationships.
+    purpose: Understand the behavioral laws a correct equals implementation must preserve so callers can reason about logical equality consistently.
+    relatedKnowledge:
+      - Equals
     objectives:
       - Reason about reflexive, symmetric, transitive, consistent, and null behavior.
-      - Avoid equality implementations that break subtype or mutable-state assumptions.
-  - id: hashing-consistency
-    title: hashCode and Hash Consistency
-    purpose: Understand why equal objects must produce compatible hashes and how hash-based APIs depend on that promise.
+      - Recognize inheritance and mutable-state designs that can make equality unreliable.
+  - id: hashcode-contract
+    title: hashCode and Hash-Based Lookup
+    purpose: Understand what hashCode contributes to efficient hash-based lookup before combining it with the equals contract.
+    relatedKnowledge:
+      - HashCode
+    objectives:
+      - Explain what hashCode guarantees and what it does not guarantee.
+      - Distinguish a hash code from object identity or a unique identifier.
+  - id: equals-hashcode-consistency
+    title: The equals/hashCode Contract
+    purpose: Connect logical equality and hashing so equal objects remain findable and consistent in hash-based APIs.
+    relatedKnowledge:
+      - EqualsHashCode
     relatedModules:
       - routeId: JAVA_COLLECTION
         label: Collections
         note: HashSet and HashMap make equals/hashCode contracts directly observable.
     objectives:
-      - Explain the equals/hashCode consistency rule.
-      - Predict failures caused by mutable keys or inconsistent hash implementations.
+      - Explain why objects that are equal according to equals must produce the same hash code.
+      - Predict lookup failures caused by inconsistent implementations or by mutating key state after insertion.
   - id: human-readable-representation
-    title: Human-Readable Representation
-    purpose: Understand toString as a diagnostic and representation contract whose usefulness and safety depend on deliberate design.
+    title: Text Representation with toString
+    purpose: Understand toString as a diagnostic text-representation contract for humans and tools, not as a persistence or serialization format.
+    relatedKnowledge:
+      - ToString
     objectives:
-      - Produce stable and meaningful representations for debugging and tooling.
-      - Avoid leaking sensitive or misleading state through textual representation.
+      - Produce meaningful representations for logs, debugging, assertions, and tooling.
+      - Avoid leaking sensitive state or treating ordinary toString output as a stable data format.
   - id: natural-ordering
     title: Natural Ordering with Comparable
-    purpose: Understand how a type defines one natural order and which behavioral properties compareTo must preserve.
+    purpose: Understand how a type defines one natural order and which behavioral properties compareTo must preserve for callers and sorted APIs.
+    relatedKnowledge:
+      - Comparable
     objectives:
       - Interpret negative/zero/positive comparison results correctly.
-      - Reason about consistency between ordering and logical equality.
+      - Preserve a transitive and internally consistent natural order.
+      - Reason about when compareTo returning zero should agree with logical equality.
   - id: alternate-ordering
     title: Alternate Ordering with Comparator
-    purpose: Understand caller-defined ordering as a separate strategy from the type’s natural order.
+    purpose: Understand caller-defined ordering as a separate strategy when a type has no single suitable natural order or a use case needs another view.
+    relatedKnowledge:
+      - Comparator
     objectives:
       - Compose and reverse comparators without changing domain equality.
-      - Choose between Comparable and Comparator from ownership and use-case needs.
+      - Preserve a transitive and internally consistent comparison relation in custom orderings.
+      - Choose between Comparable and Comparator based on who owns the ordering policy and how many orderings are needed.
   - id: contract-synthesis
-    title: Contract Interaction Synthesis
-    purpose: Connect identity, equality, hashing, representation, mutability, and ordering into one model for library-safe objects.
+    title: Putting the Object Contracts Together
+    purpose: Connect identity, equality, hashing, text representation, mutability, and ordering into one model for objects that behave predictably across Java APIs.
+    relatedKnowledge:
+      - ContractSynthesis
     relatedModules:
       - routeId: JAVA_NUMBERS
         label: Numbers

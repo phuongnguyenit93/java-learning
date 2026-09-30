@@ -1,22 +1,22 @@
 EqualityController:
   description: |-
-    <h2>Equality</h2>
-    <p>Nhóm thí nghiệm quan sát trực tiếp sự khác nhau giữa <strong>reference identity</strong> và <strong>logical equality</strong>.</p>
-    <p>Mục tiêu là nhìn thấy hai object khác identity vẫn có thể equal theo domain contract, thay vì chỉ ghi nhớ rằng <code>==</code> và <code>equals</code> khác nhau.</p>
+    <h2>Định danh và phép bằng nhau</h2>
+    <p>Nhóm thí nghiệm giúp quan sát trực tiếp sự khác nhau giữa <strong>định danh tham chiếu</strong> và <strong>phép bằng nhau về mặt logic</strong>.</p>
+    <p>Mục tiêu là nhìn thấy hai đối tượng có định danh khác nhau vẫn có thể bằng nhau theo quy tắc nghiệp vụ, thay vì chỉ ghi nhớ rằng <code>==</code> và <code>equals</code> khác nhau.</p>
   readmeRelated:
-    file: 1.IdentityEquality/IdentityEquality.md
+    file: 2.IdentityEquality/IdentityEquality.md
 HashContractController:
   description: |-
-    <h2>Hash Contract</h2>
-    <p>Nhóm thí nghiệm cho thấy <code>equals</code> và <code>hashCode</code> là một contract vận hành chung trong hash-based collection.</p>
-    <p>Hai endpoint tập trung vào hai failure mode thực tế: equal object nhưng hash khác nhau, và key bị mutate sau khi đã insert.</p>
-    <p>Đây cũng là evidence trực tiếp cho câu hỏi lớn của module: library code dựa vào behavioral contract của object dù compiler không thể chứng minh implementation của bạn giữ đúng mọi semantic law.</p>
+    <h2>Quy ước giữa equals và hashCode</h2>
+    <p>Nhóm thí nghiệm cho thấy <code>equals</code> và <code>hashCode</code> tạo thành một quy ước vận hành chung trong cấu trúc dữ liệu dựa trên mã băm.</p>
+    <p>Hai endpoint tập trung vào hai dạng lỗi thực tế: hai đối tượng bằng nhau nhưng có mã băm khác nhau, và khóa bị thay đổi sau khi đã được đưa vào cấu trúc dữ liệu.</p>
+    <p>Đây cũng là minh chứng trực tiếp cho ý chính của mô-đun: thư viện dựa vào các cam kết về hành vi của đối tượng dù trình biên dịch không thể chứng minh phần triển khai giữ đúng mọi quy tắc ngữ nghĩa.</p>
   readmeRelated:
-    file: 4.EqualsHashCode/EqualsHashCode.md
+    file: 5.EqualsHashCode/EqualsHashCode.md
 OrderingController:
   description: |-
-    <h2>Ordering</h2>
-    <p>Nhóm thí nghiệm so sánh natural ordering qua <code>Comparable</code> với ordering policy bên ngoài qua <code>Comparator</code>.</p>
-    <p>Đồng thời quan sát hệ quả khi ordering equality (<code>compareTo == 0</code>) không trùng với logical equality.</p>
+    <h2>Thứ tự sắp xếp</h2>
+    <p>Nhóm thí nghiệm so sánh thứ tự tự nhiên qua <code>Comparable</code> với chính sách sắp xếp do đoạn mã sử dụng cung cấp qua <code>Comparator</code>.</p>
+    <p>Đồng thời quan sát hệ quả khi quan hệ “bằng nhau theo thứ tự” (<code>compareTo == 0</code>) không trùng với phép bằng nhau về mặt logic.</p>
   readmeRelated:
-    file: 7.Comparator/Comparator.md
+    file: 8.Comparator/Comparator.md
