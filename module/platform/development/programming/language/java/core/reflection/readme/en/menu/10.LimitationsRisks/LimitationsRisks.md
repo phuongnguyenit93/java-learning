@@ -1,8 +1,43 @@
-# Reflection Limitations and Risks
+# When Should Reflection Be Used?
 
 Reflection solves a real problem: code can work with structure that becomes known only at runtime. That flexibility comes from moving several compiler guarantees into runtime logic. The design question is therefore not only “can reflection do this?” but “is this dynamic behavior worth the safety, coupling, and operational cost?”.
 
 The risks in this chapter follow from the same mental model. Direct Java code references types and members through symbols the compiler understands; reflective code often moves through metadata, strings, `Class`, `Method`, `Field`, and `Object`, then performs its own runtime validation.
+
+## <a id="reflection-cost-boundary">Costs and Usage Boundaries</a>
+
+Reflection gains flexibility by moving decisions from compile time to runtime. The first cost is therefore **reduced compile-time safety**.
+
+~~~java
+// Compiler-checked
+service.pay(request);
+
+// A typo is discovered only at runtime
+service.getClass().getMethod("paay", PaymentRequest.class);
+~~~
+
+Reflective code must also handle missing members, wrong receivers, wrong arguments, denied access, and exceptions thrown by the target itself. Earlier chapters already distinguished those failure modes; this final chapter brings them together for design decisions.
+
+The second cost is hidden coupling. IDEs can find references to service.pay(...), while a string such as "pay" in configuration or framework metadata may be invisible to ordinary refactoring tools. Renames therefore need stronger contracts and tests.
+
+The third cost is encapsulation pressure. Reflection still performs access checks. Some APIs can attempt to change reflective accessibility, while JPMS introduces strong-encapsulation boundaries. Access Control covers those rules. The presence of Reflection does not make private meaningless.
+
+The fourth cost is runtime overhead. Metadata lookup and `Method.invoke()`/Field access are generally more expensive than direct calls, although JVMs and frameworks often cache or optimize reflective structures. This cost may be irrelevant during one-time bootstrap and significant inside a hot path. The sections below analyze that trade-off in depth.
+
+A practical decision rule is:
+
+~~~text
+Type/member is known at compile time
+→ prefer direct calls, interfaces, polymorphism, or factories
+
+The real structure is only known at runtime
+and discovering it is part of the requirement
+→ Reflection may be appropriate
+~~~
+
+When reflection is used, keep the dynamic area narrow: validate metadata early, cache descriptors when reused, translate runtime failures into meaningful framework/domain errors, and keep ordinary business code as type-safe as possible.
+
+This overview puts the major trade-offs into one frame. The following sections separate compile-time safety, encapsulation, performance, native-image concerns, and maintainability before the final decision model.
 
 ## <a id="compile-time-safety-loss">Loss of Compile-Time Safety</a>
 
@@ -138,4 +173,66 @@ A maintainable reflective design usually has these properties:
 5. integration tests exercise important reflective paths;
 6. public contracts remain the primary source of truth, with private reflection used only when the requirement truly needs it.
 
-These trade-offs lead into the final chapter. Dynamic proxies demonstrate a particularly structured use of runtime metadata: the JDK can synthesize an **interface** implementation and route calls through an `InvocationHandler`, turning interception into a defined boundary instead of scattering string-based invocation throughout the codebase.
+## <a id="reflection-decision-model">Decision Model: When Should Reflection Be Used?</a>
+
+After `Class<?>`, member descriptors, dynamic operations, access control, generic metadata, and Dynamic Proxy, the choice can be reduced to a practical sequence of questions:
+
+```text
+Is the type/member structure already known at compile time?
+    ├─ Yes
+    │   ↓
+    │ prefer direct calls / interfaces / polymorphism / factories
+    │
+    └─ No
+        ↓
+Is runtime discovery genuinely part of the requirement?
+    ├─ No
+    │   ↓
+    │ make the static contract clearer instead of adding reflection
+    │
+    └─ Yes
+        ↓
+Can reflection be contained inside a small infrastructure boundary?
+    ├─ No
+    │   ↓
+    │ coupling + runtime failures + maintenance cost rise sharply
+    │
+    └─ Yes
+        ↓
+validate early → cache metadata → expose a typed contract
+```
+
+Reflection is often justified when several of these conditions hold:
+
+- the concrete type/member is known only at runtime;
+- framework or tooling code needs one algorithm for many externally defined types;
+- metadata or annotations are a natural part of the integration contract;
+- reflective code is concentrated in an adapter, container, serializer, or proxy layer;
+- lookup/access/type-mismatch failures are validated and translated into clear framework/domain errors;
+- performance is measured on the real workload when reflection lies on a hot path.
+
+Reflection is often a design smell when code already knows the exact type/member but still uses string lookup merely to avoid a direct call, or when `setAccessible(true)` is scattered through application code to bypass an API boundary that has no intentional integration contract.
+
+The whole module can be retained as one final mental model:
+
+```text
+WHY
+→ work with structure known only at runtime
+
+MODEL
+→ Class<?> + member descriptors + Type metadata
+
+MECHANICS
+→ discover → inspect → access check → operate
+
+INTEGRATION
+→ runtime annotation metadata / Dynamic Proxy / framework tooling
+
+TRADE-OFF
+→ compile-time safety / encapsulation / performance / refactorability / native image
+
+DECISION
+→ use Reflection only when runtime dynamism is genuinely part of the requirement
+```
+
+Reflection is strongest when **dynamism is a real requirement** and the dynamic behavior is kept inside a small, validated, explicit boundary. When the type is already known at compile time, direct Java code usually remains simpler, safer, and easier to maintain.

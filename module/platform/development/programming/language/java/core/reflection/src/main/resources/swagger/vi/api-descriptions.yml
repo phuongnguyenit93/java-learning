@@ -1,16 +1,17 @@
 AccessReflectionController:
   accessChecks():
-    summary: Quan sát discovery và reflective access trên private method
-    description: API lấy descriptor của private internalStatus(), đo canAccess trước/sau
-      trySetAccessible(), rồi chỉ invoke khi quyền truy cập được mở. Response tách
-      rõ việc tìm thấy member với việc được phép sử dụng member đó.
+    summary: Quan sát khám phá và quyền truy cập phản chiếu trên method private
+    description: API lấy đối tượng mô tả của internalStatus() private, đo canAccess
+      trước/sau trySetAccessible(), rồi chỉ gọi method khi quyền truy cập được mở.
+      Phản hồi tách rõ việc tìm thấy thành phần với việc được phép sử dụng thành phần
+      đó.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 6.AccessControl/AccessControl.md
+      file: 7.AccessControl/AccessControl.md
       anchor: try-set-accessible
     methodName: accessChecks
     params: [
@@ -28,10 +29,10 @@ AccessReflectionController:
     usage: true
 ClassMetadataController:
   inspectType():
-    summary: Inspect runtime Class metadata của PaymentService
-    description: API trả type kind, modifier/access flags, superclass, interfaces,
-      assignability và declared method names để quan sát những gì Class<?> mô tả về
-      một runtime type.
+    summary: Kiểm tra siêu dữ liệu Class lúc chạy của PaymentService
+    description: API trả loại kiểu, modifier/cờ truy cập, superclass, interface, quan
+      hệ gán kiểu và tên các method khai báo trực tiếp để quan sát những gì Class<?>
+      mô tả về một kiểu lúc chạy.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -57,15 +58,16 @@ ClassMetadataController:
 ConstructorReflectionController:
   construct():
     summary: Tạo PaymentService qua Constructor.newInstance()
-    description: API lookup constructor nhận String, đọc parameter metadata, tạo instance
-      với provider=stripe và trả bằng chứng về runtime type cùng state được khởi tạo.
+    description: API tra cứu constructor nhận String, đọc siêu dữ liệu tham số, tạo
+      đối tượng với provider=stripe và trả bằng chứng về kiểu lúc chạy cùng trạng
+      thái được khởi tạo.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 5.Constructors/Constructors.md
+      file: 6.DynamicInvocation/DynamicInvocation.md
       anchor: constructor-newinstance
     methodName: construct
     params: [
@@ -83,17 +85,17 @@ ConstructorReflectionController:
     usage: true
 DynamicProxyController:
   intercept():
-    summary: Intercept lời gọi interface bằng JDK Dynamic Proxy
-    description: API tạo PaymentGateway proxy ở runtime, chuyển pay(...) qua TracingHandler
-      rồi delegate tới target. Trace before/after và Proxy.isProxyClass chứng minh
-      interception xảy ra qua generated interface implementation.
+    summary: Chặn lời gọi interface bằng JDK Dynamic Proxy
+    description: API tạo proxy PaymentGateway lúc chạy, chuyển pay(...) qua TracingHandler
+      rồi ủy quyền tới đối tượng đích. Dấu vết before/after và Proxy.isProxyClass
+      chứng minh lời gọi đi qua phần triển khai interface được sinh tự động.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 10.DynamicProxy/DynamicProxy.md
+      file: 9.DynamicProxy/DynamicProxy.md
       anchor: invocation-handler
     methodName: intercept
     params: [
@@ -111,9 +113,9 @@ DynamicProxyController:
     usage: true
 FieldReflectionController:
   inspectAndMutate():
-    summary: Đọc và ghi field thông qua Field descriptor
-    description: API lookup public processedCount, đọc giá trị 1, ghi thành 5 bằng
-      getInt/setInt và đồng thời cho thấy private field vẫn có thể được discover nhưng
+    summary: Đọc và ghi field thông qua đối tượng mô tả Field
+    description: API tra cứu processedCount public, đọc giá trị 1, ghi thành 5 bằng
+      getInt/setInt và đồng thời cho thấy field private vẫn có thể được khám phá nhưng
       chưa tự có quyền truy cập.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
@@ -121,7 +123,7 @@ FieldReflectionController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 3.Fields/Fields.md
+      file: 6.DynamicInvocation/DynamicInvocation.md
       anchor: field-read-write
     methodName: inspectAndMutate
     params: [
@@ -139,16 +141,17 @@ FieldReflectionController:
     usage: true
 GenericReflectionController:
   genericSignature():
-    summary: Inspect generic signature sau type erasure
-    description: API so sánh raw List type với List<? extends T>, đọc WildcardType
-      upper bound và TypeVariable bounds của Repository<T extends Number & Comparable<T>>.
+    summary: Kiểm tra chữ ký generic sau xóa kiểu
+    description: API so sánh kiểu List thô với List<? extends T>, đọc giới hạn trên
+      của WildcardType và các giới hạn TypeVariable của Repository<T extends Number
+      & Comparable<T>>.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 7.GenericTypeInspection/GenericTypeInspection.md
+      file: 8.GenericTypeInspection/GenericTypeInspection.md
       anchor: parameterized-type
     methodName: genericSignature
     params: [
@@ -166,17 +169,17 @@ GenericReflectionController:
     usage: true
 MethodReflectionController:
   invoke():
-    summary: Invoke method động và quan sát InvocationTargetException
-    description: API lookup pay(PaymentRequest), invoke thành công, sau đó invoke
-      reject() để tách wrapper InvocationTargetException khỏi IllegalStateException
-      thực sự do target method ném ra.
+    summary: Gọi method động và quan sát InvocationTargetException
+    description: API tra cứu pay(PaymentRequest), gọi thành công, sau đó gọi reject()
+      để tách lớp bọc InvocationTargetException khỏi IllegalStateException thực sự
+      do method đích ném ra.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 4.Methods/Methods.md
+      file: 6.DynamicInvocation/DynamicInvocation.md
       anchor: method-invoke
     methodName: invoke
     params: [

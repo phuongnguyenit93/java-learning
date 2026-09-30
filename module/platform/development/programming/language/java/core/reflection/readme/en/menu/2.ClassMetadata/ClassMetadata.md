@@ -1,4 +1,4 @@
-# Class Metadata
+# Runtime Type Model with Class<?>
 
 The previous chapter established Class<?> as Reflection's main entry point. The next question a framework asks is: **what kind of runtime type is this, and what does its overall structure look like?**
 
@@ -30,6 +30,50 @@ public class PaymentService implements PaymentProcessor {
     }
 }
 ~~~
+
+## <a id="class-object-entrypoints">Class<?> as the Reflection Entry Point</a>
+
+Reflection normally begins with a Class<?> object. A Class object is not the source code of a class; it is the runtime object that represents a type known to the JVM.
+
+Three common entry points are:
+
+~~~java
+// 1. The type is known directly in source
+Class<PaymentService> a = PaymentService.class;
+
+// 2. An object is available, but its concrete type may not be known
+Object service = new PaymentService("stripe");
+Class<?> b = service.getClass();
+
+// 3. Only the binary class name is known at runtime
+Class<?> c = Class.forName("com.example.PaymentService");
+~~~
+
+A class literal fits code that already references the type. Object.getClass() is common in framework code that receives an arbitrary object and wants its concrete runtime class. Class.forName(...) is useful for plugin/configuration scenarios where the class name arrives at runtime.
+
+`Class<T>` also carries compile-time type information. `Class<PaymentService>` says that this `Class` object represents `PaymentService`. `Class<?>` means "this is a valid `Class` object, but the concrete represented type is not known here." Framework code commonly works with `Class<?>` precisely because discovering the concrete type is part of the runtime problem; it then validates metadata before casting or operating on values.
+
+Primitive and array types also have Class objects:
+
+~~~java
+Class<Integer> primitive = int.class;
+Class<String[]> array = String[].class;
+~~~
+
+`Class.forName(String)` **initializes the class by default** after locating/loading it, so static initialization may run. The overload `Class.forName(name, false, loader)` can request that initialization not happen at that step. The detailed lifecycle and class-identity rules belong to the ClassLoader module; the important point here is that resolving a class by name can have different side effects from simply using a class literal.
+
+Once a Class<?> exists, reflection can move into more specific questions:
+
+~~~java
+Class<?> type = PaymentService.class;
+
+String name = type.getName();
+Field[] fields = type.getDeclaredFields();
+Method[] methods = type.getDeclaredMethods();
+Constructor<?>[] constructors = type.getDeclaredConstructors();
+~~~
+
+The rest of **Runtime Type Model with Class<?>** explores what the runtime knows about the type itself. The Field, Method, and Constructor chapters then focus on each member kind.
 
 ## <a id="class-names">Class Names</a>
 
@@ -143,6 +187,106 @@ Class<? extends PaymentProcessor> processorType =
 
 The direction of `isAssignableFrom(...)` is easy to reverse accidentally. Read `A.isAssignableFrom(B)` as: **can a value of B be assigned to a variable of type A?** `cast(...)` performs a checked runtime cast; `asSubclass(...)` performs the corresponding check at the `Class`-object level and throws `ClassCastException` when the discovered type is not an appropriate subtype.
 
+## <a id="specialized-type-metadata">Specialized Metadata for Arrays, Enums, Records, and Sealed Types</a>
+
+Not every `Class<?>` has the same meaningful metadata. After identifying a type's **kind**, reflection exposes APIs specialized for that kind.
+
+For arrays, `Class` exposes the immediate component type:
+
+~~~java
+Class<?> arrayType = String[][].class;
+
+System.out.println(arrayType.isArray());
+System.out.println(arrayType.getComponentType());
+System.out.println(arrayType.getComponentType().getComponentType());
+~~~
+
+`getComponentType()` returns `null` for a non-array type. A multidimensional array is peeled one dimension at a time because the component type of `String[][]` is `String[]`.
+
+For enums, `getEnumConstants()` returns constants in declaration order:
+
+~~~java
+enum PaymentStatus { CREATED, PAID, FAILED }
+
+PaymentStatus[] values = PaymentStatus.class.getEnumConstants();
+~~~
+
+For a non-enum type, `getEnumConstants()` returns `null`.
+
+Records have dedicated metadata because a **record component** is a language-level concept, not merely another name for a field or method:
+
+~~~java
+record PaymentRequest(String orderId, long amount) {}
+
+for (RecordComponent component : PaymentRequest.class.getRecordComponents()) {
+    System.out.println(component.getName());
+    System.out.println(component.getType());
+    System.out.println(component.getAccessor());
+}
+~~~
+
+`getRecordComponents()` returns components in record-header order and returns `null` when the type is not a record. `RecordComponent` also exposes generic-type and annotation metadata, allowing serializers and frameworks to reason from the **record contract** rather than reconstructing it indirectly from private fields or accessors.
+
+Sealed classes and interfaces also expose their declared restriction:
+
+~~~java
+sealed interface Payment permits CardPayment, BankTransfer {}
+final class CardPayment implements Payment {}
+final class BankTransfer implements Payment {}
+
+Class<?> paymentType = Payment.class;
+
+if (paymentType.isSealed()) {
+    for (Class<?> permitted : paymentType.getPermittedSubclasses()) {
+        System.out.println(permitted.getName());
+    }
+}
+~~~
+
+`getPermittedSubclasses()` exposes direct permitted subtypes for a sealed type and returns `null` for a non-sealed type. Reflection observes the declared contract; designing sealed hierarchies remains a type/OOP concern.
+
+~~~text
+general Class<?>
+    ↓ classify kind
+    ├─ array  → component type
+    ├─ enum   → enum constants
+    ├─ record → record components
+    └─ sealed → permitted direct subtypes
+~~~
+
+## <a id="runtime-annotation-metadata">Annotations as Runtime Metadata</a>
+
+One major reflection use case is consuming annotations retained with `RUNTIME`. Reflection does not decide annotation lifetime; retention, target, repeatability, and inheritance semantics belong to the Annotation module. Here the annotation is viewed from the **runtime consumer** side.
+
+`Class`, `Field`, `Method`, `Constructor`, `Parameter`, `RecordComponent`, and many other reflective elements participate in the `AnnotatedElement` contract, giving them a largely shared lookup vocabulary. In the example below, assume `@Audit` is a custom annotation declared with `RUNTIME` retention in the Annotation module:
+
+~~~java
+Deprecated deprecated = PaymentService.class
+        .getAnnotation(Deprecated.class);
+
+Annotation[] declared = PaymentService.class
+        .getDeclaredAnnotations();
+
+Audit[] audits = PaymentService.class
+        .getAnnotationsByType(Audit.class);
+~~~
+
+These calls answer different questions:
+
+- `getAnnotation(...)` follows the `AnnotatedElement` "present" lookup semantics;
+- `getDeclaredAnnotation(...)` / `getDeclaredAnnotations()` inspect only the current declaration;
+- `getAnnotationsByType(...)` is appropriate when an annotation can repeat and container semantics matter.
+
+Reflection sees only annotations that survive to runtime. A `SOURCE`- or `CLASS`-retained annotation does not become visible through these runtime APIs merely because it existed in source or the class file.
+
+~~~text
+Annotation module
+→ define the metadata contract and retention
+
+Reflection module
+→ consume RUNTIME metadata and choose runtime behavior
+~~~
+
 ## <a id="modifiers">Inspecting Class Modifiers</a>
 
 getModifiers() returns a bit mask. java.lang.reflect.Modifier provides helpers for interpreting the relevant bits.
@@ -234,7 +378,43 @@ static List<Class<?>> classHierarchy(Class<?> type) {
 }
 ~~~
 
-When generic superclass/interface signatures matter, Class also provides getGenericSuperclass() and getGenericInterfaces(). The full Type model belongs to Generic Type Inspection; Class<?> alone is not the entire generic metadata story.
+When generic superclass/interface signatures matter, `Class` also provides `getGenericSuperclass()` and `getGenericInterfaces()`. The full `Type` model belongs to **Generic Signature Metadata after Erasure**; `Class<?>` alone is not the entire generic metadata story.
+
+## <a id="member-abstraction-model">Shared Member Descriptor Model</a>
+
+Before separating `Field`, `Method`, and `Constructor`, it helps to see that they are not three unrelated API families. Core Reflection exposes shared abstractions that let framework code reason about members at a higher level:
+
+| Abstraction | Role |
+| --- | --- |
+| `Member` | Common contract for `Field`, `Method`, and `Constructor`: name, declaring class, modifiers, synthetic state |
+| `Executable` | Shared base of `Method` and `Constructor`: parameters, exceptions, varargs, generic declarations |
+| `AccessibleObject` | Shared base for `Field`, `Method`, and `Constructor` reflective access checks |
+| `AnnotatedElement` | Runtime annotation lookup contract implemented by `AccessibleObject` and many other program elements |
+
+~~~text
+                 Member
+             ┌─────┴──────┐
+           Field       Executable
+                         ├─ Method
+                         └─ Constructor
+
+Field ───────────────┐
+Executable ──────────┴─→ AccessibleObject → AnnotatedElement
+~~~
+
+This is a learning-oriented view rather than the entire `java.lang.reflect` hierarchy. For example, `Executable` also implements `GenericDeclaration`; `Class<?>` implements `AnnotatedElement` but is not a `Member`.
+
+A practical flow is:
+
+~~~text
+discovery
+→ obtain a descriptor
+→ inspect shared metadata
+→ check access
+→ perform the Field / Method / Constructor-specific operation
+~~~
+
+The next three chapters can therefore focus on behavior specific to each member kind without relearning modifiers, annotations, or the access abstraction from scratch.
 
 ## <a id="declared-vs-public-members">Declared Members versus the Public Surface</a>
 
@@ -308,4 +488,4 @@ getConstructors()         → public constructors declared by the class
 
 Array-returning discovery APIs do not provide a source-order contract that framework logic should depend on. Do not select “the first method” or “the first constructor” as a semantic rule. Select members by explicit criteria such as name, parameter types, annotations, modifiers, or a documented framework policy.
 
-With the type-level map established, the next question becomes state-oriented: **which fields exist, and how can runtime code read or write them?**
+With the type-level map established, the next question becomes state-oriented: **which fields exist, and what metadata describes them?** Reading and writing their values is deferred to the later **Acting Dynamically from Metadata** milestone.

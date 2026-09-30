@@ -1,8 +1,8 @@
-# Reflecting on Constructors
+# Constructor Discovery and Construction Metadata
 
-Method reflection works with behavior on an object that already exists. Constructor reflection solves the earlier problem: **how can code create an object when the concrete class and constructor are selected only at runtime?**
+Field and Method describe state and behavior. `Constructor` completes the **Discovering Class Members** milestone by asking: **which constructors does this runtime type declare, and what metadata lets a framework choose the right descriptor?** Actual `Constructor.newInstance(...)` execution belongs to the next **Acting Dynamically from Metadata** milestone.
 
-This is common in dependency-injection containers, plugin systems, serializers/deserializers, and framework bootstrapping. The framework receives a Class<?> and applies a constructor-selection policy instead of writing new PaymentService(...) directly in its own source.
+This is common in dependency-injection containers, plugin systems, serializers/deserializers, and framework bootstrapping. The framework receives a `Class<?>`, discovers constructors, and applies a selection policy before it performs object creation.
 
 The baseline model remains:
 
@@ -87,56 +87,6 @@ Java supplies a default no-argument constructor only when the source declares no
 
 Non-static inner classes provide another edge case: the runtime constructor signature normally includes a parameter for the enclosing instance. The reflective signature can therefore contain a parameter that is less obvious from ordinary source-level construction syntax.
 
-## <a id="constructor-newinstance">Creating an Object with Constructor.newInstance</a>
-
-After selecting a constructor descriptor:
-
-~~~java
-Constructor<PaymentService> constructor =
-        PaymentService.class.getConstructor(String.class);
-
-PaymentService service = constructor.newInstance("stripe");
-~~~
-
-This is the reflective counterpart of:
-
-~~~java
-PaymentService service = new PaymentService("stripe");
-~~~
-
-The key difference is that the constructor can be selected from runtime metadata:
-
-~~~java
-static <T> T create(
-        Class<T> type,
-        Class<?>[] parameterTypes,
-        Object[] arguments
-) throws ReflectiveOperationException {
-    Constructor<T> constructor =
-            type.getDeclaredConstructor(parameterTypes);
-    return constructor.newInstance(arguments);
-}
-~~~
-
-A real framework typically validates constructor policy, accessibility, and dependency resolution before the newInstance(...) step.
-
-Arguments may undergo the unboxing/primitive-widening conversions allowed by reflective invocation, but the caller still must supply a valid count and compatible types. Reflection is not a general-purpose parser or domain conversion layer.
-
-Constructor.newInstance(...) should be preferred over the deprecated Class.newInstance(). The older API only targets a no-argument constructor and has a less useful exception contract. A Constructor descriptor represents the exact constructor selected and reports target failures through InvocationTargetException, just like Method.invoke(...).
-
-Reflective construction **still executes the real constructor body**. It does not allocate an object while skipping initialization logic:
-
-~~~java
-public PaymentService(String provider) {
-    if (provider == null || provider.isBlank()) {
-        throw new IllegalArgumentException("provider is required");
-    }
-    this.provider = provider;
-}
-~~~
-
-constructor.newInstance("") runs that validation.
-
 ## <a id="constructor-metadata">Constructor Metadata</a>
 
 Constructor<?> exposes metadata similar to Method, but a constructor has no return type:
@@ -187,59 +137,4 @@ public PaymentService(String provider)
 
 getExceptionTypes() exposes that declaration. If construction actually throws the exception, Constructor.newInstance(...) exposes it as the cause of InvocationTargetException.
 
-Varargs constructors are represented with an array as the final parameter and isVarArgs() == true. The same outer Object.../array caveats discussed for Method invocation apply.
-
-## <a id="constructor-reflection-failure">Constructor Reflection Failure Modes</a>
-
-Constructor reflection can fail at several different stages. Separating them lets a framework report the real cause instead of reducing everything to “reflection failed.”
-
-| Failure | Meaning |
-| --- | --- |
-| NoSuchMethodException | Discovery did not find a constructor with the exact parameter types |
-| IllegalAccessException | The constructor exists but reflective access is denied |
-| InstantiationException | The declaring class cannot be instantiated through the constructor contract, such as an abstract class |
-| IllegalArgumentException | Argument count/type is wrong, or the target is a case Reflection forbids constructing such as an enum |
-| InvocationTargetException | The constructor body ran and threw an exception |
-| ExceptionInInitializerError | Class initialization was triggered and static initialization failed |
-
-Example: distinguish a protocol failure from a constructor/domain failure:
-
-~~~java
-Constructor<PaymentService> constructor =
-        PaymentService.class.getConstructor(String.class);
-
-try {
-    PaymentService service = constructor.newInstance("");
-} catch (InvocationTargetException ex) {
-    Throwable constructorFailure = ex.getCause();
-    // e.g. IllegalArgumentException("provider is required")
-}
-~~~
-
-Passing Integer instead of String:
-
-~~~java
-constructor.newInstance(123);
-~~~
-
-fails the reflective invocation contract rather than the constructor's business validation.
-
-Enums are a special case: enum instances are controlled by the JVM according to the enum declaration, and Constructor.newInstance cannot create additional enum constants.
-
-A private or package-private constructor can still be **discovered** with getDeclaredConstructor(...), but discovery is not permission to invoke it. Whether reflective access can be enabled depends on language/module boundaries and runtime policy. Access Control picks up directly from this point.
-
-After the first five chapters, the basic reflection flow is complete:
-
-~~~text
-obtain Class<?> at runtime
-    ↓
-inspect type metadata
-    ↓
-discover Field / Method / Constructor
-    ↓
-read state, invoke behavior, or create an object
-    ↓
-encounter access, generic-metadata, and dynamic-invocation boundaries
-~~~
-
-The next chapter addresses the most common misconception about Reflection: **does finding a private member mean Reflection is automatically allowed to use it?**
+Varargs constructors are represented with an array as the final parameter and `isVarArgs() == true`. At this point the learner has completed **discovery** for `Field`, `Method`, and `Constructor`; the next chapter uses those descriptors to read/write fields, invoke methods, and create objects at runtime.

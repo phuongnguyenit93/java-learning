@@ -11,7 +11,7 @@ AccessReflectionController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 6.AccessControl/AccessControl.md
+      file: 7.AccessControl/AccessControl.md
       anchor: try-set-accessible
     methodName: accessChecks
     params: [
@@ -67,7 +67,7 @@ ConstructorReflectionController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 5.Constructors/Constructors.md
+      file: 6.DynamicInvocation/DynamicInvocation.md
       anchor: constructor-newinstance
     methodName: construct
     params: [
@@ -95,7 +95,7 @@ DynamicProxyController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 10.DynamicProxy/DynamicProxy.md
+      file: 9.DynamicProxy/DynamicProxy.md
       anchor: invocation-handler
     methodName: intercept
     params: [
@@ -123,7 +123,7 @@ FieldReflectionController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 3.Fields/Fields.md
+      file: 6.DynamicInvocation/DynamicInvocation.md
       anchor: field-read-write
     methodName: inspectAndMutate
     params: [
@@ -151,7 +151,7 @@ GenericReflectionController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 7.GenericTypeInspection/GenericTypeInspection.md
+      file: 8.GenericTypeInspection/GenericTypeInspection.md
       anchor: parameterized-type
     methodName: genericSignature
     params: [
@@ -179,7 +179,7 @@ MethodReflectionController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 4.Methods/Methods.md
+      file: 6.DynamicInvocation/DynamicInvocation.md
       anchor: method-invoke
     methodName: invoke
     params: [

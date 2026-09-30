@@ -48,7 +48,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '1.Basic/Basic.md'
+      file: '10.LimitationsRisks/LimitationsRisks.md'
       anchor: 'reflection-cost-boundary'
     apiRelated:
       controller: ''
@@ -61,7 +61,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '1.Basic/Basic.md'
+      file: '2.ClassMetadata/ClassMetadata.md'
       anchor: 'class-object-entrypoints'
     apiRelated:
       controller: ''
@@ -81,6 +81,19 @@ questions:
       methodSignature: 'inspectType()'
 
   - question: >-
+      When a framework receives an arbitrary Class<?>, why should it distinguish arrays, enums, records, sealed types, and runtime-retained annotations instead of treating every type the same way?
+    answer: >-
+      Class<?> is a common entry point, but different kinds of type expose specialized metadata. Arrays expose a component type; enums expose enum constants; records expose RecordComponent values in record-header order; sealed types expose permitted subclasses. A framework should classify the type with isArray/isEnum/isRecord/isSealed and use the matching APIs rather than infer those structures from ordinary fields or methods. Annotations add another metadata dimension: Reflection only reads annotations that survive to runtime, typically through RUNTIME retention; SOURCE- or CLASS-retained annotations do not automatically appear through runtime APIs. Correct processing therefore starts with type classification and metadata policy.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '2.ClassMetadata/ClassMetadata.md'
+      anchor: 'specialized-type-metadata'
+    apiRelated:
+      controller: 'ClassMetadataController'
+      methodSignature: 'inspectType()'
+
+  - question: >-
       Compare the getDeclaredXxx(...) and getXxx(...) families for member discovery. Which inheritance differences commonly cause frameworks to select the wrong member?
     answer: >-
       getDeclaredXxx(...) looks at members declared directly on the current class and can expose any visibility, but it does not automatically include inherited members. For Field and Method, getXxx(...) represents the public surface and may include public members from superclasses or interface hierarchies. Constructors are different because constructors are never inherited: getConstructors() returns only public constructors declared by that class. Static interface methods are also not inherited by implementing classes or subinterfaces, so they must be reflected from the interface that declares them. A framework should first decide whether it wants the current declaration or the inherited public API surface.
@@ -94,13 +107,26 @@ questions:
       methodSignature: ''
 
   - question: >-
+      How do Member, Executable, AccessibleObject, and AnnotatedElement form a shared mental model for Field, Method, and Constructor, and why should framework code understand those abstractions?
+    answer: >-
+      Member is the common contract for Field, Method, and Constructor metadata such as name, declaring class, modifiers, and synthetic state. Method and Constructor additionally share Executable, which centralizes parameter, exception, varargs, and generic-declaration metadata. Field, Method, and Constructor participate in reflective access checks through AccessibleObject, which also implements AnnotatedElement and therefore provides a common annotation-inspection model. These shared abstractions let a framework standardize discovery → metadata inspection → access validation before branching into the operation specific to a field, method, or constructor.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '2.ClassMetadata/ClassMetadata.md'
+      anchor: 'member-abstraction-model'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: >-
       When using Field to read or write state, how should a framework separate discovery, receiver, value, and access concerns? Which failures indicate a broken adapter contract?
     answer: >-
       The framework first resolves a Field descriptor in the intended scope, then applies that descriptor to a concrete receiver. An instance field needs a receiver compatible with the declaring class, while a static field needs no instance and is normally accessed with null. A written value must also be compatible with the field type; primitive fields allow some unboxing and widening but do not perform arbitrary domain conversion. A bad receiver or incompatible value typically causes IllegalArgumentException, while a member that exists but is not reflectively accessible causes IllegalAccessException. Successful discovery therefore does not prove that get or set is valid.
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '3.Fields/Fields.md'
+      file: '6.DynamicInvocation/DynamicInvocation.md'
       anchor: 'field-read-write'
     apiRelated:
       controller: 'FieldReflectionController'
@@ -139,7 +165,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '4.Methods/Methods.md'
+      file: '6.DynamicInvocation/DynamicInvocation.md'
       anchor: 'method-invoke'
     apiRelated:
       controller: ''
@@ -152,7 +178,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '4.Methods/Methods.md'
+      file: '6.DynamicInvocation/DynamicInvocation.md'
       anchor: 'invocation-exception'
     apiRelated:
       controller: 'MethodReflectionController'
@@ -165,7 +191,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '4.Methods/Methods.md'
+      file: '6.DynamicInvocation/DynamicInvocation.md'
       anchor: 'varargs-reflection'
     apiRelated:
       controller: ''
@@ -191,7 +217,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '5.Constructors/Constructors.md'
+      file: '6.DynamicInvocation/DynamicInvocation.md'
       anchor: 'constructor-reflection-failure'
     apiRelated:
       controller: ''
@@ -204,7 +230,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '6.AccessControl/AccessControl.md'
+      file: '7.AccessControl/AccessControl.md'
       anchor: 'language-vs-reflective-access'
     apiRelated:
       controller: ''
@@ -217,7 +243,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '6.AccessControl/AccessControl.md'
+      file: '7.AccessControl/AccessControl.md'
       anchor: 'strong-encapsulation-boundary'
     apiRelated:
       controller: 'AccessReflectionController'
@@ -226,11 +252,11 @@ questions:
   - question: >-
       Why does java.lang.reflect.Type exist when Java already has Class<?>? Explain the roles of Class, ParameterizedType, TypeVariable, WildcardType, and GenericArrayType.
     answer: >-
-      Class<?> represents raw or reifiable runtime types well, but a generic declaration may contain structure that a single Class cannot express. ParameterizedType represents forms such as List<String>; TypeVariable represents a variable such as T; WildcardType carries the upper or lower bounds of ? extends or ? super; and GenericArrayType represents an array whose component is generic, such as T[]. These pieces can nest, so framework code often has to process Type as a tree. Reflection is reading declaration metadata, not creating a new runtime generic type system.
+      Class<?> represents types for which the JVM provides a direct Class object, such as String, raw List, int, or String[]. A generic declaration may contain structure that a single Class cannot express. ParameterizedType represents forms such as List<String>; TypeVariable represents a variable such as T; WildcardType carries the upper or lower bounds of ? extends or ? super; and GenericArrayType represents an array whose component is generic, such as T[]. These pieces can nest, so framework code often has to process Type as a tree. Reflection is reading declaration metadata, not creating a new runtime generic type system.
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '7.GenericTypeInspection/GenericTypeInspection.md'
+      file: '8.GenericTypeInspection/GenericTypeInspection.md'
       anchor: 'type-interface'
     apiRelated:
       controller: ''
@@ -243,7 +269,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '7.GenericTypeInspection/GenericTypeInspection.md'
+      file: '8.GenericTypeInspection/GenericTypeInspection.md'
       anchor: 'type-variable-bounds'
     apiRelated:
       controller: ''
@@ -256,7 +282,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '7.GenericTypeInspection/GenericTypeInspection.md'
+      file: '8.GenericTypeInspection/GenericTypeInspection.md'
       anchor: 'erasure-vs-signature-metadata'
     apiRelated:
       controller: 'GenericReflectionController'
@@ -269,7 +295,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '8.DynamicInvocation/DynamicInvocation.md'
+      file: '6.DynamicInvocation/DynamicInvocation.md'
       anchor: 'reflective-dispatch'
     apiRelated:
       controller: ''
@@ -282,8 +308,21 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '8.DynamicInvocation/DynamicInvocation.md'
+      file: '6.DynamicInvocation/DynamicInvocation.md'
       anchor: 'argument-conversion'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: >-
+      What problem does java.lang.reflect.Array solve when the component type is known only at runtime, and why is new Object[] not a general replacement for Array.newInstance(...)?
+    answer: >-
+      The syntax new T[length] requires T to be statically available in source, while framework code may only receive a Class<?> componentType at runtime. Array.newInstance(componentType, length) creates an array with the correct runtime component type, such as String[] or int[], even if the Java variable holding it is only Object. Array.get/Array.set and primitive helpers such as getInt/setInt then provide access without a statically known array type. new Object[] creates only Object[]; it is not String[], int[], or an array of another runtime-selected component type, so it cannot solve the general case.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '6.DynamicInvocation/DynamicInvocation.md'
+      anchor: 'dynamic-array-reflection'
     apiRelated:
       controller: ''
       methodSignature: ''
@@ -295,7 +334,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '8.DynamicInvocation/DynamicInvocation.md'
+      file: '6.DynamicInvocation/DynamicInvocation.md'
       anchor: 'method-handle-boundary'
     apiRelated:
       controller: ''
@@ -308,7 +347,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '9.LimitationsRisks/LimitationsRisks.md'
+      file: '10.LimitationsRisks/LimitationsRisks.md'
       anchor: 'reflection-performance'
     apiRelated:
       controller: ''
@@ -321,7 +360,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '9.LimitationsRisks/LimitationsRisks.md'
+      file: '10.LimitationsRisks/LimitationsRisks.md'
       anchor: 'reflection-maintainability'
     apiRelated:
       controller: ''
@@ -334,7 +373,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '9.LimitationsRisks/LimitationsRisks.md'
+      file: '10.LimitationsRisks/LimitationsRisks.md'
       anchor: 'native-image-boundary'
     apiRelated:
       controller: ''
@@ -347,7 +386,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '10.DynamicProxy/DynamicProxy.md'
+      file: '9.DynamicProxy/DynamicProxy.md'
       anchor: 'object-methods-proxy'
     apiRelated:
       controller: 'DynamicProxyController'
@@ -360,8 +399,21 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '10.DynamicProxy/DynamicProxy.md'
+      file: '9.DynamicProxy/DynamicProxy.md'
       anchor: 'proxy-limitations'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: >-
+      If you must decide whether to use Reflection in a new design, which questions should you answer before writing the reflective code?
+    answer: >-
+      First ask whether the type or structure is genuinely unknown until runtime. If it is already known at compile time, direct calls, interfaces, polymorphism, or factories are usually clearer. If runtime discovery is a real requirement, ask whether Reflection can be isolated behind a small infrastructure boundary, whether metadata can be resolved and validated early and cached when useful, whether callers can still see typed contracts, and whether access, module, and native-image constraints are handled deliberately. Reflection is strongest when dynamism provides real value and is contained; it is a design smell when it merely replaces a known static call with strings and invoke calls.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '10.LimitationsRisks/LimitationsRisks.md'
+      anchor: 'reflection-decision-model'
     apiRelated:
       controller: ''
       methodSignature: ''

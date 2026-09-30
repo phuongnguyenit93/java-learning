@@ -3,19 +3,15 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  class-object-entrypoints:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
   reflection-use-cases:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  reflection-cost-boundary:
+2.ClassMetadata/ClassMetadata.md:
+  class-object-entrypoints:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-2.ClassMetadata/ClassMetadata.md:
   class-names:
     difficulty: BASIC
     aiGenerated: true
@@ -24,12 +20,24 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+  specialized-type-metadata:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  runtime-annotation-metadata:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
   modifiers:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
   superclass-interfaces:
     difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  member-abstraction-model:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
   declared-vs-public-members:
@@ -41,16 +49,12 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  field-read-write:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
   field-modifiers:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
   field-type-metadata:
-    difficulty: BASIC
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
 4.Methods/Methods.md:
@@ -59,6 +63,20 @@
     aiGenerated: true
     reviewed: false
   method-signature-metadata:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+5.Constructors/Constructors.md:
+  constructor-discovery:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  constructor-metadata:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+6.DynamicInvocation/DynamicInvocation.md:
+  field-read-write:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
@@ -67,124 +85,126 @@
     aiGenerated: true
     reviewed: false
   invocation-exception:
-    difficulty: BASIC
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
   varargs-reflection:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-5.Constructors/Constructors.md:
-  constructor-discovery:
-    difficulty: BASIC
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
   constructor-newinstance:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  constructor-metadata:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
   constructor-reflection-failure:
-    difficulty: BASIC
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-6.AccessControl/AccessControl.md:
+  reflective-dispatch:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  argument-conversion:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  dynamic-array-reflection:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  method-handle-boundary:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  dynamic-invocation-design:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+7.AccessControl/AccessControl.md:
   language-vs-reflective-access:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
   try-set-accessible:
-    difficulty: BASIC
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
   strong-encapsulation-boundary:
-    difficulty: BASIC
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
   accessible-object-risk:
-    difficulty: BASIC
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-7.GenericTypeInspection/GenericTypeInspection.md:
+8.GenericTypeInspection/GenericTypeInspection.md:
   type-interface:
-    difficulty: BASIC
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
   parameterized-type:
-    difficulty: BASIC
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
   type-variable-bounds:
-    difficulty: BASIC
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
   wildcard-reflection:
-    difficulty: BASIC
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
   erasure-vs-signature-metadata:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+9.DynamicProxy/DynamicProxy.md:
+  jdk-proxy-model:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  invocation-handler:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  proxy-interfaces:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  object-methods-proxy:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  proxy-limitations:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+10.LimitationsRisks/LimitationsRisks.md:
+  reflection-cost-boundary:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-8.DynamicInvocation/DynamicInvocation.md:
-  reflective-dispatch:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-  argument-conversion:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-  method-handle-boundary:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-  dynamic-invocation-design:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-9.LimitationsRisks/LimitationsRisks.md:
   compile-time-safety-loss:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
   encapsulation-breakage:
-    difficulty: BASIC
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
   reflection-performance:
-    difficulty: BASIC
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
   native-image-boundary:
-    difficulty: BASIC
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
   reflection-maintainability:
-    difficulty: BASIC
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-10.DynamicProxy/DynamicProxy.md:
-  jdk-proxy-model:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-  invocation-handler:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-  proxy-interfaces:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-  object-methods-proxy:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-  proxy-limitations:
-    difficulty: BASIC
+  reflection-decision-model:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false

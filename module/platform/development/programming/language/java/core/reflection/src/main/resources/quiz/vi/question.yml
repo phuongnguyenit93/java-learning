@@ -42,10 +42,10 @@ questions:
   - id: reflection-q01
     question: "Reflection giải quyết bài toán cốt lõi nào?"
     answers:
-      - {id: A, answer: "Cho code inspect metadata và chọn type/member ở runtime khi cấu trúc không được hard-code sẵn.", explanation: "Đúng. Đây là lý do cốt lõi Reflection tồn tại."}
-      - {id: B, answer: "Biến Java thành ngôn ngữ dynamic và bỏ compile-time type checking.", explanation: "Sai. Java vẫn là statically typed; Reflection chỉ chuyển một số quyết định sang runtime."}
-      - {id: C, answer: "Tự động scan mọi class đã load mà caller không cần policy.", explanation: "Sai. Caller/framework vẫn phải quyết định cách discovery."}
-      - {id: D, answer: "Thay thế hoàn toàn interface, factory và registry.", explanation: "Sai. Các abstraction tĩnh thường rõ hơn khi concrete structure đã biết."}
+      - {id: A, answer: "Cho mã kiểm tra siêu dữ liệu và chọn kiểu/thành phần lúc chạy khi cấu trúc không được ghi cứng sẵn.", explanation: "Đúng. Đây là lý do cốt lõi Reflection tồn tại."}
+      - {id: B, answer: "Biến Java thành ngôn ngữ kiểu động và bỏ kiểm tra kiểu tại thời điểm biên dịch.", explanation: "Sai. Java vẫn là ngôn ngữ kiểu tĩnh; Reflection chỉ chuyển một số quyết định sang lúc chạy."}
+      - {id: C, answer: "Tự động quét mọi class đã nạp mà bên gọi không cần chính sách.", explanation: "Sai. Bên gọi/framework vẫn phải quyết định cách khám phá."}
+      - {id: D, answer: "Thay thế hoàn toàn interface, factory và registry.", explanation: "Sai. Các khái niệm tĩnh thường rõ hơn khi cấu trúc cụ thể đã biết."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -53,38 +53,38 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: reflection-q02
-    question: "Khi chỉ có binary class name từ configuration, entry point nào phù hợp nhất?"
+    question: "Khi chỉ có tên nhị phân của class từ cấu hình, điểm vào nào phù hợp nhất?"
     answers:
-      - {id: A, answer: "object.getClass()", explanation: "Sai. Cách này cần có object trước."}
-      - {id: B, answer: "Class.forName(name)", explanation: "Đúng. API này resolve Class từ binary name runtime."}
-      - {id: C, answer: "new Class(name)", explanation: "Sai. Không tạo Class object theo cách này."}
+      - {id: A, answer: "object.getClass()", explanation: "Sai. Cách này cần có đối tượng trước."}
+      - {id: B, answer: "Class.forName(name)", explanation: "Đúng. API này phân giải Class từ tên nhị phân được biết lúc chạy."}
+      - {id: C, answer: "new Class(name)", explanation: "Sai. Không tạo đối tượng Class theo cách này."}
       - {id: D, answer: "Method.forName(name)", explanation: "Sai. Method không có entry point như vậy."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.Basic/Basic.md", anchor: "class-object-entrypoints"}
+    readmeRelated: {file: "2.ClassMetadata/ClassMetadata.md", anchor: "class-object-entrypoints"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: reflection-q03
     question: "Ý nghĩa đúng nhất của Class<?> là gì?"
     answers:
-      - {id: A, answer: "Class chỉ có thể đại diện Object.", explanation: "Sai. Nó có thể đại diện mọi runtime type."}
-      - {id: B, answer: "Class đã mất mọi runtime metadata.", explanation: "Sai. Metadata vẫn có đầy đủ theo runtime Class."}
-      - {id: C, answer: "Đó là một Class object hợp lệ nhưng code hiện tại chưa biết represented type cụ thể.", explanation: "Đúng. Wildcard diễn tả unknown represented type tại compile time."}
-      - {id: D, answer: "Dấu ? làm Reflection bỏ qua type safety hoàn toàn.", explanation: "Sai. Runtime checks và generic constraints vẫn tồn tại."}
+      - {id: A, answer: "Class chỉ có thể đại diện Object.", explanation: "Sai. Nó có thể đại diện nhiều kiểu Java mà JVM biết lúc chạy."}
+      - {id: B, answer: "Class đã mất mọi siêu dữ liệu lúc chạy.", explanation: "Sai. Đối tượng Class chính là nguồn siêu dữ liệu quan trọng về kiểu lúc chạy."}
+      - {id: C, answer: "Đó là một đối tượng Class hợp lệ nhưng mã hiện tại chưa biết kiểu cụ thể mà nó đại diện.", explanation: "Đúng. Wildcard diễn tả kiểu đại diện chưa biết tại thời điểm biên dịch."}
+      - {id: D, answer: "Dấu ? làm Reflection bỏ qua hoàn toàn độ an toàn kiểu.", explanation: "Sai. Các kiểm tra lúc chạy và ràng buộc generic vẫn tồn tại."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.Basic/Basic.md", anchor: "class-object-entrypoints"}
+    readmeRelated: {file: "2.ClassMetadata/ClassMetadata.md", anchor: "class-object-entrypoints"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: reflection-q04
     question: "Trường hợp nào hợp lý nhất để dùng Reflection?"
     answers:
-      - {id: A, answer: "Gọi một method cố định compiler đã biết rõ.", explanation: "Sai. Direct call đơn giản hơn."}
-      - {id: B, answer: "Đọc local constant trong cùng method.", explanation: "Sai. Không có bài toán runtime discovery."}
-      - {id: C, answer: "Thay mọi direct call bằng Method.invoke cho đồng nhất.", explanation: "Sai. Điều này tăng complexity vô ích."}
-      - {id: D, answer: "Framework tổng quát phải inspect/tạo user-defined type chỉ biết từ runtime metadata.", explanation: "Đúng. Đây là use case điển hình."}
+      - {id: A, answer: "Gọi một method cố định mà trình biên dịch đã biết rõ.", explanation: "Sai. Lời gọi trực tiếp đơn giản hơn."}
+      - {id: B, answer: "Đọc hằng cục bộ trong cùng method.", explanation: "Sai. Không có bài toán khám phá lúc chạy."}
+      - {id: C, answer: "Thay mọi lời gọi trực tiếp bằng Method.invoke cho đồng nhất.", explanation: "Sai. Điều này tăng độ phức tạp vô ích."}
+      - {id: D, answer: "Framework tổng quát phải kiểm tra/tạo kiểu do người dùng định nghĩa chỉ biết từ siêu dữ liệu lúc chạy.", explanation: "Đúng. Đây là trường hợp sử dụng điển hình."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
@@ -92,16 +92,16 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: reflection-q05
-    question: "Cái giá lớn nào xuất hiện khi chuyển từ direct call sang Reflection?"
+    question: "Cái giá lớn nào xuất hiện khi chuyển từ lời gọi trực tiếp sang Reflection?"
     answers:
-      - {id: A, answer: "Nhiều lỗi tên/type/access chuyển từ compile time sang runtime và dependency có thể ẩn trong metadata/string.", explanation: "Đúng. Flexibility đổi lấy safety và refactor visibility."}
+      - {id: A, answer: "Nhiều lỗi về tên/kiểu/quyền truy cập chuyển từ thời điểm biên dịch sang lúc chạy và sự phụ thuộc có thể ẩn trong siêu dữ liệu/chuỗi.", explanation: "Đúng. Tính linh hoạt đổi lấy một phần độ an toàn và khả năng nhìn thấy quan hệ khi tái cấu trúc."}
       - {id: B, answer: "JVM không còn garbage collection.", explanation: "Sai. Reflection không tắt GC."}
-      - {id: C, answer: "Mọi reflective call tự bỏ qua access control.", explanation: "Sai. Access control vẫn tồn tại."}
-      - {id: D, answer: "Class object không còn dùng được cho runtime type checks.", explanation: "Sai. Class có nhiều API type-check runtime."}
+      - {id: C, answer: "Mọi lời gọi phản chiếu tự bỏ qua kiểm soát truy cập.", explanation: "Sai. Kiểm soát truy cập vẫn tồn tại."}
+      - {id: D, answer: "Đối tượng Class không còn dùng được để kiểm tra kiểu lúc chạy.", explanation: "Sai. Class có nhiều API kiểm tra kiểu lúc chạy."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.Basic/Basic.md", anchor: "reflection-cost-boundary"}
+    readmeRelated: {file: "10.LimitationsRisks/LimitationsRisks.md", anchor: "reflection-cost-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: reflection-q06
@@ -121,7 +121,7 @@ questions:
     question: "getInterfaces() trên một class trả điều gì?"
     answers:
       - {id: A, answer: "Toàn bộ transitive interface graph đã flatten.", explanation: "Sai. Framework phải traverse thêm nếu cần full closure."}
-      - {id: B, answer: "Mọi interface đang được JVM load.", explanation: "Sai. API chỉ liên quan type đang inspect."}
+      - {id: B, answer: "Mọi interface đang được JVM nạp.", explanation: "Sai. API chỉ liên quan kiểu đang được kiểm tra."}
       - {id: C, answer: "Các interface mà class trực tiếp implements.", explanation: "Đúng. Với interface, nó trả direct superinterfaces."}
       - {id: D, answer: "Chỉ interface có public method.", explanation: "Sai. Không lọc theo method như vậy."}
     correctAnswerId: C
@@ -133,23 +133,62 @@ questions:
   - id: reflection-q08
     question: "Khác biệt chính giữa getDeclaredMethod() và getMethod() là gì?"
     answers:
-      - {id: A, answer: "getDeclaredMethod chỉ thấy public inherited method.", explanation: "Sai. Nó tập trung vào declaration trực tiếp."}
-      - {id: B, answer: "getMethod thấy private method ở mọi superclass.", explanation: "Sai. Nó tìm public surface."}
-      - {id: C, answer: "Hai API luôn trả cùng tập method.", explanation: "Sai. Contract khác nhau."}
-      - {id: D, answer: "getDeclaredMethod tìm declaration trực tiếp mọi visibility; getMethod tìm public surface và có thể gồm inherited method.", explanation: "Đúng. Đây là distinction cốt lõi."}
+      - {id: A, answer: "getDeclaredMethod chỉ thấy public method được kế thừa.", explanation: "Sai. Nó tập trung vào khai báo trực tiếp."}
+      - {id: B, answer: "getMethod thấy private method ở mọi superclass.", explanation: "Sai. Nó tìm trên bề mặt public."}
+      - {id: C, answer: "Hai API luôn trả cùng tập method.", explanation: "Sai. Hợp đồng của chúng khác nhau."}
+      - {id: D, answer: "getDeclaredMethod tìm khai báo trực tiếp ở mọi mức truy cập; getMethod tìm bề mặt public và có thể gồm method được kế thừa.", explanation: "Đúng. Đây là sự phân biệt cốt lõi."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "2.ClassMetadata/ClassMetadata.md", anchor: "declared-vs-public-members"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - id: reflection-q09
-    question: "PaymentService có private field processedCount khai báo trực tiếp. Lookup nào phù hợp?"
+  - id: reflection-q35
+    question: "Vì sao framework không nên giả định mọi Class<?> có cùng một tập siêu dữ liệu có ý nghĩa?"
     answers:
-      - {id: A, answer: "getDeclaredField('processedCount')", explanation: "Đúng. Declared lookup thấy private member của chính class."}
-      - {id: B, answer: "getField('processedCount') luôn tìm được.", explanation: "Sai. getField theo public-field contract."}
+      - {id: A, answer: "Vì mảng, enum, record và kiểu sealed có siêu dữ liệu chuyên biệt như kiểu phần tử, hằng enum, record component hoặc kiểu con được phép.", explanation: "Đúng. Framework nên phân loại kiểu rồi dùng API phù hợp thay vì áp một mô hình duy nhất cho mọi Class<?>."}
+      - {id: B, answer: "Vì Class<?> chỉ dùng được với class thường, không dùng được với mảng hoặc primitive.", explanation: "Sai. Mảng và primitive cũng có đối tượng Class."}
+      - {id: C, answer: "Vì Reflection tự chuyển mọi record thành enum lúc chạy.", explanation: "Sai. Record và enum là các loại kiểu khác nhau."}
+      - {id: D, answer: "Vì getSuperclass() luôn trả null cho mọi Class<?>.", explanation: "Sai. Class thường có thể trả superclass trực tiếp."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.ClassMetadata/ClassMetadata.md", anchor: "specialized-type-metadata"}
+    apiRelated: {controller: "ClassMetadataController", methodSignature: "inspectType()"}
+
+  - id: reflection-q36
+    question: "Điều kiện nào để Reflection có thể đọc một annotation qua các API lúc chạy như getAnnotation(...)?"
+    answers:
+      - {id: A, answer: "Annotation phải luôn có @Inherited.", explanation: "Sai. @Inherited chỉ điều chỉnh một phần ngữ nghĩa kế thừa trên class."}
+      - {id: B, answer: "Annotation phải được giữ đến lúc chạy, điển hình bằng retention RUNTIME.", explanation: "Đúng. Annotation SOURCE hoặc CLASS không tự xuất hiện qua API Reflection lúc chạy."}
+      - {id: C, answer: "Annotation phải được khai báo trong java.lang.", explanation: "Sai. Annotation tùy chỉnh cũng có thể được đọc."}
+      - {id: D, answer: "Mọi annotation trong mã nguồn đều luôn tồn tại lúc chạy.", explanation: "Sai. Retention quyết định annotation còn tồn tại tới giai đoạn nào."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.ClassMetadata/ClassMetadata.md", anchor: "runtime-annotation-metadata"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: reflection-q37
+    question: "Mô hình nào mô tả đúng quan hệ giữa Member, Executable, AccessibleObject và AnnotatedElement?"
+    answers:
+      - {id: A, answer: "Member là superclass trực tiếp của Field, Method và Constructor.", explanation: "Sai. Member là interface chung, không phải superclass."}
+      - {id: B, answer: "Executable là nền tảng chung của Method và Constructor; Field/Method/Constructor đều tham gia mô hình truy cập qua AccessibleObject.", explanation: "Đúng. Các abstraction chung giúp framework không phải coi ba loại thành phần là API hoàn toàn rời rạc."}
+      - {id: C, answer: "AnnotatedElement chỉ áp dụng cho annotation class và không liên quan các thành phần Reflection.", explanation: "Sai. Nhiều phần tử Reflection triển khai AnnotatedElement."}
+      - {id: D, answer: "AccessibleObject tự động cấp quyền truy cập private cho mọi thành phần.", explanation: "Sai. Nó cung cấp mô hình kiểm tra/yêu cầu quyền, không bảo đảm quyền luôn được mở."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.ClassMetadata/ClassMetadata.md", anchor: "member-abstraction-model"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: reflection-q09
+    question: "PaymentService có field private processedCount khai báo trực tiếp. Cách tra cứu nào phù hợp?"
+    answers:
+      - {id: A, answer: "getDeclaredField('processedCount')", explanation: "Đúng. Tra cứu declared thấy thành phần private của chính class."}
+      - {id: B, answer: "getField('processedCount') luôn tìm được.", explanation: "Sai. getField tuân theo hợp đồng chỉ tìm field public."}
       - {id: C, answer: "getMethod('processedCount')", explanation: "Sai. Đây là field, không phải method."}
-      - {id: D, answer: "getFields()[0] vì thứ tự field ổn định.", explanation: "Sai. Không nên phụ thuộc enumeration order."}
+      - {id: D, answer: "getFields()[0] vì thứ tự field ổn định.", explanation: "Sai. Không nên phụ thuộc thứ tự liệt kê."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -157,24 +196,24 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: reflection-q10
-    question: "Trong FieldReflectionController, điều gì chứng minh Field có thể mutate state?"
+    question: "Trong FieldReflectionController, điều gì chứng minh Field có thể thay đổi trạng thái?"
     answers:
-      - {id: A, answer: "getDeclaredFields() làm processedCount tự tăng.", explanation: "Sai. Discovery không mutate state."}
-      - {id: B, answer: "getInt đọc 1, setInt ghi 5, rồi getInt đọc 5.", explanation: "Đúng. Đây là evidence read/write rõ ràng."}
-      - {id: C, answer: "getName đổi tên field thành 5.", explanation: "Sai. getName chỉ đọc metadata."}
-      - {id: D, answer: "canAccess tự ghi giá trị mới.", explanation: "Sai. canAccess chỉ kiểm tra access."}
+      - {id: A, answer: "getDeclaredFields() làm processedCount tự tăng.", explanation: "Sai. Việc khám phá không thay đổi trạng thái."}
+      - {id: B, answer: "getInt đọc 1, setInt ghi 5, rồi getInt đọc 5.", explanation: "Đúng. Đây là minh chứng đọc/ghi rõ ràng."}
+      - {id: C, answer: "getName đổi tên field thành 5.", explanation: "Sai. getName chỉ đọc siêu dữ liệu."}
+      - {id: D, answer: "canAccess tự ghi giá trị mới.", explanation: "Sai. canAccess chỉ kiểm tra quyền truy cập."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.Fields/Fields.md", anchor: "field-read-write"}
+    readmeRelated: {file: "6.DynamicInvocation/DynamicInvocation.md", anchor: "field-read-write"}
     apiRelated: {controller: "FieldReflectionController", methodSignature: "inspectAndMutate()"}
 
   - id: reflection-q11
     question: "Nhận định đúng về final field qua Reflection là gì?"
     answers:
-      - {id: A, answer: "final bảo đảm mọi reflective write luôn thành công.", explanation: "Sai. Access/runtime restrictions vẫn tồn tại."}
-      - {id: B, answer: "final không xuất hiện trong Field metadata.", explanation: "Sai. Modifier/access metadata biểu diễn nó."}
-      - {id: C, answer: "Có thể inspect final metadata, nhưng không nên thiết kế framework dựa vào việc cưỡng ép mutate final state.", explanation: "Đúng. final vẫn là một contract thiết kế quan trọng."}
+      - {id: A, answer: "final bảo đảm mọi thao tác ghi phản chiếu luôn thành công.", explanation: "Sai. Các giới hạn về quyền truy cập/lúc chạy vẫn tồn tại."}
+      - {id: B, answer: "final không xuất hiện trong siêu dữ liệu Field.", explanation: "Sai. Siêu dữ liệu modifier/cờ truy cập biểu diễn nó."}
+      - {id: C, answer: "Có thể kiểm tra siêu dữ liệu final, nhưng không nên thiết kế framework dựa vào việc cưỡng ép thay đổi final field.", explanation: "Đúng. final vẫn là một hợp đồng thiết kế quan trọng."}
       - {id: D, answer: "Reflection tự bỏ final bit trước khi set.", explanation: "Sai. Không có quy tắc như vậy."}
     correctAnswerId: C
     aiGenerated: true
@@ -185,9 +224,9 @@ questions:
   - id: reflection-q12
     question: "getDeclaredMethod('format', Long.class) làm gì nếu chỉ tồn tại format(long)?"
     answers:
-      - {id: A, answer: "Tự boxing/unboxing rồi chọn format(long).", explanation: "Sai. Discovery không chạy compiler overload resolution."}
-      - {id: B, answer: "Chọn method gần nhất.", explanation: "Sai. Lookup signature phải chính xác."}
-      - {id: C, answer: "Trả null.", explanation: "Sai. Lookup failure dùng exception."}
+      - {id: A, answer: "Tự boxing/unboxing rồi chọn format(long).", explanation: "Sai. Việc khám phá không chạy cơ chế chọn overload của trình biên dịch."}
+      - {id: B, answer: "Chọn method gần nhất.", explanation: "Sai. Chữ ký tra cứu phải chính xác."}
+      - {id: C, answer: "Trả null.", explanation: "Sai. Lỗi tra cứu được báo bằng ngoại lệ."}
       - {id: D, answer: "Ném NoSuchMethodException.", explanation: "Đúng. Long.class không phải long.class."}
     correctAnswerId: D
     aiGenerated: true
@@ -198,10 +237,10 @@ questions:
   - id: reflection-q13
     question: "getDeclaringClass() trên Method cho biết gì?"
     answers:
-      - {id: A, answer: "Class/interface thực sự khai báo method descriptor đó.", explanation: "Đúng. Lookup class và declaring class có thể khác nhau."}
-      - {id: B, answer: "Runtime class của receiver ở lần invoke gần nhất.", explanation: "Sai. Method descriptor không đổi theo receiver."}
-      - {id: C, answer: "Class chứa controller gọi Reflection.", explanation: "Sai. Không liên quan caller class."}
-      - {id: D, answer: "Superclass cao nhất của object.", explanation: "Sai. Nó chỉ owner của declaration."}
+      - {id: A, answer: "Class/interface thực sự khai báo đối tượng mô tả method đó.", explanation: "Đúng. Class bắt đầu tra cứu và class khai báo có thể khác nhau."}
+      - {id: B, answer: "Class lúc chạy của đối tượng nhận ở lần gọi gần nhất.", explanation: "Sai. Đối tượng mô tả Method không đổi theo đối tượng nhận."}
+      - {id: C, answer: "Class chứa controller gọi Reflection.", explanation: "Sai. Không liên quan class của bên gọi."}
+      - {id: D, answer: "Superclass cao nhất của đối tượng.", explanation: "Sai. Nó chỉ cho biết nơi khai báo method."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -211,49 +250,49 @@ questions:
   - id: reflection-q14
     question: "Method.invoke(service, arg) cần gì với instance method?"
     answers:
-      - {id: A, answer: "Chỉ cần method name.", explanation: "Sai. Descriptor đã có method nhưng invocation còn cần receiver/arguments."}
-      - {id: B, answer: "Receiver tương thích và arguments phù hợp parameter contract.", explanation: "Đúng. Đây là runtime invocation contract."}
-      - {id: C, answer: "Receiver luôn phải null.", explanation: "Sai. Null phù hợp với static member, không phải instance method."}
-      - {id: D, answer: "Mọi argument phải là String.", explanation: "Sai. Phụ thuộc signature."}
+      - {id: A, answer: "Chỉ cần tên method.", explanation: "Sai. Đã có Method nhưng lời gọi còn cần đối tượng nhận và đối số."}
+      - {id: B, answer: "Đối tượng nhận tương thích và các đối số phù hợp hợp đồng tham số.", explanation: "Đúng. Đây là hợp đồng của lời gọi lúc chạy."}
+      - {id: C, answer: "Đối tượng nhận luôn phải null.", explanation: "Sai. null phù hợp với thành phần static, không phải instance method."}
+      - {id: D, answer: "Mọi đối số phải là String.", explanation: "Sai. Phụ thuộc chữ ký method."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Methods/Methods.md", anchor: "method-invoke"}
+    readmeRelated: {file: "6.DynamicInvocation/DynamicInvocation.md", anchor: "method-invoke"}
     apiRelated: {controller: "MethodReflectionController", methodSignature: "invoke()"}
 
   - id: reflection-q15
-    question: "Nếu target method chạy rồi ném IllegalStateException, Method.invoke thường báo ra sao?"
+    question: "Nếu method đích chạy rồi ném IllegalStateException, Method.invoke thường báo ra sao?"
     answers:
       - {id: A, answer: "NoSuchMethodException.", explanation: "Sai. Method đã được tìm và bắt đầu chạy."}
-      - {id: B, answer: "Nuốt exception rồi trả null.", explanation: "Sai. Failure không bị nuốt."}
-      - {id: C, answer: "InvocationTargetException với IllegalStateException làm cause.", explanation: "Đúng. Wrapper tách Reflection boundary khỏi target failure."}
-      - {id: D, answer: "Compile-time error.", explanation: "Sai. Đây là runtime invocation."}
+      - {id: B, answer: "Nuốt ngoại lệ rồi trả null.", explanation: "Sai. Lỗi từ mã đích không bị nuốt."}
+      - {id: C, answer: "InvocationTargetException với IllegalStateException làm nguyên nhân.", explanation: "Đúng. Lớp bọc giúp phân biệt ranh giới Reflection với lỗi thật từ mã đích."}
+      - {id: D, answer: "Lỗi tại thời điểm biên dịch.", explanation: "Sai. Đây là lời gọi lúc chạy."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Methods/Methods.md", anchor: "invocation-exception"}
+    readmeRelated: {file: "6.DynamicInvocation/DynamicInvocation.md", anchor: "invocation-exception"}
     apiRelated: {controller: "MethodReflectionController", methodSignature: "invoke()"}
 
   - id: reflection-q16
-    question: "Varargs có ý nghĩa gì khi invoke reflectively?"
+    question: "Varargs có ý nghĩa gì khi gọi Method.invoke(...) hoặc Constructor.newInstance(...) bằng Reflection?"
     answers:
-      - {id: A, answer: "Method.invoke luôn pack trailing arguments y hệt compiler.", explanation: "Sai. Không nên giả định compile-time call syntax được tái hiện."}
-      - {id: B, answer: "Varargs method không có array parameter runtime.", explanation: "Sai. Varargs vẫn là array."}
-      - {id: C, answer: "Reflection cấm invoke varargs.", explanation: "Sai. Có thể invoke nếu truyền arguments đúng."}
-      - {id: D, answer: "Varargs vẫn là array parameter; caller phải hiểu đúng packing thay vì dựa vào compiler overload rules.", explanation: "Đúng. Đây là boundary quan trọng."}
+      - {id: A, answer: "Reflection luôn tự đóng gói các đối số cuối giống hệt cú pháp gọi Java thông thường.", explanation: "Sai. Không nên giả định cơ chế đóng gói của lời gọi trực tiếp được tái hiện."}
+      - {id: B, answer: "Varargs không còn là mảng ở lúc chạy.", explanation: "Sai. Tham số varargs vẫn được biểu diễn bằng kiểu mảng."}
+      - {id: C, answer: "Reflection cấm gọi method hoặc constructor có varargs.", explanation: "Sai. Có thể gọi nếu hình dạng đối số đúng."}
+      - {id: D, answer: "Varargs vẫn là tham số mảng, trong khi invoke/newInstance cũng nhận Object...; bên gọi phải truyền đúng một mảng khi đó là một đối số duy nhất.", explanation: "Đúng. Hai lớp varargs có thể làm mảng bị bung ngoài ý muốn nếu không kiểm soát hình dạng đối số."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Methods/Methods.md", anchor: "varargs-reflection"}
+    readmeRelated: {file: "6.DynamicInvocation/DynamicInvocation.md", anchor: "varargs-reflection"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: reflection-q17
-    question: "Điểm nào đúng về constructors và inheritance?"
+    question: "Điểm nào đúng về constructor và kế thừa?"
     answers:
-      - {id: A, answer: "Constructors không được inherit; getConstructors() nói về public constructors của chính class.", explanation: "Đúng. Constructor gắn với việc tạo declaring class."}
-      - {id: B, answer: "Constructors được inherit giống public methods.", explanation: "Sai. Constructors không inherit."}
-      - {id: C, answer: "getDeclaredConstructors() chỉ trả superclass constructors.", explanation: "Sai. Nó trả declarations của chính class."}
-      - {id: D, answer: "Interface có inherited constructor.", explanation: "Sai. Interface không có construction model như class."}
+      - {id: A, answer: "Constructor không được kế thừa; getConstructors() nói về các constructor public của chính class.", explanation: "Đúng. Constructor gắn với việc tạo class khai báo nó."}
+      - {id: B, answer: "Constructor được kế thừa giống public method.", explanation: "Sai. Constructor không được kế thừa."}
+      - {id: C, answer: "getDeclaredConstructors() chỉ trả constructor của superclass.", explanation: "Sai. Nó trả các khai báo của chính class."}
+      - {id: D, answer: "Interface có constructor được kế thừa.", explanation: "Sai. Interface không có mô hình khởi tạo class như vậy."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -263,220 +302,246 @@ questions:
   - id: reflection-q18
     question: "Constructor.newInstance('stripe') minh họa điều gì?"
     answers:
-      - {id: A, answer: "Caller vẫn bắt buộc viết new PaymentService(...).", explanation: "Sai. Descriptor có thể tạo instance trực tiếp."}
-      - {id: B, answer: "Object có thể được tạo qua constructor descriptor đã chọn ở runtime.", explanation: "Đúng. Đây là dynamic construction."}
-      - {id: C, answer: "Constructor descriptor chỉ đọc metadata.", explanation: "Sai. Nó còn có newInstance()."}
-      - {id: D, answer: "newInstance luôn gọi no-arg constructor.", explanation: "Sai. Nó dùng descriptor cụ thể đã lookup."}
+      - {id: A, answer: "Bên gọi vẫn bắt buộc viết new PaymentService(...).", explanation: "Sai. Đối tượng mô tả Constructor có thể tạo instance trực tiếp."}
+      - {id: B, answer: "Đối tượng có thể được tạo qua Constructor đã được chọn lúc chạy.", explanation: "Đúng. Đây là khởi tạo động bằng siêu dữ liệu."}
+      - {id: C, answer: "Constructor chỉ dùng để đọc siêu dữ liệu.", explanation: "Sai. Nó còn có newInstance()."}
+      - {id: D, answer: "newInstance luôn gọi constructor không tham số.", explanation: "Sai. Nó dùng chính Constructor cụ thể đã được tra cứu."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.Constructors/Constructors.md", anchor: "constructor-newinstance"}
+    readmeRelated: {file: "6.DynamicInvocation/DynamicInvocation.md", anchor: "constructor-newinstance"}
     apiRelated: {controller: "ConstructorReflectionController", methodSignature: "construct()"}
 
   - id: reflection-q19
-    question: "Nếu constructor body được gọi rồi ném exception, boundary nào nên được nhận diện?"
+    question: "Nếu thân constructor đã chạy rồi ném ngoại lệ, ranh giới lỗi nào nên được nhận diện?"
     answers:
       - {id: A, answer: "ClassNotFoundException.", explanation: "Sai. Class đã được resolve."}
-      - {id: B, answer: "NoSuchFieldException.", explanation: "Sai. Không liên quan field lookup."}
-      - {id: C, answer: "InvocationTargetException bọc exception của constructor body.", explanation: "Đúng. Cause là target failure thật."}
-      - {id: D, answer: "Compiler tự retry construction.", explanation: "Sai. Không có cơ chế như vậy."}
+      - {id: B, answer: "NoSuchFieldException.", explanation: "Sai. Không liên quan việc tra cứu field."}
+      - {id: C, answer: "InvocationTargetException bọc ngoại lệ do thân constructor ném.", explanation: "Đúng. Nguyên nhân bên trong là lỗi thật của mã đích."}
+      - {id: D, answer: "Trình biên dịch tự thử khởi tạo lại.", explanation: "Sai. Không có cơ chế như vậy."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.Constructors/Constructors.md", anchor: "constructor-reflection-failure"}
+    readmeRelated: {file: "6.DynamicInvocation/DynamicInvocation.md", anchor: "constructor-reflection-failure"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: reflection-q20
-    question: "getDeclaredMethod() trả private method descriptor có nghĩa gì?"
+    question: "getDeclaredMethod() trả về Method cho một method private có nghĩa gì?"
     answers:
-      - {id: A, answer: "private modifier đã bị xóa.", explanation: "Sai. Descriptor không đổi declaration modifier."}
-      - {id: B, answer: "Caller chắc chắn invoke được.", explanation: "Sai. Access checks vẫn độc lập."}
-      - {id: C, answer: "JPMS không còn tác dụng.", explanation: "Sai. JPMS có thể chặn deep access."}
-      - {id: D, answer: "Discovery thành công nhưng use vẫn chịu access checks.", explanation: "Đúng. Discovery và permission là hai layer."}
+      - {id: A, answer: "Modifier private đã bị xóa.", explanation: "Sai. Đối tượng mô tả không thay đổi modifier của khai báo."}
+      - {id: B, answer: "Bên gọi chắc chắn gọi được method.", explanation: "Sai. Việc khám phá và kiểm tra quyền truy cập là hai bước độc lập."}
+      - {id: C, answer: "JPMS không còn tác dụng.", explanation: "Sai. JPMS vẫn có thể chặn truy cập phản chiếu sâu."}
+      - {id: D, answer: "Khám phá thành công nhưng việc sử dụng vẫn chịu kiểm tra quyền truy cập.", explanation: "Đúng. Tìm thấy thành phần không đồng nghĩa được phép sử dụng nó."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.AccessControl/AccessControl.md", anchor: "language-vs-reflective-access"}
+    readmeRelated: {file: "7.AccessControl/AccessControl.md", anchor: "language-vs-reflective-access"}
     apiRelated: {controller: "AccessReflectionController", methodSignature: "accessChecks()"}
 
   - id: reflection-q21
     question: "trySetAccessible() khác 'biến private thành public' thế nào?"
     answers:
-      - {id: A, answer: "Nó chỉ yêu cầu suppression của một số access checks khi runtime cho phép; modifier không đổi.", explanation: "Đúng. Đây là runtime access request."}
-      - {id: B, answer: "Nó rewrite bytecode để member public vĩnh viễn.", explanation: "Sai. Declaration không bị sửa."}
+      - {id: A, answer: "Nó chỉ yêu cầu bỏ qua một số kiểm tra truy cập khi lúc chạy cho phép; modifier không đổi.", explanation: "Đúng. Đây là yêu cầu quyền truy cập lúc chạy."}
+      - {id: B, answer: "Nó viết lại bytecode để thành phần trở thành public vĩnh viễn.", explanation: "Sai. Khai báo không bị sửa."}
       - {id: C, answer: "Nó luôn thành công trên named modules.", explanation: "Sai. Strong encapsulation có thể từ chối."}
-      - {id: D, answer: "Nó chỉ dùng cho public method.", explanation: "Sai. Nó chủ yếu có ý nghĩa với member cần suppression."}
+      - {id: D, answer: "Nó chỉ dùng cho public method.", explanation: "Sai. Nó chủ yếu có ý nghĩa với thành phần cần yêu cầu bỏ qua kiểm tra truy cập."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.AccessControl/AccessControl.md", anchor: "try-set-accessible"}
+    readmeRelated: {file: "7.AccessControl/AccessControl.md", anchor: "try-set-accessible"}
     apiRelated: {controller: "AccessReflectionController", methodSignature: "accessChecks()"}
 
   - id: reflection-q22
     question: "Trong JPMS, exports và opens khác nhau chủ yếu ở đâu?"
     answers:
       - {id: A, answer: "exports chỉ dành cho private API.", explanation: "Sai. exports liên quan public API của package."}
-      - {id: B, answer: "exports cho module khác dùng public API; opens cho phép deep reflection theo module rules.", explanation: "Đúng. Hai keyword giải hai boundary khác nhau."}
-      - {id: C, answer: "Hai keyword hoàn toàn đồng nghĩa.", explanation: "Sai. Semantics khác nhau."}
-      - {id: D, answer: "opens tự đổi private member thành public source API.", explanation: "Sai. Modifier không đổi."}
+      - {id: B, answer: "exports cho mô-đun khác dùng public API; opens cho phép Reflection truy cập sâu theo quy tắc mô-đun.", explanation: "Đúng. Hai từ khóa giải quyết hai ranh giới khác nhau."}
+      - {id: C, answer: "Hai từ khóa hoàn toàn đồng nghĩa.", explanation: "Sai. Ngữ nghĩa khác nhau."}
+      - {id: D, answer: "opens tự đổi thành phần private thành public API trong mã nguồn.", explanation: "Sai. Modifier không đổi."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.AccessControl/AccessControl.md", anchor: "strong-encapsulation-boundary"}
+    readmeRelated: {file: "7.AccessControl/AccessControl.md", anchor: "strong-encapsulation-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: reflection-q23
-    question: "Vì sao generic Reflection API trả Type thay vì luôn trả Class<?>?"
+    question: "Vì sao API Reflection cho generic trả Type thay vì luôn trả Class<?>?"
     answers:
       - {id: A, answer: "Class<?> không thể đại diện primitive.", explanation: "Sai. int.class là Class."}
-      - {id: B, answer: "Type chỉ là alias của String.", explanation: "Sai. Type là reflection abstraction."}
-      - {id: C, answer: "Generic signature có thể là ParameterizedType, TypeVariable, WildcardType hoặc GenericArrayType.", explanation: "Đúng. Class chỉ là một Type implementation."}
-      - {id: D, answer: "JVM cấm Class implement Type.", explanation: "Sai. Class implements Type."}
+      - {id: B, answer: "Type chỉ là tên khác của String.", explanation: "Sai. Type là abstraction của mô hình kiểu trong Reflection."}
+      - {id: C, answer: "Chữ ký generic có thể được biểu diễn bằng ParameterizedType, TypeVariable, WildcardType hoặc GenericArrayType.", explanation: "Đúng. Class chỉ là một cách triển khai Type."}
+      - {id: D, answer: "JVM cấm Class triển khai Type.", explanation: "Sai. Class triển khai Type."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.GenericTypeInspection/GenericTypeInspection.md", anchor: "type-interface"}
+    readmeRelated: {file: "8.GenericTypeInspection/GenericTypeInspection.md", anchor: "type-interface"}
     apiRelated: {controller: "GenericReflectionController", methodSignature: "genericSignature()"}
 
   - id: reflection-q24
     question: "Với field List<? extends T> values, getGenericType() có thể cung cấp gì?"
     answers:
-      - {id: A, answer: "Luôn chỉ List.class.", explanation: "Sai. Đó là raw view từ getType()."}
-      - {id: B, answer: "Concrete T runtime class của từng object.", explanation: "Sai. Erasure không cho phép điều này nói chung."}
-      - {id: C, answer: "Wildcard bị xóa trước khi trả.", explanation: "Sai. Signature metadata có thể giữ wildcard."}
-      - {id: D, answer: "ParameterizedType giữ raw List và actual argument ? extends T.", explanation: "Đúng. Đây là declaration metadata."}
+      - {id: A, answer: "Luôn chỉ List.class.", explanation: "Sai. Đó là góc nhìn kiểu thô từ getType()."}
+      - {id: B, answer: "Class cụ thể lúc chạy của T cho từng đối tượng.", explanation: "Sai. Xóa kiểu không cho phép điều này trong trường hợp tổng quát."}
+      - {id: C, answer: "Wildcard bị xóa trước khi trả.", explanation: "Sai. Siêu dữ liệu chữ ký có thể giữ wildcard."}
+      - {id: D, answer: "ParameterizedType giữ List dạng thô và đối số thực tế ? extends T.", explanation: "Đúng. Đây là siêu dữ liệu của khai báo."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.GenericTypeInspection/GenericTypeInspection.md", anchor: "parameterized-type"}
+    readmeRelated: {file: "8.GenericTypeInspection/GenericTypeInspection.md", anchor: "parameterized-type"}
     apiRelated: {controller: "GenericReflectionController", methodSignature: "genericSignature()"}
 
   - id: reflection-q25
     question: "Repository<T extends Number & Comparable<T>> cho TypeVariable.getBounds() thấy gì?"
     answers:
-      - {id: A, answer: "Number và Comparable<T>.", explanation: "Đúng. Bounds được giữ trong generic signature metadata."}
-      - {id: B, answer: "Chỉ Object vì erasure xóa mọi metadata.", explanation: "Sai. Erasure không xóa hết declaration signature."}
-      - {id: C, answer: "Integer vì JVM đoán T.", explanation: "Sai. Reflection không đoán concrete type argument."}
-      - {id: D, answer: "Không có bounds.", explanation: "Sai. Declaration có hai bounds."}
+      - {id: A, answer: "Number và Comparable<T>.", explanation: "Đúng. Các giới hạn được giữ trong siêu dữ liệu chữ ký generic."}
+      - {id: B, answer: "Chỉ Object vì xóa kiểu xóa mọi siêu dữ liệu.", explanation: "Sai. Xóa kiểu không xóa toàn bộ chữ ký khai báo."}
+      - {id: C, answer: "Integer vì JVM đoán T.", explanation: "Sai. Reflection không đoán đối số kiểu cụ thể."}
+      - {id: D, answer: "Không có giới hạn.", explanation: "Sai. Khai báo có hai giới hạn."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.GenericTypeInspection/GenericTypeInspection.md", anchor: "type-variable-bounds"}
+    readmeRelated: {file: "8.GenericTypeInspection/GenericTypeInspection.md", anchor: "type-variable-bounds"}
     apiRelated: {controller: "GenericReflectionController", methodSignature: "genericSignature()"}
 
   - id: reflection-q26
-    question: "WildcardType cho List<? super Integer> thường mô tả bounds nào?"
+    question: "WildcardType cho List<? super Integer> thường mô tả các giới hạn nào?"
     answers:
       - {id: A, answer: "Upper bound Integer, không lower bound.", explanation: "Sai. Đây giống extends hơn."}
-      - {id: B, answer: "Lower bound Integer và upper bound Object.", explanation: "Đúng. Đó là semantics của ? super Integer."}
-      - {id: C, answer: "Lower bound Object và upper bound Number.", explanation: "Sai. Bounds bị đảo."}
-      - {id: D, answer: "Không lưu bound metadata.", explanation: "Sai. WildcardType exposes bounds."}
+      - {id: B, answer: "Giới hạn dưới Integer và giới hạn trên Object.", explanation: "Đúng. Đó là ngữ nghĩa của ? super Integer."}
+      - {id: C, answer: "Giới hạn dưới Object và giới hạn trên Number.", explanation: "Sai. Các giới hạn bị đảo và không đúng."}
+      - {id: D, answer: "Không lưu siêu dữ liệu giới hạn.", explanation: "Sai. WildcardType cung cấp các giới hạn."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.GenericTypeInspection/GenericTypeInspection.md", anchor: "wildcard-reflection"}
+    readmeRelated: {file: "8.GenericTypeInspection/GenericTypeInspection.md", anchor: "wildcard-reflection"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: reflection-q27
-    question: "Repository<Integer> và Repository<Long> thường có runtime Class như thế nào?"
+    question: "Repository<Integer> và Repository<Long> thường có Class lúc chạy như thế nào?"
     answers:
-      - {id: A, answer: "Hai Class khác nhau vì type argument là runtime identity.", explanation: "Sai. Erasure làm chúng share raw runtime class."}
-      - {id: B, answer: "Không object nào có Class.", explanation: "Sai. Mọi object có runtime class."}
-      - {id: C, answer: "Cùng Repository.class dù declaration sites có thể giữ generic signatures.", explanation: "Đúng. Đây là erasure vs signature distinction."}
+      - {id: A, answer: "Hai Class khác nhau vì đối số kiểu là một phần định danh lúc chạy.", explanation: "Sai. Xóa kiểu khiến chúng dùng chung class thô lúc chạy."}
+      - {id: B, answer: "Không đối tượng nào có Class.", explanation: "Sai. Mọi đối tượng đều có class lúc chạy."}
+      - {id: C, answer: "Cùng Repository.class dù các vị trí khai báo có thể giữ chữ ký generic.", explanation: "Đúng. Đây là sự khác nhau giữa xóa kiểu và siêu dữ liệu chữ ký."}
       - {id: D, answer: "JVM tạo hidden subclass cho từng type argument.", explanation: "Sai. Java generics không hoạt động như vậy."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.GenericTypeInspection/GenericTypeInspection.md", anchor: "erasure-vs-signature-metadata"}
+    readmeRelated: {file: "8.GenericTypeInspection/GenericTypeInspection.md", anchor: "erasure-vs-signature-metadata"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: reflection-q28
     question: "Luồng reflective dispatch hợp lý nhất là gì?"
     answers:
-      - {id: A, answer: "invoke trước rồi lookup sau.", explanation: "Sai. Phải có descriptor trước."}
-      - {id: B, answer: "Compiler chọn overload runtime giúp Reflection.", explanation: "Sai. Reflection không tái chạy compiler."}
-      - {id: C, answer: "Reflection parse source mỗi lần gọi.", explanation: "Sai. Nó dùng runtime metadata."}
-      - {id: D, answer: "Discover descriptor → validate target/arguments/access → invoke → interpret result/failure.", explanation: "Đúng. Đây là pipeline thực tế."}
+      - {id: A, answer: "Gọi trước rồi tra cứu sau.", explanation: "Sai. Phải có đối tượng mô tả trước."}
+      - {id: B, answer: "Trình biên dịch chọn overload lúc chạy giúp Reflection.", explanation: "Sai. Reflection không chạy lại trình biên dịch."}
+      - {id: C, answer: "Reflection phân tích lại mã nguồn mỗi lần gọi.", explanation: "Sai. Nó dùng siêu dữ liệu lúc chạy."}
+      - {id: D, answer: "Khám phá đối tượng mô tả → kiểm tra đích/đối số/quyền truy cập → gọi → xử lý kết quả/lỗi.", explanation: "Đúng. Đây là luồng thực tế."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.DynamicInvocation/DynamicInvocation.md", anchor: "reflective-dispatch"}
+    readmeRelated: {file: "6.DynamicInvocation/DynamicInvocation.md", anchor: "reflective-dispatch"}
     apiRelated: {controller: "MethodReflectionController", methodSignature: "invoke()"}
 
   - id: reflection-q29
-    question: "Nhận định nào đúng về argument conversion của Method.invoke?"
+    question: "Nhận định nào đúng về chuyển đổi đối số của Method.invoke?"
     answers:
-      - {id: A, answer: "Có các conversion được API quy định như unboxing/widening phù hợp, nhưng không phải general converter hay overload resolver.", explanation: "Đúng. Invocation conversion có giới hạn."}
-      - {id: B, answer: "Tự parse String '5' thành mọi numeric type.", explanation: "Sai. Không phải conversion engine tổng quát."}
+      - {id: A, answer: "Có các chuyển đổi được API quy định như unboxing/widening phù hợp, nhưng không phải bộ chuyển đổi tổng quát hay cơ chế tự chọn overload.", explanation: "Đúng. Chuyển đổi khi gọi có giới hạn."}
+      - {id: B, answer: "Tự phân tích String '5' thành mọi kiểu số.", explanation: "Sai. Không phải bộ chuyển đổi tổng quát."}
       - {id: C, answer: "Luôn thực hiện narrowing primitive conversion.", explanation: "Sai. Không có guarantee đó."}
-      - {id: D, answer: "Tự chọn method khác nếu argument không hợp.", explanation: "Sai. Method đã được lookup trước."}
+      - {id: D, answer: "Tự chọn method khác nếu đối số không phù hợp.", explanation: "Sai. Method đã được tra cứu trước."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.DynamicInvocation/DynamicInvocation.md", anchor: "argument-conversion"}
+    readmeRelated: {file: "6.DynamicInvocation/DynamicInvocation.md", anchor: "argument-conversion"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: reflection-q38
+    question: "Khi kiểu phần tử của mảng chỉ được biết lúc chạy, cách nào phù hợp để tạo và thao tác mảng bằng Reflection?"
+    answers:
+      - {id: A, answer: "Dùng Array.newInstance(componentType, length) rồi Array.get/Array.set hoặc các helper primitive phù hợp.", explanation: "Đúng. java.lang.reflect.Array tồn tại cho trường hợp kiểu phần tử chưa biết tại thời điểm biên dịch."}
+      - {id: B, answer: "Luôn dùng new Object[length] vì kiểu phần tử lúc chạy của mảng không quan trọng.", explanation: "Sai. Object[] không thay thế được mảng có kiểu phần tử cụ thể như String[] hoặc int[]."}
+      - {id: C, answer: "Dùng Class.forName để tạo trực tiếp mọi phần tử mảng mà không cần Array.", explanation: "Sai. Class.forName phân giải class, không phải API tạo/truy cập mảng động."}
+      - {id: D, answer: "Reflection không hỗ trợ mảng primitive.", explanation: "Sai. Array có các helper như getInt/setInt cho mảng primitive."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.DynamicInvocation/DynamicInvocation.md", anchor: "dynamic-array-reflection"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: reflection-q30
     question: "Ranh giới khái quát giữa Reflection và MethodHandle là gì?"
     answers:
-      - {id: A, answer: "MethodHandle là API duy nhất đọc annotation.", explanation: "Sai. Annotation metadata thường đi qua Reflection."}
-      - {id: B, answer: "Reflection thiên về member metadata/discovery; MethodHandle là lower-level callable-target mechanism sau lookup.", explanation: "Đúng. Hai abstraction có trọng tâm khác nhau."}
+      - {id: A, answer: "MethodHandle là API duy nhất đọc annotation.", explanation: "Sai. Siêu dữ liệu annotation thường được đọc qua Reflection."}
+      - {id: B, answer: "Reflection thiên về siêu dữ liệu/khám phá thành phần; MethodHandle là cơ chế mức thấp hơn để giữ và gọi một đích đã được phân giải.", explanation: "Đúng. Hai abstraction có trọng tâm khác nhau."}
       - {id: C, answer: "Reflection không thể invoke method.", explanation: "Sai. Method.invoke tồn tại."}
-      - {id: D, answer: "MethodHandle tự bypass JPMS.", explanation: "Sai. Access lookup vẫn bị kiểm soát."}
+      - {id: D, answer: "MethodHandle tự bỏ qua JPMS.", explanation: "Sai. Việc tra cứu quyền truy cập vẫn bị kiểm soát."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.DynamicInvocation/DynamicInvocation.md", anchor: "method-handle-boundary"}
+    readmeRelated: {file: "6.DynamicInvocation/DynamicInvocation.md", anchor: "method-handle-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: reflection-q31
-    question: "Cách xử lý performance Reflection hợp lý nhất trong framework là gì?"
+    question: "Cách xử lý hiệu năng Reflection hợp lý nhất trong framework là gì?"
     answers:
-      - {id: A, answer: "Cấm Reflection trong mọi code path.", explanation: "Sai. Nhiều framework use case hợp lý."}
-      - {id: B, answer: "Lookup metadata lặp lại trong hot loop.", explanation: "Sai. Repeated lookup thường nên tránh."}
-      - {id: C, answer: "Resolve/validate sớm, cache descriptor/plan khi phù hợp và benchmark workload thật nếu performance quan trọng.", explanation: "Đúng. Đây là approach thực tế."}
-      - {id: D, answer: "Giả định Reflection luôn chậm đúng 100 lần.", explanation: "Sai. Cost phụ thuộc workload/JVM/path."}
+      - {id: A, answer: "Cấm Reflection trong mọi đường chạy.", explanation: "Sai. Nhiều trường hợp framework dùng Reflection là hợp lý."}
+      - {id: B, answer: "Tra cứu siêu dữ liệu lặp lại trong vòng lặp nóng.", explanation: "Sai. Tra cứu lặp lại thường nên tránh."}
+      - {id: C, answer: "Phân giải/kiểm tra sớm, lưu đệm đối tượng mô tả/kế hoạch khi phù hợp và đo tải công việc thật nếu hiệu năng quan trọng.", explanation: "Đúng. Đây là cách tiếp cận thực tế."}
+      - {id: D, answer: "Giả định Reflection luôn chậm đúng 100 lần.", explanation: "Sai. Chi phí phụ thuộc tải công việc, JVM và đường gọi."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.LimitationsRisks/LimitationsRisks.md", anchor: "reflection-performance"}
+    readmeRelated: {file: "10.LimitationsRisks/LimitationsRisks.md", anchor: "reflection-performance"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: reflection-q32
-    question: "Vì sao string-driven Reflection có thể cần reachability metadata trong native image?"
+    question: "Vì sao Reflection được điều khiển bằng chuỗi có thể cần reachability metadata trong native image?"
     answers:
-      - {id: A, answer: "Native image không chứa Java class.", explanation: "Sai. Java code được build thành native executable."}
+      - {id: A, answer: "Native image không chứa Java class.", explanation: "Sai. Mã Java được xây dựng thành file thực thi native."}
       - {id: B, answer: "Reflection luôn bị cấm khi AOT.", explanation: "Sai. Có hỗ trợ nhưng cần reachability được biết."}
-      - {id: C, answer: "HotSpot yêu cầu metadata đó cho mọi public method.", explanation: "Sai. Đây là native-image closed-world concern."}
-      - {id: D, answer: "Build analysis có thể không suy ra member chỉ được chọn từ runtime strings/config nên cần khai báo để giữ chúng.", explanation: "Đúng. Dynamic reachability có thể cần metadata."}
+      - {id: C, answer: "HotSpot yêu cầu siêu dữ liệu đó cho mọi public method.", explanation: "Sai. Đây là mối quan tâm của mô hình closed-world trong native image."}
+      - {id: D, answer: "Phân tích lúc xây dựng có thể không suy ra thành phần chỉ được chọn từ chuỗi/cấu hình lúc chạy nên cần khai báo để giữ chúng.", explanation: "Đúng. Khả năng truy cập động có thể cần reachability metadata."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.LimitationsRisks/LimitationsRisks.md", anchor: "native-image-boundary"}
+    readmeRelated: {file: "10.LimitationsRisks/LimitationsRisks.md", anchor: "native-image-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: reflection-q33
-    question: "InvocationHandler nhận gì khi caller gọi method trên JDK proxy?"
+    question: "InvocationHandler nhận gì khi bên gọi gọi method trên JDK proxy?"
     answers:
-      - {id: A, answer: "Proxy instance, Method descriptor và arguments của lời gọi.", explanation: "Đúng. Generated proxy route call theo contract này."}
-      - {id: B, answer: "Chỉ String method name.", explanation: "Sai. Handler nhận Method object."}
-      - {id: C, answer: "Source code của interface.", explanation: "Sai. Runtime không truyền source code."}
-      - {id: D, answer: "Một subclass trực tiếp của target.", explanation: "Sai. JDK Proxy tạo implementation của interface."}
+      - {id: A, answer: "Instance proxy, đối tượng mô tả Method và mảng đối số; mảng đối số có thể null nếu method không có tham số.", explanation: "Đúng. Proxy được sinh tự động chuyển lời gọi qua hợp đồng này của InvocationHandler."}
+      - {id: B, answer: "Chỉ chuỗi tên method.", explanation: "Sai. Handler nhận đối tượng Method."}
+      - {id: C, answer: "Mã nguồn của interface.", explanation: "Sai. Lúc chạy không truyền mã nguồn."}
+      - {id: D, answer: "Một class con trực tiếp của đối tượng đích.", explanation: "Sai. JDK Proxy tạo phần triển khai của interface."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.DynamicProxy/DynamicProxy.md", anchor: "invocation-handler"}
+    readmeRelated: {file: "9.DynamicProxy/DynamicProxy.md", anchor: "invocation-handler"}
     apiRelated: {controller: "DynamicProxyController", methodSignature: "intercept()"}
 
   - id: reflection-q34
     question: "Giới hạn nào đúng với JDK Dynamic Proxy trên Java 21?"
     answers:
-      - {id: A, answer: "Proxy trực tiếp mọi concrete class dù không có interface.", explanation: "Sai. JDK Proxy là interface-based."}
-      - {id: B, answer: "Sealed/hidden interface không hợp lệ làm proxy interface, và call đi thẳng target bypass handler.", explanation: "Đúng. Đây là các boundary quan trọng."}
-      - {id: C, answer: "Tự intercept constructor và static method.", explanation: "Sai. Đây không phải interface instance calls."}
-      - {id: D, answer: "Final target class luôn làm JDK Proxy thất bại dù implements interface.", explanation: "Sai. JDK Proxy không subclass target."}
+      - {id: A, answer: "Proxy trực tiếp mọi class cụ thể dù không có interface.", explanation: "Sai. JDK Proxy dựa trên interface."}
+      - {id: B, answer: "Sealed/hidden interface không hợp lệ làm proxy interface, và lời gọi đi thẳng tới đối tượng đích bỏ qua handler.", explanation: "Đúng. Đây là các ranh giới quan trọng."}
+      - {id: C, answer: "Tự chặn constructor và static method.", explanation: "Sai. Đây không phải lời gọi instance qua interface."}
+      - {id: D, answer: "Class đích final luôn làm JDK Proxy thất bại dù triển khai interface.", explanation: "Sai. JDK Proxy không tạo class con từ đối tượng đích."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.DynamicProxy/DynamicProxy.md", anchor: "proxy-limitations"}
+    readmeRelated: {file: "9.DynamicProxy/DynamicProxy.md", anchor: "proxy-limitations"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: reflection-q39
+    question: "Tiêu chí quyết định nào hợp lý nhất trước khi chọn Reflection cho code ứng dụng hoặc framework?"
+    answers:
+      - {id: A, answer: "Dùng Reflection bất cứ khi nào API cho phép để giảm số lượng interface.", explanation: "Sai. Khả năng làm được không đồng nghĩa với nên dùng."}
+      - {id: B, answer: "Chỉ hỏi Reflection có nhanh hơn lời gọi trực tiếp hay không.", explanation: "Sai. Quyết định còn liên quan độ an toàn, sự phụ thuộc ẩn, quyền truy cập, bảo trì và nhu cầu khám phá lúc chạy."}
+      - {id: C, answer: "Xác định liệu cấu trúc thật sự chỉ biết lúc chạy, có thể khoanh Reflection trong ranh giới nhỏ, kiểm tra sớm và giữ hợp đồng có kiểu rõ ràng hay không.", explanation: "Đúng. Reflection hợp lý nhất khi tính động là yêu cầu thật và được cô lập có chủ đích."}
+      - {id: D, answer: "Nếu có annotation thì bắt buộc phải dùng Reflection.", explanation: "Sai. Annotation còn có thể tham gia các cơ chế khác như annotation processing lúc biên dịch."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.LimitationsRisks/LimitationsRisks.md", anchor: "reflection-decision-model"}
     apiRelated: {controller: "", methodSignature: ""}

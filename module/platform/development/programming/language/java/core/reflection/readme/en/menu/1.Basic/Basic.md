@@ -1,4 +1,4 @@
-# Reflection Basics
+# What Reflection Is and Why It Exists
 
 Reflection matters when a program needs to treat **the structure of code as runtime data**. When code already knows exactly which type, field, method, or constructor it will use, ordinary Java syntax is clearer and the compiler can validate most mistakes ahead of time. Frameworks, serializers, test runners, and mapping tools often face a different problem: the concrete type or member is discovered only after the application is running.
 
@@ -26,7 +26,7 @@ public class PaymentService {
 }
 ~~~
 
-The goal of this chapter is to understand **what Reflection solves and what flexibility costs** before learning the individual APIs.
+The goal of this chapter is to understand **what Reflection is, why it exists, and when runtime discovery is genuinely needed** before learning the individual APIs.
 
 ## <a id="reflection-model">What Reflection Is</a>
 
@@ -132,6 +132,7 @@ The rest of the module uses these terms:
 | Constructor<?> | Reflective descriptor for a constructor |
 | Member | Common metadata contract shared by Field/Method/Constructor |
 | Executable | Shared base abstraction for Method and Constructor |
+| AnnotatedElement | Shared contract for reading runtime annotations from supported program elements |
 | get / set | Read or write state through Field |
 | invoke | Call behavior through Method |
 | newInstance | Create an object through Constructor |
@@ -172,7 +173,7 @@ generic declaration metadata                       │
         └─ GenericArrayType
 ~~~
 
-This is a **role map**, not a claim that every branch is a literal Java inheritance edge. In the actual hierarchy, `Field` directly extends `AccessibleObject`; `Method` and `Constructor` extend `Executable`, and `Executable` extends `AccessibleObject`. All three member kinds implement the `Member` contract. `Class<?>` is both the main entry point for discovering members and an implementation of `Type` when generic metadata is an ordinary runtime class.
+This is a **role map**, not a claim that every branch is a literal Java inheritance edge. In the actual hierarchy, `Field` directly extends `AccessibleObject`; `Method` and `Constructor` extend `Executable`, and `Executable` extends `AccessibleObject`. All three member kinds implement the `Member` contract. `AccessibleObject` implements `AnnotatedElement`, so these descriptors also participate in runtime annotation lookup. `Class<?>` is both the main entry point for discovering members and an implementation of `Type` when generic metadata is an ordinary runtime class.
 
 The whole module can now be read through four large questions:
 
@@ -187,71 +188,23 @@ Type              → how is a generic declaration represented in runtime metada
 The learning path is:
 
 ~~~text
-Reflection Basics
-    ↓ why runtime inspection exists
-Class Metadata
-    ↓ how a runtime type is described
-Fields
-    ↓ discover/read/write state
-Methods
-    ↓ select and invoke behavior
-Constructors
-    ↓ create objects from runtime-selected constructors
-Access Control
-    ↓ understand language and JPMS access boundaries
-Generic Type Inspection
+What Reflection Is and Why It Exists
+    ↓ understand the runtime-discovery problem
+Runtime Type Model with Class<?>
+    ↓ understand how the JVM represents types and metadata
+Discovering Class Members
+    ↓ Field / Method / Constructor and their shared descriptor model
+Acting Dynamically from Metadata
+    ↓ read/write, invoke, construct, convert arguments, and create arrays dynamically
+Access, Encapsulation, and Module Boundaries
+    ↓ understand access checks and JPMS
+Generic Signature Metadata after Erasure
     ↓ inspect retained generic signatures
-Dynamic Invocation
-    ↓ study conversion and dynamic invocation in more depth
-Limitations / Risks
-    ↓ evaluate safety, performance, and maintainability
-Dynamic Proxy
-    ↓ connect metadata with framework-style interception
+Dynamic Proxies and Call Interception
+    ↓ connect metadata to interface interception
+When Should Reflection Be Used?
+    ↓ synthesize safety, performance, maintainability, and design choices
 ~~~
-
-## <a id="class-object-entrypoints">Class<?> as the Reflection Entry Point</a>
-
-Reflection normally begins with a Class<?> object. A Class object is not the source code of a class; it is the runtime object that represents a type known to the JVM.
-
-Three common entry points are:
-
-~~~java
-// 1. The type is known directly in source
-Class<PaymentService> a = PaymentService.class;
-
-// 2. An object is available, but its concrete type may not be known
-PaymentService service = new PaymentService("stripe");
-Class<?> b = service.getClass();
-
-// 3. Only the binary class name is known at runtime
-Class<?> c = Class.forName("com.example.PaymentService");
-~~~
-
-A class literal fits code that already references the type. Object.getClass() is common in framework code that receives an arbitrary object and wants its concrete runtime class. Class.forName(...) is useful for plugin/configuration scenarios where the class name arrives at runtime.
-
-`Class<T>` also carries compile-time type information. `Class<PaymentService>` says that this `Class` object represents `PaymentService`. `Class<?>` means "this is a valid `Class` object, but the concrete represented type is not known here." Framework code commonly works with `Class<?>` precisely because discovering the concrete type is part of the runtime problem; it then validates metadata before casting or operating on values.
-
-Primitive and array types also have Class objects:
-
-~~~java
-Class<Integer> primitive = int.class;
-Class<String[]> array = String[].class;
-~~~
-
-`Class.forName(String)` **initializes the class by default** after locating/loading it, so static initialization may run. The overload `Class.forName(name, false, loader)` can request that initialization not happen at that step. The detailed lifecycle and class-identity rules belong to the ClassLoader module; the important point here is that resolving a class by name can have different side effects from simply using a class literal.
-
-Once a Class<?> exists, reflection can move into more specific questions:
-
-~~~java
-Class<?> type = PaymentService.class;
-
-String name = type.getName();
-Field[] fields = type.getDeclaredFields();
-Method[] methods = type.getDeclaredMethods();
-Constructor<?>[] constructors = type.getDeclaredConstructors();
-~~~
-
-Class Metadata explores what the runtime knows about the type itself. The Field, Method, and Constructor chapters then focus on each member kind.
 
 ## <a id="reflection-use-cases">Where Reflection Is Useful</a>
 
@@ -278,38 +231,3 @@ static Map<String, Object> snapshot(Object target)
 The mapper implements **one algorithm over metadata** instead of separate branches for PaymentService, Customer, Order, and every future model.
 
 Reflection is not the only extensibility technique. Interfaces, factories, registries, ServiceLoader, generated code, and annotation processing can provide clearer or more static contracts. Reflection is justified when runtime discovery provides real value, especially when a framework cannot require every application model to hand-write an adapter.
-
-## <a id="reflection-cost-boundary">Costs and Usage Boundaries</a>
-
-Reflection gains flexibility by moving decisions from compile time to runtime. The first cost is therefore **reduced compile-time safety**.
-
-~~~java
-// Compiler-checked
-service.pay(request);
-
-// A typo is discovered only at runtime
-service.getClass().getMethod("paay", PaymentRequest.class);
-~~~
-
-Reflective code must also handle missing members, wrong receivers, wrong arguments, denied access, and exceptions thrown by the target itself. Later chapters distinguish these failure modes precisely.
-
-The second cost is hidden coupling. IDEs can find references to service.pay(...), while a string such as "pay" in configuration or framework metadata may be invisible to ordinary refactoring tools. Renames therefore need stronger contracts and tests.
-
-The third cost is encapsulation pressure. Reflection still performs access checks. Some APIs can attempt to change reflective accessibility, while JPMS introduces strong-encapsulation boundaries. Access Control covers those rules. The presence of Reflection does not make private meaningless.
-
-The fourth cost is runtime overhead. Metadata lookup and Method.invoke/Field access are generally more expensive than direct calls, although JVMs and frameworks often cache or optimize reflective structures. This cost may be irrelevant during one-time bootstrap and significant inside a hot path. Limitations / Risks discusses that trade-off in depth.
-
-A practical decision rule is:
-
-~~~text
-Type/member is known at compile time
-→ prefer direct calls, interfaces, polymorphism, or factories
-
-The real structure is only known at runtime
-and discovering it is part of the requirement
-→ Reflection may be appropriate
-~~~
-
-When reflection is used, keep the dynamic area narrow: validate metadata early, cache descriptors when reused, translate runtime failures into meaningful framework/domain errors, and keep ordinary business code as type-safe as possible.
-
-The next question is now concrete: **what metadata does a Class<?> actually expose about a runtime type?**

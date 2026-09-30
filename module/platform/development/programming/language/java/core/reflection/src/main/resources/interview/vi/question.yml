@@ -31,7 +31,7 @@ questions:
   - question: >-
       Hãy giải thích Reflection là gì, vấn đề nào khiến nó tồn tại và vì sao các framework tổng quát thường cần cơ chế này.
     answer: >-
-      Reflection cho phép chương trình xem cấu trúc của code như dữ liệu ở runtime: từ Class<?> có thể khám phá Field, Method, Constructor và dùng các descriptor đó để đọc trạng thái, gọi hành vi hoặc tạo object. Nó hữu ích khi concrete type/member chưa thể biết ở compile time, chẳng hạn container DI, serializer, ORM, test runner hoặc router phải làm việc với các class do người dùng định nghĩa sau này. Nếu không có Reflection, framework thường phải yêu cầu đăng ký factory/adapter hoặc viết nhánh riêng cho từng type. Đổi lại, nhiều lỗi về tên, signature, access và argument chuyển từ compile time sang runtime, nên Reflection nên được giữ trong một ranh giới có kiểm soát.
+      Reflection cho phép chương trình xem cấu trúc của mã như dữ liệu lúc chạy: từ Class<?> có thể khám phá Field, Method, Constructor và dùng các đối tượng mô tả đó để đọc trạng thái, gọi hành vi hoặc tạo đối tượng. Nó hữu ích khi kiểu/thành phần cụ thể chưa thể biết tại thời điểm biên dịch, chẳng hạn container DI, serializer, ORM, test runner hoặc router phải làm việc với các class do người dùng định nghĩa sau này. Nếu không có Reflection, framework thường phải yêu cầu đăng ký factory/adapter hoặc viết nhánh riêng cho từng kiểu. Đổi lại, nhiều lỗi về tên, chữ ký, quyền truy cập và đối số chuyển từ thời điểm biên dịch sang lúc chạy, nên Reflection nên được giữ trong một ranh giới có kiểm soát.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -42,35 +42,35 @@ questions:
       methodSignature: ''
 
   - question: >-
-      Khi nào bạn sẽ chọn Reflection, và khi nào bạn sẽ chủ động tránh nó dù technically có thể dùng được?
+      Khi nào bạn sẽ chọn Reflection, và khi nào bạn sẽ chủ động tránh nó dù về mặt kỹ thuật vẫn có thể dùng được?
     answer: >-
-      Reflection hợp lý khi việc không biết trước cấu trúc ở compile time chính là requirement, ví dụ framework cần khám phá plugin, model, annotation hoặc handler ở runtime. Nếu type và hành vi đã biết rõ, direct call, interface, polymorphism, factory hoặc registry thường cho contract rõ hơn, compile-time safety tốt hơn và dễ refactor hơn. ServiceLoader, generated code hay annotation processing cũng có thể thay Reflection trong một số bài toán extensibility. Quyết định tốt không dựa trên câu hỏi “Reflection có làm được không?” mà dựa trên việc runtime discovery có tạo ra giá trị đủ lớn để trả chi phí về safety, coupling và vận hành hay không.
+      Reflection hợp lý khi việc không biết trước cấu trúc tại thời điểm biên dịch chính là yêu cầu, ví dụ framework cần khám phá plugin, mô hình dữ liệu, annotation hoặc handler lúc chạy. Nếu kiểu và hành vi đã biết rõ, lời gọi trực tiếp, interface, đa hình, factory hoặc registry thường cho hợp đồng rõ hơn, độ an toàn lúc biên dịch tốt hơn và dễ tái cấu trúc hơn. ServiceLoader, mã được sinh tự động hay annotation processing cũng có thể thay Reflection trong một số bài toán mở rộng. Quyết định tốt không dựa trên câu hỏi “Reflection có làm được không?” mà dựa trên việc khám phá lúc chạy có tạo ra giá trị đủ lớn để trả chi phí về độ an toàn, sự phụ thuộc ẩn và vận hành hay không.
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '1.Basic/Basic.md'
+      file: '10.LimitationsRisks/LimitationsRisks.md'
       anchor: 'reflection-cost-boundary'
     apiRelated:
       controller: ''
       methodSignature: ''
 
   - question: >-
-      Class<?> nên được hiểu như thế nào trong mental model của Reflection, và ba cách lấy Class bằng class literal, getClass() và Class.forName(...) khác nhau về ý nghĩa sử dụng ra sao?
+      Class<?> nên được hiểu như thế nào trong mô hình tư duy của Reflection, và ba cách lấy Class bằng class literal, getClass() và Class.forName(...) khác nhau về ý nghĩa sử dụng ra sao?
     answer: >-
-      Class<?> là object runtime đại diện cho một type mà JVM đã biết, chứ không phải source code của class đó. Type.class phù hợp khi type đã được tham chiếu trực tiếp trong source; object.getClass() phù hợp khi có một object và cần concrete runtime class của nó; Class.forName(...) phù hợp khi binary class name chỉ xuất hiện ở runtime từ cấu hình hoặc plugin. Class.forName(String) còn có thể kích hoạt class initialization, trong khi class literal và getClass() phục vụ mục đích khác. Sau khi có Class<?>, Reflection mới có điểm xuất phát để đọc metadata và tìm member.
+      Class<?> là đối tượng lúc chạy đại diện cho một kiểu mà JVM đã biết, chứ không phải mã nguồn của class đó. Type.class phù hợp khi kiểu đã được tham chiếu trực tiếp trong mã nguồn; object.getClass() phù hợp khi có một đối tượng và cần class cụ thể của nó lúc chạy; Class.forName(...) phù hợp khi tên nhị phân của class chỉ xuất hiện lúc chạy từ cấu hình hoặc plugin. Class.forName(String) còn có thể kích hoạt quá trình khởi tạo class, trong khi class literal và getClass() phục vụ mục đích khác. Sau khi có Class<?>, Reflection mới có điểm xuất phát để đọc siêu dữ liệu và tìm thành phần.
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '1.Basic/Basic.md'
+      file: '2.ClassMetadata/ClassMetadata.md'
       anchor: 'class-object-entrypoints'
     apiRelated:
       controller: ''
       methodSignature: ''
 
   - question: >-
-      Hãy giải thích cách dùng isInstance, isAssignableFrom, cast và asSubclass khi framework cần kiểm tra quan hệ type ở runtime. Vì sao direction của isAssignableFrom dễ gây lỗi?
+      Hãy giải thích cách dùng isInstance, isAssignableFrom, cast và asSubclass khi framework cần kiểm tra quan hệ kiểu lúc chạy. Vì sao chiều của isAssignableFrom dễ gây lỗi?
     answer: >-
-      isInstance(object) là phép kiểm tra kiểu động tương tự instanceof khi Class chỉ được biết ở runtime. Với A.isAssignableFrom(B), câu hỏi đúng là “một giá trị của B có thể gán vào biến kiểu A hay không?”, nên PaymentProcessor.class.isAssignableFrom(PaymentService.class) là true nếu PaymentService implements PaymentProcessor. cast(object) thực hiện checked cast bằng Class object, còn asSubclass(parentType) kiểm tra và thu hẹp chính Class object thành Class<? extends parentType>. Viết ngược direction của isAssignableFrom thường làm registry hoặc plugin validation chấp nhận/reject type sai dù tên API nghe có vẻ đối xứng.
+      isInstance(object) là phép kiểm tra kiểu động tương tự instanceof khi Class chỉ được biết lúc chạy. Với A.isAssignableFrom(B), câu hỏi đúng là “một giá trị của B có thể gán vào biến kiểu A hay không?”, nên PaymentProcessor.class.isAssignableFrom(PaymentService.class) là true nếu PaymentService implements PaymentProcessor. cast(object) thực hiện ép kiểu có kiểm tra bằng đối tượng Class, còn asSubclass(parentType) kiểm tra và thu hẹp chính đối tượng Class thành Class<? extends parentType>. Viết ngược chiều của isAssignableFrom thường làm registry hoặc bước kiểm tra plugin chấp nhận/từ chối sai kiểu dù tên API nghe có vẻ đối xứng.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -81,9 +81,22 @@ questions:
       methodSignature: 'inspectType()'
 
   - question: >-
-      So sánh họ API getDeclaredXxx(...) và getXxx(...) khi khám phá member. Những khác biệt nào về inheritance khiến framework dễ chọn sai member?
+      Khi một framework nhận Class<?> bất kỳ, vì sao nó cần phân biệt mảng, enum, record, kiểu sealed và annotation được giữ đến lúc chạy thay vì xử lý mọi kiểu theo cùng một cách?
     answer: >-
-      getDeclaredXxx(...) nhìn các member được khai báo trực tiếp trên class hiện tại và có thể thấy mọi visibility, nhưng không tự lấy member inherited. Với Field và Method, getXxx(...) nhìn public surface và có thể gồm public member từ superclass hoặc interface hierarchy. Constructor là ngoại lệ vì constructor không được kế thừa: getConstructors() chỉ trả public constructor của chính class. Static method của interface cũng không được inherited bởi implementing class hoặc subinterface, nên muốn reflect nó phải lookup trên interface khai báo. Framework cần chọn rõ “declaration của class này” hay “public API surface” trước khi lookup.
+      Class<?> là cửa vào chung nhưng không phải mọi kiểu có cùng siêu dữ liệu có ý nghĩa. Mảng có kiểu phần tử; enum có các hằng enum; record có RecordComponent theo thứ tự record header; kiểu sealed có các kiểu con trực tiếp được phép. Framework nên phân loại kiểu bằng isArray/isEnum/isRecord/isSealed rồi dùng API tương ứng thay vì suy đoán từ field/method thông thường. Annotation là một chiều siêu dữ liệu khác: Reflection chỉ đọc được annotation còn tồn tại lúc chạy, điển hình với retention RUNTIME; retention SOURCE hoặc CLASS không tự xuất hiện qua các API lúc chạy. Vì vậy framework cần phân loại kiểu và hiểu chính sách siêu dữ liệu trước khi quyết định cách xử lý.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '2.ClassMetadata/ClassMetadata.md'
+      anchor: 'specialized-type-metadata'
+    apiRelated:
+      controller: 'ClassMetadataController'
+      methodSignature: 'inspectType()'
+
+  - question: >-
+      So sánh họ API getDeclaredXxx(...) và getXxx(...) khi khám phá thành phần. Những khác biệt nào về kế thừa khiến framework dễ chọn sai thành phần?
+    answer: >-
+      getDeclaredXxx(...) nhìn các thành phần được khai báo trực tiếp trên class hiện tại và có thể thấy mọi mức truy cập, nhưng không tự lấy thành phần được kế thừa. Với Field và Method, getXxx(...) nhìn bề mặt public và có thể gồm thành phần public từ superclass hoặc hệ phân cấp interface. Constructor là ngoại lệ vì constructor không được kế thừa: getConstructors() chỉ trả constructor public của chính class. Static method của interface cũng không được kế thừa bởi class triển khai hoặc subinterface, nên muốn dùng Reflection với nó phải tra cứu trên interface khai báo. Framework cần chọn rõ “khai báo của class này” hay “bề mặt API public” trước khi tra cứu.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -94,22 +107,35 @@ questions:
       methodSignature: ''
 
   - question: >-
-      Khi dùng Field để đọc hoặc ghi trạng thái, framework phải tách discovery, receiver, value và access như thế nào? Những lỗi nào nên được xem là lỗi contract của adapter?
+      Member, Executable, AccessibleObject và AnnotatedElement giúp xây mô hình tư duy chung cho Field, Method và Constructor như thế nào? Vì sao framework nên hiểu các khái niệm trừu tượng này thay vì viết ba luồng xử lý hoàn toàn tách biệt?
     answer: >-
-      Trước hết framework resolve một Field descriptor theo phạm vi phù hợp, sau đó mới dùng descriptor trên receiver cụ thể. Instance field yêu cầu receiver tương thích với declaring class; static field không cần instance và thường truyền null. Giá trị ghi phải có kiểu phù hợp; primitive field cho phép một số unboxing/widening nhưng không tự parse hay chuyển đổi domain value. Sai receiver hoặc value thường dẫn tới IllegalArgumentException, còn member tồn tại nhưng không có reflective access dẫn tới IllegalAccessException. Vì vậy discovery thành công chưa chứng minh rằng thao tác get/set sẽ hợp lệ.
+      Member là hợp đồng chung cho Field, Method và Constructor về tên, class khai báo, modifier và trạng thái synthetic. Method và Constructor còn cùng kế thừa Executable, nơi gom siêu dữ liệu về tham số, ngoại lệ, varargs và khai báo generic. Field, Method và Constructor đều đi qua AccessibleObject cho mô hình kiểm tra/yêu cầu quyền truy cập phản chiếu; AccessibleObject đồng thời triển khai AnnotatedElement nên các đối tượng mô tả này có cách đọc annotation tương đối thống nhất. Nhờ các khái niệm trừu tượng chung, framework có thể chuẩn hóa các bước khám phá → đọc siêu dữ liệu → kiểm tra quyền trước khi tách sang thao tác riêng của Field, Method hoặc Constructor.
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '3.Fields/Fields.md'
+      file: '2.ClassMetadata/ClassMetadata.md'
+      anchor: 'member-abstraction-model'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: >-
+      Khi dùng Field để đọc hoặc ghi trạng thái, framework phải tách việc khám phá, đối tượng nhận, giá trị và quyền truy cập như thế nào? Những lỗi nào nên được xem là lỗi hợp đồng của adapter?
+    answer: >-
+      Trước hết framework phân giải một đối tượng mô tả Field theo phạm vi phù hợp, sau đó mới dùng nó trên đối tượng nhận cụ thể. Instance field yêu cầu đối tượng nhận tương thích với class khai báo; static field không cần instance và thường truyền null. Giá trị ghi phải có kiểu phù hợp; field primitive cho phép một số unboxing/widening nhưng không tự phân tích hay chuyển đổi giá trị nghiệp vụ. Sai đối tượng nhận hoặc giá trị thường dẫn tới IllegalArgumentException, còn thành phần tồn tại nhưng không có quyền truy cập phản chiếu dẫn tới IllegalAccessException. Vì vậy khám phá thành công chưa chứng minh rằng thao tác get/set sẽ hợp lệ.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '6.DynamicInvocation/DynamicInvocation.md'
       anchor: 'field-read-write'
     apiRelated:
       controller: 'FieldReflectionController'
       methodSignature: 'inspectAndMutate()'
 
   - question: >-
-      Tại sao code framework không nên coi mọi Field mà Reflection nhìn thấy là state có thể đọc/ghi tùy ý? Hãy liên hệ static, final, volatile, transient và synthetic field với policy của framework.
+      Tại sao mã framework không nên coi mọi Field mà Reflection nhìn thấy là trạng thái có thể đọc/ghi tùy ý? Hãy liên hệ static, final, volatile, transient và synthetic field với chính sách của framework.
     answer: >-
-      Reflection cung cấp metadata, còn framework phải tự định nghĩa field nào thuộc contract của mình. Static field là state của class nên mapper theo object thường bỏ qua; transient chỉ là metadata mà serializer có thể dùng theo policy riêng; volatile vẫn giữ semantics visibility của Java; synthetic field có thể là artifact compiler không thuộc domain model. Final thể hiện một ranh giới thiết kế và một số final field trên Java hiện đại không thể bị sửa bằng deep reflection. Cách an toàn là filter có chủ đích thay vì xử lý mọi declared field chỉ vì API trả chúng về.
+      Reflection cung cấp siêu dữ liệu, còn framework phải tự định nghĩa field nào thuộc hợp đồng của mình. Static field là trạng thái của class nên mapper theo đối tượng thường bỏ qua; transient chỉ là siêu dữ liệu mà serializer có thể dùng theo chính sách riêng; volatile vẫn giữ ngữ nghĩa khả năng nhìn thấy giữa các luồng của Java; synthetic field có thể là phần tử do trình biên dịch sinh ra và không thuộc mô hình miền. Final thể hiện một ranh giới thiết kế và một số final field trên Java hiện đại không thể bị sửa bằng Reflection truy cập sâu. Cách an toàn là lọc có chủ đích thay vì xử lý mọi field khai báo trực tiếp chỉ vì API trả chúng về.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -120,9 +146,9 @@ questions:
       methodSignature: ''
 
   - question: >-
-      Khi resolve Method bằng Reflection, vì sao framework không thể đưa arguments runtime vào rồi trông chờ getMethod/getDeclaredMethod làm overload resolution giống compiler?
+      Khi phân giải Method bằng Reflection, vì sao framework không thể đưa các đối số lúc chạy vào rồi trông chờ getMethod/getDeclaredMethod chọn overload giống trình biên dịch?
     answer: >-
-      Method lookup nhận tên và declared parameter types chính xác, nên int.class và Integer.class là hai signature khác nhau và lookup không tự boxing, widening hay chọn overload “gần nhất”. getMethod tìm public surface có thể gồm inherited instance methods, còn getDeclaredMethod chỉ nhìn declaration của class hiện tại với mọi visibility. Khi enumerate, compiler còn có thể tạo bridge/synthetic methods, vì vậy thứ tự hoặc “method đầu tiên cùng tên” không phải contract. Framework nên resolve signature theo rule rõ ràng rồi cache Method đã được validate.
+      Việc tra cứu Method nhận tên và kiểu tham số đã khai báo chính xác, nên int.class và Integer.class là hai chữ ký khác nhau và tra cứu không tự boxing, widening hay chọn overload “gần nhất”. getMethod tìm bề mặt public có thể gồm instance method được kế thừa, còn getDeclaredMethod chỉ nhìn khai báo của class hiện tại với mọi mức truy cập. Khi liệt kê, trình biên dịch còn có thể tạo bridge/synthetic method, vì vậy thứ tự hoặc “method đầu tiên cùng tên” không phải hợp đồng. Framework nên phân giải chữ ký theo quy tắc rõ ràng rồi lưu đệm Method đã được kiểm tra.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -133,48 +159,48 @@ questions:
       methodSignature: ''
 
   - question: >-
-      Sau khi đã có Method descriptor, Method.invoke(...) khác một direct call ở những trách nhiệm runtime nào?
+      Sau khi đã có đối tượng mô tả Method, Method.invoke(...) khác một lời gọi trực tiếp ở những trách nhiệm lúc chạy nào?
     answer: >-
-      Direct call được compiler kiểm tra target, signature và phần lớn conversion ở compile time; Method.invoke chuyển các kiểm tra đó sang runtime. Instance method cần receiver tương thích, static method có thể dùng null receiver, arguments phải đúng số lượng và có conversion Reflection cho phép. Primitive return được boxing và void cho kết quả null vì invoke trả Object. Nếu receiver hoặc argument sai, lỗi thường là IllegalArgumentException; nếu access không hợp lệ, IllegalAccessException xảy ra trước khi target method body chạy.
+      Lời gọi trực tiếp được trình biên dịch kiểm tra đối tượng đích, chữ ký và phần lớn chuyển đổi tại thời điểm biên dịch; Method.invoke chuyển các kiểm tra đó sang lúc chạy. Instance method cần đối tượng nhận tương thích, static method có thể dùng đối tượng nhận null, các đối số phải đúng số lượng và có chuyển đổi Reflection cho phép. Giá trị trả về primitive được boxing và void cho kết quả null vì invoke trả Object. Nếu đối tượng nhận hoặc đối số sai, lỗi thường là IllegalArgumentException; nếu quyền truy cập không hợp lệ, IllegalAccessException xảy ra trước khi thân method đích chạy.
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '4.Methods/Methods.md'
+      file: '6.DynamicInvocation/DynamicInvocation.md'
       anchor: 'method-invoke'
     apiRelated:
       controller: ''
       methodSignature: ''
 
   - question: >-
-      InvocationTargetException cho bạn biết điều gì mà IllegalAccessException hoặc IllegalArgumentException không cho biết? Framework nên xử lý wrapper này như thế nào?
+      InvocationTargetException cho bạn biết điều gì mà IllegalAccessException hoặc IllegalArgumentException không cho biết? Framework nên xử lý lớp bọc này như thế nào?
     answer: >-
-      InvocationTargetException có nghĩa reflective protocol đã đi đủ xa để target method hoặc constructor thực sự chạy, và chính target code đã ném exception. Ngược lại, IllegalAccessException hay IllegalArgumentException thường báo lỗi trước khi body chạy, chẳng hạn access bị từ chối hoặc receiver/argument sai. Framework thường nên lấy getCause(), giữ nguyên hoặc map cause theo contract của lớp adapter, thay vì log wrapper rồi làm mất business failure thật. Sự phân biệt này giúp chẩn đoán “Reflection setup sai” khác với “business code đã chạy và thất bại”.
+      InvocationTargetException có nghĩa cơ chế gọi phản chiếu đã đi đủ xa để method đích hoặc constructor thực sự chạy, và chính mã đích đã ném ngoại lệ. Ngược lại, IllegalAccessException hay IllegalArgumentException thường báo lỗi trước khi thân mã chạy, chẳng hạn quyền truy cập bị từ chối hoặc đối tượng nhận/đối số sai. Framework thường nên lấy getCause(), giữ nguyên hoặc ánh xạ nguyên nhân theo hợp đồng của lớp adapter, thay vì chỉ ghi log lớp bọc rồi làm mất lỗi nghiệp vụ thật. Sự phân biệt này giúp chẩn đoán “cấu hình Reflection sai” khác với “mã nghiệp vụ đã chạy và thất bại”.
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '4.Methods/Methods.md'
+      file: '6.DynamicInvocation/DynamicInvocation.md'
       anchor: 'invocation-exception'
     apiRelated:
       controller: 'MethodReflectionController'
       methodSignature: 'invoke()'
 
   - question: >-
-      Vì sao varargs qua Method.invoke(...) có thể gây nhầm ngay cả khi target method hoàn toàn hợp lệ? Bạn sẽ thiết kế utility invocation thế nào để tránh lỗi này?
+      Vì sao varargs qua Method.invoke(...) có thể gây nhầm ngay cả khi method đích hoàn toàn hợp lệ? Bạn sẽ thiết kế hàm tiện ích gọi động thế nào để tránh lỗi này?
     answer: >-
-      Có hai lớp varargs: target method có thể nhận T..., đồng thời Method.invoke(...) bản thân nhận Object... arguments. Reflection nhìn varargs target như parameter array ở vị trí cuối và không tự thực hiện mọi packing giống cú pháp gọi Java trực tiếp. Với method chỉ nhận String..., String[] phải được truyền như một reflective argument duy nhất, đôi khi cần cast sang Object để compiler không bung array vào Object... bên ngoài. Utility nên đọc isVarArgs(), normalize arguments theo policy rõ ràng và validate shape trước khi invoke.
+      Có hai lớp varargs: method đích có thể nhận T..., đồng thời Method.invoke(...) bản thân nhận Object... arguments. Reflection nhìn varargs của method đích như tham số mảng ở vị trí cuối và không tự thực hiện mọi thao tác đóng gói giống cú pháp gọi Java trực tiếp. Với method chỉ nhận String..., String[] phải được truyền như một đối số phản chiếu duy nhất, đôi khi cần ép sang Object để trình biên dịch không bung mảng vào Object... bên ngoài. Hàm tiện ích nên đọc isVarArgs(), chuẩn hóa đối số theo chính sách rõ ràng và kiểm tra hình dạng cuối cùng trước khi gọi.
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '4.Methods/Methods.md'
+      file: '6.DynamicInvocation/DynamicInvocation.md'
       anchor: 'varargs-reflection'
     apiRelated:
       controller: ''
       methodSignature: ''
 
   - question: >-
-      Một DI container hoặc object factory nên chọn Constructor thế nào khi concrete class chỉ được biết ở runtime? Vì sao giả định luôn có no-arg constructor là nguy hiểm?
+      Một DI container hoặc factory tạo đối tượng nên chọn Constructor thế nào khi class cụ thể chỉ được biết lúc chạy? Vì sao giả định luôn có constructor không tham số là nguy hiểm?
     answer: >-
-      Constructor không được kế thừa, nên framework phải inspect các constructor của chính class rồi áp dụng rule lựa chọn rõ ràng: annotation, một constructor duy nhất, signature mong muốn hoặc policy dependency resolution. getConstructor chỉ tìm public constructor, còn getDeclaredConstructor có thể tìm mọi visibility nhưng không bảo đảm quyền invoke. Lookup yêu cầu parameter types chính xác và không chạy overload resolution kiểu compiler. Java chỉ sinh default no-arg constructor khi source không khai báo constructor nào, vì vậy factory giả định getDeclaredConstructor() luôn tồn tại sẽ hỏng với rất nhiều class bình thường.
+      Constructor không được kế thừa, nên framework phải kiểm tra các constructor của chính class rồi áp dụng quy tắc lựa chọn rõ ràng: annotation, một constructor duy nhất, chữ ký mong muốn hoặc chính sách phân giải dependency. getConstructor chỉ tìm constructor public, còn getDeclaredConstructor có thể tìm mọi mức truy cập nhưng không bảo đảm quyền gọi. Tra cứu yêu cầu kiểu tham số chính xác và không chạy cơ chế chọn overload kiểu trình biên dịch. Java chỉ sinh constructor mặc định không tham số khi mã nguồn không khai báo constructor nào, vì vậy factory giả định getDeclaredConstructor() luôn tồn tại sẽ hỏng với rất nhiều class bình thường.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -185,39 +211,39 @@ questions:
       methodSignature: 'construct()'
 
   - question: >-
-      Hãy phân loại các failure mode khi gọi Constructor.newInstance(...). Làm sao biết lỗi thuộc discovery/access/invocation protocol hay do chính constructor body?
+      Hãy phân loại các dạng lỗi khi gọi Constructor.newInstance(...). Làm sao biết lỗi thuộc bước khám phá/quyền truy cập/giao thức gọi hay do chính thân constructor?
     answer: >-
-      NoSuchMethodException thuộc giai đoạn discovery vì không có constructor đúng signature. IllegalAccessException cho biết descriptor tồn tại nhưng không được phép gọi; IllegalArgumentException thường chỉ ra arguments không phù hợp hoặc trường hợp Reflection cấm instantiate; InstantiationException có thể xuất hiện khi declaring class không thể được instantiate như abstract class. Nếu constructor body chạy rồi ném lỗi, Reflection bọc lỗi đó trong InvocationTargetException. Class initialization cũng có thể gây ExceptionInInitializerError trước hoặc trong quá trình tạo object, nên framework nên báo stage và cause thay vì gom tất cả thành một lỗi “reflection failed”.
+      NoSuchMethodException thuộc giai đoạn khám phá vì không có constructor đúng chữ ký. IllegalAccessException cho biết đối tượng mô tả tồn tại nhưng không được phép gọi; IllegalArgumentException thường chỉ ra đối số không phù hợp hoặc trường hợp Reflection cấm tạo instance; InstantiationException có thể xuất hiện khi class khai báo không thể được tạo instance như abstract class. Nếu thân constructor chạy rồi ném lỗi, Reflection bọc lỗi đó trong InvocationTargetException. Quá trình khởi tạo class cũng có thể gây ExceptionInInitializerError trước hoặc trong quá trình tạo đối tượng, nên framework nên báo đúng giai đoạn và nguyên nhân thay vì gom tất cả thành một lỗi “Reflection thất bại”.
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '5.Constructors/Constructors.md'
+      file: '6.DynamicInvocation/DynamicInvocation.md'
       anchor: 'constructor-reflection-failure'
     apiRelated:
       controller: ''
       methodSignature: ''
 
   - question: >-
-      Nếu getDeclaredMethod(...) có thể tìm thấy private method, tại sao vẫn nói Reflection tôn trọng access control? Hãy phân biệt discovery với quyền sử dụng member.
+      Nếu getDeclaredMethod(...) có thể tìm thấy method private, tại sao vẫn nói Reflection tôn trọng kiểm soát truy cập? Hãy phân biệt việc khám phá với quyền sử dụng thành phần.
     answer: >-
-      Discovery chỉ tạo descriptor mô tả member; nó không cấp quyền đọc, ghi hoặc invoke. Khi dùng Field, Method hoặc Constructor, JVM vẫn áp dụng reflective access checks dựa trên caller, visibility và module boundary. canAccess(...) cho biết member hiện có thể được caller sử dụng với receiver phù hợp hay không. Vì vậy “Reflection thấy private” không đồng nghĩa “private đã thành public”; deep reflection chỉ hoạt động khi runtime cho phép suppress một phần access checks.
+      Khám phá chỉ tạo đối tượng mô tả thành phần; nó không cấp quyền đọc, ghi hoặc gọi. Khi dùng Field, Method hoặc Constructor, JVM vẫn áp dụng kiểm tra quyền truy cập phản chiếu dựa trên bên gọi, mức truy cập và ranh giới mô-đun. canAccess(...) cho biết thành phần hiện có thể được bên gọi sử dụng với đối tượng nhận phù hợp hay không. Vì vậy “Reflection thấy private” không đồng nghĩa “private đã thành public”; Reflection truy cập sâu chỉ hoạt động khi lúc chạy cho phép bỏ qua một phần kiểm tra truy cập.
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '6.AccessControl/AccessControl.md'
+      file: '7.AccessControl/AccessControl.md'
       anchor: 'language-vs-reflective-access'
     apiRelated:
       controller: ''
       methodSignature: ''
 
   - question: >-
-      Giải thích quan hệ giữa trySetAccessible/setAccessible và JPMS exports/opens. Vì sao một package exported chưa chắc cho phép deep reflection?
+      Giải thích quan hệ giữa trySetAccessible/setAccessible và JPMS exports/opens. Vì sao một package được export chưa chắc cho phép Reflection truy cập sâu?
     answer: >-
-      trySetAccessible() cố bật suppression và trả false nếu không được phép; setAccessible(true) yêu cầu cùng mục tiêu nhưng có thể ném InaccessibleObjectException. Trong named modules, exports chủ yếu cho module khác sử dụng public API của package, còn opens cho phép deep reflection vào member không public của package đó. Vì vậy package exported nhưng không opened vẫn có thể chặn framework ở module khác khi framework cố mở private/package/protected internals. Unnamed module và open module có mức openness rộng hơn; trong thiết kế module rõ ràng, package cần reflective access nên được opens có chủ đích hoặc mở bằng cấu hình deployment phù hợp.
+      trySetAccessible() cố bật việc bỏ qua một số kiểm tra truy cập và trả false nếu không được phép; setAccessible(true) yêu cầu cùng mục tiêu nhưng có thể ném InaccessibleObjectException. Trong mô-đun có tên, exports chủ yếu cho mô-đun khác sử dụng public API của package, còn opens cho phép Reflection truy cập sâu vào thành phần không public của package đó. Vì vậy package được export nhưng không được open vẫn có thể chặn framework ở mô-đun khác khi framework cố mở phần nội bộ private/package/protected. Mô-đun không tên và mô-đun mở có mức độ mở rộng hơn; trong thiết kế mô-đun rõ ràng, package cần truy cập phản chiếu nên được opens có chủ đích hoặc mở bằng cấu hình triển khai phù hợp.
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '6.AccessControl/AccessControl.md'
+      file: '7.AccessControl/AccessControl.md'
       anchor: 'strong-encapsulation-boundary'
     apiRelated:
       controller: 'AccessReflectionController'
@@ -226,142 +252,168 @@ questions:
   - question: >-
       Tại sao java.lang.reflect.Type tồn tại trong khi Java đã có Class<?>? Hãy giải thích vai trò của Class, ParameterizedType, TypeVariable, WildcardType và GenericArrayType.
     answer: >-
-      Class<?> chỉ biểu diễn tốt raw/reifiable runtime type, còn generic declaration có thể chứa cấu trúc mà một Class không biểu diễn được. ParameterizedType mô tả dạng như List<String>; TypeVariable mô tả biến kiểu như T; WildcardType giữ upper/lower bounds của ? extends hoặc ? super; GenericArrayType mô tả array có component generic như T[]. Vì các thành phần này có thể lồng nhau, framework thường phải xử lý Type như một cây. Reflection đang đọc metadata của declaration chứ không tạo ra một hệ generic runtime mới.
+      Class<?> biểu diễn các kiểu mà JVM đại diện trực tiếp bằng một đối tượng Class, ví dụ String, raw List, int hoặc String[]. Khai báo generic có thể chứa cấu trúc mà một Class không biểu diễn được. ParameterizedType mô tả dạng như List<String>; TypeVariable mô tả biến kiểu như T; WildcardType giữ giới hạn trên/dưới của ? extends hoặc ? super; GenericArrayType mô tả mảng có kiểu phần tử generic như T[]. Vì các thành phần này có thể lồng nhau, framework thường phải xử lý Type như một cây. Reflection đang đọc siêu dữ liệu của khai báo chứ không tạo ra một hệ generic lúc chạy mới.
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '7.GenericTypeInspection/GenericTypeInspection.md'
+      file: '8.GenericTypeInspection/GenericTypeInspection.md'
       anchor: 'type-interface'
     apiRelated:
       controller: ''
       methodSignature: ''
 
   - question: >-
-      TypeVariable thuộc về declaration nào, và vì sao điều đó quan trọng khi generic type variable được khai báo trên class, method hoặc constructor?
+      TypeVariable thuộc về khai báo nào, và vì sao điều đó quan trọng khi biến kiểu generic được khai báo trên class, method hoặc constructor?
     answer: >-
-      TypeVariable không chỉ có tên và bounds; getGenericDeclaration() cho biết declaration sở hữu nó. Class generic trả TypeVariable từ Class.getTypeParameters(), còn generic Method hoặc Constructor có thể khai báo bộ type variables riêng qua Executable.getTypeParameters(). Hai biến cùng tên T ở hai declaration khác nhau không phải một identity chỉ vì text giống nhau. Framework resolve generic metadata cần giữ context của owner để tránh gán nhầm bounds hoặc mapping type argument giữa các declaration độc lập.
+      TypeVariable không chỉ có tên và giới hạn; getGenericDeclaration() cho biết khai báo sở hữu nó. Class generic trả TypeVariable từ Class.getTypeParameters(), còn Method hoặc Constructor generic có thể khai báo bộ biến kiểu riêng qua Executable.getTypeParameters(). Hai biến cùng tên T ở hai khai báo khác nhau không phải cùng một định danh chỉ vì văn bản giống nhau. Mã phân giải siêu dữ liệu generic cần giữ ngữ cảnh của nơi sở hữu để tránh gán nhầm giới hạn hoặc ánh xạ đối số kiểu giữa các khai báo độc lập.
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '7.GenericTypeInspection/GenericTypeInspection.md'
+      file: '8.GenericTypeInspection/GenericTypeInspection.md'
       anchor: 'type-variable-bounds'
     apiRelated:
       controller: ''
       methodSignature: ''
 
   - question: >-
-      Type erasure và generic signature metadata cùng tồn tại như thế nào? Vì sao Reflection có thể thấy List<String> ở một field nhưng thường không thể hỏi một List object bất kỳ xem nó là List<String> hay List<Long>?
+      Xóa kiểu (type erasure) và siêu dữ liệu chữ ký generic cùng tồn tại như thế nào? Vì sao Reflection có thể thấy List<String> ở một field nhưng thường không thể hỏi một đối tượng List bất kỳ xem nó là List<String> hay List<Long>?
     answer: >-
-      Java thực thi generic code chủ yếu trên erased runtime types, nên nhiều object như Repository<Integer> và Repository<Long> có cùng runtime Class. Tuy nhiên compiler có thể ghi generic signature metadata trên declaration như field, method, superclass hoặc type parameter. Reflection đọc metadata đó bằng getGenericType(), getGenericReturnType(), getGenericSuperclass() và các API Type liên quan. Vì vậy field List<String> có thể giữ thông tin String trong signature, nhưng một object List bất kỳ không tự mang một runtime identity riêng cho type argument. Các pattern type token hoạt động khi một declaration cụ thể giữ lại signature, không phải vì erasure biến mất.
+      Java thực thi mã generic chủ yếu trên các kiểu sau xóa kiểu, nên nhiều đối tượng như Repository<Integer> và Repository<Long> có cùng Class lúc chạy. Tuy nhiên trình biên dịch có thể ghi siêu dữ liệu chữ ký generic trên khai báo như field, method, superclass hoặc type parameter. Reflection đọc siêu dữ liệu đó bằng getGenericType(), getGenericReturnType(), getGenericSuperclass() và các API Type liên quan. Vì vậy field List<String> có thể giữ thông tin String trong chữ ký, nhưng một đối tượng List bất kỳ không tự mang một định danh lúc chạy riêng cho đối số kiểu. Mẫu type token hoạt động khi một khai báo cụ thể giữ lại chữ ký, không phải vì xóa kiểu biến mất.
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '7.GenericTypeInspection/GenericTypeInspection.md'
+      file: '8.GenericTypeInspection/GenericTypeInspection.md'
       anchor: 'erasure-vs-signature-metadata'
     apiRelated:
       controller: 'GenericReflectionController'
       methodSignature: 'genericSignature()'
 
   - question: >-
-      Dynamic invocation qua Reflection khác ordinary Java call ở đâu, và Reflection có làm mất virtual dispatch của instance method không?
+      Lời gọi động qua Reflection khác lời gọi Java thông thường ở đâu, và Reflection có làm mất cơ chế phân phối động của instance method không?
     answer: >-
-      Ordinary call có compiler chọn overload, kiểm tra target/signature và chuẩn bị conversion trước runtime. Với Reflection, code phải resolve Method descriptor, kiểm tra access, receiver và arguments rồi invoke ở runtime, nên nhiều lỗi chỉ xuất hiện khi đường chạy đó được thực hiện. Tuy vậy Method.invoke trên instance method vẫn tuân theo dynamic method lookup: nếu descriptor đại diện method overridable và receiver là subclass có override, dispatch có thể đi tới override. Reflection thay đổi cách chọn descriptor và call boundary, không biến virtual dispatch thành static dispatch.
+      Lời gọi thông thường có trình biên dịch chọn overload, kiểm tra đối tượng đích/chữ ký và chuẩn bị chuyển đổi trước lúc chạy. Với Reflection, mã phải phân giải đối tượng mô tả Method, kiểm tra quyền truy cập, đối tượng nhận và đối số rồi mới gọi lúc chạy, nên nhiều lỗi chỉ xuất hiện khi đường chạy đó được thực hiện. Tuy vậy Method.invoke trên instance method vẫn tuân theo phân phối động: nếu Method đại diện cho method có thể override và đối tượng nhận là class con đã override method đó, lời gọi có thể đi tới phần triển khai override. Reflection thay đổi cách chọn đối tượng mô tả và ranh giới lời gọi, không biến phân phối động thành phân phối tĩnh.
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '8.DynamicInvocation/DynamicInvocation.md'
+      file: '6.DynamicInvocation/DynamicInvocation.md'
       anchor: 'reflective-dispatch'
     apiRelated:
       controller: ''
       methodSignature: ''
 
   - question: >-
-      Những conversion nào Method.invoke thường hỗ trợ cho arguments, và vì sao code động vẫn nên validate arguments trước khi invoke?
+      Method.invoke thường hỗ trợ những chuyển đổi đối số nào, và vì sao mã động vẫn nên kiểm tra đối số trước khi gọi?
     answer: >-
-      Với primitive formal parameter, Reflection có thể unbox wrapper và thực hiện primitive widening hợp lệ; nó không tự làm narrowing tùy ý. Reference argument phải assignable tới formal type; null hợp lệ cho reference nhưng không thể unbox thành primitive. Reflection cũng không parse String thành number hay chạy lại overload resolution của compiler. Nếu input đến từ config, plugin hoặc dữ liệu deserialize, validate signature và value sớm giúp báo lỗi theo domain/framework thay vì để IllegalArgumentException xuất hiện muộn tại invocation boundary.
+      Với tham số hình thức primitive, Reflection có thể mở hộp wrapper và thực hiện mở rộng primitive hợp lệ; nó không tự thu hẹp kiểu tùy ý. Đối số kiểu tham chiếu phải gán được cho kiểu tham số hình thức; null hợp lệ cho tham chiếu nhưng không thể mở hộp thành primitive. Reflection cũng không phân tích String thành số hay chạy lại cơ chế chọn overload của trình biên dịch. Nếu đầu vào đến từ cấu hình, plugin hoặc dữ liệu deserialize, kiểm tra chữ ký và giá trị sớm giúp báo lỗi theo miền/framework thay vì để IllegalArgumentException xuất hiện muộn tại ranh giới lời gọi.
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '8.DynamicInvocation/DynamicInvocation.md'
+      file: '6.DynamicInvocation/DynamicInvocation.md'
       anchor: 'argument-conversion'
     apiRelated:
       controller: ''
       methodSignature: ''
 
   - question: >-
-      Reflection và MethodHandle giải quyết các phần nào khác nhau của bài toán dynamic invocation? Khi nào MethodHandle là lựa chọn đáng cân nhắc?
+      java.lang.reflect.Array giải quyết bài toán gì khi kiểu phần tử chỉ được biết lúc chạy? Vì sao new Object[] không phải lúc nào cũng thay thế được Array.newInstance(...)?
     answer: >-
-      Core Reflection mạnh ở discovery và metadata: tìm Method/Field/Constructor, đọc annotation, modifier, parameter và generic signature rồi có thể invoke qua descriptor. MethodHandle biểu diễn một callable target động với MethodType và cơ chế lookup/adaptation riêng, phù hợp hơn khi target đã được resolve và cần gọi lặp lại qua một type shape được kiểm soát. invokeExact yêu cầu call-site type khớp chính xác, còn invoke có thể thích nghi hơn; việc tạo handle vẫn chịu access rules của MethodHandles.Lookup. Không nên thay mọi Method.invoke bằng MethodHandle chỉ vì giả định nó luôn nhanh hơn; chọn abstraction theo use case và đo khi performance thật sự quan trọng.
+      Cú pháp new T[length] cần T được biết trong mã nguồn, trong khi framework có thể chỉ nhận Class<?> componentType lúc chạy. Array.newInstance(componentType, length) tạo mảng có đúng kiểu phần tử lúc chạy, ví dụ String[] hoặc int[], dù biến Java giữ nó có thể chỉ là Object. Sau đó Array.get/Array.set hoặc các hàm hỗ trợ primitive như getInt/setInt cho phép truy cập mà không cần biết kiểu mảng tĩnh từ trước. new Object[] chỉ tạo Object[]; nó không phải String[], int[] hay mảng của một kiểu phần tử động khác, nên không thể thay thế chung cho bài toán này.
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '8.DynamicInvocation/DynamicInvocation.md'
+      file: '6.DynamicInvocation/DynamicInvocation.md'
+      anchor: 'dynamic-array-reflection'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: >-
+      Reflection và MethodHandle giải quyết các phần nào khác nhau của bài toán gọi động? Khi nào MethodHandle là lựa chọn đáng cân nhắc?
+    answer: >-
+      Core Reflection mạnh ở khám phá và siêu dữ liệu: tìm Method/Field/Constructor, đọc annotation, modifier, tham số và chữ ký generic rồi có thể gọi qua đối tượng mô tả. MethodHandle biểu diễn một đích gọi động với MethodType và cơ chế tra cứu/thích nghi riêng, phù hợp hơn khi đích đã được phân giải và cần gọi lặp lại qua một hình dạng kiểu được kiểm soát. invokeExact yêu cầu kiểu tại điểm gọi khớp chính xác, còn invoke có thể thích nghi hơn; việc tạo handle vẫn chịu quy tắc truy cập của MethodHandles.Lookup. Không nên thay mọi Method.invoke bằng MethodHandle chỉ vì giả định nó luôn nhanh hơn; chọn abstraction theo trường hợp sử dụng và đo khi hiệu năng thật sự quan trọng.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '6.DynamicInvocation/DynamicInvocation.md'
       anchor: 'method-handle-boundary'
     apiRelated:
       controller: ''
       methodSignature: ''
 
   - question: >-
-      Nói “Reflection chậm” có đủ để đánh giá thiết kế không? Framework nên cache gì và vẫn phải đo những gì?
+      Nói “Reflection chậm” có đủ để đánh giá thiết kế không? Framework nên lưu đệm gì và vẫn phải đo những gì?
     answer: >-
-      Overhead của Reflection không chỉ nằm ở một lệnh invoke; repeated member lookup, scan metadata, generic/annotation parsing, access checks, argument packing/conversion và reflective dispatch đều có thể đóng góp. Framework thường resolve và validate metadata ở bootstrap/registration/lần dùng đầu rồi cache Method, Field, Constructor hoặc một invocation plan để tránh discovery lặp lại. Cache không xóa chi phí invocation hay hidden coupling, và JVM hiện đại đã tối ưu Core Reflection đáng kể. Nếu reflection nằm trên hot path, benchmark/profiler với workload thật mới cho biết có cần MethodHandle, generated code hay thiết kế khác hay không.
+      Chi phí của Reflection không chỉ nằm ở một lệnh invoke; tra cứu thành phần lặp lại, quét siêu dữ liệu, phân tích generic/annotation, kiểm tra quyền truy cập, đóng gói/chuyển đổi đối số và phân phối lời gọi phản chiếu đều có thể đóng góp. Framework thường phân giải và kiểm tra siêu dữ liệu ở giai đoạn khởi động/đăng ký/lần dùng đầu rồi lưu đệm Method, Field, Constructor hoặc một kế hoạch gọi đã chuẩn bị để tránh khám phá lặp lại. Lưu đệm không xóa chi phí lời gọi hay sự phụ thuộc ẩn, và JVM hiện đại đã tối ưu Core Reflection đáng kể. Nếu Reflection nằm trên đường chạy nóng, benchmark/profiler với tải công việc thật mới cho biết có cần MethodHandle, mã được sinh tự động hay thiết kế khác hay không.
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '9.LimitationsRisks/LimitationsRisks.md'
+      file: '10.LimitationsRisks/LimitationsRisks.md'
       anchor: 'reflection-performance'
     apiRelated:
       controller: ''
       methodSignature: ''
 
   - question: >-
-      Reflection ảnh hưởng maintainability và refactoring như thế nào, đặc biệt khi framework phụ thuộc vào private member hoặc tên member dạng string?
+      Reflection ảnh hưởng khả năng bảo trì và tái cấu trúc như thế nào, đặc biệt khi framework phụ thuộc vào thành phần private hoặc tên thành phần dạng chuỗi?
     answer: >-
-      Direct symbol reference được compiler và IDE hiểu, còn string như "pay" hoặc "processedCount" trong reflection/config có thể trở thành hidden dependency mà rename tool không nhìn thấy. Deep reflection vào private member còn biến implementation detail thành một contract ngầm giữa framework và class sở hữu. Vì vậy thay đổi tên, package, visibility hoặc module openness có thể làm lỗi chỉ xuất hiện ở runtime. Thiết kế bền hơn thường gom Reflection vào adapter/metadata layer, resolve và validate sớm, ưu tiên typed registration/annotation/Class khi có thể và giữ business code dùng contract tĩnh rõ ràng.
+      Tham chiếu ký hiệu trực tiếp được trình biên dịch và IDE hiểu, còn chuỗi như "pay" hoặc "processedCount" trong Reflection/cấu hình có thể trở thành sự phụ thuộc ẩn mà công cụ đổi tên không nhìn thấy. Reflection truy cập sâu vào thành phần private còn biến chi tiết triển khai thành một hợp đồng ngầm giữa framework và class sở hữu. Vì vậy thay đổi tên, package, mức truy cập hoặc mức độ mở của mô-đun có thể làm lỗi chỉ xuất hiện lúc chạy. Thiết kế bền hơn thường gom Reflection vào lớp adapter/siêu dữ liệu, phân giải và kiểm tra sớm, ưu tiên đăng ký có kiểu rõ ràng/annotation/Class khi có thể và giữ mã nghiệp vụ dùng hợp đồng tĩnh rõ ràng.
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '9.LimitationsRisks/LimitationsRisks.md'
+      file: '10.LimitationsRisks/LimitationsRisks.md'
       anchor: 'reflection-maintainability'
     apiRelated:
       controller: ''
       methodSignature: ''
 
   - question: >-
-      Vì sao một ứng dụng dùng Reflection chạy tốt trên JVM vẫn có thể gặp vấn đề khi build native image? Reachability metadata giải bài toán gì?
+      Vì sao một ứng dụng dùng Reflection chạy tốt trên JVM vẫn có thể gặp vấn đề khi xây dựng native image? Reachability metadata giải bài toán gì?
     answer: >-
-      JVM thông thường có thể quyết định ở runtime rằng cần class/member nào rồi tìm bằng Reflection. Native-image closed-world analysis phải biết ở build time phần code/metadata nào cần tồn tại trong executable, nên target chỉ xuất hiện qua string hoặc cấu hình runtime có thể không được static analysis nhận ra. Reachability metadata hoặc hints khai báo các class, member, proxy hay tính năng động cần giữ lại. Đây là boundary của deployment/AOT environment, không thay đổi semantics Reflection trên JVM, nhưng framework dùng dynamic discovery phải cung cấp đủ metadata để native executable còn thấy target cần thiết.
+      JVM thông thường có thể quyết định lúc chạy rằng cần class/thành phần nào rồi tìm bằng Reflection. Phân tích closed-world của native image phải biết tại thời điểm xây dựng phần mã/siêu dữ liệu nào cần tồn tại trong file thực thi, nên đích chỉ xuất hiện qua chuỗi hoặc cấu hình lúc chạy có thể không được phân tích tĩnh nhận ra. Reachability metadata hoặc hint khai báo các class, thành phần, proxy hay tính năng động cần giữ lại. Đây là ranh giới của môi trường triển khai/AOT, không thay đổi ngữ nghĩa Reflection trên JVM, nhưng framework dùng khám phá động phải cung cấp đủ siêu dữ liệu để file thực thi native còn thấy đích cần thiết.
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '9.LimitationsRisks/LimitationsRisks.md'
+      file: '10.LimitationsRisks/LimitationsRisks.md'
       anchor: 'native-image-boundary'
     apiRelated:
       controller: ''
       methodSignature: ''
 
   - question: >-
-      Hãy mô tả luồng bên trong JDK Dynamic Proxy từ lời gọi interface tới InvocationHandler, và giải thích vì sao equals, hashCode, toString cần policy riêng trong handler.
+      Hãy mô tả luồng bên trong JDK Dynamic Proxy từ lời gọi interface tới InvocationHandler, và giải thích vì sao equals, hashCode, toString cần chính sách riêng trong handler.
     answer: >-
-      Proxy.newProxyInstance tạo một runtime class implements các interface đã cho; khi caller gọi interface method, generated proxy chuyển lời gọi thành Method + arguments rồi gọi InvocationHandler.invoke(proxy, method, args). Handler có thể thực hiện logging/security/metrics hoặc delegate tới target, thường bằng Method.invoke và unwrap InvocationTargetException khi cần. Ba public non-final method equals, hashCode và toString của Object cũng đi qua handler, với Method có declaring class là Object. Nếu handler đơn giản invoke lại method trên chính proxy có thể gây recursion; nếu delegate mù sang target có thể phá equality semantics, nên handler phải định nghĩa contract cho ba method này có chủ đích.
+      Proxy.newProxyInstance tạo một class lúc chạy triển khai các interface đã cho; khi bên gọi gọi method qua interface, proxy được sinh tự động chuyển lời gọi thành Method + mảng đối số rồi gọi InvocationHandler.invoke(proxy, method, args). Với method không tham số, args có thể là null. Handler có thể thực hiện ghi log/kiểm tra quyền/đo lường hoặc ủy quyền tới đối tượng đích, thường bằng Method.invoke và lấy ngoại lệ gốc khỏi InvocationTargetException khi cần. Ba method public không final equals, hashCode và toString của Object cũng đi qua handler, với Method có class khai báo là Object. Nếu handler đơn giản gọi lại method trên chính proxy có thể gây đệ quy vô hạn; nếu ủy quyền mù sang đối tượng đích có thể phá ngữ nghĩa equals/hashCode, nên handler phải định nghĩa hợp đồng cho ba method này có chủ đích.
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '10.DynamicProxy/DynamicProxy.md'
+      file: '9.DynamicProxy/DynamicProxy.md'
       anchor: 'object-methods-proxy'
     apiRelated:
       controller: 'DynamicProxyController'
       methodSignature: 'intercept()'
 
   - question: >-
-      JDK Dynamic Proxy bị giới hạn bởi interface model như thế nào, và ranh giới giữa JDK Proxy với class-based proxy trong Spring AOP nên được giải thích ra sao?
+      JDK Dynamic Proxy bị giới hạn bởi mô hình dựa trên interface như thế nào, và ranh giới giữa JDK Proxy với proxy dựa trên class trong Spring AOP nên được giải thích ra sao?
     answer: >-
-      JDK Proxy tạo implementation cho interface chứ không subclass concrete target, nên caller phải làm việc qua interface contract; static method, constructor, private state và lời gọi trực tiếp target không trở thành interception point. Trên Java 21, hidden hoặc sealed interface không hợp lệ làm proxy interface. Một final target class vẫn có thể nằm phía sau JDK Proxy nếu nó implements interface, vì target không bị subclass. Class-based proxy trong Spring AOP dùng cơ chế subclass nên final class/final method/private method tạo các giới hạn khác. Nếu ứng dụng chỉ cần một call tĩnh đã biết trước, direct call/decorator thường rõ hơn; proxy phù hợp khi cần runtime interception chung trên interface boundary.
+      JDK Proxy tạo phần triển khai cho interface chứ không tạo class con từ class đích cụ thể, nên bên gọi phải làm việc qua hợp đồng interface; static method, constructor, trạng thái private và lời gọi trực tiếp tới đối tượng đích không trở thành điểm chặn lời gọi. Trên Java 21, hidden hoặc sealed interface không hợp lệ làm proxy interface. Một class đích final vẫn có thể nằm phía sau JDK Proxy nếu nó triển khai interface, vì class đích không bị tạo subclass. Proxy dựa trên class trong Spring AOP dùng cơ chế tạo subclass nên final class/final method/private method tạo các giới hạn khác. Nếu ứng dụng chỉ cần một lời gọi tĩnh đã biết trước, lời gọi trực tiếp/decorator thường rõ hơn; proxy phù hợp khi cần chặn lời gọi lúc chạy dùng chung trên ranh giới interface.
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '10.DynamicProxy/DynamicProxy.md'
+      file: '9.DynamicProxy/DynamicProxy.md'
       anchor: 'proxy-limitations'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: >-
+      Nếu phải quyết định có dùng Reflection cho một thiết kế mới hay không, bạn sẽ đi qua những câu hỏi nào trước khi viết mã?
+    answer: >-
+      Trước hết hỏi kiểu/cấu trúc có thật sự chỉ biết ở lúc chạy hay không. Nếu đã biết tại thời điểm biên dịch, lời gọi trực tiếp, interface, đa hình hoặc factory thường rõ hơn. Nếu khám phá lúc chạy là yêu cầu thật, tiếp tục hỏi Reflection có thể được khoanh trong một ranh giới hạ tầng nhỏ hay không, siêu dữ liệu có thể được phân giải và kiểm tra sớm rồi lưu đệm khi cần hay không, hợp đồng bên ngoài có thể giữ kiểu rõ ràng hay không, và các giới hạn quyền truy cập/mô-đun/native image có được xử lý có chủ đích hay không. Reflection phù hợp nhất khi tính động tạo giá trị thực và phần động được cô lập; nó là tín hiệu thiết kế kém khi chỉ thay lời gọi tĩnh bằng chuỗi và invoke mà không có nhu cầu khám phá lúc chạy.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '10.LimitationsRisks/LimitationsRisks.md'
+      anchor: 'reflection-decision-model'
     apiRelated:
       controller: ''
       methodSignature: ''

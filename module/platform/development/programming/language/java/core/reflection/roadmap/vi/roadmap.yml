@@ -43,78 +43,89 @@
 
 roadmap:
   - id: reflection-purpose
-    title: Mục đích Reflection và Dynamic Inspection
-    purpose: Hiểu reflection là deliberate escape khỏi static access thông thường khi runtime structure cần được discover động.
-    relatedModules:
-      - routeId: JAVA_ANNOTATION
-        label: Annotation
-        note: Annotation có RUNTIME retention là metadata phổ biến được consume qua reflection.
+    title: Reflection là gì và vì sao cần nó?
+    purpose: Hiểu Reflection cho phép chương trình quan sát cấu trúc và thao tác với kiểu hoặc thành phần khi thông tin chỉ được biết lúc chạy, thay vì phải gọi trực tiếp bằng mã đã biết từ lúc biên dịch.
+    relatedKnowledge:
+      - Basic
     objectives:
-      - Giải thích vì sao framework và tooling cần runtime metadata.
-      - Nhận biết vì sao application code thông thường không nên mặc định dùng reflection.
+      - Giải thích bài toán mà Reflection giải quyết trong framework, thư viện và công cụ.
+      - Hiểu giới hạn của cách gọi trực tiếp, interface, factory hoặc đăng ký thủ công khi cấu trúc cần xử lý không thể biết trước lúc biên dịch.
+      - Phân biệt trường hợp cần tính linh hoạt lúc chạy với trường hợp gọi trực tiếp an toàn và rõ ràng hơn.
   - id: class-metadata
-    title: Class Metadata
-    purpose: Hiểu Class<?> là runtime description của một loaded type và là entry point vào reflective structure.
+    title: Mô hình kiểu lúc chạy với Class<?>
+    purpose: Hiểu Class<?> là đối tượng mô tả một kiểu Java mà JVM biết tại lúc chạy và là điểm bắt đầu để khám phá siêu dữ liệu của kiểu đó bằng Reflection.
+    relatedKnowledge:
+      - ClassMetadata
     relatedModules:
       - routeId: JAVA_CLASSLOADER
         label: ClassLoader
-        note: Class object chỉ tồn tại sau khi ClassLoader define runtime type identity.
+        note: Với class và interface thông thường, ClassLoader tham gia nạp và định nghĩa định danh kiểu trong JVM; Reflection sử dụng đối tượng Class tương ứng để quan sát kiểu đó.
+      - routeId: JAVA_ANNOTATION
+        label: Annotation
+        note: Reflection có thể đọc annotation được giữ lại đến lúc chạy; cách khai báo và chính sách lưu giữ annotation thuộc mô-đun Annotation.
     objectives:
-      - Inspect name, kind, modifier, superclass, interface và declared/public member.
-      - Phân biệt metadata về type với instance của type đó.
-  - id: reflective-fields
-    title: Inspect và access Field bằng Reflection
-    purpose: Hiểu cách Field descriptor expose name, modifier, raw/generic type và controlled read/write operation.
+      - Hiểu cách lấy Class<?> và dùng nó để khám phá tên, loại, modifier, quan hệ kế thừa và thành phần của kiểu.
+      - Phân biệt siêu dữ liệu mô tả một kiểu với đối tượng được tạo từ kiểu đó.
+      - Nhận biết siêu dữ liệu đặc thù của mảng, enum, record và sealed type thay vì giả định mọi Class<?> có cùng một tập đặc điểm.
+      - Nhận biết annotation có chính sách lưu giữ RUNTIME là một dạng siêu dữ liệu mà Reflection có thể đọc trên kiểu và thành phần.
+  - id: reflective-members
+    title: Khám phá các thành phần của lớp
+    purpose: Xây dựng mô hình chung cho Field, Method và Constructor như các đối tượng mô tả thành phần mà Reflection có thể tìm kiếm và kiểm tra lúc chạy.
+    relatedKnowledge:
+      - ClassMetadata
+      - Fields
+      - Methods
+      - Constructors
     objectives:
-      - Phân biệt inherited public field với declared field.
-      - Xem reflective mutation là exceptional boundary có encapsulation cost.
-  - id: reflective-methods
-    title: Discover và invoke Method
-    purpose: Hiểu cách method được chọn và invoke từ metadata thay vì direct Java call syntax.
+      - Phân biệt thành phần được khai báo trực tiếp với thành phần public có thể được kế thừa.
+      - Hiểu vai trò chung của Member, Executable, AccessibleObject và AnnotatedElement thay vì xem Field, Method và Constructor là các API rời rạc.
+      - Đọc được thông tin quan trọng như modifier, kiểu dữ liệu, tham số, kiểu trả về và ngoại lệ được khai báo.
+  - id: reflective-operations
+    title: Thao tác động bằng siêu dữ liệu
+    purpose: Hiểu cách Reflection dùng Field, Method và Constructor đã khám phá để đọc hoặc ghi dữ liệu, gọi phương thức và tạo đối tượng khi quyết định chỉ có ở lúc chạy.
+    relatedKnowledge:
+      - DynamicInvocation
     objectives:
-      - Inspect signature, modifier, parameter, return type và declared exception.
-      - Hiểu InvocationTargetException và reflective invocation failure boundary.
-  - id: reflective-construction
-    title: Discover Constructor và Dynamic Instantiation
-    purpose: Hiểu cách constructor được discover và invoke khi construction choice được quyết định ở runtime.
-    objectives:
-      - Inspect constructor metadata và instantiate controlled type động.
-      - Nhận biết instantiation, access và target-failure mode.
+      - Liên hệ get/set, invoke và newInstance với thao tác Java trực tiếp tương ứng, kể cả chuyển đổi đối số và varargs.
+      - Hiểu cách tạo và truy cập mảng động khi kiểu phần tử chỉ được biết lúc chạy thông qua java.lang.reflect.Array.
+      - Phân biệt lỗi của chính cơ chế Reflection với ngoại lệ phát sinh bên trong mã đích, đặc biệt qua InvocationTargetException.
   - id: reflective-access-control
-    title: Reflective Access và Encapsulation
-    purpose: Hiểu reflection vẫn tương tác với language access rule và strong encapsulation của JPMS.
+    title: Quyền truy cập, đóng gói và giới hạn mô-đun
+    purpose: Hiểu Reflection không xóa bỏ quy tắc truy cập của Java; việc truy cập sâu vẫn chịu kiểm soát của đóng gói và ranh giới mô-đun trong JPMS.
+    relatedKnowledge:
+      - AccessControl
     objectives:
-      - Dùng canAccess/trySetAccessible với nhận thức rõ về module boundary.
-      - Nhận biết maintenance/security cost khi bypass normal access.
+      - Hiểu vai trò của canAccess, trySetAccessible và khi nào việc mở quyền truy cập có thể thất bại.
+      - Nhận biết rủi ro bảo trì và an toàn khi cố tình vượt qua ranh giới đóng gói thông thường.
   - id: generic-signature-inspection
-    title: Inspect Generic Signature
-    purpose: Hiểu generic signature metadata nào vẫn có thể inspect sau type erasure.
+    title: Siêu dữ liệu Generics còn lại sau xóa kiểu
+    purpose: Hiểu phần thông tin về kiểu tổng quát nào vẫn được lưu trong chữ ký khai báo và có thể đọc bằng Reflection sau khi xóa kiểu (type erasure) diễn ra.
+    relatedKnowledge:
+      - GenericTypeInspection
     relatedModules:
       - routeId: JAVA_GENERICS
         label: Generics
-        note: Generics sở hữu erasure, bound, wildcard và compile-time type relationship.
+        note: Xóa kiểu (type erasure), giới hạn kiểu (bound), wildcard và quan hệ kiểu tại thời điểm biên dịch được học sâu trong mô-đun Generics.
     objectives:
-      - Đi qua Class, ParameterizedType, TypeVariable, WildcardType và GenericArrayType.
-      - Tách erased execution khỏi retained signature metadata.
-  - id: dynamic-invocation
-    title: Dynamic Invocation Semantics
-    purpose: Hiểu conversion, dispatch và failure khi invocation được điều khiển động thay vì qua compile-time syntax.
-    objectives:
-      - Reason về boxing, unboxing, widening, varargs và invocation mismatch.
-      - Nhận biết boundary giữa reflection và dynamic invocation kiểu MethodHandle.
+      - Nhận biết vai trò của Class, ParameterizedType, TypeVariable, WildcardType và GenericArrayType trong mô hình Type.
+      - Phân biệt kiểu dùng để thực thi sau xóa kiểu với siêu dữ liệu chữ ký vẫn còn để công cụ kiểm tra.
   - id: dynamic-proxies
-    title: Dynamic Proxy và Interception
-    purpose: Hiểu JDK dynamic proxy là runtime-generated interface implementation chuyển call qua InvocationHandler.
+    title: Proxy động và chặn lời gọi
+    purpose: Hiểu JDK Dynamic Proxy có thể tạo lúc chạy một lớp triển khai interface và chuyển lời gọi qua InvocationHandler để bổ sung hành vi trung gian.
+    relatedKnowledge:
+      - DynamicProxy
     relatedModules:
       - routeId: JAVA_ABSTRACT_INTERFACE
-        label: Abstract Class & Interface
-        note: JDK dynamic proxy cần interface contract làm runtime proxy surface.
+        label: Lớp trừu tượng & Interface
+        note: JDK Dynamic Proxy dựa trên interface làm hợp đồng cho đối tượng proxy được tạo lúc chạy.
     objectives:
-      - Theo dõi proxy creation, handler invocation, delegation và Object-method boundary.
-      - Nhận biết interface-based limitation của JDK proxy.
+      - Theo dõi luồng tạo proxy, InvocationHandler, chuyển tiếp lời gọi và xử lý các phương thức của Object.
+      - Hiểu giới hạn của JDK Dynamic Proxy khi cơ chế này chỉ tạo proxy dựa trên interface.
   - id: reflection-risks-and-synthesis
-    title: Cost, Risk và tổng hợp Reflection
-    purpose: Kết nối dynamic flexibility với mất compile-time safety, hidden coupling, access risk, performance, refactoring và native-image constraint.
+    title: Khi nào nên dùng Reflection?
+    purpose: Tổng hợp lợi ích và đánh đổi của Reflection để quyết định khi nào tính linh hoạt lúc chạy đáng với việc mất một phần kiểm tra lúc biên dịch, tăng liên kết ẩn và tăng độ phức tạp khi bảo trì.
+    relatedKnowledge:
+      - LimitationsRisks
     objectives:
-      - Chỉ dùng reflection khi runtime dynamism thực sự đáng với cost.
-      - Thiết kế metadata discovery/caching boundary để reflective code được khoanh vùng.
+      - Đánh giá ảnh hưởng đến hiệu năng, khả năng tái cấu trúc mã, native image và ranh giới truy cập; biết khi nào cần lưu đệm siêu dữ liệu.
+      - Phân biệt phạm vi phù hợp của Reflection với gọi trực tiếp và các cơ chế gọi động lân cận như MethodHandle.

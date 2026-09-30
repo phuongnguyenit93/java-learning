@@ -7,6 +7,7 @@ AccessReflectionController:
         <li><strong>Code evidence:</strong><pre><code>Method method = PaymentAccessSample.class.getDeclaredMethod("internalStatus");
       boolean before = method.canAccess(service);
       boolean opened = method.trySetAccessible();
+      boolean after = method.canAccess(service);
       Object value = opened ? method.invoke(service) : "not-accessible";</code></pre></li>
         <li><strong>Observation:</strong> In this classpath-based demo, the response normally shows <code>canAccessBefore=false</code>, <code>trySetAccessible=true</code>, and <code>canAccessAfter=true</code>.</li>
         <li><strong>Meaning:</strong> descriptor discovery and permission are separate layers; JPMS can make the access-opening step fail in a more strongly encapsulated deployment.</li>
@@ -55,7 +56,7 @@ DynamicProxyController:
         new Class&lt;?&gt;[]{PaymentGateway.class},
         handler
       );
-      String value = proxy.pay(request);</code></pre></li>
+      String value = proxy.pay(new PaymentRequest("ORD-42", 150_000L));</code></pre></li>
         <li><strong>Observation:</strong> The trace contains <code>before:pay</code> followed by <code>after:pay</code>; <code>Proxy.isProxyClass(...)=true</code> while the proxy still satisfies <code>PaymentGateway</code>.</li>
         <li><strong>Meaning:</strong> The caller keeps a type-safe interface contract while runtime cross-cutting behavior is inserted behind that contract.</li>
       </ol>
@@ -83,9 +84,9 @@ GenericReflectionController:
       <ol>
         <li><strong>Flow:</strong> The API reads <code>List&lt;? extends T&gt; values</code>, compares the raw type with <code>getGenericType()</code>, and inspects <code>ParameterizedType</code>, <code>WildcardType</code>, and <code>TypeVariable</code>.</li>
         <li><strong>Code evidence:</strong><pre><code>Field field = Repository.class.getDeclaredField("values");
-      ParameterizedType p = (ParameterizedType) field.getGenericType();
-      WildcardType w = (WildcardType) p.getActualTypeArguments()[0];
-      TypeVariable&lt;Class&lt;Repository&gt;&gt; t = Repository.class.getTypeParameters()[0];</code></pre></li>
+      ParameterizedType parameterized = (ParameterizedType) field.getGenericType();
+      WildcardType wildcard = (WildcardType) parameterized.getActualTypeArguments()[0];
+      TypeVariable&lt;Class&lt;Repository&gt;&gt; variable = Repository.class.getTypeParameters()[0];</code></pre></li>
         <li><strong>Observation:</strong> The raw field type is <code>java.util.List</code>, the generic type retains <code>? extends T</code>, and <code>T</code> has bounds <code>Number</code> and <code>Comparable&lt;T&gt;</code>.</li>
         <li><strong>Meaning:</strong> Reflection reads declaration-site generic signatures; it does not reconstruct a concrete type argument for every object after erasure.</li>
       </ol>
@@ -98,8 +99,9 @@ MethodReflectionController:
       <ol>
         <li><strong>Flow:</strong> The API resolves <code>pay(PaymentRequest)</code> and invokes it successfully, then resolves <code>reject()</code> and catches the wrapper when the target throws <code>IllegalStateException</code>.</li>
         <li><strong>Code evidence:</strong><pre><code>Method pay = PaymentService.class.getMethod("pay", PaymentRequest.class);
-      Object success = pay.invoke(service, request);
+      Object success = pay.invoke(service, new PaymentRequest("ORD-42", 150_000L));
 
+      Method reject = PaymentService.class.getMethod("reject");
       try {
           reject.invoke(service);
       } catch (InvocationTargetException ex) {

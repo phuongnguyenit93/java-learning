@@ -1,8 +1,8 @@
-# Reflection với Field
+# Khám phá Field và siêu dữ liệu trạng thái
 
-Sau khi Class Metadata cho biết runtime type là gì, Reflection có thể đi sâu vào **trạng thái** của type đó qua Field. Đây là nền tảng cho các mapper, serializer, validator và framework muốn đọc metadata của field mà không viết code riêng cho từng model.
+Sau khi chương **Mô hình kiểu lúc chạy với Class<?>** cho biết kiểu lúc chạy là gì, Reflection có thể khám phá **trạng thái được khai báo** của kiểu đó qua `Field`. Chương này tập trung vào việc tìm đúng field và đọc siêu dữ liệu của đối tượng mô tả; thao tác `get/set` sẽ được thực hiện ở milestone **Thao tác động bằng siêu dữ liệu**.
 
-Ta tiếp tục với một PaymentService có cả field instance, static, final và generic:
+Ta tiếp tục với một `PaymentService` có cả field instance, static, final và generic:
 
 ~~~java
 public class PaymentService {
@@ -28,11 +28,11 @@ public class PaymentService {
 }
 ~~~
 
-Field reflection có hai bước tách biệt: **khám phá descriptor Field** rồi **dùng descriptor đó trên một receiver cụ thể**. Việc tìm thấy một private field không tự có nghĩa rằng ta được phép đọc hoặc ghi nó; access control được xử lý sâu ở chương sau.
+Field reflection có hai bước tách biệt: **khám phá đối tượng mô tả `Field`** rồi **dùng đối tượng mô tả đó trên một đối tượng nhận cụ thể**. Chương này chỉ tập trung vào bước khám phá; đọc/ghi giá trị nằm ở chương **Thao tác động bằng siêu dữ liệu**, còn ranh giới quyền truy cập được xử lý sau đó ở milestone **Quyền truy cập, đóng gói và giới hạn mô-đun**.
 
 ## <a id="field-discovery">Tìm Field theo đúng phạm vi</a>
 
-Class cung cấp hai nhóm API giống distinction ở chương trước:
+`Class` cung cấp hai nhóm API theo đúng sự phân biệt ở chương trước:
 
 ~~~java
 Class<PaymentService> type = PaymentService.class;
@@ -41,7 +41,7 @@ Field privateField = type.getDeclaredField("processedCount");
 Field publicField = type.getField("CHANNEL");
 ~~~
 
-getDeclaredField(name) chỉ tìm field được khai báo trực tiếp trên class hiện tại, bất kể visibility. getField(name) chỉ tìm public field và có thể đi lên hệ phân cấp để tìm public field inherited.
+`getDeclaredField(name)` chỉ tìm field được khai báo trực tiếp trên class hiện tại, bất kể mức truy cập. `getField(name)` chỉ tìm public field và có thể đi lên hệ phân cấp để tìm public field được kế thừa.
 
 Ví dụ:
 
@@ -60,7 +60,7 @@ PaymentService.class.getDeclaredField("processedCount")
 → tìm thấy
 
 PaymentService.class.getField("region")
-→ tìm thấy public field inherited từ BaseService
+→ tìm thấy public field được kế thừa từ BaseService
 
 PaymentService.class.getDeclaredField("region")
 → NoSuchFieldException
@@ -69,18 +69,18 @@ PaymentService.class.getField("processedCount")
 → NoSuchFieldException vì field không public
 ~~~
 
-Khi cần enumerate:
+Khi cần liệt kê:
 
 ~~~java
 Field[] declared = PaymentService.class.getDeclaredFields();
 Field[] publicSurface = PaymentService.class.getFields();
 ~~~
 
-Thứ tự phần tử không nên được dùng như contract. Nếu framework cần thứ tự ổn định, nó phải định nghĩa quy tắc riêng, ví dụ sort theo tên hoặc đọc một metadata khác.
+Thứ tự phần tử không nên được dùng như hợp đồng. Nếu framework cần thứ tự ổn định, nó phải định nghĩa quy tắc riêng, ví dụ sắp xếp theo tên hoặc đọc một siêu dữ liệu khác.
 
-Reflection cũng có thể thấy synthetic field do compiler tạo. isSynthetic() giúp tooling phân biệt artifact compiler với field source-level mà nó muốn xử lý. Một serializer viết kiểu “lấy mọi declared field rồi serialize hết” có thể vô tình kéo theo dữ liệu không thuộc contract của model.
+Reflection cũng có thể thấy field synthetic do trình biên dịch tạo. `isSynthetic()` giúp công cụ phân biệt phần tử do trình biên dịch sinh ra với field xuất hiện trực tiếp trong mã nguồn. Một serializer viết kiểu “lấy mọi field khai báo trực tiếp rồi serialize hết” có thể vô tình kéo theo dữ liệu không thuộc hợp đồng của mô hình.
 
-Một pattern an toàn hơn là filter có chủ đích:
+Một cách an toàn hơn là lọc có chủ đích:
 
 ~~~java
 static List<Field> instanceFields(Class<?> type) {
@@ -91,79 +91,9 @@ static List<Field> instanceFields(Class<?> type) {
 }
 ~~~
 
-## <a id="field-read-write">Đọc và ghi giá trị qua Field</a>
-
-Khi đã có `Field`, `get(...)` và `set(...)` thao tác trên một object cụ thể. Trước tiên hãy dùng một field `public` để quan sát cơ chế mà chưa vướng access control:
-
-~~~java
-class Counter {
-    public int value = 1;
-}
-
-Counter counter = new Counter();
-Field publicField = Counter.class.getField("value");
-
-System.out.println(publicField.get(counter)); // 1
-publicField.set(counter, 5);
-System.out.println(counter.value);            // 5
-~~~
-
-Ở đây `publicField` là descriptor cho `value`, còn `counter` là receiver chứa trạng thái thực tế.
-
-Với running model, `processedCount` là `private`, nên discovery vẫn thành công nhưng thao tác giá trị còn phụ thuộc quyền truy cập:
-
-~~~java
-PaymentService service = new PaymentService("stripe");
-Field field = PaymentService.class.getDeclaredField("processedCount");
-
-// Hai dòng sau chỉ thành công nếu reflective access được phép.
-Object value = field.get(service);
-field.set(service, 5);
-~~~
-
-Việc tách hai ví dụ này là có chủ ý: **`getDeclaredField()` tìm thấy member không có nghĩa `get()/set()` được quyền dùng member đó**. Chương Access Control sẽ quay lại đúng ranh giới này với `canAccess(...)` và `trySetAccessible()`.
-
-Field.get(...) trả Object. Với primitive field, giá trị được boxing:
-
-~~~java
-int processedCount = (Integer) field.get(service);
-~~~
-
-Field có các API chuyên biệt như getInt/setInt, getBoolean/setBoolean để tránh cast ở bên gọi:
-
-~~~java
-int count = field.getInt(service);
-field.setInt(service, 5);
-~~~
-
-Đối với static field, giá trị thuộc class thay vì một instance. Receiver truyền vào get/set bị bỏ qua; convention dễ đọc nhất là truyền null:
-
-~~~java
-Field channel = PaymentService.class.getField("CHANNEL");
-Object value = channel.get(null);
-~~~
-
-Với instance field, receiver phải là instance tương thích với declaring class. Sai receiver hoặc sai kiểu value có thể dẫn tới IllegalArgumentException.
-
-Reflection thực hiện một số unboxing/widening conversion hợp lệ cho primitive field, nhưng không biến mọi giá trị thành kiểu đích. Ví dụ setInt chỉ phù hợp với field primitive có thể nhận int theo quy tắc của API; một String "5" không tự được parse thành số.
-
-Điểm cần giữ trong mental model:
-
-~~~text
-Field descriptor
-    +
-receiver object (nếu là instance field)
-    +
-value phù hợp (nếu set)
-    ↓
-runtime access
-~~~
-
-Nếu field private, việc descriptor đã tồn tại không tự bỏ qua quy tắc access. IllegalAccessException là lỗi bình thường khi bên gọi không có reflective access. Chương Access Control sẽ giải thích canAccess(...), trySetAccessible() và JPMS.
-
 ## <a id="field-modifiers">Modifier và đặc tính của Field</a>
 
-getModifiers() cho phép framework hiểu field đang đóng vai trò gì:
+`getModifiers()` cho phép framework hiểu field đang đóng vai trò gì:
 
 ~~~java
 Field field = PaymentService.class.getDeclaredField("available");
@@ -180,21 +110,22 @@ Các modifier không chỉ để hiển thị. Chúng thường quyết định 
 
 ~~~text
 static
-→ trạng thái thuộc class; mapper object thường bỏ qua
+→ trạng thái thuộc class; mapper đối tượng thường bỏ qua
 
 final
-→ trạng thái được thiết kế không để gán lại sau initialization
+→ giá trị/tham chiếu của field chỉ được phép gán theo quy tắc của final;
+  nếu field trỏ tới một đối tượng có thể thay đổi (mutable) thì trạng thái bên trong đối tượng đó vẫn có thể thay đổi
 
 transient
-→ metadata source-level thường được serializer cân nhắc bỏ qua,
+→ siêu dữ liệu ở cấp mã nguồn thường được serializer cân nhắc bỏ qua,
   nhưng hành vi cuối cùng tùy serializer
 
 volatile
-→ field có memory-visibility semantics của Java;
-  Reflection chỉ report metadata, không thay đổi meaning đó
+→ field có ngữ nghĩa bảo đảm khả năng nhìn thấy giữa các luồng của Java;
+  Reflection chỉ báo cáo siêu dữ liệu, không thay đổi ngữ nghĩa đó
 ~~~
 
-Đừng hiểu final là “Reflection chắc chắn sửa được nếu cố mở access”. Trên Java hiện đại, reflective write vào final field bị giới hạn mạnh ở một số loại field, và ngay cả trường hợp có thể thay đổi một final instance field thì program semantics có thể không đáng tin do assumptions/optimization của JVM. Framework nên xem final như một ranh giới thiết kế thay vì như một cờ cần phá.
+Đừng hiểu `final` là “Reflection chắc chắn sửa được nếu cố mở quyền truy cập”. Trên Java hiện đại, việc ghi phản chiếu vào field final bị giới hạn mạnh ở một số loại field; ngoài ra `final` còn mang các bảo đảm ngôn ngữ/JVM mà framework không nên tùy tiện phá vỡ. Hãy xem `final` như một ranh giới thiết kế thay vì một cờ cần vượt qua.
 
 Field còn có:
 
@@ -203,9 +134,9 @@ field.isEnumConstant();
 field.isSynthetic();
 ~~~
 
-Hai property này không nên suy ra chỉ từ Modifier bit mask.
+Hai đặc tính này không nên suy ra chỉ từ bit mask của `Modifier`.
 
-Ví dụ một snapshotter có chính sách rõ:
+Ví dụ một công cụ chụp trạng thái có chính sách rõ:
 
 ~~~java
 static boolean shouldRead(Field field) {
@@ -215,11 +146,11 @@ static boolean shouldRead(Field field) {
 }
 ~~~
 
-Chính sách như vậy tốt hơn việc “Reflection thấy gì thì xử lý hết”, vì metadata runtime có thể chứa member phục vụ compiler/JVM mà không thuộc domain model.
+Chính sách như vậy tốt hơn việc “Reflection thấy gì thì xử lý hết”, vì siêu dữ liệu lúc chạy có thể chứa thành phần phục vụ trình biên dịch/JVM mà không thuộc mô hình miền.
 
-## <a id="field-type-metadata">Kiểu raw và generic của Field</a>
+## <a id="field-type-metadata">Kiểu thô (raw) và kiểu generic của Field</a>
 
-Một field có thể có hai lớp thông tin type:
+Một field có thể có hai lớp thông tin kiểu:
 
 ~~~java
 private List<String> supportedCurrencies;
@@ -239,9 +170,9 @@ System.out.println(genericType.getTypeName());
 // java.util.List<java.lang.String>
 ~~~
 
-getType() trả Class<?> của **runtime/raw type**. Nó phù hợp cho các câu hỏi như “field này có assignable từ List không?”.
+`getType()` trả `Class<?>` của **kiểu lúc chạy/kiểu thô**. Nó phù hợp cho các câu hỏi như “field này có gán được từ `List` không?”.
 
-getGenericType() trả java.lang.reflect.Type và có thể giữ metadata từ generic signature. Với List<String>, kết quả thường là ParameterizedType thay vì chỉ Class.
+`getGenericType()` trả `java.lang.reflect.Type` và có thể giữ siêu dữ liệu từ chữ ký generic. Với `List<String>`, kết quả thường là `ParameterizedType` thay vì chỉ `Class`.
 
 ~~~java
 if (genericType instanceof ParameterizedType parameterized) {
@@ -250,7 +181,7 @@ if (genericType instanceof ParameterizedType parameterized) {
 }
 ~~~
 
-Với type variable:
+Với biến kiểu:
 
 ~~~java
 class Box<T> {
@@ -258,21 +189,21 @@ class Box<T> {
 }
 ~~~
 
-getType() của value phản ánh erasure (thường Object nếu T không có bound cụ thể), còn getGenericType() có thể trả TypeVariable đại diện cho T.
+`getType()` của `value` phản ánh kết quả sau xóa kiểu (thường là `Object` nếu `T` không có giới hạn cụ thể), còn `getGenericType()` có thể trả `TypeVariable` đại diện cho `T`.
 
-Điều này không có nghĩa generic object thực sự giữ mọi type argument ở runtime. Java vẫn dùng type erasure cho execution; Reflection đang đọc **generic signature metadata còn được lưu trên declaration**. ParameterizedType, TypeVariable, WildcardType và GenericArrayType sẽ được học đầy đủ ở chương Generic Type Inspection.
+Điều này không có nghĩa đối tượng generic thực sự giữ mọi đối số kiểu lúc chạy. Java vẫn dùng xóa kiểu (type erasure) cho quá trình thực thi; Reflection đang đọc **siêu dữ liệu chữ ký generic còn được lưu trên khai báo**. `ParameterizedType`, `TypeVariable`, `WildcardType` và `GenericArrayType` sẽ được học đầy đủ ở chương **Siêu dữ liệu Generics còn lại sau xóa kiểu**.
 
-Field reflection vì thế nối hai thế giới:
+Field reflection vì thế nối hai lớp siêu dữ liệu:
 
 ~~~text
-Class Metadata
-→ type/member structure
+Mô hình kiểu lúc chạy
+→ cấu trúc kiểu/thành phần
 
 Field
-→ descriptor trạng thái + truy cập giá trị ở runtime
+→ đối tượng mô tả trạng thái + siêu dữ liệu kiểu/modifier/chữ ký
 
-Generic Type Inspection
-→ rich declaration signature khi raw Class<?> không đủ
+Siêu dữ liệu Generics sau xóa kiểu
+→ chữ ký khai báo phong phú hơn khi Class<?> dạng thô không đủ
 ~~~
 
-Sau khi biết cách tìm và thao tác trạng thái, bước tiếp theo là hành vi: **làm sao tìm đúng Method, hiểu signature của nó và invoke khi method chỉ được biết ở runtime?**
+Sau khi biết cách tìm và mô tả trạng thái, bước tiếp theo của milestone **Khám phá các thành phần của lớp** là hành vi: **làm sao tìm đúng `Method` và hiểu chữ ký của nó trước khi thực hiện lời gọi?**

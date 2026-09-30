@@ -1,4 +1,4 @@
-# Inspecting Generic Types with Reflection
+# Generic Signature Metadata after Erasure
 
 Once reflection can inspect classes and members, another question appears: Java uses **type erasure**, so what can runtime code still know about `List<String>`, `T extends Number`, or `? super Integer`?
 
@@ -34,11 +34,11 @@ It still follows the same reflection mental model: source declarations become cl
 
 The main forms are:
 
-- `Class<?>`: an ordinary or reifiable type such as `String`, raw `List`, or `int[]`;
+- `Class<?>`: a type represented directly by a runtime `Class`, such as `String`, raw `List`, `int`, or `String[]`;
 - `ParameterizedType`: a declaration with type arguments, such as `List<String>`;
 - `TypeVariable<?>`: a type variable such as `T` in `Repository<T>`;
 - `WildcardType`: a wildcard such as `? extends T` or `? super Integer`;
-- `GenericArrayType`: an array whose component type is not a reifiable class, such as `T[]`.
+- `GenericArrayType`: an array whose component type is a generic type shape that cannot be represented by `Class<?>` alone, such as `T[]`.
 
 For example:
 
@@ -192,4 +192,4 @@ An anonymous class or explicit subclass can sometimes preserve a concrete argume
 
 Generic reflection should also not be treated as a replacement for compile-time generic safety. It helps serializers, dependency-injection containers, schema generators, and other frameworks understand declarations; runtime validation and behavior still need explicit design.
 
-The next chapter uses metadata to perform an actual call. Dynamic invocation must handle targets, argument conversion, and failures at runtime—work that the compiler normally prepares for a direct Java call.
+The next ROADMAP milestone is **Dynamic Proxies and Call Interception**: an integration use case where `Method` metadata is routed through an `InvocationHandler` to provide runtime intermediary behavior.

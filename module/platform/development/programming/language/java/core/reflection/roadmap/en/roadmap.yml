@@ -43,78 +43,89 @@
 
 roadmap:
   - id: reflection-purpose
-    title: Reflection Purpose and Dynamic Inspection
-    purpose: Understand reflection as a deliberate escape from ordinary static access when runtime structure must be discovered dynamically.
-    relatedModules:
-      - routeId: JAVA_ANNOTATION
-        label: Annotations
-        note: Runtime-retained annotations are common metadata consumed through reflection.
+    title: What Reflection Is and Why It Exists
+    purpose: Understand reflection as a way to inspect structure and operate on types or members when the required information is known only at runtime instead of being referenced directly at compile time.
+    relatedKnowledge:
+      - Basic
     objectives:
-      - Explain why frameworks and tooling need runtime metadata.
-      - Recognize why ordinary application code should not default to reflection.
+      - Explain the problem reflection solves for frameworks, libraries, and tooling.
+      - Understand where direct calls, interfaces, factories, or manual registration stop being sufficient when the structure to handle cannot be known at compile time.
+      - Distinguish runtime flexibility needs from cases where direct Java code is safer and clearer.
   - id: class-metadata
-    title: Class Metadata
-    purpose: Understand Class<?> as the runtime description of a loaded type and the entry point to reflective structure.
+    title: Runtime Type Model with Class<?>
+    purpose: Understand Class<?> as the runtime representation of a Java type known to the JVM and the entry point for discovering that type's metadata through reflection.
+    relatedKnowledge:
+      - ClassMetadata
     relatedModules:
       - routeId: JAVA_CLASSLOADER
         label: ClassLoader
-        note: A Class object exists only after a loader defines the runtime type identity.
+        note: For ordinary classes and interfaces, ClassLoader participates in loading and defining runtime type identity; reflection consumes the corresponding Class metadata.
+      - routeId: JAVA_ANNOTATION
+        label: Annotations
+        note: Reflection can read annotations retained at runtime; declaration and retention semantics belong to the Annotation module.
     objectives:
-      - Inspect names, kind, modifiers, superclass, interfaces, and declared/public members.
+      - Obtain Class<?> values and use them to discover names, kinds, modifiers, inheritance relationships, and members.
       - Distinguish metadata about a type from instances of that type.
-  - id: reflective-fields
-    title: Reflective Field Inspection and Access
-    purpose: Understand how field descriptors expose names, modifiers, raw/generic types, and controlled read/write operations.
+      - Recognize metadata specific to arrays, enums, records, and sealed types instead of assuming every Class<?> exposes the same meaningful characteristics.
+      - Recognize RUNTIME-retained annotations as metadata that reflection can inspect on types and members.
+  - id: reflective-members
+    title: Discovering Class Members
+    purpose: Build a common mental model for Field, Method, and Constructor as runtime member descriptors that reflection can discover and inspect.
+    relatedKnowledge:
+      - ClassMetadata
+      - Fields
+      - Methods
+      - Constructors
     objectives:
-      - Distinguish inherited public fields from declared fields.
-      - Treat reflective mutation as an exceptional boundary with encapsulation costs.
-  - id: reflective-methods
-    title: Method Discovery and Invocation
-    purpose: Understand how methods are selected and invoked from metadata rather than direct Java call syntax.
+      - Distinguish directly declared members from public members that may be inherited.
+      - Understand the shared roles of Member, Executable, AccessibleObject, and AnnotatedElement instead of treating Field, Method, and Constructor as unrelated APIs.
+      - Read important member metadata such as modifiers, types, parameters, return types, and declared exceptions.
+  - id: reflective-operations
+    title: Acting Dynamically from Metadata
+    purpose: Understand how discovered fields, methods, and constructors drive reads, writes, method calls, and object creation when the choice is made at runtime.
+    relatedKnowledge:
+      - DynamicInvocation
     objectives:
-      - Inspect signatures, modifiers, parameters, return types, and declared exceptions.
-      - Understand InvocationTargetException and reflective invocation failure boundaries.
-  - id: reflective-construction
-    title: Constructor Discovery and Dynamic Instantiation
-    purpose: Understand how constructors can be discovered and invoked when construction choices are determined at runtime.
-    objectives:
-      - Inspect constructor metadata and instantiate controlled types dynamically.
-      - Recognize instantiation, access, and target-failure modes.
+      - Relate get/set, invoke, and newInstance to their direct Java counterparts, including argument conversion and varargs behavior.
+      - Understand dynamic array creation and access when the component type is known only at runtime through java.lang.reflect.Array.
+      - Separate reflection-protocol failures from exceptions thrown by target code, especially through InvocationTargetException.
   - id: reflective-access-control
-    title: Reflective Access and Encapsulation
-    purpose: Understand that reflection still interacts with language access rules and strong JPMS encapsulation.
+    title: Access, Encapsulation, and Module Boundaries
+    purpose: Understand that reflection does not erase Java access rules; deep access still interacts with encapsulation and JPMS module boundaries.
+    relatedKnowledge:
+      - AccessControl
     objectives:
-      - Use canAccess/trySetAccessible with explicit awareness of module boundaries.
-      - Recognize maintenance and security costs of bypassing normal access.
+      - Understand canAccess, trySetAccessible, and why attempts to open access can fail.
+      - Recognize maintenance and security risks when bypassing ordinary encapsulation boundaries.
   - id: generic-signature-inspection
-    title: Generic Signature Inspection
-    purpose: Understand what generic signature metadata remains inspectable after type erasure.
+    title: Generic Signature Metadata after Erasure
+    purpose: Understand which generic type information remains in declaration signatures and can still be inspected after type erasure.
+    relatedKnowledge:
+      - GenericTypeInspection
     relatedModules:
       - routeId: JAVA_GENERICS
         label: Generics
-        note: Generics owns erasure, bounds, wildcards, and compile-time type relationships.
+        note: Type erasure, bounds, wildcards, and compile-time type relationships are owned by the Generics module.
     objectives:
-      - Navigate Class, ParameterizedType, TypeVariable, WildcardType, and GenericArrayType.
-      - Separate erased execution from retained signature metadata.
-  - id: dynamic-invocation
-    title: Dynamic Invocation Semantics
-    purpose: Understand conversions, dispatch, and failures when invocation is driven dynamically instead of by compile-time syntax.
-    objectives:
-      - Reason about boxing, unboxing, widening, varargs, and invocation mismatch.
-      - Recognize the boundary between reflection and MethodHandle-style dynamic invocation.
+      - Recognize the roles of Class, ParameterizedType, TypeVariable, WildcardType, and GenericArrayType in the Type model.
+      - Separate erased execution types from retained generic signature metadata used by tools.
   - id: dynamic-proxies
-    title: Dynamic Proxies and Interception
-    purpose: Understand JDK dynamic proxies as runtime-generated interface implementations that route calls through an InvocationHandler.
+    title: Dynamic Proxies and Call Interception
+    purpose: Understand how JDK Dynamic Proxy can create an interface implementation at runtime and route calls through an InvocationHandler to add intermediary behavior.
+    relatedKnowledge:
+      - DynamicProxy
     relatedModules:
       - routeId: JAVA_ABSTRACT_INTERFACE
         label: Abstract Class & Interface
-        note: JDK dynamic proxies require interface contracts as their runtime proxy surface.
+        note: JDK Dynamic Proxy relies on interfaces as the contracts for runtime-generated proxy objects.
     objectives:
-      - Trace proxy creation, handler invocation, delegation, and Object-method boundaries.
-      - Recognize the interface-based limitations of JDK proxies.
+      - Trace proxy creation, InvocationHandler execution, delegation, and handling of Object methods.
+      - Understand the interface-based limitation of JDK Dynamic Proxy.
   - id: reflection-risks-and-synthesis
-    title: Reflection Costs, Risks, and Synthesis
-    purpose: Connect dynamic flexibility with lost compile-time safety, hidden coupling, access risk, performance, refactoring, and native-image constraints.
+    title: When Should Reflection Be Used?
+    purpose: Synthesize reflection's benefits and trade-offs so runtime flexibility can be weighed against reduced compile-time checking, hidden coupling, and maintenance complexity.
+    relatedKnowledge:
+      - LimitationsRisks
     objectives:
-      - Use reflection only when runtime dynamism justifies its costs.
-      - Design metadata discovery/caching boundaries that keep reflective code contained.
+      - Evaluate performance, refactorability, native-image, and access-boundary concerns, including when metadata caching is useful.
+      - Distinguish appropriate reflection use from direct calls and neighboring dynamic-invocation mechanisms such as MethodHandle.

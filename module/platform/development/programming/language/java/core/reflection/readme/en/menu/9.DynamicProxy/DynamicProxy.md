@@ -1,4 +1,4 @@
-# Dynamic Proxies
+# Dynamic Proxies and Call Interception
 
 Earlier chapters used reflection to discover members and operate directly on their descriptors. Dynamic proxies raise that idea to a higher abstraction: instead of application code calling `Method.invoke()` everywhere, the JDK can generate an object at runtime that **implements one or more interfaces** and routes interface calls through an `InvocationHandler`.
 
@@ -116,7 +116,7 @@ A dynamic proxy therefore keeps the interface contract while inserting an interc
 Object invoke(Object proxy, Method method, Object[] args) throws Throwable;
 ```
 
-`method` describes the operation the caller invoked, `args` contains its arguments, and `proxy` is the proxy instance itself. The handler can log, check permissions, measure time, route to a remote endpoint, or delegate to a real object.
+`method` describes the operation the caller invoked, `args` contains its arguments, and `proxy` is the proxy instance itself. For a zero-argument method, the JDK may pass `args == null`, so a generic handler must not assume that `args.length` is always available. The handler can log, check permissions, measure time, route to a remote endpoint, or delegate to a real object.
 
 A small handler for the payment example is:
 
@@ -224,16 +224,15 @@ Spring AOP provides a higher-level proxy abstraction. It can use JDK dynamic pro
 
 Dynamic Proxy also does not solve every interception problem. Constructor interception, static-call interception, bytecode weaving, and self-invocation behavior belong to other mechanisms or design choices. For this Reflection module, the key model is that JDK Proxy provides a runtime-generated **interface implementation** with one handler boundary for calls.
 
-The complete Reflection roadmap now forms one chain:
+Dynamic Proxy is the final integration milestone before synthesis. At this point reflection should no longer look like merely "calling methods by string"; it is a chain from metadata to runtime behavior:
 
 ```text
-Class metadata
+Class<?> and metadata
 → Field / Method / Constructor descriptors
+→ dynamic operations
 → access boundary
 → generic signature metadata
-→ dynamic invocation
-→ safety/performance/maintainability trade-offs
 → interface interception with Dynamic Proxy
 ```
 
-Reflection is most valuable when dynamic structure is a real requirement and the dynamic behavior is kept inside a clear boundary. When the compile-time type is already known, a direct Java contract usually remains simpler and easier to maintain.
+The final chapter places this whole chain into a decision model: when is that flexibility worth runtime failures, hidden coupling, overhead, and maintenance cost?

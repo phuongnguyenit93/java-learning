@@ -62,7 +62,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.Basic/Basic.md", anchor: "class-object-entrypoints"}
+    readmeRelated: {file: "2.ClassMetadata/ClassMetadata.md", anchor: "class-object-entrypoints"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: reflection-q03
@@ -75,7 +75,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.Basic/Basic.md", anchor: "class-object-entrypoints"}
+    readmeRelated: {file: "2.ClassMetadata/ClassMetadata.md", anchor: "class-object-entrypoints"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: reflection-q04
@@ -101,7 +101,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.Basic/Basic.md", anchor: "reflection-cost-boundary"}
+    readmeRelated: {file: "10.LimitationsRisks/LimitationsRisks.md", anchor: "reflection-cost-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: reflection-q06
@@ -143,6 +143,45 @@ questions:
     readmeRelated: {file: "2.ClassMetadata/ClassMetadata.md", anchor: "declared-vs-public-members"}
     apiRelated: {controller: "", methodSignature: ""}
 
+  - id: reflection-q35
+    question: "Why should a framework not assume every Class<?> has the same meaningful metadata shape?"
+    answers:
+      - {id: A, answer: "Arrays, enums, records, and sealed types expose specialized metadata such as component types, enum constants, record components, or permitted subclasses.", explanation: "Correct. A framework should classify the type and then use the appropriate API rather than force one model onto every Class<?>."}
+      - {id: B, answer: "Class<?> only works for ordinary classes, not arrays or primitives.", explanation: "Incorrect. Arrays and primitives also have Class objects."}
+      - {id: C, answer: "Reflection converts every record into an enum at runtime.", explanation: "Incorrect. Records and enums are different kinds of type."}
+      - {id: D, answer: "getSuperclass() always returns null for every Class<?>.", explanation: "Incorrect. Ordinary classes can report a direct superclass."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.ClassMetadata/ClassMetadata.md", anchor: "specialized-type-metadata"}
+    apiRelated: {controller: "ClassMetadataController", methodSignature: "inspectType()"}
+
+  - id: reflection-q36
+    question: "What condition allows Reflection to read an annotation through runtime APIs such as getAnnotation(...)?"
+    answers:
+      - {id: A, answer: "The annotation must always use @Inherited.", explanation: "Incorrect. @Inherited only affects part of class-inheritance lookup semantics."}
+      - {id: B, answer: "The annotation must be retained at runtime, typically with RUNTIME retention.", explanation: "Correct. SOURCE- or CLASS-retained annotations do not automatically appear through runtime Reflection APIs."}
+      - {id: C, answer: "The annotation must be declared in java.lang.", explanation: "Incorrect. Custom annotations can also be inspected."}
+      - {id: D, answer: "Every annotation written in source is always present at runtime.", explanation: "Incorrect. Retention controls how long annotation metadata survives."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.ClassMetadata/ClassMetadata.md", anchor: "runtime-annotation-metadata"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: reflection-q37
+    question: "Which model correctly describes Member, Executable, AccessibleObject, and AnnotatedElement?"
+    answers:
+      - {id: A, answer: "Member is the direct superclass of Field, Method, and Constructor.", explanation: "Incorrect. Member is a common interface, not their superclass."}
+      - {id: B, answer: "Executable is the shared base of Method and Constructor, while Field/Method/Constructor participate in the access model through AccessibleObject.", explanation: "Correct. Shared abstractions let framework code reason about members without treating every kind as unrelated."}
+      - {id: C, answer: "AnnotatedElement applies only to annotation classes and not reflected program elements.", explanation: "Incorrect. Many Reflection elements implement AnnotatedElement."}
+      - {id: D, answer: "AccessibleObject automatically grants private access to every member.", explanation: "Incorrect. It provides the access-control model; it does not guarantee suppression can be enabled."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.ClassMetadata/ClassMetadata.md", anchor: "member-abstraction-model"}
+    apiRelated: {controller: "", methodSignature: ""}
+
   - id: reflection-q09
     question: "PaymentService directly declares a private processedCount field. Which lookup is appropriate?"
     answers:
@@ -166,7 +205,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.Fields/Fields.md", anchor: "field-read-write"}
+    readmeRelated: {file: "6.DynamicInvocation/DynamicInvocation.md", anchor: "field-read-write"}
     apiRelated: {controller: "FieldReflectionController", methodSignature: "inspectAndMutate()"}
 
   - id: reflection-q11
@@ -218,7 +257,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Methods/Methods.md", anchor: "method-invoke"}
+    readmeRelated: {file: "6.DynamicInvocation/DynamicInvocation.md", anchor: "method-invoke"}
     apiRelated: {controller: "MethodReflectionController", methodSignature: "invoke()"}
 
   - id: reflection-q15
@@ -231,20 +270,20 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Methods/Methods.md", anchor: "invocation-exception"}
+    readmeRelated: {file: "6.DynamicInvocation/DynamicInvocation.md", anchor: "invocation-exception"}
     apiRelated: {controller: "MethodReflectionController", methodSignature: "invoke()"}
 
   - id: reflection-q16
-    question: "What does varargs mean during reflective invocation?"
+    question: "What does varargs mean when calling Method.invoke(...) or Constructor.newInstance(...) reflectively?"
     answers:
-      - {id: A, answer: "Method.invoke always packs trailing arguments exactly like the compiler.", explanation: "Incorrect. Do not assume source-call behavior is recreated."}
-      - {id: B, answer: "A varargs method has no array parameter at runtime.", explanation: "Incorrect. Varargs is represented by an array."}
-      - {id: C, answer: "Reflection cannot invoke varargs methods.", explanation: "Incorrect. They can be invoked with correctly shaped arguments."}
-      - {id: D, answer: "Varargs is still an array parameter, so the caller must understand packing rather than rely on compiler overload rules.", explanation: "Correct. This is the important boundary."}
+      - {id: A, answer: "Reflection always packs trailing arguments exactly like ordinary Java call syntax.", explanation: "Incorrect. Do not assume direct-call packing is reproduced."}
+      - {id: B, answer: "Varargs is no longer represented as an array at runtime.", explanation: "Incorrect. A varargs parameter is still represented by an array type."}
+      - {id: C, answer: "Reflection forbids varargs methods and constructors.", explanation: "Incorrect. They can be invoked when the argument shape is correct."}
+      - {id: D, answer: "Varargs is still an array parameter while invoke/newInstance also accept Object...; a target array sometimes must be passed explicitly as one argument.", explanation: "Correct. The two varargs layers can otherwise spread an array at the outer reflective call site."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Methods/Methods.md", anchor: "varargs-reflection"}
+    readmeRelated: {file: "6.DynamicInvocation/DynamicInvocation.md", anchor: "varargs-reflection"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: reflection-q17
@@ -270,7 +309,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.Constructors/Constructors.md", anchor: "constructor-newinstance"}
+    readmeRelated: {file: "6.DynamicInvocation/DynamicInvocation.md", anchor: "constructor-newinstance"}
     apiRelated: {controller: "ConstructorReflectionController", methodSignature: "construct()"}
 
   - id: reflection-q19
@@ -283,7 +322,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.Constructors/Constructors.md", anchor: "constructor-reflection-failure"}
+    readmeRelated: {file: "6.DynamicInvocation/DynamicInvocation.md", anchor: "constructor-reflection-failure"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: reflection-q20
@@ -296,7 +335,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.AccessControl/AccessControl.md", anchor: "language-vs-reflective-access"}
+    readmeRelated: {file: "7.AccessControl/AccessControl.md", anchor: "language-vs-reflective-access"}
     apiRelated: {controller: "AccessReflectionController", methodSignature: "accessChecks()"}
 
   - id: reflection-q21
@@ -309,7 +348,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.AccessControl/AccessControl.md", anchor: "try-set-accessible"}
+    readmeRelated: {file: "7.AccessControl/AccessControl.md", anchor: "try-set-accessible"}
     apiRelated: {controller: "AccessReflectionController", methodSignature: "accessChecks()"}
 
   - id: reflection-q22
@@ -322,7 +361,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.AccessControl/AccessControl.md", anchor: "strong-encapsulation-boundary"}
+    readmeRelated: {file: "7.AccessControl/AccessControl.md", anchor: "strong-encapsulation-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: reflection-q23
@@ -335,7 +374,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.GenericTypeInspection/GenericTypeInspection.md", anchor: "type-interface"}
+    readmeRelated: {file: "8.GenericTypeInspection/GenericTypeInspection.md", anchor: "type-interface"}
     apiRelated: {controller: "GenericReflectionController", methodSignature: "genericSignature()"}
 
   - id: reflection-q24
@@ -348,7 +387,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.GenericTypeInspection/GenericTypeInspection.md", anchor: "parameterized-type"}
+    readmeRelated: {file: "8.GenericTypeInspection/GenericTypeInspection.md", anchor: "parameterized-type"}
     apiRelated: {controller: "GenericReflectionController", methodSignature: "genericSignature()"}
 
   - id: reflection-q25
@@ -361,7 +400,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.GenericTypeInspection/GenericTypeInspection.md", anchor: "type-variable-bounds"}
+    readmeRelated: {file: "8.GenericTypeInspection/GenericTypeInspection.md", anchor: "type-variable-bounds"}
     apiRelated: {controller: "GenericReflectionController", methodSignature: "genericSignature()"}
 
   - id: reflection-q26
@@ -374,7 +413,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.GenericTypeInspection/GenericTypeInspection.md", anchor: "wildcard-reflection"}
+    readmeRelated: {file: "8.GenericTypeInspection/GenericTypeInspection.md", anchor: "wildcard-reflection"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: reflection-q27
@@ -387,7 +426,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.GenericTypeInspection/GenericTypeInspection.md", anchor: "erasure-vs-signature-metadata"}
+    readmeRelated: {file: "8.GenericTypeInspection/GenericTypeInspection.md", anchor: "erasure-vs-signature-metadata"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: reflection-q28
@@ -400,7 +439,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.DynamicInvocation/DynamicInvocation.md", anchor: "reflective-dispatch"}
+    readmeRelated: {file: "6.DynamicInvocation/DynamicInvocation.md", anchor: "reflective-dispatch"}
     apiRelated: {controller: "MethodReflectionController", methodSignature: "invoke()"}
 
   - id: reflection-q29
@@ -413,7 +452,20 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.DynamicInvocation/DynamicInvocation.md", anchor: "argument-conversion"}
+    readmeRelated: {file: "6.DynamicInvocation/DynamicInvocation.md", anchor: "argument-conversion"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: reflection-q38
+    question: "When an array component type is known only at runtime, which Reflection mechanism fits creation and access?"
+    answers:
+      - {id: A, answer: "Use Array.newInstance(componentType, length), then Array.get/Array.set or the appropriate primitive helpers.", explanation: "Correct. java.lang.reflect.Array exists for arrays whose component type is not statically known at the call site."}
+      - {id: B, answer: "Always create new Object[length] because an array's runtime component type does not matter.", explanation: "Incorrect. Object[] cannot substitute for arrays such as String[] or int[]."}
+      - {id: C, answer: "Use Class.forName to create every array element directly without Array.", explanation: "Incorrect. Class.forName resolves classes; it is not the dynamic-array creation/access API."}
+      - {id: D, answer: "Reflection cannot operate on primitive arrays.", explanation: "Incorrect. Array exposes helpers such as getInt/setInt for primitive arrays."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.DynamicInvocation/DynamicInvocation.md", anchor: "dynamic-array-reflection"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: reflection-q30
@@ -426,7 +478,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.DynamicInvocation/DynamicInvocation.md", anchor: "method-handle-boundary"}
+    readmeRelated: {file: "6.DynamicInvocation/DynamicInvocation.md", anchor: "method-handle-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: reflection-q31
@@ -439,7 +491,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.LimitationsRisks/LimitationsRisks.md", anchor: "reflection-performance"}
+    readmeRelated: {file: "10.LimitationsRisks/LimitationsRisks.md", anchor: "reflection-performance"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: reflection-q32
@@ -452,20 +504,20 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.LimitationsRisks/LimitationsRisks.md", anchor: "native-image-boundary"}
+    readmeRelated: {file: "10.LimitationsRisks/LimitationsRisks.md", anchor: "native-image-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: reflection-q33
     question: "What does InvocationHandler receive when a caller invokes a method on a JDK proxy?"
     answers:
-      - {id: A, answer: "The proxy instance, a Method descriptor, and the call arguments.", explanation: "Correct. The generated proxy routes calls through this contract."}
+      - {id: A, answer: "The proxy instance, a Method descriptor, and the argument array; that array may be null for a zero-argument method.", explanation: "Correct. The generated proxy routes calls through this InvocationHandler contract."}
       - {id: B, answer: "Only a String containing the method name.", explanation: "Incorrect. The handler receives a Method object."}
       - {id: C, answer: "The source code of the interface.", explanation: "Incorrect. Runtime does not pass source code."}
       - {id: D, answer: "A direct subclass of the target.", explanation: "Incorrect. JDK Proxy generates an interface implementation."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.DynamicProxy/DynamicProxy.md", anchor: "invocation-handler"}
+    readmeRelated: {file: "9.DynamicProxy/DynamicProxy.md", anchor: "invocation-handler"}
     apiRelated: {controller: "DynamicProxyController", methodSignature: "intercept()"}
 
   - id: reflection-q34
@@ -478,5 +530,18 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.DynamicProxy/DynamicProxy.md", anchor: "proxy-limitations"}
+    readmeRelated: {file: "9.DynamicProxy/DynamicProxy.md", anchor: "proxy-limitations"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: reflection-q39
+    question: "Which decision criterion is most appropriate before choosing Reflection in application or framework code?"
+    answers:
+      - {id: A, answer: "Use Reflection whenever the API permits it so fewer interfaces are needed.", explanation: "Incorrect. Being possible does not make it the right design."}
+      - {id: B, answer: "Only ask whether Reflection is faster than a direct call.", explanation: "Incorrect. The decision also involves safety, coupling, access, maintainability, and whether runtime discovery is required."}
+      - {id: C, answer: "Determine whether the structure is genuinely runtime-only, whether Reflection can be isolated behind a small boundary, validated early, and exposed through typed contracts.", explanation: "Correct. Reflection is strongest when runtime dynamism is a real requirement and is deliberately contained."}
+      - {id: D, answer: "If annotations exist, Reflection is mandatory.", explanation: "Incorrect. Annotations can also participate in mechanisms such as compile-time annotation processing."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.LimitationsRisks/LimitationsRisks.md", anchor: "reflection-decision-model"}
     apiRelated: {controller: "", methodSignature: ""}

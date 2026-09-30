@@ -1,4 +1,4 @@
-# Reflection and Access Control
+# Access, Encapsulation, and Module Boundaries
 
 The earlier chapters showed that reflection can discover `Field`, `Method`, and `Constructor` objects from runtime metadata instead of using direct source-level calls. That raises an important question: if `getDeclaredMethod()` can see a `private` method, does `private` still matter?
 
