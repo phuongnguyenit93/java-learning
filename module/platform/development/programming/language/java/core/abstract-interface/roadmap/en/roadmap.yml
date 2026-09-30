@@ -43,58 +43,77 @@
 
 roadmap:
   - id: abstraction-mechanism-purpose
-    title: Why Java Needs Non-Instantiable Abstractions
-    purpose: Understand the design problem solved by abstract classes and interfaces before comparing their syntax.
+    title: Why Java Needs Abstract Classes and Interfaces
+    purpose: Understand the design problem solved by abstract classes and interfaces before learning their detailed syntax and rules.
+    relatedKnowledge:
+      - AbstractionPurpose
     relatedModules:
+      - routeId: JAVA_CLASS_OBJECT
+        label: Class and Object
+        note: Provides the class, object, member, and constructor foundations needed before studying types that cannot be instantiated directly.
       - routeId: JAVA_OOP
         label: OOP
-        note: OOP provides the design context for abstraction, substitutability, and polymorphism.
+        note: Provides the abstraction, inheritance, polymorphism, and substitutability context for these mechanisms.
     objectives:
-      - Separate behavioral contract needs from concrete object construction.
-      - Identify when callers need an abstraction rather than a concrete implementation.
+      - Distinguish the need to construct concrete objects from the need to program against a common type or contract.
+      - Understand why Java provides both abstract classes and interfaces instead of a single abstraction mechanism.
   - id: abstract-classes
-    title: Abstract Classes
-    purpose: Understand abstract classes as partially implemented class hierarchies with shared state, construction, and behavior.
+    title: Abstract Classes — Shared State and Partial Implementation
+    purpose: Understand an abstract class as a partially implemented superclass that can hold shared state and behavior, use constructors to initialize the abstract/base-class portion of a subclass object, and require subclasses to complete missing behavior.
+    relatedKnowledge:
+      - AbstractClass
     objectives:
-      - Use abstract members and concrete shared behavior intentionally.
-      - Recognize the single-inheritance and constructor coupling implications.
+      - Distinguish abstract methods from methods that already provide implementation.
+      - Understand constructor behavior and the single-class-inheritance constraint.
   - id: interfaces-as-contracts
-    title: Interfaces as Contracts
-    purpose: Understand interfaces as behavioral type contracts that decouple callers from one concrete class hierarchy.
+    title: Interfaces as Behavioral Contracts
+    purpose: Understand interfaces as capability or role contracts that unrelated classes can implement without sharing one class hierarchy.
+    relatedKnowledge:
+      - Interface
     relatedModules:
       - routeId: JAVA_FUNCTIONAL_PROGRAMMING
         label: Functional Programming
         note: Functional interfaces are the target types that make Java lambdas possible.
     objectives:
       - Model capabilities and roles through interfaces.
-      - Understand interface implementation without assuming shared instance state.
+      - Understand that a class can implement several interfaces without inheriting shared instance state from them.
   - id: choosing-abstract-class-or-interface
-    title: Abstract Class vs Interface
-    purpose: Build a decision model for choosing shared implementation/state versus flexible behavioral contracts.
+    title: Choosing an Abstract Class or an Interface
+    purpose: Build criteria for choosing shared state/implementation through an abstract class versus a flexible behavioral contract through an interface.
+    relatedKnowledge:
+      - AbstractVsInterface
     objectives:
-      - Choose from ownership, state, evolution, and hierarchy constraints.
-      - Avoid using either mechanism merely because it is familiar.
+      - Choose based on shared state/implementation needs, inheritance relationships, and the need to implement multiple contracts.
+      - Avoid selecting a mechanism merely because it is familiar or syntactically convenient.
   - id: interface-hierarchies
     title: Interface Inheritance and Contract Composition
-    purpose: Understand how interfaces extend other interfaces to compose capabilities without creating object state inheritance.
+    purpose: Understand how an interface can extend one or more interfaces to compose behavioral contracts without inheriting object state.
+    relatedKnowledge:
+      - InterfaceInheritance
     objectives:
-      - Build contract hierarchies without over-fragmenting APIs.
-      - Reason about inherited abstract/default members.
+      - Build clear contract hierarchies without over-fragmenting APIs.
+      - Understand how interface methods are inherited, redeclared, or refined in child interfaces.
   - id: interface-evolution
     title: Default, Static, and Private Interface Methods
-    purpose: Understand how interfaces can evolve behavior while keeping the distinction between contract and implementation clear.
+    purpose: Understand the distinct role of each interface method kind; default methods provide inherited behavior and support compatible contract evolution, static methods belong to the interface itself rather than implementing instances, and private methods provide internal implementation reuse.
+    relatedKnowledge:
+      - DefaultStaticPrivate
     objectives:
-      - Use default methods for compatible contract evolution rather than as a replacement for class design.
-      - Understand static/private interface method roles and call semantics.
+      - Understand how default methods support compatible interface evolution without replacing class design.
+      - Distinguish the roles, visibility, and invocation rules of static and private interface methods.
   - id: multiple-inheritance-conflicts
     title: Multiple Interface Inheritance and Conflict Resolution
-    purpose: Understand what happens when several interface paths provide overlapping behavior and how Java resolves or requires explicit resolution.
+    purpose: Understand what happens when a class implements several interfaces with overlapping default behavior and when Java can determine precedence or requires the implementing class to resolve the conflict explicitly.
+    relatedKnowledge:
+      - MultipleInheritance
     objectives:
-      - Predict default-method conflict rules.
-      - Resolve diamond-like contract ambiguity without confusing it with multiple class inheritance.
+      - Predict precedence between methods inherited from the class hierarchy and interface default methods.
+      - Resolve diamond-shaped interface conflicts without confusing them with multiple class inheritance.
   - id: abstraction-mechanism-synthesis
-    title: Abstraction Mechanism Synthesis
-    purpose: Connect abstract classes, interfaces, contract inheritance, and evolution into one API-design decision model.
+    title: Designing with Abstract Classes and Interfaces
+    purpose: Connect mechanism choice with interface inheritance, interface evolution, and conflict resolution into one overall design model.
+    relatedKnowledge:
+      - AbstractionSynthesis
     objectives:
-      - Select mechanisms according to contract, state, reuse, and evolution needs.
-      - Explain how these mechanisms support polymorphism without defining OOP design by themselves.
+      - Relate mechanism choice to contract inheritance, default methods, and conflict resolution.
+      - Explain how abstract classes and interfaces support polymorphism without treating them as the whole of OOP design.

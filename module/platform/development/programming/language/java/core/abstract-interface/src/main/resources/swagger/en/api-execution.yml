@@ -42,9 +42,9 @@ DefaultMethodController:
     usage: true
   resolveConflict():
     execution: |-
-      <p><strong>Concept:</strong> unrelated interfaces that provide the same default signature create an ambiguity the implementing class must resolve.</p>
+      <p><strong>Concept:</strong> when unrelated interfaces provide the same default signature and no applicable class-side method already resolves it, the implementing class must resolve the ambiguity explicitly.</p>
       <ol>
-        <li><strong>Flow:</strong> <code>Left</code> and <code>Right</code> both define <code>value()</code>; <code>Both</code> implements both interfaces.</li>
+        <li><strong>Flow:</strong> <code>Left</code> and <code>Right</code> both define <code>value()</code>; <code>Both</code> implements both interfaces and has no class-side method that resolves the signature first.</li>
         <li><strong>Code evidence:</strong><pre><code>interface Left  { default String value() { return "left";  } }
       interface Right { default String value() { return "right"; } }
 
@@ -53,10 +53,10 @@ DefaultMethodController:
               return Left.super.value() + "+" + Right.super.value();
           }
       }</code></pre></li>
-        <li><strong>Observation:</strong> the response returns <code>resolved=left+right</code> and states that the class must explicitly resolve the unrelated default conflict.</li>
+        <li><strong>Observation:</strong> the response returns <code>resolved=left+right</code>; <code>Both</code> resolves the unrelated defaults with an explicit override.</li>
         <li><strong>Meaning:</strong> Java does not randomly choose a default; the class override determines final behavior and may explicitly invoke each parent default with <code>InterfaceName.super.method()</code>.</li>
       </ol>
-      <p><strong>Conclusion:</strong> multiple interface inheritance is allowed, but competing default behavior must be resolved explicitly.</p>
+      <p><strong>Conclusion:</strong> multiple interface inheritance is allowed; competing defaults need explicit resolution when no class-side or more-specific interface rule has already selected one behavior.</p>
     usage: true
 InterfaceController:
   multipleContracts():

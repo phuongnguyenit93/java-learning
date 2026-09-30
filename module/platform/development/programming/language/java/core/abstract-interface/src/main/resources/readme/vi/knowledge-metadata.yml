@@ -1,4 +1,21 @@
-1.AbstractClass/AbstractClass.md:
+1.AbstractionPurpose/AbstractionPurpose.md:
+  abstraction-mechanism-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  abstraction-mechanism-roles:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  abstraction-running-example:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  abstraction-learning-roadmap:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+2.AbstractClass/AbstractClass.md:
   abstract-class-model:
     difficulty: BASIC
     aiGenerated: true
@@ -15,7 +32,7 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-2.Interface/Interface.md:
+3.Interface/Interface.md:
   interface-contract:
     difficulty: BASIC
     aiGenerated: true
@@ -32,7 +49,7 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-3.AbstractVsInterface/AbstractVsInterface.md:
+4.AbstractVsInterface/AbstractVsInterface.md:
   abstract-vs-interface-state:
     difficulty: BASIC
     aiGenerated: true
@@ -45,7 +62,7 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-4.InterfaceInheritance/InterfaceInheritance.md:
+5.InterfaceInheritance/InterfaceInheritance.md:
   interface-extends-interface:
     difficulty: BASIC
     aiGenerated: true
@@ -58,7 +75,7 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-5.DefaultStaticPrivate/DefaultStaticPrivate.md:
+6.DefaultStaticPrivate/DefaultStaticPrivate.md:
   default-method:
     difficulty: BASIC
     aiGenerated: true
@@ -75,7 +92,7 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-6.MultipleInheritance/MultipleInheritance.md:
+7.MultipleInheritance/MultipleInheritance.md:
   default-method-conflict:
     difficulty: BASIC
     aiGenerated: true
@@ -89,6 +106,23 @@
     aiGenerated: true
     reviewed: false
   diamond-interface:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+8.AbstractionSynthesis/AbstractionSynthesis.md:
+  abstraction-design-synthesis:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  abstraction-design-example:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  abstraction-design-checklist:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  abstraction-final-mental-model:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false

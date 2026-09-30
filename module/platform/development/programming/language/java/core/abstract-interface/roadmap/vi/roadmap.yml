@@ -43,58 +43,77 @@
 
 roadmap:
   - id: abstraction-mechanism-purpose
-    title: Vì sao Java cần abstraction không thể instantiate
-    purpose: Hiểu design problem mà abstract class và interface giải quyết trước khi so sánh syntax.
+    title: Vì sao Java cần lớp trừu tượng và interface?
+    purpose: Hiểu bài toán thiết kế mà lớp trừu tượng (abstract class) và interface giải quyết trước khi đi vào cú pháp và quy tắc chi tiết.
+    relatedKnowledge:
+      - AbstractionPurpose
     relatedModules:
+      - routeId: JAVA_CLASS_OBJECT
+        label: Lớp và đối tượng
+        note: Cung cấp nền tảng về lớp (class), đối tượng (object), thành viên và hàm khởi tạo (constructor) trước khi học các kiểu không thể khởi tạo trực tiếp.
       - routeId: JAVA_OOP
-        label: OOP
-        note: OOP cung cấp design context cho abstraction, substitutability và polymorphism.
+        label: Lập trình hướng đối tượng (OOP)
+        note: Cung cấp nền tảng về trừu tượng hóa, kế thừa, đa hình và khả năng thay thế giữa các kiểu.
     objectives:
-      - Tách nhu cầu behavioral contract khỏi concrete object construction.
-      - Nhận biết khi caller cần abstraction thay vì concrete implementation.
+      - Phân biệt nhu cầu tạo đối tượng cụ thể với nhu cầu lập trình dựa trên một kiểu hoặc hợp đồng chung.
+      - Hiểu vì sao Java cung cấp cả lớp trừu tượng và interface thay vì chỉ một cơ chế duy nhất.
   - id: abstract-classes
-    title: Abstract Class
-    purpose: Hiểu abstract class như class hierarchy được implement một phần, có thể chia sẻ state, construction và behavior.
+    title: Lớp trừu tượng (abstract class)
+    purpose: Hiểu lớp trừu tượng như một lớp cha được triển khai một phần, có thể giữ trạng thái và hành vi dùng chung, có hàm khởi tạo để thiết lập phần trạng thái thuộc lớp trừu tượng trong đối tượng lớp con, đồng thời yêu cầu lớp con hoàn thiện những hành vi còn thiếu.
+    relatedKnowledge:
+      - AbstractClass
     objectives:
-      - Dùng abstract member và concrete shared behavior có chủ đích.
-      - Nhận biết hệ quả của single inheritance và constructor coupling.
+      - Phân biệt phương thức abstract với phương thức đã có phần triển khai.
+      - Hiểu vai trò của hàm khởi tạo và giới hạn đơn kế thừa của lớp.
   - id: interfaces-as-contracts
-    title: Interface như Contract
-    purpose: Hiểu interface như behavioral type contract giúp caller không bị khóa vào một concrete class hierarchy.
+    title: Interface như hợp đồng hành vi
+    purpose: Hiểu interface như một hợp đồng về khả năng hoặc vai trò, cho phép nhiều lớp khác nhau cùng tuân theo mà không phải thuộc chung một cây kế thừa lớp.
+    relatedKnowledge:
+      - Interface
     relatedModules:
       - routeId: JAVA_FUNCTIONAL_PROGRAMMING
-        label: Functional Programming
-        note: Functional interface là target type giúp Java lambda hoạt động.
+        label: Lập trình hàm
+        note: Interface hàm (functional interface) là kiểu đích giúp lambda trong Java hoạt động.
     objectives:
-      - Mô hình hóa capability và role bằng interface.
-      - Hiểu interface implementation mà không giả định shared instance state.
+      - Mô hình hóa khả năng và vai trò bằng interface.
+      - Hiểu một lớp có thể triển khai nhiều interface mà không nhận trạng thái đối tượng dùng chung từ các interface đó.
   - id: choosing-abstract-class-or-interface
-    title: Abstract Class và Interface
-    purpose: Xây dựng decision model để chọn giữa shared implementation/state và behavioral contract linh hoạt.
+    title: Chọn lớp trừu tượng hay interface?
+    purpose: Xây dựng tiêu chí lựa chọn giữa việc chia sẻ trạng thái/phần triển khai bằng lớp trừu tượng và mô tả hợp đồng hành vi linh hoạt bằng interface.
+    relatedKnowledge:
+      - AbstractVsInterface
     objectives:
-      - Chọn dựa trên ownership, state, evolution và hierarchy constraint.
-      - Tránh dùng một mechanism chỉ vì quen thuộc.
+      - Lựa chọn dựa trên nhu cầu chia sẻ trạng thái/phần triển khai, quan hệ kế thừa và nhu cầu triển khai nhiều hợp đồng.
+      - Tránh chọn cơ chế chỉ vì quen thuộc hoặc vì cú pháp ngắn hơn.
   - id: interface-hierarchies
-    title: Interface Inheritance và Contract Composition
-    purpose: Hiểu cách interface extends interface khác để compose capability mà không tạo object state inheritance.
+    title: Kế thừa và kết hợp interface
+    purpose: Hiểu cách một interface kế thừa một hoặc nhiều interface khác để kết hợp các hợp đồng hành vi mà không tạo ra kế thừa trạng thái đối tượng.
+    relatedKnowledge:
+      - InterfaceInheritance
     objectives:
-      - Xây dựng contract hierarchy mà không chia nhỏ API quá mức.
-      - Reason về inherited abstract/default member.
+      - Xây dựng cây hợp đồng rõ ràng mà không chia nhỏ API quá mức.
+      - Hiểu cách các phương thức của interface được kế thừa, khai báo lại hoặc làm rõ trong interface con.
   - id: interface-evolution
-    title: Default, Static và Private Interface Method
-    purpose: Hiểu cách interface có thể evolve behavior nhưng vẫn giữ ranh giới rõ giữa contract và implementation.
+    title: Phương thức default, static và private trong interface
+    purpose: Hiểu vai trò riêng của từng loại phương thức trong interface; default cung cấp hành vi mặc định và hỗ trợ mở rộng hợp đồng tương thích, static thuộc chính interface thay vì đối tượng triển khai, còn private đóng vai trò trợ giúp nội bộ để tái sử dụng phần triển khai.
+    relatedKnowledge:
+      - DefaultStaticPrivate
     objectives:
-      - Dùng default method cho compatible contract evolution thay vì thay thế class design.
-      - Hiểu vai trò và call semantics của static/private interface method.
+      - Hiểu phương thức default hỗ trợ mở rộng interface tương thích mà không thay thế vai trò của thiết kế lớp.
+      - Phân biệt vai trò, phạm vi sử dụng và quy tắc gọi của phương thức static và private trong interface.
   - id: multiple-inheritance-conflicts
-    title: Multiple Interface Inheritance và Conflict Resolution
-    purpose: Hiểu điều gì xảy ra khi nhiều interface path cung cấp behavior chồng lấn và cách Java resolve hoặc yêu cầu resolve rõ ràng.
+    title: Đa kế thừa qua interface và giải quyết xung đột
+    purpose: Hiểu điều gì xảy ra khi một lớp đồng thời triển khai nhiều interface cung cấp hành vi mặc định chồng lấn và khi nào Java tự xác định được hành vi ưu tiên hoặc yêu cầu lớp triển khai giải quyết rõ ràng.
+    relatedKnowledge:
+      - MultipleInheritance
     objectives:
-      - Dự đoán default-method conflict rule.
-      - Resolve diamond-like contract ambiguity mà không nhầm với multiple class inheritance.
+      - Dự đoán quy tắc ưu tiên giữa phương thức đến từ hệ phân cấp class và phương thức default của interface.
+      - Xử lý xung đột dạng kim cương mà không nhầm với đa kế thừa lớp.
   - id: abstraction-mechanism-synthesis
-    title: Tổng hợp cơ chế Abstraction
-    purpose: Kết nối abstract class, interface, contract inheritance và evolution thành một API-design decision model thống nhất.
+    title: Tổng hợp thiết kế bằng lớp trừu tượng và interface
+    purpose: Kết nối cách chọn cơ chế với kế thừa interface, khả năng mở rộng interface và xử lý xung đột để hình thành một mô hình thiết kế tổng thể.
+    relatedKnowledge:
+      - AbstractionSynthesis
     objectives:
-      - Chọn mechanism dựa trên contract, state, reuse và evolution need.
-      - Giải thích cách các mechanism này hỗ trợ polymorphism mà không tự định nghĩa toàn bộ OOP design.
+      - Liên hệ quyết định lựa chọn cơ chế với kế thừa hợp đồng, phương thức default và xử lý xung đột.
+      - Giải thích cách lớp trừu tượng và interface hỗ trợ đa hình mà không đồng nhất chúng với toàn bộ thiết kế OOP.

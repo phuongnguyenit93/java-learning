@@ -1,24 +1,24 @@
 AbstractClassController:
   description: |-
-    <h2>Abstract Class</h2>
-    <p>Quan sát abstract class vừa giữ state/implementation chung vừa để lại abstract hook cho subtype hoàn thiện.</p>
+    <h2>Lớp trừu tượng (abstract class)</h2>
+    <p>Quan sát lớp trừu tượng giữ trạng thái và phần triển khai dùng chung, đồng thời để lại điểm mở abstract cho lớp con hoàn thiện.</p>
   readmeRelated:
-    file: 1.AbstractClass/AbstractClass.md
+    file: 2.AbstractClass/AbstractClass.md
 DefaultMethodController:
   description: |-
-    <h2>Default Method</h2>
-    <p>Quan sát default method được kế thừa và cách class phải tự giải quyết khi hai default độc lập xung đột.</p>
+    <h2>Phương thức default</h2>
+    <p>Quan sát phương thức default được kế thừa và cách lớp triển khai phải giải quyết rõ ràng khi hai default độc lập cạnh tranh.</p>
   readmeRelated:
-    file: 5.DefaultStaticPrivate/DefaultStaticPrivate.md
+    file: 6.DefaultStaticPrivate/DefaultStaticPrivate.md
 InterfaceController:
   description: |-
     <h2>Interface</h2>
-    <p>Quan sát một object đồng thời thỏa nhiều interface contract mà không cần multiple class inheritance.</p>
+    <p>Quan sát một đối tượng đồng thời thỏa nhiều hợp đồng interface mà không cần đa kế thừa lớp.</p>
   readmeRelated:
-    file: 2.Interface/Interface.md
+    file: 3.Interface/Interface.md
 InterfaceEvolutionController:
   description: |-
-    <h2>Interface Evolution</h2>
-    <p>Quan sát implementation chỉ cung cấp abstract contract cũ nhưng vẫn dùng được hành vi mới được thêm bằng default method.</p>
+    <h2>Mở rộng interface theo thời gian</h2>
+    <p>Quan sát lớp triển khai chỉ cung cấp hợp đồng abstract cũ nhưng vẫn dùng được hành vi mới được bổ sung bằng phương thức default.</p>
   readmeRelated:
-    file: 5.DefaultStaticPrivate/DefaultStaticPrivate.md
+    file: 6.DefaultStaticPrivate/DefaultStaticPrivate.md

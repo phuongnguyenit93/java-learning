@@ -49,7 +49,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.AbstractClass/AbstractClass.md", anchor: "abstract-class-model"}
+    readmeRelated: {file: "2.AbstractClass/AbstractClass.md", anchor: "abstract-class-model"}
     apiRelated: {controller: "AbstractClassController", methodSignature: "templateBehavior()"}
 
   - id: abstract-method-contract
@@ -62,7 +62,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.AbstractClass/AbstractClass.md", anchor: "abstract-method"}
+    readmeRelated: {file: "2.AbstractClass/AbstractClass.md", anchor: "abstract-method"}
     apiRelated: {controller: "AbstractClassController", methodSignature: "templateBehavior()"}
 
   - id: abstract-constructor-chain
@@ -75,7 +75,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.AbstractClass/AbstractClass.md", anchor: "abstract-constructor"}
+    readmeRelated: {file: "2.AbstractClass/AbstractClass.md", anchor: "abstract-constructor"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: abstract-class-limit
@@ -88,7 +88,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.AbstractClass/AbstractClass.md", anchor: "abstract-class-limits"}
+    readmeRelated: {file: "2.AbstractClass/AbstractClass.md", anchor: "abstract-class-limits"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: interface-contract-decoupling
@@ -101,20 +101,20 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.Interface/Interface.md", anchor: "interface-contract"}
+    readmeRelated: {file: "3.Interface/Interface.md", anchor: "interface-contract"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: interface-field-semantics
     question: "Which statement about a field declared in an interface is most accurate?"
     answers:
       - {id: A, answer: "It is per-instance state that an implementation constructor may assign later.", explanation: "Incorrect. Interface fields are static final and must be initialized at declaration."}
-      - {id: B, answer: "It is implicitly public static final; final fixes the reference but does not make a referenced mutable object immutable.", explanation: "Correct. The object behind a final reference may still mutate."}
+      - {id: B, answer: "It is implicitly public static final; final prevents the field variable from being assigned a different value after initialization, while a referenced mutable object may still change state.", explanation: "Correct. final fixes the field variable's value, not the mutability of an object referenced by that value."}
       - {id: C, answer: "It is implicitly protected final.", explanation: "Incorrect. Interface fields are implicitly public static final."}
       - {id: D, answer: "Every implementing object gets its own copy.", explanation: "Incorrect. The field belongs to the interface type, not each object."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.Interface/Interface.md", anchor: "interface-fields"}
+    readmeRelated: {file: "3.Interface/Interface.md", anchor: "interface-fields"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: interface-abstract-visibility
@@ -127,7 +127,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.Interface/Interface.md", anchor: "interface-method-kinds"}
+    readmeRelated: {file: "3.Interface/Interface.md", anchor: "interface-method-kinds"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: multiple-contracts-same-object
@@ -140,7 +140,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.Interface/Interface.md", anchor: "interface-implementation"}
+    readmeRelated: {file: "3.Interface/Interface.md", anchor: "interface-implementation"}
     apiRelated: {controller: "InterfaceController", methodSignature: "multipleContracts()"}
 
   - id: abstract-vs-interface-state
@@ -153,7 +153,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.AbstractVsInterface/AbstractVsInterface.md", anchor: "abstract-vs-interface-state"}
+    readmeRelated: {file: "4.AbstractVsInterface/AbstractVsInterface.md", anchor: "abstract-vs-interface-state"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: one-class-many-interfaces
@@ -166,7 +166,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.AbstractVsInterface/AbstractVsInterface.md", anchor: "abstract-vs-interface-inheritance"}
+    readmeRelated: {file: "4.AbstractVsInterface/AbstractVsInterface.md", anchor: "abstract-vs-interface-inheritance"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: selection-guidance-refund
@@ -179,7 +179,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.AbstractVsInterface/AbstractVsInterface.md", anchor: "selection-guidance"}
+    readmeRelated: {file: "4.AbstractVsInterface/AbstractVsInterface.md", anchor: "selection-guidance"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: interface-extends-contract
@@ -192,7 +192,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.InterfaceInheritance/InterfaceInheritance.md", anchor: "interface-extends-interface"}
+    readmeRelated: {file: "5.InterfaceInheritance/InterfaceInheritance.md", anchor: "interface-extends-interface"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: multiple-interface-hierarchy-compatibility
@@ -205,7 +205,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.InterfaceInheritance/InterfaceInheritance.md", anchor: "multiple-interface-hierarchy"}
+    readmeRelated: {file: "5.InterfaceInheritance/InterfaceInheritance.md", anchor: "multiple-interface-hierarchy"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: interface-redeclaration-refine
@@ -213,12 +213,25 @@ questions:
     answers:
       - {id: A, answer: "Change a Number return type to unrelated String even when it is not covariant.", explanation: "Incorrect. Redeclaration must remain compatible with the inherited contract."}
       - {id: B, answer: "Turn the instance method into a constructor.", explanation: "Incorrect. Constructors are not inherited interface methods."}
-      - {id: C, answer: "Narrow the return type covariantly or turn an inherited default back into an abstract requirement.", explanation: "Correct. Both are valid contract refinements."}
+      - {id: C, answer: "Narrow a Number return type to Integer covariantly.", explanation: "Correct. A child interface may refine a compatible return type covariantly."}
       - {id: D, answer: "Attach per-instance fields to the method.", explanation: "Incorrect. Method redeclaration does not create object state."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.InterfaceInheritance/InterfaceInheritance.md", anchor: "interface-redeclaration"}
+    readmeRelated: {file: "5.InterfaceInheritance/InterfaceInheritance.md", anchor: "interface-redeclaration"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: default-reabstract-requirement
+    question: "What can a child interface do with an inherited default method when it wants downstream implementations to provide the behavior themselves?"
+    answers:
+      - {id: A, answer: "Redeclare the same method as abstract, with no body.", explanation: "Correct. A child interface may turn an inherited default back into an abstract requirement."}
+      - {id: B, answer: "Turn the method into a constructor.", explanation: "Incorrect. Interfaces do not have instance constructors."}
+      - {id: C, answer: "Make the method private while still requiring implementations to override it.", explanation: "Incorrect. A private method is not an implementation-facing contract."}
+      - {id: D, answer: "Nothing; an inherited default can never be made abstract again.", explanation: "Incorrect. Java allows a child interface to redeclare an inherited default as abstract."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.DefaultStaticPrivate/DefaultStaticPrivate.md", anchor: "default-method-evolution"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: default-method-inheritance
@@ -231,20 +244,20 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.DefaultStaticPrivate/DefaultStaticPrivate.md", anchor: "default-method"}
+    readmeRelated: {file: "6.DefaultStaticPrivate/DefaultStaticPrivate.md", anchor: "default-method"}
     apiRelated: {controller: "DefaultMethodController", methodSignature: "dispatch()"}
 
   - id: static-interface-method-call
     question: "Which statement about a static interface method is correct?"
     answers:
       - {id: A, answer: "It is inherited as an instance method by implementing classes.", explanation: "Incorrect. A static interface method does not become an instance method of the implementation."}
-      - {id: B, answer: "It should only be called through an implementation object.", explanation: "Incorrect. It naturally belongs to the interface type."}
-      - {id: C, answer: "It requires instance state to execute.", explanation: "Incorrect. A static method has no instance receiver."}
-      - {id: D, answer: "It belongs to the interface type and is typically called like PaymentMethod.validate(...).", explanation: "Correct. This is type-level behavior associated with the contract."}
+      - {id: B, answer: "It should only be called through an implementation object.", explanation: "Incorrect. It belongs to the interface that declares it."}
+      - {id: C, answer: "It is inherited by subinterfaces and can be called through a child-interface name.", explanation: "Incorrect. Static interface methods are not inherited by subinterfaces."}
+      - {id: D, answer: "It belongs to the declaring interface and is typically called like PaymentMethod.validate(...).", explanation: "Correct. This is type-level behavior invoked through the interface that declares it."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.DefaultStaticPrivate/DefaultStaticPrivate.md", anchor: "static-interface-method"}
+    readmeRelated: {file: "6.DefaultStaticPrivate/DefaultStaticPrivate.md", anchor: "static-interface-method"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: private-interface-helper
@@ -257,7 +270,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.DefaultStaticPrivate/DefaultStaticPrivate.md", anchor: "private-interface-method"}
+    readmeRelated: {file: "6.DefaultStaticPrivate/DefaultStaticPrivate.md", anchor: "private-interface-method"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: default-method-evolution
@@ -270,20 +283,20 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.DefaultStaticPrivate/DefaultStaticPrivate.md", anchor: "default-method-evolution"}
+    readmeRelated: {file: "6.DefaultStaticPrivate/DefaultStaticPrivate.md", anchor: "default-method-evolution"}
     apiRelated: {controller: "InterfaceEvolutionController", methodSignature: "defaultCompatibility()"}
 
   - id: unrelated-default-conflict
-    question: "A class implements two unrelated interfaces that both declare default String value(). What is required?"
+    question: "A class implements two unrelated interfaces that both declare default String value(), and no compatible concrete class-side method already resolves the signature. What is required?"
     answers:
       - {id: A, answer: "Java chooses whichever interface appears first in implements.", explanation: "Incorrect. implements order does not resolve the conflict."}
-      - {id: B, answer: "The class must override value() to resolve the ambiguity.", explanation: "Correct. Java does not choose between unrelated competing defaults."}
+      - {id: B, answer: "The class must override value() to resolve the ambiguity.", explanation: "Correct. When no compatible concrete class-side method has already resolved the signature, unrelated competing defaults require explicit resolution."}
       - {id: C, answer: "Both defaults run automatically in sequence.", explanation: "Incorrect. There is no automatic sequencing."}
       - {id: D, answer: "One interface is automatically removed from the type hierarchy.", explanation: "Incorrect. The class still implements both contracts."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.MultipleInheritance/MultipleInheritance.md", anchor: "default-method-conflict"}
+    readmeRelated: {file: "7.MultipleInheritance/MultipleInheritance.md", anchor: "default-method-conflict"}
     apiRelated: {controller: "DefaultMethodController", methodSignature: "resolveConflict()"}
 
   - id: class-wins-default
@@ -296,7 +309,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.MultipleInheritance/MultipleInheritance.md", anchor: "class-wins-rule"}
+    readmeRelated: {file: "7.MultipleInheritance/MultipleInheritance.md", anchor: "class-wins-rule"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: explicit-interface-super
@@ -309,7 +322,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.MultipleInheritance/MultipleInheritance.md", anchor: "explicit-super-interface"}
+    readmeRelated: {file: "7.MultipleInheritance/MultipleInheritance.md", anchor: "explicit-super-interface"}
     apiRelated: {controller: "DefaultMethodController", methodSignature: "resolveConflict()"}
 
   - id: diamond-most-specific
@@ -322,5 +335,44 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.MultipleInheritance/MultipleInheritance.md", anchor: "diamond-interface"}
+    readmeRelated: {file: "7.MultipleInheritance/MultipleInheritance.md", anchor: "diamond-interface"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: abstraction-purpose-two-mechanisms
+    question: "Why does Java benefit from having both abstract classes and interfaces instead of only one abstraction mechanism?"
+    answers:
+      - {id: A, answer: "Abstract classes fit related class families that share state/implementation, while interfaces express flexible roles or contracts that can cross class hierarchies.", explanation: "Correct. The mechanisms overlap but serve different design needs."}
+      - {id: B, answer: "Because interfaces cannot declare any methods with bodies.", explanation: "Incorrect. Modern interfaces may contain default, static, and private methods with distinct roles."}
+      - {id: C, answer: "Because abstract classes let one class extend multiple parent classes.", explanation: "Incorrect. Java still allows only one direct superclass."}
+      - {id: D, answer: "Because interfaces store per-object state while abstract classes are only for constants.", explanation: "Incorrect. Abstract classes may hold instance state; interfaces do not provide independent per-object state."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.AbstractionPurpose/AbstractionPurpose.md", anchor: "abstraction-mechanism-purpose"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: subinterface-default-conflict
+    question: "Left and Right are unrelated interfaces that both define default String name(). What happens if Combined extends Left, Right without overriding name()?"
+    answers:
+      - {id: A, answer: "Combined is valid and Java always chooses Left's default.", explanation: "Incorrect. extends order does not choose a default."}
+      - {id: B, answer: "Combined is valid and both defaults run automatically in sequence.", explanation: "Incorrect. Java does not automatically compose the two bodies."}
+      - {id: C, answer: "Combined is a compile-time error until the child interface overrides and resolves the conflict.", explanation: "Correct. A default-method conflict can arise inside the interface hierarchy before any class implements it."}
+      - {id: D, answer: "Right is automatically removed from the type hierarchy.", explanation: "Incorrect. The child may inherit both contracts once the conflict is resolved legally."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.MultipleInheritance/MultipleInheritance.md", anchor: "default-method-conflict"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: abstraction-synthesis-combined-design
+    question: "Which design best fits a checkout flow that needs a stable payment contract, shared state/base logic for some implementations, and an optional refund capability?"
+    answers:
+      - {id: A, answer: "Use PaymentMethod as the contract interface, BasePayment as an optional abstract base for the branch sharing implementation, and Refundable as an independent capability interface.", explanation: "Correct. Each mechanism owns a distinct responsibility while composing into one design."}
+      - {id: B, answer: "Force every type to extend one RefundablePaymentBase even when they share no state.", explanation: "Incorrect. That creates unnecessary superclass coupling."}
+      - {id: C, answer: "Use one giant interface that owns instance state, constructors, and every behavior.", explanation: "Incorrect. Interfaces do not provide class-like instance state or constructors."}
+      - {id: D, answer: "Remove the common contract and let checkout inspect each concrete class with instanceof.", explanation: "Incorrect. That couples the consumer directly to concrete implementations."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.AbstractionSynthesis/AbstractionSynthesis.md", anchor: "abstraction-design-example"}
     apiRelated: {controller: "", methodSignature: ""}

@@ -11,7 +11,7 @@ AbstractClassController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 1.AbstractClass/AbstractClass.md
+      file: 2.AbstractClass/AbstractClass.md
       anchor: abstract-class-model
     methodName: templateBehavior
     params: [
@@ -39,7 +39,7 @@ DefaultMethodController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 5.DefaultStaticPrivate/DefaultStaticPrivate.md
+      file: 6.DefaultStaticPrivate/DefaultStaticPrivate.md
       anchor: default-method
     methodName: dispatch
     params: [
@@ -57,7 +57,8 @@ DefaultMethodController:
     usage: true
   resolveConflict():
     summary: Resolving two unrelated default methods
-    description: Left and Right both provide value(). Both must override the method
+    description: Left and Right both provide value(). In this experiment no compatible
+      concrete class-side method already resolves the signature, so Both must override the method
       and explicitly invoke Left.super.value() and Right.super.value(). The left+right
       result shows that Java does not arbitrarily choose between unrelated defaults.
     enableVideoYoutube: false
@@ -66,7 +67,7 @@ DefaultMethodController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 6.MultipleInheritance/MultipleInheritance.md
+      file: 7.MultipleInheritance/MultipleInheritance.md
       anchor: default-method-conflict
     methodName: resolveConflict
     params: [
@@ -94,7 +95,7 @@ InterfaceController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 2.Interface/Interface.md
+      file: 3.Interface/Interface.md
       anchor: interface-implementation
     methodName: multipleContracts
     params: [
@@ -123,7 +124,7 @@ InterfaceEvolutionController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 5.DefaultStaticPrivate/DefaultStaticPrivate.md
+      file: 6.DefaultStaticPrivate/DefaultStaticPrivate.md
       anchor: default-method-evolution
     methodName: defaultCompatibility
     params: [

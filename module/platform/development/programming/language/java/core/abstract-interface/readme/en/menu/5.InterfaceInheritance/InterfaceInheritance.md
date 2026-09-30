@@ -1,6 +1,6 @@
-# Interface Inheritance
+# Interface Inheritance and Contract Composition
 
-An interface may represent one small capability. Larger APIs can compose those capabilities into broader contracts through interface inheritance.
+An interface may represent one small capability. Larger APIs can compose those capabilities into broader contracts through **interface inheritance**.
 
 Putting every behavior into one large interface can force implementers to depend on capabilities they do not need. Smaller roles keep contracts focused:
 
@@ -38,9 +38,11 @@ An interface may extend multiple interfaces:
 interface AuditedPayment extends Payable, Auditable { ... }
 ```
 
-This is multiple inheritance of **types/contracts**, not multiple copies of object state.
+This is multiple inheritance of **types/contracts**. Interfaces contribute no per-instance fields or object state, and this is not multiple class inheritance.
 
-Compatible abstract signatures compose naturally. Incompatible return types or competing default methods can make the hierarchy invalid or require explicit conflict resolution.
+Compatible abstract signatures compose naturally. If return types conflict and cannot be satisfied simultaneously, the child interface can be invalid at compile time.
+
+Conflicts involving `default` methods are deferred to the later milestones after the role of `default` has been established.
 
 ## <a id="interface-redeclaration">Redeclaring Inherited Methods</a>
 
@@ -48,11 +50,11 @@ A subinterface may redeclare an inherited method to:
 
 - add documentation or annotations;
 - narrow a return type covariantly;
-- turn an inherited default method back into an abstract requirement.
+- clarify the contract exposed by the child interface.
 
 ```java
 interface Base {
-    default Number value() { return 0; }
+    Number value();
 }
 
 interface Specific extends Base {
@@ -61,6 +63,8 @@ interface Specific extends Base {
 }
 ```
 
-Redeclaration should clarify or refine the contract rather than merely duplicate a signature.
+`Integer` is a narrower return type that remains compatible with `Number`, so the child interface can refine the contract this way.
 
-Next we look at why interfaces have `default`, `static`, and `private` methods and what each category is for.
+Redeclaration should clarify or refine the contract rather than merely repeat the same signature.
+
+Next we examine why modern interfaces support `default`, `static`, and `private` methods and what problem each kind solves.

@@ -1,16 +1,16 @@
 AbstractClassController:
   templateBehavior():
-    summary: Shared state + template behavior + abstract hook
-    description: Processor giữ prefix state và concrete process(...), còn UpperProcessor
-      hoàn thiện abstract transform(...). Response cho thấy reference kiểu Processor
-      vẫn dispatch tới runtime subtype UpperProcessor và tạo kết quả result:JAVA.
+    summary: Trạng thái dùng chung, hành vi khung và điểm mở abstract
+    description: Processor giữ trạng thái prefix và phương thức cụ thể process(...), còn
+      UpperProcessor hoàn thiện abstract transform(...). Kết quả cho thấy tham chiếu kiểu
+      Processor vẫn phân phối động tới kiểu thực tế UpperProcessor và tạo result:JAVA.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 1.AbstractClass/AbstractClass.md
+      file: 2.AbstractClass/AbstractClass.md
       anchor: abstract-class-model
     methodName: templateBehavior
     params: [
@@ -28,17 +28,17 @@ AbstractClassController:
     usage: true
 DefaultMethodController:
   dispatch():
-    summary: Kế thừa default method khi class không override
-    description: DefaultGreeting không khai báo greet(), nhưng object vẫn gọi được
-      Greeting.greet() và trả hello-default. Thí nghiệm làm rõ default method là
-      instance behavior có thể được kế thừa.
+    summary: Kế thừa phương thức default khi lớp không override
+    description: DefaultGreeting không khai báo greet(), nhưng đối tượng vẫn gọi được
+      Greeting.greet() và trả hello-default. Thí nghiệm làm rõ phương thức default là
+      hành vi của đối tượng có thể được kế thừa.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 5.DefaultStaticPrivate/DefaultStaticPrivate.md
+      file: 6.DefaultStaticPrivate/DefaultStaticPrivate.md
       anchor: default-method
     methodName: dispatch
     params: [
@@ -55,17 +55,17 @@ DefaultMethodController:
       ]
     usage: true
   resolveConflict():
-    summary: Giải quyết xung đột giữa hai default method
-    description: Left và Right cùng cung cấp value(). Both phải override method và
+    summary: Giải quyết xung đột giữa hai phương thức default
+    description: Left và Right cùng cung cấp value(). Trong ví dụ này Both phải override phương thức và
       gọi tường minh Left.super.value() cùng Right.super.value(). Kết quả left+right
-      chứng minh conflict không được Java tự chọn thay class.
+      chứng minh Java không tự chọn một hành vi thay cho lớp triển khai.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 6.MultipleInheritance/MultipleInheritance.md
+      file: 7.MultipleInheritance/MultipleInheritance.md
       anchor: default-method-conflict
     methodName: resolveConflict
     params: [
@@ -83,9 +83,9 @@ DefaultMethodController:
     usage: true
 InterfaceController:
   multipleContracts():
-    summary: Một object thỏa nhiều interface contract
-    description: Feature implement cả Named và Enabled. Hai reference theo hai interface
-      khác nhau vẫn trỏ tới cùng một object Feature; response cho thấy sameObject=true
+    summary: Một đối tượng thỏa nhiều hợp đồng interface
+    description: Feature triển khai cả Named và Enabled. Hai tham chiếu theo hai interface
+      khác nhau vẫn trỏ tới cùng một đối tượng Feature; kết quả cho thấy sameObject=true
       đồng thời gọi được name() và enabled().
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
@@ -93,7 +93,7 @@ InterfaceController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 2.Interface/Interface.md
+      file: 3.Interface/Interface.md
       anchor: interface-implementation
     methodName: multipleContracts
     params: [
@@ -111,18 +111,18 @@ InterfaceController:
     usage: true
 InterfaceEvolutionController:
   defaultCompatibility():
-    summary: Implementation cũ kế thừa default behavior mới
+    summary: Lớp triển khai cũ kế thừa hành vi default mới
     description: OldStyleImplementation chỉ định nghĩa id(), trong khi Versioned cung
-      cấp display() bằng default method. Response cho thấy display() vẫn chạy và gọi
-      id() của implementation để tạo id=legacy; đây là evidence cho cơ chế interface
-      evolution, không phải tuyên bố rằng mọi thay đổi interface đều tương thích.
+      cấp display() bằng phương thức default. Kết quả cho thấy display() vẫn chạy và gọi
+      id() của lớp triển khai để tạo id=legacy; đây là bằng chứng cho cơ chế mở rộng
+      interface theo thời gian, không phải tuyên bố rằng mọi thay đổi interface đều tương thích.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 5.DefaultStaticPrivate/DefaultStaticPrivate.md
+      file: 6.DefaultStaticPrivate/DefaultStaticPrivate.md
       anchor: default-method-evolution
     methodName: defaultCompatibility
     params: [

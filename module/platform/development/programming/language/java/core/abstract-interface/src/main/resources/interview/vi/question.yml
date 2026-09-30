@@ -28,128 +28,156 @@
 # </interview-schema>
 
 questions:
-  - question: "Abstract class giải quyết vấn đề gì mà interface thuần có thể không tự nhiên bằng?"
-    answer: "Abstract class phù hợp khi các subtype thật sự chia sẻ instance state, constructor/invariant và một phần algorithm chung. Nó vừa định nghĩa common contract vừa giữ partial implementation trong cùng hierarchy. Interface phù hợp hơn khi chỉ cần role/capability xuyên nhiều hierarchy; vì vậy không nên dùng abstract class chỉ vì muốn reuse vài dòng code."
+  - question: "Lớp trừu tượng giải quyết vấn đề gì mà interface thuần có thể không tự nhiên bằng?"
+    answer: "Lớp trừu tượng phù hợp khi các kiểu con thật sự chia sẻ trạng thái của đối tượng, quy tắc khởi tạo/bất biến và một phần thuật toán chung. Nó có thể vừa tham gia hợp đồng chung vừa giữ phần triển khai dùng chung trong cùng một hệ phân cấp. Interface phù hợp hơn khi chỉ cần vai trò hoặc khả năng xuyên qua nhiều hệ phân cấp; vì vậy không nên dùng lớp trừu tượng chỉ để tái sử dụng vài dòng mã."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.AbstractClass/AbstractClass.md", anchor: "abstract-class-model"}
+    readmeRelated: {file: "2.AbstractClass/AbstractClass.md", anchor: "abstract-class-model"}
     apiRelated: {controller: "AbstractClassController", methodSignature: "templateBehavior()"}
 
-  - question: "Abstract method liên quan thế nào tới dynamic dispatch và template-method style?"
-    answer: "Abstract method là extension point không có body. Concrete method ở base class có thể gọi abstract method như một hook; khi runtime object là subtype, lời gọi hook dispatch tới override của subtype. API templateBehavior() minh họa Processor.process(...) giữ algorithm chung còn UpperProcessor.transform(...) cung cấp bước biến đổi cụ thể."
+  - question: "Phương thức abstract liên quan thế nào tới phân phối động và kiểu thiết kế template-method?"
+    answer: "Phương thức abstract là điểm mở không có phần thân. Phương thức cụ thể ở lớp cha có thể gọi nó như một điểm mở; khi đối tượng thực tế là kiểu con, lời gọi được phân phối động tới phần override của kiểu con. API templateBehavior() minh họa Processor.process(...) giữ thuật toán chung còn UpperProcessor.transform(...) cung cấp bước biến đổi cụ thể."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.AbstractClass/AbstractClass.md", anchor: "abstract-method"}
+    readmeRelated: {file: "2.AbstractClass/AbstractClass.md", anchor: "abstract-method"}
     apiRelated: {controller: "AbstractClassController", methodSignature: "templateBehavior()"}
 
-  - question: "Vì sao gọi overridable method từ constructor thường nguy hiểm?"
-    answer: "Superclass constructor chạy trước khi phần state riêng của subclass được khởi tạo hoàn chỉnh. Nếu constructor gọi method có thể override, dynamic dispatch có thể chạy code của subclass quá sớm và đọc state chưa sẵn sàng. Vì vậy constructor nên thiết lập invariant của chính class thay vì gọi extension point có thể bị override, trừ khi contract được thiết kế cực kỳ rõ."
+  - question: "Vì sao gọi phương thức có thể bị override từ hàm khởi tạo thường nguy hiểm?"
+    answer: "Hàm khởi tạo của lớp cha chạy trước khi phần trạng thái riêng của lớp con được khởi tạo hoàn chỉnh. Nếu hàm khởi tạo gọi phương thức có thể bị override, phân phối động có thể chạy mã của lớp con quá sớm và đọc trạng thái chưa sẵn sàng. Vì vậy hàm khởi tạo nên thiết lập bất biến của chính lớp thay vì gọi điểm mở có thể bị override, trừ khi hợp đồng được thiết kế cực kỳ rõ."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.AbstractClass/AbstractClass.md", anchor: "abstract-constructor"}
+    readmeRelated: {file: "2.AbstractClass/AbstractClass.md", anchor: "abstract-constructor"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Khi nào limitation single class inheritance khiến abstract class trở thành lựa chọn kém?"
-    answer: "Khi một role cần xuất hiện ở nhiều type vốn đã thuộc các hierarchy khác nhau. Buộc tất cả vào một base class chỉ để có capability đó tạo coupling và chiếm mất superclass slot. Interface giải quyết tốt hơn vì một class vẫn có thể extends base class phù hợp với state/model của nó và implements thêm nhiều role độc lập."
+  - question: "Khi nào giới hạn đơn kế thừa lớp khiến lớp trừu tượng trở thành lựa chọn kém?"
+    answer: "Khi một vai trò cần xuất hiện ở nhiều kiểu vốn đã thuộc các hệ phân cấp khác nhau. Buộc tất cả vào một lớp cha chỉ để có khả năng đó tạo ràng buộc không cần thiết và chiếm mất vị trí lớp cha duy nhất. Interface phù hợp hơn vì một lớp vẫn có thể kế thừa lớp cha phù hợp với trạng thái/mô hình của nó và triển khai thêm nhiều vai trò độc lập."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.AbstractClass/AbstractClass.md", anchor: "abstract-class-limits"}
+    readmeRelated: {file: "2.AbstractClass/AbstractClass.md", anchor: "abstract-class-limits"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Program to an interface trong Java nghĩa là gì, và nó không có nghĩa là gì?"
-    answer: "Nó nghĩa là code phía sử dụng phụ thuộc vào behavioral contract ổn định như PaymentMethod thay vì một implementation cụ thể như CardPayment. Điều này giúp thay implementation, proxy hoặc test double dễ hơn khi contract thật sự có ý nghĩa. Nó không có nghĩa mọi class đều phải có interface riêng, cũng không có nghĩa interface tự động làm code loose-coupled nếu contract vẫn leak implementation detail."
+  - question: "Lập trình dựa trên interface trong Java nghĩa là gì, và nó không có nghĩa là gì?"
+    answer: "Nó nghĩa là mã phía sử dụng phụ thuộc vào hợp đồng hành vi ổn định như PaymentMethod thay vì một phần triển khai cụ thể như CardPayment. Điều này giúp thay cách triển khai, lớp đại diện (proxy) hoặc đối tượng giả trong kiểm thử dễ hơn khi hợp đồng thật sự có ý nghĩa. Nó không có nghĩa mọi lớp đều phải có interface riêng, cũng không có nghĩa interface tự động làm mã ít phụ thuộc nếu hợp đồng vẫn làm lộ chi tiết triển khai."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.Interface/Interface.md", anchor: "interface-contract"}
+    readmeRelated: {file: "3.Interface/Interface.md", anchor: "interface-contract"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Vì sao interface field dễ tạo global mutable-state pitfall dù field là final?"
-    answer: "Interface field là public static final nên reference được public và cố định ở cấp type. Nhưng final chỉ cấm gán lại reference; nếu nó trỏ tới mutable object thì object vẫn đổi state được. Kết quả là shared global mutable state với ownership kém rõ ràng, khó test và khó kiểm soát side effect. Interface field nên dùng cho constant thực sự, ưu tiên immutable value."
+  - question: "Vì sao trường trong interface có thể tạo rủi ro trạng thái toàn cục có thể thay đổi dù trường là final?"
+    answer: "Trường trong interface là public static final nên biến trường thuộc cấp kiểu và không thể được gán một giá trị khác sau khi khởi tạo. Nhưng nếu giá trị đó là tham chiếu tới một đối tượng có thể thay đổi thì đối tượng vẫn có thể đổi trạng thái. Kết quả có thể là trạng thái toàn cục dùng chung với quyền sở hữu không rõ ràng, khó kiểm thử và khó kiểm soát tác dụng phụ. Trường của interface nên dành cho các giá trị hằng thực sự, ưu tiên giá trị bất biến."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.Interface/Interface.md", anchor: "interface-fields"}
+    readmeRelated: {file: "3.Interface/Interface.md", anchor: "interface-fields"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Các abstract/default/static/private method trong interface khác nhau về vai trò và dispatch thế nào?"
-    answer: "Abstract instance method là public contract implementation phải thỏa. Default method là instance behavior có body và có thể được kế thừa/override. Static method thuộc interface type, không được kế thừa thành instance method của implementation. Private/private static method chỉ là helper nội bộ của interface và không trở thành public contract. Phân biệt bốn nhóm này giúp tránh suy nghĩ sai rằng 'method trong interface đều abstract'."
+  - question: "Các phương thức abstract/default/static/private trong interface khác nhau về vai trò và cách gọi thế nào?"
+    answer: "Phương thức abstract của đối tượng là hợp đồng public mà lớp triển khai phải thỏa. Phương thức default là hành vi của đối tượng có phần thân và có thể được kế thừa/override. Phương thức static thuộc chính interface khai báo, không được lớp triển khai hoặc interface con kế thừa. Phương thức private/private static chỉ là phần hỗ trợ nội bộ của interface và không trở thành hợp đồng public. Phân biệt bốn nhóm này giúp tránh suy nghĩ sai rằng 'mọi phương thức trong interface đều abstract'."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.Interface/Interface.md", anchor: "interface-method-kinds"}
+    readmeRelated: {file: "3.Interface/Interface.md", anchor: "interface-method-kinds"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Một object implement nhiều interface có tạo nhiều object hay nhiều bản sao state không?"
-    answer: "Không. Một object có thể được nhìn qua nhiều interface reference khác nhau nhưng identity/runtime object vẫn là một. Trong API multipleContracts(), Named n và Enabled e cùng trỏ tới Feature nên sameObject=true. Mỗi reference chỉ giới hạn view theo contract compile-time; nó không clone object hoặc nhân đôi state."
+  - question: "Một đối tượng triển khai nhiều interface có tạo nhiều đối tượng hay nhiều bản sao trạng thái không?"
+    answer: "Không. Một đối tượng có thể được nhìn qua nhiều tham chiếu interface khác nhau nhưng định danh và đối tượng thực tế vẫn là một. Trong API multipleContracts(), Named n và Enabled e cùng trỏ tới Feature nên sameObject=true. Mỗi tham chiếu chỉ giới hạn góc nhìn theo hợp đồng tại thời điểm biên dịch; nó không sao chép đối tượng hoặc nhân đôi trạng thái."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.Interface/Interface.md", anchor: "interface-implementation"}
+    readmeRelated: {file: "3.Interface/Interface.md", anchor: "interface-implementation"}
     apiRelated: {controller: "InterfaceController", methodSignature: "multipleContracts()"}
 
-  - question: "Nếu thiết kế PaymentMethod, BasePayment và Refundable cùng lúc, bạn phân vai ba abstraction này như thế nào?"
-    answer: "PaymentMethod nên là public behavioral contract mà consumer phụ thuộc. BasePayment là optional abstract base class cho một family implementation thật sự chia sẻ state/initialization/common behavior. Refundable là capability độc lập chỉ type hỗ trợ refund mới implement. Cách tách này tránh ép mọi implementation vào một base class nhưng vẫn cho một số implementation reuse phần chung."
+  - question: "Nếu thiết kế PaymentMethod, BasePayment và Refundable cùng lúc, bạn phân vai ba cơ chế trừu tượng này như thế nào?"
+    answer: "PaymentMethod nên là hợp đồng hành vi public mà bên sử dụng phụ thuộc. BasePayment là lớp cha trừu tượng tùy chọn cho một họ lớp triển khai thật sự chia sẻ trạng thái, quy tắc khởi tạo và hành vi chung. Refundable là khả năng độc lập chỉ các kiểu hỗ trợ hoàn tiền mới triển khai. Cách tách này tránh ép mọi cách triển khai vào một lớp cha nhưng vẫn cho một số nhánh tái sử dụng phần chung."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.AbstractVsInterface/AbstractVsInterface.md", anchor: "selection-guidance"}
+    readmeRelated: {file: "4.AbstractVsInterface/AbstractVsInterface.md", anchor: "selection-guidance"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Vì sao interface inheritance nên được nhìn như contract composition chứ không chỉ là cú pháp extends?"
-    answer: "Mục tiêu là ghép các role nhỏ thành contract lớn hơn mà không ép mọi implementation phụ thuộc vào method không cần thiết. Payable, Refundable và Auditable có thể tồn tại độc lập; một subinterface chỉ compose các role phù hợp. Nếu gom tất cả vào một giant interface, implementation có thể phải cung cấp behavior vô nghĩa hoặc phụ thuộc dư thừa."
+  - question: "Vì sao kế thừa interface nên được nhìn như cách kết hợp hợp đồng chứ không chỉ là cú pháp extends?"
+    answer: "Mục tiêu là ghép các vai trò nhỏ thành hợp đồng lớn hơn mà không ép mọi lớp triển khai phụ thuộc vào phương thức không cần thiết. Payable, Refundable và Auditable có thể tồn tại độc lập; một interface con chỉ kết hợp các vai trò phù hợp. Nếu gom tất cả vào một interface quá lớn, lớp triển khai có thể phải cung cấp hành vi vô nghĩa hoặc nhận phụ thuộc dư thừa."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.InterfaceInheritance/InterfaceInheritance.md", anchor: "interface-extends-interface"}
+    readmeRelated: {file: "5.InterfaceInheritance/InterfaceInheritance.md", anchor: "interface-extends-interface"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Interface extends nhiều parent có phải luôn an toàn không?"
-    answer: "Không. Các abstract contract tương thích thường compose được, nhưng cùng signature với return type không tương thích có thể làm contract bất khả thi. Default methods cũng có thể cạnh tranh nhau và cần rule resolution. Multiple interface inheritance vì thế là multiple inheritance của type/contract và đôi khi behavior, không phải 'không bao giờ có conflict'."
+  - question: "Interface kế thừa nhiều interface cha có phải luôn an toàn không?"
+    answer: "Không. Các hợp đồng abstract tương thích thường kết hợp được, nhưng cùng chữ ký với kiểu trả về không tương thích có thể làm hợp đồng bất khả thi. Các phương thức default cũng có thể cạnh tranh; nếu interface con nhận các default tương đương từ các interface cha không có quan hệ cụ thể-hơn với nhau thì interface con phải override để giải quyết, nếu không sẽ lỗi biên dịch. Vì vậy đa kế thừa qua interface vẫn có các quy tắc xung đột cần hiểu."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.InterfaceInheritance/InterfaceInheritance.md", anchor: "multiple-interface-hierarchy"}
+    readmeRelated: {file: "5.InterfaceInheritance/InterfaceInheritance.md", anchor: "multiple-interface-hierarchy"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Tại sao subinterface lại redeclare một inherited method thay vì để nguyên?"
-    answer: "Redeclaration hữu ích khi muốn refine contract: thu hẹp covariant return type, thêm annotation/documentation cụ thể hơn, hoặc biến inherited default thành abstract để bắt downstream implementation tự cung cấp behavior. Nó phải giữ compatibility với parent contract; redeclare chỉ để lặp lại signature mà không thêm semantics thường không có giá trị."
+  - question: "Tại sao interface con lại khai báo lại một phương thức được kế thừa thay vì để nguyên?"
+    answer: "Khai báo lại hữu ích khi muốn tinh chỉnh hợp đồng, chẳng hạn thu hẹp kiểu trả về theo quy tắc đồng biến hoặc bổ sung annotation/tài liệu cụ thể hơn. Khai báo mới vẫn phải tương thích với hợp đồng cha; nếu chỉ lặp lại cùng chữ ký mà không thêm ý nghĩa thì thường chỉ tạo nhiễu."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.InterfaceInheritance/InterfaceInheritance.md", anchor: "interface-redeclaration"}
+    readmeRelated: {file: "5.InterfaceInheritance/InterfaceInheritance.md", anchor: "interface-redeclaration"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Default method giải quyết vấn đề interface evolution nào, và giới hạn của nó là gì?"
-    answer: "Nó cho interface thêm một method có body mặc định để nhiều implementation hiện có không phải lập tức thêm source implementation mới. Nhưng nó không làm mọi thay đổi safe: thêm abstract method vẫn có thể break source, default mới có thể conflict với interface khác, và thay đổi semantics của contract vẫn có thể phá client behavior. API defaultCompatibility() minh họa cơ chế chứ không chứng minh mọi dạng binary compatibility."
+  - question: "Khi nào interface con nên biến một phương thức default được kế thừa trở lại thành yêu cầu abstract?"
+    answer: "Khi hành vi mặc định của interface cha không còn là mặc định hợp lệ cho mọi kiểu thuộc interface con, interface con có thể khai báo lại cùng phương thức mà không có phần thân. Khi đó các lớp triển khai cụ thể phía sau phải cung cấp hành vi của riêng mình. Đây là cách tinh chỉnh yêu cầu của hợp đồng chứ không phải xóa phương thức khỏi hệ phân cấp."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.DefaultStaticPrivate/DefaultStaticPrivate.md", anchor: "default-method-evolution"}
+    readmeRelated: {file: "6.DefaultStaticPrivate/DefaultStaticPrivate.md", anchor: "default-method-evolution"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Phương thức default giải quyết vấn đề mở rộng interface nào, và giới hạn của nó là gì?"
+    answer: "Nó cho interface thêm một phương thức có phần thân mặc định để nhiều lớp triển khai hiện có không phải lập tức thêm phần triển khai mới trong mã nguồn. Nhưng nó không làm mọi thay đổi trở nên an toàn: thêm phương thức abstract vẫn có thể phá tính tương thích mã nguồn, default mới có thể xung đột với interface khác, và thay đổi ý nghĩa hợp đồng vẫn có thể phá hành vi phía sử dụng. API defaultCompatibility() minh họa cơ chế chứ không chứng minh mọi dạng tương thích nhị phân."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.DefaultStaticPrivate/DefaultStaticPrivate.md", anchor: "default-method-evolution"}
     apiRelated: {controller: "InterfaceEvolutionController", methodSignature: "defaultCompatibility()"}
 
-  - question: "API dispatch() chứng minh điều gì về default method?"
-    answer: "Greeting có default greet(), còn DefaultGreeting không override. Gọi greet() trên object DefaultGreeting vẫn trả hello-default, chứng minh default method là inheritable instance behavior. Runtime type vẫn là DefaultGreeting; default method không tạo object interface riêng và cũng không trở thành static method."
+  - question: "API dispatch() chứng minh điều gì về phương thức default?"
+    answer: "Greeting có default greet(), còn DefaultGreeting không override. Gọi greet() trên đối tượng DefaultGreeting vẫn trả hello-default, chứng minh phương thức default là hành vi của đối tượng có thể được kế thừa. Kiểu thực tế vẫn là DefaultGreeting; phương thức default không tạo đối tượng interface riêng và cũng không trở thành phương thức static."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.DefaultStaticPrivate/DefaultStaticPrivate.md", anchor: "default-method"}
+    readmeRelated: {file: "6.DefaultStaticPrivate/DefaultStaticPrivate.md", anchor: "default-method"}
     apiRelated: {controller: "DefaultMethodController", methodSignature: "dispatch()"}
 
-  - question: "Khi nào nên dùng static method trong interface thay vì default method?"
-    answer: "Dùng static khi operation thuộc namespace/contract của interface nhưng không cần receiver state, ví dụ validator hoặc factory liên quan chặt tới PaymentMethod. Dùng default khi behavior cần một instance receiver và có thể được implementation kế thừa/override. Static interface method không được kế thừa thành instance method, nên hai loại phục vụ hai mục đích khác nhau."
+  - question: "Khi nào nên dùng phương thức static trong interface thay vì phương thức default?"
+    answer: "Dùng static khi thao tác thuộc chính interface nhưng không cần trạng thái của đối tượng nhận, ví dụ thao tác kiểm tra hợp lệ hoặc tạo đối tượng liên quan chặt tới PaymentMethod. Dùng default khi hành vi cần một đối tượng nhận và có thể được lớp triển khai kế thừa/override. Phương thức static của interface không được lớp triển khai hoặc interface con kế thừa; hai loại vì vậy phục vụ hai mục đích khác nhau."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.DefaultStaticPrivate/DefaultStaticPrivate.md", anchor: "static-interface-method"}
+    readmeRelated: {file: "6.DefaultStaticPrivate/DefaultStaticPrivate.md", anchor: "static-interface-method"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Private interface method có giá trị gì nếu implementation không gọi được?"
-    answer: "Chính vì không phải public contract nên nó hữu ích để deduplicate logic nội bộ giữa default/static methods mà không expose helper ra caller hoặc implementation. Private instance helper dùng trong instance/default context; private static helper dùng được trong static context. Implementing class không call hay override chúng."
+  - question: "Phương thức private trong interface có giá trị gì nếu lớp triển khai không gọi được?"
+    answer: "Chính vì không phải hợp đồng public nên nó hữu ích để tái sử dụng logic nội bộ giữa các phương thức default/static mà không công khai phương thức hỗ trợ cho bên gọi hoặc lớp triển khai. Phương thức private của đối tượng dùng trong ngữ cảnh của phương thức đối tượng/default; private static dùng được trong ngữ cảnh static. Lớp triển khai không thể gọi hay override chúng."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.DefaultStaticPrivate/DefaultStaticPrivate.md", anchor: "private-interface-method"}
+    readmeRelated: {file: "6.DefaultStaticPrivate/DefaultStaticPrivate.md", anchor: "private-interface-method"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Hãy giải thích thứ tự reasoning khi Java gặp nhiều inherited default methods."
-    answer: "Trước hết xem class hierarchy đã có concrete method tương thích chưa; nếu có thì class method thắng. Nếu không, trong các interface có default nào more specific hơn không; default cụ thể hơn có thể thắng parent default. Nếu vẫn còn unrelated defaults cùng cạnh tranh, implementing class phải override. Override có thể gọi trực tiếp parent default bằng InterfaceName.super.method() khi interface đó là direct superinterface hợp lệ."
+  - question: "Hãy giải thích thứ tự suy luận khi Java gặp nhiều phương thức default được kế thừa."
+    answer: "Trước hết kiểm tra phía lớp: phương thức static cùng chữ ký không thể triển khai phương thức của đối tượng trong interface; phương thức abstract phía lớp cũng không được default tự động thỏa; còn phương thức cụ thể tương thích phía lớp được ưu tiên. Nếu phía lớp không giải quyết, xét xem có default nào từ interface cụ thể hơn hay không. Nếu vẫn còn các default độc lập cạnh tranh, lớp triển khai phải override. Override có thể gọi default của interface cha trực tiếp hợp lệ bằng InterfaceName.super.method()."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.MultipleInheritance/MultipleInheritance.md", anchor: "default-method-conflict"}
+    readmeRelated: {file: "7.MultipleInheritance/MultipleInheritance.md", anchor: "default-method-conflict"}
     apiRelated: {controller: "DefaultMethodController", methodSignature: "resolveConflict()"}
 
-  - question: "Diamond interface inheritance có phải lúc nào cũng ambiguous không?"
-    answer: "Không. Diamond chỉ mô tả hình dạng inheritance graph. Nếu các path cuối cùng hội tụ về cùng một most-specific default thì không có hai behavior độc lập để chọn. Ambiguity xuất hiện khi nhiều independent defaults cùng signature vẫn còn cạnh tranh và không có candidate nào more specific. Vì vậy phải reasoning theo inherited declarations, không chỉ nhìn hình diamond."
+  - question: "Kế thừa interface dạng kim cương có phải lúc nào cũng mơ hồ không?"
+    answer: "Không. Hình kim cương chỉ mô tả đồ thị kế thừa. Nếu các đường cuối cùng hội tụ về cùng một default cụ thể nhất thì không có hai hành vi độc lập để chọn. Mơ hồ xuất hiện khi nhiều default độc lập cùng chữ ký vẫn cạnh tranh và không có ứng viên nào cụ thể hơn. Vì vậy phải suy luận theo các khai báo được kế thừa, không chỉ nhìn hình dạng kim cương."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.MultipleInheritance/MultipleInheritance.md", anchor: "diamond-interface"}
+    readmeRelated: {file: "7.MultipleInheritance/MultipleInheritance.md", anchor: "diamond-interface"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Vì sao Java cần cả lớp trừu tượng và interface? Nếu chỉ giữ một trong hai thì mô hình thiết kế sẽ mất gì?"
+    answer: "Lớp trừu tượng tự nhiên khi một họ lớp thật sự chia sẻ trạng thái, quy tắc khởi tạo và phần triển khai; interface tự nhiên khi cần một hợp đồng hoặc khả năng linh hoạt có thể đi qua nhiều hệ phân cấp. Chỉ dùng lớp trừu tượng sẽ ép nhiều vai trò vào một cây kế thừa duy nhất; chỉ dùng interface sẽ không thay thế được nhu cầu sở hữu trạng thái và khởi tạo dùng chung của một lớp cha. Hai cơ chế bổ sung cho nhau thay vì một cơ chế là phiên bản 'tốt hơn' của cơ chế kia."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.AbstractionPurpose/AbstractionPurpose.md", anchor: "abstraction-mechanism-roles"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Xung đột default có thể xảy ra ngay trong interface con trước khi có lớp triển khai không? Giải thích."
+    answer: "Có. Nếu một interface con extends hai interface cha không liên quan và cả hai cung cấp các phương thức default có chữ ký tương đương, trong khi không có khai báo nào cụ thể hơn, bản thân interface con đã có hợp đồng mơ hồ. Nó phải khai báo một override để chọn, thay thế hoặc kết hợp hành vi; nếu không, khai báo interface con bị lỗi biên dịch. Vì vậy giải quyết xung đột default không chỉ là vấn đề của lớp triển khai."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.MultipleInheritance/MultipleInheritance.md", anchor: "default-method-conflict"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Khi đánh giá một thiết kế dùng cả interface và lớp trừu tượng, bạn sẽ kiểm tra những câu hỏi nào trước khi chấp nhận thiết kế?"
+    answer: "Tôi sẽ kiểm tra bên sử dụng thật sự cần hợp đồng nào; các kiểu con có thật sự chia sẻ trạng thái, bất biến và quy tắc khởi tạo hay không; một vai trò có cắt ngang nhiều họ lớp hay không; một lớp có cần nhiều vai trò độc lập không; default có thật sự hợp lệ cho mọi lớp triển khai không; static/private có đúng vai trò cấp kiểu hoặc hỗ trợ nội bộ không; và việc kết hợp nhiều interface có tạo xung đột chữ ký/default hay không. Mục tiêu là mỗi cơ chế có trách nhiệm rõ, không dùng kế thừa chỉ để tái sử dụng vài dòng mã."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.AbstractionSynthesis/AbstractionSynthesis.md", anchor: "abstraction-design-checklist"}
     apiRelated: {controller: "", methodSignature: ""}
