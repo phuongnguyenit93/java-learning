@@ -124,6 +124,34 @@ export interface KnowledgeSectionRef extends KnowledgeSection {
   sourcePath: string;
 }
 
+export type KnowledgeSearchDocumentType = 'CATEGORY' | 'SECTION';
+
+export interface KnowledgeSearchDocument {
+  documentId: string;
+  type: KnowledgeSearchDocumentType;
+  moduleId: string;
+  categoryId: string;
+  categoryTitle: string;
+  sectionId?: string;
+  title: string;
+  sourcePath: string;
+  difficulty?: KnowledgeDifficulty;
+  preview: string;
+  searchText: string;
+}
+
+export interface KnowledgeSearchIndex {
+  version: number;
+  language: Language;
+  documentCount: number;
+  documents: KnowledgeSearchDocument[];
+}
+
+export interface KnowledgeSearchResult {
+  document: KnowledgeSearchDocument;
+  score: number;
+}
+
 export interface KnowledgeTopic {
   id: string;
   label: LocalizedText;

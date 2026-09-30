@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { ApiDocsPanel } from '../components/ApiDocsPanel';
 import { KnowledgePanel } from '../components/KnowledgePanel';
 import { InterviewPanel } from '../components/InterviewPanel';
@@ -28,6 +28,7 @@ import type { KnowledgeIndex, ModuleCatalog } from '../types/learning';
 export function LearningPage() {
   const { moduleId } = useParams();
   const navigate = useNavigate();
+  const [routeSearchParams] = useSearchParams();
   const { language } = useLanguage();
   const [catalog, setCatalog] = useState<ModuleCatalog | null>(null);
   const [catalogError, setCatalogError] = useState<string | null>(null);
@@ -44,6 +45,7 @@ export function LearningPage() {
   const [knowledgeError, setKnowledgeError] = useState<string | null>(null);
   const [activeKnowledgeCategory, setActiveKnowledgeCategory] = useState('all');
   const [selectedKnowledgeSection, setSelectedKnowledgeSection] = useState<string | null>(null);
+  const routeSearchKey = routeSearchParams.toString();
 
   useEffect(() => {
     let active = true;
@@ -293,6 +295,29 @@ export function LearningPage() {
     setSelectedKnowledgeSection(null);
     setVisitedTabs(new Set<ModuleTab>([activeTab]));
   }, [activeModule?.id]);
+
+  useEffect(() => {
+    if (!activeModule || routeSearchParams.get('tab') !== 'knowledge') {
+      return;
+    }
+
+    const categoryId = routeSearchParams.get('category')?.trim() || 'all';
+    const sectionId = routeSearchParams.get('section')?.trim() || null;
+
+    setSearchQuery('');
+    setActiveKnowledgeCategory(categoryId);
+    setSelectedKnowledgeSection(sectionId);
+    setVisitedTabs((current) => {
+      if (current.has('knowledge')) {
+        return current;
+      }
+
+      const next = new Set(current);
+      next.add('knowledge');
+      return next;
+    });
+    setActiveTab('knowledge');
+  }, [activeModule?.id, routeSearchKey]);
 
   useEffect(() => {
     let active = true;

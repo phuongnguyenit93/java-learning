@@ -1,9 +1,14 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
+import { loadKnowledgeSearchIndex, searchKnowledge } from '../data/knowledgeSearch';
 import { collectRealModules, formatCatalogName } from '../data/moduleCatalog';
 import { useLanguage } from '../state/LanguageContext';
-import type { ModuleCatalogNode } from '../types/learning';
+import type {
+  KnowledgeSearchIndex,
+  KnowledgeSearchResult,
+  ModuleCatalogNode,
+} from '../types/learning';
 
 interface ModuleSidebarProps {
   nodes: ModuleCatalogNode[];
@@ -25,6 +30,8 @@ interface TreeNodeProps {
   apiCounts: Record<string, number>;
   roadmapAvailability: Record<string, boolean>;
   filter: string;
+  knowledgeSearchActive: boolean;
+  knowledgeMatchModuleIds: ReadonlySet<string>;
   expandRequest: SidebarExpandRequest;
   showEntireSubtree?: boolean;
   renderAsPicker?: boolean;
@@ -45,6 +52,11 @@ interface ModulePickerPosition {
   left: number;
   width: number;
   maxHeight: number;
+}
+
+interface ModuleSearchMetadata {
+  displayName: string;
+  hierarchy: string;
 }
 
 const MODULE_PICKER_OPEN_EVENT = 'java-learning:module-picker-open';
@@ -78,6 +90,39 @@ function nodeContainsMatch(node: ModuleCatalogNode, filter: string): boolean {
   }
 
   return node.children.some((child) => nodeContainsMatch(child, filter));
+}
+
+function nodeContainsKnowledgeMatch(
+  node: ModuleCatalogNode,
+  matchingModuleIds: ReadonlySet<string>,
+): boolean {
+  if (node.routeId && matchingModuleIds.has(node.routeId)) {
+    return true;
+  }
+
+  return node.children.some((child) => nodeContainsKnowledgeMatch(child, matchingModuleIds));
+}
+
+function collectModuleSearchMetadata(
+  nodes: ModuleCatalogNode[],
+  parentPath: string[] = [],
+  result: Map<string, ModuleSearchMetadata> = new Map(),
+): Map<string, ModuleSearchMetadata> {
+  nodes.forEach((node) => {
+    const displayName = formatCatalogName(node.name);
+    const currentPath = [...parentPath, displayName];
+
+    if (node.routeId) {
+      result.set(node.routeId, {
+        displayName,
+        hierarchy: currentPath.slice(0, -1).join(' / '),
+      });
+    }
+
+    collectModuleSearchMetadata(node.children, currentPath, result);
+  });
+
+  return result;
 }
 
 function isQualifiedRealModule(
@@ -541,6 +586,8 @@ function TreeNode({
   apiCounts,
   roadmapAvailability,
   filter,
+  knowledgeSearchActive,
+  knowledgeMatchModuleIds,
   expandRequest,
   showEntireSubtree = false,
   renderAsPicker = false,
@@ -554,9 +601,15 @@ function TreeNode({
   const [searchExpanded, setSearchExpanded] = useState(expandRequest.expanded);
   const selfMatches = nodeMatchesSelf(node, filter);
   const containsMatch = nodeContainsMatch(node, filter);
-  const visible = !filter || showEntireSubtree || containsMatch;
-  const childShowEntireSubtree = showEntireSubtree || (Boolean(filter) && selfMatches);
-  const open = filter ? searchExpanded : expanded;
+  const containsKnowledgeMatch = nodeContainsKnowledgeMatch(node, knowledgeMatchModuleIds);
+  const treeSearchActive = Boolean(filter) || knowledgeSearchActive;
+  const visible = knowledgeSearchActive
+    ? containsKnowledgeMatch
+    : (!filter || showEntireSubtree || containsMatch);
+  const childShowEntireSubtree = knowledgeSearchActive
+    ? false
+    : showEntireSubtree || (Boolean(filter) && selfMatches);
+  const open = treeSearchActive ? searchExpanded : expanded;
   const isModule = node.kind === 'MODULE' && Boolean(node.routeId);
   const isActive = isModule && node.routeId === activeModuleId;
   const structuralModule = isModule && hasInlineChildren;
@@ -572,18 +625,22 @@ function TreeNode({
   const pickerEntries = useMemo<ModulePickerEntry[]>(() => {
     const ordered = node.children.map((child, index) => ({ node: child, sequence: index + 1 }));
 
+    if (knowledgeSearchActive) {
+      return ordered.filter(({ node: child }) => nodeContainsKnowledgeMatch(child, knowledgeMatchModuleIds));
+    }
+
     if (!filter || showEntireSubtree || selfMatches) {
       return ordered;
     }
 
     return ordered.filter(({ node: child }) => nodeContainsMatch(child, filter));
-  }, [filter, node.children, selfMatches, showEntireSubtree]);
+  }, [filter, knowledgeMatchModuleIds, knowledgeSearchActive, node.children, selfMatches, showEntireSubtree]);
 
   useEffect(() => {
-    if (filter && visible && hasInlineChildren) {
+    if (treeSearchActive && visible && hasInlineChildren) {
       setSearchExpanded(true);
     }
-  }, [filter, visible, hasInlineChildren]);
+  }, [hasInlineChildren, treeSearchActive, visible]);
 
   useEffect(() => {
     setExpanded(expandRequest.expanded);
@@ -628,7 +685,7 @@ function TreeNode({
 
   const toggleChildren = () => {
     if (hasInlineChildren) {
-      if (filter) {
+      if (treeSearchActive) {
         setSearchExpanded((current) => !current);
       } else {
         setExpanded((current) => !current);
@@ -712,7 +769,11 @@ function TreeNode({
 
       {hasInlineChildren && open && (
         <ul className="module-tree__branch">
-          {structuralModule && (!filter || showEntireSubtree || selfMatches) && (
+          {structuralModule && (
+            knowledgeSearchActive
+              ? Boolean(node.routeId && knowledgeMatchModuleIds.has(node.routeId))
+              : (!filter || showEntireSubtree || selfMatches)
+          ) && (
             <ModulePickerRow
               group={node}
               entries={[{ node, sequence: 1 }]}
@@ -738,6 +799,8 @@ function TreeNode({
               apiCounts={apiCounts}
               roadmapAvailability={roadmapAvailability}
               filter={filter}
+              knowledgeSearchActive={knowledgeSearchActive}
+              knowledgeMatchModuleIds={knowledgeMatchModuleIds}
               expandRequest={expandRequest}
               showEntireSubtree={childShowEntireSubtree}
               renderAsPicker={mixedDirectChildren && isLeafModule(child)}
@@ -758,11 +821,77 @@ export function ModuleSidebar({
   apiCounts,
   roadmapAvailability,
 }: ModuleSidebarProps) {
+  const navigate = useNavigate();
   const { language } = useLanguage();
   const [filterInput, setFilterInput] = useState('');
   const [realModulesOnly, setRealModulesOnly] = useState(true);
+  const [knowledgeSearchInput, setKnowledgeSearchInput] = useState('');
+  const [knowledgeSearchIndex, setKnowledgeSearchIndex] = useState<KnowledgeSearchIndex | null>(null);
+  const [knowledgeSearchLoading, setKnowledgeSearchLoading] = useState(false);
+  const [knowledgeSearchError, setKnowledgeSearchError] = useState<string | null>(null);
   const [expandRequest, setExpandRequest] = useState<SidebarExpandRequest>({ version: 0, expanded: true });
   const filter = useMemo(() => filterInput.trim().toLowerCase(), [filterInput]);
+  const knowledgeQuery = knowledgeSearchInput.trim();
+  const knowledgeSearchActive = knowledgeQuery.length > 0;
+  const moduleSearchMetadata = useMemo(() => collectModuleSearchMetadata(nodes), [nodes]);
+
+  useEffect(() => {
+    let active = true;
+
+    if (!knowledgeSearchActive) {
+      setKnowledgeSearchLoading(false);
+      setKnowledgeSearchError(null);
+      return () => {
+        active = false;
+      };
+    }
+
+    if (knowledgeSearchIndex?.language === language) {
+      return () => {
+        active = false;
+      };
+    }
+
+    setKnowledgeSearchLoading(true);
+    setKnowledgeSearchError(null);
+
+    loadKnowledgeSearchIndex(language)
+      .then((result) => {
+        if (!active) {
+          return;
+        }
+
+        setKnowledgeSearchIndex(result);
+        setKnowledgeSearchLoading(false);
+      })
+      .catch((error: unknown) => {
+        if (!active) {
+          return;
+        }
+
+        setKnowledgeSearchIndex(null);
+        setKnowledgeSearchLoading(false);
+        setKnowledgeSearchError(error instanceof Error ? error.message : 'Unable to load Knowledge search.');
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [knowledgeSearchActive, knowledgeSearchIndex?.language, language]);
+
+  const knowledgeResults = useMemo<KnowledgeSearchResult[]>(() => {
+    if (!knowledgeSearchActive || !knowledgeSearchIndex || knowledgeSearchIndex.language !== language) {
+      return [];
+    }
+
+    return searchKnowledge(knowledgeSearchIndex, knowledgeQuery);
+  }, [knowledgeQuery, knowledgeSearchActive, knowledgeSearchIndex, language]);
+
+  const knowledgeMatchModuleIds = useMemo(
+    () => new Set(knowledgeResults.map(({ document }) => document.moduleId)),
+    [knowledgeResults],
+  );
+  const visibleKnowledgeResults = useMemo(() => knowledgeResults.slice(0, 12), [knowledgeResults]);
   const moduleCount = useMemo(
     () => nodes.reduce((count, node) => count + collectRealModules(node).length, 0),
     [nodes],
@@ -783,39 +912,77 @@ export function ModuleSidebar({
     [apiCounts, interviewCounts, knowledgeCounts, nodes, quizCounts, roadmapAvailability],
   );
   const visibleNodes = useMemo(
-    () => (realModulesOnly
-      ? projectRealModuleNodes(
-        nodes,
-        knowledgeCounts,
-        quizCounts,
-        interviewCounts,
-        apiCounts,
-        roadmapAvailability,
-      )
-      : nodes),
-    [apiCounts, interviewCounts, knowledgeCounts, nodes, quizCounts, realModulesOnly, roadmapAvailability],
+    () => {
+      if (knowledgeSearchActive) {
+        return nodes;
+      }
+
+      return realModulesOnly
+        ? projectRealModuleNodes(
+          nodes,
+          knowledgeCounts,
+          quizCounts,
+          interviewCounts,
+          apiCounts,
+          roadmapAvailability,
+        )
+        : nodes;
+    },
+    [
+      apiCounts,
+      interviewCounts,
+      knowledgeCounts,
+      knowledgeSearchActive,
+      nodes,
+      quizCounts,
+      realModulesOnly,
+      roadmapAvailability,
+    ],
   );
+
+  const navigateToKnowledgeResult = (result: KnowledgeSearchResult) => {
+    const { document } = result;
+    const params = new URLSearchParams({
+      tab: 'knowledge',
+      category: document.categoryId,
+    });
+
+    if (document.sectionId) {
+      params.set('section', document.sectionId);
+    }
+
+    setKnowledgeSearchInput('');
+    navigate(`/learning/${document.moduleId}?${params.toString()}`);
+  };
+
+  const displayedModuleCount = knowledgeSearchActive
+    ? knowledgeMatchModuleIds.size
+    : (realModulesOnly ? realModuleCount : moduleCount);
 
   return (
     <aside className="learning-sidebar">
       <div className="learning-sidebar__headline">
         <span className="learning-sidebar__headline-copy">
           <span>{language === 'vi' ? 'Tất cả module' : 'All modules'}</span>
-          <span className="learning-sidebar__total">{realModulesOnly ? realModuleCount : moduleCount}</span>
+          <span className="learning-sidebar__total">{displayedModuleCount}</span>
         </span>
       </div>
 
-      <label className="sidebar-search">
+      <label className={`sidebar-search${knowledgeSearchActive ? ' is-disabled' : ''}`}>
         <span aria-hidden="true">⌕</span>
         <input
           type="search"
           value={filterInput}
           onChange={(event) => setFilterInput(event.target.value)}
+          disabled={knowledgeSearchActive}
           placeholder={language === 'vi' ? 'Lọc module...' : 'Filter modules...'}
         />
       </label>
 
-      <div className="sidebar-module-mode" aria-label={language === 'vi' ? 'Chế độ hiển thị module' : 'Module display mode'}>
+      <div
+        className={`sidebar-module-mode${knowledgeSearchActive ? ' is-disabled' : ''}`}
+        aria-label={language === 'vi' ? 'Chế độ hiển thị module' : 'Module display mode'}
+      >
         <span className={!realModulesOnly ? 'is-active' : undefined}>
           {language === 'vi' ? 'Đầy đủ' : 'Full tree'}
         </span>
@@ -825,6 +992,7 @@ export function ModuleSidebar({
           role="switch"
           aria-checked={realModulesOnly}
           aria-label={language === 'vi' ? 'Chỉ hiển thị module thật' : 'Show real modules only'}
+          disabled={knowledgeSearchActive}
           onClick={() => setRealModulesOnly((current) => !current)}
         >
           <span className="sidebar-module-mode__thumb" />
@@ -853,6 +1021,93 @@ export function ModuleSidebar({
         </div>
       </div>
 
+      <label className={`sidebar-knowledge-search${knowledgeSearchActive ? ' is-active' : ''}`}>
+        <span aria-hidden="true">⌕</span>
+        <input
+          type="search"
+          value={knowledgeSearchInput}
+          onChange={(event) => setKnowledgeSearchInput(event.target.value)}
+          placeholder={language === 'vi' ? 'Tìm kiến thức...' : 'Search knowledge...'}
+          aria-label={language === 'vi' ? 'Tìm trong Knowledge của tất cả module' : 'Search Knowledge across all modules'}
+        />
+        {knowledgeSearchInput && (
+          <button
+            type="button"
+            className="sidebar-knowledge-search__clear"
+            onClick={() => setKnowledgeSearchInput('')}
+            aria-label={language === 'vi' ? 'Xóa tìm kiếm kiến thức' : 'Clear Knowledge search'}
+          >
+            ×
+          </button>
+        )}
+      </label>
+
+      {knowledgeSearchActive && (
+        <div className="sidebar-knowledge-results" aria-live="polite">
+          <div className="sidebar-knowledge-results__header">
+            <span>{language === 'vi' ? 'KẾT QUẢ KIẾN THỨC' : 'KNOWLEDGE RESULTS'}</span>
+            {!knowledgeSearchLoading && !knowledgeSearchError && (
+              <span>{knowledgeResults.length}</span>
+            )}
+          </div>
+
+          {knowledgeSearchLoading && (
+            <div className="sidebar-knowledge-results__status">
+              {language === 'vi' ? 'Đang tải chỉ mục tìm kiếm...' : 'Loading search index...'}
+            </div>
+          )}
+
+          {!knowledgeSearchLoading && knowledgeSearchError && (
+            <div className="sidebar-knowledge-results__status is-error">{knowledgeSearchError}</div>
+          )}
+
+          {!knowledgeSearchLoading && !knowledgeSearchError && knowledgeResults.length === 0 && (
+            <div className="sidebar-knowledge-results__status">
+              {language === 'vi' ? 'Không tìm thấy Knowledge phù hợp.' : 'No matching Knowledge found.'}
+            </div>
+          )}
+
+          {!knowledgeSearchLoading && !knowledgeSearchError && visibleKnowledgeResults.length > 0 && (
+            <div className="sidebar-knowledge-results__list">
+              {visibleKnowledgeResults.map((result) => {
+                const { document } = result;
+                const moduleMetadata = moduleSearchMetadata.get(document.moduleId);
+                const moduleName = moduleMetadata?.displayName ?? document.moduleId;
+                const context = document.type === 'SECTION'
+                  ? `${moduleName} › ${document.categoryTitle}`
+                  : moduleName;
+
+                return (
+                  <button
+                    key={document.documentId}
+                    type="button"
+                    className="sidebar-knowledge-result"
+                    onClick={() => navigateToKnowledgeResult(result)}
+                    title={moduleMetadata?.hierarchy
+                      ? `${moduleMetadata.hierarchy} / ${moduleName}`
+                      : moduleName}
+                  >
+                    <span className="sidebar-knowledge-result__title">{document.title}</span>
+                    <span className="sidebar-knowledge-result__context">{context}</span>
+                    {document.preview && (
+                      <span className="sidebar-knowledge-result__preview">{document.preview}</span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
+          {!knowledgeSearchLoading && !knowledgeSearchError && knowledgeResults.length > visibleKnowledgeResults.length && (
+            <div className="sidebar-knowledge-results__more">
+              {language === 'vi'
+                ? `Còn ${knowledgeResults.length - visibleKnowledgeResults.length} kết quả khác`
+                : `${knowledgeResults.length - visibleKnowledgeResults.length} more results`}
+            </div>
+          )}
+        </div>
+      )}
+
       <div className="learning-sidebar__section-title">
         {language === 'vi' ? 'CẤU TRÚC HỌC TẬP' : 'LEARNING STRUCTURE'}
       </div>
@@ -869,10 +1124,20 @@ export function ModuleSidebar({
             interviewCounts={interviewCounts}
             apiCounts={apiCounts}
             roadmapAvailability={roadmapAvailability}
-            filter={filter}
+            filter={knowledgeSearchActive ? '' : filter}
+            knowledgeSearchActive={knowledgeSearchActive}
+            knowledgeMatchModuleIds={knowledgeMatchModuleIds}
             expandRequest={expandRequest}
           />
         ))}
+        {knowledgeSearchActive
+          && !knowledgeSearchLoading
+          && !knowledgeSearchError
+          && knowledgeMatchModuleIds.size === 0 && (
+            <li className="module-tree__empty-search">
+              {language === 'vi' ? 'Không có module chứa Knowledge phù hợp.' : 'No module contains matching Knowledge.'}
+            </li>
+        )}
       </ul>
     </aside>
   );

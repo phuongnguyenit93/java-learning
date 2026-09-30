@@ -4,6 +4,7 @@ import com.example.learning.setup.root.structure.service.ProjectStructureService
 import com.example.learning.setup.root.structure.service.PortalApiProjectionService
 import com.example.learning.setup.root.structure.service.PortalInterviewProjectionService
 import com.example.learning.setup.root.structure.service.PortalKnowledgeProjectionService
+import com.example.learning.setup.root.structure.service.PortalKnowledgeSearchProjectionService
 import com.example.learning.setup.root.structure.service.PortalQuizProjectionService
 import com.example.learning.setup.root.structure.service.PortalRoadmapProjectionService
 import com.example.learning.setup.root.structure.task.GenerateModuleOrderTask
@@ -45,6 +46,12 @@ ${project.path}
 
         PortalKnowledgeProjectionService knowledgeService =
                 new PortalKnowledgeProjectionService(
+                        project.logger
+                )
+
+
+        PortalKnowledgeSearchProjectionService knowledgeSearchService =
+                new PortalKnowledgeSearchProjectionService(
                         project.logger
                 )
 
@@ -220,6 +227,39 @@ ${project.path}
                 }
 
 
+        def generatePortalKnowledgeSearch =
+                project.tasks.register(
+                        'generatePortalKnowledgeSearch'
+                ) {
+                    task ->
+
+                        task.group =
+                                'learning portal'
+
+
+                        task.description =
+                                'Generate localized cross-module Knowledge search indexes from Portal Knowledge projections.'
+
+
+                        task.dependsOn(
+                                generatePortalKnowledge
+                        )
+
+
+                        task.inputs.files(
+                                portalDataInputs
+                        )
+
+
+                        task.doLast {
+
+                            knowledgeSearchService.generate(
+                                    project
+                            )
+                        }
+                }
+
+
         def generatePortalApi =
                 project.tasks.register(
                         'generatePortalApi'
@@ -361,6 +401,15 @@ ${project.path}
         }
 
 
+        generatePortalKnowledgeSearch.configure {
+            task ->
+
+                task.mustRunAfter(
+                        generatePortalModuleData
+                )
+        }
+
+
         generatePortalApi.configure {
             task ->
 
@@ -413,6 +462,7 @@ ${project.path}
                 task.dependsOn(
                         generatePortalModuleData,
                         generatePortalKnowledge,
+                        generatePortalKnowledgeSearch,
                         generatePortalApi,
                         generatePortalQuiz,
                         generatePortalInterview,
