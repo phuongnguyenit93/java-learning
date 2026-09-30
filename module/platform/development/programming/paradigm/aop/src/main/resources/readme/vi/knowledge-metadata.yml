@@ -1,0 +1,88 @@
+1.Introduction/AOP.md:
+  aop-what:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  aop-why:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  aop-without:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  aop-limit:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  aop-solution:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  aop-when:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+2.Terminology/Terminology.md:
+  aop-aspect:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  aop-join-point:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  aop-pointcut:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  aop-advice:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  aop-target:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  aop-weaving:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+3.ImplementationModels/ImplementationModels.md:
+  aop-compile-time:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  aop-load-time:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  aop-runtime:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  aop-model-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+4.Tradeoffs/Tradeoffs.md:
+  aop-benefits:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  aop-cost:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  aop-good-fit:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  aop-bad-fit:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  aop-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false

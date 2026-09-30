@@ -43,78 +43,82 @@
 
 roadmap:
   - id: functional-programming-purpose
-    title: Functional Programming in Java
-    purpose: Understand functional programming in Java as treating behavior as composable values while controlling state and side effects.
+    title: What Functional Programming in Java Is and Why It Matters
+    purpose: Understand how Java can parameterize behavior through functional interfaces so code can receive, return, and reuse behavior instead of hard-coding every variation or relying on verbose anonymous classes.
+    relatedModules:
+      - routeId: FUNCTIONAL_PROGRAMMING
+        label: Functional Programming Paradigm
+        note: Language-neutral topics such as pure functions, immutability, referential transparency, and paradigm-level trade-offs are owned by the Functional Programming paradigm module.
     objectives:
-      - Explain what functional style adds to ordinary imperative Java.
-      - Recognize that Java remains multi-paradigm rather than becoming a purely functional language.
-  - id: functional-interfaces
+      - Explain the problem solved by passing behavior as an argument instead of embedding every decision directly in control flow.
+      - Recognize functional style as an additional Java programming style, not a replacement for object-oriented or imperative programming.
+  - id: functional-interface-contracts
     title: Functional Interfaces and SAM Contracts
-    purpose: Understand a functional interface as the target contract that allows one abstract behavior to be represented by a lambda or method reference.
+    purpose: Understand a functional interface as an interface with one abstract method whose contract gives lambdas and method references a concrete Java type.
     relatedModules:
       - routeId: JAVA_ABSTRACT_INTERFACE
         label: Abstract Class & Interface
-        note: Functional interfaces build directly on Java interface contract semantics.
+        note: Functional interfaces build directly on Java interface contracts, including abstract, default, and static methods.
     objectives:
-      - Recognize SAM contracts and common java.util.function interface shapes.
-      - Choose domain-specific interfaces only when standard ones do not express intent well.
+      - Explain the Single Abstract Method (SAM) rule and the purpose of @FunctionalInterface.
+      - Distinguish the functional contract from additional default/static methods that do not create extra abstract behavior.
   - id: lambdas-and-target-typing
-    title: Lambdas and Target Typing
-    purpose: Understand lambda syntax through target typing, parameter/return compatibility, and delayed execution rather than as anonymous magic.
+    title: Lambda Expressions and Target Typing
+    purpose: Understand a lambda as an expression whose parameter and return types are interpreted from a target functional-interface type, representing behavior to execute later rather than executing it at declaration time.
     objectives:
-      - Explain how the target functional interface determines lambda typing.
-      - Distinguish declaring behavior from executing behavior.
-  - id: method-references
-    title: Method References
-    purpose: Understand method references as concise adapters to an existing method/constructor when the target functional signature matches.
+      - Read expression and block lambda forms and match them to compatible functional-interface signatures.
+      - Explain target typing, parameter/return compatibility, and why the same lambda text can mean different types in different contexts.
+  - id: capture-scope-and-state
+    title: Variable Capture, Scope, and State
+    purpose: Understand what surrounding state a lambda can access, why captured local variables must be final or effectively final, and how captured references differ from mutating the objects they point to.
     objectives:
-      - Distinguish static, bound, unbound, and constructor references.
-      - Prefer method references only when they improve readability over equivalent lambdas.
-  - id: capture-and-closure-semantics
-    title: Variable Capture and Closure Semantics
-    purpose: Understand how lambdas capture surrounding values and why local variables must be final or effectively final.
-    objectives:
-      - Distinguish captured local values from mutable object state reached through references.
-      - Recognize hidden state/side-effect risks inside closures.
-  - id: function-types-and-composition
-    title: Standard Function Types and Composition
-    purpose: Understand Function, Consumer, Supplier, Predicate, operators, and composition as reusable behavior-building blocks.
+      - Distinguish local-variable capture from instance/static state access and understand the lambda meaning of this.
+      - Recognize that effectively-final bindings do not make the referenced object immutable.
+  - id: standard-functional-interfaces
+    title: Standard Functional Interfaces
+    purpose: Understand the main java.util.function interface families as reusable contracts for predicates, transformations, consumers, suppliers, operators, and common arity/primitive variations.
     relatedModules:
       - routeId: JAVA_GENERICS
         label: Generics
-        note: Generic input/output relationships make standard functional interfaces reusable across types.
+        note: Generic input/output relationships make java.util.function contracts reusable while preserving type information.
     objectives:
-      - Choose functional interface shapes from data flow and return behavior.
-      - Compose behavior without hiding side effects or readability costs.
-  - id: functional-pipelines
-    title: Functional Pipelines and Stream Boundary
-    purpose: Understand pipeline-style transformation as composing lazy/intermediate behavior toward a terminal result, without turning this module into collection implementation study.
-    relatedModules:
-      - routeId: JAVA_COLLECTION
-        label: Collections
-        note: Collections provide common data sources and sinks; their hierarchy and implementation trade-offs remain owned by Collection.
+      - Choose Predicate, Function, Consumer, Supplier, UnaryOperator, BinaryOperator, and Bi variants from the behavior contract they represent.
+      - Recognize primitive specializations as a performance-oriented variation rather than a different functional model.
+  - id: method-references
+    title: Method and Constructor References
+    purpose: Understand method and constructor references as a concise way to reuse existing behavior when a target functional-interface signature can supply the required receiver, parameters, and return value.
     objectives:
-      - Recognize mapping, filtering, reduction, and terminal-operation roles.
-      - Separate pipeline behavior from the underlying collection data structure.
-  - id: optional-composition
+      - Distinguish static, bound, unbound, and constructor references.
+      - Prefer method references only when they improve readability over equivalent lambdas.
+  - id: behavior-composition-and-higher-order-use
+    title: Behavior Composition and Higher-Order Use
+    purpose: Understand how Java APIs can accept and return functional-interface values, then combine small behaviors through operations such as compose, andThen, and predicate composition.
+    objectives:
+      - Pass and return behavior through functional-interface types without losing the underlying type contract.
+      - Compose reusable behavior while keeping execution order and side effects understandable.
+  - id: optional-and-absence
     title: Optional and Explicit Absence
-    purpose: Understand Optional as a composable representation of possible absence at selected API boundaries rather than a universal replacement for null.
+    purpose: Understand Optional as a type for making possible absence explicit at selected API boundaries and for chaining absence-aware transformations without turning it into a universal replacement for null.
     objectives:
-      - Use map/flatMap/filter/orElse-style composition to keep absence explicit.
-      - Recognize inappropriate uses such as blanket field/parameter replacement.
-  - id: side-effects-failures-and-debugging
-    title: Side Effects, Failures, and Debugging
-    purpose: Understand the trade-offs of compact functional code when mutation, checked exceptions, debugging, or hidden work enter the pipeline.
+      - Use map, flatMap, filter, ifPresent, orElse, and lazy fallback forms according to whether a value exists.
+      - Recognize inappropriate uses such as blanket field/parameter replacement and unnecessary wrapping/unwrapping.
+  - id: stream-api-boundary
+    title: Functional Programming and the Stream API Boundary
+    purpose: Understand how Stream APIs consume lambdas and functional interfaces for declarative data processing while keeping Stream pipeline semantics, laziness, reduction, collectors, and parallel-stream behavior in the dedicated Stream API module.
+    relatedModules:
+      - routeId: JAVA_STREAM_API
+        label: Stream API (Java 8)
+        note: Stream creation, intermediate and terminal operations, reduction, collectors, laziness, ordering, and parallel-stream mechanics are owned by the Stream API module.
+    objectives:
+      - Recognize that a Stream operation receives behavior through functional-interface contracts learned in this module.
+      - Know when to follow the relation to the Stream API module instead of treating Stream as part of lambda syntax itself.
+  - id: tradeoffs-failures-and-synthesis
+    title: Side Effects, Exceptions, Trade-offs, and Practical Style
+    purpose: Synthesize Java functional mechanics into practical design decisions, especially when mutation, checked exceptions, debugging, hidden work, or excessive chaining makes functional code harder to understand than an imperative or object-oriented alternative.
     relatedModules:
       - routeId: JAVA_EXCEPTION
         label: Exceptions
-        note: Checked/unchecked exception semantics remain owned by the Exception module.
+        note: Checked/unchecked exception semantics and exception-design fundamentals remain owned by the Exception module.
     objectives:
-      - Keep side effects visible and controlled in functional pipelines.
-      - Recognize checked-exception friction and choose explicit adaptation boundaries.
-  - id: functional-synthesis
-    title: Functional Programming Synthesis
-    purpose: Connect functional interfaces, lambdas, capture, composition, pipelines, Optional, and side-effect control into one practical Java style model.
-    objectives:
-      - Choose functional style when it makes data flow and behavior composition clearer.
-      - Fall back to imperative/object-oriented structure when stateful workflow or debugging clarity benefits from it.
+      - Keep side effects and checked-exception adaptation explicit instead of hiding them inside compact lambda chains.
+      - Choose functional style when behavior parameterization and composition improve clarity, and choose imperative/object-oriented structure when stateful workflow or debugging clarity benefits from it.

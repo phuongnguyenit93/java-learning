@@ -1,0 +1,21 @@
+1.Introduction/MyBatis.md:
+  mybatis-what:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  mybatis-why:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  mybatis-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  mybatis-vs-orm:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  mybatis-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false

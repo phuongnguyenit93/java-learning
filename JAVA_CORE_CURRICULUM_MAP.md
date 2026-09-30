@@ -468,7 +468,7 @@ LanguageBasicsSynthesis  → How do value flow, scope, calls and compile/runtime
 
 #### Knowledge map
 
-| Existing chapter | Proposed anchored H2 sections |
+| Knowledge chapter | Anchored H2 sections |
 | --- | --- |
 | `1.LanguagePurpose/LanguagePurpose.md` | `#language-basics-roadmap` — What the module teaches, why these foundations belong together, and the accepted learning journey |
 | `2.SourceCodeStructure/SourceCodeStructure.md` | `#source-file-type-structure` — Source file → package/import → type → member/body orientation<br>`#statement-expression-model` — Statement vs expression<br>`#lexical-elements` — Identifiers, keywords/restricted identifiers, literals and comments |
@@ -596,7 +596,7 @@ NumericSynthesis        → How do we choose a representation and its policies f
 
 #### Knowledge map
 
-| Existing chapter | Proposed anchored H2 sections |
+| Knowledge chapter | Anchored H2 sections |
 | --- | --- |
 | `1.NumericModel/NumericModel.md` | `#numeric-type-model` — Java numeric type model<br>`#integer-vs-floating` — Integer vs floating-point semantics<br>`#numeric-conversions` — Numeric conversions and promotion |
 | `2.IntegerOverflow/IntegerOverflow.md` | `#integer-overflow-wraparound` — Integer overflow and wraparound<br>`#checked-arithmetic` — Checked arithmetic with exact methods<br>`#boundary-values` — MIN/MAX boundary reasoning |
@@ -1004,7 +1004,7 @@ interface vs abstract class trade-offs; why default methods exist; diamond confl
 
 #### Layer 1 — Module orientation
 
-**Entry chapter contract:** `1.IdentityEquality/IdentityEquality.md` must begin with a stable section that explicitly answers **what an "object contract" is, why Java developers need to know and obey these contracts, and how other APIs depend on them**. Clarify that an object contract is a set of behavioral promises/expectations rather than a Java keyword or one concrete interface. Methods inherited from `Object` and ordering contracts influence how collections, sorting, logging and frameworks interpret an object; breaking those promises can make otherwise valid-looking code behave incorrectly. Only after that foundation should the chapter distinguish identity from logical equality.
+**Entry chapter contract:** `1.ObjectContractPurpose/ObjectContractPurpose.md` must explicitly answer **what an "object contract" is, why Java developers need to know and obey these contracts, and how other APIs depend on them**. Clarify that an object contract is a set of behavioral promises/expectations rather than a Java keyword or one concrete interface. Methods inherited from `Object` and ordering contracts influence how collections, sorting, logging and frameworks interpret an object; breaking those promises can make otherwise valid-looking code behave incorrectly. Only after that foundation should `2.IdentityEquality/IdentityEquality.md` distinguish identity from logical equality.
 
 **Major terminology roles:**
 
@@ -1054,6 +1054,9 @@ Comparable
         ↓
 How can callers define alternate orderings?
 Comparator
+        ↓
+How do identity, equality, hashing, representation and ordering interact across Java APIs?
+Contract Synthesis
 ```
 
 **Running example / evidence strategy:** use a value object such as `Money`, `UserId`, or `BookKey`. Put the same instances into `HashSet`, `HashMap`, `TreeSet` and sorting operations so broken contracts produce visible behavior.
@@ -1061,26 +1064,30 @@ Comparator
 #### Layer 2 — Chapter story
 
 ```text
-IdentityEquality → Before overriding anything, distinguish object identity from domain equality.
-Equals           → Define what "same logical value" means and which laws callers rely on.
-HashCode         → Explain why hash containers need a stable bucket signal.
-EqualsHashCode   → Show that equality and hashing form one contract, not two independent methods.
-ToString         → Move from machine identity to useful human-readable diagnostics without leaking secrets.
-Comparable       → Define a type's natural ordering and its consistency expectations.
-Comparator       → Separate ordering policy from the type when multiple views/orders are needed.
+ObjectContractPurpose → Explain what an object contract is, why APIs rely on behavioral promises, and what can break when those promises are violated.
+IdentityEquality      → Before overriding anything, distinguish object identity from domain equality.
+Equals                → Define what "same logical value" means and which laws callers rely on.
+HashCode              → Explain what hashCode contributes to hash-based lookup, including collision/distribution boundaries.
+EqualsHashCode        → Show that equality and hashing form one contract, then make mutable-key failures observable.
+ToString              → Move from machine identity to useful human-readable diagnostics without leaking secrets.
+Comparable            → Define a type's natural ordering and its consistency expectations.
+Comparator            → Separate ordering policy from the type when multiple views/orders are needed.
+ContractSynthesis     → Reconnect identity, equality, hashing, representation, mutability and ordering into one API-facing mental model.
 ```
 
 #### Knowledge map
 
-| Existing chapter | Proposed anchored H2 sections |
+| Knowledge chapter | Anchored H2 sections |
 | --- | --- |
-| `1.IdentityEquality/IdentityEquality.md` | `#object-contract-purpose` — What an object contract is, why it matters, which APIs rely on it, and what can break when a class violates it<br>`#identity-vs-equality` — Object identity vs logical equality<br>`#reference-equality` — Reference equality with ==<br>`#value-object-equality` — Value-object equality mental model |
-| `2.Equals/Equals.md` | `#equals-contract` — equals contract: reflexive/symmetric/transitive/consistent/null<br>`#equals-implementation` — Typical equals implementation<br>`#equals-inheritance-risk` — Inheritance and equality symmetry risk |
-| `3.HashCode/HashCode.md` | `#hashcode-contract` — hashCode contract<br>`#hash-distribution` — Hash distribution and performance<br>`#mutable-key-risk` — Mutable fields used in hashCode |
-| `4.EqualsHashCode/EqualsHashCode.md` | `#equals-hashcode-consistency` — Equal objects must share hash code<br>`#hash-collection-lookup` — HashMap/HashSet lookup mechanics boundary<br>`#broken-contract-effects` — Observable failures from broken contract |
-| `5.ToString/ToString.md` | `#tostring-purpose` — toString purpose<br>`#tostring-design` — Useful deterministic representation<br>`#tostring-sensitive-data` — Sensitive-data/logging boundary |
-| `6.Comparable/Comparable.md` | `#natural-order` — Natural ordering<br>`#compareto-contract` — compareTo ordering contract<br>`#compareto-equals-consistency` — Consistency with equals and sorted collections |
-| `7.Comparator/Comparator.md` | `#external-order` — External/custom ordering<br>`#comparator-composition` — thenComparing/reversed/null handling<br>`#comparator-contract` — Comparator transitivity/consistency<br>`#sorting-stability-boundary` — Sorting behavior and stability boundary |
+| `1.ObjectContractPurpose/ObjectContractPurpose.md` | `#object-contract-purpose` — What an object contract is, why it matters, which APIs rely on it, and what can break when a class violates it |
+| `2.IdentityEquality/IdentityEquality.md` | `#identity-vs-equality` — Object identity vs logical equality<br>`#reference-equality` — Reference equality with ==<br>`#value-object-equality` — Value-object equality mental model |
+| `3.Equals/Equals.md` | `#equals-contract` — equals contract: reflexive/symmetric/transitive/consistent/null<br>`#equals-implementation` — Typical equals implementation<br>`#equals-inheritance-risk` — Inheritance and equality symmetry risk |
+| `4.HashCode/HashCode.md` | `#hashcode-contract` — hashCode contract<br>`#hash-distribution` — Hash distribution, collision and performance boundaries |
+| `5.EqualsHashCode/EqualsHashCode.md` | `#equals-hashcode-consistency` — Equal objects must share hash code<br>`#hash-collection-lookup` — HashMap/HashSet lookup mechanics boundary<br>`#broken-contract-effects` — Observable failures from broken contract<br>`#mutable-key-risk` — Mutable equality/hash state after insertion |
+| `6.ToString/ToString.md` | `#tostring-purpose` — toString purpose<br>`#tostring-design` — Useful diagnostic representation<br>`#tostring-sensitive-data` — Sensitive-data/logging boundary |
+| `7.Comparable/Comparable.md` | `#natural-order` — Natural ordering<br>`#compareto-contract` — compareTo ordering contract<br>`#compareto-equals-consistency` — Consistency with equals and sorted collections |
+| `8.Comparator/Comparator.md` | `#external-order` — External/custom ordering<br>`#comparator-composition` — thenComparing/reversed/null handling<br>`#comparator-contract` — Comparator transitivity/consistency<br>`#sorting-stability-boundary` — Sorting behavior and stability boundary |
+| `9.ContractSynthesis/ContractSynthesis.md` | `#contract-synthesis` — End-to-end relation among identity, equality, hashing, representation, mutability and ordering across Java APIs |
 
 #### Proposed API experiments
 
@@ -1245,7 +1252,7 @@ what String is, its role in a Java system and the boundary between text represen
 
 #### Layer 1 — Module orientation
 
-**Entry chapter contract:** `1.Throwable/Throwable.md` must begin with a stable section that explicitly answers **what an exception is, why Java needs/uses exceptions, and what role exceptions play in a real application** before hierarchy trivia. Establish the exception mechanism as both a `Throwable` object carrying failure context and an abrupt-control-flow mechanism that separates the normal success path from failure propagation. Explain why this is more scalable than forcing every caller to inspect status codes/extra return values, and connect exceptions to API failure contracts, cross-layer propagation, cleanup, diagnostics, translation and recovery decisions. Also establish the boundary that exceptions should not be the default mechanism for ordinary expected control flow. Only then introduce the `Throwable` hierarchy.
+**Entry chapter contract:** `1.ExceptionPurpose/ExceptionPurpose.md` must explicitly answer **what an exception is, why Java needs/uses exceptions, and what role exceptions play in a real application** before hierarchy trivia. Establish the exception mechanism as both a failure object model and an abrupt-control-flow mechanism that separates the normal success path from failure propagation. Explain why this is more scalable than forcing every caller to inspect status codes/extra return values, and connect exceptions to API failure contracts, cross-layer propagation, cleanup, diagnostics, translation and recovery decisions. Also establish the boundary that exceptions should not be the default mechanism for ordinary expected control flow. `2.ThrowableModel/ThrowableModel.md` then introduces the `Throwable` hierarchy and diagnostic model.
 
 **Major terminology roles:**
 
@@ -1275,35 +1282,32 @@ exception translation / chaining
 **Learning roadmap:**
 
 ```text
-What is an exception, why does Java need it, and what role does it play across application layers?
-Exception Purpose and Role
+What are exceptions and why does Java use them?
+Exception Purpose
         ↓
-How does Java represent abnormal failure?
-Throwable
+How does Java represent and classify throwable failures?
+Throwable Model
         ↓
 Which failures become part of the compile-time method contract?
-Checked vs Unchecked
+Checked and Unchecked Exception Contracts
         ↓
-How is a failure thrown and declared?
-throw / throws
+How are exceptions thrown, declared, and propagated?
+throw / throws / Propagation
         ↓
-How does failure move through the call stack?
-Propagation
+How do try/catch/finally route control and cleanup?
+Handling and Cleanup
         ↓
-How do we handle failure and still perform cleanup?
-try / catch / finally
+How are owned resources closed safely while preserving multiple failures?
+try-with-resources / Suppressed Exceptions
         ↓
-How do resources close safely even when multiple things fail?
-try-with-resources
-        ↓
-What happens when the body and cleanup both throw?
-Suppressed Exceptions
-        ↓
-When should we create a domain/application exception?
+When does a dedicated exception type add useful abstraction or context?
 Custom Exceptions
         ↓
-Where should failures be translated, logged, recovered or allowed to propagate?
-Exception Design
+Where should applications translate, log, retry, recover, or propagate?
+Exception Boundaries
+        ↓
+How does one failure move end to end through all of those decisions?
+Exception Handling Synthesis
 ```
 
 **Running example / evidence strategy:** use a small service operation that reads/parses data and crosses a repository/service boundary. Let it fail in controlled ways so propagation, wrapping, cause preservation, cleanup order and suppressed exceptions can all be observed from one story.
@@ -1311,30 +1315,30 @@ Exception Design
 #### Layer 2 — Chapter story
 
 ```text
-Throwable          → What changes in control flow when normal execution cannot continue?
-CheckedUnchecked   → Which failures should the compiler force callers to acknowledge?
-ThrowThrows        → How do we signal a failure and communicate the method contract?
-Propagation        → If nobody handles it here, where does the exception go?
-TryCatchFinally    → How do we recover/translate while guaranteeing cleanup behavior?
-TryWithResources   → How can resource ownership be expressed so cleanup is automatic and ordered?
-SuppressedException→ How do we preserve the primary failure when cleanup also fails?
-CustomException    → When does a new exception type add meaningful abstraction/context?
-ExceptionDesign    → Where should applications catch, translate, log, retry, recover or terminate?
+ExceptionPurpose          → What are exceptions, why do they exist, and when should they not be used as ordinary control flow?
+ThrowableModel            → How does Java represent and classify throwable failures and diagnostic context?
+CheckedUncheckedContracts → Which failures should the compiler force callers to acknowledge?
+ThrowingPropagation       → How do `throw`, `throws`, stack unwinding, catch selection, and causal chains fit together?
+HandlingCleanup           → How do `try`, `catch`, and `finally` route control and cleanup?
+ResourceSafeFailure       → How do try-with-resources, close ordering, and suppressed failures preserve resource safety?
+CustomExceptionsContext   → When does a new exception type add meaningful abstraction/context?
+ExceptionBoundaryDesign   → Where should applications catch, translate, log, retry, recover, or propagate?
+ExceptionSynthesis        → How does one failure travel from origin to the final responsible boundary?
 ```
 
 #### Knowledge map
 
 | Existing chapter | Proposed anchored H2 sections |
 | --- | --- |
-| `1.Throwable/Throwable.md` | `#exception-purpose` — What an exception is, why Java uses the exception mechanism, its role in application failure handling, and its normal-control-flow boundary<br>`#throwable-hierarchy` — Throwable hierarchy<br>`#error-vs-exception` — Error vs Exception<br>`#stack-trace-cause` — Stack trace, cause and causal chain |
-| `2.CheckedUnchecked/CheckedUnchecked.md` | `#checked-exception` — Checked exception compile-time contract<br>`#unchecked-exception` — RuntimeException semantics<br>`#checked-vs-unchecked-design` — Choosing checked vs unchecked |
-| `3.ThrowThrows/ThrowThrows.md` | `#throw-statement` — throw statement<br>`#throws-clause` — throws declaration<br>`#precise-rethrow` — Precise rethrow typing and why the compiler can preserve narrower checked types<br>`#override-throws-rules` — Overriding methods may not broaden checked exceptions declared by the parent contract<br>`#checked-exception-narrowing` — Overrides may keep, narrow or remove checked exceptions while unchecked exceptions are not constrained the same way |
-| `4.Propagation/Propagation.md` | `#exception-propagation` — Stack unwinding and propagation<br>`#catch-selection` — Catch selection by type<br>`#exception-chaining` — Wrapping with preserved cause<br>`#lost-cause-pitfall` — Lost-cause anti-pattern |
-| `5.TryCatchFinally/TryCatchFinally.md` | `#try-catch-flow` — try/catch control flow<br>`#finally-semantics` — finally execution semantics<br>`#return-finally` — return/throw interactions with finally<br>`#multi-catch` — Multi-catch and alternatives |
-| `6.TryWithResources/TryWithResources.md` | `#autocloseable` — AutoCloseable contract<br>`#resource-close-order` — Reverse resource close order<br>`#effective-final-resource` — Java 9 effective-final resource usage<br>`#twr-vs-finally` — Try-with-resources vs manual finally |
-| `7.SuppressedException/SuppressedException.md` | `#primary-vs-suppressed` — Primary vs suppressed exception<br>`#get-suppressed` — Inspecting suppressed exceptions<br>`#close-failure` — Close failure during another failure |
-| `8.CustomException/CustomException.md` | `#custom-exception-purpose` — When custom exceptions add meaning<br>`#exception-context` — Preserving useful context and cause<br>`#exception-hierarchy-design` — Designing a small domain exception hierarchy |
-| `9.ExceptionDesign/ExceptionDesign.md` | `#exception-boundaries` — Translate exceptions at abstraction boundaries<br>`#do-not-swallow` — Do not swallow failures<br>`#logging-boundary` — Logging once at responsible boundary<br>`#exception-as-control-flow` — Avoid exceptions as normal control flow<br>`#cleanup-and-recovery` — Recovery vs cleanup vs propagation |
+| `1.ExceptionPurpose/ExceptionPurpose.md` | `#exception-purpose` — What an exception is, why Java uses the exception mechanism, its role in application failure handling, and its normal-control-flow boundary |
+| `2.ThrowableModel/ThrowableModel.md` | `#throwable-hierarchy` — Throwable hierarchy<br>`#error-vs-exception` — Error vs Exception<br>`#stack-trace-cause` — Stack trace, cause and causal chain |
+| `3.CheckedUncheckedContracts/CheckedUncheckedContracts.md` | `#checked-exception` — Checked exception compile-time contract<br>`#unchecked-exception` — RuntimeException semantics<br>`#checked-vs-unchecked-design` — Choosing checked vs unchecked |
+| `4.ThrowingPropagation/ThrowingPropagation.md` | `#throw-statement` — throw statement<br>`#throws-clause` — throws declaration<br>`#exception-propagation` — Stack unwinding and propagation<br>`#catch-selection` — Catch selection by type<br>`#exception-chaining` — Wrapping with preserved cause<br>`#lost-cause-pitfall` — Lost-cause anti-pattern<br>`#precise-rethrow` — Precise rethrow typing<br>`#override-throws-rules` — Overriding checked-exception rules<br>`#checked-exception-narrowing` — Narrowing checked exceptions |
+| `5.HandlingCleanup/HandlingCleanup.md` | `#try-catch-flow` — try/catch control flow<br>`#multi-catch` — Multi-catch and alternatives<br>`#finally-semantics` — finally execution semantics<br>`#return-finally` — return/throw interactions with finally |
+| `6.ResourceSafeFailure/ResourceSafeFailure.md` | `#autocloseable` — AutoCloseable contract<br>`#resource-close-order` — Reverse resource close order<br>`#twr-vs-finally` — Try-with-resources vs manual finally<br>`#primary-vs-suppressed` — Primary vs suppressed exception<br>`#get-suppressed` — Inspecting suppressed exceptions<br>`#close-failure` — Close failure during another failure<br>`#effective-final-resource` — Java 9 effective-final resource usage |
+| `7.CustomExceptionsContext/CustomExceptionsContext.md` | `#custom-exception-purpose` — When custom exceptions add meaning<br>`#exception-context` — Preserving useful context and cause<br>`#exception-hierarchy-design` — Designing a small domain exception hierarchy |
+| `8.ExceptionBoundaryDesign/ExceptionBoundaryDesign.md` | `#exception-boundaries` — Translate exceptions at abstraction boundaries<br>`#do-not-swallow` — Do not swallow failures<br>`#logging-boundary` — Logging once at responsible boundary<br>`#exception-as-control-flow` — Avoid exceptions as normal control flow<br>`#cleanup-and-recovery` — Recovery vs cleanup vs propagation |
+| `9.ExceptionSynthesis/ExceptionSynthesis.md` | `#exception-synthesis` — End-to-end trace from failure origin through propagation, cleanup, translation and final handling boundary |
 
 #### Proposed API experiments
 
@@ -1363,7 +1367,7 @@ explain what an exception is, why Java uses a separate abnormal-completion chann
 
 #### Layer 1 — Module orientation
 
-**Entry chapter contract:** `1.GenericType/GenericType.md` must begin by explaining the problem generics solve: without parameterized types, APIs either lose type information into `Object` or duplicate the same container/algorithm for many types. The learner should understand "type as a parameter" before wildcard syntax appears.
+**Entry chapter contract:** `1.GenericsPurpose/GenericsPurpose.md` must begin by explaining the problem generics solve: without parameterized types, APIs either lose type information into `Object` or duplicate the same container/algorithm for many types. The learner should understand "type as a parameter" before declaration mechanics, invariance or wildcard syntax appear.
 
 **Major terminology roles:**
 
@@ -2405,7 +2409,7 @@ class loading lifecycle; parent delegation; why same class name can be different
 | `class-object` | 14 | 50 | 7 | 36–48 | 24–32 |
 | `oop` | 7 | 29 | 6 | 24–32 | 18–24 |
 | `abstract-interface` | 6 | 22 | 5 | 22–30 | 16–22 |
-| `object-contract` | 7 | 23 | 5 | 24–32 | 18–24 |
+| `object-contract` | 9 | 24 | 5 | 24–32 | 18–24 |
 | `string` | 12 | 48 | 8 | 28–38 | 18–26 |
 | `exception` | 9 | 35 | 6 | 28–38 | 20–28 |
 | `generics` | 9 | 41 | 6 | 28–38 | 20–28 |

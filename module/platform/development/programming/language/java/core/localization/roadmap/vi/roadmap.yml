@@ -43,68 +43,68 @@
 
 roadmap:
   - id: localization-model
-    title: Mental Model Localization
-    purpose: Hiểu localization là điều chỉnh presentation và language convention mà không thay đổi underlying domain meaning.
+    title: Mô hình tư duy về bản địa hóa
+    purpose: Hiểu bản địa hóa (localization) là điều chỉnh cách hiển thị và quy ước ngôn ngữ cho người dùng mà không làm thay đổi dữ liệu hay ý nghĩa nghiệp vụ bên dưới.
     objectives:
-      - Tách domain value khỏi presentation text/number/date theo locale.
-      - Nhận biết internationalization design là bài toán data/resource boundary.
+      - Phân biệt quốc tế hóa (internationalization/i18n) với bản địa hóa (localization/l10n) và hiểu vì sao phần mềm cần tách hai bước này.
+      - Tách dữ liệu nghiệp vụ khỏi cách hiển thị văn bản, số, tiền tệ và ngày giờ theo Locale.
   - id: locale-and-language-tags
-    title: Locale và Language Tag
-    purpose: Hiểu Locale biểu diễn gì và cách language tag kiểu BCP 47 mang language/region/script information qua hệ thống.
+    title: Locale và thẻ ngôn ngữ
+    purpose: Hiểu Locale biểu diễn ngữ cảnh ngôn ngữ/khu vực nào và cách thẻ ngôn ngữ theo chuẩn BCP 47 truyền thông tin về ngôn ngữ, hệ chữ viết và khu vực giữa các hệ thống.
     objectives:
-      - Tạo và compare locale identity có chủ đích.
-      - Tránh xem language, region, script và timezone là cùng một concept.
+      - Tạo, đọc và so sánh định danh Locale có chủ đích.
+      - Không nhầm ngôn ngữ, khu vực, hệ chữ viết và múi giờ là cùng một khái niệm.
   - id: resource-bundles-and-fallback
-    title: ResourceBundle và Fallback
-    purpose: Hiểu localized resource lookup, bundle naming, candidate selection và fallback behavior.
+    title: ResourceBundle và cơ chế tìm kiếm dự phòng
+    purpose: Hiểu cách Java tìm tài nguyên bản địa hóa, quy ước đặt tên gói tài nguyên, thứ tự Locale ứng viên và cơ chế dự phòng (fallback).
     objectives:
-      - Tổ chức localized resource mà không duplicate domain logic.
-      - Dự đoán điều gì xảy ra khi thiếu exact locale resource.
+      - Tổ chức tài nguyên theo ngôn ngữ mà không lặp lại logic nghiệp vụ.
+      - Dự đoán tài nguyên nào được chọn khi không tồn tại tài nguyên khớp chính xác với Locale yêu cầu.
   - id: localized-messages
-    title: Localized Message có tham số
-    purpose: Hiểu MessageFormat là cách locale-aware để compose message có parameter mà không nối chuỗi thủ công.
+    title: Thông điệp bản địa hóa có tham số
+    purpose: Hiểu MessageFormat giúp đưa tham số vào thông điệp theo Locale mà không phải nối chuỗi thủ công hoặc cố định cấu trúc câu trong code.
     objectives:
-      - Giữ translatable message structure trong resource thay vì code.
-      - Xử lý quoting và argument formatting có chủ đích.
+      - Giữ cấu trúc thông điệp cần dịch trong tài nguyên thay vì đặt cứng trong code.
+      - Xử lý quy tắc dấu nháy và định dạng tham số của MessageFormat có chủ đích.
   - id: numbers-and-currency
-    title: Number và Currency theo Locale
-    purpose: Hiểu khác biệt giữa numeric/currency domain value với cách chúng được format/parse theo locale.
+    title: Định dạng số và tiền tệ theo Locale
+    purpose: Hiểu sự khác biệt giữa giá trị số/tiền tệ trong nghiệp vụ với cách các giá trị đó được định dạng hoặc phân tích theo Locale.
     relatedModules:
       - routeId: JAVA_NUMBERS
         label: Numbers
-        note: Numeric representation và rounding thuộc Numbers; Localization sở hữu presentation.
+        note: Biểu diễn số và quy tắc làm tròn thuộc Numbers; Localization chịu trách nhiệm cách trình bày theo Locale.
     objectives:
-      - Dùng locale-sensitive number formatting mà không thay đổi numeric meaning.
-      - Tách currency identity khỏi localized currency display.
+      - Định dạng và phân tích số theo Locale mà không làm thay đổi ý nghĩa của giá trị số.
+      - Tách định danh tiền tệ khỏi cách ký hiệu và số tiền được hiển thị cho người dùng.
   - id: collation-and-text-order
-    title: Collation theo Locale
-    purpose: Hiểu vì sao thứ tự text người dùng nhìn thấy phụ thuộc locale rule thay vì raw Unicode/String natural order.
+    title: So sánh và sắp xếp văn bản theo Locale
+    purpose: Hiểu vì sao thứ tự văn bản dành cho người dùng phải tuân theo quy tắc ngôn ngữ của Locale thay vì chỉ dựa vào thứ tự Unicode hoặc thứ tự tự nhiên của String.
     relatedModules:
       - routeId: JAVA_STRING
         label: String
-        note: Unicode, normalization và core String semantics là prerequisite cho locale-aware text processing.
+        note: Unicode, chuẩn hóa văn bản và ngữ nghĩa cốt lõi của String là nền tảng trước khi xử lý văn bản theo Locale.
     objectives:
-      - Dùng Collator khi linguistic ordering quan trọng.
-      - Reason về collation strength và decomposition mà không thay đổi string identity.
+      - Dùng Collator khi cần so sánh hoặc sắp xếp theo quy tắc ngôn ngữ.
+      - Hiểu mức độ so sánh (strength) và chế độ phân rã ký tự (decomposition) mà không làm thay đổi nội dung String gốc.
   - id: date-time-localization
-    title: Date-Time Presentation theo Locale
-    purpose: Hiểu localization của temporal presentation nhưng vẫn tách Locale khỏi ZoneId và timeline semantics.
+    title: Hiển thị ngày giờ theo Locale
+    purpose: Hiểu Locale quyết định quy ước hiển thị ngày giờ, trong khi ZoneId và giá trị thời gian trên dòng thời gian vẫn là những khái niệm riêng.
     relatedModules:
       - routeId: JAVA_DATE_TIME
         label: Date-Time
-        note: Date-Time sở hữu temporal meaning, zone và arithmetic; Localization sở hữu presentation convention.
+        note: Date-Time chịu trách nhiệm ý nghĩa thời gian, múi giờ và phép tính; Localization chịu trách nhiệm quy ước trình bày theo Locale.
     objectives:
-      - Format date/time theo locale convention mà không đổi temporal value.
-      - Giữ timezone decision thuộc date-time model.
+      - Định dạng ngày giờ theo quy ước của Locale mà không làm thay đổi giá trị thời gian bên dưới.
+      - Giữ quyết định về múi giờ trong mô hình Date-Time thay vì gộp nó vào Locale.
   - id: text-segmentation-and-bidi
-    title: Text Segmentation và Bidirectional Text
-    purpose: Hiểu vì sao natural-language boundary và visual order có thể khác code-unit index, space và logical storage order.
+    title: Phân tách văn bản và văn bản hai chiều
+    purpose: Hiểu vì sao ranh giới ký tự/từ/câu trong ngôn ngữ tự nhiên và thứ tự hiển thị có thể khác chỉ số code unit, dấu cách hoặc thứ tự lưu trữ logic.
     objectives:
-      - Nhận biết word/sentence/grapheme segmentation phụ thuộc locale.
-      - Hiểu boundary giữa logical order và visual order trong mixed LTR/RTL text.
+      - Dùng BreakIterator khi cần xác định ranh giới ký tự, từ, câu hoặc dòng theo Locale thay vì tách văn bản một cách ngây thơ.
+      - Hiểu Bidi phân tích quan hệ giữa thứ tự logic và thứ tự hiển thị trong văn bản trộn chiều trái-sang-phải và phải-sang-trái.
   - id: locale-defaults-and-synthesis
-    title: Default, Fallback và tổng hợp Localization
-    purpose: Kết nối locale identity, resource, formatting, collation, temporal presentation và text behavior đồng thời tránh hidden system-default assumption.
+    title: Locale mặc định, cơ chế dự phòng và tổng hợp
+    purpose: Kết nối Locale, tài nguyên bản địa hóa, định dạng, sắp xếp văn bản, hiển thị ngày giờ và xử lý văn bản thành một mô hình thống nhất, đồng thời tránh phụ thuộc ngầm vào Locale mặc định của hệ thống.
     objectives:
-      - Làm locale choice rõ ràng tại application boundary.
-      - Nhận biết khi fallback hữu ích và khi nó che missing localization data.
+      - Đưa việc lựa chọn Locale thành quyết định rõ ràng tại ranh giới của ứng dụng.
+      - Nhận biết khi cơ chế dự phòng hữu ích và khi nó che giấu tài nguyên bản địa hóa bị thiếu.

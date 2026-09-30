@@ -1,0 +1,21 @@
+1.Introduction/Hibernate.md:
+  hibernate-what:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  hibernate-why:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  hibernate-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  hibernate-jpa:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  hibernate-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false

@@ -43,60 +43,77 @@
 
 roadmap:
   - id: date-time-model
-    title: Mental Model Date-Time
-    purpose: Hiểu calendar date, wall-clock time, local date-time, timeline instant, offset và zone trả lời các câu hỏi khác nhau.
+    title: Ngày và thời gian là gì, vì sao cần nhiều mô hình?
+    purpose: Hiểu dữ liệu ngày và thời gian không phải một loại dấu thời gian duy nhất; ngày theo lịch, giờ trong ngày, ngày-giờ cục bộ, mốc trên dòng thời gian, độ lệch UTC và quy tắc múi giờ trả lời những câu hỏi khác nhau, vì vậy java.time cung cấp nhiều kiểu chuyên biệt thay vì một kiểu dùng cho mọi trường hợp.
     objectives:
-      - Chọn date-time type từ ý nghĩa domain value.
-      - Tránh xem mọi temporal value như timestamp có thể thay thế lẫn nhau.
+      - Chọn kiểu ngày-giờ từ ý nghĩa của dữ liệu nghiệp vụ thay vì từ định dạng chuỗi đang nhìn thấy.
+      - Phân biệt giá trị theo lịch của con người với một mốc chính xác trên dòng thời gian toàn cục.
+      - Hiểu các kiểu chính của java.time là bất biến và thao tác thay đổi sẽ tạo giá trị mới.
   - id: local-date-and-time
-    title: Calendar và Wall-Clock value cục bộ
-    purpose: Hiểu LocalDate, LocalTime và LocalDateTime là value chưa có global timeline meaning.
+    title: Ngày, giờ và ngày-giờ cục bộ
+    purpose: Hiểu LocalDate, LocalTime và LocalDateTime biểu diễn các giá trị theo lịch hoặc đồng hồ cục bộ; chúng hữu ích khi nghiệp vụ cố ý chưa gắn múi giờ, nhưng không tự xác định một mốc duy nhất trên dòng thời gian toàn cục.
     objectives:
-      - Dùng local type cho domain concept cố ý không có offset/zone.
-      - Nhận biết khi việc gắn zone sau đó có thể tạo ambiguity.
+      - Dùng LocalDate khi nghiệp vụ chỉ quan tâm ngày và LocalTime khi chỉ quan tâm giờ trong ngày.
+      - Dùng LocalDateTime cho dữ liệu nghiệp vụ cố ý chưa gắn múi giờ.
+      - Giải thích vì sao cần thêm thông tin múi giờ hoặc độ lệch UTC trước khi ánh xạ LocalDateTime thành một Instant.
+      - Nhận biết việc gắn múi giờ sau đó có thể gặp thời điểm không tồn tại hoặc không duy nhất quanh chuyển đổi DST.
   - id: instant-and-timeline
-    title: Instant và Global Timeline
-    purpose: Hiểu Instant là một điểm chính xác trên timeline dựa trên UTC và tách nó khỏi human calendar representation.
+    title: Instant và dòng thời gian toàn cục
+    purpose: Hiểu Instant biểu diễn một mốc chính xác trên dòng thời gian dựa trên UTC, độc lập với cách con người nhìn mốc đó dưới ngày, giờ và múi giờ cụ thể.
     objectives:
-      - Dùng Instant cho machine-oriented event time và ordering.
-      - Convert giữa Instant với human-facing zoned representation có chủ đích.
+      - Dùng Instant cho thời điểm sự kiện của hệ thống, sắp xếp theo thời gian và ranh giới lưu trữ khi cần một mốc không mơ hồ.
+      - Hiểu số giây hoặc mili giây tính từ mốc epoch chỉ là cách biểu diễn bằng số của một mốc trên cùng dòng thời gian.
+      - Chuyển đổi có chủ đích giữa Instant và cách biểu diễn ngày-giờ có múi giờ cho người dùng.
+  - id: offsets-and-zone-rules
+    title: ZoneOffset, ZoneId và quy tắc múi giờ
+    purpose: Hiểu một độ lệch UTC cụ thể như +07:00 không đồng nghĩa với một múi giờ theo vùng như Asia/Ho_Chi_Minh; ZoneId có thể mang tập quy tắc thay đổi theo lịch sử hoặc chính sách, còn ZoneOffset chỉ mô tả một độ lệch cụ thể.
+    objectives:
+      - Phân biệt ZoneOffset, ZoneId và vai trò của ZoneRules.
+      - Hiểu vì sao múi giờ theo vùng có thể thay đổi độ lệch theo thời điểm và tạo khoảng trống hoặc thời điểm lặp quanh DST.
+      - Tránh coi một độ lệch UTC hiện tại là thay thế đầy đủ cho danh tính và quy tắc của múi giờ.
   - id: offsets-zones-and-zoned-values
-    title: Offset, Zone và Zoned Value
-    purpose: Hiểu fixed UTC offset khác named region rule như thế nào và cách OffsetDateTime/ZonedDateTime mang context đó.
+    title: OffsetDateTime, ZonedDateTime và chuyển đổi múi giờ
+    purpose: Hiểu cách OffsetDateTime và ZonedDateTime gắn ngữ cảnh độ lệch hoặc quy tắc múi giờ vào ngày-giờ, từ đó phân biệt giữ nguyên cùng một mốc thời gian với giữ nguyên cùng các trường ngày-giờ cục bộ.
     objectives:
-      - Phân biệt ZoneOffset với ZoneId và region rule có DST.
-      - Chọn OffsetDateTime hay ZonedDateTime theo nhu cầu interchange hoặc rule-aware.
+      - Chọn OffsetDateTime khi giá trị cần mang một độ lệch UTC cụ thể và ZonedDateTime khi cần giữ danh tính cùng quy tắc của múi giờ theo vùng.
+      - Phân biệt chuyển đổi giữ nguyên Instant với việc diễn giải lại cùng LocalDateTime trong một múi giờ khác.
+      - Nhận biết hai giá trị có thể có ngày-giờ cục bộ khác nhau nhưng vẫn biểu diễn cùng một Instant.
   - id: duration-and-period
-    title: Elapsed Time và Calendar Amount
-    purpose: Hiểu Duration và Period là hai model khác nhau cho time-based amount và date-based amount.
+    title: Duration và Period — thời lượng thực với khoảng theo lịch
+    purpose: Hiểu Duration và Period mô hình hóa hai loại khoảng thời gian khác nhau — thời lượng đo trên dòng thời gian và lượng năm/tháng/ngày theo lịch — nên không thể thay thế nhau một cách máy móc.
     objectives:
-      - Dùng Duration cho elapsed quantity dựa trên timeline.
-      - Dùng Period cho quantity year/month/day theo calendar.
+      - Dùng Duration cho lượng thời gian đo bằng giờ/phút/giây trên dòng thời gian.
+      - Dùng Period cho lượng năm/tháng/ngày chịu ảnh hưởng bởi quy tắc của lịch.
+      - Giải thích vì sao 24 giờ không phải lúc nào cũng tương đương một ngày theo lịch khi có thay đổi múi giờ hoặc DST.
   - id: formatting-and-parsing
-    title: Formatting và Parsing
-    purpose: Hiểu date-time formatter là text boundary rõ ràng chứ không phải một phần của temporal value.
+    title: Định dạng và phân tích chuỗi ngày-giờ
+    purpose: Hiểu DateTimeFormatter là ranh giới chuyển đổi giữa giá trị ngày-giờ và văn bản; định dạng hiển thị không làm thay đổi ý nghĩa thời gian của chính giá trị.
     relatedModules:
       - routeId: JAVA_LOCALIZATION
-        label: Localization
-        note: Date/time presentation theo locale thuộc localization model rộng hơn.
+        label: Bản địa hóa
+        note: Cách hiển thị ngày và giờ theo Locale thuộc mô hình bản địa hóa rộng hơn và được học sâu trong mô-đun Bản địa hóa.
     objectives:
-      - Dùng standard/custom formatter với expectation rõ ràng.
-      - Tách parsing/formatting khỏi core temporal semantics.
+      - Chọn DateTimeFormatter có sẵn hoặc mẫu tùy chỉnh với quy ước đầu vào/đầu ra rõ ràng.
+      - Hiểu việc phân tích chuỗi phải tạo đúng loại giá trị ngày-giờ mà dữ liệu thực sự mang ý nghĩa.
+      - Tách quy tắc định dạng và phân tích chuỗi khỏi ý nghĩa cốt lõi của giá trị thời gian.
   - id: arithmetic-comparison-and-dst
-    title: Arithmetic, Comparison và DST Boundary
-    purpose: Hiểu temporal arithmetic/comparison phụ thuộc type được chọn và cách zone transition tạo gap/overlap.
+    title: Phép toán, so sánh và ranh giới DST
+    purpose: Hiểu kết quả cộng/trừ, tính khoảng cách và so sánh phụ thuộc vào loại giá trị đang dùng; với dữ liệu có múi giờ, quy tắc lịch và chuyển đổi DST có thể làm phép toán theo ngày khác phép toán theo số giờ thực tế.
     objectives:
-      - Chọn timeline arithmetic hay calendar arithmetic có chủ đích.
-      - Nhận biết local time ambiguous hoặc invalid quanh DST transition.
+      - Chọn phép toán theo dòng thời gian hoặc theo lịch một cách có chủ đích.
+      - Dùng plus/minus, ChronoUnit, Duration hoặc Period theo đúng ý nghĩa cần đo.
+      - So sánh đúng loại giá trị và nhận biết thời điểm cục bộ không hợp lệ hoặc không duy nhất quanh chuyển đổi DST.
+      - Tách quy tắc ngày làm việc của nghiệp vụ khỏi phép toán ngày-giờ chung của thư viện.
   - id: clock-and-testability
-    title: Clock và thời gian có thể test
-    purpose: Hiểu Clock như injectable source của “now”, tách time-dependent behavior khỏi system clock.
+    title: Clock và thời gian có thể kiểm thử
+    purpose: Hiểu Clock là nguồn cung cấp thời điểm “hiện tại” có thể truyền vào mã nguồn, giúp tách logic phụ thuộc thời gian khỏi đồng hồ hệ thống và làm kiểm thử có kết quả ổn định.
     objectives:
-      - Làm time-sensitive code deterministic trong test.
-      - Tránh rải direct now() call khắp business logic.
+      - Dùng Clock cố định hoặc Clock được truyền vào để kiểm thử logic phụ thuộc thời gian một cách xác định.
+      - Tránh gọi trực tiếp now() rải rác trong logic nghiệp vụ khi thời điểm hiện tại là một phụ thuộc cần kiểm soát.
   - id: legacy-interop-and-synthesis
-    title: Legacy Interop và tổng hợp Date-Time
-    purpose: Kết nối modern java.time type với legacy Date/Calendar interop đồng thời tránh default-zone và conversion pitfall.
+    title: Tương tác với API ngày-giờ cũ và tổng hợp mô hình
+    purpose: Kết nối java.time với Date/Calendar và các ranh giới hệ thống cũ mà không để múi giờ mặc định hoặc chuyển đổi ngầm làm thay đổi ý nghĩa dữ liệu, sau đó tổng hợp cách chọn mô hình ngày-giờ phù hợp từ đầu đến cuối.
     objectives:
-      - Convert giữa legacy và modern API tại boundary rõ ràng.
-      - Chọn temporal model nhỏ nhất nhưng vẫn giữ domain meaning.
+      - Chuyển đổi giữa Date/Calendar và java.time tại ranh giới rõ ràng, ưu tiên Instant khi cần nối hai mô hình.
+      - Nhận biết rủi ro của múi giờ mặc định hệ thống và quyết định rõ khi nào lưu Instant, ngày-giờ cục bộ hoặc thông tin múi giờ.
+      - Chọn mô hình ngày-giờ nhỏ nhất nhưng vẫn bảo toàn đầy đủ ý nghĩa nghiệp vụ.

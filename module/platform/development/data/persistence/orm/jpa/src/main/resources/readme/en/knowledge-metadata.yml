@@ -1,0 +1,21 @@
+1.Introduction/JPA.md:
+  jpa-what:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  jpa-why:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  jpa-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  jpa-provider:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  jpa-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false

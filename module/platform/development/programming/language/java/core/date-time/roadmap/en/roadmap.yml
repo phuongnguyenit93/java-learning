@@ -43,60 +43,77 @@
 
 roadmap:
   - id: date-time-model
-    title: Date-Time Mental Model
-    purpose: Understand that calendar date, wall-clock time, local date-time, timeline instant, offset, and zone answer different questions.
+    title: What Date-Time Means and Why Multiple Models Exist
+    purpose: Understand that date and time data is not one interchangeable “timestamp” concept; calendar dates, time-of-day values, local date-times, timeline instants, UTC offsets, and zone rules answer different questions, so java.time provides specialized immutable types instead of one universal representation.
     objectives:
-      - Choose a date-time type from the meaning of the domain value.
-      - Avoid treating all temporal values as interchangeable timestamps.
+      - Choose a date-time type from domain meaning rather than from the text format currently displayed.
+      - Distinguish human calendar values from precise positions on the global timeline.
+      - Understand that the main java.time types are immutable value types whose operations return new values.
   - id: local-date-and-time
     title: Local Calendar and Wall-Clock Values
-    purpose: Understand LocalDate, LocalTime, and LocalDateTime as values without global timeline meaning.
+    purpose: Understand LocalDate, LocalTime, and LocalDateTime as local calendar or wall-clock values that are useful when the domain intentionally has no zone yet, but do not identify one unique position on the global timeline by themselves.
     objectives:
-      - Use local types for domain concepts that intentionally have no offset/zone.
-      - Recognize when attaching a zone later can create ambiguity.
+      - Use LocalDate when the domain owns only a date and LocalTime when it owns only a time of day.
+      - Use LocalDateTime for domain values that intentionally do not yet carry a zone.
+      - Explain why zone or offset context is required before mapping a LocalDateTime to an Instant.
+      - Recognize that attaching a zone later can encounter invalid or ambiguous local times around DST transitions.
   - id: instant-and-timeline
     title: Instant and Global Timeline
-    purpose: Understand Instant as a precise point on the UTC-based timeline and distinguish it from human calendar representation.
+    purpose: Understand Instant as a precise point on the UTC-based timeline that is independent from the calendar, clock, and zone representation a person uses to view it.
     objectives:
-      - Use Instant for machine-oriented event time and ordering.
-      - Convert between Instant and human-facing zoned representations intentionally.
+      - Use Instant for system event time, chronological ordering, and persistence boundaries that require an unambiguous moment.
+      - Understand epoch seconds and milliseconds as numeric representations of positions on the same timeline.
+      - Convert intentionally between Instant and human-facing zoned representations.
+  - id: offsets-and-zone-rules
+    title: ZoneOffset, ZoneId, and Zone Rules
+    purpose: Understand that a concrete UTC offset such as +07:00 is not the same as a named region such as Asia/Ho_Chi_Minh; ZoneId can carry rules that vary across history or policy while ZoneOffset describes one concrete offset.
+    objectives:
+      - Distinguish ZoneOffset, ZoneId, and the role of ZoneRules.
+      - Understand why region-based zones can change offsets over time and create DST gaps or overlaps.
+      - Avoid treating the current UTC offset as a complete substitute for zone identity and rules.
   - id: offsets-zones-and-zoned-values
-    title: Offsets, Zones, and Zoned Values
-    purpose: Understand fixed UTC offsets versus named region rules and how OffsetDateTime/ZonedDateTime carry that context.
+    title: OffsetDateTime, ZonedDateTime, and Zone Conversion
+    purpose: Understand how OffsetDateTime and ZonedDateTime attach offset or zone-rule context to a local date-time, and distinguish preserving the same timeline instant from preserving the same local fields.
     objectives:
-      - Distinguish ZoneOffset from ZoneId and DST-aware region rules.
-      - Choose OffsetDateTime or ZonedDateTime from interchange versus rule-aware needs.
+      - Choose OffsetDateTime when a value needs one concrete UTC offset and ZonedDateTime when it must preserve named-zone identity and rules.
+      - Distinguish conversion that preserves the same Instant from reinterpreting the same LocalDateTime in another zone.
+      - Recognize that two zoned values can have different local fields while representing the same Instant.
   - id: duration-and-period
     title: Elapsed Time vs Calendar Amount
-    purpose: Understand Duration and Period as different models for time-based and date-based amounts.
+    purpose: Understand Duration and Period as different models for elapsed timeline time versus calendar year/month/day amounts, so they cannot be substituted mechanically.
     objectives:
-      - Use Duration for elapsed timeline-based quantities.
-      - Use Period for calendar-aware year/month/day quantities.
+      - Use Duration for elapsed quantities measured in hours, minutes, and seconds on the timeline.
+      - Use Period for year/month/day quantities governed by calendar rules.
+      - Explain why 24 hours is not always the same as one calendar day around zone or DST changes.
   - id: formatting-and-parsing
     title: Formatting and Parsing
-    purpose: Understand date-time formatters as explicit text boundaries rather than part of the temporal value itself.
+    purpose: Understand DateTimeFormatter as the explicit boundary between date-time values and text; presentation format does not change the temporal meaning of the value itself.
     relatedModules:
       - routeId: JAVA_LOCALIZATION
         label: Localization
         note: Locale-sensitive date/time presentation belongs to the broader localization model.
     objectives:
-      - Use standard and custom formatters with explicit expectations.
-      - Keep parsing/formatting separate from core temporal semantics.
+      - Choose predefined or custom formatters with explicit input/output expectations.
+      - Parse text into the temporal type that matches the meaning the data actually carries.
+      - Keep parsing and formatting separate from core temporal semantics.
   - id: arithmetic-comparison-and-dst
     title: Arithmetic, Comparison, and DST Boundaries
-    purpose: Understand how temporal arithmetic and comparison depend on the chosen type and how zone transitions create gaps or overlaps.
+    purpose: Understand that addition, subtraction, distance calculation, and comparison depend on the chosen temporal model; with zoned values, calendar rules and DST transitions can make date-based arithmetic differ from elapsed-hour arithmetic.
     objectives:
-      - Choose timeline versus calendar arithmetic intentionally.
-      - Recognize ambiguous or invalid local times around DST transitions.
+      - Choose timeline-based versus calendar-based arithmetic intentionally.
+      - Use plus/minus, ChronoUnit, Duration, or Period according to the quantity being modeled.
+      - Compare temporal values with the correct semantics and recognize invalid or ambiguous local times around DST transitions.
+      - Keep business-calendar policy separate from general-purpose date-time arithmetic.
   - id: clock-and-testability
     title: Clock and Testable Time
-    purpose: Understand Clock as an injectable source of “now” that separates time-dependent behavior from the system clock.
+    purpose: Understand Clock as an injectable source of “now” that separates time-dependent behavior from the system clock and makes tests deterministic.
     objectives:
-      - Make time-sensitive code deterministic in tests.
-      - Avoid scattering direct now() calls through business logic.
+      - Use a fixed or injected Clock to test time-sensitive logic deterministically.
+      - Avoid scattering direct now() calls through business logic when current time is a dependency that should be controlled.
   - id: legacy-interop-and-synthesis
     title: Legacy Interop and Date-Time Synthesis
-    purpose: Connect modern java.time types with legacy Date/Calendar interop while avoiding default-zone and conversion pitfalls.
+    purpose: Connect java.time with legacy Date/Calendar and older system boundaries without letting implicit default zones or conversions change the meaning of data, then synthesize an end-to-end type-selection model.
     objectives:
-      - Convert across legacy and modern APIs at explicit boundaries.
-      - Choose the smallest temporal model that preserves the domain meaning.
+      - Convert between Date/Calendar and java.time at explicit boundaries, using Instant as the bridge when appropriate.
+      - Recognize system-default-zone risks and decide explicitly whether persistence owns an Instant, a local date-time, or zone information.
+      - Choose the smallest temporal model that still preserves complete domain meaning.

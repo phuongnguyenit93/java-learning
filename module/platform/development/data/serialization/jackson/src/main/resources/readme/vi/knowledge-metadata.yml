@@ -1,0 +1,25 @@
+1.Introduction/Jackson.md:
+  jackson-what:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  jackson-why:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  jackson-before:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  jackson-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  jackson-object-mapping-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  jackson-spring-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false

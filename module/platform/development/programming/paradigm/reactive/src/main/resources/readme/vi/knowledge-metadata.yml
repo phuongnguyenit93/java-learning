@@ -1,0 +1,21 @@
+1.Introduction/ReactiveProgramming.md:
+  reactive-what:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  reactive-why:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  reactive-solution:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  reactive-streams-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  reactive-framework-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false

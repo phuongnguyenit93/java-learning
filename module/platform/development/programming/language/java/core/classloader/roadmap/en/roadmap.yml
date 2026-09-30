@@ -43,15 +43,17 @@
 
 roadmap:
   - id: runtime-type-lifecycle
-    title: From Class Bytes to Runtime Type
-    purpose: Understand why the JVM needs loading, linking, and initialization stages after class bytes already exist.
+    title: What Is a ClassLoader? From Class Bytes to a Usable Runtime Type
+    purpose: Understand why a .class file is not enough by itself and how the JVM locates, loads, links, and initializes classes before they can be used at runtime.
     relatedModules:
       - routeId: JAVA_CLASS_OBJECT
         label: Class & Object
         note: Class/Object introduces class initialization and object construction from the language perspective.
     objectives:
+      - Understand the ClassLoader role in locating and loading class definitions into the JVM.
       - Distinguish loading, verification, preparation, resolution, and initialization conceptually.
       - Explain why “class file exists” is different from “Class is loaded and initialized”.
+      - Classify failures by locating/loading, linking, or initialization stage to guide diagnosis.
   - id: built-in-loaders
     title: Built-In ClassLoaders
     purpose: Understand the bootstrap, platform, and application loader roles in a normal JVM.
@@ -69,6 +71,7 @@ roadmap:
     purpose: Understand how applications load bytes from alternate sources or isolated namespaces through custom loaders.
     objectives:
       - Understand loadClass/findClass/defineClass responsibilities.
+      - Decide when a custom ClassLoader is justified and when the default loading model is sufficient.
       - Recognize synchronization, package, security, and API-boundary concerns.
   - id: class-identity
     title: Class Identity Across Loaders
@@ -81,9 +84,10 @@ roadmap:
       - Explain why same-name classes from different loaders are incompatible.
       - Design shared API boundaries so plugin/container types remain assignable.
   - id: thread-context-classloader
-    title: Thread Context ClassLoader
+    title: Thread Context ClassLoader (TCCL)
     purpose: Understand why parent-owned framework code sometimes needs a thread-associated loader to discover child/application providers.
     objectives:
+      - Recognize when a framework's own loader cannot see application providers and TCCL is the appropriate bridge.
       - Use TCCL in save/set/restore scopes.
       - Recognize long-lived thread references as a potential loader-leak source.
   - id: classpath-resource-loading
@@ -108,3 +112,4 @@ roadmap:
     objectives:
       - Recognize static, ThreadLocal, listener, cache, and TCCL retention patterns.
       - Treat unloading as GC-dependent rather than deterministic lifecycle code.
+      - Connect loading, delegation, identity, TCCL, resources, and loader reachability into one end-to-end mental model.
