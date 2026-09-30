@@ -7,14 +7,6 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  annotation-restrictions:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-  annotation-use-sites:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
 2.BuiltIn/BuiltIn.md:
   override-annotation:
     difficulty: BASIC
@@ -38,6 +30,10 @@
     reviewed: false
 3.CustomAnnotation/CustomAnnotation.md:
   declare-annotation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  annotation-restrictions:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
@@ -71,6 +67,10 @@
     aiGenerated: true
     reviewed: false
 5.Target/Target.md:
+  annotation-use-sites:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
   elementtype-targets:
     difficulty: BASIC
     aiGenerated: true
@@ -144,5 +144,26 @@
     reviewed: false
   processor-pitfalls:
     difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+9.AnnotationDesign/AnnotationDesign.md:
+  annotation-fit:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  annotation-alternatives:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  annotation-end-to-end:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  annotation-overuse-pitfalls:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  annotation-design-checklist:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false

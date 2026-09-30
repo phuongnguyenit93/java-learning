@@ -1,4 +1,4 @@
-# Meta-Annotations
+# Meta-Annotations and Annotation-Type Contracts
 
 After defining `@Audit`, Java still needs answers to questions about the annotation type itself:
 
@@ -151,7 +151,7 @@ Use it when the annotation is part of the API information that consumers of a de
 
 ## <a id="inherited-meta">`@Inherited` Boundary</a>
 
-`@Inherited` changes how certain runtime annotation queries on **classes** search the superclass chain.
+`@Inherited` configures a class annotation type to participate in superclass lookup for applicable runtime annotation queries.
 
 ```java
 @Inherited
@@ -168,57 +168,21 @@ class PaymentService extends BaseService {
 }
 ```
 
-For appropriate `Class` annotation lookup methods, `PaymentService` can observe `@AuditedComponent` from `BaseService` when it does not declare its own annotation of that type.
-
-### BOUNDARY — this is not general annotation inheritance
-
-`@Inherited` does **not** mean annotations automatically propagate through every Java relationship:
+This is deliberately narrow metadata configuration rather than general-purpose inheritance:
 
 ```text
 superclass → subclass class-annotation lookup
 → @Inherited can participate
 
-interface → implementing class
-→ no @Inherited propagation rule
-
-overridden method → overriding method
-→ method annotation is not inherited by @Inherited
-
-field / constructor / parameter
-→ no @Inherited class-hierarchy propagation
+method / field / constructor / parameter / interface
+→ not automatically inherited because of @Inherited
 ```
 
-The Repeatable/Inherited chapter develops these lookup rules in detail.
+Runtime visibility still requires suitable retention, normally `RUNTIME`. The Repeatable/Inherited chapter develops the actual lookup APIs, superclass fallback, and method/interface boundaries in detail.
 
 ## <a id="repeatable-meta">`@Repeatable`</a>
 
-### WHY — why does repeatability need an explicit contract?
-
-Suppose one method needs two independent audit labels:
-
-```java
-@Audit(action = "SECURITY")
-@Audit(action = "COMPLIANCE")
-void transfer() {
-}
-```
-
-Without a repeatable declaration on `Audit`, multiple annotations of the same type at that context are rejected by the compiler.
-
-The manual alternative is an explicit container:
-
-```java
-@Audits({
-    @Audit(action = "SECURITY"),
-    @Audit(action = "COMPLIANCE")
-})
-void transfer() {
-}
-```
-
-`@Repeatable` gives callers the cleaner repeated syntax while retaining a defined container contract underneath.
-
-`@Repeatable` allows multiple annotations of the same type to appear at one legal location. Java represents those repetitions through a **container annotation type**.
+`@Repeatable` configures an annotation type so multiple instances can appear at one legal location. The declaration names the **container annotation type** that represents those repeated values.
 
 ```java
 @Repeatable(Audits.class)
@@ -236,7 +200,7 @@ public @interface Audits {
 }
 ```
 
-Client code may then write:
+Client code can then write:
 
 ```java
 @Audit(action = "AUTHORIZE")
@@ -245,6 +209,4 @@ void pay() {
 }
 ```
 
-The container is part of the annotation type's structural contract, not an implementation detail that can be chosen arbitrarily. Its `value()` element must return an array of the repeated annotation type, and Java enforces compatibility rules between the repeated annotation and its container.
-
-The next chapter focuses on what repetition and `@Inherited` mean when annotations are actually retrieved, especially why `getAnnotationsByType(...)` is different from asking for one annotation directly.
+At this point the key model is the declaration relationship: **repeatable annotation ↔ container annotation**. The next chapter owns the container compatibility rules, representation, and retrieval semantics, including why `getAnnotationsByType(...)` differs from asking for one annotation directly.

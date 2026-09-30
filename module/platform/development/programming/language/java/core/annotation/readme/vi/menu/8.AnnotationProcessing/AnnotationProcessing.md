@@ -1,61 +1,61 @@
-# Annotation Processing
+# Xử lý Annotation tại thời điểm biên dịch
 
-Cho đến đây, ta đã thấy runtime code có thể đọc một `RUNTIME` annotation. Nhưng có những bài toán **không nên đợi application chạy**:
+Cho đến đây, ta đã thấy mã chạy ở thời gian chạy có thể đọc một Annotation `RUNTIME`. Nhưng có những bài toán **không nên đợi ứng dụng chạy**:
 
 ```text
-metadata sai
-→ muốn build fail ngay
+siêu dữ liệu sai
+→ muốn quá trình build thất bại ngay
 
-boilerplate có thể suy ra từ source
-→ muốn sinh code trước runtime
+boilerplate có thể suy ra từ mã nguồn
+→ muốn sinh mã trước thời gian chạy
 
-tool cần tạo resource/index từ declarations
-→ muốn artifact đó có sẵn sau compilation
+công cụ cần tạo tài nguyên/chỉ mục từ các khai báo
+→ muốn đầu ra đó có sẵn sau khi biên dịch
 ```
 
-Runtime reflection là quá muộn cho các bài toán này. Ta cần một consumer chạy **ngay trong quá trình compile**.
+Reflection ở thời gian chạy là quá muộn cho các bài toán này. Ta cần một thành phần đọc chạy **ngay trong quá trình biên dịch**.
 
-Annotation processing là cơ chế compile-time cho phép tool đọc annotation trong source/language model để:
+Xử lý Annotation tại thời điểm biên dịch là cơ chế cho phép công cụ đọc Annotation trong mã nguồn/mô hình ngôn ngữ để:
 
-- validate contract;
-- phát compiler diagnostic;
-- sinh source/class/resource mới.
+- kiểm tra quy tắc;
+- phát thông báo chẩn đoán của trình biên dịch;
+- sinh mã nguồn/class file/tài nguyên mới.
 
-Nó không cần application chạy và không phải reflection.
+Nó không cần ứng dụng chạy và không phải Reflection.
 
 Một ví dụ thực tế:
 
 ```text
-developer viết @GenerateMapper
+lập trình viên viết @GenerateMapper
         ↓
-javac/compile tool phát hiện processor
+javac/công cụ biên dịch phát hiện processor
         ↓
-processor đọc model của type được annotate
+processor đọc mô hình của type được gắn Annotation
         ↓
 sinh OrderMapperGenerated.java
         ↓
-generated source tham gia compilation
+mã nguồn được sinh tham gia quá trình biên dịch
 ```
 
-## <a id="processing-rounds">Annotation processing diễn ra theo nhiều round</a>
+## <a id="processing-rounds">Xử lý Annotation diễn ra qua nhiều vòng</a>
 
-Processing không phải “scan annotation một lần rồi gọi processor một lần”.
+Xử lý Annotation không phải “quét Annotation một lần rồi gọi processor một lần”.
 
 Mô hình đúng:
 
 ```text
-round 1
-→ root elements ban đầu
-→ processor có thể sinh source/class
+vòng 1
+→ các phần tử gốc ban đầu
+→ processor có thể sinh mã nguồn/class file
 
-round 2
-→ generated source/class trở thành input mới
+vòng 2
+→ mã nguồn/class file được sinh trở thành đầu vào mới
 → processor chạy tiếp
 
 ...
 
-final round
-→ không còn source mới cần xử lý
+vòng cuối
+→ không còn mã nguồn mới cần xử lý
 → processingOver() = true
 ```
 
@@ -64,24 +64,24 @@ Ví dụ processor sinh:
 ```text
 Order
 → OrderMapperGenerated
-→ generated type lại có annotation khác
-→ processor phù hợp có thể thấy annotation đó ở round sau
+→ type được sinh lại có Annotation khác
+→ processor phù hợp có thể thấy Annotation đó ở vòng sau
 ```
 
-`RoundEnvironment.processingOver()` cho biết đã đến round cuối. `errorRaised()` cho biết round trước đã phát sinh lỗi.
+`RoundEnvironment.processingOver()` cho biết đã đến vòng cuối. `errorRaised()` cho biết vòng trước đã phát sinh lỗi.
 
-Processor đã được gọi ở một round sẽ tiếp tục được công cụ gọi ở các round sau, kể cả round cuối, và tập annotation truyền vào có thể rỗng.
+Processor đã được gọi ở một vòng sẽ tiếp tục được công cụ gọi ở các vòng sau, kể cả vòng cuối, và tập Annotation truyền vào có thể rỗng.
 
-Vì vậy processor phải được thiết kế **an toàn khi chạy qua nhiều round**.
+Vì vậy processor phải được thiết kế **an toàn khi chạy qua nhiều vòng**.
 
 ## <a id="processor-contract">Processor và AbstractProcessor</a>
 
 API chuẩn trải trên hai package chính:
 
-- `javax.annotation.processing` — lifecycle và dịch vụ của annotation processor;
-- `javax.lang.model` — mô hình declaration/type mà compiler cung cấp cho processor.
+- `javax.annotation.processing` — vòng đời và dịch vụ của annotation processor;
+- `javax.lang.model` — mô hình khai báo/type mà trình biên dịch cung cấp cho processor.
 
-Một processor thường extend `AbstractProcessor`:
+Một processor thường kế thừa `AbstractProcessor`:
 
 ```java
 public final class MapperProcessor extends AbstractProcessor {
@@ -91,63 +91,63 @@ public final class MapperProcessor extends AbstractProcessor {
             Set<? extends TypeElement> annotations,
             RoundEnvironment roundEnv) {
 
-        // inspect compile-time model
+        // đọc mô hình tại thời điểm biên dịch
         return true;
     }
 }
 ```
 
-Trước khi dùng các API đó, hãy có mental model:
+Trước khi dùng các API đó, hãy có mô hình tư duy:
 
 ```text
 Element
-→ một declaration trong source/model, ví dụ class, method, field, parameter
+→ một khai báo trong mã nguồn/mô hình, ví dụ class, method, field, parameter
 
 TypeElement
-→ Element đại diện cho type declaration như class/interface/record/annotation interface
+→ Element đại diện cho khai báo type như class/interface/record/annotation interface
 
 TypeMirror
-→ biểu diễn một Java type ở compile time
+→ biểu diễn một Java type tại thời điểm biên dịch
 
 AnnotationMirror
-→ biểu diễn một annotation trong compiler model
+→ biểu diễn một Annotation trong mô hình của trình biên dịch
 
 Elements
-→ dịch vụ tiện ích để truy vấn declaration model
+→ dịch vụ tiện ích để truy vấn mô hình khai báo
 
 Types
-→ dịch vụ tiện ích để truy vấn/so sánh type model
+→ dịch vụ tiện ích để truy vấn/so sánh mô hình type
 ```
 
 Processor được khởi tạo bằng `ProcessingEnvironment`, từ đó truy cập:
 
-- `Elements` — dịch vụ tiện ích cho declaration model;
-- `Types` — dịch vụ tiện ích cho type model;
-- `Messager` — phát compiler diagnostic;
-- `Filer` — sinh source/class/resource;
-- options và source-version information.
+- `Elements` — dịch vụ tiện ích cho mô hình khai báo;
+- `Types` — dịch vụ tiện ích cho mô hình type;
+- `Messager` — phát thông báo chẩn đoán của trình biên dịch;
+- `Filer` — sinh mã nguồn/class file/tài nguyên;
+- các tùy chọn và thông tin phiên bản mã nguồn.
 
-### Return value của `process()`
+### Giá trị trả về của `process()`
 
 `process(...)` trả về:
 
 ```text
 true
-→ processor nhận quyền xử lý (claim) các annotation type được đưa vào
+→ processor nhận quyền xử lý (claim) các kiểu Annotation được đưa vào
 → processor sau không tiếp tục được hỏi về chính tập đã được processor trước nhận xử lý
 
 false
-→ annotation chưa bị processor nhận quyền xử lý
+→ Annotation chưa bị processor nhận quyền xử lý
 → processor khác vẫn có thể xử lý
 ```
 
-Vì vậy “luôn return true” không phải thực hành mặc định tốt. Việc nhận quyền xử lý (claim) là **hợp đồng phối hợp** giữa các processor.
+Vì vậy “luôn trả về `true`” không phải thực hành mặc định tốt. Việc nhận quyền xử lý (claim) là **quy tắc phối hợp** giữa các processor.
 
-Processor làm việc với mô hình compile-time như `Element`, `TypeMirror`, `AnnotationMirror`; nó không nên giả định class của ứng dụng đã được load thành runtime `Class<?>`.
+Processor làm việc với mô hình tại thời điểm biên dịch như `Element`, `TypeMirror`, `AnnotationMirror`; nó không nên giả định class của ứng dụng đã được nạp thành `Class<?>` ở thời gian chạy.
 
-## <a id="supported-types-source-version">Supported annotation types và source version</a>
+## <a id="supported-types-source-version">Các Annotation được hỗ trợ và phiên bản mã nguồn</a>
 
-Processor phải công bố annotation types mà nó hỗ trợ:
+Processor phải công bố các kiểu Annotation mà nó hỗ trợ:
 
 ```java
 @SupportedAnnotationTypes("com.example.GenerateMapper")
@@ -158,50 +158,50 @@ public final class MapperProcessor extends AbstractProcessor {
 
 Hoặc override API tương ứng.
 
-Hai contract khác nhau:
+Hai thông tin này có ý nghĩa khác nhau:
 
 ```text
-supported annotation types
-→ processor quan tâm annotation nào
+các kiểu Annotation được hỗ trợ
+→ processor quan tâm Annotation nào
 
-supported source version
-→ processor hiểu language/source level đến đâu
+phiên bản mã nguồn được hỗ trợ
+→ processor hiểu mức ngôn ngữ/mã nguồn đến đâu
 ```
 
-`@SupportedSourceVersion` không phải cách đổi source compatibility của project. Nó chỉ nói về capability của processor.
+`@SupportedSourceVersion` không phải cách đổi mức tương thích mã nguồn của project. Nó chỉ mô tả khả năng của processor.
 
-Processor có thể support wildcard `"*"`. Universal processor có semantics đặc biệt và có thể được invoke ngay cả khi không có annotation present, nên chỉ dùng khi thật sự cần.
+Processor có thể hỗ trợ wildcard `"*"`. Processor kiểu này có ngữ nghĩa đặc biệt và có thể được gọi ngay cả khi không có Annotation phù hợp xuất hiện, nên chỉ dùng khi thật sự cần.
 
-### Processor được compiler tìm thấy bằng cách nào?
+### Bộ xử lý được trình biên dịch tìm thấy bằng cách nào?
 
-Processor cũng là Java code, nên nó phải **được compile trước** và có mặt trên processor path/build configuration trước khi nó có thể xử lý source của application.
+Processor cũng là mã Java, nên nó phải **được biên dịch trước** và có mặt trên processor path/cấu hình build trước khi nó có thể xử lý mã nguồn của ứng dụng.
 
-Mental model:
+Mô hình tư duy:
 
 ```text
-processor source
-→ compile thành processor library/JAR
+mã nguồn processor
+→ biên dịch thành thư viện/JAR của processor
         ↓
-build tool / javac đưa library lên processor path
+công cụ build / javac đưa thư viện lên processor path
         ↓
-javac discover processor
+javac phát hiện processor
         ↓
-processor được initialize
+processor được khởi tạo
         ↓
-process(...) chạy qua các round
+process(...) chạy qua các vòng
 ```
 
-Compiler có thể biết processor bằng các cách như:
+Trình biên dịch có thể biết processor bằng các cách như:
 
-- service-provider registration, ví dụ `META-INF/services/javax.annotation.processing.Processor`;
-- Java module declaration dùng `provides ... with ...`;
-- cấu hình processor explicit của compiler/build tool.
+- đăng ký service provider, ví dụ `META-INF/services/javax.annotation.processing.Processor`;
+- khai báo Java module bằng `provides ... with ...`;
+- cấu hình processor tường minh của trình biên dịch/công cụ build.
 
-Vì vậy chỉ viết một class `extends AbstractProcessor` trong source application **không tự động đảm bảo** processor đó sẽ chạy.
+Vì vậy chỉ viết một class `extends AbstractProcessor` trong mã nguồn ứng dụng **không tự động đảm bảo** processor đó sẽ chạy.
 
-### Processor options với `@SupportedOptions`
+### Tùy chọn của bộ xử lý với `@SupportedOptions`
 
-Processor có thể công bố các option mà nó hiểu:
+Processor có thể công bố các tùy chọn mà nó hiểu:
 
 ```java
 @SupportedOptions("mapper.debug")
@@ -211,7 +211,7 @@ public final class MapperProcessor extends AbstractProcessor {
 }
 ```
 
-Compiler/build tool có thể truyền option theo dạng tương đương:
+Trình biên dịch/công cụ build có thể truyền tùy chọn theo dạng tương đương:
 
 ```text
 -Amapper.debug=true
@@ -224,13 +224,13 @@ String debug =
     processingEnv.getOptions().get("mapper.debug");
 ```
 
-Option là **input của processor**, không phải annotation element. Dùng option cho build-level configuration; dùng annotation element cho metadata gắn với một declaration/type cụ thể.
+Tùy chọn là **đầu vào của processor**, không phải phần tử Annotation. Dùng tùy chọn cho cấu hình ở cấp build; dùng phần tử Annotation cho siêu dữ liệu gắn với một khai báo/type cụ thể.
 
-## <a id="generated-source">Sinh source và resource</a>
+## <a id="generated-source">Sinh mã nguồn và tài nguyên</a>
 
-Để ghép toàn bộ mental model, xem một flow tối thiểu end-to-end.
+Để ghép toàn bộ mô hình tư duy, xem một luồng tối thiểu từ đầu đến cuối.
 
-Annotation phía application:
+Annotation phía ứng dụng:
 
 ```java
 @Target(ElementType.TYPE)
@@ -239,7 +239,7 @@ public @interface GenerateMapper {
 }
 ```
 
-Source sử dụng annotation:
+Mã nguồn sử dụng Annotation:
 
 ```java
 @GenerateMapper
@@ -247,7 +247,7 @@ class Order {
 }
 ```
 
-Processor tìm element được annotate và sinh type mới:
+Processor tìm phần tử được gắn Annotation và sinh type mới:
 
 ```java
 public final class MapperProcessor extends AbstractProcessor {
@@ -287,7 +287,7 @@ public final class MapperProcessor extends AbstractProcessor {
 }
 ```
 
-Flow quan sát được:
+Luồng quan sát được:
 
 ```text
 @GenerateMapper trên Order
@@ -295,8 +295,8 @@ Flow quan sát được:
 → processor gọi Filer
 → sinh OrderMapperGenerated.java
 → đóng file
-→ compiler thấy generated source ở round sau
-→ generated source được compile như Java source bình thường
+→ trình biên dịch thấy mã nguồn được sinh ở vòng sau
+→ mã nguồn được sinh được biên dịch như mã Java bình thường
 ```
 
 `Filer` cung cấp API chuẩn:
@@ -316,13 +316,13 @@ try (Writer writer = file.openWriter()) {
 }
 ```
 
-Sau khi output được đóng, generated source có thể tham gia round tiếp theo và cuối cùng được compile như Java source bình thường.
+Sau khi đầu ra được đóng, mã nguồn được sinh có thể tham gia vòng tiếp theo và cuối cùng được biên dịch như mã Java bình thường.
 
-`Filer` còn có thể tạo class file hoặc resource.
+`Filer` còn có thể tạo class file hoặc tài nguyên.
 
-Khi có originating element, nên truyền nó cho `Filer` nếu phù hợp để build tool có thêm dependency information.
+Khi có phần tử nguồn tương ứng, nên truyền nó cho `Filer` nếu phù hợp để công cụ build có thêm thông tin phụ thuộc.
 
-Validation error/warning nên phát qua `Messager`:
+Lỗi/cảnh báo kiểm tra hợp lệ nên được phát qua `Messager`:
 
 ```java
 processingEnv.getMessager().printMessage(
@@ -332,100 +332,86 @@ processingEnv.getMessager().printMessage(
 );
 ```
 
-Generated code không phải “runtime magic”. Nó là artifact được tạo trong build và phải compile/behave như source bình thường.
+Mã được sinh không phải “phép màu lúc chạy”. Nó là đầu ra được tạo trong quá trình build và phải biên dịch/hoạt động như mã nguồn bình thường.
 
-## <a id="processing-vs-reflection">Processing và reflection khác nhau</a>
+## <a id="processing-vs-reflection">Xử lý Annotation và Reflection khác nhau</a>
 
 So sánh:
 
-| | Annotation processing | Reflection |
+| | Xử lý Annotation khi biên dịch | Reflection |
 | --- | --- | --- |
-| Thời điểm | compile time | runtime |
-| Model chính | `Element`, `TypeMirror`, `AnnotationMirror` | `Class`, `Method`, `Field`, `AnnotatedElement` |
-| SOURCE annotation | đọc được | không |
-| Cần class được load | không | có |
-| Sinh source trước compile | có thể | không phải vai trò |
-| Use case | validate/generate | runtime inspection/invocation |
+| Thời điểm | khi biên dịch | thời gian chạy |
+| Mô hình chính | `Element`, `TypeMirror`, `AnnotationMirror` | `Class`, `Method`, `Field`, `AnnotatedElement` |
+| Annotation `SOURCE` | đọc được | không |
+| Cần class được nạp | không | có |
+| Sinh mã nguồn trước khi biên dịch xong | có thể | không phải vai trò |
+| Trường hợp sử dụng | kiểm tra/sinh mã | kiểm tra/gọi động ở thời gian chạy |
 
 Điểm rất quan trọng:
 
-> `SOURCE` retention hoàn toàn hữu ích cho annotation processor.
+> Chính sách `SOURCE` hoàn toàn hữu ích cho annotation processor.
 
-Không nên gắn `RUNTIME` chỉ vì processor cần đọc annotation.
+Không nên gắn `RUNTIME` chỉ vì processor cần đọc Annotation.
 
-### `Class`-valued element ở compile time
+### Phần tử kiểu `Class` tại thời điểm biên dịch
 
-Với annotation có element:
+Với Annotation có phần tử:
 
 ```java
 Class<?> target();
 ```
 
-processor không nên dựa vào việc gọi annotation proxy rồi load user class. Trong compile-time context, cách tổng quát và an toàn hơn là làm việc với `AnnotationMirror` / `TypeMirror`. Một số proxy-style access có thể dẫn tới `MirroredTypeException` hoặc `MirroredTypesException` vì type đang tồn tại dưới dạng compiler model chứ chưa phải runtime class.
+Processor không nên dựa vào việc gọi annotation proxy rồi nạp class của người dùng. Trong ngữ cảnh biên dịch, cách tổng quát và an toàn hơn là làm việc với `AnnotationMirror` / `TypeMirror`. Một số cách truy cập qua proxy có thể dẫn tới `MirroredTypeException` hoặc `MirroredTypesException` vì type đang tồn tại dưới dạng mô hình của trình biên dịch chứ chưa phải class ở thời gian chạy.
 
-## <a id="processor-pitfalls">Pitfalls và tính deterministic</a>
+## <a id="processor-pitfalls">Rủi ro và tính xác định của bộ xử lý</a>
 
-Annotation processor nằm trong build pipeline nên tính ổn định rất quan trọng.
+Annotation processor nằm trong quy trình build nên tính ổn định rất quan trọng.
 
 ### 1. Không sinh cùng file nhiều lần
 
-Nếu mỗi round lại gọi:
+Nếu mỗi vòng lại gọi:
 
 ```java
 createSourceFile("com.example.OrderMapperGenerated")
 ```
 
-cho cùng type, processor có thể gặp `FilerException`. Hãy thiết kế generation theo stable input và theo dõi artifact đã sinh khi cần.
+cho cùng type, processor có thể gặp `FilerException`. Hãy thiết kế quá trình sinh mã dựa trên đầu vào ổn định và theo dõi đầu ra đã sinh khi cần.
 
-### 2. Không phụ thuộc thứ tự processor/collection ngẫu nhiên
+### 2. Không phụ thuộc thứ tự processor/collection không ổn định
 
-Output nên deterministic:
+Đầu ra nên có tính xác định:
 
 ```text
-cùng source + cùng options
-→ cùng generated output
+cùng mã nguồn + cùng tùy chọn
+→ cùng đầu ra được sinh
 ```
 
-Tránh timestamp, random identifier hoặc thứ tự từ unordered collection nếu chúng không mang semantic.
+Tránh timestamp, định danh ngẫu nhiên hoặc thứ tự từ collection không đảm bảo thứ tự nếu chúng không mang ý nghĩa nghiệp vụ/kỹ thuật cần thiết.
 
-### 3. Không overwrite source của người dùng
+### 3. Không ghi đè mã nguồn của người dùng
 
-Processor nên tạo artifact mới qua `Filer`, không dùng annotation processing như cơ chế sửa source hiện có.
+Processor nên tạo đầu ra mới qua `Filer`, không dùng annotation processing như cơ chế sửa mã nguồn hiện có.
 
-### 4. Tôn trọng nhiều round
+### 4. Tôn trọng nhiều vòng xử lý
 
-Generated type có thể chỉ xuất hiện ở round sau. Đừng kết luận “thiếu type” quá sớm nếu chính pipeline đang sinh nó.
+Type được sinh có thể chỉ xuất hiện ở vòng sau. Đừng kết luận “thiếu type” quá sớm nếu chính quy trình đang sinh nó.
 
-Final round (`processingOver() == true`) phù hợp để cleanup/report final diagnostics; không nên sinh type mà bạn kỳ vọng sẽ có thêm processing round sau đó.
+Vòng cuối (`processingOver() == true`) phù hợp để dọn dẹp/phát chẩn đoán cuối; không nên sinh type mà bạn kỳ vọng sẽ còn một vòng xử lý bình thường khác sau đó.
 
-### 5. Nhận quyền xử lý (claim) annotation có chủ đích
+### 5. Nhận quyền xử lý (claim) Annotation có chủ đích
 
-Return `true` chỉ khi processor thật sự muốn nhận quyền xử lý annotation type đó. Claim quá rộng có thể ngăn processor khác tham gia.
+Chỉ trả về `true` khi processor thật sự muốn nhận quyền xử lý kiểu Annotation đó. Claim quá rộng có thể ngăn processor khác tham gia.
 
-### 6. Tách build-time và runtime mental model
+### 6. Tách mô hình tư duy giữa thời điểm biên dịch và thời gian chạy
 
 ```text
 annotation processor
-→ compile-time code generation / validation
+→ sinh mã / kiểm tra tại thời điểm biên dịch
 
-runtime framework
-→ đọc RUNTIME metadata khi application chạy
+framework ở thời gian chạy
+→ đọc siêu dữ liệu RUNTIME khi ứng dụng chạy
 ```
 
-Hai cơ chế có thể cùng dùng annotation nhưng giải quyết bài toán khác nhau.
+Hai cơ chế có thể cùng dùng Annotation nhưng giải quyết bài toán khác nhau.
 
-### Kết thúc module
-
-Toàn bộ module có thể được nhìn như một pipeline metadata:
-
-```text
-định nghĩa metadata vocabulary
-→ elements + defaults
-→ retention: metadata sống bao lâu
-→ target: metadata được đặt ở đâu
-→ meta-annotations: cấu hình annotation contract
-→ repeatable/inherited: lookup semantics
-→ compile-time processor hoặc runtime consumer đọc metadata
-```
-
-Khi đi sâu vào runtime inspection, module `reflection` là nơi sở hữu cơ chế reflection chi tiết. Annotation module dừng ở contract metadata và cách các consumer tương tác với contract đó.
+Chương tiếp theo tổng hợp toàn bộ cơ chế đã học để trả lời câu hỏi cuối cùng: **khi nào Annotation thực sự là lựa chọn phù hợp, và khi nào một API, interface hoặc cấu hình tường minh sẽ rõ ràng hơn?**

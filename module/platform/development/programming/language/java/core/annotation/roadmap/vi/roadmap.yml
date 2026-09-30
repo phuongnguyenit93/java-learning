@@ -43,60 +43,78 @@
 
 roadmap:
   - id: annotation-purpose
-    title: Mục đích Annotation và Structured Metadata
-    purpose: Hiểu annotation là structured information gắn vào code để compiler, tool hoặc framework tiêu thụ.
+    title: Annotation là gì và vì sao Java cần nó?
+    purpose: Hiểu Annotation là thông tin có cấu trúc gắn trực tiếp vào mã nguồn để trình biên dịch, công cụ hoặc framework đọc và xử lý; đồng thời hiểu vấn đề mà chú thích trong mã, quy ước đặt tên hoặc đăng ký thủ công không giải quyết tốt.
+    relatedKnowledge:
+      - Basic
     objectives:
-      - Giải thích vì sao comment hoặc naming convention không đủ cho machine-readable contract.
-      - Nhận biết annotation không tự tạo behavior; consumer mới mang lại ý nghĩa cho metadata.
+      - Giải thích vì sao Annotation tồn tại và vì sao Annotation không tự tạo hành vi nếu không có thành phần đọc nó.
+      - Đọc được cú pháp cơ bản @Name(...), phần tử Annotation và giá trị của chúng trước khi đi vào các cơ chế nâng cao.
   - id: built-in-annotations
-    title: Built-In Annotation và compiler/tool contract
-    purpose: Hiểu cách các annotation chuẩn như Override, Deprecated, SuppressWarnings, SafeVarargs và FunctionalInterface biểu diễn contract cho tool.
+    title: Các Annotation có sẵn và cách trình biên dịch/công cụ sử dụng chúng
+    purpose: Hiểu cách các Annotation chuẩn như @Override, @Deprecated, @SuppressWarnings, @SafeVarargs và @FunctionalInterface truyền thông tin có cấu trúc cho trình biên dịch, tài liệu và công cụ.
+    relatedKnowledge:
+      - BuiltIn
     objectives:
-      - Phân biệt compiler-checked guarantee với documentation/tooling hint.
-      - Dùng built-in annotation tại scope nhỏ nhất nhưng có ý nghĩa.
+      - Phân biệt quy tắc được trình biên dịch kiểm tra với thông tin chỉ phục vụ tài liệu hoặc công cụ.
+      - Chọn Annotation có sẵn phù hợp và đặt nó ở phạm vi nhỏ nhất nhưng vẫn đúng ý nghĩa.
   - id: custom-annotation-schema
-    title: Custom Annotation Type
-    purpose: Hiểu cách định nghĩa metadata vocabulary riêng với typed element, default và semantic ownership rõ ràng.
+    title: Định nghĩa Annotation tùy chỉnh
+    purpose: Hiểu cách khai báo kiểu Annotation riêng bằng @interface với các phần tử có kiểu, giá trị mặc định và ý nghĩa rõ ràng.
+    relatedKnowledge:
+      - CustomAnnotation
     objectives:
-      - Thiết kế annotation element biểu diễn metadata ổn định thay vì hidden behavior.
-      - Nhận biết allowed element type và compile-time value restriction.
+      - Thiết kế Annotation để mô tả siêu dữ liệu ổn định thay vì che giấu logic xử lý.
+      - Hiểu Annotation tùy chỉnh cần một cấu trúc dữ liệu rõ ràng và có thể kiểm tra được.
   - id: retention-lifecycle
-    title: Retention và vòng đời Metadata
-    purpose: Hiểu SOURCE, CLASS và RUNTIME retention quyết định consumer nào còn quan sát được annotation.
-    objectives:
-      - Chọn retention theo consumer lifecycle thay vì thói quen.
-      - Giải thích vì sao runtime reflection không thể thấy metadata đã bị loại bỏ trước đó.
-  - id: targets-and-use-sites
-    title: Target và Use Site
-    purpose: Hiểu annotation hợp lệ ở đâu và khác biệt giữa declaration metadata với type-use metadata.
-    objectives:
-      - Giới hạn annotation use vào context nơi semantics thực sự hợp lệ.
-      - Nhận biết TYPE_USE cùng boundary của record/package/module.
-  - id: meta-annotations-and-composition
-    title: Meta-Annotation và cấu hình Annotation
-    purpose: Hiểu annotation dùng để cấu hình chính annotation type, bao gồm retention, target, documentation, inheritance và repeatability.
-    objectives:
-      - Đọc meta-annotation như một phần contract của annotation type.
-      - Tránh nhầm composed annotation kiểu framework là language feature vượt ngoài metadata đã declare.
-  - id: repeatable-and-inherited-semantics
-    title: Repeatable và Inherited Semantics
-    purpose: Hiểu repeatable annotation dựa trên container và phạm vi class-inheritance hẹp của Inherited.
-    objectives:
-      - Dự đoán lookup behavior single-versus-by-type của repeated annotation.
-      - Nhận biết method/interface annotation inheritance theo rule khác.
-  - id: compile-time-processing
-    title: Annotation Processing ở Compile-Time
-    purpose: Hiểu annotation processor là compile-time consumer inspect source model và generate source/resource qua nhiều processing round.
-    objectives:
-      - Theo dõi concept processor discovery, supported type, processing round và Filer output.
-      - Tách compile-time generation khỏi runtime reflection.
-  - id: runtime-consumption-boundary
-    title: Boundary tiêu thụ Metadata ở Runtime
-    purpose: Hiểu boundary nơi annotation ownership kết thúc và runtime consumer như reflection/framework bắt đầu.
+    title: Vòng đời của Annotation với @Retention
+    purpose: Hiểu @Retention quyết định Annotation tồn tại đến giai đoạn nào và thành phần nào còn có thể đọc được nó.
+    relatedKnowledge:
+      - Retention
     relatedModules:
       - routeId: JAVA_REFLECTION
         label: Reflection
-        note: Reflection là Java Core mechanism chính để tiêu thụ annotation metadata có RUNTIME retention.
+        note: Reflection là cơ chế Java Core chính để đọc Annotation được lưu giữ đến RUNTIME tại thời gian chạy.
     objectives:
-      - Chỉ dùng RUNTIME retention khi thực sự có runtime consumer.
-      - Chuyển sang Reflection cho runtime inspection thay vì lặp lại member/invocation model ở đây.
+      - Chọn SOURCE, CLASS hoặc RUNTIME dựa trên thành phần thực sự cần đọc Annotation thay vì chọn theo thói quen.
+      - Hiểu vì sao Annotation không còn tồn tại ở thời gian chạy thì Reflection không thể đọc được nó.
+  - id: targets-and-use-sites
+    title: Phạm vi áp dụng và vị trí sử dụng Annotation
+    purpose: Hiểu @Target quyết định Annotation được phép xuất hiện ở đâu và vì sao phải giới hạn nó vào những vị trí có ý nghĩa.
+    relatedKnowledge:
+      - Target
+    objectives:
+      - Phân biệt Annotation gắn trên khai báo với Annotation áp dụng tại vị trí sử dụng kiểu như TYPE_USE.
+      - Thiết kế phạm vi sử dụng đủ chặt để tránh Annotation xuất hiện ở ngữ cảnh không phù hợp.
+  - id: meta-annotations-and-composition
+    title: Meta-Annotation và cách cấu hình kiểu Annotation
+    purpose: Hiểu Meta-Annotation dùng để mô tả quy tắc của chính một kiểu Annotation thông qua @Retention, @Target, @Documented, @Inherited và @Repeatable.
+    relatedKnowledge:
+      - MetaAnnotation
+    objectives:
+      - Hiểu các Meta-Annotation quyết định cách Annotation được lưu giữ, sử dụng, tài liệu hóa và tra cứu.
+      - Phân biệt cơ chế Meta-Annotation của Java với cơ chế kết hợp Annotation do framework tự định nghĩa.
+  - id: repeatable-and-inherited-semantics
+    title: Annotation lặp lại và kế thừa
+    purpose: Hiểu @Repeatable cho phép cùng một Annotation xuất hiện nhiều lần nhờ một Annotation dùng để chứa các giá trị lặp, còn @Inherited chỉ cung cấp hành vi kế thừa trong phạm vi class rất cụ thể.
+    relatedKnowledge:
+      - RepeatableInherited
+    objectives:
+      - Hiểu cách Annotation lặp lại được biểu diễn và tra cứu ở mức khái niệm.
+      - Nhận biết @Inherited không làm Annotation trên method hoặc interface tự động được kế thừa như Annotation trên class.
+  - id: compile-time-processing
+    title: Xử lý Annotation tại thời điểm biên dịch
+    purpose: Hiểu bộ xử lý Annotation (annotation processor) là thành phần chạy khi biên dịch, đọc mô hình mã nguồn và có thể sinh mã hoặc tài nguyên qua nhiều vòng xử lý.
+    relatedKnowledge:
+      - AnnotationProcessing
+    objectives:
+      - Hiểu vòng đời xử lý Annotation tại thời điểm biên dịch và khả năng kiểm tra hoặc sinh thêm mã/tài nguyên.
+      - Phân biệt xử lý Annotation tại thời điểm biên dịch với Reflection tại thời gian chạy.
+  - id: annotation-design-and-synthesis
+    title: Khi nào nên dùng Annotation?
+    purpose: Tổng hợp toàn bộ mô hình Annotation để quyết định khi nào nên mô tả thông tin bằng Annotation và khi nào API, interface hoặc cấu hình tường minh sẽ dễ hiểu hơn.
+    relatedKnowledge:
+      - AnnotationDesign
+    objectives:
+      - Theo dõi được luồng từ khai báo Annotation, gắn Annotation vào mã nguồn, lưu giữ Annotation đến thành phần đọc và tạo ra hành vi tương ứng mà không nhầm Annotation tự chứa hành vi.
+      - Nhận biết rủi ro khi lạm dụng Annotation như luồng xử lý bị ẩn, phụ thuộc chặt vào framework, cấu hình khó tìm hoặc chọn sai phạm vi và vòng đời.

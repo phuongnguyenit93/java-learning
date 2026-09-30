@@ -65,32 +65,6 @@ questions:
     readmeRelated: {file: "1.Basic/Basic.md", anchor: "annotation-syntax"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - id: annotation-restrictions
-    question: "Which element declaration is valid in an annotation interface?"
-    answers:
-      - {id: A, answer: "List<String> names();", explanation: "Incorrect. Arbitrary collection types such as List are not valid annotation element types."}
-      - {id: B, answer: "Class<? extends Runnable> handler();", explanation: "Correct. Class and parameterized uses of Class are valid annotation element types."}
-      - {id: C, answer: "Object policy();", explanation: "Incorrect. Arbitrary domain or object types cannot be annotation element types."}
-      - {id: D, answer: "String[][] matrix();", explanation: "Incorrect. Annotation elements may use a one-dimensional array of a valid element type, but nested arrays are not valid."}
-    correctAnswerId: B
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "1.Basic/Basic.md", anchor: "annotation-restrictions"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - id: annotation-use-sites
-    question: "What is the core difference between a declaration annotation and a TYPE_USE annotation?"
-    answers:
-      - {id: A, answer: "Declaration annotations always have SOURCE retention while TYPE_USE annotations always have RUNTIME retention.", explanation: "Incorrect. Retention and target are independent dimensions."}
-      - {id: B, answer: "TYPE_USE may only appear on a generic type argument.", explanation: "Incorrect. TYPE_USE also covers many type contexts such as casts, return types, array components, and new expressions."}
-      - {id: C, answer: "Declaration annotations are only for classes while TYPE_USE annotations are only for methods.", explanation: "Incorrect. Declaration annotations can target many kinds of declarations."}
-      - {id: D, answer: "A declaration annotation describes a declared program element, while TYPE_USE describes a particular use of a type.", explanation: "Correct. Runtime APIs also expose these two kinds of metadata through different inspection models."}
-    correctAnswerId: D
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "1.Basic/Basic.md", anchor: "annotation-use-sites"}
-    apiRelated: {controller: "", methodSignature: ""}
-
   - id: override-annotation
     question: "What is the main value of @Override?"
     answers:
@@ -167,6 +141,19 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "3.CustomAnnotation/CustomAnnotation.md", anchor: "declare-annotation"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: annotation-restrictions
+    question: "Which element declaration is valid in an annotation interface?"
+    answers:
+      - {id: A, answer: "List<String> names();", explanation: "Incorrect. Arbitrary collection types such as List are not valid annotation element types."}
+      - {id: B, answer: "Class<? extends Runnable> handler();", explanation: "Correct. Class and parameterized uses of Class are valid annotation element types."}
+      - {id: C, answer: "Object policy();", explanation: "Incorrect. Arbitrary domain or object types cannot be annotation element types."}
+      - {id: D, answer: "String[][] matrix();", explanation: "Incorrect. Annotation elements may use a one-dimensional array of a valid element type, but nested arrays are not valid."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.CustomAnnotation/CustomAnnotation.md", anchor: "annotation-restrictions"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: annotation-elements-defaults
@@ -260,6 +247,19 @@ questions:
     readmeRelated: {file: "4.Retention/Retention.md", anchor: "retention-use-case"}
     apiRelated: {controller: "AnnotationInspectionController", methodSignature: "retention()"}
 
+  - id: annotation-use-sites
+    question: "What is the core difference between a declaration annotation and a TYPE_USE annotation?"
+    answers:
+      - {id: A, answer: "Declaration annotations always have SOURCE retention while TYPE_USE annotations always have RUNTIME retention.", explanation: "Incorrect. Retention and target are independent dimensions."}
+      - {id: B, answer: "TYPE_USE may only appear on a generic type argument.", explanation: "Incorrect. TYPE_USE also covers many type contexts such as casts, return types, array components, and new expressions."}
+      - {id: C, answer: "Declaration annotations are only for classes while TYPE_USE annotations are only for methods.", explanation: "Incorrect. Declaration annotations can target many kinds of declarations."}
+      - {id: D, answer: "A declaration annotation describes a declared program element, while TYPE_USE describes a particular use of a type.", explanation: "Correct. Runtime APIs also expose these two kinds of metadata through different inspection models."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.Target/Target.md", anchor: "annotation-use-sites"}
+    apiRelated: {controller: "", methodSignature: ""}
+
   - id: elementtype-targets
     question: "If an annotation type declares no @Target, what does Java 21 permit?"
     answers:
@@ -271,7 +271,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "5.Target/Target.md", anchor: "elementtype-targets"}
-    apiRelated: {controller: "MetaAnnotationController", methodSignature: "inspectTargets()"}
+    apiRelated: {controller: "", methodSignature: ""}
 
   - id: type-use-annotation
     question: "Which example correctly illustrates the difference between TYPE_PARAMETER and TYPE_USE?"
@@ -352,13 +352,13 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: repeatable-meta
-    question: "Which constraint is correct for the container of a repeatable annotation @Audit?"
+    question: "When @Audit is declared with @Repeatable(Audits.class), what does @Repeatable configure?"
     answers:
-      - {id: A, answer: "The container must declare value() returning Object[].", explanation: "Incorrect. The container's value() must return an array of the repeated annotation type, such as Audit[]."}
-      - {id: B, answer: "The container may have shorter retention than @Audit.", explanation: "Incorrect. Its retention may not be shorter than that of the repeatable annotation."}
-      - {id: C, answer: "The container must declare value() returning Audit[], and any other container elements must have defaults.", explanation: "Correct. Java also imposes compatibility rules involving target, @Documented, and @Inherited where relevant."}
-      - {id: D, answer: "The container must not declare @Target.", explanation: "Incorrect. The container's target is part of the contract and must be compatible under Java's repeatable-annotation rules."}
-    correctAnswerId: C
+      - {id: A, answer: "It declares Audits as the containing annotation used to represent multiple @Audit instances at one legal location.", explanation: "Correct. At the meta-annotation level, @Repeatable establishes the repeated-annotation/container relationship; compatibility and lookup mechanics come later."}
+      - {id: B, answer: "It makes @Audit automatically inherit through the superclass chain.", explanation: "Incorrect. Class-level inheritance is controlled by @Inherited, not @Repeatable."}
+      - {id: C, answer: "It automatically chooses RUNTIME retention for both @Audit and Audits.", explanation: "Incorrect. Retention is an independent contract that must be declared appropriately."}
+      - {id: D, answer: "It makes getAnnotation(Audit.class) always return every repeated instance.", explanation: "Incorrect. Retrieval semantics belong to the lookup APIs; getAnnotationsByType(...) is designed to understand repeated representation."}
+    correctAnswerId: A
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "6.MetaAnnotation/MetaAnnotation.md", anchor: "repeatable-meta"}
@@ -414,7 +414,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "7.RepeatableInherited/RepeatableInherited.md", anchor: "annotation-inheritance-boundaries"}
-    apiRelated: {controller: "", methodSignature: ""}
+    apiRelated: {controller: "InheritedAnnotationController", methodSignature: "inheritance()"}
 
   - id: processing-rounds
     question: "Why must an annotation processor be safe across multiple processing rounds?"
@@ -492,4 +492,69 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "8.AnnotationProcessing/AnnotationProcessing.md", anchor: "processor-pitfalls"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: annotation-fit
+    question: "Which requirement is the best fit for an annotation?"
+    answers:
+      - {id: A, answer: "A secret that changes per deployment environment.", explanation: "Incorrect. Secrets and environment-specific values belong in an appropriate secure configuration mechanism, not source annotations."}
+      - {id: B, answer: "Business rules that change frequently in a database without recompiling the application.", explanation: "Incorrect. Dynamic data is usually better represented in a database, service, or runtime configuration object."}
+      - {id: C, answer: "Small, stable declarative metadata that naturally belongs to a class or method and has a clear consumer.", explanation: "Correct. This is the shape annotations handle well: metadata stays close to code and has an explicit consumer."}
+      - {id: D, answer: "A multi-step business algorithm that the annotation itself will execute.", explanation: "Incorrect. An annotation describes metadata; behavior comes from the consumer."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.AnnotationDesign/AnnotationDesign.md", anchor: "annotation-fit"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: annotation-alternatives
+    question: "If every implementation must provide an audit() method, which mechanism usually expresses that requirement more clearly than a marker annotation?"
+    answers:
+      - {id: A, answer: "An interface that declares audit().", explanation: "Correct. This is a behavioral contract that the compiler can check directly; annotations are a better fit for descriptive metadata."}
+      - {id: B, answer: "@Retention(RUNTIME).", explanation: "Incorrect. Retention controls metadata lifetime; it does not require a method implementation."}
+      - {id: C, answer: "@Documented.", explanation: "Incorrect. @Documented affects generated API documentation."}
+      - {id: D, answer: "@SuppressWarnings.", explanation: "Incorrect. @SuppressWarnings controls compiler warnings and does not define behavioral contracts."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.AnnotationDesign/AnnotationDesign.md", anchor: "annotation-alternatives"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: annotation-end-to-end
+    question: "Which flow correctly describes the end-to-end annotation model?"
+    answers:
+      - {id: A, answer: "Annotation → creates behavior by itself → framework only observes the result.", explanation: "Incorrect. An annotation does not create behavior by itself."}
+      - {id: B, answer: "Problem → design metadata → choose use sites/lifetime → a consumer reads the metadata → that consumer produces behavior or another result.", explanation: "Correct. This is the module-wide model: annotations describe; consumers act."}
+      - {id: C, answer: "@Target → automatically chooses @Retention → the JVM invokes a processor.", explanation: "Incorrect. Target and retention are independent decisions, and annotation processors do not run as JVM runtime callbacks."}
+      - {id: D, answer: "Reflection → creates the annotation → the compiler then validates its schema.", explanation: "Incorrect. Annotation declarations/usages exist before runtime; the compiler validates the schema, while Reflection is only one runtime consumer."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.AnnotationDesign/AnnotationDesign.md", anchor: "annotation-end-to-end"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: annotation-overuse-pitfalls
+    question: "Which sign most strongly suggests an annotation is being overused?"
+    answers:
+      - {id: A, answer: "It has a clear consumer and carries a few stable declarative values.", explanation: "Incorrect. That is usually a healthy annotation design."}
+      - {id: B, answer: "It uses a narrow @Target so the compiler rejects meaningless placements.", explanation: "Incorrect. A narrow target usually improves the contract."}
+      - {id: C, answer: "It has many interacting flags, sentinel values, and override rules that make control flow hard to trace from code.", explanation: "Correct. The annotation is becoming a hidden configuration language and making behavior difficult to reason about."}
+      - {id: D, answer: "A SOURCE annotation is consumed by a processor during compilation.", explanation: "Incorrect. That is a normal annotation-processing use case."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.AnnotationDesign/AnnotationDesign.md", anchor: "annotation-overuse-pitfalls"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: annotation-design-checklist
+    question: "Which question matters most before introducing a new annotation?"
+    answers:
+      - {id: A, answer: "Is the annotation name short enough?", explanation: "Incorrect. Naming matters, but it does not determine whether annotations are the right mechanism."}
+      - {id: B, answer: "Who consumes this metadata, at what stage, and is an annotation clearer than an explicit API, interface, or configuration?", explanation: "Correct. Consumer, lifecycle, and the trade-off with explicit mechanisms are core design questions."}
+      - {id: C, answer: "Can we use RUNTIME retention just to be safe?", explanation: "Incorrect. Retention should follow consumer needs rather than habit."}
+      - {id: D, answer: "Can we allow as many targets as possible?", explanation: "Incorrect. Targets should be the smallest meaningful set."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.AnnotationDesign/AnnotationDesign.md", anchor: "annotation-design-checklist"}
     apiRelated: {controller: "", methodSignature: ""}

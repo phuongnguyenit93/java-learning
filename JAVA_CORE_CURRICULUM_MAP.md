@@ -2101,6 +2101,9 @@ Repeatable / Inherited
         ↓
 How can compile-time tools consume metadata and generate code/resources?
 Annotation Processing
+        ↓
+When are annotations the clearest design, and when should another mechanism be used?
+Annotation Design / Synthesis
 ```
 
 **Running example / evidence strategy:** define one small annotation family such as `@Audit`, `@FeatureFlag`, or `@ColumnAlias`. Keep its element schema stable across chapters/languages and reuse it to demonstrate target, retention, repeatability and runtime inspection. Then show a separate compile-time processor example from annotation declaration → annotated source → processor discovery/invocation → `Filer` output → later processing round, without pretending compile-time behavior is a runtime API feature.
@@ -2116,20 +2119,22 @@ Target               → How do we prevent metadata from appearing on meaningles
 MetaAnnotation       → How do annotations declare their own retention, target, documentation and inheritance behavior?
 RepeatableInherited  → How do multiple values and class-hierarchy lookup change retrieval semantics?
 AnnotationProcessing → How can compile-time tools validate or generate code from metadata before the application runs?
+AnnotationDesign     → How do we choose annotations intentionally, compare them with explicit APIs/configuration, and reason about overuse risks end to end?
 ```
 
 #### Knowledge map
 
 | Existing chapter | Proposed anchored H2 sections |
 | --- | --- |
-| `1.Basic/Basic.md` | `#annotation-model` — Annotation as metadata<br>`#annotation-syntax` — Annotation syntax and elements<br>`#annotation-restrictions` — Allowed annotation element types, compile-time values, cyclic-element prohibition and Object/Annotation method-signature collisions<br>`#annotation-use-sites` — Declaration/type-use boundary |
+| `1.Basic/Basic.md` | `#annotation-model` — Annotation as metadata<br>`#annotation-syntax` — Basic annotation syntax, elements and values |
 | `2.BuiltIn/BuiltIn.md` | `#override-annotation` — @Override compiler contract<br>`#deprecated-annotation` — @Deprecated and documentation<br>`#suppresswarnings` — @SuppressWarnings scope/responsibility plus standard Java suppression keys vs compiler-specific keys<br>`#safevarargs` — @SafeVarargs generic-varargs assertion plus declaration/call-site warning semantics<br>`#functionalinterface` — @FunctionalInterface compiler check |
-| `3.CustomAnnotation/CustomAnnotation.md` | `#declare-annotation` — Declaring annotation types<br>`#annotation-elements-defaults` — Elements and default values<br>`#marker-annotation` — Marker annotations<br>`#custom-annotation-design` — Designing meaningful metadata |
+| `3.CustomAnnotation/CustomAnnotation.md` | `#declare-annotation` — Declaring annotation types<br>`#annotation-restrictions` — Allowed annotation element types, compile-time values, cyclic-element prohibition and Object/Annotation method-signature collisions<br>`#annotation-elements-defaults` — Elements and default values<br>`#marker-annotation` — Marker annotations<br>`#custom-annotation-design` — Designing meaningful metadata |
 | `4.Retention/Retention.md` | `#retention-source` — SOURCE retention<br>`#retention-class` — CLASS retention<br>`#retention-runtime` — RUNTIME retention<br>`#retention-use-case` — Choose retention by consumer |
-| `5.Target/Target.md` | `#elementtype-targets` — ElementType targets, including practical package-info/module-info locations<br>`#type-use-annotation` — TYPE_USE<br>`#target-design` — Restrict annotations to valid contexts, including record-component propagation boundaries |
-| `6.MetaAnnotation/MetaAnnotation.md` | `#retention-meta` — @Retention<br>`#target-meta` — @Target plus custom meta-annotation/composition boundary<br>`#documented-meta` — @Documented<br>`#inherited-meta` — @Inherited boundary<br>`#repeatable-meta` — Why repetition needs @Repeatable and its container contract |
-| `7.RepeatableInherited/RepeatableInherited.md` | `#repeatable-container` — Repeatable annotations and container<br>`#get-annotations-by-type` — Directly/indirectly present, present/associated lookup model and single-vs-by-type reflection APIs<br>`#inherited-class-only` — @Inherited applies to class inheritance only<br>`#annotation-inheritance-boundaries` — Method/interface inheritance boundaries |
+| `5.Target/Target.md` | `#annotation-use-sites` — Declaration/type-use boundary before target mechanics<br>`#elementtype-targets` — ElementType targets, including practical package-info/module-info locations<br>`#type-use-annotation` — TYPE_USE<br>`#target-design` — Restrict annotations to valid contexts, including record-component propagation boundaries |
+| `6.MetaAnnotation/MetaAnnotation.md` | `#retention-meta` — @Retention as annotation-type configuration<br>`#target-meta` — @Target plus custom meta-annotation/composition boundary<br>`#documented-meta` — @Documented<br>`#inherited-meta` — @Inherited as class-lookup configuration, with detailed lookup deferred to chapter 7<br>`#repeatable-meta` — @Repeatable declaration relationship with its container, with detailed container/lookup semantics deferred to chapter 7 |
+| `7.RepeatableInherited/RepeatableInherited.md` | `#repeatable-container` — Repeatable annotations, container compatibility rules and observable representation<br>`#get-annotations-by-type` — Directly/indirectly present, present/associated lookup model and single-vs-by-type reflection APIs<br>`#inherited-class-only` — @Inherited applies to class inheritance only<br>`#annotation-inheritance-boundaries` — Method/interface/member inheritance boundaries |
 | `8.AnnotationProcessing/AnnotationProcessing.md` | `#processing-rounds` — Compile-time annotation-processing rounds<br>`#processor-contract` — Processor/AbstractProcessor contract plus Element/TypeElement/TypeMirror/AnnotationMirror compiler-model mental model<br>`#supported-types-source-version` — Supported annotation types/source version, processor discovery and supported options<br>`#generated-source` — End-to-end annotated source → Filer output → later-round generated source<br>`#processing-vs-reflection` — Compile-time processing vs runtime reflection<br>`#processor-pitfalls` — Determinism and generated-code pitfalls |
+| `9.AnnotationDesign/AnnotationDesign.md` | `#annotation-fit` — When annotations are a good fit<br>`#annotation-alternatives` — When explicit APIs, interfaces, objects or configuration are clearer<br>`#annotation-end-to-end` — End-to-end annotation declaration → target/retention → consumer → behavior model<br>`#annotation-overuse-pitfalls` — Hidden control flow, framework coupling, target/retention misuse and oversized configuration risks<br>`#annotation-design-checklist` — Practical decision checklist for annotation design |
 
 #### Proposed API experiments
 
@@ -2138,16 +2143,16 @@ AnnotationProcessing → How can compile-time tools validate or generate code fr
 | `AnnotationInspectionController` | `retention()` | `#retention-use-case` | Reflect annotations with RUNTIME while explaining SOURCE/CLASS absence. |
 | `RepeatableAnnotationController` | `repeatable()` | `#get-annotations-by-type` | Return repeated annotations through reflection. |
 | `InheritedAnnotationController` | `inheritance()` | `#inherited-class-only` | Compare class annotation inheritance with method/interface boundaries. |
-| `MetaAnnotationController` | `inspectTargets()` | `#elementtype-targets` | Reflect meta-annotations on custom annotation type. |
+| `MetaAnnotationController` | `inspectTargets()` | `#target-meta` | Reflect `@Target`, `@Retention` and `@Documented` on a custom annotation type. |
 | `BuiltInAnnotationController` | `compilerContracts()` | `#override-annotation` | Runtime response references compiled examples; compile-time effects documented as code evidence, not faked runtime behavior. |
 
 #### Quiz coverage
 
-annotation syntax/types; built-ins; retention; target; meta-annotations; repeatable/inherited semantics; compile-time processing vs reflection; processor rounds.
+annotation syntax/types; built-ins; retention; target; meta-annotations; repeatable/inherited semantics; compile-time processing vs reflection; processor rounds; annotation fit, alternatives, end-to-end design and overuse risks.
 
 #### Interview coverage
 
-why annotations exist; retention choice; @Inherited limitations; repeatable annotations; annotation processing lifecycle; runtime reflection vs compile-time code generation; framework metadata design.
+why annotations exist; retention choice; @Inherited limitations; repeatable annotations; annotation processing lifecycle; runtime reflection vs compile-time code generation; framework metadata design; when annotations are appropriate, alternatives, overuse risks and design review checklist.
 
 
 ### 4.15 `reflection`
@@ -2408,7 +2413,7 @@ class loading lifecycle; parent delegation; why same class name can be different
 | `date-time` | 12 | 41 | 6 | 30–40 | 20–28 |
 | `io` | 11 | 45 | 7 | 30–40 | 20–28 |
 | `localization` | 13 | 55 | 11 | 26–34 | 18–24 |
-| `annotation` | 8 | 35 | 5 | 24–32 | 18–24 |
+| `annotation` | 9 | 40 | 5 | 24–32 | 18–24 |
 | `reflection` | 10 | 45 | 7 | 30–40 | 22–30 |
 | `classloader` | 9 | 39 | 7 | 28–38 | 22–30 |
 | **Total** | **163** | **636** | **109** | **450–602** | **314–430** |

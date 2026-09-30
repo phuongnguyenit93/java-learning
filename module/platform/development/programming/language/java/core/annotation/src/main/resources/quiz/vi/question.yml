@@ -65,32 +65,6 @@ questions:
     readmeRelated: {file: "1.Basic/Basic.md", anchor: "annotation-syntax"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - id: annotation-restrictions
-    question: "Khai báo element nào hợp lệ trong annotation interface?"
-    answers:
-      - {id: A, answer: "List<String> names();", explanation: "Sai. Collection type tùy ý như List không phải annotation element type hợp lệ."}
-      - {id: B, answer: "Class<? extends Runnable> handler();", explanation: "Đúng. Class và parameterized use của Class thuộc nhóm element type hợp lệ."}
-      - {id: C, answer: "Object policy();", explanation: "Sai. Arbitrary domain/object type không thể làm annotation element type."}
-      - {id: D, answer: "String[][] matrix();", explanation: "Sai. Annotation chỉ cho phép array một chiều của một element type hợp lệ; nested array không hợp lệ."}
-    correctAnswerId: B
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "1.Basic/Basic.md", anchor: "annotation-restrictions"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - id: annotation-use-sites
-    question: "Điểm khác nhau cốt lõi giữa declaration annotation và TYPE_USE annotation là gì?"
-    answers:
-      - {id: A, answer: "Declaration annotation luôn có SOURCE retention còn TYPE_USE luôn có RUNTIME retention.", explanation: "Sai. Retention và target là hai dimension độc lập."}
-      - {id: B, answer: "TYPE_USE chỉ được đặt trên generic type argument.", explanation: "Sai. TYPE_USE còn áp dụng ở nhiều type context như cast, return type, array component và new expression."}
-      - {id: C, answer: "Declaration annotation chỉ dùng cho class, còn TYPE_USE chỉ dùng cho method.", explanation: "Sai. Declaration annotation có thể gắn vào nhiều loại declaration khác nhau."}
-      - {id: D, answer: "Declaration annotation mô tả phần tử được khai báo, còn TYPE_USE mô tả một lần sử dụng type tại vị trí cụ thể.", explanation: "Đúng. Hai loại metadata này còn được runtime APIs quan sát qua các mô hình lookup khác nhau."}
-    correctAnswerId: D
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "1.Basic/Basic.md", anchor: "annotation-use-sites"}
-    apiRelated: {controller: "", methodSignature: ""}
-
   - id: override-annotation
     question: "Giá trị chính của @Override là gì?"
     answers:
@@ -167,6 +141,19 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "3.CustomAnnotation/CustomAnnotation.md", anchor: "declare-annotation"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: annotation-restrictions
+    question: "Khai báo element nào hợp lệ trong annotation interface?"
+    answers:
+      - {id: A, answer: "List<String> names();", explanation: "Sai. Collection type tùy ý như List không phải annotation element type hợp lệ."}
+      - {id: B, answer: "Class<? extends Runnable> handler();", explanation: "Đúng. Class và parameterized use của Class thuộc nhóm element type hợp lệ."}
+      - {id: C, answer: "Object policy();", explanation: "Sai. Arbitrary domain/object type không thể làm annotation element type."}
+      - {id: D, answer: "String[][] matrix();", explanation: "Sai. Annotation chỉ cho phép array một chiều của một element type hợp lệ; nested array không hợp lệ."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.CustomAnnotation/CustomAnnotation.md", anchor: "annotation-restrictions"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: annotation-elements-defaults
@@ -260,6 +247,19 @@ questions:
     readmeRelated: {file: "4.Retention/Retention.md", anchor: "retention-use-case"}
     apiRelated: {controller: "AnnotationInspectionController", methodSignature: "retention()"}
 
+  - id: annotation-use-sites
+    question: "Điểm khác nhau cốt lõi giữa declaration annotation và TYPE_USE annotation là gì?"
+    answers:
+      - {id: A, answer: "Declaration annotation luôn có SOURCE retention còn TYPE_USE luôn có RUNTIME retention.", explanation: "Sai. Retention và target là hai dimension độc lập."}
+      - {id: B, answer: "TYPE_USE chỉ được đặt trên generic type argument.", explanation: "Sai. TYPE_USE còn áp dụng ở nhiều type context như cast, return type, array component và new expression."}
+      - {id: C, answer: "Declaration annotation chỉ dùng cho class, còn TYPE_USE chỉ dùng cho method.", explanation: "Sai. Declaration annotation có thể gắn vào nhiều loại declaration khác nhau."}
+      - {id: D, answer: "Declaration annotation mô tả phần tử được khai báo, còn TYPE_USE mô tả một lần sử dụng type tại vị trí cụ thể.", explanation: "Đúng. Hai loại metadata này còn được runtime APIs quan sát qua các mô hình lookup khác nhau."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.Target/Target.md", anchor: "annotation-use-sites"}
+    apiRelated: {controller: "", methodSignature: ""}
+
   - id: elementtype-targets
     question: "Nếu annotation type không khai báo @Target thì Java 21 cho phép điều gì?"
     answers:
@@ -271,7 +271,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "5.Target/Target.md", anchor: "elementtype-targets"}
-    apiRelated: {controller: "MetaAnnotationController", methodSignature: "inspectTargets()"}
+    apiRelated: {controller: "", methodSignature: ""}
 
   - id: type-use-annotation
     question: "Ví dụ nào minh họa đúng sự khác nhau giữa TYPE_PARAMETER và TYPE_USE?"
@@ -352,13 +352,13 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: repeatable-meta
-    question: "Constraint nào đúng với container của một repeatable annotation @Audit?"
+    question: "Khi khai báo @Repeatable(Audits.class) trên @Audit, @Repeatable đang cấu hình điều gì?"
     answers:
-      - {id: A, answer: "Container phải có value() trả về Object[].", explanation: "Sai. Container phải có value() trả về chính mảng annotation type được repeat, ví dụ Audit[]."}
-      - {id: B, answer: "Container có thể có retention ngắn hơn @Audit.", explanation: "Sai. Retention của container không được ngắn hơn repeatable annotation."}
-      - {id: C, answer: "Container phải có value() trả về Audit[]; các element khác của container phải có default.", explanation: "Đúng. Java còn áp dụng các compatibility constraint về target, @Documented và @Inherited khi liên quan."}
-      - {id: D, answer: "Container không được khai báo @Target.", explanation: "Sai. Target của container là một phần contract và phải tương thích với repeatable annotation theo rule của Java."}
-    correctAnswerId: C
+      - {id: A, answer: "Nó khai báo Audits là Annotation chứa dùng để biểu diễn nhiều @Audit tại cùng vị trí hợp lệ.", explanation: "Đúng. Ở cấp Meta-Annotation, @Repeatable thiết lập quan hệ giữa Annotation lặp lại và Annotation chứa; chi tiết tương thích và tra cứu thuộc bước mechanics tiếp theo."}
+      - {id: B, answer: "Nó làm @Audit tự động được kế thừa qua superclass.", explanation: "Sai. Kế thừa class-level thuộc @Inherited, không phải @Repeatable."}
+      - {id: C, answer: "Nó tự chọn @Retention(RUNTIME) cho cả @Audit và Audits.", explanation: "Sai. @Retention là quyết định độc lập và phải được khai báo phù hợp."}
+      - {id: D, answer: "Nó làm getAnnotation(Audit.class) luôn trả về tất cả instance lặp lại.", explanation: "Sai. Retrieval semantics thuộc các API tra cứu; getAnnotationsByType(...) mới là API hiểu representation lặp lại."}
+    correctAnswerId: A
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "6.MetaAnnotation/MetaAnnotation.md", anchor: "repeatable-meta"}
@@ -414,7 +414,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "7.RepeatableInherited/RepeatableInherited.md", anchor: "annotation-inheritance-boundaries"}
-    apiRelated: {controller: "", methodSignature: ""}
+    apiRelated: {controller: "InheritedAnnotationController", methodSignature: "inheritance()"}
 
   - id: processing-rounds
     question: "Vì sao annotation processor phải được thiết kế an toàn qua nhiều processing round?"
@@ -492,4 +492,69 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "8.AnnotationProcessing/AnnotationProcessing.md", anchor: "processor-pitfalls"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: annotation-fit
+    question: "Trường hợp nào phù hợp nhất để biểu diễn bằng Annotation?"
+    answers:
+      - {id: A, answer: "Một secret thay đổi theo từng môi trường triển khai.", explanation: "Sai. Secret và dữ liệu phụ thuộc môi trường nên nằm trong cơ chế cấu hình/bảo mật phù hợp, không nên đóng cứng vào Annotation."}
+      - {id: B, answer: "Một tập business rule thay đổi liên tục trong database mà không muốn biên dịch lại ứng dụng.", explanation: "Sai. Dữ liệu động như vậy phù hợp hơn với database, service hoặc đối tượng cấu hình ở thời gian chạy."}
+      - {id: C, answer: "Một thông tin khai báo nhỏ, ổn định, gắn tự nhiên với class/method và có một thành phần đọc rõ ràng.", explanation: "Đúng. Đây là trường hợp Annotation phát huy lợi thế: metadata nằm sát mã nguồn và có consumer xác định."}
+      - {id: D, answer: "Một thuật toán nghiệp vụ nhiều bước mà Annotation sẽ tự thực thi.", explanation: "Sai. Annotation mô tả metadata; hành vi đến từ thành phần đọc, không nằm trong bản thân Annotation."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.AnnotationDesign/AnnotationDesign.md", anchor: "annotation-fit"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: annotation-alternatives
+    question: "Nếu muốn bắt mọi implementation phải cung cấp method audit(), cơ chế nào thường diễn đạt yêu cầu rõ hơn một marker Annotation?"
+    answers:
+      - {id: A, answer: "interface khai báo audit().", explanation: "Đúng. Đây là behavioral contract mà trình biên dịch có thể kiểm tra trực tiếp; Annotation phù hợp hơn khi chỉ cần mô tả metadata về một phần tử."}
+      - {id: B, answer: "@Retention(RUNTIME).", explanation: "Sai. Retention chỉ quyết định vòng đời metadata, không buộc type triển khai method."}
+      - {id: C, answer: "@Documented.", explanation: "Sai. @Documented chỉ ảnh hưởng tài liệu API."}
+      - {id: D, answer: "@SuppressWarnings.", explanation: "Sai. @SuppressWarnings điều khiển cảnh báo của trình biên dịch, không tạo behavioral contract."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.AnnotationDesign/AnnotationDesign.md", anchor: "annotation-alternatives"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: annotation-end-to-end
+    question: "Flow nào mô tả đúng mô hình Annotation từ đầu đến cuối?"
+    answers:
+      - {id: A, answer: "Annotation → tự sinh behavior → framework chỉ quan sát kết quả.", explanation: "Sai. Annotation không tự sinh hành vi."}
+      - {id: B, answer: "Bài toán → thiết kế metadata → chọn vị trí dùng/vòng đời → thành phần đọc metadata → thành phần đó tạo hành vi hoặc kết quả.", explanation: "Đúng. Đây là mental model xuyên suốt module: Annotation mô tả, consumer xử lý."}
+      - {id: C, answer: "@Target → tự quyết định @Retention → JVM tự gọi processor.", explanation: "Sai. Target và retention là hai quyết định độc lập; JVM không tự gọi annotation processor ở runtime."}
+      - {id: D, answer: "Reflection → tạo Annotation → compiler mới kiểm tra schema.", explanation: "Sai. Annotation được khai báo/sử dụng trước; compiler kiểm tra schema, còn Reflection chỉ là một consumer ở runtime."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.AnnotationDesign/AnnotationDesign.md", anchor: "annotation-end-to-end"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: annotation-overuse-pitfalls
+    question: "Dấu hiệu nào cho thấy Annotation đang bị lạm dụng?"
+    answers:
+      - {id: A, answer: "Annotation có consumer rõ ràng và chỉ mang một vài giá trị khai báo ổn định.", explanation: "Sai. Đây thường là dấu hiệu của thiết kế Annotation phù hợp."}
+      - {id: B, answer: "Annotation dùng @Target hẹp để compiler chặn vị trí vô nghĩa.", explanation: "Sai. Target hẹp thường làm contract rõ hơn."}
+      - {id: C, answer: "Một Annotation có rất nhiều cờ tương tác, sentinel và quy tắc ghi đè khiến luồng xử lý khó lần ra từ mã nguồn.", explanation: "Đúng. Annotation đang biến thành một ngôn ngữ cấu hình ẩn và làm control flow khó suy luận."}
+      - {id: D, answer: "Annotation SOURCE được processor đọc khi biên dịch.", explanation: "Sai. Đây là use case bình thường của annotation processing."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.AnnotationDesign/AnnotationDesign.md", anchor: "annotation-overuse-pitfalls"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: annotation-design-checklist
+    question: "Câu hỏi nào quan trọng nhất trước khi quyết định dùng một Annotation mới?"
+    answers:
+      - {id: A, answer: "Tên Annotation có đủ ngắn không?", explanation: "Sai. Tên quan trọng nhưng không quyết định cơ chế có phù hợp hay không."}
+      - {id: B, answer: "Ai sẽ đọc metadata này, đọc ở giai đoạn nào và Annotation có rõ hơn API/interface/configuration tường minh không?", explanation: "Đúng. Consumer, lifecycle và trade-off với cơ chế khác là các câu hỏi thiết kế cốt lõi."}
+      - {id: C, answer: "Có thể đặt retention là RUNTIME cho chắc không?", explanation: "Sai. Retention phải xuất phát từ nhu cầu của consumer, không phải chọn RUNTIME theo thói quen."}
+      - {id: D, answer: "Có thể thêm càng nhiều target càng tốt không?", explanation: "Sai. Target nên hẹp nhất vẫn diễn đạt đúng ý nghĩa."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.AnnotationDesign/AnnotationDesign.md", anchor: "annotation-design-checklist"}
     apiRelated: {controller: "", methodSignature: ""}

@@ -1,30 +1,30 @@
 AnnotationInspectionController:
   description: |-
-    <h2>Retention và runtime inspection</h2>
-    <p>Quan sát annotation nào thực sự còn nhìn thấy được bằng reflection khi cùng một class được gắn metadata với SOURCE, CLASS và RUNTIME retention.</p>
+    <h2>Vòng đời Annotation và kiểm tra tại thời gian chạy</h2>
+    <p>Quan sát Annotation nào thực sự còn nhìn thấy được bằng Reflection khi cùng một class được gắn siêu dữ liệu với các chính sách SOURCE, CLASS và RUNTIME.</p>
   readmeRelated:
     file: 4.Retention/Retention.md
 BuiltInAnnotationController:
   description: |-
-    <h2>Built-in compiler contracts</h2>
-    <p>Dùng các declaration hợp lệ đã compile với <code>@Override</code> và <code>@FunctionalInterface</code> để nối annotation metadata với compiler contract, không giả lập compile error ở runtime.</p>
+    <h2>Các Annotation có sẵn và quy tắc của trình biên dịch</h2>
+    <p>Dùng các khai báo hợp lệ đã biên dịch với <code>@Override</code> và <code>@FunctionalInterface</code> để nối Annotation với quy tắc được trình biên dịch kiểm tra, thay vì giả lập lỗi biên dịch ở thời gian chạy.</p>
   readmeRelated:
     file: 2.BuiltIn/BuiltIn.md
 InheritedAnnotationController:
   description: |-
     <h2>Ranh giới của @Inherited</h2>
-    <p>So sánh superclass inheritance, interface implementation và overriding method để thấy <code>@Inherited</code> chỉ ảnh hưởng class-level lookup qua superclass chain.</p>
+    <p>So sánh kế thừa qua superclass, việc implements interface và method ghi đè để thấy <code>@Inherited</code> chỉ ảnh hưởng tra cứu Annotation ở cấp class qua chuỗi superclass.</p>
   readmeRelated:
     file: 7.RepeatableInherited/RepeatableInherited.md
 MetaAnnotationController:
   description: |-
-    <h2>Meta-annotation inspection</h2>
-    <p>Đọc <code>@Target</code>, <code>@Retention</code> và <code>@Documented</code> trên một custom annotation type để quan sát annotation type tự mô tả contract của nó.</p>
+    <h2>Kiểm tra Meta-Annotation</h2>
+    <p>Đọc <code>@Target</code>, <code>@Retention</code> và <code>@Documented</code> trên một kiểu Annotation tùy chỉnh để quan sát cách kiểu Annotation tự mô tả quy tắc của chính nó.</p>
   readmeRelated:
-    file: 5.Target/Target.md
+    file: 6.MetaAnnotation/MetaAnnotation.md
 RepeatableAnnotationController:
   description: |-
-    <h2>Repeatable annotation lookup</h2>
-    <p>Quan sát container representation và sự khác nhau giữa single-annotation lookup với <code>getAnnotationsByType()</code> khi cùng annotation xuất hiện nhiều lần.</p>
+    <h2>Tra cứu Annotation lặp lại</h2>
+    <p>Quan sát cách Annotation chứa biểu diễn nhiều giá trị và sự khác nhau giữa tra cứu một Annotation với <code>getAnnotationsByType()</code>.</p>
   readmeRelated:
     file: 7.RepeatableInherited/RepeatableInherited.md

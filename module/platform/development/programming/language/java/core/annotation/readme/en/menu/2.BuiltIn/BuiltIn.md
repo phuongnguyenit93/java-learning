@@ -1,4 +1,4 @@
-# Built-in Annotations
+# Built-In Compiler and Tool Contracts
 
 Java ships several annotations whose consumers are already defined by the language, compiler, or documentation toolchain. They are useful examples because each one has a narrow contract: it communicates one fact and a known tool decides what to do with it.
 
@@ -29,7 +29,7 @@ class Dog extends Animal {
 }
 ```
 
-Without `@Override`, `sounds()` could silently become an unrelated overload/new method. The annotation converts an intention into a compiler-checked contract.
+Without `@Override`, `sounds()` could silently become an unrelated new method. The annotation converts an intention into a compiler-checked contract.
 
 ### BOUNDARY — `@Override` does not change dispatch
 
@@ -100,6 +100,8 @@ Before adding `@SuppressWarnings`, ask whether the warning can be eliminated by 
 
 ## <a id="safevarargs">`@SafeVarargs` and Generic Varargs</a>
 
+> **Beginner boundary:** here you only need the model that `@SafeVarargs` is a programmer assertion about generic-varargs safety. Type erasure, reifiable types, and heap-pollution mechanics belong to the Generics module.
+
 Generic varargs can create a heap-pollution boundary because varargs are implemented with arrays while generic type arguments are erased.
 
 ```java
@@ -143,6 +145,8 @@ The warning scope is materially different:
 That non-local effect is why `@SafeVarargs` is an API-level programmer assertion rather than merely a local warning switch.
 
 ## <a id="functionalinterface">`@FunctionalInterface` Compiler Check</a>
+
+> **Beginner boundary:** this module focuses on how `@FunctionalInterface` makes a design intention compiler-checked. Lambda, method-reference, and function-type mechanics belong to Functional Programming.
 
 `@FunctionalInterface` expresses that an interface is intended to have one abstract function contract and asks the compiler to verify that property.
 

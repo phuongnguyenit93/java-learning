@@ -1,6 +1,8 @@
-# Retention Policies
+# Retention and Annotation Lifetime
 
 An annotation can be useful during source compilation, remain in the generated class file, or stay available to runtime reflection. Retention policy makes that lifetime explicit.
+
+This chapter isolates the **lifetime** question. The examples intentionally omit `@Target`; the next chapter adds the separate rule for where an annotation may legally appear.
 
 ```text
 source code
@@ -20,7 +22,6 @@ RUNTIME → class-file + runtime reflection lifetime
 
 ```java
 @Retention(RetentionPolicy.SOURCE)
-@Target(ElementType.METHOD)
 public @interface GeneratedCheck {
 }
 ```
@@ -74,7 +75,6 @@ For the running auditing example:
 
 ```java
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
 public @interface Audit {
     String action();
     int level() default 1;
@@ -95,12 +95,6 @@ if (audit != null) {
 RUNTIME retention only makes retrieval possible. It does not cause the JVM to invoke business behavior automatically.
 
 Detailed reflection APIs, accessibility rules, and generic runtime metadata belong to the reflection module. Here the important boundary is the annotation lifetime contract.
-
-### EDGE CASE — local declarations and type annotations are different channels
-
-Declaration annotations on local-variable declarations and lambda formal-parameter declarations are not retained in the binary through the ordinary declaration-annotation channel, even when the annotation type declares `CLASS` or `RUNTIME` retention. A type annotation on the type used in such a context is a separate metadata channel with its own class-file/runtime representation rules.
-
-So “RUNTIME retention” does not mean every source annotation occurrence automatically becomes runtime declaration metadata. Retention must always be read together with target and use-site semantics.
 
 ## <a id="retention-use-case">Choose Retention by Consumer</a>
 

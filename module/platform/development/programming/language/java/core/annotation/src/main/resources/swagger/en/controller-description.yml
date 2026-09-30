@@ -21,7 +21,7 @@ MetaAnnotationController:
     <h2>Meta-annotation inspection</h2>
     <p>Read <code>@Target</code>, <code>@Retention</code>, and <code>@Documented</code> from a custom annotation type to observe how annotation types describe their own contract.</p>
   readmeRelated:
-    file: 5.Target/Target.md
+    file: 6.MetaAnnotation/MetaAnnotation.md
 RepeatableAnnotationController:
   description: |-
     <h2>Repeatable annotation lookup</h2>

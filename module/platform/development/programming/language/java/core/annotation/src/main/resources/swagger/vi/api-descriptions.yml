@@ -1,8 +1,8 @@
 AnnotationInspectionController:
   retention():
-    summary: So sánh SOURCE, CLASS và RUNTIME bằng reflection
-    description: Gắn ba annotation có retention khác nhau lên cùng một sample class
-      rồi trả về annotation nào còn nhìn thấy được qua runtime reflection.
+    summary: So sánh SOURCE, CLASS và RUNTIME bằng Reflection
+    description: Gắn ba Annotation có chính sách lưu giữ khác nhau lên cùng một class mẫu
+      rồi trả về Annotation nào còn nhìn thấy được qua Reflection tại thời gian chạy.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -27,10 +27,10 @@ AnnotationInspectionController:
     usage: true
 BuiltInAnnotationController:
   compilerContracts():
-    summary: Quan sát built-in annotation như compiler contract
-    description: Chạy các declaration đã compile thành công với @Override và @FunctionalInterface,
-      đồng thời giải thích vì sao invalid variant là compile-time concern chứ không
-      phải runtime experiment.
+    summary: Quan sát Annotation có sẵn như quy tắc được trình biên dịch kiểm tra
+    description: Chạy các khai báo đã biên dịch thành công với @Override và @FunctionalInterface,
+      đồng thời giải thích vì sao trường hợp sai phải bị phát hiện khi biên dịch chứ không
+      phải là một thử nghiệm ở thời gian chạy.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -55,9 +55,9 @@ BuiltInAnnotationController:
     usage: true
 InheritedAnnotationController:
   inheritance():
-    summary: Kiểm tra ranh giới class inheritance của @Inherited
-    description: So sánh subclass, interface implementation và overriding method để
-      chứng minh @Inherited chỉ ảnh hưởng class-level lookup qua superclass chain.
+    summary: Kiểm tra ranh giới kế thừa của @Inherited
+    description: So sánh subclass, việc implements interface và method ghi đè để
+      chứng minh @Inherited chỉ ảnh hưởng tra cứu Annotation ở cấp class qua chuỗi superclass.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -82,17 +82,17 @@ InheritedAnnotationController:
     usage: true
 MetaAnnotationController:
   inspectTargets():
-    summary: Inspect @Target và retention của custom annotation type
-    description: Reflect meta-annotations trên AuditedComponent để trả về ElementType
-      hợp lệ, retention policy và trạng thái @Documented.
+    summary: Quan sát cách Meta-Annotation cấu hình một kiểu Annotation
+    description: Đọc các Meta-Annotation trên AuditedComponent để trả về các ElementType
+      hợp lệ, chính sách lưu giữ và trạng thái @Documented.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 5.Target/Target.md
-      anchor: elementtype-targets
+      file: 6.MetaAnnotation/MetaAnnotation.md
+      anchor: target-meta
     methodName: inspectTargets
     params: [
       ]
@@ -109,9 +109,9 @@ MetaAnnotationController:
     usage: true
 RepeatableAnnotationController:
   repeatable():
-    summary: Đọc repeatable annotation bằng container-aware lookup
-    description: Gắn hai @Audit lên một method rồi so sánh single lookup, container
-      presence và getAnnotationsByType() để quan sát repeatable semantics.
+    summary: Đọc Annotation lặp lại bằng API hiểu Annotation chứa
+    description: Gắn hai @Audit lên một method rồi so sánh tra cứu một Annotation, sự tồn tại
+      của Annotation chứa và getAnnotationsByType() để quan sát ngữ nghĩa lặp lại.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video

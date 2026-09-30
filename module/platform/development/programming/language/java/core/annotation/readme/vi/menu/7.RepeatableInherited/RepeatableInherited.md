@@ -1,22 +1,22 @@
-# Repeatable và Inherited Annotation
+# Annotation lặp lại và kế thừa
 
-Hai meta-annotation `@Repeatable` và `@Inherited` không chỉ thay đổi cú pháp khai báo. Chúng làm thay đổi **cách metadata được biểu diễn và tìm kiếm**.
+Hai Meta-Annotation `@Repeatable` và `@Inherited` không chỉ thay đổi cú pháp khai báo. Chúng làm thay đổi **cách siêu dữ liệu được biểu diễn và tra cứu**.
 
 Đây là nơi dễ xảy ra hiểu nhầm nhất:
 
 ```text
-annotation xuất hiện trong source
+Annotation xuất hiện trong mã nguồn
 ≠
-mọi API reflection đều trả về nó theo cùng một cách
+mọi API Reflection đều trả về nó theo cùng một cách
 ```
 
-Chapter này tập trung vào lookup semantics cần thiết để dùng repeatable/inherited annotation đúng.
+Chương này tập trung vào ngữ nghĩa tra cứu cần thiết để dùng Annotation lặp lại và kế thừa đúng cách.
 
-## <a id="repeatable-container">Repeatable annotation và container</a>
+## <a id="repeatable-container">Annotation lặp lại và Annotation chứa</a>
 
-Nếu `@Audit` không có `@Repeatable`, việc viết cùng annotation type hai lần tại cùng context là compile-time error. Vì vậy repeatability là **một phần explicit của annotation contract**, không phải chỉ là cách viết đẹp hơn.
+Nếu `@Audit` không có `@Repeatable`, việc viết cùng một kiểu Annotation hai lần tại cùng ngữ cảnh là lỗi khi biên dịch. Vì vậy khả năng lặp lại là **một phần được khai báo tường minh trong quy tắc của Annotation**, không phải chỉ là cách viết đẹp hơn.
 
-Khai báo repeatable annotation:
+Khai báo Annotation lặp lại:
 
 ```java
 @Repeatable(Audits.class)
@@ -34,7 +34,7 @@ public @interface Audits {
 }
 ```
 
-Usage:
+Cách sử dụng:
 
 ```java
 @Audit(action = "SECURITY")
@@ -43,59 +43,69 @@ void transfer() {
 }
 ```
 
-Khi cùng một repeatable annotation xuất hiện nhiều lần, Java sử dụng **containing annotation** (`Audits`) để biểu diễn tập giá trị theo contract của `@Repeatable`.
+Khi cùng một Annotation lặp lại xuất hiện nhiều lần, Java sử dụng **Annotation chứa** (`Audits`) để biểu diễn tập giá trị theo quy tắc của `@Repeatable`.
 
-Mental model:
+Java kiểm tra sự tương thích giữa Annotation lặp lại và Annotation chứa. Các ràng buộc quan trọng gồm:
+
+- Annotation chứa phải có `value()` trả về `Audit[]`;
+- các phần tử khác của Annotation chứa phải có giá trị mặc định;
+- chính sách lưu giữ của Annotation chứa không được ngắn hơn Annotation lặp lại;
+- Annotation lặp lại phải áp dụng được ít nhất trên các loại khai báo/vị trí sử dụng type mà Annotation chứa hỗ trợ; Annotation chứa có thể hẹp hơn và khi đó nơi được phép lặp cũng hẹp theo;
+- nếu Annotation lặp lại có `@Documented` hoặc `@Inherited` thì Annotation chứa cũng phải đáp ứng quy tắc tương ứng.
+
+Mô hình tư duy:
 
 ```text
-source
+mã nguồn
 @Audit(action = "SECURITY")
 @Audit(action = "COMPLIANCE")
 
-logical/container representation
+biểu diễn logic qua Annotation chứa
 @Audits({
     @Audit(action = "SECURITY"),
     @Audit(action = "COMPLIANCE")
 })
 ```
 
-Container không phải chi tiết có thể bỏ qua hoàn toàn, vì API reflection “raw” và API “by type” có semantics khác nhau.
+Annotation chứa không phải chi tiết có thể bỏ qua hoàn toàn, vì API Reflection mức thấp và API tra cứu “theo type” có ngữ nghĩa khác nhau.
 
-Các repeatable values giữ thứ tự source theo contract biểu diễn của container. Không nên trộn tùy tiện explicit container và repeated annotation ở cùng context; ngoài việc khó đọc, có những combination tạo duplicate-container compile-time error.
+Các giá trị lặp giữ thứ tự trong mã nguồn theo quy tắc biểu diễn của Annotation chứa. Không nên trộn tùy tiện Annotation chứa viết tường minh với các Annotation lặp ở cùng ngữ cảnh; ngoài việc khó đọc, một số tổ hợp còn tạo lỗi trùng Annotation chứa khi biên dịch.
 
 ## <a id="get-annotations-by-type">getAnnotationsByType()</a>
 
-Trước khi nhìn API, cần phân biệt bốn khái niệm lookup mà Java dùng:
+> **Ranh giới cho người mới:** bạn cần hiểu vì sao API `...ByType(...)` tồn tại và cách `@Inherited` ảnh hưởng kết quả. Không cần học toàn bộ Reflection API; module `reflection` sẽ sở hữu phần đó.
+
+Trước khi nhìn API, cần phân biệt bốn khái niệm tra cứu mà Java dùng:
 
 ```text
-directly present
-→ annotation T được gắn trực tiếp lên element
+directly present (xuất hiện trực tiếp)
+→ Annotation T được gắn trực tiếp lên phần tử
 
-indirectly present
-→ annotation T nằm bên trong container của một repeatable annotation
+indirectly present (xuất hiện gián tiếp)
+→ Annotation T nằm bên trong Annotation chứa của một Annotation lặp lại
 
-present
+present (được xem là hiện diện)
 → directly present
-→ hoặc, với class + @Inherited, được tìm thấy qua superclass theo rule của Java
+→ hoặc, với class + @Inherited, được tìm thấy qua superclass theo quy tắc của Java
 
-associated
+associated (được liên kết với phần tử khi tra cứu theo type)
 → directly present hoặc indirectly present
-→ hoặc, với class + @Inherited, fallback lên superclass khi local element không có associated annotation của T
+→ hoặc, với class + @Inherited, tìm ngược lên superclass khi phần tử hiện tại không có associated annotation của T
 ```
 
 Từ đó các API quen thuộc có thể đọc như sau:
 
-| API | Container repeatable | Superclass `@Inherited` |
+| API | Annotation chứa của dạng lặp | Tra cứu superclass với `@Inherited` |
 | --- | --- | --- |
-| `getDeclaredAnnotation(T)` | không unwrap container | không |
-| `getAnnotation(T)` | không unwrap container | có với class khi `T` là `@Inherited` |
+| `getDeclaredAnnotation(T)` | không mở Annotation chứa | không |
+| `getAnnotation(T)` | không mở Annotation chứa | có với class khi `T` là `@Inherited` |
 | `getDeclaredAnnotationsByType(T)` | có | không |
 | `getAnnotationsByType(T)` | có | có với class khi `T` là `@Inherited` |
-| `isAnnotationPresent(T)` | cùng semantics single lookup như `getAnnotation(T) != null` | tương ứng |
+| `isAnnotationPresent(T)` | cùng ngữ nghĩa tra cứu một Annotation như `getAnnotation(T) != null` | tương ứng |
 
-Đây là lý do không nên dùng `getAnnotation(T)` rồi mong nó “tự hiểu” mọi repeatable value.
+Đây là lý do không nên dùng `getAnnotation(T)` rồi mong nó “tự hiểu” mọi giá trị lặp.
 
-Khi làm việc với repeatable annotation, API phù hợp thường là:
+Khi làm việc với Annotation lặp lại, API phù hợp thường là:
 
 ```java
 Method method = PaymentService.class.getDeclaredMethod("transfer");
@@ -103,7 +113,7 @@ Method method = PaymentService.class.getDeclaredMethod("transfer");
 Audit[] audits = method.getAnnotationsByType(Audit.class);
 ```
 
-`getAnnotationsByType(Audit.class)` hiểu repeatable/container semantics và trả về các `Audit` riêng lẻ.
+`getAnnotationsByType(Audit.class)` hiểu ngữ nghĩa Annotation lặp lại/Annotation chứa và trả về các `Audit` riêng lẻ.
 
 Ngược lại:
 
@@ -111,27 +121,27 @@ Ngược lại:
 Audit audit = method.getAnnotation(Audit.class);
 ```
 
-không phải API tốt để đọc một repeatable annotation. Khi chỉ có một `@Audit` trực tiếp, call có thể trả về annotation đó. Sau khi thêm annotation thứ hai, metadata có thể được chứa qua container và `getAnnotation(Audit.class)` không còn cho kết quả như code cũ mong đợi.
+không phải API tốt để đọc một Annotation lặp lại. Khi chỉ có một `@Audit` trực tiếp, lời gọi có thể trả về Annotation đó. Sau khi thêm Annotation thứ hai, siêu dữ liệu có thể được chứa qua Annotation chứa và `getAnnotation(Audit.class)` không còn cho kết quả như mã nguồn cũ mong đợi.
 
-Đây là một compatibility pitfall quan trọng:
+Đây là một rủi ro tương thích quan trọng:
 
-> Nếu annotation type là repeatable, consumer nên dùng API `*AnnotationsByType` thay vì giả định chỉ có một instance.
+> Nếu kiểu Annotation có thể lặp lại, thành phần đọc nên dùng API `*AnnotationsByType` thay vì giả định chỉ có một instance.
 
-### Declared vs inherited lookup
+### Tra cứu khai báo trực tiếp và tra cứu kế thừa
 
 `getDeclaredAnnotationsByType(T)`:
 
-- chỉ xem metadata khai báo tại element hiện tại;
-- unwrap container;
+- chỉ xem siêu dữ liệu khai báo tại phần tử hiện tại;
+- mở Annotation chứa;
 - không đi lên superclass.
 
 `getAnnotationsByType(T)` trên `Class`:
 
-- unwrap container;
-- có thể áp dụng `@Inherited` semantics;
-- chỉ fallback lên superclass khi class hiện tại không có associated annotation của type đó.
+- mở Annotation chứa;
+- có thể áp dụng ngữ nghĩa `@Inherited`;
+- chỉ tìm ngược lên superclass khi class hiện tại không có associated annotation của type đó.
 
-Điều này có nghĩa repeatable inherited annotations **không được cộng dồn từ mọi superclass**.
+Điều này có nghĩa Annotation vừa lặp lại vừa kế thừa **không được cộng dồn từ mọi superclass**.
 
 ## <a id="inherited-class-only">@Inherited chỉ áp dụng cho class</a>
 
@@ -152,7 +162,7 @@ class PaymentService extends BaseService {
 }
 ```
 
-Lookup:
+Tra cứu:
 
 ```java
 AuditedType annotation =
@@ -174,17 +184,17 @@ class PaymentService implements AuditedContract {
 
 `@Inherited` **không** làm `PaymentService` nhận annotation từ interface.
 
-Rule cần ghi nhớ:
+Quy tắc cần ghi nhớ:
 
 ```text
 @Inherited
-→ superclass chain của class declaration
-→ không phải interface graph
+→ chuỗi superclass của khai báo class
+→ không phải đồ thị interface
 ```
 
-## <a id="annotation-inheritance-boundaries">Ranh giới inheritance của annotation</a>
+## <a id="annotation-inheritance-boundaries">Ranh giới kế thừa của Annotation</a>
 
-Tên `@Inherited` dễ khiến người học suy luận quá rộng. Nó không có nghĩa “metadata được kế thừa giống method”.
+Tên `@Inherited` dễ khiến người học suy luận quá rộng. Nó không có nghĩa “siêu dữ liệu được kế thừa giống method”.
 
 Ví dụ:
 
@@ -202,16 +212,16 @@ class PaymentService extends BaseService {
 }
 ```
 
-Method `PaymentService.process()` không tự mang `@Audit(action = "BASE")` chỉ vì nó override method của superclass. Method annotation lookup không dùng `@Inherited`.
+Method `PaymentService.process()` không tự mang `@Audit(action = "BASE")` chỉ vì nó override method của superclass. Tra cứu Annotation trên method không dùng `@Inherited`.
 
 Tương tự:
 
 - field annotation không tự truyền xuống subclass field;
-- constructor annotation không truyền;
+- constructor hoặc parameter annotation không tự truyền;
 - interface annotation không đi sang implementing class qua `@Inherited`;
-- class-level inherited lookup chỉ hoạt động nếu annotation type có `@Inherited` và metadata còn tồn tại ở runtime.
+- tra cứu kế thừa ở cấp class chỉ hoạt động nếu kiểu Annotation có `@Inherited` và siêu dữ liệu còn tồn tại ở thời gian chạy.
 
-### Repeatable + inherited không phải merge-all
+### Lặp lại + kế thừa không có nghĩa là gộp toàn bộ
 
 Giả sử superclass có:
 
@@ -230,20 +240,20 @@ class Child extends Base {
 }
 ```
 
-Nếu `@Tag` là repeatable + inherited, lookup “by type” trên `Child` dùng associated annotations local; nó không mặc định trả `child + base-a + base-b` như một phép merge hierarchy.
+Nếu `@Tag` vừa lặp lại vừa có `@Inherited`, tra cứu “theo type” trên `Child` dùng tập Annotation associated tại class hiện tại; nó không mặc định trả `child + base-a + base-b` như một phép gộp toàn bộ hierarchy.
 
 Đây là khác biệt giữa:
 
 ```text
-inheritance fallback
+kế thừa theo cơ chế tìm ngược
 và
-hierarchical accumulation
+cộng dồn toàn bộ chuỗi kế thừa
 ```
 
-Java annotation inheritance là fallback lookup có rule xác định, không phải một config-merging framework.
+Kế thừa Annotation của Java là cơ chế tra cứu tìm ngược theo quy tắc xác định, không phải cơ chế framework tự gộp cấu hình.
 
-### Ranh giới với reflection module
+### Ranh giới với module Reflection
 
-Module Annotation cần hiểu các API lookup trên để giải thích semantics của `@Repeatable` và `@Inherited`. Các chủ đề sâu hơn như `Class`, `Method`, access control và reflective invocation thuộc module `reflection`.
+Module Annotation cần hiểu các API tra cứu trên để giải thích ngữ nghĩa của `@Repeatable` và `@Inherited`. Các chủ đề sâu hơn như `Class`, `Method`, kiểm soát truy cập và gọi method bằng Reflection thuộc module `reflection`.
 
-Chapter cuối chuyển sang một consumer hoàn toàn khác: **annotation processor chạy lúc compile**, trước khi application được khởi động.
+Chương tiếp theo chuyển sang một thành phần đọc hoàn toàn khác: **bộ xử lý Annotation chạy khi biên dịch**, trước khi ứng dụng được khởi động.

@@ -1,4 +1,6 @@
-# Annotation Basics
+# What Are Annotations and Why Does Java Need Them?
+
+## <a id="annotation-model">What Is an Annotation and Why Does It Exist?</a>
 
 Before learning `@Something` syntax, answer a simpler question:
 
@@ -71,9 +73,7 @@ You do **not** need prior knowledge of:
 
 The module explains the annotation-side contract at the point where each mechanism first matters and explicitly hands deeper mechanics to their owning modules.
 
-## <a id="annotation-model">What Is an Annotation and Why Does It Exist?</a>
-
-### WHAT — understand the label before the term metadata
+### REINFORCE THE MODEL — read annotations as structured descriptive metadata
 
 A simple annotation looks like:
 
@@ -199,20 +199,6 @@ framework / AOP
 
 Annotation is therefore not another name for reflection, AOP, interception, dependency injection, or validation.
 
-### WHEN — when is annotation a good fit?
-
-Annotations fit information that:
-
-- naturally belongs to a class, method, field, parameter, or type;
-- is relatively stable;
-- is declarative rather than algorithmic;
-- needs to be consumed by a compiler/tool/framework;
-- benefits from staying close to the code it describes.
-
-Examples include “this method is a test”, “this field has a validation constraint”, “this method should be audited”, or “this API is deprecated”.
-
-Do not turn annotations into containers for large dynamic configuration, secrets, environment-dependent state, or business algorithms. Those usually belong in objects, configuration, databases, or ordinary code.
-
 ### RELATION — how does the rest of the module fit together?
 
 Once annotation means **metadata on code for a consumer**, the chapter order becomes a cause-and-effect story:
@@ -241,6 +227,9 @@ What changes when annotations repeat or participate in superclass lookup?
         ↓
 How can a compile-time tool consume annotations to validate/generate artifacts?
 → Annotation Processing
+        ↓
+When are annotations the clearest design, and when should another mechanism be used?
+→ When Should You Use Annotations?
 ```
 
 By the end of the module, you should be able to look at any annotation and ask:
@@ -251,6 +240,7 @@ By the end of the module, you should be able to look at any annotation and ask:
 3. Where may it be used?
 4. How long does it survive?
 5. What does the consumer do with that metadata?
+6. Is an annotation actually the clearest representation for this problem?
 ```
 
 ## <a id="annotation-syntax">Annotation Syntax and Elements</a>
@@ -299,107 +289,5 @@ void export() {
 Annotation values are part of the declaration metadata. They are not arbitrary runtime expressions evaluated when the annotated method executes.
 
 The values written in an annotation use must also be representable by Java's annotation-value model at compile time: compatible constant expressions, class literals, enum constants, nested annotations, or arrays of valid annotation values. An annotation value cannot be produced with an arbitrary method call or `new SomeObject()` expression.
-
-## <a id="annotation-restrictions">Allowed Annotation Element Types</a>
-
-Annotation elements intentionally support a restricted set of types. An element type may be:
-
-- a primitive type;
-- `String`;
-- `Class` or a parameterized use such as `Class<? extends Handler>`;
-- an enum type;
-- another annotation type;
-- a one-dimensional array whose component type is one of the allowed types above.
-
-For example:
-
-```java
-@interface EndpointInfo {
-    String path();
-    int version() default 1;
-    Class<?> handler();
-    HttpMethod method();
-    Tag tag();
-    String[] roles() default {};
-}
-```
-
-Arbitrary domain objects are not valid element types:
-
-```java
-@interface InvalidMetadata {
-    // PaymentPolicy policy(); // compile error: invalid annotation element type
-}
-```
-
-Nested array element types are also not allowed. The restriction keeps annotation values representable in class-file metadata and available to compiler/runtime tooling without constructing arbitrary application objects.
-
-`null` is not a valid annotation element value. Model optional metadata with a meaningful default, an enum sentinel, or a separate annotation design rather than using `null` as an implicit state.
-
-### Annotation elements cannot form dependency cycles
-
-Although another annotation type is a legal element type, annotation interfaces may not refer to themselves through element types, directly or indirectly:
-
-```java
-// Invalid: direct self-reference
-@interface A {
-    A value();
-}
-
-// Invalid: cycle A -> B -> A
-@interface B {
-    C value();
-}
-
-@interface C {
-    B value();
-}
-```
-
-Cyclic annotation-element declarations are compile-time errors; the metadata schema must remain finitely representable by the compiler/class-file model.
-
-### Element signatures cannot collide with the `Object` / `Annotation` contract
-
-Annotation elements look like no-argument methods, but an annotation interface may not declare an element whose signature is override-equivalent to a public/protected method of `Object` or `java.lang.annotation.Annotation`.
-
-For example:
-
-```java
-public @interface InvalidMetadata {
-    // int hashCode();          // invalid
-    // String toString();       // invalid
-    // Class annotationType();  // invalid
-}
-```
-
-Methods such as `equals(...)`, `hashCode()`, `toString()`, and `annotationType()` belong to the common annotation-instance contract; they are not metadata elements for an annotation author to redefine.
-
-## <a id="annotation-use-sites">Declaration and Type-use Annotations</a>
-
-Annotations can describe **declarations** such as classes, methods, fields, parameters, and modules. Java also supports annotations on **uses of a type**.
-
-Declaration-oriented example:
-
-```java
-@Audit(action = "PAYMENT")
-void pay(@RequestId String requestId) {
-}
-```
-
-Type-use example:
-
-```java
-List<@NonNull String> names;
-
-@NonNull String findName() {
-    return "Ada";
-}
-```
-
-The same visual `@Name` syntax can therefore participate in different semantic locations. The annotation type's `@Target` declaration decides which locations are legal.
-
-This distinction matters for tools. A framework interested in method declarations asks a different question from a static analyzer interested in nullness of a nested generic type argument.
-
-When one source occurrence is legal in both a declaration context and a type context, Java can treat it according to both applicable locations. Runtime APIs reflect the same distinction: declaration annotations are exposed through `AnnotatedElement`-style APIs, while runtime-retained type annotations are inspected through the `AnnotatedType` family.
 
 The next chapter examines annotations from the JDK itself. They show an important pattern: an annotation becomes useful only when a consumer gives its metadata a precise contract.

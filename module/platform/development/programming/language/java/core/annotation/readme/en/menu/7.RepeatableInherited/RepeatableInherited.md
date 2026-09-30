@@ -1,4 +1,4 @@
-# Repeatable and Inherited Annotations
+# Repeatable and Inherited Semantics
 
 Repeatability and inheritance affect annotation lookup in ways that are easy to misread from source syntax. A method may visibly contain two `@Audit` annotations while the class file represents them through a container; a subclass may appear to “have” an annotation even though it was declared only on a superclass.
 
@@ -61,6 +61,8 @@ These rules prevent repeated source syntax from silently changing the metadata c
 The container is not purely hidden syntax sugar. Low-level reflection or tools that ask for the container type can observe it. Libraries that support repeatable annotations should normally use the `...ByType(...)` APIs designed to flatten repeated values instead of assuming one physical annotation representation.
 
 ## <a id="get-annotations-by-type">Retrieving Repeated Annotations</a>
+
+> **Beginner boundary:** understand why the `...ByType(...)` APIs exist and how `@Inherited` changes lookup. The full Reflection API surface belongs to the Reflection module.
 
 Before choosing an API, distinguish the four lookup terms Java uses:
 
@@ -228,4 +230,4 @@ When writing an annotation consumer, document whether it searches:
 
 Java reflection provides building blocks, but a framework's broader “find merged metadata” behavior can be richer than the core language rules.
 
-Runtime lookup is only one way to consume annotations. The final chapter moves to a different lifecycle entirely: compile-time annotation processing, where tools inspect source/program models and can generate new artifacts before the application runs.
+Runtime lookup is only one way to consume annotations. The next chapter moves to a different lifecycle entirely: compile-time annotation processing, where tools inspect source/program models and can generate new artifacts before the application runs.

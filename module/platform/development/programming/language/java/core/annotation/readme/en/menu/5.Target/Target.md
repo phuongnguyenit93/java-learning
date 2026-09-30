@@ -1,6 +1,34 @@
-# Annotation Targets
+# Targets and Annotation Use Sites
 
 Retention decides how long metadata survives. Target answers a different question: **where is this annotation meaningful and therefore legal to write?** A precise target lets the compiler reject annotation uses that do not fit the metadata contract.
+
+## <a id="annotation-use-sites">Declaration and Type-use Annotations</a>
+
+Annotations can describe **declarations** such as classes, methods, fields, parameters, and modules. Java also supports annotations on **uses of a type**.
+
+Declaration-oriented example:
+
+```java
+@Audit(action = "PAYMENT")
+void pay(@RequestId String requestId) {
+}
+```
+
+Type-use example:
+
+```java
+List<@NonNull String> names;
+
+@NonNull String findName() {
+    return "Ada";
+}
+```
+
+The same visual `@Name` syntax can therefore participate in different semantic locations. The annotation type's `@Target` declaration decides which locations are legal.
+
+This distinction matters for tools. A framework interested in method declarations asks a different question from a static analyzer interested in nullness of a nested generic type argument.
+
+When one source occurrence is legal in both a declaration context and a type context, Java can treat it according to both applicable locations. Runtime APIs reflect the same distinction: declaration annotations are exposed through `AnnotatedElement`-style APIs, while runtime-retained type annotations are inspected through the `AnnotatedType` family.
 
 ## <a id="elementtype-targets">`ElementType` Targets</a>
 
@@ -129,6 +157,16 @@ Use the target that matches the semantic question the consumer actually asks.
 
 One Java-language convenience is easy to miss: an annotation interface targeted with `TYPE_USE` is also applicable in type-declaration and type-parameter declaration contexts. That does not erase the conceptual distinction; tooling still needs to understand which declaration/type location it is inspecting.
 
+### EDGE CASE — local declarations and type annotations use different metadata channels
+
+> **Beginner boundary:** do not memorize class-file representation details here. The important point is that a declaration annotation and a type annotation near the same local variable are different metadata channels.
+
+Declaration annotations on local-variable declarations and lambda formal-parameter declarations are not retained in the binary through the ordinary declaration-annotation channel, even when the annotation type declares `CLASS` or `RUNTIME` retention.
+
+A type annotation on the type used in the corresponding context is a separate metadata channel with its own class-file/runtime representation rules.
+
+So `RUNTIME` retention does not mean every `@...` occurrence in source automatically becomes runtime declaration metadata. Read retention together with the annotation's target and actual use site.
+
 ## <a id="target-design">Restrict Annotations to Valid Contexts</a>
 
 A broad target increases the number of places where metadata can be written, but that is not automatically useful.
@@ -153,7 +191,7 @@ consumer supports classes and methods with defined semantics for both
 → {TYPE, METHOD} may be appropriate
 ```
 
-Record components deserve the same precision. A record-component annotation is propagated to corresponding **implicitly declared** members/parameters only when that annotation is also applicable to those contexts. It is not automatically copied to an explicitly declared accessor, and the formal parameters of an explicitly declared canonical constructor may carry different annotations. Do not assume `RECORD_COMPONENT` means “copy this metadata everywhere”.
+Record components deserve the same precision. An annotation on a record component can propagate to the corresponding component field and to an **implicitly declared** accessor/canonical-constructor parameter when the annotation type is also applicable in those contexts. It is not automatically copied to an explicitly declared accessor, and the formal parameters of an explicitly declared canonical constructor may carry different annotations. Do not assume `RECORD_COMPONENT` means “copy this metadata everywhere”.
 
 ### PITFALL — “allow everywhere” weakens the schema
 

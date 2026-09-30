@@ -83,7 +83,7 @@ InheritedAnnotationController:
     usage: true
 MetaAnnotationController:
   inspectTargets():
-    summary: Inspect @Target and retention on a custom annotation type
+    summary: Observe how meta-annotations configure an annotation type
     description: Reflect the meta-annotations on AuditedComponent and return its allowed
       ElementType values, retention policy, and @Documented marker.
     enableVideoYoutube: false
@@ -92,8 +92,8 @@ MetaAnnotationController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 5.Target/Target.md
-      anchor: elementtype-targets
+      file: 6.MetaAnnotation/MetaAnnotation.md
+      anchor: target-meta
     methodName: inspectTargets
     params: [
       ]

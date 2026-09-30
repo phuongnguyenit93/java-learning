@@ -1,10 +1,10 @@
-# Custom Annotation
+# Định nghĩa Annotation tùy chỉnh
 
-Custom annotation cho phép ứng dụng hoặc framework định nghĩa **metadata vocabulary của riêng mình**. Nhưng việc tạo một annotation mới không nên bắt đầu từ câu hỏi “cú pháp `@interface` viết thế nào?”, mà từ câu hỏi:
+Annotation tùy chỉnh cho phép ứng dụng hoặc framework định nghĩa **cấu trúc siêu dữ liệu của riêng mình**. Nhưng việc tạo một Annotation mới không nên bắt đầu từ câu hỏi “cú pháp `@interface` viết thế nào?”, mà từ câu hỏi:
 
-> Consumer nào sẽ đọc metadata này, và nó cần biết điều gì?
+> Thành phần nào sẽ đọc siêu dữ liệu này, và nó cần biết điều gì?
 
-Running example của module:
+Ví dụ xuyên suốt của module:
 
 ```java
 @Audit(action = "TRANSFER", level = 2)
@@ -12,7 +12,7 @@ void transfer() {
 }
 ```
 
-## <a id="declare-annotation">Khai báo annotation type</a>
+## <a id="declare-annotation">Khai báo kiểu Annotation</a>
 
 Custom annotation được khai báo bằng `@interface`:
 
@@ -23,20 +23,20 @@ public @interface Audit {
 }
 ```
 
-Mỗi method-like declaration bên trong định nghĩa một **annotation element**.
+Mỗi khai báo có dạng giống method bên trong định nghĩa một **phần tử Annotation (annotation element)**.
 
-Annotation interface có semantics riêng, không phải một interface thường chỉ vì cú pháp có chữ `interface`. Nó có superinterface trực tiếp là `java.lang.annotation.Annotation`; developer không tự viết `extends Annotation` để biến một interface thường thành annotation type.
+Annotation interface có ngữ nghĩa riêng, không phải một interface thường chỉ vì cú pháp có chữ `interface`. Nó có superinterface trực tiếp là `java.lang.annotation.Annotation`; lập trình viên không tự viết `extends Annotation` để biến một interface thường thành kiểu Annotation.
 
-Các element cũng có restrictions riêng:
+Các phần tử cũng có giới hạn riêng:
 
 - không có parameter;
 - không có type parameter;
 - không có `throws`;
-- return type phải thuộc nhóm annotation element type hợp lệ.
+- return type phải thuộc nhóm type hợp lệ dành cho phần tử Annotation.
 
-Annotation interface bản thân cũng không generic và không khai báo một `extends` clause tùy ý. Element methods có contract chuyên biệt tương đương các accessor metadata, không phải nơi định nghĩa `static`/`default`/`private` behavior như interface thường.
+Annotation interface bản thân cũng không generic và không khai báo một `extends` clause tùy ý. Các method đại diện cho phần tử Annotation có quy tắc chuyên biệt tương đương accessor của siêu dữ liệu, không phải nơi định nghĩa hành vi `static`/`default`/`private` như interface thường.
 
-Ví dụ usage:
+Ví dụ sử dụng:
 
 ```java
 @Audit(action = "TRANSFER", level = 2)
@@ -44,28 +44,110 @@ public void transfer() {
 }
 ```
 
-Compiler kiểm tra tên element, type của value và việc đã cung cấp các element bắt buộc hay chưa.
+Trình biên dịch kiểm tra tên phần tử, type của giá trị và việc đã cung cấp các phần tử bắt buộc hay chưa.
 
-### Annotation type chỉ định nghĩa schema
+### Kiểu Annotation chỉ định nghĩa cấu trúc siêu dữ liệu
 
 Khai báo `@Audit` không tự ghi log:
 
 ```text
-@Audit declaration
-→ định nghĩa metadata schema
+khai báo @Audit
+→ định nghĩa cấu trúc siêu dữ liệu
 
-@Audit usage
-→ gắn metadata cụ thể vào code
+vị trí sử dụng @Audit
+→ gắn siêu dữ liệu cụ thể vào mã nguồn
 
-consumer
-→ đọc metadata và quyết định làm gì
+thành phần đọc
+→ đọc siêu dữ liệu và quyết định làm gì
 ```
 
-Consumer runtime có thể là framework/reflection. Consumer compile-time có thể là annotation processor. Nếu không có consumer, metadata vẫn chỉ là metadata.
+Thành phần đọc tại thời gian chạy có thể là framework/Reflection. Thành phần đọc tại thời điểm biên dịch có thể là annotation processor. Nếu không có thành phần đọc, siêu dữ liệu vẫn chỉ là siêu dữ liệu.
 
-## <a id="annotation-elements-defaults">Element và default value</a>
+## <a id="annotation-restrictions">Kiểu dữ liệu và ràng buộc của phần tử Annotation</a>
 
-Element không có default là bắt buộc. Giữ nguyên running example: `action` không có default nên bắt buộc, còn `level` có default nên có thể bỏ qua khi sử dụng:
+Annotation không cho phép phần tử mang bất kỳ đối tượng tùy ý nào. Java giới hạn type của phần tử để siêu dữ liệu có thể được biểu diễn ổn định trong class file và mô hình mã nguồn.
+
+Các nhóm type hợp lệ là:
+
+- primitive type như `int`, `boolean`, `double`;
+- `String`;
+- `Class` hoặc dạng parameterized của `Class`, ví dụ `Class<? extends Handler>`;
+- enum type;
+- annotation type khác;
+- mảng một chiều của một trong các type hợp lệ trên.
+
+Không chỉ return type bị giới hạn; **giá trị được ghi khi sử dụng Annotation cũng phải là dạng Java có thể biểu diễn như giá trị Annotation tại thời điểm biên dịch**: constant expression phù hợp, class literal, enum constant, Annotation lồng nhau hoặc mảng các giá trị hợp lệ. Không thể dùng `new SomeObject()` hay gọi một method tùy ý để tính giá trị Annotation.
+
+Ví dụ:
+
+```java
+public @interface EndpointPolicy {
+    String name();
+    int timeoutSeconds() default 30;
+    Class<? extends Runnable> handler();
+    Mode mode() default Mode.SYNC;
+    Tag tag() default @Tag("default");
+    String[] roles() default {};
+}
+```
+
+Các dạng sau không hợp lệ:
+
+```java
+public @interface Invalid {
+    // Object value();          // không hợp lệ
+    // List<String> names();   // không hợp lệ
+    // String[][] matrix();    // mảng lồng nhau không hợp lệ
+}
+```
+
+Phần tử Annotation cũng không dùng `null` làm giá trị. Nếu miền nghiệp vụ cần biểu diễn “không có giá trị”, quy tắc Annotation phải thiết kế một giá trị mặc định/giá trị đặc biệt rõ ràng hoặc tách siêu dữ liệu thành cấu trúc khác.
+
+### Phần tử Annotation không được tạo vòng phụ thuộc
+
+Mặc dù kiểu Annotation khác là một type hợp lệ cho phần tử, annotation interface không được tự tham chiếu qua phần tử theo kiểu trực tiếp hoặc gián tiếp:
+
+```java
+// Không hợp lệ: tự tham chiếu trực tiếp
+@interface A {
+    A value();
+}
+
+// Không hợp lệ: vòng A -> B -> A
+@interface B {
+    C value();
+}
+
+@interface C {
+    B value();
+}
+```
+
+Lý do là cấu trúc Annotation phải hữu hạn để trình biên dịch/class file có thể biểu diễn; khai báo phần tử Annotation tạo vòng phụ thuộc là lỗi tại thời điểm biên dịch.
+
+### Phần tử không được xung đột với quy tắc của `Object` / `Annotation`
+
+Phần tử Annotation nhìn giống method không tham số, nhưng không được có signature tương đương về ghi đè với method `public` hoặc `protected` của `Object` hay `java.lang.annotation.Annotation`.
+
+Ví dụ:
+
+```java
+public @interface InvalidMetadata {
+    // int hashCode();          // không hợp lệ
+    // String toString();       // không hợp lệ
+    // Class annotationType();  // không hợp lệ
+}
+```
+
+Các method như `equals(...)`, `hashCode()`, `toString()` và `annotationType()` đã thuộc quy tắc chung của một Annotation instance; chúng không phải phần tử siêu dữ liệu mà người định nghĩa Annotation được phép định nghĩa lại.
+
+### Vì sao các giới hạn này quan trọng?
+
+Siêu dữ liệu Annotation không phải một đồ thị đối tượng tùy ý ở thời gian chạy. Nó phải có thể được trình biên dịch ghi, công cụ đọc và class loader/JVM biểu diễn theo định dạng đã xác định. Vì vậy Annotation phù hợp với **siêu dữ liệu khai báo nhỏ, ổn định**, không phù hợp để chứa đối tượng nghiệp vụ phức tạp.
+
+## <a id="annotation-elements-defaults">Phần tử và giá trị mặc định</a>
+
+Phần tử không có giá trị mặc định là bắt buộc. Giữ nguyên ví dụ xuyên suốt: `action` không có giá trị mặc định nên bắt buộc, còn `level` có giá trị mặc định nên có thể bỏ qua khi sử dụng:
 
 ```java
 public @interface Audit {
@@ -74,19 +156,18 @@ public @interface Audit {
 }
 ```
 
-Usage tối thiểu chỉ cần cung cấp `action`:
+Cách sử dụng tối thiểu chỉ cần cung cấp `action`:
 
 ```java
 @Audit(action = "TRANSFER")
 ```
 
-Có thể khai báo default:
+Có thể khai báo giá trị mặc định:
 
 ```java
 public @interface Audit {
     String action();
     int level() default 1;
-    String[] tags() default {};
 }
 ```
 
@@ -96,35 +177,43 @@ Khi đó:
 @Audit(action = "TRANSFER")
 ```
 
-sẽ dùng `level = 1` và `tags = {}`.
+sẽ dùng `level = 1`.
 
-### Default không phải `default method`
-
-Từ khóa `default` ở annotation element chỉ định **default metadata value**, không có semantics giống `default method` của interface thường.
-
-Một chi tiết quan trọng: default value thuộc annotation type, không được copy trực tiếp vào từng annotation usage thiếu giá trị đó. Khi annotation được đọc, default hiện tại của annotation type được áp dụng. Vì vậy thay đổi default có thể thay đổi giá trị quan sát được từ class đã compile trước đó nếu usage không ghi value explicit.
-
-Đây là lý do default cũng là một phần của **compatibility contract**.
-
-Annotation element không nhận `null`. Nếu cần trạng thái “không có giá trị”, hãy thiết kế default/sentinel có nghĩa rõ ràng, ví dụ:
+Phần tử dạng mảng cũng có thể có giá trị mặc định. Ví dụ:
 
 ```java
-// Ví dụ sentinel nếu domain thật sự cần:
+public @interface Labels {
+    String[] value() default {};
+}
+```
+
+### Giá trị mặc định không phải `default method`
+
+Từ khóa `default` ở phần tử Annotation chỉ định **giá trị siêu dữ liệu mặc định**, không có ngữ nghĩa giống `default method` của interface thường.
+
+Một chi tiết quan trọng: giá trị mặc định thuộc kiểu Annotation, không được sao chép trực tiếp vào từng vị trí sử dụng Annotation thiếu giá trị đó. Khi Annotation được đọc, giá trị mặc định hiện tại của kiểu Annotation được áp dụng. Vì vậy thay đổi giá trị mặc định có thể thay đổi giá trị quan sát được từ class đã biên dịch trước đó nếu nơi sử dụng không ghi giá trị tường minh.
+
+Đây là lý do giá trị mặc định cũng là một phần của **quy tắc tương thích**.
+
+Phần tử Annotation không nhận `null`. Nếu cần trạng thái “không có giá trị”, hãy thiết kế giá trị mặc định/giá trị đặc biệt có nghĩa rõ ràng, ví dụ:
+
+```java
+// Ví dụ giá trị đặc biệt nếu miền nghiệp vụ thật sự cần:
 // enum AuditLevel { DEFAULT, LOW, HIGH }
 ```
 
-Tránh các magic value như `"N/A"` hoặc `-1` nếu consumer phải tự đoán semantics.
+Tránh các giá trị đặc biệt khó hiểu như `"N/A"` hoặc `-1` nếu thành phần đọc phải tự đoán ngữ nghĩa.
 
-## <a id="marker-annotation">Marker annotation</a>
+## <a id="marker-annotation">Annotation đánh dấu (marker annotation)</a>
 
-Marker annotation là annotation interface **không có element**:
+Annotation đánh dấu là annotation interface **không có phần tử**:
 
 ```java
 public @interface Audited {
 }
 ```
 
-Usage:
+Cách sử dụng:
 
 ```java
 @Audited
@@ -132,80 +221,70 @@ class PaymentService {
 }
 ```
 
-Ý nghĩa thường là presence/absence:
+Ý nghĩa thường chỉ dựa trên việc Annotation có xuất hiện hay không:
 
 ```text
 có @Audited
-→ opt in vào một contract
+→ tham gia vào một quy tắc
 
 không có @Audited
-→ không opt in
+→ không tham gia
 ```
 
-Cần phân biệt marker annotation type với **marker syntax**. Một annotation có các element nhưng tất cả đều có default vẫn có thể được viết như:
+Cần phân biệt kiểu Annotation đánh dấu với **cú pháp viết dạng marker**. Một Annotation có các phần tử nhưng tất cả đều có giá trị mặc định vẫn có thể được viết như:
 
 ```java
 @Feature
 ```
 
-nhưng annotation type đó không phải marker thực sự vì schema vẫn có element.
+nhưng kiểu Annotation đó không phải Annotation đánh dấu thực sự vì cấu trúc vẫn có phần tử.
 
-Marker phù hợp khi metadata thật sự chỉ cần một boolean semantic. Nếu bắt đầu xuất hiện nhiều biến thể, nên dùng một schema có nghĩa thay vì tạo hàng loạt marker gần giống nhau.
+Marker phù hợp khi siêu dữ liệu thật sự chỉ cần biểu diễn một trạng thái có/không. Nếu bắt đầu xuất hiện nhiều biến thể, nên dùng một cấu trúc có nghĩa thay vì tạo hàng loạt marker gần giống nhau.
 
-## <a id="custom-annotation-design">Thiết kế metadata có ý nghĩa</a>
+## <a id="custom-annotation-design">Thiết kế siêu dữ liệu có ý nghĩa</a>
 
-Một custom annotation tốt nên trả lời bốn câu hỏi:
+Một Annotation tùy chỉnh tốt nên trả lời bốn câu hỏi:
 
-1. **Consumer là ai?** compiler processor, runtime framework hay tooling?
-2. **Metadata mô tả điều gì?** policy, mapping, capability hay contract?
+1. **Thành phần đọc là ai?** annotation processor, framework lúc chạy hay công cụ khác?
+2. **Siêu dữ liệu mô tả điều gì?** chính sách, ánh xạ, khả năng hay quy tắc?
 3. **Nó hợp lệ ở đâu?** class, method, field, parameter, type use?
-4. **Nó cần tồn tại bao lâu?** source, class file hay runtime?
+4. **Nó cần tồn tại bao lâu?** mã nguồn, class file hay thời gian chạy?
 
-Ví dụ:
+Với ví dụ xuyên suốt, giả sử một thành phần audit ở thời gian chạy sẽ đọc các method được đánh dấu:
 
 ```java
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface Audit {
-    String action();
-    int level() default 1;
+@Audit(action = "TRANSFER", level = 2)
+void transfer() {
 }
 ```
 
-Contract này nói rõ:
+Từ yêu cầu đó, ta có thể nhìn thấy các câu hỏi thiết kế tiếp theo mà chưa cần học cú pháp của chúng ngay:
 
 ```text
-consumer      → runtime component
-use site      → method
-lifetime      → phải tồn tại đến runtime
-schema        → action + level
+thành phần đọc → thành phần lúc chạy
+→ siêu dữ liệu phải tồn tại đến thời gian chạy
+
+quy tắc audit chỉ áp dụng cho method
+→ Annotation nên bị giới hạn vào method
+
+action + level
+→ cấu trúc siêu dữ liệu của @Audit
 ```
 
-### Java kiểm tra schema, không kiểm tra toàn bộ business meaning
+Hai câu hỏi “tồn tại đến bao giờ?” và “được đặt ở đâu?” sẽ lần lượt được biểu diễn bằng `@Retention` và `@Target` ở các chương tiếp theo.
 
-Compiler có thể biết `level()` là `int` hay một element khác có type cụ thể, nhưng không tự biết:
+### Java kiểm tra cấu trúc, không kiểm tra toàn bộ ý nghĩa nghiệp vụ
+
+Trình biên dịch có thể biết `level()` là `int` hay một phần tử khác có type cụ thể, nhưng không tự biết:
 
 ```text
 timeout phải > 0
-action phải thuộc naming convention nội bộ
-hai element này không được xuất hiện cùng nhau
+action phải thuộc quy ước đặt tên nội bộ
+hai phần tử này không được xuất hiện cùng nhau
 ```
 
-Những business constraints như vậy phải được consumer/processor validate và nên được document rõ.
+Những ràng buộc nghiệp vụ như vậy phải được thành phần đọc/bộ xử lý kiểm tra và nên được tài liệu hóa rõ.
 
-### Tránh “configuration object bằng annotation”
+### Chuyển sang @Retention
 
-Annotation nên chứa metadata khai báo tương đối nhỏ và ổn định. Nếu annotation có hàng chục element phụ thuộc lẫn nhau, nhiều sentinel đặc biệt và logic override phức tạp, nó đang trở thành một configuration language khó tiến hóa.
-
-Khi dữ liệu:
-
-- lớn;
-- động theo environment;
-- cần secret;
-- thay đổi thường xuyên mà không muốn recompile;
-
-thì config file, database hoặc runtime object thường phù hợp hơn annotation.
-
-### Chuyển sang retention
-
-Ta đã có metadata schema. Câu hỏi tiếp theo là: **consumer cần metadata tồn tại đến giai đoạn nào?** Đây chính là trách nhiệm của retention policy.
+Ta đã có cấu trúc siêu dữ liệu. Câu hỏi tiếp theo là: **thành phần đọc cần siêu dữ liệu tồn tại đến giai đoạn nào?** Đây chính là trách nhiệm của chính sách lưu giữ với `@Retention`.

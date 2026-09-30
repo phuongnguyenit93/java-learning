@@ -43,60 +43,78 @@
 
 roadmap:
   - id: annotation-purpose
-    title: Annotation Purpose and Structured Metadata
-    purpose: Understand annotations as structured information attached to code for compilers, tools, or frameworks to consume.
+    title: What Are Annotations and Why Does Java Need Them?
+    purpose: Understand annotations as structured information attached directly to code for compilers, tools, or frameworks to consume, and understand the problem they solve better than comments, naming conventions, or separate manual registration.
+    relatedKnowledge:
+      - Basic
     objectives:
-      - Explain why comments or naming conventions are insufficient for machine-readable contracts.
-      - Recognize that annotations do not create behavior by themselves; a consumer gives the metadata meaning.
+      - Explain why annotations exist and why they do not create behavior by themselves without a consumer.
+      - Read basic @Name(...) usage syntax, annotation elements, and their values before moving into deeper mechanisms.
   - id: built-in-annotations
     title: Built-In Compiler and Tool Contracts
-    purpose: Understand how standard annotations such as Override, Deprecated, SuppressWarnings, SafeVarargs, and FunctionalInterface express contracts to tools.
+    purpose: Understand how standard annotations such as @Override, @Deprecated, @SuppressWarnings, @SafeVarargs, and @FunctionalInterface communicate structured contracts to the compiler, documentation, and tools.
+    relatedKnowledge:
+      - BuiltIn
     objectives:
       - Distinguish compiler-checked guarantees from documentation/tooling hints.
       - Use built-in annotations at the narrowest meaningful scope.
   - id: custom-annotation-schema
     title: Custom Annotation Types
-    purpose: Understand how to define a project-specific metadata vocabulary with typed elements, defaults, and clear semantic ownership.
+    purpose: Understand how to declare project-specific annotation types with @interface, typed elements, default values, and clear semantics.
+    relatedKnowledge:
+      - CustomAnnotation
     objectives:
       - Design annotation elements that encode stable metadata rather than hidden behavior.
-      - Recognize allowed element types and compile-time value restrictions.
+      - Understand that custom annotations need a clear, checkable metadata schema.
   - id: retention-lifecycle
-    title: Retention and Metadata Lifetime
-    purpose: Understand how SOURCE, CLASS, and RUNTIME retention decide which consumers can still observe an annotation.
-    objectives:
-      - Choose retention from the consumer lifecycle rather than habit.
-      - Explain why runtime reflection cannot see metadata discarded earlier.
-  - id: targets-and-use-sites
-    title: Targets and Use Sites
-    purpose: Understand where annotations are legal and the distinction between declaration metadata and type-use metadata.
-    objectives:
-      - Restrict annotation use to contexts where its semantics are valid.
-      - Recognize TYPE_USE and record/package/module boundaries.
-  - id: meta-annotations-and-composition
-    title: Meta-Annotations and Annotation Configuration
-    purpose: Understand annotations that configure annotation types themselves, including retention, target, documentation, inheritance, and repeatability.
-    objectives:
-      - Read meta-annotations as part of an annotation type’s contract.
-      - Avoid assuming framework-style composed annotations are a language feature beyond their declared metadata.
-  - id: repeatable-and-inherited-semantics
-    title: Repeatable and Inherited Semantics
-    purpose: Understand container-backed repeatable annotations and the narrow class-inheritance behavior of Inherited.
-    objectives:
-      - Predict single-versus-by-type lookup behavior for repeated annotations.
-      - Recognize that method/interface annotation inheritance follows different rules.
-  - id: compile-time-processing
-    title: Compile-Time Annotation Processing
-    purpose: Understand annotation processors as compile-time consumers that inspect source models and generate source/resources across processing rounds.
-    objectives:
-      - Trace processor discovery, supported types, rounds, and Filer output conceptually.
-      - Separate compile-time generation from runtime reflection.
-  - id: runtime-consumption-boundary
-    title: Runtime Metadata Consumption Boundary
-    purpose: Understand where annotation ownership ends and runtime consumers such as reflection/frameworks begin.
+    title: Retention and Annotation Lifetime
+    purpose: Understand how @Retention determines how long annotation metadata survives and which consumers can still observe it.
+    relatedKnowledge:
+      - Retention
     relatedModules:
       - routeId: JAVA_REFLECTION
         label: Reflection
-        note: Reflection is the primary Java Core mechanism for consuming runtime-retained annotation metadata.
+        note: Reflection is the primary Java Core mechanism for consuming RUNTIME-retained annotation metadata.
     objectives:
-      - Use RUNTIME retention only when a runtime consumer actually exists.
-      - Follow runtime inspection into Reflection instead of duplicating its member/invocation model here.
+      - Choose SOURCE, CLASS, or RUNTIME from the needs of the actual consumer rather than habit.
+      - Understand why Reflection cannot observe annotation metadata that does not survive until runtime.
+  - id: targets-and-use-sites
+    title: Targets and Annotation Use Sites
+    purpose: Understand how @Target determines where an annotation is legal and why its usage should be restricted to meaningful program locations.
+    relatedKnowledge:
+      - Target
+    objectives:
+      - Distinguish declaration annotations from annotations applied at type-use locations such as TYPE_USE.
+      - Design usage boundaries tightly enough to prevent annotations from appearing in meaningless contexts.
+  - id: meta-annotations-and-composition
+    title: Meta-Annotations and Annotation-Type Contracts
+    purpose: Understand meta-annotations as the mechanism for declaring the contract of an annotation type through @Retention, @Target, @Documented, @Inherited, and @Repeatable.
+    relatedKnowledge:
+      - MetaAnnotation
+    objectives:
+      - Read the meta-annotation set as part of the annotation type's retention, usage, documentation, and lookup contract.
+      - Distinguish Java meta-annotation mechanics from framework-defined annotation composition.
+  - id: repeatable-and-inherited-semantics
+    title: Repeatable and Inherited Semantics
+    purpose: Understand container-backed @Repeatable annotations and the narrow class-inheritance behavior of @Inherited.
+    relatedKnowledge:
+      - RepeatableInherited
+    objectives:
+      - Understand conceptually how repeated annotations are represented and retrieved.
+      - Recognize that @Inherited does not make method or interface annotations inherit like class annotations.
+  - id: compile-time-processing
+    title: Compile-Time Annotation Processing
+    purpose: Understand annotation processors as compile-time consumers that inspect the source model and can generate source code or resources across processing rounds.
+    relatedKnowledge:
+      - AnnotationProcessing
+    objectives:
+      - Understand the compile-time processing lifecycle and its ability to validate or generate source code and resources.
+      - Separate compile-time generation from runtime reflection.
+  - id: annotation-design-and-synthesis
+    title: When Should You Use Annotations?
+    purpose: Synthesize the complete annotation model so the learner can decide when metadata belongs in annotations and when an explicit API, interface, or configuration is clearer.
+    relatedKnowledge:
+      - AnnotationDesign
+    objectives:
+      - Trace the end-to-end path from annotation declaration and usage through retention to the consumer that creates behavior, without treating the annotation itself as behavior.
+      - Recognize overuse risks such as hidden control flow, framework coupling, hard-to-find configuration, or incorrect target and retention choices.

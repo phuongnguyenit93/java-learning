@@ -42,32 +42,6 @@ questions:
       methodSignature: ""
 
   - question: >-
-      Why can annotation elements not contain arbitrary objects, null, or dynamic structures like a normal configuration object?
-    answer: >-
-      Annotation metadata needs a stable representation in the source and class-file models, so Java restricts element types to primitives, String, Class, enums, annotations, and one-dimensional arrays of valid element types. Values must fit the compile-time annotation contract; null and arbitrary object graphs do not. Large, dynamic, environment-dependent data usually belongs in objects, configuration, or a database instead.
-    aiGenerated: true
-    reviewed: false
-    readmeRelated:
-      file: "1.Basic/Basic.md"
-      anchor: "annotation-restrictions"
-    apiRelated:
-      controller: ""
-      methodSignature: ""
-
-  - question: >-
-      How do declaration annotations and TYPE_USE annotations differ semantically, and why must a consumer distinguish them?
-    answer: >-
-      A declaration annotation describes a declaration such as a class, method, field, or parameter; a TYPE_USE annotation describes a use of a type such as a generic argument, return type, cast, or array component. They have different models and lookup paths, so annotations written near similar syntax do not necessarily belong to the same semantic channel. At runtime, type-use metadata is commonly exposed through AnnotatedType rather than only declaration-annotation APIs.
-    aiGenerated: true
-    reviewed: false
-    readmeRelated:
-      file: "1.Basic/Basic.md"
-      anchor: "annotation-use-sites"
-    apiRelated:
-      controller: ""
-      methodSignature: ""
-
-  - question: >-
       What mistakes does @Override protect against, and why is it wrong to say that @Override creates polymorphism or dynamic dispatch?
     answer: >-
       @Override turns the intent to override or implement a method into a compiler-checked contract, so a typo or incompatible signature fails instead of silently becoming a new method. Java overriding and dynamic dispatch exist independently of the annotation; removing @Override does not stop a valid method from overriding. The annotation is a compile-time guardrail and documentation of design intent.
@@ -133,6 +107,19 @@ questions:
       methodSignature: ""
 
   - question: >-
+      Why can annotation elements not contain arbitrary objects, null, or dynamic structures like a normal configuration object?
+    answer: >-
+      Annotation metadata needs a stable representation in the source and class-file models, so Java restricts element types to primitives, String, Class, enums, annotations, and one-dimensional arrays of valid element types. Values must fit the compile-time annotation contract; null and arbitrary object graphs do not. Large, dynamic, environment-dependent data usually belongs in objects, configuration, or a database instead.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.CustomAnnotation/CustomAnnotation.md"
+      anchor: "annotation-restrictions"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
       Why can changing an annotation element's default affect code that was compiled earlier even when the annotation usage itself did not change?
     answer: >-
       The default belongs to the annotation type; it is not copied as an explicit value into every usage that omits the element. When the annotation is read, the annotation type's current default can be applied, so changing it may change the value observed from an older class. Defaults are therefore part of the compatibility contract; for an “absent” state, prefer a meaningful sentinel instead of null or an ambiguous magic value.
@@ -141,19 +128,6 @@ questions:
     readmeRelated:
       file: "3.CustomAnnotation/CustomAnnotation.md"
       anchor: "annotation-elements-defaults"
-    apiRelated:
-      controller: ""
-      methodSignature: ""
-
-  - question: >-
-      How would you decide whether a requirement should become an annotation or runtime configuration?
-    answer: >-
-      Identify the consumer, what the metadata describes, where it is valid, and how long it must survive. An annotation fits small, declarative, relatively stable metadata that naturally belongs near code. If the data is large, environment-dependent, secret, frequently changing, or has complex override/object-graph rules, a configuration file, database, or runtime object is usually easier to evolve and operate.
-    aiGenerated: true
-    reviewed: false
-    readmeRelated:
-      file: "3.CustomAnnotation/CustomAnnotation.md"
-      anchor: "custom-annotation-design"
     apiRelated:
       controller: ""
       methodSignature: ""
@@ -183,6 +157,19 @@ questions:
     apiRelated:
       controller: "AnnotationInspectionController"
       methodSignature: "retention()"
+
+  - question: >-
+      How do declaration annotations and TYPE_USE annotations differ semantically, and why must a consumer distinguish them?
+    answer: >-
+      A declaration annotation describes a declaration such as a class, method, field, or parameter; a TYPE_USE annotation describes a use of a type such as a generic argument, return type, cast, or array component. They have different models and lookup paths, so annotations written near similar syntax do not necessarily belong to the same semantic channel. At runtime, type-use metadata is commonly exposed through AnnotatedType rather than only declaration-annotation APIs.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Target/Target.md"
+      anchor: "annotation-use-sites"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
 
   - question: >-
       How does TYPE_USE differ from TYPE_PARAMETER, and why should a runtime consumer of a type annotation not rely only on getAnnotation() on the declaration?
@@ -224,9 +211,9 @@ questions:
       methodSignature: ""
 
   - question: >-
-      Why does @Repeatable still require a container annotation instead of letting the compiler store multiple instances in an arbitrary form?
+      At the meta-annotation level, what does @Repeatable(Audits.class) declare, and what should you not infer from that declaration alone?
     answer: >-
-      @Repeatable provides convenient repeated syntax while relying on a defined container contract for representation and lookup. The container needs value() returning an array of the repeated annotation and must be compatible in retention, target, and contracts such as @Documented or @Inherited when relevant. This gives compilers and reflection deterministic rules instead of an ad hoc repeated format.
+      @Repeatable(Audits.class) establishes the relationship between the repeated annotation type @Audit and the containing annotation Audits so Java has a defined representation for repeated values. That declaration alone does not mean getAnnotation() will unwrap the container, does not enable inheritance, and does not choose retention or targets automatically. Container compatibility and lookup semantics belong to the next mechanics layer in the Repeatable/Inherited chapter.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -272,8 +259,8 @@ questions:
       file: "7.RepeatableInherited/RepeatableInherited.md"
       anchor: "annotation-inheritance-boundaries"
     apiRelated:
-      controller: ""
-      methodSignature: ""
+      controller: "InheritedAnnotationController"
+      methodSignature: "inheritance()"
 
   - question: >-
       Why does annotation processing use multiple rounds, and how should that change a processor compared with a “scan once and finish” design?
@@ -315,6 +302,19 @@ questions:
       methodSignature: ""
 
   - question: >-
+      When should annotation processing be used instead of runtime reflection, and why does a Class-valued annotation element not mean a processor should load Class<?>?
+    answer: >-
+      Processing fits compile-time validation or generation and can read SOURCE metadata through Element and TypeMirror; reflection fits runtime inspection of loaded Class, Method, and Field objects with metadata retained to runtime. For Class-valued elements, processors should prefer AnnotationMirror/TypeMirror because the type may exist only in the compiler model; proxy-style access can lead to MirroredTypeException or MirroredTypesException. An annotation does not need RUNTIME retention merely because a processor consumes it.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.AnnotationProcessing/AnnotationProcessing.md"
+      anchor: "processing-vs-reflection"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
       When a processor generates code with Filer, what rules keep the output deterministic and safe across processing rounds?
     answer: >-
       A processor should create new artifacts through Filer, avoid creating the same file more than once, never overwrite user source, and avoid timestamps, randomness, or unstable iteration order when they have no semantic meaning. The same source and options should produce the same output, generated types may appear only in later rounds, and diagnostics should go through Messager. Supplying an appropriate originating element can also help build tools understand dependencies.
@@ -328,14 +328,66 @@ questions:
       methodSignature: ""
 
   - question: >-
-      When should annotation processing be used instead of runtime reflection, and why does a Class-valued annotation element not mean a processor should load Class<?>?
+      What characteristics make a requirement a good fit for an annotation, and what signals suggest using another mechanism instead?
     answer: >-
-      Processing fits compile-time validation or generation and can read SOURCE metadata through Element and TypeMirror; reflection fits runtime inspection of loaded Class, Method, and Field objects with metadata retained to runtime. For Class-valued elements, processors should prefer AnnotationMirror/TypeMirror because the type may exist only in the compiler model; proxy-style access can lead to MirroredTypeException or MirroredTypesException. An annotation does not need RUNTIME retention merely because a processor consumes it.
+      An annotation fits small, declarative, relatively stable information that naturally belongs to a class, method, field, or type and has a clear consumer. If the data changes frequently, depends on deployment environment, contains secrets, models a dynamic object graph, or is really a behavioral contract the compiler should enforce, configuration, objects, databases, APIs, or interfaces are usually clearer. The key question is not “can an annotation do this?” but “does an annotation make the contract easier to understand?”.
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "8.AnnotationProcessing/AnnotationProcessing.md"
-      anchor: "processing-vs-reflection"
+      file: "9.AnnotationDesign/AnnotationDesign.md"
+      anchor: "annotation-fit"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      How would you decide whether a requirement should become an annotation or runtime configuration?
+    answer: >-
+      Identify the consumer, what the metadata describes, where it is valid, and how long it must survive. An annotation fits small, declarative, relatively stable metadata that naturally belongs near code. If the data is large, environment-dependent, secret, frequently changing, or has complex override/object-graph rules, a configuration file, database, or runtime object is usually easier to evolve and operate.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.AnnotationDesign/AnnotationDesign.md"
+      anchor: "annotation-alternatives"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Describe the end-to-end flow from deciding to create an annotation to observing behavior, and identify the most common conceptual mistake in that flow.
+    answer: >-
+      Start from the problem and the metadata to describe, design the schema, constrain legal use sites with @Target, choose lifetime with @Retention, and identify a consumer that runs at compile time or runtime. That consumer may validate, generate, register, or create behavior. The common mistake is treating the annotation itself as the behavior; the annotation only describes metadata, while the compiler, processor, Reflection, or framework reads it and creates the observable effect.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.AnnotationDesign/AnnotationDesign.md"
+      anchor: "annotation-end-to-end"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      What signs suggest that a system is overusing annotations, and what design costs usually follow?
+    answer: >-
+      Warning signs include many annotations stacked on a method while behavior is hard to trace, annotations with dozens of interacting elements, flags, sentinels, and override rules, habitual RUNTIME retention or overly broad targets, and deep dependence on framework semantics with unclear contracts. The costs are hidden control flow, stronger coupling, hard-to-find configuration, difficult debugging, and poor evolvability. Once annotations become a large configuration language, an explicit API or typed configuration object is often clearer and easier to test.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.AnnotationDesign/AnnotationDesign.md"
+      anchor: "annotation-overuse-pitfalls"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      What checklist would you use before adding a new annotation to a public API or framework?
+    answer: >-
+      Ask what the annotation describes, why the metadata belongs next to code, who consumes it, whether the consumer runs at compile time or runtime, where the annotation is legal, how long the metadata must survive, whether repeatability or @Inherited lookup is needed, what effect the consumer creates, and whether an explicit API, interface, object, or configuration is clearer. Finally, a developer reading the use site should be able to discover the relevant contract and behavior; otherwise the abstraction is hiding too much.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.AnnotationDesign/AnnotationDesign.md"
+      anchor: "annotation-design-checklist"
     apiRelated:
       controller: ""
       methodSignature: ""

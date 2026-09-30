@@ -1,4 +1,4 @@
-# Annotation Processing
+# Compile-Time Annotation Processing
 
 Runtime reflection asks questions after classes have been loaded. That is too late when invalid metadata should fail the build, boilerplate should be generated before execution, or an index/resource must exist as part of the compiled artifact.
 
@@ -13,7 +13,7 @@ declarations imply an index/resource
 → generate the artifact during the build
 ```
 
-Annotation processing solves that timing problem by operating during compilation. A processor can inspect annotated program elements, validate rules, and generate source files or resources that become inputs to later compiler rounds.
+Annotation processing solves that timing problem by operating during compilation. A processor can inspect annotated program elements and validate rules. Generated source/class files can participate in later compiler rounds; generated resources are build outputs rather than automatic new compiler roots.
 
 Java's standard processing API is primarily in `javax.annotation.processing` and `javax.lang.model`. It models source/program structure through elements and types instead of requiring application classes to be loaded and executed.
 
@@ -85,7 +85,7 @@ Types
 ```
 
 ```java
-public final class AuditProcessor extends AbstractProcessor {
+public final class MapperProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(
@@ -156,8 +156,8 @@ process(...) participates in rounds
 A processor declares which annotation types it supports. `AbstractProcessor` can derive this from `@SupportedAnnotationTypes`:
 
 ```java
-@SupportedAnnotationTypes("com.example.Audit")
-public final class AuditProcessor extends AbstractProcessor {
+@SupportedAnnotationTypes("com.example.GenerateMapper")
+public final class MapperProcessor extends AbstractProcessor {
     // ...
 }
 ```
@@ -168,7 +168,7 @@ The processor also declares the latest source version whose language model it su
 
 ```java
 @SupportedSourceVersion(SourceVersion.RELEASE_21)
-public final class AuditProcessor extends AbstractProcessor {
+public final class MapperProcessor extends AbstractProcessor {
     // ...
 }
 ```
@@ -328,7 +328,7 @@ Processing and reflection consume metadata at different lifecycle stages and thr
 | When? | During compilation | While application/runtime code executes |
 | Main model | `Element`, `TypeMirror`, compiler model | `Class`, `Method`, `Field`, etc. |
 | Can see SOURCE-retained annotations during compilation? | Yes, when applicable to the processing model | No |
-| Can generate source/resources for compilation? | Yes | Not as part of compiler processing rounds |
+| Can generate source files and build resources? | Yes | Not as part of compiler processing rounds |
 | Requires `RUNTIME` retention for annotation lookup? | No | Yes for ordinary reflective annotation access |
 
 For example, a compile-time processor can validate `@Audit` usage and generate an index even if `@Audit` is SOURCE-retained. A runtime library that calls `Method.getAnnotation(Audit.class)` requires the annotation to survive with RUNTIME retention.
@@ -386,4 +386,4 @@ Compile-time generation can move discovery and validation earlier, improve type 
 
 Use annotation processing when compile-time validation or generation materially improves the design. For runtime-only metadata decisions, a processor may add complexity without removing a real problem.
 
-This completes the annotation lifecycle story: define structured metadata, constrain where it is valid, choose how long it survives, understand repeatable/inherited lookup, and select a compile-time or runtime consumer that matches the problem.
+The next chapter uses this lifecycle knowledge to make the design decision explicit: **when are annotations the clearest choice, and when is an API, interface, or configuration easier to understand?**

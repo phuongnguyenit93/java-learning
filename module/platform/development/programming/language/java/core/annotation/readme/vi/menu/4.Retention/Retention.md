@@ -1,50 +1,51 @@
-# Retention Policy
+# Vòng đời của Annotation với @Retention
 
-Retention trả lời một câu hỏi về **vòng đời metadata**:
+`@Retention` trả lời một câu hỏi về **vòng đời của siêu dữ liệu**:
 
-> Annotation cần tồn tại đến source processing, class file hay runtime?
+> Annotation cần tồn tại đến lúc xử lý mã nguồn, class file hay thời gian chạy?
 
-Java có ba `RetentionPolicy`: `SOURCE`, `CLASS`, `RUNTIME`. Chọn retention không nên dựa trên “RUNTIME mạnh hơn”, mà dựa trên **consumer thực sự cần đọc annotation ở giai đoạn nào**.
+Java có ba `RetentionPolicy`: `SOURCE`, `CLASS`, `RUNTIME`. Chọn chính sách lưu giữ không nên dựa trên suy nghĩ “RUNTIME mạnh hơn”, mà dựa trên **thành phần nào thực sự cần đọc Annotation và ở giai đoạn nào**.
 
-Nếu annotation type không khai báo `@Retention`, policy mặc định là **`CLASS`**.
+Nếu kiểu Annotation không khai báo `@Retention`, chính sách mặc định là **`CLASS`**.
 
-## <a id="retention-source">SOURCE retention</a>
+Chương này chỉ tập trung vào **vòng đời**. Để tránh trộn hai câu hỏi quá sớm, các ví dụ dưới đây chưa thêm `@Target`; chương kế tiếp sẽ quyết định Annotation được phép đặt ở đâu.
+
+## <a id="retention-source">Chính sách SOURCE</a>
 
 ```java
 @Retention(RetentionPolicy.SOURCE)
-@Target(ElementType.METHOD)
 public @interface CompileNote {
 }
 ```
 
-`SOURCE` annotation chỉ cần tồn tại trong source/compile-time model và bị compiler loại bỏ khỏi class-file representation.
+Annotation có chính sách `SOURCE` chỉ cần tồn tại trong mã nguồn/mô hình lúc biên dịch và bị trình biên dịch loại bỏ khỏi biểu diễn trong class file.
 
-Phù hợp khi metadata phục vụ:
+Phù hợp khi siêu dữ liệu phục vụ:
 
-- compiler check;
-- static analysis;
-- source-oriented tooling;
-- annotation processing không cần metadata tồn tại trong output class.
+- kiểm tra của trình biên dịch;
+- phân tích tĩnh;
+- công cụ làm việc trên mã nguồn;
+- annotation processing không cần siêu dữ liệu tồn tại trong class file đầu ra.
 
-Mental model:
+Mô hình tư duy:
 
 ```text
 .java
   @CompileNote
-      ↓ compiler/processor có thể đọc
+      ↓ trình biên dịch/bộ xử lý có thể đọc
 .class
-  metadata không còn
+  siêu dữ liệu không còn
       ↓
-runtime reflection không thể đọc
+Reflection ở thời gian chạy không thể đọc
 ```
 
-Một annotation processor vẫn có thể xử lý `SOURCE` annotation vì processor chạy **trong compilation**, trước khi metadata bị loại khỏi class output.
+Một annotation processor vẫn có thể xử lý Annotation `SOURCE` vì processor chạy **trong quá trình biên dịch**, trước khi siêu dữ liệu bị loại khỏi class file đầu ra.
 
-Không nên chọn `SOURCE` nếu application cần `getAnnotation(...)` ở runtime.
+Không nên chọn `SOURCE` nếu ứng dụng cần `getAnnotation(...)` ở thời gian chạy.
 
-## <a id="retention-class">CLASS retention</a>
+## <a id="retention-class">Chính sách CLASS</a>
 
-`CLASS` giữ annotation trong class file nhưng JVM **không bắt buộc** phải giữ nó để standard runtime reflection truy cập.
+`CLASS` giữ Annotation trong class file nhưng JVM **không bắt buộc** phải giữ nó để Reflection chuẩn ở thời gian chạy truy cập.
 
 ```java
 @Retention(RetentionPolicy.CLASS)
@@ -52,15 +53,15 @@ public @interface BytecodeMetadata {
 }
 ```
 
-Đây cũng là retention mặc định nếu không viết `@Retention`.
+Đây cũng là chính sách mặc định nếu không viết `@Retention`.
 
-Use case điển hình:
+Trường hợp sử dụng điển hình:
 
-- bytecode tooling;
-- post-compile analysis/instrumentation;
-- metadata cần đi cùng artifact `.class` nhưng không cần reflection runtime.
+- công cụ xử lý bytecode;
+- phân tích/chèn mã sau khi biên dịch;
+- siêu dữ liệu cần đi cùng class file nhưng không cần Reflection ở thời gian chạy.
 
-Mental model:
+Mô hình tư duy:
 
 ```text
 .java
@@ -69,19 +70,18 @@ Mental model:
 .class
   annotation vẫn được ghi
       ↓
-runtime reflection
-  không expose như RUNTIME annotation
+Reflection ở thời gian chạy
+  không quan sát được như Annotation RUNTIME
 ```
 
-Pitfall phổ biến là quên `@Retention(RUNTIME)` rồi thắc mắc vì sao reflection không thấy custom annotation.
+Sai sót phổ biến là quên `@Retention(RUNTIME)` rồi thắc mắc vì sao Reflection không thấy Annotation tùy chỉnh.
 
-## <a id="retention-runtime">RUNTIME retention</a>
+## <a id="retention-runtime">Chính sách RUNTIME</a>
 
-`RUNTIME` giữ annotation trong class file và JVM giữ metadata để standard runtime reflection có thể đọc:
+`RUNTIME` giữ Annotation trong class file và JVM giữ siêu dữ liệu để Reflection chuẩn ở thời gian chạy có thể đọc:
 
 ```java
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
 public @interface Audit {
     String action();
     int level() default 1;
@@ -99,67 +99,61 @@ if (audit != null) {
 }
 ```
 
-Đây là retention phù hợp khi runtime framework hoặc application code cần inspect metadata.
+Đây là chính sách phù hợp khi framework hoặc mã ứng dụng ở thời gian chạy cần đọc siêu dữ liệu.
 
 Nhưng:
 
-> `RUNTIME` chỉ làm metadata **có thể được runtime đọc**; nó không tự trigger interception, validation hay dependency injection.
+> `RUNTIME` chỉ làm siêu dữ liệu **có thể được đọc ở thời gian chạy**; nó không tự kích hoạt interception, validation hay dependency injection.
 
-Một consumer vẫn phải chủ động inspect và xử lý metadata.
+Một thành phần đọc vẫn phải chủ động đọc và xử lý siêu dữ liệu.
 
-Với annotation trên **type use**, runtime inspection thường đi qua các API thuộc họ `AnnotatedType` thay vì chỉ các API declaration-level quen thuộc trên `AnnotatedElement`.
+Với Annotation trên **type use**, việc kiểm tra ở thời gian chạy thường đi qua các API thuộc họ `AnnotatedType` thay vì chỉ các API Annotation trên khai báo quen thuộc của `AnnotatedElement`.
 
-### Edge case — local declaration không giống type annotation
+## <a id="retention-use-case">Chọn chính sách lưu giữ theo thành phần đọc</a>
 
-Declaration annotations trên **local-variable declaration** và formal parameter của lambda không được lưu trong binary theo retention mechanism thông thường, kể cả annotation type khai báo `CLASS` hoặc `RUNTIME`. Type annotations đặt lên **type được sử dụng** ở các context tương ứng là một kênh metadata khác và có rule lưu trữ riêng.
+Thay vì mặc định dùng `RUNTIME`, hãy bắt đầu từ thành phần đọc:
 
-Điều này nhắc lại rằng “RUNTIME retention” không có nghĩa mọi source location đều trở thành runtime declaration metadata; retention luôn hoạt động cùng target/context semantics.
-
-## <a id="retention-use-case">Chọn retention theo consumer</a>
-
-Thay vì mặc định dùng `RUNTIME`, hãy bắt đầu từ consumer:
-
-| Consumer cần metadata ở đâu? | Retention phù hợp |
+| Thành phần đọc cần siêu dữ liệu ở đâu? | Chính sách phù hợp |
 | --- | --- |
-| Chỉ source/compiler/static analysis | `SOURCE` |
-| Class-file/bytecode tooling | `CLASS` |
-| Reflection/runtime framework | `RUNTIME` |
+| Chỉ mã nguồn/trình biên dịch/phân tích tĩnh | `SOURCE` |
+| Class file/công cụ bytecode | `CLASS` |
+| Reflection/framework ở thời gian chạy | `RUNTIME` |
 
 Ví dụ:
 
 ```text
-@GeneratedHint cho source processor
+@GeneratedHint cho bộ xử lý mã nguồn
 → SOURCE có thể đủ
 
 @BytecodeRule cho class-file transformer
 → CLASS
 
-@Audit được interceptor/runtime code đọc
+@Audit được interceptor/mã chạy ở thời gian chạy đọc
 → RUNTIME
 ```
 
-### Trade-off thiết kế
+### Đánh đổi thiết kế
 
-Giữ metadata lâu hơn mức cần thiết không tự động tốt hơn. Nó làm contract rộng hơn và có thể khiến người dùng hiểu rằng runtime inspection là một phần của API.
+Giữ siêu dữ liệu lâu hơn mức cần thiết không tự động tốt hơn. Nó làm quy tắc rộng hơn và có thể khiến người dùng hiểu rằng kiểm tra lúc chạy là một phần của API.
 
-Ngược lại, retention quá ngắn làm metadata biến mất trước khi consumer cần nó.
+Ngược lại, chính sách lưu giữ quá ngắn làm siêu dữ liệu biến mất trước khi thành phần đọc cần nó.
 
 Quy tắc thực dụng:
 
 ```text
-xác định consumer
-→ xác định giai đoạn consumer chạy
-→ chọn retention ngắn nhất vẫn đáp ứng consumer
+xác định thành phần đọc
+→ xác định giai đoạn thành phần đó chạy
+→ chọn chính sách lưu giữ ngắn nhất vẫn đáp ứng nhu cầu
 ```
 
-### Retention và annotation processing
+### @Retention và xử lý Annotation tại thời điểm biên dịch
 
-Annotation processor chạy trong compilation nên có thể xử lý annotation mà runtime sẽ không bao giờ thấy. Đây là khác biệt nền tảng:
+Annotation processor chạy trong quá trình biên dịch nên có thể xử lý Annotation mà mã ở thời gian chạy sẽ không bao giờ thấy. Đây là khác biệt nền tảng:
 
 ```text
-compile-time processing
+xử lý tại thời điểm biên dịch
 ≠
-runtime reflection
+Reflection tại thời gian chạy
 ```
 
-Ta sẽ đi sâu vào processing ở chapter cuối. Chapter tiếp theo giải quyết dimension độc lập còn lại: **annotation được phép xuất hiện ở đâu?**
+Ta sẽ đi sâu vào xử lý Annotation tại thời điểm biên dịch ở một chương phía sau. Chương tiếp theo giải quyết một khía cạnh độc lập còn lại: **Annotation được phép xuất hiện ở đâu?**
