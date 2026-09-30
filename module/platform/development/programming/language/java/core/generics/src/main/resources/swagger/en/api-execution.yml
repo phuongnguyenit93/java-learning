@@ -24,7 +24,7 @@ VarianceController:
         <li><strong>Observation:</strong> the response marks exact assignment <code>List&lt;Animal&gt; animals = dogs</code> as illegal while the wildcard read view works.</li>
         <li><strong>Meaning:</strong> allowing exact assignment would let code through <code>List&lt;Animal&gt;</code> insert a non-Dog Animal and violate the original list guarantee.</li>
       </ol>
-      <p><strong>Conclusion:</strong> invariance blocks unsafe mutation; wildcards restore only the flexibility an API actually needs.</p>
+      <p><strong>Conclusion:</strong> invariance prevents Java from inventing subtype relationships between parameterized types; mutable List makes the safety risk concrete. Wildcards restore only the use-site flexibility an API actually needs.</p>
     usage: true
 WildcardController:
   producerConsumer():
@@ -47,7 +47,7 @@ WildcardController:
 RawTypeController:
   heapPollution():
     execution: |-
-      <p><strong>Concept:</strong> a raw type can bypass generic checking and create heap pollution, causing failure later than the unsafe write.</p>
+      <p><strong>Concept:</strong> a raw type can weaken or bypass some generic checks and create heap pollution, causing failure later than the unsafe write.</p>
       <ol>
         <li><strong>Flow:</strong> the endpoint creates <code>List&lt;String&gt;</code>, assigns it to raw <code>List</code>, inserts an <code>Integer</code>, then reads that element through the typed reference.</li>
         <li><strong>Code evidence:</strong><pre><code>List&lt;String&gt; names = new ArrayList&lt;&gt;();

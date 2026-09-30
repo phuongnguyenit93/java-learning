@@ -1,4 +1,4 @@
-1.GenericType/GenericType.md:
+1.GenericsPurpose/GenericsPurpose.md:
   generic-type-purpose:
     difficulty: BASIC
     aiGenerated: true
@@ -7,19 +7,15 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+2.GenericTypesAndMethods/GenericTypesAndMethods.md:
+  generic-type-declaration:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
   diamond-operator:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  generic-invariance-intro:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-  generic-api-design:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-2.GenericMethod/GenericMethod.md:
   generic-method-syntax:
     difficulty: BASIC
     aiGenerated: true
@@ -40,7 +36,7 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-3.BoundedType/BoundedType.md:
+3.BoundedTypeParameters/BoundedTypeParameters.md:
   upper-bounded-type:
     difficulty: BASIC
     aiGenerated: true
@@ -57,49 +53,11 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-4.Wildcards/Wildcards.md:
-  unbounded-wildcard:
+4.InvarianceAndSubtyping/InvarianceAndSubtyping.md:
+  generic-invariance-intro:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  wildcard-vs-object:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-  wildcard-placement:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  extends-wildcard:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  super-wildcard:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  wildcard-capture:
-    difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
-5.PECS/PECS.md:
-  pecs-rule:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  read-from-producer:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  write-to-consumer:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  pecs-api-design:
-    difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
-6.Invariance/Invariance.md:
   generic-declaration-subtyping:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -116,7 +74,52 @@
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-7.RawTypes/RawTypes.md:
+5.WildcardsAndPECS/WildcardsAndPECS.md:
+  unbounded-wildcard:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  wildcard-vs-object:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  wildcard-placement:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  wildcard-vs-type-parameter:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  extends-wildcard:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  super-wildcard:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  pecs-rule:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  read-from-producer:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  write-to-consumer:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  pecs-api-design:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  wildcard-capture:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+6.RawTypesAndLegacyBoundaries/RawTypesAndLegacyBoundaries.md:
   raw-type-compatibility:
     difficulty: BASIC
     aiGenerated: true
@@ -133,12 +136,16 @@
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-8.TypeErasure/TypeErasure.md:
+7.TypeErasureAndRuntimeModel/TypeErasureAndRuntimeModel.md:
   erasure-model:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
   erased-runtime-type:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  generic-signature-metadata:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
@@ -150,7 +157,7 @@
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-9.Limitations/Limitations.md:
+8.GenericLimitationsAndApiDesign/GenericLimitationsAndApiDesign.md:
   no-generic-primitives:
     difficulty: BASIC
     aiGenerated: true
@@ -163,11 +170,23 @@
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+  runtime-type-information-limit:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
   static-type-parameter-limit:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  erasure-signature-clash:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
   generic-exception-limit:
     difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  generic-api-design:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false

@@ -32,180 +32,208 @@ questions:
     answer: "Separate classes preserve type safety but duplicate the implementation. Object-based code reuses the implementation but loses specific type information, forces callers to cast, and can move failures to runtime. Generics let one declaration such as Box<T> represent the same logic for many types while the compiler still tracks type relationships, rejects many mistakes at compile time, and removes most manual casts. The core value is reuse with an explicit type contract."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.GenericType/GenericType.md", anchor: "generic-type-purpose"}
+    readmeRelated: {file: "1.GenericsPurpose/GenericsPurpose.md", anchor: "generic-type-purpose"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: "Distinguish a type parameter from a type argument. Why does Box<String> not mean the JVM creates a separate Box class for String?"
     answer: "In the declaration Box<T>, T is a type parameter: a type variable declared by Box. In Box<String>, String is the type argument supplied when using that declaration. Box<String> is a parameterized type used by the compiler for type checking; ordinary Java generics do not create a separate runtime class for each type argument. The runtime representation is explained later by type erasure."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.GenericType/GenericType.md", anchor: "type-parameter"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - question: "When should a type parameter belong to the class, and when should you declare a generic method instead?"
-    answer: "Put the type parameter on the class when the same type identity must persist across object state or several members, such as Box<T> storing and returning the same T. Use a generic method when the relationship exists only for one operation, such as <T> T echo(T value), so the whole class does not carry an unnecessary type parameter. A method type variable has its own scope and is independent of the class type variable."
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "2.GenericMethod/GenericMethod.md", anchor: "generic-method-vs-type"}
+    readmeRelated: {file: "1.GenericsPurpose/GenericsPurpose.md", anchor: "type-parameter"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: "Where does generic-method type inference happen, and what information does the compiler use? What does an inference failure tell you?"
     answer: "Inference happens at compile time, not through runtime guessing. The compiler collects constraints from argument types, the target type, and other generic relationships in the invocation, then searches for type arguments satisfying all of them. If no valid solution exists, the call does not compile. An explicit type witness can guide the compiler or clarify intent, but it does not change the runtime type system. inference() shows one generic method preserving a different inferred return type at each call site."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.GenericMethod/GenericMethod.md", anchor: "type-inference"}
+    readmeRelated: {file: "2.GenericTypesAndMethods/GenericTypesAndMethods.md", anchor: "type-inference"}
     apiRelated: {controller: "GenericMethodController", methodSignature: "inference()"}
+
+  - question: "When should a type parameter belong to the class, and when should you declare a generic method instead?"
+    answer: "Put the type parameter on the class when the same type identity must persist across object state or several members, such as Box<T> storing and returning the same T. Use a generic method when the relationship exists only for one operation, such as <T> T echo(T value), so the whole class does not carry an unnecessary type parameter. A method type variable has its own scope and is independent of the class type variable."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.GenericTypesAndMethods/GenericTypesAndMethods.md", anchor: "generic-method-vs-type"}
+    apiRelated: {controller: "", methodSignature: ""}
 
   - question: "Why can an unbounded type parameter not call doubleValue(), while <T extends Number> can? What trade-off does a bound make?"
     answer: "With <T>, the compiler can rely only on contracts guaranteed for every possible reference type, so it cannot assume doubleValue() exists. <T extends Number> narrows the allowed type arguments and in return lets the implementation use capabilities guaranteed by Number. A bound therefore restricts callers while strengthening the implementation contract. Overly specific bounds reduce reuse, so require only the capabilities the algorithm actually needs."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.BoundedType/BoundedType.md", anchor: "bound-api-capability"}
+    readmeRelated: {file: "3.BoundedTypeParameters/BoundedTypeParameters.md", anchor: "bound-api-capability"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "What problem does the wildcard ? solve differently from declaring another named type parameter T?"
-    answer: "A wildcard fits when an API only needs to say 'this is a generic value of some type' without naming or relating that type identity elsewhere. A named type parameter is useful when the same type must connect multiple parameters, a return type, or constraints. For example, sizeOf(List<?>) does not need to name the element type, so ? expresses the intent more directly than <T> int sizeOf(List<T>)."
+  - question: "Does saying 'generics are invariant' mean inheritance relationships between generic declarations disappear?"
+    answer: "No. Invariance says subtype relationships between type arguments do not automatically lift through the same generic type constructor: Dog <: Animal does not imply Container<Dog> <: Container<Animal>. If the declarations themselves have inheritance, that relationship still holds for the same type argument. For example, ArrayContainer<String> is still a Container<String> when ArrayContainer<T> implements Container<T>."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Wildcards/Wildcards.md", anchor: "unbounded-wildcard"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - question: "How do List<?> and List<Object> differ as contracts, especially for writes?"
-    answer: "List<Object> has the exact element type Object, so adding a String, Integer, or any other object is valid. List<?> has one specific element type, but the caller does not know which one; the actual object might be List<String> or List<Integer>. Because that concrete type is unknown, the caller can read safely as Object but cannot add an arbitrary concrete value."
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "4.Wildcards/Wildcards.md", anchor: "wildcard-vs-object"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - question: "Why can List<? extends Number> be read safely as Number but not accept an Integer, even though Integer is a Number?"
-    answer: "? extends Number means the list has one specific unknown element type that is Number or a subtype of Number. Every possible element is therefore a Number, so reading as Number is safe. But the actual list might be List<Double>; allowing an Integer write would violate that list's contract. The restriction preserves the unknown subtype consistently; it does not make the collection completely read-only."
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "4.Wildcards/Wildcards.md", anchor: "extends-wildcard"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - question: "Why does List<? super Integer> accept Integer values while reads are usually guaranteed only as Object?"
-    answer: "? super Integer means the actual element type is Integer or a supertype such as Number or Object. An Integer can be written safely into every one of those possibilities. On read, however, the actual list could be List<Object> and may contain objects unrelated to Number, so Object is the only universally safe static type. A lower-bounded wildcard trades read precision for flexible writes."
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "4.Wildcards/Wildcards.md", anchor: "super-wildcard"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - question: "Use PECS to explain copy(List<? extends T> source, List<? super T> target). Why do the two sides point in opposite directions?"
-    answer: "The source produces T values for the method to read, so ? extends T lets it be List<T> or a list of a T subtype while every element remains readable as T. The target consumes T values written by the method, so ? super T lets it be List<T> or a list of a T supertype where every T can be stored safely. producerConsumer() demonstrates List<Integer> as the producer and List<Number> as the consumer in one copy operation."
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "5.PECS/PECS.md", anchor: "pecs-rule"}
-    apiRelated: {controller: "WildcardController", methodSignature: "producerConsumer()"}
-
-  - question: "Should PECS be applied mechanically to every generic parameter and return type?"
-    answer: "No. PECS is useful when a boundary mainly reads T or mainly writes T. If a parameter must both read and write the same precise T, an exact type such as List<T> is often clearer. If a wildcard does not admit more useful callers, it only complicates the signature. A wildcard in a public return type can also push an unknown type onto callers, so use it only when that uncertainty is genuinely part of the contract."
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "5.PECS/PECS.md", anchor: "pecs-api-design"}
+    readmeRelated: {file: "4.InvarianceAndSubtyping/InvarianceAndSubtyping.md", anchor: "generic-declaration-subtyping"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: "Why is Dog a subtype of Animal while List<Dog> is not a subtype of List<Animal>? What would break if Java allowed that assignment?"
     answer: "A List<Animal> is allowed to accept any Animal. If a List<Dog> could be viewed as List<Animal>, other code could insert a Cat or another Animal into an object whose contract promises only Dogs, breaking the guarantee of List<Dog>. Generic types such as List are therefore invariant in their type arguments by default. invariance() demonstrates the rejected exact assignment and the safe List<? extends Animal> read view."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.Invariance/Invariance.md", anchor: "generic-invariance"}
+    readmeRelated: {file: "4.InvarianceAndSubtyping/InvarianceAndSubtyping.md", anchor: "generic-invariance"}
     apiRelated: {controller: "VarianceController", methodSignature: "invariance()"}
-
-  - question: "Does saying 'generics are invariant' mean inheritance relationships between generic declarations disappear?"
-    answer: "No. Invariance says subtype relationships between type arguments do not automatically lift through the same generic type constructor: Dog <: Animal does not imply Container<Dog> <: Container<Animal>. If the declarations themselves have inheritance, that relationship still holds for the same type argument. For example, ArrayContainer<String> is still a Container<String> when ArrayContainer<T> implements Container<T>."
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "6.Invariance/Invariance.md", anchor: "generic-declaration-subtyping"}
-    apiRelated: {controller: "", methodSignature: ""}
 
   - question: "Compare array covariance with generic invariance. Why can arrays compile and later throw ArrayStoreException while generics reject the unsafe relationship earlier?"
     answer: "Java arrays are covariant and reified: Integer[] can be assigned to Number[], but the array object still knows its actual component type at runtime, so the JVM checks stores and can throw ArrayStoreException when a Double is written into an Integer[]. Generics instead use compile-time invariance for parameterized types such as List<Integer>; type arguments are largely erased, so the type system prevents the unsafe mutable relationship before runtime."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.Invariance/Invariance.md", anchor: "variance-vs-arrays"}
+    readmeRelated: {file: "4.InvarianceAndSubtyping/InvarianceAndSubtyping.md", anchor: "variance-vs-arrays"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "How does a raw type differ from List<?>, and why does Java still support raw types?"
-    answer: "List<?> remains a type-safe parameterized type: there is a specific element type, but it is unknown to the caller. Raw List omits the type argument and makes the compiler bypass part of generic checking. Java keeps raw types primarily for compatibility with code and binaries written before generics existed. A raw type is therefore a compatibility escape hatch, not a shorter substitute for a wildcard in new code."
+  - question: "How do List<?> and List<Object> differ as contracts, especially for writes?"
+    answer: "List<Object> has the exact element type Object, so adding a String, Integer, or any other object is valid. List<?> has one specific element type, but the caller does not know which one; the actual object might be List<String> or List<Integer>. Because that concrete type is unknown, the caller can read safely as Object but cannot add an arbitrary concrete value."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.RawTypes/RawTypes.md", anchor: "raw-type-compatibility"}
+    readmeRelated: {file: "5.WildcardsAndPECS/WildcardsAndPECS.md", anchor: "wildcard-vs-object"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "What does an unchecked warning tell you about the proof of type safety, and why is immediately suppressing it risky?"
-    answer: "An unchecked warning means the compiler cannot fully prove a generic operation is type-safe, commonly because of a raw type, unchecked cast, or non-reifiable boundary. The code may still be correct if the developer knows an invariant the compiler cannot see, but the warning marks where the normal guarantee has weakened. Suppressing it too early hides that trust boundary; first identify the source, validate or convert data as needed, then isolate any suppression to the smallest justified scope."
+  - question: "What problem does the wildcard ? solve differently from declaring another named type parameter T?"
+    answer: "A wildcard fits when an API only needs to say 'this is a generic value of some type' without naming or relating that type identity elsewhere. A named type parameter is useful when the same type must connect multiple parameters, a return type, or constraints. For example, sizeOf(List<?>) does not need to name the element type, so ? expresses the intent more directly than <T> int sizeOf(List<T>)."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.RawTypes/RawTypes.md", anchor: "unchecked-warning"}
+    readmeRelated: {file: "5.WildcardsAndPECS/WildcardsAndPECS.md", anchor: "wildcard-vs-type-parameter"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "If you must integrate a legacy API returning a raw List, how would you design the boundary so the rest of the application remains typed?"
-    answer: "Keep the raw value inside a small adapter boundary, inspect or convert elements according to the real API invariant, then expose a parameterized type to the typed application code. If an unchecked cast is unavoidable, place it at the validated boundary and document the invariant that makes it safe. The goal is to contain the region the compiler cannot prove, rather than letting raw types spread across layers and weaken generic guarantees everywhere."
+  - question: "Why can List<? extends Number> be read safely as Number but not accept an Integer, even though Integer is a Number?"
+    answer: "? extends Number means the list has one specific unknown element type that is Number or a subtype of Number. Every possible element is therefore a Number, so reading as Number is safe. But the actual list might be List<Double>; allowing an Integer write would violate that list's contract. The restriction preserves the unknown subtype consistently; it does not make the collection completely read-only."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.RawTypes/RawTypes.md", anchor: "raw-type-boundary"}
+    readmeRelated: {file: "5.WildcardsAndPECS/WildcardsAndPECS.md", anchor: "extends-wildcard"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "What is heap pollution, and why can the failure appear far away from the line that caused the pollution?"
-    answer: "Heap pollution occurs when a variable of a parameterized type ultimately refers to data that violates that parameterized contract. A raw or unchecked operation may write the wrong type without failing immediately; the error surfaces later when typed code reads the value and a compiler-inserted cast fails. heapPollution() deliberately writes an Integer through a raw List into a List<String>, then shows the ClassCastException appearing at the later typed read."
+  - question: "Why does List<? super Integer> accept Integer values while reads are usually guaranteed only as Object?"
+    answer: "? super Integer means the actual element type is Integer or a supertype such as Number or Object. An Integer can be written safely into every one of those possibilities. On read, however, the actual list could be List<Object> and may contain objects unrelated to Number, so Object is the only universally safe static type. A lower-bounded wildcard trades read precision for flexible writes."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.RawTypes/RawTypes.md", anchor: "heap-pollution"}
-    apiRelated: {controller: "RawTypeController", methodSignature: "heapPollution()"}
+    readmeRelated: {file: "5.WildcardsAndPECS/WildcardsAndPECS.md", anchor: "super-wildcard"}
+    apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Describe type erasure from source to runtime. Why can List<String> and List<Integer> have the same runtime class while compile-time safety still exists?"
-    answer: "The compiler first uses type arguments and bounds to check source code, then erases type variables to an appropriate bound or Object and inserts casts where needed to preserve the caller's typed view. Because parameterizations do not create separate runtime classes, ArrayList<String> and ArrayList<Integer> can both be java.util.ArrayList at runtime. The safety was largely enforced before bytecode execution. inspectRuntimeTypes() shows distinct source parameterizations reporting the same runtime class."
+  - question: "Use PECS to explain copy(List<? extends T> source, List<? super T> target). Why do the two sides point in opposite directions?"
+    answer: "The source produces T values for the method to read, so ? extends T lets it be List<T> or a list of a T subtype while every element remains readable as T. The target consumes T values written by the method, so ? super T lets it be List<T> or a list of a T supertype where every T can be stored safely. producerConsumer() demonstrates List<Integer> as the producer and List<Number> as the consumer in one copy operation."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.TypeErasure/TypeErasure.md", anchor: "erasure-model"}
-    apiRelated: {controller: "ErasureController", methodSignature: "inspectRuntimeTypes()"}
+    readmeRelated: {file: "5.WildcardsAndPECS/WildcardsAndPECS.md", anchor: "pecs-rule"}
+    apiRelated: {controller: "WildcardController", methodSignature: "producerConsumer()"}
 
-  - question: "What is a bridge method, why might javac generate one after erasure, and how does it preserve polymorphism?"
-    answer: "Erasure can make the erased signature of a generic supertype differ from the concrete signature written by a subtype. Mapper<T>.map(T) erases roughly to map(Object), while StringMapper implements map(String). javac can emit a synthetic bridge map(Object) that casts and forwards to map(String), so calls through the erased supertype contract still dispatch to the correct implementation. bridgeMethod() uses Reflection to expose that synthetic bridge method."
+  - question: "Should PECS be applied mechanically to every generic parameter and return type?"
+    answer: "No. PECS is useful when a boundary mainly reads T or mainly writes T. If a parameter must both read and write the same precise T, an exact type such as List<T> is often clearer. If a wildcard does not admit more useful callers, it only complicates the signature. A wildcard in a public return type can also push an unknown type onto callers, so use it only when that uncertainty is genuinely part of the contract."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.TypeErasure/TypeErasure.md", anchor: "bridge-method"}
-    apiRelated: {controller: "ErasureController", methodSignature: "bridgeMethod()"}
-
-  - question: "How do reifiable and non-reifiable types differ, and why does the distinction matter for runtime type checks?"
-    answer: "A reifiable type has enough runtime representation for operations that need runtime type checking, such as String, raw List, List<?>, or String[]. A non-reifiable type such as List<String> or T does not retain its full concrete generic identity in a form runtime checks can arbitrarily verify. This affects casts, array creation, and instanceof rules. Avoid the oversimplified rule that every parameterized instanceof is illegal, because Java 16+ permits some checked cases based on static type compatibility."
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "8.TypeErasure/TypeErasure.md", anchor: "non-reifiable-types"}
+    readmeRelated: {file: "5.WildcardsAndPECS/WildcardsAndPECS.md", anchor: "pecs-api-design"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: "What problem does wildcard capture solve? Why can a helper <T> swap elements of List<?> when direct code with ? often cannot write them back?"
     answer: "List<?> has one specific unknown element type, and the compiler must keep that unknown type consistent. A helper such as <T> void swapHelper(List<T>) lets the compiler capture the wildcard as an internal type variable T; a value read as T can then be written back to that same List<T>. Capture does not turn the unknown type into Object and does not add runtime casting magic; it simply gives the compiler a name for one consistent unknown type within the helper."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Wildcards/Wildcards.md", anchor: "wildcard-capture"}
+    readmeRelated: {file: "5.WildcardsAndPECS/WildcardsAndPECS.md", anchor: "wildcard-capture"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "How does a raw type differ from List<?>, and why does Java still support raw types?"
+    answer: "List<?> remains a type-safe parameterized type: there is a specific element type, but it is unknown to the caller. Raw List omits the type argument and weakens or bypasses some generic checks for particular operations. Java keeps raw types primarily for compatibility with code and binaries written before generics existed. A raw type is therefore a legacy-compatibility escape hatch, not a shorter substitute for a wildcard in new code."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.RawTypesAndLegacyBoundaries/RawTypesAndLegacyBoundaries.md", anchor: "raw-type-compatibility"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "What does an unchecked warning tell you about the proof of type safety, and why is immediately suppressing it risky?"
+    answer: "An unchecked warning means the compiler cannot fully prove a generic operation is type-safe, commonly because of a raw type, unchecked cast, or non-reifiable boundary. The code may still be correct if the developer knows an invariant the compiler cannot see, but the warning marks where the normal guarantee has weakened. Suppressing it too early hides that trust boundary; first identify the source, validate or convert data as needed, then isolate any suppression to the smallest justified scope."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.RawTypesAndLegacyBoundaries/RawTypesAndLegacyBoundaries.md", anchor: "unchecked-warning"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "What is heap pollution, and why can the failure appear far away from the line that caused the pollution?"
+    answer: "Heap pollution occurs when a variable of a parameterized type ultimately refers to data that violates that parameterized contract. A raw or unchecked operation may write the wrong type without failing immediately; the error surfaces later when typed code reads the value and a compiler-inserted cast fails. heapPollution() deliberately writes an Integer through a raw List into a List<String>, then shows the ClassCastException appearing at the later typed read."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.RawTypesAndLegacyBoundaries/RawTypesAndLegacyBoundaries.md", anchor: "heap-pollution"}
+    apiRelated: {controller: "RawTypeController", methodSignature: "heapPollution()"}
+
+  - question: "If you must integrate a legacy API returning a raw List, how would you design the boundary so the rest of the application remains typed?"
+    answer: "Keep the raw value inside a small adapter boundary, validate or convert elements according to the real API invariant, then expose a parameterized type to typed application code. The safest default is often to copy into a new typed collection so no raw alias can later mutate it with an incompatible value. If a zero-copy unchecked cast is unavoidable, document the stronger invariant: current contents are valid and no remaining raw alias can violate the type contract after validation."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.RawTypesAndLegacyBoundaries/RawTypesAndLegacyBoundaries.md", anchor: "raw-type-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Describe type erasure from source to runtime. Why can List<String> and List<Integer> have the same runtime class while compile-time safety still exists?"
+    answer: "The compiler first uses type arguments and bounds to check source code. A type variable such as T erases to its leftmost bound or Object, while a parameterized type such as List<String> erases to the raw type List; casts are inserted where needed to preserve the caller's typed view. Because parameterizations do not create separate runtime classes, ArrayList<String> and ArrayList<Integer> can both be java.util.ArrayList at runtime. inspectRuntimeTypes() demonstrates that shared runtime class."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.TypeErasureAndRuntimeModel/TypeErasureAndRuntimeModel.md", anchor: "erasure-model"}
+    apiRelated: {controller: "ErasureController", methodSignature: "inspectRuntimeTypes()"}
+
+  - question: "Do type erasure and retained generic signature metadata contradict each other? Why can Reflection sometimes see List<String> while execution uses erased List?"
+    answer: "They do not conflict. Erasure determines the types primarily used by executable bytecode, so List<String> erases to List. The class file may still retain Signature metadata describing declaration type parameters and type arguments for compilers, Reflection, and tooling. That metadata does not make the runtime object a reified List<String> and does not mean the JVM checks every element for String."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.TypeErasureAndRuntimeModel/TypeErasureAndRuntimeModel.md", anchor: "generic-signature-metadata"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "What is a bridge method, why might javac generate one after erasure, and how does it preserve polymorphism?"
+    answer: "Erasure can make the erased signature of a generic supertype differ from the concrete signature written by a subtype. Mapper<T>.map(T) erases roughly to map(Object), while StringMapper implements map(String). javac can emit a synthetic bridge map(Object) that casts and forwards to map(String), so calls through the erased supertype contract still dispatch to the correct implementation. bridgeMethod() uses Reflection to expose that synthetic bridge method."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.TypeErasureAndRuntimeModel/TypeErasureAndRuntimeModel.md", anchor: "bridge-method"}
+    apiRelated: {controller: "ErasureController", methodSignature: "bridgeMethod()"}
+
+  - question: "How do reifiable and non-reifiable types differ, and why does the distinction matter for runtime type checks?"
+    answer: "A reifiable type has enough runtime representation for operations that need runtime type checking, such as String, raw List, List<?>, or String[]. A non-reifiable type such as List<String> or T does not retain its full concrete generic identity in a form runtime checks can arbitrarily verify. This matters especially for array creation and runtime type checks; for casts, a non-reifiable target may lead to an unchecked cast because the JVM cannot verify the full generic target. Java 16+ still permits some parameterized instanceof checks when a checked casting conversion exists from the static type."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.TypeErasureAndRuntimeModel/TypeErasureAndRuntimeModel.md", anchor: "non-reifiable-types"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: "Why can generic code not instantiate new T() directly, and what design should be used when it really needs to create instances of T?"
-    answer: "T is a compile-time type variable, and after erasure the runtime does not automatically have a concrete constructor target just from T. Generic code therefore cannot assume new T(). A common design is to receive an object-creation strategy from the caller, such as Factory<T>, a supplier-like abstraction, or when appropriate an explicit type token handled by Reflection in another module. The concrete constructor decision stays with code that actually knows the concrete type."
+    answer: "T is a compile-time type variable; declaring <T> does not promise that every valid type argument has any particular constructor, and after erasure runtime does not automatically have a concrete constructor target from T alone. Generic code therefore cannot assume new T(). A common design is to receive an object-creation strategy such as Factory<T>/a supplier-like abstraction, or when appropriate an explicit runtime type token for Reflection."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.Limitations/Limitations.md", anchor: "no-new-type-parameter"}
+    readmeRelated: {file: "8.GenericLimitationsAndApiDesign/GenericLimitationsAndApiDesign.md", anchor: "no-new-type-parameter"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: "Why does Java reject new T[] and new List<String>[] while String[] is valid?"
     answer: "Arrays are reified and covariant, so runtime must know the component type to check every store. T and List<String> are non-reifiable in these contexts, so the JVM does not have enough concrete component information to enforce the array store contract completely. Java therefore rejects those generic array creations. List<?>[] is legal because List<?> is reifiable, though collections are usually simpler for generic code."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.Limitations/Limitations.md", anchor: "generic-array-limit"}
+    readmeRelated: {file: "8.GenericLimitationsAndApiDesign/GenericLimitationsAndApiDesign.md", anchor: "generic-array-limit"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "If generic code needs the actual runtime class represented by T, why are T.class and instanceof T unavailable, and how should the API be designed?"
+    answer: "T is a compile-time type variable and does not automatically denote an independent runtime Class object after erasure, so T.class and instanceof T are not legal. If the operation genuinely needs runtime type information, the caller should supply it explicitly, commonly as Class<T> or another suitable type token. This makes the runtime requirement part of the API contract instead of pretending T can be recovered from erased information."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.GenericLimitationsAndApiDesign/GenericLimitationsAndApiDesign.md", anchor: "runtime-type-information-limit"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: "Why can a static member of Box<T> not use the class type parameter T directly, while static <U> U identity(U value) is legal?"
     answer: "A static member belongs to the single runtime class, not separately to Box<String> and Box<Integer>. If shared static state used the class's T, there would be no single T to choose for that state. A static generic method declares its own U per invocation, so U does not depend on Box's parameterization. The same erasure model also explains why overloads differing only as List<String> versus List<Integer> can clash after erasure."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.Limitations/Limitations.md", anchor: "static-type-parameter-limit"}
+    readmeRelated: {file: "8.GenericLimitationsAndApiDesign/GenericLimitationsAndApiDesign.md", anchor: "static-type-parameter-limit"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Why do process(List<String>) and process(List<Integer>) clash after erasure, and what design implication follows?"
+    answer: "Both List<String> and List<Integer> erase to List, so the two declarations would have the same JVM-level process(List) signature and cannot coexist as overloads. An API should not depend on erased generic arguments to distinguish overloads; use distinct method names, parameters that remain distinguishable at runtime, or a different abstraction that expresses the intent directly."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.GenericLimitationsAndApiDesign/GenericLimitationsAndApiDesign.md", anchor: "erasure-signature-clash"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: "What are the main generic restrictions around Throwable, and why can throws E still be legal?"
     answer: "Java does not allow a generic class to directly extend Throwable, such as Problem<T> extends Exception, and it does not allow catching a type parameter because catch matching requires a concrete runtime exception type. A suitably bounded type parameter may still appear in throws, for example <E extends Exception> ... throws E, so a compile-time contract can propagate the precise checked-exception type from a callback to its caller without creating a generic exception class at runtime."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.Limitations/Limitations.md", anchor: "generic-exception-limit"}
+    readmeRelated: {file: "8.GenericLimitationsAndApiDesign/GenericLimitationsAndApiDesign.md", anchor: "generic-exception-limit"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "When designing a generic API, how do you decide between a named type parameter, a bound, wildcards/PECS, or a raw boundary?"
+    answer: "Start from the type relationship the API must express. Use a named <T> when several positions must preserve the same type identity; add a bound when T needs a minimum capability; use a wildcard for use-site flexibility, with ? extends for producers and ? super for consumers; prefer an exact List<T> when the same T must be both read and written. Raw types are not a normal design tool and should be isolated only at legacy boundaries. Choose the simplest mechanism that preserves the real relationship and type safety."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.GenericLimitationsAndApiDesign/GenericLimitationsAndApiDesign.md", anchor: "generic-api-design"}
     apiRelated: {controller: "", methodSignature: ""}

@@ -3,28 +3,28 @@ ErasureController:
     <h2>Type Erasure ở Runtime</h2>
     <p>Quan sát runtime class identity sau erasure và synthetic bridge method do compiler sinh để giữ polymorphism.</p>
   readmeRelated:
-    file: 8.TypeErasure/TypeErasure.md
+    file: 7.TypeErasureAndRuntimeModel/TypeErasureAndRuntimeModel.md
 GenericMethodController:
   description: |-
     <h2>Generic Method và Type Inference</h2>
     <p>Quan sát cùng một generic method được compiler suy luận thành các type cụ thể khác nhau tại từng call site.</p>
   readmeRelated:
-    file: 2.GenericMethod/GenericMethod.md
+    file: 2.GenericTypesAndMethods/GenericTypesAndMethods.md
 RawTypeController:
   description: |-
     <h2>Raw Type và Heap Pollution</h2>
     <p>Cho một raw reference xuyên qua generic safety, ghi sai type rồi quan sát failure xuất hiện muộn tại typed read.</p>
   readmeRelated:
-    file: 7.RawTypes/RawTypes.md
+    file: 6.RawTypesAndLegacyBoundaries/RawTypesAndLegacyBoundaries.md
 VarianceController:
   description: |-
     <h2>Invariance của Generic Type</h2>
     <p>Quan sát vì sao quan hệ Dog → Animal không tự biến List&lt;Dog&gt; thành List&lt;Animal&gt;, và wildcard mở một read view an toàn như thế nào.</p>
   readmeRelated:
-    file: 6.Invariance/Invariance.md
+    file: 4.InvarianceAndSubtyping/InvarianceAndSubtyping.md
 WildcardController:
   description: |-
     <h2>Wildcard và PECS</h2>
     <p>Thí nghiệm copy dữ liệu qua producer <code>? extends T</code> và consumer <code>? super T</code> để quan sát PECS bằng flow đọc/ghi thực tế.</p>
   readmeRelated:
-    file: 5.PECS/PECS.md
+    file: 5.WildcardsAndPECS/WildcardsAndPECS.md

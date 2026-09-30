@@ -43,68 +43,86 @@
 
 roadmap:
   - id: generics-purpose
-    title: Type-safe reuse với Generics
-    purpose: Hiểu vì sao parameterized type an toàn và expressive hơn việc lưu Object rồi cast ở mọi nơi.
+    title: Generics là gì và vì sao cần?
+    purpose: Hiểu Generics cho phép dùng kiểu như một tham số để tái sử dụng cấu trúc và thuật toán mà vẫn kiểm tra an toàn kiểu khi biên dịch, thay vì dùng Object rồi ép kiểu hoặc viết lặp lại cùng một cách xử lý cho nhiều kiểu.
+    relatedKnowledge:
+      - GenericsPurpose
     relatedModules:
+      - routeId: JAVA_OOP
+        label: Lập trình hướng đối tượng (OOP)
+        note: Kế thừa, kiểu con và khả năng thay thế là nền tảng để hiểu giới hạn kiểu, tính bất biến và quan hệ giữa các kiểu generic.
+      - routeId: JAVA_ABSTRACT_INTERFACE
+        label: Lớp trừu tượng & Interface
+        note: Giao diện (interface) và hợp đồng kiểu là nền tảng để hiểu giao diện generic, giới hạn bằng giao diện và cách Generics biểu diễn các quan hệ kiểu dùng chung.
       - routeId: JAVA_COLLECTION
-        label: Collections
-        note: Collections Framework là một trong các consumer quan trọng nhất của Java generics.
+        label: Collections Framework
+        note: Collections Framework là một trong những nơi sử dụng Generics quan trọng nhất trong Java.
     objectives:
-      - Giải thích compile-time type safety và reusable algorithm qua type parameter.
-      - Nhận biết nơi generics loại bỏ cast mà không thay đổi runtime object identity.
+      - Phân biệt tham số kiểu (type parameter) với đối số kiểu (type argument) và đọc được khai báo generic cơ bản.
+      - Giải thích vì sao Generics giúp phát hiện sai kiểu ngay khi biên dịch và giảm ép kiểu thủ công so với cách dùng Object.
   - id: generic-types-and-methods
-    title: Generic Type và Generic Method
-    purpose: Hiểu type parameter nên thuộc type hay một operation tùy nơi reusable relationship thực sự được sở hữu.
+    title: Kiểu generic và phương thức generic
+    purpose: Hiểu khi tham số kiểu nên thuộc về lớp/giao diện (interface) và khi nó chỉ nên thuộc về một phương thức hoặc hàm tạo (constructor).
+    relatedKnowledge:
+      - GenericTypesAndMethods
     objectives:
-      - Declare và consume generic class/interface với type parameter có ý nghĩa.
-      - Dùng generic method khi type relationship chỉ thuộc một operation.
+      - Khai báo và sử dụng lớp/giao diện generic với tham số kiểu có ý nghĩa.
+      - Dùng phương thức hoặc hàm tạo generic và suy luận kiểu khi quan hệ kiểu chỉ thuộc một thao tác cụ thể.
   - id: bounded-type-parameters
-    title: Bound và capability yêu cầu
-    purpose: Hiểu bounded type parameter như cách yêu cầu capability nhưng vẫn giữ generic reuse.
+    title: Tham số kiểu có giới hạn
+    purpose: Hiểu giới hạn tham số kiểu (bounded type parameter) là cách yêu cầu kiểu cung cấp những khả năng cần thiết mà vẫn giữ được khả năng tái sử dụng của Generics.
+    relatedKnowledge:
+      - BoundedTypeParameters
     objectives:
-      - Dùng upper bound để biểu diễn operation khả dụng trên type parameter.
-      - Nhận biết multiple/recursive bound là dạng nâng cao của cùng capability model.
-  - id: wildcards-and-type-families
-    title: Wildcard và họ type
-    purpose: Hiểu wildcard khi API cần nhận một họ parameterized type mà không biết chính xác một type argument.
-    objectives:
-      - Phân biệt unbounded, upper-bounded và lower-bounded wildcard.
-      - Hiểu wildcard capture như compiler model thay vì mẹo ghi nhớ.
-  - id: pecs-data-direction
-    title: PECS và hướng dữ liệu
-    purpose: Dùng hướng producer/consumer của dữ liệu để chọn wildcard variance có chủ đích.
-    objectives:
-      - Áp dụng extends cho producer và super cho consumer dựa trên API intent.
-      - Nhận biết khi không cần wildcard vì cần cả read và write symmetry.
+      - Dùng giới hạn trên (upper bound) để giới hạn kiểu và xác định những thao tác mã generic được phép gọi an toàn.
+      - Nhận biết nhiều giới hạn (multiple bounds) và giới hạn đệ quy (recursive bound) là các dạng nâng cao của cùng mô hình giới hạn kiểu.
   - id: invariance-and-subtyping
-    title: Generic Invariance và Subtyping
-    purpose: Hiểu vì sao List<Dog> không phải subtype của List<Animal> và cách wildcard variance tạo flexibility có kiểm soát.
+    title: Tính bất biến và quan hệ kiểu con
+    purpose: Hiểu vì sao Dog có thể là kiểu con của Animal nhưng List<Dog> không vì thế trở thành kiểu con của List<Animal>, từ đó thấy được giới hạn mà wildcard cần giải quyết.
+    relatedKnowledge:
+      - InvarianceAndSubtyping
     objectives:
-      - Tách class inheritance khỏi parameterized-type subtyping.
-      - Dự đoán assignment compatibility giữa các generic type.
+      - Phân biệt quan hệ kế thừa giữa các kiểu với quan hệ tương thích giữa các kiểu generic.
+      - Nhận biết tính bất biến không xóa quan hệ kế thừa của chính khai báo generic; ví dụ ArrayList<Dog> vẫn là một List<Dog>.
+      - So sánh cách Generics và mảng xử lý quan hệ kiểu con để hiểu lý do an toàn kiểu phía sau tính bất biến.
+  - id: wildcards-and-type-families
+    title: Wildcard, PECS và chiều đọc/ghi dữ liệu
+    purpose: Hiểu wildcard dùng để biểu diễn một đối số kiểu chưa biết khi API cần chấp nhận cả một họ kiểu generic tương thích, sau đó dùng vai trò bên cung cấp dữ liệu (producer) và bên tiếp nhận dữ liệu (consumer) để chọn ? extends hoặc ? super có chủ đích.
+    relatedKnowledge:
+      - WildcardsAndPECS
+    objectives:
+      - Phân biệt wildcard không giới hạn, wildcard giới hạn trên, wildcard giới hạn dưới và List<?> với List<Object>.
+      - Áp dụng extends cho bên cung cấp và super cho bên tiếp nhận dựa trên mục đích của API.
+      - Phân biệt khi wildcard chỉ cần mô tả một họ kiểu tại vị trí sử dụng với khi cần tham số kiểu có tên để giữ quan hệ kiểu giữa nhiều vị trí trong API.
   - id: raw-types-and-legacy-boundaries
-    title: Raw Type và Legacy Boundary
-    purpose: Hiểu cách raw type bypass generic guarantee và vì sao unchecked warning phản ánh safety boundary thực sự.
+    title: Kiểu thô (raw type) và ranh giới mã cũ
+    purpose: Hiểu kiểu thô (raw type) tồn tại để tương thích với mã Java có từ trước Generics, nhưng có thể bỏ qua các đảm bảo an toàn kiểu và tạo ra cảnh báo không được kiểm tra đầy đủ (unchecked warning) khi trình biên dịch không còn kiểm chứng đầy đủ.
+    relatedKnowledge:
+      - RawTypesAndLegacyBoundaries
     objectives:
-      - Khoanh vùng raw-type interoperability thay vì làm unchecked operation lan rộng.
-      - Hiểu compiler warning là bằng chứng type guarantee bị yếu đi.
+      - Khoanh vùng phần mã phải tương tác với kiểu thô thay vì để các thao tác không được kiểm tra đầy đủ (unchecked) lan rộng.
+      - Hiểu cảnh báo của trình biên dịch là dấu hiệu các đảm bảo an toàn kiểu đã bị suy yếu.
   - id: erasure-runtime-model
-    title: Type Erasure và Runtime Metadata
-    purpose: Hiểu cách generic type argument hướng dẫn compilation trong khi phần lớn runtime execution dùng erased type.
+    title: Xóa kiểu (Type Erasure) và mô hình lúc chạy
+    purpose: Hiểu thông tin kiểu generic chủ yếu hướng dẫn quá trình biên dịch, trong khi phần lớn mã thực thi lúc chạy sử dụng kiểu đã được xóa.
+    relatedKnowledge:
+      - TypeErasureAndRuntimeModel
     relatedModules:
       - routeId: JAVA_REFLECTION
         label: Reflection
-        note: Reflection expose generic signature metadata còn tồn tại sau erasure.
+        note: Reflection có thể đọc phần siêu dữ liệu chữ ký generic vẫn còn được lưu sau quá trình xóa kiểu.
     objectives:
-      - Giải thích bridge method và erased signature ở mức conceptual.
-      - Phân biệt erased execution với retained generic signature metadata.
+      - Hiểu ở mức khái niệm cách tham số kiểu được xóa về giới hạn tương ứng hoặc Object và vì sao trình biên dịch có thể chèn phép ép kiểu cần thiết.
+      - Phân biệt kiểu dùng để thực thi lúc chạy với siêu dữ liệu chữ ký generic vẫn còn được lưu lại.
   - id: generic-limitations-and-synthesis
-    title: Giới hạn Generics và API Design
-    purpose: Kết nối erasure, invariance, reifiability, heap pollution và wildcard trade-off thành generic API design model thực tế.
+    title: Giới hạn của Generics và thiết kế API
+    purpose: Tổng hợp các giới hạn và đánh đổi của Generics, bao gồm các ràng buộc liên quan đến xóa kiểu, thông tin kiểu lúc chạy, ngữ cảnh static, tính bất biến và wildcard, để thiết kế API generic thực tế và an toàn.
+    relatedKnowledge:
+      - GenericLimitationsAndApiDesign
     relatedModules:
       - routeId: JAVA_FUNCTIONAL_PROGRAMMING
-        label: Functional Programming
-        note: Standard functional interface sử dụng generics mạnh để biểu diễn input/output relationship.
+        label: Lập trình hàm
+        note: Các giao diện hàm (functional interface) chuẩn dùng Generics để biểu diễn rõ quan hệ giữa kiểu đầu vào và đầu ra.
     objectives:
-      - Nhận biết operation vẫn không thể hoặc không an toàn do erasure/invariance.
-      - Thiết kế generic API type-safe mà không lạm dụng bound phức tạp.
+      - Nhận biết các giới hạn quan trọng của ngôn ngữ và các ranh giới không an toàn liên quan đến xóa kiểu, thông tin kiểu lúc chạy, ngữ cảnh static và tính bất biến.
+      - Thiết kế API generic an toàn kiểu mà không lạm dụng wildcard hoặc giới hạn kiểu phức tạp.

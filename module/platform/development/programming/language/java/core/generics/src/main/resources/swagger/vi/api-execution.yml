@@ -1,37 +1,37 @@
 GenericMethodController:
   inference():
     execution: |-
-      <p><strong>Khái niệm:</strong> generic method có type parameter riêng; compiler suy luận type argument cho từng lời gọi từ argument/target context.</p>
+      <p><strong>Khái niệm:</strong> phương thức generic có type parameter riêng; compiler suy luận type argument cho từng lời gọi từ đối số và ngữ cảnh đích.</p>
       <ol>
         <li><strong>Flow:</strong> endpoint gọi cùng method <code>echo(T)</code> một lần với <code>"java"</code> và một lần với <code>21</code>.</li>
         <li><strong>Code evidence:</strong><pre><code>private static &lt;T&gt; T echo(T value) {
           return value;
       }</code></pre></li>
-        <li><strong>Observation:</strong> response có <code>textRuntimeType=String</code> và <code>numberRuntimeType=Integer</code> dù source chỉ có một generic method.</li>
-        <li><strong>Ý nghĩa:</strong> <code>T</code> không phải một runtime slot cố định cho method; mỗi invocation được type-check với constraint riêng tại compile time.</li>
+        <li><strong>Quan sát:</strong> phản hồi có <code>textRuntimeType=String</code> và <code>numberRuntimeType=Integer</code> dù mã nguồn chỉ có một phương thức generic.</li>
+        <li><strong>Ý nghĩa:</strong> <code>T</code> không phải một ô kiểu cố định ở runtime cho phương thức; mỗi lời gọi được kiểm tra với các ràng buộc riêng tại compile time.</li>
       </ol>
-      <p><strong>Kết luận:</strong> generic method giúp tái sử dụng một operation mà vẫn giữ quan hệ kiểu giữa input và output cho từng call site.</p>
+      <p><strong>Kết luận:</strong> phương thức generic giúp tái sử dụng một thao tác mà vẫn giữ quan hệ kiểu giữa đầu vào và đầu ra cho từng lời gọi.</p>
     usage: true
 VarianceController:
   invariance():
     execution: |-
       <p><strong>Khái niệm:</strong> <code>Dog</code> là subtype của <code>Animal</code> nhưng <code>List&lt;Dog&gt;</code> không phải subtype của <code>List&lt;Animal&gt;</code>.</p>
       <ol>
-        <li><strong>Flow:</strong> endpoint tạo <code>List&lt;Dog&gt;</code>, rồi expose nó qua <code>List&lt;? extends Animal&gt;</code> để chỉ đọc an toàn.</li>
+        <li><strong>Luồng:</strong> endpoint tạo <code>List&lt;Dog&gt;</code>, rồi đọc nó qua <code>List&lt;? extends Animal&gt;</code> một cách an toàn.</li>
         <li><strong>Code evidence:</strong><pre><code>List&lt;Dog&gt; dogs = new ArrayList&lt;&gt;();
       List&lt;? extends Animal&gt; readableAnimals = dogs;
       Animal first = readableAnimals.get(0);</code></pre></li>
-        <li><strong>Observation:</strong> response ghi rõ exact assignment <code>List&lt;Animal&gt; animals = dogs</code> không hợp lệ nhưng wildcard read view hoạt động.</li>
-        <li><strong>Ý nghĩa:</strong> nếu exact assignment được phép, code qua <code>List&lt;Animal&gt;</code> có thể chèn một Animal không phải Dog và phá guarantee của list gốc.</li>
+        <li><strong>Quan sát:</strong> phản hồi ghi rõ phép gán <code>List&lt;Animal&gt; animals = dogs</code> không hợp lệ nhưng góc nhìn wildcard chỉ đọc vẫn hoạt động.</li>
+        <li><strong>Ý nghĩa:</strong> nếu phép gán đó được phép, code qua <code>List&lt;Animal&gt;</code> có thể chèn một Animal không phải Dog và phá đảm bảo của list gốc.</li>
       </ol>
-      <p><strong>Kết luận:</strong> invariance chặn mutation không an toàn; wildcard mở đúng phần flexibility mà API cần.</p>
+      <p><strong>Kết luận:</strong> invariance ngăn Java tự suy diễn quan hệ subtype giữa các parameterized type; mutable List cho thấy rõ vì sao suy diễn đó có thể làm mất an toàn kiểu. Wildcard mở đúng phần linh hoạt mà API cần tại nơi sử dụng.</p>
     usage: true
 WildcardController:
   producerConsumer():
     execution: |-
-      <p><strong>Khái niệm:</strong> PECS mô tả data flow: producer dùng <code>? extends T</code>, consumer dùng <code>? super T</code>.</p>
+      <p><strong>Khái niệm:</strong> PECS mô tả chiều dữ liệu: producer dùng <code>? extends T</code>, consumer dùng <code>? super T</code>.</p>
       <ol>
-        <li><strong>Flow:</strong> source là <code>List&lt;Integer&gt;</code>, target là <code>List&lt;Number&gt;</code>. Method <code>copy</code> đọc từng <code>T</code> từ source rồi ghi vào target.</li>
+        <li><strong>Luồng:</strong> nguồn là <code>List&lt;Integer&gt;</code>, đích là <code>List&lt;Number&gt;</code>. Method <code>copy</code> đọc từng <code>T</code> từ nguồn rồi ghi vào đích.</li>
         <li><strong>Code evidence:</strong><pre><code>static &lt;T&gt; void copy(
           List&lt;? extends T&gt; source,
           List&lt;? super T&gt; target) {
@@ -39,25 +39,25 @@ WildcardController:
               target.add(value);
           }
       }</code></pre></li>
-        <li><strong>Observation:</strong> response trả <code>copiedValues=[10,20,30]</code>, source role là producer và target role là consumer.</li>
-        <li><strong>Ý nghĩa:</strong> bounds không phải decoration; chúng mở đúng thao tác read/write an toàn theo direction của dữ liệu.</li>
+        <li><strong>Quan sát:</strong> phản hồi trả <code>copiedValues=[10,20,30]</code>, nguồn đóng vai trò producer và đích đóng vai trò consumer.</li>
+        <li><strong>Ý nghĩa:</strong> wildcard bounds không phải phần trang trí; chúng mở đúng thao tác đọc/ghi an toàn theo chiều dữ liệu.</li>
       </ol>
-      <p><strong>Kết luận:</strong> PECS là heuristic thiết kế signature dựa trên việc parameter cung cấp hay nhận giá trị kiểu T.</p>
+      <p><strong>Kết luận:</strong> PECS là quy tắc gợi nhớ để thiết kế signature dựa trên việc tham số cung cấp hay tiếp nhận giá trị kiểu T.</p>
     usage: true
 RawTypeController:
   heapPollution():
     execution: |-
-      <p><strong>Khái niệm:</strong> raw type có thể xuyên qua generic checking và gây heap pollution, khiến failure xuất hiện muộn hơn điểm gây sai.</p>
+      <p><strong>Khái niệm:</strong> raw type có thể làm suy yếu hoặc bỏ qua một phần generic checking và gây heap pollution, khiến failure xuất hiện muộn hơn điểm gây sai.</p>
       <ol>
-        <li><strong>Flow:</strong> endpoint tạo <code>List&lt;String&gt;</code>, gán nó cho raw <code>List</code>, thêm <code>Integer</code>, rồi đọc phần tử đó qua typed reference.</li>
+        <li><strong>Luồng:</strong> endpoint tạo <code>List&lt;String&gt;</code>, gán nó cho raw <code>List</code>, thêm <code>Integer</code>, rồi đọc phần tử đó qua tham chiếu có kiểu.</li>
         <li><strong>Code evidence:</strong><pre><code>List&lt;String&gt; names = new ArrayList&lt;&gt;();
       List raw = names;
       raw.add(123);
       String value = names.get(1);</code></pre></li>
-        <li><strong>Observation:</strong> raw write thành công nhưng typed read bị <code>ClassCastException</code>; response expose cả runtime contents và failure type.</li>
+        <li><strong>Quan sát:</strong> phép ghi qua raw reference thành công nhưng lần đọc có kiểu bị <code>ClassCastException</code>; phản hồi hiển thị cả dữ liệu lúc chạy và loại lỗi.</li>
         <li><strong>Ý nghĩa:</strong> unchecked warning đánh dấu nơi compiler không còn chứng minh được invariant; lỗi runtime có thể xuất hiện ở nơi hoàn toàn khác.</li>
       </ol>
-      <p><strong>Kết luận:</strong> raw type chỉ nên tồn tại ở legacy boundary nhỏ, được validate và cô lập khỏi typed code.</p>
+      <p><strong>Kết luận:</strong> raw type chỉ nên tồn tại ở ranh giới mã cũ nhỏ, được kiểm tra và cô lập khỏi phần code có kiểu rõ ràng.</p>
     usage: true
 ErasureController:
   inspectRuntimeTypes():
@@ -68,23 +68,23 @@ ErasureController:
         <li><strong>Code evidence:</strong><pre><code>List&lt;String&gt; texts = new ArrayList&lt;&gt;();
       List&lt;Integer&gt; numbers = new ArrayList&lt;&gt;();
       texts.getClass() == numbers.getClass();</code></pre></li>
-        <li><strong>Observation:</strong> cả hai runtime class đều là <code>java.util.ArrayList</code> và <code>sameRuntimeClass=true</code>.</li>
-        <li><strong>Ý nghĩa:</strong> generic argument phục vụ compile-time checking; JVM không có một class <code>ArrayList&lt;String&gt;</code> riêng với <code>ArrayList&lt;Integer&gt;</code>.</li>
+        <li><strong>Quan sát:</strong> cả hai class lúc chạy đều là <code>java.util.ArrayList</code> và <code>sameRuntimeClass=true</code>.</li>
+        <li><strong>Ý nghĩa:</strong> generic argument phục vụ kiểm tra lúc biên dịch; JVM không có một class <code>ArrayList&lt;String&gt;</code> riêng với <code>ArrayList&lt;Integer&gt;</code>.</li>
       </ol>
-      <p><strong>Kết luận:</strong> erasure giải thích vì sao nhiều generic restriction xuất hiện ở runtime boundary.</p>
+      <p><strong>Kết luận:</strong> erasure giải thích vì sao nhiều giới hạn của Generics xuất hiện ở các ranh giới runtime.</p>
     usage: true
   bridgeMethod():
     execution: |-
       <p><strong>Khái niệm:</strong> compiler có thể sinh synthetic bridge method để giữ overriding/polymorphism sau khi generic signature bị erase.</p>
       <ol>
-        <li><strong>Flow:</strong> <code>StringMapper</code> implements <code>Mapper&lt;String&gt;</code>. Endpoint inspect các declared method và expose cờ <code>isBridge()</code>/<code>isSynthetic()</code>.</li>
+        <li><strong>Luồng:</strong> <code>StringMapper</code> implements <code>Mapper&lt;String&gt;</code>. Endpoint kiểm tra các method được khai báo và hiển thị cờ <code>isBridge()</code>/<code>isSynthetic()</code>.</li>
         <li><strong>Code evidence:</strong><pre><code>interface Mapper&lt;T&gt; { T map(T value); }
 
       final class StringMapper implements Mapper&lt;String&gt; {
           public String map(String value) { return value.trim(); }
       }</code></pre></li>
-        <li><strong>Observation:</strong> response có method developer viết và thêm một method synthetic/bridge do compiler sinh; <code>bridgeMethodCount</code> lớn hơn 0.</li>
-        <li><strong>Ý nghĩa:</strong> erased contract gần với <code>Object map(Object)</code>, nên bridge chuyển call đó về implementation <code>String map(String)</code>.</li>
+        <li><strong>Quan sát:</strong> phản hồi có method do lập trình viên viết và thêm một method synthetic/bridge do compiler sinh; <code>bridgeMethodCount</code> lớn hơn 0.</li>
+        <li><strong>Ý nghĩa:</strong> contract sau erasure gần với <code>Object map(Object)</code>, nên bridge chuyển lời gọi đó về implementation <code>String map(String)</code>.</li>
       </ol>
-      <p><strong>Kết luận:</strong> bridge method là compiler plumbing giúp source-level generic override tiếp tục tuân polymorphism ở bytecode/runtime.</p>
+      <p><strong>Kết luận:</strong> bridge method là phần hạ tầng compiler giúp generic override ở mã nguồn tiếp tục giữ hành vi đa hình ở bytecode/runtime.</p>
     usage: true

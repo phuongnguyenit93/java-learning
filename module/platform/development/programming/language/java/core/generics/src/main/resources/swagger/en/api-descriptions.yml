@@ -10,7 +10,7 @@ GenericMethodController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 2.GenericMethod/GenericMethod.md
+      file: 2.GenericTypesAndMethods/GenericTypesAndMethods.md
       anchor: type-inference
     methodName: inference
     params: [
@@ -38,7 +38,7 @@ VarianceController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 6.Invariance/Invariance.md
+      file: 4.InvarianceAndSubtyping/InvarianceAndSubtyping.md
       anchor: generic-invariance
     methodName: invariance
     params: [
@@ -66,7 +66,7 @@ WildcardController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 5.PECS/PECS.md
+      file: 5.WildcardsAndPECS/WildcardsAndPECS.md
       anchor: pecs-rule
     methodName: producerConsumer
     params: [
@@ -94,7 +94,7 @@ RawTypeController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 7.RawTypes/RawTypes.md
+      file: 6.RawTypesAndLegacyBoundaries/RawTypesAndLegacyBoundaries.md
       anchor: heap-pollution
     methodName: heapPollution
     params: [
@@ -122,7 +122,7 @@ ErasureController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 8.TypeErasure/TypeErasure.md
+      file: 7.TypeErasureAndRuntimeModel/TypeErasureAndRuntimeModel.md
       anchor: erased-runtime-type
     methodName: inspectRuntimeTypes
     params: [
@@ -149,7 +149,7 @@ ErasureController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 8.TypeErasure/TypeErasure.md
+      file: 7.TypeErasureAndRuntimeModel/TypeErasureAndRuntimeModel.md
       anchor: bridge-method
     methodName: bridgeMethod
     params: [

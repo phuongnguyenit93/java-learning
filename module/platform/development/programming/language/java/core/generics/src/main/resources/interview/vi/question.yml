@@ -32,180 +32,208 @@ questions:
     answer: "Viết riêng từng class giữ type safety nhưng lặp implementation; dùng Object tái sử dụng được code nhưng làm mất thông tin kiểu, buộc caller cast và có thể đẩy lỗi sang runtime. Generics cho phép một declaration như Box<T> biểu diễn cùng logic cho nhiều kiểu trong khi compiler vẫn theo dõi quan hệ kiểu, chặn nhiều sai sót tại compile time và giảm cast thủ công. Điểm cốt lõi là tái sử dụng code mà vẫn giữ type contract rõ ràng."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.GenericType/GenericType.md", anchor: "generic-type-purpose"}
+    readmeRelated: {file: "1.GenericsPurpose/GenericsPurpose.md", anchor: "generic-type-purpose"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: "Phân biệt type parameter và type argument. Vì sao Box<String> không có nghĩa JVM tạo một class Box riêng cho String?"
     answer: "Trong declaration Box<T>, T là type parameter: một type variable do declaration định nghĩa. Trong Box<String>, String là type argument được cung cấp khi sử dụng declaration đó. Box<String> là một parameterized type để compiler kiểm tra kiểu; với Java Generics thông thường, JVM không tạo một class bytecode mới cho từng type argument. Runtime representation chi tiết được giải thích bởi type erasure."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.GenericType/GenericType.md", anchor: "type-parameter"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - question: "Khi nào nên đặt type parameter ở class và khi nào nên khai báo generic method riêng?"
-    answer: "Đặt type parameter ở class khi cùng một type identity phải tồn tại xuyên suốt state hoặc nhiều member của object, như Box<T> lưu và trả cùng T. Dùng generic method khi quan hệ kiểu chỉ cần cho một operation, như <T> T echo(T value), để không ép cả class mang một type parameter không cần thiết. Type variable của method có scope riêng và độc lập với type variable của class."
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "2.GenericMethod/GenericMethod.md", anchor: "generic-method-vs-type"}
+    readmeRelated: {file: "1.GenericsPurpose/GenericsPurpose.md", anchor: "type-parameter"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: "Type inference của generic method diễn ra ở đâu và compiler dựa vào những thông tin nào? Nếu inference thất bại thì điều đó nói lên gì?"
     answer: "Inference diễn ra ở compile time, không phải runtime guessing. Compiler gom constraint từ argument types, target type và các quan hệ generic khác của lời gọi để tìm type argument thỏa tất cả điều kiện. Nếu không tìm được nghiệm phù hợp, lời gọi không compile; explicit type witness chỉ hữu ích khi cần hướng compiler hoặc làm ý định rõ hơn, chứ không thay đổi runtime type system. API inference() minh họa cùng một generic method giữ quan hệ return type khác nhau cho từng lời gọi."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.GenericMethod/GenericMethod.md", anchor: "type-inference"}
+    readmeRelated: {file: "2.GenericTypesAndMethods/GenericTypesAndMethods.md", anchor: "type-inference"}
     apiRelated: {controller: "GenericMethodController", methodSignature: "inference()"}
+
+  - question: "Khi nào nên đặt type parameter ở class và khi nào nên khai báo generic method riêng?"
+    answer: "Đặt type parameter ở class khi cùng một type identity phải tồn tại xuyên suốt state hoặc nhiều member của object, như Box<T> lưu và trả cùng T. Dùng generic method khi quan hệ kiểu chỉ cần cho một operation, như <T> T echo(T value), để không ép cả class mang một type parameter không cần thiết. Type variable của method có scope riêng và độc lập với type variable của class."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.GenericTypesAndMethods/GenericTypesAndMethods.md", anchor: "generic-method-vs-type"}
+    apiRelated: {controller: "", methodSignature: ""}
 
   - question: "Tại sao một type parameter không bound không thể gọi doubleValue(), còn <T extends Number> thì có thể? Bound đánh đổi điều gì?"
     answer: "Với <T>, compiler chỉ có thể dựa vào contract chung mà mọi reference type đều có, nên không thể giả định doubleValue() tồn tại. <T extends Number> thu hẹp tập type argument hợp lệ và đổi lại implementation được quyền dùng capability do Number bảo đảm. Bound vì thế vừa hạn chế caller vừa làm contract cho implementation mạnh hơn; bound quá cụ thể sẽ giảm khả năng tái sử dụng, nên chỉ nên yêu cầu capability thuật toán thật sự cần."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.BoundedType/BoundedType.md", anchor: "bound-api-capability"}
+    readmeRelated: {file: "3.BoundedTypeParameters/BoundedTypeParameters.md", anchor: "bound-api-capability"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Wildcard ? giải quyết bài toán gì khác với việc khai báo thêm một type parameter T?"
-    answer: "Wildcard phù hợp khi API chỉ cần nói 'đây là một generic value của kiểu nào đó' mà không cần đặt tên hoặc liên kết type identity đó với chỗ khác. Named type parameter hữu ích khi cùng một kiểu phải nối nhiều parameter, return type hoặc constraint. Ví dụ sizeOf(List<?>) chỉ cần thao tác độc lập với element type nên ? diễn đạt intent gọn hơn <T> int sizeOf(List<T>)."
+  - question: "Nói 'Generics invariant' có nghĩa mọi quan hệ kế thừa giữa generic types biến mất không?"
+    answer: "Không. Invariance chỉ nói quan hệ subtype giữa type arguments không tự được nâng qua cùng một generic constructor: Dog <: Animal không kéo theo Container<Dog> <: Container<Animal>. Nếu chính declarations có inheritance, quan hệ đó vẫn tồn tại với cùng type argument, ví dụ ArrayContainer<String> vẫn là Container<String> khi ArrayContainer<T> implements Container<T>."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Wildcards/Wildcards.md", anchor: "unbounded-wildcard"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - question: "List<?> và List<Object> khác nhau về contract như thế nào, đặc biệt khi ghi dữ liệu?"
-    answer: "List<Object> có element type chính xác là Object, nên có thể thêm String, Integer hay object khác vì tất cả đều là subtype của Object. List<?> có một element type cụ thể nhưng caller không biết đó là gì; nó có thể thực sự là List<String> hoặc List<Integer>. Vì không biết type thật, caller chỉ đọc an toàn dưới dạng Object và không thể thêm một concrete value tùy ý."
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "4.Wildcards/Wildcards.md", anchor: "wildcard-vs-object"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - question: "Giải thích vì sao List<? extends Number> đọc ra Number an toàn nhưng không thể add Integer, dù Integer là Number."
-    answer: "? extends Number nghĩa là list có một element type cụ thể chưa biết nhưng type đó là Number hoặc subtype của Number. Vì mọi khả năng đều là Number, đọc ra Number an toàn. Nhưng list thật có thể là List<Double>; nếu cho add Integer thì contract của List<Double> bị phá. Hạn chế này đến từ việc unknown subtype phải được giữ nhất quán, không phải vì collection trở thành bất biến hay hoàn toàn read-only."
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "4.Wildcards/Wildcards.md", anchor: "extends-wildcard"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - question: "Giải thích vì sao List<? super Integer> cho phép add Integer nhưng khi đọc thường chỉ chắc chắn được Object."
-    answer: "? super Integer nghĩa là element type thật là Integer hoặc một supertype của Integer, chẳng hạn Number hay Object. Integer có thể được ghi an toàn vào mọi khả năng đó. Khi đọc, list thật có thể là List<Object> và có thể chứa các Object khác không phải Number, nên type duy nhất luôn an toàn cho caller là Object. Lower-bounded wildcard đổi độ chính xác khi đọc lấy khả năng ghi linh hoạt."
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "4.Wildcards/Wildcards.md", anchor: "super-wildcard"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - question: "Hãy dùng PECS để giải thích signature copy(List<? extends T> source, List<? super T> target). Vì sao hai phía đi ngược hướng?"
-    answer: "Source produce T cho method đọc nên ? extends T cho phép source là List<T> hoặc list của subtype T mà vẫn đọc mỗi phần tử dưới dạng T. Target consume T do method ghi vào nên ? super T cho phép target là List<T> hoặc list của supertype T, nơi mọi T đều có thể được thêm an toàn. API producerConsumer() minh họa List<Integer> làm producer và List<Number> làm consumer trong cùng một phép copy."
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "5.PECS/PECS.md", anchor: "pecs-rule"}
-    apiRelated: {controller: "WildcardController", methodSignature: "producerConsumer()"}
-
-  - question: "PECS có nên được áp dụng máy móc cho mọi generic parameter và return type không?"
-    answer: "Không. PECS hữu ích khi một boundary chủ yếu đọc T hoặc ghi T. Nếu parameter cần vừa đọc chính xác T vừa ghi T, exact type như List<T> thường rõ hơn. Nếu wildcard không mở rộng tập caller hợp lệ, nó chỉ làm signature khó đọc. Wildcard ở public return type cũng thường đẩy unknown type sang caller, nên chỉ nên dùng khi đó thực sự là contract cần biểu diễn."
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "5.PECS/PECS.md", anchor: "pecs-api-design"}
+    readmeRelated: {file: "4.InvarianceAndSubtyping/InvarianceAndSubtyping.md", anchor: "generic-declaration-subtyping"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: "Vì sao Dog là subtype của Animal nhưng List<Dog> không phải subtype của List<Animal>? Điều gì sẽ hỏng nếu Java cho phép phép gán đó?"
     answer: "List<Animal> có quyền nhận bất kỳ Animal nào. Nếu một List<Dog> được xem như List<Animal>, code có thể add một Cat hoặc Animal khác vào object vốn hứa chỉ chứa Dog, làm guarantee của List<Dog> sai. Vì vậy generic types như List là invariant theo type argument mặc định. API invariance() minh họa phép gán exact bị từ chối và cách dùng List<? extends Animal> làm read view an toàn."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.Invariance/Invariance.md", anchor: "generic-invariance"}
+    readmeRelated: {file: "4.InvarianceAndSubtyping/InvarianceAndSubtyping.md", anchor: "generic-invariance"}
     apiRelated: {controller: "VarianceController", methodSignature: "invariance()"}
-
-  - question: "Nói 'Generics invariant' có nghĩa mọi quan hệ kế thừa giữa generic types biến mất không?"
-    answer: "Không. Invariance chỉ nói quan hệ subtype giữa type arguments không tự được nâng qua cùng một generic constructor: Dog <: Animal không kéo theo Container<Dog> <: Container<Animal>. Nếu chính declarations có inheritance, quan hệ đó vẫn tồn tại với cùng type argument, ví dụ ArrayContainer<String> vẫn là Container<String> khi ArrayContainer<T> implements Container<T>."
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "6.Invariance/Invariance.md", anchor: "generic-declaration-subtyping"}
-    apiRelated: {controller: "", methodSignature: ""}
 
   - question: "So sánh array covariance với generic invariance. Vì sao arrays có thể compile rồi ném ArrayStoreException còn generics chặn sớm hơn?"
     answer: "Java arrays là covariant và reified: Integer[] có thể gán cho Number[], nhưng object array vẫn biết component type thật ở runtime nên JVM kiểm tra store và có thể ném ArrayStoreException khi ghi Double vào Integer[]. Generics chọn invariant compile-time checking cho các parameterized types như List<Integer>, vì type arguments phần lớn bị erase và mutable generic structures cần được bảo vệ trước khi runtime. Hai cơ chế đặt điểm kiểm tra an toàn ở thời điểm khác nhau."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.Invariance/Invariance.md", anchor: "variance-vs-arrays"}
+    readmeRelated: {file: "4.InvarianceAndSubtyping/InvarianceAndSubtyping.md", anchor: "variance-vs-arrays"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Raw type khác List<?> thế nào và vì sao Java vẫn giữ raw types?"
-    answer: "List<?> vẫn là parameterized type an toàn: có một element type cụ thể nhưng unknown đối với caller. Raw List bỏ type argument và làm compiler bỏ qua một phần generic checking. Java giữ raw types chủ yếu để tương thích với code và binary cũ từ trước khi Generics được thêm vào. Vì vậy raw type là compatibility escape hatch, không phải cách viết ngắn thay cho wildcard trong code mới."
+  - question: "List<?> và List<Object> khác nhau về contract như thế nào, đặc biệt khi ghi dữ liệu?"
+    answer: "List<Object> có element type chính xác là Object, nên có thể thêm String, Integer hay object khác vì tất cả đều là subtype của Object. List<?> có một element type cụ thể nhưng caller không biết đó là gì; nó có thể thực sự là List<String> hoặc List<Integer>. Vì không biết type thật, caller chỉ đọc an toàn dưới dạng Object và không thể thêm một concrete value tùy ý."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.RawTypes/RawTypes.md", anchor: "raw-type-compatibility"}
+    readmeRelated: {file: "5.WildcardsAndPECS/WildcardsAndPECS.md", anchor: "wildcard-vs-object"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Một unchecked warning đang nói gì về bằng chứng type safety, và vì sao suppress warning ngay lập tức là nguy hiểm?"
-    answer: "Unchecked warning nghĩa là compiler không thể chứng minh đầy đủ một generic operation là type-safe, thường vì raw type, unchecked cast hoặc non-reifiable boundary. Code có thể vẫn chạy đúng nếu developer biết một invariant mà compiler không biết, nhưng warning đánh dấu nơi guarantee đã yếu đi. Suppress quá sớm che mất trust boundary; nên trước hết xác định nguồn dữ liệu, validate hoặc convert nếu cần, rồi chỉ cô lập suppression ở phạm vi nhỏ có invariant rõ ràng."
+  - question: "Wildcard ? giải quyết bài toán gì khác với việc khai báo thêm một type parameter T?"
+    answer: "Wildcard phù hợp khi API chỉ cần nói 'đây là một generic value của kiểu nào đó' mà không cần đặt tên hoặc liên kết type identity đó với chỗ khác. Named type parameter hữu ích khi cùng một kiểu phải nối nhiều parameter, return type hoặc constraint. Ví dụ sizeOf(List<?>) chỉ cần thao tác độc lập với element type nên ? diễn đạt intent gọn hơn <T> int sizeOf(List<T>)."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.RawTypes/RawTypes.md", anchor: "unchecked-warning"}
+    readmeRelated: {file: "5.WildcardsAndPECS/WildcardsAndPECS.md", anchor: "wildcard-vs-type-parameter"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Nếu bắt buộc tích hợp một legacy API trả raw List, bạn sẽ thiết kế boundary thế nào để phần còn lại của ứng dụng vẫn typed?"
-    answer: "Giữ raw value trong một adapter/boundary nhỏ, kiểm tra hoặc chuyển đổi các element theo invariant thật của API, rồi chỉ trả parameterized type vào phần code bên trong. Nếu cần unchecked cast, đặt nó ở chính boundary đã validate và giải thích giả định bảo đảm cast. Mục tiêu là khoanh vùng nơi compiler không thể chứng minh safety, thay vì để raw type lan qua nhiều layer và làm mất generic guarantees toàn hệ thống."
+  - question: "Giải thích vì sao List<? extends Number> đọc ra Number an toàn nhưng không thể add Integer, dù Integer là Number."
+    answer: "? extends Number nghĩa là list có một element type cụ thể chưa biết nhưng type đó là Number hoặc subtype của Number. Vì mọi khả năng đều là Number, đọc ra Number an toàn. Nhưng list thật có thể là List<Double>; nếu cho add Integer thì contract của List<Double> bị phá. Hạn chế này đến từ việc unknown subtype phải được giữ nhất quán, không phải vì collection trở thành bất biến hay hoàn toàn read-only."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.RawTypes/RawTypes.md", anchor: "raw-type-boundary"}
+    readmeRelated: {file: "5.WildcardsAndPECS/WildcardsAndPECS.md", anchor: "extends-wildcard"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Heap pollution là gì và vì sao lỗi có thể xuất hiện rất xa dòng code gây ra pollution?"
-    answer: "Heap pollution xảy ra khi một variable của parameterized type cuối cùng tham chiếu tới dữ liệu không phù hợp với parameterized contract của nó. Raw type hoặc unchecked operation có thể ghi sai kiểu mà runtime chưa fail ngay; lỗi chỉ lộ ra sau đó khi typed code đọc giá trị và compiler-inserted cast thất bại. API heapPollution() cố ý ghi Integer qua raw List vào List<String>, rồi ClassCastException xuất hiện ở typed read để cho thấy khoảng cách giữa nguyên nhân và triệu chứng."
+  - question: "Giải thích vì sao List<? super Integer> cho phép add Integer nhưng khi đọc thường chỉ chắc chắn được Object."
+    answer: "? super Integer nghĩa là element type thật là Integer hoặc một supertype của Integer, chẳng hạn Number hay Object. Integer có thể được ghi an toàn vào mọi khả năng đó. Khi đọc, list thật có thể là List<Object> và có thể chứa các Object khác không phải Number, nên type duy nhất luôn an toàn cho caller là Object. Lower-bounded wildcard đổi độ chính xác khi đọc lấy khả năng ghi linh hoạt."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.RawTypes/RawTypes.md", anchor: "heap-pollution"}
-    apiRelated: {controller: "RawTypeController", methodSignature: "heapPollution()"}
+    readmeRelated: {file: "5.WildcardsAndPECS/WildcardsAndPECS.md", anchor: "super-wildcard"}
+    apiRelated: {controller: "", methodSignature: ""}
 
-  - question: "Mô tả type erasure từ source tới runtime. Vì sao List<String> và List<Integer> có thể có cùng runtime class mà compile-time safety vẫn tồn tại?"
-    answer: "Compiler dùng type arguments và bounds để kiểm tra source trước, sau đó erase type variables về bound phù hợp hoặc Object và chèn cast khi cần để giữ typed view cho caller. Vì parameterizations không tạo class runtime riêng, ArrayList<String> và ArrayList<Integer> có thể cùng là java.util.ArrayList ở runtime. Safety chủ yếu đã được áp dụng trước khi bytecode chạy; API inspectRuntimeTypes() cho thấy hai source parameterizations khác nhau nhưng getClass() giống nhau."
+  - question: "Hãy dùng PECS để giải thích signature copy(List<? extends T> source, List<? super T> target). Vì sao hai phía đi ngược hướng?"
+    answer: "Source produce T cho method đọc nên ? extends T cho phép source là List<T> hoặc list của subtype T mà vẫn đọc mỗi phần tử dưới dạng T. Target consume T do method ghi vào nên ? super T cho phép target là List<T> hoặc list của supertype T, nơi mọi T đều có thể được thêm an toàn. API producerConsumer() minh họa List<Integer> làm producer và List<Number> làm consumer trong cùng một phép copy."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.TypeErasure/TypeErasure.md", anchor: "erasure-model"}
-    apiRelated: {controller: "ErasureController", methodSignature: "inspectRuntimeTypes()"}
+    readmeRelated: {file: "5.WildcardsAndPECS/WildcardsAndPECS.md", anchor: "pecs-rule"}
+    apiRelated: {controller: "WildcardController", methodSignature: "producerConsumer()"}
 
-  - question: "Bridge method là gì, vì sao javac có thể phải sinh nó sau erasure, và nó liên quan gì tới polymorphism?"
-    answer: "Erasure có thể làm erased signature của generic supertype khác signature cụ thể mà subclass viết. Ví dụ Mapper<T>.map(T) erase gần thành map(Object), còn StringMapper implement map(String). javac có thể sinh một synthetic bridge map(Object) chuyển tiếp tới map(String), kèm cast, để lời gọi qua erased supertype contract vẫn dispatch đúng implementation. API bridgeMethod() dùng Reflection để quan sát method synthetic/bridge đó."
+  - question: "PECS có nên được áp dụng máy móc cho mọi generic parameter và return type không?"
+    answer: "Không. PECS hữu ích khi một boundary chủ yếu đọc T hoặc ghi T. Nếu parameter cần vừa đọc chính xác T vừa ghi T, exact type như List<T> thường rõ hơn. Nếu wildcard không mở rộng tập caller hợp lệ, nó chỉ làm signature khó đọc. Wildcard ở public return type cũng thường đẩy unknown type sang caller, nên chỉ nên dùng khi đó thực sự là contract cần biểu diễn."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.TypeErasure/TypeErasure.md", anchor: "bridge-method"}
-    apiRelated: {controller: "ErasureController", methodSignature: "bridgeMethod()"}
-
-  - question: "Reifiable và non-reifiable type khác nhau ở điểm nào, và vì sao distinction này quan trọng với runtime type checks?"
-    answer: "Reifiable type có runtime representation đủ cho operation cần kiểm tra kiểu, như String, raw List, List<?> hoặc String[]. Non-reifiable type như List<String> hay T không giữ đầy đủ concrete generic identity theo cách runtime có thể kiểm tra tùy ý. Vì vậy cast, array creation và instanceof có các giới hạn hoặc unchecked cases. Cần tránh rule máy móc rằng mọi parameterized instanceof đều cấm, vì Java 16+ cho phép một số checked cases dựa trên static type compatibility."
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "8.TypeErasure/TypeErasure.md", anchor: "non-reifiable-types"}
+    readmeRelated: {file: "5.WildcardsAndPECS/WildcardsAndPECS.md", anchor: "pecs-api-design"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: "Wildcard capture giải quyết vấn đề gì? Vì sao helper <T> có thể swap phần tử của List<?> trong khi code trực tiếp với ? thường không ghi lại được?"
     answer: "List<?> có một element type cụ thể nhưng chưa biết, và compiler phải giữ type đó nhất quán. Một helper như <T> void swapHelper(List<T>) cho phép compiler capture unknown type thành một type variable nội bộ T; sau đó giá trị đọc ra là T và có thể ghi lại đúng vào cùng List<T>. Capture không biến unknown thành Object và không làm runtime cast magic; nó chỉ giúp compiler đặt tên cho cùng một unknown type trong phạm vi helper."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Wildcards/Wildcards.md", anchor: "wildcard-capture"}
+    readmeRelated: {file: "5.WildcardsAndPECS/WildcardsAndPECS.md", anchor: "wildcard-capture"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Raw type khác List<?> thế nào và vì sao Java vẫn giữ raw types?"
+    answer: "List<?> vẫn là parameterized type an toàn: có một element type cụ thể nhưng bên gọi không biết chính xác đó là gì. Raw List bỏ type argument và làm suy yếu hoặc bỏ qua một phần generic checking ở những thao tác nhất định. Java giữ raw type chủ yếu để tương thích với code và binary có từ trước Generics. Vì vậy raw type là lối tương thích với mã cũ, không phải cách viết ngắn thay cho wildcard trong code mới."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.RawTypesAndLegacyBoundaries/RawTypesAndLegacyBoundaries.md", anchor: "raw-type-compatibility"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Một unchecked warning đang nói gì về bằng chứng type safety, và vì sao suppress warning ngay lập tức là nguy hiểm?"
+    answer: "Unchecked warning nghĩa là compiler không thể chứng minh đầy đủ một generic operation là type-safe, thường vì raw type, unchecked cast hoặc non-reifiable boundary. Code có thể vẫn chạy đúng nếu developer biết một invariant mà compiler không biết, nhưng warning đánh dấu nơi guarantee đã yếu đi. Suppress quá sớm che mất trust boundary; nên trước hết xác định nguồn dữ liệu, validate hoặc convert nếu cần, rồi chỉ cô lập suppression ở phạm vi nhỏ có invariant rõ ràng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.RawTypesAndLegacyBoundaries/RawTypesAndLegacyBoundaries.md", anchor: "unchecked-warning"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Heap pollution là gì và vì sao lỗi có thể xuất hiện rất xa dòng code gây ra pollution?"
+    answer: "Heap pollution xảy ra khi một variable của parameterized type cuối cùng tham chiếu tới dữ liệu không phù hợp với parameterized contract của nó. Raw type hoặc unchecked operation có thể ghi sai kiểu mà runtime chưa fail ngay; lỗi chỉ lộ ra sau đó khi typed code đọc giá trị và compiler-inserted cast thất bại. API heapPollution() cố ý ghi Integer qua raw List vào List<String>, rồi ClassCastException xuất hiện ở typed read để cho thấy khoảng cách giữa nguyên nhân và triệu chứng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.RawTypesAndLegacyBoundaries/RawTypesAndLegacyBoundaries.md", anchor: "heap-pollution"}
+    apiRelated: {controller: "RawTypeController", methodSignature: "heapPollution()"}
+
+  - question: "Nếu bắt buộc tích hợp một legacy API trả raw List, bạn sẽ thiết kế boundary thế nào để phần còn lại của ứng dụng vẫn typed?"
+    answer: "Giữ raw value trong một ranh giới tích hợp nhỏ, kiểm tra hoặc chuyển đổi phần tử theo invariant thật của API rồi chỉ trả parameterized type vào phần code có kiểu rõ ràng. Mặc định an toàn hơn là copy sang collection typed mới để không còn raw alias có thể ghi sai kiểu về sau. Nếu bắt buộc zero-copy bằng unchecked cast, phải document invariant mạnh hơn: dữ liệu hiện tại hợp lệ và không còn đường raw nào có thể phá contract sau validation."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.RawTypesAndLegacyBoundaries/RawTypesAndLegacyBoundaries.md", anchor: "raw-type-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Mô tả type erasure từ source tới runtime. Vì sao List<String> và List<Integer> có thể có cùng runtime class mà compile-time safety vẫn tồn tại?"
+    answer: "Compiler dùng type arguments và bounds để kiểm tra source trước. Type variable như T được erase về leftmost bound hoặc Object, còn parameterized type như List<String> được erase về raw type List; compiler chèn cast khi cần để giữ typed view cho caller. Vì parameterization không tạo class runtime riêng, ArrayList<String> và ArrayList<Integer> đều có thể là java.util.ArrayList ở runtime. API inspectRuntimeTypes() cho thấy hai source parameterization khác nhau nhưng getClass() giống nhau."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.TypeErasureAndRuntimeModel/TypeErasureAndRuntimeModel.md", anchor: "erasure-model"}
+    apiRelated: {controller: "ErasureController", methodSignature: "inspectRuntimeTypes()"}
+
+  - question: "Type erasure và generic signature metadata có mâu thuẫn nhau không? Vì sao Reflection đôi khi vẫn thấy List<String> dù runtime execution dùng List đã erase?"
+    answer: "Không mâu thuẫn. Erasure quyết định kiểu chủ yếu dùng cho thực thi bytecode, ví dụ List<String> erase về List. Đồng thời class file có thể giữ Signature metadata mô tả type parameter/type argument của declaration để compiler, Reflection và tooling đọc lại. Metadata đó không biến runtime object thành một List<String> reified và không có nghĩa JVM kiểm tra từng element là String."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.TypeErasureAndRuntimeModel/TypeErasureAndRuntimeModel.md", anchor: "generic-signature-metadata"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Bridge method là gì, vì sao javac có thể phải sinh nó sau erasure, và nó liên quan gì tới polymorphism?"
+    answer: "Erasure có thể làm erased signature của generic supertype khác signature cụ thể mà subclass viết. Ví dụ Mapper<T>.map(T) erase gần thành map(Object), còn StringMapper implement map(String). javac có thể sinh một synthetic bridge map(Object) chuyển tiếp tới map(String), kèm cast, để lời gọi qua erased supertype contract vẫn dispatch đúng implementation. API bridgeMethod() dùng Reflection để quan sát method synthetic/bridge đó."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.TypeErasureAndRuntimeModel/TypeErasureAndRuntimeModel.md", anchor: "bridge-method"}
+    apiRelated: {controller: "ErasureController", methodSignature: "bridgeMethod()"}
+
+  - question: "Reifiable và non-reifiable type khác nhau ở điểm nào, và vì sao distinction này quan trọng với runtime type checks?"
+    answer: "Reifiable type có runtime representation đủ cho thao tác cần runtime type check, như String, raw List, List<?> hoặc String[]. Non-reifiable type như List<String> hay T không giữ full concrete generic identity theo cách runtime có thể tùy ý xác minh. Điều này đặc biệt quan trọng với array creation và runtime type checks; với cast, target non-reifiable có thể dẫn tới unchecked cast vì JVM không xác minh được full generic target. Java 16+ vẫn cho phép một số parameterized instanceof khi static type có checked casting conversion phù hợp."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.TypeErasureAndRuntimeModel/TypeErasureAndRuntimeModel.md", anchor: "non-reifiable-types"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: "Vì sao không thể new T() trực tiếp trong generic code, và design nào nên dùng khi code thật sự cần tạo instance của T?"
-    answer: "T là compile-time type variable và sau erasure runtime không tự có một constructor target cụ thể chỉ từ T. Generic code vì vậy không thể giả định new T(). Thiết kế thường là nhận chiến lược tạo object từ caller, chẳng hạn Factory<T>, supplier-like abstraction hoặc khi phù hợp một explicit type token handled bởi Reflection ở module khác. Cách này làm quyền quyết định constructor nằm ở nơi thật sự biết concrete type."
+    answer: "T là compile-time type variable; bản thân khai báo <T> không hề yêu cầu mọi type argument phải có một constructor cụ thể, và sau erasure runtime cũng không tự có constructor target chỉ từ T. Vì vậy generic code không thể giả định new T(). Thiết kế thường là nhận chiến lược tạo object từ caller như Factory<T>/supplier-like abstraction, hoặc khi phù hợp nhận explicit type token cho Reflection. Quyết định constructor nằm ở nơi thật sự biết concrete type."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.Limitations/Limitations.md", anchor: "no-new-type-parameter"}
+    readmeRelated: {file: "8.GenericLimitationsAndApiDesign/GenericLimitationsAndApiDesign.md", anchor: "no-new-type-parameter"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: "Vì sao Java cấm new T[] và new List<String>[], trong khi String[] hoàn toàn hợp lệ?"
     answer: "Array là reified và covariant: runtime phải biết component type để kiểm tra mỗi phép store. T và List<String> là non-reifiable trong các ngữ cảnh này, nên JVM không có đủ concrete component information để thực hiện array store contract một cách đầy đủ. Vì vậy Java cấm tạo các generic array đó. List<?>[] hợp lệ vì List<?> là reifiable, nhưng collection thường vẫn là lựa chọn đơn giản hơn cho generic code."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.Limitations/Limitations.md", anchor: "generic-array-limit"}
+    readmeRelated: {file: "8.GenericLimitationsAndApiDesign/GenericLimitationsAndApiDesign.md", anchor: "generic-array-limit"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Nếu generic code cần biết class thật của T ở runtime, vì sao T.class hoặc instanceof T không dùng được và API nên thiết kế thế nào?"
+    answer: "T là type variable phục vụ compile-time checking và không tự đại diện cho một runtime Class object độc lập sau erasure, nên T.class và instanceof T không hợp lệ. Nếu operation thật sự cần runtime type information, caller phải truyền nó vào, thường qua Class<T> hoặc một type token phù hợp. Cách này làm requirement runtime trở thành một phần tường minh của API contract thay vì cố phục hồi T từ thông tin đã erase."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.GenericLimitationsAndApiDesign/GenericLimitationsAndApiDesign.md", anchor: "runtime-type-information-limit"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: "Tại sao static member của Box<T> không thể dùng trực tiếp class type parameter T, nhưng static <U> U identity(U value) lại hợp lệ?"
     answer: "Static member thuộc về class runtime duy nhất, không thuộc riêng Box<String> hay Box<Integer>. Nếu static field dùng T của class, không có một T duy nhất để chọn cho shared static state. Static generic method lại tự khai báo U cho từng invocation, nên U không phụ thuộc vào parameterization của Box. Cùng cơ chế erasure cũng giải thích vì sao hai overload chỉ khác List<String> và List<Integer> có thể name-clash sau erasure."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.Limitations/Limitations.md", anchor: "static-type-parameter-limit"}
+    readmeRelated: {file: "8.GenericLimitationsAndApiDesign/GenericLimitationsAndApiDesign.md", anchor: "static-type-parameter-limit"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Vì sao overload process(List<String>) và process(List<Integer>) gây name clash sau erasure? Điều này ảnh hưởng thiết kế API thế nào?"
+    answer: "Cả List<String> và List<Integer> đều erase về List, nên hai method cùng trở thành signature process(List) ở mức JVM và không thể cùng tồn tại. Khi thiết kế API, không nên dựa vào generic argument bị erase để phân biệt overload; hãy dùng tên method khác, parameter runtime khác thực sự phân biệt được, hoặc thiết kế abstraction khác thể hiện intent rõ hơn."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.GenericLimitationsAndApiDesign/GenericLimitationsAndApiDesign.md", anchor: "erasure-signature-clash"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: "Những giới hạn chính của Generics với Throwable là gì, và vì sao throws E vẫn có thể hợp lệ?"
     answer: "Java không cho một generic class trực tiếp extends Throwable như Problem<T> extends Exception, và không cho catch một type parameter vì catch matching cần runtime exception type cụ thể. Tuy nhiên type parameter có bound phù hợp có thể xuất hiện trong throws, ví dụ <E extends Exception> ... throws E, để compile-time contract truyền chính xác checked-exception type từ callback ra caller. Đây là type relationship ở compile time chứ không tạo generic exception class ở runtime."
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.Limitations/Limitations.md", anchor: "generic-exception-limit"}
+    readmeRelated: {file: "8.GenericLimitationsAndApiDesign/GenericLimitationsAndApiDesign.md", anchor: "generic-exception-limit"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: "Khi thiết kế một API generic, bạn quyết định lúc nào dùng named type parameter, bound, wildcard/PECS hay raw boundary như thế nào?"
+    answer: "Bắt đầu từ quan hệ kiểu cần biểu diễn. Dùng named <T> khi nhiều vị trí phải giữ cùng một type identity; thêm bound khi T phải cung cấp capability tối thiểu; dùng wildcard khi chỉ cần chấp nhận một family ở use site, với ? extends cho producer và ? super cho consumer; dùng exact List<T> khi cần vừa đọc vừa ghi cùng T. Raw type không phải công cụ thiết kế bình thường mà chỉ nên bị cô lập ở legacy boundary. Mục tiêu là cơ chế đơn giản nhất vẫn diễn đạt đúng relation và giữ type safety."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.GenericLimitationsAndApiDesign/GenericLimitationsAndApiDesign.md", anchor: "generic-api-design"}
     apiRelated: {controller: "", methodSignature: ""}

@@ -49,7 +49,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.GenericType/GenericType.md", anchor: "generic-type-purpose"}
+    readmeRelated: {file: "1.GenericsPurpose/GenericsPurpose.md", anchor: "generic-type-purpose"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: type-parameter-vs-argument
@@ -62,7 +62,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.GenericType/GenericType.md", anchor: "type-parameter"}
+    readmeRelated: {file: "1.GenericsPurpose/GenericsPurpose.md", anchor: "type-parameter"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: diamond-vs-raw
@@ -75,7 +75,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.GenericType/GenericType.md", anchor: "diamond-operator"}
+    readmeRelated: {file: "2.GenericTypesAndMethods/GenericTypesAndMethods.md", anchor: "diamond-operator"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: generic-method-syntax
@@ -88,7 +88,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.GenericMethod/GenericMethod.md", anchor: "generic-method-syntax"}
+    readmeRelated: {file: "2.GenericTypesAndMethods/GenericTypesAndMethods.md", anchor: "generic-method-syntax"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: generic-constructor-scope
@@ -101,7 +101,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.GenericMethod/GenericMethod.md", anchor: "generic-constructor"}
+    readmeRelated: {file: "2.GenericTypesAndMethods/GenericTypesAndMethods.md", anchor: "generic-constructor"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: method-type-inference
@@ -114,7 +114,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.GenericMethod/GenericMethod.md", anchor: "type-inference"}
+    readmeRelated: {file: "2.GenericTypesAndMethods/GenericTypesAndMethods.md", anchor: "type-inference"}
     apiRelated: {controller: "GenericMethodController", methodSignature: "inference()"}
 
   - id: method-vs-class-type-parameter
@@ -127,7 +127,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.GenericMethod/GenericMethod.md", anchor: "generic-method-vs-type"}
+    readmeRelated: {file: "2.GenericTypesAndMethods/GenericTypesAndMethods.md", anchor: "generic-method-vs-type"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: upper-bound-capability
@@ -140,7 +140,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.BoundedType/BoundedType.md", anchor: "upper-bounded-type"}
+    readmeRelated: {file: "3.BoundedTypeParameters/BoundedTypeParameters.md", anchor: "upper-bounded-type"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: multiple-bounds-order
@@ -153,7 +153,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.BoundedType/BoundedType.md", anchor: "multiple-bounds"}
+    readmeRelated: {file: "3.BoundedTypeParameters/BoundedTypeParameters.md", anchor: "multiple-bounds"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: recursive-bound-meaning
@@ -166,20 +166,46 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.BoundedType/BoundedType.md", anchor: "recursive-bound"}
+    readmeRelated: {file: "3.BoundedTypeParameters/BoundedTypeParameters.md", anchor: "recursive-bound"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - id: unbounded-wildcard-purpose
-    question: "When is List<?> usually a better fit than declaring <T> List<T>?"
+  - id: declaration-subtyping
+    question: "If ArrayContainer<T> implements Container<T>, which relationship is valid?"
     answers:
-      - {id: A, answer: "When the method does not need to relate the element type to another parameter or return value.", explanation: "Correct."}
-      - {id: B, answer: "When it wants to add any Object.", explanation: "Incorrect."}
-      - {id: C, answer: "When it wants to bypass generic checking.", explanation: "Incorrect. That describes raw types."}
-      - {id: D, answer: "Only when the list is empty.", explanation: "Incorrect."}
+      - {id: A, answer: "ArrayContainer<String> is a subtype of Container<String>.", explanation: "Correct. Declared inheritance still applies for the same type argument."}
+      - {id: B, answer: "Container<String> is a subtype of ArrayContainer<String>.", explanation: "Incorrect."}
+      - {id: C, answer: "ArrayContainer<Dog> automatically becomes Container<Animal>.", explanation: "Incorrect. Type-argument invariance still applies."}
+      - {id: D, answer: "A generic declaration cannot implement an interface.", explanation: "Incorrect."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Wildcards/Wildcards.md", anchor: "unbounded-wildcard"}
+    readmeRelated: {file: "4.InvarianceAndSubtyping/InvarianceAndSubtyping.md", anchor: "generic-declaration-subtyping"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: generic-invariance
+    question: "Why is List<Dog> not assignable to List<Animal>?"
+    answers:
+      - {id: A, answer: "Because Dog is not an Animal.", explanation: "Incorrect. Dog is still a subtype of Animal."}
+      - {id: B, answer: "Because code through List<Animal> could insert an Animal that is not a Dog into the original list.", explanation: "Correct."}
+      - {id: C, answer: "Because List does not support inheritance.", explanation: "Incorrect."}
+      - {id: D, answer: "Because the JVM does not support Object.", explanation: "Incorrect."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.InvarianceAndSubtyping/InvarianceAndSubtyping.md", anchor: "generic-invariance"}
+    apiRelated: {controller: "VarianceController", methodSignature: "invariance()"}
+
+  - id: arrays-vs-generics
+    question: "What is the core contrast between array covariance and generic invariance?"
+    answers:
+      - {id: A, answer: "Arrays allow subtype assignment but runtime store checks may throw ArrayStoreException; generics reject the unsafe relation earlier.", explanation: "Correct."}
+      - {id: B, answer: "Generics are covariant while arrays are invariant.", explanation: "Incorrect."}
+      - {id: C, answer: "Arrays do not know their component type at runtime.", explanation: "Incorrect. Arrays are reified."}
+      - {id: D, answer: "The two mechanisms are identical.", explanation: "Incorrect."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.InvarianceAndSubtyping/InvarianceAndSubtyping.md", anchor: "variance-vs-arrays"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: wildcard-vs-object
@@ -192,7 +218,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Wildcards/Wildcards.md", anchor: "wildcard-vs-object"}
+    readmeRelated: {file: "5.WildcardsAndPECS/WildcardsAndPECS.md", anchor: "wildcard-vs-object"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: wildcard-placement-rule
@@ -205,7 +231,20 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Wildcards/Wildcards.md", anchor: "wildcard-placement"}
+    readmeRelated: {file: "5.WildcardsAndPECS/WildcardsAndPECS.md", anchor: "wildcard-placement"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: unbounded-wildcard-purpose
+    question: "When is List<?> usually a better fit than declaring <T> List<T>?"
+    answers:
+      - {id: A, answer: "When the method does not need to relate the element type to another parameter or return value.", explanation: "Correct."}
+      - {id: B, answer: "When it wants to add any Object.", explanation: "Incorrect."}
+      - {id: C, answer: "When it wants to bypass generic checking.", explanation: "Incorrect. That describes raw types."}
+      - {id: D, answer: "Only when the list is empty.", explanation: "Incorrect."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.WildcardsAndPECS/WildcardsAndPECS.md", anchor: "wildcard-vs-type-parameter"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: extends-read-write
@@ -218,7 +257,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Wildcards/Wildcards.md", anchor: "extends-wildcard"}
+    readmeRelated: {file: "5.WildcardsAndPECS/WildcardsAndPECS.md", anchor: "extends-wildcard"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: super-read-write
@@ -231,20 +270,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Wildcards/Wildcards.md", anchor: "super-wildcard"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - id: wildcard-capture-helper
-    question: "What does a helper such as <T> void swapHelper(List<T>) provide for a List<?>?"
-    answers:
-      - {id: A, answer: "It permanently turns the unknown type into Object.", explanation: "Incorrect."}
-      - {id: B, answer: "It gives the compiler one consistent type variable representing the captured unknown type.", explanation: "Correct."}
-      - {id: C, answer: "It disables type checking.", explanation: "Incorrect."}
-      - {id: D, answer: "It creates a new runtime subclass.", explanation: "Incorrect."}
-    correctAnswerId: B
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "4.Wildcards/Wildcards.md", anchor: "wildcard-capture"}
+    readmeRelated: {file: "5.WildcardsAndPECS/WildcardsAndPECS.md", anchor: "super-wildcard"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: pecs-core-rule
@@ -257,7 +283,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.PECS/PECS.md", anchor: "pecs-rule"}
+    readmeRelated: {file: "5.WildcardsAndPECS/WildcardsAndPECS.md", anchor: "pecs-rule"}
     apiRelated: {controller: "WildcardController", methodSignature: "producerConsumer()"}
 
   - id: extends-not-readonly
@@ -270,7 +296,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.PECS/PECS.md", anchor: "read-from-producer"}
+    readmeRelated: {file: "5.WildcardsAndPECS/WildcardsAndPECS.md", anchor: "read-from-producer"}
     apiRelated: {controller: "WildcardController", methodSignature: "producerConsumer()"}
 
   - id: consumer-target
@@ -283,46 +309,20 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.PECS/PECS.md", anchor: "write-to-consumer"}
+    readmeRelated: {file: "5.WildcardsAndPECS/WildcardsAndPECS.md", anchor: "write-to-consumer"}
     apiRelated: {controller: "WildcardController", methodSignature: "producerConsumer()"}
 
-  - id: generic-invariance
-    question: "Why is List<Dog> not assignable to List<Animal>?"
+  - id: wildcard-capture-helper
+    question: "What does a helper such as <T> void swapHelper(List<T>) provide for a List<?>?"
     answers:
-      - {id: A, answer: "Because Dog is not an Animal.", explanation: "Incorrect. Dog is still a subtype of Animal."}
-      - {id: B, answer: "Because code through List<Animal> could insert an Animal that is not a Dog into the original list.", explanation: "Correct."}
-      - {id: C, answer: "Because List does not support inheritance.", explanation: "Incorrect."}
-      - {id: D, answer: "Because the JVM does not support Object.", explanation: "Incorrect."}
+      - {id: A, answer: "It permanently turns the unknown type into Object.", explanation: "Incorrect."}
+      - {id: B, answer: "It gives the compiler one consistent type variable representing the captured unknown type.", explanation: "Correct."}
+      - {id: C, answer: "It disables type checking.", explanation: "Incorrect."}
+      - {id: D, answer: "It creates a new runtime subclass.", explanation: "Incorrect."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.Invariance/Invariance.md", anchor: "generic-invariance"}
-    apiRelated: {controller: "VarianceController", methodSignature: "invariance()"}
-
-  - id: declaration-subtyping
-    question: "If ArrayContainer<T> implements Container<T>, which relationship is valid?"
-    answers:
-      - {id: A, answer: "ArrayContainer<String> is a subtype of Container<String>.", explanation: "Correct. Declared inheritance still applies for the same type argument."}
-      - {id: B, answer: "Container<String> is a subtype of ArrayContainer<String>.", explanation: "Incorrect."}
-      - {id: C, answer: "ArrayContainer<Dog> automatically becomes Container<Animal>.", explanation: "Incorrect. Type-argument invariance still applies."}
-      - {id: D, answer: "A generic declaration cannot implement an interface.", explanation: "Incorrect."}
-    correctAnswerId: A
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "6.Invariance/Invariance.md", anchor: "generic-declaration-subtyping"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - id: arrays-vs-generics
-    question: "What is the core contrast between array covariance and generic invariance?"
-    answers:
-      - {id: A, answer: "Arrays allow subtype assignment but runtime store checks may throw ArrayStoreException; generics reject the unsafe relation earlier.", explanation: "Correct."}
-      - {id: B, answer: "Generics are covariant while arrays are invariant.", explanation: "Incorrect."}
-      - {id: C, answer: "Arrays do not know their component type at runtime.", explanation: "Incorrect. Arrays are reified."}
-      - {id: D, answer: "The two mechanisms are identical.", explanation: "Incorrect."}
-    correctAnswerId: A
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "6.Invariance/Invariance.md", anchor: "variance-vs-arrays"}
+    readmeRelated: {file: "5.WildcardsAndPECS/WildcardsAndPECS.md", anchor: "wildcard-capture"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: raw-type-purpose
@@ -335,7 +335,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.RawTypes/RawTypes.md", anchor: "raw-type-compatibility"}
+    readmeRelated: {file: "6.RawTypesAndLegacyBoundaries/RawTypesAndLegacyBoundaries.md", anchor: "raw-type-compatibility"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: unchecked-warning-meaning
@@ -348,20 +348,20 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.RawTypes/RawTypes.md", anchor: "unchecked-warning"}
+    readmeRelated: {file: "6.RawTypesAndLegacyBoundaries/RawTypesAndLegacyBoundaries.md", anchor: "unchecked-warning"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: heap-pollution-failure
     question: "In the heap-pollution experiment, why can raw.add(123) succeed while a later typed read throws ClassCastException?"
     answers:
-      - {id: A, answer: "The raw reference bypasses generic checking; the later typed read needs the value to behave as String.", explanation: "Correct."}
+      - {id: A, answer: "The raw reference weakens generic checking at the add call; the later typed read still requires the String contract.", explanation: "Correct."}
       - {id: B, answer: "Array covariance causes the failure.", explanation: "Incorrect."}
       - {id: C, answer: "Integer automatically converts into String.", explanation: "Incorrect."}
       - {id: D, answer: "List<String> always safely stores any Object.", explanation: "Incorrect."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.RawTypes/RawTypes.md", anchor: "heap-pollution"}
+    readmeRelated: {file: "6.RawTypesAndLegacyBoundaries/RawTypesAndLegacyBoundaries.md", anchor: "heap-pollution"}
     apiRelated: {controller: "RawTypeController", methodSignature: "heapPollution()"}
 
   - id: erasure-runtime-class
@@ -374,8 +374,21 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.TypeErasure/TypeErasure.md", anchor: "erased-runtime-type"}
+    readmeRelated: {file: "7.TypeErasureAndRuntimeModel/TypeErasureAndRuntimeModel.md", anchor: "erased-runtime-type"}
     apiRelated: {controller: "ErasureController", methodSignature: "inspectRuntimeTypes()"}
+
+  - id: generic-signature-metadata
+    question: "If type erasure has occurred, why can Reflection still inspect a declaration such as a field of type List<String> in some cases?"
+    answers:
+      - {id: A, answer: "Because the JVM creates a separate runtime List<String> class.", explanation: "Incorrect. Parameterization does not create a separate runtime class."}
+      - {id: B, answer: "Because the class file can retain generic signature metadata even though executable behavior primarily uses erased types.", explanation: "Correct. Erased execution and retained generic metadata can coexist."}
+      - {id: C, answer: "Because every List object stores its full type argument for element checks.", explanation: "Incorrect. Runtime cannot arbitrarily verify concrete generic arguments that way."}
+      - {id: D, answer: "Because erasure applies only to primitives.", explanation: "Incorrect."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.TypeErasureAndRuntimeModel/TypeErasureAndRuntimeModel.md", anchor: "generic-signature-metadata"}
+    apiRelated: {controller: "", methodSignature: ""}
 
   - id: bridge-method-purpose
     question: "Why does the compiler generate a bridge method?"
@@ -387,7 +400,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.TypeErasure/TypeErasure.md", anchor: "bridge-method"}
+    readmeRelated: {file: "7.TypeErasureAndRuntimeModel/TypeErasureAndRuntimeModel.md", anchor: "bridge-method"}
     apiRelated: {controller: "ErasureController", methodSignature: "bridgeMethod()"}
 
   - id: reifiable-instanceof-java21
@@ -400,7 +413,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.TypeErasure/TypeErasure.md", anchor: "non-reifiable-types"}
+    readmeRelated: {file: "7.TypeErasureAndRuntimeModel/TypeErasureAndRuntimeModel.md", anchor: "non-reifiable-types"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: no-generic-primitives
@@ -413,7 +426,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.Limitations/Limitations.md", anchor: "no-generic-primitives"}
+    readmeRelated: {file: "8.GenericLimitationsAndApiDesign/GenericLimitationsAndApiDesign.md", anchor: "no-generic-primitives"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: no-new-t
@@ -426,7 +439,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.Limitations/Limitations.md", anchor: "no-new-type-parameter"}
+    readmeRelated: {file: "8.GenericLimitationsAndApiDesign/GenericLimitationsAndApiDesign.md", anchor: "no-new-type-parameter"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: generic-array-restriction
@@ -439,7 +452,20 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.Limitations/Limitations.md", anchor: "generic-array-limit"}
+    readmeRelated: {file: "8.GenericLimitationsAndApiDesign/GenericLimitationsAndApiDesign.md", anchor: "generic-array-limit"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: runtime-type-token
+    question: "A generic method genuinely needs the runtime class represented by T. Which design is usually appropriate?"
+    answers:
+      - {id: A, answer: "Use T.class directly.", explanation: "Incorrect. A type parameter cannot be used as a class literal."}
+      - {id: B, answer: "Receive Class<T> or another suitable type token from the caller.", explanation: "Correct. Runtime type information must be supplied when the API genuinely needs it."}
+      - {id: C, answer: "Use a raw type so the JVM reconstructs T.", explanation: "Incorrect. Raw types do not recover erased type information."}
+      - {id: D, answer: "Cast every T to String.", explanation: "Incorrect."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.GenericLimitationsAndApiDesign/GenericLimitationsAndApiDesign.md", anchor: "runtime-type-information-limit"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: static-class-type-parameter
@@ -452,9 +478,21 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.Limitations/Limitations.md", anchor: "static-type-parameter-limit"}
+    readmeRelated: {file: "8.GenericLimitationsAndApiDesign/GenericLimitationsAndApiDesign.md", anchor: "static-type-parameter-limit"}
     apiRelated: {controller: "", methodSignature: ""}
 
+  - id: erasure-signature-clash
+    question: "Why can a class not overload void process(List<String>) and void process(List<Integer>)?"
+    answers:
+      - {id: A, answer: "Because String and Integer cannot be generic type arguments.", explanation: "Incorrect."}
+      - {id: B, answer: "Because both methods erase to the same process(List) signature and therefore clash.", explanation: "Correct."}
+      - {id: C, answer: "Because overloading is forbidden for every method that mentions generics.", explanation: "Incorrect. Overloading is legal when erased signatures remain distinct."}
+      - {id: D, answer: "Because List is final.", explanation: "Incorrect."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.GenericLimitationsAndApiDesign/GenericLimitationsAndApiDesign.md", anchor: "erasure-signature-clash"}
+    apiRelated: {controller: "", methodSignature: ""}
   - id: generic-exception-rule
     question: "Which statement about generics and exceptions is correct?"
     answers:
@@ -465,5 +503,5 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.Limitations/Limitations.md", anchor: "generic-exception-limit"}
+    readmeRelated: {file: "8.GenericLimitationsAndApiDesign/GenericLimitationsAndApiDesign.md", anchor: "generic-exception-limit"}
     apiRelated: {controller: "", methodSignature: ""}

@@ -1,16 +1,16 @@
 GenericMethodController:
   inference():
-    summary: Quan sát type inference của generic method
-    description: Gọi cùng method <code>&lt;T&gt; T echo(T)</code> với String và Integer.
-      Response cho thấy mỗi call giữ đúng return type mà không cần caller viết type
-      argument.
+    summary: Quan sát suy luận kiểu của phương thức generic
+    description: Gọi cùng phương thức <code>&lt;T&gt; T echo(T)</code> với String và Integer.
+      Phản hồi cho thấy mỗi lời gọi giữ đúng kiểu trả về mà bên gọi không cần ghi
+      type argument tường minh.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 2.GenericMethod/GenericMethod.md
+      file: 2.GenericTypesAndMethods/GenericTypesAndMethods.md
       anchor: type-inference
     methodName: inference
     params: [
@@ -30,7 +30,7 @@ VarianceController:
   invariance():
     summary: Quan sát vì sao List<Dog> không phải List<Animal>
     description: Tạo List<Dog>, đọc an toàn qua List<? extends Animal>, đồng thời
-      trả evidence giải thích vì sao exact assignment sang List<Animal> bị compiler
+      trả bằng chứng giải thích vì sao phép gán trực tiếp sang List<Animal> bị compiler
       từ chối.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
@@ -38,7 +38,7 @@ VarianceController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 6.Invariance/Invariance.md
+      file: 4.InvarianceAndSubtyping/InvarianceAndSubtyping.md
       anchor: generic-invariance
     methodName: invariance
     params: [
@@ -57,16 +57,16 @@ VarianceController:
 WildcardController:
   producerConsumer():
     summary: Quan sát Producer Extends, Consumer Super
-    description: Copy Integer từ List<? extends T> sang List<? super T>. Response
-      expose role của source/target và các value được copy để nối PECS với read/write
-      direction.
+    description: Sao chép Integer từ List<? extends T> sang List<? super T>. Phản hồi
+      cho thấy vai trò của nguồn/đích và các giá trị được sao chép để nối PECS với
+      chiều đọc/ghi dữ liệu.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 5.PECS/PECS.md
+      file: 5.WildcardsAndPECS/WildcardsAndPECS.md
       anchor: pecs-rule
     methodName: producerConsumer
     params: [
@@ -85,16 +85,16 @@ WildcardController:
 RawTypeController:
   heapPollution():
     summary: Tạo heap pollution qua raw type có kiểm soát
-    description: Cho raw List trỏ vào List<String>, ghi Integer qua raw reference
-      rồi đọc lại qua typed reference để quan sát ClassCastException xuất hiện xa
-      điểm gây pollution.
+    description: Cho raw List trỏ vào List<String>, ghi Integer qua tham chiếu raw
+      rồi đọc lại qua tham chiếu có kiểu để quan sát ClassCastException xuất hiện xa
+      điểm gây heap pollution.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 7.RawTypes/RawTypes.md
+      file: 6.RawTypesAndLegacyBoundaries/RawTypesAndLegacyBoundaries.md
       anchor: heap-pollution
     methodName: heapPollution
     params: [
@@ -112,16 +112,16 @@ RawTypeController:
     usage: true
 ErasureController:
   inspectRuntimeTypes():
-    summary: So sánh runtime class của hai parameterized type
-    description: Tạo List<String> và List<Integer> rồi so sánh Class object. Response
-      chứng minh type argument khác nhau không tạo ArrayList runtime class riêng.
+    summary: So sánh class lúc chạy của hai parameterized type
+    description: Tạo List<String> và List<Integer> rồi so sánh đối tượng Class. Phản hồi
+      chứng minh type argument khác nhau không tạo class ArrayList riêng ở runtime.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 8.TypeErasure/TypeErasure.md
+      file: 7.TypeErasureAndRuntimeModel/TypeErasureAndRuntimeModel.md
       anchor: erased-runtime-type
     methodName: inspectRuntimeTypes
     params: [
@@ -139,16 +139,16 @@ ErasureController:
     usage: true
   bridgeMethod():
     summary: Quan sát synthetic bridge method sau erasure
-    description: Inspect declared methods của StringMapper implements Mapper<String>.
-      Response expose isBridge/isSynthetic để chứng minh compiler sinh method giữ
-      erased interface contract và polymorphism.
+    description: Kiểm tra các method được khai báo của StringMapper implements Mapper<String>.
+      Phản hồi hiển thị isBridge/isSynthetic để chứng minh compiler sinh method giữ
+      interface contract sau erasure và hành vi đa hình.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 8.TypeErasure/TypeErasure.md
+      file: 7.TypeErasureAndRuntimeModel/TypeErasureAndRuntimeModel.md
       anchor: bridge-method
     methodName: bridgeMethod
     params: [

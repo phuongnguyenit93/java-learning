@@ -1378,7 +1378,7 @@ bounded type parameter
 → restricts which type arguments are legal
 
 wildcard
-→ describes an unknown family of compatible generic types at a use site
+→ describes an unknown type argument at a use site so an API can accept a compatible family of parameterized types
 
 PECS
 → reasoning heuristic for producer/consumer variance
@@ -1393,65 +1393,60 @@ type erasure
 **Learning roadmap:**
 
 ```text
-Why not just store Object everywhere?
-Generic Type
+What are generics, why do they exist, and why not just store Object everywhere?
+What Generics Are and Why They Exist
         ↓
-How can one algorithm introduce its own type variable?
-Generic Method
+When should a type parameter belong to a class/interface versus one method/constructor?
+Generic Types and Generic Methods
         ↓
 How do we constrain the capabilities a type parameter must have?
-Bounded Type
-        ↓
-How can an API accept a family of generic types without knowing the exact type?
-Wildcards
-        ↓
-How do producer and consumer directions affect wildcard choice?
-PECS
+Bounded Type Parameters
         ↓
 Why is List<Dog> not a List<Animal>?
-Invariance
+Generic Invariance and Subtyping
         ↓
-What happens when old raw types bypass generic guarantees?
-Raw Types
+How can an API accept compatible generic families and choose extends/super from data direction?
+Wildcards, PECS, and Data Direction
         ↓
-Where did generic type information go at runtime?
-Type Erasure
+Why do raw types exist and where do generic guarantees become weaker?
+Raw Types and Legacy Boundaries
         ↓
-Which operations remain impossible or unsafe because of erasure/invariance?
-Generic Limitations
+How does Java erase types while retaining selected generic signature metadata?
+Type Erasure and Runtime Metadata
+        ↓
+How do generic restrictions and trade-offs shape practical API design?
+Generic Limitations and API Design
 ```
 
-**Learning depth contract:** this module is intentionally complete but should not imply equal mastery depth for every topic. A first pass should prioritize Generic Type, Generic Method, basic bounds, wildcards, PECS, invariance and practical raw-type safety. Recursive bounds, wildcard capture, heap pollution internals, bridge methods, reifiable/non-reifiable details and advanced restrictions are second-pass topics for compiler/runtime reasoning, framework/JDK reading and debugging. Difficulty metadata should preserve this distinction in the learning UI.
+**Learning depth contract:** this module is intentionally complete but should not imply equal mastery depth for every topic. A first pass should prioritize Generic Type, Generic Method, basic bounds, invariance, wildcards, PECS and practical raw-type safety. Recursive bounds, wildcard capture, heap pollution internals, bridge methods, reifiable/non-reifiable details and advanced restrictions are second-pass topics for compiler/runtime reasoning, framework/JDK reading and debugging. Difficulty metadata should preserve this distinction in the learning UI.
 
 **Running example / evidence strategy:** evolve `Box<T>` into a small repository/collection-style API and reuse a simple `Animal`/`Dog` hierarchy to demonstrate bounds, invariance, wildcards and PECS. Compile-time-invalid examples should be shown as code evidence rather than faked runtime endpoints.
 
 #### Layer 2 — Chapter story
 
 ```text
-GenericType    → How do we preserve type information while reusing one data structure/API?
-GenericMethod  → How can one method be generic even when its class is not?
-BoundedType    → How can generic code safely call capabilities that not every type has?
-Wildcards      → How do we describe "some unknown subtype/supertype" at an API boundary?
-PECS           → Why does reading and writing push wildcard bounds in different directions?
-Invariance     → Why would generic subtyping be unsafe if List<Dog> were assignable to List<Animal>?
-RawTypes       → How can legacy/raw usage escape compile-time safety and reintroduce runtime failure?
-TypeErasure    → How does Java implement generics while preserving older bytecode/runtime compatibility?
-Limitations    → Which restrictions follow from erasure, non-reifiable types and invariant mutation?
+GenericsPurpose                → What are generics, why do they exist, and what problem do they solve?
+GenericTypesAndMethods         → When does a type own a type parameter versus one method/constructor?
+BoundedTypeParameters          → How can generic code require capabilities without giving up reuse?
+InvarianceAndSubtyping         → Why does subtype relation between type arguments not automatically transfer through generic types?
+WildcardsAndPECS               → How can an API accept compatible type families and choose extends/super from data direction?
+RawTypesAndLegacyBoundaries    → Why do raw types exist and where do generic guarantees become weaker?
+TypeErasureAndRuntimeModel     → How does Java erase types while retaining selected generic signature metadata?
+GenericLimitationsAndApiDesign → How do language/runtime restrictions shape practical generic API design?
 ```
 
 #### Knowledge map
 
 | Existing chapter | Proposed anchored H2 sections |
 | --- | --- |
-| `1.GenericType/GenericType.md` | `#generic-type-purpose` — What generics are, why they exist and when to use them<br>`#type-parameter` — Type parameter/type argument mental model, including generic interfaces<br>`#diamond-operator` — Diamond operator and generic-class instantiation inference<br>`#generic-invariance-intro` — Generic invariance introduction<br>`#generic-api-design` — Designing generic APIs |
-| `2.GenericMethod/GenericMethod.md` | `#generic-method-syntax` — Generic method syntax<br>`#generic-constructor` — Constructors with their own type parameters<br>`#type-inference` — Generic method type inference<br>`#static-generic-method` — Static generic methods<br>`#generic-method-vs-type` — Method type parameter vs class type parameter |
-| `3.BoundedType/BoundedType.md` | `#upper-bounded-type` — Upper-bounded type parameter<br>`#multiple-bounds` — Multiple bounds<br>`#recursive-bound` — Recursive/self bounds<br>`#bound-api-capability` — Bounds expose safe capabilities |
-| `4.Wildcards/Wildcards.md` | `#unbounded-wildcard` — Unbounded wildcard<br>`#wildcard-vs-object` — `List<?>` vs `List<Object>` mental model<br>`#wildcard-placement` — Wildcard use-site placement and declaration/creation restrictions<br>`#extends-wildcard` — Upper-bounded wildcard<br>`#super-wildcard` — Lower-bounded wildcard<br>`#wildcard-capture` — Wildcard capture |
-| `5.PECS/PECS.md` | `#pecs-rule` — Producer extends, consumer super<br>`#read-from-producer` — Reading from extends<br>`#write-to-consumer` — Writing to super<br>`#pecs-api-design` — Applying PECS in method signatures |
-| `6.Invariance/Invariance.md` | `#generic-declaration-subtyping` — Declared generic inheritance still preserves subtyping for the same type argument<br>`#generic-invariance` — List<Integer> is not List<Number><br>`#variance-vs-arrays` — Generics invariance vs array covariance<br>`#variance-safety` — Why invariance preserves type safety |
-| `7.RawTypes/RawTypes.md` | `#raw-type-compatibility` — Raw types for legacy compatibility<br>`#unchecked-warning` — Unchecked warnings<br>`#heap-pollution` — Heap pollution<br>`#raw-type-boundary` — Contain raw-type boundaries |
-| `8.TypeErasure/TypeErasure.md` | `#erasure-model` — Type erasure mental model<br>`#erased-runtime-type` — Runtime type information after erasure<br>`#bridge-method` — Bridge methods<br>`#non-reifiable-types` — Reifiable vs non-reifiable types |
-| `9.Limitations/Limitations.md` | `#no-generic-primitives` — No primitive type arguments<br>`#no-new-type-parameter` — Cannot instantiate T directly<br>`#generic-array-limit` — Generic array restrictions<br>`#static-type-parameter-limit` — Static context and type parameters<br>`#generic-exception-limit` — Generic exception restrictions |
+| `1.GenericsPurpose/GenericsPurpose.md` | `#generic-type-purpose` — What generics are, why they exist and when to use them<br>`#type-parameter` — Type parameter/type argument mental model |
+| `2.GenericTypesAndMethods/GenericTypesAndMethods.md` | `#generic-type-declaration` — Declaring and consuming generic classes/interfaces<br>`#diamond-operator` — Diamond operator and generic-class instantiation inference<br>`#generic-method-syntax` — Generic method syntax<br>`#generic-constructor` — Constructors with their own type parameters<br>`#type-inference` — Generic method type inference<br>`#static-generic-method` — Static generic methods<br>`#generic-method-vs-type` — Method type parameter vs class type parameter |
+| `3.BoundedTypeParameters/BoundedTypeParameters.md` | `#upper-bounded-type` — Upper-bounded type parameter<br>`#multiple-bounds` — Multiple bounds<br>`#recursive-bound` — Recursive/self bounds<br>`#bound-api-capability` — Bounds expose safe capabilities |
+| `4.InvarianceAndSubtyping/InvarianceAndSubtyping.md` | `#generic-invariance-intro` — Beginner bridge from ordinary subtyping to generic invariance<br>`#generic-declaration-subtyping` — Declared generic inheritance still preserves subtyping for the same type argument<br>`#generic-invariance` — List<Integer> is not List<Number><br>`#variance-vs-arrays` — Generics invariance vs array covariance<br>`#variance-safety` — Why invariance preserves type safety |
+| `5.WildcardsAndPECS/WildcardsAndPECS.md` | `#unbounded-wildcard` — Unbounded wildcard<br>`#wildcard-vs-object` — `List<?>` vs `List<Object>` mental model<br>`#wildcard-placement` — Wildcard use-site placement and declaration/creation restrictions<br>`#wildcard-vs-type-parameter` — Wildcard vs named type parameter across API positions<br>`#extends-wildcard` — Upper-bounded wildcard<br>`#super-wildcard` — Lower-bounded wildcard<br>`#pecs-rule` — Producer extends, consumer super<br>`#read-from-producer` — Reading from extends<br>`#write-to-consumer` — Writing to super<br>`#pecs-api-design` — Applying PECS in method signatures<br>`#wildcard-capture` — Wildcard capture |
+| `6.RawTypesAndLegacyBoundaries/RawTypesAndLegacyBoundaries.md` | `#raw-type-compatibility` — Raw types for legacy compatibility<br>`#unchecked-warning` — Unchecked warnings<br>`#heap-pollution` — Heap pollution<br>`#raw-type-boundary` — Contain raw-type boundaries |
+| `7.TypeErasureAndRuntimeModel/TypeErasureAndRuntimeModel.md` | `#erasure-model` — Type erasure mental model<br>`#erased-runtime-type` — Runtime type information after erasure<br>`#generic-signature-metadata` — Generic signature metadata retained after erasure<br>`#bridge-method` — Bridge methods<br>`#non-reifiable-types` — Reifiable vs non-reifiable types |
+| `8.GenericLimitationsAndApiDesign/GenericLimitationsAndApiDesign.md` | `#no-generic-primitives` — No primitive type arguments<br>`#no-new-type-parameter` — Cannot instantiate T directly<br>`#generic-array-limit` — Generic array restrictions<br>`#runtime-type-information-limit` — Limits of runtime generic type information<br>`#static-type-parameter-limit` — Static context and type parameters<br>`#erasure-signature-clash` — Signature clashes after erasure<br>`#generic-exception-limit` — Generic exception restrictions<br>`#generic-api-design` — Synthesizing safe generic API design choices |
 
 #### Proposed API experiments
 

@@ -43,68 +43,86 @@
 
 roadmap:
   - id: generics-purpose
-    title: Type-Safe Reuse with Generics
-    purpose: Understand why parameterized types are safer and more expressive than storing Object and casting everywhere.
+    title: What Generics Are and Why They Exist
+    purpose: Understand generics as using types as parameters so one data structure, API, or algorithm can be reused across types while preserving compile-time type safety instead of falling back to Object casts or duplicated implementations.
+    relatedKnowledge:
+      - GenericsPurpose
     relatedModules:
+      - routeId: JAVA_OOP
+        label: Object-Oriented Programming (OOP)
+        note: Inheritance, subtyping, and substitutability provide the foundation for understanding bounds, invariance, and relationships between generic types.
+      - routeId: JAVA_ABSTRACT_INTERFACE
+        label: Abstract Class & Interface
+        note: Interfaces and type contracts provide the foundation for generic interfaces, interface bounds, and reusable generic type relationships.
       - routeId: JAVA_COLLECTION
         label: Collections
         note: The Collections Framework is one of the most important consumers of Java generics.
     objectives:
-      - Explain compile-time type safety and reusable algorithms through type parameters.
-      - Recognize where generics remove casts without changing runtime object identity.
+      - Distinguish type parameters from type arguments and read basic generic declarations and usages.
+      - Explain how generics catch type mismatches at compile time and reduce manual casts compared with Object-based code.
   - id: generic-types-and-methods
     title: Generic Types and Generic Methods
-    purpose: Understand where type parameters belong when the reusable relationship is owned by a type versus by one operation.
+    purpose: Understand when a type parameter belongs to a class or interface and when it belongs only to one method or constructor.
+    relatedKnowledge:
+      - GenericTypesAndMethods
     objectives:
       - Declare and consume generic classes/interfaces with meaningful type parameters.
-      - Use generic methods when the type relationship is local to one operation.
+      - Use generic methods/constructors and basic type inference when the type relationship is local to one operation.
   - id: bounded-type-parameters
-    title: Bounds and Required Capabilities
+    title: Bounded Type Parameters
     purpose: Understand bounded type parameters as a way to require capabilities while preserving generic reuse.
+    relatedKnowledge:
+      - BoundedTypeParameters
     objectives:
       - Use upper bounds to express operations available on a type parameter.
       - Recognize multiple and recursive bounds as advanced forms of the same capability model.
-  - id: wildcards-and-type-families
-    title: Wildcards and Type Families
-    purpose: Understand wildcards when an API must accept a family of parameterized types without naming one exact type argument.
-    objectives:
-      - Distinguish unbounded, upper-bounded, and lower-bounded wildcards.
-      - Use wildcard capture as a compiler model rather than a memorized trick.
-  - id: pecs-data-direction
-    title: PECS and Data Direction
-    purpose: Use producer/consumer data direction to choose wildcard variance intentionally.
-    objectives:
-      - Apply extends for producers and super for consumers from API intent.
-      - Recognize when no wildcard is needed because read/write symmetry matters.
   - id: invariance-and-subtyping
     title: Generic Invariance and Subtyping
-    purpose: Understand why List<Dog> is not a subtype of List<Animal> and how wildcard variance provides controlled flexibility.
+    purpose: Understand why Dog can be a subtype of Animal while List<Dog> is not a subtype of List<Animal>, establishing the safety problem that wildcards solve.
+    relatedKnowledge:
+      - InvarianceAndSubtyping
     objectives:
-      - Separate class inheritance from parameterized-type subtyping.
-      - Predict assignment compatibility across generic types.
+      - Separate ordinary type inheritance from compatibility between parameterized types.
+      - Recognize that invariance does not remove declared generic subtyping; for example, ArrayList<Dog> is still a List<Dog>.
+      - Compare invariant generics with covariant arrays and explain the type-safety reason for the difference.
+  - id: wildcards-and-type-families
+    title: Wildcards, PECS, and Data Direction
+    purpose: Understand wildcards as a way to represent an unknown type argument when an API must accept a compatible family of parameterized types, then use producer/consumer data direction to choose ? extends or ? super intentionally.
+    relatedKnowledge:
+      - WildcardsAndPECS
+    objectives:
+      - Distinguish unbounded, upper-bounded, and lower-bounded wildcards as well as List<?> from List<Object>.
+      - Apply extends for producers and super for consumers from API intent.
+      - Distinguish when a wildcard expresses use-site flexibility from when a named type parameter is needed to preserve a type relationship across multiple API positions.
   - id: raw-types-and-legacy-boundaries
     title: Raw Types and Legacy Boundaries
-    purpose: Understand how raw types bypass generic guarantees and why unchecked warnings indicate a real safety boundary.
+    purpose: Understand that raw types exist for compatibility with pre-generics Java code, but can bypass generic guarantees and produce unchecked warnings when the compiler can no longer verify type safety fully.
+    relatedKnowledge:
+      - RawTypesAndLegacyBoundaries
     objectives:
       - Contain raw-type interoperability instead of spreading unchecked operations.
       - Interpret compiler warnings as evidence of weakened type guarantees.
   - id: erasure-runtime-model
     title: Type Erasure and Runtime Metadata
     purpose: Understand how generic type arguments guide compilation while much executable runtime behavior uses erased types.
+    relatedKnowledge:
+      - TypeErasureAndRuntimeModel
     relatedModules:
       - routeId: JAVA_REFLECTION
         label: Reflection
         note: Reflection exposes the generic signature metadata that remains available after erasure.
     objectives:
-      - Explain bridge methods and erased signatures at a conceptual level.
+      - Explain conceptually how type parameters erase to their bound or Object and why the compiler may insert casts where needed.
       - Distinguish erased execution from retained generic signature metadata.
   - id: generic-limitations-and-synthesis
     title: Generic Limitations and API Design
-    purpose: Connect erasure, invariance, reifiability, heap pollution, and wildcard trade-offs into a practical generic API design model.
+    purpose: Synthesize the limitations and trade-offs of generics, including constraints involving erasure, runtime type information, static context, invariance, and wildcards, into a practical and type-safe API design model.
+    relatedKnowledge:
+      - GenericLimitationsAndApiDesign
     relatedModules:
       - routeId: JAVA_FUNCTIONAL_PROGRAMMING
         label: Functional Programming
         note: Standard functional interfaces use generics heavily to express input/output relationships.
     objectives:
-      - Recognize operations that remain impossible or unsafe because of erasure/invariance.
+      - Recognize important language restrictions and unsafe boundaries involving erasure, runtime type information, static context, and invariance.
       - Design generic APIs that are type-safe without overusing complex bounds.

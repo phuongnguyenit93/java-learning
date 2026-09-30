@@ -49,7 +49,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.GenericType/GenericType.md", anchor: "generic-type-purpose"}
+    readmeRelated: {file: "1.GenericsPurpose/GenericsPurpose.md", anchor: "generic-type-purpose"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: type-parameter-vs-argument
@@ -62,7 +62,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.GenericType/GenericType.md", anchor: "type-parameter"}
+    readmeRelated: {file: "1.GenericsPurpose/GenericsPurpose.md", anchor: "type-parameter"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: diamond-vs-raw
@@ -75,7 +75,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.GenericType/GenericType.md", anchor: "diamond-operator"}
+    readmeRelated: {file: "2.GenericTypesAndMethods/GenericTypesAndMethods.md", anchor: "diamond-operator"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: generic-method-syntax
@@ -88,7 +88,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.GenericMethod/GenericMethod.md", anchor: "generic-method-syntax"}
+    readmeRelated: {file: "2.GenericTypesAndMethods/GenericTypesAndMethods.md", anchor: "generic-method-syntax"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: generic-constructor-scope
@@ -101,7 +101,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.GenericMethod/GenericMethod.md", anchor: "generic-constructor"}
+    readmeRelated: {file: "2.GenericTypesAndMethods/GenericTypesAndMethods.md", anchor: "generic-constructor"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: method-type-inference
@@ -114,7 +114,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.GenericMethod/GenericMethod.md", anchor: "type-inference"}
+    readmeRelated: {file: "2.GenericTypesAndMethods/GenericTypesAndMethods.md", anchor: "type-inference"}
     apiRelated: {controller: "GenericMethodController", methodSignature: "inference()"}
 
   - id: method-vs-class-type-parameter
@@ -127,7 +127,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.GenericMethod/GenericMethod.md", anchor: "generic-method-vs-type"}
+    readmeRelated: {file: "2.GenericTypesAndMethods/GenericTypesAndMethods.md", anchor: "generic-method-vs-type"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: upper-bound-capability
@@ -140,7 +140,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.BoundedType/BoundedType.md", anchor: "upper-bounded-type"}
+    readmeRelated: {file: "3.BoundedTypeParameters/BoundedTypeParameters.md", anchor: "upper-bounded-type"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: multiple-bounds-order
@@ -153,7 +153,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.BoundedType/BoundedType.md", anchor: "multiple-bounds"}
+    readmeRelated: {file: "3.BoundedTypeParameters/BoundedTypeParameters.md", anchor: "multiple-bounds"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: recursive-bound-meaning
@@ -166,20 +166,46 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.BoundedType/BoundedType.md", anchor: "recursive-bound"}
+    readmeRelated: {file: "3.BoundedTypeParameters/BoundedTypeParameters.md", anchor: "recursive-bound"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - id: unbounded-wildcard-purpose
-    question: "Khi nào List<?> thường phù hợp hơn <T> List<T>?"
+  - id: declaration-subtyping
+    question: "Nếu ArrayContainer<T> implements Container<T>, quan hệ nào đúng?"
     answers:
-      - {id: A, answer: "Khi method không cần liên kết element type với parameter/return nào khác.", explanation: "Đúng."}
-      - {id: B, answer: "Khi muốn add bất kỳ Object nào.", explanation: "Sai."}
-      - {id: C, answer: "Khi muốn bỏ qua generic checking.", explanation: "Sai. Đó là raw type."}
-      - {id: D, answer: "Chỉ khi list rỗng.", explanation: "Sai."}
+      - {id: A, answer: "ArrayContainer<String> là subtype của Container<String>.", explanation: "Đúng. Declaration inheritance vẫn hoạt động với cùng type argument."}
+      - {id: B, answer: "Container<String> là subtype của ArrayContainer<String>.", explanation: "Sai."}
+      - {id: C, answer: "ArrayContainer<Dog> tự là Container<Animal>.", explanation: "Sai. Invariance vẫn áp dụng cho type argument."}
+      - {id: D, answer: "Generic declaration không thể implements interface.", explanation: "Sai."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Wildcards/Wildcards.md", anchor: "unbounded-wildcard"}
+    readmeRelated: {file: "4.InvarianceAndSubtyping/InvarianceAndSubtyping.md", anchor: "generic-declaration-subtyping"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: generic-invariance
+    question: "Vì sao List<Dog> không được gán cho List<Animal>?"
+    answers:
+      - {id: A, answer: "Vì Dog không phải Animal.", explanation: "Sai. Dog vẫn là subtype của Animal."}
+      - {id: B, answer: "Vì nếu được phép, code qua List<Animal> có thể chèn Animal không phải Dog vào list gốc.", explanation: "Đúng."}
+      - {id: C, answer: "Vì List không hỗ trợ inheritance.", explanation: "Sai."}
+      - {id: D, answer: "Vì JVM không hỗ trợ Object.", explanation: "Sai."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.InvarianceAndSubtyping/InvarianceAndSubtyping.md", anchor: "generic-invariance"}
+    apiRelated: {controller: "VarianceController", methodSignature: "invariance()"}
+
+  - id: arrays-vs-generics
+    question: "Điểm khác nhau cốt lõi giữa array covariance và generic invariance là gì?"
+    answers:
+      - {id: A, answer: "Array cho phép subtype assignment nhưng runtime store-check có thể ném ArrayStoreException; generics chặn quan hệ nguy hiểm sớm.", explanation: "Đúng."}
+      - {id: B, answer: "Generics covariant còn array invariant.", explanation: "Sai."}
+      - {id: C, answer: "Array không biết component type ở runtime.", explanation: "Sai. Array là reified."}
+      - {id: D, answer: "Hai cơ chế giống hoàn toàn.", explanation: "Sai."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.InvarianceAndSubtyping/InvarianceAndSubtyping.md", anchor: "variance-vs-arrays"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: wildcard-vs-object
@@ -192,7 +218,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Wildcards/Wildcards.md", anchor: "wildcard-vs-object"}
+    readmeRelated: {file: "5.WildcardsAndPECS/WildcardsAndPECS.md", anchor: "wildcard-vs-object"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: wildcard-placement-rule
@@ -205,7 +231,20 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Wildcards/Wildcards.md", anchor: "wildcard-placement"}
+    readmeRelated: {file: "5.WildcardsAndPECS/WildcardsAndPECS.md", anchor: "wildcard-placement"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: unbounded-wildcard-purpose
+    question: "Khi nào List<?> thường phù hợp hơn <T> List<T>?"
+    answers:
+      - {id: A, answer: "Khi method không cần liên kết element type với parameter/return nào khác.", explanation: "Đúng."}
+      - {id: B, answer: "Khi muốn add bất kỳ Object nào.", explanation: "Sai."}
+      - {id: C, answer: "Khi muốn bỏ qua generic checking.", explanation: "Sai. Đó là raw type."}
+      - {id: D, answer: "Chỉ khi list rỗng.", explanation: "Sai."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.WildcardsAndPECS/WildcardsAndPECS.md", anchor: "wildcard-vs-type-parameter"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: extends-read-write
@@ -218,7 +257,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Wildcards/Wildcards.md", anchor: "extends-wildcard"}
+    readmeRelated: {file: "5.WildcardsAndPECS/WildcardsAndPECS.md", anchor: "extends-wildcard"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: super-read-write
@@ -231,20 +270,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Wildcards/Wildcards.md", anchor: "super-wildcard"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - id: wildcard-capture-helper
-    question: "Wildcard capture helper như <T> void swapHelper(List<T>) giúp gì cho List<?>?"
-    answers:
-      - {id: A, answer: "Biến unknown type thành Object vĩnh viễn.", explanation: "Sai."}
-      - {id: B, answer: "Cho compiler một type variable nhất quán đại diện cho một unknown type cụ thể.", explanation: "Đúng."}
-      - {id: C, answer: "Tắt type checking.", explanation: "Sai."}
-      - {id: D, answer: "Tạo runtime subclass mới.", explanation: "Sai."}
-    correctAnswerId: B
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "4.Wildcards/Wildcards.md", anchor: "wildcard-capture"}
+    readmeRelated: {file: "5.WildcardsAndPECS/WildcardsAndPECS.md", anchor: "super-wildcard"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: pecs-core-rule
@@ -257,7 +283,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.PECS/PECS.md", anchor: "pecs-rule"}
+    readmeRelated: {file: "5.WildcardsAndPECS/WildcardsAndPECS.md", anchor: "pecs-rule"}
     apiRelated: {controller: "WildcardController", methodSignature: "producerConsumer()"}
 
   - id: extends-not-readonly
@@ -270,7 +296,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.PECS/PECS.md", anchor: "read-from-producer"}
+    readmeRelated: {file: "5.WildcardsAndPECS/WildcardsAndPECS.md", anchor: "read-from-producer"}
     apiRelated: {controller: "WildcardController", methodSignature: "producerConsumer()"}
 
   - id: consumer-target
@@ -283,46 +309,20 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.PECS/PECS.md", anchor: "write-to-consumer"}
+    readmeRelated: {file: "5.WildcardsAndPECS/WildcardsAndPECS.md", anchor: "write-to-consumer"}
     apiRelated: {controller: "WildcardController", methodSignature: "producerConsumer()"}
 
-  - id: generic-invariance
-    question: "Vì sao List<Dog> không được gán cho List<Animal>?"
+  - id: wildcard-capture-helper
+    question: "Wildcard capture helper như <T> void swapHelper(List<T>) giúp gì cho List<?>?"
     answers:
-      - {id: A, answer: "Vì Dog không phải Animal.", explanation: "Sai. Dog vẫn là subtype của Animal."}
-      - {id: B, answer: "Vì nếu được phép, code qua List<Animal> có thể chèn Animal không phải Dog vào list gốc.", explanation: "Đúng."}
-      - {id: C, answer: "Vì List không hỗ trợ inheritance.", explanation: "Sai."}
-      - {id: D, answer: "Vì JVM không hỗ trợ Object.", explanation: "Sai."}
+      - {id: A, answer: "Biến unknown type thành Object vĩnh viễn.", explanation: "Sai."}
+      - {id: B, answer: "Cho compiler một type variable nhất quán đại diện cho một unknown type cụ thể.", explanation: "Đúng."}
+      - {id: C, answer: "Tắt type checking.", explanation: "Sai."}
+      - {id: D, answer: "Tạo runtime subclass mới.", explanation: "Sai."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.Invariance/Invariance.md", anchor: "generic-invariance"}
-    apiRelated: {controller: "VarianceController", methodSignature: "invariance()"}
-
-  - id: declaration-subtyping
-    question: "Nếu ArrayContainer<T> implements Container<T>, quan hệ nào đúng?"
-    answers:
-      - {id: A, answer: "ArrayContainer<String> là subtype của Container<String>.", explanation: "Đúng. Declaration inheritance vẫn hoạt động với cùng type argument."}
-      - {id: B, answer: "Container<String> là subtype của ArrayContainer<String>.", explanation: "Sai."}
-      - {id: C, answer: "ArrayContainer<Dog> tự là Container<Animal>.", explanation: "Sai. Invariance vẫn áp dụng cho type argument."}
-      - {id: D, answer: "Generic declaration không thể implements interface.", explanation: "Sai."}
-    correctAnswerId: A
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "6.Invariance/Invariance.md", anchor: "generic-declaration-subtyping"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - id: arrays-vs-generics
-    question: "Điểm khác nhau cốt lõi giữa array covariance và generic invariance là gì?"
-    answers:
-      - {id: A, answer: "Array cho phép subtype assignment nhưng runtime store-check có thể ném ArrayStoreException; generics chặn quan hệ nguy hiểm sớm.", explanation: "Đúng."}
-      - {id: B, answer: "Generics covariant còn array invariant.", explanation: "Sai."}
-      - {id: C, answer: "Array không biết component type ở runtime.", explanation: "Sai. Array là reified."}
-      - {id: D, answer: "Hai cơ chế giống hoàn toàn.", explanation: "Sai."}
-    correctAnswerId: A
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "6.Invariance/Invariance.md", anchor: "variance-vs-arrays"}
+    readmeRelated: {file: "5.WildcardsAndPECS/WildcardsAndPECS.md", anchor: "wildcard-capture"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: raw-type-purpose
@@ -335,7 +335,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.RawTypes/RawTypes.md", anchor: "raw-type-compatibility"}
+    readmeRelated: {file: "6.RawTypesAndLegacyBoundaries/RawTypesAndLegacyBoundaries.md", anchor: "raw-type-compatibility"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: unchecked-warning-meaning
@@ -348,20 +348,20 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.RawTypes/RawTypes.md", anchor: "unchecked-warning"}
+    readmeRelated: {file: "6.RawTypesAndLegacyBoundaries/RawTypesAndLegacyBoundaries.md", anchor: "unchecked-warning"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: heap-pollution-failure
     question: "Trong heap-pollution experiment, vì sao raw.add(123) có thể qua nhưng typed read sau đó ném ClassCastException?"
     answers:
-      - {id: A, answer: "Raw reference đã xuyên qua generic checking; typed read sau đó cần cast về String.", explanation: "Đúng."}
+      - {id: A, answer: "Raw reference làm suy yếu generic checking ở lời gọi add; typed read sau đó vẫn cần thỏa contract String.", explanation: "Đúng."}
       - {id: B, answer: "Array covariance gây lỗi.", explanation: "Sai."}
       - {id: C, answer: "Integer tự đổi thành String.", explanation: "Sai."}
       - {id: D, answer: "List<String> thực ra luôn chứa Object an toàn.", explanation: "Sai."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.RawTypes/RawTypes.md", anchor: "heap-pollution"}
+    readmeRelated: {file: "6.RawTypesAndLegacyBoundaries/RawTypesAndLegacyBoundaries.md", anchor: "heap-pollution"}
     apiRelated: {controller: "RawTypeController", methodSignature: "heapPollution()"}
 
   - id: erasure-runtime-class
@@ -374,8 +374,21 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.TypeErasure/TypeErasure.md", anchor: "erased-runtime-type"}
+    readmeRelated: {file: "7.TypeErasureAndRuntimeModel/TypeErasureAndRuntimeModel.md", anchor: "erased-runtime-type"}
     apiRelated: {controller: "ErasureController", methodSignature: "inspectRuntimeTypes()"}
+
+  - id: generic-signature-metadata
+    question: "Type erasure đã xảy ra, vậy vì sao Reflection vẫn có thể đọc declaration như field List<String> trong một số trường hợp?"
+    answers:
+      - {id: A, answer: "Vì JVM tạo một runtime class List<String> riêng.", explanation: "Sai. Parameterization không tạo runtime class riêng."}
+      - {id: B, answer: "Vì class file có thể giữ generic signature metadata dù phần thực thi chủ yếu dùng kiểu đã erase.", explanation: "Đúng. Erased execution và retained generic metadata có thể cùng tồn tại."}
+      - {id: C, answer: "Vì mọi object List đều giữ đầy đủ type argument để JVM kiểm tra element.", explanation: "Sai. Runtime không thể tùy ý xác minh concrete generic argument như vậy."}
+      - {id: D, answer: "Vì type erasure chỉ áp dụng cho primitive.", explanation: "Sai."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.TypeErasureAndRuntimeModel/TypeErasureAndRuntimeModel.md", anchor: "generic-signature-metadata"}
+    apiRelated: {controller: "", methodSignature: ""}
 
   - id: bridge-method-purpose
     question: "Compiler sinh bridge method chủ yếu để làm gì?"
@@ -387,7 +400,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.TypeErasure/TypeErasure.md", anchor: "bridge-method"}
+    readmeRelated: {file: "7.TypeErasureAndRuntimeModel/TypeErasureAndRuntimeModel.md", anchor: "bridge-method"}
     apiRelated: {controller: "ErasureController", methodSignature: "bridgeMethod()"}
 
   - id: reifiable-instanceof-java21
@@ -400,7 +413,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.TypeErasure/TypeErasure.md", anchor: "non-reifiable-types"}
+    readmeRelated: {file: "7.TypeErasureAndRuntimeModel/TypeErasureAndRuntimeModel.md", anchor: "non-reifiable-types"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: no-generic-primitives
@@ -413,7 +426,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.Limitations/Limitations.md", anchor: "no-generic-primitives"}
+    readmeRelated: {file: "8.GenericLimitationsAndApiDesign/GenericLimitationsAndApiDesign.md", anchor: "no-generic-primitives"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: no-new-t
@@ -426,7 +439,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.Limitations/Limitations.md", anchor: "no-new-type-parameter"}
+    readmeRelated: {file: "8.GenericLimitationsAndApiDesign/GenericLimitationsAndApiDesign.md", anchor: "no-new-type-parameter"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: generic-array-restriction
@@ -439,7 +452,20 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.Limitations/Limitations.md", anchor: "generic-array-limit"}
+    readmeRelated: {file: "8.GenericLimitationsAndApiDesign/GenericLimitationsAndApiDesign.md", anchor: "generic-array-limit"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: runtime-type-token
+    question: "Một generic method thực sự cần biết class của T ở runtime. Thiết kế nào phù hợp nhất?"
+    answers:
+      - {id: A, answer: "Dùng T.class trực tiếp.", explanation: "Sai. Type parameter không thể dùng làm class literal."}
+      - {id: B, answer: "Nhận Class<T> hoặc một type token phù hợp từ caller.", explanation: "Đúng. Runtime type information phải được truyền vào khi API thực sự cần nó."}
+      - {id: C, answer: "Dùng raw type để JVM tự phục hồi T.", explanation: "Sai. Raw type còn làm yếu generic checking."}
+      - {id: D, answer: "Ép mọi T thành String.", explanation: "Sai."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.GenericLimitationsAndApiDesign/GenericLimitationsAndApiDesign.md", anchor: "runtime-type-information-limit"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: static-class-type-parameter
@@ -452,9 +478,21 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.Limitations/Limitations.md", anchor: "static-type-parameter-limit"}
+    readmeRelated: {file: "8.GenericLimitationsAndApiDesign/GenericLimitationsAndApiDesign.md", anchor: "static-type-parameter-limit"}
     apiRelated: {controller: "", methodSignature: ""}
 
+  - id: erasure-signature-clash
+    question: "Vì sao không thể overload void process(List<String>) và void process(List<Integer>) trong cùng class?"
+    answers:
+      - {id: A, answer: "Vì String và Integer không thể dùng trong Generics.", explanation: "Sai."}
+      - {id: B, answer: "Vì sau erasure cả hai có cùng signature process(List), gây name clash.", explanation: "Đúng."}
+      - {id: C, answer: "Vì method overloading bị cấm với mọi generic method.", explanation: "Sai. Overloading vẫn hợp lệ nếu erased signatures khác nhau."}
+      - {id: D, answer: "Vì List là final class.", explanation: "Sai."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.GenericLimitationsAndApiDesign/GenericLimitationsAndApiDesign.md", anchor: "erasure-signature-clash"}
+    apiRelated: {controller: "", methodSignature: ""}
   - id: generic-exception-rule
     question: "Phát biểu nào đúng về generic exceptions?"
     answers:
@@ -465,5 +503,5 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.Limitations/Limitations.md", anchor: "generic-exception-limit"}
+    readmeRelated: {file: "8.GenericLimitationsAndApiDesign/GenericLimitationsAndApiDesign.md", anchor: "generic-exception-limit"}
     apiRelated: {controller: "", methodSignature: ""}
