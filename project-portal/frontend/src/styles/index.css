@@ -1009,8 +1009,22 @@ pre {
 }
 
 .sidebar-knowledge-results__more {
+  width: 100%;
   border-top: 1px solid var(--border);
+  border-right: 0;
+  border-bottom: 0;
+  border-left: 0;
+  background: transparent;
   text-align: center;
+  cursor: pointer;
+  transition: background 130ms ease, color 130ms ease;
+}
+
+.sidebar-knowledge-results__more:hover,
+.sidebar-knowledge-results__more:focus-visible {
+  background: var(--surface-hover);
+  color: var(--text-soft);
+  outline: none;
 }
 
 .learning-sidebar__section-title {

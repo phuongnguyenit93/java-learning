@@ -60,6 +60,7 @@ interface ModuleSearchMetadata {
 }
 
 const MODULE_PICKER_OPEN_EVENT = 'java-learning:module-picker-open';
+const KNOWLEDGE_RESULTS_PAGE_SIZE = 12;
 
 function nodeMatchesSelf(node: ModuleCatalogNode, filter: string): boolean {
   if (!filter) {
@@ -829,6 +830,7 @@ export function ModuleSidebar({
   const [knowledgeSearchIndex, setKnowledgeSearchIndex] = useState<KnowledgeSearchIndex | null>(null);
   const [knowledgeSearchLoading, setKnowledgeSearchLoading] = useState(false);
   const [knowledgeSearchError, setKnowledgeSearchError] = useState<string | null>(null);
+  const [visibleKnowledgeResultLimit, setVisibleKnowledgeResultLimit] = useState(KNOWLEDGE_RESULTS_PAGE_SIZE);
   const [expandRequest, setExpandRequest] = useState<SidebarExpandRequest>({ version: 0, expanded: true });
   const filter = useMemo(() => filterInput.trim().toLowerCase(), [filterInput]);
   const knowledgeQuery = knowledgeSearchInput.trim();
@@ -891,7 +893,14 @@ export function ModuleSidebar({
     () => new Set(knowledgeResults.map(({ document }) => document.moduleId)),
     [knowledgeResults],
   );
-  const visibleKnowledgeResults = useMemo(() => knowledgeResults.slice(0, 12), [knowledgeResults]);
+  const visibleKnowledgeResults = useMemo(
+    () => knowledgeResults.slice(0, visibleKnowledgeResultLimit),
+    [knowledgeResults, visibleKnowledgeResultLimit],
+  );
+
+  useEffect(() => {
+    setVisibleKnowledgeResultLimit(KNOWLEDGE_RESULTS_PAGE_SIZE);
+  }, [knowledgeQuery, language]);
   const moduleCount = useMemo(
     () => nodes.reduce((count, node) => count + collectRealModules(node).length, 0),
     [nodes],
@@ -1099,11 +1108,17 @@ export function ModuleSidebar({
           )}
 
           {!knowledgeSearchLoading && !knowledgeSearchError && knowledgeResults.length > visibleKnowledgeResults.length && (
-            <div className="sidebar-knowledge-results__more">
+            <button
+              type="button"
+              className="sidebar-knowledge-results__more"
+              onClick={() => setVisibleKnowledgeResultLimit((current) => (
+                Math.min(current + KNOWLEDGE_RESULTS_PAGE_SIZE, knowledgeResults.length)
+              ))}
+            >
               {language === 'vi'
                 ? `Còn ${knowledgeResults.length - visibleKnowledgeResults.length} kết quả khác`
                 : `${knowledgeResults.length - visibleKnowledgeResults.length} more results`}
-            </div>
+            </button>
           )}
         </div>
       )}
