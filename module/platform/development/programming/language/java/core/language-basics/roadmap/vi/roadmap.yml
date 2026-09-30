@@ -182,7 +182,7 @@ roadmap:
       - Giải thích được Java luôn truyền bằng giá trị (`pass-by-value`) và phân biệt thay đổi trạng thái đối tượng với gán lại biến tham chiếu.
 
   - id: packages-imports-and-name-organization
-    title: `package`, `import` và cách Java tổ chức tên
+    title: "`package`, `import` và cách Java tổ chức tên"
     purpose: Hiểu Java gom các kiểu vào không gian tên bằng `package`, hỗ trợ sử dụng tên bằng `import` và tạo ranh giới truy cập trong cùng package như thế nào khi chương trình bắt đầu có nhiều tệp mã nguồn.
     relatedKnowledge:
       - PackagesImports
