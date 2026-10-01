@@ -44,81 +44,118 @@
 roadmap:
   - id: functional-programming-purpose
     title: Lập trình hàm trong Java là gì và vì sao cần?
-    purpose: Hiểu Java hỗ trợ lập trình hàm bằng cách cho phép tham số hóa hành vi thông qua giao diện hàm, nhờ đó mã có thể nhận, trả về và tái sử dụng hành vi thay vì gắn cứng mọi biến thể xử lý hoặc phải dùng lớp vô danh dài dòng.
+    purpose: Hiểu vì sao Java cần cách truyền và tái sử dụng hành vi thay vì gắn cứng từng biến thể xử lý hoặc phải dùng lớp vô danh dài dòng, từ đó thấy vai trò của giao diện hàm như hợp đồng kiểu cho cách viết này.
+    relatedKnowledge:
+      - FunctionalProgrammingPurpose
     relatedModules:
       - routeId: FUNCTIONAL_PROGRAMMING
         label: Mô hình lập trình hàm
-        note: Các khái niệm không phụ thuộc ngôn ngữ như hàm thuần túy, tính bất biến, tính trong suốt tham chiếu và các đánh đổi ở cấp mô hình lập trình thuộc module Mô hình lập trình hàm.
+        note: Các khái niệm không phụ thuộc ngôn ngữ như hàm thuần túy, tính bất biến, tính trong suốt tham chiếu và các đánh đổi ở cấp mô hình lập trình thuộc mô-đun Mô hình lập trình hàm.
     objectives:
       - Giải thích vấn đề được giải quyết khi truyền hành vi như một tham số thay vì nhúng mọi quyết định trực tiếp vào luồng điều khiển.
       - Nhận biết phong cách hàm là một cách lập trình bổ sung trong Java, không thay thế lập trình hướng đối tượng hoặc lập trình mệnh lệnh.
   - id: functional-interface-contracts
-    title: Giao diện hàm và hợp đồng SAM
-    purpose: Hiểu giao diện hàm (functional interface) là interface có đúng một phương thức trừu tượng, tạo ra kiểu Java cụ thể để lambda và tham chiếu phương thức có thể được gán, truyền và trả về.
+    title: Giao diện hàm và quy tắc một phương thức trừu tượng (SAM)
+    purpose: Hiểu giao diện hàm (functional interface) là giao diện có một hợp đồng phương thức trừu tượng duy nhất theo quy tắc của Java, tạo ra kiểu đích cụ thể để lambda và tham chiếu phương thức có thể được gán, truyền và trả về.
+    relatedKnowledge:
+      - FunctionalInterfaceContracts
     relatedModules:
       - routeId: JAVA_ABSTRACT_INTERFACE
-        label: Lớp trừu tượng & Interface
-        note: Giao diện hàm dựa trực tiếp trên quy ước của interface trong Java, bao gồm phương thức trừu tượng, default và static.
+        label: Lớp trừu tượng & Giao diện
+        note: Giao diện hàm dựa trực tiếp trên quy ước của giao diện trong Java, bao gồm phương thức trừu tượng và các phương thức dùng từ khóa default hoặc static.
+      - routeId: JAVA_8_FUNCTIONAL_INTERFACES
+        label: Giao diện hàm (Java 8)
+        note: Mô-đun Java 8 cung cấp bối cảnh theo phiên bản về việc giao diện hàm trở thành kiểu đích cho lambda và về @FunctionalInterface; mô-đun Java Core này sở hữu các cơ chế ổn định được dùng trong Java hiện tại.
     objectives:
-      - Giải thích quy tắc SAM (Single Abstract Method) và mục đích của @FunctionalInterface.
+      - Giải thích hợp đồng SAM (Single Abstract Method) và hiểu @FunctionalInterface giúp trình biên dịch kiểm tra hợp đồng nhưng không bắt buộc để một giao diện trở thành giao diện hàm.
       - Phân biệt phương thức trừu tượng duy nhất của hợp đồng hàm với các phương thức default/static không làm phát sinh thêm hành vi trừu tượng.
+      - Nhận biết Java xác định hợp đồng một phương thức trừu tượng theo quy tắc của giao diện hàm chứ không chỉ đếm số phương thức abstract được khai báo, trong đó còn xét các phương thức tương ứng với Object và các phương thức abstract kế thừa tương đương nhau.
   - id: lambdas-and-target-typing
     title: Biểu thức lambda và kiểu đích
-    purpose: Hiểu lambda là một biểu thức có kiểu tham số và kiểu trả về được xác định từ giao diện hàm làm kiểu đích, dùng để mô tả hành vi sẽ được thực thi sau thay vì thực thi ngay khi khai báo.
+    purpose: Hiểu lambda là biểu thức cần một giao diện hàm làm kiểu đích; dạng tham số và kết quả phải tương thích với kiểu hàm của kiểu đích đó, còn kiểu tham số thường có thể được suy ra từ ngữ cảnh. Lambda mô tả hành vi thay vì thực thi hành vi ngay khi được khai báo.
+    relatedKnowledge:
+      - LambdaAndTargetTyping
+    relatedModules:
+      - routeId: JAVA_8_LAMBDA_EXPRESSIONS
+        label: Biểu thức lambda (Java 8)
+        note: Mô-đun Java 8 trình bày bối cảnh theo phiên bản khi lambda được giới thiệu; mô-đun Java Core này tập trung vào cơ chế ngôn ngữ và cách sử dụng ổn định của lambda.
     objectives:
       - Đọc được lambda dạng biểu thức và dạng khối, đồng thời đối chiếu chúng với chữ ký tương thích của giao diện hàm.
       - Giải thích cơ chế xác định kiểu từ ngữ cảnh (target typing), tính tương thích của tham số/giá trị trả về và vì sao cùng một lambda có thể mang kiểu khác nhau trong ngữ cảnh khác nhau.
   - id: capture-scope-and-state
     title: Bắt giữ biến, phạm vi và trạng thái
-    purpose: Hiểu lambda có thể truy cập những trạng thái nào xung quanh nó, vì sao biến cục bộ được bắt giữ phải là final hoặc effectively final, và vì sao việc bắt giữ một tham chiếu khác với việc thay đổi chính đối tượng mà tham chiếu đó trỏ tới.
+    purpose: Hiểu lambda có thể truy cập những trạng thái nào xung quanh nó, vì sao biến cục bộ được bắt giữ phải là final hoặc không bị gán lại sau khi khởi tạo (effectively final), và vì sao việc bắt giữ một tham chiếu khác với việc thay đổi chính đối tượng mà tham chiếu đó trỏ tới.
+    relatedKnowledge:
+      - CaptureScopeAndState
     objectives:
       - Phân biệt bắt giữ biến cục bộ với truy cập trạng thái của đối tượng hoặc thành viên static và hiểu ý nghĩa của this bên trong lambda.
-      - Nhận biết ràng buộc effectively final chỉ áp dụng cho biến tham chiếu, không khiến đối tượng được tham chiếu trở thành bất biến.
+      - Nhận biết ràng buộc effectively final áp dụng cho chính biến cục bộ được bắt giữ; với biến tham chiếu, ràng buộc này không khiến đối tượng được tham chiếu trở thành bất biến.
   - id: standard-functional-interfaces
     title: Các giao diện hàm chuẩn
-    purpose: Hiểu các nhóm interface chính trong java.util.function như những hợp đồng tái sử dụng cho điều kiện, biến đổi dữ liệu, nhận dữ liệu, cung cấp dữ liệu, toán tử và các biến thể nhiều tham số hoặc chuyên biệt cho kiểu nguyên thủy.
+    purpose: Hiểu các nhóm giao diện chính trong java.util.function như những hợp đồng tái sử dụng cho điều kiện, biến đổi dữ liệu, nhận dữ liệu, cung cấp dữ liệu, toán tử và các biến thể nhiều tham số hoặc chuyên biệt cho kiểu nguyên thủy.
+    relatedKnowledge:
+      - StandardFunctionalInterfaces
     relatedModules:
       - routeId: JAVA_GENERICS
         label: Generics
         note: Quan hệ kiểu generic giữa đầu vào và đầu ra giúp các giao diện trong java.util.function tái sử dụng được mà vẫn giữ thông tin kiểu.
     objectives:
-      - Chọn Predicate, Function, Consumer, Supplier, UnaryOperator, BinaryOperator và các biến thể Bi dựa trên hợp đồng hành vi cần biểu diễn.
+      - Chọn Predicate, Function, Consumer, Supplier, UnaryOperator, BinaryOperator và các nhóm BiFunction/BiConsumer/BiPredicate dựa trên hợp đồng hành vi cần biểu diễn.
       - Nhận biết các biến thể chuyên biệt cho kiểu nguyên thủy chủ yếu giúp tránh chi phí đóng hộp/mở hộp (boxing/unboxing), không tạo ra một mô hình hàm khác.
+      - Ưu tiên giao diện hàm chuẩn khi hợp đồng của nó diễn đạt rõ hành vi cần có, và tự định nghĩa giao diện hàm theo miền nghiệp vụ khi ý nghĩa hoặc hợp đồng cần được thể hiện rõ hơn.
   - id: method-references
     title: Tham chiếu phương thức và hàm tạo
-    purpose: Hiểu tham chiếu phương thức hoặc hàm tạo là cách viết ngắn gọn để tái sử dụng hành vi đã có khi chữ ký của giao diện hàm đích có thể cung cấp đúng đối tượng nhận, tham số và giá trị trả về cần thiết.
+    purpose: Hiểu tham chiếu phương thức hoặc hàm tạo là cách viết ngắn gọn để tái sử dụng hành vi đã có khi Java có thể thích nghi thành viên được tham chiếu với kiểu hàm đích, bao gồm cách ánh xạ đối tượng nhận, đối số và xử lý kết quả tương thích.
+    relatedKnowledge:
+      - MethodReferences
+    relatedModules:
+      - routeId: JAVA_8_METHOD_REFERENCES
+        label: Tham chiếu phương thức (Java 8)
+        note: Mô-đun Java 8 cung cấp bối cảnh theo phiên bản khi tham chiếu phương thức được giới thiệu; mô-đun Java Core này sở hữu mô hình kiểu và cách sử dụng ổn định của chúng.
     objectives:
       - Phân biệt tham chiếu tới phương thức static, phương thức của một đối tượng cụ thể, phương thức của một đối tượng chưa xác định và hàm tạo.
       - Chỉ dùng tham chiếu phương thức khi nó giúp mã dễ đọc hơn lambda tương đương.
   - id: behavior-composition-and-higher-order-use
     title: Truyền, trả về và kết hợp hành vi
     purpose: Hiểu API Java có thể nhận hoặc trả về giá trị mang kiểu giao diện hàm, sau đó kết hợp các hành vi nhỏ bằng những cơ chế như compose, andThen hoặc kết hợp Predicate.
+    relatedKnowledge:
+      - BehaviorCompositionAndHigherOrderUse
     objectives:
       - Truyền và trả về hành vi thông qua giao diện hàm mà vẫn giữ rõ hợp đồng kiểu của đầu vào và đầu ra.
       - Kết hợp các hành vi có thể tái sử dụng mà vẫn giữ rõ thứ tự thực thi và các tác dụng phụ.
   - id: optional-and-absence
     title: Optional và biểu diễn sự vắng mặt
     purpose: Hiểu Optional là kiểu dùng để biểu diễn rõ khả năng không có giá trị tại một số ranh giới API và hỗ trợ chuỗi biến đổi có xét tới sự vắng mặt, không phải cách thay thế null ở mọi nơi.
+    relatedKnowledge:
+      - OptionalAndAbsence
+    relatedModules:
+      - routeId: JAVA_8_OPTIONAL
+        label: Optional (Java 8)
+        note: Mô-đun Java 8 cung cấp bối cảnh theo phiên bản khi Optional được giới thiệu; mô-đun Java Core này sở hữu cách sử dụng ổn định và ranh giới kết hợp Optional trong phong cách hàm.
     objectives:
-      - Dùng map, flatMap, filter, ifPresent, orElse và các dạng giá trị thay thế chỉ được tính khi cần, phù hợp với trường hợp có hoặc không có giá trị.
+      - Dùng map, flatMap, filter và ifPresent cho luồng xử lý có xét tới sự vắng mặt, đồng thời chủ động phân biệt giá trị thay thế được tính ngay với dạng chỉ tính khi cần qua orElse và orElseGet/or.
       - Nhận biết các cách dùng không phù hợp như thay mọi trường/tham số bằng Optional hoặc liên tục bọc rồi tháo Optional không cần thiết.
   - id: stream-api-boundary
     title: Ranh giới với Stream API
-    purpose: Hiểu Stream API sử dụng lambda và giao diện hàm để nhận hành vi xử lý dữ liệu, nhưng các quy tắc riêng của chuỗi xử lý Stream như tính lười, phép rút gọn (reduction), Collector, thứ tự và xử lý song song thuộc module Stream API chuyên biệt.
+    purpose: Hiểu Stream API sử dụng lambda và giao diện hàm để nhận hành vi xử lý dữ liệu, nhưng các quy tắc riêng của chuỗi xử lý Stream như tính lười, phép rút gọn (reduction), Collector, thứ tự và xử lý song song thuộc mô-đun Stream API chuyên biệt.
+    relatedKnowledge:
+      - StreamApiBoundary
     relatedModules:
       - routeId: JAVA_STREAM_API
         label: Stream API (Java 8)
-        note: Cách tạo Stream, thao tác trung gian/kết thúc, phép rút gọn, Collector, tính lười, thứ tự và cơ chế Stream song song thuộc module Stream API.
+        note: Cách tạo Stream, thao tác trung gian/kết thúc, phép rút gọn, Collector, tính lười, thứ tự và cơ chế Stream song song thuộc mô-đun Stream API.
     objectives:
-      - Nhận biết một thao tác Stream nhận hành vi thông qua các hợp đồng giao diện hàm đã học trong module này.
-      - Biết khi nào cần chuyển sang module Stream API thay vì xem Stream là một phần của cú pháp lambda.
+      - Nhận biết một thao tác Stream nhận hành vi thông qua các hợp đồng giao diện hàm đã học trong mô-đun này.
+      - Biết khi nào cần chuyển sang mô-đun Stream API thay vì xem Stream là một phần của cú pháp lambda.
   - id: tradeoffs-failures-and-synthesis
     title: Tác dụng phụ, ngoại lệ, đánh đổi và cách lựa chọn
-    purpose: Tổng hợp các cơ chế lập trình hàm của Java thành cách lựa chọn thực tế, đặc biệt khi thay đổi trạng thái, checked exception, gỡ lỗi, công việc bị che giấu hoặc chuỗi xử lý quá dài khiến mã theo phong cách hàm khó hiểu hơn cách viết mệnh lệnh hay hướng đối tượng.
+    purpose: Tổng hợp các cơ chế lập trình hàm của Java thành cách lựa chọn thực tế, đặc biệt khi thay đổi trạng thái, ngoại lệ được kiểm tra (checked exception), gỡ lỗi, công việc bị che giấu hoặc chuỗi xử lý quá dài khiến mã theo phong cách hàm khó hiểu hơn cách viết mệnh lệnh hay hướng đối tượng.
+    relatedKnowledge:
+      - TradeoffsFailuresAndSynthesis
     relatedModules:
       - routeId: JAVA_EXCEPTION
         label: Ngoại lệ (Exception)
-        note: Ngữ nghĩa checked/unchecked exception và nền tảng thiết kế ngoại lệ vẫn thuộc module Exception.
+        note: Ngữ nghĩa của ngoại lệ được kiểm tra/không được kiểm tra (checked/unchecked exception) và nền tảng thiết kế ngoại lệ vẫn thuộc mô-đun Exception.
     objectives:
-      - Giữ tác dụng phụ và phần chuyển đổi checked exception rõ ràng thay vì che chúng trong chuỗi lambda ngắn gọn nhưng khó theo dõi.
+      - Giải thích vì sao lambda hoặc tham chiếu phương thức không thể truyền tiếp một ngoại lệ được kiểm tra nếu kiểu hàm đích không cho phép ngoại lệ đó, đồng thời giữ rõ cách bọc, chuyển đổi hoặc dùng giao diện hàm riêng khi cần thích nghi.
       - Chọn phong cách hàm khi việc tham số hóa và kết hợp hành vi làm mã rõ hơn, đồng thời chọn cách viết mệnh lệnh hoặc hướng đối tượng khi luồng có trạng thái hay nhu cầu gỡ lỗi sẽ dễ hiểu hơn.

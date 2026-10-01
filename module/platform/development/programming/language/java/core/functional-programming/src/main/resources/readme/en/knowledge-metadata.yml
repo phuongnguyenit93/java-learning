@@ -1,1 +1,362 @@
-{}
+1.FunctionalProgrammingPurpose/FunctionalProgrammingPurpose.md:
+  functional-programming-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  hard-coded-behavior-problem:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  behavior-before-lambdas:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  behavior-parameterization:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  functional-interface-bridge:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  functional-multi-paradigm-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  functional-style-use-cases:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  functional-programming-module-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+2.FunctionalInterfaceContracts/FunctionalInterfaceContracts.md:
+  functional-interface-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  sam-contract:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  functional-interface-function-type:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  sam-object-method-rule:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  sam-inherited-method-rule:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  functional-interface-annotation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  non-abstract-interface-methods:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  custom-functional-interface:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  functional-interface-contract-violations:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+3.LambdaAndTargetTyping/LambdaAndTargetTyping.md:
+  lambda-expression-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  lambda-syntax-forms:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  target-typing:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  lambda-parameter-typing:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  lambda-body-result-compatibility:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  lambda-target-contexts:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  lambda-execution-timing:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  lambda-overload-ambiguity:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+4.CaptureScopeAndState/CaptureScopeAndState.md:
+  lambda-lexical-scope:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  captured-local-variables:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  captured-local-values:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  effectively-final:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  instance-static-state-access:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  lambda-this:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  lambda-vs-anonymous-class-scope:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  captured-reference-mutation:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+5.StandardFunctionalInterfaces/StandardFunctionalInterfaces.md:
+  java-util-function-overview:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  function-contract:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  predicate-contract:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  consumer-contract:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  supplier-contract:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  operator-contracts:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  bi-functional-interfaces:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  primitive-specializations:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  generic-input-output-flow:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  functional-interfaces-outside-java-util-function:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  standard-vs-custom-functional-interface:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+6.MethodReferences/MethodReferences.md:
+  method-reference-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  static-method-reference:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  bound-instance-method-reference:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  unbound-instance-method-reference:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  constructor-reference:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  method-reference-target-adaptation:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  method-reference-result-adaptation:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  overloaded-method-reference:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  method-reference-vs-lambda:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+7.BehaviorCompositionAndHigherOrderUse/BehaviorCompositionAndHigherOrderUse.md:
+  higher-order-methods:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  passing-behavior:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  returning-behavior:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  returned-behavior-capture:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  function-composition:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  predicate-composition:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  consumer-composition:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  composition-order:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  composition-side-effects:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+8.OptionalAndAbsence/OptionalAndAbsence.md:
+  optional-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  optional-creation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  optional-null-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  optional-presence:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  optional-transform-filter:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  optional-consumption:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  optional-fallback-and-failure:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  optional-api-design:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  optional-misuse:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+9.StreamApiBoundary/StreamApiBoundary.md:
+  stream-functional-interface-bridge:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  stream-behavior-contracts:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  stream-lambda-method-reference:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  collection-vs-stream-boundary:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  stream-mechanics-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  stream-learning-handoff:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+10.TradeoffsFailuresAndSynthesis/TradeoffsFailuresAndSynthesis.md:
+  side-effects-in-lambdas:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  hidden-mutation-state:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  checked-exception-constraint:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  checked-exception-adaptation:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  debugging-composed-behavior:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  readability-vs-chaining:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  functional-vs-imperative-choice:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  functional-vs-oop-choice:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  purity-immutability-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  common-functional-pitfalls:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  functional-programming-synthesis:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false

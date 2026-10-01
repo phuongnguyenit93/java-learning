@@ -1,0 +1,690 @@
+# <quiz-schema>
+# Cấu trúc câu hỏi Quiz
+# schema-version: 3
+#
+# questions [kiểu: list; bắt buộc; mặc định: []; duy nhất theo: id]
+#   Danh sách câu hỏi Quiz của module trong language hiện tại.
+#   mỗi phần tử:
+#     id [kiểu: string; bắt buộc; mặc định: ""]
+#       ID ổn định và duy nhất của câu hỏi.
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi hiển thị cho người học.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu câu hỏi được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu câu hỏi đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+#     answers [kiểu: list; bắt buộc; số phần tử: 4; mặc định: []; duy nhất theo: id]
+#       Chính xác bốn đáp án. ID A/B/C/D là identity nội bộ ổn định, không phải vị trí hiển thị sau khi frontend shuffle.
+#       mỗi phần tử:
+#         id [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#           Identity ổn định của đáp án.
+#         answer [kiểu: string; bắt buộc; mặc định: ""]
+#           Nội dung đáp án hiển thị cho người học.
+#         explanation [kiểu: string; bắt buộc; mặc định: ""]
+#           Giải thích hiển thị khi người học chọn đáp án này, bất kể đúng hay sai.
+#     correctAnswerId [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
+# </quiz-schema>
+
+questions:
+  - id: fp-q01
+    question: "Ý tưởng cốt lõi, đặc thù của Java về lập trình hàm trong mô-đun này là gì?"
+    answers:
+      - {id: A, answer: "Biểu diễn hành vi bằng các giá trị có kiểu là giao diện hàm (functional interface), để có thể truyền đi và gọi thực thi.", explanation: "Đúng. Java mô hình hóa hành vi thông qua hợp đồng của giao diện hàm; lambda hoặc tham chiếu phương thức cung cấp phần triển khai cho hợp đồng đó."}
+      - {id: B, answer: "Thay mọi đối tượng bằng một giá trị hàm độc lập không có kiểu Java.", explanation: "Sai. Java vẫn là ngôn ngữ định kiểu chặt; hành vi theo phong cách hàm được biểu diễn thông qua các kiểu giao diện."}
+      - {id: C, answer: "Biến mọi phương thức thành static để trạng thái biến mất.", explanation: "Sai. Phong cách hàm không bắt buộc phương thức phải là static và cũng không tự loại bỏ trạng thái."}
+      - {id: D, answer: "Biến mọi vòng lặp thành một chuỗi xử lý Stream.", explanation: "Sai. Cơ chế của Stream là một chủ đề riêng, còn lập trình hàm trong Java rộng hơn Stream."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.FunctionalProgrammingPurpose/FunctionalProgrammingPurpose.md", anchor: "functional-programming-purpose"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q02
+    question: "Vì sao tham số hóa hành vi hữu ích khi thuật toán ổn định nhưng có một quy tắc thay đổi?"
+    answers:
+      - {id: A, answer: "Nó đảm bảo quy tắc thay đổi luôn thuần khiết (pure).", explanation: "Sai. Giao diện hàm của Java không ép buộc tính thuần khiết."}
+      - {id: B, answer: "Thuật toán ổn định có thể giữ nguyên, còn bên gọi cung cấp hành vi thay đổi.", explanation: "Đúng. Thuật toán quyết định hành vi chạy ở đâu và khi nào; bên gọi quyết định sẽ truyền hành vi nào."}
+      - {id: C, answer: "Nó loại bỏ việc kiểm tra kiểu ở thời điểm biên dịch đối với quy tắc thay đổi.", explanation: "Sai. Kiểu giao diện hàm cung cấp kiểm tra kiểu ở thời điểm biên dịch."}
+      - {id: D, answer: "Nó yêu cầu tạo một lớp con cho mỗi quy tắc.", explanation: "Sai. Truyền hành vi thường được dùng để tránh tạo lớp con chỉ vì một phần hành vi thay đổi."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.FunctionalProgrammingPurpose/FunctionalProgrammingPurpose.md", anchor: "behavior-parameterization"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q03
+    question: "Mô tả nào chính xác nhất về mối quan hệ giữa lớp ẩn danh (anonymous class) và lambda?"
+    answers:
+      - {id: A, answer: "Lớp ẩn danh không thể biểu diễn hành vi thông qua giao diện.", explanation: "Sai. Từ lâu lớp ẩn danh đã có thể triển khai hành vi của giao diện."}
+      - {id: B, answer: "Lambda luôn tạo ra phạm vi biến và ngữ nghĩa this giống hệt lớp ẩn danh.", explanation: "Sai. Lambda dùng phạm vi từ vựng (lexical scope) và có ngữ nghĩa this khác lớp ẩn danh."}
+      - {id: C, answer: "Lambda cung cấp cú pháp ngắn gọn cho hành vi tương thích với giao diện hàm, vốn trong nhiều trường hợp cũng có thể viết bằng lớp ẩn danh.", explanation: "Đúng. Lambda giảm phần cú pháp rườm rà nhưng vẫn phụ thuộc vào một kiểu giao diện hàm đích."}
+      - {id: D, answer: "Lambda là cách thay thế đối tượng ẩn danh mà không cần kiểu.", explanation: "Sai. Lambda cần một kiểu đích tương thích."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.FunctionalProgrammingPurpose/FunctionalProgrammingPurpose.md", anchor: "behavior-before-lambdas"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q04
+    question: "Phong cách hàm nên kết hợp với Java hướng đối tượng và Java mệnh lệnh như thế nào?"
+    answers:
+      - {id: A, answer: "Một lớp đã dùng một lambda thì nên ngừng dùng thiết kế hướng đối tượng.", explanation: "Sai. Nhiều phong cách Java có thể cùng tồn tại trong một thiết kế."}
+      - {id: B, answer: "Khi đã dùng giao diện hàm thì luồng điều khiển kiểu mệnh lệnh trở nên không hợp lệ.", explanation: "Sai. Luồng điều khiển mệnh lệnh rõ ràng vẫn phù hợp với nhiều quy trình."}
+      - {id: C, answer: "Phong cách hàm chỉ nên dùng trong thư viện, không nên dùng trong mã ứng dụng.", explanation: "Sai. Nó hữu ích ở bất kỳ nơi nào việc biểu diễn phần hành vi thay đổi dưới dạng hợp đồng giúp ý định rõ hơn."}
+      - {id: D, answer: "Phong cách hàm là một công cụ khác của Java và có thể dùng cùng đối tượng lẫn quy trình mệnh lệnh.", explanation: "Đúng. Java hỗ trợ nhiều mô hình lập trình; hãy chọn cách biểu diễn làm rõ ý định và ràng buộc nhất."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.FunctionalProgrammingPurpose/FunctionalProgrammingPurpose.md", anchor: "functional-multi-paradigm-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q05
+    question: "Chủ đề nào nằm ngoài phạm vi mô-đun Java Core về lập trình hàm này?"
+    answers:
+      - {id: A, answer: "Tính lười của Stream, phép rút gọn, bộ thu thập, thứ tự xử lý và hành vi của Stream song song.", explanation: "Đúng. Những nội dung đó thuộc mô-đun Stream API chuyên biệt."}
+      - {id: B, answer: "Target typing của lambda.", explanation: "Sai. Target typing là cơ chế cốt lõi của lập trình hàm trong Java."}
+      - {id: C, answer: "Quy tắc SAM của giao diện hàm.", explanation: "Sai. Quy tắc SAM thuộc phạm vi mô-đun này."}
+      - {id: D, answer: "Lambda bắt giữ biến.", explanation: "Sai. Việc bắt giữ biến và phạm vi biến là các chủ đề cốt lõi của mô-đun này."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.FunctionalProgrammingPurpose/FunctionalProgrammingPurpose.md", anchor: "functional-programming-module-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q06
+    question: "Giao diện nào sau đây vẫn có thể là một giao diện hàm?"
+    answers:
+      - {id: A, answer: "Một giao diện có hai phương thức trừu tượng không liên quan với nhau và không có phương thức default.", explanation: "Sai. Hai hợp đồng trừu tượng không liên quan khiến giao diện không còn một SAM duy nhất."}
+      - {id: B, answer: "Một giao diện có một phương thức trừu tượng cùng với bất kỳ số lượng phương thức default và static tương thích nào.", explanation: "Đúng. Phương thức default và static đã có phần triển khai nên không thêm hành vi trừu tượng vào SAM."}
+      - {id: C, answer: "Chỉ giao diện được gắn @FunctionalInterface một cách tường minh.", explanation: "Sai. Chú thích @FunctionalInterface là tùy chọn; điều quyết định là cấu trúc của giao diện có thỏa quy tắc hay không."}
+      - {id: D, answer: "Chỉ giao diện được khai báo trong java.util.function.", explanation: "Sai. Giao diện hàm có thể nằm trong bất kỳ gói nào."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.FunctionalInterfaceContracts/FunctionalInterfaceContracts.md", anchor: "sam-contract"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q07
+    question: "Một giao diện khai báo boolean matches(String value) và cũng khai báo lại boolean equals(Object other). Vì sao giao diện này vẫn có thể là giao diện hàm?"
+    answers:
+      - {id: A, answer: "equals tự động trở thành phương thức default trong mọi giao diện.", explanation: "Sai. Lý do không phải vì equals trở thành phương thức default."}
+      - {id: B, answer: "Mọi phương thức tên equals đều bị bỏ qua bất kể chữ ký.", explanation: "Sai. Quy tắc áp dụng cho chữ ký tương ứng với phương thức thực thể public của Object."}
+      - {id: C, answer: "Một khai báo khớp với phương thức public liên quan của Object không tạo thêm hợp đồng trừu tượng chức năng thứ hai.", explanation: "Đúng. matches vẫn là hợp đồng chức năng của giao diện."}
+      - {id: D, answer: "@FunctionalInterface âm thầm xóa equals khỏi bytecode.", explanation: "Sai. Chú thích này chỉ kiểm tra hợp đồng; nó không viết lại phương thức."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.FunctionalInterfaceContracts/FunctionalInterfaceContracts.md", anchor: "sam-object-method-rule"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q08
+    question: "Left khai báo CharSequence value(), Right khai báo String value(), còn Combined extends cả hai. Vì sao Combined vẫn có thể là giao diện hàm?"
+    answers:
+      - {id: A, answer: "Vì phương thức trừu tượng kế thừa luôn bị bỏ qua khi phân tích SAM.", explanation: "Sai. Phương thức trừu tượng kế thừa vẫn được tính, trừ khi chúng cùng tạo thành một hợp đồng tương thích."}
+      - {id: B, answer: "Vì String và CharSequence trở thành cùng một kiểu nguyên thủy sau xóa kiểu (type erasure).", explanation: "Sai. Lý do là khả năng ghi đè tương thích, không phải xóa kiểu thành kiểu nguyên thủy."}
+      - {id: C, answer: "Vì Java tùy ý giữ lại phương thức từ giao diện cha ở bên phải.", explanation: "Sai. Thứ tự giao diện cha không phải quy tắc quyết định."}
+      - {id: D, answer: "Vì các phương thức kế thừa tương thích khi ghi đè và String là kiểu trả về đồng biến (covariant return) của CharSequence.", explanation: "Đúng. Chúng có thể đại diện cho một hợp đồng trừu tượng thống nhất."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.FunctionalInterfaceContracts/FunctionalInterfaceContracts.md", anchor: "sam-inherited-method-rule"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q09
+    question: "@FunctionalInterface đảm bảo điều gì?"
+    answers:
+      - {id: A, answer: "Trình biên dịch kiểm tra giao diện có thỏa các quy tắc của giao diện hàm hay không.", explanation: "Đúng. Đây là kiểm tra thiết kế ở thời điểm biên dịch đồng thời là tín hiệu tài liệu hóa ý định."}
+      - {id: B, answer: "JVM luôn cấp phát một đối tượng lambda mới cho mỗi lần biểu thức được đánh giá.", explanation: "Sai. Chú thích này không nói gì về cấp phát hoặc danh tính ở thời điểm chạy."}
+      - {id: C, answer: "Giao diện không bao giờ được có phương thức default, static hoặc private.", explanation: "Sai. Các phương thức đó có thể cùng tồn tại với một hợp đồng trừu tượng chức năng duy nhất."}
+      - {id: D, answer: "Giao diện chỉ trở thành giao diện hàm khi chú thích này xuất hiện.", explanation: "Sai. Giao diện không có chú thích vẫn có thể là giao diện hàm nếu thỏa các quy tắc."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.FunctionalInterfaceContracts/FunctionalInterfaceContracts.md", anchor: "functional-interface-annotation"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q10
+    question: "Về mặt khái niệm, kiểu hàm (function type) của một giao diện hàm gồm những thông tin nào?"
+    answers:
+      - {id: A, answer: "Chỉ tên của phương thức SAM.", explanation: "Sai. Tính tương thích phụ thuộc vào nhiều yếu tố hơn tên phương thức."}
+      - {id: B, answer: "Kiểu tham số, kiểu kết quả và hợp đồng ngoại lệ được kiểm tra (checked exception).", explanation: "Đúng. Đây là các thành phần cốt lõi để xác định tính tương thích của lambda và tham chiếu phương thức."}
+      - {id: C, answer: "Tên lớp được tạo cho lambda ở thời điểm chạy.", explanation: "Sai. Danh tính của lớp triển khai ở thời điểm chạy không phải kiểu hàm."}
+      - {id: D, answer: "Tên gói của mọi lớp triển khai.", explanation: "Sai. Các phần triển khai không định nghĩa kiểu hàm đích."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.FunctionalInterfaceContracts/FunctionalInterfaceContracts.md", anchor: "functional-interface-function-type"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q11
+    question: "Vì sao cùng một biểu thức lambda () -> value có thể được gán cho hai kiểu giao diện hàm tương thích khác nhau?"
+    answers:
+      - {id: A, answer: "Vì lambda được định kiểu động ở thời điểm chạy.", explanation: "Sai. Kiểu của lambda được xác định ở thời điểm biên dịch và phụ thuộc vào kiểu đích."}
+      - {id: B, answer: "Vì mọi giao diện không có tham số đều tương thích gán với nhau.", explanation: "Sai. Kiểu hàm của chúng vẫn phải tương thích."}
+      - {id: C, answer: "Vì target typing dùng kiểu giao diện hàm mà ngữ cảnh đang mong đợi để diễn giải lambda.", explanation: "Đúng. Cùng một cú pháp lambda có thể nhận các kiểu Java khác nhau trong những ngữ cảnh đích khác nhau."}
+      - {id: D, answer: "Vì trình biên dịch bỏ qua kiểu trả về khi xử lý lambda.", explanation: "Sai. Tính tương thích của kết quả là một phần của quá trình xác định kiểu lambda."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.LambdaAndTargetTyping/LambdaAndTargetTyping.md", anchor: "target-typing"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q12
+    question: "Phép gán nào không hợp lệ vì thân lambda không tương thích với kết quả mà kiểu đích yêu cầu?"
+    answers:
+      - {id: A, answer: "Consumer<String> c = s -> System.out.println(s);", explanation: "Sai. Thân là một biểu thức dạng câu lệnh (statement expression) tương thích với Consumer không trả về giá trị."}
+      - {id: B, answer: "Function<String, Integer> f = s -> s.length();", explanation: "Sai. Thân lambda tạo ra kết quả tương thích với Integer như yêu cầu."}
+      - {id: C, answer: "Predicate<String> p = s -> !s.isEmpty();", explanation: "Sai. Thân lambda tạo ra kết quả boolean như yêu cầu."}
+      - {id: D, answer: "Function<String, Integer> f = s -> { s.length(); };", explanation: "Đúng. Khối lệnh này có thể kết thúc bình thường mà không trả về giá trị, nên không thể thỏa Function yêu cầu trả về kết quả."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.LambdaAndTargetTyping/LambdaAndTargetTyping.md", anchor: "lambda-body-result-compatibility"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q13
+    question: "Ngữ cảnh nào có thể cung cấp kiểu đích cho lambda?"
+    answers:
+      - {id: A, answer: "Phép gán, lời gọi phương thức, ngữ cảnh trả về hoặc phép ép kiểu tường minh sang một giao diện hàm.", explanation: "Đúng. Đây là những ngữ cảnh target typing phổ biến của lambda."}
+      - {id: B, answer: "Chỉ khai báo biến cục bộ.", explanation: "Sai. Đối số phương thức, giá trị trả về và phép ép kiểu cũng có thể cung cấp kiểu đích."}
+      - {id: C, answer: "Chỉ khai báo trường.", explanation: "Sai. Target typing rộng hơn nhiều so với trường."}
+      - {id: D, answer: "Không cần ngữ cảnh nào vì mọi lambda đều có sẵn một kiểu độc lập nội tại.", explanation: "Sai. Lambda cần một kiểu giao diện hàm đích tương thích."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.LambdaAndTargetTyping/LambdaAndTargetTyping.md", anchor: "lambda-target-contexts"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q14
+    question: "Thân một Supplier ghi log rồi trả về một giá trị. Điều gì xảy ra khi lambda Supplier chỉ mới được gán vào một biến?"
+    answers:
+      - {id: A, answer: "Thân lambda chạy một lần lúc gán rồi chạy lại sau mỗi lần gọi get().", explanation: "Sai. Phép gán tạo ra giá trị biểu diễn hành vi; nó không thực thi thân lambda."}
+      - {id: B, answer: "Thân lambda chưa chạy cho đến khi đoạn mã nhận Supplier gọi get().", explanation: "Đúng. Tạo lambda và thực thi lambda là hai sự kiện riêng biệt."}
+      - {id: C, answer: "Thân lambda chạy lúc lớp được nạp.", explanation: "Sai. Lambda chỉ thực thi khi phương thức chức năng được gọi."}
+      - {id: D, answer: "Trình biên dịch thực thi thân lambda để suy luận kiểu.", explanation: "Sai. Kiểm tra kiểu không thực thi mã ứng dụng."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.LambdaAndTargetTyping/LambdaAndTargetTyping.md", anchor: "lambda-execution-timing"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q15
+    question: "Có hai phiên bản nạp chồng (overload) lần lượt nhận Callable<String> và Supplier<String>. Vì sao lời gọi với () -> value có thể bị mơ hồ?"
+    answers:
+      - {id: A, answer: "Vì lambda không thể trả về String.", explanation: "Sai. Cả hai hợp đồng đích đều có thể trả về String."}
+      - {id: B, answer: "Vì quá trình phân giải nạp chồng luôn từ chối giao diện hàm.", explanation: "Sai. Nhiều lời gọi nạp chồng có giao diện hàm vẫn được phân giải bình thường."}
+      - {id: C, answer: "Vì hình dạng của lambda tương thích với cả hai kiểu đích không liên quan, còn lời gọi không cung cấp một kiểu đích duy nhất.", explanation: "Đúng. Phép ép kiểu tường minh hoặc biến đã khai báo kiểu có thể làm rõ ý định và loại bỏ sự mơ hồ."}
+      - {id: D, answer: "Vì Callable và Supplier trở thành cùng một giao diện sau xóa kiểu (type erasure).", explanation: "Sai. Chúng là hai giao diện riêng biệt."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.LambdaAndTargetTyping/LambdaAndTargetTyping.md", anchor: "lambda-overload-ambiguity"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q16
+    question: "Một biến cục bộ int minimum ban đầu được gán 3, sau đó được gán lại thành 5 rồi được lambda tham chiếu. Điều gì xảy ra?"
+    answers:
+      - {id: A, answer: "Mã biên dịch được vì biến cục bộ kiểu nguyên thủy luôn có thể được bắt giữ.", explanation: "Sai. Biến cục bộ kiểu nguyên thủy và kiểu tham chiếu đều tuân theo cùng quy tắc effectively final khi được bắt giữ."}
+      - {id: B, answer: "Mã biên dịch được nếu lambda không bao giờ thực thi.", explanation: "Sai. Tính hợp lệ của việc bắt giữ được kiểm tra ở thời điểm biên dịch."}
+      - {id: C, answer: "Mã chỉ biên dịch được nếu minimum được boxing thành Integer.", explanation: "Sai. Boxing không thay đổi quy tắc effectively final."}
+      - {id: D, answer: "Mã không biên dịch vì minimum không còn là final hoặc effectively final.", explanation: "Đúng. Việc gán lại làm mất trạng thái effectively final."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.CaptureScopeAndState/CaptureScopeAndState.md", anchor: "effectively-final"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q17
+    question: "Một biến cục bộ List không bao giờ được gán lại, còn lambda gọi list.add(value). Phát biểu nào đúng?"
+    answers:
+      - {id: A, answer: "Mã có thể biên dịch vì tham chiếu cục bộ vẫn có thể là effectively final dù đối tượng List có thể thay đổi.", explanation: "Đúng. Quy tắc bắt giữ cố định liên kết của biến cục bộ, không làm trạng thái bên trong đối tượng trở thành bất biến."}
+      - {id: B, answer: "Mã không thể biên dịch vì effectively final khiến mọi đối tượng có thể truy cập qua biến đó trở thành bất biến.", explanation: "Sai. Effectively final không đồng nghĩa với đối tượng bất biến."}
+      - {id: C, answer: "Mã chỉ biên dịch khi phần triển khai List là bất biến.", explanation: "Sai. Khả năng thay đổi của đối tượng tách biệt với tính hợp lệ của việc bắt giữ biến cục bộ."}
+      - {id: D, answer: "Lambda nhận một bản sao sâu của List.", explanation: "Sai. Giá trị được bắt giữ là tham chiếu, không phải bản sao sâu của đối tượng."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.CaptureScopeAndState/CaptureScopeAndState.md", anchor: "captured-reference-mutation"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q18
+    question: "Bên trong một phương thức thực thể, this trong lambda có nghĩa là gì?"
+    answers:
+      - {id: A, answer: "Lớp tổng hợp được tạo cho lambda ở thời điểm chạy.", explanation: "Sai. Cú pháp lambda không tạo ra this riêng của nó."}
+      - {id: B, answer: "Chính thực thể bao ngoài mà this đang chỉ tới ở ngữ cảnh chứa lambda.", explanation: "Đúng. Lambda dùng ngữ nghĩa this theo phạm vi từ vựng."}
+      - {id: C, answer: "Đối tượng giao diện hàm, nhưng chỉ khi lambda không có tham số.", explanation: "Sai. Số lượng tham số không thay đổi ngữ nghĩa this."}
+      - {id: D, answer: "Không được phép dùng this trong lambda.", explanation: "Sai. Có thể dùng this nếu this hợp lệ trong ngữ cảnh bao ngoài."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.CaptureScopeAndState/CaptureScopeAndState.md", anchor: "lambda-this"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q19
+    question: "Vì sao lambda có thể tăng một trường thực thể mà nó truy cập được, dù biến cục bộ được bắt giữ phải effectively final?"
+    answers:
+      - {id: A, answer: "Trường được âm thầm sao chép thành biến cục bộ final.", explanation: "Sai. Truy cập trường vẫn là truy cập trường."}
+      - {id: B, answer: "Trình biên dịch tắt quy tắc effectively final ở bên trong lớp.", explanation: "Sai. Quy tắc đó vẫn áp dụng cho biến cục bộ được bắt giữ."}
+      - {id: C, answer: "Ràng buộc effectively final áp dụng cho liên kết của biến cục bộ được bắt giữ, không áp dụng cho trường thực thể hoặc trường static thông thường.", explanation: "Đúng. Có thể thay đổi trường nếu vẫn tuân theo các quy tắc Java thông thường."}
+      - {id: D, answer: "Mọi thao tác ghi trường trong lambda đều tự động được synchronized.", explanation: "Sai. Lambda không tự bổ sung cơ chế an toàn luồng."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.CaptureScopeAndState/CaptureScopeAndState.md", anchor: "instance-static-state-access"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q20
+    question: "Một phương thức trả về lambda sử dụng một tham số effectively final của chính phương thức đó. Vì sao lambda vẫn dùng được giá trị này sau khi phương thức đã kết thúc?"
+    answers:
+      - {id: A, answer: "JVM giữ nguyên stack frame ban đầu tồn tại mãi mãi.", explanation: "Sai. Lambda không phụ thuộc vào việc giữ lại toàn bộ stack frame ban đầu."}
+      - {id: B, answer: "Tham số được biến thành một trường static.", explanation: "Sai. Việc bắt giữ không chuyển tham số thành trạng thái static."}
+      - {id: C, answer: "Mỗi khi lambda chạy, tham số được đọc lại từ bên gọi.", explanation: "Sai. Sau khi lần gọi phương thức kết thúc, không còn ô lưu trữ cục bộ đang tồn tại để đọc lại theo cách đó."}
+      - {id: D, answer: "Lambda giữ lại giá trị cục bộ đã bắt giữ mà hành vi cần dùng.", explanation: "Đúng. Giá trị được bắt giữ có thể tồn tại lâu hơn lần gọi phương thức đã tạo ra lambda."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.CaptureScopeAndState/CaptureScopeAndState.md", anchor: "captured-local-values"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q21
+    question: "Giao diện hàm chuẩn nào phù hợp nhất để biểu diễn việc tạo ra một giá trị theo kiểu trì hoãn mà không nhận đối số đầu vào?"
+    answers:
+      - {id: A, answer: "Supplier<T>", explanation: "Đúng. Supplier.get tạo ra một T mà không nhận đối số cho phương thức chức năng."}
+      - {id: B, answer: "Consumer<T>", explanation: "Sai. Consumer nhận một giá trị và không trả về kết quả."}
+      - {id: C, answer: "Predicate<T>", explanation: "Sai. Predicate nhận một giá trị và trả về boolean."}
+      - {id: D, answer: "BiFunction<T, U, R>", explanation: "Sai. BiFunction nhận hai đầu vào."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.StandardFunctionalInterfaces/StandardFunctionalInterfaces.md", anchor: "supplier-contract"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q22
+    question: "Khi nào UnaryOperator<T> thể hiện ý định rõ hơn Function<T, T>?"
+    answers:
+      - {id: A, answer: "Khi phép toán nhận hai giá trị T.", explanation: "Sai. Hình dạng đó tương ứng với BinaryOperator<T>."}
+      - {id: B, answer: "Khi một giá trị T được biến đổi thành một giá trị T khác cùng kiểu.", explanation: "Đúng. UnaryOperator làm rõ quan hệ đầu vào và đầu ra cùng kiểu."}
+      - {id: C, answer: "Chỉ khi T là kiểu nguyên thủy.", explanation: "Sai. UnaryOperator là kiểu tổng quát và làm việc với kiểu tham chiếu."}
+      - {id: D, answer: "Khi phép toán phải trả về boolean.", explanation: "Sai. Predicate<T> là hợp đồng chuẩn cho kết quả boolean."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.StandardFunctionalInterfaces/StandardFunctionalInterfaces.md", anchor: "operator-contracts"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q23
+    question: "BiPredicate<T, U> biểu diễn hợp đồng nào?"
+    answers:
+      - {id: A, answer: "Hai đầu vào và một kết quả R bất kỳ.", explanation: "Sai. Đó là BiFunction<T, U, R>."}
+      - {id: B, answer: "Một đầu vào và không có kết quả.", explanation: "Sai. Đó là Consumer<T>."}
+      - {id: C, answer: "Hai đầu vào và một kết quả boolean.", explanation: "Đúng. BiPredicate kiểm tra một điều kiện liên quan đến hai giá trị."}
+      - {id: D, answer: "Không có đầu vào và có hai kết quả.", explanation: "Sai. Các giao diện hàm chuẩn không mô hình hóa hai giá trị trả về theo cách đó."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.StandardFunctionalInterfaces/StandardFunctionalInterfaces.md", anchor: "bi-functional-interfaces"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q24
+    question: "Vì sao ToIntFunction<String> có thể phù hợp hơn Function<String, Integer> khi kết quả là int nguyên thủy?"
+    answers:
+      - {id: A, answer: "Nó làm Java chuyển sang truyền int theo tham chiếu.", explanation: "Sai. Ngữ nghĩa truyền tham số không thay đổi."}
+      - {id: B, answer: "Nó cho phép ngoại lệ được kiểm tra (checked exception) mà Function không cho phép.", explanation: "Sai. Chuyên biệt hóa cho kiểu nguyên thủy không tự thêm ngoại lệ được kiểm tra tùy ý."}
+      - {id: C, answer: "Nó đảm bảo phần triển khai là thuần khiết.", explanation: "Sai. Giao diện hàm không ép buộc tính thuần khiết."}
+      - {id: D, answer: "Nó biểu diễn trực tiếp kết quả int nguyên thủy và có thể tránh boxing sang Integer.", explanation: "Đúng. Mục đích chính của các biến thể chuyên biệt cho kiểu nguyên thủy là tránh chuyển đổi sang kiểu bao không cần thiết trong những trường hợp phù hợp."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.StandardFunctionalInterfaces/StandardFunctionalInterfaces.md", anchor: "primitive-specializations"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q25
+    question: "Khi nào một giao diện hàm riêng cho miền nghiệp vụ thường phù hợp hơn Function hoặc Predicate chuẩn?"
+    answers:
+      - {id: A, answer: "Khi vai trò trong miền nghiệp vụ hoặc hợp đồng ngoại lệ cần một tên tường minh mà dạng tổng quát có thể che khuất.", explanation: "Đúng. Giao diện tùy chỉnh có thể làm rõ ý nghĩa miền nghiệp vụ và các yêu cầu hợp đồng đặc biệt."}
+      - {id: B, answer: "Bất cứ khi nào thân lambda dài hơn một dòng.", explanation: "Sai. Độ dài thân lambda không quyết định việc chọn giao diện."}
+      - {id: C, answer: "Bất cứ khi nào java.util.function có sẵn.", explanation: "Sai. Việc có các giao diện chuẩn không loại bỏ nhu cầu về hợp đồng riêng của miền nghiệp vụ."}
+      - {id: D, answer: "Chỉ khi giao diện có ít nhất hai phương thức trừu tượng.", explanation: "Sai. Một giao diện hàm vẫn phải có một hợp đồng trừu tượng chức năng duy nhất."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.StandardFunctionalInterfaces/StandardFunctionalInterfaces.md", anchor: "standard-vs-custom-functional-interface"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q26
+    question: "Khác biệt chính giữa tham chiếu phương thức gắn sẵn đối tượng nhận receiver::method và tham chiếu phương thức chưa gắn đối tượng nhận Type::method là gì?"
+    answers:
+      - {id: A, answer: "Dạng đã gắn sẵn có đối tượng nhận cố định; dạng chưa gắn nhận đối tượng nhận làm đối số chức năng đầu tiên.", explanation: "Đúng. Các đối số còn lại ánh xạ vào tham số của phương thức."}
+      - {id: B, answer: "Dạng đã gắn sẵn luôn là static.", explanation: "Sai. Đây là tham chiếu đến phương thức thực thể gắn với một đối tượng nhận."}
+      - {id: C, answer: "Dạng chưa gắn thực thi ngay lập tức.", explanation: "Sai. Nó vẫn mô tả hành vi sẽ được gọi sau."}
+      - {id: D, answer: "Hai dạng không có khác biệt về ngữ nghĩa.", explanation: "Sai. Cách ánh xạ đối tượng nhận khác nhau."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.MethodReferences/MethodReferences.md", anchor: "unbound-instance-method-reference"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q27
+    question: "Điều gì xảy ra khi biểu thức đối tượng nhận của một tham chiếu phương thức đã gắn sẵn được đánh giá thành null?"
+    answers:
+      - {id: A, answer: "Việc kiểm tra null bị trì hoãn đến khi phương thức chức năng được gọi.", explanation: "Sai. Đối tượng nhận được đánh giá ngay khi biểu thức tham chiếu phương thức được đánh giá."}
+      - {id: B, answer: "Việc tạo tham chiếu phương thức đã gắn sẵn ném NullPointerException.", explanation: "Đúng. Lỗi xảy ra trong lúc đánh giá receiver::method."}
+      - {id: C, answer: "Java âm thầm thay nó bằng Optional.empty().", explanation: "Sai. Không có cơ chế thích nghi như vậy."}
+      - {id: D, answer: "Phương thức trở thành static.", explanation: "Sai."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.MethodReferences/MethodReferences.md", anchor: "bound-instance-method-reference"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q28
+    question: "Một tham chiếu phương thức trỏ tới phương thức có trả về giá trị có thể thỏa kiểu đích trả về void như Consumer<T> không?"
+    answers:
+      - {id: A, answer: "Không bao giờ.", explanation: "Sai. Java có thể bỏ kết quả trong ngữ cảnh kiểu đích void tương thích."}
+      - {id: B, answer: "Chỉ khi kết quả là null.", explanation: "Sai."}
+      - {id: C, answer: "Có, nếu lời gọi tương thích ở các mặt còn lại; giá trị trả về sẽ bị bỏ đi.", explanation: "Đúng. Cơ chế thích nghi kết quả có thể bỏ giá trị khi kiểu đích trả về void."}
+      - {id: D, answer: "Chỉ áp dụng cho kiểu trả về nguyên thủy.", explanation: "Sai."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.MethodReferences/MethodReferences.md", anchor: "method-reference-result-adaptation"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q29
+    question: "Kiểu đích nào phù hợp tự nhiên với tham chiếu constructor mảng String[]::new?"
+    answers:
+      - {id: A, answer: "Runnable", explanation: "Sai. Runnable không nhận độ dài đầu vào và trả về void."}
+      - {id: B, answer: "Predicate<Integer>", explanation: "Sai. Predicate trả về boolean."}
+      - {id: C, answer: "Consumer<Integer>", explanation: "Sai. Consumer trả về void."}
+      - {id: D, answer: "IntFunction<String[]>", explanation: "Đúng. Đầu vào int cung cấp độ dài mảng và kết quả là String[]."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.MethodReferences/MethodReferences.md", anchor: "constructor-reference"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q30
+    question: "Vì sao tham chiếu phương thức đến một phương thức bị nạp chồng có thể cần lambda tường minh hoặc phép ép kiểu?"
+    answers:
+      - {id: A, answer: "Vì ngữ cảnh đích vẫn có thể để lại nhiều phiên bản nạp chồng được tham chiếu cùng tương thích.", explanation: "Đúng. Kiểu được chỉ rõ hơn có thể giúp phân giải chính xác thành viên cần chọn."}
+      - {id: B, answer: "Vì tham chiếu phương thức không thể dùng phương thức bị nạp chồng.", explanation: "Sai. Có thể dùng khi target typing chọn được một thành viên tương thích."}
+      - {id: C, answer: "Vì mọi tham chiếu phương thức đều bắt buộc phải ép kiểu.", explanation: "Sai."}
+      - {id: D, answer: "Vì quá trình phân giải nạp chồng chỉ diễn ra ở thời điểm chạy.", explanation: "Sai. Đây là quá trình ở thời điểm biên dịch."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.MethodReferences/MethodReferences.md", anchor: "overloaded-method-reference"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q31
+    question: "Một phương thức Java nhận hoặc trả về hành vi có nghĩa là gì?"
+    answers:
+      - {id: A, answer: "Phương thức đó bắt buộc phải dùng cơ chế phản chiếu (reflection).", explanation: "Sai."}
+      - {id: B, answer: "Phương thức nhận hoặc trả về một giá trị có kiểu là giao diện hàm.", explanation: "Đúng. Hành vi được biểu diễn bằng một hợp đồng có kiểu rõ ràng."}
+      - {id: C, answer: "Phương thức biên dịch mã nguồn động.", explanation: "Sai."}
+      - {id: D, answer: "Phương thức bắt buộc phải trả về đối tượng Method.", explanation: "Sai."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.BehaviorCompositionAndHigherOrderUse/BehaviorCompositionAndHigherOrderUse.md", anchor: "higher-order-methods"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q32
+    question: "Quan hệ nào đúng về phép kết hợp của Function?"
+    answers:
+      - {id: A, answer: "f.andThen(g) áp dụng g trước.", explanation: "Sai. andThen áp dụng f trước."}
+      - {id: B, answer: "f.compose(g) và f.andThen(g) hoàn toàn giống nhau.", explanation: "Sai. Thứ tự thực thi của chúng khác nhau."}
+      - {id: C, answer: "f.andThen(g) có cùng thứ tự luồng dữ liệu với g.compose(f).", explanation: "Đúng. Cả hai đều có nghĩa là áp dụng f trước, rồi đến g."}
+      - {id: D, answer: "Phép kết hợp Function chạy hai hàm song song.", explanation: "Sai."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.BehaviorCompositionAndHigherOrderUse/BehaviorCompositionAndHigherOrderUse.md", anchor: "function-composition"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q33
+    question: "Quy tắc dừng sớm (short-circuit) nào áp dụng cho Predicate.and và Predicate.or?"
+    answers:
+      - {id: A, answer: "Predicate thứ hai luôn chạy.", explanation: "Sai."}
+      - {id: B, answer: "and bỏ qua điều kiện thứ hai khi điều kiện đầu là false; or bỏ qua điều kiện thứ hai khi điều kiện đầu là true.", explanation: "Đúng."}
+      - {id: C, answer: "Chỉ Predicate chuyên biệt cho kiểu nguyên thủy mới dừng sớm.", explanation: "Sai."}
+      - {id: D, answer: "Thứ tự thực thi không được xác định.", explanation: "Sai. Phép kết hợp giữ thứ tự đã được quy định."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.BehaviorCompositionAndHigherOrderUse/BehaviorCompositionAndHigherOrderUse.md", anchor: "predicate-composition"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q34
+    question: "Với Consumer, điều gì xảy ra trong first.andThen(second) nếu first ném ngoại lệ?"
+    answers:
+      - {id: A, answer: "second vẫn chạy trong một khối finally.", explanation: "Sai. andThen không đưa ra đảm bảo như vậy."}
+      - {id: B, answer: "Ngoại lệ bị nuốt.", explanation: "Sai."}
+      - {id: C, answer: "Cả hai Consumer đều khởi động lại.", explanation: "Sai."}
+      - {id: D, answer: "Ngoại lệ được truyền tiếp và second không được thực thi.", explanation: "Đúng."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.BehaviorCompositionAndHigherOrderUse/BehaviorCompositionAndHigherOrderUse.md", anchor: "consumer-composition"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q35
+    question: "Vì sao các tác dụng phụ bên trong hành vi được kết hợp cần được thể hiện rõ trong thiết kế?"
+    answers:
+      - {id: A, answer: "Vì việc kết hợp hành vi không biến thay đổi trạng thái, I/O, ghi log hoặc thử lại thành hành vi thuần khiết hay vô hại.", explanation: "Đúng. Tác dụng phụ bị che khuất có thể khiến thứ tự và hành vi khi lỗi khó suy luận."}
+      - {id: B, answer: "Vì giao diện hàm cấm mọi tác dụng phụ.", explanation: "Sai. Java không ép buộc tính thuần khiết."}
+      - {id: C, answer: "Vì tác dụng phụ chỉ chạy một lần bất kể hành vi được gọi bao nhiêu lần.", explanation: "Sai. Chúng chạy mỗi khi hành vi tương ứng được thực thi."}
+      - {id: D, answer: "Vì andThen tự động hoàn tác các tác dụng phụ.", explanation: "Sai."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.BehaviorCompositionAndHigherOrderUse/BehaviorCompositionAndHigherOrderUse.md", anchor: "composition-side-effects"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q36
+    question: "Vì sao nên dùng Optional.flatMap thay vì map khi hàm ánh xạ đã trả về Optional<U>?"
+    answers:
+      - {id: A, answer: "flatMap chuyển kết quả thành Stream.", explanation: "Sai."}
+      - {id: B, answer: "flatMap ép Optional phải có giá trị.", explanation: "Sai."}
+      - {id: C, answer: "flatMap tránh tạo ra Optional<Optional<U>>.", explanation: "Đúng."}
+      - {id: D, answer: "map không thể biến đổi giá trị.", explanation: "Sai."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.OptionalAndAbsence/OptionalAndAbsence.md", anchor: "optional-transform-filter"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q37
+    question: "Vì sao orElseGet có thể phù hợp hơn orElse khi giá trị dự phòng tốn chi phí tạo?"
+    answers:
+      - {id: A, answer: "orElseGet chỉ gọi Supplier khi Optional rỗng.", explanation: "Đúng. orElse đánh giá đối số dự phòng ngay lập tức."}
+      - {id: B, answer: "orElseGet luôn đánh giá cả hai giá trị.", explanation: "Sai."}
+      - {id: C, answer: "orElse trì hoãn đánh giá còn orElseGet đánh giá ngay lập tức.", explanation: "Sai. Thực tế ngược lại."}
+      - {id: D, answer: "Hai phương thức chỉ khác nhau ở kiểu trả về.", explanation: "Sai."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.OptionalAndAbsence/OptionalAndAbsence.md", anchor: "optional-fallback-and-failure"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q38
+    question: "Phát biểu nào về phiên bản Java của các API Optional là đúng?"
+    answers:
+      - {id: A, answer: "isEmpty đã có từ Java 8.", explanation: "Sai. Phương thức này được thêm trong Java 11."}
+      - {id: B, answer: "or được thêm trong Java 11.", explanation: "Sai. Optional.or được thêm trong Java 9."}
+      - {id: C, answer: "ifPresentOrElse và or được thêm trong Java 9; isEmpty được thêm trong Java 11.", explanation: "Đúng."}
+      - {id: D, answer: "Bản thân Optional chỉ được thêm từ Java 11.", explanation: "Sai. Optional được giới thiệu từ Java 8."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.OptionalAndAbsence/OptionalAndAbsence.md", anchor: "optional-consumption"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q39
+    question: "Hướng dẫn thiết kế API nào với Optional là chính xác nhất?"
+    answers:
+      - {id: A, answer: "Dùng Optional cho mọi trường và mọi tham số.", explanation: "Sai. Optional không phải công cụ thay thế null trong mọi trường hợp."}
+      - {id: B, answer: "Dùng Optional có chọn lọc khi việc không có giá trị là kết quả dự kiến và việc biểu diễn rõ trạng thái đó giúp hợp đồng dễ hiểu hơn.", explanation: "Đúng."}
+      - {id: C, answer: "Optional buộc bên gọi phải xử lý trường hợp không có giá trị theo đúng một cách duy nhất.", explanation: "Sai."}
+      - {id: D, answer: "Optional chỉ hữu ích bên trong Stream.", explanation: "Sai."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.OptionalAndAbsence/OptionalAndAbsence.md", anchor: "optional-api-design"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q40
+    question: "Khi hàm ánh xạ trả về null, Optional.map và Optional.flatMap xử lý khác nhau như thế nào?"
+    answers:
+      - {id: A, answer: "Cả hai luôn ném NullPointerException.", explanation: "Sai."}
+      - {id: B, answer: "Cả hai đều chuyển null thành Optional.empty().", explanation: "Sai đối với flatMap."}
+      - {id: C, answer: "map chuyển kết quả ánh xạ là null thành Optional.empty(), còn flatMap yêu cầu hàm ánh xạ trả về một Optional khác null và sẽ ném ngoại lệ nếu hàm này trả về null.", explanation: "Đúng."}
+      - {id: D, answer: "flatMap bỏ qua hàm ánh xạ khi Optional đang có giá trị.", explanation: "Sai."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.OptionalAndAbsence/OptionalAndAbsence.md", anchor: "optional-null-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q41
+    question: "Vì sao API Stream thường nhận lambda và tham chiếu phương thức?"
+    answers:
+      - {id: A, answer: "Vì các phép toán Stream nhận hợp đồng giao diện hàm để bên gọi cung cấp hành vi.", explanation: "Đúng."}
+      - {id: B, answer: "Vì Stream là API duy nhất hỗ trợ lambda.", explanation: "Sai."}
+      - {id: C, answer: "Vì mọi lambda đều tạo ra một Stream.", explanation: "Sai."}
+      - {id: D, answer: "Vì giao diện hàm chỉ tồn tại trong java.util.stream.", explanation: "Sai."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.StreamApiBoundary/StreamApiBoundary.md", anchor: "stream-functional-interface-bridge"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q42
+    question: "Predicate, Function và Consumer có phải là các kiểu dành riêng cho Stream không?"
+    answers:
+      - {id: A, answer: "Có, chúng chỉ có thể dùng trong chuỗi xử lý Stream.", explanation: "Sai."}
+      - {id: B, answer: "Không. Đây là các hợp đồng giao diện hàm dùng chung trong java.util.function và nhiều API khác cũng có thể sử dụng.", explanation: "Đúng."}
+      - {id: C, answer: "Chỉ Predicate là kiểu dùng chung.", explanation: "Sai."}
+      - {id: D, answer: "Chúng được Stream tạo động.", explanation: "Sai."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.StreamApiBoundary/StreamApiBoundary.md", anchor: "stream-behavior-contracts"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q43
+    question: "Phần nào của mã Stream thuộc phạm vi mô-đun Lập trình hàm này?"
+    answers:
+      - {id: A, answer: "Chi tiết triển khai Collector.", explanation: "Sai. Nội dung đó thuộc phần học Stream API."}
+      - {id: B, answer: "Cách lập lịch của Stream song song.", explanation: "Sai."}
+      - {id: C, answer: "Cách lambda và tham chiếu phương thức thỏa các tham số kiểu giao diện hàm mà phương thức của Stream nhận.", explanation: "Đúng."}
+      - {id: D, answer: "Quy tắc đánh giá trì hoãn của chuỗi xử lý.", explanation: "Sai."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.StreamApiBoundary/StreamApiBoundary.md", anchor: "stream-lambda-method-reference"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q44
+    question: "Phân biệt nào giữa Collection và Stream là phù hợp trong phạm vi này?"
+    answers:
+      - {id: A, answer: "Collection chủ yếu là khái niệm trừu tượng cho dữ liệu và cách truy cập dữ liệu, còn Stream biểu diễn quá trình xử lý trên một nguồn.", explanation: "Đúng."}
+      - {id: B, answer: "Hai khái niệm là cùng một khái niệm trừu tượng.", explanation: "Sai."}
+      - {id: C, answer: "Stream luôn sở hữu vĩnh viễn các phần tử của nó.", explanation: "Sai."}
+      - {id: D, answer: "Collection không thể dùng cùng giao diện hàm.", explanation: "Sai."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.StreamApiBoundary/StreamApiBoundary.md", anchor: "collection-vs-stream-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q45
+    question: "Nhóm chủ đề nào nên được học trong mô-đun Stream API chuyên biệt?"
+    answers:
+      - {id: A, answer: "Quy tắc SAM và việc bắt giữ biến effectively final.", explanation: "Sai. Các nội dung đó thuộc mô-đun này."}
+      - {id: B, answer: "Target typing và cách ánh xạ đối tượng nhận của tham chiếu phương thức.", explanation: "Sai. Các nội dung đó thuộc mô-đun này."}
+      - {id: C, answer: "Ngữ nghĩa chuỗi xử lý, tính lười, phép rút gọn, bộ thu thập, thứ tự xử lý và hành vi song song.", explanation: "Đúng."}
+      - {id: D, answer: "Cách Function<T,R> được định kiểu.", explanation: "Sai."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.StreamApiBoundary/StreamApiBoundary.md", anchor: "stream-mechanics-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q46
+    question: "Vì sao Function<Path, String> reader = Files::readString không biên dịch nếu không có bước thích nghi?"
+    answers:
+      - {id: A, answer: "Function.apply trả về void.", explanation: "Sai."}
+      - {id: B, answer: "Files.readString có thể ném IOException, nhưng Function.apply không khai báo ngoại lệ được kiểm tra đó.", explanation: "Đúng."}
+      - {id: C, answer: "Tham chiếu phương thức không thể trỏ tới phương thức static.", explanation: "Sai."}
+      - {id: D, answer: "Path không thể dùng làm đối số kiểu tổng quát.", explanation: "Sai."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.TradeoffsFailuresAndSynthesis/TradeoffsFailuresAndSynthesis.md", anchor: "checked-exception-constraint"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q47
+    question: "Cách nào giữ việc thích nghi ngoại lệ được kiểm tra (checked exception) ở trạng thái tường minh?"
+    answers:
+      - {id: A, answer: "Dùng giao diện hàm tùy chỉnh có khai báo ngoại lệ được kiểm tra, hoặc xử lý/chuyển đổi ngoại lệ rõ ràng tại ranh giới.", explanation: "Đúng."}
+      - {id: B, answer: "Giả định Function tự thêm throws IOException ở thời điểm chạy.", explanation: "Sai."}
+      - {id: C, answer: "Dùng hàm hỗ trợ sneaky-throw không được tài liệu hóa ở mọi nơi.", explanation: "Sai. Cách này che khuất hợp đồng lỗi."}
+      - {id: D, answer: "Bỏ qua ngoại lệ vì lambda sẽ tự triệt tiêu nó.", explanation: "Sai."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.TradeoffsFailuresAndSynthesis/TradeoffsFailuresAndSynthesis.md", anchor: "checked-exception-adaptation"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q48
+    question: "Giả định nào về danh tính của lambda khi chạy là không an toàn?"
+    answers:
+      - {id: A, answer: "Lambda có một kiểu giao diện hàm đích.", explanation: "Đây là một thực tế hợp lệ về kiểu."}
+      - {id: B, answer: "Việc đánh giá một lambda tạo ra một giá trị tham chiếu tới một đối tượng thuộc kiểu đích.", explanation: "Đây là mô hình hợp lệ khi chạy."}
+      - {id: C, answer: "Mỗi lần đánh giá bắt buộc phải cấp phát một đối tượng mới với lớp triển khai ổn định mà mã ứng dụng có thể phụ thuộc vào.", explanation: "Đúng. Java không đảm bảo luôn cấp phát đối tượng mới hoặc danh tính của lớp triển khai ổn định."}
+      - {id: D, answer: "Mã ứng dụng nên phụ thuộc vào hợp đồng giao diện hàm.", explanation: "Đây là cách tiếp cận được khuyến nghị."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.TradeoffsFailuresAndSynthesis/TradeoffsFailuresAndSynthesis.md", anchor: "functional-vs-oop-choice"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q49
+    question: "Khi nào cấu trúc mệnh lệnh hoặc hướng đối tượng thường rõ ràng hơn một chuỗi xử lý theo phong cách hàm?"
+    answers:
+      - {id: A, answer: "Không bao giờ; phong cách hàm luôn rõ ràng hơn.", explanation: "Sai."}
+      - {id: B, answer: "Khi chuyển đổi trạng thái tường minh, danh tính, vòng đời, nhiều thao tác có quan hệ với nhau hoặc nhu cầu gỡ lỗi là trọng tâm của thiết kế.", explanation: "Đúng."}
+      - {id: C, answer: "Chỉ khi không thể dùng generics.", explanation: "Sai."}
+      - {id: D, answer: "Chỉ khi không có cú pháp lambda.", explanation: "Sai."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.TradeoffsFailuresAndSynthesis/TradeoffsFailuresAndSynthesis.md", anchor: "functional-vs-imperative-choice"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: fp-q50
+    question: "Phát biểu nào mô tả đúng nhất một lỗi thiết kế phổ biến trong mã Java theo phong cách hàm?"
+    answers:
+      - {id: A, answer: "Lambda tự động thuần khiết và an toàn luồng.", explanation: "Sai. Java không ép buộc cả hai thuộc tính này."}
+      - {id: B, answer: "Trạng thái có thể thay đổi được lambda bắt giữ có thể khiến đoạn mã trông ngắn gọn và thiên về hàm thực chất lại có trạng thái, từ đó khó suy luận hơn.", explanation: "Đúng."}
+      - {id: C, answer: "Giao diện hàm ngăn mọi thao tác thay đổi trạng thái.", explanation: "Sai."}
+      - {id: D, answer: "Tác dụng phụ chỉ chạy một lần bất kể số lần hành vi được gọi.", explanation: "Sai."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.TradeoffsFailuresAndSynthesis/TradeoffsFailuresAndSynthesis.md", anchor: "common-functional-pitfalls"}
+    apiRelated: {controller: "", methodSignature: ""}

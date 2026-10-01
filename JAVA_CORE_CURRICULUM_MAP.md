@@ -6,7 +6,7 @@
 
 There are now 17 real modules under `module/platform/development/programming/language/java/core`.
 
-The original 16-module detailed curriculum remains the locked Wave 1–3 baseline below. `functional-programming` was later relocated here from `programming/paradigm/functional` because its existing curriculum is Java-specific; its detailed normalization and wave assignment remain pending a dedicated curriculum review.
+The original 16 modules remain the detailed curriculum baseline. `functional-programming` was later relocated here from `programming/paradigm/functional` because its Java-specific mechanics belong in Java Core; after its dedicated roadmap review, it is now explicitly inserted into Wave 2 after `generics` and before `collection`. Step 2.1 locked its roadmap-derived chapter paths and anchored H2 identities; Step 2.2 now fills those stable sections with detailed lesson content while preserving that structure.
 
 ```text
 language-basics
@@ -303,10 +303,11 @@ string
 exception
 ```
 
-### Wave 2 — Type and data mechanisms
+### Wave 2 — Type, behavior and data mechanisms
 
 ```text
 generics
+functional-programming
 collection
 annotation
 reflection
@@ -323,7 +324,7 @@ localization
 
 Within each wave, stabilize README anchors before implementing relations downstream.
 
-`functional-programming` is intentionally not inserted into Wave 1–3 by this structural migration. Do not infer a wave position from its physical directory location; assign it explicitly in a later curriculum review.
+`functional-programming` belongs after `generics` because standard functional interfaces depend heavily on generic input/output contracts, and before `collection` because collection-facing APIs commonly expose lambdas, method references and functional-interface concepts. Its Stream API relationship remains a cross-module boundary rather than a reason to move Stream mechanics into Java Core.
 
 Within each module, however, the order is now:
 
@@ -1472,7 +1473,126 @@ type inference; bounds; wildcard read/write rules; PECS; invariance vs arrays; r
 why generics are invariant; PECS reasoning; erasure trade-offs; bridge methods; raw types; wildcard capture; API design with bounds; why generic arrays are restricted.
 
 
-### 4.10 `collection`
+### 4.10 `functional-programming`
+
+**API applicability:** Yes in principle — target typing, capture, method-reference adaptation, `Optional`, and checked-exception boundaries have useful compile-time/runtime evidence. Exact API experiments remain Step 3 work and are intentionally not designed during Knowledge Steps 2.1–2.2.
+
+**Assessment planning:** Deferred to Step 3. Step 2.1 locked the Knowledge taxonomy, chapter paths, titles, and stable anchors; Step 2.2 supplies the detailed Knowledge those later assessments must consume.
+
+#### Layer 1 — Module orientation
+
+**Entry chapter contract:** `1.FunctionalProgrammingPurpose/FunctionalProgrammingPurpose.md` must begin from the problem of hard-coded behavior and verbose anonymous classes before introducing lambda syntax. The learner should first understand that Java can pass behavior through typed contracts, why that is useful, and where the Java-specific functional-programming boundary ends. Language-neutral functional-programming theory remains owned by `programming/paradigm/functional`.
+
+**Major terminology roles:**
+
+```text
+functional interface / SAM
+→ Java interface contract that provides the target type for functional behavior
+
+function type
+→ parameter / result / throws contract derived from a functional interface
+
+lambda expression
+→ behavior expression interpreted through a target functional-interface type
+
+target typing
+→ surrounding context supplies the target type used to type-check a lambda or method reference
+
+capture / effectively final
+→ rules governing access to enclosing local variables and state
+
+java.util.function
+→ standard reusable functional-interface families
+
+method / constructor reference
+→ concise reference to existing behavior adapted to a target function type
+
+behavior composition
+→ passing, returning and combining functional-interface values
+
+Optional
+→ explicit representation of possible absence at selected API boundaries
+
+Stream boundary
+→ Stream consumes functional contracts, while Stream pipeline mechanics remain owned by the Stream API module
+```
+
+**Learning roadmap:**
+
+```text
+What problem does passing behavior solve in Java?
+What Functional Programming in Java Is and Why It Matters
+        ↓
+What contract makes a lambda or method reference a typed Java value?
+Functional Interfaces and SAM Contracts
+        ↓
+How does Java type-check lambda syntax from context?
+Lambda Expressions and Target Typing
+        ↓
+What surrounding state can a lambda access and capture?
+Variable Capture, Scope, and State
+        ↓
+Which reusable function shapes does the JDK provide?
+Standard Functional Interfaces
+        ↓
+How can existing methods and constructors satisfy those contracts?
+Method and Constructor References
+        ↓
+How can code receive, return, and combine behavior?
+Behavior Composition and Higher-Order Use
+        ↓
+How can possible absence be represented and transformed explicitly?
+Optional and Explicit Absence
+        ↓
+How do these concepts connect to Stream without teaching Stream twice?
+Functional Programming and the Stream API Boundary
+        ↓
+When does functional style improve or reduce clarity?
+Side Effects, Exceptions, Trade-offs, and Practical Style
+```
+
+**Learning depth contract:** a first pass should prioritize the motivation for passing behavior, SAM/function type, lambda/target typing, effectively-final capture, the main `java.util.function` families, common method-reference forms, basic composition, and practical `Optional` use. Object-equivalent/inherited SAM edge rules, overload ambiguity, detailed target adaptation, primitive specializations, and checked-exception adaptation are second-pass topics. Pure-function/immutability theory and Stream pipeline mechanics remain cross-module boundaries rather than duplicated deep curriculum.
+
+#### Layer 2 — Chapter story
+
+```text
+FunctionalProgrammingPurpose             → Why does Java need reusable behavior values and where does this module fit?
+FunctionalInterfaceContracts             → What typed contract makes lambda/method-reference behavior legal Java?
+LambdaAndTargetTyping                    → How does lambda syntax become a typed expression from surrounding context?
+CaptureScopeAndState                     → Which enclosing variables/state can lambda behavior observe or retain?
+StandardFunctionalInterfaces             → Which standard behavior contracts should code reuse?
+MethodReferences                         → How can existing methods/constructors be adapted to those contracts?
+BehaviorCompositionAndHigherOrderUse     → How can APIs pass, return and combine behavior?
+OptionalAndAbsence                       → How can code make absence explicit and transform it without null-driven control flow?
+StreamApiBoundary                        → How do functional contracts feed Stream while Stream mechanics stay elsewhere?
+TradeoffsFailuresAndSynthesis            → How do side effects, checked exceptions, debugging and readability shape practical choices?
+```
+
+#### Knowledge map
+
+| Chapter | Locked anchored H2 sections |
+| --- | --- |
+| `1.FunctionalProgrammingPurpose/FunctionalProgrammingPurpose.md` | `#functional-programming-purpose` — What Is Functional Programming in Java?<br>`#hard-coded-behavior-problem` — The Problem with Hard-Coded Behavior<br>`#behavior-before-lambdas` — Before Lambdas: Anonymous Classes as Behavior Objects<br>`#behavior-parameterization` — Passing Behavior as a Parameter<br>`#functional-interface-bridge` — Functional Interfaces as the Typed Bridge<br>`#functional-multi-paradigm-boundary` — Functional Style inside Multi-Paradigm Java<br>`#functional-style-use-cases` — When Functional Style Helps<br>`#functional-programming-module-boundary` — What This Module Owns |
+| `2.FunctionalInterfaceContracts/FunctionalInterfaceContracts.md` | `#functional-interface-purpose` — What Makes an Interface Functional?<br>`#sam-contract` — The Single Abstract Method Contract<br>`#functional-interface-function-type` — The Function Type of a Functional Interface<br>`#sam-object-method-rule` — Object Method Signatures in SAM Rules<br>`#sam-inherited-method-rule` — Inherited Override-Equivalent Abstract Methods<br>`#functional-interface-annotation` — @FunctionalInterface<br>`#non-abstract-interface-methods` — Default, Static, and Private Interface Methods<br>`#custom-functional-interface` — Defining a Custom Functional Interface<br>`#functional-interface-contract-violations` — When a Functional Interface Contract Becomes Invalid |
+| `3.LambdaAndTargetTyping/LambdaAndTargetTyping.md` | `#lambda-expression-model` — What Is a Lambda Expression?<br>`#lambda-syntax-forms` — Lambda Syntax Forms<br>`#target-typing` — Target Typing<br>`#lambda-parameter-typing` — Explicit and Inferred Parameter Types<br>`#lambda-body-result-compatibility` — Lambda Body and Result Compatibility<br>`#lambda-target-contexts` — Where Lambda Target Types Come From<br>`#lambda-execution-timing` — Declaring Behavior vs Executing It<br>`#lambda-overload-ambiguity` — Overload Ambiguity with Lambdas |
+| `4.CaptureScopeAndState/CaptureScopeAndState.md` | `#lambda-lexical-scope` — Lambda Lexical Scope<br>`#captured-local-variables` — Captured Local Variables<br>`#captured-local-values` — What a Lambda Captures from Local Variables<br>`#effectively-final` — Final and Effectively Final<br>`#instance-static-state-access` — Accessing Instance and Static State<br>`#lambda-this` — The Meaning of this inside a Lambda<br>`#lambda-vs-anonymous-class-scope` — Lambda Scope vs Anonymous-Class Scope<br>`#captured-reference-mutation` — Captured References and Mutable Objects |
+| `5.StandardFunctionalInterfaces/StandardFunctionalInterfaces.md` | `#java-util-function-overview` — The java.util.function Families<br>`#function-contract` — Function&lt;T, R&gt;<br>`#predicate-contract` — Predicate&lt;T&gt;<br>`#consumer-contract` — Consumer&lt;T&gt;<br>`#supplier-contract` — Supplier&lt;T&gt;<br>`#operator-contracts` — UnaryOperator&lt;T&gt; and BinaryOperator&lt;T&gt;<br>`#bi-functional-interfaces` — BiFunction, BiConsumer, and BiPredicate<br>`#primitive-specializations` — Primitive Specializations<br>`#generic-input-output-flow` — Generic Input and Output Type Flow<br>`#functional-interfaces-outside-java-util-function` — Functional Interfaces outside java.util.function<br>`#standard-vs-custom-functional-interface` — Standard vs Domain-Specific Functional Interfaces |
+| `6.MethodReferences/MethodReferences.md` | `#method-reference-model` — What Is a Method Reference?<br>`#static-method-reference` — Static Method References<br>`#bound-instance-method-reference` — Bound Instance Method References<br>`#unbound-instance-method-reference` — Unbound Instance Method References<br>`#constructor-reference` — Constructor References<br>`#method-reference-target-adaptation` — Adapting to the Target Function Type<br>`#method-reference-result-adaptation` — Result Compatibility and Discarded Return Values<br>`#overloaded-method-reference` — Overloaded Method References<br>`#method-reference-vs-lambda` — Method Reference or Lambda? |
+| `7.BehaviorCompositionAndHigherOrderUse/BehaviorCompositionAndHigherOrderUse.md` | `#higher-order-methods` — Methods That Receive or Return Behavior<br>`#passing-behavior` — Passing Behavior to a Method<br>`#returning-behavior` — Returning Behavior from a Method<br>`#returned-behavior-capture` — Returning Behavior with Captured Values<br>`#function-composition` — Function Composition with compose and andThen<br>`#predicate-composition` — Predicate Composition<br>`#consumer-composition` — Consumer.andThen<br>`#composition-order` — Composition Order and Data Flow<br>`#composition-side-effects` — Side Effects inside Composed Behavior |
+| `8.OptionalAndAbsence/OptionalAndAbsence.md` | `#optional-purpose` — Why Optional Exists<br>`#optional-creation` — Creating Optional Values<br>`#optional-null-boundary` — Optional and the null Boundary<br>`#optional-presence` — Presence and Absence<br>`#optional-transform-filter` — Transforming and Filtering Optional Values<br>`#optional-consumption` — Consuming a Present Value<br>`#optional-fallback-and-failure` — Fallback and Failure Strategies<br>`#optional-api-design` — Optional at API Boundaries<br>`#optional-misuse` — Common Optional Misuses |
+| `9.StreamApiBoundary/StreamApiBoundary.md` | `#stream-functional-interface-bridge` — Why Stream APIs Consume Functional Interfaces<br>`#stream-behavior-contracts` — Functional Contracts Commonly Used by Streams<br>`#stream-lambda-method-reference` — Lambdas and Method References in Stream Code<br>`#collection-vs-stream-boundary` — Collection Data vs Stream Processing<br>`#stream-mechanics-boundary` — What Belongs to the Stream API Module<br>`#stream-learning-handoff` — When to Continue into the Stream API Module |
+| `10.TradeoffsFailuresAndSynthesis/TradeoffsFailuresAndSynthesis.md` | `#side-effects-in-lambdas` — Side Effects inside Lambdas<br>`#hidden-mutation-state` — Hidden Mutation and Captured State<br>`#checked-exception-constraint` — Checked Exceptions and Target Function Types<br>`#checked-exception-adaptation` — Adapting Checked Exceptions Explicitly<br>`#debugging-composed-behavior` — Debugging Composed Behavior<br>`#readability-vs-chaining` — Readability vs Excessive Chaining<br>`#functional-vs-imperative-choice` — Functional or Imperative Style?<br>`#functional-vs-oop-choice` — Functional Composition or Object-Oriented Structure?<br>`#purity-immutability-boundary` — Purity and Immutability: Paradigm Boundary<br>`#common-functional-pitfalls` — Common Functional-Java Pitfalls<br>`#functional-programming-synthesis` — Functional Programming in Java: End-to-End Mental Model |
+
+#### Step 3 surfaces
+
+Step 3 consumes the locked Knowledge curriculum without reshaping it:
+
+- **API Docs / Swagger:** not applicable for this module in its current form. The module has no Java controller/API source to document, so `BUILD_SWAGGER` remains `FALSE` and Step 3 does not manufacture demonstration endpoints merely to populate Swagger.
+- **Quiz:** enabled with `BUILD_QUIZ=TRUE`; 50 localized questions per language reinforce the 10-chapter learning order, use stable A/B/C/D answer identities, and link back to exact Knowledge anchors. `apiRelated` remains empty because Swagger is not applicable.
+- **Interview:** enabled with `BUILD_INTERVIEW=TRUE`; 32 localized interview questions per language progress from foundations through Java mechanics, trade-offs, and final synthesis, with exact Knowledge relations and empty `apiRelated` metadata.
+
+
+### 4.11 `collection`
 
 **API applicability:** Yes — ordering, uniqueness, hashing, iteration and mutability are observable.
 
@@ -1623,7 +1743,7 @@ collection purpose/common API; Collection vs Collections; functional-syntax boun
 how to choose collection; shared Collection and Map contracts; Collection vs Collections; HashMap conceptual lookup; TreeSet/TreeMap sorted/navigable and comparison-result contracts; Set algebra; Map.Entry/backed views; ListIterator; Queue/Deque equality boundary; mutable keys; fail-fast meaning; ArrayList vs LinkedList; unmodifiable vs fixed-size vs snapshot; PriorityQueue ordering.
 
 
-### 4.11 `date-time`
+### 4.12 `date-time`
 
 **API applicability:** Yes — zones, DST, arithmetic and deterministic Clock experiments are valuable.
 
@@ -1659,40 +1779,35 @@ Clock
 
 ```text
 What kind of "time" does the problem actually mean?
-Date-Time Mental Model
+What Date-Time Means and Why Multiple Models Exist
         ↓
-Need only a calendar date?
-LocalDate
-        ↓
-Need only wall-clock time?
-LocalTime
-        ↓
-Need both but still no global timeline meaning?
-LocalDateTime
+Need local calendar/wall-clock values with no zone yet?
+Local Calendar and Wall-Clock Values
+→ LocalDate / LocalTime / LocalDateTime
         ↓
 Need one precise point on the timeline?
-Instant
+Instant and Global Timeline
         ↓
 How do UTC offset and named zone rules differ?
-ZoneOffset / ZoneId
+ZoneOffset, ZoneId, and Zone Rules
         ↓
 How do we attach offset/zone context to date-time values?
-ZonedDateTime / OffsetDateTime
+OffsetDateTime, ZonedDateTime, and Zone Conversion
         ↓
 How do we represent elapsed time vs calendar amount?
-Duration / Period
+Elapsed Time vs Calendar Amount
         ↓
 How do we parse and format intentionally?
-Formatting / Parsing
+Formatting and Parsing
         ↓
-How do arithmetic and comparison change across types/zones?
-Arithmetic / Comparison
+How do arithmetic, comparison, and DST boundaries interact?
+Arithmetic, Comparison, and DST Boundaries
         ↓
 How do we make "now" testable?
-Clock
+Clock and Testable Time
         ↓
-How do legacy Date/Calendar APIs interoperate and where do defaults/DST cause bugs?
-Legacy Interop / Pitfalls
+How do legacy APIs, default zones, and storage boundaries fit the final model?
+Legacy Interop and Date-Time Synthesis
 ```
 
 **Running example / evidence strategy:** use a meeting/booking scenario with a user-local schedule and a stored global instant. Reuse it to show local date-time ambiguity, zone conversion, DST gap/overlap, duration/period differences and deterministic `Clock` tests.
@@ -1709,9 +1824,9 @@ ZoneOffsetZoneId      → Why is +07:00 not the same thing as Asia/Ho_Chi_Minh r
 ZonedOffsetDateTime   → When should the value carry named-zone rules versus only an offset?
 DurationPeriod        → Why is 24 hours different from one calendar day around DST/calendar rules?
 FormattingParsing     → How do text representation rules stay explicit and deterministic?
-ArithmeticComparison  → Which arithmetic operates on calendar fields and which on timeline distance?
+ArithmeticComparison  → How do calendar/timeline arithmetic, comparison semantics, and DST gap/overlap resolution interact?
 Clock                 → How do we remove hidden dependency on the system clock from business logic/tests?
-LegacyInteropPitfalls → How do Date/Calendar/default zone/DST assumptions leak bugs into modern code?
+LegacyInteropPitfalls → How do Date/Calendar, default-zone assumptions, storage boundaries, and final type-selection decisions fit together?
 ```
 
 #### Knowledge map
@@ -1727,9 +1842,9 @@ LegacyInteropPitfalls → How do Date/Calendar/default zone/DST assumptions leak
 | `7.ZonedOffsetDateTime/ZonedOffsetDateTime.md` | `#zoned-date-time` — ZonedDateTime combines local fields + zone rules<br>`#offset-date-time` — OffsetDateTime fixed offset semantics<br>`#same-instant-vs-same-local` — Same instant vs same local date-time<br>`#zone-conversion` — withZoneSameInstant vs local reinterpretation |
 | `8.DurationPeriod/DurationPeriod.md` | `#duration-time-based` — Duration is time-based<br>`#period-date-based` — Period is date-based<br>`#duration-vs-period` — DST/month-length consequences |
 | `9.FormattingParsing/FormattingParsing.md` | `#date-time-formatter` — DateTimeFormatter immutability<br>`#format-patterns` — Patterns vs predefined formatters<br>`#strict-smart-lenient` — Resolver styles<br>`#parse-target-type` — Parsing into correct temporal type |
-| `10.ArithmeticComparison/ArithmeticComparison.md` | `#temporal-arithmetic` — plus/minus operations<br>`#between-semantics` — ChronoUnit/Duration/Period between<br>`#date-time-comparison` — isBefore/isAfter/compareTo<br>`#business-calendar-boundary` — Business-day logic is separate policy |
+| `10.ArithmeticComparison/ArithmeticComparison.md` | `#temporal-arithmetic` — plus/minus operations<br>`#between-semantics` — ChronoUnit/Duration/Period between<br>`#date-time-comparison` — isBefore/isAfter/compareTo<br>`#dst-gap-overlap` — DST gaps, overlaps and local-time resolution<br>`#business-calendar-boundary` — Business-day logic is separate policy |
 | `11.Clock/Clock.md` | `#clock-abstraction` — Clock abstracts current time<br>`#fixed-clock-testing` — Fixed Clock for deterministic tests<br>`#clock-injection` — Inject Clock instead of calling now everywhere |
-| `12.LegacyInteropPitfalls/LegacyInteropPitfalls.md` | `#legacy-date-calendar` — Date/Calendar legacy mental model<br>`#legacy-conversion` — Conversion to/from Instant<br>`#system-default-zone-risk` — System default time-zone risk<br>`#dst-gap-overlap` — DST gaps and overlaps<br>`#timestamp-storage-boundary` — Store instant vs local business time deliberately |
+| `12.LegacyInteropPitfalls/LegacyInteropPitfalls.md` | `#legacy-date-calendar` — Date/Calendar legacy mental model<br>`#legacy-conversion` — Conversion to/from Instant<br>`#system-default-zone-risk` — System default time-zone risk<br>`#timestamp-storage-boundary` — Store instant vs local business time deliberately |
 
 #### Proposed API experiments
 
@@ -1751,7 +1866,7 @@ type choice; local vs instant; offset vs zone; same instant/local; Duration vs P
 Instant vs LocalDateTime vs ZonedDateTime; storing timestamps; DST bugs; Duration vs Period; why Clock injection matters; ZoneId vs ZoneOffset; formatter thread safety; legacy migration.
 
 
-### 4.12 `io`
+### 4.13 `io`
 
 **API applicability:** Conditional — controlled temp resources could demonstrate stream/channel/resource semantics, but the current `JAVA_IO` module is `LIBRARY` with `BUILD_SWAGGER=FALSE`, so API Docs are intentionally absent unless real runtime learning APIs are introduced later.
 
@@ -1805,37 +1920,37 @@ AutoCloseable / try-with-resources
 
 ```text
 What is moving, from where to where, and who owns the resource?
-I/O Mental Model
+I/O Data-Flow Model and Resource Lifetime
         ↓
 Is the payload raw bytes or structured primitive binary data?
-Byte Streams
+Byte Streams and Structured Binary Data
         ↓
 Is the payload text?
-Character Streams
+Character Streams and Charset Conversion
         ↓
-Why do many tiny reads/writes cost more?
-Buffered I/O
+How do wrappers add behavior, and why do many tiny reads/writes cost more?
+Stream Wrappers, Buffering, and Flush Semantics
         ↓
 How did Java historically represent filesystem paths?
-File
+File and the Legacy Path Model
         ↓
 What is the modern filesystem API, including provider-backed semantics, temporary resources, attributes and change notification?
-Path / Files
+Path, Files, and the Modern Filesystem Model
         ↓
 How does NIO model data with Channel + Buffer, byte order and multi-buffer transfer?
-Buffers / Channels
+Buffers and Channels in NIO
         ↓
 What file-specific synchronous/asynchronous operations become possible with FileChannel-family APIs?
-FileChannel
+FileChannel and Advanced File I/O
         ↓
 How do we guarantee close/release behavior?
-Resource Management
+Resource Lifetime and Failure Safety
         ↓
 What does Java object serialization do and why is it a boundary-heavy feature?
-Serialization
+Java Object Serialization Boundary
         ↓
 How do we choose the simplest correct I/O abstraction?
-Choosing I/O
+Choosing the Simplest Correct I/O Abstraction
 ```
 
 **Running example / evidence strategy:** move one UTF-8 text payload from memory to a temporary file and back, first as bytes, then characters, then buffered/channel-based forms. Add one compact structured-binary record with fixed primitive fields to demonstrate DataInput/DataOutput and ByteOrder without turning the module into a binary-protocol course. Use a controlled temporary directory for WatchService evidence and a bounded file for asynchronous/scatter-gather examples. Keep charset, framing, byte order and resource ownership explicit.
@@ -1846,7 +1961,7 @@ Choosing I/O
 MentalModel        → What are source, sink, payload unit and resource lifetime?
 ByteStreams        → When must data remain opaque bytes, and how are primitive values given a binary field contract?
 CharacterStreams   → How do bytes become characters through a Charset-aware layer?
-BufferedIO         → Why does batching improve throughput and where does flushing matter?
+BufferedIO         → How do wrappers add behavior, why does batching improve throughput and where does flushing matter?
 File               → What does the legacy File abstraction represent and what are its limitations?
 PathFiles          → How do Path, FileSystem/provider and Files separate path identity, filesystem capabilities, storage metadata and operations?
 BuffersChannels    → Why does NIO separate storage of data from the conduit that moves it, and how do byte order/scatter-gather affect binary transfer?
@@ -1860,17 +1975,17 @@ ChoosingIO         → Given payload, scale and operation pattern, which abstrac
 
 | Existing chapter | Proposed anchored H2 sections |
 | --- | --- |
-| `1.MentalModel/MentalModel.md` | `#io-data-flow` — I/O as data flow between source/sink<br>`#bytes-vs-characters` — Byte vs character abstraction<br>`#blocking-io-boundary` — Blocking I/O mental model<br>`#resource-lifecycle` — I/O resources have lifecycle |
+| `1.MentalModel/MentalModel.md` | `#io-data-flow` — I/O as data flow between source/sink<br>`#bytes-vs-characters` — Byte vs character abstraction<br>`#blocking-io-boundary` — Blocking/non-blocking call behavior vs asynchronous completion<br>`#resource-lifecycle` — I/O resources have lifecycle |
 | `2.ByteStreams/ByteStreams.md` | `#inputstream-outputstream` — InputStream/OutputStream model<br>`#standard-console-io` — Standard streams and Console boundary<br>`#read-contract` — read return values and EOF<br>`#partial-read-write` — Reads/writes may be partial<br>`#typed-binary-io` — DataInput/DataOutput structured primitive binary I/O<br>`#byte-stream-use-cases` — Binary data use cases |
-| `3.CharacterStreams/CharacterStreams.md` | `#reader-writer` — Reader/Writer model<br>`#charset-bridge` — InputStreamReader/OutputStreamWriter charset bridge<br>`#character-buffering` — Character buffering |
-| `4.BufferedIO/BufferedIO.md` | `#buffering-purpose` — Why buffering reduces calls<br>`#flush-semantics` — flush semantics<br>`#buffer-size-tradeoff` — Buffer size trade-off<br>`#buffered-wrappers` — BufferedInputStream/Reader/Writer |
+| `3.CharacterStreams/CharacterStreams.md` | `#reader-writer` — Reader/Writer model<br>`#charset-bridge` — InputStreamReader/OutputStreamWriter charset bridge |
+| `4.BufferedIO/BufferedIO.md` | `#wrapper-composition` — I/O wrapper composition and delegated behavior<br>`#buffering-purpose` — Why buffering reduces calls<br>`#character-buffering` — BufferedReader/BufferedWriter and line-oriented text<br>`#flush-semantics` — flush semantics<br>`#buffer-size-tradeoff` — Buffer size trade-off<br>`#buffered-wrappers` — BufferedInputStream/Reader/Writer |
 | `5.File/File.md` | `#legacy-file-model` — java.io.File is path-like metadata API<br>`#file-path-limitations` — Legacy File limitations<br>`#file-api-boundary` — Why prefer Path/Files for modern code |
-| `6.PathFiles/PathFiles.md` | `#path-model` — Path is filesystem path abstraction<br>`#filesystem-provider-model` — FileSystem/FileSystemProvider/FileStore ownership and capability model<br>`#resolve-normalize` — resolve/normalize/relativize<br>`#files-operations` — Files read/write/copy/move/delete<br>`#temporary-files` — Temporary files/directories and cleanup ownership<br>`#file-attributes` — Attributes and metadata<br>`#file-permissions-ownership` — File owner/permission views and portability boundary<br>`#directory-stream-walk` — Directory listing/walking and resource concerns<br>`#watch-service-boundary` — WatchService filesystem-change notification boundary |
-| `7.BuffersChannels/BuffersChannels.md` | `#buffer-state` — Buffer position/limit/capacity<br>`#byte-order-structured-binary` — ByteOrder and multi-byte primitive layout<br>`#flip-clear-compact` — flip/clear/compact<br>`#channel-model` — Channel read/write model<br>`#scatter-gather-boundary` — Scattering/gathering multi-buffer channel I/O boundary<br>`#bytebuffer-types` — Heap vs direct ByteBuffer boundary |
-| `8.FileChannel/FileChannel.md` | `#filechannel-random-access` — Random-position I/O and RandomAccessFile comparison boundary<br>`#asynchronous-filechannel-boundary` — AsynchronousFileChannel positional async I/O boundary<br>`#filechannel-transfer` — transferTo/transferFrom<br>`#file-lock-boundary` — File locking boundary<br>`#memory-mapped-boundary` — Memory-mapped file boundary |
-| `9.ResourceManagement/ResourceManagement.md` | `#closeable-lifecycle` — Closeable/AutoCloseable<br>`#try-with-resources-io` — Try-with-resources for I/O<br>`#resource-ownership` — Who owns and closes a stream<br>`#close-wrapper-chain` — Closing wrapper chains |
+| `6.PathFiles/PathFiles.md` | `#path-model` — Path is filesystem path abstraction<br>`#resolve-normalize` — resolve/normalize/relativize<br>`#files-operations` — Files read/write/copy/move/delete<br>`#temporary-files` — Temporary files/directories and cleanup ownership<br>`#file-attributes` — Attributes and metadata<br>`#filesystem-provider-model` — FileSystem/FileSystemProvider/FileStore ownership and capability model<br>`#file-permissions-ownership` — File owner/permission views and portability boundary<br>`#directory-stream-walk` — Directory listing/walking and resource concerns<br>`#watch-service-boundary` — WatchService filesystem-change notification boundary |
+| `7.BuffersChannels/BuffersChannels.md` | `#buffer-state` — Buffer position/limit/capacity<br>`#flip-clear-compact` — flip/clear/compact<br>`#byte-order-structured-binary` — ByteOrder and multi-byte primitive layout<br>`#channel-model` — Channel read/write model<br>`#scatter-gather-boundary` — Scattering/gathering multi-buffer channel I/O boundary<br>`#bytebuffer-types` — Heap vs direct ByteBuffer boundary |
+| `8.FileChannel/FileChannel.md` | `#filechannel-random-access` — Random-position I/O and RandomAccessFile comparison boundary<br>`#filechannel-transfer` — transferTo/transferFrom<br>`#file-lock-boundary` — File locking boundary<br>`#memory-mapped-boundary` — Memory-mapped file boundary<br>`#asynchronous-filechannel-boundary` — AsynchronousFileChannel positional async I/O boundary |
+| `9.ResourceManagement/ResourceManagement.md` | `#closeable-lifecycle` — Closeable/AutoCloseable<br>`#resource-ownership` — Who owns and closes a stream<br>`#try-with-resources-io` — Try-with-resources for I/O<br>`#close-wrapper-chain` — Closing wrapper chains |
 | `10.Serialization/Serialization.md` | `#java-serialization-model` — Object serialization model<br>`#serializable-graph` — Serializable object graph<br>`#serialversionuid` — serialVersionUID/version compatibility<br>`#transient-field` — transient fields<br>`#serialization-security-risk` — Native serialization security/compatibility risks |
-| `11.ChoosingIO/ChoosingIO.md` | `#choose-stream-reader-channel` — Choose stream/reader/channel/path by problem<br>`#memory-vs-streaming` — Streaming vs loading whole content<br>`#charset-explicit` — Make charset explicit<br>`#io-error-handling` — I/O error/partial-operation handling<br>`#io-performance-boundary` — Measure before optimizing I/O |
+| `11.ChoosingIO/ChoosingIO.md` | `#choose-stream-reader-channel` — Choose stream/reader/channel/path or ClassLoader resource lookup by problem<br>`#memory-vs-streaming` — Streaming vs loading whole content<br>`#charset-explicit` — Make charset explicit<br>`#io-error-handling` — I/O error/partial-operation handling<br>`#io-performance-boundary` — Measure before optimizing I/O |
 
 #### Proposed API experiments
 
@@ -1897,7 +2012,7 @@ byte vs char; standard/console I/O; EOF/read contract; typed primitive binary I/
 
 InputStream vs Reader; DataInput/DataOutput vs object serialization; explicit charset; Path/Files vs File; FileSystem/provider capability boundaries; temp-resource ownership; WatchService delivery limitations; flip/clear/compact; byte order; scatter/gather; blocking vs asynchronous file I/O; try-with-resources ownership; serialization risks; streaming large files.
 
-### 4.13 `localization`
+### 4.14 `localization`
 
 **API applicability:** Yes — locale-sensitive formatting, bundles, fallback and collation are directly observable.
 
@@ -2044,7 +2159,7 @@ Locale structure/defaults; language tags/matching; ResourceBundle lookup/fallbac
 i18n vs l10n; Locale vs Currency vs ZoneId; ResourceBundle fallback; why default Locale is dangerous; MessageFormat; locale-sensitive comparison; text segmentation vs naive splitting; logical vs visual order in bidi text; locale-sensitive week/numbering conventions; separating domain data from presentation.
 
 
-### 4.14 `annotation`
+### 4.15 `annotation`
 
 **API applicability:** Yes, partially — runtime-retained annotations are observable; compile-time processing remains primarily Knowledge/code evidence.
 
@@ -2159,7 +2274,7 @@ annotation syntax/types; built-ins; retention; target; meta-annotations; repeata
 why annotations exist; retention choice; @Inherited limitations; repeatable annotations; annotation processing lifecycle; runtime reflection vs compile-time code generation; framework metadata design; when annotations are appropriate, alternatives, overuse risks and design review checklist.
 
 
-### 4.15 `reflection`
+### 4.16 `reflection`
 
 **API applicability:** Yes — reflection is itself runtime inspection, making APIs directly educational.
 
@@ -2281,7 +2396,7 @@ Class entrypoints; declared vs inherited members; Field/Method/Constructor APIs;
 how frameworks use reflection; getMethod vs getDeclaredMethod; InvocationTargetException; generic Type hierarchy; JPMS effects; dynamic proxy internals; reflection vs MethodHandle; native-image/refactoring concerns.
 
 
-### 4.16 `classloader`
+### 4.17 `classloader`
 
 **API applicability:** Yes — loader chain, resource lookup, initialization and identity can be observed; unloading/leaks need bounded demonstrations.
 
@@ -2415,7 +2530,7 @@ class loading lifecycle; parent delegation; why same class name can be different
 | `generics` | 9 | 41 | 6 | 28–38 | 20–28 |
 | `collection` | 12 | 71 | 8 | 34–46 | 22–30 |
 | `date-time` | 12 | 41 | 6 | 30–40 | 20–28 |
-| `io` | 11 | 45 | 7 | 30–40 | 20–28 |
+| `io` | 11 | 55 | 7 | 30–40 | 20–28 |
 | `localization` | 13 | 55 | 11 | 26–34 | 18–24 |
 | `annotation` | 9 | 40 | 5 | 24–32 | 18–24 |
 | `reflection` | 10 | 45 | 7 | 30–40 | 22–30 |

@@ -1,0 +1,317 @@
+# <interview-schema>
+# Cấu trúc câu hỏi Interview
+# schema-version: 2
+#
+# questions [kiểu: list; bắt buộc; mặc định: []]
+#   Danh sách câu hỏi Interview của module trong language hiện tại.
+#   mỗi phần tử:
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi phỏng vấn hiển thị cho người học.
+#     answer [kiểu: string; bắt buộc; mặc định: ""]
+#       Câu trả lời tham khảo, chỉ hiển thị khi người học chủ động mở.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu nội dung được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu nội dung đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+# </interview-schema>
+
+questions:
+  - question: >-
+      “Lập trình hàm trong Java” có nghĩa gì khi Java vẫn là ngôn ngữ hướng đối tượng và mệnh lệnh, và việc xem hành vi như một giá trị có kiểu giải quyết vấn đề gì?
+    answer: >-
+      Phong cách lập trình hàm trong Java biểu diễn hành vi bằng các hợp đồng có kiểu để hành vi có thể được truyền vào, lựa chọn, trả về, kết hợp hoặc thực thi sau. Java vẫn là ngôn ngữ đa mô hình: đối tượng vẫn mô hình hóa trạng thái và trách nhiệm, còn luồng điều khiển mệnh lệnh vẫn phù hợp trong nhiều trường hợp. Giao diện hàm (functional interface) là cầu nối vì lambda và tham chiếu phương thức (method reference) cần một kiểu Java đích. Lợi ích thực tế là tách phần điều phối ổn định khỏi hành vi thay đổi, nhờ đó giảm các nhánh bị viết cứng và cho phép API nhận chính sách hoặc chiến lược mà không phải tạo cả một hệ phân cấp lớp cho từng hành vi nhỏ.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.FunctionalProgrammingPurpose/FunctionalProgrammingPurpose.md", anchor: "functional-programming-purpose"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Một phương thức có cờ chế độ ngày càng phình to và nhiều nhánh if/else cho các quy tắc lựa chọn khác nhau. Tham số hóa hành vi sẽ thay đổi thiết kế này như thế nào, và khi nào việc chuyển các nhánh đó thành lambda lại là ý tưởng không tốt?
+    answer: >-
+      Hãy giữ phần duyệt dữ liệu hoặc điều phối ổn định trong một phương thức và nhận quy tắc thay đổi qua một giao diện hàm như Predicate<T>. Khi đó phía gọi cung cấp quy tắc thay vì buộc phương thức phải biết mọi biến thể. Cách này phù hợp khi hành vi thực sự biến đổi hoặc có thể tái sử dụng. Không nên biến mọi câu lệnh if thành lambda: nếu chính luồng điều khiển mới là nội dung cần đọc, hoặc việc tách thành nhiều hành vi rất nhỏ làm quá trình chuyển trạng thái khó theo dõi hơn, mã mệnh lệnh thông thường có thể rõ ràng hơn.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.FunctionalProgrammingPurpose/FunctionalProgrammingPurpose.md", anchor: "behavior-parameterization"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Trước khi có lambda, Java đã có thể truyền hành vi bằng lớp vô danh (anonymous class). Lambda đã thay đổi điều gì, và vì sao lambda không đơn giản là một “phương thức không tên” không có kiểu?
+    answer: >-
+      Lớp vô danh vốn đã cho phép Java đóng gói hành vi trong một đối tượng triển khai giao diện, nhưng cú pháp phải lặp lại phần tạo đối tượng, phương thức của giao diện, kiểu tham số và nhiều mã khuôn mẫu quanh hành vi thực sự. Lambda giúp viết ngắn gọn phần triển khai một hợp đồng giao diện hàm tương thích. Lambda không phải một hàm độc lập không có kiểu: nó cần giao diện hàm đích do ngữ cảnh cung cấp, và kiểu đích đó quyết định kiểu tham số, yêu cầu về kết quả và ràng buộc ngoại lệ được kiểm tra (checked exception).
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.FunctionalProgrammingPurpose/FunctionalProgrammingPurpose.md", anchor: "behavior-before-lambdas"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Điều gì thực sự khiến một giao diện Java trở thành giao diện hàm? Hãy giải thích vì sao chỉ đếm các khai báo trông giống trừu tượng là chưa đủ, kể cả chữ ký phương thức của Object và các phương thức kế thừa tương đương khi ghi đè (override-equivalent).
+    answer: >-
+      Sau khi áp dụng các quy tắc về giao diện hàm của Java, giao diện phải còn một hợp đồng trừu tượng thống nhất mà lambda có thể triển khai. Một khai báo trừu tượng tương ứng với phương thức thực thể (instance method) public của Object, chẳng hạn equals(Object), không tạo thêm nghĩa vụ SAM. Các phương thức trừu tượng được kế thừa cũng có thể hợp nhất thành một hợp đồng nếu chúng override-equivalent và có kiểu trả về tương thích, kể cả kiểu trả về hiệp biến. Vì vậy mô hình đúng không phải là “trong mã nguồn có đúng một từ khóa abstract”, mà là có đúng một hợp đồng hàm hiệu lực sau khi xét kế thừa và các quy tắc liên quan của ngôn ngữ.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.FunctionalInterfaceContracts/FunctionalInterfaceContracts.md", anchor: "sam-inherited-method-rule"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Kiểu hàm (function type) của một giao diện hàm là gì, và những phần nào của hợp đồng đó ràng buộc lambda hoặc tham chiếu phương thức?
+    answer: >-
+      Kiểu hàm là hình dạng lời gọi mà Java suy ra từ hợp đồng của giao diện hàm. Nó gồm kiểu các tham số, kiểu kết quả hoặc void, cùng các ngoại lệ được kiểm tra mà hợp đồng cho phép. Vì vậy lambda hoặc tham chiếu phương thức nhắm tới giao diện đó phải tương thích với tất cả các thành phần này. Đây là lý do hai giao diện hàm có vẻ cùng số lượng tham số vẫn có thể đặt ra yêu cầu khác nhau về kiểu, kết quả hoặc ngoại lệ.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.FunctionalInterfaceContracts/FunctionalInterfaceContracts.md", anchor: "functional-interface-function-type"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      @FunctionalInterface đảm bảo điều gì, không đảm bảo điều gì, và các phương thức default, static hoặc private trong giao diện có phá vỡ hợp đồng SAM không?
+    answer: >-
+      @FunctionalInterface yêu cầu trình biên dịch xác minh giao diện có thỏa các quy tắc của giao diện hàm hay không, đồng thời ghi rõ chủ đích duy trì một hợp đồng hàm. Chú thích này không bắt buộc để một giao diện trở thành giao diện hàm. Các phương thức default, static và private đều có phần triển khai nên không thêm hành vi trừu tượng mà lambda phải cung cấp. Phương thức default và static trong giao diện có từ Java 8, còn phương thức private trong giao diện được thêm ở Java 9, vì vậy phương thức hỗ trợ private trong giao diện không tương thích mã nguồn với Java 8.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.FunctionalInterfaceContracts/FunctionalInterfaceContracts.md", anchor: "non-abstract-interface-methods"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Khi nào nên dùng giao diện hàm tự định nghĩa thay vì Function, Predicate hoặc một giao diện chuẩn khác, và cần tránh sai lầm nào khi giao diện đó phát triển?
+    answer: >-
+      Nên dùng giao diện hàm tự định nghĩa khi ý nghĩa miền nghiệp vụ đáng có tên riêng, khi hợp đồng cần khai báo một ngoại lệ được kiểm tra cụ thể, hoặc khi một kiểu chuẩn quá chung sẽ che mất cam kết ngữ nghĩa quan trọng. Giao diện chuẩn phù hợp hơn khi hình dạng của nó đã diễn đạt rõ ý định và khả năng kết hợp chuẩn có ích. Nếu một giao diện được chủ đích dùng làm đích cho lambda, việc thêm thao tác trừu tượng thứ hai không tương thích phải dẫn tới xem xét lại thiết kế; chỉ xóa @FunctionalInterface để trình biên dịch im lặng là bỏ đi một hàng rào hữu ích chứ không sửa mô hình trừu tượng.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.FunctionalInterfaceContracts/FunctionalInterfaceContracts.md", anchor: "custom-functional-interface"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Suy kiểu theo đích (target typing) đối với lambda là gì, và lambda có thể nhận kiểu đích từ những ngữ cảnh nào? Vì sao cùng một cú pháp lambda có thể mang ý nghĩa khác nhau trong các ngữ cảnh khác nhau?
+    answer: >-
+      Lambda được suy kiểu theo ngữ cảnh đích: cú pháp Java xung quanh cung cấp giao diện hàm dùng để kiểm tra lambda. Các nguồn phổ biến gồm ngữ cảnh gán, vị trí đối số của phương thức, ngữ cảnh trả về hoặc phép ép kiểu tường minh. Kiểu đích quyết định kiểu tham số, hợp đồng kết quả và các ngoại lệ được kiểm tra được phép, nên cùng một đoạn lambda có thể hợp lệ cho các giao diện khác nhau với ý nghĩa khác nhau. Nếu không có giao diện hàm đích phù hợp, lambda thông thường không thể tự đứng độc lập như một giá trị có kiểu riêng.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.LambdaAndTargetTyping/LambdaAndTargetTyping.md", anchor: "target-typing"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Kiểu tham số được suy ra, kiểu tham số khai báo tường minh và var hoạt động thế nào trong danh sách tham số lambda, và quy tắc nhất quán nào áp dụng trong cùng một danh sách?
+    answer: >-
+      Giao diện hàm đích thường cung cấp được kiểu cho tham số lambda, nên nhiều trường hợp không cần viết kiểu tường minh. Tham số cũng có thể được khai báo bằng kiểu cụ thể; từ Java 11 có thể dùng var khi hữu ích, chẳng hạn để gắn chú thích nhất quán. Trong cùng một danh sách tham số lambda, cách khai báo phải nhất quán: không trộn tham số suy kiểu ngầm với tham số có kiểu tường minh hoặc với var. Suy luận kiểu (type inference) chỉ loại bỏ cú pháp lặp lại, không có nghĩa tham số thiếu kiểu tại thời điểm biên dịch.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.LambdaAndTargetTyping/LambdaAndTargetTyping.md", anchor: "lambda-parameter-typing"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Hãy giải thích thân lambda tương thích giá trị (value-compatible) và tương thích void (void-compatible). Vì sao Consumer đôi khi có thể gọi một phương thức trả về giá trị, và vì sao điều đó không khiến mọi biểu thức sinh giá trị đều hợp lệ với đích void?
+    answer: >-
+      Lambda dạng khối nhắm tới đích có giá trị phải thỏa các quy tắc cấu trúc để tạo ra giá trị: khối đó không được kết thúc theo luồng bình thường và mọi câu lệnh return trong khối đều phải trả về một biểu thức, sau đó kết quả của biểu thức phải tương thích với kiểu kết quả đích. Đích void chấp nhận khối tương thích không có return trả về giá trị; thân lambda dạng biểu thức cũng có thể là một biểu thức được phép dùng như câu lệnh (statement expression). Vì vậy Consumer có thể gọi một phương thức có giá trị trả về rồi bỏ qua giá trị đó. Tuy nhiên không phải biểu thức sinh giá trị tùy ý nào cũng hợp lệ với void.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.LambdaAndTargetTyping/LambdaAndTargetTyping.md", anchor: "lambda-body-result-compatibility"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Vì sao các phương thức nạp chồng có thể trở nên mơ hồ khi truyền lambda, và có những cách thực tế nào để giải quyết hoặc tránh sự mơ hồ đó? Đồng thời hãy phân biệt việc tạo ra một giá trị lambda với việc thực thi thân của nó.
+    answer: >-
+      Nếu hai biến thể nạp chồng nhận các giao diện hàm không liên quan nhưng có hình dạng lambda tương thích, lambda có thể không cung cấp đủ thông tin để trình biên dịch chọn một biến thể. Có thể ép kiểu tường minh hoặc gán lambda vào biến thuộc giao diện mong muốn để phân giải lời gọi; người thiết kế API cũng nên tránh các tập nạp chồng chỉ khác nhau ở những giao diện hàm không liên quan nhưng cùng hình dạng. Riêng việc đánh giá một biểu thức lambda cho ra một giá trị giao diện hàm, còn thân lambda chỉ chạy khi phương thức hàm của giao diện được phía nhận gọi; Java không đảm bảo mỗi lần đánh giá lambda đều cấp phát một đối tượng mới.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.LambdaAndTargetTyping/LambdaAndTargetTyping.md", anchor: "lambda-overload-ambiguity"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Vì sao biến cục bộ được lambda bắt giữ phải là final hoặc effectively final, và chính xác lambda giữ lại gì khi bắt giữ một giá trị cục bộ?
+    answer: >-
+      Lambda chỉ có thể bắt giữ một biến cục bộ khi biến đó là final hoặc effectively final, nghĩa là liên kết của biến không bị gán lại sau khi khởi tạo. Về mặt khái niệm, lambda giữ lại giá trị đã bắt giữ mà hành vi cần, chứ không giữ một “ô biến cục bộ có thể thay đổi” đặc biệt để phương thức bao ngoài có thể gán lại sau đó. Ràng buộc này tránh ngữ nghĩa khó hiểu khi vòng đời của biến cục bộ vượt ra ngoài khung ngăn xếp (stack frame) ban đầu. Quy tắc áp dụng cho chính liên kết của biến, không áp dụng cho khả năng thay đổi của đối tượng mà liên kết đó tham chiếu tới.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.CaptureScopeAndState/CaptureScopeAndState.md", anchor: "effectively-final"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      this, super và phạm vi từ vựng (lexical scope) hoạt động thế nào bên trong lambda, và khác lớp vô danh ra sao?
+    answer: >-
+      Lambda dùng phạm vi từ vựng của ngữ cảnh bao quanh. this bên trong lambda có cùng nghĩa với this ở mã bao ngoài; việc truy cập thành viên không định danh và cách dùng super hợp lệ cũng tuân theo phạm vi bao ngoài. Lớp vô danh thì khác vì nó tạo ra một phạm vi đối tượng mới: bên trong phương thức thực thể của lớp vô danh, this trỏ tới chính đối tượng vô danh. Khác biệt này quan trọng khi đổi lớp vô danh thành lambda vì cách tra cứu thành viên và hành vi phụ thuộc vào danh tính đối tượng có thể thay đổi.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.CaptureScopeAndState/CaptureScopeAndState.md", anchor: "lambda-vs-anonymous-class-scope"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Nếu một tham chiếu cục bộ được bắt giữ là effectively final thì đối tượng mà nó trỏ tới vẫn có thể thay đổi không? Điều này liên quan thế nào tới trường thực thể/static và an toàn luồng?
+    answer: >-
+      Có. Effectively final chỉ ngăn việc gán lại tham chiếu cục bộ đã bắt giữ; nó không làm đối tượng được tham chiếu trở thành bất biến. Vì vậy lambda vẫn có thể thay đổi một ArrayList hoặc đối tượng có thể thay đổi (mutable) khác đi qua tham chiếu đó. Trường thực thể (instance) và static không phải biến cục bộ được bắt giữ và tuân theo các quy tắc truy cập trường thông thường, nên chúng cũng có thể được đọc hoặc thay đổi khi có quyền truy cập. Không điều nào ở đây tự tạo ra an toàn luồng: nếu các lambda chạy đồng thời, các vấn đề về tính nhìn thấy (visibility), đồng bộ hóa, tính nguyên tử và Java Memory Model vẫn phải được xử lý.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.CaptureScopeAndState/CaptureScopeAndState.md", anchor: "captured-reference-mutation"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      So sánh Function, Predicate, Consumer và Supplier theo hình dạng đầu vào/đầu ra và theo ý định mà mỗi giao diện truyền đạt. Vì sao chọn theo vai trò ngữ nghĩa tốt hơn chỉ chọn theo số lượng tham số?
+    answer: >-
+      Function<T,R> biến đổi T thành R, Predicate<T> đặt một câu hỏi boolean về T, Consumer<T> nhận T để thực hiện hành động mà hợp đồng không trả kết quả, còn Supplier<T> tạo ra T mà không nhận tham số đầu vào. Hình dạng của chúng quan trọng, nhưng tên của chúng cũng truyền đạt ý định cho phía gọi và người đọc. Chọn giao diện chỉ vì nó có đúng số tham số có thể làm mờ ý nghĩa; nên dùng hợp đồng có vai trò khớp với hành vi thực sự được biểu diễn.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.StandardFunctionalInterfaces/StandardFunctionalInterfaces.md", anchor: "java-util-function-overview"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      UnaryOperator/BinaryOperator và các giao diện hàm dạng Bi* dùng để làm gì, và khi nào nên ưu tiên các biến thể chuyên cho kiểu nguyên thủy như IntPredicate hoặc ToIntFunction?
+    answer: >-
+      UnaryOperator<T> là Function<T,T>, còn BinaryOperator<T> là BiFunction<T,T,T>; chúng diễn đạt phép biến đổi cùng kiểu chính xác hơn. BiFunction, BiPredicate và BiConsumer mô hình hóa các biến thể hai đầu vào của những hợp đồng quen thuộc. Các biến thể chuyên cho kiểu nguyên thủy như IntPredicate, IntUnaryOperator hoặc ToIntFunction giúp tránh boxing/unboxing không cần thiết khi API hoặc đường xử lý nóng làm việc nhiều với kiểu nguyên thủy. Đây không phải một mô hình lập trình khác, vì vậy nên dùng khi API vốn đã yêu cầu chúng hoặc khi chi phí boxing và độ rõ ràng khiến kiểu chuyên biệt trở nên hợp lý.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.StandardFunctionalInterfaces/StandardFunctionalInterfaces.md", anchor: "primitive-specializations"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Nên đọc luồng kiểu tổng quát (generic) của Function<T,R>, BiFunction<T,U,R>, Predicate<T>, Consumer<T> và Supplier<T> như thế nào khi gỡ lỗi việc kết hợp hành vi hoặc lời gọi API?
+    answer: >-
+      Hãy xem các tham số kiểu như một hợp đồng luồng dữ liệu. Function<T,R> nhận T và tạo R; BiFunction<T,U,R> nhận T và U rồi tạo R; Predicate<T> nhận T và tạo boolean; Consumer<T> nhận T và không trả kết quả trong hợp đồng; Supplier<T> không có đầu vào và tạo T. Khi kết hợp hoặc truyền hành vi, hãy lần theo kiểu đầu ra của một bước sang kiểu đầu vào mà bước kế tiếp yêu cầu. Cách này phát hiện được nhiều điểm không tương thích trước khi cần nhìn vào chi tiết triển khai.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.StandardFunctionalInterfaces/StandardFunctionalInterfaces.md", anchor: "generic-input-output-flow"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Có phải mọi giao diện hàm đều nằm trong java.util.function không? Trong mã dùng thực tế, bạn sẽ quyết định giữa giao diện chuẩn và giao diện đặc thù miền nghiệp vụ như thế nào?
+    answer: >-
+      Không. Runnable, Callable<V>, Comparator<T> và nhiều giao diện khác trong JDK vẫn có thể là giao diện hàm dù nằm ngoài java.util.function. Điều quyết định là hợp đồng chứ không phải gói (package). Nên dùng giao diện chuẩn khi hình dạng và từ vựng của nó diễn đạt rõ hành vi và khả năng kết hợp chuẩn có ích. Nên dùng giao diện đặc thù miền nghiệp vụ khi một vai trò nghiệp vụ cần tên rõ ràng, khi hợp đồng ngoại lệ được kiểm tra khác đi, hoặc khi dùng Function hay Predicate sẽ làm mất một cam kết ngữ nghĩa quan trọng.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.StandardFunctionalInterfaces/StandardFunctionalInterfaces.md", anchor: "standard-vs-custom-functional-interface"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      So sánh tham chiếu tới phương thức static, phương thức thực thể đã gắn đối tượng nhận (bound), phương thức thực thể chưa gắn đối tượng nhận (unbound) và hàm khởi tạo (constructor). Đối tượng nhận cùng các đối số được ánh xạ thế nào, và điều gì xảy ra nếu đối tượng nhận của một tham chiếu bound là null?
+    answer: >-
+      Type::staticMethod ánh xạ các đối số của giao diện hàm trực tiếp vào lời gọi static. expression::instanceMethod là dạng bound: biểu thức đối tượng nhận được đánh giá ngay khi biểu thức tham chiếu phương thức được đánh giá, còn các đối số của giao diện hàm chỉ cung cấp những đối số còn lại của phương thức. Type::instanceMethod là dạng unbound: đối số đầu tiên của giao diện hàm trở thành đối tượng nhận. Type::new nhắm tới constructor tương thích. Với tham chiếu bound, nếu việc đánh giá đối tượng nhận cho ra null thì quá trình tạo tham chiếu phương thức ném NullPointerException ngay lập tức; việc kiểm tra null không bị trì hoãn tới lúc gọi.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.MethodReferences/MethodReferences.md", anchor: "bound-instance-method-reference"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Tham chiếu phương thức thích nghi với giao diện hàm đích như thế nào về kiểu tham số, boxing/unboxing và trường hợp phương thức trả về một giá trị mà đích không dùng?
+    answer: >-
+      Kiểu hàm đích cung cấp hình dạng tham số và kết quả mong đợi, rồi Java kiểm tra phương thức được tham chiếu có thể được gọi nhất quán với hình dạng đó hay không. Các phép chuyển đổi lời gọi thông thường, gồm boxing và unboxing khi được phép, có thể tham gia. Một phương thức trả về giá trị cũng có thể đáp ứng một hợp đồng hàm trả về void trong những trường hợp Java cho phép bỏ qua kết quả. Đây là quy tắc của ngôn ngữ, nhưng vẫn nên dùng có chủ đích vì âm thầm bỏ một kết quả có ý nghĩa có thể khiến người đọc hiểu sai.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.MethodReferences/MethodReferences.md", anchor: "method-reference-result-adaptation"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Vì sao tham chiếu tới một phương thức nạp chồng có thể bị mơ hồ, và khi nào lambda rõ ràng hơn tham chiếu phương thức dù cả hai đều biên dịch được?
+    answer: >-
+      Chỉ riêng tên một phương thức nạp chồng chưa xác định được một khai báo cụ thể. Trình biên dịch dùng giao diện hàm đích và các quy tắc phân giải nạp chồng để tìm khai báo phù hợp; nếu kiểu đích vẫn để lại nhiều ứng viên thì tham chiếu bị mơ hồ. Lambda có thể làm rõ vị trí đối tượng nhận, việc đổi thứ tự đối số, chuyển đổi, lọc hoặc logic bổ sung. Nên dùng tham chiếu phương thức khi nó gọi đúng thao tác mong muốn một cách trực tiếp; nên dùng lambda khi ánh xạ từ các tham số của giao diện hàm sang lời gọi thực tế sẽ bị che khuất hoặc gây bất ngờ.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.MethodReferences/MethodReferences.md", anchor: "method-reference-vs-lambda"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Trong thực tế Java, điều gì khiến một phương thức trở thành “bậc cao” (higher-order), và những câu hỏi nào về vòng đời hoặc trạng thái xuất hiện khi phương thức trả về một lambda có bắt giữ giá trị?
+    answer: >-
+      Theo nghĩa thực tế trong Java, một phương thức là bậc cao khi nó nhận hành vi qua giao diện hàm hoặc trả hành vi dưới dạng một giá trị giao diện hàm. Trả về lambda hữu ích khi xây dựng hành vi đã được cấu hình, chẳng hạn prefixWith(prefix). Giá trị được bắt giữ có thể tồn tại lâu hơn lời gọi phương thức ban đầu vì hành vi trả về giữ lại những gì nó cần. Nếu giá trị được bắt giữ là tham chiếu tới trạng thái có thể thay đổi, các thay đổi sau đó có thể làm kết quả trong tương lai đổi theo, vì vậy quyền sở hữu và tính thay đổi vẫn phải được thiết kế rõ ràng.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.BehaviorCompositionAndHigherOrderUse/BehaviorCompositionAndHigherOrderUse.md", anchor: "returned-behavior-capture"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Với việc kết hợp Function, thứ tự thực thi của f.andThen(g) và g.compose(f) là gì, và nên dùng luồng kiểu như thế nào để suy luận về chuỗi dài?
+    answer: >-
+      f.andThen(g) chạy f trước rồi mới chạy g. g.compose(f) mô tả cùng thứ tự thực thi: f rồi g. Hai tên phương thức được đọc từ hai góc nhìn khác nhau, nên viết rõ luồng giá trị thường là cách an toàn nhất. Hãy theo dõi kiểu đầu ra của từng hàm và kiểm tra nó có phù hợp với kiểu đầu vào của hàm kế tiếp hay không. Trình biên dịch có thể từ chối thứ tự không tương thích về kiểu, nhưng không thể cho biết một thứ tự đúng kiểu có đúng với thứ tự nghiệp vụ hay không.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.BehaviorCompositionAndHigherOrderUse/BehaviorCompositionAndHigherOrderUse.md", anchor: "composition-order"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Predicate.and/or và Consumer.andThen hoạt động thế nào khi có đánh giá ngắn mạch (short-circuit) hoặc ngoại lệ, và vì sao tác dụng phụ khiến việc kết hợp khó suy luận hơn?
+    answer: >-
+      Predicate.and và Predicate.or đánh giá ngắn mạch, nên predicate thứ hai chỉ được đánh giá khi kết quả của predicate đầu tiên chưa đủ để quyết định kết quả cuối cùng. Consumer.andThen chạy consumer thứ nhất trước consumer thứ hai; nếu consumer đầu tiên ném ngoại lệ thì consumer thứ hai không được chạy. Tác dụng phụ làm các quy tắc thứ tự này trở nên quan sát được: lời gọi cơ sở dữ liệu, ghi log, thay đổi dữ liệu hoặc I/O bên ngoài có thể xảy ra 0, 1 hoặc nhiều lần tùy theo luồng điều khiển và việc tái sử dụng. Việc kết hợp dễ kiểm soát nhất khi thứ tự và tác dụng phụ được thể hiện rõ.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.BehaviorCompositionAndHigherOrderUse/BehaviorCompositionAndHigherOrderUse.md", anchor: "composition-side-effects"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Hãy giải thích Optional.of, ofNullable, empty, map, flatMap và filter. Các phương thức này giúp ngăn những lỗi nào liên quan tới null, và vẫn có thể phát sinh những sai lầm mới nào?
+    answer: >-
+      Optional.of yêu cầu giá trị khác null, ofNullable chuyển null thành Optional.empty(), còn empty biểu diễn rõ ràng trạng thái không có giá trị. map biến đổi giá trị đang hiện diện và chuyển kết quả ánh xạ là null thành empty; flatMap dùng khi hàm ánh xạ vốn đã trả về Optional để tránh lồng Optional; filter chỉ giữ giá trị hiện diện khi predicate đạt. Các phương thức này đưa trạng thái vắng mặt vào hợp đồng API, nhưng bản thân Optional không nên là null; cách dùng bất cẩn như trả về null thay vì Optional.empty hoặc lập tức gọi get() chỉ tái tạo lại sự mơ hồ ban đầu.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.OptionalAndAbsence/OptionalAndAbsence.md", anchor: "optional-transform-filter"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Khác biệt thực tế giữa orElse và orElseGet là gì, và orElseThrow, ifPresentOrElse cùng Optional.or tham gia vào xử lý giá trị dự phòng hoặc lỗi qua các phiên bản Java như thế nào?
+    answer: >-
+      Đối số truyền cho orElse được đánh giá trước lời gọi phương thức ngay cả khi Optional đang có giá trị, nên một giá trị dự phòng tốn kém hoặc có tác dụng phụ vẫn được tạo. orElseGet chỉ gọi Supplier khi không có giá trị. orElseThrow biến trạng thái vắng mặt thành một nhánh lỗi rõ ràng. ifPresentOrElse và Optional.or được thêm ở Java 9; Optional.or chỉ cung cấp một Optional khác khi cần (lazy) thay vì một giá trị trực tiếp. Mã cần tương thích mã nguồn với Java 8 không được giả định các phương thức Java 9 này tồn tại.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.OptionalAndAbsence/OptionalAndAbsence.md", anchor: "optional-fallback-and-failure"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Optional hữu ích ở đâu tại ranh giới API, và các cách dùng sai phổ biến với trường, tham số, collection hoặc get() là gì?
+    answer: >-
+      Optional hữu ích nhất khi kết quả của một phương thức thực sự có thể vắng mặt và việc thể hiện khả năng đó làm hợp đồng với phía gọi rõ hơn. Mặc định dùng Optional làm trường hoặc tham số thường ít hữu ích hơn vì có thể làm việc xử lý lớp bọc lan khắp mô hình đối tượng hoặc API mà không làm rõ ngữ nghĩa. Collection rỗng vốn thường đã biểu diễn “không có phần tử”, nên Optional<List<T>> thường dư thừa. Mẫu isPresent/get lặp đi lặp lại cũng làm mất nhiều lợi ích vì quay lại rẽ nhánh thủ công và trích xuất giá trị không an toàn.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.OptionalAndAbsence/OptionalAndAbsence.md", anchor: "optional-api-design"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Vì sao Stream API nhận Predicate, Function, Consumer và các giao diện hàm khác, và ở ranh giới của mô-đun này nên phân biệt Collection với Stream như thế nào?
+    answer: >-
+      Các thao tác của Stream cần phía gọi cung cấp hành vi có kiểu như lọc, biến đổi hoặc thực hiện hành động trên từng phần tử, và giao diện hàm cung cấp các hợp đồng đó. Collection chủ yếu sở hữu hoặc cung cấp các phần tử như một cấu trúc dữ liệu; Stream là một lớp trừu tượng API để mô tả việc xử lý trên một nguồn. Mô-đun Lập trình hàm (Functional Programming) chịu trách nhiệm giải thích các giá trị hành vi được gán kiểu và truyền vào như thế nào. Điều đó không có nghĩa lambda là Stream, cũng không có nghĩa biết cú pháp lambda là đã hiểu ngữ nghĩa thực thi của Stream.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.StreamApiBoundary/StreamApiBoundary.md", anchor: "collection-vs-stream-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Những chủ đề Stream nào nằm ngoài mô-đun Lập trình hàm (Functional Programming) này, và câu hỏi nào cho biết đã đến lúc chuyển sang mô-đun Stream API?
+    answer: >-
+      Việc tạo Stream và nguồn dữ liệu, thao tác trung gian so với thao tác kết thúc, đánh giá lười (lazy evaluation), rút gọn (reduction), bộ gom (collector), thứ tự gặp phần tử và hành vi của stream song song (parallel stream) đều là cơ chế riêng của Stream. Mô-đun này chỉ cần phần cầu nối: các phương thức của Stream nhận giá trị giao diện hàm có kiểu, được triển khai bằng lambda hoặc tham chiếu phương thức. Nếu câu hỏi còn lại là “Java gán kiểu cho hành vi truyền vào Stream như thế nào?” thì vẫn ở mô-đun này. Nếu câu hỏi là “Chuỗi xử lý (pipeline) của Stream thực thi, thu thập, sắp thứ tự hoặc xử lý song song dữ liệu khi nào và như thế nào?” thì chuyển sang mô-đun Stream API.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.StreamApiBoundary/StreamApiBoundary.md", anchor: "stream-learning-handoff"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Vì sao ngoại lệ được kiểm tra (checked exception) gây vướng với các giao diện hàm chuẩn, và những cách thích nghi tường minh nào tốt hơn việc che giấu vấn đề?
+    answer: >-
+      Lambda hoặc tham chiếu phương thức phải tuân theo hợp đồng throws của kiểu hàm đích. Giao diện chuẩn như Function<T,R> không khai báo tùy ý ngoại lệ được kiểm tra, nên phần thân có thể ném IOException không thể đơn giản truyền ngoại lệ đó ra ngoài qua Function.apply. Các lựa chọn gồm xử lý ngoại lệ ngay tại chỗ, chuyển nó thành ngoại lệ không được kiểm tra phù hợp như UncheckedIOException, định nghĩa giao diện hàm đặc thù miền nghiệp vụ có khai báo ngoại lệ được kiểm tra, hoặc giữ thao tác trong phương thức thông thường nếu cách đó làm xử lý lỗi rõ hơn. Các hàm hỗ trợ sneaky-throw kiểu tổng quát thường che mất hợp đồng lỗi thực sự.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.TradeoffsFailuresAndSynthesis/TradeoffsFailuresAndSynthesis.md", anchor: "checked-exception-adaptation"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Khi nào nên dừng việc kết hợp theo phong cách hàm để dùng mã mệnh lệnh hoặc mô hình trừu tượng hướng đối tượng, và vì sao tính thuần khiết (purity), tính bất biến (immutability) cùng danh tính của lambda vẫn là các mối quan tâm tách biệt?
+    answer: >-
+      Kết hợp theo phong cách hàm phù hợp khi phần thay đổi là một hành vi nhỏ, phép biến đổi, điều kiện, hàm gọi lại hoặc chính sách. Mã mệnh lệnh có thể rõ hơn khi trọng tâm là chuyển trạng thái, thử lại, vòng đời tài nguyên hoặc nhiều nhánh thoát sớm. Mô hình trừu tượng hướng đối tượng thường phù hợp hơn khi khái niệm có danh tính, nhiều thao tác liên quan, vòng đời và trạng thái có ý nghĩa. Cú pháp lambda không đảm bảo purity hay immutability, và Java cũng không đảm bảo mỗi lần đánh giá lambda đều tạo đối tượng mới hoặc có lớp triển khai hay danh tính ổn định. Các mối quan tâm này phải được thiết kế độc lập.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.TradeoffsFailuresAndSynthesis/TradeoffsFailuresAndSynthesis.md", anchor: "functional-vs-oop-choice"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Hãy đưa ra một mô hình tư duy xuyên suốt cho lập trình hàm trong Java, từ lúc định nghĩa hợp đồng hành vi tới khi dùng nó an toàn trong mã thực tế.
+    answer: >-
+      Bắt đầu với một hợp đồng giao diện hàm định nghĩa đúng một hành vi trừu tượng hiệu lực. Lambda hoặc tham chiếu phương thức được kiểm tra theo kiểu hàm đích, nơi quyết định tham số, kết quả và ngoại lệ được kiểm tra. Hành vi có thể bắt giữ các biến cục bộ effectively final nhưng vẫn quan sát trạng thái có thể thay đổi thông qua các tham chiếu đã bắt giữ. Giao diện hàm chuẩn hoặc giao diện đặc thù miền nghiệp vụ cho phép mã truyền, trả về và kết hợp hành vi; thứ tự kết hợp, đánh giá ngắn mạch, tác dụng phụ và xử lý lỗi vẫn có thể quan sát được. Optional có thể biểu diễn trạng thái vắng mặt tại các ranh giới API phù hợp, còn Stream tái sử dụng các hợp đồng hành vi này nhưng sở hữu cơ chế thực thi riêng. Mã dùng thực tế nên chọn cấu trúc hàm, mệnh lệnh hoặc hướng đối tượng dựa trên độ rõ ràng, trạng thái, vòng đời và nhu cầu gỡ lỗi thay vì cố tăng số lượng lambda.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.TradeoffsFailuresAndSynthesis/TradeoffsFailuresAndSynthesis.md", anchor: "functional-programming-synthesis"}
+    apiRelated: {controller: "", methodSignature: ""}

@@ -1,1 +1,0 @@
-# Các lỗi thường gặp trong Functional Java
