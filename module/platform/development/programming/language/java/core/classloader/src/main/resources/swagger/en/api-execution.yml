@@ -12,7 +12,7 @@ ClassLoaderChainController:
         <li><strong>Observation:</strong> the application class has a loader object, the platform loader appears in the parent chain, and <code>String.class.getClassLoader()</code> is <code>null</code>.</li>
         <li><strong>Meaning:</strong> <code>null</code> does not mean String was never loaded; it is the API representation of the bootstrap loading mechanism.</li>
       </ol>
-      <p><strong>Conclusion:</strong> the parent chain describes lookup/ownership boundaries, not Java class inheritance.</p>
+      <p><strong>Conclusion:</strong> the parent chain describes a delegation/lookup relationship, not Java class inheritance. Ownership of a particular runtime class is observed separately through <code>Class#getClassLoader()</code>.</p>
     usage: true
 ClassLifecycleController:
   loadWithoutInit():

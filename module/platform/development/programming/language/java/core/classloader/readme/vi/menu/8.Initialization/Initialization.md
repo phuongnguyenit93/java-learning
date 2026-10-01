@@ -1,4 +1,4 @@
-# Khởi tạo Class
+# Điều kiện kích hoạt và lỗi khi khởi tạo class
 
 Ở chương Lifecycle ta đã tách:
 
@@ -8,78 +8,40 @@ loading
 → initialization
 ```
 
-Chương này tập trung vào initialization vì đây là nơi các tác dụng phụ thật sự dễ xuất hiện: static field initializer, static block, đăng ký, tạo cache hoặc lỗi trong lúc class khởi động.
+Chương này tập trung vào khởi tạo (initialization) vì đây là nơi các tác dụng phụ thật sự dễ xuất hiện: bộ khởi tạo trường static, khối `static`, đăng ký, tạo bộ nhớ đệm hoặc lỗi trong lúc class khởi động.
 
-Đối với hệ thống plugin, hiểu initialization giúp framework **nạp/kiểm tra type plugin mà chưa chạy mã `static` của plugin**, rồi chỉ initialize khi thật sự quyết định dùng.
+Đối với hệ thống plugin, hiểu khởi tạo giúp khung phần mềm **nạp/kiểm tra kiểu plugin mà chưa chạy mã `static` của plugin**, rồi chỉ khởi tạo khi thật sự quyết định dùng.
 
-## <a id="clinit-model">Mô hình tư duy của &lt;clinit&gt;</a>
+## <a id="initialization-trigger">Thao tác sử dụng chủ động (active use) nào kích hoạt khởi tạo?</a>
 
-Khi class có executable static initialization, mô hình compiler/JVM dùng một method khởi tạo class đặc biệt tên `<clinit>`.
+Khởi tạo là lúc JVM thực thi logic khởi tạo `static` của class hoặc interface theo các quy tắc của Java.
 
-Ví dụ mã nguồn:
+Những thao tác sử dụng chủ động quan trọng gồm:
+
+- tạo instance của một class bằng `new`;
+- gọi một `static` method được khai báo bởi class hoặc interface đó;
+- đọc hoặc ghi một `static` field được khai báo bởi class hoặc interface đó khi field không phải hằng số lúc biên dịch;
+- một số thao tác reflection/runtime yêu cầu khởi tạo;
+- class khởi động của ứng dụng được JVM khởi tạo trước khi gọi `main`.
+
+Khi một **class** được khởi tạo, superclass của nó được khởi tạo trước và JVM cũng xử lý các superinterface cần thiết theo quy tắc về default method; điều này không có nghĩa mọi interface trong toàn bộ graph đều bị khởi tạo. Khi chính một **interface** được khởi tạo, các superinterface của nó cũng không tự động bị khởi tạo chỉ vì quan hệ kế thừa.
+
+Ví dụ:
 
 ```java
 final class PaymentPlugin {
-    static int retryCount = loadRetryCount();
-
     static {
-        System.out.println("register metrics");
+        System.out.println("PaymentPlugin initialized");
     }
 
-    private static int loadRetryCount() {
-        return 3;
-    }
-}
-```
-
-Mô hình tư duy:
-
-```text
-static field initializer cần chạy
-        +
-static initializer block
-        ↓
-class initialization logic
-        ↓
-<clinit> ở bytecode model khi cần
-```
-
-Các static field initializer và static block có hiệu lực theo thứ tự xuất hiện của declaration trong class, sau khi JVM đã thực hiện các quy tắc initialization tiên quyết như initialize superclass thích hợp.
-
-`<clinit>` không phải method để ứng dụng gọi:
-
-```java
-// Không có API source-level kiểu này:
-// PaymentPlugin.<clinit>();
-```
-
-JVM tự quyết định khi nào initialize theo JLS/JVM rules.
-
-### Class và interface có quy tắc khác nhau
-
-Khi initialize một class, superclass cần thiết được initialize trước. Initialization của interface có ngữ nghĩa khác; việc initialize một class không đơn giản là initialize toàn bộ interface graph của nó. Các superinterface khai báo default method có vai trò trong initialization prerequisites của class theo JLS.
-
-Điểm người học cần giữ ở đây: initialization là **một quy trình của runtime**, không phải “JVM chạy tất cả static block của mọi type liên quan”.
-
-## <a id="initialization-once">Initialization diễn ra một lần cho mỗi runtime Class identity</a>
-
-Với một runtime `Class` cụ thể, JVM đảm bảo quy trình initialization chỉ hoàn thành một lần.
-
-```java
-final class PluginRegistry {
-    static {
-        System.out.println("INIT");
-    }
-
-    static void touch() {
+    static void register() {
+        System.out.println("registered");
     }
 }
 
 public class Demo {
     public static void main(String[] args) {
-        PluginRegistry.touch();
-        PluginRegistry.touch();
-        PluginRegistry.touch();
+        PaymentPlugin.register();
     }
 }
 ```
@@ -87,124 +49,15 @@ public class Demo {
 Kết quả:
 
 ```text
-INIT
+PaymentPlugin initialized
+registered
 ```
 
-nhưng `touch()` được gọi ba lần.
+JVM phải initialize `PaymentPlugin` trước khi thực thi `register()`.
 
-Kết nối với Class Identity:
+Điểm quan trọng là **nạp class không tự động đồng nghĩa với khởi tạo**. Đây là ranh giới cần thiết cho framework, reflection và việc tìm plugin vì ta có thể muốn quan sát một kiểu mà chưa muốn chạy tác dụng phụ `static` của nó.
 
-```text
-PaymentPlugin defined by loaderA
-→ Class object A
-→ initialization state A
-
-PaymentPlugin defined by loaderB
-→ Class object B
-→ initialization state B
-```
-
-Vì hai defining loaders tạo hai runtime identities, mỗi identity có initialization state riêng. “Static singleton” vì vậy chỉ singleton **trong phạm vi một runtime class identity**, không phải singleton toàn JVM khi có nhiều loader.
-
-## <a id="initialization-locking">JVM đồng bộ initialization khi nhiều thread chạm cùng class</a>
-
-Giả sử hai thread cùng active-use một class chưa initialize:
-
-```text
-Thread A ─┐
-          ├→ PaymentPlugin chưa initialized
-Thread B ─┘
-```
-
-Quy trình initialization của JVM dùng cơ chế đồng bộ riêng cho mỗi `Class`/interface initialization state. Một thread thực hiện initialization; thread khác cần initialization của cùng type sẽ chờ quy trình đó hoàn tất hoặc thất bại.
-
-Ví dụ:
-
-```java
-final class SlowPlugin {
-    static final Object CONFIG = loadConfig();
-
-    private static Object loadConfig() {
-        System.out.println(
-                "init by " + Thread.currentThread().getName()
-        );
-        return new Object();
-    }
-}
-```
-
-Hai thread đọc `SlowPlugin.CONFIG` cùng lúc không được phép làm initializer chạy hai lần cho cùng `SlowPlugin.class`.
-
-### Mã initialization vẫn có thể gây deadlock ở cấp ứng dụng
-
-JVM bảo đảm quy trình initialization, nhưng static initialization của ta vẫn có thể gọi code khác, lấy lock khác hoặc trigger initialization của type khác.
-
-```text
-Thread A initializes A
-→ cần B
-
-Thread B initializes B
-→ cần A
-```
-
-Nếu dependency/locking tạo cycle xấu, ứng dụng có thể treo. Vì vậy static initializer nên ngắn, có tính xác định và tránh I/O/network/lock graph phức tạp.
-
-## <a id="initialization-failure">Lỗi initialization đưa class vào trạng thái erroneous</a>
-
-Một static initializer có thể thất bại:
-
-```java
-final class BrokenPlugin {
-    static final int PORT = loadPort();
-
-    private static int loadPort() {
-        throw new IllegalStateException("invalid plugin config");
-    }
-}
-```
-
-Lần active use đầu:
-
-```java
-System.out.println(BrokenPlugin.PORT);
-```
-
-`IllegalStateException` phát sinh trong initialization không phải `Error`, nên quy trình initialization thường bọc nó bằng `ExceptionInInitializerError` cho bên gọi đầu tiên.
-
-Sau khi thất bại:
-
-```text
-BrokenPlugin runtime Class
-→ initialization failed
-→ marked erroneous
-```
-
-Active use sau đó của **cùng runtime class identity** không chạy initializer lại như retry. Bên gọi thường thấy `NoClassDefFoundError` báo class không thể initialize.
-
-Ví dụ quan sát:
-
-```java
-for (int i = 0; i < 2; i++) {
-    try {
-        System.out.println(BrokenPlugin.PORT);
-    } catch (Throwable error) {
-        System.out.println(error.getClass().getName());
-    }
-}
-```
-
-Dạng điển hình:
-
-```text
-java.lang.ExceptionInInitializerError
-java.lang.NoClassDefFoundError
-```
-
-Nếu initializer trực tiếp ném một `Error`, quy trình initialization không cần bọc nó thành `ExceptionInInitializerError`; class vẫn đi vào erroneous state.
-
-Đây là lý do không nên dùng static initializer như một cơ chế thử lại. Nếu cấu hình plugin có thể lỗi tạm thời và cần thử lại, hãy thiết kế một vòng đời runtime rõ ràng thay vì nhét logic vào class initialization.
-
-## <a id="constant-no-init">Compile-time constant có thể được dùng mà không initialize class</a>
+## <a id="constant-no-init">Hằng số lúc biên dịch có thể được dùng mà không khởi tạo class</a>
 
 Một bẫy phổ biến:
 
@@ -262,4 +115,196 @@ final class PluginDefaults {
 
 Compile-time constant còn tạo ra một hệ quả khi triển khai: nếu thư viện đổi giá trị constant nhưng mã gọi cũ không được biên dịch lại, mã đó có thể tiếp tục dùng giá trị đã được inline trước đó.
 
-Kết thúc chapter, ta đã thấy initialization state thuộc về runtime class identity. Chương cuối nối identity với GC: **khi plugin dừng, điều kiện nào cho phép cả Class và defining ClassLoader được thu hồi?**
+## <a id="clinit-model">Mô hình tư duy của &lt;clinit&gt;</a>
+
+Khi class hoặc interface có logic khởi tạo `static` cần thực thi, mô hình class-file/JVM dùng một method khởi tạo đặc biệt tên `<clinit>`.
+
+Ví dụ mã nguồn:
+
+```java
+final class PaymentPlugin {
+    static int retryCount = loadRetryCount();
+
+    static {
+        System.out.println("register metrics");
+    }
+
+    private static int loadRetryCount() {
+        return 3;
+    }
+}
+```
+
+Mô hình tư duy:
+
+```text
+static field initializer cần chạy
+        +
+static initializer block
+        ↓
+class initialization logic
+        ↓
+<clinit> ở bytecode model khi cần
+```
+
+Các static field initializer và static block có hiệu lực theo thứ tự xuất hiện của declaration trong class, sau khi JVM đã thực hiện các quy tắc initialization tiên quyết như initialize superclass thích hợp.
+
+`<clinit>` không phải method để ứng dụng gọi:
+
+```java
+// Không có API source-level kiểu này:
+// PaymentPlugin.<clinit>();
+```
+
+JVM tự quyết định khi nào initialize theo JLS/JVM rules.
+
+### Class và interface có quy tắc khác nhau
+
+Quy tắc thứ tự đã nêu ở phần kích hoạt vẫn áp dụng: khi khởi tạo một class, JVM khởi tạo superclass trước và xử lý các superinterface cần thiết theo quy tắc về default method; không phải toàn bộ cây interface đều bị khởi tạo. Việc khởi tạo chính một interface cũng không đồng nghĩa mọi superinterface của nó bị khởi tạo theo.
+
+Điểm người học cần giữ ở đây: khởi tạo là **một quy trình của JVM**, không phải “JVM chạy tất cả khối `static` của mọi kiểu có liên quan”.
+
+## <a id="initialization-once">Mỗi class do một ClassLoader định nghĩa chỉ được JVM khởi tạo một lần</a>
+
+Với một `Class<?>` cụ thể khi chạy, JVM đảm bảo quy trình khởi tạo chỉ hoàn thành một lần.
+
+```java
+final class PluginRegistry {
+    static {
+        System.out.println("INIT");
+    }
+
+    static void touch() {
+    }
+}
+
+public class Demo {
+    public static void main(String[] args) {
+        PluginRegistry.touch();
+        PluginRegistry.touch();
+        PluginRegistry.touch();
+    }
+}
+```
+
+Kết quả:
+
+```text
+INIT
+```
+
+nhưng `touch()` được gọi ba lần.
+
+Kết nối với phần Định danh class:
+
+```text
+PaymentPlugin do loaderA định nghĩa
+→ đối tượng Class A
+→ trạng thái khởi tạo A
+
+PaymentPlugin do loaderB định nghĩa
+→ đối tượng Class B
+→ trạng thái khởi tạo B
+```
+
+Vì hai ClassLoader định nghĩa tạo ra hai định danh class khác nhau khi chạy, mỗi định danh có trạng thái khởi tạo riêng. “Static singleton” vì vậy chỉ mang tính singleton **trong phạm vi một định danh class khi chạy**, không phải singleton toàn JVM khi có nhiều ClassLoader.
+
+## <a id="initialization-locking">JVM đồng bộ việc khởi tạo khi nhiều luồng cùng sử dụng class</a>
+
+Giả sử hai luồng cùng sử dụng chủ động một class chưa được khởi tạo:
+
+```text
+Luồng A ─┐
+         ├→ PaymentPlugin chưa được khởi tạo
+Luồng B ─┘
+```
+
+Quy trình khởi tạo của JVM dùng cơ chế đồng bộ riêng cho trạng thái khởi tạo của mỗi `Class`/interface. Một luồng thực hiện khởi tạo; luồng khác cần khởi tạo cùng kiểu sẽ chờ quy trình đó hoàn tất hoặc thất bại.
+
+Ví dụ:
+
+```java
+final class SlowPlugin {
+    static final Object CONFIG = loadConfig();
+
+    private static Object loadConfig() {
+        System.out.println(
+                "init by " + Thread.currentThread().getName()
+        );
+        return new Object();
+    }
+}
+```
+
+Hai luồng đọc `SlowPlugin.CONFIG` cùng lúc không được phép làm bộ khởi tạo chạy hai lần cho cùng `SlowPlugin.class`.
+
+### Mã khởi tạo vẫn có thể gây bế tắc (deadlock) ở cấp ứng dụng
+
+JVM bảo đảm quy trình khởi tạo, nhưng mã khởi tạo `static` của ta vẫn có thể gọi mã khác, lấy khóa khác hoặc kích hoạt khởi tạo của kiểu khác.
+
+```text
+Thread A initializes A
+→ cần B
+
+Thread B initializes B
+→ cần A
+```
+
+Nếu phụ thuộc/cơ chế khóa tạo thành vòng lặp xấu, ứng dụng có thể treo. Vì vậy bộ khởi tạo `static` nên ngắn, có tính xác định và tránh I/O, mạng hoặc đồ thị khóa phức tạp.
+
+## <a id="initialization-failure">Lỗi khởi tạo đưa class vào trạng thái lỗi (erroneous)</a>
+
+Một bộ khởi tạo `static` có thể thất bại:
+
+```java
+final class BrokenPlugin {
+    static final int PORT = loadPort();
+
+    private static int loadPort() {
+        throw new IllegalStateException("invalid plugin config");
+    }
+}
+```
+
+Lần sử dụng chủ động (active use) đầu tiên:
+
+```java
+System.out.println(BrokenPlugin.PORT);
+```
+
+`IllegalStateException` phát sinh trong quá trình khởi tạo không phải `Error`, nên JVM thường bọc nó bằng `ExceptionInInitializerError` cho bên gọi đầu tiên.
+
+Sau khi thất bại:
+
+```text
+BrokenPlugin Class khi chạy
+→ khởi tạo thất bại
+→ bị đánh dấu ở trạng thái lỗi (erroneous)
+```
+
+Lần sử dụng chủ động sau đó của **cùng định danh class khi chạy** không chạy lại bộ khởi tạo như một lần thử lại. Bên gọi thường thấy `NoClassDefFoundError` báo class không thể khởi tạo.
+
+Ví dụ quan sát:
+
+```java
+for (int i = 0; i < 2; i++) {
+    try {
+        System.out.println(BrokenPlugin.PORT);
+    } catch (Throwable error) {
+        System.out.println(error.getClass().getName());
+    }
+}
+```
+
+Dạng điển hình:
+
+```text
+java.lang.ExceptionInInitializerError
+java.lang.NoClassDefFoundError
+```
+
+Nếu bộ khởi tạo trực tiếp ném một `Error`, quy trình khởi tạo không cần bọc nó thành `ExceptionInInitializerError`; class vẫn đi vào trạng thái lỗi (erroneous).
+
+Đây là lý do không nên dùng bộ khởi tạo `static` như một cơ chế thử lại. Nếu cấu hình plugin có thể lỗi tạm thời và cần thử lại, hãy thiết kế một vòng đời khi chạy rõ ràng thay vì nhét logic vào quá trình khởi tạo class.
+
+Kết thúc chương, ta đã thấy trạng thái khởi tạo thuộc về định danh class khi chạy. Chương cuối nối định danh đó với GC: **khi plugin dừng, điều kiện nào cho phép cả `Class` và ClassLoader định nghĩa được thu hồi?**

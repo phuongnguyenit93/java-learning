@@ -1,6 +1,6 @@
-# Bootstrap, Platform và Application ClassLoader
+# Các ClassLoader có sẵn trong JVM
 
-Sau chương Lifecycle, ta biết JVM cần loader để biến class bytes thành runtime type. Câu hỏi tiếp theo là: **trong một tiến trình Java 21 bình thường, loader nào đã tồn tại sẵn trước khi ta viết custom loader?**
+Sau chương Lifecycle, ta biết JVM cần cơ chế nạp để đưa bytecode thành class khi chạy. Câu hỏi tiếp theo là: **trong một tiến trình Java 21 bình thường, những ClassLoader nào đã tồn tại sẵn và ClassLoader nào định nghĩa từng nhóm class trước khi ta viết ClassLoader tùy chỉnh?**
 
 JDK hiện đại tổ chức phần lớn class loading mặc định thành một chuỗi khái niệm:
 
@@ -14,11 +14,11 @@ Application/System ClassLoader
 class của ứng dụng
 ```
 
-Các loader này có phạm vi trách nhiệm khác nhau. Hiểu đúng chúng giúp ta đọc `Class#getClassLoader()`, chẩn đoán “class ở đâu ra”, và chuẩn bị cho parent delegation ở chương sau.
+Các ClassLoader này có phạm vi trách nhiệm khác nhau. Hiểu đúng chúng giúp ta đọc `Class#getClassLoader()`, chẩn đoán “class do ClassLoader nào định nghĩa”, và chuẩn bị cho cơ chế ủy quyền cho ClassLoader cha ở chương sau.
 
-Vì sao Java không gom mọi thứ vào một loader duy nhất? Việc tách ownership thành các tầng giúp runtime tạo ranh giới rõ giữa **core JDK classes**, **platform classes** và **application classes**. Nhờ vậy class nền tảng có một nơi sở hữu ổn định, code ứng dụng không phải tự định nghĩa lại chúng, và custom loader sau này có thể chọn chính xác tầng nào làm parent để quyết định phần nào được chia sẻ và phần nào cần cô lập.
+Vì sao Java không gom mọi thứ vào một ClassLoader duy nhất? Việc phân chia trách nhiệm thành các tầng giúp môi trường chạy tạo ranh giới rõ giữa **class lõi của JDK**, **class nền tảng** và **class của ứng dụng**. Nhờ vậy class nền tảng có một nơi sở hữu ổn định, mã ứng dụng không phải tự định nghĩa lại chúng, và ClassLoader tùy chỉnh sau này có thể chọn chính xác tầng nào làm ClassLoader cha để quyết định phần nào được chia sẻ và phần nào cần cô lập.
 
-## <a id="bootstrap-loader">Bootstrap loader</a>
+## <a id="bootstrap-loader">Bootstrap ClassLoader</a>
 
 Bootstrap loader chịu trách nhiệm cho các class nền tảng cốt lõi mà JVM/JDK runtime cần, ví dụ nhiều class trong `java.base`.
 
@@ -111,7 +111,7 @@ plugin implementation ở nguồn riêng
 → chương CustomClassLoader sẽ dùng loader con
 ```
 
-## <a id="loader-chain">Chuỗi parent của các loader có sẵn và biểu diễn bootstrap bằng null</a>
+## <a id="loader-chain">Chuỗi ClassLoader cha và cách biểu diễn Bootstrap bằng null</a>
 
 Ta có thể quan sát chuỗi từ một class của ứng dụng:
 

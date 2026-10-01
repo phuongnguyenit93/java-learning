@@ -1,6 +1,6 @@
-# Nạp Resource
+# Nạp tài nguyên từ classpath
 
-ClassLoader không chỉ liên quan tới `.class` bytes. Java application thường đóng gói thêm:
+ClassLoader không chỉ liên quan tới bytecode trong tệp `.class`. Ứng dụng Java thường đóng gói thêm:
 
 ```text
 config/default.yml
@@ -9,13 +9,13 @@ templates/email.txt
 plugin.properties
 ```
 
-Những file này là **classpath resources**. Chúng có thể nằm trong thư mục, JAR, runtime image hoặc nguồn mà loader hiểu được.
+Những tệp này là **tài nguyên trên classpath**. Chúng có thể nằm trong thư mục, JAR, runtime image hoặc nguồn mà ClassLoader hiểu được.
 
-Phần này dùng `URL`, `InputStream`, `Path` và try-with-resources để quan sát resource. Nếu các API I/O đó còn mới, chỉ cần giữ mental model “resource có thể được tìm và đọc như stream”; chi tiết stream/file thuộc module `io` và không cần học lại ở đây.
+Phần này dùng `URL`, `InputStream`, `Path` và try-with-resources để quan sát tài nguyên. Nếu các API I/O đó còn mới, chỉ cần giữ mô hình tư duy “tài nguyên có thể được tìm và đọc như một luồng dữ liệu”; chi tiết về luồng dữ liệu/tệp thuộc module `io` và không cần học lại ở đây.
 
-Điểm dễ nhầm nhất là resource path của `Class`, resource path của `ClassLoader` và filesystem path **không dùng cùng mô hình tư duy**.
+Điểm dễ nhầm nhất là đường dẫn tài nguyên của `Class`, đường dẫn tài nguyên của `ClassLoader` và đường dẫn trên hệ thống tệp **không dùng cùng mô hình tư duy**.
 
-## <a id="class-resource">Class.getResource: relative theo package hoặc absolute từ resource root</a>
+## <a id="class-resource">Class.getResource: đường dẫn tương đối theo gói (package) hoặc tuyệt đối từ gốc tài nguyên</a>
 
 `Class#getResource(String)` có hai cách hiểu path.
 
@@ -81,7 +81,7 @@ if (url == null) {
 }
 ```
 
-## <a id="loader-resource">ClassLoader.getResource: name tính từ loader resource root</a>
+## <a id="loader-resource">ClassLoader.getResource: tên tính từ gốc tài nguyên của ClassLoader</a>
 
 `ClassLoader#getResource(String)` dùng resource name theo root semantics. Convention là **không có leading slash**:
 
@@ -109,7 +109,7 @@ Với `ClassLoader` API, leading slash không mang semantics “absolute” như
 
 > **Nâng cao — JPMS boundary:** trong môi trường named module, các quy tắc encapsulation của module vẫn áp dụng. `ClassLoader.getResource` không phải một “lối tắt” để bỏ qua ranh giới JPMS; khi chuyển từ classpath phẳng sang module path, cần kiểm tra cả loader visibility lẫn module resource access.
 
-### Resource lookup vẫn phụ thuộc loader
+### Kết quả tìm tài nguyên vẫn phụ thuộc ClassLoader
 
 Hai plugin loaders có thể cùng tìm:
 
@@ -130,7 +130,7 @@ loader dùng để lookup
 
 chứ không chỉ nhìn mỗi string path.
 
-## <a id="resource-enumeration">Một resource name có thể có nhiều kết quả</a>
+## <a id="resource-enumeration">Một tên tài nguyên có thể có nhiều kết quả</a>
 
 `getResource` trả một result phù hợp theo lookup order của loader. Nhưng với metadata kiểu SPI hoặc config fragment, classpath có thể chứa nhiều resource cùng tên.
 
@@ -159,7 +159,7 @@ while (resources.hasMoreElements()) {
 
 Thứ tự tìm kiếm có thể phụ thuộc vào cách triển khai loader và chiến lược delegation. Nếu hành vi nghiệp vụ phụ thuộc vào thứ tự resource, hợp đồng đó phải được thiết kế rõ ràng thay vì vô tình phụ thuộc vào thứ tự classpath.
 
-## <a id="resource-stream-lifecycle">Resource stream cũng cần lifecycle rõ ràng</a>
+## <a id="resource-stream-lifecycle">Luồng dữ liệu của tài nguyên cũng cần vòng đời rõ ràng</a>
 
 `getResourceAsStream` thuận tiện khi chỉ cần đọc bytes/text:
 
@@ -193,7 +193,7 @@ Không nên giả định stream là `FileInputStream`. Resource có thể đế
 
 Với plugin loader có lifecycle ngắn, việc đóng stream và đóng loader/resource container khi thích hợp giúp tránh file handle/resource leak, đặc biệt trên Windows nơi open JAR/file handle có thể ảnh hưởng replace/delete artifact.
 
-## <a id="classpath-vs-filesystem">Classpath resource không nhất thiết là File</a>
+## <a id="classpath-vs-filesystem">Tài nguyên trên classpath không nhất thiết là tệp trên hệ thống</a>
 
 Code sau chỉ đúng trong một số deployment:
 
@@ -228,6 +228,8 @@ try (InputStream input =
 ```
 
 Nếu thật sự cần một `Path` để thư viện khác xử lý, ứng dụng phải quyết định chiến lược riêng: copy resource ra file tạm, mount filesystem phù hợp, hoặc yêu cầu config nằm ngoài classpath.
+
+## <a id="resource-vs-class-loading">Tìm tài nguyên khác với nạp và định nghĩa class</a>
 
 Ví dụ plugin xuyên suốt đến đây có hai không gian tìm kiếm song song:
 

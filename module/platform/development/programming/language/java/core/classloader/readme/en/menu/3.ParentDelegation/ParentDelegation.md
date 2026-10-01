@@ -1,4 +1,4 @@
-# Parent Delegation Model
+# Parent Delegation
 
 Once several loaders exist, a new problem appears: when a child loader is asked for `demo.api.Plugin`, should it define its own copy or reuse the one its parent already knows? Java's default answer is **parent-first delegation**. That policy keeps shared types consistent while still allowing a child loader to define classes that its parent cannot find.
 
@@ -66,6 +66,12 @@ When `PluginClassLoader` needs `demo.api.Plugin`, default delegation asks the ap
 
 For most custom loaders, this is why overriding `findClass` is safer than replacing `loadClass`: the inherited `loadClass` keeps the established delegation protocol and invokes your byte-source logic only after parent lookup fails.
 
+## <a id="initiating-vs-defining-loader">Initiating and Defining ClassLoader Roles</a>
+
+This is why the phrase **defining loader** matters more than merely asking which loader received the original `loadClass` call. A child may receive the request and delegate to its parent. If the parent returns the class, the parent is still the defining loader.
+
+For an ordinary named class/interface, an **initiating loader** is a loader recorded as having initiated loading directly or through delegation. The JVM can record multiple initiating loaders for the same ordinary named type, while that type has one defining loader. For runtime type identity, the defining-loader role is the crucial part.
+
 ## <a id="delegation-purpose">Why Delegate to the Parent?</a>
 
 Parent-first lookup solves a consistency problem. If every loader freely redefined any class name it received, even widely shared API types could fragment into incompatible runtime identities.
@@ -122,7 +128,7 @@ Overriding `loadClass` also takes responsibility for the concurrency and delegat
 
 The trade-off is therefore clear: child-first loading can isolate conflicting implementation dependencies, but the more names it isolates, the more carefully the application must design the shared type boundary.
 
-## <a id="protected-packages-boundary">Protected Core-package Boundary</a>
+## <a id="protected-packages-boundary">The java.* Package-definition Boundary</a>
 
 Custom loading is powerful, but it does not mean application code may redefine every name. In particular, `ClassLoader.defineClass` rejects attempts by ordinary loaders to define classes whose names begin with `java.`.
 

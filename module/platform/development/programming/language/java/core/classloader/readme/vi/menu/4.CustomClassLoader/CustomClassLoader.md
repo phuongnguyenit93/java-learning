@@ -1,19 +1,19 @@
-# Custom ClassLoader
+# ClassLoader tùy chỉnh và cô lập
 
-Các loader có sẵn đủ cho phần lớn ứng dụng. Nhưng hệ thống plugin đặt ra một bài toán khác:
+Các ClassLoader có sẵn đủ cho phần lớn ứng dụng. Nhưng hệ thống plugin đặt ra một bài toán khác:
 
 ```text
-classpath của host application
-→ không chứa implementation của plugin
+classpath của ứng dụng chủ
+→ không chứa phần triển khai của plugin
 
-plugin bytes
-→ có thể nằm trong thư mục riêng, JAR được tải lên, database, network artifact
+bytecode của plugin
+→ có thể nằm trong thư mục riêng, JAR được tải lên, cơ sở dữ liệu, artifact trên mạng
   hoặc một nguồn byte do ứng dụng quản lý
 ```
 
-JVM vẫn cần một `Class<?>` để thực thi plugin. **Custom ClassLoader** là điểm mở rộng cho phép ứng dụng cung cấp cách tìm class bytes hoặc tạo một namespace loading riêng.
+JVM vẫn cần một `Class<?>` để thực thi plugin. **ClassLoader tùy chỉnh** là điểm mở rộng cho phép ứng dụng cung cấp cách tìm bytecode của class hoặc tạo một không gian tên nạp riêng.
 
-Mục tiêu của custom loader không phải “viết lại JVM”. Ta vẫn để JVM verify, link và initialize class. Custom loader chủ yếu quyết định **khi parent không đáp ứng yêu cầu thì bytes của class sẽ đến từ đâu và loader nào sẽ trở thành defining loader**.
+Mục tiêu của ClassLoader tùy chỉnh không phải “viết lại JVM”. Ta vẫn để JVM kiểm tra, liên kết và khởi tạo class. ClassLoader tùy chỉnh chủ yếu quyết định **khi ClassLoader cha không đáp ứng yêu cầu thì bytecode của class sẽ đến từ đâu và ClassLoader nào sẽ trở thành ClassLoader định nghĩa (defining ClassLoader)**.
 
 ## <a id="classloader-contract">Quan hệ giữa loadClass và findClass</a>
 
@@ -65,7 +65,7 @@ findClass của PluginClassLoader
 defineClass
 ```
 
-### Khi nào mới override loadClass?
+### Khi nào mới nên ghi đè (override) loadClass?
 
 Chỉ khi loader thật sự cần chính sách lookup khác, ví dụ child-first có tách biệt chọn lọc. Lúc đó implementation phải tự giữ các invariant như:
 
@@ -102,7 +102,7 @@ PluginClassLoader instance
 Class<?> tại runtime có defining loader = instance PluginClassLoader
 ```
 
-`defineClass` không bỏ qua bước kiểm tra của JVM. Nếu bytes sai format, name không phù hợp hoặc vi phạm loading constraint, runtime có thể ném các lỗi như `ClassFormatError`, `NoClassDefFoundError`, `LinkageError` hoặc `SecurityException` tùy nguyên nhân.
+`defineClass` thiết lập quan hệ giữa class runtime và defining ClassLoader, đồng thời JVM thực hiện các kiểm tra cần thiết ở thời điểm định nghĩa như tên, định dạng và ranh giới bảo mật. Verification là một phần của linking và JVM có thể thực hiện sớm khi cần. Nếu bytecode sai định dạng, tên không phù hợp hoặc vi phạm ràng buộc nạp class, JVM có thể ném `ClassFormatError`, `LinkageError`, `SecurityException` hoặc lỗi liên quan tùy nguyên nhân.
 
 Một điểm rất quan trọng:
 
@@ -110,7 +110,7 @@ Một điểm rất quan trọng:
 
 Nếu hai instance `PluginClassLoader` khác nhau cùng gọi `defineClass` với cùng binary name và cùng byte content, JVM vẫn có thể tạo hai type khác nhau. Chương Class Identity sẽ chứng minh điều đó.
 
-### defineClass chưa đồng nghĩa với initialization
+### defineClass chưa đồng nghĩa với khởi tạo
 
 Sau khi `defineClass` tạo `Class<?>`, class chưa nhất thiết đã chạy static initializer. Initialization vẫn theo các rule lifecycle đã học.
 
@@ -121,7 +121,7 @@ defineClass
 → initialization chỉ khi trigger phù hợp
 ```
 
-## <a id="custom-source">Nạp class bytes từ nguồn tùy chỉnh</a>
+## <a id="custom-source">Nạp bytecode từ nguồn tùy chỉnh</a>
 
 Nguồn tùy chỉnh có thể là bất kỳ nơi nào ứng dụng có thể lấy đúng class-file bytes. Để tập trung vào ClassLoader thay vì I/O, ta có thể dùng in-memory map:
 
@@ -179,7 +179,7 @@ Nếu `Plugin` là API dùng chung của host, đặt loader của API làm pare
 
 Trong môi trường thực tế, nguồn có thể là URL hoặc thư mục JAR. `URLClassLoader` vẫn là một implementation có thể dùng khi phù hợp; custom loader chỉ cần khi contract lookup/tách biệt của ứng dụng khác với loader có sẵn.
 
-### Đừng gắn custom loader với một mô hình lưu trữ cụ thể
+### Đừng gắn ClassLoader tùy chỉnh với một mô hình lưu trữ cụ thể
 
 ClassLoader contract quan tâm tới binary name và bytes. Cách lấy bytes thuộc về ứng dụng:
 
@@ -192,7 +192,7 @@ binary name
 
 Tách bộ phân giải nguồn khỏi logic loader giúp test, cache và dọn dẹp lifecycle dễ hơn.
 
-## <a id="custom-loader-safety">Đồng bộ, package và ranh giới an toàn</a>
+## <a id="custom-loader-safety">Đồng bộ, gói (package) và ranh giới an toàn</a>
 
 Custom loading dễ tạo lỗi vì class definition có state. Một loader phải tránh race:
 

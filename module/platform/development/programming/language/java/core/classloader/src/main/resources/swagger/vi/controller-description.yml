@@ -1,42 +1,42 @@
 ClassIdentityController:
   description: |-
-    <h2>Class identity qua ranh giới loader</h2>
-    <p>Quan sát cùng binary name nhưng khác defining loader dẫn tới type incompatibility và cross-loader cast failure.</p>
+    <h2>Định danh class qua ranh giới ClassLoader</h2>
+    <p>Quan sát cùng tên nhị phân nhưng khác ClassLoader định nghĩa dẫn tới hai kiểu không tương thích và ép kiểu thất bại.</p>
   readmeRelated:
     file: 5.ClassIdentity/ClassIdentity.md
 ClassLifecycleController:
   description: |-
-    <h2>Loading khác Initialization</h2>
-    <p>Dùng một loader mới cho mỗi lần gọi để chứng minh runtime Class có thể được load mà static initialization chưa chạy.</p>
+    <h2>Nạp class khác với khởi tạo class</h2>
+    <p>Dùng một ClassLoader mới cho mỗi lần gọi để chứng minh một Class có thể đã được nạp khi chạy nhưng phần khởi tạo static vẫn chưa chạy.</p>
   readmeRelated:
     file: 1.Lifecycle/Lifecycle.md
 ClassLoaderChainController:
   description: |-
     <h2>Chuỗi ClassLoader có sẵn</h2>
-    <p>Quan sát Application/System, Platform và bootstrap boundary để thấy một class của ứng dụng và class JDK thuộc các loader ownership khác nhau.</p>
+    <p>Quan sát Application/System, Platform và ranh giới Bootstrap để thấy class của ứng dụng và class JDK được định nghĩa bởi các tầng ClassLoader khác nhau.</p>
   readmeRelated:
     file: 2.BuiltInClassLoaders/BuiltInClassLoaders.md
 ContextClassLoaderController:
   description: |-
-    <h2>Thread Context ClassLoader lifecycle</h2>
-    <p>Thực hành save, set và restore TCCL trong phạm vi nhỏ để tránh làm rò loader context sang công việc khác.</p>
+    <h2>Vòng đời của Thread Context ClassLoader</h2>
+    <p>Thực hành lưu, gán và khôi phục TCCL trong phạm vi nhỏ để ngữ cảnh ClassLoader không bị giữ lại hoặc truyền nhầm sang công việc khác.</p>
   readmeRelated:
     file: 6.ContextClassLoader/ContextClassLoader.md
 CustomClassLoaderController:
   description: |-
-    <h2>Custom loader và namespace tách biệt</h2>
-    <p>Định nghĩa cùng class bytes bằng hai loader độc lập để quan sát loader ownership tạo ra runtime type identity khác nhau.</p>
+    <h2>Định danh class qua hai ClassLoader tùy chỉnh độc lập</h2>
+    <p>Dùng hai ClassLoader tùy chỉnh làm cơ chế thử nghiệm để chứng minh cùng tên nhị phân và cùng bytecode vẫn có thể tạo hai kiểu khác nhau khi chạy.</p>
   readmeRelated:
-    file: 4.CustomClassLoader/CustomClassLoader.md
+    file: 5.ClassIdentity/ClassIdentity.md
 InitializationController:
   description: |-
-    <h2>Initialization failure và erroneous state</h2>
-    <p>Dùng một class identity mới mỗi request để quan sát lần initialization đầu thất bại và lần active use sau không retry initializer.</p>
+    <h2>Lỗi khởi tạo và trạng thái lỗi của class</h2>
+    <p>Dùng một định danh class mới cho mỗi request để quan sát lần khởi tạo đầu thất bại và lần sử dụng chủ động sau không chạy lại bộ khởi tạo.</p>
   readmeRelated:
     file: 8.Initialization/Initialization.md
 ResourceLoadingController:
   description: |-
-    <h2>Resource lookup qua Class và ClassLoader</h2>
-    <p>So sánh package-relative, absolute Class resource và loader-root path trên cùng một resource được đóng gói.</p>
+    <h2>Tìm tài nguyên qua Class và ClassLoader</h2>
+    <p>So sánh đường dẫn tương đối theo gói, đường dẫn tuyệt đối qua Class và đường dẫn tính từ gốc ClassLoader trên cùng một tài nguyên được đóng gói.</p>
   readmeRelated:
     file: 7.ResourceLoading/ResourceLoading.md

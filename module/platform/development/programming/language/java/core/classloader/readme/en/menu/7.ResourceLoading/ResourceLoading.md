@@ -1,4 +1,4 @@
-# Resource Loading
+# Classpath Resource Loading
 
 Class loaders are also used to locate **resources** such as configuration files, templates, service descriptors, and bundled data. Resource lookup is related to class lookup because it often uses the same loader hierarchy, but a resource is not a Java type: finding `plugin.properties` does not define a `Class<?>`, participate in type identity, or trigger class initialization.
 
@@ -176,6 +176,8 @@ runtime image          → jrt:...
 Therefore, if the operation only needs to **read resource content**, prefer `getResourceAsStream` and stay independent of the physical storage mechanism.
 
 Use filesystem APIs only when the application contract truly requires a filesystem path. If an external library requires a `Path`, the application may need to copy the classpath resource to a temporary file or explicitly mount/open the relevant archive filesystem; that is a deployment decision, not a generic property of classpath resources.
+
+## <a id="resource-vs-class-loading">Resource Lookup Is Different from Class Loading and Definition</a>
 
 For the plugin system, keep the distinction clear:
 

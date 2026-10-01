@@ -44,72 +44,93 @@
 roadmap:
   - id: runtime-type-lifecycle
     title: ClassLoader là gì? Từ bytecode đến class có thể sử dụng
-    purpose: Hiểu vì sao có file .class vẫn chưa đủ và JVM còn phải tìm, nạp, liên kết rồi khởi tạo class trước khi chương trình có thể sử dụng nó.
+    purpose: Hiểu vì sao có tệp .class vẫn chưa đủ; JVM còn phải tìm bytecode, định nghĩa class khi chương trình chạy, liên kết rồi khởi tạo class trước khi chương trình có thể sử dụng nó.
+    relatedKnowledge:
+      - Lifecycle
     relatedModules:
       - routeId: JAVA_CLASS_OBJECT
         label: Class & Object
-        note: Class & Object giới thiệu việc khởi tạo class và tạo object từ góc nhìn ngôn ngữ Java.
+        note: Class & Object giới thiệu việc khởi tạo class và tạo đối tượng từ góc nhìn ngôn ngữ Java.
     objectives:
-      - Hiểu ClassLoader là thành phần giúp JVM tìm và nạp định nghĩa class khi chương trình chạy.
+      - Hiểu ClassLoader tham gia quá trình nạp bằng cách tự tìm và định nghĩa class hoặc ủy quyền cho ClassLoader khác; JVM tạo class khi chạy từ kết quả nạp, rồi thực hiện các giai đoạn liên kết (linking) và khởi tạo (initialization).
       - Phân biệt các giai đoạn nạp (loading), kiểm tra (verification), chuẩn bị (preparation), phân giải (resolution) và khởi tạo (initialization).
-      - Giải thích vì sao “file .class tồn tại” khác với “class đã được nạp và khởi tạo”.
+      - Giải thích vì sao “tệp .class tồn tại” khác với “class đã được nạp và khởi tạo”.
       - Nhận biết lỗi thuộc giai đoạn tìm/nạp, liên kết hay khởi tạo để định hướng chẩn đoán.
   - id: built-in-loaders
     title: Các ClassLoader có sẵn trong JVM
-    purpose: Hiểu vai trò của Bootstrap, Platform và Application/System ClassLoader trong một JVM thông thường.
+    purpose: Hiểu vai trò của Bootstrap ClassLoader, Platform ClassLoader và Application/System ClassLoader trong một JVM thông thường.
+    relatedKnowledge:
+      - BuiltInClassLoaders
     objectives:
-      - Xác định ClassLoader nào nạp class của JDK, platform và ứng dụng.
-      - Hiểu vì sao ClassLoader API biểu diễn Bootstrap ClassLoader bằng null trong một số trường hợp.
+      - Xác định ClassLoader nào định nghĩa các class lõi của JDK, các class nền tảng và các class của ứng dụng.
+      - Theo dõi chuỗi ClassLoader cha từ Application/System tới Platform và Bootstrap, đồng thời hiểu vì sao API biểu diễn Bootstrap ClassLoader bằng null.
   - id: parent-delegation
     title: Cơ chế ủy quyền cho ClassLoader cha
     purpose: Hiểu vì sao một ClassLoader thường hỏi ClassLoader cha trước khi tự nạp class, từ đó bảo vệ tính nhất quán và định danh của các kiểu nền tảng.
+    relatedKnowledge:
+      - ParentDelegation
     objectives:
-      - Theo dõi thứ tự tìm kiếm theo cơ chế parent-first trước khi ClassLoader hiện tại tự định nghĩa class.
-      - Nhận biết child-first là một chiến lược ngoại lệ có chủ đích và có rủi ro về cô lập kiểu.
+      - Theo dõi thứ tự tìm kiếm theo cơ chế ưu tiên cha (parent-first) trước khi ClassLoader hiện tại tự định nghĩa class.
+      - Phân biệt vai trò initiating ClassLoader và defining ClassLoader: một class có một defining ClassLoader, còn nhiều ClassLoader có thể được ghi nhận là initiating ClassLoader qua quá trình ủy quyền.
+      - Nhận biết ưu tiên con (child-first) là một chiến lược ngoại lệ có chủ đích và có thể gây xung đột về định danh kiểu.
   - id: custom-loaders-and-isolation
     title: ClassLoader tùy chỉnh và cô lập
-    purpose: Hiểu cách ứng dụng nạp class từ nguồn khác classpath thông thường hoặc tạo không gian class tách biệt bằng ClassLoader tùy chỉnh.
+    purpose: Hiểu cách ứng dụng nạp class từ nguồn ngoài classpath thông thường hoặc tạo không gian class tách biệt bằng ClassLoader tùy chỉnh.
+    relatedKnowledge:
+      - CustomClassLoader
     objectives:
       - Phân biệt trách nhiệm của loadClass, findClass và defineClass.
       - Biết khi nào ClassLoader tùy chỉnh có giá trị và khi nào ClassLoader mặc định đã đủ.
-      - Nhận biết các vấn đề về đồng bộ, package, bảo mật và ranh giới API.
+      - Nhận biết các vấn đề về đồng bộ, gói (package) và bảo mật khi tự xây dựng ClassLoader.
   - id: class-identity
     title: Định danh class qua nhiều ClassLoader
     purpose: Hiểu vì sao hai class có cùng tên nhị phân (binary name) vẫn có thể là hai kiểu khác nhau nếu chúng được định nghĩa bởi hai ClassLoader khác nhau.
+    relatedKnowledge:
+      - ClassIdentity
     relatedModules:
       - routeId: JAVA_REFLECTION
         label: Reflection
-        note: Reflection quan sát đối tượng Class có định danh được thiết lập bởi ClassLoader đã định nghĩa class đó.
+        note: Reflection quan sát đối tượng Class; định danh kiểu của đối tượng này được quyết định bởi tên nhị phân và ClassLoader đã định nghĩa class đó.
     objectives:
-      - Giải thích vì sao class cùng tên từ loader khác nhau không tương thích.
-      - Thiết kế ranh giới API dùng chung để kiểu của plugin hoặc container vẫn tương thích khi đi qua ranh giới ClassLoader.
+      - Giải thích vì sao class cùng tên từ các ClassLoader khác nhau không tương thích.
+      - Thiết kế ranh giới API dùng chung để kiểu của phần mở rộng (plugin) hoặc môi trường chứa (container) vẫn tương thích khi đi qua ranh giới ClassLoader.
   - id: thread-context-classloader
-    title: Thread Context ClassLoader (TCCL)
-    purpose: Hiểu vì sao mã của framework được nạp ở tầng cha đôi khi phải dùng ClassLoader gắn với thread để tìm provider nằm ở tầng ứng dụng hoặc tầng con.
+    title: ClassLoader ngữ cảnh của luồng (Thread Context ClassLoader - TCCL)
+    purpose: Hiểu vì sao mã của khung phần mềm (framework) ở tầng ClassLoader cha đôi khi phải dùng ClassLoader gắn với luồng (thread) để tìm thành phần cung cấp (provider) ở tầng ứng dụng hoặc tầng con.
+    relatedKnowledge:
+      - ContextClassLoader
     objectives:
-      - Nhận biết khi nào ClassLoader của framework không nhìn thấy provider của ứng dụng và TCCL trở nên cần thiết.
+      - Nhận biết khi nào ClassLoader của khung phần mềm không thể tìm thấy thành phần cung cấp của ứng dụng và TCCL cần được dùng làm cầu nối.
       - Dùng TCCL đúng phạm vi theo quy trình lưu, gán rồi khôi phục.
-      - Nhận biết thread sống lâu có thể giữ tham chiếu tới ClassLoader và gây rò rỉ.
+      - Nhận biết luồng sống lâu có thể giữ tham chiếu tới ClassLoader và gây rò rỉ.
   - id: classpath-resource-loading
     title: Nạp tài nguyên từ classpath
-    purpose: Hiểu cách tìm tài nguyên (resource) theo class hoặc theo gốc của ClassLoader mà không nhầm tài nguyên trong classpath với file trên hệ thống.
+    purpose: Hiểu cách tìm tài nguyên (resource) theo class hoặc theo gốc của ClassLoader mà không nhầm tài nguyên trên classpath với tệp trên hệ thống tệp.
+    relatedKnowledge:
+      - ResourceLoading
     relatedModules:
       - routeId: JAVA_IO
         label: I/O
-        note: I/O phụ trách xử lý stream và file thông thường; ClassLoader phụ trách quy tắc tìm tài nguyên trong classpath.
+        note: Module I/O tập trung vào việc đọc/ghi luồng dữ liệu và tệp; ClassLoader tập trung vào quy tắc tìm tài nguyên trên classpath.
     objectives:
       - Phân biệt quy tắc đường dẫn của Class.getResource và ClassLoader.getResource.
-      - Quản lý stream của tài nguyên và trường hợp một tên tài nguyên có nhiều kết quả một cách có chủ đích.
+      - Hiểu việc tìm tài nguyên qua ClassLoader khác với việc nạp và định nghĩa class.
+      - Quản lý vòng đời luồng dữ liệu (stream) của tài nguyên và xử lý có chủ đích trường hợp một tên tài nguyên có nhiều kết quả.
   - id: class-initialization
-    title: Kích hoạt và lỗi khi khởi tạo class
+    title: Điều kiện kích hoạt và lỗi khi khởi tạo class
     purpose: Hiểu thao tác nào kích hoạt việc khởi tạo class, JVM đồng bộ quá trình này như thế nào và lỗi khởi tạo ảnh hưởng đến những lần sử dụng sau ra sao.
+    relatedKnowledge:
+      - Initialization
     objectives:
-      - Phân biệt việc nạp class với khởi tạo class và nhận biết các thao tác sử dụng chủ động có thể kích hoạt khởi tạo.
+      - Phân biệt việc nạp class với khởi tạo class và nhận biết các thao tác JVM xem là sử dụng chủ động (active use), qua đó kích hoạt khởi tạo.
+      - Hiểu mỗi class đã được một ClassLoader định nghĩa chỉ được JVM khởi tạo một lần, và JVM đồng bộ quá trình này khi nhiều luồng cùng sử dụng class.
       - Hiểu ExceptionInInitializerError và trạng thái lỗi của class sau khi khởi tạo thất bại.
   - id: unloading-leaks-and-synthesis
     title: Gỡ nạp class và rò rỉ ClassLoader
-    purpose: Hiểu class chỉ có thể được gỡ nạp khi ClassLoader đã định nghĩa nó không còn bị giữ tham chiếu, và vì sao một ClassLoader bị giữ lại có thể kéo theo toàn bộ class, tài nguyên và trạng thái của ứng dụng hoặc plugin.
+    purpose: Hiểu class chỉ có thể được gỡ nạp khi ClassLoader đã định nghĩa nó không còn bị giữ tham chiếu, và vì sao một ClassLoader bị giữ lại có thể kéo theo toàn bộ class, tài nguyên và trạng thái của ứng dụng hoặc phần mở rộng (plugin).
+    relatedKnowledge:
+      - UnloadingLeaks
     objectives:
       - Nhận biết các kiểu giữ tham chiếu qua static, ThreadLocal, bộ lắng nghe (listener), bộ nhớ đệm (cache) và TCCL.
-      - Hiểu việc gỡ nạp phụ thuộc Garbage Collector (GC) và không xảy ra theo một thời điểm xác định trước.
-      - Kết nối toàn bộ hành trình từ nạp class, ủy quyền, định danh, TCCL và tài nguyên tới điều kiện để class có thể được gỡ nạp.
+      - Hiểu việc gỡ nạp phụ thuộc vào bộ thu gom rác (Garbage Collector - GC) và không xảy ra ở một thời điểm xác định trước.
+      - Kết nối toàn bộ hành trình từ nạp class, ủy quyền, ClassLoader tùy chỉnh, định danh, TCCL, tài nguyên và khởi tạo tới điều kiện để class có thể được gỡ nạp.

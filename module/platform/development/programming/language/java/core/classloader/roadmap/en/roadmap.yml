@@ -44,38 +44,49 @@
 roadmap:
   - id: runtime-type-lifecycle
     title: What Is a ClassLoader? From Class Bytes to a Usable Runtime Type
-    purpose: Understand why a .class file is not enough by itself and how the JVM locates, loads, links, and initializes classes before they can be used at runtime.
+    purpose: Understand why a .class file is not enough by itself and how the JVM locates class bytes, defines runtime classes, links them, and initializes them before use.
+    relatedKnowledge:
+      - Lifecycle
     relatedModules:
       - routeId: JAVA_CLASS_OBJECT
         label: Class & Object
         note: Class/Object introduces class initialization and object construction from the language perspective.
     objectives:
-      - Understand the ClassLoader role in locating and loading class definitions into the JVM.
+      - Understand that a ClassLoader participates in loading either by locating and defining a class directly or by delegating to another loader; the JVM creates the runtime class and later performs linking and initialization.
       - Distinguish loading, verification, preparation, resolution, and initialization conceptually.
       - Explain why “class file exists” is different from “Class is loaded and initialized”.
       - Classify failures by locating/loading, linking, or initialization stage to guide diagnosis.
   - id: built-in-loaders
     title: Built-In ClassLoaders
     purpose: Understand the bootstrap, platform, and application loader roles in a normal JVM.
+    relatedKnowledge:
+      - BuiltInClassLoaders
     objectives:
       - Inspect which loader owns JDK, platform, and application classes.
-      - Understand the null bootstrap representation in ClassLoader APIs.
+      - Trace the parent chain from the application/system loader through the platform loader to bootstrap, including the null bootstrap representation in ClassLoader APIs.
   - id: parent-delegation
     title: Parent Delegation
     purpose: Understand parent-first lookup as a consistency and core-type identity strategy rather than arbitrary recursion.
+    relatedKnowledge:
+      - ParentDelegation
     objectives:
       - Trace the delegation path before local class definition.
+      - Distinguish initiating-loader and defining-loader roles: a class has one defining ClassLoader, while multiple ClassLoaders may be recorded as initiating loaders through delegation.
       - Recognize child-first strategies as deliberate exceptions with isolation risks.
   - id: custom-loaders-and-isolation
     title: Custom ClassLoaders and Isolation
     purpose: Understand how applications load bytes from alternate sources or isolated namespaces through custom loaders.
+    relatedKnowledge:
+      - CustomClassLoader
     objectives:
       - Understand loadClass/findClass/defineClass responsibilities.
       - Decide when a custom ClassLoader is justified and when the default loading model is sufficient.
-      - Recognize synchronization, package, security, and API-boundary concerns.
+      - Recognize synchronization, package, and security concerns when implementing a custom ClassLoader.
   - id: class-identity
     title: Class Identity Across Loaders
     purpose: Understand runtime type identity as binary name plus defining ClassLoader.
+    relatedKnowledge:
+      - ClassIdentity
     relatedModules:
       - routeId: JAVA_REFLECTION
         label: Reflection
@@ -86,6 +97,8 @@ roadmap:
   - id: thread-context-classloader
     title: Thread Context ClassLoader (TCCL)
     purpose: Understand why parent-owned framework code sometimes needs a thread-associated loader to discover child/application providers.
+    relatedKnowledge:
+      - ContextClassLoader
     objectives:
       - Recognize when a framework's own loader cannot see application providers and TCCL is the appropriate bridge.
       - Use TCCL in save/set/restore scopes.
@@ -93,23 +106,31 @@ roadmap:
   - id: classpath-resource-loading
     title: Classpath Resource Loading
     purpose: Understand class-relative and loader-root resource lookup without confusing classpath resources with filesystem files.
+    relatedKnowledge:
+      - ResourceLoading
     relatedModules:
       - routeId: JAVA_IO
         label: I/O
         note: I/O owns ordinary stream/file handling; ClassLoader owns classpath resource discovery semantics.
     objectives:
       - Distinguish Class.getResource and ClassLoader.getResource path semantics.
+      - Distinguish resource lookup through a ClassLoader from class loading and definition.
       - Manage resource streams and multiple-resource lookup intentionally.
   - id: class-initialization
     title: Class Initialization Triggers and Failure
     purpose: Understand what triggers class initialization, how initialization is synchronized, and how failure affects later use.
+    relatedKnowledge:
+      - Initialization
     objectives:
       - Distinguish loading from initialization and active-use triggers.
+      - Understand once-per-runtime-class initialization and JVM synchronization when multiple threads trigger it concurrently.
       - Understand ExceptionInInitializerError and erroneous class state conceptually.
   - id: unloading-leaks-and-synthesis
     title: Unloading, Retention, and Loader Leaks
     purpose: Understand that classes unload with their defining loader reachability and why one retained loader can retain an entire application/plugin graph.
+    relatedKnowledge:
+      - UnloadingLeaks
     objectives:
       - Recognize static, ThreadLocal, listener, cache, and TCCL retention patterns.
       - Treat unloading as GC-dependent rather than deterministic lifecycle code.
-      - Connect loading, delegation, identity, TCCL, resources, and loader reachability into one end-to-end mental model.
+      - Connect loading, delegation, custom loaders, identity, TCCL, resources, initialization, and loader reachability into one end-to-end mental model.

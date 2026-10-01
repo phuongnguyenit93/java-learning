@@ -24,10 +24,10 @@ ContextClassLoaderController:
     file: 6.ContextClassLoader/ContextClassLoader.md
 CustomClassLoaderController:
   description: |-
-    <h2>Custom Loaders and Isolated Namespaces</h2>
-    <p>Define identical class bytes through two independent loaders and observe how loader ownership creates distinct runtime types.</p>
+    <h2>Class Identity through Independent Custom Loaders</h2>
+    <p>Use two independent custom loaders as the experiment mechanism to prove that the same binary name and bytes can still produce distinct runtime types.</p>
   readmeRelated:
-    file: 4.CustomClassLoader/CustomClassLoader.md
+    file: 5.ClassIdentity/ClassIdentity.md
 InitializationController:
   description: |-
     <h2>Initialization Failure and Erroneous State</h2>

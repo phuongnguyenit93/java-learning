@@ -1,35 +1,35 @@
-# Context ClassLoader
+# ClassLoader ngữ cảnh của luồng (Thread Context ClassLoader - TCCL)
 
-Parent delegation có hướng nhìn thấy tự nhiên:
+Cơ chế ủy quyền cho ClassLoader cha tạo ra một hướng nhìn thấy tự nhiên:
 
 ```text
-child
-→ nhìn thấy parent
+ClassLoader con
+→ nhìn thấy ClassLoader cha
 
-parent
-→ không tự nhiên nhìn thấy class chỉ tồn tại ở child
+ClassLoader cha
+→ không tự nhiên nhìn thấy class chỉ tồn tại ở ClassLoader con
 ```
 
-Nhưng nhiều framework/thư viện nằm ở phía parent lại cần tìm implementation do ứng dụng hoặc plugin cung cấp ở phía child. Ví dụ một SPI API nằm trong platform/library layer, còn provider implementation nằm trong classpath của ứng dụng.
+Nhưng nhiều khung phần mềm/thư viện nằm ở phía ClassLoader cha lại cần tìm phần triển khai do ứng dụng hoặc plugin cung cấp ở phía ClassLoader con. Ví dụ một SPI API nằm ở tầng thư viện/nền tảng, còn phần triển khai của thành phần cung cấp nằm trong classpath của ứng dụng.
 
 Nếu các thuật ngữ này còn mới, hãy đọc chúng theo nghĩa rất đơn giản:
 
 ```text
 SPI (Service Provider Interface)
-→ interface/contract mà thư viện công bố để bên khác implement
+→ interface/hợp đồng mà thư viện công bố để bên khác triển khai
 
 provider
-→ implementation của SPI
+→ thành phần triển khai SPI
 
 ServiceLoader
-→ API JDK dùng để tìm các provider đã được khai báo
+→ API JDK dùng để tìm các thành phần cung cấp (provider) đã được khai báo
 ```
 
-Trong ví dụ xuyên suốt, `Plugin` chính là SPI; `PaymentPlugin` là một provider.
+Trong ví dụ xuyên suốt, `Plugin` chính là SPI; `PaymentPlugin` là một thành phần cung cấp (provider).
 
-**Thread Context ClassLoader (TCCL)** tạo một liên kết loader trên `Thread` để code đang chạy có thể nói: “đối với thao tác này, hãy dùng loader phù hợp với context của bên gọi/ứng dụng để tìm provider”.
+**Thread Context ClassLoader (TCCL)** tạo một liên kết ClassLoader trên `Thread` để mã đang chạy có thể nói: “đối với thao tác này, hãy dùng ClassLoader phù hợp với ngữ cảnh của bên gọi/ứng dụng để tìm thành phần cung cấp”.
 
-## <a id="tccl-purpose">TCCL giải quyết bài toán nhìn thấy ngược chiều</a>
+## <a id="tccl-purpose">TCCL giúp khung phần mềm tìm thành phần ở ClassLoader tầng con</a>
 
 Không có TCCL, một thư viện chỉ dùng loader định nghĩa chính nó có thể gặp:
 
@@ -63,7 +63,7 @@ Thread Context ClassLoader
 
 TCCL **không thay đổi defining loader của class đã tồn tại**. Nó chỉ là một reference tới loader mà code có thể chọn dùng.
 
-### Vì sao defining loader của framework có thể thất bại nhưng TCCL lại thành công?
+### Vì sao ClassLoader định nghĩa của khung phần mềm không tìm thấy thành phần cung cấp (provider) nhưng TCCL lại tìm thấy?
 
 Giả sử framework được parent loader định nghĩa, còn provider chỉ có child loader nhìn thấy:
 
@@ -79,7 +79,7 @@ thread context ClassLoader = PluginClassLoader
 
 Đây là WHY cốt lõi của TCCL: nó cho code đang chạy một **lookup context khác với defining loader của chính framework** khi kiến trúc cần nhìn xuống application/plugin layer.
 
-## <a id="tccl-discovery">Framework tìm provider bằng TCCL</a>
+## <a id="tccl-discovery">Khung phần mềm tìm thành phần cung cấp bằng TCCL</a>
 
 `ServiceLoader` là ví dụ chuẩn.
 
@@ -118,7 +118,7 @@ ServiceLoader<Plugin> plugins =
         ServiceLoader.load(Plugin.class, loader);
 ```
 
-Điều này làm dependency vào loader dễ nhìn thấy hơn.
+Điều này làm phụ thuộc vào ClassLoader dễ nhìn thấy hơn. Khi bên gọi **đã biết chính xác ClassLoader cần dùng**, truyền loader tường minh thường rõ ràng hơn dựa vào trạng thái TCCL ngầm. TCCL hữu ích nhất khi hợp đồng của framework cần một ngữ cảnh ClassLoader gắn với luồng hiện tại để code ở tầng cha có thể làm việc thay cho ứng dụng ở tầng con.
 
 TCCL thường xuất hiện quanh:
 
@@ -130,7 +130,7 @@ TCCL thường xuất hiện quanh:
 
 Không phải mọi thư viện đều cần TCCL. Nếu defining loader của thư viện đã nhìn thấy tất cả implementation cần dùng, nạp trực tiếp sẽ đơn giản hơn.
 
-## <a id="tccl-lifecycle">Lưu, gán và khôi phục TCCL đúng lifecycle</a>
+## <a id="tccl-lifecycle">Lưu, gán và khôi phục TCCL đúng phạm vi</a>
 
 TCCL là mutable state của `Thread`. Nếu một thao tác plugin cần tạm thời dùng plugin loader, pattern an toàn là:
 
@@ -182,7 +182,7 @@ cùng pooled thread xử lý yêu cầu B
 
 TCCL vì vậy nên được xem như context có phạm vi rõ ràng, tương tự những mutable context khác gắn với thread: gán trong phạm vi càng hẹp càng tốt và luôn khôi phục.
 
-## <a id="tccl-leak-risk">TCCL trên thread sống lâu có thể giữ ClassLoader sống</a>
+## <a id="tccl-leak-risk">TCCL trên luồng sống lâu có thể giữ ClassLoader không được thu hồi</a>
 
 Một `Thread` sống lâu có thể trở thành GC root hoặc vẫn reachable từ runtime/thread pool. Nếu TCCL của nó trỏ tới plugin loader:
 

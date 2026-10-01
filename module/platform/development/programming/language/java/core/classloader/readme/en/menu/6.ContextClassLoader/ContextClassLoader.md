@@ -1,4 +1,4 @@
-# Context Class Loader
+# Thread Context ClassLoader (TCCL)
 
 Parent delegation works naturally when a child asks a parent for shared types. Framework discovery sometimes needs the opposite direction: code owned by a parent or shared library needs to discover application/provider classes that only a child loader can see.
 
@@ -105,6 +105,8 @@ try {
 The shared service type still has to be loader-compatible. Setting the TCCL does not repair a design where the provider implements a private child copy of `Plugin` while the host expects the parent copy.
 
 Frameworks may use TCCL for other discovery tasks such as resource lookup or reflective loading. The principle is the same: parent-owned code obtains a loader that represents the current application's visibility context.
+
+When the caller already knows the exact loader that should be used, an explicit API such as `ServiceLoader.load(service, loader)` is usually easier to reason about than ambient thread context. TCCL is most valuable when the framework contract intentionally relies on a loader context associated with the current thread so parent-owned code can act on behalf of child/application code.
 
 ## <a id="tccl-lifecycle">Save, Set, and Restore</a>
 

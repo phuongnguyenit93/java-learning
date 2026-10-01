@@ -1,4 +1,4 @@
-# Class Unloading và ClassLoader Leak
+# Gỡ nạp class và rò rỉ ClassLoader
 
 Hệ thống plugin có một vòng đời mong muốn:
 
@@ -10,13 +10,13 @@ load plugin
 → plugin classes có thể được GC/unload
 ```
 
-Nhưng “xóa plugin khỏi một `Map`” chưa chắc đủ. Một defining ClassLoader thường gắn với metadata và quan hệ của các class mà nó định nghĩa; ngược lại, `Class`, instance và nhiều cấu trúc runtime có thể dẫn tham chiếu trở lại loader.
+Nhưng “xóa plugin khỏi một `Map`” chưa chắc đủ. Một **ClassLoader định nghĩa (defining ClassLoader)** thường gắn với metadata và quan hệ của các class mà nó định nghĩa; ngược lại, `Class`, instance và nhiều cấu trúc khi chạy có thể dẫn tham chiếu trở lại ClassLoader.
 
-Vì vậy chỉ một tham chiếu nhỏ từ vùng sống lâu sang plugin cũng có thể giữ cả đồ thị loader tồn tại sau khi redeploy.
+Vì vậy chỉ một tham chiếu nhỏ từ vùng sống lâu sang plugin cũng có thể giữ cả đồ thị ClassLoader tồn tại sau khi triển khai lại (redeploy).
 
-## <a id="class-unloading">Class chỉ có thể unload khi defining loader có thể được thu hồi</a>
+## <a id="class-unloading">Class chỉ có thể được gỡ nạp khi ClassLoader định nghĩa có thể được thu hồi</a>
 
-Đối với class do loader do ứng dụng tạo ra định nghĩa, điều kiện cốt lõi là **defining loader phải trở nên có thể được GC thu hồi**. JVM không unload riêng tùy ý một class trong khi defining loader của nó vẫn còn reachable.
+Đối với class do ClassLoader do ứng dụng tạo ra định nghĩa, điều kiện cốt lõi là **ClassLoader định nghĩa phải trở nên có thể được GC thu hồi**. Một class như vậy không thể trở thành đối tượng để gỡ nạp khi ClassLoader định nghĩa của nó vẫn còn được tham chiếu và chưa thể được thu hồi.
 
 Mô hình tư duy:
 
@@ -30,11 +30,11 @@ PluginClassLoader unreachable
 → classes do loader định nghĩa có thể được unload
 ```
 
-Các class do bootstrap loader định nghĩa không có vòng đời kiểu plugin loader và không phải đối tượng để ứng dụng unload.
+Các class do Bootstrap ClassLoader định nghĩa không có vòng đời kiểu ClassLoader plugin và không phải đối tượng để ứng dụng chủ động gỡ nạp.
 
-### Vì sao application class thông thường gần như sống tới khi JVM kết thúc?
+### Vì sao class của ứng dụng thông thường gần như sống tới khi JVM kết thúc?
 
-Trong một ứng dụng Java thông thường, Application/System ClassLoader là hạ tầng sống rất lâu, thường gần bằng vòng đời của tiến trình JVM. Vì loader này vẫn còn được tham chiếu, những class mà nó định nghĩa **thường không có vòng đời “load rồi unload riêng từng class”** giống plugin.
+Trong một ứng dụng Java thông thường, Application/System ClassLoader là hạ tầng sống rất lâu, thường gần bằng vòng đời của tiến trình JVM. Vì ClassLoader này vẫn còn được tham chiếu, những class mà nó định nghĩa **thường không có vòng đời “nạp rồi gỡ nạp riêng từng class”** giống plugin.
 
 ```text
 JVM process đang chạy
@@ -43,7 +43,7 @@ JVM process đang chạy
 → không mong đợi từng class tự biến mất chỉ vì không còn instance
 ```
 
-Class unloading trở nên đặc biệt quan trọng khi ta cố tình tạo **ranh giới ClassLoader có thể bỏ đi sau một vòng đời**:
+Việc gỡ nạp class trở nên đặc biệt quan trọng khi ta cố tình tạo **ranh giới ClassLoader có thể bỏ đi sau một vòng đời**:
 
 ```text
 plugin loader
@@ -52,45 +52,45 @@ hot-reload/devtools loader
 isolated scripting/tooling loader
 ```
 
-Ở các mô hình đó, ta muốn bỏ cả một thế hệ loader để toàn bộ namespace cũ có cơ hội được thu hồi. Đây là lý do chương này tập trung vào plugin/redeploy thay vì coi unloading là vòng đời bình thường của mọi class trong ứng dụng.
+Ở các mô hình đó, ta muốn bỏ cả một thế hệ ClassLoader để toàn bộ không gian tên cũ có cơ hội được thu hồi. Đây là lý do chương này tập trung vào plugin/triển khai lại thay vì coi việc gỡ nạp là vòng đời bình thường của mọi class trong ứng dụng.
 
-### “Có thể unload” không phải “sẽ unload ngay”
+### “Có thể gỡ nạp” không có nghĩa “sẽ gỡ nạp ngay”
 
-GC và class unloading phụ thuộc cách triển khai JVM, garbage collector, áp lực heap và thời điểm chạy. Ứng dụng không có API:
+GC và việc gỡ nạp class phụ thuộc cách triển khai JVM, bộ thu gom rác, áp lực heap và thời điểm chạy. Ứng dụng không có API:
 
 ```java
 // không tồn tại
 Class.unloadNow(PaymentPlugin.class);
 ```
 
-Ngay cả `System.gc()` chỉ là một yêu cầu/gợi ý cho GC, không phải hợp đồng đảm bảo một loader sẽ được thu hồi tại dòng code kế tiếp.
+Ngay cả `System.gc()` chỉ là một yêu cầu/gợi ý cho GC, không phải hợp đồng đảm bảo một ClassLoader sẽ được thu hồi tại dòng mã kế tiếp.
 
 ## <a id="loader-retention">Những tham chiếu nào giữ một ClassLoader sống?</a>
 
-Ta nên chẩn đoán dựa trên reachability (khả năng còn được tham chiếu):
+Ta nên chẩn đoán dựa trên **khả năng còn được tham chiếu (reachability)**:
 
-**GC root** là một điểm mà garbage collector xem như còn sống chắc chắn khi bắt đầu lần theo object graph, ví dụ thread đang sống hoặc các runtime structure sống lâu dẫn tới static state. Một object còn đường tham chiếu từ GC root thì chưa thể được thu hồi.
+**GC root** là một điểm mà bộ thu gom rác xem như còn sống chắc chắn khi bắt đầu lần theo đồ thị đối tượng, ví dụ luồng đang sống hoặc các cấu trúc JVM sống lâu dẫn tới trạng thái `static`. Một đối tượng còn đường tham chiếu từ GC root thì chưa thể được thu hồi.
 
 ```text
-GC root / object sống lâu
+GC root / đối tượng sống lâu
 → ...
-→ plugin object / plugin Class / plugin ClassLoader
+→ đối tượng plugin / Class của plugin / ClassLoader của plugin
 ```
 
 Các nguồn giữ lại phổ biến:
 
-- thread sống lâu có TCCL trỏ vào plugin loader;
-- cache do parent/application sở hữu giữ `Class<?>`, `Method`, instance hoặc loader của plugin;
-- registry/listener/event bus chưa gỡ đăng ký callback của plugin;
-- executor/thread do plugin tạo chưa dừng;
-- registry của JDK/thư viện giữ object được plugin đăng ký;
-- `ThreadLocal` trên thread trong pool giữ object thuộc plugin;
-- hook dọn dẹp hoặc callback bị giữ ngoài plugin lifecycle.
+- luồng sống lâu có TCCL trỏ vào ClassLoader của plugin;
+- bộ nhớ đệm do tầng cha/ứng dụng sở hữu giữ `Class<?>`, `Method`, instance hoặc ClassLoader của plugin;
+- registry/bộ lắng nghe/event bus chưa gỡ đăng ký hàm gọi lại (callback) của plugin;
+- executor/luồng do plugin tạo chưa dừng;
+- registry của JDK/thư viện giữ đối tượng được plugin đăng ký;
+- `ThreadLocal` trên luồng trong pool giữ đối tượng thuộc plugin;
+- hook dọn dẹp hoặc hàm gọi lại bị giữ ngoài vòng đời plugin.
 
-Ví dụ cache nguy hiểm:
+Ví dụ bộ nhớ đệm nguy hiểm:
 
 ```java
-// Class này nằm ở application loader và sống suốt process.
+// Class này nằm ở Application ClassLoader và sống suốt tiến trình.
 final class GlobalCache {
     static final Map<String, Class<?>> TYPES = new HashMap<>();
 }
@@ -98,50 +98,50 @@ final class GlobalCache {
 GlobalCache.TYPES.put("payment", pluginClass);
 ```
 
-Sau khi plugin stop, entry trên vẫn tạo chuỗi tham chiếu:
+Sau khi plugin dừng, mục trên vẫn tạo chuỗi tham chiếu:
 
 ```text
-application static GlobalCache
+GlobalCache static của ứng dụng
 → plugin Class
-→ defining PluginClassLoader
+→ PluginClassLoader ở vai trò ClassLoader định nghĩa
 ```
 
-### Static field trong plugin tự nó chưa đủ để gọi là leak
+### Trường static của plugin tự nó chưa đủ để gọi là rò rỉ
 
 Đây là một điểm tinh tế nhưng quan trọng.
 
 ```text
 PluginClassLoader
-↔ plugin Class
-↔ plugin static object graph
+↔ Class của plugin
+↔ đồ thị đối tượng static của plugin
 ```
 
-Nếu toàn bộ đồ thị chỉ tham chiếu lẫn nhau và **không còn đường từ GC root/object bên ngoài sống lâu vào graph**, GC có thể thu hồi chu trình đó.
+Nếu toàn bộ đồ thị chỉ tham chiếu lẫn nhau và **không còn đường từ GC root hoặc đối tượng bên ngoài sống lâu đi vào đồ thị**, GC có thể thu hồi chu trình đó.
 
-Leak xảy ra khi có một root bên ngoài sống lâu giữ lại một phần đồ thị.
+Rò rỉ xảy ra khi một đối tượng bên ngoài sống lâu vẫn còn đường tham chiếu tới một phần đồ thị của plugin.
 
-## <a id="static-threadlocal-leaks">Static, ThreadLocal, listener và các kiểu leak từ cache</a>
+## <a id="static-threadlocal-leaks">Static, ThreadLocal, bộ lắng nghe và các kiểu rò rỉ từ bộ nhớ đệm</a>
 
-### Parent-owned static cache
+### Bộ nhớ đệm static do ClassLoader cha sở hữu
 
 Đây là mẫu điển hình:
 
 ```text
-class ở application loader
-→ static cache
-→ plugin instance/Class
+class ở Application ClassLoader
+→ bộ nhớ đệm static
+→ instance/Class của plugin
 → PluginClassLoader
 ```
 
-Cách sửa phải nằm ở vòng đời: xóa entry khi plugin dừng, hoặc thiết kế cache với ngữ nghĩa tham chiếu yếu khi bài toán thực sự phù hợp.
+Cách sửa phải nằm ở vòng đời: xóa phần tử khi plugin dừng, hoặc thiết kế bộ nhớ đệm với ngữ nghĩa tham chiếu yếu khi bài toán thực sự phù hợp.
 
-### ThreadLocal trên thread trong pool
+### ThreadLocal trên luồng trong nhóm luồng (thread pool)
 
 ```java
 threadLocal.set(pluginObject);
 ```
 
-Nếu thread thuộc server/executor sống lâu hơn plugin, value có thể giữ plugin object và loader. Với `ThreadLocalMap`, key reference có weak semantics nhưng value vẫn có thể bị giữ cho tới khi entry được dọn; vì vậy “mất reference tới ThreadLocal key” không phải chiến lược dọn dẹp đáng tin cậy.
+Nếu luồng thuộc máy chủ hoặc executor sống lâu hơn plugin, giá trị có thể giữ đối tượng của plugin và ClassLoader. Với `ThreadLocalMap`, tham chiếu tới key có ngữ nghĩa tham chiếu yếu, nhưng value vẫn có thể bị giữ cho tới khi phần tử được dọn; vì vậy “mất tham chiếu tới key của ThreadLocal” không phải chiến lược dọn dẹp đáng tin cậy.
 
 Mẫu xử lý:
 
@@ -154,30 +154,30 @@ try {
 }
 ```
 
-### Listener/subscriber
+### Bộ lắng nghe (listener/subscriber)
 
 ```text
-application event bus
-→ listener implemented by plugin
+event bus của ứng dụng
+→ bộ lắng nghe do plugin triển khai
 → plugin Class
-→ loader
+→ ClassLoader
 ```
 
-Khi plugin dừng phải gỡ đăng ký listener.
+Khi plugin dừng phải gỡ đăng ký bộ lắng nghe.
 
 ### TCCL
 
 TCCL đã học ở chương trước:
 
 ```text
-long-lived pooled Thread
+luồng trong pool sống lâu
 → contextClassLoader
 → PluginClassLoader
 ```
 
-Vì vậy save/set/restore trong `finally` là cả quy tắc về tính đúng đắn lẫn quy tắc phòng tránh leak.
+Vì vậy việc lưu, gán rồi khôi phục TCCL trong `finally` vừa là quy tắc về tính đúng đắn vừa giúp phòng tránh rò rỉ.
 
-## <a id="redeploy-leak">Redeploy/plugin lifecycle leak xảy ra như thế nào?</a>
+## <a id="redeploy-leak">Rò rỉ khi triển khai lại (redeploy) plugin xảy ra như thế nào?</a>
 
 Giả sử phiên bản 1 được nạp:
 
@@ -224,7 +224,7 @@ Một trình tự shutdown thực tế nên dựa trên quyền sở hữu:
 
 `URLClassLoader.close()` hữu ích để giải phóng resource JAR/file nhưng **không phải lệnh unload**. Nếu một cache toàn cục vẫn giữ `pluginClass`, loader vẫn reachable.
 
-## <a id="unloading-observation">Quan sát unloading: phụ thuộc GC, không mang tính xác định</a>
+## <a id="unloading-observation">Quan sát việc gỡ nạp: phụ thuộc GC, không mang tính xác định</a>
 
 Ta có thể dùng `WeakReference` để viết một thí nghiệm có giới hạn:
 
@@ -269,17 +269,28 @@ plugin đã dừng thật chưa?
 → còn tham chiếu mạnh tới loader?
 ```
 
+## <a id="end-to-end-synthesis">Mô hình tổng hợp: từ bytecode đến gỡ nạp ClassLoader</a>
+
 Toàn bộ module giờ nối thành một câu chuyện:
 
 ```text
-bytes
-→ loader tìm và define
-→ parent delegation quyết định namespace lookup
-→ defining loader tham gia type identity
-→ TCCL hỗ trợ discovery qua visibility boundary
-→ loader cũng tìm resource
-→ active use kích hoạt initialization
-→ khi lifecycle kết thúc, chỉ graph không còn reachable mới có cơ hội unload
+trục vòng đời chính
+bytecode
+→ yêu cầu nạp đi qua quy tắc ưu tiên cha/ủy quyền và cách tìm kiếm của ClassLoader tùy chỉnh
+→ một ClassLoader cuối cùng định nghĩa class có tên thông thường
+→ tên nhị phân + ClassLoader định nghĩa xác lập định danh kiểu khi chạy
+→ liên kết (linking) chuẩn bị kiểu cho việc sử dụng
+→ sử dụng chủ động (active use) kích hoạt khởi tạo
+→ đối tượng/class tồn tại khi vẫn còn được tham chiếu
+→ class của ClassLoader tùy chỉnh chỉ có cơ hội được gỡ nạp khi đồ thị ClassLoader định nghĩa không còn được GC root giữ lại
+
+cơ chế tìm kiếm/phát hiện chạy song song với trục vòng đời
+TCCL
+→ có thể cung cấp ngữ cảnh tìm kiếm khác để khung phần mềm thấy provider của ứng dụng/ClassLoader con
+
+API tài nguyên của Class / ClassLoader
+→ tìm tài nguyên trong không gian tên mà ClassLoader nhìn thấy
+→ việc tìm tài nguyên không tự nó định nghĩa một class
 ```
 
 Nếu giữ mô hình tư duy này, các lỗi ClassLoader không còn là một nhóm exception rời rạc. Chúng thường quay về bốn câu hỏi: **bytes được tìm bởi loader nào, type được định nghĩa bởi loader nào, thao tác đang dùng ngữ cảnh tìm kiếm nào, và tham chiếu nào vẫn giữ loader sống**.

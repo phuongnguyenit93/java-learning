@@ -1,8 +1,90 @@
-# Class Initialization
+# Class Initialization Triggers and Failure
 
 Loading and linking prepare a class for use without necessarily running its static setup. Initialization is the point at which the JVM executes that setup. This separation allows frameworks to inspect or stage types without automatically performing every static side effect they contain.
 
 Initialization is also a concurrency and failure boundary: the JVM coordinates it so a particular runtime class is initialized once, and a failed initialization leaves that class in an erroneous state.
+
+## <a id="initialization-trigger">Active Use Triggers Initialization</a>
+
+Initialization is delayed until the JVM sees an **active use** that requires the class or interface to be initialized. The purpose of the delay is practical: loading metadata does not always mean the program needs to execute that type's static setup immediately.
+
+Common initialization triggers include:
+
+- creating an instance of a class with `new`;
+- invoking a `static` method declared by the class or interface;
+- reading a `static` field declared by the class or interface when that field is not a compile-time constant;
+- assigning a `static` field declared by the class or interface;
+- reflective operations that explicitly request initialization, such as `Class.forName("...")` with initialization enabled.
+
+Before a class is initialized, its superclass is initialized first and the JVM also initializes the required superinterfaces that declare default methods according to the initialization rules. This does not mean every superinterface is initialized. Initializing an interface also does not automatically initialize all of its superinterfaces merely because they are inherited.
+
+For example:
+
+```java
+final class PluginBootstrap {
+    static {
+        System.out.println("PluginBootstrap initialized");
+    }
+
+    static void start() {
+        System.out.println("plugin system started");
+    }
+}
+
+public class Demo {
+    public static void main(String[] args) {
+        PluginBootstrap.start();
+    }
+}
+```
+
+The first invocation of `PluginBootstrap.start()` requires `PluginBootstrap` to be initialized before the method executes. The static block therefore runs first.
+
+Later sections in this chapter go deeper into `<clinit>`, synchronization, failure state, and compile-time constants. The key relationship is that **loading makes a class available to the runtime; active use is what normally forces initialization**.
+
+## <a id="constant-no-init">Compile-time Constants May Avoid Initialization</a>
+
+One active-use rule has an important exception: reading a `static final` **constant variable** can be compiled as the constant value itself and therefore may not initialize the declaring class.
+
+Before the constant case, keep two other important **non-triggers** in mind:
+
+```java
+Class<?> type = PluginConstants.class;
+```
+
+Obtaining the class literal does **not by itself initialize** `PluginConstants`.
+
+Also, if source code writes `SubType.SOME_STATIC_FIELD` but that field is actually declared by `SuperType`, then for a static-field access that **really triggers initialization**—for example, reading a non-constant static field—the initialized type is the **class/interface that declares the field**. Merely naming a subclass on the left side does not initialize that subclass. If the field is a compile-time constant, the exception below still applies: the read may initialize neither `SuperType` nor `SubType`.
+
+```java
+final class PluginConstants {
+    static {
+        System.out.println("PluginConstants initialized");
+    }
+
+    static final int API_VERSION = 3;
+    static final String NAME = "hello";
+
+    static final Integer BOXED_VERSION = 3;
+    static final int RUNTIME_VERSION = Integer.parseInt("3");
+}
+```
+
+These reads can behave differently:
+
+```java
+System.out.println(PluginConstants.API_VERSION);     // may be inlined; no init required
+System.out.println(PluginConstants.NAME);            // may be inlined; no init required
+
+System.out.println(PluginConstants.BOXED_VERSION);   // initializes class
+System.out.println(PluginConstants.RUNTIME_VERSION); // initializes class
+```
+
+A Java constant variable must satisfy specific language rules: roughly, it is a `final` primitive or `String` initialized with a compile-time constant expression. `Integer` is a reference type outside that constant-variable rule, and `Integer.parseInt("3")` is a runtime call.
+
+Inlining also has a binary-compatibility consequence. If a library changes a public compile-time constant from `3` to `4`, already-compiled client bytecode may still contain `3` until the client is recompiled.
+
+This section reinforces the lifecycle distinction from chapter 1: mentioning or even reading something through a class name does not automatically prove that initialization occurred. Observe the exact operation and the exact runtime class identity.
 
 ## <a id="clinit-model">The `<clinit>` Model</a>
 
@@ -22,7 +104,7 @@ final class PluginEnvironment {
 }
 ```
 
-The JVM class-file model represents class initialization through a special method named `<clinit>` when one is needed. You do not declare or invoke `<clinit>` directly in Java source; the compiler derives it from the class's static initialization work.
+The JVM class-file model represents class or interface initialization through a special method named `<clinit>` when one is needed. You do not declare or invoke `<clinit>` directly in Java source; the compiler derives it from static initialization work.
 
 Within one class, static field initializers and static blocks execute in their source order:
 
@@ -77,7 +159,7 @@ Each identity has its own static fields and its own initialization lifecycle. Th
 
 This is a common source of surprises in plugin systems and containers. A "singleton" implemented with a static field is singleton-like only inside one particular class identity, not automatically across every ClassLoader in the JVM.
 
-Initialization also obeys dependency ordering. Before a class is initialized, its superclass is initialized first. Interfaces have more specific rules; merely loading an interface does not imply that every related interface is initialized.
+The prerequisite-ordering rules described earlier still apply to each of these runtime identities. The important point here is ownership of state: each distinct runtime class identity has its own initialization state and reaches the initialized state independently.
 
 ## <a id="initialization-locking">Initialization Is Synchronized</a>
 
@@ -151,49 +233,5 @@ If initialization itself throws an `Error`, the JVM does not need to wrap that f
 In an isolated plugin architecture, unloading the failed loader and creating a **new loader that defines a new class identity** can produce a fresh initialization lifecycle. The old erroneous class itself does not become healthy again.
 
 This behavior is why important recoverable configuration should usually be validated explicitly rather than hidden inside static initialization.
-
-## <a id="constant-no-init">Compile-time Constants May Avoid Initialization</a>
-
-One active-use rule has an important exception: reading a `static final` **constant variable** can be compiled as the constant value itself and therefore may not initialize the declaring class.
-
-Before the constant case, keep two other important **non-triggers** in mind:
-
-```java
-Class<?> type = PluginConstants.class;
-```
-
-Obtaining the class literal does **not by itself initialize** `PluginConstants`.
-
-Also, if source code writes `SubType.SOME_STATIC_FIELD` but that field is actually declared by `SuperType`, then for a static-field access that **really triggers initialization**—for example, reading a non-constant static field—the initialized type is the **class/interface that declares the field**. Merely naming a subclass on the left side does not initialize that subclass. If the field is a compile-time constant, the exception below still applies: the read may initialize neither `SuperType` nor `SubType`.
-
-```java
-final class PluginConstants {
-    static {
-        System.out.println("PluginConstants initialized");
-    }
-
-    static final int API_VERSION = 3;
-    static final String NAME = "hello";
-
-    static final Integer BOXED_VERSION = 3;
-    static final int RUNTIME_VERSION = Integer.parseInt("3");
-}
-```
-
-These reads can behave differently:
-
-```java
-System.out.println(PluginConstants.API_VERSION);     // may be inlined; no init required
-System.out.println(PluginConstants.NAME);            // may be inlined; no init required
-
-System.out.println(PluginConstants.BOXED_VERSION);   // initializes class
-System.out.println(PluginConstants.RUNTIME_VERSION); // initializes class
-```
-
-A Java constant variable must satisfy specific language rules: roughly, it is a `final` primitive or `String` initialized with a compile-time constant expression. `Integer` is a reference type outside that constant-variable rule, and `Integer.parseInt("3")` is a runtime call.
-
-Inlining also has a binary-compatibility consequence. If a library changes a public compile-time constant from `3` to `4`, already-compiled client bytecode may still contain `3` until the client is recompiled.
-
-This section reinforces the lifecycle distinction from chapter 1: mentioning or even reading something through a class name does not automatically prove that initialization occurred. Observe the exact operation and the exact runtime class identity.
 
 That runtime identity also owns the initialization state just discussed. The final chapter follows that identity to its lifecycle boundary: when a plugin is stopped, when can the defining ClassLoader and the classes it owns actually become reclaimable, and which longer-lived references can prevent that from happening?

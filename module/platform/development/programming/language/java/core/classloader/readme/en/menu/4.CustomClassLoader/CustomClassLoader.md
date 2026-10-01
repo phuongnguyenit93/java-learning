@@ -1,4 +1,4 @@
-# Custom Class Loaders
+# Custom ClassLoaders and Isolation
 
 Built-in loaders are enough when every class comes from the normal runtime, module path, or application class path. A custom ClassLoader becomes useful when the application needs a different **source of class bytes** or a deliberate **namespace boundary**: plugin directories, generated classes, container isolation, scripting engines, instrumentation tools, or similar runtime systems.
 
@@ -59,7 +59,7 @@ byte[] bytes = ...;
 Class<?> type = defineClass(binaryName, bytes, 0, bytes.length);
 ```
 
-`defineClass` asks the JVM to turn a valid class-file representation into a `Class<?>` owned by **this defining loader**. The JVM verifies structural constraints and associates the resulting class with that loader's namespace.
+`defineClass` asks the JVM to create a runtime `Class<?>` associated with **this defining loader** and performs definition-time name, format, and security checks as required. Verification is conceptually part of linking and may be performed eagerly by the JVM; it should not be collapsed into the definition step itself.
 
 Several consequences follow immediately:
 

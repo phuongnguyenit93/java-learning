@@ -164,12 +164,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      State the runtime class-identity rule precisely, and how does a defining loader differ from an initiating loader?
+      How does a defining ClassLoader differ from an initiating ClassLoader, and why can delegation associate multiple initiating loaders with one ordinary named class/interface?
     answer: >-
-      For the ordinary class/reference types covered here, the core identity is the binary name plus the defining ClassLoader identity. The defining loader actually defines the runtime Class; an initiating loader is a loader that has caused that Class to be created through loading, directly or by delegation. One Class can therefore have multiple initiating loaders but only one defining loader. A plugin loader can request java.lang.String and receive the String defined by bootstrap through delegation; the plugin loader may be recorded as an initiating loader while String's identity still belongs to the bootstrap defining boundary. For cast and assignability reasoning, the defining loader is the decisive part.
+      The defining ClassLoader is responsible for defining the runtime type. An initiating ClassLoader is recorded as having initiated loading directly or through delegation. The same ordinary named class/interface can therefore be associated with multiple initiating loaders while still having one defining loader. For example, a plugin loader can request java.lang.String and receive the String defined by bootstrap through delegation; the plugin loader may be recorded as an initiating loader while bootstrap remains the defining side. The distinction matters later because runtime type identity uses the defining-loader role, not whichever loader first received the request.
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.ClassIdentity/ClassIdentity.md", anchor: "class-identity-rule"}
+    readmeRelated: {file: "3.ParentDelegation/ParentDelegation.md", anchor: "initiating-vs-defining-loader"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
@@ -227,13 +227,31 @@ questions:
     apiRelated: {controller: "ContextClassLoaderController", methodSignature: "temporaryTccl()"}
 
   - question: >-
-      Compare Class.getResource and ClassLoader.getResource path semantics, then explain why a classpath resource should not be treated as a filesystem File by default.
+      Compare Class.getResource and ClassLoader.getResource path semantics, explain why a classpath resource should not be treated as a filesystem File by default, and distinguish resource lookup from class loading.
     answer: >-
-      Class.getResource("x") is package-relative, while Class.getResource("/x") starts at the class/module resource root. ClassLoader.getResource("x") uses a root-relative resource name and conventionally no leading slash. A lookup result may come from a directory, JAR, or runtime image using file:, jar:, or jrt: protocols, so code that only needs bytes should prefer URL/stream access rather than forcing every resource into Path/File. Lookup also depends on which loader is used, not just the path string.
+      Class.getResource("x") is package-relative, while Class.getResource("/x") starts at the class/module resource root. ClassLoader.getResource("x") uses a root-relative resource name and conventionally no leading slash. A lookup result may come from a directory, JAR, or runtime image using file:, jar:, or jrt: protocols, so code that only needs content should prefer URL/stream access rather than forcing every resource into Path/File. Resource lookup uses a loader-visible namespace, but finding a resource does not define a Class, create runtime type identity, or trigger class initialization.
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.ResourceLoading/ResourceLoading.md", anchor: "class-resource"}
+    readmeRelated: {file: "7.ResourceLoading/ResourceLoading.md", anchor: "resource-vs-class-loading"}
     apiRelated: {controller: "ResourceLoadingController", methodSignature: "resolve()"}
+
+  - question: >-
+      What ownership rules should you apply to a resource stream returned by ClassLoader.getResourceAsStream, and why is that lifecycle separate from class unloading?
+    answer: >-
+      Treat the returned InputStream as a resource owned by the caller and close it, normally with try-with-resources. The stream may be backed by a file, JAR entry, runtime image, or custom source, and keeping handles open can interfere with replacement or cleanup. Closing that stream releases the stream's underlying resource; it does not unload classes or make a defining ClassLoader unreachable. Resource-handle lifecycle and ClassLoader reachability are related operational concerns but different mechanisms.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.ResourceLoading/ResourceLoading.md", anchor: "resource-stream-lifecycle"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      When several JARs can contribute resources with the same logical name, why might ClassLoader.getResources/resources be more appropriate than getResource, and what policy should the application still define?
+    answer: >-
+      getResource is a first-match style lookup, while getResources or resources can enumerate every visible matching resource, which is important for SPI metadata or configuration fragments contributed by several artifacts. Enumeration alone does not define application semantics: the application should still decide whether to merge, deduplicate, prioritize, reject conflicts, or preserve encounter order instead of relying on undocumented ordering between unrelated artifacts. Custom ClassLoaders can also change resource lookup behavior, so that merge policy should be explicit.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.ResourceLoading/ResourceLoading.md", anchor: "resource-enumeration"}
+    apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
       Analyze a static-member access that does not initialize a class, and explain how to avoid the assumption that seeing a class name in source means that class must have initialized.
@@ -242,6 +260,15 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "8.Initialization/Initialization.md", anchor: "constant-no-init"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      How does the JVM guarantee once-per-runtime-class initialization when multiple threads trigger the same class concurrently, and how does this interact with two loaders defining the same binary name?
+    answer: >-
+      Initialization state belongs to a particular runtime class identity. For one Class identity, the JVM synchronizes initialization so one thread performs the initialization work while other threads that require that same type wait for completion or failure; the initializer is not run independently by every racing thread. If loader A and loader B independently define the same binary name, those are two different runtime class identities, so each identity has its own initialization state and can initialize independently once.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.Initialization/Initialization.md", anchor: "initialization-locking"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
@@ -260,4 +287,13 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "9.UnloadingLeaks/UnloadingLeaks.md", anchor: "redeploy-leak"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Walk through the ClassLoader module end to end. Which concepts form the lifecycle spine, and which mechanisms are cross-cutting rather than sequential lifecycle stages?
+    answer: >-
+      The lifecycle spine is: a loading request follows delegation/custom lookup rules, one loader ultimately defines an ordinary named class, binary name plus defining ClassLoader establish runtime type identity, linking prepares the type, active use can trigger initialization, and later the defining-loader graph must become unreachable before its classes can become unloadable. TCCL and resource lookup are cross-cutting: TCCL supplies a discovery context when parent-owned code needs child/application visibility, while Class/ClassLoader resource APIs locate non-class data in a loader-visible namespace. Neither should be inserted as a mandatory stage between linking and initialization.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.UnloadingLeaks/UnloadingLeaks.md", anchor: "end-to-end-synthesis"}
     apiRelated: {controller: "", methodSignature: ""}

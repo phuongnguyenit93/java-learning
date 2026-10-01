@@ -1,4 +1,4 @@
-# Class Unloading and ClassLoader Leaks
+# Unloading, Retention, and Loader Leaks
 
 Custom loaders make runtime namespaces disposable in principle. A plugin can be loaded, used, stopped, and replaced by a new loader with new class definitions. The hard part is reachability: the JVM cannot reclaim classes while their defining loader is still reachable from live application state.
 
@@ -31,7 +31,7 @@ no path from a GC root
 
 Classes defined by the bootstrap loading mechanism do not have a collectible user ClassLoader and therefore do not follow the disposable plugin-loader lifecycle.
 
-This also explains why class unloading is much coarser than object collection. The JVM does not normally unload one arbitrary class from a still-live custom loader while keeping that loader's other definitions as if each class had an independent lifecycle.
+This also explains why class unloading is much coarser than object collection. A class defined by a user-created ClassLoader cannot become unloadable while that defining loader itself remains non-reclaimable; those definitions do not have independent disposal lifecycles inside a still-live loader.
 
 ### Why ordinary application classes usually live for the process lifetime
 
@@ -205,15 +205,28 @@ Calling `System.gc()` can request garbage collection for an experiment, but it i
 
 Heap dumps and JDK diagnostic tools can then help answer a different question when unloading does **not** happen: which GC-root path still retains the stale loader?
 
+## <a id="end-to-end-synthesis">End-to-End Model: From Class Bytes to Loader Unloading</a>
+
 That is the final mental model for this module:
 
 ```text
+lifecycle spine
 class bytes
-  → loader chooses/defines runtime identity
+  → loading request follows parent/delegation and custom-loader lookup rules
+  → one loader ultimately defines the ordinary named class
+  → binary name + defining ClassLoader establish runtime type identity
   → linking prepares the type
   → initialization runs on active use
   → objects/classes live while reachable
-  → custom-loader classes become unloadable only when the defining loader graph is no longer rooted
+  → custom-loader classes become unloadable only when the defining-loader graph is no longer rooted
+
+cross-cutting lookup/discovery
+TCCL
+  → may provide a different discovery context for child/application providers
+
+Class / ClassLoader resource APIs
+  → locate resources in a loader-visible namespace
+  → resource lookup does not itself define a class
 ```
 
 ClassLoader behavior is therefore not only about finding files. It defines namespaces, type compatibility, discovery boundaries, initialization lifecycles, and the unit of disposal for dynamic Java systems.

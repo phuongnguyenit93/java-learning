@@ -1,4 +1,4 @@
-# Vòng đời nạp Class
+# ClassLoader là gì? Từ bytecode đến class có thể sử dụng
 
 Khi viết Java, ta thường nhìn thấy một chuỗi rất ngắn:
 
@@ -10,19 +10,19 @@ Main.java
 → chương trình chạy
 ```
 
-Nhưng file `.class` chỉ là **bytecode nằm ở đâu đó**: trong thư mục build, JAR, runtime image của module, thư mục plugin hoặc một nguồn byte khác. JVM không thể thực thi một type chỉ vì một file mang tên đó tồn tại. Trước hết JVM phải biết **tìm byte ở đâu, byte đó đại diện cho class nào, các tham chiếu bên trong trỏ tới đâu, trạng thái `static` được chuẩn bị thế nào và khi nào code khởi tạo được chạy**.
+Nhưng tệp `.class` chỉ là **bytecode nằm ở đâu đó**: trong thư mục build, JAR, runtime image của module, thư mục plugin hoặc một nguồn byte khác. JVM không thể thực thi một kiểu chỉ vì một tệp mang tên đó tồn tại. Trước hết JVM phải biết **tìm byte ở đâu, byte đó đại diện cho class nào, các tham chiếu bên trong trỏ tới đâu, trạng thái `static` được chuẩn bị thế nào và khi nào mã khởi tạo được chạy**.
 
-Ở đây **JAR** chỉ là một file đóng gói thường dùng để chứa `.class` và resource của Java. Bạn chưa cần biết chi tiết format JAR để học ClassLoader; chỉ cần hiểu một class có thể nằm trong thư mục hoặc bên trong một JAR thay vì tồn tại như một file độc lập.
+Ở đây **JAR** chỉ là một tệp đóng gói thường dùng để chứa `.class` và tài nguyên của Java. Bạn chưa cần biết chi tiết định dạng JAR để học ClassLoader; chỉ cần hiểu một class có thể nằm trong thư mục hoặc bên trong một JAR thay vì tồn tại như một tệp độc lập.
 
 Đây là chỗ `ClassLoader` xuất hiện.
 
-> **ClassLoader là thành phần của cơ chế nạp class dùng để tìm hoặc cung cấp biểu diễn nhị phân của class cho JVM, từ đó JVM tạo ra `Class` tương ứng tại runtime.**
+> **ClassLoader là thành phần tham gia cơ chế nạp class: nó có thể tự tìm/cung cấp biểu diễn nhị phân để JVM tạo `Class` tương ứng, hoặc ủy quyền yêu cầu nạp cho ClassLoader khác.**
 
-Nếu Java không có cơ chế này, runtime sẽ phải giả định mọi class đều nằm ở một vị trí cố định và thuộc một namespace duy nhất. Khi đó JAR dependency, classpath của ứng dụng, plugin, application server, runtime image của module hay namespace tách biệt gần như không thể hoạt động theo mô hình Java hiện nay.
+Nếu Java không có cơ chế này, môi trường chạy sẽ phải giả định mọi class đều nằm ở một vị trí cố định và thuộc một không gian tên duy nhất. Khi đó các phụ thuộc trong JAR, classpath của ứng dụng, plugin, máy chủ ứng dụng (application server), runtime image của module hay các không gian tên tách biệt gần như không thể hoạt động theo mô hình Java hiện nay.
 
-Trong module này, **namespace runtime** có thể hiểu là vùng ánh xạ từ binary class name tới runtime type mà một loader nhìn thấy/định nghĩa. Hai loader khác nhau có thể cùng biết tên `com.example.Plugin` nhưng ánh xạ tên đó tới hai `Class<?>` khác nhau.
+Trong module này, **không gian tên khi chạy** có thể hiểu là vùng ánh xạ từ tên nhị phân của class tới kiểu khi chạy mà một ClassLoader nhìn thấy hoặc định nghĩa. Hai ClassLoader khác nhau có thể cùng biết tên `com.example.Plugin` nhưng ánh xạ tên đó tới hai `Class<?>` khác nhau.
 
-> **Kiến thức nối từ module trước:** phần này giả định bạn đã biết một class Java có thể được biểu diễn ở runtime bằng `Class<?>`. Nếu `Class<?>`, runtime type metadata hoặc reflection vẫn còn lạ, hãy xem lại module `class-object` và `reflection`. Ở đây ta không học lại Reflection; ta chỉ dùng `Class<?>` như “đại diện runtime của một type” để tập trung vào cách type đó được đưa vào JVM.
+> **Kiến thức nối từ module trước:** phần này giả định bạn đã biết một class Java có thể được biểu diễn khi chạy bằng `Class<?>`. Nếu `Class<?>`, metadata của kiểu khi chạy hoặc reflection vẫn còn lạ, hãy xem lại module `class-object` và `reflection`. Ở đây ta không học lại Reflection; ta chỉ dùng `Class<?>` như “đại diện khi chạy của một kiểu” để tập trung vào cách kiểu đó được đưa vào JVM.
 
 Một phân biệt phải giữ từ đầu:
 
@@ -47,10 +47,10 @@ Plugin API / SPI
 → interface/contract dùng chung giữa host và plugin
 
 provider
-→ class implementation cung cấp SPI đó
+→ class triển khai SPI đó
 
 framework/library
-→ code hạ tầng dùng API/SPI để tìm và gọi provider
+→ mã hạ tầng dùng API/SPI để tìm và gọi provider
 ```
 
 ```text
@@ -58,55 +58,55 @@ Plugin API dùng chung
         ↓
 PaymentPlugin.class
         ↓
-loader tìm byte và định nghĩa type
+ClassLoader tìm byte và định nghĩa kiểu
         ↓
-quan sát identity, resource, TCCL, initialization
+quan sát định danh, tài nguyên, TCCL, khởi tạo
         ↓
-tháo plugin và kiểm tra reference nào cản unloading
+tháo plugin và kiểm tra tham chiếu nào cản việc gỡ nạp
 ```
 
 Lộ trình của toàn module:
 
 ```text
-Class bytes trở thành runtime type thế nào?
+Bytecode trở thành kiểu khi chạy thế nào?
 → Lifecycle
         ↓
-JVM có sẵn những loader nào?
+JVM có sẵn những ClassLoader nào?
 → Bootstrap / Platform / Application
         ↓
-Vì sao loader thường hỏi parent trước?
+Vì sao ClassLoader thường hỏi ClassLoader cha trước?
 → Parent Delegation
         ↓
 Muốn nạp plugin từ nguồn riêng thì sao?
 → Custom ClassLoader
         ↓
-Vì sao cùng tên class vẫn có thể là hai type khác nhau?
+Vì sao cùng tên class vẫn có thể là hai kiểu khác nhau?
 → Class Identity
         ↓
-Framework ở parent tìm provider ở child thế nào?
+Khung phần mềm ở tầng cha tìm provider ở tầng con thế nào?
 → Thread Context ClassLoader
         ↓
-Resource trong classpath được tìm thế nào?
+Tài nguyên trong classpath được tìm thế nào?
 → Resource Loading
         ↓
-Khi nào static initialization thật sự chạy?
+Khi nào khởi tạo `static` thật sự chạy?
 → Initialization
         ↓
-Vì sao redeploy/plugin dễ giữ lại cả loader graph?
-→ Unloading / Leaks
+Vì sao triển khai lại plugin dễ giữ lại cả đồ thị ClassLoader?
+→ Gỡ nạp / Rò rỉ
 ```
 
 ## <a id="loading-linking-initialization">ClassLoader là gì và class đi vào runtime như thế nào?</a>
 
 ### KHÁI NIỆM — ClassLoader tham gia vào đoạn nào?
 
-Ở mức cơ bản, **`ClassLoader` là cơ chế giúp JVM biến một binary class name thành một runtime `Class<?>` bằng cách tìm hoặc cung cấp class bytes phù hợp để JVM định nghĩa type đó**. Nó giải quyết khoảng cách giữa “bytecode đang tồn tại ở đâu đó” và “JVM đã có một type có identity rõ ràng để liên kết, khởi tạo và sử dụng”.
+Ở mức cơ bản, **`ClassLoader` tham gia biến một tên nhị phân (binary name) thành `Class<?>` khi chạy bằng cách tự tìm/cung cấp bytecode phù hợp hoặc ủy quyền việc nạp cho ClassLoader khác**. JVM dùng kết quả đó để tạo kiểu khi chạy rồi tiếp tục liên kết (linking) và khởi tạo (initialization). Nó giải quyết khoảng cách giữa “bytecode đang tồn tại ở đâu đó” và “JVM đã có một kiểu với định danh rõ ràng để liên kết, khởi tạo và sử dụng”.
 
-Nếu runtime chỉ biết một vị trí cố định và một namespace duy nhất, Java sẽ rất khó hỗ trợ classpath của ứng dụng, dependency trong JAR, plugin, container, generated bytecode hoặc các vùng nạp class tách biệt. Vì vậy ClassLoader không phải một API phụ để “đọc file `.class`”; nó là một phần của cơ chế đưa type vào JVM theo đúng namespace và vòng đời runtime.
+Nếu môi trường chạy chỉ biết một vị trí cố định và một không gian tên duy nhất, Java sẽ rất khó hỗ trợ classpath của ứng dụng, phụ thuộc trong JAR, plugin, container, bytecode được sinh động hoặc các vùng nạp class tách biệt. Vì vậy ClassLoader không phải một API phụ để “đọc tệp `.class`”; nó là một phần của cơ chế đưa kiểu vào JVM theo đúng không gian tên và vòng đời khi chạy.
 
-### Binary name, class file path và classpath khác nhau như thế nào?
+### Tên nhị phân (binary name), đường dẫn tệp .class và classpath khác nhau như thế nào?
 
-Giả sử source code là:
+Giả sử mã nguồn là:
 
 ```java
 package com.example.plugins;
@@ -115,19 +115,19 @@ public final class PaymentPlugin {
 }
 ```
 
-Với top-level class này:
+Với class cấp cao nhất này:
 
 ```text
 binary name
 → com.example.plugins.PaymentPlugin
 
-class-file path thông thường tính từ một classpath root
+đường dẫn tệp .class thông thường tính từ một gốc classpath
 → com/example/plugins/PaymentPlugin.class
 ```
 
-`ClassLoader.loadClass(...)` làm việc với **binary name**, không nhận một đường dẫn filesystem kiểu `C:\\...\\PaymentPlugin.class`.
+`ClassLoader.loadClass(...)` làm việc với **tên nhị phân**, không nhận một đường dẫn hệ thống tệp kiểu `C:\\...\\PaymentPlugin.class`.
 
-**Classpath** có thể hiểu đơn giản là tập các vị trí mà runtime/application loader được cấu hình để tìm class và resource, ví dụ:
+**Classpath** có thể hiểu đơn giản là tập các vị trí mà Application/System ClassLoader được cấu hình để tìm class và tài nguyên, ví dụ:
 
 ```text
 build/classes/java/main/
@@ -135,7 +135,7 @@ libs/payment-plugin.jar
 libs/common-api.jar
 ```
 
-Nếu một classpath root là `build/classes/java/main/`, loader có thể ánh xạ:
+Nếu một gốc classpath là `build/classes/java/main/`, ClassLoader có thể ánh xạ:
 
 ```text
 com.example.plugins.PaymentPlugin
@@ -143,9 +143,9 @@ com.example.plugins.PaymentPlugin
 com/example/plugins/PaymentPlugin.class
 ```
 
-rồi tìm path tương đối đó bên dưới classpath root. Nếu root là JAR, entry tương ứng nằm **bên trong JAR**, không phải là một file `.class` độc lập trên filesystem.
+rồi tìm đường dẫn tương đối đó bên dưới gốc classpath. Nếu gốc là JAR, mục tương ứng nằm **bên trong JAR**, không phải là một tệp `.class` độc lập trên hệ thống tệp.
 
-Vì vậy cần tách bốn khái niệm. Với top-level class, một số tên có thể nhìn giống nhau về mặt text, nhưng **vai trò của chúng khác nhau**:
+Vì vậy cần tách bốn khái niệm. Với class cấp cao nhất, một số tên có thể nhìn giống nhau về mặt chữ, nhưng **vai trò của chúng khác nhau**:
 
 ```text
 package/source naming
@@ -154,11 +154,11 @@ class-file/resource path
 classpath location
 ```
 
-> **Nâng cao — có thể bỏ qua ở lượt học đầu:** module path và named module bổ sung thêm quy tắc visibility/encapsulation. Mô hình nền vẫn là: **loader nhận tên runtime và tìm biểu diễn phù hợp trong những vị trí mà nó nhìn thấy**.
+> **Nâng cao — có thể bỏ qua ở lượt học đầu:** module path và named module bổ sung thêm quy tắc về khả năng nhìn thấy và đóng gói. Mô hình nền vẫn là: **ClassLoader nhận tên khi chạy và tìm biểu diễn phù hợp trong những vị trí mà nó nhìn thấy**.
 
-### Khi nào JVM bắt đầu load một class?
+### Khi nào JVM bắt đầu nạp một class?
 
-Không nên hình dung JVM đọc toàn bộ mọi `.class` ngay lúc ứng dụng khởi động. Java thường nạp class **theo nhu cầu (demand-driven)**: một type được load/link khi runtime cần nó để thực hiện một thao tác, resolve dependency, reflection/dynamic loading hoặc phục vụ một type khác đang được xử lý.
+Không nên hình dung JVM đọc toàn bộ mọi `.class` ngay lúc ứng dụng khởi động. Java thường nạp class **theo nhu cầu (demand-driven)**: một kiểu được nạp/liên kết khi JVM cần nó để thực hiện một thao tác, phân giải phụ thuộc, reflection/nạp động hoặc phục vụ một kiểu khác đang được xử lý.
 
 Ví dụ:
 
@@ -172,9 +172,9 @@ public class Demo {
 }
 ```
 
-Dòng `import` chỉ giúp **compiler** hiểu tên trong source code. Bản thân `import` không phải lệnh runtime và không có nghĩa `PaymentPlugin` đã được load hoặc initialize khi `Demo` chạy.
+Dòng `import` chỉ giúp **compiler** hiểu tên trong mã nguồn. Bản thân `import` không phải lệnh khi chạy và không có nghĩa `PaymentPlugin` đã được nạp hoặc khởi tạo khi `Demo` chạy.
 
-Ngược lại, các thao tác như sau có thể làm runtime cần type:
+Ngược lại, các thao tác như sau có thể làm JVM cần một kiểu:
 
 ```text
 new PaymentPlugin()
@@ -184,9 +184,9 @@ loader.loadClass("com.example.plugins.PaymentPlugin")
 JVM resolve symbolic reference từ class khác
 ```
 
-Không nên dựa vào một thời điểm load tuyệt đối cho mọi JVM. JVM có thể thực hiện một số loading/linking sớm hơn khi specification cho phép, miễn là không làm thay đổi semantics quan sát được. Điều cần giữ là: **không phải mọi class đều được load từ startup, và loading vẫn khác initialization**.
+Không nên dựa vào một thời điểm nạp tuyệt đối cho mọi JVM. JVM có thể thực hiện một số bước nạp/liên kết sớm hơn khi đặc tả cho phép, miễn là không làm thay đổi ngữ nghĩa quan sát được. Điều cần giữ là: **không phải mọi class đều được nạp ngay lúc khởi động, và nạp vẫn khác khởi tạo**.
 
-JVM Specification mô tả quá trình tạo class/interface runtime theo ba giai đoạn lớn:
+JVM Specification mô tả quá trình tạo class/interface khi chạy theo ba giai đoạn lớn:
 
 ```text
 Loading
@@ -194,42 +194,42 @@ Loading
 → Initialization
 ```
 
-- **Loading** tìm biểu diễn nhị phân của type và tạo `Class` tại runtime.
-- **Linking** kiểm tra và chuẩn bị type để có thể dùng an toàn trong JVM.
-- **Initialization** chạy phần static initialization mà chương trình đã khai báo.
+- **Loading (nạp)** tìm biểu diễn nhị phân của kiểu và tạo `Class` khi chạy.
+- **Linking (liên kết)** kiểm tra và chuẩn bị kiểu để có thể dùng an toàn trong JVM.
+- **Initialization (khởi tạo)** chạy phần khởi tạo `static` mà chương trình đã khai báo.
 
-`ClassLoader` gắn trực tiếp nhất với **loading**. Tuy vậy, khi gọi các API như `loadClass`, `Class.forName` hoặc dùng type lần đầu, người học thường quan sát cả chuỗi lifecycle nên cần hiểu ranh giới giữa ba giai đoạn.
+`ClassLoader` gắn trực tiếp nhất với **loading (nạp)**. Tuy vậy, khi gọi các API như `loadClass`, `Class.forName` hoặc dùng kiểu lần đầu, người học thường quan sát cả chuỗi vòng đời nên cần hiểu ranh giới giữa ba giai đoạn.
 
-### VÌ SAO — vì sao không chạy bytecode ngay khi tìm thấy file?
+### VÌ SAO — vì sao không chạy bytecode ngay khi tìm thấy tệp?
 
-Một file có đuôi `.class` chưa chứng minh rằng nó:
+Một tệp có đuôi `.class` chưa chứng minh rằng nó:
 
-- có format class-file hợp lệ;
-- thật sự mang binary name mà runtime đang yêu cầu;
-- tham chiếu đến những type/member hợp lệ;
-- tương thích với các constraint của JVM;
-- đã có static state sẵn sàng;
-- đã chạy static initializer.
+- có định dạng class-file hợp lệ;
+- thật sự mang tên nhị phân mà JVM đang yêu cầu;
+- tham chiếu đến những kiểu/thành viên hợp lệ;
+- tương thích với các ràng buộc của JVM;
+- đã có trạng thái `static` sẵn sàng;
+- đã chạy bộ khởi tạo `static`.
 
-JVM tách lifecycle thành nhiều bước để có thể kiểm tra tính đúng đắn, trì hoãn công việc chưa cần thiết và chỉ chạy tác dụng phụ của khởi tạo khi ngữ nghĩa yêu cầu.
+JVM tách vòng đời thành nhiều bước để có thể kiểm tra tính đúng đắn, trì hoãn công việc chưa cần thiết và chỉ chạy tác dụng phụ của khởi tạo khi ngữ nghĩa yêu cầu.
 
 ### MỐI LIÊN HỆ — mã nguồn, bytecode, ClassLoader và `Class<?>`
 
 ```text
 mã nguồn
   ↓ javac
-class bytes
-  ↓ ClassLoader/JVM loading
-object Class<?> tại runtime
-  ↓ linking
-type sẵn sàng về mặt cấu trúc runtime
-  ↓ initialization khi có active use
-static initialization đã hoàn tất
+bytecode của class
+  ↓ ClassLoader/JVM nạp class
+đối tượng Class<?> khi chạy
+  ↓ liên kết
+kiểu đã sẵn sàng về mặt cấu trúc
+  ↓ khởi tạo khi có active use
+khởi tạo static đã hoàn tất
 ```
 
-`Class<?> pluginType` là runtime metadata của type đã được JVM tạo. Nó không phải file `.class`, dù hai thứ liên quan trực tiếp.
+`Class<?> pluginType` là metadata của kiểu khi chạy đã được JVM tạo. Nó không phải tệp `.class`, dù hai thứ liên quan trực tiếp.
 
-### CƠ CHẾ — quan sát loader của một type
+### CƠ CHẾ — quan sát ClassLoader của một kiểu
 
 ```java
 public final class PluginLifecycleDemo {
@@ -242,24 +242,24 @@ public final class PluginLifecycleDemo {
 }
 ```
 
-Class của ứng dụng thông thường sẽ gắn với Application/System ClassLoader. Những loader cụ thể sẽ được tách riêng ở chương tiếp theo.
+Class của ứng dụng thông thường sẽ gắn với Application/System ClassLoader. Các ClassLoader cụ thể sẽ được tách riêng ở chương tiếp theo.
 
 ### MINH CHỨNG — điều cần đọc từ ví dụ
 
-Khi `PluginLifecycleDemo.class` đã tồn tại trên classpath, JVM vẫn phải tạo biểu diễn runtime cho nó trước khi code có thể chạy. Từ đây hãy luôn phân biệt:
+Khi `PluginLifecycleDemo.class` đã tồn tại trên classpath, JVM vẫn phải tạo biểu diễn khi chạy cho nó trước khi mã có thể chạy. Từ đây hãy luôn phân biệt:
 
 ```text
-artifact chứa bytes
+artifact chứa bytecode
 → đầu vào
 
-ClassLoader + JVM lifecycle
-→ cơ chế biến đầu vào thành runtime type
+ClassLoader + vòng đời JVM
+→ cơ chế biến đầu vào thành kiểu khi chạy
 
 Class<?>
-→ identity/metadata tại runtime đã được tạo
+→ định danh/metadata khi chạy đã được tạo
 ```
 
-## <a id="linking-phases">Linking: verification, preparation và resolution</a>
+## <a id="linking-phases">Liên kết (linking): kiểm tra, chuẩn bị và phân giải</a>
 
 Linking nằm giữa loading và initialization:
 
@@ -275,15 +275,15 @@ resolve
 initialize khi cần
 ```
 
-### Verification
+### Kiểm tra (verification)
 
-Verification kiểm tra class-file và các constraint runtime quan trọng. Mục tiêu là không để JVM thực thi bytecode phá vỡ những invariant mà runtime dựa vào.
+Verification kiểm tra class-file và các ràng buộc (constraint) quan trọng khi chạy. Mục tiêu là không để JVM thực thi bytecode phá vỡ những bất biến (invariant) mà JVM dựa vào.
 
-Không nên hiểu verification như “compiler chạy lại”. Compiler kiểm tra rule ở mức source; verifier làm việc với constraint ở mức class-file/bytecode.
+Không nên hiểu verification như “compiler chạy lại”. Compiler kiểm tra quy tắc ở mức mã nguồn; verifier làm việc với ràng buộc ở mức class-file/bytecode.
 
-### Preparation
+### Chuẩn bị (preparation)
 
-Preparation tạo static fields và đặt chúng về giá trị chuẩn bị ban đầu theo JVM rules.
+Preparation tạo vùng lưu trữ cho các trường `static` và đặt chúng về giá trị chuẩn bị ban đầu theo quy tắc của JVM.
 
 Ví dụ:
 
@@ -308,9 +308,9 @@ initialization
 
 Vì vậy không nên đồng nhất “static field đã có storage và default value sau preparation” với “class đã được initialize”. Ngay cả giá trị từ `ConstantValue` cũng thuộc quy trình initialization chứ không phải preparation.
 
-### Resolution
+### Phân giải (resolution)
 
-Class file chứa nhiều **symbolic reference** như tên class, field và method. Resolution biến các symbolic reference cần thiết thành reference runtime có thể dùng trực tiếp.
+Class file chứa nhiều **tham chiếu ký hiệu (symbolic reference)** như tên class, field và method. Resolution biến các tham chiếu ký hiệu cần thiết thành tham chiếu khi chạy mà JVM có thể dùng trực tiếp.
 
 Ví dụ bytecode của `PaymentPlugin` có thể tham chiếu:
 
@@ -320,11 +320,11 @@ java.lang.String
 java.util.List
 ```
 
-JVM phải resolve chúng theo rule của runtime. Resolution có thể được thực hiện ở các thời điểm khác nhau theo implementation/JVM rules; người học không nên giả định mọi symbolic reference đều được resolve ngay tại đúng một thời điểm cố định trước khi chương trình bắt đầu.
+JVM phải phân giải chúng theo các quy tắc khi chạy. Resolution có thể được thực hiện ở các thời điểm khác nhau tùy cách triển khai JVM; người học không nên giả định mọi tham chiếu ký hiệu đều được phân giải ngay tại đúng một thời điểm cố định trước khi chương trình bắt đầu.
 
-### Khi class A cần class B, loader nào được dùng?
+### Khi class A cần class B, ClassLoader nào được dùng?
 
-Đây là mắt xích nối lifecycle với parent delegation. Theo quy tắc resolution của JVM, khi class `A` có symbolic reference tới class/interface `B`, **defining ClassLoader của `A` được dùng để load `B`**. Loader đó có thể tự định nghĩa `B` hoặc delegate tiếp cho parent; loader cuối cùng thực sự định nghĩa `B` mới là defining loader của `B`.
+Đây là mắt xích nối vòng đời với cơ chế ủy quyền cho ClassLoader cha. Theo quy tắc phân giải của JVM, khi class `A` có tham chiếu ký hiệu tới class/interface `B`, **ClassLoader định nghĩa (defining ClassLoader) của `A` được dùng để khởi xướng việc nạp `B`**. ClassLoader đó có thể tự định nghĩa `B` hoặc tiếp tục ủy quyền cho ClassLoader cha; ClassLoader cuối cùng chịu trách nhiệm định nghĩa `B` mới là defining ClassLoader của `B`.
 
 Với plugin ví dụ:
 
@@ -339,84 +339,41 @@ PaymentPlugin
 → trả về cùng Plugin.class dùng chung
 ```
 
-Điểm quan trọng không phải thuộc lòng từng bước nội bộ của JVM, mà là hiểu rằng dependency của một class **không được tìm bằng một “global loader” duy nhất cho toàn JVM**. Defining loader của class đang tham chiếu tạo điểm bắt đầu tự nhiên cho việc load dependency. Sau này TCCL xuất hiện chính vì framework ở parent đôi lúc cần một loader context khác để nhìn thấy provider ở child.
+Điểm quan trọng không phải thuộc lòng từng bước nội bộ của JVM, mà là hiểu rằng phụ thuộc của một class **không được tìm bằng một “ClassLoader toàn cục” duy nhất cho toàn JVM**. ClassLoader định nghĩa của class đang tham chiếu tạo điểm bắt đầu tự nhiên cho việc nạp phụ thuộc. Sau này TCCL xuất hiện chính vì khung phần mềm ở tầng cha đôi lúc cần một ngữ cảnh ClassLoader khác để nhìn thấy thành phần cung cấp ở tầng con.
 
-### Failure model — lỗi xảy ra ở phase nào?
+### Mô hình lỗi — lỗi xảy ra ở giai đoạn nào?
 
-Các lỗi class loading dễ gây nhầm vì nhiều exception/error có tên gần nhau. Hãy map chúng về câu hỏi runtime đang làm gì:
+Các lỗi khi nạp class dễ gây nhầm vì nhiều exception/error có tên gần nhau. Hãy quy chúng về câu hỏi JVM đang làm gì:
 
 | Dấu hiệu | Cách hiểu |
 | --- | --- |
-| `ClassNotFoundException` | Code chủ động yêu cầu `ClassLoader`/`Class.forName` tìm một binary name nhưng loader không tìm được class đó. Đây thường là checked exception ở dynamic-loading API. |
-| `NoClassDefFoundError` | JVM cần một class definition trong quá trình thực thi/linking nhưng definition không còn dùng được hoặc không thể hoàn tất. Nó cũng có thể xuất hiện ở lần active-use sau khi initialization trước đó đã thất bại. |
-| `VerifyError` | Class bytes đã được load nhưng verifier phát hiện bytecode/class-file vi phạm constraint JVM nên class không thể đi qua verification. |
-| `ClassFormatError` | Bytes đã được tìm thấy nhưng không phải class-file hợp lệ theo format JVM mong đợi. |
-| `UnsupportedClassVersionError` | Class file được compile cho class-file version mới hơn JVM hiện tại hỗ trợ. |
-| `LinkageError` | Nhóm lỗi cho thấy class đã đi tới vùng definition/linking nhưng runtime không thể tạo một hệ type nhất quán; ví dụ `NoClassDefFoundError`, `ClassFormatError`, `NoSuchMethodError` hoặc `IncompatibleClassChangeError`. |
+| `ClassNotFoundException` | Mã chủ động yêu cầu `ClassLoader`/`Class.forName` tìm một tên nhị phân nhưng ClassLoader không tìm được class đó. Đây thường là checked exception của API nạp động. |
+| `NoClassDefFoundError` | JVM cần một định nghĩa class trong lúc thực thi/liên kết nhưng định nghĩa đó không còn khả dụng hoặc không thể hoàn tất. Lỗi này cũng có thể xuất hiện ở lần sử dụng chủ động sau khi khởi tạo trước đó đã thất bại. |
+| `VerifyError` | Bytecode đã được nạp nhưng verifier phát hiện class-file vi phạm ràng buộc JVM nên class không thể vượt qua bước verification. |
+| `ClassFormatError` | Byte đã được tìm thấy nhưng không tạo thành class-file hợp lệ theo định dạng JVM mong đợi. |
+| `UnsupportedClassVersionError` | Class-file được biên dịch cho phiên bản class-file mới hơn JVM hiện tại hỗ trợ. |
+| `LinkageError` | Nhóm lỗi cho thấy class đã đi tới vùng định nghĩa/liên kết nhưng JVM không thể tạo một hệ kiểu nhất quán; ví dụ `NoClassDefFoundError`, `ClassFormatError`, `NoSuchMethodError` hoặc `IncompatibleClassChangeError`. |
 
-Một flow chẩn đoán hữu ích:
+Một luồng chẩn đoán hữu ích:
 
 ```text
-API động không tìm được requested name?
+API động không tìm được tên được yêu cầu?
 → ClassNotFoundException
 
-runtime đang cần dependency nhưng definition không khả dụng?
+JVM đang cần phụ thuộc nhưng định nghĩa class không khả dụng?
 → NoClassDefFoundError / LinkageError
 
-đã tìm được bytes nhưng bytes/version sai?
+đã tìm được bytecode nhưng định dạng/phiên bản sai?
 → ClassFormatError / UnsupportedClassVersionError
 
-static initialization đã fail trước đó?
+khởi tạo static đã thất bại trước đó?
 → lần đầu thường ExceptionInInitializerError
 → lần dùng sau có thể NoClassDefFoundError: Could not initialize class
 ```
 
-Không nên học các error này như danh sách thuộc lòng. Luôn quay lại ba câu hỏi: **loader có tìm thấy bytes không, JVM có define/link được không, và initialization đã thành công chưa?**
+Không nên học các error này như danh sách thuộc lòng. Luôn quay lại ba câu hỏi: **ClassLoader có tìm thấy bytecode không, JVM có định nghĩa/liên kết được không, và khởi tạo đã thành công chưa?**
 
-## <a id="initialization-trigger">Active use nào kích hoạt initialization?</a>
-
-Initialization là lúc Java thực thi static initialization của class/interface theo JLS.
-
-Những trigger quan trọng đối với một class gồm:
-
-- tạo instance bằng `new`;
-- gọi một `static` method được khai báo bởi class đó;
-- đọc hoặc ghi một `static` field được khai báo bởi class đó khi field không phải compile-time constant;
-- một số reflective/runtime operations yêu cầu initialization;
-- class khởi động của ứng dụng được JVM initialize trước khi gọi `main`.
-
-Ví dụ:
-
-```java
-final class PaymentPlugin {
-    static {
-        System.out.println("PaymentPlugin initialized");
-    }
-
-    static void register() {
-        System.out.println("registered");
-    }
-}
-
-public class Demo {
-    public static void main(String[] args) {
-        PaymentPlugin.register();
-    }
-}
-```
-
-Kết quả:
-
-```text
-PaymentPlugin initialized
-registered
-```
-
-JVM phải initialize `PaymentPlugin` trước khi thực thi `register()`.
-
-Điểm quan trọng là **load không tự động đồng nghĩa với initialize**. Đây là ranh giới cần thiết cho framework, reflection và việc tìm plugin vì ta có thể muốn inspect một type mà chưa muốn chạy tác dụng phụ static của nó.
-
-## <a id="load-vs-initialize">Loading một class không đồng nghĩa với initialization</a>
+## <a id="load-vs-initialize">Nạp class không đồng nghĩa với khởi tạo</a>
 
 Đây là thử nghiệm quan trọng nhất của chương.
 

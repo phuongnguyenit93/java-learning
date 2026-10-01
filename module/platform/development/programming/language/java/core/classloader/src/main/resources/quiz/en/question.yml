@@ -212,13 +212,26 @@ questions:
     question: "What conceptual transformation does defineClass(name, bytes, ...) perform?"
     answers:
       - {id: A, answer: "Class<?> into Java source.", explanation: "Incorrect. defineClass goes from bytes toward a runtime class definition."}
-      - {id: B, answer: "A valid class-file representation into Class<?> owned by that defining loader's namespace.", explanation: "Correct. Definition is still subject to verification and runtime constraints."}
+      - {id: B, answer: "A valid class-file representation into Class<?> associated with that defining loader.", explanation: "Correct. defineClass performs the definition step and applicable name/format/security checks; verification belongs conceptually to linking and may be performed when the JVM requires it."}
       - {id: C, answer: "A resource URL into a filesystem File.", explanation: "Incorrect. That is not defineClass's responsibility."}
       - {id: D, answer: "An object instance into new class metadata.", explanation: "Incorrect. An instance is not the input to defineClass."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "4.CustomClassLoader/CustomClassLoader.md", anchor: "define-class"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: classloader-q35
+    question: "Which situation most clearly justifies a custom ClassLoader instead of the default application loader?"
+    answers:
+      - {id: A, answer: "The application only needs to load ordinary classes already on its normal class path.", explanation: "Incorrect. The default application loader is normally sufficient for ordinary class-path loading."}
+      - {id: B, answer: "A plugin system must load implementation bytes from a separately managed source and keep those implementations in an isolated loader namespace.", explanation: "Correct. Alternate byte sources and intentional namespace isolation are core reasons to introduce a custom ClassLoader."}
+      - {id: C, answer: "A method needs to allocate one more Java object.", explanation: "Incorrect. Object allocation is unrelated to choosing a ClassLoader."}
+      - {id: D, answer: "A class should run its static initializer earlier.", explanation: "Incorrect. A custom ClassLoader is not an initialization-order tool."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.CustomClassLoader/CustomClassLoader.md", anchor: "custom-source"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: classloader-q15
@@ -270,7 +283,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.ClassIdentity/ClassIdentity.md", anchor: "class-identity-rule"}
+    readmeRelated: {file: "3.ParentDelegation/ParentDelegation.md", anchor: "initiating-vs-defining-loader"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: classloader-q19
@@ -310,6 +323,19 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "6.ContextClassLoader/ContextClassLoader.md", anchor: "tccl-purpose"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: classloader-q36
+    question: "Why can ServiceLoader-style discovery use the Thread Context ClassLoader instead of only the framework class's defining loader?"
+    answers:
+      - {id: A, answer: "Because TCCL changes the defining loader of the framework class itself.", explanation: "Incorrect. TCCL supplies a lookup/discovery context; it does not rewrite an existing class's defining loader."}
+      - {id: B, answer: "Because parent-owned framework code may need a loader that can see application or child providers that the framework's own defining loader cannot see.", explanation: "Correct. TCCL bridges the normal parent-to-child visibility gap for discovery."}
+      - {id: C, answer: "Because every provider must be defined by the bootstrap loader.", explanation: "Incorrect. Application providers are commonly defined by application or child loaders."}
+      - {id: D, answer: "Because ServiceLoader ignores runtime type identity.", explanation: "Incorrect. A discovered provider still has to implement the same service/SPI runtime type expected by the consumer."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.ContextClassLoader/ContextClassLoader.md", anchor: "tccl-discovery"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: classloader-q22
@@ -390,6 +416,45 @@ questions:
     readmeRelated: {file: "7.ResourceLoading/ResourceLoading.md", anchor: "classpath-vs-filesystem"}
     apiRelated: {controller: "", methodSignature: ""}
 
+  - id: classloader-q37
+    question: "What is the key difference between ClassLoader.getResource(...) and ClassLoader.loadClass(...)?"
+    answers:
+      - {id: A, answer: "getResource locates non-class data in a loader-visible resource namespace; it does not by itself define a runtime class.", explanation: "Correct. Resource lookup and class loading may use related loader visibility, but only class loading/definition creates runtime type identity."}
+      - {id: B, answer: "getResource always initializes every class in the same JAR before returning.", explanation: "Incorrect. Resource lookup does not imply class initialization."}
+      - {id: C, answer: "loadClass returns only a filesystem Path while getResource returns Class<?>.", explanation: "Incorrect. loadClass returns Class<?>; resource lookup commonly returns URL or stream data."}
+      - {id: D, answer: "There is no semantic difference; both operations define a class if the name exists.", explanation: "Incorrect. A resource is not a Java type and locating it does not define a class."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.ResourceLoading/ResourceLoading.md", anchor: "resource-vs-class-loading"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: classloader-q41
+    question: "When reading content through ClassLoader.getResourceAsStream(...), which practice is correct?"
+    answers:
+      - {id: A, answer: "Treat the returned stream as an owned resource and close it, normally with try-with-resources.", explanation: "Correct. The stream can be backed by a JAR entry, file, runtime image, or custom source and has its own resource lifecycle."}
+      - {id: B, answer: "Never close it because the ClassLoader owns every stream until the JVM exits.", explanation: "Incorrect. Callers should close resource streams they obtain."}
+      - {id: C, answer: "Use InputStream.available() as the guaranteed total resource length.", explanation: "Incorrect. available() reports bytes readable without blocking, not total content length."}
+      - {id: D, answer: "Closing the stream immediately unloads every class defined by the same ClassLoader.", explanation: "Incorrect. Stream lifecycle and class unloading are separate concerns."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.ResourceLoading/ResourceLoading.md", anchor: "resource-stream-lifecycle"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: classloader-q38
+    question: "Which operation is a normal active-use trigger for initializing a class or interface?"
+    answers:
+      - {id: A, answer: "Merely reading the .class file bytes from disk.", explanation: "Incorrect. Obtaining bytes is not itself Java class initialization."}
+      - {id: B, answer: "Calling a static method declared by the class or interface.", explanation: "Correct. Invoking a declared static method is a standard active-use initialization trigger."}
+      - {id: C, answer: "Writing an import statement in source code.", explanation: "Incorrect. import is a compile-time source construct, not a runtime initialization trigger."}
+      - {id: D, answer: "Calling ClassLoader.getResource for a neighboring properties file.", explanation: "Incorrect. Resource lookup does not initialize the class merely because the resource is nearby."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.Initialization/Initialization.md", anchor: "initialization-trigger"}
+    apiRelated: {controller: "", methodSignature: ""}
+
   - id: classloader-q28
     question: "How should <clinit> be understood?"
     answers:
@@ -401,6 +466,19 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "8.Initialization/Initialization.md", anchor: "clinit-model"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: classloader-q39
+    question: "The same binary name is defined independently by loader A and loader B. How does class initialization behave?"
+    answers:
+      - {id: A, answer: "Initialization state is shared globally by binary name, so initializing A also initializes B's class.", explanation: "Incorrect. The two definitions are distinct runtime class identities."}
+      - {id: B, answer: "Each runtime class identity has its own initialization state and is initialized independently, once for that identity.", explanation: "Correct. Different defining loaders create different runtime class identities, each with its own initialization state."}
+      - {id: C, answer: "Only the class defined by the bootstrap loader may initialize.", explanation: "Incorrect. Classes from user-created loaders can be initialized normally."}
+      - {id: D, answer: "The second loader automatically reuses the first loader's static fields even though the Class objects differ.", explanation: "Incorrect. Static state belongs to each distinct runtime class identity."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.Initialization/Initialization.md", anchor: "initialization-once"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: classloader-q29
@@ -455,6 +533,19 @@ questions:
     readmeRelated: {file: "9.UnloadingLeaks/UnloadingLeaks.md", anchor: "class-unloading"}
     apiRelated: {controller: "", methodSignature: ""}
 
+  - id: classloader-q40
+    question: "A plugin has been removed from the application's registry, but its ClassLoader is still reachable from a long-lived cache. What should you conclude?"
+    answers:
+      - {id: A, answer: "Removing the registry entry guarantees the plugin classes are immediately unloadable.", explanation: "Incorrect. Another strong-reference path can still retain the defining loader graph."}
+      - {id: B, answer: "The retained ClassLoader can keep its classes and related plugin state reachable; cleanup must remove all relevant long-lived reference paths.", explanation: "Correct. Unloading eligibility depends on reachability of the defining loader graph, not one registry operation."}
+      - {id: C, answer: "Deleting the plugin JAR is enough even while the ClassLoader remains reachable.", explanation: "Incorrect. File deletion does not remove in-memory reference paths."}
+      - {id: D, answer: "The JVM must unload the plugin classes because no new instances are being created.", explanation: "Incorrect. Instance creation rate does not determine loader reachability."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.UnloadingLeaks/UnloadingLeaks.md", anchor: "loader-retention"}
+    apiRelated: {controller: "", methodSignature: ""}
+
   - id: classloader-q33
     question: "Which references can keep an old plugin ClassLoader alive after redeploy?"
     answers:
@@ -479,4 +570,17 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "9.UnloadingLeaks/UnloadingLeaks.md", anchor: "unloading-observation"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: classloader-q42
+    question: "Which end-to-end model of the ClassLoader module is most accurate?"
+    answers:
+      - {id: A, answer: "Resource lookup → TCCL → linking → delegation → initialization → defining-loader identity.", explanation: "Incorrect. TCCL and resource lookup are cross-cutting discovery mechanisms, not mandatory lifecycle stages, and delegation occurs during loading before the defining-loader result is known."}
+      - {id: B, answer: "Loading/delegation → defining-loader runtime identity → linking → initialization on active use → reachability/unloading; TCCL and resource lookup are related but cross-cutting mechanisms.", explanation: "Correct. This keeps the JVM lifecycle spine separate from discovery/resource mechanisms."}
+      - {id: C, answer: "Initialization → class bytes → parent delegation → compilation → unloading.", explanation: "Incorrect. Compilation precedes runtime loading, and initialization cannot precede loading/linking."}
+      - {id: D, answer: "Every resource lookup defines a class, and every loaded class is unloaded as soon as its last instance disappears.", explanation: "Incorrect. Resource lookup does not define a class, and loader reachability—not last-instance count alone—is the key unloading boundary for custom-loader classes."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.UnloadingLeaks/UnloadingLeaks.md", anchor: "end-to-end-synthesis"}
     apiRelated: {controller: "", methodSignature: ""}

@@ -65,7 +65,7 @@ ResourceLoadingController:
     reviewed: false
     readmeRelated:
       file: 7.ResourceLoading/ResourceLoading.md
-      anchor: class-resource
+      anchor: loader-resource
     methodName: resolve
     params: [
       ]

@@ -27,47 +27,48 @@
 #         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
 # </interview-schema>
 
+
 questions:
   - question: >-
-      Vì sao Java cần một cơ chế ClassLoader thay vì chỉ chạy ngay mọi file .class tìm thấy trên disk, và loading, linking, initialization giải quyết ba vấn đề khác nhau thế nào?
+      Vì sao Java cần cơ chế ClassLoader thay vì chỉ thực thi ngay mọi tệp .class tìm thấy, và các giai đoạn nạp (loading), liên kết (linking), khởi tạo (initialization) giải quyết những vấn đề khác nhau thế nào?
     answer: >-
-      File .class chỉ là class bytes; JVM vẫn phải tìm đúng representation cho một binary name, tạo runtime Class identity, kiểm tra/chuẩn bị/liên kết type, rồi mới chạy static initialization khi semantics yêu cầu. Loading đưa type vào runtime namespace, linking làm type hợp lệ và sẵn sàng về cấu trúc, còn initialization chạy code khởi tạo static có thể có side effect. Tách các phase cho phép Java nạp theo nhu cầu, kiểm tra bytecode trước khi dùng và trì hoãn side effect cho tới active use.
+      Tệp .class chỉ chứa bytecode. JVM vẫn phải tìm biểu diễn phù hợp với một tên nhị phân, tạo Class khi chạy, kiểm tra/chuẩn bị/phân giải kiểu rồi chỉ thực hiện khởi tạo static khi ngữ nghĩa yêu cầu. Nạp đưa định nghĩa class vào JVM, liên kết làm kiểu hợp lệ và sẵn sàng về cấu trúc, còn khởi tạo chạy logic static có thể tạo tác dụng phụ. Tách các giai đoạn giúp JVM nạp theo nhu cầu, kiểm tra bytecode trước khi dùng và trì hoãn tác dụng phụ cho tới lúc có sử dụng chủ động.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "1.Lifecycle/Lifecycle.md", anchor: "loading-linking-initialization"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      Hãy giải thích mối quan hệ giữa binary class name, class-file path và classpath root. Vì sao một dòng import không chứng minh class đó đã được load ở runtime?
+      Hãy giải thích mối quan hệ giữa tên nhị phân của class, đường dẫn tệp .class và gốc classpath. Vì sao import không chứng minh class đã được nạp khi chạy?
     answer: >-
-      Binary name là tên runtime như com.example.Plugin; class-file path thường là dạng com/example/Plugin.class tương đối từ một classpath root; classpath là tập location mà loader có thể tìm class/resource. Compiler dùng import để resolve tên trong source, nhưng import không tạo bytecode instruction bắt JVM phải load hay initialize type đó. Runtime chỉ cần type khi execution, resolution hoặc dynamic loading thực sự yêu cầu nó.
+      Tên nhị phân là tên JVM dùng như com.example.Plugin; đường dẫn class-file thường là com/example/Plugin.class tính từ một gốc classpath; classpath là tập vị trí mà ClassLoader có thể tìm class và tài nguyên. import chỉ giúp trình biên dịch phân giải tên trong mã nguồn, không tạo lệnh khi chạy bắt JVM phải nạp hoặc khởi tạo kiểu đó. JVM chỉ cần kiểu khi thực thi, phân giải phụ thuộc hoặc nạp động thật sự yêu cầu nó.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "1.Lifecycle/Lifecycle.md", anchor: "loading-linking-initialization"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      Khi gặp ClassNotFoundException, NoClassDefFoundError và LinkageError, bạn sẽ suy luận theo phase nào thay vì học thuộc tên exception?
+      Khi gặp ClassNotFoundException, NoClassDefFoundError hoặc LinkageError, bạn sẽ chẩn đoán theo vòng đời class như thế nào thay vì học thuộc tên lỗi?
     answer: >-
-      Trước hết hỏi loader có tìm được requested bytes không: dynamic lookup không tìm thấy thường dẫn tới ClassNotFoundException. Nếu runtime đang resolve/use một dependency mà definition không khả dụng, hoặc class đã từng initialization fail, có thể thấy NoClassDefFoundError. Nếu bytes đã đi tới vùng define/link nhưng runtime không thể tạo một type system hợp lệ, đó là họ LinkageError như ClassFormatError, VerifyError, NoSuchMethodError hay IncompatibleClassChangeError. Chẩn đoán nên theo flow find bytes → define/link → initialize.
+      Trước tiên hỏi ClassLoader có tìm được bytecode được yêu cầu không; tìm kiếm động không tìm thấy thường dẫn tới ClassNotFoundException. Nếu JVM đang cần một phụ thuộc nhưng định nghĩa class không khả dụng, hoặc class từng khởi tạo thất bại, có thể thấy NoClassDefFoundError. Nếu bytecode đã tới vùng định nghĩa/liên kết nhưng JVM không tạo được hệ kiểu hợp lệ, lỗi thuộc họ LinkageError như ClassFormatError, VerifyError, NoSuchMethodError hoặc IncompatibleClassChangeError. Cách suy luận hữu ích là tìm bytecode → định nghĩa/liên kết → khởi tạo.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "1.Lifecycle/Lifecycle.md", anchor: "linking-phases"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      Vì sao framework có thể muốn load một plugin class mà chưa initialize nó, và Class.forName(name, false, loader) giúp chứng minh ranh giới đó thế nào?
+      Vì sao một khung phần mềm (framework) có thể muốn nạp một plugin class mà chưa khởi tạo nó, và Class.forName(name, false, loader) chứng minh ranh giới đó thế nào?
     answer: >-
-      Framework có thể cần kiểm tra metadata, identity hoặc khả năng assign trước khi chấp nhận chạy code của plugin. Nếu loading tự động chạy static initializer, chỉ việc inspect type đã có thể mở connection, register global state hoặc fail vì config chưa sẵn sàng. Class.forName với initialize=false cho phép lấy runtime Class mà không yêu cầu initialization; gọi lại với true hoặc thực hiện active use mới làm side effect static xuất hiện. Đây là bằng chứng trực tiếp rằng loaded và initialized là hai trạng thái khác nhau.
+      Khung phần mềm có thể cần kiểm tra siêu dữ liệu (metadata), định danh hoặc khả năng gán kiểu trước khi quyết định chạy mã plugin. Nếu việc nạp class tự động chạy bộ khởi tạo static, chỉ thao tác quan sát kiểu cũng có thể mở kết nối, đăng ký trạng thái toàn cục hoặc thất bại vì cấu hình chưa sẵn sàng. Class.forName với initialize=false cho phép lấy Class khi chạy mà không yêu cầu khởi tạo; gọi với true hoặc thực hiện sử dụng chủ động mới làm tác dụng phụ static xuất hiện.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "1.Lifecycle/Lifecycle.md", anchor: "load-vs-initialize"}
     apiRelated: {controller: "ClassLifecycleController", methodSignature: "loadWithoutInit()"}
 
   - question: >-
-      Nếu inspect loader của class ứng dụng, một platform class và String.class trên Java 21, bạn mong đợi thấy chuỗi ownership nào và vì sao kết quả đó quan trọng?
+      Nếu quan sát ClassLoader của class ứng dụng, một class nền tảng và String.class trên Java 21, bạn mong đợi chuỗi nào và vì sao nó quan trọng?
     answer: >-
-      Class ứng dụng thường do Application/System ClassLoader định nghĩa, platform class do Platform ClassLoader, còn nhiều core class như String do bootstrap loader định nghĩa và Class.getClassLoader biểu diễn bằng null. Chuỗi parent thường đi application → platform → bootstrap boundary. Quan sát này cho biết type thực sự thuộc namespace nào và chuẩn bị cho việc hiểu parent delegation: requester ở tầng dưới không nhất thiết là defining loader cuối cùng.
+      Class ứng dụng thường do Application/System ClassLoader định nghĩa, class nền tảng thường do Platform ClassLoader định nghĩa, còn nhiều class lõi như String do Bootstrap ClassLoader định nghĩa và Class.getClassLoader biểu diễn bằng null. Chuỗi cha thường đi Application/System → Platform → ranh giới Bootstrap. Điều này cho thấy ClassLoader nhận yêu cầu ban đầu không nhất thiết là ClassLoader cuối cùng định nghĩa Class.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "2.BuiltInClassLoaders/BuiltInClassLoaders.md", anchor: "loader-chain"}
@@ -76,188 +77,224 @@ questions:
   - question: >-
       String.class.getClassLoader() trả null có nghĩa gì, và kết luận sai phổ biến nào cần tránh?
     answer: >-
-      Null là cách Java API biểu diễn bootstrap-defined class vì bootstrap loader không được expose như một ClassLoader object thông thường. Nó không có nghĩa String không được load, không có owner hay JVM bỏ qua class-loading rules. Khi debug, null nên được đọc là bootstrap boundary, đồng thời tránh suy luận dựa vào tên concrete implementation của built-in loaders.
+      null là cách API biểu diễn class do cơ chế Bootstrap ClassLoader định nghĩa. Nó không có nghĩa String chưa được nạp, không có ClassLoader nào xử lý nó, hoặc class không có định danh khi chạy. Khi duyệt chuỗi getParent(), null nên được hiểu là ranh giới Bootstrap thay vì gọi phương thức tiếp trên nó.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "2.BuiltInClassLoaders/BuiltInClassLoaders.md", anchor: "bootstrap-loader"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      Vì sao Java tách Platform ClassLoader và Application/System ClassLoader thay vì để một loader duy nhất sở hữu mọi class ngoài bootstrap?
+      Vì sao Java tách Platform ClassLoader và Application/System ClassLoader thay vì để một ClassLoader duy nhất sở hữu mọi class ngoài Bootstrap?
     answer: >-
-      Hai tầng tạo ranh giới ownership rõ giữa platform modules của JDK và code/dependency của ứng dụng. Nhờ đó platform types có namespace ổn định, application code nằm ở tầng có lifecycle và classpath riêng, còn custom loader có thể chọn parent phù hợp để quyết định cái gì được chia sẻ. Giá trị thiết kế nằm ở boundary và delegation chain, không phải ở việc ghi nhớ concrete class name của loader implementation.
+      Hai tầng tạo ranh giới rõ giữa class/module nền tảng của JDK và mã/phụ thuộc của ứng dụng. Nhờ đó các kiểu nền tảng có vùng sở hữu ổn định, ứng dụng có classpath/vòng đời riêng, còn ClassLoader tùy chỉnh có thể chọn ClassLoader cha phù hợp để quyết định phần nào được chia sẻ và phần nào được cô lập. Giá trị cần nhớ là ranh giới trách nhiệm chứ không phải tên class triển khai cụ thể của từng ClassLoader.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "2.BuiltInClassLoaders/BuiltInClassLoaders.md", anchor: "platform-loader"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      Mô tả parent-first delegation của loadClass và giải thích vì sao resolve=true vẫn không đồng nghĩa với initialization.
+      Mô tả cơ chế ưu tiên cha (parent-first) của loadClass và giải thích vì sao resolve=true vẫn không đồng nghĩa với khởi tạo.
     answer: >-
-      loadClass trước tiên kiểm tra class đã được loader này load chưa, sau đó cho parent/bootstrap cơ hội xử lý, và chỉ khi phía trên không tìm thấy mới tới lookup của loader hiện tại. Với overload có resolve flag, resolve=true yêu cầu resolveClass cho class vừa load, tức bước linking/resolution; nó không chạy static initializer. Initialization là phase riêng và chỉ xảy ra theo active-use/runtime rules phù hợp.
+      loadClass trước hết kiểm tra class đã được ClassLoader hiện tại nạp chưa, sau đó cho ClassLoader cha/Bootstrap cơ hội xử lý, và chỉ khi phía trên không tìm thấy mới dùng nguồn của ClassLoader hiện tại. Với overload có cờ resolve, resolve=true yêu cầu resolveClass cho class vừa nạp, tức thuộc bước linking/resolution; nó không chạy bộ khởi tạo static. Khởi tạo là giai đoạn riêng và chỉ xảy ra khi có điều kiện sử dụng chủ động phù hợp.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "3.ParentDelegation/ParentDelegation.md", anchor: "parent-delegation"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      Parent-first delegation bảo vệ tính nhất quán type trong một plugin system như thế nào, đặc biệt với shared Plugin API?
+      Cơ chế ưu tiên cha bảo vệ tính nhất quán kiểu trong hệ thống plugin như thế nào, đặc biệt với Plugin API dùng chung?
     answer: >-
-      Host nên định nghĩa shared Plugin API ở parent. Khi plugin loader cần Plugin, parent-first trả lại cùng Plugin.class thay vì để mỗi plugin tự định nghĩa một bản sao cùng tên. Vì runtime type identity phụ thuộc defining loader, cách này giữ interface, DTO, exception và facade dùng chung có identity tương thích giữa host với plugin. Delegation vì thế là boundary consistency mechanism chứ không chỉ là tối ưu lookup.
+      Ứng dụng chủ nên định nghĩa Plugin API dùng chung ở ClassLoader cha. Khi ClassLoader của plugin cần Plugin, ưu tiên cha trả lại cùng Plugin.class thay vì để mỗi plugin định nghĩa một bản sao cùng tên. Vì định danh kiểu phụ thuộc ClassLoader định nghĩa, cách này giữ interface, DTO, exception và facade dùng chung tương thích giữa ứng dụng chủ với plugin. Cơ chế ủy quyền vì vậy bảo vệ ranh giới kiểu chứ không chỉ tối ưu việc tìm kiếm.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "3.ParentDelegation/ParentDelegation.md", anchor: "delegation-purpose"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      Khi nào child-first loading có lý do tồn tại, và vì sao dùng child-first cho mọi package là một thiết kế nguy hiểm?
+      Khi nào ưu tiên con (child-first) có lý do tồn tại, và vì sao áp dụng child-first cho mọi package là nguy hiểm?
     answer: >-
-      Child-first hữu ích khi plugin/container cần cô lập dependency version riêng khỏi host. Nhưng nếu áp dụng mù quáng, loader có thể nhân đôi shared API, singleton/static state và library types, tạo ClassCastException, discovery mismatch hoặc hành vi phụ thuộc lookup order. Thiết kế tốt thường phân vùng: parent-first cho java.* và contract dùng chung, child-first có chọn lọc cho implementation dependency cần isolation.
+      Ưu tiên con (child-first) hữu ích khi plugin/container cần cô lập phiên bản phụ thuộc riêng khỏi ứng dụng chủ. Nhưng nếu áp dụng quá rộng, ClassLoader con có thể tự định nghĩa lại API dùng chung, trạng thái static hoặc kiểu thư viện, dẫn tới ClassCastException, lỗi khám phá thành phần hoặc hành vi phụ thuộc thứ tự tìm kiếm. Thiết kế tốt thường dùng ưu tiên cha (parent-first) cho java.* và hợp đồng dùng chung, còn child-first chỉ áp dụng có chọn lọc cho phần triển khai/phụ thuộc cần cô lập.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "3.ParentDelegation/ParentDelegation.md", anchor: "child-first-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      Vì sao việc custom loader không thể tùy ý định nghĩa java.lang.String là một ranh giới khác với parent delegation?
+      Vì sao việc ClassLoader tùy chỉnh không thể tự định nghĩa java.lang.String là một ranh giới khác với parent delegation?
     answer: >-
-      Parent delegation là policy lookup mặc định: child hỏi parent trước. Protected core-package rule là constraint runtime/ClassLoader độc lập nhằm ngăn custom ClassLoader chiếm namespace java.* bằng defineClass. Ngay cả khi một loader thay đổi delegation policy, nó vẫn không có quyền biến bytes tùy ý thành java.lang.String. Phân biệt hai cơ chế giúp tránh hiểu sai rằng core namespace chỉ được bảo vệ nhờ parent-first.
+      Cơ chế ủy quyền cho cha là chính sách tìm kiếm mặc định: ClassLoader con hỏi cha trước. Quy tắc cấm ClassLoader thông thường định nghĩa tên bắt đầu bằng java. là ràng buộc độc lập của ClassLoader/JVM nhằm bảo vệ không gian tên lõi. Ngay cả khi thay đổi chiến lược ủy quyền, mã ứng dụng vẫn không được gọi defineClass để chiếm java.lang.String. Vì vậy không nên giải thích an toàn của java.* chỉ bằng parent-first.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "3.ParentDelegation/ParentDelegation.md", anchor: "protected-packages-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      Khi tự viết ClassLoader, loadClass và findClass có vai trò khác nhau thế nào, và vì sao override findClass thường an toàn hơn override loadClass?
+      Khi tự viết ClassLoader, loadClass và findClass khác vai trò thế nào, và vì sao thường nên ghi đè findClass trước khi nghĩ tới ghi đè loadClass?
     answer: >-
-      loadClass là orchestration contract quản lý findLoadedClass, parent delegation, locking và optional resolution. findClass là extension point để loader hiện tại tìm bytes và define class khi parent không đáp ứng. Nếu bài toán chỉ là nguồn bytes khác, override findClass giữ lại các invariant mặc định của ClassLoader. Override loadClass chỉ hợp lý khi thật sự cần policy khác như child-first có kiểm soát và lúc đó developer phải tự bảo toàn nhiều invariant hơn.
+      loadClass điều phối findLoadedClass, cơ chế ủy quyền cho cha, đồng bộ và tùy chọn resolve. findClass là điểm mở rộng để ClassLoader hiện tại tìm bytecode rồi định nghĩa class khi ClassLoader cha không đáp ứng. Nếu bài toán chỉ là nguồn bytecode khác, ghi đè findClass giữ lại các bất biến mặc định của ClassLoader. Chỉ nên ghi đè loadClass khi thật sự cần chính sách khác như child-first có kiểm soát và chấp nhận tự bảo toàn nhiều quy tắc hơn.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "4.CustomClassLoader/CustomClassLoader.md", anchor: "classloader-contract"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      defineClass biến byte[] thành gì, và tại sao gọi defineClass thành công vẫn chưa nói class đã được initialize?
+      defineClass biến byte[] thành gì, và vì sao gọi defineClass thành công vẫn chưa có nghĩa class đã được khởi tạo?
     answer: >-
-      defineClass yêu cầu JVM định nghĩa runtime Class từ class-file bytes dưới identity của loader hiện tại; JVM vẫn kiểm tra format, name và loading constraints. Kết quả là một Class<?> có defining loader rõ ràng, nhưng static initialization là phase riêng và chỉ chạy khi có initialization trigger. Vì vậy custom loader quyết định nguồn bytes/namespace, còn JVM vẫn sở hữu verification, linking và initialization semantics.
+      defineClass yêu cầu JVM định nghĩa một Class khi chạy gắn với ClassLoader định nghĩa và thực hiện các kiểm tra phù hợp ở thời điểm định nghĩa như tên, định dạng và bảo mật. Verification về mặt khái niệm thuộc linking và có thể được JVM thực hiện khi cần. Khởi tạo static là giai đoạn riêng, chỉ chạy khi có trigger phù hợp. Vì vậy ClassLoader tùy chỉnh quyết định nguồn bytecode/namespace, còn JVM vẫn sở hữu các quy tắc linking và initialization.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "4.CustomClassLoader/CustomClassLoader.md", anchor: "define-class"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      Khi plugin bytes đến từ một nguồn tùy chỉnh, vì sao chọn parent cho custom loader là quyết định kiến trúc chứ không chỉ là tham số constructor?
+      Khi bytecode plugin đến từ nguồn tùy chỉnh, vì sao việc chọn ClassLoader cha là quyết định kiến trúc chứ không chỉ là tham số constructor?
     answer: >-
-      Parent quyết định những type nào child có thể chia sẻ qua delegation. Nếu Plugin API của host phải là contract chung, dùng loader định nghĩa Plugin làm parent giúp implementation trong child resolve interface đó về cùng Class identity. Chọn parent sai có thể cô lập cả contract đáng lẽ phải dùng chung, khiến instance không assignable về API của host. Nguồn bytes và parent boundary vì thế là hai quyết định khác nhau: một cái quyết định lấy implementation ở đâu, cái kia quyết định namespace nào được chia sẻ.
+      ClassLoader cha quyết định những kiểu nào ClassLoader con có thể chia sẻ qua cơ chế ủy quyền. Nếu Plugin API của ứng dụng chủ phải là hợp đồng chung, chọn ClassLoader đã định nghĩa Plugin làm cha giúp phần triển khai trong con phân giải interface đó về cùng định danh Class. Chọn cha sai có thể cô lập cả hợp đồng đáng lẽ dùng chung và làm đối tượng không gán được về API của ứng dụng chủ. Nguồn bytecode và ranh giới chia sẻ là hai quyết định khác nhau.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "4.CustomClassLoader/CustomClassLoader.md", anchor: "custom-source"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      Một custom ClassLoader production cần bảo vệ những invariant nào ngoài việc đọc đúng byte[]?
+      Một ClassLoader tùy chỉnh dùng trong hệ thống thực tế cần bảo vệ những bất biến nào ngoài việc đọc đúng byte[]?
     answer: >-
-      Loader phải tránh define cùng binary name hai lần trong cùng namespace khi concurrent, giữ delegation/shared-contract boundary rõ ràng, tuân theo package/runtime constraints và quản lý resource handle theo lifecycle. Nếu dùng loader có close như URLClassLoader thì close giải phóng file/JAR handle nhưng không ép class unload. Những yêu cầu này cho thấy custom loading có state và lifecycle; code chỉ đọc bytes rồi gọi defineClass chưa đủ để thành một loader an toàn.
+      Nó phải tránh định nghĩa cùng tên nhị phân hai lần trong một không gian tên khi có cạnh tranh luồng, giữ ranh giới ủy quyền/hợp đồng dùng chung rõ ràng, tuân theo ràng buộc gói/JVM và quản lý tài nguyên mở theo vòng đời. Nếu ClassLoader hỗ trợ close như URLClassLoader, close chỉ giải phóng tài nguyên tệp/JAR chứ không ép JVM gỡ nạp class. Chỉ đọc byte rồi gọi defineClass chưa đủ để tạo một ClassLoader an toàn.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "4.CustomClassLoader/CustomClassLoader.md", anchor: "custom-loader-safety"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      Phát biểu chính xác runtime class identity là gì, và defining loader khác initiating loader ở điểm nào?
+      ClassLoader định nghĩa (defining) khác ClassLoader khởi xướng (initiating) thế nào, và vì sao cơ chế ủy quyền có thể khiến một class có nhiều initiating loader?
     answer: >-
-      Với class/reference type thông thường trong phạm vi module này, identity cốt lõi là binary name cộng defining ClassLoader identity. Defining loader là loader thực sự định nghĩa Class; initiating loader là một loader đã khiến Class đó được tạo ra thông qua loading, trực tiếp hoặc qua delegation. Vì vậy một Class có thể có nhiều initiating loaders nhưng chỉ một defining loader. Ví dụ plugin loader yêu cầu java.lang.String và delegation trả String do bootstrap loader định nghĩa; plugin loader có thể được ghi nhận là initiating loader, còn identity của String vẫn thuộc bootstrap defining boundary. Khi suy luận cast/assignability, defining loader là phần quyết định.
+      Với class/interface có tên thông thường, ClassLoader định nghĩa là ClassLoader chịu trách nhiệm định nghĩa kiểu khi chạy. ClassLoader khởi xướng là ClassLoader được ghi nhận đã bắt đầu việc nạp trực tiếp hoặc qua ủy quyền. Một kiểu có thể có nhiều initiating loader nhưng chỉ một defining loader. Ví dụ ClassLoader plugin yêu cầu java.lang.String rồi cơ chế ủy quyền trả String do Bootstrap định nghĩa; ClassLoader plugin có thể là initiating loader còn Bootstrap vẫn giữ vai trò defining. Vai trò defining mới tham gia vào quy tắc định danh kiểu khi chạy.
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.ClassIdentity/ClassIdentity.md", anchor: "class-identity-rule"}
+    readmeRelated: {file: "3.ParentDelegation/ParentDelegation.md", anchor: "initiating-vs-defining-loader"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      Hai ClassLoader khác nhau nhận cùng binary name và cùng class bytes. Vì sao JVM vẫn có thể tạo hai type khác nhau, và điều đó hữu ích ở đâu?
+      Hai ClassLoader khác nhau nhận cùng tên nhị phân và cùng bytecode. Vì sao JVM vẫn có thể tạo hai kiểu khác nhau, và điều đó hữu ích ở đâu?
     answer: >-
-      Defining loader là một phần của runtime identity, nên (PaymentPlugin, loaderA) và (PaymentPlugin, loaderB) là hai Class khác nhau dù text name và bytes giống nhau. Cơ chế này tạo isolated namespace, cho phép plugin hoặc container giữ dependency/static state tách biệt. Cái giá là object từ một namespace không tự động assignable sang type cùng tên ở namespace kia.
+      ClassLoader định nghĩa là một phần của định danh kiểu khi chạy, nên (PaymentPlugin, loaderA) và (PaymentPlugin, loaderB) là hai Class khác nhau dù tên và bytecode giống nhau. Điều này tạo các không gian tên cô lập, cho phép plugin/container giữ phiên bản phụ thuộc và trạng thái static riêng. Cái giá là đối tượng từ một không gian tên không tự động gán được sang kiểu cùng tên ở không gian tên khác.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "5.ClassIdentity/ClassIdentity.md", anchor: "same-name-different-type"}
     apiRelated: {controller: "CustomClassLoaderController", methodSignature: "sameNameIdentity()"}
 
   - question: >-
-      Làm thế nào một ClassCastException có thể trông như “PaymentPlugin cannot be cast to PaymentPlugin”, và bạn sẽ debug lỗi đó ra sao?
+      Làm thế nào ClassCastException có thể trông như “PaymentPlugin cannot be cast to PaymentPlugin”, và bạn sẽ chẩn đoán lỗi đó ra sao?
     answer: >-
-      Hai tên hiển thị có thể giống nhau nhưng object thuộc PaymentPlugin do loaderA định nghĩa còn target cast là PaymentPlugin do loaderB định nghĩa. JVM so runtime identity chứ không chỉ so getName(), nên cast thất bại hợp lệ. Khi debug cần in cả class name, Class object và getClassLoader của source/target, đồng thời kiểm tra shared API có bị child loader định nghĩa lại hay không.
+      Hai tên hiển thị có thể giống nhau nhưng đối tượng thuộc PaymentPlugin do loaderA định nghĩa còn kiểu đích thuộc PaymentPlugin do loaderB định nghĩa. JVM so định danh kiểu khi chạy chứ không chỉ so getName(), nên phép cast thất bại là hợp lệ. Khi chẩn đoán, hãy in class name, Class object và getClassLoader của nguồn/đích, đồng thời kiểm tra API dùng chung có bị ClassLoader con tự định nghĩa lại hay không.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "5.ClassIdentity/ClassIdentity.md", anchor: "class-cast-loader-failure"}
     apiRelated: {controller: "ClassIdentityController", methodSignature: "crossLoaderCast()"}
 
   - question: >-
-      Vì sao shared API, DTO hoặc exception đi qua loader boundary nên được định nghĩa ở một parent chung?
+      Vì sao API, DTO hoặc exception dùng chung đi qua ranh giới ClassLoader thường nên được định nghĩa bởi một ClassLoader cha chung?
     answer: >-
-      Những type này là ngôn ngữ giao tiếp giữa host và plugin. Nếu mỗi side có bản sao cùng binary name do loader khác định nghĩa, method signature nhìn giống nhau nhưng assignability, catch type, annotation lookup hoặc DTO cast có thể không tương thích. Đặt contract ở parent mà cả hai phía delegate tới tạo một identity chung, còn implementation/dependency riêng có thể tiếp tục ở child namespace.
+      Những kiểu này là ngôn ngữ giao tiếp giữa ứng dụng chủ và plugin. Nếu mỗi phía có bản sao cùng tên nhị phân do ClassLoader khác nhau định nghĩa, chữ ký phương thức nhìn giống nhau nhưng khả năng gán kiểu, kiểu exception được bắt, tìm annotation hoặc ép kiểu DTO có thể không tương thích. Đặt hợp đồng ở ClassLoader cha mà cả hai phía cùng ủy quyền tới tạo một định danh chung, còn phần triển khai/phụ thuộc riêng vẫn có thể nằm ở ClassLoader con.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "5.ClassIdentity/ClassIdentity.md", anchor: "loader-boundary-api"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      TCCL giải quyết vấn đề visibility nào mà parent delegation thông thường không giải quyết được?
+      TCCL giải quyết vấn đề nhìn thấy nào mà cơ chế ủy quyền cho ClassLoader cha thông thường không giải quyết được?
     answer: >-
-      Parent delegation tạo hướng tự nhiên child nhìn lên parent, nhưng framework class do parent định nghĩa không tự nhiên nhìn xuống implementation chỉ child/application loader thấy. TCCL gắn một lookup context với Thread để framework có thể dùng loader phù hợp với caller/application cho discovery. Nó không đổi defining loader của framework hay của class đã tồn tại; nó chỉ cung cấp một reference loader khác cho thao tác lookup.
+      Cơ chế ủy quyền cho cha tạo hướng tự nhiên ClassLoader con nhìn lên cha, nhưng class của khung phần mềm do cha định nghĩa không tự nhiên nhìn xuống phần triển khai chỉ ClassLoader con/ứng dụng thấy. TCCL gắn một ngữ cảnh ClassLoader với Thread để khung phần mềm có thể dùng ClassLoader phù hợp với bên gọi/ứng dụng cho việc khám phá thành phần. Nó không thay đổi ClassLoader định nghĩa của class đã tồn tại; nó chỉ cung cấp một ClassLoader khác cho thao tác tìm kiếm.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "6.ContextClassLoader/ContextClassLoader.md", anchor: "tccl-purpose"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      ServiceLoader minh họa TCCL như thế nào, và điều gì vẫn phải đúng về SPI identity để provider discovery hữu ích?
+      ServiceLoader minh họa TCCL như thế nào, và điều gì vẫn phải đúng về định danh SPI để thành phần cung cấp (provider) tìm được có thể sử dụng được?
     answer: >-
-      ServiceLoader.load(serviceType) dùng context ClassLoader của thread để tìm provider metadata/implementation mà framework defining loader có thể không nhìn thấy. Nhưng discovery chỉ hữu ích khi provider implement đúng cùng SPI Class identity mà consumer đang dùng; nếu child tự định nghĩa bản sao SPI, provider dù cùng tên cũng không assignable về serviceType của parent. TCCL giải quyết lookup visibility, không chữa sai class identity boundary.
+      ServiceLoader.load(serviceType) có thể dùng ClassLoader ngữ cảnh của luồng để tìm metadata/phần triển khai provider mà ClassLoader định nghĩa khung phần mềm không nhìn thấy. Nhưng provider vẫn phải triển khai đúng cùng định danh Class của SPI mà phía sử dụng đang dùng; nếu ClassLoader con tự định nghĩa bản sao SPI, provider cùng tên cũng không gán được về serviceType của phía cha. TCCL giải quyết khả năng nhìn thấy khi tìm kiếm, không sửa một ranh giới định danh class đã sai.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "6.ContextClassLoader/ContextClassLoader.md", anchor: "tccl-discovery"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      Vì sao pattern đổi TCCL phải là save → set → work → restore trong finally, đặc biệt khi thread đến từ pool?
+      Vì sao thay đổi TCCL tạm thời phải theo quy trình lưu → gán → thực hiện → khôi phục trong finally, đặc biệt trên luồng từ nhóm luồng (thread pool)?
     answer: >-
-      TCCL là mutable state của Thread và pooled thread được tái sử dụng cho nhiều task. Nếu code set plugin loader rồi exception trước khi restore, task kế tiếp có thể vô tình chạy với lookup context cũ, gây discovery sai và giữ plugin loader sống lâu hơn lifecycle của nó. Lưu giá trị trước, set trong phạm vi nhỏ và restore trong finally làm thay đổi TCCL có lexical lifecycle rõ ràng ngay cả khi công việc thất bại.
+      TCCL là trạng thái có thể thay đổi của Thread và luồng trong nhóm được tái sử dụng cho nhiều công việc. Nếu mã gán ClassLoader plugin rồi ném exception trước khi khôi phục, công việc sau có thể dùng nhầm ngữ cảnh tìm kiếm cũ và giữ ClassLoader plugin sống lâu hơn vòng đời của nó. Lưu giá trị trước, gán trong phạm vi nhỏ và luôn khôi phục trong finally giúp cả tính đúng đắn lẫn tránh rò rỉ.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "6.ContextClassLoader/ContextClassLoader.md", anchor: "tccl-lifecycle"}
     apiRelated: {controller: "ContextClassLoaderController", methodSignature: "temporaryTccl()"}
 
   - question: >-
-      So sánh Class.getResource và ClassLoader.getResource về cách hiểu path, rồi giải thích vì sao classpath resource không nên bị đồng nhất với filesystem File.
+      So sánh Class.getResource và ClassLoader.getResource, giải thích vì sao tài nguyên trên classpath không nên mặc định coi là File, và phân biệt tìm tài nguyên với nạp class.
     answer: >-
-      Class.getResource("x") là package-relative, còn Class.getResource("/x") bắt đầu từ resource root của class/module. ClassLoader.getResource("x") dùng root-relative resource name và convention không có leading slash. Kết quả lookup có thể là resource trong directory, JAR hay runtime image với protocol file:, jar: hoặc jrt:, nên code chỉ cần đọc nên ưu tiên URL/stream thay vì ép mọi resource thành Path/File. Lookup còn phụ thuộc loader được dùng, không chỉ string path.
+      Class.getResource("x") tìm tương đối theo gói, còn Class.getResource("/x") bắt đầu từ gốc tài nguyên của class/module. ClassLoader.getResource("x") dùng tên tính từ gốc ClassLoader và thường không có dấu / đầu. Kết quả có thể đến từ thư mục, JAR hoặc runtime image qua file:, jar:, jrt:, nên mã chỉ cần đọc nội dung nên ưu tiên URL/luồng dữ liệu thay vì ép thành Path/File. Tìm thấy tài nguyên không định nghĩa Class, không tạo định danh kiểu và không tự kích hoạt khởi tạo class.
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.ResourceLoading/ResourceLoading.md", anchor: "class-resource"}
+    readmeRelated: {file: "7.ResourceLoading/ResourceLoading.md", anchor: "resource-vs-class-loading"}
     apiRelated: {controller: "ResourceLoadingController", methodSignature: "resolve()"}
 
   - question: >-
-      Hãy phân tích một trường hợp đọc static member mà class không initialize, và nêu cách tránh suy luận “thấy tên class trong source thì class đó chắc chắn đã initialize”.
+      Khi ClassLoader.getResourceAsStream trả về InputStream, bên gọi nên quản lý vòng đời luồng dữ liệu thế nào và vì sao việc đóng luồng dữ liệu khác với gỡ nạp class?
     answer: >-
-      Class literal T.class không tự kích hoạt initialization, và đọc compile-time constant như static final int A = 30 có thể dùng giá trị đã inline nên không chạy initializer của declaring class. Ngoài ra khi truy cập static field qua tên subtype nhưng field thực sự được khai báo ở superclass, initialization trigger áp dụng cho type khai báo field chứ không đơn giản là token đứng bên trái dấu chấm. Vì vậy phải suy luận từ active-use rule và declaration thực tế, không từ hình thức source.
+      Hãy coi InputStream là tài nguyên do bên gọi sở hữu và đóng nó, thường bằng try-with-resources. Luồng dữ liệu có thể đọc từ tệp, mục trong JAR, runtime image hoặc nguồn tùy chỉnh; giữ tài nguyên mở có thể gây khó cho việc thay thế hoặc dọn dẹp. Đóng luồng dữ liệu chỉ giải phóng tài nguyên của nó, không làm ClassLoader mất khả năng còn được tham chiếu và không ép JVM gỡ nạp class.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.ResourceLoading/ResourceLoading.md", anchor: "resource-stream-lifecycle"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Khi nhiều JAR có thể đóng góp tài nguyên cùng một tên logic, vì sao ClassLoader.getResources/resources phù hợp hơn getResource và ứng dụng vẫn phải định nghĩa chính sách gì?
+    answer: >-
+      getResource mang kiểu tìm một kết quả, còn getResources hoặc resources cho phép liệt kê mọi tài nguyên cùng tên đang nhìn thấy, hữu ích cho metadata SPI hoặc các mảnh cấu hình từ nhiều artifact. Nhưng việc liệt kê không tự quyết định cách xử lý: ứng dụng vẫn phải chọn cách hợp nhất, loại trùng, ưu tiên, từ chối xung đột hoặc bảo toàn thứ tự thay vì dựa vào thứ tự không được cam kết giữa các artifact không liên quan.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.ResourceLoading/ResourceLoading.md", anchor: "resource-enumeration"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Hãy phân tích một trường hợp truy cập thành viên static nhưng không khởi tạo class, và giải thích vì sao chỉ thấy tên class trong mã nguồn chưa đủ để kết luận class đã được khởi tạo.
+    answer: >-
+      Class literal như T.class không tự kích hoạt khởi tạo, và đọc hằng số lúc biên dịch như static final int A = 30 có thể dùng giá trị đã được chèn trực tiếp mà không khởi tạo class khai báo. Nếu truy cập trường static qua tên kiểu con nhưng trường thật sự được khai báo ở lớp cha, điều kiện kích hoạt khởi tạo áp dụng cho kiểu khai báo trường chứ không đơn giản là tên đứng bên trái dấu chấm. Phải suy luận theo quy tắc sử dụng chủ động (active use) và nơi khai báo thực tế, không theo hình thức mã nguồn.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "8.Initialization/Initialization.md", anchor: "constant-no-init"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      Một static initializer ném exception ở lần active use đầu. Vì sao lần gọi sau của cùng runtime Class không đơn giản retry initializer, và caller thường quan sát hai failure khác nhau thế nào?
+      JVM bảo đảm class chỉ được khởi tạo một lần cho mỗi định danh khi chạy như thế nào khi nhiều luồng cùng kích hoạt, và điều gì xảy ra nếu hai ClassLoader định nghĩa cùng tên nhị phân?
     answer: >-
-      Nếu initialization thất bại, runtime Class identity đó bị đánh dấu erroneous. Khi nguyên nhân ban đầu là exception không phải Error, caller đầu thường thấy ExceptionInInitializerError; active use sau của cùng Class không chạy lại initializer và thường thấy NoClassDefFoundError báo class không thể initialize. Muốn một thử nghiệm lặp lại từ đầu phải dùng một runtime identity mới, ví dụ class do một fresh loader định nghĩa, chứ không thể reset state của Class cũ.
+      Trạng thái khởi tạo thuộc về một định danh Class cụ thể. Với cùng một Class, JVM đồng bộ quá trình khởi tạo để một luồng thực hiện công việc còn các luồng khác cần cùng kiểu phải chờ kết quả hoàn tất hoặc thất bại; bộ khởi tạo không chạy song song nhiều lần cho cùng Class. Nếu loaderA và loaderB định nghĩa cùng tên nhị phân, đó là hai định danh class khác nhau nên mỗi định danh có trạng thái khởi tạo riêng và có thể được khởi tạo độc lập một lần.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.Initialization/Initialization.md", anchor: "initialization-locking"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Một bộ khởi tạo static ném exception ở lần sử dụng chủ động đầu. Vì sao lần sử dụng sau của cùng Class không đơn giản chạy lại bộ khởi tạo, và caller thường thấy hai lỗi nào?
+    answer: >-
+      Khi khởi tạo thất bại, định danh Class đó đi vào trạng thái lỗi. Nếu nguyên nhân ban đầu là exception chứ không phải Error, bên gọi đầu thường thấy ExceptionInInitializerError; các lần sử dụng chủ động sau của cùng Class không chạy lại bộ khởi tạo và thường thấy NoClassDefFoundError báo class không thể khởi tạo. Muốn thử lại từ trạng thái sạch cần một định danh Class mới, ví dụ được một ClassLoader mới định nghĩa.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "8.Initialization/Initialization.md", anchor: "initialization-failure"}
     apiRelated: {controller: "InitializationController", methodSignature: "failureState()"}
 
   - question: >-
-      Vì sao “đã remove plugin khỏi registry” chưa đủ để class được unload, và bạn sẽ thiết kế/chẩn đoán lifecycle redeploy theo reachability như thế nào?
+      Vì sao “đã xóa plugin khỏi registry” chưa đủ để class của plugin được gỡ nạp, và bạn sẽ thiết kế/chẩn đoán vòng đời triển khai lại theo khả năng còn được tham chiếu (reachability) thế nào?
     answer: >-
-      Class do disposable loader định nghĩa chỉ có cơ hội unload khi defining loader không còn reachable; GC/unloading cũng không xảy ra theo lịch deterministic. Parent-owned cache, listener, pooled-thread TCCL, ThreadLocal, plugin thread/executor hoặc callback đều có thể tạo đường từ GC root tới plugin object/Class/loader. Shutdown cần dừng work/thread, unregister callback, clear ThreadLocal/TCCL/cache, close resource handle rồi bỏ strong references. WeakReference/logging/profiler chỉ giúp quan sát; System.gc() không phải lệnh unload hay bằng chứng leak tức thời.
+      Class do ClassLoader có thể bỏ đi định nghĩa chỉ có cơ hội được gỡ nạp khi ClassLoader định nghĩa không còn được tham chiếu; thời điểm GC/gỡ nạp cũng không xác định. Bộ nhớ đệm ở tầng cha, bộ lắng nghe, TCCL trên luồng trong nhóm, ThreadLocal, luồng/executor của plugin hoặc hàm gọi lại đều có thể tạo đường từ GC root tới đối tượng/Class/ClassLoader của plugin. Khi dừng cần dừng công việc/luồng, gỡ đăng ký hàm gọi lại, dọn ThreadLocal/TCCL/bộ nhớ đệm, đóng tài nguyên mở và bỏ tham chiếu mạnh. WeakReference, nhật ký và profiler chỉ giúp quan sát; System.gc() không phải lệnh gỡ nạp.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "9.UnloadingLeaks/UnloadingLeaks.md", anchor: "redeploy-leak"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Hãy trình bày module ClassLoader từ đầu đến cuối: đâu là trục vòng đời chính và đâu là cơ chế chạy song song chứ không phải các giai đoạn tuần tự?
+    answer: >-
+      Trục chính là yêu cầu nạp → ủy quyền/tìm nguồn → một ClassLoader cuối cùng định nghĩa class có tên thông thường → tên nhị phân + ClassLoader định nghĩa tạo định danh kiểu khi chạy → liên kết chuẩn bị kiểu → sử dụng chủ động có thể kích hoạt khởi tạo → về sau đồ thị ClassLoader định nghĩa phải mất khả năng còn được tham chiếu trước khi class có cơ hội được gỡ nạp. TCCL và tìm tài nguyên là cơ chế chạy song song: TCCL cung cấp ngữ cảnh khám phá khi mã ở tầng cha cần nhìn thấy provider ở tầng con, còn API tài nguyên tìm dữ liệu không phải class trong không gian tên ClassLoader nhìn thấy. Không nên chèn hai cơ chế này thành bước bắt buộc giữa liên kết và khởi tạo.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.UnloadingLeaks/UnloadingLeaks.md", anchor: "end-to-end-synthesis"}
     apiRelated: {controller: "", methodSignature: ""}

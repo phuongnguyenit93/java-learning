@@ -1,30 +1,30 @@
-# Class Identity
+# Định danh class qua nhiều ClassLoader
 
-Trong mã nguồn, ta thường nhận diện type bằng tên:
+Trong mã nguồn, ta thường nhận diện kiểu bằng tên:
 
 ```text
 com.example.plugins.PaymentPlugin
 ```
 
-Nhưng Java tại runtime cần thêm một thông tin: **loader nào đã định nghĩa type đó**.
+Nhưng khi chạy, Java cần thêm một thông tin: **ClassLoader nào đã định nghĩa kiểu đó**.
 
-Đây là lý do plugin có thể tách biệt namespace, đồng thời cũng là nguồn của những lỗi rất khó hiểu kiểu:
+Đây là lý do plugin có thể tách biệt không gian tên, đồng thời cũng là nguồn của những lỗi rất khó hiểu kiểu:
 
 ```text
 PaymentPlugin cannot be cast to PaymentPlugin
 ```
 
-Hai cái tên nhìn giống nhau, nhưng JVM đang nói về hai type khác nhau tại runtime.
+Hai cái tên nhìn giống nhau, nhưng JVM đang nói về hai kiểu khác nhau khi chạy.
 
-## <a id="class-identity-rule">Class identity tại runtime = binary name + defining ClassLoader</a>
+## <a id="class-identity-rule">Định danh class khi chạy = tên nhị phân (binary name) + ClassLoader định nghĩa (defining ClassLoader)</a>
 
 Cách hiểu cốt lõi:
 
 ```text
-class identity tại runtime
-= binary name
+định danh class khi chạy
+= tên nhị phân (binary name)
   +
-defining ClassLoader identity
+định danh của ClassLoader định nghĩa
 ```
 
 Ví dụ:
@@ -37,7 +37,7 @@ Ví dụ:
 
 nếu `loaderA != loaderB`.
 
-`Class#getClassLoader()` cho phép quan sát defining loader của một class thông thường:
+`Class#getClassLoader()` cho phép quan sát ClassLoader định nghĩa của một class thông thường:
 
 ```java
 Class<?> type = PaymentPlugin.class;
@@ -46,22 +46,13 @@ System.out.println(type.getName());
 System.out.println(type.getClassLoader());
 ```
 
-Class do bootstrap loader định nghĩa là trường hợp đặc biệt trong cách API biểu diễn vì `getClassLoader()` trả `null`.
+Class do Bootstrap ClassLoader định nghĩa là trường hợp đặc biệt trong cách API biểu diễn vì `getClassLoader()` trả `null`.
 
-### Defining loader và initiating loader
+Chương Parent Delegation đã phân biệt **ClassLoader khởi xướng (initiating)** và **ClassLoader định nghĩa (defining)**. Ở đây chỉ cần giữ điểm phục vụ định danh: một class có một ClassLoader định nghĩa, và chính ClassLoader đó mới tham gia vào quy tắc định danh kiểu khi chạy.
 
-Hai thuật ngữ này không hoàn toàn giống nhau:
+### Ranh giới của quy tắc định danh này
 
-- **defining loader** là loader thực sự định nghĩa class runtime;
-- **initiating loader** là một loader đã khiến class đó được tạo ra thông qua việc load trực tiếp hoặc delegation. Một class có thể có nhiều initiating loaders được JVM ghi nhận, nhưng chỉ có một defining loader.
-
-Ví dụ plugin loader gọi `loadClass("java.lang.String")`, nhưng parent delegation cuối cùng trả `String` do bootstrap loader định nghĩa. Plugin loader có thể được ghi nhận là một initiating loader của `String`, nhưng class identity của `String` tại runtime vẫn gắn với bootstrap defining loader.
-
-Trong phần lớn suy luận về “hai type có giống nhau không”, **defining loader** là phần quan trọng.
-
-### Ranh giới của quy tắc identity này
-
-Quy tắc `binary name + defining ClassLoader` ở trên là mental model chính cho **ordinary named class/interface** mà module này đang học. Một số runtime type đặc biệt không được tạo theo đúng đường `ClassLoader#defineClass` đó:
+Quy tắc `tên nhị phân + ClassLoader định nghĩa` ở trên là mô hình tư duy chính cho **class/interface có tên thông thường** mà module này đang học. Một số kiểu đặc biệt khi chạy không được tạo theo đúng đường `ClassLoader#defineClass` đó:
 
 ```text
 array class
@@ -74,9 +65,9 @@ primitive type / void
 → không có ClassLoader theo nghĩa ordinary class loading
 ```
 
-Không cần đào sâu array/primitive loading ở đây; note này chỉ giúp tránh hiểu quá rộng rằng **mọi** `Class<?>` đều được một custom ClassLoader `defineClass` trực tiếp.
+Không cần đào sâu việc nạp array/primitive ở đây; ghi chú này chỉ giúp tránh hiểu quá rộng rằng **mọi** `Class<?>` đều được một ClassLoader tùy chỉnh gọi `defineClass` trực tiếp.
 
-## <a id="same-name-different-type">Cùng binary name, cùng bytes, vẫn có thể là hai type khác nhau</a>
+## <a id="same-name-different-type">Cùng tên nhị phân (binary name), cùng bytecode, vẫn có thể là hai kiểu khác nhau</a>
 
 Giả sử ta có bytes của:
 
@@ -124,7 +115,7 @@ khác defining loader
 
 Sự tách biệt vì vậy không chỉ là “file nằm ở thư mục khác”. Nó là **namespace khác tại runtime**.
 
-## <a id="class-cast-loader-failure">Vì sao ClassCastException có thể ghi cùng một class name?</a>
+## <a id="class-cast-loader-failure">Vì sao ClassCastException có thể ghi cùng một tên class?</a>
 
 Tiếp tục ví dụ trên:
 
@@ -173,7 +164,7 @@ static void describe(Class<?> type) {
 
 Trong Java 9+, `Class#getModule()` cũng có thể giúp hiểu thêm ranh giới module, nhưng class loader identity vẫn là phần cốt lõi của type identity đang học ở đây.
 
-## <a id="loader-boundary-api">API dùng chung phải đi qua ranh giới loader tương thích</a>
+## <a id="loader-boundary-api">API dùng chung phải đi qua ranh giới ClassLoader tương thích</a>
 
 Hệ thống plugin thường muốn host gọi plugin qua một interface:
 

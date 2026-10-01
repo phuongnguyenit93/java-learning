@@ -7,10 +7,6 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  initialization-trigger:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
   load-vs-initialize:
     difficulty: BASIC
     aiGenerated: true
@@ -34,6 +30,10 @@
     reviewed: false
 3.ParentDelegation/ParentDelegation.md:
   parent-delegation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  initiating-vs-defining-loader:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
@@ -121,7 +121,19 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+  resource-vs-class-loading:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
 8.Initialization/Initialization.md:
+  initialization-trigger:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  constant-no-init:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
   clinit-model:
     difficulty: BASIC
     aiGenerated: true
@@ -135,10 +147,6 @@
     aiGenerated: true
     reviewed: false
   initialization-failure:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-  constant-no-init:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
@@ -160,6 +168,10 @@
     aiGenerated: true
     reviewed: false
   unloading-observation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  end-to-end-synthesis:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false

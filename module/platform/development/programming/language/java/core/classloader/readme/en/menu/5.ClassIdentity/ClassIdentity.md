@@ -1,4 +1,4 @@
-# Class Identity
+# Class Identity Across Loaders
 
 Java source code encourages us to identify a type by its fully qualified name. At runtime that is not enough. Class loaders create separate namespaces, so two classes can have the same binary name and still be different, incompatible runtime types.
 
@@ -20,9 +20,7 @@ If both components are the same, the JVM is referring to the same runtime class 
 (demo.plugins.HelloPlugin, loader B)
 ```
 
-This is why the phrase **defining loader** matters more than merely asking which loader received the original `loadClass` call. A child may receive the request and delegate to its parent. If the parent returns the class, the parent is still the defining loader.
-
-An **initiating loader** is a loader that causes a class to be created through loading, either by defining it directly or by delegation. The JVM can record multiple initiating loaders for the same class, while that class still has exactly one defining loader. For runtime type identity, the defining loader is the crucial part.
+The Parent Delegation chapter established the difference between initiating and defining loader roles. For runtime type identity, the defining ClassLoader is the role that matters here.
 
 You can inspect the relationship directly:
 
