@@ -1,39 +1,15 @@
-BidirectionalTextController:
-  description: |-
-    <h2>Bidirectional Text</h2>
-    <p>Analyze mixed Hebrew/Latin text into directional runs to separate logical content from visual direction and layout.</p>
-  readmeRelated:
-    file: 13.BidirectionalText/BidirectionalText.md
-BundleController:
-  description: |-
-    <h2>ResourceBundle lookup and fallback</h2>
-    <p>Observe the candidate locale chain and the bundle actually selected to distinguish resource lookup from automatic translation.</p>
-  readmeRelated:
-    file: 10.Fallback/Fallback.md
-CollationController:
-  description: |-
-    <h2>Collator and human-facing text order</h2>
-    <p>Compare raw String ordering with a Vietnamese Collator to show that machine lexical order is not the same contract as linguistic order.</p>
-  readmeRelated:
-    file: 8.Collator/Collator.md
-CurrencyController:
-  description: |-
-    <h2>Currency is separate from Locale</h2>
-    <p>Separate currency identity from display locale by rendering explicit currencies under different presentation conventions.</p>
-  readmeRelated:
-    file: 7.Currency/Currency.md
-DateTimeLocalizationController:
-  description: |-
-    <h2>Date-Time Localization</h2>
-    <p>Observe the independent responsibilities of Locale and ZoneId, then compare WeekFields, DecimalStyle, and Unicode locale extensions.</p>
-  readmeRelated:
-    file: 9.DateTimeLocalization/DateTimeLocalization.md
 LocaleController:
   description: |-
     <h2>Locale as localization context</h2>
     <p>Observe language, script, region, and default Locale categories to see that Locale selects conventions rather than representing physical location, time zone, or currency.</p>
   readmeRelated:
     file: 2.Locale/Locale.md
+BundleController:
+  description: |-
+    <h2>ResourceBundle candidate lookup</h2>
+    <p>Observe target-Locale candidates and the bundle actually selected while default-locale fallback is deliberately disabled, keeping candidate generation separate from fallback-Locale policy.</p>
+  readmeRelated:
+    file: 4.ResourceBundle/ResourceBundle.md
 MessageController:
   description: |-
     <h2>Localized messages with MessageFormat</h2>
@@ -46,9 +22,33 @@ NumberLocalizationController:
     <p>Keep the numeric value unchanged while its representation varies by locale, and observe controlled parsing plus compact-number styles.</p>
   readmeRelated:
     file: 6.NumberFormatting/NumberFormatting.md
+CurrencyController:
+  description: |-
+    <h2>Currency is separate from Locale</h2>
+    <p>Separate currency identity from display locale by rendering explicit currencies under different presentation conventions.</p>
+  readmeRelated:
+    file: 7.Currency/Currency.md
+CollationController:
+  description: |-
+    <h2>Collator and human-facing text order</h2>
+    <p>Compare raw String ordering with a Vietnamese Collator to show that machine lexical order is not the same contract as linguistic order.</p>
+  readmeRelated:
+    file: 8.Collator/Collator.md
+DateTimeLocalizationController:
+  description: |-
+    <h2>Date-Time Localization</h2>
+    <p>Observe the independent responsibilities of Locale and ZoneId, then compare WeekFields, DecimalStyle, and Unicode locale extensions.</p>
+  readmeRelated:
+    file: 9.DateTimeLocalization/DateTimeLocalization.md
 TextSegmentationController:
   description: |-
     <h2>BreakIterator and natural-language boundaries</h2>
     <p>Segment the same text by character, word, sentence, and line boundaries instead of assuming char, spaces, or periods are always correct boundaries.</p>
   readmeRelated:
-    file: 12.TextSegmentation/TextSegmentation.md
+    file: 10.TextSegmentation/TextSegmentation.md
+BidirectionalTextController:
+  description: |-
+    <h2>Bidirectional Text</h2>
+    <p>Analyze mixed Hebrew/Latin text into directional runs to separate logical content from visual direction and layout.</p>
+  readmeRelated:
+    file: 11.BidirectionalText/BidirectionalText.md

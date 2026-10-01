@@ -81,19 +81,6 @@ questions:
       methodSignature: "compareLocales()"
 
   - question: >-
-      Why is the default Locale a dangerous hidden dependency in a backend that serves many users?
-    answer: >-
-      The default Locale belongs to the JVM or environment, so identical code can produce different output on a laptop, in CI, in production, or across nodes. It also does not necessarily match the preference of the current request. A backend should pass Locale explicitly when user or request locale is part of the contract, and use the default only when the environment default is itself an intentional policy.
-    aiGenerated: true
-    reviewed: false
-    readmeRelated:
-      file: "2.Locale/Locale.md"
-      anchor: "default-locale"
-    apiRelated:
-      controller: ""
-      methodSignature: ""
-
-  - question: >-
       Why can Locale en and en-US serve some of the same resources while still not being equal?
     answer: >-
       Locale equality is based on identity components such as language, script, region, variant, and extensions; en-US has a region while en does not. ResourceBundle fallback is a separate lookup policy that can move from a specific locale to a more general one. The fact that fallback can reuse a resource does not mean the two Locale objects have the same identity.
@@ -127,10 +114,23 @@ questions:
     reviewed: false
     readmeRelated:
       file: "3.LanguageTags/LanguageTags.md"
-      anchor: "for-language-tag"
+      anchor: "locale-matching"
     apiRelated:
       controller: ""
       methodSignature: ""
+
+  - question: >-
+      What can Unicode locale extensions add to a language tag, and what should they not be confused with?
+    answer: >-
+      Extensions such as u-ca-buddhist or u-nu-thai can carry additional localization preferences, for example a presentation calendar or numbering system, that supporting APIs may interpret. They do not make Locale a container for every business context: transaction Currency, application time-zone policy, and other domain data remain separate concepts. Not every API interprets every extension, so behavior should be tied to the API contract rather than assumed globally.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.LanguageTags/LanguageTags.md"
+      anchor: "locale-extensions"
+    apiRelated:
+      controller: "DateTimeLocalizationController"
+      methodSignature: "weekAndNumberingConventions()"
 
   - question: >-
       Distinguish language-tag syntax validity from application support, and explain when Locale.Builder is more useful than Locale.forLanguageTag.
@@ -161,7 +161,7 @@ questions:
   - question: >-
       Explain the ResourceBundle candidate locale chain and why you should not reproduce it by manually concatenating file names.
     answer: >-
-      ResourceBundle prefers more specific candidates and then moves toward more general ones; for example, en-US may try en_US, then en, then the base bundle, while scripts, variants, or extensions can make the chain more detailed. JDK Control already understands these rules and the fallback policy. Hand-built file-name logic is easy to get wrong and can diverge from the semantics of the standard API.
+      ResourceBundle.Control generates candidate Locales for one target Locale from more specific to more general; for example en-US has candidates en-US, en, then ROOT. Scripts and variants can make the candidate list richer. Locale extensions are removed for candidate generation by the default Control. Choosing another fallback Locale is a separate step, so hand-built file-name logic easily conflates two different mechanisms and diverges from the standard API.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -209,6 +209,19 @@ questions:
     apiRelated:
       controller: "MessageController"
       methodSignature: "format()"
+
+  - question: >-
+      What makes a good translation key, and why should a sentence not be assembled from many small translated fragments?
+    answer: >-
+      A key should be stable around meaning, for example order.created, so its identity remains stable even if English wording changes. A message should provide enough context for translators to control grammar and word order; fragment concatenation locks structure to the source language and makes many languages difficult to translate correctly. When grammar varies substantially, separate complete messages can be clearer than forcing every case into one template.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.MessageFormat/MessageFormat.md"
+      anchor: "translation-key-design"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
 
   - question: >-
       Why is the apostrophe in MessageFormat a production pitfall worth testing?
@@ -343,7 +356,7 @@ questions:
   - question: >-
       What problem does Collator solve that String.compareTo does not, and when should Collator not be used?
     answer: >-
-      String.compareTo provides a deterministic order based on Unicode values, which is appropriate for many keys, protocols, and internal orderings but does not fully represent the alphabetical order readers expect. Collator applies locale-specific linguistic rules to user-visible text. A user Locale should not be used to sort technical identifiers that must have the same order in every environment.
+      String.compareTo compares lexicographically over UTF-16 char code units, which gives a deterministic technical order but does not model the alphabetical order readers expect in every language. Collator applies locale-sensitive linguistic rules to user-visible text. A user Locale should not be used to sort technical identifiers that must keep the same order in every environment.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -376,8 +389,8 @@ questions:
       file: "8.Collator/Collator.md"
       anchor: "sorting-user-text"
     apiRelated:
-      controller: "CollationController"
-      methodSignature: "sort()"
+      controller: ""
+      methodSignature: ""
 
   - question: >-
       Why are localized DateTimeFormatter styles often preferable to hard-coding the same pattern for every locale?
@@ -428,84 +441,6 @@ questions:
       file: "9.DateTimeLocalization/DateTimeLocalization.md"
       anchor: "localized-parsing"
     apiRelated:
-      controller: "DateTimeLocalizationController"
-      methodSignature: "format()"
-
-  - question: >-
-      What does ResourceBundle fallback provide, and why does successful fallback not prove that translations are complete?
-    answer: >-
-      Fallback lets a requested locale use a less specific candidate or base resource when a more specific resource is missing, enabling reuse and avoiding some hard failures. However, the user can receive text from an unintended language or level while the application continues running normally. Translation completeness should be checked through tests or build validation rather than inferred from the absence of lookup exceptions.
-    aiGenerated: true
-    reviewed: false
-    readmeRelated:
-      file: "10.Fallback/Fallback.md"
-      anchor: "bundle-candidate-chain"
-    apiRelated:
-      controller: "BundleController"
-      methodSignature: "resolveBundle()"
-
-  - question: >-
-      Why can default-Locale fallback make the same artifact display different languages in two environments?
-    answer: >-
-      When the target locale has no suitable resource, the default ResourceBundle policy may consult the JVM default Locale before reaching the base bundle. If node A and node B have different defaults, the same requested locale can resolve differently. A system should define its product fallback policy explicitly and can use a no-fallback Control when it needs to remove this environmental dependency.
-    aiGenerated: true
-    reviewed: false
-    readmeRelated:
-      file: "10.Fallback/Fallback.md"
-      anchor: "default-locale-fallback"
-    apiRelated:
-      controller: "BundleController"
-      methodSignature: "resolveBundle()"
-
-  - question: >-
-      How would you handle the base bundle and missing keys so missing translations are not hidden in production?
-    answer: >-
-      The team should decide whether the base bundle is the actual default language or only a minimal technical fallback, then test that strategy consistently. A missing bundle or missing key can lead to MissingResourceException, so build or test checks should compare key sets and catch omissions early. Silently catching the exception and returning the key to the UI without logging or monitoring only turns a deployment defect into a persistent user-facing problem.
-    aiGenerated: true
-    reviewed: false
-    readmeRelated:
-      file: "10.Fallback/Fallback.md"
-      anchor: "missing-resource"
-    apiRelated:
-      controller: "BundleController"
-      methodSignature: "resolveBundle()"
-
-  - question: >-
-      What does the Turkish-I problem demonstrate about calling toLowerCase() or toUpperCase() without a Locale on technical identifiers?
-    answer: >-
-      Case mapping can depend on the default Locale, so the same token can normalize differently across environments; Turkish I and i are the classic example. Human text may require the user's Locale, while protocol keys and technical identifiers often need Locale.ROOT or an explicit contract rule. Lowercasing is also not a universal solution for every kind of case-insensitive comparison.
-    aiGenerated: true
-    reviewed: false
-    readmeRelated:
-      file: "11.LocalePitfalls/LocalePitfalls.md"
-      anchor: "turkish-i"
-    apiRelated:
-      controller: ""
-      methodSignature: ""
-
-  - question: >-
-      Why is formatting localized text and then parsing it back not a safe serialization strategy between services?
-    answer: >-
-      Human-facing formatters can round values, omit fields, use ambiguous separators, or change patterns with locale and runtime data. Even the same formatter does not guarantee a round-trip to the original object when presentation intentionally reduces precision. Machine boundaries should use explicit canonical contracts such as numeric JSON values, currency codes, and ISO temporal formats where appropriate.
-    aiGenerated: true
-    reviewed: false
-    readmeRelated:
-      file: "11.LocalePitfalls/LocalePitfalls.md"
-      anchor: "format-parse-roundtrip"
-    apiRelated:
-      controller: ""
-      methodSignature: ""
-
-  - question: >-
-      What makes a good translation key, and why should a sentence not be assembled from many small translated fragments?
-    answer: >-
-      A key should be stable around meaning, for example order.created, so its identity remains stable even if English wording changes. A message should provide enough context for translators to control grammar and word order; fragment concatenation locks structure to the source language and makes many languages difficult to translate correctly. When grammar varies substantially, separate complete messages can be clearer than forcing every case into one template.
-    aiGenerated: true
-    reviewed: false
-    readmeRelated:
-      file: "11.LocalePitfalls/LocalePitfalls.md"
-      anchor: "translation-key-design"
-    apiRelated:
       controller: ""
       methodSignature: ""
 
@@ -516,7 +451,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "12.TextSegmentation/TextSegmentation.md"
+      file: "10.TextSegmentation/TextSegmentation.md"
       anchor: "breakiterator-model"
     apiRelated:
       controller: "TextSegmentationController"
@@ -529,7 +464,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "12.TextSegmentation/TextSegmentation.md"
+      file: "10.TextSegmentation/TextSegmentation.md"
       anchor: "character-boundary"
     apiRelated:
       controller: "TextSegmentationController"
@@ -542,7 +477,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "12.TextSegmentation/TextSegmentation.md"
+      file: "10.TextSegmentation/TextSegmentation.md"
       anchor: "word-sentence-boundary"
     apiRelated:
       controller: "TextSegmentationController"
@@ -555,7 +490,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "12.TextSegmentation/TextSegmentation.md"
+      file: "10.TextSegmentation/TextSegmentation.md"
       anchor: "breakiterator-boundary"
     apiRelated:
       controller: "TextSegmentationController"
@@ -568,7 +503,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "13.BidirectionalText/BidirectionalText.md"
+      file: "11.BidirectionalText/BidirectionalText.md"
       anchor: "bidi-model"
     apiRelated:
       controller: "BidirectionalTextController"
@@ -577,11 +512,11 @@ questions:
   - question: >-
       What do directional runs and embedding levels help a developer understand about mixed-direction text?
     answer: >-
-      A paragraph can be divided into contiguous runs that share an embedding level or direction, for example an RTL run containing an LTR run for a number or product code before returning to RTL. A single isRtl boolean for the entire string is therefore an oversimplified mental model. java.text.Bidi lets the application inspect base direction, run boundaries, and levels instead of reimplementing the Unicode Bidirectional Algorithm.
+      A paragraph can be divided into adjacent contiguous runs that share an embedding level or direction, for example an RTL run followed by an LTR run for a number or product code and then another RTL run. A single isRtl boolean for the entire string is therefore an oversimplified mental model. java.text.Bidi lets the application inspect base direction, run boundaries, and levels instead of reimplementing the Unicode Bidirectional Algorithm.
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "13.BidirectionalText/BidirectionalText.md"
+      file: "11.BidirectionalText/BidirectionalText.md"
       anchor: "ltr-rtl-runs"
     apiRelated:
       controller: "BidirectionalTextController"
@@ -594,8 +529,99 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "13.BidirectionalText/BidirectionalText.md"
+      file: "11.BidirectionalText/BidirectionalText.md"
       anchor: "bidi-boundary"
     apiRelated:
       controller: "BidirectionalTextController"
       methodSignature: "analyze()"
+
+  - question: >-
+      What does ResourceBundle fallback provide, and why does successful fallback not prove that translations are complete?
+    answer: >-
+      Fallback is the policy for continuing lookup when the preferred Locale path does not resolve an acceptable resource. That can include less-specific candidates and, depending on ResourceBundle.Control, a separate fallback-Locale branch such as the JVM default Locale. The application may still display something while a desired translation is missing, so completeness should be checked through tests or build validation rather than inferred from successful lookup.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "12.Fallback/Fallback.md"
+      anchor: "bundle-candidate-chain"
+    apiRelated:
+      controller: "BundleController"
+      methodSignature: "resolveBundle()"
+
+  - question: >-
+      Why can default-Locale fallback make the same artifact display different languages in two environments?
+    answer: >-
+      When the target locale has no suitable resource, the default ResourceBundle policy may consult the JVM default Locale before reaching the base bundle. If node A and node B have different defaults, the same requested locale can resolve differently. A system should define its product fallback policy explicitly and can use a no-fallback Control when it needs to remove this environmental dependency.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "12.Fallback/Fallback.md"
+      anchor: "default-locale-fallback"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      How would you handle the base bundle and missing keys so missing translations are not hidden in production?
+    answer: >-
+      The team should decide whether the base bundle is the actual default language or only a minimal technical fallback, then test that strategy consistently. A missing bundle or missing key can lead to MissingResourceException, so build or test checks should compare key sets and catch omissions early. Silently catching the exception and returning the key to the UI without logging or monitoring only turns a deployment defect into a persistent user-facing problem.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "12.Fallback/Fallback.md"
+      anchor: "missing-resource"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Why is the default Locale a dangerous hidden dependency in a backend that serves many users?
+    answer: >-
+      The JVM has a general default Locale plus DISPLAY and FORMAT category defaults. APIs do not all consult the same one: String case conversion uses the general default while formatting APIs commonly use FORMAT. These JVM-wide values can differ from the current user/request preference and can vary across environments. A backend should pass Locale explicitly when it is part of the contract and use defaults only as an intentional policy.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "13.LocalePitfalls/LocalePitfalls.md"
+      anchor: "default-locale"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      What does the Turkish-I problem demonstrate about calling toLowerCase() or toUpperCase() without a Locale on technical identifiers?
+    answer: >-
+      Case mapping can depend on the default Locale, so the same token can normalize differently across environments; Turkish I and i are the classic example. Human text may require the user's Locale, while protocol keys and technical identifiers often need Locale.ROOT or an explicit contract rule. Lowercasing is also not a universal solution for every kind of case-insensitive comparison.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "13.LocalePitfalls/LocalePitfalls.md"
+      anchor: "turkish-i"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Why is formatting localized text and then parsing it back not a safe serialization strategy between services?
+    answer: >-
+      Human-facing formatters can round values, omit fields, use ambiguous separators, or change patterns with locale and runtime data. Even the same formatter does not guarantee a round-trip to the original object when presentation intentionally reduces precision. Machine boundaries should use explicit canonical contracts such as numeric JSON values, currency codes, and ISO temporal formats where appropriate.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "13.LocalePitfalls/LocalePitfalls.md"
+      anchor: "format-parse-roundtrip"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Walk through an end-to-end localization decision for a service that has canonical domain values, user-facing output, machine-to-machine contracts, and fallback behavior.
+    answer: >-
+      Start from the canonical domain meaning and keep values such as numbers, currency identity, instants, and identifiers independent from display text. Decide whether each boundary is human-facing or machine-facing. At human-facing boundaries choose Locale explicitly, keep ZoneId and Currency as separate context, then use ResourceBundle/MessageFormat, NumberFormat, DateTimeFormatter, Collator, BreakIterator, or Bidi only for the presentation problem they own. Make fallback and default-Locale policy intentional and observable. Machine contracts should use stable explicit representations instead of localized display strings.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "13.LocalePitfalls/LocalePitfalls.md"
+      anchor: "localization-synthesis"
+    apiRelated:
+      controller: ""
+      methodSignature: ""

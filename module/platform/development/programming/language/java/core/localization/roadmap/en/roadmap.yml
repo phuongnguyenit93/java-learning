@@ -45,30 +45,45 @@ roadmap:
   - id: localization-model
     title: Localization Mental Model
     purpose: Understand localization as adapting presentation and language conventions without changing the underlying domain meaning.
+    relatedKnowledge:
+      - MentalModel
     objectives:
+      - Distinguish internationalization from localization and understand why software needs to separate those responsibilities.
       - Separate domain values from locale-specific text/number/date presentation.
-      - Recognize internationalization design as a data/resource boundary problem.
+      - Recognize the problems caused by hard-coding language and presentation rules into domain logic as an application adds locales.
   - id: locale-and-language-tags
     title: Locale and Language Tags
-    purpose: Understand what Locale identifies and how BCP 47-style language tags carry language/region/script information across systems.
+    purpose: Understand what Locale identifies and how BCP 47-style language tags carry language, script, region, and selected localization preferences across systems.
+    relatedKnowledge:
+      - Locale
+      - LanguageTags
     objectives:
       - Create and compare locale identities intentionally.
       - Avoid treating language, region, script, and timezone as the same concept.
+      - Understand how requested language preferences are matched against the locales an application actually supports.
+      - Recognize that language tags can carry extensions used by localized services, while Locale is still distinct from time zone, currency, and domain data.
   - id: resource-bundles-and-fallback
-    title: ResourceBundle and Fallback
-    purpose: Understand localized resource lookup, bundle naming, candidate selection, and fallback behavior.
+    title: ResourceBundle and Localized Resources
+    purpose: Understand how Java organizes and locates localized resources for a Locale through bundle naming conventions and candidate-locale selection.
+    relatedKnowledge:
+      - ResourceBundle
     objectives:
       - Organize localized resources without duplicating domain logic.
-      - Predict what happens when an exact locale resource is missing.
+      - Understand bundle naming and the candidate-locale sequence ResourceBundle uses to locate a matching bundle.
   - id: localized-messages
     title: Parameterized Localized Messages
     purpose: Understand MessageFormat as a locale-aware way to compose parameterized messages without manual concatenation.
+    relatedKnowledge:
+      - MessageFormat
     objectives:
       - Keep translatable message structure in resources rather than code.
       - Handle quoting and argument formatting intentionally.
   - id: numbers-and-currency
     title: Locale-Sensitive Numbers and Currency
     purpose: Understand the difference between numeric/currency domain values and how those values are formatted or parsed for a locale.
+    relatedKnowledge:
+      - NumberFormatting
+      - Currency
     relatedModules:
       - routeId: JAVA_NUMBERS
         label: Numbers
@@ -79,6 +94,8 @@ roadmap:
   - id: collation-and-text-order
     title: Locale-Sensitive Collation
     purpose: Understand why user-facing text order depends on locale rules rather than raw Unicode/String natural order.
+    relatedKnowledge:
+      - Collator
     relatedModules:
       - routeId: JAVA_STRING
         label: String
@@ -87,24 +104,42 @@ roadmap:
       - Use Collator when linguistic ordering matters.
       - Reason about collation strength and decomposition without changing string identity.
   - id: date-time-localization
-    title: Locale-Sensitive Date-Time Presentation
-    purpose: Understand localization of temporal presentation while keeping Locale separate from ZoneId and timeline semantics.
+    title: Locale-Sensitive Date-Time Localization
+    purpose: Understand how Locale affects date-time formatting, parsing, and presentation conventions while ZoneId and temporal meaning remain owned by the Date-Time model.
+    relatedKnowledge:
+      - DateTimeLocalization
     relatedModules:
       - routeId: JAVA_DATE_TIME
         label: Date-Time
         note: Date-Time owns temporal meaning, zones, and arithmetic; Localization owns presentation conventions.
     objectives:
-      - Format dates/times using locale conventions without changing the temporal value.
+      - Format and parse dates/times using locale conventions without changing the temporal value.
       - Keep timezone decisions owned by the date-time model.
+      - Recognize locale-sensitive conventions such as date-field order, week rules, numbering systems, and display calendars.
   - id: text-segmentation-and-bidi
     title: Text Segmentation and Bidirectional Text
     purpose: Understand why natural-language boundaries and visual order can differ from code-unit indexes, spaces, and logical storage order.
+    relatedKnowledge:
+      - TextSegmentation
+      - BidirectionalText
+    relatedModules:
+      - routeId: JAVA_STRING
+        label: String
+        note: The Unicode, code-unit, code-point, and grapheme model from String is foundational for understanding text boundaries and logical-versus-visual ordering.
     objectives:
-      - Recognize word/sentence/grapheme segmentation as locale-sensitive.
-      - Understand the logical-versus-visual order boundary in mixed LTR/RTL text.
+      - Recognize that user-perceived character boundaries require Unicode-aware handling while word, sentence, and line boundaries can be language- or locale-sensitive.
+      - Use BreakIterator when text boundaries must be identified instead of naively splitting by indexes, spaces, or punctuation.
+      - Understand that Bidi analyzes logical order and directional runs while actual rendering and layout remain the responsibility of the presentation layer.
   - id: locale-defaults-and-synthesis
-    title: Defaults, Fallbacks, and Localization Synthesis
-    purpose: Connect locale identity, resources, formatting, collation, temporal presentation, and text behavior while avoiding hidden system-default assumptions.
+    title: Fallback, Default Locale, Common Pitfalls, and Localization Synthesis
+    purpose: Understand how ResourceBundle behaves when an exact localized resource is missing, then connect the pieces of localization into one model while avoiding implicit default-locale dependencies or formatted data crossing the wrong boundary.
+    relatedKnowledge:
+      - Locale
+      - Fallback
+      - LocalePitfalls
     objectives:
+      - Predict fallback resolution and recognize when it is a useful safety net versus when it hides missing localized resources.
       - Make locale choice explicit at application boundaries.
-      - Recognize when fallback is useful versus when it hides missing localization data.
+      - Distinguish FORMAT and DISPLAY default Locale categories and understand why implicit environment defaults can change behavior across machines.
+      - Avoid locale-sensitive behavior for identifiers, protocols, or machine-stable data representations.
+      - Synthesize how to choose locale, resources, and presentation APIs without changing domain meaning.

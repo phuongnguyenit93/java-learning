@@ -175,14 +175,16 @@ boolean valid = number != null
         && pos.getErrorIndex() < 0;
 ```
 
-For decimal domain values, `DecimalFormat` can parse to `BigDecimal`:
+When the actual implementation is `DecimalFormat`, decimal domain values can be parsed to `BigDecimal`:
 
 ```java
-DecimalFormat decimal = (DecimalFormat) NumberFormat.getNumberInstance(locale);
-decimal.setParseBigDecimal(true);
+NumberFormat numberFormat = NumberFormat.getNumberInstance(locale);
+if (numberFormat instanceof DecimalFormat decimal) {
+    decimal.setParseBigDecimal(true);
+}
 ```
 
-This avoids introducing binary floating-point approximation merely because the value passed through a UI parser.
+`NumberFormat.getNumberInstance(...)` returns the abstract `NumberFormat` type, so code should not assume every provider must return `DecimalFormat`. When it is a `DecimalFormat`, enabling `setParseBigDecimal(true)` avoids introducing binary floating-point approximation merely because the value passed through a UI parser.
 
 ## <a id="formatting-vs-domain-value">Formatting Must Not Change Domain Meaning</a>
 

@@ -108,9 +108,9 @@ BreakIterator sentences = BreakIterator.getSentenceInstance(locale);
 sentences.setText(text);
 ```
 
-finds sentence boundaries without hard-coding `split(".")`.
+finds sentence boundaries without hard-coding literal-period splitting such as `split("\\.")`.
 
-Why are `split(" ")` and `split(".")` weak models?
+Why are `split(" ")` and even literal-period splitting with `split("\\.")` weak models?
 
 ```text
 spaces are not a universal word delimiter

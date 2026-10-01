@@ -45,6 +45,11 @@ public class CurrencyController {
     private String format(BigDecimal amount, Currency currency, Locale locale) {
         NumberFormat format = NumberFormat.getCurrencyInstance(locale);
         format.setCurrency(currency);
+        int fractionDigits = currency.getDefaultFractionDigits();
+        if (fractionDigits >= 0) {
+            format.setMinimumFractionDigits(fractionDigits);
+            format.setMaximumFractionDigits(fractionDigits);
+        }
         return format.format(amount);
     }
 }

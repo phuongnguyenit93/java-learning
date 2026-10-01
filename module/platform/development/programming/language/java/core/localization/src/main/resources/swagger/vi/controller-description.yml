@@ -1,54 +1,54 @@
-BidirectionalTextController:
-  description: |-
-    <h2>Bidirectional Text</h2>
-    <p>Phân tích mixed Hebrew/Latin text thành directional runs để tách logical content khỏi visual direction/layout.</p>
-  readmeRelated:
-    file: 13.BidirectionalText/BidirectionalText.md
-BundleController:
-  description: |-
-    <h2>ResourceBundle và fallback</h2>
-    <p>Quan sát candidate locale chain và bundle thực tế được chọn để hiểu resource lookup khác với dịch tự động như thế nào.</p>
-  readmeRelated:
-    file: 10.Fallback/Fallback.md
-CollationController:
-  description: |-
-    <h2>Collator và thứ tự text dành cho người dùng</h2>
-    <p>So sánh raw String order với Vietnamese Collator để thấy lexical machine order không đồng nghĩa linguistic order.</p>
-  readmeRelated:
-    file: 8.Collator/Collator.md
-CurrencyController:
-  description: |-
-    <h2>Currency khác Locale</h2>
-    <p>Tách currency identity khỏi display locale bằng cách format cùng amount/currency dưới các convention khác nhau.</p>
-  readmeRelated:
-    file: 7.Currency/Currency.md
-DateTimeLocalizationController:
-  description: |-
-    <h2>Date-Time Localization</h2>
-    <p>Quan sát Locale và ZoneId có trách nhiệm độc lập, sau đó so sánh WeekFields, DecimalStyle và Unicode locale extensions.</p>
-  readmeRelated:
-    file: 9.DateTimeLocalization/DateTimeLocalization.md
 LocaleController:
   description: |-
-    <h2>Locale như context của localization</h2>
-    <p>Quan sát language, script, region và các default Locale category để thấy Locale mô tả convention cần áp dụng chứ không phải vị trí vật lý, múi giờ hay tiền tệ.</p>
+    <h2>Locale như ngữ cảnh bản địa hóa</h2>
+    <p>Quan sát ngôn ngữ, hệ chữ, vùng và các nhóm Locale mặc định để thấy Locale chọn quy ước cần áp dụng chứ không đại diện cho vị trí vật lý, múi giờ hay tiền tệ.</p>
   readmeRelated:
     file: 2.Locale/Locale.md
+BundleController:
+  description: |-
+    <h2>Chuỗi Locale ứng viên của ResourceBundle</h2>
+    <p>Quan sát các Locale ứng viên và gói tài nguyên thực tế được chọn khi dự phòng qua Locale mặc định bị tắt, qua đó tách rõ việc tạo ứng viên khỏi chính sách chọn Locale dự phòng.</p>
+  readmeRelated:
+    file: 4.ResourceBundle/ResourceBundle.md
 MessageController:
   description: |-
-    <h2>Localized message với MessageFormat</h2>
-    <p>Kết hợp ResourceBundle và MessageFormat để cùng dữ liệu động được đưa vào pattern tiếng Việt và tiếng Anh mà không nối fragment thủ công.</p>
+    <h2>Thông điệp bản địa hóa với MessageFormat</h2>
+    <p>Kết hợp ResourceBundle và MessageFormat để cùng dữ liệu động được đưa vào mẫu câu tiếng Việt và tiếng Anh mà không phải nối các mảnh câu thủ công.</p>
   readmeRelated:
     file: 5.MessageFormat/MessageFormat.md
 NumberLocalizationController:
   description: |-
-    <h2>Number formatting và parsing theo Locale</h2>
-    <p>Giữ nguyên numeric value nhưng thay representation theo locale, đồng thời quan sát compact number style và round-trip parsing có kiểm soát.</p>
+    <h2>Định dạng và phân tích số theo Locale</h2>
+    <p>Giữ nguyên giá trị số nhưng thay đổi cách biểu diễn theo Locale, đồng thời quan sát dạng số rút gọn và quy trình định dạng rồi phân tích ngược có kiểm soát.</p>
   readmeRelated:
     file: 6.NumberFormatting/NumberFormatting.md
+CurrencyController:
+  description: |-
+    <h2>Currency độc lập với Locale</h2>
+    <p>Tách định danh tiền tệ khỏi Locale hiển thị bằng cách định dạng các Currency tường minh theo những quy ước trình bày khác nhau.</p>
+  readmeRelated:
+    file: 7.Currency/Currency.md
+CollationController:
+  description: |-
+    <h2>Collator và thứ tự văn bản dành cho người dùng</h2>
+    <p>So sánh thứ tự String thô với Collator tiếng Việt để thấy thứ tự kỹ thuật của máy không đồng nghĩa với thứ tự ngôn ngữ.</p>
+  readmeRelated:
+    file: 8.Collator/Collator.md
+DateTimeLocalizationController:
+  description: |-
+    <h2>Bản địa hóa ngày giờ</h2>
+    <p>Quan sát Locale và ZoneId có trách nhiệm độc lập, sau đó so sánh WeekFields, DecimalStyle và các phần mở rộng Unicode của Locale.</p>
+  readmeRelated:
+    file: 9.DateTimeLocalization/DateTimeLocalization.md
 TextSegmentationController:
   description: |-
-    <h2>BreakIterator và natural-language boundaries</h2>
-    <p>Phân đoạn cùng text theo character, word, sentence và line boundary thay vì giả định char/space/dấu chấm luôn là ranh giới đúng.</p>
+    <h2>BreakIterator và ranh giới ngôn ngữ tự nhiên</h2>
+    <p>Phân đoạn cùng một văn bản theo ranh giới ký tự, từ, câu và dòng thay vì giả định char, khoảng trắng hay dấu chấm luôn là ranh giới đúng.</p>
   readmeRelated:
-    file: 12.TextSegmentation/TextSegmentation.md
+    file: 10.TextSegmentation/TextSegmentation.md
+BidirectionalTextController:
+  description: |-
+    <h2>Văn bản hai chiều</h2>
+    <p>Phân tích văn bản trộn tiếng Do Thái/chữ Latin thành các đoạn hướng để tách nội dung theo thứ tự logic khỏi hướng và bố cục hiển thị.</p>
+  readmeRelated:
+    file: 11.BidirectionalText/BidirectionalText.md

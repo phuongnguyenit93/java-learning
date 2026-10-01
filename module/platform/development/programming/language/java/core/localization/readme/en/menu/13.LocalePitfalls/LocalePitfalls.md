@@ -2,6 +2,49 @@
 
 After learning each localization API individually, the most important practical skill is recognizing **where locale-sensitive behavior should not happen implicitly**. Many localization bugs are boundary mistakes: code fails to distinguish human-facing text from machine-facing data.
 
+## <a id="default-locale">Default Locale and FORMAT/DISPLAY Categories</a>
+
+The JVM has a default locale:
+
+```java
+Locale current = Locale.getDefault();
+```
+
+That is convenient for local desktop-style applications, but in a multi-user backend it can become a **hidden environmental dependency**.
+
+Java exposes two important categories:
+
+```text
+Locale.Category.DISPLAY
+→ locale used when displaying locale/language/country names
+
+Locale.Category.FORMAT
+→ locale used by formatting operations
+```
+
+```java
+Locale displayLocale = Locale.getDefault(Locale.Category.DISPLAY);
+Locale formatLocale = Locale.getDefault(Locale.Category.FORMAT);
+```
+
+The default can be changed:
+
+```java
+Locale.setDefault(Locale.Category.FORMAT, Locale.US);
+```
+
+but this changes JVM-wide state and can affect unrelated code. Request-based servers are usually safer when they pass the user locale explicitly:
+
+```java
+NumberFormat format = NumberFormat.getNumberInstance(userLocale);
+```
+
+rather than silently relying on:
+
+```java
+NumberFormat format = NumberFormat.getNumberInstance();
+```
+
 ## <a id="turkish-i">Case Conversion and the Turkish-I Problem</a>
 
 Calls such as:
@@ -46,7 +89,7 @@ DateTimeFormatter formatter = DateTimeFormatter
         .ofLocalizedDate(FormatStyle.SHORT);
 ```
 
-but without explicit locale context their behavior can depend on the JVM environment or default locale category.
+but they do **not all consult the same default**. `String.toLowerCase()` uses the JVM's general default Locale, while formatting APIs such as `NumberFormat` and localized `DateTimeFormatter` use the `FORMAT` default category. The common risk is the same: behavior is being driven by implicit JVM-wide state instead of an explicit application/user Locale.
 
 That creates failures such as:
 
@@ -68,16 +111,20 @@ The default locale should be an **intentional fallback policy**, not an invisibl
 Tests can deliberately vary the default locale to expose accidental dependencies:
 
 ```java
-Locale previous = Locale.getDefault();
+Locale previousGeneral = Locale.getDefault();
+Locale previousDisplay = Locale.getDefault(Locale.Category.DISPLAY);
+Locale previousFormat = Locale.getDefault(Locale.Category.FORMAT);
 try {
     Locale.setDefault(Locale.forLanguageTag("tr-TR"));
     // run a focused test
 } finally {
-    Locale.setDefault(previous);
+    Locale.setDefault(previousGeneral);
+    Locale.setDefault(Locale.Category.DISPLAY, previousDisplay);
+    Locale.setDefault(Locale.Category.FORMAT, previousFormat);
 }
 ```
 
-Because changing the default locale mutates JVM-wide state, parallel tests can interfere with each other. Isolate such tests or prefer code whose locale dependency is explicit.
+`Locale.setDefault(Locale)` updates the JVM-wide general default and both category defaults, so a test that changes it must restore all three values if they may have differed beforehand. Because this is global mutable state, parallel tests can still interfere with each other; isolate such tests or prefer code whose locale dependency is explicit.
 
 ## <a id="format-parse-roundtrip">Localized Formatting Is Not Stable Machine Serialization</a>
 
@@ -111,43 +158,6 @@ human boundary
 
 Even formatting and parsing with the same formatter does not guarantee preservation of the original object if the presentation intentionally drops precision or information.
 
-## <a id="translation-key-design">Stable Translation Keys and Complete Messages</a>
-
-Translation keys should be stable semantic identifiers rather than copies of the current English wording.
-
-Prefer:
-
-```properties
-order.created=Order {0} was created.
-order.cancelled=Order {0} was cancelled.
-```
-
-over a key whose identity is tied to one sentence spelling:
-
-```properties
-Order_was_created=Order was created
-```
-
-If the English wording changes later, `order.created` still represents the same application meaning.
-
-### Do not build translatable sentences from fragments
-
-Avoid:
-
-```text
-"Order " + id + " was " + statusText
-```
-
-because the translator cannot rearrange the full sentence naturally.
-
-Prefer a complete parameterized resource:
-
-```properties
-order.status=Order {0} is {1}.
-```
-
-If different statuses require materially different grammar across languages, separate semantic message keys can be better than forcing every language into one English-shaped template.
-
 ### Localization review checklist
 
 ```text
@@ -162,6 +172,33 @@ If different statuses require materially different grammar across languages, sep
 [ ] Does user-visible sorting need a Collator?
 [ ] Is Java collation incorrectly assumed to match database collation?
 ```
+
+## <a id="localization-synthesis">Synthesis: Choose the Localization Boundary First</a>
+
+After learning the individual APIs, decision-making should return to one end-to-end flow instead of starting from class names:
+
+```text
+1. Identify the canonical domain meaning
+   → number, currency, instant, status, identifier, ...
+        ↓
+2. Decide whether the boundary is human-facing or machine-stable
+        ↓
+3. For human-facing output/input, choose Locale explicitly
+   → user preference / request negotiation / product policy
+        ↓
+4. Choose the mechanism that owns the presentation problem
+   → ResourceBundle / MessageFormat
+   → NumberFormat / Currency
+   → DateTimeFormatter + ZoneId
+   → Collator / BreakIterator / Bidi when text behavior requires them
+        ↓
+5. Make fallback and default-Locale policy observable and intentional
+        ↓
+6. Keep machine-facing representations stable and locale-neutral
+   → do not persist localized strings as domain values, identifiers, or protocol formats
+```
+
+When one step is unclear, the underlying problem is usually an **ownership/boundary decision**, not a missing formatter.
 
 If one principle should remain after this module, it is this:
 

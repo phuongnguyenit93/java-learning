@@ -41,7 +41,10 @@ public class NumberLocalizationController {
     }
 
     private Map<String, Object> formatAndParse(BigDecimal value, Locale locale) {
-        DecimalFormat format = (DecimalFormat) NumberFormat.getNumberInstance(locale);
+        NumberFormat numberFormat = NumberFormat.getNumberInstance(locale);
+        if (!(numberFormat instanceof DecimalFormat format)) {
+            throw new IllegalStateException("This demo requires a DecimalFormat-capable NumberFormat provider");
+        }
         format.setGroupingUsed(true);
         format.setMinimumFractionDigits(2);
         format.setMaximumFractionDigits(2);

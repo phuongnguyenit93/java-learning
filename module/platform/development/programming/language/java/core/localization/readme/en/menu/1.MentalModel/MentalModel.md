@@ -1,4 +1,18 @@
-# Localization and Internationalization Mental Model
+# Localization Mental Model
+
+## <a id="i18n-vs-l10n">What Are Internationalization and Localization?</a>
+
+Before looking at APIs or implementation details, separate the two related concepts:
+
+- **internationalization (i18n)** means designing software so it can support different languages, regions, and presentation conventions without rewriting the business logic;
+- **localization (l10n)** means supplying or selecting the concrete language and conventions for a particular locale, such as Vietnamese messages or US number formatting.
+
+The abbreviations count the letters between the first and last characters:
+
+```text
+internationalization → i18n
+localization          → l10n
+```
 
 Software can be correct at the business level and still present information incorrectly to users in different languages and regions.
 
@@ -28,21 +42,7 @@ en-US
 → "Order created"
 ```
 
-That is the problem space of internationalization and localization.
-
-## <a id="i18n-vs-l10n">What Are Internationalization and Localization?</a>
-
-The two terms are related but not identical:
-
-- **internationalization (i18n)** means designing software so it can support different languages, regions, and presentation conventions without rewriting the business logic;
-- **localization (l10n)** means supplying or selecting the concrete language and conventions for a particular locale, such as Vietnamese messages or US number formatting.
-
-The abbreviations count the letters between the first and last characters:
-
-```text
-internationalization → i18n
-localization          → l10n
-```
+This example shows the central boundary: domain meaning can stay stable while human presentation changes with Locale.
 
 ### What goes wrong without internationalization?
 
@@ -119,11 +119,11 @@ Beginners often meet individual classes without seeing how they fit together. A 
 6. NumberFormat / DecimalFormat / Currency
 → presents numbers, percentages and money
 
-7. DateTimeFormatter + ZoneId
-→ presents date/time while keeping locale and time-zone responsibilities separate
-
-8. Collator
+7. Collator
 → compares and orders human text using language-sensitive rules
+
+8. DateTimeFormatter + ZoneId
+→ presents date/time while keeping locale and time-zone responsibilities separate
 
 9. BreakIterator
 → finds character/word/sentence/line boundaries in natural-language text
@@ -229,44 +229,35 @@ String key = input.toLowerCase(Locale.ROOT);
 
 ### Module roadmap
 
-The rest of the module follows this path:
+The detailed Knowledge chapters expand the nine approved roadmap milestones as follows:
 
 ```text
-separate domain meaning from presentation
+1. Localization Mental Model
+→ separate internationalization/localization concerns and keep domain values presentation-neutral
         ↓
-Locale
-→ language / script / region context
+2. Locale and Language Tags
+→ model locale context, exchange BCP 47 tags, and select a supported locale
         ↓
-Language Tag
-→ interoperable textual locale representation
+3. ResourceBundle and Localized Resources
+→ organize and locate resources for a Locale
         ↓
-ResourceBundle
-→ localized resource lookup
+4. Parameterized Localized Messages
+→ use MessageFormat while keeping translated sentence structure in resources
         ↓
-MessageFormat
-→ parameterized localized messages
+5. Locale-Sensitive Numbers and Currency
+→ format/parse numbers while keeping currency identity separate from Locale
         ↓
-NumberFormat / DecimalFormat
-→ numbers and percentages
+6. Locale-Sensitive Collation
+→ compare and order user-facing text with language-sensitive rules
         ↓
-Currency
-→ monetary unit plus locale-sensitive display
+7. Locale-Sensitive Date-Time Localization
+→ format/parse date-time conventions without conflating Locale with ZoneId
         ↓
-Collator
-→ user-facing text ordering
+8. Text Segmentation and Bidirectional Text
+→ use BreakIterator for text boundaries and Bidi for logical/directional analysis
         ↓
-DateTimeFormatter + Locale
-→ localized date/time presentation
-        ↓
-ResourceBundle fallback
-        ↓
-default-locale and serialization pitfalls
-        ↓
-BreakIterator
-→ character / word / sentence / line boundaries
-        ↓
-Bidi
-→ logical order vs visual order for LTR / RTL text
+9. Fallback, Default Locale, Common Pitfalls, and Localization Synthesis
+→ understand fallback/default behavior and keep machine-stable data independent from presentation localization
 ```
 
 The goal is not to memorize classes from `java.util` and `java.text`. The goal is to recognize **which values must remain locale-neutral, which boundaries are human-facing, and which Java API belongs at each presentation step**.

@@ -1,153 +1,161 @@
 LocaleController:
   compareLocales():
     execution: |-
-      <p><strong>Khái niệm:</strong> <code>Locale</code> là context ngôn ngữ/vùng dùng bởi các API localization; nó không phải vị trí vật lý, múi giờ hay tiền tệ.</p>
+      <p><strong>Khái niệm:</strong> <code>Locale</code> là ngữ cảnh ngôn ngữ và văn hóa được các API bản địa hóa sử dụng; nó không phải vị trí vật lý, múi giờ hay tiền tệ.</p>
       <ol>
-        <li><strong>Flow:</strong> endpoint tạo <code>vi-VN</code>, <code>en-US</code>, <code>zh-Hant-TW</code>, tách language/script/region và đọc default DISPLAY/FORMAT locale.</li>
-        <li><strong>Code evidence:</strong><pre><code>Locale.forLanguageTag("zh-Hant-TW");
+        <li><strong>Luồng:</strong> tạo <code>vi-VN</code>, <code>en-US</code>, <code>zh-Hant-TW</code>, tách ngôn ngữ, hệ chữ, vùng rồi đọc Locale mặc định của hai nhóm DISPLAY/FORMAT.</li>
+        <li><strong>Bằng chứng mã nguồn:</strong><pre><code>Locale.forLanguageTag("zh-Hant-TW");
       Locale.getDefault(Locale.Category.DISPLAY);
       Locale.getDefault(Locale.Category.FORMAT);</code></pre></li>
-        <li><strong>Observation:</strong> <code>zh-Hant-TW</code> có language <code>zh</code>, script <code>Hant</code>, region <code>TW</code>; default categories là state riêng của JVM.</li>
-        <li><strong>Ý nghĩa:</strong> Locale chỉ cung cấp context để formatter, bundle hoặc collator chọn convention phù hợp.</li>
+        <li><strong>Quan sát:</strong> <code>zh-Hant-TW</code> có ngôn ngữ <code>zh</code>, hệ chữ <code>Hant</code>, vùng <code>TW</code>; Locale mặc định của từng nhóm là trạng thái của JVM.</li>
+        <li><strong>Ý nghĩa:</strong> Locale cung cấp ngữ cảnh để bộ định dạng, ResourceBundle và Collator chọn quy ước phù hợp.</li>
       </ol>
-      <p><strong>Kết luận:</strong> model Locale explicit ở user-facing boundary; không suy ra ZoneId/Currency/location từ nó.</p>
+      <p><strong>Kết luận:</strong> mô hình hóa Locale tường minh tại các ranh giới hiển thị cho người dùng; không suy ra ZoneId, Currency hay vị trí vật lý từ nó.</p>
     usage: true
 BundleController:
   resolveBundle():
     execution: |-
-      <p><strong>Khái niệm:</strong> <code>ResourceBundle</code> lookup resource đã chuẩn bị sẵn qua candidate chain; nó không tự dịch nội dung.</p>
+      <p><strong>Khái niệm:</strong> <code>ResourceBundle</code> tra cứu tài nguyên đã soạn sẵn theo chuỗi Locale ứng viên; nó không tự dịch nội dung.</p>
       <ol>
-        <li><strong>Flow:</strong> endpoint resolve <code>vi-VN</code>, <code>en-GB</code>, <code>fr-FR</code> với default-locale fallback bị tắt.</li>
-        <li><strong>Code evidence:</strong><pre><code>ResourceBundle.Control control =
+        <li><strong>Luồng:</strong> phân giải <code>vi-VN</code>, <code>en-GB</code>, <code>fr-FR</code> trong khi cố ý tắt nhánh dự phòng qua Locale mặc định.</li>
+        <li><strong>Bằng chứng mã nguồn:</strong><pre><code>ResourceBundle.Control control =
       ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_PROPERTIES);
       ResourceBundle.getBundle("i18n.messages", locale, control);</code></pre></li>
-        <li><strong>Observation:</strong> vi-VN chọn bundle cụ thể, en-GB rơi về en, còn fr-FR rơi về ROOT/base bundle.</li>
-        <li><strong>Ý nghĩa:</strong> candidate locale và base bundle tạo reuse có kiểm soát; default JVM locale không cần trở thành hidden dependency.</li>
+        <li><strong>Quan sát:</strong> vi-VN chọn gói tài nguyên cụ thể, en-GB phân giải qua ứng viên en, còn fr-FR đi hết chuỗi ứng viên của Locale đích và chọn ROOT/gói tài nguyên gốc.</li>
+        <li><strong>Ý nghĩa:</strong> chuỗi Locale ứng viên và gói tài nguyên gốc cho phép tái sử dụng có kiểm soát mà không biến Locale mặc định của JVM thành phụ thuộc ẩn.</li>
       </ol>
-      <p><strong>Kết luận:</strong> thiết kế bundle family và fallback policy có chủ đích, đồng thời test missing translation trước production.</p>
+      <p><strong>Kết luận:</strong> thiết kế họ ResourceBundle và chính sách dự phòng có chủ đích, đồng thời kiểm tra bản dịch còn thiếu trước khi đưa vào môi trường vận hành.</p>
     usage: true
 MessageController:
   format():
     execution: |-
-      <p><strong>Khái niệm:</strong> <code>ResourceBundle</code> sở hữu translated pattern còn <code>MessageFormat</code> chèn argument theo Locale.</p>
+      <p><strong>Khái niệm:</strong> <code>ResourceBundle</code> chứa mẫu câu đã dịch, còn <code>MessageFormat</code> chèn các đối số theo Locale.</p>
       <ol>
-        <li><strong>Flow:</strong> load key <code>order.created</code> cho vi-VN và en-US rồi format cùng order id <code>1001</code> và customer <code>An</code>.</li>
-        <li><strong>Code evidence:</strong><pre><code>String pattern = bundle.getString("order.created");
+        <li><strong>Luồng:</strong> nạp khóa <code>order.created</code> cho vi-VN và en-US rồi định dạng cùng mã đơn hàng <code>1001</code> và khách hàng <code>An</code>.</li>
+        <li><strong>Bằng chứng mã nguồn:</strong><pre><code>String pattern = bundle.getString("order.created");
       MessageFormat formatter = new MessageFormat(pattern, locale);
       formatter.format(new Object[]{1001L, "An"});</code></pre></li>
-        <li><strong>Observation:</strong> argument giữ nguyên nhưng vị trí/từ ngữ của câu thay đổi theo pattern đã dịch.</li>
-        <li><strong>Ý nghĩa:</strong> translator kiểm soát cấu trúc toàn câu thay vì developer ghép các fragment English-shaped.</li>
+        <li><strong>Quan sát:</strong> các đối số giữ nguyên nhưng từ ngữ và vị trí của chúng thay đổi theo mẫu câu đã dịch.</li>
+        <li><strong>Ý nghĩa:</strong> người dịch kiểm soát cấu trúc toàn câu thay vì lập trình viên ghép các mảnh câu theo cấu trúc tiếng Anh.</li>
       </ol>
-      <p><strong>Kết luận:</strong> dùng stable message key + complete localized pattern + explicit Locale cho message có tham số.</p>
+      <p><strong>Kết luận:</strong> dùng khóa thông điệp ổn định, mẫu câu bản địa hóa đầy đủ và Locale tường minh cho thông điệp có tham số.</p>
     usage: true
 NumberLocalizationController:
   formatAndParse():
     execution: |-
-      <p><strong>Khái niệm:</strong> numeric domain value và human-readable number text là hai representation khác nhau.</p>
+      <p><strong>Khái niệm:</strong> giá trị số nghiệp vụ và văn bản số dành cho người đọc là hai dạng biểu diễn khác nhau.</p>
       <ol>
-        <li><strong>Flow:</strong> giữ <code>BigDecimal("1234567.89")</code>, format theo vi-VN/en-US, parse lại và kiểm tra parser consume toàn bộ text.</li>
-        <li><strong>Code evidence:</strong><pre><code>DecimalFormat format = (DecimalFormat) NumberFormat.getNumberInstance(locale);
+        <li><strong>Luồng:</strong> giữ <code>BigDecimal("1234567.89")</code>, định dạng theo vi-VN/en-US, phân tích lại và kiểm tra bộ phân tích đã đọc hết đầu vào.</li>
+        <li><strong>Bằng chứng mã nguồn:</strong><pre><code>NumberFormat numberFormat = NumberFormat.getNumberInstance(locale);
+      if (!(numberFormat instanceof DecimalFormat format)) {
+          throw new IllegalStateException("This demo requires DecimalFormat");
+      }
       format.setParseBigDecimal(true);
       Number parsed = format.parse(text, position);</code></pre></li>
-        <li><strong>Observation:</strong> separators thay đổi theo locale nhưng parsed numeric meaning quay về cùng giá trị.</li>
-        <li><strong>Ý nghĩa:</strong> server không nên format/parse user input bằng một default locale không rõ nguồn gốc.</li>
+        <li><strong>Quan sát:</strong> dấu phân cách thay đổi theo Locale nhưng giá trị số sau khi phân tích vẫn giữ cùng ý nghĩa.</li>
+        <li><strong>Ý nghĩa:</strong> phía máy chủ không nên phân tích đầu vào người dùng bằng một Locale mặc định không rõ nguồn gốc.</li>
       </ol>
-      <p><strong>Kết luận:</strong> giữ canonical numeric type trong domain; chỉ chuyển sang localized text tại human boundary.</p>
+      <p><strong>Kết luận:</strong> giữ kiểu số chuẩn trong miền nghiệp vụ; chỉ chuyển sang văn bản bản địa hóa tại ranh giới dành cho con người.</p>
     usage: true
   compact():
     execution: |-
-      <p><strong>Khái niệm:</strong> compact number là một presentation style có pattern phụ thuộc locale.</p>
+      <p><strong>Khái niệm:</strong> số rút gọn là một kiểu trình bày có mẫu phụ thuộc Locale.</p>
       <ol>
-        <li><strong>Flow:</strong> format <code>1_200_000</code> bằng SHORT và LONG cho en-US và vi-VN.</li>
-        <li><strong>Code evidence:</strong><pre><code>NumberFormat.getCompactNumberInstance(locale, NumberFormat.Style.SHORT);
+        <li><strong>Luồng:</strong> định dạng <code>1_200_000</code> bằng SHORT và LONG cho en-US và vi-VN.</li>
+        <li><strong>Bằng chứng mã nguồn:</strong><pre><code>NumberFormat.getCompactNumberInstance(locale, NumberFormat.Style.SHORT);
       NumberFormat.getCompactNumberInstance(locale, NumberFormat.Style.LONG);</code></pre></li>
-        <li><strong>Observation:</strong> output rút gọn khác nhau theo locale/style trong khi canonical value không đổi.</li>
-        <li><strong>Ý nghĩa:</strong> application không nên tự nối K/M/B hoặc giả định một abbreviation universal.</li>
+        <li><strong>Quan sát:</strong> kết quả rút gọn khác nhau theo Locale/kiểu trong khi giá trị chuẩn không đổi.</li>
+        <li><strong>Ý nghĩa:</strong> ứng dụng không nên tự nối K/M/B hoặc giả định một hệ viết tắt dùng chung cho mọi ngôn ngữ.</li>
       </ol>
-      <p><strong>Kết luận:</strong> compact format phù hợp dashboard/UI; dữ liệu nghiệp vụ vẫn giữ numeric value đầy đủ.</p>
+      <p><strong>Kết luận:</strong> định dạng rút gọn phù hợp bảng điều khiển/UI; dữ liệu nghiệp vụ vẫn giữ giá trị số đầy đủ.</p>
     usage: true
 CurrencyController:
   currencyVsLocale():
     execution: |-
-      <p><strong>Khái niệm:</strong> <code>Currency</code> mô tả monetary unit; <code>Locale</code> mô tả convention trình bày.</p>
+      <p><strong>Khái niệm:</strong> <code>Currency</code> mô tả đơn vị tiền tệ; <code>Locale</code> mô tả quy ước trình bày.</p>
       <ol>
-        <li><strong>Flow:</strong> lấy VND/USD metadata, sau đó cố ý format USD bằng vi-VN và VND bằng en-US.</li>
-        <li><strong>Code evidence:</strong><pre><code>NumberFormat format = NumberFormat.getCurrencyInstance(locale);
+        <li><strong>Luồng:</strong> lấy siêu dữ liệu VND/USD, sau đó cố ý định dạng USD bằng vi-VN và VND bằng en-US.</li>
+        <li><strong>Bằng chứng mã nguồn:</strong><pre><code>NumberFormat format = NumberFormat.getCurrencyInstance(locale);
       format.setCurrency(currency);
+      int digits = currency.getDefaultFractionDigits();
+      if (digits &gt;= 0) {
+          format.setMinimumFractionDigits(digits);
+          format.setMaximumFractionDigits(digits);
+      }
       format.format(amount);</code></pre></li>
-        <li><strong>Observation:</strong> currency code giữ nguyên nhưng symbol placement/separators/display convention phụ thuộc locale.</li>
-        <li><strong>Ý nghĩa:</strong> currency của transaction không được reconstruct từ language preference của user.</li>
+        <li><strong>Quan sát:</strong> mã tiền tệ giữ nguyên nhưng vị trí ký hiệu, dấu phân cách và quy ước trình bày phụ thuộc Locale.</li>
+        <li><strong>Ý nghĩa:</strong> tiền tệ giao dịch không được suy lại từ lựa chọn ngôn ngữ của người dùng; đồng thời đổi Currency không tự đồng bộ số chữ số thập phân của bộ định dạng.</li>
       </ol>
-      <p><strong>Kết luận:</strong> domain giữ amount + Currency explicit; localization chỉ format chúng cho người đọc.</p>
+      <p><strong>Kết luận:</strong> miền nghiệp vụ giữ số tiền + Currency tường minh; bản địa hóa chỉ định dạng chúng cho người đọc.</p>
     usage: true
 CollationController:
   sort():
     execution: |-
-      <p><strong>Khái niệm:</strong> raw <code>String.compareTo</code> order không phải linguistic ordering.</p>
+      <p><strong>Khái niệm:</strong> thứ tự thô của <code>String.compareTo</code> không phải hợp đồng sắp xếp theo ngôn ngữ.</p>
       <ol>
-        <li><strong>Flow:</strong> sort cùng danh sách tên bằng String order và <code>Collator</code> vi-VN.</li>
-        <li><strong>Code evidence:</strong><pre><code>stringOrder.sort(String::compareTo);
+        <li><strong>Luồng:</strong> sắp xếp cùng danh sách tên theo thứ tự String và bằng <code>Collator</code> vi-VN.</li>
+        <li><strong>Bằng chứng mã nguồn:</strong><pre><code>stringOrder.sort(String::compareTo);
       Collator collator = Collator.getInstance(Locale.forLanguageTag("vi-VN"));
       vietnameseOrder.sort(collator);</code></pre></li>
-        <li><strong>Observation:</strong> hai danh sách có thể có thứ tự khác vì Collator áp dụng rule ngôn ngữ thay vì raw code-unit order.</li>
-        <li><strong>Ý nghĩa:</strong> sort user-visible names/labels cần contract khác technical key ordering.</li>
+        <li><strong>Quan sát:</strong> hai danh sách có thể có thứ tự khác vì Collator áp dụng quy tắc ngôn ngữ thay vì thứ tự thô theo đơn vị mã (code unit).</li>
+        <li><strong>Ý nghĩa:</strong> tên và nhãn hiển thị cho người dùng thường cần quy tắc so sánh khác với khóa kỹ thuật.</li>
       </ol>
-      <p><strong>Kết luận:</strong> chọn comparator theo semantics của dữ liệu; không lower-case rồi compare như một substitute cho collation.</p>
+      <p><strong>Kết luận:</strong> chọn cách so sánh theo ý nghĩa của dữ liệu; chuyển về chữ thường rồi so sánh không thay thế được Collator.</p>
     usage: true
 DateTimeLocalizationController:
   format():
     execution: |-
-      <p><strong>Khái niệm:</strong> <code>ZoneId</code> quyết định local time tương ứng với Instant; <code>Locale</code> quyết định cách local time đó được trình bày.</p>
+      <p><strong>Khái niệm:</strong> <code>ZoneId</code> quyết định giờ địa phương tương ứng với Instant; <code>Locale</code> quyết định cách giờ đó được trình bày.</p>
       <ol>
-        <li><strong>Flow:</strong> cùng Instant được đặt vào Ho Chi Minh/New York và format bằng vi-VN/en-US.</li>
-        <li><strong>Code evidence:</strong><pre><code>instant.atZone(zone);
+        <li><strong>Luồng:</strong> đặt cùng một Instant vào múi giờ Ho Chi Minh/New York rồi định dạng bằng vi-VN/en-US.</li>
+        <li><strong>Bằng chứng mã nguồn:</strong><pre><code>instant.atZone(zone);
       DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)
           .withLocale(locale);</code></pre></li>
-        <li><strong>Observation:</strong> đổi zone làm local clock time thay đổi; đổi locale làm representation thay đổi.</li>
-        <li><strong>Ý nghĩa:</strong> language preference không phải time-zone preference và không nên model chung một field.</li>
+        <li><strong>Quan sát:</strong> đổi ZoneId làm giờ địa phương thay đổi; đổi Locale làm cách biểu diễn thay đổi.</li>
+        <li><strong>Ý nghĩa:</strong> tùy chọn ngôn ngữ và tùy chọn múi giờ là hai mối quan tâm riêng của người dùng hoặc miền nghiệp vụ.</li>
       </ol>
-      <p><strong>Kết luận:</strong> giữ instant/zone semantics trong date-time model và áp dụng Locale riêng ở presentation boundary.</p>
+      <p><strong>Kết luận:</strong> giữ ngữ nghĩa Instant/ZoneId trong mô hình ngày giờ và áp dụng Locale riêng tại ranh giới trình bày.</p>
     usage: true
   weekAndNumberingConventions():
     execution: |-
-      <p><strong>Khái niệm:</strong> Locale có thể ảnh hưởng week convention, digit style và một số preference mở rộng của formatter.</p>
+      <p><strong>Khái niệm:</strong> Locale có thể ảnh hưởng quy ước tuần, kiểu chữ số và một số tùy chọn mở rộng của bộ định dạng.</p>
       <ol>
-        <li><strong>Flow:</strong> đọc <code>WeekFields</code>/<code>DecimalStyle</code> cho en-US và vi-VN, sau đó dùng <code>th-TH-u-ca-buddhist-nu-thai</code> với <code>localizedBy</code>.</li>
-        <li><strong>Code evidence:</strong><pre><code>WeekFields.of(locale);
+        <li><strong>Luồng:</strong> đọc <code>WeekFields</code>/<code>DecimalStyle</code> cho en-US và vi-VN, sau đó dùng <code>th-TH-u-ca-buddhist-nu-thai</code> với <code>localizedBy</code>.</li>
+        <li><strong>Bằng chứng mã nguồn:</strong><pre><code>WeekFields.of(locale);
       DecimalStyle.of(locale);
       formatter.localizedBy(Locale.forLanguageTag("th-TH-u-ca-buddhist-nu-thai"));</code></pre></li>
-        <li><strong>Observation:</strong> first day/minimal days, digits và chronology/presentation preference có thể thay đổi theo locale data/extensions.</li>
-        <li><strong>Ý nghĩa:</strong> locale-sensitive calendar convention vẫn khác business calendar rule cố định.</li>
+        <li><strong>Quan sát:</strong> ngày đầu tuần, số ngày tối thiểu, chữ số, hệ lịch và quy ước trình bày có thể thay đổi theo dữ liệu Locale hoặc phần mở rộng Locale.</li>
+        <li><strong>Ý nghĩa:</strong> quy ước lịch phụ thuộc Locale vẫn khác với quy tắc lịch nghiệp vụ cố định.</li>
       </ol>
-      <p><strong>Kết luận:</strong> dùng locale convention cho presentation; encode accounting/scheduling rules explicit trong domain.</p>
+      <p><strong>Kết luận:</strong> dùng quy ước Locale cho phần trình bày; định nghĩa các quy tắc kế toán và lập lịch tường minh trong miền nghiệp vụ.</p>
     usage: true
 TextSegmentationController:
   boundaries():
     execution: |-
-      <p><strong>Khái niệm:</strong> natural-language boundary không thể luôn suy ra bằng UTF-16 char, space, dấu chấm hoặc newline.</p>
+      <p><strong>Khái niệm:</strong> không thể luôn suy ra ranh giới ngôn ngữ tự nhiên từ char UTF-16, khoảng trắng, dấu chấm hoặc ký tự xuống dòng.</p>
       <ol>
-        <li><strong>Flow:</strong> chạy character/word/sentence/line <code>BreakIterator</code> trên cùng text chứa combining mark.</li>
-        <li><strong>Code evidence:</strong><pre><code>BreakIterator.getCharacterInstance(locale);
+        <li><strong>Luồng:</strong> chạy các <code>BreakIterator</code> theo ký tự, từ, câu và dòng trên cùng chuỗi có dấu kết hợp.</li>
+        <li><strong>Bằng chứng mã nguồn:</strong><pre><code>BreakIterator.getCharacterInstance(locale);
       BreakIterator.getWordInstance(locale);
       BreakIterator.getSentenceInstance(locale);
       BreakIterator.getLineInstance(locale);</code></pre></li>
-        <li><strong>Observation:</strong> API trả các segment theo boundary rule; caller vẫn quyết định segment nào được dùng như word/token/layout unit.</li>
-        <li><strong>Ý nghĩa:</strong> cursor, selection, truncation và wrapping cần Unicode/language-aware boundary thay vì naive split.</li>
+        <li><strong>Quan sát:</strong> API trả về các đoạn theo quy tắc ranh giới; mã gọi vẫn quyết định mỗi đoạn được dùng như từ, token hay đơn vị bố cục ra sao.</li>
+        <li><strong>Ý nghĩa:</strong> di chuyển con trỏ, vùng chọn, rút gọn và xuống dòng cần ranh giới nhận biết Unicode/ngôn ngữ thay vì cách cắt chuỗi đơn giản.</li>
       </ol>
-      <p><strong>Kết luận:</strong> BreakIterator là boundary-analysis API, không phải full NLP hoặc renderer.</p>
+      <p><strong>Kết luận:</strong> BreakIterator thực hiện phân tích ranh giới; nó không phải bộ xử lý ngôn ngữ tự nhiên (NLP) hoàn chỉnh hay trình kết xuất.</p>
     usage: true
 BidirectionalTextController:
   analyze():
     execution: |-
-      <p><strong>Khái niệm:</strong> bidi text có logical order trong String và visual direction được xác định qua directional runs.</p>
+      <p><strong>Khái niệm:</strong> văn bản hai chiều có thứ tự logic trong String, còn hướng hiển thị được mô tả qua các đoạn hướng.</p>
       <ol>
-        <li><strong>Flow:</strong> phân tích chuỗi Hebrew + <code>Java 21</code>, đọc base direction, mixed state và từng run.</li>
-        <li><strong>Code evidence:</strong><pre><code>Bidi bidi = new Bidi(text, Bidi.DIRECTION_DEFAULT_LEFT_TO_RIGHT);
+        <li><strong>Luồng:</strong> phân tích chuỗi gồm tiếng Do Thái và <code>Java 21</code>, đọc hướng cơ sở, trạng thái trộn hướng và từng đoạn.</li>
+        <li><strong>Bằng chứng mã nguồn:</strong><pre><code>Bidi bidi = new Bidi(text, Bidi.DIRECTION_DEFAULT_LEFT_TO_RIGHT);
       bidi.getRunStart(i);
       bidi.getRunLimit(i);
       bidi.getRunLevel(i);</code></pre></li>
-        <li><strong>Observation:</strong> một String có thể chứa cả RTL và LTR runs; embedding level parity biểu diễn direction của run.</li>
-        <li><strong>Ý nghĩa:</strong> tự reverse Arabic/Hebrew text phá logical content và không xử lý đúng số/punctuation/embedded Latin.</li>
+        <li><strong>Quan sát:</strong> một String có thể chứa cả đoạn RTL và LTR; tính chẵn lẻ của mức nhúng cho biết hướng của từng đoạn.</li>
+        <li><strong>Ý nghĩa:</strong> tự đảo văn bản tiếng Ả Rập/tiếng Do Thái sẽ phá thứ tự logic và xử lý sai số, dấu câu cùng phần chữ Latin xen kẽ.</li>
       </ol>
-      <p><strong>Kết luận:</strong> giữ Unicode text ở logical order, dùng bidi analysis chuẩn và để renderer sở hữu final visual layout.</p>
+      <p><strong>Kết luận:</strong> giữ văn bản Unicode theo thứ tự logic, dùng phân tích bidi chuẩn và để trình kết xuất chịu trách nhiệm cho bố cục hiển thị cuối cùng.</p>
     usage: true

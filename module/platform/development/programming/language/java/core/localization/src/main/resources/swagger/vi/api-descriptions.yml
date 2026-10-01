@@ -1,174 +1,9 @@
-BidirectionalTextController:
-  analyze():
-    summary: Phân tích logical order và directional runs của bidi text
-    description: Dùng java.text.Bidi trên chuỗi trộn Hebrew, Latin và số để quan sát
-      base direction, mixed-direction state và từng directional run mà không tự reverse
-      String.
-    enableVideoYoutube: false
-    videoYoutubeId: ''
-    videoYoutubeTitle: ''
-    aiGenerated: true
-    reviewed: false
-    readmeRelated:
-      file: 13.BidirectionalText/BidirectionalText.md
-      anchor: bidi-model
-    methodName: analyze
-    params: [
-      ]
-    path: com/example/learning/controller/BidirectionalTextController.java
-    mapping: '@GetMapping("/analyze")'
-    httpMethods:
-    - GET
-    mappingPaths:
-    - /java/core/localization/bidi/analyze
-    produces: [
-      ]
-    consumes: [
-      ]
-    usage: true
-BundleController:
-  resolveBundle():
-    summary: Quan sát ResourceBundle candidate chain và fallback
-    description: Resolve vi-VN, en-GB và fr-FR qua cùng base name để thấy exact bundle,
-      language bundle và base bundle được chọn như thế nào khi default-locale fallback
-      bị tắt có chủ đích.
-    enableVideoYoutube: false
-    videoYoutubeId: ''
-    videoYoutubeTitle: ''
-    aiGenerated: true
-    reviewed: false
-    readmeRelated:
-      file: 10.Fallback/Fallback.md
-      anchor: bundle-candidate-chain
-    methodName: resolveBundle
-    params: [
-      ]
-    path: com/example/learning/controller/BundleController.java
-    mapping: '@GetMapping("/resolve")'
-    httpMethods:
-    - GET
-    mappingPaths:
-    - /java/core/localization/bundle/resolve
-    produces: [
-      ]
-    consumes: [
-      ]
-    usage: true
-CollationController:
-  sort():
-    summary: So sánh String order với Vietnamese Collator order
-    description: Sort cùng danh sách tên bằng String.compareTo và Collator vi-VN để
-      quan sát raw Unicode/code-unit ordering khác linguistic ordering dành cho người
-      dùng.
-    enableVideoYoutube: false
-    videoYoutubeId: ''
-    videoYoutubeTitle: ''
-    aiGenerated: true
-    reviewed: false
-    readmeRelated:
-      file: 8.Collator/Collator.md
-      anchor: collator-vs-string-order
-    methodName: sort
-    params: [
-      ]
-    path: com/example/learning/controller/CollationController.java
-    mapping: '@GetMapping("/sort")'
-    httpMethods:
-    - GET
-    mappingPaths:
-    - /java/core/localization/collation/sort
-    produces: [
-      ]
-    consumes: [
-      ]
-    usage: true
-CurrencyController:
-  currencyVsLocale():
-    summary: Tách Currency identity khỏi Locale presentation
-    description: Lấy VND/USD metadata rồi cố ý format USD bằng vi-VN và VND bằng en-US
-      để chứng minh currency của giao dịch và locale hiển thị là hai context độc lập.
-    enableVideoYoutube: false
-    videoYoutubeId: ''
-    videoYoutubeTitle: ''
-    aiGenerated: true
-    reviewed: false
-    readmeRelated:
-      file: 7.Currency/Currency.md
-      anchor: currency-vs-locale
-    methodName: currencyVsLocale
-    params: [
-      ]
-    path: com/example/learning/controller/CurrencyController.java
-    mapping: '@GetMapping("/currency-vs-locale")'
-    httpMethods:
-    - GET
-    mappingPaths:
-    - /java/core/localization/currency/currency-vs-locale
-    produces: [
-      ]
-    consumes: [
-      ]
-    usage: true
-DateTimeLocalizationController:
-  format():
-    summary: Tách Locale khỏi ZoneId khi hiển thị cùng Instant
-    description: Render cùng Instant ở Asia/Ho_Chi_Minh và America/New_York bằng vi-VN/en-US
-      để thấy ZoneId chọn local time còn Locale chọn convention trình bày.
-    enableVideoYoutube: false
-    videoYoutubeId: ''
-    videoYoutubeTitle: ''
-    aiGenerated: true
-    reviewed: false
-    readmeRelated:
-      file: 9.DateTimeLocalization/DateTimeLocalization.md
-      anchor: locale-vs-zone
-    methodName: format
-    params: [
-      ]
-    path: com/example/learning/controller/DateTimeLocalizationController.java
-    mapping: '@GetMapping("/format")'
-    httpMethods:
-    - GET
-    mappingPaths:
-    - /java/core/localization/date-time/format
-    produces: [
-      ]
-    consumes: [
-      ]
-    usage: true
-  weekAndNumberingConventions():
-    summary: Quan sát WeekFields, DecimalStyle và locale extensions
-    description: So sánh first-day/minimal-days giữa en-US và vi-VN, rồi dùng locale
-      extension Thai Buddhist/Thai digits để quan sát formatter áp dụng calendar và
-      numbering preference.
-    enableVideoYoutube: false
-    videoYoutubeId: ''
-    videoYoutubeTitle: ''
-    aiGenerated: true
-    reviewed: false
-    readmeRelated:
-      file: 9.DateTimeLocalization/DateTimeLocalization.md
-      anchor: locale-week-conventions
-    methodName: weekAndNumberingConventions
-    params: [
-      ]
-    path: com/example/learning/controller/DateTimeLocalizationController.java
-    mapping: '@GetMapping("/week-and-numbering")'
-    httpMethods:
-    - GET
-    mappingPaths:
-    - /java/core/localization/date-time/week-and-numbering
-    produces: [
-      ]
-    consumes: [
-      ]
-    usage: true
 LocaleController:
   compareLocales():
-    summary: Quan sát language, script, region và default Locale categories
-    description: Tách các component của vi-VN, en-US, zh-Hant-TW và expose default
-      DISPLAY/FORMAT Locale để củng cố mental model Locale là context chứ không phải
-      location/zone/currency.
+    summary: Quan sát ngôn ngữ, hệ chữ, vùng và các nhóm Locale mặc định
+    description: Tách các thành phần của vi-VN, en-US, zh-Hant-TW và đọc Locale mặc định
+      cho DISPLAY/FORMAT để củng cố mô hình tư duy rằng Locale là ngữ cảnh bản địa hóa,
+      không phải vị trí vật lý, múi giờ hay tiền tệ.
     enableVideoYoutube: false
     videoYoutubeId: ''
     videoYoutubeTitle: ''
@@ -191,11 +26,40 @@ LocaleController:
     consumes: [
       ]
     usage: true
+BundleController:
+  resolveBundle():
+    summary: Quan sát chuỗi Locale ứng viên của ResourceBundle khi tắt dự phòng qua Locale mặc định
+    description: Phân giải vi-VN, en-GB và fr-FR qua cùng một tên cơ sở để quan sát
+      các ứng viên của Locale đích và việc chọn gói tài nguyên gốc, đồng thời cố ý
+      tách nhánh Locale dự phòng khỏi thí nghiệm này.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 4.ResourceBundle/ResourceBundle.md
+      anchor: bundle-naming
+    methodName: resolveBundle
+    params: [
+      ]
+    path: com/example/learning/controller/BundleController.java
+    mapping: '@GetMapping("/resolve")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/localization/bundle/resolve
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
 MessageController:
   format():
     summary: Kết hợp ResourceBundle và MessageFormat theo cùng Locale
-    description: Load pattern order.created theo vi-VN/en-US rồi format cùng order
-      id và customer name để translator sở hữu cấu trúc câu thay vì code nối fragment.
+    description: Nạp mẫu order.created theo vi-VN/en-US rồi định dạng cùng mã đơn hàng
+      và tên khách hàng để người dịch kiểm soát cấu trúc câu thay vì mã nguồn nối các
+      mảnh câu.
     enableVideoYoutube: false
     videoYoutubeId: ''
     videoYoutubeTitle: ''
@@ -220,10 +84,10 @@ MessageController:
     usage: true
 NumberLocalizationController:
   formatAndParse():
-    summary: Format và parse cùng BigDecimal theo hai Locale
-    description: Giữ canonical BigDecimal cố định, format vi-VN/en-US rồi parse lại
-      bằng DecimalFormat có setParseBigDecimal(true), đồng thời kiểm tra toàn bộ input
-      đã được consume.
+    summary: Định dạng và phân tích cùng một BigDecimal theo hai Locale
+    description: Giữ BigDecimal chuẩn không đổi, lấy NumberFormat theo Locale, yêu cầu
+      bộ cung cấp định dạng của demo trả về DecimalFormat, bật setParseBigDecimal(true)
+      rồi kiểm tra toàn bộ đầu vào đã được phân tích hết.
     enableVideoYoutube: false
     videoYoutubeId: ''
     videoYoutubeTitle: ''
@@ -231,7 +95,7 @@ NumberLocalizationController:
     reviewed: false
     readmeRelated:
       file: 6.NumberFormatting/NumberFormatting.md
-      anchor: number-format
+      anchor: parsing-numbers
     methodName: formatAndParse
     params: [
       ]
@@ -247,9 +111,9 @@ NumberLocalizationController:
       ]
     usage: true
   compact():
-    summary: So sánh compact number SHORT và LONG theo Locale
-    description: Format 1_200_000 bằng getCompactNumberInstance cho en-US và vi-VN
-      để chứng minh K/M hay từ rút gọn không nên được hard-code trong application.
+    summary: So sánh dạng số rút gọn SHORT và LONG theo Locale
+    description: Định dạng 1_200_000 bằng getCompactNumberInstance cho en-US và vi-VN
+      để cho thấy không nên viết cứng K/M hay các dạng rút gọn khác trong ứng dụng.
     enableVideoYoutube: false
     videoYoutubeId: ''
     videoYoutubeTitle: ''
@@ -272,19 +136,129 @@ NumberLocalizationController:
     consumes: [
       ]
     usage: true
-TextSegmentationController:
-  boundaries():
-    summary: Quan sát character, word, sentence và line boundaries
-    description: Dùng bốn BreakIterator factory trên cùng Unicode text có combining
-      mark để thấy boundary analysis khác việc cắt bằng char, space, dấu chấm hoặc
-      độ dài cố định.
+CurrencyController:
+  currencyVsLocale():
+    summary: Tách định danh Currency khỏi quy ước trình bày của Locale
+    description: Lấy siêu dữ liệu VND/USD rồi cố ý định dạng USD bằng vi-VN và VND bằng
+      en-US để cho thấy tiền tệ của giao dịch và Locale hiển thị là hai ngữ cảnh độc lập,
+      đồng thời chủ đích cấu hình số chữ số thập phân hiển thị theo Currency đã chọn.
     enableVideoYoutube: false
     videoYoutubeId: ''
     videoYoutubeTitle: ''
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 12.TextSegmentation/TextSegmentation.md
+      file: 7.Currency/Currency.md
+      anchor: currency-vs-locale
+    methodName: currencyVsLocale
+    params: [
+      ]
+    path: com/example/learning/controller/CurrencyController.java
+    mapping: '@GetMapping("/currency-vs-locale")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/localization/currency/currency-vs-locale
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+CollationController:
+  sort():
+    summary: So sánh thứ tự String với thứ tự Collator tiếng Việt
+    description: Sắp xếp cùng danh sách tên bằng String.compareTo và Collator vi-VN để
+      quan sát String.compareTo sắp theo thứ tự từ điển trên các đơn vị mã char UTF-16,
+      khác với thứ tự ngôn ngữ dành cho người dùng.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 8.Collator/Collator.md
+      anchor: collator-vs-string-order
+    methodName: sort
+    params: [
+      ]
+    path: com/example/learning/controller/CollationController.java
+    mapping: '@GetMapping("/sort")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/localization/collation/sort
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+DateTimeLocalizationController:
+  format():
+    summary: Tách Locale khỏi ZoneId khi hiển thị cùng Instant
+    description: Hiển thị cùng Instant ở Asia/Ho_Chi_Minh và America/New_York bằng
+      vi-VN/en-US để thấy ZoneId chọn giờ địa phương còn Locale chọn quy ước trình bày.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 9.DateTimeLocalization/DateTimeLocalization.md
+      anchor: locale-vs-zone
+    methodName: format
+    params: [
+      ]
+    path: com/example/learning/controller/DateTimeLocalizationController.java
+    mapping: '@GetMapping("/format")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/localization/date-time/format
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  weekAndNumberingConventions():
+    summary: Quan sát WeekFields, DecimalStyle và phần mở rộng Locale
+    description: So sánh ngày đầu tuần và số ngày tối thiểu giữa en-US với vi-VN, rồi
+      dùng phần mở rộng Locale cho lịch Phật giáo Thái và chữ số Thái để quan sát bộ
+      định dạng áp dụng hệ lịch cùng quy ước chữ số.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 9.DateTimeLocalization/DateTimeLocalization.md
+      anchor: locale-week-conventions
+    methodName: weekAndNumberingConventions
+    params: [
+      ]
+    path: com/example/learning/controller/DateTimeLocalizationController.java
+    mapping: '@GetMapping("/week-and-numbering")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/localization/date-time/week-and-numbering
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+TextSegmentationController:
+  boundaries():
+    summary: Quan sát ranh giới ký tự, từ, câu và dòng
+    description: Dùng bốn phương thức tạo BreakIterator trên cùng văn bản Unicode có
+      dấu kết hợp để thấy phân tích ranh giới khác với việc cắt theo char, khoảng trắng,
+      dấu chấm hoặc độ dài cố định.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 10.TextSegmentation/TextSegmentation.md
       anchor: breakiterator-model
     methodName: boundaries
     params: [
@@ -295,6 +269,34 @@ TextSegmentationController:
     - GET
     mappingPaths:
     - /java/core/localization/segmentation/boundaries
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+BidirectionalTextController:
+  analyze():
+    summary: Phân tích thứ tự logic và các đoạn hướng của văn bản hai chiều
+    description: Dùng java.text.Bidi trên chuỗi trộn tiếng Do Thái, chữ Latin và số để
+      quan sát hướng cơ sở, trạng thái trộn hướng và từng đoạn hướng mà không tự đảo
+      String.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 11.BidirectionalText/BidirectionalText.md
+      anchor: bidi-model
+    methodName: analyze
+    params: [
+      ]
+    path: com/example/learning/controller/BidirectionalTextController.java
+    mapping: '@GetMapping("/analyze")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/localization/bidi/analyze
     produces: [
       ]
     consumes: [

@@ -1,6 +1,6 @@
 # Collator and Locale-Aware Comparison
 
-Sorting text looks simple until the order is meant for a human reader. `String.compareTo` provides a deterministic Java string order, but raw Unicode/code-unit order is not the same thing as the alphabetic order expected by every language.
+Sorting text looks simple until the order is meant for a human reader. `String.compareTo` compares strings lexicographically over their UTF-16 `char` code units; that deterministic order is not the same thing as the alphabetic order expected by every language.
 
 `Collator` exists for **locale-sensitive text comparison and ordering**.
 
@@ -29,7 +29,7 @@ CollationKey
 
 Use `Collator` when **human-facing order** matters. For stable technical keys or protocol ordering, a locale-neutral order is usually more appropriate.
 
-`String.compareTo` compares strings lexicographically according to their character representation. That is useful for many machine-oriented tasks, but it does not model all language-specific collation rules.
+`String.compareTo` compares strings lexicographically over their UTF-16 `char` code units. That is useful for many machine-oriented tasks, but it does not model language-specific collation rules.
 
 `Collator` adds locale context:
 
@@ -93,6 +93,14 @@ The exact linguistic meaning of each level is locale-dependent. Do not treat the
 At a lower strength, two strings with different Unicode representations can compare as equivalent for collation purposes. That is useful for search or sorting where some differences should be ignored.
 
 `Collator` also has **decomposition** settings. Unicode text can represent visually similar characters in composed or decomposed forms, for example a precomposed accented character versus a base character followed by a combining mark. Decomposition controls how those representations participate in comparison.
+
+```java
+collator.setDecomposition(Collator.NO_DECOMPOSITION);
+collator.setDecomposition(Collator.CANONICAL_DECOMPOSITION);
+collator.setDecomposition(Collator.FULL_DECOMPOSITION);
+```
+
+Do not treat decomposition as another strength level. **Strength** decides which differences matter to comparison; **decomposition** decides how Unicode representations are prepared for that comparison.
 
 The important lesson is that human text comparison can require both linguistic rules and Unicode normalization awareness; comparing raw character values is not always enough.
 

@@ -1,10 +1,10 @@
 # Resource Fallback
 
-A localization system rarely needs a completely independent resource file for every possible language-script-region combination. `ResourceBundle` therefore supports fallback: when an exact resource is unavailable, lookup can continue through less-specific candidates.
+A localization system rarely needs a completely independent resource file for every possible language-script-region combination. `ResourceBundle` therefore supports fallback: when the best resource for the requested Locale cannot be resolved, lookup can continue through candidate locales and, when the active policy allows it, through a fallback-Locale branch such as the JVM default Locale.
 
 Fallback is useful, but “the application still displayed something” does not necessarily mean localization is complete or correct.
 
-In plain language, **fallback is the strategy of looking for a less-specific resource when the most-specific resource is unavailable**.
+In plain language, **fallback is the strategy for continuing resource lookup when the preferred Locale path does not resolve an acceptable resource**. Trying less-specific candidates is one part of that strategy; switching to a fallback Locale can be another.
 
 It exists because, without fallback, an application would need a complete independent file for every precise locale or would fail whenever a small locale-specific variant was missing. Fallback enables reuse, but developers must understand where the final value actually came from.
 
@@ -39,14 +39,14 @@ Messages_en.properties
 Messages.properties
 ```
 
-A beginner mental model is:
+A beginner mental model for one target-locale candidate list is:
 
 ```text
 start with the most specific requested locale
         ↓
 try a more general candidate when necessary
         ↓
-eventually reach the base bundle when applicable
+Locale.ROOT represents the base bundle candidate
 ```
 
 Candidate locales can be inspected through `ResourceBundle.Control`:
@@ -63,6 +63,8 @@ List<Locale> candidates = control.getCandidateLocales(
 ```
 
 Locales containing script or variant subtags can have a richer chain than the simple `en-US` example. Let the JDK's resource-bundle algorithm own this behavior instead of implementing filename fallback manually.
+
+Candidate generation and fallback-locale selection are separate steps. `getCandidateLocales(...)` creates candidates for one locale being considered. If the active `ResourceBundle.Control` supplies another fallback locale (the default control may use the JVM default locale), lookup can create another candidate list for that locale. Do not model the complete algorithm as one hard-coded filename sequence.
 
 ## <a id="default-locale-fallback">Default Locale Fallback</a>
 
@@ -108,7 +110,7 @@ The base bundle has no locale suffix:
 Messages.properties
 ```
 
-It can serve as the final general resource set in the bundle hierarchy.
+It can serve as the final general resource set in the bundle hierarchy. With the default control, however, do not assume that finding the base candidate means it is always returned before a fallback-locale branch is considered; final resolution depends on the complete `ResourceBundle.Control` algorithm.
 
 Two common strategies are:
 
@@ -123,7 +125,7 @@ localized bundles contain full language-specific content
 
 Neither strategy works well if the team has not agreed on it. For example, an English base bundle can quietly leak English into another locale when a translation key is missing.
 
-Parent/fallback lookup also means a locale-specific bundle does not technically need to duplicate every key that exists in a parent. A product may still require 100% per-locale key completeness and enforce that with tests.
+Parent lookup also means a locale-specific bundle does not technically need to duplicate every key that exists in its resolved parent chain. A product may still require 100% per-locale key completeness and enforce that with tests.
 
 ## <a id="missing-resource">MissingResourceException and Missing Keys</a>
 

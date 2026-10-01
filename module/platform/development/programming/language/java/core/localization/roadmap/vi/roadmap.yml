@@ -45,40 +45,57 @@ roadmap:
   - id: localization-model
     title: Mô hình tư duy về bản địa hóa
     purpose: Hiểu bản địa hóa (localization) là điều chỉnh cách hiển thị và quy ước ngôn ngữ cho người dùng mà không làm thay đổi dữ liệu hay ý nghĩa nghiệp vụ bên dưới.
+    relatedKnowledge:
+      - MentalModel
     objectives:
       - Phân biệt quốc tế hóa (internationalization/i18n) với bản địa hóa (localization/l10n) và hiểu vì sao phần mềm cần tách hai bước này.
       - Tách dữ liệu nghiệp vụ khỏi cách hiển thị văn bản, số, tiền tệ và ngày giờ theo Locale.
+      - Nhận biết vấn đề của việc đặt cứng ngôn ngữ và quy tắc hiển thị trong logic nghiệp vụ khi ứng dụng phải hỗ trợ thêm Locale.
   - id: locale-and-language-tags
     title: Locale và thẻ ngôn ngữ
-    purpose: Hiểu Locale biểu diễn ngữ cảnh ngôn ngữ/khu vực nào và cách thẻ ngôn ngữ theo chuẩn BCP 47 truyền thông tin về ngôn ngữ, hệ chữ viết và khu vực giữa các hệ thống.
+    purpose: Hiểu Locale biểu diễn ngữ cảnh ngôn ngữ/khu vực nào và cách thẻ ngôn ngữ theo chuẩn BCP 47 truyền thông tin về ngôn ngữ, hệ chữ viết, khu vực và một số tùy chọn bản địa hóa giữa các hệ thống.
+    relatedKnowledge:
+      - Locale
+      - LanguageTags
     objectives:
       - Tạo, đọc và so sánh định danh Locale có chủ đích.
       - Không nhầm ngôn ngữ, khu vực, hệ chữ viết và múi giờ là cùng một khái niệm.
+      - Hiểu cách đối chiếu danh sách ngôn ngữ ưu tiên với các Locale mà ứng dụng thực sự hỗ trợ.
+      - Nhận biết thẻ ngôn ngữ có thể mang phần mở rộng (extension) ảnh hưởng đến một số dịch vụ bản địa hóa, nhưng Locale không đồng nghĩa với múi giờ, tiền tệ hay dữ liệu nghiệp vụ.
   - id: resource-bundles-and-fallback
-    title: ResourceBundle và cơ chế tìm kiếm dự phòng
-    purpose: Hiểu cách Java tìm tài nguyên bản địa hóa, quy ước đặt tên gói tài nguyên, thứ tự Locale ứng viên và cơ chế dự phòng (fallback).
+    title: ResourceBundle và tài nguyên bản địa hóa
+    purpose: Hiểu cách Java tổ chức và tìm tài nguyên bản địa hóa theo Locale thông qua quy ước đặt tên gói tài nguyên và thứ tự Locale ứng viên.
+    relatedKnowledge:
+      - ResourceBundle
     objectives:
       - Tổ chức tài nguyên theo ngôn ngữ mà không lặp lại logic nghiệp vụ.
-      - Dự đoán tài nguyên nào được chọn khi không tồn tại tài nguyên khớp chính xác với Locale yêu cầu.
+      - Hiểu quy ước đặt tên và chuỗi Locale ứng viên mà ResourceBundle dùng để tìm gói tài nguyên phù hợp.
   - id: localized-messages
     title: Thông điệp bản địa hóa có tham số
-    purpose: Hiểu MessageFormat giúp đưa tham số vào thông điệp theo Locale mà không phải nối chuỗi thủ công hoặc cố định cấu trúc câu trong code.
+    purpose: Hiểu MessageFormat giúp đưa tham số vào thông điệp theo Locale mà không phải nối chuỗi thủ công hoặc cố định cấu trúc câu trong mã nguồn.
+    relatedKnowledge:
+      - MessageFormat
     objectives:
-      - Giữ cấu trúc thông điệp cần dịch trong tài nguyên thay vì đặt cứng trong code.
+      - Giữ cấu trúc thông điệp cần dịch trong tài nguyên thay vì đặt cứng trong mã nguồn.
       - Xử lý quy tắc dấu nháy và định dạng tham số của MessageFormat có chủ đích.
   - id: numbers-and-currency
-    title: Định dạng số và tiền tệ theo Locale
+    title: Số và tiền tệ theo Locale
     purpose: Hiểu sự khác biệt giữa giá trị số/tiền tệ trong nghiệp vụ với cách các giá trị đó được định dạng hoặc phân tích theo Locale.
+    relatedKnowledge:
+      - NumberFormatting
+      - Currency
     relatedModules:
       - routeId: JAVA_NUMBERS
-        label: Numbers
-        note: Biểu diễn số và quy tắc làm tròn thuộc Numbers; Localization chịu trách nhiệm cách trình bày theo Locale.
+        label: Kiểu số
+        note: Biểu diễn số và quy tắc làm tròn thuộc mô-đun Kiểu số; Bản địa hóa chịu trách nhiệm cách trình bày theo Locale.
     objectives:
       - Định dạng và phân tích số theo Locale mà không làm thay đổi ý nghĩa của giá trị số.
       - Tách định danh tiền tệ khỏi cách ký hiệu và số tiền được hiển thị cho người dùng.
   - id: collation-and-text-order
     title: So sánh và sắp xếp văn bản theo Locale
     purpose: Hiểu vì sao thứ tự văn bản dành cho người dùng phải tuân theo quy tắc ngôn ngữ của Locale thay vì chỉ dựa vào thứ tự Unicode hoặc thứ tự tự nhiên của String.
+    relatedKnowledge:
+      - Collator
     relatedModules:
       - routeId: JAVA_STRING
         label: String
@@ -87,24 +104,42 @@ roadmap:
       - Dùng Collator khi cần so sánh hoặc sắp xếp theo quy tắc ngôn ngữ.
       - Hiểu mức độ so sánh (strength) và chế độ phân rã ký tự (decomposition) mà không làm thay đổi nội dung String gốc.
   - id: date-time-localization
-    title: Hiển thị ngày giờ theo Locale
-    purpose: Hiểu Locale quyết định quy ước hiển thị ngày giờ, trong khi ZoneId và giá trị thời gian trên dòng thời gian vẫn là những khái niệm riêng.
+    title: Bản địa hóa ngày giờ theo Locale
+    purpose: Hiểu cách Locale ảnh hưởng đến định dạng, phân tích và các quy ước trình bày ngày giờ, trong khi ZoneId và ý nghĩa thời gian vẫn thuộc mô hình Date-Time.
+    relatedKnowledge:
+      - DateTimeLocalization
     relatedModules:
       - routeId: JAVA_DATE_TIME
-        label: Date-Time
-        note: Date-Time chịu trách nhiệm ý nghĩa thời gian, múi giờ và phép tính; Localization chịu trách nhiệm quy ước trình bày theo Locale.
+        label: Ngày giờ
+        note: Mô-đun Ngày giờ chịu trách nhiệm ý nghĩa thời gian, múi giờ và phép tính; Bản địa hóa chịu trách nhiệm quy ước trình bày theo Locale.
     objectives:
-      - Định dạng ngày giờ theo quy ước của Locale mà không làm thay đổi giá trị thời gian bên dưới.
+      - Định dạng và phân tích ngày giờ theo quy ước của Locale mà không làm thay đổi giá trị thời gian bên dưới.
       - Giữ quyết định về múi giờ trong mô hình Date-Time thay vì gộp nó vào Locale.
+      - Nhận biết Locale còn có thể ảnh hưởng thứ tự ngày-tháng, quy ước tuần, hệ chữ số và lịch dùng khi trình bày.
   - id: text-segmentation-and-bidi
     title: Phân tách văn bản và văn bản hai chiều
     purpose: Hiểu vì sao ranh giới ký tự/từ/câu trong ngôn ngữ tự nhiên và thứ tự hiển thị có thể khác chỉ số code unit, dấu cách hoặc thứ tự lưu trữ logic.
+    relatedKnowledge:
+      - TextSegmentation
+      - BidirectionalText
+    relatedModules:
+      - routeId: JAVA_STRING
+        label: String
+        note: Mô hình Unicode, code unit, code point và grapheme trong String là nền tảng để hiểu ranh giới văn bản và thứ tự logic/hiển thị.
     objectives:
-      - Dùng BreakIterator khi cần xác định ranh giới ký tự, từ, câu hoặc dòng theo Locale thay vì tách văn bản một cách ngây thơ.
-      - Hiểu Bidi phân tích quan hệ giữa thứ tự logic và thứ tự hiển thị trong văn bản trộn chiều trái-sang-phải và phải-sang-trái.
+      - Nhận biết ranh giới ký tự người dùng nhìn thấy cần xử lý theo Unicode, còn ranh giới từ, câu và dòng có thể phụ thuộc ngôn ngữ hoặc Locale.
+      - Dùng BreakIterator khi cần xác định các ranh giới văn bản thay vì tách chuỗi một cách ngây thơ bằng chỉ số, dấu cách hoặc dấu câu.
+      - Hiểu Bidi phân tích thứ tự logic và các đoạn có hướng viết khác nhau, còn việc dựng và bố trí văn bản lên màn hình thuộc trách nhiệm của tầng hiển thị.
   - id: locale-defaults-and-synthesis
-    title: Locale mặc định, cơ chế dự phòng và tổng hợp
-    purpose: Kết nối Locale, tài nguyên bản địa hóa, định dạng, sắp xếp văn bản, hiển thị ngày giờ và xử lý văn bản thành một mô hình thống nhất, đồng thời tránh phụ thuộc ngầm vào Locale mặc định của hệ thống.
+    title: Cơ chế dự phòng, Locale mặc định, các lỗi thường gặp và tổng hợp
+    purpose: Hiểu cách ResourceBundle xử lý khi thiếu tài nguyên khớp chính xác, đồng thời kết nối các phần của Localization thành một mô hình thống nhất và tránh phụ thuộc ngầm vào Locale mặc định hoặc dữ liệu đã định dạng sai ranh giới.
+    relatedKnowledge:
+      - Locale
+      - Fallback
+      - LocalePitfalls
     objectives:
+      - Dự đoán chuỗi tìm kiếm dự phòng và nhận biết khi cơ chế dự phòng hữu ích hoặc khi nó che giấu tài nguyên bản địa hóa bị thiếu.
       - Đưa việc lựa chọn Locale thành quyết định rõ ràng tại ranh giới của ứng dụng.
-      - Nhận biết khi cơ chế dự phòng hữu ích và khi nó che giấu tài nguyên bản địa hóa bị thiếu.
+      - Phân biệt Locale mặc định cho FORMAT và DISPLAY, đồng thời hiểu vì sao phụ thuộc ngầm vào môi trường có thể làm hành vi thay đổi giữa các máy.
+      - Tránh dùng hành vi phụ thuộc Locale cho định danh, giao thức hoặc dữ liệu cần biểu diễn ổn định cho máy.
+      - Tổng hợp cách chọn Locale, tài nguyên và API trình bày phù hợp mà không làm thay đổi ý nghĩa nghiệp vụ.

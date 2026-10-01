@@ -135,3 +135,5 @@ direction analysis
 visual layout
 → let the renderer own it
 ```
+
+After the human-text milestone, the final milestone returns to **module-wide safety policy**: `ResourceBundle` fallback, default Locale behavior, machine-stable data, and common localization pitfalls.

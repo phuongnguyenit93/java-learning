@@ -20,10 +20,6 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  default-locale:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
   locale-equality:
     difficulty: BASIC
     aiGenerated: true
@@ -37,7 +33,15 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+  locale-matching:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
   language-script-region:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  locale-extensions:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
@@ -64,6 +68,10 @@
     reviewed: false
 5.MessageFormat/MessageFormat.md:
   messageformat-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  translation-key-design:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
@@ -159,41 +167,7 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-10.Fallback/Fallback.md:
-  bundle-candidate-chain:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-  default-locale-fallback:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-  base-bundle:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-  missing-resource:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-11.LocalePitfalls/LocalePitfalls.md:
-  turkish-i:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-  default-locale-production-risk:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-  format-parse-roundtrip:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-  translation-key-design:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-12.TextSegmentation/TextSegmentation.md:
+10.TextSegmentation/TextSegmentation.md:
   breakiterator-model:
     difficulty: BASIC
     aiGenerated: true
@@ -214,7 +188,7 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-13.BidirectionalText/BidirectionalText.md:
+11.BidirectionalText/BidirectionalText.md:
   bidi-model:
     difficulty: BASIC
     aiGenerated: true
@@ -228,6 +202,44 @@
     aiGenerated: true
     reviewed: false
   bidi-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+12.Fallback/Fallback.md:
+  bundle-candidate-chain:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  default-locale-fallback:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  base-bundle:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  missing-resource:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+13.LocalePitfalls/LocalePitfalls.md:
+  default-locale:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  turkish-i:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  default-locale-production-risk:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  format-parse-roundtrip:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  localization-synthesis:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false

@@ -52,11 +52,17 @@ Java Core does not provide a built-in `Money` domain value type in `java.base` t
 
 ## <a id="currency-vs-locale">Currency Is Not Locale</a>
 
-Java can obtain the currency associated with a locale's region:
+Java can obtain a currency from a `Locale`, but the rule is not simply “use the region's currency.” If the Locale contains `cu` and/or `rg` Unicode extensions, Java reflects those values; when both are present, `cu` takes precedence over the currency implied by `rg`. Without those extensions, Java derives from the Locale's **country**; the language and variant components are ignored:
 
 ```java
 Currency currency = Currency.getInstance(Locale.US);
+
+Currency euroPreference = Currency.getInstance(
+        Locale.forLanguageTag("en-US-u-cu-eur")
+); // EUR
 ```
+
+If the Locale's country is not a supported ISO 3166 country code, `Currency.getInstance(locale)` can throw `IllegalArgumentException`; for a territory that has no currency, it can return `null`. A language-only Locale such as `Locale.ENGLISH` is therefore not enough information to infer a transaction currency.
 
 That does not mean every user with `en-US` preferences transacts in USD.
 
@@ -108,6 +114,8 @@ format.setCurrency(Currency.getInstance("EUR"));
 System.out.println(format.format(new BigDecimal("25.00")));
 ```
 
+`setCurrency(...)` changes the currency used by the formatter, including the currency identity/symbol, but it does **not** reset the formatter's minimum/maximum fraction digits to the new currency's defaults. A formatter created for USD and then switched to JPY can therefore still retain two fraction digits. Configure display fraction digits deliberately when the transaction currency differs; business rounding and scale policy remain domain-owned.
+
 Avoid manual symbol concatenation such as `"$" + amount`; symbol choice, placement, spacing, and ambiguity can all be locale-sensitive.
 
 ## <a id="money-boundary">Formatting vs Monetary Domain Modeling</a>
@@ -128,15 +136,24 @@ A minimal domain value might be:
 record Money(BigDecimal amount, Currency currency) {}
 ```
 
-and localization can render it later:
+and localization can render it later. The example below **deliberately uses the `Currency` default fraction digits as a display policy**; it is not a business-rounding rule:
 
 ```java
-String display(Money money, Locale locale) {
+String displayUsingCurrencyDefaultDigits(Money money, Locale locale) {
     NumberFormat format = NumberFormat.getCurrencyInstance(locale);
     format.setCurrency(money.currency());
+
+    int fractionDigits = money.currency().getDefaultFractionDigits();
+    if (fractionDigits >= 0) {
+        format.setMinimumFractionDigits(fractionDigits);
+        format.setMaximumFractionDigits(fractionDigits);
+    }
+
     return format.format(money.amount());
 }
 ```
+
+A real application may choose a different display policy. The important boundary is that `setCurrency(...)` does not synchronize fraction digits automatically, and `NumberFormat` must not replace the domain's rounding/scale policy.
 
 This preserves the module's central boundary: **the domain owns meaning; locale controls human presentation**.
 

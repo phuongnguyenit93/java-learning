@@ -21,10 +21,10 @@ BundleController:
         <li><strong>Code evidence:</strong><pre><code>ResourceBundle.Control control =
       ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_PROPERTIES);
       ResourceBundle.getBundle("i18n.messages", locale, control);</code></pre></li>
-        <li><strong>Observation:</strong> vi-VN selects a specific bundle, en-GB falls back to en, and fr-FR reaches ROOT/base.</li>
+        <li><strong>Observation:</strong> vi-VN selects a specific candidate, en-GB resolves through its <code>en</code> candidate, and fr-FR reaches the ROOT/base candidate.</li>
         <li><strong>Meaning:</strong> candidate locales and a base bundle enable controlled reuse without making the JVM default locale a hidden dependency.</li>
       </ol>
-      <p><strong>Conclusion:</strong> design bundle families and fallback policy intentionally and detect missing translations before production.</p>
+      <p><strong>Conclusion:</strong> design the bundle family and candidate policy intentionally; treat a separate fallback-Locale policy as a different decision and detect missing translations before production.</p>
     usage: true
 MessageController:
   format():
@@ -46,7 +46,10 @@ NumberLocalizationController:
       <p><strong>Concept:</strong> a numeric domain value and human-readable numeric text are different representations.</p>
       <ol>
         <li><strong>Flow:</strong> keep <code>BigDecimal("1234567.89")</code>, format it for vi-VN/en-US, parse it back, and verify the parser consumed the whole input.</li>
-        <li><strong>Code evidence:</strong><pre><code>DecimalFormat format = (DecimalFormat) NumberFormat.getNumberInstance(locale);
+        <li><strong>Code evidence:</strong><pre><code>NumberFormat numberFormat = NumberFormat.getNumberInstance(locale);
+      if (!(numberFormat instanceof DecimalFormat format)) {
+          throw new IllegalStateException("This demo requires DecimalFormat");
+      }
       format.setParseBigDecimal(true);
       Number parsed = format.parse(text, position);</code></pre></li>
         <li><strong>Observation:</strong> separators change by locale while the parsed numeric meaning returns to the same value.</li>
@@ -74,22 +77,27 @@ CurrencyController:
         <li><strong>Flow:</strong> inspect VND/USD metadata, then intentionally format USD with vi-VN and VND with en-US.</li>
         <li><strong>Code evidence:</strong><pre><code>NumberFormat format = NumberFormat.getCurrencyInstance(locale);
       format.setCurrency(currency);
+      int digits = currency.getDefaultFractionDigits();
+      if (digits &gt;= 0) {
+          format.setMinimumFractionDigits(digits);
+          format.setMaximumFractionDigits(digits);
+      }
       format.format(amount);</code></pre></li>
         <li><strong>Observation:</strong> the currency code stays fixed while symbol placement, separators, and display conventions depend on Locale.</li>
-        <li><strong>Meaning:</strong> transaction currency cannot be reconstructed from a user's language preference.</li>
+        <li><strong>Meaning:</strong> transaction currency cannot be reconstructed from a user's language preference, and changing Currency does not automatically synchronize formatter fraction digits.</li>
       </ol>
       <p><strong>Conclusion:</strong> keep amount + Currency explicit in the domain; localization only renders them for readers.</p>
     usage: true
 CollationController:
   sort():
     execution: |-
-      <p><strong>Concept:</strong> raw <code>String.compareTo</code> order is not a linguistic ordering contract.</p>
+      <p><strong>Concept:</strong> lexicographic UTF-16 <code>char</code> order from <code>String.compareTo</code> is not a linguistic ordering contract.</p>
       <ol>
         <li><strong>Flow:</strong> sort the same names with String ordering and a vi-VN <code>Collator</code>.</li>
         <li><strong>Code evidence:</strong><pre><code>stringOrder.sort(String::compareTo);
       Collator collator = Collator.getInstance(Locale.forLanguageTag("vi-VN"));
       vietnameseOrder.sort(collator);</code></pre></li>
-        <li><strong>Observation:</strong> the orders can differ because Collator applies linguistic rules instead of raw code-unit order.</li>
+        <li><strong>Observation:</strong> the orders can differ because Collator applies linguistic rules instead of lexicographic UTF-16 char code-unit order.</li>
         <li><strong>Meaning:</strong> user-facing names and technical keys often require different comparison contracts.</li>
       </ol>
       <p><strong>Conclusion:</strong> choose comparison by semantics; lowercasing then comparing is not a substitute for collation.</p>

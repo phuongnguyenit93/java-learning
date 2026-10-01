@@ -196,6 +196,20 @@ localizedBy(locale)
 → applies the locale more broadly, including relevant locale extensions
 ```
 
+For example, a locale can request a presentation calendar:
+
+```java
+Locale thaiBuddhist = Locale.forLanguageTag("th-TH-u-ca-buddhist");
+
+DateTimeFormatter formatter = DateTimeFormatter
+        .ofLocalizedDate(FormatStyle.LONG)
+        .localizedBy(thaiBuddhist);
+
+String display = formatter.format(LocalDate.of(2026, 9, 27));
+```
+
+The `LocalDate` still represents the same domain date. The `ca-buddhist` preference affects the **chronology/calendar used for presentation** when the formatter honors it; it does not create a different underlying business date.
+
 Applications should not put Unicode extensions into every request without a real use case. The learning goal is simply to understand that **Locale can carry extended preferences and some formatters know how to interpret them**, without turning Locale into a container for all business context.
 
 ## <a id="localized-pattern">Localized Pattern Generation</a>
@@ -258,4 +272,4 @@ machine contract / persistence
 
 Parsing localized input also requires an intentional validation/resolver policy and handling of `DateTimeParseException`. A human-friendly display string should not automatically become the canonical stored representation.
 
-The next chapter examines a behavior first encountered with `ResourceBundle`: **fallback**. Fallback makes localized resources reusable, but it can also hide missing translations when the resolution chain is not understood.
+The next milestone turns to **natural-language text behavior**: first `BreakIterator` text boundaries, then `Bidi` analysis for mixed LTR/RTL text. `ResourceBundle` fallback and default-Locale risks are synthesized afterward in the final milestone.

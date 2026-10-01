@@ -104,19 +104,6 @@ questions:
     readmeRelated: {file: "2.Locale/Locale.md", anchor: "locale-construction"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - id: localization-q06
-    question: "Why should a multi-user backend be careful with Locale.getDefault()?"
-    answers:
-      - {id: A, answer: "Because the default Locale is always Locale.ROOT.", explanation: "The default Locale is JVM/environment state and can become a hidden dependency; request-specific locale should be explicit when it is part of the contract."}
-      - {id: B, answer: "Because NumberFormat cannot use a default Locale.", explanation: "The default Locale is JVM/environment state and can become a hidden dependency; request-specific locale should be explicit when it is part of the contract."}
-      - {id: C, answer: "Because output may depend on JVM configuration instead of the user/request locale.", explanation: "The default Locale is JVM/environment state and can become a hidden dependency; request-specific locale should be explicit when it is part of the contract."}
-      - {id: D, answer: "Because Java forbids changing the default Locale at runtime.", explanation: "The default Locale is JVM/environment state and can become a hidden dependency; request-specific locale should be explicit when it is part of the contract."}
-    correctAnswerId: C
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "2.Locale/Locale.md", anchor: "default-locale"}
-    apiRelated: {controller: "", methodSignature: ""}
-
   - id: localization-q07
     question: "Which statement about Locale en and Locale en-US is correct?"
     answers:
@@ -156,6 +143,19 @@ questions:
     readmeRelated: {file: "3.LanguageTags/LanguageTags.md", anchor: "for-language-tag"}
     apiRelated: {controller: "", methodSignature: ""}
 
+  - id: localization-q56
+    question: "A client sends an ordered list of language preferences while the product supports only a subset of locales. What is the correct model?"
+    answers:
+      - {id: A, answer: "Always use the first language tag exactly as sent, even when the product does not support it.", explanation: "Locale negotiation is a matching problem between requested language ranges and the product's supported locales. Locale.LanguageRange with lookup/filter can model the selection, followed by an explicit product fallback policy."}
+      - {id: B, answer: "Match the requested language ranges against supported locales, then apply the product's explicit fallback policy if no match is acceptable.", explanation: "Locale negotiation is a matching problem between requested language ranges and the product's supported locales. Locale.LanguageRange with lookup/filter can model the selection, followed by an explicit product fallback policy."}
+      - {id: C, answer: "Convert every preference to the JVM default Locale before matching.", explanation: "Locale negotiation is a matching problem between requested language ranges and the product's supported locales. Locale.LanguageRange with lookup/filter can model the selection, followed by an explicit product fallback policy."}
+      - {id: D, answer: "Use ResourceBundle file names as the supported-locale list.", explanation: "Locale negotiation is a matching problem between requested language ranges and the product's supported locales. Locale.LanguageRange with lookup/filter can model the selection, followed by an explicit product fallback policy."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.LanguageTags/LanguageTags.md", anchor: "locale-matching"}
+    apiRelated: {controller: "", methodSignature: ""}
+
   - id: localization-q10
     question: "In zh-Hant-TW, what do Hant and TW represent?"
     answers:
@@ -168,6 +168,19 @@ questions:
     reviewed: false
     readmeRelated: {file: "3.LanguageTags/LanguageTags.md", anchor: "language-script-region"}
     apiRelated: {controller: "", methodSignature: ""}
+
+  - id: localization-q57
+    question: "What is the correct mental model for a tag such as th-TH-u-ca-buddhist-nu-thai?"
+    answers:
+      - {id: A, answer: "The extensions replace Locale with a ZoneId and transaction Currency.", explanation: "Unicode locale extensions can carry additional localization preferences such as calendar or numbering system that selected APIs may honor. They do not turn Locale into the application's time-zone, currency, or arbitrary business context."}
+      - {id: B, answer: "Every Java API must honor every extension in the tag.", explanation: "Unicode locale extensions can carry additional localization preferences such as calendar or numbering system that selected APIs may honor. They do not turn Locale into the application's time-zone, currency, or arbitrary business context."}
+      - {id: C, answer: "The tag carries extra localization preferences such as calendar/numbering system that supporting APIs may interpret.", explanation: "Unicode locale extensions can carry additional localization preferences such as calendar or numbering system that selected APIs may honor. They do not turn Locale into the application's time-zone, currency, or arbitrary business context."}
+      - {id: D, answer: "The extension is only a comment and can never affect formatter behavior.", explanation: "Unicode locale extensions can carry additional localization preferences such as calendar or numbering system that selected APIs may honor. They do not turn Locale into the application's time-zone, currency, or arbitrary business context."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.LanguageTags/LanguageTags.md", anchor: "locale-extensions"}
+    apiRelated: {controller: "DateTimeLocalizationController", methodSignature: "weekAndNumberingConventions()"}
 
   - id: localization-q11
     question: "A public API must reject malformed language tags and only supports vi-VN/en-US. Which two concerns should be separated?"
@@ -196,12 +209,12 @@ questions:
     apiRelated: {controller: "BundleController", methodSignature: "resolveBundle()"}
 
   - id: localization-q13
-    question: "With base name Messages and locale en-US, which simple candidate model is correct?"
+    question: "For requested Locale en-US, which simple candidate-Locale sequence is correct before considering any separate fallback-Locale branch?"
     answers:
-      - {id: A, answer: "Messages -> Messages_US -> Messages_en_US, always from general to specific.", explanation: "Lookup prefers the more specific candidate and falls back toward general/base resources; script/variant chains may be more detailed."}
-      - {id: B, answer: "Only Messages_en_US is tried; missing it fails immediately.", explanation: "Lookup prefers the more specific candidate and falls back toward general/base resources; script/variant chains may be more detailed."}
-      - {id: C, answer: "Messages_en_US -> Messages_en -> Messages.", explanation: "Lookup prefers the more specific candidate and falls back toward general/base resources; script/variant chains may be more detailed."}
-      - {id: D, answer: "The chain is determined by Locale.equals.", explanation: "Lookup prefers the more specific candidate and falls back toward general/base resources; script/variant chains may be more detailed."}
+      - {id: A, answer: "ROOT -> en -> en-US, always from general to specific.", explanation: "For one target Locale, ResourceBundle.Control generates candidates from more specific to more general, for example en-US -> en -> ROOT. Choosing a separate fallback Locale is a different step."}
+      - {id: B, answer: "Only en-US is a candidate; missing it fails immediately.", explanation: "For one target Locale, ResourceBundle.Control generates candidates from more specific to more general, for example en-US -> en -> ROOT. Choosing a separate fallback Locale is a different step."}
+      - {id: C, answer: "en-US -> en -> ROOT.", explanation: "For one target Locale, ResourceBundle.Control generates candidates from more specific to more general, for example en-US -> en -> ROOT. Choosing a separate fallback Locale is a different step."}
+      - {id: D, answer: "The candidate sequence is determined by Locale.equals.", explanation: "For one target Locale, ResourceBundle.Control generates candidates from more specific to more general, for example en-US -> en -> ROOT. Choosing a separate fallback Locale is a different step."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
@@ -247,6 +260,19 @@ questions:
     readmeRelated: {file: "5.MessageFormat/MessageFormat.md", anchor: "messageformat-model"}
     apiRelated: {controller: "MessageController", methodSignature: "format()"}
 
+  - id: localization-q46
+    question: "Which translation-key/message design is more maintainable?"
+    answers:
+      - {id: A, answer: "Use the current English sentence itself as the key.", explanation: "Stable semantic keys and complete messages give translators control over sentence structure; fragment concatenation makes localization brittle."}
+      - {id: B, answer: "Split every sentence into tiny reusable fragments.", explanation: "Stable semantic keys and complete messages give translators control over sentence structure; fragment concatenation makes localization brittle."}
+      - {id: C, answer: "Use source line numbers as keys.", explanation: "Stable semantic keys and complete messages give translators control over sentence structure; fragment concatenation makes localization brittle."}
+      - {id: D, answer: "Use a stable semantic key such as order.created and keep complete contextual messages instead of concatenated fragments.", explanation: "Stable semantic keys and complete messages give translators control over sentence structure; fragment concatenation makes localization brittle."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.MessageFormat/MessageFormat.md", anchor: "translation-key-design"}
+    apiRelated: {controller: "", methodSignature: ""}
+
   - id: localization-q17
     question: "When a MessageFormat pattern uses {0,number}, what determines the number sub-format convention?"
     answers:
@@ -258,7 +284,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "5.MessageFormat/MessageFormat.md", anchor: "messageformat-types"}
-    apiRelated: {controller: "MessageController", methodSignature: "format()"}
+    apiRelated: {controller: "", methodSignature: ""}
 
   - id: localization-q18
     question: "What is special about apostrophes in MessageFormat patterns?"
@@ -453,7 +479,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "8.Collator/Collator.md", anchor: "sorting-user-text"}
-    apiRelated: {controller: "CollationController", methodSignature: "sort()"}
+    apiRelated: {controller: "", methodSignature: ""}
 
   - id: localization-q33
     question: "What is the main advantage of DateTimeFormatter.ofLocalizedDate with a FormatStyle?"
@@ -531,110 +557,6 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "9.DateTimeLocalization/DateTimeLocalization.md", anchor: "localized-parsing"}
-    apiRelated: {controller: "DateTimeLocalizationController", methodSignature: "format()"}
-
-  - id: localization-q39
-    question: "What is ResourceBundle fallback for?"
-    answers:
-      - {id: A, answer: "Guaranteeing that every locale has a complete translation.", explanation: "Fallback tries less specific resources when a specific one is missing; it supports reuse/safety but does not prove translation completeness."}
-      - {id: B, answer: "Finding a less specific candidate when the most specific resource is unavailable.", explanation: "Fallback tries less specific resources when a specific one is missing; it supports reuse/safety but does not prove translation completeness."}
-      - {id: C, answer: "Changing the requested Locale into another equal Locale.", explanation: "Fallback tries less specific resources when a specific one is missing; it supports reuse/safety but does not prove translation completeness."}
-      - {id: D, answer: "Calling a translation service automatically when a key is missing.", explanation: "Fallback tries less specific resources when a specific one is missing; it supports reuse/safety but does not prove translation completeness."}
-    correctAnswerId: B
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "10.Fallback/Fallback.md", anchor: "bundle-candidate-chain"}
-    apiRelated: {controller: "BundleController", methodSignature: "resolveBundle()"}
-
-  - id: localization-q40
-    question: "Why can default-Locale fallback create production bugs that are hard to notice?"
-    answers:
-      - {id: A, answer: "Because default Locale always suppresses MissingResourceException.", explanation: "The JVM default can become a hidden fallback path, causing missing/unsupported translations to silently display a language chosen by the environment."}
-      - {id: B, answer: "Because it changes the domain currency.", explanation: "The JVM default can become a hidden fallback path, causing missing/unsupported translations to silently display a language chosen by the environment."}
-      - {id: C, answer: "Because a missing target resource may fall back through the JVM default and produce different output across environments.", explanation: "The JVM default can become a hidden fallback path, causing missing/unsupported translations to silently display a language chosen by the environment."}
-      - {id: D, answer: "Because JVM default Locale exists only on developer machines.", explanation: "The JVM default can become a hidden fallback path, causing missing/unsupported translations to silently display a language chosen by the environment."}
-    correctAnswerId: C
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "10.Fallback/Fallback.md", anchor: "default-locale-fallback"}
-    apiRelated: {controller: "BundleController", methodSignature: "resolveBundle()"}
-
-  - id: localization-q41
-    question: "How should a base bundle such as Messages.properties be designed?"
-    answers:
-      - {id: A, answer: "Choose and test a clear strategy: a real default language or an intentionally minimal fallback set.", explanation: "The base bundle is an important final fallback; its semantics must be explicit so missing translations are not hidden."}
-      - {id: B, answer: "It must always be locale-neutral even when its values are English.", explanation: "The base bundle is an important final fallback; its semantics must be explicit so missing translations are not hidden."}
-      - {id: C, answer: "It needs no tests because ResourceBundle guarantees every key exists.", explanation: "The base bundle is an important final fallback; its semantics must be explicit so missing translations are not hidden."}
-      - {id: D, answer: "Copy every localized string into the base bundle under different keys.", explanation: "The base bundle is an important final fallback; its semantics must be explicit so missing translations are not hidden."}
-    correctAnswerId: A
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "10.Fallback/Fallback.md", anchor: "base-bundle"}
-    apiRelated: {controller: "BundleController", methodSignature: "resolveBundle()"}
-
-  - id: localization-q42
-    question: "In which two situations can MissingResourceException occur?"
-    answers:
-      - {id: A, answer: "Only when the JVM default Locale is null.", explanation: "Failure can mean no valid bundle was found or the requested key was absent from the lookup chain; production should detect these early through validation/tests."}
-      - {id: B, answer: "Only when a properties file is not UTF-8.", explanation: "Failure can mean no valid bundle was found or the requested key was absent from the lookup chain; production should detect these early through validation/tests."}
-      - {id: C, answer: "Only when a MessageFormat pattern is invalid.", explanation: "Failure can mean no valid bundle was found or the requested key was absent from the lookup chain; production should detect these early through validation/tests."}
-      - {id: D, answer: "When no suitable bundle can be found, or when a requested key is absent from the lookup chain.", explanation: "Failure can mean no valid bundle was found or the requested key was absent from the lookup chain; production should detect these early through validation/tests."}
-    correctAnswerId: D
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "10.Fallback/Fallback.md", anchor: "missing-resource"}
-    apiRelated: {controller: "BundleController", methodSignature: "resolveBundle()"}
-
-  - id: localization-q43
-    question: "For a technical identifier/protocol token that needs stable lowercasing, which choice is usually appropriate?"
-    answers:
-      - {id: A, answer: "Call toLowerCase() with no Locale so it follows the current machine.", explanation: "Locale-sensitive case conversion belongs to human text; technical identifiers usually need Locale.ROOT or an explicit protocol normalization rule."}
-      - {id: B, answer: "Use toLowerCase(Locale.ROOT) or the protocol's explicit normalization rule.", explanation: "Locale-sensitive case conversion belongs to human text; technical identifiers usually need Locale.ROOT or an explicit protocol normalization rule."}
-      - {id: C, answer: "Use toLowerCase(Locale.forLanguageTag(\"tr-TR\")) for every system.", explanation: "Locale-sensitive case conversion belongs to human text; technical identifiers usually need Locale.ROOT or an explicit protocol normalization rule."}
-      - {id: D, answer: "Use Collator to generate a lowercase identifier.", explanation: "Locale-sensitive case conversion belongs to human text; technical identifiers usually need Locale.ROOT or an explicit protocol normalization rule."}
-    correctAnswerId: B
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "11.LocalePitfalls/LocalePitfalls.md", anchor: "turkish-i"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - id: localization-q44
-    question: "The same NumberFormat.getNumberInstance() code produces different output in CI and production. What is the most likely concern?"
-    answers:
-      - {id: A, answer: "BigDecimal changes scale depending on the machine.", explanation: "Locale-sensitive APIs used without an explicit Locale may depend on the JVM default; backend code should pass the user/request locale when that is the contract."}
-      - {id: B, answer: "NumberFormat chooses separators randomly.", explanation: "Locale-sensitive APIs used without an explicit Locale may depend on the JVM default; backend code should pass the user/request locale when that is the contract."}
-      - {id: C, answer: "The code is depending on the environment's default Locale.", explanation: "Locale-sensitive APIs used without an explicit Locale may depend on the JVM default; backend code should pass the user/request locale when that is the contract."}
-      - {id: D, answer: "The database ZoneId changes number separators.", explanation: "Locale-sensitive APIs used without an explicit Locale may depend on the JVM default; backend code should pass the user/request locale when that is the contract."}
-    correctAnswerId: C
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "11.LocalePitfalls/LocalePitfalls.md", anchor: "default-locale-production-risk"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - id: localization-q45
-    question: "Why should localized format -> parse not be a serialization contract between services?"
-    answers:
-      - {id: A, answer: "Because localized text is human-oriented and may be ambiguous, rounded, or omit fields/precision.", explanation: "Machine boundaries need explicit stable formats; human formatting is not guaranteed to round-trip to the original object."}
-      - {id: B, answer: "Because parse APIs work only on desktop Java.", explanation: "Machine boundaries need explicit stable formats; human formatting is not guaranteed to round-trip to the original object."}
-      - {id: C, answer: "Because ISO itself depends on the user's Locale.", explanation: "Machine boundaries need explicit stable formats; human formatting is not guaranteed to round-trip to the original object."}
-      - {id: D, answer: "Because every formatter always loses all precision.", explanation: "Machine boundaries need explicit stable formats; human formatting is not guaranteed to round-trip to the original object."}
-    correctAnswerId: A
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "11.LocalePitfalls/LocalePitfalls.md", anchor: "format-parse-roundtrip"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - id: localization-q46
-    question: "Which translation-key/message design is more maintainable?"
-    answers:
-      - {id: A, answer: "Use the current English sentence itself as the key.", explanation: "Stable semantic keys and complete messages give translators control over sentence structure; fragment concatenation makes localization brittle."}
-      - {id: B, answer: "Split every sentence into tiny reusable fragments.", explanation: "Stable semantic keys and complete messages give translators control over sentence structure; fragment concatenation makes localization brittle."}
-      - {id: C, answer: "Use source line numbers as keys.", explanation: "Stable semantic keys and complete messages give translators control over sentence structure; fragment concatenation makes localization brittle."}
-      - {id: D, answer: "Use a stable semantic key such as order.created and keep complete contextual messages instead of concatenated fragments.", explanation: "Stable semantic keys and complete messages give translators control over sentence structure; fragment concatenation makes localization brittle."}
-    correctAnswerId: D
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "11.LocalePitfalls/LocalePitfalls.md", anchor: "translation-key-design"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: localization-q47
@@ -647,7 +569,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "12.TextSegmentation/TextSegmentation.md", anchor: "breakiterator-model"}
+    readmeRelated: {file: "10.TextSegmentation/TextSegmentation.md", anchor: "breakiterator-model"}
     apiRelated: {controller: "TextSegmentationController", methodSignature: "boundaries()"}
 
   - id: localization-q48
@@ -660,7 +582,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "12.TextSegmentation/TextSegmentation.md", anchor: "character-boundary"}
+    readmeRelated: {file: "10.TextSegmentation/TextSegmentation.md", anchor: "character-boundary"}
     apiRelated: {controller: "TextSegmentationController", methodSignature: "boundaries()"}
 
   - id: localization-q49
@@ -673,7 +595,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "12.TextSegmentation/TextSegmentation.md", anchor: "word-sentence-boundary"}
+    readmeRelated: {file: "10.TextSegmentation/TextSegmentation.md", anchor: "word-sentence-boundary"}
     apiRelated: {controller: "TextSegmentationController", methodSignature: "boundaries()"}
 
   - id: localization-q50
@@ -686,7 +608,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "12.TextSegmentation/TextSegmentation.md", anchor: "line-boundary"}
+    readmeRelated: {file: "10.TextSegmentation/TextSegmentation.md", anchor: "line-boundary"}
     apiRelated: {controller: "TextSegmentationController", methodSignature: "boundaries()"}
 
   - id: localization-q51
@@ -699,7 +621,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "12.TextSegmentation/TextSegmentation.md", anchor: "breakiterator-boundary"}
+    readmeRelated: {file: "10.TextSegmentation/TextSegmentation.md", anchor: "breakiterator-boundary"}
     apiRelated: {controller: "TextSegmentationController", methodSignature: "boundaries()"}
 
   - id: localization-q52
@@ -712,7 +634,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "13.BidirectionalText/BidirectionalText.md", anchor: "bidi-model"}
+    readmeRelated: {file: "11.BidirectionalText/BidirectionalText.md", anchor: "bidi-model"}
     apiRelated: {controller: "BidirectionalTextController", methodSignature: "analyze()"}
 
   - id: localization-q53
@@ -725,7 +647,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "13.BidirectionalText/BidirectionalText.md", anchor: "ltr-rtl-runs"}
+    readmeRelated: {file: "11.BidirectionalText/BidirectionalText.md", anchor: "ltr-rtl-runs"}
     apiRelated: {controller: "BidirectionalTextController", methodSignature: "analyze()"}
 
   - id: localization-q54
@@ -738,7 +660,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "13.BidirectionalText/BidirectionalText.md", anchor: "java-bidi"}
+    readmeRelated: {file: "11.BidirectionalText/BidirectionalText.md", anchor: "java-bidi"}
     apiRelated: {controller: "BidirectionalTextController", methodSignature: "analyze()"}
 
   - id: localization-q55
@@ -751,5 +673,122 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "13.BidirectionalText/BidirectionalText.md", anchor: "bidi-boundary"}
+    readmeRelated: {file: "11.BidirectionalText/BidirectionalText.md", anchor: "bidi-boundary"}
     apiRelated: {controller: "BidirectionalTextController", methodSignature: "analyze()"}
+
+  - id: localization-q39
+    question: "What is ResourceBundle fallback for?"
+    answers:
+      - {id: A, answer: "Guaranteeing that every locale has a complete translation.", explanation: "Fallback is the policy for continuing resource lookup when the preferred Locale path cannot resolve an acceptable resource; this can involve less-specific candidates and, depending on Control, a separate fallback Locale. It does not prove translation completeness."}
+      - {id: B, answer: "Continuing lookup through the configured candidate/fallback policy when the preferred Locale path cannot resolve an acceptable resource.", explanation: "Fallback is the policy for continuing resource lookup when the preferred Locale path cannot resolve an acceptable resource; this can involve less-specific candidates and, depending on Control, a separate fallback Locale. It does not prove translation completeness."}
+      - {id: C, answer: "Changing the requested Locale into another equal Locale.", explanation: "Fallback is the policy for continuing resource lookup when the preferred Locale path cannot resolve an acceptable resource; this can involve less-specific candidates and, depending on Control, a separate fallback Locale. It does not prove translation completeness."}
+      - {id: D, answer: "Calling a translation service automatically when a key is missing.", explanation: "Fallback is the policy for continuing resource lookup when the preferred Locale path cannot resolve an acceptable resource; this can involve less-specific candidates and, depending on Control, a separate fallback Locale. It does not prove translation completeness."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "12.Fallback/Fallback.md", anchor: "bundle-candidate-chain"}
+    apiRelated: {controller: "BundleController", methodSignature: "resolveBundle()"}
+
+  - id: localization-q40
+    question: "Why can default-Locale fallback create production bugs that are hard to notice?"
+    answers:
+      - {id: A, answer: "Because default Locale always suppresses MissingResourceException.", explanation: "The JVM default can become a hidden fallback path, causing missing/unsupported translations to silently display a language chosen by the environment."}
+      - {id: B, answer: "Because it changes the domain currency.", explanation: "The JVM default can become a hidden fallback path, causing missing/unsupported translations to silently display a language chosen by the environment."}
+      - {id: C, answer: "Because a missing target resource may fall back through the JVM default and produce different output across environments.", explanation: "The JVM default can become a hidden fallback path, causing missing/unsupported translations to silently display a language chosen by the environment."}
+      - {id: D, answer: "Because JVM default Locale exists only on developer machines.", explanation: "The JVM default can become a hidden fallback path, causing missing/unsupported translations to silently display a language chosen by the environment."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "12.Fallback/Fallback.md", anchor: "default-locale-fallback"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: localization-q41
+    question: "How should a base bundle such as Messages.properties be designed?"
+    answers:
+      - {id: A, answer: "Choose and test a clear strategy: a real default language or an intentionally minimal fallback set.", explanation: "The base bundle is the ROOT/general candidate in the bundle family. Its meaning must be explicit, and code should not assume it is always returned before a separate fallback-Locale branch under the default Control."}
+      - {id: B, answer: "It must always be locale-neutral even when its values are English.", explanation: "The base bundle is the ROOT/general candidate in the bundle family. Its meaning must be explicit, and code should not assume it is always returned before a separate fallback-Locale branch under the default Control."}
+      - {id: C, answer: "It needs no tests because ResourceBundle guarantees every key exists.", explanation: "The base bundle is the ROOT/general candidate in the bundle family. Its meaning must be explicit, and code should not assume it is always returned before a separate fallback-Locale branch under the default Control."}
+      - {id: D, answer: "Copy every localized string into the base bundle under different keys.", explanation: "The base bundle is the ROOT/general candidate in the bundle family. Its meaning must be explicit, and code should not assume it is always returned before a separate fallback-Locale branch under the default Control."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "12.Fallback/Fallback.md", anchor: "base-bundle"}
+    apiRelated: {controller: "BundleController", methodSignature: "resolveBundle()"}
+
+  - id: localization-q42
+    question: "In which two situations can MissingResourceException occur?"
+    answers:
+      - {id: A, answer: "Only when the JVM default Locale is null.", explanation: "Failure can mean no valid bundle was found or the requested key was absent from the lookup chain; production should detect these early through validation/tests."}
+      - {id: B, answer: "Only when a properties file is not UTF-8.", explanation: "Failure can mean no valid bundle was found or the requested key was absent from the lookup chain; production should detect these early through validation/tests."}
+      - {id: C, answer: "Only when a MessageFormat pattern is invalid.", explanation: "Failure can mean no valid bundle was found or the requested key was absent from the lookup chain; production should detect these early through validation/tests."}
+      - {id: D, answer: "When no suitable bundle can be found, or when a requested key is absent from the lookup chain.", explanation: "Failure can mean no valid bundle was found or the requested key was absent from the lookup chain; production should detect these early through validation/tests."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "12.Fallback/Fallback.md", anchor: "missing-resource"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: localization-q06
+    question: "Why should a multi-user backend be careful with Locale.getDefault()?"
+    answers:
+      - {id: A, answer: "Because the default Locale is always Locale.ROOT.", explanation: "The default Locale is JVM/environment state and can become a hidden dependency; request-specific locale should be explicit when it is part of the contract."}
+      - {id: B, answer: "Because NumberFormat cannot use a default Locale.", explanation: "The default Locale is JVM/environment state and can become a hidden dependency; request-specific locale should be explicit when it is part of the contract."}
+      - {id: C, answer: "Because output may depend on JVM configuration instead of the user/request locale.", explanation: "The default Locale is JVM/environment state and can become a hidden dependency; request-specific locale should be explicit when it is part of the contract."}
+      - {id: D, answer: "Because Java forbids changing the default Locale at runtime.", explanation: "The default Locale is JVM/environment state and can become a hidden dependency; request-specific locale should be explicit when it is part of the contract."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "13.LocalePitfalls/LocalePitfalls.md", anchor: "default-locale"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: localization-q43
+    question: "For a technical identifier/protocol token that needs stable lowercasing, which choice is usually appropriate?"
+    answers:
+      - {id: A, answer: "Call toLowerCase() with no Locale so it follows the current machine.", explanation: "Locale-sensitive case conversion belongs to human text; technical identifiers usually need Locale.ROOT or an explicit protocol normalization rule."}
+      - {id: B, answer: "Use toLowerCase(Locale.ROOT) or the protocol's explicit normalization rule.", explanation: "Locale-sensitive case conversion belongs to human text; technical identifiers usually need Locale.ROOT or an explicit protocol normalization rule."}
+      - {id: C, answer: "Use toLowerCase(Locale.forLanguageTag(\"tr-TR\")) for every system.", explanation: "Locale-sensitive case conversion belongs to human text; technical identifiers usually need Locale.ROOT or an explicit protocol normalization rule."}
+      - {id: D, answer: "Use Collator to generate a lowercase identifier.", explanation: "Locale-sensitive case conversion belongs to human text; technical identifiers usually need Locale.ROOT or an explicit protocol normalization rule."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "13.LocalePitfalls/LocalePitfalls.md", anchor: "turkish-i"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: localization-q44
+    question: "The same NumberFormat.getNumberInstance() code produces different output in CI and production. What is the most likely concern?"
+    answers:
+      - {id: A, answer: "BigDecimal changes scale depending on the machine.", explanation: "NumberFormat.getNumberInstance() without an explicit Locale uses the JVM's default FORMAT Locale category. Backend code should pass the user/request Locale when that is the contract."}
+      - {id: B, answer: "NumberFormat chooses separators randomly.", explanation: "NumberFormat.getNumberInstance() without an explicit Locale uses the JVM's default FORMAT Locale category. Backend code should pass the user/request Locale when that is the contract."}
+      - {id: C, answer: "The code is depending on the environment's default FORMAT Locale category.", explanation: "NumberFormat.getNumberInstance() without an explicit Locale uses the JVM's default FORMAT Locale category. Backend code should pass the user/request Locale when that is the contract."}
+      - {id: D, answer: "The database ZoneId changes number separators.", explanation: "NumberFormat.getNumberInstance() without an explicit Locale uses the JVM's default FORMAT Locale category. Backend code should pass the user/request Locale when that is the contract."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "13.LocalePitfalls/LocalePitfalls.md", anchor: "default-locale-production-risk"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: localization-q45
+    question: "Why should localized format -> parse not be a serialization contract between services?"
+    answers:
+      - {id: A, answer: "Because localized text is human-oriented and may be ambiguous, rounded, or omit fields/precision.", explanation: "Machine boundaries need explicit stable formats; human formatting is not guaranteed to round-trip to the original object."}
+      - {id: B, answer: "Because parse APIs work only on desktop Java.", explanation: "Machine boundaries need explicit stable formats; human formatting is not guaranteed to round-trip to the original object."}
+      - {id: C, answer: "Because ISO itself depends on the user's Locale.", explanation: "Machine boundaries need explicit stable formats; human formatting is not guaranteed to round-trip to the original object."}
+      - {id: D, answer: "Because every formatter always loses all precision.", explanation: "Machine boundaries need explicit stable formats; human formatting is not guaranteed to round-trip to the original object."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "13.LocalePitfalls/LocalePitfalls.md", anchor: "format-parse-roundtrip"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: localization-q58
+    question: "Which end-to-end design best summarizes the Localization module?"
+    answers:
+      - {id: A, answer: "Persist all numbers, dates, and identifiers in the user's localized text so every layer sees the same display value.", explanation: "Keep canonical domain meaning stable, decide whether a boundary is human-facing or machine-facing, pass Locale/ZoneId/Currency explicitly where each belongs, use the appropriate localization API at the presentation boundary, and keep fallback/default-Locale policy intentional."}
+      - {id: B, answer: "Set one JVM default Locale per request and let every library infer the user's context implicitly.", explanation: "Keep canonical domain meaning stable, decide whether a boundary is human-facing or machine-facing, pass Locale/ZoneId/Currency explicitly where each belongs, use the appropriate localization API at the presentation boundary, and keep fallback/default-Locale policy intentional."}
+      - {id: C, answer: "Infer transaction Currency and ZoneId from Locale so the application needs only one context object.", explanation: "Keep canonical domain meaning stable, decide whether a boundary is human-facing or machine-facing, pass Locale/ZoneId/Currency explicitly where each belongs, use the appropriate localization API at the presentation boundary, and keep fallback/default-Locale policy intentional."}
+      - {id: D, answer: "Keep canonical domain values stable; localize only at human-facing boundaries with explicit context and policy, while machine contracts remain stable and locale-neutral where required.", explanation: "Keep canonical domain meaning stable, decide whether a boundary is human-facing or machine-facing, pass Locale/ZoneId/Currency explicitly where each belongs, use the appropriate localization API at the presentation boundary, and keep fallback/default-Locale policy intentional."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "13.LocalePitfalls/LocalePitfalls.md", anchor: "localization-synthesis"}
+    apiRelated: {controller: "", methodSignature: ""}

@@ -40,12 +40,12 @@
 
 questions:
   - id: localization-q01
-    question: "Phát biểu nào phân biệt đúng internationalization (i18n) và localization (l10n)?"
+    question: "Phát biểu nào phân biệt đúng quốc tế hóa (internationalization/i18n) và bản địa hóa (localization/l10n)?"
     answers:
-      - {id: A, answer: "i18n là dịch câu chữ; l10n là đổi encoding của source code.", explanation: "i18n là thiết kế để phần mềm thích nghi được với nhiều locale; l10n cung cấp nội dung và convention cụ thể cho một locale."}
-      - {id: B, answer: "i18n là thiết kế khả năng thích nghi; l10n là cung cấp bản dịch và quy ước cụ thể cho từng locale.", explanation: "i18n là thiết kế để phần mềm thích nghi được với nhiều locale; l10n cung cấp nội dung và convention cụ thể cho một locale."}
-      - {id: C, answer: "i18n chỉ dành cho backend; l10n chỉ dành cho frontend.", explanation: "i18n là thiết kế để phần mềm thích nghi được với nhiều locale; l10n cung cấp nội dung và convention cụ thể cho một locale."}
-      - {id: D, answer: "Hai khái niệm hoàn toàn đồng nghĩa.", explanation: "i18n là thiết kế để phần mềm thích nghi được với nhiều locale; l10n cung cấp nội dung và convention cụ thể cho một locale."}
+      - {id: A, answer: "i18n là dịch câu chữ; l10n là đổi mã hóa ký tự của mã nguồn.", explanation: "i18n là thiết kế để phần mềm thích nghi với nhiều Locale; l10n cung cấp nội dung và quy ước cụ thể cho một Locale."}
+      - {id: B, answer: "i18n là thiết kế khả năng thích nghi; l10n là cung cấp bản dịch và quy ước cụ thể cho từng Locale.", explanation: "i18n là thiết kế để phần mềm thích nghi với nhiều Locale; l10n cung cấp nội dung và quy ước cụ thể cho một Locale."}
+      - {id: C, answer: "i18n chỉ dành cho hệ thống phía máy chủ; l10n chỉ dành cho giao diện phía người dùng.", explanation: "i18n là thiết kế để phần mềm thích nghi với nhiều Locale; l10n cung cấp nội dung và quy ước cụ thể cho một Locale."}
+      - {id: D, answer: "Hai khái niệm hoàn toàn đồng nghĩa.", explanation: "i18n là thiết kế để phần mềm thích nghi với nhiều Locale; l10n cung cấp nội dung và quy ước cụ thể cho một Locale."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -55,10 +55,10 @@ questions:
   - id: localization-q02
     question: "Một Order có total là BigDecimal và createdAt là Instant. Khi đổi từ vi-VN sang en-US, điều gì nên thay đổi?"
     answers:
-      - {id: A, answer: "BigDecimal phải đổi giá trị để dùng dấu chấm thập phân.", explanation: "Locale nên thay đổi representation dành cho người dùng, còn domain value như BigDecimal và Instant phải giữ nguyên ý nghĩa."}
-      - {id: B, answer: "Instant phải dịch chuyển theo múi giờ của locale.", explanation: "Locale nên thay đổi representation dành cho người dùng, còn domain value như BigDecimal và Instant phải giữ nguyên ý nghĩa."}
-      - {id: C, answer: "Chỉ text trình bày như separators, ngày giờ và message thay đổi; domain value giữ nguyên.", explanation: "Locale nên thay đổi representation dành cho người dùng, còn domain value như BigDecimal và Instant phải giữ nguyên ý nghĩa."}
-      - {id: D, answer: "Currency của giao dịch phải đổi theo region trong Locale.", explanation: "Locale nên thay đổi representation dành cho người dùng, còn domain value như BigDecimal và Instant phải giữ nguyên ý nghĩa."}
+      - {id: A, answer: "BigDecimal phải đổi giá trị để dùng dấu chấm thập phân.", explanation: "Locale nên thay đổi cách biểu diễn dành cho người dùng, còn giá trị nghiệp vụ như BigDecimal và Instant phải giữ nguyên ý nghĩa."}
+      - {id: B, answer: "Instant phải dịch chuyển theo múi giờ của Locale.", explanation: "Locale nên thay đổi cách biểu diễn dành cho người dùng, còn giá trị nghiệp vụ như BigDecimal và Instant phải giữ nguyên ý nghĩa."}
+      - {id: C, answer: "Chỉ cách trình bày như dấu phân cách, ngày giờ và thông điệp thay đổi; giá trị nghiệp vụ giữ nguyên.", explanation: "Locale nên thay đổi cách biểu diễn dành cho người dùng, còn giá trị nghiệp vụ như BigDecimal và Instant phải giữ nguyên ý nghĩa."}
+      - {id: D, answer: "Currency của giao dịch phải đổi theo khu vực trong Locale.", explanation: "Locale nên thay đổi cách biểu diễn dành cho người dùng, còn giá trị nghiệp vụ như BigDecimal và Instant phải giữ nguyên ý nghĩa."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
@@ -66,12 +66,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: localization-q03
-    question: "Localization phù hợp nhất ở ranh giới nào của ứng dụng?"
+    question: "Bản địa hóa phù hợp nhất ở ranh giới nào của ứng dụng?"
     answers:
-      - {id: A, answer: "Ở human-facing boundary như UI, email, report, sau khi domain value đã được xác định.", explanation: "Localization chủ yếu thuộc ranh giới giao tiếp với con người; machine contracts và domain values nên giữ representation ổn định."}
-      - {id: B, answer: "Trong mọi entity để dữ liệu đã lưu sẵn theo locale.", explanation: "Localization chủ yếu thuộc ranh giới giao tiếp với con người; machine contracts và domain values nên giữ representation ổn định."}
-      - {id: C, answer: "Trong cache key để key dễ đọc hơn.", explanation: "Localization chủ yếu thuộc ranh giới giao tiếp với con người; machine contracts và domain values nên giữ representation ổn định."}
-      - {id: D, answer: "Trong protocol identifier để mỗi user có identifier riêng.", explanation: "Localization chủ yếu thuộc ranh giới giao tiếp với con người; machine contracts và domain values nên giữ representation ổn định."}
+      - {id: A, answer: "Ở ranh giới dành cho con người như UI, email, báo cáo, sau khi giá trị nghiệp vụ đã được xác định.", explanation: "Bản địa hóa chủ yếu thuộc ranh giới giao tiếp với con người; hợp đồng dành cho máy và giá trị nghiệp vụ nên giữ cách biểu diễn ổn định."}
+      - {id: B, answer: "Trong mọi thực thể để dữ liệu được lưu sẵn theo Locale.", explanation: "Bản địa hóa chủ yếu thuộc ranh giới giao tiếp với con người; hợp đồng dành cho máy và giá trị nghiệp vụ nên giữ cách biểu diễn ổn định."}
+      - {id: C, answer: "Trong khóa bộ nhớ đệm để khóa dễ đọc hơn.", explanation: "Bản địa hóa chủ yếu thuộc ranh giới giao tiếp với con người; hợp đồng dành cho máy và giá trị nghiệp vụ nên giữ cách biểu diễn ổn định."}
+      - {id: D, answer: "Trong định danh giao thức để mỗi người dùng có một định danh riêng.", explanation: "Bản địa hóa chủ yếu thuộc ranh giới giao tiếp với con người; hợp đồng dành cho máy và giá trị nghiệp vụ nên giữ cách biểu diễn ổn định."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -79,12 +79,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: localization-q04
-    question: "Mental model đúng nhất về Locale trong Java là gì?"
+    question: "Mô hình tư duy đúng nhất về Locale trong Java là gì?"
     answers:
-      - {id: A, answer: "Locale là vị trí GPS của người dùng.", explanation: "Locale là context/preference về language, script, region và convention; nó là đầu vào cho API locale-sensitive chứ không tự dịch hay tự format."}
-      - {id: B, answer: "Locale là một ZoneId rút gọn.", explanation: "Locale là context/preference về language, script, region và convention; nó là đầu vào cho API locale-sensitive chứ không tự dịch hay tự format."}
-      - {id: C, answer: "Locale là bản dịch đã hoàn chỉnh của ứng dụng.", explanation: "Locale là context/preference về language, script, region và convention; nó là đầu vào cho API locale-sensitive chứ không tự dịch hay tự format."}
-      - {id: D, answer: "Locale là context mô tả language/script/region để các API chọn convention phù hợp.", explanation: "Locale là context/preference về language, script, region và convention; nó là đầu vào cho API locale-sensitive chứ không tự dịch hay tự format."}
+      - {id: A, answer: "Locale là vị trí GPS của người dùng.", explanation: "Locale là ngữ cảnh hoặc lựa chọn về ngôn ngữ, hệ chữ viết, khu vực và quy ước; nó là đầu vào cho các API phụ thuộc Locale chứ không tự dịch hay tự định dạng."}
+      - {id: B, answer: "Locale là một ZoneId rút gọn.", explanation: "Locale là ngữ cảnh hoặc lựa chọn về ngôn ngữ, hệ chữ viết, khu vực và quy ước; nó là đầu vào cho các API phụ thuộc Locale chứ không tự dịch hay tự định dạng."}
+      - {id: C, answer: "Locale là bản dịch đã hoàn chỉnh của ứng dụng.", explanation: "Locale là ngữ cảnh hoặc lựa chọn về ngôn ngữ, hệ chữ viết, khu vực và quy ước; nó là đầu vào cho các API phụ thuộc Locale chứ không tự dịch hay tự định dạng."}
+      - {id: D, answer: "Locale là ngữ cảnh mô tả ngôn ngữ, hệ chữ viết và khu vực để các API chọn quy ước phù hợp.", explanation: "Locale là ngữ cảnh hoặc lựa chọn về ngôn ngữ, hệ chữ viết, khu vực và quy ước; nó là đầu vào cho các API phụ thuộc Locale chứ không tự dịch hay tự định dạng."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
@@ -92,38 +92,25 @@ questions:
     apiRelated: {controller: "LocaleController", methodSignature: "compareLocales()"}
 
   - id: localization-q05
-    question: "Khi nhận language tag vi-VN từ HTTP/config, cách tạo Locale tự nhiên nhất là gì?"
+    question: "Khi nhận thẻ ngôn ngữ vi-VN từ HTTP hoặc cấu hình, cách tạo Locale tự nhiên nhất là gì?"
     answers:
-      - {id: A, answer: "Tự split chuỗi theo dấu gạch ngang rồi nối thành key.", explanation: "Locale.forLanguageTag phù hợp khi đầu vào đã là BCP 47 tag; Locale.Builder hữu ích khi cần xây chi tiết hoặc validation chặt hơn."}
-      - {id: B, answer: "Dùng Locale.forLanguageTag(\"vi-VN\").", explanation: "Locale.forLanguageTag phù hợp khi đầu vào đã là BCP 47 tag; Locale.Builder hữu ích khi cần xây chi tiết hoặc validation chặt hơn."}
-      - {id: C, answer: "Luôn dùng Locale.getDefault().", explanation: "Locale.forLanguageTag phù hợp khi đầu vào đã là BCP 47 tag; Locale.Builder hữu ích khi cần xây chi tiết hoặc validation chặt hơn."}
-      - {id: D, answer: "Tạo ZoneId trước rồi chuyển sang Locale.", explanation: "Locale.forLanguageTag phù hợp khi đầu vào đã là BCP 47 tag; Locale.Builder hữu ích khi cần xây chi tiết hoặc validation chặt hơn."}
+      - {id: A, answer: "Tự tách chuỗi theo dấu gạch ngang rồi nối thành khóa.", explanation: "Locale.forLanguageTag phù hợp khi đầu vào đã là thẻ BCP 47; Locale.Builder hữu ích khi cần xây Locale theo từng thành phần hoặc kiểm tra dữ liệu chặt hơn."}
+      - {id: B, answer: "Dùng Locale.forLanguageTag(\"vi-VN\").", explanation: "Locale.forLanguageTag phù hợp khi đầu vào đã là thẻ BCP 47; Locale.Builder hữu ích khi cần xây Locale theo từng thành phần hoặc kiểm tra dữ liệu chặt hơn."}
+      - {id: C, answer: "Luôn dùng Locale.getDefault().", explanation: "Locale.forLanguageTag phù hợp khi đầu vào đã là thẻ BCP 47; Locale.Builder hữu ích khi cần xây Locale theo từng thành phần hoặc kiểm tra dữ liệu chặt hơn."}
+      - {id: D, answer: "Tạo ZoneId trước rồi chuyển sang Locale.", explanation: "Locale.forLanguageTag phù hợp khi đầu vào đã là thẻ BCP 47; Locale.Builder hữu ích khi cần xây Locale theo từng thành phần hoặc kiểm tra dữ liệu chặt hơn."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "2.Locale/Locale.md", anchor: "locale-construction"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - id: localization-q06
-    question: "Vì sao backend nhiều người dùng nên thận trọng với Locale.getDefault()?"
-    answers:
-      - {id: A, answer: "Vì default Locale luôn là Locale.ROOT.", explanation: "Default Locale là trạng thái JVM/environment và có thể trở thành hidden dependency; request-specific locale nên được truyền tường minh khi đó là contract."}
-      - {id: B, answer: "Vì default Locale không dùng được cho NumberFormat.", explanation: "Default Locale là trạng thái JVM/environment và có thể trở thành hidden dependency; request-specific locale nên được truyền tường minh khi đó là contract."}
-      - {id: C, answer: "Vì output có thể phụ thuộc cấu hình JVM thay vì locale của user/request.", explanation: "Default Locale là trạng thái JVM/environment và có thể trở thành hidden dependency; request-specific locale nên được truyền tường minh khi đó là contract."}
-      - {id: D, answer: "Vì Java cấm đổi default Locale ở runtime.", explanation: "Default Locale là trạng thái JVM/environment và có thể trở thành hidden dependency; request-specific locale nên được truyền tường minh khi đó là contract."}
-    correctAnswerId: C
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "2.Locale/Locale.md", anchor: "default-locale"}
-    apiRelated: {controller: "", methodSignature: ""}
-
   - id: localization-q07
     question: "Locale en và Locale en-US có quan hệ nào đúng?"
     answers:
-      - {id: A, answer: "Chúng không equals vì identity khác nhau, dù ResourceBundle có thể fallback giữa các mức tổng quát/cụ thể.", explanation: "Locale equality dựa trên các thành phần identity; khả năng dùng chung resource là quy tắc lookup riêng, không làm hai Locale trở thành equal."}
-      - {id: B, answer: "Chúng luôn equals vì cùng language en.", explanation: "Locale equality dựa trên các thành phần identity; khả năng dùng chung resource là quy tắc lookup riêng, không làm hai Locale trở thành equal."}
-      - {id: C, answer: "Chúng chỉ khác khi JVM default locale là en-US.", explanation: "Locale equality dựa trên các thành phần identity; khả năng dùng chung resource là quy tắc lookup riêng, không làm hai Locale trở thành equal."}
-      - {id: D, answer: "equals phụ thuộc ResourceBundle đang load.", explanation: "Locale equality dựa trên các thành phần identity; khả năng dùng chung resource là quy tắc lookup riêng, không làm hai Locale trở thành equal."}
+      - {id: A, answer: "Chúng không bằng nhau theo equals vì định danh khác nhau, dù ResourceBundle có thể dự phòng giữa mức cụ thể và tổng quát.", explanation: "Locale.equals dựa trên các thành phần định danh; khả năng dùng chung tài nguyên là quy tắc tra cứu riêng và không làm hai Locale trở thành bằng nhau."}
+      - {id: B, answer: "Chúng luôn bằng nhau theo equals vì cùng ngôn ngữ en.", explanation: "Locale.equals dựa trên các thành phần định danh; khả năng dùng chung tài nguyên là quy tắc tra cứu riêng và không làm hai Locale trở thành bằng nhau."}
+      - {id: C, answer: "Chúng chỉ khác khi Locale mặc định của JVM là en-US.", explanation: "Locale.equals dựa trên các thành phần định danh; khả năng dùng chung tài nguyên là quy tắc tra cứu riêng và không làm hai Locale trở thành bằng nhau."}
+      - {id: D, answer: "Kết quả equals phụ thuộc ResourceBundle đang được nạp.", explanation: "Locale.equals dựa trên các thành phần định danh; khả năng dùng chung tài nguyên là quy tắc tra cứu riêng và không làm hai Locale trở thành bằng nhau."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -131,12 +118,12 @@ questions:
     apiRelated: {controller: "LocaleController", methodSignature: "compareLocales()"}
 
   - id: localization-q08
-    question: "BCP 47 language tag có vai trò chính gì?"
+    question: "Thẻ ngôn ngữ BCP 47 có vai trò chính gì?"
     answers:
-      - {id: A, answer: "Là tên file ResourceBundle bắt buộc dùng dấu gạch dưới.", explanation: "Language tag là representation text chuẩn để trao đổi locale qua HTTP/config/database; Locale là object Java tương ứng."}
-      - {id: B, answer: "Là timezone identifier dành cho DateTimeFormatter.", explanation: "Language tag là representation text chuẩn để trao đổi locale qua HTTP/config/database; Locale là object Java tương ứng."}
-      - {id: C, answer: "Là chuỗi tùy ý miễn có language code.", explanation: "Language tag là representation text chuẩn để trao đổi locale qua HTTP/config/database; Locale là object Java tương ứng."}
-      - {id: D, answer: "Là representation text có cấu trúc để mang thông tin locale giữa các hệ thống.", explanation: "Language tag là representation text chuẩn để trao đổi locale qua HTTP/config/database; Locale là object Java tương ứng."}
+      - {id: A, answer: "Là tên tệp ResourceBundle bắt buộc dùng dấu gạch dưới.", explanation: "Thẻ ngôn ngữ là cách biểu diễn văn bản chuẩn để trao đổi Locale qua HTTP, cấu hình hoặc cơ sở dữ liệu; Locale là đối tượng Java tương ứng."}
+      - {id: B, answer: "Là định danh múi giờ dành cho DateTimeFormatter.", explanation: "Thẻ ngôn ngữ là cách biểu diễn văn bản chuẩn để trao đổi Locale qua HTTP, cấu hình hoặc cơ sở dữ liệu; Locale là đối tượng Java tương ứng."}
+      - {id: C, answer: "Là chuỗi tùy ý miễn có mã ngôn ngữ.", explanation: "Thẻ ngôn ngữ là cách biểu diễn văn bản chuẩn để trao đổi Locale qua HTTP, cấu hình hoặc cơ sở dữ liệu; Locale là đối tượng Java tương ứng."}
+      - {id: D, answer: "Là cách biểu diễn văn bản có cấu trúc để mang thông tin Locale giữa các hệ thống.", explanation: "Thẻ ngôn ngữ là cách biểu diễn văn bản chuẩn để trao đổi Locale qua HTTP, cấu hình hoặc cơ sở dữ liệu; Locale là đối tượng Java tương ứng."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
@@ -146,36 +133,62 @@ questions:
   - id: localization-q09
     question: "Phát biểu nào đúng về Locale.forLanguageTag và toLanguageTag?"
     answers:
-      - {id: A, answer: "toLanguageTag luôn trả tên bundle kiểu Messages_vi_VN.", explanation: "forLanguageTag chuyển BCP 47 text thành Locale; toLanguageTag tạo representation chuẩn dùng dấu gạch ngang cho trao đổi."}
-      - {id: B, answer: "Chúng cung cấp chuyển đổi chuẩn giữa BCP 47 text và Locale, tránh tự nối language/region.", explanation: "forLanguageTag chuyển BCP 47 text thành Locale; toLanguageTag tạo representation chuẩn dùng dấu gạch ngang cho trao đổi."}
-      - {id: C, answer: "forLanguageTag chỉ chấp nhận tag có region.", explanation: "forLanguageTag chuyển BCP 47 text thành Locale; toLanguageTag tạo representation chuẩn dùng dấu gạch ngang cho trao đổi."}
-      - {id: D, answer: "Hai API chỉ dùng cho ResourceBundle class-based.", explanation: "forLanguageTag chuyển BCP 47 text thành Locale; toLanguageTag tạo representation chuẩn dùng dấu gạch ngang cho trao đổi."}
+      - {id: A, answer: "toLanguageTag luôn trả tên gói tài nguyên kiểu Messages_vi_VN.", explanation: "forLanguageTag chuyển thẻ BCP 47 thành Locale; toLanguageTag tạo biểu diễn chuẩn dùng dấu gạch ngang để trao đổi."}
+      - {id: B, answer: "Chúng cung cấp chuyển đổi chuẩn giữa thẻ BCP 47 và Locale, tránh tự ghép ngôn ngữ với khu vực.", explanation: "forLanguageTag chuyển thẻ BCP 47 thành Locale; toLanguageTag tạo biểu diễn chuẩn dùng dấu gạch ngang để trao đổi."}
+      - {id: C, answer: "forLanguageTag chỉ chấp nhận thẻ có khu vực.", explanation: "forLanguageTag chuyển thẻ BCP 47 thành Locale; toLanguageTag tạo biểu diễn chuẩn dùng dấu gạch ngang để trao đổi."}
+      - {id: D, answer: "Hai API chỉ dùng cho ResourceBundle dạng lớp.", explanation: "forLanguageTag chuyển thẻ BCP 47 thành Locale; toLanguageTag tạo biểu diễn chuẩn dùng dấu gạch ngang để trao đổi."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "3.LanguageTags/LanguageTags.md", anchor: "for-language-tag"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - id: localization-q10
-    question: "Trong tag zh-Hant-TW, Hant và TW lần lượt biểu diễn điều gì?"
+  - id: localization-q56
+    question: "Máy khách gửi danh sách ngôn ngữ ưu tiên có thứ tự, còn sản phẩm chỉ hỗ trợ một tập Locale. Mô hình xử lý đúng là gì?"
     answers:
-      - {id: A, answer: "Hant là timezone, TW là currency.", explanation: "Language, script và region là các chiều khác nhau; Hant là script, TW là region."}
-      - {id: B, answer: "Hant là variant, TW là language.", explanation: "Language, script và region là các chiều khác nhau; Hant là script, TW là region."}
-      - {id: C, answer: "Hant là script, TW là region.", explanation: "Language, script và region là các chiều khác nhau; Hant là script, TW là region."}
-      - {id: D, answer: "Hant là locale category, TW là extension.", explanation: "Language, script và region là các chiều khác nhau; Hant là script, TW là region."}
+      - {id: A, answer: "Luôn lấy thẻ ngôn ngữ đầu tiên dù sản phẩm không hỗ trợ.", explanation: "Đây là bài toán đối chiếu các dải ngôn ngữ được yêu cầu với tập Locale mà sản phẩm hỗ trợ. Locale.LanguageRange cùng các thao tác lookup/filter có thể mô hình hóa bước lựa chọn, sau đó áp dụng chính sách dự phòng rõ ràng của sản phẩm."}
+      - {id: B, answer: "Đối chiếu các dải ngôn ngữ yêu cầu với tập Locale được hỗ trợ, rồi áp dụng chính sách dự phòng rõ ràng nếu không có kết quả phù hợp.", explanation: "Đây là bài toán đối chiếu các dải ngôn ngữ được yêu cầu với tập Locale mà sản phẩm hỗ trợ. Locale.LanguageRange cùng các thao tác lookup/filter có thể mô hình hóa bước lựa chọn, sau đó áp dụng chính sách dự phòng rõ ràng của sản phẩm."}
+      - {id: C, answer: "Đổi mọi lựa chọn thành Locale mặc định của JVM trước khi đối chiếu.", explanation: "Đây là bài toán đối chiếu các dải ngôn ngữ được yêu cầu với tập Locale mà sản phẩm hỗ trợ. Locale.LanguageRange cùng các thao tác lookup/filter có thể mô hình hóa bước lựa chọn, sau đó áp dụng chính sách dự phòng rõ ràng của sản phẩm."}
+      - {id: D, answer: "Dùng tên tệp ResourceBundle làm danh sách Locale được hỗ trợ.", explanation: "Đây là bài toán đối chiếu các dải ngôn ngữ được yêu cầu với tập Locale mà sản phẩm hỗ trợ. Locale.LanguageRange cùng các thao tác lookup/filter có thể mô hình hóa bước lựa chọn, sau đó áp dụng chính sách dự phòng rõ ràng của sản phẩm."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.LanguageTags/LanguageTags.md", anchor: "locale-matching"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: localization-q10
+    question: "Trong thẻ zh-Hant-TW, Hant và TW lần lượt biểu diễn điều gì?"
+    answers:
+      - {id: A, answer: "Hant là múi giờ, TW là tiền tệ.", explanation: "Ngôn ngữ, hệ chữ viết và khu vực là các chiều khác nhau; Hant là hệ chữ viết, TW là khu vực."}
+      - {id: B, answer: "Hant là biến thể, TW là ngôn ngữ.", explanation: "Ngôn ngữ, hệ chữ viết và khu vực là các chiều khác nhau; Hant là hệ chữ viết, TW là khu vực."}
+      - {id: C, answer: "Hant là hệ chữ viết, TW là khu vực.", explanation: "Ngôn ngữ, hệ chữ viết và khu vực là các chiều khác nhau; Hant là hệ chữ viết, TW là khu vực."}
+      - {id: D, answer: "Hant là nhóm Locale, TW là phần mở rộng.", explanation: "Ngôn ngữ, hệ chữ viết và khu vực là các chiều khác nhau; Hant là hệ chữ viết, TW là khu vực."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "3.LanguageTags/LanguageTags.md", anchor: "language-script-region"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - id: localization-q11
-    question: "Một public API cần từ chối language tag sai cú pháp và cũng chỉ hỗ trợ vi-VN/en-US. Cần tách hai bước nào?"
+  - id: localization-q57
+    question: "Mô hình tư duy đúng cho thẻ th-TH-u-ca-buddhist-nu-thai là gì?"
     answers:
-      - {id: A, answer: "Validation cú pháp bằng API phù hợp, rồi kiểm tra policy locale mà application thực sự hỗ trợ.", explanation: "Syntax validity và application support là hai contract khác nhau; một tag hợp lệ BCP 47 vẫn có thể không được sản phẩm hỗ trợ."}
-      - {id: B, answer: "Chỉ cần Locale.forLanguageTag; parse được nghĩa là application phải hỗ trợ.", explanation: "Syntax validity và application support là hai contract khác nhau; một tag hợp lệ BCP 47 vẫn có thể không được sản phẩm hỗ trợ."}
-      - {id: C, answer: "Chỉ kiểm tra có dấu '-' trong string.", explanation: "Syntax validity và application support là hai contract khác nhau; một tag hợp lệ BCP 47 vẫn có thể không được sản phẩm hỗ trợ."}
-      - {id: D, answer: "Đổi mọi tag lạ thành JVM default locale.", explanation: "Syntax validity và application support là hai contract khác nhau; một tag hợp lệ BCP 47 vẫn có thể không được sản phẩm hỗ trợ."}
+      - {id: A, answer: "Các phần mở rộng thay Locale bằng ZoneId và Currency của giao dịch.", explanation: "Phần mở rộng Locale Unicode (Unicode locale extension) có thể mang lựa chọn bản địa hóa bổ sung như hệ lịch hoặc hệ chữ số để các API có hỗ trợ đọc. Chúng không biến Locale thành múi giờ, tiền tệ giao dịch hay nơi chứa mọi ngữ cảnh nghiệp vụ."}
+      - {id: B, answer: "Mọi API Java bắt buộc phải hiểu mọi phần mở rộng trong thẻ.", explanation: "Phần mở rộng Locale Unicode (Unicode locale extension) có thể mang lựa chọn bản địa hóa bổ sung như hệ lịch hoặc hệ chữ số để các API có hỗ trợ đọc. Chúng không biến Locale thành múi giờ, tiền tệ giao dịch hay nơi chứa mọi ngữ cảnh nghiệp vụ."}
+      - {id: C, answer: "Thẻ mang thêm lựa chọn bản địa hóa như hệ lịch/hệ chữ số để các API có hỗ trợ có thể diễn giải.", explanation: "Phần mở rộng Locale Unicode (Unicode locale extension) có thể mang lựa chọn bản địa hóa bổ sung như hệ lịch hoặc hệ chữ số để các API có hỗ trợ đọc. Chúng không biến Locale thành múi giờ, tiền tệ giao dịch hay nơi chứa mọi ngữ cảnh nghiệp vụ."}
+      - {id: D, answer: "Phần mở rộng chỉ là ghi chú và không bao giờ ảnh hưởng hành vi bộ định dạng.", explanation: "Phần mở rộng Locale Unicode (Unicode locale extension) có thể mang lựa chọn bản địa hóa bổ sung như hệ lịch hoặc hệ chữ số để các API có hỗ trợ đọc. Chúng không biến Locale thành múi giờ, tiền tệ giao dịch hay nơi chứa mọi ngữ cảnh nghiệp vụ."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.LanguageTags/LanguageTags.md", anchor: "locale-extensions"}
+    apiRelated: {controller: "DateTimeLocalizationController", methodSignature: "weekAndNumberingConventions()"}
+
+  - id: localization-q11
+    question: "Một API công khai cần từ chối thẻ ngôn ngữ sai cú pháp và cũng chỉ hỗ trợ vi-VN/en-US. Cần tách hai bước nào?"
+    answers:
+      - {id: A, answer: "Kiểm tra cú pháp bằng API phù hợp, rồi kiểm tra chính sách Locale mà ứng dụng thực sự hỗ trợ.", explanation: "Tính hợp lệ về cú pháp và phạm vi Locale ứng dụng hỗ trợ là hai hợp đồng khác nhau; một thẻ BCP 47 hợp lệ vẫn có thể không được sản phẩm hỗ trợ."}
+      - {id: B, answer: "Chỉ cần Locale.forLanguageTag; phân tích được nghĩa là ứng dụng phải hỗ trợ.", explanation: "Tính hợp lệ về cú pháp và phạm vi Locale ứng dụng hỗ trợ là hai hợp đồng khác nhau; một thẻ BCP 47 hợp lệ vẫn có thể không được sản phẩm hỗ trợ."}
+      - {id: C, answer: "Chỉ kiểm tra chuỗi có dấu '-' hay không.", explanation: "Tính hợp lệ về cú pháp và phạm vi Locale ứng dụng hỗ trợ là hai hợp đồng khác nhau; một thẻ BCP 47 hợp lệ vẫn có thể không được sản phẩm hỗ trợ."}
+      - {id: D, answer: "Đổi mọi thẻ lạ thành Locale mặc định của JVM.", explanation: "Tính hợp lệ về cú pháp và phạm vi Locale ứng dụng hỗ trợ là hai hợp đồng khác nhau; một thẻ BCP 47 hợp lệ vẫn có thể không được sản phẩm hỗ trợ."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -183,12 +196,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: localization-q12
-    question: "ResourceBundle thực sự làm gì trong pipeline localization?"
+    question: "ResourceBundle thực sự làm gì trong luồng bản địa hóa?"
     answers:
-      - {id: A, answer: "Tự động dịch English sang mọi ngôn ngữ.", explanation: "ResourceBundle tra cứu resource đã được chuẩn bị sẵn theo base name, Locale, candidate/fallback và stable key."}
-      - {id: B, answer: "Tra cứu resource đã có sẵn theo key + Locale và áp dụng lookup/fallback rules.", explanation: "ResourceBundle tra cứu resource đã được chuẩn bị sẵn theo base name, Locale, candidate/fallback và stable key."}
-      - {id: C, answer: "Tự format mọi number/date trong resource.", explanation: "ResourceBundle tra cứu resource đã được chuẩn bị sẵn theo base name, Locale, candidate/fallback và stable key."}
-      - {id: D, answer: "Thay Locale bằng một translation service.", explanation: "ResourceBundle tra cứu resource đã được chuẩn bị sẵn theo base name, Locale, candidate/fallback và stable key."}
+      - {id: A, answer: "Tự động dịch tiếng Anh sang mọi ngôn ngữ.", explanation: "ResourceBundle tra cứu tài nguyên đã chuẩn bị sẵn theo tên cơ sở (base name), Locale, chuỗi ứng viên/dự phòng và khóa ổn định."}
+      - {id: B, answer: "Tra cứu tài nguyên đã có sẵn theo khóa và Locale, rồi áp dụng quy tắc tra cứu/dự phòng.", explanation: "ResourceBundle tra cứu tài nguyên đã chuẩn bị sẵn theo tên cơ sở (base name), Locale, chuỗi ứng viên/dự phòng và khóa ổn định."}
+      - {id: C, answer: "Tự định dạng mọi số và ngày giờ trong tài nguyên.", explanation: "ResourceBundle tra cứu tài nguyên đã chuẩn bị sẵn theo tên cơ sở (base name), Locale, chuỗi ứng viên/dự phòng và khóa ổn định."}
+      - {id: D, answer: "Thay Locale bằng một dịch vụ dịch.", explanation: "ResourceBundle tra cứu tài nguyên đã chuẩn bị sẵn theo tên cơ sở (base name), Locale, chuỗi ứng viên/dự phòng và khóa ổn định."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -196,12 +209,12 @@ questions:
     apiRelated: {controller: "BundleController", methodSignature: "resolveBundle()"}
 
   - id: localization-q13
-    question: "Với base name Messages và locale en-US, mental model candidate đơn giản nào đúng?"
+    question: "Với Locale yêu cầu en-US, chuỗi Locale ứng viên đơn giản nào đúng trước khi xét một nhánh Locale dự phòng riêng?"
     answers:
-      - {id: A, answer: "Messages -> Messages_US -> Messages_en_US, luôn từ tổng quát đến cụ thể.", explanation: "Candidate lookup ưu tiên locale cụ thể rồi giảm dần về tổng quát/base; chain thực tế có thể phức tạp hơn với script/variant."}
-      - {id: B, answer: "Chỉ Messages_en_US được thử; thiếu thì lỗi ngay.", explanation: "Candidate lookup ưu tiên locale cụ thể rồi giảm dần về tổng quát/base; chain thực tế có thể phức tạp hơn với script/variant."}
-      - {id: C, answer: "Messages_en_US -> Messages_en -> Messages.", explanation: "Candidate lookup ưu tiên locale cụ thể rồi giảm dần về tổng quát/base; chain thực tế có thể phức tạp hơn với script/variant."}
-      - {id: D, answer: "Chain phụ thuộc equals của Locale.", explanation: "Candidate lookup ưu tiên locale cụ thể rồi giảm dần về tổng quát/base; chain thực tế có thể phức tạp hơn với script/variant."}
+      - {id: A, answer: "ROOT -> en -> en-US, luôn từ tổng quát đến cụ thể.", explanation: "Với một Locale đích, ResourceBundle.Control tạo danh sách ứng viên từ cụ thể đến tổng quát, ví dụ en-US -> en -> ROOT. Việc chọn một Locale dự phòng khác là bước riêng."}
+      - {id: B, answer: "Chỉ en-US là ứng viên; thiếu thì lỗi ngay.", explanation: "Với một Locale đích, ResourceBundle.Control tạo danh sách ứng viên từ cụ thể đến tổng quát, ví dụ en-US -> en -> ROOT. Việc chọn một Locale dự phòng khác là bước riêng."}
+      - {id: C, answer: "en-US -> en -> ROOT.", explanation: "Với một Locale đích, ResourceBundle.Control tạo danh sách ứng viên từ cụ thể đến tổng quát, ví dụ en-US -> en -> ROOT. Việc chọn một Locale dự phòng khác là bước riêng."}
+      - {id: D, answer: "Chuỗi ứng viên phụ thuộc vào Locale.equals.", explanation: "Với một Locale đích, ResourceBundle.Control tạo danh sách ứng viên từ cụ thể đến tổng quát, ví dụ en-US -> en -> ROOT. Việc chọn một Locale dự phòng khác là bước riêng."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
@@ -209,12 +222,12 @@ questions:
     apiRelated: {controller: "BundleController", methodSignature: "resolveBundle()"}
 
   - id: localization-q14
-    question: "Khi localization chủ yếu là message text cho translator, lựa chọn nào thường đơn giản nhất?"
+    question: "Khi phần cần bản địa hóa chủ yếu là văn bản thông điệp cho người dịch, lựa chọn nào thường đơn giản nhất?"
     answers:
-      - {id: A, answer: "Properties bundle, vì tách text khỏi Java source và hợp với key/value translation workflow.", explanation: "Properties bundle thường phù hợp cho message text; class-based bundle hữu ích khi thật sự cần resource object/code lifecycle."}
-      - {id: B, answer: "Luôn dùng ListResourceBundle vì nhanh hơn trong mọi trường hợp.", explanation: "Properties bundle thường phù hợp cho message text; class-based bundle hữu ích khi thật sự cần resource object/code lifecycle."}
-      - {id: C, answer: "Hard-code string trong enum để compiler quản lý.", explanation: "Properties bundle thường phù hợp cho message text; class-based bundle hữu ích khi thật sự cần resource object/code lifecycle."}
-      - {id: D, answer: "Dùng language tag làm nguyên văn nội dung message.", explanation: "Properties bundle thường phù hợp cho message text; class-based bundle hữu ích khi thật sự cần resource object/code lifecycle."}
+      - {id: A, answer: "Gói .properties, vì tách văn bản khỏi mã nguồn Java và phù hợp với quy trình dịch theo khóa/giá trị.", explanation: "Gói .properties thường phù hợp cho văn bản thông điệp; gói tài nguyên dạng lớp hữu ích khi thật sự cần tài nguyên là đối tượng hoặc logic Java."}
+      - {id: B, answer: "Luôn dùng ListResourceBundle vì nhanh hơn trong mọi trường hợp.", explanation: "Gói .properties thường phù hợp cho văn bản thông điệp; gói tài nguyên dạng lớp hữu ích khi thật sự cần tài nguyên là đối tượng hoặc logic Java."}
+      - {id: C, answer: "Mã hóa cứng chuỗi trong enum để trình biên dịch quản lý.", explanation: "Gói .properties thường phù hợp cho văn bản thông điệp; gói tài nguyên dạng lớp hữu ích khi thật sự cần tài nguyên là đối tượng hoặc logic Java."}
+      - {id: D, answer: "Dùng thẻ ngôn ngữ làm nguyên văn nội dung thông điệp.", explanation: "Gói .properties thường phù hợp cho văn bản thông điệp; gói tài nguyên dạng lớp hữu ích khi thật sự cần tài nguyên là đối tượng hoặc logic Java."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -222,12 +235,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: localization-q15
-    question: "Sửa file bundle trên disk trong lúc JVM đang chạy nhưng message chưa đổi ngay. Giải thích nào hợp lý?"
+    question: "Sửa tệp gói tài nguyên trên đĩa trong lúc JVM đang chạy nhưng thông điệp chưa đổi ngay. Giải thích nào hợp lý?"
     answers:
-      - {id: A, answer: "Locale immutable nên resource không thể đổi.", explanation: "ResourceBundle có caching; runtime reload cần policy/Control hoặc clearCache có chủ đích, không nên giả định file đổi là JVM thấy ngay."}
-      - {id: B, answer: "Properties bundle chỉ được đọc ở compile time.", explanation: "ResourceBundle có caching; runtime reload cần policy/Control hoặc clearCache có chủ đích, không nên giả định file đổi là JVM thấy ngay."}
-      - {id: C, answer: "MessageFormat đã khóa toàn bộ ResourceBundle.", explanation: "ResourceBundle có caching; runtime reload cần policy/Control hoặc clearCache có chủ đích, không nên giả định file đổi là JVM thấy ngay."}
-      - {id: D, answer: "ResourceBundle có cache, nên reload là một lifecycle riêng phải được quản lý rõ.", explanation: "ResourceBundle có caching; runtime reload cần policy/Control hoặc clearCache có chủ đích, không nên giả định file đổi là JVM thấy ngay."}
+      - {id: A, answer: "Locale là bất biến nên tài nguyên không thể đổi.", explanation: "ResourceBundle có bộ nhớ đệm; muốn tải lại khi chương trình đang chạy cần chính sách Control hoặc clearCache có chủ đích, không nên giả định tệp vừa đổi thì JVM sẽ thấy ngay."}
+      - {id: B, answer: "Gói .properties chỉ được đọc ở thời điểm biên dịch.", explanation: "ResourceBundle có bộ nhớ đệm; muốn tải lại khi chương trình đang chạy cần chính sách Control hoặc clearCache có chủ đích, không nên giả định tệp vừa đổi thì JVM sẽ thấy ngay."}
+      - {id: C, answer: "MessageFormat đã khóa toàn bộ ResourceBundle.", explanation: "ResourceBundle có bộ nhớ đệm; muốn tải lại khi chương trình đang chạy cần chính sách Control hoặc clearCache có chủ đích, không nên giả định tệp vừa đổi thì JVM sẽ thấy ngay."}
+      - {id: D, answer: "ResourceBundle có bộ nhớ đệm, nên việc tải lại là một vòng đời riêng cần được quản lý rõ.", explanation: "ResourceBundle có bộ nhớ đệm; muốn tải lại khi chương trình đang chạy cần chính sách Control hoặc clearCache có chủ đích, không nên giả định tệp vừa đổi thì JVM sẽ thấy ngay."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
@@ -235,38 +248,51 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: localization-q16
-    question: "Vì sao MessageFormat tốt hơn nối các fragment string để tạo câu localized có tham số?"
+    question: "Vì sao MessageFormat tốt hơn việc nối các mảnh chuỗi để tạo câu đã bản địa hóa có tham số?"
     answers:
-      - {id: A, answer: "Vì MessageFormat tự dịch message.", explanation: "MessageFormat để toàn bộ cấu trúc câu nằm trong pattern localized và chèn arguments theo placeholder; translator có thể đổi thứ tự câu."}
-      - {id: B, answer: "Vì pattern sở hữu cấu trúc câu và vị trí placeholder, nên bản dịch có thể sắp xếp tham số phù hợp.", explanation: "MessageFormat để toàn bộ cấu trúc câu nằm trong pattern localized và chèn arguments theo placeholder; translator có thể đổi thứ tự câu."}
-      - {id: C, answer: "Vì MessageFormat biến mọi argument thành JSON.", explanation: "MessageFormat để toàn bộ cấu trúc câu nằm trong pattern localized và chèn arguments theo placeholder; translator có thể đổi thứ tự câu."}
-      - {id: D, answer: "Vì nối string bị Java cấm khi dùng Locale.", explanation: "MessageFormat để toàn bộ cấu trúc câu nằm trong pattern localized và chèn arguments theo placeholder; translator có thể đổi thứ tự câu."}
+      - {id: A, answer: "Vì MessageFormat tự dịch thông điệp.", explanation: "MessageFormat giữ toàn bộ cấu trúc câu trong mẫu đã bản địa hóa và chèn đối số qua tham số giữ chỗ, nên người dịch có thể đổi thứ tự thành phần theo ngôn ngữ."}
+      - {id: B, answer: "Vì mẫu sở hữu cấu trúc câu và vị trí tham số giữ chỗ, nên bản dịch có thể sắp xếp tham số phù hợp.", explanation: "MessageFormat giữ toàn bộ cấu trúc câu trong mẫu đã bản địa hóa và chèn đối số qua tham số giữ chỗ, nên người dịch có thể đổi thứ tự thành phần theo ngôn ngữ."}
+      - {id: C, answer: "Vì MessageFormat biến mọi đối số thành JSON.", explanation: "MessageFormat giữ toàn bộ cấu trúc câu trong mẫu đã bản địa hóa và chèn đối số qua tham số giữ chỗ, nên người dịch có thể đổi thứ tự thành phần theo ngôn ngữ."}
+      - {id: D, answer: "Vì Java cấm nối chuỗi khi dùng Locale.", explanation: "MessageFormat giữ toàn bộ cấu trúc câu trong mẫu đã bản địa hóa và chèn đối số qua tham số giữ chỗ, nên người dịch có thể đổi thứ tự thành phần theo ngôn ngữ."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "5.MessageFormat/MessageFormat.md", anchor: "messageformat-model"}
     apiRelated: {controller: "MessageController", methodSignature: "format()"}
 
-  - id: localization-q17
-    question: "Khi pattern MessageFormat dùng {0,number}, yếu tố nào quyết định convention của sub-format số?"
+  - id: localization-q46
+    question: "Thiết kế khóa bản dịch/thông điệp nào bền vững hơn?"
     answers:
-      - {id: A, answer: "ZoneId của JVM.", explanation: "Locale của MessageFormat ảnh hưởng các sub-format locale-sensitive như number/date; pattern và locale phải thuộc cùng localization pipeline."}
-      - {id: B, answer: "Tên resource key.", explanation: "Locale của MessageFormat ảnh hưởng các sub-format locale-sensitive như number/date; pattern và locale phải thuộc cùng localization pipeline."}
-      - {id: C, answer: "Locale của MessageFormat.", explanation: "Locale của MessageFormat ảnh hưởng các sub-format locale-sensitive như number/date; pattern và locale phải thuộc cùng localization pipeline."}
-      - {id: D, answer: "Currency mặc định của database.", explanation: "Locale của MessageFormat ảnh hưởng các sub-format locale-sensitive như number/date; pattern và locale phải thuộc cùng localization pipeline."}
+      - {id: A, answer: "Dùng câu tiếng Anh hiện tại làm khóa để khỏi cần ánh xạ.", explanation: "Khóa có ngữ nghĩa ổn định và thông điệp hoàn chỉnh giúp người dịch kiểm soát cấu trúc câu; nối nhiều mảnh làm bản địa hóa khó và dễ sai ngữ pháp."}
+      - {id: B, answer: "Chia câu thành nhiều mảnh nhỏ để tái sử dụng tối đa.", explanation: "Khóa có ngữ nghĩa ổn định và thông điệp hoàn chỉnh giúp người dịch kiểm soát cấu trúc câu; nối nhiều mảnh làm bản địa hóa khó và dễ sai ngữ pháp."}
+      - {id: C, answer: "Dùng số dòng trong mã nguồn làm khóa.", explanation: "Khóa có ngữ nghĩa ổn định và thông điệp hoàn chỉnh giúp người dịch kiểm soát cấu trúc câu; nối nhiều mảnh làm bản địa hóa khó và dễ sai ngữ pháp."}
+      - {id: D, answer: "Dùng khóa ngữ nghĩa ổn định như order.created và giữ thông điệp đủ ngữ cảnh thay vì nối mảnh.", explanation: "Khóa có ngữ nghĩa ổn định và thông điệp hoàn chỉnh giúp người dịch kiểm soát cấu trúc câu; nối nhiều mảnh làm bản địa hóa khó và dễ sai ngữ pháp."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.MessageFormat/MessageFormat.md", anchor: "translation-key-design"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: localization-q17
+    question: "Khi mẫu MessageFormat dùng {0,number}, yếu tố nào quyết định quy ước của bộ định dạng số con?"
+    answers:
+      - {id: A, answer: "ZoneId của JVM.", explanation: "Locale của MessageFormat ảnh hưởng các bộ định dạng con phụ thuộc Locale như số và ngày giờ; mẫu cùng Locale phải nằm trong một luồng bản địa hóa nhất quán."}
+      - {id: B, answer: "Tên khóa tài nguyên.", explanation: "Locale của MessageFormat ảnh hưởng các bộ định dạng con phụ thuộc Locale như số và ngày giờ; mẫu cùng Locale phải nằm trong một luồng bản địa hóa nhất quán."}
+      - {id: C, answer: "Locale của MessageFormat.", explanation: "Locale của MessageFormat ảnh hưởng các bộ định dạng con phụ thuộc Locale như số và ngày giờ; mẫu cùng Locale phải nằm trong một luồng bản địa hóa nhất quán."}
+      - {id: D, answer: "Currency mặc định của cơ sở dữ liệu.", explanation: "Locale của MessageFormat ảnh hưởng các bộ định dạng con phụ thuộc Locale như số và ngày giờ; mẫu cùng Locale phải nằm trong một luồng bản địa hóa nhất quán."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "5.MessageFormat/MessageFormat.md", anchor: "messageformat-types"}
-    apiRelated: {controller: "MessageController", methodSignature: "format()"}
+    apiRelated: {controller: "", methodSignature: ""}
 
   - id: localization-q18
-    question: "Điều gì đặc biệt về dấu apostrophe trong MessageFormat pattern?"
+    question: "Điều gì đặc biệt về dấu nháy đơn (apostrophe) trong mẫu MessageFormat?"
     answers:
-      - {id: A, answer: "Nó là ký tự quote của pattern, nên apostrophe literal và pattern do translator sửa phải được escape/test đúng.", explanation: "Apostrophe có syntax riêng trong MessageFormat; localized resource dùng MessageFormat phải được xem như pattern cần validation/test."}
-      - {id: B, answer: "Nó luôn được in nguyên văn và không có ý nghĩa cú pháp.", explanation: "Apostrophe có syntax riêng trong MessageFormat; localized resource dùng MessageFormat phải được xem như pattern cần validation/test."}
-      - {id: C, answer: "Nó chỉ quan trọng với Locale.ENGLISH.", explanation: "Apostrophe có syntax riêng trong MessageFormat; localized resource dùng MessageFormat phải được xem như pattern cần validation/test."}
-      - {id: D, answer: "Nó tự động escape mọi placeholder.", explanation: "Apostrophe có syntax riêng trong MessageFormat; localized resource dùng MessageFormat phải được xem như pattern cần validation/test."}
+      - {id: A, answer: "Nó là ký tự trích dẫn của mẫu, nên dấu nháy đơn cần hiển thị nguyên văn phải được thoát đúng và mẫu do người dịch sửa phải được kiểm thử.", explanation: "Dấu nháy đơn có cú pháp riêng trong MessageFormat; tài nguyên đã bản địa hóa dùng MessageFormat phải được xem là mẫu cần kiểm tra và kiểm thử."}
+      - {id: B, answer: "Nó luôn được in nguyên văn và không có ý nghĩa cú pháp.", explanation: "Dấu nháy đơn có cú pháp riêng trong MessageFormat; tài nguyên đã bản địa hóa dùng MessageFormat phải được xem là mẫu cần kiểm tra và kiểm thử."}
+      - {id: C, answer: "Nó chỉ quan trọng với Locale.ENGLISH.", explanation: "Dấu nháy đơn có cú pháp riêng trong MessageFormat; tài nguyên đã bản địa hóa dùng MessageFormat phải được xem là mẫu cần kiểm tra và kiểm thử."}
+      - {id: D, answer: "Nó tự động thoát mọi tham số giữ chỗ.", explanation: "Dấu nháy đơn có cú pháp riêng trong MessageFormat; tài nguyên đã bản địa hóa dùng MessageFormat phải được xem là mẫu cần kiểm tra và kiểm thử."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -274,12 +300,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: localization-q19
-    question: "Pipeline nào giữ Locale nhất quán khi tạo localized message có số?"
+    question: "Luồng xử lý nào giữ Locale nhất quán khi tạo thông điệp đã bản địa hóa có số?"
     answers:
-      - {id: A, answer: "Load bundle bằng user Locale nhưng để MessageFormat dùng JVM default.", explanation: "Một pipeline nhất quán dùng cùng request/user Locale cho ResourceBundle và MessageFormat để text lẫn sub-format đều theo cùng context."}
-      - {id: B, answer: "Format số trước bằng Locale.ROOT rồi chọn bundle sau.", explanation: "Một pipeline nhất quán dùng cùng request/user Locale cho ResourceBundle và MessageFormat để text lẫn sub-format đều theo cùng context."}
-      - {id: C, answer: "Đổi JVM default locale trước mỗi placeholder.", explanation: "Một pipeline nhất quán dùng cùng request/user Locale cho ResourceBundle và MessageFormat để text lẫn sub-format đều theo cùng context."}
-      - {id: D, answer: "Chọn ResourceBundle(locale), lấy pattern rồi MessageFormat(pattern, cùng locale).", explanation: "Một pipeline nhất quán dùng cùng request/user Locale cho ResourceBundle và MessageFormat để text lẫn sub-format đều theo cùng context."}
+      - {id: A, answer: "Nạp gói tài nguyên bằng Locale của người dùng nhưng để MessageFormat dùng Locale mặc định của JVM.", explanation: "Một luồng xử lý nhất quán dùng cùng Locale của yêu cầu/người dùng cho ResourceBundle và MessageFormat để cả văn bản lẫn bộ định dạng con đều theo cùng ngữ cảnh."}
+      - {id: B, answer: "Định dạng số trước bằng Locale.ROOT rồi mới chọn gói tài nguyên.", explanation: "Một luồng xử lý nhất quán dùng cùng Locale của yêu cầu/người dùng cho ResourceBundle và MessageFormat để cả văn bản lẫn bộ định dạng con đều theo cùng ngữ cảnh."}
+      - {id: C, answer: "Đổi Locale mặc định của JVM trước mỗi tham số giữ chỗ.", explanation: "Một luồng xử lý nhất quán dùng cùng Locale của yêu cầu/người dùng cho ResourceBundle và MessageFormat để cả văn bản lẫn bộ định dạng con đều theo cùng ngữ cảnh."}
+      - {id: D, answer: "Chọn ResourceBundle(locale), lấy mẫu rồi tạo MessageFormat với cùng Locale.", explanation: "Một luồng xử lý nhất quán dùng cùng Locale của yêu cầu/người dùng cho ResourceBundle và MessageFormat để cả văn bản lẫn bộ định dạng con đều theo cùng ngữ cảnh."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
@@ -289,10 +315,10 @@ questions:
   - id: localization-q20
     question: "NumberFormat nên được hiểu như thế nào?"
     answers:
-      - {id: A, answer: "Là numeric domain type thay cho BigDecimal.", explanation: "NumberFormat là abstraction chuyển numeric value và localized human-readable text theo Locale; nó không thay thế domain numeric value."}
-      - {id: B, answer: "Là abstraction format/parse số theo convention của Locale.", explanation: "NumberFormat là abstraction chuyển numeric value và localized human-readable text theo Locale; nó không thay thế domain numeric value."}
-      - {id: C, answer: "Là serializer ổn định cho machine-to-machine protocol.", explanation: "NumberFormat là abstraction chuyển numeric value và localized human-readable text theo Locale; nó không thay thế domain numeric value."}
-      - {id: D, answer: "Là API chọn Currency dựa trên exchange rate.", explanation: "NumberFormat là abstraction chuyển numeric value và localized human-readable text theo Locale; nó không thay thế domain numeric value."}
+      - {id: A, answer: "Là kiểu dữ liệu miền số thay cho BigDecimal.", explanation: "NumberFormat chuyển đổi giữa giá trị số và văn bản dành cho người đọc theo Locale; nó không thay thế giá trị số trong miền nghiệp vụ."}
+      - {id: B, answer: "Là cơ chế định dạng và phân tích số theo quy ước của Locale.", explanation: "NumberFormat chuyển đổi giữa giá trị số và văn bản dành cho người đọc theo Locale; nó không thay thế giá trị số trong miền nghiệp vụ."}
+      - {id: C, answer: "Là bộ tuần tự hóa ổn định cho giao thức máy-với-máy.", explanation: "NumberFormat chuyển đổi giữa giá trị số và văn bản dành cho người đọc theo Locale; nó không thay thế giá trị số trong miền nghiệp vụ."}
+      - {id: D, answer: "Là API chọn Currency dựa trên tỷ giá.", explanation: "NumberFormat chuyển đổi giữa giá trị số và văn bản dành cho người đọc theo Locale; nó không thay thế giá trị số trong miền nghiệp vụ."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -300,12 +326,12 @@ questions:
     apiRelated: {controller: "NumberLocalizationController", methodSignature: "formatAndParse()"}
 
   - id: localization-q21
-    question: "Trong DecimalFormat, đâu là ranh giới đúng giữa pattern/symbols và business rounding?"
+    question: "Trong DecimalFormat, đâu là ranh giới đúng giữa mẫu/ký hiệu và quy tắc làm tròn nghiệp vụ?"
     answers:
-      - {id: A, answer: "Locale quyết định luôn số tiền phải thanh toán sau rounding.", explanation: "Pattern/symbols điều khiển representation; business rounding/scale cho tiền hoặc thuế là policy nghiệp vụ phải được xác định riêng."}
-      - {id: B, answer: "RoundingMode chỉ ảnh hưởng currency symbol.", explanation: "Pattern/symbols điều khiển representation; business rounding/scale cho tiền hoặc thuế là policy nghiệp vụ phải được xác định riêng."}
-      - {id: C, answer: "DecimalFormat điều khiển presentation; rule rounding nghiệp vụ phải được model riêng và không đổi theo Locale.", explanation: "Pattern/symbols điều khiển representation; business rounding/scale cho tiền hoặc thuế là policy nghiệp vụ phải được xác định riêng."}
-      - {id: D, answer: "DecimalFormatSymbols nên được dùng để sửa domain value.", explanation: "Pattern/symbols điều khiển representation; business rounding/scale cho tiền hoặc thuế là policy nghiệp vụ phải được xác định riêng."}
+      - {id: A, answer: "Locale quyết định luôn số tiền phải thanh toán sau khi làm tròn.", explanation: "Mẫu và ký hiệu điều khiển cách trình bày; quy tắc làm tròn hoặc scale cho tiền, thuế là chính sách nghiệp vụ phải được xác định riêng."}
+      - {id: B, answer: "RoundingMode chỉ ảnh hưởng ký hiệu tiền tệ.", explanation: "Mẫu và ký hiệu điều khiển cách trình bày; quy tắc làm tròn hoặc scale cho tiền, thuế là chính sách nghiệp vụ phải được xác định riêng."}
+      - {id: C, answer: "DecimalFormat điều khiển cách trình bày; quy tắc làm tròn nghiệp vụ phải được mô hình hóa riêng và không đổi theo Locale.", explanation: "Mẫu và ký hiệu điều khiển cách trình bày; quy tắc làm tròn hoặc scale cho tiền, thuế là chính sách nghiệp vụ phải được xác định riêng."}
+      - {id: D, answer: "DecimalFormatSymbols nên được dùng để sửa giá trị nghiệp vụ.", explanation: "Mẫu và ký hiệu điều khiển cách trình bày; quy tắc làm tròn hoặc scale cho tiền, thuế là chính sách nghiệp vụ phải được xác định riêng."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
@@ -315,10 +341,10 @@ questions:
   - id: localization-q22
     question: "CompactNumberFormat phù hợp nhất với trường hợp nào?"
     answers:
-      - {id: A, answer: "Dashboard cần hiển thị 1,200,000 ở dạng compact locale-aware như 1.2M, trong khi domain vẫn giữ số gốc.", explanation: "Compact formatting là presentation locale-aware cho UI; không nên lưu chuỗi compact làm numeric value chính."}
-      - {id: B, answer: "Lưu sổ cái cần thể hiện đầy đủ từng chữ số chính xác.", explanation: "Compact formatting là presentation locale-aware cho UI; không nên lưu chuỗi compact làm numeric value chính."}
-      - {id: C, answer: "Tạo canonical numeric string cho API giữa hai service.", explanation: "Compact formatting là presentation locale-aware cho UI; không nên lưu chuỗi compact làm numeric value chính."}
-      - {id: D, answer: "Tự nối K/M/B vào số để bỏ qua locale data.", explanation: "Compact formatting là presentation locale-aware cho UI; không nên lưu chuỗi compact làm numeric value chính."}
+      - {id: A, answer: "Bảng điều khiển cần hiển thị 1,200,000 ở dạng rút gọn theo Locale như 1.2M, trong khi miền nghiệp vụ vẫn giữ số gốc.", explanation: "Định dạng rút gọn là cách trình bày theo Locale cho UI; không nên lưu chuỗi rút gọn làm giá trị số chính."}
+      - {id: B, answer: "Lưu sổ cái cần thể hiện đầy đủ từng chữ số chính xác.", explanation: "Định dạng rút gọn là cách trình bày theo Locale cho UI; không nên lưu chuỗi rút gọn làm giá trị số chính."}
+      - {id: C, answer: "Tạo chuỗi số chuẩn cho API giữa hai dịch vụ.", explanation: "Định dạng rút gọn là cách trình bày theo Locale cho UI; không nên lưu chuỗi rút gọn làm giá trị số chính."}
+      - {id: D, answer: "Tự nối K/M/B vào số để bỏ qua dữ liệu Locale.", explanation: "Định dạng rút gọn là cách trình bày theo Locale cho UI; không nên lưu chuỗi rút gọn làm giá trị số chính."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -326,12 +352,12 @@ questions:
     apiRelated: {controller: "NumberLocalizationController", methodSignature: "compact()"}
 
   - id: localization-q23
-    question: "Khi validate input số localized, vì sao parse(String) một mình có thể chưa đủ?"
+    question: "Khi kiểm tra đầu vào số đã bản địa hóa, vì sao chỉ gọi parse(String) có thể chưa đủ?"
     answers:
-      - {id: A, answer: "Vì NumberFormat không parse được số âm.", explanation: "NumberFormat có thể parse prefix hợp lệ rồi dừng; strict validation cần ParsePosition và kiểm tra toàn bộ input đã được consume."}
-      - {id: B, answer: "Vì parse luôn dùng Locale.ROOT.", explanation: "NumberFormat có thể parse prefix hợp lệ rồi dừng; strict validation cần ParsePosition và kiểm tra toàn bộ input đã được consume."}
-      - {id: C, answer: "Vì parse chỉ trả String.", explanation: "NumberFormat có thể parse prefix hợp lệ rồi dừng; strict validation cần ParsePosition và kiểm tra toàn bộ input đã được consume."}
-      - {id: D, answer: "Vì parser có thể chấp nhận prefix hợp lệ và bỏ phần dư; cần kiểm tra ParsePosition để bảo đảm consume toàn bộ.", explanation: "NumberFormat có thể parse prefix hợp lệ rồi dừng; strict validation cần ParsePosition và kiểm tra toàn bộ input đã được consume."}
+      - {id: A, answer: "Vì NumberFormat không phân tích được số âm.", explanation: "NumberFormat có thể phân tích một tiền tố hợp lệ rồi dừng; kiểm tra chặt chẽ cần ParsePosition để bảo đảm toàn bộ đầu vào đã được đọc."}
+      - {id: B, answer: "Vì parse luôn dùng Locale.ROOT.", explanation: "NumberFormat có thể phân tích một tiền tố hợp lệ rồi dừng; kiểm tra chặt chẽ cần ParsePosition để bảo đảm toàn bộ đầu vào đã được đọc."}
+      - {id: C, answer: "Vì parse chỉ trả String.", explanation: "NumberFormat có thể phân tích một tiền tố hợp lệ rồi dừng; kiểm tra chặt chẽ cần ParsePosition để bảo đảm toàn bộ đầu vào đã được đọc."}
+      - {id: D, answer: "Vì bộ phân tích có thể chấp nhận tiền tố hợp lệ và bỏ phần dư; cần kiểm tra ParsePosition để bảo đảm toàn bộ đầu vào đã được đọc.", explanation: "NumberFormat có thể phân tích một tiền tố hợp lệ rồi dừng; kiểm tra chặt chẽ cần ParsePosition để bảo đảm toàn bộ đầu vào đã được đọc."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
@@ -339,12 +365,12 @@ questions:
     apiRelated: {controller: "NumberLocalizationController", methodSignature: "formatAndParse()"}
 
   - id: localization-q24
-    question: "Vì sao không nên lưu chuỗi đã NumberFormat vào DB như numeric value chính?"
+    question: "Vì sao không nên lưu chuỗi đã định dạng bằng NumberFormat vào cơ sở dữ liệu như giá trị số chính?"
     answers:
-      - {id: A, answer: "Vì NumberFormat chỉ chạy trên frontend.", explanation: "Localized text là representation cho người đọc và có thể đổi separators/precision; domain/persistence nên giữ numeric value ổn định."}
-      - {id: B, answer: "Vì localized text có thể đổi convention hoặc mất precision hiển thị; domain nên lưu giá trị số ổn định.", explanation: "Localized text là representation cho người đọc và có thể đổi separators/precision; domain/persistence nên giữ numeric value ổn định."}
-      - {id: C, answer: "Vì database không lưu được String.", explanation: "Localized text là representation cho người đọc và có thể đổi separators/precision; domain/persistence nên giữ numeric value ổn định."}
-      - {id: D, answer: "Vì formatted text luôn lớn hơn 255 ký tự.", explanation: "Localized text là representation cho người đọc và có thể đổi separators/precision; domain/persistence nên giữ numeric value ổn định."}
+      - {id: A, answer: "Vì NumberFormat chỉ chạy trên giao diện phía người dùng.", explanation: "Văn bản đã bản địa hóa là cách biểu diễn cho người đọc và có thể thay đổi dấu phân cách hoặc độ chính xác hiển thị; miền nghiệp vụ và lưu trữ nên giữ giá trị số ổn định."}
+      - {id: B, answer: "Vì văn bản đã bản địa hóa có thể đổi quy ước hoặc mất độ chính xác khi hiển thị; miền nghiệp vụ nên lưu giá trị số ổn định.", explanation: "Văn bản đã bản địa hóa là cách biểu diễn cho người đọc và có thể thay đổi dấu phân cách hoặc độ chính xác hiển thị; miền nghiệp vụ và lưu trữ nên giữ giá trị số ổn định."}
+      - {id: C, answer: "Vì cơ sở dữ liệu không lưu được String.", explanation: "Văn bản đã bản địa hóa là cách biểu diễn cho người đọc và có thể thay đổi dấu phân cách hoặc độ chính xác hiển thị; miền nghiệp vụ và lưu trữ nên giữ giá trị số ổn định."}
+      - {id: D, answer: "Vì văn bản đã định dạng luôn lớn hơn 255 ký tự.", explanation: "Văn bản đã bản địa hóa là cách biểu diễn cho người đọc và có thể thay đổi dấu phân cách hoặc độ chính xác hiển thị; miền nghiệp vụ và lưu trữ nên giữ giá trị số ổn định."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -354,10 +380,10 @@ questions:
   - id: localization-q25
     question: "Currency trong Java Core mô hình hóa điều gì?"
     answers:
-      - {id: A, answer: "Amount tiền cùng exchange rate hiện tại.", explanation: "Currency là identity/metadata của đơn vị tiền tệ; amount là dữ liệu riêng và domain money cần kết hợp amount + currency."}
-      - {id: B, answer: "Locale dùng để hiển thị amount.", explanation: "Currency là identity/metadata của đơn vị tiền tệ; amount là dữ liệu riêng và domain money cần kết hợp amount + currency."}
-      - {id: C, answer: "Định danh và metadata của đơn vị tiền tệ như code, symbol/display name và fraction digits mặc định.", explanation: "Currency là identity/metadata của đơn vị tiền tệ; amount là dữ liệu riêng và domain money cần kết hợp amount + currency."}
-      - {id: D, answer: "Một Money value đầy đủ có cả amount, tax và exchange rate.", explanation: "Currency là identity/metadata của đơn vị tiền tệ; amount là dữ liệu riêng và domain money cần kết hợp amount + currency."}
+      - {id: A, answer: "Số tiền cùng tỷ giá hiện tại.", explanation: "Currency là định danh và siêu dữ liệu của đơn vị tiền tệ; số tiền là dữ liệu riêng, còn mô hình tiền tệ trong nghiệp vụ cần kết hợp số tiền với Currency."}
+      - {id: B, answer: "Locale dùng để hiển thị số tiền.", explanation: "Currency là định danh và siêu dữ liệu của đơn vị tiền tệ; số tiền là dữ liệu riêng, còn mô hình tiền tệ trong nghiệp vụ cần kết hợp số tiền với Currency."}
+      - {id: C, answer: "Định danh và siêu dữ liệu của đơn vị tiền tệ như mã, ký hiệu/tên hiển thị và số chữ số thập phân mặc định.", explanation: "Currency là định danh và siêu dữ liệu của đơn vị tiền tệ; số tiền là dữ liệu riêng, còn mô hình tiền tệ trong nghiệp vụ cần kết hợp số tiền với Currency."}
+      - {id: D, answer: "Một giá trị Money đầy đủ có cả số tiền, thuế và tỷ giá.", explanation: "Currency là định danh và siêu dữ liệu của đơn vị tiền tệ; số tiền là dữ liệu riêng, còn mô hình tiền tệ trong nghiệp vụ cần kết hợp số tiền với Currency."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
@@ -365,12 +391,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: localization-q26
-    question: "Một user dùng giao diện vi-VN nhưng giao dịch bằng USD. Mô hình nào đúng?"
+    question: "Một người dùng sử dụng giao diện vi-VN nhưng giao dịch bằng USD. Mô hình nào đúng?"
     answers:
-      - {id: A, answer: "Locale hiển thị là vi-VN và Currency nghiệp vụ là USD; hai giá trị độc lập.", explanation: "Locale trả lời cách trình bày; Currency trả lời đơn vị của amount. Không suy currency giao dịch từ display locale."}
-      - {id: B, answer: "Currency bắt buộc là VND vì Locale là vi-VN.", explanation: "Locale trả lời cách trình bày; Currency trả lời đơn vị của amount. Không suy currency giao dịch từ display locale."}
-      - {id: C, answer: "Đổi Locale thành en-US để biểu diễn USD.", explanation: "Locale trả lời cách trình bày; Currency trả lời đơn vị của amount. Không suy currency giao dịch từ display locale."}
-      - {id: D, answer: "Không cần lưu Currency; formatter sẽ suy ra đúng currency sau.", explanation: "Locale trả lời cách trình bày; Currency trả lời đơn vị của amount. Không suy currency giao dịch từ display locale."}
+      - {id: A, answer: "Locale hiển thị là vi-VN và Currency nghiệp vụ là USD; hai giá trị độc lập.", explanation: "Locale quyết định cách trình bày; Currency xác định đơn vị của số tiền. Không suy ra Currency giao dịch từ Locale hiển thị."}
+      - {id: B, answer: "Currency bắt buộc là VND vì Locale là vi-VN.", explanation: "Locale quyết định cách trình bày; Currency xác định đơn vị của số tiền. Không suy ra Currency giao dịch từ Locale hiển thị."}
+      - {id: C, answer: "Đổi Locale thành en-US để biểu diễn USD.", explanation: "Locale quyết định cách trình bày; Currency xác định đơn vị của số tiền. Không suy ra Currency giao dịch từ Locale hiển thị."}
+      - {id: D, answer: "Không cần lưu Currency; bộ định dạng sẽ tự suy ra đúng Currency sau.", explanation: "Locale quyết định cách trình bày; Currency xác định đơn vị của số tiền. Không suy ra Currency giao dịch từ Locale hiển thị."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -378,12 +404,12 @@ questions:
     apiRelated: {controller: "CurrencyController", methodSignature: "currencyVsLocale()"}
 
   - id: localization-q27
-    question: "Khi format 25 EUR cho người dùng US, cách nào đúng?"
+    question: "Khi định dạng 25 EUR cho người dùng ở Locale US, cách nào đúng?"
     answers:
-      - {id: A, answer: "Nối ký tự € trước amount bằng string concatenation.", explanation: "Currency NumberFormat dùng Locale cho convention hiển thị và setCurrency cho đơn vị cần format; symbol placement/separators không nên nối thủ công."}
-      - {id: B, answer: "Đổi Currency thành USD vì Locale.US.", explanation: "Currency NumberFormat dùng Locale cho convention hiển thị và setCurrency cho đơn vị cần format; symbol placement/separators không nên nối thủ công."}
-      - {id: C, answer: "Dùng NumberFormat.getNumberInstance mà không set currency.", explanation: "Currency NumberFormat dùng Locale cho convention hiển thị và setCurrency cho đơn vị cần format; symbol placement/separators không nên nối thủ công."}
-      - {id: D, answer: "Tạo currency formatter với Locale.US rồi set Currency EUR trước khi format amount.", explanation: "Currency NumberFormat dùng Locale cho convention hiển thị và setCurrency cho đơn vị cần format; symbol placement/separators không nên nối thủ công."}
+      - {id: A, answer: "Nối ký tự € trước số tiền bằng phép nối chuỗi.", explanation: "Bộ định dạng tiền tệ dùng Locale cho quy ước hiển thị và setCurrency cho đơn vị cần định dạng; vị trí ký hiệu cùng dấu phân cách không nên được ghép thủ công."}
+      - {id: B, answer: "Đổi Currency thành USD vì Locale.US.", explanation: "Bộ định dạng tiền tệ dùng Locale cho quy ước hiển thị và setCurrency cho đơn vị cần định dạng; vị trí ký hiệu cùng dấu phân cách không nên được ghép thủ công."}
+      - {id: C, answer: "Dùng NumberFormat.getNumberInstance mà không đặt Currency.", explanation: "Bộ định dạng tiền tệ dùng Locale cho quy ước hiển thị và setCurrency cho đơn vị cần định dạng; vị trí ký hiệu cùng dấu phân cách không nên được ghép thủ công."}
+      - {id: D, answer: "Tạo bộ định dạng tiền tệ với Locale.US rồi đặt Currency là EUR trước khi định dạng số tiền.", explanation: "Bộ định dạng tiền tệ dùng Locale cho quy ước hiển thị và setCurrency cho đơn vị cần định dạng; vị trí ký hiệu cùng dấu phân cách không nên được ghép thủ công."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
@@ -393,10 +419,10 @@ questions:
   - id: localization-q28
     question: "Currency.getDefaultFractionDigits() có nên được coi là luật làm tròn bắt buộc của nghiệp vụ không?"
     answers:
-      - {id: A, answer: "Có, nó thay thế mọi policy scale/rounding của domain.", explanation: "Default fraction digits là metadata hữu ích cho presentation/defaults; business rules về scale, tax, FX hay allocation cần policy riêng."}
-      - {id: B, answer: "Không. Đây là metadata của currency; nghiệp vụ tiền vẫn phải có policy scale/rounding riêng.", explanation: "Default fraction digits là metadata hữu ích cho presentation/defaults; business rules về scale, tax, FX hay allocation cần policy riêng."}
-      - {id: C, answer: "Chỉ với USD mới là rule bắt buộc.", explanation: "Default fraction digits là metadata hữu ích cho presentation/defaults; business rules về scale, tax, FX hay allocation cần policy riêng."}
-      - {id: D, answer: "Nó chỉ quyết định language của symbol.", explanation: "Default fraction digits là metadata hữu ích cho presentation/defaults; business rules về scale, tax, FX hay allocation cần policy riêng."}
+      - {id: A, answer: "Có, nó thay thế mọi chính sách scale/làm tròn của miền nghiệp vụ.", explanation: "Số chữ số thập phân mặc định là siêu dữ liệu hữu ích cho cách trình bày hoặc giá trị mặc định; quy tắc nghiệp vụ về scale, thuế, FX hay phân bổ cần chính sách riêng."}
+      - {id: B, answer: "Không. Đây là siêu dữ liệu của Currency; nghiệp vụ tiền vẫn phải có chính sách scale/làm tròn riêng.", explanation: "Số chữ số thập phân mặc định là siêu dữ liệu hữu ích cho cách trình bày hoặc giá trị mặc định; quy tắc nghiệp vụ về scale, thuế, FX hay phân bổ cần chính sách riêng."}
+      - {id: C, answer: "Chỉ với USD mới là quy tắc bắt buộc.", explanation: "Số chữ số thập phân mặc định là siêu dữ liệu hữu ích cho cách trình bày hoặc giá trị mặc định; quy tắc nghiệp vụ về scale, thuế, FX hay phân bổ cần chính sách riêng."}
+      - {id: D, answer: "Nó chỉ quyết định ngôn ngữ của ký hiệu tiền tệ.", explanation: "Số chữ số thập phân mặc định là siêu dữ liệu hữu ích cho cách trình bày hoặc giá trị mặc định; quy tắc nghiệp vụ về scale, thuế, FX hay phân bổ cần chính sách riêng."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -406,10 +432,10 @@ questions:
   - id: localization-q29
     question: "Collator tồn tại chủ yếu để giải quyết vấn đề nào?"
     answers:
-      - {id: A, answer: "So sánh/sắp xếp user-visible text theo quy tắc ngôn ngữ của Locale.", explanation: "Collator là comparator locale-sensitive cho text dành cho con người; String.compareTo phù hợp hơn với nhiều thứ tự kỹ thuật ổn định."}
-      - {id: B, answer: "Mã hóa String sang UTF-8.", explanation: "Collator là comparator locale-sensitive cho text dành cho con người; String.compareTo phù hợp hơn với nhiều thứ tự kỹ thuật ổn định."}
-      - {id: C, answer: "Tách câu thành word tokens.", explanation: "Collator là comparator locale-sensitive cho text dành cho con người; String.compareTo phù hợp hơn với nhiều thứ tự kỹ thuật ổn định."}
-      - {id: D, answer: "Đảo thứ tự text RTL.", explanation: "Collator là comparator locale-sensitive cho text dành cho con người; String.compareTo phù hợp hơn với nhiều thứ tự kỹ thuật ổn định."}
+      - {id: A, answer: "So sánh và sắp xếp văn bản hiển thị cho người dùng theo quy tắc ngôn ngữ của Locale.", explanation: "Collator là bộ so sánh phụ thuộc Locale cho văn bản dành cho con người; String.compareTo phù hợp hơn với nhiều thứ tự kỹ thuật cần ổn định."}
+      - {id: B, answer: "Mã hóa String sang UTF-8.", explanation: "Collator là bộ so sánh phụ thuộc Locale cho văn bản dành cho con người; String.compareTo phù hợp hơn với nhiều thứ tự kỹ thuật cần ổn định."}
+      - {id: C, answer: "Tách câu thành các token từ.", explanation: "Collator là bộ so sánh phụ thuộc Locale cho văn bản dành cho con người; String.compareTo phù hợp hơn với nhiều thứ tự kỹ thuật cần ổn định."}
+      - {id: D, answer: "Đảo thứ tự văn bản RTL.", explanation: "Collator là bộ so sánh phụ thuộc Locale cho văn bản dành cho con người; String.compareTo phù hợp hơn với nhiều thứ tự kỹ thuật cần ổn định."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -419,10 +445,10 @@ questions:
   - id: localization-q30
     question: "Khi hạ Collator strength xuống PRIMARY, điều gì có thể xảy ra?"
     answers:
-      - {id: A, answer: "Mọi String trở thành equal theo Object.equals.", explanation: "Strength quyết định mức khác biệt linguistic nào ảnh hưởng compare; hai string khác code point vẫn có thể compare == 0 ở strength hiện tại."}
-      - {id: B, answer: "Collator chuyển thành String.compareTo.", explanation: "Strength quyết định mức khác biệt linguistic nào ảnh hưởng compare; hai string khác code point vẫn có thể compare == 0 ở strength hiện tại."}
-      - {id: C, answer: "Locale bị bỏ qua hoàn toàn.", explanation: "Strength quyết định mức khác biệt linguistic nào ảnh hưởng compare; hai string khác code point vẫn có thể compare == 0 ở strength hiện tại."}
-      - {id: D, answer: "Một số khác biệt như dấu/case có thể không còn làm hai chuỗi phân biệt ở mức compare đó.", explanation: "Strength quyết định mức khác biệt linguistic nào ảnh hưởng compare; hai string khác code point vẫn có thể compare == 0 ở strength hiện tại."}
+      - {id: A, answer: "Mọi String trở thành bằng nhau theo Object.equals.", explanation: "Strength quyết định mức khác biệt ngôn ngữ nào ảnh hưởng đến compare; hai chuỗi khác code point vẫn có thể cho compare == 0 ở strength hiện tại."}
+      - {id: B, answer: "Collator chuyển thành String.compareTo.", explanation: "Strength quyết định mức khác biệt ngôn ngữ nào ảnh hưởng đến compare; hai chuỗi khác code point vẫn có thể cho compare == 0 ở strength hiện tại."}
+      - {id: C, answer: "Locale bị bỏ qua hoàn toàn.", explanation: "Strength quyết định mức khác biệt ngôn ngữ nào ảnh hưởng đến compare; hai chuỗi khác code point vẫn có thể cho compare == 0 ở strength hiện tại."}
+      - {id: D, answer: "Một số khác biệt như dấu hoặc chữ hoa/thường có thể không còn làm hai chuỗi khác nhau ở mức so sánh đó.", explanation: "Strength quyết định mức khác biệt ngôn ngữ nào ảnh hưởng đến compare; hai chuỗi khác code point vẫn có thể cho compare == 0 ở strength hiện tại."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
@@ -430,12 +456,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: localization-q31
-    question: "Bài toán nào nên ưu tiên String.compareTo hoặc comparator locale-neutral thay vì Collator?"
+    question: "Bài toán nào nên ưu tiên String.compareTo hoặc comparator không phụ thuộc Locale thay vì Collator?"
     answers:
-      - {id: A, answer: "Sắp xếp tên người trong UI tiếng Việt.", explanation: "Technical keys/protocol ordering cần deterministic locale-neutral contract; user-visible linguistic order mới là nơi Collator phát huy vai trò."}
-      - {id: B, answer: "Sắp xếp protocol token/key kỹ thuật cần thứ tự ổn định giữa môi trường.", explanation: "Technical keys/protocol ordering cần deterministic locale-neutral contract; user-visible linguistic order mới là nơi Collator phát huy vai trò."}
-      - {id: C, answer: "Sắp xếp nhãn sản phẩm đã localized.", explanation: "Technical keys/protocol ordering cần deterministic locale-neutral contract; user-visible linguistic order mới là nơi Collator phát huy vai trò."}
-      - {id: D, answer: "Sắp xếp danh bạ theo kỳ vọng ngôn ngữ của user.", explanation: "Technical keys/protocol ordering cần deterministic locale-neutral contract; user-visible linguistic order mới là nơi Collator phát huy vai trò."}
+      - {id: A, answer: "Sắp xếp tên người trong UI tiếng Việt.", explanation: "Khóa kỹ thuật và thứ tự giao thức cần một hợp đồng xác định, không phụ thuộc Locale; Collator phù hợp với thứ tự ngôn ngữ của văn bản hiển thị cho người dùng."}
+      - {id: B, answer: "Sắp xếp token giao thức hoặc khóa kỹ thuật cần thứ tự ổn định giữa các môi trường.", explanation: "Khóa kỹ thuật và thứ tự giao thức cần một hợp đồng xác định, không phụ thuộc Locale; Collator phù hợp với thứ tự ngôn ngữ của văn bản hiển thị cho người dùng."}
+      - {id: C, answer: "Sắp xếp nhãn sản phẩm đã bản địa hóa.", explanation: "Khóa kỹ thuật và thứ tự giao thức cần một hợp đồng xác định, không phụ thuộc Locale; Collator phù hợp với thứ tự ngôn ngữ của văn bản hiển thị cho người dùng."}
+      - {id: D, answer: "Sắp xếp danh bạ theo kỳ vọng ngôn ngữ của người dùng.", explanation: "Khóa kỹ thuật và thứ tự giao thức cần một hợp đồng xác định, không phụ thuộc Locale; Collator phù hợp với thứ tự ngôn ngữ của văn bản hiển thị cho người dùng."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -443,25 +469,25 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: localization-q32
-    question: "Nếu pagination/sort được thực hiện trong database, điều gì cần nhớ về Java Collator?"
+    question: "Nếu phân trang và sắp xếp được thực hiện trong cơ sở dữ liệu, điều gì cần nhớ về Java Collator?"
     answers:
-      - {id: A, answer: "Chỉ cần tạo Collator ở Java là DB tự dùng cùng rules.", explanation: "DB collation mới quyết định sort trong database; Java Collator chỉ điều khiển Java-side comparison và không bảo đảm cùng ordering."}
-      - {id: B, answer: "DB luôn dùng Unicode code point nên giống String.compareTo.", explanation: "DB collation mới quyết định sort trong database; Java Collator chỉ điều khiển Java-side comparison và không bảo đảm cùng ordering."}
-      - {id: C, answer: "Phải kiểm tra DB collation riêng; không giả định nó giống Collator của JVM.", explanation: "DB collation mới quyết định sort trong database; Java Collator chỉ điều khiển Java-side comparison và không bảo đảm cùng ordering."}
-      - {id: D, answer: "CollationKey của Java có thể lưu trực tiếp làm DB index portable.", explanation: "DB collation mới quyết định sort trong database; Java Collator chỉ điều khiển Java-side comparison và không bảo đảm cùng ordering."}
+      - {id: A, answer: "Chỉ cần tạo Collator ở Java là cơ sở dữ liệu tự dùng cùng quy tắc.", explanation: "Collation của cơ sở dữ liệu mới quyết định thứ tự trong cơ sở dữ liệu; Java Collator chỉ điều khiển phép so sánh phía Java và không bảo đảm tạo cùng thứ tự."}
+      - {id: B, answer: "Cơ sở dữ liệu luôn dùng Unicode code point nên giống String.compareTo.", explanation: "Collation của cơ sở dữ liệu mới quyết định thứ tự trong cơ sở dữ liệu; Java Collator chỉ điều khiển phép so sánh phía Java và không bảo đảm tạo cùng thứ tự."}
+      - {id: C, answer: "Phải kiểm tra collation của cơ sở dữ liệu riêng; không giả định nó giống Collator của JVM.", explanation: "Collation của cơ sở dữ liệu mới quyết định thứ tự trong cơ sở dữ liệu; Java Collator chỉ điều khiển phép so sánh phía Java và không bảo đảm tạo cùng thứ tự."}
+      - {id: D, answer: "CollationKey của Java có thể lưu trực tiếp làm chỉ mục cơ sở dữ liệu dùng được ở mọi môi trường.", explanation: "Collation của cơ sở dữ liệu mới quyết định thứ tự trong cơ sở dữ liệu; Java Collator chỉ điều khiển phép so sánh phía Java và không bảo đảm tạo cùng thứ tự."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "8.Collator/Collator.md", anchor: "sorting-user-text"}
-    apiRelated: {controller: "CollationController", methodSignature: "sort()"}
+    apiRelated: {controller: "", methodSignature: ""}
 
   - id: localization-q33
     question: "Lợi ích chính của DateTimeFormatter.ofLocalizedDate với FormatStyle là gì?"
     answers:
-      - {id: A, answer: "Application chọn mức chi tiết, còn locale data chọn pattern trình bày phù hợp.", explanation: "Localized styles tránh hard-code một pattern cho mọi locale; kết quả cụ thể phụ thuộc locale data của runtime."}
-      - {id: B, answer: "Nó tự suy ZoneId từ Locale.", explanation: "Localized styles tránh hard-code một pattern cho mọi locale; kết quả cụ thể phụ thuộc locale data của runtime."}
-      - {id: C, answer: "Nó biến mọi temporal thành Instant.", explanation: "Localized styles tránh hard-code một pattern cho mọi locale; kết quả cụ thể phụ thuộc locale data của runtime."}
-      - {id: D, answer: "Nó tạo canonical machine format giống ISO.", explanation: "Localized styles tránh hard-code một pattern cho mọi locale; kết quả cụ thể phụ thuộc locale data của runtime."}
+      - {id: A, answer: "Ứng dụng chọn mức chi tiết, còn dữ liệu Locale chọn mẫu trình bày phù hợp.", explanation: "Các kiểu định dạng bản địa hóa giúp tránh mã hóa cứng một mẫu cho mọi Locale; kết quả cụ thể phụ thuộc dữ liệu Locale của môi trường chạy."}
+      - {id: B, answer: "Nó tự suy ZoneId từ Locale.", explanation: "Các kiểu định dạng bản địa hóa giúp tránh mã hóa cứng một mẫu cho mọi Locale; kết quả cụ thể phụ thuộc dữ liệu Locale của môi trường chạy."}
+      - {id: C, answer: "Nó biến mọi giá trị thời gian thành Instant.", explanation: "Các kiểu định dạng bản địa hóa giúp tránh mã hóa cứng một mẫu cho mọi Locale; kết quả cụ thể phụ thuộc dữ liệu Locale của môi trường chạy."}
+      - {id: D, answer: "Nó tạo định dạng chuẩn dành cho máy giống ISO.", explanation: "Các kiểu định dạng bản địa hóa giúp tránh mã hóa cứng một mẫu cho mọi Locale; kết quả cụ thể phụ thuộc dữ liệu Locale của môi trường chạy."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -471,10 +497,10 @@ questions:
   - id: localization-q34
     question: "Cùng một Instant, ZoneId và Locale giữ trách nhiệm nào?"
     answers:
-      - {id: A, answer: "Locale chọn local time; ZoneId chỉ đổi language của month name.", explanation: "ZoneId ánh xạ Instant sang local date/time theo timezone rules; Locale quyết định convention trình bày của local value."}
-      - {id: B, answer: "Cả hai đều chỉ ảnh hưởng text, không ảnh hưởng local time.", explanation: "ZoneId ánh xạ Instant sang local date/time theo timezone rules; Locale quyết định convention trình bày của local value."}
-      - {id: C, answer: "Locale và ZoneId là hai cách viết của cùng concept.", explanation: "ZoneId ánh xạ Instant sang local date/time theo timezone rules; Locale quyết định convention trình bày của local value."}
-      - {id: D, answer: "ZoneId xác định local time tương ứng; Locale xác định cách local time đó được trình bày.", explanation: "ZoneId ánh xạ Instant sang local date/time theo timezone rules; Locale quyết định convention trình bày của local value."}
+      - {id: A, answer: "Locale chọn thời gian cục bộ; ZoneId chỉ đổi ngôn ngữ của tên tháng.", explanation: "ZoneId ánh xạ Instant sang ngày giờ cục bộ theo quy tắc của múi giờ; Locale quyết định quy ước trình bày giá trị ngày giờ cục bộ đó."}
+      - {id: B, answer: "Cả hai đều chỉ ảnh hưởng văn bản, không ảnh hưởng thời gian cục bộ.", explanation: "ZoneId ánh xạ Instant sang ngày giờ cục bộ theo quy tắc của múi giờ; Locale quyết định quy ước trình bày giá trị ngày giờ cục bộ đó."}
+      - {id: C, answer: "Locale và ZoneId là hai cách viết của cùng một khái niệm.", explanation: "ZoneId ánh xạ Instant sang ngày giờ cục bộ theo quy tắc của múi giờ; Locale quyết định quy ước trình bày giá trị ngày giờ cục bộ đó."}
+      - {id: D, answer: "ZoneId xác định thời gian cục bộ tương ứng; Locale xác định cách thời gian đó được trình bày.", explanation: "ZoneId ánh xạ Instant sang ngày giờ cục bộ theo quy tắc của múi giờ; Locale quyết định quy ước trình bày giá trị ngày giờ cục bộ đó."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
@@ -482,12 +508,12 @@ questions:
     apiRelated: {controller: "DateTimeLocalizationController", methodSignature: "format()"}
 
   - id: localization-q35
-    question: "WeekFields.of(locale) nên được dùng với mental model nào?"
+    question: "WeekFields.of(locale) nên được hiểu theo mô hình tư duy nào?"
     answers:
-      - {id: A, answer: "Nó định nghĩa bắt buộc rule tuần kế toán của mọi công ty trong locale đó.", explanation: "WeekFields cung cấp calendar conventions locale-sensitive như first day/minimal days; business calendar rule phải được model riêng nếu cố định."}
-      - {id: B, answer: "Nó cung cấp quy ước tuần theo Locale; business rule như tuần kế toán vẫn phải explicit nếu khác.", explanation: "WeekFields cung cấp calendar conventions locale-sensitive như first day/minimal days; business calendar rule phải được model riêng nếu cố định."}
-      - {id: C, answer: "Nó là API tìm timezone offset.", explanation: "WeekFields cung cấp calendar conventions locale-sensitive như first day/minimal days; business calendar rule phải được model riêng nếu cố định."}
-      - {id: D, answer: "Nó chỉ format tên thứ trong tuần.", explanation: "WeekFields cung cấp calendar conventions locale-sensitive như first day/minimal days; business calendar rule phải được model riêng nếu cố định."}
+      - {id: A, answer: "Nó bắt buộc mọi công ty trong Locale đó dùng cùng quy tắc tuần kế toán.", explanation: "WeekFields cung cấp quy ước lịch phụ thuộc Locale như ngày đầu tuần và số ngày tối thiểu của tuần đầu năm; quy tắc lịch nghiệp vụ cố định phải được mô hình hóa riêng."}
+      - {id: B, answer: "Nó cung cấp quy ước tuần theo Locale; quy tắc nghiệp vụ như tuần kế toán vẫn phải tường minh nếu khác.", explanation: "WeekFields cung cấp quy ước lịch phụ thuộc Locale như ngày đầu tuần và số ngày tối thiểu của tuần đầu năm; quy tắc lịch nghiệp vụ cố định phải được mô hình hóa riêng."}
+      - {id: C, answer: "Nó là API tìm độ lệch múi giờ.", explanation: "WeekFields cung cấp quy ước lịch phụ thuộc Locale như ngày đầu tuần và số ngày tối thiểu của tuần đầu năm; quy tắc lịch nghiệp vụ cố định phải được mô hình hóa riêng."}
+      - {id: D, answer: "Nó chỉ định dạng tên thứ trong tuần.", explanation: "WeekFields cung cấp quy ước lịch phụ thuộc Locale như ngày đầu tuần và số ngày tối thiểu của tuần đầu năm; quy tắc lịch nghiệp vụ cố định phải được mô hình hóa riêng."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -497,10 +523,10 @@ questions:
   - id: localization-q36
     question: "Phát biểu nào đúng về Unicode locale extensions và DateTimeFormatter?"
     answers:
-      - {id: A, answer: "Extension biến Locale thành đầy đủ ZoneId và Currency domain object.", explanation: "Locale có thể mang preference mở rộng; localizedBy có thể áp dụng relevant extensions rộng hơn, nhưng Locale vẫn không thay thế business ZoneId/Currency."}
-      - {id: B, answer: "withLocale luôn bỏ qua locale text và chỉ đổi timezone.", explanation: "Locale có thể mang preference mở rộng; localizedBy có thể áp dụng relevant extensions rộng hơn, nhưng Locale vẫn không thay thế business ZoneId/Currency."}
-      - {id: C, answer: "Một số formatter có thể đọc numbering/calendar/region extension, nhưng chúng không biến Locale thành nơi chứa toàn bộ business context.", explanation: "Locale có thể mang preference mở rộng; localizedBy có thể áp dụng relevant extensions rộng hơn, nhưng Locale vẫn không thay thế business ZoneId/Currency."}
-      - {id: D, answer: "DecimalStyle quyết định Instant trên timeline.", explanation: "Locale có thể mang preference mở rộng; localizedBy có thể áp dụng relevant extensions rộng hơn, nhưng Locale vẫn không thay thế business ZoneId/Currency."}
+      - {id: A, answer: "Phần mở rộng biến Locale thành đối tượng chứa đầy đủ ZoneId và Currency của nghiệp vụ.", explanation: "Locale có thể mang các lựa chọn mở rộng; localizedBy có thể áp dụng thêm những phần mở rộng liên quan, nhưng Locale vẫn không thay thế ZoneId hoặc Currency của nghiệp vụ."}
+      - {id: B, answer: "withLocale luôn bỏ qua văn bản theo Locale và chỉ đổi múi giờ.", explanation: "Locale có thể mang các lựa chọn mở rộng; localizedBy có thể áp dụng thêm những phần mở rộng liên quan, nhưng Locale vẫn không thay thế ZoneId hoặc Currency của nghiệp vụ."}
+      - {id: C, answer: "Một số bộ định dạng có thể đọc phần mở rộng về hệ chữ số, hệ lịch hoặc khu vực, nhưng chúng không biến Locale thành nơi chứa toàn bộ ngữ cảnh nghiệp vụ.", explanation: "Locale có thể mang các lựa chọn mở rộng; localizedBy có thể áp dụng thêm những phần mở rộng liên quan, nhưng Locale vẫn không thay thế ZoneId hoặc Currency của nghiệp vụ."}
+      - {id: D, answer: "DecimalStyle quyết định Instant trên trục thời gian.", explanation: "Locale có thể mang các lựa chọn mở rộng; localizedBy có thể áp dụng thêm những phần mở rộng liên quan, nhưng Locale vẫn không thay thế ZoneId hoặc Currency của nghiệp vụ."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
@@ -508,12 +534,12 @@ questions:
     apiRelated: {controller: "DateTimeLocalizationController", methodSignature: "weekAndNumberingConventions()"}
 
   - id: localization-q37
-    question: "Khi business code chỉ cần MEDIUM localized date, có nên lấy localized pattern rồi copy/hard-code lại không?"
+    question: "Khi mã nghiệp vụ chỉ cần ngày bản địa hóa ở mức MEDIUM, có nên lấy mẫu đã bản địa hóa rồi sao chép và mã hóa cứng lại không?"
     answers:
-      - {id: A, answer: "Thường không; dùng localized formatter trực tiếp. Chỉ lấy pattern khi tooling/integration thực sự cần pattern cụ thể.", explanation: "getLocalizedDateTimePattern hữu ích khi cần inspect/integrate pattern; business code nên giữ semantic intent qua localized style khi đó là contract."}
-      - {id: B, answer: "Luôn phải lấy pattern rồi lưu DB trước khi format.", explanation: "getLocalizedDateTimePattern hữu ích khi cần inspect/integrate pattern; business code nên giữ semantic intent qua localized style khi đó là contract."}
-      - {id: C, answer: "Có, vì localized formatter không dùng Locale.", explanation: "getLocalizedDateTimePattern hữu ích khi cần inspect/integrate pattern; business code nên giữ semantic intent qua localized style khi đó là contract."}
-      - {id: D, answer: "Chỉ ZoneId mới có thể tạo pattern.", explanation: "getLocalizedDateTimePattern hữu ích khi cần inspect/integrate pattern; business code nên giữ semantic intent qua localized style khi đó là contract."}
+      - {id: A, answer: "Thường không; hãy dùng trực tiếp bộ định dạng bản địa hóa. Chỉ lấy mẫu khi công cụ hoặc tích hợp thực sự cần mẫu cụ thể.", explanation: "getLocalizedDateTimePattern hữu ích khi cần kiểm tra hoặc tích hợp với mẫu cụ thể; mã nghiệp vụ nên giữ ý nghĩa ở mức kiểu định dạng theo Locale khi đó là hợp đồng."}
+      - {id: B, answer: "Luôn phải lấy mẫu rồi lưu vào cơ sở dữ liệu trước khi định dạng.", explanation: "getLocalizedDateTimePattern hữu ích khi cần kiểm tra hoặc tích hợp với mẫu cụ thể; mã nghiệp vụ nên giữ ý nghĩa ở mức kiểu định dạng theo Locale khi đó là hợp đồng."}
+      - {id: C, answer: "Có, vì bộ định dạng bản địa hóa không dùng Locale.", explanation: "getLocalizedDateTimePattern hữu ích khi cần kiểm tra hoặc tích hợp với mẫu cụ thể; mã nghiệp vụ nên giữ ý nghĩa ở mức kiểu định dạng theo Locale khi đó là hợp đồng."}
+      - {id: D, answer: "Chỉ ZoneId mới có thể tạo mẫu.", explanation: "getLocalizedDateTimePattern hữu ích khi cần kiểm tra hoặc tích hợp với mẫu cụ thể; mã nghiệp vụ nên giữ ý nghĩa ở mức kiểu định dạng theo Locale khi đó là hợp đồng."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -521,235 +547,248 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: localization-q38
-    question: "Policy nào hợp lý cho parsing date/time?"
+    question: "Chính sách nào hợp lý khi phân tích ngày giờ?"
     answers:
-      - {id: A, answer: "Mọi machine contract nên parse bằng pattern localized của user.", explanation: "Human input/display có thể locale-aware; machine contracts/persistence nên dùng format explicit ổn định như ISO khi phù hợp."}
-      - {id: B, answer: "Locale chỉ ảnh hưởng output, không ảnh hưởng parsing text có tên tháng.", explanation: "Human input/display có thể locale-aware; machine contracts/persistence nên dùng format explicit ổn định như ISO khi phù hợp."}
-      - {id: C, answer: "Lưu text hiển thị rồi parse lại là canonical strategy.", explanation: "Human input/display có thể locale-aware; machine contracts/persistence nên dùng format explicit ổn định như ISO khi phù hợp."}
-      - {id: D, answer: "Human input có thể parse bằng formatter theo Locale; machine contract nên dùng format stable/explicit.", explanation: "Human input/display có thể locale-aware; machine contracts/persistence nên dùng format explicit ổn định như ISO khi phù hợp."}
+      - {id: A, answer: "Mọi hợp đồng dành cho máy nên được phân tích bằng mẫu bản địa hóa của người dùng.", explanation: "Đầu vào và hiển thị dành cho con người có thể phụ thuộc Locale; hợp đồng dành cho máy và dữ liệu lưu trữ nên dùng định dạng tường minh, ổn định như ISO khi phù hợp."}
+      - {id: B, answer: "Locale chỉ ảnh hưởng đầu ra, không ảnh hưởng việc phân tích văn bản có tên tháng.", explanation: "Đầu vào và hiển thị dành cho con người có thể phụ thuộc Locale; hợp đồng dành cho máy và dữ liệu lưu trữ nên dùng định dạng tường minh, ổn định như ISO khi phù hợp."}
+      - {id: C, answer: "Lưu văn bản hiển thị rồi phân tích lại là chiến lược chuẩn.", explanation: "Đầu vào và hiển thị dành cho con người có thể phụ thuộc Locale; hợp đồng dành cho máy và dữ liệu lưu trữ nên dùng định dạng tường minh, ổn định như ISO khi phù hợp."}
+      - {id: D, answer: "Đầu vào của người dùng có thể được phân tích bằng bộ định dạng theo Locale; hợp đồng dành cho máy nên dùng định dạng ổn định và tường minh.", explanation: "Đầu vào và hiển thị dành cho con người có thể phụ thuộc Locale; hợp đồng dành cho máy và dữ liệu lưu trữ nên dùng định dạng tường minh, ổn định như ISO khi phù hợp."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "9.DateTimeLocalization/DateTimeLocalization.md", anchor: "localized-parsing"}
-    apiRelated: {controller: "DateTimeLocalizationController", methodSignature: "format()"}
-
-  - id: localization-q39
-    question: "ResourceBundle fallback có mục đích gì?"
-    answers:
-      - {id: A, answer: "Bảo đảm mọi locale đều có translation hoàn chỉnh.", explanation: "Fallback thử resource ít cụ thể hơn khi resource cụ thể thiếu; nó giúp reuse/safety nhưng không chứng minh translation completeness."}
-      - {id: B, answer: "Tìm candidate ít cụ thể hơn khi resource chính xác nhất không có.", explanation: "Fallback thử resource ít cụ thể hơn khi resource cụ thể thiếu; nó giúp reuse/safety nhưng không chứng minh translation completeness."}
-      - {id: C, answer: "Đổi requested Locale thành equal Locale khác.", explanation: "Fallback thử resource ít cụ thể hơn khi resource cụ thể thiếu; nó giúp reuse/safety nhưng không chứng minh translation completeness."}
-      - {id: D, answer: "Tự gọi translation service khi thiếu key.", explanation: "Fallback thử resource ít cụ thể hơn khi resource cụ thể thiếu; nó giúp reuse/safety nhưng không chứng minh translation completeness."}
-    correctAnswerId: B
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "10.Fallback/Fallback.md", anchor: "bundle-candidate-chain"}
-    apiRelated: {controller: "BundleController", methodSignature: "resolveBundle()"}
-
-  - id: localization-q40
-    question: "Tại sao default Locale fallback có thể gây bug production khó thấy?"
-    answers:
-      - {id: A, answer: "Vì default Locale luôn làm MissingResourceException biến mất.", explanation: "Default locale có thể trở thành hidden fallback path, khiến unsupported/missing translation âm thầm hiện ngôn ngữ tùy môi trường JVM."}
-      - {id: B, answer: "Vì nó thay đổi currency của domain.", explanation: "Default locale có thể trở thành hidden fallback path, khiến unsupported/missing translation âm thầm hiện ngôn ngữ tùy môi trường JVM."}
-      - {id: C, answer: "Vì locale thiếu resource có thể rơi sang resource theo JVM default và cho output khác giữa môi trường.", explanation: "Default locale có thể trở thành hidden fallback path, khiến unsupported/missing translation âm thầm hiện ngôn ngữ tùy môi trường JVM."}
-      - {id: D, answer: "Vì JVM default chỉ tồn tại trên developer machine.", explanation: "Default locale có thể trở thành hidden fallback path, khiến unsupported/missing translation âm thầm hiện ngôn ngữ tùy môi trường JVM."}
-    correctAnswerId: C
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "10.Fallback/Fallback.md", anchor: "default-locale-fallback"}
-    apiRelated: {controller: "BundleController", methodSignature: "resolveBundle()"}
-
-  - id: localization-q41
-    question: "Base bundle Messages.properties nên được thiết kế theo nguyên tắc nào?"
-    answers:
-      - {id: A, answer: "Chọn strategy rõ ràng và test nhất quán: default language thật hoặc fallback tối thiểu có chủ đích.", explanation: "Base bundle là fallback cuối quan trọng; semantics của nó phải được team xác định rõ để thiếu translation không bị che giấu."}
-      - {id: B, answer: "Luôn phải locale-neutral dù value thực tế là English.", explanation: "Base bundle là fallback cuối quan trọng; semantics của nó phải được team xác định rõ để thiếu translation không bị che giấu."}
-      - {id: C, answer: "Không cần test vì ResourceBundle tự bảo đảm mọi key tồn tại.", explanation: "Base bundle là fallback cuối quan trọng; semantics của nó phải được team xác định rõ để thiếu translation không bị che giấu."}
-      - {id: D, answer: "Nên copy mọi localized string vào base với key khác nhau.", explanation: "Base bundle là fallback cuối quan trọng; semantics của nó phải được team xác định rõ để thiếu translation không bị che giấu."}
-    correctAnswerId: A
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "10.Fallback/Fallback.md", anchor: "base-bundle"}
-    apiRelated: {controller: "BundleController", methodSignature: "resolveBundle()"}
-
-  - id: localization-q42
-    question: "MissingResourceException có thể xuất hiện trong hai tình huống nào?"
-    answers:
-      - {id: A, answer: "Chỉ khi JVM default locale là null.", explanation: "Failure có thể là không tìm được bundle phù hợp hoặc không tìm được key trong chain; production nên phát hiện sớm bằng validation/test."}
-      - {id: B, answer: "Chỉ khi properties file không phải UTF-8.", explanation: "Failure có thể là không tìm được bundle phù hợp hoặc không tìm được key trong chain; production nên phát hiện sớm bằng validation/test."}
-      - {id: C, answer: "Chỉ khi MessageFormat pattern sai.", explanation: "Failure có thể là không tìm được bundle phù hợp hoặc không tìm được key trong chain; production nên phát hiện sớm bằng validation/test."}
-      - {id: D, answer: "Khi không tìm được bundle hợp lệ hoặc khi key không tồn tại trong lookup chain.", explanation: "Failure có thể là không tìm được bundle phù hợp hoặc không tìm được key trong chain; production nên phát hiện sớm bằng validation/test."}
-    correctAnswerId: D
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "10.Fallback/Fallback.md", anchor: "missing-resource"}
-    apiRelated: {controller: "BundleController", methodSignature: "resolveBundle()"}
-
-  - id: localization-q43
-    question: "Với identifier/protocol token cần lowercase ổn định, lựa chọn nào thường đúng?"
-    answers:
-      - {id: A, answer: "toLowerCase() không truyền Locale để theo máy đang chạy.", explanation: "Locale-sensitive case conversion phù hợp cho human text; technical identifiers thường cần Locale.ROOT hoặc rule explicit của protocol."}
-      - {id: B, answer: "toLowerCase(Locale.ROOT) hoặc rule normalization explicit của protocol.", explanation: "Locale-sensitive case conversion phù hợp cho human text; technical identifiers thường cần Locale.ROOT hoặc rule explicit của protocol."}
-      - {id: C, answer: "toLowerCase(Locale.forLanguageTag(\"tr-TR\")) cho mọi hệ thống.", explanation: "Locale-sensitive case conversion phù hợp cho human text; technical identifiers thường cần Locale.ROOT hoặc rule explicit của protocol."}
-      - {id: D, answer: "Dùng Collator để tạo lowercase identifier.", explanation: "Locale-sensitive case conversion phù hợp cho human text; technical identifiers thường cần Locale.ROOT hoặc rule explicit của protocol."}
-    correctAnswerId: B
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "11.LocalePitfalls/LocalePitfalls.md", anchor: "turkish-i"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - id: localization-q44
-    question: "Cùng code NumberFormat.getNumberInstance() cho output khác giữa CI và production. Nguyên nhân đáng nghi nhất là gì?"
-    answers:
-      - {id: A, answer: "BigDecimal thay đổi scale theo máy.", explanation: "API locale-sensitive không truyền Locale có thể dựa vào JVM default; backend nên truyền request/user locale rõ ràng khi đó là contract."}
-      - {id: B, answer: "NumberFormat dùng random separator.", explanation: "API locale-sensitive không truyền Locale có thể dựa vào JVM default; backend nên truyền request/user locale rõ ràng khi đó là contract."}
-      - {id: C, answer: "Code đang phụ thuộc default Locale của environment.", explanation: "API locale-sensitive không truyền Locale có thể dựa vào JVM default; backend nên truyền request/user locale rõ ràng khi đó là contract."}
-      - {id: D, answer: "ZoneId của database làm đổi number separator.", explanation: "API locale-sensitive không truyền Locale có thể dựa vào JVM default; backend nên truyền request/user locale rõ ràng khi đó là contract."}
-    correctAnswerId: C
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "11.LocalePitfalls/LocalePitfalls.md", anchor: "default-locale-production-risk"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - id: localization-q45
-    question: "Vì sao localized format -> parse không nên là serialization contract giữa service?"
-    answers:
-      - {id: A, answer: "Vì localized text dành cho con người, có thể ambiguous, round hoặc bỏ field/precision.", explanation: "Machine boundaries cần explicit stable format; human formatting có thể không round-trip lại đúng object ban đầu."}
-      - {id: B, answer: "Vì parse API chỉ chạy trên desktop.", explanation: "Machine boundaries cần explicit stable format; human formatting có thể không round-trip lại đúng object ban đầu."}
-      - {id: C, answer: "Vì ISO cũng phụ thuộc user locale.", explanation: "Machine boundaries cần explicit stable format; human formatting có thể không round-trip lại đúng object ban đầu."}
-      - {id: D, answer: "Vì mọi formatter luôn mất toàn bộ precision.", explanation: "Machine boundaries cần explicit stable format; human formatting có thể không round-trip lại đúng object ban đầu."}
-    correctAnswerId: A
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "11.LocalePitfalls/LocalePitfalls.md", anchor: "format-parse-roundtrip"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - id: localization-q46
-    question: "Thiết kế translation key/message nào bền vững hơn?"
-    answers:
-      - {id: A, answer: "Dùng câu English hiện tại làm key để khỏi cần mapping.", explanation: "Stable semantic keys và complete messages cho translator kiểm soát cấu trúc câu; fragment concatenation làm localization khó và dễ sai grammar."}
-      - {id: B, answer: "Chia câu thành nhiều fragment nhỏ để tái sử dụng tối đa.", explanation: "Stable semantic keys và complete messages cho translator kiểm soát cấu trúc câu; fragment concatenation làm localization khó và dễ sai grammar."}
-      - {id: C, answer: "Dùng vị trí source line làm key.", explanation: "Stable semantic keys và complete messages cho translator kiểm soát cấu trúc câu; fragment concatenation làm localization khó và dễ sai grammar."}
-      - {id: D, answer: "Dùng semantic key ổn định như order.created và giữ message đủ ngữ cảnh thay vì nối fragment.", explanation: "Stable semantic keys và complete messages cho translator kiểm soát cấu trúc câu; fragment concatenation làm localization khó và dễ sai grammar."}
-    correctAnswerId: D
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "11.LocalePitfalls/LocalePitfalls.md", anchor: "translation-key-design"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: localization-q47
     question: "BreakIterator giải quyết bài toán cốt lõi nào?"
     answers:
-      - {id: A, answer: "Dịch text từ ngôn ngữ này sang ngôn ngữ khác.", explanation: "BreakIterator xác định character/word/sentence/line boundary theo locale; nó cung cấp boundary positions chứ không làm full NLP/rendering."}
-      - {id: B, answer: "Xác định boundary hợp lệ của character, word, sentence hoặc line trong natural-language text.", explanation: "BreakIterator xác định character/word/sentence/line boundary theo locale; nó cung cấp boundary positions chứ không làm full NLP/rendering."}
-      - {id: C, answer: "Sắp xếp text theo alphabet.", explanation: "BreakIterator xác định character/word/sentence/line boundary theo locale; nó cung cấp boundary positions chứ không làm full NLP/rendering."}
-      - {id: D, answer: "Đổi logical order thành visual order cho RTL.", explanation: "BreakIterator xác định character/word/sentence/line boundary theo locale; nó cung cấp boundary positions chứ không làm full NLP/rendering."}
+      - {id: A, answer: "Dịch văn bản từ ngôn ngữ này sang ngôn ngữ khác.", explanation: "BreakIterator xác định ranh giới ký tự, từ, câu và dòng theo Locale; nó cung cấp vị trí ranh giới chứ không thực hiện NLP đầy đủ hay dựng hiển thị."}
+      - {id: B, answer: "Xác định ranh giới hợp lệ của ký tự, từ, câu hoặc dòng trong văn bản ngôn ngữ tự nhiên.", explanation: "BreakIterator xác định ranh giới ký tự, từ, câu và dòng theo Locale; nó cung cấp vị trí ranh giới chứ không thực hiện NLP đầy đủ hay dựng hiển thị."}
+      - {id: C, answer: "Sắp xếp văn bản theo bảng chữ cái.", explanation: "BreakIterator xác định ranh giới ký tự, từ, câu và dòng theo Locale; nó cung cấp vị trí ranh giới chứ không thực hiện NLP đầy đủ hay dựng hiển thị."}
+      - {id: D, answer: "Đổi thứ tự logic thành thứ tự hiển thị cho RTL.", explanation: "BreakIterator xác định ranh giới ký tự, từ, câu và dòng theo Locale; nó cung cấp vị trí ranh giới chứ không thực hiện NLP đầy đủ hay dựng hiển thị."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "12.TextSegmentation/TextSegmentation.md", anchor: "breakiterator-model"}
+    readmeRelated: {file: "10.TextSegmentation/TextSegmentation.md", anchor: "breakiterator-model"}
     apiRelated: {controller: "TextSegmentationController", methodSignature: "boundaries()"}
 
   - id: localization-q48
-    question: "Khi cắt text theo ký tự người dùng nhìn thấy, vì sao không nên mặc định mỗi char UTF-16 là một character hoàn chỉnh?"
+    question: "Khi cắt văn bản theo ký tự mà người dùng nhìn thấy, vì sao không nên mặc định mỗi char UTF-16 là một ký tự hoàn chỉnh?"
     answers:
-      - {id: A, answer: "Vì Java char luôn là byte UTF-8.", explanation: "User-perceived character có thể gồm nhiều code unit/code point; character BreakIterator giúp chọn boundary phù hợp hơn cho UI/text handling."}
-      - {id: B, answer: "Vì Locale đổi kích thước của char.", explanation: "User-perceived character có thể gồm nhiều code unit/code point; character BreakIterator giúp chọn boundary phù hợp hơn cho UI/text handling."}
-      - {id: C, answer: "Vì một grapheme/user-perceived character có thể gồm nhiều code unit/code point.", explanation: "User-perceived character có thể gồm nhiều code unit/code point; character BreakIterator giúp chọn boundary phù hợp hơn cho UI/text handling."}
-      - {id: D, answer: "Vì BreakIterator chỉ làm việc với byte array.", explanation: "User-perceived character có thể gồm nhiều code unit/code point; character BreakIterator giúp chọn boundary phù hợp hơn cho UI/text handling."}
+      - {id: A, answer: "Vì Java char luôn là byte UTF-8.", explanation: "Một ký tự mà người dùng cảm nhận có thể gồm nhiều đơn vị mã hoặc nhiều code point; BreakIterator cho ranh giới ký tự giúp chọn ranh giới phù hợp hơn khi xử lý văn bản/UI."}
+      - {id: B, answer: "Vì Locale đổi kích thước của char.", explanation: "Một ký tự mà người dùng cảm nhận có thể gồm nhiều đơn vị mã hoặc nhiều code point; BreakIterator cho ranh giới ký tự giúp chọn ranh giới phù hợp hơn khi xử lý văn bản/UI."}
+      - {id: C, answer: "Vì một grapheme, tức ký tự người dùng cảm nhận, có thể gồm nhiều đơn vị mã hoặc nhiều code point.", explanation: "Một ký tự mà người dùng cảm nhận có thể gồm nhiều đơn vị mã hoặc nhiều code point; BreakIterator cho ranh giới ký tự giúp chọn ranh giới phù hợp hơn khi xử lý văn bản/UI."}
+      - {id: D, answer: "Vì BreakIterator chỉ làm việc với mảng byte.", explanation: "Một ký tự mà người dùng cảm nhận có thể gồm nhiều đơn vị mã hoặc nhiều code point; BreakIterator cho ranh giới ký tự giúp chọn ranh giới phù hợp hơn khi xử lý văn bản/UI."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "12.TextSegmentation/TextSegmentation.md", anchor: "character-boundary"}
+    readmeRelated: {file: "10.TextSegmentation/TextSegmentation.md", anchor: "character-boundary"}
     apiRelated: {controller: "TextSegmentationController", methodSignature: "boundaries()"}
 
   - id: localization-q49
-    question: "Điểm nào đúng về word/sentence BreakIterator?"
+    question: "Điểm nào đúng về BreakIterator cho từ và câu?"
     answers:
-      - {id: A, answer: "Nó trả boundary positions theo rule phù hợp; application vẫn quyết định segment nào có ý nghĩa cho use case.", explanation: "BreakIterator tốt hơn split theo space/dot cho natural-language boundaries nhưng không phải full semantic tokenizer."}
-      - {id: B, answer: "Word iterator luôn trả danh sách token đã loại punctuation.", explanation: "BreakIterator tốt hơn split theo space/dot cho natural-language boundaries nhưng không phải full semantic tokenizer."}
-      - {id: C, answer: "Sentence iterator chỉ tìm ký tự '.'.", explanation: "BreakIterator tốt hơn split theo space/dot cho natural-language boundaries nhưng không phải full semantic tokenizer."}
-      - {id: D, answer: "Locale không ảnh hưởng segmentation.", explanation: "BreakIterator tốt hơn split theo space/dot cho natural-language boundaries nhưng không phải full semantic tokenizer."}
+      - {id: A, answer: "Nó trả về các vị trí ranh giới theo quy tắc phù hợp; ứng dụng vẫn quyết định đoạn nào có ý nghĩa cho trường hợp sử dụng.", explanation: "BreakIterator phù hợp hơn việc tách theo dấu cách hoặc dấu chấm khi xử lý ranh giới ngôn ngữ tự nhiên, nhưng nó không phải bộ tách token NLP hiểu đầy đủ ngữ nghĩa."}
+      - {id: B, answer: "Bộ lặp từ luôn trả danh sách token đã loại dấu câu.", explanation: "BreakIterator phù hợp hơn việc tách theo dấu cách hoặc dấu chấm khi xử lý ranh giới ngôn ngữ tự nhiên, nhưng nó không phải bộ tách token NLP hiểu đầy đủ ngữ nghĩa."}
+      - {id: C, answer: "Bộ lặp câu chỉ tìm ký tự '.'.", explanation: "BreakIterator phù hợp hơn việc tách theo dấu cách hoặc dấu chấm khi xử lý ranh giới ngôn ngữ tự nhiên, nhưng nó không phải bộ tách token NLP hiểu đầy đủ ngữ nghĩa."}
+      - {id: D, answer: "Locale không ảnh hưởng việc phân đoạn.", explanation: "BreakIterator phù hợp hơn việc tách theo dấu cách hoặc dấu chấm khi xử lý ranh giới ngôn ngữ tự nhiên, nhưng nó không phải bộ tách token NLP hiểu đầy đủ ngữ nghĩa."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "12.TextSegmentation/TextSegmentation.md", anchor: "word-sentence-boundary"}
+    readmeRelated: {file: "10.TextSegmentation/TextSegmentation.md", anchor: "word-sentence-boundary"}
     apiRelated: {controller: "TextSegmentationController", methodSignature: "boundaries()"}
 
   - id: localization-q50
-    question: "Line BreakIterator khác newline ký tự '\n' ở điểm nào?"
+    question: "BreakIterator cho ranh giới dòng khác ký tự xuống dòng '\n' ở điểm nào?"
     answers:
-      - {id: A, answer: "Không khác, cả hai chỉ tìm ký tự newline có sẵn.", explanation: "Line BreakIterator tìm line-break opportunities để renderer cân nhắc wrap; newline là break đã được encode trong dữ liệu."}
-      - {id: B, answer: "Line BreakIterator luôn chèn newline vào String.", explanation: "Line BreakIterator tìm line-break opportunities để renderer cân nhắc wrap; newline là break đã được encode trong dữ liệu."}
-      - {id: C, answer: "Newline phụ thuộc Locale còn BreakIterator không.", explanation: "Line BreakIterator tìm line-break opportunities để renderer cân nhắc wrap; newline là break đã được encode trong dữ liệu."}
-      - {id: D, answer: "Line BreakIterator tìm vị trí có thể ngắt khi wrap; newline là ký tự break đã tồn tại.", explanation: "Line BreakIterator tìm line-break opportunities để renderer cân nhắc wrap; newline là break đã được encode trong dữ liệu."}
+      - {id: A, answer: "Không khác, cả hai chỉ tìm ký tự xuống dòng có sẵn.", explanation: "BreakIterator cho ranh giới dòng tìm các vị trí có thể ngắt dòng để bộ dựng hiển thị cân nhắc xuống dòng; ký tự xuống dòng là điểm ngắt đã được mã hóa sẵn trong dữ liệu."}
+      - {id: B, answer: "BreakIterator cho ranh giới dòng luôn chèn ký tự xuống dòng vào String.", explanation: "BreakIterator cho ranh giới dòng tìm các vị trí có thể ngắt dòng để bộ dựng hiển thị cân nhắc xuống dòng; ký tự xuống dòng là điểm ngắt đã được mã hóa sẵn trong dữ liệu."}
+      - {id: C, answer: "Ký tự xuống dòng phụ thuộc Locale còn BreakIterator thì không.", explanation: "BreakIterator cho ranh giới dòng tìm các vị trí có thể ngắt dòng để bộ dựng hiển thị cân nhắc xuống dòng; ký tự xuống dòng là điểm ngắt đã được mã hóa sẵn trong dữ liệu."}
+      - {id: D, answer: "BreakIterator cho ranh giới dòng tìm vị trí có thể ngắt khi xuống dòng; ký tự xuống dòng là ký tự ngắt đã tồn tại.", explanation: "BreakIterator cho ranh giới dòng tìm các vị trí có thể ngắt dòng để bộ dựng hiển thị cân nhắc xuống dòng; ký tự xuống dòng là điểm ngắt đã được mã hóa sẵn trong dữ liệu."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "12.TextSegmentation/TextSegmentation.md", anchor: "line-boundary"}
+    readmeRelated: {file: "10.TextSegmentation/TextSegmentation.md", anchor: "line-boundary"}
     apiRelated: {controller: "TextSegmentationController", methodSignature: "boundaries()"}
 
   - id: localization-q51
-    question: "Boundary nào mô tả đúng giới hạn của BreakIterator?"
+    question: "Phát biểu nào mô tả đúng giới hạn của BreakIterator?"
     answers:
-      - {id: A, answer: "Nó là full NLP engine hiểu semantic meaning và stemming.", explanation: "BreakIterator phân tích boundaries; translation, semantic NLP và rendering thuộc layer/tool khác."}
-      - {id: B, answer: "Nó phân tích text boundaries, nhưng không tự dịch, hiểu semantics sâu hay render text.", explanation: "BreakIterator phân tích boundaries; translation, semantic NLP và rendering thuộc layer/tool khác."}
-      - {id: C, answer: "Nó thay thế Bidi cho mixed-direction text.", explanation: "BreakIterator phân tích boundaries; translation, semantic NLP và rendering thuộc layer/tool khác."}
-      - {id: D, answer: "Nó quyết định font và pixel layout.", explanation: "BreakIterator phân tích boundaries; translation, semantic NLP và rendering thuộc layer/tool khác."}
+      - {id: A, answer: "Nó là bộ máy NLP đầy đủ, hiểu ngữ nghĩa và thực hiện stemming.", explanation: "BreakIterator phân tích các ranh giới; dịch thuật, ngữ nghĩa NLP và dựng hiển thị thuộc các tầng hoặc công cụ khác."}
+      - {id: B, answer: "Nó phân tích ranh giới văn bản, nhưng không tự dịch, hiểu ngữ nghĩa sâu hay dựng hiển thị văn bản.", explanation: "BreakIterator phân tích các ranh giới; dịch thuật, ngữ nghĩa NLP và dựng hiển thị thuộc các tầng hoặc công cụ khác."}
+      - {id: C, answer: "Nó thay thế Bidi cho văn bản trộn nhiều hướng.", explanation: "BreakIterator phân tích các ranh giới; dịch thuật, ngữ nghĩa NLP và dựng hiển thị thuộc các tầng hoặc công cụ khác."}
+      - {id: D, answer: "Nó quyết định phông chữ và bố trí điểm ảnh.", explanation: "BreakIterator phân tích các ranh giới; dịch thuật, ngữ nghĩa NLP và dựng hiển thị thuộc các tầng hoặc công cụ khác."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "12.TextSegmentation/TextSegmentation.md", anchor: "breakiterator-boundary"}
+    readmeRelated: {file: "10.TextSegmentation/TextSegmentation.md", anchor: "breakiterator-boundary"}
     apiRelated: {controller: "TextSegmentationController", methodSignature: "boundaries()"}
 
   - id: localization-q52
-    question: "Trong bidirectional text, logical order và visual order khác nhau thế nào?"
+    question: "Trong văn bản hai chiều, thứ tự logic và thứ tự hiển thị khác nhau thế nào?"
     answers:
-      - {id: A, answer: "Logical order là pixel position; visual order là thứ tự lưu trong String.", explanation: "String nên giữ logical content order; bidi rules/renderer quyết định visual ordering, đặc biệt khi LTR và RTL trộn lẫn."}
-      - {id: B, answer: "Hai khái niệm luôn giống nhau nếu String là Unicode.", explanation: "String nên giữ logical content order; bidi rules/renderer quyết định visual ordering, đặc biệt khi LTR và RTL trộn lẫn."}
-      - {id: C, answer: "Logical order là thứ tự nội dung lưu trong String; visual order là cách glyph/run xuất hiện sau bidi processing.", explanation: "String nên giữ logical content order; bidi rules/renderer quyết định visual ordering, đặc biệt khi LTR và RTL trộn lẫn."}
-      - {id: D, answer: "Visual order nên được lưu sẵn bằng cách reverse String RTL.", explanation: "String nên giữ logical content order; bidi rules/renderer quyết định visual ordering, đặc biệt khi LTR và RTL trộn lẫn."}
+      - {id: A, answer: "Thứ tự logic là vị trí điểm ảnh; thứ tự hiển thị là thứ tự lưu trong String.", explanation: "String nên giữ thứ tự nội dung logic; quy tắc bidi và bộ dựng hiển thị quyết định thứ tự hiển thị, đặc biệt khi LTR và RTL trộn lẫn."}
+      - {id: B, answer: "Hai khái niệm luôn giống nhau nếu String là Unicode.", explanation: "String nên giữ thứ tự nội dung logic; quy tắc bidi và bộ dựng hiển thị quyết định thứ tự hiển thị, đặc biệt khi LTR và RTL trộn lẫn."}
+      - {id: C, answer: "Thứ tự logic là thứ tự nội dung lưu trong String; thứ tự hiển thị là cách các glyph và đoạn có hướng xuất hiện sau khi xử lý bidi.", explanation: "String nên giữ thứ tự nội dung logic; quy tắc bidi và bộ dựng hiển thị quyết định thứ tự hiển thị, đặc biệt khi LTR và RTL trộn lẫn."}
+      - {id: D, answer: "Thứ tự hiển thị nên được lưu sẵn bằng cách đảo ngược String RTL.", explanation: "String nên giữ thứ tự nội dung logic; quy tắc bidi và bộ dựng hiển thị quyết định thứ tự hiển thị, đặc biệt khi LTR và RTL trộn lẫn."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "13.BidirectionalText/BidirectionalText.md", anchor: "bidi-model"}
+    readmeRelated: {file: "11.BidirectionalText/BidirectionalText.md", anchor: "bidi-model"}
     apiRelated: {controller: "BidirectionalTextController", methodSignature: "analyze()"}
 
   - id: localization-q53
-    question: "Một paragraph bidi có thể chứa directional runs. Run là gì?"
+    question: "Một đoạn văn bidi có thể chứa nhiều đoạn có hướng (directional run) khác nhau. Một đoạn như vậy là gì?"
     answers:
-      - {id: A, answer: "Một paragraph con bắt buộc có Locale riêng.", explanation: "Directional run là đoạn liên tiếp có cùng embedding level/direction trong kết quả bidi analysis; mixed text không thể giản lược thành một boolean RTL cho cả chuỗi."}
-      - {id: B, answer: "Một đoạn liên tiếp có cùng embedding level/direction sau khi phân tích bidi.", explanation: "Directional run là đoạn liên tiếp có cùng embedding level/direction trong kết quả bidi analysis; mixed text không thể giản lược thành một boolean RTL cho cả chuỗi."}
-      - {id: C, answer: "Một token được BreakIterator tách ra.", explanation: "Directional run là đoạn liên tiếp có cùng embedding level/direction trong kết quả bidi analysis; mixed text không thể giản lược thành một boolean RTL cho cả chuỗi."}
-      - {id: D, answer: "Một String đã được reverse để hiển thị.", explanation: "Directional run là đoạn liên tiếp có cùng embedding level/direction trong kết quả bidi analysis; mixed text không thể giản lược thành một boolean RTL cho cả chuỗi."}
+      - {id: A, answer: "Một đoạn văn con bắt buộc có Locale riêng.", explanation: "Đoạn có hướng là đoạn liên tiếp có cùng mức nhúng và hướng trong kết quả phân tích bidi; văn bản trộn nhiều hướng không thể giản lược thành một boolean RTL cho cả chuỗi."}
+      - {id: B, answer: "Một đoạn liên tiếp có cùng mức nhúng và hướng sau khi phân tích bidi.", explanation: "Đoạn có hướng là đoạn liên tiếp có cùng mức nhúng và hướng trong kết quả phân tích bidi; văn bản trộn nhiều hướng không thể giản lược thành một boolean RTL cho cả chuỗi."}
+      - {id: C, answer: "Một token được BreakIterator tách ra.", explanation: "Đoạn có hướng là đoạn liên tiếp có cùng mức nhúng và hướng trong kết quả phân tích bidi; văn bản trộn nhiều hướng không thể giản lược thành một boolean RTL cho cả chuỗi."}
+      - {id: D, answer: "Một String đã được đảo ngược để hiển thị.", explanation: "Đoạn có hướng là đoạn liên tiếp có cùng mức nhúng và hướng trong kết quả phân tích bidi; văn bản trộn nhiều hướng không thể giản lược thành một boolean RTL cho cả chuỗi."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "13.BidirectionalText/BidirectionalText.md", anchor: "ltr-rtl-runs"}
+    readmeRelated: {file: "11.BidirectionalText/BidirectionalText.md", anchor: "ltr-rtl-runs"}
     apiRelated: {controller: "BidirectionalTextController", methodSignature: "analyze()"}
 
   - id: localization-q54
-    question: "java.text.Bidi cho phép application quan sát loại thông tin nào?"
+    question: "java.text.Bidi cho phép ứng dụng quan sát loại thông tin nào?"
     answers:
-      - {id: A, answer: "Translation key nào đang được dùng.", explanation: "java.text.Bidi phân tích base direction, run count, run boundaries và embedding levels; nó không thực hiện rendering."}
-      - {id: B, answer: "Currency symbol theo Locale.", explanation: "java.text.Bidi phân tích base direction, run count, run boundaries và embedding levels; nó không thực hiện rendering."}
-      - {id: C, answer: "Base direction, số run, boundary và embedding level của từng run.", explanation: "java.text.Bidi phân tích base direction, run count, run boundaries và embedding levels; nó không thực hiện rendering."}
-      - {id: D, answer: "Font fallback và glyph width.", explanation: "java.text.Bidi phân tích base direction, run count, run boundaries và embedding levels; nó không thực hiện rendering."}
+      - {id: A, answer: "Khóa bản dịch nào đang được dùng.", explanation: "java.text.Bidi phân tích hướng nền, số lượng đoạn có hướng, ranh giới của từng đoạn và mức nhúng; nó không thực hiện dựng hiển thị."}
+      - {id: B, answer: "Ký hiệu Currency theo Locale.", explanation: "java.text.Bidi phân tích hướng nền, số lượng đoạn có hướng, ranh giới của từng đoạn và mức nhúng; nó không thực hiện dựng hiển thị."}
+      - {id: C, answer: "Hướng nền, số đoạn có hướng, ranh giới và mức nhúng của từng đoạn.", explanation: "java.text.Bidi phân tích hướng nền, số lượng đoạn có hướng, ranh giới của từng đoạn và mức nhúng; nó không thực hiện dựng hiển thị."}
+      - {id: D, answer: "Phông chữ dự phòng và độ rộng glyph.", explanation: "java.text.Bidi phân tích hướng nền, số lượng đoạn có hướng, ranh giới của từng đoạn và mức nhúng; nó không thực hiện dựng hiển thị."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "13.BidirectionalText/BidirectionalText.md", anchor: "java-bidi"}
+    readmeRelated: {file: "11.BidirectionalText/BidirectionalText.md", anchor: "java-bidi"}
     apiRelated: {controller: "BidirectionalTextController", methodSignature: "analyze()"}
 
   - id: localization-q55
-    question: "java.text.Bidi và UI renderer chia trách nhiệm thế nào?"
+    question: "java.text.Bidi và bộ dựng hiển thị UI chia trách nhiệm thế nào?"
     answers:
-      - {id: A, answer: "Bidi phân tích direction/runs; renderer chịu font, glyph shaping, measurement, layout và vẽ output.", explanation: "java.text.Bidi là analysis API, không phải rendering engine; dữ liệu vẫn nên giữ logical order."}
-      - {id: B, answer: "Bidi tự chọn font và vẽ glyph; renderer chỉ lưu String.", explanation: "java.text.Bidi là analysis API, không phải rendering engine; dữ liệu vẫn nên giữ logical order."}
-      - {id: C, answer: "Renderer phải reverse String trước rồi mới gọi Bidi.", explanation: "java.text.Bidi là analysis API, không phải rendering engine; dữ liệu vẫn nên giữ logical order."}
-      - {id: D, answer: "Bidi chỉ hoạt động khi toàn paragraph là RTL thuần.", explanation: "java.text.Bidi là analysis API, không phải rendering engine; dữ liệu vẫn nên giữ logical order."}
+      - {id: A, answer: "Bidi phân tích hướng và các đoạn có hướng; bộ dựng hiển thị chịu trách nhiệm về phông chữ, tạo hình glyph, đo kích thước, bố trí và vẽ đầu ra.", explanation: "java.text.Bidi là API phân tích, không phải bộ máy dựng hiển thị; dữ liệu vẫn nên giữ thứ tự logic."}
+      - {id: B, answer: "Bidi tự chọn phông chữ và vẽ glyph; bộ dựng hiển thị chỉ lưu String.", explanation: "java.text.Bidi là API phân tích, không phải bộ máy dựng hiển thị; dữ liệu vẫn nên giữ thứ tự logic."}
+      - {id: C, answer: "Bộ dựng hiển thị phải đảo ngược String trước rồi mới gọi Bidi.", explanation: "java.text.Bidi là API phân tích, không phải bộ máy dựng hiển thị; dữ liệu vẫn nên giữ thứ tự logic."}
+      - {id: D, answer: "Bidi chỉ hoạt động khi toàn bộ đoạn văn là RTL thuần.", explanation: "java.text.Bidi là API phân tích, không phải bộ máy dựng hiển thị; dữ liệu vẫn nên giữ thứ tự logic."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "13.BidirectionalText/BidirectionalText.md", anchor: "bidi-boundary"}
+    readmeRelated: {file: "11.BidirectionalText/BidirectionalText.md", anchor: "bidi-boundary"}
     apiRelated: {controller: "BidirectionalTextController", methodSignature: "analyze()"}
+
+  - id: localization-q39
+    question: "Cơ chế dự phòng của ResourceBundle dùng để làm gì?"
+    answers:
+      - {id: A, answer: "Bảo đảm mọi Locale đều có bản dịch đầy đủ.", explanation: "Cơ chế dự phòng là chính sách tiếp tục tra cứu khi đường tra cứu của Locale ưu tiên không phân giải được tài nguyên phù hợp; nó có thể gồm ứng viên ít cụ thể hơn và, tùy Control, một Locale dự phòng riêng. Nó không chứng minh bản dịch đã đầy đủ."}
+      - {id: B, answer: "Tiếp tục tra cứu theo chính sách ứng viên/dự phòng đã cấu hình khi đường tra cứu của Locale ưu tiên không phân giải được tài nguyên phù hợp.", explanation: "Cơ chế dự phòng là chính sách tiếp tục tra cứu khi đường tra cứu của Locale ưu tiên không phân giải được tài nguyên phù hợp; nó có thể gồm ứng viên ít cụ thể hơn và, tùy Control, một Locale dự phòng riêng. Nó không chứng minh bản dịch đã đầy đủ."}
+      - {id: C, answer: "Đổi Locale yêu cầu thành một Locale khác nhưng bằng nhau theo equals.", explanation: "Cơ chế dự phòng là chính sách tiếp tục tra cứu khi đường tra cứu của Locale ưu tiên không phân giải được tài nguyên phù hợp; nó có thể gồm ứng viên ít cụ thể hơn và, tùy Control, một Locale dự phòng riêng. Nó không chứng minh bản dịch đã đầy đủ."}
+      - {id: D, answer: "Tự gọi dịch vụ dịch khi thiếu khóa.", explanation: "Cơ chế dự phòng là chính sách tiếp tục tra cứu khi đường tra cứu của Locale ưu tiên không phân giải được tài nguyên phù hợp; nó có thể gồm ứng viên ít cụ thể hơn và, tùy Control, một Locale dự phòng riêng. Nó không chứng minh bản dịch đã đầy đủ."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "12.Fallback/Fallback.md", anchor: "bundle-candidate-chain"}
+    apiRelated: {controller: "BundleController", methodSignature: "resolveBundle()"}
+
+  - id: localization-q40
+    question: "Tại sao dự phòng qua Locale mặc định có thể gây lỗi khó phát hiện giữa các môi trường vận hành?"
+    answers:
+      - {id: A, answer: "Vì Locale mặc định luôn làm MissingResourceException biến mất.", explanation: "Locale mặc định có thể trở thành đường dự phòng ẩn, khiến bản dịch không được hỗ trợ hoặc còn thiếu âm thầm hiển thị ngôn ngữ khác tùy môi trường JVM."}
+      - {id: B, answer: "Vì nó thay đổi Currency của miền nghiệp vụ.", explanation: "Locale mặc định có thể trở thành đường dự phòng ẩn, khiến bản dịch không được hỗ trợ hoặc còn thiếu âm thầm hiển thị ngôn ngữ khác tùy môi trường JVM."}
+      - {id: C, answer: "Vì Locale thiếu tài nguyên có thể rơi sang tài nguyên theo giá trị mặc định của JVM và tạo đầu ra khác giữa các môi trường.", explanation: "Locale mặc định có thể trở thành đường dự phòng ẩn, khiến bản dịch không được hỗ trợ hoặc còn thiếu âm thầm hiển thị ngôn ngữ khác tùy môi trường JVM."}
+      - {id: D, answer: "Vì giá trị mặc định của JVM chỉ tồn tại trên máy lập trình viên.", explanation: "Locale mặc định có thể trở thành đường dự phòng ẩn, khiến bản dịch không được hỗ trợ hoặc còn thiếu âm thầm hiển thị ngôn ngữ khác tùy môi trường JVM."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "12.Fallback/Fallback.md", anchor: "default-locale-fallback"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: localization-q41
+    question: "Gói tài nguyên gốc Messages.properties nên được thiết kế theo nguyên tắc nào?"
+    answers:
+      - {id: A, answer: "Chọn và kiểm thử rõ chiến lược: một ngôn ngữ mặc định thật hoặc tập dự phòng tối thiểu có chủ đích.", explanation: "Gói tài nguyên gốc là ứng viên ROOT/tổng quát của họ ResourceBundle. Ý nghĩa của nó phải rõ ràng và mã nguồn không nên giả định nó luôn được trả về trước một nhánh Locale dự phòng riêng dưới Control mặc định."}
+      - {id: B, answer: "Luôn phải trung lập với Locale dù giá trị thực tế là tiếng Anh.", explanation: "Gói tài nguyên gốc là ứng viên ROOT/tổng quát của họ ResourceBundle. Ý nghĩa của nó phải rõ ràng và mã nguồn không nên giả định nó luôn được trả về trước một nhánh Locale dự phòng riêng dưới Control mặc định."}
+      - {id: C, answer: "Không cần kiểm thử vì ResourceBundle tự bảo đảm mọi khóa tồn tại.", explanation: "Gói tài nguyên gốc là ứng viên ROOT/tổng quát của họ ResourceBundle. Ý nghĩa của nó phải rõ ràng và mã nguồn không nên giả định nó luôn được trả về trước một nhánh Locale dự phòng riêng dưới Control mặc định."}
+      - {id: D, answer: "Nên sao chép mọi chuỗi đã bản địa hóa vào gói gốc với khóa khác nhau.", explanation: "Gói tài nguyên gốc là ứng viên ROOT/tổng quát của họ ResourceBundle. Ý nghĩa của nó phải rõ ràng và mã nguồn không nên giả định nó luôn được trả về trước một nhánh Locale dự phòng riêng dưới Control mặc định."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "12.Fallback/Fallback.md", anchor: "base-bundle"}
+    apiRelated: {controller: "BundleController", methodSignature: "resolveBundle()"}
+
+  - id: localization-q42
+    question: "MissingResourceException có thể xuất hiện trong hai tình huống nào?"
+    answers:
+      - {id: A, answer: "Chỉ khi Locale mặc định của JVM là null.", explanation: "Lỗi có thể xuất hiện khi không tìm được bundle phù hợp hoặc không tìm được khóa trong chuỗi tra cứu; nên phát hiện sớm bằng kiểm tra dữ liệu và kiểm thử."}
+      - {id: B, answer: "Chỉ khi tệp .properties không phải UTF-8.", explanation: "Lỗi có thể xuất hiện khi không tìm được bundle phù hợp hoặc không tìm được khóa trong chuỗi tra cứu; nên phát hiện sớm bằng kiểm tra dữ liệu và kiểm thử."}
+      - {id: C, answer: "Chỉ khi mẫu MessageFormat sai.", explanation: "Lỗi có thể xuất hiện khi không tìm được bundle phù hợp hoặc không tìm được khóa trong chuỗi tra cứu; nên phát hiện sớm bằng kiểm tra dữ liệu và kiểm thử."}
+      - {id: D, answer: "Khi không tìm được bundle hợp lệ hoặc khi khóa không tồn tại trong chuỗi tra cứu.", explanation: "Lỗi có thể xuất hiện khi không tìm được bundle phù hợp hoặc không tìm được khóa trong chuỗi tra cứu; nên phát hiện sớm bằng kiểm tra dữ liệu và kiểm thử."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "12.Fallback/Fallback.md", anchor: "missing-resource"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: localization-q06
+    question: "Vì sao hệ thống phía máy chủ nhiều người dùng nên thận trọng với Locale.getDefault()?"
+    answers:
+      - {id: A, answer: "Vì Locale mặc định luôn là Locale.ROOT.", explanation: "Locale mặc định là trạng thái của JVM/môi trường và có thể trở thành phụ thuộc ẩn; Locale theo từng yêu cầu nên được truyền tường minh khi đó là một phần của hợp đồng."}
+      - {id: B, answer: "Vì Locale mặc định không dùng được cho NumberFormat.", explanation: "Locale mặc định là trạng thái của JVM/môi trường và có thể trở thành phụ thuộc ẩn; Locale theo từng yêu cầu nên được truyền tường minh khi đó là một phần của hợp đồng."}
+      - {id: C, answer: "Vì đầu ra có thể phụ thuộc cấu hình JVM thay vì Locale của người dùng hoặc yêu cầu.", explanation: "Locale mặc định là trạng thái của JVM/môi trường và có thể trở thành phụ thuộc ẩn; Locale theo từng yêu cầu nên được truyền tường minh khi đó là một phần của hợp đồng."}
+      - {id: D, answer: "Vì Java cấm đổi Locale mặc định trong thời gian chạy.", explanation: "Locale mặc định là trạng thái của JVM/môi trường và có thể trở thành phụ thuộc ẩn; Locale theo từng yêu cầu nên được truyền tường minh khi đó là một phần của hợp đồng."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "13.LocalePitfalls/LocalePitfalls.md", anchor: "default-locale"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: localization-q43
+    question: "Với định danh hoặc token giao thức cần chuyển sang chữ thường một cách ổn định, lựa chọn nào thường đúng?"
+    answers:
+      - {id: A, answer: "Gọi toLowerCase() không truyền Locale để phụ thuộc máy đang chạy.", explanation: "Chuyển đổi hoa/thường phụ thuộc Locale phù hợp với văn bản dành cho con người; định danh kỹ thuật thường cần Locale.ROOT hoặc quy tắc tường minh của giao thức."}
+      - {id: B, answer: "Dùng toLowerCase(Locale.ROOT) hoặc quy tắc chuẩn hóa tường minh của giao thức.", explanation: "Chuyển đổi hoa/thường phụ thuộc Locale phù hợp với văn bản dành cho con người; định danh kỹ thuật thường cần Locale.ROOT hoặc quy tắc tường minh của giao thức."}
+      - {id: C, answer: "Dùng toLowerCase(Locale.forLanguageTag(\"tr-TR\")) cho mọi hệ thống.", explanation: "Chuyển đổi hoa/thường phụ thuộc Locale phù hợp với văn bản dành cho con người; định danh kỹ thuật thường cần Locale.ROOT hoặc quy tắc tường minh của giao thức."}
+      - {id: D, answer: "Dùng Collator để tạo định danh chữ thường.", explanation: "Chuyển đổi hoa/thường phụ thuộc Locale phù hợp với văn bản dành cho con người; định danh kỹ thuật thường cần Locale.ROOT hoặc quy tắc tường minh của giao thức."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "13.LocalePitfalls/LocalePitfalls.md", anchor: "turkish-i"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: localization-q44
+    question: "Cùng một mã gọi NumberFormat.getNumberInstance() nhưng cho đầu ra khác giữa CI và môi trường vận hành. Nguyên nhân đáng nghi nhất là gì?"
+    answers:
+      - {id: A, answer: "BigDecimal thay đổi scale theo máy.", explanation: "NumberFormat.getNumberInstance() khi không truyền Locale sẽ dùng Locale mặc định của nhóm FORMAT trong JVM. Hệ thống phía máy chủ nên truyền tường minh Locale của yêu cầu/người dùng khi đó là một phần của hợp đồng."}
+      - {id: B, answer: "NumberFormat chọn dấu phân cách ngẫu nhiên.", explanation: "NumberFormat.getNumberInstance() khi không truyền Locale sẽ dùng Locale mặc định của nhóm FORMAT trong JVM. Hệ thống phía máy chủ nên truyền tường minh Locale của yêu cầu/người dùng khi đó là một phần của hợp đồng."}
+      - {id: C, answer: "Mã nguồn đang phụ thuộc Locale mặc định của nhóm FORMAT trong môi trường JVM.", explanation: "NumberFormat.getNumberInstance() khi không truyền Locale sẽ dùng Locale mặc định của nhóm FORMAT trong JVM. Hệ thống phía máy chủ nên truyền tường minh Locale của yêu cầu/người dùng khi đó là một phần của hợp đồng."}
+      - {id: D, answer: "ZoneId của cơ sở dữ liệu làm đổi dấu phân cách số.", explanation: "NumberFormat.getNumberInstance() khi không truyền Locale sẽ dùng Locale mặc định của nhóm FORMAT trong JVM. Hệ thống phía máy chủ nên truyền tường minh Locale của yêu cầu/người dùng khi đó là một phần của hợp đồng."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "13.LocalePitfalls/LocalePitfalls.md", anchor: "default-locale-production-risk"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: localization-q45
+    question: "Vì sao định dạng bản địa hóa rồi phân tích ngược không nên trở thành hợp đồng tuần tự hóa giữa các dịch vụ?"
+    answers:
+      - {id: A, answer: "Vì văn bản đã bản địa hóa dành cho con người có thể mơ hồ, bị làm tròn hoặc bỏ trường/độ chính xác.", explanation: "Ranh giới dành cho máy cần định dạng tường minh và ổn định; định dạng dành cho con người có thể không chuyển đổi hai chiều về đúng đối tượng ban đầu."}
+      - {id: B, answer: "Vì API phân tích chỉ chạy trên máy tính để bàn.", explanation: "Ranh giới dành cho máy cần định dạng tường minh và ổn định; định dạng dành cho con người có thể không chuyển đổi hai chiều về đúng đối tượng ban đầu."}
+      - {id: C, answer: "Vì ISO cũng phụ thuộc Locale của người dùng.", explanation: "Ranh giới dành cho máy cần định dạng tường minh và ổn định; định dạng dành cho con người có thể không chuyển đổi hai chiều về đúng đối tượng ban đầu."}
+      - {id: D, answer: "Vì mọi bộ định dạng luôn làm mất toàn bộ độ chính xác.", explanation: "Ranh giới dành cho máy cần định dạng tường minh và ổn định; định dạng dành cho con người có thể không chuyển đổi hai chiều về đúng đối tượng ban đầu."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "13.LocalePitfalls/LocalePitfalls.md", anchor: "format-parse-roundtrip"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: localization-q58
+    question: "Thiết kế đầu-cuối nào tóm tắt đúng nhất mô-đun Bản địa hóa?"
+    answers:
+      - {id: A, answer: "Lưu mọi số, ngày giờ và định danh dưới dạng văn bản đã bản địa hóa để mọi tầng dùng cùng giá trị hiển thị.", explanation: "Giữ ý nghĩa nghiệp vụ chuẩn ổn định; xác định ranh giới dành cho con người hay cho máy; truyền Locale/ZoneId/Currency tường minh đúng trách nhiệm; dùng API bản địa hóa ở ranh giới trình bày; và kiểm soát cơ chế dự phòng/Locale mặc định có chủ đích."}
+      - {id: B, answer: "Đặt một Locale mặc định của JVM cho mỗi yêu cầu rồi để mọi thư viện tự suy ra ngữ cảnh người dùng.", explanation: "Giữ ý nghĩa nghiệp vụ chuẩn ổn định; xác định ranh giới dành cho con người hay cho máy; truyền Locale/ZoneId/Currency tường minh đúng trách nhiệm; dùng API bản địa hóa ở ranh giới trình bày; và kiểm soát cơ chế dự phòng/Locale mặc định có chủ đích."}
+      - {id: C, answer: "Suy ra Currency giao dịch và ZoneId từ Locale để ứng dụng chỉ cần một đối tượng ngữ cảnh.", explanation: "Giữ ý nghĩa nghiệp vụ chuẩn ổn định; xác định ranh giới dành cho con người hay cho máy; truyền Locale/ZoneId/Currency tường minh đúng trách nhiệm; dùng API bản địa hóa ở ranh giới trình bày; và kiểm soát cơ chế dự phòng/Locale mặc định có chủ đích."}
+      - {id: D, answer: "Giữ giá trị nghiệp vụ chuẩn ổn định; chỉ bản địa hóa ở ranh giới dành cho con người với ngữ cảnh/chính sách tường minh, còn hợp đồng dành cho máy giữ định dạng ổn định khi cần.", explanation: "Giữ ý nghĩa nghiệp vụ chuẩn ổn định; xác định ranh giới dành cho con người hay cho máy; truyền Locale/ZoneId/Currency tường minh đúng trách nhiệm; dùng API bản địa hóa ở ranh giới trình bày; và kiểm soát cơ chế dự phòng/Locale mặc định có chủ đích."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "13.LocalePitfalls/LocalePitfalls.md", anchor: "localization-synthesis"}
+    apiRelated: {controller: "", methodSignature: ""}

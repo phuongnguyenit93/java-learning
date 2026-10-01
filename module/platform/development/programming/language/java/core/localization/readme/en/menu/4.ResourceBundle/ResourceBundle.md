@@ -95,17 +95,21 @@ For:
 ResourceBundle.getBundle("Messages", Locale.forLanguageTag("en-US"));
 ```
 
-a beginner-friendly candidate model is:
+a beginner-friendly model for **bundle resolution** is:
 
 ```text
-Messages_en_US
+requested Locale en-US
         ↓
-Messages_en
+generate candidate locales
         ↓
-Messages
+en-US → en → Locale.ROOT
+        ↓
+locate a bundle for those candidates
 ```
 
 More complex locales containing script or variant components can produce a richer candidate list. Do not recreate that algorithm with string concatenation.
+
+Once a bundle is resolved, **key lookup is a separate mechanism**: if a key is absent from the concrete bundle, lookup may continue through its established parent chain. Do not conflate “which bundle was resolved” with “which parent ultimately supplied a key.”
 
 You can inspect the candidate locales through `ResourceBundle.Control`:
 
@@ -120,7 +124,7 @@ List<Locale> candidates = control.getCandidateLocales(
 );
 ```
 
-Fallback is a **lookup rule**. It does not mean `Locale.forLanguageTag("en-US")` equals `Locale.forLanguageTag("en")`.
+Fallback is a **lookup rule**. It does not mean `Locale.forLanguageTag("en-US")` equals `Locale.forLanguageTag("en")`. Default-locale fallback policy is intentionally deferred to the final milestone.
 
 ## <a id="properties-vs-class-bundle">Properties vs Class-Based Bundles</a>
 
@@ -177,6 +181,6 @@ ResourceBundle.clearCache(classLoader);
 
 `ResourceBundle.Control` can customize TTL, reload, and candidate behavior, but that is an advanced mechanism. Decide first whether the application actually needs live resource reloading or can treat bundles as deployment-time content.
 
-Missing bundle and missing key are both important failure modes. `ResourceBundle.getBundle(...)` or later key lookup can produce `MissingResourceException` when resolution fails. Translation completeness is therefore better checked during tests/builds rather than discovered first in production UI.
+The distinction between **missing bundles** and **missing keys**, together with `MissingResourceException` policy, is owned by the final fallback milestone so it can be learned with the complete `ResourceBundle` failure/fallback model.
 
 The next chapter handles the next problem: localized messages often include dynamic values. Concatenating fragments assumes one sentence structure, while `MessageFormat` lets the translated pattern own argument placement.

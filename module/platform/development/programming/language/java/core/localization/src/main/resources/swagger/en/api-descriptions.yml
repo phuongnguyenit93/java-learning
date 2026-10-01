@@ -1,26 +1,25 @@
-BidirectionalTextController:
-  analyze():
-    summary: Analyze logical order and directional runs in bidi text
-    description: Use java.text.Bidi on mixed Hebrew, Latin, and numeric content to
-      observe base direction, mixed-direction state, and individual directional runs
-      without manually reversing the String.
+LocaleController:
+  compareLocales():
+    summary: Observe language, script, region, and default Locale categories
+    description: Decompose vi-VN, en-US, and zh-Hant-TW and expose default DISPLAY/FORMAT
+      locales to reinforce that Locale is context rather than location, zone, or currency.
     enableVideoYoutube: false
     videoYoutubeId: ''
     videoYoutubeTitle: ''
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 13.BidirectionalText/BidirectionalText.md
-      anchor: bidi-model
-    methodName: analyze
+      file: 2.Locale/Locale.md
+      anchor: locale-model
+    methodName: compareLocales
     params: [
       ]
-    path: com/example/learning/controller/BidirectionalTextController.java
-    mapping: '@GetMapping("/analyze")'
+    path: com/example/learning/controller/LocaleController.java
+    mapping: '@GetMapping("/compare")'
     httpMethods:
     - GET
     mappingPaths:
-    - /java/core/localization/bidi/analyze
+    - /java/core/localization/locale/compare
     produces: [
       ]
     consumes: [
@@ -28,18 +27,18 @@ BidirectionalTextController:
     usage: true
 BundleController:
   resolveBundle():
-    summary: Observe ResourceBundle candidate chains and fallback
-    description: Resolve vi-VN, en-GB, and fr-FR through one base name to show exact,
-      language-level, and base-bundle selection with default-locale fallback deliberately
-      disabled.
+    summary: Observe ResourceBundle candidate chains with default-locale fallback disabled
+    description: Resolve vi-VN, en-GB, and fr-FR through one base name to show target-Locale
+      candidates and base-bundle selection while deliberately keeping fallback-Locale
+      selection out of this experiment.
     enableVideoYoutube: false
     videoYoutubeId: ''
     videoYoutubeTitle: ''
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 10.Fallback/Fallback.md
-      anchor: bundle-candidate-chain
+      file: 4.ResourceBundle/ResourceBundle.md
+      anchor: bundle-naming
     methodName: resolveBundle
     params: [
       ]
@@ -54,11 +53,122 @@ BundleController:
     consumes: [
       ]
     usage: true
+MessageController:
+  format():
+    summary: Combine ResourceBundle and MessageFormat under one Locale
+    description: Load the order.created pattern for vi-VN/en-US and format the same
+      order id and customer name so translators own sentence structure instead of
+      code concatenating fragments.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 5.MessageFormat/MessageFormat.md
+      anchor: messageformat-locale
+    methodName: format
+    params: [
+      ]
+    path: com/example/learning/controller/MessageController.java
+    mapping: '@GetMapping("/format")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/localization/message/format
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+NumberLocalizationController:
+  formatAndParse():
+    summary: Format and parse one BigDecimal under two Locales
+    description: Keep one canonical BigDecimal, obtain the locale NumberFormat, require
+      a DecimalFormat-capable provider for this demo, parse with setParseBigDecimal(true),
+      and verify that the entire input was consumed.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 6.NumberFormatting/NumberFormatting.md
+      anchor: parsing-numbers
+    methodName: formatAndParse
+    params: [
+      ]
+    path: com/example/learning/controller/NumberLocalizationController.java
+    mapping: '@GetMapping("/format-and-parse")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/localization/number/format-and-parse
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  compact():
+    summary: Compare SHORT and LONG compact number styles by Locale
+    description: Format 1_200_000 with getCompactNumberInstance for en-US and vi-VN
+      to show why applications should not hard-code K/M or language-specific compact
+      suffixes.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 6.NumberFormatting/NumberFormatting.md
+      anchor: compact-number-format
+    methodName: compact
+    params: [
+      ]
+    path: com/example/learning/controller/NumberLocalizationController.java
+    mapping: '@GetMapping("/compact")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/localization/number/compact
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+CurrencyController:
+  currencyVsLocale():
+    summary: Separate Currency identity from Locale presentation
+    description: Inspect VND/USD metadata and intentionally render USD with vi-VN
+      and VND with en-US to prove transaction currency and display locale are independent
+      context, while configuring display fraction digits deliberately for the chosen Currency.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 7.Currency/Currency.md
+      anchor: currency-vs-locale
+    methodName: currencyVsLocale
+    params: [
+      ]
+    path: com/example/learning/controller/CurrencyController.java
+    mapping: '@GetMapping("/currency-vs-locale")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/localization/currency/currency-vs-locale
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
 CollationController:
   sort():
     summary: Compare String ordering with Vietnamese Collator ordering
     description: Sort the same names with String.compareTo and a vi-VN Collator to
-      expose the difference between raw Unicode/code-unit ordering and user-facing
+      expose the difference between lexicographic UTF-16 char code-unit ordering and user-facing
       linguistic ordering.
     enableVideoYoutube: false
     videoYoutubeId: ''
@@ -77,34 +187,6 @@ CollationController:
     - GET
     mappingPaths:
     - /java/core/localization/collation/sort
-    produces: [
-      ]
-    consumes: [
-      ]
-    usage: true
-CurrencyController:
-  currencyVsLocale():
-    summary: Separate Currency identity from Locale presentation
-    description: Inspect VND/USD metadata and intentionally render USD with vi-VN
-      and VND with en-US to prove transaction currency and display locale are independent
-      context.
-    enableVideoYoutube: false
-    videoYoutubeId: ''
-    videoYoutubeTitle: ''
-    aiGenerated: true
-    reviewed: false
-    readmeRelated:
-      file: 7.Currency/Currency.md
-      anchor: currency-vs-locale
-    methodName: currencyVsLocale
-    params: [
-      ]
-    path: com/example/learning/controller/CurrencyController.java
-    mapping: '@GetMapping("/currency-vs-locale")'
-    httpMethods:
-    - GET
-    mappingPaths:
-    - /java/core/localization/currency/currency-vs-locale
     produces: [
       ]
     consumes: [
@@ -165,116 +247,6 @@ DateTimeLocalizationController:
     consumes: [
       ]
     usage: true
-LocaleController:
-  compareLocales():
-    summary: Observe language, script, region, and default Locale categories
-    description: Decompose vi-VN, en-US, and zh-Hant-TW and expose default DISPLAY/FORMAT
-      locales to reinforce that Locale is context rather than location, zone, or currency.
-    enableVideoYoutube: false
-    videoYoutubeId: ''
-    videoYoutubeTitle: ''
-    aiGenerated: true
-    reviewed: false
-    readmeRelated:
-      file: 2.Locale/Locale.md
-      anchor: locale-model
-    methodName: compareLocales
-    params: [
-      ]
-    path: com/example/learning/controller/LocaleController.java
-    mapping: '@GetMapping("/compare")'
-    httpMethods:
-    - GET
-    mappingPaths:
-    - /java/core/localization/locale/compare
-    produces: [
-      ]
-    consumes: [
-      ]
-    usage: true
-MessageController:
-  format():
-    summary: Combine ResourceBundle and MessageFormat under one Locale
-    description: Load the order.created pattern for vi-VN/en-US and format the same
-      order id and customer name so translators own sentence structure instead of
-      code concatenating fragments.
-    enableVideoYoutube: false
-    videoYoutubeId: ''
-    videoYoutubeTitle: ''
-    aiGenerated: true
-    reviewed: false
-    readmeRelated:
-      file: 5.MessageFormat/MessageFormat.md
-      anchor: messageformat-locale
-    methodName: format
-    params: [
-      ]
-    path: com/example/learning/controller/MessageController.java
-    mapping: '@GetMapping("/format")'
-    httpMethods:
-    - GET
-    mappingPaths:
-    - /java/core/localization/message/format
-    produces: [
-      ]
-    consumes: [
-      ]
-    usage: true
-NumberLocalizationController:
-  formatAndParse():
-    summary: Format and parse one BigDecimal under two Locales
-    description: Keep one canonical BigDecimal, format it for vi-VN/en-US, parse it
-      back with DecimalFormat setParseBigDecimal(true), and verify that the entire
-      input was consumed.
-    enableVideoYoutube: false
-    videoYoutubeId: ''
-    videoYoutubeTitle: ''
-    aiGenerated: true
-    reviewed: false
-    readmeRelated:
-      file: 6.NumberFormatting/NumberFormatting.md
-      anchor: number-format
-    methodName: formatAndParse
-    params: [
-      ]
-    path: com/example/learning/controller/NumberLocalizationController.java
-    mapping: '@GetMapping("/format-and-parse")'
-    httpMethods:
-    - GET
-    mappingPaths:
-    - /java/core/localization/number/format-and-parse
-    produces: [
-      ]
-    consumes: [
-      ]
-    usage: true
-  compact():
-    summary: Compare SHORT and LONG compact number styles by Locale
-    description: Format 1_200_000 with getCompactNumberInstance for en-US and vi-VN
-      to show why applications should not hard-code K/M or language-specific compact
-      suffixes.
-    enableVideoYoutube: false
-    videoYoutubeId: ''
-    videoYoutubeTitle: ''
-    aiGenerated: true
-    reviewed: false
-    readmeRelated:
-      file: 6.NumberFormatting/NumberFormatting.md
-      anchor: compact-number-format
-    methodName: compact
-    params: [
-      ]
-    path: com/example/learning/controller/NumberLocalizationController.java
-    mapping: '@GetMapping("/compact")'
-    httpMethods:
-    - GET
-    mappingPaths:
-    - /java/core/localization/number/compact
-    produces: [
-      ]
-    consumes: [
-      ]
-    usage: true
 TextSegmentationController:
   boundaries():
     summary: Observe character, word, sentence, and line boundaries
@@ -287,7 +259,7 @@ TextSegmentationController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 12.TextSegmentation/TextSegmentation.md
+      file: 10.TextSegmentation/TextSegmentation.md
       anchor: breakiterator-model
     methodName: boundaries
     params: [
@@ -298,6 +270,34 @@ TextSegmentationController:
     - GET
     mappingPaths:
     - /java/core/localization/segmentation/boundaries
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+BidirectionalTextController:
+  analyze():
+    summary: Analyze logical order and directional runs in bidi text
+    description: Use java.text.Bidi on mixed Hebrew, Latin, and numeric content to
+      observe base direction, mixed-direction state, and individual directional runs
+      without manually reversing the String.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 11.BidirectionalText/BidirectionalText.md
+      anchor: bidi-model
+    methodName: analyze
+    params: [
+      ]
+    path: com/example/learning/controller/BidirectionalTextController.java
+    mapping: '@GetMapping("/analyze")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/core/localization/bidi/analyze
     produces: [
       ]
     consumes: [

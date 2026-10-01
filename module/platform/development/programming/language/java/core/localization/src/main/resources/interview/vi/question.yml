@@ -29,9 +29,9 @@
 
 questions:
   - question: >-
-      Hãy phân biệt internationalization (i18n) và localization (l10n), và giải thích vì sao một hệ thống có bản dịch tiếng Việt chưa chắc đã được localization đúng.
+      Hãy phân biệt quốc tế hóa (internationalization/i18n) và bản địa hóa (localization/l10n), và giải thích vì sao một hệ thống có bản dịch tiếng Việt chưa chắc đã được bản địa hóa đúng.
     answer: >-
-      i18n là thiết kế phần mềm để có thể thích nghi với nhiều ngôn ngữ, vùng và convention mà không phải viết lại business logic; l10n là cung cấp nội dung và convention cụ thể cho một locale. Chỉ dịch label chưa đủ, vì number, date/time, currency, collation, text boundary và bidi vẫn có thể dùng convention sai. Thiết kế tốt tách khả năng thích nghi khỏi dữ liệu bản địa hóa cụ thể.
+      i18n là thiết kế phần mềm để có thể thích nghi với nhiều ngôn ngữ, vùng và quy ước mà không phải viết lại logic nghiệp vụ; l10n là cung cấp nội dung và quy ước cụ thể cho một Locale. Chỉ dịch nhãn chưa đủ, vì số, ngày giờ, tiền tệ, thứ tự sắp xếp, ranh giới văn bản và bidi vẫn có thể dùng quy ước sai. Thiết kế tốt tách khả năng thích nghi khỏi dữ liệu bản địa hóa cụ thể.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -42,9 +42,9 @@ questions:
       methodSignature: ""
 
   - question: >-
-      Vì sao domain value như BigDecimal, Instant hoặc currency code không nên thay đổi chỉ vì người dùng đổi Locale?
+      Vì sao giá trị nghiệp vụ như BigDecimal, Instant hoặc mã tiền tệ không nên thay đổi chỉ vì người dùng đổi Locale?
     answer: >-
-      Locale mô tả cách con người nhìn và đọc dữ liệu, không thay đổi ý nghĩa nghiệp vụ của dữ liệu đó. Nếu amount hoặc instant bị biến thành localized String quá sớm, hệ thống dễ mất precision, khó tính toán, khó đổi locale và dễ nhầm presentation với canonical value. Domain giữ representation ổn định; localization chỉ xảy ra khi đi qua human-facing boundary.
+      Locale mô tả cách con người nhìn và đọc dữ liệu, không thay đổi ý nghĩa nghiệp vụ của dữ liệu đó. Nếu số tiền hoặc Instant bị biến thành String đã bản địa hóa quá sớm, hệ thống dễ mất độ chính xác, khó tính toán, khó đổi Locale và dễ nhầm cách trình bày với giá trị chuẩn. Miền nghiệp vụ giữ cách biểu diễn ổn định; bản địa hóa chỉ xảy ra khi đi qua ranh giới dành cho con người.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -55,9 +55,9 @@ questions:
       methodSignature: ""
 
   - question: >-
-      Bạn sẽ đặt localization ở đâu trong kiến trúc backend, và những nơi nào nên tránh dùng Locale của người dùng?
+      Bạn sẽ đặt logic bản địa hóa ở đâu trong kiến trúc hệ thống phía máy chủ, và những nơi nào nên tránh dùng Locale của người dùng?
     answer: >-
-      Localization phù hợp ở UI response, email, report, invoice hoặc sorting text dành cho người đọc. Machine contracts, database numeric values, cache keys, protocol identifiers và log fields dùng cho parsing nên có format ổn định, explicit và thường locale-neutral. Ranh giới này giúp cùng một domain value có thể được trình bày khác nhau mà không làm thay đổi identity hay semantics bên trong hệ thống.
+      Bản địa hóa phù hợp ở phản hồi UI, email, báo cáo, hóa đơn hoặc khi sắp xếp văn bản dành cho người đọc. Hợp đồng dành cho máy, giá trị số trong cơ sở dữ liệu, khóa bộ nhớ đệm, định danh giao thức và trường log dùng cho phân tích nên có định dạng ổn định, tường minh và thường không phụ thuộc Locale. Ranh giới này giúp cùng một giá trị nghiệp vụ có thể được trình bày khác nhau mà không làm thay đổi định danh hay ngữ nghĩa bên trong hệ thống.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -70,7 +70,7 @@ questions:
   - question: >-
       Locale thực sự mô hình hóa điều gì, và tại sao không nên coi nó là vị trí địa lý, ZoneId hoặc hồ sơ người dùng?
     answer: >-
-      Locale là context về language, script, region, variant/extensions để các API locale-sensitive chọn convention phù hợp. Nó không nói thiết bị đang ở đâu, không chứa timezone rules và cũng không chứng minh quốc tịch, địa chỉ hay currency của giao dịch. Những khái niệm nghiệp vụ khác phải được model riêng thay vì suy diễn từ Locale.
+      Locale là ngữ cảnh về ngôn ngữ, hệ chữ viết, khu vực, biến thể và phần mở rộng để các API phụ thuộc Locale chọn quy ước phù hợp. Nó không cho biết thiết bị đang ở đâu, không chứa quy tắc múi giờ và cũng không chứng minh quốc tịch, địa chỉ hay Currency của giao dịch. Những khái niệm nghiệp vụ khác phải được mô hình hóa riêng thay vì suy diễn từ Locale.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -81,22 +81,9 @@ questions:
       methodSignature: "compareLocales()"
 
   - question: >-
-      Vì sao default Locale là một hidden dependency nguy hiểm trong backend phục vụ nhiều người dùng?
+      Vì sao Locale en và en-US có thể phục vụ cùng một số tài nguyên nhưng vẫn không equals nhau?
     answer: >-
-      Default Locale thuộc JVM/environment, nên cùng một đoạn code có thể cho output khác giữa laptop, CI và production hoặc giữa các node. Nó cũng không nhất thiết trùng preference của request hiện tại. Backend nên truyền Locale tường minh theo user/request khi đó là contract, và chỉ dùng default khi chính environment default là policy đã được quyết định.
-    aiGenerated: true
-    reviewed: false
-    readmeRelated:
-      file: "2.Locale/Locale.md"
-      anchor: "default-locale"
-    apiRelated:
-      controller: ""
-      methodSignature: ""
-
-  - question: >-
-      Vì sao Locale en và en-US có thể phục vụ cùng một số resource nhưng vẫn không equals nhau?
-    answer: >-
-      Equality của Locale dựa trên identity components như language, script, region, variant và extensions; en-US có region còn en thì không. ResourceBundle fallback là một lookup policy riêng, có thể đi từ locale cụ thể về tổng quát hơn. Không nên dùng khả năng fallback để suy rằng hai Locale có cùng identity.
+      Phép so sánh bằng của Locale dựa trên các thành phần định danh như ngôn ngữ, hệ chữ viết, khu vực, biến thể và phần mở rộng; en-US có khu vực còn en thì không. Cơ chế dự phòng của ResourceBundle là một chính sách tra cứu riêng, có thể đi từ Locale cụ thể về Locale tổng quát hơn. Không nên dùng khả năng dự phòng để suy rằng hai Locale có cùng định danh.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -107,9 +94,9 @@ questions:
       methodSignature: "compareLocales()"
 
   - question: >-
-      Tại sao BCP 47 language tag cần tồn tại khi Java đã có Locale object?
+      Tại sao thẻ ngôn ngữ BCP 47 vẫn cần tồn tại khi Java đã có đối tượng Locale?
     answer: >-
-      Locale là object trong process Java, còn HTTP, URL, config và database cần một representation dạng text có thể trao đổi giữa các hệ thống. BCP 47 cung cấp cấu trúc chuẩn cho language, script, region, variant và extensions, giúp các bên hiểu cùng một locale context. Vì tag có cấu trúc, application nên dùng API chuẩn thay vì tự split hoặc nối chuỗi.
+      Locale là đối tượng trong tiến trình Java, còn HTTP, URL, cấu hình và cơ sở dữ liệu cần một cách biểu diễn dạng văn bản để trao đổi giữa các hệ thống. BCP 47 cung cấp cấu trúc chuẩn cho ngôn ngữ, hệ chữ viết, khu vực, biến thể và phần mở rộng, giúp các bên hiểu cùng một ngữ cảnh Locale. Vì thẻ có cấu trúc, ứng dụng nên dùng API chuẩn thay vì tự tách hoặc nối chuỗi.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -120,22 +107,35 @@ questions:
       methodSignature: ""
 
   - question: >-
-      Khi client gửi nhiều language preference như vi-VN, vi, en-US, ứng dụng nên tư duy về việc chọn Locale thế nào?
+      Khi máy khách gửi nhiều lựa chọn ngôn ngữ như vi-VN, vi, en-US, ứng dụng nên tư duy về việc chọn Locale thế nào?
     answer: >-
-      Đây là bài toán matching giữa danh sách preference có thứ tự ưu tiên và tập locale mà sản phẩm thật sự hỗ trợ, không phải lấy tag đầu tiên một cách mù quáng. Locale.LanguageRange cùng lookup/filter mô hình hóa bước chọn này. Framework web có thể thực hiện giúp, nhưng application vẫn cần biết supported locales và fallback policy của mình.
+      Đây là bài toán đối chiếu giữa danh sách lựa chọn có thứ tự ưu tiên và tập Locale mà sản phẩm thật sự hỗ trợ, không phải lấy thẻ đầu tiên một cách mù quáng. Locale.LanguageRange cùng các thao tác lookup/filter có thể mô hình hóa bước chọn này. Khung web có thể thực hiện giúp, nhưng ứng dụng vẫn cần biết các Locale được hỗ trợ và chính sách dự phòng của mình.
     aiGenerated: true
     reviewed: false
     readmeRelated:
       file: "3.LanguageTags/LanguageTags.md"
-      anchor: "for-language-tag"
+      anchor: "locale-matching"
     apiRelated:
       controller: ""
       methodSignature: ""
 
   - question: >-
-      Hãy phân biệt syntax validity của language tag với application support, và cho biết khi nào Locale.Builder hữu ích hơn Locale.forLanguageTag.
+      Phần mở rộng Locale Unicode (Unicode locale extension) có thể bổ sung gì cho một thẻ ngôn ngữ, và không nên nhầm chúng với điều gì?
     answer: >-
-      Một tag có thể hợp lệ theo cấu trúc BCP 47 nhưng sản phẩm vẫn không có resource hay policy để hỗ trợ locale đó. Locale.forLanguageTag phù hợp với best-effort parsing, còn Locale.Builder.setLanguageTag có thể tạo boundary validation chặt hơn và ném IllformedLocaleException khi input sai cấu trúc. Sau validation cú pháp vẫn phải kiểm tra supported-locale policy riêng.
+      Các phần mở rộng như u-ca-buddhist hoặc u-nu-thai có thể mang thêm lựa chọn bản địa hóa, chẳng hạn hệ lịch trình bày hoặc hệ chữ số, để những API có hỗ trợ diễn giải. Chúng không biến Locale thành nơi chứa mọi ngữ cảnh nghiệp vụ: Currency của giao dịch, chính sách múi giờ và dữ liệu miền vẫn là các khái niệm riêng. Không phải API nào cũng hiểu mọi phần mở rộng, nên phải dựa vào hợp đồng của API cụ thể thay vì suy luận toàn cục.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.LanguageTags/LanguageTags.md"
+      anchor: "locale-extensions"
+    apiRelated:
+      controller: "DateTimeLocalizationController"
+      methodSignature: "weekAndNumberingConventions()"
+
+  - question: >-
+      Hãy phân biệt tính hợp lệ cú pháp của thẻ ngôn ngữ với phạm vi Locale ứng dụng hỗ trợ, và cho biết khi nào Locale.Builder hữu ích hơn Locale.forLanguageTag.
+    answer: >-
+      Một thẻ có thể hợp lệ theo cấu trúc BCP 47 nhưng sản phẩm vẫn không có tài nguyên hay chính sách để hỗ trợ Locale đó. Locale.forLanguageTag phù hợp với cách phân tích dung thứ đầu vào, còn Locale.Builder.setLanguageTag có thể tạo ranh giới kiểm tra chặt hơn và ném IllformedLocaleException khi đầu vào sai cấu trúc. Sau khi kiểm tra cú pháp vẫn phải kiểm tra riêng chính sách các Locale được hỗ trợ.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -146,9 +146,9 @@ questions:
       methodSignature: ""
 
   - question: >-
-      ResourceBundle giải quyết bài toán gì, và tại sao nói nó không phải là translation engine?
+      ResourceBundle giải quyết bài toán gì, và tại sao nói nó không phải là bộ máy dịch?
     answer: >-
-      ResourceBundle tra cứu resource đã được chuẩn bị sẵn dựa trên base name, requested Locale, candidate/fallback chain và stable key. Nó không tạo ra bản dịch mới; team vẫn phải author và review các resource localized. Giá trị của cơ chế này là tách source code khỏi nội dung dịch và gom lookup policy về một chỗ.
+      ResourceBundle tra cứu tài nguyên đã chuẩn bị sẵn dựa trên tên cơ sở (base name), Locale được yêu cầu, chuỗi ứng viên/dự phòng và khóa ổn định. Nó không tạo ra bản dịch mới; nhóm vẫn phải biên soạn và rà soát các tài nguyên đã bản địa hóa. Giá trị của cơ chế này là tách mã nguồn khỏi nội dung dịch và gom chính sách tra cứu về một chỗ.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -159,9 +159,9 @@ questions:
       methodSignature: "resolveBundle()"
 
   - question: >-
-      Giải thích candidate locale chain của ResourceBundle và vì sao không nên tự mô phỏng nó bằng cách nối tên file.
+      Giải thích chuỗi Locale ứng viên của ResourceBundle và vì sao không nên tự mô phỏng nó bằng cách nối tên tệp.
     answer: >-
-      ResourceBundle ưu tiên candidate cụ thể hơn rồi đi về các mức tổng quát, ví dụ en-US có thể thử en_US, en rồi base; với script, variant hoặc extensions chain có thể chi tiết hơn. Control của JDK đã biết các rule này và cả fallback policy. Tự nối tên file dễ bỏ sót trường hợp và tạo lookup khác với semantics của API chuẩn.
+      ResourceBundle.Control tạo danh sách Locale ứng viên cho một Locale đích từ cụ thể đến tổng quát; ví dụ en-US có các ứng viên en-US, en rồi ROOT. Hệ chữ và biến thể có thể làm danh sách phong phú hơn, còn phần mở rộng được Control mặc định loại khỏi quá trình tạo ứng viên. Việc chọn một Locale dự phòng khác là bước riêng, nên tự nối tên tệp rất dễ trộn hai cơ chế và lệch khỏi API chuẩn.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -172,9 +172,9 @@ questions:
       methodSignature: "resolveBundle()"
 
   - question: >-
-      Khi nào properties bundle phù hợp hơn class-based bundle, và trade-off chính giữa hai loại là gì?
+      Khi nào gói tài nguyên .properties phù hợp hơn gói tài nguyên dạng lớp, và điểm đánh đổi chính giữa hai loại là gì?
     answer: >-
-      Properties bundle thường phù hợp cho message text vì tách nội dung khỏi Java source, dễ cho translator/tooling xử lý và không cần model resource bằng code. Class-based bundle có thể trả object và dùng logic Java nhưng gắn resource với compile/runtime code lifecycle. Nên chọn theo loại resource và vận hành thực tế, không theo thói quen.
+      Gói .properties thường phù hợp cho văn bản thông điệp vì tách nội dung khỏi mã nguồn Java, thuận tiện cho người dịch và công cụ xử lý, đồng thời không cần mô hình hóa tài nguyên bằng mã. Gói tài nguyên dạng lớp có thể trả đối tượng và dùng logic Java nhưng gắn tài nguyên chặt hơn với vòng đời biên dịch và chạy mã. Nên chọn theo loại tài nguyên và cách vận hành thực tế, không theo thói quen.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -185,9 +185,9 @@ questions:
       methodSignature: ""
 
   - question: >-
-      ResourceBundle caching ảnh hưởng thế nào tới performance và runtime resource update?
+      Bộ nhớ đệm của ResourceBundle ảnh hưởng thế nào tới hiệu năng và việc cập nhật tài nguyên khi chương trình đang chạy?
     answer: >-
-      Cache tránh việc load và dựng bundle lại trên mỗi request, nên có lợi cho performance. Mặt khác, thay file resource trên disk không có nghĩa JVM đang chạy sẽ nhìn thấy ngay; reload cần Control/TTL hoặc clearCache có chủ đích. Nếu sản phẩm không có hot-reload requirement, deployment-based refresh thường đơn giản và an toàn hơn.
+      Bộ nhớ đệm tránh việc nạp và dựng lại ResourceBundle ở mỗi yêu cầu nên có lợi cho hiệu năng. Mặt khác, thay tệp tài nguyên trên đĩa không có nghĩa JVM đang chạy sẽ nhìn thấy ngay; tải lại cần Control/TTL hoặc clearCache có chủ đích. Nếu sản phẩm không có yêu cầu tải lại nóng, làm mới theo lần triển khai thường đơn giản và an toàn hơn.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -198,9 +198,9 @@ questions:
       methodSignature: ""
 
   - question: >-
-      Vì sao MessageFormat tốt hơn việc ghép nhiều fragment string khi message có dữ liệu động?
+      Vì sao MessageFormat tốt hơn việc ghép nhiều mảnh chuỗi khi thông điệp có dữ liệu động?
     answer: >-
-      Fragment concatenation khóa cấu trúc câu theo ngôn ngữ của developer và làm translator không thể đổi thứ tự thành phần một cách tự nhiên. MessageFormat giữ toàn bộ sentence pattern trong resource và chèn arguments qua placeholder, nên cùng dữ liệu có thể được sắp xếp khác nhau theo ngôn ngữ. ResourceBundle chọn pattern; MessageFormat chỉ parameterize pattern đó.
+      Việc nối các mảnh câu khóa cấu trúc theo ngôn ngữ của lập trình viên và khiến người dịch khó đổi thứ tự thành phần một cách tự nhiên. MessageFormat giữ toàn bộ mẫu câu trong tài nguyên và chèn các đối số qua tham số giữ chỗ, nên cùng dữ liệu có thể được sắp xếp khác nhau theo ngôn ngữ. ResourceBundle chọn mẫu; MessageFormat chỉ điền tham số vào mẫu đó.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -211,9 +211,22 @@ questions:
       methodSignature: "format()"
 
   - question: >-
-      Vì sao apostrophe trong MessageFormat là một production pitfall đáng test?
+      Một khóa bản dịch tốt cần đặc tính gì, và vì sao không nên ghép câu từ nhiều mảnh nhỏ?
     answer: >-
-      Apostrophe là ký tự quote của MessageFormat pattern, nên text tự nhiên do translator thêm vào có thể vô tình thay đổi cách parser hiểu placeholder. Resource dùng MessageFormat không còn là plain string hoàn toàn; nó là một pattern có syntax. Vì vậy cần test pattern với arguments thực tế và kiểm tra escaping ở các locale có apostrophe thường xuyên.
+      Khóa nên ổn định theo ý nghĩa, ví dụ order.created, để câu chữ tiếng Anh có đổi thì định danh vẫn còn. Thông điệp nên đủ ngữ cảnh để người dịch kiểm soát ngữ pháp và thứ tự từ; việc nối các mảnh khóa cấu trúc theo ngôn ngữ nguồn và làm nhiều ngôn ngữ khó dịch đúng. Với biến thể ngữ pháp lớn, có thể dùng các thông điệp hoàn chỉnh riêng thay vì ép mọi trường hợp vào một mẫu.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.MessageFormat/MessageFormat.md"
+      anchor: "translation-key-design"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Vì sao dấu nháy đơn trong MessageFormat là một bẫy dễ gây lỗi ở môi trường vận hành và cần được kiểm thử?
+    answer: >-
+      Dấu nháy đơn (apostrophe) là ký tự trích dẫn trong mẫu MessageFormat, nên văn bản tự nhiên do người dịch thêm vào có thể vô tình thay đổi cách bộ phân tích hiểu tham số giữ chỗ. Tài nguyên dùng MessageFormat không còn là chuỗi thuần túy; nó là một mẫu có cú pháp. Vì vậy cần kiểm thử mẫu với các đối số thực tế và kiểm tra cách thoát dấu nháy đơn ở những Locale thường dùng ký tự này.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -224,9 +237,9 @@ questions:
       methodSignature: ""
 
   - question: >-
-      Bạn sẽ thiết kế pipeline ResourceBundle + MessageFormat thế nào để tránh dùng sai Locale và tránh vấn đề thread-safety?
+      Bạn sẽ thiết kế luồng xử lý ResourceBundle + MessageFormat thế nào để tránh dùng sai Locale và tránh vấn đề an toàn luồng?
     answer: >-
-      Request/user Locale nên được dùng nhất quán để chọn bundle và tạo MessageFormat, nhờ đó sentence pattern và number/date sub-format cùng một context. MessageFormat và nhiều java.text Format là mutable, nên backend đơn giản nhất là tạo formatter theo request/operation hoặc quản lý cache/synchronization rất rõ. Không nên load pattern theo một locale rồi âm thầm format arguments theo JVM default khác.
+      Locale của yêu cầu/người dùng nên được dùng nhất quán để chọn ResourceBundle và tạo MessageFormat, nhờ đó mẫu câu cùng các bộ định dạng con cho số/ngày dùng chung một ngữ cảnh. MessageFormat và nhiều lớp java.text.Format có thể thay đổi trạng thái, nên cách đơn giản trên hệ thống phía máy chủ là tạo bộ định dạng theo từng yêu cầu/thao tác hoặc quản lý bộ nhớ đệm và đồng bộ hóa thật rõ ràng. Không nên nạp mẫu theo một Locale rồi âm thầm định dạng đối số bằng Locale mặc định khác của JVM.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -237,9 +250,9 @@ questions:
       methodSignature: "format()"
 
   - question: >-
-      Hãy giải thích sự khác nhau giữa numeric value và localized numeric text, và vai trò của NumberFormat.
+      Hãy giải thích sự khác nhau giữa giá trị số và văn bản số đã bản địa hóa, cùng vai trò của NumberFormat.
     answer: >-
-      Numeric value là dữ liệu nghiệp vụ dùng để tính toán/persist, còn localized text là cách con người nhìn giá trị đó với separator, grouping, percent hoặc currency convention phù hợp. NumberFormat là abstraction format/parse giữa hai phía theo Locale. Nó không thay thế BigDecimal hay biến presentation thành canonical numeric model.
+      Giá trị số là dữ liệu nghiệp vụ dùng để tính toán và lưu trữ, còn văn bản đã bản địa hóa là cách con người nhìn giá trị đó với dấu phân cách, nhóm chữ số, phần trăm hoặc quy ước tiền tệ phù hợp. NumberFormat là cơ chế định dạng và phân tích giữa hai phía theo Locale. Nó không thay thế BigDecimal hay biến cách trình bày thành mô hình số chuẩn.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -250,9 +263,9 @@ questions:
       methodSignature: "formatAndParse()"
 
   - question: >-
-      DecimalFormat pattern, DecimalFormatSymbols và business rounding nên được phân chia trách nhiệm ra sao?
+      DecimalFormat mẫu, DecimalFormatSymbols và quy tắc làm tròn nghiệp vụ nên được phân chia trách nhiệm ra sao?
     answer: >-
-      Pattern mô tả shape hiển thị như digit/grouping/fraction positions, còn DecimalFormatSymbols cung cấp ký hiệu thực tế của locale. Formatter có thể round để đáp ứng presentation, nhưng rule tính tiền, thuế hay scale lưu trữ là business policy và phải được quyết định riêng. Đổi Locale không được phép làm thay đổi số tiền nghiệp vụ phải thanh toán.
+      Mẫu mô tả hình thức hiển thị như vị trí chữ số, nhóm chữ số và phần thập phân; DecimalFormatSymbols cung cấp ký hiệu thực tế của Locale. Bộ định dạng có thể làm tròn để phục vụ trình bày, nhưng quy tắc tính tiền, thuế hay scale lưu trữ là chính sách nghiệp vụ và phải được quyết định riêng. Đổi Locale không được phép làm thay đổi số tiền nghiệp vụ phải thanh toán.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -263,9 +276,9 @@ questions:
       methodSignature: ""
 
   - question: >-
-      Khi nào CompactNumberFormat hữu ích, và vì sao không nên persist kết quả compact?
+      Khi nào CompactNumberFormat hữu ích, và vì sao không nên lưu kết quả dạng rút gọn?
     answer: >-
-      Compact format phù hợp cho dashboard, statistic card hoặc UI hẹp cần representation kiểu 1.2M/biến thể theo locale. Pattern compact đến từ locale data chứ không nên tự nối K/M/B. Chuỗi compact có thể round hoặc bỏ chi tiết, nên domain/persistence vẫn phải giữ numeric value gốc.
+      Định dạng rút gọn phù hợp cho bảng điều khiển, thẻ thống kê hoặc UI hẹp cần cách biểu diễn kiểu 1.2M theo Locale. Mẫu rút gọn đến từ dữ liệu Locale chứ không nên tự nối K/M/B. Chuỗi rút gọn có thể bị làm tròn hoặc bỏ chi tiết, nên miền nghiệp vụ và dữ liệu lưu trữ vẫn phải giữ giá trị số gốc.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -276,9 +289,9 @@ questions:
       methodSignature: "compact()"
 
   - question: >-
-      Vì sao parse localized number cần một validation policy rõ ràng thay vì chỉ gọi NumberFormat.parse(String)?
+      Vì sao việc phân tích số theo Locale cần một chính sách kiểm tra dữ liệu rõ ràng thay vì chỉ gọi NumberFormat.parse(String)?
     answer: >-
-      Parser có thể đọc một prefix hợp lệ rồi dừng trước phần dư, nên kết quả khác với yêu cầu “toàn bộ input phải hợp lệ”. Với strict validation cần ParsePosition và kiểm tra vị trí consume/error; khi cần decimal exact có thể bật parseBigDecimal trên DecimalFormat. Locale của parser cũng phải đến từ input/user context chứ không dựa vào default không rõ nguồn.
+      Bộ phân tích có thể đọc một tiền tố hợp lệ rồi dừng trước phần dư, nên kết quả khác với yêu cầu “toàn bộ đầu vào phải hợp lệ”. Khi kiểm tra chặt chẽ cần dùng ParsePosition và kiểm tra vị trí đã đọc cùng vị trí lỗi; khi cần giá trị thập phân chính xác có thể bật parseBigDecimal trên DecimalFormat. Locale của bộ phân tích cũng phải đến từ ngữ cảnh đầu vào/người dùng chứ không dựa vào giá trị mặc định không rõ nguồn.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -289,9 +302,9 @@ questions:
       methodSignature: "formatAndParse()"
 
   - question: >-
-      Điều gì có thể sai nếu hệ thống format một BigDecimal theo Locale rồi lưu String đó làm giá trị chính?
+      Điều gì có thể sai nếu hệ thống định dạng một BigDecimal theo Locale rồi lưu String đó làm giá trị chính?
     answer: >-
-      String hiển thị có thể thay separator, grouping và displayed precision theo locale, nên đổi locale hoặc parse ở service khác trở nên mơ hồ. Nó cũng có thể đã bị round để phục vụ UI. Domain nên giữ BigDecimal/canonical contract, còn NumberFormat chỉ chạy ở presentation boundary.
+      String hiển thị có thể thay dấu phân cách, cách nhóm chữ số và độ chính xác hiển thị theo Locale, nên việc đổi Locale hoặc phân tích ở dịch vụ khác trở nên mơ hồ. Nó cũng có thể đã bị làm tròn để phục vụ UI. Miền nghiệp vụ nên giữ BigDecimal hoặc hợp đồng chuẩn, còn NumberFormat chỉ chạy ở ranh giới trình bày.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -302,9 +315,9 @@ questions:
       methodSignature: ""
 
   - question: >-
-      Currency trong Java đại diện cho gì, và tại sao symbol như "$" không đủ để làm identity?
+      Currency trong Java đại diện cho gì, và tại sao ký hiệu như "$" không đủ để làm định danh?
     answer: >-
-      Currency đại diện cho identity/metadata của đơn vị tiền tệ, thường qua ISO 4217 code cùng numeric code, display name, symbol và default fraction digits. Symbol có thể ambiguous giữa nhiều currency và còn thay đổi theo display Locale. Domain cần currency code/object rõ ràng; Currency cũng không chứa amount nên chưa phải một Money value hoàn chỉnh.
+      Currency đại diện cho định danh và siêu dữ liệu của đơn vị tiền tệ, thường qua mã ISO 4217 cùng mã số, tên hiển thị, ký hiệu và số chữ số thập phân mặc định. Ký hiệu có thể mơ hồ giữa nhiều Currency và còn thay đổi theo Locale hiển thị. Miền nghiệp vụ cần mã tiền tệ hoặc đối tượng rõ ràng; Currency cũng không chứa số tiền nên chưa phải một giá trị Money hoàn chỉnh.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -315,9 +328,9 @@ questions:
       methodSignature: ""
 
   - question: >-
-      Vì sao không được suy transaction currency từ display Locale, và bạn sẽ format một amount EUR cho user Locale.US thế nào?
+      Vì sao không được suy Currency giao dịch từ Locale hiển thị, và bạn sẽ định dạng một số tiền EUR cho Locale.US thế nào?
     answer: >-
-      Display Locale trả lời cách trình bày, còn transaction Currency trả lời đơn vị của amount; một user dùng giao diện US vẫn có thể giao dịch EUR. Ta tạo currency NumberFormat theo Locale.US rồi set Currency EUR trước khi format. Cách này giữ separators/symbol placement theo user convention mà không thay đổi currency nghiệp vụ.
+      Locale hiển thị quyết định cách trình bày, còn Currency giao dịch xác định đơn vị của số tiền; một người dùng giao diện US vẫn có thể giao dịch EUR. Ta tạo NumberFormat tiền tệ theo Locale.US rồi đặt Currency là EUR trước khi định dạng. Cách này giữ dấu phân cách và vị trí ký hiệu theo quy ước của người dùng mà không thay đổi Currency nghiệp vụ.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -328,9 +341,9 @@ questions:
       methodSignature: "currencyVsLocale()"
 
   - question: >-
-      Vì sao Currency và NumberFormat không thay thế được một money domain model?
+      Vì sao Currency và NumberFormat không thay thế được một mô hình tiền tệ trong miền nghiệp vụ?
     answer: >-
-      Currency chỉ mô tả đơn vị/metadata, NumberFormat chỉ xử lý presentation. Các rule như cộng khác currency, FX timestamp, tax rounding, DB scale hay allocation thuộc business domain. Một model tối thiểu thường cần amount + currency rồi localization mới format kết quả; defaultFractionDigits chỉ là metadata, không phải luật kế toán bắt buộc.
+      Currency chỉ mô tả đơn vị và siêu dữ liệu, còn NumberFormat chỉ xử lý cách trình bày. Các quy tắc như cộng các khoản tiền khác Currency, thời điểm áp dụng FX, làm tròn thuế, scale trong cơ sở dữ liệu hay phân bổ đều thuộc miền nghiệp vụ. Một mô hình tối thiểu thường cần số tiền cùng Currency, rồi bản địa hóa mới định dạng kết quả; defaultFractionDigits chỉ là siêu dữ liệu, không phải luật kế toán bắt buộc.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -343,7 +356,7 @@ questions:
   - question: >-
       Collator giải quyết vấn đề gì mà String.compareTo không giải quyết, và khi nào không nên dùng Collator?
     answer: >-
-      String.compareTo cho thứ tự deterministic dựa trên Unicode values, phù hợp cho nhiều key/protocol/internal ordering nhưng không đại diện đầy đủ thứ tự chữ mà người đọc mong đợi. Collator áp dụng linguistic rules theo Locale cho user-visible text. Không nên dùng user Locale để sort technical identifiers cần cùng một thứ tự ở mọi môi trường.
+      String.compareTo so sánh theo thứ tự từ điển trên các đơn vị char UTF-16, tạo một thứ tự kỹ thuật xác định nhưng không mô hình hóa đầy đủ thứ tự chữ mà người đọc mong đợi ở mọi ngôn ngữ. Collator áp dụng quy tắc ngôn ngữ theo Locale cho văn bản dành cho người dùng. Không nên dùng Locale của người dùng để sắp xếp định danh kỹ thuật cần giữ cùng thứ tự ở mọi môi trường.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -354,9 +367,9 @@ questions:
       methodSignature: "sort()"
 
   - question: >-
-      Hãy giải thích Collator strength và decomposition, và vì sao compare(a, b) == 0 không nhất thiết nghĩa a.equals(b).
+      Hãy giải thích strength và decomposition của Collator, và vì sao compare(a, b) == 0 không nhất thiết nghĩa là a.equals(b).
     answer: >-
-      Strength quyết định mức khác biệt linguistic nào được xem là quan trọng, còn decomposition liên quan cách xử lý các Unicode representation tương đương/gần nhau. Ở strength thấp, hai String khác code point vẫn có thể được coi là tương đương cho collation và compare trả 0. Điều đó là equality theo comparator hiện tại, không thay đổi Object/String equality.
+      Strength quyết định mức khác biệt ngôn ngữ nào được xem là quan trọng, còn decomposition liên quan đến cách xử lý các biểu diễn Unicode tương đương hoặc gần nhau. Ở strength thấp, hai String khác code point vẫn có thể được coi là tương đương khi đối chiếu và compare trả 0. Đây là phép so sánh bằng theo Collator hiện tại, không làm thay đổi kết quả equals của Object/String.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -367,22 +380,22 @@ questions:
       methodSignature: ""
 
   - question: >-
-      Một danh sách được sort trong database nhưng Java dùng Collator cho cùng màn hình. Rủi ro consistency là gì?
+      Một danh sách được sắp xếp trong cơ sở dữ liệu nhưng Java dùng Collator cho cùng màn hình. Rủi ro về tính nhất quán là gì?
     answer: >-
-      DB thực thi collation của schema/database, còn Collator thực thi rules của JVM/Locale; không có bảo đảm hai hệ thống tạo cùng ordering. Điều này đặc biệt quan trọng với pagination vì khác thứ tự có thể gây duplicate/missing rows giữa page. Nếu sort ở DB thì DB collation là contract thực tế; Java-side Collator chỉ nên dùng khi chính Java thực hiện comparison.
+      Cơ sở dữ liệu thực thi collation của schema hoặc cơ sở dữ liệu, còn Collator thực thi quy tắc của JVM/Locale; không có bảo đảm hai hệ thống tạo cùng thứ tự. Điều này đặc biệt quan trọng khi phân trang vì khác thứ tự có thể gây trùng hoặc thiếu hàng giữa các trang. Nếu sắp xếp ở cơ sở dữ liệu thì collation của cơ sở dữ liệu là hợp đồng thực tế; Collator phía Java chỉ nên dùng khi chính Java thực hiện phép so sánh.
     aiGenerated: true
     reviewed: false
     readmeRelated:
       file: "8.Collator/Collator.md"
       anchor: "sorting-user-text"
     apiRelated:
-      controller: "CollationController"
-      methodSignature: "sort()"
+      controller: ""
+      methodSignature: ""
 
   - question: >-
-      Vì sao localized DateTimeFormatter style thường tốt hơn hard-code cùng một pattern cho mọi locale?
+      Vì sao kiểu DateTimeFormatter bản địa hóa thường tốt hơn việc mã hóa cứng cùng một mẫu cho mọi Locale?
     answer: >-
-      Application chỉ cần nói mức detail như SHORT/MEDIUM/LONG/FULL, còn locale data quyết định order, separators và localized text phù hợp. Hard-code một pattern toàn cầu áp giả định của một vùng lên người dùng khác. Nếu contract thật sự yêu cầu một pattern cố định thì application có thể sở hữu pattern đó, nhưng đó là quyết định khác với localized style.
+      Ứng dụng chỉ cần chỉ ra mức chi tiết như SHORT/MEDIUM/LONG/FULL, còn dữ liệu Locale quyết định thứ tự, dấu phân cách và văn bản bản địa hóa phù hợp. Mã hóa cứng một mẫu toàn cầu sẽ áp giả định của một vùng lên người dùng khác. Nếu hợp đồng thật sự yêu cầu một mẫu cố định thì ứng dụng có thể sở hữu mẫu đó, nhưng đó là quyết định khác với kiểu định dạng theo Locale.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -395,7 +408,7 @@ questions:
   - question: >-
       Hãy giải thích ranh giới giữa Locale và ZoneId khi hiển thị một Instant cho người dùng.
     answer: >-
-      ZoneId quyết định local date/time tương ứng với Instant theo timezone rules; Locale quyết định cách local date/time đó được viết cho người đọc. Ta có thể hiển thị giờ New York bằng convention vi-VN hoàn toàn hợp lệ. Vì vậy không được suy Asia/Ho_Chi_Minh chỉ từ Locale vi-VN hay dùng Locale thay cho timezone preference.
+      ZoneId quyết định ngày giờ cục bộ tương ứng với Instant theo quy tắc của múi giờ; Locale quyết định cách ngày giờ cục bộ đó được viết cho người đọc. Ta hoàn toàn có thể hiển thị giờ New York bằng quy ước vi-VN. Vì vậy không được suy ra Asia/Ho_Chi_Minh chỉ từ Locale vi-VN hay dùng Locale thay cho lựa chọn múi giờ.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -406,9 +419,9 @@ questions:
       methodSignature: "format()"
 
   - question: >-
-      WeekFields.of(locale) và business week policy khác nhau thế nào?
+      WeekFields.of(locale) và chính sách tuần của nghiệp vụ khác nhau thế nào?
     answer: >-
-      WeekFields.of(locale) cung cấp convention văn hóa như first day of week và minimal days in first week, phù hợp cho calendar presentation. Nếu nghiệp vụ nói tuần kế toán luôn bắt đầu thứ Hai hay có rule riêng, rule đó phải được model explicit bằng WeekFields cụ thể hoặc policy riêng. User Locale không nên âm thầm thay đổi business logic.
+      WeekFields.of(locale) cung cấp quy ước văn hóa như ngày đầu tuần và số ngày tối thiểu của tuần đầu năm, phù hợp cho cách trình bày lịch. Nếu nghiệp vụ quy định tuần kế toán luôn bắt đầu vào thứ Hai hoặc có quy tắc riêng, quy tắc đó phải được mô hình hóa tường minh bằng WeekFields cụ thể hoặc chính sách riêng. Locale của người dùng không nên âm thầm thay đổi logic nghiệp vụ.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -419,183 +432,196 @@ questions:
       methodSignature: "weekAndNumberingConventions()"
 
   - question: >-
-      Khi parse date-time input của người dùng, tại sao cần phân biệt human input với machine contract?
+      Khi phân tích đầu vào ngày giờ của người dùng, tại sao cần phân biệt đầu vào dành cho con người với hợp đồng dành cho máy?
     answer: >-
-      Human input có thể chứa month name hoặc pattern phụ thuộc locale nên formatter phải biết Locale và validation/resolver policy. Machine contracts và persistence cần format explicit, ổn định, thường là ISO khi phù hợp, để không phụ thuộc user preference hay runtime locale data. Text đã format cho UI không nên được xem là canonical representation của temporal value.
+      Đầu vào dành cho con người có thể chứa tên tháng hoặc mẫu phụ thuộc Locale nên bộ định dạng phải biết Locale và có chính sách kiểm tra dữ liệu cùng resolver rõ ràng. Hợp đồng dành cho máy và dữ liệu lưu trữ cần định dạng tường minh, ổn định, thường là ISO khi phù hợp, để không phụ thuộc lựa chọn của người dùng hay dữ liệu Locale của môi trường chạy. Văn bản đã định dạng cho UI không nên được xem là biểu diễn chuẩn của giá trị thời gian.
     aiGenerated: true
     reviewed: false
     readmeRelated:
       file: "9.DateTimeLocalization/DateTimeLocalization.md"
       anchor: "localized-parsing"
     apiRelated:
-      controller: "DateTimeLocalizationController"
-      methodSignature: "format()"
-
-  - question: >-
-      ResourceBundle fallback giúp gì, và vì sao fallback thành công không chứng minh translation đã đầy đủ?
-    answer: >-
-      Fallback cho phép requested locale dùng candidate ít cụ thể hơn hoặc base resource khi resource cụ thể thiếu, nhờ đó reuse và giảm failure cứng. Nhưng user có thể nhận text từ language/level không mong muốn mà application vẫn chạy bình thường. Translation completeness phải được kiểm tra bằng test/build validation chứ không suy từ việc lookup không ném exception.
-    aiGenerated: true
-    reviewed: false
-    readmeRelated:
-      file: "10.Fallback/Fallback.md"
-      anchor: "bundle-candidate-chain"
-    apiRelated:
-      controller: "BundleController"
-      methodSignature: "resolveBundle()"
-
-  - question: >-
-      Vì sao default-Locale fallback có thể làm cùng artifact hiển thị ngôn ngữ khác nhau giữa hai môi trường?
-    answer: >-
-      Khi target locale không có resource phù hợp, default ResourceBundle policy có thể đi qua JVM default Locale trước khi về base. Nếu node A và node B có default khác nhau, cùng requested locale có thể resolve khác nhau. Hệ thống cần product fallback policy rõ và có thể dùng no-fallback Control khi muốn loại bỏ dependency này.
-    aiGenerated: true
-    reviewed: false
-    readmeRelated:
-      file: "10.Fallback/Fallback.md"
-      anchor: "default-locale-fallback"
-    apiRelated:
-      controller: "BundleController"
-      methodSignature: "resolveBundle()"
-
-  - question: >-
-      Bạn sẽ xử lý base bundle và missing key thế nào để missing translation không bị che giấu trong production?
-    answer: >-
-      Team cần xác định base bundle là default language thật hay fallback technical tối thiểu rồi test strategy đó nhất quán. Missing bundle và missing key đều có thể dẫn tới MissingResourceException; build/test nên so key sets và phát hiện thiếu sớm. Catch exception rồi im lặng trả key ra UI mà không logging/monitoring chỉ biến deployment defect thành lỗi giao diện kéo dài.
-    aiGenerated: true
-    reviewed: false
-    readmeRelated:
-      file: "10.Fallback/Fallback.md"
-      anchor: "missing-resource"
-    apiRelated:
-      controller: "BundleController"
-      methodSignature: "resolveBundle()"
-
-  - question: >-
-      Turkish-I cho thấy vấn đề gì khi gọi toLowerCase()/toUpperCase() không truyền Locale trên identifier kỹ thuật?
-    answer: >-
-      Case mapping có thể phụ thuộc default Locale, nên cùng token có thể normalize khác giữa môi trường; Turkish I/i là ví dụ kinh điển. Human text có thể cần user Locale, còn protocol key/identifier thường cần Locale.ROOT hoặc rule explicit của contract. Lowercasing cũng không phải giải pháp universal cho mọi case-insensitive comparison.
-    aiGenerated: true
-    reviewed: false
-    readmeRelated:
-      file: "11.LocalePitfalls/LocalePitfalls.md"
-      anchor: "turkish-i"
-    apiRelated:
       controller: ""
       methodSignature: ""
 
   - question: >-
-      Vì sao localized format rồi parse lại không phải một serialization strategy an toàn giữa các service?
+      BreakIterator tồn tại để giải quyết vấn đề gì mà việc tách theo dấu cách hoặc dấu chấm không giải quyết được?
     answer: >-
-      Human-facing formatter có thể round, bỏ field, dùng ambiguous separators hoặc pattern thay đổi theo locale/runtime data. Ngay cả cùng formatter cũng không bảo đảm round-trip về đúng object ban đầu nếu presentation cố ý giảm precision. Machine boundary nên dùng canonical contract explicit như numeric JSON, currency code và ISO temporal format khi phù hợp.
+      Ranh giới trong ngôn ngữ tự nhiên không đồng nhất với một ký tự phân cách ASCII: nhiều hệ chữ viết không tách từ như tiếng Anh, dấu câu có nhiều vai trò và quy tắc ranh giới câu/dòng phụ thuộc ngôn ngữ cùng ngữ cảnh Unicode. BreakIterator cung cấp phân tích ranh giới ký tự, từ, câu và dòng theo Locale. Nó trả vị trí ranh giới để ứng dụng dùng, không tự dịch hay hiểu ngữ nghĩa sâu.
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "11.LocalePitfalls/LocalePitfalls.md"
-      anchor: "format-parse-roundtrip"
-    apiRelated:
-      controller: ""
-      methodSignature: ""
-
-  - question: >-
-      Một translation key tốt cần đặc tính gì, và vì sao không nên ghép câu từ nhiều fragment nhỏ?
-    answer: >-
-      Key nên ổn định theo ý nghĩa, ví dụ order.created, để wording English có đổi thì identity vẫn còn. Message nên đủ context để translator kiểm soát grammar và word order; fragment concatenation khóa cấu trúc theo ngôn ngữ nguồn và làm nhiều ngôn ngữ khó dịch đúng. Với biến thể grammar lớn, có thể dùng các complete message riêng thay vì ép mọi case vào một template.
-    aiGenerated: true
-    reviewed: false
-    readmeRelated:
-      file: "11.LocalePitfalls/LocalePitfalls.md"
-      anchor: "translation-key-design"
-    apiRelated:
-      controller: ""
-      methodSignature: ""
-
-  - question: >-
-      BreakIterator tồn tại để giải quyết vấn đề gì mà split theo space hoặc dấu chấm không giải quyết được?
-    answer: >-
-      Natural-language boundaries không đồng nhất với một ASCII delimiter: nhiều script không tách từ như English, punctuation có nhiều vai trò và sentence/line rules phụ thuộc language/Unicode context. BreakIterator cung cấp character, word, sentence và line boundary analysis theo Locale. Nó trả vị trí boundary để application dùng, không tự dịch hay hiểu semantics sâu.
-    aiGenerated: true
-    reviewed: false
-    readmeRelated:
-      file: "12.TextSegmentation/TextSegmentation.md"
+      file: "10.TextSegmentation/TextSegmentation.md"
       anchor: "breakiterator-model"
     apiRelated:
       controller: "TextSegmentationController"
       methodSignature: "boundaries()"
 
   - question: >-
-      Vì sao cắt String theo char index có thể phá một ký tự mà người dùng nhìn thấy, và BreakIterator giúp ở đâu?
+      Vì sao cắt String theo chỉ số char có thể phá một ký tự mà người dùng nhìn thấy, và BreakIterator giúp ở đâu?
     answer: >-
-      UTF-16 char không đồng nghĩa Unicode code point, và code point cũng không luôn đồng nghĩa user-perceived grapheme; một cụm hiển thị có thể gồm nhiều code unit/code point. Character BreakIterator tìm boundary phù hợp hơn cho cursor movement, selection hoặc truncation. Lý thuyết Unicode representation thuộc string domain, còn localization dùng boundary analysis để xử lý text cho người dùng.
+      char UTF-16 không đồng nghĩa với Unicode code point, và code point cũng không luôn đồng nghĩa với grapheme mà người dùng cảm nhận; một cụm hiển thị có thể gồm nhiều đơn vị mã hoặc nhiều code point. BreakIterator cho ranh giới ký tự tìm ranh giới phù hợp hơn cho việc di chuyển con trỏ, chọn văn bản hoặc cắt ngắn. Cách biểu diễn Unicode thuộc miền của chuỗi, còn bản địa hóa dùng phân tích ranh giới để xử lý văn bản dành cho người dùng.
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "12.TextSegmentation/TextSegmentation.md"
+      file: "10.TextSegmentation/TextSegmentation.md"
       anchor: "character-boundary"
     apiRelated:
       controller: "TextSegmentationController"
       methodSignature: "boundaries()"
 
   - question: >-
-      Word/Sentence BreakIterator trả về gì, và vì sao application vẫn phải quyết định segment nào có ý nghĩa?
+      BreakIterator cho từ/câu trả về gì, và vì sao ứng dụng vẫn phải quyết định đoạn nào có ý nghĩa?
     answer: >-
-      BreakIterator chủ yếu cho boundary positions theo rule của locale, không phải danh sách semantic tokens đã lọc punctuation hoặc hiểu domain. Application lấy các đoạn giữa boundary rồi quyết định đoạn nào là word/token cần dùng. Điều này tốt hơn hard-code split(" ") hay split(".") nhưng vẫn không biến API thành full NLP tokenizer.
+      BreakIterator chủ yếu trả các vị trí ranh giới theo quy tắc của Locale, không phải danh sách token ngữ nghĩa đã lọc dấu câu hoặc hiểu miền nghiệp vụ. Ứng dụng lấy các đoạn giữa ranh giới rồi quyết định đoạn nào là từ hoặc token cần dùng. Cách này tốt hơn việc mã hóa cứng split(" ") hay split("."), nhưng vẫn không biến API thành bộ tách token NLP đầy đủ.
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "12.TextSegmentation/TextSegmentation.md"
+      file: "10.TextSegmentation/TextSegmentation.md"
       anchor: "word-sentence-boundary"
     apiRelated:
       controller: "TextSegmentationController"
       methodSignature: "boundaries()"
 
   - question: >-
-      Hãy phân biệt line-break opportunity với newline, và nêu boundary của BreakIterator so với UI renderer/NLP.
+      Hãy phân biệt vị trí có thể ngắt dòng với ký tự xuống dòng, và nêu ranh giới của BreakIterator so với bộ dựng hiển thị UI và NLP.
     answer: >-
-      Newline là break đã tồn tại trong dữ liệu, còn line BreakIterator tìm vị trí mà renderer có thể cân nhắc wrap text. BreakIterator chỉ cung cấp boundary analysis; font shaping, pixel layout và drawing thuộc renderer, còn semantic tokenization, stemming hay language understanding sâu thuộc NLP layer. Backend thường không layout text nhưng vẫn cần biết không nên cắt mỗi N ký tự.
+      Ký tự xuống dòng là điểm ngắt đã tồn tại trong dữ liệu, còn BreakIterator cho ranh giới dòng tìm vị trí mà bộ dựng hiển thị có thể cân nhắc xuống dòng. BreakIterator chỉ cung cấp phân tích ranh giới; tạo hình glyph, bố trí điểm ảnh và vẽ thuộc bộ dựng hiển thị, còn tách token, stemming hay hiểu ngôn ngữ sâu thuộc tầng NLP. Hệ thống phía máy chủ thường không bố trí văn bản nhưng vẫn cần biết không nên cắt cứ mỗi N ký tự.
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "12.TextSegmentation/TextSegmentation.md"
+      file: "10.TextSegmentation/TextSegmentation.md"
       anchor: "breakiterator-boundary"
     apiRelated:
       controller: "TextSegmentationController"
       methodSignature: "boundaries()"
 
   - question: >-
-      Trong bidirectional text, logical order và visual order khác nhau thế nào, và vì sao reverse String để hỗ trợ Arabic/Hebrew là sai?
+      Trong văn bản hai chiều, thứ tự logic và thứ tự hiển thị khác nhau thế nào, và vì sao đảo ngược String để hỗ trợ tiếng Ả Rập hoặc tiếng Do Thái là sai?
     answer: >-
-      Logical order là thứ tự nội dung lưu trong String; visual order là vị trí glyph/run sau khi bidi rules được áp dụng. Mixed RTL/LTR text còn chứa số, punctuation và code có hướng khác nhau, nên reverse toàn bộ String phá semantics và ordering. Dữ liệu nên giữ logical order, còn bidi algorithm và renderer chịu trách nhiệm visual presentation.
+      Thứ tự logic là thứ tự nội dung lưu trong String; thứ tự hiển thị là vị trí của các glyph và đoạn có hướng sau khi các quy tắc bidi được áp dụng. Văn bản trộn RTL/LTR còn chứa số, dấu câu và mã có hướng khác nhau, nên đảo ngược toàn bộ String sẽ phá ngữ nghĩa và thứ tự. Dữ liệu nên giữ thứ tự logic, còn thuật toán bidi và bộ dựng hiển thị chịu trách nhiệm về cách hiển thị.
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "13.BidirectionalText/BidirectionalText.md"
+      file: "11.BidirectionalText/BidirectionalText.md"
       anchor: "bidi-model"
     apiRelated:
       controller: "BidirectionalTextController"
       methodSignature: "analyze()"
 
   - question: >-
-      Directional run và embedding level giúp developer hiểu điều gì về mixed-direction text?
+      Đoạn có hướng (directional run) và mức nhúng giúp lập trình viên hiểu điều gì về văn bản trộn nhiều hướng?
     answer: >-
-      Một paragraph có thể được chia thành các đoạn liên tiếp có cùng embedding level/direction, ví dụ RTL run chứa một LTR run cho number hoặc product code rồi quay lại RTL. Vì vậy một boolean isRtl cho toàn chuỗi là mental model quá đơn giản. java.text.Bidi cho phép inspect base direction, run boundaries và levels thay vì application tự implement Unicode Bidirectional Algorithm.
+      Một đoạn văn có thể được chia thành các đoạn liên tiếp kề nhau có cùng mức nhúng/hướng, ví dụ một đoạn RTL, tiếp theo là đoạn LTR chứa số hoặc mã sản phẩm, rồi một đoạn RTL khác. Vì vậy một boolean isRtl cho toàn chuỗi là mô hình tư duy quá đơn giản. java.text.Bidi cho phép kiểm tra hướng nền, ranh giới các đoạn và mức nhúng thay vì ứng dụng tự triển khai Unicode Bidirectional Algorithm.
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "13.BidirectionalText/BidirectionalText.md"
+      file: "11.BidirectionalText/BidirectionalText.md"
       anchor: "ltr-rtl-runs"
     apiRelated:
       controller: "BidirectionalTextController"
       methodSignature: "analyze()"
 
   - question: >-
-      java.text.Bidi dừng ở đâu và UI renderer bắt đầu ở đâu?
+      java.text.Bidi dừng ở đâu và bộ dựng hiển thị UI bắt đầu ở đâu?
     answer: >-
-      Bidi là analysis API: nó cho biết base direction, có cần bidi processing không, số run, start/limit và embedding level. Nó không chọn font, shape glyph, đo width, layout pixel hay vẽ text; các việc đó thuộc UI/text rendering stack. Nhiều framework làm phần visual tự động, nhưng developer vẫn cần boundary này để tránh reverse string hoặc tự hack punctuation theo vị trí hiển thị.
+      Bidi là API phân tích: nó cho biết hướng nền, có cần xử lý bidi hay không, số đoạn có hướng, vị trí bắt đầu/giới hạn và mức nhúng. Nó không chọn phông chữ, tạo hình glyph, đo độ rộng, bố trí điểm ảnh hay vẽ văn bản; các việc đó thuộc ngăn xếp dựng hiển thị UI/văn bản. Nhiều khung làm việc tự xử lý phần hiển thị, nhưng lập trình viên vẫn cần hiểu ranh giới này để tránh đảo ngược chuỗi hoặc tự sửa dấu câu theo vị trí hiển thị.
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "13.BidirectionalText/BidirectionalText.md"
+      file: "11.BidirectionalText/BidirectionalText.md"
       anchor: "bidi-boundary"
     apiRelated:
       controller: "BidirectionalTextController"
       methodSignature: "analyze()"
+
+  - question: >-
+      ResourceBundle dự phòng giúp gì, và vì sao dự phòng thành công không chứng minh bản dịch đã đầy đủ?
+    answer: >-
+      Cơ chế dự phòng là chính sách tiếp tục tra cứu khi đường tra cứu của Locale ưu tiên không phân giải được tài nguyên phù hợp. Nó có thể gồm các ứng viên ít cụ thể hơn và, tùy ResourceBundle.Control, một nhánh Locale dự phòng riêng như Locale mặc định của JVM. Ứng dụng vẫn có thể hiển thị nội dung dù bản dịch mong muốn đang thiếu, nên độ đầy đủ phải được kiểm tra trong quá trình xây dựng và kiểm thử thay vì suy ra từ việc tra cứu thành công.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "12.Fallback/Fallback.md"
+      anchor: "bundle-candidate-chain"
+    apiRelated:
+      controller: "BundleController"
+      methodSignature: "resolveBundle()"
+
+  - question: >-
+      Vì sao dự phòng qua Locale mặc định có thể làm cùng một bản dựng hiển thị ngôn ngữ khác nhau giữa hai môi trường?
+    answer: >-
+      Khi Locale đích không có tài nguyên phù hợp, chính sách mặc định của ResourceBundle có thể đi qua Locale mặc định của JVM trước khi về gói tài nguyên gốc. Nếu nút A và nút B có Locale mặc định khác nhau, cùng một Locale được yêu cầu có thể phân giải khác nhau. Hệ thống cần chính sách dự phòng rõ ràng của sản phẩm và có thể dùng Control không dự phòng khi muốn loại bỏ phụ thuộc này.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "12.Fallback/Fallback.md"
+      anchor: "default-locale-fallback"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Bạn sẽ xử lý gói tài nguyên gốc và khóa bị thiếu thế nào để bản dịch còn thiếu không bị che giấu trong môi trường vận hành?
+    answer: >-
+      Nhóm cần xác định gói tài nguyên gốc là ngôn ngữ mặc định thật hay tập dự phòng kỹ thuật tối thiểu, rồi kiểm thử chiến lược đó một cách nhất quán. Thiếu gói tài nguyên hoặc thiếu khóa đều có thể dẫn tới MissingResourceException; quá trình xây dựng và kiểm thử nên so sánh tập khóa để phát hiện thiếu sớm. Bắt ngoại lệ rồi âm thầm trả khóa ra UI mà không ghi log hay giám sát chỉ biến lỗi triển khai thành lỗi giao diện kéo dài.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "12.Fallback/Fallback.md"
+      anchor: "missing-resource"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Vì sao Locale mặc định là một phụ thuộc ẩn nguy hiểm trong hệ thống phía máy chủ phục vụ nhiều người dùng?
+    answer: >-
+      JVM có Locale mặc định chung cùng hai nhóm mặc định DISPLAY và FORMAT. Các API không đọc cùng một giá trị: chuyển đổi hoa/thường của String dùng Locale mặc định chung, còn các API định dạng thường dùng nhóm FORMAT. Những trạng thái toàn cục này có thể khác lựa chọn của từng yêu cầu/người dùng và khác giữa các môi trường. Hệ thống phía máy chủ nên truyền Locale tường minh khi đó là một phần của hợp đồng và chỉ dùng giá trị mặc định như một chính sách có chủ đích.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "13.LocalePitfalls/LocalePitfalls.md"
+      anchor: "default-locale"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Turkish-I cho thấy vấn đề gì khi gọi toLowerCase()/toUpperCase() không truyền Locale trên định danh kỹ thuật?
+    answer: >-
+      Ánh xạ chữ hoa/thường có thể phụ thuộc Locale mặc định, nên cùng một token có thể được chuẩn hóa khác nhau giữa các môi trường; Turkish I/i là ví dụ kinh điển. Văn bản dành cho con người có thể cần Locale của người dùng, còn khóa hoặc định danh giao thức thường cần Locale.ROOT hay quy tắc tường minh của hợp đồng. Chuyển toàn bộ sang chữ thường cũng không phải giải pháp chung cho mọi phép so sánh không phân biệt hoa/thường.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "13.LocalePitfalls/LocalePitfalls.md"
+      anchor: "turkish-i"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Vì sao định dạng bản địa hóa rồi phân tích ngược không phải là một chiến lược tuần tự hóa an toàn giữa các dịch vụ?
+    answer: >-
+      Bộ định dạng dành cho con người có thể làm tròn, bỏ trường, dùng dấu phân cách mơ hồ hoặc thay đổi mẫu theo Locale và dữ liệu của môi trường chạy. Ngay cả cùng một bộ định dạng cũng không bảo đảm chuyển đổi hai chiều về đúng đối tượng ban đầu nếu cách trình bày cố ý giảm độ chính xác. Ranh giới dành cho máy nên dùng hợp đồng chuẩn tường minh như số trong JSON, mã tiền tệ và định dạng thời gian ISO khi phù hợp.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "13.LocalePitfalls/LocalePitfalls.md"
+      anchor: "format-parse-roundtrip"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Hãy đi qua một quyết định bản địa hóa đầu-cuối cho dịch vụ có giá trị nghiệp vụ chuẩn, đầu ra cho người dùng, hợp đồng máy-với-máy và cơ chế dự phòng.
+    answer: >-
+      Bắt đầu từ ý nghĩa nghiệp vụ chuẩn và giữ số, Currency, Instant hay định danh độc lập với văn bản hiển thị. Xác định mỗi ranh giới dành cho con người hay dành cho máy. Ở ranh giới dành cho con người, chọn Locale tường minh, giữ ZoneId và Currency là ngữ cảnh riêng rồi dùng ResourceBundle/MessageFormat, NumberFormat, DateTimeFormatter, Collator, BreakIterator hoặc Bidi đúng trách nhiệm của từng API. Chính sách dự phòng và Locale mặc định phải có chủ đích và quan sát được. Hợp đồng dành cho máy nên dùng biểu diễn ổn định thay vì chuỗi đã bản địa hóa.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "13.LocalePitfalls/LocalePitfalls.md"
+      anchor: "localization-synthesis"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
