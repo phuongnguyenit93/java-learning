@@ -513,30 +513,75 @@ module
     │   │       └── reactive [REACTIVE_PROGRAMMING] : Reactive Programming paradigm, data flow and backpressure concepts
     │   ├── software-design
     │   │   ├── architecture
-    │   │   │   ├── domain-driven-design [DOMAIN_DRIVEN_DESIGN] : Domain-Driven Design fundamentals, strategic design and tactical design
-    │   │   │   └── mvc [MODEL_VIEW_CONTROLLER] : Model-View-Controller architectural pattern
-    │   │   └── design-pattern
-    │   │       ├── anti-patterns
-    │   │       ├── behavioral
-    │   │       │   ├── observer
-    │   │       │   ├── state
-    │   │       │   └── strategy
-    │   │       ├── creational
-    │   │       │   ├── builder
-    │   │       │   ├── factory-method
-    │   │       │   └── singleton
-    │   │       ├── dependency-injection [DEPENDENCY_INJECTION] : Dependency Injection and Inversion of Control design concepts
-    │   │       ├── distributed-system
-    │   │       │   ├── bulkhead
-    │   │       │   ├── cqrs
-    │   │       │   ├── event-sourcing
-    │   │       │   ├── saga
-    │   │       │   └── sidecar
-    │   │       ├── solid-principles
-    │   │       └── structural
-    │   │           ├── adapter
-    │   │           ├── facade
-    │   │           └── proxy
+    │   │   │   ├── fundamentals
+    │   │   │   ├── architectural-pattern
+    │   │   │   │   ├── layered
+    │   │   │   │   ├── mvc [MODEL_VIEW_CONTROLLER] : Model-View-Controller architectural pattern
+    │   │   │   │   ├── hexagonal
+    │   │   │   │   ├── clean-architecture
+    │   │   │   │   ├── onion-architecture
+    │   │   │   │   ├── client-server
+    │   │   │   │   ├── event-driven
+    │   │   │   │   ├── microkernel
+    │   │   │   │   ├── pipes-and-filters
+    │   │   │   │   ├── service-oriented-architecture
+    │   │   │   │   └── modular-monolith
+    │   │   │   ├── distributed-system
+    │   │   │   │   ├── bulkhead
+    │   │   │   │   ├── cqrs
+    │   │   │   │   ├── event-sourcing
+    │   │   │   │   ├── saga
+    │   │   │   │   └── sidecar
+    │   │   │   └── domain-modeling
+    │   │   │       └── domain-driven-design [DOMAIN_DRIVEN_DESIGN] : Domain-Driven Design fundamentals, strategic design and tactical design
+    │   │   ├── design-pattern
+    │   │   │   ├── behavioral
+    │   │   │   │   ├── chain-of-responsibility
+    │   │   │   │   ├── command
+    │   │   │   │   ├── interpreter
+    │   │   │   │   ├── iterator
+    │   │   │   │   ├── mediator
+    │   │   │   │   ├── memento
+    │   │   │   │   ├── observer
+    │   │   │   │   ├── state
+    │   │   │   │   ├── strategy
+    │   │   │   │   ├── template-method
+    │   │   │   │   └── visitor
+    │   │   │   ├── creational
+    │   │   │   │   ├── abstract-factory
+    │   │   │   │   ├── builder
+    │   │   │   │   ├── factory-method
+    │   │   │   │   ├── prototype
+    │   │   │   │   └── singleton
+    │   │   │   ├── fundamentals
+    │   │   │   └── structural
+    │   │   │       ├── adapter
+    │   │   │       ├── bridge
+    │   │   │       ├── composite
+    │   │   │       ├── decorator
+    │   │   │       ├── facade
+    │   │   │       ├── flyweight
+    │   │   │       └── proxy
+    │   │   ├── design-principle
+    │   │   │   ├── solid-principles
+    │   │   │   │   ├── single-responsibility
+    │   │   │   │   ├── open-closed
+    │   │   │   │   ├── liskov-substitution
+    │   │   │   │   ├── interface-segregation
+    │   │   │   │   └── dependency-inversion
+    │   │   │   ├── separation-of-concerns
+    │   │   │   ├── loose-coupling
+    │   │   │   ├── high-cohesion
+    │   │   │   ├── composition-over-inheritance
+    │   │   │   ├── law-of-demeter
+    │   │   │   ├── dry
+    │   │   │   ├── kiss
+    │   │   │   └── yagni
+    │   │   ├── design-technique
+    │   │   │   └── dependency-injection [DEPENDENCY_INJECTION] : Dependency Injection and Inversion of Control design concepts
+    │   │   └── design-problem
+    │   │       ├── anti-pattern
+    │   │       └── code-smell
     │   └── software-process
     │       └── methodology
     │           ├── agile-development [AGILE_DEVELOPMENT] : Agile software development principles, iterative delivery and related methods such as Scrum, Kanban, XP and Lean

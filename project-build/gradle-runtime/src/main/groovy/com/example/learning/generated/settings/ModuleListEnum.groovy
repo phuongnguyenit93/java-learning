@@ -139,8 +139,8 @@ enum ModuleListEnum {
     ),
 
     DEPENDENCY_INJECTION(
-            'module:platform:development:software-design:design-pattern:dependency-injection',
-            'module/platform/development/software-design/design-pattern/dependency-injection',
+            'module:platform:development:software-design:design-technique:dependency-injection',
+            'module/platform/development/software-design/design-technique/dependency-injection',
             'LIBRARY',
             'Dependency Injection and Inversion of Control design concepts',
             false,
@@ -157,8 +157,8 @@ enum ModuleListEnum {
     ),
 
     DOMAIN_DRIVEN_DESIGN(
-            'module:platform:development:software-design:architecture:domain-driven-design',
-            'module/platform/development/software-design/architecture/domain-driven-design',
+            'module:platform:development:software-design:architecture:domain-modeling:domain-driven-design',
+            'module/platform/development/software-design/architecture/domain-modeling/domain-driven-design',
             'LIBRARY',
             'Domain-Driven Design fundamentals, strategic design and tactical design',
             false,
@@ -1867,8 +1867,8 @@ enum ModuleListEnum {
     ),
 
     MODEL_VIEW_CONTROLLER(
-            'module:platform:development:software-design:architecture:mvc',
-            'module/platform/development/software-design/architecture/mvc',
+            'module:platform:development:software-design:architecture:architectural-pattern:mvc',
+            'module/platform/development/software-design/architecture/architectural-pattern/mvc',
             'LIBRARY',
             'Model-View-Controller architectural pattern',
             false,

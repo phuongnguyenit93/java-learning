@@ -1,0 +1,12 @@
+version: 1
+children:
+  architecture:
+    order: 1
+  design-pattern:
+    order: 2
+  design-principle:
+    order: 3
+  design-technique:
+    order: 4
+  design-problem:
+    order: 5

@@ -2132,10 +2132,79 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <summary><b><a href='./module/platform/development/software-design/architecture'>📁 architecture</a></b></summary>
 <ul>
 <li>
-  <a href='./module/platform/development/software-design/architecture/domain-driven-design'>🪄 domain-driven-design</a>
+  <a href='./module/platform/development/software-design/architecture/fundamentals'>🪄 fundamentals</a>
 </li>
 <li>
-  <a href='./module/platform/development/software-design/architecture/mvc'>🪄 mvc</a>
+<details>
+  <summary><b><a href='./module/platform/development/software-design/architecture/architectural-pattern'>📁 architectural-pattern</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/software-design/architecture/architectural-pattern/layered'>🪄 layered</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/architecture/architectural-pattern/mvc'>🪄 mvc</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/architecture/architectural-pattern/hexagonal'>🪄 hexagonal</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/architecture/architectural-pattern/clean-architecture'>🪄 clean-architecture</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/architecture/architectural-pattern/onion-architecture'>🪄 onion-architecture</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/architecture/architectural-pattern/client-server'>🪄 client-server</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/architecture/architectural-pattern/event-driven'>🪄 event-driven</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/architecture/architectural-pattern/microkernel'>🪄 microkernel</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/architecture/architectural-pattern/pipes-and-filters'>🪄 pipes-and-filters</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/architecture/architectural-pattern/service-oriented-architecture'>🪄 service-oriented-architecture</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/architecture/architectural-pattern/modular-monolith'>🪄 modular-monolith</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/software-design/architecture/distributed-system'>📁 distributed-system</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/software-design/architecture/distributed-system/bulkhead'>🪄 bulkhead</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/architecture/distributed-system/cqrs'>🪄 cqrs</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/architecture/distributed-system/event-sourcing'>🪄 event-sourcing</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/architecture/distributed-system/saga'>🪄 saga</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/architecture/distributed-system/sidecar'>🪄 sidecar</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/software-design/architecture/domain-modeling'>📁 domain-modeling</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/software-design/architecture/domain-modeling/domain-driven-design'>🪄 domain-driven-design</a>
+</li>
+</ul>
+</details>
 </li>
 </ul>
 </details>
@@ -2145,12 +2214,27 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <summary><b><a href='./module/platform/development/software-design/design-pattern'>📁 design-pattern</a></b></summary>
 <ul>
 <li>
-  <a href='./module/platform/development/software-design/design-pattern/anti-patterns'>🪄 anti-patterns</a>
-</li>
-<li>
 <details>
   <summary><b><a href='./module/platform/development/software-design/design-pattern/behavioral'>📁 behavioral</a></b></summary>
 <ul>
+<li>
+  <a href='./module/platform/development/software-design/design-pattern/behavioral/chain-of-responsibility'>🪄 chain-of-responsibility</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/design-pattern/behavioral/command'>🪄 command</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/design-pattern/behavioral/interpreter'>🪄 interpreter</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/design-pattern/behavioral/iterator'>🪄 iterator</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/design-pattern/behavioral/mediator'>🪄 mediator</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/design-pattern/behavioral/memento'>🪄 memento</a>
+</li>
 <li>
   <a href='./module/platform/development/software-design/design-pattern/behavioral/observer'>🪄 observer</a>
 </li>
@@ -2160,6 +2244,12 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
   <a href='./module/platform/development/software-design/design-pattern/behavioral/strategy'>🪄 strategy</a>
 </li>
+<li>
+  <a href='./module/platform/development/software-design/design-pattern/behavioral/template-method'>🪄 template-method</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/design-pattern/behavioral/visitor'>🪄 visitor</a>
+</li>
 </ul>
 </details>
 </li>
@@ -2168,10 +2258,16 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <summary><b><a href='./module/platform/development/software-design/design-pattern/creational'>📁 creational</a></b></summary>
 <ul>
 <li>
+  <a href='./module/platform/development/software-design/design-pattern/creational/abstract-factory'>🪄 abstract-factory</a>
+</li>
+<li>
   <a href='./module/platform/development/software-design/design-pattern/creational/builder'>🪄 builder</a>
 </li>
 <li>
   <a href='./module/platform/development/software-design/design-pattern/creational/factory-method'>🪄 factory-method</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/design-pattern/creational/prototype'>🪄 prototype</a>
 </li>
 <li>
   <a href='./module/platform/development/software-design/design-pattern/creational/singleton'>🪄 singleton</a>
@@ -2180,32 +2276,7 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </details>
 </li>
 <li>
-  <a href='./module/platform/development/software-design/design-pattern/dependency-injection'>🪄 dependency-injection</a>
-</li>
-<li>
-<details>
-  <summary><b><a href='./module/platform/development/software-design/design-pattern/distributed-system'>📁 distributed-system</a></b></summary>
-<ul>
-<li>
-  <a href='./module/platform/development/software-design/design-pattern/distributed-system/bulkhead'>🪄 bulkhead</a>
-</li>
-<li>
-  <a href='./module/platform/development/software-design/design-pattern/distributed-system/cqrs'>🪄 cqrs</a>
-</li>
-<li>
-  <a href='./module/platform/development/software-design/design-pattern/distributed-system/event-sourcing'>🪄 event-sourcing</a>
-</li>
-<li>
-  <a href='./module/platform/development/software-design/design-pattern/distributed-system/saga'>🪄 saga</a>
-</li>
-<li>
-  <a href='./module/platform/development/software-design/design-pattern/distributed-system/sidecar'>🪄 sidecar</a>
-</li>
-</ul>
-</details>
-</li>
-<li>
-  <a href='./module/platform/development/software-design/design-pattern/solid-principles'>🪄 solid-principles</a>
+  <a href='./module/platform/development/software-design/design-pattern/fundamentals'>🪄 fundamentals</a>
 </li>
 <li>
 <details>
@@ -2215,13 +2286,101 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <a href='./module/platform/development/software-design/design-pattern/structural/adapter'>🪄 adapter</a>
 </li>
 <li>
+  <a href='./module/platform/development/software-design/design-pattern/structural/bridge'>🪄 bridge</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/design-pattern/structural/composite'>🪄 composite</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/design-pattern/structural/decorator'>🪄 decorator</a>
+</li>
+<li>
   <a href='./module/platform/development/software-design/design-pattern/structural/facade'>🪄 facade</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/design-pattern/structural/flyweight'>🪄 flyweight</a>
 </li>
 <li>
   <a href='./module/platform/development/software-design/design-pattern/structural/proxy'>🪄 proxy</a>
 </li>
 </ul>
 </details>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/software-design/design-principle'>📁 design-principle</a></b></summary>
+<ul>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/software-design/design-principle/solid-principles'>📁 solid-principles</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/software-design/design-principle/solid-principles/single-responsibility'>🪄 single-responsibility</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/design-principle/solid-principles/open-closed'>🪄 open-closed</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/design-principle/solid-principles/liskov-substitution'>🪄 liskov-substitution</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/design-principle/solid-principles/interface-segregation'>🪄 interface-segregation</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/design-principle/solid-principles/dependency-inversion'>🪄 dependency-inversion</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/design-principle/separation-of-concerns'>🪄 separation-of-concerns</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/design-principle/loose-coupling'>🪄 loose-coupling</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/design-principle/high-cohesion'>🪄 high-cohesion</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/design-principle/composition-over-inheritance'>🪄 composition-over-inheritance</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/design-principle/law-of-demeter'>🪄 law-of-demeter</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/design-principle/dry'>🪄 dry</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/design-principle/kiss'>🪄 kiss</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/design-principle/yagni'>🪄 yagni</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/software-design/design-technique'>📁 design-technique</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/software-design/design-technique/dependency-injection'>🪄 dependency-injection</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/software-design/design-problem'>📁 design-problem</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/software-design/design-problem/anti-pattern'>🪄 anti-pattern</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/design-problem/code-smell'>🪄 code-smell</a>
 </li>
 </ul>
 </details>

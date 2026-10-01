@@ -1,0 +1,21 @@
+version: 1
+children:
+  solid-principles:
+    order: 1
+  separation-of-concerns:
+    order: 2
+  loose-coupling:
+    order: 3
+  high-cohesion:
+    order: 4
+  composition-over-inheritance:
+    order: 5
+  law-of-demeter:
+    order: 6
+  dry:
+    order: 7
+  kiss:
+    order: 8
+  yagni:
+    order: 9
+

@@ -1,0 +1,7 @@
+version: 1
+children:
+  anti-pattern:
+    order: 1
+  code-smell:
+    order: 2
+

@@ -1,0 +1,24 @@
+version: 1
+children:
+  layered:
+    order: 1
+  mvc:
+    order: 2
+  hexagonal:
+    order: 3
+  clean-architecture:
+    order: 4
+  onion-architecture:
+    order: 5
+  client-server:
+    order: 6
+  event-driven:
+    order: 7
+  microkernel:
+    order: 8
+  pipes-and-filters:
+    order: 9
+  service-oriented-architecture:
+    order: 10
+  modular-monolith:
+    order: 11

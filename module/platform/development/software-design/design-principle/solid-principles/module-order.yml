@@ -1,0 +1,13 @@
+version: 1
+children:
+  single-responsibility:
+    order: 1
+  open-closed:
+    order: 2
+  liskov-substitution:
+    order: 3
+  interface-segregation:
+    order: 4
+  dependency-inversion:
+    order: 5
+
