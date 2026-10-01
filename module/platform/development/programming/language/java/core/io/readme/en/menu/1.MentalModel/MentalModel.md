@@ -1,8 +1,10 @@
-# Java I/O Mental Model
+# I/O Data-Flow Model and Resource Lifetime
 
 ## <a id="io-data-flow">What Is I/O?</a>
 
-A program that only computes in memory keeps its working data inside the running **process**, meaning one running instance of the program managed by the operating system. When the process ends, objects, local variables, and arrays in RAM do not automatically become persistent data. The program also cannot receive keyboard input, read a file, send data over a network, or write a result somewhere else without crossing a **process boundary** between resources inside that running process and resources outside it.
+A program needs one model for **reading data from a source** and **writing data to a sink**. A source or sink can be a file, console, socket, device, or even an in-memory region inside the current process. I/O exists to model those data exchanges without forcing application code to invent an unrelated mechanism for every endpoint type.
+
+When an endpoint is a resource outside ordinary Java-managed memory, such as a file or socket, the program also crosses a **resource boundary** with its own lifetime. Objects, local variables, and arrays in RAM do not automatically become persistent when the process ends; data that must outlive those objects has to be written to an appropriate storage destination.
 
 **I/O (Input/Output)** is the set of mechanisms used to move data **into** a program and **out of** a program.
 
@@ -15,7 +17,7 @@ source ── input ──> program ── output ──> sink
 - A **source** is where data comes from, such as a file, **socket** (a network endpoint used by a program to exchange data), keyboard, or memory region.
 - A **sink** is where data goes, such as a file, socket, screen, or memory region.
 - The **payload** is the data being moved.
-- A **resource boundary** is where Java code starts interacting with a resource that has its own lifetime, often managed by the operating system or another component outside the process.
+- A **resource boundary** is where Java code starts interacting with a resource that has its own lifetime, often managed by the operating system or another component outside the process. Not every I/O abstraction crosses such a boundary; an in-memory byte-array stream is one example.
 
 Suppose an application writes `Xin chào Java ☕` to a file and reads it back:
 
@@ -38,9 +40,11 @@ The major terms in this module form a learning path rather than an unrelated lis
 ```text
 I/O data flow
     ↓ data needs a transfer unit
-byte stream / character stream
+byte streams
+    ↓ text needs a character conversion layer
+character streams
     ↓ many tiny operations can be expensive
-buffering
+wrappers and buffering
     ↓ files also have names, paths, and metadata
 File → Path / Files
     ↓ NIO separates stored data from the conduit that moves it
@@ -105,7 +109,7 @@ System.out.println(text.equals(restored)); // true
 
 Byte streams and character streams are related layers. A character stream commonly sits on top of a byte source or sink and adds encoding/decoding. The next chapter starts with the lower-level `InputStream`/`OutputStream` model before the module introduces `Reader`/`Writer`.
 
-## <a id="blocking-io-boundary">The Blocking I/O Boundary</a>
+## <a id="blocking-io-boundary">Blocking, Non-blocking, and Asynchronous I/O</a>
 
 When code calls an I/O operation, the requested data is not necessarily already available in RAM. The program may have to wait for a filesystem, device, or network peer.
 
@@ -127,13 +131,15 @@ A **thread** is one execution flow inside a process. “Blocking” means the ca
 
 With **non-blocking I/O**, an operation is designed not to keep the calling thread waiting until the resource becomes ready. The call can return control earlier so the program can do other work and react when a readiness/event mechanism reports that data can be processed. This is a difference in waiting and coordination, not a promise that every operation is faster.
 
+**Asynchronous I/O** is a different dimension: an operation is initiated first and its result is delivered later, for example through a `Future` or callback. Asynchronous is therefore not a synonym for non-blocking; the implementation underneath can use different mechanisms depending on the platform. The later FileChannel chapter uses `AsynchronousFileChannel` to make this boundary concrete.
+
 This creates a useful distinction between **CPU-bound work** and **I/O-bound work**. CPU-bound work spends most of its time computing on the CPU; I/O-bound work spends most of its time waiting for files, devices, sockets, or other external resources.
 
 Not every Java I/O API is inherently blocking. NIO also provides channels and non-blocking mechanisms for appropriate workloads. These early chapters intentionally use synchronous stream/file I/O to establish the basic model first.
 
 ## <a id="resource-lifecycle">I/O Resource Lifecycles</a>
 
-The garbage collector can reclaim Java objects after they become unreachable. A **file descriptor** is an operating-system identifier for an opened file, while **native handle** is a broader term for an operating-system-level reference to a resource such as a file, socket, or device. These resources live outside the Java heap and must be released at a predictable point in the program.
+The garbage collector can reclaim Java objects after they become unreachable. On systems that use **file descriptors**, a descriptor is an operating-system identifier for an open I/O resource such as a file, socket, or pipe; other platforms may expose an equivalent **native handle** for resources such as files, sockets, or devices. These resources live outside the Java heap and must be released at a predictable point in the program.
 
 Many I/O abstractions therefore have a lifecycle:
 

@@ -31,7 +31,7 @@ questions:
   - question: >-
       Explain I/O using the source → data flow → sink mental model, and why keeping data only in RAM is insufficient for most real applications.
     answer: >-
-      I/O is data crossing the process boundary between a source and a sink. RAM only holds the process's working state; when the process ends, that state does not automatically become durable file data, nor does it let the program receive input, read files, or interact with external resources. The source/sink model separates payload meaning from where data comes from or goes to, allowing similar read/write contracts across files, memory, consoles, and sockets.
+      I/O is data moving into a program from a source or out of a program to a sink. Some I/O crosses an operating-system or process resource boundary, while in-memory streams can stay entirely inside the process. RAM only holds the process's working state; when the process ends, that state does not automatically become durable file data. The source/sink model separates payload meaning from where data comes from or goes to, allowing similar read/write abstractions across files, memory, consoles, sockets, and other endpoints.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "1.MentalModel/MentalModel.md", anchor: "io-data-flow"}
@@ -47,9 +47,9 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      How do blocking and non-blocking I/O differ? Why does non-blocking not mean external resources have no latency?
+      How do blocking, non-blocking, and asynchronous I/O differ? Why are non-blocking and asynchronous not synonyms?
     answer: >-
-      With blocking I/O, the calling thread waits until the operation can return progress, completion, or failure. With non-blocking I/O, a call may return immediately with no progress, while readiness/event-loop logic organizes when to try again. Disk/network latency still exists; what changes is how the program organizes waiting and threads, not the physical latency of the resource.
+      With blocking I/O, the calling thread can wait until the operation can return progress, completion, EOF, or failure. With non-blocking I/O, a call is designed to return control rather than wait for resource readiness, possibly with no progress, while readiness/event-loop logic decides when to try again. Asynchronous I/O is a different completion model: the operation is initiated and its result arrives later through a Future, callback, or similar mechanism. External latency still exists in every case; the difference is how waiting and completion are organized.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "1.MentalModel/MentalModel.md", anchor: "blocking-io-boundary"}
@@ -65,21 +65,21 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      Explain the InputStream.read contract, partial reads, EOF, available(), and mark/reset. What common assumptions are wrong?
-    answer: >-
-      `read()` returns a byte value 0..255 or `-1` at EOF; bulk reads return the number of bytes actually read and do not promise to fill the buffer. `available()` only estimates bytes that can currently be read or skipped without blocking, not total bytes remaining. `mark/reset` is usable only when `markSupported()` is true. Common bugs assume one read is enough, process the whole buffer instead of the returned count, or use available() to size the complete payload.
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "2.ByteStreams/ByteStreams.md", anchor: "read-contract"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - question: >-
       How do System.in, System.out/System.err, and Console differ? Why can System.console() be null in an IDE, CI, or redirected process?
     answer: >-
       `System.in` is standard input, while `System.out` and `System.err` are `PrintStream` instances for standard output/error; these streams can be redirected or piped and are not necessarily attached to an interactive terminal. `Console` represents an interactive console and provides APIs such as `readPassword`; when the process has no real console, `System.console()` may be null. Portable code needs a fallback or an explicit environment contract instead of assuming a terminal is always present.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "2.ByteStreams/ByteStreams.md", anchor: "standard-console-io"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Explain the InputStream.read contract, partial reads, EOF, available(), and mark/reset. What common assumptions are wrong?
+    answer: >-
+      `read()` returns a byte value 0..255 or `-1` at EOF; bulk reads return the number of bytes actually read and do not promise to fill the buffer. `available()` only estimates bytes that can currently be read or skipped without blocking, not total bytes remaining. `mark/reset` is usable only when `markSupported()` is true. Common bugs assume one read is enough, process the whole buffer instead of the returned count, or use available() to size the complete payload.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.ByteStreams/ByteStreams.md", anchor: "read-contract"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
@@ -110,6 +110,15 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
+      In a wrapper chain, how do capability composition, close propagation, and application ownership differ from one another?
+    answer: >-
+      Each wrapper adds one behavior while delegating to the object beneath it: for example InputStreamReader adds charset decoding and BufferedReader adds buffering/readLine. Standard wrappers normally propagate `close()` down the chain, but constructing a wrapper does not by itself transfer application-level ownership of a caller-owned resource. The application contract must decide who owns the underlying resource; when the current scope owns the whole chain, closing the outermost wrapper is normally sufficient.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.BufferedIO/BufferedIO.md", anchor: "wrapper-composition"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
       How does buffering improve I/O, what does flush() really guarantee, and why does flush not mean the data is durable on disk?
     answer: >-
       Buffering batches many small operations in memory to reduce crossings into a more expensive underlying I/O layer. `flush()` asks the wrapper to pass buffered data to the next layer, but the data may still be in operating-system, filesystem, or device caches. Durability is a different requirement and may need `FileChannel.force` or storage-specific mechanisms; flush/force also have cost and should follow a real durability contract.
@@ -128,18 +137,9 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      Explain the Path → FileSystem → FileSystemProvider → FileStore relationship and why it matters for portability.
+      How do normalize(), toAbsolutePath(), and toRealPath() answer different path questions, especially when symbolic links are involved?
     answer: >-
-      Every `Path` belongs to a `FileSystem`; that filesystem is implemented by a `FileSystemProvider`, while `FileStore` describes backing storage and capabilities. Different providers/filesystems may support POSIX attributes, atomic moves, symbolic links, or WatchService differently, so code should not infer capabilities from the developer machine. `Path.toFile()` is also not universal for non-default providers, making it safer for modern code to stay in the Path model and check capabilities when requirements depend on them.
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "6.PathFiles/PathFiles.md", anchor: "filesystem-provider-model"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - question: >-
-      How do normalize(), toAbsolutePath(), toRealPath(), and Files.isSameFile() answer different questions, especially when symbolic links are involved?
-    answer: >-
-      `normalize()` only simplifies syntax such as `.` and reducible `name/..` pairs without touching the filesystem. `toAbsolutePath()` creates an absolute representation from the current context but does not prove identity; `toRealPath()` accesses the filesystem, requires the target to exist, and resolves links according to its options. When the real question is whether two paths identify the same file, `Files.isSameFile` is more appropriate than string comparison or purely syntactic normalization.
+      `normalize()` only simplifies syntax such as `.` and reducible `name/..` pairs without touching the filesystem. `toAbsolutePath()` creates an absolute representation from the current context but does not prove filesystem identity or existence. `toRealPath()` accesses the filesystem, requires the target to exist, and resolves symbolic links according to its options. The key distinction is syntactic path transformation versus filesystem-backed resolution; file identity itself belongs to the file-attributes/identity discussion.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "6.PathFiles/PathFiles.md", anchor: "resolve-normalize"}
@@ -161,6 +161,24 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "6.PathFiles/PathFiles.md", anchor: "temporary-files"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      How should Files.exists/notExists, file attributes, and Files.isSameFile be used without creating check-then-act assumptions?
+    answer: >-
+      `exists()` and `notExists()` are not logical complements: both can be false when the filesystem cannot determine the state. Attribute queries are snapshots and another thread/process can change the filesystem immediately afterward, so the real operation must still handle failure. `Files.isSameFile` is for identity rather than existence; when two Path values are already equal it may return true without checking that the target exists. These APIs inform decisions but do not turn a mutable filesystem into a transaction.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.PathFiles/PathFiles.md", anchor: "file-attributes"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Explain the Path → FileSystem → FileSystemProvider → FileStore relationship and why it matters for portability.
+    answer: >-
+      Every `Path` belongs to a `FileSystem`; that filesystem is implemented by a `FileSystemProvider`, while `FileStore` describes backing storage and capabilities. Different providers/filesystems may support POSIX attributes, atomic moves, symbolic links, or WatchService differently, so code should not infer capabilities from the developer machine. `Path.toFile()` is also not universal for non-default providers, making it safer for modern code to stay in the Path model and check capabilities when requirements depend on them.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.PathFiles/PathFiles.md", anchor: "filesystem-provider-model"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
@@ -220,7 +238,7 @@ questions:
   - question: >-
       How should heap ByteBuffer and direct ByteBuffer be chosen? Why is a direct buffer not an automatically faster default?
     answer: >-
-      Heap buffers live in the Java heap and are convenient for ordinary allocation and application access. Direct buffers use off-heap/native-friendly memory and may reduce copying on some native I/O paths, but allocation/deallocation is more expensive and memory pressure is less visible in normal heap metrics. Use them when the workload, channel path, and measurement demonstrate a benefit rather than treating `allocateDirect` as a universal optimization.
+      Heap buffers use ordinary heap-backed storage and are convenient for normal allocation/application access. For a direct buffer, the JVM arranges the storage so native I/O can work with it efficiently on suitable paths; the contents may live outside the normal garbage-collected heap depending on the implementation. Direct allocation/reclamation is usually more expensive, so use it when the workload/channel path and measurement demonstrate a benefit rather than treating `allocateDirect` as a universal optimization.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "7.BuffersChannels/BuffersChannels.md", anchor: "bytebuffer-types"}
@@ -229,37 +247,54 @@ questions:
   - question: >-
       How does FileChannel random access differ from a sequential stream, and where does RandomAccessFile fit?
     answer: >-
-      `FileChannel` supports a mutable position and also positional reads/writes that can target a specific offset without necessarily changing that channel position. `RandomAccessFile` is an older API that combines `DataInput/DataOutput` with `seek`; a channel obtained from it shares related position state with the file pointer. New code often prefers FileChannel for NIO capabilities, while RandomAccessFile remains important for understanding legacy code and API evolution.
+      `FileChannel` supports a mutable position and also positional reads/writes that can target a specific offset without changing that channel position for ordinary channels. One caveat is `APPEND`: the JDK leaves the effect of positional writes in append mode unspecified, so portable code must not rely on the ordinary positional-write rule there. `RandomAccessFile` is an older API that combines `DataInput/DataOutput` with `seek`; a channel obtained from it shares related position state with the file pointer. New code often prefers FileChannel for NIO capabilities, while RandomAccessFile remains useful for legacy code and API evolution.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "8.FileChannel/FileChannel.md", anchor: "filechannel-random-access"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      How does AsynchronousFileChannel differ from FileChannel in its completion model? What responsibilities remain with the caller even though the operation is asynchronous?
+      What does FileChannel.force(false/true) mean, and how is that durability concern different from transfer completion or MappedByteBuffer.force()?
     answer: >-
-      `AsynchronousFileChannel` performs positional I/O and reports completion through `Future` or `CompletionHandler`, so the initiating thread does not need to stay blocked until the operation finishes. The caller still owns channel lifetime, buffer lifetime, partial completion, failure handling, and the surrounding concurrency policy. Async is not automatically faster; it is a different orchestration model, while deeper executor/cancellation/memory-visibility concerns belong to concurrency.
+      `FileChannel.force(false)` requests that file-content updates be pushed toward storage, while `force(true)` also requests the necessary metadata updates. The actual durability boundary still depends on the filesystem, operating system, caches, and storage device. A completed `transferTo/transferFrom` only says bytes were transferred according to that operation; it does not by itself guarantee persistence. Changes made through a memory-mapped buffer use `MappedByteBuffer.force()` instead, so ordinary channel durability and mapped-buffer durability are related but distinct contracts.
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.FileChannel/FileChannel.md", anchor: "asynchronous-filechannel-boundary"}
+    readmeRelated: {file: "8.FileChannel/FileChannel.md", anchor: "filechannel-random-access"}
     apiRelated: {controller: "", methodSignature: ""}
-
   - question: >-
-      How do transferTo/transferFrom and force() solve different problems? Why must partial transfer and durability still be handled explicitly?
+      How do transferTo/transferFrom handle channel-to-channel copying, and why must partial transfer still be handled explicitly?
     answer: >-
-      `transferTo/transferFrom` provide an efficient shape for copying between file/channels, but the actual transferred count can be smaller than requested, so callers must track progress when full transfer is required. `force(false/true)` addresses durability by requesting that file content, and with true necessary metadata, be pushed through the storage stack. Transfer completion and persistence across failures are separate contracts.
+      `transferTo/transferFrom` provide an efficient shape for copying between file/channels, but the actual transferred count can be smaller than requested, so callers must track progress when full transfer is required. A return of zero must not automatically be read as “copy complete”; the caller needs a no-progress policy appropriate to the source/target. Transfer completion also says nothing by itself about durability, which is a separate file-storage concern.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "8.FileChannel/FileChannel.md", anchor: "filechannel-transfer"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      What boundaries make file locks and memory-mapped files poor candidates for a “magic concurrency/performance solution”?
+      What boundaries make FileChannel file locks a poor replacement for ordinary thread synchronization or transactional coordination?
     answer: >-
-      File locks are mainly filesystem/OS coordination mechanisms; shared requests may become exclusive and advisory/platform behavior varies, so they are not Java thread locks. Memory mapping participates in virtual-memory paging with page faults, size/window/lifetime, and mutation/truncation boundaries; closing the FileChannel does not automatically unmap an existing mapping. Both features should be chosen for explicit requirements rather than the intuition that they are always faster or safer.
+      File locks are mainly filesystem/OS coordination mechanisms held on behalf of the JVM, not monitors for one Java thread. Shared requests may become exclusive, enforcement/advisory behavior varies by platform, overlapping locks in one JVM can fail, and on some systems closing one channel can release locks held by the JVM on the same underlying file. A file lock also does not provide a database/business transaction. Use it only when the requirement is coordination around file access.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "8.FileChannel/FileChannel.md", anchor: "file-lock-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Explain the lifecycle and durability boundaries of a memory-mapped file. What changes with READ_ONLY, READ_WRITE, and PRIVATE mappings?
+    answer: >-
+      A successful mapping returns a MappedByteBuffer whose lifetime is independent of the FileChannel, so closing the channel does not unmap it. READ_WRITE changes can be requested to storage with `force()`; READ_ONLY cannot be changed, and PRIVATE is copy-on-write so its changes are not ordinary persistent file updates and `force()` has no effect. Mapping also inherits virtual-memory/page-fault behavior, one-region size limits, and sensitivity to concurrent truncation/mutation, which is why it is a specialized tool rather than the default file API.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.FileChannel/FileChannel.md", anchor: "memory-mapped-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      How does AsynchronousFileChannel differ from FileChannel in its completion model? What responsibilities remain with the caller even though the operation is asynchronous?
+    answer: >-
+      `AsynchronousFileChannel` performs positional I/O and reports completion through `Future` or `CompletionHandler`, so the initiating thread does not need to stay blocked until the operation finishes. The caller still owns channel/buffer lifetime, partial completion, failure handling, and ordering policy: several outstanding operations are not guaranteed to complete in initiation order. Closing the channel completes outstanding operations with `AsynchronousCloseException`, and `cancel(true)` may close the channel as part of interrupting an operation, potentially affecting other outstanding work. Async is not automatically faster; it is a different orchestration model.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.FileChannel/FileChannel.md", anchor: "asynchronous-filechannel-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
@@ -272,9 +307,27 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
+      What exactly does try-with-resources guarantee when several resources and several failures are involved, and what ownership question does it not answer?
+    answer: >-
+      Resources in the try header are closed automatically in reverse declaration order. If the body throws and a close also throws, the body exception normally remains primary and close failures are attached as suppressed exceptions. This gives deterministic cleanup and preserves diagnostic information, but it does not decide whether the current method should own/close a resource in the first place; that must come from the API/application ownership contract.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.ResourceManagement/ResourceManagement.md", anchor: "try-with-resources-io"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      How do constructor behavior and serialVersionUID differ between an ordinary Serializable class and a serializable record?
+    answer: >-
+      Ordinary serializable classes are reconstructed without invoking their own ordinary constructors; the nearest non-serializable superclass participates through its accessible no-argument constructor. A serializable record is different: Java reconstructs component values and invokes the canonical constructor. Ordinary classes also use serialVersionUID matching as part of compatibility, while records default to 0L unless they declare a UID and stream/local UID matching is waived. These special cases show why Java Object Serialization has type-specific contracts.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.Serialization/Serialization.md", anchor: "java-serialization-model"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
       How does native Java serialization model an object graph, and how do serialVersionUID and transient relate to compatibility?
     answer: >-
-      `ObjectOutputStream` writes the reachable graph of Serializable objects while preserving reference relationships rather than dumping each object independently. `serialVersionUID` participates in compatibility checks between the stored class descriptor and the class used during reading; `transient` excludes a field from default serialized state but does not turn the format into a stable schema. Because native serialization is tightly coupled to Java classes and versions, it is a poor default for long-lived persistence or network interchange.
+      `ObjectOutputStream` writes the reachable graph of Serializable objects while preserving reference relationships rather than dumping each object independently. For ordinary serializable classes, `serialVersionUID` participates in compatibility checks between the stored class descriptor and the class used during reading; `transient` excludes a field from default serialized state but does not turn the format into a stable schema. Serializable records have special rules: their canonical constructor participates in deserialization, their default serialVersionUID is 0L unless declared, and stream/local UID matching is waived. Because native serialization is tightly coupled to Java types and evolution, it is a poor default for long-lived persistence or network interchange.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "10.Serialization/Serialization.md", anchor: "serialversionuid"}
@@ -290,10 +343,19 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      When reviewing a new I/O requirement, in what order would you choose Stream/Reader/Files/Channel and the memory/error/performance strategy?
+      When reviewing a new I/O requirement, in what order would you choose Stream/Reader/Files/Channel/ClassLoader resources and the memory/error/performance strategy?
     answer: >-
-      Start with payload semantics: bytes, text, or structured binary; then consider size bounds, sequential versus random access, charset/byte order/framing, resource ownership, and failure policy. Large data should usually be streamed/chunked instead of fully loaded, and partial reads/writes plus filesystem races are correctness concerns. Tune buffer size, direct buffers, transfer, mapping, or async only after measurement identifies a real bottleneck; a more powerful API is not automatically more correct or faster.
+      Start with payload semantics: bytes, text, or structured binary; then ask whether the target is a filesystem path or a packaged classpath/module-path resource, because Class/ClassLoader resources are a different namespace and may live inside a JAR rather than a normal File/Path. Then consider size bounds, sequential versus random access, charset/byte order/framing, resource ownership, and failure policy. Large data should usually be streamed/chunked instead of fully loaded, and partial reads/writes plus filesystem races are correctness concerns. Tune buffer size, direct buffers, transfer, mapping, or async only after measurement identifies a real bottleneck.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "11.ChoosingIO/ChoosingIO.md", anchor: "choose-stream-reader-channel"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Why does an I/O failure not imply “nothing happened,” and how should that change retry design?
+    answer: >-
+      Reads, writes, transfers, and filesystem operations can make partial progress before an exception or interruption occurs. Retrying blindly from the beginning can duplicate data or corrupt a target unless the operation is idempotent, resumable, or the code can determine the correct target offset/state. A good failure policy therefore records/derives progress, distinguishes operations that are safe to repeat, and treats cleanup/ownership as part of error handling rather than assuming every IOException is a zero-effect failure.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "11.ChoosingIO/ChoosingIO.md", anchor: "io-error-handling"}
     apiRelated: {controller: "", methodSignature: ""}

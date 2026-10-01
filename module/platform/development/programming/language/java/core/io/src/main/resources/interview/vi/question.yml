@@ -29,271 +29,334 @@
 
 questions:
   - question: >-
-      Hãy giải thích I/O là gì theo mental model source → data flow → sink, và vì sao chương trình chỉ xử lý dữ liệu trong RAM là chưa đủ cho phần lớn ứng dụng thực tế.
+      Hãy giải thích I/O theo mô hình nguồn → luồng dữ liệu → đích, và vì sao chỉ xử lý dữ liệu trong RAM là chưa đủ cho phần lớn ứng dụng thực tế.
     answer: >-
-      I/O là việc dữ liệu đi qua ranh giới của process giữa một source và một sink. RAM chỉ giữ working state của process; khi process kết thúc, dữ liệu đó không tự trở thành file bền vững, cũng không giúp chương trình nhận input, đọc file hay giao tiếp với tài nguyên bên ngoài. Mental model source/sink giúp tách ý nghĩa của payload khỏi nơi dữ liệu đến hoặc đi, nên cùng một contract đọc/ghi có thể áp dụng cho file, memory, console hoặc socket.
+      I/O là nhóm cơ chế đưa dữ liệu vào chương trình từ một nguồn hoặc đưa dữ liệu từ chương trình tới một đích. Nguồn/đích có thể là tệp, bảng điều khiển, socket hoặc vùng nhớ, nên I/O không bắt buộc phải vượt qua ranh giới tiến trình. RAM chỉ giữ trạng thái đang làm việc của tiến trình; khi tiến trình kết thúc, dữ liệu trong RAM không tự trở thành dữ liệu bền vững trên tệp. Mô hình nguồn/đích giúp tách ý nghĩa của dữ liệu khỏi nơi dữ liệu đến hoặc đi, nhờ đó cùng một cách tư duy đọc/ghi có thể áp dụng cho nhiều loại tài nguyên.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "1.MentalModel/MentalModel.md", anchor: "io-data-flow"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      Khi nào nên nghĩ dữ liệu là bytes và khi nào nên nghĩ là characters? Vì sao chọn sai abstraction có thể làm hỏng dữ liệu?
+      Khi nào nên nghĩ dữ liệu là byte và khi nào nên nghĩ là ký tự? Vì sao chọn sai mức trừu tượng có thể làm hỏng dữ liệu?
     answer: >-
-      Bytes là representation nhị phân thô, phù hợp ảnh, file nén, protocol binary hoặc dữ liệu chưa được diễn giải thành text. Characters chỉ đúng khi payload có semantics văn bản và có charset xác định cách bytes ↔ characters. Dùng Reader cho ảnh có thể decode các byte thành ký tự sai rồi encode lại khác ban đầu; ngược lại xử lý text chỉ bằng byte mà không xác định charset dễ tạo mojibake hoặc lỗi round-trip.
+      Byte là biểu diễn dữ liệu thô, phù hợp với ảnh, tệp nén, giao thức nhị phân hoặc dữ liệu chưa được diễn giải thành văn bản. Ký tự chỉ là mức trừu tượng đúng khi dữ liệu thực sự mang ý nghĩa văn bản và có charset xác định cách chuyển đổi giữa byte và ký tự. Dùng `Reader` cho ảnh có thể giải mã các byte thành ký tự sai rồi mã hóa trở lại thành dữ liệu khác ban đầu; ngược lại, xử lý văn bản chỉ bằng byte mà không xác định charset dễ gây mojibake hoặc làm hỏng vòng chuyển đổi đọc-ghi.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "1.MentalModel/MentalModel.md", anchor: "bytes-vs-characters"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      Blocking I/O và non-blocking I/O khác nhau ở điểm nào? Tại sao non-blocking không có nghĩa là tài nguyên bên ngoài không còn độ trễ?
+      I/O chặn, I/O không chặn và I/O bất đồng bộ khác nhau như thế nào? Vì sao không chặn và bất đồng bộ không phải là hai từ đồng nghĩa?
     answer: >-
-      Với blocking I/O, thread gọi operation chờ cho tới khi operation tiến triển đủ để trả kết quả hoặc lỗi. Với non-blocking I/O, lời gọi có thể trả ngay khi chưa có tiến triển, còn readiness/event-loop tổ chức việc quay lại sau. Độ trễ của disk/network vẫn tồn tại; khác biệt là cách chương trình tổ chức thời gian chờ và thread, không phải phép biến I/O thành tức thời.
+      Với I/O chặn, luồng thực thi gọi API có thể phải chờ cho tới khi thao tác có thể trả về tiến triển, kết quả hoàn tất, EOF hoặc lỗi. Với I/O không chặn, lời gọi được thiết kế để trả quyền điều khiển thay vì chờ tài nguyên sẵn sàng; nó có thể chưa tạo tiến triển và xử lý theo dõi trạng thái sẵn sàng sẽ quyết định khi nào thử lại. I/O bất đồng bộ là một mô hình hoàn tất khác: thao tác được khởi chạy trước rồi kết quả đến sau qua `Future`, callback hoặc cơ chế tương tự. Độ trễ của tài nguyên bên ngoài vẫn tồn tại trong cả ba trường hợp; khác biệt nằm ở cách tổ chức việc chờ và nhận kết quả.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "1.MentalModel/MentalModel.md", anchor: "blocking-io-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      Vì sao garbage collector không thay thế được close() đối với file, socket hay channel?
+      Vì sao bộ thu gom rác (garbage collector) không thay thế được `close()` đối với tệp, socket hay channel?
     answer: >-
-      GC quản lý lifetime của object Java trên heap, còn file descriptor/native handle là tài nguyên bên ngoài heap và thường có giới hạn ở OS. Nếu chờ GC, thời điểm release không xác định và ứng dụng có thể cạn handle hoặc giữ lock/resource lâu hơn dự kiến. Vì vậy code cần ownership rõ ràng và deterministic cleanup, thường qua try-with-resources.
+      GC quản lý vòng đời của đối tượng Java trên heap, còn bộ mô tả tệp (file descriptor) hoặc handle gốc (native handle) là tài nguyên bên ngoài heap và thường có giới hạn do hệ điều hành đặt ra. Nếu chờ GC, thời điểm giải phóng không xác định và ứng dụng có thể cạn tài nguyên hệ điều hành hoặc giữ khóa/tài nguyên lâu hơn dự kiến. Vì vậy mã phải có quy tắc sở hữu rõ ràng và đóng tài nguyên tại thời điểm xác định, thường bằng `try-with-resources`.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "1.MentalModel/MentalModel.md", anchor: "resource-lifecycle"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      Hãy giải thích contract của InputStream.read, partial read, EOF, available() và mark/reset. Những giả định sai phổ biến là gì?
+      `System.in`, `System.out`/`System.err` và `Console` khác nhau thế nào? Vì sao `System.console()` có thể trả `null` trong IDE, CI hoặc khi I/O bị chuyển hướng?
     answer: >-
-      `read()` trả byte 0..255 hoặc `-1` ở EOF; bulk read trả số byte thực tế và không hứa lấp đầy buffer. `available()` chỉ ước lượng số byte có thể đọc/skip mà không block, không phải tổng số byte còn lại. `mark/reset` chỉ đáng tin khi `markSupported()` là true. Bug phổ biến là xem một lần read là đủ, dùng toàn bộ buffer thay vì phần `count`, hoặc dùng available() để cấp phát toàn bộ payload.
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "2.ByteStreams/ByteStreams.md", anchor: "read-contract"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - question: >-
-      System.in, System.out/System.err và Console khác nhau thế nào? Vì sao System.console() có thể trả null trong IDE, CI hoặc khi redirect I/O?
-    answer: >-
-      `System.in` là standard input, còn `System.out` và `System.err` là `PrintStream` cho standard output/error; các stream này có thể bị redirect hoặc pipe, không nhất thiết gắn với terminal tương tác. `Console` biểu diễn interactive console và có API như `readPassword`; khi process không có console thật, `System.console()` có thể là null. Code portable phải có fallback hoặc contract rõ ràng thay vì giả định mọi môi trường đều có terminal.
+      `System.in` là đầu vào chuẩn, còn `System.out` và `System.err` là `PrintStream` cho đầu ra chuẩn và lỗi chuẩn. Các luồng này có thể bị chuyển hướng hoặc nối qua pipe, nên không nhất thiết gắn với thiết bị đầu cuối (terminal) tương tác. `Console` đại diện cho bảng điều khiển tương tác và cung cấp API như `readPassword`; khi tiến trình không có bảng điều khiển phù hợp, `System.console()` có thể trả `null`. Mã đa nền tảng cần có phương án dự phòng thay vì giả định mọi môi trường đều có terminal.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "2.ByteStreams/ByteStreams.md", anchor: "standard-console-io"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      DataInputStream/DataOutputStream giải quyết bài toán gì mà raw byte stream chưa giải quyết? Hãy nói về field order, framing, readFully, EOF và writeUTF/readUTF.
+      Hãy giải thích quy ước của `InputStream.read`, việc đọc từng phần, EOF, `available()` và `mark/reset`. Những giả định sai phổ biến là gì?
     answer: >-
-      Raw stream chỉ di chuyển bytes; typed binary I/O thêm contract để ghi/đọc primitive theo thứ tự field mà hai bên đã thống nhất. Reader phải biết schema/framing, validate length trước allocation và dùng `readFully` khi cần đúng N bytes; EOF giữa record thường là dữ liệu truncated chứ không phải kết thúc hợp lệ. `writeUTF/readUTF` dùng modified UTF-8 theo contract riêng của DataInput/DataOutput, không phải format UTF-8 text tổng quát để trao đổi tùy ý.
+      `read()` trả giá trị byte trong khoảng 0..255 hoặc `-1` ở EOF; đọc theo khối trả số byte thực tế và không bảo đảm lấp đầy buffer. `available()` chỉ ước lượng số byte có thể đọc hoặc bỏ qua mà không bị chặn tại thời điểm gọi, chứ không phải tổng số byte còn lại. `mark/reset` chỉ dùng được khi `markSupported()` trả `true`. Lỗi phổ biến là giả định một lần đọc luôn đủ, xử lý toàn bộ buffer thay vì đúng `count` byte mới đọc, hoặc dùng `available()` để suy ra kích thước toàn bộ dữ liệu.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.ByteStreams/ByteStreams.md", anchor: "read-contract"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      `DataInputStream`/`DataOutputStream` giải quyết bài toán gì mà luồng byte thô chưa giải quyết? Hãy nói về thứ tự trường, phân khung, `readFully`, EOF và `writeUTF/readUTF`.
+    answer: >-
+      Luồng byte thô chỉ di chuyển byte; `DataInput`/`DataOutput` bổ sung quy ước để ghi và đọc các giá trị nguyên thủy theo thứ tự trường mà hai bên đã thống nhất. Bên đọc phải biết lược đồ và cách phân khung, kiểm tra độ dài trước khi cấp phát và dùng `readFully` khi yêu cầu đúng N byte; gặp EOF giữa một bản ghi thường có nghĩa dữ liệu bị cắt cụt chứ không phải kết thúc hợp lệ. `writeUTF/readUTF` dùng modified UTF-8 theo quy ước riêng của `DataInput`/`DataOutput`, không phải UTF-8 chuẩn để trao đổi văn bản tổng quát.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "2.ByteStreams/ByteStreams.md", anchor: "typed-binary-io"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      Reader/Writer khác InputStream/OutputStream ở abstraction nào? Vì sao Reader.read(char[]) vẫn phải xử lý partial read và PrintWriter có error semantics đáng chú ý?
+      `Reader`/`Writer` khác `InputStream`/`OutputStream` ở mức trừu tượng nào? Vì sao `Reader.read(char[])` vẫn phải xử lý việc đọc từng phần và `PrintWriter` có quy tắc lỗi đáng chú ý?
     answer: >-
-      Reader/Writer làm việc với characters, còn byte stream làm việc với raw bytes. `Reader.read(char[])` vẫn trả số char thực tế, nên caller không được mặc định mảng đã đầy. `PrintWriter` tiện cho print/println/printf nhưng không propagate `IOException` từ các method ghi theo cách writer thông thường; khi cần biết lỗi I/O phải xem `checkError()`, nên convenience này không phù hợp mọi error-handling contract.
+      `Reader`/`Writer` làm việc với ký tự, còn `InputStream`/`OutputStream` làm việc với byte. `Reader.read(char[])` vẫn trả số ký tự thực tế đã đọc, nên bên gọi không được mặc định mảng đã đầy. `PrintWriter` tiện cho `print/println/printf` nhưng các phương thức ghi của nó không truyền `IOException` ra ngoài theo cách của nhiều `Writer` khác; khi cần biết lỗi I/O, bên gọi phải kiểm tra `checkError()`.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "3.CharacterStreams/CharacterStreams.md", anchor: "reader-writer"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      InputStreamReader/OutputStreamWriter và Charset đóng vai trò gì? Khi nào cần CharsetDecoder với REPORT thay vì chấp nhận replacement?
+      InputStreamReader/OutputStreamWriter và Charset đóng vai trò gì? Khi nào cần CharsetDecoder với REPORT thay vì chấp nhận thay thế?
     answer: >-
-      Bridge classes chịu trách nhiệm decode bytes thành characters và encode characters thành bytes theo một `Charset`. Nếu format/protocol yêu cầu dữ liệu hợp lệ tuyệt đối, silent replacement có thể che corruption; khi đó `CharsetDecoder`/`CharsetEncoder` với `CodingErrorAction.REPORT` giúp reject malformed/unmappable input. Charset là một phần của data contract, không nên để caller đoán từ môi trường nếu format đã quy định rõ.
+      `InputStreamReader` và `OutputStreamWriter` là cầu nối giữa byte và ký tự: một bên giải mã byte thành ký tự, bên kia mã hóa ký tự thành byte theo `Charset`. Nếu định dạng hoặc giao thức yêu cầu dữ liệu hợp lệ nghiêm ngặt, việc âm thầm thay thế ký tự lỗi có thể che giấu dữ liệu hỏng; khi đó `CharsetDecoder`/`CharsetEncoder` với `CodingErrorAction.REPORT` giúp báo lỗi cho dữ liệu không hợp lệ hoặc không thể ánh xạ. Charset là một phần của quy ước dữ liệu và nên được thể hiện rõ khi định dạng đã xác định nó.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "3.CharacterStreams/CharacterStreams.md", anchor: "charset-bridge"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      Buffering cải thiện I/O như thế nào, flush() thực sự bảo đảm điều gì và vì sao flush không đồng nghĩa dữ liệu đã bền vững trên disk?
+      Trong một chuỗi lớp bọc, việc ghép khả năng, sự lan truyền của close() và quyền sở hữu ở cấp ứng dụng khác nhau như thế nào?
     answer: >-
-      Buffering gom nhiều thao tác nhỏ trong memory để giảm số lần đi qua boundary đắt hơn tới tầng I/O bên dưới. `flush()` yêu cầu wrapper đẩy dữ liệu đang giữ xuống tầng tiếp theo, nhưng dữ liệu vẫn có thể nằm trong OS/filesystem/device cache. Durability là yêu cầu khác, có thể cần `FileChannel.force` hoặc cơ chế storage-specific; gọi flush/force quá thường xuyên cũng có cost nên phải xuất phát từ durability contract thật sự.
+      Mỗi lớp bọc bổ sung một hành vi rồi ủy quyền xuống đối tượng bên dưới: chẳng hạn `InputStreamReader` thêm bước giải mã theo charset còn `BufferedReader` thêm bộ đệm và `readLine()`. Các lớp bọc chuẩn thường lan truyền `close()` xuống chuỗi bên trong, nhưng việc tạo lớp bọc không tự chuyển quyền sở hữu một tài nguyên do bên gọi cung cấp. Quy ước của ứng dụng phải xác định ai sở hữu tài nguyên bên dưới; khi phạm vi hiện tại sở hữu cả chuỗi thì đóng lớp bọc ngoài cùng thường là đủ.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.BufferedIO/BufferedIO.md", anchor: "wrapper-composition"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Bộ đệm cải thiện I/O như thế nào, `flush()` thực sự bảo đảm điều gì và vì sao `flush()` không đồng nghĩa dữ liệu đã bền vững trên đĩa?
+    answer: >-
+      Bộ đệm gom nhiều thao tác nhỏ trong bộ nhớ để giảm số lần đi qua tầng I/O bên dưới. `flush()` yêu cầu lớp bọc đẩy dữ liệu đang giữ xuống tầng tiếp theo, nhưng dữ liệu vẫn có thể nằm trong bộ nhớ đệm của hệ điều hành, hệ thống tệp hoặc thiết bị. Độ bền dữ liệu là yêu cầu khác và có thể cần `FileChannel.force(...)` hoặc cơ chế tương ứng của tầng lưu trữ; gọi `flush()`/`force()` quá thường xuyên cũng có chi phí, nên phải xuất phát từ yêu cầu thực tế.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "4.BufferedIO/BufferedIO.md", anchor: "flush-semantics"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      Vì sao java.io.File không nên được hiểu là “một file đang mở”, và tại sao code Java hiện đại thường ưu tiên Path/Files?
+      Vì sao `java.io.File` không nên được hiểu là “một tệp đang mở”, và tại sao mã Java hiện đại thường ưu tiên `Path`/`Files`?
     answer: >-
-      `File` chủ yếu là legacy pathname/metadata abstraction; tạo object File không mở file và target thậm chí có thể chưa tồn tại. `Path` tách representation đường dẫn khỏi `Files` là lớp thao tác filesystem, có model phong phú hơn cho attributes, links, copy/move options, tree walking và exception cụ thể. `File` vẫn xuất hiện ở API cũ, nhưng không nên là default chỉ vì tên của nó trực quan.
+      `File` chủ yếu biểu diễn đường dẫn và cung cấp các thao tác hệ thống tệp kiểu cũ; tạo một đối tượng `File` không mở tệp và đích thậm chí có thể chưa tồn tại. `Path` tách vai trò biểu diễn đường dẫn khỏi `Files`, lớp cung cấp thao tác hệ thống tệp với mô hình phong phú hơn cho thuộc tính, liên kết tượng trưng, sao chép/di chuyển, duyệt cây và ngoại lệ cụ thể. `File` vẫn quan trọng khi làm việc với API cũ, nhưng không nên là lựa chọn mặc định chỉ vì tên của nó trực quan.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "5.File/File.md", anchor: "file-api-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      Hãy giải thích quan hệ Path → FileSystem → FileSystemProvider → FileStore và vì sao mental model này quan trọng cho portability.
+      `normalize()`, `toAbsolutePath()` và `toRealPath()` trả lời những câu hỏi khác nhau về đường dẫn như thế nào, đặc biệt khi có liên kết tượng trưng?
     answer: >-
-      Mỗi `Path` thuộc một `FileSystem`; filesystem được triển khai bởi `FileSystemProvider`, còn `FileStore` mô tả backing storage/capability. Vì provider/filesystem khác nhau có thể hỗ trợ khác nhau về POSIX attributes, atomic move, symlink hay WatchService, code không nên suy luận capability từ máy developer. `Path.toFile()` cũng không universal cho non-default provider, nên modern code nên giữ `Path` và kiểm capability khi requirement phụ thuộc provider.
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "6.PathFiles/PathFiles.md", anchor: "filesystem-provider-model"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - question: >-
-      normalize(), toAbsolutePath(), toRealPath() và Files.isSameFile() trả lời những câu hỏi khác nhau thế nào, đặc biệt khi có symbolic link?
-    answer: >-
-      `normalize()` chỉ rút gọn cú pháp như `.` và `name/..` mà không truy cập filesystem. `toAbsolutePath()` tạo dạng absolute theo context hiện tại nhưng chưa chứng minh identity; `toRealPath()` truy cập filesystem, yêu cầu target tồn tại và resolve link theo option. Khi cần biết hai path có cùng file identity hay không, `Files.isSameFile` phù hợp hơn so với so sánh chuỗi hay normalize thuần cú pháp.
+      `normalize()` chỉ rút gọn cú pháp như `.` và các cặp `name/..` có thể rút gọn mà không truy cập hệ thống tệp. `toAbsolutePath()` tạo biểu diễn tuyệt đối dựa trên ngữ cảnh hiện tại nhưng không chứng minh tệp tồn tại hay xác nhận định danh. `toRealPath()` truy cập hệ thống tệp, yêu cầu đích tồn tại và xử lý liên kết tượng trưng theo các tùy chọn của nó. Cần tách rõ biến đổi đường dẫn thuần cú pháp với việc phân giải dựa trên trạng thái thực của hệ thống tệp.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "6.PathFiles/PathFiles.md", anchor: "resolve-normalize"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      Những boundary nào cần nhớ khi dùng Files.copy/move/delete và ATOMIC_MOVE? Vì sao “copy directory” không tự động nghĩa là recursive copy?
+      Những ranh giới nào cần nhớ khi dùng `Files.copy/move/delete` và `ATOMIC_MOVE`? Vì sao “sao chép thư mục” không tự động nghĩa là sao chép đệ quy cả cây?
     answer: >-
-      `Files.copy` với directory chỉ tạo directory đích tương ứng, không copy cả cây; delete cũng không recursive với directory không rỗng. Copy source symlink mặc định có thể follow target còn move di chuyển chính link. `ATOMIC_MOVE` phụ thuộc filesystem, có thể ném `AtomicMoveNotSupportedException`; các option khác bị bỏ qua và behavior khi target tồn tại có thể provider-specific, nên publish policy phải explicit thay vì dựa vào trực giác.
+      `Files.copy` với thư mục chỉ tạo thư mục đích tương ứng, không sao chép toàn bộ cây; `Files.delete` cũng không xóa đệ quy thư mục không rỗng. Khi nguồn là liên kết tượng trưng, `copy` mặc định đi theo đích trừ khi dùng `NOFOLLOW_LINKS`, còn `move` di chuyển chính liên kết. `ATOMIC_MOVE` phụ thuộc khả năng của hệ thống tệp và có thể ném `AtomicMoveNotSupportedException`; các tùy chọn di chuyển khác bị bỏ qua và hành vi khi đích đã tồn tại có thể phụ thuộc phần triển khai, nên chính sách công bố tệp phải được xác định rõ.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "6.PathFiles/PathFiles.md", anchor: "files-operations"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      Temporary file/directory nên được quản lý ownership và cleanup thế nào? DELETE_ON_CLOSE có phải là lời giải cleanup tuyệt đối không?
+      Tệp và thư mục tạm nên được quản lý quyền sở hữu và dọn dẹp thế nào? `DELETE_ON_CLOSE` có phải là lời giải dọn dẹp tuyệt đối không?
     answer: >-
-      Code tạo temp resource nên xác định rõ ai sở hữu nó và khi nào cleanup; temp directory chứa nhiều file thường cần cleanup theo tree thay vì chỉ xóa directory cha. `DELETE_ON_CLOSE` chỉ là một option hữu ích trong vài trường hợp và vẫn phụ thuộc provider/lifecycle của handle, không thay thế policy cleanup tổng thể. Nếu process crash hoặc resource không được đóng đúng, application vẫn cần hiểu boundary của cơ chế temp mà nó đang dùng.
+      Mã tạo tài nguyên tạm phải xác định rõ ai sở hữu nó và khi nào dọn dẹp; thư mục tạm chứa nhiều tệp thường cần xóa nội dung theo cây trước khi xóa thư mục cha. `DELETE_ON_CLOSE` hữu ích trong một số trường hợp nhưng vẫn phụ thuộc provider và vòng đời của tài nguyên mở, nên không thay thế chính sách dọn dẹp tổng thể. Sự cố tiến trình hoặc tài nguyên không được đóng đúng cách vẫn có thể để lại dữ liệu tạm.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "6.PathFiles/PathFiles.md", anchor: "temporary-files"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      File owner/permission attributes trong NIO.2 có portability boundary nào? Vì sao không nên giả định POSIX permission tồn tại ở mọi filesystem?
+      Nên dùng Files.exists/notExists, thuộc tính tệp và Files.isSameFile như thế nào để tránh suy luận sai theo kiểu “kiểm tra rồi hành động”?
     answer: >-
-      NIO.2 expose nhiều attribute view như basic, POSIX, DOS và owner, nhưng provider/store quyết định view nào được hỗ trợ. `FileStore.supportsFileAttributeView(...)` giúp kiểm capability, còn operation cụ thể vẫn có thể fail vì permission, race hoặc file state. Code portable phải xem permission model là capability của filesystem/provider thay vì hard-code giả định Unix trên mọi môi trường.
+      `exists()` và `notExists()` không phải hai phép phủ định logic tuyệt đối: cả hai có thể cùng `false` khi hệ thống tệp không xác định được trạng thái. Kết quả truy vấn thuộc tính chỉ là ảnh chụp tại thời điểm gọi; luồng thực thi hoặc tiến trình khác có thể thay đổi hệ thống tệp ngay sau đó, nên thao tác thực tế vẫn phải xử lý thất bại. `Files.isSameFile` dùng để hỏi về định danh tệp chứ không phải sự tồn tại; nếu hai giá trị `Path` đã bằng nhau thì phương thức có thể trả `true` mà không kiểm tra đích có tồn tại. Các API này cung cấp thông tin để ra quyết định, không biến hệ thống tệp thay đổi được thành một giao dịch.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.PathFiles/PathFiles.md", anchor: "file-attributes"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Hãy giải thích quan hệ Path → FileSystem → FileSystemProvider → FileStore và vì sao mô hình tư duy này quan trọng cho tính đa nền tảng.
+    answer: >-
+      Mỗi `Path` thuộc một `FileSystem`; hệ thống tệp được triển khai bởi `FileSystemProvider`, còn `FileStore` mô tả vùng lưu trữ bên dưới và các khả năng của nó. Các provider/hệ thống tệp khác nhau có thể hỗ trợ khác nhau về thuộc tính POSIX, di chuyển nguyên tử, liên kết tượng trưng hoặc `WatchService`, nên mã không được suy luận khả năng chỉ từ máy phát triển. `Path.toFile()` cũng không được mọi provider hỗ trợ; mã hiện đại nên giữ dữ liệu dưới dạng `Path` và kiểm tra khả năng khi yêu cầu phụ thuộc vào provider.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.PathFiles/PathFiles.md", anchor: "filesystem-provider-model"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Các thuộc tính về chủ sở hữu và quyền truy cập trong NIO.2 có những ranh giới đa nền tảng nào? Vì sao không nên giả định quyền POSIX tồn tại trên mọi hệ thống tệp?
+    answer: >-
+      NIO.2 cung cấp nhiều góc nhìn thuộc tính như basic, POSIX, DOS và chủ sở hữu, nhưng provider và `FileStore` quyết định góc nhìn nào được hỗ trợ. `FileStore.supportsFileAttributeView(...)` giúp kiểm tra khả năng, còn thao tác cụ thể vẫn có thể thất bại vì quyền truy cập, thay đổi đồng thời hoặc trạng thái của tệp. Mã đa nền tảng phải xem mô hình quyền truy cập là khả năng của hệ thống tệp/provider thay vì ghi cứng giả định kiểu Unix cho mọi môi trường.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "6.PathFiles/PathFiles.md", anchor: "file-permissions-ownership"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      Files.list/walk/find/lines trả java.util.stream.Stream, vậy tại sao vẫn phải close? Điều này nói gì về resource ownership của Stream API được tạo từ I/O?
+      `Files.list/walk/find/lines` trả về `java.util.stream.Stream`, vậy tại sao vẫn phải đóng các stream này? Điều đó nói gì về quyền sở hữu tài nguyên của Stream API được tạo từ I/O?
     answer: >-
-      Các stream này là Stream API ở mức xử lý phần tử nhưng phía dưới vẫn giữ directory/file resource mở trong lúc traversal hoặc reading. Vì vậy chúng có close lifecycle và nên nằm trong try-with-resources. Đây là ví dụ quan trọng cho thấy type `Stream<T>` không tự nói tài nguyên có external lifetime hay không; ownership phải được suy ra từ API tạo ra stream.
+      Các giá trị này là Stream API ở mức xử lý phần tử nhưng bên dưới vẫn có thể giữ thư mục hoặc tệp đang mở trong lúc duyệt/đọc. Vì vậy chúng có vòng đời đóng và thường nên được dùng trong `try-with-resources`. Đây là ví dụ quan trọng cho thấy chỉ nhìn kiểu `Stream<T>` chưa đủ để biết có tài nguyên bên ngoài hay không; quyền sở hữu còn phải được hiểu từ API đã tạo stream đó.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "6.PathFiles/PathFiles.md", anchor: "directory-stream-walk"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      WatchService nên được dùng với mental model nào? Vì sao không nên coi nó là transaction log chính xác của filesystem?
+      WatchService nên được dùng với mô hình tư duy nào? Vì sao không nên coi nó là nhật ký giao dịch chính xác của hệ thống tệp?
     answer: >-
-      `WatchService` đăng ký directory và phát event create/modify/delete qua `WatchKey`; consumer lấy key bằng `take/poll`, đọc events rồi `reset()` key. Event có thể coalesce, `OVERFLOW` báo mất chi tiết, behavior phụ thuộc provider và việc watch không recursive mặc định. Vì vậy watcher phù hợp để phát hiện “có thay đổi, hãy kiểm tra lại trạng thái” hơn là làm audit log hoặc nguồn sự thật transaction-level.
+      `WatchService` đăng ký thư mục và nhận các sự kiện tạo/sửa/xóa thông qua `WatchKey`; bên tiêu thụ lấy key bằng `take()`/`poll()`, đọc sự kiện rồi gọi `reset()`. Sự kiện có thể bị gộp, `OVERFLOW` báo rằng một số chi tiết đã mất, hành vi phụ thuộc provider và việc theo dõi không đệ quy mặc định. Vì vậy `WatchService` phù hợp với mô hình “có thay đổi, hãy kiểm tra lại trạng thái” hơn là một nhật ký kiểm toán hoặc nguồn sự thật mang tính giao dịch.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "6.PathFiles/PathFiles.md", anchor: "watch-service-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      Hãy mô tả state machine của Buffer với position/limit/capacity và vai trò của flip, clear, compact, mark/reset, rewind.
+      Hãy mô tả trạng thái của Buffer với `position`/`limit`/`capacity` và vai trò của `flip`, `clear`, `compact`, `mark/reset`, `rewind`.
     answer: >-
-      Khi ghi vào buffer, `position` tiến tới `limit`; sau đó `flip()` đặt limit thành lượng dữ liệu vừa ghi và position về 0 để đọc. `clear()` mở toàn bộ vùng cho pha ghi mới nhưng không xóa byte cũ; `compact()` giữ phần chưa đọc rồi chuẩn bị ghi tiếp. `rewind()` đọc lại cùng vùng từ đầu, còn mark/reset là bookmark tạm và bị discard bởi các transition nhất định. Hiểu sai state thường dẫn tới underflow/overflow hoặc đọc dữ liệu stale.
+      Khi ghi vào Buffer, `position` tiến tới `limit`; sau đó `flip()` đặt `limit` bằng vị trí cũ và đưa `position` về 0 để đọc. `clear()` mở toàn bộ vùng cho pha ghi mới nhưng không xóa byte cũ; `compact()` giữ phần chưa đọc rồi chuẩn bị ghi tiếp. `rewind()` đưa `position` về 0 nhưng giữ nguyên `limit`, còn `mark/reset` tạo một dấu mốc tạm có thể bị hủy bởi một số thao tác chuyển trạng thái. Hiểu sai các giá trị này dễ dẫn tới `BufferUnderflowException`, `BufferOverflowException` hoặc đọc dữ liệu cũ.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "7.BuffersChannels/BuffersChannels.md", anchor: "flip-clear-compact"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      ByteOrder là gì và tại sao endianness là correctness contract chứ không phải tuning detail?
+      `ByteOrder` là gì và tại sao endianness là một phần của quy ước dữ liệu chứ không phải chi tiết tinh chỉnh hiệu năng?
     answer: >-
-      Multi-byte primitive như int/long cần quy tắc xác định byte nào là phần high-order/low-order. `ByteBuffer` mặc định big-endian nhưng có thể đổi sang little-endian; cùng 4 bytes có thể cho int khác nhau tùy order. Vì vậy binary format/protocol phải quy định endianness và code phải cấu hình đúng trước `getInt/putInt` hoặc typed view, nếu không dữ liệu vẫn “đọc được” nhưng semantic value sai.
+      Các giá trị nguyên thủy nhiều byte như `int`/`long` cần quy tắc xác định byte nào chứa phần có trọng số cao hay thấp. `ByteBuffer` mặc định big-endian nhưng có thể đổi sang little-endian; cùng bốn byte có thể tạo ra giá trị `int` khác nhau tùy thứ tự byte. Vì vậy định dạng hoặc giao thức nhị phân phải quy định endianness và mã phải cấu hình đúng trước `getInt/putInt` hoặc khi tạo góc nhìn theo kiểu (typed view), nếu không dữ liệu vẫn có thể đọc được nhưng mang giá trị sai.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "7.BuffersChannels/BuffersChannels.md", anchor: "byte-order-structured-binary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      Channel + Buffer model khác Stream model ở đâu? Scatter/gather giải quyết bài toán gì và tại sao nó không đồng nghĩa parallel I/O?
+      Mô hình Channel + Buffer khác mô hình Stream ở đâu? Đọc phân tán/ghi thu gom (scatter/gather) giải quyết bài toán gì và tại sao nó không đồng nghĩa với I/O song song?
     answer: >-
-      Channel tách conduit khỏi vùng chứa dữ liệu explicit là `Buffer`, nhờ đó code quản lý state/position và có các capability NIO cụ thể. Scattering read phân phối bytes vào nhiều buffer, gathering write lấy bytes từ nhiều buffer theo thứ tự, phù hợp layout kiểu header + body. Một operation vẫn có thể partial và không tự tạo thread hay parallelism; scatter/gather là multi-buffer transfer, không phải concurrent execution.
+      Channel tách đường truyền I/O khỏi vùng dữ liệu hiện hữu là `Buffer`, nhờ đó mã quản lý trạng thái/`position` một cách rõ ràng và sử dụng các khả năng riêng của NIO. Đọc phân tán (scattering read) phân phối byte vào nhiều buffer theo thứ tự, còn ghi thu gom (gathering write) lấy byte từ nhiều buffer theo thứ tự, phù hợp bố cục như phần đầu + phần thân. Một thao tác vẫn có thể chỉ tiến triển một phần và không tự tạo luồng thực thi hay tính song song; scatter/gather là truyền dữ liệu qua nhiều buffer, không phải thực thi đồng thời.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "7.BuffersChannels/BuffersChannels.md", anchor: "scatter-gather-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      Heap ByteBuffer và direct ByteBuffer nên được chọn theo tiêu chí nào? Vì sao direct buffer không phải lựa chọn mặc định luôn nhanh hơn?
+      ByteBuffer trên heap và ByteBuffer trực tiếp (direct) nên được chọn theo tiêu chí nào? Vì sao bộ đệm trực tiếp không phải lựa chọn mặc định luôn nhanh hơn?
     answer: >-
-      Heap buffer sống trong Java heap và thường thuận tiện cho allocation/access của application. Direct buffer dùng off-heap/native-friendly memory và có thể giảm một số copy trong native I/O path, nhưng allocation/deallocation đắt hơn và memory pressure khó thấy hơn trong heap metrics. Chỉ nên chọn direct buffer khi workload/channel path và benchmark chứng minh lợi ích, thay vì xem `allocateDirect` là optimization mặc định.
+      ByteBuffer trên heap dùng vùng lưu trữ do Java heap quản lý và thường thuận tiện cho cấp phát cũng như xử lý thông thường. Với bộ đệm trực tiếp (direct buffer), JVM cố gắng bố trí vùng lưu trữ để I/O ở tầng native có thể làm việc hiệu quả hơn trên một số đường dữ liệu; vùng lưu trữ có thể nằm ngoài heap thông thường tùy phần triển khai. Việc cấp phát/thu hồi direct buffer thường đắt hơn, vì vậy chỉ nên chọn khi tải công việc, đường I/O và phép đo cho thấy lợi ích, thay vì xem `allocateDirect` là tối ưu mặc định.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "7.BuffersChannels/BuffersChannels.md", anchor: "bytebuffer-types"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      FileChannel random access khác sequential stream như thế nào, và RandomAccessFile nằm ở đâu trong bức tranh này?
+      `FileChannel` truy cập ngẫu nhiên khác luồng tuần tự như thế nào, và `RandomAccessFile` nằm ở đâu trong bức tranh này?
     answer: >-
-      `FileChannel` hỗ trợ position và cả positional read/write không nhất thiết thay đổi channel position, nên phù hợp khi cần truy cập offset cụ thể. `RandomAccessFile` là API legacy hơn, vừa implement `DataInput/DataOutput` vừa có `seek`; channel lấy từ nó chia sẻ position liên quan với file pointer. Code mới thường ưu tiên FileChannel khi cần NIO capabilities, nhưng hiểu RandomAccessFile giúp đọc code cũ và thấy evolution của API.
+      `FileChannel` có vị trí tệp dùng chung và còn hỗ trợ đọc/ghi tại vị trí chỉ định mà, với channel thông thường, không làm thay đổi vị trí chung. Riêng khi channel mở với `APPEND`, JDK không quy định kết quả của `write(buffer, position)`, nên mã đa nền tảng không được dựa vào độ lệch (offset) yêu cầu trong chế độ này. `RandomAccessFile` là API cũ hơn, vừa triển khai `DataInput`/`DataOutput` vừa có `seek`; channel lấy từ nó có vị trí liên kết với con trỏ tệp. Hiểu cả hai giúp chọn đúng API và đọc mã cũ.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "8.FileChannel/FileChannel.md", anchor: "filechannel-random-access"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      AsynchronousFileChannel khác FileChannel ở mô hình completion nào? Những trách nhiệm nào vẫn thuộc caller dù operation là async?
+      FileChannel.force(false/true) có ý nghĩa gì, và yêu cầu về độ bền dữ liệu này khác gì với việc truyền dữ liệu hoàn tất hoặc MappedByteBuffer.force()?
     answer: >-
-      `AsynchronousFileChannel` thực hiện positional I/O và trả completion qua `Future` hoặc `CompletionHandler`, nên caller không cần block chính thread gọi cho tới khi operation xong. Nhưng caller vẫn phải quản lý channel lifetime, buffer lifetime, partial completion, failure và concurrency policy. Async không đảm bảo nhanh hơn; nó là orchestration model khác, còn executor/cancellation/memory-visibility sâu thuộc concurrency curriculum.
+      `FileChannel.force(false)` yêu cầu đẩy các thay đổi nội dung tệp về phía tầng lưu trữ bền vững theo bảo đảm của chuỗi lưu trữ; `force(true)` còn yêu cầu đẩy các cập nhật siêu dữ liệu cần thiết. Đây là câu hỏi về độ bền dữ liệu, không phải việc một lần `write` hay `transferTo/transferFrom` đã hoàn tất bao nhiêu byte. Nếu thay đổi được thực hiện qua vùng ánh xạ, `MappedByteBuffer.force()` là cơ chế riêng cho vùng ánh xạ đó. Không cơ chế nào tự biến nhiều tệp thành một giao dịch nguyên tử.
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.FileChannel/FileChannel.md", anchor: "asynchronous-filechannel-boundary"}
+    readmeRelated: {file: "8.FileChannel/FileChannel.md", anchor: "filechannel-random-access"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      transferTo/transferFrom và force() giải quyết hai bài toán khác nhau thế nào? Vì sao vẫn phải xử lý partial transfer và durability contract?
+      `transferTo/transferFrom` xử lý việc sao chép giữa các channel như thế nào, và vì sao vẫn phải xử lý trường hợp truyền được một phần?
     answer: >-
-      `transferTo/transferFrom` tối ưu hình dạng copy giữa channel/file nhưng số byte thực tế có thể nhỏ hơn requested, nên caller phải theo dõi progress nếu cần chuyển đủ. `force(false/true)` liên quan durability: yêu cầu đẩy content, và với true cả metadata cần thiết, xuống storage stack. Transfer API không bảo đảm durability; completion của copy và persistence sau failure là hai contract khác nhau.
+      `transferTo/transferFrom` cung cấp cách truyền dữ liệu hiệu quả giữa tệp/channel, nhưng số byte thực tế được truyền có thể nhỏ hơn số yêu cầu, nên bên gọi phải theo dõi tiến độ nếu cần chuyển đủ. Giá trị trả về bằng 0 cũng không được tự động hiểu là “đã sao chép xong”; mã cần chính sách xử lý khi không có tiến triển phù hợp với nguồn/đích. Việc truyền hoàn tất cũng không tự nói lên độ bền dữ liệu; đó là một yêu cầu riêng của tầng lưu trữ tệp.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "8.FileChannel/FileChannel.md", anchor: "filechannel-transfer"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      File lock và memory-mapped file có những boundary nào khiến chúng không nên được xem như “magic concurrency/performance solution”?
+      Những ranh giới nào khiến khóa tệp của `FileChannel` không phù hợp để thay cho đồng bộ luồng thực thi thông thường hoặc cơ chế giao dịch?
     answer: >-
-      File lock chủ yếu là cơ chế coordination theo filesystem/OS; shared lock có thể bị nâng thành exclusive và semantics/advisory behavior phụ thuộc nền tảng, nên nó không thay Java thread lock. Memory mapping đưa file pages vào virtual-memory model, có page fault, size/window/lifetime và mutation/truncate boundary; đóng FileChannel không tự unmap mapping đã tạo. Cả hai đều cần requirement cụ thể thay vì dùng theo trực giác “nhanh hơn/an toàn hơn”.
+      Khóa tệp chủ yếu là cơ chế phối hợp qua hệ thống tệp/hệ điều hành và được giữ thay mặt cho JVM, không phải monitor dành cho một luồng thực thi Java. Yêu cầu khóa dùng chung có thể bị chuyển thành độc quyền; mức độ cưỡng chế hay chỉ mang tính thỏa thuận phụ thuộc nền tảng; khóa chồng lấn trong cùng JVM có thể thất bại; và trên một số hệ thống, đóng một channel có thể làm mất các khóa JVM đang giữ trên cùng tệp bên dưới. Khóa tệp cũng không tạo ra giao dịch cơ sở dữ liệu hay giao dịch nghiệp vụ.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "8.FileChannel/FileChannel.md", anchor: "file-lock-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      Trong một chain wrapper như BufferedReader → InputStreamReader → InputStream, ai nên close resource? Try-with-resources giúp gì và không giải quyết được gì?
+      Hãy giải thích ranh giới vòng đời và độ bền dữ liệu của tệp ánh xạ bộ nhớ. READ_ONLY, READ_WRITE và PRIVATE khác nhau ở đâu?
     answer: >-
-      Ownership phải do design quyết định: thường component mở resource chịu trách nhiệm đóng, còn borrower không tự close tài nguyên của người khác. Với wrapper chain, close outer wrapper thường delegate xuống inner resource, nên tránh double-ownership mơ hồ. Try-with-resources bảo đảm deterministic close và close order, nhưng không tự quyết định ownership architecture hay biến shared resource thành an toàn để bất kỳ caller nào cũng đóng.
+      Một lần ánh xạ thành công trả về `MappedByteBuffer` có vòng đời độc lập với `FileChannel`, nên đóng channel không tự hủy ánh xạ. Với `READ_WRITE`, có thể dùng `force()` để yêu cầu đẩy thay đổi xuống tầng lưu trữ; `READ_ONLY` không cho sửa, còn `PRIVATE` dùng cơ chế sao chép khi ghi (copy-on-write) nên thay đổi không trở thành cập nhật bền vững thông thường của tệp và `force()` không có tác dụng. Ánh xạ còn chịu ảnh hưởng của bộ nhớ ảo và lỗi trang, giới hạn kích thước mỗi vùng ánh xạ, cùng rủi ro khi tệp bị cắt ngắn hoặc thay đổi đồng thời. Vì vậy đây là công cụ chuyên biệt chứ không phải API tệp mặc định.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.FileChannel/FileChannel.md", anchor: "memory-mapped-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      `AsynchronousFileChannel` khác `FileChannel` ở mô hình hoàn tất như thế nào? Những trách nhiệm nào vẫn thuộc bên gọi dù thao tác là bất đồng bộ?
+    answer: >-
+      `AsynchronousFileChannel` thực hiện I/O tại vị trí chỉ định và báo kết quả qua `Future` hoặc `CompletionHandler`, nên luồng thực thi khởi chạy không cần chờ ngay tại lời gọi đọc/ghi. Bên gọi vẫn phải quản lý vòng đời channel/buffer, trường hợp chỉ hoàn tất một phần, lỗi và quy tắc thứ tự: nhiều thao tác đang chờ không được bảo đảm hoàn tất theo thứ tự khởi chạy. Đóng channel khiến các thao tác còn chờ hoàn tất với `AsynchronousCloseException`; `cancel(true)` có thể đóng channel khi ngắt thao tác và vì thế ảnh hưởng tới các thao tác khác. Bất đồng bộ không mặc định nhanh hơn; đây là cách tổ chức việc hoàn tất khác.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.FileChannel/FileChannel.md", anchor: "asynchronous-filechannel-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Trong một chuỗi lớp bọc như `BufferedReader → InputStreamReader → InputStream`, ai nên đóng tài nguyên? `try-with-resources` giúp gì và không giải quyết được gì?
+    answer: >-
+      Quyền sở hữu phải do thiết kế quyết định: thường thành phần mở tài nguyên chịu trách nhiệm đóng, còn bên chỉ mượn không tự đóng tài nguyên của bên khác. Với chuỗi lớp bọc chuẩn, đóng lớp bọc ngoài cùng thường lan truyền `close()` xuống các lớp bên trong. `try-with-resources` giúp đóng tài nguyên một cách xác định và đúng thứ tự, nhưng không tự quyết định ai là chủ sở hữu ở cấp kiến trúc và cũng không làm cho một tài nguyên dùng chung trở nên an toàn để bất kỳ bên gọi nào cũng đóng.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "9.ResourceManagement/ResourceManagement.md", anchor: "resource-ownership"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      Native Java serialization mô hình hóa object graph như thế nào, và serialVersionUID/transient liên quan gì tới compatibility contract?
+      `try-with-resources` bảo đảm điều gì khi có nhiều tài nguyên và nhiều lỗi, và nó không trả lời câu hỏi nào về quyền sở hữu?
     answer: >-
-      `ObjectOutputStream` ghi object graph reachable của các object Serializable, giữ reference relationships chứ không chỉ dump từng object độc lập. `serialVersionUID` tham gia kiểm tra compatibility giữa class descriptor lúc ghi và class khi đọc; `transient` loại field khỏi default serialized state nhưng không biến format thành schema ổn định. Vì serialization gắn chặt với Java class/version, nó không nên được chọn mặc định cho persistence hay network interchange lâu dài.
+      Các tài nguyên trong phần khai báo của `try` được tự động đóng theo thứ tự ngược với thứ tự khai báo. Nếu phần thân ném ngoại lệ và `close()` cũng ném ngoại lệ, ngoại lệ từ phần thân thường vẫn là ngoại lệ chính còn lỗi khi đóng được gắn dưới dạng **ngoại lệ bị nén (suppressed exception)**. Cơ chế này cung cấp việc dọn dẹp xác định và giữ lại thông tin chẩn đoán, nhưng không quyết định phương thức hiện tại có nên sở hữu hoặc đóng tài nguyên ngay từ đầu hay không; điều đó phải đến từ quy ước quyền sở hữu của API/ứng dụng.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.ResourceManagement/ResourceManagement.md", anchor: "try-with-resources-io"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Hành vi của hàm tạo và `serialVersionUID` khác nhau như thế nào giữa lớp `Serializable` thông thường và record có thể tuần tự hóa?
+    answer: >-
+      Lớp `Serializable` thông thường được dựng lại mà không gọi hàm tạo thông thường của chính nó; lớp cha gần nhất không hỗ trợ tuần tự hóa tham gia qua hàm tạo không tham số có thể truy cập. Record khác ở chỗ Java dựng lại các giá trị thành phần rồi gọi **hàm tạo chuẩn (canonical constructor)**. Với lớp thông thường, `serialVersionUID` tham gia kiểm tra tương thích; record mặc định có UID `0L` nếu không khai báo và Java không yêu cầu UID trong luồng phải khớp UID của lớp record hiện tại. Những ngoại lệ này cho thấy Java Object Serialization có quy tắc phụ thuộc loại lớp.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.Serialization/Serialization.md", anchor: "java-serialization-model"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Java Object Serialization mô hình hóa đồ thị đối tượng như thế nào, và `serialVersionUID`/`transient` liên quan gì tới khả năng tương thích?
+    answer: >-
+      `ObjectOutputStream` ghi đồ thị các đối tượng `Serializable` có thể truy cập được và giữ quan hệ tham chiếu thay vì biến mỗi đối tượng thành một bản sao độc lập. Với lớp `Serializable` thông thường, `serialVersionUID` tham gia kiểm tra tương thích giữa mô tả lớp đã lưu và lớp dùng khi đọc; `transient` loại một trường khỏi trạng thái tuần tự hóa mặc định nhưng không biến định dạng thành một lược đồ ổn định. Record có quy tắc riêng: hàm tạo chuẩn tham gia giải tuần tự hóa, UID mặc định là `0L` nếu không khai báo và Java không yêu cầu UID trong luồng phải khớp UID cục bộ. Vì cơ chế này gắn chặt với kiểu Java và quá trình tiến hóa của lớp, nó không phải lựa chọn mặc định tốt cho lưu trữ dài hạn hoặc trao đổi qua mạng.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "10.Serialization/Serialization.md", anchor: "serialversionuid"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      Vì sao deserialize dữ liệu không tin cậy là rủi ro bảo mật? ObjectInputFilter giúp gì và tại sao vẫn không biến native serialization thành format an toàn mặc định?
+      Vì sao giải tuần tự hóa dữ liệu không tin cậy là rủi ro bảo mật? `ObjectInputFilter` giúp gì và tại sao vẫn không biến tuần tự hóa đối tượng nguyên bản của Java thành định dạng an toàn mặc định?
     answer: >-
-      Deserialization có thể khiến JVM load/instantiate object graph và kích hoạt các gadget path nguy hiểm trước khi application “kiểm tra dữ liệu” theo cách thông thường. `ObjectInputFilter` có thể giới hạn class, depth, array size và graph size, nhưng filter phải được cấu hình trước lần đọc object đầu tiên và chỉ là defense-in-depth. Boundary tốt nhất vẫn là không deserialize native Java object stream từ nguồn không tin cậy nếu có format an toàn hơn.
+      Giải tuần tự hóa có thể khiến JVM dựng lại đồ thị đối tượng và kích hoạt hành vi đặc biệt của các lớp, tạo điều kiện cho chuỗi gadget nguy hiểm trước khi ứng dụng có cơ hội “kiểm tra dữ liệu” theo cách thông thường. `ObjectInputFilter` có thể giới hạn lớp, độ sâu, số tham chiếu, độ dài mảng hoặc kích thước, nhưng phải được cấu hình trước lần đọc đối tượng đầu tiên và chỉ là **phòng thủ nhiều lớp (defense in depth)**. Ranh giới an toàn hơn vẫn là không giải tuần tự hóa Java Object Serialization trực tiếp từ nguồn không tin cậy khi có định dạng trao đổi phù hợp hơn.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "10.Serialization/Serialization.md", anchor: "serialization-security-risk"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
-      Khi review một yêu cầu I/O mới, bạn sẽ chọn Stream/Reader/Files/Channel và chiến lược memory/error/performance theo trình tự nào?
+      Khi xem xét một yêu cầu I/O mới, bạn sẽ chọn Stream/Reader/Files/Channel/tài nguyên ClassLoader và chiến lược bộ nhớ, xử lý lỗi, hiệu năng theo trình tự nào?
     answer: >-
-      Bắt đầu từ semantics của payload: bytes, text hay structured binary; sau đó xét size bound, sequential/random access, charset/byte order/framing, resource ownership và failure policy. Dữ liệu lớn nên streaming/chunking thay vì load-all; partial read/write và filesystem race phải là một phần của correctness. Chỉ tối ưu buffer size, direct buffer, transfer, mapping hoặc async sau khi đo được bottleneck cụ thể; API “mạnh hơn” không tự động đúng hơn hay nhanh hơn.
+      Bắt đầu từ ý nghĩa dữ liệu: byte, văn bản hay dữ liệu nhị phân có cấu trúc. Sau đó xác định đích là đường dẫn hệ thống tệp hay tài nguyên đóng gói trên classpath/module path, vì tài nguyên qua `Class`/`ClassLoader` thuộc không gian tên khác và có thể nằm trong JAR thay vì một `File`/`Path` thông thường. Tiếp theo xét giới hạn kích thước, truy cập tuần tự hay ngẫu nhiên, charset/thứ tự byte/phân khung, quyền sở hữu tài nguyên và chính sách khi lỗi. Dữ liệu lớn thường nên được xử lý theo luồng hoặc từng khối thay vì nạp toàn bộ; đọc/ghi từng phần và thay đổi đồng thời của hệ thống tệp đều là vấn đề tính đúng đắn. Chỉ tinh chỉnh kích thước buffer, direct buffer, truyền dữ liệu, ánh xạ hoặc I/O bất đồng bộ sau khi phép đo chỉ ra điểm nghẽn thật.
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "11.ChoosingIO/ChoosingIO.md", anchor: "choose-stream-reader-channel"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - question: >-
+      Vì sao lỗi I/O không có nghĩa là “chưa có gì xảy ra”, và điều đó phải thay đổi thiết kế thử lại như thế nào?
+    answer: >-
+      Đọc, ghi, truyền dữ liệu và thao tác hệ thống tệp đều có thể tiến triển một phần trước khi ngoại lệ hoặc gián đoạn xảy ra. Thử lại mù quáng từ đầu có thể nhân đôi dữ liệu hoặc làm hỏng đích nếu thao tác không có tính lặp lại an toàn (idempotent), không thể tiếp tục từ trạng thái dở dang, hoặc mã không biết độ lệch/trạng thái đúng của đích. Chính sách lỗi tốt phải ghi nhận hoặc suy ra tiến triển, phân biệt thao tác nào an toàn khi lặp lại và xem dọn dẹp/quyền sở hữu là một phần của xử lý lỗi thay vì giả định mọi `IOException` đều có hiệu ứng bằng 0.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "11.ChoosingIO/ChoosingIO.md", anchor: "io-error-handling"}
     apiRelated: {controller: "", methodSignature: ""}

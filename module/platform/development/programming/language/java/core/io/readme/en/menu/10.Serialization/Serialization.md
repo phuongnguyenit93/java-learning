@@ -1,4 +1,4 @@
-# Object Serialization
+# Java Object Serialization Boundary
 
 So far we have mostly moved bytes or text. Java also has a mechanism for turning the state of an **object graph** into a byte stream and reconstructing that graph later. An object graph is a root object plus the objects reachable through its fields/references; it can contain shared references and cycles. Turning that graph into bytes and reconstructing it later is commonly called **Java native serialization**.
 
@@ -100,7 +100,9 @@ Article B ─┘
 
 After deserialization, shared-reference relationships are restored according to the serialization protocol.
 
-One important runtime behavior is that deserializing a serializable class does not invoke that class's ordinary constructor as if application code had called `new`. The nearest non-serializable superclass participates through its accessible no-argument constructor according to serialization rules. This is another sign that deserialization is more than “parse fields and call a constructor.”
+For an **ordinary serializable class**, deserialization does not invoke that class's ordinary constructor as if application code had called `new`. The nearest non-serializable superclass participates through its accessible no-argument constructor according to serialization rules. This is another sign that deserialization is more than “parse fields and call a constructor.”
+
+Serializable **record classes are a defined exception to that ordinary-class rule**: during deserialization Java reconstructs the record component values and invokes the record's canonical constructor. Record serialization has additional special rules, so do not automatically apply every ordinary-`Serializable` constructor rule to records.
 
 The ability to reconstruct a whole graph through this special lifecycle is one reason native serialization must be treated as a strong boundary.
 
@@ -117,7 +119,7 @@ final class Note implements Serializable {
 }
 ~~~
 
-If it is omitted, the runtime can compute a UID from class details. Class changes can then change the computed value in ways that make older data unreadable.
+For an **ordinary serializable class**, if `serialVersionUID` is omitted, the runtime can compute a UID from class details. Class changes can then change the computed value in ways that make older data unreadable.
 
 Classes that intentionally use native serialization therefore commonly declare the value explicitly:
 
@@ -128,6 +130,8 @@ private static final long serialVersionUID = 1L;
 Its limit is crucial: **keeping the same UID does not make every class change safe or semantically compatible**. It is only one piece of the serialization runtime's compatibility rules. Changes to fields, hierarchy, invariants, or custom serialization logic can still make old data inappropriate even when runtime accepts it.
 
 Conversely, deliberately changing the UID can declare old serialized forms incompatible; reading them can result in `InvalidClassException`.
+
+Record classes again have a special boundary: a serializable record has a default `serialVersionUID` of `0L` unless it declares one explicitly, and the requirement for matching stream/local `serialVersionUID` values is waived for records. That special rule is another reason to treat Java Object Serialization as a mechanism with type-specific contracts rather than one universal recipe.
 
 Because serialized form is tied to class evolution, using native serialization for data expected to live for years often creates more migration and compatibility burden than a format designed around an explicit schema or contract.
 

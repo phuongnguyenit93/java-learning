@@ -1,10 +1,10 @@
-# Legacy File API
+# File and the Legacy Path Model
 
 Streams answer “how does data move in or out?” Before opening a stream for a file, code also needs to refer to the file's location, name, **directory**, and **metadata** — descriptive information such as whether it exists, whether it is a file or directory, its size, or its modification time. `java.io.File` is Java's older API for that part of the problem.
 
 ## <a id="legacy-file-model">The java.io.File Model</a>
 
-The name `File` can mislead beginners into thinking the object is “an opened file.” In practice, a `java.io.File` primarily represents a **pathname** — a value describing the name/location of a file or directory in a filesystem. An **absolute pathname** identifies a location from a filesystem root/base, while a **relative pathname** must be interpreted against the process's current working directory. The object can exist even when the target does not. The JDK phrase “abstract pathname” emphasizes that this is a path model, not an opened file handle.
+The name `File` can mislead beginners into thinking the object is “an opened file.” In practice, a `java.io.File` primarily represents a **pathname** — a value describing the name/location of a file or directory in a filesystem. An **absolute pathname** identifies a location from a filesystem root/base, while `java.io` resolves a **relative pathname** against the current user directory named by the `user.dir` system property, typically the directory in which the JVM was launched. The object can exist even when the target does not. The JDK phrase “abstract pathname” emphasizes that this is a path model, not an opened file handle.
 
 ```text
 java.io.File object

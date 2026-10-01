@@ -1,4 +1,4 @@
-# FileChannel and Random Access
+# FileChannel and Advanced File I/O
 
 `FileChannel` is a file-oriented channel. It still moves bytes through `ByteBuffer`, but it also has a **file position**, positional operations, channel-to-channel transfer, file locking, and memory mapping. This is where the Buffer/Channel model from the previous chapter enables capabilities that a purely sequential stream does not express directly.
 
@@ -45,7 +45,7 @@ ByteBuffer part = ByteBuffer.allocate(5);
 int read = channel.read(part, 6);
 ~~~
 
-The `read(buffer, position)` overload reads at the requested offset **without changing the channel's shared file position**. `write(buffer, position)` has the same property for writes.
+The `read(buffer, position)` overload reads at the requested offset **without changing the channel's shared file position**. `write(buffer, position)` has the same property for ordinary writable channels. Do not rely on positional-write semantics when the channel is opened with `APPEND`: the JDK leaves the effect of writing at a given position in append mode unspecified.
 
 When a positional write may consume only part of the buffer, the next file offset must advance by the number actually written:
 
@@ -82,61 +82,6 @@ The boolean controls whether metadata must also be requested: `force(false)` foc
 `FileChannel.force(...)` is also not a replacement for `MappedByteBuffer.force()`. When data is modified through a memory-mapped buffer, the mapped buffer has its own `force()` operation for requesting that mapped changes be written to storage.
 
 `RandomAccessFile` is the older `java.io` API for the same broad family of random-access file problems. It exposes a file pointer moved with `seek(...)` and implements `DataInput`/`DataOutput`, which can be convenient in legacy code or code that deliberately uses that primitive-oriented style. `FileChannel` fits better when the problem needs `ByteBuffer`, positional operations that do not change the shared position, transfer, locking, or mapping. `RandomAccessFile.getChannel()` returns a channel associated with the same file, and the two APIs have linked file positions, so mixing both abstractions in the same flow requires care.
-
-## <a id="asynchronous-filechannel-boundary">The AsynchronousFileChannel Boundary</a>
-
-`AsynchronousFileChannel` is still a file-oriented channel, but its read/write operations are **initiated and then completed asynchronously** instead of requiring the caller to wait at the `read` or `write` call itself.
-
-Unlike `FileChannel`, this API does not center on one mutable shared file position. Each read or write names an explicit file offset:
-
-~~~java
-try (AsynchronousFileChannel channel =
-             AsynchronousFileChannel.open(path, StandardOpenOption.READ)) {
-    ByteBuffer buffer = ByteBuffer.allocate(4096);
-    Future<Integer> pending = channel.read(buffer, 0);
-
-    // The program can do other work here.
-    int read = pending.get();
-}
-~~~
-
-`Future<Integer>` is one completion style. Calling `get()` waits when the operation has not completed yet, so code that immediately calls `get()` after `read(...)` gives up most of the benefit of separating initiation from waiting.
-
-The API also supports `CompletionHandler`, where Java invokes a callback after the operation succeeds or fails:
-
-~~~java
-channel.read(buffer, 0, null,
-        new CompletionHandler<Integer, Void>() {
-            @Override
-            public void completed(Integer count, Void ignored) {
-                // use the result after the read completes
-            }
-
-            @Override
-            public void failed(Throwable error, Void ignored) {
-                // handle failure
-            }
-        });
-~~~
-
-Writes offer the same two styles and also use an explicit file position. As with synchronous channels, the completed byte count may be smaller than the buffer's remaining data, so multi-step logic must follow the actual count/`position` rather than assume one operation handled the entire payload.
-
-Lifecycle remains explicit: `AsynchronousFileChannel` is `AutoCloseable`; its owner must keep the channel open for the operations the application still needs and close it when use ends. Code must also avoid modifying or reusing a `ByteBuffer` region participating in an asynchronous operation until that operation has completed under the application's contract.
-
-A useful selection boundary is:
-
-~~~text
-FileChannel
-→ caller performs blocking/synchronous file I/O
-→ control flow is usually simpler
-
-AsynchronousFileChannel
-→ operations may complete later
-→ useful when the architecture can actually do other work while I/O is pending
-→ completion, cancellation, and coordination become part of the design
-~~~
-
-Asynchronous I/O is not automatically faster and does not automatically solve concurrent access. When operations overlap on the same file region or in-memory data, the application still needs an explicit coordination policy. Executors, callback composition, cancellation, memory visibility, and deeper concurrency models belong in the concurrency module; the core concern here is the asynchronous I/O contract and the lifetime of the channel and buffers.
 
 ## <a id="filechannel-transfer">transferTo and transferFrom</a>
 
@@ -209,6 +154,7 @@ With that coordination role established, the boundaries still matter:
 - Java file locks are held on behalf of the **entire JVM**, not as a monitor for one Java thread. They are not the mechanism for coordinating threads inside the same JVM.
 - Operating systems and filesystems differ in how strongly they enforce locks and whether other software treats them as advisory. For portable correctness, treat locking as a coordination protocol that participating processes must honor.
 - Overlapping locks in the same JVM can cause `OverlappingFileLockException`.
+- On some systems, closing one channel for a file can release **all locks held by the JVM on that underlying file**, including locks acquired through another channel. Portable code should not assume each channel's file-lock lifetime is always isolated from other channels opened on the same file.
 - A lock does not turn multiple file operations into a database transaction or business transaction.
 - A `FileLock` has a lifetime and must be released, typically with try-with-resources.
 
@@ -263,13 +209,72 @@ Memory mapping can be useful for large files with substantial random access beca
 Important boundaries include:
 
 - A mapping has a specific offset and size; code must still respect its range.
-- With Java 21's `map(MapMode, long, long)` overload, one mapped region cannot be larger than `Integer.MAX_VALUE`; very large files may need windowed mappings.
+- For `map(MapMode, long, long)`, one mapped region cannot be larger than `Integer.MAX_VALUE`; very large files may need windowed mappings. This overload predates Java 21, so the size limit is an API constraint rather than a Java-21-specific feature.
 - Once successfully created, a mapping remains valid independently of whether the `FileChannel` stays open; closing the channel does **not** automatically unmap or invalidate an existing `MappedByteBuffer`.
 - Concurrent truncation or mutation of the underlying file can make mapped access fail or become platform-sensitive.
 - `MappedByteBuffer` has no standard application-facing `close()` operation that deterministically unmaps the region at a chosen source line, so its lifetime is less explicit than an ordinary channel.
-- For writable mappings, `force()` can request that changes be written to storage, but real durability still has to match the system's requirements.
+- For a `READ_WRITE` mapping, `force()` requests that changes be written to the mapped file's storage device; the JDK gives its strongest guarantee for local storage. `force()` has no effect for `READ_ONLY` or `PRIVATE` mappings, so a copy-on-write `PRIVATE` mapping must not be treated as a persistent writable mapping.
 - Mapping is most compelling for workloads with meaningful large-file random access; small or sequential files are usually simpler with ordinary streams/channels.
 
 Memory mapping is therefore a specialized tool rather than the default for file I/O.
 
-After `FileChannel`, we have seen many objects tied to resources outside the JVM: streams, channels, directory streams, and file locks. The next chapter focuses on a design question more important than syntax: **who owns the resource, and when must it be closed?**
+## <a id="asynchronous-filechannel-boundary">The AsynchronousFileChannel Boundary</a>
+
+`AsynchronousFileChannel` is still a file-oriented channel, but its read/write operations are **initiated and then completed asynchronously** instead of requiring the caller to wait at the `read` or `write` call itself.
+
+Unlike `FileChannel`, this API does not center on one mutable shared file position. Each read or write names an explicit file offset:
+
+~~~java
+try (AsynchronousFileChannel channel =
+             AsynchronousFileChannel.open(path, StandardOpenOption.READ)) {
+    ByteBuffer buffer = ByteBuffer.allocate(4096);
+    Future<Integer> pending = channel.read(buffer, 0);
+
+    // The program can do other work here.
+    int read = pending.get();
+}
+~~~
+
+`Future<Integer>` is one completion style. Calling `get()` waits when the operation has not completed yet, so code that immediately calls `get()` after `read(...)` gives up most of the benefit of separating initiation from waiting.
+
+The API also supports `CompletionHandler`, where Java invokes a callback after the operation succeeds or fails:
+
+~~~java
+channel.read(buffer, 0, null,
+        new CompletionHandler<Integer, Void>() {
+            @Override
+            public void completed(Integer count, Void ignored) {
+                // use the result after the read completes
+            }
+
+            @Override
+            public void failed(Throwable error, Void ignored) {
+                // handle failure
+            }
+        });
+~~~
+
+Writes offer the same two styles and also use an explicit file position. As with synchronous channels, the completed byte count may be smaller than the buffer's remaining data, so multi-step logic must follow the actual count/`position` rather than assume one operation handled the entire payload.
+
+Lifecycle remains explicit: `AsynchronousFileChannel` is `AutoCloseable`; its owner must keep the channel open for the operations the application still needs and close it when use ends. Closing the channel while operations are still outstanding causes those operations to complete with `AsynchronousCloseException`. Code must also avoid modifying or reusing a `ByteBuffer` region participating in an asynchronous operation until that operation has completed under the application's contract.
+
+Several reads/writes may be outstanding at the same time. Their I/O completion order and the order in which their `CompletionHandler` callbacks run are **not specified** and are not guaranteed to match initiation order. Algorithms that require ordering must impose that ordering explicitly rather than infer it from call order.
+
+Cancellation is also an I/O concern, not just a generic `Future` concern. Calling `cancel(true)` may interrupt an operation by **closing the channel**; in that case other outstanding operations on the same channel can fail with `AsynchronousCloseException`. Cancellation is implementation-sensitive when the runtime cannot prove whether bytes were already read or written, so cancelled-operation buffers/state must not be treated as if “nothing happened.”
+
+A useful selection boundary is:
+
+~~~text
+FileChannel
+→ caller performs blocking/synchronous file I/O
+→ control flow is usually simpler
+
+AsynchronousFileChannel
+→ operations may complete later
+→ useful when the architecture can actually do other work while I/O is pending
+→ completion, cancellation, and coordination become part of the design
+~~~
+
+Asynchronous I/O is not automatically faster and does not automatically solve concurrent access. When operations overlap on the same file region or in-memory data, the application still needs an explicit coordination policy. Executors, callback composition, cancellation, memory visibility, and deeper concurrency models belong in the concurrency module; the core concern here is the asynchronous I/O contract and the lifetime of the channel and buffers.
+
+After `FileChannel` and `AsynchronousFileChannel`, we have seen many objects tied to resources outside the JVM: streams, channels, directory streams, and file locks. The next chapter focuses on a design question more important than syntax: **who owns the resource, and when must it be closed?**

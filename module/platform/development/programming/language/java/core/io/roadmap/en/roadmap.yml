@@ -44,19 +44,25 @@
 roadmap:
   - id: io-mental-model
     title: I/O Data-Flow Model and Resource Lifetime
-    purpose: Understand I/O as moving data from a source to a sink across a resource boundary while accounting for data units, blocking behavior, buffering, encoding, and resource lifetime.
+    purpose: Understand why I/O exists: programs need one model for reading data from a source and writing data to a sink whether that endpoint is a file, console, memory region, or another resource, while accounting for representation, completion behavior, buffering, encoding, and resource lifetime.
+    relatedKnowledge:
+      - MentalModel
     objectives:
-      - Identify what data is moving, where it comes from, where it goes, and who owns the resource before choosing an API.
-      - Distinguish bytes from characters, buffering from storage, blocking from non-blocking mechanisms, and resource lifetime from ordinary object lifetime.
+      - Identify what data is moving, where it comes from, where it goes, and, when a closeable resource exists, who owns the responsibility to close it before choosing an API.
+      - Distinguish bytes from characters, buffering from storage, and resource lifetime from ordinary object lifetime; distinguish blocking/non-blocking call behavior from asynchronous completion and do not treat asynchronous as a synonym for non-blocking.
   - id: byte-streams
     title: Byte Streams and Structured Binary Data
     purpose: Understand when data must remain raw bytes and how Java reads or writes bytes and ordered primitive values.
+    relatedKnowledge:
+      - ByteStreams
     objectives:
       - Understand the InputStream/OutputStream model, read() return values, EOF, and partial reads/writes.
       - Distinguish arbitrary bytes from structured primitive binary values carried through DataInput/DataOutput and an explicit framing contract.
   - id: character-streams
     title: Character Streams and Charset Conversion
     purpose: Understand how bytes become characters for text I/O and why decoding and encoding require a charset-aware bridge.
+    relatedKnowledge:
+      - CharacterStreams
     relatedModules:
       - routeId: JAVA_STRING
         label: String
@@ -65,38 +71,51 @@ roadmap:
       - Choose Reader/Writer when the payload is text and make charset conversion explicit at byte ↔ character boundaries.
       - Avoid applying text semantics to arbitrary binary payloads.
   - id: buffered-io
-    title: Buffered I/O and Flush Semantics
-    purpose: Understand why batching small reads/writes can reduce I/O overhead and how wrapper composition changes read/write behavior.
+    title: Stream Wrappers, Buffering, and Flush Semantics
+    purpose: Understand how Java composes I/O layers with wrappers that add behavior, with buffering as a key case that batches small reads/writes to reduce underlying I/O overhead.
+    relatedKnowledge:
+      - BufferedIO
     objectives:
+      - Understand how an outer I/O layer can add behavior and delegate to an inner resource instead of each API implementing the whole transfer itself.
       - Use buffering when the access pattern benefits from fewer underlying operations.
       - Flush intentionally without assuming every wrapper has identical behavior.
   - id: legacy-file-model
     title: File and the Legacy Path Model
     purpose: Understand what java.io.File represents in the legacy I/O model and why it is neither file contents nor an open file handle.
+    relatedKnowledge:
+      - File
     objectives:
       - Distinguish java.io.File from file contents and from resources opened for reading or writing.
       - Recognize File limitations so the transition to Path/Files in modern code is motivated rather than memorized.
   - id: modern-filesystem
     title: Path, Files, and the Modern Filesystem Model
     purpose: Understand how Path, Files, FileSystem, FileSystemProvider, and FileStore separate path identity, operations, filesystem capabilities, and storage metadata.
+    relatedKnowledge:
+      - PathFiles
     objectives:
       - Use Path/Files for resolve/normalize, read/write, copy/move/delete, temporary resources, attributes, and directory traversal.
       - Respect provider capabilities, permission/ownership views, and WatchService boundaries instead of assuming all filesystems behave alike.
   - id: buffers-and-channels
     title: Buffers and Channels in NIO
     purpose: Understand NIO's transfer model in which buffers hold stateful data while channels move data between memory and I/O resources.
+    relatedKnowledge:
+      - BuffersChannels
     objectives:
       - Reason about position, limit, capacity, and flip/clear/compact transitions rather than treating Buffer as a simple array.
       - Understand byte order, scatter/gather, and when lower-level control is justified over ordinary stream I/O.
   - id: file-channels-and-advanced-file-io
     title: FileChannel and Advanced File I/O
     purpose: Understand file-specific capabilities such as positional access, locking, memory mapping, direct transfer, and asynchronous I/O.
+    relatedKnowledge:
+      - FileChannel
     objectives:
       - Choose FileChannel or AsynchronousFileChannel only when their specialized capabilities solve a concrete need.
       - Recognize the boundaries and lifecycle implications of locking, mapping, transfer, and asynchronous file I/O.
   - id: resource-management
     title: Resource Lifetime and Failure Safety
     purpose: Understand why I/O resources require deterministic release and how structured cleanup interacts with failures during work and close operations.
+    relatedKnowledge:
+      - ResourceManagement
     relatedModules:
       - routeId: JAVA_EXCEPTION
         label: Exceptions
@@ -107,12 +126,16 @@ roadmap:
   - id: serialization-boundary
     title: Java Object Serialization Boundary
     purpose: Understand Java Object Serialization as an object-graph serialization mechanism with identity, versioning, compatibility, and security boundaries rather than a universal data format.
+    relatedKnowledge:
+      - Serialization
     objectives:
       - Understand how Serializable, object graphs, serialVersionUID, and transient affect serialized state.
       - Recognize compatibility and security risks before choosing native Java serialization.
   - id: io-choice-synthesis
     title: Choosing the Simplest Correct I/O Abstraction
     purpose: Connect payload type, scale, operation pattern, resource lifetime, and API capabilities into one decision model.
+    relatedKnowledge:
+      - ChoosingIO
     relatedModules:
       - routeId: JAVA_CLASSLOADER
         label: ClassLoader

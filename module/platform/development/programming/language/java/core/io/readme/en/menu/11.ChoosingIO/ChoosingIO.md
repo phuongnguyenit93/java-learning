@@ -1,4 +1,4 @@
-# Choosing an I/O API and Common Pitfalls
+# Choosing the Simplest Correct I/O Abstraction
 
 Java has several I/O APIs because different problems need different abstractions. The goal is not to memorize one “most powerful” API. Choose the simplest layer that still represents the payload, data size, access pattern, and resource lifetime correctly.
 
@@ -15,7 +15,7 @@ Are we handling bytes, text, or structured binary data?
 → is there measured evidence that performance needs tuning?
 ~~~
 
-## <a id="choose-stream-reader-channel">Choosing Stream, Reader/Writer, Files, or Channel</a>
+## <a id="choose-stream-reader-channel">Choosing Stream, Reader/Writer, Files, Channel, or ClassLoader Resources</a>
 
 Start with **what the data means**, not which API sounds newer.
 
@@ -31,6 +31,7 @@ Start with **what the data means**, not which API sounds newer.
 | Byte I/O that needs Buffer/Channel model | `Channel` + `ByteBuffer` |
 | File position, random access, transfer, lock, map | `FileChannel` |
 | Positional file I/O with asynchronous completion | `AsynchronousFileChannel` |
+| Packaged resources on the classpath/module path | `Class.getResource(...)` / `Class.getResourceAsStream(...)` / `ClassLoader.getResource(...)` / `ClassLoader.getResourceAsStream(...)` |
 
 Copying an image should not go through a `Reader` because the payload is binary:
 
@@ -88,6 +89,8 @@ Likewise, `DataInputStream` does not replace `ObjectInputStream`: it reads **pri
 
 For filesystem work, do not assume every `Path` is the same kind of operating-system path. If code depends on POSIX permissions, atomic moves, `WatchService`, `toFile()`, or another capability, remember that the path belongs to a `FileSystem`/provider and check the capability rather than inferring it from the developer machine.
 
+A **classpath/module-path resource** belongs to a different namespace from the filesystem. `Class.getResourceAsStream(...)` or `ClassLoader.getResourceAsStream(...)` may read content packaged inside a JAR or another source managed by a class loader, so code must not assume a resource found this way can always become a local `File` or `Path`. When the API returns a stream, normal stream-lifecycle rules still apply. Relative/root lookup rules, delegation, and resource enumeration belong to the **ClassLoader** module; the I/O boundary to retain is that **a classpath resource is not the same thing as a filesystem path**.
+
 ## <a id="memory-vs-streaming">Whole-Content vs Streaming</a>
 
 Convenience APIs such as `readAllBytes` and `readString` are excellent when input is **small and bounded**:
@@ -97,12 +100,15 @@ String config =
         Files.readString(path, StandardCharsets.UTF_8);
 ~~~
 
-They keep code short and make whole-content processing easy. Their memory model is also straightforward:
+They keep code short and make whole-content processing easy. The important memory model is that the **entire logical content must fit in memory at once**:
 
 ~~~text
-file size N
-→ roughly N bytes or more must be retained in memory
-→ text also has its in-memory String representation
+readAllBytes(file of size N)
+→ returns a byte[] containing the whole file
+
+readString(file)
+→ returns one String containing the whole decoded text
+→ implementation may also need temporary byte/character buffers while decoding
 ~~~
 
 If a file can be large, has an untrusted size, or comes from a long-running source, streaming gives a bounded memory model:
@@ -137,7 +143,7 @@ Define the data bound before choosing the API. “The current example is small�
 
 ## <a id="charset-explicit">Make the Charset Explicit</a>
 
-Text I/O always has a bridge:
+When text crosses a **byte-oriented boundary** such as a file or byte stream, encoding/decoding forms the bridge:
 
 ~~~text
 bytes
@@ -145,7 +151,7 @@ bytes
 ↔ characters / String
 ~~~
 
-If the data is text, charset is part of the data contract. For a UTF-8 format, say so:
+For such a byte-backed text format, the charset is part of the data contract. Pure in-memory character sources such as `StringReader` do not perform a byte/charset conversion. For a UTF-8 file format, say so explicitly:
 
 ~~~java
 String text =
@@ -170,7 +176,7 @@ try (
 }
 ~~~
 
-In Java 21, the default charset is UTF-8 unless an implementation is configured through its supported mechanism to use another default. Even so, when a file format or protocol defines a specific charset, code should pass that charset explicitly: it is part of the data contract rather than a decision that should depend on the runtime default.
+Since Java 18, the default charset of standard Java APIs is UTF-8 unless an implementation is configured through its supported mechanism to use another default. Even so, when a file format or protocol defines a specific charset, code should pass that charset explicitly: it is part of the data contract rather than a decision that should depend on the runtime default.
 
 Charset also explains why arbitrary binary data should not be converted into a `String`:
 

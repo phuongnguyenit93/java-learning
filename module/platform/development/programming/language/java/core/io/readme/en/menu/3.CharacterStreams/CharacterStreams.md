@@ -1,4 +1,4 @@
-# Character Streams
+# Character Streams and Charset Conversion
 
 Byte streams preserve binary payloads. When the problem says “read text,” however, application code normally wants characters rather than hand-written byte decoding. Character streams provide that layer.
 
@@ -106,42 +106,4 @@ When encoding is part of a file format or protocol, pass the `Charset` explicitl
 
 Character streams operate on Java `char` values/UTF-16 code units. Beginners do **not** need surrogate-pair, code-point, or grapheme-cluster details to continue here; those belong to the String/Unicode curriculum. The I/O responsibility is narrower: the charset bridge converts correctly between bytes and Java's character representation.
 
-## <a id="character-buffering">Buffering Character Data</a>
-
-Reading one `char` at a time across the underlying boundary can create many small operations. Text I/O commonly adds:
-
-- `BufferedReader` for buffered reads and `readLine()`;
-- `BufferedWriter` for collecting small character writes before passing them downstream.
-
-For example:
-
-```java
-java.nio.file.Path temp = java.nio.file.Files.createTempFile("lines-", ".txt");
-
-try (java.io.BufferedWriter writer =
-         new java.io.BufferedWriter(
-             new java.io.OutputStreamWriter(
-                 new java.io.FileOutputStream(temp.toFile()),
-                 java.nio.charset.StandardCharsets.UTF_8))) {
-    writer.write("line 1");
-    writer.newLine();
-    writer.write("line 2");
-}
-
-try (java.io.BufferedReader reader =
-         new java.io.BufferedReader(
-             new java.io.InputStreamReader(
-                 new java.io.FileInputStream(temp.toFile()),
-                 java.nio.charset.StandardCharsets.UTF_8))) {
-    String line;
-    while ((line = reader.readLine()) != null) {
-        System.out.println(line);
-    }
-}
-
-java.nio.file.Files.deleteIfExists(temp);
-```
-
-`readLine()` removes the line terminator from the returned text and returns `null` at EOF. `BufferedWriter.newLine()` emits the platform line separator when that is the format the application wants.
-
-Buffering does not change encoding; the charset bridge still owns encoding and decoding. The next chapter isolates buffering itself: why it can improve throughput, when `flush()` matters, and why a larger buffer is not automatically a better buffer.
+At this point the character-stream responsibility is complete: `Reader`/`Writer` work at the character layer, while `InputStreamReader`/`OutputStreamWriter` bridge characters and bytes through a charset. Composing `BufferedReader`/`BufferedWriter` belongs to the next chapter about wrappers and buffering.

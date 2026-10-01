@@ -1,12 +1,12 @@
-# Object Serialization
+# Ranh giới của tuần tự hóa đối tượng Java
 
-Đến đây ta đã chủ yếu di chuyển byte hoặc text. Java còn có một cơ chế khác: biến trạng thái của một **đồ thị đối tượng (object graph)** thành luồng byte rồi dựng lại graph đó sau này. Object graph là object gốc cùng các object có thể đi tới thông qua field/reference của nó; graph có thể chứa reference dùng chung và cả chu trình. Cơ chế biến graph này thành byte và dựng lại về sau thường được gọi là **Java native serialization**.
+Đến đây ta đã chủ yếu di chuyển byte hoặc văn bản. Java còn có một cơ chế khác: biến trạng thái của một **đồ thị đối tượng (object graph)** thành luồng byte rồi dựng lại đồ thị đó sau này. Đồ thị đối tượng gồm đối tượng gốc cùng các đối tượng có thể đi tới thông qua trường/tham chiếu; nó có thể chứa tham chiếu dùng chung và cả chu trình. Cơ chế này là **tuần tự hóa đối tượng nguyên bản của Java (`Java Object Serialization`)**.
 
-Tên gọi dễ khiến người mới suy ra rằng đây là cách mặc định để lưu object vào database, cache hoặc gửi object qua network. Đó là suy luận nguy hiểm. Native serialization gắn chặt với class Java, version compatibility, **classpath** — tập các class/resource mà JVM có thể tìm và nạp khi chạy — và quá trình **deserialize**, tức đọc serialized bytes để dựng lại object graph; vì thế nó là một cơ chế có ranh giới lớn, không phải định dạng persistence/network tổng quát nên mặc định chọn.
+Tên gọi dễ khiến người mới suy ra rằng đây là cách mặc định để lưu đối tượng vào cơ sở dữ liệu, bộ nhớ đệm hoặc gửi đối tượng qua mạng. Đó là suy luận nguy hiểm. Java Object Serialization gắn chặt với lớp Java, khả năng tương thích phiên bản, **classpath** — tập các lớp/tài nguyên mà JVM có thể tìm và nạp khi chạy — và quá trình **giải tuần tự hóa (deserialization)**, tức đọc các byte đã tuần tự hóa để dựng lại đồ thị đối tượng. Vì thế đây là một cơ chế có ranh giới lớn, không phải định dạng lưu trữ hay trao đổi qua mạng dùng chung cho mọi trường hợp.
 
-## <a id="java-serialization-model">Mô hình Java Serialization</a>
+## <a id="java-serialization-model">Mô hình tuần tự hóa Java</a>
 
-Một class tham gia native serialization thường implements marker interface `Serializable`:
+Một lớp tham gia **tuần tự hóa đối tượng nguyên bản của Java (`Java Object Serialization`)** thường triển khai giao diện đánh dấu (marker interface) `Serializable`:
 
 ~~~java
 final class Note implements Serializable {
@@ -22,9 +22,9 @@ final class Note implements Serializable {
 }
 ~~~
 
-`Serializable` không khai báo method nào. Nó là **marker interface**: class dùng nó để nói với cơ chế serialization rằng instance của class này được phép tham gia quá trình.
+`Serializable` không khai báo phương thức nào. Nó là **giao diện đánh dấu (marker interface)**: lớp dùng nó để nói với cơ chế tuần tự hóa rằng các **đối tượng (instance)** của lớp này được phép tham gia quá trình.
 
-Ghi object:
+Ghi đối tượng:
 
 ~~~java
 Path file = Files.createTempFile("note-", ".ser");
@@ -50,28 +50,28 @@ try (
 }
 ~~~
 
-Mental model không phải:
+Mô hình cần tránh là:
 
 ~~~text
-object
-→ JSON-like field map
+đối tượng
+→ bản đồ trường kiểu JSON
 ~~~
 
 mà gần hơn với:
 
 ~~~text
-Java object graph
-→ ObjectOutputStream ghi protocol serialization của Java
-→ byte stream chứa type/class descriptors + state + graph references
-→ ObjectInputStream đọc protocol
-→ JVM dựng lại graph của Java objects
+đồ thị đối tượng Java
+→ ObjectOutputStream ghi giao thức tuần tự hóa của Java
+→ luồng byte chứa mô tả kiểu/lớp + trạng thái + tham chiếu trong đồ thị
+→ ObjectInputStream đọc giao thức
+→ JVM dựng lại đồ thị đối tượng Java
 ~~~
 
-Vì vậy byte kết quả không nên được xem là một contract dễ đọc, độc lập ngôn ngữ hoặc ổn định lâu dài.
+Vì vậy dãy byte kết quả không nên được xem là một quy ước dễ đọc, độc lập ngôn ngữ hoặc tự động ổn định lâu dài.
 
-## <a id="serializable-graph">Serializable Object Graph</a>
+## <a id="serializable-graph">Đồ thị đối tượng có thể tuần tự hóa</a>
 
-Serialization không dừng ở object đầu tiên. Nó đi qua các object reachable từ các field được serialize.
+Tuần tự hóa không dừng ở đối tượng đầu tiên. Nó đi qua các đối tượng có thể truy cập được từ những trường tham gia tuần tự hóa.
 
 Ví dụ:
 
@@ -88,25 +88,27 @@ final class Article implements Serializable {
 }
 ~~~
 
-Khi serialize một `Article`, object `Author` mà field `author` trỏ tới cũng thuộc graph cần serialize. Nếu một object reachable không serializable và field đó không bị loại khỏi serialization, runtime có thể ném `NotSerializableException`.
+Khi tuần tự hóa một `Article`, đối tượng `Author` mà trường `author` trỏ tới cũng thuộc đồ thị cần tuần tự hóa. Nếu một đối tượng có thể truy cập được không hỗ trợ tuần tự hóa và trường đó không bị loại khỏi quá trình, cơ chế tuần tự hóa khi chạy có thể ném `NotSerializableException`.
 
-Object stream còn giữ quan hệ identity trong graph. Nếu hai field cùng trỏ tới một object, protocol có thể ghi reference tới object đã xuất hiện thay vì tạo hai object độc lập khi deserialize. Cycle trong graph vì thế cũng có thể được biểu diễn.
+Luồng đối tượng (`ObjectOutputStream`/`ObjectInputStream`) còn giữ quan hệ định danh trong đồ thị. Nếu hai trường cùng trỏ tới một đối tượng, giao thức có thể ghi tham chiếu tới đối tượng đã xuất hiện thay vì tạo hai đối tượng độc lập khi giải tuần tự hóa. Chu trình trong đồ thị vì thế cũng có thể được biểu diễn.
 
 ~~~text
 Article A ─┐
-           ├─→ cùng một Author instance
+           ├─→ cùng một đối tượng Author
 Article B ─┘
 ~~~
 
-Sau deserialize, quan hệ chia sẻ reference trong graph được khôi phục theo protocol.
+Sau khi giải tuần tự hóa, quan hệ chia sẻ tham chiếu trong đồ thị được khôi phục theo giao thức.
 
-Một điểm runtime quan trọng: khi deserialize một class serializable, constructor thông thường của chính class serializable không được gọi như lúc ta dùng `new`. Phần non-serializable superclass gần nhất cần constructor no-arg có thể truy cập để state superclass được khởi tạo theo quy tắc serialization. Điều này cho thấy deserialize không chỉ là “parse dữ liệu rồi gọi constructor”.
+Với một **lớp Serializable thông thường**, khi giải tuần tự hóa, **hàm tạo (constructor)** thông thường của chính lớp đó không được gọi như lúc ta dùng `new`. Lớp cha gần nhất không hỗ trợ tuần tự hóa cần một hàm tạo không tham số có thể truy cập để trạng thái lớp cha được khởi tạo theo quy tắc tuần tự hóa. Điều này cho thấy **giải tuần tự hóa (deserialization)** không chỉ là “đọc dữ liệu rồi gọi hàm tạo”.
 
-Chính khả năng dựng lại cả graph và tham gia lifecycle đặc biệt này là lý do native serialization phải được xem như một boundary mạnh.
+**Record có thể tuần tự hóa là ngoại lệ được Java quy định riêng** cho quy tắc trên: khi giải tuần tự hóa record, Java dựng lại các giá trị **thành phần (component)** rồi gọi **hàm tạo chuẩn (canonical constructor)** của record. Record còn có thêm các quy tắc tuần tự hóa đặc biệt khác, vì vậy không nên áp mọi quy tắc về hàm tạo của lớp `Serializable` thông thường sang record.
+
+Chính khả năng dựng lại cả đồ thị qua vòng đời đặc biệt này là lý do Java Object Serialization phải được xem như một ranh giới mạnh.
 
 ## <a id="serialversionuid">serialVersionUID và tương thích phiên bản</a>
 
-Serialized bytes có thể sống lâu hơn version class đã tạo ra chúng. Java cần một cách kiểm tra class lúc đọc có tương thích với class lúc ghi hay không. `serialVersionUID` là version identifier phục vụ kiểm tra này:
+Dữ liệu đã tuần tự hóa có thể tồn tại lâu hơn phiên bản lớp đã tạo ra nó. Java cần một cách kiểm tra lớp lúc đọc có tương thích với lớp lúc ghi hay không. `serialVersionUID` là mã định danh phiên bản phục vụ kiểm tra này:
 
 ~~~java
 final class Note implements Serializable {
@@ -117,23 +119,25 @@ final class Note implements Serializable {
 }
 ~~~
 
-Nếu không khai báo, runtime có thể tính một UID từ chi tiết class. Khi class thay đổi, UID tính tự động có thể thay đổi theo những cách khiến dữ liệu cũ không đọc được.
+Với một **lớp Serializable thông thường**, nếu không khai báo `serialVersionUID`, cơ chế tuần tự hóa có thể tính UID từ chi tiết lớp. Khi lớp thay đổi, UID tính tự động có thể thay đổi theo những cách khiến dữ liệu cũ không đọc được.
 
-Vì vậy class cố ý dùng native serialization thường khai báo UID rõ ràng:
+Vì vậy lớp cố ý dùng Java Object Serialization thường khai báo UID rõ ràng:
 
 ~~~java
 private static final long serialVersionUID = 1L;
 ~~~
 
-Nhưng cần hiểu giới hạn: **giữ cùng UID không tự động làm mọi thay đổi class trở nên an toàn hoặc có nghĩa**. Nó chỉ là một phần của kiểm tra compatibility của serialization runtime. Thay đổi field, hierarchy, invariant hoặc custom serialization logic vẫn có thể tạo dữ liệu không còn phù hợp về mặt nghiệp vụ dù runtime không chặn ngay.
+Nhưng cần hiểu giới hạn: **giữ cùng UID không tự động làm mọi thay đổi lớp trở nên an toàn hoặc có nghĩa**. Nó chỉ là một phần của kiểm tra tương thích trong cơ chế tuần tự hóa. Thay đổi trường, hệ phân cấp, bất biến hoặc cơ chế tuần tự hóa tùy chỉnh vẫn có thể tạo dữ liệu không còn phù hợp về mặt nghiệp vụ dù cơ chế khi chạy không chặn ngay.
 
-Ngược lại, đổi UID chủ động có thể dùng để tuyên bố stream cũ không còn compatible; lúc đọc dữ liệu cũ, `InvalidClassException` có thể xuất hiện.
+Ngược lại, đổi UID chủ động có thể dùng để tuyên bố dữ liệu tuần tự hóa cũ không còn tương thích; lúc đọc dữ liệu cũ, `InvalidClassException` có thể xuất hiện.
 
-Vì serialized form bị buộc vào evolution của class, lưu native serialization như dữ liệu persistence sống nhiều năm thường tạo chi phí migration và compatibility lớn hơn các format có schema/contract được thiết kế rõ ràng.
+Record lại có ranh giới riêng: record hỗ trợ tuần tự hóa có `serialVersionUID` mặc định là `0L` nếu không tự khai báo, và Java **không yêu cầu UID trong luồng phải khớp UID của lớp record hiện tại**. Quy tắc đặc biệt này tiếp tục cho thấy Java Object Serialization có quy tắc phụ thuộc loại lớp, không phải một công thức áp dụng giống hệt cho mọi kiểu.
 
-## <a id="transient-field">Field transient</a>
+Vì dạng dữ liệu tuần tự hóa bị buộc vào quá trình tiến hóa của lớp, lưu Java Object Serialization như dữ liệu dài hạn nhiều năm thường tạo chi phí chuyển đổi và tương thích lớn hơn các định dạng có lược đồ (schema) hoặc quy ước được thiết kế rõ ràng.
 
-Không phải mọi instance field đều nên đi vào serialized form. Keyword `transient` loại một field khỏi default serialization:
+## <a id="transient-field">Trường transient</a>
+
+Không phải mọi **trường của đối tượng (instance field)** đều nên đi vào dạng tuần tự hóa. Từ khóa `transient` loại một trường khỏi cơ chế tuần tự hóa mặc định:
 
 ~~~java
 final class SessionSnapshot implements Serializable {
@@ -144,40 +148,40 @@ final class SessionSnapshot implements Serializable {
 }
 ~~~
 
-Sau deserialize bằng cơ chế mặc định, field `temporaryToken` nhận giá trị mặc định của type, ở đây là `null`.
+Sau khi giải tuần tự hóa bằng cơ chế mặc định, trường `temporaryToken` nhận giá trị mặc định của kiểu, ở đây là `null`.
 
 `transient` phù hợp với dữ liệu:
 
-- có thể tính lại từ field khác;
-- chỉ có ý nghĩa trong runtime hiện tại;
-- trỏ tới object không nên/không thể serialize;
-- không nên trở thành một phần của serialized form.
+- có thể tính lại từ trường khác;
+- chỉ có ý nghĩa trong lần chạy hiện tại;
+- trỏ tới đối tượng không nên/không thể tuần tự hóa;
+- không nên trở thành một phần của dạng dữ liệu đã tuần tự hóa.
 
-Field `static` cũng không phải state của từng instance nên không thuộc default serialized object state.
+Trường `static` là trạng thái cấp lớp chứ không phải trạng thái của từng đối tượng nên không thuộc trạng thái đối tượng được tuần tự hóa mặc định.
 
-Không nên hiểu `transient` như một cơ chế bảo mật hoàn chỉnh. Nó chỉ nói field nào không đi vào default serialized form. Nếu dữ liệu nhạy cảm được copy sang field khác, custom serialization ghi nó ra, hoặc design tổng thể vẫn để secret tồn tại trong artifact khác, keyword này không giải quyết vấn đề.
+Không nên hiểu `transient` như một cơ chế bảo mật hoàn chỉnh. Nó chỉ nói trường nào không đi vào dạng tuần tự hóa mặc định. Nếu dữ liệu nhạy cảm được sao chép sang trường khác, cơ chế tuần tự hóa tùy chỉnh ghi nó ra, hoặc thiết kế tổng thể vẫn để bí mật xuất hiện ở thành phần khác, từ khóa này không giải quyết vấn đề.
 
-Java còn cho phép custom `writeObject/readObject` và các hook liên quan. Các hook này tăng quyền kiểm soát nhưng cũng tăng compatibility và security surface. Chỉ nên thêm khi thực sự cần một serialized-form contract có chủ ý.
+Java còn cho phép tùy chỉnh `writeObject/readObject` và các **điểm mở rộng đặc biệt (hook)** liên quan. Các điểm mở rộng này tăng quyền kiểm soát nhưng cũng mở rộng bề mặt tương thích và bảo mật. Chỉ nên thêm khi thực sự cần một quy ước dạng tuần tự hóa có chủ ý.
 
 ## <a id="serialization-security-risk">Rủi ro bảo mật và ranh giới sử dụng</a>
 
-Deserialize native Java data không giống parse một cấu trúc dữ liệu thụ động đơn giản. Trong quá trình dựng object graph, serialization runtime có thể kích hoạt hành vi đặc biệt của các class trên classpath, như custom `readObject`, `readResolve` và validation hooks.
+Giải tuần tự hóa bằng Java Object Serialization không giống việc đọc một cấu trúc dữ liệu thụ động đơn giản. Trong quá trình dựng đồ thị đối tượng, cơ chế tuần tự hóa khi chạy có thể kích hoạt hành vi đặc biệt của các lớp trên classpath, như `readObject`, `readResolve` tùy chỉnh và các **điểm móc xác thực (validation hook)**.
 
-Vì vậy **không deserialize Java native serialization từ nguồn không tin cậy**. Byte stream do client tùy ý gửi, file upload không đáng tin hoặc message từ boundary bên ngoài không nên được đưa trực tiếp vào `ObjectInputStream.readObject()`.
+Vì vậy **không giải tuần tự hóa bằng Java Object Serialization từ nguồn không tin cậy**. Luồng byte do client tùy ý gửi, tệp tải lên không đáng tin hoặc thông điệp từ ranh giới bên ngoài không nên được đưa trực tiếp vào `ObjectInputStream.readObject()`.
 
-Trong các cuộc tấn công deserialize, một **gadget** là class/method đã có sẵn trên classpath có hành vi đặc biệt có thể bị lợi dụng khi object được dựng lại. Một **gadget chain** là chuỗi nhiều gadget được dữ liệu độc hại kích hoạt nối tiếp để dẫn tới hành vi nguy hiểm. Đây là ý nghĩa của cụm “gadget/deserialization attack” khi nói về lịch sử rủi ro của native serialization.
+Trong các **cuộc tấn công giải tuần tự hóa (deserialization attack)**, một **gadget** là lớp/phương thức đã có sẵn trên classpath có hành vi đặc biệt có thể bị lợi dụng khi đối tượng được dựng lại. Một **chuỗi gadget (gadget chain)** là nhiều gadget được dữ liệu độc hại kích hoạt nối tiếp để dẫn tới hành vi nguy hiểm. Đây là ý nghĩa của cụm “gadget/deserialization attack” khi nói về lịch sử rủi ro của Java Object Serialization.
 
 ~~~text
-untrusted bytes
+byte không tin cậy
     ↓
 ObjectInputStream.readObject()
     ↓
-object graph reconstruction + class-specific hooks
+dựng lại đồ thị đối tượng + điểm móc đặc thù của lớp
     ↓
-risk
+rủi ro
 ~~~
 
-`ObjectInputFilter` có thể giới hạn class, graph depth, số reference hoặc kích thước trong hệ thống bắt buộc phải hỗ trợ serialization:
+`ObjectInputFilter` có thể giới hạn lớp, độ sâu đồ thị, số tham chiếu hoặc kích thước trong hệ thống bắt buộc phải hỗ trợ Java Object Serialization:
 
 ~~~java
 ObjectInputFilter filter =
@@ -188,20 +192,20 @@ ObjectInputFilter filter =
 objectIn.setObjectInputFilter(filter);
 ~~~
 
-Chuỗi filter trên cho phép class `com.example.Note`, cho phép các class thuộc module `java.base`, rồi dùng `!*` để từ chối các class còn lại. Filter phải được gắn vào `ObjectInputStream` **trước lần đọc object đầu tiên** như `readObject()`/`readUnshared()`, để giới hạn được áp dụng ngay từ lúc graph bắt đầu được dựng lại.
+Chuỗi bộ lọc trên cố ý khá rộng để minh họa: nó cho phép lớp `com.example.Note`, cho phép mọi lớp thuộc module `java.base`, rồi dùng `!*` để từ chối các lớp chưa khớp khác. Trong hệ thống thực tế, `ObjectInputFilter` nên chỉ cho phép các lớp/module thật sự cần cho đồ thị đối tượng mong đợi và thường cần thêm giới hạn phù hợp về độ sâu, số tham chiếu, độ dài mảng hoặc kích thước luồng. Bộ lọc phải được gắn vào `ObjectInputStream` **trước lần đọc đối tượng đầu tiên** như `readObject()` hoặc `readUnshared()`.
 
-Filter là **lớp bảo vệ bổ sung (defense in depth)**, không phải lý do để biến việc deserialize native data không tin cậy thành lựa chọn mặc định.
+`ObjectInputFilter` là **lớp bảo vệ bổ sung (defense in depth)**, không biến việc giải tuần tự hóa dữ liệu Java Object Serialization không tin cậy thành lựa chọn mặc định được khuyến nghị.
 
-Native serialization cũng mang các ranh giới ngoài security:
+Java Object Serialization cũng có các ranh giới ngoài bảo mật:
 
 | Ranh giới | Hệ quả |
 | --- | --- |
-| Gắn với Java class/classpath | Khó làm contract giữa ngôn ngữ khác nhau |
-| Gắn với class evolution | Cần quản lý compatibility/version |
-| Binary protocol khó quan sát | Debug/inspect kém trực tiếp hơn text/schema format |
-| Dựng object graph | Boundary có hành vi runtime lớn hơn parse DTO đơn giản |
-| Lịch sử gadget chain/deserialization attack | Input không tin cậy là rủi ro nghiêm trọng |
+| Gắn với lớp Java/classpath | Khó làm quy ước giữa các ngôn ngữ khác nhau |
+| Gắn với quá trình tiến hóa của lớp | Cần quản lý tương thích/phiên bản |
+| Giao thức nhị phân khó quan sát | Khó gỡ lỗi/kiểm tra trực tiếp hơn định dạng văn bản/lược đồ (schema) |
+| Dựng đồ thị đối tượng | Bề mặt hành vi khi chạy lớn hơn việc đọc DTO đơn giản |
+| Lịch sử chuỗi gadget/tấn công giải tuần tự hóa | Dữ liệu đầu vào không tin cậy là rủi ro nghiêm trọng |
 
-Với network API, message contract hoặc persistence dài hạn, thường nên ưu tiên format có contract rõ như JSON, Protocol Buffers hoặc format/schema phù hợp hệ thống, kết hợp DTO/versioning có chủ ý. Việc chọn format cụ thể phụ thuộc bài toán, nhưng **Java native serialization không nên là khuyến nghị tổng quát**.
+Với API mạng, quy ước thông điệp hoặc lưu trữ dài hạn, thường nên ưu tiên định dạng có quy ước rõ như JSON, Protocol Buffers hoặc định dạng/lược đồ phù hợp hệ thống, kết hợp DTO và quản lý phiên bản có chủ ý. Việc chọn định dạng cụ thể phụ thuộc bài toán, nhưng **Java Object Serialization không nên là khuyến nghị tổng quát**.
 
-Nếu một codebase cũ đã dùng serialization, cần biết cơ chế để đọc, bảo trì và thu hẹp boundary của nó. Chương cuối sẽ đặt serialization bên cạnh stream, reader/writer, Files và channel để hình thành quy tắc chọn abstraction I/O đơn giản và đúng nhất.
+Nếu một cơ sở mã cũ đã dùng Java Object Serialization, cần biết cơ chế để đọc, bảo trì và thu hẹp ranh giới của nó. Chương cuối sẽ đặt cơ chế này bên cạnh luồng byte, Reader/Writer, `Files` và Channel để hình thành quy tắc chọn mức trừu tượng I/O đơn giản và đúng nhất.

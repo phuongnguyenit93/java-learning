@@ -1,4 +1,4 @@
-# Buffers and Channels
+# Buffers and Channels in NIO
 
 Traditional streams encourage a “read the next byte” or “write the next byte” mental model. **NIO (New I/O)** is Java's I/O API family, primarily in `java.nio` and `java.nio.channels`, that adds another model: data is staged in a `Buffer` and moved through a `Channel`.
 
@@ -95,46 +95,6 @@ consume the buffer
 ~~~
 
 Moving between those phases requires updating the buffer boundaries correctly.
-
-## <a id="byte-order-structured-binary">Structured Binary and Byte Order</a>
-
-A `ByteBuffer` is not limited to individual `byte` operations. It also provides multi-byte primitive operations such as `putShort`, `putInt`, `putLong`, `putFloat`, `putDouble`, and matching `get...` methods. These are convenient for **structured binary** formats, where byte regions have defined meanings such as a four-byte version followed by an eight-byte timestamp.
-
-~~~java
-ByteBuffer buffer = ByteBuffer.allocate(12);
-
-buffer.putInt(3);
-buffer.putLong(1_700_000_000L);
-
-buffer.flip();
-
-int version = buffer.getInt();
-long timestamp = buffer.getLong();
-~~~
-
-An `int` occupies four bytes and a `long` occupies eight. When several bytes form one value, code must know the **byte order (endianness)**: whether the most-significant or least-significant byte appears first in the data.
-
-A newly created `ByteBuffer` uses `ByteOrder.BIG_ENDIAN` by default:
-
-~~~text
-value 0x01020304
-BIG_ENDIAN     → 01 02 03 04
-LITTLE_ENDIAN  → 04 03 02 01
-~~~
-
-If a file format or protocol specifies little-endian values, set the order before reading or writing multi-byte primitives:
-
-~~~java
-ByteBuffer little = ByteBuffer
-        .allocate(8)
-        .order(ByteOrder.LITTLE_ENDIAN);
-
-little.putInt(0x01020304);
-~~~
-
-Byte order is **part of the data contract**, not a performance preference. Reading little-endian bytes as big-endian can still produce a perfectly valid Java number, but it will represent the wrong value. Byte order does not matter for isolated single-byte access; it matters when several bytes are interpreted as one primitive.
-
-A `ByteBuffer` can also create typed views such as `asIntBuffer()` or `asLongBuffer()`. A view shares the underlying byte storage while exposing `int`- or `long`-sized elements; the byte order in effect when the view is created determines how those bytes are interpreted. Typed views can help with dense binary layouts, but the underlying model remains **byte storage + byte order + the primitive layout defined by the format**.
 
 ## <a id="flip-clear-compact">flip, clear, and compact</a>
 
@@ -250,6 +210,46 @@ fill buffer
 
 If `put` tries to move beyond `limit`, `BufferOverflowException` may occur. If `get` tries to read beyond `limit`, `BufferUnderflowException` may occur. These failures often reveal an incorrect understanding of the current buffer state.
 
+## <a id="byte-order-structured-binary">Structured Binary and Byte Order</a>
+
+A `ByteBuffer` is not limited to individual `byte` operations. It also provides multi-byte primitive operations such as `putShort`, `putInt`, `putLong`, `putFloat`, `putDouble`, and matching `get...` methods. These are convenient for **structured binary** formats, where byte regions have defined meanings such as a four-byte version followed by an eight-byte timestamp.
+
+~~~java
+ByteBuffer buffer = ByteBuffer.allocate(12);
+
+buffer.putInt(3);
+buffer.putLong(1_700_000_000L);
+
+buffer.flip();
+
+int version = buffer.getInt();
+long timestamp = buffer.getLong();
+~~~
+
+An `int` occupies four bytes and a `long` occupies eight. When several bytes form one value, code must know the **byte order (endianness)**: whether the most-significant or least-significant byte appears first in the data.
+
+A newly created `ByteBuffer` uses `ByteOrder.BIG_ENDIAN` by default:
+
+~~~text
+value 0x01020304
+BIG_ENDIAN     → 01 02 03 04
+LITTLE_ENDIAN  → 04 03 02 01
+~~~
+
+If a file format or protocol specifies little-endian values, set the order before reading or writing multi-byte primitives:
+
+~~~java
+ByteBuffer little = ByteBuffer
+        .allocate(8)
+        .order(ByteOrder.LITTLE_ENDIAN);
+
+little.putInt(0x01020304);
+~~~
+
+Byte order is **part of the data contract**, not a performance preference. Reading little-endian bytes as big-endian can still produce a perfectly valid Java number, but it will represent the wrong value. Byte order does not matter for isolated single-byte access; it matters when several bytes are interpreted as one primitive.
+
+A `ByteBuffer` can also create typed views such as `asIntBuffer()` or `asLongBuffer()`. A view shares the underlying byte storage while exposing `int`- or `long`-sized elements; the byte order in effect when the view is created determines how those bytes are interpreted. Typed views can help with dense binary layouts, but the underlying model remains **byte storage + byte order + the primitive layout defined by the format**.
+
 ## <a id="channel-model">The Channel Model</a>
 
 A `Channel` connects the program to an I/O source or sink. For a `ReadableByteChannel`, reading moves bytes **from the channel into the buffer**:
@@ -357,9 +357,9 @@ The main trade-offs are:
 | Usually cheaper to allocate | Usually more expensive to allocate/reclaim |
 | Convenient for ordinary Java logic | Can help when a long-lived buffer participates in repeated I/O |
 | Often has an accessible backing array | Do not assume an accessible backing array |
-| Data lives on the Java heap | Data storage is outside the Java heap |
+| Data is backed by ordinary heap storage | Buffer contents may reside outside the normal garbage-collected heap, depending on the JVM implementation |
 
-A direct buffer is still represented by a Java object, and reclamation of its native memory is tied to the JVM's management of that buffer. It is not a resource with a public `close()` method that application code releases on demand.
+A direct buffer is still represented by a Java object. Its backing storage is managed by the JVM and may live outside the normal garbage-collected heap; application code does not receive a standard public `close()` method for releasing that storage on demand.
 
 Do not replace every heap buffer with a direct buffer because “direct” sounds faster. For small operations or short-lived buffers, allocation cost can outweigh any I/O benefit. Choose based on the workload and measurement.
 

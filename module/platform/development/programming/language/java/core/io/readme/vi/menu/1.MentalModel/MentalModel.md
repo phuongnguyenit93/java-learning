@@ -1,97 +1,101 @@
-# Mô hình I/O trong Java
+# Mô hình luồng dữ liệu I/O và vòng đời tài nguyên
 
 ## <a id="io-data-flow">I/O là gì?</a>
 
-Một chương trình chỉ tính toán trong bộ nhớ thì mọi dữ liệu của nó chỉ tồn tại trong **tiến trình (process)** đang chạy, tức một phiên bản cụ thể của chương trình đang được hệ điều hành thực thi. Khi tiến trình dừng, các object, biến cục bộ và mảng trong RAM không tự trở thành dữ liệu bền vững. Chương trình cũng không thể tự nhận nội dung từ bàn phím, đọc một file, gửi dữ liệu qua mạng hay ghi kết quả ra nơi khác nếu không có cơ chế trao đổi dữ liệu với thế giới bên ngoài. **Ranh giới tiến trình (process boundary)** là ranh giới giữa dữ liệu/tài nguyên nằm trong tiến trình đó và tài nguyên bên ngoài mà chương trình phải giao tiếp qua I/O.
+Một chương trình cần một mô hình thống nhất để **đọc dữ liệu từ nguồn (source)** và **ghi dữ liệu tới đích (sink)**. Nguồn hoặc đích có thể là tệp, bảng điều khiển, socket, thiết bị hoặc thậm chí một vùng nhớ nằm ngay trong tiến trình hiện tại. I/O tồn tại để mô hình hóa những lần trao đổi dữ liệu đó mà không buộc mã ứng dụng phải tạo một cơ chế hoàn toàn khác cho từng loại đầu cuối.
 
-**I/O (Input/Output)** là nhóm cơ chế dùng để đưa dữ liệu **vào** chương trình và đưa dữ liệu **ra khỏi** chương trình.
+Khi nguồn hoặc đích là tài nguyên nằm ngoài vùng nhớ Java thông thường, chẳng hạn tệp hoặc socket, chương trình còn đi qua một **ranh giới tài nguyên (resource boundary)** có vòng đời riêng. Đối tượng, biến cục bộ và mảng trong RAM không tự trở thành dữ liệu bền vững khi tiến trình kết thúc; dữ liệu cần tồn tại lâu hơn các đối tượng đó phải được ghi tới một nơi lưu trữ phù hợp.
+
+**I/O (Input/Output - vào/ra)** là nhóm cơ chế dùng để đưa dữ liệu **vào** chương trình và đưa dữ liệu **ra khỏi** chương trình.
 
 Có thể bắt đầu bằng mô hình rất đơn giản:
 
 ```text
-source ── input ──> chương trình ── output ──> sink
+nguồn ── dữ liệu vào ──> chương trình ── dữ liệu ra ──> đích
 ```
 
-- **source (nguồn)** là nơi dữ liệu đi ra, ví dụ file, **socket** (endpoint mà chương trình dùng để trao đổi dữ liệu qua mạng), bàn phím hoặc một vùng nhớ.
-- **sink (đích)** là nơi nhận dữ liệu, ví dụ file, socket, màn hình hoặc một vùng nhớ.
-- **payload** là dữ liệu đang được truyền.
-- **resource boundary (ranh giới tài nguyên)** là chỗ mã Java bắt đầu làm việc với một tài nguyên có vòng đời riêng, thường do hệ điều hành hoặc một thành phần bên ngoài tiến trình quản lý.
+- **Nguồn (source)** là nơi dữ liệu đi ra, ví dụ tệp, **socket** (đầu cuối mạng mà chương trình dùng để trao đổi dữ liệu), bàn phím hoặc một vùng nhớ.
+- **Đích (sink)** là nơi nhận dữ liệu, ví dụ tệp, socket, màn hình hoặc một vùng nhớ.
+- **Dữ liệu truyền (payload)** là phần dữ liệu đang được di chuyển.
+- **Ranh giới tài nguyên (resource boundary)** là chỗ mã Java bắt đầu làm việc với một tài nguyên có vòng đời riêng, thường do hệ điều hành hoặc một thành phần bên ngoài tiến trình quản lý. Không phải mọi mô hình I/O đều đi qua ranh giới này; luồng đọc từ mảng byte trong RAM là một ví dụ.
 
-Ví dụ một ứng dụng ghi dòng chữ `Xin chào Java ☕` vào file rồi đọc lại có luồng:
+Ví dụ một ứng dụng ghi dòng chữ `Xin chào Java ☕` vào tệp rồi đọc lại có luồng:
 
 ```text
 String trong RAM
-    ↓ encode thành bytes
-file tạm trên filesystem
-    ↓ đọc bytes + decode
+    ↓ mã hóa thành byte
+tệp tạm trên hệ thống tệp
+    ↓ đọc byte + giải mã
 String mới trong RAM
 ```
 
-Nếu chỉ giữ chuỗi ban đầu trong RAM, dữ liệu biến mất khi tiến trình kết thúc. Khi ghi xuống file, chương trình tạo ra một biểu diễn có thể tồn tại độc lập với object đang nằm trong **heap**, vùng bộ nhớ JVM thường dùng để chứa các object Java.
+Nếu chỉ giữ chuỗi ban đầu trong RAM, dữ liệu biến mất khi tiến trình kết thúc. Khi ghi xuống tệp, chương trình tạo ra một biểu diễn có thể tồn tại độc lập với đối tượng đang nằm trong **heap**, vùng bộ nhớ JVM thường dùng để chứa các đối tượng Java.
 
-**Hệ thống tệp (filesystem)** là cơ chế của hệ điều hành dùng để tổ chức file, directory và thông tin đi kèm của chúng. Thông tin đi kèm đó gọi là **siêu dữ liệu (metadata)**, ví dụ file có tồn tại hay không, loại entry, kích thước hoặc thời điểm sửa đổi; metadata khác với chính nội dung bytes của file.
+**Hệ thống tệp (filesystem)** là cơ chế của hệ điều hành dùng để tổ chức tệp, thư mục và thông tin đi kèm của chúng. Thông tin đi kèm đó gọi là **siêu dữ liệu (metadata)**, ví dụ một mục có tồn tại hay không, loại mục, kích thước hoặc thời điểm sửa đổi; siêu dữ liệu khác với chính nội dung byte của tệp.
 
-**Buffering (đệm dữ liệu)** khác với **nơi lưu/tài nguyên (storage/resource)**. Buffer chỉ là vùng nhớ tạm dùng để gom dữ liệu và giảm số thao tác I/O nhỏ; nó không tự làm dữ liệu trở nên bền vững. File, socket hoặc thiết bị mới là tài nguyên nguồn/đích mà buffer hỗ trợ giao tiếp.
+**Đệm dữ liệu (buffering)** khác với **nơi lưu trữ hoặc tài nguyên bên dưới**. Bộ đệm chỉ là vùng nhớ tạm dùng để gom dữ liệu và giảm số thao tác I/O nhỏ; nó không tự làm dữ liệu trở nên bền vững. Tệp, socket hoặc thiết bị mới là nguồn/đích mà bộ đệm hỗ trợ giao tiếp.
 
 Trong module này, các thuật ngữ sẽ xuất hiện theo một lộ trình có quan hệ với nhau:
 
 ```text
-I/O data flow
-    ↓ dữ liệu phải có đơn vị truyền
-byte stream / character stream
+luồng dữ liệu I/O
+    ↓ dữ liệu cần một đơn vị truyền
+luồng byte
+    ↓ văn bản cần tầng chuyển đổi ký tự
+luồng ký tự
     ↓ nhiều thao tác nhỏ có thể tốn chi phí
-buffering
-    ↓ file còn có tên, đường dẫn và metadata
+lớp bọc và bộ đệm
+    ↓ tệp còn có tên, đường dẫn và siêu dữ liệu
 File → Path / Files
-    ↓ NIO tách vùng chứa dữ liệu khỏi kênh truyền
+    ↓ NIO tách vùng chứa dữ liệu khỏi đường vận chuyển
 Buffer / Channel / FileChannel
-    ↓ tài nguyên bên ngoài phải có người sở hữu vòng đời
-resource management
-    ↓ một số dữ liệu có thể được biểu diễn thành object graph
-serialization
-    ↓ cuối cùng phải chọn abstraction phù hợp với bài toán
-choosing I/O
+    ↓ tài nguyên bên ngoài cần bên chịu trách nhiệm cho vòng đời
+quản lý tài nguyên
+    ↓ một số dữ liệu có thể biểu diễn thành đồ thị đối tượng
+tuần tự hóa
+    ↓ cuối cùng chọn mô hình đơn giản nhưng đúng
+lựa chọn I/O
 ```
 
 Các thành phần chính và vai trò của chúng:
 
 | Thành phần | Vai trò |
 | --- | --- |
-| Byte stream | Đọc/ghi dữ liệu thô dưới dạng byte; khi byte mang các primitive có cấu trúc thì cần thêm contract về field order/kiểu dữ liệu. |
-| Character stream + `Charset` | Làm việc với text và chuyển đổi đúng giữa ký tự với byte. |
-| Buffering | Gom nhiều thao tác nhỏ thành các khối lớn hơn để giảm chi phí I/O. |
-| `File` vs `Path` / `Files` | Biểu diễn và thao tác với vị trí/metadata trên filesystem; `File` là API cũ, `Path`/`Files` là mô hình hiện đại hơn. |
-| `WatchService` | Nhận thông báo thay đổi filesystem như create/modify/delete với boundary phụ thuộc provider/nền tảng. |
-| `Buffer` / `Channel` / `FileChannel` | Mô hình NIO tách vùng dữ liệu khỏi kênh truyền; `ByteOrder` quyết định cách hiểu primitive nhiều byte và channel có thể hỗ trợ multi-buffer transfer. |
-| `AsynchronousFileChannel` | File I/O theo vị trí nhưng completion xảy ra bất đồng bộ thay vì giữ thread gọi chờ tới khi xong. |
-| Resource management | Xác định ai sở hữu tài nguyên và khi nào phải `close()`. |
-| Serialization | Chuyển trạng thái object theo một format tuần tự hóa cụ thể. |
-| Choosing I/O | Chọn mô hình/API đơn giản và đúng với loại dữ liệu, quy mô và kiểu thao tác. |
+| Luồng byte | Đọc/ghi dữ liệu thô dưới dạng byte; khi byte mang các giá trị nguyên thủy có cấu trúc thì cần thêm quy tắc rõ ràng về thứ tự trường và kiểu dữ liệu. |
+| Luồng ký tự + `Charset` | Làm việc với văn bản và chuyển đổi đúng giữa ký tự với byte. |
+| Đệm dữ liệu | Gom nhiều thao tác nhỏ thành các khối lớn hơn để giảm chi phí I/O. |
+| `File` so với `Path` / `Files` | Biểu diễn và thao tác với vị trí/siêu dữ liệu trên hệ thống tệp; `File` là API cũ, `Path`/`Files` là mô hình hiện đại hơn. |
+| `WatchService` | Nhận thông báo thay đổi hệ thống tệp như tạo/sửa/xóa với ranh giới phụ thuộc nhà cung cấp hệ thống tệp và nền tảng. |
+| `Buffer` / `Channel` / `FileChannel` | Mô hình NIO tách vùng dữ liệu khỏi kênh truyền; `ByteOrder` quyết định cách hiểu giá trị nguyên thủy nhiều byte và channel có thể truyền qua nhiều bộ đệm. |
+| `AsynchronousFileChannel` | I/O tệp theo vị trí với kết quả hoàn tất bất đồng bộ thay vì giữ luồng thực thi gọi API chờ tới khi xong. |
+| Quản lý tài nguyên | Xác định ai chịu trách nhiệm cho tài nguyên và khi nào phải `close()`. |
+| Tuần tự hóa | Chuyển trạng thái đối tượng theo một định dạng tuần tự hóa cụ thể. |
+| Lựa chọn I/O | Chọn mô hình/API đơn giản và đúng với loại dữ liệu, quy mô và kiểu thao tác. |
 
-**NIO (New I/O)** là nhóm API I/O mới hơn của Java, gồm các khái niệm như `Buffer`, `Channel` và `java.nio.file`. Ở đây chỉ cần xem nó như một nhánh abstraction khác sẽ được học sau; không phải mọi API NIO đều là non-blocking.
+**NIO (New I/O)** là nhóm API I/O mới hơn của Java, gồm các khái niệm như `Buffer`, `Channel` và `java.nio.file`. Ở đây chỉ cần xem nó như một họ mô hình I/O khác sẽ được học sau; không phải mọi API NIO đều là không chặn.
 
-Điểm cần giữ từ đầu là: I/O không đồng nghĩa với “đọc file”. File chỉ là một loại nguồn/đích. Cùng mental model nguồn → dữ liệu → đích còn áp dụng cho network, console, memory stream và nhiều thiết bị khác.
+Điểm cần giữ từ đầu là: I/O không đồng nghĩa với “đọc tệp”. Tệp chỉ là một loại nguồn/đích. Cùng mô hình nguồn → dữ liệu → đích còn áp dụng cho mạng, bảng điều khiển, luồng trong bộ nhớ và nhiều thiết bị khác.
 
-## <a id="bytes-vs-characters">Byte và character</a>
+## <a id="bytes-vs-characters">Byte và ký tự</a>
 
-Máy lưu trữ và truyền dữ liệu vật lý dưới dạng byte. Tuy nhiên, mã ứng dụng thường muốn làm việc với text. Hai nhu cầu này tạo ra hai mức abstraction quan trọng:
+Máy lưu trữ và truyền dữ liệu vật lý dưới dạng byte. Tuy nhiên, mã ứng dụng thường muốn làm việc với văn bản. Hai nhu cầu này tạo ra hai mức mô hình quan trọng:
 
 ```text
-binary data            text
+dữ liệu nhị phân       văn bản
     ↓                    ↓
-byte abstraction     character abstraction
+mô hình byte          mô hình ký tự
 ```
 
-**Byte stream** xem payload là dãy byte và không tự gán ý nghĩa “chữ” cho chúng. Đây là lựa chọn tự nhiên cho ảnh, ZIP, PDF, dữ liệu mã hóa hoặc bất kỳ format nhị phân nào.
+**Luồng byte (byte stream)** xem dữ liệu là dãy byte và không tự gán ý nghĩa “chữ” cho chúng. Đây là lựa chọn tự nhiên cho ảnh, ZIP, PDF, dữ liệu mã hóa hoặc bất kỳ định dạng nhị phân nào.
 
-**Character stream** xem payload là dữ liệu ký tự. Khi ký tự phải đi qua file hoặc network, cần một **charset** để chuyển giữa ký tự Java và byte. Với UTF-8:
+**Luồng ký tự (character stream)** xem dữ liệu là ký tự. Khi ký tự phải đi qua tệp hoặc mạng, cần một **bộ mã ký tự (charset)** để chuyển giữa ký tự Java và byte. Với UTF-8:
 
 ```text
-characters ── encode UTF-8 ──> bytes
-bytes      ── decode UTF-8 ──> characters
+ký tự ── mã hóa UTF-8 ──> byte
+byte  ── giải mã UTF-8 ──> ký tự
 ```
 
-Vì vậy không nên lấy một dãy byte tùy ý rồi coi mỗi byte là một ký tự. Một ký tự Unicode có thể cần nhiều byte trong UTF-8, và một `char` Java cũng chỉ là một UTF-16 code unit, không phải lúc nào cũng tương ứng với một Unicode code point hoàn chỉnh.
+Vì vậy không nên lấy một dãy byte tùy ý rồi coi mỗi byte là một ký tự. Một ký tự Unicode có thể cần nhiều byte trong UTF-8, và một `char` Java cũng chỉ là một đơn vị mã UTF-16 (code unit), không phải lúc nào cũng tương ứng với một điểm mã Unicode (code point) hoàn chỉnh.
 
 Ví dụ:
 
@@ -103,44 +107,46 @@ String restored = new String(utf8, java.nio.charset.StandardCharsets.UTF_8);
 System.out.println(text.equals(restored)); // true
 ```
 
-Byte stream và character stream không cạnh tranh nhau. Character stream thường nằm **trên** một nguồn/đích byte và thêm bước encode/decode. Chapter tiếp theo sẽ bắt đầu từ tầng thấp hơn là `InputStream` và `OutputStream`, sau đó mới đặt `Reader`/`Writer` lên trên.
+Luồng byte và luồng ký tự là hai tầng có quan hệ với nhau. Luồng ký tự thường nằm **trên** một nguồn/đích byte và thêm bước mã hóa/giải mã. Chương tiếp theo sẽ bắt đầu từ tầng thấp hơn là `InputStream` và `OutputStream`, sau đó mới đặt `Reader`/`Writer` lên trên.
 
-## <a id="blocking-io-boundary">Mô hình blocking I/O</a>
+## <a id="blocking-io-boundary">I/O chặn, không chặn và bất đồng bộ</a>
 
-Khi mã gọi một thao tác I/O, dữ liệu không nhất thiết đã sẵn sàng trong RAM. Chương trình có thể phải chờ filesystem, thiết bị hoặc peer mạng.
+Khi mã gọi một thao tác I/O, dữ liệu không nhất thiết đã sẵn sàng trong RAM. Chương trình có thể phải chờ hệ thống tệp, thiết bị hoặc đầu bên kia của kết nối mạng.
 
-Với blocking I/O truyền thống, lời gọi như `read()` có thể chưa trả về ngay. Từ góc nhìn của đoạn mã đang chạy:
+Với **I/O chặn (blocking I/O)** truyền thống, lời gọi như `read()` có thể chưa trả về ngay:
 
 ```text
 gọi read()
     ↓
 dữ liệu chưa có
     ↓
-thread chờ
+luồng thực thi gọi API chờ
     ↓
 có dữ liệu / EOF / lỗi
     ↓
-read() trả về hoặc ném exception
+read() trả về hoặc ném ngoại lệ
 ```
 
-**Thread** là một luồng thực thi bên trong process. “Blocking” mô tả việc thread gọi API phải chờ lời gọi hoàn tất; nó không có nghĩa CPU luôn bận quay vòng. Trong thời gian chờ I/O, hệ điều hành/JVM có thể để thread ngủ và dùng CPU cho việc khác.
+**Luồng thực thi (thread)** là một dòng thực thi bên trong tiến trình. “Chặn” nghĩa là luồng thực thi gọi API phải chờ thao tác hoàn tất. Điều đó không có nghĩa CPU phải luôn bận quay vòng; JVM và hệ điều hành có thể tạm dừng luồng thực thi trong khi CPU làm việc khác.
 
-Ngược lại, với **non-blocking I/O**, thao tác được thiết kế để không giữ thread đứng chờ cho tới khi tài nguyên sẵn sàng. Lời gọi có thể trả quyền điều khiển lại sớm để chương trình tiếp tục việc khác và xử lý dữ liệu khi cơ chế readiness/event báo tài nguyên đã sẵn sàng. Đây là khác biệt về cách chờ và điều phối công việc, không phải lời hứa rằng thao tác luôn nhanh hơn.
+Với **I/O không chặn (non-blocking I/O)**, thao tác được thiết kế để không giữ luồng thực thi gọi API đứng chờ cho tới khi tài nguyên sẵn sàng. Lời gọi có thể trả quyền điều khiển sớm để chương trình tiếp tục việc khác và phản ứng khi cơ chế báo sẵn sàng/sự kiện cho biết dữ liệu có thể được xử lý. Đây là khác biệt về cách chờ và phối hợp công việc, không phải lời hứa rằng mọi thao tác đều nhanh hơn.
 
-Điều này tạo ra ranh giới quan trọng giữa **CPU-bound work** và **I/O-bound work**. CPU-bound nghĩa là thời gian chủ yếu bị chi phối bởi tính toán trên CPU; I/O-bound nghĩa là thời gian chủ yếu bị chi phối bởi việc chờ file, thiết bị, socket hoặc tài nguyên bên ngoài.
+**I/O bất đồng bộ (asynchronous I/O)** là một chiều khác: thao tác được khởi chạy trước, còn kết quả được nhận sau khi thao tác hoàn tất, chẳng hạn qua `Future` hoặc hàm gọi lại (callback). Vì vậy “bất đồng bộ” không đồng nghĩa với “không chặn”; cơ chế thực thi bên dưới có thể khác nhau tùy nền tảng. Chương `FileChannel` phía sau sẽ dùng `AsynchronousFileChannel` để làm rõ ranh giới này.
 
-Không phải mọi API I/O của Java đều bắt buộc dùng blocking model. NIO còn có channel và một số cơ chế non-blocking cho những bài toán phù hợp. Ở các chapter đầu, ta tập trung vào stream/file I/O đồng bộ để xây mental model nền tảng.
+Điều này cũng tạo ra ranh giới hữu ích giữa **công việc thiên về CPU (CPU-bound)** và **công việc thiên về I/O (I/O-bound)**. Loại thứ nhất dành phần lớn thời gian cho tính toán trên CPU; loại thứ hai dành phần lớn thời gian chờ tệp, thiết bị, socket hoặc tài nguyên bên ngoài.
+
+Không phải mọi API I/O của Java đều chặn. NIO còn có channel và các cơ chế không chặn cho những bài toán phù hợp. Các chương đầu chủ ý dùng luồng/tệp I/O đồng bộ để xây dựng mô hình nền tảng trước.
 
 ## <a id="resource-lifecycle">Vòng đời tài nguyên I/O</a>
 
-Một object Java có thể được garbage collector thu hồi khi không còn tham chiếu mạnh. Nhưng **file descriptor** là mã định danh mà hệ điều hành dùng cho một file đang mở, còn **native handle** là tên gọi rộng hơn cho tham chiếu tài nguyên ở tầng hệ điều hành như file, socket hoặc thiết bị. Những tài nguyên này nằm ngoài heap Java, nên chương trình cần kết thúc việc sử dụng chúng theo thời điểm xác định.
+Một đối tượng Java có thể được **bộ thu gom rác (garbage collector)** thu hồi khi không còn tham chiếu mạnh. Trên các hệ thống dùng **file descriptor**, đây là mã định danh của hệ điều hành cho một tài nguyên I/O đang mở như tệp, socket hoặc pipe; trên nền tảng khác có thể gặp **handle gốc (native handle)** tương ứng cho tài nguyên như tệp, socket hoặc thiết bị. Những tài nguyên này nằm ngoài heap Java, nên chương trình cần kết thúc việc sử dụng chúng ở một thời điểm xác định.
 
-Vì vậy nhiều abstraction I/O có vòng đời:
+Vì vậy nhiều mô hình I/O có vòng đời:
 
 ```text
-acquire/open
+mở/nhận tài nguyên
     ↓
-read/write
+đọc/ghi
     ↓
 flush nếu cần
     ↓
@@ -149,7 +155,7 @@ close
 
 Ví dụ cơ bản:
 
-`Path`/`Files` xuất hiện trong ví dụ chỉ để tạo và xóa một file tạm an toàn; người học **chưa cần hiểu API filesystem này ở đây**. Chapter `File` và `Path/Files` phía sau sẽ định nghĩa chúng từ đầu.
+`Path`/`Files` xuất hiện trong ví dụ chỉ để tạo và xóa một tệp tạm an toàn; người học **chưa cần hiểu API hệ thống tệp này ở đây**. Các chương `File` và `Path/Files` phía sau sẽ định nghĩa chúng từ đầu.
 
 ```java
 java.nio.file.Path temp = java.nio.file.Files.createTempFile("io-", ".txt");
@@ -163,8 +169,8 @@ try (java.io.OutputStream out =
 java.nio.file.Files.deleteIfExists(temp);
 ```
 
-`try-with-resources` gọi `close()` tự động kể cả khi phần thân ném exception. Đây là công cụ chính để ràng buộc vòng đời tài nguyên với một **phạm vi code (scope)** rõ ràng.
+`try-with-resources` gọi `close()` tự động kể cả khi phần thân ném ngoại lệ. Đây là cơ chế chính của Java để gắn vòng đời tài nguyên với một **phạm vi mã (scope)** rõ ràng.
 
-Không phải mọi stream đều giữ tài nguyên hệ điều hành. Ví dụ `ByteArrayInputStream` chỉ đọc từ mảng byte trong RAM và `close()` của nó không giải phóng file descriptor. Tuy vậy, khi code nhận một `InputStream` chung, cần hiểu **ai sở hữu stream và ai chịu trách nhiệm đóng nó**. Chapter Resource Management sau này sẽ đào sâu ownership và chuỗi wrapper.
+Không phải mọi luồng I/O đều giữ tài nguyên hệ điều hành. Ví dụ `ByteArrayInputStream` chỉ đọc từ mảng byte trong RAM và `close()` của nó không giải phóng file descriptor. Tuy vậy, khi mã nhận một `InputStream` chung, cần hiểu **ai sở hữu luồng và ai chịu trách nhiệm đóng nó**. Chương Quản lý tài nguyên phía sau sẽ phát triển rõ mô hình quyền sở hữu này.
 
-Từ mental model này, chapter kế tiếp có thể đi vào lớp abstraction thấp nhất của stream I/O: dữ liệu được đọc và ghi dưới dạng byte như thế nào.
+Từ mô hình này, chương kế tiếp có thể đi vào tầng thấp nhất của luồng I/O: Java đọc và ghi byte thô như thế nào.

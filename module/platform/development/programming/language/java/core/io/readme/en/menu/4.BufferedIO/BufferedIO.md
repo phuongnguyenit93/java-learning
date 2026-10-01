@@ -1,10 +1,24 @@
-# Buffered I/O
+# Stream Wrappers, Buffering, and Flush Semantics
 
-The previous chapters already have streams that can move data. A practical problem remains: if an application performs many tiny operations against an underlying resource, the cost of crossing layers or reaching the operating system can outweigh the amount of data handled per call. Buffering batches small operations into larger ones.
+The previous chapters already have streams that can move data. Two practical questions remain: how does Java add behavior to an existing I/O abstraction, and why do many tiny I/O operations often need buffering? The common answer is **wrapper composition**, with buffering as one important use of that model.
+
+## <a id="wrapper-composition">Composing I/O Wrappers</a>
+
+A **wrapper** receives another stream, reader, or writer underneath it, adds one capability, and delegates the actual data movement downstream. Java therefore does not need one class for every possible combination such as “file input + UTF-8 decoding + line-oriented reads + buffering.”
+
+```text
+byte source
+    ↓ FileInputStream
+    ↓ InputStreamReader   — bytes to characters
+    ↓ BufferedReader      — buffering + readLine()
+application
+```
+
+Not every wrapper is a buffering wrapper. `DataInputStream` adds structured primitive reads, `InputStreamReader` adds charset decoding, and `BufferedInputStream` or `BufferedReader` adds buffering. When reading a wrapper chain, ask **what behavior each layer adds**, **how `close()` propagates through the chain**, and separately **which application scope owns responsibility for closing the underlying resource**.
 
 ## <a id="buffering-purpose">Why Buffering Helps</a>
 
-A buffer is temporary memory placed between application code and the underlying I/O resource/layer. A **wrapper** is an object that surrounds another stream or writer, adds behavior, and forwards data to the wrapped object underneath.
+A buffer is temporary memory placed between application code and the underlying I/O resource/layer. A buffering wrapper batches small operations before forwarding data to the wrapped object underneath.
 
 ```text
 many small reads                  fewer larger reads
@@ -27,6 +41,46 @@ for (byte value : data) {
 ```
 
 If `out` is a `BufferedOutputStream`, those small `write` calls can be collected before data is passed to the underlying stream.
+
+## <a id="character-buffering">Buffering Character Data</a>
+
+Reading one `char` at a time across the underlying layer can create many small operations. Text I/O commonly composes character streams with:
+
+- `BufferedReader` for buffered reads and `readLine()`;
+- `BufferedWriter` for collecting small character writes before passing them downstream.
+
+For example:
+
+```java
+java.nio.file.Path temp = java.nio.file.Files.createTempFile("lines-", ".txt");
+
+try (java.io.BufferedWriter writer =
+         new java.io.BufferedWriter(
+             new java.io.OutputStreamWriter(
+                 new java.io.FileOutputStream(temp.toFile()),
+                 java.nio.charset.StandardCharsets.UTF_8))) {
+    writer.write("line 1");
+    writer.newLine();
+    writer.write("line 2");
+}
+
+try (java.io.BufferedReader reader =
+         new java.io.BufferedReader(
+             new java.io.InputStreamReader(
+                 new java.io.FileInputStream(temp.toFile()),
+                 java.nio.charset.StandardCharsets.UTF_8))) {
+    String line;
+    while ((line = reader.readLine()) != null) {
+        System.out.println(line);
+    }
+}
+
+java.nio.file.Files.deleteIfExists(temp);
+```
+
+`readLine()` removes the line terminator from the returned text and returns `null` at EOF. `BufferedWriter.newLine()` emits the platform line separator when that is the format the application wants.
+
+Buffering does not change encoding; the charset bridge still owns encoding and decoding. The next section focuses on when buffered output must be pushed to the layer underneath.
 
 ## <a id="flush-semantics">What flush() Means</a>
 
@@ -132,7 +186,7 @@ System.out.println(expected.equals(actual)); // true
 java.nio.file.Files.deleteIfExists(temp);
 ```
 
-Closing the outer wrapper closes its underlying chain according to these classes' contracts. Code therefore normally owns and closes the outermost wrapper rather than separately closing every layer.
+Closing the outer wrapper closes its underlying chain according to these classes' contracts. When the current application scope owns the whole chain, it normally closes the outermost wrapper rather than separately closing every layer; wrapping a caller-owned resource does not silently transfer application-level ownership.
 
 Adding more buffering layers is not automatically faster. If one layer already buffers effectively, another buffer may only add memory and copying. Choose wrappers for capabilities the code actually needs: byte buffering, line-oriented text, charset conversion, or another behavior.
 

@@ -43,7 +43,7 @@ questions:
     question: "Which statement best describes I/O in a Java program?"
     answers:
       - {id: A, answer: "It only means reading and writing files on disk.", explanation: "Incorrect. Files are only one kind of source/sink; I/O also includes consoles, memory, sockets, and other resources."}
-      - {id: B, answer: "It is data crossing a process boundary between a source and a sink.", explanation: "Correct. The source → data flow → sink mental model covers files, consoles, memory, sockets, and other resources."}
+      - {id: B, answer: "It is data moving into a program from a source or out of a program to a sink.", explanation: "Correct. The source → data flow → sink mental model covers files, consoles, sockets, devices, and in-memory sources/sinks; I/O does not always cross a process boundary."}
       - {id: C, answer: "It is how the JVM automatically stores every in-memory object on disk.", explanation: "Incorrect. Objects in memory do not automatically become durable data when the process ends."}
       - {id: D, answer: "It only refers to APIs in the java.io package.", explanation: "Incorrect. Java I/O also includes NIO APIs such as java.nio.file and java.nio.channels."}
     correctAnswerId: B
@@ -73,6 +73,19 @@ questions:
       - {id: C, answer: "Every operation always runs on a newly created thread.", explanation: "Incorrect. Non-blocking does not mean one new thread is automatically created per operation."}
       - {id: D, answer: "Every operation always completes the entire payload in one call.", explanation: "Incorrect. Partial progress or no progress can still occur depending on the API."}
     correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.MentalModel/MentalModel.md", anchor: "blocking-io-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q53
+    question: "Which statement best distinguishes asynchronous I/O from non-blocking I/O?"
+    answers:
+      - {id: A, answer: "They are synonyms: every asynchronous API is non-blocking in exactly the same sense.", explanation: "Incorrect. They describe different dimensions of how waiting/completion is organized."}
+      - {id: B, answer: "Asynchronous means the operation has zero external latency.", explanation: "Incorrect. Physical I/O latency still exists."}
+      - {id: C, answer: "Non-blocking APIs let a call return without waiting for readiness/progress, while asynchronous APIs initiate an operation and deliver its completion later, for example by Future or callback.", explanation: "Correct. An implementation may use different underlying mechanisms, so async must not be defined as a synonym for non-blocking."}
+      - {id: D, answer: "Non-blocking always creates a new thread, while asynchronous never uses threads.", explanation: "Incorrect. Neither concept has that universal thread rule."}
+    correctAnswerId: C
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "1.MentalModel/MentalModel.md", anchor: "blocking-io-boundary"}
@@ -208,17 +221,17 @@ questions:
     readmeRelated: {file: "3.CharacterStreams/CharacterStreams.md", anchor: "charset-bridge"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - id: io-q14
-    question: "What do BufferedReader/BufferedWriter change compared with the underlying Reader/Writer?"
+  - id: io-q41
+    question: "In BufferedReader(new InputStreamReader(in, UTF_8)), what should be kept separate conceptually?"
     answers:
-      - {id: A, answer: "They change the charset of the data.", explanation: "Incorrect. Buffering does not change the encoding contract."}
-      - {id: B, answer: "They automatically make the resource thread-safe.", explanation: "Incorrect. Buffering is not a concurrency guarantee."}
-      - {id: C, answer: "They convert text into a binary format.", explanation: "Incorrect. The payload semantics remain characters."}
-      - {id: D, answer: "They add temporary memory to batch I/O and provide conveniences such as readLine at the character layer.", explanation: "Correct. Buffering reduces underlying calls without changing the meaning of the data."}
-    correctAnswerId: D
+      - {id: A, answer: "The outer BufferedReader automatically becomes the application owner of in.", explanation: "Incorrect. Wrapper construction and application-level ownership are separate decisions."}
+      - {id: B, answer: "Each wrapper adds behavior and close() normally propagates inward, while the application still needs an explicit ownership rule for the underlying resource.", explanation: "Correct. Composition explains behavior/close propagation; it does not silently transfer application ownership."}
+      - {id: C, answer: "InputStreamReader adds buffering while BufferedReader chooses the charset.", explanation: "Incorrect. InputStreamReader performs charset decoding; BufferedReader adds character buffering and line-oriented conveniences."}
+      - {id: D, answer: "Closing the outer wrapper never affects inner resources.", explanation: "Incorrect. Standard I/O wrappers normally propagate close to the wrapped object according to their contracts."}
+    correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.CharacterStreams/CharacterStreams.md", anchor: "character-buffering"}
+    readmeRelated: {file: "4.BufferedIO/BufferedIO.md", anchor: "wrapper-composition"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q15
@@ -232,6 +245,19 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "4.BufferedIO/BufferedIO.md", anchor: "buffering-purpose"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q14
+    question: "What do BufferedReader/BufferedWriter change compared with the underlying Reader/Writer?"
+    answers:
+      - {id: A, answer: "They change the charset of the data.", explanation: "Incorrect. Buffering does not change the encoding contract."}
+      - {id: B, answer: "They automatically make the resource thread-safe.", explanation: "Incorrect. Buffering is not a concurrency guarantee."}
+      - {id: C, answer: "They convert text into a binary format.", explanation: "Incorrect. The payload semantics remain characters."}
+      - {id: D, answer: "They add temporary memory to batch I/O and provide conveniences such as readLine at the character layer.", explanation: "Correct. Buffering reduces underlying calls without changing the meaning of the data."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.BufferedIO/BufferedIO.md", anchor: "character-buffering"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q16
@@ -299,19 +325,6 @@ questions:
     readmeRelated: {file: "6.PathFiles/PathFiles.md", anchor: "path-model"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - id: io-q21
-    question: "Which statement about Path, FileSystem, FileSystemProvider, and FileStore is correct?"
-    answers:
-      - {id: A, answer: "Every Path always belongs to the JVM's single default filesystem.", explanation: "Incorrect. A Path may belong to an alternate provider-backed filesystem."}
-      - {id: B, answer: "FileStore is another alias for Path.", explanation: "Incorrect. FileStore describes backing storage and capabilities, not a path value."}
-      - {id: C, answer: "FileSystemProvider matters only when writing a custom provider and is unrelated to Files.", explanation: "Incorrect. The provider is the implementation layer behind filesystem operations even though application code usually does not call it directly."}
-      - {id: D, answer: "Each Path belongs to a FileSystem; the provider implements the semantics, while FileStore describes backing storage and capabilities.", explanation: "Correct. This mental model explains many NIO.2 portability boundaries."}
-    correctAnswerId: D
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "6.PathFiles/PathFiles.md", anchor: "filesystem-provider-model"}
-    apiRelated: {controller: "", methodSignature: ""}
-
   - id: io-q22
     question: "What is the main difference between normalize() and toRealPath()?"
     answers:
@@ -349,6 +362,32 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "6.PathFiles/PathFiles.md", anchor: "temporary-files"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q42
+    question: "Files.exists(path) is false and Files.notExists(path) is also false. What does that mean?"
+    answers:
+      - {id: A, answer: "The path definitely exists but is hidden.", explanation: "Incorrect. false from exists() does not prove existence."}
+      - {id: B, answer: "The path definitely does not exist.", explanation: "Incorrect. notExists() would need to be true to confirm non-existence."}
+      - {id: C, answer: "The filesystem state could not be determined at that moment.", explanation: "Correct. exists() and notExists() are not exact logical complements; both may be false when the state cannot be established."}
+      - {id: D, answer: "The Path object is invalid and must be recreated.", explanation: "Incorrect. The result concerns what could be determined about filesystem state, not whether the Path value can exist."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.PathFiles/PathFiles.md", anchor: "file-attributes"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q21
+    question: "Which statement about Path, FileSystem, FileSystemProvider, and FileStore is correct?"
+    answers:
+      - {id: A, answer: "Every Path always belongs to the JVM's single default filesystem.", explanation: "Incorrect. A Path may belong to an alternate provider-backed filesystem."}
+      - {id: B, answer: "FileStore is another alias for Path.", explanation: "Incorrect. FileStore describes backing storage and capabilities, not a path value."}
+      - {id: C, answer: "FileSystemProvider matters only when writing a custom provider and is unrelated to Files.", explanation: "Incorrect. The provider is the implementation layer behind filesystem operations even though application code usually does not call it directly."}
+      - {id: D, answer: "Each Path belongs to a FileSystem; the provider implements the semantics, while FileStore describes backing storage and capabilities.", explanation: "Correct. This mental model explains many NIO.2 portability boundaries."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.PathFiles/PathFiles.md", anchor: "filesystem-provider-model"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q25
@@ -481,19 +520,18 @@ questions:
     readmeRelated: {file: "8.FileChannel/FileChannel.md", anchor: "filechannel-random-access"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - id: io-q35
-    question: "Which statement about AsynchronousFileChannel is correct?"
+  - id: io-q56
+    question: "What does FileChannel.force(true) primarily address?"
     answers:
-      - {id: A, answer: "It guarantees every operation completes all requested bytes at once.", explanation: "Incorrect. Partial completion still has to be handled."}
-      - {id: B, answer: "It provides positional file I/O with completion through Future or CompletionHandler.", explanation: "Correct. This is the key difference in completion/orchestration model."}
-      - {id: C, answer: "It is a non-blocking SocketChannel for networking.", explanation: "Incorrect. It is an asynchronous file channel, not a networking channel."}
-      - {id: D, answer: "It is always faster than FileChannel for every workload.", explanation: "Incorrect. Asynchronous execution has no universal performance advantage."}
+      - {id: A, answer: "It guarantees the next read fills its ByteBuffer completely.", explanation: "Incorrect. force() is unrelated to partial-read semantics."}
+      - {id: B, answer: "It requests that file-content updates and necessary metadata updates be pushed toward stable storage according to the storage stack's guarantees.", explanation: "Correct. It is a durability mechanism, not a transfer/completion mechanism."}
+      - {id: C, answer: "It flushes every MappedByteBuffer ever created from the channel.", explanation: "Incorrect. Mapped buffers have their own force() operation for mapped changes."}
+      - {id: D, answer: "It makes every earlier write transactional across several files.", explanation: "Incorrect. FileChannel.force does not provide a multi-resource transaction."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.FileChannel/FileChannel.md", anchor: "asynchronous-filechannel-boundary"}
+    readmeRelated: {file: "8.FileChannel/FileChannel.md", anchor: "filechannel-random-access"}
     apiRelated: {controller: "", methodSignature: ""}
-
   - id: io-q36
     question: "FileChannel.transferTo(...) returns fewer bytes than requested. What is the correct conclusion?"
     answers:
@@ -508,16 +546,55 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q37
-    question: "Which statement about file locks and memory mapping is correct?"
+    question: "Which statement about FileChannel file locks is correct?"
     answers:
       - {id: A, answer: "A file lock is a direct replacement for synchronized between threads inside one JVM.", explanation: "Incorrect. File locks are mainly OS/filesystem coordination and have platform-specific semantics."}
-      - {id: B, answer: "Closing a FileChannel always immediately unmaps every MappedByteBuffer created from it.", explanation: "Incorrect. An existing mapping has a lifetime independent of the channel."}
+      - {id: B, answer: "Closing one channel can never affect locks acquired through another channel to the same file.", explanation: "Incorrect. On some systems, closing one channel can release all locks held by the JVM on that underlying file."}
       - {id: C, answer: "A shared lock always remains shared on every platform.", explanation: "Incorrect. A platform may convert the request to exclusive; check isShared() when the actual mode matters."}
-      - {id: D, answer: "Both locking and memory mapping cross OS/filesystem/virtual-memory boundaries, so they should be used for specific requirements rather than as magic solutions.", explanation: "Correct. Their semantics, lifecycle, and performance depend on the platform and workload."}
+      - {id: D, answer: "File locks are JVM/process coordination mechanisms with platform-dependent enforcement; they are not Java thread locks or business transactions.", explanation: "Correct. Portable code should treat file locking as a coordination protocol around file regions and respect its lifecycle/platform boundaries."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "8.FileChannel/FileChannel.md", anchor: "file-lock-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q43
+    question: "Which statement about a MappedByteBuffer created by FileChannel.map is correct?"
+    answers:
+      - {id: A, answer: "Closing the FileChannel immediately invalidates every mapping created from it.", explanation: "Incorrect. A successfully created mapping remains valid independently of the channel being closed."}
+      - {id: B, answer: "force() makes READ_ONLY and PRIVATE mappings persist their changes to the file.", explanation: "Incorrect. force() has no effect for READ_ONLY or PRIVATE mappings; PRIVATE is copy-on-write."}
+      - {id: C, answer: "A READ_WRITE mapping can use force() to request writing mapped changes to storage, while mapping lifetime and concurrent file truncation still need separate consideration.", explanation: "Correct. Mapping is a specialized virtual-memory-backed file access mechanism with its own lifecycle and platform boundaries."}
+      - {id: D, answer: "One map(MapMode, long, long) call can map an arbitrarily large region beyond Integer.MAX_VALUE bytes.", explanation: "Incorrect. A single region through this overload is limited by ByteBuffer's int-indexed capacity."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.FileChannel/FileChannel.md", anchor: "memory-mapped-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q35
+    question: "Which statement about AsynchronousFileChannel is correct?"
+    answers:
+      - {id: A, answer: "It guarantees every operation completes all requested bytes at once.", explanation: "Incorrect. Partial completion still has to be handled."}
+      - {id: B, answer: "It provides positional file I/O with completion through Future or CompletionHandler.", explanation: "Correct. This is the key difference in completion/orchestration model."}
+      - {id: C, answer: "It is a non-blocking SocketChannel for networking.", explanation: "Incorrect. It is an asynchronous file channel, not a networking channel."}
+      - {id: D, answer: "It is always faster than FileChannel for every workload.", explanation: "Incorrect. Asynchronous execution has no universal performance advantage."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.FileChannel/FileChannel.md", anchor: "asynchronous-filechannel-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q44
+    question: "Which statement correctly distinguishes Closeable from AutoCloseable?"
+    answers:
+      - {id: A, answer: "Every AutoCloseable implementation is required to make repeated close() calls harmless.", explanation: "Incorrect. Idempotent close is not a general AutoCloseable requirement."}
+      - {id: B, answer: "Closeable is an I/O-oriented AutoCloseable specialization whose close() uses IOException and is specified so repeated close calls have no further effect.", explanation: "Correct. This is a useful lifecycle distinction, though code should still have one clear owner."}
+      - {id: C, answer: "AutoCloseable can only be used with files.", explanation: "Incorrect. AutoCloseable is a general resource-lifecycle contract."}
+      - {id: D, answer: "Closeable resources should normally be left for GC instead of being closed deterministically.", explanation: "Incorrect. External resources should normally be released at a predictable point."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.ResourceManagement/ResourceManagement.md", anchor: "closeable-lifecycle"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q38
@@ -531,6 +608,71 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "9.ResourceManagement/ResourceManagement.md", anchor: "resource-ownership"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q45
+    question: "The try body throws exception X, then close() also throws exception Y. What does try-with-resources normally do?"
+    answers:
+      - {id: A, answer: "It discards X and throws only Y.", explanation: "Incorrect. The body failure normally remains the primary exception."}
+      - {id: B, answer: "It silently ignores Y with no way to inspect it.", explanation: "Incorrect. The close failure is retained as a suppressed exception."}
+      - {id: C, answer: "It always wraps both failures in IOException.", explanation: "Incorrect. There is no universal conversion to IOException."}
+      - {id: D, answer: "It keeps X as the primary exception and attaches Y as a suppressed exception; resources declared in the try header are closed in reverse declaration order.", explanation: "Correct. Try-with-resources provides deterministic cleanup while preserving both failure signals."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.ResourceManagement/ResourceManagement.md", anchor: "try-with-resources-io"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q47
+    question: "Which statement correctly describes deserialization of ordinary Serializable classes versus serializable records?"
+    answers:
+      - {id: A, answer: "Both always bypass every constructor in the entire inheritance hierarchy.", explanation: "Incorrect. Ordinary classes involve the nearest non-serializable superclass constructor, while records have a distinct rule."}
+      - {id: B, answer: "Records cannot implement Serializable.", explanation: "Incorrect. Records can be serializable and have serialization-specific rules."}
+      - {id: C, answer: "An ordinary serializable class does not run its own ordinary constructor during deserialization, while a serializable record is reconstructed through its canonical constructor.", explanation: "Correct. Record serialization is a defined exception to the ordinary-class constructor rule."}
+      - {id: D, answer: "serialVersionUID must always match for records exactly as for ordinary serializable classes.", explanation: "Incorrect. Matching stream/local serialVersionUID is waived for records."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.Serialization/Serialization.md", anchor: "java-serialization-model"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q46
+    question: "What does Java Object Serialization serialize when an object references other Serializable objects?"
+    answers:
+      - {id: A, answer: "Only primitive fields of the root object; references are ignored.", explanation: "Incorrect. Reachable serializable objects participate in the serialized graph unless excluded by the serialization rules."}
+      - {id: B, answer: "A reachable object graph, preserving shared-reference/cycle relationships according to the serialization protocol.", explanation: "Correct. Two fields that referenced the same object can be restored as shared references rather than unrelated copies."}
+      - {id: C, answer: "A language-neutral JSON document with no class coupling.", explanation: "Incorrect. Java Object Serialization is a Java-specific binary format tied to Java classes and their evolution."}
+      - {id: D, answer: "Every object in the JVM heap.", explanation: "Incorrect. Serialization follows the graph reachable from the object being written, subject to serialization rules."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.Serialization/Serialization.md", anchor: "serializable-graph"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q55
+    question: "What is the safest general statement about serialVersionUID?"
+    answers:
+      - {id: A, answer: "Keeping the same UID guarantees every class evolution is semantically compatible.", explanation: "Incorrect. UID matching is only one part of compatibility; field/hierarchy/invariant changes can still make old data unsuitable."}
+      - {id: B, answer: "For ordinary serializable classes, UID participates in stream/local class compatibility checks; records have special rules and do not require stream/local UID matching.", explanation: "Correct. The ordinary-class rule must not be generalized unchanged to serializable records."}
+      - {id: C, answer: "serialVersionUID is a cryptographic integrity checksum for serialized bytes.", explanation: "Incorrect. It is a serialization compatibility identifier, not a security hash."}
+      - {id: D, answer: "Changing the UID can never make old serialized data unreadable.", explanation: "Incorrect. Deliberately changing it for an ordinary serializable class can make old serialized forms incompatible."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.Serialization/Serialization.md", anchor: "serialversionuid"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q48
+    question: "Which statement about transient and static fields in default Java Object Serialization is correct?"
+    answers:
+      - {id: A, answer: "transient makes the whole class non-serializable.", explanation: "Incorrect. transient excludes that field from default serialized object state."}
+      - {id: B, answer: "A transient instance field is restored to the type's default value unless custom logic establishes another value; static fields are class state and are not part of default per-object serialized state.", explanation: "Correct. Both boundaries are about what belongs to the default serialized instance form."}
+      - {id: C, answer: "static fields are serialized once per object.", explanation: "Incorrect. Static fields belong to the class rather than each instance."}
+      - {id: D, answer: "transient is a complete security mechanism that guarantees the value can never leak elsewhere.", explanation: "Incorrect. Custom serialization or other application state can still expose sensitive data."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.Serialization/Serialization.md", anchor: "transient-field"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q39
@@ -557,4 +699,69 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "11.ChoosingIO/ChoosingIO.md", anchor: "choose-stream-reader-channel"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q54
+    question: "A resource is loaded with ClassLoader.getResourceAsStream(\"config/default.txt\"). What filesystem assumption is unsafe?"
+    answers:
+      - {id: A, answer: "The returned content must always exist as a normal local File/Path.", explanation: "Correct. A classpath/module-path resource may live inside a JAR or another class-loader-managed source rather than a directly addressable filesystem path."}
+      - {id: B, answer: "The returned InputStream still has a resource lifecycle.", explanation: "Incorrect. That is a valid consideration; stream lifecycle rules still apply."}
+      - {id: C, answer: "ClassLoader resource lookup uses a different namespace from ordinary filesystem Path lookup.", explanation: "Incorrect. That distinction is precisely why converting the resource to File/Path cannot be assumed."}
+      - {id: D, answer: "Detailed ClassLoader delegation rules belong outside the I/O module.", explanation: "Incorrect. That curriculum boundary is valid; I/O only needs the resource-vs-filesystem distinction here."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "11.ChoosingIO/ChoosingIO.md", anchor: "choose-stream-reader-channel"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q49
+    question: "Why is Files.readAllBytes(path) a poor default for an input whose size is untrusted or potentially huge?"
+    answers:
+      - {id: A, answer: "It is limited to ASCII.", explanation: "Incorrect. readAllBytes works with raw bytes and has no text charset semantics."}
+      - {id: B, answer: "It requires the entire remaining content to be materialized in memory, while streaming can process bounded chunks incrementally.", explanation: "Correct. The size contract should be known before choosing a whole-content API."}
+      - {id: C, answer: "It automatically memory-maps the file and cannot be closed.", explanation: "Incorrect. It returns a byte array; memory mapping is a different mechanism."}
+      - {id: D, answer: "It always performs asynchronous I/O.", explanation: "Incorrect. That is not its contract."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "11.ChoosingIO/ChoosingIO.md", anchor: "memory-vs-streaming"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q50
+    question: "When is a Charset part of the I/O data contract?"
+    answers:
+      - {id: A, answer: "Whenever Java manipulates any String, including pure StringReader/StringWriter operations.", explanation: "Incorrect. Pure in-memory character operations do not cross a byte/character encoding boundary."}
+      - {id: B, answer: "When text crosses a byte-oriented boundary such as a file or byte stream and the bytes must be encoded or decoded.", explanation: "Correct. The format/protocol should define the charset rather than relying on an implicit environment choice."}
+      - {id: C, answer: "Only when the text contains non-ASCII characters.", explanation: "Incorrect. A byte-backed text format has an encoding contract regardless of which characters happen to occur in one sample."}
+      - {id: D, answer: "Only before Java 18, because UTF-8 defaults remove the need for explicit format contracts.", explanation: "Incorrect. A stable data format should still make its charset explicit even when the runtime default is UTF-8."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "11.ChoosingIO/ChoosingIO.md", anchor: "charset-explicit"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q51
+    question: "A write fails after some bytes have already reached the target. Why can blindly retrying the whole write be wrong?"
+    answers:
+      - {id: A, answer: "Because every IOException proves that zero bytes were written.", explanation: "Incorrect. I/O failure can occur after partial progress."}
+      - {id: B, answer: "Because retrying from the beginning can duplicate or corrupt data unless the operation is idempotent/resumable or the code knows the target state/offset.", explanation: "Correct. Failure policy must account for partial effects."}
+      - {id: C, answer: "Because Java forbids retrying any I/O operation.", explanation: "Incorrect. Retries are valid when their semantics are understood."}
+      - {id: D, answer: "Because retries are only allowed with Reader, not Channel or OutputStream.", explanation: "Incorrect. The issue is operation semantics, not one specific abstraction."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "11.ChoosingIO/ChoosingIO.md", anchor: "io-error-handling"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: io-q52
+    question: "Which optimization approach best matches the module's I/O performance boundary?"
+    answers:
+      - {id: A, answer: "Use direct buffers, memory mapping, and async I/O first, then measure later.", explanation: "Incorrect. More complex APIs introduce costs and should follow evidence."}
+      - {id: B, answer: "Always increase every buffer because larger buffers cannot hurt latency or memory.", explanation: "Incorrect. Buffer sizing has workload-dependent trade-offs."}
+      - {id: C, answer: "Choose the simplest correct bounded design, measure the real workload, identify the actual bottleneck, then optimize the relevant layer.", explanation: "Correct. Correctness and resource bounds come before performance tuning."}
+      - {id: D, answer: "Prefer the lowest-level NIO API because abstraction level directly determines speed.", explanation: "Incorrect. Lower level does not imply universally better performance."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "11.ChoosingIO/ChoosingIO.md", anchor: "io-performance-boundary"}
     apiRelated: {controller: "", methodSignature: ""}

@@ -1,4 +1,4 @@
-# Byte Streams
+# Byte Streams and Structured Binary Data
 
 The opening chapter established I/O as data moving between a source and a sink. The next question is how Java represents that flow when the payload must remain binary.
 
@@ -77,13 +77,17 @@ java.io.Console console = System.console();
 if (console != null) {
     String name = console.readLine("Your name: ");
     char[] password = console.readPassword("Password: ");
-    console.printf("Hello %s%n", name);
 
-    java.util.Arrays.fill(password, '\0');
+    if (name != null) {
+        console.printf("Hello %s%n", name);
+    }
+    if (password != null) {
+        java.util.Arrays.fill(password, '\0');
+    }
 }
 ```
 
-`Console` provides terminal-oriented operations such as `readLine`, `printf`, `reader()`, `writer()`, and `readPassword()`. `readPassword()` attempts to suppress terminal echo and returns a `char[]` so the caller can overwrite sensitive characters after use.
+`Console` provides terminal-oriented operations such as `readLine`, `printf`, `reader()`, `writer()`, and `readPassword()`. `readPassword()` attempts to suppress terminal echo and returns a `char[]` so the caller can overwrite sensitive characters after use. Both `readLine(...)` and `readPassword(...)` can return `null` when the console input reaches end-of-stream, so code must not dereference their results unconditionally.
 
 The key boundary is that `System.console()` **may return `null`**. This is common when the JVM has no suitable interactive console, such as under some IDEs, test runners, services/background processes, or when standard streams are piped or redirected. Code therefore needs a fallback or another input abstraction instead of assuming a `Console` always exists.
 
@@ -134,7 +138,9 @@ Two other API groups are easy to misuse:
 
 A call to `read(buffer)` does **not** promise to fill the buffer. It may return fewer bytes than the array can hold even though the stream has not reached EOF. This matters especially for networks, compressed streams, pipes, and sources that produce data incrementally.
 
-If a format requires an exact number of bytes, the caller must loop or use an API whose contract performs that work, such as `readNBytes`:
+If a format requires an exact number of bytes, the caller must loop or use a helper with the right completion semantics. `readNBytes(...)` performs repeated reads up to the requested length, but it can still return a smaller count when EOF arrives early, so code must validate that count. `DataInput.readFully(...)`, introduced below for structured binary data, instead throws `EOFException` if it cannot obtain the required bytes.
+
+A manual exact-length loop looks like this:
 
 ```java
 byte[] header = new byte[8];

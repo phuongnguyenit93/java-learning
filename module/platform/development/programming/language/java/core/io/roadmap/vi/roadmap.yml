@@ -44,75 +44,98 @@
 roadmap:
   - id: io-mental-model
     title: Mô hình luồng dữ liệu I/O và vòng đời tài nguyên
-    purpose: Hiểu I/O là quá trình di chuyển dữ liệu từ nguồn đến đích qua một ranh giới tài nguyên, đồng thời phải quan tâm đến đơn vị dữ liệu, cơ chế chặn, bộ đệm, mã hóa và vòng đời tài nguyên.
+    purpose: Hiểu I/O tồn tại để chương trình có một mô hình thống nhất cho việc đọc dữ liệu từ nguồn (source) và ghi dữ liệu tới đích (sink), dù nguồn/đích là tệp, bảng điều khiển (console), vùng nhớ hay tài nguyên khác; quá trình đó phải được quản lý đúng về biểu diễn dữ liệu, cách chờ hoàn tất, bộ đệm, mã hóa và vòng đời tài nguyên.
+    relatedKnowledge:
+      - MentalModel
     objectives:
-      - Xác định dữ liệu đang di chuyển là gì, đi từ đâu đến đâu và ai chịu trách nhiệm đóng tài nguyên trước khi chọn API.
-      - Phân biệt byte với ký tự, bộ đệm với nơi lưu trữ, cơ chế chặn với không chặn và vòng đời tài nguyên với vòng đời đối tượng thông thường.
+      - Xác định dữ liệu đang di chuyển là gì, đi từ đâu đến đâu và, nếu có tài nguyên cần đóng, ai sở hữu trách nhiệm đóng trước khi chọn API.
+      - Phân biệt byte với ký tự, bộ đệm với nơi lưu trữ và vòng đời tài nguyên với vòng đời đối tượng thông thường; phân biệt hành vi lời gọi chặn/không chặn (blocking/non-blocking) với cách hoàn tất bất đồng bộ (asynchronous), không đồng nhất asynchronous với non-blocking.
   - id: byte-streams
     title: Luồng byte và dữ liệu nhị phân có cấu trúc
     purpose: Hiểu khi nào dữ liệu phải được xử lý dưới dạng byte nguyên gốc và cách Java biểu diễn việc đọc/ghi byte hoặc các giá trị nguyên thủy có thứ tự xác định.
+    relatedKnowledge:
+      - ByteStreams
     objectives:
-      - Hiểu mô hình InputStream/OutputStream, giá trị trả về của read(), EOF và khả năng đọc/ghi từng phần.
+      - Hiểu mô hình InputStream/OutputStream, giá trị trả về của read(), dấu kết thúc luồng (EOF) và khả năng đọc/ghi từng phần.
       - Phân biệt byte tùy ý với dữ liệu nhị phân có cấu trúc qua DataInput/DataOutput và quy ước xác định ranh giới dữ liệu.
   - id: character-streams
     title: Luồng ký tự và chuyển đổi bộ mã ký tự
-    purpose: Hiểu cách byte trở thành ký tự khi đọc văn bản và tại sao I/O văn bản cần lớp chuyển đổi có nhận biết charset.
+    purpose: Hiểu cách byte trở thành ký tự khi đọc văn bản và tại sao I/O văn bản cần lớp chuyển đổi có nhận biết bộ mã ký tự (charset).
+    relatedKnowledge:
+      - CharacterStreams
     relatedModules:
       - routeId: JAVA_STRING
         label: String
-        note: Module String sở hữu mô hình charset/Unicode mà I/O văn bản dựa vào.
+        note: Module String sở hữu mô hình bộ mã ký tự và Unicode mà I/O văn bản dựa vào.
     objectives:
       - Chọn Reader/Writer khi dữ liệu mang ý nghĩa văn bản và xác định rõ charset khi chuyển đổi byte ↔ ký tự.
       - Tránh áp dụng quy tắc xử lý văn bản cho dữ liệu nhị phân tùy ý.
   - id: buffered-io
-    title: Bộ đệm I/O và hành vi đẩy dữ liệu (flush)
-    purpose: Hiểu vì sao gom nhiều thao tác đọc/ghi nhỏ vào bộ đệm có thể giảm chi phí I/O và cách các lớp bọc thay đổi hành vi đọc/ghi.
+    title: Lớp bọc, bộ đệm và hành vi đẩy dữ liệu (flush)
+    purpose: Hiểu cách Java ghép nhiều lớp I/O bằng lớp bọc (wrapper) để bổ sung hành vi, trong đó dùng bộ đệm (buffering) là trường hợp quan trọng giúp gom các thao tác đọc/ghi nhỏ và giảm chi phí truy cập tài nguyên bên dưới.
+    relatedKnowledge:
+      - BufferedIO
     objectives:
+      - Hiểu lớp I/O bên ngoài có thể bổ sung hành vi rồi ủy quyền cho lớp bên trong, thay vì mỗi API tự thực hiện toàn bộ việc đọc/ghi.
       - Dùng bộ đệm khi kiểu truy cập hưởng lợi từ việc giảm số lần thao tác với tài nguyên bên dưới.
       - Hiểu khi nào cần flush và không giả định mọi lớp bọc có cùng hành vi.
   - id: legacy-file-model
     title: File và mô hình đường dẫn cũ
     purpose: Hiểu java.io.File đại diện cho điều gì trong mô hình I/O cũ và vì sao nó không phải là nội dung của tệp hay một tài nguyên tệp đang mở.
+    relatedKnowledge:
+      - File
     objectives:
       - Phân biệt java.io.File với dữ liệu thật trong tệp và với tài nguyên đang được mở để đọc/ghi.
       - Nhận biết các giới hạn của File để hiểu vì sao mã nguồn hiện đại thường chuyển sang Path/Files.
   - id: modern-filesystem
     title: Path, Files và mô hình hệ thống tệp hiện đại
     purpose: Hiểu cách Path, Files, FileSystem, FileSystemProvider và FileStore tách đường dẫn, thao tác, khả năng của hệ thống tệp và thông tin lưu trữ.
+    relatedKnowledge:
+      - PathFiles
     objectives:
       - Dùng Path/Files cho resolve, normalize, đọc/ghi, copy/move/delete, thư mục tạm, thuộc tính và duyệt cây thư mục.
       - Hiểu ranh giới khả năng của FileSystemProvider, quyền/chủ sở hữu và WatchService thay vì giả định mọi hệ thống tệp đều giống nhau.
   - id: buffers-and-channels
     title: Buffer và Channel trong NIO
-    purpose: Hiểu mô hình truyền dữ liệu của NIO, trong đó Buffer giữ trạng thái dữ liệu còn Channel là đường truyền giữa dữ liệu và tài nguyên I/O.
+    purpose: Hiểu mô hình truyền dữ liệu của NIO (New I/O), trong đó Buffer giữ trạng thái dữ liệu còn Channel là đường truyền giữa dữ liệu và tài nguyên I/O.
+    relatedKnowledge:
+      - BuffersChannels
     objectives:
       - Suy luận đúng về position, limit, capacity và các chuyển trạng thái flip/clear/compact thay vì xem Buffer như một mảng đơn giản.
       - Hiểu ByteOrder, đọc phân tán/ghi thu gom (scatter/gather) và khi nào cần mức kiểm soát thấp hơn luồng I/O thông thường.
   - id: file-channels-and-advanced-file-io
     title: FileChannel và I/O tệp nâng cao
     purpose: Hiểu các khả năng chuyên biệt cho tệp như truy cập theo vị trí, khóa tệp, ánh xạ bộ nhớ, truyền trực tiếp và I/O bất đồng bộ.
+    relatedKnowledge:
+      - FileChannel
     objectives:
       - Chỉ chọn FileChannel hoặc AsynchronousFileChannel khi khả năng riêng của chúng giải quyết nhu cầu cụ thể.
       - Nhận biết ranh giới và vòng đời của khóa tệp, ánh xạ bộ nhớ, truyền dữ liệu và I/O bất đồng bộ.
   - id: resource-management
     title: Quản lý vòng đời tài nguyên và an toàn khi lỗi
     purpose: Hiểu vì sao tài nguyên I/O cần được giải phóng có chủ đích và cách dọn dẹp có cấu trúc tương tác với lỗi trong quá trình xử lý.
+    relatedKnowledge:
+      - ResourceManagement
     relatedModules:
       - routeId: JAVA_EXCEPTION
         label: Exception
-        note: Module Exception sở hữu cơ chế lan truyền lỗi, suppressed exception và dọn dẹp mà tài nguyên I/O sử dụng.
+        note: Module Exception sở hữu cơ chế lan truyền lỗi, ngoại lệ bị giữ lại (suppressed exception) và dọn dẹp mà tài nguyên I/O sử dụng.
     objectives:
       - Dùng try-with-resources làm cấu trúc mặc định khi code sở hữu tài nguyên Closeable/AutoCloseable.
       - Giữ đúng ngữ cảnh lỗi khi cả thao tác chính và quá trình close đều thất bại.
   - id: serialization-boundary
     title: Ranh giới của tuần tự hóa đối tượng Java
     purpose: Hiểu Java Object Serialization là cơ chế tuần tự hóa đồ thị đối tượng có ràng buộc về định danh đối tượng, phiên bản, tương thích và an toàn, không phải định dạng dữ liệu dùng chung cho mọi trường hợp.
+    relatedKnowledge:
+      - Serialization
     objectives:
       - Hiểu Serializable, đồ thị đối tượng, serialVersionUID và transient ảnh hưởng đến dữ liệu được tuần tự hóa như thế nào.
       - Nhận biết rủi ro tương thích và bảo mật trước khi chọn cơ chế Java Object Serialization.
   - id: io-choice-synthesis
     title: Chọn cách I/O đơn giản nhưng đúng
     purpose: Kết nối loại dữ liệu, quy mô, kiểu thao tác, vòng đời tài nguyên và khả năng của từng API thành một mô hình quyết định thống nhất.
+    relatedKnowledge:
+      - ChoosingIO
     relatedModules:
       - routeId: JAVA_CLASSLOADER
         label: ClassLoader

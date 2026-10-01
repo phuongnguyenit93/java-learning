@@ -1,4 +1,4 @@
-# Path and Files
+# Path, Files, and the Modern Filesystem Model
 
 After `java.io.File`, modern Java usually works with the filesystem through two separate roles: `Path` represents a **path**, while `Files` performs **I/O operations and metadata queries** on that path. This separation lets us answer two different questions: where is the resource, and what operation should be performed on it?
 
@@ -12,7 +12,7 @@ String text = "Hello Java I/O";
 
 ## <a id="path-model">The Path Model</a>
 
-A `Path` models a path in a filesystem. An **absolute path** starts from a root/location that identifies the target independently of the current working directory, such as `C:\\work\\note.txt` or `/tmp/note.txt`. A **relative path** such as `data/note.txt` must be interpreted against a base path, often the working directory or another `Path` that code explicitly resolves it against.
+A `Path` models a path in a filesystem. An **absolute path** starts from a root/location that identifies the target independently of the current working directory, such as `C:\work\note.txt` or `/tmp/note.txt`. A **relative path** such as `data/note.txt` must be interpreted against a base path, often the working directory or another `Path` that code explicitly resolves it against.
 
 The first important rule for a beginner is that **creating a Path does not access the filesystem**:
 
@@ -45,59 +45,6 @@ Files
 ~~~
 
 The previous chapter introduced legacy `File`. `Path` and `Files` are generally preferred in modern Java because their responsibilities are clearer, they expose richer operations, and failures are represented by more specific exceptions.
-
-## <a id="filesystem-provider-model">FileSystem, FileSystemProvider, and FileStore</a>
-
-A `Path` does not exist by itself. **Every `Path` belongs to a particular `FileSystem`.** A `FileSystem` describes the namespace and path rules in which that path lives: available roots, separator rules, backing stores, and the capabilities exposed by the provider underneath it.
-
-Keep this mental model:
-
-~~~text
-Path
-→ belongs to a FileSystem
-→ the FileSystem is implemented/provided by a FileSystemProvider
-→ data is backed by one or more FileStore objects
-~~~
-
-In most ordinary desktop/server programs, `Path.of(...)` uses the operating system's **default filesystem**. NIO.2 is broader than that, however: Java can work with alternate provider-backed filesystems, for example ZIP/JAR filesystems. That is one reason `Path` is a richer abstraction than “a Windows/Linux path string.”
-
-~~~java
-Path path = Path.of("data", "note.txt");
-FileSystem fs = path.getFileSystem();
-
-System.out.println(fs.provider().getScheme());
-System.out.println(fs.getSeparator());
-~~~
-
-`FileSystemProvider` is the implementation layer behind filesystem operations. Application code normally **does not call a provider directly**; it uses `Path` and `Files`, and the provider performs the operation according to that filesystem's capabilities. This gives one common explanation for several portability boundaries in this chapter:
-
-~~~text
-ATOMIC_MOVE may be unsupported
-POSIX permission views may not exist
-WatchService delivery can differ
-symbolic-link behavior can differ
-→ because capability/semantics depend on the filesystem + provider
-~~~
-
-`FileStore` represents the backing storage/filesystem volume containing a path. It can expose information such as capacity and supported attribute views:
-
-~~~java
-FileStore store = Files.getFileStore(path);
-
-long total = store.getTotalSpace();
-long usable = store.getUsableSpace();
-
-boolean posix =
-        store.supportsFileAttributeView("posix");
-~~~
-
-Capacity values are snapshots at query time, not quota or transaction guarantees. Likewise, a `FileStore` reporting support for an attribute view means that capability exists at the store/provider level; a specific operation can still fail because of permissions, file state, or races.
-
-One important consequence is that **not every `Path` from every provider can be converted to `java.io.File`**. `Path.toFile()` is supported only by the default provider; another provider can throw `UnsupportedOperationException`. Modern code should therefore keep values as `Path` instead of converting to `File` merely by habit.
-
-Paths from incompatible providers/filesystems also should not be mixed casually. Operations such as `resolve`, `relativize`, copy, and move have filesystem/provider boundaries of their own. Reusable code should treat **filesystem identity** as part of the context instead of assuming every path is the same kind of path.
-
-Beginners do not need to implement a custom `FileSystemProvider` here. The goal is architectural understanding: a `Path` has an owning `FileSystem`, `Files` dispatches operations through the provider, and `FileStore` describes backing storage/capabilities. That mental model ties together the portability caveats throughout this chapter.
 
 ## <a id="resolve-normalize">resolve, normalize, and relativize</a>
 
@@ -137,7 +84,7 @@ The paths must be compatible, for example both absolute or both relative and fro
 
 ## <a id="files-operations">Files Operations</a>
 
-Once a `Path` exists, the `Files` utility class provides common filesystem operations. For small files with known bounds, Java 21 offers direct read/write methods:
+Once a `Path` exists, the `Files` utility class provides common filesystem operations. For small files with known bounds, modern Java provides convenient whole-content read/write methods:
 
 ~~~java
 Path tempDir = Files.createTempDirectory("io-demo-");
@@ -299,7 +246,7 @@ both false
 → the state could not be determined
 ~~~
 
-If the real question is whether two `Path` values identify the same file, do not infer that only from path strings or `normalize()`. `Files.isSameFile(a, b)` asks the filesystem about file identity and handles cases such as symbolic links more directly.
+If the real question is whether two `Path` values identify the same file, do not infer that only from path strings or `normalize()`. `Files.isSameFile(a, b)` handles filesystem identity and cases such as symbolic links more directly. One important caveat is that when the two `Path` values are already equal, `isSameFile` returns `true` without checking whether the file exists, so **it is not an existence check**.
 
 When several attributes are needed together, `readAttributes` expresses that intent directly:
 
@@ -332,6 +279,59 @@ check exists
 ~~~
 
 The filesystem can change between the check and the operation because of another thread or process. Let the real operation determine success or failure and handle its exception instead of treating an earlier check as a guarantee.
+
+## <a id="filesystem-provider-model">FileSystem, FileSystemProvider, and FileStore</a>
+
+A `Path` does not exist by itself. **Every `Path` belongs to a particular `FileSystem`.** A `FileSystem` describes the namespace and path rules in which that path lives: available roots, separator rules, backing stores, and the capabilities exposed by the provider underneath it.
+
+Keep this mental model:
+
+~~~text
+Path
+→ belongs to a FileSystem
+→ the FileSystem is implemented/provided by a FileSystemProvider
+→ data is backed by one or more FileStore objects
+~~~
+
+In most ordinary desktop/server programs, `Path.of(...)` uses the operating system's **default filesystem**. NIO.2 is broader than that, however: Java can work with alternate provider-backed filesystems, for example ZIP/JAR filesystems. That is one reason `Path` is a richer abstraction than “a Windows/Linux path string.”
+
+~~~java
+Path path = Path.of("data", "note.txt");
+FileSystem fs = path.getFileSystem();
+
+System.out.println(fs.provider().getScheme());
+System.out.println(fs.getSeparator());
+~~~
+
+`FileSystemProvider` is the implementation layer behind filesystem operations. Application code normally **does not call a provider directly**; it uses `Path` and `Files`, and the provider performs the operation according to that filesystem's capabilities. This gives one common explanation for several portability boundaries in this chapter:
+
+~~~text
+ATOMIC_MOVE may be unsupported
+POSIX permission views may not exist
+WatchService delivery can differ
+symbolic-link behavior can differ
+→ because capability/semantics depend on the filesystem + provider
+~~~
+
+`FileStore` represents the backing storage/filesystem volume containing a path. It can expose information such as capacity and supported attribute views:
+
+~~~java
+FileStore store = Files.getFileStore(path);
+
+long total = store.getTotalSpace();
+long usable = store.getUsableSpace();
+
+boolean posix =
+        store.supportsFileAttributeView("posix");
+~~~
+
+Capacity values are snapshots at query time, not quota or transaction guarantees. Likewise, a `FileStore` reporting support for an attribute view means that capability exists at the store/provider level; a specific operation can still fail because of permissions, file state, or races.
+
+One important consequence is that **not every `Path` from every provider can be converted to `java.io.File`**. `Path.toFile()` is supported only by the default provider; another provider can throw `UnsupportedOperationException`. Modern code should therefore keep values as `Path` instead of converting to `File` merely by habit.
+
+Paths from incompatible providers/filesystems also should not be mixed casually. Operations such as `resolve`, `relativize`, copy, and move have filesystem/provider boundaries of their own. Reusable code should treat **filesystem identity** as part of the context instead of assuming every path is the same kind of path.
+
+Beginners do not need to implement a custom `FileSystemProvider` here. The goal is architectural understanding: a `Path` has an owning `FileSystem`, `Files` dispatches operations through the provider, and `FileStore` describes backing storage/capabilities. That mental model ties together the portability caveats throughout this chapter.
 
 ## <a id="file-permissions-ownership">Attribute Views, Permissions, and Ownership</a>
 

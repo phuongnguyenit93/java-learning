@@ -49,12 +49,16 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  character-buffering:
+4.BufferedIO/BufferedIO.md:
+  wrapper-composition:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-4.BufferedIO/BufferedIO.md:
   buffering-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  character-buffering:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
@@ -88,10 +92,6 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  filesystem-provider-model:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
   resolve-normalize:
     difficulty: BASIC
     aiGenerated: true
@@ -105,6 +105,10 @@
     aiGenerated: true
     reviewed: false
   file-attributes:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  filesystem-provider-model:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
@@ -125,11 +129,11 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  byte-order-structured-binary:
+  flip-clear-compact:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  flip-clear-compact:
+  byte-order-structured-binary:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
@@ -150,10 +154,6 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  asynchronous-filechannel-boundary:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
   filechannel-transfer:
     difficulty: BASIC
     aiGenerated: true
@@ -166,16 +166,20 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+  asynchronous-filechannel-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
 9.ResourceManagement/ResourceManagement.md:
   closeable-lifecycle:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  try-with-resources-io:
+  resource-ownership:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  resource-ownership:
+  try-with-resources-io:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
