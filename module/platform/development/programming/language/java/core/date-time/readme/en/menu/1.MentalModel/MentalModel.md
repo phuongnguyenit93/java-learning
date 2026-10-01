@@ -1,4 +1,4 @@
-# Java Date-Time Mental Model
+# What Date-Time Means and Why Multiple Models Exist
 
 Date and time look simple because people use calendars and clocks every day. In software, however, the phrase “store a time” can mean several very different things:
 
@@ -210,24 +210,6 @@ UnsupportedTemporalTypeException
 ```
 
 For example, `LocalDate.of(2026, 2, 30)` can throw `DateTimeException`; malformed temporal text can produce `DateTimeParseException`; requesting `HOURS` from `LocalDate` can lead to `UnsupportedTemporalTypeException`.
-
-### What is DST? — know the term before gaps and overlaps appear
-
-**DST (Daylight Saving Time)** is a policy used by **some** countries or regions to change the UTC offset/local clock during part of the year. Not every region uses DST, and governments can change the rules.
-
-When a zone transition moves the clock, two terms matter:
-
-```text
-gap
-→ the clock jumps forward
-→ a range of local clock readings does not exist
-
-overlap
-→ the clock moves backward
-→ a range of local clock readings occurs twice under different offsets
-```
-
-This is why `LocalDateTime + ZoneId` does not always map trivially 1:1 to an `Instant`. The learner does not need the resolution rules yet; the zone and pitfalls chapters build them step by step.
 
 ### CONCEPT — “time” is not one thing
 
@@ -469,9 +451,9 @@ Offset or zone rules? → ZoneOffset / ZoneId
 Attach context?       → ZonedDateTime / OffsetDateTime
 Amount of time?       → Duration / Period
 Text ↔ temporal?      → Formatting / Parsing
-Add/subtract/compare? → Arithmetic / Comparison
+Add/subtract/compare + DST? → Arithmetic / Comparison
 Testable “now”?       → Clock
-Old APIs + DST/defaults? → Legacy Interop / Pitfalls
+Old APIs + default zone + storage? → Legacy Interop / Synthesis
 ```
 
 If only one idea stays with you before the next chapter, keep this one: **choose a date-time type from the meaning of the data, not from a habit of calling everything a timestamp**.

@@ -1,10 +1,10 @@
-# Tính toán và so sánh thời gian
+# Phép toán, so sánh và ảnh hưởng của quy tắc múi giờ
 
-Date-time arithmetic không chỉ là “cộng một con số”. Khi code cộng `1 day`, `24 hours`, `1 month` hoặc đo khoảng cách giữa hai value, kết quả phụ thuộc vào loại temporal và semantics đang dùng.
+Phép toán ngày-giờ không chỉ là “cộng một con số”. Khi mã cộng 1 ngày, 24 giờ, 1 tháng hoặc đo khoảng cách giữa hai giá trị, kết quả phụ thuộc vào kiểu thời gian và ý nghĩa đang dùng.
 
-## <a id="temporal-arithmetic">plus/minus và semantics của temporal type</a>
+## <a id="temporal-arithmetic">Phép cộng/trừ và ý nghĩa của từng kiểu thời gian</a>
 
-Các type `java.time` thường cung cấp operation dạng:
+Các kiểu `java.time` thường cung cấp thao tác dạng:
 
 ```java
 value.plusDays(1);
@@ -13,7 +13,7 @@ value.plus(amount);
 value.minus(amount);
 ```
 
-Nhưng ý nghĩa khác nhau theo type.
+Nhưng ý nghĩa khác nhau theo kiểu.
 
 ### LocalDate
 
@@ -23,7 +23,7 @@ LocalDate nextMonth = invoiceDate.plusMonths(1);
 // 2026-02-28
 ```
 
-Đây là calendar arithmetic.
+Đây là phép toán theo lịch.
 
 ### Instant
 
@@ -32,18 +32,18 @@ Instant deadline = Instant.parse("2026-09-27T10:00:00Z");
 Instant extended = deadline.plus(Duration.ofMinutes(30));
 ```
 
-Đây là timeline arithmetic.
+Đây là phép toán theo dòng thời gian.
 
 ### ZonedDateTime
 
-`ZonedDateTime` có cả local calendar fields và timeline context, vì vậy cần phân biệt:
+`ZonedDateTime` có cả các trường lịch cục bộ và ngữ cảnh dòng thời gian, vì vậy cần phân biệt:
 
 ```java
-zoned.plusDays(1);                // date-based/local semantics
-zoned.plus(Duration.ofHours(24)); // timeline duration semantics
+zoned.plusDays(1);                // theo ngày lịch / giờ cục bộ
+zoned.plus(Duration.ofHours(24)); // theo thời lượng thực trên dòng thời gian
 ```
 
-Quanh DST, hai operation có thể không dẫn tới cùng local time hoặc cùng elapsed seconds.
+Quanh thời điểm chuyển DST, hai thao tác có thể không dẫn tới cùng giờ cục bộ hoặc cùng số giây thực tế đã trôi qua.
 
 ### TemporalAmount và TemporalUnit
 
@@ -54,13 +54,13 @@ temporal.plus(amount);
 temporal.plus(number, unit);
 ```
 
-Hai overload này dẫn tới hai abstraction khác nhau:
+Hai overload này dẫn tới hai giao diện dùng chung khác nhau:
 
 - `TemporalAmount` là **một lượng thời gian đã có cấu trúc**, ví dụ `Period.ofMonths(2)` hoặc `Duration.ofMinutes(30)`;
 - `TemporalUnit` là **đơn vị dùng để diễn giải một con số**, ví dụ DAYS, HOURS, MONTHS;
-- `ChronoUnit` là enum implementation chuẩn của `TemporalUnit`, cung cấp những unit quen thuộc như `NANOS`, `SECONDS`, `MINUTES`, `HOURS`, `DAYS`, `WEEKS`, `MONTHS`, `YEARS`.
+- `ChronoUnit` là enum triển khai chuẩn của `TemporalUnit`, cung cấp những đơn vị quen thuộc như `NANOS`, `SECONDS`, `MINUTES`, `HOURS`, `DAYS`, `WEEKS`, `MONTHS`, `YEARS`.
 
-Mental model:
+Mô hình tư duy:
 
 ```text
 TemporalAmount
@@ -74,7 +74,7 @@ ChronoUnit
 → bộ TemporalUnit chuẩn mà Java cung cấp
 ```
 
-Quan hệ type:
+Quan hệ kiểu:
 
 ```text
 TemporalAmount
@@ -85,7 +85,7 @@ TemporalUnit
 └── ChronoUnit
 ```
 
-Ví dụ hai style tương đương về ý định:
+Ví dụ hai cách viết tương đương về ý định:
 
 ```java
 LocalDate date = LocalDate.of(2026, 9, 27);
@@ -94,11 +94,11 @@ LocalDate byAmount = date.plus(Period.ofWeeks(2));
 LocalDate byUnit = date.plus(2, ChronoUnit.WEEKS);
 ```
 
-Tại sao Java cần abstraction chung này? Vì nhiều temporal type có thể chia sẻ vocabulary `plus`, `minus`, `between`, field và unit mà không cần mỗi class phát minh một interface hoàn toàn khác.
+Tại sao Java cần các giao diện dùng chung này? Vì nhiều kiểu thời gian có thể chia sẻ từ vựng `plus`, `minus`, `between`, trường và đơn vị mà không cần mỗi lớp phát minh một giao diện hoàn toàn khác.
 
-Nhưng abstraction chung **không có nghĩa mọi unit đều hợp lệ cho mọi type**. `LocalDate` không có hour-of-day nên không hỗ trợ `HOURS`; `Instant` không mang calendar-month semantics nên không hỗ trợ trực tiếp `MONTHS`. Khi operation/unit không được type hỗ trợ, API có thể ném `UnsupportedTemporalTypeException`.
+Nhưng việc dùng giao diện chung **không có nghĩa mọi đơn vị đều hợp lệ cho mọi kiểu**. `LocalDate` không có trường giờ trong ngày nên không hỗ trợ `HOURS`; `Instant` không mang ý nghĩa tháng theo lịch nên không hỗ trợ trực tiếp `MONTHS`. Khi thao tác hoặc đơn vị không được kiểu hỗ trợ, API có thể ném `UnsupportedTemporalTypeException`.
 
-## <a id="between-semantics">Semantics của between</a>
+## <a id="between-semantics">Ý nghĩa của phép tính khoảng cách `between`</a>
 
 Có nhiều cách hỏi “khoảng cách giữa A và B”, và chúng không hoàn toàn giống nhau.
 
@@ -111,7 +111,7 @@ LocalDate end = LocalDate.of(2026, 9, 27);
 long days = ChronoUnit.DAYS.between(start, end); // 26
 ```
 
-`ChronoUnit` trả một số lượng unit hoàn chỉnh giữa hai temporal phù hợp.
+`ChronoUnit` trả một số lượng đơn vị hoàn chỉnh giữa hai giá trị thời gian phù hợp.
 
 ### Duration.between
 
@@ -122,7 +122,7 @@ Instant b = Instant.parse("2026-09-27T11:30:00Z");
 Duration elapsed = Duration.between(a, b);
 ```
 
-Phù hợp khi cần elapsed timeline time.
+Phù hợp khi cần thời lượng thực đã trôi qua trên dòng thời gian.
 
 ### Period.between
 
@@ -133,30 +133,30 @@ LocalDate date = LocalDate.of(2026, 9, 27);
 Period calendarDifference = Period.between(birth, date);
 ```
 
-Kết quả giữ year/month/day calendar components; nó không phải tổng số seconds.
+Kết quả giữ các thành phần năm/tháng/ngày theo lịch; nó không phải tổng số giây.
 
-### Boundary và unit hoàn chỉnh
+### Cách between đếm các đơn vị hoàn chỉnh
 
-Khi dùng `ChronoUnit.HOURS.between`, kết quả là số hour unit hoàn chỉnh theo semantics của temporal đó. Nếu application cần fractional unit, giữ `Duration`/nanos rồi tính theo requirement thay vì giả định `between` trả decimal.
+Khi dùng `ChronoUnit.HOURS.between`, kết quả là số đơn vị giờ hoàn chỉnh theo ý nghĩa của giá trị thời gian đó. Nếu ứng dụng cần phần lẻ của đơn vị, hãy giữ `Duration` hoặc nano giây rồi tính theo yêu cầu thay vì giả định `between` trả số thập phân.
 
-### Time range cần định nghĩa rõ inclusive/exclusive boundary
+### Khoảng thời gian cần định nghĩa rõ biên bao gồm và không bao gồm
 
-`java.time` không có một core class tên `Interval` bắt buộc mọi application phải dùng, nên domain thường tự định nghĩa semantics cho một khoảng thời gian. Convention rất phổ biến là **half-open interval**:
+`java.time` không có một lớp lõi tên `Interval` bắt buộc mọi ứng dụng phải dùng, nên nghiệp vụ thường tự định nghĩa ý nghĩa cho một khoảng thời gian. Một quy ước rất phổ biến là **khoảng nửa mở (half-open interval)**:
 
 ```text
 [start, end)
 
-start     → inclusive
-end       → exclusive
+start     → bao gồm đầu mút
+end       → không bao gồm đầu mút
 ```
 
-Ví dụ một event thuộc range khi:
+Ví dụ một sự kiện thuộc khoảng khi:
 
 ```java
 boolean inside = !event.isBefore(start) && event.isBefore(endExclusive);
 ```
 
-Convention này đặc biệt hữu ích cho query “toàn bộ event trong một ngày” vì tránh phải invent giá trị kiểu `23:59:59.999999999`:
+Quy ước này đặc biệt hữu ích cho truy vấn “toàn bộ sự kiện trong một ngày” vì tránh phải tự tạo giá trị kiểu `23:59:59.999999999`:
 
 ```java
 LocalDate day = LocalDate.of(2026, 9, 27);
@@ -166,11 +166,11 @@ Instant start = day.atStartOfDay(zone).toInstant();
 Instant endExclusive = day.plusDays(1).atStartOfDay(zone).toInstant();
 ```
 
-`LocalDate.atStartOfDay(zone)` không đơn giản là luôn ép `00:00`. Nếu midnight rơi vào một zone transition/gap, Java trả **earliest valid time** của ngày đó trong zone. Vì vậy `[startOfDay, startOfNextDay)` an toàn hơn tự ghép `00:00`/`23:59:59...` khi domain thực sự hỏi theo ngày của một region.
+`LocalDate.atStartOfDay(zone)` không đơn giản là luôn ép `00:00`. Java dùng quy tắc múi giờ để tìm thời điểm bắt đầu hợp lệ: nếu đầu ngày rơi vào khoảng trống, kết quả được đẩy tới thời điểm ngay sau khoảng trống; trong trường hợp cực đoan cả ngày cục bộ bị bỏ qua, ngày-giờ kết quả thậm chí có thể thuộc ngày kế tiếp. Vì vậy `[startOfDay, startOfNextDay)` an toàn hơn tự ghép `00:00`/`23:59:59...` khi nghiệp vụ thực sự hỏi theo ngày của một vùng.
 
-## <a id="date-time-comparison">So sánh date-time đúng nghĩa</a>
+## <a id="date-time-comparison">So sánh giá trị ngày-giờ theo đúng ý nghĩa</a>
 
-Các type thường có:
+Các kiểu thường có:
 
 ```java
 a.isBefore(b);
@@ -181,7 +181,7 @@ a.equals(b);
 
 Nhưng phải hỏi **đang so sánh cái gì**.
 
-### LocalDate comparison
+### So sánh LocalDate
 
 ```java
 LocalDate a = LocalDate.of(2026, 9, 27);
@@ -190,99 +190,161 @@ LocalDate b = LocalDate.of(2026, 9, 28);
 a.isBefore(b); // true
 ```
 
-Đây là order trên calendar date.
+Đây là thứ tự trên ngày theo lịch.
 
-### Instant comparison
+### So sánh Instant
 
 ```java
 instantA.isBefore(instantB);
 ```
 
-Đây là order trên global timeline.
+Đây là thứ tự trên dòng thời gian toàn cục.
 
-### Zoned values: local representation và timeline identity
+### Giá trị có múi giờ: cách biểu diễn cục bộ và vị trí trên dòng thời gian
 
-Hai `ZonedDateTime` có thể có field/zone khác nhau nhưng cùng instant. Khi domain hỏi “cùng sự kiện trên timeline không?”, cách rõ ràng là so `toInstant()` hoặc dùng API có semantics instant phù hợp.
+Hai `ZonedDateTime` có thể có trường/múi giờ khác nhau nhưng cùng `Instant`. Khi nghiệp vụ hỏi “cùng sự kiện trên dòng thời gian không?”, cách rõ ràng là so `toInstant()` hoặc dùng API có ngữ nghĩa theo `Instant`.
 
 ```java
 boolean sameMoment = a.toInstant().equals(b.toInstant());
 boolean sameMomentDirectly = a.isEqual(b);
 ```
 
-`isEqual(...)` trên các zone-aware temporal phù hợp trả lời câu hỏi timeline equality. Đừng dùng `equals()` như một shorthand cho mọi khái niệm “cùng thời điểm”; equality của object còn quan tâm representation/type state theo contract của type.
+`isEqual(...)` trên các giá trị có múi giờ phù hợp trả lời câu hỏi bằng nhau trên dòng thời gian. Đừng dùng `equals()` như cách viết tắt cho mọi khái niệm “cùng thời điểm”; tính bằng nhau của đối tượng còn phụ thuộc trạng thái biểu diễn theo hợp đồng của từng kiểu.
 
 Với `ZonedDateTime` và `OffsetDateTime`, có thể đọc các API theo hai nhóm:
 
 ```text
 isEqual / isBefore / isAfter
-→ câu hỏi trên instant/timeline
+→ câu hỏi trên Instant/dòng thời gian
 
 equals
-→ equality của object representation theo contract của type
+→ tính bằng nhau của cách biểu diễn đối tượng theo hợp đồng của kiểu
 
 compareTo
-→ natural ordering của type; có tie-break để nhất quán với equality
-→ không nên giả định đây là "instant-only comparator"
+→ thứ tự tự nhiên của kiểu; có tiêu chí phân định để nhất quán với tính bằng nhau
+→ không nên giả định đây là "bộ so sánh chỉ theo Instant"
 ```
 
 Ở đây:
 
 ```text
-natural ordering
-→ thứ tự mặc định mà compareTo(...) định nghĩa cho type
+thứ tự tự nhiên
+→ thứ tự mặc định mà compareTo(...) định nghĩa cho kiểu
 
-tie-break
+tiêu chí phân định
 → tiêu chí phụ chỉ được dùng khi tiêu chí so sánh trước đó bằng nhau
 ```
 
-Nếu business logic chỉ quan tâm timeline order, `toInstant()` hoặc các method `isBefore` / `isAfter` / `isEqual` làm intent rõ hơn.
+Nếu logic nghiệp vụ chỉ quan tâm thứ tự trên dòng thời gian, `toInstant()` hoặc các phương thức `isBefore` / `isAfter` / `isEqual` làm ý định rõ hơn.
 
-**Boundary nâng cao — chi tiết contract:** người mới chỉ cần nắm rule ở trên trước; block dưới hữu ích khi code sorting/comparator cần đúng contract tuyệt đối.
+**Ranh giới nâng cao — hợp đồng chính xác:** người mới chỉ cần nắm quy tắc ở trên trước; phần dưới hữu ích khi mã sắp xếp hoặc bộ so sánh cần tuân thủ chính xác hợp đồng của kiểu.
 
 ```text
 OffsetDateTime.equals(...)
-→ cùng local date-time + cùng offset
+→ cùng ngày-giờ cục bộ + cùng độ lệch
 
 ZonedDateTime.equals(...)
-→ cùng local date-time + cùng offset + cùng ZoneId
+→ cùng ngày-giờ cục bộ + cùng độ lệch + cùng ZoneId
 
 isEqual / isBefore / isAfter
-→ so theo instant trên timeline
+→ so theo Instant trên dòng thời gian
 
 OffsetDateTime.compareTo(...)
 → trước hết so instant
-→ nếu cùng instant thì dùng local date-time làm tie-break
+→ nếu cùng Instant thì dùng ngày-giờ cục bộ làm tiêu chí phân định
 
 ZonedDateTime.compareTo(...)
 → trước hết so instant
-→ rồi local date-time
+→ rồi ngày-giờ cục bộ
 → rồi ZoneId
-→ chronology (calendar system) là tie-break cuối trong contract ChronoZonedDateTime
+→ hệ lịch (chronology) là tiêu chí phân định cuối trong hợp đồng ChronoZonedDateTime
 ```
 
-Do đó hai value có thể **cùng instant nhưng `compareTo(...) != 0`**. Nếu cần comparator chỉ theo timeline, `OffsetDateTime.timeLineOrder()` và `ChronoZonedDateTime.timeLineOrder()` tồn tại đúng cho mục đích đó.
+Do đó hai giá trị có thể **cùng Instant nhưng `compareTo(...) != 0`**. Nếu cần bộ so sánh chỉ theo dòng thời gian, `OffsetDateTime.timeLineOrder()` và `ChronoZonedDateTime.timeLineOrder()` tồn tại đúng cho mục đích đó.
 
-### So sánh local values không tạo ra global meaning
+### Các giá trị cục bộ bằng nhau không tạo ra ý nghĩa toàn cục
 
 ```java
 LocalDateTime vietnamNine = LocalDateTime.of(2026, 10, 5, 9, 0);
 LocalDateTime parisNine = LocalDateTime.of(2026, 10, 5, 9, 0);
 ```
 
-Hai value bằng nhau về local fields nhưng không chứng minh hai event ở Việt Nam và Paris xảy ra cùng instant. Zone context phải được thêm trước.
+Hai giá trị bằng nhau về các trường cục bộ nhưng không chứng minh hai sự kiện ở Việt Nam và Paris xảy ra cùng `Instant`. Ngữ cảnh múi giờ phải được thêm trước.
 
-## <a id="business-calendar-boundary">Business calendar là policy riêng</a>
+## <a id="dst-gap-overlap">Khoảng trống và chồng lặp khi đổi giờ mùa hè (DST)</a>
 
-JDK biết calendar mechanics nhưng không biết business rule của công ty bạn.
+Ở vùng áp dụng giờ mùa hè (DST), đồng hồ cục bộ có các lần chuyển đổi đặc biệt.
 
-Ví dụ câu “deadline sau 3 ngày làm việc” cần trả lời:
+### Khoảng trống (gap) — một khoảng giờ cục bộ không tồn tại
+
+Khi đồng hồ nhảy về phía trước, ví dụ từ 02:00 lên 03:00, các giờ cục bộ trong khoảng bị bỏ qua không tồn tại trong múi giờ đó.
+
+Khi dùng API tiện ích như `LocalDateTime.atZone(zone)`, Java phân giải khoảng trống bằng cách điều chỉnh giờ cục bộ tiến qua độ dài khoảng trống theo quy tắc của `ZonedDateTime`.
+
+Với đầu vào nghiệp vụ quan trọng, đừng chỉ dựa vào điều chỉnh mặc định nếu “thời gian không tồn tại” phải được báo cho người dùng. Có thể kiểm tra `ZoneRules`:
+
+```java
+LocalDateTime local = ...;
+ZoneId zone = ZoneId.of("Europe/Paris");
+
+List<ZoneOffset> validOffsets = zone.getRules().getValidOffsets(local);
+
+if (validOffsets.isEmpty()) {
+    // giờ cục bộ rơi vào khoảng trống
+}
+```
+
+### Chồng lặp (overlap) — một giờ cục bộ xảy ra hai lần
+
+Khi đồng hồ quay lại, cùng một giờ cục bộ có thể hợp lệ với hai độ lệch.
+
+```java
+List<ZoneOffset> validOffsets = zone.getRules().getValidOffsets(local);
+
+if (validOffsets.size() == 2) {
+    // giờ cục bộ bị mơ hồ
+}
+```
+
+Khi tạo `ZonedDateTime` từ giá trị cục bộ bằng API thông thường, Java có quy tắc cụ thể:
+
+```text
+bình thường
+→ 1 độ lệch hợp lệ → dùng độ lệch đó
+
+khoảng trống (gap)
+→ 0 độ lệch hợp lệ
+→ ngày-giờ cục bộ được đẩy tiến theo độ dài khoảng trống
+
+chồng lặp (overlap)
+→ 2 độ lệch hợp lệ
+→ mặc định dùng độ lệch trước lần chuyển đổi
+  (thường là độ lệch mùa hè; API gọi đây là earlier offset)
+```
+
+Nếu ứng dụng cần lần xuất hiện còn lại trong vùng chồng lặp, `withLaterOffsetAtOverlap()` cho phép chọn độ lệch sau lần chuyển đổi; `withEarlierOffsetAtOverlap()` chọn độ lệch trước lần chuyển đổi một cách rõ ràng.
+
+Khi cần xem chính lần chuyển đổi thay vì chỉ đếm các độ lệch hợp lệ, `ZoneRules.getTransition(localDateTime)` trả `ZoneOffsetTransition` cho khoảng trống/chồng lặp tương ứng; `nextTransition(instant)` và `previousTransition(instant)` giúp tìm lần chuyển đổi quanh mốc trên dòng thời gian.
+
+Điểm học quan trọng không phải nhớ một ngày DST cụ thể, mà là hiểu:
+
+```text
+LocalDateTime + ZoneId
+không phải lúc nào cũng ánh xạ 1:1 tới Instant
+```
+
+## <a id="business-calendar-boundary">Lịch nghiệp vụ có quy tắc riêng</a>
+
+JDK biết cơ chế lịch nhưng không biết quy tắc nghiệp vụ của công ty bạn.
+
+Ví dụ câu “hạn chót sau 3 ngày làm việc” cần trả lời:
 
 ```text
 Thứ Bảy có tính không?
 Chủ Nhật?
 Ngày lễ quốc gia nào?
 Ngày nghỉ riêng của công ty?
-Cut-off 17:00 xử lý thế nào?
+Mốc chốt 17:00 xử lý thế nào?
 ```
 
 Không nên viết:
@@ -291,9 +353,9 @@ Không nên viết:
 deadline = start.plusDays(3);
 ```
 
-rồi gọi đó là “3 business days”. `plusDays(3)` chỉ biết calendar days.
+rồi gọi đó là “3 ngày làm việc”. `plusDays(3)` chỉ biết ngày theo lịch.
 
-Một design rõ ràng hơn:
+Một thiết kế rõ ràng hơn:
 
 ```java
 interface BusinessCalendar {
@@ -302,8 +364,8 @@ interface BusinessCalendar {
 }
 ```
 
-Implementation có thể sử dụng `LocalDate`, `DayOfWeek` và nguồn holiday riêng.
+Cách triển khai có thể sử dụng `LocalDate`, `DayOfWeek` và nguồn ngày nghỉ riêng.
 
-Boundary này quan trọng vì Java date-time API cung cấp **mechanics**, còn business calendar cung cấp **policy**.
+Ranh giới này quan trọng vì API ngày-giờ của Java cung cấp **cơ chế**, còn lịch nghiệp vụ cung cấp **chính sách**.
 
-Chapter tiếp theo xử lý một dependency thường bị giấu trong code: lời gọi “bây giờ là mấy giờ?” thông qua system clock.
+Chương tiếp theo xử lý một phụ thuộc thường bị giấu trong mã: lời gọi “bây giờ là mấy giờ?” thông qua đồng hồ hệ thống.

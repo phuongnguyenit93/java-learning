@@ -1,25 +1,25 @@
-# Duration và Period
+# Duration và Period — thời lượng trôi qua và khoảng theo lịch
 
-“Thêm một ngày” nghe giống “thêm 24 giờ”, nhưng trong date-time domain hai câu đó không phải lúc nào cũng tương đương. Java tách chúng thành hai mô hình: `Duration` và `Period`.
+“Thêm một ngày” nghe giống “thêm 24 giờ”, nhưng trong miền ngày-giờ hai câu đó không phải lúc nào cũng tương đương. Java tách chúng thành hai mô hình: `Duration` và `Period`.
 
-## <a id="duration-time-based">Duration — lượng thời gian theo timeline</a>
+## <a id="duration-time-based">Duration — thời lượng trên dòng thời gian</a>
 
-`Duration` là amount theo đơn vị time-based, chủ yếu seconds và nanoseconds.
+`Duration` biểu diễn lượng thời gian theo giây và nano giây.
 
 ```java
 Duration thirtyMinutes = Duration.ofMinutes(30);
 Duration twoHours = Duration.ofHours(2);
-Duration oneDayAsTime = Duration.ofDays(1); // 24 hours
+Duration oneDayAsTime = Duration.ofDays(1); // 24 giờ
 ```
 
 Tư duy:
 
 ```text
 Duration.ofHours(24)
-→ 86,400 seconds elapsed time
+→ 86.400 giây thời lượng đã trôi qua
 ```
 
-Nó phù hợp cho timeout, elapsed time, latency, TTL hoặc khoảng cách giữa hai timeline points.
+Nó phù hợp cho thời gian chờ (timeout), thời lượng đã trôi qua, độ trễ (latency), TTL hoặc khoảng cách giữa hai mốc trên dòng thời gian.
 
 ```java
 Instant start = Instant.parse("2026-10-05T02:00:00Z");
@@ -29,11 +29,11 @@ Duration elapsed = Duration.between(start, end);
 System.out.println(elapsed.toMinutes()); // 90
 ```
 
-`Duration` có thể âm nếu end nằm trước start.
+`Duration` có thể âm nếu điểm kết thúc nằm trước điểm bắt đầu.
 
-## <a id="period-date-based">Period — lượng thời gian theo calendar date</a>
+## <a id="period-date-based">Period — khoảng thời gian theo lịch</a>
 
-`Period` biểu diễn amount theo **year, month, day**.
+`Period` biểu diễn lượng theo **năm, tháng, ngày**.
 
 ```java
 Period oneMonth = Period.ofMonths(1);
@@ -41,7 +41,7 @@ Period oneYearTwoMonths = Period.of(1, 2, 0);
 Period oneCalendarDay = Period.ofDays(1);
 ```
 
-Nó phù hợp cho age-like/calendar rule:
+Nó phù hợp cho tuổi hoặc các quy tắc theo lịch:
 
 ```java
 LocalDate start = LocalDate.of(2026, 1, 31);
@@ -51,7 +51,7 @@ LocalDate next = start.plus(Period.ofMonths(1));
 
 `Period.ofMonths(1)` không định nghĩa một số giây cố định vì tháng có độ dài khác nhau.
 
-### Period không tự normalize mọi thứ
+### Period không tự chuẩn hóa mọi đơn vị
 
 ```java
 Period p = Period.of(0, 15, 0);
@@ -59,9 +59,9 @@ System.out.println(p);              // P15M
 System.out.println(p.normalized()); // P1Y3M
 ```
 
-`normalized()` có thể chuẩn hóa year/month, nhưng day không thể đổi tổng quát sang month vì độ dài tháng thay đổi.
+`normalized()` có thể chuẩn hóa năm/tháng, nhưng ngày không thể đổi tổng quát sang tháng vì độ dài tháng thay đổi.
 
-## <a id="duration-vs-period">Duration vs Period: khác biệt về semantics</a>
+## <a id="duration-vs-period">Duration và Period: khác biệt về ý nghĩa</a>
 
 Chọn theo câu hỏi:
 
@@ -75,7 +75,7 @@ Chọn theo câu hỏi:
 
 ### DST: 24 giờ có thể khác 1 ngày lịch
 
-Ở zone có DST transition:
+Ở múi giờ có lần chuyển DST:
 
 ```java
 ZonedDateTime start = ZonedDateTime.of(
@@ -87,31 +87,31 @@ ZonedDateTime plus24Hours = start.plus(Duration.ofHours(24));
 ZonedDateTime plusOneDay = start.plus(Period.ofDays(1));
 ```
 
-`plus24Hours` bảo toàn **elapsed duration 24 giờ** trên timeline. `plusOneDay` bảo toàn ý định **sang ngày lịch tiếp theo với local-time semantics**, nên elapsed seconds có thể là 23 hoặc 25 giờ quanh DST transition.
+`plus24Hours` bảo toàn **thời lượng thực 24 giờ đã trôi qua** trên dòng thời gian. `plusOneDay` bảo toàn ý định **sang ngày lịch tiếp theo theo giờ cục bộ**, nên số giây thực tế đã trôi qua có thể tương đương 23 hoặc 25 giờ quanh lần chuyển DST.
 
-Đây là lý do không nên đổi `Period.ofDays(1)` và `Duration.ofHours(24)` cho nhau chỉ vì ở nhiều ngày bình thường chúng cho local result giống nhau.
+Đây là lý do không nên đổi `Period.ofDays(1)` và `Duration.ofHours(24)` cho nhau chỉ vì ở nhiều ngày bình thường chúng cho kết quả cục bộ giống nhau.
 
-### Month length cũng phá giả định “calendar = fixed seconds”
+### Độ dài tháng cũng phá vỡ giả định “lịch = số giây cố định”
 
 ```text
-1 month
+1 tháng
 → 28, 29, 30 hoặc 31 ngày tùy vị trí trên lịch
 
-1 year
-→ có thể chứa leap day
+1 năm
+→ có thể chứa ngày nhuận
 ```
 
-Không có conversion tổng quát chính xác từ `Period.ofMonths(1)` thành một `Duration` nếu chưa biết điểm bắt đầu và zone/context cần thiết.
+Không có chuyển đổi tổng quát chính xác từ `Period.ofMonths(1)` thành một `Duration` nếu chưa biết điểm bắt đầu và múi giờ/ngữ cảnh cần thiết.
 
-### Rule chọn nhanh
+### Quy tắc chọn nhanh
 
 | Nhu cầu | Chọn |
 | --- | --- |
-| HTTP timeout 30 giây | `Duration` |
-| cache TTL 10 phút | `Duration` |
+| thời gian chờ HTTP 30 giây | `Duration` |
+| TTL của bộ nhớ đệm 10 phút | `Duration` |
 | thời gian xử lý giữa hai `Instant` | `Duration` |
 | cộng 1 tháng vào ngày hóa đơn | `Period` hoặc `plusMonths` |
 | tuổi theo năm/tháng/ngày | `Period` |
-| lịch chạy “cùng giờ ngày mai” | calendar arithmetic, thường `Period`/`plusDays` trên zone-aware value |
+| lịch chạy “cùng giờ ngày mai” | phép toán theo lịch, thường `Period`/`plusDays` trên giá trị có múi giờ |
 
-Sau khi có đúng temporal value và amount, bước tiếp theo là boundary rất phổ biến: **text ↔ date-time object**.
+Sau khi có đúng giá trị thời gian và lượng, bước tiếp theo là ranh giới rất phổ biến: **văn bản ↔ đối tượng ngày-giờ**.

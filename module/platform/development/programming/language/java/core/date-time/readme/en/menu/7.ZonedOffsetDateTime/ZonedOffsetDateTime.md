@@ -1,4 +1,4 @@
-# ZonedDateTime and OffsetDateTime
+# OffsetDateTime, ZonedDateTime, and Zone Conversion
 
 Once local fields, offsets, and zone rules are separate in the mental model, Java provides two useful value types that carry some of that context together: `ZonedDateTime` and `OffsetDateTime`.
 
@@ -173,4 +173,4 @@ withOffsetSameLocal
 
 Because `OffsetDateTime` carries no regional rule set, this is conversion between concrete offsets only; it does not perform DST rule lookup like a region-based `ZoneId` does.
 
-Resolving local fields around DST gaps and overlaps adds another layer of rules; the Pitfalls chapter covers those cases explicitly. First, the next chapter separates two different meanings of an “amount of time”: `Duration` and `Period`.
+Resolving local fields around DST gaps and overlaps adds another layer of rules; the Arithmetic / Comparison chapter covers those cases explicitly. First, the next chapter separates two different meanings of an “amount of time”: `Duration` and `Period`.

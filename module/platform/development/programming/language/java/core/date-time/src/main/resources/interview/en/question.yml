@@ -43,6 +43,19 @@ questions:
       methodSignature: ""
 
   - question: >-
+      Explain the boundary among ISO chronology, non-ISO chronology, and Locale in java.time.
+    answer: >-
+      LocalDate, LocalDateTime, and the corresponding Local* concrete types use the ISO calendar system; changing Locale does not switch them to another chronology. Locale mainly affects presentation and parsing of text. When a domain genuinely uses a non-ISO calendar, java.time.chrono provides separate abstractions and types such as ChronoLocalDate; that is an advanced branch, not a configuration option of LocalDate.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.MentalModel/MentalModel.md"
+      anchor: "date-time-domains"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
       Why do immutability and value semantics in java.time matter in production code?
     answer: >-
       Operations such as plus, minus, and with return new values instead of mutating the original object, which reduces hidden side effects when date-time values cross layers and makes reasoning easier. The main types should be treated as values, so code should follow their equality contracts rather than rely on object identity. A common migration bug from mutable APIs is calling plusDays(...) and forgetting to keep the returned value.
@@ -69,19 +82,6 @@ questions:
       methodSignature: ""
 
   - question: >-
-      Explain the boundary among ISO chronology, non-ISO chronology, and Locale in java.time.
-    answer: >-
-      LocalDate, LocalDateTime, and the corresponding Local* concrete types use the ISO calendar system; changing Locale does not switch them to another chronology. Locale mainly affects presentation and parsing of text. When a domain genuinely uses a non-ISO calendar, java.time.chrono provides separate abstractions and types such as ChronoLocalDate; that is an advanced branch, not a configuration option of LocalDate.
-    aiGenerated: true
-    reviewed: false
-    readmeRelated:
-      file: "1.MentalModel/MentalModel.md"
-      anchor: "date-time-domains"
-    apiRelated:
-      controller: ""
-      methodSignature: ""
-
-  - question: >-
       Why should a birthday be modeled as LocalDate instead of LocalDateTime at 00:00?
     answer: >-
       If the domain only knows the date, 00:00 is invented information. That fake field can later leak into serialization, database queries, or zone conversion and create meaningless questions such as "which instant did this birthday occur at?" LocalDate is more accurate because it intentionally contains no time-of-day or zone.
@@ -90,19 +90,6 @@ questions:
     readmeRelated:
       file: "2.LocalDate/LocalDate.md"
       anchor: "local-date-model"
-    apiRelated:
-      controller: ""
-      methodSignature: ""
-
-  - question: >-
-      Why is LocalDate.of(2026, 1, 31).plusMonths(1) not equivalent to adding a fixed number of days, and what if the business wants different behavior?
-    answer: >-
-      plusMonths is calendar arithmetic: it first moves to the target month and then adjusts to a valid date, so January 31, 2026 plus one month becomes February 28, 2026. It does not mean "add N seconds." If the business wants different semantics, such as rejecting the operation or rolling into the next month, that policy should be encoded and validated explicitly rather than inferred from the JDK default.
-    aiGenerated: true
-    reviewed: false
-    readmeRelated:
-      file: "2.LocalDate/LocalDate.md"
-      anchor: "calendar-validity"
     apiRelated:
       controller: ""
       methodSignature: ""
@@ -121,14 +108,27 @@ questions:
       methodSignature: ""
 
   - question: >-
-      A shift from 22:00 to 06:00 produces a wrong or negative duration when modeled only with LocalTime. How do you diagnose the problem?
+      Why is LocalDate.of(2026, 1, 31).plusMonths(1) not equivalent to adding a fixed number of days, and what if the business wants different behavior?
     answer: >-
-      LocalTime only knows time-of-day and wraps within a 24-hour day; it cannot know whether 06:00 means the same day or the next day. To calculate elapsed time, add a date or an explicit rule. If the shift occurs in a region with DST, LocalDateTime may still be insufficient; include ZoneId/ZonedDateTime or resolve to Instant before measuring elapsed timeline time.
+      plusMonths is calendar arithmetic: it first moves to the target month and then adjusts to a valid date, so January 31, 2026 plus one month becomes February 28, 2026. It does not mean "add N seconds." If the business wants different semantics, such as rejecting the operation or rolling into the next month, that policy should be encoded and validated explicitly rather than inferred from the JDK default.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.LocalDate/LocalDate.md"
+      anchor: "calendar-validity"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      When should a rule such as "09:00 every day" remain a LocalTime, and when must it become a scheduled instant?
+    answer: >-
+      LocalTime is appropriate while the domain only owns a wall-clock rule. A concrete occurrence is identified only after adding a date and, when global timeline meaning is required, a region or offset. Converting too early to Instant or inventing a date/zone changes the semantics; resolve only when the use case has enough context.
     aiGenerated: true
     reviewed: false
     readmeRelated:
       file: "3.LocalTime/LocalTime.md"
-      anchor: "local-time-wrap"
+      anchor: "local-time-model"
     apiRelated:
       controller: ""
       methodSignature: ""
@@ -147,14 +147,27 @@ questions:
       methodSignature: ""
 
   - question: >-
-      When should a rule such as "09:00 every day" remain a LocalTime, and when must it become a scheduled instant?
+      A shift from 22:00 to 06:00 produces a wrong or negative duration when modeled only with LocalTime. How do you diagnose the problem?
     answer: >-
-      LocalTime is appropriate while the domain only owns a wall-clock rule. A concrete occurrence is identified only after adding a date and, when global timeline meaning is required, a region or offset. Converting too early to Instant or inventing a date/zone changes the semantics; resolve only when the use case has enough context.
+      LocalTime only knows time-of-day and wraps within a 24-hour day; it cannot know whether 06:00 means the same day or the next day. To calculate elapsed time, add a date or an explicit rule. If the shift occurs in a region with DST, LocalDateTime may still be insufficient; include ZoneId/ZonedDateTime or resolve to Instant before measuring elapsed timeline time.
     aiGenerated: true
     reviewed: false
     readmeRelated:
       file: "3.LocalTime/LocalTime.md"
-      anchor: "local-time-model"
+      anchor: "local-time-wrap"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      A form already has a date and time, but the user chooses a zone in a later step. Why is LocalDateTime a reasonable model at this stage, and what does it not guarantee yet?
+    answer: >-
+      LocalDateTime preserves exactly the local date and time fields the application currently knows without inventing a ZoneId or ZoneOffset. It is therefore appropriate while timeline resolution is intentionally deferred. It does not identify one unique Instant, is not sufficient for global event ordering, and can encounter a gap or overlap when later resolved through a region's DST rules.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.LocalDateTime/LocalDateTime.md"
+      anchor: "local-date-time-model"
     apiRelated:
       controller: ""
       methodSignature: ""
@@ -186,27 +199,14 @@ questions:
       methodSignature: ""
 
   - question: >-
-      How would you review code that does local.atZone(ZoneId.systemDefault()).toInstant()?
+      Explain the practical boundary of Instant regarding leap seconds and elapsed-time measurement.
     answer: >-
-      Converting local fields to an Instant requires the zone that belongs to the domain; the system default is only runtime environment state and may differ across laptops, CI, containers, and production. Pass or configure the intended ZoneId explicitly. For important user input, also define a policy for DST gaps and overlaps instead of letting an implicit default decide a business outcome.
-    aiGenerated: true
-    reviewed: false
-    readmeRelated:
-      file: "4.LocalDateTime/LocalDateTime.md"
-      anchor: "local-date-time-ambiguity"
-    apiRelated:
-      controller: ""
-      methodSignature: ""
-
-  - question: >-
-      What kinds of data are good defaults for Instant, and when can storing only an Instant lose business intent?
-    answer: >-
-      Instant is a strong fit for occurredAt values, audit logs, cross-system ordering, and deadlines whose meaning is a timeline point. A future schedule such as "09:00 in Europe/Paris" also owns local civil time and regional rules. Storing only the initially resolved Instant can lose the ZoneId needed for display, rescheduling, or reacting to future time-zone rule changes.
+      For business applications, Instant is well modeled as a point on a global UTC-oriented timeline. At the specification level, Java uses the Java Time-Scale and does not promise a raw astronomical UTC clock around leap seconds. Instant.now() is also wall-clock time; measuring how long code takes within one JVM should use a monotonic elapsed-time source such as System.nanoTime().
     aiGenerated: true
     reviewed: false
     readmeRelated:
       file: "5.Instant/Instant.md"
-      anchor: "instant-use-cases"
+      anchor: "instant-model"
     apiRelated:
       controller: ""
       methodSignature: ""
@@ -225,14 +225,14 @@ questions:
       methodSignature: ""
 
   - question: >-
-      Explain the practical boundary of Instant regarding leap seconds and elapsed-time measurement.
+      What kinds of data are good defaults for Instant, and when can storing only an Instant lose business intent?
     answer: >-
-      For business applications, Instant is well modeled as a point on a global UTC-oriented timeline. At the specification level, Java uses the Java Time-Scale and does not promise a raw astronomical UTC clock around leap seconds. Instant.now() is also wall-clock time; measuring how long code takes within one JVM should use a monotonic elapsed-time source such as System.nanoTime().
+      Instant is a strong fit for occurredAt values, audit logs, cross-system ordering, and deadlines whose meaning is a timeline point. A future schedule such as "09:00 in Europe/Paris" also owns local civil time and regional rules. Storing only the initially resolved Instant can lose the ZoneId needed for display, rescheduling, or reacting to future time-zone rule changes.
     aiGenerated: true
     reviewed: false
     readmeRelated:
       file: "5.Instant/Instant.md"
-      anchor: "instant-model"
+      anchor: "instant-use-cases"
     apiRelated:
       controller: ""
       methodSignature: ""
@@ -241,6 +241,32 @@ questions:
       Why can +01:00 not replace Europe/Paris when designing a location-based schedule?
     answer: >-
       ZoneOffset is only one concrete difference from UTC, while a region-based ZoneId identifies a rule set with history and potentially changing offsets over time. Many regions can share the same offset at one moment, so +01:00 cannot reliably reconstruct the original region. Future scheduling needs the ZoneId when regional rules are part of the intent.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.ZoneOffsetZoneId/ZoneOffsetZoneId.md"
+      anchor: "zone-offset"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Why is ZoneId.systemDefault() a risky dependency in a service or container?
+    answer: >-
+      The default zone comes from the runtime environment, so the same binary can behave differently on a laptop, CI machine, container, or production host. If a business fact owns a specific zone, pass or configure it explicitly. Rely on the system default only when that environmental default is intentionally part of the contract.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.ZoneOffsetZoneId/ZoneOffsetZoneId.md"
+      anchor: "zone-id"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      How can ZoneId represent fixed-offset and region-based zones, and how should ZoneId.SHORT_IDS be understood?
+    answer: >-
+      ZoneId can represent either a fixed-offset zone or a named region whose ZoneRules may vary across history or policy. ZoneId.SHORT_IDS is only a compatibility alias map; it does not make a one-argument call such as ZoneId.of("EST") automatically valid. For canonical business data, clear region IDs such as Europe/Paris are generally safer than ambiguous three-letter abbreviations.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -264,19 +290,6 @@ questions:
       methodSignature: ""
 
   - question: >-
-      Why is ZoneId.systemDefault() a risky dependency in a service or container?
-    answer: >-
-      The default zone comes from the runtime environment, so the same binary can behave differently on a laptop, CI machine, container, or production host. If a business fact owns a specific zone, pass or configure it explicitly. Rely on the system default only when that environmental default is intentionally part of the contract.
-    aiGenerated: true
-    reviewed: false
-    readmeRelated:
-      file: "6.ZoneOffsetZoneId/ZoneOffsetZoneId.md"
-      anchor: "zone-id"
-    apiRelated:
-      controller: ""
-      methodSignature: ""
-
-  - question: >-
       When should you choose ZonedDateTime, OffsetDateTime, or Instant for the same general kind of time data?
     answer: >-
       Use ZonedDateTime when a named region and its changing rules are part of the domain, such as future scheduling. OffsetDateTime fits a boundary that supplies local fields plus one concrete offset but no regional identity. If only global event identity or ordering matters, Instant is often the simplest and clearest representation.
@@ -285,6 +298,19 @@ questions:
     readmeRelated:
       file: "7.ZonedOffsetDateTime/ZonedOffsetDateTime.md"
       anchor: "zoned-date-time"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      How do OffsetDateTime.withOffsetSameInstant and withOffsetSameLocal differ?
+    answer: >-
+      withOffsetSameInstant changes the local fields so the timeline point remains unchanged. withOffsetSameLocal preserves the local date-time and reinterprets it under the new offset, so the Instant changes. Because OffsetDateTime carries only a concrete offset, these operations do not consult regional ZoneRules or DST rules the way a region-based ZoneId can.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.ZonedOffsetDateTime/ZonedOffsetDateTime.md"
+      anchor: "offset-date-time"
     apiRelated:
       controller: ""
       methodSignature: ""
@@ -305,7 +331,7 @@ questions:
   - question: >-
       A system uses withZoneSameLocal to display the same event in another zone. What is wrong?
     answer: >-
-      Displaying the same event must preserve the Instant, so withZoneSameInstant is the appropriate operation. withZoneSameLocal preserves local fields and resolves them under another zone's rules, which usually creates a different timeline event. This is a modeling error, not merely a method-naming mistake.
+      Displaying the same event must preserve the Instant, so withZoneSameInstant is the appropriate operation. withZoneSameLocal tries to retain the local date-time fields and resolves them under the target zone's rules; if that local time falls in a gap, the fields can be adjusted forward to a valid time. It therefore does not preserve the Instant and usually represents a different timeline event. This is a modeling error, not merely a method-naming mistake.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -316,27 +342,14 @@ questions:
       methodSignature: ""
 
   - question: >-
-      How do OffsetDateTime.withOffsetSameInstant and withOffsetSameLocal differ?
+      Analyze using Period for a timeout or TTL, and Duration for age or monthly billing cycles.
     answer: >-
-      withOffsetSameInstant changes the local fields so the timeline point remains unchanged. withOffsetSameLocal preserves the local date-time and reinterprets it under the new offset, so the Instant changes. Because OffsetDateTime carries only a concrete offset, these operations do not consult regional ZoneRules or DST rules the way a region-based ZoneId can.
-    aiGenerated: true
-    reviewed: false
-    readmeRelated:
-      file: "7.ZonedOffsetDateTime/ZonedOffsetDateTime.md"
-      anchor: "offset-date-time"
-    apiRelated:
-      controller: ""
-      methodSignature: ""
-
-  - question: >-
-      Why can "one day" and "24 hours" produce different results around DST?
-    answer: >-
-      Period.ofDays(1) or plusDays(1) uses calendar/local semantics: move to the next calendar day and typically preserve the local time. Duration.ofHours(24) represents a fixed elapsed amount on the timeline. When DST makes a local day 23 or 25 hours long, the operations diverge; the right choice comes from the business meaning.
+      Timeouts, TTLs, and latency ask about elapsed time and therefore fit Duration. Age, monthly due dates, and billing cycles usually use calendar semantics and therefore fit Period or date arithmetic. The wrong abstraction can look correct on ordinary days but fail at month-end, on leap days, or around DST transitions.
     aiGenerated: true
     reviewed: false
     readmeRelated:
       file: "8.DurationPeriod/DurationPeriod.md"
-      anchor: "duration-vs-period"
+      anchor: "duration-time-based"
     apiRelated:
       controller: ""
       methodSignature: ""
@@ -355,14 +368,14 @@ questions:
       methodSignature: ""
 
   - question: >-
-      Analyze using Period for a timeout or TTL, and Duration for age or monthly billing cycles.
+      Why can "one day" and "24 hours" produce different results around DST?
     answer: >-
-      Timeouts, TTLs, and latency ask about elapsed time and therefore fit Duration. Age, monthly due dates, and billing cycles usually use calendar semantics and therefore fit Period or date arithmetic. The wrong abstraction can look correct on ordinary days but fail at month-end, on leap days, or around DST transitions.
+      Period.ofDays(1) or plusDays(1) uses calendar/local semantics: move to the next calendar day and typically preserve the local time. Duration.ofHours(24) represents a fixed elapsed amount on the timeline. When DST makes a local day 23 or 25 hours long, the operations diverge; the right choice comes from the business meaning.
     aiGenerated: true
     reviewed: false
     readmeRelated:
       file: "8.DurationPeriod/DurationPeriod.md"
-      anchor: "duration-time-based"
+      anchor: "duration-vs-period"
     apiRelated:
       controller: ""
       methodSignature: ""
@@ -435,7 +448,20 @@ questions:
   - question: >-
       When should you use ChronoUnit.between, Duration.between, or Period.between?
     answer: >-
-      ChronoUnit.between counts whole units of a requested kind between compatible temporals. Duration.between represents elapsed timeline time, while Period.between preserves year/month/day calendar components. If fractional units are required, keep a higher-precision representation such as Duration or nanoseconds and apply the domain's rounding policy explicitly.
+      ChronoUnit.between counts whole units of a requested kind between compatible temporals. Duration.between is appropriate when the endpoints support a time-based duration; with Instants it directly represents elapsed timeline time. Period.between preserves year/month/day calendar components. If fractional units are required, keep a higher-precision representation such as Duration or nanoseconds and apply the domain's rounding policy explicitly.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "10.ArithmeticComparison/ArithmeticComparison.md"
+      anchor: "between-semantics"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      When designing a time range for event filtering, why is [start, end) often a useful convention?
+    answer: >-
+      java.time does not impose one universal core Interval type, so inclusive/exclusive boundaries must be defined by the domain. A half-open range [start, end) lets adjacent ranges meet without double-counting the boundary and makes splitting or composing windows simpler. For a calendar date in a zone, derive the two boundaries with day.atStartOfDay(zone) and day.plusDays(1).atStartOfDay(zone) instead of inventing 00:00/23:59:59...; atStartOfDay consults the zone rules, including start-of-day gaps and the rare case where an entire local date is skipped. The most important requirement is an explicit and consistent boundary contract.
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -459,14 +485,14 @@ questions:
       methodSignature: ""
 
   - question: >-
-      When designing a time range for event filtering, why is [start, end) often a useful convention?
+      How would you handle appointment input that falls into a DST gap or overlap?
     answer: >-
-      java.time does not impose one universal core Interval type, so inclusive/exclusive boundaries must be defined by the domain. A half-open range [start, end) lets adjacent ranges meet without double-counting the boundary and makes splitting or composing windows simpler. The most important requirement is an explicit and consistent boundary contract.
+      Inspect ZoneRules for the LocalDateTime: zero valid offsets indicates a gap, while two offsets indicate an overlap. By default, atZone shifts a gap forward by the gap length and uses the before-transition offset (the earlier offset) during an overlap. For important business input, the product should still decide whether to reject, adjust, ask the user, or choose one occurrence explicitly. If the user selects an occurrence during an overlap, preserve enough offset and ZoneId context to keep that decision.
     aiGenerated: true
     reviewed: false
     readmeRelated:
       file: "10.ArithmeticComparison/ArithmeticComparison.md"
-      anchor: "between-semantics"
+      anchor: "dst-gap-overlap"
     apiRelated:
       controller: ""
       methodSignature: ""
@@ -550,6 +576,32 @@ questions:
       methodSignature: ""
 
   - question: >-
+      When migrating legacy JDBC code, what traps should you remember around java.sql.Date, java.sql.Time, and java.sql.Timestamp?
+    answer: >-
+      java.sql.Date naturally bridges to LocalDate and java.sql.Time to LocalTime; Date.toInstant() and Time.toInstant() throw UnsupportedOperationException because those SQL types lack the corresponding time-of-day or date information. Time.valueOf(LocalTime) also does not preserve the nanosecond fraction. java.sql.Timestamp has direct bridges to both Instant and LocalDateTime, but those paths express different semantics. With JDBC 4.2, new code should prefer direct java.time mappings when the driver supports them instead of forcing every value through legacy wrappers.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "12.LegacyInteropPitfalls/LegacyInteropPitfalls.md"
+      anchor: "legacy-conversion"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      How would you review code that does local.atZone(ZoneId.systemDefault()).toInstant()?
+    answer: >-
+      Converting local fields to an Instant requires the zone that belongs to the domain; the system default is only runtime environment state and may differ across laptops, CI, containers, and production. Pass or configure the intended ZoneId explicitly. For important user input, also define a policy for DST gaps and overlaps instead of letting an implicit default decide a business outcome.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "12.LegacyInteropPitfalls/LegacyInteropPitfalls.md"
+      anchor: "system-default-zone-risk"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
       Why can a date-time bug appear only after deployment even though the code worked on a developer machine?
     answer: >-
       Code that relies on the system default zone may see different zones on a laptop, CI host, container, and production server. The same Instant near midnight can even map to different LocalDate values in different zones. A domain zone should be passed or configured explicitly; use the default only when the environment's zone is intentionally part of the contract.
@@ -563,22 +615,22 @@ questions:
       methodSignature: ""
 
   - question: >-
-      How would you handle appointment input that falls into a DST gap or overlap?
+      Design persistence for three cases: an occurred event, a future region-based schedule, and a local business date/time.
     answer: >-
-      Inspect ZoneRules for the LocalDateTime: zero valid offsets indicates a gap, while two offsets indicate an overlap. atZone has default resolution behavior, but for important business input the product should decide whether to reject, adjust, ask the user, or choose one occurrence explicitly. If the user selects an occurrence during an overlap, preserve enough offset and zone context to keep that decision.
+      An occurred event usually belongs in a timeline representation such as Instant or another UTC-oriented value. A future schedule tied to a place should preserve local fields plus ZoneId when regional rules are part of the intent. Local facts such as birthdays or opening hours should remain LocalDate/LocalTime rather than being forced into an Instant. Every choice must also define database type, precision, and read-back semantics; "always store everything in UTC" is not correct for every domain.
     aiGenerated: true
     reviewed: false
     readmeRelated:
       file: "12.LegacyInteropPitfalls/LegacyInteropPitfalls.md"
-      anchor: "dst-gap-overlap"
+      anchor: "timestamp-storage-boundary"
     apiRelated:
       controller: ""
       methodSignature: ""
 
   - question: >-
-      Design persistence for three cases: an occurred event, a future region-based schedule, and a local business date/time.
+      Walk through an end-to-end decision process for a new date-time value that enters as text, may belong to a region, participates in arithmetic, depends on "now", and must eventually be persisted or passed to a legacy boundary.
     answer: >-
-      An occurred event usually belongs in a timeline representation such as Instant or another UTC-oriented value. A future schedule tied to a place should preserve local fields plus ZoneId when regional rules are part of the intent. Local facts such as birthdays or opening hours should remain LocalDate/LocalTime rather than being forced into an Instant. Every choice must also define database type, precision, and read-back semantics; "always store everything in UTC" is not correct for every domain.
+      Start with meaning, not format: decide whether the domain owns a calendar date, time-of-day, local date-time, precise Instant, concrete offset, or named region. Choose the smallest java.time type that preserves that meaning and add ZoneId/ZoneOffset only when the domain really owns it. Use Period/date arithmetic for calendar intent and Duration/Instant arithmetic for elapsed timeline intent. Parse and format at explicit text boundaries with a suitable DateTimeFormatter and Locale/zone context. Treat current time as a dependency through Clock or InstantSource instead of scattering direct now() calls or relying on the system default zone. Convert legacy Date/Calendar/JDBC types only at integration boundaries. For persistence, store enough information to reconstruct the original semantics, precision, and any region rules the future behavior depends on; there is no universal "store everything as UTC" rule for every domain value.
     aiGenerated: true
     reviewed: false
     readmeRelated:

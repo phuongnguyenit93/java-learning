@@ -136,6 +136,10 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+  dst-gap-overlap:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
   business-calendar-boundary:
     difficulty: BASIC
     aiGenerated: true
@@ -163,10 +167,6 @@
     aiGenerated: true
     reviewed: false
   system-default-zone-risk:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-  dst-gap-overlap:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false

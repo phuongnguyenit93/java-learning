@@ -1,32 +1,34 @@
-# Clock
+# Clock và thời gian có thể kiểm thử
 
-Code dùng thời gian thường có một dependency vô hình: **đồng hồ hệ thống tại thời điểm method chạy**. Nếu business logic gọi `Instant.now()` hoặc `LocalDate.now()` trực tiếp ở nhiều nơi, test sẽ phụ thuộc thời gian thực và trở nên khó deterministic.
+Mã dùng thời gian thường có một phụ thuộc vô hình: **đồng hồ hệ thống tại thời điểm phương thức chạy**. Nếu logic nghiệp vụ gọi `Instant.now()` hoặc `LocalDate.now()` trực tiếp ở nhiều nơi, kiểm thử sẽ phụ thuộc thời gian thực và trở nên khó có kết quả xác định.
 
-`Clock` tồn tại để biến nguồn “now” thành một object có thể truyền vào.
+`Clock` tồn tại để biến nguồn “thời điểm hiện tại” thành một đối tượng có thể truyền vào.
 
-## <a id="clock-abstraction">Clock là abstraction cho nguồn thời gian hiện tại</a>
+## <a id="clock-abstraction">Clock trừu tượng hóa nguồn thời gian hiện tại</a>
 
 Không có `Clock`:
 
 ```java
 boolean isExpired(Instant expiresAt) {
-    return Instant.now().isAfter(expiresAt);
+    return !Instant.now().isBefore(expiresAt);
 }
 ```
 
-Method này phụ thuộc trực tiếp system clock. Test chạy lúc nào thì `now()` là lúc đó.
+Phương thức này phụ thuộc trực tiếp vào đồng hồ hệ thống. Kiểm thử chạy lúc nào thì `now()` là lúc đó.
 
 Với `Clock`:
 
 ```java
 boolean isExpired(Instant expiresAt, Clock clock) {
-    return Instant.now(clock).isAfter(expiresAt);
+    return !Instant.now(clock).isBefore(expiresAt);
 }
 ```
 
-Business rule không đổi, nhưng nguồn current time đã trở thành dependency rõ ràng.
+Quy tắc nghiệp vụ không đổi, nhưng nguồn thời gian hiện tại đã trở thành phụ thuộc rõ ràng.
 
-### Một số Clock factory
+Trong ví dụ này, quy ước là token **hết hạn ngay khi `now >= expiresAt`**. Nếu nghiệp vụ muốn chỉ hết hạn sau mốc đó, có thể dùng `isAfter`; điều quan trọng là chọn và kiểm thử trường hợp bằng đúng hạn chót một cách nhất quán.
+
+### Một số phương thức tạo Clock
 
 ```java
 Clock utc = Clock.systemUTC();
@@ -38,7 +40,7 @@ Clock fixed = Clock.fixed(
 Clock shifted = Clock.offset(utc, Duration.ofMinutes(5));
 ```
 
-`Clock` cung cấp cả instant và zone context cho những API `now(clock)` cần chúng.
+`Clock` cung cấp cả `Instant` và ngữ cảnh múi giờ cho những API `now(clock)` cần chúng.
 
 ```java
 Instant now = clock.instant();
@@ -47,18 +49,18 @@ ZoneId zone = clock.getZone();
 
 ### InstantSource — khi chỉ cần nguồn Instant
 
-Từ Java 17 trở đi, `java.time` còn có `InstantSource`: một abstraction **hẹp hơn `Clock`**, chỉ đại diện cho nguồn cung cấp current `Instant`.
+Từ Java 17 trở đi, `java.time` còn có `InstantSource`: một **giao diện hẹp hơn `Clock`**, chỉ đại diện cho nguồn cung cấp `Instant` hiện tại.
 
 ```text
 InstantSource
-→ cần biết "instant hiện tại là gì?"
+→ cần biết "Instant hiện tại là gì?"
 
 Clock
-→ cũng cung cấp current instant
-→ đồng thời mang ZoneId cho các API cần local/calendar context
+→ cũng cung cấp Instant hiện tại
+→ đồng thời mang ZoneId cho các API cần ngữ cảnh lịch/múi giờ
 ```
 
-`Clock` implements `InstantSource`, nên một service chỉ cần timeline timestamp có thể phụ thuộc vào interface hẹp hơn:
+`Clock` triển khai `InstantSource`, nên một dịch vụ chỉ cần dấu thời gian trên dòng thời gian có thể phụ thuộc vào giao diện hẹp hơn:
 
 ```java
 boolean isExpired(Instant expiresAt, InstantSource source) {
@@ -66,7 +68,7 @@ boolean isExpired(Instant expiresAt, InstantSource source) {
 }
 ```
 
-Test vẫn có thể dùng nguồn cố định:
+Kiểm thử vẫn có thể dùng nguồn cố định:
 
 ```java
 InstantSource fixed = InstantSource.fixed(
@@ -74,13 +76,13 @@ InstantSource fixed = InstantSource.fixed(
 );
 ```
 
-Không cần thay mọi `Clock` bằng `InstantSource`: nếu logic cần `ZoneId`, `LocalDate.now(clock)` hoặc `ZonedDateTime.now(clock)`, `Clock` vẫn là abstraction phù hợp hơn.
+Không cần thay mọi `Clock` bằng `InstantSource`: nếu logic cần `ZoneId`, `LocalDate.now(clock)` hoặc `ZonedDateTime.now(clock)`, `Clock` vẫn là lựa chọn phù hợp hơn.
 
-### Clock không phải stopwatch đo elapsed time
+### Clock không phải đồng hồ bấm giờ để đo thời lượng
 
-`Clock`/`Instant.now()` thuộc **wall-clock time**: nó trả lời “trên timeline hiện tại đang là thời điểm nào?”. Wall clock có thể bị điều chỉnh bởi hệ điều hành, đồng bộ thời gian hoặc thay đổi nguồn clock.
+`Clock`/`Instant.now()` trả lời câu hỏi **“hiện tại là mốc nào trên dòng thời gian?”**. Đồng hồ hệ thống có thể bị điều chỉnh bởi hệ điều hành, đồng bộ thời gian hoặc thay đổi nguồn thời gian.
 
-Nếu mục tiêu là đo **một đoạn code chạy mất bao lâu** trong cùng JVM, Java có `System.nanoTime()`:
+Nếu mục tiêu là đo **một đoạn mã chạy mất bao lâu** trong cùng JVM, Java có `System.nanoTime()`:
 
 ```java
 long start = System.nanoTime();
@@ -90,9 +92,9 @@ doWork();
 long elapsedNanos = System.nanoTime() - start;
 ```
 
-Giá trị tuyệt đối từ `nanoTime()` không phải timestamp, không convert sang `Instant`, và không có ý nghĩa calendar. Chỉ **hiệu giữa hai lần đọc trong cùng JVM** mới có ý nghĩa elapsed-time.
+Giá trị tuyệt đối từ `nanoTime()` không phải dấu thời gian, không chuyển đổi sang `Instant`, và không có ý nghĩa lịch. Chỉ **hiệu giữa hai lần đọc trong cùng JVM** mới có ý nghĩa thời lượng đã trôi qua.
 
-Mental model:
+Mô hình tư duy:
 
 ```text
 Clock / Instant.now()
@@ -102,9 +104,9 @@ System.nanoTime()
 → "đã trôi qua bao lâu giữa hai điểm đo trong JVM?"
 ```
 
-Hai bài toán khác nhau, dù cả hai đều có chữ “time”.
+Hai bài toán khác nhau, dù cả hai đều liên quan đến thời gian.
 
-## <a id="fixed-clock-testing">Fixed Clock cho test deterministic</a>
+## <a id="fixed-clock-testing">Clock cố định cho kiểm thử có kết quả xác định</a>
 
 Giả sử token hết hạn lúc 10:05 UTC:
 
@@ -112,7 +114,7 @@ Giả sử token hết hạn lúc 10:05 UTC:
 Instant expiresAt = Instant.parse("2026-09-27T10:05:00Z");
 ```
 
-Test trước deadline:
+Kiểm thử trước hạn chót:
 
 ```java
 Clock beforeExpiry = Clock.fixed(
@@ -123,7 +125,7 @@ Clock beforeExpiry = Clock.fixed(
 assertFalse(isExpired(expiresAt, beforeExpiry));
 ```
 
-Test sau deadline:
+Kiểm thử sau hạn chót:
 
 ```java
 Clock afterExpiry = Clock.fixed(
@@ -134,22 +136,33 @@ Clock afterExpiry = Clock.fixed(
 assertTrue(isExpired(expiresAt, afterExpiry));
 ```
 
-Hai test không cần sleep và không phụ thuộc lúc suite thực sự chạy.
+Kiểm thử đúng tại hạn chót:
 
-### Không dùng Thread.sleep để “chờ thời gian” trong unit test
+```java
+Clock atExpiry = Clock.fixed(
+        expiresAt,
+        ZoneOffset.UTC
+);
 
-Pattern yếu:
+assertTrue(isExpired(expiresAt, atExpiry));
+```
+
+Ba kiểm thử không cần chờ thời gian thực và không phụ thuộc lúc bộ kiểm thử thực sự chạy.
+
+### Không dùng Thread.sleep để “chờ thời gian” trong kiểm thử đơn vị
+
+Cách viết yếu:
 
 ```java
 Thread.sleep(1_000);
 assertTrue(...);
 ```
 
-Nó làm test chậm và có thể flaky vì scheduler/CI load. Nếu logic chỉ cần kiểm tra rule thời gian, điều khiển `Clock` tốt hơn nhiều.
+Nó làm kiểm thử chậm và có thể không ổn định vì bộ lập lịch hoặc tải của CI. Nếu logic chỉ cần kiểm tra quy tắc thời gian, điều khiển `Clock` tốt hơn nhiều.
 
-## <a id="clock-injection">Inject Clock thay vì gọi now khắp nơi</a>
+## <a id="clock-injection">Truyền Clock vào thay vì gọi now() khắp nơi</a>
 
-Một service có thể nhận `Clock` qua constructor:
+Một dịch vụ có thể nhận `Clock` qua hàm tạo:
 
 ```java
 final class TokenService {
@@ -165,13 +178,13 @@ final class TokenService {
 }
 ```
 
-Production:
+Môi trường thực tế:
 
 ```java
 TokenService service = new TokenService(Clock.systemUTC());
 ```
 
-Test:
+Kiểm thử:
 
 ```java
 Clock fixed = Clock.fixed(
@@ -182,12 +195,12 @@ Clock fixed = Clock.fixed(
 TokenService service = new TokenService(fixed);
 ```
 
-### Chọn nơi inject
+### Chọn nơi truyền Clock vào
 
-Không nhất thiết mọi method đều phải nhận `Clock` parameter. Thường application inject một `Clock` ở service/component boundary rồi dùng lại bên trong. Mục tiêu là **không để business logic tự truy cập global time source một cách không kiểm soát**.
+Không nhất thiết mọi phương thức đều phải nhận tham số `Clock`. Thường ứng dụng truyền một `Clock` vào tại ranh giới dịch vụ/thành phần rồi dùng lại bên trong. Mục tiêu là **không để logic nghiệp vụ tự truy cập nguồn thời gian toàn cục một cách không kiểm soát**.
 
-### Clock không thay thế scheduler
+### Clock không thay thế bộ lập lịch
 
-`Clock` trả lời “thời gian hiện tại là gì theo source này?”. Nó không tự chạy job, không schedule task và không đảm bảo wake-up timing. Scheduling là trách nhiệm khác.
+`Clock` trả lời “thời gian hiện tại là gì theo nguồn này?”. Nó không tự chạy tác vụ, không lập lịch tác vụ và không đảm bảo thời điểm đánh thức. Lập lịch là trách nhiệm khác.
 
-Sau khi hiểu cách kiểm soát “now”, chapter cuối nhìn lại API cũ và những bug production thường đến từ default zone, legacy conversion và DST gap/overlap.
+Sau khi hiểu cách kiểm soát “thời điểm hiện tại”, chương cuối nhìn lại API cũ, rủi ro của múi giờ mặc định và cách chọn thông tin cần lưu trữ. Phần khoảng trống/chồng lặp DST đã được xử lý ở chương phép toán và quy tắc múi giờ ngay trước đó.

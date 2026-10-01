@@ -1,4 +1,4 @@
-# Legacy Interop and Date-Time Pitfalls
+# Legacy Interop and Date-Time Synthesis
 
 `java.time` fixes many design problems in older date-time APIs, but real systems still encounter `java.util.Date`, `Calendar`, JDBC types, database columns, and machine defaults. Modern code therefore needs to interoperate without importing legacy mental models into the new design.
 
@@ -202,68 +202,6 @@ Instant instant = local.atZone(ZoneId.systemDefault()).toInstant();
 ```
 
 If `local` belongs to a known business zone, using the machine default is an undocumented assumption. Supply the correct `ZoneId` from domain/configuration instead.
-
-## <a id="dst-gap-overlap">DST Gaps and Overlaps</a>
-
-Regions using daylight saving time can have special local-clock transitions.
-
-### Gap — a range of local times does not exist
-
-When the clock jumps forward, for example from 02:00 to 03:00, the skipped local times do not exist in that region on that date.
-
-Convenience APIs such as `LocalDateTime.atZone(zone)` resolve a gap according to `ZonedDateTime` rules by moving the local time forward by the gap length.
-
-For important user scheduling input, the application may prefer to detect the gap rather than silently accept the default adjustment:
-
-```java
-LocalDateTime local = ...;
-ZoneId zone = ZoneId.of("Europe/Paris");
-
-List<ZoneOffset> validOffsets = zone.getRules().getValidOffsets(local);
-
-if (validOffsets.isEmpty()) {
-    // local time falls in a gap
-}
-```
-
-### Overlap — one local time occurs twice
-
-When the clock moves backward, one local clock reading can be valid under two offsets.
-
-```java
-List<ZoneOffset> validOffsets = zone.getRules().getValidOffsets(local);
-
-if (validOffsets.size() == 2) {
-    // ambiguous local time
-}
-```
-
-Normal local-to-zone construction follows concrete resolution rules:
-
-```text
-normal
-→ 1 valid offset → use it
-
-gap
-→ 0 valid offsets
-→ move the local date-time forward by the length of the gap
-
-overlap
-→ 2 valid offsets
-→ choose the earlier offset on the local timeline by default
-  (typically the summer/before-transition offset)
-```
-
-If the application needs the other occurrence during an overlap, `withLaterOffsetAtOverlap()` selects the later offset; `withEarlierOffsetAtOverlap()` selects the earlier one explicitly.
-
-When code needs to inspect the transition itself rather than only count valid offsets, `ZoneRules.getTransition(localDateTime)` returns the corresponding `ZoneOffsetTransition`; `nextTransition(instant)` and `previousTransition(instant)` find transitions around a timeline point.
-
-The key lesson is not memorizing one DST date; it is understanding this relationship:
-
-```text
-LocalDateTime + ZoneId
-does not always map 1:1 to Instant
-```
 
 ## <a id="timestamp-storage-boundary">Choose Storage Semantics Deliberately</a>
 

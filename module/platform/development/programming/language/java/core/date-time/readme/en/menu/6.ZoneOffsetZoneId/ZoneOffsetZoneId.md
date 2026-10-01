@@ -1,4 +1,4 @@
-# ZoneOffset and ZoneId
+# ZoneOffset, ZoneId, and Zone Rules
 
 To map local date-time fields onto the global timeline, Java needs to know how a local clock relates to UTC. Two closely related but different concepts appear here: `ZoneOffset` and `ZoneId`.
 
@@ -30,6 +30,24 @@ ZoneOffset
 
 So **a time zone is not the same thing as an offset**. An offset is one part/result of the zone rules at a particular time.
 
+### What is DST? — know the term before gaps and overlaps appear
+
+**DST (Daylight Saving Time)** is a policy used by **some** countries or regions to change the UTC offset/local clock during part of the year. Not every region uses DST, and governments can change the rules.
+
+When a zone transition moves the clock, two terms matter:
+
+```text
+gap
+→ the clock jumps forward
+→ a range of local clock readings does not exist
+
+overlap
+→ the clock moves backward
+→ a range of local clock readings occurs twice under different offsets
+```
+
+This is why `LocalDateTime + ZoneId` does not always map trivially 1:1 to an `Instant`. The learner does not need the resolution rules yet; later chapters build them step by step, with Arithmetic / Comparison covering DST gaps and overlaps explicitly.
+
 ## <a id="zone-offset">ZoneOffset — One Concrete Difference from UTC</a>
 
 `ZoneOffset` describes a specific displacement from UTC:
@@ -57,9 +75,9 @@ Instant instant = value.toInstant();
 
 Local fields plus an offset are enough to determine an instant. They are not enough to prove that the region was `Asia/Ho_Chi_Minh`; many places or fixed-offset systems can share the same offset at a given time.
 
-## <a id="zone-id">ZoneId — A Named Time-Zone Identity</a>
+## <a id="zone-id">ZoneId — A Time-Zone Identity</a>
 
-Region-based `ZoneId` values look like:
+`ZoneId` can represent either a fixed-offset zone or a named region. When the domain needs rules that can vary across history or policy, region-based values look like:
 
 ```java
 ZoneId vietnam = ZoneId.of("Asia/Ho_Chi_Minh");
@@ -79,7 +97,7 @@ Europe/Paris
 America/New_York
 ```
 
-Java retains support for some short IDs for compatibility, but do not use them as canonical business zones when a clear region ID can be stored or exchanged.
+Java exposes compatibility mappings such as `ZoneId.SHORT_IDS`, and the legacy `TimeZone` API also recognizes many short IDs. This is a separate compatibility mechanism; it does not mean a one-argument call such as `ZoneId.of("EST")` is generally valid. Prefer clear region IDs as canonical business data when the contract can store or exchange a `ZoneId`.
 
 Compare:
 

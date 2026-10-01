@@ -1,60 +1,60 @@
-# Tương tác API cũ và các lỗi Date-Time thường gặp
+# Tương tác với API ngày-giờ cũ và tổng hợp mô hình
 
-`java.time` giải quyết nhiều vấn đề thiết kế của API date-time cũ, nhưng application thực tế vẫn thường gặp `java.util.Date`, `Calendar`, JDBC types, database columns và system defaults. Vì vậy cần biết cách interop mà không mang mental model cũ vào code mới.
+`java.time` giải quyết nhiều vấn đề thiết kế của API ngày-giờ cũ, nhưng ứng dụng thực tế vẫn thường gặp `java.util.Date`, `Calendar`, các kiểu JDBC, cột cơ sở dữ liệu và giá trị mặc định của hệ thống. Vì vậy cần biết cách tương tác mà không mang mô hình tư duy cũ vào mã mới.
 
-## <a id="legacy-date-calendar">Date và Calendar: mental model legacy</a>
+## <a id="legacy-date-calendar">Date và Calendar: mô hình tư duy của API cũ</a>
 
 ### java.util.Date
 
-Tên `Date` dễ gây hiểu nhầm: `java.util.Date` không phải modern calendar-date type giống `LocalDate`. Nó chủ yếu biểu diễn một point-in-time dựa trên milliseconds từ epoch và có API legacy/mutable.
+Tên `Date` dễ gây hiểu nhầm: `java.util.Date` không phải kiểu ngày theo lịch hiện đại giống `LocalDate`. Nó chủ yếu biểu diễn một mốc thời gian dựa trên mili giây từ epoch và có API cũ, có thể thay đổi trạng thái.
 
 ```java
 Date legacy = new Date();
 ```
 
-Nhiều getter/setter calendar-style của `Date` đã deprecated từ lâu; modern code nên ưu tiên `java.time`.
+Nhiều getter/setter kiểu lịch của `Date` đã bị đánh dấu lỗi thời từ lâu; mã mới nên ưu tiên `java.time`.
 
 ### Calendar
 
-`Calendar` cung cấp calendar fields, zone và arithmetic theo kiểu mutable:
+`Calendar` cung cấp các trường theo lịch, múi giờ và phép toán theo kiểu có thể thay đổi:
 
 ```java
 Calendar calendar = Calendar.getInstance();
 calendar.add(Calendar.DAY_OF_MONTH, 1);
 ```
 
-Operation sửa trực tiếp object, khác mental model immutable của `java.time`.
+Thao tác sửa trực tiếp đối tượng, khác mô hình tư duy bất biến của `java.time`.
 
-Các API cũ vẫn xuất hiện ở boundary legacy, nhưng đừng chọn chúng cho code mới chỉ vì hệ thống đã có sẵn một vài method dùng `Date`.
+Các API cũ vẫn xuất hiện ở ranh giới tích hợp với hệ thống cũ, nhưng đừng chọn chúng cho mã mới chỉ vì hệ thống đã có sẵn một vài phương thức dùng `Date`.
 
-### SimpleDateFormat — legacy formatter mutable và không thread-safe
+### SimpleDateFormat — bộ định dạng cũ, thay đổi được và không an toàn đa luồng
 
-Code cũ còn rất hay gặp `java.text.SimpleDateFormat`:
+Mã cũ còn rất hay gặp `java.text.SimpleDateFormat`:
 
 ```java
 SimpleDateFormat legacyFormatter = new SimpleDateFormat("dd/MM/yyyy");
 ```
 
-Khác `DateTimeFormatter`, `SimpleDateFormat` là object **mutable và không thread-safe**. Vì vậy pattern kiểu chia sẻ một instance global/static giữa nhiều thread có thể tạo race condition và kết quả parse/format khó đoán.
+Khác `DateTimeFormatter`, `SimpleDateFormat` là đối tượng **có thể thay đổi và không an toàn đa luồng**. Vì vậy cách chia sẻ một đối tượng `static` dùng chung giữa nhiều luồng có thể tạo tranh chấp dữ liệu và kết quả phân tích/định dạng khó đoán.
 
 ```text
 SimpleDateFormat
-→ legacy formatter
-→ mutable
-→ không nên share giữa nhiều thread nếu không có synchronization phù hợp
+→ bộ định dạng cũ
+→ có thể thay đổi
+→ không nên chia sẻ giữa nhiều luồng nếu không có đồng bộ phù hợp
 
 DateTimeFormatter
-→ modern java.time formatter
-→ immutable + thread-safe
+→ bộ định dạng java.time hiện đại
+→ bất biến + an toàn đa luồng
 ```
 
-Khi migrate code mới, ưu tiên `DateTimeFormatter`; chỉ giữ `SimpleDateFormat` ở legacy boundary khi API cũ bắt buộc.
+Khi chuyển mã sang API mới, ưu tiên `DateTimeFormatter`; chỉ giữ `SimpleDateFormat` ở ranh giới với hệ thống cũ khi API cũ bắt buộc.
 
-## <a id="legacy-conversion">Chuyển đổi legacy có chủ đích</a>
+## <a id="legacy-conversion">Chuyển đổi API cũ có chủ đích</a>
 
 ### Date ↔ Instant
 
-`Date` và `Instant` đều có thể biểu diễn timeline point, nên conversion tương đối trực tiếp:
+`Date` và `Instant` đều có thể biểu diễn mốc trên dòng thời gian, nên chuyển đổi tương đối trực tiếp:
 
 ```java
 Date legacy = new Date();
@@ -63,7 +63,7 @@ Instant instant = legacy.toInstant();
 Date back = Date.from(instant);
 ```
 
-Đây thường là boundary tốt: convert sang modern type sớm, xử lý bằng `java.time`, rồi chỉ convert lại nếu API legacy bắt buộc.
+Đây thường là ranh giới tốt: chuyển đổi sang kiểu hiện đại sớm, xử lý bằng `java.time`, rồi chỉ chuyển đổi lại nếu API cũ bắt buộc.
 
 ### Calendar → ZonedDateTime
 
@@ -74,29 +74,29 @@ ZonedDateTime modern = calendar.toInstant()
         .atZone(calendar.getTimeZone().toZoneId());
 ```
 
-Ở đây cần cả timeline point và zone của `Calendar` để giữ local interpretation phù hợp.
+Ở đây cần cả mốc trên dòng thời gian và múi giờ của `Calendar` để giữ cách diễn giải cục bộ phù hợp.
 
 ### `java.sql.Date`, `Time`, `Timestamp`
 
-**JDBC (Java Database Connectivity)** là API Java dùng để làm việc với relational database. Code JDBC cũ thường expose ba wrapper `java.sql.*` rất dễ bị nhầm với `java.time`:
+**JDBC (Java Database Connectivity)** là API Java dùng để làm việc với cơ sở dữ liệu quan hệ. Mã JDBC cũ thường cung cấp ba kiểu bọc `java.sql.*` rất dễ bị nhầm với `java.time`:
 
 ```text
 java.sql.Date
-→ SQL DATE-style value
-→ modern counterpart tự nhiên: LocalDate
+→ giá trị kiểu SQL DATE
+→ kiểu java.time tương ứng tự nhiên: LocalDate
 
 java.sql.Time
-→ SQL TIME-style value
-→ modern counterpart tự nhiên: LocalTime
+→ giá trị kiểu SQL TIME
+→ kiểu java.time tương ứng tự nhiên: LocalTime
 
 java.sql.Timestamp
-→ SQL TIMESTAMP-style wrapper có fractional seconds
-→ có API conversion với LocalDateTime và Instant
+→ kiểu bọc SQL TIMESTAMP có phần giây lẻ
+→ có API chuyển đổi với LocalDateTime và Instant
 ```
 
-Java cung cấp conversion trực tiếp:
+Java cung cấp chuyển đổi trực tiếp:
 
-Trong snippet dưới, `sqlDate`, `sqlTime` và `timestamp` được giả sử là **legacy JDBC values đã được API/database layer cũ cung cấp**; mục tiêu của đoạn code chỉ là minh họa bước conversion sang `java.time` và ngược lại.
+Trong đoạn mã dưới, `sqlDate`, `sqlTime` và `timestamp` được giả sử là **các giá trị JDBC cũ đã được API hoặc tầng cơ sở dữ liệu cung cấp**; mục tiêu của đoạn mã chỉ là minh họa bước chuyển đổi sang `java.time` và ngược lại.
 
 ```java
 LocalDate date = sqlDate.toLocalDate();
@@ -112,7 +112,7 @@ Instant instant = timestamp.toInstant();
 java.sql.Timestamp timestampFromInstant = java.sql.Timestamp.from(instant);
 ```
 
-Nhưng các conversion legacy này **không hoàn toàn đối xứng** và có vài bẫy quan trọng:
+Nhưng các chuyển đổi cũ này **không hoàn toàn đối xứng** và có vài bẫy quan trọng:
 
 ```text
 java.sql.Date.toInstant()
@@ -122,28 +122,28 @@ java.sql.Time.toInstant()
 → không được hỗ trợ, ném UnsupportedOperationException
 
 java.sql.Time.valueOf(LocalTime)
-→ chỉ giữ hour/minute/second
+→ chỉ giữ giờ/phút/giây
 → phần nanosecond của LocalTime bị mất
 
 Timestamp.from(Instant) / timestamp.toInstant()
-→ timeline-oriented conversion
+→ chuyển đổi theo dòng thời gian
 
 Timestamp.valueOf(LocalDateTime) / timestamp.toLocalDateTime()
-→ local date-time interpretation của legacy Timestamp
-→ có thể phụ thuộc default time-zone khi mapping legacy millisecond value ↔ local fields
+→ diễn giải ngày-giờ cục bộ của Timestamp cũ
+→ có thể phụ thuộc múi giờ mặc định khi ánh xạ giá trị mili giây cũ ↔ các trường cục bộ
 ```
 
-Vì vậy nếu domain sở hữu một `Instant`, ưu tiên boundary `Timestamp ↔ Instant`; nếu schema thật sự mang local date-time semantics thì dùng `Timestamp ↔ LocalDateTime` có chủ đích và kiểm soát default-zone assumptions trong stack JDBC/database.
+Vì vậy nếu nghiệp vụ sở hữu một `Instant`, ưu tiên ranh giới `Timestamp ↔ Instant`; nếu lược đồ thật sự mang ý nghĩa ngày-giờ cục bộ thì dùng `Timestamp ↔ LocalDateTime` có chủ đích và kiểm soát các giả định về múi giờ mặc định trong tầng JDBC/cơ sở dữ liệu.
 
-Đừng vì cả `Timestamp` và `Instant` đều có thể liên quan timeline mà mặc định mọi database `TIMESTAMP` column đều có cùng semantics. Ý nghĩa của SQL type, time-zone handling và precision còn phụ thuộc database/schema/driver. Boundary database phải được thiết kế rõ thay vì suy từ tên Java class.
+Đừng vì cả `Timestamp` và `Instant` đều có thể liên quan dòng thời gian mà mặc định mọi cột `TIMESTAMP` trong cơ sở dữ liệu đều có cùng ý nghĩa. Ý nghĩa của kiểu SQL, cách xử lý múi giờ và độ chính xác còn phụ thuộc cơ sở dữ liệu, lược đồ và trình điều khiển. Ranh giới cơ sở dữ liệu phải được thiết kế rõ thay vì suy từ tên Java lớp.
 
-### Modern JDBC có thể làm việc trực tiếp với java.time
+### JDBC hiện đại có thể làm việc trực tiếp với java.time
 
-Từ JDBC 4.2, nhiều `java.time` type có standard mapping trực tiếp qua `setObject` / `getObject`, nên code mới **không bắt buộc phải đi vòng qua `java.sql.Date/Time/Timestamp`** chỉ để truy cập database.
+Từ JDBC 4.2, nhiều kiểu `java.time` có ánh xạ chuẩn trực tiếp qua `setObject` / `getObject`, nên mã mới **không bắt buộc phải đi vòng qua `java.sql.Date/Time/Timestamp`** chỉ để truy cập cơ sở dữ liệu.
 
-Ví dụ ở driver/database hỗ trợ mapping tương ứng:
+Ví dụ ở trình điều khiển/cơ sở dữ liệu hỗ trợ ánh xạ tương ứng:
 
-Trong snippet này, `preparedStatement` là một `PreparedStatement` đã được application tạo để gửi parameter xuống database, còn `resultSet` là `ResultSet` nhận từ query. Chúng là JDBC boundary objects, không phải date-time types.
+Trong đoạn mã này, `preparedStatement` là một `PreparedStatement` đã được ứng dụng tạo để gửi tham số xuống cơ sở dữ liệu, còn `resultSet` là `ResultSet` nhận từ truy vấn. Chúng là các đối tượng tại ranh giới JDBC, không phải kiểu ngày-giờ.
 
 ```java
 LocalDate invoiceDate = LocalDate.of(2026, 9, 27);
@@ -160,19 +160,19 @@ OffsetDateTime loadedOccurredAt = resultSet.getObject(
 );
 ```
 
-`LocalDate`, `LocalTime`, `LocalDateTime`, `OffsetTime` và `OffsetDateTime` có mapping JDBC 4.2 chuẩn. Tuy nhiên database type thực tế, driver capability và time-zone semantics vẫn phải được kiểm tra theo schema/provider. Đặc biệt, đừng suy rằng mọi driver có direct `Instant` mapping giống nhau chỉ vì application dùng `Instant` trong domain.
+`LocalDate`, `LocalTime`, `LocalDateTime`, `OffsetTime` và `OffsetDateTime` có ánh xạ JDBC 4.2 chuẩn. Tuy nhiên kiểu cơ sở dữ liệu thực tế, khả năng của trình điều khiển và ý nghĩa múi giờ vẫn phải được kiểm tra theo lược đồ/nhà cung cấp. Đặc biệt, đừng suy rằng mọi trình điều khiển đều ánh xạ trực tiếp `Instant` giống nhau chỉ vì ứng dụng dùng `Instant` trong nghiệp vụ.
 
-### Không convert bằng text nếu có API trực tiếp
+### Không chuyển đổi qua chuỗi nếu có API trực tiếp
 
-Pattern không cần thiết:
+Cách chuyển đổi không cần thiết:
 
 ```text
-Date → format String → parse LocalDateTime
+Date → định dạng thành String → phân tích thành LocalDateTime
 ```
 
-Nó đưa format/locale/default zone vào giữa một conversion có thể làm trực tiếp và an toàn hơn.
+Nó đưa định dạng/`Locale`/múi giờ mặc định vào giữa một chuyển đổi có thể làm trực tiếp và an toàn hơn.
 
-## <a id="system-default-zone-risk">Rủi ro của system default zone</a>
+## <a id="system-default-zone-risk">Rủi ro của múi giờ mặc định hệ thống</a>
 
 Các lời gọi như:
 
@@ -182,94 +182,32 @@ LocalDate.now();
 ZonedDateTime.now();
 ```
 
-có thể phụ thuộc cấu hình máy nếu không truyền `Clock`/zone rõ ràng.
+có thể phụ thuộc cấu hình máy nếu không truyền `Clock`/múi giờ rõ ràng.
 
-Bug thường xuất hiện khi:
+Lỗi thường xuất hiện khi:
 
 ```text
-developer laptop → Asia/Ho_Chi_Minh
+máy phát triển   → Asia/Ho_Chi_Minh
 CI               → UTC
-production       → UTC hoặc region khác
+môi trường thực tế → UTC hoặc vùng khác
 ```
 
-Cùng một `Instant`, `LocalDate.now(zone)` quanh midnight có thể cho ngày khác giữa các zone.
+Cùng một `Instant` có thể thuộc các `LocalDate` khác nhau khi được chiếu qua các múi giờ khác nhau, đặc biệt quanh nửa đêm cục bộ.
 
-### Conversion nguy hiểm
+### Chuyển đổi nguy hiểm
 
 ```java
 LocalDateTime local = ...;
 Instant instant = local.atZone(ZoneId.systemDefault()).toInstant();
 ```
 
-Nếu `local` thuộc business zone cụ thể, dùng system default là assumption ẩn. Hãy truyền đúng `ZoneId` từ domain/configuration.
+Nếu `local` thuộc một múi giờ nghiệp vụ cụ thể, dùng giá trị mặc định hệ thống là giả định ẩn. Hãy truyền đúng `ZoneId` từ nghiệp vụ/cấu hình.
 
-## <a id="dst-gap-overlap">DST gap và overlap</a>
+## <a id="timestamp-storage-boundary">Chọn cách lưu trữ theo đúng ý nghĩa dữ liệu</a>
 
-Ở region áp dụng daylight saving time, local clock có các transition đặc biệt.
+Không có một quy tắc “mọi dữ liệu ngày-giờ đều phải lưu UTC” áp dụng cho mọi nghiệp vụ. Câu đúng hơn là: **lưu đủ thông tin để phục hồi đúng ý nghĩa mà nghiệp vụ sở hữu**.
 
-### Gap — một khoảng local time không tồn tại
-
-Khi clock nhảy về phía trước, ví dụ từ 02:00 lên 03:00, các local time trong khoảng bị bỏ qua không tồn tại trong zone đó.
-
-Khi dùng API tiện ích như `LocalDateTime.atZone(zone)`, Java resolve gap bằng cách điều chỉnh local time tiến qua độ dài gap theo rule của `ZonedDateTime`.
-
-Với input business quan trọng, đừng chỉ dựa vào adjustment mặc định nếu “thời gian không tồn tại” phải được báo cho user. Có thể kiểm tra `ZoneRules`:
-
-```java
-LocalDateTime local = ...;
-ZoneId zone = ZoneId.of("Europe/Paris");
-
-List<ZoneOffset> validOffsets = zone.getRules().getValidOffsets(local);
-
-if (validOffsets.isEmpty()) {
-    // local time falls in a gap
-}
-```
-
-### Overlap — một local time xảy ra hai lần
-
-Khi clock quay lại, cùng local time có thể hợp lệ với hai offset.
-
-```java
-List<ZoneOffset> validOffsets = zone.getRules().getValidOffsets(local);
-
-if (validOffsets.size() == 2) {
-    // ambiguous local time
-}
-```
-
-Khi tạo `ZonedDateTime` từ local value bằng API thông thường, Java có rule cụ thể:
-
-```text
-normal
-→ 1 offset hợp lệ → dùng offset đó
-
-gap
-→ 0 offset hợp lệ
-→ local date-time được đẩy tiến theo độ dài gap
-
-overlap
-→ 2 offset hợp lệ
-→ mặc định chọn earlier offset tại local timeline
-  (thường là offset mùa hè / trước transition)
-```
-
-Nếu application cần occurrence còn lại trong overlap, `withLaterOffsetAtOverlap()` cho phép chọn later offset; `withEarlierOffsetAtOverlap()` chọn earlier offset một cách explicit.
-
-Khi cần inspect transition thay vì chỉ đếm valid offsets, `ZoneRules.getTransition(localDateTime)` trả `ZoneOffsetTransition` cho gap/overlap tương ứng; `nextTransition(instant)` và `previousTransition(instant)` giúp tìm transition quanh timeline point.
-
-Điểm học quan trọng không phải nhớ một ngày DST cụ thể, mà là hiểu:
-
-```text
-LocalDateTime + ZoneId
-không phải lúc nào cũng map 1:1 tới Instant
-```
-
-## <a id="timestamp-storage-boundary">Chọn storage semantics có chủ đích</a>
-
-Không có một quy tắc “mọi date-time đều phải lưu UTC” áp dụng cho mọi domain. Câu đúng hơn là: **lưu đủ thông tin để phục hồi đúng semantics mà business sở hữu**.
-
-### Event đã xảy ra
+### Sự kiện đã xảy ra
 
 Ví dụ:
 
@@ -279,7 +217,7 @@ requestReceivedAt
 auditEventAt
 ```
 
-Thường cần một timeline point → `Instant`/UTC-oriented storage là tự nhiên.
+Thường cần một mốc trên dòng thời gian → lưu theo `Instant`/UTC là lựa chọn tự nhiên.
 
 ### Lịch tương lai gắn với địa điểm
 
@@ -289,46 +227,46 @@ Ví dụ:
 "09:00 ngày 05/10 tại Europe/Paris"
 ```
 
-Domain có thể cần giữ:
+Nghiệp vụ có thể cần giữ:
 
 ```text
-local date-time
+ngày-giờ cục bộ
 + ZoneId
 ```
 
-vì region rule là một phần của intent. Chỉ giữ initial instant hoặc initial offset có thể mất thông tin cần cho rescheduling/display/future rule updates.
+vì quy tắc của vùng là một phần của ý định lịch. Chỉ giữ `Instant` hoặc độ lệch được tính ở thời điểm ban đầu có thể mất thông tin cần cho việc đổi lịch, hiển thị hoặc thay đổi quy tắc múi giờ trong tương lai.
 
-### Local business date/time
+### Ngày và giờ nghiệp vụ cục bộ
 
-Ngày sinh, ngày hóa đơn hoặc giờ mở cửa không nên bị ép thành instant nếu domain không có timeline semantics.
+Ngày sinh, ngày hóa đơn hoặc giờ mở cửa không nên bị ép thành `Instant` nếu nghiệp vụ không có ý nghĩa trên dòng thời gian.
 
-### Checklist trước khi chọn column/type
+### Danh sách kiểm tra trước khi chọn cột và kiểu dữ liệu
 
 ```text
-1. Đây là calendar value hay timeline event?
-2. Có cần named region không?
-3. Offset có phải dữ liệu gốc hay chỉ là kết quả resolve?
-4. Đây là lịch tương lai hay event đã xảy ra?
-5. Database lưu precision tới mức nào?
-6. Khi đọc lại, application cần phục hồi chính xác thông tin nào?
+1. Đây là giá trị theo lịch hay sự kiện trên dòng thời gian?
+2. Có cần giữ một vùng múi giờ có tên không?
+3. Độ lệch UTC là dữ liệu gốc hay chỉ là kết quả phân giải?
+4. Đây là lịch tương lai hay sự kiện đã xảy ra?
+5. Cơ sở dữ liệu giữ độ chính xác tới mức nào?
+6. Khi đọc lại, ứng dụng cần phục hồi chính xác thông tin nào?
 ```
 
-Nếu trả lời được các câu đó, lựa chọn giữa `LocalDate`, `LocalDateTime`, `Instant`, `OffsetDateTime` và `ZonedDateTime` sẽ xuất phát từ domain thay vì convention mơ hồ.
+Nếu trả lời được các câu đó, lựa chọn giữa `LocalDate`, `LocalDateTime`, `Instant`, `OffsetDateTime` và `ZonedDateTime` sẽ xuất phát từ nghiệp vụ thay vì một quy ước mơ hồ.
 
-Kết thúc module, mental model nên là:
+Kết thúc mô-đun, mô hình tư duy nên là:
 
 ```text
 Hiểu ý nghĩa thời gian trước
         ↓
-chọn temporal type giữ đúng thông tin
+chọn kiểu thời gian giữ đúng thông tin
         ↓
-thêm zone/offset chỉ khi domain cần
+thêm múi giờ/độ lệch chỉ khi nghiệp vụ cần
         ↓
-chọn Duration hay Period theo semantics
+chọn Duration hay Period theo ý nghĩa
         ↓
-format/parse ở boundary
+định dạng/phân tích chuỗi tại ranh giới dữ liệu
         ↓
-inject Clock cho "now"
+truyền Clock vào để kiểm soát "thời điểm hiện tại"
         ↓
-tránh default zone và kiểm soát DST/legacy conversion
+tránh múi giờ mặc định ngầm và kiểm soát chuyển đổi API cũ
 ```

@@ -2,7 +2,7 @@
 
 `LocalDateTime` kết hợp `LocalDate` và `LocalTime`: nó biết **ngày nào** và **mấy giờ**, nhưng vẫn cố ý không biết `ZoneId` hay `ZoneOffset`.
 
-Đây là type rất hữu ích nhưng cũng rất dễ bị dùng nhầm như một timestamp toàn cầu.
+Đây là kiểu rất hữu ích nhưng cũng rất dễ bị dùng nhầm như một dấu thời gian toàn cầu.
 
 ## <a id="local-date-time-model">Mô hình LocalDateTime</a>
 
@@ -12,7 +12,7 @@ Ví dụ:
 LocalDateTime meeting = LocalDateTime.of(2026, 10, 5, 9, 0);
 ```
 
-Value trên nói:
+Giá trị trên nói:
 
 ```text
 ngày = 2026-10-05
@@ -23,11 +23,11 @@ Nó **không nói**:
 
 ```text
 09:00 ở đâu?
-offset so với UTC là bao nhiêu?
-đó là instant nào?
+độ lệch so với UTC là bao nhiêu?
+đó là `Instant` nào?
 ```
 
-Có thể tạo bằng cách ghép hai concept đã học:
+Có thể tạo bằng cách ghép hai khái niệm đã học:
 
 ```java
 LocalDate date = LocalDate.of(2026, 10, 5);
@@ -37,7 +37,7 @@ LocalDateTime a = LocalDateTime.of(date, time);
 LocalDateTime b = date.atTime(time);
 ```
 
-Arithmetic vẫn immutable:
+Các phép toán vẫn giữ tính bất biến:
 
 ```java
 LocalDateTime rescheduled = meeting.plusDays(1).withHour(10);
@@ -45,7 +45,7 @@ LocalDateTime rescheduled = meeting.plusDays(1).withHour(10);
 
 ## <a id="local-date-time-ambiguity">Vì sao LocalDateTime không phải Instant?</a>
 
-Đây là distinction quan trọng nhất của chapter.
+Đây là điểm phân biệt quan trọng nhất của chương.
 
 Giá trị:
 
@@ -53,7 +53,7 @@ Giá trị:
 2026-10-05T09:00
 ```
 
-có thể map tới nhiều instant khác nhau:
+có thể ánh xạ tới nhiều `Instant` khác nhau:
 
 ```java
 LocalDateTime local = LocalDateTime.of(2026, 10, 5, 9, 0);
@@ -70,39 +70,39 @@ System.out.println(vietnam);
 System.out.println(paris);
 ```
 
-Cùng local fields nhưng vì zone rules khác nhau, hai kết quả trên là hai điểm khác nhau trên timeline.
+Cùng các trường cục bộ nhưng vì quy tắc múi giờ khác nhau, hai kết quả trên là hai điểm khác nhau trên dòng thời gian.
 
-Mental model:
+Mô hình tư duy:
 
 ```text
 LocalDateTime
     + ZoneId
         ↓
-resolve local fields theo zone rules
+phân giải các trường cục bộ theo quy tắc múi giờ
         ↓
 ZonedDateTime
         ↓
 Instant
 ```
 
-### DST làm ambiguity rõ hơn
+### DST làm sự mơ hồ của LocalDateTime rõ hơn
 
-Ở các region có daylight saving time, một local date-time có thể rơi vào:
+Ở các vùng có áp dụng giờ mùa hè (DST), một ngày-giờ cục bộ có thể rơi vào:
 
 ```text
-normal case
-→ đúng một offset hợp lệ
+trường hợp bình thường
+→ đúng một độ lệch hợp lệ
 
-gap
-→ local clock nhảy qua một khoảng
-→ một số local time không tồn tại
+khoảng trống (gap)
+→ đồng hồ cục bộ nhảy qua một khoảng
+→ một số giờ cục bộ không tồn tại
 
-overlap
-→ clock quay lại
-→ một số local time xảy ra hai lần với hai offset khác nhau
+chồng lặp (overlap)
+→ đồng hồ quay lại
+→ một số giờ cục bộ xảy ra hai lần với hai độ lệch khác nhau
 ```
 
-Vì `LocalDateTime` không giữ zone rules, bản thân nó không thể giải quyết gap/overlap. Chapter về `ZoneId` và pitfalls sẽ đi sâu phần này.
+Vì `LocalDateTime` không giữ quy tắc múi giờ, bản thân nó không thể giải quyết khoảng trống/chồng lặp. Chương `ZoneOffset / ZoneId` giới thiệu nguyên nhân; chương **Phép toán / So sánh** sẽ đi sâu cách Java phân giải các trường hợp này.
 
 ### Sai lầm phổ biến: dùng LocalDateTime cho createdAt
 
@@ -112,11 +112,11 @@ class Order {
 }
 ```
 
-Nếu `createdAt` cần biểu diễn một sự kiện đã xảy ra trên hệ thống phân tán, chỉ `LocalDateTime` có thể làm mất context zone và khiến hai server ở hai vùng khó so sánh chính xác. `Instant` thường phù hợp hơn cho loại timestamp machine-oriented đó.
+Nếu `createdAt` cần biểu diễn một sự kiện đã xảy ra trên hệ thống phân tán, chỉ `LocalDateTime` có thể làm mất ngữ cảnh múi giờ và khiến hai máy chủ ở hai vùng khó so sánh chính xác. `Instant` thường phù hợp hơn cho loại dấu thời gian hướng hệ thống đó.
 
 ## <a id="local-date-time-use-cases">Khi nào LocalDateTime phù hợp?</a>
 
-`LocalDateTime` đúng khi domain thật sự sở hữu **local calendar fields** nhưng timeline mapping chưa tồn tại hoặc không phải điều cần biểu diễn ở bước đó.
+`LocalDateTime` đúng khi nghiệp vụ thật sự sở hữu **các trường lịch cục bộ** nhưng ánh xạ lên dòng thời gian chưa tồn tại hoặc không phải điều cần biểu diễn ở bước đó.
 
 Ví dụ:
 
@@ -126,35 +126,35 @@ Ví dụ:
 LocalDateTime requestedSlot = LocalDateTime.of(2026, 10, 5, 9, 0);
 ```
 
-Sau đó người dùng chọn zone:
+Sau đó người dùng chọn múi giờ:
 
 ```java
 ZoneId zone = ZoneId.of("Asia/Ho_Chi_Minh");
 ZonedDateTime scheduled = requestedSlot.atZone(zone);
 ```
 
-### 2. Domain cố ý dùng local civil time
+### 2. Nghiệp vụ cố ý dùng thời gian dân sự cục bộ
 
-**Local civil time** là ngày/giờ theo đồng hồ và lịch mà con người tại một nơi sử dụng cho sinh hoạt/business, trước khi ta ánh xạ nó thành một global instant. Một business rule có thể nói “chốt sổ lúc 23:00 ngày cuối tháng theo local business calendar”. Local fields là phần của rule; zone có thể được cấu hình ở một boundary khác.
+**Thời gian dân sự cục bộ (local civil time)** là ngày/giờ theo đồng hồ và lịch mà con người tại một nơi sử dụng cho sinh hoạt/nghiệp vụ, trước khi ta ánh xạ nó thành một `Instant` toàn cục. Một quy tắc nghiệp vụ có thể nói “chốt sổ lúc 23:00 ngày cuối tháng theo lịch nghiệp vụ cục bộ”. Các trường cục bộ là phần của quy tắc; múi giờ có thể được cấu hình ở một ranh giới khác.
 
-### 3. Dữ liệu database loại local timestamp
+### 3. Dữ liệu cơ sở dữ liệu mang nghĩa ngày-giờ cục bộ
 
-Nếu database column thật sự có semantics “timestamp without time zone”, `LocalDateTime` thường là mapping tự nhiên hơn `Instant`. Nhưng phải chắc rằng application không nhầm column đó với một global instant.
+Nếu cột cơ sở dữ liệu thật sự có ý nghĩa “dấu thời gian không kèm múi giờ”, `LocalDateTime` thường là ánh xạ tự nhiên hơn `Instant`. Nhưng phải chắc rằng ứng dụng không nhầm cột đó với một `Instant` toàn cục.
 
 ### Khi nào không nên dùng?
 
-Không dùng `LocalDateTime` chỉ vì format input trông như:
+Không dùng `LocalDateTime` chỉ vì định dạng đầu vào trông như:
 
 ```text
 2026-10-05 09:00:00
 ```
 
-**Text format không quyết định semantics.** Hãy hỏi dữ liệu muốn nói gì.
+**Chuỗi định dạng không quyết định ý nghĩa.** Hãy hỏi dữ liệu muốn nói gì.
 
 ```text
-Audit timestamp?          → thường Instant
-Meeting in a real region? → ZonedDateTime / local + ZoneId
-Date + time chưa có zone? → LocalDateTime
+Dấu thời gian kiểm toán (audit)? → thường Instant
+Cuộc họp ở vùng thực?      → ZonedDateTime / cục bộ + ZoneId
+Ngày + giờ chưa có múi giờ?→ LocalDateTime
 ```
 
-Chapter tiếp theo chuyển sang `Instant`, vì sau khi hiểu local date-time chưa phải timeline point, ta cần một type đại diện cho **một thời điểm toàn cầu không mơ hồ**.
+Chương tiếp theo chuyển sang `Instant`, vì sau khi hiểu ngày-giờ cục bộ chưa phải mốc trên dòng thời gian, ta cần một kiểu đại diện cho **một thời điểm toàn cầu không mơ hồ**.

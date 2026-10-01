@@ -40,12 +40,12 @@
 
 questions:
   - id: date-time-q01
-    question: "Vì sao java.time dùng nhiều type thay vì một timestamp chung cho mọi bài toán?"
+    question: "Vì sao java.time dùng nhiều kiểu thay vì một dấu thời gian chung cho mọi bài toán?"
     answers:
-      - {id: A, answer: "Vì Java muốn tăng số class dù semantics giống nhau.", explanation: "Sai. Các loại thông tin thời gian có semantics khác nhau nên cần model khác nhau."}
-      - {id: B, answer: "Vì ngày, giờ trong ngày, instant, zone và amount trả lời các câu hỏi domain khác nhau.", explanation: "Đúng. Các loại thông tin thời gian có semantics khác nhau nên cần model khác nhau."}
-      - {id: C, answer: "Vì mọi type chỉ khác format text.", explanation: "Sai. Các loại thông tin thời gian có semantics khác nhau nên cần model khác nhau."}
-      - {id: D, answer: "Vì ZoneId có thể thay thế tất cả type còn lại.", explanation: "Sai. Các loại thông tin thời gian có semantics khác nhau nên cần model khác nhau."}
+      - {id: A, answer: "Vì Java muốn tăng số lớp dù ý nghĩa giống nhau.", explanation: "Sai. Các loại thông tin thời gian có ý nghĩa khác nhau nên cần mô hình khác nhau."}
+      - {id: B, answer: "Vì ngày, giờ trong ngày, Instant, múi giờ và lượng thời gian trả lời các câu hỏi nghiệp vụ khác nhau.", explanation: "Đúng. Các loại thông tin thời gian có ý nghĩa khác nhau nên cần mô hình khác nhau."}
+      - {id: C, answer: "Vì mọi kiểu chỉ khác định dạng văn bản.", explanation: "Sai. Các loại thông tin thời gian có ý nghĩa khác nhau nên cần mô hình khác nhau."}
+      - {id: D, answer: "Vì ZoneId có thể thay thế tất cả kiểu còn lại.", explanation: "Sai. Các loại thông tin thời gian có ý nghĩa khác nhau nên cần mô hình khác nhau."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -53,12 +53,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q02
-    question: "Vai trò chính của java.time trong code hiện đại là gì?"
+    question: "Vai trò chính của java.time trong mã hiện đại là gì?"
     answers:
-      - {id: A, answer: "Chỉ parse String thành Date.", explanation: "Sai. java.time là API mô hình hóa date-time hiện đại theo semantics rõ ràng."}
-      - {id: B, answer: "Chỉ schedule job theo thời gian.", explanation: "Sai. java.time là API mô hình hóa date-time hiện đại theo semantics rõ ràng."}
-      - {id: C, answer: "Cung cấp các temporal value type rõ nghĩa cùng operation chuẩn để tạo, chuyển đổi, tính toán và format/parse.", explanation: "Đúng. java.time là API mô hình hóa date-time hiện đại theo semantics rõ ràng."}
-      - {id: D, answer: "Chỉ ánh xạ database TIMESTAMP.", explanation: "Sai. java.time là API mô hình hóa date-time hiện đại theo semantics rõ ràng."}
+      - {id: A, answer: "Chỉ phân tích String thành Date.", explanation: "Sai. java.time là API mô hình hóa ngày-giờ hiện đại theo ý nghĩa rõ ràng."}
+      - {id: B, answer: "Chỉ lập lịch tác vụ theo thời gian.", explanation: "Sai. java.time là API mô hình hóa ngày-giờ hiện đại theo ý nghĩa rõ ràng."}
+      - {id: C, answer: "Cung cấp các kiểu giá trị thời gian rõ nghĩa cùng thao tác chuẩn để tạo, chuyển đổi, tính toán và định dạng/phân tích.", explanation: "Đúng. java.time là API mô hình hóa ngày-giờ hiện đại theo ý nghĩa rõ ràng."}
+      - {id: D, answer: "Chỉ ánh xạ TIMESTAMP trong cơ sở dữ liệu.", explanation: "Sai. java.time là API mô hình hóa ngày-giờ hiện đại theo ý nghĩa rõ ràng."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
@@ -68,10 +68,10 @@ questions:
   - id: date-time-q03
     question: "Phát biểu nào mô tả đúng quan hệ giữa ISO-8601, UTC và Instant?"
     answers:
-      - {id: A, answer: "ISO-8601 là chuẩn biểu diễn/calendar, UTC là mốc tham chiếu toàn cầu, còn Instant là một điểm trên timeline.", explanation: "Đúng. ISO-8601, UTC và Instant có vai trò khác nhau: chuẩn biểu diễn, mốc tham chiếu và timeline point."}
-      - {id: B, answer: "UTC là múi giờ địa phương mặc định của mọi máy.", explanation: "Sai. ISO-8601, UTC và Instant có vai trò khác nhau: chuẩn biểu diễn, mốc tham chiếu và timeline point."}
-      - {id: C, answer: "ISO-8601 là một Java class chứa timezone rules.", explanation: "Sai. ISO-8601, UTC và Instant có vai trò khác nhau: chuẩn biểu diễn, mốc tham chiếu và timeline point."}
-      - {id: D, answer: "Ký tự Z luôn là tên một region ZoneId.", explanation: "Sai. ISO-8601, UTC và Instant có vai trò khác nhau: chuẩn biểu diễn, mốc tham chiếu và timeline point."}
+      - {id: A, answer: "ISO-8601 là chuẩn biểu diễn/lịch, UTC là mốc tham chiếu toàn cầu, còn Instant là một điểm trên dòng thời gian.", explanation: "Đúng. ISO-8601, UTC và Instant có vai trò khác nhau: chuẩn biểu diễn, mốc tham chiếu và mốc trên dòng thời gian."}
+      - {id: B, answer: "UTC là múi giờ địa phương mặc định của mọi máy.", explanation: "Sai. ISO-8601, UTC và Instant có vai trò khác nhau: chuẩn biểu diễn, mốc tham chiếu và mốc trên dòng thời gian."}
+      - {id: C, answer: "ISO-8601 là một lớp Java chứa quy tắc múi giờ.", explanation: "Sai. ISO-8601, UTC và Instant có vai trò khác nhau: chuẩn biểu diễn, mốc tham chiếu và mốc trên dòng thời gian."}
+      - {id: D, answer: "Ký tự Z luôn là tên một vùng ZoneId.", explanation: "Sai. ISO-8601, UTC và Instant có vai trò khác nhau: chuẩn biểu diễn, mốc tham chiếu và mốc trên dòng thời gian."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -81,10 +81,10 @@ questions:
   - id: date-time-q04
     question: "Sau date.plusDays(1), điều gì xảy ra với date nếu không gán kết quả?"
     answers:
-      - {id: A, answer: "date bị thay đổi tại chỗ.", explanation: "Sai. Các value type chính của java.time immutable; plus/with/minus trả value mới."}
-      - {id: B, answer: "date giữ nguyên vì operation trả về một value mới.", explanation: "Đúng. Các value type chính của java.time immutable; plus/with/minus trả value mới."}
-      - {id: C, answer: "Chỉ Instant mới có behavior immutable này.", explanation: "Sai. Các value type chính của java.time immutable; plus/with/minus trả value mới."}
-      - {id: D, answer: "date chỉ đổi nếu có nhiều reference cùng trỏ tới nó.", explanation: "Sai. Các value type chính của java.time immutable; plus/with/minus trả value mới."}
+      - {id: A, answer: "date bị thay đổi tại chỗ.", explanation: "Sai. Các kiểu giá trị chính của java.time bất biến; plus/with/minus trả giá trị mới."}
+      - {id: B, answer: "date giữ nguyên vì thao tác trả về một giá trị mới.", explanation: "Đúng. Các kiểu giá trị chính của java.time bất biến; plus/with/minus trả giá trị mới."}
+      - {id: C, answer: "Chỉ Instant mới có hành vi bất biến này.", explanation: "Sai. Các kiểu giá trị chính của java.time bất biến; plus/with/minus trả giá trị mới."}
+      - {id: D, answer: "date chỉ đổi nếu có nhiều tham chiếu cùng trỏ tới nó.", explanation: "Sai. Các kiểu giá trị chính của java.time bất biến; plus/with/minus trả giá trị mới."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -92,12 +92,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q05
-    question: "Với các java.time value-based class, cách tư duy nào đúng?"
+    question: "Với các lớp java.time dựa trên giá trị (value-based), cách tư duy nào đúng?"
     answers:
-      - {id: A, answer: "Dùng == để xác định hai value bằng nhau.", explanation: "Sai. Value-based class cần được đối xử như giá trị, không dựa vào identity."}
-      - {id: B, answer: "Dựa vào object identity vì instance được Java giữ ổn định.", explanation: "Sai. Value-based class cần được đối xử như giá trị, không dựa vào identity."}
-      - {id: C, answer: "Dùng date-time object làm monitor synchronized là contract được khuyến nghị.", explanation: "Sai. Value-based class cần được đối xử như giá trị, không dựa vào identity."}
-      - {id: D, answer: "So sánh theo value/semantic API thay vì dựa vào identity của instance.", explanation: "Đúng. Value-based class cần được đối xử như giá trị, không dựa vào identity."}
+      - {id: A, answer: "Dùng == để xác định hai giá trị bằng nhau.", explanation: "Sai. Lớp dựa trên giá trị cần được đối xử như giá trị, không dựa vào định danh đối tượng."}
+      - {id: B, answer: "Dựa vào định danh đối tượng vì Java luôn giữ ổn định từng đối tượng.", explanation: "Sai. Lớp dựa trên giá trị cần được đối xử như giá trị, không dựa vào định danh đối tượng."}
+      - {id: C, answer: "Dùng đối tượng ngày-giờ làm monitor (khóa đồng bộ) cho synchronized là hợp đồng được khuyến nghị.", explanation: "Sai. Lớp dựa trên giá trị cần được đối xử như giá trị, không dựa vào định danh đối tượng."}
+      - {id: D, answer: "So sánh bằng API theo giá trị/ngữ nghĩa thay vì dựa vào định danh đối tượng.", explanation: "Đúng. Lớp dựa trên giá trị cần được đối xử như giá trị, không dựa vào định danh đối tượng."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
@@ -105,12 +105,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q06
-    question: "Nguyên tắc chọn temporal type tốt nhất là gì?"
+    question: "Nguyên tắc chọn kiểu thời gian tốt nhất là gì?"
     answers:
-      - {id: A, answer: "Luôn dùng Instant để thống nhất storage.", explanation: "Sai. Temporal type nên phản ánh đúng thông tin domain sở hữu; Local không có nghĩa là system zone."}
-      - {id: B, answer: "Local* tự động mang system default zone.", explanation: "Sai. Temporal type nên phản ánh đúng thông tin domain sở hữu; Local không có nghĩa là system zone."}
-      - {id: C, answer: "Chọn type hẹp nhất đúng với thông tin domain thật sự sở hữu, không invent field còn thiếu.", explanation: "Đúng. Temporal type nên phản ánh đúng thông tin domain sở hữu; Local không có nghĩa là system zone."}
-      - {id: D, answer: "Luôn thêm date, time và zone để type đầy đủ nhất.", explanation: "Sai. Temporal type nên phản ánh đúng thông tin domain sở hữu; Local không có nghĩa là system zone."}
+      - {id: A, answer: "Luôn dùng Instant để thống nhất lưu trữ.", explanation: "Sai. Kiểu thời gian nên phản ánh đúng thông tin nghiệp vụ sở hữu; Local không có nghĩa là múi giờ hệ thống."}
+      - {id: B, answer: "Local* tự động mang múi giờ mặc định hệ thống.", explanation: "Sai. Kiểu thời gian nên phản ánh đúng thông tin nghiệp vụ sở hữu; Local không có nghĩa là múi giờ hệ thống."}
+      - {id: C, answer: "Chọn kiểu hẹp nhất đúng với thông tin nghiệp vụ thật sự sở hữu, không tự tạo trường còn thiếu.", explanation: "Đúng. Kiểu thời gian nên phản ánh đúng thông tin nghiệp vụ sở hữu; Local không có nghĩa là múi giờ hệ thống."}
+      - {id: D, answer: "Luôn thêm ngày, giờ và múi giờ để kiểu đầy đủ nhất.", explanation: "Sai. Kiểu thời gian nên phản ánh đúng thông tin nghiệp vụ sở hữu; Local không có nghĩa là múi giờ hệ thống."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
@@ -120,10 +120,23 @@ questions:
   - id: date-time-q07
     question: "LocalDate mô hình hóa thông tin nào?"
     answers:
-      - {id: A, answer: "Year/month/day của một calendar date, không có time-of-day hay zone.", explanation: "Đúng. LocalDate chỉ giữ calendar date và không tự invent time/zone."}
-      - {id: B, answer: "Một Instant tại midnight.", explanation: "Sai. LocalDate chỉ giữ calendar date và không tự invent time/zone."}
-      - {id: C, answer: "Một date luôn gắn system default zone.", explanation: "Sai. LocalDate chỉ giữ calendar date và không tự invent time/zone."}
-      - {id: D, answer: "Một LocalDateTime ẩn với giờ 00:00.", explanation: "Sai. LocalDate chỉ giữ calendar date và không tự invent time/zone."}
+      - {id: A, answer: "Năm/tháng/ngày của một ngày theo lịch, không có giờ trong ngày hay múi giờ.", explanation: "Đúng. LocalDate chỉ giữ ngày theo lịch và không tự tạo thêm giờ hay múi giờ."}
+      - {id: B, answer: "Một Instant tại nửa đêm.", explanation: "Sai. LocalDate chỉ giữ ngày theo lịch và không tự tạo thêm giờ hay múi giờ."}
+      - {id: C, answer: "Một ngày luôn gắn múi giờ mặc định hệ thống.", explanation: "Sai. LocalDate chỉ giữ ngày theo lịch và không tự tạo thêm giờ hay múi giờ."}
+      - {id: D, answer: "Một LocalDateTime ẩn với giờ 00:00.", explanation: "Sai. LocalDate chỉ giữ ngày theo lịch và không tự tạo thêm giờ hay múi giờ."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.LocalDate/LocalDate.md", anchor: "local-date-model"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: date-time-q25
+    question: "Một nghiệp vụ chỉ lưu ngày sinh 25/09/1995, không có giờ hay múi giờ. Vì sao LocalDate phù hợp nhất?"
+    answers:
+      - {id: A, answer: "Vì LocalDate chỉ giữ năm/tháng/ngày và không tự tạo thêm giờ hay múi giờ mà nghiệp vụ không sở hữu.", explanation: "Đúng. LocalDate khớp chính xác với dữ kiện chỉ có ngày theo lịch."}
+      - {id: B, answer: "Vì LocalDate thực chất là Instant bị cắt về ngày.", explanation: "Sai. LocalDate không phải một mốc trên dòng thời gian bị giảm độ chính xác."}
+      - {id: C, answer: "Vì LocalDate luôn tự gắn múi giờ mặc định của hệ thống.", explanation: "Sai. LocalDate không chứa ZoneId."}
+      - {id: D, answer: "Vì LocalDate là lớp bọc có thể thay đổi quanh java.util.Date.", explanation: "Sai. LocalDate là giá trị bất biến độc lập với java.util.Date."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -133,11 +146,24 @@ questions:
   - id: date-time-q08
     question: "LocalDate.plusDays(1) nên được hiểu thế nào?"
     answers:
-      - {id: A, answer: "Luôn luôn là đúng 24 giờ elapsed trên timeline.", explanation: "Sai. LocalDate arithmetic là calendar arithmetic, không phải fixed elapsed seconds."}
-      - {id: B, answer: "Sang ngày lịch tiếp theo theo calendar arithmetic.", explanation: "Đúng. LocalDate arithmetic là calendar arithmetic, không phải fixed elapsed seconds."}
-      - {id: C, answer: "Mutate LocalDate hiện tại.", explanation: "Sai. LocalDate arithmetic là calendar arithmetic, không phải fixed elapsed seconds."}
-      - {id: D, answer: "Chỉ hợp lệ khi có ZoneId.", explanation: "Sai. LocalDate arithmetic là calendar arithmetic, không phải fixed elapsed seconds."}
+      - {id: A, answer: "Luôn luôn là đúng 24 giờ đã trôi qua trên dòng thời gian.", explanation: "Sai. Phép toán của LocalDate là phép toán theo lịch, không phải số giây đã trôi qua cố định."}
+      - {id: B, answer: "Sang ngày lịch tiếp theo theo phép toán lịch.", explanation: "Đúng. Phép toán của LocalDate là phép toán theo lịch, không phải số giây đã trôi qua cố định."}
+      - {id: C, answer: "Thay đổi trực tiếp LocalDate hiện tại.", explanation: "Sai. Phép toán của LocalDate là phép toán theo lịch, không phải số giây đã trôi qua cố định."}
+      - {id: D, answer: "Chỉ hợp lệ khi có ZoneId.", explanation: "Sai. Phép toán của LocalDate là phép toán theo lịch, không phải số giây đã trôi qua cố định."}
     correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.LocalDate/LocalDate.md", anchor: "local-date-arithmetic"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: date-time-q10
+    question: "TemporalAdjusters nên được hiểu ở ranh giới nào?"
+    answers:
+      - {id: A, answer: "Tự biết ngày nghỉ của mọi công ty.", explanation: "Sai. TemporalAdjusters xử lý cơ chế lịch, không thay thế chính sách lịch nghiệp vụ."}
+      - {id: B, answer: "Chuyển LocalDate thành Instant.", explanation: "Sai. TemporalAdjusters xử lý cơ chế lịch, không thay thế chính sách lịch nghiệp vụ."}
+      - {id: C, answer: "Thay đổi quy tắc múi giờ.", explanation: "Sai. TemporalAdjusters xử lý cơ chế lịch, không thay thế chính sách lịch nghiệp vụ."}
+      - {id: D, answer: "Cung cấp các bộ điều chỉnh lịch có thể tái sử dụng; chính sách ngày làm việc vẫn thuộc ứng dụng.", explanation: "Đúng. TemporalAdjusters xử lý cơ chế lịch, không thay thế chính sách lịch nghiệp vụ."}
+    correctAnswerId: D
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "2.LocalDate/LocalDate.md", anchor: "local-date-arithmetic"}
@@ -146,36 +172,36 @@ questions:
   - id: date-time-q09
     question: "LocalDate.of(2026,1,31).plusMonths(1) cho kết quả nào?"
     answers:
-      - {id: A, answer: "2026-02-31", explanation: "Sai. plusMonths resolve về ngày hợp lệ cuối cùng khi target month không có day tương ứng."}
-      - {id: B, answer: "Luôn ném DateTimeException.", explanation: "Sai. plusMonths resolve về ngày hợp lệ cuối cùng khi target month không có day tương ứng."}
-      - {id: C, answer: "2026-02-28", explanation: "Đúng. plusMonths resolve về ngày hợp lệ cuối cùng khi target month không có day tương ứng."}
-      - {id: D, answer: "2026-03-03", explanation: "Sai. plusMonths resolve về ngày hợp lệ cuối cùng khi target month không có day tương ứng."}
+      - {id: A, answer: "2026-02-31", explanation: "Sai. plusMonths phân giải về ngày hợp lệ cuối cùng khi đích tháng không có ngày tương ứng."}
+      - {id: B, answer: "Luôn ném DateTimeException.", explanation: "Sai. plusMonths phân giải về ngày hợp lệ cuối cùng khi đích tháng không có ngày tương ứng."}
+      - {id: C, answer: "2026-02-28", explanation: "Đúng. plusMonths phân giải về ngày hợp lệ cuối cùng khi đích tháng không có ngày tương ứng."}
+      - {id: D, answer: "2026-03-03", explanation: "Sai. plusMonths phân giải về ngày hợp lệ cuối cùng khi đích tháng không có ngày tương ứng."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "2.LocalDate/LocalDate.md", anchor: "calendar-validity"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - id: date-time-q10
-    question: "TemporalAdjusters nên được hiểu ở boundary nào?"
-    answers:
-      - {id: A, answer: "Tự biết holiday của mọi công ty.", explanation: "Sai. TemporalAdjusters xử lý calendar mechanics, không thay thế business calendar policy."}
-      - {id: B, answer: "Chuyển LocalDate thành Instant.", explanation: "Sai. TemporalAdjusters xử lý calendar mechanics, không thay thế business calendar policy."}
-      - {id: C, answer: "Thay đổi time-zone rules.", explanation: "Sai. TemporalAdjusters xử lý calendar mechanics, không thay thế business calendar policy."}
-      - {id: D, answer: "Cung cấp calendar adjustment dùng lại được; business-day policy vẫn thuộc application.", explanation: "Đúng. TemporalAdjusters xử lý calendar mechanics, không thay thế business calendar policy."}
-    correctAnswerId: D
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "2.LocalDate/LocalDate.md", anchor: "local-date-arithmetic"}
-    apiRelated: {controller: "", methodSignature: ""}
-
   - id: date-time-q11
     question: "LocalTime giữ loại thông tin nào?"
     answers:
-      - {id: A, answer: "Time-of-day, không chứa date, zone hay timeline position.", explanation: "Đúng. LocalTime chỉ biểu diễn giờ trong ngày."}
-      - {id: B, answer: "Một exact Instant trong local zone.", explanation: "Sai. LocalTime chỉ biểu diễn giờ trong ngày."}
-      - {id: C, answer: "Time-of-day cộng ngày hôm nay.", explanation: "Sai. LocalTime chỉ biểu diễn giờ trong ngày."}
-      - {id: D, answer: "Một time luôn có ZoneOffset.", explanation: "Sai. LocalTime chỉ biểu diễn giờ trong ngày."}
+      - {id: A, answer: "Giờ trong ngày, không chứa ngày, múi giờ hay vị trí trên dòng thời gian.", explanation: "Đúng. LocalTime chỉ biểu diễn giờ trong ngày."}
+      - {id: B, answer: "Một Instant chính xác trong múi giờ cục bộ.", explanation: "Sai. LocalTime chỉ biểu diễn giờ trong ngày."}
+      - {id: C, answer: "Giờ trong ngày cộng với ngày hôm nay.", explanation: "Sai. LocalTime chỉ biểu diễn giờ trong ngày."}
+      - {id: D, answer: "Một giá trị giờ luôn có ZoneOffset.", explanation: "Sai. LocalTime chỉ biểu diễn giờ trong ngày."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.LocalTime/LocalTime.md", anchor: "local-time-model"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: date-time-q26
+    question: "Một cửa hàng mở hằng ngày lúc 08:30, chưa xét ngày cụ thể hay múi giờ. Kiểu nào phù hợp nhất?"
+    answers:
+      - {id: A, answer: "LocalTime", explanation: "Đúng. Quy tắc hiện chỉ sở hữu giờ trong ngày."}
+      - {id: B, answer: "Instant", explanation: "Sai. Chưa có ngày/múi giờ nên chưa có mốc trên dòng thời gian toàn cục."}
+      - {id: C, answer: "LocalDate", explanation: "Sai. Nghiệp vụ đang nói về giờ trong ngày chứ không phải ngày lịch."}
+      - {id: D, answer: "Period", explanation: "Sai. Period là lượng theo lịch."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -183,12 +209,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q12
-    question: "LocalTime biểu diễn được nanosecond cho biết điều gì?"
+    question: "LocalTime biểu diễn được nano giây cho biết điều gì?"
     answers:
-      - {id: A, answer: "System clock luôn đo chính xác tới nanosecond.", explanation: "Sai. Representation precision không đồng nghĩa measurement/storage accuracy."}
-      - {id: B, answer: "Database luôn lưu đủ 9 chữ số nano.", explanation: "Sai. Representation precision không đồng nghĩa measurement/storage accuracy."}
-      - {id: C, answer: "Type có representation precision tới nano, nhưng nguồn đo/storage có thể có resolution thấp hơn.", explanation: "Đúng. Representation precision không đồng nghĩa measurement/storage accuracy."}
-      - {id: D, answer: "LocalTime thực ra chỉ chính xác tới millisecond.", explanation: "Sai. Representation precision không đồng nghĩa measurement/storage accuracy."}
+      - {id: A, answer: "Đồng hồ hệ thống luôn đo chính xác tới nano giây.", explanation: "Sai. Độ chính xác biểu diễn không đồng nghĩa với độ chính xác của phép đo hay lưu trữ."}
+      - {id: B, answer: "Cơ sở dữ liệu luôn lưu đủ 9 chữ số nano.", explanation: "Sai. Độ chính xác biểu diễn không đồng nghĩa với độ chính xác của phép đo hay lưu trữ."}
+      - {id: C, answer: "Kiểu có độ chính xác biểu diễn tới nano giây, nhưng nguồn đo hoặc nơi lưu trữ có thể có độ phân giải thấp hơn.", explanation: "Đúng. Độ chính xác biểu diễn không đồng nghĩa với độ chính xác của phép đo hay lưu trữ."}
+      - {id: D, answer: "LocalTime thực ra chỉ chính xác tới mili giây.", explanation: "Sai. Độ chính xác biểu diễn không đồng nghĩa với độ chính xác của phép đo hay lưu trữ."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
@@ -198,10 +224,10 @@ questions:
   - id: date-time-q13
     question: "LocalTime.of(23,30).plusHours(2) nên được hiểu thế nào?"
     answers:
-      - {id: A, answer: "Kết quả chứa cờ nextDay.", explanation: "Sai. LocalTime không chứa date nên arithmetic wrap trong phạm vi ngày."}
-      - {id: B, answer: "Kết quả là 01:30; LocalTime wrap trong ngày và không biết ngày mai.", explanation: "Đúng. LocalTime không chứa date nên arithmetic wrap trong phạm vi ngày."}
-      - {id: C, answer: "LocalDate tự động tăng thêm một ngày.", explanation: "Sai. LocalTime không chứa date nên arithmetic wrap trong phạm vi ngày."}
-      - {id: D, answer: "Hai LocalTime luôn đủ để suy ra elapsed duration qua midnight.", explanation: "Sai. LocalTime không chứa date nên arithmetic wrap trong phạm vi ngày."}
+      - {id: A, answer: "Kết quả chứa cờ nextDay.", explanation: "Sai. LocalTime không chứa date nên phép toán quay vòng trong phạm vi ngày."}
+      - {id: B, answer: "Kết quả là 01:30; LocalTime quay vòng trong ngày và không biết ngày mai.", explanation: "Đúng. LocalTime không chứa date nên phép toán quay vòng trong phạm vi ngày."}
+      - {id: C, answer: "LocalDate tự động tăng thêm một ngày.", explanation: "Sai. LocalTime không chứa date nên phép toán quay vòng trong phạm vi ngày."}
+      - {id: D, answer: "Hai LocalTime luôn đủ để suy ra thời lượng đã trôi qua qua nửa đêm.", explanation: "Sai. LocalTime không chứa date nên phép toán quay vòng trong phạm vi ngày."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -211,11 +237,24 @@ questions:
   - id: date-time-q14
     question: "LocalDateTime chứa những thành phần cốt lõi nào?"
     answers:
-      - {id: A, answer: "Một global timestamp duy nhất.", explanation: "Sai. LocalDateTime là local calendar fields, chưa phải timeline point."}
-      - {id: B, answer: "Một Instant ở UTC.", explanation: "Sai. LocalDateTime là local calendar fields, chưa phải timeline point."}
-      - {id: C, answer: "Date/time cùng system default zone.", explanation: "Sai. LocalDateTime là local calendar fields, chưa phải timeline point."}
-      - {id: D, answer: "LocalDate + LocalTime fields, không có ZoneId hay ZoneOffset.", explanation: "Đúng. LocalDateTime là local calendar fields, chưa phải timeline point."}
+      - {id: A, answer: "Một dấu thời gian toàn cục duy nhất.", explanation: "Sai. LocalDateTime là các trường lịch cục bộ, chưa phải mốc trên dòng thời gian."}
+      - {id: B, answer: "Một Instant ở UTC.", explanation: "Sai. LocalDateTime là các trường lịch cục bộ, chưa phải mốc trên dòng thời gian."}
+      - {id: C, answer: "Ngày/giờ cùng múi giờ mặc định hệ thống.", explanation: "Sai. LocalDateTime là các trường lịch cục bộ, chưa phải mốc trên dòng thời gian."}
+      - {id: D, answer: "Các trường của LocalDate + LocalTime, không có ZoneId hay ZoneOffset.", explanation: "Đúng. LocalDateTime là các trường lịch cục bộ, chưa phải mốc trên dòng thời gian."}
     correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.LocalDateTime/LocalDateTime.md", anchor: "local-date-time-model"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: date-time-q27
+    question: "Một form thu ngày + giờ nhưng người dùng chỉ chọn múi giờ ở bước sau. Vì sao LocalDateTime phù hợp cho trạng thái trung gian này?"
+    answers:
+      - {id: A, answer: "Vì LocalDateTime giữ các trường ngày + giờ cục bộ nhưng chưa tự gắn ZoneId hay ZoneOffset.", explanation: "Đúng. Nó giữ đúng dữ liệu đã biết mà chưa giả định một mốc toàn cục."}
+      - {id: B, answer: "Vì LocalDateTime đã chứa Instant + ZoneId nên có thể hoãn hiển thị.", explanation: "Sai. LocalDateTime không chứa Instant hay ZoneId."}
+      - {id: C, answer: "Vì LocalDateTime chỉ giữ năm/tháng/ngày và bỏ giờ.", explanation: "Sai. Đó gần với LocalDate hơn."}
+      - {id: D, answer: "Vì LocalDateTime chỉ giữ giờ/phút/giây và bỏ ngày.", explanation: "Sai. Đó gần với LocalTime hơn."}
+    correctAnswerId: A
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "4.LocalDateTime/LocalDateTime.md", anchor: "local-date-time-model"}
@@ -224,10 +263,10 @@ questions:
   - id: date-time-q15
     question: "Cùng LocalDateTime 09:00 gắn vào hai ZoneId khác nhau có thể dẫn tới điều gì?"
     answers:
-      - {id: A, answer: "Luôn cùng Instant vì local fields giống nhau.", explanation: "Sai. Zone context quyết định cách local fields map lên timeline."}
-      - {id: B, answer: "ZoneId chỉ đổi cách format text.", explanation: "Sai. Zone context quyết định cách local fields map lên timeline."}
-      - {id: C, answer: "Có thể thành hai Instant khác nhau do zone rules khác nhau.", explanation: "Đúng. Zone context quyết định cách local fields map lên timeline."}
-      - {id: D, answer: "LocalDateTime tự chứa đủ zone để tránh khác biệt.", explanation: "Sai. Zone context quyết định cách local fields map lên timeline."}
+      - {id: A, answer: "Luôn cùng Instant vì các trường cục bộ giống nhau.", explanation: "Sai. Ngữ cảnh múi giờ quyết định cách các trường cục bộ ánh xạ lên dòng thời gian."}
+      - {id: B, answer: "ZoneId chỉ đổi cách định dạng văn bản.", explanation: "Sai. Ngữ cảnh múi giờ quyết định cách các trường cục bộ ánh xạ lên dòng thời gian."}
+      - {id: C, answer: "Có thể thành hai Instant khác nhau do quy tắc múi giờ khác nhau.", explanation: "Đúng. Ngữ cảnh múi giờ quyết định cách các trường cục bộ ánh xạ lên dòng thời gian."}
+      - {id: D, answer: "LocalDateTime tự chứa đủ múi giờ để tránh khác biệt.", explanation: "Sai. Ngữ cảnh múi giờ quyết định cách các trường cục bộ ánh xạ lên dòng thời gian."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
@@ -235,12 +274,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q16
-    question: "DST gap/overlap cho thấy điều gì về LocalDateTime + ZoneId?"
+    question: "Khoảng trống/chồng lặp (gap/overlap) của DST cho thấy điều gì về LocalDateTime + ZoneId?"
     answers:
-      - {id: A, answer: "Một local date-time có thể có 0 hoặc 2 offset hợp lệ thay vì luôn 1.", explanation: "Đúng. DST làm local-to-zone mapping có thể không phải 1:1."}
-      - {id: B, answer: "Luôn có đúng một offset.", explanation: "Sai. DST làm local-to-zone mapping có thể không phải 1:1."}
-      - {id: C, answer: "DST chỉ ảnh hưởng tên tháng khi format.", explanation: "Sai. DST làm local-to-zone mapping có thể không phải 1:1."}
-      - {id: D, answer: "LocalDateTime tự resolve DST mà không cần zone rules.", explanation: "Sai. DST làm local-to-zone mapping có thể không phải 1:1."}
+      - {id: A, answer: "Một ngày-giờ cục bộ có thể có 0 hoặc 2 độ lệch hợp lệ thay vì luôn 1.", explanation: "Đúng. DST làm cục bộ-to-múi giờ ánh xạ có thể không phải 1:1."}
+      - {id: B, answer: "Luôn có đúng một độ lệch.", explanation: "Sai. DST làm cục bộ-to-múi giờ ánh xạ có thể không phải 1:1."}
+      - {id: C, answer: "DST chỉ ảnh hưởng tên tháng khi định dạng.", explanation: "Sai. DST làm cục bộ-to-múi giờ ánh xạ có thể không phải 1:1."}
+      - {id: D, answer: "LocalDateTime tự phân giải DST mà không cần quy tắc múi giờ.", explanation: "Sai. DST làm cục bộ-to-múi giờ ánh xạ có thể không phải 1:1."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -248,12 +287,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q17
-    question: "Use case nào phù hợp nhất với LocalDateTime?"
+    question: "Trường hợp sử dụng nào phù hợp nhất với LocalDateTime?"
     answers:
-      - {id: A, answer: "createdAt của distributed audit event.", explanation: "Sai. LocalDateTime phù hợp khi domain sở hữu local date/time nhưng chưa sở hữu timeline mapping."}
-      - {id: B, answer: "Lịch local đã có date+time nhưng zone chưa được chọn hoặc timeline mapping chưa phải domain concern.", explanation: "Đúng. LocalDateTime phù hợp khi domain sở hữu local date/time nhưng chưa sở hữu timeline mapping."}
-      - {id: C, answer: "Protocol timestamp đã có +07:00.", explanation: "Sai. LocalDateTime phù hợp khi domain sở hữu local date/time nhưng chưa sở hữu timeline mapping."}
-      - {id: D, answer: "Global event ordering giữa nhiều server.", explanation: "Sai. LocalDateTime phù hợp khi domain sở hữu local date/time nhưng chưa sở hữu timeline mapping."}
+      - {id: A, answer: "createdAt của sự kiện kiểm toán trong hệ thống phân tán.", explanation: "Sai. LocalDateTime phù hợp khi nghiệp vụ sở hữu ngày/giờ cục bộ nhưng chưa sở hữu ánh xạ lên dòng thời gian."}
+      - {id: B, answer: "Lịch cục bộ đã có date+time nhưng múi giờ chưa được chọn hoặc ánh xạ lên dòng thời gian chưa phải mối quan tâm của nghiệp vụ.", explanation: "Đúng. LocalDateTime phù hợp khi nghiệp vụ sở hữu ngày/giờ cục bộ nhưng chưa sở hữu ánh xạ lên dòng thời gian."}
+      - {id: C, answer: "Dấu thời gian của giao thức đã có +07:00.", explanation: "Sai. LocalDateTime phù hợp khi nghiệp vụ sở hữu ngày/giờ cục bộ nhưng chưa sở hữu ánh xạ lên dòng thời gian."}
+      - {id: D, answer: "Thứ tự sự kiện toàn cục giữa nhiều server.", explanation: "Sai. LocalDateTime phù hợp khi nghiệp vụ sở hữu ngày/giờ cục bộ nhưng chưa sở hữu ánh xạ lên dòng thời gian."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -261,12 +300,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q18
-    question: "Mental model đúng nhất cho Instant là gì?"
+    question: "Mô hình tư duy đúng nhất cho Instant là gì?"
     answers:
-      - {id: A, answer: "Một LocalDateTime đặc biệt ở UTC.", explanation: "Sai. Instant là timeline point, không phải UTC LocalDateTime."}
-      - {id: B, answer: "Một named time-zone value.", explanation: "Sai. Instant là timeline point, không phải UTC LocalDateTime."}
-      - {id: C, answer: "Một calendar date theo UTC.", explanation: "Sai. Instant là timeline point, không phải UTC LocalDateTime."}
-      - {id: D, answer: "Một điểm tuyệt đối trên global timeline, không sở hữu local calendar fields như domain chính.", explanation: "Đúng. Instant là timeline point, không phải UTC LocalDateTime."}
+      - {id: A, answer: "Một LocalDateTime đặc biệt ở UTC.", explanation: "Sai. Instant là mốc trên dòng thời gian, không phải UTC LocalDateTime."}
+      - {id: B, answer: "Một giá trị múi giờ có tên.", explanation: "Sai. Instant là mốc trên dòng thời gian, không phải UTC LocalDateTime."}
+      - {id: C, answer: "Một ngày theo lịch theo UTC.", explanation: "Sai. Instant là mốc trên dòng thời gian, không phải UTC LocalDateTime."}
+      - {id: D, answer: "Một điểm tuyệt đối trên dòng thời gian toàn cục, không sở hữu các trường lịch cục bộ như nghiệp vụ chính.", explanation: "Đúng. Instant là mốc trên dòng thời gian, không phải UTC LocalDateTime."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
@@ -274,12 +313,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q19
-    question: "Vì sao raw epoch number phải kèm unit rõ ràng?"
+    question: "Vì sao giá trị epoch thô phải kèm đơn vị rõ ràng?"
     answers:
-      - {id: A, answer: "Vì seconds, milliseconds hay unit khác cho kết quả rất khác nếu hiểu nhầm.", explanation: "Đúng. Epoch number tự nó không mang unit metadata."}
-      - {id: B, answer: "Vì Java tự nhận unit từ Locale.", explanation: "Sai. Epoch number tự nó không mang unit metadata."}
-      - {id: C, answer: "Vì mọi epoch number bắt buộc là milliseconds.", explanation: "Sai. Epoch number tự nó không mang unit metadata."}
-      - {id: D, answer: "Vì ZoneId xác định epoch unit.", explanation: "Sai. Epoch number tự nó không mang unit metadata."}
+      - {id: A, answer: "Vì giây, mili giây hay đơn vị khác cho kết quả rất khác nếu hiểu nhầm.", explanation: "Đúng. Epoch number tự nó không mang đơn vị metadata."}
+      - {id: B, answer: "Vì Java tự nhận đơn vị từ Locale.", explanation: "Sai. Epoch number tự nó không mang đơn vị metadata."}
+      - {id: C, answer: "Vì mọi giá trị epoch bắt buộc là mili giây.", explanation: "Sai. Epoch number tự nó không mang đơn vị metadata."}
+      - {id: D, answer: "Vì ZoneId xác định epoch đơn vị.", explanation: "Sai. Epoch number tự nó không mang đơn vị metadata."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -287,12 +326,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q20
-    question: "Phát biểu nào đúng về representation của Instant?"
+    question: "Phát biểu nào đúng về cách biểu diễn của Instant?"
     answers:
-      - {id: A, answer: "Instant chỉ lưu epoch milliseconds.", explanation: "Sai. Instant có seconds+nano precision; toEpochMilli có thể làm mất phần nhỏ hơn millisecond."}
-      - {id: B, answer: "toEpochMilli luôn giữ nguyên toàn bộ nanosecond precision.", explanation: "Sai. Instant có seconds+nano precision; toEpochMilli có thể làm mất phần nhỏ hơn millisecond."}
-      - {id: C, answer: "Có thể hiểu logic là epoch seconds cộng nano fraction; đổi về milliseconds có thể mất precision nhỏ hơn ms.", explanation: "Đúng. Instant có seconds+nano precision; toEpochMilli có thể làm mất phần nhỏ hơn millisecond."}
-      - {id: D, answer: "Chuyển epoch bắt buộc thêm ZoneId.", explanation: "Sai. Instant có seconds+nano precision; toEpochMilli có thể làm mất phần nhỏ hơn millisecond."}
+      - {id: A, answer: "Instant chỉ lưu epoch mili giây.", explanation: "Sai. Instant có giây+độ chính xác nano; toEpochMilli có thể làm mất phần nhỏ hơn mili giây."}
+      - {id: B, answer: "toEpochMilli luôn giữ nguyên toàn bộ nano giây độ chính xác.", explanation: "Sai. Instant có giây+độ chính xác nano; toEpochMilli có thể làm mất phần nhỏ hơn mili giây."}
+      - {id: C, answer: "Có thể hiểu logic là số giây tính từ epoch cộng phần nano; đổi về mili giây có thể mất độ chính xác nhỏ hơn ms.", explanation: "Đúng. Instant có giây+độ chính xác nano; toEpochMilli có thể làm mất phần nhỏ hơn mili giây."}
+      - {id: D, answer: "Chuyển epoch bắt buộc thêm ZoneId.", explanation: "Sai. Instant có giây+độ chính xác nano; toEpochMilli có thể làm mất phần nhỏ hơn mili giây."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
@@ -302,10 +341,10 @@ questions:
   - id: date-time-q21
     question: "Dữ liệu nào thường phù hợp nhất với Instant?"
     answers:
-      - {id: A, answer: "Ngày sinh chỉ có calendar date.", explanation: "Sai. Instant phù hợp cho occurred event point và timeline-based timestamp/deadline."}
-      - {id: B, answer: "Timestamp của event đã xảy ra cần audit/order thống nhất trên timeline.", explanation: "Đúng. Instant phù hợp cho occurred event point và timeline-based timestamp/deadline."}
-      - {id: C, answer: "Giờ mở cửa lặp lại hằng ngày.", explanation: "Sai. Instant phù hợp cho occurred event point và timeline-based timestamp/deadline."}
-      - {id: D, answer: "Local meeting chưa biết zone.", explanation: "Sai. Instant phù hợp cho occurred event point và timeline-based timestamp/deadline."}
+      - {id: A, answer: "Ngày sinh chỉ có ngày theo lịch.", explanation: "Sai. Instant phù hợp cho mốc của sự kiện đã xảy ra và dấu thời gian/hạn chót dựa trên dòng thời gian."}
+      - {id: B, answer: "Timestamp của sự kiện đã xảy ra cần kiểm toán/sắp thứ tự thống nhất trên dòng thời gian.", explanation: "Đúng. Instant phù hợp cho mốc của sự kiện đã xảy ra và dấu thời gian/hạn chót dựa trên dòng thời gian."}
+      - {id: C, answer: "Giờ mở cửa lặp lại hằng ngày.", explanation: "Sai. Instant phù hợp cho mốc của sự kiện đã xảy ra và dấu thời gian/hạn chót dựa trên dòng thời gian."}
+      - {id: D, answer: "Cuộc họp cục bộ chưa biết múi giờ.", explanation: "Sai. Instant phù hợp cho mốc của sự kiện đã xảy ra và dấu thời gian/hạn chót dựa trên dòng thời gian."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -315,10 +354,10 @@ questions:
   - id: date-time-q22
     question: "ZoneOffset biểu diễn điều gì?"
     answers:
-      - {id: A, answer: "Một named region với DST history.", explanation: "Sai. ZoneOffset là concrete offset chứ không phải region identity."}
-      - {id: B, answer: "Một Locale cho vùng địa lý.", explanation: "Sai. ZoneOffset là concrete offset chứ không phải region identity."}
-      - {id: C, answer: "Một zone rule database.", explanation: "Sai. ZoneOffset là concrete offset chứ không phải region identity."}
-      - {id: D, answer: "Một độ lệch số cụ thể so với UTC, không mang region rules.", explanation: "Đúng. ZoneOffset là concrete offset chứ không phải region identity."}
+      - {id: A, answer: "Một vùng có tên với lịch sử DST.", explanation: "Sai. ZoneOffset là độ lệch cụ thể chứ không phải định danh vùng."}
+      - {id: B, answer: "Một Locale cho vùng địa lý.", explanation: "Sai. ZoneOffset là độ lệch cụ thể chứ không phải định danh vùng."}
+      - {id: C, answer: "Một cơ sở dữ liệu quy tắc múi giờ.", explanation: "Sai. ZoneOffset là độ lệch cụ thể chứ không phải định danh vùng."}
+      - {id: D, answer: "Một độ lệch số cụ thể so với UTC, không mang quy tắc vùng.", explanation: "Đúng. ZoneOffset là độ lệch cụ thể chứ không phải định danh vùng."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
@@ -326,12 +365,25 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q23
-    question: "ZoneId region-based có vai trò gì?"
+    question: "ZoneId theo vùng có vai trò gì?"
     answers:
-      - {id: A, answer: "Định danh một vùng để Java tra time-zone rule set tương ứng.", explanation: "Đúng. Region ZoneId là identity dẫn tới zone rules."}
-      - {id: B, answer: "Chỉ chứa một fixed offset vĩnh viễn.", explanation: "Sai. Region ZoneId là identity dẫn tới zone rules."}
-      - {id: C, answer: "Chỉ là label display không có semantics.", explanation: "Sai. Region ZoneId là identity dẫn tới zone rules."}
-      - {id: D, answer: "Thay thế Locale cho localization.", explanation: "Sai. Region ZoneId là identity dẫn tới zone rules."}
+      - {id: A, answer: "Định danh một vùng để Java tra bộ quy tắc múi giờ tương ứng.", explanation: "Đúng. ZoneId theo vùng là định danh dẫn tới quy tắc múi giờ."}
+      - {id: B, answer: "Chỉ chứa một độ lệch cố định vĩnh viễn.", explanation: "Sai. ZoneId theo vùng là định danh dẫn tới quy tắc múi giờ."}
+      - {id: C, answer: "Chỉ là nhãn hiển thị không có ý nghĩa.", explanation: "Sai. ZoneId theo vùng là định danh dẫn tới quy tắc múi giờ."}
+      - {id: D, answer: "Thay thế Locale cho bản địa hóa.", explanation: "Sai. ZoneId theo vùng là định danh dẫn tới quy tắc múi giờ."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.ZoneOffsetZoneId/ZoneOffsetZoneId.md", anchor: "zone-id"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: date-time-q56
+    question: 'Phát biểu nào đúng về ZoneId.SHORT_IDS và ZoneId.of("EST")?'
+    answers:
+      - {id: A, answer: 'ZoneId.SHORT_IDS là ánh xạ tương thích riêng; lời gọi một tham số ZoneId.of("EST") không vì thế mà mặc nhiên hợp lệ.', explanation: "Đúng. Với dữ liệu nghiệp vụ nên ưu tiên định danh vùng rõ ràng hoặc truyền bảng bí danh có chủ đích khi thật sự cần tương thích."}
+      - {id: B, answer: 'Vì EST có trong ZoneId.SHORT_IDS nên ZoneId.of("EST") một tham số luôn hợp lệ.', explanation: "Sai. SHORT_IDS không tự động được áp dụng cho lời gọi một tham số."}
+      - {id: C, answer: "EST luôn là một định danh vùng IANA duy nhất trên toàn cầu.", explanation: "Sai. Mã viết tắt ba chữ có thể mơ hồ và không phải định danh vùng đáng tin cậy."}
+      - {id: D, answer: "ZoneId.SHORT_IDS biến mọi ZoneOffset thành Locale.", explanation: "Sai. Locale không liên quan cơ chế bí danh của ZoneId."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -339,88 +391,77 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q24
-    question: "ZoneRules của một region như Europe/Paris có vai trò gì?"
+    question: "ZoneRules của một vùng như Europe/Paris có vai trò gì?"
     answers:
-      - {id: A, answer: "Chỉ lưu tên hiển thị của múi giờ.", explanation: "Sai. ZoneRules chứa quy tắc ánh xạ giữa local time, offset và timeline theo thời gian."}
-      - {id: B, answer: "Xác định offset/transition hợp lệ theo thời điểm hoặc local date-time, nên một region có thể dùng offset khác nhau theo ngày.", explanation: "Đúng. ZoneRules là phần rule engine phía sau region-based ZoneId, bao gồm transition như DST."}
-      - {id: C, answer: "Thay thế LocalDate và LocalTime bằng một business calendar.", explanation: "Sai. ZoneRules xử lý time-zone rules, không phải holiday/business policy."}
-      - {id: D, answer: "Chỉ format ZoneId thành String.", explanation: "Sai. Formatting không phải vai trò cốt lõi của ZoneRules."}
+      - {id: A, answer: "Chỉ lưu tên hiển thị của múi giờ.", explanation: "Sai. ZoneRules chứa quy tắc ánh xạ giữa giờ cục bộ, độ lệch và dòng thời gian theo thời gian."}
+      - {id: B, answer: "Xác định độ lệch/lần chuyển đổi hợp lệ theo thời điểm hoặc ngày-giờ cục bộ, nên một vùng có thể dùng độ lệch khác nhau theo ngày.", explanation: "Đúng. ZoneRules là phần bộ quy tắc phía sau theo vùng ZoneId, bao gồm lần chuyển đổi như DST."}
+      - {id: C, answer: "Thay thế LocalDate và LocalTime bằng một nghiệp vụ lịch.", explanation: "Sai. ZoneRules xử lý quy tắc múi giờ, không phải ngày nghỉ/chính sách nghiệp vụ."}
+      - {id: D, answer: "Chỉ định dạng ZoneId thành String.", explanation: "Sai. Định dạng không phải vai trò cốt lõi của ZoneRules."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "6.ZoneOffsetZoneId/ZoneOffsetZoneId.md", anchor: "zone-rules"}
     apiRelated: {controller: "", methodSignature: ""}
-  - id: date-time-q25
-    question: "Phát biểu nào mô tả đúng nhất LocalDate?"
-    answers:
-      - {id: A, answer: "Một calendar date gồm year/month/day, không có time-of-day hay zone.", explanation: "Đúng. LocalDate diễn đạt date-only semantics."}
-      - {id: B, answer: "Một Instant bị truncate về ngày.", explanation: "Sai. LocalDate không phải timeline point đã bị cắt precision."}
-      - {id: C, answer: "Một date luôn gắn system default zone.", explanation: "Sai. LocalDate không chứa ZoneId."}
-      - {id: D, answer: "Một mutable wrapper quanh java.util.Date.", explanation: "Sai. LocalDate là immutable java.time value type độc lập với java.util.Date."}
-    correctAnswerId: A
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "2.LocalDate/LocalDate.md", anchor: "local-date-model"}
-    apiRelated: {controller: "", methodSignature: ""}
 
-  - id: date-time-q26
-    question: "Một cửa hàng mở hằng ngày lúc 08:30, chưa xét ngày cụ thể hay zone. Type nào phù hợp nhất?"
-    answers:
-      - {id: A, answer: "LocalTime", explanation: "Đúng. Rule hiện chỉ sở hữu time-of-day."}
-      - {id: B, answer: "Instant", explanation: "Sai. Chưa có date/zone nên chưa có global timeline point."}
-      - {id: C, answer: "LocalDate", explanation: "Sai. Domain đang nói về giờ trong ngày chứ không phải ngày calendar."}
-      - {id: D, answer: "Period", explanation: "Sai. Period là calendar amount."}
-    correctAnswerId: A
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "3.LocalTime/LocalTime.md", anchor: "local-time-model"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - id: date-time-q27
-    question: "LocalDateTime chứa những thông tin cốt lõi nào?"
-    answers:
-      - {id: A, answer: "LocalDate + LocalTime fields nhưng không có ZoneId/ZoneOffset.", explanation: "Đúng. Nó là local calendar date-time chưa được map lên global timeline."}
-      - {id: B, answer: "Instant + ZoneId.", explanation: "Sai. Đó gần hơn với zone-aware timeline representation."}
-      - {id: C, answer: "Chỉ year/month/day.", explanation: "Sai. Đó là LocalDate."}
-      - {id: D, answer: "Chỉ hour/minute/second.", explanation: "Sai. Đó là LocalTime."}
-    correctAnswerId: A
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "4.LocalDateTime/LocalDateTime.md", anchor: "local-date-time-model"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - id: date-time-q28
-    question: "OffsetDateTime biểu diễn thông tin nào mà vẫn xác định được một Instant?"
-    answers:
-      - {id: A, answer: "Chỉ LocalDate, không có giờ hay offset.", explanation: "Sai. OffsetDateTime chứa đầy đủ local date-time cùng một concrete offset."}
-      - {id: B, answer: "LocalDateTime cùng named region ZoneId và toàn bộ ZoneRules.", explanation: "Sai. Đó gần hơn với ZonedDateTime region-based; OffsetDateTime không giữ named-region rules."}
-      - {id: C, answer: "Local date-time cộng một ZoneOffset cụ thể; đủ để tính Instant nhưng không khôi phục chắc chắn region ban đầu.", explanation: "Đúng. Concrete offset giải quyết mapping lên timeline nhưng không mang identity/rule history của region."}
-      - {id: D, answer: "Một Duration cộng Locale.", explanation: "Sai. Duration/Locale không tạo thành date-time point có offset."}
-    correctAnswerId: C
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "7.ZonedOffsetDateTime/ZonedOffsetDateTime.md", anchor: "offset-date-time"}
-    apiRelated: {controller: "", methodSignature: ""}
   - id: date-time-q29
-    question: "Một ZonedDateTime region-based như 09:00 Europe/Paris có thể cung cấp những view nào?"
+    question: "Một ZonedDateTime theo vùng như 09:00 Europe/Paris có thể cung cấp những cách nhìn nào?"
     answers:
-      - {id: A, answer: "LocalDateTime, ZoneId, resolved ZoneOffset và Instant.", explanation: "Đúng. ZonedDateTime kết nối local fields với zone context và timeline point."}
-      - {id: B, answer: "Chỉ một String đã format.", explanation: "Sai. Nó là rich temporal value, không chỉ text."}
-      - {id: C, answer: "Chỉ ZoneOffset, không có local fields.", explanation: "Sai. Nó giữ local date-time cùng zone."}
-      - {id: D, answer: "Chỉ Period và Duration.", explanation: "Sai. Period/Duration là temporal amounts khác loại."}
+      - {id: A, answer: "LocalDateTime, ZoneId, đã phân giải ZoneOffset và Instant.", explanation: "Đúng. ZonedDateTime kết nối các trường cục bộ với ngữ cảnh múi giờ và mốc trên dòng thời gian."}
+      - {id: B, answer: "Chỉ một String đã định dạng.", explanation: "Sai. Nó là giá trị thời gian giàu thông tin, không chỉ văn bản."}
+      - {id: C, answer: "Chỉ ZoneOffset, không có các trường cục bộ.", explanation: "Sai. Nó giữ ngày-giờ cục bộ cùng múi giờ."}
+      - {id: D, answer: "Chỉ Period và Duration.", explanation: "Sai. Period/Duration là các lượng thời gian khác loại."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "7.ZonedOffsetDateTime/ZonedOffsetDateTime.md", anchor: "zoned-date-time"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - id: date-time-q30
-    question: "Loại amount nào phù hợp nhất cho HTTP timeout 30 giây?"
+  - id: date-time-q28
+    question: "OffsetDateTime biểu diễn thông tin nào mà vẫn xác định được một Instant?"
     answers:
-      - {id: A, answer: "Duration", explanation: "Đúng. Timeout là elapsed time-based amount."}
-      - {id: B, answer: "Period", explanation: "Sai. Period dùng year/month/day calendar semantics."}
-      - {id: C, answer: "ZoneId", explanation: "Sai. ZoneId là time-zone identity/rules context."}
-      - {id: D, answer: "LocalDate", explanation: "Sai. LocalDate là calendar date value."}
+      - {id: A, answer: "Chỉ LocalDate, không có giờ hay độ lệch.", explanation: "Sai. OffsetDateTime chứa đầy đủ ngày-giờ cục bộ cùng một độ lệch cụ thể."}
+      - {id: B, answer: "LocalDateTime cùng vùng có tên ZoneId và toàn bộ ZoneRules.", explanation: "Sai. Đó gần hơn với ZonedDateTime theo vùng; OffsetDateTime không giữ quy tắc vùng có tên."}
+      - {id: C, answer: "Ngày-giờ cục bộ cộng một ZoneOffset cụ thể; đủ để tính Instant nhưng không khôi phục chắc chắn vùng ban đầu.", explanation: "Đúng. Độ lệch cụ thể giải quyết ánh xạ lên dòng thời gian nhưng không mang định danh/lịch sử quy tắc của vùng."}
+      - {id: D, answer: "Một Duration cộng Locale.", explanation: "Sai. Duration/Locale không tạo thành mốc ngày-giờ có độ lệch."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.ZonedOffsetDateTime/ZonedOffsetDateTime.md", anchor: "offset-date-time"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: date-time-q33
+    question: "'Cùng Instant' và 'cùng ngày-giờ cục bộ' khác nhau thế nào khi đổi múi giờ?"
+    answers:
+      - {id: A, answer: "Cùng Instant giữ nguyên sự kiện trên dòng thời gian nên đồng hồ cục bộ có thể đổi; cùng ngày-giờ cục bộ giữ các trường lịch/đồng hồ nên Instant có thể đổi.", explanation: "Đúng. Hai tính chất cần giữ khác nhau dẫn đến hai loại chuyển đổi khác nhau."}
+      - {id: B, answer: "Hai khái niệm luôn tương đương.", explanation: "Sai. Đây chính là khác biệt quan trọng khi chuyển đổi múi giờ/độ lệch."}
+      - {id: C, answer: "Cùng cục bộ luôn chứng minh hai sự kiện xảy ra cùng lúc toàn cầu.", explanation: "Sai. Cùng các trường cục bộ ở múi giờ khác nhau thường ánh xạ tới Instant khác nhau."}
+      - {id: D, answer: "Cùng Instant yêu cầu ZoneId cũng phải giống nhau.", explanation: "Sai. Cùng Instant có thể được nhìn qua nhiều ZoneId khác nhau."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.ZonedOffsetDateTime/ZonedOffsetDateTime.md", anchor: "same-instant-vs-same-local"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: date-time-q51
+    question: "Muốn hiển thị cùng một sự kiện cho người dùng ở múi giờ khác, chuyển đổi nào diễn đạt ý định đúng nhất?"
+    answers:
+      - {id: A, answer: "withZoneSameLocal, vì phải giữ nguyên 09:00 bất kể múi giờ.", explanation: "Sai. withZoneSameLocal diễn giải lại ngày-giờ cục bộ theo múi giờ đích và thường đổi Instant."}
+      - {id: B, answer: "Đổi ZoneId bằng thay chuỗi String trong đầu ra.", explanation: "Sai. Cần chuyển đổi thời gian theo quy tắc múi giờ, không sửa văn bản thủ công."}
+      - {id: C, answer: "Bỏ ZoneId rồi dùng LocalDateTime.equals.", explanation: "Sai. Cách đó làm mất định danh sự kiện trên dòng thời gian."}
+      - {id: D, answer: "withZoneSameInstant, vì nó giữ mốc trên dòng thời gian và tính lại cách biểu diễn cục bộ theo múi giờ mới.", explanation: "Đúng. Đây là chuyển đổi tự nhiên cho cùng một sự kiện được nhìn từ khu vực khác."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.ZonedOffsetDateTime/ZonedOffsetDateTime.md", anchor: "zone-conversion"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: date-time-q30
+    question: "Loại lượng thời gian nào phù hợp nhất cho thời gian chờ HTTP 30 giây?"
+    answers:
+      - {id: A, answer: "Duration", explanation: "Đúng. Thời gian chờ (timeout) là một thời lượng đã trôi qua."}
+      - {id: B, answer: "Period", explanation: "Sai. Period dùng năm/tháng/ngày ý nghĩa theo lịch."}
+      - {id: C, answer: "ZoneId", explanation: "Sai. ZoneId là định danh và ngữ cảnh quy tắc múi giờ."}
+      - {id: D, answer: "LocalDate", explanation: "Sai. LocalDate là giá trị ngày theo lịch."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -430,48 +471,62 @@ questions:
   - id: date-time-q31
     question: "Period.ofMonths(1) biểu diễn điều gì?"
     answers:
-      - {id: A, answer: "Một calendar amount một tháng, không có số giây cố định nếu chưa có context.", explanation: "Đúng. Độ dài month thay đổi theo calendar position."}
+      - {id: A, answer: "Một lượng theo lịch một tháng, không có số giây cố định nếu chưa có ngữ cảnh.", explanation: "Đúng. Độ dài tháng thay đổi theo vị trí trên lịch."}
       - {id: B, answer: "Luôn chính xác 30 ngày.", explanation: "Sai. Tháng có thể 28/29/30/31 ngày."}
-      - {id: C, answer: "Luôn chính xác 2,592,000 giây.", explanation: "Sai. Không có fixed-second conversion tổng quát cho một calendar month."}
-      - {id: D, answer: "Một ZoneRules transition.", explanation: "Sai. Period không mô hình zone transitions."}
+      - {id: C, answer: "Luôn chính xác 2,592,000 giây.", explanation: "Sai. Không có cách chuyển đổi sang số giây cố định tổng quát cho một tháng lịch."}
+      - {id: D, answer: "Một ZoneRules lần chuyển đổi.", explanation: "Sai. Period không mô hình các lần chuyển đổi múi giờ."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "8.DurationPeriod/DurationPeriod.md", anchor: "period-date-based"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - id: date-time-q32
-    question: "Quanh DST transition, vì sao plus(Duration.ofHours(24)) có thể khác plus(Period.ofDays(1)) trên ZonedDateTime?"
+  - id: date-time-q61
+    question: "Period.normalized() chuẩn hóa phần nào?"
     answers:
-      - {id: A, answer: "Duration bảo toàn 24 giờ elapsed; Period/date arithmetic bảo toàn ý định calendar/local-day nên elapsed seconds có thể 23 hoặc 25 giờ.", explanation: "Đúng. Đây là khác biệt giữa timeline amount và calendar amount."}
-      - {id: B, answer: "Vì Duration mutable còn Period immutable.", explanation: "Sai. Cả hai đều immutable value types."}
-      - {id: C, answer: "Vì Period luôn dùng UTC còn Duration luôn dùng systemDefault.", explanation: "Sai. Khác biệt nằm ở semantics amount/arithmetic, không phải hard-coded zone đó."}
-      - {id: D, answer: "Chúng không bao giờ khác nhau.", explanation: "Sai. DST là case điển hình làm khác biệt lộ rõ."}
+      - {id: A, answer: "Luôn đổi toàn bộ ngày thành tháng theo 30 ngày.", explanation: "Sai. Độ dài tháng thay đổi nên Period không chuẩn hóa ngày thành tháng theo một tỷ lệ cố định."}
+      - {id: B, answer: "Luôn đổi Period thành Duration chính xác theo giây.", explanation: "Sai. Period vẫn là lượng theo lịch, không tự trở thành thời lượng đã trôi qua."}
+      - {id: C, answer: "Chuẩn hóa quan hệ năm/tháng nhưng giữ phần ngày riêng; ví dụ P1Y15M40D thành P2Y3M40D.", explanation: "Đúng. normalized() xử lý năm/tháng mà không suy diễn ngày thành tháng."}
+      - {id: D, answer: "Chỉ sắp xếp văn bản khi định dạng Period.", explanation: "Sai. normalized() thay đổi chính giá trị Period theo quy tắc năm/tháng."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.DurationPeriod/DurationPeriod.md", anchor: "period-date-based"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: date-time-q32
+    question: "Quanh DST lần chuyển đổi, vì sao plus(Duration.ofHours(24)) có thể khác plus(Period.ofDays(1)) trên ZonedDateTime?"
+    answers:
+      - {id: A, answer: "Duration bảo toàn 24 giờ đã trôi qua; Period hoặc phép toán ngày bảo toàn ý định lịch/cục bộ-ngày nên đã trôi qua giây có thể 23 hoặc 25 giờ.", explanation: "Đúng. Đây là khác biệt giữa lượng thời gian trên dòng thời gian và lượng theo lịch."}
+      - {id: B, answer: "Vì Duration có thể thay đổi còn Period bất biến.", explanation: "Sai. Cả hai đều kiểu giá trị bất biến."}
+      - {id: C, answer: "Vì Period luôn dùng UTC còn Duration luôn dùng systemDefault.", explanation: "Sai. Khác biệt nằm ở ý nghĩa lượng thời gian/phép toán, không phải múi giờ ghi cứng đó."}
+      - {id: D, answer: "Chúng không bao giờ khác nhau.", explanation: "Sai. DST là trường hợp điển hình làm khác biệt lộ rõ."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "8.DurationPeriod/DurationPeriod.md", anchor: "duration-vs-period"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - id: date-time-q33
-    question: "'Cùng instant' và 'cùng local date-time' khác nhau thế nào khi đổi zone?"
+  - id: date-time-q55
+    question: "Muốn định dạng một Instant thành 'dd/MM/uuuu HH:mm' theo giờ Việt Nam, cần thêm gì?"
     answers:
-      - {id: A, answer: "Cùng instant giữ nguyên event trên timeline nên local clock có thể đổi; cùng local giữ các calendar/clock fields nên instant có thể đổi.", explanation: "Đúng. Hai invariant khác nhau dẫn đến hai loại conversion khác nhau."}
-      - {id: B, answer: "Hai khái niệm luôn tương đương.", explanation: "Sai. Đây chính là distinction quan trọng khi convert zone/offset."}
-      - {id: C, answer: "Cùng local luôn chứng minh hai event xảy ra cùng lúc toàn cầu.", explanation: "Sai. Cùng local fields ở zone khác nhau thường map tới Instant khác nhau."}
-      - {id: D, answer: "Cùng instant yêu cầu ZoneId cũng phải giống nhau.", explanation: "Sai. Cùng Instant có thể được nhìn qua nhiều ZoneId khác nhau."}
+      - {id: A, answer: "ZoneId như Asia/Ho_Chi_Minh trên formatter hoặc chuyển đổi Instant sang ZonedDateTime hoặc cách hiển thị cục bộ trước.", explanation: "Đúng. Instant không sở hữu cục bộ năm/tháng/ngày/giờ; múi giờ cung cấp góc nhìn cục bộ."}
+      - {id: B, answer: "Chỉ Locale.ENGLISH là đủ.", explanation: "Sai. Locale điều khiển văn bản hiển thị, không xác định các trường đồng hồ cục bộ từ Instant."}
+      - {id: C, answer: "Period.ofDays(1).", explanation: "Sai. Period không cung cấp ngữ cảnh múi giờ."}
+      - {id: D, answer: "Không cần gì vì Instant lưu sẵn múi giờ mặc định hệ thống.", explanation: "Sai. Instant không chứa ZoneId."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.ZonedOffsetDateTime/ZonedOffsetDateTime.md", anchor: "same-instant-vs-same-local"}
+    readmeRelated: {file: "9.FormattingParsing/FormattingParsing.md", anchor: "date-time-formatter"}
     apiRelated: {controller: "", methodSignature: ""}
+
   - id: date-time-q34
-    question: "Trong DateTimeFormatter pattern, khác biệt giữa 'MM' và 'mm' là gì?"
+    question: "Trong mẫu DateTimeFormatter, khác biệt giữa 'MM' và 'mm' là gì?"
     answers:
-      - {id: A, answer: "MM là month-of-year, mm là minute-of-hour.", explanation: "Đúng. Pattern letters phân biệt hoa/thường và mang semantics khác nhau."}
-      - {id: B, answer: "MM là minute, mm là month.", explanation: "Sai. Hai meaning bị đảo."}
-      - {id: C, answer: "Không khác vì pattern case-insensitive.", explanation: "Sai. Case rất quan trọng."}
-      - {id: D, answer: "MM là milliseconds, mm là microseconds.", explanation: "Sai. Không phải meaning của hai pattern này."}
+      - {id: A, answer: "MM là tháng trong năm, mm là phút trong giờ.", explanation: "Đúng. Các ký tự mẫu phân biệt hoa/thường và mang ý nghĩa khác nhau."}
+      - {id: B, answer: "MM là phút, mm là tháng.", explanation: "Sai. Hai ý nghĩa bị đảo."}
+      - {id: C, answer: "Không khác vì mẫu không phân biệt hoa/thường.", explanation: "Sai. Case rất quan trọng."}
+      - {id: D, answer: "MM là mili giây, mm là micro giây.", explanation: "Sai. Không phải ý nghĩa của hai mẫu này."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -481,10 +536,10 @@ questions:
   - id: date-time-q35
     question: "Tại sao 'YYYY-MM-dd' có thể gây bất ngờ quanh đầu/cuối năm?"
     answers:
-      - {id: A, answer: "Vì YYYY là week-based-year, có boundary theo week rules chứ không phải calendar year thông thường.", explanation: "Đúng. Nếu intent là calendar year, thường cần uuuu/yyyy phù hợp semantics thay vì uppercase Y."}
-      - {id: B, answer: "Vì YYYY luôn biểu diễn timezone.", explanation: "Sai. Y liên quan week-based-year, không phải zone."}
-      - {id: C, answer: "Vì Java coi mọi năm có 52 ngày.", explanation: "Sai. Không có rule như vậy."}
-      - {id: D, answer: "Vì MM sẽ đổi thành minute khi đi cùng YYYY.", explanation: "Sai. MM vẫn là month-of-year."}
+      - {id: A, answer: "Vì YYYY là năm theo tuần, có ranh giới theo week các quy tắc chứ không phải lịch năm thông thường.", explanation: "Đúng. Nếu ý định là lịch năm, thường cần uuuu/yyyy phù hợp ý nghĩa thay vì uppercase Y."}
+      - {id: B, answer: "Vì YYYY luôn biểu diễn timezone.", explanation: "Sai. Y liên quan năm theo tuần, không phải múi giờ."}
+      - {id: C, answer: "Vì Java coi mọi năm có 52 ngày.", explanation: "Sai. Không có quy tắc như vậy."}
+      - {id: D, answer: "Vì MM sẽ đổi thành phút khi đi cùng YYYY.", explanation: "Sai. MM vẫn là tháng trong năm."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -492,12 +547,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q36
-    question: "Formatter tạo từ pattern thông thường mặc định dùng ResolverStyle nào và điều đó gợi ý gì?"
+    question: "DateTimeFormatter tạo bằng ofPattern(...) mặc định dùng ResolverStyle nào và điều đó gợi ý gì?"
     answers:
-      - {id: A, answer: "SMART; nếu contract cần reject calendar input chặt chẽ thì nên cấu hình STRICT có chủ đích.", explanation: "Đúng. Không nên giả định default parsing là STRICT."}
-      - {id: B, answer: "STRICT; không cần cấu hình gì cho validation chặt.", explanation: "Sai. Default thông thường là SMART."}
-      - {id: C, answer: "LENIENT; Java không có SMART.", explanation: "Sai. SMART tồn tại và là default thông thường."}
-      - {id: D, answer: "Locale quyết định ResolverStyle.", explanation: "Sai. Locale và resolver style là hai cấu hình khác nhau."}
+      - {id: A, answer: "SMART; nếu hợp đồng cần từ chối dữ liệu lịch không hợp lệ một cách chặt chẽ thì nên cấu hình STRICT có chủ đích.", explanation: "Đúng. ofPattern(...) dùng SMART mặc định; đừng suy rộng rằng mọi formatter dựng sẵn đều có cùng cấu hình."}
+      - {id: B, answer: "STRICT; không cần cấu hình gì cho kiểm tra chặt.", explanation: "Sai. ofPattern(...) mặc định dùng SMART."}
+      - {id: C, answer: "LENIENT; Java không có SMART.", explanation: "Sai. SMART tồn tại và là mặc định của ofPattern(...)."}
+      - {id: D, answer: "Locale quyết định ResolverStyle.", explanation: "Sai. Locale và chế độ phân giải là hai cấu hình khác nhau."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -505,12 +560,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q37
-    question: "Input '2026-09-27T14:30:00+07:00' nên parse vào type nào để không làm mất offset?"
+    question: "Đầu vào '2026-09-27T14:30:00+07:00' nên phân tích vào kiểu nào để không làm mất độ lệch?"
     answers:
-      - {id: A, answer: "OffsetDateTime", explanation: "Đúng. Input chứa local date-time cộng concrete offset."}
-      - {id: B, answer: "LocalDateTime sau khi cắt '+07:00'", explanation: "Sai. Cắt offset làm mất timeline context mà input đang sở hữu."}
-      - {id: C, answer: "LocalDate", explanation: "Sai. Sẽ làm mất cả time-of-day và offset."}
-      - {id: D, answer: "Period", explanation: "Sai. Period không phải date-time point/value."}
+      - {id: A, answer: "OffsetDateTime", explanation: "Đúng. Đầu vào chứa ngày-giờ cục bộ cộng độ lệch cụ thể."}
+      - {id: B, answer: "LocalDateTime sau khi cắt '+07:00'", explanation: "Sai. Cắt độ lệch làm mất ngữ cảnh dòng thời gian mà đầu vào đang sở hữu."}
+      - {id: C, answer: "LocalDate", explanation: "Sai. Sẽ làm mất cả giờ trong ngày và độ lệch."}
+      - {id: D, answer: "Period", explanation: "Sai. Period không phải mốc ngày-giờ/giá trị."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -520,10 +575,10 @@ questions:
   - id: date-time-q38
     question: "Phân biệt TemporalAmount và TemporalUnit thế nào?"
     answers:
-      - {id: A, answer: "TemporalAmount là amount có cấu trúc như Duration/Period; TemporalUnit diễn giải đơn vị của một con số như DAYS/HOURS, với ChronoUnit là bộ unit chuẩn.", explanation: "Đúng. Hai abstraction phục vụ hai kiểu API arithmetic khác nhau."}
-      - {id: B, answer: "Cả hai chỉ là alias của ZoneId.", explanation: "Sai. Chúng thuộc temporal arithmetic vocabulary."}
-      - {id: C, answer: "TemporalAmount là formatter còn TemporalUnit là parser.", explanation: "Sai. Không liên quan format/parse role đó."}
-      - {id: D, answer: "TemporalUnit luôn chứa một LocalDate.", explanation: "Sai. Unit mô tả đơn vị, không chứa date value."}
+      - {id: A, answer: "TemporalAmount là lượng thời gian có cấu trúc như Duration/Period; TemporalUnit diễn giải đơn vị của một con số như DAYS/HOURS, với ChronoUnit là bộ đơn vị chuẩn.", explanation: "Đúng. Hai khái niệm trừu tượng phục vụ hai kiểu API phép toán khác nhau."}
+      - {id: B, answer: "Cả hai chỉ là bí danh của ZoneId.", explanation: "Sai. Chúng thuộc từ vựng phép toán thời gian."}
+      - {id: C, answer: "TemporalAmount là bộ định dạng còn TemporalUnit là bộ phân tích.", explanation: "Sai. Không liên quan vai trò định dạng/phân tích đó."}
+      - {id: D, answer: "TemporalUnit luôn chứa một LocalDate.", explanation: "Sai. TemporalUnit mô tả đơn vị, không chứa giá trị ngày."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -531,12 +586,25 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q39
-    question: "Requirement là đo elapsed time chính xác giữa hai Instant. API/model nào diễn đạt intent tốt nhất?"
+    question: "Yêu cầu là đo thời lượng đã trôi qua chính xác giữa hai Instant. API/mô hình nào diễn đạt ý định tốt nhất?"
     answers:
-      - {id: A, answer: "Duration.between(start, end)", explanation: "Đúng. Duration mô hình elapsed timeline amount."}
-      - {id: B, answer: "Period.between(startDate, endDate) bất kể requirement timeline.", explanation: "Sai. Period giữ calendar Y/M/D semantics."}
-      - {id: C, answer: "MonthDay.from(start)", explanation: "Sai. MonthDay không đo elapsed interval."}
-      - {id: D, answer: "ZoneId.systemDefault()", explanation: "Sai. ZoneId không phải amount/between operation."}
+      - {id: A, answer: "Duration.between(start, end)", explanation: "Đúng. Duration mô hình thời lượng đã trôi qua trên dòng thời gian."}
+      - {id: B, answer: "Period.between(startDate, endDate) bất kể yêu cầu dòng thời gian.", explanation: "Sai. Period giữ ý nghĩa lịch năm/tháng/ngày."}
+      - {id: C, answer: "MonthDay.from(start)", explanation: "Sai. MonthDay không đo khoảng thời gian đã trôi qua."}
+      - {id: D, answer: "ZoneId.systemDefault()", explanation: "Sai. ZoneId không phải lượng thời gian/thao tác between."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.ArithmeticComparison/ArithmeticComparison.md", anchor: "between-semantics"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: date-time-q52
+    question: "Vì sao khoảng [start, end) thường tốt hơn dùng mốc kết thúc bao gồm như '23:59:59.999999999' khi truy vấn một ngày?"
+    answers:
+      - {id: A, answer: "Khoảng nửa mở tránh đếm trùng biên, không phụ thuộc độ chính xác giả ở cuối ngày và ghép các khoảng liền kề sạch hơn.", explanation: "Đúng. Với ngày theo một múi giờ, có thể lấy biên bằng day.atStartOfDay(zone) và day.plusDays(1).atStartOfDay(zone); API dùng quy tắc múi giờ nên xử lý cả khoảng trống ở đầu ngày hoặc trường hợp hiếm một ngày cục bộ bị bỏ qua."}
+      - {id: B, answer: "Vì Java không hỗ trợ nano giây.", explanation: "Sai. java.time biểu diễn được nano giây; vấn đề nằm ở ý nghĩa của biên và giả định về độ chính xác."}
+      - {id: C, answer: "Vì mốc kết thúc không bao gồm luôn làm mất sự kiện cuối ngày.", explanation: "Sai. Sự kiện trước thời điểm bắt đầu của ngày kế tiếp vẫn nằm trong khoảng."}
+      - {id: D, answer: "Vì mọi ngày luôn dài chính xác 24 giờ.", explanation: "Sai. Một ngày theo múi giờ có thể khác 24 giờ quanh các lần chuyển đổi độ lệch."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -544,25 +612,64 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q40
-    question: "Hai ZonedDateTime có cùng Instant nhưng ZoneId/local representation khác nhau. Method nào diễn đạt câu hỏi 'cùng moment trên timeline không?' rõ nhất?"
+    question: "Hai ZonedDateTime có cùng Instant nhưng ZoneId/cách biểu diễn cục bộ khác nhau. Phương thức nào diễn đạt câu hỏi 'cùng mốc trên dòng thời gian không?' rõ nhất?"
     answers:
-      - {id: A, answer: "isEqual(...) hoặc so toInstant()", explanation: "Đúng. Đây là timeline equality intent."}
-      - {id: B, answer: "equals(...) luôn luôn", explanation: "Sai. ZonedDateTime.equals còn quan tâm local fields/offset/ZoneId theo representation contract."}
-      - {id: C, answer: "toString().equals(...)", explanation: "Sai. Text representation không phải timeline equality contract."}
-      - {id: D, answer: "getZone().equals(...)", explanation: "Sai. Cùng zone không chứng minh cùng instant và khác zone vẫn có thể cùng instant."}
+      - {id: A, answer: "isEqual(...) hoặc so toInstant()", explanation: "Đúng. Đây là ý định so sánh bằng nhau trên dòng thời gian."}
+      - {id: B, answer: "equals(...) luôn luôn", explanation: "Sai. ZonedDateTime.equals còn quan tâm các trường cục bộ/độ lệch/ZoneId theo hợp đồng biểu diễn."}
+      - {id: C, answer: "toString().equals(...)", explanation: "Sai. Cách biểu diễn văn bản không phải dòng thời gian hợp đồng so sánh bằng nhau."}
+      - {id: D, answer: "getZone().equals(...)", explanation: "Sai. Cùng múi giờ không chứng minh cùng instant và khác múi giờ vẫn có thể cùng instant."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "10.ArithmeticComparison/ArithmeticComparison.md", anchor: "date-time-comparison"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - id: date-time-q41
-    question: "'Deadline sau 3 ngày làm việc' nên được modeling thế nào?"
+  - id: date-time-q48
+    question: "ZoneRules.getValidOffsets(localDateTime) trả list rỗng. Điều này thường có nghĩa gì?"
     answers:
-      - {id: A, answer: "Có business-calendar policy riêng cho weekend/holiday/cut-off; dùng java.time cho calendar mechanics bên dưới.", explanation: "Đúng. JDK không biết policy riêng của tổ chức."}
-      - {id: B, answer: "Luôn start.plusDays(3).", explanation: "Sai. plusDays đếm calendar days, không tự biết business-day policy."}
-      - {id: C, answer: "Dùng ZoneOffset để chứa danh sách holiday.", explanation: "Sai. ZoneOffset không phải business-calendar container."}
-      - {id: D, answer: "Dùng DateTimeFormatter để loại cuối tuần.", explanation: "Sai. Formatter không thực hiện business-day arithmetic."}
+      - {id: A, answer: "Giờ cục bộ rơi vào khoảng trống DST/múi giờ và không tồn tại trực tiếp trong múi giờ đó.", explanation: "Đúng. Khoảng trống có 0 độ lệch hợp lệ."}
+      - {id: B, answer: "Local time là UTC.", explanation: "Sai. Không thể suy ra UTC/độ lệch cố định từ danh sách rỗng."}
+      - {id: C, answer: "Có đúng hai lần xuất hiện hợp lệ.", explanation: "Sai. Hai độ lệch hợp lệ biểu thị trường hợp chồng lặp (overlap), không phải khoảng trống."}
+      - {id: D, answer: "ZoneId không tồn tại trong JDK.", explanation: "Sai. getValidOffsets đang được gọi trên ZoneRules đã phân giải."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.ArithmeticComparison/ArithmeticComparison.md", anchor: "dst-gap-overlap"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: date-time-q49
+    question: "ZoneRules.getValidOffsets(localDateTime) trả hai độ lệch. Tình huống nào đang xảy ra?"
+    answers:
+      - {id: A, answer: "Overlap: cùng giờ đọc trên đồng hồ cục bộ xảy ra hai lần với hai độ lệch khác nhau.", explanation: "Đúng. Ứng dụng có thể cần chính sách chọn lần xuất hiện hoặc hỏi người dùng."}
+      - {id: B, answer: "Gap: giờ cục bộ hoàn toàn không tồn tại.", explanation: "Sai. Khoảng trống có 0 độ lệch hợp lệ."}
+      - {id: C, answer: "LocalDate không hợp lệ vì năm nhuận.", explanation: "Sai. Đây là sự mơ hồ do chuyển đổi múi giờ, không phải tính hợp lệ của ngày."}
+      - {id: D, answer: "Mẫu định dạng bị mơ hồ.", explanation: "Sai. Đây là sự mơ hồ khi ánh xạ ngày-giờ cục bộ qua quy tắc múi giờ, không phải lỗi của bộ định dạng."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.ArithmeticComparison/ArithmeticComparison.md", anchor: "dst-gap-overlap"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: date-time-q57
+    question: "Khi LocalDateTime.atZone(regionZone) gặp khoảng trống (gap) hoặc chồng lặp (overlap) của DST, hành vi mặc định nào đúng?"
+    answers:
+      - {id: A, answer: "Gap luôn ném exception và overlap luôn chọn độ lệch sau lần chuyển đổi.", explanation: "Sai. atZone có quy tắc phân giải mặc định thay vì luôn ném exception."}
+      - {id: B, answer: "Khoảng trống (gap) đẩy ngày-giờ cục bộ tiến qua độ dài khoảng trống; chồng lặp (overlap) mặc định dùng độ lệch trước lần chuyển đổi (earlier offset).", explanation: "Đúng. Đây là cách phân giải mặc định của ZonedDateTime khi ánh xạ ngày-giờ cục bộ qua quy tắc vùng."}
+      - {id: C, answer: "Cả gap và overlap đều bị bỏ qua vì ZoneId không biết DST.", explanation: "Sai. ZoneId theo vùng dùng ZoneRules để xử lý lần chuyển đổi."}
+      - {id: D, answer: "Overlap luôn tạo hai ZonedDateTime cùng lúc.", explanation: "Sai. atZone trả một kết quả mặc định; ứng dụng có thể chọn lần xuất hiện còn lại bằng API overlap tương ứng."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.ArithmeticComparison/ArithmeticComparison.md", anchor: "dst-gap-overlap"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: date-time-q41
+    question: "'Deadline sau 3 ngày làm việc' nên được mô hình hóa thế nào?"
+    answers:
+      - {id: A, answer: "Có chính sách lịch nghiệp vụ riêng cho cuối tuần/ngày nghỉ/mốc chốt; dùng java.time cho cơ chế lịch bên dưới.", explanation: "Đúng. JDK không biết chính sách riêng của tổ chức."}
+      - {id: B, answer: "Luôn start.plusDays(3).", explanation: "Sai. plusDays đếm ngày lịch, không tự biết chính sách ngày làm việc."}
+      - {id: C, answer: "Dùng ZoneOffset để chứa danh sách ngày nghỉ.", explanation: "Sai. ZoneOffset không phải nơi chứa lịch nghiệp vụ."}
+      - {id: D, answer: "Dùng DateTimeFormatter để loại cuối tuần.", explanation: "Sai. Formatter không thực hiện phép toán ngày nghiệp vụ."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -570,25 +677,51 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q42
-    question: "Lợi ích chính của việc inject Clock vào business service là gì?"
+    question: "Lợi ích chính của việc truyền Clock vào dịch vụ nghiệp vụ là gì?"
     answers:
-      - {id: A, answer: "Biến dependency 'now' thành explicit/testable source thay vì đọc system time rải rác.", explanation: "Đúng. Test có thể kiểm soát current time deterministic."}
-      - {id: B, answer: "Clock tự chạy scheduled task đúng giờ.", explanation: "Sai. Clock không phải scheduler."}
-      - {id: C, answer: "Clock thay thế ZoneRules database.", explanation: "Sai. Clock có zone context nhưng không thay thế zone rules infrastructure."}
-      - {id: D, answer: "Clock làm LocalDate mutable để test dễ hơn.", explanation: "Sai. java.time values vẫn immutable."}
+      - {id: A, answer: "Biến phụ thuộc 'now' thành một nguồn rõ ràng và có thể kiểm thử thay vì đọc thời gian hệ thống rải rác.", explanation: "Đúng. Kiểm thử có thể kiểm soát thời gian hiện tại có kết quả xác định."}
+      - {id: B, answer: "Clock tự chạy tác vụ được lập lịch đúng giờ.", explanation: "Sai. Clock không phải bộ lập lịch."}
+      - {id: C, answer: "Clock thay thế ZoneRules cơ sở dữ liệu.", explanation: "Sai. Clock có ngữ cảnh múi giờ nhưng không thay thế quy tắc múi giờ hạ tầng."}
+      - {id: D, answer: "Clock làm LocalDate có thể thay đổi để kiểm thử dễ hơn.", explanation: "Sai. các giá trị java.time vẫn bất biến."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "11.Clock/Clock.md", anchor: "clock-abstraction"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - id: date-time-q43
-    question: "Vì sao unit test rule hết hạn không nên dựa vào Thread.sleep nếu chỉ cần điều khiển 'now'?"
+  - id: date-time-q58
+    question: "Khác biệt cốt lõi giữa InstantSource và Clock là gì?"
     answers:
-      - {id: A, answer: "Sleep làm test chậm/flaky; fixed Clock/InstantSource đặt current time chính xác mà không cần chờ thực tế.", explanation: "Đúng. Test boundary trước/đúng/sau deadline trở nên deterministic."}
-      - {id: B, answer: "Thread.sleep không tồn tại trong Java.", explanation: "Sai. Method tồn tại; vấn đề là suitability cho time-rule unit test."}
-      - {id: C, answer: "Clock.fixed cũng sleep ngầm cùng khoảng thời gian.", explanation: "Sai. Fixed source trả cùng time value cho tới khi test thay source."}
-      - {id: D, answer: "Mọi test phải đổi system clock của OS.", explanation: "Sai. Dependency injection tránh việc đó."}
+      - {id: A, answer: "InstantSource chỉ dùng cho phân tích chuỗi, còn Clock chỉ dùng cho định dạng.", explanation: "Sai. Cả hai đều liên quan nguồn thời gian hiện tại, không phải bộ định dạng hay bộ phân tích chuỗi."}
+      - {id: B, answer: "Clock chỉ trả LocalDate và không thể cung cấp Instant.", explanation: "Sai. Clock cung cấp Instant và còn mang ZoneId."}
+      - {id: C, answer: "InstantSource là phụ thuộc hẹp chỉ cung cấp Instant hiện tại; Clock còn mang ZoneId và dùng được với API như LocalDate.now(clock).", explanation: "Đúng. Chọn phụ thuộc hẹp nhất vẫn giữ đủ ý nghĩa mà logic cần."}
+      - {id: D, answer: "Hai API hoàn toàn giống nhau và không có khác biệt về hợp đồng.", explanation: "Sai. Clock triển khai InstantSource nhưng cung cấp thêm ngữ cảnh múi giờ."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "11.Clock/Clock.md", anchor: "clock-abstraction"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: date-time-q59
+    question: "Khi đo một đoạn mã chạy mất bao lâu trong cùng JVM, lựa chọn nào đúng nhất?"
+    answers:
+      - {id: A, answer: "Dùng LocalDateTime.now() rồi coi chênh lệch là monotonic.", explanation: "Sai. Đồng hồ thực tế có thể bị điều chỉnh và không phải nguồn đo thời lượng đơn điệu (monotonic)."}
+      - {id: B, answer: "Dùng ZoneId.systemDefault() vì múi giờ quyết định thời lượng đã trôi qua.", explanation: "Sai. Múi giờ không biến đồng hồ hệ thống thành nguồn đo thời lượng đơn điệu (monotonic)."}
+      - {id: C, answer: "Dùng Instant.now() và coi giá trị tuyệt đối là bộ đếm đồng hồ bấm giờ.", explanation: "Sai. Instant là dấu thời gian trên đồng hồ hệ thống, không phải bộ đếm đơn điệu."}
+      - {id: D, answer: "Dùng System.nanoTime() và chỉ xét hiệu giữa hai lần đọc; giá trị tuyệt đối của nó không phải dấu thời gian.", explanation: "Đúng. nanoTime phù hợp để đo thời lượng đã trôi qua trong cùng JVM."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "11.Clock/Clock.md", anchor: "clock-abstraction"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: date-time-q43
+    question: "Vì sao kiểm thử đơn vị quy tắc hết hạn không nên dựa vào Thread.sleep nếu chỉ cần điều khiển 'thời điểm hiện tại'?"
+    answers:
+      - {id: A, answer: "Sleep làm kiểm thử chậm/không ổn định; Clock cố định/InstantSource đặt thời gian hiện tại chính xác mà không cần chờ thực tế.", explanation: "Đúng. Các kiểm thử ranh giới trước/đúng/sau hạn chót trở nên có kết quả xác định."}
+      - {id: B, answer: "Thread.sleep không tồn tại trong Java.", explanation: "Sai. Phương thức tồn tại; vấn đề là nó không phù hợp cho kiểm thử đơn vị của quy tắc thời gian."}
+      - {id: C, answer: "Clock.fixed cũng sleep ngầm cùng khoảng thời gian.", explanation: "Sai. Nguồn cố định trả cùng một giá trị thời gian cho tới khi kiểm thử thay nguồn."}
+      - {id: D, answer: "Mọi kiểm thử phải đổi đồng hồ hệ thống của OS.", explanation: "Sai. Truyền phụ thuộc tránh việc đó."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -598,10 +731,10 @@ questions:
   - id: date-time-q44
     question: "Clock không chịu trách nhiệm nào sau đây?"
     answers:
-      - {id: A, answer: "Cung cấp current Instant.", explanation: "Sai vì đây là một trách nhiệm thật của Clock."}
-      - {id: B, answer: "Mang ZoneId context.", explanation: "Sai vì Clock có getZone()/withZone()."}
-      - {id: C, answer: "Tự schedule callback/job chạy trong tương lai.", explanation: "Đúng. Scheduling là responsibility khác; Clock chỉ là time source abstraction."}
-      - {id: D, answer: "Cho phép fixed source trong test.", explanation: "Sai vì Clock.fixed hỗ trợ chính use case này."}
+      - {id: A, answer: "Cung cấp Instant hiện tại.", explanation: "Sai vì đây là một trách nhiệm thật của Clock."}
+      - {id: B, answer: "Mang ngữ cảnh ZoneId.", explanation: "Sai vì Clock có getZone()/withZone()."}
+      - {id: C, answer: "Tự lập lịch callback/tác vụ chạy trong tương lai.", explanation: "Đúng. Lập lịch là trách nhiệm khác; Clock chỉ là một khái niệm trừu tượng cho nguồn thời gian."}
+      - {id: D, answer: "Cho phép cố định nguồn trong kiểm thử.", explanation: "Sai vì Clock.fixed hỗ trợ chính trường hợp sử dụng này."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
@@ -609,12 +742,25 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q45
-    question: "Khác biệt quan trọng giữa java.util.Date/Calendar legacy và java.time modern model là gì?"
+    question: "Khác biệt quan trọng giữa java.util.Date/Calendar cũ và mô hình java.time hiện đại là gì?"
     answers:
-      - {id: A, answer: "Date là legacy timeline-oriented value, Calendar là mutable fields/zone model; code mới nên ưu tiên explicit immutable java.time types.", explanation: "Đúng. Migration nên convert ở boundary rồi giữ domain code bằng java.time."}
-      - {id: B, answer: "java.util.Date tương đương LocalDate date-only.", explanation: "Sai. Tên Date dễ gây nhầm; nó chủ yếu timeline-oriented."}
-      - {id: C, answer: "Calendar immutable như LocalDate.", explanation: "Sai. Calendar là mutable legacy API."}
-      - {id: D, answer: "java.time chỉ là alias package của Calendar.", explanation: "Sai. Đây là API model mới với type semantics khác rõ ràng."}
+      - {id: A, answer: "Date là giá trị cũ theo dòng thời gian, Calendar là mô hình các trường/múi giờ có thể thay đổi; mã mới nên ưu tiên các kiểu java.time bất biến và rõ nghĩa.", explanation: "Đúng. Khi chuyển đổi, nên chuyển đổi ở ranh giới rồi giữ mã nghiệp vụ bằng java.time."}
+      - {id: B, answer: "java.util.Date tương đương LocalDate chỉ có ngày.", explanation: "Sai. Tên Date dễ gây nhầm; nó chủ yếu theo dòng thời gian."}
+      - {id: C, answer: "Calendar bất biến như LocalDate.", explanation: "Sai. Calendar là API cũ có thể thay đổi."}
+      - {id: D, answer: "java.time chỉ là gói bí danh của Calendar.", explanation: "Sai. Đây là API mô hình mới với kiểu ý nghĩa khác rõ ràng."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "12.LegacyInteropPitfalls/LegacyInteropPitfalls.md", anchor: "legacy-date-calendar"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: date-time-q53
+    question: "Vì sao không nên chia sẻ một static SimpleDateFormat giữa nhiều luồng như DateTimeFormatter?"
+    answers:
+      - {id: A, answer: "SimpleDateFormat là có thể thay đổi và không an toàn đa luồng; DateTimeFormatter hiện đại bất biến/an toàn đa luồng.", explanation: "Đúng. Đây là một bẫy đồng thời của API cũ quan trọng."}
+      - {id: B, answer: "Vì SimpleDateFormat chỉ chạy trên Java 7.", explanation: "Sai. Lớp vẫn tồn tại vì tương thích."}
+      - {id: C, answer: "Vì DateTimeFormatter có thể thay đổi hơn nên cần thay thế thường xuyên.", explanation: "Sai. DateTimeFormatter bất biến và có thể tái sử dụng."}
+      - {id: D, answer: "Vì SimpleDateFormat không thể định dạng Date.", explanation: "Sai. Nó được thiết kế cho định dạng/phân tích chuỗi cho Date cũ; vấn đề là thiết kế API/an toàn đa luồng."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -622,131 +768,66 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q46
-    question: "Cách chuyển legacy java.util.Date sang modern timeline type trực tiếp là gì?"
+    question: "Cách chuyển java.util.Date cũ sang kiểu dòng thời gian hiện đại trực tiếp là gì?"
     answers:
-      - {id: A, answer: "date.toInstant()", explanation: "Đúng. Date và Instant đều có timeline-point semantics phù hợp cho direct conversion."}
-      - {id: B, answer: "Format Date thành String rồi parse LocalDateTime là bắt buộc.", explanation: "Sai. Text detour đưa thêm format/locale/default-zone risk không cần thiết."}
-      - {id: C, answer: "date.toLocalDate()", explanation: "Sai. java.util.Date không có direct LocalDate semantics như vậy."}
-      - {id: D, answer: "ZoneId.of(date.toString())", explanation: "Sai. Date text không phải region ZoneId."}
+      - {id: A, answer: "date.toInstant()", explanation: "Đúng. Date và Instant đều có ý nghĩa mốc trên dòng thời gian phù hợp cho chuyển đổi trực tiếp."}
+      - {id: B, answer: "Định dạng Date thành String rồi phân tích LocalDateTime là bắt buộc.", explanation: "Sai. Việc đi vòng qua văn bản đưa thêm định dạng/locale/rủi ro từ múi giờ mặc định không cần thiết."}
+      - {id: C, answer: "date.toLocalDate()", explanation: "Sai. java.util.Date không có trực tiếp LocalDate ý nghĩa như vậy."}
+      - {id: D, answer: "ZoneId.of(date.toString())", explanation: "Sai. Văn bản của Date không phải vùng ZoneId."}
     correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "12.LegacyInteropPitfalls/LegacyInteropPitfalls.md", anchor: "legacy-conversion"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: date-time-q54
+    question: "Với JDBC 4.2 và trình điều khiển hỗ trợ ánh xạ chuẩn, phát biểu nào đúng?"
+    answers:
+      - {id: A, answer: "Mã có thể setObject/getObject trực tiếp với nhiều các kiểu java.time như LocalDate/LocalDateTime/OffsetDateTime; không bắt buộc đi qua các lớp bọc java.sql.", explanation: "Đúng. Tuy nhiên lược đồ/trình điều khiển/ý nghĩa múi giờ vẫn phải được kiểm soát."}
+      - {id: B, answer: "Mọi lời gọi JDBC bắt buộc chuyển đổi qua java.sql.Timestamp.", explanation: "Sai. JDBC 4.2 có ánh xạ trực tiếp cho nhiều các kiểu java.time."}
+      - {id: C, answer: "Mọi trình điều khiển bắt buộc có ánh xạ trực tiếp Instant phổ quát giống nhau.", explanation: "Sai. Không nên khẳng định ánh xạ Instant phổ quát; cần xem hợp đồng trình điều khiển/cơ sở dữ liệu."}
+      - {id: D, answer: "Tên cột cơ sở dữ liệu quyết định Java ZoneId tự động.", explanation: "Sai. Ý nghĩa múi giờ phải được thiết kế rõ ở ranh giới lược đồ/trình điều khiển/ứng dụng."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "12.LegacyInteropPitfalls/LegacyInteropPitfalls.md", anchor: "legacy-conversion"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: date-time-q60
+    question: "Phát biểu nào đúng về các kiểu JDBC cũ java.sql.Date, java.sql.Time và java.sql.Timestamp?"
+    answers:
+      - {id: A, answer: "java.sql.Date.toInstant() và java.sql.Time.toInstant() là cách chuẩn để tạo Instant.", explanation: "Sai. Hai phương thức này ném UnsupportedOperationException vì Date thiếu giờ trong ngày và Time thiếu date."}
+      - {id: B, answer: "Timestamp có chuyển đổi trực tiếp tới Instant; Date/Time nên chuyển qua LocalDate/LocalTime tương ứng, và Time.valueOf(LocalTime) không giữ phần nano giây.", explanation: "Đúng. Hãy chuyển theo ý nghĩa thật của từng kiểu SQL cũ thay vì ép mọi thứ thành Instant."}
+      - {id: C, answer: "java.sql.Time giữ đầy đủ nano giây của LocalTime.", explanation: "Sai. valueOf(LocalTime) dùng giờ/phút/giây và không bảo toàn phần nano."}
+      - {id: D, answer: "JDBC 4.2 bắt buộc mọi mã mới phải tiếp tục đi qua ba lớp bọc java.sql này.", explanation: "Sai. JDBC 4.2 hỗ trợ ánh xạ trực tiếp cho nhiều java.time kiểu."}
+    correctAnswerId: B
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "12.LegacyInteropPitfalls/LegacyInteropPitfalls.md", anchor: "legacy-conversion"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q47
-    question: "Bug chỉ xuất hiện trên production vì conversion dùng local.atZone(ZoneId.systemDefault()). Nguyên nhân hợp lý nhất là gì?"
+    question: "Lỗi chỉ xuất hiện trên môi trường thực tế vì chuyển đổi dùng local.atZone(ZoneId.systemDefault()). Nguyên nhân hợp lý nhất là gì?"
     answers:
-      - {id: A, answer: "Default zone của production khác laptop/CI, trong khi business value thực ra cần một explicit domain ZoneId.", explanation: "Đúng. Hidden environment default làm mapping local→instant không ổn định giữa môi trường."}
-      - {id: B, answer: "LocalDateTime tự đổi zone sau mỗi GC.", explanation: "Sai. LocalDateTime immutable và không chứa zone."}
-      - {id: C, answer: "Instant chỉ chạy đúng ở UTC+7.", explanation: "Sai. Instant là global timeline value."}
-      - {id: D, answer: "ResolverStyle.SMART thay đổi system zone.", explanation: "Sai. Parsing resolver style không điều khiển JVM default zone."}
+      - {id: A, answer: "Múi giờ mặc định của môi trường thực tế khác máy phát triển/CI, trong khi giá trị nghiệp vụ thực ra cần một ZoneId rõ ràng.", explanation: "Đúng. Giá trị mặc định ẩn của môi trường làm ánh xạ cục bộ→Instant không ổn định giữa các môi trường."}
+      - {id: B, answer: "LocalDateTime tự đổi múi giờ sau mỗi GC.", explanation: "Sai. LocalDateTime bất biến và không chứa múi giờ."}
+      - {id: C, answer: "Instant chỉ chạy đúng ở UTC+7.", explanation: "Sai. Instant là dòng thời gian toàn cục giá trị."}
+      - {id: D, answer: "ResolverStyle.SMART thay đổi múi giờ hệ thống.", explanation: "Sai. Chế độ phân giải khi phân tích không điều khiển JVM mặc định múi giờ."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "12.LegacyInteropPitfalls/LegacyInteropPitfalls.md", anchor: "system-default-zone-risk"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - id: date-time-q48
-    question: "ZoneRules.getValidOffsets(localDateTime) trả list rỗng. Điều này thường có nghĩa gì?"
-    answers:
-      - {id: A, answer: "Local time rơi vào DST/zone gap và không tồn tại trực tiếp trong zone đó.", explanation: "Đúng. Gap có 0 valid offsets."}
-      - {id: B, answer: "Local time là UTC.", explanation: "Sai. UTC/fixed offset không được suy ra từ empty list."}
-      - {id: C, answer: "Có đúng hai occurrence hợp lệ.", explanation: "Sai. Hai valid offsets là overlap."}
-      - {id: D, answer: "ZoneId không tồn tại trong JDK.", explanation: "Sai. getValidOffsets đang được gọi trên ZoneRules đã resolve."}
-    correctAnswerId: A
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "12.LegacyInteropPitfalls/LegacyInteropPitfalls.md", anchor: "dst-gap-overlap"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - id: date-time-q49
-    question: "ZoneRules.getValidOffsets(localDateTime) trả hai offset. Tình huống nào đang xảy ra?"
-    answers:
-      - {id: A, answer: "Overlap: cùng local clock reading xảy ra hai lần với hai offset khác nhau.", explanation: "Đúng. Application có thể cần policy chọn occurrence hoặc hỏi user."}
-      - {id: B, answer: "Gap: local time hoàn toàn không tồn tại.", explanation: "Sai. Gap có 0 valid offsets."}
-      - {id: C, answer: "LocalDate invalid vì leap year.", explanation: "Sai. Đây là zone-transition ambiguity, không phải date validity."}
-      - {id: D, answer: "Formatter pattern bị ambiguous.", explanation: "Sai. Đây là ambiguity khi map local date-time qua zone rules."}
-    correctAnswerId: A
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "12.LegacyInteropPitfalls/LegacyInteropPitfalls.md", anchor: "dst-gap-overlap"}
-    apiRelated: {controller: "", methodSignature: ""}
-
   - id: date-time-q50
-    question: "Storage strategy nào phù hợp với semantics nhất?"
+    question: "Chiến lược lưu trữ nào phù hợp với ý nghĩa nhất?"
     answers:
-      - {id: A, answer: "Occurred event thường lưu timeline point như Instant; future regional schedule có thể cần local date-time + ZoneId; date-only fact giữ LocalDate-like semantics.", explanation: "Đúng. Storage phải đủ để phục hồi domain meaning, không có một rule 'mọi thứ UTC' cho mọi loại value."}
-      - {id: B, answer: "Mọi giá trị đều phải ép thành Instant UTC, kể cả birthday và opening time.", explanation: "Sai. Cách này invent/mất semantics cho non-timeline facts."}
-      - {id: C, answer: "Mọi future schedule chỉ cần lưu offset hiện tại.", explanation: "Sai. Offset không giữ region rules/future intent."}
-      - {id: D, answer: "Dùng String bất kỳ là đủ vì text shape quyết định semantics.", explanation: "Sai. Text representation không thay thế temporal semantics/schema contract."}
+      - {id: A, answer: "Sự kiện đã xảy ra thường lưu mốc trên dòng thời gian như Instant; lịch tương lai theo vùng có thể cần ngày-giờ cục bộ + ZoneId; dữ kiện chỉ có ngày giữ ý nghĩa tương tự LocalDate.", explanation: "Đúng. Lưu trữ phải đủ để phục hồi ý nghĩa nghiệp vụ, không có một quy tắc 'mọi thứ UTC' cho mọi loại giá trị."}
+      - {id: B, answer: "Mọi giá trị đều phải ép thành Instant UTC, kể cả ngày sinh và giờ mở cửa.", explanation: "Sai. Cách này tự tạo/mất ý nghĩa cho dữ kiện không thuộc dòng thời gian."}
+      - {id: C, answer: "Mọi lịch tương lai chỉ cần lưu độ lệch hiện tại.", explanation: "Sai. ZoneOffset không giữ quy tắc vùng hay ý định lịch tương lai."}
+      - {id: D, answer: "Dùng String bất kỳ là đủ vì hình dạng văn bản quyết định ý nghĩa.", explanation: "Sai. Cách biểu diễn văn bản không thay thế ý nghĩa thời gian hay hợp đồng lược đồ."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "12.LegacyInteropPitfalls/LegacyInteropPitfalls.md", anchor: "timestamp-storage-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
-
-  - id: date-time-q51
-    question: "Muốn hiển thị cùng một event cho user ở zone khác, conversion nào diễn đạt intent đúng nhất?"
-    answers:
-      - {id: A, answer: "withZoneSameLocal, vì phải giữ nguyên 09:00 bất kể zone.", explanation: "Sai. SameLocal reinterpret local schedule và thường đổi Instant."}
-      - {id: B, answer: "Đổi ZoneId bằng String replacement trong output.", explanation: "Sai. Cần temporal conversion theo zone rules, không sửa text thủ công."}
-      - {id: C, answer: "Bỏ ZoneId rồi dùng LocalDateTime.equals.", explanation: "Sai. Cách đó làm mất event identity trên timeline."}
-      - {id: D, answer: "withZoneSameInstant, vì nó giữ timeline point và tính lại local representation theo zone mới.", explanation: "Đúng. Đây là conversion tự nhiên cho cùng một event được nhìn từ khu vực khác."}
-    correctAnswerId: D
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "7.ZonedOffsetDateTime/ZonedOffsetDateTime.md", anchor: "zone-conversion"}
-    apiRelated: {controller: "", methodSignature: ""}
-  - id: date-time-q52
-    question: "Vì sao range [start, end) thường tốt hơn dùng inclusive end='23:59:59.999999999' cho query một ngày?"
-    answers:
-      - {id: A, answer: "Half-open range tránh double-count boundary, không phụ thuộc precision giả ở cuối ngày và ghép adjacent ranges sạch hơn.", explanation: "Đúng. Với zoned day còn có thể derive start/end bằng atStartOfDay(zone) và ngày kế tiếp."}
-      - {id: B, answer: "Vì Java không hỗ trợ nanosecond.", explanation: "Sai. java.time hỗ trợ nano representation; vấn đề là semantics/precision boundary."}
-      - {id: C, answer: "Vì end exclusive luôn làm mất event cuối ngày.", explanation: "Sai. Event trước start-of-next-day vẫn nằm trong range."}
-      - {id: D, answer: "Vì mọi ngày luôn dài chính xác 24 giờ.", explanation: "Sai. Zoned calendar day có thể khác 24 giờ quanh transitions."}
-    correctAnswerId: A
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "10.ArithmeticComparison/ArithmeticComparison.md", anchor: "between-semantics"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - id: date-time-q53
-    question: "Vì sao không nên share một static SimpleDateFormat giữa nhiều thread như DateTimeFormatter?"
-    answers:
-      - {id: A, answer: "SimpleDateFormat là mutable và không thread-safe; DateTimeFormatter modern immutable/thread-safe.", explanation: "Đúng. Đây là một legacy concurrency pitfall quan trọng."}
-      - {id: B, answer: "Vì SimpleDateFormat chỉ chạy trên Java 7.", explanation: "Sai. Class vẫn tồn tại vì compatibility."}
-      - {id: C, answer: "Vì DateTimeFormatter mutable hơn nên cần thay thế thường xuyên.", explanation: "Sai. DateTimeFormatter immutable và reusable."}
-      - {id: D, answer: "Vì SimpleDateFormat không thể format Date.", explanation: "Sai. Nó được thiết kế cho legacy Date formatting/parsing; vấn đề là API design/thread safety."}
-    correctAnswerId: A
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "12.LegacyInteropPitfalls/LegacyInteropPitfalls.md", anchor: "legacy-date-calendar"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - id: date-time-q54
-    question: "Với JDBC 4.2 và driver hỗ trợ mapping chuẩn, phát biểu nào đúng?"
-    answers:
-      - {id: A, answer: "Code có thể setObject/getObject trực tiếp với nhiều java.time types như LocalDate/LocalDateTime/OffsetDateTime; không bắt buộc đi qua java.sql wrappers.", explanation: "Đúng. Tuy nhiên schema/driver/time-zone semantics vẫn phải được kiểm soát."}
-      - {id: B, answer: "Mọi JDBC call bắt buộc convert qua java.sql.Timestamp.", explanation: "Sai. JDBC 4.2 có direct mappings cho nhiều java.time types."}
-      - {id: C, answer: "Mọi driver bắt buộc có universal direct Instant mapping giống nhau.", explanation: "Sai. Không nên khẳng định universal Instant mapping; cần xem driver/database contract."}
-      - {id: D, answer: "Database column name quyết định Java ZoneId tự động.", explanation: "Sai. Zone semantics phải được thiết kế rõ ở schema/driver/application boundary."}
-    correctAnswerId: A
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "12.LegacyInteropPitfalls/LegacyInteropPitfalls.md", anchor: "legacy-conversion"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - id: date-time-q55
-    question: "Muốn format một Instant thành 'dd/MM/uuuu HH:mm' theo giờ Việt Nam, cần thêm gì?"
-    answers:
-      - {id: A, answer: "ZoneId như Asia/Ho_Chi_Minh trên formatter hoặc convert Instant sang zoned/local view trước.", explanation: "Đúng. Instant không sở hữu local year/month/day/hour; zone cung cấp góc nhìn local."}
-      - {id: B, answer: "Chỉ Locale.ENGLISH là đủ.", explanation: "Sai. Locale điều khiển presentation text, không xác định local clock fields từ Instant."}
-      - {id: C, answer: "Period.ofDays(1).", explanation: "Sai. Period không cung cấp zone context."}
-      - {id: D, answer: "Không cần gì vì Instant lưu sẵn system default zone.", explanation: "Sai. Instant không chứa ZoneId."}
-    correctAnswerId: A
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "9.FormattingParsing/FormattingParsing.md", anchor: "date-time-formatter"}
-    apiRelated: {controller: "", methodSignature: ""}
-

@@ -1,4 +1,4 @@
-# Clock
+# Clock and Testable Time
 
 Time-dependent code often contains an invisible dependency: **the system clock at the instant the method executes**. If business logic calls `Instant.now()` or `LocalDate.now()` directly in many places, tests become tied to real time and are harder to make deterministic.
 
@@ -10,7 +10,7 @@ Without a clock dependency:
 
 ```java
 boolean isExpired(Instant expiresAt) {
-    return Instant.now().isAfter(expiresAt);
+    return !Instant.now().isBefore(expiresAt);
 }
 ```
 
@@ -20,11 +20,13 @@ With `Clock`:
 
 ```java
 boolean isExpired(Instant expiresAt, Clock clock) {
-    return Instant.now(clock).isAfter(expiresAt);
+    return !Instant.now(clock).isBefore(expiresAt);
 }
 ```
 
 The business rule is unchanged, but the source of current time is now an explicit dependency.
+
+This example deliberately defines expiry as **`now >= expiresAt`**. If a domain wants expiry only after that boundary, it can use `isAfter`; the important point is to choose and test equality at the deadline consistently.
 
 ### Useful Clock factories
 
@@ -132,7 +134,18 @@ Clock afterExpiry = Clock.fixed(
 assertTrue(isExpired(expiresAt, afterExpiry));
 ```
 
-Neither test sleeps or depends on the real wall clock.
+At the exact expiry boundary:
+
+```java
+Clock atExpiry = Clock.fixed(
+        expiresAt,
+        ZoneOffset.UTC
+);
+
+assertTrue(isExpired(expiresAt, atExpiry));
+```
+
+None of these tests sleeps or depends on the real wall clock.
 
 ### Do not use Thread.sleep as a unit-test clock
 
@@ -188,4 +201,4 @@ Every method does not need its own `Clock` parameter. A common design is to inje
 
 `Clock` answers “what time does this source report now?” It does not run jobs, schedule callbacks, or guarantee wake-up timing. Scheduling is a separate responsibility.
 
-The final chapter now combines production boundaries: legacy APIs, default-zone assumptions, and DST gaps/overlaps.
+The final chapter combines legacy APIs, default-zone assumptions, storage boundaries, and synthesis; DST gaps/overlaps were handled in Arithmetic / Comparison.

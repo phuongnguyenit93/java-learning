@@ -130,6 +130,19 @@ questions:
     readmeRelated: {file: "2.LocalDate/LocalDate.md", anchor: "local-date-model"}
     apiRelated: {controller: "", methodSignature: ""}
 
+  - id: date-time-q25
+    question: "A domain stores a birthday such as 1995-09-25 with no time-of-day or zone. Why is LocalDate the best fit?"
+    answers:
+      - {id: A, answer: "Because LocalDate stores only year/month/day and does not invent a time or zone that the domain does not own.", explanation: "Correct. LocalDate matches a date-only domain fact exactly."}
+      - {id: B, answer: "Because LocalDate is an Instant truncated to a date.", explanation: "Incorrect. LocalDate is not a timeline point with reduced precision."}
+      - {id: C, answer: "Because LocalDate always attaches the system default zone.", explanation: "Incorrect. LocalDate contains no ZoneId."}
+      - {id: D, answer: "Because LocalDate is a mutable wrapper around java.util.Date.", explanation: "Incorrect. LocalDate is an independent immutable value type."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.LocalDate/LocalDate.md", anchor: "local-date-model"}
+    apiRelated: {controller: "", methodSignature: ""}
+
   - id: date-time-q08
     question: "How should LocalDate.plusDays(1) be understood?"
     answers:
@@ -138,6 +151,19 @@ questions:
       - {id: C, answer: "It mutates the current LocalDate.", explanation: "Incorrect. LocalDate arithmetic is calendar arithmetic, not fixed elapsed seconds."}
       - {id: D, answer: "It is valid only when a ZoneId is supplied.", explanation: "Incorrect. LocalDate arithmetic is calendar arithmetic, not fixed elapsed seconds."}
     correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.LocalDate/LocalDate.md", anchor: "local-date-arithmetic"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: date-time-q10
+    question: "What is the proper boundary for TemporalAdjusters?"
+    answers:
+      - {id: A, answer: "They automatically know every company holiday.", explanation: "Incorrect. TemporalAdjusters provide calendar mechanics, not business-calendar policy."}
+      - {id: B, answer: "They convert LocalDate to Instant.", explanation: "Incorrect. TemporalAdjusters provide calendar mechanics, not business-calendar policy."}
+      - {id: C, answer: "They modify time-zone rules.", explanation: "Incorrect. TemporalAdjusters provide calendar mechanics, not business-calendar policy."}
+      - {id: D, answer: "They provide reusable calendar adjustments while business-day policy remains application logic.", explanation: "Correct. TemporalAdjusters provide calendar mechanics, not business-calendar policy."}
+    correctAnswerId: D
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "2.LocalDate/LocalDate.md", anchor: "local-date-arithmetic"}
@@ -156,19 +182,6 @@ questions:
     readmeRelated: {file: "2.LocalDate/LocalDate.md", anchor: "calendar-validity"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - id: date-time-q10
-    question: "What is the proper boundary for TemporalAdjusters?"
-    answers:
-      - {id: A, answer: "They automatically know every company holiday.", explanation: "Incorrect. TemporalAdjusters provide calendar mechanics, not business-calendar policy."}
-      - {id: B, answer: "They convert LocalDate to Instant.", explanation: "Incorrect. TemporalAdjusters provide calendar mechanics, not business-calendar policy."}
-      - {id: C, answer: "They modify time-zone rules.", explanation: "Incorrect. TemporalAdjusters provide calendar mechanics, not business-calendar policy."}
-      - {id: D, answer: "They provide reusable calendar adjustments while business-day policy remains application logic.", explanation: "Correct. TemporalAdjusters provide calendar mechanics, not business-calendar policy."}
-    correctAnswerId: D
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "2.LocalDate/LocalDate.md", anchor: "local-date-arithmetic"}
-    apiRelated: {controller: "", methodSignature: ""}
-
   - id: date-time-q11
     question: "What information does LocalTime contain?"
     answers:
@@ -176,6 +189,19 @@ questions:
       - {id: B, answer: "An exact Instant in a local zone.", explanation: "Incorrect. LocalTime represents only a time within a day."}
       - {id: C, answer: "A time-of-day plus todays date.", explanation: "Incorrect. LocalTime represents only a time within a day."}
       - {id: D, answer: "A time that always has a ZoneOffset.", explanation: "Incorrect. LocalTime represents only a time within a day."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.LocalTime/LocalTime.md", anchor: "local-time-model"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: date-time-q26
+    question: "A store opens every day at 08:30, without considering a specific date or zone yet. Which type fits best?"
+    answers:
+      - {id: A, answer: "LocalTime", explanation: "Correct. The rule currently owns only a time-of-day."}
+      - {id: B, answer: "Instant", explanation: "Incorrect. Without a date and zone there is no global timeline point yet."}
+      - {id: C, answer: "LocalDate", explanation: "Incorrect. The domain is about a time within the day, not a calendar date."}
+      - {id: D, answer: "Period", explanation: "Incorrect. Period is a calendar amount."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
@@ -216,6 +242,19 @@ questions:
       - {id: C, answer: "Date and time plus the system default zone.", explanation: "Incorrect. LocalDateTime is a local calendar value, not yet a timeline point."}
       - {id: D, answer: "LocalDate + LocalTime fields with no ZoneId or ZoneOffset.", explanation: "Correct. LocalDateTime is a local calendar value, not yet a timeline point."}
     correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.LocalDateTime/LocalDateTime.md", anchor: "local-date-time-model"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: date-time-q27
+    question: "A form collects a date and time, but the user chooses the zone in a later step. Why is LocalDateTime a reasonable intermediate model?"
+    answers:
+      - {id: A, answer: "Because LocalDateTime stores the local date and time fields without inventing a ZoneId or ZoneOffset yet.", explanation: "Correct. It preserves exactly what is known before a global timeline mapping exists."}
+      - {id: B, answer: "Because LocalDateTime already contains Instant + ZoneId.", explanation: "Incorrect. LocalDateTime contains neither an Instant nor a ZoneId."}
+      - {id: C, answer: "Because LocalDateTime stores only year/month/day and discards the time.", explanation: "Incorrect. That is closer to LocalDate."}
+      - {id: D, answer: "Because LocalDateTime stores only hour/minute/second and discards the date.", explanation: "Incorrect. That is closer to LocalTime."}
+    correctAnswerId: A
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "4.LocalDateTime/LocalDateTime.md", anchor: "local-date-time-model"}
@@ -337,6 +376,20 @@ questions:
     reviewed: false
     readmeRelated: {file: "6.ZoneOffsetZoneId/ZoneOffsetZoneId.md", anchor: "zone-id"}
     apiRelated: {controller: "", methodSignature: ""}
+
+  - id: date-time-q56
+    question: 'Which statement about ZoneId.SHORT_IDS and ZoneId.of("EST") is correct?'
+    answers:
+      - {id: A, answer: 'ZoneId.SHORT_IDS is a separate compatibility alias map; its existence does not make the one-argument ZoneId.of("EST") call automatically valid.', explanation: "Correct. Prefer clear region IDs for canonical business data, or pass an alias map deliberately when compatibility is actually required."}
+      - {id: B, answer: 'Because EST appears in ZoneId.SHORT_IDS, one-argument ZoneId.of("EST") is always valid.', explanation: "Incorrect. SHORT_IDS is not automatically applied by the one-argument overload."}
+      - {id: C, answer: "EST is always one globally unique IANA region ID.", explanation: "Incorrect. Three-letter abbreviations are ambiguous and are not reliable region identities."}
+      - {id: D, answer: "ZoneId.SHORT_IDS converts every ZoneOffset into a Locale.", explanation: "Incorrect. Locale is unrelated to ZoneId alias resolution."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.ZoneOffsetZoneId/ZoneOffsetZoneId.md", anchor: "zone-id"}
+    apiRelated: {controller: "", methodSignature: ""}
+
   - id: date-time-q24
     question: "What role do ZoneRules play for a region such as Europe/Paris?"
     answers:
@@ -349,43 +402,18 @@ questions:
     reviewed: false
     readmeRelated: {file: "6.ZoneOffsetZoneId/ZoneOffsetZoneId.md", anchor: "zone-rules"}
     apiRelated: {controller: "", methodSignature: ""}
-  - id: date-time-q25
-    question: "Which statement best describes LocalDate?"
-    answers:
-      - {id: A, answer: "A calendar date containing year/month/day, with no time-of-day or zone.", explanation: "Correct. LocalDate represents date-only semantics."}
-      - {id: B, answer: "An Instant truncated to a date.", explanation: "Incorrect. LocalDate is not a timeline point with reduced precision."}
-      - {id: C, answer: "A date that is always attached to the system default zone.", explanation: "Incorrect. LocalDate contains no ZoneId."}
-      - {id: D, answer: "A mutable wrapper around java.util.Date.", explanation: "Incorrect. LocalDate is an independent immutable java.time value type."}
-    correctAnswerId: A
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "2.LocalDate/LocalDate.md", anchor: "local-date-model"}
-    apiRelated: {controller: "", methodSignature: ""}
 
-  - id: date-time-q26
-    question: "A store opens every day at 08:30, without considering a specific date or zone yet. Which type fits best?"
+  - id: date-time-q29
+    question: "What views can a region-based ZonedDateTime such as 09:00 Europe/Paris provide?"
     answers:
-      - {id: A, answer: "LocalTime", explanation: "Correct. The rule currently owns only a time-of-day."}
-      - {id: B, answer: "Instant", explanation: "Incorrect. Without a date and zone there is no global timeline point yet."}
-      - {id: C, answer: "LocalDate", explanation: "Incorrect. The domain is about a time within the day, not a calendar date."}
-      - {id: D, answer: "Period", explanation: "Incorrect. Period is a calendar amount."}
+      - {id: A, answer: "LocalDateTime, ZoneId, resolved ZoneOffset, and Instant.", explanation: "Correct. ZonedDateTime connects local fields with zone context and a timeline point."}
+      - {id: B, answer: "Only one formatted String.", explanation: "Incorrect. It is a rich temporal value, not merely text."}
+      - {id: C, answer: "Only a ZoneOffset with no local fields.", explanation: "Incorrect. It also carries the local date-time and zone."}
+      - {id: D, answer: "Only Period and Duration.", explanation: "Incorrect. Period and Duration are different temporal amount types."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.LocalTime/LocalTime.md", anchor: "local-time-model"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - id: date-time-q27
-    question: "What core information does LocalDateTime contain?"
-    answers:
-      - {id: A, answer: "LocalDate + LocalTime fields, but no ZoneId or ZoneOffset.", explanation: "Correct. It is a local calendar date-time that has not yet been mapped onto the global timeline."}
-      - {id: B, answer: "Instant + ZoneId.", explanation: "Incorrect. That is closer to a zone-aware timeline representation."}
-      - {id: C, answer: "Only year/month/day.", explanation: "Incorrect. That describes LocalDate."}
-      - {id: D, answer: "Only hour/minute/second.", explanation: "Incorrect. That describes LocalTime."}
-    correctAnswerId: A
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "4.LocalDateTime/LocalDateTime.md", anchor: "local-date-time-model"}
+    readmeRelated: {file: "7.ZonedOffsetDateTime/ZonedOffsetDateTime.md", anchor: "zoned-date-time"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q28
@@ -400,17 +428,31 @@ questions:
     reviewed: false
     readmeRelated: {file: "7.ZonedOffsetDateTime/ZonedOffsetDateTime.md", anchor: "offset-date-time"}
     apiRelated: {controller: "", methodSignature: ""}
-  - id: date-time-q29
-    question: "What views can a region-based ZonedDateTime such as 09:00 Europe/Paris provide?"
+
+  - id: date-time-q33
+    question: "How do 'same instant' and 'same local date-time' differ when changing zones?"
     answers:
-      - {id: A, answer: "LocalDateTime, ZoneId, resolved ZoneOffset, and Instant.", explanation: "Correct. ZonedDateTime connects local fields with zone context and a timeline point."}
-      - {id: B, answer: "Only one formatted String.", explanation: "Incorrect. It is a rich temporal value, not merely text."}
-      - {id: C, answer: "Only a ZoneOffset with no local fields.", explanation: "Incorrect. It also carries the local date-time and zone."}
-      - {id: D, answer: "Only Period and Duration.", explanation: "Incorrect. Period and Duration are different temporal amount types."}
+      - {id: A, answer: "Same instant preserves the event on the timeline so the local clock may change; same local preserves calendar/clock fields so the instant may change.", explanation: "Correct. The two invariants lead to different conversion semantics."}
+      - {id: B, answer: "The two concepts are always equivalent.", explanation: "Incorrect. This distinction is fundamental to zone and offset conversion."}
+      - {id: C, answer: "Same local always proves two events happened at the same global moment.", explanation: "Incorrect. Equal local fields in different zones usually map to different Instants."}
+      - {id: D, answer: "Same instant requires the ZoneId to be identical.", explanation: "Incorrect. The same Instant can be viewed through many ZoneIds."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.ZonedOffsetDateTime/ZonedOffsetDateTime.md", anchor: "zoned-date-time"}
+    readmeRelated: {file: "7.ZonedOffsetDateTime/ZonedOffsetDateTime.md", anchor: "same-instant-vs-same-local"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: date-time-q51
+    question: "Which conversion best expresses the intent to display the same event to a user in another zone?"
+    answers:
+      - {id: A, answer: "withZoneSameLocal, because 09:00 must stay 09:00 in every zone.", explanation: "Incorrect. SameLocal reinterprets the local schedule and usually changes the Instant."}
+      - {id: B, answer: "Replace the ZoneId text in the formatted output.", explanation: "Incorrect. The temporal value must be converted using zone rules rather than by text replacement."}
+      - {id: C, answer: "Drop the ZoneId and compare LocalDateTime values.", explanation: "Incorrect. That loses the event's timeline identity."}
+      - {id: D, answer: "withZoneSameInstant, because it preserves the timeline point and recalculates the local representation in the new zone.", explanation: "Correct. This is the natural conversion for the same event viewed from another region."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.ZonedOffsetDateTime/ZonedOffsetDateTime.md", anchor: "zone-conversion"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q30
@@ -439,6 +481,19 @@ questions:
     readmeRelated: {file: "8.DurationPeriod/DurationPeriod.md", anchor: "period-date-based"}
     apiRelated: {controller: "", methodSignature: ""}
 
+  - id: date-time-q61
+    question: "What does Period.normalized() normalize?"
+    answers:
+      - {id: A, answer: "It always converts all days to months using 30 days per month.", explanation: "Incorrect. Month length varies, so Period does not normalize days into months using a fixed ratio."}
+      - {id: B, answer: "It always converts the Period into an exact Duration in seconds.", explanation: "Incorrect. Period remains a calendar amount and does not become an elapsed duration automatically."}
+      - {id: C, answer: "It normalizes the year/month relationship while leaving days separate; for example, P1Y15M40D becomes P2Y3M40D.", explanation: "Correct. normalized() operates on year/month without inventing a fixed day-to-month conversion."}
+      - {id: D, answer: "It only changes text ordering when the Period is formatted.", explanation: "Incorrect. normalized() returns a normalized Period value."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.DurationPeriod/DurationPeriod.md", anchor: "period-date-based"}
+    apiRelated: {controller: "", methodSignature: ""}
+
   - id: date-time-q32
     question: "Around a DST transition, why can plus(Duration.ofHours(24)) differ from plus(Period.ofDays(1)) on ZonedDateTime?"
     answers:
@@ -452,18 +507,19 @@ questions:
     readmeRelated: {file: "8.DurationPeriod/DurationPeriod.md", anchor: "duration-vs-period"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - id: date-time-q33
-    question: "How do 'same instant' and 'same local date-time' differ when changing zones?"
+  - id: date-time-q55
+    question: "What is needed to format an Instant as dd/MM/uuuu HH:mm in Vietnam local time?"
     answers:
-      - {id: A, answer: "Same instant preserves the event on the timeline so the local clock may change; same local preserves calendar/clock fields so the instant may change.", explanation: "Correct. The two invariants lead to different conversion semantics."}
-      - {id: B, answer: "The two concepts are always equivalent.", explanation: "Incorrect. This distinction is fundamental to zone and offset conversion."}
-      - {id: C, answer: "Same local always proves two events happened at the same global moment.", explanation: "Incorrect. Equal local fields in different zones usually map to different Instants."}
-      - {id: D, answer: "Same instant requires the ZoneId to be identical.", explanation: "Incorrect. The same Instant can be viewed through many ZoneIds."}
+      - {id: A, answer: "A ZoneId such as Asia/Ho_Chi_Minh on the formatter, or first convert the Instant to a zoned/local view.", explanation: "Correct. Instant does not own local year/month/day/hour fields; the zone provides the local view."}
+      - {id: B, answer: "Locale.ENGLISH by itself is enough.", explanation: "Incorrect. Locale controls presentation text, not the local clock fields derived from an Instant."}
+      - {id: C, answer: "Period.ofDays(1).", explanation: "Incorrect. Period does not provide zone context."}
+      - {id: D, answer: "Nothing, because Instant stores the system default zone internally.", explanation: "Incorrect. Instant contains no ZoneId."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.ZonedOffsetDateTime/ZonedOffsetDateTime.md", anchor: "same-instant-vs-same-local"}
+    readmeRelated: {file: "9.FormattingParsing/FormattingParsing.md", anchor: "date-time-formatter"}
     apiRelated: {controller: "", methodSignature: ""}
+
   - id: date-time-q34
     question: "In a DateTimeFormatter pattern, what is the difference between MM and mm?"
     answers:
@@ -491,11 +547,11 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q36
-    question: "What ResolverStyle is used by ordinary pattern-based formatters by default, and what does that imply?"
+    question: "What ResolverStyle does DateTimeFormatter.ofPattern(...) use by default, and what does that imply?"
     answers:
-      - {id: A, answer: "SMART; if the contract must reject invalid calendar input strictly, configure STRICT intentionally.", explanation: "Correct. Do not assume the default parsing behavior is STRICT."}
-      - {id: B, answer: "STRICT; no extra configuration is ever needed for strict validation.", explanation: "Incorrect. The ordinary default is SMART."}
-      - {id: C, answer: "LENIENT; Java does not have SMART.", explanation: "Incorrect. SMART exists and is the ordinary default."}
+      - {id: A, answer: "SMART; if the contract must reject invalid calendar input strictly, configure STRICT intentionally.", explanation: "Correct. ofPattern(...) uses SMART by default; do not generalize that every predefined formatter has the same resolver configuration."}
+      - {id: B, answer: "STRICT; no extra configuration is ever needed for strict validation.", explanation: "Incorrect. ofPattern(...) defaults to SMART."}
+      - {id: C, answer: "LENIENT; Java does not have SMART.", explanation: "Incorrect. SMART exists and is the default for ofPattern(...)."}
       - {id: D, answer: "Locale decides the ResolverStyle.", explanation: "Incorrect. Locale and resolver style are separate configuration concerns."}
     correctAnswerId: A
     aiGenerated: true
@@ -542,6 +598,19 @@ questions:
     readmeRelated: {file: "10.ArithmeticComparison/ArithmeticComparison.md", anchor: "between-semantics"}
     apiRelated: {controller: "", methodSignature: ""}
 
+  - id: date-time-q52
+    question: "Why is a range [start, end) often better than an inclusive end such as 23:59:59.999999999 for a one-day query?"
+    answers:
+      - {id: A, answer: "A half-open range avoids double-counting boundaries, does not depend on fake end-of-day precision, and composes adjacent ranges cleanly.", explanation: "Correct. For a zoned calendar date, boundaries can be derived from day.atStartOfDay(zone) and day.plusDays(1).atStartOfDay(zone); those calls consult zone rules, including start-of-day gaps and the rare case where an entire local date is skipped."}
+      - {id: B, answer: "Because Java does not support nanoseconds.", explanation: "Incorrect. java.time can represent nanos; the issue is boundary semantics and precision assumptions."}
+      - {id: C, answer: "Because an exclusive end always loses the last event of the day.", explanation: "Incorrect. Events before the start of the next day are still inside the range."}
+      - {id: D, answer: "Because every day is always exactly 24 hours.", explanation: "Incorrect. A zoned calendar day can differ from 24 hours around transitions."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.ArithmeticComparison/ArithmeticComparison.md", anchor: "between-semantics"}
+    apiRelated: {controller: "", methodSignature: ""}
+
   - id: date-time-q40
     question: "Two ZonedDateTime values have the same Instant but different ZoneId/local representations. Which API most clearly asks whether they are the same moment on the timeline?"
     answers:
@@ -553,6 +622,45 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "10.ArithmeticComparison/ArithmeticComparison.md", anchor: "date-time-comparison"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: date-time-q48
+    question: "ZoneRules.getValidOffsets(localDateTime) returns an empty list. What does that usually mean?"
+    answers:
+      - {id: A, answer: "The local time falls in a DST/zone gap and does not directly exist in that zone.", explanation: "Correct. A gap has zero valid offsets."}
+      - {id: B, answer: "The local time is UTC.", explanation: "Incorrect. UTC or a fixed offset cannot be inferred from an empty list."}
+      - {id: C, answer: "There are exactly two valid occurrences.", explanation: "Incorrect. Two valid offsets indicate an overlap."}
+      - {id: D, answer: "The ZoneId does not exist in the JDK.", explanation: "Incorrect. getValidOffsets is already being called on resolved ZoneRules."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.ArithmeticComparison/ArithmeticComparison.md", anchor: "dst-gap-overlap"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: date-time-q49
+    question: "ZoneRules.getValidOffsets(localDateTime) returns two offsets. What situation is occurring?"
+    answers:
+      - {id: A, answer: "An overlap: the same local clock reading occurs twice with two different offsets.", explanation: "Correct. The application may need a policy to choose an occurrence or ask the user."}
+      - {id: B, answer: "A gap: the local time does not exist at all.", explanation: "Incorrect. A gap has zero valid offsets."}
+      - {id: C, answer: "The LocalDate is invalid because of a leap year.", explanation: "Incorrect. This is zone-transition ambiguity, not calendar-date validity."}
+      - {id: D, answer: "The formatter pattern is ambiguous.", explanation: "Incorrect. The ambiguity appears when local date-time is mapped through zone rules."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.ArithmeticComparison/ArithmeticComparison.md", anchor: "dst-gap-overlap"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: date-time-q57
+    question: "When LocalDateTime.atZone(regionZone) encounters a DST gap or overlap, which default behavior is correct?"
+    answers:
+      - {id: A, answer: "A gap always throws and an overlap always chooses the after-transition offset.", explanation: "Incorrect. atZone has default resolution rules rather than always throwing."}
+      - {id: B, answer: "A gap shifts the local date-time forward by the gap length; an overlap uses the before-transition offset by default (the earlier offset).", explanation: "Correct. This is ZonedDateTime's default resolution when local fields are mapped through region rules."}
+      - {id: C, answer: "Both cases are ignored because ZoneId does not know DST.", explanation: "Incorrect. Region-based ZoneId values use ZoneRules to handle transitions."}
+      - {id: D, answer: "An overlap always returns two ZonedDateTime objects at once.", explanation: "Incorrect. atZone returns one default result; the application can explicitly select the other occurrence with the overlap APIs."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.ArithmeticComparison/ArithmeticComparison.md", anchor: "dst-gap-overlap"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q41
@@ -576,6 +684,32 @@ questions:
       - {id: C, answer: "Clock replaces the ZoneRules database.", explanation: "Incorrect. Clock carries zone context but does not replace zone-rule infrastructure."}
       - {id: D, answer: "Clock makes LocalDate mutable so tests are easier.", explanation: "Incorrect. java.time values remain immutable."}
     correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "11.Clock/Clock.md", anchor: "clock-abstraction"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: date-time-q58
+    question: "What is the core difference between InstantSource and Clock?"
+    answers:
+      - {id: A, answer: "InstantSource is only for parsing, while Clock is only for formatting.", explanation: "Incorrect. Both are current-time sources, not formatter/parser roles."}
+      - {id: B, answer: "Clock only returns LocalDate and cannot provide an Instant.", explanation: "Incorrect. Clock provides an Instant and also carries a ZoneId."}
+      - {id: C, answer: "InstantSource is the narrower dependency that supplies the current Instant; Clock also carries a ZoneId and works with APIs such as LocalDate.now(clock).", explanation: "Correct. Depend on the narrowest abstraction that still preserves the semantics the logic requires."}
+      - {id: D, answer: "The two APIs are identical and have no contract difference.", explanation: "Incorrect. Clock implements InstantSource but adds zone context."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "11.Clock/Clock.md", anchor: "clock-abstraction"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: date-time-q59
+    question: "When measuring how long a piece of code takes inside one JVM, which choice is best?"
+    answers:
+      - {id: A, answer: "Use LocalDateTime.now() and assume the difference is monotonic.", explanation: "Incorrect. Wall-clock time can be adjusted and is not a monotonic elapsed-time source."}
+      - {id: B, answer: "Use ZoneId.systemDefault() because the zone determines elapsed duration.", explanation: "Incorrect. A zone does not turn wall-clock time into a monotonic elapsed source."}
+      - {id: C, answer: "Use Instant.now() and treat its absolute value as a stopwatch counter.", explanation: "Incorrect. Instant is a wall-clock timestamp, not a monotonic counter."}
+      - {id: D, answer: "Use System.nanoTime() and only compare differences between readings; its absolute value is not a timestamp.", explanation: "Correct. nanoTime is the appropriate elapsed-time source within one JVM."}
+    correctAnswerId: D
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "11.Clock/Clock.md", anchor: "clock-abstraction"}
@@ -620,6 +754,19 @@ questions:
     readmeRelated: {file: "12.LegacyInteropPitfalls/LegacyInteropPitfalls.md", anchor: "legacy-date-calendar"}
     apiRelated: {controller: "", methodSignature: ""}
 
+  - id: date-time-q53
+    question: "Why should one static SimpleDateFormat not be shared across many threads like DateTimeFormatter?"
+    answers:
+      - {id: A, answer: "SimpleDateFormat is mutable and not thread-safe, while modern DateTimeFormatter is immutable and thread-safe.", explanation: "Correct. This is an important legacy concurrency pitfall."}
+      - {id: B, answer: "SimpleDateFormat only runs on Java 7.", explanation: "Incorrect. The class still exists for compatibility."}
+      - {id: C, answer: "DateTimeFormatter is more mutable and must be replaced frequently.", explanation: "Incorrect. DateTimeFormatter is immutable and reusable."}
+      - {id: D, answer: "SimpleDateFormat cannot format Date values.", explanation: "Incorrect. It was designed for legacy Date formatting/parsing; the problem is its API design and thread safety."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "12.LegacyInteropPitfalls/LegacyInteropPitfalls.md", anchor: "legacy-date-calendar"}
+    apiRelated: {controller: "", methodSignature: ""}
+
   - id: date-time-q46
     question: "What is the direct way to convert a legacy java.util.Date to the modern timeline type?"
     answers:
@@ -628,6 +775,32 @@ questions:
       - {id: C, answer: "date.toLocalDate()", explanation: "Incorrect. java.util.Date does not have direct LocalDate semantics like that."}
       - {id: D, answer: "ZoneId.of(date.toString())", explanation: "Incorrect. Date text is not a region ZoneId."}
     correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "12.LegacyInteropPitfalls/LegacyInteropPitfalls.md", anchor: "legacy-conversion"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: date-time-q54
+    question: "With JDBC 4.2 and a driver that supports the standard mappings, which statement is correct?"
+    answers:
+      - {id: A, answer: "Code can use setObject/getObject directly with several java.time types such as LocalDate, LocalDateTime, and OffsetDateTime; java.sql wrappers are not mandatory.", explanation: "Correct. Schema, driver, and time-zone semantics still need to be controlled intentionally."}
+      - {id: B, answer: "Every JDBC call must convert through java.sql.Timestamp.", explanation: "Incorrect. JDBC 4.2 defines direct mappings for several java.time types."}
+      - {id: C, answer: "Every driver must provide one universal direct Instant mapping in exactly the same way.", explanation: "Incorrect. Do not assume a universal Instant mapping; check the driver/database contract."}
+      - {id: D, answer: "The database column name automatically determines the Java ZoneId.", explanation: "Incorrect. Zone semantics must be designed explicitly across schema, driver, and application boundaries."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "12.LegacyInteropPitfalls/LegacyInteropPitfalls.md", anchor: "legacy-conversion"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: date-time-q60
+    question: "Which statement about legacy JDBC types java.sql.Date, java.sql.Time, and java.sql.Timestamp is correct?"
+    answers:
+      - {id: A, answer: "java.sql.Date.toInstant() and java.sql.Time.toInstant() are the standard bridges to Instant.", explanation: "Incorrect. Both methods throw UnsupportedOperationException because Date lacks a time-of-day and Time lacks a date."}
+      - {id: B, answer: "Timestamp has a direct Instant bridge; Date and Time should map through LocalDate and LocalTime respectively, and Time.valueOf(LocalTime) does not preserve nanoseconds.", explanation: "Correct. Convert according to the semantics of each legacy SQL type rather than forcing every value into Instant."}
+      - {id: C, answer: "java.sql.Time preserves the full nanosecond fraction from LocalTime.", explanation: "Incorrect. valueOf(LocalTime) uses hour/minute/second and does not preserve the nanosecond fraction."}
+      - {id: D, answer: "JDBC 4.2 requires all new code to keep routing through these three java.sql wrappers.", explanation: "Incorrect. JDBC 4.2 supports direct mappings for several java.time types."}
+    correctAnswerId: B
     aiGenerated: true
     reviewed: false
     readmeRelated: {file: "12.LegacyInteropPitfalls/LegacyInteropPitfalls.md", anchor: "legacy-conversion"}
@@ -646,32 +819,6 @@ questions:
     readmeRelated: {file: "12.LegacyInteropPitfalls/LegacyInteropPitfalls.md", anchor: "system-default-zone-risk"}
     apiRelated: {controller: "", methodSignature: ""}
 
-  - id: date-time-q48
-    question: "ZoneRules.getValidOffsets(localDateTime) returns an empty list. What does that usually mean?"
-    answers:
-      - {id: A, answer: "The local time falls in a DST/zone gap and does not directly exist in that zone.", explanation: "Correct. A gap has zero valid offsets."}
-      - {id: B, answer: "The local time is UTC.", explanation: "Incorrect. UTC or a fixed offset cannot be inferred from an empty list."}
-      - {id: C, answer: "There are exactly two valid occurrences.", explanation: "Incorrect. Two valid offsets indicate an overlap."}
-      - {id: D, answer: "The ZoneId does not exist in the JDK.", explanation: "Incorrect. getValidOffsets is already being called on resolved ZoneRules."}
-    correctAnswerId: A
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "12.LegacyInteropPitfalls/LegacyInteropPitfalls.md", anchor: "dst-gap-overlap"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - id: date-time-q49
-    question: "ZoneRules.getValidOffsets(localDateTime) returns two offsets. What situation is occurring?"
-    answers:
-      - {id: A, answer: "An overlap: the same local clock reading occurs twice with two different offsets.", explanation: "Correct. The application may need a policy to choose an occurrence or ask the user."}
-      - {id: B, answer: "A gap: the local time does not exist at all.", explanation: "Incorrect. A gap has zero valid offsets."}
-      - {id: C, answer: "The LocalDate is invalid because of a leap year.", explanation: "Incorrect. This is zone-transition ambiguity, not calendar-date validity."}
-      - {id: D, answer: "The formatter pattern is ambiguous.", explanation: "Incorrect. The ambiguity appears when local date-time is mapped through zone rules."}
-    correctAnswerId: A
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "12.LegacyInteropPitfalls/LegacyInteropPitfalls.md", anchor: "dst-gap-overlap"}
-    apiRelated: {controller: "", methodSignature: ""}
-
   - id: date-time-q50
     question: "Which storage strategy best preserves temporal semantics?"
     answers:
@@ -684,68 +831,3 @@ questions:
     reviewed: false
     readmeRelated: {file: "12.LegacyInteropPitfalls/LegacyInteropPitfalls.md", anchor: "timestamp-storage-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
-
-  - id: date-time-q51
-    question: "Which conversion best expresses the intent to display the same event to a user in another zone?"
-    answers:
-      - {id: A, answer: "withZoneSameLocal, because 09:00 must stay 09:00 in every zone.", explanation: "Incorrect. SameLocal reinterprets the local schedule and usually changes the Instant."}
-      - {id: B, answer: "Replace the ZoneId text in the formatted output.", explanation: "Incorrect. The temporal value must be converted using zone rules rather than by text replacement."}
-      - {id: C, answer: "Drop the ZoneId and compare LocalDateTime values.", explanation: "Incorrect. That loses the event's timeline identity."}
-      - {id: D, answer: "withZoneSameInstant, because it preserves the timeline point and recalculates the local representation in the new zone.", explanation: "Correct. This is the natural conversion for the same event viewed from another region."}
-    correctAnswerId: D
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "7.ZonedOffsetDateTime/ZonedOffsetDateTime.md", anchor: "zone-conversion"}
-    apiRelated: {controller: "", methodSignature: ""}
-  - id: date-time-q52
-    question: "Why is a range [start, end) often better than an inclusive end such as 23:59:59.999999999 for a one-day query?"
-    answers:
-      - {id: A, answer: "A half-open range avoids double-counting boundaries, does not depend on fake end-of-day precision, and composes adjacent ranges cleanly.", explanation: "Correct. For a zoned day, start/end can also be derived from atStartOfDay(zone) and the next date."}
-      - {id: B, answer: "Because Java does not support nanoseconds.", explanation: "Incorrect. java.time can represent nanos; the issue is boundary semantics and precision assumptions."}
-      - {id: C, answer: "Because an exclusive end always loses the last event of the day.", explanation: "Incorrect. Events before the start of the next day are still inside the range."}
-      - {id: D, answer: "Because every day is always exactly 24 hours.", explanation: "Incorrect. A zoned calendar day can differ from 24 hours around transitions."}
-    correctAnswerId: A
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "10.ArithmeticComparison/ArithmeticComparison.md", anchor: "between-semantics"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - id: date-time-q53
-    question: "Why should one static SimpleDateFormat not be shared across many threads like DateTimeFormatter?"
-    answers:
-      - {id: A, answer: "SimpleDateFormat is mutable and not thread-safe, while modern DateTimeFormatter is immutable and thread-safe.", explanation: "Correct. This is an important legacy concurrency pitfall."}
-      - {id: B, answer: "SimpleDateFormat only runs on Java 7.", explanation: "Incorrect. The class still exists for compatibility."}
-      - {id: C, answer: "DateTimeFormatter is more mutable and must be replaced frequently.", explanation: "Incorrect. DateTimeFormatter is immutable and reusable."}
-      - {id: D, answer: "SimpleDateFormat cannot format Date values.", explanation: "Incorrect. It was designed for legacy Date formatting/parsing; the problem is its API design and thread safety."}
-    correctAnswerId: A
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "12.LegacyInteropPitfalls/LegacyInteropPitfalls.md", anchor: "legacy-date-calendar"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - id: date-time-q54
-    question: "With JDBC 4.2 and a driver that supports the standard mappings, which statement is correct?"
-    answers:
-      - {id: A, answer: "Code can use setObject/getObject directly with several java.time types such as LocalDate, LocalDateTime, and OffsetDateTime; java.sql wrappers are not mandatory.", explanation: "Correct. Schema, driver, and time-zone semantics still need to be controlled intentionally."}
-      - {id: B, answer: "Every JDBC call must convert through java.sql.Timestamp.", explanation: "Incorrect. JDBC 4.2 defines direct mappings for several java.time types."}
-      - {id: C, answer: "Every driver must provide one universal direct Instant mapping in exactly the same way.", explanation: "Incorrect. Do not assume a universal Instant mapping; check the driver/database contract."}
-      - {id: D, answer: "The database column name automatically determines the Java ZoneId.", explanation: "Incorrect. Zone semantics must be designed explicitly across schema, driver, and application boundaries."}
-    correctAnswerId: A
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "12.LegacyInteropPitfalls/LegacyInteropPitfalls.md", anchor: "legacy-conversion"}
-    apiRelated: {controller: "", methodSignature: ""}
-
-  - id: date-time-q55
-    question: "What is needed to format an Instant as dd/MM/uuuu HH:mm in Vietnam local time?"
-    answers:
-      - {id: A, answer: "A ZoneId such as Asia/Ho_Chi_Minh on the formatter, or first convert the Instant to a zoned/local view.", explanation: "Correct. Instant does not own local year/month/day/hour fields; the zone provides the local view."}
-      - {id: B, answer: "Locale.ENGLISH by itself is enough.", explanation: "Incorrect. Locale controls presentation text, not the local clock fields derived from an Instant."}
-      - {id: C, answer: "Period.ofDays(1).", explanation: "Incorrect. Period does not provide zone context."}
-      - {id: D, answer: "Nothing, because Instant stores the system default zone internally.", explanation: "Incorrect. Instant contains no ZoneId."}
-    correctAnswerId: A
-    aiGenerated: true
-    reviewed: false
-    readmeRelated: {file: "9.FormattingParsing/FormattingParsing.md", anchor: "date-time-formatter"}
-    apiRelated: {controller: "", methodSignature: ""}
-

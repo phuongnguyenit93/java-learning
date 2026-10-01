@@ -45,6 +45,8 @@ roadmap:
   - id: date-time-model
     title: Ngày và thời gian là gì, vì sao cần nhiều mô hình?
     purpose: Hiểu dữ liệu ngày và thời gian không phải một loại dấu thời gian duy nhất; ngày theo lịch, giờ trong ngày, ngày-giờ cục bộ, mốc trên dòng thời gian, độ lệch UTC và quy tắc múi giờ trả lời những câu hỏi khác nhau, vì vậy java.time cung cấp nhiều kiểu chuyên biệt thay vì một kiểu dùng cho mọi trường hợp.
+    relatedKnowledge:
+      - MentalModel
     objectives:
       - Chọn kiểu ngày-giờ từ ý nghĩa của dữ liệu nghiệp vụ thay vì từ định dạng chuỗi đang nhìn thấy.
       - Phân biệt giá trị theo lịch của con người với một mốc chính xác trên dòng thời gian toàn cục.
@@ -52,35 +54,47 @@ roadmap:
   - id: local-date-and-time
     title: Ngày, giờ và ngày-giờ cục bộ
     purpose: Hiểu LocalDate, LocalTime và LocalDateTime biểu diễn các giá trị theo lịch hoặc đồng hồ cục bộ; chúng hữu ích khi nghiệp vụ cố ý chưa gắn múi giờ, nhưng không tự xác định một mốc duy nhất trên dòng thời gian toàn cục.
+    relatedKnowledge:
+      - LocalDate
+      - LocalTime
+      - LocalDateTime
     objectives:
       - Dùng LocalDate khi nghiệp vụ chỉ quan tâm ngày và LocalTime khi chỉ quan tâm giờ trong ngày.
       - Dùng LocalDateTime cho dữ liệu nghiệp vụ cố ý chưa gắn múi giờ.
       - Giải thích vì sao cần thêm thông tin múi giờ hoặc độ lệch UTC trước khi ánh xạ LocalDateTime thành một Instant.
-      - Nhận biết việc gắn múi giờ sau đó có thể gặp thời điểm không tồn tại hoặc không duy nhất quanh chuyển đổi DST.
+      - Nhận biết việc gắn múi giờ sau đó có thể gặp thời điểm không tồn tại hoặc không duy nhất; nguyên nhân sẽ được giải thích khi học quy tắc múi giờ.
   - id: instant-and-timeline
     title: Instant và dòng thời gian toàn cục
     purpose: Hiểu Instant biểu diễn một mốc chính xác trên dòng thời gian dựa trên UTC, độc lập với cách con người nhìn mốc đó dưới ngày, giờ và múi giờ cụ thể.
+    relatedKnowledge:
+      - Instant
     objectives:
       - Dùng Instant cho thời điểm sự kiện của hệ thống, sắp xếp theo thời gian và ranh giới lưu trữ khi cần một mốc không mơ hồ.
-      - Hiểu số giây hoặc mili giây tính từ mốc epoch chỉ là cách biểu diễn bằng số của một mốc trên cùng dòng thời gian.
+      - Hiểu số giây hoặc mili giây tính từ mốc gốc Unix (epoch) chỉ là cách biểu diễn bằng số của một mốc trên cùng dòng thời gian.
       - Chuyển đổi có chủ đích giữa Instant và cách biểu diễn ngày-giờ có múi giờ cho người dùng.
   - id: offsets-and-zone-rules
     title: ZoneOffset, ZoneId và quy tắc múi giờ
     purpose: Hiểu một độ lệch UTC cụ thể như +07:00 không đồng nghĩa với một múi giờ theo vùng như Asia/Ho_Chi_Minh; ZoneId có thể mang tập quy tắc thay đổi theo lịch sử hoặc chính sách, còn ZoneOffset chỉ mô tả một độ lệch cụ thể.
+    relatedKnowledge:
+      - ZoneOffsetZoneId
     objectives:
       - Phân biệt ZoneOffset, ZoneId và vai trò của ZoneRules.
-      - Hiểu vì sao múi giờ theo vùng có thể thay đổi độ lệch theo thời điểm và tạo khoảng trống hoặc thời điểm lặp quanh DST.
+      - Hiểu vì sao múi giờ theo vùng có thể thay đổi độ lệch theo thời điểm và tạo khoảng trống hoặc thời điểm lặp, đặc biệt khi áp dụng giờ mùa hè (DST).
       - Tránh coi một độ lệch UTC hiện tại là thay thế đầy đủ cho danh tính và quy tắc của múi giờ.
   - id: offsets-zones-and-zoned-values
     title: OffsetDateTime, ZonedDateTime và chuyển đổi múi giờ
     purpose: Hiểu cách OffsetDateTime và ZonedDateTime gắn ngữ cảnh độ lệch hoặc quy tắc múi giờ vào ngày-giờ, từ đó phân biệt giữ nguyên cùng một mốc thời gian với giữ nguyên cùng các trường ngày-giờ cục bộ.
+    relatedKnowledge:
+      - ZonedOffsetDateTime
     objectives:
       - Chọn OffsetDateTime khi giá trị cần mang một độ lệch UTC cụ thể và ZonedDateTime khi cần giữ danh tính cùng quy tắc của múi giờ theo vùng.
       - Phân biệt chuyển đổi giữ nguyên Instant với việc diễn giải lại cùng LocalDateTime trong một múi giờ khác.
       - Nhận biết hai giá trị có thể có ngày-giờ cục bộ khác nhau nhưng vẫn biểu diễn cùng một Instant.
   - id: duration-and-period
-    title: Duration và Period — thời lượng thực với khoảng theo lịch
+    title: Duration và Period — thời lượng trôi qua và khoảng theo lịch
     purpose: Hiểu Duration và Period mô hình hóa hai loại khoảng thời gian khác nhau — thời lượng đo trên dòng thời gian và lượng năm/tháng/ngày theo lịch — nên không thể thay thế nhau một cách máy móc.
+    relatedKnowledge:
+      - DurationPeriod
     objectives:
       - Dùng Duration cho lượng thời gian đo bằng giờ/phút/giây trên dòng thời gian.
       - Dùng Period cho lượng năm/tháng/ngày chịu ảnh hưởng bởi quy tắc của lịch.
@@ -88,6 +102,8 @@ roadmap:
   - id: formatting-and-parsing
     title: Định dạng và phân tích chuỗi ngày-giờ
     purpose: Hiểu DateTimeFormatter là ranh giới chuyển đổi giữa giá trị ngày-giờ và văn bản; định dạng hiển thị không làm thay đổi ý nghĩa thời gian của chính giá trị.
+    relatedKnowledge:
+      - FormattingParsing
     relatedModules:
       - routeId: JAVA_LOCALIZATION
         label: Bản địa hóa
@@ -97,8 +113,10 @@ roadmap:
       - Hiểu việc phân tích chuỗi phải tạo đúng loại giá trị ngày-giờ mà dữ liệu thực sự mang ý nghĩa.
       - Tách quy tắc định dạng và phân tích chuỗi khỏi ý nghĩa cốt lõi của giá trị thời gian.
   - id: arithmetic-comparison-and-dst
-    title: Phép toán, so sánh và ranh giới DST
+    title: Phép toán, so sánh và ảnh hưởng của quy tắc múi giờ
     purpose: Hiểu kết quả cộng/trừ, tính khoảng cách và so sánh phụ thuộc vào loại giá trị đang dùng; với dữ liệu có múi giờ, quy tắc lịch và chuyển đổi DST có thể làm phép toán theo ngày khác phép toán theo số giờ thực tế.
+    relatedKnowledge:
+      - ArithmeticComparison
     objectives:
       - Chọn phép toán theo dòng thời gian hoặc theo lịch một cách có chủ đích.
       - Dùng plus/minus, ChronoUnit, Duration hoặc Period theo đúng ý nghĩa cần đo.
@@ -107,12 +125,16 @@ roadmap:
   - id: clock-and-testability
     title: Clock và thời gian có thể kiểm thử
     purpose: Hiểu Clock là nguồn cung cấp thời điểm “hiện tại” có thể truyền vào mã nguồn, giúp tách logic phụ thuộc thời gian khỏi đồng hồ hệ thống và làm kiểm thử có kết quả ổn định.
+    relatedKnowledge:
+      - Clock
     objectives:
       - Dùng Clock cố định hoặc Clock được truyền vào để kiểm thử logic phụ thuộc thời gian một cách xác định.
       - Tránh gọi trực tiếp now() rải rác trong logic nghiệp vụ khi thời điểm hiện tại là một phụ thuộc cần kiểm soát.
   - id: legacy-interop-and-synthesis
     title: Tương tác với API ngày-giờ cũ và tổng hợp mô hình
     purpose: Kết nối java.time với Date/Calendar và các ranh giới hệ thống cũ mà không để múi giờ mặc định hoặc chuyển đổi ngầm làm thay đổi ý nghĩa dữ liệu, sau đó tổng hợp cách chọn mô hình ngày-giờ phù hợp từ đầu đến cuối.
+    relatedKnowledge:
+      - LegacyInteropPitfalls
     objectives:
       - Chuyển đổi giữa Date/Calendar và java.time tại ranh giới rõ ràng, ưu tiên Instant khi cần nối hai mô hình.
       - Nhận biết rủi ro của múi giờ mặc định hệ thống và quyết định rõ khi nào lưu Instant, ngày-giờ cục bộ hoặc thông tin múi giờ.

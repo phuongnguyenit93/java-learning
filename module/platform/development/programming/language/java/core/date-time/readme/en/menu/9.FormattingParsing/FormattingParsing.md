@@ -1,4 +1,4 @@
-# Date-Time Formatting and Parsing
+# Formatting and Parsing
 
 Date-time objects and text are different representations. A value such as `LocalDate` or `Instant` carries temporal semantics; strings such as `27/09/2026`, `2026-09-27`, or `09:30 AM` are **representations** used at UI, file, API, or protocol boundaries.
 
@@ -163,7 +163,7 @@ LENIENT
 → allow broader overflow and normalization
 ```
 
-For formatters created through the ordinary factories/pattern APIs, **the default resolver style is `SMART`**. If an input contract must reject invalid calendar data strictly, do not assume the default is strict; configure `ResolverStyle.STRICT` intentionally.
+A formatter created by `DateTimeFormatter.ofPattern(...)` uses **`SMART` by default**. Predefined formatters can carry their own resolver configuration, so do not generalize that every `DateTimeFormatter` defaults to `SMART`. If an input contract must reject invalid calendar data strictly, inspect or configure the `ResolverStyle` intentionally.
 
 Example:
 
