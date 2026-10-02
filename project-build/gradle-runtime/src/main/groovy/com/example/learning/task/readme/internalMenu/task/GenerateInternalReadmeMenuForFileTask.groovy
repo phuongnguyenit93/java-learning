@@ -11,7 +11,7 @@ import org.gradle.work.DisableCachingByDefault
 @DisableCachingByDefault(
         because = 'Updates the configured Markdown file in place'
 )
-abstract class GenerateInternalReadmeMenuTask
+abstract class GenerateInternalReadmeMenuForFileTask
         extends DefaultTask {
 
     @Input
@@ -37,7 +37,7 @@ Internal README menu location is not configured.
 
 Example:
 
-generateInternalReadmeMenu {
+generateInternalReadmeMenuForFile {
 
     location =
         'readme/vi/menu/1.Basic/BasicThread.md'

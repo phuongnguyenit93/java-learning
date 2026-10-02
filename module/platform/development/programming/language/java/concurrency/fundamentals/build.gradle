@@ -8,7 +8,7 @@ markdownTranslation {
     fileLocation = 'menu/1.Basic/Test.md'
 }
 
-generateInternalReadmeMenu {
+generateInternalReadmeMenuForFile {
     location = 'readme/vi/menu/1.Basic/Basic.md'
 }
 

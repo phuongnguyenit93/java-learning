@@ -1,9 +1,9 @@
 {
     "README": [
         {
-            "extension": "GenerateInternalReadmeMenuExtension",
-            "name": "generateInternalReadmeMenu",
-            "path": "gradle-runtime/src/main/groovy/com/example/learning/task/readme/extension/GenerateInternalReadmeMenuExtension.groovy",
+            "extension": "GenerateInternalReadmeMenuForFileExtension",
+            "name": "generateInternalReadmeMenuForFile",
+            "path": "gradle-runtime/src/main/groovy/com/example/learning/task/readme/extension/GenerateInternalReadmeMenuForFileExtension.groovy",
             "fields": {
                 "location": "String"
             }

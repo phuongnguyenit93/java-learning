@@ -4,8 +4,9 @@ import com.example.learning.task.readme.translate.config.TranslationProvider
 import com.example.learning.task.readme.extension.MarkdownTranslationExtension
 import com.example.learning.task.readme.translate.service.path.MarkdownPathResolver
 import com.example.learning.task.readme.translate.task.TranslateMarkdownTask
-import com.example.learning.task.readme.extension.GenerateInternalReadmeMenuExtension
-import com.example.learning.task.readme.internalMenu.task.GenerateInternalReadmeMenuTask
+import com.example.learning.task.readme.extension.GenerateInternalReadmeMenuForFileExtension
+import com.example.learning.task.readme.internalMenu.task.GenerateInternalReadmeMenuForFileTask
+import com.example.learning.task.readme.internalMenu.task.GenerateInternalReadmeMenuForModuleTask
 import com.example.learning.task.readme.finalReadme.task.GenerateFinalReadmeTask
 import com.example.learning.utils.ProjectPropertyUtils
 import org.gradle.api.Plugin
@@ -20,17 +21,31 @@ class ReadmeTaskPlugin
             Project project
     ) {
 
-        GenerateInternalReadmeMenuExtension internalMenuExtension =
+        GenerateInternalReadmeMenuForFileExtension internalMenuForFileExtension =
                 project.extensions.create(
-                        'generateInternalReadmeMenu',
-                        GenerateInternalReadmeMenuExtension
+                        'generateInternalReadmeMenuForFile',
+                        GenerateInternalReadmeMenuForFileExtension
                 )
 
-        project.tasks.register('generateInternalReadmeMenu', GenerateInternalReadmeMenuTask) { task ->
+        project.tasks.register('generateInternalReadmeMenuForFile', GenerateInternalReadmeMenuForFileTask) { task ->
 
             task.group = 'documentation'
-            task.description = 'Generate internal navigation menu and collapsible sections for a README file.'
-            task.location.set(internalMenuExtension.location)
+            task.description = 'Generate internal navigation menu and collapsible sections for one README Markdown file.'
+            task.location.set(internalMenuForFileExtension.location)
+        }
+
+        project.tasks.register('generateInternalReadmeMenuForModule', GenerateInternalReadmeMenuForModuleTask) { task ->
+
+            task.group = 'documentation'
+            task.description = 'Generate internal README menus for all menu Markdown files in MODULE_LANGUAGE.'
+            task.languages.set(
+                    project.provider {
+                        ProjectPropertyUtils.getStringList(
+                                project,
+                                'MODULE_LANGUAGE'
+                        )
+                    }
+            )
         }
 
         project.tasks.register('generateFinalReadme', GenerateFinalReadmeTask) { task ->
