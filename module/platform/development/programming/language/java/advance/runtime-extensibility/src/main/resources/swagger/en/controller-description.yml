@@ -1,0 +1,6 @@
+RuntimeExtensibilityController:
+  description: |-
+    <h2>Runtime Extensibility Experiments</h2>
+    <p>This API group runs four bounded experiments that expose ServiceLoader lazy/cache/reload behavior, the distinction between discovery and selection, ClassLoader type identity, and plugin replacement lifecycle. HTTP only triggers the experiments; the learning behavior lives in Java runtime code and every request creates the state it needs.</p>
+  readmeRelated:
+    file: ''

@@ -41,4 +41,101 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: runtime-extensibility-purpose
+    title: What Runtime Extensibility Is and Why Hosts Need Stable Extension Boundaries
+    purpose: Build a mental model of runtime extensibility as a way for a host to depend on a stable contract while discovering and using independently deployed implementations instead of hard-coding every implementation into the application.
+    objectives:
+      - Explain the roles of the host, service contract, provider, and discovery mechanism in an extensible system.
+      - Recognize problems that justify runtime extensibility instead of direct object construction or fixed wiring.
+      - Distinguish loading extensions from bytecode modification or changing already-loaded class behavior.
+    relatedModules:
+      - routeId: JAVA_INSTRUMENTATION
+        label: Instrumentation
+        note: Instrumentation modifies or observes class/runtime behavior, while runtime extensibility focuses on loading implementations through extension contracts.
+
+  - id: service-provider-contract
+    title: Service Provider Contracts and Provider Design
+    purpose: Understand an SPI as the stable boundary between host and extension, how a service type expresses a capability, and how providers implement or supply that capability without forcing the host to depend directly on implementation classes.
+    objectives:
+      - Design a service contract stable enough for hosts and providers to evolve independently within known compatibility limits.
+      - Distinguish the service type, provider type, and provider-as-factory or indirection patterns.
+      - Keep shared contracts small and explicit to reduce coupling between the host and provider implementations.
+
+  - id: service-loader-discovery
+    title: Provider Discovery and Loading with ServiceLoader
+    purpose: Understand ServiceLoader as Java's standard discovery mechanism, including provider lookup, lazy loading, provider selection, class-loader context, caching/reload behavior, and failure surfaces when provider configuration or initialization is invalid.
+    objectives:
+      - Explain how ServiceLoader locates and exposes providers to an application at runtime.
+      - Distinguish iteration from the Provider stream when providers need to be inspected before instantiation.
+      - Understand lazy discovery, provider caches, reload, and ServiceConfigurationError rather than assuming discovery is eager or infallible.
+      - Understand that ServiceLoader.load(service) uses the thread context class loader by default, while the ClassLoader overload makes the discovery context explicit.
+      - Avoid treating a ServiceLoader instance as a global thread-safe registry or caching it VM-wide when discovery depends on a context class loader.
+      - Do not treat "the first provider found" as a business-priority contract unless the application defines an explicit provider-selection policy.
+    relatedModules:
+      - routeId: JAVA_6_SERVICE_LOADER
+        label: Java 6 - ServiceLoader
+        note: The Java Version module records the introduction history of ServiceLoader; this module owns the current runtime-extensibility mental model and usage.
+
+  - id: provider-deployment-models
+    title: Provider Registration on the Class Path and Module Path
+    purpose: Understand Java's two provider deployment models, from META-INF/services on the class path to uses/provides in named modules, together with how module boundaries and class-loading context affect discovery.
+    objectives:
+      - Understand how a provider-configuration file under META-INF/services registers providers on the class path.
+      - Understand that a named-module consumer must declare uses for the service and, when the service type is in another module, must also read the module that exports that service type.
+      - Understand that provider modules declare provides, while the host should depend on the service contract rather than require provider modules directly in order to preserve the extension boundary.
+      - Distinguish provider-instantiation rules: class-path and automatic-module providers require a provider constructor, while an explicit module may use either a provider constructor or a public static provider() method as defined by ServiceLoader.
+      - Separate provider discovery from the full ClassLoader and JPMS resolution curricula so the module boundary remains clear.
+    relatedModules:
+      - routeId: JAVA_CLASSLOADER
+        label: ClassLoader
+        note: The ClassLoader module owns loader lifecycle and delegation mechanics; this roadmap uses class-loading context only to explain provider discovery.
+      - routeId: JAVA_MODULE_SYSTEM
+        label: Java Platform Module System
+        note: The Module System module owns JPMS in full; runtime extensibility uses uses/provides and service binding only where they support extension discovery.
+
+  - id: plugin-architecture-lifecycle
+    title: From SPI to Plugin Architecture and Extension Lifecycle
+    purpose: Move from locating one provider to organizing a plugin system with explicit extension points, plugin selection rules, and host-controlled lifecycle from discovery through activation, use, deactivation or cleanup, and replacement when the architecture actually supports it.
+    objectives:
+      - Distinguish provider discovery from the broader plugin architecture that surrounds discovery.
+      - Define host responsibilities for extension selection, initialization, activation, and cleanup.
+      - Design extension points that let providers expose capabilities without leaking unnecessary implementation details.
+      - Distinguish ServiceLoader.reload() as clearing the provider cache for rediscovery rather than unloading classes/modules or automatically shutting down plugin instances already used by the host.
+
+  - id: isolation-compatibility-failure-boundaries
+    title: Plugin Isolation, Compatibility, and Failure Boundaries
+    purpose: Understand why extension code needs explicit compatibility and failure boundaries, and what can go wrong when plugins carry different dependencies, disagree on shared contract types, or fail during discovery and execution.
+    objectives:
+      - Recognize how version mismatch, duplicated or shared dependencies, and type-identity problems can break a plugin contract.
+      - Design failure boundaries so one broken provider does not make the host assume the whole extension model is healthy.
+      - Treat isolation as an architectural requirement before choosing a concrete ClassLoader or ModuleLayer strategy.
+    relatedModules:
+      - routeId: JAVA_CLASSLOADER
+        label: ClassLoader
+        note: The ClassLoader module explains class identity, delegation, and loader lifecycle that underpin many plugin-isolation strategies.
+
+  - id: module-layer-integration
+    title: ModuleLayer Integration for Modular Runtime Plugins
+    purpose: Understand how Configuration and ModuleLayer can resolve and define a new set of modules while the JVM is running, how service binding can bring provider modules into the graph, and how ServiceLoader can discover providers in the resulting layer.
+    objectives:
+      - Understand the relationship between a parent configuration, module resolution, and a new ModuleLayer without relearning the full JPMS curriculum.
+      - Explain when resolveAndBind is needed to bring service-provider modules into the resolved graph.
+      - Compare one-loader, many-loader, and custom-loader mappings at the plugin-architecture decision level.
+      - Know when ServiceLoader.load(layer, service) is appropriate and understand that it searches the layer and its ancestor layers, not unnamed-module or class-path providers as part of this overload's discovery scope.
+      - Understand that a ModuleLayer is created from an already-resolved Configuration; changing the plugin set typically means creating a new configuration/layer rather than treating the current layer as a mutable plugin registry.
+    relatedModules:
+      - routeId: JAVA_MODULE_SYSTEM
+        label: Java Platform Module System
+        note: The JPMS module provides the descriptor, readability, and resolution foundations that ModuleLayer integration builds on.
+      - routeId: JAVA_CLASSLOADER
+        label: ClassLoader
+        note: One-loader, many-loader, and custom-loader choices rely on class-loading mechanics owned by the ClassLoader module.
+
+  - id: runtime-extensibility-synthesis
+    title: End-to-End Extensibility Design and Mechanism Selection
+    purpose: Connect service contracts, provider discovery, deployment models, plugin lifecycle, compatibility, isolation, and ModuleLayer into one end-to-end model so the simplest sufficient extensibility mechanism is chosen instead of defaulting to the most complex option.
+    objectives:
+      - Design an end-to-end flow from contract definition to provider deployment, discovery, selection, execution, and failure handling.
+      - Choose among static wiring, ServiceLoader on the class path or module path, and ModuleLayer-based plugin composition based on actual requirements.
+      - Recognize when a requirement has moved into deep class loading, full JPMS, framework plugin systems, or instrumentation and should be handed off to the owning module.

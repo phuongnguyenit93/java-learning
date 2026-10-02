@@ -1,0 +1,117 @@
+RuntimeExtensibilityController:
+  serviceLoader():
+    summary: Observe ServiceLoader lazy loading, caching, and reload
+    description: Each request creates a fresh ServiceLoader for ReportExporter. The
+      response records provider-constructor counts before traversal, after the first
+      provider is obtained, after cached traversal, and after reload so the learner
+      can see that discovery/instantiation is lazy and reload only invalidates discovery
+      cache state.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 3.ServiceLoaderIntegration/ServiceLoaderIntegration.md
+      anchor: lazy-discovery-and-cache
+    methodName: serviceLoader
+    params: [
+      ]
+    path: com/example/learning/module/runtimeextensibility/controller/RuntimeExtensibilityController.java
+    mapping: '@GetMapping("/service-loader")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /runtime-extensibility/service-loader
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  providerSelection():
+    summary: Separate provider discovery from provider selection
+    description: ServiceLoader discovers both PDF and CSV providers, then the host
+      applies its own `format == csv` rule. The response exposes all candidates, the
+      selection rule, the selected provider, and the export result to show that discovery
+      supplies candidates while selection remains application policy.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 4.ProviderDiscoveryStrategy/ProviderDiscoveryStrategy.md
+      anchor: discovery-vs-selection
+    methodName: providerSelection
+    params: [
+      ]
+    path: com/example/learning/module/runtimeextensibility/controller/RuntimeExtensibilityController.java
+    mapping: '@GetMapping("/provider-selection")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /runtime-extensibility/provider-selection
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  classLoaderIdentity():
+    summary: Observe ClassLoader as part of runtime type identity
+    description: The same PluginContractMarker bytecode is defined by two separate
+      ClassLoaders. The response shows identical binary names but different Class
+      objects, false assignability in both directions, and a rejected cross-loader
+      cast.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 8.PluginIsolationDesign/PluginIsolationDesign.md
+      anchor: class-identity-boundaries
+    methodName: classLoaderIdentity
+    params: [
+      ]
+    path: com/example/learning/module/runtimeextensibility/controller/RuntimeExtensibilityController.java
+    mapping: '@GetMapping("/classloader-identity")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /runtime-extensibility/classloader-identity
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  pluginReplacement():
+    summary: Observe prepare → switch → retire during plugin replacement
+    description: The request keeps one v1 task in flight, validates replacement compatibility
+      and health-checks v2 before the switch, atomically moves the active reference
+      to v2, then marks v1 as draining, waits for the old work to finish, and shuts
+      down the v1 worker. v2 is also shut down at request cleanup so the experiment
+      does not leak a thread. The response exposes states, in-flight counts, work-acceptance
+      state, worker termination, and event histories to distinguish lifecycle replacement
+      from ServiceLoader.reload().
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 7.PluginLifecycle/PluginLifecycle.md
+      anchor: replacement-and-upgrade
+    methodName: pluginReplacement
+    params: [
+      ]
+    path: com/example/learning/module/runtimeextensibility/controller/RuntimeExtensibilityController.java
+    mapping: '@GetMapping("/plugin-replacement")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /runtime-extensibility/plugin-replacement
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

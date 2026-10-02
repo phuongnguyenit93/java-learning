@@ -1,0 +1,352 @@
+# <quiz-schema>
+# Cấu trúc câu hỏi Quiz
+# schema-version: 3
+#
+# questions [kiểu: list; bắt buộc; mặc định: []; duy nhất theo: id]
+#   Danh sách câu hỏi Quiz của module trong language hiện tại.
+#   mỗi phần tử:
+#     id [kiểu: string; bắt buộc; mặc định: ""]
+#       ID ổn định và duy nhất của câu hỏi.
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi hiển thị cho người học.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu câu hỏi được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu câu hỏi đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+#     answers [kiểu: list; bắt buộc; số phần tử: 4; mặc định: []; duy nhất theo: id]
+#       Chính xác bốn đáp án. ID A/B/C/D là identity nội bộ ổn định, không phải vị trí hiển thị sau khi frontend shuffle.
+#       mỗi phần tử:
+#         id [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#           Identity ổn định của đáp án.
+#         answer [kiểu: string; bắt buộc; mặc định: ""]
+#           Nội dung đáp án hiển thị cho người học.
+#         explanation [kiểu: string; bắt buộc; mặc định: ""]
+#           Giải thích hiển thị khi người học chọn đáp án này, bất kể đúng hay sai.
+#     correctAnswerId [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
+# </quiz-schema>
+
+questions:
+  - id: runtime-extensibility-decoupling
+    question: >-
+      Host cần cho phép thêm `PdfExporter` hoặc `CsvExporter` bằng JAR mới mà không sửa code host. Thiết kế nào phù hợp nhất với mục tiêu Runtime Extensibility?
+    answers:
+      - id: A
+        answer: "Host dùng `switch` theo format và `new` từng implementation cụ thể."
+        explanation: "Sai. Cách này giữ provider set trong code host, nên thêm provider vẫn buộc sửa và build lại host."
+      - id: B
+        answer: "Mỗi provider gọi trực tiếp API nội bộ của host để tự đăng ký khi class được load."
+        explanation: "Sai. Cách này tạo coupling mạnh vào implementation/lifecycle nội bộ của host và không tạo service contract ổn định."
+      - id: C
+        answer: "Host phụ thuộc service contract ổn định, còn provider được đóng gói độc lập và được discovery ở runtime."
+        explanation: "Đúng. Đây là dependency direction cốt lõi của Runtime Extensibility: host biết contract, không hard-code từng provider."
+      - id: D
+        answer: "Host load mọi class trong JAR bằng Reflection rồi chọn class có tên chứa `Exporter`."
+        explanation: "Sai. Reflection scan theo naming convention không thay thế một service-provider contract và discovery model rõ ràng."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.MentalModel/RuntimeExtensibility.md"
+      anchor: "runtime-extensibility-purpose"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - id: serviceloader-lazy-cache
+    question: >-
+      Sau khi gọi `ServiceLoader.load(ReportExporter.class)` nhưng trước khi iterate hoặc consume stream, nhận định nào đúng nhất?
+    answers:
+      - id: A
+        answer: "`load(...)` instantiate provider đầu tiên ngay để validate configuration, còn các provider sau mới chờ traversal."
+        explanation: "Sai. Việc tạo ServiceLoader chưa buộc instantiate provider đầu tiên; locating/instantiation xảy ra lazily khi traversal thực sự cần provider."
+      - id: B
+        answer: "Việc gọi `load(...)` chưa đồng nghĩa mọi provider đã được instantiate; provider được xử lý lazily khi traversal xảy ra."
+        explanation: "Đúng. `ServiceLoader` locate và instantiate provider theo nhu cầu khi iterator/stream được consume."
+      - id: C
+        answer: "`iterator()` tạo snapshot và instantiate toàn bộ provider vào cache trước khi lần `next()` đầu tiên trả kết quả."
+        explanation: "Sai. Iterator tiếp tục locate/instantiate provider lazily và thêm provider đã load vào cache theo tiến trình traversal."
+      - id: D
+        answer: "`load(...)` discover toàn bộ provider type trước, còn constructor chỉ bị trì hoãn đến khi caller gọi `Provider.get()`."
+        explanation: "Sai. Với iterator, chính traversal có thể locate và instantiate provider; `Provider.get()` là flow của stream/provider objects, không phải requirement chung."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.ServiceLoaderIntegration/ServiceLoaderIntegration.md"
+      anchor: "lazy-discovery-and-cache"
+    apiRelated:
+      controller: "RuntimeExtensibilityController"
+      methodSignature: "serviceLoader()"
+
+  - id: spi-contract-stability-boundary
+    question: >-
+      Host công bố `ReportExporter` SPI cho provider do team khác phát hành độc lập. Thiết kế nào giữ boundary ổn định nhất khi host và provider cần tiến hóa riêng?
+    answers:
+      - id: A
+        answer: "Đưa entity nội bộ của host vào SPI để provider luôn nhận được đầy đủ state mới nhất của host."
+        explanation: "Sai. Internal host type làm provider phụ thuộc implementation detail và khiến thay đổi nội bộ dễ phá extension contract."
+      - id: B
+        answer: "Giữ SPI tối thiểu rồi để host cast provider sang concrete class khi cần capability chưa có trong contract."
+        explanation: "Sai. Cast sang implementation tạo side channel và phá abstraction boundary giữa host với provider."
+      - id: C
+        answer: "Cho provider truy cập một mutable service locator của host để tự lấy bất kỳ dependency nội bộ nào nó cần."
+        explanation: "Sai. Cách này mở rộng coupling không kiểm soát và khiến dependency/lifecycle semantics khó ổn định."
+      - id: D
+        answer: "Giữ shared contract nhỏ, dùng type/semantics ổn định, document error/lifecycle ownership và chỉ thêm capability theo cách có compatibility policy rõ."
+        explanation: "Đúng. SPI là public compatibility surface; ổn định type, semantics và ownership giúp host/provider tiến hóa độc lập hơn."
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.SPIContract/SPIContract.md"
+      anchor: "contract-stability"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - id: serviceloader-reload-semantics
+    question: >-
+      Host gọi `serviceLoader.reload()` sau khi đã dùng một provider giữ thread và socket. Điều nào được `reload()` bảo đảm trực tiếp?
+    answers:
+      - id: A
+        answer: "Cache provider của `ServiceLoader` instance bị xóa để lần traversal sau discovery lại."
+        explanation: "Đúng. `reload()` là cache invalidation cho discovery của loader đó."
+      - id: B
+        answer: "Provider cũ được gọi `close()` và mọi resource của nó được giải phóng."
+        explanation: "Sai. `ServiceLoader` không quản lý application lifecycle hoặc resource cleanup của provider."
+      - id: C
+        answer: "ClassLoader chứa provider bị unload ngay nếu không còn provider mới cùng service."
+        explanation: "Sai. `reload()` không phải class unloading primitive."
+      - id: D
+        answer: "Mọi iterator cũ tiếp tục dùng cache trước reload một cách an toàn cho đến khi kết thúc."
+        explanation: "Sai. Iterator/stream cũ không nên tiếp tục dùng sau khi cache bị reload."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.ServiceLoaderIntegration/ServiceLoaderIntegration.md"
+      anchor: "reload-and-concurrency"
+    apiRelated:
+      controller: "RuntimeExtensibilityController"
+      methodSignature: "serviceLoader()"
+
+  - id: provider-order-is-not-business-priority
+    question: >-
+      Hệ thống có hai provider cùng hỗ trợ `pdf`. Vì sao dùng raw `ServiceLoader.findFirst()` làm business priority thường là thiết kế yếu?
+    answers:
+      - id: A
+        answer: "Vì `findFirst()` sắp provider theo tên class, nên kết quả deterministic nhưng không phản ánh capability của request."
+        explanation: "Sai. ServiceLoader không định nghĩa `findFirst()` theo lexical order của provider class name."
+      - id: B
+        answer: "Vì `findFirst()` ưu tiên provider instantiate nhanh hơn, nên thứ tự có thể đổi theo runtime cost của constructor."
+        explanation: "Sai. Provider ordering không được xác định bằng thời gian instantiate hay constructor cost."
+      - id: C
+        answer: "Vì discovery order không phải business-priority contract tổng quát; host cần selection policy riêng cho request."
+        explanation: "Đúng. Priority nghiệp vụ phải đến từ contract/configuration của application, không từ incidental deployment order."
+      - id: D
+        answer: "Vì `findFirst()` dùng `META-INF/services` như một global total order kể cả khi provider đến từ named modules."
+        explanation: "Sai. Provider có thể đến từ nhiều deployment source và Java không biến service file thành global business order."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.ProviderDiscoveryStrategy/ProviderDiscoveryStrategy.md"
+      anchor: "provider-ordering-caveats"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - id: named-module-consumer-uses
+    question: >-
+      `ReportExporter` nằm trong module `export.api`; host là named module khác, trực tiếp dùng type này và muốn discovery provider bằng `ServiceLoader`. Descriptor của host nên thể hiện điều gì?
+    answers:
+      - id: A
+        answer: "Khai báo `requires export.api`; việc gọi `ServiceLoader.load(...)` tự suy ra service dependence nên không cần `uses`."
+        explanation: "Sai. Named-module consumer phải khai báo `uses` cho service mà nó discovery qua ServiceLoader."
+      - id: B
+        answer: "`requires export.api` để đọc service type và `uses ReportExporter` để khai báo consumer của service."
+        explanation: "Đúng. Hai directive có vai trò khác nhau và cùng cần khi service type nằm ở module khác."
+      - id: C
+        answer: "Chỉ khai báo `uses ReportExporter`; service binding sẽ tự tạo readability tới `export.api` cho source code của host."
+        explanation: "Sai. `uses` không thay thế readability/accessibility cần thiết để host trực tiếp tham chiếu service type."
+      - id: D
+        answer: "Khai báo `requires export.api`, `uses ReportExporter` và `requires` từng provider module để provider được discovery."
+        explanation: "Sai. Consumer không nên require từng provider module chỉ để ServiceLoader discovery chúng."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.ClasspathModulePathIntegration/ClasspathModulePathIntegration.md"
+      anchor: "module-consumer-requires-uses"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - id: host-plugin-responsibility-boundary
+    question: >-
+      Business code đang tự gọi `ServiceLoader`, cast provider sang concrete class và tự start/stop resource của plugin ở nhiều nơi. Refactor nào tạo plugin boundary rõ nhất?
+    answers:
+      - id: A
+        answer: "Giữ discovery trong từng business flow nhưng chuẩn hóa tên concrete provider để các cast nhất quán hơn."
+        explanation: "Sai. Naming convention không giải quyết coupling, lifecycle ownership hay việc business code biết implementation detail."
+      - id: B
+        answer: "Tập trung discovery/validation/selection/lifecycle vào PluginManager qua stable contract; business code chỉ dùng registry/service view đã được host quản lý."
+        explanation: "Đúng. Host sở hữu orchestration và policy, còn plugin giữ implementation/private dependency/resource theo contract đã định nghĩa."
+      - id: C
+        answer: "Cho mỗi plugin tự sửa global registry của host khi class được load để không cần PluginManager."
+        explanation: "Sai. Self-registration vào global mutable state làm ownership và failure boundary khó kiểm soát."
+      - id: D
+        answer: "Để business code giữ provider instance lâu dài và gọi cleanup khi JVM shutdown, bất kể plugin có replacement lifecycle hay không."
+        explanation: "Sai. Resource/lifecycle ownership phải theo plugin architecture và replacement semantics, không dựa vào ad-hoc long-lived references."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.PluginArchitecture/PluginArchitecture.md"
+      anchor: "host-plugin-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - id: plugin-reload-vs-serviceloader-reload
+    question: >-
+      Plugin generation mới đã sẵn sàng thay thế generation cũ. Flow nào mô tả plugin replacement an toàn hơn `ServiceLoader.reload()` đơn thuần?
+    answers:
+      - id: A
+        answer: "Initialize/validate plugin mới, switch registry, drain work cũ, rồi stop và cleanup plugin cũ."
+        explanation: "Đúng. Replacement là lifecycle transition; discovery-cache reload chỉ là một phần nhỏ nếu có."
+      - id: B
+        answer: "Gọi `reload()`, xóa JAR cũ ngay, rồi giả định mọi request đang chạy sẽ tự chuyển provider."
+        explanation: "Sai. `reload()` không drain request, stop instance cũ hoặc bảo đảm JAR/class loader đã được release."
+      - id: C
+        answer: "Stop plugin cũ trước, sau đó mới kiểm tra plugin mới có tương thích và start được hay không."
+        explanation: "Sai. Cách này tạo unnecessary outage nếu replacement fail trước khi sẵn sàng."
+      - id: D
+        answer: "Giữ cả hai plugin active vô thời hạn để tránh phải quản lý cleanup hoặc compatibility."
+        explanation: "Sai. Cách này không giải quyết lifecycle, resource ownership hay selection ambiguity."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.PluginLifecycle/PluginLifecycle.md"
+      anchor: "replacement-and-upgrade"
+    apiRelated:
+      controller: "RuntimeExtensibilityController"
+      methodSignature: "pluginReplacement()"
+
+  - id: class-identity-across-plugin-loaders
+    question: >-
+      Host và plugin cùng có class tên `com.example.api.ReportExporter`, nhưng hai bản được define bởi hai ClassLoader không chia sẻ contract identity. Rủi ro chính là gì?
+    answers:
+      - id: A
+        answer: "Nếu binary name và bytecode giống nhau, JVM có thể coi hai class là cùng type dù chúng được define bởi hai loader khác nhau."
+        explanation: "Sai. Binary name giống nhau không đủ; defining ClassLoader là một phần của runtime type identity."
+      - id: B
+        answer: "Object từ plugin có thể không cast được sang service type của host dù tên class giống nhau."
+        explanation: "Đúng. Đây là lý do contract type thường phải được share qua loader boundary có identity thống nhất."
+      - id: C
+        answer: "Khác defining loader chủ yếu ảnh hưởng resource lookup; assignability vẫn dựa trên binary name của class."
+        explanation: "Sai. Defining loader ảnh hưởng trực tiếp tới class identity và vì thế tới assignability/cast."
+      - id: D
+        answer: "Type identity chỉ tách ra khi custom loader dùng child-first; với parent-first delegation thì hai bản cùng tên vẫn tương đương."
+        explanation: "Sai. Điều quyết định là class thực sự được define bởi loader nào; delegation strategy chỉ ảnh hưởng loader nào cuối cùng define class."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.PluginIsolationDesign/PluginIsolationDesign.md"
+      anchor: "class-identity-boundaries"
+    apiRelated:
+      controller: "RuntimeExtensibilityController"
+      methodSignature: "classLoaderIdentity()"
+
+  - id: dependency-conflict-boundary
+    question: >-
+      Plugin B cần library X 2.x trong khi host dùng X 1.x. Điều nào là reasoning phù hợp nhất cho plugin architecture?
+    answers:
+      - id: A
+        answer: "Đặt cả hai version lên cùng loader là đủ vì JVM tự chọn version phù hợp cho từng caller."
+        explanation: "Sai. Một loader namespace không tự cung cấp per-caller dependency version selection."
+      - id: B
+        answer: "Cho plugin import implementation package của host để dùng đúng version X mà host đã chọn."
+        explanation: "Sai. Cách này tăng coupling và có thể không đáp ứng requirement của plugin B."
+      - id: C
+        answer: "Cân nhắc align version, shade/relocate hoặc loader isolation; giữ shared contract type ngoài plugin-private dependency namespace."
+        explanation: "Đúng. Đây là các hướng xử lý phù hợp với dependency/isolation boundary thay vì giả định conflict tự biến mất."
+      - id: D
+        answer: "Đổi tên plugin B là đủ vì dependency conflict phụ thuộc plugin identifier, không phụ thuộc class loading."
+        explanation: "Sai. Conflict liên quan dependency/type namespace chứ không phải tên logic của plugin."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.VersionCompatibility/VersionCompatibility.md"
+      anchor: "dependency-version-conflicts"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - id: resolveandbind-service-binding
+    question: >-
+      Khi tạo `Configuration` cho modular plugins, lợi ích chính của `resolveAndBind(...)` so với chỉ `resolve(...)` trong service-provider scenario là gì?
+    answers:
+      - id: A
+        answer: "Nó giữ graph giống `resolve()` nhưng đánh dấu provider metadata để `ServiceLoader` instantiate sau khi layer được tạo."
+        explanation: "Sai. Service binding có thể làm graph được augment bằng provider modules; không chỉ gắn metadata lên graph cũ."
+      - id: B
+        answer: "Nó thêm mọi observable module có `provides`, kể cả khi graph không có service-use dependence tương ứng."
+        explanation: "Sai. Provider modules được thêm do service-use dependence; không phải mọi module có `provides` đều được kéo vào."
+      - id: C
+        answer: "Nó chỉ bind provider modules đã có trong root set; provider chưa phải root vẫn phải được host `requires` trực tiếp."
+        explanation: "Sai. Điểm của service binding là có thể kéo matching provider modules vào graph mà host không require trực tiếp từng provider."
+      - id: D
+        answer: "Nó augment resolved graph bằng provider modules được service-use dependence yêu cầu, rồi resolve tiếp cho đến khi ổn định."
+        explanation: "Đúng. Đây là điểm quan trọng để host không phải `requires` trực tiếp từng provider module."
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "10.ModuleLayerIntegration/ModuleLayerIntegration.md"
+      anchor: "resolve-vs-resolveandbind"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - id: serviceloader-layer-scope
+    question: >-
+      Host gọi `ServiceLoader.load(pluginLayer, ReportExporter.class)`. Phạm vi discovery nào phù hợp nhất với overload này?
+    answers:
+      - id: A
+        answer: "Provider trong layer đã cho và các ancestor layers; class-path provider trong unnamed module không thuộc scope overload này."
+        explanation: "Đúng. Layer-based discovery có context rõ ràng theo layer graph và ancestors của nó."
+      - id: B
+        answer: "Provider visible từ system ClassLoader cộng với provider trong layer đã cho; ancestor layers không được traversal."
+        explanation: "Sai. Overload theo layer search layer đã cho và ancestors, không ghép thêm một system-class-loader scope độc lập."
+      - id: C
+        answer: "Chỉ provider trong đúng layer hiện tại; parent layer bị loại để giữ isolation giữa các plugin generation."
+        explanation: "Sai. API contract bao gồm provider trong ancestor layers của layer đã cho."
+      - id: D
+        answer: "Provider trong layer đã cho cộng với provider mà thread context ClassLoader tìm thấy, bất kể quan hệ ancestor layer."
+        explanation: "Sai. Layer overload dùng module-layer scope; nó không bổ sung discovery từ TCCL như `load(service)` convenience method."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "10.ModuleLayerIntegration/ModuleLayerIntegration.md"
+      anchor: "serviceloader-layer-discovery"
+    apiRelated:
+      controller: ""
+      methodSignature: ""

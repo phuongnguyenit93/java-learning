@@ -1,0 +1,114 @@
+RuntimeExtensibilityController:
+  serviceLoader():
+    summary: Quan sát ServiceLoader lazy loading, cache và reload
+    description: Mỗi request tạo một ServiceLoader mới cho ReportExporter. Response
+      ghi lại số lần constructor provider chạy trước traversal, sau lần lấy provider
+      đầu tiên, khi đọc lại từ cache và sau reload để learner thấy discovery/instantiation
+      là lazy và reload chỉ làm cache discovery bị invalidated.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 3.ServiceLoaderIntegration/ServiceLoaderIntegration.md
+      anchor: lazy-discovery-and-cache
+    methodName: serviceLoader
+    params: [
+      ]
+    path: com/example/learning/module/runtimeextensibility/controller/RuntimeExtensibilityController.java
+    mapping: '@GetMapping("/service-loader")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /runtime-extensibility/service-loader
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  providerSelection():
+    summary: Tách provider discovery khỏi provider selection
+    description: ServiceLoader discovery cả PDF và CSV provider, sau đó host áp dụng
+      rule riêng `format == csv`. Response trả toàn bộ candidates, rule selection,
+      provider được chọn và kết quả export để chứng minh discovery chỉ tạo candidate
+      set còn selection vẫn thuộc application policy.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 4.ProviderDiscoveryStrategy/ProviderDiscoveryStrategy.md
+      anchor: discovery-vs-selection
+    methodName: providerSelection
+    params: [
+      ]
+    path: com/example/learning/module/runtimeextensibility/controller/RuntimeExtensibilityController.java
+    mapping: '@GetMapping("/provider-selection")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /runtime-extensibility/provider-selection
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  classLoaderIdentity():
+    summary: Quan sát ClassLoader là một phần của runtime type identity
+    description: Cùng bytecode của PluginContractMarker được define bởi hai ClassLoader
+      riêng. Response chứng minh binary name giống nhau nhưng Class object khác nhau,
+      assignability hai chiều là false và cross-loader cast bị ClassCastException.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 8.PluginIsolationDesign/PluginIsolationDesign.md
+      anchor: class-identity-boundaries
+    methodName: classLoaderIdentity
+    params: [
+      ]
+    path: com/example/learning/module/runtimeextensibility/controller/RuntimeExtensibilityController.java
+    mapping: '@GetMapping("/classloader-identity")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /runtime-extensibility/classloader-identity
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  pluginReplacement():
+    summary: Quan sát prepare → switch → retire trong plugin replacement
+    description: Request giữ một work đang chạy trên v1, validate compatibility và
+      health-check v2 trước khi switch, atomically đổi active reference sang v2, sau
+      đó mark v1 draining, chờ work cũ hoàn tất và shutdown worker của v1. Cuối request,
+      v2 cũng được shutdown để experiment không rò thread. Response trả state, in-flight
+      count, trạng thái nhận work, worker termination và event history để phân biệt
+      lifecycle replacement với ServiceLoader.reload().
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 7.PluginLifecycle/PluginLifecycle.md
+      anchor: replacement-and-upgrade
+    methodName: pluginReplacement
+    params: [
+      ]
+    path: com/example/learning/module/runtimeextensibility/controller/RuntimeExtensibilityController.java
+    mapping: '@GetMapping("/plugin-replacement")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /runtime-extensibility/plugin-replacement
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

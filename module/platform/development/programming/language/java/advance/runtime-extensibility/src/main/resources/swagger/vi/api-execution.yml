@@ -1,0 +1,73 @@
+RuntimeExtensibilityController:
+  serviceLoader():
+    execution: |-
+      <p><b>Concept:</b> ServiceLoader discovery và provider instantiation là lazy; mỗi ServiceLoader giữ cache riêng và <code>reload()</code> chỉ clear cache đó.</p>
+      <ol>
+        <li>Mỗi request reset một ThreadLocal construction probe rồi tạo <code>ServiceLoader&lt;ReportExporter&gt;</code> mới. Trước traversal, construction count bằng 0.</li>
+        <li>Lần <code>next()</code> đầu tiên instantiate provider đầu tiên từ <code>META-INF/services</code>, làm construction count tăng.</li>
+        <li>Tạo iterator mới trên cùng ServiceLoader và lấy provider đầu tiên lần nữa. Loader trả instance đã cache nên construction count không tăng và identity vẫn giống instance trước.</li>
+        <li>Gọi <code>reload()</code>, rồi traverse lại. Cache đã bị clear nên provider đầu tiên được instantiate lại và construction count tăng thêm.</li>
+      </ol>
+      <p><b>Code evidence:</b></p>
+      <pre><code>ReportExporter firstProvider = loader.iterator().next();
+      ReportExporter cachedProvider = loader.iterator().next();
+      loader.reload();
+      ReportExporter providerAfterReload = loader.iterator().next();</code></pre>
+      <p><b>Evidence:</b> <code>beforeTraversalConstructionCount</code>, <code>afterFirstProviderConstructionCount</code>, <code>sameInstanceReturnedFromCache</code>, <code>afterCachedTraversalConstructionCount</code>, <code>sameInstanceAfterReload</code> và <code>afterReloadTraversalConstructionCount</code>.</p>
+      <p><b>Kết luận:</b> <code>reload()</code> invalidates provider cache của loader; nó không phải lifecycle shutdown hoặc class unloading.</p>
+    usage: true
+  providerSelection():
+    execution: |-
+      <p><b>Concept:</b> Discovery trả candidate set; selection là policy riêng của host.</p>
+      <ol>
+        <li>ServiceLoader load cả <code>PdfReportExporter</code> và <code>CsvReportExporter</code> từ service configuration.</li>
+        <li>Service materialize candidates và trả <code>discoveredFormats</code>/<code>discoveredTypes</code> để learner thấy tập provider thật sự được discovery.</li>
+        <li>Host áp dụng rule explicit <code>format == csv</code> thay vì dùng raw discovery order làm business priority.</li>
+        <li>Provider CSV được chọn và thực thi <code>export("quarterly-report")</code>.</li>
+      </ol>
+      <p><b>Code evidence:</b></p>
+      <pre><code>ReportExporter selected = providers.stream()
+              .filter(provider -&gt; "csv".equals(provider.format()))
+              .findFirst()
+              .orElseThrow();</code></pre>
+      <p><b>Evidence:</b> <code>discoveredFormats</code>, <code>discoveredTypes</code>, <code>selectionRule</code>, <code>selectedFormat</code>, <code>selectedType</code> và <code>exportResult</code>.</p>
+      <p><b>Kết luận:</b> ServiceLoader không quyết định provider tốt nhất cho business request; application phải sở hữu selection policy.</p>
+    usage: true
+  classLoaderIdentity():
+    execution: |-
+      <p><b>Concept:</b> Runtime type identity phụ thuộc cả binary name và defining ClassLoader.</p>
+      <ol>
+        <li>Service đọc bytecode của cùng một <code>PluginContractMarker</code>.</li>
+        <li>Hai <code>IsolatedClassLoader</code> độc lập cùng define bytecode đó dưới cùng binary name.</li>
+        <li>Hai Class có cùng <code>getName()</code> nhưng khác Class object và khác defining loader.</li>
+        <li><code>isAssignableFrom</code> hai chiều trả false; cast instance của class A sang class B bị <code>ClassCastException</code>.</li>
+      </ol>
+      <p><b>Code evidence:</b></p>
+      <pre><code>Class&lt;?&gt; classA = loaderA.loadClass(MARKER_CLASS_NAME);
+      Class&lt;?&gt; classB = loaderB.loadClass(MARKER_CLASS_NAME);
+      boolean assignable = classA.isAssignableFrom(classB);
+      classB.cast(classA.getDeclaredConstructor().newInstance());</code></pre>
+      <p><b>Evidence:</b> cùng binary name nhưng <code>sameClassObject=false</code>, hai loader identity khác nhau, assignability false và <code>crossLoaderCastRejected=true</code>.</p>
+      <p><b>Kết luận:</b> Plugin system phải share contract type qua loader boundary phù hợp; chỉ trùng fully-qualified name không đủ tạo cùng runtime type.</p>
+    usage: true
+  pluginReplacement():
+    execution: |-
+      <p><b>Concept:</b> Plugin replacement là lifecycle transition prepare → switch → retire, không phải chỉ gọi <code>ServiceLoader.reload()</code>.</p>
+      <ol>
+        <li>Generation v1 đi qua <code>NEW → INITIALIZED → ACTIVE</code>, trở thành active reference và bắt đầu một work cố ý giữ ở trạng thái in-flight.</li>
+        <li>Host validate contract version của v2, initialize/start v2 và chạy health check trên worker thật của v2 trước khi switch.</li>
+        <li><code>AtomicReference.compareAndSet(v1, v2)</code> thực hiện switch active generation; request mới sau switch chạy trên v2.</li>
+        <li>v1 chuyển sang <code>DRAINING</code>, ngừng nhận work mới, sau đó in-flight work cũ được release và chờ hoàn tất.</li>
+        <li>Khi in-flight count về 0, v1 shutdown executor và chuyển sang <code>STOPPED</code>.</li>
+        <li>Cuối request, v2 cũng được shutdown trong <code>finally</code> để bounded experiment không để lại worker thread.</li>
+      </ol>
+      <p><b>Code evidence:</b></p>
+      <pre><code>boolean compatible = generationTwo.isCompatibleWith(HOST_PLUGIN_CONTRACT_VERSION);
+      boolean healthy = generationTwo.healthCheck();
+      boolean switched = active.compareAndSet(generationOne, generationTwo);
+      generationOne.beginDrain();
+      oldInFlightWork.completeAndAwait();
+      generationOne.stop();</code></pre>
+      <p><b>Evidence:</b> <code>replacementCompatible</code>, <code>replacementHealthCheckPassed</code>, <code>atomicSwitchSucceeded</code>, <code>replacementExecutionResult</code>, <code>oldGenerationAcceptingWorkAfterDrain=false</code>, in-flight count trước/sau drain, <code>oldGenerationWorkerTerminated=true</code>, event history, và <code>newGenerationWorkerTerminatedAfterRequestCleanup=true</code>.</p>
+      <p><b>Kết luận:</b> Replacement an toàn cần chuẩn bị candidate trước switch, giữ request cũ trên generation cũ đến khi drain xong, rồi cleanup resource theo ownership. <code>ServiceLoader.reload()</code> không thực hiện các bước lifecycle này.</p>
+    usage: true

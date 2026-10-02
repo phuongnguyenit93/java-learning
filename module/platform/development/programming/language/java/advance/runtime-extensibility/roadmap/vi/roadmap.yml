@@ -41,4 +41,101 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: runtime-extensibility-purpose
+    title: Mở rộng hành vi lúc chạy là gì và vì sao cần tách host khỏi extension?
+    purpose: Xây dựng mental model về runtime extensibility như một cách để host phụ thuộc vào hợp đồng ổn định nhưng có thể phát hiện và sử dụng implementation được triển khai độc lập, thay vì hard-code mọi implementation vào ứng dụng.
+    objectives:
+      - Giải thích vai trò của host, service contract, provider và cơ chế discovery trong một hệ thống có thể mở rộng.
+      - Nhận biết bài toán nào cần runtime extensibility thay vì chỉ tạo object trực tiếp hoặc wiring cố định.
+      - Phân biệt việc nạp extension với việc sửa bytecode hoặc thay đổi hành vi class đang chạy.
+    relatedModules:
+      - routeId: JAVA_INSTRUMENTATION
+        label: Instrumentation
+        note: Instrumentation sửa hoặc quan sát class/runtime behavior; runtime extensibility tập trung vào việc nạp implementation qua extension contract.
+
+  - id: service-provider-contract
+    title: Thiết kế hợp đồng dịch vụ và provider
+    purpose: Hiểu SPI như ranh giới ổn định giữa host và extension, cách service type định nghĩa capability và cách provider triển khai hoặc cung cấp capability đó mà không buộc host phụ thuộc trực tiếp vào implementation.
+    objectives:
+      - Thiết kế service contract đủ ổn định để host và provider có thể tiến hóa độc lập trong giới hạn đã xác định.
+      - Phân biệt service type, provider type và trường hợp provider đóng vai trò factory hoặc indirection.
+      - Giữ shared contract nhỏ và rõ để giảm coupling giữa host với extension implementation.
+
+  - id: service-loader-discovery
+    title: Khám phá và nạp provider với ServiceLoader
+    purpose: Hiểu ServiceLoader như cơ chế discovery chuẩn của Java, bao gồm cách tìm provider, lazy loading, lựa chọn provider, class-loader context, cache/reload và failure surface khi provider cấu hình hoặc khởi tạo không hợp lệ.
+    objectives:
+      - Giải thích ServiceLoader tìm và cung cấp provider cho application ở mức runtime như thế nào.
+      - Phân biệt iterator với stream Provider khi cần inspect provider trước khi khởi tạo.
+      - Hiểu lazy discovery, provider cache, reload và ServiceConfigurationError để không giả định discovery luôn eager hoặc luôn thành công.
+      - Hiểu ServiceLoader.load(service) mặc định dựa trên thread context class loader, còn overload nhận ClassLoader cho phép chọn discovery context rõ ràng.
+      - Không coi một ServiceLoader instance là global thread-safe registry hoặc cache nó VM-wide khi discovery phụ thuộc context class loader.
+      - Không dùng "provider đầu tiên được tìm thấy" như business-priority contract trừ khi application tự định nghĩa policy lựa chọn rõ ràng.
+    relatedModules:
+      - routeId: JAVA_6_SERVICE_LOADER
+        label: Java 6 - ServiceLoader
+        note: Module Java Version ghi lại bối cảnh ServiceLoader được giới thiệu; module hiện tại sở hữu mental model và cách dùng runtime extensibility.
+
+  - id: provider-deployment-models
+    title: Đăng ký provider trên classpath và module path
+    purpose: Hiểu hai mô hình triển khai provider mà Java hỗ trợ, từ META-INF/services trên classpath đến uses/provides trong named modules, cùng ảnh hưởng của module boundary và class-loading context đến discovery.
+    objectives:
+      - Hiểu provider-configuration file trong META-INF/services biểu diễn registration trên classpath như thế nào.
+      - Hiểu named-module consumer phải khai báo uses cho service; khi service type nằm ở module khác thì consumer cũng phải đọc module export service type đó.
+      - Hiểu provider module khai báo provides, trong khi host nên phụ thuộc vào service contract thay vì require trực tiếp các provider modules để giữ extension boundary.
+      - Phân biệt quy tắc khởi tạo provider: classpath/automatic-module provider cần provider constructor, còn explicit module có thể dùng provider constructor hoặc public static provider() method theo ServiceLoader contract.
+      - Phân biệt provider discovery với toàn bộ cơ chế class loading và JPMS resolution để giữ đúng boundary của module.
+    relatedModules:
+      - routeId: JAVA_CLASSLOADER
+        label: ClassLoader
+        note: ClassLoader module sở hữu đầy đủ lifecycle và delegation mechanics; roadmap này chỉ dùng class-loading context để giải thích provider discovery.
+      - routeId: JAVA_MODULE_SYSTEM
+        label: Java Platform Module System
+        note: Module System sở hữu JPMS đầy đủ; runtime extensibility chỉ sử dụng uses/provides và service binding khi chúng phục vụ extension discovery.
+
+  - id: plugin-architecture-lifecycle
+    title: Từ SPI đến kiến trúc plugin và vòng đời extension
+    purpose: Mở rộng từ việc tìm một provider sang việc tổ chức một plugin system có extension point rõ ràng, quy tắc chọn plugin và vòng đời mà host kiểm soát từ discovery đến activation, sử dụng, deactivation/cleanup và replacement khi kiến trúc thực sự hỗ trợ.
+    objectives:
+      - Phân biệt provider discovery với toàn bộ plugin architecture bao quanh discovery.
+      - Xác định trách nhiệm của host trong selection, initialization, activation và cleanup của extension.
+      - Thiết kế extension point để provider có thể công bố capability mà không làm lộ implementation detail không cần thiết.
+      - Phân biệt ServiceLoader.reload() là xóa provider cache để discovery lại, không phải cơ chế unload class/module hay lifecycle shutdown tự động cho plugin đã được host sử dụng.
+
+  - id: isolation-compatibility-failure-boundaries
+    title: Cô lập, tương thích và ranh giới lỗi của plugin
+    purpose: Hiểu vì sao extension code cần ranh giới tương thích và lỗi rõ ràng, cùng những vấn đề phát sinh khi plugin có dependency khác nhau, chia sẻ type contract không nhất quán hoặc gây lỗi trong quá trình discovery và execution.
+    objectives:
+      - Nhận biết version mismatch, duplicate/shared dependency và type-identity risk có thể phá vỡ plugin contract như thế nào.
+      - Thiết kế failure boundary để một provider lỗi không làm host nhầm rằng toàn bộ extension model vẫn hợp lệ.
+      - Hiểu isolation là requirement kiến trúc trước khi chọn ClassLoader hoặc ModuleLayer cụ thể để thực thi requirement đó.
+    relatedModules:
+      - routeId: JAVA_CLASSLOADER
+        label: ClassLoader
+        note: ClassLoader module giải thích sâu về class identity, delegation và loader lifecycle là nền tảng của nhiều chiến lược plugin isolation.
+
+  - id: module-layer-integration
+    title: Tích hợp ModuleLayer cho runtime plugin có module
+    purpose: Hiểu cách Configuration và ModuleLayer cho phép resolve rồi định nghĩa một tập module mới khi runtime đang chạy, cách service binding kéo provider modules vào graph và cách ServiceLoader có thể khám phá provider trong layer mới.
+    objectives:
+      - Hiểu quan hệ giữa parent configuration, module resolution và một ModuleLayer mới mà không học lại toàn bộ JPMS.
+      - Giải thích khi resolveAndBind cần thiết để đưa module cung cấp service vào resolved graph.
+      - So sánh một loader, nhiều loader và custom loader mapping ở mức quyết định kiến trúc plugin.
+      - Biết khi nào ServiceLoader.load(layer, service) phù hợp và hiểu nó tìm provider trong layer cùng các ancestor layer, không dùng unnamed-module/classpath provider như discovery scope của overload này.
+      - Hiểu ModuleLayer được tạo từ một Configuration đã resolve; việc thay đổi tập plugin thường cần tạo configuration/layer mới thay vì coi layer hiện tại như mutable plugin registry.
+    relatedModules:
+      - routeId: JAVA_MODULE_SYSTEM
+        label: Java Platform Module System
+        note: JPMS module cung cấp nền tảng về module descriptor, readability và resolution mà ModuleLayer integration dựa vào.
+      - routeId: JAVA_CLASSLOADER
+        label: ClassLoader
+        note: Các lựa chọn one-loader, many-loaders hoặc custom loader mapping dựa trên class-loading mechanics thuộc module ClassLoader.
+
+  - id: runtime-extensibility-synthesis
+    title: Tổng hợp thiết kế hệ thống mở rộng và chọn đúng cơ chế
+    purpose: Kết nối service contract, provider discovery, deployment model, plugin lifecycle, compatibility, isolation và ModuleLayer thành một mô hình end-to-end để chọn mức extensibility phù hợp thay vì mặc định dùng cơ chế phức tạp nhất.
+    objectives:
+      - Thiết kế flow end-to-end từ contract đến provider deployment, discovery, selection, execution và failure handling.
+      - Chọn giữa wiring tĩnh, ServiceLoader trên classpath/module path và ModuleLayer-based plugin composition theo nhu cầu thực tế.
+      - Nhận biết khi yêu cầu đã chuyển sang class loading chuyên sâu, JPMS chuyên sâu, framework plugin system hoặc instrumentation và cần handoff sang module owner tương ứng.

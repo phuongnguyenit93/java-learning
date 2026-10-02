@@ -1,1 +1,0 @@
-# Tương thích phiên bản

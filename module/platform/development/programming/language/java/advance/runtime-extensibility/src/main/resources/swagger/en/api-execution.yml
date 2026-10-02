@@ -1,0 +1,73 @@
+RuntimeExtensibilityController:
+  serviceLoader():
+    execution: |-
+      <p><b>Concept:</b> ServiceLoader discovery and provider instantiation are lazy; each ServiceLoader keeps its own cache and <code>reload()</code> only clears that cache.</p>
+      <ol>
+        <li>Each request resets a ThreadLocal construction probe and creates a fresh <code>ServiceLoader&lt;ReportExporter&gt;</code>. Before traversal, the construction count is 0.</li>
+        <li>The first <code>next()</code> instantiates the first provider from <code>META-INF/services</code>, increasing the construction count.</li>
+        <li>A new iterator on the same ServiceLoader returns the cached first provider, so the construction count does not increase and object identity remains the same.</li>
+        <li>After <code>reload()</code>, traversal begins with an empty provider cache and the first provider is instantiated again.</li>
+      </ol>
+      <p><b>Code evidence:</b></p>
+      <pre><code>ReportExporter firstProvider = loader.iterator().next();
+      ReportExporter cachedProvider = loader.iterator().next();
+      loader.reload();
+      ReportExporter providerAfterReload = loader.iterator().next();</code></pre>
+      <p><b>Evidence:</b> <code>beforeTraversalConstructionCount</code>, <code>afterFirstProviderConstructionCount</code>, <code>sameInstanceReturnedFromCache</code>, <code>afterCachedTraversalConstructionCount</code>, <code>sameInstanceAfterReload</code>, and <code>afterReloadTraversalConstructionCount</code>.</p>
+      <p><b>Conclusion:</b> <code>reload()</code> invalidates the loader's provider cache; it is not lifecycle shutdown or class unloading.</p>
+    usage: true
+  providerSelection():
+    execution: |-
+      <p><b>Concept:</b> Discovery produces a candidate set; selection is a separate host policy.</p>
+      <ol>
+        <li>ServiceLoader loads both <code>PdfReportExporter</code> and <code>CsvReportExporter</code> from service configuration.</li>
+        <li>The service materializes candidates and exposes <code>discoveredFormats</code>/<code>discoveredTypes</code>.</li>
+        <li>The host applies the explicit rule <code>format == csv</code> instead of treating raw discovery order as business priority.</li>
+        <li>The selected CSV provider executes <code>export("quarterly-report")</code>.</li>
+      </ol>
+      <p><b>Code evidence:</b></p>
+      <pre><code>ReportExporter selected = providers.stream()
+              .filter(provider -&gt; "csv".equals(provider.format()))
+              .findFirst()
+              .orElseThrow();</code></pre>
+      <p><b>Evidence:</b> <code>discoveredFormats</code>, <code>discoveredTypes</code>, <code>selectionRule</code>, <code>selectedFormat</code>, <code>selectedType</code>, and <code>exportResult</code>.</p>
+      <p><b>Conclusion:</b> ServiceLoader does not decide which provider is best for a business request; the application owns selection policy.</p>
+    usage: true
+  classLoaderIdentity():
+    execution: |-
+      <p><b>Concept:</b> Runtime type identity depends on both binary name and defining ClassLoader.</p>
+      <ol>
+        <li>The service reads the bytecode of one <code>PluginContractMarker</code>.</li>
+        <li>Two independent <code>IsolatedClassLoader</code> instances define the same bytes under the same binary name.</li>
+        <li>The resulting Class objects have the same <code>getName()</code> value but different object and defining-loader identities.</li>
+        <li><code>isAssignableFrom</code> is false in both directions, and casting an instance of class A to class B throws <code>ClassCastException</code>.</li>
+      </ol>
+      <p><b>Code evidence:</b></p>
+      <pre><code>Class&lt;?&gt; classA = loaderA.loadClass(MARKER_CLASS_NAME);
+      Class&lt;?&gt; classB = loaderB.loadClass(MARKER_CLASS_NAME);
+      boolean assignable = classA.isAssignableFrom(classB);
+      classB.cast(classA.getDeclaredConstructor().newInstance());</code></pre>
+      <p><b>Evidence:</b> equal binary names with <code>sameClassObject=false</code>, different loader identities, false assignability, and <code>crossLoaderCastRejected=true</code>.</p>
+      <p><b>Conclusion:</b> A plugin system must share contract types through an appropriate loader boundary; matching fully qualified names alone do not create one runtime type.</p>
+    usage: true
+  pluginReplacement():
+    execution: |-
+      <p><b>Concept:</b> Plugin replacement is a prepare → switch → retire lifecycle transition, not merely a call to <code>ServiceLoader.reload()</code>.</p>
+      <ol>
+        <li>Generation v1 moves through <code>NEW → INITIALIZED → ACTIVE</code>, becomes the active reference, and starts one deliberately held in-flight task.</li>
+        <li>The host validates v2 contract compatibility, initializes/starts v2, and performs a health check on v2's real worker before switching.</li>
+        <li><code>AtomicReference.compareAndSet(v1, v2)</code> switches the active generation; new work after the switch executes on v2.</li>
+        <li>v1 enters <code>DRAINING</code>, stops accepting new work, and the held old request is released and awaited.</li>
+        <li>Once the in-flight count reaches zero, v1 shuts down its executor and moves to <code>STOPPED</code>.</li>
+        <li>At request cleanup, v2 is also stopped in <code>finally</code> so the bounded experiment leaves no worker thread behind.</li>
+      </ol>
+      <p><b>Code evidence:</b></p>
+      <pre><code>boolean compatible = generationTwo.isCompatibleWith(HOST_PLUGIN_CONTRACT_VERSION);
+      boolean healthy = generationTwo.healthCheck();
+      boolean switched = active.compareAndSet(generationOne, generationTwo);
+      generationOne.beginDrain();
+      oldInFlightWork.completeAndAwait();
+      generationOne.stop();</code></pre>
+      <p><b>Evidence:</b> <code>replacementCompatible</code>, <code>replacementHealthCheckPassed</code>, <code>atomicSwitchSucceeded</code>, <code>replacementExecutionResult</code>, <code>oldGenerationAcceptingWorkAfterDrain=false</code>, in-flight counts before/after draining, <code>oldGenerationWorkerTerminated=true</code>, event history, and <code>newGenerationWorkerTerminatedAfterRequestCleanup=true</code>.</p>
+      <p><b>Conclusion:</b> Safe replacement prepares the candidate before switching, keeps old requests on the old generation until draining completes, and cleans resources according to ownership. <code>ServiceLoader.reload()</code> performs none of these lifecycle steps.</p>
+    usage: true

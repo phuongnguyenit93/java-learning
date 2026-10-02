@@ -1,1 +1,271 @@
-{}
+1.MentalModel/RuntimeExtensibility.md:
+  runtime-extensibility-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  host-extension-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  static-wiring-limitations:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  extensibility-mechanism-spectrum:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  runtime-extensibility-boundaries:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+2.SPIContract/SPIContract.md:
+  spi-contract-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  service-type-design:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  provider-type-design:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  provider-as-factory:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  contract-stability:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+3.ServiceLoaderIntegration/ServiceLoaderIntegration.md:
+  serviceloader-discovery-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  lazy-discovery-and-cache:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  iterator-vs-provider-stream:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  discovery-classloader-context:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  reload-and-concurrency:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  serviceconfigurationerror:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+4.ProviderDiscoveryStrategy/ProviderDiscoveryStrategy.md:
+  discovery-vs-selection:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  provider-selection-policy:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  capability-based-selection:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  provider-ordering-caveats:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  no-provider-and-fallback:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  duplicate-and-broken-providers:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+5.ClasspathModulePathIntegration/ClasspathModulePathIntegration.md:
+  classpath-provider-configuration:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  module-consumer-requires-uses:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  module-provider-provides:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  provider-instantiation-rules:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  automatic-module-limitations:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  host-provider-decoupling:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+6.PluginArchitecture/PluginArchitecture.md:
+  plugin-architecture-purpose:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  extension-point-design:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  host-plugin-boundary:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  plugin-manager-responsibilities:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  plugin-capability-model:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  plugin-dependency-policy:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+7.PluginLifecycle/PluginLifecycle.md:
+  plugin-lifecycle-model:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  discovery-to-activation:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  initialization-and-startup:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  deactivation-and-cleanup:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  rediscovery-vs-reload:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  replacement-and-upgrade:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+8.PluginIsolationDesign/PluginIsolationDesign.md:
+  plugin-isolation-purpose:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  class-identity-boundaries:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  shared-vs-private-dependencies:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  classloader-isolation-strategies:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  isolation-resource-boundaries:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  plugin-failure-boundaries:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  unloadability-and-leak-risks:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+9.VersionCompatibility/VersionCompatibility.md:
+  compatibility-contract:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  spi-evolution-rules:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  host-provider-version-negotiation:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  dependency-version-conflicts:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  capability-versioning:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  compatibility-testing:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+10.ModuleLayerIntegration/ModuleLayerIntegration.md:
+  modulelayer-purpose:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  configuration-and-resolution:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  resolve-vs-resolveandbind:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  layer-loader-strategies:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  serviceloader-layer-discovery:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  layer-replacement-model:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+11.SynthesisAndPitfalls/SynthesisAndPitfalls.md:
+  extensibility-end-to-end-flow:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  mechanism-selection:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  common-design-pitfalls:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  failure-containment-checklist:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  boundary-handoffs:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  runtime-extensibility-synthesis:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false

@@ -1,0 +1,6 @@
+RuntimeExtensibilityController:
+  description: |-
+    <h2>Runtime Extensibility Experiments</h2>
+    <p>Nhóm API này chạy bốn thí nghiệm bounded để quan sát trực tiếp ServiceLoader lazy/cache/reload, sự khác nhau giữa discovery và selection, ClassLoader type identity, và lifecycle replacement của plugin. HTTP chỉ trigger experiment; hành vi học tập nằm trong Java runtime code và mỗi request tự tạo state cần thiết.</p>
+  readmeRelated:
+    file: ''

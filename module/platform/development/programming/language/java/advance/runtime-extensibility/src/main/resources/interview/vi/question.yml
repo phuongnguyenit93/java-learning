@@ -1,0 +1,159 @@
+# <interview-schema>
+# Cấu trúc câu hỏi Interview
+# schema-version: 2
+#
+# questions [kiểu: list; bắt buộc; mặc định: []]
+#   Danh sách câu hỏi Interview của module trong language hiện tại.
+#   mỗi phần tử:
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi phỏng vấn hiển thị cho người học.
+#     answer [kiểu: string; bắt buộc; mặc định: ""]
+#       Câu trả lời tham khảo, chỉ hiển thị khi người học chủ động mở.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu nội dung được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu nội dung đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+# </interview-schema>
+
+questions:
+  - question: >-
+      Runtime Extensibility khác gì với việc chỉ dùng interface + dependency injection, và khi nào bạn thực sự cần provider discovery ở runtime?
+    answer: >-
+      Interface + DI đã tách host khỏi implementation cụ thể, nhưng tập implementation thường vẫn được biết khi build/startup configuration được tạo. Runtime Extensibility đi thêm một bước: provider có thể được đóng gói và triển khai độc lập, còn host discovery provider từ runtime environment qua một service contract ổn định. Chỉ nên dùng discovery động khi có requirement như plugin JAR/module độc lập, provider set không biết trước, cần capability selection hoặc lifecycle/isolation riêng. Nếu implementation set cố định, static wiring/DI thường đơn giản và dễ vận hành hơn.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.MentalModel/RuntimeExtensibility.md"
+      anchor: "extensibility-mechanism-spectrum"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Bạn thiết kế một SPI để host và provider có thể phát triển độc lập như thế nào, và đâu là các dấu hiệu cho thấy SPI đang coupling quá mạnh?
+    answer: >-
+      SPI nên mô tả capability mà host cần bằng contract nhỏ, ổn định và ít dependency. Type đi qua boundary nên thuộc contract module, error/lifecycle/thread-safety/resource ownership cần được định nghĩa rõ, còn implementation-specific type không nên rò ra ngoài. Dấu hiệu coupling mạnh gồm host cast provider về concrete class, SPI nhận internal entity của host, provider phải import implementation package của host, hoặc mỗi thay đổi nội bộ lại buộc provider compile lại. Khi capability mới là phần thật sự của contract, hãy model nó rõ thay vì dùng cast/reflection như side channel.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.SPIContract/SPIContract.md"
+      anchor: "contract-stability"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Giải thích mental model của `ServiceLoader`: lazy discovery, cache, thread context ClassLoader và `reload()` liên hệ với nhau ra sao?
+    answer: >-
+      `ServiceLoader.load(service)` dùng thread context ClassLoader làm discovery context mặc định. Provider được locate và instantiate lazily khi iterator/stream được consume; các provider đã load được cache trong chính `ServiceLoader` instance. `reload()` chỉ clear cache đó để traversal sau discovery lại, không stop provider cũ, không đóng resource và không unload class/module. Một `ServiceLoader` instance cũng không thread-safe. Vì vậy trong container/plugin environment, discovery context và ownership của loader nên explicit; không nên cache một context-loader-based loader toàn JVM nếu có nhiều application/plugin contexts.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Tại sao provider discovery và provider selection phải tách riêng? Nếu có nhiều provider cùng service, bạn sẽ thiết kế selection policy thế nào?
+    answer: >-
+      Discovery chỉ trả lời provider nào tồn tại trong runtime context; selection trả lời provider nào phù hợp với request và business policy. Dùng raw discovery order hoặc `findFirst()` làm priority thường yếu vì thứ tự có thể phụ thuộc deployment/module/resource topology chứ không phải business contract. Host nên filter theo capability/compatibility trước, sau đó áp dụng explicit priority hoặc tie-breaker. Nếu ambiguity là lỗi, nên reject sớm khi build registry. Có thể discovery một lần ở startup, validate/normalize metadata rồi expose immutable registry cho request path thay vì raw discovery lặp lại.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.ProviderDiscoveryStrategy/ProviderDiscoveryStrategy.md"
+      anchor: "provider-selection-policy"
+    apiRelated:
+      controller: "RuntimeExtensibilityController"
+      methodSignature: "providerSelection()"
+
+  - question: >-
+      Một provider JAR chạy tốt trên class path nhờ `META-INF/services`, nhưng sau khi migrate host và provider sang explicit named modules trên module path thì host không còn discover được provider. Bạn sẽ chẩn đoán và migrate thế nào để vẫn giữ host-provider decoupling?
+    answer: >-
+      Trước hết kiểm tra service type nằm trong module contract được export và host có readability tới module đó. Host named module phải khai báo `uses` cho service; provider explicit module phải khai báo `provides S with P`. `META-INF/services` là registration model của class path và không thay thế module descriptor khi provider đã trở thành explicit named module. Sau đó kiểm tra provider construction: explicit module có thể dùng provider constructor hoặc public static no-arg `provider()` hợp lệ; nếu artifact vẫn chỉ là automatic module thì dùng constructor form. Không sửa bằng cách `requires` trực tiếp từng provider module trong host vì như vậy lại biến extension set thành compile-time dependency list. Cuối cùng chạy integration test với artifact/module path thật để xác nhận resolution + discovery thay vì chỉ `new Provider()` trong unit test.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      `ServiceLoader.reload()` có phải là plugin hot reload không? Hãy mô tả một flow replacement an toàn hơn cho plugin có state và resource.
+    answer: >-
+      Không. `reload()` chỉ xóa provider cache của một `ServiceLoader`. Plugin replacement thực sự phải quản lý lifecycle: discovery/validate candidate mới, initialize và health-check, sau đó atomically switch registry/reference, drain request đang dùng generation cũ, rồi stop/close và release resource/reference của plugin cũ. Nếu candidate mới fail trước switch thì old generation vẫn phục vụ. Nếu plugin set dùng class loader hoặc ModuleLayer riêng, replacement thường cần context/layer mới; class chỉ có thể được GC khi loader và mọi object/thread/reference liên quan không còn reachable.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.PluginLifecycle/PluginLifecycle.md"
+      anchor: "replacement-and-upgrade"
+    apiRelated:
+      controller: "RuntimeExtensibilityController"
+      methodSignature: "pluginReplacement()"
+
+  - question: >-
+      Vì sao class-loader isolation có thể vừa giải quyết dependency conflict vừa gây `ClassCastException`? Bạn sẽ đặt shared contract ở đâu?
+    answer: >-
+      ClassLoader tạo namespace/type identity boundary: cùng binary name nhưng khác defining loader có thể là hai runtime types khác nhau. Loader riêng cho mỗi plugin cho phép private dependency versions khác nhau, nhưng nếu mỗi plugin cũng load một copy riêng của contract thì object provider có thể không assignable sang service type mà host biết. Vì vậy service contract và những type thật sự phải đi qua boundary thường được load bởi shared/parent loader; implementation dependencies giữ private. Child-first policy cần exclude contract/API packages để tránh duplicate identity.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.PluginIsolationDesign/PluginIsolationDesign.md"
+      anchor: "class-identity-boundaries"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Host-plugin compatibility nên được đánh giá bằng version number hay capability? Bạn sẽ thiết kế compatibility check ra sao để hỗ trợ provider cũ?
+    answer: >-
+      Version number hữu ích nhưng thường không đủ. Compatibility thực tế gồm binary/source/semantic contract, lifecycle assumptions, configuration và capability set. Một host có thể dùng major/minor policy kết hợp required capabilities: reject major không tương thích, còn provider cũ cùng major vẫn phục vụ request cơ bản nếu có capability cần thiết. SPI evolution nên giữ contract nhỏ, dùng default method chỉ khi default semantic thật sự hợp lý, hoặc tách capability interface riêng. Compatibility cần được validate trước activation và test dưới dạng host × plugin matrix với artifact thật.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.VersionCompatibility/VersionCompatibility.md"
+      anchor: "capability-versioning"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Khi nào `ModuleLayer` đáng dùng cho plugin system, và `resolveAndBind()` giúp gì so với chỉ `resolve()`?
+    answer: >-
+      `ModuleLayer` đáng dùng khi plugin là explicit named modules và host cần resolve/define một module graph mới trong JVM, có discovery context và loader mapping riêng. Nếu provider set cố định lúc process start thì startup module path thường đơn giản hơn. `resolve()` tạo dependency/readability graph từ roots; `resolveAndBind()` còn thực hiện service binding để modules cung cấp services được các modules trong graph `uses` có thể được kéo vào resolved configuration. Sau đó configuration được define thành layer và provider được tìm bằng `ServiceLoader.load(layer, service)`. Layer không phải mutable plugin registry; plugin set mới thường dẫn tới configuration/layer mới.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "10.ModuleLayerIntegration/ModuleLayerIntegration.md"
+      anchor: "resolve-vs-resolveandbind"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Bạn sẽ chọn giữa static wiring, `ServiceLoader`, custom ClassLoader/ModuleLayer và process isolation theo tiêu chí nào?
+    answer: >-
+      Bắt đầu từ cơ chế đơn giản nhất đáp ứng requirement. Static wiring/DI phù hợp khi implementation biết trước. `ServiceLoader` phù hợp khi cần provider discovery nhưng không cần module graph động phức tạp. Dedicated ClassLoader hoặc ModuleLayer đáng dùng khi có dependency/type isolation, modular graph hoặc replacement-context requirement rõ. Nếu failure/security/resource containment phải mạnh hơn JVM boundary có thể cung cấp, process isolation có thể phù hợp hơn. Không nên trả complexity chỉ vì cơ chế “advanced”; mỗi lớp phải giải quyết một vấn đề cụ thể về deployment, discovery, lifecycle, compatibility hoặc isolation.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "11.SynthesisAndPitfalls/SynthesisAndPitfalls.md"
+      anchor: "mechanism-selection"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
