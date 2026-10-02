@@ -1,0 +1,24 @@
+FailureExperimentController:
+  description: |-
+    <h2>Timeout and Failure Experiments</h2>
+    <p>Runs bounded experiments that make socket waiting, timeout, and post-timeout resource state directly observable.</p>
+  readmeRelated:
+    file: 5.FailureControl/FailureControl.md
+NioExperimentController:
+  description: |-
+    <h2>NIO Readiness Experiments</h2>
+    <p>Observes Selector readiness for accept and read using real loopback network channels.</p>
+  readmeRelated:
+    file: 6.NioNetworking/NioNetworking.md
+TcpExperimentController:
+  description: |-
+    <h2>TCP Stream Experiments</h2>
+    <p>Observes that TCP exposes a byte stream and that one application write does not become a message boundary for the receiver.</p>
+  readmeRelated:
+    file: 3.TcpSockets/TcpSockets.md
+UdpExperimentController:
+  description: |-
+    <h2>UDP Datagram Experiments</h2>
+    <p>Observes datagram boundaries and truncation when a receive buffer is smaller than the datagram sent.</p>
+  readmeRelated:
+    file: 4.UdpDatagrams/UdpDatagrams.md

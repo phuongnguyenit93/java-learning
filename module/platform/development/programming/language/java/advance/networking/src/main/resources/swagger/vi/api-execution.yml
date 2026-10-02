@@ -1,0 +1,77 @@
+FailureExperimentController:
+  readTimeout():
+    execution: |-
+      <p><b>Concept:</b> <code>SO_TIMEOUT</code> giới hạn thời gian một blocking read chờ dữ liệu; hết timeout không tự đóng socket.</p>
+      <ol>
+        <li><b>Setup:</b> Service tạo <code>ServerSocket</code> trên loopback với port tạm, kết nối client rồi <code>accept()</code> peer Socket. Peer vẫn mở nhưng ban đầu chưa gửi byte nào.</li>
+        <li><b>Trigger:</b> Client đặt <code>setSoTimeout(150)</code> rồi gọi <code>getInputStream().read()</code>.
+          <div><i>Source: NetworkingExperimentService.readTimeoutDemo()</i></div>
+          <pre><code>client.setSoTimeout(timeoutMillis);
+      try {
+          client.getInputStream().read();
+      } catch (SocketTimeoutException exception) {
+          exceptionType = exception.getClass().getSimpleName();
+      }</code></pre>
+        </li>
+        <li><b>Recovery evidence:</b> Sau timeout, peer ghi byte <code>R</code>. Client tăng timeout cho lần đọc kế tiếp và đọc được chính byte đó trên cùng Socket.</li>
+        <li><b>Observation:</b> Response trả <code>SocketTimeoutException</code>, thời gian đã chờ, <code>socketStillOpenAfterTimeout=true</code>, <code>recoveryRead=R</code> và <code>sameSocketReadSucceededAfterTimeout=true</code>.</li>
+        <li><b>Conclusion:</b> Read timeout chỉ kết thúc thao tác đọc đang chờ; nó không tự đóng Socket, không tương đương cancellation và không phải timeout chung cho mọi stage của network operation.</li>
+      </ol>
+    usage: true
+NioExperimentController:
+  selectorReadiness():
+    execution: |-
+      <p><b>Concept:</b> <code>Selector</code> báo channel nào đã ready cho operation quan tâm; application vẫn phải thực hiện operation thật.</p>
+      <ol>
+        <li><b>Setup:</b> Service mở non-blocking <code>ServerSocketChannel</code>, đăng ký <code>OP_ACCEPT</code> với một <code>Selector</code>, rồi tạo client loopback.</li>
+        <li><b>Accept evidence:</b> Service lặp selection trong deadline một giây. Khi <code>serverKey.isAcceptable()</code> báo true, code thử non-blocking <code>accept()</code>; nếu readiness hint đã stale và <code>accept()</code> trả <code>null</code>, loop tiếp tục thay vì coi đó là impossible state.
+          <div><i>Source: NetworkingExperimentService.selectorReadinessDemo()</i></div>
+          <pre><code>while (accepted == null &amp;&amp; System.nanoTime() &lt; acceptDeadline) {
+          acceptSelectionCount += selector.select(waitMillis);
+          acceptReady = serverKey.isValid()
+              &amp;&amp; serverKey.isAcceptable();
+          selector.selectedKeys().clear();
+          if (acceptReady) {
+              accepted = server.accept();
+          }
+      }</code></pre>
+        </li>
+        <li><b>Read evidence:</b> Channel đã accept được đăng ký <code>OP_READ</code>; client ghi <code>PING</code>; service cũng chờ readable trong một deadline bounded và fail rõ nếu deadline hết.</li>
+        <li><b>Observation:</b> Response tách <code>readReady</code> khỏi <code>bytesRead</code>/<code>readMadeProgress</code>; payload chỉ phản ánh số byte mà lần <code>read</code> cụ thể thực sự lấy được.</li>
+        <li><b>Conclusion:</b> Ready set là hint rằng operation có vẻ có thể tiến triển, không phải guarantee. Application vẫn phải xử lý <code>accept()==null</code>, partial/zero-byte I/O và deadline/lifecycle của chính nó.</li>
+      </ol>
+    usage: true
+TcpExperimentController:
+  streamFraming():
+    execution: |-
+      <p><b>Concept:</b> TCP là byte stream; số lần <code>write</code> phía gửi không tạo message boundary cho số lần <code>read</code> phía nhận.</p>
+      <ol>
+        <li><b>Setup:</b> Client và server chạy trên loopback. Client chuẩn bị chuỗi <code>HELLO-WORLD</code> dài 11 byte; receiver dùng buffer chỉ 4 byte.</li>
+        <li><b>Trigger:</b> Client thực hiện đúng một <code>write(payload)</code> rồi <code>shutdownOutput()</code>.
+          <div><i>Source: NetworkingExperimentService.tcpFramingDemo()</i></div>
+          <pre><code>client.getOutputStream().write(payload);
+      client.getOutputStream().flush();
+      client.shutdownOutput();</code></pre>
+        </li>
+        <li><b>Observation:</b> Receiver lặp <code>read(chunk)</code>, response trả danh sách <code>readSizes</code>, số <code>readCalls</code>, payload đã ghép lại và <code>oneWriteObservedAcrossMultipleReads=true</code>. Buffer 4 byte cố ý làm cho payload 11 byte phải được ứng dụng thu qua nhiều read.</li>
+        <li><b>Conclusion:</b> Thí nghiệm không chứng minh cách TCP transport tự phân mảnh packet; nó chứng minh ở API byte-stream rằng application write boundary không phải message/read boundary. Protocol ứng dụng vẫn phải tự định nghĩa framing.</li>
+      </ol>
+    usage: true
+UdpExperimentController:
+  datagramTruncation():
+    execution: |-
+      <p><b>Concept:</b> UDP giữ datagram boundary nhưng nếu receive buffer nhỏ hơn datagram thì phần dữ liệu dư của chính datagram đó bị loại bỏ.</p>
+      <ol>
+        <li><b>Setup:</b> Sender và receiver là hai <code>DatagramSocket</code> loopback. Sender chuẩn bị <code>ABCDEFGH</code> dài 8 byte; receiver chỉ cấp buffer 4 byte.</li>
+        <li><b>Trigger:</b> Sender gửi đúng một <code>DatagramPacket</code>; receiver gọi <code>receive(incoming)</code>.
+          <div><i>Source: NetworkingExperimentService.udpTruncationDemo()</i></div>
+          <pre><code>byte[] receiveBuffer = new byte[4];
+      DatagramPacket incoming =
+          new DatagramPacket(receiveBuffer, receiveBuffer.length);
+      receiver.receive(incoming);</code></pre>
+        </li>
+        <li><b>Bounded follow-up:</b> Receiver đổi sang timeout ngắn rồi gọi <code>receive()</code> lần hai. Không có datagram thứ hai nên call kết thúc bằng <code>SocketTimeoutException</code>.</li>
+        <li><b>Observation:</b> Response cho thấy <code>sentBytes=8</code>, <code>receivedBytes=4</code>, prefix <code>ABCD</code>, <code>datagramTruncated=true</code>, <code>secondReceiveTimedOut=true</code> và <code>secondDatagramObserved=false</code>.</li>
+        <li><b>Conclusion:</b> Runtime observation phù hợp với Java 21 contract: nếu message dài hơn packet length, message bị truncate. Second receive là bounded supporting evidence; contract của API mới là authority cho semantics “phần dư không trở thành lần receive kế tiếp”.</li>
+      </ol>
+    usage: true

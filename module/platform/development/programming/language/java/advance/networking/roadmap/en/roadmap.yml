@@ -41,4 +41,111 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: networking-mental-model
+    title: Java Networking Mental Model
+    purpose: Understand Java networking as the platform boundary for communicating with another process or machine through network endpoints, and identify addresses, endpoints, transport semantics, transferred data, I/O completion behavior, and connection lifetime before choosing an API.
+    relatedModules:
+      - routeId: JAVA_IO
+        label: Java I/O
+        note: Networking builds on the byte, stream, buffer, and channel models owned by Java I/O.
+    objectives:
+      - Distinguish hosts, IP addresses, ports, socket endpoints, and protocol/transport roles instead of treating a URL or hostname as the whole networking model.
+      - Distinguish blocking, non-blocking, and asynchronous completion at the I/O-behavior level without conflating them with the application's overall concurrency model.
+      - Keep the module boundary explicit; this module owns JDK networking APIs/runtime mechanics, not gateway/service-mesh architecture, HTTP integration patterns, or WebSocket protocol design.
+
+  - id: addressing-resolution-endpoints
+    title: Addressing, Name Resolution, and Endpoints
+    purpose: Understand how Java represents hosts/IP addresses, socket addresses, and network interfaces, how host names are resolved, and how URI/URL resource identity differs from addresses used for bind or connect.
+    objectives:
+      - Use the InetAddress, InetSocketAddress, and NetworkInterface mental models correctly, including IPv4/IPv6 and hosts that resolve to multiple addresses.
+      - Treat name resolution as fallible and cached for both successful and failed lookups; do not assume the core InetAddress API exposes a per-lookup timeout.
+      - Distinguish URI as resource identity, URL/URLConnection as protocol-handler based resource access, and SocketAddress as a bind/connect address; recognize java.net.http as the separate modern high-level HTTP Client API rather than treating all HTTP access as URLConnection-based.
+      - Recognize UnixDomainSocketAddress for Unix-domain SocketChannel/ServerSocketChannel use; not every supported socket endpoint is an IP address plus port.
+
+  - id: tcp-stream-sockets
+    title: TCP Connections and Stream Sockets
+    purpose: Understand the connection-oriented Socket/ServerSocket model for building TCP clients and servers with correct connection, byte-transfer, shutdown, and framing behavior.
+    objectives:
+      - Trace the client/server lifecycle from bind and listen/accept or connect through read/write and close.
+      - Understand that TCP provides a byte stream rather than application message boundaries, so framing belongs to the application/protocol contract when messages must be separated.
+      - Manage socket streams and socket lifetime with explicit ownership, including failures and half-close/shutdown of one connection direction.
+
+  - id: datagram-communication
+    title: UDP Datagram Communication
+    purpose: Understand the message-oriented DatagramSocket/DatagramPacket model and when datagrams are a better fit than a connection-oriented TCP byte stream.
+    objectives:
+      - Distinguish datagram boundaries from a TCP byte stream and understand that each datagram carries addressing for its send/receive operation.
+      - Reason correctly about UDP not providing TCP-like connection, ordering, or delivery guarantees; any additional reliability belongs to protocol/application design.
+      - Understand that DatagramSocket.connect selects a default/filtered peer but does not establish a reliable TCP-like session.
+      - Recognize broadcast, multicast, and DatagramChannel as extensions of the datagram model without turning this module into a network-protocol design course.
+
+  - id: network-failure-control
+    title: Timeouts, Socket Options, and Failure Lifetime
+    purpose: Keep network code bounded and controllable by understanding timeouts, socket options, cleanup, and failures that can occur during resolution, connection establishment, waiting for data, or resource shutdown.
+    objectives:
+      - Distinguish waiting points such as name resolution, connect, accept, and read/receive; configure time bounds only where the JDK API actually exposes them instead of assuming one timeout covers the whole operation chain.
+      - Treat socket options as transport/OS controls or hints rather than tuning knobs to change by habit without understanding their effect.
+      - Classify common failures such as unknown host, bind/connect failure, timeout, reset/EOF, and closed socket/channel while keeping cleanup deterministic.
+      - Recognize that on Java 21, blocking socket I/O in a virtual thread is interruptible; interrupting a virtual thread blocked on Socket/ServerSocket/DatagramSocket using the system-default implementation wakes the thread and closes the socket, so cancellation is part of resource-lifetime reasoning.
+
+  - id: nio-networking-models
+    title: NIO Networking, Multiplexing, and Asynchronous Channels
+    purpose: Understand NIO's lower-level network I/O models so blocking sockets, selectable non-blocking channels, and asynchronous completion can be chosen deliberately when scale or control requirements justify them.
+    relatedModules:
+      - routeId: JAVA_IO
+        label: Java I/O
+        note: The Buffer/Channel state model is a direct prerequisite for SocketChannel, DatagramChannel, and other network channels.
+      - routeId: JAVA_CONCURRENCY_FUNDAMENTALS
+        label: Java Concurrency Fundamentals
+        note: Thread, executor, and completion/concurrency semantics belong to Concurrency; Networking applies them to network I/O.
+      - routeId: JAVA_VIRTUAL_THREADS
+        label: Java Virtual Threads
+        note: Virtual Threads owns the thread-per-task model; Networking uses it only to reassess the trade-off between blocking socket style and selector/asynchronous I/O on Java 21.
+    objectives:
+      - Understand how SocketChannel, ServerSocketChannel, and DatagramChannel work with buffers and how that model differs from stream sockets.
+      - Understand Selector/SelectionKey as readiness, registration, interest-set, and selected-operation machinery rather than as a thread pool.
+      - Distinguish selectable non-blocking I/O based on readiness from AsynchronousSocketChannel/AsynchronousServerSocketChannel based on completion through Future or CompletionHandler.
+      - Recognize Unix-domain socket support through SocketChannel/ServerSocketChannel and its platform-dependent constraints instead of assuming every channel uses InetSocketAddress.
+      - Understand that on Java 21, blocking network I/O in a virtual thread can release its carrier while waiting; high connection concurrency therefore does not automatically require Selector/non-blocking I/O.
+      - Prefer the simplest model that satisfies the required semantics, concurrency, and control instead of assuming NIO or non-blocking I/O is always faster or better.
+
+  - id: jdk-http-client
+    title: JDK HTTP Client
+    purpose: Understand java.net.http.HttpClient as a higher-level client API built over the networking stack, separating client configuration/resource sharing, requests, response-body handling, and synchronous or asynchronous completion.
+    relatedModules:
+      - routeId: JAVA_11_HTTP_CLIENT
+        label: Java 11 - HTTP Client
+        note: The Java Version module owns the feature-introduction view; Networking owns the current API mental model and usage.
+    objectives:
+      - Understand how HttpClient, HttpRequest, HttpResponse, and body publishers/handlers cooperate without turning the roadmap into a method inventory.
+      - Distinguish send from sendAsync while recognizing that a client can be reused and manages shared resources/connections across requests.
+      - Recognize that request/response bodies can stream through Flow-based publisher/subscriber mechanics while deeper concurrency/reactive semantics remain owned elsewhere.
+      - Place version, redirect, timeout, proxy, authentication, cookie handling, and executor concerns at the proper client/request boundary, then hand protocol/application integration policy to its owning module.
+
+  - id: jdk-websocket-client
+    title: JDK WebSocket Client
+    purpose: Understand the Java WebSocket client API as an asynchronous message-oriented connection opened through HttpClient, with its own listener, demand control, and lifecycle after the opening handshake.
+    objectives:
+      - Trace the lifecycle from the asynchronous opening handshake through onOpen, message send/receive, close, and error.
+      - Understand that WebSocket.Listener callbacks are ordered for a given WebSocket and that request(n) controls demand for receive invocations.
+      - Understand that one text/binary message may arrive across multiple callback fragments and that the last flag identifies the final part; do not assume every callback is a complete application message.
+      - Keep JDK WebSocket client mechanics separate from WebSocket protocol design, realtime architecture, reconnect policy, and application messaging semantics.
+
+  - id: networking-choice-synthesis
+    title: Choosing the Networking Abstraction and Preserving Boundaries
+    purpose: Connect endpoint identity, transport semantics, blocking model, failure handling, and API level into one deliberate selection model, while knowing when concerns must be handed off to security, concurrency, or integration modules.
+    relatedModules:
+      - routeId: JAVA_SECURITY_CRYPTOGRAPHY
+        label: Security & Cryptography
+        note: TLS/JSSE, certificates, key material, and cryptographic semantics belong to Security & Cryptography.
+      - routeId: JAVA_CONCURRENCY_FUNDAMENTALS
+        label: Java Concurrency Fundamentals
+        note: Thread scheduling, synchronization, and the Java Memory Model are not redesigned inside Networking.
+      - routeId: JAVA_VIRTUAL_THREADS
+        label: Java Virtual Threads
+        note: Virtual Threads provides an important concurrency model when comparing blocking network I/O with event-driven/non-blocking approaches.
+    objectives:
+      - Choose among Socket/ServerSocket, datagram APIs, blocking I/O with virtual threads, selectable/asynchronous channels, HttpClient, and WebSocket client based on communication semantics, concurrency model, and operational needs.
+      - Separate network transport/API mechanics from TLS security semantics, retry/resilience policy, and application-level protocol/integration design.
+      - Explain the end-to-end path from host name to resolved endpoint, transport/API interaction, data transfer/completion, failure handling, and resource release.

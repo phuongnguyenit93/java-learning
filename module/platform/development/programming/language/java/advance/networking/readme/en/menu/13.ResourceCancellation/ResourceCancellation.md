@@ -1,1 +1,0 @@
-# Resource Lifecycle and Cancellation

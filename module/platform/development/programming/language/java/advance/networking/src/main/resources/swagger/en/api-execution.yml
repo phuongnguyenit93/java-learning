@@ -1,0 +1,77 @@
+FailureExperimentController:
+  readTimeout():
+    execution: |-
+      <p><b>Concept:</b> <code>SO_TIMEOUT</code> bounds how long a blocking read waits for data; expiration does not automatically close the socket.</p>
+      <ol>
+        <li><b>Setup:</b> The service creates a loopback <code>ServerSocket</code> on an ephemeral port, connects the client, and <code>accept()</code>s the peer Socket. The peer stays open but initially sends no bytes.</li>
+        <li><b>Trigger:</b> The client calls <code>setSoTimeout(150)</code> and then <code>getInputStream().read()</code>.
+          <div><i>Source: NetworkingExperimentService.readTimeoutDemo()</i></div>
+          <pre><code>client.setSoTimeout(timeoutMillis);
+      try {
+          client.getInputStream().read();
+      } catch (SocketTimeoutException exception) {
+          exceptionType = exception.getClass().getSimpleName();
+      }</code></pre>
+        </li>
+        <li><b>Recovery evidence:</b> After the timeout, the peer writes byte <code>R</code>. The client increases the timeout for the next read and successfully reads that byte on the same Socket.</li>
+        <li><b>Observation:</b> The response records <code>SocketTimeoutException</code>, elapsed wait time, <code>socketStillOpenAfterTimeout=true</code>, <code>recoveryRead=R</code>, and <code>sameSocketReadSucceededAfterTimeout=true</code>.</li>
+        <li><b>Conclusion:</b> A read timeout ends the blocked read operation; it does not automatically close the Socket, is not cancellation, and is not a universal timeout for every networking stage.</li>
+      </ol>
+    usage: true
+NioExperimentController:
+  selectorReadiness():
+    execution: |-
+      <p><b>Concept:</b> A <code>Selector</code> reports which channels are ready for operations of interest; application code still performs the actual operation.</p>
+      <ol>
+        <li><b>Setup:</b> The service opens a non-blocking <code>ServerSocketChannel</code>, registers <code>OP_ACCEPT</code> with a <code>Selector</code>, and creates a loopback client.</li>
+        <li><b>Accept evidence:</b> The service repeats selection within a one-second deadline. When <code>serverKey.isAcceptable()</code> reports true, it attempts non-blocking <code>accept()</code>; if the readiness hint is stale and <code>accept()</code> returns <code>null</code>, the loop continues instead of treating that result as impossible.
+          <div><i>Source: NetworkingExperimentService.selectorReadinessDemo()</i></div>
+          <pre><code>while (accepted == null &amp;&amp; System.nanoTime() &lt; acceptDeadline) {
+          acceptSelectionCount += selector.select(waitMillis);
+          acceptReady = serverKey.isValid()
+              &amp;&amp; serverKey.isAcceptable();
+          selector.selectedKeys().clear();
+          if (acceptReady) {
+              accepted = server.accept();
+          }
+      }</code></pre>
+        </li>
+        <li><b>Read evidence:</b> The accepted channel is registered for <code>OP_READ</code>; the client writes <code>PING</code>; the service also waits for readability within a bounded deadline and fails explicitly if the deadline expires.</li>
+        <li><b>Observation:</b> The response keeps <code>readReady</code> separate from <code>bytesRead</code>/<code>readMadeProgress</code>; the payload reflects only the bytes that this particular <code>read</code> actually consumed.</li>
+        <li><b>Conclusion:</b> The ready set is a hint that an operation appears able to make progress, not a guarantee. Application code still handles <code>accept()==null</code>, partial/zero-byte I/O, and its own deadline/lifecycle policy.</li>
+      </ol>
+    usage: true
+TcpExperimentController:
+  streamFraming():
+    execution: |-
+      <p><b>Concept:</b> TCP is a byte stream; sender-side <code>write</code> calls do not create receiver-side message boundaries.</p>
+      <ol>
+        <li><b>Setup:</b> Client and server run on loopback. The client prepares the 11-byte string <code>HELLO-WORLD</code>; the receiver intentionally reads through a 4-byte buffer.</li>
+        <li><b>Trigger:</b> The client performs exactly one <code>write(payload)</code>, flushes it, and calls <code>shutdownOutput()</code>.
+          <div><i>Source: NetworkingExperimentService.tcpFramingDemo()</i></div>
+          <pre><code>client.getOutputStream().write(payload);
+      client.getOutputStream().flush();
+      client.shutdownOutput();</code></pre>
+        </li>
+        <li><b>Observation:</b> The receiver loops over <code>read(chunk)</code>. The response returns every <code>readSizes</code> entry, total <code>readCalls</code>, the reconstructed payload, and <code>oneWriteObservedAcrossMultipleReads=true</code>. The intentionally small 4-byte buffer makes the application collect the 11-byte payload through multiple reads.</li>
+        <li><b>Conclusion:</b> This experiment does not claim to prove how TCP transport packets are fragmented; it demonstrates at the byte-stream API boundary that an application write boundary is not a receiver-side message/read boundary. Application protocols still define framing.</li>
+      </ol>
+    usage: true
+UdpExperimentController:
+  datagramTruncation():
+    execution: |-
+      <p><b>Concept:</b> UDP preserves a datagram boundary, but if the receive buffer is smaller than the datagram, the excess bytes from that datagram are discarded.</p>
+      <ol>
+        <li><b>Setup:</b> Sender and receiver are loopback <code>DatagramSocket</code> instances. The sender prepares the 8-byte value <code>ABCDEFGH</code>; the receiver provides only a 4-byte buffer.</li>
+        <li><b>Trigger:</b> The sender transmits one <code>DatagramPacket</code>; the receiver calls <code>receive(incoming)</code>.
+          <div><i>Source: NetworkingExperimentService.udpTruncationDemo()</i></div>
+          <pre><code>byte[] receiveBuffer = new byte[4];
+      DatagramPacket incoming =
+          new DatagramPacket(receiveBuffer, receiveBuffer.length);
+      receiver.receive(incoming);</code></pre>
+        </li>
+        <li><b>Bounded follow-up:</b> The receiver switches to a short timeout and calls <code>receive()</code> a second time. No second datagram arrives, so the call ends with <code>SocketTimeoutException</code>.</li>
+        <li><b>Observation:</b> The response shows <code>sentBytes=8</code>, <code>receivedBytes=4</code>, prefix <code>ABCD</code>, <code>datagramTruncated=true</code>, <code>secondReceiveTimedOut=true</code>, and <code>secondDatagramObserved=false</code>.</li>
+        <li><b>Conclusion:</b> The runtime observation is consistent with the Java 21 contract: when a message is longer than the packet length, the message is truncated. The second receive is bounded supporting evidence; the API contract is the authority for the semantic claim that the remainder does not become a later receive.</li>
+      </ol>
+    usage: true

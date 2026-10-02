@@ -1,0 +1,118 @@
+FailureExperimentController:
+  readTimeout():
+    summary: Quan sát SO_TIMEOUT trên blocking socket read
+    description: Kết nối hai Socket qua loopback, để peer tạm thời không gửi dữ liệu,
+      đặt SO_TIMEOUT ngắn và quan sát SocketTimeoutException. Sau timeout, chính peer
+      đó gửi một byte và client đọc thành công trên cùng Socket, trực tiếp cho thấy
+      read timeout giới hạn thao tác đọc nhưng không tự đóng Socket.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: socket-timeouts
+    methodName: readTimeout
+    params: [
+      ]
+    path: com/example/learning/module/networking/controller/FailureExperimentController.java
+    mapping: '@GetMapping("/read-timeout")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /networking/failure/read-timeout
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+NioExperimentController:
+  selectorReadiness():
+    summary: Quan sát Selector readiness cho accept và read
+    description: Đăng ký ServerSocketChannel với OP_ACCEPT, tạo kết nối loopback,
+      sau đó đăng ký channel đã accept với OP_READ và gửi dữ liệu. Response cho thấy
+      Selector chỉ báo readiness như một hint; code dùng deadline bounded, chấp nhận
+      accept() có thể trả null rồi retry, và vẫn không giả định một read sẽ xử lý
+      toàn bộ payload.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: selector-readiness-model
+    methodName: selectorReadiness
+    params: [
+      ]
+    path: com/example/learning/module/networking/controller/NioExperimentController.java
+    mapping: '@GetMapping("/selector-readiness")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /networking/nio/selector-readiness
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+TcpExperimentController:
+  streamFraming():
+    summary: Quan sát TCP read không phải message boundary
+    description: Client thực hiện một application write 11 byte, trong khi receiver
+      chủ động đọc bằng buffer 4 byte. Response trả về kích thước từng lần read và
+      payload được ghép lại, cho thấy trong setup này ranh giới write không trở thành
+      ranh giới message/read ở phía nhận.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: tcp-message-framing
+    methodName: streamFraming
+    params: [
+      ]
+    path: com/example/learning/module/networking/controller/TcpExperimentController.java
+    mapping: '@GetMapping("/stream-framing")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /networking/tcp/stream-framing
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+UdpExperimentController:
+  datagramTruncation():
+    summary: Quan sát UDP datagram truncation
+    description: Gửi một datagram 8 byte tới DatagramSocket có receive buffer 4 byte.
+      Response cho thấy chỉ 4 byte được nhận, sau đó một receive bounded thứ hai timeout
+      thay vì nhận thêm phần dư. Java 21 DatagramSocket contract xác định message
+      dài hơn packet length sẽ bị truncate; thí nghiệm cung cấp runtime evidence phù
+      hợp với contract đó.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: datagram-packet-addressing
+    methodName: datagramTruncation
+    params: [
+      ]
+    path: com/example/learning/module/networking/controller/UdpExperimentController.java
+    mapping: '@GetMapping("/datagram-truncation")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /networking/udp/datagram-truncation
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

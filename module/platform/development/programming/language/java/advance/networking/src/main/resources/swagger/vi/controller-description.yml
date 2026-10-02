@@ -1,0 +1,24 @@
+FailureExperimentController:
+  description: |-
+    <h2>Thí nghiệm timeout và failure</h2>
+    <p>Chạy các thí nghiệm bounded để quan sát điểm chờ, timeout và trạng thái tài nguyên của Java socket thay vì chỉ đọc mô tả lý thuyết.</p>
+  readmeRelated:
+    file: 5.FailureControl/FailureControl.md
+NioExperimentController:
+  description: |-
+    <h2>Thí nghiệm NIO readiness</h2>
+    <p>Quan sát Selector báo readiness cho accept và read trên các network channel thật chạy hoàn toàn trên loopback.</p>
+  readmeRelated:
+    file: 6.NioNetworking/NioNetworking.md
+TcpExperimentController:
+  description: |-
+    <h2>Thí nghiệm TCP stream</h2>
+    <p>Quan sát trực tiếp rằng TCP cung cấp byte stream và một application write không tạo ra ranh giới message cho phía nhận.</p>
+  readmeRelated:
+    file: 3.TcpSockets/TcpSockets.md
+UdpExperimentController:
+  description: |-
+    <h2>Thí nghiệm UDP datagram</h2>
+    <p>Quan sát datagram boundary và việc dữ liệu dư bị loại bỏ khi receive buffer nhỏ hơn datagram được gửi.</p>
+  readmeRelated:
+    file: 4.UdpDatagrams/UdpDatagrams.md

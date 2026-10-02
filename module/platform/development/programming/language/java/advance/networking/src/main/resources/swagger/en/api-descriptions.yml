@@ -1,0 +1,119 @@
+FailureExperimentController:
+  readTimeout():
+    summary: Observe SO_TIMEOUT on a blocking socket read
+    description: Connect two Sockets over loopback, keep the peer temporarily silent,
+      configure a short SO_TIMEOUT, and observe SocketTimeoutException. After the
+      timeout, that same peer sends one byte and the client reads it successfully
+      on the same Socket, directly showing that a read timeout bounds the read operation
+      without automatically closing the Socket.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: socket-timeouts
+    methodName: readTimeout
+    params: [
+      ]
+    path: com/example/learning/module/networking/controller/FailureExperimentController.java
+    mapping: '@GetMapping("/read-timeout")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /networking/failure/read-timeout
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+NioExperimentController:
+  selectorReadiness():
+    summary: Observe Selector readiness for accept and read
+    description: Register a ServerSocketChannel for OP_ACCEPT, create a loopback connection,
+      then register the accepted channel for OP_READ and send data. The response shows
+      that Selector readiness is only a hint; the code uses bounded deadlines, permits
+      accept() to return null and retries, and still does not assume one read consumes
+      the full payload.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: selector-readiness-model
+    methodName: selectorReadiness
+    params: [
+      ]
+    path: com/example/learning/module/networking/controller/NioExperimentController.java
+    mapping: '@GetMapping("/selector-readiness")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /networking/nio/selector-readiness
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+TcpExperimentController:
+  streamFraming():
+    summary: Observe that TCP reads are not message boundaries
+    description: The client performs one 11-byte application write while the receiver
+      intentionally reads through a 4-byte buffer. The response returns every read
+      size and the reconstructed payload, showing in this setup that the sender's
+      write boundary does not become a receiver-side message/read boundary.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: tcp-message-framing
+    methodName: streamFraming
+    params: [
+      ]
+    path: com/example/learning/module/networking/controller/TcpExperimentController.java
+    mapping: '@GetMapping("/stream-framing")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /networking/tcp/stream-framing
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+UdpExperimentController:
+  datagramTruncation():
+    summary: Observe UDP datagram truncation
+    description: Send an 8-byte datagram to a DatagramSocket using a 4-byte receive
+      buffer. The response shows that only 4 bytes are delivered and then a second
+      bounded receive times out instead of receiving a remainder. The Java 21 DatagramSocket
+      contract specifies truncation when a message is longer than the packet length;
+      the experiment provides runtime evidence consistent with that contract.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: datagram-packet-addressing
+    methodName: datagramTruncation
+    params: [
+      ]
+    path: com/example/learning/module/networking/controller/UdpExperimentController.java
+    mapping: '@GetMapping("/datagram-truncation")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /networking/udp/datagram-truncation
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

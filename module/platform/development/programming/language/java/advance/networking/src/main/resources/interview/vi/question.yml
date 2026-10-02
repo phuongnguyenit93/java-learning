@@ -1,0 +1,117 @@
+# <interview-schema>
+# Cấu trúc câu hỏi Interview
+# schema-version: 2
+#
+# questions [kiểu: list; bắt buộc; mặc định: []]
+#   Danh sách câu hỏi Interview của module trong language hiện tại.
+#   mỗi phần tử:
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi phỏng vấn hiển thị cho người học.
+#     answer [kiểu: string; bắt buộc; mặc định: ""]
+#       Câu trả lời tham khảo, chỉ hiển thị khi người học chủ động mở.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu nội dung được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu nội dung đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+# </interview-schema>
+
+questions:
+  - question: "Bạn sẽ chọn Socket/TCP, Datagram/UDP, HttpClient hay WebSocket client như thế nào cho một bài toán mới? Hãy giải thích từ communication semantics thay vì từ API quen thuộc."
+    answer: "Tôi bắt đầu từ dữ liệu và quan hệ giữa peers. Custom ordered byte stream với protocol/framing do ứng dụng sở hữu phù hợp với TCP Socket. Independent datagrams phù hợp với UDP khi application chấp nhận hoặc tự bổ sung reliability/order semantics. HTTP request/response nên ưu tiên HttpClient để JDK sở hữu HTTP framing, body handling và connection reuse. Long-lived bidirectional WebSocket messaging phù hợp với WebSocket client. Sau đó mới chọn completion/concurrency model và timeout/lifecycle policy. Nguyên tắc là chọn abstraction thấp nhất thực sự cần thiết nhưng không thấp hơn mức mà problem yêu cầu."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.NetworkingChoices/NetworkingChoices.md"
+      anchor: "transport-choice"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Vì sao một write() TCP không phải một message? Nếu thiết kế custom TCP protocol, bạn sẽ xử lý framing, EOF và half-close như thế nào?"
+    answer: "TCP chỉ cung cấp ordered byte stream. Một write phía gửi có thể được phía nhận thu qua nhiều read, và một read cũng không phải application message boundary. Vì vậy protocol phải tự định nghĩa framing, ví dụ fixed length, delimiter có escaping, hoặc length prefix, rồi lặp read cho đến khi đủ frame. EOF từ read=-1 có nghĩa input side đã kết thúc chứ không tự mô tả một business message. shutdownOutput có thể phát tín hiệu end-of-stream theo một chiều trong khi vẫn giữ chiều nhận; full close giải phóng cả connection resource. Tôi luôn gắn framing và lifecycle rule vào protocol thay vì dựa vào kích thước từng read/write."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "UDP giữ datagram boundary nhưng không cung cấp TCP-style reliability. Hãy giải thích tác động của buffer truncation, DatagramSocket.connect và delivery semantics lên protocol design."
+    answer: "Datagram boundary nghĩa là mỗi receive xử lý một datagram hoặc phần đầu của datagram nếu DatagramPacket quá nhỏ; phần dư bị truncate chứ không trở thành lần receive kế tiếp. DatagramSocket.connect chỉ associate một peer, cung cấp default addressing và unicast receive filtering; nó không handshake hay tạo reliable session. UDP vẫn có thể mất, reorder hoặc duplicate traffic theo góc nhìn protocol ứng dụng, nên nếu workflow cần sequencing, acknowledgment, retry, duplicate detection hoặc reassembly thì các rule đó phải nằm trong application protocol. Vì câu hỏi này trải qua truncation, peer association và delivery semantics nên không nên giản lược thành 'UDP connect giống TCP nhẹ hơn'."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "SO_TIMEOUT xảy ra trên blocking Socket read nhưng Socket có thể vẫn dùng tiếp. Điều đó thay đổi cách bạn thiết kế error handling, cancellation và retry như thế nào?"
+    answer: "SO_TIMEOUT kết thúc thao tác read đang chờ bằng SocketTimeoutException; nó không tự đóng Socket và không chứng minh peer chưa nhận hay xử lý dữ liệu. Vì vậy tôi tách operation timeout khỏi resource state: quyết định đóng, thử đọc lại hay chuyển trạng thái connection phải dựa trên protocol và failure context. Module experiment chứng minh cùng Socket có thể timeout rồi đọc byte mới thành công. Cancellation là một path khác: trên Java 21, khi interrupt virtual thread đang block I/O trên system-default Socket, ServerSocket hoặc DatagramSocket, thread được đánh thức và socket đó bị đóng, nên code không được giả định cùng resource vẫn usable sau đó. Retry cũng không được suy ra chỉ từ IOException/timeout: nếu operation có side effect, request có thể đã tới peer trước khi response bị mất. Retry/idempotency/backoff là policy tầng resilience/integration, không phải mặc định của Socket timeout."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "So sánh blocking I/O trên virtual thread, Selector readiness và AsynchronousSocketChannel completion model. Khi nào bạn chọn từng mô hình?"
+    answer: "Blocking + virtual threads phù hợp khi workflow tự nhiên tuần tự và thread-per-task làm code dễ reasoning; Java 21 có thể suspend virtual thread trên supported blocking network I/O nên high connection count không tự động buộc dùng Selector. Selector phù hợp khi architecture chủ động dùng event loop, cần multiplex readiness và chấp nhận tự quản per-connection state machine; ready set chỉ là hint, application vẫn accept/read/write và xử lý partial I/O. AsynchronousSocketChannel phù hợp khi completion-style Future/CompletionHandler ăn khớp architecture; completion vẫn trả số byte thực sự xử lý và có pending-operation rules. Tôi chọn theo control-flow, concurrency architecture, state ownership và real workload chứ không chỉ microbenchmark throughput."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.NioNetworking/NioNetworking.md"
+      anchor: "network-io-model-choice"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Một service dùng HttpClient cho nhiều request. Bạn sẽ quản lý client reuse, send/sendAsync và response-body lifetime như thế nào để tránh hiểu sai resource lifecycle?"
+    answer: "Tôi thường reuse HttpClient thay vì tạo client cho từng request để tận dụng configuration và connection/resource sharing của implementation. send block caller theo BodyHandler semantics, còn sendAsync trả CompletableFuture; async không bảo đảm code downstream không block. BodyHandler quyết định BodySubscriber dựa trên response metadata. Với materializing handler như ofString, body được consume trước khi response value hoàn tất theo semantics của handler; với streaming handler như ofInputStream/ofPublisher, caller còn sở hữu phần body lifecycle và phải consume/close/cancel đúng cách. Trên Java 21, built-in HttpClient có lifecycle methods, nhưng tôi phân biệt API contract với behavior của arbitrary custom subclass."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Trong JDK WebSocket client, hãy nối request(n), message fragmentation, listener CompletionStage và send completion. Implementation sai thường nhầm chúng ở đâu?"
+    answer: "request(n) điều khiển demand theo receive callback invocation, không theo complete application message. Một text/binary message có thể tới qua nhiều fragments nên listener phải dùng last để biết lúc nào message hoàn tất và phải giới hạn buffer tích lũy. CompletionStage trả từ receive callback là contract riêng về lifetime của data object/callback processing; completion của stage không tăng demand và không phải cơ chế serialize business work. Các send method trả CompletableFuture<WebSocket> cho completion của local send operation; completion đó không chứng minh remote business application đã xử lý message, nên application-level acknowledgement là concern riêng của protocol. Các lỗi phổ biến là coi một requested callback như một full message, coi listener-stage completion như demand, hoặc coi send-future completion như business acknowledgement."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Hãy mô tả boundary end-to-end của Java Networking: khi lỗi xảy ra ở DNS, transport, TLS, HTTP/WebSocket API hoặc business retry, module nào nên chịu trách nhiệm giải thích và policy nào không nên nhét vào transport code?"
+    answer: "Networking sở hữu JDK mechanics từ addressing/resolution, socket/channel I/O, timeout/cancellation tới HttpClient/WebSocket client lifecycle. TLS nằm trên transport nhưng trust store, certificate chain, cipher/protocol security và custom TrustManager/KeyManager thuộc Security & Cryptography. HTTP resource contract, serialization/domain schema, service communication và WebSocket subscription/message protocol thuộc Integration. Retry/circuit breaker/backoff/idempotency là resilience/application policy vì transport error không đủ để biết operation có an toàn để lặp lại hay không. Vì vậy khi debug tôi xác định failure stage trước, giữ original cause, rồi hand off sang đúng owner thay vì để networking component tự đoán business policy."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.NetworkingChoices/NetworkingChoices.md"
+      anchor: "networking-end-to-end-model"
+    apiRelated:
+      controller: ""
+      methodSignature: ""

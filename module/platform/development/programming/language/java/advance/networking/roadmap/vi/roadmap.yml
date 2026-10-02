@@ -41,4 +41,111 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: networking-mental-model
+    title: Mô hình giao tiếp mạng trong Java
+    purpose: Hiểu Networking trong Java tồn tại để chương trình giao tiếp với tiến trình hoặc máy khác qua các đầu mút mạng, và trước khi chọn API phải phân biệt địa chỉ, đầu mút, tầng giao vận, dữ liệu truyền, cách hoàn tất I/O và vòng đời kết nối.
+    relatedModules:
+      - routeId: JAVA_IO
+        label: Java I/O
+        note: Networking sử dụng mô hình byte, stream, buffer và channel đã được xây dựng trong Java I/O.
+    objectives:
+      - Phân biệt host, địa chỉ IP, cổng, đầu mút socket và vai trò của giao thức/tầng giao vận thay vì xem một URL hoặc hostname là toàn bộ mô hình mạng.
+      - Phân biệt lời gọi chặn, không chặn và hoàn tất bất đồng bộ ở mức hành vi I/O; không đồng nhất các khái niệm này với mô hình concurrency của toàn ứng dụng.
+      - Xác định rõ module này sở hữu JDK networking API và cơ chế vận hành của chúng, không sở hữu kiến trúc gateway, service mesh, HTTP integration pattern hoặc thiết kế giao thức WebSocket.
+
+  - id: addressing-resolution-endpoints
+    title: Địa chỉ, phân giải tên và endpoint
+    purpose: Hiểu cách Java biểu diễn host/IP, socket address và network interface, cách hostname được phân giải, và cách URI/URL khác với địa chỉ đầu mút dùng để bind hoặc connect.
+    objectives:
+      - Sử dụng đúng mental model của InetAddress, InetSocketAddress và NetworkInterface, bao gồm IPv4/IPv6 và trường hợp một hostname có nhiều địa chỉ.
+      - Hiểu phân giải tên có thể thất bại và có cache cho cả kết quả thành công lẫn thất bại; không giả định core InetAddress API cung cấp timeout riêng cho từng lần lookup.
+      - Phân biệt URI là định danh tài nguyên, URL/URLConnection là lớp truy cập tài nguyên theo protocol handler, còn SocketAddress là địa chỉ dùng cho bind/connect; nhận biết java.net.http cung cấp HTTP Client mức cao hiện đại riêng thay vì đồng nhất mọi HTTP access với URLConnection.
+      - Nhận biết SocketAddress còn có UnixDomainSocketAddress cho Unix-domain SocketChannel/ServerSocketChannel, không phải mọi network endpoint đều là địa chỉ IP + cổng.
+
+  - id: tcp-stream-sockets
+    title: Kết nối TCP và socket dạng luồng
+    purpose: Hiểu mô hình kết nối hướng luồng của Socket/ServerSocket để xây client/server TCP đúng về connect, accept, truyền byte, đóng kết nối và ranh giới dữ liệu.
+    objectives:
+      - Theo dõi được vòng đời client/server từ bind, listen/accept hoặc connect đến đọc/ghi và close.
+      - Hiểu TCP cung cấp luồng byte chứ không tự tạo ranh giới thông điệp; code phải có quy ước đóng khung ở tầng ứng dụng khi cần tách thông điệp.
+      - Quản lý InputStream/OutputStream và socket như tài nguyên có trách nhiệm sở hữu rõ ràng, kể cả khi thao tác mạng thất bại hoặc một chiều của kết nối đã shutdown.
+
+  - id: datagram-communication
+    title: Giao tiếp datagram với UDP
+    purpose: Hiểu mô hình message-oriented của DatagramSocket/DatagramPacket và khi nào datagram phù hợp hơn kết nối TCP dạng luồng.
+    objectives:
+      - Phân biệt datagram boundary với TCP byte stream và hiểu mỗi datagram mang endpoint gửi/nhận riêng.
+      - Suy luận đúng về việc UDP không cung cấp các bảo đảm về kết nối, thứ tự và giao hàng giống TCP; nếu cần độ tin cậy bổ sung thì đó là trách nhiệm của giao thức/tầng ứng dụng.
+      - Hiểu DatagramSocket.connect chỉ gắn socket với một peer mặc định/lọc peer phù hợp, không thiết lập phiên kết nối đáng tin cậy như TCP.
+      - Nhận biết vai trò của broadcast, multicast và DatagramChannel mà không biến module thành khóa học thiết kế giao thức mạng.
+
+  - id: network-failure-control
+    title: Timeout, socket option và vòng đời khi lỗi
+    purpose: Học cách giữ network code hữu hạn và có thể kiểm soát bằng timeout, socket option, dọn dẹp tài nguyên và cách diễn giải lỗi ở từng giai đoạn phân giải, kết nối, chờ dữ liệu hoặc đóng tài nguyên.
+    objectives:
+      - Phân biệt các điểm có thể chờ như phân giải tên, connect, accept và read/receive; chỉ cấu hình timeout ở boundary mà JDK API thực sự hỗ trợ, không giả định có một timeout chung cho toàn bộ chuỗi thao tác.
+      - Hiểu socket option là các điều khiển/gợi ý ở boundary transport hoặc hệ điều hành và không nên chỉnh theo thói quen nếu chưa biết tác dụng.
+      - Phân loại các lỗi phổ biến như unknown host, bind/connect failure, timeout, reset/EOF và closed channel/socket, đồng thời giữ quá trình dọn dẹp tài nguyên xác định.
+      - Nhận biết trên Java 21, blocking socket I/O chạy trong virtual thread có thể bị interrupt; việc interrupt thao tác Socket/ServerSocket/DatagramSocket theo system-default implementation sẽ đánh thức virtual thread và đóng socket, nên cancellation là một phần của resource-lifetime reasoning.
+
+  - id: nio-networking-models
+    title: NIO networking, multiplexing và asynchronous channels
+    purpose: Hiểu các mô hình network I/O mức thấp hơn của NIO để lựa chọn giữa blocking socket, selectable non-blocking channel và asynchronous completion khi yêu cầu scale hoặc control thực sự cần chúng.
+    relatedModules:
+      - routeId: JAVA_IO
+        label: Java I/O
+        note: Buffer/Channel state model là prerequisite trực tiếp cho SocketChannel, DatagramChannel và các network channel.
+      - routeId: JAVA_CONCURRENCY_FUNDAMENTALS
+        label: Java Concurrency Fundamentals
+        note: Executor, thread và completion/concurrency semantics thuộc module Concurrency; Networking chỉ áp dụng chúng vào network I/O.
+      - routeId: JAVA_VIRTUAL_THREADS
+        label: Java Virtual Threads
+        note: Virtual Threads sở hữu thread-per-task model; Networking chỉ dùng nó để đánh giá lại trade-off giữa blocking socket style và selector/asynchronous I/O trên Java 21.
+    objectives:
+      - Hiểu SocketChannel, ServerSocketChannel và DatagramChannel kết hợp với Buffer như thế nào và khác stream socket ở đâu.
+      - Hiểu Selector/SelectionKey theo mô hình readiness, registration, interest set và selected operations thay vì xem Selector như thread pool.
+      - Phân biệt selectable non-blocking I/O dựa trên readiness với AsynchronousSocketChannel/AsynchronousServerSocketChannel dựa trên completion, nơi thao tác hoàn tất qua Future hoặc CompletionHandler.
+      - Nhận biết Unix-domain socket support thuộc SocketChannel/ServerSocketChannel và có giới hạn phụ thuộc hệ điều hành, thay vì giả định mọi channel chỉ dùng InetSocketAddress.
+      - Hiểu rằng trên Java 21, blocking network I/O trong virtual thread có thể nhả carrier thread khi chờ I/O; nhiều kết nối đồng thời vì thế không tự động đồng nghĩa phải dùng Selector/non-blocking I/O.
+      - Chọn mô hình đơn giản nhất đáp ứng semantics, concurrency và control cần thiết thay vì mặc định NIO/non-blocking luôn nhanh hoặc tốt hơn.
+
+  - id: jdk-http-client
+    title: HTTP Client của JDK
+    purpose: Hiểu java.net.http.HttpClient như API client mức cao hơn được xây trên networking stack, nơi client configuration/resource sharing, request, response body handling và sync/async completion được tách thành các abstraction rõ ràng.
+    relatedModules:
+      - routeId: JAVA_11_HTTP_CLIENT
+        label: Java 11 - HTTP Client
+        note: Module Java Version sở hữu góc nhìn feature được giới thiệu ở Java 11; module Networking sở hữu mental model và cách dùng API hiện tại.
+    objectives:
+      - Hiểu quan hệ giữa HttpClient, HttpRequest, HttpResponse và body publisher/handler mà không biến roadmap thành inventory method.
+      - Phân biệt send với sendAsync, đồng thời hiểu client có thể được tái sử dụng và quản lý resource/connection dùng chung cho nhiều request.
+      - Hiểu request/response body có thể được stream qua Flow-based publisher/subscriber mechanics; concurrency/reactive semantics sâu hơn vẫn thuộc module chuyên trách.
+      - Đặt version, redirect, timeout, proxy, authentication, cookie handling và executor vào đúng client/request boundary; handoff protocol/application integration policy sang module chuyên trách.
+
+  - id: jdk-websocket-client
+    title: WebSocket Client của JDK
+    purpose: Hiểu Java WebSocket client API như một kết nối message-oriented bất đồng bộ được mở từ HttpClient, có listener, demand control và lifecycle riêng sau handshake.
+    objectives:
+      - Theo dõi được lifecycle từ asynchronous opening handshake đến onOpen, nhận/gửi message, close và error.
+      - Hiểu WebSocket.Listener nhận callback tuần tự theo từng WebSocket và việc request(n) kiểm soát demand cho các receive invocation.
+      - Hiểu một text/binary message có thể đến qua nhiều callback fragment và cờ last mới xác định phần cuối; không giả định mỗi callback luôn là một message hoàn chỉnh.
+      - Phân biệt mechanics của JDK WebSocket client với thiết kế WebSocket protocol, realtime architecture, reconnect policy hoặc messaging semantics ở tầng ứng dụng.
+
+  - id: networking-choice-synthesis
+    title: Chọn abstraction mạng và giữ đúng boundary
+    purpose: Kết nối endpoint, transport semantics, blocking model, failure handling và API level thành một cách chọn networking abstraction có chủ đích, đồng thời biết khi nào phải handoff sang security, concurrency hoặc integration module khác.
+    relatedModules:
+      - routeId: JAVA_SECURITY_CRYPTOGRAPHY
+        label: Security & Cryptography
+        note: TLS/JSSE, certificate, key material và cryptographic semantics thuộc module Security & Cryptography.
+      - routeId: JAVA_CONCURRENCY_FUNDAMENTALS
+        label: Java Concurrency Fundamentals
+        note: Thread scheduling, synchronization và Java Memory Model không được thiết kế lại trong Networking.
+      - routeId: JAVA_VIRTUAL_THREADS
+        label: Java Virtual Threads
+        note: Virtual Threads cung cấp một concurrency model quan trọng khi cân nhắc blocking network I/O so với event-driven/non-blocking approaches.
+    objectives:
+      - Chọn giữa Socket/ServerSocket, datagram APIs, blocking I/O với virtual threads, selectable/asynchronous channels, HttpClient và WebSocket client dựa trên communication semantics, concurrency model và operational need.
+      - Tách network transport/API mechanics khỏi TLS security semantics, retry/resilience policy và application-level protocol/integration design.
+      - Có thể giải thích end-to-end đường đi từ tên host đến resolved endpoint, transport/API interaction, data transfer/completion, failure handling và resource release.

@@ -1,3 +1,24 @@
+# 📂 README MODULE STRUCTURE (VI)
+
+* **1.NetworkingModel**
+    * [NetworkingModel](readme/vi/menu/1.NetworkingModel/NetworkingModel.md)
+* **2.AddressingEndpoints**
+    * [AddressingEndpoints](readme/vi/menu/2.AddressingEndpoints/AddressingEndpoints.md)
+* **3.TcpSockets**
+    * [TcpSockets](readme/vi/menu/3.TcpSockets/TcpSockets.md)
+* **4.UdpDatagrams**
+    * [UdpDatagrams](readme/vi/menu/4.UdpDatagrams/UdpDatagrams.md)
+* **5.FailureControl**
+    * [FailureControl](readme/vi/menu/5.FailureControl/FailureControl.md)
+* **6.NioNetworking**
+    * [NioNetworking](readme/vi/menu/6.NioNetworking/NioNetworking.md)
+* **7.HttpClient**
+    * [HttpClient](readme/vi/menu/7.HttpClient/HttpClient.md)
+* **8.WebSocketClient**
+    * [WebSocketClient](readme/vi/menu/8.WebSocketClient/WebSocketClient.md)
+* **9.NetworkingChoices**
+    * [NetworkingChoices](readme/vi/menu/9.NetworkingChoices/NetworkingChoices.md)
+
 # Java Networking nâng cao
 
 Module này xây dựng mental model thực tế cho các API mạng của JDK: từ địa chỉ và phân giải tên, TCP/UDP socket, các mô hình I/O của NIO, đến java.net.http.HttpClient và WebSocket client.

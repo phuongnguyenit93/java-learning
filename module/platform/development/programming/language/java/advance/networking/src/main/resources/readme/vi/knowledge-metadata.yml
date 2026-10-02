@@ -1,1 +1,273 @@
-{}
+1.NetworkingModel/NetworkingModel.md:
+  networking-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  network-endpoint-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  transport-and-data-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  io-completion-models:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  networking-module-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+2.AddressingEndpoints/AddressingEndpoints.md:
+  inet-address-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  name-resolution:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  name-resolution-spi:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  network-interface-model:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  socket-address-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  uri-url-resource-identity:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  urlconnection-boundary:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  unix-domain-addresses:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+3.TcpSockets/TcpSockets.md:
+  tcp-connection-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  tcp-bind-connect-accept:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  tcp-client-server-lifecycle:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  tcp-stream-io:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  tcp-message-framing:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  tcp-half-close:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  tcp-resource-lifecycle:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+4.UdpDatagrams/UdpDatagrams.md:
+  udp-datagram-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  datagram-packet-addressing:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  udp-delivery-semantics:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  datagram-connect-semantics:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  udp-broadcast-multicast:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  datagram-channel-boundary:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+5.FailureControl/FailureControl.md:
+  network-wait-points:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  socket-timeouts:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  socket-options:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  network-failure-model:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  network-resource-cleanup:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  network-cancellation:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  networking-pitfalls:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+6.NioNetworking/NioNetworking.md:
+  network-channels:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  network-buffer-interaction:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  selector-readiness-model:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  selection-key-lifecycle:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  asynchronous-channel-model:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  unix-domain-channels:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  virtual-threads-network-io:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  network-io-model-choice:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+7.HttpClient/HttpClient.md:
+  http-client-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  http-client-configuration:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  http-request-building:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  http-response-handling:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  http-sync-async:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  http-flow-streaming:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  http-client-policies:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  http-client-resource-sharing:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  http-client-lifecycle:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  http-integration-boundary:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+8.WebSocketClient/WebSocketClient.md:
+  websocket-client-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  websocket-opening-handshake:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  websocket-listener-lifecycle:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  websocket-demand-control:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  websocket-message-fragmentation:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  websocket-send-completion:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  websocket-close-error:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  websocket-integration-boundary:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+9.NetworkingChoices/NetworkingChoices.md:
+  networking-choice-model:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  transport-choice:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  blocking-concurrency-choice:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  networking-security-boundary:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  networking-resilience-boundary:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  networking-integration-handoff:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  networking-end-to-end-model:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false

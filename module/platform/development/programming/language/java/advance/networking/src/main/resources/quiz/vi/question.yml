@@ -1,0 +1,290 @@
+# <quiz-schema>
+# Cấu trúc câu hỏi Quiz
+# schema-version: 3
+#
+# questions [kiểu: list; bắt buộc; mặc định: []; duy nhất theo: id]
+#   Danh sách câu hỏi Quiz của module trong language hiện tại.
+#   mỗi phần tử:
+#     id [kiểu: string; bắt buộc; mặc định: ""]
+#       ID ổn định và duy nhất của câu hỏi.
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi hiển thị cho người học.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu câu hỏi được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu câu hỏi đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+#     answers [kiểu: list; bắt buộc; số phần tử: 4; mặc định: []; duy nhất theo: id]
+#       Chính xác bốn đáp án. ID A/B/C/D là identity nội bộ ổn định, không phải vị trí hiển thị sau khi frontend shuffle.
+#       mỗi phần tử:
+#         id [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#           Identity ổn định của đáp án.
+#         answer [kiểu: string; bắt buộc; mặc định: ""]
+#           Nội dung đáp án hiển thị cho người học.
+#         explanation [kiểu: string; bắt buộc; mặc định: ""]
+#           Giải thích hiển thị khi người học chọn đáp án này, bất kể đúng hay sai.
+#     correctAnswerId [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
+# </quiz-schema>
+
+questions:
+  - id: networking-q01-tcp-framing
+    question: "Client gọi write() đúng một lần với 11 byte, nhưng server đọc bằng buffer 4 byte. Kết luận nào đúng nhất?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.TcpSockets/TcpSockets.md"
+      anchor: "tcp-message-framing"
+    apiRelated:
+      controller: "TcpExperimentController"
+      methodSignature: "streamFraming()"
+    answers:
+      - id: A
+        answer: "Server phải nhận đúng một read 11 byte vì mỗi write của TCP tạo một message boundary tương ứng."
+        explanation: "Sai. TCP cung cấp byte stream; ranh giới write phía gửi không trở thành message boundary phía nhận."
+      - id: B
+        answer: "Server chỉ có thể đọc 4 byte đầu; phần còn lại bị loại bỏ vì buffer của một lần read quá nhỏ."
+        explanation: "Sai. Đó là kiểu truncation cần phân biệt với UDP datagram; TCP stream giữ các byte còn lại để những read tiếp theo lấy."
+      - id: C
+        answer: "Server có thể cần nhiều read để thu đủ dữ liệu; protocol ứng dụng phải tự định nghĩa framing."
+        explanation: "Đúng. Một stream read chỉ trả số byte hiện lấy được; application không được suy ra message boundary từ call boundary."
+      - id: D
+        answer: "Server luôn đọc 4,4,3 byte theo đúng ba lần read trên mọi hệ điều hành và mọi lần chạy."
+        explanation: "Sai. Demo với buffer 4 byte đảm bảo cần nhiều read cho 11 byte, nhưng kích thước từng read không phải transport guarantee tổng quát."
+    correctAnswerId: C
+
+  - id: networking-q02-udp-truncation
+    question: "Một DatagramSocket nhận datagram 8 byte vào DatagramPacket có length 4. Điều gì phù hợp với Java UDP API?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.UdpDatagrams/UdpDatagrams.md"
+      anchor: "datagram-packet-addressing"
+    apiRelated:
+      controller: "UdpExperimentController"
+      methodSignature: "datagramTruncation()"
+    answers:
+      - id: A
+        answer: "Receive trả phần đầu tối đa 4 byte; phần dư của datagram bị truncate chứ không trở thành một datagram tiếp theo."
+        explanation: "Đúng. Datagram boundary được giữ nhưng packet length giới hạn phần dữ liệu được giao cho lần receive đó."
+      - id: B
+        answer: "Receive tự tăng backing buffer lên 8 byte để luôn giữ nguyên toàn bộ datagram."
+        explanation: "Sai. DatagramPacket không tự resize buffer để tránh truncation."
+      - id: C
+        answer: "Receive trả 4 byte đầu, rồi lần receive kế tiếp chắc chắn trả 4 byte còn lại với cùng sender."
+        explanation: "Sai. Phần dư không được tách thành datagram thứ hai."
+      - id: D
+        answer: "Receive ném BufferOverflowException trước khi thay đổi DatagramPacket vì message lớn hơn packet length."
+        explanation: "Sai. Contract là truncation theo packet length, không phải BufferOverflowException."
+    correctAnswerId: A
+
+  - id: networking-q03-udp-connect
+    question: "Một DatagramSocket gọi connect(peer) tới địa chỉ unicast. Cách hiểu nào đúng nhất?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.UdpDatagrams/UdpDatagrams.md"
+      anchor: "datagram-connect-semantics"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Nó thực hiện handshake kiểu TCP, chờ remote peer xác nhận association rồi mới bắt đầu một reliable session."
+        explanation: "Sai. UDP connect không tạo TCP-style handshake hay reliable session."
+      - id: B
+        answer: "Nó vẫn dùng API DatagramSocket nhưng nâng delivery thành ordered reliable stream với connection-style failure semantics."
+        explanation: "Sai. Delivery/order/reliability semantics của UDP không thay đổi thành TCP."
+      - id: C
+        answer: "Nó lưu default destination cho send, còn receive vẫn nhận datagram từ unrelated peer giống hệt socket chưa connect."
+        explanation: "Sai. Với ordinary unicast peer, connected DatagramSocket còn lọc datagram nhận theo peer đã associate."
+      - id: D
+        answer: "Nó associate một remote peer để default addressing/filtering nhưng không tạo handshake-based reliable session hay delivery guarantee."
+        explanation: "Đúng. Đây là peer association/filtering semantics, không phải connection establishment kiểu TCP."
+    correctAnswerId: D
+
+  - id: networking-q04-socket-timeout
+    question: "Blocking Socket read vượt quá SO_TIMEOUT và ném SocketTimeoutException. Điều gì nên được suy ra?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.FailureControl/FailureControl.md"
+      anchor: "socket-timeouts"
+    apiRelated:
+      controller: "FailureExperimentController"
+      methodSignature: "readTimeout()"
+    answers:
+      - id: A
+        answer: "Read kết thúc bằng timeout; dù object vẫn có thể báo open, input sau đó không còn valid nên phải tạo connection mới."
+        explanation: "Sai. Socket vẫn valid sau read SocketTimeoutException; timeout tự nó không làm invalid input về sau."
+      - id: B
+        answer: "Read kết thúc bằng timeout; chính Socket đó vẫn valid nên có thể thử I/O tiếp nếu protocol và connection state cho phép."
+        explanation: "Đúng. Experiment của module timeout trước rồi đọc thành công byte mới trên cùng Socket."
+      - id: C
+        answer: "Read kết thúc bằng timeout; SO_TIMEOUT đó sau đó trở thành deadline chung cho các read và write tiếp theo cho tới khi đổi option."
+        explanation: "Sai. SO_TIMEOUT điều khiển blocking read; nó không trở thành write deadline."
+      - id: D
+        answer: "Read kết thúc bằng timeout; vì chưa có byte trước deadline nên application có thể suy ra peer chưa xử lý operation và retry an toàn."
+        explanation: "Sai. Local read timeout không xác định remote peer đã nhận hoặc xử lý work trước đó hay chưa."
+    correctAnswerId: B
+
+  - id: networking-q05-selector-readiness
+    question: "Selector báo SelectionKey isAcceptable()/isReadable() là true. Application nên hiểu tín hiệu đó thế nào?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.NioNetworking/NioNetworking.md"
+      anchor: "selector-readiness-model"
+    apiRelated:
+      controller: "NioExperimentController"
+      methodSignature: "selectorReadiness()"
+    answers:
+      - id: A
+        answer: "Ready bit là snapshot cho biết Selector đã hoàn tất operation; application call chủ yếu chỉ lấy kết quả đã có."
+        explanation: "Sai. Selector readiness không tự thực hiện accept/read/write thay application."
+      - id: B
+        answer: "Ready bit là snapshot đảm bảo non-blocking call kế tiếp có một phần progress, dù phần work còn lại có thể cần call sau."
+        explanation: "Sai. Readiness có thể stale; non-blocking call vẫn có thể trả null hoặc zero progress."
+      - id: C
+        answer: "Ready bit là snapshot/hint rằng operation có thể tiến triển; application vẫn thực hiện nó và xử lý stale, zero hoặc partial outcome."
+        explanation: "Đúng. Đây là mental model chính của Selector/SelectionKey."
+      - id: D
+        answer: "Ready bit là snapshot chỉ cho read/write data transfer; accept/connect transition phải được poll trực tiếp trên channel."
+        explanation: "Sai. Selector có thể báo OP_ACCEPT và OP_CONNECT readiness khi operation đó valid với channel."
+    correctAnswerId: C
+
+  - id: networking-q06-http-send-async
+    question: "Khác biệt cốt lõi giữa HttpClient.send(...) và sendAsync(...) là gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.HttpClient/HttpClient.md"
+      anchor: "http-sync-async"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "send chờ trên caller, còn sendAsync trả CompletableFuture biểu diễn completion của HTTP exchange xảy ra sau."
+        explanation: "Đúng. Hai API dùng cùng request/body-handler model nhưng expose completion khác nhau."
+      - id: B
+        answer: "send dùng HTTP/1.1, còn sendAsync là API bắt buộc khi client negotiate HTTP/2 multiplexing."
+        explanation: "Sai. Protocol version không được phân chia theo sync hay async method như vậy."
+      - id: C
+        answer: "sendAsync đảm bảo request processing và dependent CompletableFuture stage không bao giờ block application thread."
+        explanation: "Sai. Future là completion API; code downstream vẫn có thể thực hiện blocking work."
+      - id: D
+        answer: "sendAsync expose Selector cho caller đăng ký readiness event và event-loop control, còn send giữ cơ chế đó bên trong client."
+        explanation: "Sai. Application không cần tự quản Selector chỉ vì dùng sendAsync."
+    correctAnswerId: A
+
+  - id: networking-q07-addressing-endpoint
+    question: "Code cần giữ nguyên host text và port cho proxy nhưng chưa được thực hiện DNS resolution. JDK representation nào phù hợp?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.AddressingEndpoints/AddressingEndpoints.md"
+      anchor: "socket-address-model"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "new InetSocketAddress(InetAddress.getByName(host), port), vì resolve sang InetAddress trước vẫn defer DNS tới lúc connect."
+        explanation: "Sai. InetAddress.getByName thực hiện name resolution trước khi InetSocketAddress được tạo."
+      - id: B
+        answer: "URI.create(\"https://\" + host + \":\" + port), vì URI có authority là unresolved socket-endpoint representation của JDK."
+        explanation: "Sai. URI biểu diễn resource identity; nó không phải socket-address abstraction dùng cho bind/connect."
+      - id: C
+        answer: "new InetSocketAddress(host, port), vì constructor này luôn giữ unresolved host và không thử name resolution."
+        explanation: "Sai. Host/port constructor thông thường sẽ thử resolution; dùng createUnresolved khi cần defer lookup rõ ràng."
+      - id: D
+        answer: "InetSocketAddress.createUnresolved(host, port), vì nó giữ host text cùng port mà không resolve host."
+        explanation: "Đúng. createUnresolved tạo Internet socket address ở trạng thái unresolved và giữ nguyên host text cùng port."
+    correctAnswerId: D
+
+  - id: networking-q08-websocket-demand
+    question: "Trong JDK WebSocket.Listener, request(1) có ý nghĩa chính xác nào?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.WebSocketClient/WebSocketClient.md"
+      anchor: "websocket-demand-control"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Nó yêu cầu một application message hoàn chỉnh, nên mọi fragment của message đó dùng chung một demand unit."
+        explanation: "Sai. Demand đếm listener receive invocations, không đếm application message hoàn chỉnh."
+      - id: B
+        answer: "Nó tăng demand cho một receive callback tiếp theo; fragmentation và message assembly vẫn là trách nhiệm riêng của listener."
+        explanation: "Đúng. Một text/binary message có thể cần nhiều callback và mỗi callback tiêu thụ demand."
+      - id: C
+        answer: "Nó chỉ điều khiển text/binary callback; ping, pong và close là control/lifecycle event không tiêu thụ receive-demand counter."
+        explanation: "Sai. Demand còn áp dụng cho ping/pong và onClose; onOpen/onError không bị gated như receive callbacks."
+      - id: D
+        answer: "Nó queue demand nhưng demand đó chưa dùng được cho tới khi CompletionStage của callback trước hoàn tất."
+        explanation: "Sai. Demand counter tách khỏi CompletionStage callback; stage completion không phải cơ chế tăng demand."
+    correctAnswerId: B
+
+  - id: networking-q09-websocket-close-lifecycle
+    question: "Phát biểu nào phân biệt đúng graceful close và abort trong JDK WebSocket client?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.WebSocketClient/WebSocketClient.md"
+      anchor: "websocket-close-error"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "sendClose đóng cả input lẫn output ngay, còn abort chờ Close frame từ peer rồi mới terminate."
+        explanation: "Sai. sendClose bắt đầu graceful output-side close; abort mới là path terminate ngay."
+      - id: B
+        answer: "sendClose chỉ lưu local status code; connection vẫn mở hoàn toàn cho tới khi application gọi abort."
+        explanation: "Sai. sendClose gửi Close message và đóng output side của WebSocket theo API contract."
+      - id: C
+        answer: "sendClose bắt đầu graceful output-side close trong khi input có thể chờ peer Close; abort terminate ngay."
+        explanation: "Đúng. Graceful close và abort có lifecycle semantics khác nhau; sendClose không đóng cả hai chiều ngay lập tức."
+      - id: D
+        answer: "abort là graceful vì gửi Close frame trước, còn sendClose là forceful path dùng sau protocol error."
+        explanation: "Sai. Vai trò ngược lại: sendClose là protocol close path, còn abort đóng connection ngay."
+    correctAnswerId: C
+
+  - id: networking-q10-abstraction-choice
+    question: "Ứng dụng chỉ cần gọi HTTP endpoint JSON thông thường và không cần tự sở hữu HTTP framing. Lựa chọn JDK nào phù hợp nhất?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.NetworkingChoices/NetworkingChoices.md"
+      anchor: "transport-choice"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "HttpClient, vì communication contract đã là HTTP request/response và application không cần tự implement HTTP framing."
+        explanation: "Đúng. Chọn abstraction nhỏ nhất phù hợp với communication semantics nhưng không thấp hơn mức cần thiết."
+      - id: B
+        answer: "Socket TCP trực tiếp, vì direct framing control làm ordinary HTTP request/response đơn giản hơn."
+        explanation: "Sai. Tự implement HTTP framing/lifecycle khi HttpClient đã phù hợp chỉ tăng complexity."
+      - id: C
+        answer: "DatagramSocket, vì JSON self-contained và datagram boundary loại bỏ nhu cầu dùng HTTP framing."
+        explanation: "Sai. Data format không thay đổi protocol requirement; server đang expose HTTP endpoint."
+      - id: D
+        answer: "WebSocket, vì repeated call tới cùng server có thể reuse một persistent bidirectional channel và tránh per-request setup."
+        explanation: "Sai. WebSocket chỉ phù hợp khi communication model thực sự cần long-lived bidirectional messaging."
+    correctAnswerId: A
