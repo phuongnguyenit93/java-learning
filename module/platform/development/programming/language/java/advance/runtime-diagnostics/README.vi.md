@@ -1,3 +1,24 @@
+# 📂 README MODULE STRUCTURE (VI)
+
+* **1.MentalModel**
+    * [RuntimeDiagnostics](readme/vi/menu/1.MentalModel/RuntimeDiagnostics.md)
+* **2.JdkDiagnosticTools**
+    * [JdkDiagnosticTools](readme/vi/menu/2.JdkDiagnosticTools/JdkDiagnosticTools.md)
+* **3.ThreadDiagnostics**
+    * [ThreadDiagnostics](readme/vi/menu/3.ThreadDiagnostics/ThreadDiagnostics.md)
+* **4.HeapGcDiagnostics**
+    * [HeapGcDiagnostics](readme/vi/menu/4.HeapGcDiagnostics/HeapGcDiagnostics.md)
+* **5.NativeMemoryTracking**
+    * [NativeMemoryTracking](readme/vi/menu/5.NativeMemoryTracking/NativeMemoryTracking.md)
+* **6.JFR**
+    * [JFR](readme/vi/menu/6.JFR/JFR.md)
+* **7.ManagementJMX**
+    * [ManagementJMX](readme/vi/menu/7.ManagementJMX/ManagementJMX.md)
+* **8.CrashPostmortemDiagnostics**
+    * [CrashPostmortemDiagnostics](readme/vi/menu/8.CrashPostmortemDiagnostics/CrashPostmortemDiagnostics.md)
+* **9.TroubleshootingWorkflow**
+    * [TroubleshootingWorkflow](readme/vi/menu/9.TroubleshootingWorkflow/TroubleshootingWorkflow.md)
+
 # Runtime Diagnostics
 
 ## Module này là gì?

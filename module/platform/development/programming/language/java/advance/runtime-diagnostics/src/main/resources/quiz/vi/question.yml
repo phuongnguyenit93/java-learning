@@ -1,0 +1,290 @@
+# <quiz-schema>
+# Cấu trúc câu hỏi Quiz
+# schema-version: 3
+#
+# questions [kiểu: list; bắt buộc; mặc định: []; duy nhất theo: id]
+#   Danh sách câu hỏi Quiz của module trong language hiện tại.
+#   mỗi phần tử:
+#     id [kiểu: string; bắt buộc; mặc định: ""]
+#       ID ổn định và duy nhất của câu hỏi.
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi hiển thị cho người học.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu câu hỏi được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu câu hỏi đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+#     answers [kiểu: list; bắt buộc; số phần tử: 4; mặc định: []; duy nhất theo: id]
+#       Chính xác bốn đáp án. ID A/B/C/D là identity nội bộ ổn định, không phải vị trí hiển thị sau khi frontend shuffle.
+#       mỗi phần tử:
+#         id [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#           Identity ổn định của đáp án.
+#         answer [kiểu: string; bắt buộc; mặc định: ""]
+#           Nội dung đáp án hiển thị cho người học.
+#         explanation [kiểu: string; bắt buộc; mặc định: ""]
+#           Giải thích hiển thị khi người học chọn đáp án này, bất kể đúng hay sai.
+#     correctAnswerId [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
+# </quiz-schema>
+
+questions:
+  - id: runtime-diagnostics-q01-evidence-vs-root-cause
+    question: "Dashboard cho thấy latency cao và heap usage 85% trong lúc xảy ra sự cố. Bước chẩn đoán tiếp theo phù hợp nhất là gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.MentalModel/RuntimeDiagnostics.md"
+      anchor: "diagnostic-reasoning-loop"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Lấy heap dump ngay và dùng class population lớn nhất làm nguyên nhân chính vì heap metric đã ở mức cao."
+        explanation: "Sai. Heap dump có thể cần về sau, nhưng một utilization snapshot chưa đủ để biện minh cho artifact nặng hoặc xem class lớn nhất là causal."
+      - id: B
+        answer: "Chỉ theo dõi chu kỳ GC kế tiếp; nếu heap giảm thì có thể bỏ memory khỏi incident hypothesis mà không cần kiểm tra signal khác."
+        explanation: "Sai. Heap giảm sau GC là evidence hữu ích nhưng chưa giải thích latency và cũng không loại trừ allocation/GC pressure trong symptom window."
+      - id: C
+        answer: "Snapshot mới chỉ là bằng chứng ở mức triệu chứng; cần giả thuyết kiểm chứng được và bằng chứng có tương quan theo thời gian trước khi kết luận root cause."
+        explanation: "Đúng. Runtime diagnosis đi từ triệu chứng → giả thuyết → thu thập thêm bằng chứng để xác nhận hoặc bác bỏ giả thuyết."
+      - id: D
+        answer: "Bắt đầu profile recording và hoãn correlate log/metric cho tới khi recording xong vì runtime timeline nên được đọc độc lập trước."
+        explanation: "Sai. JFR có thể hữu ích, nhưng trì hoãn correlate với evidence đã có trong cùng time window làm reasoning yếu hơn."
+    correctAnswerId: C
+
+  - id: runtime-diagnostics-q02-low-impact-thread-evidence
+    question: "Bạn nghi request bị treo vì lock contention trên một JVM đang chạy. Thu thập nào phù hợp nhất với nguyên tắc low-impact-first?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.TroubleshootingWorkflow/TroubleshootingWorkflow.md"
+      anchor: "collect-low-impact-first"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Lấy full heap dump trước vì object graph là nguồn đầy đủ nhất để xác định quan hệ lock giữa các thread."
+        explanation: "Sai. Heap dump nặng hơn nhiều và không phải bằng chứng trực tiếp đầu tiên cho giả thuyết lock contention."
+      - id: B
+        answer: "Lấy một chuỗi ngắn thread dump của đúng PID và đúng time window sau khi kiểm tra impact của command."
+        explanation: "Đúng. Thread evidence trả lời trực tiếp giả thuyết liveness; nhiều snapshot bổ sung yếu tố thời gian mà chưa cần nhảy ngay sang artifact nặng hơn."
+      - id: C
+        answer: "Chạy GC.class_histogram lặp lại vì class population cho biết thread nào giữ monitor và thread nào đang bị block."
+        explanation: "Sai. Class histogram mô tả population của object, không mô tả quan hệ owner/waiter giữa các thread."
+      - id: D
+        answer: "Bắt đầu một profile-style JFR recording trước và hoãn thread dump tới khi recording kết thúc vì timeline nên thay snapshot cho bài toán lock."
+        explanation: "Sai. JFR có thể bổ sung evidence, nhưng bounded thread dump là phép kiểm tra trực tiếp và rẻ hơn cho giả thuyết lock contention cụ thể này."
+    correctAnswerId: B
+
+  - id: runtime-diagnostics-q03-virtual-thread-management-boundary
+    question: "Trên Java 21, ứng dụng dùng rất nhiều virtual thread nhưng ThreadMXBean báo số thread nhỏ hơn nhiều. Cách hiểu đúng là gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.ThreadDiagnostics/ThreadDiagnostics.md"
+      anchor: "platform-vs-virtual-thread-diagnostics"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "ThreadMXBean chỉ sample virtual thread, nên count thấp nghĩa là phần lớn virtual thread đang inactive đúng lúc bean được đọc."
+        explanation: "Sai. Trong Java 21, ThreadMXBean không hỗ trợ monitoring/management virtual thread."
+      - id: B
+        answer: "ThreadMXBean chỉ tính virtual thread khi đang mounted, nên count chính là số carrier thread hiện đang chạy chúng."
+        explanation: "Sai. Management interface này được định nghĩa quanh platform thread, không phải mounted-only count của virtual thread."
+      - id: C
+        answer: "Chênh lệch đó nghĩa là các virtual thread đã kết thúc vì Thread còn sống được kỳ vọng sẽ xuất hiện trong ThreadMXBean."
+        explanation: "Sai. Kết luận đó bỏ qua boundary quản lý virtual thread được Java 21 quy định rõ."
+      - id: D
+        answer: "ThreadMXBean quản lý platform thread chứ không quản lý virtual thread; cần dùng dump/JFR có nhận biết virtual thread để quan sát population đó."
+        explanation: "Đúng. Java 21 quy định ThreadMXBean là management interface cho platform thread và không hỗ trợ quản lý virtual thread."
+    correctAnswerId: D
+
+  - id: runtime-diagnostics-q04-contention-not-deadlock
+    question: "Experiment thread-contention trả started=true và waiterStateAtResponse=BLOCKED. Observation đó chứng minh điều gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.ThreadDiagnostics/ThreadDiagnostics.md"
+      anchor: "locks-deadlocks-and-contention"
+    apiRelated:
+      controller: "RuntimeDiagnosticsExperimentController"
+      methodSignature: "threadContention(int)"
+    answers:
+      - id: A
+        answer: "Deadlock đã được chứng minh vì chỉ cần có một thread ở BLOCKED là toàn bộ quan hệ monitor không thể tiến triển."
+        explanation: "Sai. Waiter bị block vẫn có thể tiếp tục khi owner nhả monitor; deadlock cần một dependency cycle không thể tiến triển."
+      - id: B
+        answer: "Đang có bounded monitor contention; muốn chứng minh deadlock cần bằng chứng về wait cycle khiến các thread liên quan không thể tiến triển."
+        explanation: "Đúng. Experiment cố tình tạo contention với holder cuối cùng sẽ nhả monitor, không tạo deadlock cycle."
+      - id: C
+        answer: "Monitor owner đang CPU-bound vì cứ giữ Java monitor thì thread đó phải liên tục chiếm platform thread."
+        explanation: "Sai. Monitor ownership không tự nói lên CPU utilization; owner có thể sleep hoặc block trong lúc vẫn giữ monitor."
+      - id: D
+        answer: "Waiter thực chất đang ở Object.wait semantics vì BLOCKED và WAITING chỉ là hai cách hiển thị cùng một monitor state."
+        explanation: "Sai. BLOCKED là chờ vào monitor; WAITING là một Thread.State khác với nguyên nhân khác."
+    correctAnswerId: B
+
+  - id: runtime-diagnostics-q05-histogram-retention
+    question: "Trong heap-retention, DiagnosticRetainedPayload xuất hiện trong GC.class_histogram. Sau khi window hết hạn, heap-used không giảm ngay. Giải thích nào đúng nhất?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.HeapGcDiagnostics/HeapGcDiagnostics.md"
+      anchor: "class-histogram"
+    apiRelated:
+      controller: "RuntimeDiagnosticsExperimentController"
+      methodSignature: "heapRetention(int,int)"
+    answers:
+      - id: A
+        answer: "Payload có thể đã unreachable nhưng các byte array vẫn strong-reachable qua field của payload cho tới khi có cleanup riêng clear từng array."
+        explanation: "Sai. Reachability mang tính bắc cầu; khi chính payload không còn reachable thì byte array của nó không được giữ sống chỉ vì là một field."
+      - id: B
+        answer: "Kết quả này phù hợp với allocation pressure hơn retention vì retention thật sẽ tiếp tục làm heap-used tăng sau khi reference được clear."
+        explanation: "Sai. Observation này chưa phân loại được hai mechanism; cleanup timing và một giá trị heap-used không đủ để mô tả retention trước đó."
+      - id: C
+        answer: "Payload có thể mới chỉ trở thành eligible for GC; kết luận leak vẫn cần retention và trend evidence ngoài một histogram đơn lẻ."
+        explanation: "Đúng. Experiment chỉ kiểm soát strong reachability; thời điểm collection và leak diagnosis cần thêm bằng chứng."
+      - id: D
+        answer: "Heap-used không đổi đủ để kết luận payload đã được promote vào vùng không reclaim được, nên phải lấy heap dump trước khi GC có thể thu hồi."
+        explanation: "Sai. Object unreachable bình thường không trở thành non-reclaimable chỉ vì generational placement, và heap dump không làm object eligible for GC."
+    correctAnswerId: C
+
+  - id: runtime-diagnostics-q06-nmt-reserved-committed
+    question: "NMT báo một subsystem có reserved=1 GB và committed=100 MB. Cách diễn giải nào đúng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.NativeMemoryTracking/NativeMemoryTracking.md"
+      anchor: "reserved-vs-committed"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Process đang dùng đủ 1 GB vì reserved memory là phần đã được backing sẵn để JVM dùng ngay."
+        explanation: "Sai. Reserved address space có thể lớn hơn nhiều phần committed và không nên được hiểu như current committed usage."
+      - id: B
+        answer: "JVM đã reserve một vùng address space lớn hơn, còn khoảng 100 MB mới committed; xu hướng committed tăng là tín hiệu pressure trực tiếp hơn."
+        explanation: "Đúng. NMT phân biệt address-space reservation với memory committed để sử dụng; reserved lớn không đồng nghĩa đang dùng đủ 1 GB committed."
+      - id: C
+        answer: "100 MB committed chỉ là giới hạn cho tương lai, còn reserved mới là lượng native malloc đã thực sự được cấp phát."
+        explanation: "Sai. Cách nói này đảo ngược ý nghĩa của reserved và committed."
+      - id: D
+        answer: "Reserved và committed bình thường phải bằng nhau; chênh lệch lớn chứng minh NMT đang bỏ sót third-party native allocation."
+        explanation: "Sai. Chênh lệch reserved/committed lớn có thể hoàn toàn bình thường và không tự chứng minh coverage gap của NMT."
+    correctAnswerId: B
+
+  - id: runtime-diagnostics-q07-jfr-cpu-sampling
+    question: "Một JFR recording từ jfr-cpu-window có nhiều jdk.ExecutionSample với stack chứa runCpuLoop. Kết luận mạnh nhất là gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.JFR/JFR.md"
+      anchor: "cpu-thread-lock-analysis"
+    apiRelated:
+      controller: "RuntimeDiagnosticsExperimentController"
+      methodSignature: "jfrCpuWindow(int)"
+    answers:
+      - id: A
+        answer: "Có thể đổi trực tiếp sample distribution thành exact per-method CPU milliseconds nếu đã biết tổng JVM CPU time của window."
+        explanation: "Sai. Sampling hỗ trợ statistical hot-path analysis chứ không tái dựng exact per-method CPU accounting."
+      - id: B
+        answer: "Frequent samples chứng minh runCpuLoop dùng CPU, và vì experiment isolated nên cũng chứng minh mọi latency xảy ra cùng lúc đều do method này."
+        explanation: "Sai. Phần đầu là evidence hữu ích, nhưng causal attribution tới symptom khác vẫn cần time correlation và kiểm tra competing hypothesis."
+      - id: C
+        answer: "Worker thường xuyên đang execute tại thời điểm sample được lấy, nên có bằng chứng thống kê rằng code path này nóng trong window đó."
+        explanation: "Đúng. JFR execution sampling giúp nhận diện execution path thường xuyên được quan sát theo thời gian nhưng không khẳng định accounting tuyệt đối."
+      - id: D
+        answer: "ExecutionSample density chủ yếu đo runnable-queue delay, nên sample lặp lại chỉ scheduling pressure chứ không phải code đang execute."
+        explanation: "Sai. Execution sampling quan sát thread đang chạy code; scheduling delay không phải thứ repeated method samples trực tiếp đo."
+    correctAnswerId: C
+
+  - id: runtime-diagnostics-q08-mxbean-standard-extension
+    question: "Vì sao API MXBean snapshot tách operatingSystem khỏi jdkOperatingSystemExtension?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.ManagementJMX/ManagementJMX.md"
+      anchor: "platform-management-surfaces"
+    apiRelated:
+      controller: "RuntimeDiagnosticsExperimentController"
+      methodSignature: "mxBeanSnapshot()"
+    answers:
+      - id: A
+        answer: "Object đầu đến từ JMX còn extension đến từ JFR, nên chúng có collection/lifecycle semantics hoàn toàn khác nhau."
+        explanation: "Sai. Cả hai đều được đọc qua management interfaces; JFR không phải nguồn của các extension metric này."
+      - id: B
+        answer: "Extension là Java SE contract chính, còn standard interface chủ yếu được giữ để tương thích với các management client cũ."
+        explanation: "Sai. java.lang.management.OperatingSystemMXBean là Java SE interface chuẩn; com.sun.management là JDK extension."
+      - id: C
+        answer: "Hai object mô tả hai operating system khác nhau: standard là host OS còn extension chỉ mô tả guest OS trong container."
+        explanation: "Sai. Ranh giới ở đây là portability của API và tập metric mở rộng, không phải host-versus-container identity."
+      - id: D
+        answer: "Standard interface cung cấp management data portable của Java SE, còn com.sun.management bổ sung CPU/memory metric đặc thù JDK khi có."
+        explanation: "Đúng. Tách hai phần giúp tránh trình bày extension method như Java SE contract chuẩn."
+    correctAnswerId: D
+
+  - id: runtime-diagnostics-q09-jhsdb-live-attach
+    question: "JVM vẫn phản hồi và các live diagnostic tool thông thường còn dùng được. Vì sao attach jhsdb trực tiếp vào live PID không phải lựa chọn đầu tiên?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.CrashPostmortemDiagnostics/CrashPostmortemDiagnostics.md"
+      anchor: "core-dump-and-jhsdb"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Serviceability Agent live attach làm target hang và process có thể crash khi detach, nên nên ưu tiên live tool an toàn hơn trước."
+        explanation: "Đúng. Oracle mô tả jhsdb là experimental/unsupported và cảnh báo cụ thể về tác động khi attach vào live process."
+      - id: B
+        answer: "Live attach phù hợp nếu cùng OS user có quyền attach; cảnh báo process hang chỉ áp dụng khi jhsdb mở core dump."
+        explanation: "Sai. Cảnh báo này nhắm trực tiếp vào Serviceability Agent attach vào running process, không phải core-file analysis."
+      - id: C
+        answer: "Các read-only mode như jstack hoặc jmap an toàn trên live PID; nguy cơ crash khi detach chỉ áp dụng cho debugd mode."
+        explanation: "Sai. Oracle không giới hạn live-attach warning ở debugd; chính Serviceability Agent attachment đã là thao tác xâm lấn."
+      - id: D
+        answer: "Hạn chế chính chỉ là thiếu symbol/detail trên live JVM; target vẫn chạy bình thường nên jhsdb hợp lý khi jcmd chưa đủ dữ liệu."
+        explanation: "Sai. Concern chính không chỉ là output quality: live Serviceability Agent attachment dừng normal progress của target và có thể làm process mất ổn định."
+    correctAnswerId: A
+
+  - id: runtime-diagnostics-q10-preserve-before-restart
+    question: "Restart có khả năng khôi phục service và SLA cho phép một diagnostic window ngắn trước đó. Trình tự nào bảo toàn giá trị chẩn đoán tốt nhất?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.TroubleshootingWorkflow/TroubleshootingWorkflow.md"
+      anchor: "preserve-before-restart"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Lưu log và JVM flags, restart để phục hồi service, rồi dùng thread/JFR evidence của process mới để reconstruct failure tạm thời."
+        explanation: "Sai. Log/flags vẫn có giá trị, nhưng thread/JFR state sau restart không thể tái dựng nhiều transient condition của process lỗi."
+      - id: B
+        answer: "Lấy heap và core dump trước restart mỗi khi còn diagnostic window vì tính khó tái hiện luôn quan trọng hơn pause và disk risk."
+        explanation: "Sai. Heavy artifact chỉ hợp lý khi hypothesis và impact budget biện minh; thu indiscriminately có thể làm incident tệ hơn."
+      - id: C
+        answer: "Lấy một low-impact snapshot rồi restart ngay, sau đó dựa vào monitoring history thay vì dùng window để thu repeated/correlated evidence."
+        explanation: "Sai. Một snapshot có thể thiếu chiều thời gian, trong khi một số volatile evidence không thể phục hồi sau restart."
+      - id: D
+        answer: "Xác định đúng process/time window, bảo toàn volatile evidence có giá trị với chi phí chấp nhận được, rồi restart và correlate artifact sau."
+        explanation: "Đúng. Cách này cân bằng recovery với evidence preservation và giữ đúng PID/time identity cho bước reasoning tiếp theo."
+    correctAnswerId: D

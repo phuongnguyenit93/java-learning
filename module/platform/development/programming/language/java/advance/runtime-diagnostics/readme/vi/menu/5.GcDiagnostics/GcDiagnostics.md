@@ -1,1 +1,0 @@
-# Chẩn đoán Garbage Collection

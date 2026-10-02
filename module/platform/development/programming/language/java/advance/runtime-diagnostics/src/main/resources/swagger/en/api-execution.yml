@@ -1,0 +1,79 @@
+RuntimeDiagnosticsExperimentController:
+  threadContention(int):
+    execution: |-
+      <p><b>Concept:</b> Monitor contention is observable through holder/waiter relationships and a <code>BLOCKED</code> waiter in thread evidence. The API creates only a bounded window long enough to collect that evidence.</p>
+      <ol>
+        <li>The service clamps <code>durationMillis</code> to 2–15 seconds and refuses to create a second contention window while one is active.</li>
+        <li>A named platform thread <code>runtime-diagnostics-lock-holder-&lt;id&gt;</code> acquires a monitor and keeps it for the bounded duration.
+          <div><i>Source: RuntimeDiagnosticsExperimentService.startThreadContention()</i></div>
+          <pre><code>synchronized (monitor) {
+              holderAcquired.countDown();
+              sleep(durationMillis);
+          }</code></pre>
+        </li>
+        <li>After the holder owns the monitor, a waiter attempts the same synchronized block. The API returns <code>started=true</code> only after it has actually observed that waiter in <code>BLOCKED</code>; if that evidence is not established within the bounded wait, the workers are stopped and the experiment returns a failure reason instead.</li>
+        <li>Before <code>expiresAt</code>, run the returned command such as <code>jcmd &lt;pid&gt; Thread.print -l</code> and locate the two named threads. A second dump can test whether the relationship persists during the window.</li>
+        <li>When the holder releases the monitor, the waiter acquires it, both workers terminate, and the cleanup coordinator clears active state.</li>
+      </ol>
+      <p><b>Evidence:</b> The thread dump shows the holder/waiter relationship and a BLOCKED waiter; the response supplies the PID, thread names, and observation window needed to correlate the correct data.</p>
+      <p><b>Safety:</b> <code>Thread.print</code> can have Medium impact depending on thread count. This experiment targets a learning/lab JVM; on a real system, evaluate diagnostic-command impact before collecting it.</p>
+      <p><b>Conclusion:</b> This is bounded contention, not a deadlock. Diagnostics identifies runtime evidence while locking semantics and correctness remain owned by Concurrency.</p>
+    usage: true
+  heapRetention(int,int):
+    execution: |-
+      <p><b>Concept:</b> A class histogram is a point-in-time view of object populations visible to heap inspection; a large population alone does not prove a leak.</p>
+      <ol>
+        <li>The service clamps <code>megabytes</code> to 1–16 MiB and <code>durationMillis</code> to 2–15 seconds, with at most one active retention window.</li>
+        <li>The service creates many <code>DiagnosticRetainedPayload</code> objects. Each owns a 256 KiB byte array and is kept strongly reachable by service state.
+          <div><i>Source: RuntimeDiagnosticsExperimentService.startHeapRetention()</i></div>
+          <pre><code>payloads.add(
+              new DiagnosticRetainedPayload(index, PAYLOAD_BYTES)
+          );
+          state.payloads = List.copyOf(payloads);</code></pre>
+        </li>
+        <li>The API returns the PID, class name, payload count, and <code>expiresAt</code>. During that window run <code>jcmd &lt;pid&gt; GC.class_histogram</code> and locate <code>DiagnosticRetainedPayload</code>; the backing byte arrays also increase heap footprint.</li>
+        <li>After the timeout, a cleanup thread clears the strong references and active state. That only makes the objects <i>eligible</i> for collection; the experiment does not call <code>System.gc()</code> or promise an immediate heap-used drop.</li>
+      </ol>
+      <p><b>Evidence:</b> The response states the population and bytes intentionally retained, while a histogram in the same time window shows the actual class population inside the JVM.</p>
+      <p><b>Safety:</b> The JDK classifies <code>GC.class_histogram</code> as High impact and it can request a full GC by default. Use it on the learning/lab JVM for this experiment; production collection requires a separate impact decision.</p>
+      <p><b>Conclusion:</b> Histograms help form population-growth hypotheses. A leak conclusion still requires trend and retention evidence beyond one snapshot.</p>
+    usage: true
+  jfrCpuWindow(int):
+    execution: |-
+      <p><b>Concept:</b> JFR execution samples correlate CPU activity with stacks and threads over a time window instead of inferring hot code from one thread snapshot.</p>
+      <ol>
+        <li>Obtain the PID from the MXBean snapshot API or <code>jcmd -l</code>, then start a self-bounded recording before triggering the workload, for example <code>jcmd &lt;pid&gt; JFR.start name=runtime-diagnostics-lab settings=profile duration=20s filename=runtime-diagnostics-lab.jfr</code>. Twenty seconds is longer than the API's maximum 15-second CPU window while still guaranteeing that the recording stops and writes its file if the learner forgets to stop it manually.</li>
+        <li>Trigger this API. The service clamps the duration to 2–15 seconds and creates exactly one named platform thread, <code>runtime-diagnostics-cpu-worker-&lt;id&gt;</code>.
+          <div><i>Source: RuntimeDiagnosticsExperimentService.runCpuLoop()</i></div>
+          <pre><code>while (System.nanoTime() &lt; deadline) {
+              value ^= value &lt;&lt; 13;
+              value ^= value &gt;&gt;&gt; 7;
+              value ^= value &lt;&lt; 17;
+              iterations++;
+          }</code></pre>
+        </li>
+        <li>The API responds immediately with the thread name and <code>expiresAt</code>; the worker continues consuming CPU until the window ends and then terminates automatically.</li>
+        <li>After the window, the learner can stop the recording early with <code>jcmd &lt;pid&gt; JFR.stop name=runtime-diagnostics-lab filename=runtime-diagnostics-lab.jfr</code> and inspect execution samples with the <code>jfr</code> CLI or JMC. If it is not stopped early, the recording ends automatically after 20 seconds and writes the configured file.</li>
+      </ol>
+      <p><b>Evidence:</b> The recording should contain samples in the same interval with stacks/threads related to the CPU worker when sampling captures the workload.</p>
+      <p><b>Safety:</b> <code>settings=profile</code> collects more data and has more overhead than <code>default.jfc</code>. The lab recording is self-bounded with <code>duration=20s</code> so it cannot run indefinitely when a manual stop is missed; production settings and duration should still match the diagnostic question and impact budget.</p>
+      <p><b>Conclusion:</b> CPU samples are statistical time-based evidence. They help identify hot execution paths but are not nanosecond-perfect accounting.</p>
+    usage: true
+  mxBeanSnapshot():
+    execution: |-
+      <p><b>Concept:</b> Platform MXBeans expose structured runtime state that in-process code can read directly without parsing command-line output.</p>
+      <ol>
+        <li>The service obtains standard beans through <code>ManagementFactory</code>: runtime, memory, threads, class loading, garbage collectors, and operating system.
+          <div><i>Source: RuntimeDiagnosticsExperimentService.managementSnapshot()</i></div>
+          <pre><code>MemoryMXBean memory =
+              ManagementFactory.getMemoryMXBean();
+          ThreadMXBean threads =
+              ManagementFactory.getThreadMXBean();</code></pre>
+        </li>
+        <li>The response contains PID/uptime, heap and non-heap usage, platform-thread counts, class-loading counters, GC counters, and standard OS information.</li>
+        <li>If the OS bean also implements <code>com.sun.management.OperatingSystemMXBean</code>, extension metrics such as process CPU and committed virtual memory appear under a separate field. Otherwise the extension reports <code>available=false</code>.</li>
+        <li>Take snapshots before, during, and after another experiment to observe changing state instead of treating one value as a root cause.</li>
+      </ol>
+      <p><b>Evidence:</b> Returned values are read directly from the target JVM's platform management interfaces at <code>sampledAt</code>.</p>
+      <p><b>Conclusion:</b> MXBeans are a structured monitoring surface. They complement JFR and dumps but do not explain incidents by themselves.</p>
+    usage: true

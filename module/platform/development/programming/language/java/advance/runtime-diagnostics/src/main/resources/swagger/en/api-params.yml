@@ -1,0 +1,12 @@
+durationMillis:
+  summary: Observation-window duration
+  description: Requested duration in milliseconds. The service always clamps the effective
+    value to 2000–15000 ms so experiments terminate automatically instead of holding
+    CPU, a monitor, or heap state indefinitely.
+  usage: true
+megabytes:
+  summary: Temporary retained-heap size
+  description: Requested MiB retained by the heap experiment through DiagnosticRetainedPayload
+    objects. The service clamps the effective value to 1–16 MiB so the learning demo
+    does not become an unsafe memory-pressure or OOME test.
+  usage: true

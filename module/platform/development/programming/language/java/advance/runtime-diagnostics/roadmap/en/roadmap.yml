@@ -41,4 +41,123 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: diagnostic-mindset
+    title: Runtime Diagnostic Mindset
+    purpose: Understand runtime diagnostics as a process of turning symptoms into testable evidence rather than guessing causes from a single metric or snapshot.
+    objectives:
+      - Distinguish symptoms, signals, evidence, hypotheses, and root causes in a Java incident.
+      - Understand why low-impact evidence should normally be collected before heavier diagnostic artifacts.
+      - Keep a clear boundary between observation/diagnosis, JVM internals, instrumentation, and observability platforms.
+    relatedModules:
+      - routeId: JAVA_JVM
+        label: JVM
+        note: Provides the runtime mental model needed to interpret evidence without turning diagnostics into a JVM-internals course.
+
+  - id: diagnostic-surface
+    title: JDK Diagnostic Surface and Tools
+    purpose: Build a mental model of how a running JVM can be prepared and observed through processes, diagnostic commands, logs, dumps, and recordings while accounting for access requirements and collection cost.
+    objectives:
+      - Identify the target JVM/process and choose the JDK diagnostic family that matches the question.
+      - Prefer jcmd for supported diagnostic operations and understand when a more specialized or older utility is still needed.
+      - Distinguish live diagnostics, artifact collection, and postmortem evidence.
+      - Establish diagnostic readiness before an incident by enabling appropriate artifacts and capabilities instead of waiting for failure to begin collecting evidence.
+      - Consider impact, permissions, and timing before running diagnostic operations.
+
+  - id: thread-liveness-diagnostics
+    title: Thread and Liveness Diagnostics
+    purpose: Use thread-oriented evidence to investigate hangs, blocking, deadlocks, contention, or lack of progress without turning this module into a concurrency-theory course.
+    objectives:
+      - Read a thread dump as a snapshot of execution state, stacks, and lock ownership.
+      - Collect multiple snapshots over time to distinguish transient states from liveness problems.
+      - Use thread evidence to form hypotheses about deadlock, blocking, contention, and hot execution paths.
+      - Distinguish how platform threads and virtual threads are observed in Java 21, including ThreadMXBean limitations and when a virtual-thread-aware dump is required.
+      - Know when to hand off to Java Concurrency for correctness and synchronization semantics.
+    relatedModules:
+      - routeId: JAVA_CONCURRENCY_FUNDAMENTALS
+        label: Java Concurrency Fundamentals
+        note: Owns thread lifecycle, synchronization, happens-before, and concurrency correctness that diagnostics only observes.
+
+  - id: heap-gc-diagnostics
+    title: Heap and GC Evidence
+    purpose: Investigate memory pressure, OutOfMemoryError, and suspected memory leaks with heap-oriented evidence without duplicating GC and JVM-memory mechanics owned by the JVM module.
+    objectives:
+      - Distinguish heap usage, class histograms, heap dumps, GC logs, and memory-related events by the questions they answer.
+      - Choose appropriate artifacts for memory growth, allocation pressure, or OutOfMemoryError.
+      - Understand how snapshots differ from trends and why one heap dump does not prove a memory leak by itself.
+      - Interpret evidence using the JVM memory model instead of reteaching collector internals.
+    relatedModules:
+      - routeId: JAVA_JVM
+        label: JVM
+        note: Owns heap, allocation, and garbage-collection mechanics needed to interpret memory evidence.
+
+  - id: native-memory-diagnostics
+    title: Native Memory Diagnostics
+    purpose: Extend the diagnostic model beyond the Java heap so process-memory growth can be investigated when heap evidence is insufficient, especially through Native Memory Tracking.
+    objectives:
+      - Distinguish the Java heap, JVM native memory, and native allocations outside NMT coverage.
+      - Understand reserved versus committed memory in NMT output.
+      - Understand that NMT is disabled by default, must be enabled when the JVM starts, and benefits from an early baseline when trend comparison is needed.
+      - Use baselines and diffs to identify growth trends by JVM memory category.
+      - Understand NMT limitations and overhead before concluding that a native-memory leak exists.
+    relatedModules:
+      - routeId: JAVA_JVM
+        label: JVM
+        note: Provides the model of JVM-managed native structures while this module focuses on evidence and troubleshooting.
+
+  - id: flight-recorder-diagnostics
+    title: Event and Performance Diagnostics with Java Flight Recorder
+    purpose: Move from isolated snapshots to contextual event timelines so JVM and application behavior can be analyzed over time and hard-to-reproduce performance problems can be investigated.
+    objectives:
+      - Understand JFR as an event-recording system rather than merely a profiler UI.
+      - Start, inspect, dump, and analyze flight recordings with JDK tooling at the workflow level.
+      - Correlate CPU samples, thread/lock events, allocation, GC, I/O, and other runtime events over time to test hypotheses.
+      - Choose recording settings and duration according to production safety and the question being investigated.
+    relatedModules:
+      - routeId: JAVA_11_FLIGHT_RECORDER
+        label: Java 11 Flight Recorder
+        note: Provides the release/evolution view of Flight Recorder while this module owns the current diagnostic workflow.
+
+  - id: management-jmx
+    title: Runtime Management with MXBeans and JMX
+    purpose: Understand Java's monitoring and management APIs so runtime state can be observed from code or management clients instead of relying only on command-line tools and dump artifacts.
+    objectives:
+      - Understand the role of ManagementFactory and platform MXBeans in runtime observation.
+      - Connect thread, memory, GC, class-loading, compilation, process, and operating-system information to their management interfaces.
+      - Understand MBeans, the MBeanServer, and remote JMX at the level needed for monitoring and diagnostics.
+      - Recognize security and exposure concerns when enabling remote management.
+
+  - id: crash-postmortem-diagnostics
+    title: Crash Artifacts and Postmortem Diagnostics
+    purpose: Preserve and interpret the evidence that remains when a JVM has crashed, has been forcibly terminated, or can no longer be investigated safely as a live process.
+    objectives:
+      - Distinguish fatal error logs, core/crash dumps, heap dumps, application/JVM logs, and flight recordings by the failures they can help explain.
+      - Understand why core-dump readiness, fatal-error-log location, heap dumps on OutOfMemoryError, and continuous recording should be prepared before an incident.
+      - Understand the role of the Serviceability Agent/jhsdb for core-dump analysis and the risk of attaching it to a live process.
+      - Combine crash artifacts with thread, memory, and JFR knowledge to choose the next investigation step instead of inferring a root cause from a single error line.
+    relatedModules:
+      - routeId: JAVA_NATIVE_INTEROPERABILITY
+        label: Native Interoperability
+        note: Hand off when fatal-error or stack evidence points to JNI, a native library, or another native-code boundary that requires deeper investigation.
+
+  - id: troubleshooting-workflow
+    title: End-to-End Troubleshooting Workflow
+    purpose: Synthesize the module into a workflow from symptom to tested hypothesis, choosing evidence by cost and handing off to neighboring owners when deeper theory or tooling is required.
+    objectives:
+      - Move from a symptom to an evidence plan instead of running tools randomly.
+      - Correlate thread, heap, native-memory, crash artifacts, JFR, logs, and management signals when one source is insufficient.
+      - Prefer low-impact evidence and preserve transient artifacts before a restart destroys useful state.
+      - Distinguish when to continue diagnostics and when to hand off to JVM, Concurrency, Instrumentation, or observability tooling.
+    relatedModules:
+      - routeId: JAVA_JVM
+        label: JVM
+        note: Go deeper into execution, memory, GC, and JIT mechanics when evidence requires an internals explanation.
+      - routeId: JAVA_CONCURRENCY_FUNDAMENTALS
+        label: Java Concurrency Fundamentals
+        note: Go deeper into synchronization and correctness when thread evidence points to a concurrency problem.
+      - routeId: JAVA_INSTRUMENTATION
+        label: Instrumentation
+        note: Use when the problem requires active instrumentation or runtime transformation rather than observation alone.
+      - routeId: ARTHAS
+        label: Arthas
+        note: Tool-specific runtime analysis is handed off to observability tooling instead of expanding the scope of JDK diagnostics.

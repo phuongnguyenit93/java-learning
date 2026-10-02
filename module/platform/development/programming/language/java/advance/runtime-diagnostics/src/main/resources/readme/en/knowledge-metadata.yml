@@ -1,1 +1,269 @@
-{}
+1.MentalModel/RuntimeDiagnostics.md:
+  runtime-diagnostics-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  diagnostic-reasoning-loop:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  evidence-quality-and-cost:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  diagnostic-readiness-principle:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  diagnostic-scope-boundaries:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+2.JdkDiagnosticTools/JdkDiagnosticTools.md:
+  target-jvm-identification:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jcmd-first-diagnostics:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  specialized-jdk-utilities:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  diagnostic-tool-selection:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  live-vs-offline-evidence:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  diagnostic-artifact-readiness:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  diagnostic-permissions-and-impact:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+3.ThreadDiagnostics/ThreadDiagnostics.md:
+  thread-diagnostics-purpose:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  thread-dump-structure:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  thread-states-and-stack-evidence:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  locks-deadlocks-and-contention:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  repeated-thread-dumps:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  platform-vs-virtual-thread-diagnostics:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  thread-diagnostic-pitfalls:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+4.HeapGcDiagnostics/HeapGcDiagnostics.md:
+  heap-gc-diagnostics-purpose:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  heap-usage-vs-allocation-pressure:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  class-histogram:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  heap-dump-and-oome:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  gc-logs-and-events:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  snapshot-vs-trend:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  memory-leak-evidence:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  heap-gc-diagnostic-pitfalls:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+5.NativeMemoryTracking/NativeMemoryTracking.md:
+  native-memory-diagnostics-purpose:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  nmt-scope-and-limitations:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  enabling-nmt-and-tracking-levels:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  reserved-vs-committed:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  nmt-baseline-and-diff:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  native-memory-growth-analysis:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  nmt-overhead-and-pitfalls:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+6.JFR/JFR.md:
+  jfr-diagnostics-purpose:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  recording-lifecycle:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  recording-settings-and-overhead:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jfr-event-model:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  cpu-thread-lock-analysis:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  memory-gc-io-analysis:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  continuous-recording-and-postmortem:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jfr-cli-and-jmc-boundary:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+7.ManagementJMX/ManagementJMX.md:
+  java-management-purpose:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  management-factory-and-platform-mxbeans:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  platform-management-surfaces:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  mbean-and-object-name-model:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  platform-mbean-server:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  local-vs-remote-jmx:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jconsole-and-management-clients:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  remote-jmx-security:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+8.CrashPostmortemDiagnostics/CrashPostmortemDiagnostics.md:
+  postmortem-diagnostics-purpose:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  fatal-error-log:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  core-dump-and-jhsdb:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  oome-heap-dump:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  preserve-logs-and-recordings:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  correlate-crash-artifacts:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  native-crash-handoff:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+9.TroubleshootingWorkflow/TroubleshootingWorkflow.md:
+  troubleshooting-workflow-purpose:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  classify-symptom:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  build-evidence-plan:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  collect-low-impact-first:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  correlate-multiple-signals:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  preserve-before-restart:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  common-diagnostic-pitfalls:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  escalation-and-handoff:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false

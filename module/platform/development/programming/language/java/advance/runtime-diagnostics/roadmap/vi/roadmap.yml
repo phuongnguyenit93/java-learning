@@ -41,4 +41,123 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: diagnostic-mindset
+    title: Tư duy chẩn đoán runtime
+    purpose: Hiểu chẩn đoán runtime là quá trình biến triệu chứng thành bằng chứng có thể kiểm chứng, thay vì đoán nguyên nhân từ một chỉ số hoặc một ảnh chụp trạng thái đơn lẻ.
+    objectives:
+      - Phân biệt triệu chứng, tín hiệu, bằng chứng, giả thuyết và nguyên nhân gốc trong một sự cố Java.
+      - Biết vì sao cần ưu tiên bằng chứng ít xâm lấn trước khi thu thập dữ liệu chẩn đoán nặng hơn.
+      - Giữ rõ ranh giới giữa chẩn đoán với cơ chế nội bộ JVM, instrumentation và nền tảng observability.
+    relatedModules:
+      - routeId: JAVA_JVM
+        label: JVM
+        note: Cung cấp mô hình nền về execution, memory, GC và JIT để diễn giải bằng chứng runtime.
+
+  - id: diagnostic-surface
+    title: Nguồn dữ liệu và công cụ chẩn đoán JDK
+    purpose: Hiểu cách chuẩn bị và quan sát một JVM đang chạy qua thông tin tiến trình, diagnostic commands, logs, dumps và recordings, đồng thời cân nhắc chi phí và điều kiện thu thập của từng loại bằng chứng.
+    objectives:
+      - Nhận diện JVM/process mục tiêu và chọn đúng nhóm công cụ JDK cho câu hỏi chẩn đoán.
+      - Ưu tiên jcmd cho các thao tác được hỗ trợ và hiểu khi nào mới cần tới công cụ chuyên biệt hoặc cũ hơn.
+      - Phân biệt quan sát trực tiếp trên JVM đang chạy, thu thập dữ liệu để phân tích sau và chẩn đoán hậu kiểm.
+      - Chuẩn bị khả năng thu thập bằng chứng trước sự cố thay vì chờ tới lúc hệ thống hỏng mới bắt đầu cấu hình.
+      - Đánh giá tác động, quyền truy cập và thời điểm trước khi chạy thao tác chẩn đoán.
+
+  - id: thread-liveness-diagnostics
+    title: Chẩn đoán thread và liveness
+    purpose: Học cách dùng bằng chứng về thread để điều tra ứng dụng treo, blocked, deadlock, contention hoặc không tiến triển mà không lặp lại lý thuyết concurrency.
+    objectives:
+      - Đọc thread dump như một ảnh chụp trạng thái thực thi, stack và quan hệ sở hữu lock.
+      - Thu thập nhiều ảnh chụp theo thời gian để phân biệt trạng thái tạm thời với vấn đề liveness.
+      - Dùng bằng chứng về thread để hình thành giả thuyết về deadlock, blocking, contention và đường thực thi đang tiêu tốn CPU.
+      - Phân biệt cách quan sát platform thread và virtual thread trong Java 21, bao gồm giới hạn của ThreadMXBean và khi nào cần dump có hỗ trợ virtual thread.
+      - Biết khi nào cần chuyển sang Java Concurrency để giải thích correctness hoặc synchronization semantics.
+    relatedModules:
+      - routeId: JAVA_CONCURRENCY_FUNDAMENTALS
+        label: Java Concurrency Fundamentals
+        note: Sở hữu thread lifecycle, synchronization, happens-before và concurrency correctness mà module này chỉ quan sát qua bằng chứng runtime.
+
+  - id: heap-gc-diagnostics
+    title: Chẩn đoán heap và GC
+    purpose: Biết cách điều tra áp lực bộ nhớ, OutOfMemoryError và nghi ngờ memory leak bằng dữ liệu heap/GC mà không lặp lại cơ chế memory và garbage collection đã thuộc module JVM.
+    objectives:
+      - Phân biệt heap usage, class histogram, heap dump, GC log và memory-related event theo loại câu hỏi chúng có thể trả lời.
+      - Chọn dữ liệu phù hợp cho memory growth, allocation pressure hoặc OutOfMemoryError.
+      - Hiểu ảnh chụp tại một thời điểm khác xu hướng theo thời gian như thế nào và vì sao một heap dump đơn lẻ không tự chứng minh memory leak.
+      - Diễn giải bằng chứng dựa trên JVM memory model thay vì tái dạy collector internals.
+    relatedModules:
+      - routeId: JAVA_JVM
+        label: JVM
+        note: Sở hữu heap, allocation và garbage-collection mechanics cần để diễn giải dữ liệu bộ nhớ.
+
+  - id: native-memory-diagnostics
+    title: Chẩn đoán native memory
+    purpose: Mở rộng góc nhìn ra ngoài Java heap để điều tra khi bộ nhớ của process tăng nhưng dữ liệu heap không giải thích được, đặc biệt thông qua Native Memory Tracking.
+    objectives:
+      - Phân biệt Java heap, JVM native memory và native allocation ngoài phạm vi NMT.
+      - Hiểu reserved và committed memory trong NMT output.
+      - Hiểu NMT mặc định tắt, phải được bật từ lúc JVM khởi động và nên tạo baseline sớm nếu cần so sánh xu hướng.
+      - Dùng baseline/diff để nhận diện xu hướng tăng theo từng nhóm bộ nhớ JVM.
+      - Biết giới hạn và overhead của NMT trước khi kết luận có native-memory leak.
+    relatedModules:
+      - routeId: JAVA_JVM
+        label: JVM
+        note: Cung cấp mô hình về các cấu trúc native do JVM quản lý; module này tập trung vào bằng chứng và quy trình chẩn đoán.
+
+  - id: flight-recorder-diagnostics
+    title: Chẩn đoán sự kiện và hiệu năng bằng Java Flight Recorder
+    purpose: Chuyển từ các ảnh chụp rời rạc sang dòng sự kiện theo thời gian để phân tích hành vi JVM/application và điều tra các vấn đề hiệu năng khó tái hiện.
+    objectives:
+      - Hiểu JFR là hệ thống ghi sự kiện của JVM chứ không chỉ là dữ liệu cho một profiler UI.
+      - Biết start, inspect, dump và phân tích flight recording bằng công cụ JDK ở mức workflow.
+      - Liên hệ CPU samples, thread/lock events, allocation, GC, I/O và các runtime events theo thời gian để kiểm tra giả thuyết.
+      - Chọn recording settings và duration phù hợp với mức an toàn production và câu hỏi cần trả lời.
+    relatedModules:
+      - routeId: JAVA_11_FLIGHT_RECORDER
+        label: Java 11 Flight Recorder
+        note: Cung cấp góc nhìn theo phiên bản về Flight Recorder; module này sở hữu workflow chẩn đoán hiện tại.
+
+  - id: management-jmx
+    title: Theo dõi và quản lý runtime với MXBeans và JMX
+    purpose: Hiểu lớp API monitoring/management của Java để quan sát JVM từ code hoặc management client thay vì chỉ dựa vào công cụ dòng lệnh và dump.
+    objectives:
+      - Hiểu vai trò của ManagementFactory và các platform MXBeans trong việc quan sát runtime.
+      - Liên hệ thread, memory, GC, class loading, compilation, process/OS information với management interface tương ứng.
+      - Hiểu MBean, MBeanServer và remote JMX ở mức cần thiết cho monitoring và diagnostics.
+      - Nhận biết yêu cầu bảo mật và rủi ro phơi bày management endpoint khi bật remote JMX.
+
+  - id: crash-postmortem-diagnostics
+    title: Dữ liệu sự cố và chẩn đoán hậu kiểm
+    purpose: Biết cách bảo toàn và diễn giải nhóm bằng chứng còn lại khi JVM đã crash, bị buộc dừng hoặc không thể tiếp tục quan sát trực tiếp.
+    objectives:
+      - Phân biệt fatal error log, core/crash dump, heap dump, application/JVM logs và flight recording theo loại sự cố mà chúng có thể giải thích.
+      - Hiểu vì sao core dump, vị trí fatal error log, heap dump khi OutOfMemoryError và continuous recording cần được chuẩn bị trước sự cố.
+      - Biết vai trò của Serviceability Agent/jhsdb trong phân tích core dump và rủi ro khi attach công cụ này vào live process.
+      - Kết hợp crash artifacts với kiến thức về thread, memory và JFR để xác định bước điều tra tiếp theo thay vì suy diễn nguyên nhân từ một dòng lỗi.
+    relatedModules:
+      - routeId: JAVA_NATIVE_INTEROPERABILITY
+        label: Native Interoperability
+        note: Chuyển sang module này khi fatal error hoặc stack evidence chỉ ra JNI, native library hay native-code boundary cần được điều tra sâu hơn.
+
+  - id: troubleshooting-workflow
+    title: Quy trình troubleshooting end-to-end
+    purpose: Hợp nhất toàn bộ module thành một quy trình từ triệu chứng đến giả thuyết được kiểm chứng, biết chọn bằng chứng theo chi phí và biết lúc nào cần chuyển sang module chuyên trách khác.
+    objectives:
+      - Đi từ triệu chứng đến kế hoạch thu thập bằng chứng thay vì chạy công cụ ngẫu nhiên.
+      - Liên hệ dữ liệu thread, heap, native memory, crash artifacts, JFR, logs và management signals khi một nguồn dữ liệu không đủ.
+      - Ưu tiên bằng chứng có chi phí thấp và bảo toàn dữ liệu quan trọng trước khi restart làm mất trạng thái.
+      - Phân biệt khi nào tiếp tục chẩn đoán và khi nào chuyển sang JVM, Concurrency, Instrumentation hoặc observability tooling.
+    relatedModules:
+      - routeId: JAVA_JVM
+        label: JVM
+        note: Đi sâu vào execution, memory, GC và JIT mechanics khi bằng chứng yêu cầu giải thích cơ chế nội bộ JVM.
+      - routeId: JAVA_CONCURRENCY_FUNDAMENTALS
+        label: Java Concurrency Fundamentals
+        note: Đi sâu vào synchronization và concurrency correctness khi dữ liệu thread chỉ ra vấn đề liveness hoặc concurrency.
+      - routeId: JAVA_INSTRUMENTATION
+        label: Instrumentation
+        note: Dùng khi bài toán cần chủ động instrument hoặc biến đổi runtime thay vì chỉ quan sát.
+      - routeId: ARTHAS
+        label: Arthas
+        note: Runtime analysis theo công cụ cụ thể được chuyển sang observability tooling thay vì mở rộng phạm vi của JDK diagnostics.

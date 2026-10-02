@@ -1,0 +1,117 @@
+RuntimeDiagnosticsExperimentController:
+  threadContention(int):
+    summary: Tạo một cửa sổ monitor contention có giới hạn
+    description: Tạo hai platform thread có tên rõ ràng. Thread holder giữ một monitor
+      trong một khoảng thời gian có giới hạn, còn thread waiter cố lấy cùng monitor
+      và chuyển sang BLOCKED. API trả về ngay PID, tên thread và thời điểm hết hạn
+      để learner có thể chạy jcmd Thread.print -l trong lúc contention còn tồn tại.
+      Mỗi lần chỉ có một cửa sổ contention active và không tạo vòng deadlock.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 3.ThreadDiagnostics/ThreadDiagnostics.md
+      anchor: locks-deadlocks-and-contention
+    methodName: threadContention
+    params:
+    - durationMillis
+    path: com/example/learning/module/runtimediagnostics/controller/RuntimeDiagnosticsExperimentController.java
+    mapping: '@PostMapping("/thread-contention")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /runtime-diagnostics/experiments/thread-contention
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  heapRetention(int,int):
+    summary: Giữ một tập object có giới hạn để quan sát class histogram
+    description: Tạo các DiagnosticRetainedPayload với tổng dung lượng được giới hạn,
+      giữ strong reference trong một cửa sổ ngắn rồi tự giải phóng reference. Trong
+      cửa sổ đó learner có thể chạy jcmd GC.class_histogram và tìm population của
+      class này. Đây là thí nghiệm retention có kiểm soát, không phải một memory leak
+      thật và không cam kết heap-used giảm ngay sau khi reference được bỏ.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 4.HeapGcDiagnostics/HeapGcDiagnostics.md
+      anchor: class-histogram
+    methodName: heapRetention
+    params:
+    - megabytes
+    - durationMillis
+    path: com/example/learning/module/runtimediagnostics/controller/RuntimeDiagnosticsExperimentController.java
+    mapping: '@PostMapping("/heap-retention")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /runtime-diagnostics/experiments/heap-retention
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  jfrCpuWindow(int):
+    summary: Tạo CPU window ngắn để quan sát bằng JFR
+    description: Khởi chạy đúng một platform thread có tên rõ ràng thực hiện CPU loop
+      trong thời gian giới hạn. Learner nên start một JFR recording trước, trigger
+      API, rồi dump/stop recording để tìm execution samples của worker trong đúng
+      time window. Mỗi lần chỉ có một CPU window active.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 6.JFR/JFR.md
+      anchor: cpu-thread-lock-analysis
+    methodName: jfrCpuWindow
+    params:
+    - durationMillis
+    path: com/example/learning/module/runtimediagnostics/controller/RuntimeDiagnosticsExperimentController.java
+    mapping: '@PostMapping("/jfr-cpu-window")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /runtime-diagnostics/experiments/jfr-cpu-window
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  mxBeanSnapshot():
+    summary: Đọc snapshot runtime trực tiếp từ platform MXBeans
+    description: Đọc RuntimeMXBean, MemoryMXBean, ThreadMXBean, ClassLoadingMXBean,
+      GarbageCollectorMXBeans và OperatingSystemMXBean trong chính JVM đang chạy.
+      Response tách dữ liệu Java SE chuẩn khỏi com.sun.management.OperatingSystemMXBean
+      extension khi JDK hỗ trợ, nhờ đó learner có thể so sánh snapshot trước, trong
+      và sau các thí nghiệm khác.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 7.ManagementJMX/ManagementJMX.md
+      anchor: platform-management-surfaces
+    methodName: mxBeanSnapshot
+    params: [
+      ]
+    path: com/example/learning/module/runtimediagnostics/controller/RuntimeDiagnosticsExperimentController.java
+    mapping: '@GetMapping("/mxbeans/snapshot")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /runtime-diagnostics/experiments/mxbeans/snapshot
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

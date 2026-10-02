@@ -1,0 +1,6 @@
+RuntimeDiagnosticsExperimentController:
+  description: |-
+    <h2>Thí nghiệm Runtime Diagnostics có giới hạn</h2>
+    <p>Nhóm API này tạo các cửa sổ runtime ngắn và có giới hạn để learner có thể dùng jcmd, JFR và MXBeans quan sát bằng chứng thật trên một JVM đang chạy. Các thí nghiệm contention, heap retention và CPU tự kết thúc; chúng không cố tình tạo deadlock, OutOfMemoryError hay crash JVM.</p>
+  readmeRelated:
+    file: ''

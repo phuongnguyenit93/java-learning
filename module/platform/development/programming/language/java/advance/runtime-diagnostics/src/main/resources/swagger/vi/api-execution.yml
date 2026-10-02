@@ -1,0 +1,79 @@
+RuntimeDiagnosticsExperimentController:
+  threadContention(int):
+    execution: |-
+      <p><b>Khái niệm:</b> Contention có thể được quan sát bằng quan hệ holder/waiter và trạng thái <code>BLOCKED</code> trong thread dump; API chỉ tạo một cửa sổ đủ dài để learner thu thập bằng chứng đó.</p>
+      <ol>
+        <li>Service clamp <code>durationMillis</code> vào khoảng 2–15 giây và từ chối tạo thêm cửa sổ contention nếu một cửa sổ khác còn active.</li>
+        <li>Một platform thread tên <code>runtime-diagnostics-lock-holder-&lt;id&gt;</code> lấy monitor và giữ nó trong thời gian đã giới hạn.
+          <div><i>Source: RuntimeDiagnosticsExperimentService.startThreadContention()</i></div>
+          <pre><code>synchronized (monitor) {
+              holderAcquired.countDown();
+              sleep(durationMillis);
+          }</code></pre>
+        </li>
+        <li>Sau khi holder đã lấy monitor, waiter thread cố vào cùng block <code>synchronized</code>. API chỉ trả <code>started=true</code> sau khi thực sự quan sát waiter ở trạng thái <code>BLOCKED</code>; nếu không thiết lập được bằng chứng đó trong thời gian chờ có giới hạn, các worker được dừng và experiment trả failure reason thay vì báo success giả.</li>
+        <li>Trong khoảng trước <code>expiresAt</code>, chạy command từ response, ví dụ <code>jcmd &lt;pid&gt; Thread.print -l</code>, rồi tìm đúng hai thread theo tên. Có thể lấy thêm một dump trước khi window kết thúc để kiểm tra contention còn tồn tại hay không.</li>
+        <li>Khi holder hết thời gian giữ monitor, waiter lấy được monitor, cả hai thread kết thúc và coordinator xóa active state.</li>
+      </ol>
+      <p><b>Bằng chứng:</b> thread dump cho thấy holder/waiter có cùng monitor relationship, waiter ở <code>BLOCKED</code>, còn response cho PID, thread names và expiration window để liên hệ đúng dữ liệu.</p>
+      <p><b>An toàn:</b> <code>Thread.print</code> có thể có mức tác động Medium tùy số thread. Experiment này được thiết kế cho JVM học/lab; trên hệ thống thật phải đánh giá impact trước khi thu thập.</p>
+      <p><b>Kết luận:</b> Đây là contention có giới hạn chứ không phải deadlock. Chẩn đoán nhận diện runtime evidence; semantics/correctness của locking vẫn thuộc module Concurrency.</p>
+    usage: true
+  heapRetention(int,int):
+    execution: |-
+      <p><b>Khái niệm:</b> Class histogram là snapshot của population đang reachable/được heap inspection nhìn thấy tại thời điểm command chạy; một population lớn không tự chứng minh leak.</p>
+      <ol>
+        <li>Service clamp <code>megabytes</code> vào 1–16 MiB và <code>durationMillis</code> vào 2–15 giây; mỗi lần chỉ có một retention window active.</li>
+        <li>Service tạo nhiều <code>DiagnosticRetainedPayload</code>; mỗi object giữ một byte array 256 KiB và được giữ bằng strong reference trong state của service.
+          <div><i>Source: RuntimeDiagnosticsExperimentService.startHeapRetention()</i></div>
+          <pre><code>payloads.add(
+              new DiagnosticRetainedPayload(index, PAYLOAD_BYTES)
+          );
+          state.payloads = List.copyOf(payloads);</code></pre>
+        </li>
+        <li>API trả PID, class name, payload count và <code>expiresAt</code>. Trong window đó chạy <code>jcmd &lt;pid&gt; GC.class_histogram</code> và tìm <code>DiagnosticRetainedPayload</code>; byte arrays liên quan cũng làm heap footprint tăng.</li>
+        <li>Sau timeout, cleanup thread xóa strong references và active state. Điều này chỉ làm object <i>eligible</i> cho GC; API không gọi <code>System.gc()</code> và không hứa heap-used giảm ngay lập tức.</li>
+      </ol>
+      <p><b>Bằng chứng:</b> response cho biết population/bytes mà thí nghiệm cố tình giữ; histogram trong cùng time window cho thấy class population thực tế trên JVM.</p>
+      <p><b>An toàn:</b> <code>GC.class_histogram</code> được JDK đánh dấu High impact và mặc định có thể request full GC. Chỉ dùng command này trên JVM học/lab cho experiment này; production cần cân nhắc impact riêng.</p>
+      <p><b>Kết luận:</b> Histogram giúp hình thành giả thuyết về population tăng. Muốn kết luận leak phải có trend và retention evidence khác, không dựa vào một snapshot.</p>
+    usage: true
+  jfrCpuWindow(int):
+    execution: |-
+      <p><b>Khái niệm:</b> JFR execution samples cho phép liên hệ CPU activity với stack/thread trong một time window thay vì suy luận từ một thread dump đơn lẻ.</p>
+      <ol>
+        <li>Lấy PID từ API MXBean snapshot hoặc <code>jcmd -l</code>, sau đó start một recording tự giới hạn trước khi trigger workload, ví dụ <code>jcmd &lt;pid&gt; JFR.start name=runtime-diagnostics-lab settings=profile duration=20s filename=runtime-diagnostics-lab.jfr</code>. Mốc 20 giây dài hơn CPU window tối đa 15 giây nhưng vẫn bảo đảm recording tự dừng và ghi file nếu learner quên stop thủ công.</li>
+        <li>Trigger API này. Service clamp duration vào 2–15 giây và tạo đúng một platform thread tên <code>runtime-diagnostics-cpu-worker-&lt;id&gt;</code>.
+          <div><i>Source: RuntimeDiagnosticsExperimentService.runCpuLoop()</i></div>
+          <pre><code>while (System.nanoTime() &lt; deadline) {
+              value ^= value &lt;&lt; 13;
+              value ^= value &gt;&gt;&gt; 7;
+              value ^= value &lt;&lt; 17;
+              iterations++;
+          }</code></pre>
+        </li>
+        <li>API trả ngay thread name và <code>expiresAt</code>; worker tiếp tục tiêu tốn CPU cho tới khi window hết hạn rồi tự kết thúc.</li>
+        <li>Sau window, có thể stop recording sớm bằng <code>jcmd &lt;pid&gt; JFR.stop name=runtime-diagnostics-lab filename=runtime-diagnostics-lab.jfr</code> rồi inspect execution samples bằng <code>jfr</code> CLI hoặc JMC. Nếu không stop sớm, recording tự kết thúc sau 20 giây và ghi cùng file đã cấu hình.</li>
+      </ol>
+      <p><b>Bằng chứng:</b> recording phải chứa samples trong cùng khoảng thời gian và có stack/thread liên quan tới CPU worker nếu sampling bắt được workload.</p>
+      <p><b>An toàn:</b> <code>settings=profile</code> thu nhiều dữ liệu và có overhead cao hơn <code>default.jfc</code>. Recording lab được self-bound bằng <code>duration=20s</code> để không chạy vô hạn nếu bỏ quên bước stop; trên production vẫn phải chọn settings/duration theo câu hỏi và budget tác động.</p>
+      <p><b>Kết luận:</b> CPU samples là bằng chứng thống kê theo thời gian. Chúng giúp xác định hot execution path nhưng không phải accounting tuyệt đối từng nanosecond.</p>
+    usage: true
+  mxBeanSnapshot():
+    execution: |-
+      <p><b>Khái niệm:</b> Platform MXBeans cung cấp structured runtime state mà code trong JVM có thể đọc trực tiếp, không cần parse output của command-line tool.</p>
+      <ol>
+        <li>Service lấy các bean chuẩn từ <code>ManagementFactory</code>: runtime, memory, thread, class loading, garbage collectors và operating system.
+          <div><i>Source: RuntimeDiagnosticsExperimentService.managementSnapshot()</i></div>
+          <pre><code>MemoryMXBean memory =
+              ManagementFactory.getMemoryMXBean();
+          ThreadMXBean threads =
+              ManagementFactory.getThreadMXBean();</code></pre>
+        </li>
+        <li>Response chứa PID/uptime, heap/non-heap usage, platform-thread counts, class-loading counters, GC counters và thông tin OS chuẩn.</li>
+        <li>Nếu object OS bean còn implement <code>com.sun.management.OperatingSystemMXBean</code>, response đặt các metric extension như process CPU và committed virtual memory vào một field riêng. Nếu không, field extension báo <code>available=false</code>.</li>
+        <li>Gọi snapshot trước/trong/sau một experiment khác để thấy metric có thể thay đổi theo thời gian; không xem một giá trị đơn lẻ là root cause.</li>
+      </ol>
+      <p><b>Bằng chứng:</b> Các giá trị trả về là data đọc trực tiếp từ platform management interfaces của chính target JVM tại <code>sampledAt</code>.</p>
+      <p><b>Kết luận:</b> MXBeans là monitoring surface có cấu trúc. Chúng bổ sung cho JFR/dumps nhưng không tự giải thích nguyên nhân sự cố.</p>
+    usage: true

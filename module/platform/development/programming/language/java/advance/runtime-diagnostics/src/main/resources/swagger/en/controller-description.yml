@@ -1,0 +1,6 @@
+RuntimeDiagnosticsExperimentController:
+  description: |-
+    <h2>Bounded Runtime Diagnostics Experiments</h2>
+    <p>This API group creates short, bounded runtime windows that let a learner observe real evidence with jcmd, JFR, and MXBeans on a running JVM. Contention, heap-retention, and CPU experiments terminate automatically; none intentionally creates a deadlock, OutOfMemoryError, or JVM crash.</p>
+  readmeRelated:
+    file: ''

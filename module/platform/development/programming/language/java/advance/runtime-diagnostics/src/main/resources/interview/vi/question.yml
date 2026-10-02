@@ -1,0 +1,117 @@
+# <interview-schema>
+# Cấu trúc câu hỏi Interview
+# schema-version: 2
+#
+# questions [kiểu: list; bắt buộc; mặc định: []]
+#   Danh sách câu hỏi Interview của module trong language hiện tại.
+#   mỗi phần tử:
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi phỏng vấn hiển thị cho người học.
+#     answer [kiểu: string; bắt buộc; mặc định: ""]
+#       Câu trả lời tham khảo, chỉ hiển thị khi người học chủ động mở.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu nội dung được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu nội dung đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+# </interview-schema>
+
+questions:
+  - question: "Hãy mô tả một vòng suy luận chẩn đoán có kỷ luật từ triệu chứng bên ngoài tới một giả thuyết nguyên nhân gốc có thể bảo vệ được. Chi phí thu thập bằng chứng, tương quan thời gian và định danh tiến trình đích nằm ở đâu trong quy trình đó?"
+    answer: "Tôi bắt đầu bằng cách gọi tên triệu chứng mà chưa biến nó thành nguyên nhân: ví dụ latency cao, CPU cao, RSS tăng hoặc request bị treo. Sau đó tôi tạo một giả thuyết có thể bị bác bỏ và chọn bằng chứng có chi phí thấp nhất nhưng vẫn đủ khả năng phân biệt giả thuyết đó với các nguyên nhân hợp lý khác. Mọi dữ liệu chẩn đoán phải gắn với đúng PID hoặc service instance và đúng khoảng thời gian của triệu chứng; nếu không thì dữ liệu có thể đúng về mặt kỹ thuật nhưng không liên quan. Tôi ưu tiên bằng chứng có tác động thấp trước, rồi chỉ nâng lên artifact nặng hơn khi giá trị chẩn đoán kỳ vọng xứng đáng với chi phí. Tôi đối chiếu nhiều nguồn độc lập thay vì coi một metric hay snapshot là bằng chứng đủ, đồng thời phải sửa hoặc bác bỏ giả thuyết khi dữ liệu không ủng hộ. Nguyên nhân gốc chỉ có ý nghĩa khi cơ chế được đề xuất giải thích được cả triệu chứng lẫn bằng chứng, không phải chỉ vì có một con số trông bất thường."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.MentalModel/RuntimeDiagnostics.md"
+      anchor: "diagnostic-reasoning-loop"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Request có vẻ bị stuck. Bạn sẽ phân biệt ordinary lock contention, deadlock, starvation hoặc external wait từ thread evidence như thế nào, và vì sao repeated dumps quan trọng? Hãy nêu cả boundary của virtual thread trên Java 21."
+    answer: "Tôi đọc Thread.State và các top stack frame trong ngữ cảnh thay vì map một state trực tiếp thành lỗi. Thread ở BLOCKED có thể chỉ ra monitor contention, nhưng cần xem owner là ai và owner/waiter relationship có lặp lại hay không. Deadlock cần dependency cycle khiến các thread liên quan không thể tiến triển; contention kéo dài chưa tự động là deadlock. Repeated dumps thêm chiều thời gian: stack và lock relationship giữ nguyên trong khi workload đáng lẽ phải tiến triển sẽ làm liveness hypothesis mạnh hơn, còn stack thay đổi có thể cho thấy hệ thống vẫn đang chạy. Starvation, external I/O wait, executor saturation hoặc livelock có thể làm hệ thống không tiến triển hữu ích mà không tạo monitor deadlock. Trên Java 21, ThreadMXBean quản lý platform thread chứ không quản lý virtual thread, nên ứng dụng dùng nhiều virtual thread cần dump/JFR có nhận biết virtual thread thay vì xem MXBean count là toàn bộ population."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Bạn sẽ điều tra một Java memory leak bị nghi ngờ thế nào để không nhầm allocation rate, heap occupancy và retention? Hãy giải thích vai trò của histogram, heap dump, bằng chứng GC/JFR và xu hướng theo thời gian."
+    answer: "Tôi tách thành ba câu hỏi. Allocation rate hỏi object được tạo nhanh đến mức nào; heap occupancy hỏi hiện đang dùng bao nhiêu heap; retention hỏi object nào còn reachable lâu hơn kỳ vọng. Class histogram là một ảnh chụp population hữu ích, nhưng GC.class_histogram được JDK xếp là command có impact cao và chi phí phụ thuộc kích thước/nội dung heap, nên việc lấy histogram lặp lại phải có impact budget rõ ràng. Một class lớn vẫn chưa chứng minh leak. GC log và bằng chứng allocation/old-object từ JFR bổ sung chiều thời gian, giúp phân biệt high churn với live set đang tăng. Heap dump cung cấp object graph và retention path khi cần hiểu vì sao object vẫn reachable, nhưng cũng là artifact nặng hơn. Tôi luôn đối chiếu với workload và thay đổi deploy vì tăng trưởng dữ liệu hợp lệ cũng có thể trông giống leak. Tôi chỉ gọi đó là leak khi retention growth không được workload hợp lý giải thích và đường giữ tham chiếu thực sự hỗ trợ giả thuyết."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.HeapGcDiagnostics/HeapGcDiagnostics.md"
+      anchor: "memory-leak-evidence"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Process RSS tiếp tục tăng trong khi Java heap sau GC tương đối ổn định. Bạn sẽ dùng Native Memory Tracking thế nào, và những kết luận nào phải tránh?"
+    answer: "Triệu chứng đó đẩy điều tra ra ngoài Java heap. Nếu NMT đã được bật từ lúc JVM startup, tôi bắt đầu bằng summary rồi so reserved với committed theo từng subsystem. Reserved address space có thể lớn hơn committed rất nhiều, nên reserved lớn tự nó chưa phải memory-pressure signal. Với bài toán growth, tôi tạo baseline tại một điểm phù hợp — thường sau warm-up nếu muốn phân tích steady-state — rồi dùng summary.diff hoặc detail.diff để xem JVM category/call site nào tăng. Chỉ nâng từ summary sang detail khi câu hỏi cần vì detail nhiều dữ liệu và có chi phí cao hơn. Đồng thời phải giữ rõ boundary của NMT: nó theo dõi HotSpot/JVM native memory, không theo dõi arbitrary third-party native allocation hay Oracle JDK class-library allocation. Vì vậy NMT ổn định không loại trừ mọi nguồn native growth. Nếu RSS tăng mà NMT không giải thích được, tôi correlate với OS evidence và handoff sang native-memory tooling khi phù hợp."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Dùng experiment jfrCpuWindow, hãy giải thích cách chứng minh một code path đang CPU-hot bằng JFR. Vì sao cách này mạnh hơn một thread dump đơn lẻ, và nó vẫn chưa chứng minh điều gì?"
+    answer: "Tôi start một JFR recording có execution sampling và có giới hạn, trigger jfrCpuWindow, rồi dùng worker name cùng expiration window mà API trả về để correlate recording với đúng workload. Trong recording tôi tìm các jdk.ExecutionSample lặp lại có stack chứa CPU loop. Như vậy tôi có observation phân bố theo thời gian thay vì chỉ một thời điểm như thread dump đơn lẻ. Nếu cùng code path xuất hiện thường xuyên trong symptom window, có bằng chứng tốt rằng nó hot tại các thời điểm được sample. Tuy nhiên tôi không biến nó thành exact nanosecond CPU accounting hoặc tự động kết luận incident causality: sample là thống kê, và hot path vẫn phải được correlate với triệu chứng bên ngoài. Tôi cũng chọn recording settings/duration có chủ đích vì một profile recording ngắn trong lab có impact budget khác với continuous default recording trên production."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.JFR/JFR.md"
+      anchor: "cpu-thread-lock-analysis"
+    apiRelated:
+      controller: "RuntimeDiagnosticsExperimentController"
+      methodSignature: "jfrCpuWindow(int)"
+
+  - question: "MXBeans/JMX đóng vai trò gì trong chẩn đoán khi so với JFR, thread/heap dump và application metrics? Remote JMX làm mô hình rủi ro thay đổi ra sao?"
+    answer: "Platform MXBeans cung cấp trạng thái runtime có cấu trúc như heap usage, số platform thread, class loading, GC counters, runtime identity và thông tin OS chuẩn. Chúng phù hợp cho polling nhẹ, snapshot và quản trị bằng code, nhưng một giá trị hiện tại không phải lời giải thích nhân quả. JFR bổ sung event timeline phong phú hơn; thread/heap dump cho bằng chứng sâu tại một thời điểm cho từng giả thuyết; application metrics cung cấp ngữ cảnh nghiệp vụ mà JVM management interface không biết. Tôi cũng phân biệt Java SE management interface chuẩn với JDK extension như com.sun.management.OperatingSystemMXBean. Remote JMX mở thêm một giao diện quản trị có thể đọc attribute và đôi khi invoke operation, nên authentication, bảo vệ đường truyền, network exposure và chi phí polling của client trở thành vấn đề cần quản lý trên production. Tôi không coi JMX đã bật là đồng nghĩa với observability đầy đủ."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "JVM đã crash, hoặc bạn buộc phải restart để khôi phục service. Bạn sẽ bảo toàn bằng chứng nào trước, dùng hs_err/core/heap/JFR artifact ra sao sau đó, và jhsdb nằm ở đâu trong flow?"
+    answer: "Trước restart, nếu service objective cho phép, tôi bảo toàn volatile evidence có thể biến mất: log gần thời điểm lỗi kèm timestamp, JFR dump hoặc continuous recording, thread evidence nếu process còn phản hồi, heap/native-memory evidence có liên quan, JVM flags/version và mọi fatal-error/core artifact đã tồn tại. hs_err cho biết nơi fatal failure được quan sát cùng process/thread/native context, nhưng problematic frame chưa tự động là root cause. Core dump hỗ trợ postmortem HotSpot/native sâu hơn khi có đúng executable/JDK build và symbol. OOME heap dump phục vụ object-graph analysis và khác bản chất với core dump của native crash. jhsdb/Serviceability Agent chủ yếu là công cụ postmortem hoặc chuyên biệt; attach vào live process là xâm lấn, có thể làm process hang và có khả năng crash khi detach. Nếu evidence chỉ sang JNI/FFM hoặc native-library lifetime/ABI, tôi handoff sang Native Interoperability cùng các artifact đã bảo toàn thay vì cố giải thích native semantics trong Runtime Diagnostics."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Hãy đi qua một quyết định troubleshooting trên production từ đầu đến cuối: phân loại triệu chứng, thu thập bằng chứng, đối chiếu, xác định lúc dừng và chuyển giao. Làm thế nào tránh biến Runtime Diagnostics thành nơi chịu trách nhiệm cho mọi vấn đề bên dưới?"
+    answer: "Tôi phân loại triệu chứng đủ rộng để chọn nhóm bằng chứng chứ chưa coi bước phân loại là chẩn đoán. Tôi giữ đúng định danh tiến trình đích và khoảng thời gian, rồi thu bằng chứng có tác động thấp nhất nhưng vẫn trả lời được câu hỏi tiếp theo. Mỗi kết quả phải làm giả thuyết mạnh lên, yếu đi hoặc thay đổi; tôi đối chiếu nhiều tín hiệu độc lập từ cùng process và cùng khoảng thời gian thay vì gom artifact không liên quan. Chỉ nâng lên cách thu thập nặng hơn khi giá trị kỳ vọng lớn hơn rủi ro và chi phí, đồng thời bảo toàn trạng thái quan trọng trước restart nếu có thể. Tôi dừng khi bằng chứng đủ mạnh để xác định cơ chế hoặc khi câu hỏi tiếp theo thuộc lĩnh vực khác. GC/JIT mechanics chuyển sang JVM module, happens-before và locking correctness sang Concurrency, bytecode transformation sang Instrumentation, còn JNI/FFM/native-library semantics sang Native Interoperability. Một lần chuyển giao tốt phải mang theo bằng chứng, timeline, giả thuyết hiện tại và những gì đã loại trừ để nhóm phụ trách tiếp theo không phải bắt đầu từ số không."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
