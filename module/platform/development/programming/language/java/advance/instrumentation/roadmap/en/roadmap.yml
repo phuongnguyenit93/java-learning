@@ -41,4 +41,84 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: instrumentation-mental-model
+    title: Java Instrumentation Mental Model
+    purpose: "Understand Java Instrumentation as the mechanism that lets an agent modify class bytecode inside a running JVM, why that capability exists, and where its boundary differs from reflection, proxies, and runtime diagnostics."
+    objectives:
+      - "Explain how instrumentation can add or transform class bytecode inside the JVM without requiring application source changes."
+      - "Recognize canonical uses such as profiling, coverage, monitoring, and event logging where Instrumentation injects data-collection logic without making the diagnostic workflow part of this module."
+      - "Separate the bytecode instrumentation/transformation mechanism from evidence interpretation and troubleshooting so Instrumentation is not confused with Runtime Diagnostics."
+      - "Recognize JVM bytecode and class loading as prerequisites without re-teaching the full JVM or ClassLoader curricula."
+    relatedModules:
+      - routeId: JAVA_JVM
+        label: JVM
+        note: "Provides the class-file, bytecode, and execution foundation that Instrumentation builds on."
+      - routeId: JAVA_CLASSLOADER
+        label: ClassLoader
+        note: "Provides the class-loading lifecycle and loader context used during transformation."
+
+  - id: agent-lifecycle
+    title: Java Agent Lifecycle
+    purpose: "Understand how a Java agent is packaged, started before the application or loaded into a running JVM, and how it receives access to the Instrumentation service."
+    objectives:
+      - "Distinguish the three main launch paths: -javaagent with Premain-Class/premain, executable JAR launch with Launcher-Agent-Class/agentmain before application main, and Agent-Class/agentmain for an agent loaded after JVM startup."
+      - "Understand the role of the manifest, agent entry point, and agent arguments."
+      - "Recognize the Attach API as a mechanism for dynamic loading while understanding that attach/load behavior is implementation-, policy-, and JDK-version-sensitive."
+      - "Understand failure semantics by launch mode: premain or Launcher-Agent-Class startup failure can abort JVM/application startup, whereas failure to initialize an agent loaded into an already-running JVM does not abort that JVM."
+
+  - id: instrumentation-capability-model
+    title: Instrumentation Capability Model
+    purpose: "Build a capability-oriented mental model of the Instrumentation API before learning transformation mechanics, especially optional JVM capabilities and per-class modifiability."
+    objectives:
+      - "Distinguish JVM/agent capabilities such as redefine and retransform from whether a specific class is modifiable."
+      - "Understand that per-class modifiability is independent of whether the JVM supports redefine/retransform, and that some class kinds are inherently unmodifiable."
+      - "Understand the Instrumentation handle as the entry point for transformer registration, loaded-class discovery, and class-modification requests."
+      - "Recognize supporting hooks for class-loader search paths and module adjustment without turning this module into a ClassLoader or JPMS course."
+      - "Check capabilities explicitly instead of assuming every JVM and class supports the same form of modification."
+
+  - id: class-transformation-pipeline
+    title: Class Transformation Pipeline
+    purpose: "Understand where ClassFileTransformer participates in the class lifecycle and how multiple transformers form a bytecode-processing pipeline before a class definition is applied."
+    objectives:
+      - "Trace class loading, redefinition, and retransformation into transformer callbacks and resulting class-file bytes."
+      - "Understand transformer chaining: transformers are grouped by retransformation capability/native status, then invoked in registration order within each group, with earlier output becoming later input."
+      - "Understand that during retransformation, retransformation-incapable transformers are not invoked again; the JVM reuses their previous transformation results while retransformation-capable transformers run again."
+      - "Scope transformation by class, loader, and module context to avoid unintended instrumentation."
+      - "Recognize failure modes such as invalid class files, linkage failures, and uncontrolled dependency or recursion during transformation."
+
+  - id: redefine-and-retransform
+    title: Redefinition and Retransformation
+    purpose: "Distinguish the two mechanisms for changing already-loaded classes, choose the appropriate mechanism, and understand the structural limits imposed by the JVM."
+    objectives:
+      - "Differentiate redefining a class with replacement class bytes from retransformation that re-runs the transformation process on an existing class."
+      - "Understand that capability/manifest requirements and class modifiability must be satisfied before redefine or retransform operations."
+      - "Understand the major structural limits: redefine/retransform cannot arbitrarily change fields, methods, signatures, modifiers, inheritance, or JVM-protected structural class-file attributes."
+      - "Understand that new method versions affect new invocations while active frames may continue running old bytecode, and existing instance/static state is not automatically reset."
+
+  - id: bytecode-engineering-boundary
+    title: Bytecode Engineering and Tool Boundary
+    purpose: "Learn how to implement transformations safely in practice without turning the Instrumentation module into a standalone ASM or Byte Buddy curriculum."
+    objectives:
+      - "Understand that a transformer must emit valid class-file bytes that still satisfy verification, linkage, and JVM constraints."
+      - "Distinguish bytecode generation from bytecode transformation in an agent workflow."
+      - "Recognize ASM as a lower-level control surface and Byte Buddy as a higher-level abstraction, choosing tools according to transformation needs rather than treating either library as the curriculum goal."
+      - "Recognize helper visibility, class-loader boundaries, recursive instrumentation, and transformation idempotence as practical design concerns."
+    relatedModules:
+      - routeId: JAVA_JVM
+        label: JVM
+        note: "Owns class-file and bytecode semantics; Instrumentation consumes that foundation to modify classes."
+
+  - id: operational-safety-and-synthesis
+    title: Operational Safety, Trade-offs, and Synthesis
+    purpose: "Combine the agent lifecycle into an end-to-end mental model and decide when Instrumentation is appropriate versus when another runtime mechanism should be used."
+    objectives:
+      - "Evaluate startup agents versus dynamic attach based on deployment control, JDK policy, and operational safety; on JDK 21, dynamic agent loading remains allowed by default but emits warnings and can be explicitly controlled by JVM configuration."
+      - "Assess transformation costs and risks including startup/runtime overhead, JDK/class-version compatibility, class-loader/module visibility, and application breakage."
+      - "Design bounded transformations with failure observation and conditional rollback: removeTransformer does not restore classes already transformed, and callbacks may still race after removal; restoration requires capabilities and a transformation design that can safely retransform or redefine affected classes."
+      - "Recognize that Instrumentation can underpin profiler, monitoring, and coverage agents while runtime-evidence interpretation and troubleshooting remain owned by the Runtime Diagnostics module."
+      - "Recognize when requirements exceed the Java Instrumentation API and belong at the JVMTI/native-agent boundary."
+    relatedModules:
+      - routeId: JAVA_RUNTIME_DIAGNOSTICS
+        label: Runtime Diagnostics
+        note: "Owns runtime-evidence interpretation and troubleshooting; Instrumentation may inject probes or collect data but does not own the diagnostic workflow."

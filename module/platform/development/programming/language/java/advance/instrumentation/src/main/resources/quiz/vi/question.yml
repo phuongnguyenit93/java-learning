@@ -1,0 +1,290 @@
+# <quiz-schema>
+# Cấu trúc câu hỏi Quiz
+# schema-version: 3
+#
+# questions [kiểu: list; bắt buộc; mặc định: []; duy nhất theo: id]
+#   Danh sách câu hỏi Quiz của module trong language hiện tại.
+#   mỗi phần tử:
+#     id [kiểu: string; bắt buộc; mặc định: ""]
+#       ID ổn định và duy nhất của câu hỏi.
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi hiển thị cho người học.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu câu hỏi được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu câu hỏi đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+#     answers [kiểu: list; bắt buộc; số phần tử: 4; mặc định: []; duy nhất theo: id]
+#       Chính xác bốn đáp án. ID A/B/C/D là identity nội bộ ổn định, không phải vị trí hiển thị sau khi frontend shuffle.
+#       mỗi phần tử:
+#         id [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#           Identity ổn định của đáp án.
+#         answer [kiểu: string; bắt buộc; mặc định: ""]
+#           Nội dung đáp án hiển thị cho người học.
+#         explanation [kiểu: string; bắt buộc; mặc định: ""]
+#           Giải thích hiển thị khi người học chọn đáp án này, bất kể đúng hay sai.
+#     correctAnswerId [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
+# </quiz-schema>
+
+questions:
+  - id: instrumentation-q01-mechanism-choice
+    question: "Một ứng dụng tạo object trực tiếp bằng new và gọi method không đi qua proxy. Bạn cần chèn timing probe vào chính method đó mà không sửa source ứng dụng. Cơ chế nào phù hợp nhất?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "14.DecisionGuide/DecisionGuide.md"
+      anchor: "instrumentation-vs-reflection-proxy"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Dùng Reflection để mọi lời gọi tới method tự động đi qua reflective invocation."
+        explanation: "Sai. Reflection có thể khám phá hoặc gọi member khi code chủ động dùng Reflection, nhưng không tự chặn các lời gọi Java bình thường đã tồn tại."
+      - id: B
+        answer: "Dùng proxy để mọi lời gọi trên object, kể cả object tạo trực tiếp, đều bị interceptor chặn."
+        explanation: "Sai. Proxy chỉ quan sát các lời gọi đi qua proxy boundary; object được tạo và gọi trực tiếp có thể bypass proxy."
+      - id: C
+        answer: "Dùng Instrumentation để biến đổi bytecode của class và chèn probe vào method đích."
+        explanation: "Đúng. Instrumentation can thiệp ở class definition/bytecode nên không phụ thuộc lời gọi có đi qua proxy hay không."
+      - id: D
+        answer: "Dùng Runtime Diagnostics để thread dump tự chèn timing probe vào method đang chạy."
+        explanation: "Sai. Runtime Diagnostics diễn giải runtime evidence; nó không phải cơ chế chung để chèn bytecode probe vào class."
+    correctAnswerId: C
+
+  - id: instrumentation-q02-agent-failure-semantics
+    question: "So sánh lỗi khởi tạo agent: premain của agent chạy bằng -javaagent ném uncaught exception, còn agentmain của agent được nạp vào JVM đang chạy cũng ném uncaught exception. Điều gì đúng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.AgentLoading/AgentLoading.md"
+      anchor: "launch-failure-semantics"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Cả hai trường hợp đều buộc JVM kết thúc vì agent luôn là thành phần bắt buộc của tiến trình."
+        explanation: "Sai. Failure semantics phụ thuộc cách agent được khởi động; dynamic agent failure không buộc JVM đang chạy phải kết thúc."
+      - id: B
+        answer: "Lỗi premain có thể làm JVM abort trước application main, còn lỗi agentmain khi dynamic load không làm JVM đang chạy bị abort."
+        explanation: "Đúng. Startup agent failure là lỗi khởi động, trong khi lỗi khởi tạo agent nạp vào JVM đang chạy không làm JVM đó bị dừng."
+      - id: C
+        answer: "Lỗi premain bị bỏ qua để application tiếp tục, còn lỗi agentmain mới làm JVM đang chạy bị abort."
+        explanation: "Sai. Đây là đảo ngược failure semantics của hai launch path."
+      - id: D
+        answer: "Cả hai trường hợp đều bị JVM bỏ qua; khác biệt duy nhất là tên method premain hay agentmain."
+        explanation: "Sai. premain failure có thể ngăn application startup hoàn tất."
+    correctAnswerId: B
+
+  - id: instrumentation-q03-capability-vs-modifiability
+    question: "Endpoint agentStatus báo retransformSupported=true nhưng probeTargetModifiable=false. Kết luận nào chính xác nhất?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.InstrumentationApi/InstrumentationApi.md"
+      anchor: "capability-model"
+    apiRelated:
+      controller: "InstrumentationController"
+      methodSignature: "agentStatus()"
+    answers:
+      - id: A
+        answer: "Target vẫn retransform được vì JVM-level capability luôn ghi đè kết quả isModifiableClass."
+        explanation: "Sai. Retransform support và per-class modifiability là hai điều kiện độc lập."
+      - id: B
+        answer: "Hai kết quả mâu thuẫn; nếu retransformSupported=true thì isModifiableClass bắt buộc phải true cho mọi class."
+        explanation: "Sai. JVM-level capability không quyết định giá trị per-class của isModifiableClass."
+      - id: C
+        answer: "Kết quả false chỉ chặn redefine; retransformation dùng một per-class modifiability rule khác."
+        explanation: "Sai. isModifiableClass là kiểm tra per-class dùng cho cả redefine và retransform."
+      - id: D
+        answer: "JVM hỗ trợ cơ chế retransform, nhưng target cụ thể vẫn không đủ điều kiện để được retransform."
+        explanation: "Đúng. isRetransformClassesSupported không làm isModifiableClass tự trở thành true; target không modifiable sẽ không thể được retransform."
+    correctAnswerId: D
+
+  - id: instrumentation-q04-transformer-order
+    question: "Hai Java transformer được đăng ký cho cùng class load: T1 có canRetransform=true được đăng ký trước, T2 có canRetransform=false được đăng ký sau. Nếu cả hai match class, thứ tự gọi nào đúng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.TransformationPipeline/TransformationPipeline.md"
+      anchor: "transformer-order"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "T2 rồi T1, vì nhóm không hỗ trợ retransformation được xử lý trước nhóm hỗ trợ retransformation."
+        explanation: "Đúng. JVM sắp theo nhóm capability/native trước; registration order chỉ quyết định thứ tự bên trong cùng một nhóm."
+      - id: B
+        answer: "T1 rồi T2, vì registration order luôn là thứ tự toàn cục giữa mọi transformer."
+        explanation: "Sai. Registration order không vượt qua thứ tự giữa các nhóm transformer khác capability."
+      - id: C
+        answer: "Chỉ T1 được gọi, vì T2 không hỗ trợ retransformation nên không tham gia class load ban đầu."
+        explanation: "Sai. canRetransform=false vẫn nhận class load và redefine; nó chỉ không được gọi lại trong retransformation."
+      - id: D
+        answer: "Thứ tự không được định nghĩa; JVM có thể gọi T1 hoặc T2 trước ở mỗi lần load."
+        explanation: "Sai. ClassFileTransformer định nghĩa rõ grouping order và registration order trong từng group."
+    correctAnswerId: A
+
+  - id: instrumentation-q05-retransform-capability-groups
+    question: "Trong experiment retransform-groups, target đã được load trước khi hai transformer được add. Một transformer đăng ký canRetransform=false, transformer còn lại true. Khi gọi retransformClasses(target), evidence nào được kỳ vọng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.TransformationPipeline/TransformationPipeline.md"
+      anchor: "retransform-capability-groups"
+    apiRelated:
+      controller: "InstrumentationController"
+      methodSignature: "retransformGroups()"
+    answers:
+      - id: A
+        answer: "Cả hai transformer đều nhận callback một lần vì chúng đều đang được đăng ký tại thời điểm retransform."
+        explanation: "Sai. Retransformation-incapable transformer không được gọi lại trong quá trình retransformation."
+      - id: B
+        answer: "Transformer false nhận callback còn transformer true không nhận, vì true chỉ ảnh hưởng class load sau này."
+        explanation: "Sai. canRetransform=true chính là khả năng khiến transformer được gọi trong retransformation."
+      - id: C
+        answer: "Transformer false có callback count 0, còn transformer true có ít nhất một callback cho target."
+        explanation: "Đúng. Đây là evidence chính mà experiment quan sát trực tiếp từ JVM transformer pipeline."
+      - id: D
+        answer: "Cả hai đều có callback count 0 vì class đã load thì transformer mới không thể tham gia bất kỳ thao tác nào."
+        explanation: "Sai. Transformer hỗ trợ retransformation vẫn có thể nhận callback khi class đã load được retransform."
+    correctAnswerId: C
+
+  - id: instrumentation-q06-transformer-exception
+    question: "Một ClassFileTransformer ném unchecked exception trong transform và không tự catch. Theo contract, JVM xử lý pipeline thế nào?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.ClassFileTransformer/ClassFileTransformer.md"
+      anchor: "transform-failure-contract"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "JVM dừng ngay pipeline, bỏ qua mọi transformer sau và luôn hủy class operation."
+        explanation: "Sai. Exception từ một transformer không tự động chặn các transformer sau."
+      - id: B
+        answer: "Với transformer đó, effect tương đương return null; transformer sau vẫn được gọi và class operation vẫn được thử tiếp."
+        explanation: "Đúng. Contract cho phép pipeline tiếp tục; vì vậy transformer nên tự quản lý failure/logging khi cần."
+      - id: C
+        answer: "JVM tự remove transformer gây lỗi rồi retry toàn bộ pipeline từ đầu một lần."
+        explanation: "Sai. Không có automatic removal hoặc retry contract như vậy."
+      - id: D
+        answer: "JVM giữ exception tới cuối pipeline rồi luôn wrap thành IllegalClassFormatException."
+        explanation: "Sai. IllegalClassFormatException là signal riêng mà transformer có thể dùng; unchecked exception không được chuẩn hóa theo cách này."
+    correctAnswerId: B
+
+  - id: instrumentation-q07-active-frame-behavior
+    question: "Một method đang có stack frame hoạt động khi class được redefine/retransform thành công với method body mới. Điều gì mô tả đúng behavior?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.RedefinitionRetransformation/RedefinitionRetransformation.md"
+      anchor: "active-frame-behavior"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Cả active frame và invocation mới đều tiếp tục code cũ cho tới khi mọi frame cũ kết thúc."
+        explanation: "Sai. Active frame có thể tiếp tục code cũ, nhưng invocation mới có thể dùng definition mới ngay sau khi nó được cài."
+      - id: B
+        answer: "Active frame được JVM chuyển sang method body mới tại một safepoint rồi tiếp tục từ vị trí tương ứng."
+        explanation: "Sai. Redefine/retransform không có contract chuyển active frame đang chạy sang bytecode mới."
+      - id: C
+        answer: "Active frame dùng code mới ngay, còn invocation mới có thể tiếp tục code cũ cho tới lần class resolution kế tiếp."
+        explanation: "Sai. Quan hệ đúng theo chiều ngược lại: active frame có thể giữ code cũ, còn invocation mới dùng definition mới."
+      - id: D
+        answer: "Frame đang hoạt động có thể tiếp tục code cũ, còn invocation mới dùng method definition mới."
+        explanation: "Đúng. Đây là distinction quan trọng khi reasoning về hot modification và trạng thái đang thực thi."
+    correctAnswerId: D
+
+  - id: instrumentation-q08-unmodifiable-types
+    question: "Theo Instrumentation.isModifiableClass, nhóm nào được bảo đảm là không modifiable?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.StructuralLimits/StructuralLimits.md"
+      anchor: "unmodifiable-classes"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Primitive classes và array classes, bất kể JVM có hỗ trợ retransformation hay không."
+        explanation: "Đúng. Java Instrumentation quy định primitive class và array class không bao giờ modifiable."
+      - id: B
+        answer: "Mọi class do bootstrap class loader định nghĩa, bất kể loại class và runtime capability."
+        explanation: "Sai. Bootstrap-loaded không đồng nghĩa với luôn unmodifiable; phải hỏi capability của class cụ thể."
+      - id: C
+        answer: "Mọi interface và enum đã được JVM load, bất kể defining loader hoặc module của chúng."
+        explanation: "Sai. Không có rule chung nói toàn bộ interface hoặc enum luôn unmodifiable."
+      - id: D
+        answer: "Mọi class thuộc named module, bất kể module đó export hoặc open package như thế nào."
+        explanation: "Sai. Module membership không tự làm class không modifiable; module/access concerns là một trục khác."
+    correctAnswerId: A
+
+  - id: instrumentation-q09-remove-vs-rollback
+    question: "Một transformer đã biến đổi nhiều class rồi được removeTransformer thành công. Kết luận vận hành nào đúng nhất?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "13.OperationalSafety/OperationalSafety.md"
+      anchor: "rollback-strategy"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Các class đã biến đổi tự động quay về bytecode gốc ngay khi transformer được remove."
+        explanation: "Sai. removeTransformer chỉ gỡ đăng ký; nó không tự hoàn tác definition đã được cài."
+      - id: B
+        answer: "Remove bảo đảm transformer không thể nhận thêm callback nào, nên có thể giải phóng mọi state ngay lập tức."
+        explanation: "Sai. Do class loading đa luồng, callback có thể vẫn đến sau remove; transformer cần defensive lifecycle."
+      - id: C
+        answer: "Class đã biến đổi giữ definition hiện tại; rollback cần strategy riêng như retransform/redefine khi capability và thiết kế cho phép."
+        explanation: "Đúng. Unregister và restoration là hai việc khác nhau."
+      - id: D
+        answer: "Remove chỉ có tác dụng với transformer canRetransform=true; transformer false phải giữ tới khi JVM dừng."
+        explanation: "Sai. removeTransformer áp dụng cho transformer đã đăng ký bất kể retransformation capability."
+    correctAnswerId: C
+
+  - id: instrumentation-q10-jdk21-dynamic-attach
+    question: "Phát biểu nào mô tả đúng policy của JDK 21 đối với agent được nạp động vào JVM đang chạy?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.AgentLoading/AgentLoading.md"
+      anchor: "jdk21-dynamic-agent-loading"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Dynamic loading bị tắt mặc định trên JDK 21; chỉ startup -javaagent hoạt động nếu không thêm opt-in flag."
+        explanation: "Sai. Trên JDK 21 dynamic loading vẫn được phép mặc định nhưng JVM phát cảnh báo."
+      - id: B
+        answer: "Dynamic loading vẫn được phép mặc định nhưng phát warning; HotSpot có opt-in flag rõ ràng để cho phép và suppress warning."
+        explanation: "Đúng. Đây là bước chuyển policy theo hướng yêu cầu deployer opt-in rõ hơn trong tương lai."
+      - id: C
+        answer: "Dynamic loading vẫn được phép không warning nếu agent khai báo Can-Retransform-Classes=true trong manifest."
+        explanation: "Sai. Retransformation capability không quyết định warning policy của dynamic agent loading."
+      - id: D
+        answer: "Warning chỉ áp dụng cho startup premain; agentmain được nạp sau startup không chịu integrity policy này."
+        explanation: "Sai. JDK 21 warning nhắm chính vào agent được load động vào JVM đang chạy."
+    correctAnswerId: B

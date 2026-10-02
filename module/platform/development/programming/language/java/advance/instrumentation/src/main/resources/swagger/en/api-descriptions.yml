@@ -1,0 +1,60 @@
+InstrumentationController:
+  agentStatus():
+    summary: Observe real Instrumentation capabilities and class modifiability
+    description: Reads the Instrumentation instance received by the Java agent and
+      returns redefine/retransform/native-prefix support, loaded-class count, the
+      agent and probe target ClassLoaders, and isModifiableClass for the target. If
+      the application was not started with the agent, the response explicitly reports
+      that the experiment is unavailable rather than simulating capabilities.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 5.InstrumentationApi/InstrumentationApi.md
+      anchor: capability-model
+    methodName: agentStatus
+    params: [
+      ]
+    path: com/example/learning/module/instrumentation/controller/InstrumentationController.java
+    mapping: '@GetMapping("/agent-status")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /instrumentation/agent-status
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  retransformGroups():
+    summary: Observe transformer capability groups during retransformation
+    description: Registers two ClassFileTransformer instances for one already-loaded
+      target, one with canRetransform=false and one with canRetransform=true, then
+      invokes retransformClasses. The response exposes callback counts, classBeingRedefined
+      evidence, and removeTransformer results. Both transformers return null, so the
+      target behavior remains unchanged while the pipeline semantics stay directly
+      observable.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 7.TransformationPipeline/TransformationPipeline.md
+      anchor: retransform-capability-groups
+    methodName: retransformGroups
+    params: [
+      ]
+    path: com/example/learning/module/instrumentation/controller/InstrumentationController.java
+    mapping: '@PostMapping("/retransform-groups")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /instrumentation/retransform-groups
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

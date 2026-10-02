@@ -1,0 +1,6 @@
+InstrumentationController:
+  description: |-
+    <h2>Java Instrumentation Experiments</h2>
+    <p>These endpoints run bounded experiments against a real JVM Instrumentation instance. The module starts with its Java agent; HTTP is only the trigger used to observe capabilities, loaded-class state, and retransformation behavior. Each experiment removes the transformers it registers and does not replace Instrumentation with a mock.</p>
+  readmeRelated:
+    file: ''

@@ -1,0 +1,117 @@
+# <interview-schema>
+# Cấu trúc câu hỏi Interview
+# schema-version: 2
+#
+# questions [kiểu: list; bắt buộc; mặc định: []]
+#   Danh sách câu hỏi Interview của module trong language hiện tại.
+#   mỗi phần tử:
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi phỏng vấn hiển thị cho người học.
+#     answer [kiểu: string; bắt buộc; mặc định: ""]
+#       Câu trả lời tham khảo, chỉ hiển thị khi người học chủ động mở.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu nội dung được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu nội dung đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+# </interview-schema>
+
+questions:
+  - question: "Hãy giải thích mental model của Java Instrumentation và phân biệt nó với Reflection hoặc proxy. Khi nào việc biến đổi bytecode là lựa chọn hợp lý, và khi nào là overkill?"
+    answer: "Instrumentation can thiệp vào class-file bytes trong lifecycle load/redefine/retransform, nên nó có thể chèn hoặc thay đổi logic ngay trong class definition mà không yêu cầu lời gọi phải đi qua một wrapper cụ thể. Reflection chủ yếu giải quyết runtime metadata/member access và invocation khi code chủ động dùng Reflection; proxy/interceptor chỉ thấy lời gọi đi qua proxy boundary. Instrumentation phù hợp khi cần cross-cutting behavior ở quy mô class rộng, không sở hữu source, hoặc cần probe hoạt động kể cả với object được tạo/gọi trực tiếp. Đổi lại nó có blast radius lớn hơn, chịu verification/linkage/ClassLoader constraints và tăng operational risk, nên nếu direct call, wrapper, proxy hoặc framework hook đã diễn đạt requirement rõ ràng thì nên chọn cơ chế đơn giản hơn."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "14.DecisionGuide/DecisionGuide.md"
+      anchor: "instrumentation-vs-reflection-proxy"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "So sánh ba đường khởi động agent: -javaagent/Premain-Class, Launcher-Agent-Class trong executable JAR, và Agent-Class cho dynamic loading. Failure semantics và quyết định startup agent hay dynamic attach ảnh hưởng deployment thế nào?"
+    answer: "Với -javaagent, manifest chỉ Premain-Class và JVM gọi premain trước application main; lỗi khởi tạo không được xử lý có thể làm JVM abort trước khi ứng dụng chạy. Với executable JAR có Launcher-Agent-Class, JVM gọi agentmain trước application main và startup failure cũng có thể làm launch thất bại. Với agent JAR được nạp vào JVM đang chạy, Agent-Class chỉ agentmain; nếu agent không khởi tạo được thì JVM đang chạy không bị abort, dù lỗi có thể được log. Về deployment, startup agent cho deployer opt-in rõ ràng, thấy class sớm và dễ audit hơn nhưng cần restart/cấu hình launch. Dynamic attach hữu ích cho on-demand tooling hoặc khi không thể restart ngay, nhưng phụ thuộc Attach implementation/policy và trên JDK 21 phát warning mặc định. Vì vậy lựa chọn là trade-off về thời điểm can thiệp, quyền vận hành, policy và khả năng bỏ lỡ class đã load, không chỉ là khác tên entry method."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Một JVM báo isRetransformClassesSupported() = true nhưng isModifiableClass(Target.class) = false. Hãy giải thích vì sao hai kết quả không mâu thuẫn, và endpoint agentStatus giúp learner kiểm chứng mô hình capability như thế nào."
+    answer: "isRetransformClassesSupported là capability của cấu hình JVM/agent cho cơ chế retransformation nói chung; isModifiableClass trả lời một câu hỏi khác là class cụ thể có thể được redefine/retransform hay không. Một cơ chế có thể được hỗ trợ toàn cục trong khi target cụ thể vẫn không modifiable, nên code đúng phải kiểm cả capability lẫn target. agentStatus lấy Instrumentation thật từ agent rồi trả retransform/redefine support, loaded-class count và isModifiableClass cho probe target. Vì vậy response không chỉ lặp lại manifest: nó tách điều kiện cấp JVM/agent khỏi per-class condition. Nếu target false, retransformClasses trên target đó vẫn không hợp lệ dù retransformSupported là true."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.InstrumentationApi/InstrumentationApi.md"
+      anchor: "capability-model"
+    apiRelated:
+      controller: "InstrumentationController"
+      methodSignature: "agentStatus()"
+
+  - question: "Giải thích transformer ordering và retransformation semantics. Vì sao transformer canRetransform=false không được gọi lại, previous output của nó được xử lý thế nào, và experiment retransform-groups thực sự chứng minh được phần nào của contract?"
+    answer: "Transformer được chia theo nhóm: Java retransformation-incapable, native incapable, Java capable, rồi native capable; registration order chỉ áp dụng bên trong mỗi nhóm. Ở load/redefine, các transformer phù hợp được gọi theo pipeline và output trước trở thành input sau. Khi retransform, transformer đã đăng ký với canRetransform=false không được gọi lại; JVM tự động tái sử dụng kết quả transformation mà nhóm đó đã tạo ở lần load/redefine trước, còn transformer canRetransform=true được callback lại trên retransformation input. Experiment retransform-groups load target trước rồi mới đăng ký hai transformer quan sát và gọi retransformClasses: callback count 0 cho false và >=1 cho true trực tiếp chứng minh khác biệt invocation group. Nó không tự chứng minh việc reuse một previous transformed output, vì transformer false của experiment chưa tồn tại ở lần load ban đầu và cũng không tạo bytes biến đổi; phần reuse đến từ API contract/Knowledge, không nên suy diễn chỉ từ response."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.TransformationPipeline/TransformationPipeline.md"
+      anchor: "retransform-capability-groups"
+    apiRelated:
+      controller: "InstrumentationController"
+      methodSignature: "retransformGroups()"
+
+  - question: "Khi nào bạn chọn redefineClasses thay vì retransformClasses, và ngược lại? Hãy giải thích structural limits, active stack frames và existing object/static state ảnh hưởng kỳ vọng hot modification ra sao."
+    answer: "redefineClasses phù hợp khi tool đã có replacement class-file bytes cụ thể và muốn yêu cầu JVM cài definition đó. retransformClasses phù hợp khi muốn chạy lại transformation pipeline trên class hiện có, đặc biệt để bật/tắt hoặc tính lại instrumentation theo transformer logic. Cả hai đều cần capability tương ứng và class modifiable, đồng thời không cho phép tùy ý thay đổi schema như thêm/xóa field hoặc method, đổi signature/modifier/hierarchy hay các structural attributes bị JVM hạn chế. Sau khi definition mới được cài, invocation mới có thể dùng method body mới nhưng active frame có thể tiếp tục chạy version cũ; object đã tồn tại và static state không tự reset. Vì vậy hot modification không nên được mô tả như thay toàn bộ runtime state tức thời; tool phải tách code-definition transition khỏi state migration và in-flight execution."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Một transformer chèn lời gọi tới AgentHelper vào class của plugin được định nghĩa bởi child ClassLoader trong named module. Vì sao bytecode hợp lệ vẫn có thể fail lúc runtime, và bạn thiết kế helper visibility thế nào? ASM hay Byte Buddy có thay đổi vấn đề này không?"
+    answer: "Bytecode có thể pass class-file generation nhưng vẫn fail linkage nếu defining loader/module của class mục tiêu không nhìn thấy hoặc không được phép access AgentHelper. Type identity còn phụ thuộc cả binary name và defining ClassLoader, nên cùng tên helper ở loader khác cũng không phải cùng type. Agent cần thiết kế vị trí helper theo class-loader graph: có thể dùng helper ở system/application loader khi target nhìn thấy, append một JAR tối thiểu vào bootstrap/system search khi thực sự cần, hoặc điều chỉnh module readability/exports/opens bằng cơ chế phù hợp. Không nên nhét toàn bộ agent JAR vào bootstrap chỉ để 'cho thấy được'. ASM và Byte Buddy chỉ khác mức abstraction khi sinh/biến đổi bytecode; chúng không xóa ClassLoader/module visibility rules. Tooling tốt vẫn phải tạo reference mà target class có thể resolve hợp lệ."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "11.Tooling/Tooling.md"
+      anchor: "helper-class-visibility"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Bạn sẽ thiết kế shutdown/rollback an toàn cho một production agent như thế nào khi removeTransformer không tự hoàn tác class và callback vẫn có thể race sau removal? JDK 21 dynamic-attach policy ảnh hưởng runbook ra sao?"
+    answer: "Tôi tách unregister khỏi rollback. removeTransformer ngăn các future transformation theo registration nhưng class đã biến đổi giữ definition hiện tại; rollback cần retransform/redefine riêng nếu capability và transformer design cho phép tái tạo trạng thái mong muốn. Vì class loading đa luồng, callback có thể vẫn đến sau remove, nên transformer nên có enabled state an toàn, resource lifetime đủ dài cho in-flight callback, cleanup idempotent và tránh giải phóng dependency mà callback trễ còn dùng. Production runbook cũng phải quy định ai được attach, artifact trust/version, scope target, observability và recovery nếu transform fail. Trên JDK 21 dynamic agent loading vẫn được phép mặc định nhưng phát warning; HotSpot có explicit opt-in flag. Điều đó khuyến khích deployer-owned startup/configuration hơn là automation mặc định giả định attach động sẽ luôn im lặng hoặc luôn được phép ở các JDK tương lai."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Nếu thiết kế một APM agent đơn giản end-to-end, bạn sẽ nối packaging, agent lifecycle, target selection, transformation, helper/telemetry và cleanup theo flow nào? Ranh giới nào thuộc Runtime Diagnostics hoặc JVMTI thay vì Instrumentation?"
+    answer: "Tôi bắt đầu bằng agent JAR tối thiểu với manifest capability đúng và chọn startup -javaagent hay dynamic attach theo deployment policy. Entry point nhận Instrumentation, kiểm tra capability, đăng ký transformer có target filter chặt theo class/loader/module và chọn bytecode tool phù hợp để chèn probe nhỏ, idempotent. Probe gọi helper mà target có thể resolve; helper thu thập timing/counter/span data với overhead bounded và đưa sang telemetry pipeline. Agent phải expose health/version/transform failures, hỗ trợ disable/remove và có rollback strategy nếu đã sửa class. Instrumentation sở hữu cơ chế chèn probe và class transformation; việc đọc JFR/thread dump/heap evidence để tìm root cause thuộc Runtime Diagnostics. Nếu yêu cầu cần VM events/native hooks hoặc quyền điều khiển thấp hơn Java Instrumentation API, đó là điểm handoff sang JVMTI/native agent thay vì cố kéo scope module này xuống tầng native."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "14.DecisionGuide/DecisionGuide.md"
+      anchor: "end-to-end-agent-flow"
+    apiRelated:
+      controller: ""
+      methodSignature: ""

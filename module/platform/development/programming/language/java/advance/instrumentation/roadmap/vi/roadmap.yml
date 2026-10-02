@@ -41,4 +41,84 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: instrumentation-mental-model
+    title: Mô hình tư duy về Java Instrumentation
+    purpose: "Hiểu Java Instrumentation là cơ chế cho agent can thiệp vào bytecode của class trong JVM, vì sao cơ chế này tồn tại và ranh giới của nó so với Reflection, proxy và chẩn đoán runtime."
+    objectives:
+      - "Giải thích instrumentation cho phép bổ sung hoặc biến đổi bytecode của class trong JVM mà không cần sửa mã nguồn ứng dụng."
+      - "Nhận diện các trường hợp sử dụng điển hình như profiler, đo độ bao phủ mã, giám sát và ghi sự kiện có thể dùng Instrumentation để chèn logic thu thập dữ liệu mà không biến quy trình chẩn đoán thành trách nhiệm của module này."
+      - "Phân biệt cơ chế biến đổi/instrument bytecode với quy trình diễn giải bằng chứng và khắc phục sự cố để không nhầm Instrumentation với Runtime Diagnostics."
+      - "Nhận diện bytecode JVM và quá trình nạp class là kiến thức tiên quyết, nhưng không học lại toàn bộ nội dung thuộc JVM/ClassLoader."
+    relatedModules:
+      - routeId: JAVA_JVM
+        label: JVM
+        note: "Cung cấp nền tảng về class file, bytecode và quá trình thực thi runtime mà Instrumentation dựa vào."
+      - routeId: JAVA_CLASSLOADER
+        label: ClassLoader
+        note: "Cung cấp vòng đời nạp class và ngữ cảnh ClassLoader được dùng trong quá trình biến đổi."
+
+  - id: agent-lifecycle
+    title: Java Agent và vòng đời nạp
+    purpose: "Hiểu cách một Java agent được đóng gói, được khởi động cùng JVM hoặc được nạp vào JVM đang chạy, và cách agent nhận đối tượng Instrumentation."
+    objectives:
+      - "Phân biệt ba đường khởi động chính: -javaagent dùng Premain-Class/premain, JAR thực thi dùng Launcher-Agent-Class/agentmain trước main của ứng dụng, và Agent-Class/agentmain cho agent được nạp sau khi JVM đã chạy."
+      - "Hiểu vai trò của manifest, lớp làm điểm vào và tham số agent trong vòng đời agent."
+      - "Nhận biết Attach API là cơ chế hỗ trợ nạp agent động nhưng hành vi kết nối/nạp phụ thuộc hiện thực JVM, chính sách và phiên bản JDK."
+      - "Hiểu cách xử lý lỗi phụ thuộc đường khởi động: lỗi của premain hoặc Launcher-Agent-Class có thể làm quá trình khởi động JVM/ứng dụng thất bại, còn lỗi khi nạp agent vào JVM đang chạy không làm JVM bị dừng."
+
+  - id: instrumentation-capability-model
+    title: Mô hình khả năng của Instrumentation API
+    purpose: "Xây mô hình tư duy về những khả năng mà JVM cấp cho agent trước khi đi vào chi tiết biến đổi, đặc biệt các khả năng tùy chọn và khả năng sửa đổi của từng class."
+    objectives:
+      - "Phân biệt khả năng cấp JVM/agent như redefine, retransform với việc một class cụ thể có thể được sửa đổi hay không."
+      - "Hiểu khả năng sửa đổi của từng class là khái niệm độc lập với việc JVM có hỗ trợ redefine/retransform hay không; một số loại class luôn không thể sửa đổi."
+      - "Hiểu đối tượng Instrumentation là điểm truy cập để đăng ký transformer, khảo sát class đã nạp và yêu cầu thay đổi class."
+      - "Nhận diện các cơ chế hỗ trợ liên quan tới đường tìm kiếm của class loader và điều chỉnh module mà không biến module này thành khóa học ClassLoader/JPMS."
+      - "Biết phải kiểm tra khả năng thực tế thay vì giả định mọi JVM/class đều hỗ trợ cùng một kiểu thay đổi."
+
+  - id: class-transformation-pipeline
+    title: Chuỗi biến đổi class
+    purpose: "Hiểu ClassFileTransformer được gọi ở đâu trong vòng đời của class và cách nhiều transformer tạo thành chuỗi xử lý bytecode trước khi định nghĩa class được áp dụng."
+    objectives:
+      - "Theo dõi luồng từ lúc nạp class, redefine hoặc retransform tới lần gọi transformer và mảng byte đại diện cho class file kết quả."
+      - "Hiểu nhiều transformer được ghép theo nhóm khả năng/native rồi theo thứ tự đăng ký trong từng nhóm; đầu ra của transformer trước trở thành đầu vào cho transformer sau."
+      - "Hiểu khi retransform, transformer không hỗ trợ retransformation sẽ không được gọi lại; JVM tái sử dụng kết quả biến đổi trước đó của chúng, còn transformer hỗ trợ retransformation mới được gọi lại."
+      - "Biết cách giới hạn phạm vi biến đổi theo class, class loader và ngữ cảnh module để tránh tác động ngoài ý muốn."
+      - "Nhận diện các dạng lỗi như lỗi định dạng class, lỗi liên kết và transformer gây phụ thuộc/đệ quy không kiểm soát."
+
+  - id: redefine-and-retransform
+    title: Redefinition và Retransformation
+    purpose: "Phân biệt hai cơ chế thay đổi class đã được nạp, hiểu khi nào dùng mỗi cơ chế và những giới hạn JVM không cho phép vượt qua."
+    objectives:
+      - "Phân biệt redefine bằng các byte class thay thế với retransform bằng cách chạy lại chuỗi biến đổi trên class hiện có."
+      - "Hiểu yêu cầu về khả năng được khai báo trong manifest và khả năng sửa đổi của class phải thỏa trước khi yêu cầu redefine hoặc retransform."
+      - "Nắm các giới hạn cấu trúc quan trọng: redefine/retransform không cho phép tùy ý thay đổi field, method, signature, modifier, quan hệ kế thừa hoặc các thuộc tính cấu trúc bị JVM bảo vệ."
+      - "Hiểu phiên bản method mới áp dụng cho lần gọi mới, trong khi stack frame đang hoạt động có thể tiếp tục chạy bytecode phiên bản trước; trạng thái instance/static không tự được đặt lại."
+
+  - id: bytecode-engineering-boundary
+    title: Biến đổi bytecode và ranh giới công cụ
+    purpose: "Biết cách hiện thực việc biến đổi an toàn trong thực tế mà không biến Instrumentation thành chương trình học riêng về ASM hoặc Byte Buddy."
+    objectives:
+      - "Hiểu transformer phải tạo ra mảng byte class file hợp lệ và vẫn chịu bộ kiểm tra bytecode, quy tắc liên kết và các ràng buộc của JVM."
+      - "Phân biệt sinh bytecode mới với biến đổi bytecode trong ngữ cảnh của agent."
+      - "Biết ASM cung cấp mức điều khiển thấp hơn và Byte Buddy cung cấp mức trừu tượng cao hơn; chọn công cụ theo nhu cầu thay vì học thư viện như mục tiêu chính."
+      - "Nhận diện các vấn đề về khả năng nhìn thấy class hỗ trợ, ranh giới class loader, instrumentation đệ quy và tính idempotent của phép biến đổi."
+    relatedModules:
+      - routeId: JAVA_JVM
+        label: JVM
+        note: "Sở hữu kiến thức nền về ngữ nghĩa class file/bytecode; Instrumentation chỉ sử dụng nền tảng đó để biến đổi class."
+
+  - id: operational-safety-and-synthesis
+    title: Vận hành an toàn, đánh đổi và tổng hợp
+    purpose: "Ghép toàn bộ vòng đời agent thành một mô hình tư duy xuyên suốt và biết khi nào Instrumentation là lựa chọn phù hợp, khi nào nên dùng cơ chế khác."
+    objectives:
+      - "Đánh giá agent khởi động cùng JVM và nạp động qua Attach API theo quyền kiểm soát triển khai, chính sách JDK và độ an toàn vận hành; trên JDK 21, việc nạp agent động vẫn được phép mặc định nhưng phát cảnh báo và có thể được cấu hình rõ ràng ở mức JVM."
+      - "Đánh giá chi phí của phép biến đổi: chi phí lúc khởi động/runtime, khả năng tương thích theo JDK/phiên bản class file, khả năng nhìn thấy qua class loader/module và rủi ro phá vỡ ứng dụng."
+      - "Biết cách giới hạn phạm vi, quan sát lỗi và thiết kế khôi phục có điều kiện; removeTransformer không hoàn tác class đã biến đổi và transformer vẫn có thể nhận lời gọi sau khi bị gỡ do quá trình nạp class đa luồng."
+      - "Biết Instrumentation có thể là cơ chế nền để profiler, agent giám sát hoặc agent đo độ bao phủ mã thu thập dữ liệu, nhưng việc diễn giải bằng chứng runtime và khắc phục sự cố vẫn được chuyển sang module Runtime Diagnostics."
+      - "Nhận biết khi yêu cầu vượt khỏi Java Instrumentation API và cần tầng JVMTI/native agent thay vì mở rộng phạm vi module này."
+    relatedModules:
+      - routeId: JAVA_RUNTIME_DIAGNOSTICS
+        label: Runtime Diagnostics
+        note: "Sở hữu quy trình diễn giải bằng chứng runtime và khắc phục sự cố; Instrumentation có thể cung cấp cơ chế chèn điểm đo/thu thập dữ liệu nhưng không sở hữu quy trình chẩn đoán."

@@ -1,0 +1,36 @@
+InstrumentationController:
+  agentStatus():
+    execution: |-
+      <p><b>Concept:</b> Instrumentation capability là state runtime thật của JVM/agent, không phải một flag giả do controller tự đặt.</p>
+      <ol>
+        <li>Module được chạy bằng <code>bootRun</code>; build script tạo dedicated agent JAR chỉ chứa agent entry class và truyền nó bằng <code>-javaagent</code>. <code>InstrumentationAgent.premain</code> nhận <code>Instrumentation</code> từ JVM.</li>
+        <li>Application lấy đúng agent state qua system class loader, nên cùng experiment vẫn hoạt động khi dedicated agent JAR và Spring Boot application có class-loader boundary khác nhau.
+          <div><i>Nguồn: InstrumentationAccess.current()</i></div>
+          <pre><code>Class&lt;?&gt; agentClass =
+          ClassLoader.getSystemClassLoader()
+              .loadClass(InstrumentationAgent.class.getName());
+      Method method = agentClass.getMethod("instrumentation");
+      return (Instrumentation) method.invoke(null);</code></pre>
+        </li>
+        <li>Service hỏi trực tiếp JVM bằng <code>isRetransformClassesSupported()</code>, <code>isRedefineClassesSupported()</code>, <code>isNativeMethodPrefixSupported()</code>, <code>getAllLoadedClasses()</code> và <code>isModifiableClass()</code>.</li>
+      </ol>
+      <p><b>Evidence:</b> <code>agentLoaded</code>, ba capability flags, <code>loadedClassCount</code>, <code>probeTargetModifiable</code> và tên ClassLoader thực tế.</p>
+      <p><b>Kết luận:</b> capability và per-class modifiability phải được hỏi từ Instrumentation hiện tại; trạng thái manifest/config chỉ là điều kiện đầu vào chứ không thay thế runtime check.</p>
+    usage: true
+  retransformGroups():
+    execution: |-
+      <p><b>Concept:</b> Khi <code>retransformClasses</code> chạy, transformer không hỗ trợ retransformation không được gọi lại; transformer đăng ký với <code>canRetransform=true</code> được JVM callback lại.</p>
+      <ol>
+        <li>Service load <code>InstrumentationProbeTarget</code> trước rồi ghi nhận behavior <code>ORIGINAL</code>.</li>
+        <li>Tạo hai transformer chỉ quan sát đúng target. Một transformer được add với <code>false</code>, transformer còn lại với <code>true</code>.
+          <div><i>Nguồn: InstrumentationExperimentService.retransformGroups()</i></div>
+          <pre><code>instrumentation.addTransformer(nonRetransformable, false);
+      instrumentation.addTransformer(retransformable, true);
+      instrumentation.retransformClasses(targetClass);</code></pre>
+        </li>
+        <li>Callback return <code>null</code>, nên experiment không sửa bytecode. Nó chỉ đếm callback và ghi nhận <code>classBeingRedefined</code>.</li>
+        <li>Khối <code>finally</code> gỡ cả hai transformer bằng <code>removeTransformer</code>; method được <code>synchronized</code> để các request của chính experiment không chồng state lên nhau.</li>
+      </ol>
+      <p><b>Evidence:</b> <code>nonRetransformableCallbackCount=0</code>, <code>retransformableCallbackCount&gt;=1</code>, <code>classBeingRedefinedObserved=true</code>, hai cờ removed=true và behavior trước/sau đều là <code>ORIGINAL</code>.</p>
+      <p><b>Kết luận:</b> retransformation capability thay đổi việc transformer có được gọi lại hay không; HTTP chỉ trigger thao tác, còn evidence đến trực tiếp từ callback pipeline của JVM.</p>
+    usage: true

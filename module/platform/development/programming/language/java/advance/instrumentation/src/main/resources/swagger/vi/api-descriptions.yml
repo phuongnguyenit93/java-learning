@@ -1,0 +1,59 @@
+InstrumentationController:
+  agentStatus():
+    summary: Quan sát Instrumentation capability và class modifiability thật
+    description: Endpoint đọc Instrumentation do Java Agent đã nhận từ JVM, trả trạng
+      thái hỗ trợ redefine/retransform/native-prefix, số class đã load, ClassLoader
+      của agent và probe target, đồng thời gọi isModifiableClass trên target. Nếu
+      application không được khởi động cùng agent, response nói rõ experiment chưa
+      sẵn sàng thay vì giả lập capability.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 5.InstrumentationApi/InstrumentationApi.md
+      anchor: capability-model
+    methodName: agentStatus
+    params: [
+      ]
+    path: com/example/learning/module/instrumentation/controller/InstrumentationController.java
+    mapping: '@GetMapping("/agent-status")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /instrumentation/agent-status
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  retransformGroups():
+    summary: Quan sát hai nhóm transformer khi retransform class đã load
+    description: Đăng ký hai ClassFileTransformer trên cùng một target đã load, một
+      transformer với canRetransform=false và một với canRetransform=true, rồi gọi
+      retransformClasses. Response trả callback count của từng nhóm, classBeingRedefined
+      và kết quả removeTransformer. Transformer chỉ quan sát callback và return null
+      nên business behavior của target không bị đổi.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 7.TransformationPipeline/TransformationPipeline.md
+      anchor: retransform-capability-groups
+    methodName: retransformGroups
+    params: [
+      ]
+    path: com/example/learning/module/instrumentation/controller/InstrumentationController.java
+    mapping: '@PostMapping("/retransform-groups")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /instrumentation/retransform-groups
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

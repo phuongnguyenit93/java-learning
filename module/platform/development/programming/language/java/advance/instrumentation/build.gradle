@@ -1,0 +1,48 @@
+def instrumentationAgentClass =
+        'com.example.learning.module.instrumentation.agent.InstrumentationAgent'
+
+def instrumentationAgentJar =
+        tasks.register(
+                'instrumentationAgentJar',
+                Jar
+        ) {
+    archiveClassifier =
+            'agent'
+
+    from(
+            sourceSets.main.output
+    ) {
+        include(
+                'com/example/learning/module/instrumentation/agent/InstrumentationAgent.class'
+        )
+    }
+
+    manifest {
+        attributes(
+                'Premain-Class': instrumentationAgentClass,
+                'Agent-Class': instrumentationAgentClass,
+                'Can-Redefine-Classes': 'true',
+                'Can-Retransform-Classes': 'true'
+        )
+    }
+}
+
+tasks.named('bootRun') {
+    dependsOn instrumentationAgentJar
+
+    doFirst {
+        String agentJar =
+                instrumentationAgentJar
+                        .get()
+                        .archiveFile
+                        .get()
+                        .asFile
+                        .absolutePath
+
+        jvmArgs '-javaagent:' + agentJar
+    }
+}
+
+tasks.named('assemble') {
+    dependsOn instrumentationAgentJar
+}

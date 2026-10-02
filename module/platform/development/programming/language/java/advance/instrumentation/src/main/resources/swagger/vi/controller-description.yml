@@ -1,0 +1,6 @@
+InstrumentationController:
+  description: |-
+    <h2>Java Instrumentation Experiments</h2>
+    <p>Nhóm API này chạy các thí nghiệm bounded trên Instrumentation thật của JVM. Module được khởi động cùng Java Agent; HTTP chỉ đóng vai trò trigger để learner quan sát capability, loaded-class state và hành vi retransformation. Mỗi experiment tự dọn transformer mà nó đăng ký và không giả lập Instrumentation bằng mock.</p>
+  readmeRelated:
+    file: ''

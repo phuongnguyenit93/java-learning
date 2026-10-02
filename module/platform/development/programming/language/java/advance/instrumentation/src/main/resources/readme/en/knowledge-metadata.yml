@@ -1,1 +1,346 @@
-{}
+1.MentalModel/Instrumentation.md:
+  instrumentation-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  instrumentation-problem:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  instrumentation-mechanism:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  instrumentation-use-case-shape:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  instrumentation-boundaries:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+2.JavaAgent/JavaAgent.md:
+  java-agent-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  agent-class-contract:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  instrumentation-service-handoff:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  agent-startup-shapes:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  agent-trust-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+3.AgentPackaging/AgentPackaging.md:
+  agent-jar:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  agent-manifest:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  agent-entry-points:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  agent-arguments:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  agent-capability-declarations:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  executable-jar-agent:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+4.AgentLoading/AgentLoading.md:
+  javaagent-premain-flow:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  launcher-agent-flow:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  runtime-agentmain-flow:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  attach-api-flow:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  launch-failure-semantics:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jdk21-dynamic-agent-loading:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+5.InstrumentationApi/InstrumentationApi.md:
+  instrumentation-service:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  transformer-registration:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  loaded-class-discovery:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  capability-model:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  class-modifiability:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  classloader-module-hooks:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+6.ClassFileTransformer/ClassFileTransformer.md:
+  transformer-contract:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  transform-input-context:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  transform-result-contract:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  transform-failure-contract:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  target-selection:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  transformer-removal:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+7.TransformationPipeline/TransformationPipeline.md:
+  transformation-trigger-points:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  transformer-order:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  transformer-chaining:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  retransform-capability-groups:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  reentrancy-recursion:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  idempotent-transformation:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+8.RedefinitionRetransformation/RedefinitionRetransformation.md:
+  redefine-purpose:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  retransform-purpose:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  redefine-vs-retransform:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  active-frame-behavior:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  existing-state-behavior:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+9.StructuralLimits/StructuralLimits.md:
+  modification-boundary:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  schema-change-limits:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  structural-attribute-limits:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  unmodifiable-classes:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  verification-linkage-constraints:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  version-compatibility:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+10.BytecodeEngineeringBoundary/BytecodeEngineeringBoundary.md:
+  bytecode-transformation-model:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  generation-vs-transformation:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  classfile-validity:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  bytecode-engineering-scope:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  standard-classfile-api-version-boundary:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+11.Tooling/Tooling.md:
+  tool-selection-principles:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  asm-supporting-role:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  byte-buddy-supporting-role:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  low-level-vs-abstraction:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  helper-class-visibility:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  tooling-version-compatibility:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+12.UseCases/UseCases.md:
+  profiling-use-case:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  coverage-use-case:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  monitoring-event-logging-use-case:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  tracing-probe-use-case:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  framework-agent-use-case:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  diagnostic-boundary:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+13.OperationalSafety/OperationalSafety.md:
+  agent-trust-security:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  startup-runtime-overhead:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  classloader-module-visibility:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  dynamic-attach-policy:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  remove-transformer-race:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  rollback-strategy:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  compatibility-testing:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+14.DecisionGuide/DecisionGuide.md:
+  when-to-use-instrumentation:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  when-not-to-use-instrumentation:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  startup-vs-dynamic-agent-choice:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  redefine-vs-retransform-choice:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  instrumentation-vs-reflection-proxy:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  instrumentation-vs-runtime-diagnostics:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jvmti-native-agent-handoff:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  end-to-end-agent-flow:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false

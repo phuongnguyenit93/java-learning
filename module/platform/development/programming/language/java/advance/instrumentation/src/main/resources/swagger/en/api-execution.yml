@@ -1,0 +1,36 @@
+InstrumentationController:
+  agentStatus():
+    execution: |-
+      <p><b>Concept:</b> Instrumentation capabilities are real JVM/agent runtime state, not controller-owned flags.</p>
+      <ol>
+        <li>The module runs through <code>bootRun</code>; the build script creates a dedicated agent JAR containing only the agent entry class and supplies it with <code>-javaagent</code>. <code>InstrumentationAgent.premain</code> receives Instrumentation from the JVM.</li>
+        <li>The application resolves the agent state through the system class loader so the experiment also handles the class-loader boundary between the dedicated agent JAR and the Spring Boot application.
+          <div><i>Source: InstrumentationAccess.current()</i></div>
+          <pre><code>Class&lt;?&gt; agentClass =
+          ClassLoader.getSystemClassLoader()
+              .loadClass(InstrumentationAgent.class.getName());
+      Method method = agentClass.getMethod("instrumentation");
+      return (Instrumentation) method.invoke(null);</code></pre>
+        </li>
+        <li>The service asks the JVM directly through <code>isRetransformClassesSupported()</code>, <code>isRedefineClassesSupported()</code>, <code>isNativeMethodPrefixSupported()</code>, <code>getAllLoadedClasses()</code>, and <code>isModifiableClass()</code>.</li>
+      </ol>
+      <p><b>Evidence:</b> <code>agentLoaded</code>, three capability flags, <code>loadedClassCount</code>, <code>probeTargetModifiable</code>, and the actual ClassLoader names.</p>
+      <p><b>Conclusion:</b> capability and per-class modifiability must be queried from the current Instrumentation instance; manifest/configuration state is an input condition, not a replacement for runtime checks.</p>
+    usage: true
+  retransformGroups():
+    execution: |-
+      <p><b>Concept:</b> During <code>retransformClasses</code>, a retransformation-incapable transformer is not invoked again, while a transformer registered with <code>canRetransform=true</code> is called again by the JVM.</p>
+      <ol>
+        <li>The service loads <code>InstrumentationProbeTarget</code> first and records its <code>ORIGINAL</code> behavior.</li>
+        <li>Two target-filtered transformers are created. One is registered with <code>false</code>, the other with <code>true</code>.
+          <div><i>Source: InstrumentationExperimentService.retransformGroups()</i></div>
+          <pre><code>instrumentation.addTransformer(nonRetransformable, false);
+      instrumentation.addTransformer(retransformable, true);
+      instrumentation.retransformClasses(targetClass);</code></pre>
+        </li>
+        <li>The callbacks return <code>null</code>, so no bytecode is changed. They only count callbacks and record <code>classBeingRedefined</code>.</li>
+        <li>A <code>finally</code> block removes both transformers with <code>removeTransformer</code>; the method is <code>synchronized</code> so requests from this experiment do not overlap their local transformer lifecycle.</li>
+      </ol>
+      <p><b>Evidence:</b> <code>nonRetransformableCallbackCount=0</code>, <code>retransformableCallbackCount&gt;=1</code>, <code>classBeingRedefinedObserved=true</code>, both removal flags are true, and behavior before/after remains <code>ORIGINAL</code>.</p>
+      <p><b>Conclusion:</b> retransformation capability changes whether a transformer is called again; HTTP only triggers the action while the evidence comes from the JVM transformer pipeline itself.</p>
+    usage: true
