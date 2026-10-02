@@ -47,7 +47,7 @@ class PortalKnowledgeProjectionService {
     private static final Pattern DETAILS_OPEN_PATTERN =
             Pattern.compile(
                     '(?s)^\\s*<details>\\s*' +
-                            '<summary>Click for details</summary>\\s*'
+                            '<summary>[^<\\r\\n]*</summary>\\s*'
             )
 
 
@@ -55,7 +55,7 @@ class PortalKnowledgeProjectionService {
             Pattern.compile(
                     '(?s)' +
                             '\\s*</details>\\s*' +
-                            '(?:-\\s+\\[Quay lại đầu trang\\]\\(#back-to-top\\)\\s*)?' +
+                            '(?:-\\s+\\[[^\\]\\r\\n]+\\]\\(#back-to-top\\)\\s*)?' +
                             '(?:---\\s*)?' +
                             '$'
             )
@@ -63,7 +63,7 @@ class PortalKnowledgeProjectionService {
 
     private static final Pattern BACK_TO_TOP_LINK_PATTERN =
             Pattern.compile(
-                    '(?m)^\\s*-\\s+\\[Quay lại đầu trang\\]\\(#back-to-top\\)\\s*$'
+                    '(?m)^\\s*-\\s+\\[[^\\]\\r\\n]+\\]\\(#back-to-top\\)\\s*$'
             )
 
 

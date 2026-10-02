@@ -1,5 +1,6 @@
 package com.example.learning.task.readme.internalMenu.service
 
+import java.nio.file.Path
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
@@ -13,17 +14,8 @@ class GenerateInternalReadmeMenuService {
             '<a id="back-to-top"></a>'
 
 
-    private static final String DETAILS_OPEN =
-            '''<details>
-<summary>Click for details</summary>'''
-
-
     private static final String DETAILS_CLOSE =
             '</details>'
-
-
-    private static final String BACK_TO_TOP_LINK =
-            '- [Quay lại đầu trang](#back-to-top)'
 
 
     /*
@@ -70,7 +62,7 @@ class GenerateInternalReadmeMenuService {
             Pattern.compile(
                     '(?s)^\\s*' +
                             '<details>\\s*' +
-                            '<summary>Click for details</summary>' +
+                            '<summary>[^<\\r\\n]*</summary>' +
                             '\\s*'
             )
 
@@ -80,7 +72,7 @@ class GenerateInternalReadmeMenuService {
                     '(?s)' +
                             '\\s*</details>\\s*' +
                             '(?:' +
-                            '- \\[Quay lại đầu trang\\]' +
+                            '- \\[[^\\]\\r\\n]+\\]' +
                             '\\(#back-to-top\\)' +
                             '\\s*' +
                             ')?' +
@@ -111,9 +103,16 @@ class GenerateInternalReadmeMenuService {
                 )
 
 
+        UiText uiText =
+                resolveUiText(
+                        markdownFile
+                )
+
+
         String generatedContent =
                 renderDocument(
-                        document
+                        document,
+                        uiText
                 )
 
 
@@ -366,7 +365,8 @@ Expected format:
 
 
     private static String renderDocument(
-            ParsedDocument document
+            ParsedDocument document,
+            UiText uiText
     ) {
 
         String menu =
@@ -422,7 +422,9 @@ Expected format:
                 )
 
                 output.append(
-                        DETAILS_OPEN
+                        '<details>\n<summary>' +
+                                uiText.detailsSummary +
+                                '</summary>'
                 )
 
 
@@ -452,7 +454,9 @@ Expected format:
                 )
 
                 output.append(
-                        BACK_TO_TOP_LINK
+                        '- [' +
+                                uiText.backToTop +
+                                '](#back-to-top)'
                 )
 
 
@@ -473,6 +477,63 @@ Expected format:
         )
                 .trim() +
                 '\n'
+    }
+
+
+    private static UiText resolveUiText(
+            File markdownFile
+    ) {
+
+        List<String> pathParts =
+                []
+
+
+        markdownFile
+                .canonicalFile
+                .toPath()
+                .each {
+                    Path pathPart ->
+
+                        pathParts.add(
+                                pathPart.toString()
+                        )
+                }
+
+
+        int readmeIndex =
+                pathParts.findIndexOf {
+                    String part ->
+
+                        part.equalsIgnoreCase(
+                                'readme'
+                        )
+                }
+
+
+        String language =
+                readmeIndex >= 0 &&
+                        readmeIndex + 1 < pathParts.size()
+                        ? pathParts[readmeIndex + 1]
+                                .trim()
+                                .toLowerCase(
+                                        Locale.ROOT
+                                )
+                        : ''
+
+
+        if (language == 'vi') {
+
+            return new UiText(
+                    'Xem chi tiết',
+                    'Quay lại đầu trang'
+            )
+        }
+
+
+        return new UiText(
+                'Click for details',
+                'Back to top'
+        )
     }
 
 
@@ -688,6 +749,27 @@ Expected:
 
             this.body =
                     body
+        }
+    }
+
+
+    private static class UiText {
+
+        final String detailsSummary
+
+        final String backToTop
+
+
+        UiText(
+                String detailsSummary,
+                String backToTop
+        ) {
+
+            this.detailsSummary =
+                    detailsSummary
+
+            this.backToTop =
+                    backToTop
         }
     }
 }
