@@ -321,14 +321,14 @@ module
     │   │   │   ├── domain-specific-language [DOMAIN_SPECIFIC_LANGUAGE] : Domain-Specific Language concepts, design, parsing and execution models
     │   │   │   └── java
     │   │   │       ├── advance
-    │   │   │       │   ├── dynamic-runtime [JAVA_DYNAMIC_RUNTIME] : Advanced Java dynamic invocation and runtime linkage
-    │   │   │       │   ├── instrumentation [JAVA_INSTRUMENTATION] : Java instrumentation, agents and class transformation
     │   │   │       │   ├── jvm [JAVA_JVM] : Java Virtual Machine internals
-    │   │   │       │   ├── native-interoperability [JAVA_NATIVE_INTEROPERABILITY] : Java native interoperability, foreign memory and operating-system boundaries
-    │   │   │       │   ├── networking [JAVA_NETWORKING] : Java networking APIs
-    │   │   │       │   ├── runtime-diagnostics [JAVA_RUNTIME_DIAGNOSTICS] : Java runtime diagnostics, management and troubleshooting
+    │   │   │       │   ├── dynamic-runtime [JAVA_DYNAMIC_RUNTIME] : Advanced Java dynamic invocation and runtime linkage
     │   │   │       │   ├── runtime-extensibility [JAVA_RUNTIME_EXTENSIBILITY] : Java runtime extensibility, SPI and plugin architecture
-    │   │   │       │   └── security-cryptography [JAVA_SECURITY_CRYPTOGRAPHY] : Java security and cryptography APIs
+    │   │   │       │   ├── networking [JAVA_NETWORKING] : Java networking APIs
+    │   │   │       │   ├── security-cryptography [JAVA_SECURITY_CRYPTOGRAPHY] : Java security and cryptography APIs
+    │   │   │       │   ├── native-interoperability [JAVA_NATIVE_INTEROPERABILITY] : Java native interoperability, foreign memory and operating-system boundaries
+    │   │   │       │   ├── instrumentation [JAVA_INSTRUMENTATION] : Java instrumentation, agents and class transformation
+    │   │   │       │   └── runtime-diagnostics [JAVA_RUNTIME_DIAGNOSTICS] : Java runtime diagnostics, management and troubleshooting
     │   │   │       ├── concurrency
     │   │   │       │   ├── fundamentals [JAVA_CONCURRENCY_FUNDAMENTALS] : Java concurrency fundamentals, Thread lifecycle and Java Memory Model
     │   │   │       │   ├── high-level-utils [JAVA_HIGH_LEVEL_CONCURRENCY_UTILS] : Java synchronization, coordination and concurrent utilities
@@ -600,6 +600,7 @@ module
         │   ├── markdown
         │   │   └── flexmark [FLEXMARK_MARKDOWN] - [DEPEND]
         │   ├── pdf
+        │   ├── reporting
         │   ├── translate
         │   │   ├── argos
         │   │   ├── azure [AZURE_TRANSLATE] - [DEPEND] : Translate using Azure service

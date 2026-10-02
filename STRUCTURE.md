@@ -1450,28 +1450,28 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <summary><b><a href='./module/platform/development/programming/language/java/advance'>📁 advance</a></b></summary>
 <ul>
 <li>
-  <a href='./module/platform/development/programming/language/java/advance/dynamic-runtime'>🪄 dynamic-runtime</a>
-</li>
-<li>
-  <a href='./module/platform/development/programming/language/java/advance/instrumentation'>🪄 instrumentation</a>
-</li>
-<li>
   <a href='./module/platform/development/programming/language/java/advance/jvm'>🪄 jvm</a>
 </li>
 <li>
-  <a href='./module/platform/development/programming/language/java/advance/native-interoperability'>🪄 native-interoperability</a>
-</li>
-<li>
-  <a href='./module/platform/development/programming/language/java/advance/networking'>🪄 networking</a>
-</li>
-<li>
-  <a href='./module/platform/development/programming/language/java/advance/runtime-diagnostics'>🪄 runtime-diagnostics</a>
+  <a href='./module/platform/development/programming/language/java/advance/dynamic-runtime'>🪄 dynamic-runtime</a>
 </li>
 <li>
   <a href='./module/platform/development/programming/language/java/advance/runtime-extensibility'>🪄 runtime-extensibility</a>
 </li>
 <li>
+  <a href='./module/platform/development/programming/language/java/advance/networking'>🪄 networking</a>
+</li>
+<li>
   <a href='./module/platform/development/programming/language/java/advance/security-cryptography'>🪄 security-cryptography</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/advance/native-interoperability'>🪄 native-interoperability</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/advance/instrumentation'>🪄 instrumentation</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/advance/runtime-diagnostics'>🪄 runtime-diagnostics</a>
 </li>
 </ul>
 </details>
@@ -2470,6 +2470,9 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </li>
 <li>
   <a href='./module/platform/support/document/pdf'>🪄 pdf</a>
+</li>
+<li>
+  <a href='./module/platform/support/document/reporting'>🪄 reporting</a>
 </li>
 <li>
 <details>

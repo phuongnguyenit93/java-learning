@@ -1,0 +1,18 @@
+version: 1
+children:
+  jvm:
+    order: 10
+  dynamic-runtime:
+    order: 20
+  runtime-extensibility:
+    order: 30
+  networking:
+    order: 40
+  security-cryptography:
+    order: 50
+  native-interoperability:
+    order: 60
+  instrumentation:
+    order: 70
+  runtime-diagnostics:
+    order: 80

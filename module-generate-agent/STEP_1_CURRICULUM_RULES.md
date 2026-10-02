@@ -232,6 +232,140 @@ Wave 4 — Advanced internals
 
 Learning waves giúp learner biết nên đi qua area theo thứ tự nào mà không biến Curriculum thành roadmap chi tiết của từng module.
 
+### 7.1 Materialize learning order bằng `module-order.yml`
+
+Sau khi canonical module inventory và recommended learning path của area đã đủ ổn định, Step 1 phải materialize thứ tự sibling tương ứng bằng file:
+
+```text
+<area-parent>/module-order.yml
+```
+
+File này là **parent-local ordering contract** cho generated module tree. Nó chỉ điều khiển **direct child directories** của parent chứa file.
+
+Ví dụ:
+
+```text
+module/platform/development/programming/language/java/advance/
+├── dynamic-runtime/
+├── instrumentation/
+├── jvm/
+├── native-interoperability/
+├── networking/
+├── runtime-diagnostics/
+├── runtime-extensibility/
+├── security-cryptography/
+└── module-order.yml
+```
+
+Trong ví dụ trên, `module-order.yml` chỉ order 8 direct children của `java/advance`. Nó không order chapter bên trong từng module và không tự order descendant sâu hơn.
+
+#### File này dùng để làm gì?
+
+`module-order.yml` không phải Curriculum source-of-truth và không thay thế dependency graph / learning waves.
+
+Ownership đúng là:
+
+```text
+CURRICULUM
+→ quyết định canonical module inventory + recommended learning order
+        ↓
+module-order.yml
+→ materialize sibling order đó cho generated module hierarchy
+        ↓
+ProjectStructureService
+→ apply order trước khi generate STRUCTURE / module catalog
+        ↓
+Portal
+→ preserve catalog order, không đọc/sort lại module-order.yml
+```
+
+Vì vậy:
+
+- Step 1 quyết định **vì sao** module A đứng trước module B;
+- `module-order.yml` chỉ lưu **thứ tự hiển thị/projection** tương ứng;
+- Step 2 ROADMAP vẫn chỉ quản lý learning journey **bên trong một module**;
+- không dùng `module-order.yml` để suy ngược Curriculum khi Curriculum chưa được review.
+
+#### Cách tạo/sync file
+
+Không tự dựng shape file bằng trí nhớ nếu repository task đang khả dụng. Dùng explicit root task:
+
+```text
+./gradlew generateModuleOrder --path=<parent-path-relative-to-module>
+```
+
+Trên Windows có thể dùng:
+
+```text
+.\gradlew.bat generateModuleOrder --path=<parent-path-relative-to-module>
+```
+
+Ví dụ cho `java/advance`:
+
+```text
+.\gradlew.bat generateModuleOrder --path=platform/development/programming/language/java/advance
+```
+
+Task này:
+
+```text
+discover direct child directories
+→ create/sync module-order.yml
+→ preserve existing human-owned order values
+→ add child mới với order null/rỗng
+→ remove stale child đã không còn tồn tại
+```
+
+Ordinary Gradle sync/generation chỉ **đọc** file này; không được tự mutate human-owned order.
+
+#### Cấu trúc và giá trị cần điền
+
+Schema hiện tại:
+
+```yaml
+version: 1
+children:
+  module-a:
+    order: 10
+  module-b:
+    order: 20
+  module-c:
+    order:
+```
+
+Rules:
+
+```text
+version
+→ hiện phải là integer 1
+
+children
+→ map của direct child directory name
+
+order
+→ non-negative integer hoặc null/rỗng
+→ số nhỏ hơn đứng trước
+→ cùng order thì fallback ABC
+→ null/rỗng đứng sau các child có order rồi fallback ABC
+```
+
+Nên dùng khoảng cách như `10, 20, 30, ...` khi area có khả năng chèn module về sau; `1, 2, 3, ...` cũng hợp lệ nếu không cần khoảng trống.
+
+Agent phải điền `order` theo **recommended learning path đã được Curriculum chấp nhận**, không theo alphabetical order, folder creation order hoặc historical Portal order.
+
+Nếu một parent có direct child là GROUP thay vì real module, `module-order.yml` vẫn order direct child directory đó. File này là tree-sibling ordering contract, không phải danh sách riêng chỉ dành cho real module.
+
+#### Validation sau khi điền
+
+Sau khi chỉnh `order`:
+
+1. chạy lại `generateModuleOrder --path=...` để xác nhận shape vẫn hợp lệ và human-owned order được preserve;
+2. chạy repository structure/catalog generation phù hợp khi task đang khả dụng;
+3. kiểm tra generated hierarchy/catalog giữ đúng thứ tự;
+4. kiểm tra git diff để đảm bảo chỉ có intended Curriculum/order changes.
+
+Nếu file có child không tồn tại, parser có thể warning/ignore stale entry; canonical Step 1 workflow vẫn phải dùng generator để sync và loại stale entry thay vì giữ cấu hình cũ.
+
 ---
 
 ## 8. Cross-module concepts
@@ -671,7 +805,9 @@ Flow khuyến nghị:
         ↓
 9. Lock Curriculum
         ↓
-10. Handoff từng module sang Module ROADMAP
+10. Generate/sync module-order.yml và điền order theo learning path đã lock
+        ↓
+11. Handoff từng module sang Module ROADMAP
 ```
 
 Curriculum planning chỉ dừng ở **area/module architecture**. Không dùng phase này để thiết kế H2, Knowledge anchor, API experiment, Quiz coverage hoặc Interview coverage của từng module; các chi tiết đó thuộc downstream module workflow.
@@ -714,6 +850,7 @@ dependency graph không còn major issue
 recommended learning path phù hợp với learner mục tiêu
 cross-module concept không còn duplicate owner đáng kể
 major foundational gap đã được review
+module-order.yml của area parent đã materialize đúng recommended sibling learning order khi area có nhiều direct child cần custom order
 ```
 
 Sau khi lock, thay đổi module inventory, primary owner, boundary hoặc dependency graph phải được coi là **Curriculum migration**, không phải chỉnh sửa cục bộ trong một module.
@@ -775,6 +912,8 @@ Có module advanced nào bị đưa lên quá sớm không?
 Có cross-module duplication đáng kể không?
 
 Có boundary nào mơ hồ khiến nhiều module cùng dạy một nội dung không?
+
+module-order.yml đã được generate/sync từ direct children thật và order có phản ánh recommended learning path không?
 ```
 
 Curriculum chỉ nên được xem là ổn định khi không còn major conceptual gap ở cấp area.
@@ -855,6 +994,9 @@ AREA_CURRICULUM_MAP.md
         ├── terminology ownership
         └── coverage matrix
                  ↓
+        module-order.yml
+        → materialized direct-child presentation order
+                 ↓
         module A ROADMAP
         module B ROADMAP
         module C ROADMAP
@@ -872,6 +1014,9 @@ Source-of-truth hierarchy:
 Area curriculum scope
         ↓
 AREA_CURRICULUM_MAP.md
+        ↓
+module-order.yml
+→ sibling-order projection of approved area learning order
         ↓
 Module learning journey
         ↓
