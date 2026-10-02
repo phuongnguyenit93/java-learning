@@ -39,7 +39,7 @@ Chi tiết Portal: [`PROJECT_PORTAL.md`](./PROJECT_PORTAL.md).
 
 Với learning module, hãy **xem Roadmap trước** để hiểu thứ tự và quan hệ giữa các đầu mục lớn; sau đó mới dùng Menu/Knowledge để đi vào bài học chi tiết. Portal đặt `Roadmap` ngay kế bên `Menu`: milestone nằm trên timeline chính, `relatedKnowledge` luôn hiển thị ở phía đối diện để nhảy vào Knowledge category cùng module, còn `relatedModules` là cross-module navigation. Hai relation này không thay đổi learning order. Kiến trúc nội dung của project đi theo hướng **Roadmap first → Knowledge second → API/Quiz/Interview later**.
 
-Chi tiết contract: [`MODULE_ROADMAP.md`](./MODULE_ROADMAP.md) và [`MODULE_LEARNING_AGENTS.md`](./MODULE_LEARNING_AGENTS.md).
+Chi tiết workflow: [`GENARAL_AGENT_RULES.md`](./module-generate-agent/GENARAL_AGENT_RULES.md) và các canonical step rules trong `module-generate-agent/STEP_1_...` đến `STEP_8_...`.
 
 ## Bắt đầu với module mới
 
@@ -54,7 +54,14 @@ Chi tiết contract: [`MODULE_ROADMAP.md`](./MODULE_ROADMAP.md) và [`MODULE_LEA
 
 - [`ARCHITECTURE.md`](./ARCHITECTURE.md) — kiến trúc chi tiết và ownership/lifecycle.
 - [`AGENTS.md`](./AGENTS.md) — working rules/context cho AI và contributor.
-- [`MODULE_ROADMAP.md`](./MODULE_ROADMAP.md) — roadmap-first learning architecture và source-of-truth pipeline.
-- [`MODULE_LEARNING_AGENTS.md`](./MODULE_LEARNING_AGENTS.md) — workflow xây/review learning content của một module.
+- [`GENARAL_AGENT_RULES.md`](./module-generate-agent/GENARAL_AGENT_RULES.md) — orchestrator/routing cho toàn bộ module-generation workflow.
+- [`STEP_1_CURRICULUM_RULES.md`](./module-generate-agent/STEP_1_CURRICULUM_RULES.md) — Curriculum, scope, ownership và boundary.
+- [`STEP_2_ROADMAP.md`](./module-generate-agent/STEP_2_ROADMAP.md) — canonical ROADMAP architecture, contract và authoring/review rules.
+- [`STEP_3_MENU.md`](./module-generate-agent/STEP_3_MENU.md) — Menu + title skeleton cho new module; refactor module skip step này.
+- [`STEP_4_KNOWLEDGE.md`](./module-generate-agent/STEP_4_KNOWLEDGE.md) — Knowledge; với refactor module thì Menu + Knowledge được xử lý cùng nhau.
+- [`STEP_5_API.md`](./module-generate-agent/STEP_5_API.md) — API learning documentation / experiments.
+- [`STEP_6_QUIZ.md`](./module-generate-agent/STEP_6_QUIZ.md) — Quiz.
+- [`STEP_7_INTERVIEW.md`](./module-generate-agent/STEP_7_INTERVIEW.md) — Interview.
+- [`STEP_8_VALIDATION.md`](./module-generate-agent/STEP_8_VALIDATION.md) — integrated validation + Coverage Review.
 - [`PROJECT_PORTAL.md`](./PROJECT_PORTAL.md) — Portal hiện tại, data contract và deployment.
 - [`STRUCTURE.md`](./STRUCTURE.md) — cây module generated.

@@ -5,6 +5,7 @@ Software Architecture describes the high-level structure, boundaries, dependenci
 ## Structure
 
 - Fundamentals
+- System Architecture
 - Architectural Pattern
 - Distributed System Design
 - Domain Modeling
@@ -20,4 +21,5 @@ Software Architecture describes the high-level structure, boundaries, dependenci
 
 - GoF and related Design Patterns: `module/platform/development/software-design/design-pattern`
 - Distributed-system design concepts and patterns: `module/platform/development/software-design/architecture/distributed-system`
-- Microservice architecture and microservice-specific patterns: `module/microservice`
+- System-architecture taxonomy: `module/platform/development/software-design/architecture/system-architecture`
+- Detailed Microservices curriculum and implementation: `module/microservice`

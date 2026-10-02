@@ -1,0 +1,7 @@
+version: 1
+children:
+  monolithic:
+    order: 1
+  microservices:
+    order: 2
+

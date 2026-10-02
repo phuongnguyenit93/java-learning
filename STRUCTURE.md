@@ -2136,6 +2136,26 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </li>
 <li>
 <details>
+  <summary><b><a href='./module/platform/development/software-design/architecture/system-architecture'>📁 system-architecture</a></b></summary>
+<ul>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/software-design/architecture/system-architecture/monolithic'>📁 monolithic</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/software-design/architecture/system-architecture/monolithic/modular-monolith'>🪄 modular-monolith</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/architecture/system-architecture/microservices'>🪄 microservices</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
   <summary><b><a href='./module/platform/development/software-design/architecture/architectural-pattern'>📁 architectural-pattern</a></b></summary>
 <ul>
 <li>
@@ -2167,9 +2187,6 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </li>
 <li>
   <a href='./module/platform/development/software-design/architecture/architectural-pattern/service-oriented-architecture'>🪄 service-oriented-architecture</a>
-</li>
-<li>
-  <a href='./module/platform/development/software-design/architecture/architectural-pattern/modular-monolith'>🪄 modular-monolith</a>
 </li>
 </ul>
 </details>

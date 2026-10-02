@@ -6,4 +6,3 @@
 - Single deployment unit
 - Related microservice comparison: `module/microservice`
 - Related framework implementation: `module/platform/development/programming/framework/spring-modulith`
-

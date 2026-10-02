@@ -2,9 +2,11 @@ version: 1
 children:
   fundamentals:
     order: 1
-  architectural-pattern:
+  system-architecture:
     order: 2
-  distributed-system:
+  architectural-pattern:
     order: 3
-  domain-modeling:
+  distributed-system:
     order: 4
+  domain-modeling:
+    order: 5

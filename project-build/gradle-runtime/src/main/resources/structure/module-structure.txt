@@ -514,6 +514,10 @@ module
     │   ├── software-design
     │   │   ├── architecture
     │   │   │   ├── fundamentals
+    │   │   │   ├── system-architecture
+    │   │   │   │   ├── monolithic
+    │   │   │   │   │   └── modular-monolith
+    │   │   │   │   └── microservices
     │   │   │   ├── architectural-pattern
     │   │   │   │   ├── layered
     │   │   │   │   ├── mvc [MODEL_VIEW_CONTROLLER] : Model-View-Controller architectural pattern
@@ -524,8 +528,7 @@ module
     │   │   │   │   ├── event-driven
     │   │   │   │   ├── microkernel
     │   │   │   │   ├── pipes-and-filters
-    │   │   │   │   ├── service-oriented-architecture
-    │   │   │   │   └── modular-monolith
+    │   │   │   │   └── service-oriented-architecture
     │   │   │   ├── distributed-system
     │   │   │   │   ├── bulkhead
     │   │   │   │   ├── cqrs

@@ -1,0 +1,5 @@
+version: 1
+children:
+  modular-monolith:
+    order: 1
+

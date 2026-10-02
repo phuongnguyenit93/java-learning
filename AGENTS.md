@@ -14,8 +14,15 @@ Use:
 AGENTS.md       → how an AI should work in this repository
 ARCHITECTURE.md → why the repository is structured this way
 README.md       → high-level project orientation
-MODULE_ROADMAP.md → canonical roadmap-first learning architecture
-MODULE_LEARNING_AGENTS.md → how module learning content is designed/reviewed
+module-generate-agent/STEP_1_CURRICULUM_RULES.md → how area curriculum/module ownership is designed/reviewed
+module-generate-agent/STEP_2_ROADMAP.md → canonical roadmap architecture + how one module roadmap is designed/reviewed
+module-generate-agent/STEP_3_MENU.md → new-module Menu/title skeleton; skipped for refactor modules
+module-generate-agent/STEP_4_KNOWLEDGE.md → Knowledge authoring; refactor Menu + Knowledge together
+module-generate-agent/STEP_5_API.md → API learning documentation / experiment rules
+module-generate-agent/STEP_6_QUIZ.md → Quiz authoring rules
+module-generate-agent/STEP_7_INTERVIEW.md → Interview authoring rules
+module-generate-agent/STEP_8_VALIDATION.md → integrated validation + Coverage Review
+module-generate-agent/GENARAL_AGENT_RULES.md → orchestrates the canonical module-generation steps
 PROJECT_PORTAL.md → detailed Learning Portal design/current implementation
 STRUCTURE.md    → generated module tree/navigation
 ```
@@ -56,16 +63,17 @@ For repository-level work, read in this order:
 1. AGENTS.md
 2. ARCHITECTURE.md
 3. README.md
-4. MODULE_ROADMAP.md + MODULE_LEARNING_AGENTS.md when learning-content work is involved
-5. settings.gradle
-6. build.gradle
-7. project-orchestration/
-8. project-build/gradle-runtime/
-9. project-build/springboot-runtime/
-10. project-portal/ and PROJECT_PORTAL.md when portal/frontend work is involved
-11. STRUCTURE.md when module navigation is needed
-12. module metadata/build.gradle for the concrete task
-13. module source packages only when the requested work requires them
+4. module-generate-agent/GENARAL_AGENT_RULES.md for module-generation routing
+5. the requested module-generate-agent/STEP_X_*.md file for the concrete learning step
+6. settings.gradle
+7. build.gradle
+8. project-orchestration/
+9. project-build/gradle-runtime/
+10. project-build/springboot-runtime/
+11. project-portal/ and PROJECT_PORTAL.md when portal/frontend work is involved
+12. STRUCTURE.md when module navigation is needed
+13. module metadata/build.gradle for the concrete task
+14. module source packages only when the requested work requires them
 ```
 
 Do not read the entire `module/` source tree just to answer a build-system question.
@@ -511,9 +519,9 @@ For Vietnamese (`vi`) learning content, Vietnamese is the primary explanatory la
 
 API availability is not a prerequisite for learning-module completeness. A conceptual/library-oriented module may be complete with Knowledge, Quiz and Interview only. Do not force a module into `SERVLET`/`REACTIVE` or create artificial endpoints solely so it can have API Docs. When a `SERVLET`/`REACTIVE` module does contain meaningful learning APIs, those APIs should represent real experiments for Knowledge concepts and follow the Swagger ↔ README relationship contract below.
 
-Detailed AI authoring workflow and granularity guidance lives in `MODULE_LEARNING_AGENTS.md`.
+Area-level module granularity, ownership and boundary guidance lives in `module-generate-agent/STEP_1_CURRICULUM_RULES.md`. `module-generate-agent/GENARAL_AGENT_RULES.md` owns orchestration; detailed authoring/validation rules live in the corresponding `STEP_X_*.md` file.
 
-For learning-content tasks, treat the three-layer pedagogical model in `MODULE_LEARNING_AGENTS.md` as an authoring requirement, not optional style guidance. A successful build/projection or high relation/assessment coverage does not prove that the learning path is complete.
+For Knowledge tasks, treat the three-layer pedagogical model in `module-generate-agent/STEP_4_KNOWLEDGE.md` as an authoring requirement, not optional style guidance. A successful build/projection or high relation/assessment coverage does not prove that the learning path is complete.
 
 When bootstrapping a new learning module, prefer the actual settings/module lifecycle: create the local `gradle.properties` marker, let settings synchronization create/synchronize `master.json` and `properties.json`, set module-owned `VALUE` fields, enable `BUILD_README`, then let `ReadmeSetupPlugin` initialize the README language/support structure. Do not manually create generated registries/structure outputs that already have a generator.
 
@@ -853,6 +861,41 @@ rebuild from canonical anchor/content structure
 ```
 
 Do not implement append-only generation for these sections.
+
+### Internal README menu source contract
+
+The explicit task:
+
+```text
+generateInternalReadmeMenu
+```
+
+operates on human-authored Markdown source and generated navigation markup. Authoring should keep those responsibilities separate.
+
+A minimal chapter source should normally look like:
+
+```markdown
+# Chapter title
+
+Optional introduction.
+
+## <a id="stable-section-id">Section title</a>
+
+Section content.
+```
+
+The anchored H2 id is the stable navigation/relation identity and should be unique, short, readable and independent from display numbering when possible. The visible H2 text is the localized learner-facing label.
+
+Do not manually author generator-owned navigation markup merely to make a source chapter look like generated output. `generateInternalReadmeMenu` owns structures such as:
+
+```text
+Menu
+<details> navigation blocks
+back-to-top anchors/links
+generated separators
+```
+
+If generated output is wrong, fix the human-owned source or the generator contract rather than maintaining a second hand-written copy of generated structure.
 
 ---
 

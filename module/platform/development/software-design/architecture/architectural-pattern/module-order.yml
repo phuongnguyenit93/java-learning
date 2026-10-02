@@ -20,5 +20,3 @@ children:
     order: 9
   service-oriented-architecture:
     order: 10
-  modular-monolith:
-    order: 11

@@ -57,8 +57,16 @@ java-learning/
 ├── settings.gradle                 # Composite build entry point
 ├── README.md
 ├── ARCHITECTURE.md
-├── MODULE_ROADMAP.md               # Roadmap-first learning architecture
-├── MODULE_LEARNING_AGENTS.md       # Module learning workflow/review rules
+├── module-generate-agent/
+│   ├── STEP_1_CURRICULUM_RULES.md  # Area-level curriculum rules
+│   ├── STEP_2_ROADMAP.md           # Canonical module roadmap architecture/workflow
+│   ├── STEP_3_MENU.md              # New-module Menu/title skeleton rules
+│   ├── STEP_4_KNOWLEDGE.md         # Knowledge + refactor Menu/Knowledge rules
+│   ├── STEP_5_API.md               # API learning documentation rules
+│   ├── STEP_6_QUIZ.md              # Quiz authoring rules
+│   ├── STEP_7_INTERVIEW.md         # Interview authoring rules
+│   ├── STEP_8_VALIDATION.md        # Integrated validation / Coverage Review
+│   └── GENARAL_AGENT_RULES.md      # Step orchestration / routing
 ├── PROJECT_PORTAL.md               # Portal-specific architecture/design
 └── STRUCTURE.md                    # Generated module map
 ```
@@ -135,7 +143,7 @@ Mỗi language roadmap tự sở hữu curriculum của nó; Gradle chỉ tạo/
 
 Với legacy module, roadmap phải được thiết kế độc lập từ module scope/curriculum goal trước, rồi mới audit Knowledge hiện tại. Điều này tránh việc historical menu order vô tình trở thành curriculum mới.
 
-Canonical contract nằm trong [`MODULE_ROADMAP.md`](./MODULE_ROADMAP.md); authoring/review workflow nằm trong [`MODULE_LEARNING_AGENTS.md`](./MODULE_LEARNING_AGENTS.md).
+`GENARAL_AGENT_RULES.md` chỉ orchestrate/routing. Canonical rules của từng phase nằm trong `module-generate-agent/STEP_1_...` đến `STEP_8_...`; riêng ROADMAP architecture + authoring/review contract nằm trong [`STEP_2_ROADMAP.md`](./module-generate-agent/STEP_2_ROADMAP.md).
 
 ### 3.1 `project-portal` boundary
 
@@ -634,7 +642,7 @@ Việc một module có API hay không không quyết định module đó có đ
 
 Do đó không được đổi một topic tự nhiên thành `SERVLET`/`REACTIVE`, hoặc tạo endpoint giả, chỉ để đạt "đủ bộ" Knowledge/API/Quiz/Interview. Ngược lại, nếu `SERVLET`/`REACTIVE` module có learning API thực sự thì API phải minh họa/chứng minh Knowledge concept và dùng exact README relationship theo Swagger contract.
 
-Quy tắc authoring chi tiết, heuristic granularity và workflow AI nằm trong `MODULE_LEARNING_AGENTS.md`.
+Workflow routing nằm trong `module-generate-agent/GENARAL_AGENT_RULES.md`; quy tắc authoring/validation chi tiết nằm trong file `STEP_X_*.md` tương ứng.
 
 Ba tầng này là **learning/content contract**, không phải constraint của Gradle/module scanner. Build system vẫn chỉ materialize/present source content; chất lượng roadmap, motivation, transition và conceptual relationship thuộc human/AI-authored curriculum và phải được review độc lập với schema/build correctness.
 
