@@ -1,0 +1,139 @@
+AeadExperimentController:
+  tamperDetection():
+    summary: AEAD từ chối ciphertext đã bị chỉnh sửa
+    description: Mã hóa một payload bằng AES/GCM, giải mã ciphertext gốc thành công,
+      sau đó sửa một byte và quan sát AEADBadTagException khi authentication tag không
+      còn hợp lệ.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 11.AuthenticatedEncryption/AuthenticatedEncryption.md
+      anchor: aead-decryption-failure
+    methodName: tamperDetection
+    params: [
+      ]
+    path: com/example/learning/controller/AeadExperimentController.java
+    mapping: '@GetMapping("/tamper-detection")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/advance/security-cryptography/aead/tamper-detection
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+DigitalSignatureExperimentController:
+  tamper():
+    summary: Chữ ký không còn hợp lệ khi payload thay đổi
+    description: Ký payload bằng private key rồi verify bằng public key với cả bytes
+      gốc và bytes đã sửa để quan sát chữ ký chỉ bảo vệ đúng dữ liệu đã được ký.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 8.DigitalSignature/DigitalSignature.md
+      anchor: signature-data-contract
+    methodName: tamper
+    params: [
+      ]
+    path: com/example/learning/controller/DigitalSignatureExperimentController.java
+    mapping: '@GetMapping("/tamper")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/advance/security-cryptography/signature/tamper
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+KeyDerivationExperimentController:
+  saltEffect():
+    summary: Salt là một phần của hợp đồng dẫn xuất khóa
+    description: Chạy PBKDF2 nhiều lần với cùng password/parameters để thấy cùng salt
+      cho cùng output, còn đổi salt làm derived key thay đổi; iteration count chỉ
+      là giá trị bounded cho demo và hai salt cố định chỉ nhằm làm phép so sánh tái
+      lập được.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 13.KeyDerivation/KeyDerivation.md
+      anchor: salt-and-work-factor
+    methodName: saltEffect
+    params: [
+      ]
+    path: com/example/learning/controller/KeyDerivationExperimentController.java
+    mapping: '@GetMapping("/salt-effect")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/advance/security-cryptography/key-derivation/salt-effect
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+KeyEstablishmentExperimentController:
+  compare():
+    summary: So sánh KeyAgreement với KEM qua secret material
+    description: Chạy X25519 KeyAgreement cho hai key pair và DHKEM encapsulate/decapsulate
+      cho receiver để quan sát cả hai cơ chế đều tạo secret material khớp nhưng theo
+      flow khác nhau.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 12.KeyEstablishment/KeyEstablishment.md
+      anchor: agreement-vs-kem
+    methodName: compare
+    params: [
+      ]
+    path: com/example/learning/controller/KeyEstablishmentExperimentController.java
+    mapping: '@GetMapping("/compare")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/advance/security-cryptography/key-establishment/compare
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+MacExperimentController:
+  tamper():
+    summary: MAC phát hiện thay đổi của message
+    description: Tạo HMAC cho message gốc bằng một secret key, sau đó verify cùng
+      tag với message gốc và message đã bị sửa một byte để quan sát integrity check.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 7.Mac/Mac.md
+      anchor: mac-workflow
+    methodName: tamper
+    params: [
+      ]
+    path: com/example/learning/controller/MacExperimentController.java
+    mapping: '@GetMapping("/tamper")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /java/advance/security-cryptography/mac/tamper
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

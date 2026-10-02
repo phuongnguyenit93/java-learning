@@ -41,4 +41,108 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: security-cryptography-purpose
+    title: Mật mã học bảo vệ điều gì trong Java?
+    purpose: Hiểu mật mã học là tập hợp các cơ chế bảo vệ tính bí mật, toàn vẹn và tính xác thực của dữ liệu, đồng thời nhận ra vì sao ứng dụng nên dùng các cơ chế và API mật mã đã được chuẩn hóa thay vì tự thiết kế thuật toán bảo mật.
+    relatedKnowledge:
+      - MentalModel
+      - EncodingVsEncryption
+    objectives:
+      - Phân biệt các mục tiêu bảo mật chính như tính bí mật, tính toàn vẹn và tính xác thực trước khi chọn cơ chế kỹ thuật.
+      - Phân biệt encoding, hàm băm, MAC, mã hóa và chữ ký số theo mục đích sử dụng, tránh coi chúng là các phép biến đổi dữ liệu có thể thay thế lẫn nhau.
+      - Nhận biết ranh giới của mô-đun với framework xác thực/phân quyền, IAM, hạ tầng quản lý bí mật và cơ chế mạng.
+  - id: jca-provider-model
+    title: JCA/JCE và mô hình Provider
+    purpose: Xây dựng mô hình tư duy về Java Cryptography Architecture như một lớp API ổn định tách mã ứng dụng khỏi phần triển khai thuật toán thông qua các engine class, tên thuật toán chuẩn và security provider.
+    relatedKnowledge:
+      - ProvidersAlgorithms
+    relatedModules:
+      - routeId: JAVA_RUNTIME_EXTENSIBILITY
+        label: Runtime Extensibility
+        note: Mô hình provider của JCA là một cơ chế mở rộng chuyên biệt cho bảo mật; kiến trúc plugin/provider tổng quát lúc chạy thuộc mô-đun Runtime Extensibility.
+    objectives:
+      - Hiểu vai trò của engine class, SPI, Provider và Security trong quá trình tìm phần triển khai cho một dịch vụ mật mã.
+      - Theo dõi cách getInstance chọn thuật toán và provider mà không buộc ứng dụng phụ thuộc vào một phần triển khai cụ thể.
+      - Hiểu vì sao tên thuật toán chuẩn, thứ tự provider và security properties ảnh hưởng đến tính tương thích và hành vi lúc chạy.
+  - id: secure-random-and-key-material
+    title: Độ ngẫu nhiên an toàn và vật liệu khóa
+    purpose: Hiểu nhiều thao tác mật mã phụ thuộc vào nguồn ngẫu nhiên và vật liệu khóa phù hợp, từ SecureRandom đến secret key, cặp public/private key, bộ sinh khóa, factory và key specification.
+    relatedKnowledge:
+      - SecureRandom
+      - KeysKeyPair
+    relatedModules:
+      - routeId: JAVA_NUMBERS
+        label: Numbers
+        note: Các khái niệm sinh số ngẫu nhiên tổng quát thuộc mô-đun Numbers; milestone này chỉ tập trung vào yêu cầu về độ ngẫu nhiên trong bảo mật và mật mã học.
+    objectives:
+      - Phân biệt SecureRandom với bộ sinh số ngẫu nhiên dùng cho mô phỏng hoặc logic nghiệp vụ không yêu cầu tính khó dự đoán.
+      - Phân biệt secret key, public key và private key cùng vai trò của chúng trong các nhóm cơ chế mật mã khác nhau.
+      - Phân biệt việc sinh khóa mới với việc dựng hoặc chuyển đổi khóa từ vật liệu khóa đã có thông qua generator, factory và key specification.
+  - id: integrity-and-authenticity
+    title: Băm, MAC và chữ ký số
+    purpose: Hiểu ba nhóm cơ chế thường bị nhầm lẫn khi phát hiện dữ liệu bị thay đổi và xác minh nguồn gốc, từ digest không dùng khóa đến MAC dùng bí mật dùng chung và chữ ký số dùng khóa bất đối xứng.
+    relatedKnowledge:
+      - MessageDigest
+      - Mac
+      - DigitalSignature
+    objectives:
+      - Giải thích MessageDigest tạo dấu vân tay để so sánh với một giá trị tham chiếu đáng tin cậy, nhưng bản thân digest không bảo vệ chống kẻ tấn công có thể sửa cả dữ liệu lẫn digest và cũng không xác thực người gửi.
+      - Hiểu MAC dùng secret key để kiểm tra tính toàn vẹn và tính xác thực giữa các bên chia sẻ khóa.
+      - Hiểu quá trình ký/xác minh dùng private/public key như thế nào và phân biệt chữ ký số với mã hóa.
+  - id: encryption-and-aead
+    title: Mã hóa và mã hóa có xác thực
+    purpose: Hiểu cách Java biểu diễn mã hóa/giải mã qua Cipher và vì sao transformation, mode, padding, IV/nonce cùng cơ chế AEAD quyết định cả tính bí mật lẫn khả năng phát hiện dữ liệu bị chỉnh sửa.
+    relatedKnowledge:
+      - SymmetricEncryption
+      - AsymmetricEncryption
+      - AuthenticatedEncryption
+    objectives:
+      - Phân biệt mã hóa đối xứng và bất đối xứng theo mô hình khóa, chi phí và trường hợp sử dụng thay vì chỉ theo tên thuật toán.
+      - Hiểu transformation và tham số thuật toán là một phần của hợp đồng mật mã chứ không phải chi tiết cấu hình phụ.
+      - Nhận biết vai trò của IV/nonce, padding và authentication tag, đặc biệt rủi ro khi tái sử dụng nonce với các mode yêu cầu giá trị duy nhất.
+      - Hiểu vì sao AEAD thường phù hợp khi cần đồng thời tính bí mật và tính toàn vẹn thay vì tự ghép nhiều cơ chế mật mã.
+  - id: shared-secret-establishment
+    title: Thiết lập bí mật dùng chung và dẫn xuất khóa
+    purpose: Phân biệt hai bài toán tạo vật liệu khóa bí mật gồm thiết lập bí mật dùng chung giữa các bên bằng KeyAgreement hoặc KEM và dẫn xuất khóa cục bộ từ vật liệu đầu vào như mật khẩu bằng cơ chế dẫn xuất phù hợp.
+    relatedKnowledge:
+      - KeyEstablishment
+      - KeyDerivation
+    objectives:
+      - Hiểu KeyAgreement thiết lập bí mật dùng chung từ cặp khóa và thông tin công khai nhưng không trực tiếp mã hóa dữ liệu ứng dụng.
+      - Hiểu dẫn xuất khóa từ mật khẩu là bài toán khác với trao đổi khóa và cần salt, work factor cùng thuật toán phù hợp thay vì dùng trực tiếp mật khẩu làm khóa mật mã.
+      - Nhận biết Key Encapsulation Mechanism trong Java 21 như một cơ chế mật mã khóa công khai để thiết lập vật liệu khóa đối xứng, và phân biệt nó với KeyAgreement.
+  - id: key-certificate-trust-management
+    title: KeyStore, chứng thư và mô hình tin cậy
+    purpose: Hiểu cách Java lưu và sử dụng vật liệu khóa/chứng thư, cách chứng thư gắn public key với danh tính và cách certificate path, trust anchor cùng chính sách kiểm tra tham gia vào quyết định tin cậy.
+    relatedKnowledge:
+      - KeyStore
+      - CertificatesTrust
+    objectives:
+      - Phân biệt PrivateKeyEntry, SecretKeyEntry và trusted certificate material trong KeyStore.
+      - Hiểu certificate path, trust anchor, path validation và kiểm tra thu hồi ở mức cần thiết để sử dụng Java security API đúng cách.
+      - Phân biệt keystore và truststore theo vai trò sử dụng thay vì coi chúng là hai định dạng file bắt buộc khác nhau.
+      - Nhận biết ranh giới giữa Java certificate/key API với vận hành PKI, CA và vòng đời bí mật ở hạ tầng.
+  - id: jsse-tls-security
+    title: JSSE và mô hình bảo mật của TLS
+    purpose: Kết nối các cơ chế mật mã, vật liệu khóa và mô hình tin cậy với JSSE để hiểu Java thiết lập kênh bảo mật bằng SSLContext, KeyManager, TrustManager và TLS handshake mà không biến mô-đun này thành khóa học networking.
+    relatedKnowledge:
+      - TlsJsse
+    relatedModules:
+      - routeId: JAVA_NETWORKING
+        label: Networking
+        note: Socket, HTTP client và cơ chế mạng thuộc mô-đun Networking; milestone này sở hữu phần khóa, trust, certificate và cơ chế bảo mật TLS của JSSE.
+    objectives:
+      - Hiểu vai trò của SSLContext, KeyManager, TrustManager cùng vật liệu khóa và dữ liệu tin cậy trong việc thiết lập TLS.
+      - Theo dõi ở mức khái niệm cách handshake tạo phiên bảo mật, xác thực peer và thỏa thuận tham số mật mã.
+      - Phân biệt kiểm tra độ tin cậy của certificate path với xác minh danh tính hostname/endpoint và nhận biết vì sao bỏ qua các bước kiểm tra này làm mất bảo đảm bảo mật.
+  - id: safe-crypto-design-synthesis
+    title: Tổng hợp thiết kế mật mã an toàn
+    purpose: Tổng hợp toàn bộ mô-đun thành quy trình chọn đúng cơ chế mật mã, thuật toán/provider, vật liệu khóa, tham số, cách lưu trữ và bảo vệ dữ liệu truyền tải dựa trên mô hình đe dọa thay vì ghép API theo cảm tính.
+    relatedKnowledge:
+      - CryptoPitfalls
+    objectives:
+      - Chọn cơ chế mật mã dựa trên mục tiêu bảo mật trước khi chọn class hoặc thuật toán cụ thể.
+      - Nhận biết các mẫu lỗi quan trọng như nhúng cứng bí mật, dùng thuật toán yếu/lỗi thời, tái sử dụng IV/nonce, bỏ qua authentication tag hoặc kiểm tra chứng thư và khóa cứng ứng dụng vào provider khi không cần thiết.
+      - Hiểu security properties và các ràng buộc thuật toán của JDK/provider có thể giới hạn thuật toán, giao thức hoặc kích thước khóa dù API tương ứng vẫn tồn tại.
+      - Mô tả được luồng bảo vệ từ đầu đến cuối cho dữ liệu lưu trữ và dữ liệu truyền qua mạng, từ nguồn ngẫu nhiên/vật liệu khóa đến cơ chế mật mã, lưu trữ/trust và TLS khi phù hợp.

@@ -41,4 +41,108 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: security-cryptography-purpose
+    title: What Problems Does Cryptography Solve in Java?
+    purpose: Understand cryptography as a set of mechanisms for protecting confidentiality, integrity, and authenticity, and why applications should rely on standardized primitives and APIs rather than inventing security algorithms.
+    relatedKnowledge:
+      - MentalModel
+      - EncodingVsEncryption
+    objectives:
+      - Distinguish core security goals such as confidentiality, integrity, and authenticity before selecting a technical mechanism.
+      - Distinguish encoding, hashing, MACs, encryption, and digital signatures by purpose instead of treating them as interchangeable data transformations.
+      - Recognize the module boundary with authentication/authorization frameworks, IAM, secret infrastructure, and networking mechanics.
+  - id: jca-provider-model
+    title: JCA/JCE and the Provider Model
+    purpose: Build a mental model of the Java Cryptography Architecture as a stable API layer that separates application code from algorithm implementations through engine classes, standard algorithm names, and security providers.
+    relatedKnowledge:
+      - ProvidersAlgorithms
+    relatedModules:
+      - routeId: JAVA_RUNTIME_EXTENSIBILITY
+        label: Runtime Extensibility
+        note: JCA providers are a security-specific extension mechanism; general runtime plugin and provider architecture belongs to the Runtime Extensibility module.
+    objectives:
+      - Understand the roles of engine classes, SPIs, Provider, and Security when locating an implementation for a cryptographic service.
+      - Trace how getInstance resolves an algorithm and provider without requiring application code to bind to one implementation.
+      - Understand how standard algorithm names, provider ordering, and security properties affect portability and runtime behavior.
+  - id: secure-random-and-key-material
+    title: Entropy and Key Material
+    purpose: Understand how cryptographic operations use suitable randomness and key material when required, from SecureRandom to secret keys, public/private key pairs, generators, factories, and key specifications.
+    relatedKnowledge:
+      - SecureRandom
+      - KeysKeyPair
+    relatedModules:
+      - routeId: JAVA_NUMBERS
+        label: Numbers
+        note: General random-number concepts belong to the Numbers module; this milestone focuses only on randomness requirements for security and cryptography.
+    objectives:
+      - Distinguish SecureRandom from random generators intended for simulation or business logic where unpredictability is not a security requirement.
+      - Distinguish secret, public, and private keys and their roles across different families of cryptographic primitives.
+      - Distinguish generating new key material from constructing or converting keys from existing material through generators, factories, and key specifications.
+  - id: integrity-and-authenticity
+    title: Hashes, MACs, and Digital Signatures
+    purpose: Understand three families of primitives that are often confused when detecting modification and establishing message origin, from unkeyed digests to shared-secret MACs and asymmetric digital signatures.
+    relatedKnowledge:
+      - MessageDigest
+      - Mac
+      - DigitalSignature
+    objectives:
+      - Explain that MessageDigest produces a fingerprint that can be compared with a trusted reference, but a digest alone does not protect against an attacker who can modify both the data and digest and does not authenticate a sender.
+      - Understand how a MAC uses a secret key to provide integrity and authenticity between parties that share that key.
+      - Understand signing and verification with private/public keys and distinguish digital signatures from encryption.
+  - id: encryption-and-aead
+    title: Encryption and Authenticated Encryption
+    purpose: Understand how Java models encryption and decryption through Cipher and why the transformation, mode, padding, IV/nonce, and authenticated-encryption design determine both confidentiality and tamper detection.
+    relatedKnowledge:
+      - SymmetricEncryption
+      - AsymmetricEncryption
+      - AuthenticatedEncryption
+    objectives:
+      - Distinguish symmetric and asymmetric encryption by key model, cost, and use case rather than only by algorithm names.
+      - Understand that transformations and algorithm parameters are part of the cryptographic contract rather than incidental configuration.
+      - Recognize the roles of IVs/nonces, padding, and authentication tags, especially the danger of nonce reuse in modes that require uniqueness.
+      - Understand why AEAD is commonly preferred when both confidentiality and integrity are required instead of composing primitives ad hoc.
+  - id: shared-secret-establishment
+    title: Shared-Secret Establishment and Key Derivation
+    purpose: Distinguish two different ways secret key material is produced by separating shared-secret establishment between parties with KeyAgreement or KEM from local key derivation using input material such as a password.
+    relatedKnowledge:
+      - KeyEstablishment
+      - KeyDerivation
+    objectives:
+      - Understand that KeyAgreement establishes shared secret material from key pairs and public information rather than encrypting application payloads.
+      - Understand that password-based key derivation is different from key exchange and needs a suitable algorithm, salt, and work factor instead of using a password directly as a cryptographic key.
+      - Recognize the Java 21 Key Encapsulation Mechanism API as a public-key mechanism for establishing symmetric key material and distinguish it from KeyAgreement.
+  - id: key-certificate-trust-management
+    title: KeyStore, Certificates, and Trust
+    purpose: Understand how Java stores and consumes key and certificate material, how certificates bind public keys to identities, and how certification paths, trust anchors, and validation policy participate in trust decisions.
+    relatedKnowledge:
+      - KeyStore
+      - CertificatesTrust
+    objectives:
+      - Distinguish PrivateKeyEntry, SecretKeyEntry, and trusted certificate material in a KeyStore.
+      - Understand certification paths, trust anchors, path validation, and revocation checking at the level needed to use Java security APIs correctly.
+      - Distinguish keystore and truststore by their application role rather than assuming they must be different file formats.
+      - Recognize the boundary between Java key/certificate APIs and infrastructure ownership of PKI, certificate authorities, and secret lifecycle.
+  - id: jsse-tls-security
+    title: JSSE and the TLS Security Model
+    purpose: Connect cryptographic primitives, key material, and trust with JSSE so secure channels can be understood through SSLContext, key managers, trust managers, and the TLS handshake without turning this module into a networking course.
+    relatedKnowledge:
+      - TlsJsse
+    relatedModules:
+      - routeId: JAVA_NETWORKING
+        label: Networking
+        note: Socket, HTTP client, and networking mechanics belong to the Networking module; this milestone owns JSSE key, trust, certificate, and TLS security mechanics.
+    objectives:
+      - Understand the roles of SSLContext, KeyManager, TrustManager, and key/trust material when establishing TLS.
+      - Trace conceptually how a handshake creates a secure session, authenticates peers, and negotiates cryptographic parameters.
+      - Distinguish certificate trust validation from hostname or endpoint identity verification and recognize why bypassing trust checks removes security guarantees.
+  - id: safe-crypto-design-synthesis
+    title: Safe Cryptographic Choices and End-to-End Synthesis
+    purpose: Synthesize the module into a workflow for selecting primitives, algorithms/providers, key material, parameters, storage, and transport protection from a threat model instead of assembling APIs by intuition.
+    relatedKnowledge:
+      - CryptoPitfalls
+    objectives:
+      - Select a primitive from the security goal before choosing a class or concrete algorithm.
+      - Recognize important failure patterns such as hard-coded secrets, obsolete algorithms, IV/nonce reuse, ignored authentication tags or certificate validation, and unnecessary provider lock-in.
+      - Understand that JDK/provider security properties and algorithm constraints can disable or restrict algorithms, protocols, or key sizes even when the corresponding API exists.
+      - Explain an end-to-end protection flow for data at rest and data in transit, from randomness and key material through primitives, key storage/trust, and TLS where appropriate.

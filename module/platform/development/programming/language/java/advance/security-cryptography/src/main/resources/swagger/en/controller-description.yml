@@ -1,0 +1,30 @@
+AeadExperimentController:
+  description: |-
+    <h2>AEAD Ciphertext-Tamper Detection</h2>
+    <p>Uses AES/GCM to compare valid ciphertext with the same ciphertext after one byte is changed, making authentication-tag failure directly observable.</p>
+  readmeRelated:
+    file: 11.AuthenticatedEncryption/AuthenticatedEncryption.md
+DigitalSignatureExperimentController:
+  description: |-
+    <h2>Digital Signatures and Signed Bytes</h2>
+    <p>Signs one payload and verifies both the original and a modified payload to demonstrate that a signature is bound to the exact bytes that were signed.</p>
+  readmeRelated:
+    file: 8.DigitalSignature/DigitalSignature.md
+KeyDerivationExperimentController:
+  description: |-
+    <h2>Password-Based Key Derivation</h2>
+    <p>Runs bounded PBKDF2 derivations to show repeatability with the same salt and changed output when the salt changes.</p>
+  readmeRelated:
+    file: 13.KeyDerivation/KeyDerivation.md
+KeyEstablishmentExperimentController:
+  description: |-
+    <h2>KeyAgreement and KEM</h2>
+    <p>Runs both X25519 KeyAgreement and Java 21 DHKEM so two different interaction models can be observed producing matching secret material at both ends.</p>
+  readmeRelated:
+    file: 12.KeyEstablishment/KeyEstablishment.md
+MacExperimentController:
+  description: |-
+    <h2>MAC Message Integrity</h2>
+    <p>Uses the same HMAC key with the original and modified message to show that the tag verifies only for the exact original bytes.</p>
+  readmeRelated:
+    file: 7.Mac/Mac.md

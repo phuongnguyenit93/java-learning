@@ -1,0 +1,150 @@
+# <interview-schema>
+# Cấu trúc câu hỏi Interview
+# schema-version: 2
+#
+# questions [kiểu: list; bắt buộc; mặc định: []]
+#   Danh sách câu hỏi Interview của module trong language hiện tại.
+#   mỗi phần tử:
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi phỏng vấn hiển thị cho người học.
+#     answer [kiểu: string; bắt buộc; mặc định: ""]
+#       Câu trả lời tham khảo, chỉ hiển thị khi người học chủ động mở.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu nội dung được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu nội dung đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+# </interview-schema>
+
+questions:
+  - question: Tại sao một thiết kế mật mã nên bắt đầu từ threat model và security goal thay vì bắt đầu bằng câu hỏi "dùng AES hay RSA"?
+    answer: >-
+      Thuật toán chỉ là công cụ; trước tiên phải biết tài sản nào cần bảo vệ, kẻ tấn công có thể đọc/sửa/replay/giả mạo đến đâu và hệ thống cần confidentiality, integrity hay authenticity. Từ mục tiêu đó mới chọn trust model, primitive, key model và Java API phù hợp. Nếu bắt đầu từ tên thuật toán, mã có thể dùng đúng API nhưng giải sai bài toán, ví dụ dùng encryption khi chỉ cần fingerprint hoặc dùng digest khi thực sự cần authenticity.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 1.MentalModel/MentalModel.md
+      anchor: threat-model-boundary
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: Giải thích delayed provider selection trong JCA. Tại sao cơ chế này hữu ích với HSM/token key, và khi nào bạn nên pin provider rõ ràng?
+    answer: >-
+      Với một số engine như Signature, Cipher, Mac và KeyAgreement, getInstance(...) có thể chưa chốt provider cuối cùng; JDK có thể đợi đến init(...) khi nhìn thấy Key để chọn provider xử lý được key đó. Điều này quan trọng với key không exportable trong HSM/token vì provider giữ key có thể phải thực hiện phép toán. Nên pin provider khi có yêu cầu kỹ thuật/compliance rõ ràng; nếu không, để provider selection linh hoạt thường tăng portability. Sau khi một engine instance đã chọn provider, muốn lựa chọn lại theo key khác nên tạo engine instance mới.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 3.ProvidersAlgorithms/ProvidersAlgorithms.md
+      anchor: provider-selection
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: SecureRandom khác Random ở security contract nào, và vì sao tự gọi setSeed(...) bằng timestamp có thể làm thiết kế tệ hơn thay vì tốt hơn?
+    answer: >-
+      SecureRandom được dùng khi đầu ra phải khó dự đoán đối với kẻ tấn công, còn Random chủ yếu phục vụ nhu cầu pseudo-random thông thường. Với PRNG-based SecureRandom, nếu setSeed(...) được gọi trước lần đầu ra/self-seed đầu tiên, bên gọi phải bảo đảm seed đủ entropy. Timestamp, user id hoặc constant là dữ liệu dễ đoán nên có thể làm mất giả định unpredictability. Trong mã ứng dụng thông thường, để JDK/provider quản lý seeding an toàn hơn việc "seed cho chắc" bằng dữ liệu tự nghĩ ra.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 4.SecureRandom/SecureRandom.md
+      anchor: entropy-and-seeding
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: So sánh digest, MAC và digital signature theo trust model. Khi nào verifier có thể tự tạo một giá trị xác thực hợp lệ và tại sao điều đó quan trọng?
+    answer: >-
+      Digest không dùng key nên bất kỳ ai có dữ liệu đều có thể tính lại; authenticity chỉ tồn tại nếu digest reference được bảo vệ bởi một trust mechanism khác. MAC dùng shared secret, vì vậy mọi holder của secret thường vừa verify vừa tạo được tag hợp lệ. Digital signature tách quyền: private key tạo chữ ký còn public key chỉ verify, nên verifier không cần có signing authority. Distinction này quyết định cơ chế phù hợp khi nhiều verifier phải kiểm tra dữ liệu nhưng không được quyền giả mạo signer.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 7.Mac/Mac.md
+      anchor: mac-comparison
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: Một API AES-GCM trả AEADBadTagException sau khi ciphertext bị sửa. Bạn giải thích failure này thế nào, và vì sao nonce lifecycle vẫn quan trọng dù tag có tồn tại?
+    answer: >-
+      AEADBadTagException nghĩa là ciphertext/AAD/tag không còn xác minh thành công; plaintext không nên được đưa vào business logic và record phải bị reject. Authentication tag không cứu được thiết kế nếu nonce bị reuse dưới cùng key: GCM dựa vào nonce uniqueness và reuse có thể phá cả confidentiality lẫn authentication assumptions. Vì vậy thiết kế ở môi trường thực tế cần vừa fail closed khi tag verification lỗi vừa quản lý nonce để không reuse dưới cùng key.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: KeyAgreement và Java 21 KEM đều có thể tạo shared secret material. Hãy giải thích interaction model khác nhau và vì sao cả hai không tự xác thực peer.
+    answer: >-
+      Với KeyAgreement, mỗi bên thường kết hợp private key của mình với public information của peer để tính cùng shared secret. Với KEM, sender dùng receiver public key để encapsulate, nhận secret key cùng encapsulation message; receiver dùng private key để decapsulate message và thu cùng secret. Cả hai giải quyết secret establishment chứ không tự chứng minh public key thuộc đúng identity mong muốn. Protocol vẫn cần certificate, signature hoặc authenticated binding khác, và raw secret thường tiếp tục đi qua KDF/key schedule trước khi thành traffic/application key.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 12.KeyEstablishment/KeyEstablishment.md
+      anchor: agreement-vs-kem
+    apiRelated:
+      controller: KeyEstablishmentExperimentController
+      methodSignature: compare()
+
+  - question: Salt và work factor giải quyết hai vấn đề gì khác nhau trong password-based key derivation? Tại sao salt có thể lưu cạnh record nhưng password thì không?
+    answer: >-
+      Salt làm cùng một password ở các record khác nhau dẫn tới derived output khác và giảm khả năng tái sử dụng precomputation chung; nó không cần bí mật nên được lưu cùng KDF id/version và parameters để derive lại. Work factor làm mỗi password guess tốn tài nguyên hơn, giúp tăng chi phí offline guessing. Password là secret input nên không được lưu plaintext cạnh record. Parameter value cần được version/calibrate theo hardware và policy; giá trị bounded trong demo không nên được copy làm production recommendation.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 13.KeyDerivation/KeyDerivation.md
+      anchor: salt-and-work-factor
+    apiRelated:
+      controller: KeyDerivationExperimentController
+      methodSignature: saltEffect()
+
+  - question: >-
+      "Keystore" và "truststore" có phải hai Java type hoặc hai file format bắt buộc khác nhau không? Liên hệ câu trả lời với KeyManager và TrustManager.
+    answer: >-
+      Không. Hai tên chủ yếu mô tả role. Local identity store thường chứa PrivateKeyEntry cùng certificate chain để KeyManager chọn credentials trình bày với peer; trust store thường chứa TrustedCertificateEntry để TrustManager đánh giá peer. Cả hai có thể là cùng KeyStore type như PKCS12. Tách thành hai store vật lý thường giúp operations và least privilege rõ hơn, nhưng đó là deployment choice chứ không phải Java type rule.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 14.KeyStore/KeyStore.md
+      anchor: keystore-vs-truststore
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: Phân biệt certification-path validation, trust anchor và endpoint identity verification trong TLS client. Vì sao "certificate được CA tin cậy" vẫn chưa đủ?
+    answer: >-
+      Certification-path validation kiểm leaf/intermediate chain có dẫn tới một trust anchor được cấu hình và thỏa PKIX policy hay không; trust anchor là local trusted input, không phải certificate nằm bên trong CertPath được validate. Endpoint identity verification trả lời câu hỏi khác: certificate có đại diện đúng hostname/endpoint mà client định kết nối không. Một certificate có chain hợp lệ cho attacker.example vẫn không đúng cho api.example. TLS client cần cả trust validation lẫn identity verification; revocation policy còn là concern riêng nếu hệ thống yêu cầu kiểm trạng thái certificate.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: Sau khi nâng JDK, TLS handshake cũ bắt đầu fail dù cipher suite vẫn được set trong SSLParameters. Bạn sẽ phân tích và điều tra theo thứ tự nào?
+    answer: >-
+      Không giả định "đã enable là chắc chắn dùng được". Kiểm tra lần lượt provider có hỗ trợ service/cipher không, protocol/cipher suite có được enable ở SSLParameters không, JDK security properties hoặc disabled-algorithm rules có chặn algorithm/key size không, certificate/key có vi phạm constraint mới không và peer có capability tương thích không. Nếu failure đến từ security policy mới, hướng xử lý ưu tiên là nâng certificate/key/protocol/config thay vì nới lỏng JVM-wide constraint chỉ để handshake chạy lại.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 16.TlsJsse/TlsJsse.md
+      anchor: tls-algorithm-constraints
+    apiRelated:
+      controller: ""
+      methodSignature: ""

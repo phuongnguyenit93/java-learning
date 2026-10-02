@@ -1,0 +1,340 @@
+# <quiz-schema>
+# Cấu trúc câu hỏi Quiz
+# schema-version: 3
+#
+# questions [kiểu: list; bắt buộc; mặc định: []; duy nhất theo: id]
+#   Danh sách câu hỏi Quiz của module trong language hiện tại.
+#   mỗi phần tử:
+#     id [kiểu: string; bắt buộc; mặc định: ""]
+#       ID ổn định và duy nhất của câu hỏi.
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi hiển thị cho người học.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu câu hỏi được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu câu hỏi đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+#     answers [kiểu: list; bắt buộc; số phần tử: 4; mặc định: []; duy nhất theo: id]
+#       Chính xác bốn đáp án. ID A/B/C/D là identity nội bộ ổn định, không phải vị trí hiển thị sau khi frontend shuffle.
+#       mỗi phần tử:
+#         id [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#           Identity ổn định của đáp án.
+#         answer [kiểu: string; bắt buộc; mặc định: ""]
+#           Nội dung đáp án hiển thị cho người học.
+#         explanation [kiểu: string; bắt buộc; mặc định: ""]
+#           Giải thích hiển thị khi người học chọn đáp án này, bất kể đúng hay sai.
+#     correctAnswerId [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
+# </quiz-schema>
+
+questions:
+  - id: crypto-goal-before-primitive
+    question: Một dịch vụ cần phát hiện payload bị sửa và các bên đã chia sẻ cùng một secret. Cơ chế nào phù hợp nhất với mục tiêu này?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 1.MentalModel/MentalModel.md
+      anchor: primitive-by-goal
+    apiRelated:
+      controller: MacExperimentController
+      methodSignature: tamper()
+    answers:
+      - id: A
+        answer: Dùng MessageDigest vì digest thay đổi khi payload thay đổi.
+        explanation: Digest có thể phát hiện thay đổi nếu có giá trị tham chiếu đáng tin cậy, nhưng bản thân digest không xác thực bên tạo dữ liệu vì không có secret.
+      - id: B
+        answer: Dùng MAC vì tag phụ thuộc cả message bytes và shared secret.
+        explanation: Đúng. MAC phù hợp khi các bên cùng giữ một secret và cần integrity kèm shared-secret authenticity.
+      - id: C
+        answer: Dùng Base64 để payload có cách biểu diễn ổn định trước khi truyền.
+        explanation: Base64 chỉ thay đổi cách biểu diễn và không tạo integrity hay authenticity.
+      - id: D
+        answer: Dùng symmetric encryption không xác thực vì ciphertext khác khi plaintext thay đổi.
+        explanation: Encryption không xác thực không bảo đảm phát hiện chỉnh sửa; nếu cần confidentiality kèm integrity nên dùng AEAD.
+    correctAnswerId: B
+
+  - id: delayed-provider-selection
+    question: Vì sao một JCA engine như Signature có thể chưa chốt provider cuối cùng ngay tại getInstance(...)?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 3.ProvidersAlgorithms/ProvidersAlgorithms.md
+      anchor: provider-selection
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: Vì provider chỉ được chọn sau khi sign() tạo xong signature bytes.
+        explanation: Provider phải được chọn trước khi phép toán thực tế chạy; delayed selection thường được resolve ở bước init với key.
+      - id: B
+        answer: Vì JCA luôn thử đồng thời tất cả provider rồi chọn kết quả nhanh nhất.
+        explanation: JCA không benchmark đồng thời các provider để chọn provider nhanh nhất.
+      - id: C
+        answer: Vì provider chỉ có thể được xác định từ tên package của key implementation.
+        explanation: Key/provider compatibility có thể ảnh hưởng lựa chọn, nhưng không có rule chung rằng package name quyết định provider.
+      - id: D
+        answer: Vì JDK có thể đợi đến init(...) để biết key nào phải được provider xử lý.
+        explanation: Đúng. Điều này đặc biệt hữu ích với key không exportable trong token hoặc HSM.
+    correctAnswerId: D
+
+  - id: securerandom-setseed-before-output
+    question: Với một SecureRandom dựa trên PRNG, điều gì đáng lưu ý nếu code gọi setSeed(...) trước lần nextBytes(...) đầu tiên?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 4.SecureRandom/SecureRandom.md
+      anchor: entropy-and-seeding
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: Bên gọi phải bảo đảm seed tự cung cấp có đủ entropy vì bước self-seeding thông thường có thể không xảy ra.
+        explanation: Đúng. Đây là lý do mã ứng dụng không nên tự seed bằng timestamp, user id hoặc constant.
+      - id: B
+        answer: SecureRandom bỏ qua hoàn toàn seed được truyền và vẫn luôn self-seed trước.
+        explanation: Không đúng cho trường hợp setSeed được gọi trước đầu ra đầu tiên của PRNG-based SecureRandom.
+      - id: C
+        answer: setSeed biến SecureRandom thành deterministic generator trong mọi provider.
+        explanation: setSeed không có contract chung rằng mọi provider trở thành deterministic.
+      - id: D
+        answer: setSeed chỉ ảnh hưởng hiệu năng, không ảnh hưởng các giả định bảo mật của seed material.
+        explanation: Seed entropy có thể ảnh hưởng trực tiếp tới khả năng dự đoán đầu ra.
+    correctAnswerId: A
+
+  - id: digest-trusted-reference
+    question: Một client tải file và SHA-256 digest từ cùng một kênh mà kẻ tấn công có thể sửa cả hai. Vì sao việc so digest không đủ để chứng minh file là bản gốc?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 6.MessageDigest/MessageDigest.md
+      anchor: trusted-digest-reference
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: Vì SHA-256 chỉ dùng được với text và không phù hợp với file binary.
+        explanation: SHA-256 hoạt động trên bytes và có thể hash file binary bình thường.
+      - id: B
+        answer: Vì digest chỉ có ý nghĩa khi file nhỏ hơn kích thước đầu ra của hash.
+        explanation: Hash được thiết kế cho input có độ dài tùy ý; kích thước file không phải vấn đề này.
+      - id: C
+        answer: Vì kẻ tấn công có thể thay file rồi tính digest mới nếu digest tham chiếu cũng không được bảo vệ.
+        explanation: Đúng. Digest thuần không tạo authenticity khi kẻ tấn công kiểm soát cả dữ liệu lẫn giá trị tham chiếu.
+      - id: D
+        answer: Vì MessageDigest luôn cần một secret key để xác minh giá trị tham chiếu.
+        explanation: MessageDigest không dùng secret key; nếu cần shared-secret authenticity thì MAC là primitive phù hợp hơn.
+    correctAnswerId: C
+
+  - id: mac-vs-signature-authority
+    question: Khi verifier phải kiểm tra dữ liệu nhưng không được có khả năng tự tạo một giá trị xác thực hợp lệ thay signer, lựa chọn nào phù hợp hơn?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 7.Mac/Mac.md
+      anchor: mac-comparison
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: MAC, vì verifier cần shared secret để kiểm tra tag.
+        explanation: Với MAC, verifier giữ shared secret nên thường cũng có khả năng tạo tag hợp lệ.
+      - id: B
+        answer: Digital signature, vì verifier chỉ cần public key còn quyền ký nằm ở private key.
+        explanation: Đúng. Signature tách signing authority khỏi verification authority.
+      - id: C
+        answer: MessageDigest, vì verifier có thể hash lại dữ liệu mà không cần key.
+        explanation: Digest không cung cấp signer authenticity nếu không có một trust mechanism khác.
+      - id: D
+        answer: Symmetric encryption, vì verifier có thể decrypt để chứng minh signer identity.
+        explanation: Khả năng decrypt không tự chứng minh bên nào đã tạo ciphertext.
+    correctAnswerId: B
+
+  - id: gcm-nonce-reuse
+    question: Hai bản ghi AES-GCM khác nhau vô tình dùng cùng nonce dưới cùng key. Đánh giá nào đúng nhất?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 11.AuthenticatedEncryption/AuthenticatedEncryption.md
+      anchor: nonce-uniqueness
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: Chỉ hiệu năng bị ảnh hưởng vì authentication tag vẫn tách hai bản ghi.
+        explanation: Nonce reuse trong GCM là lỗi bảo mật nghiêm trọng, không chỉ là vấn đề hiệu năng.
+      - id: B
+        answer: Chỉ confidentiality bị giảm còn authentication vẫn giữ nguyên.
+        explanation: GCM nonce reuse có thể làm hỏng cả confidentiality và authentication security assumptions.
+      - id: C
+        answer: Không sao nếu nonce được giữ bí mật cùng key.
+        explanation: Nonce thường không cần bí mật; đặc tính quan trọng là uniqueness dưới cùng key.
+      - id: D
+        answer: Đây là security failure vì GCM yêu cầu nonce không bị reuse dưới cùng key.
+        explanation: Đúng. Nonce lifecycle phải được thiết kế để tránh reuse với cùng key.
+    correctAnswerId: D
+
+  - id: aead-tamper-runtime
+    question: Trong experiment AES/GCM, ciphertext gốc giải mã được nhưng sau khi lật một bit thì doFinal(...) ném AEADBadTagException. Observation này chứng minh điều gì?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 11.AuthenticatedEncryption/AuthenticatedEncryption.md
+      anchor: aead-decryption-failure
+    apiRelated:
+      controller: AeadExperimentController
+      methodSignature: tamperDetection()
+    answers:
+      - id: A
+        answer: Authentication tag không còn hợp lệ nên record đã bị sửa phải bị reject.
+        explanation: Đúng. AEAD biến tampering thành authentication failure thay vì trả plaintext để business logic tiếp tục dùng.
+      - id: B
+        answer: Nonce đã trở thành secret nên decryptor không thể đọc lại ciphertext.
+        explanation: Nonce không trở thành secret; failure xuất phát từ tag verification.
+      - id: C
+        answer: AES key tự động bị rotate ngay khi ciphertext thay đổi.
+        explanation: Cipher không tự rotate key khi phát hiện tampering.
+      - id: D
+        answer: GCM chỉ hỗ trợ decrypt dữ liệu chưa từng được copy sang byte array khác.
+        explanation: Việc clone byte array không gây lỗi; thay đổi authenticated bytes mới làm verification fail.
+    correctAnswerId: A
+
+  - id: agreement-vs-kem-flow
+    question: Điểm khác biệt chính nào mô tả đúng KeyAgreement và KEM dù cả hai experiment đều tạo secret material khớp giữa hai phía?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 12.KeyEstablishment/KeyEstablishment.md
+      anchor: agreement-vs-kem
+    apiRelated:
+      controller: KeyEstablishmentExperimentController
+      methodSignature: compare()
+    answers:
+      - id: A
+        answer: KeyAgreement luôn dùng password còn KEM luôn dùng certificate.
+        explanation: Cả hai không được phân biệt theo password versus certificate như vậy.
+      - id: B
+        answer: KeyAgreement tạo ciphertext payload còn KEM chỉ tạo digest.
+        explanation: Cả hai thuộc key-establishment domain, không phải payload encryption versus hashing.
+      - id: C
+        answer: KeyAgreement kết hợp local private key với peer public information; KEM dùng encapsulation/decapsulation quanh receiver key pair.
+        explanation: Đúng. Hai cơ chế có interaction model khác nhau dù đều dẫn tới shared secret material.
+      - id: D
+        answer: KeyAgreement xác thực peer tự động còn KEM thì không có public key.
+        explanation: Key agreement không tự xác thực peer; KEM cũng dựa trên public/private key material.
+    correctAnswerId: C
+
+  - id: pbkdf2-salt-effect
+    question: "PBKDF2 experiment cho cùng password và parameters: salt A lặp lại cho cùng output, còn salt B cho output khác. Kết luận nào đúng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 13.KeyDerivation/KeyDerivation.md
+      anchor: salt-and-work-factor
+    apiRelated:
+      controller: KeyDerivationExperimentController
+      methodSignature: saltEffect()
+    answers:
+      - id: A
+        answer: Salt phải được giữ bí mật giống password để KDF an toàn.
+        explanation: Salt không cần bí mật; nó cần được lưu cùng parameter set và có strategy phù hợp.
+      - id: B
+        answer: Salt là một phần của derivation contract; thay salt có thể thay derived output với cùng password.
+        explanation: Đúng. Fixed salts trong experiment chỉ để phép so sánh tái lập, không phải mẫu dùng ở môi trường thực tế.
+      - id: C
+        answer: Work factor không còn tác dụng nếu ứng dụng lưu salt cùng record.
+        explanation: Work factor và salt giải quyết các vấn đề khác nhau; lưu salt cùng record là bình thường.
+      - id: D
+        answer: Cùng password phải luôn cho cùng derived key dù salt thay đổi để authentication hoạt động.
+        explanation: KDF parameters, bao gồm salt, ảnh hưởng output; hệ thống lưu chúng để dẫn xuất lại đúng record.
+    correctAnswerId: B
+
+  - id: keystore-vs-truststore
+    question: Phát biểu nào mô tả đúng nhất sự khác nhau giữa "keystore" và "truststore" trong Java?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 14.KeyStore/KeyStore.md
+      anchor: keystore-vs-truststore
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: Keystore bắt buộc là JKS còn truststore bắt buộc là PKCS12.
+        explanation: Hai tên này chủ yếu mô tả vai trò sử dụng, không bắt buộc hai format khác nhau.
+      - id: B
+        answer: Keystore chỉ chứa certificate còn truststore chỉ chứa private key.
+        explanation: Local identity store thường chứa private key + chain, còn trust material thường là trusted certificates.
+      - id: C
+        answer: Hai khái niệm hoàn toàn giống nhau nên không cần phân biệt role khi cấu hình JSSE.
+        explanation: Cùng dùng KeyStore abstraction nhưng role khác nhau vẫn quan trọng với KeyManager và TrustManager.
+      - id: D
+        answer: Chúng thường là tên theo role; cả hai có thể dùng cùng KeyStore type như PKCS12.
+        explanation: Đúng. Tách store vật lý là lựa chọn triển khai, không phải hai Java type bắt buộc.
+    correctAnswerId: D
+
+  - id: trust-vs-endpoint-identity
+    question: TLS client đã validate thành công certificate path tới một trusted CA. Tại sao vẫn cần endpoint identity verification?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 15.CertificatesTrust/CertificatesTrust.md
+      anchor: trust-vs-identity
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: Vì path trust và hostname identity là hai câu hỏi khác nhau; certificate trusted cho một host có thể sai với target hiện tại.
+        explanation: Đúng. Client thường cần cả trust validation lẫn xác minh certificate đại diện đúng endpoint mong muốn.
+      - id: B
+        answer: Vì endpoint verification dùng để kiểm tra private key có nằm trong truststore hay không.
+        explanation: Endpoint verification kiểm identity như hostname, không kiểm private key có trong truststore.
+      - id: C
+        answer: Vì path validation chỉ kiểm ngày hết hạn và không kiểm chữ ký của certificate.
+        explanation: PKIX validation kiểm nhiều yếu tố, bao gồm signature và constraints; distinction ở đây là trust path versus endpoint identity.
+      - id: D
+        answer: Vì hostname verification thay thế hoàn toàn certificate-path validation.
+        explanation: Hai bước bổ sung cho nhau; hostname verification không thay thế trust validation.
+    correctAnswerId: A
+
+  - id: tls-algorithm-constraints
+    question: Một TLS cipher suite được code enable rõ ràng nhưng handshake vẫn bị JDK từ chối sau khi nâng cấp runtime. Nguyên nhân nào phù hợp nhất?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 16.TlsJsse/TlsJsse.md
+      anchor: tls-algorithm-constraints
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: Enable trong SSLParameters luôn override mọi security property nên lỗi chắc chắn nằm ở mạng.
+        explanation: SSLParameters không override mọi JDK security constraint.
+      - id: B
+        answer: Cipher suite chỉ có thể bị từ chối khi peer dùng hệ điều hành khác.
+        explanation: Local provider support và JDK security properties cũng có thể chặn lựa chọn.
+      - id: C
+        answer: JDK security properties hoặc algorithm constraints có thể chặn algorithm/key size dù API vẫn tồn tại.
+        explanation: Đúng. API availability, provider support và security policy là các lớp khác nhau.
+      - id: D
+        answer: Việc upgrade JDK tự động đổi certificate của server nên cipher suite cũ biến mất.
+        explanation: JDK upgrade không tự động thay certificate của remote server; constraint/policy thay đổi là khả năng thực tế hơn.
+    correctAnswerId: C

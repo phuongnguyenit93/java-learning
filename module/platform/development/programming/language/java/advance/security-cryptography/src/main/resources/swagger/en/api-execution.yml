@@ -1,0 +1,58 @@
+AeadExperimentController:
+  tamperDetection():
+    execution: |-
+      <p><strong>Concept:</strong> AEAD releases usable plaintext only when ciphertext and its authentication tag verify successfully.</p>
+      <p><strong>Flow:</strong> Generate a fresh AES key and nonce, encrypt with <code>AES/GCM/NoPadding</code>, decrypt the original record, then flip one ciphertext bit and decrypt again.</p>
+      <pre><code>byte[] tampered = ciphertextAndTag.clone();
+      tampered[0] ^= 1;
+      tamperedDecryptor.doFinal(tampered);</code></pre>
+      <p><strong>Observation:</strong> <code>originalRoundTrip=true</code>; the modified branch reports <code>tamperFailure=AEADBadTagException</code> and <code>tamperingRejected=true</code>.</p>
+      <p><strong>Conclusion:</strong> With GCM, modified ciphertext is not accepted as “slightly wrong” plaintext; authentication fails and the record must be rejected.</p>
+    usage: true
+DigitalSignatureExperimentController:
+  tamper():
+    execution: |-
+      <p><strong>Concept:</strong> A digital signature protects the exact byte sequence that was signed.</p>
+      <p><strong>Flow:</strong> Generate an RSA key pair, sign the payload with <code>SHA256withRSA</code>, verify the original, then change one byte and verify the same signature again.</p>
+      <pre><code>signer.update(message);
+      byte[] signature = signer.sign();
+      verifier.update(tamperedMessage);
+      verifier.verify(signature);</code></pre>
+      <p><strong>Observation:</strong> <code>originalValid=true</code> while <code>tamperedValid=false</code>.</p>
+      <p><strong>Conclusion:</strong> A signature does not protect vague business meaning; the protocol must define the exact bytes or canonical form that are signed.</p>
+    usage: true
+KeyDerivationExperimentController:
+  saltEffect():
+    execution: |-
+      <p><strong>Concept:</strong> Salt and KDF parameters are part of the derivation contract.</p>
+      <p><strong>Flow:</strong> With one fixed demonstration password, run PBKDF2 twice with salt A and once with salt B; the iteration count is fixed at 20,000 only to keep the experiment bounded.</p>
+      <pre><code>derive(password, firstSalt, iterations)
+      derive(password, firstSalt, iterations)
+      derive(password, secondSalt, iterations)</code></pre>
+      <p><strong>Observation:</strong> <code>sameParametersSameOutput=true</code> and <code>differentSaltChangesOutput=true</code>; the API returns boolean evidence rather than derived-key bytes.</p>
+      <p><strong>Conclusion:</strong> Salt need not be secret but must be stored with the parameter set. The fixed salts in this experiment exist only to make the comparison repeatable; real records need an appropriate unique-salt strategy. The 20,000-iteration demo value is not a production recommendation.</p>
+    usage: true
+KeyEstablishmentExperimentController:
+  compare():
+    execution: |-
+      <p><strong>Concept:</strong> KeyAgreement and KEM both establish shared secret material but use different interaction models.</p>
+      <p><strong>Flow:</strong> Branch 1 creates two X25519 key pairs and runs <code>KeyAgreement</code> at each side. Branch 2 creates an X25519 receiver key pair, uses <code>DHKEM.encapsulate()</code> at the sender, and <code>decapsulate()</code> at the receiver.</p>
+      <pre><code>agreement.doPhase(peerPublicKey, true);
+      byte[] shared = agreement.generateSecret();
+
+      KEM.Encapsulated value = encapsulator.encapsulate();
+      SecretKey recovered = decapsulator.decapsulate(value.encapsulation());</code></pre>
+      <p><strong>Observation:</strong> <code>keyAgreementSecretsMatch=true</code> and <code>kemSecretsMatch=true</code>; the default KEM secret uses the algorithm name <code>Generic</code>. The API returns comparison evidence, not raw shared-secret bytes.</p>
+      <p><strong>Conclusion:</strong> Both establish secret material, but a protocol selects the interaction model and commonly feeds raw secret material into a KDF or key schedule.</p>
+    usage: true
+MacExperimentController:
+  tamper():
+    execution: |-
+      <p><strong>Concept:</strong> A MAC binds message bytes to a shared secret.</p>
+      <p><strong>Flow:</strong> Generate one 256-bit HMAC-SHA-256 key with <code>SecureRandom</code>, produce a tag for the original payload, then recompute the MAC for original and one-byte-modified payloads.</p>
+      <pre><code>byte[] originalTag = mac(key, message);
+      MessageDigest.isEqual(originalTag, mac(key, message));
+      MessageDigest.isEqual(originalTag, mac(key, tamperedMessage));</code></pre>
+      <p><strong>Observation:</strong> <code>keySizeBits=256</code>, <code>originalValid=true</code> while <code>tamperedValid=false</code>.</p>
+      <p><strong>Conclusion:</strong> Sharing the same secret does not make a modified message valid; verification must cover the exact canonical bytes defined by the protocol.</p>
+    usage: true

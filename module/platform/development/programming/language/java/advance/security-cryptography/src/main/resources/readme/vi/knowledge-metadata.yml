@@ -1,1 +1,309 @@
-{}
+1.MentalModel/MentalModel.md:
+  security-goals:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  cryptography-role:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  threat-model-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  primitive-by-goal:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+2.EncodingVsEncryption/EncodingVsEncryption.md:
+  encoding-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  hashing-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  encryption-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  authentication-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+3.ProvidersAlgorithms/ProvidersAlgorithms.md:
+  jca-jce-architecture:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  engine-spi-provider:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  algorithm-names-transformations:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  provider-selection:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  security-properties-constraints:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+4.SecureRandom/SecureRandom.md:
+  cryptographic-randomness:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  entropy-and-seeding:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  secure-random-selection:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  randomness-misuse:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+5.KeysKeyPair/KeysKeyPair.md:
+  key-models:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  key-generation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  key-factory-specification:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  key-material-boundary:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+6.MessageDigest/MessageDigest.md:
+  digest-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  message-digest-workflow:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  trusted-digest-reference:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  digest-limitations:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+7.Mac/Mac.md:
+  mac-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  mac-shared-secret:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  mac-workflow:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  mac-comparison:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+8.DigitalSignature/DigitalSignature.md:
+  signature-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  sign-and-verify:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  signature-data-contract:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  signature-comparison:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+9.SymmetricEncryption/SymmetricEncryption.md:
+  symmetric-encryption-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  cipher-transformation:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  iv-and-parameters:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  symmetric-encryption-workflow:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+10.AsymmetricEncryption/AsymmetricEncryption.md:
+  asymmetric-encryption-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  public-private-key-roles:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  asymmetric-encryption-limits:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  hybrid-encryption-model:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+11.AuthenticatedEncryption/AuthenticatedEncryption.md:
+  aead-purpose:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  nonce-uniqueness:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  aad-and-authentication-tag:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  aead-decryption-failure:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+12.KeyEstablishment/KeyEstablishment.md:
+  key-establishment-purpose:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  key-agreement-model:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  kem-model:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  agreement-vs-kem:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+13.KeyDerivation/KeyDerivation.md:
+  key-derivation-purpose:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  password-key-material:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  password-kdf-java-api:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  salt-and-work-factor:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  derived-key-usage:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+14.KeyStore/KeyStore.md:
+  keystore-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  keystore-entry-types:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  keystore-protection:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  keystore-vs-truststore:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+15.CertificatesTrust/CertificatesTrust.md:
+  x509-certificate-model:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  certification-path:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  trust-anchor-validation:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  certificate-revocation:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  trust-vs-identity:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+16.TlsJsse/TlsJsse.md:
+  jsse-model:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  ssl-context-managers:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  tls-handshake-security:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  endpoint-identification:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  tls-algorithm-constraints:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+17.CryptoPitfalls/CryptoPitfalls.md:
+  security-goal-before-api:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  algorithm-provider-portability:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  secret-key-nonce-handling:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  crypto-failure-handling:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  end-to-end-crypto-review:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false

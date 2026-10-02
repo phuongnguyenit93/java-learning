@@ -1,0 +1,58 @@
+AeadExperimentController:
+  tamperDetection():
+    execution: |-
+      <p><strong>Khái niệm:</strong> AEAD chỉ trả plaintext khi ciphertext và authentication tag xác minh thành công.</p>
+      <p><strong>Luồng:</strong> Sinh AES key + nonce mới, mã hóa payload bằng <code>AES/GCM/NoPadding</code>, giải mã bản gốc, sau đó lật một bit trong ciphertext và thử giải mã lại.</p>
+      <pre><code>byte[] tampered = ciphertextAndTag.clone();
+      tampered[0] ^= 1;
+      tamperedDecryptor.doFinal(tampered);</code></pre>
+      <p><strong>Quan sát:</strong> <code>originalRoundTrip=true</code>; nhánh bị sửa ghi <code>tamperFailure=AEADBadTagException</code> và <code>tamperingRejected=true</code>.</p>
+      <p><strong>Kết luận:</strong> Với GCM, thay đổi ciphertext không trở thành plaintext “hơi sai”; nó làm authentication thất bại và record phải bị reject.</p>
+    usage: true
+DigitalSignatureExperimentController:
+  tamper():
+    execution: |-
+      <p><strong>Khái niệm:</strong> Chữ ký số bảo vệ đúng byte sequence đã được ký.</p>
+      <p><strong>Luồng:</strong> Sinh RSA key pair, ký payload bằng <code>SHA256withRSA</code>, verify payload gốc, rồi thay một byte và verify lại bằng cùng signature.</p>
+      <pre><code>signer.update(message);
+      byte[] signature = signer.sign();
+      verifier.update(tamperedMessage);
+      verifier.verify(signature);</code></pre>
+      <p><strong>Quan sát:</strong> <code>originalValid=true</code> nhưng <code>tamperedValid=false</code>.</p>
+      <p><strong>Kết luận:</strong> Signature không bảo vệ “ý nghĩa logic” chung chung; protocol phải xác định chính xác bytes/canonical form được ký.</p>
+    usage: true
+KeyDerivationExperimentController:
+  saltEffect():
+    execution: |-
+      <p><strong>Khái niệm:</strong> Salt và KDF parameters là một phần của phép dẫn xuất khóa.</p>
+      <p><strong>Luồng:</strong> Với cùng password, chạy PBKDF2 hai lần bằng salt A và một lần bằng salt B; iteration count được cố định ở 20,000 chỉ để experiment luôn bounded.</p>
+      <pre><code>derive(password, firstSalt, iterations)
+      derive(password, firstSalt, iterations)
+      derive(password, secondSalt, iterations)</code></pre>
+      <p><strong>Quan sát:</strong> <code>sameParametersSameOutput=true</code>, <code>differentSaltChangesOutput=true</code> và API chỉ trả các boolean evidence chứ không trả derived-key bytes.</p>
+      <p><strong>Kết luận:</strong> Salt không cần bí mật nhưng phải được lưu cùng parameter set. Hai salt cố định trong thí nghiệm chỉ giúp kết quả so sánh tái lập; record thực tế cần chiến lược salt unique phù hợp. 20,000 iteration trong demo không phải khuyến nghị cho production.</p>
+    usage: true
+KeyEstablishmentExperimentController:
+  compare():
+    execution: |-
+      <p><strong>Khái niệm:</strong> KeyAgreement và KEM đều tạo shared secret material nhưng interaction model khác nhau.</p>
+      <p><strong>Luồng:</strong> Nhánh 1 tạo hai X25519 key pair và mỗi bên chạy <code>KeyAgreement</code>. Nhánh 2 tạo receiver X25519 key pair, sender chạy <code>DHKEM.encapsulate()</code> và receiver chạy <code>decapsulate()</code>.</p>
+      <pre><code>agreement.doPhase(peerPublicKey, true);
+      byte[] shared = agreement.generateSecret();
+
+      KEM.Encapsulated value = encapsulator.encapsulate();
+      SecretKey recovered = decapsulator.decapsulate(value.encapsulation());</code></pre>
+      <p><strong>Quan sát:</strong> <code>keyAgreementSecretsMatch=true</code>, <code>kemSecretsMatch=true</code>; KEM secret mặc định có algorithm name <code>Generic</code>. API chỉ trả kết quả so sánh, không trả raw shared-secret bytes.</p>
+      <p><strong>Kết luận:</strong> Cả hai giải quyết thiết lập secret material, nhưng protocol phải chọn flow phù hợp và thường còn đưa raw secret qua KDF/key schedule.</p>
+    usage: true
+MacExperimentController:
+  tamper():
+    execution: |-
+      <p><strong>Khái niệm:</strong> MAC gắn message bytes với một shared secret.</p>
+      <p><strong>Luồng:</strong> Sinh HMAC-SHA-256 key 256-bit bằng <code>SecureRandom</code>, tạo tag cho payload gốc, sau đó tính lại MAC cho payload gốc và payload bị đổi một byte.</p>
+      <pre><code>byte[] originalTag = mac(key, message);
+      MessageDigest.isEqual(originalTag, mac(key, message));
+      MessageDigest.isEqual(originalTag, mac(key, tamperedMessage));</code></pre>
+      <p><strong>Quan sát:</strong> <code>keySizeBits=256</code>, <code>originalValid=true</code> nhưng <code>tamperedValid=false</code>.</p>
+      <p><strong>Kết luận:</strong> Cùng secret key không cứu một message đã thay đổi; verifier phải tính MAC trên đúng canonical bytes mà protocol quy định.</p>
+    usage: true

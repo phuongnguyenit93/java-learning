@@ -1,0 +1,30 @@
+AeadExperimentController:
+  description: |-
+    <h2>AEAD và phát hiện chỉnh sửa ciphertext</h2>
+    <p>Thí nghiệm dùng AES/GCM để đối chiếu một ciphertext hợp lệ với cùng ciphertext sau khi bị sửa một byte, qua đó quan sát trực tiếp authentication-tag failure.</p>
+  readmeRelated:
+    file: 11.AuthenticatedEncryption/AuthenticatedEncryption.md
+DigitalSignatureExperimentController:
+  description: |-
+    <h2>Chữ ký số và dữ liệu đã ký</h2>
+    <p>Thí nghiệm ký một payload rồi xác minh cả payload gốc và payload đã bị sửa để chứng minh chữ ký gắn với đúng byte sequence được ký.</p>
+  readmeRelated:
+    file: 8.DigitalSignature/DigitalSignature.md
+KeyDerivationExperimentController:
+  description: |-
+    <h2>Password-based key derivation</h2>
+    <p>Thí nghiệm PBKDF2 có tham số cố định để quan sát tính lặp lại với cùng salt và sự thay đổi của output khi salt thay đổi.</p>
+  readmeRelated:
+    file: 13.KeyDerivation/KeyDerivation.md
+KeyEstablishmentExperimentController:
+  description: |-
+    <h2>KeyAgreement và KEM</h2>
+    <p>Thí nghiệm chạy cả X25519 KeyAgreement và Java 21 DHKEM để quan sát hai interaction model khác nhau đều tạo secret material khớp giữa hai phía.</p>
+  readmeRelated:
+    file: 12.KeyEstablishment/KeyEstablishment.md
+MacExperimentController:
+  description: |-
+    <h2>MAC và tính toàn vẹn của thông điệp</h2>
+    <p>Thí nghiệm dùng cùng HMAC key cho message gốc và message bị sửa để quan sát tag chỉ xác minh thành công với đúng bytes ban đầu.</p>
+  readmeRelated:
+    file: 7.Mac/Mac.md
