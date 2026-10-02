@@ -41,4 +41,120 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: dynamic-runtime-purpose
+    title: Dynamic Runtime giải quyết vấn đề gì?
+    purpose: Xây mô hình tư duy về lý do Java cung cấp các primitive mức thấp, strongly typed và có thể kết hợp cho lời gọi, truy cập biến và runtime linkage — kể cả khi member đã biết trước — đồng thời đặt ranh giới rõ với Reflection, JVM internals và lịch sử feature theo phiên bản.
+    objectives:
+      - Giải thích được nhu cầu về executable/variable handles có kiểu, capability-based access và runtime linkage thay vì quy mọi use case về “không biết target trước”.
+      - Phân biệt vai trò của lời gọi trực tiếp, Reflection và các primitive trong java.lang.invoke ở mức khái niệm.
+      - Nhận diện prerequisite và ranh giới của module trước khi đi vào API chi tiết.
+    relatedKnowledge:
+      - DynamicRuntime
+    relatedModules:
+      - routeId: JAVA_JVM
+        label: JVM
+        note: JVM cung cấp nền tảng thực thi và liên kết mà Dynamic Runtime dựa trên.
+      - routeId: JAVA_REFLECTION
+        label: Reflection
+        note: Reflection sở hữu việc khám phá metadata/member; Dynamic Runtime tập trung vào lời gọi có kiểu và liên kết tại runtime.
+
+  - id: typed-invocation-model
+    title: Mô hình gọi động có kiểu
+    purpose: Hiểu MethodType và MethodHandle như nền tảng gọi có kiểu ở mức JVM để biểu diễn, kiểm tra và thực thi callable operation thông qua handle, từ đó làm cơ sở cho adaptation và dynamic linkage.
+    objectives:
+      - Hiểu MethodType mô tả hợp đồng tham số và kiểu trả về của một lời gọi động như thế nào.
+      - Hiểu MethodHandle là tham chiếu thực thi có kiểu chứ không chỉ là metadata mô tả method.
+      - Hiểu signature polymorphism và phân biệt invokeExact, invoke cùng WrongMethodTypeException ở mức mô hình tư duy thay vì học thuộc từng overload.
+    relatedKnowledge:
+      - TypedInvocation
+    relatedModules:
+      - routeId: JAVA_7_METHOD_HANDLES
+        label: Java 7 - Method Handles
+        note: Module Java Version giữ góc nhìn về thời điểm feature xuất hiện và tiến hóa; module hiện tại giữ mô hình runtime hiện hành.
+
+  - id: lookup-access-model
+    title: Lookup và mô hình quyền truy cập
+    purpose: Hiểu cách MethodHandles.Lookup gắn quyền truy cập với lookup class và thực hiện kiểm tra quyền tại thời điểm tạo handle.
+    objectives:
+      - Giải thích được vì sao Lookup là một phần của mô hình capability/quyền truy cập chứ không chỉ là factory tiện ích.
+      - Hiểu khác biệt giữa lookup được tạo cho caller class, publicLookup và việc thay đổi/chuyển lookup context theo lookup modes cùng các ràng buộc module/access.
+      - Nhận diện các lỗi quan trọng khi member không tồn tại, không thể truy cập hoặc lookup không đủ quyền.
+    relatedKnowledge:
+      - LookupAccess
+    relatedModules:
+      - routeId: JAVA_REFLECTION
+        label: Reflection
+        note: Reflection có access model riêng; milestone này chỉ so sánh ở boundary cần thiết để hiểu Lookup.
+
+  - id: method-handle-adaptation
+    title: Biến đổi và kết hợp MethodHandle
+    purpose: Học cách giữ một đích gọi có kiểu nhưng vẫn thích nghi signature, bind dữ liệu và ghép nhiều handle thành một chuỗi gọi động.
+    objectives:
+      - Hiểu adaptation khác với thay đổi ngữ nghĩa của đích gọi như thế nào.
+      - Nhóm được các thao tác theo mục đích như thích nghi kiểu, binding, biến đổi argument/return và composition.
+      - Xây được mô hình tư duy cho chuỗi MethodHandle mà không biến roadmap thành danh sách combinator API.
+    relatedKnowledge:
+      - MethodHandleAdaptation
+
+  - id: call-site-targets
+    title: CallSite và target có thể thay đổi
+    purpose: Hiểu CallSite như nơi giữ MethodHandle target, phân biệt việc một invokedynamic instruction được link tới một CallSite với việc target bên trong CallSite đó có thể bất biến hoặc thay đổi.
+    objectives:
+      - Giải thích được quan hệ giữa CallSite, MethodHandle target và dynamic invoker.
+      - Phân biệt mục đích của ConstantCallSite, MutableCallSite và VolatileCallSite.
+      - Hiểu target type invariant và khác biệt về khả năng quan sát target update ở mức CallSite API, đồng thời chuyển phần JMM/happens-before chuyên sâu sang Concurrency.
+    relatedKnowledge:
+      - CallSite
+    relatedModules:
+      - routeId: JAVA_CONCURRENCY_FUNDAMENTALS
+        label: Concurrency Fundamentals
+        note: Memory visibility và happens-before chuyên sâu thuộc Concurrency; milestone này chỉ giữ ngữ nghĩa cần thiết của mutable/volatile call site.
+
+  - id: invokedynamic-linkage
+    title: invokedynamic và bootstrap linkage
+    purpose: Ghép MethodHandle, MethodType, Lookup và CallSite thành vòng đời liên kết hoàn chỉnh của một invokedynamic instruction, từ trạng thái chưa được resolve tới call site đã được JVM liên kết.
+    objectives:
+      - Mô tả được các đầu vào bootstrap chính và vai trò của bootstrap method trong quá trình resolve dynamic call site.
+      - Theo dõi được luồng invokedynamic chưa link → bootstrap → một CallSite được chọn/cài đặt → gọi target, và hiểu instruction không “relink” sang CallSite khác sau khi linkage hoàn tất.
+      - Hiểu các ràng buộc/lỗi như CallSite type mismatch và BootstrapMethodError, đồng thời nhận diện lambda/string concatenation là nơi sử dụng dynamic linkage chứ không phải scope chính của module.
+    relatedKnowledge:
+      - InvokeDynamic
+    relatedModules:
+      - routeId: JAVA_JVM
+        label: JVM
+        note: Constant pool, thực thi bytecode và nền tảng JVM linkage thuộc module JVM.
+      - routeId: JAVA_7_INVOKEDYNAMIC
+        label: Java 7 - invokedynamic
+        note: Module Java Version giữ lịch sử feature; module hiện tại tập trung vào cơ chế và mô hình tư duy hiện hành.
+
+  - id: var-handle-model
+    title: VarHandle và truy cập biến có ngữ nghĩa
+    purpose: Mở nhánh truy cập biến song song sau khi hoàn tất luồng dynamic invocation, hiểu VarHandle như một tham chiếu có kiểu tới một biến hoặc họ biến với các access mode khác nhau nhưng vẫn giữ đúng ranh giới với Java Memory Model và curriculum Concurrency.
+    objectives:
+      - Hiểu variable type, coordinate types và cách chúng xác định biến được truy cập.
+      - Phân biệt các nhóm access mode như plain, opaque, acquire/release, volatile và atomic ở mức mục đích sử dụng.
+      - Biết khi nào phải chuyển sang Java Concurrency để giải thích đầy đủ memory ordering và happens-before.
+    relatedKnowledge:
+      - VarHandle
+    relatedModules:
+      - routeId: JAVA_CONCURRENCY_FUNDAMENTALS
+        label: Concurrency Fundamentals
+        note: Java Memory Model, happens-before và concurrency correctness thuộc Concurrency.
+      - routeId: JAVA_NATIVE_INTEROPERABILITY
+        label: Native Interoperability
+        note: Native/foreign-memory APIs có thể sử dụng VarHandle nhưng ranh giới native thuộc module riêng.
+
+  - id: dynamic-runtime-synthesis
+    title: Lựa chọn và tổng hợp Dynamic Runtime
+    purpose: Hợp nhất hai nhánh chính của module — dynamic invocation/linkage và truy cập biến — thành một mô hình ra quyết định để chọn đúng cơ chế, hiểu ranh giới lỗi và giữ đúng phạm vi sở hữu của module.
+    objectives:
+      - Chọn đúng giữa lời gọi trực tiếp, Reflection và MethodHandle cho bài toán invocation; chọn VarHandle cho truy cập biến có kiểu, đồng thời ưu tiên Java code trực tiếp khi cơ chế động không tạo thêm giá trị.
+      - Lần theo luồng end-to-end từ access context, handle có kiểu và adaptation tới bootstrap, CallSite và invokedynamic linkage khi cơ chế động thực sự cần thiết.
+      - Nhận diện ranh giới lỗi về access, method type, bootstrap/linkage và visibility, đồng thời giữ đúng ownership khi các cơ chế này được runtime/framework, Native Interoperability hoặc Instrumentation sử dụng.
+    relatedKnowledge:
+      - Synthesis
+    relatedModules:
+      - routeId: JAVA_NATIVE_INTEROPERABILITY
+        label: Native Interoperability
+        note: Foreign-function integration có thể dùng MethodHandle/VarHandle nhưng sở hữu native-memory và native-linking concerns riêng.

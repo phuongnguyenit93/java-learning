@@ -1,0 +1,73 @@
+DynamicRuntimeController:
+  methodHandle():
+    execution: |-
+      <p><b>Khái niệm:</b> Một MethodHandle luôn có hợp đồng kiểu cụ thể; binding và adaptation tạo handle mới với type mới thay vì thay đổi handle cũ.</p>
+      <ol>
+        <li>Service resolve <code>Greeter.greet(String)</code> thành virtual handle kiểu <code>(Greeter,String)String</code>.
+          <div><i>Nguồn: DynamicRuntimeService.methodHandleDemo()</i></div>
+          <pre><code>MethodHandle virtualHandle =
+          lookup.findVirtual(Greeter.class, "greet", methodType);
+      MethodHandle boundHandle =
+          virtualHandle.bindTo(new Greeter("Hello"));</code></pre>
+        </li>
+        <li>Bind receiver làm type thành <code>(String)String</code>; <code>invokeExact</code> trả <code>Hello Phuong</code>.</li>
+        <li><code>asType</code> tạo adapter <code>(Object)Object</code> và vẫn thực thi cùng hành vi khi conversion hợp lệ.</li>
+        <li>Một lời gọi cố ý yêu cầu return <code>int</code> trên handle trả <code>String</code> bị từ chối bằng <code>WrongMethodTypeException</code>.</li>
+      </ol>
+      <p><b>Bằng chứng:</b> <code>virtualHandleType</code>, <code>boundHandleType</code>, <code>adaptedHandleType</code>, hai result và cờ <code>wrongMethodTypeExceptionObserved</code>.</p>
+      <p><b>Kết luận:</b> Type của MethodHandle là hợp đồng runtime thật; adaptation thay shape lời gọi một cách có kiểm soát thay vì bỏ type checking.</p>
+    usage: true
+  lookup():
+    execution: |-
+      <p><b>Khái niệm:</b> Lookup mang quyền truy cập dùng tại thời điểm tạo MethodHandle.</p>
+      <ol>
+        <li><code>SecretGreeter</code> được khai báo public nhưng <code>greet</code> là private. <code>publicLookup()</code> thử resolve method này và bị <code>IllegalAccessException</code>, nên failure không bị lẫn với việc target class không public.
+          <div><i>Nguồn: DynamicRuntimeService.lookupDemo()</i></div>
+          <pre><code>MethodHandles.publicLookup()
+          .findVirtual(
+              SecretGreeter.class,
+              "greet",
+              methodType
+          );</code></pre>
+        </li>
+        <li>Lookup của bên gọi được dùng với <code>privateLookupIn</code> để tạo Lookup gắn với target class và đủ quyền cho private member trong thí nghiệm này.</li>
+        <li>Handle được tạo bằng private lookup invoke thành công và kết quả trả về là <code>Secret hello Phuong</code>.</li>
+      </ol>
+      <p><b>Bằng chứng:</b> target class public + private method, <code>publicLookupRejectedPrivateMember=true</code>, lookup class/modes và <code>privateInvocationResult</code>.</p>
+      <p><b>Kết luận:</b> Cùng một symbolic member có thể lookup thất bại hoặc thành công tùy quyền của Lookup; HTTP chỉ kích hoạt thí nghiệm, còn access check nằm ở <code>java.lang.invoke</code>.</p>
+    usage: true
+  callSite():
+    execution: |-
+      <p><b>Khái niệm:</b> MutableCallSite giữ một type cố định nhưng target MethodHandle có thể thay đổi.</p>
+      <ol>
+        <li>Service tạo target hằng <code>VERSION_1</code>, MutableCallSite và một <code>dynamicInvoker()</code>.
+          <div><i>Nguồn: DynamicRuntimeService.callSiteDemo()</i></div>
+          <pre><code>MutableCallSite callSite =
+          new MutableCallSite(initialTarget);
+      MethodHandle dynamicInvoker =
+          callSite.dynamicInvoker();</code></pre>
+        </li>
+        <li>Cùng invoker trả <code>VERSION_1</code> trước update; service đổi target sang <code>VERSION_2</code> rồi gọi <code>MutableCallSite.syncAll</code>.</li>
+        <li>Gọi lại đúng handle đó trả <code>VERSION_2</code>, chứng minh target thay đổi mà CallSite/invoker contract vẫn giữ nguyên.</li>
+        <li><code>setTarget</code> với handle kiểu <code>()Integer</code> bị từ chối bằng <code>WrongMethodTypeException</code>.</li>
+      </ol>
+      <p><b>Bằng chứng:</b> site/invoker type, <code>beforeTargetUpdate</code>, <code>afterTargetUpdate</code> và <code>wrongTargetTypeRejected</code>.</p>
+      <p><b>Kết luận:</b> Target mutation khác với thay đổi type/linkage identity; thí nghiệm không cố chứng minh đầy đủ JMM visibility giữa nhiều thread.</p>
+    usage: true
+  varHandle():
+    execution: |-
+      <p><b>Khái niệm:</b> VarHandle biểu diễn một variable location/family cùng các access mode có type rõ ràng.</p>
+      <ol>
+        <li>Mỗi lần gọi tạo Counter mới với <code>value=10</code>; VarHandle được resolve trước từ field <code>Counter.value</code>.
+          <div><i>Nguồn: DynamicRuntimeService.varHandleDemo()</i></div>
+          <pre><code>boolean firstCompareAndSet =
+          (boolean) COUNTER_VALUE.compareAndSet(
+              counter, 10, 20
+          );</code></pre>
+        </li>
+        <li>CAS <code>10→20</code> thành công. CAS thứ hai vẫn dùng expected <code>10</code> nên thất bại và không ghi <code>30</code>.</li>
+        <li>Kết quả trả về đọc trạng thái cuối bằng VarHandle, đồng thời xuất <code>variableType</code>, <code>coordinateTypes</code>, <code>accessModeType(COMPARE_AND_SET)</code> và khả năng hỗ trợ <code>GET_AND_ADD</code>.</li>
+      </ol>
+      <p><b>Bằng chứng:</b> <code>before=10</code>, first CAS=true, stale CAS=false, <code>after=20</code> cùng type metadata của handle.</p>
+      <p><b>Kết luận:</b> Compare-and-set là conditional atomic update trên variable được VarHandle định vị; việc chứng minh memory ordering chuyên sâu vẫn thuộc Concurrency.</p>
+    usage: true

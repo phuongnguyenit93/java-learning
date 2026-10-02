@@ -41,4 +41,120 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: dynamic-runtime-purpose
+    title: Why Dynamic Runtime Exists
+    purpose: Build a mental model for why Java provides low-level, strongly typed, composable primitives for invocation, variable access, and runtime linkage — even when a member is already known — while keeping clear boundaries with Reflection, JVM internals, and release-history modules.
+    objectives:
+      - Explain the need for typed executable and variable handles, capability-based access, and runtime linkage without reducing every use case to an unknown target.
+      - Distinguish the conceptual roles of direct calls, Reflection, and the primitives in java.lang.invoke.
+      - Identify the module prerequisites and boundaries before learning individual mechanisms.
+    relatedKnowledge:
+      - DynamicRuntime
+    relatedModules:
+      - routeId: JAVA_JVM
+        label: JVM
+        note: The JVM module owns the execution and linkage foundation that Dynamic Runtime builds upon.
+      - routeId: JAVA_REFLECTION
+        label: Reflection
+        note: Reflection owns metadata and member inspection; Dynamic Runtime focuses on typed invocation and runtime linkage.
+
+  - id: typed-invocation-model
+    title: Typed Dynamic Invocation Model
+    purpose: Understand MethodType and MethodHandle as the JVM-level typed foundation for representing, validating, and executing callable operations through handles, forming the basis for adaptation and dynamic linkage.
+    objectives:
+      - Understand how MethodType models the parameter and return contract of a dynamic invocation.
+      - Understand MethodHandle as a typed executable reference rather than only descriptive metadata.
+      - Understand signature polymorphism and distinguish invokeExact, invoke, and WrongMethodTypeException at the mental-model level rather than memorizing overloads.
+    relatedKnowledge:
+      - TypedInvocation
+    relatedModules:
+      - routeId: JAVA_7_METHOD_HANDLES
+        label: Java 7 - Method Handles
+        note: The Java Version module owns feature introduction and evolution; this module owns the current conceptual runtime model.
+
+  - id: lookup-access-model
+    title: Lookup and Access Capabilities
+    purpose: Understand how MethodHandles.Lookup binds capabilities to a caller or lookup class and performs access checking when a handle is created.
+    objectives:
+      - Explain why Lookup is part of the access model rather than merely a convenience factory.
+      - Understand the conceptual difference between a lookup created for the caller class, publicLookup, and changing or transferring lookup context under lookup-mode and module-access constraints.
+      - Recognize important failures when a member is missing, inaccessible, or the lookup lacks sufficient capability.
+    relatedKnowledge:
+      - LookupAccess
+    relatedModules:
+      - routeId: JAVA_REFLECTION
+        label: Reflection
+        note: Reflection has its own access model; this milestone compares only the boundary needed to understand Lookup.
+
+  - id: method-handle-adaptation
+    title: Adapting and Composing Method Handles
+    purpose: Learn how a typed target can still adapt signatures, bind data, and compose handles into a dynamic invocation pipeline.
+    objectives:
+      - Understand how adaptation differs from changing the semantic target.
+      - Group operations by purpose such as type adaptation, binding, argument or return transformation, and composition.
+      - Build a mental model for handle pipelines without turning the roadmap into a combinator API inventory.
+    relatedKnowledge:
+      - MethodHandleAdaptation
+
+  - id: call-site-targets
+    title: Call Sites and Changeable Targets
+    purpose: Understand CallSite as a holder for a MethodHandle target, distinguishing an invokedynamic instruction being linked to one CallSite from the target inside that CallSite being immutable or changeable.
+    objectives:
+      - Explain the relationship among a CallSite, its target MethodHandle, and its dynamic invoker.
+      - Distinguish the purposes of ConstantCallSite, MutableCallSite, and VolatileCallSite.
+      - Understand the target-type invariant and target-update visibility differences at the CallSite API level, while handing deeper JMM and happens-before reasoning to Concurrency.
+    relatedKnowledge:
+      - CallSite
+    relatedModules:
+      - routeId: JAVA_CONCURRENCY_FUNDAMENTALS
+        label: Concurrency Fundamentals
+        note: Deeper memory-visibility and happens-before reasoning belongs to Concurrency; this milestone keeps only the semantics required to understand mutable and volatile call sites.
+
+  - id: invokedynamic-linkage
+    title: invokedynamic and Bootstrap Linkage
+    purpose: Connect MethodHandle, MethodType, Lookup, and CallSite into the complete lifecycle of an invokedynamic instruction from an unlinked state to a JVM-linked call site.
+    objectives:
+      - Describe the main bootstrap inputs and the bootstrap method's role in dynamic call-site resolution.
+      - Trace the flow from an unlinked invokedynamic instruction through bootstrap to an installed CallSite and target invocation, understanding that the instruction does not relink to a different CallSite after linkage completes.
+      - Understand invariants and failures such as call-site type mismatch and BootstrapMethodError while recognizing lambdas and string concatenation as consumers of dynamic linkage rather than the module's primary scope.
+    relatedKnowledge:
+      - InvokeDynamic
+    relatedModules:
+      - routeId: JAVA_JVM
+        label: JVM
+        note: Constant-pool structure, bytecode execution, and JVM linkage foundations belong to the JVM module.
+      - routeId: JAVA_7_INVOKEDYNAMIC
+        label: Java 7 - invokedynamic
+        note: The Java Version module owns feature history; this module focuses on the current mechanism and mental model.
+
+  - id: var-handle-model
+    title: VarHandle and Variable Access Semantics
+    purpose: Open the parallel variable-access branch after completing the dynamic-invocation flow, understanding VarHandle as a typed reference to a variable or family of variables with distinct access modes while preserving the boundary with the Java Memory Model and concurrency curriculum.
+    objectives:
+      - Understand variable type, coordinate types, and how they identify the variable being accessed.
+      - Distinguish the purpose of plain, opaque, acquire/release, volatile, and atomic access-mode families.
+      - Know when full memory-ordering and happens-before reasoning must hand off to Java Concurrency.
+    relatedKnowledge:
+      - VarHandle
+    relatedModules:
+      - routeId: JAVA_CONCURRENCY_FUNDAMENTALS
+        label: Concurrency Fundamentals
+        note: The Java Memory Model, happens-before, and concurrency correctness belong to the Concurrency owner.
+      - routeId: JAVA_NATIVE_INTEROPERABILITY
+        label: Native Interoperability
+        note: Native and foreign-memory APIs may consume VarHandle, while native boundaries remain owned by that module.
+
+  - id: dynamic-runtime-synthesis
+    title: Choosing and Reasoning About Dynamic Runtime
+    purpose: Synthesize the module's two main branches — dynamic invocation/linkage and variable access — into a decision model for choosing the right primitive, understanding failure boundaries, and preserving module ownership.
+    objectives:
+      - Choose appropriately among direct calls, Reflection, and MethodHandle for invocation; choose VarHandle for typed variable access, while preferring ordinary direct Java code when dynamic mechanisms add no value.
+      - Trace an end-to-end path from access context and typed handles through adaptation to bootstrap, CallSite, and invokedynamic linkage when a dynamic mechanism is actually required.
+      - Recognize access, method-type, bootstrap/linkage, and visibility failure boundaries while preserving ownership when these primitives are consumed by runtimes, frameworks, native interoperability, or instrumentation.
+    relatedKnowledge:
+      - Synthesis
+    relatedModules:
+      - routeId: JAVA_NATIVE_INTEROPERABILITY
+        label: Native Interoperability
+        note: Foreign-function integration may use MethodHandle and VarHandle while owning its own native-memory and native-linking concerns.

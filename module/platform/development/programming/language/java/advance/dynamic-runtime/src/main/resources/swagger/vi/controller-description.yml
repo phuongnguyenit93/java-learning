@@ -1,0 +1,6 @@
+DynamicRuntimeController:
+  description: |-
+    <h2>Thí nghiệm Dynamic Runtime</h2>
+    <p>Nhóm API này chạy các thí nghiệm có phạm vi giới hạn cho MethodHandle, Lookup, CallSite và VarHandle. Mỗi lần gọi tự tạo trạng thái cần thiết, trả bằng chứng runtime trực tiếp và không phụ thuộc vào trạng thái còn lại từ lần chạy trước.</p>
+  readmeRelated:
+    file: 8.Synthesis/Synthesis.md

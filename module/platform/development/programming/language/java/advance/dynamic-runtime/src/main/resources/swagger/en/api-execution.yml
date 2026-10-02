@@ -1,0 +1,73 @@
+DynamicRuntimeController:
+  methodHandle():
+    execution: |-
+      <p><b>Concept:</b> A MethodHandle always has a concrete type contract; binding and adaptation produce new handles with new types rather than mutating the original handle.</p>
+      <ol>
+        <li>The service resolves <code>Greeter.greet(String)</code> into a virtual handle of type <code>(Greeter,String)String</code>.
+          <div><i>Source: DynamicRuntimeService.methodHandleDemo()</i></div>
+          <pre><code>MethodHandle virtualHandle =
+          lookup.findVirtual(Greeter.class, "greet", methodType);
+      MethodHandle boundHandle =
+          virtualHandle.bindTo(new Greeter("Hello"));</code></pre>
+        </li>
+        <li>Binding the receiver changes the type to <code>(String)String</code>; <code>invokeExact</code> returns <code>Hello Phuong</code>.</li>
+        <li><code>asType</code> creates a <code>(Object)Object</code> adapter that still reaches the same behavior through supported conversions.</li>
+        <li>A deliberate call site requesting <code>int</code> from a String-returning handle is rejected with <code>WrongMethodTypeException</code>.</li>
+      </ol>
+      <p><b>Evidence:</b> <code>virtualHandleType</code>, <code>boundHandleType</code>, <code>adaptedHandleType</code>, both results, and <code>wrongMethodTypeExceptionObserved</code>.</p>
+      <p><b>Conclusion:</b> A MethodHandle type is a real runtime contract; adaptation changes invocation shape in a controlled way rather than removing type checking.</p>
+    usage: true
+  lookup():
+    execution: |-
+      <p><b>Concept:</b> Lookup carries the access capability used when a MethodHandle is created.</p>
+      <ol>
+        <li><code>SecretGreeter</code> is public while <code>greet</code> is private. <code>publicLookup()</code> attempts to resolve that method and receives <code>IllegalAccessException</code>, so the failure is not confounded by a non-public target class.
+          <div><i>Source: DynamicRuntimeService.lookupDemo()</i></div>
+          <pre><code>MethodHandles.publicLookup()
+          .findVirtual(
+              SecretGreeter.class,
+              "greet",
+              methodType
+          );</code></pre>
+        </li>
+        <li>The caller lookup is passed to <code>privateLookupIn</code> to obtain a Lookup associated with the target class and permitted private access for this bounded experiment.</li>
+        <li>The private lookup creates a handle successfully and invocation returns <code>Secret hello Phuong</code>.</li>
+      </ol>
+      <p><b>Evidence:</b> public target class + private method, <code>publicLookupRejectedPrivateMember=true</code>, lookup class/modes, and <code>privateInvocationResult</code>.</p>
+      <p><b>Conclusion:</b> The same symbolic member can fail or succeed depending on Lookup capability; HTTP only triggers the experiment while access checking belongs to <code>java.lang.invoke</code>.</p>
+    usage: true
+  callSite():
+    execution: |-
+      <p><b>Concept:</b> A MutableCallSite keeps a fixed type while its target MethodHandle can change.</p>
+      <ol>
+        <li>The service creates a constant <code>VERSION_1</code> target, a MutableCallSite, and one <code>dynamicInvoker()</code>.
+          <div><i>Source: DynamicRuntimeService.callSiteDemo()</i></div>
+          <pre><code>MutableCallSite callSite =
+          new MutableCallSite(initialTarget);
+      MethodHandle dynamicInvoker =
+          callSite.dynamicInvoker();</code></pre>
+        </li>
+        <li>The same invoker returns <code>VERSION_1</code> before the update; the service replaces the target with <code>VERSION_2</code> and calls <code>MutableCallSite.syncAll</code>.</li>
+        <li>Invoking the same handle again returns <code>VERSION_2</code>, showing that target mutation does not change the call site's type contract.</li>
+        <li><code>setTarget</code> with a <code>()Integer</code> handle is rejected with <code>WrongMethodTypeException</code>.</li>
+      </ol>
+      <p><b>Evidence:</b> site/invoker types, <code>beforeTargetUpdate</code>, <code>afterTargetUpdate</code>, and <code>wrongTargetTypeRejected</code>.</p>
+      <p><b>Conclusion:</b> Target mutation is distinct from changing linkage identity or type; this experiment intentionally does not attempt a full multi-threaded JMM visibility proof.</p>
+    usage: true
+  varHandle():
+    execution: |-
+      <p><b>Concept:</b> A VarHandle represents a variable location or family together with typed access modes.</p>
+      <ol>
+        <li>Every request creates a fresh Counter with <code>value=10</code>; a VarHandle has already been resolved for <code>Counter.value</code>.
+          <div><i>Source: DynamicRuntimeService.varHandleDemo()</i></div>
+          <pre><code>boolean firstCompareAndSet =
+          (boolean) COUNTER_VALUE.compareAndSet(
+              counter, 10, 20
+          );</code></pre>
+        </li>
+        <li>CAS <code>10→20</code> succeeds. A second CAS still expects <code>10</code>, so it fails and does not write <code>30</code>.</li>
+        <li>The response reads the final state through the VarHandle and also exposes <code>variableType</code>, <code>coordinateTypes</code>, <code>accessModeType(COMPARE_AND_SET)</code>, and support for <code>GET_AND_ADD</code>.</li>
+      </ol>
+      <p><b>Evidence:</b> <code>before=10</code>, first CAS=true, stale CAS=false, <code>after=20</code>, plus the handle's type metadata.</p>
+      <p><b>Conclusion:</b> Compare-and-set is a conditional atomic update on the variable selected by the VarHandle; deeper memory-order proofs remain owned by Concurrency.</p>
+    usage: true

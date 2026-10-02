@@ -1,0 +1,117 @@
+# <interview-schema>
+# Cấu trúc câu hỏi Interview
+# schema-version: 2
+#
+# questions [kiểu: list; bắt buộc; mặc định: []]
+#   Danh sách câu hỏi Interview của module trong language hiện tại.
+#   mỗi phần tử:
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi phỏng vấn hiển thị cho người học.
+#     answer [kiểu: string; bắt buộc; mặc định: ""]
+#       Câu trả lời tham khảo, chỉ hiển thị khi người học chủ động mở.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu nội dung được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu nội dung đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+# </interview-schema>
+
+questions:
+  - question: "Khi nào bạn chọn direct call, Reflection hoặc MethodHandle? Hãy giải thích theo nhu cầu runtime thay vì theo performance folklore."
+    answer: "Tôi bắt đầu từ requirement. Nếu target đã biết và Java call bình thường đủ dùng, direct call đơn giản và dễ maintain nhất. Reflection phù hợp khi bài toán chính là runtime metadata/member discovery hoặc invocation dựa trên metadata. MethodHandle phù hợp khi infrastructure cần executable reference có type, cần bind/adapt/compose hoặc cần tham gia runtime linkage. Tôi không chọn MethodHandle chỉ vì giả định nó luôn nhanh hơn Reflection/direct call; nếu performance là lý do thì cần benchmark đúng workload. Điểm quyết định là capability cần thiết và complexity budget, không phải độ 'low-level' của API."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.Synthesis/Synthesis.md"
+      anchor: "choose-invocation-mechanism"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Vì sao invokeExact có thể ném WrongMethodTypeException dù method đích nhìn như nhận đúng dữ liệu? Bạn debug vấn đề này như thế nào?"
+    answer: "MethodHandle invocation là signature-polymorphic: descriptor thực tế của call site đến từ static argument/return types ở source. invokeExact yêu cầu descriptor đó khớp chính xác handle.type(); nó không làm overload resolution hay conversion linh hoạt như lời gọi Java thông thường. Khi debug, tôi in handle.type(), kiểm tra static type của từng argument và đặc biệt kiểu return do assignment/cast tạo ra. Nếu có adapter, tôi kiểm tra type trước/sau từng bước. Tôi cũng tách type failure khỏi lookup/access failure; WrongMethodTypeException là vấn đề invocation contract, không phải member visibility."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.TypedInvocation/TypedInvocation.md"
+      anchor: "invocation-type-failures"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Hãy giải thích MethodHandles.Lookup như một capability object. publicLookup và privateLookupIn khác nhau thế nào, và vì sao privateLookupIn không phải bypass access control?"
+    answer: "Lookup mang lookup class và lookup modes, nên nó biểu diễn quyền mà code đang giữ để tạo MethodHandle/VarHandle. publicLookup chỉ cung cấp public access trong phạm vi contract của nó; nó không thể tự tạo private handle. privateLookupIn yêu cầu incoming Lookup có capability phù hợp và vẫn phải thỏa module readability/package openness khi đi qua module boundary. Vì vậy nó không 'tắt' Java access control mà chuyển access context theo rule được JVM cho phép. Trong experiment của module, target class là public nhưng method là private: publicLookup bị từ chối ở member access, còn privateLookupIn với caller lookup phù hợp tạo handle thành công."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.LookupAccess/LookupAccess.md"
+      anchor: "lookup-context"
+    apiRelated:
+      controller: "DynamicRuntimeController"
+      methodSignature: "lookup()"
+
+  - question: "Một framework có nhiều target signature khác nhau nhưng muốn chuẩn hóa về một internal invocation contract. MethodHandle adaptation giúp gì và khi nào plain Java wrapper tốt hơn?"
+    answer: "Framework có thể resolve target một lần rồi tạo handle mới bằng bindTo, asType, insert/permute/filter hoặc composition để đưa nhiều target về một MethodType thống nhất. Caller sau đó chỉ làm việc với contract chung, thay vì reflection dispatch hoặc wrapper class riêng cho từng shape. Tuy nhiên adapter chain quá sâu làm reasoning, stack trace và maintenance khó hơn; conversion/boxing cũng có cost. Nếu shape ít, ổn định và một Java method diễn đạt flow rõ hơn, wrapper thường là lựa chọn tốt hơn. MethodHandle composition có giá trị nhất khi dynamic dispatch/adaptation thực sự là phần cốt lõi của infrastructure."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.MethodHandleAdaptation/MethodHandleAdaptation.md"
+      anchor: "method-handle-type-adaptation"
+    apiRelated:
+      controller: "DynamicRuntimeController"
+      methodSignature: "methodHandle()"
+
+  - question: "Phân biệt việc invokedynamic instruction được link tới CallSite với việc MutableCallSite thay đổi target. Visibility của target update ảnh hưởng thiết kế ra sao?"
+    answer: "Linkage và target mutation là hai tầng khác nhau. invokedynamic instruction được resolve/link tới một CallSite; sau linkage nó không cần chuyển sang CallSite mới mỗi khi behavior thay đổi. MutableCallSite giữ MethodType cố định nhưng target MethodHandle có thể thay đổi, nên cùng dynamic invoker có thể dispatch sang target mới. MutableCallSite không cung cấp volatile-style visibility cho update; syncAll được dùng khi runtime cần publish một nhóm update, còn VolatileCallSite dùng semantics mạnh hơn. Formal happens-before proof thuộc Concurrency, nhưng Dynamic Runtime phải biết rằng target mutability không tự đồng nghĩa với cross-thread visibility."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Mô tả lifecycle của một invokedynamic call site từ chưa link tới khi gọi target. Bootstrap failure và concurrent bootstrap cần được hiểu thế nào?"
+    answer: "Khi JVM cần resolve một invokedynamic instruction chưa link, nó resolve bootstrap method và static bootstrap arguments, truyền Lookup/name/MethodType cùng arguments vào bootstrap, rồi yêu cầu bootstrap trả một CallSite có type đúng descriptor. JVM chọn/cài một kết quả linkage và invocation sau đó đi qua target hiện tại của CallSite. Nếu nhiều thread gặp cùng unresolved site, bootstrap có thể chạy đồng thời nhiều lần nhưng chỉ một kết quả được cài; bootstrap side effects vì thế vẫn phải thread-safe. Non-Error Throwable từ bootstrap trở thành cause của BootstrapMethodError, còn Error có thể propagate trực tiếp; invalid hoặc wrong-type CallSite cũng làm resolution fail. Sau failure, instruction không coi bootstrap như retryable business operation."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "VarHandle khác MethodHandle ở mental model nào? Hãy dùng compare-and-set để giải thích variable type, coordinates, access mode và ranh giới với Java Memory Model."
+    answer: "MethodHandle biểu diễn executable operation, còn VarHandle biểu diễn một variable hoặc family of variables cùng access semantics. Với instance field int value của Counter, variable type là int và coordinate type gồm Counter. COMPARE_AND_SET vì thế có shape (Counter,int,int)boolean: coordinate, expected, new value, result. CAS chỉ update khi current value khớp expected theo comparison semantics của mode; experiment 10→20 thành công rồi stale 10→30 thất bại. Dynamic Runtime sở hữu shape/access-mode mechanics; câu hỏi acquire/release tạo happens-before nào, publication có safe không hoặc algorithm có linearizable không phải chuyển sang Concurrency."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Nếu phải trình bày Dynamic Runtime end-to-end cho một framework engineer, bạn sẽ nối Lookup, MethodHandle, adaptation, CallSite và invokedynamic theo flow nào? VarHandle nằm ở đâu trong bức tranh?"
+    answer: "Tôi bắt đầu từ access context: Lookup quyết định code có quyền resolve member nào. Từ đó runtime tạo MethodHandle có MethodType cụ thể, rồi bind/adapt/compose để target khớp internal call contract. Nếu cần dynamic linkage, bootstrap nhận Lookup/name/MethodType/static args, chọn hoặc tạo target, adapt về exact call-site type và trả CallSite; JVM link invokedynamic instruction tới CallSite và future calls đi qua current target. VarHandle là nhánh song song, không phải bước kế tiếp của invokedynamic: nó giải quyết variable location/family và access modes. End-to-end model hữu ích vì nó tách access capability, type contract, linkage object và variable semantics thay vì gom tất cả thành 'reflection động'."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.Synthesis/Synthesis.md"
+      anchor: "dynamic-linkage-end-to-end"
+    apiRelated:
+      controller: ""
+      methodSignature: ""

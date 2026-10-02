@@ -1,0 +1,111 @@
+DynamicRuntimeController:
+  methodHandle():
+    summary: Quan sát binding và type adaptation của MethodHandle
+    description: Tạo MethodHandle cho Greeter.greet, bind receiver để đổi type từ
+      (Greeter,String)String thành (String)String, gọi invokeExact, adapt tiếp bằng
+      asType thành (Object)Object và cố ý tạo WrongMethodTypeException bằng return
+      type không khớp. Kết quả trả về cho thấy hợp đồng kiểu thay đổi ở từng bước.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 4.MethodHandleAdaptation/MethodHandleAdaptation.md
+      anchor: method-handle-type-adaptation
+    methodName: methodHandle
+    params: [
+      ]
+    path: com/example/learning/module/dynamicruntime/controller/DynamicRuntimeController.java
+    mapping: '@GetMapping("/method-handle")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /dynamic-runtime/method-handle
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  lookup():
+    summary: Quan sát quyền truy cập của MethodHandles.Lookup
+    description: Dùng publicLookup để thử resolve private method trên một target class
+      public và ghi nhận IllegalAccessException, sau đó dùng privateLookupIn với caller
+      Lookup để tạo handle hợp lệ và invoke cùng member. Thí nghiệm cô lập member
+      access và chứng minh quyền lookup được kiểm tra lúc tạo handle.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 3.LookupAccess/LookupAccess.md
+      anchor: lookup-context
+    methodName: lookup
+    params: [
+      ]
+    path: com/example/learning/module/dynamicruntime/controller/DynamicRuntimeController.java
+    mapping: '@GetMapping("/lookup")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /dynamic-runtime/lookup
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  callSite():
+    summary: Quan sát MutableCallSite thay đổi target
+    description: Tạo một MutableCallSite với target VERSION_1, giữ cùng dynamicInvoker,
+      đổi target sang VERSION_2 rồi syncAll và gọi lại invoker. Kết quả trả về cũng
+      ghi nhận WrongMethodTypeException khi setTarget bằng handle có type khác site.type().
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 5.CallSite/CallSite.md
+      anchor: call-site-target-updates
+    methodName: callSite
+    params: [
+      ]
+    path: com/example/learning/module/dynamicruntime/controller/DynamicRuntimeController.java
+    mapping: '@GetMapping("/call-site")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /dynamic-runtime/call-site
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  varHandle():
+    summary: Quan sát VarHandle compare-and-set
+    description: Tạo Counter cục bộ với value=10, CAS 10→20 thành công rồi lặp lại
+      CAS bằng expected cũ 10→30 để quan sát thất bại và trạng thái cuối vẫn là 20.
+      Kết quả trả về còn trả variable type, coordinate types và MethodType của COMPARE_AND_SET.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 7.VarHandle/VarHandle.md
+      anchor: var-handle-atomic-updates
+    methodName: varHandle
+    params: [
+      ]
+    path: com/example/learning/module/dynamicruntime/controller/DynamicRuntimeController.java
+    mapping: '@GetMapping("/var-handle")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /dynamic-runtime/var-handle
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

@@ -1,0 +1,115 @@
+DynamicRuntimeController:
+  methodHandle():
+    summary: Observe MethodHandle binding and type adaptation
+    description: Create a MethodHandle for Greeter.greet, bind the receiver so its
+      type changes from (Greeter,String)String to (String)String, invoke it exactly,
+      adapt it again with asType to (Object)Object, and deliberately request an incompatible
+      return type to observe WrongMethodTypeException. The response exposes the type
+      contract at each step.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 4.MethodHandleAdaptation/MethodHandleAdaptation.md
+      anchor: method-handle-type-adaptation
+    methodName: methodHandle
+    params: [
+      ]
+    path: com/example/learning/module/dynamicruntime/controller/DynamicRuntimeController.java
+    mapping: '@GetMapping("/method-handle")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /dynamic-runtime/method-handle
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  lookup():
+    summary: Observe MethodHandles.Lookup access capabilities
+    description: Use publicLookup to resolve a private method on a public target class
+      and record the resulting IllegalAccessException, then use privateLookupIn with
+      the caller Lookup to create a valid handle and invoke that same member. The
+      experiment isolates member access and demonstrates that lookup access is checked
+      when the handle is created.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 3.LookupAccess/LookupAccess.md
+      anchor: lookup-context
+    methodName: lookup
+    params: [
+      ]
+    path: com/example/learning/module/dynamicruntime/controller/DynamicRuntimeController.java
+    mapping: '@GetMapping("/lookup")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /dynamic-runtime/lookup
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  callSite():
+    summary: Observe MutableCallSite target updates
+    description: Create a MutableCallSite with VERSION_1 as its target, keep the same
+      dynamic invoker, replace the target with VERSION_2, call syncAll, and invoke
+      again. The response also records WrongMethodTypeException when setTarget receives
+      a handle whose type differs from site.type().
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 5.CallSite/CallSite.md
+      anchor: call-site-target-updates
+    methodName: callSite
+    params: [
+      ]
+    path: com/example/learning/module/dynamicruntime/controller/DynamicRuntimeController.java
+    mapping: '@GetMapping("/call-site")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /dynamic-runtime/call-site
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  varHandle():
+    summary: Observe VarHandle compare-and-set
+    description: Create a local Counter with value=10, successfully CAS 10→20, then
+      repeat CAS with the stale expected value 10→30 and observe failure while the
+      final state remains 20. The response also exposes the variable type, coordinate
+      types, and MethodType for COMPARE_AND_SET.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 7.VarHandle/VarHandle.md
+      anchor: var-handle-atomic-updates
+    methodName: varHandle
+    params: [
+      ]
+    path: com/example/learning/module/dynamicruntime/controller/DynamicRuntimeController.java
+    mapping: '@GetMapping("/var-handle")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /dynamic-runtime/var-handle
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

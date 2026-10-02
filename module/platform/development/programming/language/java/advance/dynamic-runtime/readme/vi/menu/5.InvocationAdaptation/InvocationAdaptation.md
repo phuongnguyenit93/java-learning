@@ -1,1 +1,0 @@
-# Thích nghi lời gọi

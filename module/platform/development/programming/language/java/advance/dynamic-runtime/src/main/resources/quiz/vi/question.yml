@@ -1,0 +1,290 @@
+# <quiz-schema>
+# Cấu trúc câu hỏi Quiz
+# schema-version: 3
+#
+# questions [kiểu: list; bắt buộc; mặc định: []; duy nhất theo: id]
+#   Danh sách câu hỏi Quiz của module trong language hiện tại.
+#   mỗi phần tử:
+#     id [kiểu: string; bắt buộc; mặc định: ""]
+#       ID ổn định và duy nhất của câu hỏi.
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi hiển thị cho người học.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu câu hỏi được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu câu hỏi đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+#     answers [kiểu: list; bắt buộc; số phần tử: 4; mặc định: []; duy nhất theo: id]
+#       Chính xác bốn đáp án. ID A/B/C/D là identity nội bộ ổn định, không phải vị trí hiển thị sau khi frontend shuffle.
+#       mỗi phần tử:
+#         id [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#           Identity ổn định của đáp án.
+#         answer [kiểu: string; bắt buộc; mặc định: ""]
+#           Nội dung đáp án hiển thị cho người học.
+#         explanation [kiểu: string; bắt buộc; mặc định: ""]
+#           Giải thích hiển thị khi người học chọn đáp án này, bất kể đúng hay sai.
+#     correctAnswerId [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
+# </quiz-schema>
+
+questions:
+  - id: dynamic-runtime-q01-invocation-choice
+    question: "Một framework biết chính xác method cần gọi và không cần runtime adaptation. Lựa chọn nào phù hợp nhất?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.Synthesis/Synthesis.md"
+      anchor: "choose-invocation-mechanism"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Dùng Reflection để giữ một runtime invocation path thống nhất dù target đã biết trước."
+        explanation: "Sai. Cách này có thể thống nhất infrastructure path nhưng thêm metadata/invocation complexity mà scenario hiện tại không cần."
+      - id: B
+        answer: "Dùng lời gọi Java trực tiếp nếu target đã biết và không cần capability động bổ sung."
+        explanation: "Đúng. Cơ chế trực tiếp đơn giản hơn khi dynamic invocation không tạo thêm learning/design value."
+      - id: C
+        answer: "Dùng MethodHandle để chuẩn hóa call path, dù scenario không cần binding, adaptation hay dynamic linkage."
+        explanation: "Sai. Typed handle có giá trị khi capability đó cần thiết; nếu không, nó chỉ tăng complexity so với direct call."
+      - id: D
+        answer: "Dùng invokedynamic để defer linkage tới runtime dù target và call contract đã cố định."
+        explanation: "Sai. invokedynamic chỉ hợp lý khi runtime linkage thực sự tạo giá trị; ở đây nó là over-engineering."
+    correctAnswerId: B
+
+  - id: dynamic-runtime-q02-invoke-exact
+    question: "Một MethodHandle có type (String)String. Điều gì đúng về invokeExact?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.TypedInvocation/TypedInvocation.md"
+      anchor: "invoke-exact-vs-invoke"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Nó tự tìm overload gần nhất nếu argument hoặc return type ở call site không khớp."
+        explanation: "Sai. MethodHandle invocation không thực hiện overload resolution kiểu Java source."
+      - id: B
+        answer: "Nó cho phép mọi reference conversion mà MethodHandle.asType có thể thực hiện."
+        explanation: "Sai. Đó gần với behavior của invoke; invokeExact yêu cầu symbolic call-site type khớp chính xác."
+      - id: C
+        answer: "Call-site descriptor phải khớp chính xác handle type; lệch type có thể gây WrongMethodTypeException."
+        explanation: "Đúng. invokeExact dùng exact symbolic type contract tại call site."
+      - id: D
+        answer: "Nó luôn trả Object bất kể static return type ở call site, rồi caller mới cast về kiểu mong muốn."
+        explanation: "Sai. Signature-polymorphic invocation dùng static type tại call site; return type không bị cố định thành Object."
+    correctAnswerId: C
+
+  - id: dynamic-runtime-q03-lookup-capability
+    question: "Trong experiment Lookup, vì sao publicLookup() thất bại còn privateLookupIn(...) có thể tạo handle cho cùng private method?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.LookupAccess/LookupAccess.md"
+      anchor: "lookup-context"
+    apiRelated:
+      controller: "DynamicRuntimeController"
+      methodSignature: "lookup()"
+    answers:
+      - id: A
+        answer: "Hai Lookup mang lookup class/modes khác nhau; capability được kiểm tra ngay khi handle được tạo."
+        explanation: "Đúng. publicLookup() không có private access, còn lookup phù hợp từ privateLookupIn có thể tạo handle khi access/module rules cho phép."
+      - id: B
+        answer: "lookup.in(SecretGreeter.class) sẽ tương đương privateLookupIn vì chỉ cần đổi lookup class sang target."
+        explanation: "Sai. Đổi lookup class không tự cấp private capability; lookup modes/access rules vẫn quyết định quyền."
+      - id: C
+        answer: "Vì SecretGreeter là public nên publicLookup vẫn tạo được private handle; khác biệt chỉ xuất hiện lúc invoke."
+        explanation: "Sai. Private member access được kiểm tra khi handle được tạo, không bị trì hoãn tới invocation."
+      - id: D
+        answer: "privateLookupIn suy ra private access từ target class public nên incoming Lookup capability không ảnh hưởng kết quả."
+        explanation: "Sai. privateLookupIn yêu cầu incoming Lookup phù hợp và vẫn tuân thủ module/package access rules."
+    correctAnswerId: A
+
+  - id: dynamic-runtime-q04-method-handle-adaptation
+    question: "Sau khi bind receiver của handle (Greeter,String)String, handle mới có type (String)String. Điều này minh họa điều gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.MethodHandleAdaptation/MethodHandleAdaptation.md"
+      anchor: "method-handle-binding"
+    apiRelated:
+      controller: "DynamicRuntimeController"
+      methodSignature: "methodHandle()"
+    answers:
+      - id: A
+        answer: "Handle gốc bị mutate tại chỗ và mất receiver parameter, nên type cũ không còn tồn tại."
+        explanation: "Sai. MethodHandle là immutable; binding tạo một handle mới."
+      - id: B
+        answer: "Binding chỉ đổi metadata hiển thị, còn invocation contract của handle không đổi."
+        explanation: "Sai. Type của handle mới thực sự thay đổi từ (Greeter,String)String thành (String)String."
+      - id: C
+        answer: "bindTo chỉ bỏ parameter đầu khỏi type; receiver vẫn phải được cung cấp gián tiếp khi invoke."
+        explanation: "Sai. bindTo thực sự capture receiver vào handle mới; caller không truyền receiver đó nữa."
+      - id: D
+        answer: "Adaptation có thể tạo handle mới với call contract khác nhưng vẫn dẫn tới operation đích."
+        explanation: "Đúng. Binding/asType/combinators tạo handle mới với type/shape phù hợp hơn cho caller."
+    correctAnswerId: D
+
+  - id: dynamic-runtime-q05-guard-with-test
+    question: "Điều kiện nào cần đúng khi tạo MethodHandles.guardWithTest(test, target, fallback)?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.MethodHandleAdaptation/MethodHandleAdaptation.md"
+      anchor: "method-handle-guards"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "test và target phải có cùng return type, còn fallback có thể khác type."
+        explanation: "Sai. target và fallback phải cùng type; test phải trả boolean."
+      - id: B
+        answer: "test phải trả boolean và target/fallback phải cùng type với parameter prefix tương thích."
+        explanation: "Đúng. Đây là invariant type quan trọng của guardWithTest."
+      - id: C
+        answer: "test có thể nhận bất kỳ arguments nào vì runtime tự reorder chúng theo target."
+        explanation: "Sai. Parameters của test phải tương thích với prefix của target/fallback."
+      - id: D
+        answer: "guardWithTest chỉ kiểm tra type khi handle kết quả được invoke lần đầu."
+        explanation: "Sai. Type incompatibility có thể gây IllegalArgumentException ngay khi xây adapter."
+    correctAnswerId: B
+
+  - id: dynamic-runtime-q06-callsite-target-update
+    question: "Một MutableCallSite giữ type ()String và một dynamic invoker đã được tạo trước. Sau khi target đổi từ VERSION_1 sang VERSION_2, điều gì đúng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.CallSite/CallSite.md"
+      anchor: "call-site-target-updates"
+    apiRelated:
+      controller: "DynamicRuntimeController"
+      methodSignature: "callSite()"
+    answers:
+      - id: A
+        answer: "Dynamic invoker tiếp tục gọi VERSION_1 vì target được snapshot vào invoker khi nó được tạo."
+        explanation: "Sai. dynamicInvoker dispatch qua target hiện tại của CallSite thay vì giữ snapshot target cũ."
+      - id: B
+        answer: "Caller phải tạo dynamic invoker mới sau mỗi setTarget thì mới có thể thấy VERSION_2."
+        explanation: "Sai. Cùng invoker đã tạo trước vẫn dispatch qua CallSite và có thể quan sát target mới."
+      - id: C
+        answer: "Cùng dynamic invoker có thể trả VERSION_2 vì nó đi qua target hiện tại của chính CallSite."
+        explanation: "Đúng. Target mutation không tạo một invoker mới; invoker hiện có vẫn dispatch qua CallSite."
+      - id: D
+        answer: "setTarget làm CallSite bị unlink, nên lần gọi tiếp theo phải bootstrap hoặc relink trước khi invoke."
+        explanation: "Sai. Target update không làm mất linkage/identity của CallSite."
+    correctAnswerId: C
+
+  - id: dynamic-runtime-q07-bootstrap-failure
+    question: "Nếu bootstrap method của một invokedynamic instruction ném một RuntimeException, caller thường quan sát gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.InvokeDynamic/InvokeDynamic.md"
+      anchor: "invokedynamic-linkage-failures"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "RuntimeException luôn propagate nguyên trạng vì bootstrap nằm ngoài JVM linkage."
+        explanation: "Sai. Non-Error Throwable từ bootstrap được dùng làm cause của BootstrapMethodError."
+      - id: B
+        answer: "JVM bỏ exception, giữ call site unlinked và tự retry bootstrap ở mỗi invocation."
+        explanation: "Sai. Resolution failure được ghi nhận cho instruction; bootstrap không được retry như business logic."
+      - id: C
+        answer: "JVM chuyển exception thành WrongMethodTypeException vì bootstrap chưa trả CallSite."
+        explanation: "Sai. WrongMethodTypeException không phải wrapper chung cho bootstrap failure."
+      - id: D
+        answer: "Một BootstrapMethodError được quan sát, với RuntimeException gốc làm cause."
+        explanation: "Đúng. Non-Error Throwable từ bootstrap được wrap thành BootstrapMethodError theo linkage semantics."
+    correctAnswerId: D
+
+  - id: dynamic-runtime-q08-varhandle-access-type
+    question: "Với VarHandle tới instance field int value của Counter, type nào mô tả đúng COMPARE_AND_SET?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.VarHandle/VarHandle.md"
+      anchor: "var-handle-access-mode-type"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "(Counter,int,int)boolean: receiver coordinate, expected value, new value, rồi result boolean."
+        explanation: "Đúng. Access-mode type được derive từ coordinate types, variable type và mode."
+      - id: B
+        answer: "(int,int)boolean: receiver không thuộc access-mode type vì VarHandle đã bind field."
+        explanation: "Sai. Instance-field VarHandle vẫn cần Counter coordinate để định vị variable."
+      - id: C
+        answer: "(Counter,int)int: CAS trả current value, chỉ nhận new value và không cần expected argument."
+        explanation: "Sai. Shape này không phải COMPARE_AND_SET; CAS cần expected + new và trả boolean."
+      - id: D
+        answer: "(Counter,Object,Object)Object: mọi signature-polymorphic access đều dùng Object ở runtime."
+        explanation: "Sai. Signature-polymorphic call site vẫn mang type cụ thể của access mode."
+    correctAnswerId: A
+
+  - id: dynamic-runtime-q09-varhandle-cas
+    question: "Counter bắt đầu ở 10. CAS 10→20 thành công; ngay sau đó CAS 10→30 được gọi trên cùng Counter. Kết quả hợp lý là gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.VarHandle/VarHandle.md"
+      anchor: "var-handle-atomic-updates"
+    apiRelated:
+      controller: "DynamicRuntimeController"
+      methodSignature: "varHandle()"
+    answers:
+      - id: A
+        answer: "CAS thứ hai thành công vì expected được so với giá trị ban đầu khi VarHandle được tạo."
+        explanation: "Sai. Expected được so với current value tại thời điểm operation."
+      - id: B
+        answer: "CAS thứ hai thất bại nhưng trả current value 20 thay vì boolean false."
+        explanation: "Sai. compareAndSet trả boolean; compareAndExchange mới trả witness/current value."
+      - id: C
+        answer: "CAS thứ hai thất bại và value giữ 20 vì current value không còn khớp expected 10."
+        explanation: "Đúng. Conditional atomic update chỉ ghi khi current value khớp expected theo comparison semantics của mode."
+      - id: D
+        answer: "CAS thứ hai vẫn ghi 30 nhưng trả false để báo rằng expected 10 đã stale."
+        explanation: "Sai. CAS failure không thực hiện write của new value."
+    correctAnswerId: C
+
+  - id: dynamic-runtime-q10-varhandle-boundary
+    question: "Câu hỏi nào nên được chuyển sang Java Concurrency thay vì cố giải quyết đầy đủ trong Dynamic Runtime?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.VarHandle/VarHandle.md"
+      anchor: "var-handle-memory-model-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "VarHandle có variable type và coordinate types nào cho một instance field?"
+        explanation: "Sai. Đây là mechanics thuộc Dynamic Runtime/VarHandle model."
+      - id: B
+        answer: "Acquire/release cụ thể tạo happens-before nào và publication có an toàn không?"
+        explanation: "Đúng. Proof về memory ordering/happens-before thuộc Java Concurrency."
+      - id: C
+        answer: "Access-mode type của COMPARE_AND_SET được derive từ những thành phần nào?"
+        explanation: "Sai. Đây là type mechanics của VarHandle trong Dynamic Runtime."
+      - id: D
+        answer: "Khi nào một access mode không được VarHandle hỗ trợ và API báo lỗi ra sao?"
+        explanation: "Sai. Đây vẫn là API behavior thuộc VarHandle model."
+    correctAnswerId: B

@@ -1,0 +1,6 @@
+DynamicRuntimeController:
+  description: |-
+    <h2>Dynamic Runtime Experiments</h2>
+    <p>This API group runs bounded experiments for MethodHandle, Lookup, CallSite, and VarHandle. Every request creates its own required state, returns direct runtime evidence, and does not rely on stale state from an earlier execution.</p>
+  readmeRelated:
+    file: 8.Synthesis/Synthesis.md
