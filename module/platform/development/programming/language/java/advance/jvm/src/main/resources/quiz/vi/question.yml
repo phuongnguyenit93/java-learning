@@ -1,0 +1,440 @@
+# <quiz-schema>
+# Cấu trúc câu hỏi Quiz
+# schema-version: 3
+#
+# questions [kiểu: list; bắt buộc; mặc định: []; duy nhất theo: id]
+#   Danh sách câu hỏi Quiz của module trong language hiện tại.
+#   mỗi phần tử:
+#     id [kiểu: string; bắt buộc; mặc định: ""]
+#       ID ổn định và duy nhất của câu hỏi.
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi hiển thị cho người học.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu câu hỏi được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu câu hỏi đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+#     answers [kiểu: list; bắt buộc; số phần tử: 4; mặc định: []; duy nhất theo: id]
+#       Chính xác bốn đáp án. ID A/B/C/D là identity nội bộ ổn định, không phải vị trí hiển thị sau khi frontend shuffle.
+#       mỗi phần tử:
+#         id [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#           Identity ổn định của đáp án.
+#         answer [kiểu: string; bắt buộc; mặc định: ""]
+#           Nội dung đáp án hiển thị cho người học.
+#         explanation [kiểu: string; bắt buộc; mặc định: ""]
+#           Giải thích hiển thị khi người học chọn đáp án này, bất kể đúng hay sai.
+#     correctAnswerId [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
+# </quiz-schema>
+
+questions:
+  - id: jvm-q01-spec-vs-implementation
+    question: "Phát biểu nào phân biệt đúng JVM Specification với HotSpot?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.JvmPurposeContract/JvmPurposeContract.md"
+      anchor: "jvm-specification-vs-implementation"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "JVM Specification bắt buộc mọi JVM dùng cùng object layout và cùng garbage collector."
+        explanation: "Sai. Specification quy định contract/semantics, không bắt buộc một object layout hay collector cụ thể."
+      - id: B
+        answer: "HotSpot là một JVM implementation có thể chọn GC, JIT strategy và memory layout riêng miễn giữ đúng JVM contract."
+        explanation: "Đúng. Đây chính là ranh giới giữa specification-level behavior và implementation detail."
+      - id: C
+        answer: "HotSpot là nguồn định nghĩa JVM Specification, còn các JVM khác phải mô phỏng cùng runtime design của HotSpot."
+        explanation: "Sai. HotSpot là một implementation của specification, không phải nguồn định nghĩa specification."
+      - id: D
+        answer: "JVM Specification chỉ định class-file format, còn runtime semantics hoàn toàn do từng implementation quyết định."
+        explanation: "Sai. Specification còn quy định instruction semantics, runtime areas, linking, frames, exceptions và nhiều runtime rules."
+    correctAnswerId: B
+
+  - id: jvm-q02-portability-contract
+    question: "Điều gì tạo ra portability cốt lõi của JVM model?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.JvmPurposeContract/JvmPurposeContract.md"
+      anchor: "jvm-portability-model"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Mọi JVM trên mọi hệ điều hành phải dùng cùng native machine code."
+        explanation: "Sai. Native machine code phụ thuộc platform; JVM implementation ánh xạ class-file contract xuống platform cụ thể."
+      - id: B
+        answer: "Java source được hệ điều hành thực thi trực tiếp nên không phụ thuộc CPU."
+        explanation: "Sai. Java source phải được compile thành representation mà runtime hiểu."
+      - id: C
+        answer: "Class-file representation cung cấp một execution contract chung, còn JVM implementation thực thi contract đó trên từng platform."
+        explanation: "Đúng. Portability nằm ở contract chung giữa artifact và JVM, không phải ở việc mọi máy chạy cùng native code."
+      - id: D
+        answer: "Portability được bảo đảm vì filesystem, charset và scheduling giống nhau trên mọi hệ điều hành."
+        explanation: "Sai. Các đặc điểm môi trường này vẫn có thể khác nhau dù class file portable."
+    correctAnswerId: C
+
+  - id: jvm-q03-preparation-vs-initialization
+    question: "Với field `static int port = 8080;`, trạng thái nào mô tả đúng preparation và initialization?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.ClassFileBytecode/ClassFileBytecode.md"
+      anchor: "verification-preparation-resolution"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Preparation tạo storage và đặt `port` về 0; initialization sau đó thực thi initializer để đặt 8080."
+        explanation: "Đúng. Preparation dùng default JVM value; Java-level initializer thuộc initialization."
+      - id: B
+        answer: "Preparation đặt ngay 8080; initialization chỉ resolve symbolic reference tới field."
+        explanation: "Sai. Resolution là linking concern khác; initializer 8080 không chạy trong preparation."
+      - id: C
+        answer: "Preparation không tạo storage; storage chỉ được tạo khi method đầu tiên đọc `port`."
+        explanation: "Sai. Static field storage được chuẩn bị trước khi initialization hoàn tất."
+      - id: D
+        answer: "Preparation và initialization là hai tên cho cùng một phase nên giá trị không có bước chuyển."
+        explanation: "Sai. Hai phase có trách nhiệm khác nhau và distinction này rất quan trọng với static state."
+    correctAnswerId: A
+
+  - id: jvm-q04-linkage-failure
+    question: "Ứng dụng compile thành công với dependency phiên bản A nhưng runtime lại load phiên bản B thiếu method cần gọi. Điều gì có thể xảy ra?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.ClassFileBytecode/ClassFileBytecode.md"
+      anchor: "pre-execution-failures"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "JVM luôn tự sửa bytecode để gọi method gần giống nhất trong phiên bản B."
+        explanation: "Sai. JVM không tự đổi semantic target để cứu một linkage mismatch."
+      - id: B
+        answer: "Chỉ khi method body bắt đầu chạy mới có thể phát hiện mismatch này."
+        explanation: "Sai. Linkage/resolution có thể fail trước khi target method body được thực thi."
+      - id: C
+        answer: "Nếu compile đã thành công thì runtime không thể fail vì dependency signature."
+        explanation: "Sai. Compile-time classpath và runtime classpath có thể khác nhau."
+      - id: D
+        answer: "Runtime có thể fail trong linkage/resolution trước khi target method body chạy."
+        explanation: "Đúng. Successful compilation không bảo đảm runtime linkage với một dependency khác."
+    correctAnswerId: D
+
+  - id: jvm-q05-frame-and-heap
+    question: "Một local variable trong method giữ reference tới một object. Mô hình nào đúng nhất?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.RuntimeDataAreasFrames/RuntimeDataAreasFrames.md"
+      anchor: "vm-wide-vs-thread-private-areas"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Local variable nằm trong frame của thread; object được reference thường nằm trên shared heap."
+        explanation: "Đúng. Frame/JVM stack là thread-private, còn heap là VM-wide/shared runtime area."
+      - id: B
+        answer: "Cả local variable và object đều luôn nằm trong JVM stack của thread hiện tại."
+        explanation: "Sai. Source-level local reference và referenced object thuộc hai phần khác nhau của runtime model."
+      - id: C
+        answer: "Local variable nằm trên heap, còn object luôn nằm trong method area."
+        explanation: "Sai. Đây là đảo ngược vai trò của frame, heap và method area."
+      - id: D
+        answer: "Vì local variable là thread-private nên object nó trỏ tới cũng không thể được thread khác thấy."
+        explanation: "Sai. Object có thể được publish qua shared references; thread-private local variable không làm object tự động thread-private."
+    correctAnswerId: A
+
+  - id: jvm-q06-frame-abrupt-completion
+    question: "Một method throw exception không được handle trong chính method đó. Điều gì xảy ra với frame của invocation này?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.RuntimeDataAreasFrames/RuntimeDataAreasFrames.md"
+      anchor: "frame-lifecycle-and-completion"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Frame được giữ nguyên vĩnh viễn để debugger có thể đọc lại sau này."
+        explanation: "Sai. Debugger không thay đổi lifecycle contract của invocation frame theo cách này."
+      - id: B
+        answer: "Frame hoàn tất abruptly và có thể bị discard khi exception propagate sang caller."
+        explanation: "Đúng. Abrupt completion là một cách invocation kết thúc; exception tiếp tục tìm handler ở caller frames."
+      - id: C
+        answer: "JVM chuyển toàn bộ frame sang heap rồi mới propagate exception."
+        explanation: "Sai. Không có rule specification nào yêu cầu chuyển frame sang heap."
+      - id: D
+        answer: "Frame chỉ bị hủy nếu exception là checked exception."
+        explanation: "Sai. Checked/unchecked là source-language typing concern, không quyết định frame lifecycle theo cách này."
+    correctAnswerId: B
+
+  - id: jvm-q07-new-vs-init
+    question: "Ở bytecode level, phát biểu nào đúng về `new Order()`?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.ManagedHeapGC/ManagedHeapGC.md"
+      anchor: "object-allocation-model"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Instruction `new` vừa cấp object vừa tự thực thi toàn bộ constructor `<init>` trong cùng một instruction."
+        explanation: "Sai. Allocation và constructor invocation là hai bước bytecode tách biệt."
+      - id: B
+        answer: "`new` chỉ resolve class; storage chỉ được cấp khi constructor return."
+        explanation: "Sai. `new` tạo uninitialized object trước khi constructor được gọi."
+      - id: C
+        answer: "`new` tạo uninitialized object; compiler thường dùng `invokespecial ... <init>` để gọi constructor sau đó."
+        explanation: "Đúng. Đây là distinction quan trọng khi đọc bytecode và verifier rules."
+      - id: D
+        answer: "Constructor chạy trước, sau đó `new` mới tạo reference tới object đã tồn tại."
+        explanation: "Sai. Constructor cần receiver object đã được tạo ở trạng thái uninitialized."
+    correctAnswerId: C
+
+  - id: jvm-q08-reachability-leak
+    question: "Heap usage tăng dần vì một cache giữ strong reference tới object không còn cần về mặt nghiệp vụ. Cách giải thích nào đúng nhất?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.ManagedHeapGC/ManagedHeapGC.md"
+      anchor: "reachability-and-liveness"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Đây có thể là managed-memory leak vì object vẫn reachable nên GC không được phép reclaim chúng."
+        explanation: "Đúng. GC nhìn reachability, không biết business đã không còn cần object."
+      - id: B
+        answer: "GC phải reclaim các object này vì chúng đã tồn tại đủ lâu."
+        explanation: "Sai. Age không thay thế reachability semantics."
+      - id: C
+        answer: "Strong reference chỉ ảnh hưởng performance, không ảnh hưởng object liveness."
+        explanation: "Sai. Strong reference trực tiếp ảnh hưởng reachability/liveness."
+      - id: D
+        answer: "Object chỉ leak nếu JVM không chạy collector nào."
+        explanation: "Sai. Collector hoạt động bình thường vẫn không reclaim object còn strongly reachable."
+    correctAnswerId: A
+
+  - id: jvm-q09-adaptive-jit
+    question: "Vì sao một long-running JVM service thường có warm-up behavior?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.AdaptiveExecutionJIT/AdaptiveExecutionJIT.md"
+      anchor: "tiered-and-adaptive-compilation"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Vì JVM bắt buộc sleep trong vài phút trước khi cho JIT chạy."
+        explanation: "Sai. Không có JVM contract như vậy."
+      - id: B
+        answer: "Vì heap phải đầy ít nhất một lần thì bytecode mới được phép chạy."
+        explanation: "Sai. Method có thể được thực thi trước khi heap trải qua một collection đầy."
+      - id: C
+        answer: "Vì mọi method phải được AOT compile hoàn chỉnh trước request đầu tiên."
+        explanation: "Sai. HotSpot thường bắt đầu bằng interpretation/light compilation rồi tối ưu dần."
+      - id: D
+        answer: "Vì runtime thu thập profile và có thể nâng hot code qua các mức compilation/optimization theo thời gian."
+        explanation: "Đúng. Adaptive/tiered compilation tạo khác biệt giữa cold và steady-state behavior."
+    correctAnswerId: D
+
+  - id: jvm-q10-escape-analysis
+    question: "Phát biểu nào chính xác nhất về escape analysis trong HotSpot?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.AdaptiveExecutionJIT/AdaptiveExecutionJIT.md"
+      anchor: "escape-analysis-and-scalar-replacement"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Mọi object không escape đều bắt buộc được chuyển thành object vật lý trên thread stack."
+        explanation: "Sai. Đây là misconception phổ biến; HotSpot có thể scalar-replace/eliminate allocation thay vì stack-allocate object."
+      - id: B
+        answer: "HotSpot có thể dùng escape analysis để scalar-replace state và loại allocation khỏi generated code khi chứng minh được điều kiện phù hợp."
+        explanation: "Đúng. Source-level `new` không bảo đảm một heap allocation vật lý sống tới GC."
+      - id: C
+        answer: "Escape analysis chỉ dùng để quyết định object có được serialize hay không."
+        explanation: "Sai. Nó là compiler optimization analysis, không phải serialization policy."
+      - id: D
+        answer: "Escape analysis là rule của JVM Specification nên mọi JVM phải tối ưu giống HotSpot."
+        explanation: "Sai. Đây là implementation/compiler optimization behavior."
+    correctAnswerId: B
+
+  - id: jvm-q11-rss-vs-heap
+    question: "Một service có live heap gần như ổn định nhưng RSS của process vẫn tăng. Kết luận nào hợp lý nhất?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.ProcessMemory/ProcessMemory.md"
+      anchor: "process-memory-growth"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Điều này bất khả thi vì Java heap luôn bằng toàn bộ process memory."
+        explanation: "Sai. JVM process còn có stacks, metadata, compiled code, direct/native memory và nhiều resource khác."
+      - id: B
+        answer: "Chắc chắn GC bị tắt vì RSS chỉ tăng khi object không được collect."
+        explanation: "Sai. RSS có thể tăng từ nhiều non-heap category dù GC hoạt động bình thường."
+      - id: C
+        answer: "Cần kiểm tra các category ngoài heap như thread stacks, class metadata, code cache và direct/native memory."
+        explanation: "Đúng. Stable heap không loại trừ whole-process memory growth."
+      - id: D
+        answer: "Chỉ cần giảm `-Xmx` là đủ để kiểm soát mọi nguồn RSS tăng trong JVM process."
+        explanation: "Sai. `-Xmx` giới hạn heap, không kiểm soát mọi native/process resource."
+    correctAnswerId: C
+
+  - id: jvm-q12-direct-buffer
+    question: "Phát biểu nào đúng nhất về `ByteBuffer.allocateDirect`?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.ProcessMemory/ProcessMemory.md"
+      anchor: "direct-and-offheap-memory-awareness"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "API contract định nghĩa direct buffer đơn giản là mọi byte bắt buộc nằm ngoài heap trong mọi JVM."
+        explanation: "Sai. Java API mô tả direct I/O behavior; physical backing là implementation concern."
+      - id: B
+        answer: "Direct buffer luôn nhanh hơn heap buffer cho mọi operation nên nên dùng mặc định."
+        explanation: "Sai. Direct buffers có allocation/deallocation cost và chỉ phù hợp một số workload."
+      - id: C
+        answer: "Direct buffer chỉ là một alias của `byte[]`, nên JVM vẫn luôn phải copy qua heap trước native I/O."
+        explanation: "Sai. Directness tồn tại chính để JVM có thể cố gắng native I/O trực tiếp hơn."
+      - id: D
+        answer: "JVM cố gắng native I/O trực tiếp với direct buffer; HotSpot thường dùng native memory nên heap metrics có thể bỏ sót footprint."
+        explanation: "Đúng. Đây là contract + implementation caveat phù hợp nhất."
+    correctAnswerId: D
+
+  - id: jvm-q13-xmx-process-limit
+    question: "Container limit là 1 GiB và JVM chạy với `-Xmx1g`. Rủi ro chính nào cần nhớ?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.HotSpotErgonomics/HotSpotErgonomics.md"
+      anchor: "heap-sizing-concepts"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Process vẫn cần memory ngoài heap cho stacks, metadata, code cache và native resources nên có thể vượt container limit."
+        explanation: "Đúng. `-Xmx` chỉ giới hạn heap, không phải toàn process footprint."
+      - id: B
+        answer: "`-Xmx1g` tự động reserve thêm 1 GiB riêng cho native memory nên tổng limit phải đúng 2 GiB."
+        explanation: "Sai. Không có fixed rule cộng thêm đúng bằng heap size."
+      - id: C
+        answer: "Container limit không ảnh hưởng JVM nếu heap chưa đầy."
+        explanation: "Sai. Container/OS có thể giới hạn toàn process memory."
+      - id: D
+        answer: "Metadata và thread stacks được tính bên trong `-Xmx`, nên không có memory category nào khác."
+        explanation: "Sai. Đây là chính misconception mà whole-process model sửa."
+    correctAnswerId: A
+
+  - id: jvm-q14-tuning-evidence
+    question: "Một service có latency cao nhưng chưa có evidence về GC hay compiler. Bước nào phù hợp nhất?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.HotSpotErgonomics/HotSpotErgonomics.md"
+      anchor: "configuration-vs-diagnostics"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Thêm nhiều `-XX` flags từ một blog cũ rồi giữ tất cả nếu service vẫn chạy."
+        explanation: "Sai. Đây là cargo-cult tuning, không tạo causal evidence."
+      - id: B
+        answer: "Đo và xác định nguồn latency trước, rồi chỉ thay đổi một cấu hình có hypothesis rõ và đo lại."
+        explanation: "Đúng. Quy trình phù hợp là measure → explain → change → measure again."
+      - id: C
+        answer: "Luôn đổi sang collector có pause thấp nhất được quảng cáo, bất kể workload."
+        explanation: "Sai. Collector selection là trade-off theo workload/SLO."
+      - id: D
+        answer: "Tắt JIT để loại bỏ mọi variability trước khi quan sát."
+        explanation: "Sai. Thay đổi lớn trước khi có evidence có thể làm behavior lệch xa production."
+    correctAnswerId: B
+
+  - id: jvm-q15-end-to-end-flow
+    question: "Flow nào mô tả đúng nhất hành trình từ class file tới method execution?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.EndToEndModel/EndToEndModel.md"
+      anchor: "classfile-to-runtime-state-flow"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Class file → GC → source parsing → method area → native library loading."
+        explanation: "Sai. Flow này trộn các phase không theo lifecycle thực thi."
+      - id: B
+        answer: "Class file → constructor của mọi object → linking → compile source → execute."
+        explanation: "Sai. Constructor object không phải bước bắt buộc để runtime tạo class state."
+      - id: C
+        answer: "Class file → loading → verification/preparation/resolution theo nhu cầu → initialization khi được trigger → frame/execution."
+        explanation: "Đúng. Đây là flow khái niệm từ representation đến runtime state và execution."
+      - id: D
+        answer: "Class file → JIT compile toàn bộ application → loading → initialization → interpreter."
+        explanation: "Sai. JVM không bắt buộc eager JIT toàn application trước loading."
+    correctAnswerId: C
+
+  - id: jvm-q16-module-boundary
+    question: "Bạn cần xác định class cụ thể được load bởi ClassLoader nào và vì sao hai class cùng tên lại không tương thích type identity. Module owner phù hợp nhất là gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.EndToEndModel/EndToEndModel.md"
+      anchor: "jvm-problem-boundary-map"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Managed Heap & GC, vì mọi class cuối cùng đều dùng memory."
+        explanation: "Sai. Memory usage không phải owner của class-loader identity."
+      - id: B
+        answer: "JIT Optimization, vì compiler quyết định type identity."
+        explanation: "Sai. JIT phải tôn trọng runtime type identity, không định nghĩa ClassLoader identity."
+      - id: C
+        answer: "Native Interoperability, vì ClassLoader luôn gọi native code để tạo type."
+        explanation: "Sai. JNI/FFM không phải curriculum owner của class-loader identity."
+      - id: D
+        answer: "Java Core ClassLoader/Class Loading, vì loader identity và delegation là scope chuyên sâu của module đó."
+        explanation: "Đúng. JVM module chỉ đặt lifecycle boundary; ClassLoader module sở hữu identity/delegation mechanics."
+    correctAnswerId: D

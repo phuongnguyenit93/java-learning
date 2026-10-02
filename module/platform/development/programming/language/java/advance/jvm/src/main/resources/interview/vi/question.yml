@@ -1,0 +1,161 @@
+# <interview-schema>
+# Cấu trúc câu hỏi Interview
+# schema-version: 2
+#
+# questions [kiểu: list; bắt buộc; mặc định: []]
+#   Danh sách câu hỏi Interview của module trong language hiện tại.
+#   mỗi phần tử:
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi phỏng vấn hiển thị cho người học.
+#     answer [kiểu: string; bắt buộc; mặc định: ""]
+#       Câu trả lời tham khảo, chỉ hiển thị khi người học chủ động mở.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu nội dung được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu nội dung đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+# </interview-schema>
+
+questions:
+  - question: "JVM Specification và HotSpot khác nhau như thế nào? Vì sao phân biệt này quan trọng khi học JVM internals?"
+    answer: "JVM Specification định nghĩa execution contract: class-file format, instruction semantics, runtime data areas, loading/linking/initialization, frames, exceptions và các rule mà một JVM compliant phải giữ. HotSpot là một implementation cụ thể của contract đó và được quyền chọn object layout, garbage collector, JIT strategy, code-cache organization, heuristics và VM flags riêng. Phân biệt này quan trọng vì nhiều kiến thức production như G1, Metaspace, TLAB hay C1/C2 không phải universal JVM rules. Khi đổi JDK version hoặc vendor, implementation detail có thể thay đổi nhưng specification-level semantics vẫn là nền tảng ổn định hơn."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.JvmPurposeContract/JvmPurposeContract.md"
+      anchor: "jvm-specification-vs-implementation"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Hãy giải thích loading, linking và initialization khác method execution như thế nào. Cho một ví dụ failure xảy ra trước khi target method body chạy."
+    answer: "Loading tạo runtime representation của class/interface từ binary representation. Linking tích hợp representation đó vào JVM state; linking gồm verification, preparation và resolution theo rule của JVM. Initialization thực hiện static initialization semantics, bao gồm việc thiết lập static values và gọi `<clinit>` khi cần. Chỉ sau các lifecycle condition phù hợp, method execution mới chạy bytecode/native compiled form trong frame. Ví dụ, application compile với dependency A nhưng runtime load dependency B thiếu method referenced trong constant pool. Resolution/linkage có thể ném linkage error trước khi target method body chạy. Vì vậy 'compile thành công' không đồng nghĩa 'runtime linkage chắc chắn thành công'."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.ClassFileBytecode/ClassFileBytecode.md"
+      anchor: "pre-execution-failures"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Stack frame chứa gì, lifecycle của frame ra sao, và exception propagation liên quan tới frame như thế nào?"
+    answer: "Một frame là execution context của một method invocation. Theo JVMS model, frame chứa local-variable array, operand stack và reference tới runtime constant pool của current class; nó cũng hỗ trợ dynamic linking, return và exception dispatch. Khi method được invoke, frame mới được tạo trên JVM stack của thread. Normal completion trả control/return value về caller rồi frame bị hủy. Abrupt completion xảy ra khi exception không được handle trong invocation đó; current frame bị bỏ và JVM tiếp tục tìm handler ở caller frames. Điều cần nhớ là frame là logical JVM execution model, không phải cam kết về exact native stack/register layout của HotSpot."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.RuntimeDataAreasFrames/RuntimeDataAreasFrames.md"
+      anchor: "stack-frame-model"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Method area và HotSpot Metaspace có phải cùng một thứ không? Hãy giải thích cách nói chính xác hơn."
+    answer: "Không nên đồng nhất tuyệt đối. Method area là abstraction ở mức JVM Specification cho runtime state liên quan class/interface, bao gồm runtime constant pools và method/field-related structures. Metaspace là một phần implementation strategy của HotSpot hiện đại để lưu phần lớn class metadata bằng native memory. Vì specification không yêu cầu một physical region tên 'method area', implementation khác hoặc version khác có thể tổ chức memory khác. Cách nói chính xác là Metaspace hiện thực một phần trách nhiệm metadata liên quan method-area-level state trong HotSpot, chứ 'method area = Metaspace' không phải JVM-wide identity."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.RuntimeDataAreasFrames/RuntimeDataAreasFrames.md"
+      anchor: "method-area"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Tại sao Java vẫn có memory leak dù có garbage collector? Reachability đóng vai trò gì?"
+    answer: "GC chỉ có thể reclaim object khi object không còn live theo reachability model của collector. Nó không biết business logic đã 'không cần' object nữa. Nếu cache, static collection, listener registry hoặc ClassLoader vô tình giữ strong reference, object vẫn reachable từ GC roots và collector phải giữ nó. Đây là managed-memory leak: storage management hoạt động đúng nhưng application reference graph giữ dữ liệu quá lâu. Vì vậy root cause thường là ownership/lifecycle của reference chứ không phải 'GC quên free'. Heap dump và dominator/reference-path analysis là bước diagnostics để tìm ai đang giữ object."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.ManagedHeapGC/ManagedHeapGC.md"
+      anchor: "reachability-and-liveness"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Khi chọn garbage collector, vì sao không có câu trả lời đơn giản 'collector nào tốt nhất'? Hãy nói về throughput, latency và footprint."
+    answer: "Collector design tối ưu các mục tiêu xung đột. Throughput ưu tiên nhiều CPU time cho application; latency ưu tiên pause ngắn; footprint ưu tiên dùng ít memory/headroom. Concurrent collector có thể giảm pause nhưng dùng thêm CPU/resources. Heap lớn có thể giảm collection frequency nhưng tăng footprint và có thể thay đổi pause characteristics. Một workload batch có thể ưu tiên throughput trong khi service interactive ưu tiên tail latency. Vì vậy chọn collector phải bắt đầu từ SLO, live-set/heap size, CPU budget và memory constraint, sau đó đo behavior thực tế. Không nên chọn chỉ vì tên collector 'mới hơn' hoặc một benchmark của workload khác."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.ManagedHeapGC/ManagedHeapGC.md"
+      anchor: "gc-goals-and-tradeoffs"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Giải thích vì sao JVM service có warm-up. Profiling, JIT compilation, speculation và deoptimization liên hệ với nhau như thế nào?"
+    answer: "HotSpot có thể bắt đầu code bằng interpreter hoặc compilation level nhẹ để startup nhanh và đồng thời thu thập profile. Khi method/call site đủ hot, runtime dành compiler effort để tạo optimized native code. Optimizer có thể dùng observed receiver types hoặc branch behavior để speculate và inline/specialize mạnh hơn. Nếu workload sau đó phá assumption, runtime deoptimize về state an toàn hơn và có thể recompile với profile mới. Vì vậy performance là dynamic lifecycle: cold-path behavior khác steady state, và một method không nhất thiết có một compiled version cố định suốt process lifetime. Đây cũng là lý do benchmark JVM cần warm-up và measurement discipline."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.AdaptiveExecutionJIT/AdaptiveExecutionJIT.md"
+      anchor: "speculation-and-deoptimization"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Escape analysis có đồng nghĩa 'object không escape thì được đặt lên stack' không? HotSpot thực sự có thể tối ưu gì?"
+    answer: "Không nên dùng câu đó như một rule. Escape analysis cung cấp information cho optimizer về phạm vi object có thể được quan sát. Trong HotSpot server compiler, một optimization quan trọng là scalar replacement/allocation elimination: nếu object có thể được phân rã thành scalar state và allocation không cần observable, generated code có thể không tạo heap allocation đó. Java 21 HotSpot documentation còn nói rõ server compiler không đơn giản thay non-global-escaping heap allocation bằng stack allocation. Vì vậy source-level `new` không chứng minh có một physical heap object sống tới GC, nhưng cũng không nên suy diễn thành 'mọi non-escaping object nằm trên stack'."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.AdaptiveExecutionJIT/AdaptiveExecutionJIT.md"
+      anchor: "escape-analysis-and-scalar-replacement"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Heap usage ổn định nhưng RSS của JVM process tăng. Bạn sẽ reasoning những memory category nào trước khi kết luận heap leak?"
+    answer: "Java heap chỉ là một phần process footprint. Tôi sẽ nghĩ tới platform-thread/native stacks, class metadata/Metaspace, JIT compiled code/code cache, direct buffers, JNI/native libraries, runtime internal structures, allocator fragmentation và committed-but-not-currently-used memory. Nếu số thread hoặc loaded classes tăng, RSS có thể tăng dù live heap ổn định. Vì vậy bước đúng là chuyển từ câu hỏi 'heap leak không?' sang 'category nào tăng?'. Sau đó dùng evidence phù hợp như Native Memory Tracking, jcmd, JFR và OS/container metrics. `-Xmx` không phải total process-memory limit."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.ProcessMemory/ProcessMemory.md"
+      anchor: "process-memory-growth"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Bạn có container memory limit 1 GiB. Vì sao đặt `-Xmx1g` thường là rủi ro? `-Xms` và `-Xmx` thực sự điều khiển gì?"
+    answer: "Trong Java 21 launcher, `-Xms` đặt minimum và initial heap size, còn `-Xmx` đặt maximum heap size. Chúng điều khiển managed heap, không phải toàn JVM process. Process còn cần thread stacks, class metadata, code cache, direct/native memory, native libraries và VM overhead. Nếu `-Xmx` chiếm gần toàn bộ container limit, các category còn lại không có headroom và process có thể chạm cgroup/OS limit dù heap chưa gặp Java heap OOM. Heap sizing phải nằm trong whole-process budget và nên dựa trên workload/evidence, không chỉ bằng cách đặt Xmx bằng memory limit."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.HotSpotErgonomics/HotSpotErgonomics.md"
+      anchor: "heap-sizing-concepts"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Một team thấy latency tăng và muốn thêm hàng loạt `-XX` flags. Bạn sẽ phản biện thế nào?"
+    answer: "Tôi sẽ yêu cầu hypothesis và evidence trước. Latency có thể do GC, lock contention, I/O, CPU saturation, allocation pressure, safepoint, JIT/deoptimization hoặc dependency bên ngoài. Đổi nhiều flags cùng lúc phá khả năng xác định nguyên nhân và có thể làm behavior lệch xa production baseline. Quy trình tốt là measure → explain → change → measure again: lấy JFR/GC logs/thread evidence/metrics để xác định subsystem, chỉ thay một configuration có reason rõ, rồi so sánh lại. HotSpot ergonomics đã cung cấp default hợp lý cho nhiều workload; non-default flags cần được versioned, documented và đánh giá lại khi nâng JDK."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.HotSpotErgonomics/HotSpotErgonomics.md"
+      anchor: "configuration-vs-diagnostics"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Nếu được yêu cầu mô tả end-to-end một Java program từ class file đến optimized execution và memory reclamation, bạn sẽ trình bày flow nào?"
+    answer: "Tôi sẽ bắt đầu từ class file chứa constant pool, fields, methods, attributes và bytecode. Khi runtime cần class, nó load representation, link bằng verification/preparation/resolution theo nhu cầu và initialize static state khi trigger. Method invocation tạo frame với locals, operand stack và runtime-constant-pool reference. Execution có thể bắt đầu interpreted, được profiling, rồi hot code được JIT compile/optimize; assumption có thể dẫn tới deoptimization/recompile. `new` tạo uninitialized object, `<init>` hoàn tất constructor initialization, references làm object reachable; khi reference graph không còn giữ object live, GC có thể reclaim storage. Song song, whole process còn dùng stacks, metadata, code cache và native resources ngoài heap."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.EndToEndModel/EndToEndModel.md"
+      anchor: "jvm-mental-model-checkpoint"
+    apiRelated:
+      controller: ""
+      methodSignature: ""

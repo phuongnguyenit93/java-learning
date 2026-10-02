@@ -41,4 +41,119 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: jvm-purpose-and-contract
+    title: JVM Purpose and Execution Contract
+    purpose: Understand the JVM as an abstract machine that executes code through the class-file contract, why this intermediate execution layer is useful, and how the JVM specification differs from a concrete implementation such as HotSpot.
+    objectives:
+      - Explain the JVM as an execution contract for class-file code rather than a runtime tied exclusively to Java source code.
+      - Distinguish the Java language, the JVM specification, and a JVM implementation.
+      - Recognize which runtime behaviors are standardized contracts and which are implementation details.
+    relatedKnowledge:
+      - JvmPurposeContract
+
+  - id: classfile-bytecode-execution
+    title: Class Files, Bytecode, and the Pre-Execution Boundary
+    purpose: Build a model of the program representation the JVM consumes, how symbolic runtime state is formed, and which runtime gates must be crossed before method bytecode can execute.
+    objectives:
+      - Understand the class file as the JVM's hardware- and operating-system-independent binary contract.
+      - Understand bytecode instructions and the runtime constant pool at the level needed to follow symbolic references and execution.
+      - Recognize loading, linking/verification, and initialization as runtime gates before execution without turning this milestone into a ClassLoader API/lifecycle course.
+      - Understand that pre-execution stages can fail before a method body runs and distinguish linkage/initialization failure from execution-engine behavior.
+    relatedKnowledge:
+      - ClassFileBytecode
+    relatedModules:
+      - routeId: JAVA_CLASSLOADER
+        label: Class Loading
+        note: ClassLoader mechanics and the class-loading lifecycle are owned by the Java Core ClassLoader module.
+
+  - id: runtime-data-and-frames
+    title: Runtime Data Areas and Stack Frames
+    purpose: Understand where JVM execution state lives and which runtime data is VM-wide versus associated with an individual thread.
+    objectives:
+      - Distinguish the heap, method area, runtime constant pools, JVM stacks, pc registers, and native method stacks in the JVM model.
+      - Understand how frames, local variables, operand stacks, and runtime-constant-pool references cooperate during method execution.
+      - Distinguish specification-level runtime areas from the way HotSpot may implement them.
+      - Recognize StackOverflowError and OutOfMemoryError as failure boundaries that may appear when runtime areas or resources cannot satisfy execution needs.
+    relatedKnowledge:
+      - RuntimeDataAreasFrames
+    relatedModules:
+      - routeId: JAVA_CONCURRENCY_FUNDAMENTALS
+        label: Concurrency Fundamentals
+        note: Thread safety, happens-before, and the Java Memory Model are owned by Concurrency Fundamentals.
+
+  - id: allocation-and-garbage-collection
+    title: Managed Heap, Object Allocation, and Garbage Collection
+    purpose: Understand the heap as managed storage for objects and arrays, why lifetime is managed automatically, and why garbage-collection strategy is an implementation choice rather than a fixed layout or algorithm in the JVM specification.
+    objectives:
+      - Explain the relationship between heap allocation, object reachability/live data, and automatic memory reclamation.
+      - Understand that collectors may use different strategies such as generational or non-generational organization, regions, parallel work, or concurrent work without treating one strategy as the universal JVM contract.
+      - Compare major GC goals such as throughput, pause time, and memory footprint.
+      - Separate garbage-collection mechanics from the operational workflow used to diagnose GC problems.
+    relatedKnowledge:
+      - ManagedHeapGC
+    relatedModules:
+      - routeId: JAVA_RUNTIME_DIAGNOSTICS
+        label: Runtime Diagnostics
+        note: GC logs, heap evidence, and troubleshooting workflows are owned by Runtime Diagnostics.
+
+  - id: adaptive-execution-and-jit
+    title: Interpreter, JIT, and Adaptive Optimization
+    purpose: Understand how a JVM balances startup and peak performance through interpretation, profiling, and dynamic compilation rather than assuming bytecode is always executed in one fixed way.
+    objectives:
+      - Explain the different roles of the interpreter and JIT compiler.
+      - Understand profiling, hot code, and tiered/adaptive compilation at a mental-model level, treating the code cache as a HotSpot implementation example.
+      - Understand how optimizations such as inlining or escape analysis may change execution without changing Java semantics.
+      - Recognize JIT strategy, optimization/deoptimization, and native-code generation as implementation behavior rather than Java language contracts.
+    relatedKnowledge:
+      - AdaptiveExecutionJIT
+
+  - id: native-memory-and-vm-resources
+    title: JVM Process Memory Beyond the Managed Heap
+    purpose: Extend the memory model beyond the Java heap so the learner understands that a JVM process also needs memory and resources for thread stacks, class metadata, compiled code, and other implementation-specific runtime subsystems.
+    objectives:
+      - Distinguish specification-level runtime data areas from process-level native memory and resources used by a JVM implementation.
+      - Recognize thread/native stacks, class-metadata storage, and JIT compiled-code storage as sources of memory consumption outside the managed Java heap.
+      - Explain why process memory can grow even when the Java heap is not full.
+      - Understand that memory or resource exhaustion outside the Java heap can still cause runtime failure without turning this milestone into a troubleshooting workflow.
+      - Separate JVM native-memory awareness from Java-to-native API programming.
+    relatedKnowledge:
+      - ProcessMemory
+    relatedModules:
+      - routeId: JAVA_NATIVE_INTEROPERABILITY
+        label: Native Interoperability
+        note: JNI, the Foreign Function & Memory API, and native-call boundaries are owned by Native Interoperability.
+      - routeId: JAVA_RUNTIME_DIAGNOSTICS
+        label: Runtime Diagnostics
+        note: Native Memory Tracking and runtime evidence are owned by Runtime Diagnostics.
+
+  - id: vm-ergonomics-and-controls
+    title: HotSpot Ergonomics and JVM Configuration Boundaries
+    purpose: Understand how a JVM implementation such as HotSpot can choose defaults for heap sizing, garbage collection, and runtime compilation, and how to reason about VM options without confusing implementation controls with the JVM specification.
+    objectives:
+      - Understand HotSpot ergonomics and why defaults can depend on the platform, available resources, runtime implementation, and version.
+      - Relate heap sizing, collector goals, and compilation policy to workload characteristics.
+      - Distinguish portable JVM behavior from implementation-specific VM controls rather than treating a JVM flag as a general Java/JVM contract.
+      - Know when runtime questions require diagnostic evidence instead of further configuration guessing.
+    relatedKnowledge:
+      - HotSpotErgonomics
+
+  - id: jvm-end-to-end-model
+    title: End-to-End JVM Mental Model
+    purpose: Connect class files, execution state, allocation, garbage collection, JIT compilation, and native resources into one model that can explain runtime behavior before moving into other Java Advanced modules.
+    objectives:
+      - Trace a Java program conceptually from class-file input through method execution and object lifetime.
+      - Explain the interaction between the execution engine, managed memory, and native VM resources.
+      - Identify when a practical problem belongs to Class Loading, Dynamic Runtime, Instrumentation, Native Interoperability, or Runtime Diagnostics.
+    relatedKnowledge:
+      - EndToEndModel
+    relatedModules:
+      - routeId: JAVA_DYNAMIC_RUNTIME
+        label: Dynamic Runtime
+        note: Continue into low-level invocation and runtime linkage after establishing the JVM execution model.
+      - routeId: JAVA_INSTRUMENTATION
+        label: Instrumentation
+        note: Continue into runtime modification with Java agents and class transformation.
+      - routeId: JAVA_RUNTIME_DIAGNOSTICS
+        label: Runtime Diagnostics
+        note: Continue into evidence collection and JVM troubleshooting.

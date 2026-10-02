@@ -1,1 +1,0 @@
-# Các vùng dữ liệu runtime

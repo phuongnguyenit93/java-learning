@@ -1,3 +1,22 @@
+# 📂 README MODULE STRUCTURE (VI)
+
+* **1.JvmPurposeContract**
+    * [JvmPurposeContract](readme/vi/menu/1.JvmPurposeContract/JvmPurposeContract.md)
+* **2.ClassFileBytecode**
+    * [ClassFileBytecode](readme/vi/menu/2.ClassFileBytecode/ClassFileBytecode.md)
+* **3.RuntimeDataAreasFrames**
+    * [RuntimeDataAreasFrames](readme/vi/menu/3.RuntimeDataAreasFrames/RuntimeDataAreasFrames.md)
+* **4.ManagedHeapGC**
+    * [ManagedHeapGC](readme/vi/menu/4.ManagedHeapGC/ManagedHeapGC.md)
+* **5.AdaptiveExecutionJIT**
+    * [AdaptiveExecutionJIT](readme/vi/menu/5.AdaptiveExecutionJIT/AdaptiveExecutionJIT.md)
+* **6.ProcessMemory**
+    * [ProcessMemory](readme/vi/menu/6.ProcessMemory/ProcessMemory.md)
+* **7.HotSpotErgonomics**
+    * [HotSpotErgonomics](readme/vi/menu/7.HotSpotErgonomics/HotSpotErgonomics.md)
+* **8.EndToEndModel**
+    * [EndToEndModel](readme/vi/menu/8.EndToEndModel/EndToEndModel.md)
+
 # Java Virtual Machine (JVM)
 
 Module JVM xây dựng mental model nền tảng cho Java Advanced: JVM nhận chương trình ở dạng class file như thế nào, tạo trạng thái runtime ra sao, thực thi method bằng frame/operand stack thế nào, quản lý heap và garbage collection ra sao, tối ưu hot code bằng interpreter/JIT như thế nào, và vì sao memory của cả JVM process lớn hơn Java heap.

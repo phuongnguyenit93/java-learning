@@ -1,0 +1,283 @@
+<a id="back-to-top"></a>
+
+# Interpreter, JIT, and Adaptive Optimization
+
+## Menu
+- [The Execution-Engine Model](#execution-engine-model)
+- [The Role of the Interpreter](#interpreter-role)
+- [Profiling and Hot Code](#profiling-and-hot-code)
+- [The JIT Compilation Model](#jit-compilation-model)
+- [Tiered and Adaptive Compilation](#tiered-and-adaptive-compilation)
+- [Compiled Code and the Code Cache](#compiled-code-and-code-cache)
+- [Inlining and Runtime Optimization](#inlining-and-runtime-optimization)
+- [Escape Analysis and Scalar Replacement](#escape-analysis-and-scalar-replacement)
+- [Speculation and Deoptimization](#speculation-and-deoptimization)
+- [The Boundary Between Optimization and Java Semantics](#optimization-semantics-boundary)
+
+## <a id="execution-engine-model">The Execution-Engine Model</a>
+
+<details>
+<summary>Click for details</summary>
+
+The JVM specification does not require bytecode to be executed by one fixed technique. A compliant implementation may interpret, compile, or combine several execution modes as long as Java-level semantics are preserved.
+
+HotSpot commonly uses an **adaptive execution** model:
+
+```text
+bytecode
+   ↓
+interpreter starts execution
+   ↓
+runtime profiling observes behavior
+   ↓
+hot code is compiled
+   ↓
+optimized native code
+```
+
+This avoids compiling every path eagerly while still allowing the runtime to spend optimization effort on code that actually matters to the workload.
+
+Think of the execution engine as the subsystem that turns JVM instruction semantics into machine execution, not as an application-facing API.
+
+</details>
+
+- [Quay lại đầu trang](#back-to-top)
+
+---
+
+## <a id="interpreter-role">The Role of the Interpreter</a>
+
+<details>
+<summary>Click for details</summary>
+
+An interpreter can begin executing bytecode immediately without first compiling every method to native machine code. That improves startup behavior and avoids expensive compiler work for methods that execute only a few times.
+
+The trade-off is straightforward:
+
+```text
+interpreter
+→ low startup cost
+→ early runtime profiling
+→ usually lower peak speed than optimized native code
+```
+
+HotSpot uses interpretation as part of a larger adaptive strategy; Java is not simply “an interpreted language.”
+
+In a long-running service, hot paths may spend most of their time in compiled code while cold paths remain interpreted or lightly optimized.
+
+</details>
+
+- [Quay lại đầu trang](#back-to-top)
+
+---
+
+## <a id="profiling-and-hot-code">Profiling and Hot Code</a>
+
+<details>
+<summary>Click for details</summary>
+
+Runtime profiling gathers evidence about code that actually executes: frequently invoked methods, common branches, receiver types at call sites, and other signals chosen by the implementation.
+
+The runtime uses that evidence to identify **hot code** worth optimizing.
+
+This is powerful because:
+
+```text
+what source code permits
+≠ what the workload actually does
+```
+
+Runtime information can support optimizations that would be unsafe or unprofitable without observed behavior.
+
+Profiles can also change. Optimized code based on a runtime assumption therefore needs a safe path back when that assumption stops being true.
+
+</details>
+
+- [Quay lại đầu trang](#back-to-top)
+
+---
+
+## <a id="jit-compilation-model">The JIT Compilation Model</a>
+
+<details>
+<summary>Click for details</summary>
+
+JIT (Just-In-Time) compilation converts sufficiently important bytecode into native machine code while the application is running.
+
+Conceptually:
+
+```text
+method bytecode
+→ collect profile
+→ compilation request
+→ optimization
+→ machine code
+→ later calls may execute the compiled version
+```
+
+JIT compilation can use runtime information for optimizations such as aggressive inlining based on observed receiver types.
+
+Compilation itself consumes CPU and memory, so a runtime must decide **which code**, **when**, and **at what optimization level** should be compiled.
+
+</details>
+
+- [Quay lại đầu trang](#back-to-top)
+
+---
+
+## <a id="tiered-and-adaptive-compilation">Tiered and Adaptive Compilation</a>
+
+<details>
+<summary>Click for details</summary>
+
+Tiered compilation lets HotSpot balance startup, profiling quality, and peak optimization instead of forcing each method to jump directly from interpreted execution to maximum optimization.
+
+```text
+interpreter
+→ fast/light compilation
+→ richer profiling
+→ highly optimized compilation
+```
+
+Exact levels and thresholds are implementation/version details. The durable mental model is:
+
+- cold code deserves little compiler effort;
+- warm/hot code may be promoted;
+- profiling feedback influences decisions;
+- code can be recompiled or deoptimized.
+
+This is why JVM applications often have a **warm-up phase** before reaching steady-state performance.
+
+</details>
+
+- [Quay lại đầu trang](#back-to-top)
+
+---
+
+## <a id="compiled-code-and-code-cache">Compiled Code and the Code Cache</a>
+
+<details>
+<summary>Click for details</summary>
+
+Native machine code generated by the JIT compiler must live in executable process memory. In HotSpot this is commonly discussed as the **code cache**.
+
+The code cache is an implementation-level resource, not a logical runtime data area defined by the JVMS in the same way as the heap or JVM stacks.
+
+```text
+Java heap
+→ Java objects
+
+code-cache / compiled-code memory
+→ native machine code generated by the runtime
+```
+
+That means process memory can grow as compilation progresses even when live heap usage remains stable.
+
+Observing compiler/code-cache events belongs to diagnostics; this lesson only places compiled-code memory in the correct runtime model.
+
+</details>
+
+- [Quay lại đầu trang](#back-to-top)
+
+---
+
+## <a id="inlining-and-runtime-optimization">Inlining and Runtime Optimization</a>
+
+<details>
+<summary>Click for details</summary>
+
+Inlining replaces a call boundary with the callee's body in the compiled representation when the optimizer decides it is profitable and safe.
+
+```text
+before
+caller → call smallMethod()
+
+after conceptual inlining
+caller → [body of smallMethod]
+```
+
+The benefit is larger than call-overhead removal. Inlining exposes more code to constant propagation, dead-code elimination, escape analysis, and other cross-boundary optimizations.
+
+Inlining is not part of Java source semantics. The runtime may inline or decline to inline based on profile, size, policy, and current compilation state.
+
+Treat claims such as “this method will definitely inline” as implementation hypotheses unless measurement confirms them.
+
+</details>
+
+- [Quay lại đầu trang](#back-to-top)
+
+---
+
+## <a id="escape-analysis-and-scalar-replacement">Escape Analysis and Scalar Replacement</a>
+
+<details>
+<summary>Click for details</summary>
+
+Escape analysis tries to determine whether an allocation escapes beyond a scope the compiler can reason about.
+
+If the HotSpot server compiler proves an object is scalar-replaceable, it can eliminate the allocation from generated code and represent the object's state as separate scalar values.
+
+```java
+Point p = new Point(x, y);
+return p.x() + p.y();
+```
+
+The source-level `new` therefore does not guarantee that a physical heap allocation survives until garbage collection. The runtime can transform implementation details as long as program semantics stay the same.
+
+A common misconception is that escape analysis simply “moves the object to the stack.” The Java 21 HotSpot documentation describes scalar replacement/allocation elimination and explicitly notes that the server compiler does not replace a heap allocation with a stack allocation merely because an object does not globally escape.
+
+Counting `new` keywords is not a reliable way to infer real allocation cost.
+
+</details>
+
+- [Quay lại đầu trang](#back-to-top)
+
+---
+
+## <a id="speculation-and-deoptimization">Speculation and Deoptimization</a>
+
+<details>
+<summary>Click for details</summary>
+
+Runtime optimizers can specialize code using assumptions derived from profiling. For example, a call site may observe only one receiver type for a long period.
+
+If that assumption enables a profitable optimization, HotSpot can compile specialized code. If later execution invalidates the assumption, the JVM must return to a safe execution state through **deoptimization**.
+
+```text
+profile assumption
+→ optimized compiled code
+→ new runtime behavior invalidates assumption
+→ deopt
+→ interpreter / less-optimized state
+→ possible recompilation
+```
+
+Speculation enables stronger optimization while also explaining why latency or throughput can shift across different application phases.
+
+</details>
+
+- [Quay lại đầu trang](#back-to-top)
+
+---
+
+## <a id="optimization-semantics-boundary">The Boundary Between Optimization and Java Semantics</a>
+
+<details>
+<summary>Click for details</summary>
+
+An optimizer may change **how** a program executes but not the observable behavior required by Java/JVM contracts.
+
+Therefore:
+
+- a source-level object may not exist physically as expected;
+- a method may be inlined;
+- machine-level instruction order can differ from the naive source mental model within semantic constraints;
+- compiled code may be discarded and rebuilt.
+
+Application correctness must not depend on implementation accidents such as “this method is always inlined” or “this object is definitely stack allocated.”
+
+Write code according to language/JMM semantics and use profiling or benchmarking when you need evidence about actual runtime optimization.
+
+</details>
+
+- [Quay lại đầu trang](#back-to-top)

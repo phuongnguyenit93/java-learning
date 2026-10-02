@@ -1,1 +1,292 @@
-{}
+1.JvmPurposeContract/JvmPurposeContract.md:
+  jvm-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  classfile-execution-contract:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  jvm-language-independence:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  jvm-portability-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  jvm-specification-vs-implementation:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jvm-runtime-boundary:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+2.ClassFileBytecode/ClassFileBytecode.md:
+  classfile-format-overview:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  classfile-structure:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  bytecode-instruction-model:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  constant-pool-symbolic-references:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  runtime-constant-pool:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  loading-linking-initialization-overview:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  verification-preparation-resolution:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  pre-execution-failures:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+3.RuntimeDataAreasFrames/RuntimeDataAreasFrames.md:
+  runtime-data-areas-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  vm-wide-vs-thread-private-areas:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  pc-register:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  jvm-stacks:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  heap:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  method-area:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  runtime-constant-pool-area:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  native-method-stacks:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  stack-frame-model:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  local-variables-and-operand-stack:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  frame-lifecycle-and-completion:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  runtime-area-failure-boundaries:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+4.ManagedHeapGC/ManagedHeapGC.md:
+  managed-heap-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  object-allocation-model:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  object-layout-boundary:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  reachability-and-liveness:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  automatic-memory-reclamation:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  garbage-collection-model:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  collector-strategies:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  gc-goals-and-tradeoffs:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  reference-strengths:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  gc-mechanism-vs-diagnostics:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+5.AdaptiveExecutionJIT/AdaptiveExecutionJIT.md:
+  execution-engine-model:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  interpreter-role:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  profiling-and-hot-code:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jit-compilation-model:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  tiered-and-adaptive-compilation:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  compiled-code-and-code-cache:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  inlining-and-runtime-optimization:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  escape-analysis-and-scalar-replacement:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  speculation-and-deoptimization:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  optimization-semantics-boundary:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+6.ProcessMemory/ProcessMemory.md:
+  process-memory-purpose:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  runtime-areas-vs-process-memory:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  thread-and-native-stack-memory:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  class-metadata-memory:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  compiled-code-memory:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  direct-and-offheap-memory-awareness:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  process-memory-growth:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  nonheap-resource-exhaustion:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  native-memory-vs-native-interoperability:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+7.HotSpotErgonomics/HotSpotErgonomics.md:
+  ergonomics-purpose:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  hotspot-default-selection:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  heap-sizing-concepts:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  collector-selection-and-goals:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  runtime-compiler-policy:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  vm-options-model:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  portable-vs-implementation-specific-controls:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  configuration-vs-diagnostics:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+8.EndToEndModel/EndToEndModel.md:
+  startup-to-execution-flow:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  classfile-to-runtime-state-flow:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  method-execution-flow:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  allocation-to-reclamation-flow:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  interpreted-to-optimized-flow:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  whole-process-memory-view:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  jvm-problem-boundary-map:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  jvm-mental-model-checkpoint:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false

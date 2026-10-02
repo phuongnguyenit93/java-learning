@@ -28,6 +28,12 @@ class PortalKnowledgeProjectionService {
             )
 
 
+    private static final Pattern CATEGORY_TITLE_PATTERN =
+            Pattern.compile(
+                    '(?m)^#\\s+(.+?)\\s*$'
+            )
+
+
     private static final Pattern GENERATED_MENU_PATTERN =
             Pattern.compile(
                     '(?ms)' +
@@ -489,6 +495,13 @@ Category ids are derived from Markdown filenames and must be unique within one m
                 )
 
 
+        String categoryTitle =
+                resolveCategoryTitle(
+                        content,
+                        categoryId
+                )
+
+
         List<ReadmeKnowledgeParser.SectionCandidate> candidates =
                 knowledgeParser.parse(
                         markdownFile,
@@ -701,7 +714,7 @@ Section ids must be unique within one module/language.
                 [
                         kind      : 'CATEGORY',
                         id        : categoryId,
-                        title     : categoryId,
+                        title     : categoryTitle,
                         sourcePath: sourcePath,
                         sections  : sections
                 ]
@@ -713,6 +726,34 @@ Section ids must be unique within one module/language.
 
 
         return category
+    }
+
+
+    private static String resolveCategoryTitle(
+            String content,
+            String fallbackTitle
+    ) {
+
+        Matcher matcher =
+                CATEGORY_TITLE_PATTERN.matcher(
+                        content
+                )
+
+
+        if (!matcher.find()) {
+            return fallbackTitle
+        }
+
+
+        String title =
+                matcher
+                        .group(1)
+                        ?.trim()
+
+
+        return title == null || title.isBlank()
+                ? fallbackTitle
+                : title
     }
 
 

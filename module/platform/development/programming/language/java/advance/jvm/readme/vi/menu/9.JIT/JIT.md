@@ -1,1 +1,0 @@
-# JIT Compilation và tối ưu hóa

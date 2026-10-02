@@ -41,4 +41,119 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: jvm-purpose-and-contract
+    title: JVM - mục đích và hợp đồng thực thi
+    purpose: Hiểu JVM là một máy trừu tượng thực thi mã theo hợp đồng class file, vì sao lớp thực thi trung gian này cần thiết và cách phân biệt đặc tả JVM với một hiện thực cụ thể như HotSpot.
+    objectives:
+      - Giải thích JVM là môi trường thực thi cho mã ở định dạng class file và không bị ràng buộc riêng với mã nguồn Java.
+      - Phân biệt ngôn ngữ Java, đặc tả JVM và một hiện thực JVM.
+      - Nhận diện hành vi nào thuộc hợp đồng chuẩn và hành vi nào chỉ là chi tiết hiện thực.
+    relatedKnowledge:
+      - JvmPurposeContract
+
+  - id: classfile-bytecode-execution
+    title: Class file, bytecode và ranh giới trước thực thi
+    purpose: Xây mô hình về dạng chương trình JVM nhận, cách tham chiếu tượng trưng trở thành trạng thái khi chạy và các giai đoạn bắt buộc trước khi bytecode của method có thể được thực thi.
+    objectives:
+      - Hiểu class file là hợp đồng nhị phân độc lập với phần cứng và hệ điều hành.
+      - Hiểu bytecode instruction và runtime constant pool ở mức cần thiết để theo dõi tham chiếu tượng trưng và quá trình thực thi.
+      - Nhận diện loading, linking/verification và initialization là các giai đoạn trước thực thi mà không đi sâu vào API và lifecycle của ClassLoader.
+      - Hiểu các giai đoạn trước thực thi có thể thất bại trước khi method body chạy và phân biệt đây là runtime linkage/initialization failure, không phải lỗi của execution engine.
+    relatedKnowledge:
+      - ClassFileBytecode
+    relatedModules:
+      - routeId: JAVA_CLASSLOADER
+        label: Class Loading
+        note: Cơ chế ClassLoader và lifecycle nạp lớp được học đầy đủ ở module Java Core ClassLoader.
+
+  - id: runtime-data-and-frames
+    title: Runtime data areas và stack frame
+    purpose: Hiểu trạng thái khi chạy của JVM được tổ chức ở đâu và vùng dữ liệu nào dùng chung cho toàn JVM hay gắn với từng thread.
+    objectives:
+      - Phân biệt heap, method area, runtime constant pool, JVM stack, pc register và native method stack theo JVM model.
+      - Hiểu frame, local variables, operand stack và tham chiếu tới runtime constant pool phối hợp khi một method được thực thi.
+      - Phân biệt runtime data area được đặc tả với cách HotSpot có thể hiện thực các vùng đó.
+      - Nhận diện StackOverflowError và OutOfMemoryError như các điểm lỗi có thể xuất hiện khi vùng dữ liệu hoặc tài nguyên runtime không đáp ứng được nhu cầu thực thi.
+    relatedKnowledge:
+      - RuntimeDataAreasFrames
+    relatedModules:
+      - routeId: JAVA_CONCURRENCY_FUNDAMENTALS
+        label: Concurrency Fundamentals
+        note: Thread-safety, happens-before và Java Memory Model thuộc module Concurrency Fundamentals.
+
+  - id: allocation-and-garbage-collection
+    title: Heap được quản lý, cấp phát object và garbage collection
+    purpose: Hiểu heap là vùng lưu trữ object/array do JVM quản lý, vì sao vòng đời bộ nhớ được quản lý tự động và vì sao chiến lược garbage collection là lựa chọn của từng hiện thực JVM chứ không phải một layout hay algorithm cố định trong đặc tả.
+    objectives:
+      - Giải thích quan hệ giữa cấp phát trên heap, object còn reachable/live và việc tự động thu hồi bộ nhớ.
+      - Hiểu collector có thể dùng các chiến lược khác nhau như generational hoặc non-generational, region-based, parallel hay concurrent mà không coi một chiến lược là hợp đồng chung của JVM.
+      - So sánh các mục tiêu chính của GC như throughput, pause time và memory footprint.
+      - Phân biệt cơ chế GC với quy trình chẩn đoán sự cố GC.
+    relatedKnowledge:
+      - ManagedHeapGC
+    relatedModules:
+      - routeId: JAVA_RUNTIME_DIAGNOSTICS
+        label: Runtime Diagnostics
+        note: GC logs, heap evidence và troubleshooting workflow thuộc module Runtime Diagnostics.
+
+  - id: adaptive-execution-and-jit
+    title: Interpreter, JIT và adaptive optimization
+    purpose: Hiểu cách JVM cân bằng thời gian khởi động và hiệu năng tối đa bằng interpretation, profiling và biên dịch/tối ưu động thay vì coi bytecode là thứ luôn được chạy theo một cách cố định.
+    objectives:
+      - Giải thích vai trò khác nhau của interpreter và JIT compiler.
+      - Hiểu profiling, hot code và tiered/adaptive compilation ở mức mô hình; xem code cache như một ví dụ chi tiết hiện thực của HotSpot.
+      - Hiểu các tối ưu như inlining hoặc escape analysis có thể thay đổi cách mã được thực thi mà không đổi ngữ nghĩa Java.
+      - Nhận biết chiến lược JIT, optimization/deoptimization và sinh native code là hành vi của implementation, không phải hợp đồng của ngôn ngữ Java.
+    relatedKnowledge:
+      - AdaptiveExecutionJIT
+
+  - id: native-memory-and-vm-resources
+    title: Bộ nhớ tiến trình JVM ngoài Java heap
+    purpose: Mở rộng mô hình khỏi Java heap để hiểu một tiến trình JVM còn cần bộ nhớ và tài nguyên cho thread stack, class metadata, compiled code và các runtime subsystem khác tùy hiện thực.
+    objectives:
+      - Phân biệt runtime data area trong đặc tả với native memory và tài nguyên ở cấp tiến trình mà một JVM implementation sử dụng.
+      - Nhận diện thread/native stack, vùng lưu class metadata và JIT compiled code như các nguồn tiêu thụ bộ nhớ ngoài Java heap.
+      - Hiểu vì sao bộ nhớ của tiến trình có thể tăng dù Java heap chưa đầy.
+      - Hiểu cạn kiệt bộ nhớ hoặc tài nguyên ngoài Java heap vẫn có thể gây lỗi runtime mà không biến milestone này thành quy trình troubleshooting.
+      - Phân biệt nhận thức về native memory của JVM với việc lập trình API Java-to-native.
+    relatedKnowledge:
+      - ProcessMemory
+    relatedModules:
+      - routeId: JAVA_NATIVE_INTEROPERABILITY
+        label: Native Interoperability
+        note: JNI, Foreign Function & Memory API và native-call boundary thuộc module Native Interoperability.
+      - routeId: JAVA_RUNTIME_DIAGNOSTICS
+        label: Runtime Diagnostics
+        note: Native Memory Tracking và runtime evidence thuộc module Runtime Diagnostics.
+
+  - id: vm-ergonomics-and-controls
+    title: HotSpot ergonomics và ranh giới cấu hình JVM
+    purpose: Hiểu một hiện thực JVM như HotSpot có thể tự chọn mặc định cho heap, collector và runtime compiler thế nào, đồng thời biết cách suy luận về VM options mà không nhầm cấu hình riêng của implementation với đặc tả JVM.
+    objectives:
+      - Hiểu HotSpot ergonomics và vì sao giá trị mặc định có thể phụ thuộc platform, tài nguyên máy, implementation và version.
+      - Liên hệ heap sizing, mục tiêu của collector và compilation policy với đặc điểm workload.
+      - Phân biệt hành vi JVM có tính portable với VM control riêng của implementation và tránh xem một JVM flag như hợp đồng Java/JVM chung.
+      - Biết khi nào cần chuyển từ mô hình runtime sang diagnostics thay vì tiếp tục phỏng đoán bằng cấu hình.
+    relatedKnowledge:
+      - HotSpotErgonomics
+
+  - id: jvm-end-to-end-model
+    title: Tổng hợp mental model JVM
+    purpose: Kết nối class file, trạng thái thực thi, cấp phát, GC, JIT và tài nguyên native thành một mô hình end-to-end để learner có thể giải thích hành vi runtime trước khi đi sang các module Java Advanced khác.
+    objectives:
+      - Theo dõi một chương trình ở mức khái niệm từ class file đến thực thi method và vòng đời object.
+      - Giải thích sự phối hợp giữa execution engine, bộ nhớ được JVM quản lý và tài nguyên native của VM.
+      - Xác định đúng boundary khi vấn đề thực tế cần ClassLoader, Dynamic Runtime, Instrumentation, Native Interoperability hoặc Runtime Diagnostics.
+    relatedKnowledge:
+      - EndToEndModel
+    relatedModules:
+      - routeId: JAVA_DYNAMIC_RUNTIME
+        label: Dynamic Runtime
+        note: Học tiếp low-level invocation và runtime linkage sau khi đã có JVM execution model.
+      - routeId: JAVA_INSTRUMENTATION
+        label: Instrumentation
+        note: Học runtime modification bằng Java agents và class transformation.
+      - routeId: JAVA_RUNTIME_DIAGNOSTICS
+        label: Runtime Diagnostics
+        note: Học cách thu thập evidence và troubleshooting JVM runtime.
