@@ -49,6 +49,7 @@ java-learning/
 ├── module/                         # Learning modules
 ├── internal/                       # Internal supporting modules/resources
 ├── project-portal/                 # Repository-level Java Learning portal
+│   └── PROJECT_PORTAL.md           # Portal-specific architecture/design
 ├── project-build/
 │   ├── gradle-runtime/             # Build-time implementation
 │   └── springboot-runtime/         # Shared Spring Boot runtime capability
@@ -67,7 +68,6 @@ java-learning/
 │   ├── STEP_7_INTERVIEW.md         # Interview authoring rules
 │   ├── STEP_8_VALIDATION.md        # Integrated validation / Coverage Review
 │   └── GENARAL_AGENT_RULES.md      # Step orchestration / routing
-├── PROJECT_PORTAL.md               # Portal-specific architecture/design
 └── STRUCTURE.md                    # Generated module map
 ```
 
@@ -2583,7 +2583,7 @@ Khi cần hiểu architecture của project, thứ tự đọc được khuyến
 5. project-orchestration
 6. project-build/gradle-runtime
 7. project-build/springboot-runtime
-8. PROJECT_PORTAL.md + project-portal khi task liên quan Learning Portal
+8. project-portal/PROJECT_PORTAL.md + project-portal khi task liên quan Learning Portal
 9. STRUCTURE.md
 10. metadata/build.gradle của module cần khảo sát
 11. source package của module chỉ khi phạm vi công việc yêu cầu
@@ -2706,7 +2706,7 @@ Bản tài liệu này được xây dựng từ source thực tế của:
 - `project-build/springboot-runtime/execution-context`;
 - `project-build/springboot-runtime/execution-context-servlet`;
 - `project-portal` Spring Boot + React/Vite build handoff;
-- `PROJECT_PORTAL.md` cho product/portal-specific design;
+- `project-portal/PROJECT_PORTAL.md` cho product/portal-specific design;
 - canonical automation/task resources;
 - generated plugin/catalog flow đã được kiểm tra;
 - Gradle configuration flow đã được chạy bằng repository Gradle Wrapper 8.5.

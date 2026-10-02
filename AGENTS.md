@@ -23,7 +23,7 @@ module-generate-agent/STEP_6_QUIZ.md → Quiz authoring rules
 module-generate-agent/STEP_7_INTERVIEW.md → Interview authoring rules
 module-generate-agent/STEP_8_VALIDATION.md → integrated validation + Coverage Review
 module-generate-agent/GENARAL_AGENT_RULES.md → orchestrates the canonical module-generation steps
-PROJECT_PORTAL.md → detailed Learning Portal design/current implementation
+project-portal/PROJECT_PORTAL.md → detailed Learning Portal design/current implementation
 STRUCTURE.md    → generated module tree/navigation
 ```
 
@@ -70,7 +70,7 @@ For repository-level work, read in this order:
 8. project-orchestration/
 9. project-build/gradle-runtime/
 10. project-build/springboot-runtime/
-11. project-portal/ and PROJECT_PORTAL.md when portal/frontend work is involved
+11. project-portal/ and project-portal/PROJECT_PORTAL.md when portal/frontend work is involved
 12. STRUCTURE.md when module navigation is needed
 13. module metadata/build.gradle for the concrete task
 14. module source packages only when the requested work requires them
@@ -120,6 +120,7 @@ java-learning/
 ├── module/                         # learning/application modules
 ├── internal/                       # internal supporting modules/resources
 ├── project-portal/                 # repository-level Java Learning portal
+│   └── PROJECT_PORTAL.md           # Portal design/current implementation
 ├── project-build/
 │   ├── gradle-runtime/             # Gradle/build-time implementation
 │   └── springboot-runtime/         # shared Spring Boot runtime implementation
@@ -129,7 +130,6 @@ java-learning/
 ├── README.md
 ├── ARCHITECTURE.md
 ├── AGENTS.md
-├── PROJECT_PORTAL.md
 └── STRUCTURE.md
 ```
 

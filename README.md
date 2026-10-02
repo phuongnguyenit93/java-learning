@@ -33,7 +33,7 @@ Task          → explicit execution
 
 Portal dùng React + TypeScript + Vite, theo hướng **static-first**. Module catalog, Overview, Roadmap, Knowledge, Quiz, Interview và API Docs đều được materialize ở build-time; `Local Run` là ngoại lệ dynamic, dùng backend server-side để build/download executable JAR qua GitHub Actions + rolling Release. Production deploy qua GitHub Actions lên Cloudflare Pages tại `https://java-learning-cly.pages.dev` (Wrangler project: `java-learning`).
 
-Chi tiết Portal: [`PROJECT_PORTAL.md`](./PROJECT_PORTAL.md).
+Chi tiết Portal: [`project-portal/PROJECT_PORTAL.md`](./project-portal/PROJECT_PORTAL.md).
 
 ## Cách học một module
 
@@ -63,5 +63,5 @@ Chi tiết workflow: [`GENARAL_AGENT_RULES.md`](./module-generate-agent/GENARAL_
 - [`STEP_6_QUIZ.md`](./module-generate-agent/STEP_6_QUIZ.md) — Quiz.
 - [`STEP_7_INTERVIEW.md`](./module-generate-agent/STEP_7_INTERVIEW.md) — Interview.
 - [`STEP_8_VALIDATION.md`](./module-generate-agent/STEP_8_VALIDATION.md) — integrated validation + Coverage Review.
-- [`PROJECT_PORTAL.md`](./PROJECT_PORTAL.md) — Portal hiện tại, data contract và deployment.
+- [`project-portal/PROJECT_PORTAL.md`](./project-portal/PROJECT_PORTAL.md) — Portal hiện tại, data contract và deployment.
 - [`STRUCTURE.md`](./STRUCTURE.md) — cây module generated.

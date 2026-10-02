@@ -9,7 +9,10 @@
 - High Cohesion
 - Composition over Inheritance
 - Law of Demeter
+- Clean Code
+- Readability
+- Maintainability
+- Refactoring-friendly design
 
 - Design principles are general guidelines for making software easier to understand, change and maintain.
 - They are not GoF Design Patterns.
-
