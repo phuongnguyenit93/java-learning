@@ -41,4 +41,104 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: native-boundary
+    title: Biên giữa Java và native
+    purpose: Hiểu vì sao Java đôi khi phải đi ra ngoài runtime được quản lý để làm việc với native code, native memory, thư viện hệ điều hành hoặc phần cứng, đồng thời nhận ra những bảo đảm nào của JVM không còn tự động đúng ở biên này.
+    relatedKnowledge:
+      - NativeInteroperability
+    objectives:
+      - Phân biệt managed Java runtime với native code và native memory.
+      - Giải thích các nhu cầu thực tế dẫn tới native interoperability thay vì cố giải quyết mọi thứ thuần Java.
+      - Nhận diện sớm chi phí về portability, ownership, lifetime và khả năng crash hoặc memory corruption.
+    relatedModules:
+      - routeId: JAVA_JVM
+        label: JVM
+        note: JVM cung cấp mental model về managed runtime và memory để thấy rõ điều gì thay đổi khi đi qua native boundary.
+
+  - id: native-library-abi-linkage
+    title: Native library, ABI và linkage
+    purpose: Xây nền tảng về shared library, symbol, ABI, calling convention và platform architecture để hiểu tại sao cùng một lời gọi native lại phụ thuộc OS, CPU và binary contract.
+    relatedKnowledge:
+      - NativeLibraryAbi
+    objectives:
+      - Hiểu Java phải locate/load đúng native library trước khi có thể resolve symbol và thực hiện lời gọi native.
+      - Hiểu ABI là contract giữa binary caller và callee chứ không phải Java type system.
+      - Giải thích vì sao library name, architecture, calling convention hoặc binary mismatch có thể làm interoperability thất bại.
+
+  - id: jni-bridge-model
+    title: Mô hình bridge với JNI
+    purpose: Hiểu JNI như cơ chế truyền thống nối Java với native code, từ native method binding đến object/reference, thread và exception boundary.
+    relatedKnowledge:
+      - JNI
+      - JNIInvocation
+    objectives:
+      - Mô tả flow Java gọi native method và native code tương tác ngược với JVM qua JNI environment.
+      - Phân biệt Java object với JNI local/global reference và hiểu ảnh hưởng của lifetime/GC.
+      - Nhận diện trách nhiệm khi dữ liệu, exception và thread đi qua JNI boundary.
+      - Nhận biết Invocation API như chiều native application nhúng JVM: application có thể tạo JVM, còn native thread có thể attach/detach với JVM đã tồn tại, mà không biến module này thành curriculum về process administration.
+
+  - id: ffm-memory-lifetime
+    title: FFM và mô hình native memory có lifetime
+    purpose: Chuyển từ cách tư duy dựa trực tiếp trên con trỏ và vùng nhớ native thô sang mô hình Foreign Function & Memory API, trong đó MemorySegment biểu diễn vùng nhớ còn Arena quản lý lifetime của native memory được cấp phát.
+    relatedKnowledge:
+      - FFM
+      - MemorySegment
+      - ArenaLifetime
+    objectives:
+      - Hiểu MemorySegment biểu diễn vùng nhớ heap hoặc native/off-heap; mapped segment là một dạng native segment được ánh xạ từ file.
+      - Hiểu Arena/scope như ownership và lifetime boundary cho native allocation.
+      - Phân biệt các bảo đảm an toàn của FFM với mức rủi ro khi thao tác trực tiếp trên native memory.
+      - Nhận biết Java 21 dùng FFM ở trạng thái preview còn Java 22 là mốc finalization, nhưng release history chi tiết thuộc Java Version.
+    relatedModules:
+      - routeId: JAVA_22_FOREIGN_FUNCTION_MEMORY_API
+        label: Java 22 — Foreign Function & Memory API
+        note: Module Java Version giải thích mốc finalization và thay đổi theo release; module này sở hữu mental model native interoperability.
+
+  - id: native-data-layout
+    title: Biểu diễn native data và memory layout
+    purpose: Hiểu cách Java mô tả kích thước, alignment, primitive value, struct, sequence, union và address để đọc/ghi native data mà không giả định Java object layout giống C/native layout.
+    relatedKnowledge:
+      - MemoryLayout
+    objectives:
+      - Giải thích vì sao native data cần layout contract riêng.
+      - Mô hình hóa dữ liệu native có cấu trúc, alignment và quan hệ pointer/address bằng memory layout.
+      - Nhận diện lỗi do sai size, offset, alignment hoặc pointer interpretation.
+
+  - id: foreign-function-linkage
+    title: Liên kết và gọi foreign function
+    purpose: Hiểu end-to-end flow của FFM khi tìm native symbol, mô tả function signature, tạo downcall và cho native code callback về Java bằng upcall.
+    relatedKnowledge:
+      - LinkerSymbolLookup
+      - DowncallUpcall
+    objectives:
+      - Kết nối SymbolLookup, FunctionDescriptor và Linker thành một luồng gọi foreign function thống nhất.
+      - Hiểu downcall là Java gọi foreign function và upcall là foreign code gọi lại Java.
+      - Hiểu MethodHandle là cầu nối invocation được FFM tái sử dụng mà không học lại toàn bộ Dynamic Runtime trong module này.
+    relatedModules:
+      - routeId: JAVA_DYNAMIC_RUNTIME
+        label: Dynamic Runtime
+        note: MethodHandle và typed invocation mechanics được sở hữu bởi Dynamic Runtime; Native Interoperability chỉ sử dụng chúng tại foreign-function boundary.
+
+  - id: native-ownership-safety-failure
+    title: Ownership, safety và failure boundary
+    purpose: Học cách lập luận về tài nguyên và lỗi khi JVM không còn kiểm soát toàn bộ execution, để tránh leak, dangling lifetime, invalid reference, ABI mismatch, native crash và silent memory corruption.
+    relatedKnowledge:
+      - SafetyPitfalls
+    objectives:
+      - Theo dõi ownership và lifecycle của native memory, library binding, JNI reference và callback resource.
+      - Phân biệt Java exception với native error reporting và các failure không thể được JVM biến thành exception an toàn.
+      - Hiểu vì sao restricted native operations, sai descriptor/layout hoặc lifetime sai có thể làm JVM crash hoặc corrupt memory.
+      - Phân biệt việc bật preview feature của FFM trên Java 21 với native-access control/warning dành cho restricted operations.
+      - Xác định thread-safety và lifetime constraint trước khi chia sẻ native state qua nhiều thread.
+
+  - id: interoperability-decisions-synthesis
+    title: Lựa chọn JNI, FFM và thiết kế end-to-end
+    purpose: Tổng hợp toàn bộ module thành khả năng chọn bridge phù hợp và thiết kế một native integration có boundary, portability, deployment, xử lý lỗi và giải phóng tài nguyên rõ ràng.
+    relatedKnowledge:
+      - DecisionsSynthesis
+    objectives:
+      - So sánh JNI và FFM theo use case, bề mặt native sẵn có, khả năng bảo trì, mức an toàn và ràng buộc phiên bản thay vì chọn theo sở thích API.
+      - Tách các vấn đề cốt lõi của interoperability khỏi C/C++ toolchain hoặc ABI engineering chuyên sâu theo từng platform.
+      - Mô tả luồng end-to-end từ library/ABI, data layout, call/callback đến lan truyền lỗi và giải phóng tài nguyên.
+      - Nhận biết khi native interoperability không đáng dùng và nên giữ implementation trong managed Java.

@@ -1,0 +1,290 @@
+# <quiz-schema>
+# Cấu trúc câu hỏi Quiz
+# schema-version: 3
+#
+# questions [kiểu: list; bắt buộc; mặc định: []; duy nhất theo: id]
+#   Danh sách câu hỏi Quiz của module trong language hiện tại.
+#   mỗi phần tử:
+#     id [kiểu: string; bắt buộc; mặc định: ""]
+#       ID ổn định và duy nhất của câu hỏi.
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi hiển thị cho người học.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu câu hỏi được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu câu hỏi đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+#     answers [kiểu: list; bắt buộc; số phần tử: 4; mặc định: []; duy nhất theo: id]
+#       Chính xác bốn đáp án. ID A/B/C/D là identity nội bộ ổn định, không phải vị trí hiển thị sau khi frontend shuffle.
+#       mỗi phần tử:
+#         id [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#           Identity ổn định của đáp án.
+#         answer [kiểu: string; bắt buộc; mặc định: ""]
+#           Nội dung đáp án hiển thị cho người học.
+#         explanation [kiểu: string; bắt buộc; mặc định: ""]
+#           Giải thích hiển thị khi người học chọn đáp án này, bất kể đúng hay sai.
+#     correctAnswerId [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
+# </quiz-schema>
+
+questions:
+  - id: native-interop-q01-boundary
+    question: "Vì sao khi Java managed code đi sang native code cần một interoperability boundary rõ ràng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.MentalModel/NativeInteroperability.md"
+      anchor: "managed-native-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Vì mỗi lần vượt boundary luôn chuyển execution sang native-created thread và thread đó phải attach vào JVM."
+        explanation: "Sai. Native-created thread có JNI attachment rule, nhưng Java-to-native call thông thường không mặc định chuyển sang một native-created thread mới."
+      - id: B
+        answer: "Vì JVM luôn copy mọi argument sang unmanaged memory và mất toàn bộ lifetime information ngay tại call site."
+        explanation: "Sai. Cách truyền argument phụ thuộc bridge/signature; vấn đề rộng hơn là ownership và safety contract không còn hoàn toàn do JVM quản lý."
+      - id: C
+        answer: "Vì các guarantee của JVM không tự động mở rộng qua native memory, ABI, lifetime và failure boundary."
+        explanation: "Đúng. Khi vượt boundary, chương trình phải quản lý thêm các contract mà JVM không thể kiểm soát hoàn toàn cho foreign code và memory."
+      - id: D
+        answer: "Vì khi vào native code, garbage collection bị suspend cho mọi Java object cho tới khi foreign call trả về."
+        explanation: "Sai. Native interoperability không đồng nghĩa mọi foreign call sẽ suspend garbage collection trên toàn process."
+    correctAnswerId: C
+
+  - id: native-interop-q02-abi-contract
+    question: "Java binding khai báo đúng kiểu parameter/return mong đợi, nhưng native library được build cho ABI không tương thích. Kết luận nào chính xác nhất?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.NativeLibraryAbi/NativeLibraryAbi.md"
+      anchor: "abi-calling-convention"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Java type declaration là đủ vì JVM luôn chuyển mọi native ABI về một calling convention chung."
+        explanation: "Sai. Native binary vẫn tuân theo calling convention và data-layout rule của platform."
+      - id: B
+        answer: "Call vẫn có thể fail hoặc corrupt state vì Java-level types không thay thế binary ABI contract giữa caller và callee."
+        explanation: "Đúng. Architecture, calling convention, layout và binary compatibility vẫn là một phần của native contract."
+      - id: C
+        answer: "Chỉ symbol name quan trọng; resolve được symbol thì ABI mismatch không còn ảnh hưởng."
+        explanation: "Sai. Resolve symbol là cần thiết nhưng không chứng minh call signature hoặc ABI tương thích."
+      - id: D
+        answer: "Mismatch luôn được đổi thành checked Java exception trước khi native code được chạy."
+        explanation: "Sai. Một số mismatch có thể hiện thành Java error, nhưng cũng có thể gây native crash hoặc corruption."
+    correctAnswerId: B
+
+  - id: native-interop-q03-jni-reference-lifetime
+    question: "Native code cần giữ reference tới một Java object sau khi JNI call hiện tại kết thúc. Ownership model đúng là gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.JNI/JNI.md"
+      anchor: "jni-references"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Giữ nguyên local reference vì local reference tồn tại toàn process cho tới khi JVM dừng."
+        explanation: "Sai. Local reference có JNI lifetime hữu hạn và không phải cơ chế ownership chung để giữ qua nhiều call."
+      - id: B
+        answer: "Lưu raw jobject vào native memory vì GC coi mọi bản copy ở native side là GC root."
+        explanation: "Sai. Copy một handle thô không tự động biến nó thành durable JNI reference."
+      - id: C
+        answer: "Chuyển object thành weak Java reference vì JNI global reference không thể sống qua nhiều native call."
+        explanation: "Sai. Global reference chính là cơ chế JNI để giữ reference qua nhiều call cho tới khi được release."
+      - id: D
+        answer: "Tạo global reference và delete global reference khi native owner thực sự không còn cần object."
+        explanation: "Đúng. Global reference cho lifetime xuyên qua nhiều call và phải được giải phóng để tránh leak."
+    correctAnswerId: D
+
+  - id: native-interop-q04-ffm-preview-native-access
+    question: "Trên Java 21, phát biểu nào phân biệt đúng FFM preview enablement với native-access control?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.FFM/FFM.md"
+      anchor: "ffm-restricted-operations"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Dùng preview enablement cho Java 21 preview API/class file; native-access configuration quản lý riêng restricted native operations."
+        explanation: "Đúng. Hai concern này độc lập dù một chương trình có thể phải xử lý cả hai."
+      - id: B
+        answer: "Dùng preview enablement để authorize restricted native call; native-access configuration chỉ là compile-time source check."
+        explanation: "Sai. Preview enablement và restricted native-access control là hai runtime concern khác nhau."
+      - id: C
+        answer: "Dùng native-access configuration để enable preview class file; preview enablement chỉ đổi tập native symbol mà Linker resolve."
+        explanation: "Sai. Native-access configuration không enable preview class file, còn preview enablement không định nghĩa symbol visibility của Linker."
+      - id: D
+        answer: "Có thể dùng preview và native-access configuration thay thế lẫn nhau vì cả hai đều enable cùng một FFM capability."
+        explanation: "Sai. Hai cơ chế quản lý các concern khác nhau và không thể thay thế cho nhau."
+    correctAnswerId: A
+
+  - id: native-interop-q05-spatial-bounds
+    question: "API experiment allocate MemorySegment 8 byte rồi đọc JAVA_INT_UNALIGNED 4 byte tại offset 6. Observation này chứng minh điều gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.MemorySegment/MemorySegment.md"
+      anchor: "segment-spatial-bounds"
+    apiRelated:
+      controller: "MemorySegmentExperimentController"
+      methodSignature: "spatialBounds()"
+    answers:
+      - id: A
+        answer: "Read thành công vì unaligned layout tắt cả alignment check lẫn segment bounds check."
+        explanation: "Sai. Unaligned layout bỏ yêu cầu alignment, không bỏ spatial bounds của segment."
+      - id: B
+        answer: "Read chỉ fail vì offset 6 không chia hết cho bốn; kích thước segment không liên quan."
+        explanation: "Sai. Experiment cố ý dùng unaligned layout để alignment không phải nguyên nhân."
+      - id: C
+        answer: "Read bị từ chối vì vùng byte 6 đến 9 vượt khỏi spatial range 8 byte của segment."
+        explanation: "Đúng. Access bốn byte bắt đầu tại offset 6 không nằm trọn trong segment."
+      - id: D
+        answer: "Read được đổi thành giá trị 0 vì FFM tự cắt phần access vượt segment boundary."
+        explanation: "Sai. FFM từ chối access invalid thay vì âm thầm clip hoặc zero-fill."
+    correctAnswerId: C
+
+  - id: native-interop-q06-temporal-safety
+    question: "Sau khi confined Arena bị close, experiment gọi get(...) trên segment được allocate bởi Arena đó. Learner nên kết luận gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.ArenaLifetime/ArenaLifetime.md"
+      anchor: "temporal-safety"
+    apiRelated:
+      controller: "ArenaExperimentController"
+      methodSignature: "temporalSafety()"
+    answers:
+      - id: A
+        answer: "Segment vẫn đọc được cho tới khi GC chứng minh không còn Java reference nào trỏ tới nó."
+        explanation: "Sai. Close Arena kết thúc scope tương ứng dù Java code vẫn còn giữ segment object."
+      - id: B
+        answer: "Java-side access bị từ chối vì lifetime do Arena định nghĩa đã kết thúc."
+        explanation: "Đúng. Experiment quan sát scope không còn alive và access fail bằng IllegalStateException."
+      - id: C
+        answer: "Sau close chỉ write bị cấm; read vẫn hợp lệ vì read không thể corrupt native memory."
+        explanation: "Sai. Segment không còn hợp lệ để access sau khi scope bị close."
+      - id: D
+        answer: "Close Arena copy native memory sang Java heap để các read sau vẫn an toàn."
+        explanation: "Sai. Arena close kết thúc lifetime, không tự động migrate nội dung native sang heap."
+    correctAnswerId: B
+
+  - id: native-interop-q07-arena-thread-access
+    question: "Một worker thread đọc một segment từ Arena.ofConfined() và một segment từ Arena.ofShared(). Behavior nào khớp Java 21 contract và experiment?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.ArenaLifetime/ArenaLifetime.md"
+      anchor: "arena-thread-access"
+    apiRelated:
+      controller: "ArenaExperimentController"
+      methodSignature: "threadAccess()"
+    answers:
+      - id: A
+        answer: "Cả hai access đều fail vì mọi native MemorySegment đều bị buộc vĩnh viễn vào allocating thread."
+        explanation: "Sai. Shared Arena cho phép access từ nhiều thread."
+      - id: B
+        answer: "Cả hai access đều thành công vì thread access chỉ phụ thuộc synchronization quanh get(...)."
+        explanation: "Sai. Arena scope accessibility được kiểm tra độc lập với application-level synchronization."
+      - id: C
+        answer: "Confined access thành công nhưng shared access fail vì shared Arena yêu cầu virtual thread."
+        explanation: "Sai. Shared Arena không yêu cầu virtual thread và được thiết kế cho multi-thread access."
+      - id: D
+        answer: "Confined access bị từ chối với worker, còn shared segment có thể được worker đó access."
+        explanation: "Đúng. Experiment quan sát WrongThreadException với confined segment và read thành công từ shared segment."
+    correctAnswerId: D
+
+  - id: native-interop-q08-layout-path-offset
+    question: "Struct layout gồm một JAVA_BYTE tên kind, ba byte padding rõ ràng rồi một JAVA_INT tên value. Kết quả derive nào đúng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.MemoryLayout/MemoryLayout.md"
+      anchor: "layout-path-access"
+    apiRelated:
+      controller: "MemoryLayoutExperimentController"
+      methodSignature: "structOffset()"
+    answers:
+      - id: A
+        answer: "kind ở offset 0, value ở offset 4 và layout có size 8 byte."
+        explanation: "Đúng. Ba byte padding sau kind đặt int tại offset 4 và tổng layout chiếm tám byte."
+      - id: B
+        answer: "kind ở offset 0, value ở offset 1 và alignment bị bỏ qua vì field có tên."
+        explanation: "Sai. Đặt tên field không loại padding/alignment khỏi layout contract."
+      - id: C
+        answer: "value ở offset 3 vì padding byte thay thế cho byte của kind trong layout."
+        explanation: "Sai. Padding nằm sau field kind một byte, không overlap field đó."
+      - id: D
+        answer: "Không thể query offset từ MemoryLayout nên binding author luôn phải hard-code offset."
+        explanation: "Sai. Layout path và byteOffset(...) tồn tại để derive offset từ layout."
+    correctAnswerId: A
+
+  - id: native-interop-q09-downcall-platform-contract
+    question: "Experiment strlen không tìm thấy strlen trong Linker.defaultLookup() trên một platform. Kết luận nào an toàn nhất?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "10.DowncallUpcall/DowncallUpcall.md"
+      anchor: "downcall-handle"
+    apiRelated:
+      controller: "LinkerExperimentController"
+      methodSignature: "nativeStrlen()"
+    answers:
+      - id: A
+        answer: "C runtime library chắc chắn chưa được load, nên retry System.loadLibrary cho C library của platform luôn là cách sửa đúng."
+        explanation: "Sai. defaultLookup có lookup semantics phụ thuộc platform; kết quả rỗng không tự nó chứng minh C runtime chưa load."
+      - id: B
+        answer: "defaultLookup bắt buộc expose standard C runtime symbol, nên kết quả rỗng chứng minh FunctionDescriptor đang sai."
+        explanation: "Sai. Symbol lookup xảy ra trước khi descriptor được dùng cho downcall, và symbol set của default lookup phụ thuộc platform."
+      - id: C
+        answer: "Default lookup không expose symbol đó trong runtime/platform hiện tại, nên binding phải coi availability là một platform fact."
+        explanation: "Đúng. Experiment report linker/symbol availability thay vì giả định downcall luôn tồn tại."
+      - id: D
+        answer: "Linker sẽ tự động search mọi native library đã load sau khi defaultLookup rỗng, nên application không cần lookup strategy khác."
+        explanation: "Sai. Application phải dùng lookup mechanism phù hợp library/platform; default lookup rỗng không kích hoạt universal automatic search."
+    correctAnswerId: C
+
+  - id: native-interop-q10-upcall-lifetime
+    question: "Foreign code giữ address của một FFM upcall stub và có thể gọi lại sau. Lifetime rule nào quan trọng nhất?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "10.DowncallUpcall/DowncallUpcall.md"
+      anchor: "callback-lifetime"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Stub tồn tại vĩnh viễn vì executable address độc lập với Java resource lifetime."
+        explanation: "Sai. Upcall stub được gắn với Arena nên có lifetime rõ ràng."
+      - id: B
+        answer: "Giữ owning Arena alive cho tới khi native code không còn khả năng invoke stub, rồi mới close Arena."
+        explanation: "Đúng. Native code không được tiếp tục gọi stub sau khi Arena sở hữu nó đã đóng."
+      - id: C
+        answer: "Close Arena chỉ ngăn Java đọc stub; native caller vẫn dùng old address an toàn."
+        explanation: "Sai. Close owning Arena kết thúc lifetime hợp lệ của stub."
+      - id: D
+        answer: "Callback lifetime chỉ phụ thuộc target MethodHandle có được giữ trong static field hay không."
+        explanation: "Sai. Giữ Java target reachable không thay thế lifetime contract của native upcall stub."
+    correctAnswerId: B

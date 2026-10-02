@@ -1,0 +1,93 @@
+ArenaExperimentController:
+  temporalSafety():
+    execution: |-
+      <p><b>Khái niệm:</b> Arena đặt temporal bound cho native memory. Segment thuộc closeable Arena chỉ hợp lệ khi scope của Arena còn sống.</p>
+      <ol>
+        <li>Service tạo <code>Arena.ofConfined()</code>, cấp phát một <code>JAVA_LONG</code>, ghi <code>42</code> và đọc lại khi scope còn alive.
+          <div><i>Nguồn: NativeInteroperabilityExperimentService.temporalSafetyDemo()</i></div>
+          <pre><code>Arena arena = Arena.ofConfined();
+      MemorySegment segment = arena.allocate(ValueLayout.JAVA_LONG);
+      segment.set(ValueLayout.JAVA_LONG, 0, 42L);</code></pre>
+        </li>
+        <li>Response ghi nhận <code>scopeAliveBeforeClose=true</code>, sau đó service gọi <code>arena.close()</code>.</li>
+        <li>Sau close, cùng scope báo <code>isAlive=false</code>. Một lần <code>segment.get(...)</code> có chủ ý bị từ chối bằng <code>IllegalStateException</code>.</li>
+      </ol>
+      <p><b>Bằng chứng:</b> <code>valueBeforeClose=42</code>, trạng thái scope trước/sau close, <code>accessAfterCloseRejected=true</code> và loại exception thực tế.</p>
+      <p><b>Kết luận:</b> Temporal safety là runtime contract của MemorySegment/Arena: Java-side access không tiếp tục dereference segment sau khi lifetime đã kết thúc.</p>
+    usage: true
+  threadAccess():
+    execution: |-
+      <p><b>Khái niệm:</b> Confined Arena giới hạn segment vào owner thread; shared Arena cho phép segment được truy cập từ nhiều thread nhưng không tự giải quyết data race.</p>
+      <ol>
+        <li>Request tạo một confined segment chứa <code>11</code> và một shared segment chứa <code>22</code>.</li>
+        <li>Một worker thread riêng thử đọc confined segment. <code>isAccessibleBy(worker)</code> trả false và access bị <code>WrongThreadException</code>.
+          <div><i>Nguồn: NativeInteroperabilityExperimentService.threadAccessDemo()</i></div>
+          <pre><code>try {
+          confined.get(ValueLayout.JAVA_INT, 0);
+      } catch (WrongThreadException expected) {
+          confinedRejected = true;
+      }</code></pre>
+        </li>
+        <li>Cùng worker đọc shared segment thành công và nhận <code>22</code>.</li>
+        <li>Thí nghiệm bị bounded bằng <code>Future.get(2, TimeUnit.SECONDS)</code>. Timeout hoặc request thread bị interrupt sẽ cancel Future và restore interrupt status. Executor được khai báo sau cả hai Arena trong cùng try-with-resources, nên Java đóng/chờ executor trước rồi mới đóng shared/confined native memory.</li>
+      </ol>
+      <p><b>Bằng chứng:</b> tên owner/worker thread, hai kết quả <code>isAccessibleBy</code>, <code>WrongThreadException</code> cho confined segment và <code>sharedReadValue=22</code>.</p>
+      <p><b>Kết luận:</b> Thread accessibility là thuộc tính thật của Arena/segment. Shared Arena mở quyền truy cập nhiều luồng; synchronization của dữ liệu vẫn là trách nhiệm riêng.</p>
+    usage: true
+LinkerExperimentController:
+  nativeStrlen():
+    execution: |-
+      <p><b>Khái niệm:</b> Một FFM downcall cần symbol address, FunctionDescriptor và Linker của ABI hiện tại; MethodHandle là invocation bridge từ Java sang native function.</p>
+      <ol>
+        <li>Service trước hết lấy <code>Linker.nativeLinker()</code>. Nếu JVM/platform hiện tại không cung cấp native linker, response trả <code>linkerAvailable=false</code>. Nếu linker có sẵn, service tìm <code>strlen</code> trong <code>defaultLookup()</code>; symbol không tồn tại sẽ trả <code>symbolAvailable=false</code> thay vì tạo call từ address giả.</li>
+        <li>Khi symbol tồn tại, binding chọn carrier cho C <code>size_t</code> từ pointer width của platform và tạo descriptor <code>size_t strlen(char*)</code>.
+          <div><i>Nguồn: NativeInteroperabilityExperimentService.nativeStrlenDemo()</i></div>
+          <pre><code>FunctionDescriptor descriptor =
+          FunctionDescriptor.of(sizeTLayout, ValueLayout.ADDRESS);
+      MethodHandle strlen =
+          linker.downcallHandle(symbol.orElseThrow(), descriptor);</code></pre>
+        </li>
+        <li>Mỗi request cấp phát chuỗi UTF-8 <code>native-interop</code> trong confined Arena rồi gọi handle bằng carrier type tương ứng.</li>
+        <li>Response so sánh byte length do Java tính với kết quả trả về từ native <code>strlen</code>, đồng thời ghi carrier và OS/architecture.</li>
+      </ol>
+      <p><b>Bằng chứng:</b> <code>linkerAvailable</code>, <code>symbolAvailable</code>, input, <code>expectedUtf8ByteLength</code>, <code>nativeResult</code>, <code>sizeTCarrier</code> và platform.</p>
+      <p><b>Lưu ý runtime Java 21:</b> bản thân module này cần <code>--enable-preview</code> vì FFM của Java 21 là preview API. Downcall đồng thời là restricted operation: nếu không truyền <code>--enable-native-access</code>, Java 21 vẫn cho phép lời gọi nhưng phát warning. Để chạy class path không warning, thêm <code>--enable-native-access=ALL-UNNAMED</code>.</p>
+      <p><b>Kết luận:</b> Linker không “hiểu header C” thay binding. Symbol và descriptor đúng mới tạo được lời gọi native đúng ABI; availability của default lookup cũng là đặc tính platform cần được quan sát thay vì giả định.</p>
+    usage: true
+MemoryLayoutExperimentController:
+  structOffset():
+    execution: |-
+      <p><b>Khái niệm:</b> MemoryLayout là data contract có size/alignment/path; field offset nên được derive từ layout thay vì rải magic number trong code.</p>
+      <ol>
+        <li>Service tạo struct gồm một <code>JAVA_BYTE</code> tên <code>kind</code>, ba byte padding và một <code>JAVA_INT</code> tên <code>value</code>.
+          <div><i>Nguồn: NativeInteroperabilityExperimentService.structOffsetDemo()</i></div>
+          <pre><code>StructLayout layout = MemoryLayout.structLayout(
+          ValueLayout.JAVA_BYTE.withName("kind"),
+          MemoryLayout.paddingLayout(3),
+          ValueLayout.JAVA_INT.withName("value")
+      );</code></pre>
+        </li>
+        <li><code>PathElement.groupElement(...)</code> kết hợp với <code>byteOffset</code> derive offset của hai field; <code>select</code> lấy nested layout của <code>value</code>.</li>
+        <li>Segment được allocate trực tiếp từ struct layout, sau đó ghi/đọc <code>kind=7</code> và <code>value=123</code> tại các offset đã derive.</li>
+      </ol>
+      <p><b>Bằng chứng:</b> layout size/alignment, <code>kindOffset</code>, <code>valueOffset</code>, selected value size và hai giá trị đọc lại.</p>
+      <p><b>Kết luận:</b> Layout path biến cấu trúc native thành contract có thể query và tái sử dụng; offset trong binding đến từ layout thay vì giả định thủ công.</p>
+    usage: true
+MemorySegmentExperimentController:
+  spatialBounds():
+    execution: |-
+      <p><b>Khái niệm:</b> MemorySegment có spatial bounds; mọi access phải nằm hoàn toàn trong khoảng <code>[0, byteSize)</code>.</p>
+      <ol>
+        <li>Service cấp phát segment 8 byte với alignment phù hợp cho <code>JAVA_INT</code>, ghi <code>100</code> và đọc hợp lệ ở offset 0.</li>
+        <li>Thí nghiệm sau đó đọc một int 4 byte tại offset 6. Nó cố ý dùng <code>JAVA_INT_UNALIGNED</code> để loại alignment khỏi phép thử, nên vi phạm còn lại chỉ là spatial bounds.
+          <div><i>Nguồn: NativeInteroperabilityExperimentService.spatialBoundsDemo()</i></div>
+          <pre><code>segment.get(
+          ValueLayout.JAVA_INT_UNALIGNED,
+          6
+      );</code></pre>
+        </li>
+        <li>FFM từ chối access bằng <code>IndexOutOfBoundsException</code>; exception được capture thành evidence thay vì để request thất bại.</li>
+      </ol>
+      <p><b>Bằng chứng:</b> segment/layout byte size, valid read, attempted offset, <code>spatialBoundsViolationObserved=true</code> và exception type.</p>
+      <p><b>Kết luận:</b> Spatial safety biến một lớp lỗi pointer arithmetic thành failure có thể quan sát ở Java boundary trước khi memory ngoài phạm vi bị dereference.</p>
+    usage: true

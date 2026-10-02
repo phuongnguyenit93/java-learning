@@ -1,0 +1,24 @@
+ArenaExperimentController:
+  description: |-
+    <h2>Arena lifetime and thread-access experiments</h2>
+    <p>Observe temporal safety after an Arena closes and the thread-access difference between confined and shared arenas through bounded experiments that clean up their resources on every request.</p>
+  readmeRelated:
+    file: 7.ArenaLifetime/ArenaLifetime.md
+LinkerExperimentController:
+  description: |-
+    <h2>Foreign-function downcall experiment</h2>
+    <p>When the current JVM/platform provides a native linker and the default lookup exposes <code>strlen</code>, resolve that symbol, describe its ABI contract with FunctionDescriptor, and invoke the real function through a MethodHandle so the complete symbol → descriptor → linker → native-result flow is observable. Otherwise, return explicit platform-availability evidence instead of pretending the call succeeded.</p>
+  readmeRelated:
+    file: 10.DowncallUpcall/DowncallUpcall.md
+MemoryLayoutExperimentController:
+  description: |-
+    <h2>Structured MemoryLayout experiment</h2>
+    <p>Use StructLayout and PathElement to derive size, alignment, and field offsets, then read and write a MemorySegment according to that layout instead of hard-coding magic offsets.</p>
+  readmeRelated:
+    file: 8.MemoryLayout/MemoryLayout.md
+MemorySegmentExperimentController:
+  description: |-
+    <h2>MemorySegment spatial-bounds experiment</h2>
+    <p>Perform one valid access and one deliberate out-of-bounds access to observe Java 21 FFM rejecting the operation with IndexOutOfBoundsException before it can become native memory corruption.</p>
+  readmeRelated:
+    file: 6.MemorySegment/MemorySegment.md

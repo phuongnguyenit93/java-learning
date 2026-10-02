@@ -41,4 +41,104 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: native-boundary
+    title: The Java-to-Native Boundary
+    purpose: Understand why Java sometimes has to leave the managed runtime to work with native code, native memory, operating-system libraries, or hardware, and which JVM guarantees no longer come for free across that boundary.
+    relatedKnowledge:
+      - NativeInteroperability
+    objectives:
+      - Distinguish the managed Java runtime from native code and native memory.
+      - Explain practical reasons for native interoperability instead of solving every problem in pure Java.
+      - Recognize portability, ownership, lifetime, crash, and memory-corruption costs early.
+    relatedModules:
+      - routeId: JAVA_JVM
+        label: JVM
+        note: JVM provides the managed-runtime and memory model needed to understand what changes at the native boundary.
+
+  - id: native-library-abi-linkage
+    title: Native Libraries, ABI, and Linkage
+    purpose: Build the foundation of shared libraries, symbols, ABIs, calling conventions, and platform architecture so native calls are understood as binary contracts tied to an OS and CPU.
+    relatedKnowledge:
+      - NativeLibraryAbi
+    objectives:
+      - Understand that Java must locate and load the correct native library before symbols can be resolved and native calls made.
+      - Understand that an ABI is a binary caller-callee contract rather than the Java type system.
+      - Explain how library names, architectures, calling conventions, and binary mismatches cause interoperability failures.
+
+  - id: jni-bridge-model
+    title: The JNI Bridge Model
+    purpose: Understand JNI as the traditional bridge between Java and native code, from native-method binding to object/reference, thread, and exception boundaries.
+    relatedKnowledge:
+      - JNI
+      - JNIInvocation
+    objectives:
+      - Describe the flow from a Java native-method call to native code interacting with the JVM through the JNI environment.
+      - Distinguish Java objects from JNI local and global references and understand their lifetime and GC implications.
+      - Recognize responsibilities when data, exceptions, and threads cross the JNI boundary.
+      - Recognize the Invocation API as native-application JVM embedding: an application can create a JVM, while native threads can attach to and detach from an existing JVM, without turning this module into process-administration curriculum.
+
+  - id: ffm-memory-lifetime
+    title: FFM and Lifetime-Aware Native Memory
+    purpose: Move from raw-pointer thinking to the Foreign Function & Memory API model, where MemorySegment represents memory regions and Arena controls the lifetime of allocated native memory.
+    relatedKnowledge:
+      - FFM
+      - MemorySegment
+      - ArenaLifetime
+    objectives:
+      - Understand MemorySegment as a model for heap or native/off-heap regions, with mapped segments being native segments backed by file mappings.
+      - Understand Arena and scope as ownership and lifetime boundaries for native allocation.
+      - Contrast FFM safety guarantees with the risks of raw native-memory access.
+      - Recognize that FFM is preview in Java 21 and finalized in Java 22, while detailed release evolution belongs to Java Version.
+    relatedModules:
+      - routeId: JAVA_22_FOREIGN_FUNCTION_MEMORY_API
+        label: Java 22 — Foreign Function & Memory API
+        note: The Java Version module owns the finalization milestone and release evolution; this module owns the native-interoperability mental model.
+
+  - id: native-data-layout
+    title: Native Data and Memory Layouts
+    purpose: Understand how Java describes size, alignment, primitive values, structs, sequences, unions, and addresses so native data can be accessed without assuming Java object layout matches C or another native layout.
+    relatedKnowledge:
+      - MemoryLayout
+    objectives:
+      - Explain why native data needs an explicit layout contract.
+      - Model structured native data, alignment, and pointer/address relationships with memory layouts.
+      - Recognize failures caused by incorrect size, offset, alignment, or pointer interpretation.
+
+  - id: foreign-function-linkage
+    title: Foreign Function Linkage and Calls
+    purpose: Understand the end-to-end FFM flow for resolving native symbols, describing function signatures, creating downcalls, and allowing native code to call back into Java through upcalls.
+    relatedKnowledge:
+      - LinkerSymbolLookup
+      - DowncallUpcall
+    objectives:
+      - Connect SymbolLookup, FunctionDescriptor, and Linker into one foreign-call flow.
+      - Understand downcalls as Java-to-foreign calls and upcalls as foreign-to-Java callbacks.
+      - Understand MethodHandle as an invocation bridge reused by FFM without reteaching the full Dynamic Runtime curriculum here.
+    relatedModules:
+      - routeId: JAVA_DYNAMIC_RUNTIME
+        label: Dynamic Runtime
+        note: Dynamic Runtime owns MethodHandle and typed-invocation mechanics; Native Interoperability consumes them at the foreign-function boundary.
+
+  - id: native-ownership-safety-failure
+    title: Ownership, Safety, and Failure Boundaries
+    purpose: Learn to reason about resources and failures when the JVM no longer controls the whole execution path, avoiding leaks, dangling lifetimes, invalid references, ABI mismatches, native crashes, and silent memory corruption.
+    relatedKnowledge:
+      - SafetyPitfalls
+    objectives:
+      - Track ownership and cleanup for native memory, libraries, JNI references, and callback resources.
+      - Distinguish Java exceptions from native error reporting and failures the JVM cannot safely convert into exceptions.
+      - Understand why restricted native operations, incorrect descriptors/layouts, or invalid lifetimes can crash the JVM or corrupt memory.
+      - Distinguish enabling FFM preview features on Java 21 from native-access control and warnings for restricted operations.
+      - Identify thread-safety and lifetime constraints before sharing native state across threads.
+
+  - id: interoperability-decisions-synthesis
+    title: Choosing JNI or FFM and Designing End to End
+    purpose: Synthesize the module into the ability to choose an appropriate bridge and design a native integration with explicit boundaries for portability, deployment, error handling, and cleanup.
+    relatedKnowledge:
+      - DecisionsSynthesis
+    objectives:
+      - Compare JNI and FFM by use case, existing native surface, maintainability, safety, and version constraints rather than API preference.
+      - Separate conceptual interoperability concerns from deep platform-specific C/C++ toolchain or ABI engineering.
+      - Explain the end-to-end journey from library and ABI through data layout and calls/callbacks to error propagation and resource cleanup.
+      - Recognize when native interoperability is not justified and the implementation should remain in managed Java.

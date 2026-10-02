@@ -1,0 +1,144 @@
+ArenaExperimentController:
+  temporalSafety():
+    summary: Observe temporal safety after an Arena closes
+    description: Allocate a native long in a confined Arena, read it while the scope
+      is alive, close the Arena, then deliberately read it again. The response shows
+      the scope becoming closed and the post-close access being rejected with IllegalStateException.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: temporal-safety
+    methodName: temporalSafety
+    params: [
+      ]
+    path: com/example/learning/module/nativeinteroperability/controller/ArenaExperimentController.java
+    mapping: '@GetMapping("/temporal-safety")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /native-interoperability/arena/temporal-safety
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  threadAccess():
+    summary: Compare confined and shared Arena access from a worker thread
+    description: Create one confined segment and one shared segment, then let the
+      same bounded worker thread read both. Confined access fails with WrongThreadException
+      while shared access succeeds, exposing the Arena thread-access contract directly.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: arena-thread-access
+    methodName: threadAccess
+    params: [
+      ]
+    path: com/example/learning/module/nativeinteroperability/controller/ArenaExperimentController.java
+    mapping: '@GetMapping("/thread-access")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /native-interoperability/arena/thread-access
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+LinkerExperimentController:
+  nativeStrlen():
+    summary: Invoke native strlen through a Linker downcall
+    description: Obtain the native Linker, resolve strlen through the default lookup,
+      choose a size_t carrier from the platform pointer width, create a FunctionDescriptor
+      and downcall MethodHandle, then pass a UTF-8 string in native memory. If the
+      JVM/platform has no native linker or the default lookup does not expose strlen,
+      the response records that platform boundary instead of failing or guessing an
+      address.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: downcall-handle
+    methodName: nativeStrlen
+    params: [
+      ]
+    path: com/example/learning/module/nativeinteroperability/controller/LinkerExperimentController.java
+    mapping: '@GetMapping("/strlen")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /native-interoperability/linker/strlen
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+MemoryLayoutExperimentController:
+  structOffset():
+    summary: Observe struct offsets derived from MemoryLayout
+    description: Describe a struct containing one byte, three bytes of padding, and
+      an int; use PathElement, byteOffset, and select to derive the layout contract;
+      then allocate a segment and read/write through those offsets. The response exposes
+      size, alignment, offsets, and stored values.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: layout-path-access
+    methodName: structOffset
+    params: [
+      ]
+    path: com/example/learning/module/nativeinteroperability/controller/MemoryLayoutExperimentController.java
+    mapping: '@GetMapping("/struct-offset")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /native-interoperability/memory-layout/struct-offset
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+MemorySegmentExperimentController:
+  spatialBounds():
+    summary: Observe MemorySegment spatial bounds
+    description: Create an 8-byte segment, perform a valid int read at offset 0, then
+      use the unaligned layout to attempt an int read at offset 6. Removing alignment
+      from the experiment isolates the remaining bounds violation and records the
+      resulting IndexOutOfBoundsException.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: segment-spatial-bounds
+    methodName: spatialBounds
+    params: [
+      ]
+    path: com/example/learning/module/nativeinteroperability/controller/MemorySegmentExperimentController.java
+    mapping: '@GetMapping("/spatial-bounds")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /native-interoperability/memory-segment/spatial-bounds
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

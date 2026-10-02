@@ -1,1 +1,336 @@
-{}
+1.MentalModel/NativeInteroperability.md:
+  native-interoperability-definition:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  native-interoperability-purpose:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  managed-native-boundary:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  native-interoperability-use-cases:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  native-boundary-costs:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+2.NativeLibraryAbi/NativeLibraryAbi.md:
+  native-library-model:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  native-library-loading:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  system-load-vs-loadlibrary:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  native-symbol-resolution:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  abi-calling-convention:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  platform-binary-compatibility:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+3.JNI/JNI.md:
+  jni-definition-purpose:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jni-native-method-binding:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jni-environment:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jni-types-data-boundary:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jni-references:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  jni-exception-boundary:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  jni-thread-boundary:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+4.JNIInvocation/JNIInvocation.md:
+  jni-invocation-purpose:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jni-vm-init-args:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  jni-create-jvm:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jni-get-created-vms:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jni-attach-detach-thread:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  jni-destroy-jvm:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  jni-library-lifecycle:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  jni-invocation-lifecycle:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+5.FFM/FFM.md:
+  ffm-definition-purpose:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  ffm-jni-relationship:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  ffm-java21-java22-boundary:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  ffm-core-abstractions:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  ffm-safety-model:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  ffm-restricted-operations:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+6.MemorySegment/MemorySegment.md:
+  memory-segment-model:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  heap-native-segments:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  mapped-segments:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  segment-spatial-bounds:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  segment-access:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  segment-slicing:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+7.ArenaLifetime/ArenaLifetime.md:
+  arena-purpose:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  arena-lifetime:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  arena-kinds:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  arena-allocation:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  temporal-safety:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  arena-thread-access:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+8.MemoryLayout/MemoryLayout.md:
+  memory-layout-purpose:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  value-layouts:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  struct-layout:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  sequence-layout:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  union-layout:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  address-layout:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  layout-alignment-offset:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  layout-path-access:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+9.LinkerSymbolLookup/LinkerSymbolLookup.md:
+  linker-model:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  symbol-lookup:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  library-symbol-lookup:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  function-descriptor:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  linker-abi-mapping:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  method-handle-boundary:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  jextract-generated-bindings:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+10.DowncallUpcall/DowncallUpcall.md:
+  downcall-model:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  downcall-handle:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  native-argument-return:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  upcall-model:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  upcall-stub:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  callback-lifetime:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  callback-thread-boundary:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+11.SafetyPitfalls/SafetyPitfalls.md:
+  native-resource-ownership:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  native-loading-failures:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  jni-reference-failures:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  native-access-control:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  layout-descriptor-mismatch:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  lifetime-failures:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  native-error-boundary:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  native-thread-safety:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  native-crash-corruption:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+12.DecisionsSynthesis/DecisionsSynthesis.md:
+  jni-vs-ffm:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  interop-selection-criteria:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  deployment-portability:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  end-to-end-native-integration:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  when-not-to-use-native:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  native-interoperability-handoffs:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false

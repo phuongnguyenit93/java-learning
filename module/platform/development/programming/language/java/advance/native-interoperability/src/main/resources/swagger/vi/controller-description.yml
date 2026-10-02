@@ -1,0 +1,24 @@
+ArenaExperimentController:
+  description: |-
+    <h2>Thí nghiệm vòng đời và quyền truy cập Arena</h2>
+    <p>Quan sát trực tiếp temporal safety của segment sau khi Arena đóng và sự khác biệt về quyền truy cập theo luồng giữa confined Arena với shared Arena bằng các thí nghiệm bounded, tự cleanup sau mỗi lần gọi.</p>
+  readmeRelated:
+    file: 7.ArenaLifetime/ArenaLifetime.md
+LinkerExperimentController:
+  description: |-
+    <h2>Thí nghiệm foreign-function downcall</h2>
+    <p>Khi JVM/platform hiện tại cung cấp native linker và default lookup expose <code>strlen</code>, resolve symbol đó, mô tả ABI bằng FunctionDescriptor và gọi function thật qua MethodHandle để learner quan sát toàn bộ luồng symbol → descriptor → linker → native result. Nếu capability hoặc symbol không có, response trả evidence về availability của platform thay vì giả vờ lời gọi đã thành công.</p>
+  readmeRelated:
+    file: 10.DowncallUpcall/DowncallUpcall.md
+MemoryLayoutExperimentController:
+  description: |-
+    <h2>Thí nghiệm MemoryLayout có cấu trúc</h2>
+    <p>Dùng StructLayout và PathElement để derive size, alignment và field offset rồi đọc/ghi MemorySegment theo layout, thay vì hard-code magic offset.</p>
+  readmeRelated:
+    file: 8.MemoryLayout/MemoryLayout.md
+MemorySegmentExperimentController:
+  description: |-
+    <h2>Thí nghiệm spatial bounds của MemorySegment</h2>
+    <p>Thực hiện một access hợp lệ rồi cố ý truy cập vượt biên để quan sát Java 21 FFM chặn lỗi bằng IndexOutOfBoundsException trước khi biến thành native memory corruption.</p>
+  readmeRelated:
+    file: 6.MemorySegment/MemorySegment.md

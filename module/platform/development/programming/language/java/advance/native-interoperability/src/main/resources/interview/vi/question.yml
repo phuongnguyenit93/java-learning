@@ -1,0 +1,125 @@
+# <interview-schema>
+# Cấu trúc câu hỏi Interview
+# schema-version: 2
+#
+# questions [kiểu: list; bắt buộc; mặc định: []]
+#   Danh sách câu hỏi Interview của module trong language hiện tại.
+#   mỗi phần tử:
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi phỏng vấn hiển thị cho người học.
+#     answer [kiểu: string; bắt buộc; mặc định: ""]
+#       Câu trả lời tham khảo, chỉ hiển thị khi người học chủ động mở.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu nội dung được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu nội dung đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+# </interview-schema>
+
+questions:
+  - question: "Điều gì thay đổi khi Java đi từ managed runtime sang native code, và bạn sẽ quyết định boundary đó có thực sự đáng dùng hay không như thế nào?"
+    answer: >-
+      Trong managed Java, JVM quản lý object reachability, garbage collection, type safety, exception semantics và phần lớn portability của runtime. Native interoperability đưa thêm những contract nằm ngoài các guarantee đó: native allocation/ownership, ABI và architecture compatibility, library deployment, pointer lifetime, callback, native error convention và các failure có thể crash hoặc corrupt process. Tôi chỉ chấp nhận boundary này khi có nhu cầu cụ thể như tích hợp native library sẵn có, OS/hardware API, specialized memory access hoặc native ecosystem. Nếu một Java API được maintain tốt giải quyết đủ bài toán, giữ implementation ở managed Java thường giảm đáng kể rủi ro portability, deployment, observability và safety.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.MentalModel/NativeInteroperability.md"
+      anchor: "managed-native-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "So sánh JNI và FFM như hai lựa chọn native interoperability. Java version, native surface hiện có, maintainability và deployment ảnh hưởng quyết định ra sao?"
+    answer: >-
+      JNI là bridge truyền thống lâu đời và vẫn phù hợp với các JNI library sẵn có, JVM embedding qua Invocation API và ecosystem đã dựa vào generated header cùng JNIEnv. FFM cho Java một model trực tiếp hơn cho foreign memory, layout, symbol lookup, downcall và upcall, nên có thể giảm nhiều handwritten JNI glue với C-style API. Trên Java 21 FFM vẫn là preview, vì vậy preview flags và version compatibility là một phần deployment contract; Java 22 final hóa API nhưng không xóa ABI hay native-binary constraint. Tôi chọn dựa trên interface native đang có, target JDK policy, tooling/team maturity, callback và data-layout needs, portability target và chi phí maintain native artifacts thay vì coi FFM là replacement tự động cho mọi JNI integration.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "12.DecisionsSynthesis/DecisionsSynthesis.md"
+      anchor: "jni-vs-ffm"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Một JNI component giữ Java object, callback vào Java và tạo native worker thread. Bạn sẽ audit những rule nào về lifetime, exception và thread trước khi coi nó production-safe?"
+    answer: >-
+      Tôi phân loại từng JNI reference theo ownership trước: local reference chỉ tồn tại trong local frame/call hợp lệ, còn object cần giữ qua nhiều call phải dùng global hoặc weak-global reference và release rõ ràng. Native code phải kiểm tra và xử lý pending Java exception trước khi tiếp tục những JNI operation không hợp lệ trong trạng thái exception. Native-created thread phải attach vào JVM trước khi dùng JNIEnv và detach theo Invocation API contract; bản thân JNIEnv là thread-specific nên không thể chia sẻ tùy ý giữa thread. Tôi cũng audit local-reference growth trong native loop dài, callback reentrancy, synchronization quanh shared native state, shutdown ordering và đảm bảo cleanup vẫn xảy ra ở cả Java lẫn native error path.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Hãy giải thích spatial safety, temporal safety và thread accessibility của MemorySegment/Arena như ba câu hỏi khác nhau. Vì sao thỏa mãn chỉ một trong ba là chưa đủ?"
+    answer: >-
+      Spatial safety hỏi access range có nằm trọn trong segment và phù hợp layout constraint hay không. Temporal safety hỏi scope của segment còn alive hay không; close một closeable Arena chấm dứt access dù Java vẫn giữ segment object. Thread accessibility hỏi current thread có quyền access segment đó hay không, khác nhau giữa confined và shared arena. Một chương trình có thể đúng ở một chiều nhưng sai ở chiều khác: read in-bounds vẫn có thể xảy ra sau close, hoặc một confined segment còn live và in-bounds vẫn có thể bị thread sai truy cập. Vì vậy native-memory reasoning đúng phải theo dõi đồng thời range, lifetime và permitted access, cộng thêm synchronization bình thường khi shared mutable data tồn tại.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Vì sao MemoryLayout và FunctionDescriptor là một phần của ABI correctness chứ không chỉ là tiện ích API? Hãy nêu failure khi một trong hai contract sai."
+    answer: >-
+      MemoryLayout mô tả native data shape: size, alignment, field placement, sequence, union và address. FunctionDescriptor mô tả native call signature mà Linker dùng. Đây là representation của binary contract chứ không phải metadata trang trí. Struct offset hoặc alignment sai có thể đọc nhầm byte hoặc overwrite native state lân cận. Function descriptor sai có thể truyền argument hay diễn giải return value bằng carrier/ABI classification sai. Dù symbol lookup thành công, các mismatch này vẫn có thể gây kết quả sai, Java-side validation failure, native crash hoặc silent corruption. Tôi derive offset từ layout, verify platform-dependent type và dùng generated binding/native header như evidence cho contract thay vì giả định Java object/type layout giống C.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "11.SafetyPitfalls/SafetyPitfalls.md"
+      anchor: "layout-descriptor-mismatch"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Hãy đi qua experiment nativeStrlen từ symbol lookup đến kết quả length. Observation nào phụ thuộc platform, và việc không tìm thấy symbol thực sự chứng minh điều gì?"
+    answer: >-
+      Experiment lấy native Linker cho ABI của OS/processor hiện tại, hỏi defaultLookup về strlen, chọn Java carrier cho C size_t theo pointer width, tạo FunctionDescriptor cho size_t strlen(char*) rồi tạo downcall MethodHandle. Sau đó nó allocate UTF-8 string trong Arena và invoke handle, so native result với byte length do Java tính. Linker và symbol set của default lookup là platform fact, nên không lấy được linker hoặc không thấy strlen không chứng minh function đó không tồn tại ở mọi C environment; nó chỉ chứng minh lookup surface của runtime/platform hiện tại không cung cấp binding này. FunctionDescriptor vẫn phải khớp ABI thật trước khi call có thể được tin cậy.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "10.DowncallUpcall/DowncallUpcall.md"
+      anchor: "downcall-handle"
+    apiRelated:
+      controller: "LinkerExperimentController"
+      methodSignature: "nativeStrlen()"
+
+  - question: "Bạn sẽ làm FFM upcall callback an toàn thế nào nếu native code có thể callback bất đồng bộ hoặc từ native-created thread?"
+    answer: >-
+      Tôi coi upcall stub là native resource có lifetime do Arena quản lý. Arena phải sống lâu hơn mọi native use có thể xảy ra, và shutdown phải dừng hoặc unregister callback ở native side trước rồi mới close Arena. Tôi cũng xác định native thread nào gọi callback, Java synchronization hay thread-confinement assumption nào tồn tại, và callback có thể reenter shared native state hay không. Trên Java 21, upcall target không được để exception escape; nếu điều đó xảy ra JVM sẽ terminate abruptly, vì vậy target cần catch/translation policy rõ ràng. Cuối cùng tôi định nghĩa ownership cho native memory và Java object mà callback capture để lifetime của callback và resource liên quan không bị lệch nhau.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Hãy mô tả checklist end-to-end để ship một Java-to-native integration cho nhiều operating system và architecture."
+    answer: >-
+      Tôi bắt đầu từ lý do business phải rời managed Java, rồi xác định bridge và supported JDK versions. Tôi inventory từng native artifact theo OS/architecture, loading rule, symbol/version requirement, calling convention và data-layout assumption. Tôi định nghĩa ownership/shutdown cho library, memory, JNI reference, Arena, callback và thread; quy định native error map sang Java thế nào; và bound failure để test không dựa trên undefined behavior. CI phải chạy representative target platform thay vì coi một developer machine là bằng chứng portability. Packaging phải phân phối đúng binary mà không tạo unsafe search-path behavior. Tôi cũng document preview/native-access flags khi cần, observability/crash diagnostics, fallback khi capability unavailable và điều kiện mà feature nên tiếp tục ở managed Java.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "12.DecisionsSynthesis/DecisionsSynthesis.md"
+      anchor: "end-to-end-native-integration"
+    apiRelated:
+      controller: ""
+      methodSignature: ""

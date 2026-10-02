@@ -1,0 +1,11 @@
+tasks.withType(org.gradle.api.tasks.compile.JavaCompile).configureEach {
+    options.compilerArgs += ['--enable-preview']
+}
+
+tasks.withType(org.gradle.api.tasks.testing.Test).configureEach {
+    jvmArgs '--enable-preview', '--enable-native-access=ALL-UNNAMED'
+}
+
+tasks.withType(org.gradle.api.tasks.JavaExec).configureEach {
+    jvmArgs '--enable-preview', '--enable-native-access=ALL-UNNAMED'
+}

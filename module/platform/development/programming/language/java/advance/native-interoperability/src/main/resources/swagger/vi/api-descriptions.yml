@@ -1,0 +1,142 @@
+ArenaExperimentController:
+  temporalSafety():
+    summary: Quan sát temporal safety sau khi Arena đóng
+    description: Cấp phát một native long trong confined Arena, đọc khi scope còn
+      sống, đóng Arena rồi cố ý đọc lại. Response cho thấy scope chuyển từ alive sang
+      closed và access sau close bị từ chối bằng IllegalStateException.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: temporal-safety
+    methodName: temporalSafety
+    params: [
+      ]
+    path: com/example/learning/module/nativeinteroperability/controller/ArenaExperimentController.java
+    mapping: '@GetMapping("/temporal-safety")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /native-interoperability/arena/temporal-safety
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  threadAccess():
+    summary: So sánh confined và shared Arena qua worker thread
+    description: Tạo một segment confined và một segment shared, sau đó cho cùng một
+      worker thread thử đọc cả hai. Confined access bị WrongThreadException trong
+      khi shared access đọc được giá trị, giúp quan sát trực tiếp thread-access contract.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: arena-thread-access
+    methodName: threadAccess
+    params: [
+      ]
+    path: com/example/learning/module/nativeinteroperability/controller/ArenaExperimentController.java
+    mapping: '@GetMapping("/thread-access")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /native-interoperability/arena/thread-access
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+LinkerExperimentController:
+  nativeStrlen():
+    summary: Gọi strlen native qua Linker downcall
+    description: Lấy native Linker, tìm symbol strlen bằng default lookup, chọn carrier
+      cho size_t theo pointer width, tạo FunctionDescriptor và downcall MethodHandle,
+      rồi truyền UTF-8 string trong native memory. Nếu JVM/platform không có native
+      linker hoặc default lookup không expose strlen, response ghi nhận platform boundary
+      đó thay vì fail hoặc đoán một address.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: downcall-handle
+    methodName: nativeStrlen
+    params: [
+      ]
+    path: com/example/learning/module/nativeinteroperability/controller/LinkerExperimentController.java
+    mapping: '@GetMapping("/strlen")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /native-interoperability/linker/strlen
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+MemoryLayoutExperimentController:
+  structOffset():
+    summary: Quan sát offset struct được derive từ MemoryLayout
+    description: Mô tả struct gồm byte, ba byte padding và int; dùng PathElement,
+      byteOffset và select để derive layout contract, rồi cấp phát segment và đọc/ghi
+      theo các offset đã tính. Response trả size, alignment, offsets và values thực
+      tế.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: layout-path-access
+    methodName: structOffset
+    params: [
+      ]
+    path: com/example/learning/module/nativeinteroperability/controller/MemoryLayoutExperimentController.java
+    mapping: '@GetMapping("/struct-offset")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /native-interoperability/memory-layout/struct-offset
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+MemorySegmentExperimentController:
+  spatialBounds():
+    summary: Quan sát spatial bounds của MemorySegment
+    description: Tạo segment 8 byte, đọc int hợp lệ tại offset 0 rồi dùng layout unaligned
+      để thử đọc int tại offset 6. Việc bỏ alignment khỏi thí nghiệm giúp response
+      chứng minh lỗi còn lại là bounds violation và ghi nhận IndexOutOfBoundsException.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: segment-spatial-bounds
+    methodName: spatialBounds
+    params: [
+      ]
+    path: com/example/learning/module/nativeinteroperability/controller/MemorySegmentExperimentController.java
+    mapping: '@GetMapping("/spatial-bounds")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /native-interoperability/memory-segment/spatial-bounds
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

@@ -1,0 +1,93 @@
+ArenaExperimentController:
+  temporalSafety():
+    execution: |-
+      <p><b>Concept:</b> An Arena defines temporal bounds for native memory. A segment owned by a closeable Arena remains valid only while that Arena's scope is alive.</p>
+      <ol>
+        <li>The service creates <code>Arena.ofConfined()</code>, allocates a <code>JAVA_LONG</code>, stores <code>42</code>, and reads it while the scope is alive.
+          <div><i>Source: NativeInteroperabilityExperimentService.temporalSafetyDemo()</i></div>
+          <pre><code>Arena arena = Arena.ofConfined();
+      MemorySegment segment = arena.allocate(ValueLayout.JAVA_LONG);
+      segment.set(ValueLayout.JAVA_LONG, 0, 42L);</code></pre>
+        </li>
+        <li>The response records <code>scopeAliveBeforeClose=true</code>, then the service calls <code>arena.close()</code>.</li>
+        <li>After close, the same scope reports <code>isAlive=false</code>. A deliberate <code>segment.get(...)</code> is rejected with <code>IllegalStateException</code>.</li>
+      </ol>
+      <p><b>Evidence:</b> <code>valueBeforeClose=42</code>, the scope state before/after close, <code>accessAfterCloseRejected=true</code>, and the actual exception type.</p>
+      <p><b>Conclusion:</b> Temporal safety is a real MemorySegment/Arena runtime contract: Java-side access cannot keep dereferencing the segment after its lifetime ends.</p>
+    usage: true
+  threadAccess():
+    execution: |-
+      <p><b>Concept:</b> A confined Arena restricts its segments to the owner thread; a shared Arena permits multi-thread access but does not solve data races automatically.</p>
+      <ol>
+        <li>Each request creates a confined segment containing <code>11</code> and a shared segment containing <code>22</code>.</li>
+        <li>A separate worker thread attempts to read the confined segment. <code>isAccessibleBy(worker)</code> is false and the access throws <code>WrongThreadException</code>.
+          <div><i>Source: NativeInteroperabilityExperimentService.threadAccessDemo()</i></div>
+          <pre><code>try {
+          confined.get(ValueLayout.JAVA_INT, 0);
+      } catch (WrongThreadException expected) {
+          confinedRejected = true;
+      }</code></pre>
+        </li>
+        <li>The same worker reads the shared segment successfully and observes <code>22</code>.</li>
+        <li>The experiment is bounded with <code>Future.get(2, TimeUnit.SECONDS)</code>. Timeout or request-thread interruption cancels the Future, and interruption status is restored. The executor is declared after both arenas in the same try-with-resources statement, so Java closes/waits for the executor first and only then closes shared/confined native memory.</li>
+      </ol>
+      <p><b>Evidence:</b> owner/worker thread names, both <code>isAccessibleBy</code> results, <code>WrongThreadException</code> for the confined segment, and <code>sharedReadValue=22</code>.</p>
+      <p><b>Conclusion:</b> Thread accessibility belongs to the Arena/segment runtime contract. A shared Arena enables cross-thread access; synchronization of the data remains a separate responsibility.</p>
+    usage: true
+LinkerExperimentController:
+  nativeStrlen():
+    execution: |-
+      <p><b>Concept:</b> An FFM downcall needs a symbol address, a FunctionDescriptor, and the Linker for the current ABI; the MethodHandle is the invocation bridge from Java to the foreign function.</p>
+      <ol>
+        <li>The service first obtains <code>Linker.nativeLinker()</code>. If the current JVM/platform does not provide a native linker, the response returns <code>linkerAvailable=false</code>. Otherwise it searches the default lookup for <code>strlen</code>; a missing symbol returns <code>symbolAvailable=false</code> instead of constructing a call from a guessed address.</li>
+        <li>When the symbol exists, the binding chooses a carrier for C <code>size_t</code> from the platform pointer width and creates a descriptor for <code>size_t strlen(char*)</code>.
+          <div><i>Source: NativeInteroperabilityExperimentService.nativeStrlenDemo()</i></div>
+          <pre><code>FunctionDescriptor descriptor =
+          FunctionDescriptor.of(sizeTLayout, ValueLayout.ADDRESS);
+      MethodHandle strlen =
+          linker.downcallHandle(symbol.orElseThrow(), descriptor);</code></pre>
+        </li>
+        <li>Each request allocates the UTF-8 string <code>native-interop</code> in a confined Arena and invokes the handle with the matching carrier type.</li>
+        <li>The response compares the Java-computed UTF-8 byte length with the value returned by native <code>strlen</code>, and records the carrier and OS/architecture.</li>
+      </ol>
+      <p><b>Evidence:</b> <code>linkerAvailable</code>, <code>symbolAvailable</code>, input, <code>expectedUtf8ByteLength</code>, <code>nativeResult</code>, <code>sizeTCarrier</code>, and platform.</p>
+      <p><b>Java 21 runtime note:</b> this module itself requires <code>--enable-preview</code> because Java 21 FFM is a preview API. The downcall is also a restricted operation: without <code>--enable-native-access</code>, Java 21 still allows it but emits a warning. For a warning-free class-path run, add <code>--enable-native-access=ALL-UNNAMED</code>.</p>
+      <p><b>Conclusion:</b> The Linker does not infer a C header for the binding. Correct symbol resolution plus a correct descriptor produce the real ABI call, while default-lookup availability must be observed rather than assumed across platforms.</p>
+    usage: true
+MemoryLayoutExperimentController:
+  structOffset():
+    execution: |-
+      <p><b>Concept:</b> A MemoryLayout is a data contract with size, alignment, and paths; field offsets should be derived from the layout rather than scattered as magic numbers.</p>
+      <ol>
+        <li>The service creates a struct containing a named <code>JAVA_BYTE</code>, three bytes of padding, and a named <code>JAVA_INT</code>.
+          <div><i>Source: NativeInteroperabilityExperimentService.structOffsetDemo()</i></div>
+          <pre><code>StructLayout layout = MemoryLayout.structLayout(
+          ValueLayout.JAVA_BYTE.withName("kind"),
+          MemoryLayout.paddingLayout(3),
+          ValueLayout.JAVA_INT.withName("value")
+      );</code></pre>
+        </li>
+        <li><code>PathElement.groupElement(...)</code> plus <code>byteOffset</code> derives both field offsets, while <code>select</code> retrieves the nested layout for <code>value</code>.</li>
+        <li>A segment is allocated directly from the struct layout, then <code>kind=7</code> and <code>value=123</code> are written/read using the derived offsets.</li>
+      </ol>
+      <p><b>Evidence:</b> layout size/alignment, <code>kindOffset</code>, <code>valueOffset</code>, selected-value size, and both values read back from the segment.</p>
+      <p><b>Conclusion:</b> Layout paths turn the native data shape into a queryable, reusable contract; binding offsets come from the layout rather than hand-written assumptions.</p>
+    usage: true
+MemorySegmentExperimentController:
+  spatialBounds():
+    execution: |-
+      <p><b>Concept:</b> A MemorySegment has spatial bounds; every access must fit completely inside <code>[0, byteSize)</code>.</p>
+      <ol>
+        <li>The service allocates an 8-byte segment aligned for <code>JAVA_INT</code>, stores <code>100</code>, and performs a valid read at offset 0.</li>
+        <li>It then attempts a four-byte int read at offset 6. The experiment deliberately uses <code>JAVA_INT_UNALIGNED</code> so alignment cannot mask the bounds failure.
+          <div><i>Source: NativeInteroperabilityExperimentService.spatialBoundsDemo()</i></div>
+          <pre><code>segment.get(
+          ValueLayout.JAVA_INT_UNALIGNED,
+          6
+      );</code></pre>
+        </li>
+        <li>FFM rejects the access with <code>IndexOutOfBoundsException</code>; the endpoint records that exception as evidence instead of failing the request.</li>
+      </ol>
+      <p><b>Evidence:</b> segment/layout byte sizes, the valid read, attempted offset, <code>spatialBoundsViolationObserved=true</code>, and exception type.</p>
+      <p><b>Conclusion:</b> Spatial safety turns a class of pointer-arithmetic mistakes into an observable Java-boundary failure before memory outside the segment can be dereferenced.</p>
+    usage: true
