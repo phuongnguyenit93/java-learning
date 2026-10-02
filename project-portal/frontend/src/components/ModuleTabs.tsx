@@ -12,8 +12,8 @@ interface ModuleTabsProps {
 
 const tabs: Array<{ id: ModuleTab; vi: string; en: string; countKey?: keyof ModuleStats }> = [
   { id: 'overview', vi: 'Overview', en: 'Overview' },
-  { id: 'menu', vi: 'Menu', en: 'Menu' },
   { id: 'roadmap', vi: 'Roadmap', en: 'Roadmap' },
+  { id: 'menu', vi: 'Menu', en: 'Menu' },
   { id: 'knowledge', vi: 'Knowledge', en: 'Knowledge', countKey: 'knowledge' },
   { id: 'api', vi: 'API Docs', en: 'API Docs', countKey: 'apiDocs' },
   { id: 'quiz', vi: 'Quiz', en: 'Quiz', countKey: 'quiz' },
