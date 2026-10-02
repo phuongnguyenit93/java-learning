@@ -39,7 +39,7 @@ Chi tiết Portal: [`project-portal/PROJECT_PORTAL.md`](./project-portal/PROJECT
 
 Với learning module, hãy **xem Roadmap trước** để hiểu thứ tự và quan hệ giữa các đầu mục lớn; sau đó mới dùng Menu/Knowledge để đi vào bài học chi tiết. Portal đặt `Roadmap` ngay kế bên `Menu`: milestone nằm trên timeline chính, `relatedKnowledge` luôn hiển thị ở phía đối diện để nhảy vào Knowledge category cùng module, còn `relatedModules` là cross-module navigation. Hai relation này không thay đổi learning order. Kiến trúc nội dung của project đi theo hướng **Roadmap first → Knowledge second → API/Quiz/Interview later**.
 
-Chi tiết workflow: [`GENARAL_AGENT_RULES.md`](./module-generate-agent/GENARAL_AGENT_RULES.md) và các canonical step rules trong `module-generate-agent/STEP_1_...` đến `STEP_8_...`.
+Chi tiết workflow: [`GENARAL_AGENT_RULES.md`](module-generate-agent/GENERAL_AGENT_RULES.md) và các canonical step rules trong `module-generate-agent/STEP_1_...` đến `STEP_8_...`.
 
 ## Bắt đầu với module mới
 
@@ -54,7 +54,7 @@ Chi tiết workflow: [`GENARAL_AGENT_RULES.md`](./module-generate-agent/GENARAL_
 
 - [`ARCHITECTURE.md`](./ARCHITECTURE.md) — kiến trúc chi tiết và ownership/lifecycle.
 - [`AGENTS.md`](./AGENTS.md) — working rules/context cho AI và contributor.
-- [`GENARAL_AGENT_RULES.md`](./module-generate-agent/GENARAL_AGENT_RULES.md) — orchestrator/routing cho toàn bộ module-generation workflow.
+- [`GENARAL_AGENT_RULES.md`](module-generate-agent/GENERAL_AGENT_RULES.md) — orchestrator/routing cho toàn bộ module-generation workflow.
 - [`STEP_1_CURRICULUM_RULES.md`](./module-generate-agent/STEP_1_CURRICULUM_RULES.md) — Curriculum, scope, ownership và boundary.
 - [`STEP_2_ROADMAP.md`](./module-generate-agent/STEP_2_ROADMAP.md) — canonical ROADMAP architecture, contract và authoring/review rules.
 - [`STEP_3_MENU.md`](./module-generate-agent/STEP_3_MENU.md) — Menu + title skeleton cho new module; refactor module skip step này.
