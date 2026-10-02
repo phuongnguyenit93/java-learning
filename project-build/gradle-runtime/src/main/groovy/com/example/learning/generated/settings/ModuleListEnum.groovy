@@ -1545,7 +1545,7 @@ enum ModuleListEnum {
     JAVA_DYNAMIC_RUNTIME(
             'module:platform:development:programming:language:java:advance:dynamic-runtime',
             'module/platform/development/programming/language/java/advance/dynamic-runtime',
-            'LIBRARY',
+            'SERVLET',
             'Advanced Java dynamic invocation and runtime linkage',
             false,
             []
@@ -1608,7 +1608,7 @@ enum ModuleListEnum {
     JAVA_INSTRUMENTATION(
             'module:platform:development:programming:language:java:advance:instrumentation',
             'module/platform/development/programming/language/java/advance/instrumentation',
-            'LIBRARY',
+            'SERVLET',
             'Java instrumentation, agents and class transformation',
             false,
             []
@@ -1662,7 +1662,7 @@ enum ModuleListEnum {
     JAVA_NATIVE_INTEROPERABILITY(
             'module:platform:development:programming:language:java:advance:native-interoperability',
             'module/platform/development/programming/language/java/advance/native-interoperability',
-            'LIBRARY',
+            'SERVLET',
             'Java native interoperability, foreign memory and operating-system boundaries',
             false,
             []
@@ -1671,7 +1671,7 @@ enum ModuleListEnum {
     JAVA_NETWORKING(
             'module:platform:development:programming:language:java:advance:networking',
             'module/platform/development/programming/language/java/advance/networking',
-            'LIBRARY',
+            'SERVLET',
             'Java networking APIs',
             false,
             []
@@ -1725,7 +1725,7 @@ enum ModuleListEnum {
     JAVA_RUNTIME_DIAGNOSTICS(
             'module:platform:development:programming:language:java:advance:runtime-diagnostics',
             'module/platform/development/programming/language/java/advance/runtime-diagnostics',
-            'LIBRARY',
+            'SERVLET',
             'Java runtime diagnostics, management and troubleshooting',
             false,
             []
@@ -1734,7 +1734,7 @@ enum ModuleListEnum {
     JAVA_RUNTIME_EXTENSIBILITY(
             'module:platform:development:programming:language:java:advance:runtime-extensibility',
             'module/platform/development/programming/language/java/advance/runtime-extensibility',
-            'LIBRARY',
+            'SERVLET',
             'Java runtime extensibility, SPI and plugin architecture',
             false,
             []
@@ -1743,7 +1743,7 @@ enum ModuleListEnum {
     JAVA_SECURITY_CRYPTOGRAPHY(
             'module:platform:development:programming:language:java:advance:security-cryptography',
             'module/platform/development/programming/language/java/advance/security-cryptography',
-            'LIBRARY',
+            'SERVLET',
             'Java security and cryptography APIs',
             false,
             []

@@ -1077,8 +1077,15 @@ THREAD-docker.zip
 Người dùng có thể chạy:
 
 ```bash
-java -jar thread.jar
+java --enable-preview -jar thread.jar
 ```
+
+`Local Run` dùng Java 21 làm runtime baseline và luôn truyền `--enable-preview`.
+Flag này là bắt buộc cho runnable module được compile bằng Java 21 preview
+feature/API; module không dùng preview vẫn có thể chạy bằng cùng command.
+Các quyền native như `--enable-native-access=...` không được cấp globally;
+module thực sự gọi restricted native operation phải document quyền đó ở
+learning/runtime surface của chính module.
 
 hoặc:
 

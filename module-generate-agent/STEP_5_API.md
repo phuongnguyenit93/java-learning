@@ -1,19 +1,32 @@
 # Step 5 - API Rules
 
-Step 5 xây hoặc refactor API learning documentation khi module thực sự có learning API. Step number này **giống nhau cho new và refactor module**.
+Step 5 đánh giá, xây hoặc refactor API learning surface dựa trên **learning design đã được approve**. Step number này **giống nhau cho new và refactor module**.
 
-### General Agent Rules context guard
+### General Agent Rules + upstream learning context guard
 
 Trước khi thực hiện Step 5:
 
 ```text
-Nếu context của GENARAL_AGENT_RULES.md vẫn còn rõ ràng trong working context
+Nếu context của GENERAL_AGENT_RULES.md vẫn còn rõ ràng trong working context
 → không cần đọc lại
 
 Nếu context đã bị loại khỏi cửa sổ làm việc, bị quên, bị truncate,
 hoặc agent không chắc mình còn nhớ đầy đủ các global rules
-→ đọc lại ./GENARAL_AGENT_RULES.md trước khi tiếp tục
+→ đọc lại ./GENERAL_AGENT_RULES.md trước khi tiếp tục
 ```
+
+Step 5 **bắt buộc** phải nắm context của:
+
+```text
+relevant ./temp/*_CURRICULUM_MAP.md
++ approved Step 2 ROADMAP
++ approved Step 3 Menu
++ completed/reviewed Step 4 Knowledge
+```
+
+Step 5 applicability phải được quyết định từ các upstream learning artifacts này trước khi nhìn config/runtime implementation hiện tại.
+
+Nếu Curriculum Map thiếu/ambiguous, report **CURRICULUM CONTEXT GAP**. Nếu API experiment cần concept/milestone chưa tồn tại, route về đúng upstream gap thay vì tự mở rộng curriculum trong Step 5.
 
 Không suy đoán các orchestration, preservation, gap-routing hoặc cross-step rules từ trí nhớ khi context không còn chắc chắn.
 
@@ -30,19 +43,246 @@ module/.../src/main/resources/swagger/{lang}/api-params.yml
 
 ## Step 5 — Build API learning documentation and connect API to Knowledge
 
-This step is conditional on the module exposing learning APIs.
+Step 5 là conditional learning surface, nhưng quyết định **có cần API hay không phải đến từ learning value**, không phải trạng thái repository hiện tại.
 
-For current repository conventions:
+### Applicability source of truth
 
 ```text
-MODULE_TYPE = SERVLET
-or
-MODULE_TYPE = REACTIVE
+Curriculum
+        ↓
+ROADMAP
+        ↓
+Menu
+        ↓
+Knowledge
+        ↓
+API learning-value evaluation
+        ↓
+STEP 5 REQUIRED / NOT REQUIRED
 ```
 
-means the agent must explicitly inspect controllers/endpoints and determine whether the module contains learning APIs that should participate in Swagger/API Docs.
+Tuyệt đối **không** dùng các trạng thái hiện tại sau làm authority để quyết định Step 5 có cần hay không:
+
+```text
+MODULE_TYPE
+BUILD_SWAGGER
+current build.gradle
+existing dependencies
+existing controller/service/source layout
+presence/absence of @RestController / @Controller
+presence/absence of @RequestMapping / @GetMapping / @PostMapping / ...
+presence/absence of src/main/resources/swagger
+presence/absence of existing API metadata
+neighboring modules currently using LIBRARY/SERVLET/REACTIVE
+```
+
+Các trạng thái trên chỉ mô tả **current implementation state**. Chúng có thể:
+
+```text
+đúng
+incomplete
+stale
+được cấu hình từ curriculum cũ
+hoặc đã bị hiểu/sửa sai trước đó
+```
+
+Do đó:
+
+```text
+NEVER:
+current config
+→ infer curriculum
+→ decide Step 5
+
+ALWAYS:
+approved learning design
+→ decide Step 5
+→ reconcile implementation/config
+```
+
+Ví dụ, đây **không phải** lý do hợp lệ để skip Step 5:
+
+```text
+MODULE_TYPE = LIBRARY
+BUILD_SWAGGER = FALSE
+src/main/java is empty
+no controller exists
+no swagger resources exist
+```
+
+Nếu Knowledge cho thấy một executable API experiment có learning value cao, các trạng thái trên được hiểu là **implementation chưa support curriculum**, không phải bằng chứng API không cần thiết.
+
+Ngược lại, đây cũng không phải lý do bắt buộc phải giữ Step 5:
+
+```text
+BUILD_SWAGGER = TRUE
+controller already exists
+swagger metadata already exists
+```
+
+Nếu API không còn tạo learning value theo Curriculum/Roadmap/Knowledge hiện tại, implementation cũ có thể là stale và cần được cleanup/reconciled.
 
 Do not assume every endpoint is a learning experiment. Infrastructure, health, support, internal, generated or framework-only endpoints must not force artificial curriculum mappings.
+
+---
+
+## Step 5 applicability decision
+
+Trước khi inspect config hiện tại, review toàn bộ Knowledge surface và hỏi:
+
+```text
+Có concept nào mà learner sẽ hiểu tốt hơn đáng kể
+nếu được trigger/observe qua một bounded executable API experiment không?
+```
+
+Decision:
+
+```text
+NO
+→ STEP 5 learning API is not required
+→ do not create Swagger/API solely because this step exists
+→ inspect current implementation only to find stale API/config that contradicts this decision
+
+YES
+→ STEP 5 learning API is required
+→ define experiment surface from Knowledge
+→ only then inspect current repository implementation
+→ repair/enable required capability
+→ build/refactor API + documentation
+```
+
+Step 5 applicability phải được explain bằng **Knowledge concept + expected observable evidence**, ví dụ:
+
+```text
+Concept
+→ what learner needs to observe
+→ why static Knowledge/code example is insufficient
+→ why an API-triggered experiment adds value
+```
+
+Không dùng câu trả lời kiểu:
+
+```text
+"module is LIBRARY"
+"Swagger is disabled"
+"there is no controller"
+"other modules do not expose APIs"
+```
+
+để kết luận Step 5 không cần.
+
+---
+
+## Reconcile module configuration with the learning decision
+
+Sau khi Step 5 applicability đã được quyết định từ learning design, agent phải audit implementation hiện tại.
+
+### If Step 5 is required
+
+Repository configuration phải được chỉnh để support learning API thực tế.
+
+Review ít nhất:
+
+```text
+module/master.json
+→ MODULE_TYPE
+→ BUILD_SWAGGER
+→ other required BUILD_* capabilities
+
+module runtime/source structure
+→ controller
+→ service/experiment implementation
+→ resources
+→ dependencies derived by repository setup
+
+Swagger source
+→ src/main/resources/swagger/{lang}/...
+```
+
+Canonical rule:
+
+```text
+learning design requires API
+        ↓
+derive required runtime architecture
+        ↓
+fix canonical module config
+        ↓
+run repository setup/sync
+        ↓
+let generated/derived files follow canonical config
+        ↓
+author/refactor API experiment
+```
+
+Do **not** blindly set every API module to `SERVLET`.
+
+Choose runtime architecture from the experiment:
+
+```text
+Spring MVC / Servlet learning endpoint
+→ MODULE_TYPE = SERVLET
+
+Spring WebFlux / reactive endpoint
+→ MODULE_TYPE = REACTIVE
+
+No executable HTTP learning surface justified
+→ do not force a web runtime merely to satisfy Step 5
+```
+
+For the current repository implementation, Swagger adapters are selected from `MODULE_TYPE` only when `BUILD_SWAGGER=TRUE`. Therefore, if an in-module Swagger learning API is required, these values must be made mutually consistent rather than leaving a stale combination such as:
+
+```text
+MODULE_TYPE = LIBRARY
+BUILD_SWAGGER = TRUE
+```
+
+when the intended experiment actually requires a runnable Servlet/Reactive web stack.
+
+Prefer editing **canonical human-owned config values** such as `master.json`, then run the repository's normal synchronization/setup so derived configuration/resources are regenerated correctly. Do not hand-patch generated projections merely to make the build pass.
+
+If enabling Step 5 reveals missing dependencies/resources/source folders that should be generated by repository setup, fix the canonical capability/config first and let repository automation materialize them.
+
+### If Step 5 is not required
+
+Current implementation must still be checked for stale contradictions.
+
+Examples:
+
+```text
+BUILD_SWAGGER = TRUE but no learning API is justified
+legacy learning controller no longer maps to approved Knowledge
+swagger metadata refers to removed/out-of-scope concepts
+module runtime type was changed only to support obsolete API demos
+```
+
+Do not silently keep stale capability just because it already exists.
+
+Reconcile it safely:
+
+```text
+approved learning design
+→ no API learning surface
+→ identify stale API/config
+→ remove/disable only when ownership and downstream impact are understood
+→ validate build/projection afterward
+```
+
+Preservation rules still apply: historical human-owned content must not be silently deleted. Classify stale/out-of-scope artifacts explicitly before removal/refactor.
+
+### Configuration is downstream, not curriculum authority
+
+```text
+Curriculum / Roadmap / Menu / Knowledge
+        ↓
+Step 5 applicability
+        ↓
+required API architecture
+        ↓
+MODULE_TYPE / BUILD_SWAGGER / source / dependencies / swagger resources
+```
+
+Never reverse this arrow.
 
 ## API learning value và experiment suitability
 
@@ -201,7 +441,7 @@ Knowledge anchored section
 Controller / method experiment
 ```
 
-Every meaningful learning API in a SERVLET/REACTIVE learning module should illustrate, prove, observe or exercise a real Knowledge concept.
+Every meaningful learning API should illustrate, prove, observe or exercise a real Knowledge concept. If the experiment requires a Servlet/Reactive runtime, Step 5 must ensure the module configuration actually provides that runtime.
 
 For an executable learning experiment, keep the runtime evidence intentionally bounded and observable:
 
@@ -316,6 +556,13 @@ At the end of the API step, API Docs should read as the **practical experiment l
 Step 5 hoàn thành khi:
 
 ```text
+[ ] Applicability được quyết định từ Curriculum/Roadmap/Menu/Knowledge, không từ config hiện tại
+[ ] Có rationale rõ vì sao Step 5 REQUIRED hoặc NOT REQUIRED
+[ ] MODULE_TYPE / BUILD_SWAGGER / source hiện tại chỉ được dùng như implementation evidence
+[ ] Nếu Step 5 REQUIRED, canonical module config đã được sửa để support runtime/API capability cần thiết
+[ ] Nếu Step 5 NOT REQUIRED, stale API/config contradiction đã được review/reconcile
+[ ] Repository setup/sync đã được chạy khi canonical config thay đổi
+[ ] Generated/derived config không bị hand-edit thay cho source-of-truth config
 [ ] Mỗi learning API có learning intent rõ
 [ ] API tạo observation/evidence thật sự thay vì chỉ lặp lại Knowledge
 [ ] Concept được đánh giá đúng mức API value thay vì ép mọi Knowledge section thành endpoint
@@ -326,6 +573,7 @@ Step 5 hoàn thành khi:
 [ ] Execution giải thích vì sao evidence chứng minh concept
 [ ] Không có API giả được tạo chỉ để tăng count hoặc relation coverage
 [ ] Resource / unsafe experiment được bounded và cleanup đúng cách
+[ ] Build/runtime/API projection được validate sau khi capability/config thay đổi
 ```
 
 Downstream:

@@ -1,19 +1,31 @@
 # Step 4 - Knowledge Rules
 
-Step 4 là canonical authoring/refactor step cho **Menu + Knowledge**.
+Step 4 là canonical authoring/refactor step cho **Knowledge** sau khi Step 3 đã ổn định Menu structure.
 
-### General Agent Rules context guard
+### General Agent Rules + Curriculum Map context guard
 
 Trước khi thực hiện Step 4:
 
 ```text
-Nếu context của GENARAL_AGENT_RULES.md vẫn còn rõ ràng trong working context
+Nếu context của GENERAL_AGENT_RULES.md vẫn còn rõ ràng trong working context
 → không cần đọc lại
 
 Nếu context đã bị loại khỏi cửa sổ làm việc, bị quên, bị truncate,
 hoặc agent không chắc mình còn nhớ đầy đủ các global rules
-→ đọc lại ./GENARAL_AGENT_RULES.md trước khi tiếp tục
+→ đọc lại ./GENERAL_AGENT_RULES.md trước khi tiếp tục
 ```
+
+Ngoài General Agent Rules, Step 4 **bắt buộc** phải đọc và nắm context của:
+
+```text
+./temp/*_CURRICULUM_MAP.md tương ứng với target module
++ approved Step 2 ROADMAP
++ approved Step 3 Menu structure
+```
+
+Curriculum Map cung cấp area/module ownership và boundary; ROADMAP cung cấp module learning journey; Step 3 Menu cung cấp chapter/path/title/section structure mà Knowledge phải triển khai.
+
+Nếu Curriculum Map thiếu/ambiguous, report **CURRICULUM CONTEXT GAP**. Nếu Knowledge cần một milestone chưa có, report **ROADMAP GAP**. Nếu Knowledge chỉ có thể đúng bằng cách redesign chapter/path/title structure đáng kể, report **MENU GAP** và quay lại Step 3 thay vì tự tái cấu trúc Menu trong Step 4.
 
 Không suy đoán các orchestration, preservation, gap-routing hoặc cross-step rules từ trí nhớ khi context không còn chắc chắn.
 
@@ -23,8 +35,8 @@ NEW MODULE
 → write full Knowledge
 
 REFACTOR MODULE
-→ Step 3 is skipped
-→ refactor Menu + Knowledge together in Step 4
+→ consume the reviewed/refactored Step 3 Menu skeleton
+→ migrate/refactor existing Knowledge into that approved structure
 ```
 
 Canonical sources:
@@ -38,32 +50,34 @@ module/.../src/main/resources/readme/{lang}/knowledge-metadata.yml
 
 ## Refactor behavior
 
-### Existing / refactor module — Refactor Menu + Knowledge
+### Existing / refactor module — Refactor Knowledge against approved Menu
 
-This step applies only to an existing/refactor module and combines the structural Menu work with Knowledge refactoring.
+For an existing/refactor module, Step 3 has already reconciled the structural Menu with Curriculum + ROADMAP. Step 4 therefore focuses on the learner-facing Knowledge body and metadata.
 
-Audit the old content against the approved roadmap and reorganize it as needed. Existing knowledge must be preserved while being moved, regrouped, split, merged, renamed or expanded.
+Audit the old Knowledge against the approved Curriculum, ROADMAP and Step 3 structure. Existing knowledge must be preserved while being migrated, rewritten, regrouped, split, merged or expanded as needed.
 
 Allowed operations include:
 
 ```text
-move content to a better chapter
-split an overloaded chapter
-merge fragmented sections
-rename titles/categories to match the approved learning model
+move existing body content into the Step 3-approved chapter/section
+split an overloaded explanation across already-approved section identities
+merge fragmented explanations into the approved target section
+refine learner-facing wording while preserving stable structural identities
 add missing prerequisites, explanations or concepts
-reorder content to match the roadmap
+reorder explanation flow inside the approved structure
 ```
 
-Do not silently delete an existing concept merely because the new structure no longer has the same chapter name. Preserve the knowledge somewhere appropriate or explicitly classify it as incorrect/stale/out-of-scope for review.
+Do not silently delete an existing concept merely because Step 3 changed the chapter structure. Preserve the knowledge somewhere appropriate or explicitly classify it as incorrect/stale/out-of-scope for review.
 
-Toàn bộ Knowledge authoring và pedagogy rules trong file này cũng áp dụng cho phần Knowledge của refactor module.
+Do not perform a second independent Menu redesign in Step 4. Small mechanical corrections required to make the approved structure valid are acceptable; structural curriculum changes belong to Step 3.
+
+Toàn bộ Knowledge authoring và pedagogy rules trong file này áp dụng như nhau cho new module và refactor module.
 
 ## Knowledge authoring
 
-### New module — Build Knowledge
+### Build / Refactor Knowledge
 
-This step applies to a new module after the Menu/title skeleton is stable. For a refactor module, the same Knowledge rules apply while Menu + Knowledge are refactored together in Step 4.
+This step applies after the Menu/title skeleton is stable in Step 3, regardless of whether the module is new or existing.
 
 Knowledge is the canonical explanation layer for the module.
 

@@ -1,4 +1,4 @@
-# GENARAL_AGENT_RULES.md
+# GENERAL_AGENT_RULES.md
 
 ## 1. Purpose
 
@@ -13,7 +13,7 @@ AGENTS.md
 ARCHITECTURE.md
 → why the repository/build/runtime boundaries exist
 
-GENARAL_AGENT_RULES.md
+GENERAL_AGENT_RULES.md
 → orchestrates the canonical module-generation steps
 
 STEP_1_CURRICULUM_RULES.md
@@ -23,10 +23,10 @@ STEP_2_ROADMAP.md
 → canonical roadmap architecture, contract, workflow and approval gate
 
 STEP_3_MENU.md
-→ new-module Menu + title skeleton only
+→ Menu + title skeleton/review for both new and existing modules
 
 STEP_4_KNOWLEDGE.md
-→ Knowledge authoring; refactor Menu + Knowledge together
+→ Knowledge authoring/refactor against the approved Step 3 Menu
 
 STEP_5_API.md / STEP_6_QUIZ.md / STEP_7_INTERVIEW.md
 → downstream learning surfaces
@@ -164,7 +164,7 @@ Generated or mixed-ownership fields must follow the preservation rules from `../
 
 ## 4. Module generation orchestration
 
-`GENARAL_AGENT_RULES.md` is the **orchestrator**. Detailed authoring rules belong to the canonical step files below; do not duplicate them here.
+`GENERAL_AGENT_RULES.md` is the **orchestrator**. Detailed authoring rules belong to the canonical step files below; do not duplicate them here.
 
 ### Canonical step numbering
 
@@ -186,7 +186,7 @@ Step 7 — Interview
 Step 8 — Integrated validation + Coverage Review
 ```
 
-The step number is stable across new and refactor workflows. Do not renumber later steps when one step is skipped.
+The step number and execution order are stable across new and refactor workflows. Existing content may change what must be audited, but it does not remove Step 3 from the canonical sequence.
 
 ### New module workflow
 
@@ -206,16 +206,73 @@ Step 8 → STEP_8_VALIDATION.md
 ```text
 Step 1 → STEP_1_CURRICULUM_RULES.md
 Step 2 → STEP_2_ROADMAP.md
-Step 3 → SKIP
+Step 3 → STEP_3_MENU.md
+         audit/refactor existing Menu against Step 1 + Step 2
 Step 4 → STEP_4_KNOWLEDGE.md
-         refactor Menu + Knowledge together
+         refactor Knowledge against the approved Step 3 Menu
 Step 5 → STEP_5_API.md
 Step 6 → STEP_6_QUIZ.md
 Step 7 → STEP_7_INTERVIEW.md
 Step 8 → STEP_8_VALIDATION.md
 ```
 
-For refactor work, Step 3 is never repurposed. It stays **SKIPPED**, while Step 4 owns the combined Menu + Knowledge refactor. This keeps one canonical numbering system for every module.
+Step 3 is **mandatory for both new and existing modules**.
+
+The difference is only the evidence being inspected:
+
+```text
+NEW MODULE
+→ derive Menu/chapter/title skeleton from approved Curriculum + ROADMAP
+
+EXISTING / REFACTOR MODULE
+→ derive the same target Menu/chapter/title skeleton from approved Curriculum + ROADMAP
+→ additionally inspect the old Menu/content structure as migration evidence
+→ preserve/reuse compatible structure where appropriate
+→ move/reorder/rename/split/merge structural items when needed
+```
+
+Existing Menu structure is never a reason to skip Step 3 and is never the curriculum authority. Step 3 must explicitly reconcile it with Step 1 and Step 2 before Step 4 authors/refactors full Knowledge.
+
+### Mandatory Curriculum Map context for Steps 2, 3, 4 and 5
+
+Steps 2, 3, 4 and 5 must load and understand the relevant Step 1 Curriculum Map from:
+
+```text
+module-generate-agent/temp/*_CURRICULUM_MAP.md
+```
+
+The target module path determines which area Curriculum Map is relevant. The agent must not select a Curriculum Map only because its filename looks similar.
+
+For each of Steps 2, 3, 4 and 5:
+
+```text
+GENERAL_AGENT_RULES.md
+        +
+target module/repository context
+        +
+relevant *_CURRICULUM_MAP.md from module-generate-agent/temp
+        +
+the requested STEP_X rule file
+        +
+required upstream output from earlier steps
+```
+
+must be present in working context before editing.
+
+The Curriculum Map supplies:
+
+```text
+area scope
+module responsibility
+primary ownership
+neighboring-module boundaries
+inter-module dependencies
+recommended area learning order
+cross-module terminology ownership
+known duplication/gap risks
+```
+
+If the required Curriculum Map is missing, stale relative to an explicitly updated Step 1, or ambiguous for the target module, do not silently infer the missing Step 1 decisions. Report the prerequisite as a **CURRICULUM CONTEXT GAP** and resolve Step 1 context first.
 
 ### Execute only the requested step
 
@@ -279,8 +336,8 @@ ROADMAP GAP
 → return to Step 2
 
 Menu / Knowledge issue
-→ resolve in Step 3 for a new-module structural skeleton
-→ resolve in Step 4 for full Knowledge or any refactor module
+→ structural Menu/chapter/title/path issue: resolve in Step 3 for both new and existing modules
+→ full explanation/body/pedagogy issue inside approved structure: resolve in Step 4
 ```
 
 ---
@@ -296,7 +353,7 @@ Prime / Lead
     ↓
 Step 1 scope / Curriculum + approved Step 2 ROADMAP
     ↓
-Menu worker for new modules only
+Menu worker for both new and existing modules
     ↓ stable chapter/title skeleton
 Knowledge worker(s)
     ↓ approved/stable Knowledge structure
@@ -322,20 +379,25 @@ Prime / Lead agent
 → ensures all phases use the same learning model
 
 Menu worker
-→ new module only
 → executes Step 3 Menu/title scaffolding
+→ for existing modules, audits and restructures the old Menu against Step 1 + Step 2
+→ consults authoritative technical sources to verify concept grouping and terminology
 → does not write full Knowledge
 
 Knowledge worker
 → executes Step 4
 → writes/reviews README Knowledge + metadata
-→ for refactor modules, restructures Menu + Knowledge together
+→ consumes the approved Step 3 Menu for both new and existing modules
+→ migrates/refactors existing Knowledge into that approved structure when needed
 → establishes stable file/anchor identities
 → preserves the agreed three-layer flow and chapter-to-chapter narrative
 
 API worker
 → starts only after Knowledge structure is sufficiently stable
-→ inspects actual controllers/methods/source
+→ decides API applicability from Curriculum/Roadmap/Menu/Knowledge first
+→ treats current MODULE_TYPE/BUILD_SWAGGER/controllers as implementation evidence, never curriculum authority
+→ reconciles module config/runtime capability when the approved learning design requires or rejects an API surface
+→ then inspects/creates/refactors actual controllers/methods/source
 → maps learning APIs to exact Knowledge
 → writes API descriptions/execution/evidence
 
@@ -395,7 +457,7 @@ Step 1 output
 Step 2 output
 → approved milestone order + prerequisites + module mental journey
 
-Step 3 output — new module only
+Step 3 output — both new and existing modules
 → stable Menu/chapter/title skeleton
 
 Step 4 output

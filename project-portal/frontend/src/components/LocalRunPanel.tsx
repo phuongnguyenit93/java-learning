@@ -42,7 +42,7 @@ export function LocalRunPanel({
   const [error, setError] = useState<string | null>(null);
 
   const jarFileName = useMemo(() => toJarFileName(moduleId), [moduleId]);
-  const runCommand = `java -jar ${jarFileName} --server.port=${DEFAULT_PORT} --server.servlet.context-path=${DEFAULT_CONTEXT_PATH} --spring.application.name=${DEFAULT_APPLICATION_NAME} --swagger.enabled=${SWAGGER_ENABLED}`;
+  const runCommand = `java --enable-preview -jar ${jarFileName} --server.port=${DEFAULT_PORT} --server.servlet.context-path=${DEFAULT_CONTEXT_PATH} --spring.application.name=${DEFAULT_APPLICATION_NAME} --swagger.enabled=${SWAGGER_ENABLED}`;
   const localUrl = `http://localhost:${DEFAULT_PORT}${DEFAULT_CONTEXT_PATH}`;
 
   const text = language === 'vi'

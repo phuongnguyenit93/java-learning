@@ -2,20 +2,42 @@
 
 Tài liệu này là **canonical source-of-truth duy nhất cho Step 2 — Build / Review / Refactor Module ROADMAP** sau khi scope, ownership và boundary cấp area đã được xác định ở [`STEP_1_CURRICULUM_RULES.md`](./STEP_1_CURRICULUM_RULES.md).
 
-### General Agent Rules context guard
+### General Agent Rules + Curriculum Map context guard
 
 Trước khi thực hiện Step 2:
 
 ```text
-Nếu context của GENARAL_AGENT_RULES.md vẫn còn rõ ràng trong working context
+Nếu context của GENERAL_AGENT_RULES.md vẫn còn rõ ràng trong working context
 → không cần đọc lại
 
 Nếu context đã bị loại khỏi cửa sổ làm việc, bị quên, bị truncate,
 hoặc agent không chắc mình còn nhớ đầy đủ các global rules
-→ đọc lại ./GENARAL_AGENT_RULES.md trước khi tiếp tục
+→ đọc lại ./GENERAL_AGENT_RULES.md trước khi tiếp tục
 ```
 
-Không suy đoán các orchestration, preservation, gap-routing hoặc cross-step rules từ trí nhớ khi context không còn chắc chắn.
+Ngoài General Agent Rules, Step 2 **bắt buộc** phải đọc và nắm context của Step 1 Curriculum Map liên quan trong:
+
+```text
+./temp/*_CURRICULUM_MAP.md
+```
+
+Resolve Curriculum Map theo target module/area thực tế trong repository. Curriculum Map phải cung cấp ít nhất:
+
+```text
+module responsibility
+primary ownership
+scope boundary
+neighboring-module ownership
+inter-module dependency
+recommended area learning order
+duplication / curriculum-gap risks
+```
+
+Không coi Curriculum Map là optional chỉ vì module đã tồn tại hoặc đã có ROADMAP cũ.
+
+Nếu không xác định được Curriculum Map tương ứng, file bị thiếu, hoặc có nhiều candidate mâu thuẫn, phải report **CURRICULUM CONTEXT GAP** thay vì tự suy ownership/boundary.
+
+Không suy đoán các orchestration, preservation, gap-routing, Curriculum hoặc cross-step rules từ trí nhớ khi context không còn chắc chắn.
 
 File này sở hữu đồng thời:
 
@@ -332,7 +354,7 @@ roadmap:
 Với **module mới**, thiết kế ROADMAP từ:
 
 ```text
-approved area Curriculum khi có
+approved area Curriculum Map — mandatory
 + module scope
 + prerequisites
 + neighboring-module boundaries
