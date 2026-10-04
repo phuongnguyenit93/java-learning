@@ -10,6 +10,7 @@ import { ModuleSidebar } from '../components/ModuleSidebar';
 import { ModuleTabs, type ModuleTab } from '../components/ModuleTabs';
 import { OverviewPanel } from '../components/OverviewPanel';
 import { QuizPanel } from '../components/QuizPanel';
+import { ReferencePanel } from '../components/ReferencePanel';
 import { RoadmapPanel } from '../components/RoadmapPanel';
 import {
   collectRealModules,
@@ -100,6 +101,7 @@ export function LearningPage() {
   );
   const knowledgePath = activeModule?.knowledge[language];
   const videoPath = activeModule?.video[language];
+  const referencePath = activeModule?.reference;
   const quizPath = activeModule?.quiz[language];
   const interviewPath = activeModule?.interview[language];
   const apiPath = activeModule?.api[language];
@@ -124,6 +126,17 @@ export function LearningPage() {
       });
     }
   }, [activeModule, activeTab]);
+
+  useEffect(() => {
+    if (activeTab === 'reference' && !referencePath) {
+      setActiveTab('knowledge');
+      setVisitedTabs((current) => {
+        const next = new Set(current);
+        next.add('knowledge');
+        return next;
+      });
+    }
+  }, [activeTab, referencePath]);
 
   useEffect(() => {
     let active = true;
@@ -432,6 +445,7 @@ export function LearningPage() {
           <ModuleTabs
             activeTab={activeTab}
             stats={displayedStats}
+            referenceEnabled={Boolean(referencePath)}
             executionEnabled={activeModule.capabilities.execution}
             onChange={(tab) => {
               setActiveTab(tab);
@@ -493,6 +507,15 @@ export function LearningPage() {
                   });
                   setActiveTab('knowledge');
                 }}
+              />
+            </div>
+          )}
+          {visitedTabs.has('reference') && (
+            <div hidden={activeTab !== 'reference'}>
+              <ReferencePanel
+                key={`${activeModule.id}:reference`}
+                path={referencePath}
+                searchQuery={searchQuery}
               />
             </div>
           )}
@@ -564,6 +587,17 @@ export function LearningPage() {
               moduleName={activeModule.shortName}
               sourceFingerprint={activeModule.sourceFingerprint}
             />
+          )}
+          {activeTab === 'feedback' && (
+            <section className="feedback-panel">
+              <span className="feedback-panel__eyebrow">MODULE FEEDBACK</span>
+              <h2>Feedback</h2>
+              <p>
+                {language === 'vi'
+                  ? 'Khu vực feedback dành riêng cho module hiện tại.'
+                  : 'Feedback area for the current module.'}
+              </p>
+            </section>
           )}
         </div>
       </section>

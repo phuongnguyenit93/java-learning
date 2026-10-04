@@ -141,6 +141,52 @@ problem / motivation
 
 Not every section needs all layers. The content should fit the actual topic rather than follow a rigid template mechanically.
 
+### Section-level References
+
+Reference gắn trực tiếp với một Knowledge section thuộc ownership của Step 4 và được author **thuần trong chính Markdown Knowledge**, không tạo artifact/schema/relation system riêng.
+
+Khi một H2 section có tài liệu tham khảo thực sự hữu ích, đặt reference ở bên trong section đó bằng H3 localized:
+
+```markdown
+## <a id="polymorphism">Đa hình</a>
+
+Nội dung Knowledge...
+
+### Tài liệu tham khảo
+
+- Java Language Specification §...
+- Dev.java — ...
+```
+
+EN tương ứng:
+
+```markdown
+### References
+```
+
+Contract bắt buộc:
+
+```text
+Section Reference
+→ optional; không bắt buộc mọi H2 phải có
+→ phải liên quan trực tiếp tới section hiện tại
+→ ưu tiên authoritative source
+→ có thể trùng với một entry trong module-level Reference nếu đó là source phù hợp nhất
+→ không dump toàn bộ Module Reference xuống mỗi section
+→ giữ official document title theo tên gốc khi phù hợp
+```
+
+Không tạo:
+
+```text
+## References
+## Tài liệu tham khảo
+```
+
+chỉ để chứa citation/reference, vì H2 là stable Knowledge section identity và còn được dùng cho Portal navigation, Video section mapping và downstream relations. Reference local phải là H3 hoặc content thấp hơn nằm trong H2 hiện tại.
+
+Section-level Reference không cần stable reference id, YAML riêng, relation metadata, generator riêng hoặc Portal projection riêng. Nó là một phần tự nhiên của learner-facing Knowledge Markdown.
+
 However, a mature module must collectively satisfy the three-layer contract:
 
 ```text

@@ -56,7 +56,7 @@ Chi tiết workflow: [`GENARAL_AGENT_RULES.md`](module-generate-agent/GENERAL_AG
 - [`AGENTS.md`](./AGENTS.md) — working rules/context cho AI và contributor.
 - [`GENERAL_AGENT_RULES.md`](module-generate-agent/GENERAL_AGENT_RULES.md) — orchestrator/routing cho toàn bộ module-generation workflow.
 - [`STEP_1_CURRICULUM_RULES.md`](./module-generate-agent/STEP_1_CURRICULUM_RULES.md) — Curriculum, scope, ownership và boundary.
-- [`STEP_2_ROADMAP.md`](./module-generate-agent/STEP_2_ROADMAP.md) — canonical ROADMAP architecture, contract và authoring/review rules.
+- [`STEP_2_ROADMAP_REFERENCE.md`](./module-generate-agent/STEP_2_ROADMAP_REFERENCE.md) — canonical ROADMAP + module Reference architecture, contract và authoring/review rules.
 - [`STEP_3_MENU.md`](./module-generate-agent/STEP_3_MENU.md) — Menu + title skeleton cho new module; refactor module skip step này.
 - [`STEP_4_KNOWLEDGE.md`](./module-generate-agent/STEP_4_KNOWLEDGE.md) — Knowledge; với refactor module thì Menu + Knowledge được xử lý cùng nhau.
 - [`STEP_5_API.md`](./module-generate-agent/STEP_5_API.md) — API learning documentation / experiments.

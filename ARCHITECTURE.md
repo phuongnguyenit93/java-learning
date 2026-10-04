@@ -60,7 +60,7 @@ java-learning/
 ├── ARCHITECTURE.md
 ├── module-generate-agent/
 │   ├── STEP_1_CURRICULUM_RULES.md  # Area-level curriculum rules
-│   ├── STEP_2_ROADMAP.md           # Canonical module roadmap architecture/workflow
+│   ├── STEP_2_ROADMAP_REFERENCE.md # Canonical module roadmap + Reference architecture/workflow
 │   ├── STEP_3_MENU.md              # New-module Menu/title skeleton rules
 │   ├── STEP_4_KNOWLEDGE.md         # Knowledge + refactor Menu/Knowledge rules
 │   ├── STEP_5_API.md               # API learning documentation rules
@@ -146,7 +146,7 @@ Mỗi language roadmap tự sở hữu curriculum của nó; Gradle chỉ tạo/
 
 Với legacy module, roadmap phải được thiết kế độc lập từ module scope/curriculum goal trước, rồi mới audit Knowledge hiện tại. Điều này tránh việc historical menu order vô tình trở thành curriculum mới.
 
-`GENERAL_AGENT_RULES.md` chỉ orchestrate/routing. Canonical rules của từng phase nằm trong `module-generate-agent/STEP_1_...` đến `STEP_9_...`; riêng ROADMAP architecture + authoring/review contract nằm trong [`STEP_2_ROADMAP.md`](./module-generate-agent/STEP_2_ROADMAP.md).
+`GENERAL_AGENT_RULES.md` chỉ orchestrate/routing. Canonical rules của từng phase nằm trong `module-generate-agent/STEP_1_...` đến `STEP_9_...`; riêng ROADMAP + module-level Reference architecture + authoring/review contract nằm trong [`STEP_2_ROADMAP_REFERENCE.md`](./module-generate-agent/STEP_2_ROADMAP_REFERENCE.md).
 
 ### 3.1 `project-portal` boundary
 

@@ -1,4 +1,4 @@
-# Step 2 - Roadmap Rules
+# Step 2 - Roadmap + Reference Rules
 
 Tài liệu này là **canonical source-of-truth duy nhất cho Step 2 — Build / Review / Refactor Module ROADMAP** sau khi scope, ownership và boundary cấp area đã được xác định ở [`STEP_1_CURRICULUM_RULES.md`](./STEP_1_CURRICULUM_RULES.md).
 
@@ -138,6 +138,7 @@ Roadmap architecture
 + review / approval gate
 + downstream dependency contract
 + Portal semantic contract
++ module-level Reference curation contract
 ```
 
 ```text
@@ -146,6 +147,7 @@ STEP 1 — CURRICULUM
         ↓
 STEP 2 — ROADMAP
 → learning journey bên trong một module
+→ curate shared module-level Reference catalog
         ↓
 Menu / Knowledge
         ↓
@@ -227,6 +229,81 @@ human / AI author
 ```
 
 Không overwrite human/AI-owned `roadmap:` content trong normal synchronization.
+
+### Module-level Reference companion artifact
+
+Step 2 đồng thời sở hữu việc **curate Reference chung của module** từ các authoritative sources đã được dùng để research/review ROADMAP.
+
+Vì vậy Step 2 không được coi là hoàn tất chỉ bằng việc approve ROADMAP; agent cũng phải review/create `reference/references.yml` cho module. Nếu thật sự không có learner-facing source phù hợp để publish, có thể giữ skeleton comment-only, nhưng không được bỏ qua việc đánh giá Reference.
+
+Reference chung không phải một ROADMAP khác và không quyết định learning order. Nó là learner-facing bibliography / further-reading catalog của toàn module.
+
+Canonical source:
+
+```text
+<module>/
+└── reference/
+    └── references.yml
+```
+
+Reference chung là **shared artifact**, không tách theo `MODULE_LANGUAGE`:
+
+```text
+reference/references.yml
+→ dùng chung cho VI / EN
+→ không tạo reference/vi hoặc reference/en
+```
+
+Build contract:
+
+```text
+automation/master.json
+→ BUILD_REFERENCE (default TRUE)
+→ ModuleOrchestrationPlugin
+→ ReferenceSetupPlugin
+→ reference/references.yml
+```
+
+Generation / preservation contract:
+
+```text
+file missing
+→ create comment-only skeleton
+
+file exists but empty / whitespace-only
+→ initialize comment-only skeleton
+
+file contains any authored content
+→ preserve file exactly
+→ do not overwrite / resynchronize authored Reference content
+```
+
+Reference skeleton chỉ mô tả schema bằng comment. Authored content có dạng tối thiểu:
+
+```yaml
+references:
+  - title: "Java Language Specification"
+    url: "https://docs.oracle.com/javase/specs/"
+    description: "Official Java language specification."
+```
+
+Authoring policy:
+
+```text
+title
+→ giữ tên chính thức / tên gốc của tài liệu khi có thể
+
+url
+→ trỏ tới authoritative or high-value source thực tế
+
+description
+→ mô tả ngắn lý do source hữu ích cho module
+→ mặc định có thể dùng English chung vì catalog không localized
+```
+
+Không dump mọi URL agent từng mở vào `references.yml`. Research evidence có thể rộng, nhưng published Module Reference phải được **curate** và chỉ giữ các nguồn thực sự có giá trị học tập hoặc kiểm chứng module.
+
+Portal chỉ nên expose Reference khi file có authored `references:` entries. Comment-only skeleton không phải learner-facing Reference content.
 
 ---
 
@@ -547,6 +624,23 @@ important conceptual gaps
 ```
 
 Repository implementation là evidence quan trọng, nhưng không phải curriculum authority duy nhất.
+
+Trong quá trình research/review Step 2, đồng thời đánh giá source nào xứng đáng được publish vào `reference/references.yml`.
+
+Phân biệt rõ:
+
+```text
+Research sources
+→ có thể rộng
+→ dùng để kiểm chứng ROADMAP / scope / semantics
+
+Published Module Reference
+→ curated subset
+→ shared cho toàn module
+→ learner-facing
+```
+
+Không bắt buộc mọi source đã consult phải xuất hiện trong Module Reference.
 
 ---
 

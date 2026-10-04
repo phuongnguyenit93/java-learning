@@ -344,6 +344,18 @@ ${moduleDirectory.absolutePath}
                     )
 
 
+            node.referenceAvailable =
+                    hasAuthoredReference(
+                            directory,
+                            !'FALSE'.equalsIgnoreCase(
+                                    getMasterValue(
+                                            master,
+                                            'BUILD_REFERENCE'
+                                    )
+                            )
+                    )
+
+
             node.apiLanguages =
                     findApiLanguages(
                             directory,
@@ -778,6 +790,12 @@ ${moduleDirectory.absolutePath}
             }
 
 
+            if (node.referenceAvailable) {
+                result.reference =
+                        "/module/${resolveRouteId(node)}/reference/references.yml"
+            }
+
+
             if (!node.apiLanguages.isEmpty()) {
 
                 result.api =
@@ -1147,6 +1165,44 @@ ${moduleDirectory.absolutePath}
 
 
         return result
+    }
+
+
+    private static boolean hasAuthoredReference(
+            File moduleDirectory,
+            boolean referenceEnabled
+    ) {
+
+        if (!referenceEnabled) {
+            return false
+        }
+
+
+        File referenceFile =
+                new File(
+                        moduleDirectory,
+                        'reference/references.yml'
+                )
+
+
+        if (!referenceFile.isFile()) {
+            return false
+        }
+
+
+        return referenceFile
+                .getText('UTF-8')
+                .readLines()
+                .any {
+                    String line ->
+
+                    String trimmed =
+                            line.trim()
+
+
+                    !trimmed.startsWith('#') &&
+                            trimmed ==~ /^-\s+title:\s*.+$/
+                }
     }
 
 
@@ -1867,6 +1923,7 @@ ${exception.message}
         Set<String> knowledgeLanguages = [] as Set<String>
         Set<String> videoLanguages = [] as Set<String>
         Set<String> roadmapLanguages = [] as Set<String>
+        boolean referenceAvailable
         Set<String> apiLanguages = [] as Set<String>
         Set<String> quizLanguages = [] as Set<String>
         Set<String> interviewLanguages = [] as Set<String>

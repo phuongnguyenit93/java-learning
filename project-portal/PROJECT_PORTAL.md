@@ -339,7 +339,7 @@ Menu
 → điều hướng chi tiết vào nội dung
 ```
 
-Roadmap interaction có hai loại relation riêng: `relatedKnowledge` thuộc module hiện tại và luôn hiển thị ở phía đối diện milestone trên timeline, click item sẽ chuyển sang đúng Knowledge category; numbered marker vẫn giữ pulse animation để nhấn mạnh milestone có Knowledge hỗ trợ. `relatedModules` hiển thị thành card phụ cạnh milestone và click để chuyển sang module khác. Cả hai chỉ là navigation/support relation, không tạo nested curriculum graph và không thay đổi learning order của Level 1. Roadmap source/projection + frontend Roadmap tab đều đã implement và Roadmap vẫn đứng upstream của Menu/Knowledge theo `module-generate-agent/STEP_2_ROADMAP.md`.
+Roadmap interaction có hai loại relation riêng: `relatedKnowledge` thuộc module hiện tại và luôn hiển thị ở phía đối diện milestone trên timeline, click item sẽ chuyển sang đúng Knowledge category; numbered marker vẫn giữ pulse animation để nhấn mạnh milestone có Knowledge hỗ trợ. `relatedModules` hiển thị thành card phụ cạnh milestone và click để chuyển sang module khác. Cả hai chỉ là navigation/support relation, không tạo nested curriculum graph và không thay đổi learning order của Level 1. Roadmap source/projection + frontend Roadmap tab đều đã implement và Roadmap vẫn đứng upstream của Menu/Knowledge theo `module-generate-agent/STEP_2_ROADMAP_REFERENCE.md`.
 
 Visual contract hiện tại:
 

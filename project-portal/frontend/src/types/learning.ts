@@ -49,6 +49,7 @@ export interface LearningModule {
   overview: Partial<Record<Language, string>>;
   knowledge: Partial<Record<Language, string>>;
   video: Partial<Record<Language, string>>;
+  reference?: string;
   quiz: Partial<Record<Language, string>>;
   interview: Partial<Record<Language, string>>;
   api: Partial<Record<Language, string>>;
@@ -75,6 +76,7 @@ export interface ModuleCatalogNode {
   overview?: Partial<Record<Language, string>>;
   knowledge?: Partial<Record<Language, string>>;
   video?: Partial<Record<Language, string>>;
+  reference?: string;
   roadmap?: Partial<Record<Language, string>>;
   quiz?: Partial<Record<Language, string>>;
   interview?: Partial<Record<Language, string>>;
@@ -173,6 +175,16 @@ export interface VideoScriptDocument {
     url: string;
   };
   sections: VideoScriptSection[];
+}
+
+export interface ReferenceItem {
+  title: string;
+  url: string;
+  description: string;
+}
+
+export interface ReferenceDocument {
+  references: ReferenceItem[];
 }
 
 export type KnowledgeSearchDocumentType = 'CATEGORY' | 'SECTION';

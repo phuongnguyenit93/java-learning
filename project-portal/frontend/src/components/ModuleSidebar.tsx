@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import type { CSSProperties } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { loadKnowledgeSearchIndex, searchKnowledge } from '../data/knowledgeSearch';
@@ -45,6 +46,59 @@ interface SidebarExpandRequest {
 interface ModulePickerEntry {
   node: ModuleCatalogNode;
   sequence: number;
+}
+
+type ModuleTreeCssProperties = CSSProperties & {
+  '--module-tree-depth'?: number;
+  '--module-menu-border'?: string;
+  '--module-menu-accent'?: string;
+};
+
+function moduleTreeIndentStyle(depth: number): ModuleTreeCssProperties {
+  return {
+    '--module-tree-depth': depth,
+  };
+}
+
+function moduleMenuLevelStyle(depth: number): ModuleTreeCssProperties {
+  const level = depth + 1;
+  const levelHues = [
+    210, // level 1 - blue
+    145, // level 2 - green
+    38,  // level 3 - amber
+    274, // level 4 - violet
+    188, // level 5 - cyan / teal
+    338, // level 6 - rose
+    72,  // level 7 - lime
+  ];
+  const hue = levelHues[(level - 1) % levelHues.length];
+
+  return {
+    '--module-menu-border': `hsla(${hue}, 78%, 64%, 0.30)`,
+    '--module-menu-accent': `hsl(${hue}, 82%, 72%)`,
+  };
+}
+
+function ModuleTreeIndent({ depth }: { depth: number }) {
+  return (
+    <span
+      className="module-tree__indent"
+      style={moduleTreeIndentStyle(depth)}
+      aria-hidden="true"
+    />
+  );
+}
+
+function ModuleTreeLevelBadge({ depth }: { depth: number }) {
+  return (
+    <span
+      className="module-tree__level-badge"
+      aria-label={`Menu level ${depth + 1}`}
+      title={`Menu level ${depth + 1}`}
+    >
+      {depth + 1}
+    </span>
+  );
 }
 
 interface ModulePickerPosition {
@@ -350,7 +404,9 @@ function ModulePickerRow({
   const pickerPopupRef = useRef<HTMLDivElement>(null);
   const pickerCloseTimerRef = useRef<number | null>(null);
   const displayName = formatCatalogName(group.name);
-  const containsActiveModule = entries.some(({ node }) => node.routeId === activeModuleId);
+  const activeEntry = entries.find(({ node }) => node.routeId === activeModuleId);
+  const containsActiveModule = Boolean(activeEntry);
+  const activeModuleName = activeEntry ? formatCatalogName(activeEntry.node.name) : null;
 
   const clearPickerCloseTimer = useCallback(() => {
     if (pickerCloseTimerRef.current !== null) {
@@ -506,11 +562,18 @@ function ModulePickerRow({
           aria-label={`Open ${displayName} modules`}
           title={`Open ${displayName} modules`}
         >
-          <span className="module-tree__indent" data-depth={Math.min(depth, 5)} />
+          <ModuleTreeIndent depth={depth} />
           <span className="module-tree__vertical-cue module-tree__vertical-cue--placeholder" aria-hidden="true" />
           <span className="module-tree__caret" aria-hidden="true">›</span>
           <span className={`module-tree__content${containsActiveModule ? ' is-active' : ''}`}>
             <span className="module-tree__label">{displayName}</span>
+            {activeModuleName && (
+              <span className="module-tree__active-module">
+                <span className="module-tree__active-module-dot" aria-hidden="true" />
+                <span className="module-tree__active-module-prefix">ACTIVE</span>
+                <span className="module-tree__active-module-name">{activeModuleName}</span>
+              </span>
+            )}
           </span>
           <span className="module-tree__count">{entries.length}</span>
           <span className="module-tree__picker-cue" aria-hidden="true">›</span>
@@ -720,7 +783,8 @@ function TreeNode({
   return (
     <li className="module-tree__item">
       <div
-        className={`module-tree__row${hasInlineChildren ? ' is-expandable' : ''}${isModule && !structuralModule ? ' is-module' : ''}${isRealModule ? ' is-real-module' : ''}${isActive && !structuralModule ? ' is-active' : ''}`}
+        className={`module-tree__row${hasChildren ? ' is-menu-level' : ''}${hasInlineChildren ? ' is-expandable' : ''}${isModule && !structuralModule ? ' is-module' : ''}${isRealModule ? ' is-real-module' : ''}${isActive && !structuralModule ? ' is-active' : ''}`}
+        style={hasChildren ? moduleMenuLevelStyle(depth) : undefined}
       >
         {hasInlineChildren && (
           <button
@@ -731,8 +795,8 @@ function TreeNode({
             aria-label={`${open ? 'Collapse' : 'Expand'} ${displayName}`}
             title={`${open ? 'Collapse' : 'Expand'} ${displayName}`}
           >
-            <span className="module-tree__indent" data-depth={Math.min(depth, 5)} />
-            <span className="module-tree__vertical-cue" aria-hidden="true">{open ? '↑↑↑' : '↓↓↓'}</span>
+            <ModuleTreeIndent depth={depth} />
+            <ModuleTreeLevelBadge depth={depth} />
             <span className="module-tree__caret" aria-hidden="true">{open ? '−' : '+'}</span>
             {content}
           </button>
@@ -748,7 +812,7 @@ function TreeNode({
           >
             {!hasChildren && (
               <>
-                <span className="module-tree__indent" data-depth={Math.min(depth, 5)} />
+                <ModuleTreeIndent depth={depth} />
                 <span className="module-tree__vertical-cue module-tree__vertical-cue--placeholder" aria-hidden="true" />
                 <span className="module-tree__caret module-tree__caret--leaf" aria-hidden="true">•</span>
               </>
@@ -760,7 +824,7 @@ function TreeNode({
 
         {!hasChildren && !isModule && (
           <div className="module-tree__static-zone">
-            <span className="module-tree__indent" data-depth={Math.min(depth, 5)} />
+            <ModuleTreeIndent depth={depth} />
             <span className="module-tree__vertical-cue module-tree__vertical-cue--placeholder" aria-hidden="true" />
             <span className="module-tree__caret module-tree__caret--leaf" aria-hidden="true">•</span>
             {content}

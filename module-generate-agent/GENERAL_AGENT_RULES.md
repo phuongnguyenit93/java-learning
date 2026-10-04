@@ -19,7 +19,7 @@ GENERAL_AGENT_RULES.md
 STEP_1_CURRICULUM_RULES.md
 → area/module scope, ownership, boundary and Step 1 handoff
 
-STEP_2_ROADMAP.md
+STEP_2_ROADMAP_REFERENCE.md
 → canonical roadmap architecture, contract, workflow and approval gate
 
 STEP_3_MENU.md
@@ -116,7 +116,7 @@ Do not optimize for raw counts. A smaller coherent module is better than a large
 
 ### Step 1 / Step 2 navigation
 
-Area Curriculum/scope rules live in [`STEP_1_CURRICULUM_RULES.md`](./STEP_1_CURRICULUM_RULES.md). ROADMAP design/review rules live in [`STEP_2_ROADMAP.md`](./STEP_2_ROADMAP.md). This orchestrator does not duplicate either contract.
+Area Curriculum/scope rules live in [`STEP_1_CURRICULUM_RULES.md`](./STEP_1_CURRICULUM_RULES.md). ROADMAP + module-level Reference design/review rules live in [`STEP_2_ROADMAP_REFERENCE.md`](./STEP_2_ROADMAP_REFERENCE.md). This orchestrator does not duplicate either contract.
 
 This file only consumes the approved ROADMAP as the upstream source for Menu, Knowledge, API Docs, Video, Quiz and Interview. If downstream work reveals a missing module-level prerequisite or milestone, report a **ROADMAP GAP** and return to Step 2 instead of silently changing the learning journey here.
 
@@ -143,6 +143,9 @@ Agents must work on canonical module source, not generated Portal projections.
 Typical learning sources are:
 
 ```text
+Module Reference
+module/.../reference/references.yml
+
 Knowledge
 module/.../readme/{lang}/menu/**/*.md
 module/.../src/main/resources/readme/{lang}/knowledge-metadata.yml
@@ -165,7 +168,17 @@ module/.../src/main/resources/interview/{lang}/question.yml
 
 Actual paths and enabled capabilities must be confirmed from the module and current repository configuration before editing.
 
-`MODULE_LANGUAGE` is the language source of truth. Do not invent a separate feature-specific language list.
+`MODULE_LANGUAGE` is the language source of truth for localized learning artifacts. Do not invent a separate feature-specific language list.
+
+Module-level Reference is the intentional exception because it is a **shared non-localized catalog**:
+
+```text
+module/.../reference/references.yml
+→ one shared file for all module languages
+→ owned/curated in Step 2
+```
+
+Section-level references are not a second Reference subsystem. They remain ordinary localized Markdown inside Step 4 Knowledge sections.
 
 Generated or mixed-ownership fields must follow the preservation rules from `../AGENTS.md` and `../ARCHITECTURE.md`. Never regenerate human-owned content from scratch merely because an AI agent is rebuilding learning content.
 
@@ -180,7 +193,7 @@ Generated or mixed-ownership fields must follow the preservation rules from `../
 ```text
 Step 1 — Curriculum / scope / ownership / boundary
         ↓
-Step 2 — ROADMAP
+Step 2 — ROADMAP + Module Reference
         ↓
 Step 3 — Menu + title only
         ↓
@@ -203,7 +216,7 @@ The step number and execution order are stable across new and refactor workflows
 
 ```text
 Step 1 → STEP_1_CURRICULUM_RULES.md
-Step 2 → STEP_2_ROADMAP.md
+Step 2 → STEP_2_ROADMAP_REFERENCE.md
 Step 3 → STEP_3_MENU.md
 Step 4 → STEP_4_KNOWLEDGE.md
 Step 5 → STEP_5_API.md
@@ -217,7 +230,7 @@ Step 9 → STEP_9_VALIDATION.md
 
 ```text
 Step 1 → STEP_1_CURRICULUM_RULES.md
-Step 2 → STEP_2_ROADMAP.md
+Step 2 → STEP_2_ROADMAP_REFERENCE.md
 Step 3 → STEP_3_MENU.md
          audit/refactor existing Menu against Step 1 + Step 2
 Step 4 → STEP_4_KNOWLEDGE.md
@@ -311,6 +324,28 @@ Other technologies
 
 Repository implementation is important evidence, but it is not the only curriculum authority.
 
+### Reference ownership rule
+
+Keep the two Reference scopes separate:
+
+```text
+MODULE-LEVEL REFERENCE
+→ Step 2 ownership
+→ module/.../reference/references.yml
+→ shared across VI / EN
+→ curated learner-facing bibliography
+→ not a source of learning order
+
+SECTION-LEVEL REFERENCE
+→ Step 4 ownership
+→ authored directly inside Knowledge Markdown
+→ localized naturally with that Knowledge file
+→ use H3 such as "### References" / "### Tài liệu tham khảo"
+→ do not create a new H2 only for references
+```
+
+External research may use more sources than are ultimately published. Do not automatically dump browsing/research history into Module Reference or every Knowledge section.
+
 ### Refactor preservation rule
 
 ```text
@@ -329,7 +364,7 @@ Incorrect, stale or out-of-scope content must be surfaced as an explicit review 
 
 ```text
 Step 1 → STEP_1_CURRICULUM_RULES.md
-Step 2 → STEP_2_ROADMAP.md
+Step 2 → STEP_2_ROADMAP_REFERENCE.md
 Step 3 → STEP_3_MENU.md
 Step 4 → STEP_4_KNOWLEDGE.md
 Step 5 → STEP_5_API.md
@@ -408,6 +443,8 @@ Knowledge worker
 → migrates/refactors existing Knowledge into that approved structure when needed
 → establishes stable file/anchor identities
 → preserves the agreed three-layer flow and chapter-to-chapter narrative
+→ adds optional section-level References directly in Markdown when they materially help the learner
+→ keeps those References inside the owning H2 using H3/local content; does not invent a separate section-reference schema
 
 API worker
 → starts only after Knowledge structure is sufficiently stable
@@ -486,6 +523,7 @@ Step 1 output
 
 Step 2 output
 → approved milestone order + prerequisites + module mental journey
+→ curated shared module-level `reference/references.yml` when useful sources exist
 
 Step 3 output — both new and existing modules
 → stable Menu/chapter/title skeleton
@@ -496,6 +534,7 @@ Step 4 output
 → chapter-order rationale / important transitions
 → running-example plan when useful
 → exact Knowledge files + anchors when full Knowledge is authored
+→ optional local section References embedded directly in the relevant Knowledge Markdown
 
 Step 5 output
 → controller/method ↔ Knowledge mapping + API learning intent

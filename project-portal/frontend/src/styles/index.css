@@ -52,6 +52,8 @@
   --menu-text: #a7dfbd;
   --roadmap-bg: #293551;
   --roadmap-text: #b9ccff;
+  --reference-bg: #3a263d;
+  --reference-text: #e7a9ff;
   --knowledge-bg: #163a63;
   --knowledge-text: #8cc7ff;
   --quiz-bg: #4a3512;
@@ -62,6 +64,8 @@
   --api-text: #ff9aaa;
   --execution-bg: #34245c;
   --execution-text: #c7b5ff;
+  --feedback-bg: #26333b;
+  --feedback-text: #9dd8e6;
   --download-bg: #17463d;
   --download-text: #7fe0c4;
 
@@ -1068,6 +1072,28 @@ pre {
   background: var(--row-active-bg);
 }
 
+.module-tree__row.is-module-picker.is-active,
+.module-tree__row.is-module.is-active {
+  position: relative;
+  background: color-mix(in srgb, var(--blue) 10%, var(--surface));
+  box-shadow:
+    inset 3px 0 0 var(--blue),
+    inset 0 0 0 1px color-mix(in srgb, var(--blue) 54%, transparent),
+    0 0 18px color-mix(in srgb, var(--blue) 12%, transparent);
+}
+
+.module-tree__row.is-module-picker.is-active::after,
+.module-tree__row.is-module.is-active::after {
+  content: "";
+  position: absolute;
+  inset: 5px 5px 5px auto;
+  width: 3px;
+  border-radius: 999px;
+  background: var(--blue);
+  box-shadow: 0 0 9px color-mix(in srgb, var(--blue) 72%, transparent);
+  pointer-events: none;
+}
+
 .module-tree__content {
   min-width: 0;
   flex: 1;
@@ -1280,14 +1306,25 @@ pre {
 }
 
 .module-tree__indent {
-  flex: 0 0 0;
+  flex: 0 0 calc(var(--module-tree-depth, 0) * 14px);
 }
 
-.module-tree__indent[data-depth="1"] { flex-basis: 14px; }
-.module-tree__indent[data-depth="2"] { flex-basis: 28px; }
-.module-tree__indent[data-depth="3"] { flex-basis: 42px; }
-.module-tree__indent[data-depth="4"] { flex-basis: 56px; }
-.module-tree__indent[data-depth="5"] { flex-basis: 70px; }
+.module-tree__level-badge {
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 5px;
+  border: 1px solid var(--module-menu-border);
+  border-radius: 7px;
+  background: color-mix(in srgb, var(--module-menu-accent) 16%, transparent);
+  color: var(--module-menu-accent);
+  font-size: 11px;
+  font-weight: 850;
+  line-height: 1;
+}
 
 .module-tree__caret {
   width: 22px;
@@ -1370,6 +1407,44 @@ pre {
 
 .module-tree__content.is-active .module-tree__label {
   color: var(--row-active-text);
+}
+
+.module-tree__active-module {
+  min-width: 0;
+  display: inline-flex;
+  flex: 0 1 auto;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 7px;
+  border: 1px solid color-mix(in srgb, var(--blue) 52%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--blue) 12%, transparent);
+  color: var(--blue);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
+
+.module-tree__active-module-dot {
+  width: 5px;
+  height: 5px;
+  flex: 0 0 5px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 7px currentColor;
+}
+
+.module-tree__active-module-prefix {
+  opacity: 0.78;
+}
+
+.module-tree__active-module-name {
+  max-width: 108px;
+  overflow: hidden;
+  color: var(--text);
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .module-tree__badges {
@@ -1712,6 +1787,8 @@ pre {
 }
 
 .module-tabs {
+  min-width: 0;
+  flex: 1;
   display: flex;
   align-self: stretch;
   gap: 8px;
@@ -1770,6 +1847,11 @@ pre {
   color: var(--roadmap-text);
 }
 
+.module-tabs__button--reference {
+  background: var(--reference-bg);
+  color: var(--reference-text);
+}
+
 .module-tabs__button--knowledge {
   background: var(--knowledge-bg);
   color: var(--knowledge-text);
@@ -1795,6 +1877,16 @@ pre {
   color: var(--execution-text);
 }
 
+.module-tabs__button--feedback {
+  background: var(--feedback-bg);
+  color: var(--feedback-text);
+}
+
+.module-tabs__feedback {
+  flex: 0 0 auto;
+  margin-left: auto;
+}
+
 .module-tabs__count {
   min-width: 20px;
   height: 19px;
@@ -1808,6 +1900,34 @@ pre {
   color: inherit;
   font-size: 10px;
   font-weight: 800;
+}
+
+.feedback-panel {
+  min-height: 180px;
+  padding: 22px 24px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.feedback-panel__eyebrow {
+  display: block;
+  margin-bottom: 7px;
+  color: var(--feedback-text);
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: 0.1em;
+}
+
+.feedback-panel h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.feedback-panel p {
+  margin: 10px 0 0;
+  color: var(--text-soft);
+  font-size: 13px;
 }
 
 /* =========================================================
@@ -3725,6 +3845,86 @@ pre {
   background: linear-gradient(90deg, #2f81f7, #4aa7ff);
 }
 
+.reference-panel {
+  display: grid;
+  gap: 18px;
+}
+
+.reference-panel__header {
+  display: grid;
+  gap: 6px;
+}
+
+.reference-panel__header h2,
+.reference-panel__header p {
+  margin: 0;
+}
+
+.reference-panel__header p {
+  color: var(--text-soft);
+}
+
+.reference-list {
+  display: grid;
+  gap: 12px;
+}
+
+.reference-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--card-bg);
+}
+
+.reference-card__number {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: var(--reference-bg);
+  color: var(--reference-text);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.reference-card__content {
+  min-width: 0;
+}
+
+.reference-card__content h3,
+.reference-card__content p {
+  margin: 0;
+}
+
+.reference-card__content h3 {
+  color: var(--text);
+  font-size: 15px;
+}
+
+.reference-card__content p {
+  margin-top: 7px;
+  color: var(--text-soft);
+  line-height: 1.6;
+}
+
+.reference-card__content a {
+  display: inline-flex;
+  margin-top: 10px;
+  color: var(--reference-text);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.reference-card__content a:hover,
+.reference-card__content a:focus-visible {
+  text-decoration: underline;
+}
+
 .quiz-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -5496,6 +5696,10 @@ pre {
 
   .module-tabs {
     gap: 18px;
+  }
+
+  .module-tabs__feedback {
+    margin-left: 0;
   }
 
   .download-action {

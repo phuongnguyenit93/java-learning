@@ -15,7 +15,7 @@ AGENTS.md       → how an AI should work in this repository
 ARCHITECTURE.md → why the repository is structured this way
 README.md       → high-level project orientation
 module-generate-agent/STEP_1_CURRICULUM_RULES.md → how area curriculum/module ownership is designed/reviewed
-module-generate-agent/STEP_2_ROADMAP.md → canonical roadmap architecture + how one module roadmap is designed/reviewed
+module-generate-agent/STEP_2_ROADMAP_REFERENCE.md → canonical roadmap + module Reference architecture + how one module roadmap/reference set is designed/reviewed
 module-generate-agent/STEP_3_MENU.md → Menu/title skeleton and reconciliation for both new and existing/refactor modules
 module-generate-agent/STEP_4_KNOWLEDGE.md → Knowledge authoring/refactor against the approved Step 3 Menu
 module-generate-agent/STEP_5_API.md → API learning documentation / experiment rules

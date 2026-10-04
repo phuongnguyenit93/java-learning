@@ -6,6 +6,7 @@ import com.example.learning.setup.root.structure.service.PortalInterviewProjecti
 import com.example.learning.setup.root.structure.service.PortalKnowledgeProjectionService
 import com.example.learning.setup.root.structure.service.PortalKnowledgeSearchProjectionService
 import com.example.learning.setup.root.structure.service.PortalQuizProjectionService
+import com.example.learning.setup.root.structure.service.PortalReferenceProjectionService
 import com.example.learning.setup.root.structure.service.PortalRoadmapProjectionService
 import com.example.learning.setup.root.structure.service.PortalVideoProjectionService
 import com.example.learning.setup.root.structure.task.GenerateModuleOrderTask
@@ -81,6 +82,12 @@ ${project.path}
                 )
 
 
+        PortalReferenceProjectionService referenceService =
+                new PortalReferenceProjectionService(
+                        project.logger
+                )
+
+
         PortalVideoProjectionService videoService =
                 new PortalVideoProjectionService(
                         project.logger
@@ -102,6 +109,7 @@ ${project.path}
                     include '**/src/main/resources/quiz/**'
                     include '**/src/main/resources/interview/**'
                     include '**/roadmap/**'
+                    include '**/reference/**'
                     include '**/video/**'
 
                     exclude '**/build/**'
@@ -433,6 +441,39 @@ ${project.path}
                 }
 
 
+        def generatePortalReference =
+                project.tasks.register(
+                        'generatePortalReference'
+                ) {
+                    task ->
+
+                        task.group =
+                                'learning portal'
+
+
+                        task.description =
+                                'Copy authored shared module Reference files into static Portal Reference projections.'
+
+
+                        task.dependsOn(
+                                cleanupLegacyPortalData
+                        )
+
+
+                        task.inputs.files(
+                                portalDataInputs
+                        )
+
+
+                        task.doLast {
+
+                            referenceService.generate(
+                                    project
+                            )
+                        }
+                }
+
+
         generatePortalKnowledge.configure {
             task ->
 
@@ -496,6 +537,15 @@ ${project.path}
         }
 
 
+        generatePortalReference.configure {
+            task ->
+
+                task.mustRunAfter(
+                        generatePortalModuleData
+                )
+        }
+
+
         project.tasks.register(
                 'generatePortalData'
         ) {
@@ -517,7 +567,8 @@ ${project.path}
                         generatePortalQuiz,
                         generatePortalInterview,
                         generatePortalRoadmap,
-                        generatePortalVideo
+                        generatePortalVideo,
+                        generatePortalReference
                 )
         }
 

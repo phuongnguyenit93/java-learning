@@ -55,6 +55,11 @@ enum ProjectPluginEnum {
             'com.example.learning.setup.module.readme.plugin.ReadmeSetupPlugin'
     ),
 
+    REFERENCE_SETUP_PLUGIN(
+            'com.example.learning.setup.module.reference.plugin',
+            'com.example.learning.setup.module.reference.plugin.ReferenceSetupPlugin'
+    ),
+
     ROADMAP_SETUP_PLUGIN(
             'com.example.learning.setup.module.roadmap.plugin',
             'com.example.learning.setup.module.roadmap.plugin.RoadmapSetupPlugin'

@@ -28,6 +28,7 @@ class ModuleOrderService {
                     'src',
                     'readme',
                     'roadmap',
+                    'reference',
                     'video'
             ] as Set
 

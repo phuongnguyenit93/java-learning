@@ -163,6 +163,32 @@ class ModuleOrchestrationPlugin
         }
 
         // ====================================================
+        // Reference setup
+        //
+        // Reference is a shared module-level learning artifact.
+        // It is not localized by MODULE_LANGUAGE.
+        // ====================================================
+
+        if (
+                ProjectPropertyUtils.isEnabled(
+                        project,
+                        'BUILD_REFERENCE'
+                )
+        ) {
+
+            project.pluginManager.apply(
+                    ProjectPluginEnum.REFERENCE_SETUP_PLUGIN.id
+            )
+        }
+        else {
+
+            project.logger.info(
+                    '[PROJECT-ORCHESTRATION] Skip REFERENCE setup for {} because BUILD_REFERENCE != TRUE.',
+                    project.path
+            )
+        }
+
+        // ====================================================
         // README setup
         // ====================================================
 

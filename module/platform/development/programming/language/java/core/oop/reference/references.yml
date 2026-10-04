@@ -1,0 +1,33 @@
+# ============================================================
+# MODULE REFERENCE STRUCTURE
+# ============================================================
+#
+# This is the shared module-level reference catalog.
+# It is intentionally not split by MODULE_LANGUAGE.
+#
+# Example structure:
+#
+# references:
+#   - title: "Java Language Specification"
+#     url: "https://docs.oracle.com/javase/specs/"
+#     description: "Official Java language specification."
+#
+# Add only curated references that are useful for the module.
+# The build system must not overwrite this file after authored content exists.
+
+references:
+  - title: "Object Oriented Programming - Dev.java"
+    url: "https://dev.java/learn/language/oop/"
+    description: "Official Java learning material covering objects, classes, interfaces, inheritance, records and packages."
+
+  - title: "Java Language Specification, Java SE 21 - Chapter 8: Classes"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-8.html"
+    description: "Normative language specification for class declarations, members, inheritance, overriding and related class semantics."
+
+  - title: "Java Language Specification, Java SE 21 - Chapter 9: Interfaces"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-9.html"
+    description: "Normative language specification for interface declarations, inheritance and implementation contracts."
+
+  - title: "Objects, Classes, Interfaces, Packages, and Inheritance - Dev.java"
+    url: "https://dev.java/learn/language/oop/classes/"
+    description: "Official introductory material that connects core OOP concepts with Java language syntax and design vocabulary."

@@ -1,11 +1,12 @@
 import { useLanguage } from '../state/LanguageContext';
 import type { ModuleStats } from '../types/learning';
 
-export type ModuleTab = 'overview' | 'menu' | 'roadmap' | 'knowledge' | 'quiz' | 'interview' | 'api' | 'execution';
+export type ModuleTab = 'overview' | 'menu' | 'roadmap' | 'reference' | 'knowledge' | 'quiz' | 'interview' | 'api' | 'execution' | 'feedback';
 
 interface ModuleTabsProps {
   activeTab: ModuleTab;
   stats: ModuleStats;
+  referenceEnabled: boolean;
   executionEnabled: boolean;
   onChange: (tab: ModuleTab) => void;
 }
@@ -13,6 +14,7 @@ interface ModuleTabsProps {
 const tabs: Array<{ id: ModuleTab; vi: string; en: string; countKey?: keyof ModuleStats }> = [
   { id: 'overview', vi: 'Overview', en: 'Overview' },
   { id: 'roadmap', vi: 'Roadmap', en: 'Roadmap' },
+  { id: 'reference', vi: 'Reference', en: 'Reference' },
   { id: 'menu', vi: 'Menu', en: 'Menu' },
   { id: 'knowledge', vi: 'Knowledge', en: 'Knowledge', countKey: 'knowledge' },
   { id: 'api', vi: 'API Docs', en: 'API Docs', countKey: 'apiDocs' },
@@ -21,13 +23,16 @@ const tabs: Array<{ id: ModuleTab; vi: string; en: string; countKey?: keyof Modu
   { id: 'execution', vi: 'Local Run', en: 'Local Run' },
 ];
 
-export function ModuleTabs({ activeTab, stats, executionEnabled, onChange }: ModuleTabsProps) {
+export function ModuleTabs({ activeTab, stats, referenceEnabled, executionEnabled, onChange }: ModuleTabsProps) {
   const { language } = useLanguage();
 
   return (
-    <div className="module-tabs-row">
-      <div className="module-tabs" role="tablist" aria-label="Module sections">
-        {tabs.filter((tab) => tab.id !== 'execution' || executionEnabled).map((tab) => {
+    <div className="module-tabs-row" role="tablist" aria-label="Module sections">
+      <div className="module-tabs">
+        {tabs.filter((tab) => (
+          (tab.id !== 'execution' || executionEnabled)
+          && (tab.id !== 'reference' || referenceEnabled)
+        )).map((tab) => {
           const count = tab.countKey ? stats[tab.countKey] : 0;
 
           return (
@@ -46,6 +51,15 @@ export function ModuleTabs({ activeTab, stats, executionEnabled, onChange }: Mod
         })}
       </div>
 
+      <button
+        type="button"
+        role="tab"
+        aria-selected={activeTab === 'feedback'}
+        className={`module-tabs__button module-tabs__button--feedback module-tabs__feedback${activeTab === 'feedback' ? ' is-active' : ''}`}
+        onClick={() => onChange('feedback')}
+      >
+        <span>Feedback</span>
+      </button>
     </div>
   );
 }

@@ -40,6 +40,11 @@
         "implementationClass": "com.example.learning.setup.module.readme.plugin.ReadmeSetupPlugin"
     },
     {
+        "name": "referenceSetupPlugin",
+        "id": "com.example.learning.setup.module.reference.plugin",
+        "implementationClass": "com.example.learning.setup.module.reference.plugin.ReferenceSetupPlugin"
+    },
+    {
         "name": "roadmapSetupPlugin",
         "id": "com.example.learning.setup.module.roadmap.plugin",
         "implementationClass": "com.example.learning.setup.module.roadmap.plugin.RoadmapSetupPlugin"

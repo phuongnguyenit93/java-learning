@@ -58,6 +58,11 @@
     "TYPE": "boolean",
     "VALUE": "TRUE"
   },
+  "BUILD_REFERENCE": {
+    "DESCRIPTION": "Enable shared module-level reference/references.yml skeleton generation",
+    "TYPE": "boolean",
+    "VALUE": "TRUE"
+  },
   "BUILD_QUIZ": {
     "DESCRIPTION": "Enable localized Quiz question skeletons and Portal Quiz projection for this module",
     "TYPE": "boolean",
