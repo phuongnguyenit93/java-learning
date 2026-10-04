@@ -170,12 +170,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: classloader-q11
-    question: "Rủi ro lớn khi áp dụng child-first quá rộng là gì?"
+    question: "Plugin loader dùng child-first cho mọi package, kể cả package API dùng chung mà parent cũng nhìn thấy. Rủi ro correctness chính là gì?"
     answers:
-      - {id: A, answer: "Child-first tự động vô hiệu hóa bộ thu gom rác.", explanation: "Sai. GC không bị tắt bởi thứ tự tìm kiếm."}
+      - {id: A, answer: "Shared API type vẫn tự động thuộc parent nên đổi lookup order không thể ảnh hưởng runtime type identity.", explanation: "Sai. Child có thể tự define một bản riêng, tạo runtime type identity thứ hai cho cùng binary name."}
       - {id: B, answer: "Nó có thể tạo bản sao riêng của các kiểu API/thư viện dùng chung, dẫn tới không tương thích kiểu hoặc hành vi khác mong đợi.", explanation: "Đúng. Sự cô lập cần ranh giới có chủ đích thay vì child-first cho mọi package."}
-      - {id: C, answer: "JVM không còn cho phép việc tìm tài nguyên.", explanation: "Sai. Chính sách tìm tài nguyên là vấn đề riêng và có thể được tùy chỉnh."}
-      - {id: D, answer: "Mọi bộ khởi tạo static sẽ chạy hai lần dù class định danh chỉ có một.", explanation: "Sai. Khởi tạo gắn với định danh class khi chạy."}
+      - {id: C, answer: "Nếu parent và child define bytecode giống hệt nhau, JVM sẽ hợp nhất hai Class object vì binary name giống nhau.", explanation: "Sai. Class identity thông thường còn gồm defining loader; cùng tên và cùng bytecode vẫn có thể là hai type khác nhau."}
+      - {id: D, answer: "Đổi thread context ClassLoader sau đó sẽ hợp nhất các bản shared API bị trùng thành một type tương thích.", explanation: "Sai. TCCL chỉ ảnh hưởng discovery context, không đổi defining loader hay identity của class đã được define."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false

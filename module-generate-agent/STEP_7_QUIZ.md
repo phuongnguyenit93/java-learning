@@ -1,18 +1,18 @@
-# Step 6 - Quiz Rules
+# Step 7 - Quiz Rules
 
-Step 6 xây hoặc refactor Quiz từ curriculum đã ổn định. Step number này **giống nhau cho new và refactor module**.
+Step 7 xây hoặc refactor Quiz từ curriculum đã ổn định. Step number này **giống nhau cho new và refactor module**.
 
 ### General Agent Rules context guard
 
-Trước khi thực hiện Step 6:
+Trước khi thực hiện Step 7:
 
 ```text
-Nếu context của GENARAL_AGENT_RULES.md vẫn còn rõ ràng trong working context
+Nếu context của GENERAL_AGENT_RULES.md vẫn còn rõ ràng trong working context
 → không cần đọc lại
 
 Nếu context đã bị loại khỏi cửa sổ làm việc, bị quên, bị truncate,
 hoặc agent không chắc mình còn nhớ đầy đủ các global rules
-→ đọc lại ./GENARAL_AGENT_RULES.md trước khi tiếp tục
+→ đọc lại ./GENERAL_AGENT_RULES.md trước khi tiếp tục
 ```
 
 Không suy đoán các orchestration, preservation, gap-routing hoặc cross-step rules từ trí nhớ khi context không còn chắc chắn.
@@ -25,9 +25,11 @@ module/.../src/main/resources/quiz/{lang}/question.yml
 
 ---
 
-## Step 6 — Build Quiz from the established curriculum
+## Step 7 — Build Quiz from the established curriculum
 
 Quiz is authored after Knowledge and API relationships are stable enough to serve as references.
+
+Canonical workflow now runs Step 6 Video before Quiz. Video may help the learner rehearse the same concepts, but Quiz correctness and relations must still resolve against canonical Knowledge/API sources rather than presentation wording from the Video script.
 
 Quiz should test understanding rather than repeat sentences from the README.
 
@@ -178,7 +180,7 @@ VI/EN variants should preserve conceptual parity and question order unless the t
 
 ## Completion gate
 
-Step 6 hoàn thành khi:
+Step 7 hoàn thành khi:
 
 ```text
 [ ] Quiz đúng canonical schema

@@ -94,10 +94,10 @@ questions:
   - id: io-q04
     question: "Vì sao try-with-resources quan trọng với I/O dù Java có bộ thu gom rác (garbage collector)?"
     answers:
-      - {id: A, answer: "Vì GC không thu hồi bất kỳ đối tượng I/O nào.", explanation: "Sai. GC vẫn quản lý đối tượng Java, nhưng tài nguyên bên ngoài có vòng đời riêng."}
-      - {id: B, answer: "Vì close() làm đối tượng trở nên bất biến.", explanation: "Sai. close() liên quan tới việc giải phóng tài nguyên, không phải tính bất biến."}
+      - {id: A, answer: "Vì mất reference Java cuối cùng lập tức chứng minh tài nguyên hệ điều hành tương ứng đã được giải phóng.", explanation: "Sai. Reachability của Java object và thời điểm giải phóng external resource là hai lifecycle khác nhau."}
+      - {id: B, answer: "Vì finalization hoặc cleaner bảo đảm descriptor được giải phóng trước khi operation I/O kế tiếp cần tới nó.", explanation: "Sai. Cleanup phụ thuộc GC không phải contract deterministic cho vòng đời của các handle khan hiếm."}
       - {id: C, answer: "Vì bộ mô tả tệp (file descriptor) hoặc handle gốc (native handle) cần được giải phóng ở thời điểm xác định thay vì chờ GC.", explanation: "Đúng. Tài nguyên bên ngoài có thể cạn hoặc giữ khóa quá lâu nếu thời điểm dọn dẹp không được xác định rõ."}
-      - {id: D, answer: "Vì try-with-resources tự quyết định bên sở hữu của mọi tài nguyên dùng chung.", explanation: "Sai. try-with-resources bảo đảm đóng tài nguyên được khai báo, nhưng quy tắc quyền sở hữu vẫn phải do mã/API thiết kế."}
+      - {id: D, answer: "Vì khai báo resource trong try-with-resources tự động biến method hiện tại thành owner của mọi wrapped hoặc shared resource.", explanation: "Sai. Cấu trúc này đóng resource nó quản lý về mặt cú pháp, nhưng API design vẫn phải quyết định việc đóng shared resource có đúng ownership hay không."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false

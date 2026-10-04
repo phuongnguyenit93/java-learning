@@ -171,7 +171,7 @@ anchored H2 id
 anchored H2 visible title
 ```
 
-Sau khi `readmeRelated`, Quiz/Interview relations, Knowledge metadata hoặc API ordering đã phụ thuộc vào path/anchor, rename/reorder sẽ trở thành reference migration và phải update/validate mọi exact relation liên quan.
+Sau khi Video path mapping, `readmeRelated`, Quiz/Interview relations, Knowledge metadata hoặc API ordering đã phụ thuộc vào path/anchor, rename/reorder sẽ trở thành reference migration và phải update/validate mọi exact relation liên quan. Video mirror dùng cùng relative path của Knowledge; đổi path ở Step 3 sẽ tạo Video path mới và có thể để lại Video cũ như orphan cần migrate thủ công.
 
 Không chạy `syncMetadataReadme` chỉ để tạo metadata rỗng trước khi anchored H2 identities thực sự được chốt.
 

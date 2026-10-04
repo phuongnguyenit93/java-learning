@@ -79,12 +79,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: reflection-q04
-    question: "Which case is the strongest justification for using Reflection?"
+    question: "Which design situation most strongly justifies Reflection instead of a direct call or a normal static abstraction?"
     answers:
-      - {id: A, answer: "Calling one fixed method already known to the compiler.", explanation: "Incorrect. A direct call is simpler."}
-      - {id: B, answer: "Reading a local constant in the same method.", explanation: "Incorrect. There is no runtime-discovery problem."}
-      - {id: C, answer: "Replacing every direct call with Method.invoke for consistency.", explanation: "Incorrect. That adds unnecessary complexity."}
-      - {id: D, answer: "A general-purpose framework must inspect or create user-defined types known only from runtime metadata.", explanation: "Correct. This is a classic Reflection use case."}
+      - {id: A, answer: "The application calls one fixed method whose declaring type and signature are already known at compile time.", explanation: "Incorrect. A normal method call keeps stronger static checking and is simpler when the member is already known."}
+      - {id: B, answer: "The application has a closed set of known strategies that already implement a stable interface selected by ordinary configuration.", explanation: "Incorrect. An interface plus normal construction or a registry can express this without runtime structural inspection."}
+      - {id: C, answer: "A collaborator already exposes exactly the behavior the caller needs through a stable public contract.", explanation: "Incorrect. Reflection would add dynamic access without solving a discovery problem in this case."}
+      - {id: D, answer: "A general-purpose framework must inspect or construct user-defined types whose members are known only from runtime metadata.", explanation: "Correct. Runtime structural discovery is a classic reason to accept Reflection's weaker static guarantees and extra complexity."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false

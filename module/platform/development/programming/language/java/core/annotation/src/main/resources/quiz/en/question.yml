@@ -237,10 +237,10 @@ questions:
   - id: retention-use-case
     question: "What is the best design rule for choosing retention?"
     answers:
-      - {id: A, answer: "Always choose RUNTIME because keeping metadata longer is always better.", explanation: "Incorrect. Longer retention can widen the contract and create unnecessary runtime expectations."}
-      - {id: B, answer: "Always choose SOURCE to minimize artifact size.", explanation: "Incorrect. Metadata would disappear too early if a class-file or runtime consumer needs it."}
-      - {id: C, answer: "Choose the target first and let retention be inferred automatically.", explanation: "Incorrect. Target and retention are independent dimensions."}
-      - {id: D, answer: "Identify when the real consumer runs and choose the shortest retention that still satisfies that consumer.", explanation: "Correct. This keeps metadata lifetime aligned with the actual use case."}
+      - {id: A, answer: "Choose RUNTIME whenever any downstream tool may inspect the compiled artifact.", explanation: "Incorrect. A class-file consumer may only need CLASS retention; RUNTIME should be chosen when runtime visibility is part of the contract."}
+      - {id: B, answer: "Choose SOURCE whenever runtime reflection is not used, even if bytecode tooling needs the annotation.", explanation: "Incorrect. SOURCE metadata is discarded from the class file, so it is too short-lived for a class-file consumer."}
+      - {id: C, answer: "Derive retention from @Target because the allowed use site also determines metadata lifetime.", explanation: "Incorrect. Target answers where an annotation may appear; retention independently answers how long its metadata is kept."}
+      - {id: D, answer: "Identify the phase of the real consumer and choose the shortest retention that still reaches that phase.", explanation: "Correct. The metadata lifetime should be no broader than the compile-time, class-file, or runtime consumer actually requires."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false

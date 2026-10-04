@@ -79,12 +79,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exception-stack-trace-cause
-    question: "Khi bọc một exception tầng thấp, cause giúp ích gì?"
+    question: "Service chuyển một exception tầng thấp thành domain exception. Vì sao thường nên giữ exception gốc làm cause?"
     answers:
-      - {id: A, answer: "Giữ liên kết tới lỗi gốc trong chuỗi nguyên nhân.", explanation: "Đúng; mức trừu tượng có thể đổi mà thông tin chẩn đoán vẫn còn."}
-      - {id: B, answer: "Xóa stack trace lớp bọc.", explanation: "Không."}
-      - {id: C, answer: "Biến unchecked thành checked.", explanation: "Classification không đổi."}
-      - {id: D, answer: "Tự động thử lại.", explanation: "Cause không phải thử lại chính sách."}
+      - {id: A, answer: "Giữ lỗi tầng thấp trong causal chain trong khi service vẫn có thể expose một abstraction exception phù hợp hơn.", explanation: "Đúng. Exception type ở boundary có thể đổi mà đường chẩn đoán về failure gốc vẫn được bảo toàn."}
+      - {id: B, answer: "Thay stack trace của wrapper bằng stack trace tầng thấp để cuối cùng chỉ còn một exception.", explanation: "Sai. Wrapper vẫn có stack trace riêng; cause là một Throwable được liên kết với diagnostic information của chính nó."}
+      - {id: C, answer: "Đổi wrapper từ checked sang unchecked hoặc ngược lại theo loại exception đang làm cause.", explanation: "Sai. Checked hay unchecked phụ thuộc hierarchy của chính wrapper, không phụ thuộc cause."}
+      - {id: D, answer: "Yêu cầu cơ chế catch tự retry cause trước khi propagate wrapper lên caller.", explanation: "Sai. Causal chain lưu provenance của failure; retry và recovery là policy riêng của ứng dụng."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false

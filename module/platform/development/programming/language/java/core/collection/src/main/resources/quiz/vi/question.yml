@@ -43,9 +43,9 @@ questions:
     question: "Vì sao Java Collections Framework vẫn cần thiết khi array đã có thể chứa nhiều giá trị?"
     answers:
       - {id: A, answer: "Nó cung cấp các abstraction và implementation chuẩn cho nhóm dữ liệu động với các hành vi như thứ tự, tính duy nhất, lookup theo key và queueing.", explanation: "Đúng. Array giải quyết lưu trữ theo index với kích thước xác định, còn JCF chuẩn hóa nhiều contract và thao tác phổ biến cho nhóm dữ liệu."}
-      - {id: B, answer: "Vì array không thể lưu object.", explanation: "Sai. Array có thể lưu reference tới object; framework bổ sung contract và hành vi cấu trúc dữ liệu có thể tái sử dụng."}
-      - {id: C, answer: "Vì JCF thay thế hoàn toàn mọi trường hợp dùng array trong Java.", explanation: "Sai. Array vẫn hữu ích cho dữ liệu kích thước cố định và các boundary API hoặc performance phù hợp."}
-      - {id: D, answer: "Vì JCF chủ yếu là framework persistence cho các row trong database.", explanation: "Sai. JCF là framework collection trong bộ nhớ, không phải framework persistence database."}
+      - {id: B, answer: "Mục đích chính là resize trực tiếp một array có sẵn nhưng vẫn giữ nguyên kiểu array và các quy tắc covariance.", explanation: "Sai. Collection implementation quản lý storage riêng; JCF không phải lớp resize tại chỗ cho một array bất kỳ."}
+      - {id: C, answer: "Nó cho mọi container cùng một quy tắc về thứ tự và duplicate để không còn cần phân biệt List, Set, Map hay Queue.", explanation: "Sai. Chính các contract khác nhau đó mới biểu diễn nhu cầu khác nhau về thứ tự, uniqueness, lookup và queue semantics."}
+      - {id: D, answer: "Nó cần thiết vì array không thể chứa object reference hoặc tham gia generic API.", explanation: "Sai. Array có thể chứa reference type; JCF bổ sung contract, implementation và operation tái sử dụng chứ không sửa một giới hạn không tồn tại."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false

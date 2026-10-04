@@ -198,10 +198,10 @@ questions:
   - id: localization-q12
     question: "What does ResourceBundle actually do in a localization pipeline?"
     answers:
-      - {id: A, answer: "It automatically translates English into every language.", explanation: "ResourceBundle looks up resources prepared ahead of time using base name, Locale, candidate/fallback rules, and a stable key."}
-      - {id: B, answer: "It looks up prepared resources by key + Locale and applies lookup/fallback rules.", explanation: "ResourceBundle looks up resources prepared ahead of time using base name, Locale, candidate/fallback rules, and a stable key."}
-      - {id: C, answer: "It automatically formats every number and date inside a resource.", explanation: "ResourceBundle looks up resources prepared ahead of time using base name, Locale, candidate/fallback rules, and a stable key."}
-      - {id: D, answer: "It replaces Locale with a translation service.", explanation: "ResourceBundle looks up resources prepared ahead of time using base name, Locale, candidate/fallback rules, and a stable key."}
+      - {id: A, answer: "It generates missing translations from the base bundle and caches those generated translations for later requests.", explanation: "Incorrect. ResourceBundle resolves resources that already exist; it does not translate or synthesize missing localized content."}
+      - {id: B, answer: "It looks up prepared resources by key and Locale while applying the bundle candidate and fallback rules.", explanation: "Correct. The bundle mechanism resolves pre-authored resources from a base name, requested Locale, candidate chain, and key."}
+      - {id: C, answer: "It parses every retrieved message and automatically localizes all numbers, dates, and placeholders inside the text.", explanation: "Incorrect. Number/date/message formatting is handled by formatting APIs and explicit patterns; bundle lookup itself returns the resource."}
+      - {id: D, answer: "It chooses the application's Locale and time zone from the host environment before any bundle lookup can occur.", explanation: "Incorrect. The application can supply an explicit Locale, and Locale selection is separate from time-zone policy."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false

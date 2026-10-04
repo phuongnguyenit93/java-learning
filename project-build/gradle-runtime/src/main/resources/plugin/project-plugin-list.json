@@ -55,6 +55,11 @@
         "implementationClass": "com.example.learning.setup.module.task.plugin.TaskSetupPlugin"
     },
     {
+        "name": "videoSetupPlugin",
+        "id": "com.example.learning.setup.module.video.plugin",
+        "implementationClass": "com.example.learning.setup.module.video.plugin.VideoSetupPlugin"
+    },
+    {
         "name": "ymlSetupPlugin",
         "id": "com.example.learning.setup.module.yml.plugin",
         "implementationClass": "com.example.learning.setup.module.yml.plugin.YmlSetupPlugin"

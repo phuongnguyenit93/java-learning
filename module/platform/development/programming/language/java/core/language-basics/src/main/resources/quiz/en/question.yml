@@ -183,12 +183,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: java-pass-by-value
-    question: "A method mutates an object received as a parameter and the caller sees the mutation. Does this prove Java is pass-by-reference?"
+    question: "A method mutates an object through parameter p, then assigns p to a new object. The caller sees the mutation but its variable still points to the original object. What explains both observations?"
     answers:
-      - {id: A, answer: "Yes, any visible mutation proves pass-by-reference.", explanation: "Incorrect. Parameter reassignment stays local, while mutation through the copied reference can be visible."}
-      - {id: B, answer: "No. Java copied the reference value, and both copied references identify the same mutable object.", explanation: "Correct. Parameter reassignment stays local, while mutation through the copied reference can be visible."}
-      - {id: C, answer: "Yes, but only for collections.", explanation: "Incorrect. Parameter reassignment stays local, while mutation through the copied reference can be visible."}
-      - {id: D, answer: "No, because methods cannot mutate objects at all.", explanation: "Incorrect. Parameter reassignment stays local, while mutation through the copied reference can be visible."}
+      - {id: A, answer: "The caller's reference itself was passed by reference until p was reassigned, at which point Java switched to pass-by-value.", explanation: "Incorrect. Java does not switch parameter-passing modes during a call."}
+      - {id: B, answer: "Java copied the reference value into p; both references initially reach the same mutable object, while reassigning only the copied parameter is local.", explanation: "Correct. Mutation through the copied reference can affect the shared object, but assigning a new reference value to p does not replace the caller's variable."}
+      - {id: C, answer: "Object parameters are passed by reference, but the JVM prevents a callee from changing the caller's variable after the first mutation.", explanation: "Incorrect. The rule is simpler: the parameter receives a value copy, including when that value is an object reference."}
+      - {id: D, answer: "Java deep-copies the object for the method and synchronizes field mutations back to the caller when the method returns.", explanation: "Incorrect. Ordinary method invocation neither deep-copies the object nor performs a copy-back phase."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false

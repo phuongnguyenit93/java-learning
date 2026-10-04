@@ -212,9 +212,9 @@ questions:
     question: "Why can a poorly designed backtracking regex become dangerous on adversarial input?"
     answers:
       - {id: A, answer: "Ambiguous nested alternatives/quantifiers can cause a rapidly growing number of backtracking paths and excessive CPU time.", explanation: "Correct. Catastrophic backtracking is a search-explosion problem, so patterns and input bounds matter."}
-      - {id: B, answer: "Pattern always allocates one thread per character.", explanation: "Incorrect. Catastrophic backtracking is a search-explosion problem, so patterns and input bounds matter."}
-      - {id: C, answer: "Regex automatically opens a network connection.", explanation: "Incorrect. Catastrophic backtracking is a search-explosion problem, so patterns and input bounds matter."}
-      - {id: D, answer: "Matcher converts all input into BigInteger.", explanation: "Incorrect. Catastrophic backtracking is a search-explosion problem, so patterns and input bounds matter."}
+      - {id: B, answer: "Nested quantifiers become safe once Pattern is compiled once; repeated compilation is the only source of the CPU spike.", explanation: "Incorrect. Precompilation avoids compile cost but does not remove ambiguous runtime search paths in the matching engine."}
+      - {id: C, answer: "Possessive quantifiers and atomic grouping cannot change complexity because Matcher must explore the same alternatives anyway.", explanation: "Incorrect. Those constructs can deliberately prevent some backtracking paths and are among the tools for controlling search behavior."}
+      - {id: D, answer: "Backtracking work is bounded only by the number of capture groups, so increasing adversarial input length cannot amplify it.", explanation: "Incorrect. Input length and ambiguous repetition can multiply the number of paths the engine explores."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false

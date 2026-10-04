@@ -43,9 +43,9 @@ questions:
     question: "Why does the Java Collections Framework exist when arrays can already hold multiple values?"
     answers:
       - {id: A, answer: "It provides standard abstractions and implementations for dynamic groups with behaviors such as ordering, uniqueness, key lookup, and queueing.", explanation: "Correct. Arrays solve fixed indexed storage, while JCF standardizes several common group-data contracts and operations."}
-      - {id: B, answer: "It exists only because arrays cannot store objects.", explanation: "Incorrect. Arrays can store object references; the framework adds reusable contracts and data-structure behavior."}
-      - {id: C, answer: "It replaces every use of arrays in Java.", explanation: "Incorrect. Arrays remain useful for fixed-size storage and API or performance boundaries."}
-      - {id: D, answer: "It is primarily a persistence framework for database rows.", explanation: "Incorrect. JCF is an in-memory collection framework, not a database persistence framework."}
+      - {id: B, answer: "Its main purpose is to resize an existing array in place while preserving the same array type and covariance rules.", explanation: "Incorrect. Collection implementations manage their own storage; the framework is not an in-place resizing layer over arbitrary arrays."}
+      - {id: C, answer: "It gives every container one common ordering and duplicate policy so callers no longer need List, Set, Map, or Queue distinctions.", explanation: "Incorrect. Those distinctions are exactly the point: different collection contracts express different ordering, uniqueness, lookup, and queue semantics."}
+      - {id: D, answer: "It is required because arrays cannot hold object references or participate in generic APIs.", explanation: "Incorrect. Arrays can hold reference types; Collections adds reusable contracts, implementations, and operations rather than fixing that nonexistent limitation."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false

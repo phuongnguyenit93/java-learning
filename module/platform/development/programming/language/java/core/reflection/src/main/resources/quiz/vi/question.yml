@@ -79,12 +79,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: reflection-q04
-    question: "Trường hợp nào hợp lý nhất để dùng Reflection?"
+    question: "Tình huống thiết kế nào biện minh rõ nhất cho Reflection thay vì direct call hoặc static abstraction thông thường?"
     answers:
-      - {id: A, answer: "Gọi một method cố định mà trình biên dịch đã biết rõ.", explanation: "Sai. Lời gọi trực tiếp đơn giản hơn."}
-      - {id: B, answer: "Đọc hằng cục bộ trong cùng method.", explanation: "Sai. Không có bài toán khám phá lúc chạy."}
-      - {id: C, answer: "Thay mọi lời gọi trực tiếp bằng Method.invoke cho đồng nhất.", explanation: "Sai. Điều này tăng độ phức tạp vô ích."}
-      - {id: D, answer: "Framework tổng quát phải kiểm tra/tạo kiểu do người dùng định nghĩa chỉ biết từ siêu dữ liệu lúc chạy.", explanation: "Đúng. Đây là trường hợp sử dụng điển hình."}
+      - {id: A, answer: "Ứng dụng gọi một method cố định mà declaring type và signature đã biết ở compile time.", explanation: "Sai. Direct call giữ static checking mạnh hơn và đơn giản hơn khi member đã biết trước."}
+      - {id: B, answer: "Ứng dụng có tập strategy đóng, đã biết trước và đều implement một stable interface được chọn bằng configuration thông thường.", explanation: "Sai. Interface cùng construction/registry thông thường đã mô hình hóa được trường hợp này mà không cần runtime structural inspection."}
+      - {id: C, answer: "Collaborator đã expose đúng behavior caller cần thông qua một stable public contract.", explanation: "Sai. Reflection chỉ thêm dynamic access mà không giải quyết bài toán discovery nào trong trường hợp này."}
+      - {id: D, answer: "Framework tổng quát phải inspect hoặc construct user-defined type có member chỉ được biết qua runtime metadata.", explanation: "Đúng. Runtime structural discovery là lý do điển hình để chấp nhận static guarantee yếu hơn và độ phức tạp tăng của Reflection."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false

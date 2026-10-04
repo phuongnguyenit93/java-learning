@@ -170,12 +170,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: classloader-q11
-    question: "What is a major risk of applying child-first loading too broadly?"
+    question: "A plugin loader uses child-first lookup for every package, including a shared API package also visible to its parent. What is the main correctness risk?"
     answers:
-      - {id: A, answer: "Child-first automatically disables garbage collection.", explanation: "Incorrect. Lookup order does not disable GC."}
+      - {id: A, answer: "Shared API types remain parent-owned automatically, so changing lookup order cannot affect runtime type identity.", explanation: "Incorrect. A child that defines its own copy can create a second runtime type identity for the same binary name."}
       - {id: B, answer: "A child can create private copies of shared API/library types, causing type incompatibility or unexpected behavior.", explanation: "Correct. Isolation needs an intentional boundary rather than child-first for every package."}
-      - {id: C, answer: "The JVM can no longer perform resource lookup.", explanation: "Incorrect. Resource policy is separate and can also be customized."}
-      - {id: D, answer: "Every static initializer runs twice even when there is only one runtime class identity.", explanation: "Incorrect. Initialization belongs to a runtime class identity."}
+      - {id: C, answer: "If parent and child define identical class bytes, the JVM merges their Class objects because the binary name matches.", explanation: "Incorrect. Ordinary class identity includes the defining loader; identical bytes and names do not merge separate definitions."}
+      - {id: D, answer: "Setting the thread context ClassLoader later reconciles duplicate shared API classes into one compatible type.", explanation: "Incorrect. TCCL affects discovery context; it does not rewrite the defining loader or identity of classes already defined."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false

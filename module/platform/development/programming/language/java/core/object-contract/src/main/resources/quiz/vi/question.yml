@@ -66,12 +66,12 @@ questions:
     apiRelated: {controller: "EqualityController", methodSignature: "identityVsEquality()"}
 
   - id: equals-contract-laws
-    question: "Tính chất nào bắt buộc trong một quy ước equals đúng?"
+    question: "Với hai object ổn định a và b, a.equals(b) là true nhưng b.equals(a) là false. Quy tắc equals nào bị vi phạm?"
     answers:
-      - {id: A, answer: "Nó có thể trả kết quả khác nhau mỗi lần dù trạng thái liên quan không đổi.", explanation: "Sai. Cấu trúc dữ liệu và thư viện dựa vào đầy đủ quy tắc của equals dù trình biên dịch không thể cưỡng chế chúng."}
-      - {id: B, answer: "Nó phải phản xạ, đối xứng, bắc cầu, nhất quán khi trạng thái liên quan ổn định và trả false với null.", explanation: "Đúng. Cấu trúc dữ liệu và thư viện dựa vào đầy đủ quy tắc của equals dù trình biên dịch không thể cưỡng chế chúng."}
-      - {id: C, answer: "Nó phải trả true với null.", explanation: "Sai. Cấu trúc dữ liệu và thư viện dựa vào đầy đủ quy tắc của equals dù trình biên dịch không thể cưỡng chế chúng."}
-      - {id: D, answer: "Nó có thể bất đối xứng miễn hashCode giống nhau.", explanation: "Sai. Cấu trúc dữ liệu và thư viện dựa vào đầy đủ quy tắc của equals dù trình biên dịch không thể cưỡng chế chúng."}
+      - {id: A, answer: "Tính phản xạ, vì một object phải bằng chính nó.", explanation: "Sai. Reflexivity nói về a.equals(a); tình huống này đang so hai chiều giữa hai reference khác nhau."}
+      - {id: B, answer: "Tính đối xứng, vì equality phải thống nhất theo cả hai hướng của cùng một cặp object.", explanation: "Đúng. Nếu a.equals(b) là true thì symmetry yêu cầu b.equals(a) cũng phải true."}
+      - {id: C, answer: "Tính bắc cầu, vì equality giữa ba object phải giữ quan hệ nhất quán.", explanation: "Sai. Transitivity cần object thứ ba và chuỗi quan hệ như a bằng b, b bằng c."}
+      - {id: D, answer: "Tính nhất quán, vì phép so sánh lặp lại phải ổn định khi state liên quan không đổi.", explanation: "Sai. Consistency nói về kết quả qua nhiều lần đánh giá, không phải hai hướng so sánh cho kết quả khác nhau."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false

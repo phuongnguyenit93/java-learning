@@ -94,10 +94,10 @@ questions:
   - id: io-q04
     question: "Why is try-with-resources important for I/O even though Java has a garbage collector?"
     answers:
-      - {id: A, answer: "Because the garbage collector never reclaims any I/O object.", explanation: "Incorrect. GC still manages Java objects, but external resources have their own lifetime."}
-      - {id: B, answer: "Because close() makes an object immutable.", explanation: "Incorrect. close() is about releasing resources, not immutability."}
+      - {id: A, answer: "Because losing the last Java reference immediately proves the operating-system resource has already been released.", explanation: "Incorrect. Object reachability and timely release of external resources are different lifecycles."}
+      - {id: B, answer: "Because finalization or cleaner processing guarantees the descriptor is released before the next I/O operation needs it.", explanation: "Incorrect. Cleanup tied to GC is not a deterministic resource-lifetime contract for scarce handles."}
       - {id: C, answer: "Because file descriptors and native handles need to be released at a predictable time instead of waiting for GC.", explanation: "Correct. External resources can be exhausted or keep locks held too long when cleanup is not deterministic."}
-      - {id: D, answer: "Because try-with-resources automatically decides ownership of every shared resource.", explanation: "Incorrect. TWR guarantees closing of declared resources, but the ownership architecture still has to be designed by the code."}
+      - {id: D, answer: "Because declaring a resource in try-with-resources automatically makes the current method the owner of every wrapped or shared resource.", explanation: "Incorrect. The construct closes resources it owns syntactically, but API design still has to decide whether closing a shared resource is appropriate."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false

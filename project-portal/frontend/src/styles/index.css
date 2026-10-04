@@ -2618,6 +2618,416 @@ pre {
   gap: 10px;
 }
 
+.knowledge-category-group {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--card-bg) 82%, transparent);
+}
+
+.knowledge-category-group__header {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 13px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-soft);
+}
+
+.knowledge-category-group__title {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 720;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.knowledge-category-group__count {
+  flex: 0 0 auto;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: var(--chip-bg);
+  color: var(--chip-text);
+  font-size: 10px;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.knowledge-category-group__sections {
+  display: grid;
+  gap: 8px;
+  padding: 9px;
+}
+
+.knowledge-category-group__video {
+  padding: 9px 9px 0;
+}
+
+.knowledge-category-group__sections .knowledge-card {
+  border-radius: 6px;
+}
+
+.knowledge-video {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--card-bg);
+}
+
+.knowledge-list > .knowledge-video {
+  margin-bottom: 0;
+}
+
+.knowledge-lessons-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 9px 0;
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.knowledge-lessons-heading--standalone {
+  padding: 20px 0 2px;
+}
+
+.knowledge-lessons-heading__line {
+  height: 1px;
+  flex: 1;
+  background: var(--border);
+}
+
+.knowledge-video__header {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 9px 13px;
+  border-bottom: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface-soft) 70%, transparent);
+}
+
+.knowledge-video__heading {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.knowledge-video__heading strong {
+  overflow: hidden;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 720;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.knowledge-video__eyebrow,
+.knowledge-video__type {
+  flex: 0 0 auto;
+  padding: 3px 7px;
+  border-radius: 4px;
+  font-size: 9px;
+  font-weight: 820;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.knowledge-video__eyebrow {
+  background: color-mix(in srgb, #e53935 18%, transparent);
+  color: #ff7b78;
+}
+
+.knowledge-video__stats {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.knowledge-video__stats span {
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: var(--chip-bg);
+  color: var(--chip-text);
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.knowledge-video__player-shell {
+  background: #090b0f;
+}
+
+.knowledge-video__iframe,
+.knowledge-video__native-player {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  display: block;
+  border: 0;
+  background: #000;
+}
+
+.knowledge-video__placeholder {
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 7px;
+  padding: 24px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.knowledge-video--compact .knowledge-video__placeholder {
+  min-height: 130px;
+}
+
+.knowledge-video__placeholder strong {
+  color: var(--text-soft);
+  font-size: 13px;
+}
+
+.knowledge-video__placeholder span:not(.knowledge-video__play) {
+  max-width: 620px;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.knowledge-video__placeholder a {
+  color: var(--knowledge-text);
+  font-size: 11px;
+  font-weight: 680;
+  text-decoration: none;
+}
+
+.knowledge-video__placeholder a:hover {
+  text-decoration: underline;
+}
+
+.knowledge-video__play {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  background: var(--surface-soft);
+  color: var(--text-soft);
+  font-size: 12px;
+}
+
+.knowledge-video__script {
+  border-top: 1px solid var(--border);
+}
+
+.knowledge-video__script-toggle {
+  width: 100%;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 13px;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+}
+
+.knowledge-video__script-toggle:hover {
+  background: color-mix(in srgb, var(--surface-hover) 55%, transparent);
+}
+
+.knowledge-video__script-toggle > span:first-child {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.knowledge-video__script-toggle strong {
+  font-size: 12px;
+}
+
+.knowledge-video__script-toggle small {
+  color: var(--text-muted);
+  font-size: 10px;
+}
+
+.knowledge-video__script-toggle > span:last-child {
+  color: var(--text-muted);
+  font-size: 18px;
+}
+
+.knowledge-video__script-body {
+  display: grid;
+  gap: 14px;
+  padding: 0 13px 13px;
+}
+
+.knowledge-video__status {
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface-soft);
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+.knowledge-video__status--error {
+  color: #ff8d8d;
+}
+
+.knowledge-video__script-section {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+}
+
+.knowledge-video__script-section-title {
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 11px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-soft);
+}
+
+.knowledge-video__script-section-title > span {
+  color: var(--text-muted);
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+.knowledge-video__script-section-title strong {
+  color: var(--text);
+  font-size: 12px;
+}
+
+.knowledge-video__script-table-wrap {
+  overflow-x: auto;
+}
+
+.knowledge-video__script-table {
+  width: 100%;
+  min-width: 980px;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.knowledge-video__script-table th,
+.knowledge-video__script-table td {
+  padding: 10px 11px;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  text-align: left;
+}
+
+.knowledge-video__script-table th:last-child,
+.knowledge-video__script-table td:last-child {
+  border-right: 0;
+}
+
+.knowledge-video__script-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.knowledge-video__script-table th {
+  background: color-mix(in srgb, var(--surface-soft) 75%, transparent);
+  color: var(--text-muted);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.knowledge-video__script-table th:first-child,
+.knowledge-video__script-table td:first-child {
+  width: 165px;
+}
+
+.knowledge-video__script-table th:nth-child(2),
+.knowledge-video__script-table td:nth-child(2) {
+  width: 25%;
+}
+
+.knowledge-video__script-table th:nth-child(3),
+.knowledge-video__script-table td:nth-child(3) {
+  width: 38%;
+}
+
+.knowledge-video__script-time {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.knowledge-video__script-time code {
+  color: var(--text-soft);
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+.knowledge-video__script-time > strong {
+  color: var(--text);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.knowledge-video__type {
+  align-self: flex-start;
+}
+
+.knowledge-video__type--scene {
+  background: color-mix(in srgb, #2f7dd1 18%, transparent);
+  color: #75b9ff;
+}
+
+.knowledge-video__type--transition {
+  background: color-mix(in srgb, #8b63d2 18%, transparent);
+  color: #b999ff;
+}
+
+.knowledge-video__markdown {
+  color: var(--text-soft);
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.knowledge-video__markdown > :first-child {
+  margin-top: 0;
+}
+
+.knowledge-video__markdown > :last-child {
+  margin-bottom: 0;
+}
+
+.knowledge-video__markdown pre {
+  overflow-x: auto;
+  padding: 8px;
+  border-radius: 5px;
+  background: var(--code-bg);
+  font-size: 10px;
+}
+
+.knowledge-video__markdown p {
+  margin: 0 0 8px;
+}
+
 .knowledge-menu-panel {
   display: grid;
   gap: 10px;

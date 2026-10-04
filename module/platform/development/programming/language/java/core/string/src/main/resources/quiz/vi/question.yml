@@ -212,9 +212,9 @@ questions:
     question: "Vì sao Regex có backtracking thiết kế kém có thể nguy hiểm với đầu vào đối nghịch hoặc rất xấu?"
     answers:
       - {id: A, answer: "Các nhánh lựa chọn/lượng từ lồng nhau mơ hồ có thể tạo số đường quay lui tăng rất nhanh và tiêu tốn CPU.", explanation: "Đúng. Quay lui bùng nổ (catastrophic backtracking) là vấn đề bùng nổ không gian tìm kiếm; thiết kế mẫu và giới hạn đầu vào rất quan trọng."}
-      - {id: B, answer: "Pattern luôn tạo một luồng cho mỗi ký tự.", explanation: "Sai. Quay lui bùng nổ là vấn đề bùng nổ không gian tìm kiếm, vì vậy mẫu và giới hạn đầu vào rất quan trọng."}
-      - {id: C, answer: "Regex tự động mở kết nối mạng.", explanation: "Sai. Quay lui bùng nổ là vấn đề bùng nổ không gian tìm kiếm, vì vậy mẫu và giới hạn đầu vào rất quan trọng."}
-      - {id: D, answer: "Matcher chuyển toàn bộ đầu vào thành BigInteger.", explanation: "Sai. Quay lui bùng nổ là vấn đề bùng nổ không gian tìm kiếm, vì vậy mẫu và giới hạn đầu vào rất quan trọng."}
+      - {id: B, answer: "Nested quantifier trở nên an toàn nếu Pattern chỉ compile một lần; compile lặp lại mới là nguồn duy nhất gây CPU spike.", explanation: "Sai. Precompile tránh compile cost nhưng không loại các runtime search path mơ hồ trong matching engine."}
+      - {id: C, answer: "Possessive quantifier và atomic grouping không thể đổi complexity vì Matcher vẫn phải thử cùng số alternative.", explanation: "Sai. Các construct này có thể chủ động ngăn một số backtracking path và là công cụ để kiểm soát search behavior."}
+      - {id: D, answer: "Backtracking work chỉ bị giới hạn bởi số capturing group nên tăng adversarial input length không thể làm nó phình ra.", explanation: "Sai. Input length kết hợp repetition mơ hồ có thể nhân số path mà engine phải khám phá."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false

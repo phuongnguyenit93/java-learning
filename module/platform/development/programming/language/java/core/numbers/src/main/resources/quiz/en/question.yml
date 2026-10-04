@@ -1,4 +1,4 @@
-﻿# <quiz-schema>
+# <quiz-schema>
 # Quiz Question Structure
 # schema-version: 3
 #
@@ -68,10 +68,10 @@ questions:
   - id: floating-decimal-approx
     question: "Why can `0.1 + 0.2` differ from exact decimal 0.3?"
     answers:
-      - {id: A, answer: "The JVM randomly perturbs double values.", explanation: "Incorrect. IEEE 754 binary floating point represents many decimal fractions approximately."}
-      - {id: B, answer: "Addition uses String conversion internally.", explanation: "Incorrect. IEEE 754 binary floating point represents many decimal fractions approximately."}
-      - {id: C, answer: "Most decimal fractions do not have finite binary floating-point representations, so operations use nearby representable values.", explanation: "Correct. IEEE 754 binary floating point represents many decimal fractions approximately."}
-      - {id: D, answer: "double stores decimal digits exactly but println changes them.", explanation: "Incorrect. IEEE 754 binary floating point represents many decimal fractions approximately."}
+      - {id: A, answer: "The JVM deliberately randomizes low-order bits of double values to avoid repeated rounding bias.", explanation: "Incorrect. The result follows deterministic IEEE 754 binary floating-point representation and arithmetic."}
+      - {id: B, answer: "Each operand is stored as an exact decimal value, but the plus operator temporarily converts both values through String.", explanation: "Incorrect. double arithmetic operates on binary floating-point values; ordinary addition does not route through String conversion."}
+      - {id: C, answer: "Many decimal fractions have no finite binary floating-point representation, so the operands and result use nearby representable values.", explanation: "Correct. The visible difference comes from binary approximation and rounding, not from random behavior."}
+      - {id: D, answer: "The arithmetic result is exactly decimal 0.3 internally, and only println changes that stored numeric value during display.", explanation: "Incorrect. Formatting may choose a textual representation, but it does not explain away approximation already present in the double value."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false

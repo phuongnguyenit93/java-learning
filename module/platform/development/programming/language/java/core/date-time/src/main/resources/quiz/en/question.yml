@@ -211,10 +211,10 @@ questions:
   - id: date-time-q12
     question: "What does nanosecond support in LocalTime actually prove?"
     answers:
-      - {id: A, answer: "The system clock always measures accurately to nanoseconds.", explanation: "Incorrect. Representation precision is not the same as measurement or storage accuracy."}
-      - {id: B, answer: "The database always preserves all nine nano digits.", explanation: "Incorrect. Representation precision is not the same as measurement or storage accuracy."}
-      - {id: C, answer: "The type can represent nanos even when the measurement source or storage has lower resolution.", explanation: "Correct. Representation precision is not the same as measurement or storage accuracy."}
-      - {id: D, answer: "LocalTime is really limited to milliseconds.", explanation: "Incorrect. Representation precision is not the same as measurement or storage accuracy."}
+      - {id: A, answer: "Any Clock used to obtain a time must measure the physical clock with true nanosecond resolution.", explanation: "Incorrect. The type's representable precision does not impose that resolution on the underlying clock source."}
+      - {id: B, answer: "Any database or wire format receiving a LocalTime must preserve all nine fractional-second digits.", explanation: "Incorrect. External storage and protocols have their own precision contracts and may truncate or round."}
+      - {id: C, answer: "The type can represent nanoseconds even when the measurement source or storage has lower resolution.", explanation: "Correct. Representation precision and the resolution or accuracy of a source, database, or protocol are separate concerns."}
+      - {id: D, answer: "A millisecond-resolution source becomes a nanosecond-accurate measurement after its value is placed in LocalTime.", explanation: "Incorrect. A richer representation cannot create measurement information that the source never supplied."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false

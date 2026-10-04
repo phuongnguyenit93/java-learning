@@ -105,12 +105,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: method-type-inference
-    question: "Which statement about generic-method type inference is correct?"
+    question: "During a call to a generic method, which information may the compiler use to infer the method type parameter?"
     answers:
-      - {id: A, answer: "The JVM guesses T after execution begins.", explanation: "Incorrect. Inference occurs at compile time."}
-      - {id: B, answer: "The compiler derives constraints from arguments, target type, and the invocation context.", explanation: "Correct."}
-      - {id: C, answer: "T always becomes Object.", explanation: "Incorrect."}
-      - {id: D, answer: "The caller must always write an explicit type witness.", explanation: "Incorrect."}
+      - {id: A, answer: "Only the runtime classes of the argument objects, because generic type inference happens after bytecode starts executing.", explanation: "Incorrect. Method type inference is a compile-time process and does not wait for runtime object classes."}
+      - {id: B, answer: "Constraints from the argument expressions, the target type, and the surrounding invocation context.", explanation: "Correct. Java combines applicable compile-time constraints to infer a type that satisfies the generic method invocation."}
+      - {id: C, answer: "Only the declared upper bound of the type parameter; call-site arguments never refine the inferred type.", explanation: "Incorrect. Bounds constrain inference, but argument and target-context constraints can refine the inferred type."}
+      - {id: D, answer: "An explicit type witness is mandatory whenever a generic method returns its type parameter.", explanation: "Incorrect. Explicit witnesses are available when needed, but ordinary calls commonly infer the method type arguments."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false

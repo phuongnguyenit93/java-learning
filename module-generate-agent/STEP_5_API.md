@@ -581,5 +581,9 @@ Downstream:
 ```text
 Knowledge + finalized API mappings
         ↓
-STEP_6_QUIZ.md / STEP_7_INTERVIEW.md
+STEP_6_VIDEO.md
+        ↓
+STEP_7_QUIZ.md / STEP_8_INTERVIEW.md
+        ↓
+STEP_9_VALIDATION.md
 ```

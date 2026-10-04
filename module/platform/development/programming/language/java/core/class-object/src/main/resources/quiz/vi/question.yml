@@ -40,12 +40,12 @@
 
 questions:
   - id: class-vs-object
-    question: "Phát biểu nào phân biệt class và object đúng nhất?"
+    question: "Hai instance Account được tạo từ cùng một class nhưng giữ balance khác nhau. Mental model nào giải thích đúng nhất?"
     answers:
       - {id: A, answer: "Class định nghĩa kiểu và khuôn mẫu triển khai; object là một instance khi chương trình chạy, có định danh (identity) và trạng thái riêng.", explanation: "Đúng. Nhiều object có thể dùng chung một định nghĩa class nhưng mỗi object vẫn có trạng thái riêng."}
-      - {id: B, answer: "Class luôn là instance khi chương trình chạy, còn object chỉ là mã nguồn.", explanation: "Sai. Class là định nghĩa kiểu; object mới là instance được tạo khi chương trình chạy."}
-      - {id: C, answer: "Object chỉ tồn tại khi mọi field đều là static.", explanation: "Sai. Object có thể chứa các field thuộc từng instance; static không phải điều kiện để object tồn tại."}
-      - {id: D, answer: "Class và mọi object được tạo từ class đó dùng chung một identity.", explanation: "Sai. Mỗi object có identity riêng, còn class là định nghĩa mà các object cùng dựa vào."}
+      - {id: B, answer: "Class sở hữu một bản dùng chung của mọi instance field, còn mỗi object chỉ là một view lên trạng thái dùng chung đó.", explanation: "Sai. Instance field thuộc từng object; trạng thái dùng chung ở cấp class được mô hình hóa riêng bằng thành viên static."}
+      - {id: C, answer: "Object là metadata class đã biên dịch, còn class là vùng cấp phát heap giữ balance của một account.", explanation: "Sai. Cách hiểu này đảo vai trò: class mô tả kiểu, còn object mới là instance tồn tại lúc chạy."}
+      - {id: D, answer: "Balance khác nhau chứng tỏ hai giá trị phải đến từ hai class khác nhau vì instance của cùng class dùng chung state.", explanation: "Sai. Các object của cùng một class có thể có instance state độc lập trong khi vẫn dùng chung type definition."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false

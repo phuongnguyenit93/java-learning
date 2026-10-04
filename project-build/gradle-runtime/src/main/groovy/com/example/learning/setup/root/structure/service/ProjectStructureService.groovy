@@ -318,6 +318,19 @@ ${moduleDirectory.absolutePath}
                     )
 
 
+            node.videoLanguages =
+                    findVideoLanguages(
+                            directory,
+                            moduleLanguages,
+                            'TRUE'.equalsIgnoreCase(
+                                    getMasterValue(
+                                            master,
+                                            'BUILD_VIDEO'
+                                    )
+                            )
+                    )
+
+
             node.roadmapLanguages =
                     findRoadmapLanguages(
                             directory,
@@ -733,6 +746,22 @@ ${moduleDirectory.absolutePath}
             }
 
 
+            if (!node.videoLanguages.isEmpty()) {
+
+                result.video =
+                        node.videoLanguages
+                                .toList()
+                                .sort()
+                                .collectEntries {
+                                    String language ->
+
+                                        [
+                                                (language): "/module/${resolveRouteId(node)}/video/${language}/index.json"
+                                        ]
+                                }
+            }
+
+
             if (!node.roadmapLanguages.isEmpty()) {
 
                 result.roadmap =
@@ -1066,6 +1095,138 @@ ${moduleDirectory.absolutePath}
 
 
         return result
+    }
+
+
+    private static Set<String> findVideoLanguages(
+            File moduleDirectory,
+            List<String> moduleLanguages,
+            boolean videoEnabled
+    ) {
+
+        if (!videoEnabled) {
+            return [] as Set<String>
+        }
+
+
+        File videoDirectory =
+                new File(
+                        moduleDirectory,
+                        'video'
+                )
+
+
+        if (!videoDirectory.isDirectory()) {
+            return [] as Set<String>
+        }
+
+
+        Set<String> result =
+                new LinkedHashSet<>()
+
+
+        moduleLanguages.each {
+            String language ->
+
+            File menuDirectory =
+                    new File(
+                            videoDirectory,
+                            "${language}/menu"
+                    )
+
+
+            if (
+                    menuDirectory.isDirectory() &&
+                            containsAuthoredVideo(
+                                    menuDirectory
+                            )
+            ) {
+                result.add(language)
+            }
+        }
+
+
+        return result
+    }
+
+
+    private static boolean containsAuthoredVideo(
+            File directory
+    ) {
+
+        File[] children =
+                directory.listFiles()
+
+
+        if (children == null) {
+            return false
+        }
+
+
+        for (File child : children) {
+
+            if (child.isDirectory()) {
+
+                if (containsAuthoredVideo(child)) {
+                    return true
+                }
+
+
+                continue
+            }
+
+
+            if (
+                    !child.isFile() ||
+                            !child.name.toLowerCase(Locale.ROOT).endsWith('.md')
+            ) {
+                continue
+            }
+
+
+            String content =
+                    child
+                            .getText('UTF-8')
+                            .replaceAll(
+                                    '(?s)<!--.*?-->',
+                                    ''
+                            )
+
+
+            boolean fenced =
+                    false
+
+
+            for (String line : content.readLines()) {
+
+                String trimmed =
+                        line.trim()
+
+
+                if (
+                        trimmed.startsWith('```') ||
+                                trimmed.startsWith('~~~')
+                ) {
+
+                    fenced =
+                            !fenced
+
+
+                    continue
+                }
+
+
+                if (
+                        !fenced &&
+                                line ==~ /^###\s+Scene(?:\s+\d+)?(?:\s+[—-].*)?\s*$/
+                ) {
+                    return true
+                }
+            }
+        }
+
+
+        return false
     }
 
 
@@ -1704,6 +1865,7 @@ ${exception.message}
         boolean moduleDepend
         Map<String, File> overviewSources = [:]
         Set<String> knowledgeLanguages = [] as Set<String>
+        Set<String> videoLanguages = [] as Set<String>
         Set<String> roadmapLanguages = [] as Set<String>
         Set<String> apiLanguages = [] as Set<String>
         Set<String> quizLanguages = [] as Set<String>

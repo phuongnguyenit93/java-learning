@@ -237,10 +237,10 @@ questions:
   - id: retention-use-case
     question: "Cách chọn retention nào phù hợp nhất về mặt thiết kế?"
     answers:
-      - {id: A, answer: "Luôn chọn RUNTIME vì giữ metadata lâu hơn luôn tốt hơn.", explanation: "Sai. Retention rộng hơn cần thiết làm contract lớn hơn và có thể tạo expectation runtime không cần thiết."}
-      - {id: B, answer: "Luôn chọn SOURCE để artifact nhỏ nhất.", explanation: "Sai. Metadata sẽ biến mất quá sớm nếu consumer cần class-file hoặc runtime."}
-      - {id: C, answer: "Chọn theo target trước rồi retention tự suy ra.", explanation: "Sai. Target và retention là hai dimension độc lập."}
-      - {id: D, answer: "Xác định consumer chạy ở giai đoạn nào rồi chọn retention ngắn nhất vẫn đáp ứng consumer đó.", explanation: "Đúng. Đây là rule thực dụng giúp lifetime metadata khớp đúng nhu cầu."}
+      - {id: A, answer: "Chọn RUNTIME mỗi khi có bất kỳ tool downstream nào có thể đọc artifact đã biên dịch.", explanation: "Sai. Tool đọc class file có thể chỉ cần CLASS; RUNTIME chỉ nên là contract khi metadata thực sự phải nhìn thấy lúc chạy."}
+      - {id: B, answer: "Chọn SOURCE nếu không dùng runtime reflection, kể cả khi bytecode tooling vẫn cần annotation.", explanation: "Sai. SOURCE bị loại khỏi class file nên sẽ biến mất quá sớm đối với consumer đọc bytecode."}
+      - {id: C, answer: "Suy retention từ @Target vì vị trí được phép dùng annotation cũng quyết định vòng đời metadata.", explanation: "Sai. Target trả lời annotation được đặt ở đâu; retention độc lập trả lời metadata được giữ tới phase nào."}
+      - {id: D, answer: "Xác định consumer thật sự chạy ở phase nào và chọn retention ngắn nhất vẫn tới được phase đó.", explanation: "Đúng. Vòng đời metadata không nên rộng hơn nhu cầu thực tế của consumer ở compile time, class file hoặc runtime."}
     correctAnswerId: D
     aiGenerated: true
     reviewed: false

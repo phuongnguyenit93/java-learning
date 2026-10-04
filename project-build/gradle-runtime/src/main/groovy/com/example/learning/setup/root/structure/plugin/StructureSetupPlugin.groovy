@@ -7,6 +7,7 @@ import com.example.learning.setup.root.structure.service.PortalKnowledgeProjecti
 import com.example.learning.setup.root.structure.service.PortalKnowledgeSearchProjectionService
 import com.example.learning.setup.root.structure.service.PortalQuizProjectionService
 import com.example.learning.setup.root.structure.service.PortalRoadmapProjectionService
+import com.example.learning.setup.root.structure.service.PortalVideoProjectionService
 import com.example.learning.setup.root.structure.task.GenerateModuleOrderTask
 import org.gradle.api.GradleException
 import org.gradle.api.Plugin
@@ -80,6 +81,12 @@ ${project.path}
                 )
 
 
+        PortalVideoProjectionService videoService =
+                new PortalVideoProjectionService(
+                        project.logger
+                )
+
+
         def portalDataInputs =
                 project.fileTree(
                         new File(
@@ -95,6 +102,7 @@ ${project.path}
                     include '**/src/main/resources/quiz/**'
                     include '**/src/main/resources/interview/**'
                     include '**/roadmap/**'
+                    include '**/video/**'
 
                     exclude '**/build/**'
                     exclude '**/.gradle/**'
@@ -392,6 +400,39 @@ ${project.path}
                 }
 
 
+        def generatePortalVideo =
+                project.tasks.register(
+                        'generatePortalVideo'
+                ) {
+                    task ->
+
+                        task.group =
+                                'learning portal'
+
+
+                        task.description =
+                                'Generate localized Video indexes and script projections for the Learning Portal.'
+
+
+                        task.dependsOn(
+                                cleanupLegacyPortalData
+                        )
+
+
+                        task.inputs.files(
+                                portalDataInputs
+                        )
+
+
+                        task.doLast {
+
+                            videoService.generate(
+                                    project
+                            )
+                        }
+                }
+
+
         generatePortalKnowledge.configure {
             task ->
 
@@ -446,6 +487,15 @@ ${project.path}
         }
 
 
+        generatePortalVideo.configure {
+            task ->
+
+                task.mustRunAfter(
+                        generatePortalModuleData
+                )
+        }
+
+
         project.tasks.register(
                 'generatePortalData'
         ) {
@@ -466,7 +516,8 @@ ${project.path}
                         generatePortalApi,
                         generatePortalQuiz,
                         generatePortalInterview,
-                        generatePortalRoadmap
+                        generatePortalRoadmap,
+                        generatePortalVideo
                 )
         }
 

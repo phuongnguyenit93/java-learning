@@ -66,12 +66,12 @@ questions:
     apiRelated: {controller: "EqualityController", methodSignature: "identityVsEquality()"}
 
   - id: equals-contract-laws
-    question: "Which property is required by a correct equals contract?"
+    question: "For stable objects a and b, a.equals(b) is true but b.equals(a) is false. Which equals contract law is violated?"
     answers:
-      - {id: A, answer: "It may return different answers on every call for the same stable objects.", explanation: "Incorrect. Collections and libraries rely on the full equality contract even though the compiler cannot enforce it."}
-      - {id: B, answer: "It must be reflexive, symmetric, transitive, consistent while relevant state is stable, and false for null.", explanation: "Correct. Collections and libraries rely on the full equality contract even though the compiler cannot enforce it."}
-      - {id: C, answer: "It must return true for null.", explanation: "Incorrect. Collections and libraries rely on the full equality contract even though the compiler cannot enforce it."}
-      - {id: D, answer: "It may be asymmetric as long as hashCode matches.", explanation: "Incorrect. Collections and libraries rely on the full equality contract even though the compiler cannot enforce it."}
+      - {id: A, answer: "Reflexivity, because an object must be equal to itself.", explanation: "Incorrect. Reflexivity concerns a.equals(a); the scenario compares the two directions between distinct references."}
+      - {id: B, answer: "Symmetry, because equality must agree in both directions for the same pair.", explanation: "Correct. If a.equals(b) is true, symmetry requires b.equals(a) to be true as well."}
+      - {id: C, answer: "Transitivity, because equality across three objects must remain compatible.", explanation: "Incorrect. Transitivity needs a third object and a chain such as a equals b and b equals c."}
+      - {id: D, answer: "Consistency, because repeated comparisons must remain stable while relevant state is unchanged.", explanation: "Incorrect. Consistency is about repeated evaluation over time, not disagreement between opposite comparison directions."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false

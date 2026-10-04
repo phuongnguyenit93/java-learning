@@ -40,12 +40,12 @@
 
 questions:
   - id: oop-responsibility
-    question: "Ngoài việc liệt kê các trường dữ liệu, câu hỏi thiết kế OOP nào hữu ích hơn?"
+    question: "Ba checkout caller đang copy cùng một discount rule và đều phải sửa khi pricing policy đổi. Câu hỏi thiết kế nào dẫn hướng refactor OOP tốt nhất?"
     answers:
-      - {id: A, answer: "Đối tượng nào sở hữu quy tắc này và chịu trách nhiệm bảo vệ trạng thái/điều kiện bất biến liên quan?", explanation: "Đúng. OOP tập trung vào ranh giới trách nhiệm và sự cộng tác, không chỉ đưa dữ liệu vào class."}
-      - {id: B, answer: "Làm sao biến mọi thao tác thành `static`?", explanation: "Sai. `static` không tự tạo ranh giới trách nhiệm hay mô hình đối tượng tốt."}
-      - {id: C, answer: "Làm sao gom toàn bộ hệ thống vào một class?", explanation: "Sai. Một class biết quá nhiều trách nhiệm thường làm thay đổi lan rộng hơn."}
-      - {id: D, answer: "Làm sao công khai mọi trường dữ liệu?", explanation: "Sai. Công khai dữ liệu nội bộ thường làm yếu ranh giới và tăng coupling."}
+      - {id: A, answer: "Object hoặc policy nào nên sở hữu discount rule và bảo vệ state hay invariant mà rule đó quản lý?", explanation: "Đúng. Gom một responsibility coherent về boundary rõ ràng giúp giảm các điểm phải sửa đồng thời."}
+      - {id: B, answer: "Class hiện có nào đã nhiều method nhất để thêm discount rule vào đó mà không phải tạo type mới?", explanation: "Sai. Số lượng method không chứng minh ownership và có thể biến class vốn đã rộng thành coupling hotspot lớn hơn."}
+      - {id: C, answer: "Caller nào nhận raw price trước để mỗi caller tiếp tục giữ một bản discount rule cục bộ?", explanation: "Sai. Giữ policy copy ở nhiều caller bảo toàn chính vấn đề change propagation cần loại bỏ."}
+      - {id: D, answer: "Pricing field nào có thể expose để các caller tự phối hợp rule mà không cần một object chịu trách nhiệm?", explanation: "Sai. Expose state đẩy policy ra ngoài và làm boundary yếu hơn thay vì gán responsibility rõ ràng."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false

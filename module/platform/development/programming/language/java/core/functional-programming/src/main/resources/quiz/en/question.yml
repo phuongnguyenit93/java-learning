@@ -68,10 +68,10 @@ questions:
   - id: fp-q03
     question: "What relationship between anonymous classes and lambdas is most accurate?"
     answers:
-      - {id: A, answer: "Anonymous classes cannot represent behavior through interfaces.", explanation: "Incorrect. They have long been able to implement interface behavior."}
-      - {id: B, answer: "A lambda always creates exactly the same scope and this semantics as an anonymous class.", explanation: "Incorrect. Lambdas use lexical scope and differ in this semantics."}
+      - {id: A, answer: "A lambda and an anonymous class have the same this, scope, and runtime class identity whenever they target the same interface.", explanation: "Incorrect. Lambdas use lexical scoping for this and are not specified as anonymous-class instances with identical identity semantics."}
+      - {id: B, answer: "An anonymous class stops being a valid way to implement a functional interface once lambda syntax is available.", explanation: "Incorrect. Anonymous classes remain legal; lambdas are a more concise form for compatible functional-interface behavior."}
       - {id: C, answer: "Lambdas provide concise syntax for compatible functional-interface behavior that could often be expressed with an anonymous class.", explanation: "Correct. Lambda syntax reduces ceremony while still relying on a target functional-interface type."}
-      - {id: D, answer: "Lambdas are untyped replacements for anonymous objects.", explanation: "Incorrect. A lambda requires a compatible target type."}
+      - {id: D, answer: "A lambda can target an interface with several unrelated abstract methods as long as its parameters match one of them.", explanation: "Incorrect. A lambda needs a functional target whose abstract-method set forms one functional contract."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false

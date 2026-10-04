@@ -81,10 +81,10 @@ questions:
   - id: abstract-class-limit
     question: "What is the main design limitation of using an abstract class for a capability that must cross unrelated hierarchies?"
     answers:
-      - {id: A, answer: "Abstract classes cannot have concrete methods.", explanation: "Incorrect. They can have concrete methods."}
-      - {id: B, answer: "Abstract classes cannot have constructors.", explanation: "Incorrect. They can have constructors."}
+      - {id: A, answer: "Concrete methods inherited from an abstract base cannot be overridden by subclasses.", explanation: "Incorrect. Subclasses may override inherited overridable methods; the key constraint here is the single class-inheritance slot."}
+      - {id: B, answer: "An abstract class cannot itself implement interfaces, so it cannot participate in other contracts.", explanation: "Incorrect. An abstract class can implement interfaces and may leave interface methods abstract."}
       - {id: C, answer: "A class can extend only one class, so the base-class commitment may be too restrictive.", explanation: "Correct. This is why interfaces often fit cross-cutting capabilities better."}
-      - {id: D, answer: "Abstract classes cannot be used as reference types.", explanation: "Incorrect. They can be declared/reference types."}
+      - {id: D, answer: "Callers cannot use an abstract base as a reference type unless the object was constructed directly as that base.", explanation: "Incorrect. Variables and parameters may use an abstract base type while the runtime object is an instance of a concrete subclass."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false

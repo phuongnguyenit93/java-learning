@@ -64,10 +64,11 @@ java-learning/
 │   ├── STEP_3_MENU.md              # New-module Menu/title skeleton rules
 │   ├── STEP_4_KNOWLEDGE.md         # Knowledge + refactor Menu/Knowledge rules
 │   ├── STEP_5_API.md               # API learning documentation rules
-│   ├── STEP_6_QUIZ.md              # Quiz authoring rules
-│   ├── STEP_7_INTERVIEW.md         # Interview authoring rules
-│   ├── STEP_8_VALIDATION.md        # Integrated validation / Coverage Review
-│   └── GENARAL_AGENT_RULES.md      # Step orchestration / routing
+│   ├── STEP_6_VIDEO.md             # Video Script / Presentation Plan rules
+│   ├── STEP_7_QUIZ.md              # Quiz authoring rules
+│   ├── STEP_8_INTERVIEW.md         # Interview authoring rules
+│   ├── STEP_9_VALIDATION.md        # Integrated validation / Coverage Review
+│   └── GENERAL_AGENT_RULES.md      # Step orchestration / routing
 └── STRUCTURE.md                    # Generated module map
 ```
 
@@ -103,6 +104,8 @@ Knowledge lessons
         ↓
 API Docs / executable evidence when applicable
         ↓
+Video Script / presentation plan
+        ↓
 Quiz
         ↓
 Interview
@@ -110,7 +113,7 @@ Interview
 Portal projection
 ```
 
-Roadmap là upstream source-of-truth cho learning order và milestone grouping. README/Menu chỉ triển khai roadmap thành Knowledge section cụ thể; API Docs, Quiz và Interview là downstream reinforcement/evidence và không được tự mở rộng curriculum.
+Roadmap là upstream source-of-truth cho learning order và milestone grouping. README/Menu chỉ triển khai roadmap thành Knowledge section cụ thể; API Docs/runtime evidence, Video Script, Quiz và Interview là downstream presentation/reinforcement/evidence và không được tự mở rộng curriculum. Video đặc biệt chỉ được chuyển Knowledge/evidence thành cách trình bày bằng scene/transition/visual/narration, không trở thành technical source of truth mới.
 
 Roadmap có hai optional relation layers nhưng cả hai đều **không phải curriculum source mới**:
 
@@ -143,7 +146,7 @@ Mỗi language roadmap tự sở hữu curriculum của nó; Gradle chỉ tạo/
 
 Với legacy module, roadmap phải được thiết kế độc lập từ module scope/curriculum goal trước, rồi mới audit Knowledge hiện tại. Điều này tránh việc historical menu order vô tình trở thành curriculum mới.
 
-`GENARAL_AGENT_RULES.md` chỉ orchestrate/routing. Canonical rules của từng phase nằm trong `module-generate-agent/STEP_1_...` đến `STEP_8_...`; riêng ROADMAP architecture + authoring/review contract nằm trong [`STEP_2_ROADMAP.md`](./module-generate-agent/STEP_2_ROADMAP.md).
+`GENERAL_AGENT_RULES.md` chỉ orchestrate/routing. Canonical rules của từng phase nằm trong `module-generate-agent/STEP_1_...` đến `STEP_9_...`; riêng ROADMAP architecture + authoring/review contract nằm trong [`STEP_2_ROADMAP.md`](./module-generate-agent/STEP_2_ROADMAP.md).
 
 ### 3.1 `project-portal` boundary
 
@@ -175,6 +178,7 @@ project-portal/
 │   └── module/{ROUTE_ID}/
 │       ├── overview/{lang}.md
 │       ├── knowledge/{lang}/...
+│       ├── video/{lang}/...
 │       ├── quiz/{lang}/question.yml
 │       ├── interview/{lang}/question.yml
 │       └── api/{lang}/              # copied complete Swagger metadata set
@@ -274,7 +278,7 @@ Learning page
 └── Download action
 ```
 
-Module hierarchy/routing hiện lấy từ generated `module-catalog.json`. `Overview` consume build-time projection từ language `BASE.md`. `Menu` và `Knowledge` consume Knowledge build-time projection theo module/language/category/section contract; section Markdown chỉ được fetch khi user mở section. `Roadmap` consume localized `roadmap/<lang>/roadmap.yml` projection: catalog chỉ expose Roadmap language khi source có ít nhất một milestone; Level 1 render milestone timeline trên center spine; optional `relatedKnowledge` luôn hiển thị ở phía đối diện milestone, resolve category/count từ Knowledge index và click item chuyển sang Knowledge tab với category đó active; numbered marker giữ pulse animation khi milestone có supporting Knowledge. Optional `relatedModules` render clickable satellite cards để chuyển giữa module mà không biến relation thành nested curriculum. Sidebar dùng badge tròn `R` cùng semantic color của Roadmap để biểu diễn availability. `Quiz` và `Interview` consume localized `question.yml` projection generated từ module resource. Build-time API projection cũng đã có: module có đủ bốn Swagger YAML chuẩn cho một language sẽ được copy nguyên vẹn vào `module/{ROUTE_ID}/api/{lang}/` và catalog expose base path tương ứng. Knowledge/Quiz/Interview/API counts ở sidebar đều preload từ generated/static projection theo active language. `Local Run` có UI Build/Download JAR + Run Locally và một contract relative `/api/local-run/{build,status,artifact}` dùng chung. Khi chạy local, browser → Spring Boot `project-portal` → GitHub REST API; khi chạy production, browser → Cloudflare Pages Functions → GitHub theo cùng contract. Cả hai adapter dispatch/poll guarded `local-run-build.yml` và đọc rolling GitHub Release tag `local-run`. Workflow build `bootJar` rồi upload raw JAR trực tiếp thành Release Asset; browser download trực tiếp từ `browser_download_url`, nên Cloudflare không buffer/unzip Actions Artifact nữa. Browser gửi `moduleId + sourceFingerprint`; workflow vẫn tự resolve `SERVICE_NAME` sang đúng real `SERVLET`/`REACTIVE` module, tự recompute fingerprint và không nhận Gradle task/path tùy ý. Token local lấy từ process environment hoặc `.env`; token production nằm trong Cloudflare secret. Hai runtime adapter độc lập, không gọi lẫn nhau. CSS dùng stylesheet riêng; inline CSS không phải convention của Portal.
+Module hierarchy/routing hiện lấy từ generated `module-catalog.json`. `Overview` consume build-time projection từ language `BASE.md`. `Menu` và `Knowledge` consume Knowledge build-time projection theo module/language/category/section contract; section Markdown chỉ được fetch khi user mở section. `Video` consume build-time projection từ authored `video/{lang}/menu/**/*.md`, map theo Knowledge `categoryId` và được render như presentation layer bên trong Knowledge flow thay vì một curriculum source riêng. `Roadmap` consume localized `roadmap/<lang>/roadmap.yml` projection: catalog chỉ expose Roadmap language khi source có ít nhất một milestone; Level 1 render milestone timeline trên center spine; optional `relatedKnowledge` luôn hiển thị ở phía đối diện milestone, resolve category/count từ Knowledge index và click item chuyển sang Knowledge tab với category đó active; numbered marker giữ pulse animation khi milestone có supporting Knowledge. Optional `relatedModules` render clickable satellite cards để chuyển giữa module mà không biến relation thành nested curriculum. Sidebar dùng badge tròn `R` cùng semantic color của Roadmap để biểu diễn availability. `Quiz` và `Interview` consume localized `question.yml` projection generated từ module resource. Build-time API projection cũng đã có: module có đủ bốn Swagger YAML chuẩn cho một language sẽ được copy nguyên vẹn vào `module/{ROUTE_ID}/api/{lang}/` và catalog expose base path tương ứng. Knowledge/Quiz/Interview/API counts ở sidebar đều preload từ generated/static projection theo active language. `Local Run` có UI Build/Download JAR + Run Locally và một contract relative `/api/local-run/{build,status,artifact}` dùng chung. Khi chạy local, browser → Spring Boot `project-portal` → GitHub REST API; khi chạy production, browser → Cloudflare Pages Functions → GitHub theo cùng contract. Cả hai adapter dispatch/poll guarded `local-run-build.yml` và đọc rolling GitHub Release tag `local-run`. Workflow build `bootJar` rồi upload raw JAR trực tiếp thành Release Asset; browser download trực tiếp từ `browser_download_url`, nên Cloudflare không buffer/unzip Actions Artifact nữa. Browser gửi `moduleId + sourceFingerprint`; workflow vẫn tự resolve `SERVICE_NAME` sang đúng real `SERVLET`/`REACTIVE` module, tự recompute fingerprint và không nhận Gradle task/path tùy ý. Token local lấy từ process environment hoặc `.env`; token production nằm trong Cloudflare secret. Hai runtime adapter độc lập, không gọi lẫn nhau. CSS dùng stylesheet riêng; inline CSS không phải convention của Portal.
 
 Sibling ordering trong generated module tree có optional parent-local contract `module-order.yml`. File nằm ngay trong parent directory cần order và chỉ áp dụng cho direct child directories của parent đó. `order` nhỏ hơn đứng trước; cùng `order` thì sort ABC; child không có/không được gán `order` đứng sau các child có order và tiếp tục sort ABC. Không có `module-order.yml` thì behavior giữ nguyên ABC. Root task `generateModuleOrder --path=<relative-to-module>` tạo/sync shape file, preserve order human-owned, thêm child mới với `order` rỗng và bỏ stale child; normal Gradle sync chỉ đọc file, không mutate. `ProjectStructureService` áp dụng order trước khi generate `STRUCTURE.md`, `module-structure.txt` và `module-catalog.json`, vì vậy Portal chỉ consume projected order và không sort lại.
 
@@ -521,6 +525,8 @@ ENV setup        [conditional]
     ↓
 README setup     [conditional]
     ↓
+Video setup      [conditional]
+    ↓
 Swagger setup    [conditional]
     ↓
 Quiz setup       [conditional]
@@ -540,6 +546,7 @@ Condition chính:
 | --- | --- |
 | ENV | `BUILD_ENV=TRUE` hoặc `BUILD_ENV_PROFILE=TRUE` |
 | README | `BUILD_README=TRUE` |
+| Video | `BUILD_VIDEO=TRUE` |
 | Swagger | `BUILD_SWAGGER=TRUE` |
 | Quiz | `BUILD_QUIZ=TRUE` |
 | Interview | `BUILD_INTERVIEW=TRUE` |
@@ -642,7 +649,7 @@ Việc một module có API hay không không quyết định module đó có đ
 
 Do đó không được đổi một topic tự nhiên thành `SERVLET`/`REACTIVE`, hoặc tạo endpoint giả, chỉ để đạt "đủ bộ" Knowledge/API/Quiz/Interview. Ngược lại, nếu `SERVLET`/`REACTIVE` module có learning API thực sự thì API phải minh họa/chứng minh Knowledge concept và dùng exact README relationship theo Swagger contract.
 
-Workflow routing nằm trong `module-generate-agent/GENARAL_AGENT_RULES.md`; quy tắc authoring/validation chi tiết nằm trong file `STEP_X_*.md` tương ứng.
+Workflow routing nằm trong `module-generate-agent/GENERAL_AGENT_RULES.md`; quy tắc authoring/validation chi tiết nằm trong file `STEP_X_*.md` tương ứng.
 
 Ba tầng này là **learning/content contract**, không phải constraint của Gradle/module scanner. Build system vẫn chỉ materialize/present source content; chất lượng roadmap, motivation, transition và conceptual relationship thuộc human/AI-authored curriculum và phải được review độc lập với schema/build correctness.
 
@@ -662,11 +669,15 @@ BUILD_README=TRUE
 README.md + localized BASE.md/LIST.md/menu directories
         ↓ human authoring
 readme/{lang}/menu/**/*.md
+        ↓ optional after README chapter files exist
+BUILD_VIDEO=TRUE
+        ↓ module orchestration / VideoSetupPlugin
+video/{lang}/menu/**/*.md skeletons mirrored from README structure
 ```
 
 `ModuleListEnum`, `module-structure.txt`, `STRUCTURE.md` và các generated registry/structure outputs khác nằm phía generator; bootstrap module không được coi các file này là canonical input để sửa tay.
 
-Concept-oriented module có thể bắt đầu ở `MODULE_TYPE=LIBRARY` với chỉ README capability. Không bắt buộc phải có Java source, module-local `build.gradle`, Swagger, Quiz hay Interview ngay trong phase dựng curriculum skeleton.
+Concept-oriented module có thể bắt đầu ở `MODULE_TYPE=LIBRARY` với chỉ README capability. Không bắt buộc phải có Java source, module-local `build.gradle`, Video, Swagger, Quiz hay Interview ngay trong phase dựng curriculum skeleton. `BUILD_VIDEO` chỉ nên bật sau khi README menu đã có Markdown chapter thực tế; Video setup cố ý fail nếu source README menu không tồn tại hoặc không có Markdown để tránh tạo presentation artifact không có Knowledge source.
 
 Current technical caveat: nếu `SERVICE_NAME` còn blank, settings info generation fallback sang directory name rồi validate nó theo enum-constant format. Vì vậy directory mới có dấu `-` sẽ fail bootstrap trước khi có `SERVICE_NAME` hợp lệ. Workaround hiện tại là sync lần đầu bằng tên thư mục tạm hợp lệ theo enum, set stable `SERVICE_NAME`, rename về final taxonomy path, rồi chạy Gradle lại. Đây là bootstrap implementation detail, không phải requirement rằng learning directory phải dùng underscore.
 
@@ -719,6 +730,7 @@ IS_MODULE_DEPEND
 BUILD_ENV
 BUILD_YML
 BUILD_README
+BUILD_VIDEO
 BUILD_TESTER
 BUILD_SWAGGER
 BUILD_EXECUTION_CONTEXT
@@ -728,7 +740,7 @@ USE_DATABASE
 USE_TASK
 ```
 
-`MODULE_LANGUAGE` là metadata cấp module dùng chung cho mọi capability cần localization. Canonical type là `list`, default hiện tại là `[vi, en]`. README, Swagger build-time, Knowledge metadata sync, Portal projection và runtime Swagger không sở hữu language list riêng; chúng consume `MODULE_LANGUAGE`. Hai key cũ `README_LANGUAGE` và `BUILD_SWAGGER_LANGUAGE_LIST` đã được loại bỏ khỏi `properties.json`.
+`MODULE_LANGUAGE` là metadata cấp module dùng chung cho mọi capability cần localization. Canonical type là `list`, default hiện tại là `[vi, en]`. README, Video skeleton, Swagger build-time, Knowledge metadata sync, Portal projection và runtime Swagger không sở hữu language list riêng; chúng consume `MODULE_LANGUAGE`. Hai key cũ `README_LANGUAGE` và `BUILD_SWAGGER_LANGUAGE_LIST` đã được loại bỏ khỏi `properties.json`.
 
 `JAVA_BASE_PACKAGE` hiện có canonical default:
 
@@ -1283,6 +1295,124 @@ render back into markdown
 Prepare/render là hai phía của cùng một transformation contract; translated spans được replace theo offset an toàn.
 
 Generated documentation phải idempotent.
+
+### 19.1 Video script architecture
+
+Video script là **presentation artifact** tách khỏi README/Knowledge. Nó derive từ Knowledge nhưng không trở thành source of truth kỹ thuật mới.
+
+Enablement contract:
+
+```text
+BUILD_VIDEO=FALSE   # canonical default
+
+BUILD_VIDEO=TRUE
+        ↓
+ModuleOrchestrationPlugin
+        ↓
+VideoSetupPlugin
+        ↓
+VideoStructureService
+```
+
+`BUILD_VIDEO=TRUE` yêu cầu `BUILD_README=TRUE` vì README Menu là structural source of truth. Localized Video structure dùng cùng `MODULE_LANGUAGE`; không có language list riêng.
+
+Canonical path mapping:
+
+```text
+readme/{lang}/menu/<relative-path>.md
+        ↓ mirror folder/file shape
+video/{lang}/menu/<same-relative-path>.md
+```
+
+Video không được đặt thành `*_VIDEO.md` bên trong `readme/{lang}/menu`, vì README final-list generation, internal-menu generation và Portal Knowledge projection đều scan Markdown ở namespace đó như Knowledge. Tách `video/` giữ boundary rõ:
+
+```text
+readme = what to learn
+video  = how to present it
+```
+
+Structure synchronization chỉ sở hữu việc **tạo file còn thiếu**. Khi source Knowledge tồn tại mà Video path tương ứng chưa tồn tại, service tạo skeleton từ H1/H2 hiện tại. Skeleton giữ metadata rất nhỏ:
+
+```yaml
+---
+video:
+  url: ""
+---
+```
+
+Body skeleton chỉ materialize H1, các H2 tương ứng và comment ẩn mô tả format script. Comment contract hiện định nghĩa:
+
+```text
+Transition
+├── Time
+├── Visual
+├── Script
+└── Purpose
+
+Scene N
+├── Time
+├── Visual
+├── Script
+└── Purpose
+```
+
+Mỗi H2 là một video section/chapter. Section đầu tiên cần ít nhất một Scene; từ section thứ hai trở đi cần ít nhất một Transition từ section trước và ít nhất một Scene. Số Scene thực tế không bị cố định; content-generation step tự quyết định theo độ sâu Knowledge, code walkthrough hoặc runtime evidence.
+
+Ownership sau khi skeleton được tạo:
+
+```text
+README H1/H2 + path
+→ structural source of truth
+
+Video URL + Transition/Scene script
+→ human/AI-owned presentation content
+```
+
+Vì vậy ordinary Video structure sync phải tuân thủ:
+
+```text
+README exists + Video missing
+→ CREATE skeleton
+
+README exists + Video exists
+→ KEEP unchanged
+
+Video exists + README missing
+→ WARN orphan; KEEP unchanged
+```
+
+Repository deliberately không có stable file id cho mapping này. Path là mapping convention. Nếu README file/folder được rename/move, lần sync kế tiếp tạo skeleton ở path mới và cảnh báo file Video cũ là orphan. Developer tự move/reconcile script + published URL rồi xóa stale artifact khi đã kiểm tra xong. Generator không được đoán rename và không được auto-delete orphan Video vì artifact có thể đã chứa URL publish hoặc script được review.
+
+`video/` là supporting content directory và phải bị loại khỏi module-child/module-order discovery giống `readme/`, `roadmap/`, `src/`, `build/`. Nó không tạo module hierarchy mới trong `STRUCTURE.md` hay `module-catalog.json`.
+
+Về learning pipeline, Video script là canonical **Step 6**:
+
+```text
+Step 4   Knowledge
+        ↓
+Step 5   API / runtime evidence when pedagogically useful
+        ↓
+Step 6   Video Script / presentation plan
+        ↓
+Step 7   Quiz
+        ↓
+Step 8   Interview
+        ↓
+Step 9   Integrated validation / Coverage Review
+```
+
+Step 6 dùng Knowledge làm technical source và có thể dùng Step 5 runtime evidence nếu tồn tại. Canonical unit là **one Knowledge Menu Markdown file → one Video**; Video path mirror exact relative path của Knowledge và H2 order của Knowledge trở thành Video section order. Narration được phép chuyển written Knowledge thành spoken explanation, thêm transition, visual direction và demo flow, nhưng không được âm thầm tạo technical claim cạnh tranh với Knowledge. Detailed authoring contract nằm trong [`STEP_6_VIDEO.md`](./module-generate-agent/STEP_6_VIDEO.md).
+
+Current implementation đã có `BUILD_VIDEO` + localized skeleton synchronization + build-time Portal Video projection. `PortalVideoProjectionService` đọc authored `video/{lang}/menu/**/*.md`, bỏ qua skeleton chưa có Scene, validate Scene/Transition fields, rồi generate:
+
+```text
+project-portal/build/generated/portal-data/module/{ROUTE_ID}/video/{lang}/index.json
+project-portal/build/generated/portal-data/module/{ROUTE_ID}/video/{lang}/content/{categoryId}/script.json
+```
+
+`ProjectStructureService` chỉ expose `video.{lang}` trong `module-catalog.json` khi language đó thực sự có authored Scene content. Vite dùng `project-portal/build/generated/portal-data` làm `publicDir`, sau đó `processResources` copy frontend build vào `classpath:/static`, nên Video projection đi cùng static-first Portal pipeline mà không cần REST endpoint hay copy mechanism riêng.
+
+**Embedded video và script-table UI vẫn chưa được implement**. Source vẫn phải là `video/{lang}/menu/**/*.md`; generated Portal data chỉ là downstream projection và không được write-back vào source.
 
 ---
 
@@ -2270,6 +2400,7 @@ trừ khi architecture contract của artifact đó được thay đổi rõ rà
 | Portal module hierarchy/catalog | filesystem/module discovery + module metadata via `ProjectStructureService` | `project-portal/build/generated/portal-data/module-catalog.json` |
 | Portal module Overview | `module/**/readme/{lang}/BASE.md` | `project-portal/build/generated/portal-data/module/{ROUTE_ID}/overview/{lang}.md` |
 | Portal Knowledge | `module/**/readme/{lang}/menu/**/*.md` anchored sections + `src/main/resources/readme/{lang}/knowledge-metadata.yml` governance | `project-portal/build/generated/portal-data/module/{ROUTE_ID}/knowledge/{lang}/...` |
+| Portal Video | authored `module/**/video/{lang}/menu/**/*.md` when `BUILD_VIDEO=TRUE` | `project-portal/build/generated/portal-data/module/{ROUTE_ID}/video/{lang}/index.json` + `content/{categoryId}/script.json` + catalog `video` path |
 | Portal Quiz | `BUILD_QUIZ=TRUE` + `module/**/src/main/resources/quiz/{lang}/question.yml` validated by canonical Quiz schema | `project-portal/build/generated/portal-data/module/{ROUTE_ID}/quiz/{lang}/question.yml` + catalog `quiz` path |
 | Portal Interview | `BUILD_INTERVIEW=TRUE` + `module/**/src/main/resources/interview/{lang}/question.yml` validated by canonical Interview schema | `project-portal/build/generated/portal-data/module/{ROUTE_ID}/interview/{lang}/question.yml` + catalog `interview` path |
 | Portal API metadata | complete `module/**/src/main/resources/swagger/{lang}` four-file set | `project-portal/build/generated/portal-data/module/{ROUTE_ID}/api/{lang}/...` + catalog `api` base path |
@@ -2658,7 +2789,7 @@ filesystem/module metadata
         ↓ ProjectStructureService
 build/generated/portal-data/module-catalog.json
         ↓
-        + module-scoped generated Overview/Knowledge/Quiz/Interview/API projections
+        + module-scoped generated Overview/Knowledge/Video/Quiz/Interview/API projections
         ↓
 React + TypeScript
         ↓ Vite build
@@ -2669,7 +2800,7 @@ Spring Boot classpath:/static
 browser at :9098
 ```
 
-Trong phase hiện tại Java backend không sở hữu learning data API. Module catalog cùng README/Quiz/Interview/OpenAPI projections đều đi theo static-first data flow; chỉ thêm server-side API khi feature có requirement runtime/persistence/security rõ ràng.
+Trong phase hiện tại Java backend không sở hữu learning data API. Module catalog cùng README/Video/Quiz/Interview/OpenAPI projections đều đi theo static-first data flow; chỉ thêm server-side API khi feature có requirement runtime/persistence/security rõ ràng.
 
 Execution Context bổ sung một đường dữ liệu khác từ runtime thực tế sang công cụ phân tích:
 

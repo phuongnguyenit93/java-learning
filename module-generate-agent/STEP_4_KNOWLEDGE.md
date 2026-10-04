@@ -171,7 +171,7 @@ Preserve existing human-owned values. Use the repository's explicit synchronizat
 
 Knowledge is allowed to contain concepts without an API. Pure conceptual material, constraints, comparisons and mental models may be valid Knowledge even when no useful executable endpoint exists.
 
-At the end of the Knowledge authoring/refactor step, the module should have a coherent Knowledge path before Quiz/Interview are authored and before API relations are finalized.
+At the end of the Knowledge authoring/refactor step, the module should have a coherent Knowledge path before Video/Quiz/Interview are authored and before API relations are finalized. Video later mirrors one Knowledge Menu file into one Video source and treats the finalized H2 order as its section order.
 
 "Coherent" here means more than all planned anchors existing. A learner entering at chapter 1 should be able to follow the motivation and chapter transitions without already knowing the module's vocabulary.
 
@@ -228,8 +228,8 @@ HOW
 EVIDENCE
 → what code/runtime behavior makes the idea observable?
 
-PRACTICE
-→ how do Quiz / Interview / API experiments reinforce it?
+PRACTICE / PRESENTATION
+→ how do Video / Quiz / Interview / API experiments reinforce or present it?
 ```
 
 Do not treat a complete H2 inventory as proof that the module teaches well.

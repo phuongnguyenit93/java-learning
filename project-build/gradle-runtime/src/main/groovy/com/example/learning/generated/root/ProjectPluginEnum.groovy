@@ -70,6 +70,11 @@ enum ProjectPluginEnum {
             'com.example.learning.setup.module.task.plugin.TaskSetupPlugin'
     ),
 
+    VIDEO_SETUP_PLUGIN(
+            'com.example.learning.setup.module.video.plugin',
+            'com.example.learning.setup.module.video.plugin.VideoSetupPlugin'
+    ),
+
     YML_SETUP_PLUGIN(
             'com.example.learning.setup.module.yml.plugin',
             'com.example.learning.setup.module.yml.plugin.YmlSetupPlugin'

@@ -40,12 +40,12 @@
 
 questions:
   - id: class-vs-object
-    question: "Which statement best distinguishes a class from an object?"
+    question: "Two Account instances created from the same class hold different balances. Which mental model best explains that?"
     answers:
       - {id: A, answer: "A class defines a type and implementation blueprint; an object is a runtime instance with its own identity and instance state.", explanation: "Correct. Many objects can share one class definition while holding different state."}
-      - {id: B, answer: "A class is always a runtime instance and an object is source code.", explanation: "Incorrect. Many objects can share one class definition while holding different state."}
-      - {id: C, answer: "An object can exist only if all fields are static.", explanation: "Incorrect. Many objects can share one class definition while holding different state."}
-      - {id: D, answer: "A class and every object created from it share one identity.", explanation: "Incorrect. Many objects can share one class definition while holding different state."}
+      - {id: B, answer: "The class owns one shared copy of every instance field, while each object is only a view over that shared state.", explanation: "Incorrect. Instance fields belong to each object; class-level shared state is modeled separately with static members."}
+      - {id: C, answer: "The object is the compiled class metadata, while the class is the heap allocation that stores one account's balance.", explanation: "Incorrect. This reverses the roles: the class describes the type, while the object is the runtime instance."}
+      - {id: D, answer: "Different balances imply the two values must come from different classes because instances of one class share state.", explanation: "Incorrect. Objects of the same class can have independent instance state while sharing the same type definition."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false

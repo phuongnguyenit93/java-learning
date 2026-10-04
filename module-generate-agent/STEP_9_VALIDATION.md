@@ -1,27 +1,27 @@
-# Step 8 - Validation Rules
+# Step 9 - Validation Rules
 
-Step 8 là integrated validation + Coverage Review cho cả **new module** và **refactor module**. Đây là step cuối trước khi coi learning build hoàn tất.
+Step 9 là integrated validation + Coverage Review cho cả **new module** và **refactor module**. Đây là step cuối trước khi coi learning build hoàn tất.
 
 ### General Agent Rules context guard
 
-Trước khi thực hiện Step 8:
+Trước khi thực hiện Step 9:
 
 ```text
-Nếu context của GENARAL_AGENT_RULES.md vẫn còn rõ ràng trong working context
+Nếu context của GENERAL_AGENT_RULES.md vẫn còn rõ ràng trong working context
 → không cần đọc lại
 
 Nếu context đã bị loại khỏi cửa sổ làm việc, bị quên, bị truncate,
 hoặc agent không chắc mình còn nhớ đầy đủ các global rules
-→ đọc lại ./GENARAL_AGENT_RULES.md trước khi tiếp tục
+→ đọc lại ./GENERAL_AGENT_RULES.md trước khi tiếp tục
 ```
 
 Không suy đoán các orchestration, preservation, gap-routing hoặc cross-step rules từ trí nhớ khi context không còn chắc chắn.
 
 ---
 
-## Step 8 — Integrated validation
+## Step 9 — Integrated validation
 
-After Knowledge, API, Quiz and Interview are authored, validate the module as one integrated unit.
+After Knowledge, API, Video, Quiz and Interview are authored, validate the module as one integrated unit.
 
 Validation must include both structural correctness and learning coherence.
 
@@ -36,6 +36,9 @@ README anchors are unique and exact
 controller README files exist
 API method anchors exist
 apiRelated controller + methodSignature exist and are active when required
+BUILD_VIDEO modules mirror Video relative paths from Knowledge Menu paths
+authored Video sections preserve current Knowledge H1/H2 structure/order
+authored Scene/Transition fields pass Portal Video validation
 localized files exist for configured MODULE_LANGUAGE values
 human-owned values were preserved
 generated/stale ownership rules were respected
@@ -60,6 +63,9 @@ Does code demonstrate a learning problem/behavior rather than merely restate syn
 Does Knowledge explain the concepts before other surfaces test them?
 Do learning APIs demonstrate concepts that exist in Knowledge?
 Does execution explain meaning/evidence, not merely source order?
+Does each authored Video map one-to-one to its Knowledge Menu and preserve the Knowledge H2 learning order?
+Does Video add useful visual/narrative value instead of copying Knowledge prose?
+Are Video Scene/Transition visuals, narration and evidence technically consistent with Knowledge/API evidence?
 Does Quiz test understanding rather than memorize wording?
 Does Interview add explanation/reasoning depth rather than duplicate Quiz?
 Are relations exact and useful?
@@ -80,16 +86,16 @@ The goal is **not** to force one-to-one coverage across all surfaces.
 Build a conceptual matrix such as:
 
 ```text
-Topic / section                 Knowledge   API   Quiz   Interview
-------------------------------------------------------------------
-Core mental model                 ✓          ✓     ✓        ✓
-Lifecycle                         ✓          ✓     ✓        ✓
-Configuration                     ✓          -     ✓        ✓
-Pure conceptual limitation        ✓          -     ✓        ✓
-Hands-on API observation          ✓          ✓     ✓        -
+Topic / section                 Knowledge   API   Video   Quiz   Interview
+-------------------------------------------------------------------------
+Core mental model                 ✓          ✓      ✓       ✓        ✓
+Lifecycle                         ✓          ✓      ✓       ✓        ✓
+Configuration                     ✓          -      ✓       ✓        ✓
+Pure conceptual limitation        ✓          -      ✓       ✓        ✓
+Hands-on API observation          ✓          ✓      ✓       ✓        -
 ```
 
-This is valid. Not every Knowledge topic needs an API, Quiz and Interview simultaneously.
+This is valid. Not every Knowledge topic needs an API, Quiz and Interview simultaneously. Video follows a different unit rule: one authored Video per Knowledge Menu, while individual H2 sections may use different numbers/types of scenes.
 
 Coverage Review should identify:
 
@@ -104,6 +110,10 @@ unnecessary context resets where a running example would materially improve cont
 critical Knowledge concept with no reinforcement anywhere
 learning API with no real Knowledge concept
 important API experiment with weak/no execution explanation
+Knowledge Menu with missing/stale Video mapping when BUILD_VIDEO is enabled for the completed module
+Video script that copies Knowledge prose without a useful visual/presentation plan
+Video that introduces claims or runtime behavior not supported by Knowledge/evidence
+Video section order that drifts from the mapped Knowledge H2 order
 Quiz cluster that repeats the same distinction
 Interview questions that duplicate Quiz mechanically
 important practical behavior missing from all assessments
@@ -154,6 +164,10 @@ Before declaring a module learning build complete, confirm:
 [ ] every meaningful learning API has a real Knowledge concept or an explicitly justified blank relation
 [ ] controller/method README relations are exact, not fuzzy guesses
 [ ] API execution explains concept/flow/meaning/evidence/observation/conclusion where applicable
+[ ] BUILD_VIDEO modules have one Video source per target Knowledge Menu
+[ ] Video path/H1/H2 mapping matches current Knowledge structure
+[ ] authored Video Scene/Transition fields validate and projection succeeds
+[ ] Video narration/visuals remain technically aligned with Knowledge/API evidence
 [ ] Quiz follows canonical schema and avoids duplicate coverage
 [ ] Interview adds explanation/reasoning depth beyond Quiz
 [ ] optional Knowledge/API relations are exact or intentionally blank
@@ -165,4 +179,4 @@ Before declaring a module learning build complete, confirm:
 [ ] no content was added solely to inflate counts or relation coverage
 ```
 
-The final result should feel like one module taught through several complementary surfaces, not four separate datasets that happen to share a module directory.
+The final result should feel like one module taught through several complementary surfaces, not separate datasets that happen to share a module directory.

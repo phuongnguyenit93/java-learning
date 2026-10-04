@@ -1,4 +1,4 @@
-﻿# <quiz-schema>
+# <quiz-schema>
 # Cấu trúc câu hỏi Quiz
 # schema-version: 3
 #
@@ -68,10 +68,10 @@ questions:
   - id: floating-decimal-approx
     question: "Vì sao `0.1 + 0.2` có thể khác giá trị thập phân 0.3 chính xác?"
     answers:
-      - {id: A, answer: "JVM ngẫu nhiên thay đổi giá trị double.", explanation: "Sai. IEEE 754 dùng dấu phẩy động nhị phân nên nhiều phân số thập phân chỉ được biểu diễn gần đúng."}
-      - {id: B, answer: "Phép cộng nội bộ chuyển mọi thứ sang String.", explanation: "Sai. IEEE 754 dùng dấu phẩy động nhị phân nên nhiều phân số thập phân chỉ được biểu diễn gần đúng."}
-      - {id: C, answer: "Phần lớn phân số thập phân không có biểu diễn dấu phẩy động nhị phân hữu hạn nên phép toán dùng giá trị biểu diễn gần nhất.", explanation: "Đúng. IEEE 754 dùng dấu phẩy động nhị phân nên nhiều phân số thập phân chỉ được biểu diễn gần đúng."}
-      - {id: D, answer: "double lưu chính xác số thập phân, chỉ println làm thay đổi kết quả.", explanation: "Sai. IEEE 754 dùng dấu phẩy động nhị phân nên nhiều phân số thập phân chỉ được biểu diễn gần đúng."}
+      - {id: A, answer: "JVM cố ý random các bit thấp của double để tránh rounding bias lặp lại.", explanation: "Sai. Kết quả tuân theo biểu diễn và phép toán IEEE 754 binary floating-point có tính xác định."}
+      - {id: B, answer: "Mỗi operand được lưu chính xác dưới dạng decimal nhưng toán tử cộng tạm chuyển cả hai qua String.", explanation: "Sai. double arithmetic hoạt động trên binary floating-point value; phép cộng thông thường không đi qua String conversion."}
+      - {id: C, answer: "Nhiều phân số thập phân không có biểu diễn binary floating-point hữu hạn nên operand và kết quả dùng các giá trị biểu diễn gần nhất.", explanation: "Đúng. Sai lệch quan sát được đến từ binary approximation và rounding chứ không phải hành vi ngẫu nhiên."}
+      - {id: D, answer: "Kết quả bên trong chính xác là decimal 0.3, chỉ println mới thay đổi numeric value đã lưu lúc hiển thị.", explanation: "Sai. Formatting có thể chọn text representation, nhưng không loại bỏ approximation vốn đã tồn tại trong double value."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false

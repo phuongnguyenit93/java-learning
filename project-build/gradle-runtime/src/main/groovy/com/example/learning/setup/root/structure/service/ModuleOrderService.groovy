@@ -27,7 +27,8 @@ class ModuleOrderService {
                     '.git',
                     'src',
                     'readme',
-                    'roadmap'
+                    'roadmap',
+                    'video'
             ] as Set
 
 

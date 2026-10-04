@@ -81,10 +81,10 @@ questions:
   - id: abstract-class-limit
     question: "Giới hạn thiết kế lớn nhất của lớp trừu tượng khi mô tả một khả năng cắt ngang nhiều hệ phân cấp là gì?"
     answers:
-      - {id: A, answer: "Lớp trừu tượng không thể có phương thức cụ thể.", explanation: "Sai. Lớp trừu tượng có thể có phương thức cụ thể."}
-      - {id: B, answer: "Lớp trừu tượng không thể có hàm khởi tạo.", explanation: "Sai. Lớp trừu tượng có thể có hàm khởi tạo."}
+      - {id: A, answer: "Phương thức cụ thể kế thừa từ lớp trừu tượng không thể được lớp con override.", explanation: "Sai. Lớp con vẫn có thể override phương thức cho phép override; giới hạn quan trọng ở đây là chỉ có một nhánh kế thừa class."}
+      - {id: B, answer: "Lớp trừu tượng không thể tự implement interface nên không thể tham gia các contract khác.", explanation: "Sai. Lớp trừu tượng có thể implement interface và có thể để một số phương thức interface tiếp tục là abstract."}
       - {id: C, answer: "Một lớp chỉ có thể extends một lớp, nên ràng buộc vào một lớp cha có thể quá chặt.", explanation: "Đúng. Đây là lý do interface thường phù hợp hơn cho khả năng cắt ngang nhiều họ lớp."}
-      - {id: D, answer: "Lớp trừu tượng không thể dùng làm kiểu tham chiếu.", explanation: "Sai. Lớp trừu tượng hoàn toàn có thể là kiểu tham chiếu."}
+      - {id: D, answer: "Caller không thể dùng lớp trừu tượng làm kiểu tham chiếu nếu object không được tạo trực tiếp từ lớp đó.", explanation: "Sai. Biến và tham số có thể mang kiểu lớp trừu tượng trong khi object thực tế là instance của lớp con cụ thể."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false

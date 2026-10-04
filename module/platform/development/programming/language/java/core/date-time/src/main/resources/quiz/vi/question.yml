@@ -211,10 +211,10 @@ questions:
   - id: date-time-q12
     question: "LocalTime biểu diễn được nano giây cho biết điều gì?"
     answers:
-      - {id: A, answer: "Đồng hồ hệ thống luôn đo chính xác tới nano giây.", explanation: "Sai. Độ chính xác biểu diễn không đồng nghĩa với độ chính xác của phép đo hay lưu trữ."}
-      - {id: B, answer: "Cơ sở dữ liệu luôn lưu đủ 9 chữ số nano.", explanation: "Sai. Độ chính xác biểu diễn không đồng nghĩa với độ chính xác của phép đo hay lưu trữ."}
-      - {id: C, answer: "Kiểu có độ chính xác biểu diễn tới nano giây, nhưng nguồn đo hoặc nơi lưu trữ có thể có độ phân giải thấp hơn.", explanation: "Đúng. Độ chính xác biểu diễn không đồng nghĩa với độ chính xác của phép đo hay lưu trữ."}
-      - {id: D, answer: "LocalTime thực ra chỉ chính xác tới mili giây.", explanation: "Sai. Độ chính xác biểu diễn không đồng nghĩa với độ chính xác của phép đo hay lưu trữ."}
+      - {id: A, answer: "Mọi Clock dùng để lấy thời gian đều phải đo đồng hồ vật lý với độ phân giải nano giây thật.", explanation: "Sai. Khả năng biểu diễn của kiểu không ép nguồn clock bên dưới phải có cùng độ phân giải."}
+      - {id: B, answer: "Mọi database hay wire format nhận LocalTime đều phải giữ đủ chín chữ số phần thập phân của giây.", explanation: "Sai. Storage và protocol bên ngoài có contract precision riêng và có thể truncate hoặc round."}
+      - {id: C, answer: "Kiểu có thể biểu diễn nano giây dù nguồn đo hoặc nơi lưu trữ có độ phân giải thấp hơn.", explanation: "Đúng. Precision của representation và resolution/accuracy của nguồn đo, database hay protocol là các vấn đề khác nhau."}
+      - {id: D, answer: "Nguồn chỉ đo tới mili giây sẽ trở thành phép đo chính xác tới nano giây sau khi giá trị được đặt vào LocalTime.", explanation: "Sai. Representation chi tiết hơn không thể tạo thêm thông tin đo mà nguồn ban đầu chưa cung cấp."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false

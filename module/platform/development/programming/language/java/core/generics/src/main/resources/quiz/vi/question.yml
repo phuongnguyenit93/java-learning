@@ -105,12 +105,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: method-type-inference
-    question: "Điều gì đúng về type inference của generic method?"
+    question: "Khi gọi một generic method, compiler có thể dùng thông tin nào để suy luận method type parameter?"
     answers:
-      - {id: A, answer: "JVM đoán T sau khi method bắt đầu chạy.", explanation: "Sai. Inference diễn ra ở compile time."}
-      - {id: B, answer: "Compiler suy luận từ argument, target type và các constraint của lời gọi.", explanation: "Đúng."}
-      - {id: C, answer: "T luôn trở thành Object.", explanation: "Sai."}
-      - {id: D, answer: "Caller luôn phải viết explicit type witness.", explanation: "Sai."}
+      - {id: A, answer: "Chỉ runtime class của các argument object, vì generic type inference diễn ra sau khi bytecode bắt đầu chạy.", explanation: "Sai. Method type inference là quá trình compile time và không chờ runtime class của object."}
+      - {id: B, answer: "Các constraint từ argument expression, target type và surrounding invocation context.", explanation: "Đúng. Java kết hợp các constraint compile time phù hợp để suy ra type thỏa generic method invocation."}
+      - {id: C, answer: "Chỉ upper bound đã khai báo của type parameter; argument ở call site không bao giờ tinh chỉnh inferred type.", explanation: "Sai. Bound giới hạn miền suy luận, nhưng argument và target context có thể tinh chỉnh type được suy ra."}
+      - {id: D, answer: "Explicit type witness luôn bắt buộc nếu generic method trả về chính type parameter của nó.", explanation: "Sai. Type witness có thể dùng khi cần, nhưng phần lớn lời gọi thông thường cho phép compiler tự suy luận method type argument."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false

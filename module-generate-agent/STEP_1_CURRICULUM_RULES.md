@@ -57,7 +57,7 @@ Module ROADMAP
         ↓
 Menu / Knowledge
         ↓
-API Docs / Quiz / Interview
+API Docs / Video / Quiz / Interview
 ```
 
 Curriculum nên quản lý:
@@ -947,7 +947,7 @@ Menu
         ↓
 Knowledge
         ↓
-API Docs / Quiz / Interview
+API Docs / Video / Quiz / Interview
 ```
 
 Giữ boundary này giúp tránh việc Curriculum và module ROADMAP trở thành hai source-of-truth cạnh tranh.
@@ -1005,7 +1005,7 @@ AREA_CURRICULUM_MAP.md
                  ↓
         Knowledge
                  ↓
-        API Docs / Quiz / Interview
+        API Docs / Video / Quiz / Interview
 ```
 
 Source-of-truth hierarchy:
@@ -1028,7 +1028,7 @@ Menu / Knowledge
         ↓
 Reinforcement
         ↓
-API Docs / Quiz / Interview
+API Docs / Video / Quiz / Interview
 ```
 
 ---

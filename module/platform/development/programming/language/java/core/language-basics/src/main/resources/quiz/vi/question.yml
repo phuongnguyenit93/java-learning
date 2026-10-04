@@ -183,12 +183,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: java-pass-by-value
-    question: "Một phương thức thay đổi đối tượng nhận qua tham số và bên gọi quan sát được thay đổi đó. Điều này có chứng minh Java pass-by-reference không?"
+    question: "Một method mutate object thông qua parameter p rồi gán p sang object mới. Caller thấy mutation nhưng biến của caller vẫn trỏ object ban đầu. Điều gì giải thích được cả hai hiện tượng?"
     answers:
-      - {id: A, answer: "Có, mọi thay đổi nhìn thấy từ bên gọi đều chứng minh pass-by-reference.", explanation: "Sai. Hai biến có thể giữ hai bản sao của cùng một giá trị tham chiếu và cùng truy cập một đối tượng."}
-      - {id: B, answer: "Không. Java sao chép giá trị tham chiếu; hai reference sau đó có thể cùng nhận diện một đối tượng có thể thay đổi.", explanation: "Đúng. Gán lại tham số chỉ cục bộ, còn thay đổi trạng thái của đối tượng dùng chung có thể được bên gọi quan sát."}
-      - {id: C, answer: "Có, nhưng chỉ với Collections.", explanation: "Sai. Quy tắc pass-by-value áp dụng cho mọi kiểu giá trị Java truyền vào phương thức."}
-      - {id: D, answer: "Không, vì phương thức không thể thay đổi đối tượng.", explanation: "Sai. Phương thức có thể thay đổi đối tượng có thể biến đổi thông qua tham chiếu."}
+      - {id: A, answer: "Reference của caller được pass-by-reference cho tới lúc p bị gán lại, khi đó Java mới chuyển sang pass-by-value.", explanation: "Sai. Java không đổi parameter-passing mode trong lúc method đang chạy."}
+      - {id: B, answer: "Java sao chép reference value vào p; ban đầu hai reference cùng tới một mutable object, còn gán lại p chỉ thay đổi parameter copy cục bộ.", explanation: "Đúng. Mutation qua copied reference có thể thay đổi shared object, nhưng gán reference value mới cho p không thay biến của caller."}
+      - {id: C, answer: "Object parameter được pass-by-reference, nhưng JVM chặn callee thay biến của caller sau mutation đầu tiên.", explanation: "Sai. Quy tắc đơn giản hơn: parameter luôn nhận một bản sao của value, kể cả khi value đó là object reference."}
+      - {id: D, answer: "Java deep-copy object cho method rồi đồng bộ các field đã mutate ngược về caller khi method kết thúc.", explanation: "Sai. Method invocation thông thường không deep-copy object và cũng không có giai đoạn copy-back như vậy."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false

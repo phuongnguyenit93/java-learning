@@ -8,14 +8,18 @@ import {
   collectKnowledgeSections,
   formatKnowledgeDisplayTitle,
 } from '../data/knowledge';
+import { loadVideoIndex } from '../data/video';
 import { useLanguage } from '../state/LanguageContext';
 import type {
   ApiDocsDocument,
   ApiKnowledgeRelation,
   KnowledgeDifficulty,
   KnowledgeIndex,
+  KnowledgeSectionRef,
+  VideoIndex,
 } from '../types/learning';
 import { CustomTooltip } from './CustomTooltip';
+import { KnowledgeVideoPanel } from './KnowledgeVideoPanel';
 
 function resolveDifficultyLabel(difficulty: KnowledgeDifficulty, language: 'vi' | 'en'): string {
   if (difficulty === 'INTERMEDIATE') {
@@ -37,6 +41,7 @@ interface KnowledgePanelProps {
   activeCategoryId: string;
   selectedSectionId: string | null;
   apiBasePath?: string;
+  videoIndexPath?: string;
   onCategoryChange: (categoryId: string) => void;
   onSectionChange: (sectionId: string | null) => void;
 }
@@ -49,6 +54,7 @@ export function KnowledgePanel({
   activeCategoryId,
   selectedSectionId,
   apiBasePath,
+  videoIndexPath,
   onCategoryChange,
   onSectionChange,
 }: KnowledgePanelProps) {
@@ -58,6 +64,7 @@ export function KnowledgePanel({
   const [loadingSectionIds, setLoadingSectionIds] = useState<Set<string>>(() => new Set());
   const [sectionErrors, setSectionErrors] = useState<Record<string, string>>({});
   const [apiDocument, setApiDocument] = useState<ApiDocsDocument | null>(null);
+  const [videoIndex, setVideoIndex] = useState<VideoIndex | null>(null);
   const [previewOperationId, setPreviewOperationId] = useState<string | null>(null);
   const [canScrollTopicsLeft, setCanScrollTopicsLeft] = useState(false);
   const [canScrollTopicsRight, setCanScrollTopicsRight] = useState(false);
@@ -91,6 +98,32 @@ export function KnowledgePanel({
       return `${section.title} ${section.id} ${section.categoryTitle}`.toLowerCase().includes(query);
     });
   }, [activeCategoryId, allSections, searchQuery]);
+
+  const visibleSectionGroups = useMemo(() => {
+    if (activeCategoryId !== 'all') {
+      return [];
+    }
+
+    const visibleSectionIds = new Set(visibleSections.map((section) => section.id));
+
+    return categories
+      .map((category) => ({
+        category,
+        sections: allSections.filter((section) => (
+          section.categoryId === category.id
+          && visibleSectionIds.has(section.id)
+        )),
+      }))
+      .filter((group) => group.sections.length > 0);
+  }, [activeCategoryId, allSections, categories, visibleSections]);
+
+  const visibleSectionNumberById = useMemo(() => new Map(
+    visibleSections.map((section, indexInList) => [section.id, indexInList + 1]),
+  ), [visibleSections]);
+
+  const videoByCategoryId = useMemo(() => new Map(
+    (videoIndex?.items ?? []).map((item) => [item.categoryId, item]),
+  ), [videoIndex]);
 
   const relatedApisByKnowledgeKey = useMemo(() => {
     const result = new Map<string, ApiKnowledgeRelation[]>();
@@ -142,6 +175,34 @@ export function KnowledgePanel({
       active = false;
     };
   }, [apiBasePath, index]);
+
+  useEffect(() => {
+    let active = true;
+
+    setVideoIndex(null);
+
+    if (!videoIndexPath) {
+      return () => {
+        active = false;
+      };
+    }
+
+    loadVideoIndex(videoIndexPath)
+      .then((result) => {
+        if (active) {
+          setVideoIndex(result);
+        }
+      })
+      .catch(() => {
+        if (active) {
+          setVideoIndex(null);
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [videoIndexPath]);
 
   useEffect(() => {
     if (!previewOperationId) {
@@ -401,6 +462,211 @@ export function KnowledgePanel({
     }
   };
 
+  const renderSectionCard = (
+    section: KnowledgeSectionRef,
+    options: {
+      showIndex: boolean;
+      showCategory: boolean;
+    },
+  ) => {
+    const expanded = expandedSectionIds.has(section.id);
+    const markdown = contentCache[section.content];
+    const isLoading = loadingSectionIds.has(section.id);
+    const sectionError = sectionErrors[section.id];
+    const relatedApis = relatedApisByKnowledgeKey.get(`${section.sourcePath}#${section.id}`) ?? [];
+    const sectionNumber = visibleSectionNumberById.get(section.id);
+
+    return (
+      <article key={section.id} id={`knowledge-section-${section.id}`} className={`knowledge-card${expanded ? ' is-expanded' : ''}`}>
+        <button
+          type="button"
+          className={`knowledge-card__header${options.showIndex ? '' : ' knowledge-card__header--without-index'}`}
+          onClick={() => toggleSection(section.id)}
+          aria-expanded={expanded}
+        >
+          {options.showIndex && sectionNumber !== undefined && (
+            <span className="knowledge-card__index">#{sectionNumber}</span>
+          )}
+          <span className="knowledge-card__title-group">
+            <span className="knowledge-card__title">{formatKnowledgeDisplayTitle(section.title)}</span>
+            {options.showCategory && (
+              <span className="knowledge-card__category">{section.categoryTitle}</span>
+            )}
+          </span>
+          <span className="knowledge-card__metadata">
+            {section.aiGenerated && (
+              <CustomTooltip
+                content={language === 'vi'
+                  ? 'Nội dung này do AI Sinh ra và có thể có sai sót'
+                  : 'This content was generated by AI and may contain errors.'}
+              >
+                <span className="knowledge-card__governance knowledge-card__governance--ai">
+                  AI Generated
+                </span>
+              </CustomTooltip>
+            )}
+            <CustomTooltip
+              content={section.reviewed
+                ? (language === 'vi'
+                  ? 'Nội dung này đã được kiểm tra và sửa chữa'
+                  : 'This content has been reviewed and corrected.')
+                : (language === 'vi'
+                  ? 'Nội dung này chưa được kiểm tra và sửa chữa'
+                  : 'This content has not been reviewed and corrected.')}
+            >
+              <span className={`knowledge-card__governance knowledge-card__governance--${section.reviewed ? 'reviewed' : 'not-reviewed'}`}>
+                {section.reviewed
+                  ? (language === 'vi' ? 'Đã review' : 'Reviewed')
+                  : (language === 'vi' ? 'Chưa review' : 'Not Reviewed')}
+              </span>
+            </CustomTooltip>
+            <span className={`knowledge-card__level knowledge-card__level--${section.difficulty.toLowerCase()}`}>
+              {resolveDifficultyLabel(section.difficulty, language)}
+            </span>
+          </span>
+          <span className="knowledge-card__expand" aria-hidden="true">{expanded ? '−' : '+'}</span>
+        </button>
+
+        {expanded && (
+          <div className="knowledge-card__body">
+            {isLoading && <div className="knowledge-section-status">{language === 'vi' ? 'Đang tải nội dung...' : 'Loading content...'}</div>}
+
+            {!isLoading && sectionError && (
+              <div className="knowledge-section-status knowledge-section-status--error">{sectionError}</div>
+            )}
+
+            {!isLoading && markdown !== undefined && (
+              <div className="markdown-content knowledge-card__markdown">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>{markdown}</ReactMarkdown>
+              </div>
+            )}
+
+            {relatedApis.length > 0 && (
+              <section className="knowledge-related-apis">
+                <div className="knowledge-related-apis__heading">
+                  <strong>{language === 'vi' ? 'API liên quan' : 'Related APIs'} · {relatedApis.length}</strong>
+                </div>
+
+                <div className="knowledge-related-apis__list">
+                  {relatedApis.map(({ controller, operation }) => {
+                    const previewOpen = previewOperationId === operation.id;
+                    const sanitizedExecution = operation.executionHtml
+                      ? DOMPurify.sanitize(operation.executionHtml)
+                      : '';
+
+                    return (
+                      <div
+                        key={operation.id}
+                        className="knowledge-related-api-control"
+                        data-related-api-control
+                      >
+                        <button
+                          type="button"
+                          className="knowledge-related-api-row"
+                          onClick={() => setPreviewOperationId((current) => (
+                            current === operation.id ? null : operation.id
+                          ))}
+                        >
+                          <span className={`http-method http-method--${operation.httpMethod.toLowerCase()}`}>
+                            {operation.httpMethod}
+                          </span>
+                          <code>{operation.path || '—'}</code>
+                          <span className="knowledge-related-api-row__copy">
+                            <strong>{operation.summary}</strong>
+                            <small>{controller.title}</small>
+                          </span>
+                        </button>
+
+                        {previewOpen && (
+                          <div className="knowledge-related-api-popover" role="dialog" aria-label={operation.summary}>
+                            <div className="knowledge-related-api-popover__header">
+                              <span className={`http-method http-method--${operation.httpMethod.toLowerCase()}`}>
+                                {operation.httpMethod}
+                              </span>
+                              <code>{operation.path || '—'}</code>
+                            </div>
+
+                            <div className="knowledge-related-api-popover__body">
+                              <div className="knowledge-related-api-popover__basic-info">
+                                <strong>{operation.summary}</strong>
+                                <div className="api-operation__metadata">
+                                  {operation.aiGenerated && (
+                                    <CustomTooltip
+                                      content={language === 'vi'
+                                        ? 'Nội dung này do AI Sinh ra và có thể có sai sót'
+                                        : 'This content was generated by AI and may contain errors.'}
+                                    >
+                                      <span className="api-operation__governance api-operation__governance--ai">
+                                        AI Generated
+                                      </span>
+                                    </CustomTooltip>
+                                  )}
+                                  <CustomTooltip
+                                    content={operation.reviewed
+                                      ? (language === 'vi'
+                                        ? 'Nội dung này đã được kiểm tra và sửa chữa'
+                                        : 'This content has been reviewed and corrected.')
+                                      : (language === 'vi'
+                                        ? 'Nội dung này chưa được kiểm tra và sửa chữa'
+                                        : 'This content has not been reviewed and corrected.')}
+                                  >
+                                    <span className={`api-operation__governance api-operation__governance--${operation.reviewed ? 'reviewed' : 'not-reviewed'}`}>
+                                      {operation.reviewed
+                                        ? (language === 'vi' ? 'Đã review' : 'Reviewed')
+                                        : (language === 'vi' ? 'Chưa review' : 'Not Reviewed')}
+                                    </span>
+                                  </CustomTooltip>
+                                </div>
+                                {operation.description && <p>{operation.description}</p>}
+                                <small>{controller.title} · {operation.methodSignature}</small>
+                              </div>
+
+                              <section>
+                                <h4>Execution</h4>
+                                {sanitizedExecution ? (
+                                  <div
+                                    className="api-execution-content"
+                                    dangerouslySetInnerHTML={{ __html: sanitizedExecution }}
+                                  />
+                                ) : (
+                                  <p className="api-operation__empty-detail">
+                                    {language === 'vi' ? 'Chưa có mô tả execution.' : 'No execution description yet.'}
+                                  </p>
+                                )}
+                              </section>
+
+                              {operation.params.length > 0 && (
+                                <section>
+                                  <h4>{language === 'vi' ? 'Tham số' : 'Parameters'}</h4>
+                                  <div className="api-param-list">
+                                    {operation.params.map((param) => (
+                                      <div key={param.name} className="api-param">
+                                        <code>{param.name}</code>
+                                        <span>
+                                          <strong>{param.summary || param.name}</strong>
+                                          {param.description && <small>{param.description}</small>}
+                                        </span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </section>
+                              )}
+                            </div>
+
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </section>
+            )}
+          </div>
+        )}
+      </article>
+    );
+  };
+
   if (loading) {
     return <div className="empty-state empty-state--large"><strong>{language === 'vi' ? 'Đang tải Knowledge...' : 'Loading Knowledge...'}</strong></div>;
   }
@@ -489,201 +755,50 @@ export function KnowledgePanel({
       </div>
 
       <div className="knowledge-list">
-        {visibleSections.map((section, indexInList) => {
-          const expanded = expandedSectionIds.has(section.id);
-          const markdown = contentCache[section.content];
-          const isLoading = loadingSectionIds.has(section.id);
-          const sectionError = sectionErrors[section.id];
-          const relatedApis = relatedApisByKnowledgeKey.get(`${section.sourcePath}#${section.id}`) ?? [];
-
-          return (
-            <article key={section.id} id={`knowledge-section-${section.id}`} className={`knowledge-card${expanded ? ' is-expanded' : ''}`}>
-              <button
-                type="button"
-                className={`knowledge-card__header${activeCategoryId === 'all' ? '' : ' knowledge-card__header--without-index'}`}
-                onClick={() => toggleSection(section.id)}
-                aria-expanded={expanded}
-              >
-                {activeCategoryId === 'all' && (
-                  <span className="knowledge-card__index">#{indexInList + 1}</span>
-                )}
-                <span className="knowledge-card__title-group">
-                  <span className="knowledge-card__title">{formatKnowledgeDisplayTitle(section.title)}</span>
-                  <span className="knowledge-card__category">{section.categoryTitle}</span>
+        {activeCategoryId === 'all'
+          ? visibleSectionGroups.map(({ category, sections }) => (
+            <section key={category.id} className="knowledge-category-group">
+              <div className="knowledge-category-group__header">
+                <span className="knowledge-category-group__title">{category.title}</span>
+                <span className="knowledge-category-group__count">
+                  {sections.length} {language === 'vi' ? 'section' : sections.length === 1 ? 'section' : 'sections'}
                 </span>
-                <span className="knowledge-card__metadata">
-                  {section.aiGenerated && (
-                    <CustomTooltip
-                      content={language === 'vi'
-                        ? 'Nội dung này do AI Sinh ra và có thể có sai sót'
-                        : 'This content was generated by AI and may contain errors.'}
-                    >
-                      <span className="knowledge-card__governance knowledge-card__governance--ai">
-                        AI Generated
-                      </span>
-                    </CustomTooltip>
-                  )}
-                  <CustomTooltip
-                    content={section.reviewed
-                      ? (language === 'vi'
-                        ? 'Nội dung này đã được kiểm tra và sửa chữa'
-                        : 'This content has been reviewed and corrected.')
-                      : (language === 'vi'
-                        ? 'Nội dung này chưa được kiểm tra và sửa chữa'
-                        : 'This content has not been reviewed and corrected.')}
-                  >
-                    <span className={`knowledge-card__governance knowledge-card__governance--${section.reviewed ? 'reviewed' : 'not-reviewed'}`}>
-                      {section.reviewed
-                        ? (language === 'vi' ? 'Đã review' : 'Reviewed')
-                        : (language === 'vi' ? 'Chưa review' : 'Not Reviewed')}
-                    </span>
-                  </CustomTooltip>
-                  <span className={`knowledge-card__level knowledge-card__level--${section.difficulty.toLowerCase()}`}>
-                    {resolveDifficultyLabel(section.difficulty, language)}
-                  </span>
-                </span>
-                <span className="knowledge-card__expand" aria-hidden="true">{expanded ? '−' : '+'}</span>
-              </button>
+              </div>
 
-              {expanded && (
-                <div className="knowledge-card__body">
-                  {isLoading && <div className="knowledge-section-status">{language === 'vi' ? 'Đang tải nội dung...' : 'Loading content...'}</div>}
-
-                  {!isLoading && sectionError && (
-                    <div className="knowledge-section-status knowledge-section-status--error">{sectionError}</div>
-                  )}
-
-                  {!isLoading && markdown !== undefined && (
-                    <div className="markdown-content knowledge-card__markdown">
-                      <ReactMarkdown remarkPlugins={[remarkGfm]}>{markdown}</ReactMarkdown>
-                    </div>
-                  )}
-
-                  {relatedApis.length > 0 && (
-                    <section className="knowledge-related-apis">
-                      <div className="knowledge-related-apis__heading">
-                        <strong>{language === 'vi' ? 'API liên quan' : 'Related APIs'} · {relatedApis.length}</strong>
-                      </div>
-
-                      <div className="knowledge-related-apis__list">
-                        {relatedApis.map(({ controller, operation }) => {
-                          const previewOpen = previewOperationId === operation.id;
-                          const sanitizedExecution = operation.executionHtml
-                            ? DOMPurify.sanitize(operation.executionHtml)
-                            : '';
-
-                          return (
-                            <div
-                              key={operation.id}
-                              className="knowledge-related-api-control"
-                              data-related-api-control
-                            >
-                              <button
-                                type="button"
-                                className="knowledge-related-api-row"
-                                onClick={() => setPreviewOperationId((current) => (
-                                  current === operation.id ? null : operation.id
-                                ))}
-                              >
-                                <span className={`http-method http-method--${operation.httpMethod.toLowerCase()}`}>
-                                  {operation.httpMethod}
-                                </span>
-                                <code>{operation.path || '—'}</code>
-                                <span className="knowledge-related-api-row__copy">
-                                  <strong>{operation.summary}</strong>
-                                  <small>{controller.title}</small>
-                                </span>
-                              </button>
-
-                              {previewOpen && (
-                                <div className="knowledge-related-api-popover" role="dialog" aria-label={operation.summary}>
-                                  <div className="knowledge-related-api-popover__header">
-                                    <span className={`http-method http-method--${operation.httpMethod.toLowerCase()}`}>
-                                      {operation.httpMethod}
-                                    </span>
-                                    <code>{operation.path || '—'}</code>
-                                  </div>
-
-                                  <div className="knowledge-related-api-popover__body">
-                                    <div className="knowledge-related-api-popover__basic-info">
-                                      <strong>{operation.summary}</strong>
-                                      <div className="api-operation__metadata">
-                                        {operation.aiGenerated && (
-                                          <CustomTooltip
-                                            content={language === 'vi'
-                                              ? 'Nội dung này do AI Sinh ra và có thể có sai sót'
-                                              : 'This content was generated by AI and may contain errors.'}
-                                          >
-                                            <span className="api-operation__governance api-operation__governance--ai">
-                                              AI Generated
-                                            </span>
-                                          </CustomTooltip>
-                                        )}
-                                        <CustomTooltip
-                                          content={operation.reviewed
-                                            ? (language === 'vi'
-                                              ? 'Nội dung này đã được kiểm tra và sửa chữa'
-                                              : 'This content has been reviewed and corrected.')
-                                            : (language === 'vi'
-                                              ? 'Nội dung này chưa được kiểm tra và sửa chữa'
-                                              : 'This content has not been reviewed and corrected.')}
-                                        >
-                                          <span className={`api-operation__governance api-operation__governance--${operation.reviewed ? 'reviewed' : 'not-reviewed'}`}>
-                                            {operation.reviewed
-                                              ? (language === 'vi' ? 'Đã review' : 'Reviewed')
-                                              : (language === 'vi' ? 'Chưa review' : 'Not Reviewed')}
-                                          </span>
-                                        </CustomTooltip>
-                                      </div>
-                                      {operation.description && <p>{operation.description}</p>}
-                                      <small>{controller.title} · {operation.methodSignature}</small>
-                                    </div>
-
-                                    <section>
-                                      <h4>Execution</h4>
-                                      {sanitizedExecution ? (
-                                        <div
-                                          className="api-execution-content"
-                                          dangerouslySetInnerHTML={{ __html: sanitizedExecution }}
-                                        />
-                                      ) : (
-                                        <p className="api-operation__empty-detail">
-                                          {language === 'vi' ? 'Chưa có mô tả execution.' : 'No execution description yet.'}
-                                        </p>
-                                      )}
-                                    </section>
-
-                                    {operation.params.length > 0 && (
-                                      <section>
-                                        <h4>{language === 'vi' ? 'Tham số' : 'Parameters'}</h4>
-                                        <div className="api-param-list">
-                                          {operation.params.map((param) => (
-                                            <div key={param.name} className="api-param">
-                                              <code>{param.name}</code>
-                                              <span>
-                                                <strong>{param.summary || param.name}</strong>
-                                                {param.description && <small>{param.description}</small>}
-                                              </span>
-                                            </div>
-                                          ))}
-                                        </div>
-                                      </section>
-                                    )}
-                                  </div>
-
-                                </div>
-                              )}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </section>
-                  )}
+              {videoByCategoryId.has(category.id) && (
+                <div className="knowledge-category-group__video">
+                  <KnowledgeVideoPanel item={videoByCategoryId.get(category.id)!} compact />
                 </div>
               )}
-            </article>
-          );
-        })}
+
+              <div className="knowledge-lessons-heading">
+                <span>{language === 'vi' ? 'BÀI HỌC' : 'LESSONS'}</span>
+                <span className="knowledge-lessons-heading__line" aria-hidden="true" />
+              </div>
+
+              <div className="knowledge-category-group__sections">
+                {sections.map((section) => renderSectionCard(section, {
+                  showIndex: true,
+                  showCategory: false,
+                }))}
+              </div>
+            </section>
+          ))
+          : (
+            <>
+              {videoByCategoryId.has(activeCategoryId) && (
+                <KnowledgeVideoPanel item={videoByCategoryId.get(activeCategoryId)!} />
+              )}
+              <div className="knowledge-lessons-heading knowledge-lessons-heading--standalone">
+                <span>{language === 'vi' ? 'BÀI HỌC' : 'LESSONS'}</span>
+                <span className="knowledge-lessons-heading__line" aria-hidden="true" />
+              </div>
+              {visibleSections.map((section) => renderSectionCard(section, {
+                showIndex: false,
+                showCategory: true,
+              }))}
+            </>
+          )}
 
         {visibleSections.length === 0 && (
           <div className="empty-state">

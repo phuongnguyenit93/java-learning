@@ -19,10 +19,11 @@ module-generate-agent/STEP_2_ROADMAP.md → canonical roadmap architecture + how
 module-generate-agent/STEP_3_MENU.md → Menu/title skeleton and reconciliation for both new and existing/refactor modules
 module-generate-agent/STEP_4_KNOWLEDGE.md → Knowledge authoring/refactor against the approved Step 3 Menu
 module-generate-agent/STEP_5_API.md → API learning documentation / experiment rules
-module-generate-agent/STEP_6_QUIZ.md → Quiz authoring rules
-module-generate-agent/STEP_7_INTERVIEW.md → Interview authoring rules
-module-generate-agent/STEP_8_VALIDATION.md → integrated validation + Coverage Review
-module-generate-agent/GENARAL_AGENT_RULES.md → orchestrates the canonical module-generation steps
+module-generate-agent/STEP_6_VIDEO.md → Video Script / Presentation Plan rules; one Knowledge Menu maps to one Video
+module-generate-agent/STEP_7_QUIZ.md → Quiz authoring rules
+module-generate-agent/STEP_8_INTERVIEW.md → Interview authoring rules
+module-generate-agent/STEP_9_VALIDATION.md → integrated validation + Coverage Review
+module-generate-agent/GENERAL_AGENT_RULES.md → orchestrates the canonical module-generation steps
 project-portal/PROJECT_PORTAL.md → detailed Learning Portal design/current implementation
 STRUCTURE.md    → generated module tree/navigation
 ```
@@ -63,7 +64,7 @@ For repository-level work, read in this order:
 1. AGENTS.md
 2. ARCHITECTURE.md
 3. README.md
-4. module-generate-agent/GENARAL_AGENT_RULES.md for module-generation routing
+4. module-generate-agent/GENERAL_AGENT_RULES.md for module-generation routing
 5. the requested module-generate-agent/STEP_X_*.md file for the concrete learning step
 6. settings.gradle
 7. build.gradle
@@ -95,7 +96,11 @@ README / Knowledge Menu
         ↓
 Knowledge lessons
         ↓
-API Docs / Quiz / Interview
+API Docs / executable evidence when applicable
+        ↓
+Video Script / presentation plan
+        ↓
+Quiz / Interview
 ```
 
 No new Knowledge Menu/lesson generation should start before the roadmap is reviewed. If downstream work reveals a missing prerequisite or learning milestone, report a **ROADMAP GAP** rather than silently inventing a different curriculum. For legacy modules, design the roadmap independently first, then audit existing Knowledge against it.
@@ -164,6 +169,7 @@ project-portal/
 │   └── module/{ROUTE_ID}/
 │       ├── overview/{lang}.md
 │       ├── knowledge/{lang}/...
+│       ├── video/{lang}/...
 │       ├── quiz/{lang}/question.yml
 │       ├── interview/{lang}/question.yml
 │       └── api/{lang}/
@@ -176,7 +182,7 @@ project-portal/
 └── build.gradle                         # Node/Vite → Spring static-resource wiring
 ```
 
-The Portal remains **static-first for learning content**. Module hierarchy/routing comes from generated `module-catalog.json`; Overview, Knowledge, Quiz, Interview, and raw localized Swagger/API metadata projections are generated under `project-portal/build/generated/portal-data`. The frontend consumes Overview, Menu/Knowledge, Quiz, Interview, and API Docs directly from those generated/static projections. `Local Run` is the narrow exception: when the Portal runs locally, Spring Boot owns `/api/local-run/*` and calls GitHub Actions server-side.
+The Portal remains **static-first for learning content**. Module hierarchy/routing comes from generated `module-catalog.json`; Overview, Knowledge, Video, Quiz, Interview, and raw localized Swagger/API metadata projections are generated under `project-portal/build/generated/portal-data`. The frontend consumes Overview, Menu/Knowledge, embedded Video presentation, Quiz, Interview, and API Docs directly from those generated/static projections. `Local Run` is the narrow exception: when the Portal runs locally, Spring Boot owns `/api/local-run/*` and calls GitHub Actions server-side.
 
 Do not move fake frontend data into Spring controllers merely because the application has a backend. Static/generated knowledge should stay static until a server-side requirement actually exists.
 
@@ -468,6 +474,8 @@ EnvSetupPlugin       if enabled
     ↓
 ReadmeSetupPlugin    if enabled
     ↓
+VideoSetupPlugin     if BUILD_VIDEO=TRUE
+    ↓
 SwaggerSetupPlugin   if enabled
     ↓
 QuizSetupPlugin      if BUILD_QUIZ=TRUE
@@ -519,7 +527,7 @@ For Vietnamese (`vi`) learning content, Vietnamese is the primary explanatory la
 
 API availability is not a prerequisite for learning-module completeness. A conceptual/library-oriented module may be complete with Knowledge, Quiz and Interview only. Do not force a module into `SERVLET`/`REACTIVE` or create artificial endpoints solely so it can have API Docs. When a `SERVLET`/`REACTIVE` module does contain meaningful learning APIs, those APIs should represent real experiments for Knowledge concepts and follow the Swagger ↔ README relationship contract below.
 
-Area-level module granularity, ownership and boundary guidance lives in `module-generate-agent/STEP_1_CURRICULUM_RULES.md`. `module-generate-agent/GENARAL_AGENT_RULES.md` owns orchestration; detailed authoring/validation rules live in the corresponding `STEP_X_*.md` file.
+Area-level module granularity, ownership and boundary guidance lives in `module-generate-agent/STEP_1_CURRICULUM_RULES.md`. `module-generate-agent/GENERAL_AGENT_RULES.md` owns orchestration; detailed authoring/validation rules live in the corresponding `STEP_X_*.md` file.
 
 For Knowledge tasks, treat the three-layer pedagogical model in `module-generate-agent/STEP_4_KNOWLEDGE.md` as an authoring requirement, not optional style guidance. A successful build/projection or high relation/assessment coverage does not prove that the learning path is complete.
 
@@ -624,6 +632,7 @@ IS_MODULE_DEPEND
 BUILD_ENV
 BUILD_YML
 BUILD_README
+BUILD_VIDEO
 BUILD_QUIZ
 BUILD_INTERVIEW
 BUILD_TESTER
@@ -635,7 +644,7 @@ USE_DATABASE
 USE_TASK
 ```
 
-`MODULE_LANGUAGE` is the module-level source of truth for localized documentation/runtime metadata. It is a `list` value in `master.json` (canonical default: `vi,en`) and is reused by README structure/final generation, Swagger description generation, Knowledge metadata synchronization, Quiz/Interview skeleton generation, Portal localized projections, runtime Swagger language grouping, and generated `.env` values. Do not reintroduce per-feature language keys such as `README_LANGUAGE`, `BUILD_SWAGGER_LANGUAGE_LIST`, or task-local `languages` extensions for README/Swagger/Quiz/Interview.
+`MODULE_LANGUAGE` is the module-level source of truth for localized documentation/runtime metadata. It is a `list` value in `master.json` (canonical default: `vi,en`) and is reused by README structure/final generation, Video skeleton generation, Swagger description generation, Knowledge metadata synchronization, Quiz/Interview skeleton generation, Portal localized projections, runtime Swagger language grouping, and generated `.env` values. Do not reintroduce per-feature language keys such as `README_LANGUAGE`, `BUILD_SWAGGER_LANGUAGE_LIST`, or task-local `languages` extensions for README/Video/Swagger/Quiz/Interview.
 
 Knowledge section governance is stored next to localized README source, not inside Portal-generated JSON:
 
@@ -660,6 +669,26 @@ Allowed `difficulty` values are `BASIC`, `INTERMEDIATE`, and `ADVANCED`. Missing
 The visible Knowledge section title is a navigation/card label, not a sentence-length summary of the entire section. Keep it short, scannable, and aligned with the concept that the section opens with. Prefer names such as `OOP là gì?`, `Đóng gói là gì?`, `Dynamic Dispatch`, `Rủi ro của kế thừa`, `What Is OOP?`, or `Inheritance Risks` over explanatory titles such as `Đối tượng là nơi gắn trạng thái với hành vi` or `Encapsulation is more than private fields`. Put the longer claim, motivation, contrast, and pedagogical framing inside the section body. Do not change a stable anchor id merely to improve the visible title; localized VI/EN titles may differ naturally while representing the same concept.
 
 A chapter file containing only an H1 is a valid curriculum scaffold but does not yet define a Knowledge section. Do not run `syncMetadataReadme` just to materialize metadata for H1-only chapter outlines; add real anchored H2 sections first, then synchronize Knowledge governance.
+
+Video script structure is a separate presentation artifact derived from README/Knowledge. Canonical enablement is `BUILD_VIDEO`, default `FALSE`. When enabled, `project-orchestration` applies `VIDEO_SETUP_PLUGIN`; `VideoStructureService` in `project-build/gradle-runtime` treats `readme/{lang}/menu/**/*.md` as the structural source of truth and mirrors missing paths into `video/{lang}/menu/**/*.md`. Video is not stored beside Knowledge as `*_VIDEO.md`, because README final-list/internal-menu/Portal Knowledge scanners intentionally treat Markdown under `readme/{lang}/menu` as Knowledge.
+
+The Video structure contract is intentionally simple:
+
+```text
+readme/{lang}/menu/<relative-path>.md
+        ↓ structural source of truth
+video/{lang}/menu/<same-relative-path>.md
+```
+
+For a missing Video file, the setup service creates a skeleton containing `video.url`, the Knowledge H1, all Knowledge H2 titles, a compact `VIDEO_SECTION` marker per section, and one hidden comment that documents the expected Transition/Scene format (`Time`, `Visual`, `Script`, `Purpose`). Existing Video files are human/AI-owned after creation and must not be overwritten by ordinary structure synchronization. A matching README + existing Video file is therefore a no-op.
+
+Path mapping is the relationship model; there is deliberately no stable file id. If a README file/folder is renamed or moved, synchronization creates the new missing Video skeleton and leaves the old Video file untouched as an orphan warning. The developer manually moves/reconciles the old script/URL and deletes stale files when appropriate. Never auto-delete or guess-renames for orphan Video files because they may contain published video URLs or reviewed scripts.
+
+`BUILD_VIDEO=TRUE` requires `BUILD_README=TRUE` and actual README menu Markdown to exist. Do not enable it during an empty module bootstrap before Step 3/Knowledge chapter files exist. `video/` is support content, not a module child; repository structure/module-order discovery must exclude it just like `readme/`, `roadmap/`, `src/`, and `build/`.
+
+The canonical content-generation position is Step **6**, after Knowledge and after Step 5 has decided/implemented any useful API/runtime evidence. One README Menu Markdown file maps to one Video by default; each H2 maps to one Video section/chapter. Each section requires at least one Scene; from the second section onward the script must also contain a Transition from the previous section. Step 6 may add as many scenes as the content needs. Video narration may rephrase Knowledge for spoken delivery, but it must not silently create a competing technical source of truth. Detailed authoring/mapping rules live in `module-generate-agent/STEP_6_VIDEO.md`.
+
+Current implementation includes localized Video source skeleton generation, build-time Portal Video projection, and frontend rendering inside the Knowledge flow. Authored Video Markdown is projected to `project-portal/build/generated/portal-data/module/{ROUTE_ID}/video/{lang}/index.json` and per-category `content/{categoryId}/script.json`; only languages with authored Scene content are exposed through `module-catalog.json`. Vite/publicDir and `processResources` carry those generated files into the final static resources automatically. The frontend loads the localized Video index, maps authored items by Knowledge `categoryId`, renders the Video block before the corresponding lessons, and lazy-loads the script only when the collapsed script panel is opened. Supported player handling includes YouTube/Vimeo embeds and direct video files; an empty `video.url` keeps the authored script available while showing the unpublished-video state.
 
 Quiz follows the same build/orchestration boundary. `BUILD_QUIZ=TRUE` is declared in canonical `automation/master.json`; `project-orchestration` only decides whether to apply `QUIZ_SETUP_PLUGIN`; the actual structure generation lives in `project-build/gradle-runtime`. Active `MODULE_LANGUAGE` values receive `src/main/resources/quiz/{lang}/question.yml`. The generated comment block between `# <quiz-schema>` and `# </quiz-schema>` is derived from canonical `gradle-runtime/src/main/resources/quiz/question-schema.yml` and may be refreshed when the schema changes; the `questions:` content below it is human-owned and must not be overwritten.
 
@@ -815,6 +844,7 @@ module-structure.txt
 project-portal/build/generated/portal-data/module-catalog.json
 project-portal/build/generated/portal-data/module/{ROUTE_ID}/overview/...
 project-portal/build/generated/portal-data/module/{ROUTE_ID}/knowledge/...
+project-portal/build/generated/portal-data/module/{ROUTE_ID}/video/{lang}/...
 project-portal/build/generated/portal-data/module/{ROUTE_ID}/quiz/{lang}/question.yml
 project-portal/build/generated/portal-data/module/{ROUTE_ID}/interview/{lang}/question.yml
 project-portal/build/generated/portal-data/module/{ROUTE_ID}/api/{lang}/...
@@ -824,7 +854,7 @@ generated README/menu fragments
 META-INF/execution-context/source-context.json
 ```
 
-Portal generated data is build-only and must never be written back into `project-portal/src/main/resources`. `module-catalog.json` stays at the root of generated `portal-data`; module-owned projections are namespaced under `portal-data/module/{ROUTE_ID}/`. Overview and Knowledge are transformed projections; Quiz and Interview are exact localized `question.yml` copies after build-time schema validation; API metadata is an exact build-time copy of the four canonical localized Swagger YAML files when the complete set exists. Quiz/Interview/API YAML is parsed in-browser, and API rich execution HTML is sanitized before rendering. These projections must follow deterministic/idempotent/write-if-changed rules. The browser must not parse `module-structure.txt` as canonical data.
+Portal generated data is build-only and must never be written back into `project-portal/src/main/resources`. `module-catalog.json` stays at the root of generated `portal-data`; module-owned projections are namespaced under `portal-data/module/{ROUTE_ID}/`. Overview and Knowledge are transformed projections; Video is a transformed static projection from authored `video/{lang}/menu/**/*.md`; Quiz and Interview are exact localized `question.yml` copies after build-time schema validation; API metadata is an exact build-time copy of the four canonical localized Swagger YAML files when the complete set exists. Quiz/Interview/API YAML is parsed in-browser, and API rich execution HTML is sanitized before rendering. These projections must follow deterministic/idempotent/write-if-changed rules. The browser must not parse `module-structure.txt` as canonical data.
 
 Generated output must prefer:
 
@@ -2252,6 +2282,11 @@ Preserve these unless the user explicitly changes the architecture:
 41. Quiz and Interview are static learning capabilities owned by module-local localized YAML. Their generated schema-comment blocks are build-owned, while `questions:` content is human-owned and must survive regeneration.
 42. Quiz answer ids `A/B/C/D` are stable identities, not display positions; shuffle only the displayed order once per localized document load and check correctness against the original id.
 43. Interview reference answers are hidden by default and revealed explicitly; Quiz/Interview relation panels must resolve canonical Knowledge/API metadata rather than duplicating content into the question file.
+44. `BUILD_VIDEO` defaults to `FALSE`; when enabled it depends on `BUILD_README=TRUE` and mirrors README Menu paths into `video/{lang}/menu` only for missing files.
+45. README path/H1/H2 is the structural source of truth for Video skeletons. Existing Video files are human/AI-owned presentation artifacts and ordinary structure sync must not overwrite them.
+46. Video mapping intentionally has no stable file id. README rename/move creates a new missing skeleton and leaves the old Video file as an orphan warning; never auto-guess rename or auto-delete the stale Video artifact.
+47. `video/` is supporting content, not a module child; module-order/structure discovery must exclude it.
+48. Current Video implementation includes source skeletons, build-time Portal Video projection/static delivery, and frontend Video/script rendering inside Knowledge. Video maps by Knowledge category, appears before the corresponding lessons, and keeps script content collapsed/lazy-loaded by default.
 
 ---
 
@@ -2355,9 +2390,9 @@ Project Portal
 → browser executes React; Spring Boot serves the static bundle and owns the local-only `/api/local-run/*` adapter
 → BrowserRouter owns clean `/my-cv` and `/learning/{routeId}` client navigation; explicit Spring MVC SPA forwards keep local deep-links/F5 on the same path
 → ProjectStructureService generates build-only `portal-data/module-catalog.json` for real hierarchy/routing
-→ module-scoped generated data lives under `portal-data/module/{ROUTE_ID}/...`; current Overview, Knowledge, Quiz, Interview, and API metadata projections follow this layout
+→ module-scoped generated data lives under `portal-data/module/{ROUTE_ID}/...`; current Overview, Knowledge, Video, Quiz, Interview, and API metadata projections follow this layout
 → Vite `publicDir` points at `build/generated/portal-data`; `npm run dev` prepares generated data before starting Vite
-→ Menu/Knowledge UI consumes the generated Knowledge index and lazy section Markdown; Knowledge supports multiple open sections and keeps panel state across tab switches
+→ Menu/Knowledge UI consumes the generated Knowledge index and lazy section Markdown; authored Video projection is mapped by Knowledge category and rendered as the presentation layer before the corresponding lessons; Knowledge supports multiple open sections and keeps panel state across tab switches
 → API Docs consumes the generated localized four-file Swagger projection, follows README-derived controller/method order, renders sanitized `execution` HTML, and is reference-only rather than a live runner/debugger
 → Quiz consumes localized generated `question.yml`, shows four shuffled answer positions, and reveals the selected answer's explanation while checking correctness by stable internal answer id
 → Interview consumes localized generated `question.yml`, keeps reference answers collapsed until explicitly opened, and can resolve Related Knowledge/API panels

@@ -1,18 +1,18 @@
-# Step 7 - Interview Rules
+# Step 8 - Interview Rules
 
-Step 7 xây hoặc refactor Interview từ cùng Knowledge/API map đã ổn định. Step number này **giống nhau cho new và refactor module**.
+Step 8 xây hoặc refactor Interview từ cùng Knowledge/API/Video learning map đã ổn định. Step number này **giống nhau cho new và refactor module**.
 
 ### General Agent Rules context guard
 
-Trước khi thực hiện Step 7:
+Trước khi thực hiện Step 8:
 
 ```text
-Nếu context của GENARAL_AGENT_RULES.md vẫn còn rõ ràng trong working context
+Nếu context của GENERAL_AGENT_RULES.md vẫn còn rõ ràng trong working context
 → không cần đọc lại
 
 Nếu context đã bị loại khỏi cửa sổ làm việc, bị quên, bị truncate,
 hoặc agent không chắc mình còn nhớ đầy đủ các global rules
-→ đọc lại ./GENARAL_AGENT_RULES.md trước khi tiếp tục
+→ đọc lại ./GENERAL_AGENT_RULES.md trước khi tiếp tục
 ```
 
 Không suy đoán các orchestration, preservation, gap-routing hoặc cross-step rules từ trí nhớ khi context không còn chắc chắn.
@@ -25,9 +25,11 @@ module/.../src/main/resources/interview/{lang}/question.yml
 
 ---
 
-## Step 7 — Build Interview as explanation and reasoning practice
+## Step 8 — Build Interview as explanation and reasoning practice
 
 Interview is not a prose copy of Quiz.
+
+Video from Step 6 may be inspected for presentation context and recurring examples, but Interview technical truth and exact relations still come from canonical Knowledge/API sources. Do not turn scene narration into a second relation source.
 
 It should exercise the learner's ability to explain and reason about the module:
 
@@ -65,4 +67,4 @@ VI/EN content should preserve topic/order parity where the module maintains bili
 
 ## Completion gate
 
-Step 7 hoàn thành khi Interview bổ sung explanation/reasoning depth, không chỉ đổi Quiz thành câu hỏi tự luận, và mọi optional relation đều exact hoặc intentionally blank.
+Step 8 hoàn thành khi Interview bổ sung explanation/reasoning depth, không chỉ đổi Quiz thành câu hỏi tự luận, và mọi optional relation đều exact hoặc intentionally blank.

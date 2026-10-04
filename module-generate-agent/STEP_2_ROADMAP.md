@@ -39,6 +39,94 @@ Nếu không xác định được Curriculum Map tương ứng, file bị thi�
 
 Không suy đoán các orchestration, preservation, gap-routing, Curriculum hoặc cross-step rules từ trí nhớ khi context không còn chắc chắn.
 
+### Module branch + worktree isolation
+
+Trước khi bắt đầu chỉnh sửa Step 2, target module phải được tách sang **branch riêng theo tên module** và branch đó phải được materialize thành **worktree riêng** cho session hiện tại.
+
+Quy ước branch:
+
+```text
+module/<module-name>
+```
+
+Trong đó `<module-name>` dùng tên module dạng lowercase kebab-case.
+
+Ví dụ:
+
+```text
+Language Basics
+→ module/language-basics
+
+Native Interoperability
+→ module/native-interoperability
+```
+
+Workflow bắt buộc:
+
+```text
+1. Kiểm tra current branch và git status.
+2. Không mang unrelated working-tree changes vào task module mới.
+3. Từ baseline `main` phù hợp, create branch `module/<module-name>`.
+4. Tạo worktree riêng cho branch đó.
+5. Session hiện tại chuyển toàn bộ thao tác sang worktree vừa tạo.
+6. Step 2 và mọi Step tiếp theo của module tiếp tục làm trong worktree riêng này cho tới hết Step 10.
+7. Không quay lại sửa module từ main worktree trong lúc module worktree còn là workspace active của task.
+```
+
+Ví dụ logical layout:
+
+```text
+main worktree
+→ /java-learning
+→ branch main
+
+module worktree
+→ /java-learning-worktrees/language-basics
+→ branch module/language-basics
+```
+
+Mục tiêu của worktree isolation là cho phép nhiều session chạy song song mà không giẫm lên current branch, index hoặc uncommitted working state của nhau.
+
+```text
+Session A
+→ worktree A
+→ branch module/language-basics
+
+Session B
+→ worktree B
+→ branch module/networking
+```
+
+Không thực hiện module-generation trực tiếp trên `main`.
+
+### Session workspace lifecycle
+
+Sau khi module worktree đã được tạo ở Step 2:
+
+```text
+Step 2
+↓
+Step 3
+↓
+...
+↓
+Step 10
+```
+
+đều phải được thực hiện **trong cùng module worktree đó**.
+
+Sau khi Step 10 đã:
+
+```text
+commit
+→ push module branch
+→ create Merge Request vào main
+```
+
+thì session quay lại **main worktree ban đầu** để kết thúc lifecycle của task hoặc chuẩn bị cho module/task tiếp theo.
+
+Việc quay lại main worktree sau khi tạo Merge Request **không có nghĩa auto-merge MR** và cũng không xóa module worktree/branch. Cleanup worktree/branch là thao tác riêng, chỉ thực hiện khi phù hợp với trạng thái MR và user workflow.
+
 File này sở hữu đồng thời:
 
 ```text
@@ -61,7 +149,7 @@ STEP 2 — ROADMAP
         ↓
 Menu / Knowledge
         ↓
-API Docs / Quiz / Interview
+API Docs / Video / Quiz / Interview
 ```
 
 ---
@@ -85,7 +173,7 @@ Roadmap Review / approval
         ↓
 Menu / Knowledge
         ↓
-API Docs / Quiz / Interview
+API Docs / Video / Quiz / Interview
 ```
 
 Nếu ROADMAP sai, downstream content không được tự bù bằng cách tạo một learning flow khác.
@@ -486,7 +574,7 @@ Approval không có nghĩa ROADMAP bất biến tuyệt đối. Correctness issu
 
 ## 11. ROADMAP GAP
 
-Nếu downstream Menu/Knowledge/API/Quiz/Interview authoring phát hiện một prerequisite hoặc milestone quan trọng mà ROADMAP chưa có:
+Nếu downstream Menu/Knowledge/API/Video/Quiz/Interview authoring phát hiện một prerequisite hoặc milestone quan trọng mà ROADMAP chưa có:
 
 ```text
 phát hiện missing module-level milestone/prerequisite
@@ -527,7 +615,7 @@ Menu / Knowledge sections cần thiết để hoàn thành milestone
         ↓
 Knowledge lesson content
         ↓
-API Docs / Quiz / Interview reinforcement
+API Docs / Video / Quiz / Interview reinforcement
 ```
 
 Downstream authoring phải hỏi:
@@ -538,11 +626,12 @@ Không được đổi thành:
 
 > Có những facts/API nào về topic này mà mình có thể liệt kê?
 
-API Docs, Quiz và Interview không được trở thành alternate curriculum designers:
+API Docs, Video, Quiz và Interview không được trở thành alternate curriculum designers:
 
 ```text
 Knowledge
 ├── API Docs / experiments → prove observable behavior
+├── Video                  → present one Knowledge Menu through scenes/visuals/narration
 ├── Quiz                   → test objectives / misconceptions
 └── Interview              → test explanation / trade-offs / practical reasoning
 ```
@@ -600,7 +689,7 @@ Menu / Knowledge structure
         ↓
 Knowledge lessons
         ↓
-API Docs / Quiz / Interview
+API Docs / Video / Quiz / Interview
         ↓
 Portal projection
 ```

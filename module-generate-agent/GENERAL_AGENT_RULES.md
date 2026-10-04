@@ -28,10 +28,10 @@ STEP_3_MENU.md
 STEP_4_KNOWLEDGE.md
 → Knowledge authoring/refactor against the approved Step 3 Menu
 
-STEP_5_API.md / STEP_6_QUIZ.md / STEP_7_INTERVIEW.md
+STEP_5_API.md / STEP_6_VIDEO.md / STEP_7_QUIZ.md / STEP_8_INTERVIEW.md
 → downstream learning surfaces
 
-STEP_8_VALIDATION.md
+STEP_9_VALIDATION.md
 → integrated validation + Coverage Review
 ```
 
@@ -47,6 +47,7 @@ Roadmap
 Menu
 Knowledge
 API Docs / guided API experiments when applicable
+Video Script / presentation plan
 Quiz
 Interview
 Integrated validation / Coverage Review
@@ -77,6 +78,8 @@ Knowledge curriculum
     ↓
 API experiments when the module exposes learning APIs
     ↓
+Video presentation grounded in Knowledge + available evidence
+    ↓
 Quiz reinforcement
     ↓
 Interview / explanation practice
@@ -96,6 +99,9 @@ Knowledge
 API Docs
 → executable/demonstrable experiments that prove or illustrate Knowledge concepts
 
+Video
+→ one presentation artifact per Knowledge Menu; turns finalized Knowledge/evidence into scenes, visuals, narration and transitions
+
 Quiz
 → checks recognition, reasoning, misconceptions, behavior and practical understanding
 
@@ -112,7 +118,7 @@ Do not optimize for raw counts. A smaller coherent module is better than a large
 
 Area Curriculum/scope rules live in [`STEP_1_CURRICULUM_RULES.md`](./STEP_1_CURRICULUM_RULES.md). ROADMAP design/review rules live in [`STEP_2_ROADMAP.md`](./STEP_2_ROADMAP.md). This orchestrator does not duplicate either contract.
 
-This file only consumes the approved ROADMAP as the upstream source for Menu, Knowledge, API Docs, Quiz and Interview. If downstream work reveals a missing module-level prerequisite or milestone, report a **ROADMAP GAP** and return to Step 2 instead of silently changing the learning journey here.
+This file only consumes the approved ROADMAP as the upstream source for Menu, Knowledge, API Docs, Video, Quiz and Interview. If downstream work reveals a missing module-level prerequisite or milestone, report a **ROADMAP GAP** and return to Step 2 instead of silently changing the learning journey here.
 
 This module-level playbook consumes these Step 1 decisions:
 
@@ -147,6 +153,9 @@ module/.../src/main/resources/swagger/{lang}/api-descriptions.yml
 module/.../src/main/resources/swagger/{lang}/api-execution.yml
 module/.../src/main/resources/swagger/{lang}/api-params.yml
 
+Video
+module/.../video/{lang}/menu/**/*.md
+
 Quiz
 module/.../src/main/resources/quiz/{lang}/question.yml
 
@@ -179,11 +188,13 @@ Step 4 — Knowledge
         ↓
 Step 5 — API learning documentation when applicable
         ↓
-Step 6 — Quiz
+Step 6 — Video Script / Presentation Plan
         ↓
-Step 7 — Interview
+Step 7 — Quiz
         ↓
-Step 8 — Integrated validation + Coverage Review
+Step 8 — Interview
+        ↓
+Step 9 — Integrated validation + Coverage Review
 ```
 
 The step number and execution order are stable across new and refactor workflows. Existing content may change what must be audited, but it does not remove Step 3 from the canonical sequence.
@@ -196,9 +207,10 @@ Step 2 → STEP_2_ROADMAP.md
 Step 3 → STEP_3_MENU.md
 Step 4 → STEP_4_KNOWLEDGE.md
 Step 5 → STEP_5_API.md
-Step 6 → STEP_6_QUIZ.md
-Step 7 → STEP_7_INTERVIEW.md
-Step 8 → STEP_8_VALIDATION.md
+Step 6 → STEP_6_VIDEO.md
+Step 7 → STEP_7_QUIZ.md
+Step 8 → STEP_8_INTERVIEW.md
+Step 9 → STEP_9_VALIDATION.md
 ```
 
 ### Existing / refactor module workflow
@@ -211,9 +223,11 @@ Step 3 → STEP_3_MENU.md
 Step 4 → STEP_4_KNOWLEDGE.md
          refactor Knowledge against the approved Step 3 Menu
 Step 5 → STEP_5_API.md
-Step 6 → STEP_6_QUIZ.md
-Step 7 → STEP_7_INTERVIEW.md
-Step 8 → STEP_8_VALIDATION.md
+Step 6 → STEP_6_VIDEO.md
+         reconcile Video path/H1/H2 mapping against the latest Knowledge before authoring/refactoring script
+Step 7 → STEP_7_QUIZ.md
+Step 8 → STEP_8_INTERVIEW.md
+Step 9 → STEP_9_VALIDATION.md
 ```
 
 Step 3 is **mandatory for both new and existing modules**.
@@ -319,9 +333,10 @@ Step 2 → STEP_2_ROADMAP.md
 Step 3 → STEP_3_MENU.md
 Step 4 → STEP_4_KNOWLEDGE.md
 Step 5 → STEP_5_API.md
-Step 6 → STEP_6_QUIZ.md
-Step 7 → STEP_7_INTERVIEW.md
-Step 8 → STEP_8_VALIDATION.md
+Step 6 → STEP_6_VIDEO.md
+Step 7 → STEP_7_QUIZ.md
+Step 8 → STEP_8_INTERVIEW.md
+Step 9 → STEP_9_VALIDATION.md
 ```
 
 ### Gap routing
@@ -359,6 +374,8 @@ Knowledge worker(s)
     ↓ approved/stable Knowledge structure
 API worker(s), when applicable
     ↓ exact Knowledge relations established
+Video worker(s)
+    ↓ one Knowledge Menu → one presentation artifact
 Quiz worker(s) + Interview worker(s)
     ↓
 Validation worker
@@ -401,12 +418,21 @@ API worker
 → maps learning APIs to exact Knowledge
 → writes API descriptions/execution/evidence
 
+Video worker
+→ executes Step 6 after Knowledge and applicable Step 5 evidence are stable
+→ preserves the one-Knowledge-Menu → one-Video mapping
+→ reconciles Video path/H1/H2 structure against the latest Knowledge before authoring
+→ turns Knowledge/evidence into spoken narration, visuals, transitions and scenes
+→ never treats Video as an alternate technical source of truth
+
 Quiz worker
-→ consumes Knowledge + finalized API mapping
+→ executes Step 7
+→ consumes Knowledge + finalized API mapping; may inspect Video for presentation context but does not derive technical truth from it
 → creates non-duplicative assessment
 
 Interview worker
-→ consumes the same Knowledge + API map
+→ executes Step 8
+→ consumes the same Knowledge + API map; Video may provide presentation context but not replace canonical Knowledge
 → creates explanation/reasoning practice, not Quiz clones
 
 Validation worker
@@ -428,7 +454,10 @@ VI and EN wording work
 → may run in parallel after the canonical topic/question structure is fixed
 
 Quiz and Interview authoring
-→ may run in parallel after Knowledge and required API mappings are stable
+→ may run in parallel only when Step 6 Video is already complete or the Prime explicitly treats the two authoring tasks as bounded work after the canonical Step 6 handoff
+
+VI and EN Video narration
+→ may run in parallel after Knowledge H1/H2 mapping and presentation plan are fixed
 
 multiple chapter workers
 → may run in parallel only when the Prime has already fixed chapter ownership,
@@ -442,8 +471,9 @@ Avoid this pattern:
 ```text
 Worker A invents Knowledge curriculum
 Worker B independently invents API curriculum
-Worker C independently invents Quiz curriculum
-Worker D independently invents Interview curriculum
+Worker C independently invents Video curriculum
+Worker D independently invents Quiz curriculum
+Worker E independently invents Interview curriculum
 ```
 
 Even if every file is individually valid, the result will usually be inconsistent.
@@ -471,17 +501,22 @@ Step 5 output
 → controller/method ↔ Knowledge mapping + API learning intent
 
 Step 6 output
-→ Quiz tied to the established curriculum
+→ one Video source per target Knowledge Menu
+→ Knowledge H2 → Video section mapping
+→ scene/transition presentation plan grounded in Knowledge + available evidence
 
 Step 7 output
-→ Interview tied to the established curriculum
+→ Quiz tied to the established curriculum
 
 Step 8 output
+→ Interview tied to the established curriculum
+
+Step 9 output
 → validated integrated module
 → prioritized gaps/fixes, not a competing curriculum
 ```
 
-Workers must inspect the latest upstream files before editing. Do not rely only on a stale task description if an upstream worker has changed the canonical Knowledge/API structure.
+Workers must inspect the latest upstream files before editing. Do not rely only on a stale task description if an upstream worker has changed the canonical Knowledge/API/Video structure.
 
 ---
 

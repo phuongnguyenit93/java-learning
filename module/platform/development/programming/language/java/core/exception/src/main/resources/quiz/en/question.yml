@@ -79,12 +79,12 @@ questions:
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exception-stack-trace-cause
-    question: "When wrapping a low-level exception, what is the main purpose of cause?"
+    question: "A service translates a low-level exception into a domain exception. Why should it usually preserve the original exception as the cause?"
     answers:
-      - {id: A, answer: "Preserve the link to the lower-level failure in the causal chain.", explanation: "Correct; abstraction can change without losing diagnostics."}
-      - {id: B, answer: "Replace the wrapper's stack trace.", explanation: "It does not."}
-      - {id: C, answer: "Make the wrapper checked.", explanation: "Checked/unchecked depends on type hierarchy."}
-      - {id: D, answer: "Automatically retry the operation.", explanation: "Cause is not a retry policy."}
+      - {id: A, answer: "It keeps the lower-level failure in the causal chain while allowing the service to expose a more appropriate abstraction.", explanation: "Correct. Translation can change the exception type seen by callers without discarding the diagnostic path to the original failure."}
+      - {id: B, answer: "It replaces the wrapper's own stack trace with the low-level stack trace so only one exception remains.", explanation: "Incorrect. The wrapper keeps its own stack trace and the cause remains a linked Throwable with its own diagnostic information."}
+      - {id: C, answer: "It changes the wrapper from checked to unchecked, or vice versa, according to the type of the cause.", explanation: "Incorrect. Checked versus unchecked classification comes from the wrapper's class hierarchy, not from its cause."}
+      - {id: D, answer: "It instructs catch processing to retry the cause before the wrapper is propagated to the caller.", explanation: "Incorrect. Causal chaining records failure provenance; retry and recovery are separate application policies."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false

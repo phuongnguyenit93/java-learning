@@ -48,6 +48,7 @@ export interface LearningModule {
   questionCount: number;
   overview: Partial<Record<Language, string>>;
   knowledge: Partial<Record<Language, string>>;
+  video: Partial<Record<Language, string>>;
   quiz: Partial<Record<Language, string>>;
   interview: Partial<Record<Language, string>>;
   api: Partial<Record<Language, string>>;
@@ -73,6 +74,7 @@ export interface ModuleCatalogNode {
   moduleDepend?: boolean;
   overview?: Partial<Record<Language, string>>;
   knowledge?: Partial<Record<Language, string>>;
+  video?: Partial<Record<Language, string>>;
   roadmap?: Partial<Record<Language, string>>;
   quiz?: Partial<Record<Language, string>>;
   interview?: Partial<Record<Language, string>>;
@@ -122,6 +124,55 @@ export interface KnowledgeSectionRef extends KnowledgeSection {
   categoryId: string;
   categoryTitle: string;
   sourcePath: string;
+}
+
+export interface VideoIndexItem {
+  categoryId: string;
+  title: string;
+  sourcePath: string;
+  content: string;
+  url: string;
+  sectionCount: number;
+  sceneCount: number;
+  transitionCount: number;
+}
+
+export interface VideoIndex {
+  version: number;
+  moduleId: string;
+  language: Language;
+  videoCount: number;
+  items: VideoIndexItem[];
+}
+
+export type VideoScriptItemType = 'SCENE' | 'TRANSITION';
+
+export interface VideoScriptItem {
+  type: VideoScriptItemType;
+  title?: string;
+  time: string;
+  visual: string;
+  script: string;
+  purpose: string;
+}
+
+export interface VideoScriptSection {
+  order: number;
+  title: string;
+  items: VideoScriptItem[];
+}
+
+export interface VideoScriptDocument {
+  version: number;
+  moduleId: string;
+  language: Language;
+  categoryId: string;
+  title: string;
+  sourcePath: string;
+  video: {
+    url: string;
+  };
+  sections: VideoScriptSection[];
 }
 
 export type KnowledgeSearchDocumentType = 'CATEGORY' | 'SECTION';

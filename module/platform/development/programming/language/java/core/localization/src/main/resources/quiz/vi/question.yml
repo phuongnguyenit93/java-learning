@@ -198,10 +198,10 @@ questions:
   - id: localization-q12
     question: "ResourceBundle thực sự làm gì trong luồng bản địa hóa?"
     answers:
-      - {id: A, answer: "Tự động dịch tiếng Anh sang mọi ngôn ngữ.", explanation: "ResourceBundle tra cứu tài nguyên đã chuẩn bị sẵn theo tên cơ sở (base name), Locale, chuỗi ứng viên/dự phòng và khóa ổn định."}
-      - {id: B, answer: "Tra cứu tài nguyên đã có sẵn theo khóa và Locale, rồi áp dụng quy tắc tra cứu/dự phòng.", explanation: "ResourceBundle tra cứu tài nguyên đã chuẩn bị sẵn theo tên cơ sở (base name), Locale, chuỗi ứng viên/dự phòng và khóa ổn định."}
-      - {id: C, answer: "Tự định dạng mọi số và ngày giờ trong tài nguyên.", explanation: "ResourceBundle tra cứu tài nguyên đã chuẩn bị sẵn theo tên cơ sở (base name), Locale, chuỗi ứng viên/dự phòng và khóa ổn định."}
-      - {id: D, answer: "Thay Locale bằng một dịch vụ dịch.", explanation: "ResourceBundle tra cứu tài nguyên đã chuẩn bị sẵn theo tên cơ sở (base name), Locale, chuỗi ứng viên/dự phòng và khóa ổn định."}
+      - {id: A, answer: "Sinh bản dịch còn thiếu từ base bundle rồi cache các bản dịch được sinh cho request sau.", explanation: "Sai. ResourceBundle resolve resource đã được chuẩn bị sẵn; nó không tự dịch hay sinh localized content còn thiếu."}
+      - {id: B, answer: "Tra cứu resource đã chuẩn bị theo key và Locale, đồng thời áp dụng candidate/fallback rule của bundle.", explanation: "Đúng. Cơ chế bundle resolve resource từ base name, requested Locale, candidate chain và key."}
+      - {id: C, answer: "Parse mọi message lấy ra rồi tự localize toàn bộ number, date và placeholder nằm trong text.", explanation: "Sai. Number/date/message formatting thuộc các formatting API và pattern tường minh; bundle lookup chỉ trả resource."}
+      - {id: D, answer: "Chọn Locale và time zone của ứng dụng từ host environment trước khi có thể lookup bundle.", explanation: "Sai. Ứng dụng có thể truyền Locale tường minh, và Locale selection tách biệt với time-zone policy."}
     correctAnswerId: B
     aiGenerated: true
     reviewed: false

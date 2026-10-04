@@ -186,6 +186,32 @@ class ModuleOrchestrationPlugin
         }
 
         // ====================================================
+        // Video setup
+        //
+        // README/Knowledge is the source of truth for the
+        // localized Video skeleton structure.
+        // ====================================================
+
+        if (
+                ProjectPropertyUtils.isEnabled(
+                        project,
+                        'BUILD_VIDEO'
+                )
+        ) {
+
+            project.pluginManager.apply(
+                    ProjectPluginEnum.VIDEO_SETUP_PLUGIN.id
+            )
+        }
+        else {
+
+            project.logger.info(
+                    '[PROJECT-ORCHESTRATION] Skip VIDEO setup for {} because BUILD_VIDEO != TRUE.',
+                    project.path
+            )
+        }
+
+        // ====================================================
         // Swagger setup
         // ====================================================
 

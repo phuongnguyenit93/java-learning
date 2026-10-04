@@ -51,6 +51,11 @@
         "VALUE": "TRUE",
         "GROUP": "README"
     },
+    "BUILD_VIDEO": {
+        "DESCRIPTION": "Enable localized video script skeletons mapped from README menu structure",
+        "TYPE": "boolean",
+        "VALUE": "FALSE"
+    },
     "BUILD_ROADMAP": {
         "DESCRIPTION": "Enable localized roadmap skeletons for this module based on MODULE_LANGUAGE",
         "TYPE": "boolean",

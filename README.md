@@ -47,21 +47,22 @@ Chi tiết workflow: [`GENARAL_AGENT_RULES.md`](module-generate-agent/GENERAL_AG
 2. Reload Gradle để build system nhận diện và sync metadata.
 3. Cấu hình `MODULE_TYPE`, `SERVICE_NAME`, `JAVA_BASE_PACKAGE`, `MODULE_LANGUAGE` và các capability cần dùng trong `master.json`.
 4. Với learning content, thiết kế và review **Module Roadmap trước README/Knowledge**.
-5. Từ roadmap đã duyệt mới tạo Knowledge Menu/lesson; API Docs, Quiz và Interview đi sau Knowledge.
+5. Từ roadmap đã duyệt mới tạo Knowledge Menu/lesson; API Docs, Video, Quiz và Interview đi sau Knowledge.
 6. Reload/run explicit tasks cần thiết; không chỉnh generated output để thay đổi source configuration.
 
 ## Tài liệu
 
 - [`ARCHITECTURE.md`](./ARCHITECTURE.md) — kiến trúc chi tiết và ownership/lifecycle.
 - [`AGENTS.md`](./AGENTS.md) — working rules/context cho AI và contributor.
-- [`GENARAL_AGENT_RULES.md`](module-generate-agent/GENERAL_AGENT_RULES.md) — orchestrator/routing cho toàn bộ module-generation workflow.
+- [`GENERAL_AGENT_RULES.md`](module-generate-agent/GENERAL_AGENT_RULES.md) — orchestrator/routing cho toàn bộ module-generation workflow.
 - [`STEP_1_CURRICULUM_RULES.md`](./module-generate-agent/STEP_1_CURRICULUM_RULES.md) — Curriculum, scope, ownership và boundary.
 - [`STEP_2_ROADMAP.md`](./module-generate-agent/STEP_2_ROADMAP.md) — canonical ROADMAP architecture, contract và authoring/review rules.
 - [`STEP_3_MENU.md`](./module-generate-agent/STEP_3_MENU.md) — Menu + title skeleton cho new module; refactor module skip step này.
 - [`STEP_4_KNOWLEDGE.md`](./module-generate-agent/STEP_4_KNOWLEDGE.md) — Knowledge; với refactor module thì Menu + Knowledge được xử lý cùng nhau.
 - [`STEP_5_API.md`](./module-generate-agent/STEP_5_API.md) — API learning documentation / experiments.
-- [`STEP_6_QUIZ.md`](./module-generate-agent/STEP_6_QUIZ.md) — Quiz.
-- [`STEP_7_INTERVIEW.md`](./module-generate-agent/STEP_7_INTERVIEW.md) — Interview.
-- [`STEP_8_VALIDATION.md`](./module-generate-agent/STEP_8_VALIDATION.md) — integrated validation + Coverage Review.
+- [`STEP_6_VIDEO.md`](./module-generate-agent/STEP_6_VIDEO.md) — Video Script / Presentation Plan, one Knowledge Menu → one Video.
+- [`STEP_7_QUIZ.md`](./module-generate-agent/STEP_7_QUIZ.md) — Quiz.
+- [`STEP_8_INTERVIEW.md`](./module-generate-agent/STEP_8_INTERVIEW.md) — Interview.
+- [`STEP_9_VALIDATION.md`](./module-generate-agent/STEP_9_VALIDATION.md) — integrated validation + Coverage Review.
 - [`project-portal/PROJECT_PORTAL.md`](./project-portal/PROJECT_PORTAL.md) — Portal hiện tại, data contract và deployment.
 - [`STRUCTURE.md`](./STRUCTURE.md) — cây module generated.

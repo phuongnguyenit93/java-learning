@@ -68,10 +68,10 @@ questions:
   - id: fp-q03
     question: "Mô tả nào chính xác nhất về mối quan hệ giữa lớp ẩn danh (anonymous class) và lambda?"
     answers:
-      - {id: A, answer: "Lớp ẩn danh không thể biểu diễn hành vi thông qua giao diện.", explanation: "Sai. Từ lâu lớp ẩn danh đã có thể triển khai hành vi của giao diện."}
-      - {id: B, answer: "Lambda luôn tạo ra phạm vi biến và ngữ nghĩa this giống hệt lớp ẩn danh.", explanation: "Sai. Lambda dùng phạm vi từ vựng (lexical scope) và có ngữ nghĩa this khác lớp ẩn danh."}
+      - {id: A, answer: "Lambda và anonymous class có cùng this, scope và runtime class identity khi cùng target một interface.", explanation: "Sai. Lambda dùng lexical scope cho this và không được đặc tả như anonymous-class instance có identity semantics giống hệt."}
+      - {id: B, answer: "Anonymous class không còn là cách hợp lệ để implement functional interface sau khi Java có cú pháp lambda.", explanation: "Sai. Anonymous class vẫn hợp lệ; lambda chỉ là cách ngắn gọn hơn cho behavior tương thích với functional interface."}
       - {id: C, answer: "Lambda cung cấp cú pháp ngắn gọn cho hành vi tương thích với giao diện hàm, vốn trong nhiều trường hợp cũng có thể viết bằng lớp ẩn danh.", explanation: "Đúng. Lambda giảm phần cú pháp rườm rà nhưng vẫn phụ thuộc vào một kiểu giao diện hàm đích."}
-      - {id: D, answer: "Lambda là cách thay thế đối tượng ẩn danh mà không cần kiểu.", explanation: "Sai. Lambda cần một kiểu đích tương thích."}
+      - {id: D, answer: "Lambda có thể target interface có nhiều abstract method không liên quan miễn parameter khớp một method trong số đó.", explanation: "Sai. Lambda cần functional target mà tập abstract method tạo thành một functional contract duy nhất."}
     correctAnswerId: C
     aiGenerated: true
     reviewed: false

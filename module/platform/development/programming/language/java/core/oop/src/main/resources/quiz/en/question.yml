@@ -40,12 +40,12 @@
 
 questions:
   - id: oop-responsibility
-    question: "What is a useful OOP design question beyond listing fields?"
+    question: "Three checkout callers duplicate the same discount rule and now change together whenever pricing policy changes. Which design question best guides an OOP refactor?"
     answers:
-      - {id: A, answer: "Which object owns this rule and protects the related state and invariant?", explanation: "Correct. OOP is primarily about responsibility boundaries and collaboration, not simply putting data into classes."}
-      - {id: B, answer: "How can every operation become static?", explanation: "Incorrect. OOP is primarily about responsibility boundaries and collaboration, not simply putting data into classes."}
-      - {id: C, answer: "How can one class contain the entire system?", explanation: "Incorrect. OOP is primarily about responsibility boundaries and collaboration, not simply putting data into classes."}
-      - {id: D, answer: "How can all fields be made public?", explanation: "Incorrect. OOP is primarily about responsibility boundaries and collaboration, not simply putting data into classes."}
+      - {id: A, answer: "Which object or policy should own the discount rule and protect the state or invariant that rule governs?", explanation: "Correct. Centralizing a coherent responsibility gives the pricing rule an explicit boundary and reduces duplicated change points."}
+      - {id: B, answer: "Which existing class already has the most methods, so the discount rule can be added there with minimal new types?", explanation: "Incorrect. Class size is not evidence of responsibility ownership and can turn an already broad class into a stronger coupling hotspot."}
+      - {id: C, answer: "Which caller receives the raw price first, so each caller can keep its own local copy of the discount rule?", explanation: "Incorrect. Keeping duplicated policy in callers preserves the very change propagation the refactor should reduce."}
+      - {id: D, answer: "Which pricing fields can be exposed so callers can coordinate the rule themselves without a responsible object?", explanation: "Incorrect. Exposing internal state pushes policy outward and weakens the boundary instead of assigning responsibility."}
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
