@@ -33,6 +33,9 @@ STEP_5_API.md / STEP_6_VIDEO.md / STEP_7_QUIZ.md / STEP_8_INTERVIEW.md
 
 STEP_9_VALIDATION.md
 → integrated validation + Coverage Review
+
+STEP_10_COMMIT.md
+→ final commit / push / Merge Request workflow
 ```
 
 Read `../AGENTS.md`, `../ARCHITECTURE.md` and this orchestrator first. Then read the canonical `STEP_X_*.md` file for the step actually being executed, together with any upstream output that step explicitly depends on. Do not load unrelated step rules as competing authorities.
@@ -208,6 +211,8 @@ Step 7 — Quiz
 Step 8 — Interview
         ↓
 Step 9 — Integrated validation + Coverage Review
+        ↓
+Step 10 — Commit / Push / Merge Request
 ```
 
 The step number and execution order are stable across new and refactor workflows. Existing content may change what must be audited, but it does not remove Step 3 from the canonical sequence.
@@ -224,6 +229,7 @@ Step 6 → STEP_6_VIDEO.md
 Step 7 → STEP_7_QUIZ.md
 Step 8 → STEP_8_INTERVIEW.md
 Step 9 → STEP_9_VALIDATION.md
+Step 10 → STEP_10_COMMIT.md
 ```
 
 ### Existing / refactor module workflow
@@ -241,6 +247,7 @@ Step 6 → STEP_6_VIDEO.md
 Step 7 → STEP_7_QUIZ.md
 Step 8 → STEP_8_INTERVIEW.md
 Step 9 → STEP_9_VALIDATION.md
+Step 10 → STEP_10_COMMIT.md
 ```
 
 Step 3 is **mandatory for both new and existing modules**.
@@ -372,6 +379,7 @@ Step 6 → STEP_6_VIDEO.md
 Step 7 → STEP_7_QUIZ.md
 Step 8 → STEP_8_INTERVIEW.md
 Step 9 → STEP_9_VALIDATION.md
+Step 10 → STEP_10_COMMIT.md
 ```
 
 ### Gap routing
@@ -418,6 +426,8 @@ Validation worker
 Independent Coverage Review
     ↓
 Prime integration
+    ↓
+Step 10 final delivery
 ```
 
 ### Recommended responsibilities
@@ -553,6 +563,13 @@ Step 8 output
 Step 9 output
 → validated integrated module
 → prioritized gaps/fixes, not a competing curriculum
+
+Step 10 output
+→ task-scoped commit on the current module branch
+→ module branch pushed to remote
+→ Merge Request created from the module branch into `main`
+→ no automatic merge unless the user explicitly requests/authorizes it
+→ after the Merge Request is actually merged, return the session to the original main worktree
 ```
 
 Workers must inspect the latest upstream files before editing. Do not rely only on a stale task description if an upstream worker has changed the canonical Knowledge/API/Video structure.
