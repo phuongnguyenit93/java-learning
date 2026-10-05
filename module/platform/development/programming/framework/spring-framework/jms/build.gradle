@@ -1,0 +1,6 @@
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-artemis'
+    implementation 'io.micrometer:micrometer-jakarta9'
+
+    runtimeOnly 'org.apache.activemq:artemis-jakarta-server'
+}

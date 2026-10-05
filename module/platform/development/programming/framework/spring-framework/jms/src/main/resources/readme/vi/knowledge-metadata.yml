@@ -1,0 +1,208 @@
+1.Foundations/SpringJmsFoundations.md:
+  jms-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  jms-producer-consumer-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  jms-sync-async-consumption:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  jms-framework-spec-provider-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  jms-61-api-baseline:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+2.TemplateAccess/JmsTemplateAccess.md:
+  jms-template-core-roles:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  jms-template-send:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  jms-template-sync-receive:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  jms-template-request-reply:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jms-template-callbacks:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jms-template-qos:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jms-template-exception-translation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  jms-messaging-template-bridge:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+3.DestinationsConversionMetadata/DestinationsConversionMetadata.md:
+  jms-destination-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  jms-destination-resolver:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  jms-message-converter:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  jms-payload-conversion:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jms-headers-properties:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jms-correlation-reply-metadata:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+4.ListenerContainer/ListenerContainer.md:
+  jms-mdp-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  jms-listener-container-responsibilities:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  jms-dmlc-model:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jms-listener-container-choices:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jms-message-listener-adapter:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jms-jca-endpoint-boundary:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+5.AnnotationEndpoints/AnnotationEndpoints.md:
+  jms-enable-jms:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  jms-listener-container-factory:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jms-listener-endpoint-registry:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jms-listener-method-signature:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  jms-listener-conversion-validation:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jms-listener-replies:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jms-programmatic-endpoints:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+6.TransactionsDelivery/TransactionsDelivery.md:
+  jms-acknowledgement-model:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jms-session-transacted:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jms-local-transaction-manager:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jms-thread-bound-resources:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  jms-jta-xa-boundary:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  jms-redelivery-idempotency:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+7.ConcurrencyRecoveryLifecycle/ConcurrencyRecoveryLifecycle.md:
+  jms-listener-concurrency:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jms-ordering-tradeoffs:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jms-selectors-subscriptions:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jms-recovery-backoff:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  jms-connection-factory-wrappers:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jms-dmlc-cache-levels:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+8.ProductionReadiness/ProductionReadiness.md:
+  jms-observability-61:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jms-testing-strategy:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jms-real-provider-testing:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jms-direct-vs-integration:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  jms-neighboring-messaging-boundaries:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  jms-end-to-end-synthesis:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false

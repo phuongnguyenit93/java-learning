@@ -1,0 +1,87 @@
+JmsObservabilityExperimentController:
+  observePublishProcessBoundary():
+    summary: Observe the Spring 6.1 JMS publish/process boundary
+    description: Sends and processes one JMS message with a dedicated ObservationRegistry,
+      then performs a bounded blocking receive on an empty destination. The response
+      exposes the observation names that actually completed so publish/process instrumentation
+      can be compared with the intentionally absent receive-wait observation.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: jms-observability-61
+    methodName: observePublishProcessBoundary
+    params: [
+      ]
+    path: com/example/learning/jms/experiment/controller/JmsObservabilityExperimentController.java
+    mapping: '@GetMapping("/publish-process-boundary")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /jms/observability/publish-process-boundary
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+JmsTemplateExperimentController:
+  observeRequestReplyRoundTrip():
+    summary: Observe a JmsTemplate request-reply round trip
+    description: Sends a text request through JmsTemplate.sendAndReceive, lets a bounded
+      listener reply through the incoming JMSReplyTo destination, and returns runtime
+      evidence for the temporary reply destination, listener invocation, correlation,
+      payload, and bounded completion time.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: jms-template-request-reply
+    methodName: observeRequestReplyRoundTrip
+    params: [
+      ]
+    path: com/example/learning/jms/experiment/controller/JmsTemplateExperimentController.java
+    mapping: '@GetMapping("/request-reply")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /jms/template/request-reply
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+JmsTransactionExperimentController:
+  observeRollbackRedelivery():
+    summary: Observe rollback-driven JMS redelivery
+    description: Sends one message to a locally transacted listener that intentionally
+      fails its first delivery and succeeds on the next attempt. The response records
+      delivery attempts, JMSRedelivered flags, the listener error, and the single
+      successful business effect.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: jms-session-transacted
+    methodName: observeRollbackRedelivery
+    params: [
+      ]
+    path: com/example/learning/jms/experiment/controller/JmsTransactionExperimentController.java
+    mapping: '@GetMapping("/rollback-redelivery")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /jms/transactions/rollback-redelivery
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

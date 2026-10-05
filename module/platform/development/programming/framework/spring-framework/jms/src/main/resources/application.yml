@@ -1,0 +1,53 @@
+# Runtime configuration of this module.
+# This skeleton is generated only when the file is missing or blank.
+# After initialization this file is human-owned and will not be overwritten.
+#
+# application.yml is the runtime source of truth.
+
+---
+# Common runtime configuration
+# Add common runtime configuration below this line.
+
+spring:
+  artemis:
+    mode: embedded
+    embedded:
+      enabled: true
+      persistent: false
+      queues:
+        - learning.jms.request-reply
+        - learning.jms.rollback-redelivery
+        - learning.jms.observability-process
+        - learning.jms.observability-empty
+
+
+---
+# Runtime configuration for profile DEV
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+# Add profile-specific configuration below this line.
+
+
+
+---
+# Runtime configuration for profile LOC
+spring:
+  config:
+    activate:
+      on-profile: loc
+
+# Add profile-specific configuration below this line.
+
+
+
+---
+# Runtime configuration for profile PRD
+spring:
+  config:
+    activate:
+      on-profile: prd
+
+# Add profile-specific configuration below this line.

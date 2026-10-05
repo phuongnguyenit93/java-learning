@@ -1,0 +1,129 @@
+# <roadmap-schema>
+# Cấu trúc Roadmap Module
+# schema-version: 1
+#
+# YAML CONTRACT
+# roadmap: Danh sách milestone cấp cao của roadmap cho language hiện tại.
+#
+# - id [string, required]: ID ổn định và duy nhất của milestone trong roadmap language hiện tại.
+# - title [string, required]: Tên milestone hiển thị cho learner.
+# - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
+# - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
+# - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
+#
+# ROADMAP THINKING FRAMEWORK
+# PURPOSE
+#   - Topic/module này là gì?
+#   - Vì sao nó tồn tại?
+#   - Không có nó thì learner gặp vấn đề gì?
+# FOUNDATION
+#   - Learner cần prerequisite hoặc mental model nào trước?
+# CORE MODEL
+#   - Những abstraction hoặc building block lớn nào tạo nên chủ đề này?
+# MECHANICS
+#   - Nó hoạt động như thế nào ở mức language/runtime/API phù hợp với module?
+# USAGE
+#   - Nó được dùng như thế nào trong code thực tế?
+# DECISION / TRADE-OFF
+#   - Khi nào nên chọn cơ chế này thay vì cơ chế khác?
+#   - Khi nào không nên dùng?
+# FAILURE / PITFALL
+#   - Những sai lầm, compile-time failure hoặc runtime failure nào đáng biết?
+# INTEGRATION
+#   - Chủ đề này kết nối với những concept/module lân cận nào?
+# SYNTHESIS
+#   - Sau cùng learner phải giữ mental model end-to-end nào?
+#
+# Mỗi language tự chịu trách nhiệm cho roadmap của chính nó. Không suy luận hoặc đồng bộ cấu trúc từ roadmap của language khác.
+# Thứ tự item trong roadmap chính là thứ tự học mặc định. Chỉ dùng dependsOn khi cần biểu diễn dependency rõ hơn thứ tự tuyến tính.
+# Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
+# </roadmap-schema>
+
+roadmap:
+  - id: spring-jms-foundations
+    title: "Nền tảng Spring JMS"
+    purpose: "Xây dựng mô hình tư duy về phần Spring JMS bổ sung trên Jakarta Messaging và JMS provider, để người học phân biệt rõ trách nhiệm của framework với trách nhiệm của specification và broker trước khi dùng các API cấp cao."
+    objectives:
+      - "Giải thích hai hướng producer/consumer trong Spring JMS và phân biệt truy cập đồng bộ với xử lý bất đồng bộ theo mô hình message-driven."
+      - "Phân biệt hạ tầng Spring JMS với ngữ nghĩa Jakarta Messaging và hành vi đặc thù của từng broker/provider."
+      - "Nhận biết mốc Spring Framework 6.1: JmsTemplate là template chính cho truy cập JMS đồng bộ, JmsMessagingTemplate nối Spring Messaging operations lên trên nó, còn JmsClient chỉ xuất hiện từ Spring Framework 7.0 trở đi."
+
+  - id: template-access-model
+    title: "Mô hình truy cập JMS bằng Template"
+    purpose: "Hiểu cách mô hình template của Spring loại bỏ mã lặp khi quản lý JMS resource nhưng vẫn cho phép truy cập có kiểm soát tới Session và mô hình producer/consumer khi cần."
+    dependsOn:
+      - spring-jms-foundations
+    objectives:
+      - "Hiểu vai trò của ConnectionFactory, JmsOperations và JmsTemplate trong truy cập JMS đồng bộ do Spring quản lý."
+      - "Hiểu mô hình send, synchronous receive, request-reply và callback mà không nhầm JmsTemplate là sự thay thế cho ngữ nghĩa messaging bên dưới."
+      - "Lý giải synchronous receive có thể block, receive timeout, thiết lập quality-of-service và cơ chế Spring chuyển JMS checked exception thành exception không bắt buộc xử lý."
+
+  - id: destinations-conversion-and-message-metadata
+    title: "Destination, chuyển đổi dữ liệu và metadata của message"
+    purpose: "Hiểu cách object của ứng dụng, destination name và messaging metadata đi qua ranh giới giữa Spring application code và Jakarta Messaging message."
+    dependsOn:
+      - template-access-model
+    objectives:
+      - "Hiểu queue/topic tại ranh giới tích hợp của Spring và cách các DestinationResolver strategy chuyển logical name thành JMS Destination."
+      - "Hiểu MessageConverter strategy, gồm chuyển đổi payload cơ bản và chuyển đổi hướng JSON, nhưng không gắn lộ trình học vào một broker cụ thể."
+      - "Lý giải JMS headers, properties, correlation/reply metadata và cầu nối giữa Spring Messaging headers với JMS-specific metadata."
+
+  - id: listener-container-model
+    title: "Mô hình Message Listener Container"
+    purpose: "Chuyển từ synchronous consumption có thể block sang mô hình message-driven của Spring và hiểu container là ranh giới runtime sở hữu vòng đời consumer, thread, JMS resource, dispatch và recovery."
+    dependsOn:
+      - destinations-conversion-and-message-metadata
+    objectives:
+      - "Giải thích mô hình Message-Driven POJO và lý do listener container tồn tại thay vì application code tự quản vòng lặp MessageConsumer."
+      - "Hiểu vòng đời và các trách nhiệm chung của các implementation MessageListenerContainer trong Spring."
+      - "Phân biệt vai trò khái niệm của DefaultMessageListenerContainer với các lựa chọn listener container đơn giản hơn mà không biến roadmap thành danh sách class."
+      - "Nhận biết JCA message endpoint là mô hình tích hợp thay thế cho môi trường resource adapter/application server, không phải lộ trình Spring JMS standalone mặc định."
+
+  - id: annotation-driven-listener-endpoints
+    title: "Listener endpoint điều khiển bằng annotation"
+    purpose: "Hiểu cách @EnableJms và @JmsListener xây declarative listener endpoint trên hạ tầng listener container mà vẫn giữ mô hình container hiển thị rõ, thay vì che giấu nó sau annotation."
+    dependsOn:
+      - listener-container-model
+    objectives:
+      - "Theo dõi một listener được annotate từ @JmsListener metadata qua JmsListenerContainerFactory tới MessageListenerContainer bên dưới."
+      - "Hiểu ở mức khái niệm việc resolve payload/header argument, conversion, reply handling và endpoint registration."
+      - "Biết khi nào cần custom container factory hoặc đăng ký endpoint bằng code thay vì chỉ dựa vào annotation configuration mặc định."
+
+  - id: transactions-and-delivery-semantics
+    title: "Transaction và ngữ nghĩa giao nhận"
+    purpose: "Kết nối acknowledgement/redelivery của JMS với local JMS transaction do Spring quản lý và cơ chế phối hợp transaction bên ngoài, nhưng không nhầm Spring transaction policy với guarantee của broker."
+    dependsOn:
+      - annotation-driven-listener-endpoints
+    objectives:
+      - "Hiểu sessionTransacted, listener rollback và hành vi redelivery tại ranh giới Spring container."
+      - "Hiểu JmsTransactionManager là local transaction manager cho một JMS ConnectionFactory và cách JmsTemplate tham gia vào JMS resource được bind theo thread."
+      - "Phân biệt local JMS transaction với JTA/XA transaction được phối hợp bên ngoài và lý giải chi phí/failure mode khi kết hợp JMS với thao tác database."
+      - "Nhận biết rủi ro redelivery và xử lý trùng lặp, cùng yêu cầu idempotency, đặc biệt khi JMS và các side effect bên ngoài không thể cùng nằm trong một atomic transaction boundary."
+
+  - id: concurrency-recovery-and-resource-lifecycle
+    title: "Concurrency, recovery và vòng đời tài nguyên"
+    purpose: "Hiểu hành vi vận hành quyết định Spring JMS consumer có ổn định dưới tải và sự cố hay không: consumer concurrency, acknowledgement configuration, resource caching, startup/shutdown và provider recovery."
+    dependsOn:
+      - transactions-and-delivery-semantics
+    objectives:
+      - "Lý giải listener concurrency range và trade-off giữa parallelism, ordering với năng lực của provider."
+      - "Hiểu cách acknowledgement mode, selector, subscription và durable/shared subscription option tương tác với listener configuration, trong khi ngữ nghĩa protocol chi tiết vẫn thuộc Jakarta Messaging."
+      - "Hiểu recovery interval/backoff và exception handling đủ để chẩn đoán các lỗi vòng đời listener thường gặp."
+      - "Phân biệt provider pooling và các Spring ConnectionFactory wrapper như SingleConnectionFactory/CachingConnectionFactory với cơ chế cache riêng của DefaultMessageListenerContainer, gồm cả việc external transaction manager làm thay đổi cache level mặc định của container."
+
+  - id: production-readiness-and-integration-boundaries
+    title: "Sẵn sàng vận hành và ranh giới tích hợp"
+    purpose: "Tổng hợp Spring JMS thành mô hình tư duy end-to-end cho production, gồm observability, chiến lược kiểm thử và handoff sang các công nghệ Spring messaging lân cận mà không lặp lại curriculum của chúng."
+    dependsOn:
+      - concurrency-recovery-and-resource-lifecycle
+    objectives:
+      - "Hiểu Spring Framework tích hợp với Micrometer Jakarta JMS instrumentation như thế nào: ObservationRegistry bật publish/process observation cho template và listener path, còn thời gian blocking receive không được ghi thành receive observation."
+      - "Chọn test có ý nghĩa cho conversion, listener endpoint, transaction/redelivery behavior và tích hợp với provider thật thay vì chỉ mock JMS APIs."
+      - "Giải thích khi nào direct Spring JMS là đủ và khi nào Enterprise Integration Patterns phải chuyển sang Spring Integration."
+      - "Giữ các abstraction đặc thù của AMQP/Kafka và các primitive chung của Spring Messaging ở đúng neighboring module owner."
+    relatedModules:
+      - routeId: SPRING_INTEGRATION
+        label: "Spring Integration"
+        note: "Sở hữu Enterprise Integration Patterns và các JMS channel adapter/gateway được xây trên Spring JMS infrastructure."

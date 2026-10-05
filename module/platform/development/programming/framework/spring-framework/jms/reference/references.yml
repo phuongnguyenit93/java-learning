@@ -1,0 +1,49 @@
+# ============================================================
+# MODULE REFERENCE STRUCTURE
+# ============================================================
+#
+# This is the shared module-level reference catalog.
+# It is intentionally not split by MODULE_LANGUAGE.
+#
+# Example structure:
+#
+# references:
+#   - title: "Java Language Specification"
+#     url: "https://docs.oracle.com/javase/specs/"
+#     description: "Official Java language specification."
+#
+# Add only curated references that are useful for the module.
+# The build system must not overwrite this file after authored content exists.
+
+references:
+  - title: "Spring Framework Reference — JMS (Java Message Service)"
+    url: "https://github.com/spring-projects/spring-framework/blob/v6.1.14/framework-docs/modules/ROOT/pages/integration/jms.adoc"
+    description: "Official Spring Framework 6.1.14 reference source for JMS, pinned to the repository baseline; covers the JMS support topology and links the detailed sending, receiving, JCA, annotated-endpoint, and transaction sections."
+
+  - title: "Spring Framework 6.1.14 API — org.springframework.jms"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/jms/package-summary.html"
+    description: "Repository-baseline API overview for the Spring Framework 6.1.14 JMS packages and their responsibilities."
+
+  - title: "Spring Framework 6.1.14 API — JmsTemplate"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/jms/core/JmsTemplate.html"
+    description: "Authoritative contract for repository-baseline synchronous JMS access, send/receive operations, callbacks, QoS settings, conversion, and receive-timeout behavior."
+
+  - title: "Spring Framework 6.1.14 API — DefaultMessageListenerContainer"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/jms/listener/DefaultMessageListenerContainer.html"
+    description: "Authoritative lifecycle, concurrency, caching, recovery, and transaction behavior for Spring's primary standalone JMS listener container."
+
+  - title: "Spring Framework 6.1.14 API — EnableJms"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/jms/annotation/EnableJms.html"
+    description: "Official contract for enabling annotation-driven JMS endpoints and configuring JmsListenerContainerFactory infrastructure."
+
+  - title: "Spring Framework 6.1.14 API — JmsTransactionManager"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/jms/connection/JmsTransactionManager.html"
+    description: "Authoritative description of Spring's local transaction manager for a single JMS ConnectionFactory and its resource-binding semantics."
+
+  - title: "Spring Framework Reference — Observability Support"
+    url: "https://github.com/spring-projects/spring-framework/blob/v6.1.14/framework-docs/modules/ROOT/pages/integration/observability.adoc"
+    description: "Official Spring Framework 6.1.14 observability reference source, pinned to the repository baseline; includes Micrometer Jakarta JMS publish/process instrumentation and ObservationRegistry integration."
+
+  - title: "Jakarta Messaging 3.1 Specification"
+    url: "https://jakarta.ee/specifications/messaging/3.1/jakarta-messaging-spec-3.1.html"
+    description: "Authoritative specification for the JMS/Jakarta Messaging concepts that Spring integrates with; useful for queue/topic, acknowledgement, subscription, header, delivery, and provider-semantics boundaries."

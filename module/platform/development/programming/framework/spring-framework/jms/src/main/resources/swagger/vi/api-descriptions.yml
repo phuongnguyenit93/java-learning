@@ -1,0 +1,87 @@
+JmsObservabilityExperimentController:
+  observePublishProcessBoundary():
+    summary: Quan sát ranh giới publish/process của Spring JMS 6.1
+    description: Gửi và xử lý một JMS message bằng ObservationRegistry riêng cho lần
+      chạy, sau đó thực hiện blocking receive có giới hạn trên destination rỗng. Response
+      cho thấy những observation thực sự hoàn tất để so sánh publish/process instrumentation
+      với receive-wait observation vốn được Spring 6.1 cố ý không tạo.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: jms-observability-61
+    methodName: observePublishProcessBoundary
+    params: [
+      ]
+    path: com/example/learning/jms/experiment/controller/JmsObservabilityExperimentController.java
+    mapping: '@GetMapping("/publish-process-boundary")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /jms/observability/publish-process-boundary
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+JmsTemplateExperimentController:
+  observeRequestReplyRoundTrip():
+    summary: Quan sát một vòng request-reply của JmsTemplate
+    description: Gửi text request qua JmsTemplate.sendAndReceive, để listener có giới
+      hạn trả lời thông qua JMSReplyTo của message đi vào, rồi trả về bằng chứng runtime
+      về temporary reply destination, số lần listener được gọi, correlation, payload
+      và thời gian hoàn tất có giới hạn.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: jms-template-request-reply
+    methodName: observeRequestReplyRoundTrip
+    params: [
+      ]
+    path: com/example/learning/jms/experiment/controller/JmsTemplateExperimentController.java
+    mapping: '@GetMapping("/request-reply")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /jms/template/request-reply
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+JmsTransactionExperimentController:
+  observeRollbackRedelivery():
+    summary: Quan sát JMS redelivery do rollback
+    description: Gửi một message tới listener dùng local transaction, cố ý làm delivery
+      đầu tiên thất bại và thành công ở lần kế tiếp. Response ghi lại số delivery
+      attempt, cờ JMSRedelivered, lỗi listener và đúng một tác động nghiệp vụ thành
+      công.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: jms-session-transacted
+    methodName: observeRollbackRedelivery
+    params: [
+      ]
+    path: com/example/learning/jms/experiment/controller/JmsTransactionExperimentController.java
+    mapping: '@GetMapping("/rollback-redelivery")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /jms/transactions/rollback-redelivery
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
