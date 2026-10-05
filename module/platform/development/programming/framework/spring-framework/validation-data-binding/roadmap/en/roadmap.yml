@@ -1,0 +1,139 @@
+# <roadmap-schema>
+# Module Roadmap Structure
+# schema-version: 1
+#
+# YAML CONTRACT
+# roadmap: High-level learning milestones for the current language roadmap.
+#
+# - id [string, required]: Stable and unique milestone identity within the current language roadmap.
+# - title [string, required]: Milestone title displayed to the learner.
+# - purpose [string, required]: What the learner should understand or achieve from this milestone.
+# - dependsOn [list, optional]: Prerequisite milestone ids when item order alone is not enough to express the dependency.
+# - objectives [list, optional]: Milestone-level learning objectives; do not use this to list every small fact/API/syntax item.
+# - relatedKnowledge [list, optional]: Knowledge category ids in the current module that support this milestone. Portal displays this list on the side opposite the milestone and clicking an item navigates to the matching Knowledge category.
+# - relatedModules [list, optional]: Related modules displayed as Portal Level 2 cards. Each item requires routeId and may provide localized label/note; this relation is navigation only and does not create child milestones or change learning order.
+#
+# ROADMAP THINKING FRAMEWORK
+# PURPOSE
+#   - What is this topic/module?
+#   - Why does it exist?
+#   - What problem exists without it?
+# FOUNDATION
+#   - What prerequisite or mental model must the learner have first?
+# CORE MODEL
+#   - What major abstractions or building blocks make up this topic?
+# MECHANICS
+#   - How does it work at the language/runtime/API level appropriate for this module?
+# USAGE
+#   - How is it used in real code?
+# DECISION / TRADE-OFF
+#   - When should this mechanism be chosen over another?
+#   - When should it not be used?
+# FAILURE / PITFALL
+#   - What mistakes, compile-time failures, or runtime failures matter?
+# INTEGRATION
+#   - How does this topic connect to neighboring concepts/modules?
+# SYNTHESIS
+#   - What end-to-end mental model should the learner retain?
+#
+# Each language owns its own roadmap. Do not infer or synchronize its structure from another language roadmap.
+# Item order in roadmap is the default learning order. Use dependsOn only when a dependency needs to be expressed beyond the linear order.
+# The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
+# </roadmap-schema>
+
+roadmap:
+  - id: validation-binding-purpose
+    title: Why Validation, Binding, and Conversion Exist
+    purpose: Build the mental model for why Spring separates object validation, data binding, type conversion, and field formatting instead of treating all incoming values as simple String-to-field assignment.
+    objectives:
+      - Explain the distinct problems solved by validation, data binding, type conversion, and formatting.
+      - Understand why Spring's validation contract is not tied to the web tier and why the same primitives can be reused in business, UI, and infrastructure layers.
+      - Identify the boundary between this module's reusable core contracts and web-specific binding lifecycles owned by Spring MVC and WebFlux.
+    relatedModules:
+      - routeId: SPRING_CORE_CONTAINER
+        label: Spring Core Container
+        note: The container supplies shared infrastructure such as ConversionService registration and bean lifecycle integration used by these contracts.
+      - routeId: SPRING_WEB
+        label: Spring Web
+        note: Spring MVC consumes these primitives for controller binding and validation but owns the HTTP/controller lifecycle.
+      - routeId: SPRING_REACTIVE
+        label: Spring Reactive
+        note: WebFlux consumes the same core validation and conversion concepts within the reactive web stack.
+
+  - id: property-access-model
+    title: Property Access and Binding State
+    purpose: Understand the object-property model that data binding operates on, including nested property paths, BeanWrapper-style access, and how binding outcomes are represented independently from transport-specific request handling.
+    objectives:
+      - Understand property paths, nested object access, and the role of BeanWrapper as a lower-level Spring property-access abstraction.
+      - Distinguish direct binding errors such as type mismatch from policy-dependent cases: missing values become errors only for required fields, unknown fields can be ignored, and inaccessible nested paths depend on invalid-field policy.
+      - Understand BindingResult and Errors as structured representations of binding and validation outcomes rather than mere exception messages.
+
+  - id: type-conversion-system
+    title: General Type Conversion
+    purpose: Learn Spring's general-purpose conversion system before using it inside binding, so conversions are understood as reusable typed transformations rather than controller-specific parsing rules.
+    objectives:
+      - Understand ConversionService as the runtime entry point and ConverterRegistry as the registration side of the system.
+      - Choose among Converter, ConverterFactory, GenericConverter, and conditional conversion based on the shape and context of the transformation.
+      - Understand why TypeDescriptor matters when generic, collection, annotation, or property-location context affects conversion.
+      - Distinguish the modern ConversionService/Formatter model from legacy JavaBeans PropertyEditor integration that Spring still supports.
+      - Recognize conversion failure and no-converter boundaries without turning the roadmap into an API inventory.
+
+  - id: field-formatting-model
+    title: Field Formatting and Localization
+    purpose: Add the client-facing parse/print layer on top of general conversion, understanding when formatting is a better fit than a plain converter.
+    objectives:
+      - Distinguish general-purpose conversion from locale-sensitive, presentation-oriented formatting.
+      - Understand Printer, Parser, Formatter, FormatterRegistry, and annotation-driven formatting as one coherent model.
+      - Reason about centralized formatting policy and reusable annotation-based formatting without moving into MVC-specific configuration.
+
+  - id: spring-validation-model
+    title: Spring Validation and Error Reporting
+    purpose: Understand Spring's Validator model and how validation failures become structured object and field errors that can later be localized or consumed by any layer.
+    objectives:
+      - Understand Validator, SmartValidator, Errors, BindingResult, ObjectError, and FieldError at the conceptual level.
+      - Compose validation across nested objects while keeping validators independent of a particular UI or transport.
+      - Understand validation hints/groups at the Spring contract boundary and the role of ValidationUtils as supporting infrastructure.
+      - Understand message-code resolution as the bridge from stable validation codes to downstream MessageSource localization, without making this module the owner of i18n itself.
+
+  - id: data-binder-orchestration
+    title: DataBinder Orchestration
+    purpose: Connect property access, conversion, formatting, binding results, and validation through DataBinder as Spring's reusable binding orchestrator.
+    objectives:
+      - Trace the binding flow from incoming values through conversion/property application to BindingResult and optional validation.
+      - Distinguish constructor binding from property/setter binding and understand why they expose different input surfaces.
+      - Understand required, unknown, invalid, allowed, and disallowed field policies as property-binding configuration rather than validation rules, and recognize that constructor binding resolves only the constructor values it needs.
+      - Understand Spring Framework 6.1 declarative binding as an opt-in mode that always permits constructor binding while allowing property binding only for explicitly configured allowed fields.
+      - Recognize DataBinder extension points such as conversion, custom editors, validators, and binding-error processing without memorizing every method.
+
+  - id: bean-validation-integration
+    title: Jakarta Bean Validation Integration
+    purpose: Understand how Spring adapts Jakarta Bean Validation providers into Spring's own Validator ecosystem while preserving the boundary between the Bean Validation specification and Spring infrastructure.
+    objectives:
+      - Understand LocalValidatorFactoryBean and SpringValidatorAdapter as integration infrastructure rather than a replacement specification.
+      - Connect constraint annotations, validation groups or hints, and Spring Errors/BindingResult reporting.
+      - Distinguish object validation from executable method validation of parameters and return values, including Spring 6.1's MethodValidator/MethodValidationAdapter result model and validation-group selection.
+      - Understand that MethodValidationPostProcessor is Spring's proxy-based wiring option for method validation, while the underlying AOP proxy/interceptor mechanics belong to the Aspect module.
+      - Keep provider-specific constraint semantics in the Bean Validation/provider boundary instead of redefining them as Spring concepts.
+    relatedModules:
+      - routeId: ASPECT
+        label: Spring AOP
+        note: Proxy/interceptor mechanics used by method-validation infrastructure belong to the AOP owner.
+
+  - id: safe-binding-synthesis
+    title: Safe Binding and End-to-End Decisions
+    purpose: Synthesize the module into a safe decision model for turning external values into typed objects, validating them, reporting failures, and handing transport-specific concerns to the correct neighboring module.
+    objectives:
+      - Prefer constrained input models, constructor or declarative binding, and explicit allowed-field policies when binding untrusted external input.
+      - Explain why binding security is about controlling the writable input surface, while validation determines whether already-bound values satisfy rules.
+      - Choose appropriately among conversion, formatting, Spring Validator, Bean Validation, and DataBinder based on the problem being solved.
+      - Trace an end-to-end pipeline from raw values through conversion/formatting, binding, validation, and error/message-code resolution, then hand off MessageSource localization and transport-specific presentation to their owning modules.
+    relatedModules:
+      - routeId: SPRING_CORE_CONTAINER
+        label: Spring Core Container
+        note: MessageSource and i18n own the localization step after this module has produced structured errors and resolvable message codes.
+      - routeId: SPRING_WEB
+        label: Spring Web
+        note: MVC owns WebDataBinder, controller argument binding, @InitBinder, and HTTP-specific validation behavior.
+      - routeId: SPRING_REACTIVE
+        label: Spring Reactive
+        note: WebFlux owns its reactive controller binding and validation lifecycle while reusing these core contracts.

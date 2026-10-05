@@ -1,0 +1,12 @@
+SafeBindingExperimentController:
+  description: |-
+    <h2>Safe Binding Experiment Controller</h2>
+    <p>So sánh property binding thông thường với declarative binding, sau đó cho thấy allow-list tường minh chỉ mở lại đúng bề mặt property được phép ghi.</p>
+  readmeRelated:
+    file: 8.SafeBinding/SafeBinding.md
+ValidationExperimentController:
+  description: |-
+    <h2>Validation Experiment Controller</h2>
+    <p>So sánh lỗi conversion/binding với trường hợp binding thành công rồi Spring Validator thất bại, đồng thời đưa bằng chứng có cấu trúc của hai giai đoạn cạnh nhau.</p>
+  readmeRelated:
+    file: 1.Foundation/Foundation.md

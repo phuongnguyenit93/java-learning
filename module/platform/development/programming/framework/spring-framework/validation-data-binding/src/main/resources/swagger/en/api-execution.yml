@@ -1,0 +1,51 @@
+DataBinderExperimentController:
+  typeMismatch():
+    execution: |-
+      <p><b>Concept:</b> Binding and conversion can fail before domain validation runs.</p>
+      <ol>
+        <li>Create a fresh target whose <code>age</code> property is an <code>int</code> initialized to <code>41</code>, then bind the external text value <code>not-a-number</code>.</li>
+        <li><code>DataBinder</code> cannot convert that text to the target type, so the binding result records a <code>FieldError</code> instead of a successful assignment.</li>
+        <li>The response exposes the rejected value, error code, <code>bindingFailure</code> flag, and target value both before and after the attempt.</li>
+      </ol>
+      <p><b>Code evidence:</b> the experiment stores <code>ageBeforeBinding</code> before calling <code>binder.bind(values)</code> and compares it with the final target value.</p>
+      <p><b>Observation:</b> <code>hasErrors=true</code>, the error code is a type-mismatch code, <code>bindingFailure=true</code>, and both before/after age values are <code>41</code> with <code>targetAgeUnchanged=true</code>.</p>
+      <p><b>Conclusion:</b> A conversion/binding failure is structured binding evidence; it is not a domain validation failure.</p>
+    usage: false
+SafeBindingExperimentController:
+  declarativeBinding():
+    execution: |-
+      <p><b>Concept:</b> Declarative binding changes the default posture of property binding; an explicit allow-list can then open only the intended writable properties.</p>
+      <ol>
+        <li>Use the same submitted values, <code>displayName=Ada</code> and <code>role=ADMIN</code>, with three fresh targets that all start as <code>displayName=Before</code> and <code>role=USER</code>.</li>
+        <li>Ordinary property binding has no declarative restriction and no configured allow-list, so the default property-binding surface accepts both properties.</li>
+        <li>Declarative binding with no <code>allowedFields</code> configured skips property binding entirely, so neither property changes.</li>
+        <li>Declarative binding with only <code>displayName</code> allowed writes that property and records <code>role</code> as suppressed.</li>
+      </ol>
+      <p><b>Code evidence:</b> the three scenarios differ only in <code>setDeclarativeBinding(true)</code> and the presence or absence of <code>setAllowedFields("displayName")</code>.</p>
+      <p><b>Observation:</b> The first two scenarios report <code>allowedFieldsConfigured=false</code> and <code>allowedFields=null</code>, making it explicit that no allow-list was configured. Ordinary binding still ends at <code>Ada/ADMIN</code>, while declarative binding stays <code>Before/USER</code>. Its <code>suppressedFields</code> is empty because property binding is skipped before allowed-field filtering runs. The third scenario reports <code>allowedFieldsConfigured=true</code>, ends at <code>Ada/USER</code>, and records <code>role</code> in <code>suppressedFields</code>.</p>
+      <p><b>Conclusion:</b> Declarative binding can close property binding by default, while an allow-list makes the accepted write surface explicit.</p>
+    usage: true
+ValidationExperimentController:
+  validationFailure():
+    execution: |-
+      <p><b>Concept:</b> Successful binding does not imply valid domain state.</p>
+      <ol>
+        <li>Bind the external text value <code>15</code> to an integer <code>age</code> property.</li>
+        <li>The conversion and assignment succeed, so the binding phase has no error.</li>
+        <li>Run a Spring <code>Validator</code> that rejects ages below 18 with code <code>age.tooYoung</code>.</li>
+      </ol>
+      <p><b>Observation:</b> The target age is <code>15</code>, errors after binding are zero, and an error appears only after validation with <code>bindingFailure=false</code>.</p>
+      <p><b>Conclusion:</b> Binding answers whether input can populate typed state; validation answers whether that resulting state is acceptable.</p>
+    usage: false
+  bindingVsValidation():
+    execution: |-
+      <p><b>Concept:</b> Binding/conversion failure and domain validation failure occur at different phases and leave different structured evidence.</p>
+      <ol>
+        <li><b>Binding-failure scenario:</b> initialize an integer <code>age</code> to <code>41</code>, then bind <code>not-a-number</code>. Conversion fails, so the target remains <code>41</code> and the <code>FieldError</code> reports <code>bindingFailure=true</code>.</li>
+        <li><b>Validation-failure scenario:</b> bind <code>15</code>. Conversion and assignment succeed with zero binding errors, then run a Spring <code>Validator</code> that rejects ages below 18 with code <code>age.tooYoung</code>.</li>
+        <li>The response places both fresh scenarios side by side so the phase boundary can be inspected directly.</li>
+      </ol>
+      <p><b>Code evidence:</b> the first scenario records target state before and after <code>binder.bind(...)</code>; the second records the error count before and after <code>binder.validate()</code>.</p>
+      <p><b>Observation:</b> the first scenario has a type-mismatch binding error, rejected raw value, <code>bindingFailure=true</code>, and unchanged target state. The second has <code>errorsAfterBinding=0</code>, target age <code>15</code>, then <code>age.tooYoung</code> with <code>bindingFailure=false</code>.</p>
+      <p><b>Conclusion:</b> Binding answers whether external input can become typed object state; validation answers whether successfully created state is acceptable.</p>
+    usage: true

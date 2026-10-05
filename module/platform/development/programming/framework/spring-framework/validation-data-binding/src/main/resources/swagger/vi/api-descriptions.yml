@@ -1,0 +1,112 @@
+DataBinderExperimentController:
+  typeMismatch():
+    summary: Quan sát lỗi binding do sai kiểu
+    description: Bắt đầu với age bằng 41, bind giá trị text "not-a-number" vào property
+      kiểu int rồi quan sát FieldError cùng trạng thái target trước/sau để chứng minh
+      conversion thất bại không gán giá trị mới.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: data-binding-flow
+    methodName: typeMismatch
+    params: [
+      ]
+    path: com/example/learning/module/validationbinding/controller/DataBinderExperimentController.java
+    mapping: '@GetMapping("/type-mismatch")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /validation-binding/data-binder/type-mismatch
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: false
+SafeBindingExperimentController:
+  declarativeBinding():
+    summary: So sánh property binding thông thường và declarative binding
+    description: Gửi displayName và role qua ba binder mới. Property binding thông
+      thường ghi cả hai field, declarative binding không có allowed field thì không
+      ghi field nào, còn declarative binding chỉ cho phép displayName sẽ ghi displayName
+      và suppress role.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: safe-binding-controls
+    methodName: declarativeBinding
+    params: [
+      ]
+    path: com/example/learning/module/validationbinding/controller/SafeBindingExperimentController.java
+    mapping: '@GetMapping("/declarative")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /validation-binding/safe-binding/declarative
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+ValidationExperimentController:
+  validationFailure():
+    summary: Phân biệt binding thành công với validation thất bại
+    description: Bind age "15" thành công vào target kiểu int rồi chạy Spring Validator
+      từ chối tuổi nhỏ hơn 18. Bằng chứng cho thấy binding error và domain validation
+      error là hai giai đoạn khác nhau.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: validation-vs-binding
+    methodName: validationFailure
+    params: [
+      ]
+    path: com/example/learning/module/validationbinding/controller/ValidationExperimentController.java
+    mapping: '@GetMapping("/rule-failure")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /validation-binding/validation/rule-failure
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: false
+  bindingVsValidation():
+    summary: So sánh lỗi binding với lỗi validation
+    description: Chạy song song hai scenario age mới. Text sai định dạng thất bại
+      ở conversion và tạo binding FieldError trong khi giữ nguyên target trước đó;
+      text hợp lệ được bind thành công rồi chỉ bị từ chối khi Spring Validator chạy.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: validation-vs-binding
+    methodName: bindingVsValidation
+    params: [
+      ]
+    path: com/example/learning/module/validationbinding/controller/ValidationExperimentController.java
+    mapping: '@GetMapping("/binding-vs-validation")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /validation-binding/validation/binding-vs-validation
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

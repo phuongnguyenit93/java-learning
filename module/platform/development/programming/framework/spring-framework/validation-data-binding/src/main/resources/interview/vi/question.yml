@@ -1,0 +1,120 @@
+# <interview-schema>
+# Cấu trúc câu hỏi Interview
+# schema-version: 2
+#
+# questions [kiểu: list; bắt buộc; mặc định: []]
+#   Danh sách câu hỏi Interview của module trong language hiện tại.
+#   mỗi phần tử:
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi phỏng vấn hiển thị cho người học.
+#     answer [kiểu: string; bắt buộc; mặc định: ""]
+#       Câu trả lời tham khảo, chỉ hiển thị khi người học chủ động mở.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu nội dung được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu nội dung đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+# </interview-schema>
+
+questions:
+  - question: >-
+      Hãy giải thích sự khác nhau giữa lỗi binding/conversion và lỗi validation trong Spring. Làm thế nào chứng minh giai đoạn nào thất bại thay vì đoán từ trạng thái target?
+    answer: >-
+      Binding và conversion trả lời dữ liệu bên ngoài có thể trở thành trạng thái target có kiểu hay không. Validation chạy trên trạng thái đã có kiểu và quyết định trạng thái đó có được chấp nhận không. Giá trị như "not-a-number" cho int thất bại trước khi một quy tắc domain có ý nghĩa chạy được, còn "15" có thể bind thành công rồi mới vi phạm quy tắc tuổi. Tôi sẽ đọc BindingResult thay vì chỉ nhìn target: binding FieldError giữ rejected raw value và có bindingFailure=true, còn lỗi do validator tạo xuất hiện sau binding thành công và có bindingFailure=false. So sánh số lỗi trước và sau binder.validate() làm ranh giới hai giai đoạn trở nên rõ ràng.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Foundation/Foundation.md"
+      anchor: "validation-vs-binding"
+    apiRelated:
+      controller: "ValidationExperimentController"
+      methodSignature: "bindingVsValidation()"
+
+  - question: >-
+      Khi nào nên chọn Converter, Formatter hoặc Validator cho một yêu cầu xử lý input, và dấu hiệu thiết kế xấu nào xuất hiện khi trộn các trách nhiệm này?
+    answer: >-
+      Converter phù hợp với biến đổi kiểu có thể tái sử dụng và có ngữ nghĩa ổn định, ví dụ String sang OrderId. Formatter phù hợp khi dạng biểu diễn text phụ thuộc presentation và cần parse/print theo Locale. Validator nên nhận trạng thái đã có kiểu rồi quyết định trạng thái đó có thỏa quy tắc hay không. Dấu hiệu thiết kế xấu thường là parse text phụ thuộc locale bên trong Validator hoặc bắt Converter từ chối một giá trị đúng kiểu nhưng sai nghĩa nghiệp vụ. Các cách này làm mờ giai đoạn phát sinh lỗi, giảm khả năng tái sử dụng và khiến error reporting khó suy luận hơn.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Foundation/Foundation.md"
+      anchor: "conversion-vs-formatting"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      BindingResult bổ sung điều gì cho mô hình tư duy ngoài việc "target đã được điền một phần", và vì sao điều đó quan trọng khi debug production?
+    answer: >-
+      BindingResult là bằng chứng có cấu trúc quanh một lần binding. Nó có thể cung cấp ObjectError và FieldError, rejected raw value, trạng thái bindingFailure, suppressed fields và các message-code candidate trong khi vẫn gắn với target thật. Điều này quan trọng vì chỉ nhìn target rất mơ hồ: field có thể không đổi vì conversion thất bại, bị bỏ qua do binding policy, hoặc đơn giản là không được gửi vào. Vì vậy khi debug production nên bắt đầu từ structured result và binding policy thay vì xem object được điền một phần là bằng chứng input processing đã thành công.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.PropertyAccess/PropertyAccess.md"
+      anchor: "binding-result-model"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Vì sao declarative binding là cơ chế kiểm soát an toàn chứ không phải validation rule? Hãy so sánh ordinary property binding, declarative binding không có allowed field và declarative binding có allow-list tường minh.
+    answer: >-
+      Validation hỏi một giá trị đã được chấp nhận có hợp lệ hay không; binding security hỏi dữ liệu bên ngoài có được phép ghi property đó ngay từ đầu hay không. Ordinary property binding mặc định có thể ghi writable properties. Trong Spring 6.1, declarative binding thay đổi trạng thái này: nếu không cấu hình allowedFields thì property binding bị bỏ qua. Khi cấu hình allow-list như displayName, chỉ property đó được mở và role gửi kèm có thể được ghi nhận là suppressed. Nhờ vậy validator không bị dùng như một lớp vá muộn cho việc kiểm soát bề mặt input có thể ghi.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.SafeBinding/SafeBinding.md"
+      anchor: "safe-binding-controls"
+    apiRelated:
+      controller: "SafeBindingExperimentController"
+      methodSignature: "declarativeBinding()"
+
+  - question: >-
+      So sánh constructor binding và property binding của DataBinder. Vì sao không nên coi allowedFields, requiredFields và declarative binding là quy tắc chung cho mọi binding path?
+    answer: >-
+      Property binding bắt đầu với target đã tồn tại rồi áp các named property value qua writable properties. Constructor binding phân giải các giá trị cần để tạo target thông qua DataBinder.construct(...) và ValueResolver. Các chính sách field như allowedFields, disallowedFields, requiredFields và giới hạn declarative property binding quản lý property binding; chúng không định nghĩa lại constructor argument. Phân biệt này quan trọng cho cả security lẫn debugging: trước tiên phải xác định binding path nào đang hoạt động, sau đó mới suy luận các control thực sự áp dụng cho path đó.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.DataBinder/DataBinder.md"
+      anchor: "constructor-binding-model"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      LocalValidatorFactoryBean nối Jakarta Bean Validation vào Spring như thế nào, và khi nào vẫn nên dùng Spring Validator bên cạnh nó?
+    answer: >-
+      LocalValidatorFactoryBean bootstrap Bean Validation và đưa validator kết quả vào hạ tầng validation của Spring, đồng thời hỗ trợ cấu hình do Spring quản lý. Nhờ đó constraint dựa trên annotation có thể tham gia những nơi tiêu thụ Spring Validator contract. Spring Validator viết bằng code vẫn hữu ích cho quy tắc dễ biểu diễn bằng logic lập trình, phụ thuộc collaborator của ứng dụng hoặc có cách composition rõ ràng hơn ngoài annotation. DataBinder có thể chứa nhiều validator, vì vậy hai cách tiếp cận bổ sung cho nhau thay vì loại trừ nhau.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.BeanValidation/BeanValidation.md"
+      anchor: "local-validator-factory-bean"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Một service method có Bean Validation constraint nhưng khi gọi lại không có validation. Bạn sẽ suy luận thế nào về MethodValidationPostProcessor, @Validated, validation group và proxy boundary?
+    answer: >-
+      Tôi sẽ tách thành ba câu hỏi. Thứ nhất, proxy-based method validation đã được kích hoạt cho bean chưa? Với MethodValidationPostProcessor, @Validated ở mức type hoặc annotation tương đương đã cấu hình là điều làm bean khớp validation pointcut. Thứ hai, group nào được chọn? @Validated ở mức method có thể tinh chỉnh group cho invocation đó nhưng tự nó không kích hoạt proxy validation cho bean vốn không khớp. Thứ ba, lời gọi có đi qua proxy không? Một direct call bỏ qua Spring proxy không thể được sửa chỉ bằng cách thay constraint annotation. Cách kiểm tra này tách validation metadata khỏi proxy activation và invocation mechanics.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.BeanValidation/BeanValidation.md"
+      anchor: "method-validation-post-processor"
+    apiRelated:
+      controller: ""
+      methodSignature: ""

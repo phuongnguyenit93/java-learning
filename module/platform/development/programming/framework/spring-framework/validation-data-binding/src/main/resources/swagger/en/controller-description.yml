@@ -1,0 +1,12 @@
+SafeBindingExperimentController:
+  description: |-
+    <h2>Safe Binding Experiment Controller</h2>
+    <p>Compares ordinary property binding with declarative binding, then shows how an explicit allow-list re-opens only the intended writable surface.</p>
+  readmeRelated:
+    file: 8.SafeBinding/SafeBinding.md
+ValidationExperimentController:
+  description: |-
+    <h2>Validation Experiment Controller</h2>
+    <p>Compares a conversion/binding failure with a successful bind followed by a Spring Validator failure, exposing the structured evidence side by side.</p>
+  readmeRelated:
+    file: 1.Foundation/Foundation.md
