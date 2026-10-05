@@ -1,13 +1,14 @@
 TaskExecutorController:
   asyncWithContext():
-    summary: Chạy @Async với custom executor và context propagation
-    description: Đặt DemoContext, MDC và RequestAttributes trên caller rồi gọi bean
-      @Async sử dụng custom ThreadPoolTaskExecutor. TaskDecorator capture, restore
-      và cleanup context để response chứng minh worker nhận đúng request context trên
-      Thread khác.
+    summary: Chạy @Async với executor tùy biến và truyền context
+    description: Đặt DemoContext và MDC trên bên gọi rồi gọi bean @Async dùng ThreadPoolTaskExecutor
+      tùy biến. TaskDecorator còn thu thập Spring RequestAttributes đang tồn tại nếu
+      có, cài các giá trị đã thu thập quanh lúc worker thực thi rồi dọn dẹp sau đó.
+      Phản hồi cho thấy tên/id của thread bên gọi và worker cùng các giá trị worker
+      thực sự quan sát được qua ranh giới này.
     enableVideoYoutube: false
-    videoYoutubeId: ID của video youtube chèn vào description trong API
-    videoYoutubeTitle: Tiêu đề của video
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
     methodName: asyncWithContext
     params: [
       ]
@@ -23,18 +24,19 @@ TaskExecutorController:
       ]
     usage: true
     readmeRelated:
-      file: ''
+      file: 3.ContextPropagation/ContextPropagation.md
       anchor: spring-async-demo
     aiGenerated: true
     reviewed: false
   asyncVoidException():
-    summary: Quan sát exception của void @Async
-    description: Gọi một void @Async method cố tình throw và quan sát AsyncUncaughtExceptionHandler
-      nhận failure qua correlation id. Experiment cũng phân biệt exception trong method
-      body với rejection xảy ra đồng bộ tại submission boundary.
+    summary: Quan sát lỗi của phương thức void @Async
+    description: Gọi một phương thức void @Async cố tình ném lỗi và quan sát AsyncUncaughtExceptionHandler
+      nhận lỗi qua correlation id. Phản hồi chứng minh đường lỗi bên trong phương
+      thức; controller cũng kết thúc probe nếu chính bước submit thất bại, còn thí
+      nghiệm bão hòa riêng chứng minh việc từ chối theo cách xác định được.
     enableVideoYoutube: false
-    videoYoutubeId: ID của video youtube chèn vào description trong API
-    videoYoutubeTitle: Tiêu đề của video
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
     methodName: asyncVoidException
     params: [
       ]
@@ -50,7 +52,65 @@ TaskExecutorController:
       ]
     usage: true
     readmeRelated:
-      file: ''
+      file: 2.Spring_Task_Executor/SpringExecutor.md
       anchor: async-return-type
+    aiGenerated: true
+    reviewed: false
+  saturation():
+    summary: Quan sát bão hòa và từ chối của ThreadPoolTaskExecutor
+    description: Tạo một ThreadPoolTaskExecutor cô lập với core=1, max=2 và một queue
+      slot. Task đầu tiên chiếm core worker, task thứ hai lấp queue, task thứ ba làm
+      pool tăng tới max và task thứ tư bị từ chối. Phản hồi cho thấy trạng thái pool/queue
+      chứng minh từng bước tiếp nhận đó.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    methodName: saturation
+    params: [
+      ]
+    path: com/example/learning/module/executor/controller/TaskExecutorController.java
+    mapping: '@GetMapping("/saturation")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-executor/saturation
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: 2.Spring_Task_Executor/SpringExecutor.md
+      anchor: spring-executor-config
+    aiGenerated: true
+    reviewed: false
+TaskSchedulerExperimentController:
+  executionModels():
+    summary: So sánh mô hình thực thi của Spring scheduler
+    description: Chạy các kịch bản fixed-rate có giới hạn qua ThreadPoolTaskScheduler
+      và SimpleAsyncTaskScheduler. Phản hồi cho thấy một đăng ký định kỳ trên scheduler
+      dạng pool vẫn được tuần tự hóa, còn SimpleAsyncTaskScheduler có thể cho các
+      lần fixed-rate chồng lấn; sau đó thí nghiệm xác nhận fixed-delay chạy trên scheduler
+      thread.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    methodName: executionModels
+    params: [
+      ]
+    path: com/example/learning/module/taskscheduler/controller/TaskSchedulerExperimentController.java
+    mapping: '@GetMapping("/execution-models")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-scheduler/execution-models
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: 4.TaskScheduler/TaskScheduler.md
+      anchor: scheduler-execution-models
     aiGenerated: true
     reviewed: false

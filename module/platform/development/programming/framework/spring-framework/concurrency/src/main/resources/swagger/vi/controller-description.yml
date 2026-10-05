@@ -1,6 +1,12 @@
 TaskExecutorController:
   description: |-
     <h2>Task Executor Controller</h2>
-    <p>Minh họa Spring TaskExecutor và @Async với custom executor, TaskDecorator context propagation và failure handling của void async method.</p>
+    <p>Chạy các thí nghiệm TaskExecutor có giới hạn để quan sát việc chuyển tác vụ bất đồng bộ, truyền context, lỗi của phương thức async và hành vi bão hòa/từ chối của thread pool.</p>
   readmeRelated:
     file: 2.Spring_Task_Executor/SpringExecutor.md
+TaskSchedulerExperimentController:
+  description: |-
+    <h2>Thí nghiệm đường thực thi của TaskScheduler</h2>
+    <p>So sánh hành vi thực thi lặp của ThreadPoolTaskScheduler và SimpleAsyncTaskScheduler, gồm khả năng chạy chồng lấn và trường hợp fixed-delay chạy trực tiếp trên scheduler thread.</p>
+  readmeRelated:
+    file: 4.TaskScheduler/TaskScheduler.md

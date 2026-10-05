@@ -1,6 +1,12 @@
 TaskExecutorController:
   description: |-
     <h2>Task Executor Controller</h2>
-    <p>Demonstrates Spring TaskExecutor and @Async with a custom executor, TaskDecorator context propagation, and failure handling for void async methods.</p>
+    <p>Runs bounded TaskExecutor experiments for async dispatch, context propagation, async failure observation, and deterministic pool saturation/rejection.</p>
   readmeRelated:
     file: 2.Spring_Task_Executor/SpringExecutor.md
+TaskSchedulerExperimentController:
+  description: |-
+    <h2>Task Scheduler Execution Experiments</h2>
+    <p>Compares recurring execution behavior between ThreadPoolTaskScheduler and SimpleAsyncTaskScheduler, including overlap and the fixed-delay scheduler-thread exception.</p>
+  readmeRelated:
+    file: 4.TaskScheduler/TaskScheduler.md

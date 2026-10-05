@@ -43,17 +43,17 @@ questions:
     question: "A method annotated with `@Async` is called from another method in the same bean using `this.asyncMethod()`. Why may the call remain synchronous in the default proxy mode?"
     answers:
       - id: A
-        answer: "Because `@Async` only works on static methods."
-        explanation: "Incorrect. @Async does not require static methods."
+        answer: "Because self-invocation bypasses executor lookup and automatically falls back to a synchronous TaskExecutor."
+        explanation: "Incorrect. Spring does not replace self-invocation with a synchronous executor; the relevant issue is whether proxy interception occurs."
       - id: B
-        answer: "Because Java does not allow an object to call one of its own methods."
-        explanation: "Incorrect. Self-invocation is valid Java; the issue is Spring proxy interception."
+        answer: "Because executor qualification is evaluated only for calls originating outside the target bean, so a self-call uses the current thread."
+        explanation: "Incorrect. Executor qualification is not based on caller location; self-invocation matters because it can bypass the proxy itself."
       - id: C
         answer: "Because self-invocation can bypass the Spring proxy, so the async interceptor never gets a chance to dispatch the invocation to a TaskExecutor."
         explanation: "Correct. An async boundary is usually clearer when the call crosses between Spring beans and passes through the proxy."
       - id: D
-        answer: "Because every @Async method is required to return `void`."
-        explanation: "Incorrect. @Async supports result-bearing types such as Future/CompletableFuture under the framework contract."
+        answer: "Because the proxy sees self-invocation but intentionally suppresses asynchronous dispatch to prevent recursive task submission."
+        explanation: "Incorrect. The problem is normally that the self-call never enters the proxy; it is not a proxy-level recursion safeguard."
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
@@ -61,29 +61,29 @@ questions:
       file: "2.Spring_Task_Executor/SpringExecutor.md"
       anchor: "async-annotation"
     apiRelated:
-      controller: "TaskExecutorController"
-      methodSignature: "asyncWithContext()"
+      controller: ""
+      methodSignature: ""
 
   - id: spring-task-decorator-context
     question: "What is the best description of Spring `TaskDecorator` responsibility in this module?"
     answers:
       - id: A
-        answer: "Capture context on the caller, restore it on the worker before execution, then clean up or restore the previous worker context in `finally`."
+        answer: "Capture caller context, install it on the worker for the task, then restore the worker's previous context in `finally`."
         explanation: "Correct. This directly bridges ThreadLocal/context propagation with ThreadPoolTaskExecutor."
       - id: B
-        answer: "Completely replace rejection handling and Future exception handling."
-        explanation: "Incorrect. A decorator focuses on execution context; failure observation and rejection have their own contracts."
+        answer: "Read the caller's ThreadLocal lazily from the worker thread, then clear the value after the task."
+        explanation: "Incorrect. Thread-bound state is not automatically visible on another pooled worker; the caller-side state must be captured before dispatch."
       - id: C
-        answer: "Keep the complete HTTP request object forever so background tasks can access it at any later time."
-        explanation: "Incorrect. Propagation does not extend the HTTP request lifecycle; capture only the values the async task actually needs."
+        answer: "Install one context snapshot when the worker pool starts and reuse that snapshot for every task."
+        explanation: "Incorrect. Context is usually task-specific; reusing one snapshot across tasks risks stale or cross-request state."
       - id: D
-        answer: "Force every @Async method to execute on the caller thread."
-        explanation: "Incorrect. TaskDecorator does not change the execution strategy into synchronous caller execution."
+        answer: "Copy request-scoped objects to the worker and keep them until the worker thread terminates."
+        explanation: "Incorrect. Propagation does not extend request lifetime; only the required values should be captured and cleanup must be explicit."
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.Spring_Task_Executor/SpringExecutor.md"
+      file: "3.ContextPropagation/ContextPropagation.md"
       anchor: "task-decorator"
     apiRelated:
       controller: "TaskExecutorController"
@@ -93,17 +93,17 @@ questions:
     question: "A `void @Async` method throws an exception after it has been dispatched successfully. Does the caller receive that exception through a `Future`?"
     answers:
       - id: A
-        answer: "Yes. Spring always creates a hidden Future and rethrows the exception to the HTTP caller."
-        explanation: "Incorrect. A `void @Async` call does not return a completion handle to the caller."
+        answer: "Yes. The proxy creates an implicit Future for the void method and completes it exceptionally for the caller."
+        explanation: "Incorrect. A `void @Async` invocation does not return a completion handle to the caller."
       - id: B
-        answer: "No. Use a separate error channel such as `AsyncUncaughtExceptionHandler`, logging, or metrics; submission rejection is a different failure at the admission boundary."
+        answer: "No. Method-body failure goes to `AsyncUncaughtExceptionHandler`; submission rejection remains a separate synchronous boundary."
         explanation: "Correct. The README distinguishes failure inside the async method body from failure that happens immediately while submitting the task."
       - id: C
-        answer: "No handling is needed because every @Async exception is discarded by contract."
-        explanation: "Incorrect. Failures still need to be observed through an appropriate strategy."
+        answer: "No. The scheduler's `ErrorHandler` observes it and keeps the asynchronous method eligible for later execution."
+        explanation: "Incorrect. `@Async` method-body failures and scheduled-task failures use different infrastructure."
       - id: D
-        answer: "A TaskDecorator alone is sufficient to catch every kind of async failure."
-        explanation: "Incorrect. TaskDecorator focuses on context propagation and is not a universal async exception handler."
+        answer: "No. Spring converts the method-body exception into `TaskRejectedException` and reports it at the original submission call."
+        explanation: "Incorrect. Submission rejection happens before execution; this question describes a failure thrown after successful dispatch."
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -113,4 +113,179 @@ questions:
     apiRelated:
       controller: "TaskExecutorController"
       methodSignature: "asyncVoidException()"
+
+  - id: spring-executor-saturation-order
+    question: "A `ThreadPoolTaskExecutor` uses `corePoolSize=1`, `maxPoolSize=2`, `queueCapacity=1`, and `AbortPolicy`. Task 1 is still running when tasks 2, 3, and 4 are submitted. Which admission sequence matches the module experiment?"
+    answers:
+      - id: A
+        answer: "Task 2 starts a second worker, task 3 enters the queue, and task 4 is rejected."
+        explanation: "Incorrect. With a positive queue capacity, task 2 is queued before the pool grows beyond core size."
+      - id: B
+        answer: "Task 2 enters the queue, task 3 is rejected, and the pool remains at one worker."
+        explanation: "Incorrect. Once the queue is full, the executor may grow beyond core size up to maxPoolSize before rejecting."
+      - id: C
+        answer: "Tasks 2 and 3 both enter the queue, and task 4 starts the second worker."
+        explanation: "Incorrect. The queue has only one slot, so task 3 cannot be buffered there."
+      - id: D
+        answer: "Task 2 enters the queue, task 3 grows the pool to two workers, and task 4 is rejected."
+        explanation: "Correct. This is the deterministic core → queue → grow-to-max → reject sequence demonstrated by the Step 5 experiment."
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.Spring_Task_Executor/SpringExecutor.md"
+      anchor: "spring-executor-config"
+    apiRelated:
+      controller: "TaskExecutorController"
+      methodSignature: "saturation()"
+
+  - id: spring-threadpool-scheduler-fixed-rate
+    question: "One fixed-rate registration runs every 20 ms on a `ThreadPoolTaskScheduler` with pool size 2, but each execution takes about 80 ms. What should be expected for that same registration?"
+    answers:
+      - id: A
+        answer: "Its successive executions remain serialized; later executions can run late even though another scheduler thread exists."
+        explanation: "Correct. The JDK periodic-task contract prevents overlapping successive executions of the same registration."
+      - id: B
+        answer: "Two executions of that registration overlap immediately because the scheduler pool contains two threads."
+        explanation: "Incorrect. A larger pool permits different registrations to run concurrently, not overlapping successive runs of one periodic registration."
+      - id: C
+        answer: "Every firing missed while the previous execution is running is permanently discarded by fixed-rate semantics."
+        explanation: "Incorrect. Fixed-rate timing can fall behind; serialization does not imply that every late execution is simply discarded."
+      - id: D
+        answer: "The scheduler silently converts the registration to fixed-delay once execution time exceeds the configured period."
+        explanation: "Incorrect. Fixed-rate and fixed-delay remain distinct scheduling policies."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.TaskScheduler/TaskScheduler.md"
+      anchor: "scheduler-execution-models"
+    apiRelated:
+      controller: "TaskSchedulerExperimentController"
+      methodSignature: "executionModels()"
+
+  - id: spring-simple-scheduler-fixed-delay
+    question: "Why is fixed-delay a special case on `SimpleAsyncTaskScheduler`?"
+    answers:
+      - id: A
+        answer: "Fixed-delay always creates a new virtual thread and therefore bypasses the scheduler thread."
+        explanation: "Incorrect. Fixed-delay is specifically the path that runs the task body on the scheduler thread."
+      - id: B
+        answer: "Fixed-delay is converted into a cron trigger so the target executor can calculate the next firing."
+        explanation: "Incorrect. Fixed-delay retains its completion-based timing semantics."
+      - id: C
+        answer: "The task body runs on the scheduler thread, so slow work can hold the scheduling lane and bypass normal hand-off controls."
+        explanation: "Correct. That includes the normal target-executor hand-off path used by fixed-rate/cron-style execution."
+      - id: D
+        answer: "The task body is always queued to a pooled platform-thread executor even when virtual threads are enabled."
+        explanation: "Incorrect. `SimpleAsyncTaskScheduler` does not require a pooled platform-thread executor for fixed-delay."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.VirtualThreadIntegration/VirtualThreadIntegration.md"
+      anchor: "virtual-thread-fixed-delay"
+    apiRelated:
+      controller: "TaskSchedulerExperimentController"
+      methodSignature: "executionModels()"
+
+  - id: spring-reactive-scheduled-resubscription
+    question: "Which lifecycle best describes a reactive `@Scheduled` method in Spring Framework 6.1?"
+    answers:
+      - id: A
+        answer: "Spring invokes the method on every firing and consumes each emitted value as the scheduling result."
+        explanation: "Incorrect. Spring obtains the Publisher once and scheduled firings resubscribe to it; emitted values are ignored."
+      - id: B
+        answer: "Spring invokes the method once, subscribes once, and keeps that one subscription alive for the application lifetime."
+        explanation: "Incorrect. The Publisher is obtained once, but the schedule drives repeated subscriptions."
+      - id: C
+        answer: "Spring obtains the Publisher once, but any `onError` permanently removes the recurring schedule."
+        explanation: "Incorrect. Reactive scheduled errors are logged and recovered so later subscriptions can continue."
+      - id: D
+        answer: "Spring obtains the Publisher once, resubscribes on each firing, ignores `onNext` values, and recovers from `onError` so later firings continue."
+        explanation: "Correct. The Publisher must therefore support deferred, repeatable subscription semantics."
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Scheduling/Scheduling.md"
+      anchor: "reactive-scheduled-methods"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - id: spring-virtual-thread-capacity
+    question: "A service moves blocking work from a bounded platform-thread pool to virtual threads. Which production concern still requires explicit design?"
+    answers:
+      - id: A
+        answer: "None; virtual threads make database connections and downstream quotas effectively unbounded."
+        explanation: "Incorrect. Virtual threads reduce thread scarcity, not the limits of external resources."
+      - id: B
+        answer: "Downstream capacity and admission still need limits even though blocking tasks can use many cheaper threads."
+        explanation: "Correct. Database pools, remote quotas, CPU, memory, and other resources remain finite."
+      - id: C
+        answer: "Only thread naming remains relevant because shared-state correctness changes automatically with virtual threads."
+        explanation: "Incorrect. Shared-state correctness and context propagation rules remain unchanged."
+      - id: D
+        answer: "The application must always restore a platform-thread queue because virtual-thread executors require queue capacity."
+        explanation: "Incorrect. A virtual-thread-per-task executor does not inherently use the worker-pool/queue model."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.VirtualThreadIntegration/VirtualThreadIntegration.md"
+      anchor: "virtual-thread-decision"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - id: spring-executor-shutdown-semantics
+    question: "What is the relationship between `setWaitForTasksToCompleteOnShutdown(true)` and `setAwaitTerminationSeconds(2)` on `ThreadPoolTaskExecutor`?"
+    answers:
+      - id: A
+        answer: "The first chooses the soft work-completion shutdown path; the second bounds how long container shutdown waits for termination."
+        explanation: "Correct. They answer different questions, and expiry of the wait is not itself a hard task-kill deadline."
+      - id: B
+        answer: "The first waits exactly two seconds, while the second decides whether queued work is discarded."
+        explanation: "Incorrect. The responsibilities are reversed and the timeout is configured separately."
+      - id: C
+        answer: "Both settings are aliases; configuring either one guarantees every queued task finishes before process exit."
+        explanation: "Incorrect. They are distinct controls and neither can guarantee completion beyond the deployment termination window."
+      - id: D
+        answer: "Both settings affect only task submission before shutdown and have no effect once context close begins."
+        explanation: "Incorrect. They directly influence shutdown behavior and termination waiting."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.LifecycleFailureProduction/LifecycleFailureProduction.md"
+      anchor: "executor-lifecycle"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - id: spring-trigger-completion-boundary
+    question: "A custom `Trigger` uses `TriggerContext.lastCompletion()` with `SimpleAsyncTaskScheduler`. What subtlety matters for completion-sensitive backoff?"
+    answers:
+      - id: A
+        answer: "`lastCompletion()` always means the business task finished, regardless of scheduler implementation."
+        explanation: "Incorrect. Completion is scheduler-relative when execution is handed off."
+      - id: B
+        answer: "The trigger context can record completion of the scheduler hand-off callback before the separately executed business task finishes."
+        explanation: "Correct. A completion-based policy must account for the concrete scheduler execution model."
+      - id: C
+        answer: "`lastCompletion()` is populated only for cron schedules and remains empty for custom triggers."
+        explanation: "Incorrect. TriggerContext history is part of programmatic trigger scheduling, not a cron-only feature."
+      - id: D
+        answer: "Using `lastCompletion()` forces `SimpleAsyncTaskScheduler` to execute the business task on its scheduler thread."
+        explanation: "Incorrect. Reading TriggerContext does not change the scheduler's hand-off behavior."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.TaskScheduler/TaskScheduler.md"
+      anchor: "trigger-context"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
 

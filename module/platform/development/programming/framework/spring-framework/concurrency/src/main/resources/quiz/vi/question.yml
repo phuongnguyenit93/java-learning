@@ -40,20 +40,20 @@
 
 questions:
   - id: spring-async-proxy
-    question: "Một method `@Async` được gọi từ method khác trong cùng bean bằng `this.asyncMethod()`. Tại sao call có thể không async trong default proxy mode?"
+    question: "Một method `@Async` được gọi từ method khác trong cùng bean bằng `this.asyncMethod()`. Vì sao lời gọi có thể vẫn chạy đồng bộ trong proxy mode mặc định?"
     answers:
       - id: A
-        answer: "Vì `@Async` chỉ chạy được trên static method."
-        explanation: "Sai. @Async không yêu cầu method static."
+        answer: "Vì self-invocation bỏ qua executor lookup và tự động fallback sang một TaskExecutor đồng bộ."
+        explanation: "Sai. Spring không thay self-invocation bằng synchronous executor; vấn đề là lời gọi có đi qua proxy để được intercept hay không."
       - id: B
-        answer: "Vì JVM không cho một object gọi method của chính nó."
-        explanation: "Sai. Self-call hoàn toàn hợp lệ về Java; vấn đề nằm ở Spring proxy interception."
+        answer: "Vì executor qualification chỉ được đánh giá cho call từ bên ngoài target bean, nên self-call dùng current thread."
+        explanation: "Sai. Executor qualification không dựa trên vị trí caller; self-invocation quan trọng vì nó có thể bypass chính proxy."
       - id: C
-        answer: "Vì self-invocation có thể bypass Spring proxy, nên async interceptor không có cơ hội dispatch invocation sang TaskExecutor."
-        explanation: "Đúng. Async boundary thường rõ ràng hơn khi nằm giữa hai Spring bean và call đi qua proxy."
+        answer: "Vì self-invocation có thể bypass Spring proxy, nên async interceptor không có cơ hội dispatch lời gọi sang TaskExecutor."
+        explanation: "Đúng. Async boundary thường rõ ràng hơn khi nằm giữa hai Spring bean và lời gọi đi qua proxy."
       - id: D
-        answer: "Vì mọi @Async method bắt buộc phải trả `void`."
-        explanation: "Sai. @Async có thể dùng `Future`/`CompletableFuture` và các return type được framework hỗ trợ."
+        answer: "Vì proxy nhìn thấy self-invocation nhưng chủ động bỏ async dispatch để ngăn recursive task submission."
+        explanation: "Sai. Thông thường self-call không đi vào proxy ngay từ đầu; đây không phải cơ chế chống recursion của proxy."
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
@@ -61,49 +61,49 @@ questions:
       file: "2.Spring_Task_Executor/SpringExecutor.md"
       anchor: "async-annotation"
     apiRelated:
-      controller: "TaskExecutorController"
-      methodSignature: "asyncWithContext()"
+      controller: ""
+      methodSignature: ""
 
   - id: spring-task-decorator-context
-    question: "Responsibility phù hợp nhất của Spring `TaskDecorator` trong module là gì?"
+    question: "Trách nhiệm phù hợp nhất của Spring `TaskDecorator` trong module là gì?"
     answers:
       - id: A
-        answer: "Capture context ở caller, restore trên worker trước task, rồi cleanup/restore previous context trong `finally`."
-        explanation: "Đúng. Đây là bridge trực tiếp từ ThreadLocal/context propagation sang ThreadPoolTaskExecutor."
+        answer: "Capture context bên gọi, cài nó trên worker cho task, rồi restore context trước đó của worker trong `finally`."
+        explanation: "Đúng. Đây là bridge trực tiếp giữa ThreadLocal/context propagation và ThreadPoolTaskExecutor."
       - id: B
-        answer: "Thay thế hoàn toàn rejection handling và Future exception handling."
-        explanation: "Sai. Decorator tập trung vào execution context; failure observation/rejection có contract riêng."
+        answer: "Đọc ThreadLocal của bên gọi một cách lazy từ worker rồi clear giá trị sau khi task kết thúc."
+        explanation: "Sai. Thread-bound state không tự xuất hiện trên pooled worker khác; state phía caller phải được capture trước khi dispatch."
       - id: C
-        answer: "Giữ nguyên toàn bộ HTTP request object vô thời hạn để task background dùng bất cứ lúc nào."
-        explanation: "Sai. Propagation không kéo dài lifecycle của HTTP request; nên capture các giá trị cần thiết thay vì phụ thuộc dài hạn vào request object."
+        answer: "Cài một context snapshot khi pool khởi động rồi dùng lại snapshot đó cho mọi task."
+        explanation: "Sai. Context thường gắn với từng task; dùng chung một snapshot dễ gây stale state hoặc lẫn context giữa request."
       - id: D
-        answer: "Ép mọi @Async method chạy trên caller thread."
-        explanation: "Sai. TaskDecorator không thay execution strategy thành synchronous caller execution."
+        answer: "Copy request-scoped object sang worker và giữ nó cho tới khi worker thread kết thúc."
+        explanation: "Sai. Propagation không kéo dài request lifecycle; chỉ nên capture giá trị cần thiết và phải cleanup rõ ràng."
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.Spring_Task_Executor/SpringExecutor.md"
+      file: "3.ContextPropagation/ContextPropagation.md"
       anchor: "task-decorator"
     apiRelated:
       controller: "TaskExecutorController"
       methodSignature: "asyncWithContext()"
 
   - id: spring-async-void-failure
-    question: "Một `void @Async` method ném exception sau khi đã được dispatch thành công. Caller có nhận exception đó qua `Future` không?"
+    question: "Một `void @Async` method ném exception sau khi đã được dispatch thành công. Bên gọi có nhận exception đó qua `Future` không?"
     answers:
       - id: A
-        answer: "Có, Spring luôn tạo Future ẩn và throw lại cho HTTP caller."
-        explanation: "Sai. `void @Async` không trả completion handle cho caller."
+        answer: "Có. Proxy tạo một Future ngầm cho void method rồi complete exceptionally cho bên gọi."
+        explanation: "Sai. Lời gọi `void @Async` không trả completion handle cho bên gọi."
       - id: B
-        answer: "Không. Cần error channel riêng như `AsyncUncaughtExceptionHandler`, logging hoặc metrics; submission rejection lại là failure khác ở admission boundary."
-        explanation: "Đúng. README phân biệt exception trong async method body với failure xảy ra ngay khi submit task."
+        answer: "Không. Method-body failure đi tới `AsyncUncaughtExceptionHandler`; submission rejection vẫn là một synchronous boundary riêng."
+        explanation: "Đúng. Knowledge phân biệt exception trong thân async method với failure xảy ra ngay khi submit task."
       - id: C
-        answer: "Không cần xử lý vì mọi exception của @Async đều bị bỏ qua theo contract."
-        explanation: "Sai. Failure vẫn cần được quan sát qua strategy phù hợp."
+        answer: "Không. `ErrorHandler` của scheduler quan sát lỗi rồi giữ async method đủ điều kiện chạy ở lần sau."
+        explanation: "Sai. `@Async` method-body failure và scheduled-task failure thuộc hạ tầng khác nhau."
       - id: D
-        answer: "Chỉ cần TaskDecorator là đủ để bắt mọi loại async failure."
-        explanation: "Sai. TaskDecorator tập trung context propagation và không phải universal async exception handler."
+        answer: "Không. Spring đổi method-body exception thành `TaskRejectedException` rồi báo lại ngay tại original submission call."
+        explanation: "Sai. Submission rejection xảy ra trước execution; câu hỏi mô tả lỗi xuất hiện sau khi dispatch thành công."
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
@@ -113,4 +113,179 @@ questions:
     apiRelated:
       controller: "TaskExecutorController"
       methodSignature: "asyncVoidException()"
+
+  - id: spring-executor-saturation-order
+    question: "Một `ThreadPoolTaskExecutor` có `corePoolSize=1`, `maxPoolSize=2`, `queueCapacity=1` và `AbortPolicy`. Task 1 vẫn đang chạy khi task 2, 3 và 4 lần lượt được submit. Chuỗi admission nào khớp với thí nghiệm của module?"
+    answers:
+      - id: A
+        answer: "Task 2 mở worker thứ hai, task 3 vào queue và task 4 bị reject."
+        explanation: "Sai. Với queue capacity dương, task 2 được queue trước khi pool tăng vượt core size."
+      - id: B
+        answer: "Task 2 vào queue, task 3 bị reject và pool vẫn chỉ có một worker."
+        explanation: "Sai. Khi queue đầy, executor còn có thể tăng số worker từ core tới max trước khi reject."
+      - id: C
+        answer: "Task 2 và task 3 cùng vào queue, sau đó task 4 mới làm pool tăng lên hai worker."
+        explanation: "Sai. Queue chỉ có một slot nên task 3 không thể tiếp tục được buffer ở đó."
+      - id: D
+        answer: "Task 2 vào queue, task 3 làm pool tăng lên hai worker và task 4 bị reject."
+        explanation: "Đúng. Đây là chuỗi core → queue → grow-to-max → reject được Step 5 chứng minh một cách xác định."
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.Spring_Task_Executor/SpringExecutor.md"
+      anchor: "spring-executor-config"
+    apiRelated:
+      controller: "TaskExecutorController"
+      methodSignature: "saturation()"
+
+  - id: spring-threadpool-scheduler-fixed-rate
+    question: "Một fixed-rate registration chạy mỗi 20 ms trên `ThreadPoolTaskScheduler` có pool size 2, nhưng mỗi lần chạy mất khoảng 80 ms. Điều gì nên xảy ra với chính registration đó?"
+    answers:
+      - id: A
+        answer: "Các lần chạy kế tiếp vẫn được serialize; chúng có thể chạy trễ dù scheduler còn thread khác."
+        explanation: "Đúng. Contract periodic task của JDK không cho các lần kế tiếp của cùng registration overlap."
+      - id: B
+        answer: "Hai lần chạy của cùng registration overlap ngay vì scheduler có hai thread."
+        explanation: "Sai. Pool lớn hơn cho phép các registration khác nhau chạy đồng thời, không làm các lần kế tiếp của cùng periodic registration chồng lấn."
+      - id: C
+        answer: "Mọi firing bị trễ trong lúc lần trước đang chạy đều bị bỏ vĩnh viễn theo fixed-rate semantics."
+        explanation: "Sai. Fixed-rate có thể bị trễ so với lịch; serialization không đồng nghĩa mọi lần chạy trễ đều bị drop."
+      - id: D
+        answer: "Scheduler tự đổi registration sang fixed-delay khi thời lượng chạy dài hơn period."
+        explanation: "Sai. Fixed-rate và fixed-delay vẫn là hai chính sách timing riêng."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.TaskScheduler/TaskScheduler.md"
+      anchor: "scheduler-execution-models"
+    apiRelated:
+      controller: "TaskSchedulerExperimentController"
+      methodSignature: "executionModels()"
+
+  - id: spring-simple-scheduler-fixed-delay
+    question: "Vì sao fixed-delay là trường hợp đặc biệt trên `SimpleAsyncTaskScheduler`?"
+    answers:
+      - id: A
+        answer: "Fixed-delay luôn tạo virtual thread mới nên hoàn toàn bỏ qua scheduler thread."
+        explanation: "Sai. Fixed-delay chính là path chạy task body trực tiếp trên scheduler thread."
+      - id: B
+        answer: "Fixed-delay được chuyển thành cron trigger để target executor tính firing tiếp theo."
+        explanation: "Sai. Fixed-delay vẫn giữ timing semantics dựa trên completion."
+      - id: C
+        answer: "Task body chạy trên scheduler thread, nên task chậm có thể giữ scheduling lane và bỏ qua normal hand-off controls."
+        explanation: "Đúng. Normal target-executor hand-off dùng cho fixed-rate/cron-style execution không áp dụng cho fixed-delay body này."
+      - id: D
+        answer: "Task body luôn được đưa vào một pooled platform-thread executor ngay cả khi virtual thread đã bật."
+        explanation: "Sai. `SimpleAsyncTaskScheduler` không bắt buộc fixed-delay phải qua pooled platform-thread executor."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.VirtualThreadIntegration/VirtualThreadIntegration.md"
+      anchor: "virtual-thread-fixed-delay"
+    apiRelated:
+      controller: "TaskSchedulerExperimentController"
+      methodSignature: "executionModels()"
+
+  - id: spring-reactive-scheduled-resubscription
+    question: "Lifecycle nào mô tả đúng reactive `@Scheduled` method trong Spring Framework 6.1?"
+    answers:
+      - id: A
+        answer: "Spring gọi lại method ở mỗi firing và dùng từng giá trị emitted làm scheduling result."
+        explanation: "Sai. Spring lấy Publisher một lần rồi các firing sẽ subscribe lại; giá trị onNext bị bỏ qua."
+      - id: B
+        answer: "Spring gọi method một lần, subscribe một lần và giữ subscription đó suốt vòng đời ứng dụng."
+        explanation: "Sai. Publisher được lấy một lần nhưng schedule tạo nhiều lần subscription."
+      - id: C
+        answer: "Spring lấy Publisher một lần, nhưng bất kỳ `onError` nào cũng xóa recurring schedule vĩnh viễn."
+        explanation: "Sai. Reactive scheduled error được log và recover để các subscription sau vẫn tiếp tục."
+      - id: D
+        answer: "Spring lấy Publisher một lần, subscribe lại ở mỗi firing, bỏ qua `onNext` và recover từ `onError` để các firing sau tiếp tục."
+        explanation: "Đúng. Vì vậy Publisher phải phù hợp với deferred và repeated subscription."
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Scheduling/Scheduling.md"
+      anchor: "reactive-scheduled-methods"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - id: spring-virtual-thread-capacity
+    question: "Một service chuyển blocking work từ bounded platform-thread pool sang virtual threads. Vấn đề production nào vẫn phải được thiết kế rõ?"
+    answers:
+      - id: A
+        answer: "Không còn vấn đề capacity vì virtual thread làm database connection và downstream quota trở nên không giới hạn."
+        explanation: "Sai. Virtual thread giảm thread scarcity chứ không xóa giới hạn của tài nguyên bên ngoài."
+      - id: B
+        answer: "Downstream capacity và admission vẫn cần giới hạn dù ứng dụng có thể chạy nhiều blocking task trên các thread rẻ hơn."
+        explanation: "Đúng. Database pool, remote quota, CPU, memory và các resource khác vẫn hữu hạn."
+      - id: C
+        answer: "Chỉ thread naming còn quan trọng vì shared-state correctness tự thay đổi khi dùng virtual thread."
+        explanation: "Sai. Quy tắc shared-state correctness và context propagation không thay đổi."
+      - id: D
+        answer: "Ứng dụng luôn phải phục hồi platform-thread queue vì virtual-thread executor bắt buộc có queue capacity."
+        explanation: "Sai. Virtual-thread-per-task executor không mặc định dùng worker-pool/queue model."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.VirtualThreadIntegration/VirtualThreadIntegration.md"
+      anchor: "virtual-thread-decision"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - id: spring-executor-shutdown-semantics
+    question: "Quan hệ giữa `setWaitForTasksToCompleteOnShutdown(true)` và `setAwaitTerminationSeconds(2)` trên `ThreadPoolTaskExecutor` là gì?"
+    answers:
+      - id: A
+        answer: "Setting đầu chọn soft shutdown path để công việc còn lại tiếp tục hoàn tất; setting sau giới hạn thời gian container chờ termination."
+        explanation: "Đúng. Hai setting trả lời hai câu hỏi khác nhau và hết thời gian chờ không tự động là hard task-kill deadline."
+      - id: B
+        answer: "Setting đầu luôn chờ đúng hai giây, còn setting sau quyết định có discard queued task hay không."
+        explanation: "Sai. Trách nhiệm đã bị đảo và timeout được cấu hình độc lập."
+      - id: C
+        answer: "Hai setting là alias và chỉ cần một trong hai là bảo đảm mọi queued task hoàn tất trước khi process thoát."
+        explanation: "Sai. Chúng là hai control khác nhau và không thể bảo đảm vượt qua termination window của deployment."
+      - id: D
+        answer: "Hai setting chỉ tác động tới submission trước shutdown và không còn tác dụng khi context close bắt đầu."
+        explanation: "Sai. Chúng trực tiếp ảnh hưởng shutdown behavior và termination waiting."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.LifecycleFailureProduction/LifecycleFailureProduction.md"
+      anchor: "executor-lifecycle"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - id: spring-trigger-completion-boundary
+    question: "Một custom `Trigger` dùng `TriggerContext.lastCompletion()` với `SimpleAsyncTaskScheduler`. Điểm nào quan trọng nếu backoff phụ thuộc thời điểm completion?"
+    answers:
+      - id: A
+        answer: "`lastCompletion()` luôn có nghĩa business task đã hoàn tất bất kể scheduler implementation."
+        explanation: "Sai. Completion mang nghĩa tương đối với scheduler khi execution được hand off."
+      - id: B
+        answer: "Trigger context có thể ghi nhận scheduler hand-off callback đã hoàn tất trước khi business task chạy trên thread khác kết thúc."
+        explanation: "Đúng. Chính sách phụ thuộc completion phải xét execution model của scheduler cụ thể."
+      - id: C
+        answer: "`lastCompletion()` chỉ có dữ liệu cho cron schedule và luôn rỗng với custom trigger."
+        explanation: "Sai. TriggerContext history thuộc programmatic trigger scheduling, không phải cron-only feature."
+      - id: D
+        answer: "Đọc `lastCompletion()` buộc `SimpleAsyncTaskScheduler` chạy business task trên scheduler thread."
+        explanation: "Sai. Việc đọc TriggerContext không thay đổi hand-off behavior của scheduler."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.TaskScheduler/TaskScheduler.md"
+      anchor: "trigger-context"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
 
