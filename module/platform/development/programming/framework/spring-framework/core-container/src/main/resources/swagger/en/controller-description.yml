@@ -1,0 +1,24 @@
+ConfigurationExperimentController:
+  description: |-
+    <h2>Configuration Experiment Controller</h2>
+    <p>Compares full <code>@Configuration</code> semantics with <code>proxyBeanMethods=false</code> by observing the runtime identity of a bean returned through an inter-<code>@Bean</code> method call.</p>
+  readmeRelated:
+    file: 3.BeanRegistration/BeanRegistration.md
+DependencyFailureExperimentController:
+  description: |-
+    <h2>Dependency Failure Experiment Controller</h2>
+    <p>Creates bounded isolated application contexts that intentionally fail during dependency resolution so missing, ambiguous, and constructor-cycle failures can be compared from real exception evidence.</p>
+  readmeRelated:
+    file: 4.DependencyInjection/DependencyInjection.md
+LifecycleExperimentController:
+  description: |-
+    <h2>Lifecycle Experiment Controller</h2>
+    <p>Records the actual initialization and destruction callback order of one Spring-managed bean inside an isolated application context.</p>
+  readmeRelated:
+    file: 6.BeanLifecycle/BeanLifecycle.md
+ScopeExperimentController:
+  description: |-
+    <h2>Scope Experiment Controller</h2>
+    <p>Observes singleton and prototype identity, then contrasts a prototype captured once by singleton injection with fresh prototype lookup through <code>ObjectProvider</code>.</p>
+  readmeRelated:
+    file: 5.BeanScope/BeanScope.md

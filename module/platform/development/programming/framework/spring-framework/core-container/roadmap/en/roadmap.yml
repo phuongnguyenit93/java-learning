@@ -41,4 +41,130 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: container-purpose
+    title: "Why the Spring IoC Container Exists"
+    purpose: "Build the initial mental model for IoC, Dependency Injection, and why Spring manages an object graph instead of letting application code construct and locate every dependency itself."
+    objectives:
+      - "Distinguish an ordinary Java object from a bean managed by the Spring container."
+      - "Explain the coupling problems of direct construction and Service Locator that Dependency Injection is intended to reduce."
+      - "Understand IoC as the broader principle and Dependency Injection as Spring's primary mechanism for assembling collaborating objects."
+      - "Keep the boundary clear: this module teaches the Spring Framework container, not Spring Boot auto-configuration."
+
+  - id: container-model
+    title: "The Container Mental Model"
+    purpose: "Understand the path from configuration metadata and BeanDefinition to BeanFactory, ApplicationContext, and bean instances so the rest of the module has one coherent model."
+    dependsOn:
+      - container-purpose
+    objectives:
+      - "Understand BeanDefinition as metadata or a recipe for creating a bean rather than the bean instance itself."
+      - "Distinguish the foundational role of BeanFactory from ApplicationContext and explain why applications normally prefer ApplicationContext."
+      - "Understand container bootstrap, registration, and context refresh conceptually before studying detailed APIs."
+      - "View the application object graph as dependencies the container resolves and materializes from metadata."
+
+  - id: bean-registration
+    title: "Bean Registration and Configuration"
+    purpose: "Learn how application components enter the container and how different configuration styles converge on bean definitions before objects are created."
+    dependsOn:
+      - container-model
+    objectives:
+      - "Compare explicit bean registration with component scanning and reason about explicitness versus automation."
+      - "Understand the roles of stereotype annotations, component scanning, @Configuration, and @Bean."
+      - "Understand how full @Configuration inter-bean method references differ from lite @Bean processing or @Configuration(proxyBeanMethods=false), where cross-method calls are ordinary Java calls rather than container-intercepted references."
+      - "Understand configuration composition with @Import and framework-level conditional registration with @Conditional."
+      - "Recognize XML and programmatic registration as alternative metadata sources feeding the same container model."
+      - "Do not confuse Spring Framework @Conditional with Spring Boot @ConditionalOn... annotations."
+
+  - id: dependency-resolution
+    title: "Dependency Injection and Bean Resolution"
+    purpose: "Understand how the container selects dependency candidates, injects collaborators, and reports ambiguity instead of treating @Autowired as magic."
+    dependsOn:
+      - bean-registration
+    objectives:
+      - "Compare constructor, setter, and field injection in terms of dependency contracts and testability."
+      - "Understand type-based autowiring, bean names, and qualifier metadata at the mental-model level."
+      - "Understand the roles of @Primary, @Qualifier, collection injection, and lazy or optional lookup abstractions in candidate resolution."
+      - "Distinguish unsatisfied dependencies, ambiguous dependencies, and circular dependencies as different failure classes."
+      - "Prefer dependency injection over actively querying the container as a Service Locator in application code."
+
+  - id: scope-and-creation
+    title: "Bean Scope and Creation Policy"
+    purpose: "Understand how one bean definition can produce objects with different lifetimes and how eager, lazy, or scoped creation changes the object graph."
+    dependsOn:
+      - dependency-resolution
+    objectives:
+      - "Distinguish Spring singleton scope from a Java or GoF singleton and understand it as per-container/per-bean-definition."
+      - "Understand prototype scope and the consequences of injecting a prototype dependency into a singleton."
+      - "Recognize request, session, application, and websocket as web-aware scopes while leaving web lifecycle details to their owning modules."
+      - "Understand how eager singleton creation, @Lazy, and on-demand lookup change when configuration failures become visible."
+      - "Understand ObjectProvider/ObjectFactory and scoped proxies as ways to defer dependency resolution; understand @Lookup as runtime-subclass-based method injection with an important limitation: it does not work for bean instances created by @Bean factory methods."
+      - "Recognize custom scopes and scoped proxies as container mechanisms rather than business abstractions."
+
+  - id: bean-lifecycle
+    title: "Bean Lifecycle and Startup Ordering"
+    purpose: "Follow a bean through creation, dependency population, initialization, post-processing, and destruction so lifecycle callbacks and startup failures are understandable."
+    dependsOn:
+      - scope-and-creation
+    objectives:
+      - "Understand the major phases from instantiation through population, initialization, and destruction."
+      - "Compare @PostConstruct/@PreDestroy, custom init/destroy methods, and InitializingBean/DisposableBean by their coupling to the framework."
+      - "Understand that Aware callbacks are invoked by the container before initialization callbacks and directly couple a bean to container APIs."
+      - "Distinguish bean initialization/destruction callbacks from Lifecycle/SmartLifecycle start/stop participation in the ApplicationContext lifecycle."
+      - "Understand how dependency relationships, depends-on, and eager initialization can influence startup order."
+      - "Understand that prototype beans are created and configured by the container but their destruction callbacks are not automatically managed by the container."
+      - "Recognize circular dependencies, premature bean creation, and resource-cleanup failures as important lifecycle risks."
+      - "Prepare the lifecycle model needed to understand BeanPostProcessor without turning this milestone into an API inventory."
+
+  - id: environment-and-expressions
+    title: "Environment, Property Sources, Profiles, and SpEL"
+    purpose: "Understand environment-dependent container metadata and value/expression resolution without mixing Spring Framework concepts with Spring Boot Config Data."
+    dependsOn:
+      - bean-registration
+    objectives:
+      - "Understand Environment as the model for profiles and properties and PropertySource as the abstraction for individual key-value sources."
+      - "Understand property-source ordering and placeholder resolution at the conceptual level."
+      - "Use @Profile as environment-driven conditional registration rather than runtime business branching."
+      - "Distinguish property placeholders ${...} from Spring Expression Language #{...} and understand how SpEL participates in bean metadata."
+      - "Understand SpEL as expression evaluation over an object graph, providing the foundation for later Knowledge on property/method access, bean references, and the evaluation context."
+      - "Keep Spring Boot externalized configuration, Config Data, and @ConfigurationProperties outside this module."
+
+  - id: application-context-services
+    title: "ApplicationContext Platform Services"
+    purpose: "Extend the mental model from bean factory to application framework context through resource loading, events, internationalization, and context hierarchy."
+    dependsOn:
+      - container-model
+    objectives:
+      - "Understand Resource and ResourceLoader as a uniform abstraction over classpath, file, and URL resources."
+      - "Understand ApplicationEventPublisher/ApplicationListener and @EventListener as in-context events rather than broker messaging."
+      - "Understand MessageSource as Spring Framework's message-resolution and internationalization facility."
+      - "Understand parent-child ApplicationContext hierarchy and lookup boundaries conceptually."
+      - "Keep MVC/WebFlux request processing and Spring Messaging/STOMP outside this module."
+
+  - id: container-extension-points
+    title: "Container Extension Points"
+    purpose: "Understand the major hooks infrastructure code uses to change configuration metadata or bean instances without subclassing ApplicationContext."
+    dependsOn:
+      - bean-lifecycle
+      - container-model
+    objectives:
+      - "Distinguish BeanFactoryPostProcessor, which operates on configuration metadata, from BeanPostProcessor, which operates on bean instances."
+      - "Understand why annotation processing and many Spring infrastructure features are implemented through post-processors."
+      - "Understand FactoryBean as a container-integrated object factory and distinguish the factory bean from its product."
+      - "Recognize ordering, early instantiation, and per-container behavior as practical extension-point pitfalls."
+      - "Know when an extension point is appropriate and when application code should remain container-agnostic."
+
+  - id: container-synthesis
+    title: "End-to-End Container Design and Diagnosis"
+    purpose: "Connect the full module into a practical mental model for designing object graphs, reading startup failures, and handing concerns to neighboring Spring modules."
+    dependsOn:
+      - dependency-resolution
+      - bean-lifecycle
+      - environment-and-expressions
+      - application-context-services
+      - container-extension-points
+    objectives:
+      - "Trace the flow from configuration metadata through BeanDefinition, dependency resolution, bean creation, lifecycle callbacks, and a usable ApplicationContext."
+      - "Choose deliberately between explicit @Bean registration and component scanning instead of defaulting to annotations by habit."
+      - "Diagnose common failure classes: missing or ambiguous dependencies, scope mismatch, circular dependencies, lifecycle or initialization failure, and environment misconfiguration."
+      - "Keep application code less container-coupled through constructor injection and by avoiding global or static container lookup."
+      - "Know when to hand off to validation-data-binding, aspect, transaction-management, web/reactive, and testing rather than expanding this module's scope."

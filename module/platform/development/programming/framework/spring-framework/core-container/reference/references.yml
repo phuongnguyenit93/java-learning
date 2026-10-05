@@ -14,3 +14,52 @@
 #
 # Add only curated references that are useful for the module.
 # The build system must not overwrite this file after authored content exists.
+
+references:
+  - title: "Spring Framework Reference — Container Overview"
+    url: "https://docs.spring.io/spring-framework/reference/6.1/core/beans/basics.html"
+    description: "Official Spring Framework 6.1 container overview covering ApplicationContext bootstrap, configuration metadata, and the core container model."
+
+  - title: "Spring Framework Reference — Classpath Scanning and Managed Components"
+    url: "https://docs.spring.io/spring-framework/reference/6.1/core/beans/classpath-scanning.html"
+    description: "Official reference for component scanning, stereotypes, bean naming, and managed-component registration."
+
+  - title: "Spring Framework Reference — Java-based Container Configuration"
+    url: "https://docs.spring.io/spring-framework/reference/6.1/core/beans/java.html"
+    description: "Official reference for @Configuration, @Bean, AnnotationConfigApplicationContext, and composition of Java configuration."
+
+  - title: "Spring Framework Reference — Dependencies"
+    url: "https://docs.spring.io/spring-framework/reference/6.1/core/beans/dependencies.html"
+    description: "Official reference for dependency injection, lazy initialization, autowiring, depends-on, and method injection."
+
+  - title: "Spring Framework Reference — Bean Scopes"
+    url: "https://docs.spring.io/spring-framework/reference/6.1/core/beans/factory-scopes.html"
+    description: "Official reference for singleton, prototype, web-aware and custom scopes, including scoped dependencies and lifecycle implications."
+
+  - title: "Spring Framework Reference — Customizing the Nature of a Bean"
+    url: "https://docs.spring.io/spring-framework/reference/6.1/core/beans/factory-nature.html"
+    description: "Official reference for initialization and destruction callbacks, Aware contracts, Lifecycle/SmartLifecycle, and shutdown ordering."
+
+  - title: "Spring Framework Reference — Container Extension Points"
+    url: "https://docs.spring.io/spring-framework/reference/6.1/core/beans/factory-extension.html"
+    description: "Official reference for BeanPostProcessor, BeanFactoryPostProcessor, FactoryBean, and container customization."
+
+  - title: "Spring Framework Reference — Environment Abstraction"
+    url: "https://docs.spring.io/spring-framework/reference/6.1/core/beans/environment.html"
+    description: "Official reference for Environment, profiles, PropertySource, property resolution, and environment-driven bean registration."
+
+  - title: "Spring Framework Reference — Additional Capabilities of the ApplicationContext"
+    url: "https://docs.spring.io/spring-framework/reference/6.1/core/beans/context-introduction.html"
+    description: "Official reference for MessageSource, application events, resource access, and hierarchical application contexts."
+
+  - title: "Spring Framework Reference — Resources"
+    url: "https://docs.spring.io/spring-framework/reference/6.1/core/resources.html"
+    description: "Official reference for Spring's Resource, ResourceLoader, resource locations, and resource-pattern abstractions."
+
+  - title: "Spring Framework Reference — Spring Expression Language (SpEL)"
+    url: "https://docs.spring.io/spring-framework/reference/6.1/core/expressions.html"
+    description: "Official reference for SpEL evaluation and expressions used in Spring configuration and bean metadata."
+
+  - title: "ApplicationContext — Spring Framework 6.1.14 API"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/context/ApplicationContext.html"
+    description: "Version-pinned API contract for the central application context interface used by the repository's Spring Framework baseline."

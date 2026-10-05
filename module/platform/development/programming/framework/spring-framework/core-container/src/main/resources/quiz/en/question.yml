@@ -38,4 +38,253 @@
 #       Internal id of the correct answer. The frontend checks this identity after shuffling.
 # </quiz-schema>
 
-questions: []
+questions:
+  - id: core-container-q01-full-vs-lite
+    question: "Two singleton @Bean methods use the same source shape: service() directly calls repository(). What does the full-vs-lite experiment demonstrate?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.BeanRegistration/BeanRegistration.md"
+      anchor: "full-vs-lite-configuration"
+    apiRelated:
+      controller: "ConfigurationExperimentController"
+      methodSignature: "observeConfigurationIdentity()"
+    answers:
+      - id: A
+        answer: "Both modes must return the managed repository because singleton scope applies to every Java call of an @Bean method."
+        explanation: "Incorrect. Singleton scope governs container resolution; in lite mode a direct method call is ordinary Java and is not routed through the container."
+      - id: B
+        answer: "Full mode can route the inter-@Bean call through the container, while lite mode can execute the method directly and create another repository object."
+        explanation: "Correct. The experiment observes sameManagedInstance=true in full mode and false in lite mode."
+      - id: C
+        answer: "Lite mode routes the call through the container, while full mode executes the method directly because CGLIB is disabled there."
+        explanation: "Incorrect. The direction is reversed: full configuration enables bean-method interception by default; proxyBeanMethods=false disables it."
+      - id: D
+        answer: "Neither mode permits one @Bean method to call another; the context fails during configuration parsing."
+        explanation: "Incorrect. Such calls are legal. Their runtime identity semantics differ depending on whether bean-method interception is enabled."
+    correctAnswerId: B
+
+  - id: core-container-q02-ambiguous-dependency
+    question: "A context has two eligible CandidatePort beans and a single-valued CandidatePort injection point with no qualifier or primary candidate. What should the dependency-failure experiment report?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.DependencyInjection/DependencyInjection.md"
+      anchor: "dependency-resolution-failures"
+    apiRelated:
+      controller: "DependencyFailureExperimentController"
+      methodSignature: "observeDependencyFailure(DependencyFailureScenario)"
+    answers:
+      - id: A
+        answer: "Refresh succeeds and Spring injects both candidates as an implicit collection."
+        explanation: "Incorrect. Collection injection must be requested explicitly; a single-valued dependency still needs one resolvable candidate."
+      - id: B
+        answer: "Refresh fails with a missing-bean root cause because neither candidate is uniquely named."
+        explanation: "Incorrect. The beans exist; the problem is that more than one candidate remains eligible."
+      - id: C
+        answer: "Refresh fails and the exception chain reaches NoUniqueBeanDefinitionException."
+        explanation: "Correct. Ambiguity for a single-valued dependency is represented by multiple equally eligible beans."
+      - id: D
+        answer: "Refresh fails with BeanCurrentlyInCreationException because candidate selection is treated as a circular dependency."
+        explanation: "Incorrect. BeanCurrentlyInCreationException belongs to creation-cycle failures, not ordinary candidate ambiguity."
+    correctAnswerId: C
+
+  - id: core-container-q03-prototype-in-singleton
+    question: "A singleton receives a prototype directly and also receives ObjectProvider<PrototypeProbe>. Which behavior should be expected?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.BeanScope/BeanScope.md"
+      anchor: "scoped-dependency-mismatch"
+    apiRelated:
+      controller: "ScopeExperimentController"
+      methodSignature: "observeScopeIdentity()"
+    answers:
+      - id: A
+        answer: "The directly injected field and each ObjectProvider call both return a fresh prototype on every access."
+        explanation: "Incorrect. Direct injection happens while the singleton is created, so that field keeps one reference."
+      - id: B
+        answer: "The directly injected field changes on every method call, while ObjectProvider caches the first prototype it resolves."
+        explanation: "Incorrect. Nothing re-injects the field, and ObjectProvider performs later bean resolution instead of caching the singleton's injected reference."
+      - id: C
+        answer: "Both access paths keep one prototype because the consuming bean itself is singleton-scoped."
+        explanation: "Incorrect. The consumer's scope does not change the prototype definition; deferred lookup can resolve a fresh prototype."
+      - id: D
+        answer: "The directly injected field keeps one prototype reference, while repeated ObjectProvider.getObject() calls can resolve fresh prototype instances."
+        explanation: "Correct. This is the scope mismatch and deferred-resolution behavior demonstrated by the experiment."
+    correctAnswerId: D
+
+  - id: core-container-q04-lifecycle-order
+    question: "A bean uses @PostConstruct, InitializingBean, a custom init method, @PreDestroy, DisposableBean, and a custom destroy method. Which trace matches the lifecycle experiment?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: "LifecycleExperimentController"
+      methodSignature: "observeLifecycleCallbacks()"
+    answers:
+      - id: A
+        answer: "@PostConstruct → afterPropertiesSet → custom init; then @PreDestroy → destroy → custom destroy."
+        explanation: "Correct. That is the initialization and destruction order recorded by the experiment for these combined callback mechanisms."
+      - id: B
+        answer: "afterPropertiesSet → @PostConstruct → custom init; then destroy → @PreDestroy → custom destroy."
+        explanation: "Incorrect. The annotation callback precedes InitializingBean during initialization, and @PreDestroy precedes DisposableBean during destruction."
+      - id: C
+        answer: "custom init → @PostConstruct → afterPropertiesSet; then custom destroy → @PreDestroy → destroy."
+        explanation: "Incorrect. Custom init/destroy methods come after the annotation and interface callbacks in this combined setup."
+      - id: D
+        answer: "@PostConstruct → custom init → afterPropertiesSet; then @PreDestroy → custom destroy → destroy."
+        explanation: "Incorrect. InitializingBean runs before the custom init method, and DisposableBean runs before the custom destroy method."
+    correctAnswerId: A
+
+  - id: core-container-q05-qualifier-vs-primary
+    question: "Two PaymentGateway beans are type-compatible. One is @Primary, while the injection point requests @Qualifier(\"offline\") and the other bean carries that qualifier. Which candidate should Spring select?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.DependencyInjection/DependencyInjection.md"
+      anchor: "primary-and-qualifier"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Use the @Primary bean after type matching, because primary preference is evaluated before qualifier metadata."
+        explanation: "Incorrect. Qualifier metadata narrows the type-compatible candidate set first; @Primary does not override an explicit qualifier constraint."
+      - id: B
+        answer: "Treat the dependency as ambiguous, because a qualifier can refine bean-name fallback but cannot narrow type-compatible candidates."
+        explanation: "Incorrect. Qualifier metadata is specifically used to narrow type-compatible candidates for the injection point."
+      - id: C
+        answer: "Use the bean carrying the offline qualifier, because that qualifier narrows the type-compatible candidate set before primary preference is considered."
+        explanation: "Correct. An explicit qualifier constraint selects the requested semantic role; @Primary matters when no stronger narrowing rule has selected another candidate."
+      - id: D
+        answer: "Use whichever bean is named offline, because a qualifier value is interpreted primarily as an exact bean-name lookup."
+        explanation: "Incorrect. A qualifier is semantic candidate metadata, not merely a bean-name lookup, even though bean names can participate in fallback matching."
+    correctAnswerId: C
+
+  - id: core-container-q06-lazy-required-by-eager
+    question: "A bean is marked @Lazy, but a non-lazy singleton requires it directly during startup. What is the most accurate expectation?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.BeanScope/BeanScope.md"
+      anchor: "eager-vs-lazy-initialization"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "The lazy bean remains uncreated during refresh, because @Lazy on its definition always postpones creation until an explicit later lookup."
+        explanation: "Incorrect. A required direct dependency from a non-lazy singleton can force that lazy bean to be resolved during refresh."
+      - id: B
+        answer: "The lazy bean can still be created during refresh, because creating the non-lazy singleton requires Spring to resolve that direct dependency immediately."
+        explanation: "Correct. @Lazy changes creation timing, but a direct dependency from an eagerly created singleton can trigger that creation."
+      - id: C
+        answer: "Spring automatically injects a lazy-resolution proxy merely because the target bean definition is @Lazy, so the real target waits until the first method call."
+        explanation: "Incorrect. A lazy-resolution proxy is associated with lazy injection-point semantics; marking only the target bean definition @Lazy does not automatically turn every direct dependency into such a proxy."
+      - id: D
+        answer: "Spring also defers the non-lazy singleton, because an eager bean cannot be created until every lazy dependency chooses to initialize itself."
+        explanation: "Incorrect. The dependency relationship works in the opposite direction: creating the eager singleton can trigger creation of the required lazy dependency."
+    correctAnswerId: B
+
+  - id: core-container-q07-placeholder-vs-spel
+    question: "Which statement correctly distinguishes a property placeholder from SpEL in Spring container metadata?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.EnvironmentAndSpEL/EnvironmentAndSpEL.md"
+      anchor: "property-placeholders"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "${...} evaluates arbitrary object-graph expressions, while #{...} only performs Environment key lookup."
+        explanation: "Incorrect. The roles are reversed: placeholders are key-based lookup; SpEL evaluates expressions."
+      - id: B
+        answer: "Both syntaxes are interchangeable; Spring chooses lookup or expression evaluation from the target Java type."
+        explanation: "Incorrect. The syntax itself selects different resolution mechanisms."
+      - id: C
+        answer: "${...} performs property lookup with optional defaults, while #{...} requests SpEL expression evaluation."
+        explanation: "Correct. Use a placeholder when lookup is sufficient and SpEL only when expression evaluation is actually needed."
+      - id: D
+        answer: "${...} is only a Spring Boot feature, while plain Spring Framework supports only #{...}."
+        explanation: "Incorrect. Property placeholder resolution is part of the Spring Framework container model as well."
+    correctAnswerId: C
+
+  - id: core-container-q08-default-application-events
+    question: "With Spring's default SimpleApplicationEventMulticaster, what should a publisher normally expect when it calls publishEvent(...)?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.ApplicationContextServices/ApplicationContextServices.md"
+      anchor: "application-events"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Matching listeners are durably queued so publishEvent returns before local listener execution begins."
+        explanation: "Incorrect. Application events are not a durable broker abstraction, and the default multicaster is synchronous."
+      - id: B
+        answer: "Matching listeners run on a dedicated Spring worker pool, so publisher-thread context is never visible."
+        explanation: "Incorrect. The default multicaster invokes listeners in the publishing thread unless explicitly configured otherwise."
+      - id: C
+        answer: "The event is persisted until every listener acknowledges it, giving process-failure retry semantics."
+        explanation: "Incorrect. The ApplicationContext event mechanism does not promise persistence, acknowledgements, or cross-process retries."
+      - id: D
+        answer: "Matching listeners are invoked synchronously in the publishing thread, so their latency and failure are part of the publish call by default."
+        explanation: "Correct. That is the default in-process observer behavior of SimpleApplicationEventMulticaster."
+    correctAnswerId: D
+
+  - id: core-container-q09-post-processor-boundary
+    question: "Which distinction between BeanFactoryPostProcessor and BeanPostProcessor is correct?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.ExtensionPoints/ExtensionPoints.md"
+      anchor: "extension-point-purpose"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "BeanFactoryPostProcessor works on definition metadata before ordinary bean creation, while BeanPostProcessor participates around initialization of bean instances."
+        explanation: "Correct. One operates on the container model; the other participates in the lifecycle of created bean instances."
+      - id: B
+        answer: "BeanFactoryPostProcessor wraps bean instances after initialization, while BeanPostProcessor changes only BeanDefinition metadata."
+        explanation: "Incorrect. This swaps the primary roles of the two extension points."
+      - id: C
+        answer: "Both extension points run only after every singleton is fully initialized; they differ only in ordering metadata."
+        explanation: "Incorrect. Factory post-processing happens before ordinary bean instantiation, and bean post-processing participates during creation."
+      - id: D
+        answer: "Both extension points are service-layer callbacks intended to run business logic during ApplicationContext startup."
+        explanation: "Incorrect. They are container infrastructure extension points, not a replacement for application workflow callbacks."
+    correctAnswerId: A
+
+  - id: core-container-q10-diagnose-init-failure
+    question: "A bean definition exists, dependency resolution succeeds, construction succeeds, but @PostConstruct throws an exception. Which diagnostic category should be investigated first?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "10.ContainerDesignAndDiagnostics/ContainerDesignAndDiagnostics.md"
+      anchor: "startup-failure-diagnosis"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Registration failure, because the bean definition was not loaded into the factory."
+        explanation: "Incorrect. The scenario explicitly says the definition exists and construction has already begun."
+      - id: B
+        answer: "Lifecycle or initialization failure, because the exception occurs in an initialization callback."
+        explanation: "Correct. Locate the failing container phase before changing registration or autowiring metadata."
+      - id: C
+        answer: "Candidate-selection failure, because @PostConstruct runs before Spring knows which dependency candidate to inject."
+        explanation: "Incorrect. Dependency resolution and population precede normal initialization callbacks."
+      - id: D
+        answer: "Scope mismatch, because every initialization exception means a shorter-lived bean was captured by a singleton."
+        explanation: "Incorrect. Scope mismatch is one possible graph-design problem, not the generic explanation for an init callback throwing."
+    correctAnswerId: B

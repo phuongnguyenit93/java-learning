@@ -41,4 +41,130 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: container-purpose
+    title: "Vì sao cần Spring IoC Container"
+    purpose: "Xây mô hình tư duy đầu tiên về IoC, Dependency Injection và lý do Spring quản lý đồ thị đối tượng thay vì để ứng dụng tự tạo và tự tìm dependency."
+    objectives:
+      - "Phân biệt đối tượng Java thông thường với bean do Spring container quản lý."
+      - "Giải thích mức độ phụ thuộc chặt do tự khởi tạo trực tiếp và Service Locator gây ra, và cách Dependency Injection giảm vấn đề đó."
+      - "Hiểu IoC là nguyên lý rộng hơn, còn Dependency Injection là cơ chế chính Spring dùng để hiện thực IoC cho đồ thị đối tượng."
+      - "Xác định ranh giới: module này dạy Spring Framework container, không dạy Spring Boot auto-configuration."
+
+  - id: container-model
+    title: "Mô hình hoạt động của container"
+    purpose: "Hiểu chuỗi từ configuration metadata và BeanDefinition đến BeanFactory, ApplicationContext và bean instance để có mô hình nhất quán cho toàn module."
+    dependsOn:
+      - container-purpose
+    objectives:
+      - "Hiểu BeanDefinition là metadata mô tả cách container tạo và cấu hình bean, không phải chính bean instance."
+      - "Phân biệt vai trò nền tảng của BeanFactory với ApplicationContext và biết vì sao ứng dụng thường dùng ApplicationContext."
+      - "Hiểu container bootstrap, registration và context refresh ở mức khái niệm trước khi đi vào API chi tiết."
+      - "Nhìn đồ thị đối tượng như tập dependency mà container resolve và hiện thực hóa từ metadata."
+
+  - id: bean-registration
+    title: "Đăng ký và cấu hình bean"
+    purpose: "Học các cách đưa thành phần ứng dụng vào container và cách Spring hợp nhất chúng thành BeanDefinition trước khi tạo đối tượng."
+    dependsOn:
+      - container-model
+    objectives:
+      - "So sánh explicit bean registration với component scanning và hiểu đánh đổi giữa tính rõ ràng với tính tự động."
+      - "Hiểu vai trò của stereotype annotations, component scanning, @Configuration và @Bean."
+      - "Hiểu full @Configuration với inter-bean method references khác lite @Bean/@Configuration(proxyBeanMethods=false) ở chỗ lời gọi giữa các @Bean method có được container intercept hay không."
+      - "Hiểu configuration composition bằng @Import và conditional registration bằng @Conditional ở mức Spring Framework."
+      - "Nhận biết XML và programmatic registration là các nguồn metadata khác nhau nhưng cùng đi vào container model."
+      - "Không nhầm @Conditional của Spring Framework với các @ConditionalOn... thuộc Spring Boot."
+
+  - id: dependency-resolution
+    title: "Dependency Injection và bean resolution"
+    purpose: "Hiểu cách container xác định dependency candidate, inject dependency và xử lý trường hợp không có hoặc có nhiều candidate thay vì chỉ ghi nhớ @Autowired."
+    dependsOn:
+      - bean-registration
+    objectives:
+      - "So sánh constructor injection, setter injection và field injection về dependency contract và khả năng kiểm thử."
+      - "Hiểu autowiring theo type, bean name và qualifier metadata ở mức mô hình tư duy."
+      - "Biết vai trò của @Primary, @Qualifier, collection injection và lazy/optional lookup abstractions trong candidate resolution."
+      - "Nhận diện unsatisfied dependency, ambiguous dependency và circular dependency như các nhóm lỗi khác nhau."
+      - "Ưu tiên dependency injection thay vì chủ động gọi container như Service Locator trong mã ứng dụng."
+
+  - id: scope-and-creation
+    title: "Scope và chính sách tạo bean"
+    purpose: "Hiểu BeanDefinition có thể tạo đối tượng với vòng đời khác nhau và việc eager, lazy hay scoped creation ảnh hưởng đồ thị đối tượng thế nào."
+    dependsOn:
+      - dependency-resolution
+    objectives:
+      - "Phân biệt singleton scope của Spring với Java/GoF singleton và hiểu singleton là per-container/per-bean-definition."
+      - "Hiểu prototype scope và hệ quả khi prototype dependency được inject vào singleton."
+      - "Nhận biết request, session, application và websocket scopes là web-aware scopes; chi tiết web lifecycle thuộc module web/messaging."
+      - "Hiểu eager singleton creation, @Lazy và lookup-on-demand thay đổi thời điểm phát hiện lỗi cấu hình như thế nào."
+      - "Hiểu ObjectProvider/ObjectFactory và scoped proxy là các cách trì hoãn dependency resolution; @Lookup cung cấp method injection bằng runtime subclassing nhưng có giới hạn, đặc biệt không hoạt động cho bean instance được tạo bởi @Bean factory method."
+      - "Biết khi nào custom scope hoặc scoped proxy là container concern thay vì business abstraction."
+
+  - id: bean-lifecycle
+    title: "Bean lifecycle và thứ tự khởi tạo"
+    purpose: "Theo dõi một bean qua creation, dependency population, initialization, post-processing và destruction để hiểu callback, thứ tự khởi tạo và shutdown."
+    dependsOn:
+      - scope-and-creation
+    objectives:
+      - "Hiểu các phase chính từ instantiate đến populate, initialize và destroy ở mức container lifecycle."
+      - "Phân biệt @PostConstruct/@PreDestroy, custom init/destroy methods và InitializingBean/DisposableBean về mức độ phụ thuộc vào Spring."
+      - "Hiểu Aware callbacks được container gọi trước initialization callbacks và đổi lại bean ứng dụng bị phụ thuộc trực tiếp vào container API."
+      - "Phân biệt bean initialization/destruction callbacks với Lifecycle/SmartLifecycle dùng cho start/stop của component theo lifecycle của ApplicationContext."
+      - "Hiểu dependency relationship, depends-on và eager initialization có thể ảnh hưởng thứ tự startup như thế nào."
+      - "Hiểu prototype bean được container tạo và cấu hình nhưng destruction callbacks của prototype không được container tự động quản lý đầy đủ."
+      - "Nhận diện circular dependency, premature bean creation và resource cleanup failure như các rủi ro lifecycle quan trọng."
+      - "Chuẩn bị mô hình tư duy để hiểu BeanPostProcessor ở milestone extension points mà không biến lifecycle thành API inventory."
+
+  - id: environment-and-expressions
+    title: "Environment, PropertySource, Profile và SpEL"
+    purpose: "Hiểu cách container đọc environment-dependent metadata và expression/value resolution mà không trộn với Spring Boot Config Data."
+    dependsOn:
+      - bean-registration
+    objectives:
+      - "Hiểu Environment mô hình hóa profiles và properties, còn PropertySource mô hình hóa từng nguồn key-value."
+      - "Hiểu property source ordering/precedence ở mức nguyên lý và cách placeholder resolution lấy dữ liệu từ Environment."
+      - "Dùng @Profile như conditional registration theo environment và phân biệt với business branching runtime."
+      - "Phân biệt property placeholder ${...} với Spring Expression Language #{...} và hiểu SpEL được dùng trong bean metadata như thế nào."
+      - "Hiểu SpEL như cơ chế expression evaluation trên đồ thị đối tượng, đủ nền để sau này học property/method access, bean references và evaluation context ở Knowledge."
+      - "Giữ ranh giới với Spring Boot externalized configuration, Config Data và @ConfigurationProperties."
+
+  - id: application-context-services
+    title: "Các dịch vụ nền của ApplicationContext"
+    purpose: "Mở rộng mô hình từ bean factory sang ApplicationContext như một framework context cung cấp resource loading, events, i18n và context hierarchy."
+    dependsOn:
+      - container-model
+    objectives:
+      - "Hiểu Resource/ResourceLoader cung cấp abstraction thống nhất cho classpath, file và URL resources."
+      - "Hiểu ApplicationEventPublisher/ApplicationListener và @EventListener như cơ chế event trong context, không phải message broker."
+      - "Hiểu MessageSource cung cấp message resolution/i18n ở mức Spring Framework."
+      - "Hiểu parent-child ApplicationContext hierarchy và lookup boundary ở mức khái niệm."
+      - "Không kéo MVC/WebFlux request lifecycle hay Spring Messaging/STOMP vào module này."
+
+  - id: container-extension-points
+    title: "Extension points của container"
+    purpose: "Hiểu những hook chính cho phép framework và infrastructure code thay đổi metadata hoặc bean instances mà không subclass ApplicationContext."
+    dependsOn:
+      - bean-lifecycle
+      - container-model
+    objectives:
+      - "Phân biệt BeanFactoryPostProcessor xử lý configuration metadata với BeanPostProcessor xử lý bean instances."
+      - "Hiểu vì sao annotation processing và nhiều infrastructure feature của Spring dựa trên post-processors."
+      - "Hiểu FactoryBean là abstraction tạo đối tượng thông qua container và phân biệt factory bean với product bean."
+      - "Nhận diện ordering, early instantiation và per-container scope của extension points như các bẫy thực tế."
+      - "Biết khi nào cần extension point và khi nào mã ứng dụng nên giữ container-agnostic."
+
+  - id: container-synthesis
+    title: "Thiết kế và chẩn đoán container end-to-end"
+    purpose: "Kết nối toàn bộ module thành một mô hình tư duy có thể dùng để thiết kế đồ thị đối tượng, đọc lỗi startup và handoff đúng sang các Spring module lân cận."
+    dependsOn:
+      - dependency-resolution
+      - bean-lifecycle
+      - environment-and-expressions
+      - application-context-services
+      - container-extension-points
+    objectives:
+      - "Theo dõi được luồng từ configuration metadata đến BeanDefinition, dependency resolution, bean creation, lifecycle callbacks và ApplicationContext sẵn sàng sử dụng."
+      - "Chọn có chủ đích giữa explicit @Bean registration và component scanning thay vì dùng annotation theo thói quen."
+      - "Chẩn đoán các nhóm lỗi phổ biến: missing/ambiguous dependency, scope mismatch, circular dependency, lifecycle/initialization failure và environment misconfiguration."
+      - "Giữ mã ứng dụng ít phụ thuộc container bằng constructor injection và tránh global/static container lookup."
+      - "Biết điểm handoff sang validation-data-binding, aspect, transaction-management, web/reactive và testing thay vì mở rộng scope module này."

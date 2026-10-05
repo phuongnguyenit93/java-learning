@@ -1,0 +1,5 @@
+scenario:
+  summary: Dependency failure scenario
+  description: Selects one bounded context-refresh failure to observe. Supported values
+    are MISSING, AMBIGUOUS, and CONSTRUCTOR_CYCLE. The endpoint defaults to MISSING.
+  usage: true

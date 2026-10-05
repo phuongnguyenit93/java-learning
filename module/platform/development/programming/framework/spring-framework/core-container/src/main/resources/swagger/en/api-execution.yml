@@ -1,0 +1,84 @@
+ConfigurationExperimentController:
+  observeConfigurationIdentity():
+    execution: |-
+      <p><b>Concept:</b> full <code>@Configuration</code> mode can intercept calls between instance <code>@Bean</code> methods, while <code>proxyBeanMethods=false</code> uses ordinary Java method-call semantics.</p>
+      <ol>
+        <li>The experiment creates one isolated context from <code>FullConfiguration</code>. Its <code>sampleService()</code> method calls <code>sampleRepository()</code> directly:
+          <pre><code>@Configuration
+      static class FullConfiguration {
+          @Bean SampleRepository sampleRepository() {
+              return new SampleRepository();
+          }
+
+          @Bean SampleService sampleService() {
+              return new SampleService(sampleRepository());
+          }
+      }</code></pre>
+        </li>
+        <li>Because the full configuration class is enhanced, the inter-<code>@Bean</code> call is routed through the container. The repository stored by <code>SampleService</code> is therefore the same Java reference as <code>context.getBean(SampleRepository.class)</code>.</li>
+        <li>The experiment then repeats the same source shape with <code>@Configuration(proxyBeanMethods = false)</code>. That direct method call is ordinary Java and creates another <code>SampleRepository</code> object instead of looking up the managed singleton.</li>
+        <li>Compare <code>fullConfiguration.sameManagedInstance</code> with <code>liteConfiguration.sameManagedInstance</code>. These booleans come from reference comparison and are the authoritative evidence: expected <code>true</code> for full mode and <code>false</code> for lite mode. The accompanying <code>*IdentityHashCode</code> fields are display hints only because identity hash codes are not guaranteed unique.</li>
+      </ol>
+      <p><b>Conclusion:</b> direct inter-<code>@Bean</code> calls have different identity semantics when proxying is disabled; full configuration routes the call through the container, while lite configuration executes an ordinary Java method call.</p>
+    usage: true
+DependencyFailureExperimentController:
+  observeDependencyFailure(DependencyFailureScenario):
+    execution: |-
+      <p><b>Concept:</b> missing dependencies, ambiguous candidates, and constructor cycles are different dependency-resolution failures, but all can surface while an <code>ApplicationContext</code> is refreshing.</p>
+      <ol>
+        <li>The <code>scenario</code> parameter selects one intentionally invalid, isolated configuration: <code>MISSING</code>, <code>AMBIGUOUS</code>, or <code>CONSTRUCTOR_CYCLE</code>.</li>
+        <li>For <code>MISSING</code>, the consumer requires a type for which no bean exists:
+          <pre><code>@Bean
+      MissingConsumer missingConsumer(MissingPort missingPort) {
+          return new MissingConsumer(missingPort);
+      }</code></pre>
+        </li>
+        <li>For <code>AMBIGUOUS</code>, two beans share the required type and no qualifier/primary rule selects one. For <code>CONSTRUCTOR_CYCLE</code>, bean A requires B while B requires A before either can be constructed.</li>
+        <li>The experiment calls <code>context.refresh()</code> and captures the failure locally. Instead of returning a raw stack trace, it exposes <code>refreshFailed</code>, a bounded <code>exceptionChain</code>, <code>rootCauseType</code>, and <code>rootCauseMessage</code>.</li>
+        <li>Run all three scenarios and compare their exception evidence. <code>refreshFailed=true</code> should remain common, while the exception chain/root cause distinguishes the dependency problem being demonstrated.</li>
+      </ol>
+      <p><b>Conclusion:</b> dependency-resolution diagnostics should start by classifying the failure shape rather than applying a generic annotation fix to every startup error.</p>
+    usage: true
+LifecycleExperimentController:
+  observeLifecycleCallbacks():
+    execution: |-
+      <p><b>Concept:</b> Spring invokes initialization and destruction mechanisms in a defined lifecycle order around a managed bean.</p>
+      <ol>
+        <li>The endpoint creates an isolated <code>AnnotationConfigApplicationContext</code> and registers one probe bean that implements <code>BeanNameAware</code>, <code>InitializingBean</code>, and <code>DisposableBean</code>, while also declaring annotation and custom callbacks.</li>
+        <li>During refresh, the probe records:
+          <pre><code>constructor
+      aware:setBeanName=lifecycleProbe
+      init:@PostConstruct
+      init:InitializingBean.afterPropertiesSet
+      init:customInit</code></pre>
+        </li>
+        <li>The endpoint snapshots that initialization trace, closes the context, and then observes the destruction callbacks:
+          <pre><code>destroy:@PreDestroy
+      destroy:DisposableBean.destroy
+      destroy:customDestroy</code></pre>
+        </li>
+        <li>The response returns both traces plus <code>initializationOrderMatches</code> and <code>destructionOrderMatches</code>. Both should be <code>true</code> when the runtime behavior matches the expected Spring lifecycle.</li>
+      </ol>
+      <p><b>Conclusion:</b> lifecycle callbacks are not interchangeable hooks; their ordering is observable, and destruction evidence appears only after the owning context is actually closed.</p>
+    usage: true
+ScopeExperimentController:
+  observeScopeIdentity():
+    execution: |-
+      <p><b>Concept:</b> Spring singleton and prototype scopes control instance reuse, and injecting a prototype directly into a singleton does not make that field refresh on every use.</p>
+      <ol>
+        <li>The isolated context defines one singleton bean and one prototype bean. Two lookups of the singleton should resolve to the same object, while two prototype lookups should resolve to different objects.</li>
+        <li>A singleton consumer receives one prototype directly and also receives an <code>ObjectProvider&lt;PrototypeProbe&gt;</code>:
+          <pre><code>PrototypeConsumer(
+          PrototypeProbe prototypeProbe,
+          ObjectProvider&lt;PrototypeProbe&gt; prototypeProvider
+      ) {
+          this.injectedPrototype = prototypeProbe;
+          this.prototypeProvider = prototypeProvider;
+      }</code></pre>
+        </li>
+        <li>Reading the directly injected field twice returns the same Java reference because injection happened once when the singleton was created.</li>
+        <li>Calling <code>prototypeProvider.getObject()</code> twice performs two later resolutions, so each call receives a fresh prototype.</li>
+        <li>Observe the response booleans: <code>singleton.sameInstance=true</code>, <code>prototype.sameInstance=false</code>, <code>directInjectionReusesSamePrototype=true</code>, and <code>providerReturnsFreshPrototype=true</code>. These booleans use reference equality or inequality and are authoritative; the <code>*IdentityHashCode</code> fields are display hints only.</li>
+      </ol>
+      <p><b>Conclusion:</b> scope belongs to bean resolution, not to Java references already stored in another object; deferred lookup is required when a longer-lived bean genuinely needs fresh shorter-lived instances.</p>
+    usage: true

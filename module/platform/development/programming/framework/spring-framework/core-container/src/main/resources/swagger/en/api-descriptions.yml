@@ -1,0 +1,115 @@
+ConfigurationExperimentController:
+  observeConfigurationIdentity():
+    summary: Compare full and lite configuration bean identity
+    description: Builds two isolated contexts with the same inter-@Bean call. Full
+      configuration routes that call through the container, while lite configuration
+      executes it as an ordinary Java method call. Reference-comparison booleans are
+      authoritative; identity hash codes are display hints only.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: full-vs-lite-configuration
+    methodName: observeConfigurationIdentity
+    params: [
+      ]
+    path: com/example/learning/corecontainer/experiment/controller/ConfigurationExperimentController.java
+    mapping: '@GetMapping("/full-vs-lite")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /core-container/configuration/full-vs-lite
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+DependencyFailureExperimentController:
+  observeDependencyFailure(DependencyFailureScenario):
+    summary: Observe dependency resolution failures during context refresh
+    description: Starts a bounded isolated context for one failure scenario and returns
+      the normalized exception chain produced by missing dependencies, ambiguous candidates,
+      or a constructor cycle instead of leaking a stack trace.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: dependency-resolution-failures
+    methodName: observeDependencyFailure
+    params:
+    - scenario
+    path: com/example/learning/corecontainer/experiment/controller/DependencyFailureExperimentController.java
+    mapping: '@GetMapping("/failure")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /core-container/dependency/failure
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+LifecycleExperimentController:
+  observeLifecycleCallbacks():
+    summary: Observe bean initialization and destruction callback order
+    description: Creates and closes an isolated context around one bean that uses
+      BeanNameAware, @PostConstruct, InitializingBean, custom init, @PreDestroy, DisposableBean,
+      and custom destroy callbacks. The response exposes the actual callback trace
+      and verifies the expected order.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: bean-lifecycle-overview
+    methodName: observeLifecycleCallbacks
+    params: [
+      ]
+    path: com/example/learning/corecontainer/experiment/controller/LifecycleExperimentController.java
+    mapping: '@GetMapping("/callbacks")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /core-container/lifecycle/callbacks
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+ScopeExperimentController:
+  observeScopeIdentity():
+    summary: Compare singleton, prototype, and deferred prototype lookup
+    description: Repeatedly resolves singleton and prototype beans, then compares
+      a prototype injected once into a singleton with prototype instances obtained
+      later through ObjectProvider. Reference-comparison booleans prove reuse or freshness;
+      identity hash codes are display hints only.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: scoped-dependency-mismatch
+    methodName: observeScopeIdentity
+    params: [
+      ]
+    path: com/example/learning/corecontainer/experiment/controller/ScopeExperimentController.java
+    mapping: '@GetMapping("/identity")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /core-container/scope/identity
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

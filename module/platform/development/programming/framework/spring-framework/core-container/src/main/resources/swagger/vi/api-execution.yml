@@ -1,0 +1,84 @@
+ConfigurationExperimentController:
+  observeConfigurationIdentity():
+    execution: |-
+      <p><b>Khái niệm:</b> full <code>@Configuration</code> có thể intercept lời gọi giữa các instance <code>@Bean</code> method, còn <code>proxyBeanMethods=false</code> dùng ngữ nghĩa lời gọi Java thông thường.</p>
+      <ol>
+        <li>Experiment tạo một context cô lập từ <code>FullConfiguration</code>. Method <code>sampleService()</code> gọi trực tiếp <code>sampleRepository()</code>:
+          <pre><code>@Configuration
+      static class FullConfiguration {
+          @Bean SampleRepository sampleRepository() {
+              return new SampleRepository();
+          }
+
+          @Bean SampleService sampleService() {
+              return new SampleService(sampleRepository());
+          }
+      }</code></pre>
+        </li>
+        <li>Vì full configuration được Spring enhance, lời gọi giữa các <code>@Bean</code> đi qua container. Repository nằm trong <code>SampleService</code> vì vậy là cùng Java reference với <code>context.getBean(SampleRepository.class)</code>.</li>
+        <li>Experiment lặp lại cùng cấu trúc với <code>@Configuration(proxyBeanMethods = false)</code>. Lời gọi method trực tiếp lúc này là Java thông thường và tạo một <code>SampleRepository</code> khác thay vì lookup managed singleton.</li>
+        <li>So sánh <code>fullConfiguration.sameManagedInstance</code> và <code>liteConfiguration.sameManagedInstance</code>. Các boolean này đến từ reference comparison nên là evidence chính: mong đợi <code>true</code> ở full mode và <code>false</code> ở lite mode. Các field <code>*IdentityHashCode</code> chỉ hỗ trợ quan sát vì identity hash code không được đảm bảo là duy nhất.</li>
+      </ol>
+      <p><b>Kết luận:</b> direct inter-<code>@Bean</code> call có ngữ nghĩa identity khác khi tắt proxying; full configuration đưa lời gọi qua container, còn lite configuration thực thi một lời gọi Java thông thường.</p>
+    usage: true
+DependencyFailureExperimentController:
+  observeDependencyFailure(DependencyFailureScenario):
+    execution: |-
+      <p><b>Khái niệm:</b> missing dependency, ambiguous candidates và constructor cycle là ba dạng dependency-resolution failure khác nhau, nhưng đều có thể xuất hiện khi <code>ApplicationContext</code> đang refresh.</p>
+      <ol>
+        <li>Parameter <code>scenario</code> chọn một cấu hình cô lập cố ý không hợp lệ: <code>MISSING</code>, <code>AMBIGUOUS</code> hoặc <code>CONSTRUCTOR_CYCLE</code>.</li>
+        <li>Với <code>MISSING</code>, consumer yêu cầu một type không có bean nào:
+          <pre><code>@Bean
+      MissingConsumer missingConsumer(MissingPort missingPort) {
+          return new MissingConsumer(missingPort);
+      }</code></pre>
+        </li>
+        <li>Với <code>AMBIGUOUS</code>, hai bean cùng thỏa type cần inject nhưng không có qualifier/primary rule để chọn một bean. Với <code>CONSTRUCTOR_CYCLE</code>, bean A cần B còn B cần A trước khi một trong hai có thể được tạo hoàn chỉnh.</li>
+        <li>Experiment gọi <code>context.refresh()</code> rồi bắt failure ngay trong context cô lập. Thay vì trả raw stack trace, response chỉ phơi bày <code>refreshFailed</code>, <code>exceptionChain</code> có giới hạn, <code>rootCauseType</code> và <code>rootCauseMessage</code>.</li>
+        <li>Chạy đủ ba scenario để so sánh evidence. <code>refreshFailed=true</code> là điểm chung, còn exception chain/root cause giúp phân loại vấn đề dependency cụ thể.</li>
+      </ol>
+      <p><b>Kết luận:</b> khi chẩn đoán dependency-resolution failure, nên phân loại kiểu lỗi trước thay vì thêm annotation chung chung cho mọi startup error.</p>
+    usage: true
+LifecycleExperimentController:
+  observeLifecycleCallbacks():
+    execution: |-
+      <p><b>Khái niệm:</b> Spring gọi các cơ chế initialization và destruction theo một thứ tự lifecycle xác định quanh managed bean.</p>
+      <ol>
+        <li>Endpoint tạo một <code>AnnotationConfigApplicationContext</code> cô lập và đăng ký một probe bean triển khai <code>BeanNameAware</code>, <code>InitializingBean</code>, <code>DisposableBean</code>, đồng thời dùng annotation và custom callbacks.</li>
+        <li>Khi refresh, probe ghi lại:
+          <pre><code>constructor
+      aware:setBeanName=lifecycleProbe
+      init:@PostConstruct
+      init:InitializingBean.afterPropertiesSet
+      init:customInit</code></pre>
+        </li>
+        <li>Endpoint chụp initialization trace, đóng context, rồi quan sát destruction callbacks:
+          <pre><code>destroy:@PreDestroy
+      destroy:DisposableBean.destroy
+      destroy:customDestroy</code></pre>
+        </li>
+        <li>Response trả cả hai trace cùng <code>initializationOrderMatches</code> và <code>destructionOrderMatches</code>. Cả hai phải là <code>true</code> khi runtime behavior khớp lifecycle order mong đợi.</li>
+      </ol>
+      <p><b>Kết luận:</b> lifecycle callback không phải các hook có thể hoán đổi tùy ý; thứ tự của chúng quan sát được, và destruction evidence chỉ xuất hiện sau khi context sở hữu bean thực sự được đóng.</p>
+    usage: true
+ScopeExperimentController:
+  observeScopeIdentity():
+    execution: |-
+      <p><b>Khái niệm:</b> singleton/prototype scope điều khiển việc tái sử dụng instance, còn inject prototype trực tiếp vào singleton không làm field đó tự nhận instance mới sau mỗi lần dùng.</p>
+      <ol>
+        <li>Context cô lập định nghĩa một singleton bean và một prototype bean. Hai lần lookup singleton phải cho cùng object, còn hai lần lookup prototype phải cho hai object khác nhau.</li>
+        <li>Một singleton consumer nhận một prototype trực tiếp và đồng thời nhận <code>ObjectProvider&lt;PrototypeProbe&gt;</code>:
+          <pre><code>PrototypeConsumer(
+          PrototypeProbe prototypeProbe,
+          ObjectProvider&lt;PrototypeProbe&gt; prototypeProvider
+      ) {
+          this.injectedPrototype = prototypeProbe;
+          this.prototypeProvider = prototypeProvider;
+      }</code></pre>
+        </li>
+        <li>Đọc field được inject trực tiếp hai lần vẫn cho cùng Java reference vì injection chỉ diễn ra khi singleton được tạo.</li>
+        <li>Gọi <code>prototypeProvider.getObject()</code> hai lần thực hiện hai lần resolution về sau, nên mỗi lần nhận một prototype mới.</li>
+        <li>Quan sát các boolean: <code>singleton.sameInstance=true</code>, <code>prototype.sameInstance=false</code>, <code>directInjectionReusesSamePrototype=true</code> và <code>providerReturnsFreshPrototype=true</code>. Các boolean này dùng reference equality/inequality nên là evidence chính; các field <code>*IdentityHashCode</code> chỉ hỗ trợ quan sát.</li>
+      </ol>
+      <p><b>Kết luận:</b> scope thuộc về quá trình bean resolution, không thuộc Java reference đã được lưu trong object khác; deferred lookup cần thiết khi bean sống lâu thật sự cần instance mới của dependency có scope ngắn hơn.</p>
+    usage: true

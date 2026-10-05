@@ -38,4 +38,253 @@
 #       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
 # </quiz-schema>
 
-questions: []
+questions:
+  - id: core-container-q01-full-vs-lite
+    question: "Hai singleton @Bean method có cùng cấu trúc source: service() gọi trực tiếp repository(). Experiment full-vs-lite cho thấy điều gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.BeanRegistration/BeanRegistration.md"
+      anchor: "full-vs-lite-configuration"
+    apiRelated:
+      controller: "ConfigurationExperimentController"
+      methodSignature: "observeConfigurationIdentity()"
+    answers:
+      - id: A
+        answer: "Cả hai mode đều phải trả managed repository vì singleton scope áp dụng cho mọi lời gọi Java tới @Bean method."
+        explanation: "Sai. Singleton scope chi phối việc container resolve bean; ở lite mode, direct method call là lời gọi Java thông thường và không đi qua container."
+      - id: B
+        answer: "Full mode có thể đưa inter-@Bean call qua container, còn lite mode có thể gọi method trực tiếp và tạo một repository object khác."
+        explanation: "Đúng. Experiment quan sát sameManagedInstance=true ở full mode và false ở lite mode."
+      - id: C
+        answer: "Lite mode đưa lời gọi qua container, còn full mode gọi trực tiếp vì CGLIB bị tắt ở full mode."
+        explanation: "Sai. Chiều ngược lại mới đúng: full configuration bật bean-method interception mặc định, còn proxyBeanMethods=false tắt cơ chế đó."
+      - id: D
+        answer: "Cả hai mode đều không cho phép một @Bean method gọi @Bean method khác; context sẽ fail khi parse configuration."
+        explanation: "Sai. Những lời gọi này hợp lệ; ngữ nghĩa identity runtime khác nhau tùy bean-method interception có được bật hay không."
+    correctAnswerId: B
+
+  - id: core-container-q02-ambiguous-dependency
+    question: "Một context có hai CandidatePort bean hợp lệ và một single-valued CandidatePort injection point không có qualifier hay primary candidate. Dependency-failure experiment nên cho kết quả nào?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.DependencyInjection/DependencyInjection.md"
+      anchor: "dependency-resolution-failures"
+    apiRelated:
+      controller: "DependencyFailureExperimentController"
+      methodSignature: "observeDependencyFailure(DependencyFailureScenario)"
+    answers:
+      - id: A
+        answer: "Refresh thành công và Spring tự inject cả hai candidate dưới dạng collection."
+        explanation: "Sai. Collection injection phải được yêu cầu rõ; single-valued dependency vẫn cần đúng một candidate có thể resolve."
+      - id: B
+        answer: "Refresh fail với missing-bean root cause vì không candidate nào có tên duy nhất."
+        explanation: "Sai. Các bean đều tồn tại; vấn đề là còn nhiều hơn một candidate hợp lệ."
+      - id: C
+        answer: "Refresh fail và exception chain đi tới NoUniqueBeanDefinitionException."
+        explanation: "Đúng. Ambiguity của single-valued dependency xuất hiện khi nhiều bean vẫn có mức đủ điều kiện ngang nhau."
+      - id: D
+        answer: "Refresh fail với BeanCurrentlyInCreationException vì candidate selection được xem như circular dependency."
+        explanation: "Sai. BeanCurrentlyInCreationException thuộc creation cycle, không phải candidate ambiguity thông thường."
+    correctAnswerId: C
+
+  - id: core-container-q03-prototype-in-singleton
+    question: "Một singleton nhận prototype trực tiếp và đồng thời nhận ObjectProvider<PrototypeProbe>. Hành vi nào được mong đợi?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.BeanScope/BeanScope.md"
+      anchor: "scoped-dependency-mismatch"
+    apiRelated:
+      controller: "ScopeExperimentController"
+      methodSignature: "observeScopeIdentity()"
+    answers:
+      - id: A
+        answer: "Field được inject trực tiếp và mỗi lần gọi ObjectProvider đều trả prototype mới ở mọi lần truy cập."
+        explanation: "Sai. Direct injection xảy ra khi singleton được tạo, nên field đó giữ một reference."
+      - id: B
+        answer: "Field được inject trực tiếp thay đổi sau mỗi method call, còn ObjectProvider cache prototype đầu tiên nó resolve."
+        explanation: "Sai. Không có cơ chế tự re-inject field; ObjectProvider thực hiện bean resolution về sau thay vì cache reference đã inject."
+      - id: C
+        answer: "Cả hai cách truy cập đều giữ một prototype vì consumer itself là singleton-scoped."
+        explanation: "Sai. Scope của consumer không đổi prototype definition; deferred lookup vẫn có thể resolve prototype mới."
+      - id: D
+        answer: "Field được inject trực tiếp giữ một prototype reference, còn các lần ObjectProvider.getObject() có thể resolve những prototype instance mới."
+        explanation: "Đúng. Đây là scope mismatch và deferred-resolution behavior mà experiment minh họa."
+    correctAnswerId: D
+
+  - id: core-container-q04-lifecycle-order
+    question: "Một bean dùng @PostConstruct, InitializingBean, custom init method, @PreDestroy, DisposableBean và custom destroy method. Trace nào khớp lifecycle experiment?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: "LifecycleExperimentController"
+      methodSignature: "observeLifecycleCallbacks()"
+    answers:
+      - id: A
+        answer: "@PostConstruct → afterPropertiesSet → custom init; sau đó @PreDestroy → destroy → custom destroy."
+        explanation: "Đúng. Đây là thứ tự initialization và destruction mà experiment ghi nhận khi kết hợp các callback mechanism này."
+      - id: B
+        answer: "afterPropertiesSet → @PostConstruct → custom init; sau đó destroy → @PreDestroy → custom destroy."
+        explanation: "Sai. Annotation callback chạy trước InitializingBean khi initialization, và @PreDestroy chạy trước DisposableBean khi destruction."
+      - id: C
+        answer: "custom init → @PostConstruct → afterPropertiesSet; sau đó custom destroy → @PreDestroy → destroy."
+        explanation: "Sai. Custom init/destroy method đứng sau annotation và interface callback trong setup kết hợp này."
+      - id: D
+        answer: "@PostConstruct → custom init → afterPropertiesSet; sau đó @PreDestroy → custom destroy → destroy."
+        explanation: "Sai. InitializingBean chạy trước custom init method, còn DisposableBean chạy trước custom destroy method."
+    correctAnswerId: A
+
+  - id: core-container-q05-qualifier-vs-primary
+    question: "Hai PaymentGateway bean cùng tương thích type. Một bean là @Primary, còn injection point yêu cầu @Qualifier(\"offline\") và bean kia mang qualifier đó. Spring nên chọn candidate nào?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.DependencyInjection/DependencyInjection.md"
+      anchor: "primary-and-qualifier"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Chọn bean @Primary sau khi match type, vì primary preference được đánh giá trước qualifier metadata."
+        explanation: "Sai. Qualifier metadata thu hẹp tập candidate tương thích type trước; @Primary không ghi đè một qualifier constraint được yêu cầu rõ."
+      - id: B
+        answer: "Xem dependency là ambiguous, vì qualifier chỉ tinh chỉnh bean-name fallback chứ không thể thu hẹp các type-compatible candidate."
+        explanation: "Sai. Qualifier metadata chính là cơ chế dùng để thu hẹp các candidate tương thích type cho injection point."
+      - id: C
+        answer: "Chọn bean mang qualifier offline, vì qualifier đó thu hẹp tập candidate tương thích type trước khi primary preference được xem xét."
+        explanation: "Đúng. Qualifier constraint chỉ ra semantic role được yêu cầu; @Primary có ý nghĩa khi không có rule thu hẹp mạnh hơn chọn candidate khác."
+      - id: D
+        answer: "Chọn bean có tên offline, vì qualifier value trước hết được hiểu là exact bean-name lookup."
+        explanation: "Sai. Qualifier là candidate metadata mang ý nghĩa semantic, không chỉ là bean-name lookup, dù bean name có thể tham gia fallback matching."
+    correctAnswerId: C
+
+  - id: core-container-q06-lazy-required-by-eager
+    question: "Một bean được đánh dấu @Lazy, nhưng một non-lazy singleton cần nó trực tiếp khi startup. Kỳ vọng nào chính xác nhất?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.BeanScope/BeanScope.md"
+      anchor: "eager-vs-lazy-initialization"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Lazy bean vẫn chưa được tạo trong refresh, vì @Lazy trên bean definition luôn trì hoãn creation cho tới một explicit lookup về sau."
+        explanation: "Sai. Required direct dependency từ non-lazy singleton có thể buộc Spring resolve lazy bean ngay trong refresh."
+      - id: B
+        answer: "Lazy bean vẫn có thể được tạo ngay trong refresh, vì khi tạo non-lazy singleton Spring phải resolve direct dependency bắt buộc đó ngay."
+        explanation: "Đúng. @Lazy thay đổi thời điểm tạo, nhưng direct dependency từ eagerly created singleton có thể kích hoạt việc tạo đó."
+      - id: C
+        answer: "Spring tự inject lazy-resolution proxy chỉ vì target bean definition có @Lazy, nên real target luôn chờ tới method call đầu tiên."
+        explanation: "Sai. Lazy-resolution proxy gắn với lazy semantics ở injection point; chỉ đánh dấu target bean definition @Lazy không tự biến mọi direct dependency thành proxy đó."
+      - id: D
+        answer: "Spring cũng defer non-lazy singleton, vì eager bean không thể được tạo cho đến khi mọi lazy dependency tự chọn thời điểm initialize."
+        explanation: "Sai. Dependency relationship hoạt động theo chiều ngược lại: việc tạo eager singleton có thể kích hoạt creation của required lazy dependency."
+    correctAnswerId: B
+
+  - id: core-container-q07-placeholder-vs-spel
+    question: "Phát biểu nào phân biệt đúng property placeholder và SpEL trong Spring container metadata?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.EnvironmentAndSpEL/EnvironmentAndSpEL.md"
+      anchor: "property-placeholders"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "${...} đánh giá biểu thức object graph tùy ý, còn #{...} chỉ lookup key trong Environment."
+        explanation: "Sai. Vai trò ngược lại: placeholder dùng key lookup, còn SpEL dùng expression evaluation."
+      - id: B
+        answer: "Hai syntax có thể thay thế nhau; Spring tự quyết định lookup hay expression dựa trên target Java type."
+        explanation: "Sai. Chính syntax chọn hai cơ chế resolution khác nhau."
+      - id: C
+        answer: "${...} thực hiện property lookup với default tùy chọn, còn #{...} yêu cầu SpEL expression evaluation."
+        explanation: "Đúng. Dùng placeholder khi chỉ cần lookup và chỉ dùng SpEL khi thực sự cần đánh giá biểu thức."
+      - id: D
+        answer: "${...} chỉ thuộc Spring Boot, còn plain Spring Framework chỉ hỗ trợ #{...}."
+        explanation: "Sai. Property placeholder resolution cũng thuộc mô hình Core Container của Spring Framework."
+    correctAnswerId: C
+
+  - id: core-container-q08-default-application-events
+    question: "Với SimpleApplicationEventMulticaster mặc định của Spring, publisher thường nên kỳ vọng gì khi gọi publishEvent(...) ?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.ApplicationContextServices/ApplicationContextServices.md"
+      anchor: "application-events"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Matching listener được đưa vào durable queue để publishEvent return trước khi listener local bắt đầu chạy."
+        explanation: "Sai. Application event không phải durable broker abstraction, và default multicaster chạy đồng bộ."
+      - id: B
+        answer: "Matching listener chạy trên Spring worker pool riêng nên không bao giờ thấy publisher-thread context."
+        explanation: "Sai. Default multicaster gọi listener ngay trên publishing thread nếu không được cấu hình khác."
+      - id: C
+        answer: "Event được persist cho đến khi mọi listener acknowledge, nên có retry semantics qua process failure."
+        explanation: "Sai. ApplicationContext event mechanism không cam kết persistence, acknowledgement hay cross-process retry."
+      - id: D
+        answer: "Matching listener được gọi đồng bộ trên publishing thread, nên latency và failure của listener mặc định là một phần của publish call."
+        explanation: "Đúng. Đây là in-process observer behavior mặc định của SimpleApplicationEventMulticaster."
+    correctAnswerId: D
+
+  - id: core-container-q09-post-processor-boundary
+    question: "Phân biệt nào giữa BeanFactoryPostProcessor và BeanPostProcessor là đúng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.ExtensionPoints/ExtensionPoints.md"
+      anchor: "extension-point-purpose"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "BeanFactoryPostProcessor làm việc với definition metadata trước ordinary bean creation, còn BeanPostProcessor tham gia quanh initialization của bean instance."
+        explanation: "Đúng. Một bên làm việc trên container model; bên kia tham gia lifecycle của bean instance đã được tạo."
+      - id: B
+        answer: "BeanFactoryPostProcessor wrap bean instance sau initialization, còn BeanPostProcessor chỉ thay đổi BeanDefinition metadata."
+        explanation: "Sai. Phát biểu này đảo vai trò chính của hai extension point."
+      - id: C
+        answer: "Cả hai chỉ chạy sau khi mọi singleton đã initialized; khác nhau chủ yếu ở ordering metadata."
+        explanation: "Sai. Factory post-processing diễn ra trước ordinary bean instantiation, còn bean post-processing tham gia trong quá trình tạo bean."
+      - id: D
+        answer: "Cả hai là service-layer callback dùng để chạy business logic trong ApplicationContext startup."
+        explanation: "Sai. Chúng là container infrastructure extension point, không phải cơ chế thay thế application workflow."
+    correctAnswerId: A
+
+  - id: core-container-q10-diagnose-init-failure
+    question: "Bean definition tồn tại, dependency resolution thành công, construction thành công, nhưng @PostConstruct ném exception. Nhóm chẩn đoán nào nên được kiểm tra trước?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "10.ContainerDesignAndDiagnostics/ContainerDesignAndDiagnostics.md"
+      anchor: "startup-failure-diagnosis"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Registration failure, vì bean definition chưa được load vào factory."
+        explanation: "Sai. Tình huống đã nói definition tồn tại và bean đã đi tới giai đoạn construction."
+      - id: B
+        answer: "Lifecycle hoặc initialization failure, vì exception xảy ra trong initialization callback."
+        explanation: "Đúng. Nên xác định phase container bị lỗi trước khi thay đổi registration hay autowiring metadata."
+      - id: C
+        answer: "Candidate-selection failure, vì @PostConstruct chạy trước khi Spring biết candidate dependency nào cần inject."
+        explanation: "Sai. Dependency resolution và population xảy ra trước normal initialization callback."
+      - id: D
+        answer: "Scope mismatch, vì mọi initialization exception đều có nghĩa singleton đã giữ shorter-lived bean."
+        explanation: "Sai. Scope mismatch chỉ là một dạng graph-design problem, không phải lời giải thích chung cho init callback ném exception."
+    correctAnswerId: B
