@@ -1,40 +1,82 @@
 TaskExecutorController:
   asyncWithContext():
     execution: |-
-      <p><b>Concept:</b> API đặt DemoContext và MDC requestId trên request thread rồi gọi method có @Async.</p>
+      <p><b>Khái niệm:</b> Controller đặt <code>DemoContext</code> và MDC trên HTTP thread rồi chuyển công việc qua Spring <code>@Async</code> và <code>ThreadPoolTaskExecutor</code> tùy biến. Nếu bên gọi đang có Spring <code>RequestAttributes</code>, decorator cũng thu thập chúng.</p>
       <ol>
-        <li>ThreadPoolTaskExecutor dùng DemoTaskDecorator để capture DemoContext, MDC và RequestAttributes tại lúc submit.
+        <li>HTTP thread lưu giá trị demo/MDC trước đó, đặt hai request identifier thành <code>REQUEST-123</code> rồi gọi async service qua proxy.
           <div><i>Nguồn: TaskExecutorService.runAsync()</i></div>
-          <pre><code>    @Async("threadLearningTaskExecutor")
-              public CompletableFuture&lt;Map&lt;String, Object&gt;&gt; runAsync(String callerThread) {
-                  Map&lt;String, Object&gt; result = new LinkedHashMap&lt;&gt;();
-                  result.put("callerThread", callerThread);
-                  result.put("workerThread", Thread.currentThread().getName());
-                  result.put("workerContext", DemoContext.get());
-                  result.put("workerMdcRequestId", MDC.get("requestId"));
-                  result.put("workerHasRequestAttributes", RequestContextHolder.getRequestAttributes() != null);
-                  result.put("differentThread", !callerThread.equals(Thread.currentThread().getName()));
+          <pre><code>@Async("threadLearningTaskExecutor")
+          public CompletableFuture&lt;Map&lt;String, Object&gt;&gt; runAsync(
+                  String callerThread, long callerThreadId) {
+              Thread worker = Thread.currentThread();
+              result.put("callerThreadId", callerThreadId);
+              result.put("workerThread", worker.getName());
+              result.put("workerThreadId", worker.threadId());
+              result.put("workerContext", DemoContext.get());
+              result.put("workerMdcRequestId", MDC.get("requestId"));
+              result.put("workerHasRequestAttributes", RequestContextHolder.getRequestAttributes() != null);
+              result.put("differentThread", callerThreadId != worker.threadId());
               ...
           }</code></pre>
         </li>
-        <li>Decorator cài các context đó lên worker, runAsync ghi nhận worker thread và giá trị quan sát được.</li>
-        <li>Sau task, decorator khôi phục context cũ của worker; controller cũng khôi phục context cũ của caller trong finally.</li>
+        <li><code>DemoTaskDecorator</code> thu thập DemoContext, MDC và RequestAttributes hiện có của bên gọi, cài chúng quanh lúc worker chạy rồi khôi phục trạng thái cũ của worker trong <code>finally</code>.</li>
+        <li>Ngay khi bước submit trả về, controller khôi phục DemoContext/MDC của chính bên gọi. Sau đó controller chờ tối đa ba giây cho thí nghiệm có giới hạn này và trả bằng chứng của worker thành HTTP body thông thường. Phần service vẫn thật sự vượt qua ranh giới executor của <code>@Async</code>.</li>
       </ol>
-      <p><b>Kết luận:</b> Chạy @Async với custom executor và context propagation. Response và Execution Context là bằng chứng runtime cho behavior này; đoạn source colocated ở trên cho thấy code path tạo experiment.</p>
+      <p><b>Kết luận:</b> Phản hồi chứng minh ranh giới thread thật của <code>@Async</code> bằng thread id (thread name chỉ là bằng chứng mô tả), cùng cơ chế truyền context có chủ đích. Thí nghiệm không khuyến nghị giữ toàn bộ request state cho công việc nền trong production.</p>
     usage: true
   asyncVoidException():
     execution: |-
-      <p><b>Concept:</b> API theo dõi exception của method @Async trả void bằng correlationId.</p>
+      <p><b>Khái niệm:</b> Lỗi của phương thức <code>void @Async</code> được quan sát qua <code>AsyncUncaughtExceptionHandler</code> đã cấu hình vì bên gọi không có Future chứa lỗi từ thân phương thức đó.</p>
       <ol>
-        <li>Controller đăng ký một CompletableFuture quan sát trong AsyncExceptionProbe rồi gọi failWithoutFuture.
+        <li>Controller tạo correlation id và đăng ký một future dùng để thu bằng chứng trong <code>AsyncExceptionProbe</code>.</li>
+        <li>Service chạy qua proxy trên executor đã chọn rồi cố ý ném lỗi.
           <div><i>Nguồn: TaskExecutorService.failWithoutFuture()</i></div>
-          <pre><code>    @Async("threadLearningTaskExecutor")
-              public void failWithoutFuture(String correlationId) {
-                  throw new IllegalStateException("async void failure: " + correlationId);
-              }</code></pre>
+          <pre><code>@Async("threadLearningTaskExecutor")
+          public void failWithoutFuture(String correlationId) {
+              throw new IllegalStateException("async void failure: " + correlationId);
+          }</code></pre>
         </li>
-        <li>Method async cố ý ném IllegalStateException; AsyncUncaughtExceptionHandler lấy correlationId và complete future bằng metadata lỗi.</li>
-        <li>Nếu executor reject ngay lúc submit, controller complete future exceptionally để registration vẫn được cleanup.</li>
+        <li><code>AsyncUncaughtExceptionHandler</code> nhận lỗi từ thân phương thức và đưa tên phương thức, loại lỗi, correlation id cùng thread xử lý lỗi vào probe. Controller chờ có giới hạn cho bằng chứng này trước khi ghi phản hồi HTTP.</li>
+        <li>Nếu chính bước submit thất bại đồng bộ, controller kết thúc probe bằng exception để không rò rỉ registration. Rejection có tính xác định được chứng minh ở endpoint saturation riêng.</li>
       </ol>
-      <p><b>Kết luận:</b> Quan sát exception của void @Async. Response và Execution Context là bằng chứng runtime cho behavior này; đoạn source colocated ở trên cho thấy code path tạo experiment.</p>
+      <p><b>Kết luận:</b> Lỗi trong thân phương thức async và lỗi tại bước submit là hai ranh giới khác nhau. Endpoint này chứng minh đường lỗi của <code>void @Async</code> được chuyển sang handler thay vì trả qua Future.</p>
+    usage: true
+  saturation():
+    execution: |-
+      <p><b>Khái niệm:</b> Cơ chế tiếp nhận task của <code>ThreadPoolTaskExecutor</code> đi theo core worker, queue capacity, tăng worker tới max rồi mới từ chối.</p>
+      <ol>
+        <li>Thí nghiệm tạo executor cô lập với <code>corePoolSize=1</code>, <code>maxPoolSize=2</code>, <code>queueCapacity=1</code> và <code>AbortPolicy</code> tường minh.</li>
+        <li>Task 1 chiếm core worker và chờ trên latch. Task 2 được submit tiếp theo nên chiếm queue slot duy nhất.</li>
+        <li>Khi queue đã đầy, task 3 làm pool tăng từ một worker lên max bằng hai và cũng chờ trên latch.
+          <div><i>Nguồn: ConcurrencyExperimentService.executorSaturationDemo()</i></div>
+          <pre><code>executor.setCorePoolSize(1);
+          executor.setMaxPoolSize(2);
+          executor.setQueueCapacity(1);
+          executor.execute(firstBlockingTask);
+          executor.execute(queuedTask);
+          executor.execute(thirdBlockingTask);
+          executor.execute(fourthTask);</code></pre>
+        </li>
+        <li>Ngay trước task 4, cả hai worker đều đang hoạt động và queue đã đầy. Vì vậy task 4 đi tới <code>AbortPolicy</code> và Spring biểu lộ <code>TaskRejectedException</code>.</li>
+        <li>Thí nghiệm mở latch, chờ đủ ba task đã được nhận chạy xong rồi shutdown executor cô lập.</li>
+      </ol>
+      <p><b>Kết luận:</b> Phản hồi làm chuỗi <code>core → queue → tăng tới max → reject</code> quan sát được mà không gây bão hòa cho executor dùng chung của ứng dụng.</p>
+    usage: true
+TaskSchedulerExperimentController:
+  executionModels():
+    execution: |-
+      <p><b>Khái niệm:</b> Chính sách thời gian và chính sách thực thi là hai vấn đề riêng. Cùng là fixed-rate nhưng khả năng chạy chồng lấn phụ thuộc scheduler cụ thể của Spring.</p>
+      <ol>
+        <li>Một <code>ThreadPoolTaskScheduler</code> cục bộ có pool size bằng hai đăng ký một fixed-rate task mỗi 20 ms trong khi mỗi lần chạy cố ý kéo dài khoảng 80 ms. Thí nghiệm quan sát ít nhất ba lần chạy và đo số lần chạy đồng thời lớn nhất của chính đăng ký đó.</li>
+        <li>Dù scheduler có hai thread, các lần kế tiếp của cùng một đăng ký định kỳ vẫn tuần tự nên mức đồng thời lớn nhất phải giữ ở một.</li>
+        <li>Sau đó một <code>SimpleAsyncTaskScheduler</code> cục bộ chạy fixed-rate qua target executor có tên xác định. Ba task body đầu tiên cùng chờ trên latch để khả năng chồng lấn được đo trực tiếp.
+          <div><i>Nguồn: ConcurrencyExperimentService.schedulerExecutionModelsDemo()</i></div>
+          <pre><code>simpleScheduler.setTargetTaskExecutor(simpleTargetExecutor);
+          simpleScheduler.scheduleAtFixedRate(rateTask, Duration.ofMillis(20));
+          simpleScheduler.scheduleWithFixedDelay(delayTask, Duration.ofMillis(100));</code></pre>
+        </li>
+        <li>Phản hồi cho thấy các lần fixed-rate chồng lấn trên thread <code>simple-target-*</code>, rồi ghi nhận fixed-delay task chạy trực tiếp trên scheduler thread <code>simple-clock-*</code>.</li>
+        <li>Tất cả đăng ký chạy lặp đều được hủy; pooled scheduler được shutdown và chờ kết thúc có giới hạn; SimpleAsync scheduler cùng target executor được đóng trước khi request kết thúc.</li>
+      </ol>
+      <p><b>Kết luận:</b> Tăng pool của <code>ThreadPoolTaskScheduler</code> không làm các lần kế tiếp của cùng một periodic registration chồng lấn; <code>SimpleAsyncTaskScheduler</code> có thể chồng lấn các fixed-rate firing được bàn giao, còn fixed-delay là đường thực thi khác.</p>
     usage: true

@@ -1,3 +1,20 @@
+# 📂 README MODULE STRUCTURE (VI)
+
+* **1.MentalModel**
+    * [SpringConcurrency](readme/vi/menu/1.MentalModel/SpringConcurrency.md)
+* **2.Spring_Task_Executor**
+    * [SpringExecutor](readme/vi/menu/2.Spring_Task_Executor/SpringExecutor.md)
+* **3.ContextPropagation**
+    * [ContextPropagation](readme/vi/menu/3.ContextPropagation/ContextPropagation.md)
+* **4.TaskScheduler**
+    * [TaskScheduler](readme/vi/menu/4.TaskScheduler/TaskScheduler.md)
+* **5.Scheduling**
+    * [Scheduling](readme/vi/menu/5.Scheduling/Scheduling.md)
+* **6.VirtualThreadIntegration**
+    * [VirtualThreadIntegration](readme/vi/menu/6.VirtualThreadIntegration/VirtualThreadIntegration.md)
+* **7.LifecycleFailureProduction**
+    * [LifecycleFailureProduction](readme/vi/menu/7.LifecycleFailureProduction/LifecycleFailureProduction.md)
+
 # Spring Framework Concurrency
 
 Spring Framework Concurrency giải thích cách Spring quản lý việc thực thi tác vụ, gọi method bất đồng bộ và lập lịch theo thời gian trên nền các primitive của Java Concurrency. Module tập trung vào abstraction của framework, lifecycle do container quản lý, cơ chế proxy của `@Async`, context propagation, hành vi của scheduler và các integration point của Spring Framework 6.1 với JDK 21 Virtual Thread.

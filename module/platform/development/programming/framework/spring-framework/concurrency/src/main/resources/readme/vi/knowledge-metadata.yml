@@ -1,37 +1,183 @@
+1.MentalModel/SpringConcurrency.md:
+  spring-concurrency-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  execution-async-scheduling:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  spring-vs-jdk-concurrency:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  container-managed-task-infrastructure:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
 2.Spring_Task_Executor/SpringExecutor.md:
   task-executor:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  async-annotation:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  async-return-type:
-    difficulty: INTERMEDIATE
+  task-executor-strategies:
+    difficulty: BASIC
     aiGenerated: true
     reviewed: false
   spring-executor-config:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+  async-annotation:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  async-executor-selection:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  async-return-type:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  spring-executor-experiments:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+3.ContextPropagation/ContextPropagation.md:
+  context-propagation-problem:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
   task-decorator:
     difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  context-propagating-task-decorator:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  context-ownership-boundaries:
+    difficulty: BASIC
     aiGenerated: true
     reviewed: false
   spring-async-demo:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  spring-boot-auto-config:
-    difficulty: ADVANCED
+4.TaskScheduler/TaskScheduler.md:
+  task-scheduler-purpose:
+    difficulty: BASIC
     aiGenerated: true
     reviewed: false
+  scheduling-time-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  trigger-context:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  task-scheduler-implementations:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  scheduler-execution-models:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  runtime-rescheduling-cancellation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  scheduler-lifecycle:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  quartz-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+5.Scheduling/Scheduling.md:
+  scheduled-infrastructure:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  scheduled-trigger-modes:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  scheduled-cron-zone-timeunit:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  scheduled-scheduler-qualifier:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  scheduled-overlap:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  scheduled-failure:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  reactive-scheduled-methods:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  scheduling-configurer:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+6.VirtualThreadIntegration/VirtualThreadIntegration.md:
+  virtual-thread-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  virtual-thread-task-executor:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  simple-async-task-executor-virtual:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  simple-async-task-scheduler:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  virtual-thread-fixed-delay:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  virtual-thread-concurrency-limits:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  virtual-thread-decision:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+7.LifecycleFailureProduction/LifecycleFailureProduction.md:
   executor-lifecycle:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  spring-executor-experiments:
-    difficulty: INTERMEDIATE
+  failure-boundaries:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  runtime-diagnostics:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  boot-auto-config-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  production-synthesis:
+    difficulty: BASIC
     aiGenerated: true
     reviewed: false

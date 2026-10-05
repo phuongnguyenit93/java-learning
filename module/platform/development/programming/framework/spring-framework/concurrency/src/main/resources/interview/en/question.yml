@@ -35,21 +35,99 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.Spring_Task_Executor/SpringExecutor.md"
+      file: "3.ContextPropagation/ContextPropagation.md"
       anchor: "task-decorator"
     apiRelated:
       controller: "TaskExecutorController"
       methodSignature: "asyncWithContext()"
 
   - question: >-
-      How does @Async work, and why can self-invocation fail to be asynchronous?
+      A team says TaskExecutor, @Async, and TaskScheduler/@Scheduled are all just different ways to "add threads." How would you separate the three concerns?
     answer: >-
-      @Async works through Spring's async infrastructure and proxy/interceptor mechanism; @EnableAsync is commonly used to enable that infrastructure. When an invocation passes through the proxy, it is dispatched to the resolved TaskExecutor. A direct call from one method to another @Async method on the same this reference can bypass the proxy and therefore bypass interception. For void @Async, the caller has no Future for failures, so AsyncUncaughtExceptionHandler, logging or metrics are needed, while submission rejection remains a separate concern.
+      Task execution answers how work that is ready now should run, so TaskExecutor selects the execution strategy. @Async is a method-invocation boundary: a Spring interceptor turns an eligible bean call into executor-backed work and changes control flow, failure observation, and thread/context behavior. Scheduling adds time to the model: TaskScheduler or @Scheduled decides when work becomes eligible. Spring does not replace Java concurrency semantics in any of these cases; it integrates execution policy with beans, configuration, proxies, lifecycle, and the application context. Keeping those concerns separate prevents tuning the wrong component.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.MentalModel/SpringConcurrency.md"
+      anchor: "execution-async-scheduling"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Explain how core pool size, queue capacity, max pool size, and rejection interact in ThreadPoolTaskExecutor, and why a very large queue can make maxPoolSize less relevant than expected.
+    answer: >-
+      With a positive queue capacity, work first uses core workers; once those workers are busy, additional tasks are queued. The pool grows beyond core size only when the queue cannot accept more work, and rejection applies only after both the queue and max worker count are exhausted. A very large queue can therefore absorb work for a long time while the pool stays near core size, trading worker growth for queueing latency. Sizing should come from workload and downstream capacity rather than from choosing large numbers independently.
     aiGenerated: true
     reviewed: false
     readmeRelated:
       file: "2.Spring_Task_Executor/SpringExecutor.md"
-      anchor: "async-annotation"
+      anchor: "spring-executor-config"
+    apiRelated:
+      controller: "TaskExecutorController"
+      methodSignature: "saturation()"
+
+  - question: >-
+      Compare ThreadPoolTaskScheduler and SimpleAsyncTaskScheduler for fixed-rate and fixed-delay work. Why does the distinction matter when reasoning about overlap?
+    answer: >-
+      ThreadPoolTaskScheduler runs task bodies on its scheduler pool, and successive executions of one fixed-rate or fixed-delay registration are serialized by the underlying periodic-task contract even if the pool has multiple threads. SimpleAsyncTaskScheduler uses one scheduling thread and normally hands fixed-rate or trigger-based firings to separate execution threads, so those bodies can overlap. Fixed-delay is its intentional exception: the body runs on the scheduler thread itself to preserve delay-after-completion semantics. Therefore timing policy alone does not determine concurrency; the concrete scheduler execution model matters.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.TaskScheduler/TaskScheduler.md"
+      anchor: "scheduler-execution-models"
+    apiRelated:
+      controller: "TaskSchedulerExperimentController"
+      methodSignature: "executionModels()"
+
+  - question: >-
+      An in-process maintenance job may have repeatable @Scheduled declarations and the application may run on several instances. What concurrency guarantee does @Scheduled not provide, and how would you design around that?
+    answer: >-
+      @Scheduled is not a distributed lock or a universal single-flight guarantee. Separate declarations on the same method are registered independently, different bean instances can create additional registrations, and separate application processes know nothing about each other's in-process scheduler state. Even when one scheduler implementation serializes successive executions of one registration, that does not protect the logical job across those other sources of concurrency. If overlap is unsafe, make the job idempotent and choose an explicit coordination mechanism appropriate to the scope: local serialization, application-level locking, or distributed scheduling/locking when several processes participate.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Scheduling/Scheduling.md"
+      anchor: "scheduled-overlap"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      SimpleAsyncTaskExecutor uses virtual threads with a concurrency limit. Why should that limit not be reasoned about like a pool size, queue capacity, or rejection threshold?
+    answer: >-
+      SimpleAsyncTaskExecutor is thread-per-task rather than a worker pool. In the Spring 6.1 baseline, a positive concurrency limit is a throttle: once the active count reaches the limit, the submitting thread waits until a slot is released. That means an @Async proxy call can itself block during submission when the throttle is saturated. The setting does not create a buffering queue and does not reject merely because a positive limit is full. A limit of zero is different again: it disables concurrent execution and fails execution rather than waiting. The control protects downstream capacity, but it is not equivalent to ThreadPoolTaskExecutor's core/max/queue admission model.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.VirtualThreadIntegration/VirtualThreadIntegration.md"
+      anchor: "virtual-thread-concurrency-limits"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Distinguish submission rejection, future-bearing @Async failure, void @Async failure, and scheduled-task failure. Why does that distinction matter operationally?
+    answer: >-
+      Submission rejection occurs before business code starts and can fail synchronously at the executor boundary. A future-bearing @Async method reports execution failure through the returned Future or CompletableFuture when the caller observes it. A void @Async method has no returned completion handle, so uncaught method-body failures go through AsyncUncaughtExceptionHandler. Scheduled failures belong to scheduler/error-handler semantics, and repeating schedules usually need separate retry and idempotency decisions. Operations need the boundary because retrying work that never started is different from retrying work that may already have produced side effects.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.LifecycleFailureProduction/LifecycleFailureProduction.md"
+      anchor: "failure-boundaries"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      How would you design shutdown for a Spring-managed executor so that "graceful" shutdown does not become a false guarantee?
+    answer: >-
+      First decide the work-completion policy: whether running and queued tasks should be allowed to finish or be interrupted/cleared. Then decide how long the container is willing to wait for termination. Those are different controls; an await timeout expiring is not itself a hard task-kill deadline. The executor policy must also fit the deployment's real termination window and the lifetime of resources the task still needs, such as databases or network clients. New submissions during shutdown must be treated as a separate rejection/lifecycle concern. A graceful policy is credible only when those boundaries are aligned.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.LifecycleFailureProduction/LifecycleFailureProduction.md"
+      anchor: "executor-lifecycle"
     apiRelated:
       controller: ""
       methodSignature: ""

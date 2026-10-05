@@ -1,13 +1,14 @@
 TaskExecutorController:
   asyncWithContext():
     summary: Run @Async with a custom executor and context propagation
-    description: Set DemoContext, MDC, and RequestAttributes on the caller, then invoke
-      an @Async bean backed by a custom ThreadPoolTaskExecutor. TaskDecorator captures,
-      restores, and cleans context so the response proves the worker sees the correct
-      request context on a different Thread.
+    description: Set DemoContext and MDC on the caller, then invoke an @Async bean
+      backed by a custom ThreadPoolTaskExecutor. TaskDecorator also captures existing
+      Spring RequestAttributes when present, restores the captured values around worker
+      execution, and cleans up afterward. The response exposes caller/worker thread
+      names and ids plus the values actually observed across that boundary.
     enableVideoYoutube: false
-    videoYoutubeId: ID of youtube video add to API description
-    videoYoutubeTitle: Title of video
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
     methodName: asyncWithContext
     params: [
       ]
@@ -23,7 +24,7 @@ TaskExecutorController:
       ]
     usage: true
     readmeRelated:
-      file: ''
+      file: 3.ContextPropagation/ContextPropagation.md
       anchor: spring-async-demo
     aiGenerated: true
     reviewed: false
@@ -31,11 +32,12 @@ TaskExecutorController:
     summary: Observe exceptions from void @Async methods
     description: Invoke a void @Async method that intentionally throws and observe
       AsyncUncaughtExceptionHandler receiving the failure through a correlation id.
-      The experiment also distinguishes method-body failure from synchronous rejection
-      at the submission boundary.
+      The response proves the method-body failure path; the controller also terminates
+      its probe if submission itself fails, while the dedicated saturation experiment
+      demonstrates rejection deterministically.
     enableVideoYoutube: false
-    videoYoutubeId: ID of youtube video add to API description
-    videoYoutubeTitle: Title of video
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
     methodName: asyncVoidException
     params: [
       ]
@@ -51,7 +53,64 @@ TaskExecutorController:
       ]
     usage: true
     readmeRelated:
-      file: ''
+      file: 2.Spring_Task_Executor/SpringExecutor.md
       anchor: async-return-type
+    aiGenerated: true
+    reviewed: false
+  saturation():
+    summary: Observe ThreadPoolTaskExecutor saturation and rejection
+    description: Create an isolated ThreadPoolTaskExecutor with core=1, max=2, and
+      one queue slot. The first task occupies the core worker, the second fills the
+      queue, the third grows the pool to max, and the fourth is rejected. The response
+      exposes the pool/queue state that proves each admission transition.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    methodName: saturation
+    params: [
+      ]
+    path: com/example/learning/module/executor/controller/TaskExecutorController.java
+    mapping: '@GetMapping("/saturation")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-executor/saturation
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: 2.Spring_Task_Executor/SpringExecutor.md
+      anchor: spring-executor-config
+    aiGenerated: true
+    reviewed: false
+TaskSchedulerExperimentController:
+  executionModels():
+    summary: Compare Spring scheduler execution models
+    description: Run bounded fixed-rate scenarios through ThreadPoolTaskScheduler
+      and SimpleAsyncTaskScheduler. The response shows that one pooled periodic registration
+      stays serialized while SimpleAsyncTaskScheduler can overlap fixed-rate firings,
+      then confirms that its fixed-delay task runs on the scheduler thread itself.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    methodName: executionModels
+    params: [
+      ]
+    path: com/example/learning/module/taskscheduler/controller/TaskSchedulerExperimentController.java
+    mapping: '@GetMapping("/execution-models")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-scheduler/execution-models
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+    readmeRelated:
+      file: 4.TaskScheduler/TaskScheduler.md
+      anchor: scheduler-execution-models
     aiGenerated: true
     reviewed: false

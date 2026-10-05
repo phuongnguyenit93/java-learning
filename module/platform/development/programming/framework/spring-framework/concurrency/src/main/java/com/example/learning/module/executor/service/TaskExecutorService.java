@@ -14,14 +14,20 @@ import java.util.concurrent.CompletableFuture;
 public class TaskExecutorService {
 
     @Async("threadLearningTaskExecutor")
-    public CompletableFuture<Map<String, Object>> runAsync(String callerThread) {
+    public CompletableFuture<Map<String, Object>> runAsync(
+            String callerThread,
+            long callerThreadId
+    ) {
+        Thread worker = Thread.currentThread();
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("callerThread", callerThread);
-        result.put("workerThread", Thread.currentThread().getName());
+        result.put("callerThreadId", callerThreadId);
+        result.put("workerThread", worker.getName());
+        result.put("workerThreadId", worker.threadId());
         result.put("workerContext", DemoContext.get());
         result.put("workerMdcRequestId", MDC.get("requestId"));
         result.put("workerHasRequestAttributes", RequestContextHolder.getRequestAttributes() != null);
-        result.put("differentThread", !callerThread.equals(Thread.currentThread().getName()));
+        result.put("differentThread", callerThreadId != worker.threadId());
         return CompletableFuture.completedFuture(result);
     }
 

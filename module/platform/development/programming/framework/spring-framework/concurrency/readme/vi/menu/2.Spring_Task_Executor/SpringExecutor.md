@@ -1,19 +1,17 @@
 <a id="back-to-top"></a>
 
-# Spring TaskExecutor, ThreadPoolTaskExecutor và @Async
+# Thực thi tác vụ và @Async
 
 ## Menu
-- [1. TaskExecutor là gì?](#task-executor)
-- [2. @Async hoạt động qua Spring proxy](#async-annotation)
-- [3. Return type của @Async](#async-return-type)
-- [4. Cấu hình ThreadPoolTaskExecutor](#spring-executor-config)
-- [5. TaskDecorator và context propagation](#task-decorator)
-- [6. Demo @Async + custom executor + context](#spring-async-demo)
-- [7. Spring Framework và Spring Boot cần phân biệt](#spring-boot-auto-config)
-- [8. Lifecycle và shutdown](#executor-lifecycle)
-- [9. Experiment của Spring Task Executor](#spring-executor-experiments)
+- [Hợp đồng TaskExecutor và AsyncTaskExecutor](#task-executor)
+- [Các chiến lược và cách triển khai thực thi tác vụ](#task-executor-strategies)
+- [Cấu hình, hàng đợi và saturation của ThreadPoolTaskExecutor](#spring-executor-config)
+- [@EnableAsync, @Async và proxy dispatch](#async-annotation)
+- [AsyncConfigurer, executor mặc định và qualification](#async-executor-selection)
+- [Kiểu trả về và cách quan sát lỗi của @Async](#async-return-type)
+- [Executable evidence cho Task Execution và @Async](#spring-executor-experiments)
 
-Spring không thay thế Java concurrency primitives. Nó cung cấp abstraction và lifecycle integration để sử dụng chúng thuận tiện hơn trong application.
+Spring không thay thế Java concurrency primitives. Nó cung cấp abstraction và tích hợp vòng đời để ứng dụng sử dụng các cơ chế đó nhất quán hơn.
 
 ```text
 Java Executor concepts
@@ -23,37 +21,36 @@ Spring TaskExecutor / ThreadPoolTaskExecutor
 @Async proxy dispatch
 ```
 
-## <a id="task-executor">1. TaskExecutor là gì?</a>
+## <a id="task-executor">Hợp đồng TaskExecutor và AsyncTaskExecutor</a>
 
 <details>
-<summary>Click for details</summary>
+<summary>Xem chi tiết</summary>
 
-`org.springframework.core.task.TaskExecutor` là abstraction của Spring cho việc thực thi task.
+`TaskExecutor` là contract cốt lõi của Spring cho ý nghĩa "nhận `Runnable` này để thực thi". Phương thức `execute(Runnable)` cố ý gần như trùng với `java.util.concurrent.Executor`; giá trị Spring bổ sung là chiến lược thực thi có thể được cấu hình, inject, thích nghi với môi trường triển khai và được quản lý như hạ tầng của ứng dụng.
 
-Nó gần với `Executor` của Java nhưng được tích hợp vào Spring container.
+`AsyncTaskExecutor` mở rộng mô hình đó với các thao tác phục vụ việc gửi tác vụ bất đồng bộ, bao gồm `Callable` và các handle theo dõi hoàn tất dạng future. Đoạn mã chỉ cần gửi tác vụ rồi tiếp tục có thể phụ thuộc vào `TaskExecutor`; đoạn mã cần quan sát lúc hoàn tất có thể cần contract giàu hơn hoặc API trả future.
 
-`ThreadPoolTaskExecutor` là implementation phổ biến, bên dưới sử dụng `ThreadPoolExecutor` và expose các cấu hình như:
+`ThreadPoolTaskExecutor` là cách triển khai dạng pool phổ biến trong ứng dụng Spring cục bộ. Bên dưới nó dùng JDK `ThreadPoolExecutor` nhưng cung cấp cấu hình kiểu bean cho core/max pool size, queue capacity, keep-alive, đặt tên thread, task decoration, xử lý rejection và vòng đời.
 
-- core pool size;
-- max pool size;
-- queue capacity;
-- keep-alive;
-- thread name prefix;
-- rejection handler;
-- TaskDecorator;
-- shutdown behavior.
-
-Mental model vẫn là phần Thread Pool đã học:
+Mô hình admission vẫn là của JDK:
 
 ```text
-core → queue → max → rejection
+chưa đủ core worker
+→ tạo worker
+
+đã đạt core
+→ đưa task vào queue
+
+queue đầy nhưng chưa đạt max
+→ tăng worker tới max
+
+queue đầy và đã đạt max
+→ reject
 ```
 
-Spring không thay đổi quy tắc cơ bản này.
+Spring không thay đổi thuật toán này. Khác biệt tại ranh giới abstraction của Spring là cách component được cấu hình và rejection được biểu lộ ra ngoài. Mã ứng dụng gọi qua `TaskExecutor` nên chuẩn bị cho contract `TaskRejectedException` của Spring thay vì phụ thuộc vào việc `RejectedExecutionException` thô của JDK luôn thoát ra nguyên dạng.
 
-Một điểm riêng của Spring là exception type ở abstraction boundary. `ThreadPoolTaskExecutor` thực hiện Spring `TaskExecutor` contract; khi task bị từ chối, caller nên xử lý theo Spring rejection semantics như `TaskRejectedException` thay vì viết code phụ thuộc rằng raw `RejectedExecutionException` của JDK luôn đi xuyên qua không đổi.
-
-Nếu cần custom overload policy ở tầng JDK, underlying `ThreadPoolExecutor` vẫn dùng `RejectedExecutionHandler`; nhưng public contract mà application gọi qua `TaskExecutor` là contract của Spring.
+Đường exception đó chỉ xuất hiện khi executor/rejection handler bên dưới thực sự từ chối bằng cách ném exception. Nếu cấu hình JDK `RejectedExecutionHandler` tùy biến thì chính handler quyết định hành vi khi quá tải: khi executor vẫn đang hoạt động, `CallerRunsPolicy` chạy task bị từ chối ngay trên thread submit, còn chính sách như `DiscardPolicy` có thể bỏ task mà không ném exception. Vì vậy rejection handler làm thay đổi ngữ nghĩa thực thi quan sát được, không chỉ đổi loại exception. Với `@Async`, `CallerRunsPolicy` có thể làm target method chạy ngay trên thread bên gọi trước khi proxy return, còn chính sách discard im lặng có thể làm mất async work mà không có exception báo ra.
 
 </details>
 
@@ -61,54 +58,23 @@ Nếu cần custom overload policy ở tầng JDK, underlying `ThreadPoolExecuto
 
 ---
 
-## <a id="async-annotation">2. @Async hoạt động qua Spring proxy</a>
+## <a id="task-executor-strategies">Các chiến lược và cách triển khai thực thi tác vụ</a>
 
 <details>
-<summary>Click for details</summary>
+<summary>Xem chi tiết</summary>
 
-Trước hết application phải bật async method execution infrastructure. Trong module:
+Interface nhỏ giúp nhiều cách triển khai biểu diễn các chiến lược thực thi rất khác nhau:
 
-```java
-@Configuration
-@EnableAsync
-class TaskExecutorConfig {
-}
-```
+- `SyncTaskExecutor` chạy task ngay trên caller thread. Nó hữu ích khi không muốn hành vi async, ví dụ một số test, nhưng không tạo concurrency.
+- `SimpleAsyncTaskExecutor` tạo thread mới cho mỗi task và không tái sử dụng thread. Spring 6.1 cho phép dùng JDK 21 Virtual Thread; class này còn hỗ trợ giới hạn mức đồng thời và task decoration.
+- `ThreadPoolTaskExecutor` dùng `ThreadPoolExecutor` có cấu hình và phù hợp khi ứng dụng cần worker-pool/queue/rejection model rõ ràng.
+- `ConcurrentTaskExecutor` thích nghi một JDK `Executor` đã tồn tại để Spring delegate vào hạ tầng đó.
+- `DefaultManagedTaskExecutor` delegate tới managed executor service của môi trường Jakarta EE/JSR-236.
+- `VirtualThreadTaskExecutor` là lựa chọn virtual-thread-per-task tối giản từ Spring 6.1 và được học sâu ở chương Virtual Thread.
 
-`@EnableAsync` yêu cầu Spring đăng ký infrastructure cần thiết để detect/intercept method có `@Async` theo async configuration hiện tại.
+Không chọn cách triển khai chỉ vì tên class quen thuộc. Hãy chọn theo hành vi cần thiết: đồng bộ hay bất đồng bộ, pool hay thread-per-task, thread do ứng dụng hay môi trường quản lý, admission có giới hạn hay không, có cần context decoration và phối hợp vòng đời hay không.
 
-Mental model:
-
-```text
-@EnableAsync
-→ enable async method execution infrastructure
-
-@Async
-→ đánh dấu method invocation cần được async interceptor xử lý
-
-TaskExecutor
-→ execution strategy thực tế
-```
-
-`@Async` đứng một mình không phải Java language feature và không tự biến method call thành asynchronous nếu application context không bật/cấu hình async support tương ứng.
-
-Khi method được gọi qua Spring proxy:
-
-```text
-caller
-→ proxy intercept @Async method
-→ submit invocation vào TaskExecutor
-→ caller nhận control/result handle
-→ worker thực thi method
-```
-
-Vì vậy `@Async` không phải keyword của Java và không tự tạo "phép màu" bên trong method.
-
-### Self-invocation
-
-Nếu một method trong bean gọi trực tiếp một `@Async` method khác trên chính `this`, lời gọi có thể không đi qua proxy, vì vậy async interception không xảy ra theo proxy mode mặc định.
-
-Design thường rõ ràng hơn khi async boundary nằm giữa hai Spring bean.
+Một cách kiểm tra tốt là thay class name bằng mô tả chính sách. Nếu yêu cầu thật là "pooled execution, queue capacity 500, abort khi overload" thì chính sách đó phải nhìn thấy rõ trong tài liệu cấu hình/vận hành, không nên biến mất sau một biến kiểu `Executor` quá chung.
 
 </details>
 
@@ -116,174 +82,33 @@ Design thường rõ ràng hơn khi async boundary nằm giữa hai Spring bean.
 
 ---
 
-## <a id="async-return-type">3. Return type của @Async</a>
+## <a id="spring-executor-config">Cấu hình, hàng đợi và saturation của ThreadPoolTaskExecutor</a>
 
 <details>
-<summary>Click for details</summary>
+<summary>Xem chi tiết</summary>
 
-Các kiểu thường gặp:
-
-- `void` cho fire-and-forget;
-- `Future<T>`;
-- `CompletableFuture<T>`.
-
-Với `void`, caller không có completion handle trực tiếp; exception handling cũng cần được thiết kế riêng.
-
-Trong proxy-based `@Async`, exception của `void` method không thể được caller nhận qua `Future`. Nếu application dùng fire-and-forget thật sự, cần có `AsyncUncaughtExceptionHandler`/logging/metric strategy tương ứng thay vì giả định exception sẽ tự quay lại HTTP caller.
-
-Với `CompletableFuture`, caller có thể compose result theo các concept đã học ở phần Async.
-
-Code hiện dùng result-bearing method:
-
-```text
-TaskExecutorService#runAsync(...)
-```
-
-để caller có completion handle rõ ràng và experiment có thể quan sát deterministic.
-
-### Demo exception của @Async void
-
-Với `void`, Spring proxy không thể trả exception cho caller thông qua `Future` vì caller không nhận completion handle nào cả.
-
-Cấu hình một `AsyncUncaughtExceptionHandler` riêng:
-
-```text
-AsyncExceptionProbe
-```
-
-và một async method cố tình fail:
-
-```java
-@Async("threadLearningTaskExecutor")
-public void failWithoutFuture(String correlationId) {
-    throw new IllegalStateException(...);
-}
-```
-
-Tham khảo:
-
-```text
-TaskExecutorController#asyncVoidException()
-GET /spring-executor/void-exception
-```
-
-Controller dùng một correlation id chỉ để learning experiment có thể quan sát deterministic rằng handler đã nhận đúng failure. Response kỳ vọng có dạng:
-
-```text
-handlerInvoked = true
-method = failWithoutFuture
-exceptionType = IllegalStateException
-correlationId = ...
-```
-
-Probe cũng cleanup registration khi observation future hoàn thành exceptional hoặc timeout. Controller gắn timeout **trước khi** gọi async proxy và còn bắt submission failure đồng bộ. Điểm này quan trọng vì task có thể bị reject ngay tại submission boundary, trước khi `@Async` method thật sự chạy và trước khi `AsyncUncaughtExceptionHandler` có cơ hội nhận exception từ method body.
-
-Flow của experiment là:
-
-```text
-register observation future
-→ attach timeout
-→ gọi @Async proxy
-   ├─ submit thành công → worker chạy → handler complete future
-   └─ submit bị reject  → caller nhận submission failure đồng bộ
-                       → complete future exceptionally
-→ mọi terminal path đều cleanup pending registration
-```
-
-Vì vậy cần phân biệt **failure của task sau khi đã dispatch** với **failure ngay tại submission/admission**. `AsyncUncaughtExceptionHandler` giải quyết exception thoát khỏi `void @Async` method body; nó không phải replacement cho rejection handling ở submission boundary.
-
-**Kết luận:** `@Async void` là fire-and-forget đối với caller; error reporting phải đi qua logging/metrics/`AsyncUncaughtExceptionHandler` hoặc một channel riêng. Nếu business flow cần biết success/failure, ưu tiên return `CompletableFuture`/result handle thay vì `void`.
-
-</details>
-
-- [Quay lại đầu trang](#back-to-top)
-
----
-
-## <a id="spring-executor-config">4. Cấu hình ThreadPoolTaskExecutor</a>
-
-<details>
-<summary>Click for details</summary>
-
-Config dùng bean riêng:
-
-```text
-threadLearningTaskExecutor
-```
-
-để các experiment dùng một executor có cấu hình rõ ràng và dễ quan sát.
-
-Các giá trị demo nhỏ vì mục tiêu là học semantics, không phải production sizing.
-
-Sizing production vẫn phải dựa vào workload/downstream/SLO như phần Thread Pool.
-
-Tham khảo code:
-
-```text
-TaskExecutorConfig#threadLearningTaskExecutor()
-```
-
-### Demo config và production config là hai mục tiêu khác nhau
-
-Demo cố ý hard-code giá trị nhỏ:
+Module dùng bean riêng tên `threadLearningTaskExecutor` để các thử nghiệm có chính sách thực thi nhỏ, dễ dự đoán:
 
 ```java
 executor.setCorePoolSize(2);
 executor.setMaxPoolSize(4);
 executor.setQueueCapacity(8);
+executor.setKeepAliveSeconds(30);
+executor.setThreadNamePrefix("thread-learning-executor-");
+executor.setRejectedExecutionHandler(new ThreadPoolExecutor.AbortPolicy());
 ```
 
-để experiment dễ quan sát và không phụ thuộc environment.
+Điểm quan trọng không phải các số `2/4/8` mà là quan hệ giữa chúng. Với queue capacity dương, khi core worker đang bận, task mới được đưa vào queue trước. Pool chỉ tăng vượt core khi queue đã đầy. Khi queue đầy và worker đã chạm max, chính sách rejection mới áp dụng.
 
-Production thường nên externalize những giá trị vận hành cần tuning, ví dụ:
+Điều này dễ gây bất ngờ nếu cấu hình queue rất lớn nhưng lại kỳ vọng `maxPoolSize` thường xuyên được dùng. Queue lớn có thể hấp thụ công việc trong thời gian dài, khiến pool ở gần core size trong khi độ trễ âm thầm tích tụ trong queue.
 
-```yaml
-application:
-  async:
-    core-pool-size: 8
-    max-pool-size: 32
-    queue-capacity: 500
-    keep-alive-seconds: 60
-    await-termination-seconds: 30
-```
+Chiều ngược lại cũng quan trọng: `queueCapacity = 0` dùng direct hand-off thay vì queue đệm, nên khi core worker đã bận, executor có thể tăng ngay về phía `maxPoolSize`. Hình dạng quá tải thay đổi rất mạnh và cần được chọn có chủ đích.
 
-rồi bind bằng một configuration object:
+Sizing cho production phải dựa trên workload và ràng buộc của downstream: arrival rate, thời lượng task, CPU, capacity của DB/HTTP connection, latency SLO, mức queueing chấp nhận được và termination window. Demo cố tình dùng số nhỏ để quan sát semantics, không phải để sao chép sang production.
 
-```java
-@ConfigurationProperties(prefix = "application.async")
-public class AsyncExecutorProperties {
-    private int corePoolSize;
-    private int maxPoolSize;
-    private int queueCapacity;
-    private int keepAliveSeconds;
-    private int awaitTerminationSeconds;
-}
-```
+Việc đưa các **giá trị tinh chỉnh vận hành** ra ngoài code thường hợp lý, nhưng cơ chế binding không thuộc phạm vi sở hữu của module này. Nội dung cũ trước đây dùng Spring Boot `@ConfigurationProperties` làm ví dụ; nguyên tắc tách tuning khỏi business code được giữ lại, còn property binding đặc thù của Boot thuộc curriculum Spring Boot.
 
-Sau đó config executor lấy giá trị từ properties thay vì hard-code.
-
-Lợi ích:
-
-- dev/staging/production có thể dùng sizing khác nhau mà không sửa code;
-- deployment platform có thể override bằng environment/config;
-- thay đổi operational tuning không bị trộn với business logic;
-- dễ review rõ đâu là semantics của executor, đâu là con số phù hợp với workload hiện tại.
-
-Nhưng externalize không có nghĩa mọi property đều nên cho phép chỉnh tùy ý. Rejection policy, context propagation hoặc safety limit quan trọng vẫn cần default/validation rõ ràng để tránh một config sai làm biến đổi semantics hệ thống.
-
-Mental model:
-
-```text
-learning demo
-→ hard-code nhỏ, deterministic
-
-production
-→ typed configuration + validation
-→ environment-specific values
-→ metrics/load test để tuning
-```
-
-Không copy các con số demo `2/4/8` sang production và cũng không dùng công thức CPU-bound/I/O-bound như một giá trị tuyệt đối.
+Không nên đưa mọi chính sách thành property không kiểm soát. Rejection strategy, hard safety limit và hành vi context/lifecycle có thể thay đổi ngữ nghĩa của hệ thống nên cần invariant và validation ở cấp ứng dụng.
 
 </details>
 
@@ -291,61 +116,27 @@ Không copy các con số demo `2/4/8` sang production và cũng không dùng c�
 
 ---
 
-## <a id="task-decorator">5. TaskDecorator và context propagation</a>
+## <a id="async-annotation">@EnableAsync, @Async và proxy dispatch</a>
 
 <details>
-<summary>Click for details</summary>
+<summary>Xem chi tiết</summary>
 
-Đây là cầu nối trực tiếp với phần ThreadLocal.
-
-Pattern:
+`@EnableAsync` đăng ký hạ tầng cho việc thực thi phương thức bất đồng bộ của Spring. Với `AdviceMode.PROXY` mặc định, Spring áp dụng async interceptor cho những lời gọi đủ điều kiện và thực sự đi qua proxy. `@Async` đánh dấu phương thức hoặc class có lời gọi cần được gửi vào executor.
 
 ```text
-request/caller thread
-    context = REQUEST-123
-        ↓ submit
-TaskDecorator capture REQUEST-123
-        ↓
-worker thread
-        ↓ restore REQUEST-123
-async method chạy
-        ↓ finally
-restore/remove worker context
+caller
+→ Spring proxy intercept @Async
+→ resolve executor
+→ submit method invocation
+→ caller lấy lại quyền điều khiển / nhận completion handle
+→ worker chạy target method
 ```
 
-Demo giữ `DemoContext` để nhìn rõ cơ chế capture/restore/cleanup, đồng thời propagate thêm hai context thực tế thường gặp trong Spring application:
+Annotation này không phải tính năng của ngôn ngữ Java và không tự biến lời gọi trực tiếp thành bất đồng bộ. Đây là lý do self-invocation là pitfall quan trọng: `this.otherAsyncMethod()` vẫn chạy bên trong target object và thông thường bỏ qua proxy, nên proxy-mode async interception không xảy ra.
 
-- SLF4J MDC, ví dụ `requestId` dùng cho log correlation;
-- Spring `RequestAttributes`, là context gắn với HTTP request hiện tại.
+Thiết kế rõ ràng thường đặt ranh giới async giữa hai Spring bean cộng tác. AspectJ advice mode có thể xử lý lời gọi nội bộ khác đi, nhưng cơ chế proxy/weaving sâu thuộc module Spring AOP.
 
-Tham khảo:
-
-```text
-DemoTaskDecorator
-DemoContext
-```
-
-`DemoTaskDecorator` capture cả ba context trên caller thread, restore chúng trên worker, rồi restore/clear state cũ trong `finally`.
-
-Rule quan trọng nhất của decorator không phải chỉ `set`, mà là **cleanup/restore trong finally** vì worker sẽ được reuse cho task khác. Nếu chỉ set MDC/RequestAttributes mà không cleanup, task sau chạy trên cùng worker có thể nhìn thấy context của request trước.
-
-`TaskDecorator` cũng không nên được xem như universal async exception handler. Decorator nhận một `Runnable` execution callback; callback đó có thể là wrapper do framework/executor tạo ra thay vì business lambda gốc. Với execution theo `Future`/`FutureTask`, failure có thể được capture vào completion handle thay vì luôn thoát trực tiếp khỏi `Runnable.run()` để decorator bắt được. Vì vậy:
-
-```text
-TaskDecorator
-→ context capture / restore / cleanup
-
-Future / async handler / rejection handling
-→ failure observation theo contract tương ứng
-```
-
-Không trộn hai trách nhiệm này chỉ vì chúng cùng nằm quanh execution boundary.
-
-### Lifecycle của RequestAttributes
-
-Propagation không kéo dài lifecycle của HTTP request. Một async task có thể sống lâu hơn request gốc; khi đó không nên giả định mọi object/request-scoped state lấy từ `RequestAttributes` vẫn còn hợp lệ để sử dụng tùy ý.
-
-Nếu async work chỉ cần vài giá trị như `requestId`, tenant id hoặc principal id, design thường an toàn và rõ ràng hơn khi capture **giá trị cần thiết** sang một immutable context riêng thay vì giữ dependency dài hạn vào request object.
+Cũng không nên dùng `@Async` như marker chung có nghĩa "làm nhanh hơn". Nó thay đổi luồng điều khiển, cách quan sát lỗi, ranh giới thread/context, giả định về transaction và hành vi shutdown. Bên gọi phải được thiết kế để hiểu các hệ quả đó.
 
 </details>
 
@@ -353,50 +144,28 @@ Nếu async work chỉ cần vài giá trị như `requestId`, tenant id hoặc 
 
 ---
 
-## <a id="spring-async-demo">6. Demo @Async + custom executor + context</a>
+## <a id="async-executor-selection">AsyncConfigurer, executor mặc định và qualification</a>
 
 <details>
-<summary>Click for details</summary>
+<summary>Xem chi tiết</summary>
 
-Tham khảo controller:
+Thực thi async cần quy tắc chọn executor. Hai cách chính ở cấp ứng dụng:
 
-```text
-TaskExecutorController#asyncWithContext()
-GET /spring-executor/async-context
-```
+- cung cấp executor mặc định thông qua `AsyncConfigurer#getAsyncExecutor()` hoặc dùng cơ chế phân giải executor mặc định của Spring;
+- chỉ định executor cho một phương thức bằng `@Async("beanNameOrQualifier")` khi workload đó cần chính sách riêng.
 
-Controller đặt:
+Nếu không có executor do `AsyncConfigurer` chỉ định, hạ tầng async của Spring tìm executor mặc định phù hợp trong context, thông thường ưu tiên một `TaskExecutor` duy nhất và sau đó là `Executor` bean tên `taskExecutor`. Nếu cả hai đều không phân giải được, Spring fallback sang `SimpleAsyncTaskExecutor`. Ứng dụng production vẫn nên cấu hình chính sách thực thi mong muốn một cách tường minh thay vì coi fallback đó là quyết định sizing.
 
-```text
-DemoContext = REQUEST-123
-MDC[requestId] = REQUEST-123
-RequestAttributes = request hiện tại do Spring Web quản lý
-```
-
-rồi gọi bean khác có:
+Module hiện chọn executor trực tiếp trên phương thức dùng cho bài học:
 
 ```java
 @Async("threadLearningTaskExecutor")
+public CompletableFuture<Map<String, Object>> runAsync(...) { ... }
 ```
 
-Response `CompletableFuture` cho biết:
+`TaskExecutorConfig` triển khai `AsyncConfigurer` để cung cấp `AsyncUncaughtExceptionHandler`, nhưng không override `getAsyncExecutor()`. Vì vậy phương thức demo dùng qualifier của `@Async` để chọn `threadLearningTaskExecutor` một cách tường minh.
 
-- caller thread;
-- worker thread;
-- DemoContext worker quan sát được;
-- MDC request id worker quan sát được;
-- worker có nhận được Spring RequestAttributes hay không.
-
-Kỳ vọng:
-
-```text
-callerThread != workerThread
-workerContext = REQUEST-123
-workerMdcRequestId = REQUEST-123
-workerHasRequestAttributes = true
-```
-
-Controller cũng capture context/MDC trước khi đặt giá trị demo và restore chúng trong `finally`. Vì vậy experiment không làm mất context đã tồn tại sẵn trên caller thread.
+Chỉ tách nhiều executor khi workload thật sự cần chính sách khác nhau, ví dụ task nhỏ nhạy với độ trễ và task tích hợp block lâu. Mỗi executor mới đều tạo thêm trách nhiệm về capacity, vòng đời, metrics và tuning; không nên tạo chỉ để "gắn nhãn" code.
 
 </details>
 
@@ -404,22 +173,38 @@ Controller cũng capture context/MDC trước khi đặt giá trị demo và res
 
 ---
 
-## <a id="spring-boot-auto-config">7. Spring Framework và Spring Boot cần phân biệt</a>
+## <a id="async-return-type">Kiểu trả về và cách quan sát lỗi của @Async</a>
 
 <details>
-<summary>Click for details</summary>
+<summary>Xem chi tiết</summary>
 
-Không nên nói chung rằng:
+Contract của Spring yêu cầu phương thức `@Async` khai báo return type là `void` hoặc kiểu tương thích với Future như `Future<T>`/`CompletableFuture<T>`. Lựa chọn này quyết định bên gọi quan sát việc hoàn tất và lỗi bằng cách nào.
 
-> Không cấu hình executor thì `@Async` luôn dùng `SimpleAsyncTaskExecutor`.
+Với kiểu trả về dạng future, proxy trả cho bên gọi handle bất đồng bộ dùng để theo dõi việc hoàn tất. Target method vẫn phải tuân thủ Java signature nên bên trong nó cũng trả một Future của riêng mình — thường là Future đã hoàn tất chứa kết quả của method — nhưng Future của target không phải chính handle được trả trực tiếp cho bên gọi. Interceptor gửi lời gọi method vào executor đã chọn rồi trả handle bất đồng bộ do executor quản lý. Bên gọi vẫn phải **thực sự quan sát** handle đó bằng `get`, `join`, composition, callback hoặc tiếp tục trả nó qua một ranh giới async khác. Bỏ qua future có thể khiến lỗi thật trở nên vô hình ở cấp vận hành.
 
-Đó có thể là cách mô tả fallback ở Spring Framework trong một số trường hợp, nhưng application đang dùng **Spring Boot 3.3.x**, nơi Boot có task execution auto-configuration.
+Với `void`, không có handle theo dõi việc hoàn tất để trả. Nếu thân phương thức ném exception sau khi đã dispatch, Spring chuyển uncaught exception tới `AsyncUncaughtExceptionHandler`. Module dùng `AsyncExceptionProbe` làm minh chứng:
 
-Trong cấu hình mặc định không dùng virtual threads, Boot thường cung cấp `ThreadPoolTaskExecutor` cho task execution nếu application chưa tự định nghĩa executor phù hợp.
+```java
+@Async("threadLearningTaskExecutor")
+public void failWithoutFuture(String correlationId) {
+    throw new IllegalStateException("async void failure: " + correlationId);
+}
+```
 
-Khi virtual threads được bật bằng cấu hình Boot tương ứng, auto-configured task executor có thể chuyển sang implementation sử dụng virtual threads.
+Endpoint `/spring-executor/void-exception` đăng ký một future quan sát theo correlation id trước khi gọi proxy. Hai nhánh được tách rõ:
 
-Vì custom bean hoặc `AsyncConfigurer` có thể thay đổi lựa chọn cuối cùng, khi behavior quan trọng hãy kiểm tra executor thực tế của application thay vì dựa trên một câu fallback chung.
+```text
+submit thành công
+→ worker chạy method
+→ method throw
+→ AsyncUncaughtExceptionHandler quan sát failure
+
+submit bị reject
+→ failure xảy ra đồng bộ tại proxy/executor boundary
+→ method body chưa từng chạy
+```
+
+`AsyncUncaughtExceptionHandler` xử lý uncaught exception của `void @Async` sau dispatch; nó không phải rejection handler. Nếu luồng nghiệp vụ cần biết thành công/thất bại, kiểu trả về theo dõi completion thường rõ ràng hơn `void` kiểu fire-and-forget.
 
 </details>
 
@@ -427,50 +212,22 @@ Vì custom bean hoặc `AsyncConfigurer` có thể thay đổi lựa chọn cu�
 
 ---
 
-## <a id="executor-lifecycle">8. Lifecycle và shutdown</a>
+## <a id="spring-executor-experiments">Executable evidence cho Task Execution và @Async</a>
 
 <details>
-<summary>Click for details</summary>
+<summary>Xem chi tiết</summary>
 
-Một ưu điểm lớn của Spring-managed executor là container có thể quản lý lifecycle.
+Phần TaskExecutor giữ ba endpoint nhỏ như **minh chứng có thể chạy được**, không phải khuyến nghị cho production hay load benchmark:
 
-`ThreadPoolTaskExecutor` có các tùy chọn liên quan shutdown như:
+| Trọng tâm Knowledge | Controller method | Endpoint | Điều chứng minh |
+| --- | --- | --- | --- |
+| Context + executor dispatch | `TaskExecutorController#asyncWithContext()` | `GET /spring-executor/async-context` | bên gọi và worker khác nhau; custom executor và decorator thực sự tham gia |
+| Lỗi của `void @Async` | `TaskExecutorController#asyncVoidException()` | `GET /spring-executor/void-exception` | lỗi trong thân phương thức đi tới handler; rejection khi gửi tác vụ là nhánh khác |
+| Admission và saturation của pool | `TaskExecutorController#saturation()` | `GET /spring-executor/saturation` | quan sát được chuỗi cô lập `core → queue → tăng tới max → reject` mà không gây saturation cho executor của ứng dụng |
 
-- chờ task hoàn thành;
-- timeout chờ termination.
+Thử nghiệm đầu thuộc chủ yếu về chương Context Propagation vì minh chứng quan trọng là dữ liệu nào vượt qua ranh giới thread. Thử nghiệm thứ hai thuộc `async-return-type` vì nó làm cách quan sát lỗi trở nên nhìn thấy được. Thử nghiệm thứ ba map tới `spring-executor-config` vì nó làm chuỗi admission theo cấu hình có thể quan sát trực tiếp.
 
-Nhưng "Spring quản lý" không có nghĩa mọi task chắc chắn hoàn thành. Shutdown policy và timeout vẫn phải khớp SLA/deployment termination window.
-
-Tham khảo cấu hình của module:
-
-```text
-TaskExecutorConfig#threadLearningTaskExecutor()
-```
-
-Method này hiện cấu hình cả:
-
-```text
-setWaitForTasksToCompleteOnShutdown(true)
-setAwaitTerminationSeconds(2)
-```
-
-Hai giá trị demo nhỏ để demo lifecycle; production phải khớp termination window của process/container và thời gian task thực tế.
-
-</details>
-
-- [Quay lại đầu trang](#back-to-top)
-
----
-
-## <a id="spring-executor-experiments">9. Experiment của Spring Task Executor</a>
-
-<details>
-<summary>Click for details</summary>
-
-| README section | Controller method | Endpoint |
-| --- | --- | --- |
-| `#spring-async-demo` | `TaskExecutorController#asyncWithContext()` | `GET /spring-executor/async-context` |
-| `#async-return-type` | `TaskExecutorController#asyncVoidException()` | `GET /spring-executor/void-exception` |
+Các endpoint này không trả lời câu hỏi sizing cho production. Chúng dùng cấu hình nhỏ, dễ dự đoán để semantics dễ quan sát. Việc tuning pool vẫn cần workload test, metrics và phân tích capacity của downstream.
 
 </details>
 

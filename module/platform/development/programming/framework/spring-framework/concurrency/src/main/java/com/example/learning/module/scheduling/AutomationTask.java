@@ -2,8 +2,10 @@ package com.example.learning.module.scheduling;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Profile;
 
 @Component
+@Profile("legacy-scheduling-demo")
 public class AutomationTask {
     @Scheduled(cron = "0 * * * * *", zone = "GMT+7")
     public void automationTask1() {
@@ -15,13 +17,13 @@ public class AutomationTask {
     // fixedRate : Tần suất tính theo thời điểm bắt đầu của 2 task (Không lệ thuộc time)
     @Scheduled(initialDelay = 10000,
             fixedDelay = 15000)
-    //fixedRate = 1000)
-    public void myTask2(){
+    public void myTask2() {
         try {
             Thread.sleep(2000);
-            System.out.println("This task is run after 10 second and every 15 second after this task end or start");
-        } catch (Exception e) {
-            System.out.println("Failed");
+        } catch (InterruptedException error) {
+            Thread.currentThread().interrupt();
+            throw new IllegalStateException("Scheduled demo was interrupted", error);
         }
+        System.out.println("This task runs after 10 seconds and then 15 seconds after each execution completes");
     }
 }

@@ -41,4 +41,137 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: spring-task-concurrency-model
+    title: Mô hình thực thi đồng thời trong Spring
+    purpose: Xây dựng mô hình tư duy về lý do Spring cung cấp các cơ chế trừu tượng cho thực thi tác vụ và lập lịch trên nền Java concurrency, đồng thời xác định ranh giới giữa kiến thức JDK và hạ tầng do Spring quản lý.
+    relatedKnowledge:
+      - SpringConcurrency
+    objectives:
+      - Phân biệt thực thi tác vụ ngay lập tức, gọi phương thức bất đồng bộ và lập lịch theo thời gian thành ba nhu cầu khác nhau.
+      - Giải thích vai trò của TaskExecutor và TaskScheduler mà không học lại thread, executor, Future hay Java Memory Model.
+      - Hiểu rằng cấu hình, vòng đời và khả năng tích hợp với container là lý do chính để dùng các abstraction của Spring.
+    relatedModules:
+      - routeId: JAVA_CONCURRENCY_FUNDAMENTALS
+        label: Java Concurrency Fundamentals
+        note: Cung cấp nền tảng thread, executor, Future, đồng bộ và Java Memory Model mà module này giả định người học đã nắm.
+      - routeId: SPRING_CORE_CONTAINER
+        label: Spring Core Container
+        note: Cung cấp mô hình bean, configuration, dependency injection và lifecycle dùng để quản lý executor và scheduler.
+
+  - id: task-executor-model
+    title: Thực thi tác vụ với TaskExecutor
+    purpose: Hiểu abstraction thực thi tác vụ của Spring, các chiến lược triển khai chính và những lựa chọn cấu hình quyết định mức đồng thời, hàng đợi, từ chối tác vụ và cách thực thi.
+    relatedKnowledge:
+      - SpringExecutor
+    dependsOn:
+      - spring-task-concurrency-model
+    objectives:
+      - Hiểu TaskExecutor và AsyncTaskExecutor như các hợp đồng API phía Spring được xây trên ngữ nghĩa của Java Executor.
+      - So sánh thực thi đồng bộ, tạo thread cho từng task, thread pool, adapter cho môi trường quản lý thread và adapter cho JDK Executor dựa trên hành vi thay vì liệt kê API.
+      - Phân tích core pool, max pool, queue capacity, saturation và task rejection của ThreadPoolTaskExecutor như các quyết định vận hành.
+      - Phân biệt phần nào thuộc cấu hình/lifecycle của Spring và phần nào vẫn thuộc Java concurrency.
+
+  - id: annotation-driven-async
+    title: Thực thi bất đồng bộ bằng annotation
+    purpose: Hiểu cách @EnableAsync và @Async biến lời gọi method của Spring bean thành công việc chạy qua executor, bao gồm proxy boundary, cách chọn executor, giá trị trả về và lan truyền lỗi.
+    relatedKnowledge:
+      - SpringExecutor
+    dependsOn:
+      - task-executor-model
+    objectives:
+      - Lần theo một lời gọi @Async từ proxy interception đến lúc task được submit và thực thi.
+      - Giải thích giới hạn self-invocation trong proxy mode và khi AspectJ-style interception làm thay đổi boundary đó.
+      - Phân biệt hành vi của void, Future và CompletableFuture đối với kết quả/lỗi, cùng vai trò của AsyncUncaughtExceptionHandler.
+      - Cấu hình executor mặc định hoặc chọn executor cụ thể mà không nhầm hành vi của Spring Framework với Spring Boot auto-configuration.
+    relatedModules:
+      - routeId: ASPECT
+        label: Spring AOP
+        note: Sở hữu mô hình proxy, interception và self-invocation dùng lại bởi @Async trong proxy mode.
+
+  - id: context-propagation
+    title: Truyền context qua ranh giới tác vụ
+    purpose: Hiểu vì sao context gắn với thread không tự động đi theo công việc sang thread khác và cách Spring task decoration hỗ trợ thu thập, khôi phục và dọn dẹp context một cách có kiểm soát.
+    relatedKnowledge:
+      - ContextPropagation
+    dependsOn:
+      - task-executor-model
+    objectives:
+      - Nhận diện những context thường bị mất qua executor boundary như logging/observation context và trạng thái ThreadLocal của ứng dụng.
+      - Dùng mô hình TaskDecorator để bao bọc task thay vì làm rò rỉ mutable thread-bound state.
+      - Hiểu mục đích và chi phí của ContextPropagatingTaskDecorator được Spring Framework 6.1 cung cấp.
+      - Tôn trọng abstraction sở hữu security, transaction, request và reactive context thay vì mặc định sao chép mọi context bằng tay.
+
+  - id: task-scheduler-model
+    title: Lập lịch với TaskScheduler và Trigger
+    purpose: Xây dựng mô hình lập lịch bằng API quanh TaskScheduler, Trigger, TriggerContext và các scheduler implementation trước khi dùng @Scheduled.
+    relatedKnowledge:
+      - TaskScheduler
+    dependsOn:
+      - spring-task-concurrency-model
+    objectives:
+      - Phân biệt one-time, fixed-rate, fixed-delay và trigger-driven scheduling.
+      - Giải thích cách Trigger và TriggerContext hỗ trợ quyết định lần chạy tiếp theo dựa trên lịch sử thực thi.
+      - So sánh ThreadPoolTaskScheduler, ConcurrentTaskScheduler, DefaultManagedTaskScheduler và SimpleAsyncTaskScheduler dựa trên ngữ nghĩa thực thi và môi trường triển khai.
+      - Hiểu ThreadPoolTaskScheduler thực thi công việc ngay trên các scheduler thread, trong khi SimpleAsyncTaskScheduler thường chuyển mỗi lần kích hoạt sang execution thread riêng, ngoại trừ fixed-delay task.
+      - Phân tích việc hủy và lập lịch lại tại runtime thông qua handle/registration của API lập lịch thay vì coi metadata của @Scheduled là trạng thái có thể thay đổi động.
+      - Hiểu khả năng pause/resume và graceful shutdown của ThreadPoolTaskScheduler được Spring Framework 6.1 hỗ trợ.
+      - Nhận diện khi mô hình TaskScheduler chạy trong process là đủ và khi bài toán cần Quartz integration, nhưng không biến module này thành khóa học Quartz.
+
+  - id: declarative-scheduling
+    title: Lập lịch khai báo với @Scheduled
+    purpose: Hiểu cách Spring phát hiện và đăng ký scheduled method, cũng như cách ngữ nghĩa trigger, khả năng chồng lấn, xử lý lỗi và hợp đồng method ảnh hưởng hành vi thực tế.
+    relatedKnowledge:
+      - Scheduling
+    dependsOn:
+      - task-scheduler-model
+    objectives:
+      - Cấu hình @EnableScheduling và hiểu vị trí của SchedulingConfigurer khi registration mặc định không đủ.
+      - Chọn đúng giữa fixedDelay, fixedRate, cron, initial delay, time unit, time zone và scheduler qualifier.
+      - Phân tích schedule chồng lấn, bean bị tạo nhiều instance, repeatable scheduling và lỗi của scheduled task.
+      - Hiểu hỗ trợ reactive scheduled method từ Spring Framework 6.1 nhưng để ngữ nghĩa của Reactive Streams cho module reactive-programming sở hữu.
+    relatedModules:
+      - routeId: REACTIVE_PROGRAMMING
+        label: Reactive Programming
+        note: Sở hữu nền tảng Reactive Streams, deferred execution, backpressure và publisher/subscriber cần thiết để hiểu reactive scheduled method.
+
+  - id: virtual-thread-integration
+    title: Tích hợp Virtual Thread
+    purpose: Hiểu cách Spring Framework 6.1 tích hợp JDK 21 virtual thread vào task execution và scheduling, từ đó chọn hạ tầng dùng virtual thread dựa trên đặc tính workload và ngữ nghĩa scheduling thay vì chỉ vì đây là cơ chế mới.
+    relatedKnowledge:
+      - VirtualThreadIntegration
+    dependsOn:
+      - task-executor-model
+      - task-scheduler-model
+    objectives:
+      - Phân biệt VirtualThreadTaskExecutor tối giản với SimpleAsyncTaskExecutor được cấu hình dùng virtual thread; lựa chọn thứ hai còn hỗ trợ các khả năng như giới hạn concurrency và task decoration.
+      - Hiểu SimpleAsyncTaskScheduler dùng một scheduler thread và thông thường tạo execution thread riêng cho mỗi lần kích hoạt, còn fixed-delay task chạy ngay trên scheduler thread.
+      - Giải thích vì sao fixed-rate hoặc cron thường phù hợp hơn fixed-delay với mô hình SimpleAsyncTaskScheduler hướng tới virtual thread.
+      - Đánh giá virtual thread so với pooled platform thread dựa trên đặc tính workload, blocking, concurrency limit và nhu cầu lifecycle.
+    relatedModules:
+      - routeId: JAVA_CONCURRENCY_FUNDAMENTALS
+        label: Java Concurrency Fundamentals
+        note: Sở hữu ngữ nghĩa virtual thread của JDK; milestone này chỉ tập trung vào lựa chọn tích hợp của Spring.
+
+  - id: lifecycle-production-synthesis
+    title: Vòng đời, xử lý lỗi và tư duy production
+    purpose: Kết hợp execution, scheduling, context và virtual thread thành một mô hình production về khởi động, shutdown, saturation, failure, chẩn đoán và ranh giới giữa Spring Framework với Spring Boot.
+    relatedKnowledge:
+      - LifecycleFailureProduction
+    dependsOn:
+      - annotation-driven-async
+      - context-propagation
+      - declarative-scheduling
+      - virtual-thread-integration
+    objectives:
+      - Phân tích context close, coordinated lifecycle stop, task đang chờ/đang chạy, graceful shutdown và thời gian chờ termination.
+      - Phân biệt task rejection, lỗi từ async method, lỗi scheduled task và schedule overlap thành các mô hình lỗi khác nhau.
+      - Dùng thread naming, trạng thái runtime của executor/scheduler và scheduled-task observation để chẩn đoán mà không biến module thành khóa học về một sản phẩm observability.
+      - Chọn chiến lược executor/scheduler end-to-end và nhận diện giá trị mặc định tiện dụng nào thuộc Spring Boot thay vì Spring Framework.
+    relatedModules:
+      - routeId: SPRING_BOOT_AUTO_CONFIGURATION
+        label: Spring Boot Auto-Configuration
+        note: Sở hữu cơ chế tự động cấu hình TaskExecutor/TaskScheduler và conditional default của Spring Boot.
+      - routeId: SPRING_BOOT_ACTUATOR
+        label: Spring Boot Actuator
+        note: Cung cấp khả năng observability và management ở production có thể tiêu thụ runtime signal từ hạ tầng task do Spring quản lý.

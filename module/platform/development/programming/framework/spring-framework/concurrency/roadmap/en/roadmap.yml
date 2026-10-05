@@ -41,4 +41,137 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: spring-task-concurrency-model
+    title: Spring Task Concurrency Model
+    purpose: Build the mental model for why Spring adds managed task execution and scheduling abstractions on top of Java concurrency, and establish the boundary between JDK concurrency fundamentals and Spring-managed infrastructure.
+    relatedKnowledge:
+      - SpringConcurrency
+    objectives:
+      - Distinguish immediate task execution, asynchronous method invocation, and time-based scheduling as separate concerns.
+      - Explain the roles of TaskExecutor and TaskScheduler without re-teaching Java thread, executor, Future, or memory-model fundamentals.
+      - Understand why container-managed configuration, lifecycle, and integration are the main reasons to use Spring's abstractions.
+    relatedModules:
+      - routeId: JAVA_CONCURRENCY_FUNDAMENTALS
+        label: Java Concurrency Fundamentals
+        note: Provides the thread, executor, Future, synchronization, and Java Memory Model foundations assumed by this module.
+      - routeId: SPRING_CORE_CONTAINER
+        label: Spring Core Container
+        note: Provides the bean, configuration, dependency-injection, and lifecycle model used to manage executors and schedulers.
+
+  - id: task-executor-model
+    title: Task Execution with TaskExecutor
+    purpose: Learn Spring's task-execution abstraction, its major implementation strategies, and the configuration choices that determine concurrency, queuing, rejection, and execution behavior.
+    relatedKnowledge:
+      - SpringExecutor
+    dependsOn:
+      - spring-task-concurrency-model
+    objectives:
+      - Understand TaskExecutor and AsyncTaskExecutor as Spring-facing execution contracts built on Java Executor semantics.
+      - Compare synchronous execution, per-task thread creation, pooled execution, managed-environment adapters, and JDK Executor adaptation by behavior rather than by API inventory.
+      - Reason about ThreadPoolTaskExecutor sizing, queue capacity, saturation, and task rejection as operational design choices.
+      - Recognize which executor concerns are Spring configuration/lifecycle concerns and which remain Java concurrency concerns.
+
+  - id: annotation-driven-async
+    title: Annotation-Driven Asynchronous Execution
+    purpose: Understand how @EnableAsync and @Async turn ordinary Spring bean method calls into executor-backed asynchronous work, including proxy boundaries, executor selection, return values, and error propagation.
+    relatedKnowledge:
+      - SpringExecutor
+    dependsOn:
+      - task-executor-model
+    objectives:
+      - Trace an @Async invocation from proxy interception to task submission and execution.
+      - Explain self-invocation limits in proxy mode and when AspectJ-style interception changes that boundary.
+      - Distinguish void, Future, and CompletableFuture result/error behavior and the role of AsyncUncaughtExceptionHandler.
+      - Configure the default executor or qualify a specific executor without confusing Spring Framework behavior with Spring Boot auto-configuration.
+    relatedModules:
+      - routeId: ASPECT
+        label: Spring AOP
+        note: Owns the reusable proxy, interception, and self-invocation mental model used by @Async in proxy mode.
+
+  - id: context-propagation
+    title: Context Propagation Across Task Boundaries
+    purpose: Learn why thread-bound context does not automatically follow work onto another thread and how Spring task decoration can capture, restore, and clean up execution context safely.
+    relatedKnowledge:
+      - ContextPropagation
+    dependsOn:
+      - task-executor-model
+    objectives:
+      - Identify common context that can be lost across executor boundaries, such as logging or observation context and application ThreadLocal state.
+      - Use the TaskDecorator model to reason about wrapping task execution instead of leaking mutable thread-bound state.
+      - Understand the purpose and cost of ContextPropagatingTaskDecorator in Spring Framework 6.1.
+      - Treat security, transaction, request, and reactive context according to their owning abstractions instead of assuming every context should be copied manually.
+
+  - id: task-scheduler-model
+    title: Task Scheduling with TaskScheduler and Trigger
+    purpose: Build the programmatic scheduling model around TaskScheduler, Trigger, TriggerContext, and scheduler implementations before using declarative @Scheduled methods.
+    relatedKnowledge:
+      - TaskScheduler
+    dependsOn:
+      - spring-task-concurrency-model
+    objectives:
+      - Distinguish one-time scheduling, fixed-rate scheduling, fixed-delay scheduling, and trigger-driven scheduling.
+      - Explain how Trigger and TriggerContext support scheduling decisions based on execution history.
+      - Compare ThreadPoolTaskScheduler, ConcurrentTaskScheduler, DefaultManagedTaskScheduler, and SimpleAsyncTaskScheduler by execution semantics and deployment environment.
+      - Understand that ThreadPoolTaskScheduler executes work on its scheduler threads, whereas SimpleAsyncTaskScheduler normally hands each firing to a separate execution thread except for fixed-delay tasks.
+      - Reason about cancellation and runtime rescheduling through programmatic scheduling handles/registration rather than treating @Scheduled metadata as mutable runtime state.
+      - Understand Spring Framework 6.1 pause/resume and graceful-shutdown lifecycle support for ThreadPoolTaskScheduler.
+      - Recognize when Spring's in-process TaskScheduler model is sufficient and when Quartz integration belongs in the solution, without turning this module into a Quartz course.
+
+  - id: declarative-scheduling
+    title: Declarative Scheduling with @Scheduled
+    purpose: Learn how Spring discovers and registers scheduled methods and how trigger semantics, overlap, error handling, and method contracts affect real application behavior.
+    relatedKnowledge:
+      - Scheduling
+    dependsOn:
+      - task-scheduler-model
+    objectives:
+      - Configure @EnableScheduling and understand where SchedulingConfigurer fits when default registration is insufficient.
+      - Choose correctly among fixedDelay, fixedRate, cron, initial delay, time units, time zones, and the scheduler qualifier.
+      - Reason about overlapping schedules, duplicate bean instances, repeated declarations, and scheduled-task failure behavior.
+      - Understand Spring Framework 6.1 support for reactive scheduled methods while leaving Reactive Streams semantics to the reactive-programming owner.
+    relatedModules:
+      - routeId: REACTIVE_PROGRAMMING
+        label: Reactive Programming
+        note: Owns Reactive Streams, deferred execution, backpressure, and publisher/subscriber fundamentals needed to reason about reactive scheduled methods.
+
+  - id: virtual-thread-integration
+    title: Virtual-Thread Integration
+    purpose: Understand how Spring Framework 6.1 integrates JDK 21 virtual threads into task execution and scheduling, and choose virtual-thread-backed infrastructure based on workload and scheduler semantics rather than novelty.
+    relatedKnowledge:
+      - VirtualThreadIntegration
+    dependsOn:
+      - task-executor-model
+      - task-scheduler-model
+    objectives:
+      - Distinguish the minimal VirtualThreadTaskExecutor from SimpleAsyncTaskExecutor configured for virtual threads, which additionally offers features such as concurrency limiting and task decoration.
+      - Understand that SimpleAsyncTaskScheduler uses one scheduler thread and normally starts a separate execution thread per firing, while fixed-delay tasks execute on the scheduler thread itself.
+      - Explain why fixed-rate or cron scheduling is generally a better fit than fixed-delay scheduling for the virtual-thread-aligned SimpleAsyncTaskScheduler model.
+      - Evaluate virtual threads against pooled platform-thread executors using workload characteristics, blocking behavior, concurrency limits, and lifecycle needs.
+    relatedModules:
+      - routeId: JAVA_CONCURRENCY_FUNDAMENTALS
+        label: Java Concurrency Fundamentals
+        note: Owns JDK virtual-thread semantics; this milestone focuses only on Spring's integration choices.
+
+  - id: lifecycle-production-synthesis
+    title: Lifecycle, Failure Handling, and Production Reasoning
+    purpose: Combine execution, scheduling, context, and virtual-thread knowledge into a production mental model for startup, shutdown, saturation, failures, diagnostics, and framework-versus-Boot ownership.
+    relatedKnowledge:
+      - LifecycleFailureProduction
+    dependsOn:
+      - annotation-driven-async
+      - context-propagation
+      - declarative-scheduling
+      - virtual-thread-integration
+    objectives:
+      - Reason about context close, coordinated lifecycle stop, queued and running work, graceful shutdown, and termination waiting.
+      - Distinguish task rejection, asynchronous method failure, scheduled-task failure, and schedule overlap as different failure models.
+      - Use thread naming, executor/scheduler runtime state, and scheduled-task observation signals to diagnose behavior without turning this module into an observability product course.
+      - Choose an executor/scheduler strategy end to end and identify which convenience defaults belong to Spring Boot rather than Spring Framework.
+    relatedModules:
+      - routeId: SPRING_BOOT_AUTO_CONFIGURATION
+        label: Spring Boot Auto-Configuration
+        note: Owns Boot's automatic TaskExecutor and TaskScheduler configuration and conditional defaults.
+      - routeId: SPRING_BOOT_ACTUATOR
+        label: Spring Boot Actuator
+        note: Provides production observability and management capabilities that can consume runtime signals from Spring-managed task infrastructure.

@@ -14,3 +14,48 @@
 #
 # Add only curated references that are useful for the module.
 # The build system must not overwrite this file after authored content exists.
+
+references:
+  - title: "Task Execution and Scheduling — Spring Framework 6.1.14 Reference"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/reference/html/integration.html#scheduling"
+    description: "Version-pinned Spring Framework 6.1.14 reference guide for task execution, scheduling, @Async, @Scheduled, scheduler implementations, lifecycle, and virtual-thread integration."
+
+  - title: "TaskExecutor API"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/core/task/TaskExecutor.html"
+    description: "Spring Framework 6.1.14 API contract for the core task-execution abstraction."
+
+  - title: "ThreadPoolTaskExecutor API"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/scheduling/concurrent/ThreadPoolTaskExecutor.html"
+    description: "Spring Framework 6.1.14 API documentation for pool configuration, runtime management, rejection behavior, and lifecycle integration."
+
+  - title: "EnableAsync API"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/scheduling/annotation/EnableAsync.html"
+    description: "Spring Framework 6.1.14 API documentation for enabling asynchronous method execution, executor customization, and proxy-versus-AspectJ advice mode."
+
+  - title: "Async API"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/scheduling/annotation/Async.html"
+    description: "Spring Framework 6.1.14 contract for asynchronous method interception, executor qualification, and supported asynchronous return types."
+
+  - title: "TaskScheduler API"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/scheduling/TaskScheduler.html"
+    description: "Spring Framework 6.1.14 scheduling contract for one-time, periodic, and Trigger-based task scheduling."
+
+  - title: "Scheduled API"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/scheduling/annotation/Scheduled.html"
+    description: "Spring Framework 6.1.14 contract for declarative scheduling, trigger attributes, scheduler qualification, repeatable schedules, and reactive scheduled methods."
+
+  - title: "ThreadPoolTaskScheduler API"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/scheduling/concurrent/ThreadPoolTaskScheduler.html"
+    description: "Spring Framework 6.1.14 API documentation for pooled scheduling, lifecycle management, pause/resume, and graceful shutdown."
+
+  - title: "ContextPropagatingTaskDecorator API"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/core/task/support/ContextPropagatingTaskDecorator.html"
+    description: "Spring Framework 6.1.14 API for propagating logging and observation context across task-execution thread boundaries."
+
+  - title: "SimpleAsyncTaskScheduler API"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/scheduling/concurrent/SimpleAsyncTaskScheduler.html"
+    description: "Spring Framework 6.1.14 API documentation for the virtual-thread-aligned scheduler and its fixed-delay execution caveat."
+
+  - title: "VirtualThreadTaskExecutor API"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/core/task/VirtualThreadTaskExecutor.html"
+    description: "Spring Framework 6.1.14 API for JDK 21 virtual-thread-backed task execution and its intentionally small configuration surface."

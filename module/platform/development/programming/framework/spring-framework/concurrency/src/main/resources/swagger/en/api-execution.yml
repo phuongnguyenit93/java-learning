@@ -1,41 +1,82 @@
 TaskExecutorController:
   asyncWithContext():
     execution: |-
-      <p><b>Concept:</b> The controller seeds request-scoped demo context, then dispatches work through Spring <code>@Async</code> and a custom <code>ThreadPoolTaskExecutor</code>.</p>
+      <p><b>Concept:</b> The controller seeds <code>DemoContext</code> and MDC on the HTTP thread, then dispatches work through Spring <code>@Async</code> and a custom <code>ThreadPoolTaskExecutor</code>. Existing Spring <code>RequestAttributes</code> are captured by the decorator when present.</p>
       <ol>
-        <li>The HTTP thread saves any previous <code>DemoContext</code> and MDC value, sets both to <code>REQUEST-123</code>, and calls the proxied async service.
+        <li>The HTTP thread saves its previous demo/MDC values, sets both request identifiers to <code>REQUEST-123</code>, and calls the proxied async service.
           <div><i>Source: TaskExecutorService.runAsync()</i></div>
-          <pre><code>    @Async("threadLearningTaskExecutor")
-              public CompletableFuture&lt;Map&lt;String, Object&gt;&gt; runAsync(String callerThread) {
-                  Map&lt;String, Object&gt; result = new LinkedHashMap&lt;&gt;();
-                  result.put("callerThread", callerThread);
-                  result.put("workerThread", Thread.currentThread().getName());
-                  result.put("workerContext", DemoContext.get());
-                  result.put("workerMdcRequestId", MDC.get("requestId"));
-                  result.put("workerHasRequestAttributes", RequestContextHolder.getRequestAttributes() != null);
-                  result.put("differentThread", !callerThread.equals(Thread.currentThread().getName()));
+          <pre><code>@Async("threadLearningTaskExecutor")
+          public CompletableFuture&lt;Map&lt;String, Object&gt;&gt; runAsync(
+                  String callerThread, long callerThreadId) {
+              Thread worker = Thread.currentThread();
+              result.put("callerThreadId", callerThreadId);
+              result.put("workerThread", worker.getName());
+              result.put("workerThreadId", worker.threadId());
+              result.put("workerContext", DemoContext.get());
+              result.put("workerMdcRequestId", MDC.get("requestId"));
+              result.put("workerHasRequestAttributes", RequestContextHolder.getRequestAttributes() != null);
+              result.put("differentThread", callerThreadId != worker.threadId());
               ...
           }</code></pre>
         </li>
-        <li><code>DemoTaskDecorator</code> captures the demo context, MDC, and request attributes at submission time, installs them on the worker, and restores the worker's previous state afterward.</li>
-        <li>The async service reports caller/worker thread names and the propagated values; the controller restores its own previous context immediately after submission.</li>
+        <li><code>DemoTaskDecorator</code> captures DemoContext, MDC, and any request attributes already bound to the caller, installs them around worker execution, then restores the worker's previous values in <code>finally</code>.</li>
+        <li>As soon as submission returns, the controller restores its own DemoContext/MDC. It then waits up to three seconds for this bounded experiment and returns the worker evidence as a normal HTTP body. The service execution itself still crosses the real <code>@Async</code> executor boundary.</li>
       </ol>
-      <p><b>Conclusion:</b> Run @Async with a custom executor and context propagation. The response and Execution Context are the runtime evidence for this behavior; the colocated source snippet shows the code path that creates the experiment.</p>
+      <p><b>Conclusion:</b> The response proves a real async thread boundary with thread ids (names are only descriptive evidence) plus deliberate context propagation. It does not imply that retaining broad request state is a production recommendation.</p>
     usage: true
   asyncVoidException():
     execution: |-
-      <p><b>Concept:</b> The endpoint observes failure from an <code>@Async void</code> method through the configured <code>AsyncUncaughtExceptionHandler</code>.</p>
+      <p><b>Concept:</b> Failure from a <code>void @Async</code> method is observed through the configured <code>AsyncUncaughtExceptionHandler</code>, because the caller has no Future result for that method body.</p>
       <ol>
-        <li>The controller creates a correlation id and registers a pending observation future in <code>AsyncExceptionProbe</code>.
+        <li>The controller creates a correlation id and registers a pending observation future in <code>AsyncExceptionProbe</code>.</li>
+        <li>The proxied service executes on the configured executor and deliberately throws.
           <div><i>Source: TaskExecutorService.failWithoutFuture()</i></div>
-          <pre><code>    @Async("threadLearningTaskExecutor")
-              public void failWithoutFuture(String correlationId) {
-                  throw new IllegalStateException("async void failure: " + correlationId);
-              }</code></pre>
+          <pre><code>@Async("threadLearningTaskExecutor")
+          public void failWithoutFuture(String correlationId) {
+              throw new IllegalStateException("async void failure: " + correlationId);
+          }</code></pre>
         </li>
-        <li>The async service method throws <code>IllegalStateException</code> on the custom executor.</li>
-        <li>The uncaught-exception handler extracts the correlation id, records method/error/thread metadata, and completes the observation future.</li>
-        <li>If submission itself is rejected synchronously, the controller completes that same probe exceptionally so the registration still terminates and cleans itself up.</li>
+        <li><code>AsyncUncaughtExceptionHandler</code> receives the method-body failure and returns method, exception, correlation, and handler-thread evidence through the probe. The controller waits boundedly for that evidence before writing the HTTP response.</li>
+        <li>If submission itself fails synchronously, the controller terminates the probe exceptionally so it cannot leak. Deterministic submission rejection is demonstrated by the separate saturation experiment.</li>
       </ol>
-      <p><b>Conclusion:</b> Observe exceptions from void @Async methods. The response and Execution Context are the runtime evidence for this behavior; the colocated source snippet shows the code path that creates the experiment.</p>
+      <p><b>Conclusion:</b> Method-body failure and submission failure are different boundaries. This endpoint proves the uncaught <code>void @Async</code> failure path.</p>
+    usage: true
+  saturation():
+    execution: |-
+      <p><b>Concept:</b> <code>ThreadPoolTaskExecutor</code> admission follows core workers, queue capacity, growth to max workers, and finally rejection.</p>
+      <ol>
+        <li>The experiment creates an isolated executor with <code>corePoolSize=1</code>, <code>maxPoolSize=2</code>, <code>queueCapacity=1</code>, and explicit <code>AbortPolicy</code>.</li>
+        <li>Task 1 occupies the core worker and waits on a latch. Task 2 is then submitted and occupies the only queue slot.</li>
+        <li>Because the queue is now full, task 3 causes the pool to grow from one worker to the configured max of two; task 3 also waits on the latch.
+          <div><i>Source: ConcurrencyExperimentService.executorSaturationDemo()</i></div>
+          <pre><code>executor.setCorePoolSize(1);
+          executor.setMaxPoolSize(2);
+          executor.setQueueCapacity(1);
+          executor.execute(firstBlockingTask);
+          executor.execute(queuedTask);
+          executor.execute(thirdBlockingTask);
+          executor.execute(fourthTask);</code></pre>
+        </li>
+        <li>Immediately before task 4, both workers are active and the queue is full. Task 4 therefore reaches <code>AbortPolicy</code>, which Spring exposes as <code>TaskRejectedException</code>.</li>
+        <li>The experiment releases the blocked workers, waits for all three accepted tasks to finish, and shuts down the isolated executor.</li>
+      </ol>
+      <p><b>Conclusion:</b> The response makes the complete <code>core → queue → grow-to-max → reject</code> sequence observable without saturating the application's shared executor.</p>
+    usage: true
+TaskSchedulerExperimentController:
+  executionModels():
+    execution: |-
+      <p><b>Concept:</b> Timing policy and execution policy are separate. The same fixed-rate idea has different overlap behavior depending on the concrete Spring scheduler.</p>
+      <ol>
+        <li>A local <code>ThreadPoolTaskScheduler</code> with pool size two schedules one fixed-rate registration every 20 ms while each invocation deliberately takes about 80 ms. The experiment observes at least three executions and records the maximum concurrent count for that one registration.</li>
+        <li>Despite having two scheduler threads, successive executions of that same periodic registration remain serialized, so the observed maximum concurrency should stay at one.</li>
+        <li>A local <code>SimpleAsyncTaskScheduler</code> then schedules fixed-rate firings through a named cached target executor. The first three task bodies wait together behind a latch, making concurrent execution directly measurable.
+          <div><i>Source: ConcurrencyExperimentService.schedulerExecutionModelsDemo()</i></div>
+          <pre><code>simpleScheduler.setTargetTaskExecutor(simpleTargetExecutor);
+          simpleScheduler.scheduleAtFixedRate(rateTask, Duration.ofMillis(20));
+          simpleScheduler.scheduleWithFixedDelay(delayTask, Duration.ofMillis(100));</code></pre>
+        </li>
+        <li>The response reports overlapping fixed-rate executions on <code>simple-target-*</code> threads, then records a fixed-delay body running on the <code>simple-clock-*</code> scheduler thread itself.</li>
+        <li>All recurring registrations are cancelled, the pooled scheduler is shut down and awaited boundedly, and the SimpleAsync scheduler/target executor are closed before the request finishes.</li>
+      </ol>
+      <p><b>Conclusion:</b> A larger <code>ThreadPoolTaskScheduler</code> pool does not make successive executions of one periodic registration overlap, while <code>SimpleAsyncTaskScheduler</code> can overlap handed-off fixed-rate firings; its fixed-delay path is intentionally different.</p>
     usage: true
