@@ -59,18 +59,11 @@ java-learning/
 ├── README.md
 ├── ARCHITECTURE.md
 ├── module-generate-agent/
-│   ├── STEP_1_CURRICULUM_RULES.md  # Area-level curriculum rules
-│   ├── STEP_2_ROADMAP_REFERENCE.md # Canonical module roadmap + Reference architecture/workflow
-│   ├── STEP_3_MENU.md              # New-module Menu/title skeleton rules
-│   ├── STEP_4_KNOWLEDGE.md         # Knowledge + refactor Menu/Knowledge rules
-│   ├── STEP_5_API.md               # API learning documentation rules
-│   ├── STEP_6_VIDEO.md             # Video Script / Presentation Plan rules
-│   ├── STEP_7_QUIZ.md              # Quiz authoring rules
-│   ├── STEP_8_INTERVIEW.md         # Interview authoring rules
-│   ├── STEP_9_VALIDATION.md        # Integrated validation / Coverage Review
-│   └── GENERAL_AGENT_RULES.md      # Step orchestration / routing
+│   └── GENERAL_AGENT_RULES.md      # Canonical source of truth for module-generation workflow/routing
 └── STRUCTURE.md                    # Generated module map
 ```
+
+The repository contains delegated module-generation rule files under `module-generate-agent/`, but this architecture overview intentionally does not enumerate or order them. `GENERAL_AGENT_RULES.md` owns the canonical chain, prerequisites, routing and delegation so the workflow has one source of truth.
 
 Ba boundary quan trọng nhất của infrastructure là:
 
@@ -146,7 +139,7 @@ Mỗi language roadmap tự sở hữu curriculum của nó; Gradle chỉ tạo/
 
 Với legacy module, roadmap phải được thiết kế độc lập từ module scope/curriculum goal trước, rồi mới audit Knowledge hiện tại. Điều này tránh việc historical menu order vô tình trở thành curriculum mới.
 
-`GENERAL_AGENT_RULES.md` chỉ orchestrate/routing. Canonical rules của từng phase nằm trong `module-generate-agent/STEP_1_...` đến `STEP_9_...`; riêng ROADMAP + module-level Reference architecture + authoring/review contract nằm trong [`STEP_2_ROADMAP_REFERENCE.md`](./module-generate-agent/STEP_2_ROADMAP_REFERENCE.md).
+`module-generate-agent/GENERAL_AGENT_RULES.md` là canonical source of truth cho chuỗi module-generation: thứ tự, prerequisite, routing, gap handling và rule file nào được delegated cho từng phase. `ARCHITECTURE.md` chỉ mô tả dependency/boundary ở cấp kiến trúc và không duy trì một bản sao numbered workflow riêng.
 
 ### 3.1 `project-portal` boundary
 
@@ -649,7 +642,7 @@ Việc một module có API hay không không quyết định module đó có đ
 
 Do đó không được đổi một topic tự nhiên thành `SERVLET`/`REACTIVE`, hoặc tạo endpoint giả, chỉ để đạt "đủ bộ" Knowledge/API/Quiz/Interview. Ngược lại, nếu `SERVLET`/`REACTIVE` module có learning API thực sự thì API phải minh họa/chứng minh Knowledge concept và dùng exact README relationship theo Swagger contract.
 
-Workflow routing nằm trong `module-generate-agent/GENERAL_AGENT_RULES.md`; quy tắc authoring/validation chi tiết nằm trong file `STEP_X_*.md` tương ứng.
+Workflow order, routing, prerequisites và authoring/validation rule delegation đều phải được resolve từ `module-generate-agent/GENERAL_AGENT_RULES.md`. Tài liệu kiến trúc này không hard-code numbered generation steps để tránh tạo source of truth cạnh tranh.
 
 Ba tầng này là **learning/content contract**, không phải constraint của Gradle/module scanner. Build system vẫn chỉ materialize/present source content; chất lượng roadmap, motivation, transition và conceptual relationship thuộc human/AI-authored curriculum và phải được review độc lập với schema/build correctness.
 
@@ -1385,23 +1378,9 @@ Repository deliberately không có stable file id cho mapping này. Path là map
 
 `video/` là supporting content directory và phải bị loại khỏi module-child/module-order discovery giống `readme/`, `roadmap/`, `src/`, `build/`. Nó không tạo module hierarchy mới trong `STRUCTURE.md` hay `module-catalog.json`.
 
-Về learning pipeline, Video script là canonical **Step 6**:
+Về learning dependency, Video script nằm downstream của finalized Knowledge và có thể dùng API/runtime evidence khi evidence đó tồn tại và có giá trị sư phạm. Exact numbered position, prerequisite và rule-file routing của Video không được duplicate trong `ARCHITECTURE.md`; chúng phải được resolve từ canonical `module-generate-agent/GENERAL_AGENT_RULES.md`.
 
-```text
-Step 4   Knowledge
-        ↓
-Step 5   API / runtime evidence when pedagogically useful
-        ↓
-Step 6   Video Script / presentation plan
-        ↓
-Step 7   Quiz
-        ↓
-Step 8   Interview
-        ↓
-Step 9   Integrated validation / Coverage Review
-```
-
-Step 6 dùng Knowledge làm technical source và có thể dùng Step 5 runtime evidence nếu tồn tại. Canonical unit là **one Knowledge Menu Markdown file → one Video**; Video path mirror exact relative path của Knowledge và H2 order của Knowledge trở thành Video section order. Narration được phép chuyển written Knowledge thành spoken explanation, thêm transition, visual direction và demo flow, nhưng không được âm thầm tạo technical claim cạnh tranh với Knowledge. Detailed authoring contract nằm trong [`STEP_6_VIDEO.md`](./module-generate-agent/STEP_6_VIDEO.md).
+Canonical unit ở cấp kiến trúc là **one Knowledge Menu Markdown file → one Video**; Video path mirror exact relative path của Knowledge và H2 order của Knowledge trở thành Video section order. Narration được phép chuyển written Knowledge thành spoken explanation, thêm transition, visual direction và demo flow, nhưng không được âm thầm tạo technical claim cạnh tranh với Knowledge. Detailed authoring contract được truy cập theo delegation hiện hành trong `GENERAL_AGENT_RULES.md`.
 
 Current implementation đã có `BUILD_VIDEO` + localized skeleton synchronization + build-time Portal Video projection. `PortalVideoProjectionService` đọc authored `video/{lang}/menu/**/*.md`, bỏ qua skeleton chưa có Scene, validate Scene/Transition fields, rồi generate:
 

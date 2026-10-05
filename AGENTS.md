@@ -14,19 +14,12 @@ Use:
 AGENTS.md       → how an AI should work in this repository
 ARCHITECTURE.md → why the repository is structured this way
 README.md       → high-level project orientation
-module-generate-agent/STEP_1_CURRICULUM_RULES.md → how area curriculum/module ownership is designed/reviewed
-module-generate-agent/STEP_2_ROADMAP_REFERENCE.md → canonical roadmap + module Reference architecture + how one module roadmap/reference set is designed/reviewed
-module-generate-agent/STEP_3_MENU.md → Menu/title skeleton and reconciliation for both new and existing/refactor modules
-module-generate-agent/STEP_4_KNOWLEDGE.md → Knowledge authoring/refactor against the approved Step 3 Menu
-module-generate-agent/STEP_5_API.md → API learning documentation / experiment rules
-module-generate-agent/STEP_6_VIDEO.md → Video Script / Presentation Plan rules; one Knowledge Menu maps to one Video
-module-generate-agent/STEP_7_QUIZ.md → Quiz authoring rules
-module-generate-agent/STEP_8_INTERVIEW.md → Interview authoring rules
-module-generate-agent/STEP_9_VALIDATION.md → integrated validation + Coverage Review
-module-generate-agent/GENERAL_AGENT_RULES.md → orchestrates the canonical module-generation steps
+module-generate-agent/GENERAL_AGENT_RULES.md → canonical source of truth for the module-generation workflow, step ordering, routing, prerequisites and delegated step rules
 project-portal/PROJECT_PORTAL.md → detailed Learning Portal design/current implementation
 STRUCTURE.md    → generated module tree/navigation
 ```
+
+Do not duplicate or infer the numbered module-generation chain from `AGENTS.md`. For any module-generation task, enter through `module-generate-agent/GENERAL_AGENT_RULES.md` and follow the current rule-file routing declared there.
 
 When documentation conflicts with live implementation, inspect the implementation and report the inconsistency instead of silently assuming the documentation is correct.
 
@@ -64,17 +57,16 @@ For repository-level work, read in this order:
 1. AGENTS.md
 2. ARCHITECTURE.md
 3. README.md
-4. module-generate-agent/GENERAL_AGENT_RULES.md for module-generation routing
-5. the requested module-generate-agent/STEP_X_*.md file for the concrete learning step
-6. settings.gradle
-7. build.gradle
-8. project-orchestration/
-9. project-build/gradle-runtime/
-10. project-build/springboot-runtime/
-11. project-portal/ and project-portal/PROJECT_PORTAL.md when portal/frontend work is involved
-12. STRUCTURE.md when module navigation is needed
-13. module metadata/build.gradle for the concrete task
-14. module source packages only when the requested work requires them
+4. module-generate-agent/GENERAL_AGENT_RULES.md for any module-generation work; follow only the current delegated rule files and upstream inputs it requires
+5. settings.gradle
+6. build.gradle
+7. project-orchestration/
+8. project-build/gradle-runtime/
+9. project-build/springboot-runtime/
+10. project-portal/ and project-portal/PROJECT_PORTAL.md when portal/frontend work is involved
+11. STRUCTURE.md when module navigation is needed
+12. module metadata/build.gradle for the concrete task
+13. module source packages only when the requested work requires them
 ```
 
 Do not read the entire `module/` source tree just to answer a build-system question.
@@ -527,9 +519,9 @@ For Vietnamese (`vi`) learning content, Vietnamese is the primary explanatory la
 
 API availability is not a prerequisite for learning-module completeness. A conceptual/library-oriented module may be complete with Knowledge, Quiz and Interview only. Do not force a module into `SERVLET`/`REACTIVE` or create artificial endpoints solely so it can have API Docs. When a `SERVLET`/`REACTIVE` module does contain meaningful learning APIs, those APIs should represent real experiments for Knowledge concepts and follow the Swagger ↔ README relationship contract below.
 
-Area-level module granularity, ownership and boundary guidance lives in `module-generate-agent/STEP_1_CURRICULUM_RULES.md`. `module-generate-agent/GENERAL_AGENT_RULES.md` owns orchestration; detailed authoring/validation rules live in the corresponding `STEP_X_*.md` file.
+`module-generate-agent/GENERAL_AGENT_RULES.md` is the canonical source of truth for module-generation scope, workflow order, prerequisites, routing and the delegated authoring/validation rule files. `AGENTS.md` must not maintain a competing copy of that chain.
 
-For Knowledge tasks, treat the three-layer pedagogical model in `module-generate-agent/STEP_4_KNOWLEDGE.md` as an authoring requirement, not optional style guidance. A successful build/projection or high relation/assessment coverage does not prove that the learning path is complete.
+For Knowledge tasks, treat the three-layer pedagogical model required by the canonical module-generation rules as an authoring requirement, not optional style guidance. A successful build/projection or high relation/assessment coverage does not prove that the learning path is complete. Resolve the current Knowledge rule through `module-generate-agent/GENERAL_AGENT_RULES.md` rather than hard-coding a numbered rule file here.
 
 When bootstrapping a new learning module, prefer the actual settings/module lifecycle: create the local `gradle.properties` marker, let settings synchronization create/synchronize `master.json` and `properties.json`, set module-owned `VALUE` fields, enable `BUILD_README`, then let `ReadmeSetupPlugin` initialize the README language/support structure. Do not manually create generated registries/structure outputs that already have a generator.
 
@@ -684,9 +676,9 @@ For a missing Video file, the setup service creates a skeleton containing `video
 
 Path mapping is the relationship model; there is deliberately no stable file id. If a README file/folder is renamed or moved, synchronization creates the new missing Video skeleton and leaves the old Video file untouched as an orphan warning. The developer manually moves/reconciles the old script/URL and deletes stale files when appropriate. Never auto-delete or guess-renames for orphan Video files because they may contain published video URLs or reviewed scripts.
 
-`BUILD_VIDEO=TRUE` requires `BUILD_README=TRUE` and actual README menu Markdown to exist. Do not enable it during an empty module bootstrap before Step 3/Knowledge chapter files exist. `video/` is support content, not a module child; repository structure/module-order discovery must exclude it just like `readme/`, `roadmap/`, `src/`, and `build/`.
+`BUILD_VIDEO=TRUE` requires `BUILD_README=TRUE` and actual README menu Markdown to exist. Do not enable it during an empty module bootstrap before Knowledge chapter files exist. `video/` is support content, not a module child; repository structure/module-order discovery must exclude it just like `readme/`, `roadmap/`, `src/`, and `build/`.
 
-The canonical content-generation position is Step **6**, after Knowledge and after Step 5 has decided/implemented any useful API/runtime evidence. One README Menu Markdown file maps to one Video by default; each H2 maps to one Video section/chapter. Each section requires at least one Scene; from the second section onward the script must also contain a Transition from the previous section. Step 6 may add as many scenes as the content needs. Video narration may rephrase Knowledge for spoken delivery, but it must not silently create a competing technical source of truth. Detailed authoring/mapping rules live in `module-generate-agent/STEP_6_VIDEO.md`.
+In the canonical module-generation workflow, Video authoring is downstream of stable Knowledge and any applicable API/runtime evidence. One README Menu Markdown file maps to one Video by default; each H2 maps to one Video section/chapter. Each section requires at least one Scene; from the second section onward the script must also contain a Transition from the previous section. Video narration may rephrase Knowledge for spoken delivery, but it must not silently create a competing technical source of truth. The exact workflow position and current detailed authoring/mapping rule must be resolved through `module-generate-agent/GENERAL_AGENT_RULES.md`.
 
 Current implementation includes localized Video source skeleton generation, build-time Portal Video projection, and frontend rendering inside the Knowledge flow. Authored Video Markdown is projected to `project-portal/build/generated/portal-data/module/{ROUTE_ID}/video/{lang}/index.json` and per-category `content/{categoryId}/script.json`; only languages with authored Scene content are exposed through `module-catalog.json`. Vite/publicDir and `processResources` carry those generated files into the final static resources automatically. The frontend loads the localized Video index, maps authored items by Knowledge `categoryId`, renders the Video block before the corresponding lessons, and lazy-loads the script only when the collapsed script panel is opened. Supported player handling includes YouTube/Vimeo embeds and direct video files; an empty `video.url` keeps the authored script available while showing the unpublished-video state.
 
